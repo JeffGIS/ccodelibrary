@@ -2051,3 +2051,8 @@ LPTRANDATA  LoadTranFromCPT (const char * Name, int dir)//dir = 1 bitmap to worl
 	}
 	return TranPtr;
 }
+
+bool CreateMask (LPDPOINT points, int *pnPoints,bounds *bnds)
+{
+    return true;
+}

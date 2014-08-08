@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB1A696B1995514E005A1CCB /* findIntersection.c in Sources */ = {isa = PBXBuildFile; fileRef = EB1A696A1995514E005A1CCB /* findIntersection.c */; };
 		EBA2E45E199527660085B2E0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45D199527660085B2E0 /* Foundation.framework */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
@@ -34,8 +35,8 @@
 		EBA2E458199527660085B2E0 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "/Users/jeffgis/GitProjects/PedRampInventory/CCodeLibrary/build/Debug-iphoneos";
-			dstSubfolderSpec = 0;
+			dstPath = "";
+			dstSubfolderSpec = 10;
 			files = (
 				EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */,
 			);
@@ -44,6 +45,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EB1A696A1995514E005A1CCB /* findIntersection.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = findIntersection.c; sourceTree = "<group>"; };
 		EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCCodeLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBA2E45D199527660085B2E0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CCodeLibrary-Prefix.pch"; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				EB1A696A1995514E005A1CCB /* findIntersection.c */,
 				EBA2E48319952BCA0085B2E0 /* MathTypes.h */,
 				EBA2E48419952BCA0085B2E0 /* MathUtil.c */,
 				EBA2E48519952BCA0085B2E0 /* MathUtil.h */,
@@ -241,6 +244,7 @@
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
+				EB1A696B1995514E005A1CCB /* findIntersection.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,6 +427,7 @@
 				EBA2E47F199527660085B2E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EBA2E480199527660085B2E0 /* Build configuration list for PBXNativeTarget "CCodeLibraryTests" */ = {
 			isa = XCConfigurationList;
@@ -431,6 +436,7 @@
 				EBA2E482199527660085B2E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

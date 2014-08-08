@@ -229,5 +229,6 @@ void InflateMNMXCORL (LPMNMXCORL pBounds, int Value);
 double ArcDistance(DPOINT p1, DPOINT p2);
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
 int diffInDegrees (int angle1,int angle2);
+bool CreateMask (LPDPOINT points, int *pnPoints,bounds *bnds);
 
 #endif
