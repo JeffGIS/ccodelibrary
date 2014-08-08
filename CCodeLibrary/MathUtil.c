@@ -2052,7 +2052,31 @@ LPTRANDATA  LoadTranFromCPT (const char * Name, int dir)//dir = 1 bitmap to worl
 	return TranPtr;
 }
 
-bool CreateMask (LPDPOINT points, int *pnPoints,bounds *bnds)
+bool CreateMask (LPDPOINT *pPointsIN, int *pnPoints,bounds *pbnds)
 {
+    LPDPOINT pPoints = *pPointsIN;
+    int nNewPoints = 5;
+    if (!pnPoints || !pPoints || *pnPoints < 3)
+        return false;
+    LPDPOINT pNewPoints = (LPDPOINT)malloc (sizeof(DPOINT) * (*pnPoints + 5));
+    
+    pNewPoints[0].x = pbnds->xmn;
+    pNewPoints[0].y = pbnds->ymn;
+    pNewPoints[1].x = pbnds->xmn;
+    pNewPoints[1].y = pbnds->ymx;
+    pNewPoints[2].x = pbnds->xmx;
+    pNewPoints[2].y = pbnds->ymx;
+    pNewPoints[3].x = pbnds->xmx;
+    pNewPoints[3].y = pbnds->ymn;
+    pNewPoints[4].x = pbnds->xmn;
+    pNewPoints[4].y = pbnds->ymn;
+    for (int i=*pnPoints-1;i>=0;i--)
+    {
+        pNewPoints[nNewPoints].x = pPoints[i].x;
+        pNewPoints[nNewPoints++].y = pPoints[i].y;
+    }
+    *pnPoints = nNewPoints;
+    free (pPoints);
+    *pPointsIN = pNewPoints;
     return true;
 }
