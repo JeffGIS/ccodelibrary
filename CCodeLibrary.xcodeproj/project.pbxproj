@@ -16,6 +16,8 @@
 		EBA2E472199527660085B2E0 /* libCCodeLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */; };
 		EBA2E478199527660085B2E0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBA2E476199527660085B2E0 /* InfoPlist.strings */; };
 		EBA2E47A199527660085B2E0 /* CCodeLibraryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E479199527660085B2E0 /* CCodeLibraryTests.m */; };
+		EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E48419952BCA0085B2E0 /* MathUtil.c */; };
+		EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E48819952BCA0085B2E0 /* TileIndex.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,8 +34,8 @@
 		EBA2E458199527660085B2E0 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
+			dstPath = "/Users/jeffgis/GitProjects/PedRampInventory/CCodeLibrary/build/Debug-iphoneos";
+			dstSubfolderSpec = 0;
 			files = (
 				EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */,
 			);
@@ -53,6 +55,12 @@
 		EBA2E475199527660085B2E0 /* CCodeLibraryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CCodeLibraryTests-Info.plist"; sourceTree = "<group>"; };
 		EBA2E477199527660085B2E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EBA2E479199527660085B2E0 /* CCodeLibraryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCodeLibraryTests.m; sourceTree = "<group>"; };
+		EBA2E48319952BCA0085B2E0 /* MathTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathTypes.h; sourceTree = "<group>"; };
+		EBA2E48419952BCA0085B2E0 /* MathUtil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MathUtil.c; sourceTree = "<group>"; };
+		EBA2E48519952BCA0085B2E0 /* MathUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathUtil.h; sourceTree = "<group>"; };
+		EBA2E48619952BCA0085B2E0 /* rotate256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotate256.h; sourceTree = "<group>"; };
+		EBA2E48719952BCA0085B2E0 /* TileGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileGraphics.h; sourceTree = "<group>"; };
+		EBA2E48819952BCA0085B2E0 /* TileIndex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TileIndex.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +118,12 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				EBA2E48319952BCA0085B2E0 /* MathTypes.h */,
+				EBA2E48419952BCA0085B2E0 /* MathUtil.c */,
+				EBA2E48519952BCA0085B2E0 /* MathUtil.h */,
+				EBA2E48619952BCA0085B2E0 /* rotate256.h */,
+				EBA2E48719952BCA0085B2E0 /* TileGraphics.h */,
+				EBA2E48819952BCA0085B2E0 /* TileIndex.c */,
 				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
 				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
@@ -225,6 +239,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
+				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
+				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +351,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -347,6 +364,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

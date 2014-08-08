@@ -7,7 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MathTypes.h"
+#import "MathUtil.h"
+#import "TileGraphics.h"
 
 @interface CCodeLibrary : NSObject
+
+-(void) dummy;
 
 @end

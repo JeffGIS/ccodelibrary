@@ -6,8 +6,12 @@
 //  Copyright (c) 2014 GSSi. All rights reserved.
 //
 
-#import "CCodeLibrary.h"
-
+/*#import "CCodeLibrary.h"
+#include "MathUtil.h"
 @implementation CCodeLibrary
-
-@end
+-(void) dummy
+{
+    bounds bnds;
+    InitBounds (&bnds);
+}
+@end*/
