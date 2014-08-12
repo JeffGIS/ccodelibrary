@@ -13,10 +13,13 @@
 + (CRAPI*)sharedInstance;
 
 @property NSString *outputDirectory;
+@property NSString *imageDirectory;
 -(int) getCornerFromAdjustedRot:(int)adjustedRot atIntersection:(MPIntersection*)intersection;
 -(int) getCornerFromX:(int)x andY:(int)y atIntersection:(MPIntersection*)intersection;
 -(int) getQuadDeviderFromX:(int)x andY:(int)y atIntersection:(MPIntersection*)intersection;
 - (BOOL) intersectionAlreadyCompleted:(int)intID;
-- (NSString*) getOutputDirectory;\
--(BOOL)getImageFile:(NSString *)imageFile andCPTFile:(NSString *)cptFile forIntersection:(int)intersection;
+- (NSString*) getOutputDirectory;
+-(NSString *)getImageFileforIntersection:(int)intersectionID
+                                   atLat:(double) lat
+                                  andLon:(double)lon;
 @end

@@ -8,6 +8,7 @@
 
 #import "CRAPI.h"
 #import "../../CCodeLibrary/CCodeLibrary/CCodeLibrary.h"
+#import <UIKit/UIKit.h>
 
 @implementation CRAPI
 
@@ -23,8 +24,13 @@
         (NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         self.outputDirectory = [NSString stringWithFormat:@"%@/ADAFiles", documentsDirectory];
+        self.imageDirectory = [NSString stringWithFormat:@"%@/IntersectionImages", documentsDirectory];
         
         [[NSFileManager defaultManager]createDirectoryAtPath:self.outputDirectory
+                                 withIntermediateDirectories:NO
+                                                  attributes:nil
+                                                       error:nil];
+        [[NSFileManager defaultManager]createDirectoryAtPath:self.imageDirectory
                                  withIntermediateDirectories:NO
                                                   attributes:nil
                                                        error:nil];
@@ -126,13 +132,36 @@
         return YES;
     return NO;
 }
--(BOOL)getImageFile:(NSString *)imageFile andCPTFile:(NSString *)cptFile forIntersection:(int)intersection
+-(NSString *)getImageFileforIntersection:(int)intersectionID
+                                   atLat:(double) lat
+                                  andLon:(double)lon
 {
+    NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Intersection_%i.jpg",intersectionID]];
+    
+    unsigned long long fileSize = [[NSFileManager.defaultManager attributesOfItemAtPath:imageFile
+                                                                                  error:nil] fileSize];
+    if (fileSize > 0)
+        return imageFile;
 /*    http://maps.googleapis.com/maps/api/staticmap?center=$Y([STREETLL])@,$X([STREETLL])&zoom=[ZOOM]&size=640x640&maptype=[MAPTYPE]&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.google.com/maps/api/staticmap?markers=color:red|%f,%f&%@&sensor=true",yourLatitude, yourLongitude,@"zoom=10&size=270x70"];
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.google.com/maps/api/staticmap?markers=color:red|%f,%f&%@&sensor=true",lat, lon,@"zoom=10&size=270x70"];*/
+    int zoom=21;
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY",lat, lon,zoom];
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];*/
-    return false;
+    UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
+    
+    int rtn = [UIImageJPEGRepresentation(image, 0.8) writeToFile:imageFile
+                                                               atomically:YES];
+/*    if (!rtn)
+    {
+        UIAlertView *saveError = [[UIAlertView alloc] initWithTitle:@"Save Image Error"
+                                                            message:@"Unable to save image. Check available storage space."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                   otherButtonTitle:nil];
+        saveError.delegate = self;
+        [saveError showInView:self.view];
+    }*/
+    return imageFile;
 }
 
 @end
