@@ -150,7 +150,7 @@
     UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
     
     int rtn = [UIImageJPEGRepresentation(image, 0.8) writeToFile:imageFile
-                                                               atomically:YES];
+                                                      atomically:YES];
 /*    if (!rtn)
     {
         UIAlertView *saveError = [[UIAlertView alloc] initWithTitle:@"Save Image Error"
