@@ -8,8 +8,9 @@
 #import <UIKit/UIKit.h>
 
 @interface UserDefaults : NSObject
-
-@property (nonatomic)NSUserDefaults *defaults;
+{
+    NSUserDefaults *_defaults;
+}
 
 + (UserDefaults *) defaults;
 
