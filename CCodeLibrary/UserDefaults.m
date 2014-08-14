@@ -79,6 +79,28 @@ static UserDefaults *_defaults;
     [_defaults synchronize];
 }
 
+- (void)saveColor:(UIColor *)color
+           forKey:(NSString *)key
+{
+    CGFloat red, green, blue, alpha;
+    
+    [color getRed:&red
+            green:&green
+             blue:&blue
+            alpha:&alpha];
+    
+    [_defaults setFloat:red
+                 forKey:[NSString stringWithFormat:@"%@Red", key]];
+    
+    [_defaults setFloat:green
+                 forKey:[NSString stringWithFormat:@"%@Green", key]];
+    
+    [_defaults setFloat:blue
+                 forKey:[NSString stringWithFormat:@"%@Blue", key]];
+    
+    [_defaults synchronize];
+}
+
 - (void)saveInteger:(int)integer
              forKey:(NSString *)key
 {

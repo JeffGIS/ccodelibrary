@@ -24,6 +24,9 @@
                     blue:(float)blue
                   forKey:(NSString *)key;
 
+- (void)saveColor:(UIColor *)color
+           forKey:(NSString *)key;
+
 - (void)saveInteger:(int)integer
              forKey:(NSString *)key;
 
