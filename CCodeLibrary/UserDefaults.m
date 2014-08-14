@@ -56,6 +56,12 @@ static UserDefaults *_defaults;
     return defaultBoolean;
 }
 
+- (NSString *)getString:(NSString *)string
+{
+    NSString *defaultString = [_defaults objectForKey:string];
+    return defaultString;
+}
+
 - (void)saveColor:(NSString *)color
               red:(float)red
             green:(float)green
@@ -87,6 +93,15 @@ static UserDefaults *_defaults;
 {
     [_defaults setBool:value
                 forKey:boolean];
+    
+    [_defaults synchronize];
+}
+
+- (void)saveString:(NSString *)string
+          contents:(NSString *)contents
+{
+    [_defaults setObject:contents
+                  forKey:string];
     
     [_defaults synchronize];
 }

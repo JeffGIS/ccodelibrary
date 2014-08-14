@@ -17,6 +17,7 @@
 - (UIColor *)getColor:(NSString *)color;
 - (NSInteger)getInteger:(NSString *)integer;
 - (bool)getBoolean:(NSString *)boolean;
+- (NSString *)getString:(NSString *)string;
 
 - (void)saveColor:(NSString *)color
               red:(float)red
@@ -28,5 +29,8 @@
 
 - (void)saveBoolean:(NSString *)boolean
               value:(bool)value;
+
+- (void)saveString:(NSString *)string
+          contents:(NSString *)contents;
 
 @end
