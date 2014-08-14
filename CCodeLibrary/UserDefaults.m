@@ -30,11 +30,11 @@ static UserDefaults *_defaults;
     return self;
 }
 
-- (UIColor *)getColor:(NSString *)color
+- (UIColor *)colorForKey:(NSString *)key
 {
-    float red = [_defaults floatForKey:[NSString stringWithFormat:@"%@red", color]];
-    float blue = [_defaults floatForKey:[NSString stringWithFormat:@"%@blue", color]];
-    float green = [_defaults floatForKey:[NSString stringWithFormat:@"%@green", color]];
+    float red = [_defaults floatForKey:[NSString stringWithFormat:@"%@red", key]];
+    float blue = [_defaults floatForKey:[NSString stringWithFormat:@"%@blue", key]];
+    float green = [_defaults floatForKey:[NSString stringWithFormat:@"%@green", key]];
 
     UIColor *defaultColor = [UIColor colorWithRed:red
                                             green:green
@@ -44,64 +44,64 @@ static UserDefaults *_defaults;
     return defaultColor;
 }
 
-- (NSInteger)getInteger:(NSString *)integer
+- (NSInteger)integerForKey:(NSString *)key
 {
-    NSInteger defaultInteger = [_defaults integerForKey:integer];
+    NSInteger defaultInteger = [_defaults integerForKey:key];
     return defaultInteger;
 }
 
-- (bool)getBoolean:(NSString *)boolean
+- (bool)boolForKey:(NSString *)key
 {
-    bool defaultBoolean = [_defaults boolForKey:boolean];
+    bool defaultBoolean = [_defaults boolForKey:key];
     return defaultBoolean;
 }
 
-- (NSString *)getString:(NSString *)string
+- (NSString *)stringForKey:(NSString *)key
 {
-    NSString *defaultString = [_defaults objectForKey:string];
+    NSString *defaultString = [_defaults stringForKey:key];
     return defaultString;
 }
 
-- (void)saveColor:(NSString *)color
-              red:(float)red
-            green:(float)green
-             blue:(float)blue
+- (void)saveColorForKey:(NSString *)key
+                    red:(float)red
+                  green:(float)green
+                   blue:(float)blue
 {
     [_defaults setFloat:red
-                 forKey:[NSString stringWithFormat:@"%@red", color]];
+                 forKey:[NSString stringWithFormat:@"%@red", key]];
     
     [_defaults setFloat:green
-                 forKey:[NSString stringWithFormat:@"%@green", color]];
+                 forKey:[NSString stringWithFormat:@"%@green", key]];
     
     [_defaults setFloat:blue
-                 forKey:[NSString stringWithFormat:@"%@blue", color]];
+                 forKey:[NSString stringWithFormat:@"%@blue", key]];
     
     [_defaults synchronize];
 }
 
-- (void)saveInteger:(NSString *)integer
-              value:(int)value;
+- (void)saveInteger:(int)integer
+             forKey:(NSString *)key
 {
-    [_defaults setInteger:value
-                   forKey:integer];
+    [_defaults setInteger:integer
+                   forKey:key];
     
     [_defaults synchronize];
 }
 
-- (void)saveBoolean:(NSString *)boolean
-              value:(bool)value;
+- (void)saveBool:(bool)boolean
+          forKey:(NSString *)key
 {
-    [_defaults setBool:value
-                forKey:boolean];
+    [_defaults setBool:boolean
+                forKey:key];
     
     [_defaults synchronize];
 }
 
 - (void)saveString:(NSString *)string
-          contents:(NSString *)contents
+            forKey:(NSString *)key
 {
-    [_defaults setObject:contents
-                  forKey:string];
+    [_defaults setObject:string
+                  forKey:key];
     
     [_defaults synchronize];
 }

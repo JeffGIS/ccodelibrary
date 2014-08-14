@@ -14,23 +14,23 @@
 
 + (UserDefaults *) defaults;
 
-- (UIColor *)getColor:(NSString *)color;
-- (NSInteger)getInteger:(NSString *)integer;
-- (bool)getBoolean:(NSString *)boolean;
-- (NSString *)getString:(NSString *)string;
+- (UIColor *)colorForKey:(NSString *)key;
+- (NSInteger)integerForKey:(NSString *)key;
+- (bool)boolForKey:(NSString *)key;
+- (NSString *)stringForKey:(NSString *)key;
 
-- (void)saveColor:(NSString *)color
-              red:(float)red
-            green:(float)green
-             blue:(float)blue;
+- (void)saveColorForKey:(NSString *)key
+                    red:(float)red
+                  green:(float)green
+                   blue:(float)blue;
 
-- (void)saveInteger:(NSString *)integer
-              value:(int)value;
+- (void)saveInteger:(int)integer
+             forKey:(NSString *)key;
 
-- (void)saveBoolean:(NSString *)boolean
-              value:(bool)value;
+- (void)saveBool:(bool)boolean
+          forKey:(NSString *)key;
 
 - (void)saveString:(NSString *)string
-          contents:(NSString *)contents;
+            forKey:(NSString *)key;
 
 @end
