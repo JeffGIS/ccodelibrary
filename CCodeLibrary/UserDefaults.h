@@ -19,9 +19,9 @@
 - (bool)boolForKey:(NSString *)key;
 - (NSString *)stringForKey:(NSString *)key;
 
-- (void)saveColorWithRed:(float)red
-                   green:(float)green
-                    blue:(float)blue
+- (void)saveColorWithRed:(CGFloat)red
+                   green:(CGFloat)green
+                    blue:(CGFloat)blue
                   forKey:(NSString *)key;
 
 - (void)saveColor:(UIColor *)color
@@ -35,5 +35,11 @@
 
 - (void)saveString:(NSString *)string
             forKey:(NSString *)key;
+
+- (UIColor *)lightColorForColor:(UIColor *)color;
+- (UIColor *)darkColorForColor:(UIColor *)color;
+
+- (bool)pickBetweenColor1:(UIColor *)color1
+                   Color2:(UIColor *)color2;
 
 @end

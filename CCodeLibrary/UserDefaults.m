@@ -32,9 +32,9 @@ static UserDefaults *_defaults;
 
 - (UIColor *)colorForKey:(NSString *)key
 {
-    float red = [_defaults floatForKey:[NSString stringWithFormat:@"%@Red", key]];
-    float green = [_defaults floatForKey:[NSString stringWithFormat:@"%@Green", key]];
-    float blue = [_defaults floatForKey:[NSString stringWithFormat:@"%@Blue", key]];
+    CGFloat red = [_defaults floatForKey:[NSString stringWithFormat:@"%@Red", key]];
+    CGFloat green = [_defaults floatForKey:[NSString stringWithFormat:@"%@Green", key]];
+    CGFloat blue = [_defaults floatForKey:[NSString stringWithFormat:@"%@Blue", key]];
 
     UIColor *defaultColor = [UIColor colorWithRed:(red / 255.0)
                                             green:(green / 255.0)
@@ -62,9 +62,9 @@ static UserDefaults *_defaults;
     return defaultString;
 }
 
-- (void)saveColorWithRed:(float)red
-                   green:(float)green
-                    blue:(float)blue
+- (void)saveColorWithRed:(CGFloat)red
+                   green:(CGFloat)green
+                    blue:(CGFloat)blue
                   forKey:(NSString *)key
 {
     [_defaults setFloat:red
@@ -89,13 +89,13 @@ static UserDefaults *_defaults;
              blue:&blue
             alpha:&alpha];
     
-    [_defaults setFloat:red
+    [_defaults setFloat:(red * 255.0)
                  forKey:[NSString stringWithFormat:@"%@Red", key]];
     
-    [_defaults setFloat:green
+    [_defaults setFloat:(green * 255.0)
                  forKey:[NSString stringWithFormat:@"%@Green", key]];
     
-    [_defaults setFloat:blue
+    [_defaults setFloat:(blue * 255.0)
                  forKey:[NSString stringWithFormat:@"%@Blue", key]];
     
     [_defaults synchronize];
@@ -126,6 +126,77 @@ static UserDefaults *_defaults;
                   forKey:key];
     
     [_defaults synchronize];
+}
+
+- (UIColor *)lightColorForColor:(UIColor *)color
+{
+    CGFloat red, green, blue, alpha;
+    
+    [color getRed:&red
+            green:&green
+             blue:&blue
+            alpha:&alpha];
+    
+    CGFloat lightRed = (255 - ((255 - red) / 3));
+    CGFloat lightGreen = (255 - ((255 - green) / 3));
+    CGFloat lightBlue = (255 - ((255 - blue) / 3));
+    
+    UIColor *lightColor = [UIColor colorWithRed:(lightRed / 255.0)
+                                          green:(lightGreen / 255.0)
+                                           blue:(lightBlue / 255.0)
+                                          alpha:1.0];
+    
+    return lightColor;
+}
+
+- (UIColor *)darkColorForColor:(UIColor *)color
+{
+    CGFloat red, green, blue, alpha;
+    
+    [color getRed:&red
+            green:&green
+             blue:&blue
+            alpha:&alpha];
+    
+    CGFloat darkRed = (red / 3);
+    CGFloat darkGreen = (green / 3);
+    CGFloat darkBlue = (blue / 3);
+    
+    UIColor *darkColor = [UIColor colorWithRed:(darkRed / 255.0)
+                                          green:(darkGreen / 255.0)
+                                           blue:(darkBlue / 255.0)
+                                          alpha:1.0];
+    
+    return darkColor;
+}
+
+- (bool)pickBetweenColor1:(UIColor *)color1
+                   Color2:(UIColor *)color2
+{
+    bool rtn;
+    CGFloat red1, green1, blue1, alpha1;
+    CGFloat red2, green2, blue2, alpha2;
+    
+    [color1 getRed:&red1
+             green:&green1
+              blue:&blue1
+             alpha:&alpha1];
+    
+    [color2 getRed:&red2
+             green:&green2
+              blue:&blue2
+             alpha:&alpha2];
+    
+    CGFloat RGB1 = (red1 + green1 + blue1);
+    CGFloat RGB2 = (red2 + green2 + blue2);
+    
+    if (RGB2 > RGB1)
+        rtn = YES;
+    
+    else
+        rtn = NO;
+    
+    return rtn;
 }
 
 @end
