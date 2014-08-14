@@ -24,7 +24,7 @@ static UserDefaults *_defaults;
 {
     if ((self = [super init]))
     {
-        _defaults = [NSUserDefaults standardUserDefaults];
+        _defaults = NSUserDefaults.standardUserDefaults;
     }
     
     return self;
@@ -36,9 +36,9 @@ static UserDefaults *_defaults;
     float green = [_defaults floatForKey:[NSString stringWithFormat:@"%@Green", key]];
     float blue = [_defaults floatForKey:[NSString stringWithFormat:@"%@Blue", key]];
 
-    UIColor *defaultColor = [UIColor colorWithRed:red
-                                            green:green
-                                             blue:blue
+    UIColor *defaultColor = [UIColor colorWithRed:(red / 255.0)
+                                            green:(green / 255.0)
+                                             blue:(blue / 255.0)
                                             alpha:1.0];
     
     return defaultColor;
