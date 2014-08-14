@@ -24,7 +24,7 @@ static UserDefaults *_defaults;
 {
     if ((self = [super init]))
     {
-        
+        _defaults = [NSUserDefaults standardUserDefaults];
     }
     
     return self;
@@ -32,9 +32,9 @@ static UserDefaults *_defaults;
 
 - (UIColor *)getColor:(NSString *)color
 {
-    float red = [self.defaults floatForKey:[NSString stringWithFormat:@"%@red", color]];
-    float blue = [self.defaults floatForKey:[NSString stringWithFormat:@"%@blue", color]];
-    float green = [self.defaults floatForKey:[NSString stringWithFormat:@"%@green", color]];
+    float red = [_defaults floatForKey:[NSString stringWithFormat:@"%@red", color]];
+    float blue = [_defaults floatForKey:[NSString stringWithFormat:@"%@blue", color]];
+    float green = [_defaults floatForKey:[NSString stringWithFormat:@"%@green", color]];
 
     UIColor *defaultColor = [UIColor colorWithRed:red
                                             green:green
@@ -46,13 +46,13 @@ static UserDefaults *_defaults;
 
 - (NSInteger)getInteger:(NSString *)integer
 {
-    NSInteger defaultInteger = [self.defaults integerForKey:integer];
+    NSInteger defaultInteger = [_defaults integerForKey:integer];
     return defaultInteger;
 }
 
 - (bool)getBoolean:(NSString *)boolean
 {
-    bool defaultBoolean = [self.defaults boolForKey:boolean];
+    bool defaultBoolean = [_defaults boolForKey:boolean];
     return defaultBoolean;
 }
 
@@ -61,34 +61,34 @@ static UserDefaults *_defaults;
             green:(float)green
              blue:(float)blue
 {
-    [self.defaults setFloat:red
-                     forKey:[NSString stringWithFormat:@"%@red", color]];
+    [_defaults setFloat:red
+                 forKey:[NSString stringWithFormat:@"%@red", color]];
     
-    [self.defaults setFloat:green
-                     forKey:[NSString stringWithFormat:@"%@green", color]];
+    [_defaults setFloat:green
+                 forKey:[NSString stringWithFormat:@"%@green", color]];
     
-    [self.defaults setFloat:blue
-                     forKey:[NSString stringWithFormat:@"%@blue", color]];
+    [_defaults setFloat:blue
+                 forKey:[NSString stringWithFormat:@"%@blue", color]];
     
-    [self.defaults synchronize];
+    [_defaults synchronize];
 }
 
 - (void)saveInteger:(NSString *)integer
               value:(int)value;
 {
-    [self.defaults setInteger:value
-                       forKey:integer];
+    [_defaults setInteger:value
+                   forKey:integer];
     
-    [self.defaults synchronize];
+    [_defaults synchronize];
 }
 
 - (void)saveBoolean:(NSString *)boolean
               value:(bool)value;
 {
-    [self.defaults setBool:value
-                    forKey:boolean];
+    [_defaults setBool:value
+                forKey:boolean];
     
-    [self.defaults synchronize];
+    [_defaults synchronize];
 }
 
 @end
