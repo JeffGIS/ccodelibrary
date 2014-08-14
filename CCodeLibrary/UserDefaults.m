@@ -137,9 +137,9 @@ static UserDefaults *_defaults;
              blue:&blue
             alpha:&alpha];
     
-    CGFloat lightRed = (255 - ((255 - red) / 3));
-    CGFloat lightGreen = (255 - ((255 - green) / 3));
-    CGFloat lightBlue = (255 - ((255 - blue) / 3));
+    CGFloat lightRed = (255.0 - ((255.0 - red) / 3.0));
+    CGFloat lightGreen = (255.0 - ((255.0 - green) / 3.0));
+    CGFloat lightBlue = (255.0 - ((255.0 - blue) / 3.0));
     
     UIColor *lightColor = [UIColor colorWithRed:(lightRed / 255.0)
                                           green:(lightGreen / 255.0)
@@ -158,9 +158,9 @@ static UserDefaults *_defaults;
              blue:&blue
             alpha:&alpha];
     
-    CGFloat darkRed = (red / 3);
-    CGFloat darkGreen = (green / 3);
-    CGFloat darkBlue = (blue / 3);
+    CGFloat darkRed = (red / 3.0);
+    CGFloat darkGreen = (green / 3.0);
+    CGFloat darkBlue = (blue / 3.0);
     
     UIColor *darkColor = [UIColor colorWithRed:(darkRed / 255.0)
                                           green:(darkGreen / 255.0)
