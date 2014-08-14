@@ -19,10 +19,10 @@
 - (bool)boolForKey:(NSString *)key;
 - (NSString *)stringForKey:(NSString *)key;
 
-- (void)saveColorForKey:(NSString *)key
-                    red:(float)red
-                  green:(float)green
-                   blue:(float)blue;
+- (void)saveColorWithRed:(float)red
+                   green:(float)green
+                    blue:(float)blue
+                  forKey:(NSString *)key;
 
 - (void)saveInteger:(int)integer
              forKey:(NSString *)key;

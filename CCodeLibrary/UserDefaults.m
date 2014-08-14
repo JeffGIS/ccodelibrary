@@ -32,9 +32,9 @@ static UserDefaults *_defaults;
 
 - (UIColor *)colorForKey:(NSString *)key
 {
-    float red = [_defaults floatForKey:[NSString stringWithFormat:@"%@red", key]];
-    float blue = [_defaults floatForKey:[NSString stringWithFormat:@"%@blue", key]];
-    float green = [_defaults floatForKey:[NSString stringWithFormat:@"%@green", key]];
+    float red = [_defaults floatForKey:[NSString stringWithFormat:@"%@Red", key]];
+    float green = [_defaults floatForKey:[NSString stringWithFormat:@"%@Green", key]];
+    float blue = [_defaults floatForKey:[NSString stringWithFormat:@"%@Blue", key]];
 
     UIColor *defaultColor = [UIColor colorWithRed:red
                                             green:green
@@ -62,19 +62,19 @@ static UserDefaults *_defaults;
     return defaultString;
 }
 
-- (void)saveColorForKey:(NSString *)key
-                    red:(float)red
-                  green:(float)green
-                   blue:(float)blue
+- (void)saveColorWithRed:(float)red
+                   green:(float)green
+                    blue:(float)blue
+                  forKey:(NSString *)key
 {
     [_defaults setFloat:red
-                 forKey:[NSString stringWithFormat:@"%@red", key]];
+                 forKey:[NSString stringWithFormat:@"%@Red", key]];
     
     [_defaults setFloat:green
-                 forKey:[NSString stringWithFormat:@"%@green", key]];
+                 forKey:[NSString stringWithFormat:@"%@Green", key]];
     
     [_defaults setFloat:blue
-                 forKey:[NSString stringWithFormat:@"%@blue", key]];
+                 forKey:[NSString stringWithFormat:@"%@Blue", key]];
     
     [_defaults synchronize];
 }
