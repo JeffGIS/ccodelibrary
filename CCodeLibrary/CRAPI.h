@@ -14,6 +14,10 @@
 
 @property NSString *outputDirectory;
 @property NSString *imageDirectory;
+
+- (void) intersectionInit:(MPIntersection*)currentIntersection;
+-(void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm forInt:(MPIntersection*)currentIntersection;
+
 -(int) getCornerFromAdjustedRot:(int)adjustedRot atIntersection:(MPIntersection*)intersection;
 -(int) getCornerFromX:(int)x andY:(int)y atIntersection:(MPIntersection*)intersection;
 -(int) getQuadDeviderFromX:(int)x andY:(int)y atIntersection:(MPIntersection*)intersection;

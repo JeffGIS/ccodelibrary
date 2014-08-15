@@ -56,6 +56,131 @@
     
     return _sharedInstance;
 }
+
+- (void) intersectionInit:(MPIntersection*)currentIntersection
+{
+    currentIntersection.intID = -1;
+    currentIntersection.dataUpdated = NO;
+    currentIntersection.pairedMode = 0;
+    currentIntersection.intRotation = 0;
+    currentIntersection.doLater = NO;
+    currentIntersection.timeComplete = 0;
+    currentIntersection.name1 = @"NOTYETSET";
+    currentIntersection.signal23Exists = NO;
+    currentIntersection.signal45Exists = NO;
+    currentIntersection.signal67Exists = NO;
+    currentIntersection.signal81Exists = NO;
+    currentIntersection.xWalkAExists = NO;
+    currentIntersection.xWalkBExists = NO;
+    currentIntersection.xWalkCExists = NO;
+    currentIntersection.xWalkDExists = NO;
+    currentIntersection.corner23isComplete = NO;
+    currentIntersection.corner45isComplete = NO;
+    currentIntersection.corner67isComplete = NO;
+    currentIntersection.corner81isComplete = NO;
+    
+	int nramps = [currentIntersection.ramps count];
+    for (int i=1;i<13;i++)
+    {
+        MPRamp *ramp = [currentIntersection.ramps objectAtIndex:i];
+        ramp.rampNum = i;
+        ramp.rampExists = NO;
+        ramp.timeComplete = 0;
+        ramp.isComplete = YES;
+        ramp.xWalkisComplete = YES;
+        ramp.signalisComplete = YES;
+        ramp.hasPEDButton = NO;
+        ramp.hasPEDSignal = NO;
+        ramp.SteepTopOfCurve = 0;
+        ramp.PedRampLip = 0;
+        
+        switch (i)
+        {
+            default:
+                if (i % 2)
+                    ramp.rampID = [NSString stringWithFormat:@"%i(Left)",i];
+                
+                else
+                    ramp.rampID = [NSString stringWithFormat:@"%i(Right)",i];
+                break;
+                
+            case 9:
+                ramp.rampID = @"23 (Middle)";
+                break;
+                
+            case 10:
+                ramp.rampID = @"45 (Middle)";
+                break;
+                
+            case 11:
+                ramp.rampID = @"67 (Middle)";
+                break;
+                
+            case 12:
+                ramp.rampID = @"81 (Middle)";
+                break;
+        }
+    }
+}
+
+-(void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm forInt:(MPIntersection*)currentIntersection
+{
+    currentIntersection.intRotation = [self intRotFromintAZMS:intAzm];
+    currentIntersection.quadDev90 = 0;
+    currentIntersection.quadDev90 = 90;
+    currentIntersection.quadDev180 = 180;
+    currentIntersection.quadDev270 = 270;
+    
+}
+-(double) azDiffFrom90s:(double)az
+{
+    double minDiff=0 - az;
+    double diff;
+    
+    diff = TWOPI - az;
+    if (fabs (diff) < fabs (minDiff))
+        minDiff = diff;
+    diff = HALFPI - az;
+    if (fabs (diff) < fabs (minDiff))
+        minDiff = diff;
+    diff = PY - az;
+    if (fabs (diff) < fabs (minDiff))
+        minDiff = diff;
+    diff = (HALFPI*3) - az;
+    if (fabs (diff) < fabs (minDiff))
+        minDiff = diff;
+    
+    return minDiff;
+    
+}
+
+-(int) intRotFromintAZMS:(NSString *)intAzm
+{
+    int rtn = 0;
+    double minDiff=10, az, diff;
+    char * intAZMS = malloc ([intAzm length]+1);
+    strcpy (intAZMS,intAzm.UTF8String);
+    char * pBeg=intAZMS;
+    char * pEnd=strchr (pBeg,'|');
+    while (pEnd)
+    {
+        *pEnd++ = 0;
+        az = atof (pBeg);
+        diff = [self azDiffFrom90s:az];
+        if (fabs(diff)<fabs(minDiff))
+            minDiff = diff;
+        pBeg = pEnd;
+        pEnd=strchr (pBeg,'|');
+    }
+    az = atof (pBeg);
+    diff = [self azDiffFrom90s:az];
+    if (fabs(diff)<fabs(minDiff))
+        minDiff = diff;
+    rtn = minDiff * RADtoDEG;
+    free (intAZMS);
+    return rtn;
+}
+
 -(int) getCornerFromAdjustedRot:(int)adjustedRot atIntersection:(MPIntersection*)intersection
 {
     //returns 81,23,45 or 67
@@ -136,7 +261,8 @@
                                    atLat:(double) lat
                                   andLon:(double)lon
 {
-    NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Intersection_%i.jpg",intersectionID]];
+    NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i.jpg",intersectionID]];
+    NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i.cpt",intersectionID]];
     
     unsigned long long fileSize = [[NSFileManager.defaultManager attributesOfItemAtPath:imageFile
                                                                                   error:nil] fileSize];
@@ -151,16 +277,39 @@
     
     int rtn = [UIImageJPEGRepresentation(image, 0.8) writeToFile:imageFile
                                                       atomically:YES];
-/*    if (!rtn)
+    
+    if (!rtn)
     {
-        UIAlertView *saveError = [[UIAlertView alloc] initWithTitle:@"Save Image Error"
-                                                            message:@"Unable to save image. Check available storage space."
-                                                           delegate:self
-                                                  cancelButtonTitle:@"OK"
-                                                   otherButtonTitle:nil];
-        saveError.delegate = self;
-        [saveError showInView:self.view];
-    }*/
+        UIAlertView *getError = [[UIAlertView alloc]initWithTitle:@"Error getting intersection image." message:@"Unable to access server." delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:nil];
+        [getError show];
+    }
+    else
+    {
+        char txt[1024];
+        double pixelX, pixelY;
+        NSError *err;
+
+        LatLongToPixelXYd(lat,lon, zoom, &pixelX, &pixelY);
+
+        sprintf (txt,"0 0 %f %f\r\n\
+                 640 0 %f %f\r\n\
+                 640 640 %f %f\r\n\
+                 0 640 %f %f\r\n",
+                 pixelX - 320, pixelY + 320,
+                 pixelX + 320, pixelY + 320,
+                 pixelX + 320, pixelY - 320,
+                 pixelX - 320, pixelY - 320
+                );
+        NSString *outcontents = [NSString stringWithCString:txt
+                                                   encoding:NSUTF8StringEncoding];
+        if (![outcontents writeToFile:cptFile
+                           atomically:NO
+                             encoding:NSUTF8StringEncoding
+                                error:&err])
+        {
+            //[self displayError:err];
+        }
+    }
     return imageFile;
 }
 
