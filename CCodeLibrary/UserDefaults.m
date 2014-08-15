@@ -62,6 +62,12 @@ static UserDefaults *_defaults;
     return defaultString;
 }
 
+- (CGFloat)CGFloatForKey:(NSString *)key
+{
+    CGFloat defaultFloat = [_defaults floatForKey:key];
+    return defaultFloat;
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue
@@ -137,13 +143,13 @@ static UserDefaults *_defaults;
              blue:&blue
             alpha:&alpha];
     
-    CGFloat lightRed = (255.0 - ((255.0 - red) / 3.0));
-    CGFloat lightGreen = (255.0 - ((255.0 - green) / 3.0));
-    CGFloat lightBlue = (255.0 - ((255.0 - blue) / 3.0));
+    CGFloat lightRed = (1.0 - ((1.0 - red) / 3.0));
+    CGFloat lightGreen = (1.0 - ((1.0 - green) / 3.0));
+    CGFloat lightBlue = (1.0 - ((1.0 - blue) / 3.0));
     
-    UIColor *lightColor = [UIColor colorWithRed:(lightRed / 255.0)
-                                          green:(lightGreen / 255.0)
-                                           blue:(lightBlue / 255.0)
+    UIColor *lightColor = [UIColor colorWithRed:lightRed
+                                          green:lightGreen
+                                           blue:lightBlue
                                           alpha:1.0];
     
     return lightColor;
@@ -162,10 +168,10 @@ static UserDefaults *_defaults;
     CGFloat darkGreen = (green / 3.0);
     CGFloat darkBlue = (blue / 3.0);
     
-    UIColor *darkColor = [UIColor colorWithRed:(darkRed / 255.0)
-                                          green:(darkGreen / 255.0)
-                                           blue:(darkBlue / 255.0)
-                                          alpha:1.0];
+    UIColor *darkColor = [UIColor colorWithRed:darkRed
+                                         green:darkGreen
+                                          blue:darkBlue
+                                         alpha:1.0];
     
     return darkColor;
 }

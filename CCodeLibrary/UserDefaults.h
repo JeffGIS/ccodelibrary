@@ -18,6 +18,7 @@
 - (NSInteger)integerForKey:(NSString *)key;
 - (bool)boolForKey:(NSString *)key;
 - (NSString *)stringForKey:(NSString *)key;
+- (CGFloat)CGFloatForKey:(NSString *)key;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
