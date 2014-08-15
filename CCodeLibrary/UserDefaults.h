@@ -8,24 +8,38 @@
 #import <UIKit/UIKit.h>
 
 @interface UserDefaults : NSObject
-
-@property (nonatomic)NSUserDefaults *defaults;
+{
+    NSUserDefaults *_defaults;
+}
 
 + (UserDefaults *) defaults;
 
-- (UIColor *)getColor:(NSString *)color;
-- (NSInteger)getInteger:(NSString *)integer;
-- (bool)getBoolean:(NSString *)boolean;
+- (UIColor *)colorForKey:(NSString *)key;
+- (NSInteger)integerForKey:(NSString *)key;
+- (bool)boolForKey:(NSString *)key;
+- (NSString *)stringForKey:(NSString *)key;
 
-- (void)saveColor:(NSString *)color
-              red:(float)red
-            green:(float)green
-             blue:(float)blue;
+- (void)saveColorWithRed:(CGFloat)red
+                   green:(CGFloat)green
+                    blue:(CGFloat)blue
+                  forKey:(NSString *)key;
 
-- (void)saveInteger:(NSString *)integer
-              value:(int)value;
+- (void)saveColor:(UIColor *)color
+           forKey:(NSString *)key;
 
-- (void)saveBoolean:(NSString *)boolean
-              value:(bool)value;
+- (void)saveInteger:(int)integer
+             forKey:(NSString *)key;
+
+- (void)saveBool:(bool)boolean
+          forKey:(NSString *)key;
+
+- (void)saveString:(NSString *)string
+            forKey:(NSString *)key;
+
+- (UIColor *)lightColorForColor:(UIColor *)color;
+- (UIColor *)darkColorForColor:(UIColor *)color;
+
+- (bool)pickBetweenColor1:(UIColor *)color1
+                   Color2:(UIColor *)color2;
 
 @end
