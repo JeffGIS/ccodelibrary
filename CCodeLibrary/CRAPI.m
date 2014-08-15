@@ -79,8 +79,8 @@
     currentIntersection.corner67isComplete = NO;
     currentIntersection.corner81isComplete = NO;
     
-	int nramps = [currentIntersection.ramps count];
-    for (int i=1;i<13;i++)
+	//int nramps = (int)currentIntersection.ramps.count;
+    for (int i=1; i<13; i++)
     {
         MPRamp *ramp = [currentIntersection.ramps objectAtIndex:i];
         ramp.rampNum = i;
