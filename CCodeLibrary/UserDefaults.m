@@ -176,8 +176,8 @@ static UserDefaults *_defaults;
     return darkColor;
 }
 
-- (bool)pickBetweenColor1:(UIColor *)color1
-                   Color2:(UIColor *)color2
+- (bool)pickAdjustedTextColorForColor1:(UIColor *)color1
+                                color2:(UIColor *)color2
 {
     bool rtn;
     CGFloat red1, green1, blue1, alpha1;

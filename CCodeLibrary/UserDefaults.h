@@ -40,7 +40,7 @@
 - (UIColor *)lightColorForColor:(UIColor *)color;
 - (UIColor *)darkColorForColor:(UIColor *)color;
 
-- (bool)pickBetweenColor1:(UIColor *)color1
-                   Color2:(UIColor *)color2;
+- (bool)pickAdjustedTextColorForColor1:(UIColor *)color1
+                                color2:(UIColor *)color2;
 
 @end
