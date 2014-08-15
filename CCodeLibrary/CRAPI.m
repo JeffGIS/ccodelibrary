@@ -123,6 +123,63 @@
     }
 }
 
+-(void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm forInt:(MPIntersection*)currentIntersection
+{
+    currentIntersection.intRotation = [self intRotFromintAZMS:intAzm];
+    currentIntersection.quadDev90 = 0;
+    currentIntersection.quadDev90 = 90;
+    currentIntersection.quadDev180 = 180;
+    currentIntersection.quadDev270 = 270;
+    
+}
+-(double) azDiffFrom90s:(double)az
+{
+    double minDiff=0 - az;
+    double diff;
+    
+    diff = TWOPI - az;
+    if (fabs (diff) < fabs (minDiff))
+        minDiff = diff;
+    diff = HALFPI - az;
+    if (fabs (diff) < fabs (minDiff))
+        minDiff = diff;
+    diff = PY - az;
+    if (fabs (diff) < fabs (minDiff))
+        minDiff = diff;
+    diff = (HALFPI*3) - az;
+    if (fabs (diff) < fabs (minDiff))
+        minDiff = diff;
+    
+    return minDiff;
+    
+}
+
+-(int) intRotFromintAZMS:(NSString *)intAzm
+{
+    int rtn = 0;
+    double minDiff=10, az, diff;
+    char * intAZMS = malloc ([intAzm length]+1);
+    strcpy (intAZMS,intAzm.UTF8String);
+    char * pBeg=intAZMS;
+    char * pEnd=strchr (pBeg,'|');
+    while (pEnd)
+    {
+        *pEnd++ = 0;
+        az = atof (pBeg);
+        diff = [self azDiffFrom90s:az];
+        if (fabs(diff)<fabs(minDiff))
+            minDiff = diff;
+        pBeg = pEnd;
+        pEnd=strchr (pBeg,'|');
+    }
+    az = atof (pBeg);
+    diff = [self azDiffFrom90s:az];
+    if (fabs(diff)<fabs(minDiff))
+        minDiff = diff;
+    rtn = minDiff * RADtoDEG;
+    free (intAZMS);
+    return rtn;
+}
 
 -(int) getCornerFromAdjustedRot:(int)adjustedRot atIntersection:(MPIntersection*)intersection
 {
