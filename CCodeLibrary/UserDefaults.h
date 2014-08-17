@@ -37,6 +37,9 @@
 - (void)saveString:(NSString *)string
             forKey:(NSString *)key;
 
+- (void)saveCGFloat:(CGFloat)CGFloat
+             forKey:(NSString *)key;
+
 - (UIColor *)lightColorForColor:(UIColor *)color;
 - (UIColor *)darkColorForColor:(UIColor *)color;
 

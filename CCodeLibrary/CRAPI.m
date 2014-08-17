@@ -15,40 +15,42 @@
 - (id)init
 {
     self = [super init];
+    
     if (self)
     {
-        //persistencyManager = [[PersistencyManager alloc] init];
+/*
+        persistencyManager = [[PersistencyManager alloc] init];
         
-        //      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadImage:) name:@"BLDownloadImageNotification" object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(downloadImage:)
+                                                   name:@"BLDownloadImageNotification"
+                                                 object:nil];
+*/
         NSArray *paths = NSSearchPathForDirectoriesInDomains
         (NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         self.outputDirectory = [NSString stringWithFormat:@"%@/ADAFiles", documentsDirectory];
         self.imageDirectory = [NSString stringWithFormat:@"%@/IntersectionImages", documentsDirectory];
         
-        [[NSFileManager defaultManager]createDirectoryAtPath:self.outputDirectory
-                                 withIntermediateDirectories:NO
-                                                  attributes:nil
-                                                       error:nil];
-        [[NSFileManager defaultManager]createDirectoryAtPath:self.imageDirectory
-                                 withIntermediateDirectories:NO
-                                                  attributes:nil
-                                                       error:nil];
+        [NSFileManager.defaultManager createDirectoryAtPath:self.outputDirectory
+                                withIntermediateDirectories:NO
+                                                 attributes:nil
+                                                      error:nil];
         
+        [NSFileManager.defaultManager createDirectoryAtPath:self.imageDirectory
+                                withIntermediateDirectories:NO
+                                                 attributes:nil
+                                                      error:nil];
     }
     
     return self;
 }
 
-+ (CRAPI*)sharedInstance
++ (CRAPI *)sharedInstance
 {
-    // 1
     static CRAPI *_sharedInstance = nil;
-    
-    // 2
     static dispatch_once_t oncePredicate;
     
-    // 3
     dispatch_once(&oncePredicate,
                   ^{
                       _sharedInstance = [[CRAPI alloc] init];
@@ -80,7 +82,7 @@
     currentIntersection.corner81isComplete = NO;
     
 	//int nramps = (int)currentIntersection.ramps.count;
-    for (int i=1; i<13; i++)
+    for (int i = 1; i < 13; i++)
     {
         MPRamp *ramp = [currentIntersection.ramps objectAtIndex:i];
         ramp.rampNum = i;
@@ -123,7 +125,8 @@
     }
 }
 
--(void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm forInt:(MPIntersection*)currentIntersection
+-(void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm
+                                  forInt:(MPIntersection*)currentIntersection
 {
     currentIntersection.intRotation = [self intRotFromintAZMS:intAzm];
     currentIntersection.quadDev90 = 0;
@@ -162,6 +165,7 @@
     strcpy (intAZMS,intAzm.UTF8String);
     char * pBeg=intAZMS;
     char * pEnd=strchr (pBeg,'|');
+    
     while (pEnd)
     {
         *pEnd++ = 0;
@@ -172,16 +176,20 @@
         pBeg = pEnd;
         pEnd=strchr (pBeg,'|');
     }
+    
     az = atof (pBeg);
     diff = [self azDiffFrom90s:az];
+    
     if (fabs(diff)<fabs(minDiff))
         minDiff = diff;
+    
     rtn = minDiff * RADtoDEG;
     free (intAZMS);
     return rtn;
 }
 
--(int) getCornerFromAdjustedRot:(int)adjustedRot atIntersection:(MPIntersection*)intersection
+-(int) getCornerFromAdjustedRot:(int)adjustedRot
+                 atIntersection:(MPIntersection*)intersection
 {
     //returns 81,23,45 or 67
     int  corner = -1;
@@ -196,7 +204,9 @@
     return corner;
 
 }
--(int) getCornerFromX:(int)x andY:(int)y atIntersection:(MPIntersection*)intersection
+-(int) getCornerFromX:(int)x
+                 andY:(int)y
+       atIntersection:(MPIntersection*)intersection
 {
     //returns 81,23,45 or 67
     int  corner = -1;
@@ -207,7 +217,9 @@
     corner = [[CRAPI sharedInstance]getCornerFromAdjustedRot:adjustedRot atIntersection:intersection];
     return corner;
 }
--(int) getQuadDeviderFromX:(int)x andY:(int)y atIntersection:(MPIntersection*)intersection
+-(int) getQuadDeviderFromX:(int)x
+                      andY:(int)y
+            atIntersection:(MPIntersection*)intersection
 {
     //returns quad lines E=1,S=2,W=3,N=4
     int  devider;
@@ -241,10 +253,12 @@
     }
     return devider;
 }
+
 -(NSString *)getOutputDirectory
 {
     return self.outputDirectory;
 }
+
 - (BOOL) intersectionAlreadyCompleted:(int)intID
 {
     NSString *outputFile = [NSString stringWithFormat:@"%@/Intersection_%i.txt",
@@ -258,7 +272,7 @@
     return NO;
 }
 -(NSString *)getImageFileforIntersection:(int)intersectionID
-                                   atLat:(double) lat
+                                   atLat:(double)lat
                                   andLon:(double)lon
 {
     NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i.jpg",intersectionID]];
@@ -268,10 +282,15 @@
                                                                                   error:nil] fileSize];
     if (fileSize > 0)
         return imageFile;
-/*    http://maps.googleapis.com/maps/api/staticmap?center=$Y([STREETLL])@,$X([STREETLL])&zoom=[ZOOM]&size=640x640&maptype=[MAPTYPE]&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.google.com/maps/api/staticmap?markers=color:red|%f,%f&%@&sensor=true",lat, lon,@"zoom=10&size=270x70"];*/
+    
+/*    
+    http://maps.googleapis.com/maps/api/staticmap?center=$Y([STREETLL])@,$X([STREETLL])&zoom=[ZOOM]&size=640x640&maptype=[MAPTYPE]&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.google.com/maps/api/staticmap?markers=color:red|%f,%f&%@&sensor=true",lat, lon,@"zoom=10&size=270x70"];
+*/
+    
     int zoom=21;
     NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY",lat, lon,zoom];
+    
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
     
@@ -289,7 +308,7 @@
         double pixelX, pixelY;
         NSError *err;
 
-        LatLongToPixelXYd(lat,lon, zoom, &pixelX, &pixelY);
+        LatLongToPixelXYd(lat, lon, zoom, &pixelX, &pixelY);
 
         sprintf (txt,"0 0 %f %f\r\n\
                  640 0 %f %f\r\n\

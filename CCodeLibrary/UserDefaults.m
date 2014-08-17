@@ -134,6 +134,15 @@ static UserDefaults *_defaults;
     [_defaults synchronize];
 }
 
+- (void)saveCGFloat:(CGFloat)CGFloat
+             forKey:(NSString *)key
+{
+    [_defaults setFloat:CGFloat
+                 forKey:key];
+    
+    [_defaults synchronize];
+}
+
 - (UIColor *)lightColorForColor:(UIColor *)color
 {
     CGFloat red, green, blue, alpha;
