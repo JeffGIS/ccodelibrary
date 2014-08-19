@@ -40,6 +40,15 @@
 - (void)saveCGFloat:(CGFloat)CGFloat
              forKey:(NSString *)key;
 
+- (void)saveLocationWithBounds_w:(CGFloat)bounds_w
+                        bounds_s:(CGFloat)bounds_s
+                        bounds_e:(CGFloat)bounds_e
+                        bounds_n:(CGFloat)bounds_n
+                            city:(NSString *)city
+                           state:(NSString *)state
+                           geoid:(int)geoid
+                          forKey:(NSString *)key;
+
 - (UIColor *)lightColorForColor:(UIColor *)color;
 - (UIColor *)darkColorForColor:(UIColor *)color;
 

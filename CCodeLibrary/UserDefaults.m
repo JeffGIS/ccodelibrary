@@ -143,6 +143,39 @@ static UserDefaults *_defaults;
     [_defaults synchronize];
 }
 
+- (void)saveLocationWithBounds_w:(CGFloat)bounds_w
+                        bounds_s:(CGFloat)bounds_s
+                        bounds_e:(CGFloat)bounds_e
+                        bounds_n:(CGFloat)bounds_n
+                            city:(NSString *)city
+                           state:(NSString *)state
+                           geoid:(int)geoid
+                          forKey:(NSString *)key
+{
+    [_defaults setFloat:bounds_w
+                 forKey:[NSString stringWithFormat:@"%@BoundsWest", key]];
+    
+    [_defaults setFloat:bounds_s
+                 forKey:[NSString stringWithFormat:@"%@BoundsSouth", key]];
+    
+    [_defaults setFloat:bounds_e
+                 forKey:[NSString stringWithFormat:@"%@BoundsEast", key]];
+    
+    [_defaults setFloat:bounds_n
+                 forKey:[NSString stringWithFormat:@"%@BoundsNorth", key]];
+    
+    [_defaults setObject:city
+                  forKey:[NSString stringWithFormat:@"%@City", key]];
+    
+    [_defaults setObject:state
+                  forKey:[NSString stringWithFormat:@"%@State", key]];
+    
+    [_defaults setInteger:geoid
+                  forKey:[NSString stringWithFormat:@"%@Geoid", key]];
+    
+    [_defaults synchronize];
+}
+
 - (UIColor *)lightColorForColor:(UIColor *)color
 {
     CGFloat red, green, blue, alpha;
