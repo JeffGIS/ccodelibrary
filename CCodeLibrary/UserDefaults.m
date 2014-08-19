@@ -68,6 +68,26 @@ static UserDefaults *_defaults;
     return defaultFloat;
 }
 
+- (UIColor *)appleBlue
+{
+    UIColor *appleBlue = [UIColor colorWithRed:(0.0 / 255.0)
+                                         green:(122.0 / 255.0)
+                                          blue:(255.0 / 255.0)
+                                         alpha:1.0];
+    
+    return appleBlue;
+}
+
+- (UIColor *)green
+{
+    UIColor *green = [UIColor colorWithRed:(160.0 / 255.0)
+                                     green:(197.0 / 255.0)
+                                      blue:(129.0 / 255.0)
+                                     alpha:1.0];
+    
+    return green;
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue

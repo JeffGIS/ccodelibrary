@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544519A412490029DBEA /* NetworkManager.m */; };
+		1F3A544C19A413990029DBEA /* URLGetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544B19A413990029DBEA /* URLGetController.m */; };
 		EB1A696B1995514E005A1CCB /* findIntersection.c in Sources */ = {isa = PBXBuildFile; fileRef = EB1A696A1995514E005A1CCB /* findIntersection.c */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
 		EBA2E45E199527660085B2E0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45D199527660085B2E0 /* Foundation.framework */; };
@@ -48,6 +50,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1F3A544419A412490029DBEA /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
+		1F3A544519A412490029DBEA /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
+		1F3A544A19A413990029DBEA /* URLGetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URLGetController.h; sourceTree = "<group>"; };
+		1F3A544B19A413990029DBEA /* URLGetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLGetController.m; sourceTree = "<group>"; };
 		EB1A696A1995514E005A1CCB /* findIntersection.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = findIntersection.c; sourceTree = "<group>"; };
 		EB1A69741999A6A9005A1CCB /* CRAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRAPI.h; sourceTree = "<group>"; };
 		EB1A69751999A6A9005A1CCB /* CRAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRAPI.m; sourceTree = "<group>"; };
@@ -129,21 +135,25 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
-				EBB1BFCA199DD7C10059B547 /* MPIntersection.h */,
-				EBB1BFCB199DD7C10059B547 /* MPIntersection.m */,
-				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
-				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
+				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
+				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
 				EB1A69741999A6A9005A1CCB /* CRAPI.h */,
 				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
 				EB1A696A1995514E005A1CCB /* findIntersection.c */,
 				EBA2E48319952BCA0085B2E0 /* MathTypes.h */,
 				EBA2E48419952BCA0085B2E0 /* MathUtil.c */,
 				EBA2E48519952BCA0085B2E0 /* MathUtil.h */,
+				EBB1BFCA199DD7C10059B547 /* MPIntersection.h */,
+				EBB1BFCB199DD7C10059B547 /* MPIntersection.m */,
+				1F3A544419A412490029DBEA /* NetworkManager.h */,
+				1F3A544519A412490029DBEA /* NetworkManager.m */,
 				EBA2E48619952BCA0085B2E0 /* rotate256.h */,
 				EBA2E48719952BCA0085B2E0 /* TileGraphics.h */,
 				EBA2E48819952BCA0085B2E0 /* TileIndex.c */,
-				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
-				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
+				1F3A544A19A413990029DBEA /* URLGetController.h */,
+				1F3A544B19A413990029DBEA /* URLGetController.m */,
+				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
+				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);
 			path = CCodeLibrary;
@@ -256,6 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
@@ -263,6 +274,7 @@
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,
 				EB1A696B1995514E005A1CCB /* findIntersection.c in Sources */,
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
+				1F3A544C19A413990029DBEA /* URLGetController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
