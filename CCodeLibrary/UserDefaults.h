@@ -16,7 +16,7 @@
 
 - (UIColor *)colorForKey:(NSString *)key;
 - (NSInteger)integerForKey:(NSString *)key;
-- (bool)boolForKey:(NSString *)key;
+- (BOOL)boolForKey:(NSString *)key;
 - (NSString *)stringForKey:(NSString *)key;
 - (CGFloat)CGFloatForKey:(NSString *)key;
 - (UIColor *)appleBlue;
@@ -33,7 +33,7 @@
 - (void)saveInteger:(int)integer
              forKey:(NSString *)key;
 
-- (void)saveBool:(bool)boolean
+- (void)saveBool:(BOOL)boolean
           forKey:(NSString *)key;
 
 - (void)saveString:(NSString *)string

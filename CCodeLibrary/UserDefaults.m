@@ -50,9 +50,9 @@ static UserDefaults *_defaults;
     return defaultInteger;
 }
 
-- (bool)boolForKey:(NSString *)key
+- (BOOL)boolForKey:(NSString *)key
 {
-    bool defaultBoolean = [_defaults boolForKey:key];
+    BOOL defaultBoolean = [_defaults boolForKey:key];
     return defaultBoolean;
 }
 
@@ -136,7 +136,7 @@ static UserDefaults *_defaults;
     [_defaults synchronize];
 }
 
-- (void)saveBool:(bool)boolean
+- (void)saveBool:(BOOL)boolean
           forKey:(NSString *)key
 {
     [_defaults setBool:boolean
@@ -238,10 +238,10 @@ static UserDefaults *_defaults;
     return darkColor;
 }
 
-- (bool)pickAdjustedTextColorForColor1:(UIColor *)color1
+- (BOOL)pickAdjustedTextColorForColor1:(UIColor *)color1
                                 color2:(UIColor *)color2
 {
-    bool rtn;
+    BOOL rtn;
     CGFloat red1, green1, blue1, alpha1;
     CGFloat red2, green2, blue2, alpha2;
     
