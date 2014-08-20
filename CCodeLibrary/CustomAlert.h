@@ -1,0 +1,35 @@
+//  CustomAlert.h
+//  ADAFieldCollector2
+//
+//  Created by Bill Munson on 6/15/14.
+//  Copyright (c) 2014 GSSi. All rights reserved.
+
+#import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
+
+@class CustomAlert;
+
+@protocol CustomAlertDelegate
+
+- (void)customAlertView:(CustomAlert *)alertView
+   clickedButtonAtIndex:(NSInteger)buttonIndex;
+
+@end
+
+@interface CustomAlert : UIView
+{
+    id delegate;
+    UIView *alertView;
+}
+
+@property id delegate;
+
+- (id)initWithTitle:(NSString *)title
+            message:(NSString *)message
+           delegate:(id)AlertDelegate
+  cancelButtonTitle:(NSString *)cancelButtonTitle
+   otherButtonTitle:(NSString *)otherButtonTitle;
+
+- (void)showInView:(UIView*)view;
+
+@end
