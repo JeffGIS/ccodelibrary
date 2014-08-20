@@ -8,7 +8,7 @@
 #import "../../PedRampInv_Detail/PedRampInv_Detail/MPIntersection.h"
 
 @interface CRAPI : NSObject
-+ (CRAPI*)sharedInstance;
++ (CRAPI *)sharedInstance;
 
 @property NSString *outputDirectory;
 @property NSString *imageDirectory;

@@ -137,19 +137,26 @@
 }
 -(double) azDiffFrom90s:(double)az
 {
-    double minDiff=0 - az;
+    double minDiff = 0 - az;
     double diff;
     
     diff = TWOPI - az;
+    
     if (fabs (diff) < fabs (minDiff))
         minDiff = diff;
+    
     diff = HALFPI - az;
+    
     if (fabs (diff) < fabs (minDiff))
         minDiff = diff;
+    
     diff = PY - az;
+    
     if (fabs (diff) < fabs (minDiff))
         minDiff = diff;
+    
     diff = (HALFPI*3) - az;
+    
     if (fabs (diff) < fabs (minDiff))
         minDiff = diff;
     
@@ -193,14 +200,19 @@
 {
     //returns 81,23,45 or 67
     int  corner = -1;
+    
     if (adjustedRot < intersection.quadDev90)
         corner = 81;
+    
     else if (adjustedRot < intersection.quadDev180)
         corner = 23;
+    
     else if (adjustedRot < intersection.quadDev270)
         corner = 45;
+    
     else
         corner = 67;
+    
     return corner;
 
 }
@@ -212,9 +224,11 @@
     int  corner = -1;
     DPOINT midPt={intersection.lev21x,intersection.lev21y}, pt={x,y};
     
-    float az = getazd(&midPt,&pt);
+    float az = getazd(&midPt, &pt);
     int adjustedRot = ClockwiseDegFromNorth ((az * RADtoDEG) + intersection.intRotation);
-    corner = [[CRAPI sharedInstance]getCornerFromAdjustedRot:adjustedRot atIntersection:intersection];
+    
+    corner = [CRAPI.sharedInstance getCornerFromAdjustedRot:adjustedRot
+                                             atIntersection:intersection];
     return corner;
 }
 -(int) getQuadDeviderFromX:(int)x
@@ -228,29 +242,35 @@
     
     DPOINT midPt={intersection.lev21x,intersection.lev21y}, pt={x,y};
     
-    float az = getazd(&midPt,&pt);
+    float az = getazd(&midPt, &pt);
     int adjustedRot = ClockwiseDegFromNorth ((az * RADtoDEG) + intersection.intRotation);
-    diff = abs(diffInDegrees (adjustedRot,intersection.quadDev90));
+    diff = abs(diffInDegrees (adjustedRot, intersection.quadDev90));
     devider = 1;
     dist = diff;
-    diff = abs(diffInDegrees (adjustedRot,intersection.quadDev180));
+    diff = abs(diffInDegrees (adjustedRot, intersection.quadDev180));
+    
     if (diff < dist)
     {
         devider = 2;
         dist = diff;
     }
-    diff = abs(diffInDegrees (adjustedRot,intersection.quadDev270));
+    
+    diff = abs(diffInDegrees (adjustedRot, intersection.quadDev270));
+    
     if (diff < dist)
     {
         devider = 3;
         dist = diff;
     }
-    diff = abs(diffInDegrees (adjustedRot,intersection.quadDev0));
+    
+    diff = abs(diffInDegrees (adjustedRot, intersection.quadDev0));
+    
     if (diff < dist)
     {
         devider = 4;
         dist = diff;
     }
+    
     return devider;
 }
 
@@ -261,14 +281,16 @@
 
 - (BOOL) intersectionAlreadyCompleted:(int)intID
 {
-    NSString *outputFile = [NSString stringWithFormat:@"%@/Intersection_%i.txt",
-                  self.outputDirectory,intID];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:outputFile])
+    NSString *outputFile = [NSString stringWithFormat:@"%@/Intersection_%i.txt", self.outputDirectory,intID];
+    
+    if ([NSFileManager.defaultManager fileExistsAtPath:outputFile])
         return YES;
-    outputFile = [NSString stringWithFormat:@"%@/Uploaded_Intersection_%i.txt",
-                  self.outputDirectory,intID];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:outputFile])
+    
+    outputFile = [NSString stringWithFormat:@"%@/Uploaded_Intersection_%i.txt", self.outputDirectory,intID];
+    
+    if ([NSFileManager.defaultManager fileExistsAtPath:outputFile])
         return YES;
+    
     return NO;
 }
 -(NSString *)getImageFileforIntersection:(int)intersectionID
@@ -278,8 +300,8 @@
     NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i.jpg",intersectionID]];
     NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i.cpt",intersectionID]];
     
-    unsigned long long fileSize = [[NSFileManager.defaultManager attributesOfItemAtPath:imageFile
-                                                                                  error:nil] fileSize];
+    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:imageFile
+                                                                                  error:nil].fileSize;
     if (fileSize > 0)
         return imageFile;
     
@@ -289,7 +311,7 @@
 */
     
     int zoom=21;
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY",lat, lon,zoom];
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY",lat, lon, zoom];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
@@ -299,9 +321,14 @@
     
     if (!rtn)
     {
-        UIAlertView *getError = [[UIAlertView alloc]initWithTitle:@"Error getting intersection image." message:@"Unable to access server." delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:nil];
+        UIAlertView *getError = [[UIAlertView alloc]initWithTitle:@"Error getting intersection image."
+                                                          message:@"Unable to access server."
+                                                         delegate:self
+                                                cancelButtonTitle:@"Continue"
+                                                otherButtonTitles:nil];
         [getError show];
     }
+    
     else
     {
         char txt[1024];

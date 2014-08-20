@@ -267,4 +267,18 @@ static UserDefaults *_defaults;
     return rtn;
 }
 
+- (CGFloat)getTotalRGBforColor:(UIColor *)color
+{
+    CGFloat red, green, blue, alpha;
+    
+    [color getRed:&red
+            green:&green
+             blue:&blue
+            alpha:&alpha];
+    
+    CGFloat RGB = (red + green + blue);
+    
+    return RGB;
+}
+
 @end

@@ -105,7 +105,7 @@
 
         self.ramps = [NSMutableArray arrayWithCapacity:12];
 
-        for (int i =0;i<13;i++)
+        for (int i = 0; i < 13; i++)
         {
             MPRamp *ramp = [[MPRamp alloc] init];
             [self.ramps addObject:ramp];

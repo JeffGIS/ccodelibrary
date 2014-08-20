@@ -11,12 +11,13 @@
 + (NetworkManager *)sharedInstance
 {
     static dispatch_once_t onceToken;
-    static NetworkManager *sSharedInstance;
+    static NetworkManager *_sharedInstance;
 
     dispatch_once(&onceToken, ^{
-        sSharedInstance = [[NetworkManager alloc] init];
+        _sharedInstance = [[NetworkManager alloc] init];
     });
-    return sSharedInstance;
+    
+    return _sharedInstance;
 }
 
 - (NSURL *)smartURLForString:(NSString *)str

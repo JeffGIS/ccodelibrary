@@ -57,4 +57,6 @@
 - (bool)pickAdjustedTextColorForColor1:(UIColor *)color1
                                 color2:(UIColor *)color2;
 
+- (CGFloat)getTotalRGBforColor:(UIColor *)color;
+
 @end
