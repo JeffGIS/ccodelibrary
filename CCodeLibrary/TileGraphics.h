@@ -45,17 +45,21 @@ typedef TESTSTRUCT *LPTESTSTRUCT;
 #pragma pack()
 
 int DoTestStruct (const char *testFile);
+unsigned int MapSize(int levelOfDetail);
+
 double GroundResolution(double latitude, int levelOfDetail);
 void LatLongToPixelXY(double latitudein, double longitudein, int levelOfDetail, int *pixelX, int *pixelY);
+void LatLongToPixelXY_old(double latitudein, double longitudein, int levelOfDetail, int *pixelX, int *pixelY);
 void LatLongToPixelXYd(double latitudein, double longitudein, int levelOfDetail, double *pixelX, double *pixelY);
 void PixelXYToLatLong(int pixelX, int pixelY, int levelOfDetail, double *latitude, double *longitude);
+void PixelXYToLatLong_old(int pixelX, int pixelY, int levelOfDetail, double *latitude, double *longitude);
 void PixelXYToLatLongd(double pixelX, double pixelY, int levelOfDetail, double *latitude, double *longitude);
 void PixelXYToTileXY(int pixelX, int pixelY, int *tileX, int *tileY);
 void TileXYToPixelXY(int tileX, int tileY, int *pixelX, int *pixelY);
 void TileXYToQuadKey(int tileX, int tileY, int levelOfDetail,char *quadKey);
 int QuadKeyToTileXY(char *quadKey, int *tileX, int *tileY, int *levelOfDetail);
-int FindIntersection (const char * indexPath,const char * dataPath,int x, int y, char * intText,char * intAZMS,int * pnumStreets,int * pnRamps,int iWant);
-int FindIntersectionFromID (const char * indexPath,const char * dataPath, int intID, char * intText,char * intAZMS,int * pnumStreets,int * pnRamps);
+int FindIntersection (const char * indexPath,const char * dataPath,int x, int y, char * intText,char * intAZMS,int * pnumStreets,int * pnRamps,int iWant,int * plev21x, int * plev21y);
+int FindIntersectionFromID (const char * indexPath,const char * dataPath, int intID, char * intText,char * intAZMS,int * pnumStreets,int * pnRamps,int * plev21x, int * plev21y);
 int GetCornerIDFromHeading (int heading,int IntersectionCorrection);
 double DeltaAngle (double AZ1, double AZ2);
 int Between0And360 (int ival);

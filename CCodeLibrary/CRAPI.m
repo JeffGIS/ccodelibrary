@@ -80,7 +80,11 @@
     currentIntersection.corner45isComplete = NO;
     currentIntersection.corner67isComplete = NO;
     currentIntersection.corner81isComplete = NO;
-    
+    currentIntersection.quadDev90 = 0;
+    currentIntersection.quadDev90 = 90;
+    currentIntersection.quadDev180 = 180;
+    currentIntersection.quadDev270 = 270;
+   
 	//int nramps = (int)currentIntersection.ramps.count;
     for (int i = 1; i < 13; i++)
     {
