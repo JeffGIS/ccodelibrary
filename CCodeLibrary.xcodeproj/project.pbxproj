@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544519A412490029DBEA /* NetworkManager.m */; };
-		1F3A544C19A413990029DBEA /* URLGetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544B19A413990029DBEA /* URLGetController.m */; };
 		1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544E19A449460029DBEA /* CustomAlert.m */; };
+		1F6D8DC019ABD679009F0BC5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F6D8DBF19ABD679009F0BC5 /* UIKit.framework */; };
 		EB1A696B1995514E005A1CCB /* findIntersection.c in Sources */ = {isa = PBXBuildFile; fileRef = EB1A696A1995514E005A1CCB /* findIntersection.c */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
 		EBA2E45E199527660085B2E0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45D199527660085B2E0 /* Foundation.framework */; };
@@ -17,7 +17,6 @@
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
 		EBA2E46C199527660085B2E0 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E46B199527660085B2E0 /* XCTest.framework */; };
 		EBA2E46D199527660085B2E0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45D199527660085B2E0 /* Foundation.framework */; };
-		EBA2E46F199527660085B2E0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E46E199527660085B2E0 /* UIKit.framework */; };
 		EBA2E472199527660085B2E0 /* libCCodeLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */; };
 		EBA2E478199527660085B2E0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBA2E476199527660085B2E0 /* InfoPlist.strings */; };
 		EBA2E47A199527660085B2E0 /* CCodeLibraryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E479199527660085B2E0 /* CCodeLibraryTests.m */; };
@@ -53,10 +52,9 @@
 /* Begin PBXFileReference section */
 		1F3A544419A412490029DBEA /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
 		1F3A544519A412490029DBEA /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
-		1F3A544A19A413990029DBEA /* URLGetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URLGetController.h; sourceTree = "<group>"; };
-		1F3A544B19A413990029DBEA /* URLGetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLGetController.m; sourceTree = "<group>"; };
 		1F3A544D19A449460029DBEA /* CustomAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlert.h; sourceTree = "<group>"; };
 		1F3A544E19A449460029DBEA /* CustomAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlert.m; sourceTree = "<group>"; };
+		1F6D8DBF19ABD679009F0BC5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB1A696A1995514E005A1CCB /* findIntersection.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = findIntersection.c; sourceTree = "<group>"; };
 		EB1A69741999A6A9005A1CCB /* CRAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRAPI.h; sourceTree = "<group>"; };
 		EB1A69751999A6A9005A1CCB /* CRAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRAPI.m; sourceTree = "<group>"; };
@@ -67,7 +65,6 @@
 		EBA2E464199527660085B2E0 /* CCodeLibrary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCodeLibrary.m; sourceTree = "<group>"; };
 		EBA2E46A199527660085B2E0 /* CCodeLibraryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CCodeLibraryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBA2E46B199527660085B2E0 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		EBA2E46E199527660085B2E0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		EBA2E475199527660085B2E0 /* CCodeLibraryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CCodeLibraryTests-Info.plist"; sourceTree = "<group>"; };
 		EBA2E477199527660085B2E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EBA2E479199527660085B2E0 /* CCodeLibraryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCodeLibraryTests.m; sourceTree = "<group>"; };
@@ -88,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F6D8DC019ABD679009F0BC5 /* UIKit.framework in Frameworks */,
 				EBA2E45E199527660085B2E0 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -97,7 +95,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBA2E46C199527660085B2E0 /* XCTest.framework in Frameworks */,
-				EBA2E46F199527660085B2E0 /* UIKit.framework in Frameworks */,
 				EBA2E472199527660085B2E0 /* libCCodeLibrary.a in Frameworks */,
 				EBA2E46D199527660085B2E0 /* Foundation.framework in Frameworks */,
 			);
@@ -128,9 +125,9 @@
 		EBA2E45C199527660085B2E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F6D8DBF19ABD679009F0BC5 /* UIKit.framework */,
 				EBA2E45D199527660085B2E0 /* Foundation.framework */,
 				EBA2E46B199527660085B2E0 /* XCTest.framework */,
-				EBA2E46E199527660085B2E0 /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -155,8 +152,6 @@
 				EBA2E48619952BCA0085B2E0 /* rotate256.h */,
 				EBA2E48719952BCA0085B2E0 /* TileGraphics.h */,
 				EBA2E48819952BCA0085B2E0 /* TileIndex.c */,
-				1F3A544A19A413990029DBEA /* URLGetController.h */,
-				1F3A544B19A413990029DBEA /* URLGetController.m */,
 				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
@@ -280,7 +275,6 @@
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,
 				EB1A696B1995514E005A1CCB /* findIntersection.c in Sources */,
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
-				1F3A544C19A413990029DBEA /* URLGetController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
