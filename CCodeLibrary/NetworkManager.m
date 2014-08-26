@@ -61,9 +61,9 @@
     NSString *extension;
     
     assert(url != nil);
-    
     extension = url.pathExtension;
     result = NO;
+    
     if (extension != nil)
     {
         result = ([extension caseInsensitiveCompare:@"bin"] == NSOrderedSame);
@@ -79,9 +79,9 @@
     NSString *extension;
     
     assert(url != nil);
-    
     extension = url.pathExtension;
     result = NO;
+    
     if (extension != nil)
     {
         result = ([extension caseInsensitiveCompare:@"gif"] == NSOrderedSame)
@@ -159,12 +159,12 @@
                                                           append:NO];
         
         assert(bigFileStream != NULL);
-        
         [bigFileStream open];
         
         for (counter = 0; counter < expansionFactor; counter++)
         {
             dataOffset = 0;
+            
             while (dataOffset != dataLength)
             {
                 NSInteger bytesWritten;
@@ -173,7 +173,6 @@
                                           maxLength:dataLength - dataOffset];
                 
                 assert(bytesWritten > 0);
-                
                 dataOffset += (NSUInteger) bytesWritten;
             }
         }
