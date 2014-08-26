@@ -5,7 +5,7 @@
 //  Copyright (c) 2014 GSSi. All rights reserved.
 
 #import <Foundation/Foundation.h>
-#import "../../PedRampInv_Detail/PedRampInv_Detail/MPIntersection.h"
+#import "MPIntersection.h"
 
 @interface CRAPI : NSObject
 

@@ -142,6 +142,7 @@ enum obstructions {
 @property bool corner81isComplete;
 @property int quadDev0,quadDev90,quadDev180,quadDev270;
 @property int lev21x, lev21y;
+@property double lat,lon;
 @property (nonatomic,strong) NSMutableArray *ramps;
 
 
