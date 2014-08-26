@@ -122,7 +122,7 @@ int FindIntersectionFromID (const char * indexPath,const char * dataPath, int in
             lev20y = atoi (indxtxt);
             pLoc = strchr (indxtxt,' ');
             lev20x = atoi (pLoc);
-            PixelXYToLatLong(lev20x,lev20y, 20, &lat,&lon);
+            PixelXYToLatLong_old(lev20x,lev20y, 20, &lat,&lon);
             LatLongToPixelXY(lat, lon, 21, plev21x,plev21y);
 
             goto HaveInt;
