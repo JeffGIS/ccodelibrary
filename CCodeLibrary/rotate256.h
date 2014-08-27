@@ -1,3 +1,6 @@
+//  rotate256.h
+//  CCodeLibrary
+
 static	float B1[256] = {
 	1.000000f,
 	0.999696f,

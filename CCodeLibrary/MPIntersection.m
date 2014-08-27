@@ -1,5 +1,5 @@
 //  MPIntersection.m
-//  ADAFieldCollector2
+//  CCodeLibrary
 
 #import "MPIntersection.h"
 
@@ -113,6 +113,5 @@
     }
     return self;
 }
-
 
 @end

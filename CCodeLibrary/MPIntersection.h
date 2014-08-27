@@ -1,5 +1,5 @@
 //  MPIntersection.h
-//  ADAFieldCollector2
+//  CCodeLibrary
 
 #define RAMP    1
 #define STREET  2
@@ -48,7 +48,7 @@ enum obstructions {
 @interface MPRamp : NSObject
 
 @property int rampNum;
-@property (nonatomic,strong) NSString *rampID;
+@property (nonatomic, strong) NSString *rampID;
 @property int timeComplete;
 @property bool rampExists;
 @property bool isComplete;
@@ -104,10 +104,10 @@ enum obstructions {
 @property int  currentSignal;
 @property int  currentObstruction;
 @property float currentCornerHeading;
-@property (nonatomic,strong) MPRamp *currentRamp;
-@property (nonatomic,strong) NSString *name1;
-@property (nonatomic,strong) NSString *name2;
-@property (nonatomic,strong) NSString *name3;
+@property (nonatomic, strong) MPRamp *currentRamp;
+@property (nonatomic, strong) NSString *name1;
+@property (nonatomic, strong) NSString *name2;
+@property (nonatomic, strong) NSString *name3;
 @property bool signal23Exists;
 @property bool signal45Exists;
 @property bool signal67Exists;
@@ -144,6 +144,5 @@ enum obstructions {
 @property int lev21x, lev21y;
 @property double lat,lon;
 @property (nonatomic,strong) NSMutableArray *ramps;
-
 
 @end

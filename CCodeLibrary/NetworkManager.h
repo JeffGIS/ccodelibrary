@@ -1,3 +1,6 @@
+//  NetworkManager.h
+//  CCodeLibrary
+
 #import <Foundation/Foundation.h>
 
 @interface NetworkManager : NSObject

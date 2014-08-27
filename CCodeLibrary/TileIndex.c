@@ -1,8 +1,11 @@
+//  TileIndex.c
+//  CCodeLibrary
+
 #include <math.h>
 #include <string.h>
 #include "tilegraphics.h"
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#define min(a,b) (((a) < (b)) ? (a) : (b))
 
 static	const double EarthRadius = 6378137;
 static	const double MinLatitude = -85.05112878;
@@ -10,7 +13,6 @@ static	const double MaxLatitude = 85.05112878;
 static	const double MinLongitude = -180;
 static	const double MaxLongitude = 180;
 static	const double PI = 3.14159265358979323846;
-
 
         /// <summary>
         /// Clips a number to the specified minimum and maximum values.
@@ -23,9 +25,6 @@ static double Clip(double n, double minValue, double maxValue)
 {
     return min(max(n, minValue), maxValue);
 }
-        
-        
-
         /// <summary>
         /// Determines the map width and height (in pixels) at a specified level
         /// of detail.
@@ -37,9 +36,6 @@ unsigned int MapSize(int levelOfDetail)
 {
     return (unsigned int) 256 << levelOfDetail;
 }
-
-
-
         /// <summary>
         /// Determines the ground resolution (in meters per pixel) at a specified
         /// latitude and level of detail.
@@ -54,9 +50,6 @@ double GroundResolution(double latitude, int levelOfDetail)
     latitude = Clip(latitude, MinLatitude, MaxLatitude);
     return cos(latitude * PI / 180) * 2 * PI * EarthRadius / MapSize(levelOfDetail);
 }
-
-
-
         /// <summary>
         /// Determines the map scale at a specified latitude, level of detail,
         /// and screen resolution.
@@ -125,10 +118,6 @@ void LatLongToPixelXYd(double latitudein, double longitudein, int levelOfDetail,
     *pixelY = (mapSize - 1) - *pixelY;
     
 }
-
-
-
-
         /// <summary>
         /// Converts a pixel from pixel XY coordinates at a specified level of detail
         /// into latitude/longitude WGS-84 coordinates (in degrees).
@@ -167,9 +156,6 @@ void PixelXYToLatLongd(double pixelX, double pixelY, int levelOfDetail, double *
     *latitude = 90 - 360 * atan(exp(-y * 2 * PI)) / PI;
     *longitude = 360 * x;
 }
-
-
-
         /// <summary>
         /// Converts pixel XY coordinates into tile XY coordinates of the tile containing
         /// the specified pixel.
@@ -183,9 +169,6 @@ void PixelXYToTileXY(int pixelX, int pixelY, int *tileX, int *tileY)
     *tileX = pixelX / 256;
     *tileY = pixelY / 256;
 }
-
-
-
         /// <summary>
         /// Converts tile XY coordinates into pixel XY coordinates of the upper-left pixel
         /// of the specified tile.
@@ -199,9 +182,6 @@ void TileXYToPixelXY(int tileX, int tileY, int *pixelX, int *pixelY)
     *pixelX = tileX * 256;
     *pixelY = tileY * 256;
 }
-
-
-
         /// <summary>
         /// Converts tile XY coordinates into a QuadKey at a specified level of detail.
         /// </summary>
@@ -232,9 +212,6 @@ void TileXYToQuadKey(int tileX, int tileY, int levelOfDetail,char *quadKey)
     }
 	return;
 }
-
-
-
         /// <summary>
         /// Converts a QuadKey into tile XY coordinates.
         /// </summary>

@@ -1,8 +1,5 @@
 //  CCodeLibrary.h
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 8/8/14.
-//  Copyright (c) 2014 GSSi. All rights reserved.
 
 #import <Foundation/Foundation.h>
 #import "CRAPI.h"
@@ -13,9 +10,10 @@
 #import "TileGraphics.h"
 #import "UserDefaults.h"
 #import "MPIntersection.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface CCodeLibrary : NSObject
 
-- (void)dummy;
+//- (void)dummy;
 
 @end

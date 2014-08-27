@@ -1,10 +1,5 @@
-//
 //  CRAPI.m
-//  ADAFieldCollector2
-//
-//  Created by JEFFREY E SMITH on 5/27/14.
-//  Copyright (c) 2014 GSSi. All rights reserved.
-//
+//  CCodeLibrary
 
 #import "CRAPI.h"
 #import "../../CCodeLibrary/CCodeLibrary/CCodeLibrary.h"
@@ -59,7 +54,7 @@
     return _sharedInstance;
 }
 
-- (void) intersectionInit:(MPIntersection*)currentIntersection
+- (void) intersectionInit:(MPIntersection* )currentIntersection
 {
     currentIntersection.intID = -1;
     currentIntersection.dataUpdated = NO;

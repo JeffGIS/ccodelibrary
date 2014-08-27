@@ -1,3 +1,6 @@
+//  TileGraphics.h
+//  CCodeLibrary
+
 #define TGPOLYGON	0
 #define TGPOLYLINE	1
 

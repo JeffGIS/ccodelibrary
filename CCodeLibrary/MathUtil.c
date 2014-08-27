@@ -1,3 +1,5 @@
+//  MathUtil.c
+//  CCodeLibrary
 
 /*#include "MathUtil.h"
 #include <math.h>
@@ -687,7 +689,7 @@ vec3 sGetTriangleNormal (svec3 * vertex1,svec3 * vertex2,svec3 * vertex3,double 
 */
 
 #include "MathUtil.h"
-#include "rotate256.h"
+#include "Rotate256.h"
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>

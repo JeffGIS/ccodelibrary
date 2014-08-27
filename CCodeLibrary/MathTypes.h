@@ -1,15 +1,16 @@
+//  MathTypes.h
+//  CCodeLibrary
 
 #ifndef __MATH_TYPES
 #define __MATH_TYPES
-
 #define PI 3.141592653589f
 #define PI_2 2.0f*PI
 #define PI_DIV_2 PI*0.5f
 
 typedef struct{double x,y;} DPOINT;
-typedef DPOINT  			*LPDPOINT;
-typedef float * LPFLOAT;
-typedef double * LPDOUBLE;
+typedef DPOINT *LPDPOINT;
+typedef float *LPFLOAT;
+typedef double *LPDOUBLE;
 
 
 typedef float f32;
@@ -28,6 +29,7 @@ typedef struct
 	float b;
 	float a;
 }  bvec4;
+
 typedef struct
 {
 	unsigned short r;
@@ -41,6 +43,7 @@ typedef struct
 	short x;
 	short y;
 }  svec2;
+
 typedef struct
 {
 	short x;
@@ -53,6 +56,7 @@ typedef struct
 	int x;
 	int y;
 }  ivec2;
+
 typedef struct
 {
 	int x;
@@ -65,11 +69,13 @@ typedef struct
 	float x;
 	float y;
 }  vec2;
+
 typedef struct
 {
 	double x;
 	double y;
 }  dvec2;
+
 typedef struct
 {
 	float x;
@@ -110,16 +116,16 @@ typedef struct
 
 vec4 MakeVec4(float singleValue);
 
-struct PlaneVec2 {
+struct PlaneVec2
+{
 	vec2 point;
 	vec2 normal;
 };
 
-struct PlaneVec3 {
+struct PlaneVec3
+{
 	vec3 point;
 	vec3 normal;
 };
-
-
 
 #endif

@@ -1,8 +1,5 @@
 //  CustomAlert.h
-//  ADAFieldCollector2
-//
-//  Created by Bill Munson on 6/15/14.
-//  Copyright (c) 2014 GSSi. All rights reserved.
+//  CCodeLibrary
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>

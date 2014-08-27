@@ -1,3 +1,6 @@
+//  NetworkManager.m
+//  CCodeLibrary
+
 #import "NetworkManager.h"
 
 @interface NetworkManager ()

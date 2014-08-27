@@ -1,3 +1,5 @@
+//  MathUtil.h
+//  CCodeLibrary
 
 /*#ifndef __MATHUTIL_H
 #define __MATHUTIL_H
