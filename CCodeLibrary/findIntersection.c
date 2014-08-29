@@ -6,9 +6,9 @@
 
 #define MAXINT  16
 #define RECLENx  40
-#define RECLEN  31
+#define RECLENmp  31
 #define OFFSETLOCx 30
-#define OFFSETLOC 23
+#define OFFSETLOCmp 23
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +18,11 @@
 
 #include "TileGraphics.h"
 #include "MathUtil.h"
+
+static int OFFSETLOC=30;
+static int RECLEN=40;
+static int FIRSTRECLEN=0;
+static int FILEVERSION;
 
 int Between0And360 (int ival)
 {
@@ -101,19 +106,40 @@ int FindIntersectionFromID (const char *indexPath, const char *dataPath, int int
 {
     int rtn = 0;
     int len, fileLen, nrecs, idint, iOffset, i;
-    char indxtxt[512];
+    char indxtxt[256];
     char *pLoc = indxtxt;
-    //char *pAZ;
-    //char *pnumRamp;
+    char *pAZ;
+    char *pnumRamp;
     FILE *fid = fopen (indexPath,"rb");
     
     if (fid == NULL)
         goto Exit;
     
+    fread (indxtxt,1,128,fid);
+    indxtxt[128] = 0;
+    if (!strncasecmp (indxtxt,"VERSION=",8))
+    {
+        char * loc;
+        
+        FILEVERSION = atoi (&indxtxt[8]);
+        if ((loc = strstr (indxtxt,";RECLEN=")))
+            RECLEN = atoi (loc+8);
+        if ((loc = strstr (indxtxt,";OFFSETLOC=")))
+            OFFSETLOC = atoi (loc+11);
+        if ((loc = strstr (indxtxt,";FIRSTRECLEN=")))
+            FIRSTRECLEN = atoi (loc+13);
+    }
+    else
+    {
+        FILEVERSION = 0;
+        OFFSETLOC=30;
+        RECLEN=40;
+        FIRSTRECLEN=0;
+    }
     fseek (fid, 0, 2);
-    fileLen = (int)ftell (fid);
+    fileLen = (int)ftell (fid) - FIRSTRECLEN;
     nrecs = fileLen / RECLEN; 
-    fseek (fid, 0, 0);
+    fseek (fid, FIRSTRECLEN, 0);
     
     while (nrecs--)
     {
@@ -142,6 +168,7 @@ int FindIntersectionFromID (const char *indexPath, const char *dataPath, int int
     goto Exit;
     
 HaveInt:
+    pLoc = indxtxt;
     fclose (fid);
     {
         
@@ -150,6 +177,7 @@ HaveInt:
         
         fseek (fidData,iOffset,0);
         fread (pLoc,1,255,fidData);
+        pLoc[256] = 0;
         fclose (fidData);
         
         if ((pend = strchr (pLoc,'\r')))
@@ -157,10 +185,9 @@ HaveInt:
         
         rtn = atoi (pLoc);
        
+/* mpls
         pLoc = strchr (pLoc,'\t')+1;
-        //*pnonCity = atoi (pLoc);
         pLoc = strchr (pLoc,'\t')+1;
-        //*pRot = atoi (pLoc);
         pLoc = strchr (pLoc,'\t')+1;
         pLoc = strchr (pLoc,'\t')+1;
         pLoc = strchr (pLoc,'\t')+1;
@@ -171,9 +198,9 @@ HaveInt:
                 pLoc[i] = '\r';
         
         strncpy (intText,(const char *)pLoc,254);
-        intText[255] = 0;
+        intText[255] = 0;*/
 
- /*
+ 
         
         pLoc = strchr (pLoc,'\t')+1;
         *pnumStreets = atoi (pLoc);
@@ -186,7 +213,7 @@ HaveInt:
         strncpy (intText,(const char*)pLoc,254);
         intText[255] = 0;
         strncpy (intAZMS,(const char*)pAZ,254);
-        intAZMS[255] = 0;*/
+        intAZMS[255] = 0;
 
     }
 Exit:
