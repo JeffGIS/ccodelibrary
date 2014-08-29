@@ -1,8 +1,5 @@
 //  findIntersection.c
-//  Three20Core
-//
-//  Created by JEFFREY E SMITH on 4/20/12.
-//  Copyright (c) 2012 GSSi. All rights reserved.
+//  CCodeLibrary
 
 #define MAXINT  16
 #define RECLENx  40
@@ -15,7 +12,6 @@
 #include <math.h>
 #include <limits.h>
 #include <string.h>
-
 #include "TileGraphics.h"
 #include "MathUtil.h"
 
@@ -105,7 +101,8 @@ int FindIntersectionFromID (const char *indexPath, const char *dataPath, int int
                             char *intAZMS, int *pnumStreets, int *pnRamps, int *plev21x, int *plev21y)
 {
     int rtn = 0;
-    int len, fileLen, nrecs, idint, iOffset, i;
+    int len, fileLen, nrecs, idint, iOffset;
+    //int i;
     char indxtxt[256];
     char *pLoc = indxtxt;
     char *pAZ;
@@ -117,25 +114,31 @@ int FindIntersectionFromID (const char *indexPath, const char *dataPath, int int
     
     fread (indxtxt,1,128,fid);
     indxtxt[128] = 0;
+    
     if (!strncasecmp (indxtxt,"VERSION=",8))
     {
         char * loc;
         
         FILEVERSION = atoi (&indxtxt[8]);
+        
         if ((loc = strstr (indxtxt,";RECLEN=")))
             RECLEN = atoi (loc+8);
+        
         if ((loc = strstr (indxtxt,";OFFSETLOC=")))
             OFFSETLOC = atoi (loc+11);
+        
         if ((loc = strstr (indxtxt,";FIRSTRECLEN=")))
             FIRSTRECLEN = atoi (loc+13);
     }
+    
     else
     {
         FILEVERSION = 0;
-        OFFSETLOC=30;
-        RECLEN=40;
-        FIRSTRECLEN=0;
+        OFFSETLOC = 30;
+        RECLEN = 40;
+        FIRSTRECLEN = 0;
     }
+    
     fseek (fid, 0, 2);
     fileLen = (int)ftell (fid) - FIRSTRECLEN;
     nrecs = fileLen / RECLEN; 
