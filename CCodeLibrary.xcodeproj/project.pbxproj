@@ -12,6 +12,8 @@
 		1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F101D2619AE96EB0006E1D5 /* findIntersection.c */; };
 		1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544519A412490029DBEA /* NetworkManager.m */; };
 		1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544E19A449460029DBEA /* CustomAlert.m */; };
+		1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F838AE919B1021C00943A8C /* PlacesInfo.m */; };
+		1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F838AEB19B1026700943A8C /* CoreGraphics.framework */; };
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
@@ -58,6 +60,9 @@
 		1F3A544519A412490029DBEA /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		1F3A544D19A449460029DBEA /* CustomAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlert.h; sourceTree = "<group>"; };
 		1F3A544E19A449460029DBEA /* CustomAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlert.m; sourceTree = "<group>"; };
+		1F838AE819B1021C00943A8C /* PlacesInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesInfo.h; sourceTree = "<group>"; };
+		1F838AE919B1021C00943A8C /* PlacesInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlacesInfo.m; sourceTree = "<group>"; };
+		1F838AEB19B1026700943A8C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		1FB3605319AE7E7D00592B1D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1FB3605519AE7E8200592B1D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB1A69741999A6A9005A1CCB /* CRAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRAPI.h; sourceTree = "<group>"; };
@@ -87,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */,
 				1F101D2319AE94910006E1D5 /* QuartzCore.framework in Frameworks */,
 				1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */,
 				1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */,
@@ -126,6 +132,7 @@
 		EBA2E45C199527660085B2E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F838AEB19B1026700943A8C /* CoreGraphics.framework */,
 				1F101D2219AE94910006E1D5 /* QuartzCore.framework */,
 				1FB3605519AE7E8200592B1D /* UIKit.framework */,
 				1FB3605319AE7E7D00592B1D /* Foundation.framework */,
@@ -152,6 +159,8 @@
 				EBB1BFCB199DD7C10059B547 /* MPIntersection.m */,
 				1F3A544419A412490029DBEA /* NetworkManager.h */,
 				1F3A544519A412490029DBEA /* NetworkManager.m */,
+				1F838AE819B1021C00943A8C /* PlacesInfo.h */,
+				1F838AE919B1021C00943A8C /* PlacesInfo.m */,
 				EBA2E48619952BCA0085B2E0 /* rotate256.h */,
 				EBA2E48719952BCA0085B2E0 /* TileGraphics.h */,
 				EBA2E48819952BCA0085B2E0 /* TileIndex.c */,
@@ -269,6 +278,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */,
 				EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */,

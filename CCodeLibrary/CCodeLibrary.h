@@ -2,6 +2,9 @@
 //  CCodeLibrary
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
+#import <CoreGraphics/CoreGraphics.h>
 #import "CRAPI.h"
 #import "CustomAlert.h"
 #import "MathTypes.h"
@@ -10,8 +13,8 @@
 #import "TileGraphics.h"
 #import "UserDefaults.h"
 #import "MPIntersection.h"
-#import <QuartzCore/QuartzCore.h>
 #import "FTPDataPull.h"
+#import "PlacesInfo.h"
 
 @interface CCodeLibrary : NSObject
 
