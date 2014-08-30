@@ -9,6 +9,9 @@
 #import "GeoMasterServer.h"
 
 @implementation GeoMasterServer
+{
+   
+}
 
 static GeoMasterServer *_open;
 
@@ -21,30 +24,51 @@ static GeoMasterServer *_open;
     
     return _open;
 }
+-(id)init
+{
+    self = [super init];
+    if (self)
+    {
+        self.output = @"";
+    }
+    return self;
+}
 
-- (void) initNetworkCommunication {
+- (void) closeServer
+{
+    if (_inputStream != nil)
+        [_inputStream close];
+    if (_outputStream != nil)
+        [_outputStream close];
+    _inputStream = nil;
+    _outputStream = nil;
+}
+
+- (bool) initCommunication {
 	
+    bool rtn=false;
+    
 	CFReadStreamRef readStream;
 	CFWriteStreamRef writeStream;
 	//FStreamCreatePairWithSocketToHost(NULL, (CFStringRef)@"localhost", 80, &readStream, &writeStream);
     CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)@"74.36.96.131", 22335, &readStream, &writeStream);
 	
-	inputStream = (__bridge NSInputStream *)readStream;
-	outputStream = (__bridge NSOutputStream *)writeStream;
-	[inputStream setDelegate:self];
-	[outputStream setDelegate:self];
-	[inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-	[outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-	[inputStream open];
-	[outputStream open];
-	
+	_inputStream = (__bridge NSInputStream *)readStream;
+	_outputStream = (__bridge NSOutputStream *)writeStream;
+	[_inputStream setDelegate:self];
+	[_outputStream setDelegate:self];
+	[_inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+	[_outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+	[_inputStream open];
+	[_outputStream open];
+	return rtn;
 }
 - (IBAction) sendMessage:(NSString *)message
 {
 	
 	NSString *response  = [NSString stringWithFormat:@"msg:%@", message];
 	NSData *data = [[NSData alloc] initWithData:[response dataUsingEncoding:NSASCIIStringEncoding]];
-	[outputStream write:[data bytes] maxLength:[data length]];
+	[_outputStream write:[data bytes] maxLength:[data length]];
 	
 }
 
@@ -56,26 +80,32 @@ static GeoMasterServer *_open;
 	switch (streamEvent) {
 			
 		case NSStreamEventOpenCompleted:
-			NSLog(@"Stream opened");
+			if (self.delegate)
+            {
+                [self.delegate GMServerDidOpen:self];
+            }
 			break;
 		case NSStreamEventHasBytesAvailable:
             
-			if (theStream == inputStream) {
+			if (theStream == _inputStream) {
 				
 				uint8_t buffer[1024];
 				long len;
 				
-				while ([inputStream hasBytesAvailable]) {
-					len = [inputStream read:buffer maxLength:sizeof(buffer)];
-					if (len > 0) {
-						
-						NSString *output = [[NSString alloc] initWithBytes:buffer length:len encoding:NSASCIIStringEncoding];
-						
-						if (nil != output) {
-                            
-							NSLog(@"server said: %@", output);
-							[self messageReceived:output];
-							
+				while ([_inputStream hasBytesAvailable])
+                {
+					len = [_inputStream read:buffer maxLength:sizeof(buffer)];
+					if (len > 0)
+                    {
+                        NSString* buff = [[NSString alloc] initWithBytes:buffer length:len encoding:NSASCIIStringEncoding];
+                        _output  = [_output stringByAppendingString:buff];
+                        if (!buffer[len])
+                        {
+                            if (self.delegate)
+                            {
+                                [self.delegate GMServer:self didReceiveMessage:_output withStatus:GMOK];
+                            }
+							_output = @"";
 						}
 					}
 				}
@@ -85,7 +115,10 @@ static GeoMasterServer *_open;
 			
 		case NSStreamEventErrorOccurred:
 			
-			NSLog(@"Can not connect to the host!");
+			if (self.delegate)
+            {
+                [self.delegate GMServer:self didReceiveError:@"Failed to open" withStatus:streamEvent];
+            }
 			break;
 			
 		case NSStreamEventEndEncountered:
@@ -93,10 +126,19 @@ static GeoMasterServer *_open;
             [theStream close];
             [theStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
             theStream = nil;
+			if (self.delegate)
+            {
+                [self.delegate GMServer:self didReceiveError:@"Server closed" withStatus:streamEvent];
+            }
 			
 			break;
+        case NSStreamEventHasSpaceAvailable:
+            break;
 		default:
-			NSLog(@"Unknown event");
+			if (self.delegate)
+            {
+                [self.delegate GMServer:self didReceiveError:@"Unknown error" withStatus:streamEvent];
+            }
 	}
     
 }

@@ -6,34 +6,38 @@
 //  Copyright (c) 2014 GSSi. All rights reserved.
 //
 
+#define GMOK    0
+
 #import <Foundation/Foundation.h>
 
 @class GeoMasterServer;
 
 @protocol GeoMasterServerDelegate  <NSObject>
 
-- (void) FTPdidComplete:(int)status
-               filePath:(NSString *)path;
+- (void) GMServer:(GeoMasterServer*)server
+didReceiveMessage:(NSString *)message
+       withStatus:(int)status;
+- (void) GMServer:(GeoMasterServer*)server
+  didReceiveError:(NSString *)error
+       withStatus:(int)status;
+- (void) GMServerDidOpen:(GeoMasterServer*)server;
 
 @end
 
 
 
 @interface GeoMasterServer : NSObject<NSStreamDelegate>
-{
-    NSInputStream	*inputStream;
-	NSOutputStream	*outputStream;
-}
 @property (nonatomic, weak) id <GeoMasterServerDelegate> delegate;
 
 + (GeoMasterServer *)open;
-@property (nonatomic, retain) NSInputStream *inputStream;
-@property (nonatomic, retain) NSOutputStream *outputStream;
 
 @property (nonatomic, retain) NSMutableArray *messages;
+@property (nonatomic, retain)NSInputStream *inputStream;
+@property (nonatomic, retain)NSOutputStream *outputStream;
+@property (nonatomic, retain)NSString *output;
 
-- (void) initNetworkCommunication;
+- (BOOL) initCommunication;
+- (void) closeServer;
 - (IBAction) sendMessage:(NSString *)message;
-- (void) messageReceived:(NSString *)message;
 
 @end

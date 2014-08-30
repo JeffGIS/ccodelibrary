@@ -13,7 +13,9 @@
 #import "TileGraphics.h"
 #import "UserDefaults.h"
 #import "MPIntersection.h"
+#import <QuartzCore/QuartzCore.h>
 #import "FTPDataPull.h"
+#import "PlacesInfo.h"
 #import "GeoMasterServer.h"
 
 @interface CCodeLibrary : NSObject
