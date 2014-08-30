@@ -1,10 +1,5 @@
-//
 //  GeoMasterServer.h
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 8/29/14.
-//  Copyright (c) 2014 GSSi. All rights reserved.
-//
 
 #define GMOK    0
 
@@ -14,17 +9,17 @@
 
 @protocol GeoMasterServerDelegate  <NSObject>
 
-- (void) GMServer:(GeoMasterServer*)server
+- (void) GMServer:(GeoMasterServer *)server
 didReceiveMessage:(NSString *)message
        withStatus:(int)status;
-- (void) GMServer:(GeoMasterServer*)server
+
+- (void) GMServer:(GeoMasterServer *)server
   didReceiveError:(NSString *)error
        withStatus:(int)status;
+
 - (void) GMServerDidOpen:(GeoMasterServer*)server;
 
 @end
-
-
 
 @interface GeoMasterServer : NSObject<NSStreamDelegate>
 @property (nonatomic, weak) id <GeoMasterServerDelegate> delegate;

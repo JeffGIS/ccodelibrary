@@ -309,7 +309,7 @@
     NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.google.com/maps/api/staticmap?markers=color:red|%f,%f&%@&sensor=true",lat, lon,@"zoom=10&size=270x70"];
 */
     
-    int zoom=21;
+    int zoom = 21;
     NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY",lat, lon, zoom];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
