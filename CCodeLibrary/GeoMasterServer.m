@@ -99,7 +99,7 @@ static GeoMasterServer *_open;
                     {
                         NSString* buff = [[NSString alloc] initWithBytes:buffer length:len encoding:NSASCIIStringEncoding];
                         _output  = [_output stringByAppendingString:buff];
-                        if (!buffer[len])
+                        if (!buffer[len-1])
                         {
                             if (self.delegate)
                             {
