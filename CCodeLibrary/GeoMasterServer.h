@@ -1,7 +1,7 @@
 //  GeoMasterServer.h
 //  CCodeLibrary
 
-#define GMOK    0
+#define GMOK 0
 
 #import <Foundation/Foundation.h>
 
