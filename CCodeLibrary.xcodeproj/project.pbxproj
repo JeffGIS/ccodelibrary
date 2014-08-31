@@ -167,11 +167,11 @@
 				1F838AE819B1021C00943A8C /* PlacesInfo.h */,
 				1F838AE919B1021C00943A8C /* PlacesInfo.m */,
 				EBA2E48619952BCA0085B2E0 /* rotate256.h */,
-				EBA2E460199527660085B2E0 /* Supporting Files */,
 				EBA2E48719952BCA0085B2E0 /* TileGraphics.h */,
 				EBA2E48819952BCA0085B2E0 /* TileIndex.c */,
 				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
+				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";
