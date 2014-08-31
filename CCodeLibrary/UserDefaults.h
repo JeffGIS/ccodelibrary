@@ -18,6 +18,7 @@
 - (CGFloat)CGFloatForKey:(NSString *)key;
 - (UIColor *)appleBlue;
 - (UIColor *)green;
+- (UIColor *)polygonFillColor;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
