@@ -33,6 +33,6 @@ didReceiveMessage:(NSString *)message
 
 - (BOOL) initCommunication;
 - (void) closeServer;
-- (IBAction) sendMessage:(NSString *)message;
+- (bool) sendMessage:(NSString *)message;
 
 @end

@@ -47,7 +47,7 @@ static GeoMasterServer *_open;
 	CFReadStreamRef readStream;
 	CFWriteStreamRef writeStream;
 	//FStreamCreatePairWithSocketToHost(NULL, (CFStringRef)@"localhost", 80, &readStream, &writeStream);
-    CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)@"74.36.96.131", 22335, &readStream, &writeStream);
+    CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)@"74.36.99.166", 22335, &readStream, &writeStream);
 	
 	_inputStream = (__bridge NSInputStream *)readStream;
 	_outputStream = (__bridge NSOutputStream *)writeStream;
@@ -65,14 +65,13 @@ static GeoMasterServer *_open;
 	return rtn;
 }
 
-- (IBAction) sendMessage:(NSString *)message
+- (bool) sendMessage:(NSString *)message
 {
-	
-	NSString *response  = [NSString stringWithFormat:@"msg:%@", message];
-	NSData *data = [[NSData alloc] initWithData:[response dataUsingEncoding:NSASCIIStringEncoding]];
+	NSData *data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
     
-	[_outputStream write:data.bytes
+	long rc = [_outputStream write:data.bytes
                maxLength:data.length];
+    return (rc == data.length);
 }
 
 
@@ -87,7 +86,7 @@ static GeoMasterServer *_open;
 			
 		case NSStreamEventOpenCompleted:
 			
-            if (self.delegate)
+            if (self.delegate && theStream == _outputStream)
             {
                 [self.delegate GMServerDidOpen:self];
             }
