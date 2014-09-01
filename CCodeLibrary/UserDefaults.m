@@ -85,6 +85,16 @@ static UserDefaults *_defaults;
     return green;
 }
 
+- (UIColor *)polygonFillColor
+{
+    UIColor *polygonFillColor = [UIColor colorWithRed:200.0
+                                                green:200.0
+                                                 blue:0.0
+                                                alpha:0.25];
+    
+    return polygonFillColor;
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue
