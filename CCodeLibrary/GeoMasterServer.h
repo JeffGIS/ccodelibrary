@@ -1,7 +1,9 @@
 //  GeoMasterServer.h
 //  CCodeLibrary
 
-#define GMOK 0
+#define GM_OK 0
+#define GM_OPEN_FAILED   101
+#define GM_SEND_FAILED   102
 
 #import <Foundation/Foundation.h>
 
@@ -30,8 +32,11 @@ didReceiveMessage:(NSString *)message
 @property (nonatomic, retain)NSInputStream *inputStream;
 @property (nonatomic, retain)NSOutputStream *outputStream;
 @property (nonatomic, retain)NSString *output;
+@property NSTimer *openTimer;
+@property NSTimer *sendTimer;
+@property NSData *data;
 
-- (BOOL) initCommunication;
+- (BOOL) initCommunication:(float)connectionTimeoutInSeconds;
 - (void) closeServer;
 - (bool) sendMessage:(NSString *)message;
 

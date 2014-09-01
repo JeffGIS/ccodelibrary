@@ -40,7 +40,7 @@ static GeoMasterServer *_open;
     _outputStream = nil;
 }
 
-- (bool) initCommunication
+- (bool) initCommunication:(float)connectionTimeoutInSeconds
 {
     bool rtn=false;
     
@@ -60,25 +60,47 @@ static GeoMasterServer *_open;
 	[_outputStream scheduleInRunLoop:NSRunLoop.currentRunLoop
                              forMode:NSDefaultRunLoopMode];
     
-	[_inputStream open];
+    if (_openTimer != nil) {
+        [_openTimer invalidate];
+    }
+    _openTimer = [NSTimer scheduledTimerWithTimeInterval:connectionTimeoutInSeconds target:self selector:@selector(serverFailedToOpen) userInfo:nil repeats:NO];
 	[_outputStream open];
+	[_inputStream open];
 	return rtn;
 }
 
+- (void) doSendMessage
+{
+    long rc = [_outputStream write:_data.bytes
+                         maxLength:_data.length];
+    if (_data.length != rc)
+    {
+        if (self.delegate)
+        {
+            [self.delegate GMServer:self
+                    didReceiveError:@"Failed to send message"
+                         withStatus:GM_SEND_FAILED];
+        }
+    }
+    
+}
 - (bool) sendMessage:(NSString *)message
 {
-	NSData *data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
+	_data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
     
-	long rc = [_outputStream write:data.bytes
-               maxLength:data.length];
-    return (rc == data.length);
+    if (_sendTimer != nil) {
+        [_sendTimer invalidate];
+    }
+    _sendTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(doSendMessage) userInfo:nil repeats:NO];
+	
+    return true;
 }
 
 
 - (void)stream:(NSStream *)theStream
    handleEvent:(NSStreamEvent)streamEvent
 {
-    
+    int ii;
 	NSLog(@"stream event %lu", streamEvent);
 	
 	switch (streamEvent)
@@ -86,6 +108,9 @@ static GeoMasterServer *_open;
 			
 		case NSStreamEventOpenCompleted:
 			
+            if (_openTimer != nil)
+                [_openTimer invalidate];
+            _openTimer = nil;
             if (self.delegate && theStream == _outputStream)
             {
                 [self.delegate GMServerDidOpen:self];
@@ -118,7 +143,7 @@ static GeoMasterServer *_open;
                             {
                                 [self.delegate GMServer:self
                                       didReceiveMessage:_output
-                                             withStatus:GMOK];
+                                             withStatus:GM_OK];
                             }
                             
 							_output = @"";
@@ -157,6 +182,7 @@ static GeoMasterServer *_open;
 			break;
             
         case NSStreamEventHasSpaceAvailable:
+            ii=1;
             break;
             
 		default:
@@ -169,6 +195,26 @@ static GeoMasterServer *_open;
 	}
 }
 
+- (void)serverFailedToOpen
+{
+    [_inputStream close];
+    [_inputStream removeFromRunLoop:NSRunLoop.currentRunLoop
+                         forMode:NSDefaultRunLoopMode];
+    _inputStream.delegate = nil;
+    _inputStream = nil;
+    [_outputStream removeFromRunLoop:NSRunLoop.currentRunLoop
+                            forMode:NSDefaultRunLoopMode];
+    _outputStream.delegate = nil;
+    _outputStream = nil;
+   
+    if (self.delegate)
+    {
+        [self.delegate GMServer:self
+                didReceiveError:@"Server failed to open"
+                     withStatus:GM_OPEN_FAILED];
+    }
+    
+}
 - (void) messageReceived:(NSString *)message
 {
 	[self.messages addObject:message];
