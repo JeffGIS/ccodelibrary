@@ -2514,7 +2514,7 @@ do_compress ( const lzo_bytep in , lzo_uint  in_len,
     for (;;)
     {
         register const lzo_bytep m_pos;
-        lzo_uint m_off;
+        lzo_uint m_off = 0;
         lzo_uint m_len;
         lzo_uint dindex;
 
