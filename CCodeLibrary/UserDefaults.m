@@ -186,7 +186,7 @@ static UserDefaults *_defaults;
                            status:(int)status
 {
     NSMutableArray *namesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"NamesArray"]];
-    NSMutableArray *statesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"NamesArray"]];
+    NSMutableArray *statesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"StatesArray"]];
     NSMutableArray *geoidsArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"GeoidsArray"]];
     NSMutableArray *bounds_wArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_wArray"]];
     NSMutableArray *bounds_sArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_sArray"]];
@@ -197,10 +197,10 @@ static UserDefaults *_defaults;
     [namesArray addObject:name];
     [statesArray addObject:state];
     [geoidsArray addObject:[NSNumber numberWithInt:geoid]];
-    [bounds_wArray addObject:[NSNumber numberWithDouble:bounds_w]];
-    [bounds_sArray addObject:[NSNumber numberWithDouble:bounds_s]];
-    [bounds_eArray addObject:[NSNumber numberWithDouble:bounds_e]];
-    [bounds_nArray addObject:[NSNumber numberWithDouble:bounds_n]];
+    [bounds_wArray addObject:[NSNumber numberWithFloat:bounds_w]];
+    [bounds_sArray addObject:[NSNumber numberWithFloat:bounds_s]];
+    [bounds_eArray addObject:[NSNumber numberWithFloat:bounds_e]];
+    [bounds_nArray addObject:[NSNumber numberWithFloat:bounds_n]];
     [statusArray addObject:[NSNumber numberWithInt:status]];
     
     NSArray *masterList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
