@@ -73,9 +73,9 @@ static UserDefaults *_defaults;
 
 - (UIColor *)appleBlue
 {
-    UIColor *appleBlue = [UIColor colorWithRed:(0.0 / 255.0)
+    UIColor *appleBlue = [UIColor colorWithRed:0.0
                                          green:(122.0 / 255.0)
-                                          blue:(255.0 / 255.0)
+                                          blue:1.0
                                          alpha:1.0];
     
     return appleBlue;
@@ -93,8 +93,8 @@ static UserDefaults *_defaults;
 
 - (UIColor *)polygonFillColor
 {
-    UIColor *polygonFillColor = [UIColor colorWithRed:200.0
-                                                green:200.0
+    UIColor *polygonFillColor = [UIColor colorWithRed:(200.0 / 255.0)
+                                                green:(200.0 / 255.0)
                                                  blue:0.0
                                                 alpha:0.25];
     
