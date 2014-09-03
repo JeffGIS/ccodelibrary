@@ -7,7 +7,6 @@
 
 @synthesize name = _name;
 @synthesize state = _state;
-@synthesize stateCode = _stateCode;
 @synthesize bounds_w = _bounds_w;
 @synthesize bounds_s = _bounds_s;
 @synthesize bounds_e = _bounds_e;
@@ -97,14 +96,6 @@
         self.longitude = longitude;
     }
     
-    return self;
-}
-
-- (id)initWithStateCode:(NSString *)stateCode
-{
-    if ((self = super.init))
-        self.stateCode = stateCode;
-
     return self;
 }
 

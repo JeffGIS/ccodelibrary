@@ -6,7 +6,7 @@
 
 @interface PlacesInfo : NSObject
 {
-    NSString *_name, *_geoid, *_stateCode;
+    NSString *_name, *_geoid;
     CGFloat _bounds_w, _bounds_s, _bounds_e, _bounds_n;
     NSNumber *_latitude, *_longitude;
     int _state, _intID, _intX, _intY, _rotation;
@@ -18,7 +18,6 @@
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *geoid;
-@property (nonatomic, copy) NSString *stateCode;
 @property (nonatomic) int state;
 @property (nonatomic) CGFloat bounds_w;
 @property (nonatomic) CGFloat bounds_s;
@@ -68,8 +67,6 @@
 
 - (id)initWithLatitude:(NSNumber *)latitude
              longitude:(NSNumber *)longitude;
-
-- (id)initWithStateCode:(NSString *)stateCode;
 
 - (id)initWithIntID:(int)intID
                intX:(int)intX
