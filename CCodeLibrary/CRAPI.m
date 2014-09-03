@@ -21,6 +21,7 @@
                                                    name:@"BLDownloadImageNotification"
                                                  object:nil];
 */
+        _currentGeoID = 2758000;
         NSArray *paths = NSSearchPathForDirectoriesInDomains
         (NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -378,13 +379,13 @@
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *fileName = [NSString stringWithFormat:@"Place_%7.7i_Area.bin", geoid];
+    NSString *fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
     
     FTPDataPull *pull = FTPDataPull.pull;
     pull.delegate = id;
     
     [pull getFile:fileName
-    fromDirectory:@"Bill/PlaceAreas"
+    fromDirectory:@"Bill/PlaceIntersections"
       toDirectory:documentsDirectory
      forceRefresh:NO];
     return TRUE;
