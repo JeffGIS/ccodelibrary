@@ -373,4 +373,21 @@
      forceRefresh:NO];
     return TRUE;
 }
+
+-(BOOL) getPlaceIntersectionFile:(id)id forGeoid:(int)geoid;
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *fileName = [NSString stringWithFormat:@"Place_%7.7i_Area.bin", geoid];
+    
+    FTPDataPull *pull = FTPDataPull.pull;
+    pull.delegate = id;
+    
+    [pull getFile:fileName
+    fromDirectory:@"Bill/PlaceAreas"
+      toDirectory:documentsDirectory
+     forceRefresh:NO];
+    return TRUE;
+}
+
 @end
