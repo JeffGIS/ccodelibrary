@@ -194,46 +194,49 @@ static UserDefaults *_defaults;
     NSMutableArray *bounds_nArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_nArray"]];
     NSMutableArray *statusArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"StatusArray"]];
     
-    [namesArray addObject:name];
-    [statesArray addObject:state];
-    [geoidsArray addObject:[NSNumber numberWithInt:geoid]];
-    [bounds_wArray addObject:[NSNumber numberWithFloat:bounds_w]];
-    [bounds_sArray addObject:[NSNumber numberWithFloat:bounds_s]];
-    [bounds_eArray addObject:[NSNumber numberWithFloat:bounds_e]];
-    [bounds_nArray addObject:[NSNumber numberWithFloat:bounds_n]];
-    [statusArray addObject:[NSNumber numberWithInt:status]];
+    if (![geoidsArray containsObject:[NSNumber numberWithInt:geoid]])
+    {
+        [namesArray addObject:name];
+        [statesArray addObject:state];
+        [geoidsArray addObject:[NSNumber numberWithInt:geoid]];
+        [bounds_wArray addObject:[NSNumber numberWithFloat:bounds_w]];
+        [bounds_sArray addObject:[NSNumber numberWithFloat:bounds_s]];
+        [bounds_eArray addObject:[NSNumber numberWithFloat:bounds_e]];
+        [bounds_nArray addObject:[NSNumber numberWithFloat:bounds_n]];
+        [statusArray addObject:[NSNumber numberWithInt:status]];
     
-    NSArray *masterList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
-                           bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, statusArray, nil];
+        NSArray *masterList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
+                               bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, statusArray, nil];
     
-    [_defaults setObject:namesArray
-                  forKey:@"NamesArray"];
+        [_defaults setObject:namesArray
+                      forKey:@"NamesArray"];
     
-    [_defaults setObject:statesArray
-                  forKey:@"StatesArray"];
+        [_defaults setObject:statesArray
+                      forKey:@"StatesArray"];
     
-    [_defaults setObject:geoidsArray
-                  forKey:@"GeoidsArray"];
+        [_defaults setObject:geoidsArray
+                      forKey:@"GeoidsArray"];
     
-    [_defaults setObject:bounds_wArray
-                  forKey:@"Bounds_wArray"];
+        [_defaults setObject:bounds_wArray
+                      forKey:@"Bounds_wArray"];
+        
+        [_defaults setObject:bounds_sArray
+                      forKey:@"Bounds_sArray"];
     
-    [_defaults setObject:bounds_sArray
-                  forKey:@"Bounds_sArray"];
+        [_defaults setObject:bounds_eArray
+                      forKey:@"Bounds_eArray"];
     
-    [_defaults setObject:bounds_eArray
-                  forKey:@"Bounds_eArray"];
+        [_defaults setObject:bounds_nArray
+                      forKey:@"Bounds_nArray"];
     
-    [_defaults setObject:bounds_nArray
-                  forKey:@"Bounds_nArray"];
+        [_defaults setObject:statusArray
+                      forKey:@"StatusArray"];
     
-    [_defaults setObject:statusArray
-                  forKey:@"StatusArray"];
+        [_defaults setObject:masterList
+                      forKey:@"MasterList"];
     
-    [_defaults setObject:masterList
-                  forKey:@"MasterList"];
-    
-    [_defaults synchronize];
+        [_defaults synchronize];
+    }
 }
 
 - (UIColor *)lightColorForColor:(UIColor *)color
