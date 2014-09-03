@@ -1,10 +1,5 @@
-//
 //  compress.c
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 9/2/14.
-//  Copyright (c) 2014 GSSi. All rights reserved.
-//
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -65,6 +65,12 @@ static UserDefaults *_defaults;
     return defaultFloat;
 }
 
+- (NSArray *)locationList
+{
+    NSArray *masterList = [_defaults arrayForKey:@"MasterList"];
+    return masterList;
+}
+
 - (UIColor *)appleBlue
 {
     UIColor *appleBlue = [UIColor colorWithRed:(0.0 / 255.0)
@@ -170,35 +176,62 @@ static UserDefaults *_defaults;
     [_defaults synchronize];
 }
 
-- (void)saveLocationWithBounds_w:(CGFloat)bounds_w
-                        bounds_s:(CGFloat)bounds_s
-                        bounds_e:(CGFloat)bounds_e
-                        bounds_n:(CGFloat)bounds_n
-                            city:(NSString *)city
-                           state:(NSString *)state
-                           geoid:(int)geoid
-                          forKey:(NSString *)key
+- (void)addLocationToListWithName:(NSString *)name
+                            state:(NSString *)state
+                            geoid:(int)geoid
+                         bounds_w:(CGFloat)bounds_w
+                         bounds_s:(CGFloat)bounds_s
+                         bounds_e:(CGFloat)bounds_e
+                         bounds_n:(CGFloat)bounds_n
+                           status:(int)status
 {
-    [_defaults setFloat:bounds_w
-                 forKey:[NSString stringWithFormat:@"%@BoundsWest", key]];
+    NSMutableArray *namesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"NamesArray"]];
+    NSMutableArray *statesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"StatesArray"]];
+    NSMutableArray *geoidsArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"GeoidsArray"]];
+    NSMutableArray *bounds_wArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_wArray"]];
+    NSMutableArray *bounds_sArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_sArray"]];
+    NSMutableArray *bounds_eArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_eArray"]];
+    NSMutableArray *bounds_nArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_nArray"]];
+    NSMutableArray *statusArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"StatusArray"]];
     
-    [_defaults setFloat:bounds_s
-                 forKey:[NSString stringWithFormat:@"%@BoundsSouth", key]];
+    [namesArray addObject:name];
+    [statesArray addObject:state];
+    [geoidsArray addObject:[NSNumber numberWithInt:geoid]];
+    [bounds_wArray addObject:[NSNumber numberWithFloat:bounds_w]];
+    [bounds_sArray addObject:[NSNumber numberWithFloat:bounds_s]];
+    [bounds_eArray addObject:[NSNumber numberWithFloat:bounds_e]];
+    [bounds_nArray addObject:[NSNumber numberWithFloat:bounds_n]];
+    [statusArray addObject:[NSNumber numberWithInt:status]];
     
-    [_defaults setFloat:bounds_e
-                 forKey:[NSString stringWithFormat:@"%@BoundsEast", key]];
+    NSArray *masterList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
+                           bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, statusArray, nil];
     
-    [_defaults setFloat:bounds_n
-                 forKey:[NSString stringWithFormat:@"%@BoundsNorth", key]];
+    [_defaults setObject:namesArray
+                  forKey:@"NamesArray"];
     
-    [_defaults setObject:city
-                  forKey:[NSString stringWithFormat:@"%@City", key]];
+    [_defaults setObject:statesArray
+                  forKey:@"StatesArray"];
     
-    [_defaults setObject:state
-                  forKey:[NSString stringWithFormat:@"%@State", key]];
+    [_defaults setObject:geoidsArray
+                  forKey:@"GeoidsArray"];
     
-    [_defaults setInteger:geoid
-                  forKey:[NSString stringWithFormat:@"%@Geoid", key]];
+    [_defaults setObject:bounds_wArray
+                  forKey:@"Bounds_wArray"];
+    
+    [_defaults setObject:bounds_sArray
+                  forKey:@"Bounds_sArray"];
+    
+    [_defaults setObject:bounds_eArray
+                  forKey:@"Bounds_eArray"];
+    
+    [_defaults setObject:bounds_nArray
+                  forKey:@"Bounds_nArray"];
+    
+    [_defaults setObject:statusArray
+                  forKey:@"StatusArray"];
+    
+    [_defaults setObject:masterList
+                  forKey:@"MasterList"];
     
     [_defaults synchronize];
 }

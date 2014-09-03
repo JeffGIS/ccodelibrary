@@ -16,6 +16,7 @@
 - (BOOL)boolForKey:(NSString *)key;
 - (NSString *)stringForKey:(NSString *)key;
 - (CGFloat)CGFloatForKey:(NSString *)key;
+- (NSArray *)locationList;
 - (UIColor *)appleBlue;
 - (UIColor *)green;
 - (UIColor *)polygonFillColor;
@@ -40,14 +41,14 @@
 - (void)saveCGFloat:(CGFloat)CGFloat
              forKey:(NSString *)key;
 
-- (void)saveLocationWithBounds_w:(CGFloat)bounds_w
-                        bounds_s:(CGFloat)bounds_s
-                        bounds_e:(CGFloat)bounds_e
-                        bounds_n:(CGFloat)bounds_n
-                            city:(NSString *)city
-                           state:(NSString *)state
-                           geoid:(int)geoid
-                          forKey:(NSString *)key;
+- (void)addLocationToListWithName:(NSString *)name
+                            state:(NSString *)state
+                            geoid:(int)geoid
+                         bounds_w:(CGFloat)bounds_w
+                         bounds_s:(CGFloat)bounds_s
+                         bounds_e:(CGFloat)bounds_e
+                         bounds_n:(CGFloat)bounds_n
+                           status:(int)status;
 
 - (UIColor *)lightColorForColor:(UIColor *)color;
 - (UIColor *)darkColorForColor:(UIColor *)color;
