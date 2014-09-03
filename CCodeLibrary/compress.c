@@ -6,7 +6,6 @@
 #include <math.h>
 #include <limits.h>
 #include <string.h>
-#include <stdbool.h>
 #include "compress.h"
 #include "minilzo.h"
 
@@ -89,17 +88,18 @@ Exit:
 }
 BOOL DecompressGMZipFile (char * TransferFileName)
 {
-    long	NextFileLoc=0, len, FileLength, EndOfFile, MaxLength,LenToRead;
+    int	NextFileLoc=0, len, FileLength, EndOfFile, MaxLength,LenToRead;
     char File[PATH_MAX];
     short	Version;
     FILE *FidTF;
     BOOL rtn = TRUE;
     FidTF = fopen(TransferFileName,"rb");
-    FileLength = GSSifilelength (FidTF);
+    FileLength = (int)GSSifilelength (FidTF);
+    NextFileLoc = sizeof(int);
     NextFileLoc = 10;
-    fread(&len, sizeof(long),1,FidTF);
+    fread(&len, sizeof(int),1,FidTF);
     fread(&Version, sizeof(short),1,FidTF);
-    fread(&MaxLength, sizeof(long),1,FidTF);
+    fread(&MaxLength, sizeof(int),1,FidTF);
     while (rtn && NextFileLoc > 0)
     {
         fseek (FidTF,NextFileLoc,0);

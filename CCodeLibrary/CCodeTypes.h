@@ -4,9 +4,11 @@
 #ifndef CCodeLibrary_CCodeTypes_h
 #define CCodeLibrary_CCodeTypes_h
 
+#include <stdbool.h>
+
 typedef char * LPSTR;
 typedef LPSTR HPSTR;
-typedef int BOOL;
+typedef bool    BOOL;
 #define TRUE    1
 #define FALSE   0
 typedef void * LPVOID;

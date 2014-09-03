@@ -10,6 +10,7 @@
 
 @property NSString *outputDirectory;
 @property NSString *imageDirectory;
+@property int currentGeoID;
 
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
 

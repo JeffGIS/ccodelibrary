@@ -69,7 +69,8 @@
     
     if (extension != nil)
     {
-        result = ([extension caseInsensitiveCompare:@"bin"] == NSOrderedSame);
+        result = ([extension caseInsensitiveCompare:@"bin"] == NSOrderedSame)
+        || ([extension caseInsensitiveCompare:@"gcf"] == NSOrderedSame);
     }
     
     return result;

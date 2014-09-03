@@ -17,6 +17,7 @@
 #import "FTPDataPull.h"
 #import "PlacesInfo.h"
 #import "GeoMasterServer.h"
+#import "compress.h"
 
 @interface CCodeLibrary : NSObject
 
