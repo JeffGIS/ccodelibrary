@@ -6,6 +6,8 @@
 @implementation PlacesInfo
 
 @synthesize name = _name;
+@synthesize state = _state;
+@synthesize stateCode = _stateCode;
 @synthesize bounds_w = _bounds_w;
 @synthesize bounds_s = _bounds_s;
 @synthesize bounds_e = _bounds_e;
@@ -55,6 +57,26 @@
 }
 
 - (id)initWithName:(NSString *)name
+             state:(int)state
+          bounds_w:(CGFloat)bounds_w
+          bounds_s:(CGFloat)bounds_s
+          bounds_e:(CGFloat)bounds_e
+          bounds_n:(CGFloat)bounds_n
+{
+    if ((self = super.init))
+    {
+        self.name = name;
+        self.state = state;
+        self.bounds_w = bounds_w;
+        self.bounds_s = bounds_s;
+        self.bounds_e = bounds_e;
+        self.bounds_n = bounds_n;
+    }
+    
+    return self;
+}
+
+- (id)initWithName:(NSString *)name
              geoid:(NSString *)geoid
 {
     if ((self = super.init))
@@ -75,6 +97,14 @@
         self.longitude = longitude;
     }
     
+    return self;
+}
+
+- (id)initWithStateCode:(NSString *)stateCode
+{
+    if ((self = super.init))
+        self.stateCode = stateCode;
+
     return self;
 }
 
