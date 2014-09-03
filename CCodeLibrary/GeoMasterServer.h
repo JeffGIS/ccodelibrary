@@ -13,11 +13,11 @@
 
 - (void) GMServer:(GeoMasterServer *)server
 didReceiveMessage:(NSString *)message
-       withStatus:(int)status;
+       withStatus:(long)status;
 
 - (void) GMServer:(GeoMasterServer *)server
   didReceiveError:(NSString *)error
-       withStatus:(int)status;
+       withStatus:(long)status;
 
 - (void) GMServerDidOpen:(GeoMasterServer*)server;
 

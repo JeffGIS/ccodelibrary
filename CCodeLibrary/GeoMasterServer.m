@@ -31,13 +31,20 @@ static GeoMasterServer *_open;
 - (void) closeServer
 {
     if (_inputStream != nil)
+    {
         [_inputStream close];
-    
+        [_inputStream removeFromRunLoop:NSRunLoop.currentRunLoop
+                                forMode:NSDefaultRunLoopMode];
+        _inputStream.delegate = nil;
+        _inputStream = nil;
+    }
     if (_outputStream != nil)
-        [_outputStream close];
-    
-    _inputStream = nil;
-    _outputStream = nil;
+    {
+       [_outputStream removeFromRunLoop:NSRunLoop.currentRunLoop
+                                 forMode:NSDefaultRunLoopMode];
+        _outputStream.delegate = nil;
+        _outputStream = nil;
+    }
 }
 
 - (bool) initCommunication:(float)connectionTimeoutInSeconds
@@ -156,12 +163,17 @@ static GeoMasterServer *_open;
             
 		case NSStreamEventErrorOccurred:
 			
-			if (self.delegate)
+        {
+            NSError *theError = [theStream streamError];
+            NSString *errorMessage = [theError localizedDescription];
+            [self closeServer];
+            if (self.delegate != nil)
             {
                 [self.delegate GMServer:self
-                        didReceiveError:@"Failed to open"
-                             withStatus:streamEvent];
+                        didReceiveError:errorMessage
+                             withStatus:[theError code]];
             }
+        }
             
 			break;
 			
@@ -197,15 +209,7 @@ static GeoMasterServer *_open;
 
 - (void)serverFailedToOpen
 {
-    [_inputStream close];
-    [_inputStream removeFromRunLoop:NSRunLoop.currentRunLoop
-                         forMode:NSDefaultRunLoopMode];
-    _inputStream.delegate = nil;
-    _inputStream = nil;
-    [_outputStream removeFromRunLoop:NSRunLoop.currentRunLoop
-                            forMode:NSDefaultRunLoopMode];
-    _outputStream.delegate = nil;
-    _outputStream = nil;
+    [self closeServer];
    
     if (self.delegate)
     {
