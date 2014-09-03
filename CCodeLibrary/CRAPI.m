@@ -358,7 +358,8 @@
     return imageFile;
 }
 
--(BOOL) getPlaceAreaFile:(id)id forGeoid:(int)geoid;
+- (BOOL)getPlaceAreaFile:(id)id
+forGeoid:(int)geoid;
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -374,7 +375,8 @@
     return TRUE;
 }
 
--(BOOL) getPlaceIntersectionFile:(id)id forGeoid:(int)geoid;
+- (BOOL)getPlaceIntersectionFile:(id)id
+forGeoid:(int)geoid;
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -387,6 +389,7 @@
     fromDirectory:@"Bill/PlaceAreas"
       toDirectory:documentsDirectory
      forceRefresh:NO];
+    
     return TRUE;
 }
 

@@ -34,7 +34,10 @@
                                     atLat:(double)lat
                                    andLon:(double)lon;
 
--(BOOL) getPlaceAreaFile:(id)id forGeoid:(int)geoid;
--(BOOL) getPlaceIntersectionFile:(id)id forGeoid:(int)geoid;
+-(BOOL) getPlaceAreaFile:(id)id
+forGeoid:(int)geoid;
+
+-(BOOL) getPlaceIntersectionFile:(id)id
+forGeoid:(int)geoid;
 
 @end

@@ -33,21 +33,25 @@ static GeoMasterServer *_open;
     if (_inputStream != nil)
     {
         [_inputStream close];
+        
         [_inputStream removeFromRunLoop:NSRunLoop.currentRunLoop
                                 forMode:NSDefaultRunLoopMode];
+        
         _inputStream.delegate = nil;
         _inputStream = nil;
     }
+    
     if (_outputStream != nil)
     {
        [_outputStream removeFromRunLoop:NSRunLoop.currentRunLoop
                                  forMode:NSDefaultRunLoopMode];
+        
         _outputStream.delegate = nil;
         _outputStream = nil;
     }
 }
 
-- (bool) initCommunication:(float)connectionTimeoutInSeconds
+- (bool)initCommunication:(float)connectionTimeoutInSeconds
 {
     bool rtn=false;
     
@@ -67,10 +71,15 @@ static GeoMasterServer *_open;
 	[_outputStream scheduleInRunLoop:NSRunLoop.currentRunLoop
                              forMode:NSDefaultRunLoopMode];
     
-    if (_openTimer != nil) {
+    if (_openTimer != nil)
         [_openTimer invalidate];
-    }
-    _openTimer = [NSTimer scheduledTimerWithTimeInterval:connectionTimeoutInSeconds target:self selector:@selector(serverFailedToOpen) userInfo:nil repeats:NO];
+    
+    _openTimer = [NSTimer scheduledTimerWithTimeInterval:connectionTimeoutInSeconds
+                                                  target:self
+                                                selector:@selector(serverFailedToOpen)
+                                                userInfo:nil
+                                                 repeats:NO];
+    
 	[_outputStream open];
 	[_inputStream open];
 	return rtn;
@@ -80,6 +89,7 @@ static GeoMasterServer *_open;
 {
     long rc = [_outputStream write:_data.bytes
                          maxLength:_data.length];
+    
     if (_data.length != rc)
     {
         if (self.delegate)
@@ -95,14 +105,18 @@ static GeoMasterServer *_open;
 {
 	_data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
     
-    if (_sendTimer != nil) {
+    if (_sendTimer != nil)
         [_sendTimer invalidate];
-    }
-    _sendTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(doSendMessage) userInfo:nil repeats:NO];
+
+    
+    _sendTimer = [NSTimer scheduledTimerWithTimeInterval:0.01
+                                                  target:self
+                                                selector:@selector(doSendMessage)
+                                                userInfo:nil
+                                                 repeats:NO];
 	
     return true;
 }
-
 
 - (void)stream:(NSStream *)theStream
    handleEvent:(NSStreamEvent)streamEvent
@@ -117,6 +131,7 @@ static GeoMasterServer *_open;
 			
             if (_openTimer != nil)
                 [_openTimer invalidate];
+            
             _openTimer = nil;
             if (self.delegate && theStream == _outputStream)
             {
@@ -164,14 +179,15 @@ static GeoMasterServer *_open;
 		case NSStreamEventErrorOccurred:
 			
         {
-            NSError *theError = [theStream streamError];
-            NSString *errorMessage = [theError localizedDescription];
+            NSError *theError = theStream.streamError;
+            NSString *errorMessage = theError.localizedDescription;
             [self closeServer];
+            
             if (self.delegate != nil)
             {
                 [self.delegate GMServer:self
                         didReceiveError:errorMessage
-                             withStatus:[theError code]];
+                             withStatus:theError.code];
             }
         }
             

@@ -2,8 +2,8 @@
 //  CCodeLibrary
 
 #define GM_OK 0
-#define GM_OPEN_FAILED   101
-#define GM_SEND_FAILED   102
+#define GM_OPEN_FAILED 101
+#define GM_SEND_FAILED 102
 
 #import <Foundation/Foundation.h>
 
