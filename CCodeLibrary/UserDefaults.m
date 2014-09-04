@@ -71,6 +71,12 @@ static UserDefaults *_defaults;
     return masterList;
 }
 
+- (NSArray *)geoidList
+{
+    NSArray *geoidList = [_defaults arrayForKey:@"GeoidsArray"];
+    return geoidList;
+}
+
 - (UIColor *)appleBlue
 {
     UIColor *appleBlue = [UIColor colorWithRed:0.0
@@ -89,6 +95,16 @@ static UserDefaults *_defaults;
                                      alpha:1.0];
     
     return green;
+}
+
+- (UIColor *)appleGray
+{
+    UIColor *appleGray = [UIColor colorWithRed:(224.0 / 255.0)
+                                         green:(224.0 / 255.0)
+                                          blue:(224.0 / 255.0)
+                                         alpha:1.0];
+    
+    return appleGray;
 }
 
 - (UIColor *)polygonFillColor

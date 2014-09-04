@@ -21,7 +21,7 @@
                                                    name:@"BLDownloadImageNotification"
                                                  object:nil];
 */
-        _currentGeoID = 2758000;
+        //_currentGeoid = 2758000;
         NSArray *paths = NSSearchPathForDirectoriesInDomains
         (NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
