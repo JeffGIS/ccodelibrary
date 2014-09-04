@@ -4,7 +4,7 @@
 #import "VerticalSegmentedControl.h"
 #import <QuartzCore/QuartzCore.h>
 
-#define IS_IOS_LESS_THAN(v) ([UIDevice.currentDevice.systemVersion compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define IS_IOS_LESS_THAN(v)                 ([UIDevice.currentDevice.systemVersion compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define DEFAULT_BACKGROUND_COLOR            UIColor.clearColor
 #define DEFAULT_TEXT_FONT                   [UIFont systemFontOfSize:14.0]
 #define DEFAULT_TEXT_COLOR                  UIColor.blackColor
@@ -95,12 +95,10 @@ int const kSMVerticalSegmentedControlNoSegment = -1;
     [self.sectionTitles enumerateObjectsUsingBlock:^(id titleString, NSUInteger idx, BOOL *stop)
     {
         CGFloat stringHeight = roundf([self getTextHeight:titleString]);
-        CGFloat y = self.segmentHeight * idx + self.segmentHeight / 2.0 - stringHeight / 2.0;
+        CGFloat y = (self.segmentHeight * idx + self.segmentHeight / 2.0 - stringHeight / 2.0);
         
         if (IS_IOS_LESS_THAN(@"6.0"))
-        {
             y +=(self.textFont.capHeight - self.textFont.xHeight);
-        }
         
         CGRect rect = CGRectMake(self.selectionIndicatorThickness + self.segmentEdgeInset.left, y,
                                  self.width - self.selectionIndicatorThickness - self.segmentEdgeInset.left - self.segmentEdgeInset.right,
@@ -184,11 +182,15 @@ int const kSMVerticalSegmentedControlNoSegment = -1;
     if (self.selectionStyle == VerticalSegmentedControlSelectionStyleTextHeightStrip && sectionHeight <= self.segmentHeight)
     {
         CGFloat heightToStartOfSelectedIndex = (self.segmentHeight * self.selectedSegmentIndex);
-        CGFloat y = heightToStartOfSelectedIndex + self.segmentHeight / 2.0 - (sectionHeight / 2.0);
+        CGFloat y = heightToStartOfSelectedIndex + (self.segmentHeight / 2.0) - (sectionHeight / 2.0);
         return CGRectMake(indicatorXOffset, y, self.selectionIndicatorThickness, sectionHeight);
     }
+    
     else
-        return CGRectMake(indicatorXOffset, self.segmentHeight * self.selectedSegmentIndex, self.selectionIndicatorThickness, self.segmentHeight);
+    {
+        return CGRectMake(indicatorXOffset, self.segmentHeight * self.selectedSegmentIndex,
+                          self.selectionIndicatorThickness, self.segmentHeight);
+    }
 }
 
 - (CGRect)frameForFillerSelectionIndicator

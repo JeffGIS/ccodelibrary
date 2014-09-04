@@ -48,6 +48,7 @@ extern int const kVerticalSegmentedControlNoSegment;
 @property (nonatomic, copy) IndexChangeBlock indexChangeBlock;
 
 - (id)initWithSectionTitles:(NSArray *)sectiontitles;
+
 - (void)setSelectedSegmentIndex:(NSUInteger)index
                        animated:(BOOL)animated;
 
