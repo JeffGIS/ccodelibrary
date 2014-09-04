@@ -16,9 +16,11 @@
 - (BOOL)boolForKey:(NSString *)key;
 - (NSString *)stringForKey:(NSString *)key;
 - (CGFloat)CGFloatForKey:(NSString *)key;
+- (NSArray *)geoidList;
 - (NSArray *)locationList;
 - (UIColor *)appleBlue;
 - (UIColor *)green;
+- (UIColor *)appleGray;
 - (UIColor *)polygonFillColor;
 
 - (void)saveColorWithRed:(CGFloat)red

@@ -10,6 +10,7 @@
 		1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */; };
 		1F101D2319AE94910006E1D5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F101D2219AE94910006E1D5 /* QuartzCore.framework */; };
 		1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F101D2619AE96EB0006E1D5 /* findIntersection.c */; };
+		1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */; };
 		1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544519A412490029DBEA /* NetworkManager.m */; };
 		1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544E19A449460029DBEA /* CustomAlert.m */; };
 		1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F838AE919B1021C00943A8C /* PlacesInfo.m */; };
@@ -59,6 +60,8 @@
 		1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPDataPull.m; sourceTree = "<group>"; };
 		1F101D2219AE94910006E1D5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1F101D2619AE96EB0006E1D5 /* findIntersection.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = findIntersection.c; sourceTree = "<group>"; };
+		1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerticalSegmentedControl.h; sourceTree = "<group>"; };
+		1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerticalSegmentedControl.m; sourceTree = "<group>"; };
 		1F3A544419A412490029DBEA /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
 		1F3A544519A412490029DBEA /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		1F3A544D19A449460029DBEA /* CustomAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlert.h; sourceTree = "<group>"; };
@@ -187,6 +190,8 @@
 				EBA2E48819952BCA0085B2E0 /* TileIndex.c */,
 				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
+				1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */,
+				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);
 			path = CCodeLibrary;
@@ -299,6 +304,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */,

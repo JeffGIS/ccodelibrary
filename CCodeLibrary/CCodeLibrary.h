@@ -18,6 +18,7 @@
 #import "PlacesInfo.h"
 #import "GeoMasterServer.h"
 #import "compress.h"
+#import "VerticalSegmentedControl.h"
 
 @interface CCodeLibrary : NSObject
 
