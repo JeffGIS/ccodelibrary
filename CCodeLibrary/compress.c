@@ -129,5 +129,3 @@ Exit:
     fclose (FidTF);
     return rtn;
 }
-
-
