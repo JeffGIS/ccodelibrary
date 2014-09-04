@@ -50,6 +50,7 @@
    forceRefresh:(BOOL)refresh;
 
 - (void)startReceive:(NSString *)fileName;
-- (void)stopReceiveWithStatus:(int)status statusString:(NSString *)statusString;
+- (void)stopReceiveWithStatus:(int)status
+                 statusString:(NSString *)statusString;
 
 @end

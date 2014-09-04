@@ -139,7 +139,8 @@ static FTPDataPull *_pull;
     [self receiveDidStart];
 }
 
-- (void)stopReceiveWithStatus:(int)status statusString:(NSString *)statusString
+- (void)stopReceiveWithStatus:(int)status
+                 statusString:(NSString *)statusString
 {
     if (self.connection != nil)
     {
@@ -192,7 +193,8 @@ didReceiveResponse:(NSURLResponse *)response
         
         if (bytesWritten <= 0)
         {
-            [self stopReceiveWithStatus:FTP_FILE_WRITE_ERROR statusString:@"File write error"];
+            [self stopReceiveWithStatus:FTP_FILE_WRITE_ERROR
+                           statusString:@"File write error"];
             break;
         }
         
@@ -214,7 +216,8 @@ didReceiveResponse:(NSURLResponse *)response
     
     if (self.hasFailed == NO)
     {
-        [self stopReceiveWithStatus:FTP_CONNECTION_FAILED statusString:[error localizedDescription]];
+        [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
+                       statusString:[error localizedDescription]];
         
         if (self.currentFtp == self.ftpSite)
         {
@@ -253,7 +256,8 @@ didReceiveResponse:(NSURLResponse *)response
     
     else
     {
-        [self stopReceiveWithStatus:FTP_CONNECTION_FAILED statusString:[error localizedDescription]];
+        [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
+                       statusString:error.localizedDescription];
         
         self.currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
         
@@ -270,7 +274,8 @@ didReceiveResponse:(NSURLResponse *)response
 #pragma unused(theConnection)
     assert(theConnection == self.connection);
     
-    [self stopReceiveWithStatus:FTP_OK statusString:@""];
+    [self stopReceiveWithStatus:FTP_OK
+                   statusString:@""];
 }
 
 - (void)setUpFTP
@@ -305,7 +310,8 @@ didReceiveResponse:(NSURLResponse *)response
 
 - (void)dealloc
 {
-    [self stopReceiveWithStatus:FTP_STOP    statusString:@"Stopped"];
+    [self stopReceiveWithStatus:FTP_STOP
+                   statusString:@"Stopped"];
 }
 
 @end
