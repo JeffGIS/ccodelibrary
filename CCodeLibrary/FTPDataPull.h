@@ -5,6 +5,12 @@
 #import "NetworkManager.h"
 #import "UserDefaults.h"
 
+#define FTP_OK      0
+#define FTP_STOP    1
+#define FTP_CANCEL  2
+#define FTP_FILE_WRITE_ERROR    101
+#define FTP_CONNECTION_FAILED   102
+
 @class FTPDataPull;
 
 @protocol FTPDataPullDelegate  <NSObject>
@@ -44,6 +50,6 @@
    forceRefresh:(BOOL)refresh;
 
 - (void)startReceive:(NSString *)fileName;
-- (void)stopReceiveWithStatus:(NSString *)statusString;
+- (void)stopReceiveWithStatus:(int)status statusString:(NSString *)statusString;
 
 @end

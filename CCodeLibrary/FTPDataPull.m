@@ -36,7 +36,7 @@ static FTPDataPull *_pull;
     
     else if (self.delegate)
     {
-        [self.delegate FTPdidComplete:1
+        [self.delegate FTPdidComplete:FTP_OK
                              filePath:self.filePath];
     }
 }
@@ -47,9 +47,8 @@ static FTPDataPull *_pull;
     [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 
-- (void)receiveDidStopWithStatus:(NSString *)statusString
+- (void)receiveDidStopWithStatus:(int)status statusString:(NSString *)statusString
 {
-    int status = 0;
     
     if (statusString == nil)
     {
@@ -140,7 +139,7 @@ static FTPDataPull *_pull;
     [self receiveDidStart];
 }
 
-- (void)stopReceiveWithStatus:(NSString *)statusString
+- (void)stopReceiveWithStatus:(int)status statusString:(NSString *)statusString
 {
     if (self.connection != nil)
     {
@@ -154,7 +153,7 @@ static FTPDataPull *_pull;
         self.fileStream = nil;
     }
     
-    [self receiveDidStopWithStatus:statusString];
+    [self receiveDidStopWithStatus:status statusString:statusString];
     self.filePath = nil;
 }
 
@@ -193,7 +192,7 @@ didReceiveResponse:(NSURLResponse *)response
         
         if (bytesWritten <= 0)
         {
-            [self stopReceiveWithStatus:@"File write error"];
+            [self stopReceiveWithStatus:FTP_FILE_WRITE_ERROR statusString:@"File write error"];
             break;
         }
         
@@ -215,7 +214,7 @@ didReceiveResponse:(NSURLResponse *)response
     
     if (self.hasFailed == NO)
     {
-        [self stopReceiveWithStatus:nil];
+        [self stopReceiveWithStatus:FTP_CONNECTION_FAILED statusString:[error localizedDescription]];
         
         if (self.currentFtp == self.ftpSite)
         {
@@ -254,7 +253,7 @@ didReceiveResponse:(NSURLResponse *)response
     
     else
     {
-        [self stopReceiveWithStatus:nil];
+        [self stopReceiveWithStatus:FTP_CONNECTION_FAILED statusString:[error localizedDescription]];
         
         self.currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
         
@@ -271,7 +270,7 @@ didReceiveResponse:(NSURLResponse *)response
 #pragma unused(theConnection)
     assert(theConnection == self.connection);
     
-    [self stopReceiveWithStatus:nil];
+    [self stopReceiveWithStatus:FTP_OK statusString:@""];
 }
 
 - (void)setUpFTP
@@ -306,7 +305,7 @@ didReceiveResponse:(NSURLResponse *)response
 
 - (void)dealloc
 {
-    [self stopReceiveWithStatus:@"Stopped"];
+    [self stopReceiveWithStatus:FTP_STOP    statusString:@"Stopped"];
 }
 
 @end
