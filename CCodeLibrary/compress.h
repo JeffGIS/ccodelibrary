@@ -7,6 +7,6 @@
 #include "CCodeTypes.h"
 
 BOOL GetFileFromTransferFile (HWND hWndStatus,FILE * FidTF,LPSTR FileToGet,long LenToRead,long MaxLength);
-BOOL DecompressGMZipFile (char * TransferFileName);
+BOOL DecompressGMZipFile (char * TransferFileName,char * toDirectory);
 
 #endif

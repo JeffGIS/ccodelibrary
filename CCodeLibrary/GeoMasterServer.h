@@ -38,6 +38,6 @@ didReceiveMessage:(NSString *)message
 
 - (BOOL) initCommunication:(float)connectionTimeoutInSeconds;
 - (void) closeServer;
-- (bool) sendMessage:(NSString *)message;
+- (BOOL) sendMessage:(NSString *)message;
 
 @end

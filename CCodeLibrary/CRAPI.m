@@ -1,7 +1,6 @@
 //  CRAPI.m
 //  CCodeLibrary
 
-#import "CRAPI.h"
 #import "../../CCodeLibrary/CCodeLibrary/CCodeLibrary.h"
 #import <UIKit/UIKit.h>
 
@@ -392,6 +391,21 @@ forGeoid:(int)geoid;
      forceRefresh:NO];
     
     return TRUE;
+}
+- (NSString*)directoryFromPath:(NSString*)path
+{
+    LPSTR str = malloc (path.length+2);
+    LPSTR pBS;
+    NSString* outDir = @"";
+    
+    strcpy (str,path.UTF8String);
+    if ((pBS = strrchr (str,'/')))
+    {
+        *pBS = 0;
+        outDir = [NSString stringWithUTF8String:str];
+    }
+    free (str);
+    return outDir;
 }
 
 @end

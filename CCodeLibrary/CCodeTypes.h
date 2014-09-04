@@ -8,12 +8,14 @@
 
 typedef char * LPSTR;
 typedef LPSTR HPSTR;
-typedef bool    BOOL;
+#ifndef BOOL
+#define BOOL int
+#endif
 #define TRUE    1
 #define FALSE   0
 typedef void * LPVOID;
 typedef int HWND;
-typedef unsigned long DWORD;
+typedef unsigned int DWORD;
 typedef unsigned char *LPBYTE;
 
 #endif

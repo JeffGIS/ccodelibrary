@@ -43,7 +43,7 @@ BOOL InitLZO (void)
     HaveLZOInit = TRUE;
     return TRUE;
 }
-long DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec,LPBYTE pCompressedRec,DWORD CompressedLen)
+int DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec,LPBYTE pCompressedRec,DWORD CompressedLen)
 {
 	int		DCLen;
 	int		rtn;
@@ -58,26 +58,27 @@ long DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec,LPBYTE pCompressedRec
 }
 BOOL GetFileFromTransferFile (HWND hWndStatus,FILE * FidTF,LPSTR FileToGet,long LenToRead,long MaxLength)
 {
-	long	lRec;
+	int	lRec;
     BOOL    rtn=FALSE;
     //HANDLE	hRec = GSSiGlobAlloc (1552,GMEM_MOVEABLE,MaxLength);
     LPBYTE	pRec = malloc (MaxLength);
     //HANDLE	hCompressedRec = GSSiGlobAlloc (1553,GMEM_MOVEABLE,MaxLength*2);
     LPBYTE	pCompressedRec = malloc (MaxLength * 2);
-    long	CompressedLength, LenRead=0;
+    int	CompressedLength, LenRead=0;
 	FILE *	Fid=fopen (FileToGet,"wb");
 	
 	if (Fid == NULL)
 		goto Exit;
    	//PctBox (hWndStatus,LenToRead,LenRead,0);
-	while (LenRead < LenToRead)
+    BigRead (FidTF,(HPSTR)&CompressedLength,4);
+	while (CompressedLength > 0)
 	{
-		BigRead (FidTF,(HPSTR)&CompressedLength,4);
 		LenRead += CompressedLength+4;
 		BigRead (FidTF,pCompressedRec,CompressedLength);
 		lRec = DecompressBinaryRecordUnsafe (pRec,pCompressedRec,CompressedLength);
     	BigWrite (Fid,pRec,lRec,-1);
     	//PctBox (hWndStatus,LenToRead,LenRead,0);
+        BigRead (FidTF,(HPSTR)&CompressedLength,4);
     }
     fclose (Fid);
     rtn = TRUE;
@@ -86,43 +87,46 @@ Exit:
     free (pRec);
     return TRUE;
 }
-BOOL DecompressGMZipFile (char * TransferFileName)
+BOOL DecompressGMZipFile (char * TransferFileName,char * toDirectory)
 {
-    int	NextFileLoc=0, len, FileLength, EndOfFile, MaxLength,LenToRead;
+    int	 len, MaxLength,LenToRead;
     char File[PATH_MAX];
-    short	Version;
+    char OutFile[PATH_MAX];
+    short	Version, endMarker;
     FILE *FidTF;
     BOOL rtn = TRUE;
+    LPSTR pBS;
+    
     FidTF = fopen(TransferFileName,"rb");
-    FileLength = (int)GSSifilelength (FidTF);
-    NextFileLoc = sizeof(int);
-    NextFileLoc = 10;
-    fread(&len, sizeof(int),1,FidTF);
+    if (FidTF == NULL)
+        return FALSE;
+    if (GSSifilelength (FidTF) < 14)
+    {
+        rtn = FALSE;
+        goto Exit;
+    }
+    fseek (FidTF,-4,SEEK_END);
+    fread(&endMarker, sizeof(short),1,FidTF);
+    if (endMarker != 32349)
+    {
+        rtn = FALSE;
+        goto Exit;
+    }
+    fseek (FidTF,0,SEEK_SET);
     fread(&Version, sizeof(short),1,FidTF);
     fread(&MaxLength, sizeof(int),1,FidTF);
-    while (rtn && NextFileLoc > 0)
+    BigRead (FidTF,&len,4);
+    while (rtn && len > 0)
     {
-        fseek (FidTF,NextFileLoc,0);
-        BigRead (FidTF,&len,4);
         BigRead (FidTF,File,len);
-        BigRead (FidTF,&NextFileLoc,4);
-        if (NextFileLoc > 0)
-            EndOfFile = NextFileLoc - 1;
-        else
-            EndOfFile = FileLength - 4;
-        LenToRead = EndOfFile - fseek (FidTF,0,1) +1;
-        //SetDlgItemText (hWndDlg,IDC_MESSAGE,File);
-        if (!strncasecmp (File,"[XCMD]",6))
-            ExpandText (&File[6]);
-        else if (!GetFileFromTransferFile (0,FidTF,File,LenToRead,MaxLength))
-        {
-            rtn = FALSE;
-            //sprintf (str,"Unable to open file\r\n%s",File);
-            //MessageBox (hWndDlg,str,0,MB_ICONEXCLAMATION);
-        }
+        if (!(pBS = strrchr (File,'\\')))
+            pBS = File;
+        sprintf (OutFile,"%s/%s",toDirectory,pBS);
+        rtn = GetFileFromTransferFile (0,FidTF,OutFile,LenToRead,MaxLength);
+        BigRead (FidTF,&len,4);
     }
+Exit:
     fclose (FidTF);
-    
     return rtn;
 }
 

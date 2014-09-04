@@ -51,7 +51,7 @@ static GeoMasterServer *_open;
     }
 }
 
-- (bool)initCommunication:(float)connectionTimeoutInSeconds
+- (BOOL)initCommunication:(float)connectionTimeoutInSeconds
 {
     bool rtn=false;
     
@@ -101,7 +101,7 @@ static GeoMasterServer *_open;
     }
     
 }
-- (bool) sendMessage:(NSString *)message
+- (BOOL) sendMessage:(NSString *)message
 {
 	_data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
     
@@ -122,7 +122,7 @@ static GeoMasterServer *_open;
    handleEvent:(NSStreamEvent)streamEvent
 {
     int ii;
-	NSLog(@"stream event %lu", streamEvent);
+	NSLog(@"stream event %lu", (long)streamEvent);
 	
 	switch (streamEvent)
     {
