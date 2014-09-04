@@ -9,6 +9,8 @@
 #include "compress.h"
 #include "minilzo.h"
 
+#define BOOL int
+
 long GSSifilelength (FILE *fid)
 {
     long fileLen;
@@ -33,9 +35,9 @@ void ExpandText (LPSTR txt)
 {
     return;
 }
-BOOL InitLZO (void)
+int InitLZO (void)
 {
-	static BOOL	HaveLZOInit=FALSE;
+	static int	HaveLZOInit=FALSE;
 	if (HaveLZOInit)
 		return TRUE;
 	if (lzo_init() != 0)
@@ -56,10 +58,10 @@ int DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec,LPBYTE pCompressedRec,
 	}
 	return 0;
 }
-BOOL GetFileFromTransferFile (HWND hWndStatus,FILE * FidTF,LPSTR FileToGet,long LenToRead,long MaxLength)
+int GetFileFromTransferFile (HWND hWndStatus,FILE * FidTF,LPSTR FileToGet,long LenToRead,long MaxLength)
 {
 	int	lRec;
-    BOOL    rtn=FALSE;
+    int    rtn=FALSE;
     //HANDLE	hRec = GSSiGlobAlloc (1552,GMEM_MOVEABLE,MaxLength);
     LPBYTE	pRec = malloc (MaxLength);
     //HANDLE	hCompressedRec = GSSiGlobAlloc (1553,GMEM_MOVEABLE,MaxLength*2);

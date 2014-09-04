@@ -278,7 +278,7 @@
     return self.outputDirectory;
 }
 
-- (bool)intersectionAlreadyCompleted:(int)intID
+- (BOOL)intersectionAlreadyCompleted:(int)intID
 {
     NSString *outputFile = [NSString stringWithFormat:@"%@/Intersection_%i.txt", self.outputDirectory,intID];
     
@@ -358,7 +358,7 @@
     return imageFile;
 }
 
-- (bool)getPlaceAreaFile:(id)id
+- (BOOL)getPlaceAreaFile:(id)id
 forGeoid:(int)geoid;
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -375,7 +375,7 @@ forGeoid:(int)geoid;
     return TRUE;
 }
 
-- (bool)getPlaceIntersectionFile:(id)id
+- (BOOL)getPlaceIntersectionFile:(id)id
 forGeoid:(int)geoid;
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
