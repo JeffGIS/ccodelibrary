@@ -20,8 +20,10 @@
 - (NSArray *)locationList;
 - (UIColor *)appleBlue;
 - (UIColor *)green;
+- (UIColor *)darkGreen;
 - (UIColor *)appleGray;
 - (UIColor *)polygonFillColor;
+- (UIImage *)checkmark;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F0AA5FE19B969AA0078D56F /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F0AA5FD19B969AA0078D56F /* checkmark.png */; };
 		1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */; };
 		1F101D2319AE94910006E1D5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F101D2219AE94910006E1D5 /* QuartzCore.framework */; };
 		1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F101D2619AE96EB0006E1D5 /* findIntersection.c */; };
@@ -56,6 +57,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1F0AA5FD19B969AA0078D56F /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
 		1F0B41F919AEAE0A00981F57 /* FTPDataPull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDataPull.h; sourceTree = "<group>"; };
 		1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPDataPull.m; sourceTree = "<group>"; };
 		1F101D2219AE94910006E1D5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -125,6 +127,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F0AA5FC19B9697F0078D56F /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				1F0AA5FD19B969AA0078D56F /* checkmark.png */,
+			);
+			name = Images;
+			path = CCodeLibraryTests;
+			sourceTree = SOURCE_ROOT;
+		};
 		EBA2E451199527660085B2E0 = {
 			isa = PBXGroup;
 			children = (
@@ -200,7 +211,9 @@
 		EBA2E460199527660085B2E0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1F0AA5FC19B9697F0078D56F /* Images */,
 				EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */,
+				EBA2E476199527660085B2E0 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -218,7 +231,6 @@
 			isa = PBXGroup;
 			children = (
 				EBA2E475199527660085B2E0 /* CCodeLibraryTests-Info.plist */,
-				EBA2E476199527660085B2E0 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -294,6 +306,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBA2E478199527660085B2E0 /* InfoPlist.strings in Resources */,
+				1F0AA5FE19B969AA0078D56F /* checkmark.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,7 +360,8 @@
 				EBA2E477199527660085B2E0 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
+			path = CCodeLibraryTests;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXVariantGroup section */
 

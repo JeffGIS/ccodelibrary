@@ -97,6 +97,16 @@ static UserDefaults *_defaults;
     return green;
 }
 
+- (UIColor *)darkGreen
+{
+    UIColor *darkGreen = [UIColor colorWithRed:0.0
+                                         green:0.5
+                                          blue:0.0
+                                         alpha:1.0];
+    
+    return darkGreen;
+}
+
 - (UIColor *)appleGray
 {
     UIColor *appleGray = [UIColor colorWithRed:(224.0 / 255.0)
@@ -115,6 +125,14 @@ static UserDefaults *_defaults;
                                                 alpha:0.25];
     
     return polygonFillColor;
+}
+
+- (UIImage *)checkmark
+{
+    UIImage *checkmark = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"checkmark"
+                                                                                        ofType:@"png"]];
+    
+    return checkmark;
 }
 
 - (void)saveColorWithRed:(CGFloat)red
