@@ -43,7 +43,8 @@ static GeoMasterServer *_open;
     
     if (_outputStream != nil)
     {
-       [_outputStream removeFromRunLoop:NSRunLoop.currentRunLoop
+        [_outputStream close];
+        [_outputStream removeFromRunLoop:NSRunLoop.currentRunLoop
                                  forMode:NSDefaultRunLoopMode];
         
         _outputStream.delegate = nil;
