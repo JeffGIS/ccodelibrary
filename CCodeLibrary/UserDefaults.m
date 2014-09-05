@@ -230,14 +230,48 @@ static UserDefaults *_defaults;
     
     if (![geoidsArray containsObject:[NSNumber numberWithInt:geoid]])
     {
-        [namesArray addObject:name];
-        [statesArray addObject:state];
-        [geoidsArray addObject:[NSNumber numberWithInt:geoid]];
-        [bounds_wArray addObject:[NSNumber numberWithFloat:bounds_w]];
-        [bounds_sArray addObject:[NSNumber numberWithFloat:bounds_s]];
-        [bounds_eArray addObject:[NSNumber numberWithFloat:bounds_e]];
-        [bounds_nArray addObject:[NSNumber numberWithFloat:bounds_n]];
-        [statusArray addObject:[NSNumber numberWithInt:status]];
+        int index = 0;
+        
+        if (namesArray.count > 0)
+        {
+            NSComparisonResult result = [name compare:[namesArray objectAtIndex:index]
+                                              options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+        
+            while (result == NSOrderedDescending)
+            {
+                index++;
+                
+                if (index == namesArray.count)
+                    break;
+           
+                result = [name compare:[namesArray objectAtIndex:index]
+                               options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+            }
+        }
+        
+        [namesArray insertObject:name
+                         atIndex:index];
+        
+        [statesArray insertObject:state
+                          atIndex:index];
+        
+        [geoidsArray insertObject:[NSNumber numberWithInt:geoid]
+                          atIndex:index];
+        
+        [bounds_wArray insertObject:[NSNumber numberWithFloat:bounds_w]
+                            atIndex:index];
+        
+        [bounds_sArray insertObject:[NSNumber numberWithFloat:bounds_s]
+                            atIndex:index];
+        
+        [bounds_eArray insertObject:[NSNumber numberWithFloat:bounds_e]
+                            atIndex:index];
+        
+        [bounds_nArray insertObject:[NSNumber numberWithFloat:bounds_n]
+                            atIndex:index];
+        
+        [statusArray insertObject:[NSNumber numberWithInt:status]
+                          atIndex:index];
     
         NSArray *masterList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
                                bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, statusArray, nil];
