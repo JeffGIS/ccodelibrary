@@ -19,6 +19,8 @@
 #import "GeoMasterServer.h"
 #import "compress.h"
 #import "VerticalSegmentedControl.h"
+#import "IntersectionsDatabase.h"
+#include "IntersectionRecord.h"
 
 @interface CCodeLibrary : NSObject
 

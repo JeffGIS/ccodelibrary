@@ -41,6 +41,6 @@ forGeoid:(int)geoid;
 -(BOOL) getPlaceIntersectionFile:(id)id
 forGeoid:(int)geoid;
 
-- (NSString*)directoryFromPath:(NSString*)path;
+- (NSString*)directoryFromPath:(NSString*)path andName:(NSString*)name;
 
 @end

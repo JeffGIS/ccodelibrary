@@ -19,6 +19,8 @@
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
+		EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */; };
+		EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
 		EBA2E472199527660085B2E0 /* libCCodeLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */; };
@@ -75,6 +77,10 @@
 		1FB3605519AE7E8200592B1D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB1A69741999A6A9005A1CCB /* CRAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRAPI.h; sourceTree = "<group>"; };
 		EB1A69751999A6A9005A1CCB /* CRAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRAPI.m; sourceTree = "<group>"; };
+		EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntersectionsDatabase.h; sourceTree = "<group>"; };
+		EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntersectionsDatabase.m; sourceTree = "<group>"; };
+		EB2C7DB219BA5A6F00F6D9F0 /* IntersectionRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntersectionRecord.h; sourceTree = "<group>"; };
+		EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntersectionRecord.m; sourceTree = "<group>"; };
 		EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCCodeLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CCodeLibrary-Prefix.pch"; sourceTree = "<group>"; };
 		EBA2E462199527660085B2E0 /* CCodeLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCodeLibrary.h; sourceTree = "<group>"; };
@@ -136,6 +142,21 @@
 			path = CCodeLibraryTests;
 			sourceTree = SOURCE_ROOT;
 		};
+		EB2C7DAE19BA002500F6D9F0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EBB1BFCA199DD7C10059B547 /* MPIntersection.h */,
+				EBB1BFCB199DD7C10059B547 /* MPIntersection.m */,
+				1F838AE819B1021C00943A8C /* PlacesInfo.h */,
+				1F838AE919B1021C00943A8C /* PlacesInfo.m */,
+				EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */,
+				EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */,
+				EB2C7DB219BA5A6F00F6D9F0 /* IntersectionRecord.h */,
+				EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		EBA2E451199527660085B2E0 = {
 			isa = PBXGroup;
 			children = (
@@ -169,6 +190,7 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				EB2C7DAE19BA002500F6D9F0 /* Model */,
 				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
 				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
 				EBAEED0A19B610260084A579 /* CCodeTypes.h */,
@@ -190,12 +212,8 @@
 				EBA2E48519952BCA0085B2E0 /* MathUtil.h */,
 				EBAEED0519B601710084A579 /* minilzo.c */,
 				EBAEED0619B601710084A579 /* minilzo.h */,
-				EBB1BFCA199DD7C10059B547 /* MPIntersection.h */,
-				EBB1BFCB199DD7C10059B547 /* MPIntersection.m */,
 				1F3A544419A412490029DBEA /* NetworkManager.h */,
 				1F3A544519A412490029DBEA /* NetworkManager.m */,
-				1F838AE819B1021C00943A8C /* PlacesInfo.h */,
-				1F838AE919B1021C00943A8C /* PlacesInfo.m */,
 				EBA2E48619952BCA0085B2E0 /* rotate256.h */,
 				EBA2E48719952BCA0085B2E0 /* TileGraphics.h */,
 				EBA2E48819952BCA0085B2E0 /* TileIndex.c */,
@@ -318,6 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,
+				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */,
@@ -325,6 +344,7 @@
 				EBAEED0719B601710084A579 /* minilzo.c in Sources */,
 				EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
+				EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */,
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,

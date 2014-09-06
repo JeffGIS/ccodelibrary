@@ -359,7 +359,7 @@
 }
 
 - (BOOL)getPlaceAreaFile:(id)id
-forGeoid:(int)geoid;
+forGeoid:(int)geoid
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -375,24 +375,7 @@ forGeoid:(int)geoid;
     return TRUE;
 }
 
-- (BOOL)getPlaceIntersectionFile:(id)id
-forGeoid:(int)geoid;
-{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
-    
-    FTPDataPull *pull = FTPDataPull.pull;
-    pull.delegate = id;
-    
-    [pull getFile:fileName
-    fromDirectory:@"Bill/PlaceIntersections"
-      toDirectory:documentsDirectory
-     forceRefresh:NO];
-    
-    return TRUE;
-}
-- (NSString*)directoryFromPath:(NSString*)path
+- (NSString*)directoryFromPath:(NSString*)path andName:(NSString*)name
 {
     LPSTR str = malloc (path.length+2);
     LPSTR pBS;
@@ -402,6 +385,7 @@ forGeoid:(int)geoid;
     if ((pBS = strrchr (str,'/')))
     {
         *pBS = 0;
+        strcat (str,name.UTF8String);
         outDir = [NSString stringWithUTF8String:str];
     }
     free (str);

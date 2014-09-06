@@ -123,6 +123,8 @@ BOOL DecompressGMZipFile (char * TransferFileName,char * toDirectory)
         BigRead (FidTF,File,len);
         if (!(pBS = strrchr (File,'\\')))
             pBS = File;
+        else
+            pBS++;
         sprintf (OutFile,"%s/%s",toDirectory,pBS);
         rtn = GetFileFromTransferFile (0,FidTF,OutFile,LenToRead,MaxLength);
         BigRead (FidTF,&len,4);

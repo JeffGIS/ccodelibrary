@@ -104,6 +104,7 @@ double ComputeMaxSlope (double frontSlope,double sideSlope);
 
 #include "MathTypes.h"
 #include <stdbool.h>
+#include <stdio.h>
 
 #define PI 3.141592653589f
 #define PY		  3.141592653589793e0
@@ -232,5 +233,7 @@ double ArcDistance(DPOINT p1, DPOINT p2);
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
 int diffInDegrees (int angle1,int angle2);
 bool CreateMask (LPDPOINT *pPointsIN, int *pnPoints,bounds *pbnds);
+
+int fgetstring (char * str,int maxlen,FILE * fid);
 
 #endif
