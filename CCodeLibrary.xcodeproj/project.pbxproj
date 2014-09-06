@@ -142,21 +142,6 @@
 			path = CCodeLibraryTests;
 			sourceTree = SOURCE_ROOT;
 		};
-		EB2C7DAE19BA002500F6D9F0 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				EBB1BFCA199DD7C10059B547 /* MPIntersection.h */,
-				EBB1BFCB199DD7C10059B547 /* MPIntersection.m */,
-				1F838AE819B1021C00943A8C /* PlacesInfo.h */,
-				1F838AE919B1021C00943A8C /* PlacesInfo.m */,
-				EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */,
-				EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */,
-				EB2C7DB219BA5A6F00F6D9F0 /* IntersectionRecord.h */,
-				EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */,
-			);
-			name = Model;
-			sourceTree = "<group>";
-		};
 		EBA2E451199527660085B2E0 = {
 			isa = PBXGroup;
 			children = (
@@ -190,7 +175,6 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
-				EB2C7DAE19BA002500F6D9F0 /* Model */,
 				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
 				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
 				EBAEED0A19B610260084A579 /* CCodeTypes.h */,
@@ -205,15 +189,23 @@
 				1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */,
 				EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */,
 				EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */,
+				EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */,
+				EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */,
+				EB2C7DB219BA5A6F00F6D9F0 /* IntersectionRecord.h */,
+				EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */,
 				EBAEED0319B601710084A579 /* lzoconf.h */,
 				EBAEED0419B601710084A579 /* lzodefs.h */,
 				EBA2E48319952BCA0085B2E0 /* MathTypes.h */,
 				EBA2E48419952BCA0085B2E0 /* MathUtil.c */,
 				EBA2E48519952BCA0085B2E0 /* MathUtil.h */,
+				EBB1BFCA199DD7C10059B547 /* MPIntersection.h */,
+				EBB1BFCB199DD7C10059B547 /* MPIntersection.m */,
 				EBAEED0519B601710084A579 /* minilzo.c */,
 				EBAEED0619B601710084A579 /* minilzo.h */,
 				1F3A544419A412490029DBEA /* NetworkManager.h */,
 				1F3A544519A412490029DBEA /* NetworkManager.m */,
+				1F838AE819B1021C00943A8C /* PlacesInfo.h */,
+				1F838AE919B1021C00943A8C /* PlacesInfo.m */,
 				EBA2E48619952BCA0085B2E0 /* rotate256.h */,
 				EBA2E48719952BCA0085B2E0 /* TileGraphics.h */,
 				EBA2E48819952BCA0085B2E0 /* TileIndex.c */,

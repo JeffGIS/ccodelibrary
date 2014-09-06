@@ -24,9 +24,11 @@ static IntersectionsDatabase *_database;
 {
     if ((self = [super init]))
     {
-        NSFileManager *fileManager = NSFileManager.defaultManager;
-        BOOL success = [fileManager fileExistsAtPath:[self databasePath:geoid]];
+        //NSFileManager *fileManager = NSFileManager.defaultManager;
+        //BOOL success = [fileManager fileExistsAtPath:[self databasePath:geoid]];
+        
         self.geoid = geoid;
+        
         if (sqlite3_open([self databasePath:geoid].UTF8String, &_database) != SQLITE_OK)
             NSAssert(0, @"Database failed to open");
     }
@@ -45,7 +47,12 @@ static IntersectionsDatabase *_database;
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *subDir = [NSString stringWithFormat:@"%@/%i",documentsDirectory,geoid];
     NSFileManager *fileManager = NSFileManager.defaultManager;
-    [fileManager createDirectoryAtPath:subDir withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    [fileManager createDirectoryAtPath:subDir
+           withIntermediateDirectories:YES
+                            attributes:nil
+                                 error:nil];
+    
     NSString *dbPath = [NSString stringWithFormat:@"%@/%i/Intersections.sqlite3",documentsDirectory,geoid];
     return dbPath;
 }
@@ -62,44 +69,19 @@ static IntersectionsDatabase *_database;
 
 - (BOOL)insertRecordIntoIntersectionTable:(IntersectionRecord*)iRec
 {
-    BOOL rtn=TRUE;
+    BOOL rtn = YES;
+    
     NSString *query = [NSString stringWithFormat:@"INSERT INTO Intersections (intID, intX, intY, rotation, ramp1, ramp2, ramp3, ramp4, ramp5, ramp6, ramp7, ramp8, ramp81, ramp23, ramp45, ramp67, xWalkA, xWalkB, xWalkC, xWalkD, signal81, signal23, signal45, signal67) VALUES ('%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i')",iRec.intID, iRec.lev21X, iRec.lev21Y, iRec.rotation, iRec.ramp1, iRec.ramp2, iRec.ramp3, iRec.ramp4, iRec.ramp5, iRec.ramp6, iRec.ramp7, iRec.ramp8, iRec.ramp81, iRec.ramp23, iRec.ramp45, iRec.ramp67, iRec.xWalkA, iRec.xWalkB, iRec.xWalkC, iRec.xWalkD, iRec.signal81, iRec.signal23, iRec.signal45, iRec.signal67];
     
     sqlite3_stmt *statement;
+    sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL);
     
-    if (sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL) != SQLITE_OK)
+    if (sqlite3_step(statement) != SQLITE_DONE)
     {
-        rtn = FALSE;
-/*        sqlite3_bind_int(statement, 0, intID);
-        sqlite3_bind_int(statement, 1, intX);
-        sqlite3_bind_int(statement, 2, intY);
-        sqlite3_bind_int(statement, 3, rotation);
-        sqlite3_bind_int(statement, 4, ramp1);
-        sqlite3_bind_int(statement, 5, ramp2);
-        sqlite3_bind_int(statement, 6, ramp3);
-        sqlite3_bind_int(statement, 7, ramp4);
-        sqlite3_bind_int(statement, 8, ramp5);
-        sqlite3_bind_int(statement, 9, ramp6);
-        sqlite3_bind_int(statement, 10, ramp7);
-        sqlite3_bind_int(statement, 11, ramp8);
-        sqlite3_bind_int(statement, 12, ramp81);
-        sqlite3_bind_int(statement, 13, ramp23);
-        sqlite3_bind_int(statement, 14, ramp45);
-        sqlite3_bind_int(statement, 15, ramp67);
-        sqlite3_bind_int(statement, 16, xWalkA);
-        sqlite3_bind_int(statement, 17, xWalkB);
-        sqlite3_bind_int(statement, 18, xWalkC);
-        sqlite3_bind_int(statement, 19, xWalkD);
-        sqlite3_bind_int(statement, 20, signal81);
-        sqlite3_bind_int(statement, 21, signal23);
-        sqlite3_bind_int(statement, 22, signal45);
-        sqlite3_bind_int(statement, 23, signal67);*/
-    }
-    else if (sqlite3_step(statement) != SQLITE_DONE)
-    {
-        rtn = FALSE;
+        rtn = NO;
         NSAssert(0, @"Error updating table");
     }
+    
     sqlite3_finalize(statement);
     return rtn;
 }
@@ -175,41 +157,44 @@ static IntersectionsDatabase *_database;
     
     return dataArray;
 }
-- (int) loadIntersectionTextToDatabase:(NSString *)path
+- (int)loadIntersectionTextToDatabase:(NSString *)path
 {
     BOOL rtn = INTDB_FAILED;
-    char dataFile[PATH_MAX];
-    char indexFile[PATH_MAX];
+    char dataFile[PATH_MAX], indexFile[PATH_MAX];
     LPSTR pUB;
-    FILE *fidData;
-    FILE *fidIndex;
-    char data[258];
-    char index[256];
-    int maxData=256, maxIndex=100;
+    FILE *fidData, *fidIndex;
+    char data[258], index[256];
+    int maxData=256;
+    int maxIndex=100;
     int nLoaded = 0;
     
     strcpy (dataFile,path.UTF8String);
+    
     if ((pUB = strrchr (dataFile,'_')))
         *pUB = 0;
+    
     else
         goto Exit;
-    strcpy (indexFile,dataFile);
-    strcat (indexFile,"/intersection_index.bin");
-    strcat (dataFile,"/intersection_data.bin");
-    fidData = fopen (dataFile,"rb");
-    fidIndex = fopen (indexFile,"rb");
+    
+    strcpy (indexFile, dataFile);
+    strcat (indexFile, "/intersection_index.bin");
+    strcat (dataFile, "/intersection_data.bin");
+    fidData = fopen (dataFile, "rb");
+    fidIndex = fopen (indexFile, "rb");
+    
     if (fidData == nil || fidIndex == nil)
         goto Exit;
+    
     [self createIntersectionsTable];
     fgetstring (index,maxIndex,fidIndex);
-    while (fgetstring (data,maxData,fidData))
+    
+    while (fgetstring (data, maxData, fidData))
     {
         LPSTR pTab = strchr (data,'\t');
         LPSTR pTabIndex;
-
         fgetstring (index,maxIndex,fidIndex);
         pTabIndex = strchr (index,'\t');
-        IntersectionRecord *iRec = [[IntersectionRecord alloc]init];
+        IntersectionRecord *iRec = [[IntersectionRecord alloc] init];
         *pTab++ = 0;
         *pTabIndex = 0;
         pTabIndex = strchr (index,' ');
@@ -233,14 +218,19 @@ Exit:
 {
     if (status == FTP_OK)
     {
-        NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path andName:[NSString stringWithFormat:@"/%i",self.geoid]];
+        NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
+                                                                andName:[NSString stringWithFormat:@"/%i",self.geoid]];
+        
         DecompressGMZipFile ((LPSTR)path.UTF8String,(LPSTR)toDirectory.UTF8String);
         status = [self loadIntersectionTextToDatabase:path];
+        
         if (self.delegate != nil)
         {
-            [self.delegate intersectionsDatabase:[self databasePath:self.geoid] didLoad:@"" withStatus:status];
+            [self.delegate intersectionsDatabase:[self databasePath:self.geoid]
+                                         didLoad:@"" withStatus:status];
         }
     }
+    
     else
     {
        
@@ -268,19 +258,27 @@ Exit:
 - (void)getPlaceIntersectionDatabase
 {
     NSString * dbPath = [self databasePath:self.geoid];
-    unsigned long long fileSize = [[NSFileManager.defaultManager attributesOfItemAtPath:dbPath                                                                                  error:nil] fileSize];
+    unsigned long long fileSize = [[NSFileManager.defaultManager attributesOfItemAtPath:dbPath
+                                                                                  error:nil] fileSize];
     BOOL forceReload = TRUE;
     if (fileSize > 0 && !forceReload)
     {
         if (self.delegate != nil)
         {
-            [self.delegate intersectionsDatabase:dbPath didLoad:@"" withStatus:INTDB_OK];
+            [self.delegate intersectionsDatabase:dbPath
+                                         didLoad:@"" withStatus:INTDB_OK];
         }
     }
+    
     else
     {
         [self getPlaceIntersectionFile:self.geoid];
     }
+    
+}
+
+- (void)createTableNamed:(NSString *)tableName
+{
     
 }
 

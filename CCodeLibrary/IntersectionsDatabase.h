@@ -4,8 +4,8 @@
 #import <sqlite3.h>
 #import "../../CCodeLibrary/CCodeLibrary/CCodeLibrary.h"
 
-#define INTDB_OK    0
-#define INTDB_FAILED    1
+#define INTDB_OK 0
+#define INTDB_FAILED 1
 
 @class IntersectionsDatabase;
 
@@ -21,16 +21,14 @@
 {
     sqlite3 *_database;
 }
+
 @property (nonatomic, weak) id <IntersectionsDatabaseDelegate> delegate;
 @property int geoid;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
 - (void)getPlaceIntersectionDatabase;
-
 - (void)createTableNamed:(NSString *)tableName;
-
-
 - (NSArray *)getRecordsFromTable:(NSString *)tableName;
 
 @end

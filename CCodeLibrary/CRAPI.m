@@ -372,7 +372,14 @@ forGeoid:(int)geoid
     fromDirectory:@"Bill/PlaceAreas"
       toDirectory:documentsDirectory
      forceRefresh:NO];
-    return TRUE;
+    
+    return YES;
+}
+
+- (BOOL) getPlaceIntersectionFile:(id)id
+forGeoid:(int)geoid
+{
+    return YES;
 }
 
 - (NSString*)directoryFromPath:(NSString*)path andName:(NSString*)name
