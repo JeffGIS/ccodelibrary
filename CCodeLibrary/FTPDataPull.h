@@ -5,11 +5,11 @@
 #import "NetworkManager.h"
 #import "UserDefaults.h"
 
-#define FTP_OK      0
-#define FTP_STOP    1
-#define FTP_CANCEL  2
-#define FTP_FILE_WRITE_ERROR    101
-#define FTP_CONNECTION_FAILED   102
+#define FTP_OK 0
+#define FTP_STOP 1
+#define FTP_CANCEL 2
+#define FTP_FILE_WRITE_ERROR 101
+#define FTP_CONNECTION_FAILED 102
 
 @class FTPDataPull;
 
@@ -45,11 +45,12 @@
 + (FTPDataPull *)pull;
 
 - (void)getFile:(NSString *)fileName
-  fromDirectory:(NSString *)fromDir
-    toDirectory:(NSString *)toDir
+  fromDirectory:(NSString *)fromDirectory
+    toDirectory:(NSString *)toDirectory
    forceRefresh:(BOOL)refresh;
 
 - (void)startReceive:(NSString *)fileName;
+
 - (void)stopReceiveWithStatus:(int)status
                  statusString:(NSString *)statusString;
 

@@ -5,33 +5,26 @@
 
 @implementation FTPDataPull
 
-static FTPDataPull *_pull;
-
 + (FTPDataPull *)pull
 {
-    if (_pull == nil)
-    {
-        _pull = [[FTPDataPull alloc] init];
-    }
-    
-    return _pull;
+    return [[FTPDataPull alloc] init];
 }
 
 - (void)getFile:(NSString *)fileName
-        fromDirectory:(NSString *)fromDir
-        toDirectory:(NSString *)toDir
+        fromDirectory:(NSString *)fromDirectory
+        toDirectory:(NSString *)toDirectory
         forceRefresh:(BOOL)refresh
 {
-    self.toDirectory = toDir;
-    self.directory = fromDir;
+    self.toDirectory = toDirectory;
+    self.directory = fromDirectory;
     self.fileName = fileName;
     self.filePath = [NSString stringWithFormat:@"%@/%@", self.toDirectory,self.fileName];
     assert(self.filePath != nil);
     
-    unsigned long long fileSize = [[NSFileManager.defaultManager attributesOfItemAtPath:self.filePath
-                                                                                  error:nil] fileSize];
+    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:self.filePath
+                                                                                  error:nil].fileSize;
     
-    if (refresh || fileSize == 0 )
+    if (refresh || fileSize == 0)
         [self startReceive:fileName];
     
     else if (self.delegate)
@@ -47,7 +40,8 @@ static FTPDataPull *_pull;
     [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 
-- (void)receiveDidStopWithStatus:(int)status statusString:(NSString *)statusString
+- (void)receiveDidStopWithStatus:(int)status
+                    statusString:(NSString *)statusString
 {
     
     if (statusString == nil)

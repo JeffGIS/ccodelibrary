@@ -217,8 +217,7 @@
 - (void)didStopNetworkOperation
 {
     assert(NSThread.isMainThread);
-    assert(self.networkOperationCount > 0);
-    
+    //assert(self.networkOperationCount > 0);
     self.networkOperationCount -= 1;
 }
 

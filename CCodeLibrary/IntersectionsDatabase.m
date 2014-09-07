@@ -67,22 +67,56 @@ static IntersectionsDatabase *_database;
         NSAssert(0, @"Table failed to create");
 }
 
-- (BOOL)insertRecordIntoIntersectionTable:(IntersectionRecord*)iRec
+- (BOOL)insertRecordIntoIntersectionTable:(IntersectionRecord *)iRec
 {
     BOOL rtn = YES;
+    char *errorMessage;
+    sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &errorMessage);
     
-    NSString *query = [NSString stringWithFormat:@"INSERT INTO Intersections (intID, intX, intY, rotation, ramp1, ramp2, ramp3, ramp4, ramp5, ramp6, ramp7, ramp8, ramp81, ramp23, ramp45, ramp67, xWalkA, xWalkB, xWalkC, xWalkD, signal81, signal23, signal45, signal67) VALUES ('%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i','%i')",iRec.intID, iRec.lev21X, iRec.lev21Y, iRec.rotation, iRec.ramp1, iRec.ramp2, iRec.ramp3, iRec.ramp4, iRec.ramp5, iRec.ramp6, iRec.ramp7, iRec.ramp8, iRec.ramp81, iRec.ramp23, iRec.ramp45, iRec.ramp67, iRec.xWalkA, iRec.xWalkB, iRec.xWalkC, iRec.xWalkD, iRec.signal81, iRec.signal23, iRec.signal45, iRec.signal67];
+    char buffer[] = "INSERT INTO Intersections VALUES (?0, ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23)";
     
     sqlite3_stmt *statement;
-    sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL);
+    sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL);
     
-    if (sqlite3_step(statement) != SQLITE_DONE)
+    while (sqlite3_step(statement) == SQLITE_ROW)
     {
-        rtn = NO;
-        NSAssert(0, @"Error updating table");
+        sqlite3_bind_int(statement, 0, iRec.intID);
+        sqlite3_bind_int(statement, 1, iRec.lev21X);
+        sqlite3_bind_int(statement, 2, iRec.lev21Y);
+        sqlite3_bind_int(statement, 3, iRec.rotation);
+        sqlite3_bind_int(statement, 4, iRec.ramp1);
+        sqlite3_bind_int(statement, 5, iRec.ramp2);
+        sqlite3_bind_int(statement, 6, iRec.ramp3);
+        sqlite3_bind_int(statement, 7, iRec.ramp4);
+        sqlite3_bind_int(statement, 8, iRec.ramp5);
+        sqlite3_bind_int(statement, 9, iRec.ramp6);
+        sqlite3_bind_int(statement, 10, iRec.ramp7);
+        sqlite3_bind_int(statement, 11, iRec.ramp8);
+        sqlite3_bind_int(statement, 12, iRec.ramp81);
+        sqlite3_bind_int(statement, 13, iRec.ramp23);
+        sqlite3_bind_int(statement, 14, iRec.ramp45);
+        sqlite3_bind_int(statement, 15, iRec.ramp67);
+        sqlite3_bind_int(statement, 16, iRec.xWalkA);
+        sqlite3_bind_int(statement, 17, iRec.xWalkB);
+        sqlite3_bind_int(statement, 18, iRec.xWalkC);
+        sqlite3_bind_int(statement, 19, iRec.xWalkD);
+        sqlite3_bind_int(statement, 20, iRec.signal81);
+        sqlite3_bind_int(statement, 21, iRec.signal23);
+        sqlite3_bind_int(statement, 22, iRec.signal45);
+        sqlite3_bind_int(statement, 23, iRec.signal67);
+        
+        if (sqlite3_step(statement) != SQLITE_DONE)
+        {
+            NSAssert(0, @"Error updating table");
+            rtn = NO;
+        }
+        
+        sqlite3_reset(statement);
     }
     
+    sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, &errorMessage);
     sqlite3_finalize(statement);
+
     return rtn;
 }
 
@@ -186,7 +220,8 @@ static IntersectionsDatabase *_database;
         goto Exit;
     
     [self createIntersectionsTable];
-    fgetstring (index,maxIndex,fidIndex);
+    
+    fgetstring (index, maxIndex, fidIndex);
     
     while (fgetstring (data, maxData, fidData))
     {
@@ -206,6 +241,7 @@ static IntersectionsDatabase *_database;
         [self insertRecordIntoIntersectionTable:iRec];
         nLoaded++;
     }
+    
     fclose (fidIndex);
     fclose (fidData);
     rtn = INTDB_OK;
@@ -227,7 +263,8 @@ Exit:
         if (self.delegate != nil)
         {
             [self.delegate intersectionsDatabase:[self databasePath:self.geoid]
-                                         didLoad:@"" withStatus:status];
+                                         didLoad:@""
+                                      withStatus:status];
         }
     }
     
