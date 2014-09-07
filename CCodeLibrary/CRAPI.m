@@ -376,7 +376,7 @@ forGeoid:(int)geoid
     return YES;
 }
 
-- (BOOL) getPlaceIntersectionFile:(id)id
+- (BOOL)getPlaceIntersectionFile:(id)id
 forGeoid:(int)geoid
 {
     return YES;
