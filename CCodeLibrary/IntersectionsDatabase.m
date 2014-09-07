@@ -10,13 +10,11 @@ static IntersectionsDatabase *_database;
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid
 {
     if (_database == nil)
-    {
         _database = [[IntersectionsDatabase alloc] initWithGeoid:geoid];
-    }
+    
     else if (_database.geoid != geoid)
-    {
         _database = [[IntersectionsDatabase alloc] initWithGeoid:geoid];
-    }
+    
     return _database;
 }
 
@@ -70,8 +68,8 @@ static IntersectionsDatabase *_database;
 - (BOOL)insertRecordIntoIntersectionTable:(IntersectionRecord *)iRec
 {
     BOOL rtn = YES;
-    char *errorMessage;
-    sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &errorMessage);
+    char *error;
+    sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &error);
     
     char buffer[] = "INSERT INTO Intersections VALUES (?0, ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23)";
     
@@ -114,7 +112,7 @@ static IntersectionsDatabase *_database;
         sqlite3_reset(statement);
     }
     
-    sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, &errorMessage);
+    sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, &error);
     sqlite3_finalize(statement);
 
     return rtn;
@@ -198,8 +196,8 @@ static IntersectionsDatabase *_database;
     LPSTR pUB;
     FILE *fidData, *fidIndex;
     char data[258], index[256];
-    int maxData=256;
-    int maxIndex=100;
+    int maxData = 256;
+    int maxIndex = 100;
     int nLoaded = 0;
     
     strcpy (dataFile,path.UTF8String);
@@ -295,15 +293,16 @@ Exit:
 - (void)getPlaceIntersectionDatabase
 {
     NSString * dbPath = [self databasePath:self.geoid];
-    unsigned long long fileSize = [[NSFileManager.defaultManager attributesOfItemAtPath:dbPath
-                                                                                  error:nil] fileSize];
+    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
+                                                                                 error:nil].fileSize;
     BOOL forceReload = TRUE;
     if (fileSize > 0 && !forceReload)
     {
         if (self.delegate != nil)
         {
             [self.delegate intersectionsDatabase:dbPath
-                                         didLoad:@"" withStatus:INTDB_OK];
+                                         didLoad:@""
+                                      withStatus:INTDB_OK];
         }
     }
     

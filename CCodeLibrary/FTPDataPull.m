@@ -44,9 +44,9 @@
                     statusString:(NSString *)statusString
 {
     
-    if (statusString == nil)
+    if (!statusString)
     {
-        assert(self.filePath != nil);
+        assert(self.filePath);
         status = 1;
     }
 
@@ -61,7 +61,7 @@
 
 - (BOOL)isReceiving
 {
-    return (self.connection != nil);
+    return (self.connection);
 }
 
 - (void)startReceive:(NSString *)fileName
@@ -76,11 +76,11 @@
     NSURL *url;
     NSURLRequest *request;
     
-    assert(self.connection == nil);
-    assert(self.fileStream == nil);
+    assert(!self.connection);
+    assert(!self.fileStream);
     
     url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
-    success = (url != nil);
+    success = (url);
     
     if (!success || ![NetworkManager.sharedInstance isBinaryURL:url])
     {
@@ -99,18 +99,18 @@
             }
             
             url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
-            success = (url != nil);
+            success = (url);
         }
         
         if (!success)
         {
-            NSLog (@"ERROR: Invalid URL");
+            NSAssert(0, @"ERROR: Invalid URL");
             return;
         }
         
         else if (![NetworkManager.sharedInstance isBinaryURL:url])
         {
-            NSLog (@"ERROR: NOT a binary file");
+            NSAssert(0, @"ERROR: NOT a binary file");
             return;
         }
     }
@@ -118,17 +118,17 @@
     self.fileStream = [NSOutputStream outputStreamToFileAtPath:self.filePath
                                                         append:NO];
     
-    assert(self.fileStream != nil);
+    assert(self.fileStream);
     
     [self.fileStream open];
     
     request = [NSURLRequest requestWithURL:url];
-    assert(request != nil);
+    assert(request);
     
     self.connection = [NSURLConnection connectionWithRequest:request
                                                     delegate:self];
     
-    assert(self.connection != nil);
+    assert(self.connection);
     
     [self receiveDidStart];
 }
@@ -148,7 +148,9 @@
         self.fileStream = nil;
     }
     
-    [self receiveDidStopWithStatus:status statusString:statusString];
+    [self receiveDidStopWithStatus:status
+                      statusString:statusString];
+    
     self.filePath = nil;
 }
 
@@ -159,7 +161,7 @@ didReceiveResponse:(NSURLResponse *)response
 #pragma unused(response)
     
     assert(theConnection == self.connection);
-    assert(response != nil);
+    assert(response);
 }
 
 - (void)connection:(NSURLConnection *)theConnection
@@ -221,7 +223,7 @@ didReceiveResponse:(NSURLResponse *)response
             [UserDefaults.defaults saveString:self.currentFtp
                                        forKey:@"CurrentFtp"];
             
-            NSLog (@"%@", status);
+            NSAssert(0, status);
             self.hasFailed = YES;
             
             [self getFile:self.fileName
@@ -238,7 +240,7 @@ didReceiveResponse:(NSURLResponse *)response
             [UserDefaults.defaults saveString:self.currentFtp
                                        forKey:@"CurrentFtp"];
             
-            NSLog (@"%@", status);
+            NSAssert(0, status);
             self.hasFailed = YES;
             
             [self getFile:self.fileName
@@ -258,7 +260,7 @@ didReceiveResponse:(NSURLResponse *)response
         [UserDefaults.defaults saveString:self.currentFtp
                                    forKey:@"CurrentFtp"];
         
-        NSLog (@"%@", status);
+        NSAssert(0, status);
         self.hasFailed = NO;
     }
 }
@@ -294,12 +296,14 @@ didReceiveResponse:(NSURLResponse *)response
 
 - (void)setToFtpSite1
 {
-    self.urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@", self.username, self.password, self.ftpSite, self.port, self.directory, self.fileName];
+    self.urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@", self.username,
+                    self.password, self.ftpSite, self.port, self.directory, self.fileName];
 }
 
 - (void)setToFtpSite2
 {
-    self.urlText = [NSString stringWithFormat:@"%@:%@@%@/%@/%@", self.username2, self.password2, self.ftpSite2, self.directory, self.fileName];
+    self.urlText = [NSString stringWithFormat:@"%@:%@@%@/%@/%@", self.username2,
+                    self.password2, self.ftpSite2, self.directory, self.fileName];
 }
 
 - (void)dealloc

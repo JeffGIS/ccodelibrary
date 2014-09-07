@@ -130,14 +130,14 @@ static GeoMasterServer *_open;
 			
 		case NSStreamEventOpenCompleted:
 			
-            if (_openTimer != nil)
+            if (_openTimer)
                 [_openTimer invalidate];
             
             _openTimer = nil;
+            
             if (self.delegate && theStream == _outputStream)
-            {
                 [self.delegate GMServerDidOpen:self];
-            }
+
 			break;
             
 		case NSStreamEventHasBytesAvailable:
