@@ -58,12 +58,15 @@ static IntersectionsDatabase *_database;
 {
     char *error;
     
+    NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;"];
+    if (sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error) != SQLITE_OK)
+        NSAssert(0, @"Table failed to drop");
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (intID INTEGER, intX INTEGER, intY INTEGER, rotation INTEGER, ramp1 INTEGER, ramp2 INTEGER, ramp3 INTEGER, ramp4 INTEGER, ramp5 INTEGER, ramp6 INTEGER, ramp7 INTEGER, ramp8 INTEGER, ramp81 INTEGER, ramp23 INTEGER, ramp45 INTEGER, ramp67 INTEGER, xWalkA INTEGER, xWalkB INTEGER, xWalkC INTEGER, xWalkD INTEGER, signal81 INTEGER, signal23 INTEGER, signal45 INTEGER, signal67 INTEGER);"];
     
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
 }
 
-- (BOOL)insertRecordIntoIntersectionTable:(IntersectionRecord *)iRec
+-(void) logError
 {
     BOOL rtn = YES;
     char *error;
@@ -116,10 +119,15 @@ static IntersectionsDatabase *_database;
     return rtn;
 }
 
-- (NSArray *)getRecordsFromTable:(NSString *)tableName
+void SQLOK (int sqlReturn)
+{
+    if (sqlReturn != SQLITE_OK)
+        [_database logError];
+}
+- (NSArray *)getIntersectionPointsFromDatabase
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM %@", tableName];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Intersections"];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
@@ -193,6 +201,12 @@ static IntersectionsDatabase *_database;
     int maxData = 256;
     int maxIndex = 100;
     int nLoaded = 0;
+    char buffer[] = "INSERT INTO Intersections VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    sqlite3_stmt *statement;
+    char *error;
+    INTERSECTION_STRUCT intStruct={0};
+    int * pInt;
+    int i;
     
     strcpy (dataFile,path.UTF8String);
     
@@ -212,6 +226,8 @@ static IntersectionsDatabase *_database;
         goto Exit;
     
     [self createIntersectionsTable];
+    SQLOK(sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL));
+    SQLOK(sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &error));
     
     fgetstring (index, maxIndex, fidIndex);
     
@@ -221,18 +237,27 @@ static IntersectionsDatabase *_database;
         LPSTR pTabIndex;
         fgetstring (index,maxIndex,fidIndex);
         pTabIndex = strchr (index,'\t');
-        IntersectionRecord *iRec = [[IntersectionRecord alloc] init];
         *pTab++ = 0;
         *pTabIndex = 0;
         pTabIndex = strchr (index,' ');
         *pTabIndex++ = 0;
-        iRec.intID = atoi (data);
-        iRec.lev21Y = atoi (index);
-        iRec.lev21X = atoi (pTabIndex);
-        
-        [self insertRecordIntoIntersectionTable:iRec];
+        intStruct.intID = atoi (data);
+        intStruct.lev21Y = atoi (index);
+        intStruct.lev21X = atoi (pTabIndex);
+        for (i=1,pInt = &intStruct.intID;i<25;i++,pInt++)
+            SQLOK(sqlite3_bind_int(statement, i, *pInt));
+        if (sqlite3_step(statement) != SQLITE_DONE)
+        {
+            NSLog(@"Error inserting intersection. '%s'", sqlite3_errmsg(_database));
+            rtn = NO;
+        }
         nLoaded++;
+        
+        SQLOK(sqlite3_reset(statement));
     }
+    
+    SQLOK(sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, &error));
+    SQLOK(sqlite3_finalize(self.statement));
     
     fclose (fidIndex);
     fclose (fidData);
@@ -260,7 +285,7 @@ Exit:
         }
     }
     
-    else
+    else if (status != FTP_STOP)
     {
        
         [self.delegate intersectionsDatabase:nil

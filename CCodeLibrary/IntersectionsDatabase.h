@@ -24,6 +24,7 @@
 
 @property (nonatomic, weak) id <IntersectionsDatabaseDelegate> delegate;
 @property int geoid;
+@property sqlite3_stmt *statement;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
