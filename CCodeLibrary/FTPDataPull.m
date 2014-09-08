@@ -223,7 +223,7 @@ didReceiveResponse:(NSURLResponse *)response
             [UserDefaults.defaults saveString:self.currentFtp
                                        forKey:@"CurrentFtp"];
             
-            NSAssert(0, status);
+            //NSAssert(0, status);
             self.hasFailed = YES;
             
             [self getFile:self.fileName
@@ -240,7 +240,7 @@ didReceiveResponse:(NSURLResponse *)response
             [UserDefaults.defaults saveString:self.currentFtp
                                        forKey:@"CurrentFtp"];
             
-            NSAssert(0, status);
+            //NSAssert(0, status);
             self.hasFailed = YES;
             
             [self getFile:self.fileName

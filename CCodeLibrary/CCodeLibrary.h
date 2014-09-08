@@ -21,6 +21,7 @@
 #import "VerticalSegmentedControl.h"
 #import "IntersectionsDatabase.h"
 #include "IntersectionRecord.h"
+#include "IntersectionPoint.h"
 
 @interface CCodeLibrary : NSObject
 
