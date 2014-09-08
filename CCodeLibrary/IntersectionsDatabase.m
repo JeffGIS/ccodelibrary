@@ -84,7 +84,7 @@ void SQLOK (int sqlReturn)
 - (NSArray *)getIntersectionPointsFromDatabase
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Intersections2"];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Intersections"];
     sqlite3_stmt *statement;
     
     if (sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL) == SQLITE_OK)
@@ -206,7 +206,7 @@ Exit:
         }
     }
     
-    else
+    else if (status != FTP_STOP)
     {
        
         [self.delegate intersectionsDatabase:nil
