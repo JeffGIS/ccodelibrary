@@ -29,8 +29,8 @@
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
 - (void)getPlaceIntersectionDatabase;
-- (void)createTableNamed:(NSString *)tableName;
-- (NSArray *)getRecordsFromTable:(NSString *)tableName;
+- (NSArray *)getIntersectionPointsFromDatabase;
+- (int)loadIntersectionTextToDatabase:(NSString *)path;
 - (void)logError;
 void SQLOK (int sqlReturn);
 

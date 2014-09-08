@@ -22,11 +22,7 @@ static IntersectionsDatabase *_database;
 {
     if ((self = [super init]))
     {
-        //NSFileManager *fileManager = NSFileManager.defaultManager;
-        //BOOL success = [fileManager fileExistsAtPath:[self databasePath:geoid]];
-        
         self.geoid = geoid;
-        
         SQLOK(sqlite3_open([self databasePath:geoid].UTF8String, &_database));
     }
     
@@ -59,71 +55,14 @@ static IntersectionsDatabase *_database;
     char *error;
     
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;"];
-    if (sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error) != SQLITE_OK)
-        NSAssert(0, @"Table failed to drop");
+    
+    SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error));
+    
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (intID INTEGER, intX INTEGER, intY INTEGER, rotation INTEGER, ramp1 INTEGER, ramp2 INTEGER, ramp3 INTEGER, ramp4 INTEGER, ramp5 INTEGER, ramp6 INTEGER, ramp7 INTEGER, ramp8 INTEGER, ramp81 INTEGER, ramp23 INTEGER, ramp45 INTEGER, ramp67 INTEGER, xWalkA INTEGER, xWalkB INTEGER, xWalkC INTEGER, xWalkD INTEGER, signal81 INTEGER, signal23 INTEGER, signal45 INTEGER, signal67 INTEGER);"];
     
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
 }
 
--(void) logError
-{
-    BOOL rtn = YES;
-    char *error;
-    sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &error);
-    
-    char buffer[] = "INSERT INTO Intersections VALUES (?0, ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23)";
-    
-    sqlite3_stmt *statement;
-    
-    SQLOK(sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL));
-    
-    while (sqlite3_step(statement) == SQLITE_ROW)
-    {
-        sqlite3_bind_int(statement, 0, iRec.intID);
-        sqlite3_bind_int(statement, 1, iRec.lev21X);
-        sqlite3_bind_int(statement, 2, iRec.lev21Y);
-        sqlite3_bind_int(statement, 3, iRec.rotation);
-        sqlite3_bind_int(statement, 4, iRec.ramp1);
-        sqlite3_bind_int(statement, 5, iRec.ramp2);
-        sqlite3_bind_int(statement, 6, iRec.ramp3);
-        sqlite3_bind_int(statement, 7, iRec.ramp4);
-        sqlite3_bind_int(statement, 8, iRec.ramp5);
-        sqlite3_bind_int(statement, 9, iRec.ramp6);
-        sqlite3_bind_int(statement, 10, iRec.ramp7);
-        sqlite3_bind_int(statement, 11, iRec.ramp8);
-        sqlite3_bind_int(statement, 12, iRec.ramp81);
-        sqlite3_bind_int(statement, 13, iRec.ramp23);
-        sqlite3_bind_int(statement, 14, iRec.ramp45);
-        sqlite3_bind_int(statement, 15, iRec.ramp67);
-        sqlite3_bind_int(statement, 16, iRec.xWalkA);
-        sqlite3_bind_int(statement, 17, iRec.xWalkB);
-        sqlite3_bind_int(statement, 18, iRec.xWalkC);
-        sqlite3_bind_int(statement, 19, iRec.xWalkD);
-        sqlite3_bind_int(statement, 20, iRec.signal81);
-        sqlite3_bind_int(statement, 21, iRec.signal23);
-        sqlite3_bind_int(statement, 22, iRec.signal45);
-        sqlite3_bind_int(statement, 23, iRec.signal67);
-        
-        if (sqlite3_step(statement) != SQLITE_DONE)
-        {
-            NSAssert(0, @"Error updating table");
-            rtn = NO;
-        }
-        
-        sqlite3_reset(statement);
-    }
-    
-    SQLOK(sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, &error));
-    sqlite3_finalize(statement);
-    return rtn;
-}
-
-void SQLOK (int sqlReturn)
-{
-    if (sqlReturn != SQLITE_OK)
-        [_database logError];
-}
 - (NSArray *)getIntersectionPointsFromDatabase
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
@@ -137,57 +76,16 @@ void SQLOK (int sqlReturn)
         int intID = sqlite3_column_int(statement, 0);
         int intX = sqlite3_column_int(statement, 1);
         int intY = sqlite3_column_int(statement, 2);
-        int rotation = sqlite3_column_int(statement, 3);
-        int ramp1 = sqlite3_column_int(statement, 4);
-        int ramp2 = sqlite3_column_int(statement, 5);
-        int ramp3 = sqlite3_column_int(statement, 6);
-        int ramp4 = sqlite3_column_int(statement, 7);
-        int ramp5 = sqlite3_column_int(statement, 8);
-        int ramp6 = sqlite3_column_int(statement, 9);
-        int ramp7 = sqlite3_column_int(statement, 10);
-        int ramp8 = sqlite3_column_int(statement, 11);
-        int ramp81 = sqlite3_column_int(statement, 12);
-        int ramp23 = sqlite3_column_int(statement, 13);
-        int ramp45 = sqlite3_column_int(statement, 14);
-        int ramp67 = sqlite3_column_int(statement, 15);
-        int xWalkA = sqlite3_column_int(statement, 16);
-        int xWalkB = sqlite3_column_int(statement, 17);
-        int xWalkC = sqlite3_column_int(statement, 18);
-        int xWalkD = sqlite3_column_int(statement, 19);
-        int signal81 = sqlite3_column_int(statement, 20);
-        int signal23 = sqlite3_column_int(statement, 21);
-        int signal45 = sqlite3_column_int(statement, 22);
-        int signal67 = sqlite3_column_int(statement, 23);
-            
-        PlacesInfo *info = [[PlacesInfo alloc]initWithIntID:intID
-                                                       intX:intX
-                                                       intY:intY
-                                                   rotation:rotation
-                                                      ramp1:ramp1
-                                                      ramp2:ramp2
-                                                      ramp3:ramp3
-                                                      ramp4:ramp4
-                                                      ramp5:ramp5
-                                                      ramp6:ramp6
-                                                      ramp7:ramp7
-                                                      ramp8:ramp8
-                                                     ramp81:ramp81
-                                                     ramp23:ramp23
-                                                     ramp45:ramp45
-                                                     ramp67:ramp67
-                                                     xWalkA:xWalkA
-                                                     xWalkB:xWalkB
-                                                     xWalkC:xWalkC
-                                                     xWalkD:xWalkD
-                                                   signal81:signal81
-                                                   signal23:signal23
-                                                   signal45:signal45
-                                                   signal67:signal67];
-            
-        [dataArray addObject:info];
+        double lat,lon;
+        PixelXYToLatLong(intX, intY, 21, &lat, &lon);
+        IntersectionPoint * intpt = [[IntersectionPoint alloc]init];
+        intpt.intID = intID;
+        intpt.latitude = lat;
+        intpt.longitude = lon;
+        [dataArray addObject:intpt];
     }
         
-    sqlite3_finalize(statement);
+    SQLOK(sqlite3_finalize(statement));
     return dataArray;
 }
 
@@ -226,6 +124,7 @@ void SQLOK (int sqlReturn)
         goto Exit;
     
     [self createIntersectionsTable];
+    
     SQLOK(sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL));
     SQLOK(sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &error));
     
@@ -246,6 +145,7 @@ void SQLOK (int sqlReturn)
         intStruct.lev21X = atoi (pTabIndex);
         for (i=1,pInt = &intStruct.intID;i<25;i++,pInt++)
             SQLOK(sqlite3_bind_int(statement, i, *pInt));
+        
         if (sqlite3_step(statement) != SQLITE_DONE)
         {
             NSLog(@"Error inserting intersection. '%s'", sqlite3_errmsg(_database));
@@ -331,11 +231,6 @@ Exit:
     {
         [self getPlaceIntersectionFile:self.geoid];
     }
-    
-}
-
-- (void)createTableNamed:(NSString *)tableName
-{
     
 }
 
