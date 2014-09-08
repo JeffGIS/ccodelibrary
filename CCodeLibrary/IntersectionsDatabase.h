@@ -30,5 +30,7 @@
 - (void)getPlaceIntersectionDatabase;
 - (void)createTableNamed:(NSString *)tableName;
 - (NSArray *)getRecordsFromTable:(NSString *)tableName;
+- (void)logError;
+void SQLOK (int sqlReturn);
 
 @end
