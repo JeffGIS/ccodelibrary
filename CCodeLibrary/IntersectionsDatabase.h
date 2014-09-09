@@ -6,9 +6,8 @@
 
 #define INTDB_OK 0
 #define INTDB_FAILED 1
-
-#define INT_TEXT_INDEX  1
-#define INT_TEXT_DATA   2
+#define INT_TEXT_INDEX 1
+#define INT_TEXT_DATA 2
 
 @class IntersectionsDatabase;
 
@@ -34,6 +33,8 @@
 - (void)getPlaceIntersectionDatabase;
 - (NSArray *)getIntersectionPointsFromDatabase;
 - (NSString *)intersectionTextPath:(int)type;
+- (void)logError;
+void SQLOK (int sqlReturn);
 
 - (int)loadIntersectionTextToDatabase:(NSString *)path;
 - (void)logError;
