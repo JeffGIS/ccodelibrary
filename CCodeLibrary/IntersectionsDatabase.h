@@ -37,7 +37,5 @@
 void SQLOK (int sqlReturn);
 
 - (int)loadIntersectionTextToDatabase:(NSString *)path;
-- (void)logError;
-void SQLOK (int sqlReturn);
 
 @end
