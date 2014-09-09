@@ -194,6 +194,8 @@
 				EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */,
 				EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */,
 				EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */,
+				EB2C7DB819BCB9C400F6D9F0 /* IntersectionPoint.h */,
+				EB2C7DB919BCB9C400F6D9F0 /* IntersectionPoint.m */,
 				EB2C7DB219BA5A6F00F6D9F0 /* IntersectionRecord.h */,
 				EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */,
 				EBAEED0319B601710084A579 /* lzoconf.h */,
@@ -217,8 +219,6 @@
 				1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */,
 				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
-				EB2C7DB819BCB9C400F6D9F0 /* IntersectionPoint.h */,
-				EB2C7DB919BCB9C400F6D9F0 /* IntersectionPoint.m */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";

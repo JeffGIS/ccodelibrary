@@ -235,17 +235,17 @@ int FindIntersection (const char *indexPath, const char *dataPath, int x, int y,
     int rtn = 0;
     char indxtxt[256];
     char *pLoc = indxtxt;
-    char *pAZ;
-    char *pnumRamp;
+    char *pAZ, *pnumRamp;
     long len, fileLen;
     int intAtY, intAtX;
     int minDist[MAXINT] = {INT_MAX};
     long ioffset[MAXINT];
     dvec2 pt[MAXINT];
-    long left=0, right;
+    long left = 0, right;
     double metersPerPixel = GroundResolution(45.0,21);
     int yStart = y - (1000 / metersPerPixel), yStop = y + (1000 / metersPerPixel);
-    long nrecs, iloc, j, k, i;
+    long nrecs, iloc, j, k;
+    //long i;
     int nFound = 0;
     FILE * fid = fopen (indexPath,"rb");
     
@@ -284,9 +284,9 @@ int FindIntersection (const char *indexPath, const char *dataPath, int x, int y,
     
     while (right - left > 1)
     {
-        fseek (fid,iloc * RECLEN+FIRSTRECLEN,0);
-        len = fread(pLoc,1,RECLEN,fid);
-        GetCoords (pLoc,&intAtX,&intAtY);
+        fseek (fid, iloc * RECLEN + FIRSTRECLEN, 0);
+        len = fread(pLoc, 1, RECLEN, fid);
+        GetCoords (pLoc, &intAtX, &intAtY);
         
         if (intAtY == yStart)
             left = right = iloc;
@@ -299,23 +299,23 @@ int FindIntersection (const char *indexPath, const char *dataPath, int x, int y,
         
         iloc = (left + right)/2;
     }
-    minDist[0] = iDist (x,y,intAtX,intAtY);
+    minDist[0] = iDist (x, y, intAtX, intAtY);
     pt[0].x = intAtX;
     pt[0].y = intAtY;
-    ioffset[0] = atoi (pLoc+OFFSETLOC);
+    ioffset[0] = atoi (pLoc + OFFSETLOC);
     nFound = 1;
     
     while (intAtY < yStop)
     {
         int dist = iDist (x,y,intAtX,intAtY);
         
-        for (k=0;k<MAXINT;k++)
+        for (k = 0; k < MAXINT; k++)
             if (dist < minDist[k])
             {
-                for (j=MAXINT-1;j>k;j--)
+                for (j = MAXINT - 1; j > k; j--)
                 {
                     minDist[j] = minDist[j-1];
-                    ioffset[j]=ioffset[j-1];
+                    ioffset[j] = ioffset[j-1];
                     pt[j] = pt[j-1];
                 }
                 
@@ -327,23 +327,22 @@ int FindIntersection (const char *indexPath, const char *dataPath, int x, int y,
                 break;
             }
         iloc ++;
-        fseek (fid,iloc * RECLEN+FIRSTRECLEN,0);
-        len = fread(pLoc,1,RECLEN,fid);
-        GetCoords (pLoc,&intAtX,&intAtY);
-
+        fseek (fid, iloc * RECLEN + FIRSTRECLEN, 0);
+        len = fread(pLoc, 1, RECLEN, fid);
+        GetCoords (pLoc, &intAtX, &intAtY);
     }
     
-    nFound = min (nFound,MAXINT);
+    nFound = min (nFound, MAXINT);
     
     if (iWant <= nFound)
     {
-//       double lat,lon;
-        FILE * fidData = fopen (dataPath,"rb");
-        char * pend;
+//      double lat,lon;
+        FILE *fidData = fopen (dataPath, "rb");
+        char *pend;
         
-        fseek (fidData,ioffset[iWant-1],0);
-//        PixelXYToLatLong_old(pt[iWant-1].x, pt[iWant-1].y, 20, &lat,&lon);
-//       LatLongToPixelXY(lat, lon, 21, plev21x, plev21y);
+        fseek (fidData, ioffset[iWant-1], 0);
+//      PixelXYToLatLong_old(pt[iWant-1].x, pt[iWant-1].y, 20, &lat,&lon);
+//      LatLongToPixelXY(lat, lon, 21, plev21x, plev21y);
         *plev21x = pt[iWant-1].x;
         *plev21y = pt[iWant-1].y;
         pLoc = indxtxt;
@@ -356,7 +355,8 @@ int FindIntersection (const char *indexPath, const char *dataPath, int x, int y,
         
         rtn = atoi (pLoc);
         
-/*        pLoc = strchr (pLoc,'\t')+1;
+/*      
+        pLoc = strchr (pLoc,'\t')+1;
         *pnonCity = atoi (pLoc);
         pLoc = strchr (pLoc,'\t')+1;
         *pRot = atoi (pLoc);
@@ -370,26 +370,27 @@ int FindIntersection (const char *indexPath, const char *dataPath, int x, int y,
                 pLoc[i] = '\r';
         
         strncpy (intText,(const char*)pLoc,254);
-        intText[255] = 0;*/
+        intText[255] = 0;
+*/
 
-        pLoc = strchr (pLoc,'\t')+1;
+        pLoc = strchr (pLoc, '\t') +1;
         *pnumStreets = atoi (pLoc);
-        pLoc = strchr (pLoc,'\t')+1;
-        pAZ = strchr (pLoc,'\t');
+        pLoc = strchr (pLoc, '\t') +1;
+        pAZ = strchr (pLoc, '\t');
         *pAZ++ = 0;
-        pnumRamp = strchr (pAZ,'\t');
+        pnumRamp = strchr (pAZ, '\t');
         *pnumRamp++ = 0;
         *pnRamps = atoi (pnumRamp);
-        strncpy (intText,(const char*)pLoc,254);
+        strncpy (intText,(const char *)pLoc, 254);
         intText[255] = 0;
-        strncpy (intAZMS,(const char*)pAZ,254);
+        strncpy (intAZMS,(const char *)pAZ, 254);
         intAZMS[255] = 0;
         //*pnonCity=1;
-
     }
     
 Exit:
     if (fid != NULL)
         fclose(fid);
+    
     return rtn;
 }

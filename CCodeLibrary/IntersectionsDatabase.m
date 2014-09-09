@@ -114,13 +114,12 @@ static IntersectionsDatabase *_database;
     char buffer[] = "INSERT INTO Intersections VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     sqlite3_stmt *statement;
     char *error;
-    INTERSECTION_STRUCT intStruct={0};
-    int * pInt;
-    int i;
+    INTERSECTION_STRUCT intStruct = {0};
+    int *pInt, i;
     
     strcpy (dataFile,path.UTF8String);
     
-    if ((pUB = strrchr (dataFile,'_')))
+    if ((pUB = strrchr (dataFile, '_')))
         *pUB = 0;
     
     else
@@ -155,7 +154,7 @@ static IntersectionsDatabase *_database;
         intStruct.intID = atoi (data);
         intStruct.lev21Y = atoi (index);
         intStruct.lev21X = atoi (pTabIndex);
-        for (i=1,pInt = &intStruct.intID;i<25;i++,pInt++)
+        for (i = 1,pInt = &intStruct.intID; i <25; i++, pInt++)
             SQLOK(sqlite3_bind_int(statement, i, *pInt));
         
         if (sqlite3_step(statement) != SQLITE_DONE)
@@ -163,8 +162,8 @@ static IntersectionsDatabase *_database;
             NSLog(@"Error inserting intersection. '%s'", sqlite3_errmsg(_database));
             rtn = NO;
         }
-        nLoaded++;
         
+        nLoaded++;
         SQLOK(sqlite3_reset(statement));
     }
     
@@ -174,6 +173,7 @@ static IntersectionsDatabase *_database;
     fclose (fidIndex);
     fclose (fidData);
     rtn = INTDB_OK;
+    
 Exit:
     return rtn;
 }
