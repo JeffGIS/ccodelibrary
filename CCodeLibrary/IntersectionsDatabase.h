@@ -7,6 +7,9 @@
 #define INTDB_OK 0
 #define INTDB_FAILED 1
 
+#define INT_TEXT_INDEX  1
+#define INT_TEXT_DATA   2
+
 @class IntersectionsDatabase;
 
 @protocol IntersectionsDatabaseDelegate  <NSObject>
@@ -32,5 +35,6 @@
 - (void)createTableNamed:(NSString *)tableName;
 - (NSArray *)getRecordsFromTable:(NSString *)tableName;
 - (NSArray *)getIntersectionPointsFromDatabase;
+- (NSString *)intersectionTextPath:(int)type;
 
 @end

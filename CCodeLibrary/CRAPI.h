@@ -11,6 +11,7 @@
 @property NSString *outputDirectory;
 @property NSString *imageDirectory;
 @property int currentGeoid;
+@property NSString *currentCityNameAndState;
 
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
 

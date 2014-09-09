@@ -111,6 +111,18 @@ void SQLOK (int sqlReturn)
     
     return dataArray;
 }
+- (NSString *)intersectionTextPath:(int)type
+{
+    NSString * path;
+    NSArray * dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString * docsDir = [dirPaths objectAtIndex:0];
+    if (type == INT_TEXT_DATA)
+        path = [NSString stringWithFormat:@"%@/%i/intersection_data.bin",docsDir,self.geoid];
+    else
+        path = [NSString stringWithFormat:@"%@/%i/intersection_index.bin",docsDir,self.geoid];
+    
+    return path;
+}
 
 - (int)loadIntersectionTextToDatabase:(NSString *)path
 {
