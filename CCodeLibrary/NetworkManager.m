@@ -210,13 +210,13 @@
 
 - (void)didStartNetworkOperation
 {
-    assert(NSThread.isMainThread);
+    //assert(NSThread.isMainThread);
     self.networkOperationCount += 1;
 }
 
 - (void)didStopNetworkOperation
 {
-    assert(NSThread.isMainThread);
+    //assert(NSThread.isMainThread);
     //assert(self.networkOperationCount > 0);
     self.networkOperationCount -= 1;
 }

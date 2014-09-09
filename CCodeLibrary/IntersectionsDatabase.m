@@ -22,13 +22,8 @@ static IntersectionsDatabase *_database;
 {
     if ((self = [super init]))
     {
-        //NSFileManager *fileManager = NSFileManager.defaultManager;
-        //BOOL success = [fileManager fileExistsAtPath:[self databasePath:geoid]];
-        
         self.geoid = geoid;
-        
-        if (sqlite3_open([self databasePath:geoid].UTF8String, &_database) != SQLITE_OK)
-            NSAssert(0, @"Database failed to open");
+        SQLOK(sqlite3_open([self databasePath:geoid].UTF8String, &_database));
     }
     
     return self;
@@ -60,55 +55,37 @@ static IntersectionsDatabase *_database;
     char *error;
     
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;"];
-    if (sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error) != SQLITE_OK)
-        NSAssert(0, @"Table failed to drop");
+    
+    SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error));
+    
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (intID INTEGER, intX INTEGER, intY INTEGER, rotation INTEGER, ramp1 INTEGER, ramp2 INTEGER, ramp3 INTEGER, ramp4 INTEGER, ramp5 INTEGER, ramp6 INTEGER, ramp7 INTEGER, ramp8 INTEGER, ramp81 INTEGER, ramp23 INTEGER, ramp45 INTEGER, ramp67 INTEGER, xWalkA INTEGER, xWalkB INTEGER, xWalkC INTEGER, xWalkD INTEGER, signal81 INTEGER, signal23 INTEGER, signal45 INTEGER, signal67 INTEGER);"];
     
-    if (sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error) != SQLITE_OK)
-        NSAssert(0, @"Table failed to create");
+    SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
 }
 
--(void) logError
-{
-    int ierr = sqlite3_errcode (_database);
-    const char * errmess = sqlite3_errmsg(_database);
-    NSLog ([NSString stringWithFormat:@"Error in SQLite = %i:%s",ierr,errmess]);
-
-}
-
-void SQLOK (int sqlReturn)
-{
-    if (sqlReturn != SQLITE_OK)
-        [_database logError];
-}
 - (NSArray *)getIntersectionPointsFromDatabase
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Intersections"];
     sqlite3_stmt *statement;
     
-    if (sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL) == SQLITE_OK)
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
     {
-        while (sqlite3_step(statement) == SQLITE_ROW)
-        {
-            int intID = sqlite3_column_int(statement, 0);
-            int intX = sqlite3_column_int(statement, 1);
-            int intY = sqlite3_column_int(statement, 2);
-            double lat,lon;
-            PixelXYToLatLong(intX,intY, 21,&lat,&lon);
-            IntersectionPoint * intpt = [[IntersectionPoint alloc]init];
-            intpt.intID = intID;
-            intpt.latitude = lat;
-            intpt.longitude = lon;
-            [dataArray addObject:intpt];
-        }
-        
-        SQLOK(sqlite3_finalize(statement));
+        int intID = sqlite3_column_int(statement, 0);
+        int intX = sqlite3_column_int(statement, 1);
+        int intY = sqlite3_column_int(statement, 2);
+        double lat,lon;
+        PixelXYToLatLong(intX, intY, 21, &lat, &lon);
+        IntersectionPoint * intpt = [[IntersectionPoint alloc]init];
+        intpt.intID = intID;
+        intpt.latitude = lat;
+        intpt.longitude = lon;
+        [dataArray addObject:intpt];
     }
-    
-    else
-        NSAssert1(0, @"Error while inserting bounds data. '%s'", sqlite3_errmsg(_database));
-    
+        
+    SQLOK(sqlite3_finalize(statement));
     return dataArray;
 }
 - (NSString *)intersectionTextPath:(int)type
@@ -159,6 +136,7 @@ void SQLOK (int sqlReturn)
         goto Exit;
     
     [self createIntersectionsTable];
+    
     SQLOK(sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL));
     SQLOK(sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &error));
     
@@ -179,6 +157,7 @@ void SQLOK (int sqlReturn)
         intStruct.lev21X = atoi (pTabIndex);
         for (i=1,pInt = &intStruct.intID;i<25;i++,pInt++)
             SQLOK(sqlite3_bind_int(statement, i, *pInt));
+        
         if (sqlite3_step(statement) != SQLITE_DONE)
         {
             NSLog(@"Error inserting intersection. '%s'", sqlite3_errmsg(_database));
@@ -228,6 +207,7 @@ Exit:
     
     return;
 }
+
 - (void)getPlaceIntersectionFile:(int)geoid
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -242,6 +222,7 @@ Exit:
       toDirectory:documentsDirectory
      forceRefresh:NO];
 }
+
 - (void)getPlaceIntersectionDatabase
 {
     NSString * dbPath = [self databasePath:self.geoid];
@@ -265,9 +246,18 @@ Exit:
     
 }
 
-- (void)createTableNamed:(NSString *)tableName
+- (void)logError
 {
-    
+    int ierr = sqlite3_errcode(_database);
+    const char *errmess = sqlite3_errmsg(_database);
+    NSString *logMess = [NSString stringWithFormat:@"Error in SQLite = %i:%s", ierr, errmess];
+    NSLog(@"%@", logMess);
+}
+
+void SQLOK (int sqlReturn)
+{
+    if (sqlReturn != SQLITE_OK)
+        [_database logError];
 }
 
 @end
