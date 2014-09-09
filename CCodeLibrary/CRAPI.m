@@ -124,8 +124,8 @@
     }
 }
 
--(void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm
-                                  forInt:(MPIntersection*)currentIntersection
+- (void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm
+                                   forInt:(MPIntersection*)currentIntersection
 {
     currentIntersection.intRotation = [self intRotFromintAZMS:intAzm];
     currentIntersection.quadDev90 = 0;
@@ -134,7 +134,7 @@
     currentIntersection.quadDev270 = 270;
     
 }
--(double) azDiffFrom90s:(double)az
+- (double)azDiffFrom90s:(double)az
 {
     double minDiff = 0 - az;
     double diff;
@@ -163,7 +163,7 @@
     
 }
 
--(int) intRotFromintAZMS:(NSString *)intAzm
+- (int)intRotFromintAZMS:(NSString *)intAzm
 {
     int rtn = 0;
     double minDiff=10, az, diff;
@@ -194,8 +194,8 @@
     return rtn;
 }
 
--(int) getCornerFromAdjustedRot:(int)adjustedRot
-                 atIntersection:(MPIntersection*)intersection
+- (int)getCornerFromAdjustedRot:(int)adjustedRot
+                 atIntersection:(MPIntersection *)intersection
 {
     //returns 81,23,45 or 67
     int  corner = -1;
@@ -215,6 +215,7 @@
     return corner;
 
 }
+
 -(int) getCornerFromX:(int)x
                  andY:(int)y
        atIntersection:(MPIntersection*)intersection
@@ -230,6 +231,7 @@
                                              atIntersection:intersection];
     return corner;
 }
+
 -(int) getQuadDeviderFromX:(int)x
                       andY:(int)y
             atIntersection:(MPIntersection*)intersection
@@ -292,6 +294,7 @@
     
     return NO;
 }
+
 -(NSString *)getImageFileforIntersection:(int)intersectionID
                                    atLat:(double)lat
                                   andLon:(double)lon
@@ -382,7 +385,8 @@ forGeoid:(int)geoid
     return YES;
 }
 
-- (NSString*)directoryFromPath:(NSString*)path andName:(NSString*)name
+- (NSString*)directoryFromPath:(NSString*)path
+                       andName:(NSString*)name
 {
     LPSTR str = malloc (path.length+2);
     LPSTR pBS;
@@ -395,6 +399,7 @@ forGeoid:(int)geoid
         strcat (str,name.UTF8String);
         outDir = [NSString stringWithUTF8String:str];
     }
+    
     free (str);
     return outDir;
 }

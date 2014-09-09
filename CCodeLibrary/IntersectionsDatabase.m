@@ -90,13 +90,15 @@ static IntersectionsDatabase *_database;
 }
 - (NSString *)intersectionTextPath:(int)type
 {
-    NSString * path;
-    NSArray * dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString * docsDir = [dirPaths objectAtIndex:0];
+    NSString *path;
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    
     if (type == INT_TEXT_DATA)
-        path = [NSString stringWithFormat:@"%@/%i/intersection_data.bin",docsDir,self.geoid];
+        path = [NSString stringWithFormat:@"%@/%i/intersection_data.bin", docsDir, self.geoid];
+    
     else
-        path = [NSString stringWithFormat:@"%@/%i/intersection_index.bin",docsDir,self.geoid];
+        path = [NSString stringWithFormat:@"%@/%i/intersection_index.bin", docsDir, self.geoid];
     
     return path;
 }
@@ -130,6 +132,8 @@ static IntersectionsDatabase *_database;
     strcat (dataFile, "/intersection_data.bin");
     fidData = fopen (dataFile, "rb");
     fidIndex = fopen (indexFile, "rb");
+    
+    NSLog (@"loadIntersectionTextToDatabase fopen file: %s", indexFile);
     
     if (fidData == nil || fidIndex == nil)
         goto Exit;

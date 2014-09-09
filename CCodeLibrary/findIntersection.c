@@ -250,6 +250,10 @@ int FindIntersection (const char *indexPath, const char *dataPath, int x, int y,
     int nFound = 0;
     FILE *fid = fopen (indexPath,"rb");
     
+    printf ("indexPath = %s\n", indexPath);
+    printf ("dataPath = %s\n", dataPath);
+    printf ("iWant = %i, fid exists = %d\n", iWant, (fid != NULL));
+    
     //find first point with y within 1000 meters of point
     if (iWant <= 0)
         goto Exit;
@@ -392,6 +396,8 @@ int FindIntersection (const char *indexPath, const char *dataPath, int x, int y,
 Exit:
     if (fid)
         fclose(fid);
+    
+    printf ("rtn = %i\n", rtn);
     
     return rtn;
 }
