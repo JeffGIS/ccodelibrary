@@ -54,7 +54,7 @@ static GeoMasterServer *_open;
 
 - (BOOL)initCommunication:(float)connectionTimeoutInSeconds
 {
-    bool rtn=false;
+    bool rtn = NO;
     
 	CFReadStreamRef readStream;
 	CFWriteStreamRef writeStream;
@@ -72,7 +72,7 @@ static GeoMasterServer *_open;
 	[_outputStream scheduleInRunLoop:NSRunLoop.currentRunLoop
                              forMode:NSDefaultRunLoopMode];
     
-    if (_openTimer != nil)
+    if (_openTimer)
         [_openTimer invalidate];
     
     _openTimer = [NSTimer scheduledTimerWithTimeInterval:connectionTimeoutInSeconds

@@ -13,6 +13,7 @@
 @property int currentGeoid;
 @property NSString *currentCityNameAndState;
 @property NSMutableArray *intersectionPointsArray;
+@property BOOL shouldDismissTwice;
 
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
 
