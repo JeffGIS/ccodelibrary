@@ -34,7 +34,8 @@
 
 - (NSString *)getImageFileforIntersection:(int)intersectionID
                                     atLat:(double)lat
-                                   andLon:(double)lon;
+                                   andLon:(double)lon
+                                  andZoom:(int)zoom;
 
 -(BOOL) getPlaceAreaFile:(id)id
 forGeoid:(int)geoid;

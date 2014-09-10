@@ -232,7 +232,7 @@ Exit:
     NSString * dbPath = [self databasePath:self.geoid];
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
                                                                                  error:nil].fileSize;
-    BOOL forceReload = TRUE;
+    BOOL forceReload = FALSE;
     if (fileSize > 0 && !forceReload)
     {
         if (self.delegate != nil)
