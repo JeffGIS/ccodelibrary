@@ -31,7 +31,7 @@
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
 - (void)getPlaceIntersectionDatabase;
-- (NSArray *)getIntersectionPointsFromDatabase;
+- (NSMutableArray *)getIntersectionPointsFromDatabase;
 - (NSString *)intersectionTextPath:(int)type;
 - (void)logError;
 void SQLOK (int sqlReturn);

@@ -63,7 +63,7 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
 }
 
-- (NSArray *)getIntersectionPointsFromDatabase
+- (NSMutableArray *)getIntersectionPointsFromDatabase
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Intersections"];
