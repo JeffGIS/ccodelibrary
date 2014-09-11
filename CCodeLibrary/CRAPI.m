@@ -299,13 +299,14 @@
                                    atLat:(double)lat
                                   andLon:(double)lon
                                  andZoom:(int)zoom
+                            forceRefresh:(BOOL)refresh
 {
     NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg",intersectionID,zoom]];
     NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt",intersectionID,zoom]];
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:imageFile
                                                                                   error:nil].fileSize;
-    if (fileSize > 0)
+    if (fileSize > 0 && refresh == NO)
         return imageFile;
     
 /*    
