@@ -145,22 +145,23 @@ static GeoMasterServer *_open;
             if (theStream == _inputStream)
             {
 				uint8_t buffer[1024];
-				long len;
+				long len, origlen;
 				
 				while (_inputStream.hasBytesAvailable)
                 {
-					len = [_inputStream read:buffer
+					origlen = len = [_inputStream read:buffer
                                    maxLength:sizeof(buffer)];
-                    
+                    while (len > 0 && buffer[len-1] == 0)
+                        len--;
 					if (len > 0)
                     {
                         NSString *buff = [[NSString alloc] initWithBytes:buffer
                                                                   length:len
-                                                                encoding:NSASCIIStringEncoding];
+                                                                encoding:NSUTF8StringEncoding];
                         
                         _output  = [_output stringByAppendingString:buff];
                         
-                        if (!buffer[len-1])
+                        if (!buffer[origlen-1])
                         {
                             if (self.delegate)
                             {
