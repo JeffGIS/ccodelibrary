@@ -22,6 +22,7 @@
 #import "IntersectionsDatabase.h"
 #include "IntersectionRecord.h"
 #include "IntersectionPoint.h"
+#import "ManagePlacesDatabase.h"
 
 @interface CCodeLibrary : NSObject
 
