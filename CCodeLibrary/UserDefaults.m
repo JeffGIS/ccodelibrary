@@ -135,6 +135,33 @@ static UserDefaults *_defaults;
     return checkmark;
 }
 
+- (UIImage *)imageTarget
+{
+    UIImage *blackImageTarget = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"crosshairs160"
+                                                                                               ofType:@"png"]];
+    
+    UIImage *whiteImageTarget = [self invertImage:blackImageTarget];
+    return whiteImageTarget;
+}
+
+- (UIImage *)invertImage:(UIImage *)image
+{
+    UIGraphicsBeginImageContext(image.size);
+    CGContextSetBlendMode(UIGraphicsGetCurrentContext(), kCGBlendModeCopy);
+    CGRect imageRect = CGRectMake(0.0, 0.0, image.size.width, image.size.height);
+    [image drawInRect:imageRect];
+    
+    CGContextSetBlendMode(UIGraphicsGetCurrentContext(), kCGBlendModeDifference);
+    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 0.0, image.size.height);
+    CGContextScaleCTM(UIGraphicsGetCurrentContext(), 1.0, -1.0);
+    CGContextClipToMask(UIGraphicsGetCurrentContext(), imageRect,  image.CGImage);
+    CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(),[UIColor whiteColor].CGColor);
+    CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0.0, 0.0, image.size.width, image.size.height));
+    UIImage *returnImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return returnImage;
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue

@@ -25,6 +25,9 @@
 - (UIColor *)appleGray;
 - (UIColor *)polygonFillColor;
 - (UIImage *)checkmark;
+- (UIImage *)imageTarget;
+
+- (UIImage *)invertImage:(UIImage *)image;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
