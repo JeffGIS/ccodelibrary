@@ -210,6 +210,40 @@ static UserDefaults *_defaults;
     [_defaults synchronize];
 }
 
+- (void)setStatus:(int)status
+         forGeoid:(int)geoid
+{
+    NSArray *namesArray = [_defaults arrayForKey:@"NamesArray"];
+    NSArray *statesArray = [_defaults arrayForKey:@"StatesArray"];
+    NSArray *geoidsArray = [_defaults arrayForKey:@"GeoidsArray"];
+    NSArray *bounds_wArray = [_defaults arrayForKey:@"Bounds_wArray"];
+    NSArray *bounds_sArray = [_defaults arrayForKey:@"Bounds_sArray"];
+    NSArray *bounds_eArray = [_defaults arrayForKey:@"Bounds_eArray"];
+    NSArray *bounds_nArray = [_defaults arrayForKey:@"Bounds_nArray"];
+    NSMutableArray *statusArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"StatusArray"]];
+    
+    NSUInteger geoidNumber = [geoidsArray indexOfObject:[NSNumber numberWithInt:geoid]];
+    
+    [statusArray replaceObjectAtIndex:geoidNumber
+                           withObject:[NSNumber numberWithInt:status]];
+    
+    CRAPI.sharedInstance.currentGeoidStatus = status;
+    
+    [_defaults setInteger:status
+                   forKey:@"CurrentGeoidStatus"];
+    
+    NSArray *masterList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
+                           bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, statusArray, nil];
+    
+    [_defaults setObject:statusArray
+                  forKey:@"StatusArray"];
+    
+    [_defaults setObject:masterList
+                  forKey:@"MasterList"];
+    
+    [_defaults synchronize];
+}
+
 - (void)addLocationToListWithName:(NSString *)name
                             state:(NSString *)state
                             geoid:(int)geoid

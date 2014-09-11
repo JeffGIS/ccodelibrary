@@ -2,7 +2,7 @@
 //  PedRampInv_Prelim
 
 #import <sqlite3.h>
-#import "../../CCodeLibrary/CCodeLibrary/CCodeLibrary.h"
+#import "CCodeLibrary.h"
 
 #define INTDB_OK 0
 #define INTDB_FAILED 1

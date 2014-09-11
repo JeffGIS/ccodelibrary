@@ -19,7 +19,7 @@
     self.directory = fromDirectory;
     self.fileName = fileName;
     self.filePath = [NSString stringWithFormat:@"%@/%@", self.toDirectory,self.fileName];
-    assert(self.filePath != nil);
+    assert(self.filePath);
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:self.filePath
                                                                                   error:nil].fileSize;
@@ -208,12 +208,12 @@ didReceiveResponse:(NSURLResponse *)response
 #pragma unused(error)
     assert(theConnection == self.connection);
     
-    NSString *status = @"Connection failed";
-    
     if (self.hasFailed == NO)
     {
         [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
-                       statusString:[error localizedDescription]];
+                       statusString:error.localizedDescription];
+        
+        NSLog (@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
         
         if (self.currentFtp == self.ftpSite)
         {
@@ -223,7 +223,6 @@ didReceiveResponse:(NSURLResponse *)response
             [UserDefaults.defaults saveString:self.currentFtp
                                        forKey:@"CurrentFtp"];
             
-            //NSAssert(0, status);
             self.hasFailed = YES;
             
             [self getFile:self.fileName
@@ -240,7 +239,6 @@ didReceiveResponse:(NSURLResponse *)response
             [UserDefaults.defaults saveString:self.currentFtp
                                        forKey:@"CurrentFtp"];
             
-            //NSAssert(0, status);
             self.hasFailed = YES;
             
             [self getFile:self.fileName
@@ -255,12 +253,13 @@ didReceiveResponse:(NSURLResponse *)response
         [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
                        statusString:error.localizedDescription];
         
+        NSLog (@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
+        
         self.currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
         
         [UserDefaults.defaults saveString:self.currentFtp
                                    forKey:@"CurrentFtp"];
         
-        NSAssert(0, status);
         self.hasFailed = NO;
     }
 }

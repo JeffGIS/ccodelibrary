@@ -1,7 +1,6 @@
 //  IntersectionPoint.h
 //  CCodeLibrary
 
-
 #import <Foundation/Foundation.h>
 
 @interface IntersectionPoint : NSObject

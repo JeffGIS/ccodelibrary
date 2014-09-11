@@ -3,6 +3,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "CRAPI.h"
 
 @interface UserDefaults : NSObject
 {
@@ -44,6 +45,9 @@
 
 - (void)saveCGFloat:(CGFloat)CGFloat
              forKey:(NSString *)key;
+
+- (void)setStatus:(int)status
+         forGeoid:(int)geoid;
 
 - (void)addLocationToListWithName:(NSString *)name
                             state:(NSString *)state

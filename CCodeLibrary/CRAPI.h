@@ -11,9 +11,9 @@
 @property NSString *outputDirectory;
 @property NSString *imageDirectory;
 @property int currentGeoid;
+@property BOOL currentGeoidStatus;
 @property NSString *currentCityNameAndState;
 @property NSMutableArray *intersectionPointsArray;
-@property BOOL shouldDismissTwice;
 
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
 
