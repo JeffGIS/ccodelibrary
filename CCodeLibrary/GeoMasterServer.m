@@ -100,13 +100,12 @@ static GeoMasterServer *_open;
                          withStatus:GM_SEND_FAILED];
         }
     }
-    
 }
 - (BOOL) sendMessage:(NSString *)message
 {
 	_data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
     
-    if (_sendTimer != nil)
+    if (_sendTimer)
         [_sendTimer invalidate];
 
     
@@ -150,9 +149,11 @@ static GeoMasterServer *_open;
 				while (_inputStream.hasBytesAvailable)
                 {
 					origlen = len = [_inputStream read:buffer
-                                   maxLength:sizeof(buffer)];
-                    while (len > 0 && buffer[len-1] == 0)
+                                             maxLength:sizeof(buffer)];
+                    
+                    while (len > 0 && buffer[len - 1] == 0)
                         len--;
+                    
 					if (len > 0)
                     {
                         NSString *buff = [[NSString alloc] initWithBytes:buffer
@@ -161,7 +162,7 @@ static GeoMasterServer *_open;
                         
                         _output  = [_output stringByAppendingString:buff];
                         
-                        if (!buffer[origlen-1])
+                        if (!buffer[origlen - 1])
                         {
                             if (self.delegate)
                             {
@@ -185,7 +186,7 @@ static GeoMasterServer *_open;
             NSString *errorMessage = theError.localizedDescription;
             [self closeServer];
             
-            if (self.delegate != nil)
+            if (self.delegate)
             {
                 [self.delegate GMServer:self
                         didReceiveError:errorMessage

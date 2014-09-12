@@ -54,7 +54,7 @@
     return _sharedInstance;
 }
 
-- (void) intersectionInit:(MPIntersection* )currentIntersection
+- (void) intersectionInit:(MPIntersection *)currentIntersection
 {
     currentIntersection.intID = -1;
     currentIntersection.dataUpdated = NO;
@@ -301,14 +301,13 @@
                                  andZoom:(int)zoom
                             forceRefresh:(BOOL)refresh
 {
-    NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg",intersectionID,zoom]];
-    NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt",intersectionID,zoom]];
+    NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, zoom]];
+    NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, zoom]];
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:imageFile
-                                                                                  error:nil].fileSize;
+                                                                                 error:nil].fileSize;
     if (fileSize > 0 && refresh == NO)
         return imageFile;
-    
 /*    
     http://maps.googleapis.com/maps/api/staticmap?center=$Y([STREETLL])@,$X([STREETLL])&zoom=[ZOOM]&size=640x640&maptype=[MAPTYPE]&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY
     NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.google.com/maps/api/staticmap?markers=color:red|%f,%f&%@&sensor=true",lat, lon,@"zoom=10&size=270x70"];
