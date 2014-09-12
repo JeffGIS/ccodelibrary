@@ -32,6 +32,7 @@
 
 - (void)getPlaceIntersectionDatabase;
 - (NSMutableArray *)getIntersectionPointsFromDatabase;
+- (NSMutableArray *)getCurrentIntersectionPoint:(int)intID;
 - (NSString *)intersectionTextPath:(int)type;
 - (void)logError;
 void SQLOK (int sqlReturn);
