@@ -5,6 +5,7 @@
 
 typedef struct {
     int intID;
+    int lastUpdateTime;
     int lev21X;
     int lev21Y;
     int rotation;

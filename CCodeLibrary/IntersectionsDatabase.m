@@ -1,4 +1,4 @@
-//  IntersectionsDatabase.m
+  //  IntersectionsDatabase.m
 //  PedRampInv_Prelim
 
 #import "IntersectionsDatabase.h"
@@ -58,7 +58,7 @@ static IntersectionsDatabase *_database;
     
     SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error));
     
-    NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (intID INTEGER, intX INTEGER, intY INTEGER, rotation INTEGER, ramp1 INTEGER, ramp2 INTEGER, ramp3 INTEGER, ramp4 INTEGER, ramp5 INTEGER, ramp6 INTEGER, ramp7 INTEGER, ramp8 INTEGER, ramp81 INTEGER, ramp23 INTEGER, ramp45 INTEGER, ramp67 INTEGER, xWalkA INTEGER, xWalkB INTEGER, xWalkC INTEGER, xWalkD INTEGER, signal81 INTEGER, signal23 INTEGER, signal45 INTEGER, signal67 INTEGER);"];
+    NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (intID INTEGER PRIMARY KEY, lastUpdateTime INTEGER, intX INTEGER, intY INTEGER, rotation INTEGER, ramp1 INTEGER, ramp2 INTEGER, ramp3 INTEGER, ramp4 INTEGER, ramp5 INTEGER, ramp6 INTEGER, ramp7 INTEGER, ramp8 INTEGER, ramp81 INTEGER, ramp23 INTEGER, ramp45 INTEGER, ramp67 INTEGER, xWalkA INTEGER, xWalkB INTEGER, xWalkC INTEGER, xWalkD INTEGER, signal81 INTEGER, signal23 INTEGER, signal45 INTEGER, signal67 INTEGER);"];
     
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
 }
@@ -66,7 +66,7 @@ static IntersectionsDatabase *_database;
 - (NSMutableArray *)getIntersectionPointsFromDatabase
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Intersections"];
+    NSString *query = [NSString stringWithFormat:@"SELECT intID,intX,intY FROM Intersections"];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
@@ -113,7 +113,7 @@ static IntersectionsDatabase *_database;
     int maxData = 256;
     int maxIndex = 100;
     int nLoaded = 0;
-    char buffer[] = "INSERT INTO Intersections VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    char buffer[] = "INSERT INTO Intersections VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     sqlite3_stmt *statement;
     char *error;
     INTERSECTION_STRUCT intStruct = {0};
@@ -158,7 +158,7 @@ static IntersectionsDatabase *_database;
         intStruct.intID = atoi (data);
         intStruct.lev21Y = atoi (index);
         intStruct.lev21X = atoi (pTabIndex);
-        for (i = 1,pInt = &intStruct.intID; i <25; i++, pInt++)
+        for (i = 1,pInt = &intStruct.intID; i <26; i++, pInt++)
             SQLOK(sqlite3_bind_int(statement, i, *pInt));
         
         if (sqlite3_step(statement) != SQLITE_DONE)
