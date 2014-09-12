@@ -5,6 +5,11 @@
 #import <UIKit/UIKit.h>
 
 @implementation CRAPI
+{
+    int _currentGeoidValue;
+    int _numAllowedZooms;
+    int _allowedZooms[3];
+}
 
 - (id)init
 {
@@ -20,22 +25,15 @@
                                                    name:@"BLDownloadImageNotification"
                                                  object:nil];
 */
-        //_currentGeoid = 2758000;
+        _currentGeoidValue = 0;
+        _numAllowedZooms = 3;
+        _allowedZooms[0] = 21;
+        _allowedZooms[1] = 20;
+        _allowedZooms[2] = 19;
         NSArray *paths = NSSearchPathForDirectoriesInDomains
         (NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        self.outputDirectory = [NSString stringWithFormat:@"%@/ADAFiles", documentsDirectory];
-        self.imageDirectory = [NSString stringWithFormat:@"%@/IntersectionImages", documentsDirectory];
+        self.documentsDirectory = [paths objectAtIndex:0];
         
-        [NSFileManager.defaultManager createDirectoryAtPath:self.outputDirectory
-                                withIntermediateDirectories:NO
-                                                 attributes:nil
-                                                      error:nil];
-        
-        [NSFileManager.defaultManager createDirectoryAtPath:self.imageDirectory
-                                withIntermediateDirectories:NO
-                                                 attributes:nil
-                                                      error:nil];
     }
     
     return self;
@@ -54,6 +52,29 @@
     return _sharedInstance;
 }
 
+-(int)currentGeoid
+{
+    return _currentGeoidValue;
+}
+-(void)setCurrentGeoid:(int)geoid
+{
+    if (geoid != _currentGeoidValue)
+    {
+        _currentGeoidValue = geoid;
+        self.outputDirectory = [NSString stringWithFormat:@"%@/%i/ADAFiles", self.documentsDirectory,_currentGeoidValue];
+        self.imageDirectory = [NSString stringWithFormat:@"%@/%i/IntersectionImages", self.documentsDirectory,_currentGeoidValue];
+        
+        [NSFileManager.defaultManager createDirectoryAtPath:self.outputDirectory
+                                withIntermediateDirectories:NO
+                                                 attributes:nil
+                                                      error:nil];
+        
+        [NSFileManager.defaultManager createDirectoryAtPath:self.imageDirectory
+                                withIntermediateDirectories:NO
+                                                 attributes:nil
+                                                      error:nil];
+    }
+}
 - (void) intersectionInit:(MPIntersection *)currentIntersection
 {
     currentIntersection.intID = -1;
@@ -295,12 +316,29 @@
     return NO;
 }
 
+- (void) deleteImagesForAllZooms:(int)intersectionID
+{
+    NSFileManager *manager = [NSFileManager defaultManager];
+    
+    for (int i=0;i<_numAllowedZooms;i++)
+    {
+        NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, _allowedZooms[i]]];
+        NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, _allowedZooms[i]]];
+        [manager removeItemAtPath:imageFile error:nil];
+        [manager removeItemAtPath:cptFile error:nil];
+    }
+}
+
 -(NSString *)getImageFileforIntersection:(int)intersectionID
                                    atLat:(double)lat
                                   andLon:(double)lon
                                  andZoom:(int)zoom
                             forceRefresh:(BOOL)refresh
 {
+    if (refresh)
+    {
+        [self deleteImagesForAllZooms:intersectionID];
+    }
     NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, zoom]];
     NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, zoom]];
     

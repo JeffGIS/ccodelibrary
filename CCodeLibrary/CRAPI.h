@@ -8,14 +8,16 @@
 
 + (CRAPI *)sharedInstance;
 
+@property NSString *documentsDirectory;
 @property NSString *outputDirectory;
 @property NSString *imageDirectory;
-@property int currentGeoid;
+@property (nonatomic)int currentGeoid;
 @property BOOL currentGeoidStatus;
 @property NSString *currentCityNameAndState;
 @property NSMutableArray *intersectionPointsArray;
 @property int currentIntersection;
 
+- (void)setCurrentGeoid:(int)currentGeoid;
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
 
 - (void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm
