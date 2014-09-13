@@ -187,19 +187,21 @@
 - (int)intRotFromintAZMS:(NSString *)intAzm
 {
     int rtn = 0;
-    double minDiff=10, az, diff;
-    char * intAZMS = malloc ([intAzm length]+1);
+    double minDiff = 10, az, diff;
+    char *intAZMS = malloc ([intAzm length] +1);
     strcpy (intAZMS,intAzm.UTF8String);
-    char * pBeg=intAZMS;
-    char * pEnd=strchr (pBeg,'|');
+    char *pBeg = intAZMS;
+    char *pEnd = strchr (pBeg,'|');
     
     while (pEnd)
     {
         *pEnd++ = 0;
         az = atof (pBeg);
         diff = [self azDiffFrom90s:az];
-        if (fabs(diff)<fabs(minDiff))
+        
+        if (fabs(diff) <fabs(minDiff))
             minDiff = diff;
+        
         pBeg = pEnd;
         pEnd=strchr (pBeg,'|');
     }
@@ -399,13 +401,12 @@
     return imageFile;
 }
 
-- (UIImage*)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
-                    lookingAtLatlon:(LLPOINT)lookLatlon
+- (UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
+                            withHeading:(int)heading
 {
-    UIImage *image=nil;
-    int heading=0;
+    UIImage *image = nil;
 /*
- [STREETPOINT]=[%ARG(1)];
+    [STREETPOINT]=[%ARG(1)];
 	[VIEWPOINT]=[%ARG(2)];
 	[AZ]=$AZM([STREETPOINT],[VIEWPOINT]);
 	[DEGROT]=$FLT(90+(360-([AZ]*[%RADTODEG])));

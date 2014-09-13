@@ -15,7 +15,6 @@
 @property (nonatomic)int currentGeoid;
 @property BOOL currentGeoidStatus;
 @property NSString *currentCityNameAndState;
-//@property NSMutableArray *intersectionPointsArray;
 @property int currentIntersection;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
@@ -43,8 +42,9 @@
                                    andLon:(double)lon
                                   andZoom:(int)zoom
                              forceRefresh:(BOOL)refresh;
-- (UIImage*)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
-                       lookingAtLatlon:(LLPOINT)lookLatlon;
+
+- (UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
+                            withHeading:(int)heading;
 
 -(BOOL) getPlaceAreaFile:(id)id
 forGeoid:(int)geoid;
