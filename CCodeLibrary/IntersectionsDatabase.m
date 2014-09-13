@@ -63,6 +63,36 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
 }
 
+- (BOOL)updateIntersectionsPointInDatabaseWithIntID:(int)intID
+                                               intX:(double)intX
+                                               intY:(double)intY
+{
+    BOOL rtn;
+    char *error;
+    
+    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET intX = %f, intY = %f WHERE intID=%i", intX, intY, intID];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+
+    sqlite3_bind_double(statement, 1, intX);
+    sqlite3_bind_double(statement, 2, intY);
+    
+    SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
+    
+    if (sqlite3_step(statement) != SQLITE_DONE)
+    {
+        NSLog(@"Error updating intersection point. '%s'", sqlite3_errmsg(_database));
+        rtn = NO;
+    }
+    
+    else
+        rtn = YES;
+    
+    SQLOK(sqlite3_finalize(statement));
+    return rtn;
+}
+
 - (NSMutableArray *)getIntersectionPointsFromDatabase
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
@@ -105,7 +135,6 @@ static IntersectionsDatabase *_database;
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
         intpt.latitude = intersectionPoint.y = lat;
         intpt.longitude = intersectionPoint.x = lon;
-        intpt.intID = intID;
         [dataArray addObject:intpt];
     }
     
@@ -183,7 +212,7 @@ static IntersectionsDatabase *_database;
         intStruct.intID = atoi (data);
         intStruct.lev21Y = atoi (index);
         intStruct.lev21X = atoi (pTabIndex);
-        for (i = 1,pInt = &intStruct.intID; i <25; i++, pInt++)
+        for (i = 1, pInt = &intStruct.intID; i <25; i++, pInt++)
             SQLOK(sqlite3_bind_int(statement, i, *pInt));
         
         if (sqlite3_step(statement) != SQLITE_DONE)
