@@ -42,8 +42,4 @@ void SQLOK (int sqlReturn);
 
 - (int)loadIntersectionTextToDatabase:(NSString *)path;
 
-- (BOOL)updateIntersectionsPointInDatabaseWithIntID:(int)intID
-                                               intX:(double)intX
-                                               intY:(double)intY;
-
 @end

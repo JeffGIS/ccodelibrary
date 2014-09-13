@@ -63,36 +63,6 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
 }
 
-- (BOOL)updateIntersectionsPointInDatabaseWithIntID:(int)intID
-                                               intX:(double)intX
-                                               intY:(double)intY
-{
-    BOOL rtn;
-    char *error;
-    
-    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET intX = %f, intY = %f WHERE intID=%i", intX, intY, intID];
-    sqlite3_stmt *statement;
-    
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
-
-    sqlite3_bind_double(statement, 1, intX);
-    sqlite3_bind_double(statement, 2, intY);
-    
-    SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
-    
-    if (sqlite3_step(statement) != SQLITE_DONE)
-    {
-        NSLog(@"Error updating intersection point. '%s'", sqlite3_errmsg(_database));
-        rtn = NO;
-    }
-    
-    else
-        rtn = YES;
-    
-    SQLOK(sqlite3_finalize(statement));
-    return rtn;
-}
-
 - (NSMutableArray *)getIntersectionPointsFromDatabase
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
@@ -116,13 +86,16 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_finalize(statement));
     return dataArray;
 }
+
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt
 {
     BOOL rtn;
-    int iTime = [NSDate timeIntervalSinceReferenceDate];
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
     int lev21x, lev21y;
-    LatLongToPixelXY(intpt.latitude, intpt.longitude, 21, &lev21x, &lev21y);
-    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i,intX=%i,intY=%i WHERE intID=%i",iTime,lev21x,lev21y, intpt.intID];
+    LatLongToPixelXY (intpt.latitude, intpt.longitude, 21, &lev21x, &lev21y);
+    
+    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, intX=%i, intY=%i WHERE intID=%i",
+                       iTime, lev21x, lev21y, intpt.intID];
     char *error;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free (error);
@@ -147,7 +120,7 @@ static IntersectionsDatabase *_database;
         PixelXYToLatLong(intX, intY, 21, &lat, &lon);
         intpt.latitude = intersectionPoint.y = lat;
         intpt.longitude = intersectionPoint.x = lon;
-        [dataArray addObject:intpt];
+        intpt.intID = intID;
     }
     
     SQLOK(sqlite3_finalize(statement));
@@ -204,7 +177,7 @@ static IntersectionsDatabase *_database;
     int maxData = 256;
     int maxIndex = 100;
     int nLoaded = 0;
-    char buffer[] = "INSERT INTO Intersections VALUES (?,?,?1,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    char buffer[] = "INSERT INTO Intersections VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     sqlite3_stmt *statement;
     char *error;
     INTERSECTION_STRUCT intStruct = {0};
@@ -249,7 +222,10 @@ static IntersectionsDatabase *_database;
         intStruct.intID = atoi (data);
         intStruct.lev21Y = atoi (index);
         intStruct.lev21X = atoi (pTabIndex);
-        for (i = 1, pInt = &intStruct.intID; i <25; i++, pInt++)
+        intStruct.assignedTo = 1;
+        intStruct.status = 0;
+        
+        for (i = 1, pInt = &intStruct.intID; i < 27; i++, pInt++)
             SQLOK(sqlite3_bind_int(statement, i, *pInt));
         
         if (sqlite3_step(statement) != SQLITE_DONE)
