@@ -403,14 +403,19 @@
                     lookingAtLatlon:(LLPOINT)lookLatlon
 {
     UIImage *image=nil;
+    int heading=0;
 /*
  [STREETPOINT]=[%ARG(1)];
 	[VIEWPOINT]=[%ARG(2)];
 	[AZ]=$AZM([STREETPOINT],[VIEWPOINT]);
 	[DEGROT]=$FLT(90+(360-([AZ]*[%RADTODEG])));
 	[STREETLL]=$CVTTO(LATLON,[STREETPOINT]);
-	$URLTOFILE(http://maps.googleapis.com/maps/api/streetview?size=355x355&location=$Y([STREETLL])@,$X([STREETLL])&fov=[FOV]&heading=[DEGROT]&pitch=[PITCH]&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY,[%ARG(3)]);
+	$URLTOFILE(http://maps.googleapis.com/maps/api/streetview?size=640x640&location=$Y([STREETLL])@,$X([STREETLL])&fov=[FOV]&heading=[DEGROT]&pitch=[PITCH]&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY,[%ARG(3)]);
 */
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=20&heading=%i&pitch=0&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY",atLatLon.lat,atLatLon.lon,heading];
+    
+    NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
     return image;
 }
 
