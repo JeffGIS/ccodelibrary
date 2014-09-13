@@ -14,7 +14,7 @@
 @property (nonatomic)int currentGeoid;
 @property BOOL currentGeoidStatus;
 @property NSString *currentCityNameAndState;
-@property NSMutableArray *intersectionPointsArray;
+//@property NSMutableArray *intersectionPointsArray;
 @property int currentIntersection;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
