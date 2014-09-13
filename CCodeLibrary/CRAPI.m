@@ -65,12 +65,12 @@
         self.imageDirectory = [NSString stringWithFormat:@"%@/%i/IntersectionImages", self.documentsDirectory,_currentGeoidValue];
         
         [NSFileManager.defaultManager createDirectoryAtPath:self.outputDirectory
-                                withIntermediateDirectories:NO
+                                withIntermediateDirectories:YES
                                                  attributes:nil
                                                       error:nil];
         
         [NSFileManager.defaultManager createDirectoryAtPath:self.imageDirectory
-                                withIntermediateDirectories:NO
+                                withIntermediateDirectories:YES
                                                  attributes:nil
                                                       error:nil];
     }
