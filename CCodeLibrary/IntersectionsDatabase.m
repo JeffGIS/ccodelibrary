@@ -130,7 +130,7 @@ static IntersectionsDatabase *_database;
 {
     IntersectionPoint *intpt = nil;
     
-    NSString *query = [NSString stringWithFormat:@"SELECT intID,intX, intY FROM Intersections WHERE status = 0"];
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status = 0"];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
