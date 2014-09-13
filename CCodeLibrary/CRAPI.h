@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import <Foundation/Foundation.h>
+#import "CCodeTypes.h"
 #import "MPIntersection.h"
 
 @interface CRAPI : NSObject
@@ -42,6 +43,8 @@
                                    andLon:(double)lon
                                   andZoom:(int)zoom
                              forceRefresh:(BOOL)refresh;
+- (UIImage*)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
+                       lookingAtLatlon:(LLPOINT)lookLatlon;
 
 -(BOOL) getPlaceAreaFile:(id)id
 forGeoid:(int)geoid;

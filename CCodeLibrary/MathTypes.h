@@ -3,14 +3,11 @@
 
 #ifndef __MATH_TYPES
 #define __MATH_TYPES
+
+#import "CCodeTypes.h"
 #define PI 3.141592653589f
 #define PI_2 2.0f*PI
 #define PI_DIV_2 PI*0.5f
-
-typedef struct{double x,y;} DPOINT;
-typedef DPOINT *LPDPOINT;
-typedef float *LPFLOAT;
-typedef double *LPDOUBLE;
 
 
 typedef float f32;

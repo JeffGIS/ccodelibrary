@@ -1,13 +1,15 @@
 //  IntersectionsDatabase.h
 //  PedRampInv_Prelim
 
-#import <sqlite3.h>
 #import "CCodeLibrary.h"
+#import <sqlite3.h>
 
 #define INTDB_OK 0
 #define INTDB_FAILED 1
 #define INT_TEXT_INDEX 1
 #define INT_TEXT_DATA 2
+
+#define INT_STATUS_PRELIMCOMPLETE   1
 
 @class IntersectionsDatabase;
 
@@ -35,6 +37,7 @@
 - (IntersectionPoint *)getCurrentIntersectionPoint:(int)intID;
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;
 - (IntersectionPoint *)getFirstAssignedIntersectionPointWithStatus0;
+- (BOOL)setIntersectionStatusTo:(int)status forIntersection:(int)intID;
 //- (NSObject *)getCurrentIntersectionPoint:(int)intID;
 - (NSString *)intersectionTextPath:(int)type;
 - (void)logError;

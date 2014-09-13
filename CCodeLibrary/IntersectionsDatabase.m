@@ -57,10 +57,12 @@ static IntersectionsDatabase *_database;
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;"];
     
     SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error));
+    sqlite3_free (error);
     
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (intID INTEGER PRIMARY KEY, lastUpdateTime INTEGER, status INTEGER, assignedToMe INTEGER, intX INTEGER, intY INTEGER, rotation INTEGER, ramp1 INTEGER, ramp2 INTEGER, ramp3 INTEGER, ramp4 INTEGER, ramp5 INTEGER, ramp6 INTEGER, ramp7 INTEGER, ramp8 INTEGER, ramp81 INTEGER, ramp23 INTEGER, ramp45 INTEGER, ramp67 INTEGER, xWalkA INTEGER, xWalkB INTEGER, xWalkC INTEGER, xWalkD INTEGER, signal81 INTEGER, signal23 INTEGER, signal45 INTEGER, signal67 INTEGER);"];
     
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
+    sqlite3_free (error);
 }
 
 - (NSMutableArray *)getIntersectionPointsFromDatabase
@@ -126,6 +128,19 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_finalize(statement));
     return intpt;
 }
+- (BOOL)setIntersectionStatusTo:(int)status forIntersection:(int)intID
+{
+    BOOL rtn;
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
+    
+    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i WHERE intID=%i",
+                       iTime, status, intID];
+    char *error;
+    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
+    sqlite3_free (error);
+    return !rtn;
+}
+
 - (IntersectionPoint *)getFirstAssignedIntersectionPointWithStatus0
 {
     IntersectionPoint *intpt = nil;
@@ -206,6 +221,7 @@ static IntersectionsDatabase *_database;
     
     SQLOK(sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL));
     SQLOK(sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &error));
+    sqlite3_free (error);
     
     fgetstring (index, maxIndex, fidIndex);
     
@@ -239,6 +255,7 @@ static IntersectionsDatabase *_database;
     }
     
     SQLOK(sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, &error));
+    sqlite3_free (error);
     SQLOK(sqlite3_finalize(self.statement));
     
     fclose (fidIndex);

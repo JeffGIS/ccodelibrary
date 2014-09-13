@@ -12,8 +12,8 @@
 #include <math.h>
 #include <limits.h>
 #include <string.h>
-#include "TileGraphics.h"
-#include "MathUtil.h"
+#import "TileGraphics.h"
+#import "MathUtil.h"
 
 static int OFFSETLOC=30;
 static int RECLEN=40;
