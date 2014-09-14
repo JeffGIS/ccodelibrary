@@ -4,18 +4,20 @@
 #import <Foundation/Foundation.h>
 #import "CCodeTypes.h"
 #import "MPIntersection.h"
+#import "UserDefaults.h"
 
 @interface CRAPI : NSObject
 
 + (CRAPI *)sharedInstance;
 
-@property NSString *documentsDirectory;
-@property NSString *outputDirectory;
-@property NSString *imageDirectory;
-@property (nonatomic)int currentGeoid;
-@property BOOL currentGeoidStatus;
-@property NSString *currentCityNameAndState;
-@property int currentIntersection;
+@property (nonatomic) NSString *documentsDirectory;
+@property (nonatomic) NSString *outputDirectory;
+@property (nonatomic) NSString *imageDirectory;
+@property (nonatomic) int currentGeoid;
+@property (nonatomic) BOOL currentGeoidStatus;
+@property (nonatomic) NSString *currentCityNameAndState;
+@property (nonatomic) int currentIntersection;
+@property (nonatomic) NSString *googleKey;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
 - (void)intersectionInit:(MPIntersection *)currentIntersection;

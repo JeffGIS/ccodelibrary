@@ -259,7 +259,7 @@
                       andY:(int)y
             atIntersection:(MPIntersection*)intersection
 {
-    //returns quad lines E=1,S=2,W=3,N=4
+    //returns quad lines E=1, S=2, W=3, N=4
     int  devider;
     int  dist = 999;
     int  diff;
@@ -305,12 +305,12 @@
 
 - (BOOL)intersectionAlreadyCompleted:(int)intID
 {
-    NSString *outputFile = [NSString stringWithFormat:@"%@/Intersection_%i.txt", self.outputDirectory,intID];
+    NSString *outputFile = [NSString stringWithFormat:@"%@/Intersection_%i.txt", self.outputDirectory, intID];
     
     if ([NSFileManager.defaultManager fileExistsAtPath:outputFile])
         return YES;
     
-    outputFile = [NSString stringWithFormat:@"%@/Uploaded_Intersection_%i.txt", self.outputDirectory,intID];
+    outputFile = [NSString stringWithFormat:@"%@/Uploaded_Intersection_%i.txt", self.outputDirectory, intID];
     
     if ([NSFileManager.defaultManager fileExistsAtPath:outputFile])
         return YES;
@@ -320,14 +320,19 @@
 
 - (void) deleteImagesForAllZooms:(int)intersectionID
 {
-    NSFileManager *manager = [NSFileManager defaultManager];
+    NSFileManager *manager = NSFileManager.defaultManager;
     
-    for (int i=0;i<_numAllowedZooms;i++)
+    for (int i=0; i< _numAllowedZooms; i++)
     {
-        NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, _allowedZooms[i]]];
-        NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, _allowedZooms[i]]];
-        [manager removeItemAtPath:imageFile error:nil];
-        [manager removeItemAtPath:cptFile error:nil];
+        NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg",
+                                                                               intersectionID, _allowedZooms[i]]];
+        NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt",
+                                                                             intersectionID, _allowedZooms[i]]];
+        [manager removeItemAtPath:imageFile
+                            error:nil];
+        
+        [manager removeItemAtPath:cptFile
+                            error:nil];
     }
 }
 
@@ -348,12 +353,8 @@
                                                                                  error:nil].fileSize;
     if (fileSize > 0 && refresh == NO)
         return imageFile;
-/*    
-    http://maps.googleapis.com/maps/api/staticmap?center=$Y([STREETLL])@,$X([STREETLL])&zoom=[ZOOM]&size=640x640&maptype=[MAPTYPE]&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.google.com/maps/api/staticmap?markers=color:red|%f,%f&%@&sensor=true",lat, lon,@"zoom=10&size=270x70"];
-*/
     
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY",lat, lon, zoom];
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=%@",lat, lon, zoom, UserDefaults.defaults.googleKey];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
@@ -405,15 +406,8 @@
                             withHeading:(int)heading
 {
     UIImage *image = nil;
-/*
-    [STREETPOINT]=[%ARG(1)];
-	[VIEWPOINT]=[%ARG(2)];
-	[AZ]=$AZM([STREETPOINT],[VIEWPOINT]);
-	[DEGROT]=$FLT(90+(360-([AZ]*[%RADTODEG])));
-	[STREETLL]=$CVTTO(LATLON,[STREETPOINT]);
-	$URLTOFILE(http://maps.googleapis.com/maps/api/streetview?size=640x640&location=$Y([STREETLL])@,$X([STREETLL])&fov=[FOV]&heading=[DEGROT]&pitch=[PITCH]&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY,[%ARG(3)]);
-*/
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=20&heading=%i&pitch=0&sensor=false&key=AIzaSyBUL-TkaHIxWa8u6Jp9vqs6LzJfsbJoiOY",atLatLon.lat,atLatLon.lon,heading];
+    
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=20&heading=%i&pitch=-10&sensor=false&key=%@", atLatLon.lat, atLatLon.lon, heading, UserDefaults.defaults.googleKey];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];

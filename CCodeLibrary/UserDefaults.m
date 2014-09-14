@@ -144,6 +144,12 @@ static UserDefaults *_defaults;
     return whiteImageTarget;
 }
 
+- (NSString *)googleKey
+{
+    NSString *googleKey = @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q";
+    return googleKey;
+}
+
 - (UIImage *)invertImage:(UIImage *)image
 {
     UIGraphicsBeginImageContext(image.size);
