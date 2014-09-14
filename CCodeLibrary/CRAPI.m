@@ -376,18 +376,19 @@
     {
         char txt[1024];
         double pixelX, pixelY;
+        int factor = pow (2,21-zoom);
         NSError *err;
 
-        LatLongToPixelXYd(lat, lon, zoom, &pixelX, &pixelY);
-
+        LatLongToPixelXYd(lat, lon, 21, &pixelX, &pixelY);
+        
         sprintf (txt,"0 0 %f %f\r\n\
                  640 0 %f %f\r\n\
                  640 640 %f %f\r\n\
                  0 640 %f %f\r\n",
-                 pixelX - 320, pixelY + 320,
-                 pixelX + 320, pixelY + 320,
-                 pixelX + 320, pixelY - 320,
-                 pixelX - 320, pixelY - 320
+                 pixelX - 320*factor, pixelY + 320*factor,
+                 pixelX + 320*factor, pixelY + 320*factor,
+                 pixelX + 320*factor, pixelY - 320*factor,
+                 pixelX - 320*factor, pixelY - 320*factor
                 );
         NSString *outcontents = [NSString stringWithCString:txt
                                                    encoding:NSUTF8StringEncoding];
