@@ -354,7 +354,7 @@
     if (fileSize > 0 && refresh == NO)
         return imageFile;
     
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=%@",lat, lon, zoom, UserDefaults.defaults.googleKey];
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=%@",lat, lon, zoom, GOOGLE_API_KEY];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
@@ -403,11 +403,12 @@
 }
 
 - (UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
-                            withHeading:(int)heading
+                                heading:(int)heading
+                                  pitch:(int)pitch
 {
     UIImage *image = nil;
     
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=20&heading=%i&pitch=-10&sensor=false&key=%@", atLatLon.lat, atLatLon.lon, heading, UserDefaults.defaults.googleKey];
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=20&heading=%i&pitch=%i&sensor=false&key=%@", atLatLon.lat, atLatLon.lon, heading, pitch, GOOGLE_API_KEY];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];

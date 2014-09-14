@@ -26,6 +26,8 @@
 #import "ManagePlacesDatabase.h"
 #import "CRAPI.h"
 
+#define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"
+
 @interface CCodeLibrary : NSObject
 
 //- (void)dummy;
