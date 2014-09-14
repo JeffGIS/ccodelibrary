@@ -403,12 +403,13 @@
 }
 
 - (UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
-                                heading:(int)heading
-                                  pitch:(int)pitch
+                                heading:(CGFloat)heading
+                                  pitch:(CGFloat)pitch
+                                    fov:(CGFloat)fov
 {
     UIImage *image = nil;
     
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=20&heading=%i&pitch=%i&sensor=false&key=%@", atLatLon.lat, atLatLon.lon, heading, pitch, GOOGLE_API_KEY];
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=%f&heading=%f&pitch=%f&sensor=false&key=%@", atLatLon.lat, atLatLon.lon, fov, heading, pitch, GOOGLE_API_KEY];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];

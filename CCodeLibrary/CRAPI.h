@@ -46,8 +46,9 @@
                              forceRefresh:(BOOL)refresh;
 
 - (UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
-                                heading:(int)heading
-                                  pitch:(int)pitch;
+                                heading:(CGFloat)heading
+                                  pitch:(CGFloat)pitch
+                                    fov:(CGFloat)fov;
 
 -(BOOL) getPlaceAreaFile:(id)id
 forGeoid:(int)geoid;
