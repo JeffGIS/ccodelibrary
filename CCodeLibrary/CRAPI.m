@@ -6,9 +6,7 @@
 
 @implementation CRAPI
 {
-    int _currentGeoidValue;
-    int _numAllowedZooms;
-    int _allowedZooms[3];
+    int _currentGeoidValue, _numAllowedZooms, _allowedZooms[3];
 }
 
 - (id)init
@@ -17,14 +15,6 @@
     
     if (self)
     {
-/*
-        persistencyManager = [[PersistencyManager alloc] init];
-        
-        [NSNotificationCenter.defaultCenter addObserver:self
-                                               selector:@selector(downloadImage:)
-                                                   name:@"BLDownloadImageNotification"
-                                                 object:nil];
-*/
         _currentGeoidValue = 0;
         _numAllowedZooms = 3;
         _allowedZooms[0] = 21;
@@ -157,27 +147,27 @@
 }
 - (double)azDiffFrom90s:(double)az
 {
-    double minDiff = 0 - az;
+    double minDiff = (0.0 - az);
     double diff;
     
-    diff = TWOPI - az;
+    diff = (TWOPI - az);
     
-    if (fabs (diff) < fabs (minDiff))
+    if (fabs(diff) < fabs(minDiff))
         minDiff = diff;
     
     diff = HALFPI - az;
     
-    if (fabs (diff) < fabs (minDiff))
+    if (fabs(diff) < fabs(minDiff))
         minDiff = diff;
     
     diff = PY - az;
     
-    if (fabs (diff) < fabs (minDiff))
+    if (fabs(diff) < fabs(minDiff))
         minDiff = diff;
     
-    diff = (HALFPI*3) - az;
+    diff = (HALFPI * 3.0) - az;
     
-    if (fabs (diff) < fabs (minDiff))
+    if (fabs(diff) < fabs(minDiff))
         minDiff = diff;
     
     return minDiff;
@@ -188,28 +178,28 @@
 {
     int rtn = 0;
     double minDiff = 10, az, diff;
-    char *intAZMS = malloc ([intAzm length] +1);
+    char *intAZMS = malloc(intAzm.length + 1);
     strcpy (intAZMS,intAzm.UTF8String);
     char *pBeg = intAZMS;
-    char *pEnd = strchr (pBeg,'|');
+    char *pEnd = strchr(pBeg,'|');
     
     while (pEnd)
     {
         *pEnd++ = 0;
-        az = atof (pBeg);
+        az = atof(pBeg);
         diff = [self azDiffFrom90s:az];
         
-        if (fabs(diff) <fabs(minDiff))
+        if (fabs(diff) < fabs(minDiff))
             minDiff = diff;
         
         pBeg = pEnd;
-        pEnd=strchr (pBeg,'|');
+        pEnd = strchr(pBeg,'|');
     }
     
     az = atof (pBeg);
     diff = [self azDiffFrom90s:az];
     
-    if (fabs(diff)<fabs(minDiff))
+    if (fabs(diff) < fabs(minDiff))
         minDiff = diff;
     
     rtn = minDiff * RADtoDEG;
@@ -236,7 +226,6 @@
         corner = 67;
     
     return corner;
-
 }
 
 -(int) getCornerFromX:(int)x
@@ -245,10 +234,10 @@
 {
     //returns 81,23,45 or 67
     int  corner = -1;
-    DPOINT midPt={intersection.lev21x,intersection.lev21y}, pt={x,y};
+    DPOINT midPt = {intersection.lev21x,intersection.lev21y}, pt = {x,y};
     
     float az = getazd(&midPt, &pt);
-    int adjustedRot = ClockwiseDegFromNorth ((az * RADtoDEG) + intersection.intRotation);
+    int adjustedRot = ClockwiseDegFromNorth((az * RADtoDEG) + intersection.intRotation);
     
     corner = [CRAPI.sharedInstance getCornerFromAdjustedRot:adjustedRot
                                              atIntersection:intersection];
@@ -264,14 +253,14 @@
     int  dist = 999;
     int  diff;
     
-    DPOINT midPt={intersection.lev21x,intersection.lev21y}, pt={x,y};
+    DPOINT midPt = {intersection.lev21x, intersection.lev21y}, pt = {x, y};
     
     float az = getazd(&midPt, &pt);
-    int adjustedRot = ClockwiseDegFromNorth ((az * RADtoDEG) + intersection.intRotation);
-    diff = abs(diffInDegrees (adjustedRot, intersection.quadDev90));
+    int adjustedRot = ClockwiseDegFromNorth((az * RADtoDEG) + intersection.intRotation);
+    diff = abs(diffInDegrees(adjustedRot, intersection.quadDev90));
     devider = 1;
     dist = diff;
-    diff = abs(diffInDegrees (adjustedRot, intersection.quadDev180));
+    diff = abs(diffInDegrees(adjustedRot, intersection.quadDev180));
     
     if (diff < dist)
     {
@@ -279,7 +268,7 @@
         dist = diff;
     }
     
-    diff = abs(diffInDegrees (adjustedRot, intersection.quadDev270));
+    diff = abs(diffInDegrees(adjustedRot, intersection.quadDev270));
     
     if (diff < dist)
     {
@@ -287,7 +276,7 @@
         dist = diff;
     }
     
-    diff = abs(diffInDegrees (adjustedRot, intersection.quadDev0));
+    diff = abs(diffInDegrees(adjustedRot, intersection.quadDev0));
     
     if (diff < dist)
     {
@@ -381,15 +370,15 @@
 
         LatLongToPixelXYd(lat, lon, 21, &pixelX, &pixelY);
         
-        sprintf (txt,"0 0 %f %f\r\n\
+        sprintf (txt, "0 0 %f %f\r\n\
                  640 0 %f %f\r\n\
                  640 640 %f %f\r\n\
                  0 640 %f %f\r\n",
-                 pixelX - 320*factor, pixelY + 320*factor,
-                 pixelX + 320*factor, pixelY + 320*factor,
-                 pixelX + 320*factor, pixelY - 320*factor,
-                 pixelX - 320*factor, pixelY - 320*factor
-                );
+                 pixelX - 320 * factor, pixelY + 320 * factor,
+                 pixelX + 320 * factor, pixelY + 320 * factor,
+                 pixelX + 320 * factor, pixelY - 320 * factor,
+                 pixelX - 320 * factor, pixelY - 320 * factor);
+        
         NSString *outcontents = [NSString stringWithCString:txt
                                                    encoding:NSUTF8StringEncoding];
         if (![outcontents writeToFile:cptFile
@@ -444,19 +433,19 @@ forGeoid:(int)geoid
 - (NSString*)directoryFromPath:(NSString*)path
                        andName:(NSString*)name
 {
-    LPSTR str = malloc (path.length+2);
+    LPSTR str = malloc(path.length+2);
     LPSTR pBS;
     NSString* outDir = @"";
     
     strcpy (str,path.UTF8String);
-    if ((pBS = strrchr (str,'/')))
+    if ((pBS = strrchr(str,'/')))
     {
         *pBS = 0;
         strcat (str,name.UTF8String);
         outDir = [NSString stringWithUTF8String:str];
     }
     
-    free (str);
+    free(str);
     return outDir;
 }
 
