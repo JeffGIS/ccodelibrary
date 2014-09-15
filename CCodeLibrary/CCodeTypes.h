@@ -4,6 +4,10 @@
 #ifndef CCodeLibrary_CCodeTypes_h
 #define CCodeLibrary_CCodeTypes_h
 
+#define MAKELONG(a, b)      ((LONG)(((WORD)(((DWORD_PTR)(a)) & 0xffff)) | ((DWORD)((WORD)(((DWORD_PTR)(b)) & 0xffff))) << 16))
+#define LOWORD(l)           ((WORD)(((DWORD_PTR)(l)) & 0xffff))
+#define HIWORD(l)           ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
+
 
 typedef char * LPSTR;
 typedef LPSTR HPSTR;
