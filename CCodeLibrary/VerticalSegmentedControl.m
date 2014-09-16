@@ -34,7 +34,6 @@ int const kSMVerticalSegmentedControlNoSegment = -1;
 
 @implementation VerticalSegmentedControl
 
-#pragma mark Init Methods
 - (id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame])
@@ -74,7 +73,6 @@ int const kSMVerticalSegmentedControlNoSegment = -1;
     return self;
 }
 
-#pragma mark - Drawing
 - (void)drawRect:(CGRect)rect
 {
     [self.backgroundColor setFill];
@@ -151,7 +149,6 @@ int const kSMVerticalSegmentedControlNoSegment = -1;
     }
 }
 
-#pragma mark Private Methods
 - (CGFloat)getTextHeight:(NSString *)text
 {
     if ([text respondsToSelector:@selector(sizeWithAttributes:)])

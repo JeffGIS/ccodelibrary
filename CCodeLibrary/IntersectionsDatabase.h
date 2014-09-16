@@ -38,7 +38,6 @@
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;
 - (IntersectionPoint *)getFirstAssignedIntersectionPointWithStatus0;
 - (BOOL)setIntersectionStatusTo:(int)status forIntersection:(int)intID;
-//- (NSObject *)getCurrentIntersectionPoint:(int)intID;
 - (NSString *)intersectionTextPath:(int)type;
 - (void)logError;
 void SQLOK (int sqlReturn);

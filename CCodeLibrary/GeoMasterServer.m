@@ -58,7 +58,6 @@ static GeoMasterServer *_open;
     
 	CFReadStreamRef readStream;
 	CFWriteStreamRef writeStream;
-	//FStreamCreatePairWithSocketToHost(NULL, (CFStringRef)@"localhost", 80, &readStream, &writeStream);
     CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)@"74.36.99.166", 22335, &readStream, &writeStream);
 	
 	_inputStream = (__bridge NSInputStream *)readStream;
