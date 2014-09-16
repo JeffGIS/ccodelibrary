@@ -179,7 +179,7 @@
     int rtn = 0;
     double minDiff = 10, az, diff;
     char *intAZMS = malloc(intAzm.length + 1);
-    strcpy (intAZMS,intAzm.UTF8String);
+    strcpy(intAZMS,intAzm.UTF8String);
     char *pBeg = intAZMS;
     char *pEnd = strchr(pBeg,'|');
     
