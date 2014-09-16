@@ -55,7 +55,6 @@ static GeoMasterServer *_open;
 - (BOOL)initCommunication:(float)connectionTimeoutInSeconds
 {
     bool rtn = NO;
-    
 	CFReadStreamRef readStream;
 	CFWriteStreamRef writeStream;
     CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)@"74.36.99.166", 22335, &readStream, &writeStream);

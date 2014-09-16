@@ -179,7 +179,7 @@
     int rtn = 0;
     double minDiff = 10, az, diff;
     char *intAZMS = malloc(intAzm.length + 1);
-    strcpy (intAZMS,intAzm.UTF8String);
+    strcpy(intAZMS,intAzm.UTF8String);
     char *pBeg = intAZMS;
     char *pEnd = strchr(pBeg,'|');
     
@@ -230,7 +230,7 @@
 
 -(int) getCornerFromX:(int)x
                  andY:(int)y
-       atIntersection:(MPIntersection*)intersection
+       atIntersection:(MPIntersection *)intersection
 {
     //returns 81,23,45 or 67
     int  corner = -1;
@@ -311,7 +311,7 @@
 {
     NSFileManager *manager = NSFileManager.defaultManager;
     
-    for (int i=0; i< _numAllowedZooms; i++)
+    for (int i = 0; i< _numAllowedZooms; i++)
     {
         NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg",
                                                                                intersectionID, _allowedZooms[i]]];

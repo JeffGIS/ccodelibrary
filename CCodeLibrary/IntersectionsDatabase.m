@@ -314,6 +314,7 @@ Exit:
 - (void)getPlaceIntersectionDatabase
 {
     NSString * dbPath = [self databasePath:self.geoid];
+    
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
                                                                                  error:nil].fileSize;
     BOOL forceReload = FALSE;
