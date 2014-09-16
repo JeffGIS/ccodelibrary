@@ -30,12 +30,11 @@
     NSRange schemeMarkerRange;
     NSString *scheme;
     
-    assert(str != nil);
-
+    assert(str);
     result = nil;
     
     trimmedStr = [str stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
-    if ( (trimmedStr != nil) && ([trimmedStr length] != 0) )
+    if ((trimmedStr) && (trimmedStr.length != 0))
     {
         schemeMarkerRange = [trimmedStr rangeOfString:@"://"];
         
@@ -45,7 +44,7 @@
         else
         {
             scheme = [trimmedStr substringWithRange:NSMakeRange(0, schemeMarkerRange.location)];
-            assert(scheme != nil);
+            assert(scheme);
             
             if (([scheme compare:@"ftp"
                          options:NSCaseInsensitiveSearch] == NSOrderedSame))
@@ -63,11 +62,11 @@
     BOOL result;
     NSString *extension;
     
-    assert(url != nil);
+    assert(url);
     extension = url.pathExtension;
     result = NO;
     
-    if (extension != nil)
+    if (extension)
     {
         result = ([extension caseInsensitiveCompare:@"bin"] == NSOrderedSame)
         || ([extension caseInsensitiveCompare:@"gcf"] == NSOrderedSame);
@@ -82,11 +81,11 @@
     BOOL result;
     NSString *extension;
     
-    assert(url != nil);
+    assert(url);
     extension = url.pathExtension;
     result = NO;
     
-    if (extension != nil)
+    if (extension)
     {
         result = ([extension caseInsensitiveCompare:@"gif"] == NSOrderedSame)
               || ([extension caseInsensitiveCompare:@"png"] == NSOrderedSame)
@@ -98,45 +97,43 @@
 
 - (NSString *)pathForTestImage:(NSUInteger)imageNumber
 {
-    NSUInteger power;
-    NSUInteger expansionFactor;
-    NSString *originalFilePath;
-    NSString *bigFilePath;
+    NSUInteger power, expansionFactor;
+    NSString *originalFilePath, *bigFilePath;
     NSFileManager *fileManager;
     NSDictionary *attrs;
-    unsigned long long originalFileSize;
-    unsigned long long bigFileSize;
+    unsigned long long originalFileSize, bigFileSize;
     
-    assert( (imageNumber >= 1) && (imageNumber <= 4) );
-    
+    assert((imageNumber >= 1) && (imageNumber <= 4));
     power = imageNumber - 1;
+    
     #if TARGET_IPHONE_SIMULATOR
         power += 1;
     #endif
-    expansionFactor = (NSUInteger) pow(10, power);
+    
+    expansionFactor = (NSUInteger)pow(10, power);
 
     fileManager = NSFileManager.defaultManager;
-    assert(fileManager != nil);
+    assert(fileManager);
     
     originalFilePath = [NSBundle.mainBundle pathForResource:[NSString stringWithFormat:@"TestImage%zu", (size_t) imageNumber]
                                                      ofType:@"png"];
     
-    assert(originalFilePath != nil);
+    assert(originalFilePath);
     
     bigFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"TestImage%zu.png", (size_t) imageNumber]];
-    assert(bigFilePath != nil);
+    assert(bigFilePath);
     
     attrs = [fileManager attributesOfItemAtPath:originalFilePath
                                           error:NULL];
     
-    assert(attrs != nil);
+    assert(attrs);
     
     originalFileSize = [[attrs objectForKey:NSFileSize] unsignedLongLongValue];
 
     attrs = [fileManager attributesOfItemAtPath:bigFilePath
                                           error:NULL];
     
-    if (attrs == NULL)
+    if (!attrs)
         bigFileSize = 0;
     
     else
@@ -147,14 +144,12 @@
         NSOutputStream *bigFileStream;
         NSData *data;
         const uint8_t *dataBuffer;
-        NSUInteger dataLength;
-        NSUInteger dataOffset;
-        NSUInteger counter;
+        NSUInteger dataLength, dataOffset, counter;
 
         NSLog(@"%5zu - %@", (size_t) expansionFactor, bigFilePath);
 
         data = [NSData dataWithContentsOfMappedFile:originalFilePath];
-        assert(data != nil);
+        assert(data);
         
         dataBuffer = data.bytes;
         dataLength = data.length;
@@ -162,7 +157,7 @@
         bigFileStream = [NSOutputStream outputStreamToFileAtPath:bigFilePath
                                                           append:NO];
         
-        assert(bigFileStream != NULL);
+        assert(bigFileStream);
         [bigFileStream open];
         
         for (counter = 0; counter < expansionFactor; counter++)
@@ -177,7 +172,7 @@
                                           maxLength:dataLength - dataOffset];
                 
                 assert(bytesWritten > 0);
-                dataOffset += (NSUInteger) bytesWritten;
+                dataOffset += (NSUInteger)bytesWritten;
             }
         }
 
@@ -194,13 +189,13 @@
     CFStringRef uuidStr;
     
     uuid = CFUUIDCreate(NULL);
-    assert(uuid != NULL);
+    assert(uuid);
     
     uuidStr = CFUUIDCreateString(NULL, uuid);
-    assert(uuidStr != NULL);
+    assert(uuidStr);
     
     result = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@-%@", prefix, uuidStr]];
-    assert(result != nil);
+    assert(result);
     
     CFRelease(uuidStr);
     CFRelease(uuid);
