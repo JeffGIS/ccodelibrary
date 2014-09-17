@@ -26,6 +26,7 @@
 - (UIColor *)polygonFillColor;
 - (UIImage *)checkmark;
 - (UIImage *)imageTarget;
+- (UIImage *)yellowArrow;
 - (NSString *)googleKey;
 
 - (UIImage *)invertImage:(UIImage *)image;
