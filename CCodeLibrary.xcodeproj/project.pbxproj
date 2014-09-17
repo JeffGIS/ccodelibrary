@@ -34,6 +34,7 @@
 		EBAEED0919B605E20084A579 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = EBAEED0819B605E20084A579 /* compress.c */; };
 		EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */; };
 		EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1BFCB199DD7C10059B547 /* MPIntersection.m */; };
+		EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +113,8 @@
 		EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaults.m; sourceTree = "<group>"; };
 		EBB1BFCA199DD7C10059B547 /* MPIntersection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPIntersection.h; sourceTree = "<group>"; };
 		EBB1BFCB199DD7C10059B547 /* MPIntersection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPIntersection.m; sourceTree = "<group>"; };
+		EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiPopoverView.h; sourceTree = "<group>"; };
+		EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiPopoverView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +187,8 @@
 				1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */,
 				EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */,
 				EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */,
+				EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */,
+				EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */,
 				EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */,
 				EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */,
 				EB2C7DB819BCB9C400F6D9F0 /* IntersectionPoint.h */,
@@ -340,6 +345,7 @@
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
+				EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */,
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
