@@ -61,7 +61,7 @@
 
 - (BOOL)isReceiving
 {
-    return (self.connection);
+    return (self.connection != nil);
 }
 
 - (void)startReceive:(NSString *)fileName
@@ -80,7 +80,7 @@
     assert(!self.fileStream);
     
     url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
-    success = (url);
+    success = (url != nil);
     
     if (!success || ![NetworkManager.sharedInstance isBinaryURL:url])
     {
@@ -99,7 +99,7 @@
             }
             
             url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
-            success = (url);
+            success = (url != nil);
         }
         
         if (!success)
