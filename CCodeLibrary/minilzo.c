@@ -3782,6 +3782,3 @@ lookbehind_overrun:
 }
 
 #endif
-
-/***** End of minilzo.c *****/
-

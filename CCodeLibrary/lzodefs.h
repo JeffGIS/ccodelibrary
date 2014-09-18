@@ -1506,6 +1506,4 @@ extern "C" {
     LZO_INFO_ARCH __LZO_INFOSTR_MM __LZO_INFOSTR_PM __LZO_INFOSTR_ENDIAN \
     " " __LZO_INFOSTR_OSNAME __LZO_INFOSTR_LIBC " " LZO_INFO_CC __LZO_INFOSTR_CCVER
 
-#endif /* already included */
-
-/* vim:set ts=4 et: */
+#endif

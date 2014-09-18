@@ -22,9 +22,8 @@ static GeoMasterServer *_open;
     self = [super init];
     
     if (self)
-    {
         self.output = @"";
-    }
+
     return self;
 }
 
@@ -211,7 +210,7 @@ static GeoMasterServer *_open;
 			break;
             
         case NSStreamEventHasSpaceAvailable:
-            ii=1;
+            ii = 1;
             break;
             
 		default:
@@ -239,16 +238,6 @@ static GeoMasterServer *_open;
 - (void) messageReceived:(NSString *)message
 {
 	[self.messages addObject:message];
-/*
-	[self.tView reloadData];
- 
-	NSIndexPath *topIndexPath = [NSIndexPath indexPathForRow:messages.count-1
-												   inSection:0];
- 
-	[self.tView scrollToRowAtIndexPath:topIndexPath
-					  atScrollPosition:UITableViewScrollPositionMiddle
-							  animated:YES];
-*/
 }
 
 @end

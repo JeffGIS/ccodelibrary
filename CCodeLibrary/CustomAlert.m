@@ -22,9 +22,7 @@
     }
     
     else
-    {
         frame = CGRectMake(0.0, 0.0, UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height);
-    }
     
     self = [super initWithFrame:frame];
     
@@ -59,8 +57,7 @@
         UILabel *titleLabel;
         UIScrollView *messageScrollView;
         UILabel *messageLabel;
-        UIButton *cancelButton;
-        UIButton *otherButton;
+        UIButton *cancelButton, *otherButton;
         
         if (title)
         {
@@ -110,9 +107,7 @@
         }
         
         else
-        {
             alertHeight += alertHeightDispl;
-        }
         
         if (cancelButtonTitle && otherButtonTitle)
         {
@@ -223,9 +218,7 @@
         }
         
         else
-        {
             alertHeight += alertHeightDispl;
-        }
         
         alertView = [[UIView alloc] initWithFrame:CGRectMake((int)((self.frame.size.width - alertWidth) / 2.0),
                                                              (int)((self.frame.size.height - alertHeight) / 2.0), alertWidth, alertHeight)];

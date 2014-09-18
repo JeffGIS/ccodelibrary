@@ -6,8 +6,8 @@
 
 #import "CCodeTypes.h"
 #define PI 3.141592653589f
-#define PI_2 2.0f*PI
-#define PI_DIV_2 PI*0.5f
+#define PI_2 2.0f * PI
+#define PI_DIV_2 PI * 0.5
 
 
 typedef float f32;

@@ -8,8 +8,7 @@
 #define INTDB_FAILED 1
 #define INT_TEXT_INDEX 1
 #define INT_TEXT_DATA 2
-
-#define INT_STATUS_PRELIMCOMPLETE   1
+#define INT_STATUS_PRELIMCOMPLETE 1
 
 @class IntersectionsDatabase;
 

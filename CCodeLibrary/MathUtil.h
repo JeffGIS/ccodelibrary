@@ -107,23 +107,23 @@ double ComputeMaxSlope (double frontSlope,double sideSlope);
 #include <stdio.h>
 
 #define PI 3.141592653589f
-#define PY		  3.141592653589793e0
-#define TWOPI     6.283185307179586e0
-#define	HALFPI    1.570796326794896e0
+#define PY 3.141592653589793e0
+#define TWOPI 6.283185307179586e0
+#define	HALFPI 1.570796326794896e0
 #define RADtoDEG 57.295779513082322
 #define DEGtoRAD 0.017453292519943296
-#define MFT  3.280833333333333e0
+#define MFT 3.280833333333333e0
 #define FTM 3.04800609601219e-1
 
 #ifndef max
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#define max(a,b)(((a) > (b)) ? (a) : (b))
 #endif
 
 #ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#define min(a,b)(((a) < (b)) ? (a) : (b))
 #endif
 
-#define IDNINT(r)     (int)(r < 0 ? r - 0.5f : r + 0.5f)
+#define IDNINT(r)(int)(r < 0 ? r - 0.5f : r + 0.5f)
 typedef struct
 {
     int NSETPT;
@@ -139,13 +139,16 @@ typedef struct
     long	xmx;
     long	ymx;
 } MNMXCORL;
+
 typedef MNMXCORL *LPMNMXCORL;
+
 typedef struct
 {	double	xmn;
     double	ymn;
     double	xmx;
     double	ymx;
 } MNMXCORD;
+
 typedef MNMXCORD *LPMNMXCORD;
 
 //1D
@@ -201,7 +204,6 @@ void  ScaleVec3_Self(vec3* vec, float scale);
 void  ScaleVec3(vec3* out_resultVec, const vec3* vec, float scale);
 void  CopyVec3(vec3* out_result, const vec3* point);
 float AngleBetweenVec3(vec3* vec0, vec3* vec1);
-
 float distpd(vec2 *Point1, vec2 *Point2);
 float getazmd (vec2 *Point1, vec2 *Point2);
 double getazd (LPDPOINT Point1, LPDPOINT Point2);
@@ -219,7 +221,6 @@ double LGETAZ(double X1, double Y1, double X2, double Y2);
 double DTWOPI (double az);
 vec3 GetTriangleNormal (vec3 * vertex1,vec3 * vertex2,vec3 * vertex3);
 double ComputeMaxSlope (double frontSlope,double sideSlope);
-
 LPTRANDATA STRAN2 (int ID,double X1[], double Y1[],double X2[],double Y2[],int N, LPFLOAT RSQMIN);
 void TRANS2 (double XIN,double YIN, LPDOUBLE XOUT,LPDOUBLE YOUT, LPTRANDATA TranPtr);
 void TranMNMXCORL (MNMXCORL * in,MNMXCORL * out,LPTRANDATA TranPtr);
@@ -233,7 +234,6 @@ double ArcDistance(DPOINT p1, DPOINT p2);
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
 int diffInDegrees (int angle1,int angle2);
 bool CreateMask (LPDPOINT *pPointsIN, int *pnPoints,bounds *pbnds);
-
 int fgetstring (char * str,int maxlen,FILE * fid);
 
 #endif

@@ -20,5 +20,4 @@
 - (void)hide;
 - (void)showAfter:(float)seconds;
 
-
 @end
