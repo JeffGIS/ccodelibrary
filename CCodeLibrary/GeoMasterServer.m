@@ -1,6 +1,9 @@
 //  GeoMasterServer.m
 //  CCodeLibrary
 
+#define GM_ADDRESS   @"74.36.99.166"
+#define GM_ADDRESSx   @"192.168.1.130"
+
 #import "GeoMasterServer.h"
 
 @implementation GeoMasterServer
@@ -56,7 +59,7 @@ static GeoMasterServer *_open;
     bool rtn = NO;
 	CFReadStreamRef readStream;
 	CFWriteStreamRef writeStream;
-    CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)@"74.36.99.166", 22335, &readStream, &writeStream);
+    CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)GM_ADDRESS, 22335, &readStream, &writeStream);
 	
 	_inputStream = (__bridge NSInputStream *)readStream;
 	_outputStream = (__bridge NSOutputStream *)writeStream;
