@@ -42,20 +42,18 @@ CGColorRef graphYColor()
 - (void)drawRect:(CGRect)rect
 {
     GMSProjection *projection = self.mapView.projection;
-    CGPoint points[2];
     CGRect pointRect;
     
     //UIColor *green = UserDefaults.defaults.darkGreen;
     
-    points[0].x = 100;
-    points[0].y = 100;
-    points[1].x = 300;
-    points[1].y = 300;
-    
     CGFloat zoom = self.mapView.camera.zoom;
-    CGFloat maxSize = 64.0;
+    CGFloat maxZoom = self.mapView.maxZoom;
+    CGFloat maxSize = 60;
     CGFloat size;
+    CGContextRef context = UIGraphicsGetCurrentContext();
 
+    size =  maxSize / (1 + maxZoom - zoom);
+    
     for (int i = 0; i < _pointsArray.count; i++)
     {
         
@@ -65,27 +63,12 @@ CGColorRef graphYColor()
         latlon.longitude = info.longitude;
         CGPoint pt = [projection pointForCoordinate:latlon];
         
-        if ((pt.x > (0.0 - maxSize)) && (pt.x < (self.mapView.frame.size.width + maxSize) &&
-                                         (pt.y > 0.0 - maxSize) && (pt.y < self.mapView.frame.size.height + maxSize)))
+        if ((pt.x > - size) && (pt.x < (self.mapView.frame.size.width + size) &&
+                                         (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
         {
-            CGContextRef context = UIGraphicsGetCurrentContext();
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
             CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
             
-            if (zoom < 13.0)
-                size = (maxSize / 16.0);
-            
-            else if (zoom < 14.0)
-                size = (maxSize / 8.0);
-            
-            else if (zoom < 15.25)
-                size = (maxSize / 4.0);
-            
-            else if (zoom < 16.5)
-                size = (maxSize / 2.0);
-            
-            else
-                size = maxSize;
             
             pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
             
