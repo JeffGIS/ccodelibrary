@@ -22,7 +22,7 @@
         
         _popover.backgroundColor = [UIColor colorWithWhite:0.0
                                                      alpha:0.8];
-        
+        _popover.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0.3 alpha:0.85];
         _popover.layer.cornerRadius = 20.0;
         
         _popoverIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
