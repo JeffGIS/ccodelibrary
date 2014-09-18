@@ -13,6 +13,8 @@
 		1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */; };
 		1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544519A412490029DBEA /* NetworkManager.m */; };
 		1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544E19A449460029DBEA /* CustomAlert.m */; };
+		1F7E00AA19CA8892006AFABA /* MarkerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7E00A919CA8892006AFABA /* MarkerView.m */; };
+		1F7E00AC19CA898E006AFABA /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7E00AB19CA898D006AFABA /* GoogleMaps.framework */; };
 		1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F838AE919B1021C00943A8C /* PlacesInfo.m */; };
 		1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F838AEB19B1026700943A8C /* CoreGraphics.framework */; };
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
@@ -71,6 +73,9 @@
 		1F3A544519A412490029DBEA /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		1F3A544D19A449460029DBEA /* CustomAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlert.h; sourceTree = "<group>"; };
 		1F3A544E19A449460029DBEA /* CustomAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlert.m; sourceTree = "<group>"; };
+		1F7E00A819CA8892006AFABA /* MarkerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkerView.h; sourceTree = "<group>"; };
+		1F7E00A919CA8892006AFABA /* MarkerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarkerView.m; sourceTree = "<group>"; };
+		1F7E00AB19CA898D006AFABA /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		1F838AE819B1021C00943A8C /* PlacesInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesInfo.h; sourceTree = "<group>"; };
 		1F838AE919B1021C00943A8C /* PlacesInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlacesInfo.m; sourceTree = "<group>"; };
 		1F838AEB19B1026700943A8C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -125,6 +130,7 @@
 				1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */,
 				1F101D2319AE94910006E1D5 /* QuartzCore.framework in Frameworks */,
 				1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */,
+				1F7E00AC19CA898E006AFABA /* GoogleMaps.framework in Frameworks */,
 				1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -162,6 +168,7 @@
 		EBA2E45C199527660085B2E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F7E00AB19CA898D006AFABA /* GoogleMaps.framework */,
 				1F838AEB19B1026700943A8C /* CoreGraphics.framework */,
 				1F101D2219AE94910006E1D5 /* QuartzCore.framework */,
 				1FB3605519AE7E8200592B1D /* UIKit.framework */,
@@ -199,6 +206,8 @@
 				EBAEED0419B601710084A579 /* lzodefs.h */,
 				1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */,
 				1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */,
+				1F7E00A819CA8892006AFABA /* MarkerView.h */,
+				1F7E00A919CA8892006AFABA /* MarkerView.m */,
 				EBA2E48319952BCA0085B2E0 /* MathTypes.h */,
 				EBA2E48419952BCA0085B2E0 /* MathUtil.c */,
 				EBA2E48519952BCA0085B2E0 /* MathUtil.h */,
@@ -346,6 +355,7 @@
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
 				EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */,
+				1F7E00AA19CA8892006AFABA /* MarkerView.m in Sources */,
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
@@ -464,6 +474,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CCodeLibrary/CCodeLibrary-Prefix.pch";
@@ -482,6 +493,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CCodeLibrary/CCodeLibrary-Prefix.pch";

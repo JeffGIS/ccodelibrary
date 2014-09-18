@@ -1,22 +1,17 @@
-//
 //  GSSiPopoverView.m
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 9/17/14.
-//  Copyright (c) 2014 GSSi. All rights reserved.
-//
 
 #import "GSSiPopoverView.h"
 
 #define MIN_SHOWTIME 2
 @implementation GSSiPopoverView
 
-- (id)initWithView:(UIView*)fromView
+- (id)initWithView:(UIView *)fromView
 {
     CGRect frame = fromView.frame;
     self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
+    if (self)
+    {
         UIView *_popoverView = self;
         self.fromView = fromView;
         _popoverView.backgroundColor = UIColor.clearColor;
@@ -83,9 +78,11 @@
 - (void)hide
 {
     [self.timer invalidate];
-    if (self.superview != nil)
+    
+    if (self.superview)
     {
-        int seconds = NSDate.timeIntervalSinceReferenceDate - self.showTime;
+        int seconds = (NSDate.timeIntervalSinceReferenceDate - self.showTime);
+        
         if (seconds < MIN_SHOWTIME)
         {
             self.timer = [NSTimer scheduledTimerWithTimeInterval:seconds
@@ -103,9 +100,10 @@
     }
 }
 
-- (void) showAfter:(float) seconds
+- (void)showAfter:(float)seconds
 {
     self.showTime = NSDate.timeIntervalSinceReferenceDate;
+    
     self.timer = [NSTimer scheduledTimerWithTimeInterval:seconds
                                      target:self
                                    selector:@selector(show)
@@ -113,14 +111,5 @@
                                     repeats:NO];
     
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 @end

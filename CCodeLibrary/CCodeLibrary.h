@@ -25,6 +25,7 @@
 #import "IntersectionRecord.h"
 #import "ManagePlacesDatabase.h"
 #import "GSSiPopoverView.h"
+#import "MarkerView.h"
 #import "CRAPI.h"
 
 #define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"

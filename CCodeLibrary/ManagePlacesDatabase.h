@@ -1,5 +1,5 @@
 //  ManagePlacesDatabase.h
-//  PedRampInv_Management
+//  CCodeLibrary
 
 #import <sqlite3.h>
 #import "CCodeLibrary.h"
