@@ -10,11 +10,12 @@
 {
     CGRect frame = fromView.frame;
     self = [super initWithFrame:frame];
+    
     if (self)
     {
-        UIView *_popoverView = self;
+        UIView *popoverView = self;
         self.fromView = fromView;
-        _popoverView.backgroundColor = UIColor.clearColor;
+        popoverView.backgroundColor = UIColor.clearColor;
         
         _popover = [[UIView alloc] initWithFrame:CGRectMake((fromView.frame.size.width / 4.0), (fromView.frame.size.height / 4.0),
                                                             (fromView.frame.size.width / 2.0), (fromView.frame.size.height / 2.0))];
@@ -58,23 +59,26 @@
         _popoverLabel.text = @"Loading Intersection Data";
         _popoverLabel.textAlignment = NSTextAlignmentCenter;
         
-        [_popoverView addSubview:_popover];
+        [popoverView addSubview:_popover];
         [_popover addSubview:_popoverIndicator];
         [_popover addSubview:_popoverCancel];
         [_popover addSubview:_popoverLabel];
     }
+    
     return self;
 }
+
 - (void)popoverCancel:(UIButton *)sender
 {
     [self removeFromSuperview];
 }
+
 - (void)show
 {
     [self.fromView addSubview:self];
     [_popoverIndicator startAnimating];
-   
 }
+
 - (void)hide
 {
     [self.timer invalidate];
@@ -92,6 +96,7 @@
                                                          repeats:NO];
             
         }
+        
         else
         {
             [_popoverIndicator stopAnimating];
