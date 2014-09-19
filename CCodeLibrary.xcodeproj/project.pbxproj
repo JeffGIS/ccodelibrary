@@ -16,10 +16,10 @@
 		1F7E00AA19CA8892006AFABA /* MarkerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7E00A919CA8892006AFABA /* MarkerView.m */; };
 		1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F838AE919B1021C00943A8C /* PlacesInfo.m */; };
 		1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F838AEB19B1026700943A8C /* CoreGraphics.framework */; };
+		1F9D7A6619CCE4D300A31A3C /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F9D7A6519CCE4D300A31A3C /* GoogleMaps.framework */; };
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
-		A9104F2519CBDDC90051E22D /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9104F2419CBDDC90051E22D /* GoogleMaps.framework */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
 		EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */; };
 		EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */; };
@@ -78,11 +78,11 @@
 		1F838AE819B1021C00943A8C /* PlacesInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesInfo.h; sourceTree = "<group>"; };
 		1F838AE919B1021C00943A8C /* PlacesInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlacesInfo.m; sourceTree = "<group>"; };
 		1F838AEB19B1026700943A8C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		1F9D7A6519CCE4D300A31A3C /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		1FB3605319AE7E7D00592B1D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1FB3605519AE7E8200592B1D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagePlacesDatabase.h; sourceTree = "<group>"; };
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
-		A9104F2419CBDDC90051E22D /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		EB1A69741999A6A9005A1CCB /* CRAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRAPI.h; sourceTree = "<group>"; };
 		EB1A69751999A6A9005A1CCB /* CRAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRAPI.m; sourceTree = "<group>"; };
 		EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntersectionsDatabase.h; sourceTree = "<group>"; };
@@ -130,7 +130,7 @@
 				1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */,
 				1F101D2319AE94910006E1D5 /* QuartzCore.framework in Frameworks */,
 				1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */,
-				A9104F2519CBDDC90051E22D /* GoogleMaps.framework in Frameworks */,
+				1F9D7A6619CCE4D300A31A3C /* GoogleMaps.framework in Frameworks */,
 				1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -168,7 +168,7 @@
 		EBA2E45C199527660085B2E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A9104F2419CBDDC90051E22D /* GoogleMaps.framework */,
+				1F9D7A6519CCE4D300A31A3C /* GoogleMaps.framework */,
 				1F838AEB19B1026700943A8C /* CoreGraphics.framework */,
 				1F101D2219AE94910006E1D5 /* QuartzCore.framework */,
 				1FB3605519AE7E8200592B1D /* UIKit.framework */,
