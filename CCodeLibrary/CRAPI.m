@@ -434,15 +434,16 @@ forGeoid:(int)geoid
 - (NSString*)directoryFromPath:(NSString*)path
                        andName:(NSString*)name
 {
-    LPSTR str = malloc(path.length+2);
+    LPSTR str = malloc(path.length + 2);
     LPSTR pBS;
-    NSString* outDir = @"";
+    NSString *outDir = @"";
     
-    strcpy (str,path.UTF8String);
+    strcpy(str,path.UTF8String);
+    
     if ((pBS = strrchr(str,'/')))
     {
         *pBS = 0;
-        strcat (str,name.UTF8String);
+        strcat (str, name.UTF8String);
         outDir = [NSString stringWithUTF8String:str];
     }
     

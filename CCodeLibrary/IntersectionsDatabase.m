@@ -227,17 +227,17 @@ static IntersectionsDatabase *_database;
     
     while (fgetstring (data, maxData, fidData))
     {
-        LPSTR pTab = strchr (data,'\t');
+        LPSTR pTab = strchr(data, '\t');
         LPSTR pTabIndex;
         fgetstring (index,maxIndex,fidIndex);
-        pTabIndex = strchr (index,'\t');
+        pTabIndex = strchr(index, '\t');
         *pTab++ = 0;
         *pTabIndex = 0;
-        pTabIndex = strchr (index,' ');
+        pTabIndex = strchr(index,' ');
         *pTabIndex++ = 0;
-        intStruct.intID = atoi (data);
-        intStruct.lev21Y = atoi (index);
-        intStruct.lev21X = atoi (pTabIndex);
+        intStruct.intID = atoi(data);
+        intStruct.lev21Y = atoi(index);
+        intStruct.lev21X = atoi(pTabIndex);
         intStruct.assignedTo = 1;
         intStruct.status = 0;
         
