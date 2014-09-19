@@ -202,8 +202,8 @@ Exit:
     return rtn;
 }
 
-int FindIntersection (const char *indexPath, const char *dataPath, int x, int y, char *intText,
-                      char *intAZMS, int *pnumStreets, int *pnRamps, int iWant, int *plev21x, int *plev21y)
+int FindIntersection(const char *indexPath, const char *dataPath, int x, int y, char *intText,
+                     char *intAZMS, int *pnumStreets, int *pnRamps, int iWant, int *plev21x, int *plev21y)
 {
     int rtn = 0;
     char indxtxt[256], *pAZ, *pnumRamp;
@@ -217,10 +217,11 @@ int FindIntersection (const char *indexPath, const char *dataPath, int x, int y,
     double metersPerPixel = GroundResolution(45.0, 21);
     int yStart = y - (1000 / metersPerPixel);
     int yStop = y + (1000 / metersPerPixel);
-    
     long nrecs, iloc, j, k;
     int nFound = 0;
-    FILE *fid = fopen (indexPath,"rb");
+    FILE *fid = fopen(indexPath,"rb");
+
+    printf("iWant = %i, fid exists = %d\n", iWant, (fid != NULL));
     
     //find first point with y within 1000 meters of point
     if (iWant <= 0)
@@ -231,10 +232,10 @@ int FindIntersection (const char *indexPath, const char *dataPath, int x, int y,
 
     ReadHeaderRecord(fid);
     fseek(fid, 0, 2);
-    fileLen = (int)ftell (fid) - FIRSTRECLEN;
+    fileLen = (int)ftell(fid) - FIRSTRECLEN;
     nrecs = (fileLen / RECLEN);
     fseek(fid, FIRSTRECLEN, 0);
-    len = (int)fread (pLoc, 1, RECLEN, fid);
+    len = (int)fread(pLoc, 1, RECLEN, fid);
     GetCoords(pLoc, &intAtX, &intAtY);
     
     if (intAtY > yStop)
