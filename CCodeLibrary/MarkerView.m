@@ -48,15 +48,13 @@ CGColorRef graphYColor()
     
     CGFloat zoom = self.mapView.camera.zoom;
     CGFloat maxZoom = self.mapView.maxZoom;
-    CGFloat maxSize = 60;
+    CGFloat maxSize = 60.0;
     CGFloat size;
     CGContextRef context = UIGraphicsGetCurrentContext();
-
-    size =  maxSize / (1 + maxZoom - zoom);
+    size =  maxSize / (1.0 + maxZoom - zoom);
     
     for (int i = 0; i < _pointsArray.count; i++)
     {
-        
         IntersectionPoint *info = (IntersectionPoint *)_pointsArray[i];
         CLLocationCoordinate2D latlon;
         latlon.latitude = info.latitude;
@@ -64,11 +62,10 @@ CGColorRef graphYColor()
         CGPoint pt = [projection pointForCoordinate:latlon];
         
         if ((pt.x > - size) && (pt.x < (self.mapView.frame.size.width + size) &&
-                                         (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
+                                        (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
         {
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
             CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
-            
             
             pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
             
