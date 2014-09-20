@@ -98,7 +98,7 @@ static void ReadHeaderRecord (FILE *fid)
     fread (indxtxt, 1, 128, fid);
     indxtxt[128] = 0;
 
-    if (!strncasecmp (indxtxt, "VERSION=", 8))
+    if (!strncasecmp(indxtxt, "VERSION=", 8))
     {
         char *loc;
         
@@ -107,10 +107,10 @@ static void ReadHeaderRecord (FILE *fid)
         if ((loc = strstr(indxtxt, ";RECLEN=")))
             RECLEN = atoi(loc + 8);
             
-            if ((loc = strstr (indxtxt, ";OFFSETLOC=")))
+            if ((loc = strstr(indxtxt, ";OFFSETLOC=")))
                 OFFSETLOC = atoi(loc + 11);
                 
-                if ((loc = strstr (indxtxt, ";FIRSTRECLEN=")))
+                if ((loc = strstr(indxtxt, ";FIRSTRECLEN=")))
                     FIRSTRECLEN = atoi(loc + 13);
     }
 
