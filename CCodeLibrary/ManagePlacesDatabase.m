@@ -48,8 +48,8 @@ static ManagePlacesDatabase *_database;
             char *nameChar = (char *)sqlite3_column_text(statement, 0);
             NSString *geoid = [NSString stringWithFormat:@"%i", sqlite3_column_int(statement, 1)];
             NSString *name = [[NSString alloc] initWithUTF8String:nameChar];
-            name = [self removeEndingReturn:name];
-            name = [self removeTextInsideParentheses:name];
+            name = [UserDefaults.defaults removeEndingReturn:name];
+            name = [UserDefaults.defaults removeTextInsideParentheses:name];
             
             PlacesInfo *info = [[PlacesInfo alloc]initWithName:name
                                                          geoid:geoid];
@@ -101,8 +101,8 @@ static ManagePlacesDatabase *_database;
     {
         char *placeNameChar = (char *)sqlite3_column_text(statement, 0);
         placeName = [[NSString alloc] initWithUTF8String:placeNameChar];
-        placeName = [self removeEndingReturn:placeName];
-        placeName = [self removeTextInsideParentheses:placeName];
+        placeName = [UserDefaults.defaults removeEndingReturn:placeName];
+        placeName = [UserDefaults.defaults removeTextInsideParentheses:placeName];
     }
         
     sqlite3_finalize(statement);
@@ -141,8 +141,8 @@ static ManagePlacesDatabase *_database;
         CGFloat bounds_e = sqlite3_column_double(statement, 4);
         CGFloat bounds_n = sqlite3_column_double(statement, 5);
         NSString *name = [[NSString alloc] initWithUTF8String:nameChar];
-        name = [self removeEndingReturn:name];
-        name = [self removeTextInsideParentheses:name];
+        name = [UserDefaults.defaults removeEndingReturn:name];
+        name = [UserDefaults.defaults removeTextInsideParentheses:name];
         
         NSString *stateCode = [[NSString alloc] initWithString:[self getStateCodeForStatefp:statefp]];
         
@@ -176,8 +176,8 @@ static ManagePlacesDatabase *_database;
         CGFloat bounds_e = sqlite3_column_double(statement, 4);
         CGFloat bounds_n = sqlite3_column_double(statement, 5);
         NSString *name = [[NSString alloc] initWithUTF8String:nameChar];
-        name = [self removeEndingReturn:name];
-        name = [self removeTextInsideParentheses:name];
+        name = [UserDefaults.defaults removeEndingReturn:name];
+        name = [UserDefaults.defaults removeTextInsideParentheses:name];
 
         [UserDefaults.defaults addLocationToListWithName:name
                                                    state:[self getStateCodeForStatefp:statefp]
@@ -204,7 +204,7 @@ static ManagePlacesDatabase *_database;
     {
         char *stateCodeChar = (char *)sqlite3_column_text(statement, 0);
         stateCode = [[NSString alloc] initWithUTF8String:stateCodeChar];
-        stateCode = [self removeEndingReturn:stateCode];
+        stateCode = [UserDefaults.defaults removeEndingReturn:stateCode];
     }
         
     sqlite3_finalize(statement);
@@ -223,7 +223,7 @@ static ManagePlacesDatabase *_database;
     {
         char *stateCodeChar = (char *)sqlite3_column_text(statement, 0);
         stateName = [[NSString alloc] initWithUTF8String:stateCodeChar];
-        stateName = [self removeEndingReturn:stateName];
+        stateName = [UserDefaults.defaults removeEndingReturn:stateName];
     }
 
     sqlite3_finalize(statement);
@@ -272,54 +272,12 @@ static ManagePlacesDatabase *_database;
     {
         char *stateCodeChar = (char *)sqlite3_column_text(statement, 0);
         NSString *stateName = [[NSString alloc] initWithUTF8String:stateCodeChar];
-        stateName = [self removeEndingReturn:stateName];
+        stateName = [UserDefaults.defaults removeEndingReturn:stateName];
         [dataArray addObject:stateName];
     }
         
     sqlite3_finalize(statement);
     return dataArray;
-}
-
-- (NSString *)removeEndingReturn:(NSString *)string
-{
-    NSString *end = [NSString stringWithFormat:@"%@", [string substringFromIndex:(string.length - 1)]];
-    
-    if ([end  isEqual:@"\r"])
-        string = [NSString stringWithFormat:@"%@", [string substringToIndex:(string.length - 1)]];
-    
-    return string;
-}
-
-- (NSString *)includeTextAfterHyphen:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"-"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringFromIndex:(range.location + 1)];
-    
-    return string;
-}
-
-- (NSString *)includeTextBeforeHyphen:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"-"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringToIndex:(range.location)];
-    
-    return string;
-}
-
-- (NSString *)removeTextInsideParentheses:(NSString *)string
-{
-    NSMutableString *mutableString = [NSMutableString stringWithString:string];
-    NSRange start = [mutableString rangeOfString:@"("];
-    NSRange end = [mutableString rangeOfString:@")"];
-    
-    if ((start.location != NSNotFound) && (end.location != NSNotFound))
-        [mutableString deleteCharactersInRange:(NSRange){(start.location - 1), (end.location - start.location + 2)}];
-    
-    return mutableString;
 }
 
 @end

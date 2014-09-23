@@ -28,6 +28,14 @@
 - (UIImage *)imageTarget;
 - (UIImage *)yellowArrow;
 - (NSString *)googleKey;
+- (NSString *)removeEndingReturn:(NSString *)string;
+- (NSString *)removeTextInsideParentheses:(NSString *)string;
+- (NSString *)includeTextBeforeParentheses:(NSString *)string;
+- (NSString *)includeTextInsideParentheses:(NSString *)string;
+- (NSString *)includeTextAfterHyphen:(NSString *)string;
+- (NSString *)includeTextBeforeHyphen:(NSString *)string;
+- (NSString *)includeTextAfterFirstColon:(NSString *)string;
+- (NSString *)addSpaceAfterComma:(NSString *)string;
 
 - (UIImage *)invertImage:(UIImage *)image;
 

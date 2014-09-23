@@ -467,4 +467,91 @@ static UserDefaults *_defaults;
     return RGB;
 }
 
+- (NSString *)removeEndingReturn:(NSString *)string
+{
+    NSString *end = [NSString stringWithFormat:@"%@", [string substringFromIndex:(string.length - 1)]];
+    
+    if ([end  isEqual:@"\r"])
+        string = [NSString stringWithFormat:@"%@", [string substringToIndex:(string.length - 1)]];
+    
+    return string;
+}
+
+- (NSString *)includeTextAfterHyphen:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"-"];
+    
+    if (range.location != NSNotFound)
+        string = [string substringFromIndex:(range.location + 1)];
+    
+    return string;
+}
+
+- (NSString *)includeTextBeforeHyphen:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"-"];
+    
+    if (range.location != NSNotFound)
+        string = [string substringToIndex:(range.location)];
+    
+    return string;
+}
+
+- (NSString *)removeTextInsideParentheses:(NSString *)string
+{
+    NSMutableString *mutableString = [NSMutableString stringWithString:string];
+    NSRange start = [mutableString rangeOfString:@"("];
+    NSRange end = [mutableString rangeOfString:@")"];
+    
+    if ((start.location != NSNotFound) && (end.location != NSNotFound))
+        [mutableString deleteCharactersInRange:(NSRange){(start.location - 1), (end.location - start.location + 2)}];
+    
+    return mutableString;
+}
+
+- (NSString *)includeTextBeforeParentheses:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"("];
+    
+    if (range.location != NSNotFound)
+        string = [string substringToIndex:(range.location)];
+    
+    return string;
+}
+
+- (NSString *)includeTextInsideParentheses:(NSString *)string
+{
+    NSRange start = [string rangeOfString:@"("];
+    NSRange end = [string rangeOfString:@")"];
+    
+    if ((start.location != NSNotFound) && (end.location != NSNotFound))
+    {
+        string = [string substringToIndex:end.location];
+        string = [string substringFromIndex:(start.location + 1)];
+    }
+    
+    return string;
+}
+
+- (NSString *)includeTextAfterFirstColon:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@":"];
+    
+    if (range.location != NSNotFound)
+        string = [string substringFromIndex:(range.location + 1)];
+    
+    return string;
+}
+
+- (NSString *)addSpaceAfterComma:(NSString *)string
+{
+    NSMutableString *mutableString = [NSMutableString stringWithString:string];
+    NSRange range = [mutableString rangeOfString:@","];
+    
+    if (range.location != NSNotFound)
+        [mutableString insertString:@" " atIndex:(range.location + 1)];
+    
+    return mutableString;
+}
+
 @end
