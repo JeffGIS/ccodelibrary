@@ -34,16 +34,6 @@
     }
 }
 
-- (void)stream:(NSStream *)theStream
-   handleEvent:(NSStreamEvent)streamEvent
-{
-    if (NSStreamEventOpenCompleted)
-    {
-        NSUInteger fileSize = [[self.fileStream propertyForKey:(id)kCFStreamPropertyFTPResourceSize] integerValue];
-        NSLog (@"%lu", (unsigned long)fileSize);
-    }
-}
-
 - (void)receiveDidStart
 {
     NSLog (@"Attempting to PULL %@ from %@", self.fileName, self.currentFtp);

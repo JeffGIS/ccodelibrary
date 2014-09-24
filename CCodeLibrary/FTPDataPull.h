@@ -20,7 +20,7 @@
 
 @end
 
-@interface FTPDataPull : NSObject<NSURLConnectionDataDelegate,NSStreamDelegate>
+@interface FTPDataPull : NSObject<NSURLConnectionDataDelegate>
 
 @property (nonatomic, weak) id <FTPDataPullDelegate> delegate;
 @property (nonatomic, assign, readonly ) BOOL isReceiving;
