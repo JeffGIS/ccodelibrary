@@ -34,6 +34,16 @@
     }
 }
 
+- (void)stream:(NSStream *)theStream
+   handleEvent:(NSStreamEvent)streamEvent
+{
+    if (NSStreamEventOpenCompleted)
+    {
+        NSUInteger fileSize = [[self.fileStream propertyForKey:(id)kCFStreamPropertyFTPResourceSize] integerValue];
+        NSLog (@"%lu", (unsigned long)fileSize);
+    }
+}
+
 - (void)receiveDidStart
 {
     NSLog (@"Attempting to PULL %@ from %@", self.fileName, self.currentFtp);
@@ -122,6 +132,9 @@
     
     [self.fileStream open];
     
+    [self.fileStream setProperty:@"YES"
+                          forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
+    
     request = [NSURLRequest requestWithURL:url];
     assert(request);
     
@@ -129,6 +142,8 @@
                                                     delegate:self];
     
     assert(self.connection);
+    
+    self.totalDataReceived = 0;
     
     [self receiveDidStart];
 }
@@ -176,14 +191,16 @@ didReceiveResponse:(NSURLResponse *)response
     assert(theConnection == self.connection);
     
     dataLength = data.length;
-    dataBytes  = data.bytes;
-    
+    dataBytes = data.bytes;
     bytesWrittenSoFar = 0;
+    self.totalDataReceived +=dataLength;
+    
+    NSLog (@"dataLength: %lu", (unsigned long)self.totalDataReceived);
     
     do
     {
         bytesWritten = [self.fileStream write:&dataBytes[bytesWrittenSoFar]
-                                    maxLength:dataLength - bytesWrittenSoFar];
+                                    maxLength:(dataLength - bytesWrittenSoFar)];
         
         assert(bytesWritten != 0);
         
@@ -195,7 +212,8 @@ didReceiveResponse:(NSURLResponse *)response
         }
         
         else
-            bytesWrittenSoFar += (NSUInteger) bytesWritten;
+            bytesWrittenSoFar += (NSUInteger)bytesWritten;
+        
     }
     
     while (bytesWrittenSoFar != dataLength);

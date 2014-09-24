@@ -9,7 +9,7 @@
 
 @class GeoMasterServer;
 
-@protocol GeoMasterServerDelegate  <NSObject>
+@protocol GeoMasterServerDelegate<NSObject>
 
 - (void) GMServer:(GeoMasterServer *)server
 didReceiveMessage:(NSString *)message
