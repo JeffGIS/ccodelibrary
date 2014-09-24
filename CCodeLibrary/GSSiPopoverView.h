@@ -2,12 +2,14 @@
 //  CCodeLibrary
 
 #import <UIKit/UIKit.h>
+#import "FTPDataPull.h"
 
 @interface GSSiPopoverView : UIView
 
 @property UIView *popover;
 @property UIView *fromView;
 @property UIActivityIndicatorView *popoverIndicator;
+@property UIProgressView *progressView;
 @property UIButton *popoverCancel;
 @property UILabel *popoverLabel;
 @property BOOL inShowAfter;

@@ -144,6 +144,7 @@
     assert(self.connection);
     
     self.totalDataReceived = 0;
+    self.progress = 0.0;
     
     [self receiveDidStart];
 }
@@ -177,6 +178,8 @@ didReceiveResponse:(NSURLResponse *)response
     
     assert(theConnection == self.connection);
     assert(response);
+    
+    self.fileSize = response.expectedContentLength;
 }
 
 - (void)connection:(NSURLConnection *)theConnection
@@ -193,9 +196,9 @@ didReceiveResponse:(NSURLResponse *)response
     dataLength = data.length;
     dataBytes = data.bytes;
     bytesWrittenSoFar = 0;
-    self.totalDataReceived +=dataLength;
     
-    NSLog (@"dataLength: %lu", (unsigned long)self.totalDataReceived);
+    self.totalDataReceived +=dataLength;
+    self.progress = ((CGFloat)self.totalDataReceived / (CGFloat)self.fileSize);
     
     do
     {

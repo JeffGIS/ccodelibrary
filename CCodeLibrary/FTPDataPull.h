@@ -42,6 +42,8 @@
 @property (nonatomic, assign, readwrite) BOOL hasFailed;
 @property (nonatomic) int geoid;
 @property (nonatomic) NSUInteger totalDataReceived;
+@property (nonatomic) NSUInteger fileSize;
+@property (nonatomic) CGFloat progress;
 
 + (FTPDataPull *)pull;
 
