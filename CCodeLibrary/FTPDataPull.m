@@ -187,8 +187,9 @@ didReceiveResponse:(NSURLResponse *)response
     dataBytes = data.bytes;
     bytesWrittenSoFar = 0;
     
-    self.totalDataReceived +=dataLength;
+    self.totalDataReceived += dataLength;
     self.progress = ((CGFloat)self.totalDataReceived / (CGFloat)self.fileSize);
+    NSLog (@"FTP Progress: %f", self.progress);
     
     do
     {
