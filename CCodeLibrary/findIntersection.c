@@ -153,7 +153,7 @@ int FindIntersectionFromID (const char *indexPath, const char *dataPath, int int
         {
             int lev21x, lev21y;
             double lat,lon;
-            pLoc = strchr (pLoc, '\t')+1;
+            pLoc = strchr(pLoc, '\t')+1;
             iOffset = atoi(pLoc) - 1;
             lev21y = atoi(indxtxt);
             pLoc = strchr(indxtxt, ' ');
@@ -323,7 +323,7 @@ int FindIntersection(const char *indexPath, const char *dataPath, int x, int y, 
         pLoc[255] = 0;
         fclose(fidData);
         
-        if ((pend = strchr (pLoc,'\r')))
+        if ((pend = strchr(pLoc,'\r')))
             *pend = 0;
         
         rtn = atoi(pLoc);

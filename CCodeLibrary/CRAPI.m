@@ -306,16 +306,18 @@
     return NO;
 }
 
-- (void) deleteImagesForAllZooms:(int)intersectionID
+- (void)deleteImagesForAllZooms:(int)intersectionID
 {
     NSFileManager *manager = NSFileManager.defaultManager;
     
     for (int i = 0; i< _numAllowedZooms; i++)
     {
-        NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg",
-                                                                               intersectionID, _allowedZooms[i]]];
-        NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt",
-                                                                             intersectionID, _allowedZooms[i]]];
+        NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:
+                               [NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, _allowedZooms[i]]];
+        
+        NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:
+                             [NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, _allowedZooms[i]]];
+        
         [manager removeItemAtPath:imageFile
                             error:nil];
         
@@ -342,8 +344,7 @@
     if (fileSize > 0 && refresh == NO)
         return imageFile;
     
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=%@",
-                              lat, lon, zoom, GOOGLE_API_KEY];
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=%@", lat, lon, zoom, GOOGLE_API_KEY];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
@@ -365,22 +366,23 @@
     {
         char txt[1024];
         double pixelX, pixelY;
-        int factor = pow (2,21-zoom);
+        int factor = pow(2,21-zoom);
         NSError *err;
 
         LatLongToPixelXYd(lat, lon, 21, &pixelX, &pixelY);
         
-        sprintf (txt, "0 0 %f %f\r\n\
-                 640 0 %f %f\r\n\
-                 640 640 %f %f\r\n\
-                 0 640 %f %f\r\n",
-                 pixelX - 320 * factor, pixelY + 320 * factor,
-                 pixelX + 320 * factor, pixelY + 320 * factor,
-                 pixelX + 320 * factor, pixelY - 320 * factor,
-                 pixelX - 320 * factor, pixelY - 320 * factor);
+        sprintf(txt, "0 0 %f %f\r\n\
+                640 0 %f %f\r\n\
+                640 640 %f %f\r\n\
+                0 640 %f %f\r\n",
+                pixelX - 320 * factor, pixelY + 320 * factor,
+                pixelX + 320 * factor, pixelY + 320 * factor,
+                pixelX + 320 * factor, pixelY - 320 * factor,
+                pixelX - 320 * factor, pixelY - 320 * factor);
         
         NSString *outcontents = [NSString stringWithCString:txt
                                                    encoding:NSUTF8StringEncoding];
+        
         if (![outcontents writeToFile:cptFile
                            atomically:NO
                              encoding:NSUTF8StringEncoding
@@ -431,8 +433,8 @@ forGeoid:(int)geoid
     return YES;
 }
 
-- (NSString*)directoryFromPath:(NSString*)path
-                       andName:(NSString*)name
+- (NSString*)directoryFromPath:(NSString *)path
+                       andName:(NSString *)name
 {
     LPSTR str = malloc(path.length + 2);
     LPSTR pBS;

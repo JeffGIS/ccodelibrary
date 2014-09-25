@@ -12,12 +12,12 @@
 
 float MaxF(float l, float r)
 {
-	return l>r?l:r;
+	return l > r ? l : r;
 }
 
 int Max(int l, int r)
 {
-	return l>r?l:r;
+	return l > r ? l : r;
 }
 
 int	  Clamp(int n, int clampMin, int clampMax)
@@ -56,23 +56,23 @@ float DegreesToRadians(float degrees)
 
 float DotVec2(vec2* vec0, vec2* vec1)
 {
-	return vec0->x*vec1->x + vec0->y*vec1->y;
+	return vec0->x * vec1->x + vec0->y * vec1->y;
 }
 
-float DotVec3(const vec3* vec0, const vec3* vec1)
+float DotVec3(const vec3 *vec0, const vec3 *vec1)
 {
-	return vec0->x*vec1->x + vec0->y*vec1->y + vec0->z*vec1->z;
+	return vec0->x * vec1->x + vec0->y * vec1->y + vec0->z * vec1->z;
 }
 
 float Lerp(float f0, float f1, float t)
 {
-	return f0 + t*(f1-f0);
+	return f0 + t * (f1 - f0);
 }
 
-void  LerpVec2(vec2* out_lerpedPos, vec2* p0, vec2* p1, float t)
+void LerpVec2(vec2 *out_lerpedPos, vec2 *p0, vec2 *p1, float t)
 {
-	const float outX = p0->x + t*(p1->x-p0->x);
-	const float outY = p0->y + t*(p1->y-p0->y);
+	const float outX = p0->x + t *(p1->x - p0->x);
+	const float outY = p0->y + t * (p1->y - p0->y);
 	
 	if(out_lerpedPos)
 	{
@@ -81,11 +81,11 @@ void  LerpVec2(vec2* out_lerpedPos, vec2* p0, vec2* p1, float t)
 	}
 }
 
-void  LerpVec3(vec3* out_lerpedPos, const vec3* p0, const vec3* p1, float t)
+void  LerpVec3(vec3 *out_lerpedPos, const vec3 *p0, const vec3 *p1, float t)
 {
-	const float outX = p0->x + t*(p1->x-p0->x);
-	const float outY = p0->y + t*(p1->y-p0->y);
-	const float outZ = p0->z + t*(p1->z-p0->z);
+	const float outX = p0->x + t * (p1->x - p0->x);
+	const float outY = p0->y + t * (p1->y - p0->y);
+	const float outZ = p0->z + t * (p1->z - p0->z);
 	
 	if(out_lerpedPos)
 	{
@@ -100,7 +100,7 @@ float MagnitudeVec2(vec2* vec)
 	return sqrtf(DotVec2(vec,vec));
 }
 
-float DistVec3_2D(const vec3* vec0, const vec3* vec1)
+float DistVec3_2D(const vec3 *vec0, const vec3 *vec1)
 {
 	vec3 vec2D;
 	SubVec3(&vec2D, vec0, vec1);
@@ -108,19 +108,19 @@ float DistVec3_2D(const vec3* vec0, const vec3* vec1)
 	return MagnitudeSqVec3(&vec2D);
 }
 
-float DistVec3(const vec3* vec0, const vec3* vec1)
+float DistVec3(const vec3 *vec0, const vec3 *vec1)
 {
 	return sqrtf(DistSqVec3(vec0,vec1));
 }
 
-float DistSqVec3(const vec3* vec0, const vec3* vec1)
+float DistSqVec3(const vec3 *vec0, const vec3 *vec1)
 {
 	vec3 distVec;
 	SubVec3(&distVec, vec0, vec1);
 	return MagnitudeSqVec3(&distVec);
 }
 
-bool PosIsBehind(const vec3* frontPos, const vec3* frontAt, const vec3* behindPos)
+bool PosIsBehind(const vec3 *frontPos, const vec3 *frontAt, const vec3 *behindPos)
 {
 	vec3 dirVec;
 	SubVec3(&dirVec, behindPos, frontPos);
@@ -412,27 +412,27 @@ int diffInDegrees (int angle1,int angle2)
 
 float distpd(vec2 *Point1, vec2 *Point2)
 {
-    return (float)sqrt ((Point1->x-Point2->x)*(Point1->x-Point2->x) +
-                        (Point1->y-Point2->y)*(Point1->y-Point2->y));
+    return (float)sqrt((Point1->x - Point2->x) * (Point1->x - Point2->x) +
+                       (Point1->y - Point2->y) * (Point1->y - Point2->y));
 }
 
-double LDIST(double X1,double Y1,double X2,double Y2)
+double LDIST(double X1, double Y1, double X2, double Y2)
 {
-	double xdf = (X1-X2);
-	double ydf = (Y1-Y2);
+	double xdf = (X1 - X2);
+	double ydf = (Y1 - Y2);
   	
   	return sqrt(xdf * xdf + ydf * ydf);
 }
 
 double LGETAZ(double X1, double Y1, double X2, double Y2)
 {
-	double	rtn=DTWOPI(atan2(Y2 - Y1,X2 - X1));
+	double rtn = DTWOPI(atan2(Y2 - Y1, X2 - X1));
 	return rtn;
 }
 
 double HeadingToAzimuth (double heading)
 {
-	double rtn = fmod ((360 - heading) * DEGtoRAD + HALFPI,TWOPI);
+	double rtn = fmod((360 - heading) * DEGtoRAD + HALFPI,TWOPI);
 	return rtn;
 }
 
@@ -440,35 +440,35 @@ vec2 newpt (vec2 *OldPoint, float AZM, float DIS)
 {
     vec2 NewPoint;
     
-    NewPoint.x= (float)(OldPoint->x+DIS*cos(AZM));
-    NewPoint.y= (float)(OldPoint->y+DIS*sin(AZM));
+    NewPoint.x = (float)(OldPoint->x + DIS * cos(AZM));
+    NewPoint.y = (float)(OldPoint->y + DIS * sin(AZM));
     return NewPoint;
 }
 dvec2 dnewpt (dvec2 *OldPoint, double AZM, double DIS)
 {
     dvec2 NewPoint;
     
-    NewPoint.x= OldPoint->x+DIS*cos(AZM);
-    NewPoint.y= OldPoint->y+DIS*sin(AZM);
+    NewPoint.x = OldPoint->x + DIS * cos(AZM);
+    NewPoint.y = OldPoint->y + DIS * sin(AZM);
     return NewPoint;
 }
 
 float getazmd (vec2 *Point1, vec2 *Point2)
 {
-	float	rtn=BTWNTWOPI((float)atan2((Point2->y-Point1->y),(Point2->x-Point1->x)));
+	float rtn = BTWNTWOPI((float)atan2((Point2->y - Point1->y), (Point2->x - Point1->x)));
 	return rtn;
 }
 
 double getazd (LPDPOINT Point1, LPDPOINT Point2)
 {
-	double 	rtn=DTWOPI(atan2((Point2->y-Point1->y),(Point2->x-Point1->x)));
+	double rtn = DTWOPI(atan2((Point2->y - Point1->y), (Point2->x - Point1->x)));
 	return rtn;
 }
 
 float DeltaAZ (float *AZ1, float *AZ2)
 {
 	float daz;
-	daz =  *AZ2 - *AZ1;
+	daz = *AZ2 - *AZ1;
     
 	if (daz < -PY)
 		daz += (float)TWOPI;
@@ -521,16 +521,16 @@ void AddPointToDBounds (dbounds* pBounds,dvec2 *pt)
  Return 1 if the point is on the same side as the normal,
  otherwise -1.
  */
-int WhichSide(vec3 p,vec3 n,vec3 vp)
+int WhichSide(vec3 p, vec3 n, vec3 vp)
 {
     double D,s;
     
-    D = -(n.x*vp.x + n.y*vp.y + n.z*vp.z);
-    s = n.x*p.x + n.y*p.y + n.z*p.z + D;
+    D = -(n.x * vp.x + n.y * vp.y + n.z * vp.z);
+    s = n.x * p.x + n.y * p.y + n.z * p.z + D;
     
-    return(s<=0 ? -1 : 1);
+    return(s <= 0 ? -1 : 1);
 }
-vec3 VectorFromPoints (vec3 * p1, vec3 * p2)
+vec3 VectorFromPoints (vec3 *p1, vec3 *p2)
 {
 	vec3 outVector;
     
@@ -540,7 +540,7 @@ vec3 VectorFromPoints (vec3 * p1, vec3 * p2)
 	return outVector;
 }
 
-vec3 sVectorFromPoints (svec3 * p1, svec3 * p2)
+vec3 sVectorFromPoints (svec3 *p1, svec3 *p2)
 {
 	vec3 outVector;
     
@@ -550,22 +550,18 @@ vec3 sVectorFromPoints (svec3 * p1, svec3 * p2)
 	return outVector;
 }
 
-vec3 GetTriangleNormal (vec3 * vertex1,vec3 * vertex2,vec3 * vertex3)
+vec3 GetTriangleNormal (vec3 *vertex1, vec3 *vertex2, vec3 *vertex3)
 {
-	vec3 vNormal;
-	vec3 v1;
-	vec3 v2;
-    
-	v1 = VectorFromPoints(vertex2,vertex1);
-	v2 = VectorFromPoints(vertex3,vertex1);
+	vec3 vNormal, v1, v2;
+	v1 = VectorFromPoints(vertex2, vertex1);
+	v2 = VectorFromPoints(vertex3, vertex1);
 	
 	CrossVec3(&vNormal, &v1, &v2);
 	NormalizeVec3(&vNormal);
-    
     return vNormal;
 }
 
-double ComputeMaxSlope(double frontSlope,double sideSlope)
+double ComputeMaxSlope(double frontSlope, double sideSlope)
 {
     double rtn = 0;
     vec3 vertex1, vertex2, vertex3;
@@ -575,12 +571,12 @@ double ComputeMaxSlope(double frontSlope,double sideSlope)
     vertex1.x = vertex1.y = vertex1.z = 0.0f;
     vertex2.x = 1.0f;
     vertex2.y = 0.0f;
-    vertex2.z = sideSlope/100.0;
+    vertex2.z = sideSlope / 100.0;
     vertex3.x = 0.0f;
     vertex3.y = 1.0f;
-    vertex3.z = frontSlope/100.0;
-    normal = GetTriangleNormal(&vertex1,&vertex2,&vertex3);
-    xyDist = LDIST(0.0,0.0,normal.x,normal.y);
+    vertex3.z = frontSlope / 100.0;
+    normal = GetTriangleNormal(&vertex1, &vertex2, &vertex3);
+    xyDist = LDIST(0.0, 0.0, normal.x, normal.y);
     
     if (fabs (normal.z) > 0.0000001)
         rtn = 100.0 * fabs (xyDist / normal.z);
@@ -593,9 +589,7 @@ double ComputeMaxSlope(double frontSlope,double sideSlope)
 
 vec3 sGetTriangleNormal(svec3 *vertex1, svec3 *vertex2, svec3 *vertex3, double metersperpixel)
 {
-	vec3 vNormal;
-	vec3 v1;
-	vec3 v2;
+	vec3 vNormal, v1, v2;
 	vec3 vertex1f, vertex2f, vertex3f;
 	float f = metersperpixel;
 	
@@ -611,12 +605,11 @@ vec3 sGetTriangleNormal(svec3 *vertex1, svec3 *vertex2, svec3 *vertex3, double m
 	vertex3f.y = vertex3->y * f;
 	vertex3f.z = FTM * vertex3->z / 8.0f;
     
-	v1 = VectorFromPoints (&vertex2f,&vertex1f);
-	v2 = VectorFromPoints (&vertex3f,&vertex1f);
+	v1 = VectorFromPoints(&vertex2f, &vertex1f);
+	v2 = VectorFromPoints(&vertex3f, &vertex1f);
 	
 	CrossVec3(&vNormal, &v1, &v2);
 	NormalizeVec3(&vNormal);
-    
     return vNormal;
 }
 
@@ -632,11 +625,11 @@ void GetFrustum2 (float LIGHTLOOKAT[3],float lightPos[3])
 
 float getazm (vec2 *Point1, vec2 *Point2)
 {
-	float	rtn=BTWNTWOPI((float)atan2((Point2->y-Point1->y),(Point2->x-Point1->x)));
+	float rtn = BTWNTWOPI((float)atan2((Point2->y - Point1->y), (Point2->x - Point1->x)));
 	return rtn;
 }
 
-void Rotate256 (int irot,vec2* pt)
+void Rotate256 (int irot,vec2 *pt)
 {
     float XOUT, YOUT;
     
@@ -693,9 +686,9 @@ float MULREG (double Y[], double X1[], double X2[], int N,double * A,double * B,
     SMD1D2 = 0e0;
     SMD1Y  = 0e0;
     SMD2Y  = 0e0;
-    YHAT   = AMEAN (Y,N);
-    X1HAT  = AMEAN (X1,N);
-    X2HAT  = AMEAN (X2,N);
+    YHAT   = AMEAN(Y,N);
+    X1HAT  = AMEAN(X1,N);
+    X2HAT  = AMEAN(X2,N);
     
     for (I = 0; I < N; I++)
     {
@@ -705,12 +698,12 @@ float MULREG (double Y[], double X1[], double X2[], int N,double * A,double * B,
         SMD1SQ = SMD1SQ + pow(D1,2);
         SMD2SQ = SMD2SQ + pow(D2,2);
         SMD1D2 = SMD1D2 + D1 * D2;
-        SMYSQ = SMYSQ + pow (DY,2);
+        SMYSQ = SMYSQ + pow(DY,2);
         SMD1Y = SMD1Y + D1 * DY;
         SMD2Y = SMD2Y + D2 * DY;
     }
     
-    D = SMD1SQ * SMD2SQ - pow (SMD1D2,2);
+    D = SMD1SQ * SMD2SQ - pow(SMD1D2,2);
     
     if (D == 0E0)
       	return (float)(0.0);
@@ -730,16 +723,16 @@ float MULREG (double Y[], double X1[], double X2[], int N,double * A,double * B,
 
 bool LINFIT (LPDPOINT pPoint,long N,double *A,double *B,double *MAXDIF,long *LOFMDF)
 {
-	double SUMX=0, SUMY=0, XAVE, YAVE, SMXDYD, SMXDSQ, SUMXY=0, SUMXSQ=0, DIFF;
-	double	SUMxy=0, SUMx2=0;
+	double SUMX = 0, SUMY = 0, XAVE, YAVE, SMXDYD, SMXDSQ, SUMXY = 0, SUMXSQ = 0, DIFF;
+	double	SUMxy = 0, SUMx2 = 0;
 	long I;
 	LPDPOINT pPointIn = pPoint;
     
 	for (I = 0; I < N; I++, pPoint++)
 	{
-        SUMX   += pPoint->x;
-        SUMY   += pPoint->y;
-        SUMXY  += pPoint->x * pPoint->y;
+        SUMX += pPoint->x;
+        SUMY += pPoint->y;
+        SUMXY += pPoint->x * pPoint->y;
     	SUMXSQ += pPoint->x * pPoint->x;
     }
     
@@ -821,56 +814,59 @@ Start:
     BASX2 = DBL_MAX;
     BASY1 = DBL_MAX;
     BASY2 = DBL_MAX;
-    for (I=0; I<N; I++)
+    
+    for (I = 0; I < N; I++)
     {
         BASX1  = min (BASX1, X1[I]);
         BASX2  = min (BASX2, X2[I]);
         BASY1  = min (BASY1, Y1[I]);
         BASY2  = min (BASY2, Y2[I]);
     }
-    for (I=0; I<N; I++)
+    
+    for (I = 0; I < N; I++)
     {
         XT1[I] = X1[I] - BASX1;
         XT2[I] = X2[I] - BASX2;
         YT1[I] = Y1[I] - BASY1;
         YT2[I] = Y2[I] - BASY2;
     }
-    RSQ1 = MULREG (XT2,XT1,YT1,N,&TranPtr->A1,&TranPtr->B1,&TranPtr->C1);
-    RSQ2 = MULREG (YT2,YT1,XT1,N,&TranPtr->A2,&TranPtr->B2,&TranPtr->C2);
+    
+    RSQ1 = MULREG(XT2, XT1, YT1, N, &TranPtr->A1, &TranPtr->B1, &TranPtr->C1);
+    RSQ2 = MULREG(YT2, YT1, XT1, N, &TranPtr->A2, &TranPtr->B2, &TranPtr->C2);
     TranPtr->A1 = TranPtr->A1 + BASX2;
     TranPtr->A2 = TranPtr->A2 + BASY2;
     TranPtr->BASX = BASX1;
     TranPtr->BASY = BASY1;
-    *RSQMIN = min (RSQ1,RSQ2);
+    *RSQMIN = min(RSQ1,RSQ2);
     TranPtr->NSETPT = N;
-    free (XT1);
+    free(XT1);
     goto Exit;
     
 //SET-UP WITH N EQ 2.
-S10: NUM    = 0;
-    ANGLE  = 0;
+S10: NUM = 0;
+    ANGLE = 0;
     SCLRAT = 0;
-    TOTD=0;
+    TOTD = 0;
     
-    for (I=0;I< N - 1;I++)
+    for (I = 0; I < N - 1; I++)
     {
-        for (J=I+1;J<N;J++)
+        for (J = I + 1; J < N; J++)
         {
-            DX1    = X1[J] - X1[I];
-            DX2    = X2[J] - X2[I];
-            DY1    = Y1[J] - Y1[I];
-            DY2    = Y2[J] - Y2[I];
-            DEN = pow(DX1,2) + pow (DY1,2);
+            DX1 = X1[J] - X1[I];
+            DX2 = X2[J] - X2[I];
+            DY1 = Y1[J] - Y1[I];
+            DY2 = Y2[J] - Y2[I];
+            DEN = pow(DX1,2) + pow(DY1,2);
             
             if (!DEN)
 	          	continue;
             
             D = sqrt(DEN);
             TOTD += D;
-            SCLRAT = SCLRAT + (sqrt((pow (DX2,2) + pow(DY2,2)) / DEN)) * D;
+            SCLRAT = SCLRAT + (sqrt((pow(DX2,2) + pow(DY2,2)) / DEN)) * D;
             ANGLE1 = atan2(DY2, DX2);
             ANGLE2 = atan2(DY1, DX1);
-            ANGLED  = DTWOPI (ANGLE2 - ANGLE1);
+            ANGLED  = DTWOPI(ANGLE2 - ANGLE1);
             
             if (ANGLED > PY)
 	          	ANGLED =  ANGLED - TWOPI;
@@ -893,7 +889,7 @@ S10: NUM    = 0;
     TranPtr->C2 =-SINANG * SCLRAT;
     TranPtr->A1 = 0;
     TranPtr->A2 = 0;
-    pPoints = (LPDPOINT)malloc (sizeof(DPOINT)*N);
+    pPoints = (LPDPOINT)malloc(sizeof(DPOINT)*N);
     xmin = DBL_MAX;
     xmax = -DBL_MAX;
     
@@ -903,8 +899,8 @@ S10: NUM    = 0;
         TranPtr->A2 = TranPtr->A2 + Y2[I] - (COSANG * Y1[I] -SINANG * X1[I]) * SCLRAT;
         pPoints[I].x = X1[I];
         pPoints[I].y = Y1[I];
-        xmin = min (xmin, X2[I]);
-        xmax = max (xmax, X2[I]);
+        xmin = min(xmin, X2[I]);
+        xmax = max(xmax, X2[I]);
     }
     
     if (LINFIT (pPoints,N,&A,&B,0,0))
@@ -913,7 +909,7 @@ S10: NUM    = 0;
         pPoints[0].y = A + pPoints[0].x * B;
         pPoints[1].x = xmax;
         pPoints[1].y = A + pPoints[1].x * B;
-        TranPtr->FitPointAZFrom = getazd (&pPoints[0],&pPoints[1]);
+        TranPtr->FitPointAZFrom = getazd(&pPoints[0], &pPoints[1]);
     }
     
     xmin = DBL_MAX;
@@ -933,10 +929,10 @@ S10: NUM    = 0;
         pPoints[0].y = A + pPoints[0].x * B;
         pPoints[1].x = xmax;
         pPoints[1].y = A + pPoints[1].x * B;
-        TranPtr->FitPointAZTo = getazd (&pPoints[0],&pPoints[1]);
+        TranPtr->FitPointAZTo = getazd(&pPoints[0], &pPoints[1]);
     }
     
-    free (pPoints);
+    free(pPoints);
     TranPtr->A1 = TranPtr->A1 / N;
     TranPtr->A2 = TranPtr->A2 / N;
     *RSQMIN = (float)1.;
@@ -1080,7 +1076,7 @@ void TranMNMXCORD(MNMXCORD * in,MNMXCORD * out,LPTRANDATA TranPtr)
 	TRANS2(in->xmx, in->ymn, &outpt.x, &outpt.y, TranPtr);
 	AddPointToDBounds(&outb, &outpt);
 	TRANS2(in->xmx, in->ymx, &outpt.x, &outpt.y, TranPtr);
-	AddPointToDBounds (&outb, &outpt);
+	AddPointToDBounds(&outb, &outpt);
 	memcpy(out, &outb, sizeof(MNMXCORD));
 	return;
 }
@@ -1088,13 +1084,13 @@ void TranMNMXCORD(MNMXCORD * in,MNMXCORD * out,LPTRANDATA TranPtr)
 void TranMNMXCORL(MNMXCORL *in, MNMXCORL *out, LPTRANDATA TranPtr)
 {
 	MNMXCORD ind, outd;
-	MNMXCORLtoMNMXCORD (in, &ind);
-	TranMNMXCORD (&ind, &outd, TranPtr);
-	MNMXCORDtoMNMXCORL (&outd, out);
+	MNMXCORLtoMNMXCORD(in, &ind);
+	TranMNMXCORD(&ind, &outd, TranPtr);
+	MNMXCORDtoMNMXCORL(&outd, out);
 	return;
 }
 
-int fgetstring(char * str,int maxlen,FILE * fid)
+int fgetstring(char *str, int maxlen, FILE *fid)
 {
     int ln;
     char * pEnd;
@@ -1128,17 +1124,17 @@ LPTRANDATA  LoadTranFromBPW(char *Name, int dir)
     
     if (Fid)
     {
-		fgetstring(str,64,Fid);
+		fgetstring(str, 64, Fid);
 		xres = atof(str);
-		fgetstring(str,64,Fid);
+		fgetstring(str, 64, Fid);
 		bpx = atof(str);
-		fgetstring(str,64,Fid);
+		fgetstring(str, 64, Fid);
 		bpy = atof(str);
-		fgetstring(str,64,Fid);
+		fgetstring(str, 64, Fid);
 		yres = atof(str);
-		fgetstring(str,64,Fid);
+		fgetstring(str, 64, Fid);
 		wx = atof(str);
-		fgetstring(str,64,Fid);
+		fgetstring(str, 64, Fid);
 		wy = atof(str);
 		XFROM[0] = bpx;
 		YFROM[0] = bpy;
@@ -1158,13 +1154,14 @@ LPTRANDATA  LoadTranFromBPW(char *Name, int dir)
 		YTO[3] = wy + 100 * yres;
         
         if (dir == 2)
-            TranPtr = STRAN2 (1660, XTO, YTO,XFROM, YFROM, 4, &RSQMIN);
+            TranPtr = STRAN2(1660, XTO, YTO,XFROM, YFROM, 4, &RSQMIN);
         
         else
-            TranPtr = STRAN2 (1660, XFROM, YFROM, XTO, YTO, 4, &RSQMIN);
+            TranPtr = STRAN2(1660, XFROM, YFROM, XTO, YTO, 4, &RSQMIN);
         
 		fclose(Fid);
 	}
+    
 	return TranPtr;
 }
 
