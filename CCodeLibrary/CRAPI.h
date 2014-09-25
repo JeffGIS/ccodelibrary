@@ -50,8 +50,6 @@
                                   pitch:(CGFloat)pitch
                                     fov:(CGFloat)fov;
 
--(BOOL) getPlaceAreaFile:(id)id
-forGeoid:(int)geoid;
 
 -(BOOL) getPlaceIntersectionFile:(id)id
 forGeoid:(int)geoid;
