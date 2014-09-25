@@ -4,15 +4,15 @@
 #import "VerticalSegmentedControl.h"
 #import <QuartzCore/QuartzCore.h>
 
-#define IS_IOS_LESS_THAN(v)                 ([UIDevice.currentDevice.systemVersion compare:v options:NSNumericSearch] == NSOrderedAscending)
-#define DEFAULT_BACKGROUND_COLOR            UIColor.clearColor
-#define DEFAULT_TEXT_FONT                   [UIFont systemFontOfSize:14.0]
-#define DEFAULT_TEXT_COLOR                  UIColor.blackColor
-#define DEFAULT_SELECTION_INDICATOR_COLOR   [UIColor colorWithRed:52.0/255.0 green:181.0/255.0 blue:229.0/255.0 alpha:1.0]
-#define DEFAULT_SEGMENT_EDGE_INSET          UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
-#define DEFAULT_BOX_BACKGROUND_COLOR_ALPHA  0.2
-#define DEFAULT_BOX_BORDER_COLOR_ALPHA      0.3
-#define DEFAULT_BOX_BORDER_WIDTH            1.0
+#define IS_IOS_LESS_THAN(v) ([UIDevice.currentDevice.systemVersion compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define DEFAULT_BACKGROUND_COLOR UIColor.clearColor
+#define DEFAULT_TEXT_FONT [UIFont systemFontOfSize:14.0]
+#define DEFAULT_TEXT_COLOR  UIColor.blackColor
+#define DEFAULT_SELECTION_INDICATOR_COLOR [UIColor colorWithRed:52.0/255.0 green:181.0/255.0 blue:229.0/255.0 alpha:1.0]
+#define DEFAULT_SEGMENT_EDGE_INSET UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
+#define DEFAULT_BOX_BACKGROUND_COLOR_ALPHA 0.2
+#define DEFAULT_BOX_BORDER_COLOR_ALPHA  0.3
+#define DEFAULT_BOX_BORDER_WIDTH 1.0
 
 static NSString *const kPositionCALayerAction = @"position";
 static NSString *const kBoundsCALayerAction = @"bounds";

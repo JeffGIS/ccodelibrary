@@ -353,9 +353,9 @@ float ClockwiseDegFromNorth (float deg)
 long    ININT (double X)
 {
     if (X < 0)
-        return ((long) (X - 0.5));
+        return ((long)(X - 0.5));
     
-    return ((long) (X + 0.5));
+    return ((long)(X + 0.5));
 }
 
 int iSign (double *val)
@@ -391,9 +391,9 @@ double DTWOPI (double az)
 
 int diffInDegrees (int angle1,int angle2)
 {
-    int rtn = angle2-angle1;
-    int mindiff = abs (rtn);
-    int diff = (angle2+360)-angle1;
+    int rtn = angle2 - angle1;
+    int mindiff = abs(rtn);
+    int diff = (angle2 + 360) - angle1;
     
     if (abs(diff) < mindiff)
     {
