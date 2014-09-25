@@ -21,18 +21,20 @@
         _popover = [[UIView alloc] initWithFrame:CGRectMake((fromView.frame.size.width / 4.0), (fromView.frame.size.height / 4.0),
                                                             (fromView.frame.size.width / 2.0), (fromView.frame.size.height / 2.0))];
         
-        _popover.backgroundColor = [UIColor colorWithWhite:0.0
-                                                     alpha:0.8];
-        _popover.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0.3 alpha:0.85];
+        _popover.backgroundColor = [UIColor colorWithRed:0.0
+                                                   green:0.0
+                                                    blue:0.3
+                                                   alpha:0.85];
         _popover.layer.cornerRadius = 20.0;
         
-/*        _popoverIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        _popoverIndicator.center = CGPointMake((_popover.frame.size.width / 2.0), (_popover.frame.size.height / 2.0));
-*/        _progressView = [[UIProgressView alloc]initWithProgressViewStyle: UIProgressViewStyleDefault];
+        _progressView = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
         CGRect progFrame = _popover.frame;
         progFrame.size.width *= 0.75;
         _progressView.frame = progFrame;
         _progressView.center = CGPointMake((_popover.frame.size.width / 2.0), (_popover.frame.size.height / 2.0));
+        _progressView.progressTintColor = UIColor.whiteColor;
+        _progressView.trackTintColor = UserDefaults.defaults.appleBlue;
+        _progressView.progress = 0.0;
         
         _popoverCancel = [[UIButton alloc] initWithFrame:CGRectMake((_popover.frame.size.width * 0.25),
                                                                     (_popover.frame.size.height * 0.75),
@@ -82,7 +84,6 @@
 - (void)show
 {
     [self.fromView addSubview:self];
-    [_popoverIndicator startAnimating];
 }
 
 - (void)hide
@@ -104,10 +105,7 @@
         }
         
         else
-        {
-            [_popoverIndicator stopAnimating];
             [self removeFromSuperview];
-        }
     }
 }
 
@@ -122,9 +120,10 @@
                                     repeats:NO];
     
 }
-- (void)updateProgress:(float)prog
+
+- (void)updateProgress:(float)progress
 {
-    self.progressView.progress = prog;
+    _progressView.progress = progress;
 }
 
 @end

@@ -7,7 +7,6 @@
 
 @property UIView *popover;
 @property UIView *fromView;
-@property UIActivityIndicatorView *popoverIndicator;
 @property (nonatomic) UIProgressView *progressView;
 @property UIButton *popoverCancel;
 @property UILabel *popoverLabel;
@@ -20,5 +19,6 @@
 - (void)show;
 - (void)hide;
 - (void)showAfter:(float)seconds;
-- (void)updateProgress:(float)prog;
+- (void)updateProgress:(float)progress;
+
 @end
