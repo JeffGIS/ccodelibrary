@@ -29,6 +29,8 @@
 #import "CRAPI.h"
 
 #define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"
+#define iPAD_HEIGHT 1024.0
+#define iPAD_WIDTH 768.0
 
 @interface CCodeLibrary : NSObject
 

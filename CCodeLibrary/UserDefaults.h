@@ -36,7 +36,6 @@
 - (NSString *)includeTextBeforeHyphen:(NSString *)string;
 - (NSString *)includeTextAfterFirstColon:(NSString *)string;
 - (NSString *)addSpaceAfterComma:(NSString *)string;
-
 - (UIImage *)invertImage:(UIImage *)image;
 
 - (void)saveColorWithRed:(CGFloat)red
