@@ -122,6 +122,9 @@
     
     [self.fileStream open];
     
+    [self.fileStream setProperty:@"YES"
+                          forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
+    
     request = [NSURLRequest requestWithURL:url];
     assert(request);
     
@@ -129,6 +132,9 @@
                                                     delegate:self];
     
     assert(self.connection);
+    
+    self.totalDataReceived = 0;
+    self.progress = 0.0;
     
     [self receiveDidStart];
 }
@@ -162,6 +168,8 @@ didReceiveResponse:(NSURLResponse *)response
     
     assert(theConnection == self.connection);
     assert(response);
+    
+    self.fileSize = response.expectedContentLength;
 }
 
 - (void)connection:(NSURLConnection *)theConnection
@@ -176,14 +184,17 @@ didReceiveResponse:(NSURLResponse *)response
     assert(theConnection == self.connection);
     
     dataLength = data.length;
-    dataBytes  = data.bytes;
-    
+    dataBytes = data.bytes;
     bytesWrittenSoFar = 0;
+    
+    self.totalDataReceived += dataLength;
+    self.progress = ((CGFloat)self.totalDataReceived / (CGFloat)self.fileSize);
+    NSLog (@"FTP Progress: %f", self.progress);
     
     do
     {
         bytesWritten = [self.fileStream write:&dataBytes[bytesWrittenSoFar]
-                                    maxLength:dataLength - bytesWrittenSoFar];
+                                    maxLength:(dataLength - bytesWrittenSoFar)];
         
         assert(bytesWritten != 0);
         
@@ -195,7 +206,8 @@ didReceiveResponse:(NSURLResponse *)response
         }
         
         else
-            bytesWrittenSoFar += (NSUInteger) bytesWritten;
+            bytesWrittenSoFar += (NSUInteger)bytesWritten;
+        
     }
     
     while (bytesWrittenSoFar != dataLength);

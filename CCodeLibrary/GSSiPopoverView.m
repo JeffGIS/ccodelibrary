@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "GSSiPopoverView.h"
+#import "FTPDataPull.h"
 
 #define MIN_SHOWTIME 2
 @implementation GSSiPopoverView

@@ -20,7 +20,7 @@
 
 @end
 
-@interface FTPDataPull : NSObject  <NSURLConnectionDataDelegate>
+@interface FTPDataPull : NSObject<NSURLConnectionDataDelegate>
 
 @property (nonatomic, weak) id <FTPDataPullDelegate> delegate;
 @property (nonatomic, assign, readonly ) BOOL isReceiving;
@@ -41,6 +41,9 @@
 @property (nonatomic, copy, readwrite) NSString *urlText;
 @property (nonatomic, assign, readwrite) BOOL hasFailed;
 @property (nonatomic) int geoid;
+@property (nonatomic) NSUInteger totalDataReceived;
+@property (nonatomic) NSUInteger fileSize;
+@property (nonatomic) CGFloat progress;
 
 + (FTPDataPull *)pull;
 
