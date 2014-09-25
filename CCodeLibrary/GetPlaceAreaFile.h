@@ -12,9 +12,9 @@
 
 @protocol GetPlaceAreaFileDelegate  <NSObject>
 
-- (void) getPlaceAreaFile:(GetPlaceAreaFile *)server
-                 didGetFile:(NSString *)path
-                 withStatus:(int)status;
+- (void)getPlaceAreaFile:(GetPlaceAreaFile *)server
+              didGetFile:(NSString *)path
+              withStatus:(int)status;
 
 @end
 

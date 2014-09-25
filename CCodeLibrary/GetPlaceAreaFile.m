@@ -16,6 +16,7 @@
     FTPDataPull *pull = FTPDataPull.pull;
     pull.delegate = self;
     pull.popover = popover;
+    
     [pull getFile:fileName
     fromDirectory:@"Bill/PlaceAreas"
       toDirectory:documentsDirectory
@@ -28,11 +29,13 @@
 {
     if (status == FTP_OK)
         status = AF_OK;
+    
     else
     {
         status = AF_FAILED;
         path = @"";
     }
+    
     [self.delegate getPlaceAreaFile:self
                          didGetFile:path
                          withStatus:status];
