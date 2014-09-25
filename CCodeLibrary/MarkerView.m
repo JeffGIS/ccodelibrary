@@ -52,10 +52,11 @@ CGColorRef graphYColor()
     CGFloat size;
     CGContextRef context = UIGraphicsGetCurrentContext();
     size =  maxSize / (1.0 + maxZoom - zoom);
+    NSArray *pointsArray = _database.getIntersectionPointsFromDatabase;
     
-    for (int i = 0; i < _pointsArray.count; i++)
+    for (int i = 0; i < pointsArray.count; i++)
     {
-        IntersectionPoint *info = (IntersectionPoint *)_pointsArray[i];
+        IntersectionPoint *info = (IntersectionPoint *)pointsArray[i];
         CLLocationCoordinate2D latlon;
         latlon.latitude = info.latitude;
         latlon.longitude = info.longitude;
@@ -75,7 +76,6 @@ CGColorRef graphYColor()
             CGContextFillPath(context);
         }
     }
-    
     return;
 }
 

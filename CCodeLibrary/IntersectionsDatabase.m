@@ -28,7 +28,10 @@ static IntersectionsDatabase *_database;
     
     return self;
 }
-
+- (void)close
+{
+   sqlite3_close(_database);
+}
 - (void)dealloc
 {
     sqlite3_close(_database);
