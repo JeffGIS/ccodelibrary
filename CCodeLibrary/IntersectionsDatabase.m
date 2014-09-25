@@ -296,7 +296,7 @@ Exit:
     return;
 }
 
-- (void)getPlaceIntersectionFile:(int)geoid
+- (void)getPlaceIntersectionFile:(GSSiPopoverView*)popover forGeoid:(int)geoid
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -304,14 +304,14 @@ Exit:
     
     FTPDataPull *pull = FTPDataPull.pull;
     pull.delegate = self;
-    
+    pull.popover = popover;
     [pull getFile:fileName
     fromDirectory:@"Bill/PlaceIntersections"
       toDirectory:documentsDirectory
      forceRefresh:NO];
 }
 
-- (void)getPlaceIntersectionDatabase
+- (void)getPlaceIntersectionDatabase:(GSSiPopoverView*)popover
 {
     NSString * dbPath = [self databasePath:self.geoid];
     
@@ -330,7 +330,7 @@ Exit:
     
     else
     {
-        [self getPlaceIntersectionFile:self.geoid];
+        [self getPlaceIntersectionFile:popover forGeoid:self.geoid];
     }
     
 }

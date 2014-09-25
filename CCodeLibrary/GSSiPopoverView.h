@@ -2,7 +2,6 @@
 //  CCodeLibrary
 
 #import <UIKit/UIKit.h>
-#import "FTPDataPull.h"
 
 @interface GSSiPopoverView : UIView
 
@@ -21,5 +20,5 @@
 - (void)show;
 - (void)hide;
 - (void)showAfter:(float)seconds;
-
+- (void)updateProgress:(float)prog;
 @end

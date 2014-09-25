@@ -190,6 +190,8 @@ didReceiveResponse:(NSURLResponse *)response
     self.totalDataReceived += dataLength;
     self.progress = ((CGFloat)self.totalDataReceived / (CGFloat)self.fileSize);
     NSLog (@"FTP Progress: %f", self.progress);
+    if (self.popover)
+        [self.popover updateProgress:self.progress];
     
     do
     {

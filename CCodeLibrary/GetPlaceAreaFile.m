@@ -6,7 +6,7 @@
 @implementation GetPlaceAreaFile
 
 
-- (BOOL)getPlaceAreaFile:(id)id
+- (BOOL)getPlaceAreaFile:(GSSiPopoverView*)popover
                 forGeoid:(int)geoid
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -15,7 +15,7 @@
     
     FTPDataPull *pull = FTPDataPull.pull;
     pull.delegate = self;
-    
+    pull.popover = popover;
     [pull getFile:fileName
     fromDirectory:@"Bill/PlaceAreas"
       toDirectory:documentsDirectory

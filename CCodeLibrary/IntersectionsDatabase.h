@@ -31,7 +31,7 @@
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
-- (void)getPlaceIntersectionDatabase;
+- (void)getPlaceIntersectionDatabase:(GSSiPopoverView*)popover;
 - (NSMutableArray *)getIntersectionPointsFromDatabase;
 - (IntersectionPoint *)getCurrentIntersectionPoint:(int)intID;
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;

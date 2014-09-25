@@ -4,6 +4,7 @@
 #import <Foundation/Foundation.h>
 #import "NetworkManager.h"
 #import "UserDefaults.h"
+#import "GSSiPopoverView.h"
 
 #define FTP_OK 0
 #define FTP_STOP 1
@@ -44,6 +45,7 @@
 @property (nonatomic) NSUInteger totalDataReceived;
 @property (nonatomic) NSUInteger fileSize;
 @property (nonatomic) CGFloat progress;
+@property (strong,nonatomic)GSSiPopoverView * popover;
 
 + (FTPDataPull *)pull;
 
