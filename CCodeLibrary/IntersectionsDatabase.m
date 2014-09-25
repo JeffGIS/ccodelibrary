@@ -28,10 +28,12 @@ static IntersectionsDatabase *_database;
     
     return self;
 }
+
 - (void)close
 {
    sqlite3_close(_database);
 }
+
 - (void)dealloc
 {
     sqlite3_close(_database);
@@ -261,8 +263,8 @@ static IntersectionsDatabase *_database;
     sqlite3_free (error);
     SQLOK(sqlite3_finalize(self.statement));
     
-    fclose (fidIndex);
-    fclose (fidData);
+    fclose(fidIndex);
+    fclose(fidData);
     rtn = INTDB_OK;
     
 Exit:
