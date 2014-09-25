@@ -45,7 +45,7 @@
 @property (nonatomic) NSUInteger totalDataReceived;
 @property (nonatomic) NSUInteger fileSize;
 @property (nonatomic) CGFloat progress;
-@property (strong,nonatomic)GSSiPopoverView * popover;
+@property (strong, nonatomic)GSSiPopoverView *popover;
 
 + (FTPDataPull *)pull;
 
