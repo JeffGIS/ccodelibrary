@@ -18,6 +18,7 @@
 @property (nonatomic) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
 @property (nonatomic) NSString *googleKey;
+@property (nonatomic) BOOL refreshMap;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
