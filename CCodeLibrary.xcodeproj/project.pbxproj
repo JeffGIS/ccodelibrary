@@ -197,6 +197,8 @@
 				1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */,
 				EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */,
 				EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */,
+				EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */,
+				EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */,
 				EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */,
 				EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */,
 				EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */,
@@ -230,8 +232,6 @@
 				1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */,
 				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
-				EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */,
-				EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";
