@@ -13,12 +13,12 @@
 @property BOOL inShowAfter;
 @property NSTimer *timer;
 @property int showTime;
+@property NSString *title;
 
 - (id)initWithView:(UIView *)fromView;
 - (void)popoverCancel:(UIButton *)sender;
-- (void)show;
-- (void)hide;
-- (void)showAfter:(float)seconds;
+- (void)showAfter:(float)seconds withTitle:(NSString*)title;
 - (void)updateProgress:(float)progress;
+- (void)hide;
 
 @end

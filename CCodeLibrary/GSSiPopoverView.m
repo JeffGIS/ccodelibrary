@@ -64,7 +64,7 @@
         _popoverLabel.textColor = UIColor.whiteColor;
         _popoverLabel.font = [UIFont boldSystemFontOfSize:40.0];
         _popoverLabel.numberOfLines = 0;
-        _popoverLabel.text = @"Loading Intersection Data";
+        _popoverLabel.text = self.title;
         _popoverLabel.textAlignment = NSTextAlignmentCenter;
         
         [popoverView addSubview:_popover];
@@ -109,8 +109,10 @@
     }
 }
 
-- (void)showAfter:(float)seconds
+- (void)showAfter:(float)seconds withTitle:(NSString *)title
 {
+    self.title = title;
+    _popoverLabel.text = title;
     self.showTime = NSDate.timeIntervalSinceReferenceDate;
     
     self.timer = [NSTimer scheduledTimerWithTimeInterval:seconds
