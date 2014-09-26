@@ -64,7 +64,7 @@ int DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec, LPBYTE pCompressedRec
 	}
 	return 0;
 }
-int GetFileFromTransferFile (HWND hWndStatus,FILE * FidTF,LPSTR FileToGet,long LenToRead,long MaxLength)
+int GetFileFromTransferFile (HWND hWndStatus,FILE * FidTF,LPSTR FileToGet,long MaxLength)
 {
 	int lRec, rtn = FALSE;
     LPBYTE	pRec = malloc(MaxLength);
@@ -92,12 +92,12 @@ int GetFileFromTransferFile (HWND hWndStatus,FILE * FidTF,LPSTR FileToGet,long L
 Exit:
     free(pCompressedRec);
     free(pRec);
-    return TRUE;
+    return rtn;
 }
 
 BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory)
 {
-    int	len, MaxLength, LenToRead;
+    int	len, MaxLength;
     char File[PATH_MAX], OutFile[PATH_MAX];
     short Version, endMarker;
     FILE *FidTF;
@@ -139,7 +139,7 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory)
             pBS++;
         
         sprintf(OutFile, "%s/%s", toDirectory, pBS);
-        rtn = GetFileFromTransferFile(0, FidTF, OutFile, LenToRead, MaxLength);
+        rtn = GetFileFromTransferFile(0, FidTF, OutFile,  MaxLength);
         BigRead(FidTF, &len, 4);
     }
     
