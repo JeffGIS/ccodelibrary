@@ -157,6 +157,21 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_finalize(statement));
     return intpt;
 }
+- (int)getCountOfIntersections
+{
+    NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Intersections"];
+    sqlite3_stmt *statement;
+    int count=0;
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        count = sqlite3_column_int(statement, 0);
+    }
+    
+    SQLOK(sqlite3_finalize(statement));
+    return count;
+}
 - (BOOL)setIntersectionStatusTo:(int)status forIntersection:(int)intID
 {
     BOOL rtn;
