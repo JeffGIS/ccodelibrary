@@ -218,6 +218,8 @@
 				1F7E00A919CA8892006AFABA /* MarkerView.m */,
 				EBA2E48319952BCA0085B2E0 /* MathTypes.h */,
 				EBA2E48519952BCA0085B2E0 /* MathUtil.h */,
+				EB521B7B19D649DC00DA0D5A /* MaskCityBounds.h */,
+				EB521B7C19D649DC00DA0D5A /* MaskCityBounds.m */,
 				EBA2E48419952BCA0085B2E0 /* MathUtil.c */,
 				EBB1BFCA199DD7C10059B547 /* MPIntersection.h */,
 				EBB1BFCB199DD7C10059B547 /* MPIntersection.m */,
@@ -235,8 +237,6 @@
 				1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */,
 				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
-				EB521B7B19D649DC00DA0D5A /* MaskCityBounds.h */,
-				EB521B7C19D649DC00DA0D5A /* MaskCityBounds.m */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";

@@ -499,11 +499,20 @@ void AddPointToBounds (bounds* pBounds,vec2 *pt)
 
 void InitDBounds (dbounds* bnds)
 {
-	bnds->xmn = DBL_MAX;
-	bnds->ymn = DBL_MAX;
-	bnds->xmx = -DBL_MAX;
-	bnds->ymx = -DBL_MAX;
-	return;
+    bnds->xmn = DBL_MAX;
+    bnds->ymn = DBL_MAX;
+    bnds->xmx = -DBL_MAX;
+    bnds->ymx = -DBL_MAX;
+    return;
+}
+
+void InitIBounds (IBOUNDS* bnds)
+{
+    bnds->xmn = INT_MAX;
+    bnds->ymn = INT_MAX;
+    bnds->xmx = INT_MIN;
+    bnds->ymx = INT_MIN;
+    return;
 }
 
 void AddPointToDBounds (dbounds* pBounds,dvec2 *pt)
@@ -512,7 +521,15 @@ void AddPointToDBounds (dbounds* pBounds,dvec2 *pt)
     pBounds->ymn = min (pBounds->ymn,pt->y);
     pBounds->xmx = max (pBounds->xmx,pt->x);
     pBounds->ymx = max (pBounds->ymx,pt->y);
-	return;
+    return;
+}
+void AddPointToIBounds (IBOUNDS* pBounds,IPOINT *pt)
+{
+    pBounds->xmn = min (pBounds->xmn,pt->x);
+    pBounds->ymn = min (pBounds->ymn,pt->y);
+    pBounds->xmx = max (pBounds->xmx,pt->x);
+    pBounds->ymx = max (pBounds->ymx,pt->y);
+    return;
 }
 
 /*

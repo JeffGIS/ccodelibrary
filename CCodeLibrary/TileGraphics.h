@@ -3,15 +3,8 @@
 
 #define TGPOLYGON 0
 #define TGPOLYLINE 1
+#import "CCodeTypes.h"
 
-typedef struct{short x, y;}SPOINT;
-typedef SPOINT *LPSPOINT;
-typedef struct{int x, y;}IPOINT;
-typedef IPOINT *LPIPOINT;
-typedef struct{unsigned char x, y;}BPOINT;
-typedef struct{char x:4 ,y:4;}CPOINT;
-typedef BPOINT *LPBPOINT;
-typedef CPOINT *LPCPOINT;
 
 BPOINT POINTtoBPOINT (IPOINT p);
 IPOINT BPOINTtoPOINT (BPOINT p);

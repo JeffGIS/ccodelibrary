@@ -73,7 +73,7 @@ static IntersectionsDatabase *_database;
 - (NSMutableArray *)getIntersectionPointsFromDatabase
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
-    NSString *query = [NSString stringWithFormat:@"SELECT intX, intY FROM Intersections ORDER BY intID"];
+    NSString *query = [NSString stringWithFormat:@"SELECT intX, intY FROM Intersections"];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
@@ -90,6 +90,30 @@ static IntersectionsDatabase *_database;
         [dataArray addObject:intpt];
     }
         
+    SQLOK(sqlite3_finalize(statement));
+    return dataArray;
+}
+
+- (NSMutableArray *)getIntersectionPointsFromDatabaseinBounds:(IBOUNDS)bounds
+{
+    NSMutableArray *dataArray = [[NSMutableArray alloc] init];
+    NSString *query = [NSString stringWithFormat:@"SELECT intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",bounds.xmn,bounds.xmx,bounds.ymn,bounds.ymx];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int intX = sqlite3_column_int(statement, 0);
+        int intY = sqlite3_column_int(statement, 1);
+        double lat,lon;
+        PixelXYToLatLong(intX, intY, 21, &lat, &lon);
+        IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
+        intpt.latitude = lat;
+        intpt.longitude = lon;
+        [dataArray addObject:intpt];
+    }
+    
     SQLOK(sqlite3_finalize(statement));
     return dataArray;
 }
