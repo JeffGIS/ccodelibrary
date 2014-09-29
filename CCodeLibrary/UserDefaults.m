@@ -177,6 +177,14 @@ static UserDefaults *_defaults;
     return returnImage;
 }
 
+- (void)disableWebKitDiskImageCache
+{
+    [_defaults setBool:NO
+                forKey:@"WebKitDiskImageCacheEnabled"];
+    
+    [_defaults synchronize];
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue

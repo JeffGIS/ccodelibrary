@@ -37,6 +37,7 @@
 - (NSString *)includeTextAfterFirstColon:(NSString *)string;
 - (NSString *)addSpaceAfterComma:(NSString *)string;
 - (UIImage *)invertImage:(UIImage *)image;
+- (void)disableWebKitDiskImageCache;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
