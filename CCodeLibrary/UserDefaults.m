@@ -506,6 +506,26 @@ static UserDefaults *_defaults;
     return string;
 }
 
+- (NSString *)includeTextBeforeTab:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"\t"];
+    
+    if (range.location != NSNotFound)
+        string = [string substringToIndex:(range.location)];
+    
+    return string;
+}
+
+- (NSString *)includeTextAfterTab:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"\t"];
+    
+    if (range.location != NSNotFound)
+        string = [string substringFromIndex:(range.location + 1)];
+    
+    return string;
+}
+
 - (NSString *)removeTextInsideParentheses:(NSString *)string
 {
     NSMutableString *mutableString = [NSMutableString stringWithString:string];
