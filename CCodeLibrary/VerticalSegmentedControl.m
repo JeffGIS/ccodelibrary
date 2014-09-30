@@ -340,6 +340,7 @@ int const kSMVerticalSegmentedControlNoSegment = -1;
                 [self notifyForSegmentChangeToIndex:index];
         }
     }
+    
     [self setNeedsDisplay];
 }
 

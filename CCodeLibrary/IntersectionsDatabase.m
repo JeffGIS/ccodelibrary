@@ -9,10 +9,7 @@ static IntersectionsDatabase *_database;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid
 {
-    if (_database == nil)
-        _database = [[IntersectionsDatabase alloc] initWithGeoid:geoid];
-    
-    else if (_database.geoid != geoid)
+    if (_database == nil || _database.geoid != geoid)
         _database = [[IntersectionsDatabase alloc] initWithGeoid:geoid];
     
     return _database;

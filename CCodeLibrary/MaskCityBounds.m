@@ -1,10 +1,6 @@
-//
 //  MaskCityBounds.m
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 9/26/14.
-//  Copyright (c) 2014 GSSi. All rights reserved.
-//
+
 #define COORDINATE_MULTIPLIER 10000000.0
 #define MAX_AREA_POINTS 15000
 
@@ -14,8 +10,8 @@
 
 @implementation MaskCityBounds
 
-
-- (void)drawCityBounds:(NSString *)fromFile inMapView:(GMSMapView *)mapView
+- (void)drawCityBounds:(NSString *)fromFile
+             inMapView:(GMSMapView *)mapView
 {
     FILE *fid = fopen(fromFile.UTF8String,"rb");
     int nLoops, nPoints, ix, iy;
@@ -87,7 +83,8 @@
         free(pnPointsInLoop);
 }
 
-- (void)maskCityBounds:(NSString *)fromFile inMapView:(GMSMapView *)mapView
+- (void)maskCityBounds:(NSString *)fromFile
+             inMapView:(GMSMapView *)mapView
 {
     FILE *fid = fopen(fromFile.UTF8String,"rb");
     int nLoops, nPoints, ix, iy;
@@ -160,7 +157,5 @@
         polygon.map = mapView;
     }
 }
-
-
 
 @end

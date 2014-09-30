@@ -17,6 +17,7 @@
         self.opaque = NO;
         self.mapView = mapView;
     }
+    
     return self;
 }
 
@@ -77,6 +78,7 @@ CGColorRef graphYColor()
             CGContextFillPath(context);
         }
     }
+    
     return;
 }
 

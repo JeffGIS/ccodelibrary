@@ -101,7 +101,6 @@
                                                         selector:@selector(hide)
                                                         userInfo:nil
                                                          repeats:NO];
-            
         }
         
         else
@@ -109,7 +108,8 @@
     }
 }
 
-- (void)showAfter:(float)seconds withTitle:(NSString *)title
+- (void)showAfter:(float)seconds
+        withTitle:(NSString *)title
 {
     self.title = title;
     _popoverLabel.text = title;
@@ -120,7 +120,6 @@
                                    selector:@selector(show)
                                    userInfo:nil
                                     repeats:NO];
-    
 }
 
 - (void)updateProgress:(float)progress

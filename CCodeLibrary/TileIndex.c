@@ -69,6 +69,7 @@ void LatLongToPixelXY(double latitudein, double longitudein, int levelOfDetail, 
     *pixelY = (int)(Clip(y * mapSize + 0.5, 0, mapSize - 1));
     *pixelY = (mapSize - 1) - *pixelY;
 }
+
 void LatLongToPixelXY_old(double latitudein, double longitudein, int levelOfDetail, int *pixelX, int *pixelY)
 {
     double latitude = Clip(latitudein, MinLatitude, MaxLatitude);
@@ -81,6 +82,7 @@ void LatLongToPixelXY_old(double latitudein, double longitudein, int levelOfDeta
     *pixelX = (int)(Clip(x * mapSize + 0.5, 0, mapSize - 1));
     *pixelY = (int)(Clip(y * mapSize + 0.5, 0, mapSize - 1));
 }
+
 void LatLongToPixelXYd(double latitudein, double longitudein, int levelOfDetail, double *pixelX, double *pixelY)
 {
     double latitude = Clip(latitudein, MinLatitude, MaxLatitude);
@@ -93,7 +95,6 @@ void LatLongToPixelXYd(double latitudein, double longitudein, int levelOfDetail,
     *pixelX = Clip(x * mapSize, 0, mapSize - 1);
     *pixelY = Clip(y * mapSize, 0, mapSize - 1);
     *pixelY = (mapSize - 1) - *pixelY;
-    
 }
 
 /*
@@ -113,6 +114,7 @@ void PixelXYToLatLong(int pixelX, int pixelY, int levelOfDetail, double *latitud
     *latitude = 90 - 360 * atan(exp(-y * 2 * PI)) / PI;
     *longitude = 360 * x;
 }
+
 void PixelXYToLatLong_old(int pixelX, int pixelY, int levelOfDetail, double *latitude, double *longitude)
 {
     unsigned int mapSize = MapSize(levelOfDetail);

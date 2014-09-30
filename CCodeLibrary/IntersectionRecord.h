@@ -31,7 +31,6 @@ typedef struct {
     int signal23;
     int signal45;
     int signal67;
-   
 }INTERSECTION_STRUCT;
 
 @interface IntersectionRecord : NSObject
