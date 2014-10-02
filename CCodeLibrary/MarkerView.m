@@ -44,6 +44,8 @@ CGColorRef graphYColor()
 {
     GMSProjection *projection = self.mapView.projection;
     CGRect pointRect;
+    int numComplete=0;
+    float pctComplete;
     
     //UIColor *green = UserDefaults.defaults.darkGreen;
     
@@ -68,7 +70,13 @@ CGColorRef graphYColor()
                                         (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
         {
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
-            CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+            if (pt.y >500)
+                CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+            else
+            {
+                numComplete++;
+                CGContextSetFillColorWithColor(context, UIColor.greenColor.CGColor);
+            }
             
             pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
             
@@ -78,7 +86,13 @@ CGColorRef graphYColor()
             CGContextFillPath(context);
         }
     }
-    
+    pctComplete = (100.0 * numComplete) /pointsArray.count;
+    if (self.delegate)
+    {
+        [self.delegate setupProgressLabelTextforTotalIntersections:pointsArray.count
+                                                         completed:(int)numComplete
+                                                       notAssigned:0];
+    }
     return;
 }
 
