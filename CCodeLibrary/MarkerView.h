@@ -22,5 +22,6 @@
 @property LPTRANDATA pTranWToBMP, pTranBMPToW;
 @property GMSMapView *mapView;
 @property IntersectionsDatabase *database;
+@property NSArray *tempDemoArray;
 
 @end

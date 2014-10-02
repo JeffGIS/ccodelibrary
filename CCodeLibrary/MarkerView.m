@@ -40,6 +40,29 @@ CGColorRef graphYColor()
 	return c;
 }
 
+-(BOOL)demoComplete:(IntersectionPoint *)pt
+{
+    if (_tempDemoArray)
+    {
+        int nSkip = _tempDemoArray.count/5;
+        double minDist=DBL_MAX;
+        
+        for (int i = 0;i<_tempDemoArray.count;i+=nSkip)
+        {
+            double lat = [UserDefaults.defaults includeTextBeforeTab:[_tempDemoArray objectAtIndex:i]].floatValue;
+            
+            double lon = [UserDefaults.defaults includeTextBeforeTab:
+                                [UserDefaults.defaults includeTextAfterTab:[_tempDemoArray objectAtIndex:i]]].floatValue;
+            double dist = LDIST(pt.longitude, pt.latitude, lon,lat);
+            if (dist < minDist)
+                minDist = dist;
+        }
+        if (minDist < 0.015)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 - (void)drawRect:(CGRect)rect
 {
     GMSProjection *projection = self.mapView.projection;
@@ -70,7 +93,7 @@ CGColorRef graphYColor()
                                         (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
         {
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
-            if (pt.y >500)
+            if (![self demoComplete:info])
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
             else
             {
