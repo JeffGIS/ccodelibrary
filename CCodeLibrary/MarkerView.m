@@ -44,7 +44,7 @@ CGColorRef graphYColor()
 {
     if (_tempDemoArray)
     {
-        int nSkip = _tempDemoArray.count/5;
+        int nSkip = (int)_tempDemoArray.count / 5;
         double minDist=DBL_MAX;
         
         for (int i = 0;i<_tempDemoArray.count;i+=nSkip)
@@ -70,7 +70,7 @@ CGColorRef graphYColor()
     int numComplete=0;
     float pctComplete;
     
-    //UIColor *green = UserDefaults.defaults.darkGreen;
+    UIColor *green = UserDefaults.defaults.darkGreen;
     
     CGFloat zoom = self.mapView.camera.zoom;
     CGFloat maxZoom = self.mapView.maxZoom;
@@ -98,7 +98,7 @@ CGColorRef graphYColor()
             else
             {
                 numComplete++;
-                CGContextSetFillColorWithColor(context, UIColor.greenColor.CGColor);
+                CGContextSetFillColorWithColor(context, green.CGColor);
             }
             
             pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
@@ -112,7 +112,7 @@ CGColorRef graphYColor()
     pctComplete = (100.0 * numComplete) /pointsArray.count;
     if (self.delegate)
     {
-        [self.delegate setupProgressLabelTextforTotalIntersections:pointsArray.count
+        [self.delegate setupProgressLabelTextforTotalIntersections:(int)pointsArray.count
                                                          completed:(int)numComplete
                                                        notAssigned:0];
     }
