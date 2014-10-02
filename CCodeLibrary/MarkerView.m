@@ -49,11 +49,8 @@ CGColorRef graphYColor()
         
         for (int i = 0;i<_tempDemoArray.count;i+=nSkip)
         {
-            double lat = [UserDefaults.defaults includeTextBeforeTab:[_tempDemoArray objectAtIndex:i]].floatValue;
-            
-            double lon = [UserDefaults.defaults includeTextBeforeTab:
-                                [UserDefaults.defaults includeTextAfterTab:[_tempDemoArray objectAtIndex:i]]].floatValue;
-            double dist = LDIST(pt.longitude, pt.latitude, lon,lat);
+            IntersectionPoint *buildingPt = [_tempDemoArray objectAtIndex:i];
+            double dist = LDIST(pt.longitude, pt.latitude, buildingPt.longitude, buildingPt.latitude);
             if (dist < minDist)
                 minDist = dist;
         }
