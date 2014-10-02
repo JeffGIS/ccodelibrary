@@ -101,7 +101,7 @@ static UserDefaults *_defaults;
 - (UIColor *)darkGreen
 {
     UIColor *darkGreen = [UIColor colorWithRed:0.0
-                                         green:0.5
+                                         green:0.6
                                           blue:0.0
                                          alpha:1.0];
     
