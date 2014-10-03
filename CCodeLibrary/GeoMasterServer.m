@@ -1,7 +1,7 @@
 //  GeoMasterServer.m
 //  CCodeLibrary
 
-#define GM_ADDRESS   @"74.36.99.166"
+#define GM_ADDRESS   @"74.44.211.159"
 #define GM_ADDRESSx   @"192.168.1.130"
 
 #import "GeoMasterServer.h"
