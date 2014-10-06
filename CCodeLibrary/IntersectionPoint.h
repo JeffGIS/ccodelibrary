@@ -8,5 +8,6 @@
 @property int intID;
 @property double latitude;
 @property double longitude;
+@property double dist;
 
 @end

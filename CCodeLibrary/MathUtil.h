@@ -114,6 +114,8 @@ void InitBounds (bounds* bnds);
 void AddPointToBounds (bounds* bnds,vec2 *pt);
 void InitDBounds (dbounds* bnds);
 void InitIBounds (IBOUNDS* bnds);
+IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist);
+IPOINT IBoundsMid (IBOUNDS* bnds);
 void AddPointToDBounds (dbounds* bnds,dvec2 *pt);
 void AddPointToIBounds (IBOUNDS* pBounds,IPOINT *pt);
 void Rotate256 (int irot,vec2* pt);

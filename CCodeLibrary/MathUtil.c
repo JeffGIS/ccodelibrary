@@ -514,6 +514,24 @@ void InitIBounds (IBOUNDS* bnds)
     bnds->ymx = INT_MIN;
     return;
 }
+IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist)
+{
+    IBOUNDS bnds;
+    
+    bnds.xmn = pt.x - dist;
+    bnds.xmx = pt.x + dist;
+    bnds.ymn = pt.y - dist;
+    bnds.ymx = pt.y + dist;
+    return bnds;
+}
+IPOINT IBoundsMid (IBOUNDS* bnds)
+{
+    IPOINT pt;
+    
+    pt.x = bnds->xmn + (bnds->xmx - bnds->xmn)/2;
+    pt.y = bnds->ymn + (bnds->ymx - bnds->ymn)/2;
+    return pt;
+}
 
 void AddPointToDBounds (dbounds* pBounds,dvec2 *pt)
 {
