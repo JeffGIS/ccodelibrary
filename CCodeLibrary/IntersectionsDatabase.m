@@ -164,6 +164,19 @@ static IntersectionsDatabase *_database;
          return (NSComparisonResult)NSOrderedSame;
      }];
 }
+- (int) findIntersection:(int) x y: (int) y
+        intersectionText:(char **)intText
+                whichInt:(int) iWant
+        intersectionAZMs:(char **)intAZMs
+              numStreets:(int *)pNumStreets
+                numRamps:(int *)pNumRamps
+                    intX:(int *)plev21x
+                    intY:(int *)plev21y
+{
+    int rtn = 0;
+    
+    return rtn;
+}
 
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt
 {

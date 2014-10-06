@@ -47,4 +47,13 @@ int SQLOK (int sqlReturn);
 
 - (int)loadIntersectionTextToDatabase:(NSString *)path;
 
+- (int) findIntersection:(int) x y: (int) y
+        intersectionText:(char **)intText
+                whichInt:(int) iWant
+        intersectionAZMs:(char **)intAZMs
+              numStreets:(int *)pNumStreets
+                numRamps:(int *)pNumRamps
+                    intX:(int *)plev21x
+                    intY:(int *)plev21y;
+
 @end

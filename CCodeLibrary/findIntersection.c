@@ -345,7 +345,7 @@ Exit:
     if (fid)
         fclose(fid);
     
-    printf ("rtn = %i\n", rtn);
+//    printf ("rtn = %i\n", rtn);
     
     return rtn;
 }
