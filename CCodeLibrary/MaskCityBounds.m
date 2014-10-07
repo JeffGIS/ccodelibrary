@@ -38,7 +38,7 @@
             else
                 *pnPointsInLoop = nPoints;
             
-            pPoints = (LPDPOINT)malloc (sizeof(DPOINT)*nPoints);
+            pPoints = (LPDPOINT)malloc(sizeof(DPOINT)*nPoints);
             
             for (int i = 0; i < nPoints ; i++)
             {
@@ -94,13 +94,13 @@
     UIColor *blue = UserDefaults.defaults.appleBlue;
 
     
-    InitBounds (&bnds);
+    InitBounds(&bnds);
     bnds.xmn = -180.0;
     bnds.ymn = 0.0;
     bnds.xmx = 0.0;
     bnds.ymx = 80.0;
     
-    GMSMutablePath *path = [[GMSMutablePath alloc]init];
+    GMSMutablePath *path = [[GMSMutablePath alloc] init];
     
     if (fid && fread (&nPoints, sizeof(int), 1, fid))
     {
@@ -121,7 +121,7 @@
             else
                 *pnPointsInLoop = nPoints;
             
-            pPoints = (LPDPOINT)malloc (sizeof(DPOINT)*nPoints);
+            pPoints = (LPDPOINT)malloc(sizeof(DPOINT)*nPoints);
             
             for (int i = 0; i < nPoints; i++)
             {

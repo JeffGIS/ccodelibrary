@@ -984,7 +984,7 @@ Exit:
     return TranPtr;
 }
 
-void TRANS2 (double XIN,double YIN, double *XOUT,double *YOUT, LPTRANDATA TranPtr)
+void TRANS2(double XIN, double YIN, double *XOUT,double *YOUT, LPTRANDATA TranPtr)
 {
 	double XI, YI;
 	DPOINT Point;

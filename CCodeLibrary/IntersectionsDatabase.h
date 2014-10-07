@@ -38,7 +38,10 @@
 - (IntersectionPoint *)getCurrentIntersectionPoint:(int)intID;
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;
 - (IntersectionPoint *)getFirstAssignedIntersectionPointWithStatus0;
-- (BOOL)setIntersectionStatusTo:(int)status forIntersection:(int)intID;
+
+- (BOOL)setIntersectionStatusTo:(int)status
+                forIntersection:(int)intID;
+
 - (NSString *)intersectionTextPath:(int)type;
 - (int)getCountOfIntersections;
 - (void)close;
