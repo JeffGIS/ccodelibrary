@@ -119,21 +119,26 @@ static IntersectionsDatabase *_database;
     return dataArray;
 }
 
-- (NSMutableArray *)getIntersectionPointsWithinDistance:(int)dist ofPoint:(IPOINT)pt
+- (NSMutableArray *)getIntersectionPointsWithinDistance:(int)meters ofPoint:(LLPOINT)latlon
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
+    IPOINT pt;
+    int dist = meters / GroundResolution(latlon.lat, 21);
+    LatLongToPixelXY(latlon.lat, latlon.lon, 21, &pt.x, &pt.y);
     IBOUNDS bounds = IBoundsFromPointAndDist (pt,dist);
-    NSString *query = [NSString stringWithFormat:@"SELECT intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",bounds.xmn,bounds.xmx,bounds.ymn,bounds.ymx];
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",bounds.xmn,bounds.xmx,bounds.ymn,bounds.ymx];
     sqlite3_stmt *statement;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
-        int intX = sqlite3_column_int(statement, 0);
-        int intY = sqlite3_column_int(statement, 1);
+        int intID = sqlite3_column_int(statement, 0);
+        int intX = sqlite3_column_int(statement, 1);
+        int intY = sqlite3_column_int(statement, 2);
         double lat,lon;
         PixelXYToLatLong(intX, intY, 21, &lat, &lon);
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
+        intpt.intID = intID;
         intpt.latitude = lat;
         intpt.longitude = lon;
         intpt.dist = LDIST(intX,intY,pt.x,pt.y);
@@ -164,17 +169,43 @@ static IntersectionsDatabase *_database;
          return (NSComparisonResult)NSOrderedSame;
      }];
 }
-- (int) findIntersection:(int) x y: (int) y
-        intersectionText:(char **)intText
+- (int) findIntersection:(int) lev21x y: (int) lev21y
+        intersectionText:(char *)intText
                 whichInt:(int) iWant
-        intersectionAZMs:(char **)intAZMs
+        intersectionAZMs:(char *)intAZMs
               numStreets:(int *)pNumStreets
                 numRamps:(int *)pNumRamps
                     intX:(int *)plev21x
                     intY:(int *)plev21y
 {
     int rtn = 0;
-    
+    LLPOINT latlon;
+    PixelXYToLatLong(lev21x, lev21y, 21, &latlon.lat, &latlon.lon);
+    NSMutableArray * nearInts = [self getIntersectionPointsWithinDistance:500 ofPoint:latlon];
+    if (nearInts.count >= iWant)
+    {
+        IntersectionPoint * intpt = nearInts[iWant-1];
+        NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",intpt.intID];
+        sqlite3_stmt *statement;
+        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+        
+        while (sqlite3_step(statement) == SQLITE_ROW)
+        {
+            int intX = sqlite3_column_int(statement, 0);
+            int intY = sqlite3_column_int(statement, 1);
+            int nStreets = sqlite3_column_int(statement,2);
+            LPSTR pStreets = (LPSTR)sqlite3_column_text(statement, 3);
+            LPSTR pAZMS = (LPSTR)sqlite3_column_text(statement, 4);
+            *plev21x = intX;
+            *plev21y = intY;
+            *pNumStreets = nStreets;
+            strcpy (intText,pStreets);
+            strcpy (intAZMs,pAZMS);
+        }
+        
+        SQLOK(sqlite3_finalize(statement));
+        return intpt.intID;
+    }
     return rtn;
 }
 
@@ -332,7 +363,7 @@ static IntersectionsDatabase *_database;
     while (fgetstring (data, maxData, fidData))
     {
         LPSTR pTab = strchr(data, '\t');
-        LPSTR pTabIndex, pAzms;
+        LPSTR pTabIndex, pAzms,pEnd;
         fgetstring (index,maxIndex,fidIndex);
         pTabIndex = strchr(index, '\t');
         *pTab++ = 0;
@@ -346,14 +377,17 @@ static IntersectionsDatabase *_database;
         intStruct.status = 0;
         intStruct.nStreets = atoi (pTab);
         pTab = strchr (pTab,'\t')+1;
-        pAzms = strchr (pTab,'\t')+1;
+        pAzms = strchr (pTab,'\t');
+        *pAzms++ = 0;
+        pEnd = strchr (pAzms,'\t');
+        *pEnd = 0;
         strncpy (intStruct.streetNames,pTab,sizeof(intStruct.streetNames)-1);
         strncpy (intStruct.streetAzms,pAzms,sizeof(intStruct.streetAzms)-1);
         
-        for (i = 1, pInt = &intStruct.intID; i < 28; i++, pInt++)
+        for (i = 1, pInt = &intStruct.intID; i < 29; i++, pInt++)
             SQLOK(sqlite3_bind_int(statement, i, *pInt));
-        SQLOK(sqlite3_bind_text(statement, 28, intStruct.streetNames,-1,SQLITE_STATIC));
-        SQLOK(sqlite3_bind_text(statement, 29, intStruct.streetAzms,-1,SQLITE_STATIC));
+        SQLOK(sqlite3_bind_text(statement, 29, intStruct.streetNames,-1,SQLITE_STATIC));
+        SQLOK(sqlite3_bind_text(statement, 30, intStruct.streetAzms,-1,SQLITE_STATIC));
 
         if (sqlite3_step(statement) != SQLITE_DONE)
         {
