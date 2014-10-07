@@ -202,7 +202,7 @@
         minDiff = diff;
     
     rtn = minDiff * RADtoDEG;
-    free (intAZMS);
+    free(intAZMS);
     return rtn;
 }
 

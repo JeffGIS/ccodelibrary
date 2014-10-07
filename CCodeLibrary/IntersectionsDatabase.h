@@ -38,7 +38,10 @@
 - (IntersectionPoint *)getCurrentIntersectionPoint:(int)intID;
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;
 - (IntersectionPoint *)getFirstAssignedIntersectionPointWithStatus0;
-- (BOOL)setIntersectionStatusTo:(int)status forIntersection:(int)intID;
+
+- (BOOL)setIntersectionStatusTo:(int)status
+                forIntersection:(int)intID;
+
 - (NSString *)intersectionTextPath:(int)type;
 - (int)getCountOfIntersections;
 - (void)close;
@@ -47,9 +50,10 @@ int SQLOK (int sqlReturn);
 
 - (int)loadIntersectionTextToDatabase:(NSString *)path;
 
-- (int) findIntersection:(int) x y: (int) y
+- (int) findIntersection:(int)x
+                       y:(int)y
         intersectionText:(char **)intText
-                whichInt:(int) iWant
+                whichInt:(int)iWant
         intersectionAZMs:(char **)intAZMs
               numStreets:(int *)pNumStreets
                 numRamps:(int *)pNumRamps

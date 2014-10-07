@@ -48,7 +48,7 @@ static IntersectionsDatabase *_database;
                             attributes:nil
                                  error:nil];
     
-    NSString *dbPath = [NSString stringWithFormat:@"%@/%i/Intersections.sqlite3",documentsDirectory,geoid];
+    NSString *dbPath = [NSString stringWithFormat:@"%@/%i/Intersections.sqlite3", documentsDirectory, geoid];
     return dbPath;
 }
 
@@ -59,18 +59,20 @@ static IntersectionsDatabase *_database;
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;"];
     
     SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error));
-    sqlite3_free (error);
+    sqlite3_free(error);
     
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (intID INTEGER PRIMARY KEY, lastUpdateTime INTEGER, status INTEGER, assignedToMe INTEGER, intX INTEGER, intY INTEGER, rotation INTEGER, ramp1 INTEGER, ramp2 INTEGER, ramp3 INTEGER, ramp4 INTEGER, ramp5 INTEGER, ramp6 INTEGER, ramp7 INTEGER, ramp8 INTEGER, ramp81 INTEGER, ramp23 INTEGER, ramp45 INTEGER, ramp67 INTEGER, xWalkA INTEGER, xWalkB INTEGER, xWalkC INTEGER, xWalkD INTEGER, signal81 INTEGER, signal23 INTEGER, signal45 INTEGER, signal67 INTEGER, nStreets INTEGER, streetNames CHAR(512), streetAZMs CHAR(128));"];
     
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
-    sqlite3_free (error);
+    sqlite3_free(error);
+    
     query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Intersections (intX);"];
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
-    sqlite3_free (error);
+    sqlite3_free(error);
+    
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Intersections (intY);"];
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
-    sqlite3_free (error);
+    sqlite3_free(error);
 }
 
 - (NSMutableArray *)getIntersectionPointsFromDatabase
@@ -96,6 +98,7 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_finalize(statement));
     return dataArray;
 }
+
 - (NSMutableArray *)getIntersectionPointsFromDatabaseinBounds:(IBOUNDS)bounds
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
@@ -119,11 +122,14 @@ static IntersectionsDatabase *_database;
     return dataArray;
 }
 
-- (NSMutableArray *)getIntersectionPointsWithinDistance:(int)dist ofPoint:(IPOINT)pt
+- (NSMutableArray *)getIntersectionPointsWithinDistance:(int)dist
+                                                ofPoint:(IPOINT)pt
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
-    IBOUNDS bounds = IBoundsFromPointAndDist (pt,dist);
-    NSString *query = [NSString stringWithFormat:@"SELECT intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",bounds.xmn,bounds.xmx,bounds.ymn,bounds.ymx];
+    IBOUNDS bounds = IBoundsFromPointAndDist(pt, dist);
+    NSString *query = [NSString stringWithFormat:@"SELECT intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
+                       bounds.xmn, bounds.xmx, bounds.ymn, bounds.ymx];
+    
     sqlite3_stmt *statement;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
     
@@ -136,7 +142,7 @@ static IntersectionsDatabase *_database;
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
         intpt.latitude = lat;
         intpt.longitude = lon;
-        intpt.dist = LDIST(intX,intY,pt.x,pt.y);
+        intpt.dist = LDIST(intX, intY, pt.x, pt.y);
         [dataArray addObject:intpt];
     }
     
@@ -152,29 +158,25 @@ static IntersectionsDatabase *_database;
          IntersectionPoint *pt2 = obj2;
          
          if (pt1.dist > pt2.dist)
-         {
              return (NSComparisonResult)NSOrderedDescending;
-         }
          
          if (pt1.dist < pt2.dist)
-         {
              return (NSComparisonResult)NSOrderedAscending;
-         }
          
          return (NSComparisonResult)NSOrderedSame;
      }];
 }
-- (int) findIntersection:(int) x y: (int) y
-        intersectionText:(char **)intText
-                whichInt:(int) iWant
-        intersectionAZMs:(char **)intAZMs
-              numStreets:(int *)pNumStreets
-                numRamps:(int *)pNumRamps
-                    intX:(int *)plev21x
-                    intY:(int *)plev21y
+- (int)findIntersection:(int)x
+                      y:(int)y
+       intersectionText:(char **)intText
+               whichInt:(int)iWant
+       intersectionAZMs:(char **)intAZMs
+             numStreets:(int *)pNumStreets
+               numRamps:(int *)pNumRamps
+                   intX:(int *)plev21x
+                   intY:(int *)plev21y
 {
     int rtn = 0;
-    
     return rtn;
 }
 
@@ -189,7 +191,7 @@ static IntersectionsDatabase *_database;
                        iTime, lev21x, lev21y, intpt.intID];
     char *error;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
-    sqlite3_free (error);
+    sqlite3_free(error);
     return !rtn;
 }
 
@@ -217,17 +219,16 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_finalize(statement));
     return intpt;
 }
+
 - (int)getCountOfIntersections
 {
     NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Intersections"];
     sqlite3_stmt *statement;
-    int count=0;
+    int count = 0;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
     
     if (sqlite3_step(statement) == SQLITE_ROW)
-    {
         count = sqlite3_column_int(statement, 0);
-    }
     
     SQLOK(sqlite3_finalize(statement));
     return count;
@@ -241,7 +242,7 @@ static IntersectionsDatabase *_database;
                        iTime, status, intID];
     char *error;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
-    sqlite3_free (error);
+    sqlite3_free(error);
     return !rtn;
 }
 
@@ -302,7 +303,7 @@ static IntersectionsDatabase *_database;
     INTERSECTION_STRUCT intStruct = {0};
     int *pInt, i;
     
-    strcpy (dataFile,path.UTF8String);
+    strcpy(dataFile,path.UTF8String);
     
     if ((pUB = strrchr (dataFile, '_')))
         *pUB = 0;
@@ -325,11 +326,11 @@ static IntersectionsDatabase *_database;
     
     SQLOK(sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL));
     SQLOK(sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &error));
-    sqlite3_free (error);
+    sqlite3_free(error);
     
-    fgetstring (index, maxIndex, fidIndex);
+    fgetstring(index, maxIndex, fidIndex);
     
-    while (fgetstring (data, maxData, fidData))
+    while (fgetstring(data, maxData, fidData))
     {
         LPSTR pTab = strchr(data, '\t');
         LPSTR pTabIndex, pAzms;
@@ -345,13 +346,14 @@ static IntersectionsDatabase *_database;
         intStruct.assignedTo = 1;
         intStruct.status = 0;
         intStruct.nStreets = atoi (pTab);
-        pTab = strchr (pTab,'\t')+1;
-        pAzms = strchr (pTab,'\t')+1;
-        strncpy (intStruct.streetNames,pTab,sizeof(intStruct.streetNames)-1);
-        strncpy (intStruct.streetAzms,pAzms,sizeof(intStruct.streetAzms)-1);
+        pTab = strchr(pTab,'\t')+1;
+        pAzms = strchr(pTab,'\t')+1;
+        strncpy(intStruct.streetNames, pTab, sizeof(intStruct.streetNames) - 1);
+        strncpy(intStruct.streetAzms, pAzms, sizeof(intStruct.streetAzms) - 1);
         
         for (i = 1, pInt = &intStruct.intID; i < 28; i++, pInt++)
             SQLOK(sqlite3_bind_int(statement, i, *pInt));
+        
         SQLOK(sqlite3_bind_text(statement, 28, intStruct.streetNames,-1,SQLITE_STATIC));
         SQLOK(sqlite3_bind_text(statement, 29, intStruct.streetAzms,-1,SQLITE_STATIC));
 
@@ -366,7 +368,7 @@ static IntersectionsDatabase *_database;
     }
     
     SQLOK(sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, &error));
-    sqlite3_free (error);
+    sqlite3_free(error);
     SQLOK(sqlite3_finalize(self.statement));
     
     fclose(fidIndex);
@@ -407,7 +409,8 @@ Exit:
     return;
 }
 
-- (void)getPlaceIntersectionFile:(GSSiPopoverView*)popover forGeoid:(int)geoid
+- (void)getPlaceIntersectionFile:(GSSiPopoverView*)popover
+                        forGeoid:(int)geoid
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -416,6 +419,7 @@ Exit:
     FTPDataPull *pull = FTPDataPull.pull;
     pull.delegate = self;
     pull.popover = popover;
+    
     [pull getFile:fileName
     fromDirectory:@"Bill/PlaceIntersections"
       toDirectory:documentsDirectory
@@ -441,7 +445,8 @@ Exit:
     
     else
     {
-        [self getPlaceIntersectionFile:popover forGeoid:self.geoid];
+        [self getPlaceIntersectionFile:popover
+                              forGeoid:self.geoid];
     }
     
 }
@@ -458,6 +463,7 @@ int SQLOK (int sqlReturn)
 {
     if (sqlReturn != SQLITE_OK)
         [_database logError];
+    
     return sqlReturn;
 }
 
