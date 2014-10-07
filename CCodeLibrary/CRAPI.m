@@ -436,7 +436,9 @@ forGeoid:(int)geoid
     free(str);
     return outDir;
 }
--(IPOINT) PointAtZoom:(int)zoom fromViewPoint:(CGPoint)pt usingProjection:(GMSProjection *)projection
+-(IPOINT) PointAtZoom:(int)zoom
+        fromViewPoint:(CGPoint)pt
+      usingProjection:(GMSProjection *)projection
 {
     IPOINT zoomPt;
     CLLocationCoordinate2D latlon = [projection coordinateForPoint:pt];
@@ -444,26 +446,44 @@ forGeoid:(int)geoid
     return zoomPt;
 }
 
--(IBOUNDS) boundsFromRect:(CGRect)rect atZoom:(int)zoom usingProjection:(GMSProjection *)projection
+- (IBOUNDS)boundsFromRect:(CGRect)rect
+                   atZoom:(int)zoom
+          usingProjection:(GMSProjection *)projection
 {
     IBOUNDS iBounds;
     CGPoint pt;
     IPOINT pt21;
     
-    InitIBounds (&iBounds);
+    InitIBounds(&iBounds);
     pt.x = rect.origin.x;
     pt.y = rect.origin.y;
-    pt21 = [self PointAtZoom:21 fromViewPoint:pt usingProjection:projection];
-    AddPointToIBounds(&iBounds,&pt21);
+    
+    pt21 = [self PointAtZoom:21
+               fromViewPoint:pt
+             usingProjection:projection];
+    
+    AddPointToIBounds(&iBounds, &pt21);
     pt.x += rect.size.width;
-    pt21 = [self PointAtZoom:21 fromViewPoint:pt usingProjection:projection];
-    AddPointToIBounds(&iBounds,&pt21);
+    
+    pt21 = [self PointAtZoom:21
+               fromViewPoint:pt
+             usingProjection:projection];
+    
+    AddPointToIBounds(&iBounds, &pt21);
     pt.y += rect.size.height;
-    pt21 = [self PointAtZoom:21 fromViewPoint:pt usingProjection:projection];
-    AddPointToIBounds(&iBounds,&pt21);
+    
+    pt21 = [self PointAtZoom:21
+               fromViewPoint:pt
+             usingProjection:projection];
+    
+    AddPointToIBounds(&iBounds, &pt21);
     pt.x = rect.origin.x;
-    pt21 = [self PointAtZoom:21 fromViewPoint:pt usingProjection:projection];
-    AddPointToIBounds(&iBounds,&pt21);
+    
+    pt21 = [self PointAtZoom:21
+               fromViewPoint:pt
+             usingProjection:projection];
+    
+    AddPointToIBounds(&iBounds, &pt21);
     return iBounds;
 }
 

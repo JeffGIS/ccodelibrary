@@ -52,13 +52,18 @@
                                   pitch:(CGFloat)pitch
                                     fov:(CGFloat)fov;
 
-
 -(BOOL) getPlaceIntersectionFile:(id)id
 forGeoid:(int)geoid;
 
 - (NSString*)directoryFromPath:(NSString*)path
                        andName:(NSString*)name;
--(IPOINT) PointAtZoom:(int)zoom fromViewPoint:(CGPoint)pt usingProjection:(GMSProjection *)projection;
--(IBOUNDS) boundsFromRect:(CGRect)rect atZoom:(int)zoom usingProjection:(GMSProjection *)projection;
+
+- (IPOINT)PointAtZoom:(int)zoom
+        fromViewPoint:(CGPoint)pt
+      usingProjection:(GMSProjection *)projection;
+
+- (IBOUNDS)boundsFromRect:(CGRect)rect
+                   atZoom:(int)zoom
+          usingProjection:(GMSProjection *)projection;
 
 @end
