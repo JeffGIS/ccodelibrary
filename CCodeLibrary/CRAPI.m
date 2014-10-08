@@ -46,6 +46,7 @@
 {
     return _currentGeoidValue;
 }
+
 -(void)setCurrentGeoid:(int)geoid
 {
     if (geoid != _currentGeoidValue)
