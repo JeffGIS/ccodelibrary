@@ -20,6 +20,9 @@
 @property (nonatomic) int currentIntersection;
 @property (nonatomic) NSString *googleKey;
 @property (nonatomic) BOOL refreshMap;
+@property (nonatomic) NSArray *placesArray;
+@property (nonatomic) NSArray *currentPlaceArray;
+@property (nonatomic) NSString *placeAreaFile;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
