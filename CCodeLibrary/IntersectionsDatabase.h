@@ -36,6 +36,7 @@
 - (NSMutableArray *)getIntersectionPointsFromDatabaseinBounds:(IBOUNDS)bounds;
 - (NSMutableArray *)getIntersectionPointsWithinDistance:(int)meters ofPoint:(LLPOINT)latlon;
 - (IntersectionPoint *)getCurrentIntersectionPoint:(int)intID;
+- (NSString *) getCurrentIntersectionAZMs:(int)intID   nStreets:(int *)pnStreets;
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;
 - (IntersectionPoint *)getFirstAssignedIntersectionPointWithStatus0;
 

@@ -279,7 +279,25 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_finalize(statement));
     return intpt;
 }
-
+- (NSString *) getCurrentIntersectionAZMs:(int)intID   nStreets:(int *)pnStreets
+{
+    NSString * rtn = [[NSString alloc]init];
+    NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetAZMs FROM Intersections WHERE intID=%i", intID];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int nStreets = sqlite3_column_int(statement, 0);
+        *pnStreets = nStreets;
+        LPSTR pAZMs = (LPSTR)sqlite3_column_text(statement, 1);
+        rtn = [NSString stringWithUTF8String:pAZMs];
+    }
+    
+    SQLOK(sqlite3_finalize(statement));
+    return rtn;
+}
 - (int)getCountOfIntersections
 {
     NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Intersections"];
