@@ -58,5 +58,12 @@ int SQLOK (int sqlReturn);
                 numRamps:(int *)pNumRamps
                     intX:(int *)plev21x
                     intY:(int *)plev21y;
+- (BOOL) findIntersectionFromID:(int)intID
+             intersectionText:(char *)intText
+             intersectionAZMs:(char *)intAZMs
+                   numStreets:(int *)pNumStreets
+                     numRamps:(int *)pNumRamps
+                         intX:(int *)plev21x
+                         intY:(int *)plev21y;
 
 @end

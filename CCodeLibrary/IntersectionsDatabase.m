@@ -168,6 +168,38 @@ static IntersectionsDatabase *_database;
          return (NSComparisonResult)NSOrderedSame;
      }];
 }
+- (BOOL) findIntersectionFromID:(int)intID
+             intersectionText:(char *)intText
+             intersectionAZMs:(char *)intAZMs
+                   numStreets:(int *)pNumStreets
+                     numRamps:(int *)pNumRamps
+                         intX:(int *)plev21x
+                         intY:(int *)plev21y
+
+{
+    BOOL rtn = FALSE;
+    NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",intID];
+    sqlite3_stmt *statement;
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int intX = sqlite3_column_int(statement, 0);
+        int intY = sqlite3_column_int(statement, 1);
+        int nStreets = sqlite3_column_int(statement,2);
+        LPSTR pStreets = (LPSTR)sqlite3_column_text(statement, 3);
+        LPSTR pAZMS = (LPSTR)sqlite3_column_text(statement, 4);
+        *plev21x = intX;
+        *plev21y = intY;
+        *pNumStreets = nStreets;
+        strcpy (intText,pStreets);
+        strcpy (intAZMs,pAZMS);
+        rtn = TRUE;
+    }
+    
+    SQLOK(sqlite3_finalize(statement));
+    return rtn;
+}
 - (int) findIntersection:(int) lev21x y: (int) lev21y
         intersectionText:(char *)intText
                 whichInt:(int) iWant
@@ -188,7 +220,7 @@ static IntersectionsDatabase *_database;
         sqlite3_stmt *statement;
         SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
         
-        while (sqlite3_step(statement) == SQLITE_ROW)
+        if (sqlite3_step(statement) == SQLITE_ROW)
         {
             int intX = sqlite3_column_int(statement, 0);
             int intY = sqlite3_column_int(statement, 1);
