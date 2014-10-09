@@ -38,6 +38,8 @@
 - (IntersectionPoint *)getCurrentIntersectionPoint:(int)intID;
 - (NSString *) getCurrentIntersectionAZMs:(int)intID   nStreets:(int *)pnStreets;
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;
+- (BOOL)storeMPIntersectionToDB:(MPIntersection*)mpint withStatus:(int)status;
+- (MPIntersection*) getMPIntersectionFromDB:(int)intID withRamps:(BOOL)wantRamps;
 - (IntersectionPoint *)getFirstAssignedIntersectionPointWithStatus0;
 
 - (BOOL)setIntersectionStatusTo:(int)status
