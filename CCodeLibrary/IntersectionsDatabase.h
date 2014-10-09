@@ -1,5 +1,5 @@
 //  IntersectionsDatabase.h
-//  PedRampInv_Prelim
+//  CCodeLibrary
 
 #import "CCodeLibrary.h"
 #import <sqlite3.h>
@@ -34,12 +34,23 @@
 - (void)getPlaceIntersectionDatabase:(GSSiPopoverView*)popover;
 - (NSMutableArray *)getIntersectionPointsFromDatabase;
 - (NSMutableArray *)getIntersectionPointsFromDatabaseinBounds:(IBOUNDS)bounds;
-- (NSMutableArray *)getIntersectionPointsWithinDistance:(int)meters ofPoint:(LLPOINT)latlon;
+
+- (NSMutableArray *)getIntersectionPointsWithinDistance:(int)meters
+                                                ofPoint:(LLPOINT)latlon;
+
 - (IntersectionPoint *)getCurrentIntersectionPoint:(int)intID;
-- (NSString *) getCurrentIntersectionAZMs:(int)intID   nStreets:(int *)pnStreets;
+
+- (NSString *)getCurrentIntersectionAZMs:(int)intID
+                                nStreets:(int *)pnStreets;
+
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;
-- (BOOL)storeMPIntersectionToDB:(MPIntersection*)mpint withStatus:(int)status;
-- (MPIntersection*) getMPIntersectionFromDB:(int)intID withRamps:(BOOL)wantRamps;
+
+- (BOOL)storeMPIntersectionToDB:(MPIntersection*)mpint
+                     withStatus:(int)status;
+
+- (MPIntersection*) getMPIntersectionFromDB:(int)intID
+                                  withRamps:(BOOL)wantRamps;
+
 - (IntersectionPoint *)getFirstAssignedIntersectionPointWithStatus0;
 
 - (BOOL)setIntersectionStatusTo:(int)status
@@ -49,24 +60,26 @@
 - (int)getCountOfIntersections;
 - (void)close;
 - (void)logError;
-int SQLOK (int sqlReturn);
+int SQLOK(int sqlReturn);
 
 - (int)loadIntersectionTextToDatabase:(NSString *)path;
 
-- (int) findIntersection:(int) x y: (int) y
-        intersectionText:(char *)intText
-                whichInt:(int) iWant
-        intersectionAZMs:(char *)intAZMs
-              numStreets:(int *)pNumStreets
-                numRamps:(int *)pNumRamps
-                    intX:(int *)plev21x
-                    intY:(int *)plev21y;
-- (BOOL) findIntersectionFromID:(int)intID
-             intersectionText:(char *)intText
-             intersectionAZMs:(char *)intAZMs
-                   numStreets:(int *)pNumStreets
-                     numRamps:(int *)pNumRamps
-                         intX:(int *)plev21x
-                         intY:(int *)plev21y;
+- (int)findIntersection:(int)x
+                      y:(int)y
+       intersectionText:(char *)intText
+               whichInt:(int)iWant
+       intersectionAZMs:(char *)intAZMs
+             numStreets:(int *)pNumStreets
+               numRamps:(int *)pNumRamps
+                   intX:(int *)plev21x
+                   intY:(int *)plev21y;
+
+- (BOOL)findIntersectionFromID:(int)intID
+              intersectionText:(char *)intText
+              intersectionAZMs:(char *)intAZMs
+                    numStreets:(int *)pNumStreets
+                      numRamps:(int *)pNumRamps
+                          intX:(int *)plev21x
+                          intY:(int *)plev21y;
 
 @end
