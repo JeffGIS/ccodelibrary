@@ -156,6 +156,8 @@ static IntersectionsDatabase *_database;
             break;
     }
     
+    NSLog(@"GET:%i:%i", xw, icoord);
+    
     return icoord;
 }
 
@@ -233,8 +235,6 @@ static IntersectionsDatabase *_database;
                        [self getSignalCoord:mpint signal:81], [self getSignalCoord:mpint signal:23],
                        [self getSignalCoord:mpint signal:45], [self getSignalCoord:mpint signal:67], mpint.intID];
     
-    NSLog (@"%@", query);
-    
     char *error;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
@@ -255,7 +255,7 @@ static IntersectionsDatabase *_database;
     int icol = (19 + (xw - 'A'));
     int icoord = sqlite3_column_int(statement, icol);
     
-    NSLog (@"%i", icoord);
+    NSLog(@"SET:%i:%i", xw, icoord);
     
     int offsetx = HIWORD(icoord);
     int offsety = LOWORD(icoord);
