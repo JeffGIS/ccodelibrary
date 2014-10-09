@@ -66,7 +66,7 @@
                                                       error:nil];
     }
 }
-- (void) intersectionInit:(MPIntersection *)currentIntersection
+- (void)intersectionInit:(MPIntersection *)currentIntersection
 {
     currentIntersection.intID = -1;
     currentIntersection.dataUpdated = NO;
@@ -135,7 +135,9 @@
     }
 }
 
-- (int) adjustQuadDev:(int)normalRot fromAZMs:(NSArray*)azms withIntRot:(int)intRot
+- (int) adjustQuadDev:(int)normalRot
+             fromAZMs:(NSArray *)azms
+           withIntRot:(int)intRot
 {
     int rtn = normalRot;
     int minDiff = 999;
@@ -143,9 +145,10 @@
     
     for (NSString * cazm in azms)
     {
-        float az = [cazm floatValue];
+        float az = cazm.floatValue;
         int adjustedRot = ClockwiseDegFromNorth((az * RADtoDEG) + intRot);
         int diff = abs (normalRot - adjustedRot);
+        
         if (diff < minDiff)
         {
             minDiff = diff;
@@ -155,11 +158,12 @@
     }
     if (minDiff < 45)
         rtn = minRot;
+    
     return rtn;
 }
 
 - (void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm
-                                   forInt:(MPIntersection*)currentIntersection
+                                   forInt:(MPIntersection *)currentIntersection
 {
     currentIntersection.intRotation = [self intRotFromintAZMS:intAzm];
     NSArray *azm = [intAzm componentsSeparatedByString:@"|"];
@@ -170,6 +174,7 @@
     currentIntersection.quadDev270 = [self adjustQuadDev:270 fromAZMs:azm withIntRot:currentIntersection.intRotation];
     
 }
+
 - (double)azDiffFrom90s:(double)az
 {
     double minDiff = (0.0 - az);
