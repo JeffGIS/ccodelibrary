@@ -12,7 +12,7 @@
 
 @class IntersectionsDatabase;
 
-@protocol IntersectionsDatabaseDelegate  <NSObject>
+@protocol IntersectionsDatabaseDelegate <NSObject>
 
 - (void) intersectionsDatabase:(NSString *)databasePath
                        didLoad:(NSString *)message
@@ -31,7 +31,7 @@
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
-- (void)getPlaceIntersectionDatabase:(GSSiPopoverView*)popover;
+- (void)getPlaceIntersectionDatabase:(GSSiPopoverView *)popover;
 - (NSMutableArray *)getIntersectionPointsFromDatabase;
 - (NSMutableArray *)getIntersectionPointsFromDatabaseinBounds:(IBOUNDS)bounds;
 

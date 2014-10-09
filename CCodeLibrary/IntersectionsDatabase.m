@@ -82,7 +82,7 @@ static IntersectionsDatabase *_database;
     sqlite3_free(error);
 }
 
-- (int)getRampCoord:(MPIntersection*)mpint
+- (int)getRampCoord:(MPIntersection *)mpint
                ramp:(int)r
 {
     int icoord = 0;
@@ -94,7 +94,7 @@ static IntersectionsDatabase *_database;
     return icoord;
 }
 
-- (int)getOffsetCoord:(MPIntersection*)mpint
+- (int)getOffsetCoord:(MPIntersection *)mpint
                     x:(int)x
                     y:(int)y
 {
@@ -108,8 +108,8 @@ static IntersectionsDatabase *_database;
     return offCoord;
 }
 
-- (int) getXWalkCoord:(MPIntersection*)mpint
-                xWalk:(char)xw
+- (int)getXWalkCoord:(MPIntersection *)mpint
+               xWalk:(char)xw
 {
     int icoord = 0;
     
@@ -241,21 +241,24 @@ static IntersectionsDatabase *_database;
     return !rtn;
 }
 
-- (void)setRampCoord:(MPIntersection*)mpint
+- (void)setRampCoord:(MPIntersection *)mpint
                 ramp:(int)r
-                from:(sqlite3_stmt*)statement
+                from:(sqlite3_stmt *)statement
 {
     
 }
 
-- (void) setXWalkCoord:(MPIntersection*)mpint
-                 xWalk:(char)xw
-                  from:(sqlite3_stmt*)statement
+- (void)setXWalkCoord:(MPIntersection *)mpint
+                xWalk:(char)xw
+                 from:(sqlite3_stmt *)statement
 {
     int icol = (19 + (xw - 'A'));
     int icoord = sqlite3_column_int(statement, icol);
-    int offsetx = HIWORD (icoord);
-    int offsety = LOWORD (icoord);
+    
+    NSLog (@"%i", icoord);
+    
+    int offsetx = HIWORD(icoord);
+    int offsety = LOWORD(icoord);
     
     switch (xw)
     {
@@ -280,9 +283,9 @@ static IntersectionsDatabase *_database;
             break;
     }
 }
-- (void)setSignalCoord:(MPIntersection*)mpint
+- (void)setSignalCoord:(MPIntersection *)mpint
                 signal:(int)s
-                  from:(sqlite3_stmt*)statement
+                  from:(sqlite3_stmt *)statement
 {
     
 }
@@ -602,7 +605,9 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_finalize(statement));
     return intpt;
 }
-- (NSString *) getCurrentIntersectionAZMs:(int)intID   nStreets:(int *)pnStreets
+
+- (NSString *)getCurrentIntersectionAZMs:(int)intID
+                                nStreets:(int *)pnStreets
 {
     NSString * rtn = [[NSString alloc]init];
     NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetAZMs FROM Intersections WHERE intID=%i", intID];
@@ -621,6 +626,7 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_finalize(statement));
     return rtn;
 }
+
 - (int)getCountOfIntersections
 {
     NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Intersections"];
@@ -633,8 +639,10 @@ static IntersectionsDatabase *_database;
     
     SQLOK(sqlite3_finalize(statement));
     return count;
+    
 }
-- (BOOL)setIntersectionStatusTo:(int)status forIntersection:(int)intID
+- (BOOL)setIntersectionStatusTo:(int)status
+                forIntersection:(int)intID
 {
     BOOL rtn;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
@@ -651,7 +659,7 @@ static IntersectionsDatabase *_database;
 {
     IntersectionPoint *intpt = nil;
     
-    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status = 0 ORDER BY intID ASC"];
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=0 ORDER BY intID ASC"];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
