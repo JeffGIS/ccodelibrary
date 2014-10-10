@@ -40,32 +40,34 @@ CGColorRef graphYColor()
 	return c;
 }
 
--(BOOL)demoComplete:(IntersectionPoint *)pt
+- (BOOL)demoComplete:(IntersectionPoint *)pt
 {
     if (_tempDemoArray)
     {
-        int nSkip = (int)_tempDemoArray.count / 5;
+        int nSkip = (int)(_tempDemoArray.count / 5);
         double minDist=DBL_MAX;
         
-        for (int i = 0;i<_tempDemoArray.count;i+=nSkip)
+        for (int i = 0; i < _tempDemoArray.count; i += nSkip)
         {
             IntersectionPoint *buildingPt = [_tempDemoArray objectAtIndex:i];
             double dist = LDIST(pt.longitude, pt.latitude, buildingPt.longitude, buildingPt.latitude);
+            
             if (dist < minDist)
                 minDist = dist;
         }
+        
         if (minDist < 0.015)
-            return TRUE;
+            return YES;
     }
-    return FALSE;
+    
+    return NO;
 }
 
 - (void)drawRect:(CGRect)rect
 {
     GMSProjection *projection = self.mapView.projection;
     CGRect pointRect;
-    int numComplete=0;
-    float pctComplete;
+    int numComplete = 0;
     
     UIColor *green = UserDefaults.defaults.darkGreen;
     
@@ -90,9 +92,10 @@ CGColorRef graphYColor()
                                         (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
         {
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
-            //if (![self demoComplete:info])
+            
             if (!info.status)
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+            
             else
             {
                 numComplete++;
@@ -107,13 +110,14 @@ CGColorRef graphYColor()
             CGContextFillPath(context);
         }
     }
-    pctComplete = (100.0 * numComplete) /pointsArray.count;
+    
     if (self.delegate)
     {
         [self.delegate setupProgressLabelTextforTotalIntersections:(int)pointsArray.count
                                                          completed:(int)numComplete
                                                        notAssigned:0];
     }
+    
     return;
 }
 
