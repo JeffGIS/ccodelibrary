@@ -61,7 +61,6 @@ static GeoMasterServer *_open;
 - (BOOL)initCommunication:(float)connectionTimeoutInSeconds
 {
     reachability = Reachability.reachabilityForInternetConnection;
-    [reachability startNotifier];
     NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
     bool rtn = NO;
     
