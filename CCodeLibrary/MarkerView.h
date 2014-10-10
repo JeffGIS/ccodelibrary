@@ -10,6 +10,7 @@
 @protocol MarkerViewDelegate<NSObject>
 - (void)setupProgressLabelTextforTotalIntersections:(int)totalIntersections
                                           completed:(int)completed
+                                           numRamps:(int)nRamps
                                         notAssigned:(int)notAssigned;
 
 @end

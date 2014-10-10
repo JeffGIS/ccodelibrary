@@ -7,6 +7,7 @@
 
 @property int intID;
 @property int status;
+@property int nramps;
 @property double latitude;
 @property double longitude;
 @property double dist;

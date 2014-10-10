@@ -68,6 +68,7 @@ CGColorRef graphYColor()
     GMSProjection *projection = self.mapView.projection;
     CGRect pointRect;
     int numComplete = 0;
+    int totRamps = 0;
     
     UIColor *green = UserDefaults.defaults.darkGreen;
     
@@ -92,7 +93,7 @@ CGColorRef graphYColor()
                                         (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
         {
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
-            
+            totRamps += info.nramps;
             if (!info.status)
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
             
@@ -115,6 +116,7 @@ CGColorRef graphYColor()
     {
         [self.delegate setupProgressLabelTextforTotalIntersections:(int)pointsArray.count
                                                          completed:(int)numComplete
+                                                          numRamps:totRamps
                                                        notAssigned:0];
     }
     

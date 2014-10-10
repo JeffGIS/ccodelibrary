@@ -542,7 +542,9 @@ static IntersectionsDatabase *_database;
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
     NSString *query = [NSString stringWithFormat:
-                       @"SELECT intID, status, intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
+                       @"SELECT intID, status, intX, intY,\
+                       ramp1,ramp2,ramp3,ramp4,ramp5,ramp6,ramp7,ramp8,ramp81,ramp23,ramp45,ramp67 \
+                       FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
                        bounds.xmn, bounds.xmx, bounds.ymn, bounds.ymx];
     
     sqlite3_stmt *statement;
@@ -554,12 +556,19 @@ static IntersectionsDatabase *_database;
         int status = sqlite3_column_int(statement, 1);
         int intX = sqlite3_column_int(statement, 2);
         int intY = sqlite3_column_int(statement, 3);
+        int nRamps = 0;
+        for (int i=4;i<16;i++)
+        {
+            if (sqlite3_column_int(statement, i) > 0)
+                nRamps++;
+        }
         double lat,lon;
         PixelXYToLatLong(intX, intY, 21, &lat, &lon);
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
         intpt.latitude = lat;
         intpt.longitude = lon;
         intpt.status = status;
+        intpt.nramps = nRamps;
         if (status)
             status++;
         intpt.intID = intID;
