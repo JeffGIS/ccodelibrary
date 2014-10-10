@@ -2,8 +2,12 @@
 //  PedRampInv_Prelim
 
 #import "FTPDataPull.h"
+#import "Reachability.h"
 
 @implementation FTPDataPull
+{
+    Reachability *reachability;
+}
 
 + (FTPDataPull *)pull
 {
@@ -25,7 +29,23 @@
                                                                                   error:nil].fileSize;
     
     if (refresh || fileSize == 0)
+    {
+        reachability = Reachability.reachabilityForInternetConnection;
+        NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
+        
+        if(remoteHostStatus == NotReachable)
+        {
+            if (self.delegate)
+            {
+                [self.delegate FTPdidComplete:FTP_CONNECTION_FAILED
+                                     filePath:nil];
+            }
+            
+            return;
+        }
+        
         [self startReceive:fileName];
+    }
     
     else if (self.delegate)
     {

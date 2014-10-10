@@ -1,12 +1,16 @@
 //  GeoMasterServer.m
 //  CCodeLibrary
 
-#define GM_ADDRESS   @"74.44.211.159"
-#define GM_ADDRESSx   @"192.168.1.130"
+#define GM_ADDRESS @"74.44.211.159"
+#define GM_ADDRESSx @"192.168.1.130"
 
 #import "GeoMasterServer.h"
+#import "Reachability.h"
 
 @implementation GeoMasterServer
+{
+    Reachability *reachability;
+}
 
 static GeoMasterServer *_open;
 
@@ -56,7 +60,25 @@ static GeoMasterServer *_open;
 
 - (BOOL)initCommunication:(float)connectionTimeoutInSeconds
 {
+    reachability = Reachability.reachabilityForInternetConnection;
+    [reachability startNotifier];
+    NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
     bool rtn = NO;
+    
+    if(remoteHostStatus == NotReachable)
+    {
+        [self closeServer];
+    
+        if (self.delegate)
+        {
+            [self.delegate GMServer:self
+                    didReceiveError:@"Internet Connection Not Available"
+                         withStatus:remoteHostStatus];
+        }
+        
+        return rtn;
+    }
+    
 	CFReadStreamRef readStream;
 	CFWriteStreamRef writeStream;
     CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)GM_ADDRESS, 22335, &readStream, &writeStream);
@@ -86,7 +108,7 @@ static GeoMasterServer *_open;
 	return rtn;
 }
 
-- (void) doSendMessage
+- (void)doSendMessage
 {
     long rc = [_outputStream write:_data.bytes
                          maxLength:_data.length];
@@ -101,7 +123,7 @@ static GeoMasterServer *_open;
         }
     }
 }
-- (BOOL) sendMessage:(NSString *)message
+- (BOOL)sendMessage:(NSString *)message
 {
 	_data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
     
@@ -126,7 +148,6 @@ static GeoMasterServer *_open;
 	
 	switch (streamEvent)
     {
-			
 		case NSStreamEventOpenCompleted:
 			
             if (_openTimer)
@@ -183,13 +204,12 @@ static GeoMasterServer *_open;
 			
         {
             NSError *theError = theStream.streamError;
-            NSString *errorMessage = theError.localizedDescription;
             [self closeServer];
             
             if (self.delegate)
             {
                 [self.delegate GMServer:self
-                        didReceiveError:errorMessage
+                        didReceiveError:theError.localizedDescription
                              withStatus:theError.code];
             }
         }
@@ -238,7 +258,7 @@ static GeoMasterServer *_open;
     }
     
 }
-- (void) messageReceived:(NSString *)message
+- (void)messageReceived:(NSString *)message
 {
 	[self.messages addObject:message];
 }

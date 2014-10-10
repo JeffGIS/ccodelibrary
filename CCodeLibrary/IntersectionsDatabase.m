@@ -811,9 +811,15 @@ Exit:
         }
     }
     
+    else if (status == FTP_CONNECTION_FAILED)
+    {
+        [self.delegate intersectionsDatabase:nil
+                                     didLoad:@"Internet Connection Not Available"
+                                  withStatus:INT_NO_NETWORK_CONNECTION];
+    }
+    
     else if (status != FTP_STOP)
     {
-       
         [self.delegate intersectionsDatabase:nil
                                      didLoad:@"FTP failure"
                                   withStatus:INTDB_FAILED];
