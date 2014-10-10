@@ -90,7 +90,8 @@ CGColorRef graphYColor()
                                         (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
         {
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
-            if (![self demoComplete:info])
+            //if (![self demoComplete:info])
+            if (!info.status)
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
             else
             {

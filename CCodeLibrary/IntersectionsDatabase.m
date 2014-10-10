@@ -62,13 +62,36 @@ static IntersectionsDatabase *_database;
     sqlite3_free(error);
     
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (\
-                       intID INTEGER PRIMARY KEY, lastUpdateTime INTEGER, status INTEGER, assignedToMe INTEGER,\
-                       intX INTEGER, intY INTEGER, rotation INTEGER,\
-                       ramp1 INTEGER, ramp2 INTEGER, ramp3 INTEGER, ramp4 INTEGER, ramp5 INTEGER, ramp6 INTEGER,\
-                       ramp7 INTEGER, ramp8 INTEGER, ramp81 INTEGER, ramp23 INTEGER, ramp45 INTEGER, ramp67 INTEGER,\
-                       xWalkA INTEGER, xWalkB INTEGER, xWalkC INTEGER, xWalkD INTEGER,\
-                       signal81 INTEGER, signal23 INTEGER, signal45 INTEGER, signal67 INTEGER,\
-                       nStreets INTEGER, streetNames CHAR(512), streetAZMs CHAR(128));"];
+                       intID INTEGER PRIMARY KEY,\
+                       lastUpdateTime INTEGER,\
+                       status INTEGER,\
+                       assignedToMe INTEGER,\
+                       intX INTEGER,\
+                       intY INTEGER,\
+                       rotation INTEGER,\
+                       ramp1 INTEGER,\
+                       ramp2 INTEGER,\
+                       ramp3 INTEGER,\
+                       ramp4 INTEGER,\
+                       ramp5 INTEGER,\
+                       ramp6 INTEGER,\
+                       ramp7 INTEGER,\
+                       ramp8 INTEGER,\
+                       ramp81 INTEGER,\
+                       ramp23 INTEGER,\
+                       ramp45 INTEGER,\
+                       ramp67 INTEGER,\
+                       xWalkA INTEGER,\
+                       xWalkB INTEGER,\
+                       xWalkC INTEGER,\
+                       xWalkD INTEGER,\
+                       signal81 INTEGER,\
+                       signal23 INTEGER,\
+                       signal45 INTEGER,\
+                       signal67 INTEGER,\
+                       nStreets INTEGER,\
+                       streetNames CHAR(512),\
+                       streetAZMs CHAR(128));"];
     
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
     sqlite3_free(error);
@@ -80,18 +103,31 @@ static IntersectionsDatabase *_database;
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Intersections (intY);"];
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
     sqlite3_free(error);
-}
-
-- (int)getRampCoord:(MPIntersection *)mpint
-               ramp:(int)r
-{
-    int icoord = 0;
-    MPRamp *ramp = mpint.ramps[r];
-    
-    if (ramp.rampExists)
-        icoord = (int)MAKELONG(ramp.lev21x, ramp.lev21y);
-    
-    return icoord;
+    /*    intX INTEGER,\    4
+     intY INTEGER,\      5
+     rotation INTEGER,\  6
+     ramp1 INTEGER,\     7
+     ramp2 INTEGER,\     8
+     ramp3 INTEGER,\     9
+     ramp4 INTEGER,\     10
+     ramp5 INTEGER,\     11
+     ramp6 INTEGER,\     12
+     ramp7 INTEGER,\     13
+     ramp8 INTEGER,\     14
+     ramp81 INTEGER,\    15
+     ramp23 INTEGER,\    16
+     ramp45 INTEGER,\    17
+     ramp67 INTEGER,\    18
+     xWalkA INTEGER,\    19
+     xWalkB INTEGER,\    20
+     xWalkC INTEGER,\    21
+     xWalkD INTEGER,\    22
+     signal81 INTEGER,\  23
+     signal23 INTEGER,\  24
+     signal45 INTEGER,\  25
+     signal67 INTEGER,\  26
+     nStreets INTEGER,\  27
+     streetNames CHAR(512),\*/
 }
 
 - (int)getOffsetCoord:(MPIntersection *)mpint
@@ -101,15 +137,47 @@ static IntersectionsDatabase *_database;
     int offCoord = 0;
     short offx, offy;
     
-    offx = (mpint.lev21x - x);
-    offy = (mpint.lev21y - y);
+    offx = (x - mpint.lev21x);
+    offy = (y - mpint.lev21y);
     
     offCoord = (int)MAKELONG(offx, offy);
     
-    NSLog(@"GET:(%i,%i)", offx, offy);
     
     return offCoord;
 }
+
+- (int)getRampCoord:(MPIntersection *)mpint
+               ramp:(int)r
+{
+    int icoord = 0;
+    MPRamp *ramp = mpint.ramps[r];
+    
+    if (ramp.rampExists)
+        icoord = [self getOffsetCoord:mpint
+                                    x:ramp.lev21x
+                                    y:ramp.lev21y];
+    return icoord;
+}
+- (void) setRampCoord:(MPIntersection*)mpint ramp:(int)r from:(sqlite3_stmt*)statement
+{
+    int icol = 7 + (r - 1);
+    int icoord = sqlite3_column_int(statement, icol);
+    
+    short offsetx = LOWORD(icoord);
+    short offsety = HIWORD(icoord);
+    MPRamp *ramp = mpint.ramps[r];
+    int lev21x = mpint.lev21x + offsetx;
+    int lev21y = mpint.lev21y + offsety;
+    if (icoord)
+    {
+        ramp.lev21x = lev21x;
+        ramp.lev21y = lev21y;
+        ramp.rampExists = YES;
+    }
+    else
+        ramp.rampExists = NO;
+}
+
 
 - (int)getXWalkCoord:(MPIntersection *)mpint
                xWalk:(char)xw
@@ -160,6 +228,63 @@ static IntersectionsDatabase *_database;
     }
     
     return icoord;
+}
+- (void)setXWalkCoord:(MPIntersection *)mpint
+                xWalk:(char)xw
+                 from:(sqlite3_stmt *)statement
+{
+    int icol = (19 + (xw - 'A'));
+    int icoord = sqlite3_column_int(statement, icol);
+    
+    short offsetx = LOWORD(icoord);
+    short offsety = HIWORD(icoord);
+    
+    switch (xw)
+    {
+        case 'A':
+            if (icoord)
+            {
+                mpint.xWalkAlev21x = mpint.lev21x + offsetx;
+                mpint.xWalkAlev21y = mpint.lev21y + offsety;
+                mpint.xWalkAExists = YES;
+            }
+            else
+                mpint.xWalkAExists = NO;
+            break;
+            
+        case 'B':
+            if (icoord)
+            {
+                mpint.xWalkBlev21x = mpint.lev21x + offsetx;
+                mpint.xWalkBlev21y = mpint.lev21y + offsety;
+                mpint.xWalkBExists = YES;
+            }
+            else
+                mpint.xWalkBExists = NO;
+            break;
+            
+        case 'C':
+            if (icoord)
+            {
+                mpint.xWalkClev21x = mpint.lev21x + offsetx;
+                mpint.xWalkClev21y = mpint.lev21y + offsety;
+                mpint.xWalkCExists = YES;
+            }
+            else
+                mpint.xWalkCExists = NO;
+            break;
+            
+        case 'D':
+            if (icoord)
+            {
+                mpint.xWalkDlev21x = mpint.lev21x + offsetx;
+                mpint.xWalkDlev21y = mpint.lev21y + offsety;
+                mpint.xWalkDExists = YES;
+            }
+            else
+                mpint.xWalkDExists = NO;
+            break;
+    }
 }
 
 - (int)getSignalCoord:(MPIntersection*)mpint
@@ -212,6 +337,76 @@ static IntersectionsDatabase *_database;
     
     return icoord;
 }
+- (void)setSignalCoord:(MPIntersection *)mpint
+                signal:(int)s
+                  from:(sqlite3_stmt *)statement
+{
+    int icol = 23;
+    switch (s)
+    {
+        case 81:
+            break;
+        case 23:
+            icol++;
+            break;
+        case 45:
+            icol += 2;
+            break;
+        case 67:
+            icol += 3;
+            break;
+    }
+    int icoord = sqlite3_column_int(statement, icol);
+    
+    short offsetx = LOWORD(icoord);
+    short offsety = HIWORD(icoord);
+    
+    switch (s)
+    {
+        case 81:
+            if (icoord)
+            {
+                mpint.signal81lev21x = mpint.lev21x + offsetx;
+                mpint.signal81lev21y = mpint.lev21y + offsety;
+                mpint.signal81Exists = YES;
+            }
+            else
+                mpint.signal81Exists = NO;
+            break;
+        case 23:
+            if (icoord)
+            {
+                mpint.signal23lev21x = mpint.lev21x + offsetx;
+                mpint.signal23lev21y = mpint.lev21y + offsety;
+                mpint.signal23Exists = YES;
+            }
+            else
+                mpint.signal23Exists = NO;
+            break;
+        case 45:
+            if (icoord)
+            {
+                mpint.signal45lev21x = mpint.lev21x + offsetx;
+                mpint.signal45lev21y = mpint.lev21y + offsety;
+                mpint.signal45Exists = YES;
+            }
+            else
+                mpint.signal45Exists = NO;
+            break;
+        case 67:
+            if (icoord)
+            {
+                mpint.signal67lev21x = mpint.lev21x + offsetx;
+                mpint.signal67lev21y = mpint.lev21y + offsety;
+                mpint.signal67Exists = YES;
+            }
+            else
+                mpint.signal67Exists = NO;
+            break;
+    }
+    
+}
+
 
 - (BOOL)storeMPIntersectionToDB:(MPIntersection*)mpint
                      withStatus:(int)status
@@ -219,22 +414,54 @@ static IntersectionsDatabase *_database;
     BOOL rtn;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     
-    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET\
-                       \nlastUpdateTime=%i, status=%i, intX=%i, intY=%i,\
-                       \nramp1=%i, ramp2=%i, ramp3=%i, ramp4=%i, ramp5=%i, ramp6=%i, ramp7=%i, ramp8=%i,\
-                       \nramp81=%i, ramp23=%i, ramp45=%i, ramp67=%i, xWalkA=%i, xWalkB=%i, xWalkC=%i, xWalkD=%i,\
-                       \nsignal81=%i, signal23=%i, signal45=%i, signal67=%i WHERE intID=%i",
-                       iTime, status, mpint.lev21x, mpint.lev21y,
-                       [self getRampCoord:mpint ramp:1], [self getRampCoord:mpint ramp:2],
-                       [self getRampCoord:mpint ramp:3], [self getRampCoord:mpint ramp:4],
-                       [self getRampCoord:mpint ramp:5], [self getRampCoord:mpint ramp:6],
-                       [self getRampCoord:mpint ramp:7], [self getRampCoord:mpint ramp:8],
-                       [self getRampCoord:mpint ramp:9], [self getRampCoord:mpint ramp:10],
-                       [self getRampCoord:mpint ramp:11], [self getRampCoord:mpint ramp:12],
-                       [self getXWalkCoord:mpint xWalk:'A'], [self getXWalkCoord:mpint xWalk:'B'],
-                       [self getXWalkCoord:mpint xWalk:'C'], [self getXWalkCoord:mpint xWalk:'D'],
-                       [self getSignalCoord:mpint signal:81], [self getSignalCoord:mpint signal:23],
-                       [self getSignalCoord:mpint signal:45], [self getSignalCoord:mpint signal:67], mpint.intID];
+    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
+                       intX=%i,\
+                       intY=%i,\
+                       ramp1=%i,\
+                       ramp2=%i,\
+                       ramp3=%i,\
+                       ramp4=%i,\
+                       ramp5=%i,\
+                       ramp6=%i,\
+                       ramp7=%i,\
+                       ramp8=%i,\
+                       ramp81=%i,\
+                       ramp23=%i,\
+                       ramp45=%i,\
+                       ramp67=%i,\
+                       xWalkA=%i,\
+                       xWalkB=%i,\
+                       xWalkC=%i,\
+                       xWalkD=%i,\
+                       signal81=%i,\
+                       signal23=%i,\
+                       signal45=%i,\
+                       signal67=%i \
+                       WHERE intID=%i",
+                       iTime, status,
+                       mpint.lev21x,
+                       mpint.lev21y,
+                       [self getRampCoord:mpint ramp:1],
+                       [self getRampCoord:mpint ramp:2],
+                       [self getRampCoord:mpint ramp:3],
+                       [self getRampCoord:mpint ramp:4],
+                       [self getRampCoord:mpint ramp:5],
+                       [self getRampCoord:mpint ramp:6],
+                       [self getRampCoord:mpint ramp:7],
+                       [self getRampCoord:mpint ramp:8],
+                       [self getRampCoord:mpint ramp:9],
+                       [self getRampCoord:mpint ramp:10],
+                       [self getRampCoord:mpint ramp:11],
+                       [self getRampCoord:mpint ramp:12],
+                       [self getXWalkCoord:mpint xWalk:'A'],
+                       [self getXWalkCoord:mpint xWalk:'B'],
+                       [self getXWalkCoord:mpint xWalk:'C'],
+                       [self getXWalkCoord:mpint xWalk:'D'],
+                       [self getSignalCoord:mpint signal:81],
+                       [self getSignalCoord:mpint signal:23],
+                       [self getSignalCoord:mpint signal:45],
+                       [self getSignalCoord:mpint signal:67],
+                       mpint.intID];
     
     char *error;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
@@ -242,55 +469,7 @@ static IntersectionsDatabase *_database;
     return !rtn;
 }
 
-- (void)setRampCoord:(MPIntersection *)mpint
-                ramp:(int)r
-                from:(sqlite3_stmt *)statement
-{
-    
-}
 
-- (void)setXWalkCoord:(MPIntersection *)mpint
-                xWalk:(char)xw
-                 from:(sqlite3_stmt *)statement
-{
-    int icol = (19 + (xw - 'A'));
-    int icoord = sqlite3_column_int(statement, icol);
-    
-    short offsetx = LOWORD(icoord);
-    short offsety = HIWORD(icoord);
-    
-    NSLog(@"SET:(%i,%i)", offsetx, offsety);
-    
-    switch (xw)
-    {
-        case 'A':
-            mpint.xWalkAlev21x = mpint.lev21x + offsetx;
-            mpint.xWalkAlev21y = mpint.lev21y + offsety;
-            break;
-            
-        case 'B':
-            mpint.xWalkBlev21x = mpint.lev21x + offsetx;
-            mpint.xWalkBlev21y = mpint.lev21y + offsety;
-            break;
-            
-        case 'C':
-            mpint.xWalkClev21x = mpint.lev21x + offsetx;
-            mpint.xWalkClev21y = mpint.lev21y + offsety;
-            break;
-            
-        case 'D':
-            mpint.xWalkDlev21x = mpint.lev21x + offsetx;
-            mpint.xWalkDlev21y = mpint.lev21y + offsety;
-            break;
-    }
-}
-
-- (void)setSignalCoord:(MPIntersection *)mpint
-                signal:(int)s
-                  from:(sqlite3_stmt *)statement
-{
-    
-}
 
 - (MPIntersection*)getMPIntersectionFromDB:(int)intID
                                  withRamps:(BOOL)wantRamps
@@ -304,90 +483,30 @@ static IntersectionsDatabase *_database;
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
-        mpint = [[MPIntersection alloc] init];
+        mpint = [[MPIntersection alloc]init];
         mpint.intID = intID;
         mpint.lev21x = sqlite3_column_int(statement, 4);
         mpint.lev21y = sqlite3_column_int(statement, 5);
-        
-        [self setRampCoord:mpint
-                      ramp:1
-                      from:statement];
-        
-        [self setRampCoord:mpint
-                      ramp:2
-                      from:statement];
-        
-        [self setRampCoord:mpint
-                      ramp:3
-                      from:statement];
-        
-        [self setRampCoord:mpint
-                      ramp:4
-                      from:statement];
-        
-        [self setRampCoord:mpint
-                      ramp:5
-                      from:statement];
-        
-        [self setRampCoord:mpint
-                      ramp:6
-                      from:statement];
-        
-        [self setRampCoord:mpint
-                      ramp:7
-                      from:statement];
-        
-        [self setRampCoord:mpint
-                      ramp:8
-                      from:statement];
-        
-        [self setRampCoord:mpint
-                      ramp:9
-                      from:statement];
-        
-        [self setRampCoord:mpint
-                      ramp:10
-                      from:statement];
-        
-        [self setRampCoord:mpint
-                      ramp:11
-                      from:statement];
-        
-        [self setRampCoord:mpint
-                      ramp:12
-                      from:statement];
-        
-        [self setXWalkCoord:mpint
-                      xWalk:'A'
-                       from:statement];
-        
-        [self setXWalkCoord:mpint
-                      xWalk:'B'
-                       from:statement];
-        
-        [self setXWalkCoord:mpint
-                      xWalk:'C'
-                       from:statement];
-        
-        [self setXWalkCoord:mpint
-                      xWalk:'D'
-                       from:statement];
-        
-        [self setSignalCoord:mpint
-                      signal:81
-                        from:statement];
-        
-        [self setSignalCoord:mpint
-                      signal:23
-                        from:statement];
-        
-        [self setSignalCoord:mpint
-                      signal:45
-                        from:statement];
-        
-        [self setSignalCoord:mpint
-                      signal:67
-                        from:statement];
+        [self setRampCoord:mpint ramp:1 from:statement];
+        [self setRampCoord:mpint ramp:2 from:statement];
+        [self setRampCoord:mpint ramp:3 from:statement];
+        [self setRampCoord:mpint ramp:4 from:statement];
+        [self setRampCoord:mpint ramp:5 from:statement];
+        [self setRampCoord:mpint ramp:6 from:statement];
+        [self setRampCoord:mpint ramp:7 from:statement];
+        [self setRampCoord:mpint ramp:8 from:statement];
+        [self setRampCoord:mpint ramp:9 from:statement];
+        [self setRampCoord:mpint ramp:10 from:statement];
+        [self setRampCoord:mpint ramp:11 from:statement];
+        [self setRampCoord:mpint ramp:12 from:statement];
+        [self setXWalkCoord:mpint xWalk:'A' from:statement];
+        [self setXWalkCoord:mpint xWalk:'B' from:statement];
+        [self setXWalkCoord:mpint xWalk:'C' from:statement];
+        [self setXWalkCoord:mpint xWalk:'D' from:statement];
+        [self setSignalCoord:mpint signal:81 from:statement];
+        [self setSignalCoord:mpint signal:23 from:statement];
+        [self setSignalCoord:mpint signal:45 from:statement];
+        [self setSignalCoord:mpint signal:67 from:statement];
     }
     
     SQLOK(sqlite3_finalize(statement));
@@ -423,7 +542,7 @@ static IntersectionsDatabase *_database;
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
     NSString *query = [NSString stringWithFormat:
-                       @"SELECT intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
+                       @"SELECT intID, status, intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
                        bounds.xmn, bounds.xmx, bounds.ymn, bounds.ymx];
     
     sqlite3_stmt *statement;
@@ -431,13 +550,19 @@ static IntersectionsDatabase *_database;
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
-        int intX = sqlite3_column_int(statement, 0);
-        int intY = sqlite3_column_int(statement, 1);
+        int intID = sqlite3_column_int(statement, 0);
+        int status = sqlite3_column_int(statement, 1);
+        int intX = sqlite3_column_int(statement, 2);
+        int intY = sqlite3_column_int(statement, 3);
         double lat,lon;
         PixelXYToLatLong(intX, intY, 21, &lat, &lon);
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
         intpt.latitude = lat;
         intpt.longitude = lon;
+        intpt.status = status;
+        if (status)
+            status++;
+        intpt.intID = intID;
         [dataArray addObject:intpt];
     }
     
