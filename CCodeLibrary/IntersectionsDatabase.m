@@ -484,6 +484,7 @@ static IntersectionsDatabase *_database;
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         mpint = [[MPIntersection alloc]init];
+        [CRAPI.sharedInstance intersectionInit:mpint];
         mpint.intID = intID;
         mpint.lev21x = sqlite3_column_int(statement, 4);
         mpint.lev21y = sqlite3_column_int(statement, 5);

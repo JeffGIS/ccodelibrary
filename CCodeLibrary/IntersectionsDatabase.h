@@ -6,9 +6,13 @@
 
 #define INTDB_OK 0
 #define INTDB_FAILED 1
+
 #define INT_TEXT_INDEX 1
 #define INT_TEXT_DATA 2
+
 #define INT_STATUS_PRELIMCOMPLETE 1
+#define INT_STATUS_COMPLEX 2
+
 #define INT_NO_NETWORK_CONNECTION 3
 
 @class IntersectionsDatabase;

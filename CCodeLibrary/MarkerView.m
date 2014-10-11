@@ -68,6 +68,7 @@ CGColorRef graphYColor()
     GMSProjection *projection = self.mapView.projection;
     CGRect pointRect;
     int numComplete = 0;
+    int numComplex;
     int totRamps = 0;
     
     UIColor *green = UserDefaults.defaults.darkGreen;
@@ -102,12 +103,16 @@ CGColorRef graphYColor()
             if (!info.status)
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
             
-            else
+            else if (info.status == INT_STATUS_PRELIMCOMPLETE)
             {
                 numComplete++;
                 CGContextSetFillColorWithColor(context, green.CGColor);
             }
-            
+            else if (info.status == INT_STATUS_COMPLEX)
+            {
+                numComplex++;
+                CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+            }
             pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
             CGContextSetLineWidth(context, (size / 12.0));
             CGContextFillEllipseInRect(context, pointRect);
@@ -120,6 +125,7 @@ CGColorRef graphYColor()
     {
         [self.delegate setupProgressLabelTextForTotalIntersections:(int)pointsArray.count
                                                          completed:(int)numComplete
+                                                        complex:numComplex
                                                           numRamps:totRamps
                                                        notAssigned:0];
     }
