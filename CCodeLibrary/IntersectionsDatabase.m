@@ -559,7 +559,7 @@ static IntersectionsDatabase *_database;
         int nRamps = 0;
         for (int i=4;i<16;i++)
         {
-            if (sqlite3_column_int(statement, i) > 0)
+            if (sqlite3_column_int(statement, i) != 0)
                 nRamps++;
         }
         double lat,lon;
