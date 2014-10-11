@@ -78,7 +78,11 @@ CGColorRef graphYColor()
     CGFloat size;
     CGContextRef context = UIGraphicsGetCurrentContext();
     size =  maxSize / (1.0 + maxZoom - zoom);
-    IBOUNDS bounds21 = [CRAPI.sharedInstance boundsFromRect:self.bounds atZoom:21 usingProjection:projection];
+    
+    IBOUNDS bounds21 = [CRAPI.sharedInstance boundsFromRect:self.bounds
+                                                     atZoom:21
+                                            usingProjection:projection];
+    
     NSArray *pointsArray = [_database getIntersectionPointsFromDatabaseinBounds:bounds21];
     
     for (int i = 0; i < pointsArray.count; i++)
@@ -94,6 +98,7 @@ CGColorRef graphYColor()
         {
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
             totRamps += info.nramps;
+            
             if (!info.status)
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
             
@@ -104,7 +109,6 @@ CGColorRef graphYColor()
             }
             
             pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
-            
             CGContextSetLineWidth(context, (size / 12.0));
             CGContextFillEllipseInRect(context, pointRect);
             CGContextStrokeEllipseInRect(context, pointRect);
