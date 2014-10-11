@@ -114,7 +114,7 @@ CGColorRef graphYColor()
     
     if (self.delegate)
     {
-        [self.delegate setupProgressLabelTextforTotalIntersections:(int)pointsArray.count
+        [self.delegate setupProgressLabelTextForTotalIntersections:(int)pointsArray.count
                                                          completed:(int)numComplete
                                                           numRamps:totRamps
                                                        notAssigned:0];
