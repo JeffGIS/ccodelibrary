@@ -71,8 +71,6 @@ CGColorRef graphYColor()
     int numComplex;
     int totRamps = 0;
     
-    UIColor *green = UserDefaults.defaults.darkGreen;
-    
     CGFloat zoom = self.mapView.camera.zoom;
     CGFloat maxZoom = self.mapView.maxZoom;
     CGFloat maxSize = 60.0;
@@ -106,13 +104,15 @@ CGColorRef graphYColor()
             else if (info.status == INT_STATUS_PRELIMCOMPLETE)
             {
                 numComplete++;
-                CGContextSetFillColorWithColor(context, green.CGColor);
+                CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
             }
+            
             else if (info.status == INT_STATUS_COMPLEX)
             {
                 numComplex++;
-                CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+                CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
             }
+            
             pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
             CGContextSetLineWidth(context, (size / 12.0));
             CGContextFillEllipseInRect(context, pointRect);
