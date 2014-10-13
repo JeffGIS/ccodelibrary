@@ -24,13 +24,10 @@
 - (void)drawRect:(CGRect)rect
 {
     CGRect pointRect;
-    
-    UIColor *green = UserDefaults.defaults.darkGreen;
-    
-    CGFloat maxSize = 60.0;
-    CGFloat size;
+    CGFloat size = 76.0;
+    CGFloat borderWidth = 4.0;
     CGContextRef context = UIGraphicsGetCurrentContext();
-    size =  maxSize;
+    int type;
     
     IBOUNDS bounds21 = [CRAPI.sharedInstance boundsFromRect:self.bounds
                                         usingTransformation:self.pTranBMPToW];
@@ -46,6 +43,7 @@
         IPOINT lev21pt;
         lev21pt.x = info.lev21x;
         lev21pt.y = info.lev21y;
+        type = info.type;
         
         CGPoint pt = [CRAPI.sharedInstance  pointForLev21Coordinate:lev21pt
                                                 usingTransformation:self.pTranWToBMP];
@@ -57,12 +55,32 @@
                                 (pt.y > - size) && (pt.y < self.parentView.frame.size.height + size)))
         {
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
-            CGContextSetFillColorWithColor(context, green.CGColor);
-            pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
-            CGContextSetLineWidth(context, (size / 12.0));
-            CGContextFillEllipseInRect(context, pointRect);
-            CGContextStrokeEllipseInRect(context, pointRect);
-            CGContextFillPath(context);
+            
+            if (type == INT_ELEMENT_TYPE_RAMP)
+            {
+                CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+                pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
+                CGContextSetLineWidth(context, borderWidth);
+                CGContextFillEllipseInRect(context, pointRect);
+                CGContextStrokeEllipseInRect(context, pointRect);
+                CGContextFillPath(context);
+            }
+            
+            else if (type == INT_ELEMENT_TYPE_XWALK)
+            {
+                CGContextSetFillColorWithColor(context, UIColor.whiteColor.CGColor);
+                pointRect = CGRectMake(pt.x - ((size * 1.35) / 2.0), pt.y - ((size * 0.5) / 2.0), (size * 1.35), (size * 0.5));
+                CGContextSetLineWidth(context, borderWidth);
+                CGContextFillRect(context, pointRect);
+                CGContextStrokeRect(context, pointRect);
+                CGContextFillPath(context);
+            }
+            
+            else if (type == INT_ELEMENT_TYPE_SIGNAL)
+            {
+                UIImage *image = UserDefaults.defaults.triangleImage;
+                [image drawInRect:CGRectMake(pt.x - ((size * 1.25) / 2.0), pt.y - ((size * 1.75) / 2.0), (size * 1.25), (size * 1.75))];
+            }
         }
     }
     

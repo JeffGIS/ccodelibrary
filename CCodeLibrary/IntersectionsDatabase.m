@@ -601,7 +601,6 @@ static IntersectionsDatabase *_database;
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
         int intID = sqlite3_column_int(statement, 0);
-        //int status = sqlite3_column_int(statement, 1);
         int intX = sqlite3_column_int(statement, 2);
         int intY = sqlite3_column_int(statement, 3);
         IntersectionElement *intEl = [[IntersectionElement alloc] init];
@@ -612,6 +611,7 @@ static IntersectionsDatabase *_database;
         if (intID != skipID)
         {
             [dataArray addObject:intEl];
+            
             for (int i = 4; i < 16; i++)
             {
                 int icoord = sqlite3_column_int(statement, i);
@@ -622,7 +622,7 @@ static IntersectionsDatabase *_database;
                     short offsety = HIWORD(icoord);
                     IntersectionElement *intEl = [[IntersectionElement alloc] init];
                     intEl.intID = intID;
-                    intEl.elementID = i-3;
+                    intEl.elementID = (i - 3);
                     intEl.type = INT_ELEMENT_TYPE_RAMP;
                     intEl.lev21x = intX + offsetx;
                     intEl.lev21y = intY + offsety;
@@ -630,7 +630,7 @@ static IntersectionsDatabase *_database;
                 }
             }
             
-            for (int i=16;i<20;i++)
+            for (int i = 16; i < 20; i++)
             {
                 int icoord = sqlite3_column_int(statement, i);
                 
@@ -640,23 +640,25 @@ static IntersectionsDatabase *_database;
                     short offsety = HIWORD(icoord);
                     IntersectionElement *intEl = [[IntersectionElement alloc] init];
                     intEl.intID = intID;
-                    intEl.elementID = i-15;
+                    intEl.elementID = (i - 15);
                     intEl.type = INT_ELEMENT_TYPE_XWALK;
                     intEl.lev21x = intX + offsetx;
                     intEl.lev21y = intY + offsety;
                     [dataArray addObject:intEl];
                 }
             }
+            
             for (int i = 20; i < 24; i++)
             {
                 int icoord = sqlite3_column_int(statement, i);
+                
                 if (icoord != 0)
                 {
                     short offsetx = LOWORD(icoord);
                     short offsety = HIWORD(icoord);
                     IntersectionElement *intEl = [[IntersectionElement alloc] init];
                     intEl.intID = intID;
-                    intEl.elementID = i-19;
+                    intEl.elementID = (i - 19);
                     intEl.type = INT_ELEMENT_TYPE_SIGNAL;
                     intEl.lev21x = intX + offsetx;
                     intEl.lev21y = intY + offsety;

@@ -136,6 +136,14 @@ static UserDefaults *_defaults;
     return checkmark;
 }
 
+- (UIImage *)triangleImage
+{
+    UIImage *triangleImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"triangle"
+                                                                                            ofType:@"png"]];
+    
+    return triangleImage;
+}
+
 - (UIImage *)imageTarget
 {
     UIImage *blackImageTarget = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"crosshairs160"
