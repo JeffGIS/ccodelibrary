@@ -45,9 +45,6 @@
         lev21pt.y = info.lev21y;
         type = info.type;
         
-        NSLog (@"%i", type);
-        NSLog (@"%i, %i", lev21pt.x, lev21pt.y);
-        
         CGPoint pt = [CRAPI.sharedInstance  pointForLev21Coordinate:lev21pt
                                                 usingTransformation:self.pTranWToBMP];
         
@@ -58,8 +55,6 @@
                                 (pt.y > -size) && (pt.y < self.parentView.frame.size.height + size)))
         {
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
-            
-            NSLog (@"I am here");
             
             if (type == INT_ELEMENT_TYPE_RAMP)
             {
