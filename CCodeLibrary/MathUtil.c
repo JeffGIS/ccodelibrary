@@ -350,12 +350,12 @@ float ClockwiseDegFromNorth (float deg)
     return rtn;
 }
 
-long    ININT (double X)
+int    ININT (double X)
 {
     if (X < 0)
-        return ((long)(X - 0.5));
+        return ((int)(X - 0.5));
     
-    return ((long)(X + 0.5));
+    return ((int)(X + 0.5));
 }
 
 int iSign (double *val)

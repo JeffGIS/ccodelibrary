@@ -33,10 +33,10 @@ typedef TRANDATA    *LPTRANDATA;
 #define MAXTRANPOINTS	32
 
 typedef struct
-{	long	xmn;
-    long	ymn;
-    long	xmx;
-    long	ymx;
+{	int	xmn;
+    int	ymn;
+    int	xmx;
+    int	ymx;
 } MNMXCORL;
 
 typedef MNMXCORL *LPMNMXCORL;
