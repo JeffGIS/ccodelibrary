@@ -11,7 +11,8 @@
 @interface IntersectionPoint : NSObject
 
 @property int intID;
-@property int status;
+@property short assignedTo;
+@property short status;
 @property int nramps;
 @property double latitude;
 @property double longitude;

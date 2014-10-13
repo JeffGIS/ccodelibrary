@@ -28,6 +28,7 @@
     int numComplete = 0;
     int numComplex;
     int totRamps = 0;
+    int notAssigned = 0;
     
     CGFloat zoom = self.mapView.camera.zoom;
     CGFloat maxZoom = self.mapView.maxZoom;
@@ -56,7 +57,9 @@
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
             totRamps += info.nramps;
             
-            if (!info.status)
+            if (!info.assignedTo)
+                CGContextSetFillColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
+            else if (!info.status)
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
             
             else if (info.status == INT_STATUS_PRELIMCOMPLETE)
@@ -70,7 +73,8 @@
                 numComplex++;
                 CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
             }
-            
+            if (!info.assignedTo)
+                notAssigned++;
             pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
             CGContextSetLineWidth(context, (size / 12.0));
             CGContextFillEllipseInRect(context, pointRect);
@@ -85,7 +89,7 @@
                                                          completed:(int)numComplete
                                                            complex:numComplex
                                                           numRamps:totRamps
-                                                       notAssigned:0];
+                                                       notAssigned:notAssigned];
     }
     
     return;
