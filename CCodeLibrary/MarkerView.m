@@ -83,13 +83,14 @@
     {
         [self.delegate setupProgressLabelTextForTotalIntersections:(int)pointsArray.count
                                                          completed:(int)numComplete
-                                                        complex:numComplex
+                                                           complex:numComplex
                                                           numRamps:totRamps
                                                        notAssigned:0];
     }
     
     return;
 }
+
 - (void)dealloc
 {
     int ii=1;

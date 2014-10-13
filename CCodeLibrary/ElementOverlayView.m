@@ -24,7 +24,7 @@
 - (void)drawRect:(CGRect)rect
 {
     CGRect pointRect;
-    CGFloat size = 76.0;
+    CGFloat size = 68.0;
     CGFloat borderWidth = 4.0;
     CGContextRef context = UIGraphicsGetCurrentContext();
     int type;
@@ -45,16 +45,21 @@
         lev21pt.y = info.lev21y;
         type = info.type;
         
+        NSLog (@"%i", type);
+        NSLog (@"%i, %i", lev21pt.x, lev21pt.y);
+        
         CGPoint pt = [CRAPI.sharedInstance  pointForLev21Coordinate:lev21pt
                                                 usingTransformation:self.pTranWToBMP];
         
         pt.x /= self.xFactor;
         pt.y /= self.yFactor;
         
-        if ((pt.x > - size) && (pt.x < (self.parentView.frame.size.width + size) &&
-                                (pt.y > - size) && (pt.y < self.parentView.frame.size.height + size)))
+        if ((pt.x > -size) && (pt.x < (self.parentView.frame.size.width + size) &&
+                                (pt.y > -size) && (pt.y < self.parentView.frame.size.height + size)))
         {
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
+            
+            NSLog (@"I am here");
             
             if (type == INT_ELEMENT_TYPE_RAMP)
             {
@@ -80,6 +85,17 @@
             {
                 UIImage *image = UserDefaults.defaults.triangleImage;
                 [image drawInRect:CGRectMake(pt.x - ((size * 1.25) / 2.0), pt.y - ((size * 1.75) / 2.0), (size * 1.25), (size * 1.75))];
+            }
+            
+            else if (type == INT_ELEMENT_TYPE_INTERSECTION)
+            {
+                size = 40.0, borderWidth = 2.0;
+                CGContextSetFillColorWithColor(context, UserDefaults.defaults.green.CGColor);
+                pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
+                CGContextSetLineWidth(context, borderWidth);
+                CGContextFillEllipseInRect(context, pointRect);
+                CGContextStrokeEllipseInRect(context, pointRect);
+                CGContextFillPath(context);
             }
         }
     }

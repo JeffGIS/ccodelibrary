@@ -605,7 +605,7 @@ static IntersectionsDatabase *_database;
         int intY = sqlite3_column_int(statement, 3);
         IntersectionElement *intEl = [[IntersectionElement alloc] init];
         intEl.type = INT_ELEMENT_TYPE_INTERSECTION;
-        intEl.lev21y = intX;
+        intEl.lev21x = intX;
         intEl.lev21y = intY;
         
         if (intID != skipID)
