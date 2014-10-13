@@ -21,7 +21,7 @@
     return self;
 }
 
-CGColorRef CreateDeviceRGBColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
+/*CGColorRef CreateDeviceRGBColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
 {
 	CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
 	CGFloat comps[] = {r, g, b, a};
@@ -61,7 +61,7 @@ CGColorRef graphYColor()
     }
     
     return NO;
-}
+}*/
 
 - (void)drawRect:(CGRect)rect
 {

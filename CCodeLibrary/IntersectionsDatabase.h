@@ -39,6 +39,7 @@
 - (void)getPlaceIntersectionDatabase:(GSSiPopoverView *)popover;
 - (NSMutableArray *)getIntersectionPointsFromDatabase;
 - (NSMutableArray *)getIntersectionPointsFromDatabaseinBounds:(IBOUNDS)bounds;
+- (NSMutableArray *)getIntersectionElementsFromDatabaseinBounds:(IBOUNDS)bounds skipIntID:(int)skipID;
 
 - (NSMutableArray *)getIntersectionPointsWithinDistance:(int)meters
                                                 ofPoint:(LLPOINT)latlon;

@@ -12,7 +12,6 @@ static const double MinLatitude = -85.05112878;
 static const double MaxLatitude = 85.05112878;
 static const double MinLongitude = -180;
 static const double MaxLongitude = 180;
-static const double PI = 3.14159265358979323846;
 
 /*
     Clips a number to the specified minimum and maximum values.

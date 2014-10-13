@@ -518,4 +518,38 @@ forGeoid:(int)geoid
     return iBounds;
 }
 
+- (IBOUNDS) CGRectToIBounds:(CGRect)rect
+{
+    IBOUNDS iBounds;
+    
+    iBounds.xmn = rect.origin.x;
+    iBounds.ymn = rect.origin.y;
+    iBounds.xmx = rect.origin.x + rect.size.width;
+    iBounds.ymx = rect.origin.y + rect.size.height;
+    return iBounds;
+}
+- (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon usingTransformation:(LPTRANDATA)pTranWToBMP
+{
+    CGPoint pt;
+    
+    return pt;
+}
+- (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt usingTransformation:(LPTRANDATA)pTranWToBMP
+{
+    CGPoint pt;
+    
+    TRANS2(lev21pt.x, lev21pt.y, &pt.x, &pt.y, pTranWToBMP);
+    return pt;
+}
+- (IBOUNDS)boundsFromRect:(CGRect)rect
+          usingTransformation:(LPTRANDATA)pTranBMPToW
+{
+    IBOUNDS iBounds,outBounds;
+    
+    iBounds = [self CGRectToIBounds:rect];
+    TranMNMXCORL(&iBounds,&outBounds,pTranBMPToW);
+    return outBounds;
+}
+
+
 @end

@@ -1,54 +1,10 @@
 #ifndef __MATHUTIL_H
 #define __MATHUTIL_H
 
-#include "MathTypes.h"
+#include "CCodeTypes.h"
 #include <stdbool.h>
 #include <stdio.h>
 
-#define PI 3.141592653589f
-#define PY 3.141592653589793e0
-#define TWOPI 6.283185307179586e0
-#define	HALFPI 1.570796326794896e0
-#define RADtoDEG 57.295779513082322
-#define DEGtoRAD 0.017453292519943296
-#define MFT 3.280833333333333e0
-#define FTM 3.04800609601219e-1
-
-#ifndef max
-#define max(a,b)(((a) > (b)) ? (a) : (b))
-#endif
-
-#ifndef min
-#define min(a,b)(((a) < (b)) ? (a) : (b))
-#endif
-
-#define IDNINT(r)(int)(r < 0 ? r - 0.5f : r + 0.5f)
-typedef struct
-{
-    int NSETPT;
-    double  A1, A2, B1, B2, C1, C2, BASX, BASY;
-    double	FitPointAZFrom, FitPointAZTo;
-} TRANDATA;
-typedef TRANDATA    *LPTRANDATA;
-#define MAXTRANPOINTS	32
-
-typedef struct
-{	long	xmn;
-    long	ymn;
-    long	xmx;
-    long	ymx;
-} MNMXCORL;
-
-typedef MNMXCORL *LPMNMXCORL;
-
-typedef struct
-{	double	xmn;
-    double	ymn;
-    double	xmx;
-    double	ymx;
-} MNMXCORD;
-
-typedef MNMXCORD *LPMNMXCORD;
 
 //1D
 float ClockwiseDegFromNorth (float deg);

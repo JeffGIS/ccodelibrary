@@ -580,6 +580,89 @@ static IntersectionsDatabase *_database;
     return dataArray;
 }
 
+- (NSMutableArray *)getIntersectionElementsFromDatabaseinBounds:(IBOUNDS)bounds skipIntID:(int)skipID
+{
+    NSMutableArray *dataArray = [[NSMutableArray alloc] init];
+    
+    NSString *query = [NSString stringWithFormat:
+                       @"SELECT intID, status, intX, intY,\
+                       ramp1,ramp2,ramp3,ramp4,ramp5,ramp6,ramp7,ramp8,ramp81,ramp23,ramp45,ramp67,\
+                       xWalkA,xWalkB,xWalkC,xWalkD,\
+                       signal81,signal23,signal45,signal67 \
+                       FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
+                       bounds.xmn, bounds.xmx, bounds.ymn, bounds.ymx];
+    
+    sqlite3_stmt *statement;
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int intID = sqlite3_column_int(statement, 0);
+        int status = sqlite3_column_int(statement, 1);
+        int intX = sqlite3_column_int(statement, 2);
+        int intY = sqlite3_column_int(statement, 3);
+        IntersectionElement *intEl = [[IntersectionElement alloc] init];
+        intEl.type = INT_ELEMENT_TYPE_INTERSECTION;
+        intEl.lev21y = intX;
+        intEl.lev21y = intY;
+        if (intID != skipID)
+        {
+            [dataArray addObject:intEl];
+            for (int i=4;i<16;i++)
+            {
+                int icoord = sqlite3_column_int(statement, i);
+                if (icoord != 0)
+                {
+                    short offsetx = LOWORD(icoord);
+                    short offsety = HIWORD(icoord);
+                    IntersectionElement *intEl = [[IntersectionElement alloc] init];
+                    intEl.intID = intID;
+                    intEl.elementID = i-3;
+                    intEl.type = INT_ELEMENT_TYPE_RAMP;
+                    intEl.lev21x = intX + offsetx;
+                    intEl.lev21y = intY + offsety;
+                    [dataArray addObject:intEl];
+                }
+            }
+            for (int i=16;i<20;i++)
+            {
+                int icoord = sqlite3_column_int(statement, i);
+                if (icoord != 0)
+                {
+                    short offsetx = LOWORD(icoord);
+                    short offsety = HIWORD(icoord);
+                    IntersectionElement *intEl = [[IntersectionElement alloc] init];
+                    intEl.intID = intID;
+                    intEl.elementID = i-15;
+                    intEl.type = INT_ELEMENT_TYPE_XWALK;
+                    intEl.lev21x = intX + offsetx;
+                    intEl.lev21y = intY + offsety;
+                    [dataArray addObject:intEl];
+                }
+            }
+            for (int i=20;i<24;i++)
+            {
+                int icoord = sqlite3_column_int(statement, i);
+                if (icoord != 0)
+                {
+                    short offsetx = LOWORD(icoord);
+                    short offsety = HIWORD(icoord);
+                    IntersectionElement *intEl = [[IntersectionElement alloc] init];
+                    intEl.intID = intID;
+                    intEl.elementID = i-19;
+                    intEl.type = INT_ELEMENT_TYPE_SIGNAL;
+                    intEl.lev21x = intX + offsetx;
+                    intEl.lev21y = intY + offsety;
+                    [dataArray addObject:intEl];
+                }
+            }
+        }
+    }
+    
+    SQLOK(sqlite3_finalize(statement));
+    return dataArray;
+}
+
 - (NSMutableArray *)getIntersectionPointsWithinDistance:(int)meters
                                                 ofPoint:(LLPOINT)latlon
 {
@@ -631,6 +714,7 @@ static IntersectionsDatabase *_database;
          return (NSComparisonResult)NSOrderedSame;
      }];
 }
+
 - (BOOL) findIntersectionFromID:(int)intID
              intersectionText:(char *)intText
              intersectionAZMs:(char *)intAZMs

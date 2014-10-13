@@ -24,20 +24,13 @@ typedef float *LPFLOAT;
 typedef double *LPDOUBLE;
 typedef struct{int x, y;}IPOINT;
 typedef IPOINT *LPIPOINT;
-typedef struct
-{
-    int xmn;
-    int ymn;
-    int xmx;
-    int ymx;
-}  IBOUNDS;
-typedef IBOUNDS LPIBOUNDS;
 typedef struct{short x, y;}SPOINT;
 typedef SPOINT *LPSPOINT;
 typedef struct{unsigned char x, y;}BPOINT;
 typedef struct{char x:4 ,y:4;}CPOINT;
 typedef BPOINT *LPBPOINT;
 typedef CPOINT *LPCPOINT;
+#include "MathTypes.h"
 
 #define MAKELONG(a, b)((LONG)(((WORD)(((DWORD_PTR)(a)) & 0xffff)) | ((DWORD)((WORD)(((DWORD_PTR)(b)) & 0xffff))) << 16))
 #define LOWORD(l)((WORD)(((DWORD_PTR)(l)) & 0xffff))

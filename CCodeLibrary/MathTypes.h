@@ -4,10 +4,53 @@
 #ifndef __MATH_TYPES
 #define __MATH_TYPES
 
-#import "CCodeTypes.h"
-#define PI 3.141592653589f
-#define PI_2 2.0f * PI
+#define PI 3.14159265358979323846e0
 #define PI_DIV_2 PI * 0.5
+#define PY 3.14159265358979323846e0
+#define TWOPI PY*2
+#define	HALFPI PY/2
+#define RADtoDEG 57.295779513082322
+#define DEGtoRAD 0.017453292519943296
+#define MFT 3.280833333333333e0
+#define FTM 3.04800609601219e-1
+
+#ifndef max
+#define max(a,b)(((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a,b)(((a) < (b)) ? (a) : (b))
+#endif
+
+#define IDNINT(r)(int)(r < 0 ? r - 0.5f : r + 0.5f)
+typedef struct
+{
+    int NSETPT;
+    double  A1, A2, B1, B2, C1, C2, BASX, BASY;
+    double	FitPointAZFrom, FitPointAZTo;
+} TRANDATA;
+typedef TRANDATA    *LPTRANDATA;
+#define MAXTRANPOINTS	32
+
+typedef struct
+{	long	xmn;
+    long	ymn;
+    long	xmx;
+    long	ymx;
+} MNMXCORL;
+
+typedef MNMXCORL *LPMNMXCORL;
+typedef MNMXCORL IBOUNDS;
+typedef IBOUNDS LPIBOUNDS;
+
+typedef struct
+{	double	xmn;
+    double	ymn;
+    double	xmx;
+    double	ymx;
+} MNMXCORD;
+
+typedef MNMXCORD *LPMNMXCORD;
 
 
 typedef float f32;
