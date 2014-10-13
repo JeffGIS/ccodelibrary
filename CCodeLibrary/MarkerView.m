@@ -21,48 +21,6 @@
     return self;
 }
 
-/*CGColorRef CreateDeviceRGBColor(CGFloat r, CGFloat g, CGFloat b, CGFloat a)
-{
-	CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
-	CGFloat comps[] = {r, g, b, a};
-	CGColorRef color = CGColorCreate(rgb, comps);
-	CGColorSpaceRelease(rgb);
-	return color;
-}
-
-CGColorRef graphYColor()
-{
-	static CGColorRef c = NULL;
-    
-	if(c == NULL)
-        c = CreateDeviceRGBColor(0.0, 1.0, 0.0, 1.0);
-    
-	return c;
-}
-
-- (BOOL)demoComplete:(IntersectionPoint *)pt
-{
-    if (_tempDemoArray)
-    {
-        int nSkip = (int)(_tempDemoArray.count / 5);
-        double minDist=DBL_MAX;
-        
-        for (int i = 0; i < _tempDemoArray.count; i += nSkip)
-        {
-            IntersectionPoint *buildingPt = [_tempDemoArray objectAtIndex:i];
-            double dist = LDIST(pt.longitude, pt.latitude, buildingPt.longitude, buildingPt.latitude);
-            
-            if (dist < minDist)
-                minDist = dist;
-        }
-        
-        if (minDist < 0.015)
-            return YES;
-    }
-    
-    return NO;
-}*/
-
 - (void)drawRect:(CGRect)rect
 {
     GMSProjection *projection = self.mapView.projection;
@@ -131,6 +89,11 @@ CGColorRef graphYColor()
     }
     
     return;
+}
+- (void)dealloc
+{
+    int ii=1;
+    ii++;
 }
 
 @end

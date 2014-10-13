@@ -66,5 +66,9 @@
     
     return;
 }
-
+- (void)dealloc
+{
+    int ii=1;
+    ii++;
+}
 @end
