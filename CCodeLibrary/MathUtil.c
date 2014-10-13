@@ -514,6 +514,7 @@ void InitIBounds (IBOUNDS* bnds)
     bnds->ymx = INT_MIN;
     return;
 }
+
 IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist)
 {
     IBOUNDS bnds;
@@ -524,29 +525,31 @@ IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist)
     bnds.ymx = pt.y + dist;
     return bnds;
 }
+
 IPOINT IBoundsMid (IBOUNDS* bnds)
 {
     IPOINT pt;
     
-    pt.x = bnds->xmn + (bnds->xmx - bnds->xmn)/2;
-    pt.y = bnds->ymn + (bnds->ymx - bnds->ymn)/2;
+    pt.x = (int)(bnds->xmn + (bnds->xmx - bnds->xmn) / 2);
+    pt.y = (int)(bnds->ymn + (bnds->ymx - bnds->ymn) / 2);
     return pt;
 }
 
-void AddPointToDBounds (dbounds* pBounds,dvec2 *pt)
+void AddPointToDBounds (dbounds *pBounds, dvec2 *pt)
 {
-    pBounds->xmn = min (pBounds->xmn,pt->x);
-    pBounds->ymn = min (pBounds->ymn,pt->y);
-    pBounds->xmx = max (pBounds->xmx,pt->x);
-    pBounds->ymx = max (pBounds->ymx,pt->y);
+    pBounds->xmn = min(pBounds->xmn, pt->x);
+    pBounds->ymn = min(pBounds->ymn, pt->y);
+    pBounds->xmx = max(pBounds->xmx, pt->x);
+    pBounds->ymx = max(pBounds->ymx, pt->y);
     return;
 }
-void AddPointToIBounds (IBOUNDS* pBounds,IPOINT *pt)
+
+void AddPointToIBounds (IBOUNDS *pBounds, IPOINT *pt)
 {
-    pBounds->xmn = min (pBounds->xmn,pt->x);
-    pBounds->ymn = min (pBounds->ymn,pt->y);
-    pBounds->xmx = max (pBounds->xmx,pt->x);
-    pBounds->ymx = max (pBounds->ymx,pt->y);
+    pBounds->xmn = min(pBounds->xmn, pt->x);
+    pBounds->ymn = min(pBounds->ymn, pt->y);
+    pBounds->xmx = max(pBounds->xmx, pt->x);
+    pBounds->ymx = max(pBounds->ymx, pt->y);
     return;
 }
 
@@ -565,6 +568,7 @@ int WhichSide(vec3 p, vec3 n, vec3 vp)
     
     return(s <= 0 ? -1 : 1);
 }
+
 vec3 VectorFromPoints (vec3 *p1, vec3 *p2)
 {
 	vec3 outVector;

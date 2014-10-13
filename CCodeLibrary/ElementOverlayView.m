@@ -1,10 +1,5 @@
-//
 //  ElementOverlayView.m
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 10/12/14.
-//  Copyright (c) 2014 GSSi. All rights reserved.
-//
 
 #import "ElementOverlayView.h"
 
@@ -39,8 +34,11 @@
     
     IBOUNDS bounds21 = [CRAPI.sharedInstance boundsFromRect:self.bounds
                                         usingTransformation:self.pTranBMPToW];
+    
     InflateMNMXCORL(&bounds21, 1000);
-    NSArray *pointsArray = [self.database getIntersectionElementsFromDatabaseinBounds:(IBOUNDS)bounds21 skipIntID:0];
+    
+    NSArray *pointsArray = [self.database getIntersectionElementsFromDatabaseinBounds:(IBOUNDS)bounds21
+                                                                            skipIntID:0];
     
     for (int i = 0; i < pointsArray.count; i++)
     {
@@ -48,9 +46,13 @@
         IPOINT lev21pt;
         lev21pt.x = info.lev21x;
         lev21pt.y = info.lev21y;
-        CGPoint pt = [CRAPI.sharedInstance  pointForLev21Coordinate:lev21pt usingTransformation:self.pTranWToBMP];
+        
+        CGPoint pt = [CRAPI.sharedInstance  pointForLev21Coordinate:lev21pt
+                                                usingTransformation:self.pTranWToBMP];
+        
         pt.x /= self.xFactor;
         pt.y /= self.yFactor;
+        
         if ((pt.x > - size) && (pt.x < (self.parentView.frame.size.width + size) &&
                                 (pt.y > - size) && (pt.y < self.parentView.frame.size.height + size)))
         {
@@ -66,9 +68,11 @@
     
     return;
 }
+
 - (void)dealloc
 {
     int ii=1;
     ii++;
 }
+
 @end

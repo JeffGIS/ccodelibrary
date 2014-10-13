@@ -103,31 +103,6 @@ static IntersectionsDatabase *_database;
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Intersections (intY);"];
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
     sqlite3_free(error);
-    /*    intX INTEGER,\    4
-     intY INTEGER,\      5
-     rotation INTEGER,\  6
-     ramp1 INTEGER,\     7
-     ramp2 INTEGER,\     8
-     ramp3 INTEGER,\     9
-     ramp4 INTEGER,\     10
-     ramp5 INTEGER,\     11
-     ramp6 INTEGER,\     12
-     ramp7 INTEGER,\     13
-     ramp8 INTEGER,\     14
-     ramp81 INTEGER,\    15
-     ramp23 INTEGER,\    16
-     ramp45 INTEGER,\    17
-     ramp67 INTEGER,\    18
-     xWalkA INTEGER,\    19
-     xWalkB INTEGER,\    20
-     xWalkC INTEGER,\    21
-     xWalkD INTEGER,\    22
-     signal81 INTEGER,\  23
-     signal23 INTEGER,\  24
-     signal45 INTEGER,\  25
-     signal67 INTEGER,\  26
-     nStreets INTEGER,\  27
-     streetNames CHAR(512),\*/
 }
 
 - (int)getOffsetCoord:(MPIntersection *)mpint
@@ -141,8 +116,6 @@ static IntersectionsDatabase *_database;
     offy = (y - mpint.lev21y);
     
     offCoord = (int)MAKELONG(offx, offy);
-    
-    
     return offCoord;
 }
 
@@ -157,8 +130,11 @@ static IntersectionsDatabase *_database;
                                     x:ramp.lev21x
                                     y:ramp.lev21y];
     return icoord;
+    
 }
-- (void) setRampCoord:(MPIntersection*)mpint ramp:(int)r from:(sqlite3_stmt*)statement
+- (void) setRampCoord:(MPIntersection*)mpint
+                 ramp:(int)r
+                 from:(sqlite3_stmt*)statement
 {
     int icol = 7 + (r - 1);
     int icoord = sqlite3_column_int(statement, icol);
@@ -168,12 +144,14 @@ static IntersectionsDatabase *_database;
     MPRamp *ramp = mpint.ramps[r];
     int lev21x = mpint.lev21x + offsetx;
     int lev21y = mpint.lev21y + offsety;
+    
     if (icoord)
     {
         ramp.lev21x = lev21x;
         ramp.lev21y = lev21y;
         ramp.rampExists = YES;
     }
+    
     else
         ramp.rampExists = NO;
 }
@@ -248,8 +226,10 @@ static IntersectionsDatabase *_database;
                 mpint.xWalkAlev21y = mpint.lev21y + offsety;
                 mpint.xWalkAExists = YES;
             }
+            
             else
                 mpint.xWalkAExists = NO;
+            
             break;
             
         case 'B':
@@ -259,8 +239,10 @@ static IntersectionsDatabase *_database;
                 mpint.xWalkBlev21y = mpint.lev21y + offsety;
                 mpint.xWalkBExists = YES;
             }
+            
             else
                 mpint.xWalkBExists = NO;
+            
             break;
             
         case 'C':
@@ -270,8 +252,10 @@ static IntersectionsDatabase *_database;
                 mpint.xWalkClev21y = mpint.lev21y + offsety;
                 mpint.xWalkCExists = YES;
             }
+            
             else
                 mpint.xWalkCExists = NO;
+            
             break;
             
         case 'D':
@@ -281,7 +265,9 @@ static IntersectionsDatabase *_database;
                 mpint.xWalkDlev21y = mpint.lev21y + offsety;
                 mpint.xWalkDExists = YES;
             }
+            
             else
+                
                 mpint.xWalkDExists = NO;
             break;
     }
@@ -346,16 +332,20 @@ static IntersectionsDatabase *_database;
     {
         case 81:
             break;
+            
         case 23:
             icol++;
             break;
+            
         case 45:
             icol += 2;
             break;
+            
         case 67:
             icol += 3;
             break;
     }
+    
     int icoord = sqlite3_column_int(statement, icol);
     
     short offsetx = LOWORD(icoord);
@@ -370,9 +360,12 @@ static IntersectionsDatabase *_database;
                 mpint.signal81lev21y = mpint.lev21y + offsety;
                 mpint.signal81Exists = YES;
             }
+            
             else
                 mpint.signal81Exists = NO;
+            
             break;
+            
         case 23:
             if (icoord)
             {
@@ -380,9 +373,12 @@ static IntersectionsDatabase *_database;
                 mpint.signal23lev21y = mpint.lev21y + offsety;
                 mpint.signal23Exists = YES;
             }
+            
             else
                 mpint.signal23Exists = NO;
+            
             break;
+            
         case 45:
             if (icoord)
             {
@@ -390,9 +386,12 @@ static IntersectionsDatabase *_database;
                 mpint.signal45lev21y = mpint.lev21y + offsety;
                 mpint.signal45Exists = YES;
             }
+            
             else
                 mpint.signal45Exists = NO;
+            
             break;
+            
         case 67:
             if (icoord)
             {
@@ -400,11 +399,12 @@ static IntersectionsDatabase *_database;
                 mpint.signal67lev21y = mpint.lev21y + offsety;
                 mpint.signal67Exists = YES;
             }
+            
             else
                 mpint.signal67Exists = NO;
+            
             break;
     }
-    
 }
 
 
@@ -468,8 +468,6 @@ static IntersectionsDatabase *_database;
     sqlite3_free(error);
     return !rtn;
 }
-
-
 
 - (MPIntersection*)getMPIntersectionFromDB:(int)intID
                                  withRamps:(BOOL)wantRamps
@@ -546,7 +544,7 @@ static IntersectionsDatabase *_database;
                        @"SELECT intID, status, intX, intY,\
                        ramp1,ramp2,ramp3,ramp4,ramp5,ramp6,ramp7,ramp8,ramp81,ramp23,ramp45,ramp67 \
                        FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
-                       bounds.xmn, bounds.xmx, bounds.ymn, bounds.ymx];
+                       (int)bounds.xmn, (int)bounds.xmx, (int)bounds.ymn, (int)bounds.ymx];
     
     sqlite3_stmt *statement;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
@@ -558,11 +556,13 @@ static IntersectionsDatabase *_database;
         int intX = sqlite3_column_int(statement, 2);
         int intY = sqlite3_column_int(statement, 3);
         int nRamps = 0;
-        for (int i=4;i<16;i++)
+        
+        for (int i = 4; i < 16; i++)
         {
             if (sqlite3_column_int(statement, i) != 0)
                 nRamps++;
         }
+        
         double lat,lon;
         PixelXYToLatLong(intX, intY, 21, &lat, &lon);
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
@@ -570,8 +570,10 @@ static IntersectionsDatabase *_database;
         intpt.longitude = lon;
         intpt.status = status;
         intpt.nramps = nRamps;
+        
         if (status)
             status++;
+        
         intpt.intID = intID;
         [dataArray addObject:intpt];
     }
@@ -580,7 +582,8 @@ static IntersectionsDatabase *_database;
     return dataArray;
 }
 
-- (NSMutableArray *)getIntersectionElementsFromDatabaseinBounds:(IBOUNDS)bounds skipIntID:(int)skipID
+- (NSMutableArray *)getIntersectionElementsFromDatabaseinBounds:(IBOUNDS)bounds
+                                                      skipIntID:(int)skipID
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
@@ -590,7 +593,7 @@ static IntersectionsDatabase *_database;
                        xWalkA,xWalkB,xWalkC,xWalkD,\
                        signal81,signal23,signal45,signal67 \
                        FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
-                       bounds.xmn, bounds.xmx, bounds.ymn, bounds.ymx];
+                       (int)bounds.xmn, (int)bounds.xmx, (int)bounds.ymn, (int)bounds.ymx];
     
     sqlite3_stmt *statement;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
@@ -598,19 +601,21 @@ static IntersectionsDatabase *_database;
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
         int intID = sqlite3_column_int(statement, 0);
-        int status = sqlite3_column_int(statement, 1);
+        //int status = sqlite3_column_int(statement, 1);
         int intX = sqlite3_column_int(statement, 2);
         int intY = sqlite3_column_int(statement, 3);
         IntersectionElement *intEl = [[IntersectionElement alloc] init];
         intEl.type = INT_ELEMENT_TYPE_INTERSECTION;
         intEl.lev21y = intX;
         intEl.lev21y = intY;
+        
         if (intID != skipID)
         {
             [dataArray addObject:intEl];
-            for (int i=4;i<16;i++)
+            for (int i = 4; i < 16; i++)
             {
                 int icoord = sqlite3_column_int(statement, i);
+                
                 if (icoord != 0)
                 {
                     short offsetx = LOWORD(icoord);
@@ -624,9 +629,11 @@ static IntersectionsDatabase *_database;
                     [dataArray addObject:intEl];
                 }
             }
+            
             for (int i=16;i<20;i++)
             {
                 int icoord = sqlite3_column_int(statement, i);
+                
                 if (icoord != 0)
                 {
                     short offsetx = LOWORD(icoord);
@@ -640,7 +647,7 @@ static IntersectionsDatabase *_database;
                     [dataArray addObject:intEl];
                 }
             }
-            for (int i=20;i<24;i++)
+            for (int i = 20; i < 24; i++)
             {
                 int icoord = sqlite3_column_int(statement, i);
                 if (icoord != 0)
@@ -674,7 +681,7 @@ static IntersectionsDatabase *_database;
     
     NSString *query = [NSString stringWithFormat:
                        @"SELECT intID, intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
-                       bounds.xmn,bounds.xmx,bounds.ymn,bounds.ymx];
+                       (int)bounds.xmn,(int)bounds.xmx,(int)bounds.ymn,(int)bounds.ymx];
     
     sqlite3_stmt *statement;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
@@ -698,6 +705,7 @@ static IntersectionsDatabase *_database;
     [self sortIntersectionsByDistance:dataArray];
     return dataArray;
 }
+
 -(void)sortIntersectionsByDistance:(NSMutableArray *)intersections
 {
     [intersections sortUsingComparator: ^(id obj1, id obj2)
@@ -739,17 +747,19 @@ static IntersectionsDatabase *_database;
         *plev21x = intX;
         *plev21y = intY;
         *pNumStreets = nStreets;
-        strcpy (intText,pStreets);
-        strcpy (intAZMs,pAZMS);
+        strcpy(intText,pStreets);
+        strcpy(intAZMs,pAZMS);
         rtn = TRUE;
     }
     
     SQLOK(sqlite3_finalize(statement));
     return rtn;
 }
-- (int) findIntersection:(int) lev21x y: (int) lev21y
+
+- (int) findIntersection:(int)lev21x
+                       y:(int)lev21y
         intersectionText:(char *)intText
-                whichInt:(int) iWant
+                whichInt:(int)iWant
         intersectionAZMs:(char *)intAZMs
               numStreets:(int *)pNumStreets
                 numRamps:(int *)pNumRamps
@@ -759,11 +769,16 @@ static IntersectionsDatabase *_database;
     int rtn = 0;
     LLPOINT latlon;
     PixelXYToLatLong(lev21x, lev21y, 21, &latlon.lat, &latlon.lon);
-    NSMutableArray * nearInts = [self getIntersectionPointsWithinDistance:500 ofPoint:latlon];
+    
+    NSMutableArray * nearInts = [self getIntersectionPointsWithinDistance:500
+                                                                  ofPoint:latlon];
+    
     if (nearInts.count >= iWant)
     {
         IntersectionPoint * intpt = nearInts[iWant-1];
+        
         NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",intpt.intID];
+        
         sqlite3_stmt *statement;
         SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
         
@@ -777,8 +792,8 @@ static IntersectionsDatabase *_database;
             *plev21x = intX;
             *plev21y = intY;
             *pNumStreets = nStreets;
-            strcpy (intText,pStreets);
-            strcpy (intAZMs,pAZMS);
+            strcpy(intText,pStreets);
+            strcpy(intAZMs,pAZMS);
         }
         
         SQLOK(sqlite3_finalize(statement));
@@ -941,11 +956,11 @@ static IntersectionsDatabase *_database;
     else
         goto Exit;
     
-    strcpy (indexFile, dataFile);
-    strcat (indexFile, "/intersection_index.bin");
-    strcat (dataFile, "/intersection_data.bin");
-    fidData = fopen (dataFile, "rb");
-    fidIndex = fopen (indexFile, "rb");
+    strcpy(indexFile, dataFile);
+    strcat(indexFile, "/intersection_index.bin");
+    strcat(dataFile, "/intersection_data.bin");
+    fidData = fopen(dataFile, "rb");
+    fidIndex = fopen(indexFile, "rb");
     
     NSLog (@"loadIntersectionTextToDatabase fopen file: %s", indexFile);
     
