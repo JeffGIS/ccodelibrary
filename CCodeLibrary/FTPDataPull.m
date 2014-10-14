@@ -284,6 +284,10 @@ didReceiveResponse:(NSURLResponse *)response
     
     else
     {
+        //remove file to ensure partially transferred files are not used
+        [NSFileManager.defaultManager removeItemAtPath:self.filePath
+                                                 error:nil];
+
         [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
                        statusString:error.localizedDescription];
         
