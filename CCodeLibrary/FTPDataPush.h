@@ -2,7 +2,6 @@
 //  CCodeLibrary
 
 #import <Foundation/Foundation.h>
-#import "NetworkManager.h"
 #import "UserDefaults.h"
 #import "GSSiPopoverView.h"
 
@@ -21,13 +20,11 @@
 
 @end
 
-@interface FTPDataPush : NSObject<NSURLConnectionDataDelegate>
+@interface FTPDataPush : NSObject <NSStreamDelegate>
 
 @property (nonatomic, weak) id <FTPDataPushDelegate> delegate;
-@property (nonatomic, assign, readonly ) BOOL isSending;
 @property (nonatomic, strong, readwrite) NSURLConnection *connection;
 @property (nonatomic, copy, readwrite) NSString *filePath;
-@property (nonatomic, strong, readwrite) NSOutputStream *fileStream;
 @property (nonatomic, copy, readwrite) NSString *ftpSite;
 @property (nonatomic, copy, readwrite) NSString *username;
 @property (nonatomic, copy, readwrite) NSString *password;
@@ -42,10 +39,9 @@
 @property (nonatomic, copy, readwrite) NSString *urlText;
 @property (nonatomic, assign, readwrite) BOOL hasFailed;
 @property (nonatomic) int geoid;
-@property (nonatomic) NSUInteger totalDataSent;
-@property (nonatomic) NSUInteger fileSize;
 @property (nonatomic) CGFloat progress;
 @property (strong, nonatomic)GSSiPopoverView *popover;
+@property (nonatomic) NSUInteger totalDataSent;
 
 + (FTPDataPush *)push;
 

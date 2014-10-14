@@ -11,9 +11,6 @@
 - (BOOL)isImageURL:(NSURL *)url;
 - (BOOL)isBinaryURL:(NSURL *)url;
 
-- (NSString *)pathForTestImage:(NSUInteger)imageNumber;
-- (NSString *)pathForTemporaryFileWithPrefix:(NSString *)prefix;
-
 @property (nonatomic, assign, readonly ) NSUInteger networkOperationCount;
 
 - (void)didStartNetworkOperation;

@@ -3,10 +3,28 @@
 
 #import "FTPDataPush.h"
 #import "Reachability.h"
+#import "NetworkManager.h"
+#import <CFNetwork/CFNetwork.h>
+
+enum {
+    kSendBufferSize = 32768
+};
+
+@interface FTPDataPush ()
+
+@property (nonatomic, readonly) BOOL isSending;
+@property (nonatomic, retain) NSOutputStream *networkStream;
+@property (nonatomic, retain) NSInputStream *fileStream;
+@property (nonatomic, readonly) uint8_t *buffer;
+@property (nonatomic, assign) size_t bufferOffset;
+@property (nonatomic, assign) size_t bufferLimit;
+
+@end
 
 @implementation FTPDataPush
 {
     Reachability *reachability;
+    long fileSize, totBytesWritten;
 }
 
 + (FTPDataPush *)push
@@ -22,7 +40,7 @@
     self.toDirectory = toDirectory;
     self.directory = fromDirectory;
     self.fileName = fileName;
-    self.filePath = [NSString stringWithFormat:@"%@/%@", self.toDirectory,self.fileName];
+    self.filePath = [NSString stringWithFormat:@"%@/%@", self.directory,self.fileName];
     assert(self.filePath);
     
     reachability = Reachability.reachabilityForInternetConnection;
@@ -44,12 +62,12 @@
 
 - (void)sendDidStart
 {
-    NSLog (@"Attempting to Push %@ from %@", self.fileName, self.currentFtp);
+    NSLog(@"Attempting to Push %@ to %@", self.filePath, self.currentFtp);
     [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 
 - (void)sendDidStopWithStatus:(int)status
-                    statusString:(NSString *)statusString
+                 statusString:(NSString *)statusString
 {
     
     if (!statusString)
@@ -80,15 +98,11 @@
         [self setUpFTP];
     }
     
-    BOOL success;
-    NSURL *url;
-    NSURLRequest *request;
-    
     assert(!self.connection);
     assert(!self.fileStream);
     
-    url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
-    success = (url != nil);
+    NSURL *url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
+    BOOL success = (url != nil);
     
     if (!success || ![NetworkManager.sharedInstance isBinaryURL:url])
     {
@@ -118,28 +132,36 @@
         
         else if (![NetworkManager.sharedInstance isBinaryURL:url])
         {
-            NSAssert(0, @"ERROR: NOT a binary file");
+            NSAssert(0, @"ERROR: Invalid file type");
             return;
         }
     }
     
-    self.fileStream = [NSOutputStream outputStreamToFileAtPath:self.filePath
-                                                        append:NO];
-    
+    self.fileStream = [NSInputStream inputStreamWithFileAtPath:self.filePath];
     assert(self.fileStream);
     
     [self.fileStream open];
     
-    [self.fileStream setProperty:@"YES"
-                          forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
+    NSLog(@"URL: %@", url);
     
-    request = [NSURLRequest requestWithURL:url];
-    assert(request);
+    CFWriteStreamRef ftpStream = CFWriteStreamCreateWithFTPURL(NULL, (__bridge CFURLRef) url);
     
-    self.connection = [NSURLConnection connectionWithRequest:request
-                                                    delegate:self];
+    if (!ftpStream)
+    {
+        NSAssert(0, @"Unable to open ftpstream");
+        return;
+    }
     
-    assert(self.connection);
+    self.networkStream = (__bridge NSOutputStream *)ftpStream;
+    
+    self.networkStream.delegate = self;
+    
+    [self.networkStream scheduleInRunLoop:NSRunLoop.currentRunLoop
+                                  forMode:NSDefaultRunLoopMode];
+    
+    [self.networkStream open];
+    CFRelease(ftpStream);
+    [self sendDidStart];
     
     self.totalDataSent = 0;
     self.progress = 0.0;
@@ -148,79 +170,116 @@
 }
 
 - (void)stopSendWithStatus:(int)status
-                 statusString:(NSString *)statusString
+              statusString:(NSString *)statusString
 {
-    if (self.connection != nil)
+    if (self.networkStream)
     {
-        [self.connection cancel];
-        self.connection = nil;
+        [self.networkStream removeFromRunLoop:NSRunLoop.currentRunLoop
+                                      forMode:NSDefaultRunLoopMode];
+        
+        self.networkStream.delegate = nil;
+        [self.networkStream close];
+        self.networkStream = nil;
     }
     
-    if (self.fileStream != nil)
+    if (self.fileStream)
     {
         [self.fileStream close];
         self.fileStream = nil;
     }
     
     [self sendDidStopWithStatus:status
-                      statusString:statusString];
-    
-    self.filePath = nil;
+                   statusString:statusString];
 }
 
-- (void)connection:(NSURLConnection *)theConnection
-didSendResponse:(NSURLResponse *)response
+- (void)stream:(NSStream *)aStream
+   handleEvent:(NSStreamEvent)eventCode
 {
-#pragma unused(theConnection)
-#pragma unused(response)
+#pragma unused(aStream)
+    assert(aStream == self.networkStream);
     
-    assert(theConnection == self.connection);
-    assert(response);
-    
-    self.fileSize = response.expectedContentLength;
-}
-
-- (void)connection:(NSURLConnection *)theConnection
-    didSendData:(NSData *)data
-{
-#pragma unused(theConnection)
-    NSUInteger dataLength;
-    const uint8_t *dataBytes;
-    NSInteger bytesWritten;
-    NSUInteger bytesWrittenSoFar;
-    
-    assert(theConnection == self.connection);
-    
-    dataLength = data.length;
-    dataBytes = data.bytes;
-    bytesWrittenSoFar = 0;
-    
-    self.totalDataSent += dataLength;
-    self.progress = ((CGFloat)self.totalDataSent / (CGFloat)self.fileSize);
-    
-    if (self.popover)
-        [self.popover updateProgress:self.progress];
-    
-    do
+    switch (eventCode)
     {
-        bytesWritten = [self.fileStream write:&dataBytes[bytesWrittenSoFar]
-                                    maxLength:(dataLength - bytesWrittenSoFar)];
-        
-        assert(bytesWritten != 0);
-        
-        if (bytesWritten <= 0)
-        {
-            [self stopSendWithStatus:FTP_FILE_WRITE_ERROR
-                           statusString:@"File write error"];
+        case NSStreamEventOpenCompleted:
             break;
+            
+        case NSStreamEventHasBytesAvailable:
+            assert(NO);
+            break;
+            
+        case NSStreamEventHasSpaceAvailable:
+        {
+            if (self.bufferOffset == self.bufferLimit)
+            {
+                NSUInteger bytesRead;
+                
+                bytesRead = [self.fileStream read:self.buffer
+                                        maxLength:kSendBufferSize];
+                
+                if (bytesRead == -1)
+                {
+                    [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                                statusString:@"File read error"];
+                }
+                
+                else if (bytesRead == 0)
+                {
+                    [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                                statusString:nil];
+                }
+                
+                else
+                {
+                    self.bufferOffset = 0;
+                    self.bufferLimit  = bytesRead;
+                }
+            }
+            
+            if (self.bufferOffset != self.bufferLimit)
+            {
+                NSInteger bytesWritten = [self.networkStream write:&self.buffer[self.bufferOffset]
+                                                         maxLength:self.bufferLimit - self.bufferOffset];
+                
+                assert(bytesWritten);
+                
+                if (bytesWritten == -1)
+                {
+                    [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                                statusString:@"Network write error"];
+                }
+                
+                else
+                {
+                    self.bufferOffset += bytesWritten;
+                    totBytesWritten += bytesWritten;
+                    self.progress = (CGFloat)totBytesWritten / (CGFloat)fileSize;
+                    
+                    if (self.popover)
+                        [self.popover updateProgress:self.progress];
+                }
+            }
         }
-        
-        else
-            bytesWrittenSoFar += (NSUInteger)bytesWritten;
-        
+            break;
+            
+        case NSStreamEventErrorOccurred:
+        {
+            [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                        statusString:@"Unable to connect"];
+        }
+            break;
+            
+        case NSStreamEventEndEncountered:
+        {
+            
+        }
+            break;
+            
+        default:
+        {
+            assert(NO);
+        }
+            break;
     }
-    
-    while (bytesWrittenSoFar != dataLength);
 }
 
 - (void)connection:(NSURLConnection *)theConnection
@@ -233,9 +292,9 @@ didSendResponse:(NSURLResponse *)response
     if (self.hasFailed == NO)
     {
         [self stopSendWithStatus:FTP_CONNECTION_FAILED
-                       statusString:error.localizedDescription];
+                    statusString:error.localizedDescription];
         
-        NSLog (@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
+        NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
         
         if (self.currentFtp == self.ftpSite)
         {
@@ -277,9 +336,9 @@ didSendResponse:(NSURLResponse *)response
                                                  error:nil];
         
         [self stopSendWithStatus:FTP_CONNECTION_FAILED
-                       statusString:error.localizedDescription];
+                    statusString:error.localizedDescription];
         
-        NSLog (@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
+        NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
         
         self.currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
         
@@ -322,13 +381,13 @@ didSendResponse:(NSURLResponse *)response
 - (void)setToFtpSite1
 {
     self.urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@", self.username,
-                    self.password, self.ftpSite, self.port, self.directory, self.fileName];
+                    self.password, self.ftpSite, self.port, self.toDirectory, self.fileName];
 }
 
 - (void)setToFtpSite2
 {
     self.urlText = [NSString stringWithFormat:@"%@:%@@%@/%@/%@", self.username2,
-                    self.password2, self.ftpSite2, self.directory, self.fileName];
+                    self.password2, self.ftpSite2, self.toDirectory, self.fileName];
 }
 
 - (void)dealloc
