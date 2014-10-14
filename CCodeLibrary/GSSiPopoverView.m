@@ -113,13 +113,18 @@
 {
     self.title = title;
     _popoverLabel.text = title;
-    self.showTime = NSDate.timeIntervalSinceReferenceDate;
-    
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:seconds
-                                     target:self
-                                   selector:@selector(show)
-                                   userInfo:nil
-                                    repeats:NO];
+    if (seconds > 0.0)
+    {
+        self.showTime = NSDate.timeIntervalSinceReferenceDate;
+        
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:seconds
+                                         target:self
+                                       selector:@selector(show)
+                                       userInfo:nil
+                                        repeats:NO];
+    }
+    else
+        [self show];
 }
 
 - (void)updateProgress:(float)progress

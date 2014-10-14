@@ -62,6 +62,7 @@
 
 - (BOOL)setIntersectionStatusTo:(int)status
                 forIntersection:(int)intID;
+- (BOOL)assignIntersection:(int)intID To:(int)user;
 
 - (NSString *)intersectionTextPath:(int)type;
 - (int)getCountOfIntersections;
