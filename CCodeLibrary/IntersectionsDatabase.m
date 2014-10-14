@@ -574,7 +574,7 @@ static IntersectionsDatabase *_database;
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
     NSString *query = [NSString stringWithFormat:
-                       @"SELECT intID, status, intX, intY,\
+                       @"SELECT intID, assignedTo, status, intX, intY,\
                        ramp1,ramp2,ramp3,ramp4,ramp5,ramp6,ramp7,ramp8,ramp81,ramp23,ramp45,ramp67 \
                        FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
                        (int)bounds.xmn, (int)bounds.xmx, (int)bounds.ymn, (int)bounds.ymx];
@@ -585,12 +585,13 @@ static IntersectionsDatabase *_database;
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
         int intID = sqlite3_column_int(statement, 0);
-        int status = sqlite3_column_int(statement, 1);
-        int intX = sqlite3_column_int(statement, 2);
-        int intY = sqlite3_column_int(statement, 3);
+        int assignedTo = sqlite3_column_int(statement, 1);
+        int status = sqlite3_column_int(statement, 2);
+        int intX = sqlite3_column_int(statement, 3);
+        int intY = sqlite3_column_int(statement, 4);
         int nRamps = 0;
         
-        for (int i = 4; i < 16; i++)
+        for (int i = 5; i < 17; i++)
         {
             if (sqlite3_column_int(statement, i) != 0)
                 nRamps++;
@@ -601,6 +602,7 @@ static IntersectionsDatabase *_database;
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
         intpt.latitude = lat;
         intpt.longitude = lon;
+        intpt.assignedTo = assignedTo;
         intpt.status = status;
         intpt.nramps = nRamps;
         
@@ -920,6 +922,19 @@ static IntersectionsDatabase *_database;
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i WHERE intID=%i",
                        iTime, status, intID];
+    char *error;
+    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
+    sqlite3_free(error);
+    return !rtn;
+}
+
+- (BOOL)assignIntersection:(int)intID To:(int)user
+{
+    BOOL rtn;
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
+    
+    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE intID=%i",
+                       iTime, user, intID];
     char *error;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
