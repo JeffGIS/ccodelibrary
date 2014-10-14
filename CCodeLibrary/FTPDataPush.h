@@ -1,10 +1,5 @@
-//
 //  FTPDataPush.h
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 10/14/14.
-//  Copyright (c) 2014 GSSi. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 #import "NetworkManager.h"
@@ -55,13 +50,13 @@
 + (FTPDataPush *)push;
 
 - (void)sendFile:(NSString *)fileName
-  fromDirectory:(NSString *)fromDirectory
-    toDirectory:(NSString *)toDirectory
-   deleteWhenDone:(BOOL)delete;
+   fromDirectory:(NSString *)fromDirectory
+     toDirectory:(NSString *)toDirectory
+  deleteWhenDone:(BOOL)delete;
 
 - (void)startSend:(NSString *)fileName;
 
 - (void)stopSendWithStatus:(int)status
-                 statusString:(NSString *)statusString;
+              statusString:(NSString *)statusString;
 
 @end

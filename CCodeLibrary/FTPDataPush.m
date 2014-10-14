@@ -1,13 +1,7 @@
-//
 //  FTPDataPush.m
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 10/14/14.
-//  Copyright (c) 2014 GSSi. All rights reserved.
-//
 
 #import "FTPDataPush.h"
-
 #import "Reachability.h"
 
 @implementation FTPDataPush
@@ -21,18 +15,15 @@
 }
 
 - (void)sendFile:(NSString *)fileName
-  fromDirectory:(NSString *)fromDirectory
-    toDirectory:(NSString *)toDirectory
- deleteWhenDone:(BOOL)delete
+   fromDirectory:(NSString *)fromDirectory
+     toDirectory:(NSString *)toDirectory
+  deleteWhenDone:(BOOL)delete
 {
     self.toDirectory = toDirectory;
     self.directory = fromDirectory;
     self.fileName = fileName;
     self.filePath = [NSString stringWithFormat:@"%@/%@", self.toDirectory,self.fileName];
     assert(self.filePath);
-    
-    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:self.filePath
-                                                                                 error:nil].fileSize;
     
     reachability = Reachability.reachabilityForInternetConnection;
     NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
@@ -257,9 +248,9 @@ didSendResponse:(NSURLResponse *)response
             self.hasFailed = YES;
             
             [self sendFile:self.fileName
-            fromDirectory:self.directory
-              toDirectory:self.toDirectory
-             deleteWhenDone:NO];
+             fromDirectory:self.directory
+               toDirectory:self.toDirectory
+            deleteWhenDone:NO];
         }
         
         else
@@ -273,9 +264,9 @@ didSendResponse:(NSURLResponse *)response
             self.hasFailed = YES;
             
             [self sendFile:self.fileName
-            fromDirectory:self.directory
-              toDirectory:self.toDirectory
-             deleteWhenDone:NO];
+             fromDirectory:self.directory
+               toDirectory:self.toDirectory
+            deleteWhenDone:NO];
         }
     }
     
