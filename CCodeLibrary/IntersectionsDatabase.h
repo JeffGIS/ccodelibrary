@@ -32,6 +32,7 @@
 
 @property (nonatomic, weak) id <IntersectionsDatabaseDelegate> delegate;
 @property int geoid;
+@property NSString *path;
 @property sqlite3_stmt *statement;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;

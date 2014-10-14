@@ -20,7 +20,8 @@ static IntersectionsDatabase *_database;
     if ((self = [super init]))
     {
         self.geoid = geoid;
-        SQLOK(sqlite3_open([self databasePath:geoid].UTF8String, &_database));
+        self.path = [self databasePath:geoid];
+        SQLOK(sqlite3_open(self.path.UTF8String, &_database));
     }
     
     return self;
