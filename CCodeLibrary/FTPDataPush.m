@@ -31,8 +31,6 @@
     self.filePath = [NSString stringWithFormat:@"%@/%@", self.toDirectory,self.fileName];
     assert(self.filePath);
     
-    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:self.filePath
-                                                                                 error:nil].fileSize;
     
     reachability = Reachability.reachabilityForInternetConnection;
     NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
