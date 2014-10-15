@@ -25,6 +25,8 @@
 
 @property (nonatomic, weak) id <FTPDataPullDelegate> delegate;
 @property (nonatomic, assign, readonly ) BOOL isReceiving;
+@property (nonatomic, assign, readwrite ) BOOL useOnlyPrimaryFTP;
+
 @property (nonatomic, strong, readwrite) NSURLConnection *connection;
 @property (nonatomic, copy, readwrite) NSString *filePath;
 @property (nonatomic, strong, readwrite) NSOutputStream *fileStream;
@@ -35,6 +37,7 @@
 @property (nonatomic, copy, readwrite) NSString *directory;
 @property (nonatomic, copy, readwrite) NSString *toDirectory;
 @property (nonatomic, copy, readwrite) NSString *fileName;
+@property (nonatomic, copy, readwrite) NSString *toFileName;
 @property (nonatomic, copy, readwrite) NSString *ftpSite2;
 @property (nonatomic, copy, readwrite) NSString *username2;
 @property (nonatomic, copy, readwrite) NSString *password2;
@@ -48,6 +51,12 @@
 @property (strong, nonatomic)GSSiPopoverView *popover;
 
 + (FTPDataPull *)pull;
+
+- (void)getFile:(NSString *)fileName
+  fromDirectory:(NSString *)fromDirectory
+         toFile:(NSString *)toFileName
+    toDirectory:(NSString *)toDirectory
+   forceRefresh:(BOOL)refresh;
 
 - (void)getFile:(NSString *)fileName
   fromDirectory:(NSString *)fromDirectory

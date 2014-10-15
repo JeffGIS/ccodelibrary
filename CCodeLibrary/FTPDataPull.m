@@ -13,16 +13,26 @@
 {
     return [[FTPDataPull alloc] init];
 }
+- (void)getFile:(NSString *)fileName
+  fromDirectory:(NSString *)fromDirectory
+    toDirectory:(NSString *)toDirectory
+   forceRefresh:(BOOL)refresh
+{
+    return [self getFile:fileName fromDirectory:fromDirectory toFile:fileName toDirectory:toDirectory forceRefresh:refresh];
+}
 
 - (void)getFile:(NSString *)fileName
-        fromDirectory:(NSString *)fromDirectory
-        toDirectory:(NSString *)toDirectory
-        forceRefresh:(BOOL)refresh
+  fromDirectory:(NSString *)fromDirectory
+         toFile:(NSString *)toFileName
+    toDirectory:(NSString *)toDirectory
+   forceRefresh:(BOOL)refresh
+
 {
     self.toDirectory = toDirectory;
     self.directory = fromDirectory;
     self.fileName = fileName;
-    self.filePath = [NSString stringWithFormat:@"%@/%@", self.toDirectory,self.fileName];
+    self.toFileName = toFileName;
+    self.filePath = [NSString stringWithFormat:@"%@/%@", self.toDirectory,self.toFileName];
     assert(self.filePath);
     
     unsigned long long fileSize = [NSFileManager.defaultManager
@@ -75,7 +85,7 @@
     
     if (self.delegate)
     {
-        [self.delegate FTPdidComplete:status
+       [self.delegate FTPdidComplete:status
                              filePath:self.filePath];
     }
 }
@@ -245,41 +255,46 @@ didReceiveResponse:(NSURLResponse *)response
     
     if (self.hasFailed == NO)
     {
-        [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
-                       statusString:error.localizedDescription];
-        
-        NSLog (@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
-        
-        if (self.currentFtp == self.ftpSite)
+        if (self.useOnlyPrimaryFTP)
         {
-            [self setToFtpSite2];
-            self.currentFtp = self.ftpSite2;
-            
-            [UserDefaults.defaults saveString:self.currentFtp
-                                       forKey:@"CurrentFtp"];
-            
-            self.hasFailed = YES;
-            
-            [self getFile:self.fileName
-            fromDirectory:self.directory
-              toDirectory:self.toDirectory
-             forceRefresh:NO];
+            [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
+                           statusString:error.localizedDescription];
         }
-        
         else
         {
-            [self setToFtpSite1];
-            self.currentFtp = self.ftpSite;
+            NSLog (@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
             
-            [UserDefaults.defaults saveString:self.currentFtp
-                                       forKey:@"CurrentFtp"];
+            if (self.currentFtp == self.ftpSite)
+            {
+                [self setToFtpSite2];
+                self.currentFtp = self.ftpSite2;
+                
+                [UserDefaults.defaults saveString:self.currentFtp
+                                           forKey:@"CurrentFtp"];
+                
+                self.hasFailed = YES;
+                
+                [self getFile:self.fileName
+                fromDirectory:self.directory
+                  toDirectory:self.toDirectory
+                 forceRefresh:NO];
+            }
             
-            self.hasFailed = YES;
-            
-            [self getFile:self.fileName
-            fromDirectory:self.directory
-              toDirectory:self.toDirectory
-             forceRefresh:NO];
+            else
+            {
+                [self setToFtpSite1];
+                self.currentFtp = self.ftpSite;
+                
+                [UserDefaults.defaults saveString:self.currentFtp
+                                           forKey:@"CurrentFtp"];
+                
+                self.hasFailed = YES;
+                
+                [self getFile:self.fileName
+                fromDirectory:self.directory
+                  toDirectory:self.toDirectory
+                 forceRefresh:NO];
+            }
         }
     }
     
