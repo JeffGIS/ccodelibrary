@@ -32,6 +32,7 @@
 @property (nonatomic, copy, readwrite) NSString *directory;
 @property (nonatomic, copy, readwrite) NSString *toDirectory;
 @property (nonatomic, copy, readwrite) NSString *fileName;
+@property (nonatomic, copy, readwrite) NSString *toFileName;
 @property (nonatomic, copy, readwrite) NSString *ftpSite2;
 @property (nonatomic, copy, readwrite) NSString *username2;
 @property (nonatomic, copy, readwrite) NSString *password2;
@@ -44,6 +45,12 @@
 @property (nonatomic) NSUInteger totalDataSent;
 
 + (FTPDataPush *)push;
+
+- (BOOL)sendFile:(NSString *)fileName
+   fromDirectory:(NSString *)fromDirectory
+          toFile:(NSString *)toFileName
+     toDirectory:(NSString *)toDirectory
+  deleteWhenDone:(BOOL)delete;
 
 - (BOOL)sendFile:(NSString *)fileName
    fromDirectory:(NSString *)fromDirectory

@@ -26,6 +26,7 @@ enum {
     Reachability *reachability;
     long _fileSize, _totBytesWritten;
     uint8_t _buffer[kSendBufferSize];
+    int ii;
 }
 
 + (FTPDataPush *)push
@@ -42,9 +43,20 @@ enum {
      toDirectory:(NSString *)toDirectory
   deleteWhenDone:(BOOL)delete
 {
+    BOOL rtn = [self sendFile:fileName fromDirectory:fromDirectory toFile:fileName toDirectory:toDirectory deleteWhenDone:delete];
+    return rtn;
+}
+- (BOOL)sendFile:(NSString *)fileName
+   fromDirectory:(NSString *)fromDirectory
+          toFile:(NSString *)toFileName
+     toDirectory:(NSString *)toDirectory
+  deleteWhenDone:(BOOL)delete
+{
+    
     self.toDirectory = toDirectory;
     self.directory = fromDirectory;
     self.fileName = fileName;
+    self.toFileName = toFileName;
     self.filePath = [NSString stringWithFormat:@"%@/%@", self.directory,self.fileName];
     assert(self.filePath);
     
@@ -302,7 +314,7 @@ enum {
             
         case NSStreamEventEndEncountered:
         {
-            
+            ii=1;
         }
             break;
             
@@ -364,8 +376,8 @@ enum {
     else
     {
         //remove file to ensure partially transferred files are not used
-        [NSFileManager.defaultManager removeItemAtPath:self.filePath
-                                                 error:nil];
+        /*[NSFileManager.defaultManager removeItemAtPath:self.filePath
+                                                 error:nil];*/
         
         [self stopSendWithStatus:FTP_CONNECTION_FAILED
                     statusString:error.localizedDescription];
@@ -412,16 +424,13 @@ enum {
 
 - (void)setToFtpSite1
 {
-    self.urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@", self.username,
-                    self.password, self.ftpSite, self.port, self.toDirectory, self.fileName];
-    self.urlText = [NSString stringWithFormat:@"@%@:%@/%@/%@",self.ftpSite, self.port, self.toDirectory, self.fileName];
+    self.urlText = [NSString stringWithFormat:@"@%@:%@/%@/%@",self.ftpSite, self.port, self.toDirectory, self.toFileName];
 
 }
 
 - (void)setToFtpSite2
 {
-    self.urlText = [NSString stringWithFormat:@"%@:%@@%@/%@/%@", self.username2,
-                    self.password2, self.ftpSite2, self.toDirectory, self.fileName];
+    self.urlText = [NSString stringWithFormat:@"@%@/%@/%@",self.ftpSite2, self.toDirectory, self.toFileName];
 }
 
 - (void)dealloc
