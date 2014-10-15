@@ -43,7 +43,12 @@ enum {
      toDirectory:(NSString *)toDirectory
   deleteWhenDone:(BOOL)delete
 {
-    BOOL rtn = [self sendFile:fileName fromDirectory:fromDirectory toFile:fileName toDirectory:toDirectory deleteWhenDone:delete];
+    BOOL rtn = [self sendFile:fileName
+                fromDirectory:fromDirectory
+                       toFile:fileName
+                  toDirectory:toDirectory
+               deleteWhenDone:delete];
+    
     return rtn;
 }
 - (BOOL)sendFile:(NSString *)fileName
@@ -116,6 +121,7 @@ enum {
                                        error:nil].fileSize;
         if (!_fileSize)
             return NO;
+        
         self.fileName = fileName;
         [self setUpFTP];
     }
@@ -180,19 +186,13 @@ enum {
                                            forKey:(id)kCFStreamPropertyFTPUserName];
         
         if (!success)
-        {
-            //self.statusLabel.text = @"Unable to set username";
             return NO;
-        }
         
         success = [self.networkStream setProperty:self.password
                                            forKey:(id)kCFStreamPropertyFTPPassword];
         
         if (!success)
-        {
-            //self.statusLabel.text = @"Unable to set password";
             return NO;
-        }
     }
     
     self.networkStream.delegate = self;
@@ -202,7 +202,6 @@ enum {
     
     [self.networkStream open];
     CFRelease(ftpStream);
-    [self sendDidStart];
     
     self.totalDataSent = 0;
     self.progress = 0.0;
@@ -375,10 +374,6 @@ enum {
     
     else
     {
-        //remove file to ensure partially transferred files are not used
-        /*[NSFileManager.defaultManager removeItemAtPath:self.filePath
-                                                 error:nil];*/
-        
         [self stopSendWithStatus:FTP_CONNECTION_FAILED
                     statusString:error.localizedDescription];
         
