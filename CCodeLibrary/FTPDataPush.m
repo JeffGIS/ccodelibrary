@@ -24,15 +24,20 @@ enum {
 @implementation FTPDataPush
 {
     Reachability *reachability;
-    long fileSize, totBytesWritten;
+    long _fileSize, _totBytesWritten;
+    uint8_t _buffer[kSendBufferSize];
 }
 
 + (FTPDataPush *)push
 {
     return [[FTPDataPush alloc] init];
 }
+- (uint8_t *)buffer
+{
+    return self->_buffer;
+}
 
-- (void)sendFile:(NSString *)fileName
+- (BOOL)sendFile:(NSString *)fileName
    fromDirectory:(NSString *)fromDirectory
      toDirectory:(NSString *)toDirectory
   deleteWhenDone:(BOOL)delete
@@ -54,10 +59,10 @@ enum {
                                  filePath:nil];
         }
         
-        return;
+        return NO;
     }
     
-    [self startSend:fileName];
+    return [self startSend:fileName];
 }
 
 - (void)sendDidStart
@@ -90,10 +95,15 @@ enum {
     return (self.connection != nil);
 }
 
-- (void)startSend:(NSString *)fileName
+- (BOOL)startSend:(NSString *)fileName
 {
     if (self.hasFailed == NO)
     {
+        _fileSize = [NSFileManager.defaultManager
+                                       attributesOfItemAtPath:self.filePath
+                                       error:nil].fileSize;
+        if (!_fileSize)
+            return NO;
         self.fileName = fileName;
         [self setUpFTP];
     }
@@ -127,13 +137,13 @@ enum {
         if (!success)
         {
             NSAssert(0, @"ERROR: Invalid URL");
-            return;
+            return NO;
         }
         
         else if (![NetworkManager.sharedInstance isBinaryURL:url])
         {
             NSAssert(0, @"ERROR: Invalid file type");
-            return;
+            return NO;
         }
     }
     
@@ -145,14 +155,33 @@ enum {
     NSLog(@"URL: %@", url);
     
     CFWriteStreamRef ftpStream = CFWriteStreamCreateWithFTPURL(NULL, (__bridge CFURLRef) url);
-    
     if (!ftpStream)
     {
         NSAssert(0, @"Unable to open ftpstream");
-        return;
+        return NO;
     }
     
     self.networkStream = (__bridge NSOutputStream *)ftpStream;
+    if (self.username.length != 0)
+    {
+        success = [self.networkStream setProperty:self.username
+                                           forKey:(id)kCFStreamPropertyFTPUserName];
+        
+        if (!success)
+        {
+            //self.statusLabel.text = @"Unable to set username";
+            return NO;
+        }
+        
+        success = [self.networkStream setProperty:self.password
+                                           forKey:(id)kCFStreamPropertyFTPPassword];
+        
+        if (!success)
+        {
+            //self.statusLabel.text = @"Unable to set password";
+            return NO;
+        }
+    }
     
     self.networkStream.delegate = self;
     
@@ -167,6 +196,7 @@ enum {
     self.progress = 0.0;
     
     [self sendDidStart];
+    return YES;
 }
 
 - (void)stopSendWithStatus:(int)status
@@ -209,9 +239,12 @@ enum {
             
         case NSStreamEventHasSpaceAvailable:
         {
+
+            
+            
             if (self.bufferOffset == self.bufferLimit)
             {
-                NSUInteger bytesRead;
+                NSInteger bytesRead;
                 
                 bytesRead = [self.fileStream read:self.buffer
                                         maxLength:kSendBufferSize];
@@ -224,8 +257,7 @@ enum {
                 
                 else if (bytesRead == 0)
                 {
-                    [self stopSendWithStatus:FTP_CONNECTION_FAILED
-                                statusString:nil];
+                    [self stopSendWithStatus:FTP_OK statusString:@""];
                 }
                 
                 else
@@ -251,8 +283,8 @@ enum {
                 else
                 {
                     self.bufferOffset += bytesWritten;
-                    totBytesWritten += bytesWritten;
-                    self.progress = (CGFloat)totBytesWritten / (CGFloat)fileSize;
+                    _totBytesWritten += bytesWritten;
+                    self.progress = (CGFloat)_totBytesWritten / (CGFloat)_fileSize;
                     
                     if (self.popover)
                         [self.popover updateProgress:self.progress];
@@ -382,6 +414,8 @@ enum {
 {
     self.urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@", self.username,
                     self.password, self.ftpSite, self.port, self.toDirectory, self.fileName];
+    self.urlText = [NSString stringWithFormat:@"@%@:%@/%@/%@",self.ftpSite, self.port, self.toDirectory, self.fileName];
+
 }
 
 - (void)setToFtpSite2

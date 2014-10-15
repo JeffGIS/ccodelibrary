@@ -25,8 +25,9 @@
     self.filePath = [NSString stringWithFormat:@"%@/%@", self.toDirectory,self.fileName];
     assert(self.filePath);
     
-    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:self.filePath
-                                                                                  error:nil].fileSize;
+    unsigned long long fileSize = [NSFileManager.defaultManager
+                                   attributesOfItemAtPath:self.filePath
+                                   error:nil].fileSize;
     
     if (refresh || fileSize == 0)
     {

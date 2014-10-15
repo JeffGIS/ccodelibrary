@@ -45,12 +45,12 @@
 
 + (FTPDataPush *)push;
 
-- (void)sendFile:(NSString *)fileName
+- (BOOL)sendFile:(NSString *)fileName
    fromDirectory:(NSString *)fromDirectory
      toDirectory:(NSString *)toDirectory
   deleteWhenDone:(BOOL)delete;
 
-- (void)startSend:(NSString *)fileName;
+- (BOOL)startSend:(NSString *)fileName;
 
 - (void)stopSendWithStatus:(int)status
               statusString:(NSString *)statusString;
