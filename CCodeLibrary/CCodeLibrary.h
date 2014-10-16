@@ -36,6 +36,7 @@
 #define ROCHESTER_MN 2754880
 #define MINNEAPOLIS_MN 2743000
 #define CRYSTAL_LAKE_IL 1717887
+#define EAGAN_MN 2717288
 
 @interface CCodeLibrary : NSObject
 

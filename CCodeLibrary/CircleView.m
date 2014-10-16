@@ -71,6 +71,12 @@ CGColorRef graphYColor()
                                              ofType:@"txt"];
     }
     
+    else if (self.geoid == EAGAN_MN)
+    {
+        path = [NSBundle.mainBundle pathForResource:@"EaganPublicPlaces"
+                                             ofType:@"txt"];
+    }
+    
     if ([path isEqual:@""])
         return;
     
