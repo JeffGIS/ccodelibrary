@@ -200,7 +200,7 @@ didReceiveResponse:(NSURLResponse *)response
     assert(theConnection == self.connection);
     assert(response);
     
-    self.fileSize = response.expectedContentLength;
+    self.fileSize = (int)response.expectedContentLength;
 }
 
 - (void)connection:(NSURLConnection *)theConnection

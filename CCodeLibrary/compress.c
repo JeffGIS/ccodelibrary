@@ -57,11 +57,12 @@ int DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec, LPBYTE pCompressedRec
     
 	if (InitLZO())
 	{
-		rtn = lzo1x_decompress(pCompressedRec,(lzo_uint)CompressedLen, pDecompressedRec, (lzo_uint *)&DCLen, NULL);
+		rtn = lzo1x_decompress(pCompressedRec, (lzo_uint)CompressedLen, pDecompressedRec, (lzo_uint *)&DCLen, NULL);
         
 		if (rtn == 0)
         	return DCLen;
 	}
+    
 	return 0;
 }
 int GetFileFromTransferFile (HWND hWndStatus,FILE * FidTF,LPSTR FileToGet,long MaxLength)

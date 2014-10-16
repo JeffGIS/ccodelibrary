@@ -21,7 +21,6 @@ static IntersectionsDatabase *_database;
     {
         self.geoid = geoid;
         self.path = [self databasePath:geoid];
-        unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:self.path                                                                            error:nil].fileSize;
         SQLOK(sqlite3_open(self.path.UTF8String, &_database));
     }
     
@@ -105,38 +104,6 @@ static IntersectionsDatabase *_database;
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Intersections (intY);"];
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
     sqlite3_free(error);
-    /*
-     intID INTEGER PRIMARY KEY,\    0
-     lastUpdateTime INTEGER,\       1
-     status INTEGER,\               2
-     assignedTo INTEGER,\           3
-     intX INTEGER,\                 4
-     intY INTEGER,\                 5
-     rotation INTEGER,\             6
-     ramp1 INTEGER,\                7
-     ramp2 INTEGER,\                8
-     ramp3 INTEGER,\                9
-     ramp4 INTEGER,\                10
-     ramp5 INTEGER,\                11
-     ramp6 INTEGER,\                12
-     ramp7 INTEGER,\                13
-     ramp8 INTEGER,\                14
-     ramp81 INTEGER,\               15
-     ramp23 INTEGER,\               16
-     ramp45 INTEGER,\               17
-     ramp67 INTEGER,\               18
-     xWalkA INTEGER,\               19
-     xWalkB INTEGER,\               20
-     xWalkC INTEGER,\               21
-     xWalkD INTEGER,\               22
-     signal81 INTEGER,\             23
-     signal23 INTEGER,\             24
-     signal45 INTEGER,\             25
-     signal67 INTEGER,\             26
-     nStreets INTEGER,\             27
-     streetNames CHAR(512),\        28
-     */
-
 }
 
 - (int)getOffsetCoord:(MPIntersection *)mpint
@@ -815,7 +782,7 @@ static IntersectionsDatabase *_database;
     
     if (nearInts.count >= iWant)
     {
-        IntersectionPoint * intpt = nearInts[iWant-1];
+        IntersectionPoint *intpt = nearInts[iWant - 1];
         
         NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",intpt.intID];
         
@@ -847,7 +814,7 @@ static IntersectionsDatabase *_database;
     BOOL rtn;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     int lev21x, lev21y;
-    LatLongToPixelXY (intpt.latitude, intpt.longitude, 21, &lev21x, &lev21y);
+    LatLongToPixelXY(intpt.latitude, intpt.longitude, 21, &lev21x, &lev21y);
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, intX=%i, intY=%i WHERE intID=%i",
                        iTime, lev21x, lev21y, intpt.intID];
@@ -1087,16 +1054,14 @@ Exit:
         NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
                                                                 andName:[NSString stringWithFormat:@"/%i",self.geoid] create:YES];
         if (self.gettingUploaded)
-        {
-            unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:self.path                                                                            error:nil].fileSize;
-
             SQLOK(sqlite3_open(self.path.UTF8String, &_database));
-        }
+        
         else
         {
             DecompressGMZipFile ((LPSTR)path.UTF8String,(LPSTR)toDirectory.UTF8String);
             status = [self loadIntersectionTextToDatabase:path];
         }
+        
         if (self.delegate != nil)
         {
             [self.delegate intersectionsDatabase:[self databasePath:self.geoid]
@@ -1108,7 +1073,6 @@ Exit:
     else if (status == FTP_CONNECTION_FAILED)
     {
         if (self.gettingUploaded)
-            
             [self.delegate intersectionsDatabase:nil
                                          didLoad:@"File not found"
                                       withStatus:INT_NO_UPLOADED_FILE];
@@ -1152,6 +1116,7 @@ Exit:
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *fileName = [NSString stringWithFormat:@"%i.sqlite3", geoid];
+    
     NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:documentsDirectory
                                                             andName:[NSString stringWithFormat:@"/%i",self.geoid] create:YES];
     [self close];
@@ -1173,8 +1138,11 @@ Exit:
 {
     NSString * dbPath = [self databasePath:self.geoid];
     
-    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath                                                                            error:nil].fileSize;
-    BOOL forceReload = FALSE;
+    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
+                                                                                 error:nil].fileSize;
+    
+    BOOL forceReload = NO;
+    
     if (fileSize > 0 && !forceReload)
     {
         if (self.delegate != nil)
@@ -1190,7 +1158,6 @@ Exit:
         [self getPlaceIntersectionFile:popover
                               forGeoid:self.geoid];
     }
-    
 }
 
 - (void)getUploadedIntersectionDatabase:(GSSiPopoverView*)popover
@@ -1199,7 +1166,9 @@ Exit:
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
                                                                                  error:nil].fileSize;
+    
     BOOL forceReload = YES;
+    
     if (fileSize > 0 && !forceReload)
     {
         if (self.delegate != nil)

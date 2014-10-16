@@ -468,17 +468,20 @@ forGeoid:(int)geoid
     }
     
     free(str);
+/*
     if (create)
     {
         int rtn = [NSFileManager.defaultManager createDirectoryAtPath:outDir
-                                      withIntermediateDirectories:YES
-                                                       attributes:nil
-                                                            error:nil];
+                                          withIntermediateDirectories:YES
+                                                           attributes:nil
+                                                                error:nil];
 
     }
+*/
     return outDir;
 }
--(IPOINT) PointAtZoom:(int)zoom
+
+- (IPOINT)PointAtZoom:(int)zoom
         fromViewPoint:(CGPoint)pt
       usingProjection:(GMSProjection *)projection
 {
@@ -539,28 +542,29 @@ forGeoid:(int)geoid
     iBounds.ymx = rect.origin.y + rect.size.height;
     return iBounds;
 }
-- (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon usingTransformation:(LPTRANDATA)pTranWToBMP
+
+- (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon
+          usingTransformation:(LPTRANDATA)pTranWToBMP
 {
     CGPoint pt;
-    
     return pt;
 }
-- (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt usingTransformation:(LPTRANDATA)pTranWToBMP
+
+- (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt
+               usingTransformation:(LPTRANDATA)pTranWToBMP
 {
     CGPoint pt;
-    
-    TRANS2(lev21pt.x, lev21pt.y, &pt.x, &pt.y, pTranWToBMP);
+    TRANS2(lev21pt.x, lev21pt.y, (LPDOUBLE)&pt.x, (LPDOUBLE)&pt.y, pTranWToBMP);
     return pt;
 }
+
 - (IBOUNDS)boundsFromRect:(CGRect)rect
           usingTransformation:(LPTRANDATA)pTranBMPToW
 {
     IBOUNDS iBounds,outBounds;
-    
     iBounds = [self CGRectToIBounds:rect];
     TranMNMXCORL(&iBounds,&outBounds,pTranBMPToW);
     return outBounds;
 }
-
 
 @end

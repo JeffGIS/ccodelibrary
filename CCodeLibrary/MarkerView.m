@@ -59,6 +59,7 @@
             
             if (!info.assignedTo)
                 CGContextSetFillColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
+            
             else if (!info.status)
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
             
@@ -73,8 +74,10 @@
                 numComplex++;
                 CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
             }
+            
             if (!info.assignedTo)
                 notAssigned++;
+            
             pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
             CGContextSetLineWidth(context, (size / 12.0));
             CGContextFillEllipseInRect(context, pointRect);
