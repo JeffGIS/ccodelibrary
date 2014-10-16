@@ -461,7 +461,8 @@ forGeoid:(int)geoid
     
     if ((pBS = strrchr(str,'/')))
     {
-        *pBS = 0;
+        if (!*(pBS+1))
+            *pBS = 0;
         strcat (str, name.UTF8String);
         outDir = [NSString stringWithUTF8String:str];
     }

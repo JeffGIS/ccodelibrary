@@ -85,7 +85,7 @@ int SQLOK(int sqlReturn);
                    intX:(int *)plev21x
                    intY:(int *)plev21y;
 
-- (BOOL)findIntersectionFromID:(int)intID
+- (int)findIntersectionFromID:(int)intID
               intersectionText:(char *)intText
               intersectionAZMs:(char *)intAZMs
                     numStreets:(int *)pNumStreets

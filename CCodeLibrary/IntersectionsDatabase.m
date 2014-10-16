@@ -763,7 +763,7 @@ static IntersectionsDatabase *_database;
      }];
 }
 
-- (BOOL) findIntersectionFromID:(int)intID
+- (int) findIntersectionFromID:(int)intID
              intersectionText:(char *)intText
              intersectionAZMs:(char *)intAZMs
                    numStreets:(int *)pNumStreets
@@ -772,7 +772,7 @@ static IntersectionsDatabase *_database;
                          intY:(int *)plev21y
 
 {
-    BOOL rtn = FALSE;
+    int rtn = 0;
     NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",intID];
     sqlite3_stmt *statement;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
@@ -789,7 +789,7 @@ static IntersectionsDatabase *_database;
         *pNumStreets = nStreets;
         strcpy(intText,pStreets);
         strcpy(intAZMs,pAZMS);
-        rtn = TRUE;
+        rtn = intID;
     }
     
     SQLOK(sqlite3_finalize(statement));
