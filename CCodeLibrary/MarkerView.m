@@ -57,9 +57,9 @@
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
             totRamps += info.nramps;
             
-            /*if (!info.assignedTo)
+            if (!info.assignedTo)
                 CGContextSetFillColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
-            else*/ if (!info.status)
+            else if (!info.status)
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
             
             else if (info.status == INT_STATUS_PRELIMCOMPLETE)

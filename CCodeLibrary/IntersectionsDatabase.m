@@ -1164,7 +1164,7 @@ Exit:
     
     [pull getFile:fileName
     fromDirectory:@"Bill/UploadedIntersections"
-           toFile:@"Intersectionsy.sqlite3"
+           toFile:@"Intersectionsz.sqlite3"
       toDirectory:toDirectory
      forceRefresh:YES];
 }
