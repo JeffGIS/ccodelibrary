@@ -528,13 +528,15 @@ forGeoid:(int)geoid
     iBounds.ymx = rect.origin.y + rect.size.height;
     return iBounds;
 }
-- (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon usingTransformation:(LPTRANDATA)pTranWToBMP
+- (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon
+          usingTransformation:(LPTRANDATA)pTranWToBMP
 {
     CGPoint pt;
     
     return pt;
 }
-- (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt usingTransformation:(LPTRANDATA)pTranWToBMP
+- (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt
+               usingTransformation:(LPTRANDATA)pTranWToBMP
 {
     CGPoint pt;
     

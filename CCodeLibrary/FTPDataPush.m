@@ -116,9 +116,9 @@ enum {
 {
     if (self.hasFailed == NO)
     {
-        _fileSize = [NSFileManager.defaultManager
-                                       attributesOfItemAtPath:self.filePath
-                                       error:nil].fileSize;
+        _fileSize = (long)[NSFileManager.defaultManager attributesOfItemAtPath:self.filePath
+                                                                         error:nil].fileSize;
+        
         if (!_fileSize)
             return NO;
         
