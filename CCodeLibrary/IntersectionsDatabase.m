@@ -21,6 +21,7 @@ static IntersectionsDatabase *_database;
     {
         self.geoid = geoid;
         self.path = [self databasePath:geoid];
+        unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:self.path                                                                            error:nil].fileSize;
         SQLOK(sqlite3_open(self.path.UTF8String, &_database));
     }
     
@@ -1084,11 +1085,18 @@ Exit:
     if (status == FTP_OK)
     {
         NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
-                                                                andName:[NSString stringWithFormat:@"/%i",self.geoid]];
-        
-        DecompressGMZipFile ((LPSTR)path.UTF8String,(LPSTR)toDirectory.UTF8String);
-        status = [self loadIntersectionTextToDatabase:path];
-        
+                                                                andName:[NSString stringWithFormat:@"/%i",self.geoid] create:YES];
+        if (self.gettingUploaded)
+        {
+            unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:self.path                                                                            error:nil].fileSize;
+
+            SQLOK(sqlite3_open(self.path.UTF8String, &_database));
+        }
+        else
+        {
+            DecompressGMZipFile ((LPSTR)path.UTF8String,(LPSTR)toDirectory.UTF8String);
+            status = [self loadIntersectionTextToDatabase:path];
+        }
         if (self.delegate != nil)
         {
             [self.delegate intersectionsDatabase:[self databasePath:self.geoid]
@@ -1099,10 +1107,16 @@ Exit:
     
     else if (status == FTP_CONNECTION_FAILED)
     {
-        [self.delegate intersectionsDatabase:nil
-                                     didLoad:@"Internet Connection Not Available"
-                                  withStatus:INT_NO_NETWORK_CONNECTION];
-    }
+        if (self.gettingUploaded)
+            
+            [self.delegate intersectionsDatabase:nil
+                                         didLoad:@"File not found"
+                                      withStatus:INT_NO_UPLOADED_FILE];
+        else
+            [self.delegate intersectionsDatabase:nil
+                                         didLoad:@"File not found"
+                                      withStatus:INT_NO_NETWORK_CONNECTION];
+   }
     
     else if (status != FTP_STOP)
     {
@@ -1121,22 +1135,45 @@ Exit:
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
     
+    self.gettingUploaded = NO;
     FTPDataPull *pull = FTPDataPull.pull;
     pull.delegate = self;
     pull.popover = popover;
+    pull.useOnlyPrimaryFTP = NO;
     
     [pull getFile:fileName
     fromDirectory:@"Bill/PlaceIntersections"
       toDirectory:documentsDirectory
      forceRefresh:NO];
 }
+- (void)getUploadedIntersectionFile:(GSSiPopoverView*)popover
+                        forGeoid:(int)geoid
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *fileName = [NSString stringWithFormat:@"%i.sqlite3", geoid];
+    NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:documentsDirectory
+                                                            andName:[NSString stringWithFormat:@"/%i",self.geoid] create:YES];
+    [self close];
+    
+    self.gettingUploaded = YES;
+    FTPDataPull *pull = FTPDataPull.pull;
+    pull.delegate = self;
+    pull.popover = popover;
+    pull.useOnlyPrimaryFTP = YES;
+    
+    [pull getFile:fileName
+    fromDirectory:@"Bill/UploadedIntersections"
+           toFile:@"Intersectionsz.sqlite3"
+      toDirectory:toDirectory
+     forceRefresh:YES];
+}
 
 - (void)getPlaceIntersectionDatabase:(GSSiPopoverView*)popover
 {
     NSString * dbPath = [self databasePath:self.geoid];
     
-    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
-                                                                                 error:nil].fileSize;
+    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath                                                                            error:nil].fileSize;
     BOOL forceReload = FALSE;
     if (fileSize > 0 && !forceReload)
     {
@@ -1156,6 +1193,30 @@ Exit:
     
 }
 
+- (void)getUploadedIntersectionDatabase:(GSSiPopoverView*)popover
+{
+    NSString * dbPath = [self databasePath:self.geoid];
+    
+    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
+                                                                                 error:nil].fileSize;
+    BOOL forceReload = YES;
+    if (fileSize > 0 && !forceReload)
+    {
+        if (self.delegate != nil)
+        {
+            [self.delegate intersectionsDatabase:dbPath
+                                         didLoad:@""
+                                      withStatus:INTDB_OK];
+        }
+    }
+    
+    else
+    {
+        [self getUploadedIntersectionFile:popover
+                              forGeoid:self.geoid];
+    }
+    
+}
 - (void)logError
 {
     int ierr = sqlite3_errcode(_database);

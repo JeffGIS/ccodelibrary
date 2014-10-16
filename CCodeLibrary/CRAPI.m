@@ -49,18 +49,19 @@
 
 -(void)setCurrentGeoid:(int)geoid
 {
+    BOOL rtn = TRUE;
     if (geoid != _currentGeoidValue)
     {
         _currentGeoidValue = geoid;
         self.outputDirectory = [NSString stringWithFormat:@"%@/%i/ADAFiles", self.documentsDirectory,_currentGeoidValue];
         self.imageDirectory = [NSString stringWithFormat:@"%@/%i/IntersectionImages", self.documentsDirectory,_currentGeoidValue];
         
-        [NSFileManager.defaultManager createDirectoryAtPath:self.outputDirectory
+        rtn = [NSFileManager.defaultManager createDirectoryAtPath:self.outputDirectory
                                 withIntermediateDirectories:YES
                                                  attributes:nil
                                                       error:nil];
         
-        [NSFileManager.defaultManager createDirectoryAtPath:self.imageDirectory
+        rtn = [NSFileManager.defaultManager createDirectoryAtPath:self.imageDirectory
                                 withIntermediateDirectories:YES
                                                  attributes:nil
                                                       error:nil];
@@ -450,6 +451,7 @@ forGeoid:(int)geoid
 
 - (NSString*)directoryFromPath:(NSString *)path
                        andName:(NSString *)name
+                        create:(BOOL)create
 {
     LPSTR str = malloc(path.length + 2);
     LPSTR pBS;
@@ -465,6 +467,14 @@ forGeoid:(int)geoid
     }
     
     free(str);
+    if (create)
+    {
+        int rtn = [NSFileManager.defaultManager createDirectoryAtPath:outDir
+                                      withIntermediateDirectories:YES
+                                                       attributes:nil
+                                                            error:nil];
+
+    }
     return outDir;
 }
 -(IPOINT) PointAtZoom:(int)zoom

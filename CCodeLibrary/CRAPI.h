@@ -59,7 +59,8 @@
 forGeoid:(int)geoid;
 
 - (NSString*)directoryFromPath:(NSString*)path
-                       andName:(NSString*)name;
+                       andName:(NSString*)name
+                        create:(BOOL)create;
 
 - (IPOINT)PointAtZoom:(int)zoom
         fromViewPoint:(CGPoint)pt

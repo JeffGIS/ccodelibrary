@@ -14,6 +14,7 @@
 #define INT_STATUS_COMPLEX 2
 
 #define INT_NO_NETWORK_CONNECTION 3
+#define INT_NO_UPLOADED_FILE    4
 
 @class IntersectionsDatabase;
 
@@ -32,11 +33,13 @@
 
 @property (nonatomic, weak) id <IntersectionsDatabaseDelegate> delegate;
 @property int geoid;
+@property BOOL gettingUploaded;
 @property NSString *path;
 @property sqlite3_stmt *statement;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
+- (void)getUploadedIntersectionDatabase:(GSSiPopoverView*)popover;
 - (void)getPlaceIntersectionDatabase:(GSSiPopoverView *)popover;
 - (NSMutableArray *)getIntersectionPointsFromDatabase;
 - (NSMutableArray *)getIntersectionPointsFromDatabaseinBounds:(IBOUNDS)bounds;
