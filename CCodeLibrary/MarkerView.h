@@ -2,7 +2,7 @@
 //  CCodeLibrary
 
 #import <Foundation/Foundation.h>
-#import <GoogleMaps/GoogleMaps.h>
+#import "GoogleMaps/GoogleMaps.h"
 #import "IntersectionsDatabase.h"
 
 @class MarkerView;

@@ -5,7 +5,7 @@
 #import "CCodeTypes.h"
 #import "MPIntersection.h"
 #import "UserDefaults.h"
-#import <GoogleMaps/GoogleMaps.h>
+#import "GoogleMaps/GoogleMaps.h"
 
 @interface CRAPI : NSObject
 
