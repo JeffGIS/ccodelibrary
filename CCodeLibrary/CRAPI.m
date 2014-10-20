@@ -1,8 +1,7 @@
 //  CRAPI.m
 //  CCodeLibrary
 
-#import "../../CCodeLibrary/CCodeLibrary/CCodeLibrary.h"
-#import <UIKit/UIKit.h>
+#import "CCodeLibrary.h"
 
 @implementation CRAPI
 {
