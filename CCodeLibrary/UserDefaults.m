@@ -3,7 +3,6 @@
 
 #import "UserDefaults.h"
 
-
 @implementation UserDefaults
 
 static UserDefaults *_defaults;
@@ -11,9 +10,7 @@ static UserDefaults *_defaults;
 + (UserDefaults *)defaults
 {
     if (_defaults == nil)
-    {
         _defaults = [[UserDefaults alloc] init];
-    }
     
     return _defaults;
 }
@@ -21,10 +18,8 @@ static UserDefaults *_defaults;
 - (id)init
 {
     if ((self = [super init]))
-    {
         _defaults = NSUserDefaults.standardUserDefaults;
-    }
-    
+
     return self;
 }
 
