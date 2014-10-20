@@ -193,16 +193,6 @@ static UserDefaults *_defaults;
     NSFileManager *fileManager = NSFileManager.defaultManager;
     NSString *appGroupName = @"group.com.GSSi.SurveyApps";
     NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:appGroupName];
-    NSError *error = nil;
-    
-    if (![fileManager createDirectoryAtURL:groupContainerURL
-               withIntermediateDirectories:YES
-                                attributes:nil
-                                     error:&error])
-    {
-        
-    }
-    
     return groupContainerURL.relativePath;
 }
 

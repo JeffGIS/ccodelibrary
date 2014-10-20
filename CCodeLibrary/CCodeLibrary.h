@@ -37,6 +37,7 @@
 #define MINNEAPOLIS_MN 2743000
 #define CRYSTAL_LAKE_IL 1717887
 #define EAGAN_MN 2717288
+#define APP_GROUP_ID @"group.com.GSSi.SurveyApps";
 
 @interface CCodeLibrary : NSObject
 
