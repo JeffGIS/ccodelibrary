@@ -18,7 +18,11 @@
     toDirectory:(NSString *)toDirectory
    forceRefresh:(BOOL)refresh
 {
-    return [self getFile:fileName fromDirectory:fromDirectory toFile:fileName toDirectory:toDirectory forceRefresh:refresh];
+    return [self getFile:fileName
+           fromDirectory:fromDirectory
+                  toFile:fileName
+             toDirectory:toDirectory
+            forceRefresh:refresh];
 }
 
 - (void)getFile:(NSString *)fileName

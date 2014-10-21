@@ -41,7 +41,8 @@
 - (NSString *)addSpaceAfterComma:(NSString *)string;
 - (UIImage *)invertImage:(UIImage *)image;
 - (void)disableWebKitDiskImageCache;
-- (NSString *)sharedLocationPath;
+- (NSString *)sharedFilePath;
+- (NSString *)localFilePath;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green

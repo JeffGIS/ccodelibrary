@@ -69,8 +69,13 @@ forGeoid:(int)geoid;
 - (IBOUNDS)boundsFromRect:(CGRect)rect
                    atZoom:(int)zoom
           usingProjection:(GMSProjection *)projection;
-- (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon usingTransformation:(LPTRANDATA)pTranWToBMP;
-- (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt usingTransformation:(LPTRANDATA)pTranWToBMP;
+
+- (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon
+          usingTransformation:(LPTRANDATA)pTranWToBMP;
+
+- (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt
+               usingTransformation:(LPTRANDATA)pTranWToBMP;
+
 - (IBOUNDS)boundsFromRect:(CGRect)rect
       usingTransformation:(LPTRANDATA)pTranBMPToW;
 

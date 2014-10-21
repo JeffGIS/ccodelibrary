@@ -188,12 +188,19 @@ static UserDefaults *_defaults;
     [_defaults synchronize];
 }
 
-- (NSString *)sharedLocationPath
+- (NSString *)sharedFilePath
 {
     NSFileManager *fileManager = NSFileManager.defaultManager;
     NSString *appGroupName = @"group.com.GSSi.SurveyApps";
     NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:appGroupName];
     return groupContainerURL.relativePath;
+}
+
+- (NSString *)localFilePath
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    return documentsDirectory;
 }
 
 - (void)saveColorWithRed:(CGFloat)red

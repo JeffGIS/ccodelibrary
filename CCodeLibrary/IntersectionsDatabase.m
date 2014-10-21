@@ -39,9 +39,10 @@ static IntersectionsDatabase *_database;
 
 - (NSString *)databasePath:(int)geoid
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *subDir = [NSString stringWithFormat:@"%@/%i",documentsDirectory,geoid];
+    NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
+    //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
+    
+    NSString *subDir = [NSString stringWithFormat:@"%@/%i", documentsDirectory, geoid];
     NSFileManager *fileManager = NSFileManager.defaultManager;
     
     [fileManager createDirectoryAtPath:subDir
@@ -1095,8 +1096,9 @@ Exit:
 - (void)getPlaceIntersectionFile:(GSSiPopoverView*)popover
                         forGeoid:(int)geoid
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
+    //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
+    
     NSString *fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
     
     self.gettingUploaded = NO;
@@ -1110,15 +1112,19 @@ Exit:
       toDirectory:documentsDirectory
      forceRefresh:NO];
 }
-- (void)getUploadedIntersectionFile:(GSSiPopoverView*)popover
+
+- (void)getUploadedIntersectionFile:(GSSiPopoverView *)popover
                         forGeoid:(int)geoid
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
+    //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
+    
     NSString *fileName = [NSString stringWithFormat:@"%i.sqlite3", geoid];
     
     NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:documentsDirectory
-                                                            andName:[NSString stringWithFormat:@"/%i",self.geoid] create:YES];
+                                                            andName:[NSString stringWithFormat:@"/%i",self.geoid]
+                                                             create:YES];
+    
     [self close];
     
     self.gettingUploaded = YES;
@@ -1136,7 +1142,7 @@ Exit:
 
 - (void)getPlaceIntersectionDatabase:(GSSiPopoverView*)popover
 {
-    NSString * dbPath = [self databasePath:self.geoid];
+    NSString *dbPath = [self databasePath:self.geoid];
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
                                                                                  error:nil].fileSize;

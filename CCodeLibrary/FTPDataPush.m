@@ -33,6 +33,7 @@ enum {
 {
     return [[FTPDataPush alloc] init];
 }
+
 - (uint8_t *)buffer
 {
     return self->_buffer;
@@ -51,6 +52,7 @@ enum {
     
     return rtn;
 }
+
 - (BOOL)sendFile:(NSString *)fileName
    fromDirectory:(NSString *)fromDirectory
           toFile:(NSString *)toFileName

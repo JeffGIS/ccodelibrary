@@ -19,10 +19,9 @@
         _allowedZooms[0] = 21;
         _allowedZooms[1] = 20;
         _allowedZooms[2] = 19;
-        NSArray *paths = NSSearchPathForDirectoriesInDomains
-        (NSDocumentDirectory, NSUserDomainMask, YES);
-        self.documentsDirectory = [paths objectAtIndex:0];
         
+        self.documentsDirectory = UserDefaults.defaults.localFilePath;
+        //self.documentsDirectory = UserDefaults.defaults.sharedFilePath;
     }
     
     return self;
@@ -135,9 +134,9 @@
     }
 }
 
-- (int) adjustQuadDev:(int)normalRot
-             fromAZMs:(NSArray *)azms
-           withIntRot:(int)intRot
+- (int)adjustQuadDev:(int)normalRot
+            fromAZMs:(NSArray *)azms
+          withIntRot:(int)intRot
 {
     int rtn = normalRot;
     int minDiff = 999;
@@ -169,10 +168,18 @@
     NSArray *azm = [intAzm componentsSeparatedByString:@"|"];
     
     currentIntersection.quadDev0 = 0;
-    currentIntersection.quadDev90 = [self adjustQuadDev:90 fromAZMs:azm withIntRot:currentIntersection.intRotation];
-    currentIntersection.quadDev180 = [self adjustQuadDev:180 fromAZMs:azm withIntRot:currentIntersection.intRotation];
-    currentIntersection.quadDev270 = [self adjustQuadDev:270 fromAZMs:azm withIntRot:currentIntersection.intRotation];
     
+    currentIntersection.quadDev90 = [self adjustQuadDev:90
+                                               fromAZMs:azm
+                                             withIntRot:currentIntersection.intRotation];
+    
+    currentIntersection.quadDev180 = [self adjustQuadDev:180
+                                                fromAZMs:azm
+                                              withIntRot:currentIntersection.intRotation];
+    
+    currentIntersection.quadDev270 = [self adjustQuadDev:270
+                                                fromAZMs:azm
+                                              withIntRot:currentIntersection.intRotation];
 }
 
 - (double)azDiffFrom90s:(double)az
@@ -364,9 +371,7 @@
                             forceRefresh:(BOOL)refresh
 {
     if (refresh)
-    {
         [self deleteImagesForAllZooms:intersectionID];
-    }
     
     NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, zoom]];
     NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, zoom]];
@@ -423,6 +428,7 @@
 
         }
     }
+    
     return imageFile;
 }
 
@@ -433,8 +439,7 @@
 {
     UIImage *image = nil;
     
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=%f&heading=%f&pitch=%f&sensor=false&key=%@",
-                              atLatLon.lat, atLatLon.lon, fov, heading, pitch, GOOGLE_API_KEY];
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=%f&heading=%f&pitch=%f&sensor=false&key=%@", atLatLon.lat, atLatLon.lon, fov, heading, pitch, GOOGLE_API_KEY];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
@@ -460,23 +465,13 @@ forGeoid:(int)geoid
     
     if ((pBS = strrchr(str,'/')))
     {
-        if (!*(pBS+1))
+        if (!*(pBS + 1))
             *pBS = 0;
         strcat (str, name.UTF8String);
         outDir = [NSString stringWithUTF8String:str];
     }
     
     free(str);
-/*
-    if (create)
-    {
-        int rtn = [NSFileManager.defaultManager createDirectoryAtPath:outDir
-                                          withIntermediateDirectories:YES
-                                                           attributes:nil
-                                                                error:nil];
-
-    }
-*/
     return outDir;
 }
 
