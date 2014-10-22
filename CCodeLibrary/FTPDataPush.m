@@ -336,46 +336,60 @@ enum {
     
     if (self.hasFailed == NO)
     {
+        NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
+        
         [self stopSendWithStatus:FTP_CONNECTION_FAILED
                     statusString:error.localizedDescription];
         
-        NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
-        
-        if (self.currentFtp == self.ftpSite)
+        if (!self.useOnlyPrimaryFTP)
         {
-            [self setToFtpSite2];
-            self.currentFtp = self.ftpSite2;
+            if ([self.currentFtp isEqualToString:self.ftpSite])
+            {
+                [self setToFtpSite2];
+                self.currentFtp = self.ftpSite2;
+                
+                [UserDefaults.defaults saveString:self.currentFtp
+                                           forKey:@"CurrentFtp"];
+                
+                self.hasFailed = YES;
+                
+                [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                            statusString:error.localizedDescription];
+                
+            [self sendFile:self.fileName
+             fromDirectory:self.directory
+               toDirectory:self.toDirectory
+            deleteWhenDone:NO];
+            }
             
-            [UserDefaults.defaults saveString:self.currentFtp
-                                       forKey:@"CurrentFtp"];
-            
-            self.hasFailed = YES;
+            else
+            {
+                [self setToFtpSite1];
+                self.currentFtp = self.ftpSite;
+                
+                [UserDefaults.defaults saveString:self.currentFtp
+                                           forKey:@"CurrentFtp"];
+                
+                self.hasFailed = YES;
+                
+                [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                            statusString:error.localizedDescription];
             
             [self sendFile:self.fileName
              fromDirectory:self.directory
                toDirectory:self.toDirectory
             deleteWhenDone:NO];
-        }
-        
-        else
-        {
-            [self setToFtpSite1];
-            self.currentFtp = self.ftpSite;
-            
-            [UserDefaults.defaults saveString:self.currentFtp
-                                       forKey:@"CurrentFtp"];
-            
-            self.hasFailed = YES;
-            
-            [self sendFile:self.fileName
-             fromDirectory:self.directory
-               toDirectory:self.toDirectory
-            deleteWhenDone:NO];
+                
+            }
         }
     }
     
     else
     {
+        //remove file to ensure partially transferred files are not used
+        [NSFileManager.defaultManager removeItemAtPath:self.filePath
+                                                 error:nil];
+        
         [self stopSendWithStatus:FTP_CONNECTION_FAILED
                     statusString:error.localizedDescription];
         

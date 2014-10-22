@@ -65,11 +65,11 @@
                                                       error:nil];
     }
 }
+
 - (void)intersectionInit:(MPIntersection *)currentIntersection
 {
     currentIntersection.intID = -1;
     currentIntersection.dataUpdated = NO;
-    currentIntersection.pairedMode = 0;
     currentIntersection.intRotation = 0;
     currentIntersection.doLater = NO;
     currentIntersection.timeComplete = 0;
@@ -86,7 +86,7 @@
     currentIntersection.corner45isComplete = NO;
     currentIntersection.corner67isComplete = NO;
     currentIntersection.corner81isComplete = NO;
-    currentIntersection.quadDev90 = 0;
+    currentIntersection.quadDev0 = 0;
     currentIntersection.quadDev90 = 90;
     currentIntersection.quadDev180 = 180;
     currentIntersection.quadDev270 = 270;
@@ -132,6 +132,20 @@
                 break;
         }
     }
+}
+
+- (void)facilityInit:(Facility *)currentFacility
+{
+    currentFacility.facID = -1;
+    currentFacility.dataUpdated = NO;
+    currentFacility.intRotation = 0;
+    currentFacility.doLater = NO;
+    currentFacility.timeComplete = 0;
+    currentFacility.name1 = @"NOTYETSET";
+    currentFacility.quadDev90 = 0;
+    currentFacility.quadDev90 = 90;
+    currentFacility.quadDev180 = 180;
+    currentFacility.quadDev270 = 270;
 }
 
 - (int)adjustQuadDev:(int)normalRot

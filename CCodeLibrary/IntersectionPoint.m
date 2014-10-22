@@ -5,6 +5,8 @@
 
 @implementation IntersectionPoint
 
-@end@implementation IntersectionElement
+@end
+
+@implementation IntersectionElement
 
 @end

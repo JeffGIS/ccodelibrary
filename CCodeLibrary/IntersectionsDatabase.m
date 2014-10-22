@@ -27,16 +27,6 @@ static IntersectionsDatabase *_database;
     return self;
 }
 
-- (void)close
-{
-   sqlite3_close(_database);
-}
-
-- (void)dealloc
-{
-    sqlite3_close(_database);
-}
-
 - (NSString *)databasePath:(int)geoid
 {
     NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
@@ -209,6 +199,7 @@ static IntersectionsDatabase *_database;
     
     return icoord;
 }
+
 - (void)setXWalkCoord:(MPIntersection *)mpint
                 xWalk:(char)xw
                  from:(sqlite3_stmt *)statement
@@ -325,6 +316,7 @@ static IntersectionsDatabase *_database;
     
     return icoord;
 }
+
 - (void)setSignalCoord:(MPIntersection *)mpint
                 signal:(int)s
                   from:(sqlite3_stmt *)statement
@@ -409,7 +401,6 @@ static IntersectionsDatabase *_database;
     }
 }
 
-
 - (BOOL)storeMPIntersectionToDB:(MPIntersection*)mpint
                      withStatus:(int)status
 {
@@ -483,7 +474,7 @@ static IntersectionsDatabase *_database;
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
-        mpint = [[MPIntersection alloc]init];
+        mpint = [[MPIntersection alloc] init];
         [CRAPI.sharedInstance intersectionInit:mpint];
         mpint.intID = intID;
         mpint.lev21x = sqlite3_column_int(statement, 4);
@@ -853,7 +844,7 @@ static IntersectionsDatabase *_database;
 - (NSString *)getCurrentIntersectionAZMs:(int)intID
                                 nStreets:(int *)pnStreets
 {
-    NSString * rtn = [[NSString alloc]init];
+    NSString * rtn = [[NSString alloc] init];
     NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetAZMs FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement;
     
@@ -883,8 +874,8 @@ static IntersectionsDatabase *_database;
     
     SQLOK(sqlite3_finalize(statement));
     return count;
-    
 }
+
 - (BOOL)setIntersectionStatusTo:(int)status
                 forIntersection:(int)intID
 {
@@ -893,6 +884,7 @@ static IntersectionsDatabase *_database;
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i WHERE intID=%i",
                        iTime, status, intID];
+    
     char *error;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
@@ -941,14 +933,15 @@ static IntersectionsDatabase *_database;
 - (NSString *)intersectionTextPath:(int)type
 {
     NSString *path;
-    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *docsDir = [dirPaths objectAtIndex:0];
+    
+    NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
+    //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
     
     if (type == INT_TEXT_DATA)
-        path = [NSString stringWithFormat:@"%@/%i/intersection_data.bin", docsDir, self.geoid];
+        path = [NSString stringWithFormat:@"%@/%i/intersection_data.bin", documentsDirectory, self.geoid];
     
     else
-        path = [NSString stringWithFormat:@"%@/%i/intersection_index.bin", docsDir, self.geoid];
+        path = [NSString stringWithFormat:@"%@/%i/intersection_index.bin", documentsDirectory, self.geoid];
     
     return path;
 }
@@ -1022,8 +1015,9 @@ static IntersectionsDatabase *_database;
         
         for (i = 1, pInt = &intStruct.intID; i < 29; i++, pInt++)
             SQLOK(sqlite3_bind_int(statement, i, *pInt));
-        SQLOK(sqlite3_bind_text(statement, 29, intStruct.streetNames,-1,SQLITE_STATIC));
-        SQLOK(sqlite3_bind_text(statement, 30, intStruct.streetAzms,-1,SQLITE_STATIC));
+        
+        SQLOK(sqlite3_bind_text(statement, 29, intStruct.streetNames, -1, SQLITE_STATIC));
+        SQLOK(sqlite3_bind_text(statement, 30, intStruct.streetAzms, -1, SQLITE_STATIC));
 
         if (sqlite3_step(statement) != SQLITE_DONE)
         {
@@ -1053,7 +1047,9 @@ Exit:
     if (status == FTP_OK)
     {
         NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
-                                                                andName:[NSString stringWithFormat:@"/%i",self.geoid] create:YES];
+                                                                andName:[NSString stringWithFormat:@"/%i",self.geoid]
+                                                                 create:YES];
+        
         if (self.gettingUploaded)
             SQLOK(sqlite3_open(self.path.UTF8String, &_database));
         
@@ -1093,7 +1089,7 @@ Exit:
     return;
 }
 
-- (void)getPlaceIntersectionFile:(GSSiPopoverView*)popover
+- (void)getPlaceIntersectionFile:(GSSiPopoverView *)popover
                         forGeoid:(int)geoid
 {
     NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
@@ -1114,7 +1110,7 @@ Exit:
 }
 
 - (void)getUploadedIntersectionFile:(GSSiPopoverView *)popover
-                        forGeoid:(int)geoid
+                           forGeoid:(int)geoid
 {
     NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
     //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
@@ -1188,10 +1184,21 @@ Exit:
     else
     {
         [self getUploadedIntersectionFile:popover
-                              forGeoid:self.geoid];
+                                 forGeoid:self.geoid];
     }
     
 }
+
+- (void)close
+{
+    sqlite3_close(_database);
+}
+
+- (void)dealloc
+{
+    sqlite3_close(_database);
+}
+
 - (void)logError
 {
     int ierr = sqlite3_errcode(_database);

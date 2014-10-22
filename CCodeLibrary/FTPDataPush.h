@@ -39,6 +39,7 @@
 @property (nonatomic, copy, readwrite) NSString *currentFtp;
 @property (nonatomic, copy, readwrite) NSString *urlText;
 @property (nonatomic, assign, readwrite) BOOL hasFailed;
+@property (nonatomic, assign, readwrite ) BOOL useOnlyPrimaryFTP;
 @property (nonatomic) int geoid;
 @property (nonatomic) CGFloat progress;
 @property (strong, nonatomic)GSSiPopoverView *popover;

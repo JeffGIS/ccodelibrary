@@ -28,7 +28,7 @@
     
     if (fid && fread(&nPoints, sizeof(int), 1, fid))
     {
-        if (nPoints > 2 && fread (&nLoops, sizeof(int), 1, fid))
+        if (nPoints > 2 && fread(&nLoops, sizeof(int), 1, fid))
         {
             pnPointsInLoop = malloc(nLoops * sizeof(int));
             

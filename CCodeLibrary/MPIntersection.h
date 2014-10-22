@@ -35,6 +35,7 @@ enum obstructions {
 };
 
 @interface PSRamp:NSObject
+
 @property int lev21x;
 @property int lev21y;
 @property int imageX;
@@ -99,7 +100,6 @@ enum obstructions {
 @property int intRotation;
 @property bool doLater;
 @property int timeComplete;
-@property int pairedMode;
 @property int  currentCorner;
 @property int  currentSignal;
 @property int  currentObstruction;
@@ -140,7 +140,7 @@ enum obstructions {
 @property bool corner45isComplete;
 @property bool corner67isComplete;
 @property bool corner81isComplete;
-@property int quadDev0,quadDev90,quadDev180,quadDev270;
+@property int quadDev0, quadDev90, quadDev180, quadDev270;
 @property int lev21x, lev21y;
 @property double lat,lon;
 @property (nonatomic,strong) NSMutableArray *ramps;

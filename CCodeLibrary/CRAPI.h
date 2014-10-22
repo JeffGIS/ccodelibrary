@@ -4,6 +4,7 @@
 #import <Foundation/Foundation.h>
 #import "CCodeTypes.h"
 #import "MPIntersection.h"
+#import "Facility.h"
 #import "UserDefaults.h"
 #import "GoogleMaps/GoogleMaps.h"
 
@@ -26,6 +27,7 @@
 
 - (void)setCurrentGeoid:(int)currentGeoid;
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
+- (void)facilityInit:(Facility *)currentFacility;
 
 - (void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm
                                    forInt:(MPIntersection *)currentIntersection;

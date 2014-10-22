@@ -66,7 +66,6 @@
 @synthesize intRotation;
 @synthesize doLater;
 @synthesize timeComplete;
-@synthesize pairedMode;
 @synthesize currentCorner;
 @synthesize currentRamp;
 @synthesize currentSignal;

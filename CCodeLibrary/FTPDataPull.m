@@ -13,6 +13,7 @@
 {
     return [[FTPDataPull alloc] init];
 }
+
 - (void)getFile:(NSString *)fileName
   fromDirectory:(NSString *)fromDirectory
     toDirectory:(NSString *)toDirectory
@@ -71,7 +72,7 @@
 
 - (void)receiveDidStart
 {
-    NSLog (@"Attempting to PULL %@ from %@", self.fileName, self.currentFtp);
+    NSLog(@"Attempting to PULL %@ from %@", self.fileName, self.currentFtp);
     [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 
@@ -259,16 +260,14 @@ didReceiveResponse:(NSURLResponse *)response
     
     if (self.hasFailed == NO)
     {
-        if (self.useOnlyPrimaryFTP)
+        NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
+        
+        [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
+                       statusString:error.localizedDescription];
+        
+        if (!self.useOnlyPrimaryFTP)
         {
-            [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
-                           statusString:error.localizedDescription];
-        }
-        else
-        {
-            NSLog (@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
-            
-            if (self.currentFtp == self.ftpSite)
+            if ([self.currentFtp isEqualToString:self.ftpSite])
             {
                 [self setToFtpSite2];
                 self.currentFtp = self.ftpSite2;
@@ -277,6 +276,9 @@ didReceiveResponse:(NSURLResponse *)response
                                            forKey:@"CurrentFtp"];
                 
                 self.hasFailed = YES;
+                
+                [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
+                               statusString:error.localizedDescription];
                 
                 [self getFile:self.fileName
                 fromDirectory:self.directory
@@ -293,6 +295,9 @@ didReceiveResponse:(NSURLResponse *)response
                                            forKey:@"CurrentFtp"];
                 
                 self.hasFailed = YES;
+                
+                [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
+                               statusString:error.localizedDescription];
                 
                 [self getFile:self.fileName
                 fromDirectory:self.directory
@@ -311,7 +316,7 @@ didReceiveResponse:(NSURLResponse *)response
         [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
                        statusString:error.localizedDescription];
         
-        NSLog (@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
+        NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
         
         self.currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
         

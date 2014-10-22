@@ -39,11 +39,13 @@
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
-- (void)getUploadedIntersectionDatabase:(GSSiPopoverView*)popover;
+- (void)getUploadedIntersectionDatabase:(GSSiPopoverView *)popover;
 - (void)getPlaceIntersectionDatabase:(GSSiPopoverView *)popover;
 - (NSMutableArray *)getIntersectionPointsFromDatabase;
 - (NSMutableArray *)getIntersectionPointsFromDatabaseinBounds:(IBOUNDS)bounds;
-- (NSMutableArray *)getIntersectionElementsFromDatabaseinBounds:(IBOUNDS)bounds skipIntID:(int)skipID;
+
+- (NSMutableArray *)getIntersectionElementsFromDatabaseinBounds:(IBOUNDS)bounds
+                                                      skipIntID:(int)skipID;
 
 - (NSMutableArray *)getIntersectionPointsWithinDistance:(int)meters
                                                 ofPoint:(LLPOINT)latlon;
@@ -55,7 +57,7 @@
 
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;
 
-- (BOOL)storeMPIntersectionToDB:(MPIntersection*)mpint
+- (BOOL)storeMPIntersectionToDB:(MPIntersection *)mpint
                      withStatus:(int)status;
 
 - (MPIntersection*) getMPIntersectionFromDB:(int)intID
@@ -65,6 +67,7 @@
 
 - (BOOL)setIntersectionStatusTo:(int)status
                 forIntersection:(int)intID;
+
 - (BOOL)assignIntersection:(int)intID To:(int)user;
 
 - (NSString *)intersectionTextPath:(int)type;
