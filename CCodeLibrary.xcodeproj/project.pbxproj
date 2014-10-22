@@ -20,6 +20,7 @@
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
 		A926F21119D9FC18007C392A /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = A926F21019D9FC18007C392A /* CircleView.m */; };
+		A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770C19F7F9F40062906E /* SharedDefaults.m */; };
 		A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9735AF019E779DF00894359 /* SystemConfiguration.framework */; };
 		A9735AF419E77B6800894359 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A9735AF319E77B6800894359 /* Reachability.m */; };
 		A9A9C8DF19CD04E100A63E94 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A9C8DE19CD04E100A63E94 /* GoogleMaps.framework */; };
@@ -91,6 +92,8 @@
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
 		A926F20F19D9FC18007C392A /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
 		A926F21019D9FC18007C392A /* CircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleView.m; sourceTree = "<group>"; };
+		A94A770B19F7F9F40062906E /* SharedDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedDefaults.h; sourceTree = "<group>"; };
+		A94A770C19F7F9F40062906E /* SharedDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedDefaults.m; sourceTree = "<group>"; };
 		A9735AF019E779DF00894359 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		A9735AF219E77B6800894359 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		A9735AF319E77B6800894359 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
@@ -251,6 +254,8 @@
 				1F3A544519A412490029DBEA /* NetworkManager.m */,
 				1F838AE819B1021C00943A8C /* PlacesInfo.h */,
 				1F838AE919B1021C00943A8C /* PlacesInfo.m */,
+				A94A770B19F7F9F40062906E /* SharedDefaults.h */,
+				A94A770C19F7F9F40062906E /* SharedDefaults.m */,
 				A9735AF219E77B6800894359 /* Reachability.h */,
 				A9735AF319E77B6800894359 /* Reachability.m */,
 				EBA2E48619952BCA0085B2E0 /* rotate256.h */,
@@ -378,6 +383,7 @@
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				A9735AF419E77B6800894359 /* Reachability.m in Sources */,
+				A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */,
 				1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */,
 				1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */,
 				EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */,

@@ -191,8 +191,7 @@ static UserDefaults *_defaults;
 - (NSString *)sharedFilePath
 {
     NSFileManager *fileManager = NSFileManager.defaultManager;
-    NSString *appGroupName = @"group.com.GSSi.SurveyApps";
-    NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:appGroupName];
+    NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:@"group.com.GSSi.SurveyApps"];
     return groupContainerURL.relativePath;
 }
 
