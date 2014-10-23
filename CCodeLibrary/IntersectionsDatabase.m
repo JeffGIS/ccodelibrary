@@ -991,10 +991,10 @@ static IntersectionsDatabase *_database;
     
     while (fgetstring(data, maxData, fidData))
     {
-        LPSTR pTab = strchr(data, '\t');
-        LPSTR pTabIndex, pAzms,pEnd;
-        fgetstring (index,maxIndex,fidIndex);
-        pTabIndex = strchr(index, '\t');
+        LPSTR pTab = strchr(data,'\t');
+        LPSTR pTabIndex, pAzms, pEnd;
+        fgetstring(index, maxIndex, fidIndex);
+        pTabIndex = strchr(index,'\t');
         *pTab++ = 0;
         *pTabIndex = 0;
         pTabIndex = strchr(index,' ');
@@ -1004,14 +1004,14 @@ static IntersectionsDatabase *_database;
         intStruct.lev21X = atoi(pTabIndex);
         intStruct.assignedTo = 0;
         intStruct.status = 0;
-        intStruct.nStreets = atoi (pTab);
-        pTab = strchr (pTab,'\t')+1;
-        pAzms = strchr (pTab,'\t');
+        intStruct.nStreets = atoi(pTab);
+        pTab = strchr(pTab,'\t') + 1;
+        pAzms = strchr(pTab,'\t');
         *pAzms++ = 0;
-        pEnd = strchr (pAzms,'\t');
+        pEnd = strchr(pAzms,'\t');
         *pEnd = 0;
-        strncpy (intStruct.streetNames,pTab,sizeof(intStruct.streetNames)-1);
-        strncpy (intStruct.streetAzms,pAzms,sizeof(intStruct.streetAzms)-1);
+        strncpy(intStruct.streetNames, pTab, sizeof(intStruct.streetNames) - 1);
+        strncpy(intStruct.streetAzms, pAzms, sizeof(intStruct.streetAzms) - 1);
         
         for (i = 1, pInt = &intStruct.intID; i < 29; i++, pInt++)
             SQLOK(sqlite3_bind_int(statement, i, *pInt));
