@@ -40,6 +40,10 @@
 #define CRYSTAL_LAKE_IL 1717887
 #define EAGAN_MN 2717288
 #define APP_GROUP_ID @"group.com.GSSi.SurveyApps";
+#define NUMREADINGS 30
+#define LEFT 1
+#define MIDDLE 2
+#define RIGHT 3
 
 @interface CCodeLibrary : NSObject
 

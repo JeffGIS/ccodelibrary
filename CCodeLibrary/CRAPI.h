@@ -24,6 +24,7 @@
 @property (nonatomic) NSArray *placesArray;
 @property (nonatomic) NSArray *currentPlaceArray;
 @property (nonatomic) NSString *placeAreaFile;
+@property BOOL doCompassCalibrate;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
