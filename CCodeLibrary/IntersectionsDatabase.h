@@ -34,6 +34,7 @@
 @property (nonatomic, weak) id <IntersectionsDatabaseDelegate> delegate;
 @property int geoid;
 @property BOOL gettingUploaded;
+@property BOOL isOpen;
 @property NSString *path;
 @property sqlite3_stmt *statement;
 

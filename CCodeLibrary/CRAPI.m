@@ -474,12 +474,14 @@ forGeoid:(int)geoid
     LPSTR str = malloc(path.length + 2);
     LPSTR pBS;
     NSString *outDir = @"";
+    BOOL isDir;
     
     strcpy(str,path.UTF8String);
     
     if ((pBS = strrchr(str,'/')))
     {
-        if (!*(pBS + 1))
+        BOOL exists = [NSFileManager.defaultManager fileExistsAtPath:path isDirectory:&isDir];
+        if (!*(pBS + 1) || (exists && !isDir))
             *pBS = 0;
         strcat (str, name.UTF8String);
         outDir = [NSString stringWithUTF8String:str];

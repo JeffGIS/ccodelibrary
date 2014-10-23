@@ -21,7 +21,7 @@ static IntersectionsDatabase *_database;
     {
         self.geoid = geoid;
         self.path = [self databasePath:geoid];
-        SQLOK(sqlite3_open(self.path.UTF8String, &_database));
+        self.isOpen = SQLOK(sqlite3_open(self.path.UTF8String, &_database));
     }
     
     return self;
@@ -44,14 +44,15 @@ static IntersectionsDatabase *_database;
     return dbPath;
 }
 
-- (void)createIntersectionsTable
+- (BOOL)createIntersectionsTable
 {
-    char *error;
+    char **error=nil;
+    BOOL rtn;
     
+    [self open];
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;"];
     
-    SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error));
-    sqlite3_free(error);
+    SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL));
     
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (\
                        intID INTEGER PRIMARY KEY,\
@@ -85,16 +86,22 @@ static IntersectionsDatabase *_database;
                        streetNames CHAR(512),\
                        streetAZMs CHAR(128));"];
     
-    SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
+    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error));
     sqlite3_free(error);
-    
+    if (rtn != SQLITE_OK)
+        return rtn;
     query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Intersections (intX);"];
-    SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
+    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error));
     sqlite3_free(error);
+    if (rtn != SQLITE_OK)
+        return rtn;
     
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Intersections (intY);"];
-    SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
+    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error));
     sqlite3_free(error);
+    if (rtn == SQLITE_OK)
+        rtn = YES;
+    return rtn;
 }
 
 - (int)getOffsetCoord:(MPIntersection *)mpint
@@ -958,7 +965,6 @@ static IntersectionsDatabase *_database;
     int nLoaded = 0;
     char buffer[] = "INSERT INTO Intersections VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     sqlite3_stmt *statement;
-    char *error;
     INTERSECTION_STRUCT intStruct = {0};
     int *pInt, i;
     
@@ -981,11 +987,11 @@ static IntersectionsDatabase *_database;
     if (fidData == nil || fidIndex == nil)
         goto Exit;
     
-    [self createIntersectionsTable];
+    if (![self createIntersectionsTable])
+        goto Exit2;
     
     SQLOK(sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL));
-    SQLOK(sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &error));
-    sqlite3_free(error);
+    SQLOK(sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, NULL));
     
     fgetstring(index, maxIndex, fidIndex);
     
@@ -1029,14 +1035,14 @@ static IntersectionsDatabase *_database;
         SQLOK(sqlite3_reset(statement));
     }
     
-    SQLOK(sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, &error));
-    sqlite3_free(error);
+    SQLOK(sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, NULL));
     SQLOK(sqlite3_finalize(self.statement));
     
+    rtn = INTDB_OK;
+Exit2:
     fclose(fidIndex);
     fclose(fidData);
-    rtn = INTDB_OK;
-    
+
 Exit:
     return rtn;
 }
@@ -1051,7 +1057,7 @@ Exit:
                                                                  create:YES];
         
         if (self.gettingUploaded)
-            SQLOK(sqlite3_open(self.path.UTF8String, &_database));
+            [self open];
         
         else
         {
@@ -1131,7 +1137,7 @@ Exit:
     
     [pull getFile:fileName
     fromDirectory:@"Bill/UploadedIntersections"
-           toFile:@"Intersectionsz.sqlite3"
+           toFile:@"Intersections.sqlite3"
       toDirectory:toDirectory
      forceRefresh:YES];
 }
@@ -1168,8 +1174,7 @@ Exit:
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
                                                                                  error:nil].fileSize;
-    
-    BOOL forceReload = YES;
+    BOOL forceReload = NO;
     
     if (fileSize > 0 && !forceReload)
     {
@@ -1189,9 +1194,16 @@ Exit:
     
 }
 
+- (void)open
+{
+    if (!self.isOpen)
+        self.isOpen = SQLOK(sqlite3_open(self.path.UTF8String, &_database));
+
+}
 - (void)close
 {
     sqlite3_close(_database);
+    self.isOpen = NO;
 }
 
 - (void)dealloc
