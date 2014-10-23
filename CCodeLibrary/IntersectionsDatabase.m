@@ -149,10 +149,13 @@ static IntersectionsDatabase *_database;
         ramp.lev21x = lev21x;
         ramp.lev21y = lev21y;
         ramp.rampExists = YES;
+        ramp.isComplete = NO;
     }
-    
     else
+    {
         ramp.rampExists = NO;
+        ramp.isComplete = YES;
+    }
 }
 
 
@@ -473,6 +476,7 @@ static IntersectionsDatabase *_database;
                                  withRamps:(BOOL)wantRamps
 {
     MPIntersection *mpint = nil;
+    double lat, lon;
     
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement;
@@ -486,6 +490,9 @@ static IntersectionsDatabase *_database;
         mpint.intID = intID;
         mpint.lev21x = sqlite3_column_int(statement, 4);
         mpint.lev21y = sqlite3_column_int(statement, 5);
+        PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
+        mpint.lat = lat;
+        mpint.lon = lon;
         [self setRampCoord:mpint ramp:1 from:statement];
         [self setRampCoord:mpint ramp:2 from:statement];
         [self setRampCoord:mpint ramp:3 from:statement];
