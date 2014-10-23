@@ -68,11 +68,11 @@ static FacilitiesDatabase *_database;
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
     sqlite3_free(error);
     
-    query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Facilities (intX);"];
+    query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Facilities (facX);"];
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
     sqlite3_free(error);
     
-    query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Facilities (intY);"];
+    query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Facilities (facY);"];
     SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error));
     sqlite3_free(error);
 }
@@ -166,7 +166,7 @@ static FacilitiesDatabase *_database;
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
     NSString *query = [NSString stringWithFormat:
-                       @"SELECT facID, assignedTo, status, intX, intY,\
+                       @"SELECT facID, assignedTo, status, facX, facY,\
                        FROM Facilities WHERE facX >= %i AND facX <= %i AND facY >= %i AND facY <= %i",
                        (int)bounds.xmn, (int)bounds.xmx, (int)bounds.ymn, (int)bounds.ymx];
     
@@ -292,7 +292,7 @@ static FacilitiesDatabase *_database;
                             nStreets:(int *)pnStreets
 {
     NSString * rtn = [[NSString alloc] init];
-    NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetAZMs FROM Facilities WHERE intID=%i", facID];
+    NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetAZMs FROM Facilities WHERE facID=%i", facID];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
@@ -486,10 +486,10 @@ static FacilitiesDatabase *_database;
     
     while (fgetstring(data, maxData, fidData))
     {
-        LPSTR pTab = strchr(data, '\t');
-        LPSTR pTabIndex, pAzms,pEnd;
-        fgetstring (index,maxIndex,fidIndex);
-        pTabIndex = strchr(index, '\t');
+        LPSTR pTab = strchr(data,'\t');
+        LPSTR pTabIndex, pAzms, pEnd;
+        fgetstring(index, maxIndex, fidIndex);
+        pTabIndex = strchr(index,'\t');
         *pTab++ = 0;
         *pTabIndex = 0;
         pTabIndex = strchr(index,' ');
@@ -499,14 +499,14 @@ static FacilitiesDatabase *_database;
         facStruct.lev21X = atoi(pTabIndex);
         facStruct.assignedTo = 0;
         facStruct.status = 0;
-        facStruct.nStreets = atoi (pTab);
-        pTab = strchr (pTab,'\t')+1;
-        pAzms = strchr (pTab,'\t');
+        facStruct.nStreets = atoi(pTab);
+        pTab = strchr(pTab,'\t') + 1;
+        pAzms = strchr(pTab,'\t');
         *pAzms++ = 0;
-        pEnd = strchr (pAzms,'\t');
+        pEnd = strchr(pAzms,'\t');
         *pEnd = 0;
-        strncpy (facStruct.streetNames,pTab,sizeof(facStruct.streetNames)-1);
-        strncpy (facStruct.streetAzms,pAzms,sizeof(facStruct.streetAzms)-1);
+        strncpy(facStruct.streetNames, pTab, sizeof(facStruct.streetNames) - 1);
+        strncpy(facStruct.streetAzms, pAzms, sizeof(facStruct.streetAzms) - 1);
         
         for (i = 1, pInt = &facStruct.facID; i < 29; i++, pInt++)
             SQLOK(sqlite3_bind_int(statement, i, *pInt));
