@@ -46,7 +46,7 @@ static IntersectionsDatabase *_database;
 
 - (BOOL)createIntersectionsTable
 {
-    char **error=nil;
+    char **error = nil;
     BOOL rtn;
     
     [self open];
@@ -88,19 +88,24 @@ static IntersectionsDatabase *_database;
     
     rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error));
     sqlite3_free(error);
+    
     if (rtn != SQLITE_OK)
         return rtn;
+    
     query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Intersections (intX);"];
     rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error));
     sqlite3_free(error);
+    
     if (rtn != SQLITE_OK)
         return rtn;
     
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Intersections (intY);"];
     rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error));
     sqlite3_free(error);
+    
     if (rtn == SQLITE_OK)
         rtn = YES;
+    
     return rtn;
 }
 
@@ -157,7 +162,6 @@ static IntersectionsDatabase *_database;
         ramp.isComplete = YES;
     }
 }
-
 
 - (int)getXWalkCoord:(MPIntersection *)mpint
                xWalk:(char)xw
@@ -760,8 +764,8 @@ static IntersectionsDatabase *_database;
         *plev21x = intX;
         *plev21y = intY;
         *pNumStreets = nStreets;
-        strcpy(intText,pStreets);
-        strcpy(intAZMs,pAZMS);
+        strcpy(intText, pStreets);
+        strcpy(intAZMs, pAZMS);
         rtn = intID;
     }
     
@@ -783,8 +787,8 @@ static IntersectionsDatabase *_database;
     LLPOINT latlon;
     PixelXYToLatLong(lev21x, lev21y, 21, &latlon.lat, &latlon.lon);
     
-    NSMutableArray * nearInts = [self getIntersectionPointsWithinDistance:500
-                                                                  ofPoint:latlon];
+    NSMutableArray *nearInts = [self getIntersectionPointsWithinDistance:500
+                                                                 ofPoint:latlon];
     
     if (nearInts.count >= iWant)
     {
