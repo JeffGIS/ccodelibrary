@@ -1,63 +1,61 @@
 #ifndef __MATHUTIL_H
 #define __MATHUTIL_H
-
 #include "CCodeTypes.h"
 #include <stdbool.h>
 #include <stdio.h>
-
 
 //1D
 float ClockwiseDegFromNorth (float deg);
 float DegreesToRadians(float degrees);
 float Lerp(float f0, float f1, float t);
-int	  Clamp(int n, int clampMin, int clampMax);
+int	Clamp(int n, int clampMin, int clampMax);
 float ClampF(float n, float clampMin, float clampMax);
 float MaxF(float l, float r);
 int Max(int l, int r);
 
 //2D
 float DotVec2(vec2* vec0, vec2* vec1);
-void  LerpVec2(vec2* out_lerpedPos, vec2* p0, vec2* p1, float t);
-void  NormalizeVec2(vec2* vec);
+void LerpVec2(vec2* out_lerpedPos, vec2* p0, vec2* p1, float t);
+void NormalizeVec2(vec2* vec);
 float MagnitudeVec2(vec2* vec);
-void  SubVec2(vec2* out_resultVec, vec2* p0, vec2* p1);
-void  SubVec2_Self(vec2* out_resultVec, vec2* p);
-void  ScaleVec2_Self(vec2* vec, float scale);
-void  ScaleVec2(vec2* out_resultVec, vec2* vec, float scale);
-void  AddVec2_Self(vec2* out_resultVec, vec2* vec);
-void  AddVec2(vec2* out_resultVec, vec2* vec0, vec2* vec1);
-void  AddScaledVec2_Self(vec2* out_resultVec, vec2* vec, float scale);
-void  AddScaledVec2(vec2* out_resultVec, vec2* vec0, vec2* vec1, float scale);
-void  SubScaledVec2_Self(vec2* out_resultVec, vec2* vec, float scale);
-void  SubScaledVec2(vec2* out_resultVec, vec2* vec0, vec2* vec1, float scale);
-void  CopyVec2(vec2* out_result, vec2* point);
-void  CreatePlaneFromPointsVec2(struct PlaneVec2* out_resultPlane, vec2* p0, vec2* p1);
-bool  PointInsidePlaneVec2(vec2* point,struct PlaneVec2* plane);
-bool  PointInsidePlaneVec2(vec2* point, struct PlaneVec2* plane);
+void SubVec2(vec2* out_resultVec, vec2* p0, vec2* p1);
+void SubVec2_Self(vec2* out_resultVec, vec2* p);
+void ScaleVec2_Self(vec2* vec, float scale);
+void ScaleVec2(vec2* out_resultVec, vec2* vec, float scale);
+void AddVec2_Self(vec2* out_resultVec, vec2* vec);
+void AddVec2(vec2* out_resultVec, vec2* vec0, vec2* vec1);
+void AddScaledVec2_Self(vec2* out_resultVec, vec2* vec, float scale);
+void AddScaledVec2(vec2* out_resultVec, vec2* vec0, vec2* vec1, float scale);
+void SubScaledVec2_Self(vec2* out_resultVec, vec2* vec, float scale);
+void SubScaledVec2(vec2* out_resultVec, vec2* vec0, vec2* vec1, float scale);
+void CopyVec2(vec2* out_result, vec2* point);
+void CreatePlaneFromPointsVec2(struct PlaneVec2* out_resultPlane, vec2* p0, vec2* p1);
+bool PointInsidePlaneVec2(vec2* point,struct PlaneVec2* plane);
+bool PointInsidePlaneVec2(vec2* point, struct PlaneVec2* plane);
 float AngleBetweenVec2(vec2* vec0, vec2* vec1);
 
 //3D
-void  SetVec3(vec3* out_resultVec,float x, float y, float z);
-void  CrossVec3(vec3* out_resultVec, const vec3* vec0, const vec3* vec1);
+void SetVec3(vec3* out_resultVec,float x, float y, float z);
+void CrossVec3(vec3* out_resultVec, const vec3* vec0, const vec3* vec1);
 float DotVec3(const vec3* vec0, const vec3* vec1);
-void  LerpVec3(vec3* out_lerpedPos, const vec3* p0, const vec3* p1, float t);
-void  NormalizeVec3(vec3* vec);
+void LerpVec3(vec3* out_lerpedPos, const vec3* p0, const vec3* p1, float t);
+void NormalizeVec3(vec3* vec);
 float MagnitudeVec3(const vec3* vec);
-bool  PosIsBehind(const vec3* frontPos, const vec3* frontAt, const vec3* behindPos);
+bool PosIsBehind(const vec3* frontPos, const vec3* frontAt, const vec3* behindPos);
 float DistSqVec3(const vec3* vec0, const vec3* vec1);
 float DistVec3_2D(const vec3* vec0, const vec3* vec1);
 float DistVec3(const vec3* vec0, const vec3* vec1);
 float MagnitudeSqVec3(const vec3* vec);
-void  AddVec3_Self(vec3* out_resultVec, vec3* vec);
-void  AddVec3(vec3* out_resultVec, vec3* vec0, vec3* vec1);
-void  AddScaledVec3_Self(vec3* out_resultVec, const vec3* vec, float scale);
-void  AddScaledVec3(vec3* out_resultVec, const vec3* vec0, const vec3* vec1, float scale);
-void  SubScaledVec3_Self(vec3* out_resultVec, vec3* vec, float scale);
-void  SubScaledVec3(vec3* out_resultVec, vec3* vec0, vec3* vec1, float scale);
-void  SubVec3(vec3* out_resultVec, const vec3* p0, const vec3* p1);
-void  ScaleVec3_Self(vec3* vec, float scale);
-void  ScaleVec3(vec3* out_resultVec, const vec3* vec, float scale);
-void  CopyVec3(vec3* out_result, const vec3* point);
+void AddVec3_Self(vec3* out_resultVec, vec3* vec);
+void AddVec3(vec3* out_resultVec, vec3* vec0, vec3* vec1);
+void AddScaledVec3_Self(vec3* out_resultVec, const vec3* vec, float scale);
+void AddScaledVec3(vec3* out_resultVec, const vec3* vec0, const vec3* vec1, float scale);
+void SubScaledVec3_Self(vec3* out_resultVec, vec3* vec, float scale);
+void SubScaledVec3(vec3* out_resultVec, vec3* vec0, vec3* vec1, float scale);
+void SubVec3(vec3* out_resultVec, const vec3* p0, const vec3* p1);
+void ScaleVec3_Self(vec3* vec, float scale);
+void ScaleVec3(vec3* out_resultVec, const vec3* vec, float scale);
+void CopyVec3(vec3* out_result, const vec3* point);
 float AngleBetweenVec3(vec3* vec0, vec3* vec1);
 float distpd(vec2 *Point1, vec2 *Point2);
 float getazmd (vec2 *Point1, vec2 *Point2);
