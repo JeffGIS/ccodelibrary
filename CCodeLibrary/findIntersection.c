@@ -79,7 +79,7 @@ int GetCornerIDFromHeading (int heading, int IntersectionCorrection)
     return 23;
 }
 
-int DoTestStruct (const char *testFile)
+int DoTestStruct(const char *testFile)
 {
     TESTSTRUCT testStruct;
     int l = sizeof(testStruct);

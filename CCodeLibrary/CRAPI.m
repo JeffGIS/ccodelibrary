@@ -156,11 +156,11 @@
     int minDiff = 999;
     int minRot = 0;
     
-    for (NSString * cazm in azms)
+    for (NSString *cazm in azms)
     {
         float az = cazm.floatValue;
         int adjustedRot = ClockwiseDegFromNorth((az * RADtoDEG) + intRot);
-        int diff = abs (normalRot - adjustedRot);
+        int diff = abs(normalRot - adjustedRot);
         
         if (diff < minDiff)
         {
@@ -405,11 +405,11 @@
     
     if (!rtn)
     {
-        UIAlertView *getError = [[UIAlertView alloc]initWithTitle:@"Error getting intersection image."
-                                                          message:@"Unable to access server."
-                                                         delegate:self
-                                                cancelButtonTitle:@"Continue"
-                                                otherButtonTitles:nil];
+        UIAlertView *getError = [[UIAlertView alloc] initWithTitle:@"Error getting intersection image."
+                                                           message:@"Unable to access server."
+                                                          delegate:self
+                                                 cancelButtonTitle:@"Continue"
+                                                 otherButtonTitles:nil];
         [getError show];
     }
     
@@ -483,7 +483,7 @@ forGeoid:(int)geoid
         BOOL exists = [NSFileManager.defaultManager fileExistsAtPath:path isDirectory:&isDir];
         if (!*(pBS + 1) || (exists && !isDir))
             *pBS = 0;
-        strcat (str, name.UTF8String);
+        strcat(str, name.UTF8String);
         outDir = [NSString stringWithUTF8String:str];
     }
     

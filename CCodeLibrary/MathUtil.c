@@ -20,16 +20,13 @@ int Max(int l, int r)
 	return l > r ? l : r;
 }
 
-int	  Clamp(int n, int clampMin, int clampMax)
+int	Clamp(int n, int clampMin, int clampMax)
 {
 	if(n < clampMin)
-	{
 		n = clampMin;
-	}
+    
 	else if(n > clampMax)
-	{
 		n = clampMax;
-	}
 	
 	return n;
 }
@@ -37,14 +34,10 @@ int	  Clamp(int n, int clampMin, int clampMax)
 float ClampF(float n, float clampMin, float clampMax)
 {
 	if(n < clampMin)
-	{
 		n = clampMin;
-	}
     
 	else if(n > clampMax)
-	{
 		n = clampMax;
-	}
 	
 	return n;
 }
@@ -95,7 +88,7 @@ void  LerpVec3(vec3 *out_lerpedPos, const vec3 *p0, const vec3 *p1, float t)
 	}
 }
 
-float MagnitudeVec2(vec2* vec)
+float MagnitudeVec2(vec2 *vec)
 {
 	return sqrtf(DotVec2(vec,vec));
 }
@@ -128,24 +121,24 @@ bool PosIsBehind(const vec3 *frontPos, const vec3 *frontAt, const vec3 *behindPo
 	return DotVec3(frontAt, &dirVec) <= 0.0f;
 }
 
-float MagnitudeSqVec3(const vec3* vec)
+float MagnitudeSqVec3(const vec3 *vec)
 {
 	return DotVec3(vec,vec);
 }
 
-float MagnitudeVec3(const vec3* vec)
+float MagnitudeVec3(const vec3 *vec)
 {
 	return sqrtf(MagnitudeSqVec3(vec));
 }
 
-void  NormalizeVec2(vec2* vec)
+void NormalizeVec2(vec2 *vec)
 {
 	const float length = MagnitudeVec2(vec);
 	vec->x/=length;
 	vec->y/=length;
 }
 
-void  NormalizeVec3(vec3* vec)
+void NormalizeVec3(vec3 *vec)
 {
 	const float length = MagnitudeVec3(vec);
 	vec->x/=length;
@@ -153,108 +146,108 @@ void  NormalizeVec3(vec3* vec)
 	vec->z/=length;
 }
 
-void  SubVec2(vec2* out_resultVec, vec2* p0, vec2* p1)
+void SubVec2(vec2 *out_resultVec, vec2 *p0, vec2 *p1)
 {
 	out_resultVec->x = p0->x-p1->x;
 	out_resultVec->y = p0->y-p1->y;
 }
 
-void  SubVec2_Self(vec2* out_resultVec, vec2* p)
+void SubVec2_Self(vec2 *out_resultVec, vec2 *p)
 {
 	out_resultVec->x -= p->x;
 	out_resultVec->y -= p->y;
 }
 
-void  SubVec3(vec3* out_resultVec, const vec3* p0, const vec3* p1)
+void SubVec3(vec3 *out_resultVec, const vec3 *p0, const vec3 *p1)
 {
 	out_resultVec->x = p0->x-p1->x;
 	out_resultVec->y = p0->y-p1->y;
 	out_resultVec->z = p0->z-p1->z;
 }
 
-void  ScaleVec2_Self(vec2* vec, float scale)
+void ScaleVec2_Self(vec2 *vec, float scale)
 {
 	vec->x *= scale;
 	vec->y *= scale;
 }
 
-void  ScaleVec2(vec2* out_resultVec, vec2* vec, float scale)
+void ScaleVec2(vec2 *out_resultVec, vec2 *vec, float scale)
 {
 	out_resultVec->x = vec->x*scale;
 	out_resultVec->y = vec->y*scale;
 }
 
-void  ScaleVec3_Self(vec3* vec, float scale)
+void ScaleVec3_Self(vec3 *vec, float scale)
 {
 	vec->x *= scale;
 	vec->y *= scale;
 	vec->z *= scale;
 }
 
-void  ScaleVec3(vec3* out_resultVec, const vec3* vec, float scale)
+void ScaleVec3(vec3 *out_resultVec, const vec3 *vec, float scale)
 {
 	out_resultVec->x = vec->x*scale;
 	out_resultVec->y = vec->y*scale;
 	out_resultVec->z = vec->z*scale;
 }
 
-void  AddScaledVec2_Self(vec2* out_resultVec, vec2* vec, float scale)
+void AddScaledVec2_Self(vec2 *out_resultVec, vec2 *vec, float scale)
 {
 	out_resultVec->x += vec->x*scale;
 	out_resultVec->y += vec->y*scale;
 }
 
-void  AddScaledVec2(vec2* out_resultVec, vec2* vec0, vec2* vec1, float scale)
+void AddScaledVec2(vec2 *out_resultVec, vec2 *vec0, vec2 *vec1, float scale)
 {
 	out_resultVec->x = vec0->x + vec1->x*scale;
 	out_resultVec->y = vec0->y + vec1->y*scale;
 }
 
-void  SubScaledVec2_Self(vec2* out_resultVec, vec2* vec, float scale)
+void SubScaledVec2_Self(vec2 *out_resultVec, vec2 *vec, float scale)
 {
 	out_resultVec->x -= vec->x*scale;
 	out_resultVec->y -= vec->y*scale;
 }
 
-void  SubScaledVec2(vec2* out_resultVec, vec2* vec0, vec2* vec1, float scale)
+void SubScaledVec2(vec2 *out_resultVec, vec2 *vec0, vec2 *vec1, float scale)
 {
 	out_resultVec->x = vec0->x - vec1->x*scale;
 	out_resultVec->y = vec0->y - vec1->y*scale;
 }
 
-void  AddVec2_Self(vec2* out_resultVec, vec2* vec)
+void AddVec2_Self(vec2 *out_resultVec, vec2 *vec)
 {
 	out_resultVec->x += vec->x;
 	out_resultVec->y += vec->y;
 }
 
-void  AddVec2(vec2* out_resultVec, vec2* vec0, vec2* vec1)
+void AddVec2(vec2 *out_resultVec, vec2 *vec0, vec2 *vec1)
 {
 	out_resultVec->x = vec0->x + vec1->x;
 	out_resultVec->y = vec0->y + vec1->y;
 }
 
-void  CopyVec2(vec2* out_result, vec2* point)
+void CopyVec2(vec2 *out_result, vec2 *point)
 {
 	out_result->x = point->x;
 	out_result->y = point->y;
 }
 
-void  CopyVec3(vec3* out_result, const vec3* point)
+void CopyVec3(vec3 *out_result, const vec3 *point)
 {
 	out_result->x = point->x;
 	out_result->y = point->y;
 	out_result->z = point->z;
 }
 
-void  CreatePlaneFromPointsVec2(struct PlaneVec2* out_resultPlane, vec2* p0, vec2* p1)
+void CreatePlaneFromPointsVec2(struct PlaneVec2 *out_resultPlane, vec2 *p0, vec2 *p1)
 {
 	float tempX;
 	//Copy point
 	CopyVec2(&out_resultPlane->point, p0);
 	
 	//Create normal
-	SubVec2(&out_resultPlane->normal,p1,p0);
+	SubVec2(&out_resultPlane->normal, p1, p0);
 	NormalizeVec2(&out_resultPlane->normal);
 	
 	tempX = out_resultPlane->normal.x;
@@ -264,11 +257,11 @@ void  CreatePlaneFromPointsVec2(struct PlaneVec2* out_resultPlane, vec2* p0, vec
 	out_resultPlane->normal.y = -tempX;
 }
 
-bool  PointInsidePlaneVec2(vec2* point,struct PlaneVec2* plane)
+bool PointInsidePlaneVec2(vec2 *point, struct PlaneVec2 *plane)
 {
 	vec2 dirVec;
-	SubVec2(&dirVec,point,&plane->point);
-	return DotVec2(&dirVec,&plane->normal) < 0.0f;
+	SubVec2(&dirVec,point, &plane->point);
+	return DotVec2(&dirVec, &plane->normal) < 0.0f;
 }
 
 float AngleBetweenVec2(vec2 *vec0, vec2 *vec1)
@@ -276,81 +269,83 @@ float AngleBetweenVec2(vec2 *vec0, vec2 *vec1)
 	return (float)(atan2(vec1->y,vec1->x) - atan2(vec0->y,vec0->x));
 }
 
-float AngleBetweenVec3(vec3* vec0, vec3* vec1)
+float AngleBetweenVec3(vec3 *vec0, vec3 *vec1)
 {
 	//TODO: get the angle
 	return 0;
 }
 
-void  CrossVec3(vec3* out_resultVec, const vec3* vec0, const vec3* vec1)
+void CrossVec3(vec3 *out_resultVec, const vec3 *vec0, const vec3 *vec1)
 {
-	const float x = vec0->y*vec1->z - vec1->y*vec0->z;
-	const float y = vec0->z*vec1->x - vec1->z*vec0->x;
-	const float z = vec0->x*vec1->y - vec1->x*vec0->y;
+	const float x = vec0->y * vec1->z - vec1->y * vec0->z;
+	const float y = vec0->z * vec1->x - vec1->z * vec0->x;
+	const float z = vec0->x * vec1->y - vec1->x * vec0->y;
 	
 	out_resultVec->x = x;
 	out_resultVec->y = y;
 	out_resultVec->z = z;
 }
 
-void  SetVec3(vec3* out_resultVec,float x, float y, float z)
+void SetVec3(vec3 *out_resultVec,float x, float y, float z)
 {
 	out_resultVec->x = x;
 	out_resultVec->y = y;
 	out_resultVec->z = z;
 }
 
-void  AddVec3_Self(vec3* out_resultVec, vec3* vec)
+void AddVec3_Self(vec3 *out_resultVec, vec3 *vec)
 {
 	out_resultVec->x += vec->x;
 	out_resultVec->y += vec->y;
 	out_resultVec->z += vec->z;
 }
 
-void  AddVec3(vec3* out_resultVec, vec3* vec0, vec3* vec1)
+void AddVec3(vec3 *out_resultVec, vec3 *vec0, vec3 *vec1)
 {
 	out_resultVec->x = vec0->x+vec1->x;
 	out_resultVec->y = vec0->y+vec1->y;
 	out_resultVec->z = vec0->z+vec1->z;
 }
 
-void  AddScaledVec3_Self(vec3* out_resultVec, const vec3* vec, float scale)
+void AddScaledVec3_Self(vec3 *out_resultVec, const vec3 *vec, float scale)
 {
 	out_resultVec->x += vec->x*scale;
 	out_resultVec->y += vec->y*scale;
 	out_resultVec->z += vec->z*scale;
 }
 
-void  AddScaledVec3(vec3* out_resultVec, const vec3* vec0, const vec3* vec1, float scale)
+void AddScaledVec3(vec3 *out_resultVec, const vec3 *vec0, const vec3 *vec1, float scale)
 {
 	out_resultVec->x = vec0->x+vec1->x*scale;
 	out_resultVec->y = vec0->y+vec1->y*scale;
 	out_resultVec->z = vec0->z+vec1->z*scale;
 }
 
-void  SubScaledVec3_Self(vec3* out_resultVec, vec3* vec, float scale)
+void SubScaledVec3_Self(vec3 *out_resultVec, vec3 *vec, float scale)
 {
 	out_resultVec->x -= vec->x*scale;
 	out_resultVec->y -= vec->y*scale;
 	out_resultVec->z -= vec->z*scale;
 }
 
-void  SubScaledVec3(vec3* out_resultVec, vec3* vec0, vec3* vec1, float scale)
+void SubScaledVec3(vec3 *out_resultVec, vec3 *vec0, vec3 *vec1, float scale)
 {
 	out_resultVec->x = vec0->x-vec1->x*scale;
 	out_resultVec->y = vec0->y-vec1->y*scale;
 	out_resultVec->z = vec0->z-vec1->z*scale;
 }
 
-float ClockwiseDegFromNorth (float deg)
+float ClockwiseDegFromNorth(float deg)
 {
     float rtn = 90 - deg;
+    
     if (rtn < 0)
         rtn = 360 + rtn;
+    
     return rtn;
 }
 
-int    ININT (double X)
+int ININT(double X)
 {
     if (X < 0)
         return ((int)(X - 0.5));
@@ -358,7 +353,7 @@ int    ININT (double X)
     return ((int)(X + 0.5));
 }
 
-int iSign (double *val)
+int iSign(double *val)
 {
 	if (*val < 0)
 		return -1;
@@ -367,10 +362,10 @@ int iSign (double *val)
 		return 1;
 }
 
-float BTWNTWOPI (float AZ1)
+float BTWNTWOPI(float AZ1)
 {
     if (AZ1 < 0)
-      	return (float)(TWOPI + fmod(AZ1,(float)TWOPI));
+      	return (float)(TWOPI + fmod(AZ1, (float)TWOPI));
     
     if (AZ1 == 0)
       	return (AZ1);
@@ -378,7 +373,7 @@ float BTWNTWOPI (float AZ1)
     return (float)(fmod(AZ1,(float)TWOPI));
 }
 
-double DTWOPI (double az)
+double DTWOPI(double az)
 {
     if (az < 0)
       	return (float)(TWOPI + fmod(az,(double)TWOPI));
@@ -386,10 +381,10 @@ double DTWOPI (double az)
     if (az == 0)
       	return (az);
     
-    return fmod(az,TWOPI);
+    return fmod(az, TWOPI);
 }
 
-int diffInDegrees (int angle1,int angle2)
+int diffInDegrees(int angle1,int angle2)
 {
     int rtn = angle2 - angle1;
     int mindiff = abs(rtn);
@@ -436,7 +431,7 @@ double HeadingToAzimuth (double heading)
 	return rtn;
 }
 
-vec2 newpt (vec2 *OldPoint, float AZM, float DIS)
+vec2 newpt(vec2 *OldPoint, float AZM, float DIS)
 {
     vec2 NewPoint;
     
@@ -444,7 +439,8 @@ vec2 newpt (vec2 *OldPoint, float AZM, float DIS)
     NewPoint.y = (float)(OldPoint->y + DIS * sin(AZM));
     return NewPoint;
 }
-dvec2 dnewpt (dvec2 *OldPoint, double AZM, double DIS)
+
+dvec2 dnewpt(dvec2 *OldPoint, double AZM, double DIS)
 {
     dvec2 NewPoint;
     
@@ -453,19 +449,19 @@ dvec2 dnewpt (dvec2 *OldPoint, double AZM, double DIS)
     return NewPoint;
 }
 
-float getazmd (vec2 *Point1, vec2 *Point2)
+float getazmd(vec2 *Point1, vec2 *Point2)
 {
 	float rtn = BTWNTWOPI((float)atan2((Point2->y - Point1->y), (Point2->x - Point1->x)));
 	return rtn;
 }
 
-double getazd (LPDPOINT Point1, LPDPOINT Point2)
+double getazd(LPDPOINT Point1, LPDPOINT Point2)
 {
 	double rtn = DTWOPI(atan2((Point2->y - Point1->y), (Point2->x - Point1->x)));
 	return rtn;
 }
 
-float DeltaAZ (float *AZ1, float *AZ2)
+float DeltaAZ(float *AZ1, float *AZ2)
 {
 	float daz;
 	daz = *AZ2 - *AZ1;
@@ -479,7 +475,7 @@ float DeltaAZ (float *AZ1, float *AZ2)
 	return daz;
 }
 
-void InitBounds (bounds* bnds)
+void InitBounds(bounds *bnds)
 {
 	bnds->xmn = FLT_MAX;
 	bnds->ymn = FLT_MAX;
@@ -488,7 +484,7 @@ void InitBounds (bounds* bnds)
 	return;
 }
 
-void AddPointToBounds (bounds* pBounds,vec2 *pt)
+void AddPointToBounds(bounds *pBounds,vec2 *pt)
 {
     pBounds->xmn = min (pBounds->xmn,pt->x);
     pBounds->ymn = min (pBounds->ymn,pt->y);
@@ -497,7 +493,7 @@ void AddPointToBounds (bounds* pBounds,vec2 *pt)
 	return;
 }
 
-void InitDBounds (dbounds* bnds)
+void InitDBounds(dbounds *bnds)
 {
     bnds->xmn = DBL_MAX;
     bnds->ymn = DBL_MAX;
@@ -506,7 +502,7 @@ void InitDBounds (dbounds* bnds)
     return;
 }
 
-void InitIBounds (IBOUNDS* bnds)
+void InitIBounds(IBOUNDS *bnds)
 {
     bnds->xmn = INT_MAX;
     bnds->ymn = INT_MAX;
@@ -515,7 +511,7 @@ void InitIBounds (IBOUNDS* bnds)
     return;
 }
 
-IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist)
+IBOUNDS IBoundsFromPointAndDist(IPOINT pt, int dist)
 {
     IBOUNDS bnds;
     
@@ -526,7 +522,7 @@ IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist)
     return bnds;
 }
 
-IPOINT IBoundsMid (IBOUNDS* bnds)
+IPOINT IBoundsMid(IBOUNDS *bnds)
 {
     IPOINT pt;
     
@@ -535,7 +531,7 @@ IPOINT IBoundsMid (IBOUNDS* bnds)
     return pt;
 }
 
-void AddPointToDBounds (dbounds *pBounds, dvec2 *pt)
+void AddPointToDBounds(dbounds *pBounds, dvec2 *pt)
 {
     pBounds->xmn = min(pBounds->xmn, pt->x);
     pBounds->ymn = min(pBounds->ymn, pt->y);
@@ -544,7 +540,7 @@ void AddPointToDBounds (dbounds *pBounds, dvec2 *pt)
     return;
 }
 
-void AddPointToIBounds (IBOUNDS *pBounds, IPOINT *pt)
+void AddPointToIBounds(IBOUNDS *pBounds, IPOINT *pt)
 {
     pBounds->xmn = min(pBounds->xmn, pt->x);
     pBounds->ymn = min(pBounds->ymn, pt->y);
@@ -569,7 +565,7 @@ int WhichSide(vec3 p, vec3 n, vec3 vp)
     return(s <= 0 ? -1 : 1);
 }
 
-vec3 VectorFromPoints (vec3 *p1, vec3 *p2)
+vec3 VectorFromPoints(vec3 *p1, vec3 *p2)
 {
 	vec3 outVector;
     
@@ -579,7 +575,7 @@ vec3 VectorFromPoints (vec3 *p1, vec3 *p2)
 	return outVector;
 }
 
-vec3 sVectorFromPoints (svec3 *p1, svec3 *p2)
+vec3 sVectorFromPoints(svec3 *p1, svec3 *p2)
 {
 	vec3 outVector;
     
@@ -589,7 +585,7 @@ vec3 sVectorFromPoints (svec3 *p1, svec3 *p2)
 	return outVector;
 }
 
-vec3 GetTriangleNormal (vec3 *vertex1, vec3 *vertex2, vec3 *vertex3)
+vec3 GetTriangleNormal(vec3 *vertex1, vec3 *vertex2, vec3 *vertex3)
 {
 	vec3 vNormal, v1, v2;
 	v1 = VectorFromPoints(vertex2, vertex1);
@@ -617,8 +613,8 @@ double ComputeMaxSlope(double frontSlope, double sideSlope)
     normal = GetTriangleNormal(&vertex1, &vertex2, &vertex3);
     xyDist = LDIST(0.0, 0.0, normal.x, normal.y);
     
-    if (fabs (normal.z) > 0.0000001)
-        rtn = 100.0 * fabs (xyDist / normal.z);
+    if (fabs(normal.z) > 0.0000001)
+        rtn = (100.0 * fabs(xyDist / normal.z));
     
     else
         rtn = -9999.0;
@@ -657,7 +653,7 @@ void GetFrustum ()
 	return;
 }
 
-void GetFrustum2 (float LIGHTLOOKAT[3],float lightPos[3])
+void GetFrustum2(float LIGHTLOOKAT[3],float lightPos[3])
 {
 
 }
@@ -712,10 +708,9 @@ double AMEAN (double X[],int N)
     return (SUM / N);
 }
 
-float MULREG (double Y[], double X1[], double X2[], int N,double * A,double * B, double * C)
+float MULREG(double Y[], double X1[], double X2[], int N, double *A, double *B, double *C)
 {
-    double D, DY, SMD1SQ, SMD2SQ,
-    SMYSQ, SMD1D2, SMD1Y, SMD2Y, YHAT, X1HAT, X2HAT, D1, D2;
+    double D, DY, SMD1SQ, SMD2SQ, SMYSQ, SMD1D2, SMD1Y, SMD2Y, YHAT, X1HAT, X2HAT, D1, D2;
     short I;
     float RSQ;
     
@@ -760,7 +755,7 @@ float MULREG (double Y[], double X1[], double X2[], int N,double * A,double * B,
     return(RSQ);
 }
 
-bool LINFIT (LPDPOINT pPoint,long N,double *A,double *B,double *MAXDIF,long *LOFMDF)
+bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long *LOFMDF)
 {
 	double SUMX = 0, SUMY = 0, XAVE, YAVE, SMXDYD, SMXDSQ, SUMXY = 0, SUMXSQ = 0, DIFF;
 	double	SUMxy = 0, SUMx2 = 0;
@@ -819,12 +814,10 @@ bool LINFIT (LPDPOINT pPoint,long N,double *A,double *B,double *MAXDIF,long *LOF
     return true;
 }
 
-LPTRANDATA STRAN2 (int ID,double X1[], double Y1[],double X2[],double Y2[],int N, float *RSQMIN)
+LPTRANDATA STRAN2(int ID, double X1[], double Y1[], double X2[], double Y2[], int N, float *RSQMIN)
 {
-	double ANGLE1, ANGLE2, ANGLE, DEN,
-    SINANG, COSANG, DX1, DX2, DY1, DY2, SCLRAT,
-    ANGLED, BASX1, BASX2, BASY1, BASY2, D,TOTD;
-    double *XT1, *YT1, *XT2, *YT2;
+	double ANGLE1, ANGLE2, ANGLE, DEN, SINANG, COSANG, DX1, DX2, DY1, DY2, SCLRAT,
+    ANGLED, BASX1, BASX2, BASY1, BASY2, D,TOTD, *XT1, *YT1, *XT2, *YT2;
     float RSQ1, RSQ2;
     short NUM, I,J,i;
     LPTRANDATA TranPtr = 0;
@@ -841,11 +834,11 @@ LPTRANDATA STRAN2 (int ID,double X1[], double Y1[],double X2[],double Y2[],int N
     }
     
 Start:
-    XT1 = (double *)malloc (4*MAXTRANPOINTS*sizeof(double));
+    XT1 = (double *)malloc(4 * MAXTRANPOINTS * sizeof(double));
     XT2 = XT1 + MAXTRANPOINTS;
     YT1 = XT2 + MAXTRANPOINTS;
     YT2 = YT1 + MAXTRANPOINTS;
-    TranPtr = (LPTRANDATA) calloc (1,sizeof(TRANDATA));
+    TranPtr = (LPTRANDATA) calloc(1, sizeof(TRANDATA));
     
     if (N == 2) goto S10;
     
@@ -902,7 +895,7 @@ S10: NUM = 0;
             
             D = sqrt(DEN);
             TOTD += D;
-            SCLRAT = SCLRAT + (sqrt((pow(DX2,2) + pow(DY2,2)) / DEN)) * D;
+            SCLRAT = SCLRAT + (sqrt((pow(DX2, 2) + pow(DY2, 2)) / DEN)) * D;
             ANGLE1 = atan2(DY2, DX2);
             ANGLE2 = atan2(DY1, DX1);
             ANGLED  = DTWOPI(ANGLE2 - ANGLE1);
@@ -920,15 +913,15 @@ S10: NUM = 0;
     
     ANGLE  = ANGLE / TOTD;
     SCLRAT = SCLRAT / TOTD;
-    COSANG = cos (ANGLE);
-    SINANG = sin (ANGLE);
+    COSANG = cos(ANGLE);
+    SINANG = sin(ANGLE);
     TranPtr->B1 = COSANG * SCLRAT;
     TranPtr->C1 = SINANG * SCLRAT;
     TranPtr->B2 = COSANG * SCLRAT;
     TranPtr->C2 =-SINANG * SCLRAT;
     TranPtr->A1 = 0;
     TranPtr->A2 = 0;
-    pPoints = (LPDPOINT)malloc(sizeof(DPOINT)*N);
+    pPoints = (LPDPOINT)malloc(sizeof(DPOINT) * N);
     xmin = DBL_MAX;
     xmax = -DBL_MAX;
     
@@ -942,7 +935,7 @@ S10: NUM = 0;
         xmax = max(xmax, X2[I]);
     }
     
-    if (LINFIT (pPoints,N,&A,&B,0,0))
+    if (LINFIT(pPoints, N, &A, &B, 0, 0))
     {
         pPoints[0].x = xmin;
         pPoints[0].y = A + pPoints[0].x * B;
@@ -962,7 +955,7 @@ S10: NUM = 0;
         xmax = max(xmax, X2[I]);
     }
     
-    if (LINFIT (pPoints,N,&A,&B,0,0))
+    if (LINFIT(pPoints, N, &A, &B, 0, 0))
     {
         pPoints[0].x = xmin;
         pPoints[0].y = A + pPoints[0].x * B;
@@ -1027,7 +1020,7 @@ double ArcDistance(DPOINT p1, DPOINT p2)
     return GreatCircle;
 }
 
-double Acos (double v)
+double Acos(double v)
 {
 	v = max(-1.0e0, v);
 	v = min(1.0e0, v);
@@ -1040,10 +1033,10 @@ DPOINT NewLatLong(double Lat, double Long, double Dist, double Direction)
     DPOINT LatLong;
     double  cosc, cosb, cosa, sinb, sinc, sina, cosC, cosA;
     
-    cosc = cos(Dist/6371100);
-    sinc = sin(Dist/6371100);
-    cosb = cos((90e0-Lat)/DEGtoRAD);
-    sinb = sin((90e0-Lat)/DEGtoRAD);
+    cosc = cos(Dist / 6371100);
+    sinc = sin(Dist / 6371100);
+    cosb = cos((90e0 - Lat) /DEGtoRAD);
+    sinb = sin((90e0 - Lat) /DEGtoRAD);
     cosa = cos(Direction) * sinb * sinc + cosb * cosc;
     cosA = Acos(cosa);
     cosA *= DEGtoRAD;
@@ -1066,8 +1059,8 @@ DPOINT NewLatLong(double Lat, double Long, double Dist, double Direction)
 dvec2 PointOnEllipseAtAngle(double a, double b, double az)
 {
 	double x0 = cos(az), y0 = sin(az);
-	double x = x0 * (a*b)/sqrt(a*a * y0*y0 + b*b * x0*x0);
-	double y = y0 * (a*b)/sqrt(a*a * y0*y0 + b*b * x0*x0);
+	double x = x0 * (a * b) / sqrt(a * a * y0 * y0 + b * b * x0 * x0);
+	double y = y0 * (a * b) / sqrt(a * a * y0 * y0 + b * b * x0 * x0);
     
 	dvec2 rtn;
 	rtn.x = x;
@@ -1075,7 +1068,7 @@ dvec2 PointOnEllipseAtAngle(double a, double b, double az)
 	return rtn;
 }
 
-void MNMXCORLtoMNMXCORD(MNMXCORL *in,MNMXCORD *out)
+void MNMXCORLtoMNMXCORD(MNMXCORL *in, MNMXCORD *out)
 {
 	out->xmn = in->xmn;
 	out->xmx = in->xmx;
@@ -1084,7 +1077,7 @@ void MNMXCORLtoMNMXCORD(MNMXCORL *in,MNMXCORD *out)
 	return;
 }
 
-void MNMXCORDtoMNMXCORL(MNMXCORD *in,MNMXCORL *out)
+void MNMXCORDtoMNMXCORL(MNMXCORD *in, MNMXCORL *out)
 {
 	out->xmn = ININT(in->xmn);
 	out->xmx = ININT(in->xmx);
@@ -1102,7 +1095,7 @@ void InflateMNMXCORL(LPMNMXCORL pBounds, int Value)
 	return;
 }
 
-void TranMNMXCORD(MNMXCORD * in,MNMXCORD * out,LPTRANDATA TranPtr)
+void TranMNMXCORD(MNMXCORD *in, MNMXCORD *out, LPTRANDATA TranPtr)
 {
 	dvec2 outpt;
 	dbounds outb;
@@ -1193,7 +1186,7 @@ LPTRANDATA  LoadTranFromBPW(char *Name, int dir)
 		YTO[3] = wy + 100 * yres;
         
         if (dir == 2)
-            TranPtr = STRAN2(1660, XTO, YTO,XFROM, YFROM, 4, &RSQMIN);
+            TranPtr = STRAN2(1660, XTO, YTO, XFROM, YFROM, 4, &RSQMIN);
         
         else
             TranPtr = STRAN2(1660, XFROM, YFROM, XTO, YTO, 4, &RSQMIN);
@@ -1217,7 +1210,7 @@ LPTRANDATA  LoadTranFromCPT(const char *Name, int dir)
     {
         for (int i = 0; i < 4; i++)
         {
-            fgetstring (str,128,Fid);
+            fgetstring (str, 128, Fid);
             sscanf(str, "%lf %lf %lf %lf", &XFROM[i], &YFROM[i], &XTO[i], &YTO[i]);
         }
         
@@ -1240,7 +1233,7 @@ bool CreateMask(LPDPOINT *pPointsIN, int *pnPoints, bounds *pbnds)
     if (!pnPoints || !pPoints || *pnPoints < 3)
         return false;
     
-    LPDPOINT pNewPoints = (LPDPOINT)malloc (sizeof(DPOINT) * (*pnPoints + 5));
+    LPDPOINT pNewPoints = (LPDPOINT)malloc(sizeof(DPOINT) * (*pnPoints + 5));
     
     pNewPoints[0].x = pbnds->xmn;
     pNewPoints[0].y = pbnds->ymn;
