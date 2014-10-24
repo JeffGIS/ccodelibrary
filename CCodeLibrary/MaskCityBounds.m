@@ -73,6 +73,7 @@
                 if (iloop)
                     i++;
             }
+            
             free(pPoints);
         }
     }
@@ -107,13 +108,16 @@
         if (nPoints > MAX_AREA_POINTS)
         {
             fclose(fid);
-            [self drawCityBounds:fromFile inMapView:mapView];
+            
+            [self drawCityBounds:fromFile
+                       inMapView:mapView];
+            
             return;
         }
         
-        if (nPoints > 2 && fread (&nLoops, sizeof(int), 1, fid))
+        if (nPoints > 2 && fread(&nLoops, sizeof(int), 1, fid))
         {
-            pnPointsInLoop = malloc (nLoops * sizeof(int));
+            pnPointsInLoop = malloc(nLoops * sizeof(int));
             
             if (nLoops > 1)
                 fread(pnPointsInLoop, sizeof(int), nLoops, fid);

@@ -247,7 +247,7 @@
         pEnd = strchr(pBeg,'|');
     }
     
-    az = atof (pBeg);
+    az = atof(pBeg);
     diff = [self azDiffFrom90s:az];
     
     if (fabs(diff) < fabs(minDiff))
@@ -284,7 +284,7 @@
        atIntersection:(MPIntersection *)intersection
 {
     //returns 81,23,45 or 67
-    int  corner = -1;
+    int corner = -1;
     DPOINT midPt = {intersection.lev21x,intersection.lev21y}, pt = {x,y};
     
     float az = getazd(&midPt, &pt);
@@ -483,6 +483,7 @@ forGeoid:(int)geoid
         BOOL exists = [NSFileManager.defaultManager fileExistsAtPath:path isDirectory:&isDir];
         if (!*(pBS + 1) || (exists && !isDir))
             *pBS = 0;
+        
         strcat(str, name.UTF8String);
         outDir = [NSString stringWithUTF8String:str];
     }
