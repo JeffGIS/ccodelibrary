@@ -32,7 +32,7 @@
     if (status == FTP_OK)
         status = AF_OK;
     
-    else
+    else if (status != FTP_CONNECTION_FAILED_TRYING_SECONDARY)
     {
         status = AF_FAILED;
         path = @"";

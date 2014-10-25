@@ -1095,7 +1095,10 @@ Exit:
                                          didLoad:@"File not found"
                                       withStatus:INT_NO_NETWORK_CONNECTION];
    }
-    
+    else if (status == FTP_CONNECTION_FAILED_TRYING_SECONDARY)
+    {
+        
+    }
     else if (status != FTP_STOP)
     {
         [self.delegate intersectionsDatabase:nil
