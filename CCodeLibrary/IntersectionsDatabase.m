@@ -692,7 +692,7 @@ static IntersectionsDatabase *_database;
     IPOINT pt;
     int dist = (meters / GroundResolution(latlon.lat, 21));
     LatLongToPixelXY(latlon.lat, latlon.lon, 21, &pt.x, &pt.y);
-    IBOUNDS bounds = IBoundsFromPointAndDist (pt, dist);
+    IBOUNDS bounds = IBoundsFromPointAndDist(pt, dist);
     
     NSString *query = [NSString stringWithFormat:
                        @"SELECT intID, assignedTo, intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",

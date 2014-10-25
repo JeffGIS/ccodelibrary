@@ -27,7 +27,7 @@
                                                    alpha:0.85];
         _popover.layer.cornerRadius = 20.0;
         
-        _progressView = [[UIProgressView alloc]initWithProgressViewStyle:UIProgressViewStyleDefault];
+        _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
         CGRect progFrame = _popover.frame;
         progFrame.size.width *= 0.75;
         _progressView.frame = progFrame;

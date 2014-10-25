@@ -32,7 +32,7 @@ long BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc)
     return bytesWritten;
 }
 
-void ExpandText (LPSTR txt)
+void ExpandText(LPSTR txt)
 {
     return;
 }
@@ -65,7 +65,7 @@ int DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec, LPBYTE pCompressedRec
     
 	return 0;
 }
-int GetFileFromTransferFile (HWND hWndStatus,FILE * FidTF,LPSTR FileToGet,long MaxLength)
+int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long MaxLength)
 {
 	int lRec, rtn = FALSE;
     LPBYTE	pRec = malloc(MaxLength);

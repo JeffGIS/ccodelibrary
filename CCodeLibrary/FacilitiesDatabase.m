@@ -215,7 +215,7 @@ static FacilitiesDatabase *_database;
     IPOINT pt;
     int dist = (meters / GroundResolution(latlon.lat, 21));
     LatLongToPixelXY(latlon.lat, latlon.lon, 21, &pt.x, &pt.y);
-    IBOUNDS bounds = IBoundsFromPointAndDist (pt, dist);
+    IBOUNDS bounds = IBoundsFromPointAndDist(pt, dist);
     
     NSString *query = [NSString stringWithFormat:
                        @"SELECT facID, assignedTo, facX, facY FROM Facilities WHERE facX >= %i AND facX <= %i AND facY >= %i AND facY <= %i",

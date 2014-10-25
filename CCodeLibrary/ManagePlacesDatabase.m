@@ -51,8 +51,8 @@ static ManagePlacesDatabase *_database;
             name = [UserDefaults.defaults removeEndingReturn:name];
             name = [UserDefaults.defaults removeTextInsideParentheses:name];
             
-            PlacesInfo *info = [[PlacesInfo alloc]initWithName:name
-                                                         geoid:geoid];
+            PlacesInfo *info = [[PlacesInfo alloc] initWithName:name
+                                                          geoid:geoid];
             
             [dataArray addObject:info];
         }
@@ -77,10 +77,10 @@ static ManagePlacesDatabase *_database;
         CGFloat bounds_e = sqlite3_column_double(statement, 2);
         CGFloat bounds_n = sqlite3_column_double(statement, 3);
             
-        PlacesInfo *info = [[PlacesInfo alloc]initWithBounds_w:bounds_w
-                                                      bounds_s:bounds_s
-                                                      bounds_e:bounds_e
-                                                      bounds_n:bounds_n];
+        PlacesInfo *info = [[PlacesInfo alloc] initWithBounds_w:bounds_w
+                                                       bounds_s:bounds_s
+                                                       bounds_e:bounds_e
+                                                       bounds_n:bounds_n];
             
         [dataArray addObject:info];
     }
@@ -146,12 +146,12 @@ static ManagePlacesDatabase *_database;
         
         NSString *stateCode = [[NSString alloc] initWithString:[self getStateCodeForStatefp:statefp]];
         
-        PlacesInfo *info = [[PlacesInfo alloc]initWithName:name
-                                                 stateCode:stateCode
-                                                  bounds_w:bounds_w
-                                                  bounds_s:bounds_s
-                                                  bounds_e:bounds_e
-                                                  bounds_n:bounds_n];
+        PlacesInfo *info = [[PlacesInfo alloc] initWithName:name
+                                                  stateCode:stateCode
+                                                   bounds_w:bounds_w
+                                                   bounds_s:bounds_s
+                                                   bounds_e:bounds_e
+                                                   bounds_n:bounds_n];
         
         [dataArray addObject:info];
     }
