@@ -118,8 +118,10 @@
                         forState:UIControlStateNormal];
         [_popoverCancel setHidden:NO];
     }
+    
     else
         [_popoverCancel setHidden:YES];
+    
     [self showAfter:seconds withTitle:title];
 }
 
@@ -128,6 +130,7 @@
 {
     self.title = title;
     _popoverLabel.text = title;
+    
     if (seconds > 0.0)
     {
         self.showTime = NSDate.timeIntervalSinceReferenceDate;
@@ -138,6 +141,7 @@
                                        userInfo:nil
                                         repeats:NO];
     }
+    
     else
         [self show];
 }
