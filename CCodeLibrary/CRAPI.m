@@ -546,7 +546,6 @@ forGeoid:(int)geoid
 - (IBOUNDS) CGRectToIBounds:(CGRect)rect
 {
     IBOUNDS iBounds;
-    
     iBounds.xmn = rect.origin.x;
     iBounds.ymn = rect.origin.y;
     iBounds.xmx = rect.origin.x + rect.size.width;
@@ -572,9 +571,9 @@ forGeoid:(int)geoid
 - (IBOUNDS)boundsFromRect:(CGRect)rect
           usingTransformation:(LPTRANDATA)pTranBMPToW
 {
-    IBOUNDS iBounds,outBounds;
+    IBOUNDS iBounds, outBounds;
     iBounds = [self CGRectToIBounds:rect];
-    TranMNMXCORL(&iBounds,&outBounds,pTranBMPToW);
+    TranMNMXCORL(&iBounds, &outBounds, pTranBMPToW);
     return outBounds;
 }
 
