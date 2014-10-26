@@ -40,12 +40,12 @@
     return _sharedInstance;
 }
 
--(int)currentGeoid
+- (int)currentGeoid
 {
     return _currentGeoidValue;
 }
 
--(void)setCurrentGeoid:(int)geoid
+- (void)setCurrentGeoid:(int)geoid
 {
     BOOL rtn = TRUE;
     if (geoid != _currentGeoidValue)

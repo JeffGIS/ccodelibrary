@@ -246,7 +246,7 @@ static FacilitiesDatabase *_database;
     return dataArray;
 }
 
--(void)sortFacilitiesByDistance:(NSMutableArray *)facilities
+- (void)sortFacilitiesByDistance:(NSMutableArray *)facilities
 {
     [facilities sortUsingComparator: ^(id obj1, id obj2)
      {
