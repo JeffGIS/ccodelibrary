@@ -252,9 +252,6 @@ enum {
             
         case NSStreamEventHasSpaceAvailable:
         {
-
-            
-            
             if (self.bufferOffset == self.bufferLimit)
             {
                 NSInteger bytesRead;
@@ -270,7 +267,8 @@ enum {
                 
                 else if (bytesRead == 0)
                 {
-                    [self stopSendWithStatus:FTP_OK statusString:@""];
+                    [self stopSendWithStatus:FTP_OK
+                                statusString:@""];
                 }
                 
                 else
@@ -356,10 +354,10 @@ enum {
                 [self stopSendWithStatus:FTP_CONNECTION_FAILED
                             statusString:error.localizedDescription];
                 
-            [self sendFile:self.fileName
-             fromDirectory:self.directory
-               toDirectory:self.toDirectory
-            deleteWhenDone:NO];
+                [self sendFile:self.fileName
+                 fromDirectory:self.directory
+                   toDirectory:self.toDirectory
+                deleteWhenDone:NO];
             }
             
             else
@@ -375,11 +373,10 @@ enum {
                 [self stopSendWithStatus:FTP_CONNECTION_FAILED
                             statusString:error.localizedDescription];
             
-            [self sendFile:self.fileName
-             fromDirectory:self.directory
-               toDirectory:self.toDirectory
-            deleteWhenDone:NO];
-                
+                [self sendFile:self.fileName
+                 fromDirectory:self.directory
+                   toDirectory:self.toDirectory
+                deleteWhenDone:NO];
             }
         }
     }

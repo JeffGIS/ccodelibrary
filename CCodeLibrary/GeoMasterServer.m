@@ -200,7 +200,6 @@ static GeoMasterServer *_open;
 			break;
             
 		case NSStreamEventErrorOccurred:
-			
         {
             NSError *theError = theStream.streamError;
             [self closeServer];
@@ -212,7 +211,6 @@ static GeoMasterServer *_open;
                              withStatus:theError.code];
             }
         }
-            
 			break;
 			
 		case NSStreamEventEndEncountered:
@@ -255,8 +253,8 @@ static GeoMasterServer *_open;
                 didReceiveError:@"Server failed to open"
                      withStatus:GM_OPEN_FAILED];
     }
-    
 }
+
 - (void)messageReceived:(NSString *)message
 {
 	[self.messages addObject:message];

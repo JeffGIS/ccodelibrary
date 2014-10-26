@@ -8,6 +8,7 @@
 {
     Reachability *reachability;
 }
+
 static FTPDataPull *_pull;
 
 + (FTPDataPull *)pull
@@ -172,7 +173,8 @@ static FTPDataPull *_pull;
     assert(request);
     
     int itimeout = request.timeoutInterval;
-    [request setTimeoutInterval:itimeout/8];
+    [request setTimeoutInterval:(itimeout / 8)];
+    
     self.connection = [NSURLConnection connectionWithRequest:request
                                                     delegate:self];
     
@@ -253,7 +255,6 @@ didReceiveResponse:(NSURLResponse *)response
         
         else
             bytesWrittenSoFar += (NSUInteger)bytesWritten;
-        
     }
     
     while (bytesWrittenSoFar != dataLength);
@@ -267,6 +268,7 @@ didReceiveResponse:(NSURLResponse *)response
     assert(theConnection == self.connection);
     
     NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
+    
     if (self.hasFailed == NO && !self.useOnlyPrimaryFTP)
     {
         if ([self.currentFtp isEqualToString:self.ftpSite])
