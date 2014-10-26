@@ -16,6 +16,8 @@
 @property (nonatomic) NSString *outputDirectory;
 @property (nonatomic) NSString *imageDirectory;
 @property (nonatomic) int currentGeoid;
+@property NSString * currentManageriPad;
+@property int currentUserID;
 @property (nonatomic) BOOL currentGeoidStatus;
 @property (nonatomic) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;

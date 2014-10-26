@@ -921,12 +921,24 @@ static IntersectionsDatabase *_database;
     sqlite3_free(error);
     return !rtn;
 }
+- (BOOL)assignAllIntersectionTo:(int)user
+{
+    BOOL rtn;
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
+    
+    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i",
+                       iTime, user];
+    char *error;
+    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
+    sqlite3_free(error);
+    return !rtn;
+}
 
-- (IntersectionPoint *)getFirstAssignedIntersectionPointWithStatus0
+- (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user WithStatus:(int)status
 {
     IntersectionPoint *intpt = nil;
     
-    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=0 ORDER BY intID ASC"];
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%i AND assignedTo=%i ORDER BY intID ASC",status,user];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
@@ -947,6 +959,29 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_finalize(statement));
     return intpt;
 }
+- (NSArray *)getAssignments
+{
+    NSMutableArray * assignments = [[NSMutableArray alloc]init];
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedTo FROM Intersections WHERE assignedTo != 0 ORDER BY assignedTo,intID ASC"];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int intID = sqlite3_column_int(statement, 0);
+        int assignedTo = sqlite3_column_int(statement, 1);
+        IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
+        intpt.intID = intID;
+        intpt.assignedTo = assignedTo;
+        [assignments addObject:intpt];
+    }
+    
+    SQLOK(sqlite3_finalize(statement));
+    return assignments;
+}
+
 
 - (NSString *)intersectionTextPath:(int)type
 {

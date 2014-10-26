@@ -70,6 +70,7 @@
     {
         result = ([extension caseInsensitiveCompare:@"bin"] == NSOrderedSame) ||
         ([extension caseInsensitiveCompare:@"gcf"] == NSOrderedSame) ||
+        ([extension caseInsensitiveCompare:@"txt"] == NSOrderedSame) ||
         ([extension caseInsensitiveCompare:@"sqlite3"] == NSOrderedSame);
     }
     

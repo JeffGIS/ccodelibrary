@@ -64,12 +64,14 @@
 - (MPIntersection*) getMPIntersectionFromDB:(int)intID
                                   withRamps:(BOOL)wantRamps;
 
-- (IntersectionPoint *)getFirstAssignedIntersectionPointWithStatus0;
+- (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user WithStatus:(int)status;
 
 - (BOOL)setIntersectionStatusTo:(int)status
                 forIntersection:(int)intID;
 
 - (BOOL)assignIntersection:(int)intID To:(int)user;
+- (BOOL)assignAllIntersectionTo:(int)user;
+- (NSArray *)getAssignments;
 
 - (NSString *)intersectionTextPath:(int)type;
 - (int)getCountOfIntersections;

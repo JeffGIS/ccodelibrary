@@ -32,6 +32,8 @@ didReceiveMessage:(NSString *)message
 @property (nonatomic, retain)NSInputStream *inputStream;
 @property (nonatomic, retain)NSOutputStream *outputStream;
 @property (nonatomic, retain)NSString *output;
+@property BOOL didOpen;
+@property int messageID;
 @property NSTimer *openTimer;
 @property NSTimer *sendTimer;
 @property NSData *data;

@@ -40,7 +40,7 @@
     IBOUNDS bounds21 = [CRAPI.sharedInstance boundsFromRect:self.bounds
                                                      atZoom:21
                                             usingProjection:projection];
-    
+//    [_database assignAllIntersectionTo:1];
     NSArray *pointsArray = [_database getIntersectionPointsFromDatabaseinBounds:bounds21];
     
     for (int i = 0; i < pointsArray.count; i++)
