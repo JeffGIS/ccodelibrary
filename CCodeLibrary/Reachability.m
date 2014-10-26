@@ -75,11 +75,12 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 {
 	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr *)hostAddress);
 
-	Reachability* returnValue = NULL;
+	Reachability *returnValue = NULL;
 
 	if (reachability != NULL)
 	{
 		returnValue = [[self alloc] init];
+        
 		if (returnValue != NULL)
 		{
 			returnValue->_reachabilityRef = reachability;
@@ -107,7 +108,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 	localWifiAddress.sin_family = AF_INET;
 	localWifiAddress.sin_addr.s_addr = htonl(IN_LINKLOCALNETNUM);
 
-	Reachability* returnValue = [self reachabilityWithAddress: &localWifiAddress];
+	Reachability* returnValue = [self reachabilityWithAddress:&localWifiAddress];
     
 	if (returnValue != NULL)
 		returnValue->_alwaysReturnLocalWiFiStatus = YES;
