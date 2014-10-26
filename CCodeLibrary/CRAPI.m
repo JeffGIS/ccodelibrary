@@ -338,7 +338,7 @@
     return devider;
 }
 
--(NSString *)getOutputDirectory
+- (NSString *)getOutputDirectory
 {
     return self.outputDirectory;
 }
@@ -378,11 +378,11 @@
     }
 }
 
--(NSString *)getImageFileforIntersection:(int)intersectionID
-                                   atLat:(double)lat
-                                  andLon:(double)lon
-                                 andZoom:(int)zoom
-                            forceRefresh:(BOOL)refresh
+- (NSString *)getImageFileforIntersection:(int)intersectionID
+                                    atLat:(double)lat
+                                    andLon:(double)lon
+                                  andZoom:(int)zoom
+                             forceRefresh:(BOOL)refresh
 {
     if (refresh)
         [self deleteImagesForAllZooms:intersectionID];
