@@ -1,0 +1,111 @@
+//  ProgressView.m
+//  CCodeLibrary
+
+#import "ProgressView.h"
+
+@implementation ProgressView
+{
+    CGFloat _size;
+}
+
+- (id)initWithOrigin:(CGPoint)origin
+      hasComplexView:(BOOL)hasComplexView;
+{
+    CGFloat margin = 4.0, width = 264.0, height = 120.0, markerMargin = 6.0;
+    UIColor *green = UserDefaults.defaults.darkGreen;
+    UIColor *red = UIColor.redColor;
+    UIColor *blue = UserDefaults.defaults.appleBlue;
+    UIColor *gray = UIColor.darkGrayColor;
+    CGRect frame;
+    _size = 15.0;
+    
+    if (hasComplexView == YES)
+        frame = CGRectMake(origin.x, origin.y, width, height);
+    
+    else
+        frame = CGRectMake(origin.x, origin.y, width, (height * 0.82));
+    
+    self = [super initWithFrame:frame];
+    
+    if (self)
+    {
+        self.layer.cornerRadius = 10.0;
+        self.layer.masksToBounds = YES;
+        self.layer.borderColor = UIColor.blackColor.CGColor;
+        self.layer.borderWidth = 4.0;
+        self.userInteractionEnabled = YES;
+        self.backgroundColor = UIColor.whiteColor;
+        
+        CGFloat buffer = (margin * 2.0);
+        CGFloat leftMargin = (_size + buffer);
+        CGFloat labelWidth = (width - leftMargin);
+        CGFloat labelHeight = ((height - buffer) / 5.0);
+        
+        self.completed = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, margin, labelWidth, labelHeight)];
+        self.toBeDone = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, (labelHeight + margin), labelWidth, labelHeight)];
+        self.notAssigned = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 2.0) + margin), labelWidth, labelHeight)];
+        
+        [self setupLabel:self.completed];
+        [self setupLabel:self.toBeDone];
+        [self setupLabel:self.notAssigned];
+        
+        self.completed.textColor = green;
+        self.toBeDone.textColor = red;
+        self.notAssigned.textColor = blue;
+        
+        if (hasComplexView == YES)
+        {
+            self.complex = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 3.0) + margin), labelWidth, labelHeight)];
+            self.numRamps = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 4.0) + margin), labelWidth, labelHeight)];
+            
+            [self setupLabel:self.complex];
+            self.complex.textColor = gray;
+        }
+        
+        else
+            self.numRamps = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 3.0) + margin), labelWidth, labelHeight)];
+        
+        [self setupLabel:self.numRamps];
+        self.numRamps.textColor = UIColor.blackColor;
+        
+        self.completedMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, buffer, _size, _size)];
+        self.toBeDoneMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, (labelHeight + buffer), _size, _size)];
+        self.notAssignedMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, ((labelHeight * 2.0) + buffer), _size, _size)];
+        
+        [self setupView:self.completedMarker];
+        [self setupView:self.toBeDoneMarker];
+        [self setupView:self.notAssignedMarker];
+        
+        self.completedMarker.backgroundColor = green;
+        self.toBeDoneMarker.backgroundColor = red;
+        self.notAssignedMarker.backgroundColor = blue;
+        
+        if (hasComplexView == YES)
+        {
+            self.complexMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, ((labelHeight * 3.0) + buffer), _size, _size)];
+            [self setupView:self.complexMarker];
+            self.complexMarker.backgroundColor = gray;
+        }
+    }
+    
+    return self;
+}
+
+- (void)setupLabel:(UILabel *)label
+{
+    label.font = [UIFont boldSystemFontOfSize:18.0];
+    label.textAlignment = NSTextAlignmentLeft;
+    label.backgroundColor = UIColor.clearColor;
+    [self addSubview:label];
+}
+
+- (void)setupView:(UIView *)view
+{
+    view.layer.cornerRadius = (_size / 2.0);
+    view.layer.borderColor = UIColor.blackColor.CGColor;
+    view.layer.borderWidth = 1.5;
+    view.clipsToBounds = NO;
+    [self addSubview:view];
+}
+
+@end

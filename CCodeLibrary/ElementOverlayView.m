@@ -100,7 +100,7 @@
 
 - (void)dealloc
 {
-    int ii=1;
+    int ii = 1;
     ii++;
 }
 
