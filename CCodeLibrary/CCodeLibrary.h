@@ -31,7 +31,7 @@
 #import "CRAPI.h"
 #import "SharedDefaults.h"
 #import "FacilitiesDatabase.h"
-#import "ProgressView.h"
+#import "LegendView.h"
 
 #define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"
 #define iPAD_HEIGHT 1024.0

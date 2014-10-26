@@ -1,9 +1,9 @@
-//  ProgressView.h
+//  LegendView.h
 //  CCodeLibrary
 
 #import "CCodeLibrary.h"
 
-@interface ProgressView : UIView
+@interface LegendView : UIView
 
 @property UILabel *completed;
 @property UILabel *toBeDone;

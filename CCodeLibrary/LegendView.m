@@ -1,9 +1,9 @@
-//  ProgressView.m
+//  LegendView.m
 //  CCodeLibrary
 
-#import "ProgressView.h"
+#import "LegendView.h"
 
-@implementation ProgressView
+@implementation LegendView
 {
     CGFloat _size;
 }

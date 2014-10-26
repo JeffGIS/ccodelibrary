@@ -25,7 +25,7 @@
 		A94A771319F807570062906E /* Facility.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A771219F807570062906E /* Facility.m */; };
 		A94A771619F8079E0062906E /* FacilityPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A771519F8079E0062906E /* FacilityPoint.m */; };
 		A94A771919F807CE0062906E /* FacilityRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A771819F807CE0062906E /* FacilityRecord.m */; };
-		A96B07BF19FBF276005A73B0 /* ProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = A96B07BE19FBF276005A73B0 /* ProgressView.m */; };
+		A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */ = {isa = PBXBuildFile; fileRef = A96B07BE19FBF276005A73B0 /* LegendView.m */; };
 		A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9735AF019E779DF00894359 /* SystemConfiguration.framework */; };
 		A9735AF419E77B6800894359 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A9735AF319E77B6800894359 /* Reachability.m */; };
 		A9A9C8DF19CD04E100A63E94 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A9C8DE19CD04E100A63E94 /* GoogleMaps.framework */; };
@@ -107,8 +107,8 @@
 		A94A771519F8079E0062906E /* FacilityPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacilityPoint.m; sourceTree = "<group>"; };
 		A94A771719F807CE0062906E /* FacilityRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacilityRecord.h; sourceTree = "<group>"; };
 		A94A771819F807CE0062906E /* FacilityRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacilityRecord.m; sourceTree = "<group>"; };
-		A96B07BD19FBF276005A73B0 /* ProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressView.h; sourceTree = "<group>"; };
-		A96B07BE19FBF276005A73B0 /* ProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressView.m; sourceTree = "<group>"; };
+		A96B07BD19FBF276005A73B0 /* LegendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegendView.h; sourceTree = "<group>"; };
+		A96B07BE19FBF276005A73B0 /* LegendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegendView.m; sourceTree = "<group>"; };
 		A9735AF019E779DF00894359 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		A9735AF219E77B6800894359 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		A9735AF319E77B6800894359 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
@@ -262,8 +262,8 @@
 				EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */,
 				1F7E00A819CA8892006AFABA /* MarkerView.h */,
 				1F7E00A919CA8892006AFABA /* MarkerView.m */,
-				A96B07BD19FBF276005A73B0 /* ProgressView.h */,
-				A96B07BE19FBF276005A73B0 /* ProgressView.m */,
+				A96B07BD19FBF276005A73B0 /* LegendView.h */,
+				A96B07BE19FBF276005A73B0 /* LegendView.m */,
 				1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */,
 				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 			);
@@ -470,7 +470,7 @@
 				EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */,
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,
 				A94A771619F8079E0062906E /* FacilityPoint.m in Sources */,
-				A96B07BF19FBF276005A73B0 /* ProgressView.m in Sources */,
+				A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
