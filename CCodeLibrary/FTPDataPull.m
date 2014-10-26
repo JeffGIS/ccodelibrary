@@ -8,11 +8,18 @@
 {
     Reachability *reachability;
 }
+static FTPDataPull *_pull;
 
 + (FTPDataPull *)pull
 {
-    return [[FTPDataPull alloc] init];
+    if (_pull == nil)
+    {
+        _pull = [[FTPDataPull alloc] init];
+    }
+    
+    return _pull;
 }
+
 
 - (void)getFile:(NSString *)fileName
   fromDirectory:(NSString *)fromDirectory
@@ -110,7 +117,7 @@
     
     BOOL success;
     NSURL *url;
-    NSURLRequest *request;
+    NSMutableURLRequest *request;
     
     assert(!self.connection);
     assert(!self.fileStream);
@@ -161,14 +168,15 @@
     [self.fileStream setProperty:@"YES"
                           forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
     
-    request = [NSURLRequest requestWithURL:url];
+    request = [NSMutableURLRequest requestWithURL:url];
     assert(request);
     
+    int itimeout = request.timeoutInterval;
+    [request setTimeoutInterval:itimeout/8];
     self.connection = [NSURLConnection connectionWithRequest:request
                                                     delegate:self];
     
     assert(self.connection);
-    
     self.totalDataReceived = 0;
     self.progress = 0.0;
     
@@ -258,52 +266,45 @@ didReceiveResponse:(NSURLResponse *)response
 #pragma unused(error)
     assert(theConnection == self.connection);
     
-    if (self.hasFailed == NO)
+    NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
+    if (self.hasFailed == NO && !self.useOnlyPrimaryFTP)
     {
-        NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
-        
-        [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
-                       statusString:error.localizedDescription];
-        
-        if (!self.useOnlyPrimaryFTP)
+        if ([self.currentFtp isEqualToString:self.ftpSite])
         {
-            if ([self.currentFtp isEqualToString:self.ftpSite])
-            {
-                [self setToFtpSite2];
-                self.currentFtp = self.ftpSite2;
-                
-                [UserDefaults.defaults saveString:self.currentFtp
-                                           forKey:@"CurrentFtp"];
-                
-                self.hasFailed = YES;
-                
-                [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
-                               statusString:error.localizedDescription];
-                
-                [self getFile:self.fileName
-                fromDirectory:self.directory
-                  toDirectory:self.toDirectory
-                 forceRefresh:NO];
-            }
+            [self setToFtpSite2];
+            self.currentFtp = self.ftpSite2;
             
-            else
-            {
-                [self setToFtpSite1];
-                self.currentFtp = self.ftpSite;
-                
-                [UserDefaults.defaults saveString:self.currentFtp
-                                           forKey:@"CurrentFtp"];
-                
-                self.hasFailed = YES;
-                
-                [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
-                               statusString:error.localizedDescription];
-                
-                [self getFile:self.fileName
-                fromDirectory:self.directory
-                  toDirectory:self.toDirectory
-                 forceRefresh:NO];
-            }
+            [UserDefaults.defaults saveString:self.currentFtp
+                                       forKey:@"CurrentFtp"];
+            
+            self.hasFailed = YES;
+            
+            [self stopReceiveWithStatus:FTP_CONNECTION_FAILED_TRYING_SECONDARY
+                           statusString:error.localizedDescription];
+            
+            [self getFile:self.fileName
+            fromDirectory:self.directory
+              toDirectory:self.toDirectory
+             forceRefresh:NO];
+        }
+        
+        else
+        {
+            [self setToFtpSite1];
+            self.currentFtp = self.ftpSite;
+            
+            [UserDefaults.defaults saveString:self.currentFtp
+                                       forKey:@"CurrentFtp"];
+            
+            self.hasFailed = YES;
+            
+            [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
+                           statusString:error.localizedDescription];
+            
+            [self getFile:self.fileName
+            fromDirectory:self.directory
+              toDirectory:self.toDirectory
+             forceRefresh:NO];
         }
     }
     

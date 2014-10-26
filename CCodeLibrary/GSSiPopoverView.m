@@ -110,6 +110,21 @@
 
 - (void)showAfter:(float)seconds
         withTitle:(NSString *)title
+        andButton:(NSString *)button
+{
+    if (button)
+    {
+        [_popoverCancel setTitle:button
+                        forState:UIControlStateNormal];
+        [_popoverCancel setHidden:NO];
+    }
+    else
+        [_popoverCancel setHidden:YES];
+    [self showAfter:seconds withTitle:title];
+}
+
+- (void)showAfter:(float)seconds
+        withTitle:(NSString *)title
 {
     self.title = title;
     _popoverLabel.text = title;
