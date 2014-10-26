@@ -5,15 +5,15 @@
 
 @interface LegendView : UIView
 
-@property UILabel *completed;
-@property UILabel *toBeDone;
-@property UILabel *notAssigned;
-@property UILabel *complex;
-@property UILabel *numRamps;
-@property UIView *completedMarker;
-@property UIView *toBeDoneMarker;
-@property UIView *notAssignedMarker;
-@property UIView *complexMarker;
+@property (nonatomic) UILabel *completed;
+@property (nonatomic) UILabel *toBeDone;
+@property (nonatomic) UILabel *notAssigned;
+@property (nonatomic) UILabel *complex;
+@property (nonatomic) UILabel *numRamps;
+@property (nonatomic) UIView *completedMarker;
+@property (nonatomic) UIView *toBeDoneMarker;
+@property (nonatomic) UIView *notAssignedMarker;
+@property (nonatomic) UIView *complexMarker;
 
 - (id)initWithOrigin:(CGPoint)origin
      hasComplexView:(BOOL)hasComplexView;
