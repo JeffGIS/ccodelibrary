@@ -723,7 +723,7 @@ static IntersectionsDatabase *_database;
     return dataArray;
 }
 
--(void)sortIntersectionsByDistance:(NSMutableArray *)intersections
+- (void)sortIntersectionsByDistance:(NSMutableArray *)intersections
 {
     [intersections sortUsingComparator: ^(id obj1, id obj2)
      {
