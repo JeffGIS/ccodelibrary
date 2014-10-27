@@ -279,7 +279,7 @@
     return corner;
 }
 
--(int) getCornerFromX:(int)x
+- (int)getCornerFromX:(int)x
                  andY:(int)y
        atIntersection:(MPIntersection *)intersection
 {
@@ -295,7 +295,7 @@
     return corner;
 }
 
--(int) getQuadDeviderFromX:(int)x
+- (int)getQuadDeviderFromX:(int)x
                       andY:(int)y
             atIntersection:(MPIntersection*)intersection
 {

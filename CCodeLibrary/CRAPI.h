@@ -60,7 +60,7 @@
                                   pitch:(CGFloat)pitch
                                     fov:(CGFloat)fov;
 
--(BOOL) getPlaceIntersectionFile:(id)id
+- (BOOL)getPlaceIntersectionFile:(id)id
 forGeoid:(int)geoid;
 
 - (NSString*)directoryFromPath:(NSString*)path
