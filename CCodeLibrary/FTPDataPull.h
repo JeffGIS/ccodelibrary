@@ -44,6 +44,7 @@
 @property (nonatomic, copy, readwrite) NSString *currentFtp;
 @property (nonatomic, copy, readwrite) NSString *urlText;
 @property (nonatomic, assign, readwrite) BOOL hasFailed;
+@property BOOL haveCalledDelegate;
 @property (nonatomic) int geoid;
 @property (nonatomic) NSUInteger totalDataReceived;
 @property (nonatomic) NSUInteger fileSize;
