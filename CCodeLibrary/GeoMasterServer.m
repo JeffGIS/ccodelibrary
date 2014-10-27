@@ -124,7 +124,7 @@ static GeoMasterServer *_open;
 }
 - (BOOL)sendMessage:(NSString *)message
 {
-	_data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
+    _data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
     
     if (_sendTimer)
         [_sendTimer invalidate];

@@ -19,7 +19,7 @@ didReceiveMessage:(NSString *)message
   didReceiveError:(NSString *)error
        withStatus:(long)status;
 
-- (void) GMServerDidOpen:(GeoMasterServer*)server;
+- (void) GMServerDidOpen:(GeoMasterServer *)server;
 
 @end
 

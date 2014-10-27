@@ -456,7 +456,7 @@
     NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=%f&heading=%f&pitch=%f&sensor=false&key=%@", atLatLon.lat, atLatLon.lon, fov, heading, pitch, GOOGLE_API_KEY];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
+    image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
     return image;
 }
 
@@ -467,20 +467,22 @@ forGeoid:(int)geoid
     return YES;
 }
 
-- (NSString*)directoryFromPath:(NSString *)path
-                       andName:(NSString *)name
-                        create:(BOOL)create
+- (NSString *)directoryFromPath:(NSString *)path
+                        andName:(NSString *)name
+                         create:(BOOL)create
 {
     LPSTR str = malloc(path.length + 2);
     LPSTR pBS;
     NSString *outDir = @"";
     BOOL isDir;
     
-    strcpy(str,path.UTF8String);
+    strcpy(str, path.UTF8String);
     
     if ((pBS = strrchr(str,'/')))
     {
-        BOOL exists = [NSFileManager.defaultManager fileExistsAtPath:path isDirectory:&isDir];
+        BOOL exists = [NSFileManager.defaultManager fileExistsAtPath:path
+                                                         isDirectory:&isDir];
+        
         if (!*(pBS + 1) || (exists && !isDir))
             *pBS = 0;
         
