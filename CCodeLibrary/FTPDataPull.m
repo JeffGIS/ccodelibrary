@@ -13,12 +13,7 @@ static FTPDataPull *_pull;
 
 + (FTPDataPull *)pull
 {
-    if (_pull == nil)
-    {
-        _pull = [[FTPDataPull alloc] init];
-    }
-    
-    return _pull;
+    return [[FTPDataPull alloc] init];
 }
 
 
