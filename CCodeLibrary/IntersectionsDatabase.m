@@ -420,7 +420,8 @@ static IntersectionsDatabase *_database;
 {
     BOOL rtn;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
-    
+    [self open];
+   
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
                        intX=%i,\
                        intY=%i,\
@@ -481,6 +482,7 @@ static IntersectionsDatabase *_database;
 {
     MPIntersection *mpint = nil;
     double lat, lon;
+    [self open];
     
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement;
@@ -528,6 +530,7 @@ static IntersectionsDatabase *_database;
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     NSString *query = [NSString stringWithFormat:@"SELECT intX, intY FROM Intersections"];
     sqlite3_stmt *statement;
+    [self open];
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
     
@@ -550,7 +553,8 @@ static IntersectionsDatabase *_database;
 - (NSMutableArray *)getIntersectionPointsFromDatabaseinBounds:(IBOUNDS)bounds
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
-    
+    [self open];
+
     NSString *query = [NSString stringWithFormat:
                        @"SELECT intID, assignedTo, status, intX, intY,\
                        ramp1,ramp2,ramp3,ramp4,ramp5,ramp6,ramp7,ramp8,ramp81,ramp23,ramp45,ramp67 \
