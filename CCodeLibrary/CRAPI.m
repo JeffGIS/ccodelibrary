@@ -63,9 +63,15 @@
                                 withIntermediateDirectories:YES
                                                  attributes:nil
                                                       error:nil];
+        self.uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i",self.currentManageriPad,geoid];
     }
 }
 
+- (NSString *)uploadDirectory
+{
+    NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i",self.currentManageriPad,_currentGeoidValue];
+    return uploadDirectory;
+}
 - (void)intersectionInit:(MPIntersection *)currentIntersection
 {
     currentIntersection.intID = -1;

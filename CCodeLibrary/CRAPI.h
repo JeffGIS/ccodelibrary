@@ -15,8 +15,9 @@
 @property (nonatomic) NSString *documentsDirectory;
 @property (nonatomic) NSString *outputDirectory;
 @property (nonatomic) NSString *imageDirectory;
+@property (nonatomic) NSString *uploadDirectory;
 @property (nonatomic) int currentGeoid;
-@property NSString * currentManageriPad;
+@property (nonatomic) NSString * currentManageriPad;
 @property int currentUserID;
 @property (nonatomic) BOOL currentGeoidStatus;
 @property (nonatomic) NSString *currentCityNameAndState;

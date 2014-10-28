@@ -145,4 +145,6 @@ enum obstructions {
 @property double lat,lon;
 @property (nonatomic,strong) NSMutableArray *ramps;
 
+- (void) setRampsXWalkAndSignal;
+
 @end

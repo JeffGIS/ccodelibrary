@@ -523,6 +523,7 @@ static IntersectionsDatabase *_database;
         [self setSignalCoord:mpint signal:23 from:statement];
         [self setSignalCoord:mpint signal:45 from:statement];
         [self setSignalCoord:mpint signal:67 from:statement];
+        [mpint setRampsXWalkAndSignal];
     }
     
     SQLOK(sqlite3_finalize(statement));

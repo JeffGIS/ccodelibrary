@@ -113,4 +113,63 @@
     return self;
 }
 
+- (void) setRampsXWalkAndSignal
+{
+    MPIntersection *currentIntersection = self;
+    MPRamp * ramp;
+    
+    for (int i = 1; i < 13 ;i++)
+    {
+        ramp = [currentIntersection.ramps objectAtIndex:i];
+        
+        switch (i)
+        {
+            case 1:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkAExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal23Exists;
+                break;
+                
+            case 2:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkAExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal81Exists;
+                break;
+                
+            case 3:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkBExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal45Exists;
+                break;
+                
+            case 4:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkBExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal23Exists;
+                break;
+                
+            case 5:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkCExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal67Exists;
+                break;
+                
+            case 6:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkCExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal45Exists;
+                break;
+                
+            case 7:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkDExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal81Exists;
+                break;
+                
+            case 8:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkDExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal67Exists;
+                break;
+                
+            default:
+                ramp.xWalkisComplete = YES;
+                ramp.signalisComplete = YES;
+                break;
+        }
+    }
+
+}
 @end
