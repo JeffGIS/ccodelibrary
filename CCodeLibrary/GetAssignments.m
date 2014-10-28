@@ -4,6 +4,9 @@
 #import "GetAssignments.h"
 
 @implementation GetAssignments
+{
+    FTPDataPull * _pull;
+}
 
 - (BOOL)getAssignments:(GSSiPopoverView *)popover
               forGeoid:(int)geoid
@@ -14,11 +17,11 @@
     
     NSString *fileName = [NSString stringWithFormat:@"%@_%i.txt", manager,geoid];
     
-    FTPDataPull *pull = FTPDataPull.pull;
-    pull.delegate = self;
-    pull.popover = popover;
+    _pull = FTPDataPull.pull;
+    _pull.delegate = self;
+    _pull.popover = popover;
     
-    [pull getFile:fileName
+    [_pull getFile:fileName
     fromDirectory:@"Bill/Assignments"
       toDirectory:documentsDirectory
      forceRefresh:NO];
@@ -29,6 +32,8 @@
 - (void)FTPdidComplete:(int)status
               filePath:(NSString *)path
 {
+    if (status == FTP_CONNECTION_FAILED_TRYING_SECONDARY)
+        return;
     if (status == FTP_OK)
         status = GETASS_OK;
     

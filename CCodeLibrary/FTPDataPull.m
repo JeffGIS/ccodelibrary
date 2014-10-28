@@ -9,7 +9,7 @@
     Reachability *reachability;
 }
 
-static FTPDataPull *_pull;
+//static FTPDataPull *_pull;
 
 + (FTPDataPull *)pull
 {
@@ -283,7 +283,7 @@ didReceiveResponse:(NSURLResponse *)response
             
             [self stopReceiveWithStatus:FTP_CONNECTION_FAILED_TRYING_SECONDARY
                            statusString:error.localizedDescription];
-            
+            self.haveCalledDelegate = NO;
             [self getFile:self.fileName
             fromDirectory:self.directory
               toDirectory:self.toDirectory
