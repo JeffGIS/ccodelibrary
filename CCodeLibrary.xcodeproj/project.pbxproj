@@ -48,6 +48,7 @@
 		EBAEED0919B605E20084A579 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = EBAEED0819B605E20084A579 /* compress.c */; };
 		EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */; };
 		EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1BFCB199DD7C10059B547 /* MPIntersection.m */; };
+		EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB9A61919FFC02900685716 /* GetAssignments.m */; };
 		EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */; };
 /* End PBXBuildFile section */
 
@@ -154,6 +155,8 @@
 		EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaults.m; sourceTree = "<group>"; };
 		EBB1BFCA199DD7C10059B547 /* MPIntersection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPIntersection.h; sourceTree = "<group>"; };
 		EBB1BFCB199DD7C10059B547 /* MPIntersection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPIntersection.m; sourceTree = "<group>"; };
+		EBB9A61819FFC02900685716 /* GetAssignments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAssignments.h; sourceTree = "<group>"; };
+		EBB9A61919FFC02900685716 /* GetAssignments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAssignments.m; sourceTree = "<group>"; };
 		EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiPopoverView.h; sourceTree = "<group>"; };
 		EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiPopoverView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -337,6 +340,8 @@
 				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
+				EBB9A61819FFC02900685716 /* GetAssignments.h */,
+				EBB9A61919FFC02900685716 /* GetAssignments.m */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";
@@ -479,6 +484,7 @@
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
 				A94A771919F807CE0062906E /* FacilityRecord.m in Sources */,
+				EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

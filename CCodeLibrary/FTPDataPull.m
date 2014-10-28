@@ -60,7 +60,7 @@ static FTPDataPull *_pull;
             {
                 [self.delegate FTPdidComplete:FTP_CONNECTION_FAILED
                                      filePath:nil];
-               // self.haveCalledDelegate = YES;
+                self.haveCalledDelegate = YES;
             }
             
             return;
@@ -73,7 +73,7 @@ static FTPDataPull *_pull;
     {
         [self.delegate FTPdidComplete:FTP_OK
                              filePath:self.filePath];
-       // self.haveCalledDelegate = YES;
+        self.haveCalledDelegate = YES;
     }
 }
 
@@ -99,7 +99,7 @@ static FTPDataPull *_pull;
     {
        [self.delegate FTPdidComplete:status
                              filePath:self.filePath];
-        //self.haveCalledDelegate = YES;
+        self.haveCalledDelegate = YES;
     }
 }
 

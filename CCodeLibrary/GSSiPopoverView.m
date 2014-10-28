@@ -71,6 +71,7 @@
         [_popover addSubview:_progressView];
         [_popover addSubview:_popoverCancel];
         [_popover addSubview:_popoverLabel];
+        _progressView.progress = 0.0;
     }
     
     return self;

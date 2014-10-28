@@ -12,7 +12,7 @@
     Reachability *reachability;
 }
 
-static GeoMasterServer *_open;
+static GeoMasterServer *_open = nil;
 
 + (GeoMasterServer *)open
 {

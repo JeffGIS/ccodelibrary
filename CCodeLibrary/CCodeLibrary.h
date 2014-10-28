@@ -24,6 +24,7 @@
 #import "VerticalSegmentedControl.h"
 #import "IntersectionsDatabase.h"
 #import "GetPlaceAreaFile.h"
+#import "GetAssignments.h"
 #import "IntersectionRecord.h"
 #import "ManagePlacesDatabase.h"
 #import "GSSiPopoverView.h"

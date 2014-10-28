@@ -1231,7 +1231,7 @@ Exit:
     else
     {
         _popover = popover;
-        [NSTimer scheduledTimerWithTimeInterval:0
+        [NSTimer scheduledTimerWithTimeInterval:1
                                          target:self
                                        selector:@selector(getInitialIntersectionFile:)
                                        userInfo:nil
