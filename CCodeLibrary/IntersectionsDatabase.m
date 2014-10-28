@@ -908,12 +908,11 @@ static IntersectionsDatabase *_database;
     BOOL rtn;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     
+    [self open];
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i WHERE intID=%i",
                        iTime, status, intID];
     
-    char *error;
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
-    sqlite3_free(error);
+    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
 
@@ -922,11 +921,10 @@ static IntersectionsDatabase *_database;
     BOOL rtn;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     
+    [self open];
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE intID=%i",
                        iTime, user, intID];
-    char *error;
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
-    sqlite3_free(error);
+    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
 - (BOOL)assignAllIntersectionTo:(int)user
@@ -934,11 +932,10 @@ static IntersectionsDatabase *_database;
     BOOL rtn;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     
+    [self open];
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i",
                        iTime, user];
-    char *error;
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
-    sqlite3_free(error);
+    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
 
@@ -946,6 +943,7 @@ static IntersectionsDatabase *_database;
 {
     IntersectionPoint *intpt = nil;
     
+    [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%i AND assignedTo=%i ORDER BY intID ASC",status,user];
     sqlite3_stmt *statement;
     
@@ -971,6 +969,7 @@ static IntersectionsDatabase *_database;
 {
     NSMutableArray * assignments = [[NSMutableArray alloc]init];
     
+    [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedTo FROM Intersections WHERE assignedTo != 0 ORDER BY assignedTo,intID ASC"];
     sqlite3_stmt *statement;
     
@@ -1022,6 +1021,7 @@ static IntersectionsDatabase *_database;
     INTERSECTION_STRUCT intStruct = {0};
     int *pInt, i;
     
+    [self open];
     strcpy(dataFile,path.UTF8String);
     
     if ((pUB = strrchr (dataFile, '_')))
