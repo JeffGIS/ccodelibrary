@@ -81,9 +81,18 @@
     [self removeFromSuperview];
 }
 
+- (void)showFromTimer:(NSTimer*)timer
+{
+    [self show];
+}
 - (void)show
 {
     [self.fromView addSubview:self];
+}
+
+- (void) hideFromTimer:(NSTimer *)timer
+{
+    [self hide];
 }
 
 - (void)hide
@@ -96,9 +105,10 @@
         
         if (seconds < MIN_SHOWTIME)
         {
+            self.showTime = 0;
             self.timer = [NSTimer scheduledTimerWithTimeInterval:seconds
                                                           target:self
-                                                        selector:@selector(hide)
+                                                        selector:@selector(hideFromTimer:)
                                                         userInfo:nil
                                                          repeats:NO];
         }
@@ -137,7 +147,7 @@
         
         self.timer = [NSTimer scheduledTimerWithTimeInterval:seconds
                                          target:self
-                                       selector:@selector(show)
+                                                    selector:@selector(showFromTimer:)
                                        userInfo:nil
                                         repeats:NO];
     }

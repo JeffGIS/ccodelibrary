@@ -314,8 +314,6 @@ didReceiveResponse:(NSURLResponse *)response
         [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
                        statusString:error.localizedDescription];
         
-        NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
-        
         self.currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
         
         [UserDefaults.defaults saveString:self.currentFtp

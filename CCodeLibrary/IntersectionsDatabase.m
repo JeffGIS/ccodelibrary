@@ -4,8 +4,12 @@
 #import "IntersectionsDatabase.h"
 
 @implementation IntersectionsDatabase
+{
+    GSSiPopoverView* _popover;
+}
 
 static IntersectionsDatabase *_database;
+
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid
 {
@@ -1111,8 +1115,14 @@ Exit:
         
         else
         {
-            DecompressGMZipFile ((LPSTR)path.UTF8String,(LPSTR)toDirectory.UTF8String);
-            status = [self loadIntersectionTextToDatabase:path];
+            if (DecompressGMZipFile ((LPSTR)path.UTF8String,(LPSTR)toDirectory.UTF8String))
+                status = [self loadIntersectionTextToDatabase:path];
+            else
+            {
+                [NSFileManager.defaultManager removeItemAtPath:path
+                                                         error:nil];
+                status = INT_FAILED_TO_UNZIP;
+            }
         }
         
         if (self.delegate != nil)
@@ -1194,6 +1204,10 @@ Exit:
       toDirectory:toDirectory
      forceRefresh:YES];
 }
+- (void)getInitialIntersectionFile:(NSTimer*)timer
+{
+    [self getPlaceIntersectionFile:_popover forGeoid:self.geoid];
+}
 
 - (void)getPlaceIntersectionDatabase:(GSSiPopoverView*)popover
 {
@@ -1216,8 +1230,13 @@ Exit:
     
     else
     {
-        [self getPlaceIntersectionFile:popover
-                              forGeoid:self.geoid];
+        _popover = popover;
+        [NSTimer scheduledTimerWithTimeInterval:0
+                                         target:self
+                                       selector:@selector(getInitialIntersectionFile:)
+                                       userInfo:nil
+                                        repeats:NO];
+
     }
 }
 

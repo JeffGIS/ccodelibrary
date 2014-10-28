@@ -10,6 +10,7 @@
 #define FTP_CANCEL 2
 #define FTP_FILE_WRITE_ERROR 101
 #define FTP_CONNECTION_FAILED 102
+#define FTP_FAILED_TO_UNZIP 103
 
 @class FTPDataPush;
 
