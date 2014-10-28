@@ -24,7 +24,7 @@ static GeoMasterServer *_open;
     return _open;
 }
 
--(id)init
+- (id)init
 {
     self = [super init];
     

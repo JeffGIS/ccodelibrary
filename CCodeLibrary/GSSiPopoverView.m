@@ -126,13 +126,15 @@
     {
         [_popoverCancel setTitle:button
                         forState:UIControlStateNormal];
-        [_popoverCancel setHidden:NO];
+        
+        _popoverCancel.hidden = NO;
     }
     
     else
-        [_popoverCancel setHidden:YES];
+        _popoverCancel.hidden = YES;
     
-    [self showAfter:seconds withTitle:title];
+    [self showAfter:seconds
+          withTitle:title];
 }
 
 - (void)showAfter:(float)seconds

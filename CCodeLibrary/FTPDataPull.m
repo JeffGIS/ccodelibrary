@@ -13,7 +13,9 @@ static FTPDataPull *_pull;
 
 + (FTPDataPull *)pull
 {
-    return [[FTPDataPull alloc] init];
+    FTPDataPull *p =[[FTPDataPull alloc] init];
+    p.haveCalledDelegate = NO;
+    return p;
 }
 
 
@@ -54,10 +56,11 @@ static FTPDataPull *_pull;
         
         if(remoteHostStatus == NotReachable)
         {
-            if (self.delegate)
+            if (self.delegate && !self.haveCalledDelegate)
             {
                 [self.delegate FTPdidComplete:FTP_CONNECTION_FAILED
                                      filePath:nil];
+               // self.haveCalledDelegate = YES;
             }
             
             return;
@@ -66,10 +69,11 @@ static FTPDataPull *_pull;
         [self startReceive:fileName];
     }
     
-    else if (self.delegate)
+    else if (self.delegate && !self.haveCalledDelegate)
     {
         [self.delegate FTPdidComplete:FTP_OK
                              filePath:self.filePath];
+       // self.haveCalledDelegate = YES;
     }
 }
 
@@ -91,10 +95,11 @@ static FTPDataPull *_pull;
 
     [NetworkManager.sharedInstance didStopNetworkOperation];
     
-    if (self.delegate)
+    if (self.delegate && !self.haveCalledDelegate)
     {
        [self.delegate FTPdidComplete:status
                              filePath:self.filePath];
+        //self.haveCalledDelegate = YES;
     }
 }
 

@@ -40,7 +40,6 @@
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
 		EBA2E472199527660085B2E0 /* libCCodeLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */; };
-		EBA2E478199527660085B2E0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBA2E476199527660085B2E0 /* InfoPlist.strings */; };
 		EBA2E47A199527660085B2E0 /* CCodeLibraryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E479199527660085B2E0 /* CCodeLibraryTests.m */; };
 		EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E48419952BCA0085B2E0 /* MathUtil.c */; };
 		EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E48819952BCA0085B2E0 /* TileIndex.c */; };
@@ -135,7 +134,6 @@
 		EBA2E464199527660085B2E0 /* CCodeLibrary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCodeLibrary.m; sourceTree = "<group>"; };
 		EBA2E46A199527660085B2E0 /* CCodeLibraryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CCodeLibraryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBA2E475199527660085B2E0 /* CCodeLibraryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CCodeLibraryTests-Info.plist"; sourceTree = "<group>"; };
-		EBA2E477199527660085B2E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EBA2E479199527660085B2E0 /* CCodeLibraryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CCodeLibraryTests.m; sourceTree = "<group>"; };
 		EBA2E48319952BCA0085B2E0 /* MathTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathTypes.h; sourceTree = "<group>"; };
 		EBA2E48419952BCA0085B2E0 /* MathUtil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MathUtil.c; sourceTree = "<group>"; };
@@ -347,7 +345,6 @@
 			isa = PBXGroup;
 			children = (
 				EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */,
-				EBA2E476199527660085B2E0 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -439,7 +436,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBA2E478199527660085B2E0 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -503,18 +499,6 @@
 			targetProxy = EBA2E470199527660085B2E0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		EBA2E476199527660085B2E0 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EBA2E477199527660085B2E0 /* en */,
-			);
-			name = InfoPlist.strings;
-			path = CCodeLibraryTests;
-			sourceTree = SOURCE_ROOT;
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		EBA2E47B199527660085B2E0 /* Debug */ = {
