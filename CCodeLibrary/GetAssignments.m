@@ -1,17 +1,13 @@
-//
 //  GetAssignments.m
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 10/28/14.
-//  Copyright (c) 2014 GSSi. All rights reserved.
-//
 
 #import "GetAssignments.h"
 
 @implementation GetAssignments
 
-- (BOOL)getAssignments:(GSSiPopoverView*)popover
-              forGeoid:(int)geoid underManager:(NSString *)manager
+- (BOOL)getAssignments:(GSSiPopoverView *)popover
+              forGeoid:(int)geoid
+          underManager:(NSString *)manager
 {
     NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
     //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
@@ -43,8 +39,8 @@
     }
     
     [self.delegate getAssignments:self
-                         didGetFile:path
-                         withStatus:status];
+                       didGetFile:path
+                       withStatus:status];
     
     return;
 }

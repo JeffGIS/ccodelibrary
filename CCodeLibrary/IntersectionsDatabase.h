@@ -14,7 +14,7 @@
 #define INT_STATUS_COMPLEX 2
 
 #define INT_NO_NETWORK_CONNECTION 3
-#define INT_NO_UPLOADED_FILE    4
+#define INT_NO_UPLOADED_FILE 4
 #define INT_FAILED_TO_UNZIP 5
 
 @class IntersectionsDatabase;
