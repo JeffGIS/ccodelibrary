@@ -280,6 +280,8 @@
 				EB05C21219ED378400F0688B /* FTPDataPush.m */,
 				EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */,
 				EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */,
+				EBB9A61819FFC02900685716 /* GetAssignments.h */,
+				EBB9A61919FFC02900685716 /* GetAssignments.m */,
 				1F3A544419A412490029DBEA /* NetworkManager.h */,
 				1F3A544519A412490029DBEA /* NetworkManager.m */,
 				A9735AF219E77B6800894359 /* Reachability.h */,
@@ -340,8 +342,6 @@
 				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
-				EBB9A61819FFC02900685716 /* GetAssignments.h */,
-				EBB9A61919FFC02900685716 /* GetAssignments.m */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";

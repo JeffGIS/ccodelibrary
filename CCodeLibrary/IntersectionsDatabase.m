@@ -1118,6 +1118,7 @@ Exit:
         {
             if (DecompressGMZipFile ((LPSTR)path.UTF8String,(LPSTR)toDirectory.UTF8String))
                 status = [self loadIntersectionTextToDatabase:path];
+            
             else
             {
                 [NSFileManager.defaultManager removeItemAtPath:path
