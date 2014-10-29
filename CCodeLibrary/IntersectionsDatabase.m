@@ -939,6 +939,17 @@ static IntersectionsDatabase *_database;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
+- (BOOL)assignRemainingIntersectionsTo:(int)user
+{
+    BOOL rtn;
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
+    
+    [self open];
+    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE assignedTo=0",
+                       iTime, user];
+    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
+    return !rtn;
+}
 
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user WithStatus:(int)status
 {
@@ -1271,7 +1282,7 @@ Exit:
 - (void)open
 {
     if (!self.isOpen)
-        self.isOpen = SQLOK(sqlite3_open(self.path.UTF8String, &_database));
+        self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database));
 
 }
 - (void)close

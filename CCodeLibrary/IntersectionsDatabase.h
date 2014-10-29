@@ -72,6 +72,8 @@
 
 - (BOOL)assignIntersection:(int)intID To:(int)user;
 - (BOOL)assignAllIntersectionTo:(int)user;
+- (BOOL)assignRemainingIntersectionsTo:(int)user;
+
 - (NSArray *)getAssignments;
 
 - (NSString *)intersectionTextPath:(int)type;
