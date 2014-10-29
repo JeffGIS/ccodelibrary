@@ -35,6 +35,7 @@
 {
     if (status == FTP_CONNECTION_FAILED_TRYING_SECONDARY)
         return;
+    
     if (status == FTP_OK)
         status = GETASS_OK;
     
