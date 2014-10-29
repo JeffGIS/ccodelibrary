@@ -51,8 +51,8 @@
     if (geoid != _currentGeoidValue)
     {
         _currentGeoidValue = geoid;
-        self.outputDirectory = [NSString stringWithFormat:@"%@/%i/ADAFiles", self.documentsDirectory,_currentGeoidValue];
-        self.imageDirectory = [NSString stringWithFormat:@"%@/%i/IntersectionImages", self.documentsDirectory,_currentGeoidValue];
+        self.outputDirectory = [NSString stringWithFormat:@"%@/%i/ADAFiles", self.documentsDirectory, _currentGeoidValue];
+        self.imageDirectory = [NSString stringWithFormat:@"%@/%i/IntersectionImages", self.documentsDirectory, _currentGeoidValue];
         
         rtn = [NSFileManager.defaultManager createDirectoryAtPath:self.outputDirectory
                                 withIntermediateDirectories:YES
@@ -63,13 +63,13 @@
                                 withIntermediateDirectories:YES
                                                  attributes:nil
                                                       error:nil];
-        self.uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i",self.currentManageriPad,geoid];
+        self.uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i", self.currentManageriPad,geoid];
     }
 }
 
 - (NSString *)uploadDirectory
 {
-    NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i",self.currentManageriPad,_currentGeoidValue];
+    NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i", self.currentManageriPad, _currentGeoidValue];
     return uploadDirectory;
 }
 - (void)intersectionInit:(MPIntersection *)currentIntersection

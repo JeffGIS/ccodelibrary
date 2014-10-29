@@ -1206,12 +1206,14 @@ Exit:
       toDirectory:toDirectory
      forceRefresh:YES];
 }
-- (void)getInitialIntersectionFile:(NSTimer*)timer
+
+- (void)getInitialIntersectionFile:(NSTimer *)timer
 {
-    [self getPlaceIntersectionFile:_popover forGeoid:self.geoid];
+    [self getPlaceIntersectionFile:_popover
+                          forGeoid:self.geoid];
 }
 
-- (void)getPlaceIntersectionDatabase:(GSSiPopoverView*)popover
+- (void)getPlaceIntersectionDatabase:(GSSiPopoverView *)popover
 {
     NSString *dbPath = [self databasePath:self.geoid];
     
@@ -1238,11 +1240,10 @@ Exit:
                                        selector:@selector(getInitialIntersectionFile:)
                                        userInfo:nil
                                         repeats:NO];
-
     }
 }
 
-- (void)getUploadedIntersectionDatabase:(GSSiPopoverView*)popover
+- (void)getUploadedIntersectionDatabase:(GSSiPopoverView *)popover
 {
     NSString * dbPath = [self databasePath:self.geoid];
     
