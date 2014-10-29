@@ -28,6 +28,8 @@
 @property (nonatomic) NSArray *currentPlaceArray;
 @property (nonatomic) NSString *placeAreaFile;
 @property BOOL doCompassCalibrate;
+@property (nonatomic) NSString *calibrateLength;
+@property (nonatomic) NSString *calibrateHeight;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
