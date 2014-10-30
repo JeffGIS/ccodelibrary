@@ -293,7 +293,8 @@
     int corner = -1;
     int lev21x, lev21y;
     LatLongToPixelXY(intersection.lat, intersection.lon, 21, &lev21x, &lev21y);
-    DPOINT midPt = {intersection.lev21x,intersection.lev21y};
+//    DPOINT midPt = {intersection.lev21x,intersection.lev21y};
+    DPOINT midPt = {lev21x,lev21y};
     DPOINT pt = {x,y};
     
     float az = getazd(&midPt, &pt);
