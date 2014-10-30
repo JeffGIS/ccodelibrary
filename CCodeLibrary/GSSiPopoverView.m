@@ -6,6 +6,9 @@
 
 #define MIN_SHOWTIME 2
 @implementation GSSiPopoverView
+{
+    UIFont *_font;
+}
 
 - (id)initWithView:(UIView *)fromView
 {
@@ -43,7 +46,9 @@
         
         _popoverCancel.layer.cornerRadius = 10.0;
         _popoverCancel.backgroundColor = UIColor.whiteColor;
-        _popoverCancel.titleLabel.font = [UIFont boldSystemFontOfSize:40.0];
+        
+        _font = [UIFont boldSystemFontOfSize:40.0];
+        _popoverCancel.titleLabel.font = _font;
         
         [_popoverCancel setTitleColor:UIColor.blackColor
                              forState:UIControlStateNormal];
@@ -79,6 +84,7 @@
 
 - (void)popoverCancel:(UIButton *)sender
 {
+    _popoverCancel.titleLabel.font = _font;
     [self removeFromSuperview];
 }
 
