@@ -291,7 +291,10 @@
 {
     //returns 81,23,45 or 67
     int corner = -1;
-    DPOINT midPt = {intersection.lev21x,intersection.lev21y}, pt = {x,y};
+    int lev21x, lev21y;
+    LatLongToPixelXY(intersection.lat, intersection.lon, 21, &lev21x, &lev21y);
+    DPOINT midPt = {intersection.lev21x,intersection.lev21y};
+    DPOINT pt = {x,y};
     
     float az = getazd(&midPt, &pt);
     int adjustedRot = ClockwiseDegFromNorth((az * RADtoDEG) + intersection.intRotation);
