@@ -48,6 +48,7 @@
 #define RIGHT 3
 #define DEGREES(x)(180.0 * x / M_PI)
 #define RADIANS(x)( x / 180.0 * M_PI)
+#define RADIANS_SLOPE(x)(100.0 * sin(RADIANS(x)))
 
 @interface CCodeLibrary : NSObject
 
