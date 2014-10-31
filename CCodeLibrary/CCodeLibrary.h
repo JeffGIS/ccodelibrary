@@ -46,7 +46,8 @@
 #define LEFT 1
 #define MIDDLE 2
 #define RIGHT 3
-#define DEGREES(x) (180 * x / M_PI)
+#define DEGREES(x)(180.0 * x / M_PI)
+#define RADIANS(x)( x / 180.0 * M_PI)
 
 @interface CCodeLibrary : NSObject
 
