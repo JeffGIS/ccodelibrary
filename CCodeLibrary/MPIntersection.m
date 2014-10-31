@@ -116,7 +116,7 @@
 - (void) setRampsXWalkAndSignal
 {
     MPIntersection *currentIntersection = self;
-    MPRamp * ramp;
+    MPRamp *ramp;
     
     for (int i = 1; i < 13 ;i++)
     {
@@ -170,6 +170,6 @@
                 break;
         }
     }
-
 }
+
 @end

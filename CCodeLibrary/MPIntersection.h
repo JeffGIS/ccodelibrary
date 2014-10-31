@@ -34,7 +34,7 @@ enum obstructions {
     none=10
 };
 
-@interface PSRamp:NSObject
+@interface PSRamp : NSObject
 
 @property int lev21x;
 @property int lev21y;
@@ -44,6 +44,7 @@ enum obstructions {
 @property float trueAz;
 @property int adjustedRot;
 @property int rampID;
+
 @end
 
 @interface MPRamp : NSObject
@@ -100,9 +101,9 @@ enum obstructions {
 @property int intRotation;
 @property bool doLater;
 @property int timeComplete;
-@property int  currentCorner;
-@property int  currentSignal;
-@property int  currentObstruction;
+@property int currentCorner;
+@property int currentSignal;
+@property int currentObstruction;
 @property float currentCornerHeading;
 @property (nonatomic, strong) MPRamp *currentRamp;
 @property (nonatomic, strong) NSString *name1;
