@@ -8,6 +8,8 @@
 #define CAL_FLIP 2
 #define SHORT_COUNT 50
 #define LONG_COUNT 500
+#define SC_START 0
+#define SC_CANCEL 1
 
 @interface CalibrationViewController ()
 
@@ -57,7 +59,30 @@
     self.xRange = self.yRange = 0.0;
     self.sumX = self.sumY = 0.0;
     self.counter = 0;
+    self.startCancelState = SC_START;
     
+    [self setupTitleLabel];
+    [self setupReturnButton];
+    [self setupStartCancelButton];
+    [self setupProgressView];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+}
+
+- (void)setupTitleLabel
+{
+    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(224.0, 20.0, 320.0, 60.0)];
+    [self.view addSubview:self.titleLabel];
+    self.titleLabel.textColor = UIColor.whiteColor;
+    self.titleLabel.text = @"Calibration";
+    self.titleLabel.font = [UIFont boldSystemFontOfSize:60.0];
+}
+
+- (void)setupReturnButton
+{
     self.returnButton = [[UIButton alloc] initWithFrame:CGRectMake(16.0, 20.0, 180.0, 60.0)];
     
     [self.returnButton addTarget:self
@@ -69,18 +94,30 @@
     [self setupButton:self.returnButton
                 title:@"< Return"
                  font:[UIFont boldSystemFontOfSize:36.0]];
+}
+
+- (void)setupStartCancelButton
+{
+    self.startCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(144.0, 840.0, 480.0, 90.0)];
     
-    [self startMotionManager];
+    [self.startCancelButton addTarget:self
+                               action:@selector(startCancel:)
+                     forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:self.startCancelButton];
+    
+    [self setupButton:self.startCancelButton
+                title:@"Start Calibration"
+                 font:[UIFont boldSystemFontOfSize:48.0]];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)setupProgressView
 {
-    [self updateButtonAppearance:self.returnButton];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
+    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(60.0, 180.0, 648.0, 9.0)];
+    self.progressView.progressTintColor = UIColor.whiteColor;
+    self.progressView.trackTintColor = UIColor.blackColor;
+    self.progressView.progress = 0.0;
+    [self.view addSubview:self.progressView];
 }
 
 - (void)setupButton:(UIButton *)button
@@ -90,31 +127,21 @@
     [button setTitle:title
             forState:UIControlStateNormal];
     
+    [button setTitleColor:UIColor.lightGrayColor
+                 forState:UIControlStateHighlighted];
+    
+    [button setTitleColor:UIColor.blackColor
+                 forState:UIControlStateNormal];
+    
+    [button setTitleColor:UIColor.grayColor
+                 forState:UIControlStateDisabled];
+    
     button.titleLabel.font = font;
     button.layer.cornerRadius = 10.0;
     button.layer.borderColor = UserDefaults.defaults.green.CGColor;
     button.layer.borderWidth = 6.0;
-}
-
-- (void)updateButtonAppearance:(UIButton *)button
-{
-    if (button.enabled == YES)
-    {
-        button.backgroundColor = UIColor.whiteColor;
-        button.layer.borderColor = UserDefaults.defaults.green.CGColor;
-        
-        [button setTitleColor:UIColor.blackColor
-                     forState:UIControlStateNormal];
-    }
-    
-    else
-    {
-        button.backgroundColor = UserDefaults.defaults.green;
-        button.layer.borderColor = UIColor.grayColor.CGColor;
-        
-        [button setTitleColor:UIColor.grayColor
-                     forState:UIControlStateNormal];
-    }
+    button.backgroundColor = UIColor.whiteColor;
+    button.layer.borderColor = UserDefaults.defaults.green.CGColor;
 }
 
 - (void)goBack:(UIButton *)button
@@ -123,6 +150,27 @@
     
     [self dismissViewControllerAnimated:YES
                              completion:nil];
+}
+
+- (void)startCancel:(UIButton *)button
+{
+    if (self.startCancelState == SC_START)
+    {
+        [self startMotionManager];
+        self.startCancelState = SC_CANCEL;
+        
+        [self.startCancelButton setTitle:@"Cancel Calibration"
+                                forState:UIControlStateNormal];
+    }
+    
+    else if (self.startCancelState == SC_CANCEL)
+    {
+        [self.motionManager stopDeviceMotionUpdates];
+        self.startCancelState = SC_START;
+        
+        [self.startCancelButton setTitle:@"Start Calibration"
+                                forState:UIControlStateNormal];
+    }
 }
 
 - (void)startMotionManager
@@ -144,8 +192,6 @@
 
 - (void)computeSlopeFromGravity:(CMAcceleration)gravity
 {
-    //NSLog(@"x=%f,y=%f,z=%f", gravity.x, gravity.y, gravity.z);
-    
     if (self.calibrationOption == CAL_STABILITY)
     {
         if (self.counter == SHORT_COUNT)
@@ -180,6 +226,14 @@
         if (self.counter == LONG_COUNT)
         {
             NSLog(@"%f,%f", (self.sumX / LONG_COUNT), (self.sumY / LONG_COUNT));
+            [self.motionManager stopDeviceMotionUpdates];
+            self.counter = 0;
+            self.sumX = self.sumY = 0.0;
+            self.calibrationOption = CAL_STABILITY;
+            self.startCancelState = SC_START;
+            
+            [self.startCancelButton setTitle:@"Continue Calibration"
+                                    forState:UIControlStateNormal];
         }
         
         else
@@ -187,6 +241,9 @@
             self.sumX = self.sumX + gravity.x;
             self.sumY = self.sumY + gravity.y;
             self.counter++;
+            
+            self.progressView.progress = (self.counter / (CGFloat)LONG_COUNT);
+            NSLog(@"%d", self.counter);
         }
     }
 }

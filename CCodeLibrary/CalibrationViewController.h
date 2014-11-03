@@ -7,6 +7,9 @@
 @interface CalibrationViewController : UIViewController
 
 @property (nonatomic, strong) UIButton *returnButton;
+@property (nonatomic, strong) UIButton *startCancelButton;
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UIProgressView *progressView;
 @property (nonatomic) int calibrationOption;
 @property (nonatomic) CGFloat xRange;
 @property (nonatomic) CGFloat yRange;
@@ -17,5 +20,6 @@
 @property (nonatomic) CGFloat sumX;
 @property (nonatomic) CGFloat sumY;
 @property (nonatomic) int counter;
+@property (nonatomic) BOOL startCancelState;
 
 @end
