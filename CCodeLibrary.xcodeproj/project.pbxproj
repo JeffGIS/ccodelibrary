@@ -19,6 +19,7 @@
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
+		A90FC1F41A07F593003AF763 /* CalibrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A90FC1F31A07F593003AF763 /* CalibrationViewController.m */; };
 		A926F21119D9FC18007C392A /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = A926F21019D9FC18007C392A /* CircleView.m */; };
 		A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770C19F7F9F40062906E /* SharedDefaults.m */; };
 		A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770F19F8045C0062906E /* FacilitiesDatabase.m */; };
@@ -95,6 +96,8 @@
 		1FB3605519AE7E8200592B1D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagePlacesDatabase.h; sourceTree = "<group>"; };
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
+		A90FC1F21A07F593003AF763 /* CalibrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalibrationViewController.h; sourceTree = "<group>"; };
+		A90FC1F31A07F593003AF763 /* CalibrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalibrationViewController.m; sourceTree = "<group>"; };
 		A926F20F19D9FC18007C392A /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
 		A926F21019D9FC18007C392A /* CircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleView.m; sourceTree = "<group>"; };
 		A94A770B19F7F9F40062906E /* SharedDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedDefaults.h; sourceTree = "<group>"; };
@@ -253,6 +256,8 @@
 		A94A771E19F813810062906E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A90FC1F21A07F593003AF763 /* CalibrationViewController.h */,
+				A90FC1F31A07F593003AF763 /* CalibrationViewController.m */,
 				A926F20F19D9FC18007C392A /* CircleView.h */,
 				A926F21019D9FC18007C392A /* CircleView.m */,
 				1F3A544D19A449460029DBEA /* CustomAlert.h */,
@@ -459,6 +464,7 @@
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				A9735AF419E77B6800894359 /* Reachability.m in Sources */,
 				A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */,
+				A90FC1F41A07F593003AF763 /* CalibrationViewController.m in Sources */,
 				1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */,
 				1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */,
 				EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */,
