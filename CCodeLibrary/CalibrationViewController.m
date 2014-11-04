@@ -260,14 +260,16 @@
             {
                 self.x2 = (self.sumX / LONG_COUNT);
                 self.y2 = (self.sumY / LONG_COUNT);
-                self.xError = ((self.x1 + self.x2) / 2.0);
-                self.yError = ((self.y1 + self.y2) / 2.0);
+                CGFloat xErr = ((self.x1 + self.x2) / 2.0);
+                CGFloat yErr = ((self.y1 + self.y2) / 2.0);
              
-                self.progressLabel.text = [NSString stringWithFormat:@"x[1] = %f g\ny[1] = %f g\nx[2] = %f g\ny[2] = %f g",
+                self.progressLabel.text = [NSString stringWithFormat:@"x[1] = %+f g\ny[1] = %+f g\nx[2] = %+f g\ny[2] = %+f g",
                                            self.x1, self.y1, self.x2, self.y2];
                 
-                self.resultsLabel.text = [NSString stringWithFormat:@"x error = %f g\ny error = %f g",
-                                          self.xError, self.yError];
+                self.resultsLabel.text = [NSString stringWithFormat:@"x error = %+f g\ny error = %+f g", xErr, yErr];
+                
+                self.xError = (xErr + self.xError);
+                self.yError = (yErr + self.yError);
                 
                 self.hasRun = NO;
             }
@@ -276,7 +278,7 @@
             {
                 self.x1 = (self.sumX / LONG_COUNT);
                 self.y1 = (self.sumY / LONG_COUNT);
-                self.progressLabel.text = [NSString stringWithFormat:@"x[1] = %f g\ny[1] = %f g",
+                self.progressLabel.text = [NSString stringWithFormat:@"x[1] = %+f g\ny[1] = %+f g",
                                            self.x1, self.y1];
                 
                 self.hasRun = YES;
