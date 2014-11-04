@@ -60,6 +60,8 @@
     self.counter = 0;
     self.startCancelState = SC_START;
     self.hasRun = NO;
+    self.xAdj = [SharedDefaults.defaults CGFloatForKey:@"XAdj"];
+    self.yAdj = [SharedDefaults.defaults CGFloatForKey:@"YAdj"];
     
     [self setupTitleLabel];
     [self setupReturnButton];
@@ -257,26 +259,32 @@
             
             if (self.hasRun == YES)
             {
-                self.x2 = (self.sumX - (self.xError * LONG_COUNT)) / LONG_COUNT;
-                self.y2 = (self.sumY - (self.yError * LONG_COUNT)) / LONG_COUNT;
-                CGFloat xErr = ((self.x1 + self.x2) / 2.0);
-                CGFloat yErr = ((self.y1 + self.y2) / 2.0);
+                self.x2 = (self.sumX - (self.xAdj * LONG_COUNT)) / LONG_COUNT;
+                self.y2 = (self.sumY - (self.yAdj * LONG_COUNT)) / LONG_COUNT;
+                CGFloat xError = ((self.x1 + self.x2) / 2.0);
+                CGFloat yError = ((self.y1 + self.y2) / 2.0);
              
                 self.progressLabel.text = [NSString stringWithFormat:@"x[1] = %+f g\ny[1] = %+f g\nx[2] = %+f g\ny[2] = %+f g",
                                            self.x1, self.y1, self.x2, self.y2];
                 
-                self.resultsLabel.text = [NSString stringWithFormat:@"x error = %+f g\ny error = %+f g", xErr, yErr];
+                self.resultsLabel.text = [NSString stringWithFormat:@"x error = %+f g\ny error = %+f g", xError, yError];
                 
-                self.xError = (xErr + self.xError);
-                self.yError = (yErr + self.yError);
+                self.xAdj += xError;
+                self.yAdj += yError;
+                
+                [SharedDefaults.defaults saveCGFloat:self.xAdj
+                                              forKey:@"XAdj"];
+                
+                [SharedDefaults.defaults saveCGFloat:self.yAdj
+                                              forKey:@"YAdj"];
                 
                 self.hasRun = NO;
             }
             
             else
             {
-                self.x1 = (self.sumX - (self.xError * LONG_COUNT)) / LONG_COUNT;
-                self.y1 = (self.sumY - (self.yError * LONG_COUNT)) / LONG_COUNT;
+                self.x1 = (self.sumX - (self.xAdj * LONG_COUNT)) / LONG_COUNT;
+                self.y1 = (self.sumY - (self.yAdj * LONG_COUNT)) / LONG_COUNT;
                 self.progressLabel.text = [NSString stringWithFormat:@"x[1] = %+f g\ny[1] = %+f g",
                                            self.x1, self.y1];
                 
@@ -294,8 +302,8 @@
         
         else
         {
-            self.sumX = (self.sumX + gravity.x);
-            self.sumY = (self.sumY + gravity.y);
+            self.sumX += gravity.x;
+            self.sumY += gravity.y;
             self.counter++;
             self.progressView.progress = (self.counter / (CGFloat)LONG_COUNT);
         }
