@@ -5,7 +5,6 @@
 
 #define CAL_STABILITY 0
 #define CAL_BEGIN 1
-#define CAL_FLIP 2
 #define SHORT_COUNT 50
 #define LONG_COUNT 500
 #define SC_START 0
@@ -258,8 +257,8 @@
             
             if (self.hasRun == YES)
             {
-                self.x2 = (self.sumX / LONG_COUNT);
-                self.y2 = (self.sumY / LONG_COUNT);
+                self.x2 = (self.sumX - (self.xError * LONG_COUNT)) / LONG_COUNT;
+                self.y2 = (self.sumY - (self.yError * LONG_COUNT)) / LONG_COUNT;
                 CGFloat xErr = ((self.x1 + self.x2) / 2.0);
                 CGFloat yErr = ((self.y1 + self.y2) / 2.0);
              
@@ -276,8 +275,8 @@
             
             else
             {
-                self.x1 = (self.sumX / LONG_COUNT);
-                self.y1 = (self.sumY / LONG_COUNT);
+                self.x1 = (self.sumX - (self.xError * LONG_COUNT)) / LONG_COUNT;
+                self.y1 = (self.sumY - (self.yError * LONG_COUNT)) / LONG_COUNT;
                 self.progressLabel.text = [NSString stringWithFormat:@"x[1] = %+f g\ny[1] = %+f g",
                                            self.x1, self.y1];
                 
@@ -295,8 +294,8 @@
         
         else
         {
-            self.sumX = (self.sumX + gravity.x - self.xError);
-            self.sumY = (self.sumY + gravity.y - self.yError);
+            self.sumX = (self.sumX + gravity.x);
+            self.sumY = (self.sumY + gravity.y);
             self.counter++;
             self.progressView.progress = (self.counter / (CGFloat)LONG_COUNT);
         }
