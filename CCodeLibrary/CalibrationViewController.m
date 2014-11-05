@@ -261,13 +261,24 @@
             {
                 self.x2 = (self.sumX - (self.xAdj * LONG_COUNT)) / LONG_COUNT;
                 self.y2 = (self.sumY - (self.yAdj * LONG_COUNT)) / LONG_COUNT;
+                CGFloat zSlope = (self.sumZ / LONG_COUNT);
                 CGFloat xError = ((self.x1 + self.x2) / 2.0);
                 CGFloat yError = ((self.y1 + self.y2) / 2.0);
-             
-                self.progressLabel.text = [NSString stringWithFormat:@"x[1] = %+f g\ny[1] = %+f g\nx[2] = %+f g\ny[2] = %+f g",
-                                           self.x1, self.y1, self.x2, self.y2];
                 
-                self.resultsLabel.text = [NSString stringWithFormat:@"x error = %+f g\ny error = %+f g", xError, yError];
+                CGFloat frontSlope1 = (100.0 * sin(-atan2(self.y1, sqrt(pow(self.x1, 2) + pow(zSlope, 2)))));
+                CGFloat sideSlope1 = (100.0 * sin(atan2(self.x1, sqrt(pow(self.y1, 2) + pow(zSlope, 2)))));
+                CGFloat frontSlope2 = (100.0 * sin(-atan2(self.y2, sqrt(pow(self.x2, 2) + pow(zSlope, 2)))));
+                CGFloat sideSlope2 = (100.0 * sin(atan2(self.x2, sqrt(pow(self.y2, 2) + pow(zSlope, 2)))));
+             
+                self.progressLabel.text = [NSString stringWithFormat:
+                                           @"Front Slope (1) = %+.2f%%\nSide Slope (1) = %+.2f%%\nFront Slope (2) = %+.2f%%\nSide Slope (2) = %+.2f%%",
+                                           frontSlope1, sideSlope1, frontSlope2, sideSlope2];
+                
+                CGFloat frontSlopeError = (100.0 * sin(-atan2(yError, sqrt(pow(xError, 2) + pow(zSlope, 2)))));
+                CGFloat sideSlopeError = (100.0 * sin(atan2(xError, sqrt(pow(yError, 2) + pow(zSlope, 2)))));
+                
+                self.resultsLabel.text = [NSString stringWithFormat:@"Front Slope Error = %+.2f%%\nSide Slope Error = %+.2f%%",
+                                          frontSlopeError, sideSlopeError];
                 
                 self.xAdj += xError;
                 self.yAdj += yError;
@@ -285,8 +296,13 @@
             {
                 self.x1 = (self.sumX - (self.xAdj * LONG_COUNT)) / LONG_COUNT;
                 self.y1 = (self.sumY - (self.yAdj * LONG_COUNT)) / LONG_COUNT;
-                self.progressLabel.text = [NSString stringWithFormat:@"x[1] = %+f g\ny[1] = %+f g",
-                                           self.x1, self.y1];
+                CGFloat zSlope = (self.sumZ / LONG_COUNT);
+                
+                CGFloat frontSlope = (100.0 * sin(-atan2(self.y1, sqrt(pow(self.x1, 2) + pow(zSlope, 2)))));
+                CGFloat sideSlope = (100.0 * sin(atan2(self.x1, sqrt(pow(self.y1, 2) + pow(zSlope, 2)))));
+                
+                self.progressLabel.text = [NSString stringWithFormat:@"Front Slope (1) = %+.2f%%\nSide Slope (1) = %+.2f%%",
+                                           frontSlope, sideSlope];
                 
                 self.hasRun = YES;
             }
@@ -304,6 +320,7 @@
         {
             self.sumX += gravity.x;
             self.sumY += gravity.y;
+            self.sumZ += gravity.z;
             self.counter++;
             self.progressView.progress = (self.counter / (CGFloat)LONG_COUNT);
         }

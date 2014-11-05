@@ -21,6 +21,7 @@
 @property (nonatomic) CGFloat minY;
 @property (nonatomic) CGFloat sumX;
 @property (nonatomic) CGFloat sumY;
+@property (nonatomic) CGFloat sumZ;
 @property (nonatomic) CGFloat x1;
 @property (nonatomic) CGFloat y1;
 @property (nonatomic) CGFloat x2;
