@@ -52,7 +52,7 @@
     {
         _currentGeoidValue = geoid;
         self.outputDirectory = [NSString stringWithFormat:@"%@/%i/ADAFiles", self.documentsDirectory, _currentGeoidValue];
-        self.imageDirectory = [NSString stringWithFormat:@"%@/%i/IntersectionImages", self.documentsDirectory, _currentGeoidValue];
+        self.imageDirectory = [NSString stringWithFormat:@"%@/%i/IntersectionImages", UserDefaults.defaults.sharedFilePath, _currentGeoidValue];
         
         rtn = [NSFileManager.defaultManager createDirectoryAtPath:self.outputDirectory
                                 withIntermediateDirectories:YES
@@ -374,10 +374,10 @@
     
     for (int i = 0; i< _numAllowedZooms; i++)
     {
-        NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:
+        NSString *imageFile = [self.imageDirectory stringByAppendingPathComponent:
                                [NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, _allowedZooms[i]]];
         
-        NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:
+        NSString *cptFile = [self.imageDirectory stringByAppendingPathComponent:
                              [NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, _allowedZooms[i]]];
         
         [manager removeItemAtPath:imageFile
@@ -397,8 +397,8 @@
     if (refresh)
         [self deleteImagesForAllZooms:intersectionID];
     
-    NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, zoom]];
-    NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, zoom]];
+    NSString *imageFile = [self.imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, zoom]];
+    NSString *cptFile = [self.imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, zoom]];
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:imageFile
                                                                                  error:nil].fileSize;
