@@ -30,6 +30,7 @@
 		A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9735AF019E779DF00894359 /* SystemConfiguration.framework */; };
 		A9735AF419E77B6800894359 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A9735AF319E77B6800894359 /* Reachability.m */; };
 		A9A9C8DF19CD04E100A63E94 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A9C8DE19CD04E100A63E94 /* GoogleMaps.framework */; };
+		A9D5A8B01A0D0A7A00314E8B /* SlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* SlopeViewController.m */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
 		EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C21219ED378400F0688B /* FTPDataPush.m */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
@@ -116,6 +117,8 @@
 		A9735AF219E77B6800894359 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		A9735AF319E77B6800894359 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		A9A9C8DE19CD04E100A63E94 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
+		A9D5A8AE1A0D0A7A00314E8B /* SlopeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlopeViewController.h; sourceTree = "<group>"; };
+		A9D5A8AF1A0D0A7A00314E8B /* SlopeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlopeViewController.m; sourceTree = "<group>"; };
 		EB05C20E19EA999F00F0688B /* ElementOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementOverlayView.h; sourceTree = "<group>"; };
 		EB05C20F19EA999F00F0688B /* ElementOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElementOverlayView.m; sourceTree = "<group>"; };
 		EB05C21119ED378400F0688B /* FTPDataPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDataPush.h; sourceTree = "<group>"; };
@@ -270,6 +273,8 @@
 				1F7E00A919CA8892006AFABA /* MarkerView.m */,
 				A96B07BD19FBF276005A73B0 /* LegendView.h */,
 				A96B07BE19FBF276005A73B0 /* LegendView.m */,
+				A9D5A8AE1A0D0A7A00314E8B /* SlopeViewController.h */,
+				A9D5A8AF1A0D0A7A00314E8B /* SlopeViewController.m */,
 				1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */,
 				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 			);
@@ -482,6 +487,7 @@
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
 				EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */,
+				A9D5A8B01A0D0A7A00314E8B /* SlopeViewController.m in Sources */,
 				1F7E00AA19CA8892006AFABA /* MarkerView.m in Sources */,
 				A926F21119D9FC18007C392A /* CircleView.m in Sources */,
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,

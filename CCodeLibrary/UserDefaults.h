@@ -27,6 +27,7 @@
 - (UIImage *)checkmark;
 - (UIImage *)imageTarget;
 - (UIImage *)yellowArrow;
+- (UIImage *)whiteArrow;
 - (UIImage *)triangleImage;
 - (NSString *)googleKey;
 - (NSString *)removeEndingReturn:(NSString *)string;

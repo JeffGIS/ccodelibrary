@@ -83,7 +83,7 @@
     self.titleLabel.textColor = UIColor.whiteColor;
     self.titleLabel.text = @"Calibration";
     self.titleLabel.font = [UIFont boldSystemFontOfSize:60.0];
-    self.progressLabel.textAlignment = NSTextAlignmentCenter;
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
 }
 
 - (void)setupReturnButton
@@ -158,15 +158,11 @@
     [button setTitleColor:UIColor.blackColor
                  forState:UIControlStateNormal];
     
-    [button setTitleColor:UIColor.grayColor
-                 forState:UIControlStateDisabled];
-    
     button.titleLabel.font = font;
     button.layer.cornerRadius = 10.0;
     button.layer.borderColor = UserDefaults.defaults.green.CGColor;
     button.layer.borderWidth = 6.0;
     button.backgroundColor = UIColor.whiteColor;
-    button.layer.borderColor = UserDefaults.defaults.green.CGColor;
 }
 
 - (void)goBack:(UIButton *)button

@@ -156,6 +156,14 @@ static UserDefaults *_defaults;
     return yellowArrow;
 }
 
+- (UIImage *)whiteArrow
+{
+    UIImage *whiteArrow = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteArrow"
+                                                                                          ofType:@"png"]];
+    
+    return whiteArrow;
+}
+
 - (NSString *)googleKey
 {
     NSString *googleKey = @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q";
