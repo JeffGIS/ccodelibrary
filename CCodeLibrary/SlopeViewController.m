@@ -283,7 +283,7 @@
                 
                 self.frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", self.frontSlope];
                 self.sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f%%", self.sideSlope];
-                self.maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %+.02f%%", self.maxSlope];
+                self.maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", self.maxSlope];
                 
                 self.promptLabel.text = @"Press 'Done' to continue inventory.";
                 
