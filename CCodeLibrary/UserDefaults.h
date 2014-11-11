@@ -29,6 +29,7 @@
 - (UIImage *)yellowArrow;
 - (UIImage *)whiteArrow;
 - (UIImage *)triangleImage;
+- (UIImage *)redCircle;
 - (NSString *)googleKey;
 - (NSString *)removeEndingReturn:(NSString *)string;
 - (NSString *)removeTextInsideParentheses:(NSString *)string;

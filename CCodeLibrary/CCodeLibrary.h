@@ -5,7 +5,6 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import <QuartzCore/QuartzCore.h>
 #import "CCodeTypes.h"
 #import "MPIntersection.h"
 #import "IntersectionPoint.h"

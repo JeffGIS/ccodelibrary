@@ -52,6 +52,14 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = UserDefaults.defaults.appleBlue;
+    self.calibrationOption = SLOPE_STABILITY;
+    self.maxX = self.maxY = -1.0;
+    self.minX = self.minY = 1.0;
+    self.xRange = self.yRange = 0.0;
+    self.sumX = self.sumY = 0.0;
+    self.counter = 0;
+    self.startCancelState = SC_START;
+    self.hasRun = NO;
     
     [self setupUnableButton];
     [self setupStartCancelButton];

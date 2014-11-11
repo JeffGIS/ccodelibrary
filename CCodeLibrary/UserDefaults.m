@@ -139,6 +139,14 @@ static UserDefaults *_defaults;
     return triangleImage;
 }
 
+- (UIImage *)redCircle
+{
+    UIImage *redCircle = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"redCircle"
+                                                                                        ofType:@"png"]];
+    
+    return redCircle;
+}
+
 - (UIImage *)imageTarget
 {
     UIImage *blackImageTarget = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"crosshairs160"
