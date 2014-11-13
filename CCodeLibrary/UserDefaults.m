@@ -559,6 +559,26 @@ static UserDefaults *_defaults;
     return string;
 }
 
+- (NSString *)includeTextBeforePipe:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"|"];
+    
+    if (range.location != NSNotFound)
+        string = [string substringToIndex:(range.location)];
+    
+    return string;
+}
+
+- (NSString *)includeTextAfterPipe:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"|"];
+    
+    if (range.location != NSNotFound)
+        string = [string substringFromIndex:(range.location + 1)];
+    
+    return string;
+}
+
 - (NSString *)removeTextInsideParentheses:(NSString *)string
 {
     NSMutableString *mutableString = [NSMutableString stringWithString:string];
