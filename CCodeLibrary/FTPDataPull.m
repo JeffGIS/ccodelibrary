@@ -60,6 +60,7 @@
             {
                 [self.delegate FTPdidComplete:FTP_CONNECTION_FAILED
                                      filePath:nil];
+                
                 self.haveCalledDelegate = YES;
             }
             
@@ -73,6 +74,7 @@
     {
         [self.delegate FTPdidComplete:FTP_OK
                              filePath:self.filePath];
+        
         self.haveCalledDelegate = YES;
     }
 }
@@ -99,6 +101,7 @@
     {
        [self.delegate FTPdidComplete:status
                              filePath:self.filePath];
+        
         self.haveCalledDelegate = YES;
     }
 }
