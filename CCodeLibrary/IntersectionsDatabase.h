@@ -71,6 +71,8 @@
                 forIntersection:(int)intID;
 
 - (BOOL)assignIntersection:(int)intID To:(int)user;
+- (BOOL)assignIntersectionsFrom:(int)intID To:(int)endID ToUser:(int)user;
+
 - (BOOL)assignAllIntersectionTo:(int)user;
 - (BOOL)assignRemainingIntersectionsTo:(int)user;
 

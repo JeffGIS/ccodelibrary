@@ -928,6 +928,17 @@ static IntersectionsDatabase *_database;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
+- (BOOL)assignIntersectionsFrom:(int)intID To:(int)endID ToUser:(int)user
+{
+    BOOL rtn;
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
+    
+    [self open];
+    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE intID>=%i AND intID <=%i",
+                       iTime, user, intID, endID];
+    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
+    return !rtn;
+}
 - (BOOL)assignAllIntersectionTo:(int)user
 {
     BOOL rtn;
