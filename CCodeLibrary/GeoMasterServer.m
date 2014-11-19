@@ -31,7 +31,10 @@ static GeoMasterServer *_open = nil;
     self = [super init];
     
     if (self)
+    {
         self.output = @"";
+        self.ipAddress = GM_ADDRESS;
+    }
 
     return self;
 }
@@ -82,7 +85,7 @@ static GeoMasterServer *_open = nil;
     
 	CFReadStreamRef readStream;
 	CFWriteStreamRef writeStream;
-    CFStreamCreatePairWithSocketToHost(NULL, (CFStringRef)GM_ADDRESS, GM_PORT, &readStream, &writeStream);
+    CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)(self.ipAddress), GM_PORT, &readStream, &writeStream);
 	
 	_inputStream = (__bridge NSInputStream *)readStream;
 	_outputStream = (__bridge NSOutputStream *)writeStream;
