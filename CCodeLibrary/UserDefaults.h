@@ -10,7 +10,7 @@
     NSUserDefaults *_defaults;
 }
 
-+ (UserDefaults *) defaults;
++ (UserDefaults *)defaults;
 
 - (UIColor *)colorForKey:(NSString *)key;
 - (NSInteger)integerForKey:(NSString *)key;
