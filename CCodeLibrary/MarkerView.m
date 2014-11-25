@@ -28,6 +28,7 @@
     int numComplete = 0;
     int numComplex;
     int totRamps = 0;
+    int totIntersections = 0;
     int notAssigned = 0;
     
     CGFloat zoom = self.mapView.camera.zoom;
@@ -54,6 +55,9 @@
         if ((pt.x > - size) && (pt.x < (self.mapView.frame.size.width + size) &&
                                         (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
         {
+            if (!info.nramps && self.showOnlyIntersectionsWithRamps)
+                continue;
+            totIntersections++;
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
             totRamps += info.nramps;
             
@@ -88,7 +92,7 @@
     
     if (self.delegate)
     {
-        [self.delegate setupProgressLabelTextForTotalIntersections:(int)pointsArray.count
+        [self.delegate setupProgressLabelTextForTotalIntersections:(int)totIntersections
                                                          completed:(int)numComplete
                                                            complex:numComplex
                                                           numRamps:totRamps

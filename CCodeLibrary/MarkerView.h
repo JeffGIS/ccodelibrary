@@ -26,5 +26,6 @@
 @property GMSMapView *mapView;
 @property IntersectionsDatabase *database;
 @property NSArray *tempDemoArray;
+@property BOOL showOnlyIntersectionsWithRamps;
 
 @end
