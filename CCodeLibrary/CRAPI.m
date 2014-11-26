@@ -108,7 +108,7 @@
         ramp.signalisComplete = YES;
         ramp.hasPEDButton = NO;
         ramp.hasPEDSignal = NO;
-        ramp.SteepTopOfCurve = 0;
+        ramp.SteepTopOfCurb = 0;
         ramp.PedRampLip = 0;
         
         switch (i)

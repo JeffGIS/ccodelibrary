@@ -53,7 +53,7 @@
 @synthesize hasPEDSignal;
 @synthesize PEDButtonDist;
 @synthesize PEDButtonHeight;
-@synthesize SteepTopOfCurve;
+@synthesize SteepTopOfCurb;
 @synthesize PedRampLip;
 @synthesize lev21x;
 @synthesize lev21y;

@@ -87,7 +87,7 @@ enum obstructions {
 @property bool hasPEDButton;
 @property int PEDButtonHeight;
 @property int PEDButtonDist;
-@property float SteepTopOfCurve;
+@property float SteepTopOfCurb;
 @property float PedRampLip;
 @property int lev21x;
 @property int lev21y;
