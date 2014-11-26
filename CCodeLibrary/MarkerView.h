@@ -11,8 +11,8 @@
 
 - (void)setupProgressLabelTextForTotalIntersections:(int)totalIntersections
                                           completed:(int)completed
-                                         complex:(int)numComplex
-                                           numRamps:(int)nRamps
+                                            complex:(int)numComplex
+                                           numRamps:(int)numRamps
                                         notAssigned:(int)notAssigned;
 
 @end

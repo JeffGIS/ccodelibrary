@@ -10,6 +10,7 @@
 @property (nonatomic) UILabel *notAssigned;
 @property (nonatomic) UILabel *complex;
 @property (nonatomic) UILabel *numRamps;
+@property (nonatomic) UILabel *numInts;
 @property (nonatomic) UIView *completedMarker;
 @property (nonatomic) UIView *toBeDoneMarker;
 @property (nonatomic) UIView *notAssignedMarker;
