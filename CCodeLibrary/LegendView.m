@@ -67,8 +67,8 @@
         
         else
         {
-            self.numRamps = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 3.0) + margin), labelWidth, labelHeight)];
-            self.numInts = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 4.0) + margin), labelWidth, labelHeight)];
+            self.numInts = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 3.0) + margin), labelWidth, labelHeight)];
+            self.numRamps = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 4.0) + margin), labelWidth, labelHeight)];
         }
         
         [self setupLabel:self.numRamps
