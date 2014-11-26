@@ -114,6 +114,8 @@ static GeoMasterServer *_open = nil;
 
 - (void)doSendMessage
 {
+    NSLog(@"data.length = %lu", (unsigned long)_data.length);
+    
     long rc = [_outputStream write:_data.bytes
                          maxLength:_data.length];
     
@@ -129,12 +131,11 @@ static GeoMasterServer *_open = nil;
 }
 - (BOOL)sendMessage:(NSString *)message
 {
-    _data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSASCIIStringEncoding]];
+    _data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSUTF8StringEncoding]];
     
     if (_sendTimer)
         [_sendTimer invalidate];
 
-    
     _sendTimer = [NSTimer scheduledTimerWithTimeInterval:0.01
                                                   target:self
                                                 selector:@selector(doSendMessage)
