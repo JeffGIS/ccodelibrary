@@ -8,10 +8,15 @@
 #import "UserDefaults.h"
 #import "GoogleMaps/GoogleMaps.h"
 
+#define MANAGEMENT_MODULE   1
+#define PRELIM_MODULE       2
+#define DETAIL_MODULE       3
+
 @interface CRAPI : NSObject
 
 + (CRAPI *)sharedInstance;
 
+@property int   currentModule;
 @property (nonatomic) NSString *documentsDirectory;
 @property (nonatomic) NSString *outputDirectory;
 @property (nonatomic) NSString *imageDirectory;

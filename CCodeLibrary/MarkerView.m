@@ -30,6 +30,8 @@
     int totRamps = 0;
     int totIntersections = 0;
     int notAssigned = 0;
+    int module = CRAPI.sharedInstance.currentModule;
+
     
     CGFloat zoom = self.mapView.camera.zoom;
     CGFloat maxZoom = self.mapView.maxZoom;
@@ -59,6 +61,7 @@
                 continue;
             totIntersections++;
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
+            CGContextSetFillColorWithColor(context, UIColor.blackColor.CGColor);
             totRamps += info.nramps;
             
             if (!info.assignedTo)
@@ -67,7 +70,8 @@
             else if (!info.status)
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
             
-            else if (info.status == INT_STATUS_PRELIMCOMPLETE)
+            else if ((module == PRELIM_MODULE && info.status == INT_STATUS_PRELIMCOMPLETE) ||
+                     (module == DETAIL_MODULE && info.status == INT_STATUS_DETAILCOMPLETE))
             {
                 numComplete++;
                 CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
