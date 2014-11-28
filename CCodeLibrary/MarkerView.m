@@ -32,7 +32,6 @@
     int notAssigned = 0;
     int module = CRAPI.sharedInstance.currentModule;
 
-    
     CGFloat zoom = self.mapView.camera.zoom;
     CGFloat maxZoom = self.mapView.maxZoom;
     CGFloat maxSize = 60.0;
@@ -43,7 +42,8 @@
     IBOUNDS bounds21 = [CRAPI.sharedInstance boundsFromRect:self.bounds
                                                      atZoom:21
                                             usingProjection:projection];
-//    [_database assignAllIntersectionTo:1];
+    
+    //[_database assignAllIntersectionTo:1];
     NSArray *pointsArray = [_database getIntersectionPointsFromDatabaseinBounds:bounds21];
     
     for (int i = 0; i < pointsArray.count; i++)
@@ -59,6 +59,7 @@
         {
             if (!info.nramps && self.showOnlyIntersectionsWithRamps)
                 continue;
+            
             totIntersections++;
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
             CGContextSetFillColorWithColor(context, UIColor.blackColor.CGColor);
@@ -67,8 +68,11 @@
             if (!info.assignedTo)
                 CGContextSetFillColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
             
-            else if (!info.status)
+            else if ((module == PRELIM_MODULE && !info.status) ||
+                     (module == DETAIL_MODULE && info.status == INT_STATUS_PRELIMCOMPLETE))
+            {
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+            }
             
             else if ((module == PRELIM_MODULE && info.status == INT_STATUS_PRELIMCOMPLETE) ||
                      (module == DETAIL_MODULE && info.status == INT_STATUS_DETAILCOMPLETE))
