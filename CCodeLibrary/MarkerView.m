@@ -68,7 +68,7 @@
             if (!info.assignedTo)
                 CGContextSetFillColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
             
-            else if ((module == PRELIM_MODULE && !info.status) ||
+            else if ((module == PRELIM_MODULE && !info.status) || (module == MANAGEMENT_MODULE) ||
                      (module == DETAIL_MODULE && info.status == INT_STATUS_PRELIMCOMPLETE))
             {
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
