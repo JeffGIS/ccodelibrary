@@ -6,7 +6,7 @@
 @implementation GetPlaceAreaFile
 
 
-- (BOOL)getPlaceAreaFile:(GSSiPopoverView*)popover
+- (BOOL)getPlaceAreaFile:(GSSiPopoverView *)popover
                 forGeoid:(int)geoid
 {
     //NSString *documentsDirectory = UserDefaults.defaults.localFilePath;

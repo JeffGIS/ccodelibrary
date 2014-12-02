@@ -82,7 +82,7 @@
 - (NSString *)intersectionTextPath:(int)type;
 - (int)getCountOfIntersections;
 - (void)close;
-- (void)logError;
+- (void)logError:(int)sqlReturn;
 int SQLOK(int sqlReturn);
 
 - (int)loadIntersectionTextToDatabase:(NSString *)path;

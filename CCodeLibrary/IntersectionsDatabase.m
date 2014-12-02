@@ -5,7 +5,7 @@
 
 @implementation IntersectionsDatabase
 {
-    GSSiPopoverView* _popover;
+    GSSiPopoverView *_popover;
 }
 
 static IntersectionsDatabase *_database;
@@ -1257,6 +1257,7 @@ Exit:
     else
     {
         _popover = popover;
+        
         [NSTimer scheduledTimerWithTimeInterval:1
                                          target:self
                                        selector:@selector(getInitialIntersectionFile:)
