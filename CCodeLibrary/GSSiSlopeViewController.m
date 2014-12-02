@@ -204,8 +204,15 @@
 {
     [self.motionManager stopDeviceMotionUpdates];
     
-    [self dismissViewControllerAnimated:YES
-                             completion:nil];
+    float slopes[2], heading;
+    
+    slopes[0] = self.frontSlope;
+    slopes[1] = self.sideSlope;
+    heading = self.avgHeading;
+    
+    [self.delegate gssiSlopeViewController:self
+                          didMeasureSlopes:slopes
+                                   heading:heading];
 }
 
 - (void)startCancel:(UIButton *)button
@@ -373,16 +380,6 @@
     
     self.progressView.hidden = YES;
     self.hasRun = NO;
-    
-    float slopes[2], heading;
-    
-    slopes[0] = self.frontSlope;
-    slopes[1] = self.sideSlope;
-    heading = self.avgHeading;
-    
-    [self.delegate gssiSlopeViewController:self
-                          didMeasureSlopes:slopes
-                                   heading:heading];
 }
 
 - (void)locationManager:(CLLocationManager *)manager
