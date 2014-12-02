@@ -1268,7 +1268,7 @@ Exit:
 
 - (void)getUploadedIntersectionDatabase:(GSSiPopoverView *)popover
 {
-    NSString * dbPath = [self databasePath:self.geoid];
+    NSString *dbPath = [self databasePath:self.geoid];
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
                                                                                  error:nil].fileSize;

@@ -606,11 +606,11 @@ Exit:
     sqlite3_close(_database);
 }
 
-- (void)logError
+- (void)logError:(int)sqlReturn
 {
     int ierr = sqlite3_errcode(_database);
     const char *errmess = sqlite3_errmsg(_database);
-    NSString *logMess = [NSString stringWithFormat:@"Error in SQLite = %i:%s", ierr, errmess];
+    NSString *logMess = [NSString stringWithFormat:@"Error %i in SQLite = %i:%s", sqlReturn,ierr, errmess];
     NSLog(@"%@", logMess);
 }
 
