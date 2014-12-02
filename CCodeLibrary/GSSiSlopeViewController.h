@@ -55,6 +55,7 @@
 @property (nonatomic) UILabel *headingLabel;
 @property (nonatomic) CGFloat target;
 @property (nonatomic) CGFloat forceFlip;
+@property (nonatomic) BOOL unable;
 
 - (id)initWithTarget:(CGFloat)target
            forceFlip:(CGFloat)forceFlip;

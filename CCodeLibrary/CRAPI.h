@@ -8,9 +8,10 @@
 #import "UserDefaults.h"
 #import "GoogleMaps/GoogleMaps.h"
 
-#define MANAGEMENT_MODULE   1
-#define PRELIM_MODULE       2
-#define DETAIL_MODULE       3
+#define MANAGEMENT_MODULE 1
+#define PRELIM_MODULE 2
+#define DETAIL_MODULE 3
+#define FACILITIES_MODULE 4
 
 @interface CRAPI : NSObject
 

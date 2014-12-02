@@ -74,6 +74,7 @@
     self.startCancelState = SC_START;
     self.hasRun = NO;
     self.headingCounter = 0;
+    self.unable = YES;
     
     [self setupUnableButton];
     [self setupStartCancelButton];
@@ -210,9 +211,18 @@
     slopes[1] = self.sideSlope;
     heading = self.avgHeading;
     
+    if (self.unable == YES)
+        slopes[0] = slopes[1] = heading = -99.0;
+    
     [self.delegate gssiSlopeViewController:self
                           didMeasureSlopes:slopes
                                    heading:heading];
+    
+    if (CRAPI.sharedInstance.currentModule == FACILITIES_MODULE)
+    {
+        [self dismissViewControllerAnimated:YES
+                                 completion:nil];
+    }
 }
 
 - (void)startCancel:(UIButton *)button
@@ -373,6 +383,8 @@
     
     [self.unableButton setTitle:@"Done"
                        forState:UIControlStateNormal];
+    
+    self.unable = NO;
     
     self.startCancelButton.hidden = YES;
     self.unableButton.enabled = YES;
