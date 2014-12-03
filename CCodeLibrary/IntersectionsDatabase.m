@@ -26,6 +26,7 @@ static IntersectionsDatabase *_database;
         self.geoid = geoid;
         self.path = [self databasePath:geoid];
         self.isOpen = SQLOK(sqlite3_open(self.path.UTF8String, &_database), "initWithGeoid(Intersections)");
+        NSLog(@"Intersections Database init");
     }
     
     return self;
@@ -1299,18 +1300,24 @@ Exit:
 - (void)open
 {
     if (!self.isOpen)
+    {
         self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), "open");
+        NSLog(@"Intersections Database open");
+    }
 
 }
+
 - (void)close
 {
     sqlite3_close(_database);
+    NSLog(@"Intersections Database close");
     self.isOpen = NO;
 }
 
 - (void)dealloc
 {
     sqlite3_close(_database);
+    NSLog(@"Intersections Database dealloc");
 }
 
 - (void)logError:(int)sqlReturn

@@ -25,6 +25,7 @@ static ManagePlacesDatabase *_database;
                                                            ofType:@"sqlite3"];
         
         SQLOK(sqlite3_open(sqLiteDb.UTF8String, &_database), "init");
+        NSLog(@"Places Database init");
     }
     
     return self;
@@ -33,6 +34,7 @@ static ManagePlacesDatabase *_database;
 - (void)dealloc
 {
     sqlite3_close(_database);
+    NSLog(@"Places Database dealloc");
 }
 
 - (NSArray *)getCityList:(int)code
