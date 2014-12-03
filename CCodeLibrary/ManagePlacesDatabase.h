@@ -9,6 +9,9 @@
     sqlite3 *_database;
 }
 
+@property BOOL isOpen;
+@property NSString *path;
+
 + (ManagePlacesDatabase *)database;
 
 - (NSArray *)getPlaceBounds:(int)geoid;

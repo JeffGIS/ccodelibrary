@@ -1301,10 +1301,9 @@ Exit:
 {
     if (!self.isOpen)
     {
-        self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), "open");
+        self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), "open(Intersections)");
         NSLog(@"Intersections Database open");
     }
-
 }
 
 - (void)close
