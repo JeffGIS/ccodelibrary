@@ -75,6 +75,8 @@
 - (int)getCountOfFacilities;
 
 - (void)close;
-- (void)logError:(int)sqlReturn;
+
+- (void)logError:(int)sqlReturn
+          method:(char *)method;
 
 @end

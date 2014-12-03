@@ -25,7 +25,7 @@ static IntersectionsDatabase *_database;
     {
         self.geoid = geoid;
         self.path = [self databasePath:geoid];
-        self.isOpen = SQLOK(sqlite3_open(self.path.UTF8String, &_database));
+        self.isOpen = SQLOK(sqlite3_open(self.path.UTF8String, &_database), "initWithGeoid(Intersections)");
     }
     
     return self;
@@ -56,7 +56,7 @@ static IntersectionsDatabase *_database;
     [self open];
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;"];
     
-    SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL));
+    SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), "createIntersectionsTable1");
     
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (\
                        intID INTEGER PRIMARY KEY,\
@@ -90,21 +90,21 @@ static IntersectionsDatabase *_database;
                        streetNames CHAR(512),\
                        streetAZMs CHAR(128));"];
     
-    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error));
+    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error), "createIntersectionsTable2");
     sqlite3_free(error);
     
     if (rtn != SQLITE_OK)
         return rtn;
     
     query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Intersections (intX);"];
-    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error));
+    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error), "createIntersectionsTable3");
     sqlite3_free(error);
     
     if (rtn != SQLITE_OK)
         return rtn;
     
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Intersections (intY);"];
-    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error));
+    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error), "createIntersectionsTable4");
     sqlite3_free(error);
     
     if (rtn == SQLITE_OK)
@@ -491,7 +491,7 @@ static IntersectionsDatabase *_database;
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getMPIntersectionFromDB1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -526,7 +526,7 @@ static IntersectionsDatabase *_database;
         [mpint setRampsXWalkAndSignal];
     }
     
-    SQLOK(sqlite3_finalize(statement));
+    SQLOK(sqlite3_finalize(statement), "getMPIntersectionFromDB2");
     return mpint;
 }
 
@@ -537,7 +537,7 @@ static IntersectionsDatabase *_database;
     sqlite3_stmt *statement;
     [self open];
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getIntersectionPointsFromDatabase1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -551,7 +551,7 @@ static IntersectionsDatabase *_database;
         [dataArray addObject:intpt];
     }
         
-    SQLOK(sqlite3_finalize(statement));
+    SQLOK(sqlite3_finalize(statement), "getIntersectionPointsFromDatabase2");
     return dataArray;
 }
 
@@ -567,7 +567,7 @@ static IntersectionsDatabase *_database;
                        (int)bounds.xmn, (int)bounds.xmx, (int)bounds.ymn, (int)bounds.ymx];
     
     sqlite3_stmt *statement;
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getIntersectionPointsFromDatabaseinBounds1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -600,7 +600,7 @@ static IntersectionsDatabase *_database;
         [dataArray addObject:intpt];
     }
     
-    SQLOK(sqlite3_finalize(statement));
+    SQLOK(sqlite3_finalize(statement), "getIntersectionPointsFromDatabaseinBounds2");
     return dataArray;
 }
 
@@ -618,7 +618,7 @@ static IntersectionsDatabase *_database;
                        (int)bounds.xmn, (int)bounds.xmx, (int)bounds.ymn, (int)bounds.ymx];
     
     sqlite3_stmt *statement;
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getIntersectionElementsFromDatabaseinBounds1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -690,7 +690,7 @@ static IntersectionsDatabase *_database;
         }
     }
     
-    SQLOK(sqlite3_finalize(statement));
+    SQLOK(sqlite3_finalize(statement), "getIntersectionElementsFromDatabaseinBounds2");
     return dataArray;
 }
 
@@ -708,7 +708,7 @@ static IntersectionsDatabase *_database;
                        (int)bounds.xmn,(int)bounds.xmx,(int)bounds.ymn,(int)bounds.ymx];
     
     sqlite3_stmt *statement;
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getIntersectionPointsWithinDistance1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -727,7 +727,7 @@ static IntersectionsDatabase *_database;
         [dataArray addObject:intpt];
     }
     
-    SQLOK(sqlite3_finalize(statement));
+    SQLOK(sqlite3_finalize(statement), "getIntersectionPointsWithinDistance2");
     [self sortIntersectionsByDistance:dataArray];
     return dataArray;
 }
@@ -761,7 +761,7 @@ static IntersectionsDatabase *_database;
     int rtn = 0;
     NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",intID];
     sqlite3_stmt *statement;
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "findIntersectionFromID1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -778,19 +778,19 @@ static IntersectionsDatabase *_database;
         rtn = intID;
     }
     
-    SQLOK(sqlite3_finalize(statement));
+    SQLOK(sqlite3_finalize(statement), "findIntersectionFromID2");
     return rtn;
 }
 
-- (int) findIntersection:(int)lev21x
-                       y:(int)lev21y
-        intersectionText:(char *)intText
-                whichInt:(int)iWant
-        intersectionAZMs:(char *)intAZMs
-              numStreets:(int *)pNumStreets
-                numRamps:(int *)pNumRamps
-                    intX:(int *)plev21x
-                    intY:(int *)plev21y
+- (int)findIntersection:(int)lev21x
+                      y:(int)lev21y
+       intersectionText:(char *)intText
+               whichInt:(int)iWant
+       intersectionAZMs:(char *)intAZMs
+             numStreets:(int *)pNumStreets
+               numRamps:(int *)pNumRamps
+                   intX:(int *)plev21x
+                   intY:(int *)plev21y
 {
     int rtn = 0;
     LLPOINT latlon;
@@ -806,7 +806,7 @@ static IntersectionsDatabase *_database;
         NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",intpt.intID];
         
         sqlite3_stmt *statement;
-        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "findIntersection1");
         
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -822,7 +822,7 @@ static IntersectionsDatabase *_database;
             strcpy(intAZMs,pAZMS);
         }
         
-        SQLOK(sqlite3_finalize(statement));
+        SQLOK(sqlite3_finalize(statement), "findIntersection2");
         return intpt.intID;
     }
     return rtn;
@@ -850,7 +850,7 @@ static IntersectionsDatabase *_database;
     CGPoint intersectionPoint;
     IntersectionPoint *intpt = nil;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "setCurrentIntersectionPoint1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -864,7 +864,7 @@ static IntersectionsDatabase *_database;
         intpt.intID = intID;
     }
     
-    SQLOK(sqlite3_finalize(statement));
+    SQLOK(sqlite3_finalize(statement), "setCurrentIntersectionPoint2");
     return intpt;
 }
 
@@ -875,7 +875,7 @@ static IntersectionsDatabase *_database;
     NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetAZMs FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getCurentIntersectionAZMs1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -885,7 +885,7 @@ static IntersectionsDatabase *_database;
         rtn = [NSString stringWithUTF8String:pAZMs];
     }
     
-    SQLOK(sqlite3_finalize(statement));
+    SQLOK(sqlite3_finalize(statement), "getCurentIntersectionAZMs2");
     return rtn;
 }
 
@@ -894,12 +894,12 @@ static IntersectionsDatabase *_database;
     NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Intersections"];
     sqlite3_stmt *statement;
     int count = 0;
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getCountOfIntersections1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
         count = sqlite3_column_int(statement, 0);
     
-    SQLOK(sqlite3_finalize(statement));
+    SQLOK(sqlite3_finalize(statement), "getCountOfIntersections2");
     return count;
 }
 
@@ -917,7 +917,8 @@ static IntersectionsDatabase *_database;
     return !rtn;
 }
 
-- (BOOL)assignIntersection:(int)intID To:(int)user
+- (BOOL)assignIntersection:(int)intID
+                        To:(int)user
 {
     BOOL rtn;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
@@ -928,7 +929,9 @@ static IntersectionsDatabase *_database;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
-- (BOOL)assignIntersectionsFrom:(int)intID To:(int)endID ToUser:(int)user
+- (BOOL)assignIntersectionsFrom:(int)intID
+                             To:(int)endID
+                         ToUser:(int)user
 {
     BOOL rtn;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
@@ -962,7 +965,8 @@ static IntersectionsDatabase *_database;
     return !rtn;
 }
 
-- (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user WithStatus:(int)status
+- (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
+                                                WithStatus:(int)status
 {
     IntersectionPoint *intpt = nil;
     
@@ -970,7 +974,7 @@ static IntersectionsDatabase *_database;
     NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%i AND assignedTo=%i ORDER BY intID ASC",status,user];
     sqlite3_stmt *statement;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getFirstIntersectionPointAssignedTo1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -985,7 +989,7 @@ static IntersectionsDatabase *_database;
         intpt.intID = intID;
     }
     
-    SQLOK(sqlite3_finalize(statement));
+    SQLOK(sqlite3_finalize(statement), "getFirstIntersectionPointAssignedTo2");
     return intpt;
 }
 - (NSArray *)getAssignments
@@ -996,7 +1000,7 @@ static IntersectionsDatabase *_database;
     NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedTo FROM Intersections WHERE assignedTo != 0 ORDER BY assignedTo,intID ASC"];
     sqlite3_stmt *statement;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getAssignments1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -1008,7 +1012,7 @@ static IntersectionsDatabase *_database;
         [assignments addObject:intpt];
     }
     
-    SQLOK(sqlite3_finalize(statement));
+    SQLOK(sqlite3_finalize(statement), "getAssignments2");
     return assignments;
 }
 
@@ -1047,7 +1051,7 @@ static IntersectionsDatabase *_database;
     [self open];
     strcpy(dataFile,path.UTF8String);
     
-    if ((pUB = strrchr (dataFile, '_')))
+    if ((pUB = strrchr(dataFile, '_')))
         *pUB = 0;
     
     else
@@ -1067,8 +1071,8 @@ static IntersectionsDatabase *_database;
     if (![self createIntersectionsTable])
         goto Exit2;
     
-    SQLOK(sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL));
-    SQLOK(sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, NULL));
+    SQLOK(sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL), "loadIntersectionTextToDatabase1");
+    SQLOK(sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, NULL), "loadIntersectionTextToDatabase2");
     
     fgetstring(index, maxIndex, fidIndex);
     
@@ -1097,10 +1101,10 @@ static IntersectionsDatabase *_database;
         strncpy(intStruct.streetAzms, pAzms, sizeof(intStruct.streetAzms) - 1);
         
         for (i = 1, pInt = &intStruct.intID; i < 29; i++, pInt++)
-            SQLOK(sqlite3_bind_int(statement, i, *pInt));
+            SQLOK(sqlite3_bind_int(statement, i, *pInt), "loadIntersectionTextToDatabase3");
         
-        SQLOK(sqlite3_bind_text(statement, 29, intStruct.streetNames, -1, SQLITE_STATIC));
-        SQLOK(sqlite3_bind_text(statement, 30, intStruct.streetAzms, -1, SQLITE_STATIC));
+        SQLOK(sqlite3_bind_text(statement, 29, intStruct.streetNames, -1, SQLITE_STATIC), "loadIntersectionTextToDatabase4");
+        SQLOK(sqlite3_bind_text(statement, 30, intStruct.streetAzms, -1, SQLITE_STATIC), "loadIntersectionTextToDatabase5");
 
         if (sqlite3_step(statement) != SQLITE_DONE)
         {
@@ -1109,13 +1113,13 @@ static IntersectionsDatabase *_database;
         }
         
         nLoaded++;
-        SQLOK(sqlite3_reset(statement));
+        SQLOK(sqlite3_reset(statement), "loadIntersectionTextToDatabase6");
     }
     
-    SQLOK(sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, NULL));
-    SQLOK(sqlite3_finalize(self.statement));
-    
+    SQLOK(sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, NULL), "loadIntersectionTextToDatabase7");
+    SQLOK(sqlite3_finalize(self.statement), "loadIntersectionTextToDatabase8");
     rtn = INTDB_OK;
+    
 Exit2:
     fclose(fidIndex);
     fclose(fidData);
@@ -1134,7 +1138,7 @@ Exit:
                                                                  create:YES];
         
         if (self.gettingUploaded)
-            [self open];
+            SQLOK(sqlite3_open(self.path.UTF8String, &_database), "FTPdidComplete(Intersections)");
         
         else
         {
@@ -1295,7 +1299,7 @@ Exit:
 - (void)open
 {
     if (!self.isOpen)
-        self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database));
+        self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), "open");
 
 }
 - (void)close
@@ -1310,17 +1314,19 @@ Exit:
 }
 
 - (void)logError:(int)sqlReturn
+          method:(char *)method
 {
     int ierr = sqlite3_errcode(_database);
     const char *errmess = sqlite3_errmsg(_database);
-    NSString *logMess = [NSString stringWithFormat:@"Error %i in SQLite = %i:%s", sqlReturn,ierr, errmess];
+    NSString *logMess = [NSString stringWithFormat:@"SQLite Error %i in %s = %i:%s", sqlReturn, method, ierr, errmess];
     NSLog(@"%@", logMess);
 }
 
-int SQLOK (int sqlReturn)
+int SQLOK(int sqlReturn, char *method)
 {
     if (sqlReturn != SQLITE_OK)
-        [_database logError:sqlReturn];
+        [_database logError:sqlReturn
+                     method:method];
     
     return sqlReturn;
 }
