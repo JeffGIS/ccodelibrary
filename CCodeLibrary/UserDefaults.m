@@ -63,8 +63,8 @@ static UserDefaults *_defaults;
 
 - (NSArray *)locationList
 {
-    NSArray *masterList = [_defaults arrayForKey:@"MasterList"];
-    return masterList;
+    NSArray *locationList = [_defaults arrayForKey:@"LocationList"];
+    return locationList;
 }
 
 - (NSArray *)iPadList
@@ -323,7 +323,7 @@ static UserDefaults *_defaults;
                   forKey:@"StatusArray"];
     
     [_defaults setObject:masterList
-                  forKey:@"MasterList"];
+                  forKey:@"LocationList"];
     
     [_defaults synchronize];
 }
@@ -419,7 +419,7 @@ static UserDefaults *_defaults;
                       forKey:@"StatusArray"];
     
         [_defaults setObject:masterList
-                      forKey:@"MasterList"];
+                      forKey:@"LocationList"];
     
         [_defaults synchronize];
     }
