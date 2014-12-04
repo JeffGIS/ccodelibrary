@@ -19,6 +19,7 @@
 - (CGFloat)CGFloatForKey:(NSString *)key;
 - (NSArray *)geoidList;
 - (NSArray *)locationList;
+- (NSArray *)iPadList;
 - (UIColor *)appleBlue;
 - (UIColor *)green;
 - (UIColor *)darkGreen;

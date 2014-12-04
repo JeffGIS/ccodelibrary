@@ -67,6 +67,12 @@ static UserDefaults *_defaults;
     return masterList;
 }
 
+- (NSArray *)iPadList
+{
+    NSArray *iPadList = [_defaults arrayForKey:@"iPadList"];
+    return iPadList;
+}
+
 - (NSArray *)geoidList
 {
     NSArray *geoidList = [_defaults arrayForKey:@"GeoidsArray"];
@@ -309,11 +315,6 @@ static UserDefaults *_defaults;
     
     [statusArray replaceObjectAtIndex:geoidNumber
                            withObject:[NSNumber numberWithInt:status]];
-    
-    CRAPI.sharedInstance.currentGeoidStatus = status;
-    
-    [_defaults setInteger:status
-                   forKey:@"CurrentGeoidStatus"];
     
     NSArray *masterList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
                            bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, statusArray, nil];

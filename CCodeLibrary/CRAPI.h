@@ -25,7 +25,6 @@
 @property (nonatomic) int currentGeoid;
 @property (nonatomic) NSString * currentManageriPad;
 @property int currentUserID;
-@property (nonatomic) BOOL currentGeoidStatus;
 @property (nonatomic) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
 @property (nonatomic) NSString *googleKey;
