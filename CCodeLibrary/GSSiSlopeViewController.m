@@ -30,29 +30,6 @@
     return self;
 }
 
-- (CMMotionManager *)motionManager
-{
-    CMMotionManager *motionManager = nil;
-    id appDelegate = UIApplication.sharedApplication.delegate;
-    
-    if ([appDelegate respondsToSelector:@selector(motionManager)])
-        motionManager = [appDelegate motionManager];
-    
-    return motionManager;
-}
-
-- (CLLocationManager *)locationManager
-{
-    CLLocationManager *locationManager = nil;
-    id appDelegate = UIApplication.sharedApplication.delegate;
-    
-    if ([appDelegate respondsToSelector:@selector(locationManager)])
-        locationManager = [appDelegate locationManager];
-    
-    locationManager.delegate = self;
-    return locationManager;
-}
-
 - (void)loadView
 {
     UIView *view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
@@ -81,6 +58,10 @@
     [self setupArrowView];
     [self setupLabels];
     [self setupProgressView];
+    
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.motionManager = [[CMMotionManager alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
@@ -212,7 +193,7 @@
     heading = self.avgHeading;
     
     if (self.unable == YES)
-        slopes[0] = slopes[1] = heading = -99.0;
+        slopes[0] = slopes[1] = heading = -9999.0;
     
     [self.delegate gssiSlopeViewController:self
                           didMeasureSlopes:slopes
