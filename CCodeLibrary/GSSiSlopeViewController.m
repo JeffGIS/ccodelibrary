@@ -332,6 +332,7 @@
             else
             {
                 [self.locationManager stopUpdatingHeading];
+                self.locationManager.delegate = nil;
                 self.avgHeading = (self.sumHeading / self.headingCounter);
                 
                 self.x1 = (self.sumX / LONG_COUNT);

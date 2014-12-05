@@ -63,8 +63,14 @@ static UserDefaults *_defaults;
 
 - (NSArray *)locationList
 {
-    NSArray *masterList = [_defaults arrayForKey:@"MasterList"];
-    return masterList;
+    NSArray *locationList = [_defaults arrayForKey:@"LocationList"];
+    return locationList;
+}
+
+- (NSArray *)iPadList
+{
+    NSArray *iPadList = [_defaults arrayForKey:@"iPadList"];
+    return iPadList;
 }
 
 - (NSArray *)geoidList
@@ -310,19 +316,14 @@ static UserDefaults *_defaults;
     [statusArray replaceObjectAtIndex:geoidNumber
                            withObject:[NSNumber numberWithInt:status]];
     
-    CRAPI.sharedInstance.currentGeoidStatus = status;
-    
-    [_defaults setInteger:status
-                   forKey:@"CurrentGeoidStatus"];
-    
-    NSArray *masterList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
-                           bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, statusArray, nil];
+    NSArray *locationList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
+                             bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, statusArray, nil];
     
     [_defaults setObject:statusArray
                   forKey:@"StatusArray"];
     
-    [_defaults setObject:masterList
-                  forKey:@"MasterList"];
+    [_defaults setObject:locationList
+                  forKey:@"LocationList"];
     
     [_defaults synchronize];
 }
@@ -390,8 +391,8 @@ static UserDefaults *_defaults;
         [statusArray insertObject:[NSNumber numberWithInt:status]
                           atIndex:index];
     
-        NSArray *masterList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
-                               bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, statusArray, nil];
+        NSArray *locationList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
+                                 bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, statusArray, nil];
     
         [_defaults setObject:namesArray
                       forKey:@"NamesArray"];
@@ -417,8 +418,8 @@ static UserDefaults *_defaults;
         [_defaults setObject:statusArray
                       forKey:@"StatusArray"];
     
-        [_defaults setObject:masterList
-                      forKey:@"MasterList"];
+        [_defaults setObject:locationList
+                      forKey:@"LocationList"];
     
         [_defaults synchronize];
     }
