@@ -610,6 +610,7 @@ static IntersectionsDatabase *_database;
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
+    [self open];
     NSString *query = [NSString stringWithFormat:
                        @"SELECT intID, status, intX, intY,\
                        ramp1,ramp2,ramp3,ramp4,ramp5,ramp6,ramp7,ramp8,ramp81,ramp23,ramp45,ramp67,\
@@ -704,6 +705,7 @@ static IntersectionsDatabase *_database;
     LatLongToPixelXY(latlon.lat, latlon.lon, 21, &pt.x, &pt.y);
     IBOUNDS bounds = IBoundsFromPointAndDist(pt, dist);
     
+    [self open];
     NSString *query = [NSString stringWithFormat:
                        @"SELECT intID, assignedTo, intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
                        (int)bounds.xmn,(int)bounds.xmx,(int)bounds.ymn,(int)bounds.ymx];
@@ -760,6 +762,7 @@ static IntersectionsDatabase *_database;
 
 {
     int rtn = 0;
+    [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",intID];
     sqlite3_stmt *statement;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "findIntersectionFromID1");
@@ -804,6 +807,7 @@ static IntersectionsDatabase *_database;
     {
         IntersectionPoint *intpt = nearInts[iWant - 1];
         
+        [self open];
         NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",intpt.intID];
         
         sqlite3_stmt *statement;
@@ -836,6 +840,7 @@ static IntersectionsDatabase *_database;
     int lev21x, lev21y;
     LatLongToPixelXY(intpt.latitude, intpt.longitude, 21, &lev21x, &lev21y);
     
+    [self open];
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, intX=%i, intY=%i WHERE intID=%i",
                        iTime, lev21x, lev21y, intpt.intID];
     char *error;
@@ -846,6 +851,7 @@ static IntersectionsDatabase *_database;
 
 - (IntersectionPoint *)getCurrentIntersectionPoint:(int)intID
 {
+    [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT intX, intY FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement;
     CGPoint intersectionPoint;
@@ -873,6 +879,7 @@ static IntersectionsDatabase *_database;
                                 nStreets:(int *)pnStreets
 {
     NSString * rtn = [[NSString alloc] init];
+    [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetAZMs FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement;
     
@@ -892,6 +899,7 @@ static IntersectionsDatabase *_database;
 
 - (int)getCountOfIntersections
 {
+    [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Intersections"];
     sqlite3_stmt *statement;
     int count = 0;
@@ -930,6 +938,7 @@ static IntersectionsDatabase *_database;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
+
 - (BOOL)assignIntersectionsFrom:(int)intID
                              To:(int)endID
                          ToUser:(int)user
@@ -943,6 +952,7 @@ static IntersectionsDatabase *_database;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
+
 - (BOOL)assignAllIntersectionTo:(int)user
 {
     BOOL rtn;
@@ -954,6 +964,7 @@ static IntersectionsDatabase *_database;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
+
 - (BOOL)assignRemainingIntersectionsTo:(int)user
 {
     BOOL rtn;
@@ -993,9 +1004,10 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_finalize(statement), "getFirstIntersectionPointAssignedTo2");
     return intpt;
 }
+
 - (NSArray *)getAssignments
 {
-    NSMutableArray * assignments = [[NSMutableArray alloc]init];
+    NSMutableArray *assignments = [[NSMutableArray alloc]init];
     
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedTo FROM Intersections WHERE assignedTo != 0 ORDER BY assignedTo,intID ASC"];
@@ -1016,7 +1028,6 @@ static IntersectionsDatabase *_database;
     SQLOK(sqlite3_finalize(statement), "getAssignments2");
     return assignments;
 }
-
 
 - (NSString *)intersectionTextPath:(int)type
 {
