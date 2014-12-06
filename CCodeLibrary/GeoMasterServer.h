@@ -4,6 +4,7 @@
 #define GM_OK 0
 #define GM_OPEN_FAILED 101
 #define GM_SEND_FAILED 102
+#define GM_NO_RESPONSE 103
 
 #import <Foundation/Foundation.h>
 
@@ -37,6 +38,8 @@ didReceiveMessage:(NSString *)message
 @property int messageID;
 @property NSTimer *openTimer;
 @property NSTimer *sendTimer;
+@property NSTimer *responseTimer;
+@property float responseTimeoutInSeconds;
 @property NSData *data;
 
 - (BOOL) initCommunication:(float)connectionTimeoutInSeconds;

@@ -41,6 +41,10 @@ static GeoMasterServer *_open = nil;
 
 - (void) closeServer
 {
+    if (_openTimer)
+        [_openTimer invalidate];
+    if (_responseTimer)
+        [_responseTimer invalidate];
     if (_inputStream != nil)
     {
         [_inputStream close];
@@ -69,6 +73,7 @@ static GeoMasterServer *_open = nil;
     NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
     bool rtn = NO;
     
+    self.responseTimeoutInSeconds = connectionTimeoutInSeconds;
     if(remoteHostStatus == NotReachable)
     {
         [self closeServer];
@@ -119,6 +124,8 @@ static GeoMasterServer *_open = nil;
     long rc = [_outputStream write:_data.bytes
                          maxLength:_data.length];
     
+    if (_responseTimer)
+        [_responseTimer invalidate];
     if (_data.length != rc)
     {
         if (self.delegate)
@@ -128,6 +135,16 @@ static GeoMasterServer *_open = nil;
                          withStatus:GM_SEND_FAILED];
         }
     }
+    else
+    {
+    
+        _responseTimer = [NSTimer scheduledTimerWithTimeInterval:self.responseTimeoutInSeconds
+                                                  target:self
+                                                selector:@selector(serverFailedToRespond)
+                                                userInfo:nil
+                                                 repeats:NO];
+    }
+
 }
 - (BOOL)sendMessage:(NSString *)message
 {
@@ -190,6 +207,8 @@ static GeoMasterServer *_open = nil;
                         
                         if (!buffer[origlen - 1])
                         {
+                            if (_responseTimer)
+                                [_responseTimer invalidate];
                             if (self.delegate)
                             {
                                 [self.delegate GMServer:self
@@ -210,6 +229,8 @@ static GeoMasterServer *_open = nil;
             NSError *theError = theStream.streamError;
             [self closeServer];
             
+            if (_responseTimer)
+                [_responseTimer invalidate];
             if (self.delegate)
             {
                 [self.delegate GMServer:self
@@ -226,6 +247,8 @@ static GeoMasterServer *_open = nil;
                                  forMode:NSDefaultRunLoopMode];
             theStream = nil;
             
+            if (_responseTimer)
+                [_responseTimer invalidate];
 			if (self.delegate)
             {
                 [self.delegate GMServer:self
@@ -240,6 +263,8 @@ static GeoMasterServer *_open = nil;
             break;
             
 		default:
+            if (_responseTimer)
+                [_responseTimer invalidate];
 			if (self.delegate)
             {
                 [self.delegate GMServer:self
@@ -249,6 +274,18 @@ static GeoMasterServer *_open = nil;
 	}
 }
 
+- (void) serverFailedToRespond
+{
+    [self closeServer];
+    
+    if (self.delegate)
+    {
+        [self.delegate GMServer:self
+                didReceiveError:@"Server failed to respond"
+                     withStatus:GM_NO_RESPONSE];
+    }
+    
+}
 - (void)serverFailedToOpen
 {
     [self closeServer];
