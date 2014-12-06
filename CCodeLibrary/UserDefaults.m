@@ -592,6 +592,18 @@ static UserDefaults *_defaults;
     return mutableString;
 }
 
+- (NSString *)removeTextInsideParenthesesWithoutSpaces:(NSString *)string
+{
+    NSMutableString *mutableString = [NSMutableString stringWithString:string];
+    NSRange start = [mutableString rangeOfString:@"("];
+    NSRange end = [mutableString rangeOfString:@")"];
+    
+    if ((start.location != NSNotFound) && (end.location != NSNotFound))
+        [mutableString deleteCharactersInRange:(NSRange){start.location, (end.location - start.location + 1)}];
+    
+    return mutableString;
+}
+
 - (NSString *)includeTextBeforeParentheses:(NSString *)string
 {
     NSRange range = [string rangeOfString:@"("];
