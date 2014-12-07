@@ -17,14 +17,14 @@
 
 + (CRAPI *)sharedInstance;
 
-@property int   currentModule;
+@property (nonatomic) int currentModule;
 @property (nonatomic) NSString *documentsDirectory;
 @property (nonatomic) NSString *outputDirectory;
 @property (nonatomic) NSString *imageDirectory;
 @property (nonatomic) NSString *uploadDirectory;
 @property (nonatomic) int currentGeoid;
 @property (nonatomic) NSString * currentManageriPad;
-@property int currentUserID;
+@property (nonatomic) int currentUserID;
 @property (nonatomic) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
 @property (nonatomic) NSString *googleKey;
@@ -32,9 +32,10 @@
 @property (nonatomic) NSArray *placesArray;
 @property (nonatomic) NSArray *currentPlaceArray;
 @property (nonatomic) NSString *placeAreaFile;
-@property BOOL doCompassCalibrate;
+@property (nonatomic) BOOL doCompassCalibrate;
 @property (nonatomic) NSString *calibrateLength;
 @property (nonatomic) NSString *calibrateHeight;
+@property (nonatomic) NSMutableArray *assignediPadsArray;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
