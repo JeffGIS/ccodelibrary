@@ -604,6 +604,28 @@ static UserDefaults *_defaults;
     return mutableString;
 }
 
+- (NSString *)removeColonInsideParentheses:(NSString *)string
+{
+    BOOL deleteMode = NO;
+    
+    for (int i = 0; i < string.length; i++)
+    {
+        if ([string characterAtIndex:i] == '(')
+            deleteMode = YES;
+        
+        if ([string characterAtIndex:i] == ')')
+            deleteMode = NO;
+        
+        if ([string characterAtIndex:i] == ':' && deleteMode == YES)
+        {
+            string = [string stringByReplacingCharactersInRange:NSMakeRange(i,1) withString:@""];
+            i--;
+        }
+    }
+    
+    return string;
+}
+
 - (NSString *)includeTextBeforeParentheses:(NSString *)string
 {
     NSRange range = [string rangeOfString:@"("];
