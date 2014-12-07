@@ -6,7 +6,7 @@
 
 @implementation FTPDataPull
 {
-    Reachability *reachability;
+    Reachability *_reachability;
 }
 
 //static FTPDataPull *_pull;
@@ -51,8 +51,8 @@
     
     if (refresh || fileSize == 0)
     {
-        reachability = Reachability.reachabilityForInternetConnection;
-        NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
+        _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
+        NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
         
         if(remoteHostStatus == NotReachable)
         {

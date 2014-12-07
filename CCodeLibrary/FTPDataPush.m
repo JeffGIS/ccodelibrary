@@ -23,7 +23,7 @@ enum {
 
 @implementation FTPDataPush
 {
-    Reachability *reachability;
+    Reachability *_reachability;
     long _fileSize, _totBytesWritten;
     uint8_t _buffer[kSendBufferSize];
     int ii;
@@ -67,8 +67,8 @@ enum {
     self.filePath = [NSString stringWithFormat:@"%@/%@", self.directory,self.fileName];
     assert(self.filePath);
     
-    reachability = Reachability.reachabilityForInternetConnection;
-    NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
+    _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
+    NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
     
     if(remoteHostStatus == NotReachable)
     {

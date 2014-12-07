@@ -11,7 +11,7 @@
 
 @implementation GeoMasterServer
 {
-    Reachability *reachability;
+    Reachability *_reachability;
 }
 
 static GeoMasterServer *_open = nil;
@@ -69,8 +69,8 @@ static GeoMasterServer *_open = nil;
 
 - (BOOL)initCommunication:(float)connectionTimeoutInSeconds
 {
-    reachability = Reachability.reachabilityForInternetConnection;
-    NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
+    _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
+    NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
     bool rtn = NO;
     
     self.responseTimeoutInSeconds = connectionTimeoutInSeconds;
