@@ -3,8 +3,17 @@
 
 #import <UIKit/UIKit.h>
 
+@class GSSiPopoverView;
+
+@protocol GSSiPopoverViewDelegate
+
+- (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView;
+
+@end
+
 @interface GSSiPopoverView : UIView
 
+@property id delegate;
 @property UIView *popover;
 @property UIView *fromView;
 @property (nonatomic) UIProgressView *progressView;
