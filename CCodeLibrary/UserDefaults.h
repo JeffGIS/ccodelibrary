@@ -80,8 +80,7 @@
                          bounds_w:(CGFloat)bounds_w
                          bounds_s:(CGFloat)bounds_s
                          bounds_e:(CGFloat)bounds_e
-                         bounds_n:(CGFloat)bounds_n
-                           status:(int)status;
+                         bounds_n:(CGFloat)bounds_n;
 
 - (UIColor *)lightColorForColor:(UIColor *)color;
 - (UIColor *)darkColorForColor:(UIColor *)color;

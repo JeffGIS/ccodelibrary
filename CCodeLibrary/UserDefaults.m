@@ -335,7 +335,6 @@ static UserDefaults *_defaults;
                          bounds_s:(CGFloat)bounds_s
                          bounds_e:(CGFloat)bounds_e
                          bounds_n:(CGFloat)bounds_n
-                           status:(int)status
 {
     NSMutableArray *namesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"NamesArray"]];
     NSMutableArray *statesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"StatesArray"]];
@@ -344,7 +343,6 @@ static UserDefaults *_defaults;
     NSMutableArray *bounds_sArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_sArray"]];
     NSMutableArray *bounds_eArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_eArray"]];
     NSMutableArray *bounds_nArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_nArray"]];
-    NSMutableArray *statusArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"StatusArray"]];
     
     if (![geoidsArray containsObject:[NSNumber numberWithInt:geoid]])
     {
@@ -387,12 +385,9 @@ static UserDefaults *_defaults;
         
         [bounds_nArray insertObject:[NSNumber numberWithFloat:bounds_n]
                             atIndex:index];
-        
-        [statusArray insertObject:[NSNumber numberWithInt:status]
-                          atIndex:index];
     
         NSArray *locationList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
-                                 bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, statusArray, nil];
+                                 bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, nil];
     
         [_defaults setObject:namesArray
                       forKey:@"NamesArray"];
@@ -414,9 +409,6 @@ static UserDefaults *_defaults;
     
         [_defaults setObject:bounds_nArray
                       forKey:@"Bounds_nArray"];
-    
-        [_defaults setObject:statusArray
-                      forKey:@"StatusArray"];
     
         [_defaults setObject:locationList
                       forKey:@"LocationList"];

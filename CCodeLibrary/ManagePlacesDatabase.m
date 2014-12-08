@@ -219,8 +219,7 @@ static ManagePlacesDatabase *_database;
                                                 bounds_w:bounds_w
                                                 bounds_s:bounds_s
                                                 bounds_e:bounds_e
-                                                bounds_n:bounds_n
-                                                  status:0];
+                                                bounds_n:bounds_n];
     }
         
     sqlite3_finalize(statement);
