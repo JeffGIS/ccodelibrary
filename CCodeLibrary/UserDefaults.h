@@ -50,6 +50,7 @@
 - (void)disableWebKitDiskImageCache;
 - (NSString *)sharedFilePath;
 - (NSString *)localFilePath;
+- (NSMutableArray *)sortByContentsOfParentheses:(NSMutableArray *)array;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green

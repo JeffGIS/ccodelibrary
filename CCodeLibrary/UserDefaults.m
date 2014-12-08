@@ -224,6 +224,38 @@ static UserDefaults *_defaults;
     return documentsDirectory;
 }
 
+- (NSMutableArray *)sortByContentsOfParentheses:(NSMutableArray *)array
+{
+    NSMutableArray *newArray = [[NSMutableArray alloc] init];
+    int index = 0;
+    
+    for (int i = 0; i < array.count; i++)
+    {
+        if (newArray.count == 0)
+            [newArray addObject:array[0]];
+        
+        else
+        {
+            NSComparisonResult result = [[UserDefaults.defaults includeTextInsideParentheses:[newArray objectAtIndex:index]] compare:[UserDefaults.defaults includeTextInsideParentheses:[array objectAtIndex:i]] options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+            
+            while (result == NSOrderedAscending)
+            {
+                index++;
+                
+                if (index == newArray.count)
+                    break;
+                
+                result = [[UserDefaults.defaults includeTextInsideParentheses:[newArray objectAtIndex:index]] compare:[UserDefaults.defaults includeTextInsideParentheses:[array objectAtIndex:i]] options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+            }
+            
+            [newArray insertObject:[array objectAtIndex:i]
+                           atIndex:index];
+        }
+    }
+  
+    return newArray;
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue
