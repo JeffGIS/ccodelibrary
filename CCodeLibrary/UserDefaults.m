@@ -220,6 +220,11 @@ static UserDefaults *_defaults;
 {
     NSFileManager *fileManager = NSFileManager.defaultManager;
     NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:@"group.com.GSSi.SurveyApps"];
+    
+    [groupContainerURL setResourceValue:[NSNumber numberWithBool:YES]
+                                 forKey:NSURLIsExcludedFromBackupKey
+                                  error:nil];
+    
     return groupContainerURL.relativePath;
 }
 
