@@ -236,20 +236,26 @@ static UserDefaults *_defaults;
         
         else
         {
-            NSComparisonResult result = [[UserDefaults.defaults includeTextInsideParentheses:[newArray objectAtIndex:index]] compare:[UserDefaults.defaults includeTextInsideParentheses:[array objectAtIndex:i]] options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+            NSComparisonResult result = [[UserDefaults.defaults includeTextInsideParentheses:[array objectAtIndex:i]]
+                                         compare:[UserDefaults.defaults includeTextInsideParentheses:[newArray objectAtIndex:index]]
+                                         options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
             
-            while (result == NSOrderedAscending)
+            while (result == NSOrderedDescending)
             {
                 index++;
                 
                 if (index == newArray.count)
                     break;
                 
-                result = [[UserDefaults.defaults includeTextInsideParentheses:[newArray objectAtIndex:index]] compare:[UserDefaults.defaults includeTextInsideParentheses:[array objectAtIndex:i]] options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+                result = [[UserDefaults.defaults includeTextInsideParentheses:[array objectAtIndex:i]]
+                          compare:[UserDefaults.defaults includeTextInsideParentheses:[newArray objectAtIndex:index]]
+                          options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
             }
             
             [newArray insertObject:[array objectAtIndex:i]
                            atIndex:index];
+            
+            index = 0;
         }
     }
   
