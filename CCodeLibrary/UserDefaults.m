@@ -55,6 +55,12 @@ static UserDefaults *_defaults;
     return defaultString;
 }
 
+- (NSArray *)arrayForKey:(NSString *)key
+{
+    NSArray *defaultArray = [_defaults arrayForKey:key];
+    return defaultArray;
+}
+
 - (CGFloat)CGFloatForKey:(NSString *)key
 {
     CGFloat defaultFloat = [_defaults floatForKey:key];
@@ -323,6 +329,15 @@ static UserDefaults *_defaults;
             forKey:(NSString *)key
 {
     [_defaults setObject:string
+                  forKey:key];
+    
+    [_defaults synchronize];
+}
+
+- (void)saveArray:(NSArray *)array
+           forKey:(NSString *)key
+{
+    [_defaults setObject:array
                   forKey:key];
     
     [_defaults synchronize];

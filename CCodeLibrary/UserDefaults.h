@@ -16,6 +16,7 @@
 - (NSInteger)integerForKey:(NSString *)key;
 - (BOOL)boolForKey:(NSString *)key;
 - (NSString *)stringForKey:(NSString *)key;
+- (NSArray *)arrayForKey:(NSString *)key;
 - (CGFloat)CGFloatForKey:(NSString *)key;
 - (NSArray *)geoidList;
 - (NSArray *)locationList;
@@ -68,6 +69,9 @@
 
 - (void)saveString:(NSString *)string
             forKey:(NSString *)key;
+
+- (void)saveArray:(NSArray *)array
+           forKey:(NSString *)key;
 
 - (void)saveCGFloat:(CGFloat)CGFloat
              forKey:(NSString *)key;
