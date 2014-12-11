@@ -564,7 +564,7 @@ static UserDefaults *_defaults;
 {
     NSString *end = [NSString stringWithFormat:@"%@", [string substringFromIndex:(string.length - 1)]];
     
-    if ([end  isEqual:@"\r"])
+    if ([end isEqualToString:@"\r"])
         string = [NSString stringWithFormat:@"%@", [string substringToIndex:(string.length - 1)]];
     
     return string;

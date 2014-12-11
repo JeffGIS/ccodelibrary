@@ -77,7 +77,7 @@ CGColorRef graphYColor()
                                              ofType:@"txt"];
     }
     
-    if ([path isEqual:@""])
+    if ([path isEqualToString:@""])
         return;
     
     NSString *contents = [NSString stringWithContentsOfFile:path
