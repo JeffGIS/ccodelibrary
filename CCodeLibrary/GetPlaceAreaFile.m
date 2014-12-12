@@ -41,8 +41,6 @@
     [self.delegate getPlaceAreaFile:self
                          didGetFile:path
                          withStatus:status];
-    
-    return;
 }
 
 @end

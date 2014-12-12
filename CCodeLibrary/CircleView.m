@@ -105,8 +105,6 @@ CGColorRef graphYColor()
             CGContextFillPath(context);
         }
     }
-    
-    return;
 }
 
 @end

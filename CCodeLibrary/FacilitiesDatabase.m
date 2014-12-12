@@ -578,8 +578,6 @@ Exit:
                                   didLoad:@"FTP failure"
                                withStatus:FACDB_FAILED];
     }
-    
-    return;
 }
 
 - (int)getCountOfFacilities

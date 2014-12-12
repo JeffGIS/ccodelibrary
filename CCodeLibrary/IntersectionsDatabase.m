@@ -1176,26 +1176,31 @@ Exit:
     else if (status == FTP_CONNECTION_FAILED)
     {
         if (self.gettingUploaded)
+        {
             [self.delegate intersectionsDatabase:nil
                                          didLoad:@"File not found"
                                       withStatus:INT_NO_UPLOADED_FILE];
+        }
+        
         else
+        {
             [self.delegate intersectionsDatabase:nil
                                          didLoad:@"File not found"
                                       withStatus:INT_NO_NETWORK_CONNECTION];
-   }
+        }
+    }
+    
     else if (status == FTP_CONNECTION_FAILED_TRYING_SECONDARY)
     {
         
     }
+    
     else if (status != FTP_STOP)
     {
         [self.delegate intersectionsDatabase:nil
                                      didLoad:@"FTP failure"
                                   withStatus:INTDB_FAILED];
     }
-    
-    return;
 }
 
 - (void)getPlaceIntersectionFile:(GSSiPopoverView *)popover
