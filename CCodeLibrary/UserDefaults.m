@@ -135,6 +135,27 @@ static UserDefaults *_defaults;
     return polygonFillColor;
 }
 
+- (Colors *)defaultColors
+{
+    Colors *defaultColors = [[Colors alloc] init];
+    
+    defaultColors.backgroundColor = [UIColor colorWithRed:(240.0 / 255.0)
+                                                    green:(255.0 / 255.0)
+                                                     blue:(200.0 / 255.0)
+                                                    alpha:1.0];
+    
+    defaultColors.label1Color = UIColor.blackColor;
+    
+    defaultColors.label2Color = [UIColor colorWithRed:(120.0 / 255.0)
+                                                green:(125.0 / 255.0)
+                                                 blue:(105.0 / 255.0)
+                                                alpha:1.0];
+    
+    defaultColors.textColor = UIColor.whiteColor;
+    
+    return defaultColors;
+}
+
 - (UIImage *)checkmark
 {
     UIImage *checkmark = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"checkmark"

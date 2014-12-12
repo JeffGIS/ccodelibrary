@@ -4,6 +4,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "CRAPI.h"
+#import "Colors.h"
 
 @interface UserDefaults : NSObject
 {
@@ -26,6 +27,7 @@
 - (UIColor *)darkGreen;
 - (UIColor *)appleGray;
 - (UIColor *)polygonFillColor;
+- (Colors *)defaultColors;
 - (UIImage *)checkmark;
 - (UIImage *)imageTarget;
 - (UIImage *)yellowArrow;
