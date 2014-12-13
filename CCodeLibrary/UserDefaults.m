@@ -144,14 +144,15 @@ static UserDefaults *_defaults;
                                                      blue:(200.0 / 255.0)
                                                     alpha:1.0];
     
-    defaultColors.label1Color = UIColor.blackColor;
+    defaultColors.enabledColor = UIColor.blackColor;
     
-    defaultColors.label2Color = [UIColor colorWithRed:(120.0 / 255.0)
-                                                green:(125.0 / 255.0)
-                                                 blue:(105.0 / 255.0)
-                                                alpha:1.0];
+    defaultColors.disabledColor = [UIColor colorWithRed:(120.0 / 255.0)
+                                                  green:(125.0 / 255.0)
+                                                   blue:(105.0 / 255.0)
+                                                  alpha:1.0];
     
-    defaultColors.textColor = UIColor.whiteColor;
+    defaultColors.titleColor = UIColor.whiteColor;
+    defaultColors.textColor = UIColor.blackColor;
     
     return defaultColors;
 }

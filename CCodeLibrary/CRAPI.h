@@ -7,6 +7,7 @@
 #import "Facility.h"
 #import "UserDefaults.h"
 #import "GoogleMaps/GoogleMaps.h"
+#import "Colors.h"
 
 #define MANAGEMENT_MODULE 1
 #define PRELIM_MODULE 2
@@ -36,6 +37,7 @@
 @property (nonatomic) NSString *calibrateLength;
 @property (nonatomic) NSString *calibrateHeight;
 @property (nonatomic) NSMutableArray *assignediPadsArray;
+@property (nonatomic) Colors *defaultColors;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
 - (void)intersectionInit:(MPIntersection *)currentIntersection;
