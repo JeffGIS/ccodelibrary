@@ -1,9 +1,9 @@
 //  MPIntersection.h
 //  CCodeLibrary
 
-#define RAMP    1
-#define STREET  2
-#define UPPER   3
+#define RAMP 1
+#define STREET 2
+#define UPPER 3
 #define RAMP 1
 #define STREETLANDING 2
 #define UPPERLANDING 3
@@ -12,6 +12,7 @@
 #define HEADINGERRORDIF 50
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 enum textures {
     smoothConcrete=1,
@@ -36,115 +37,108 @@ enum obstructions {
 
 @interface PSRamp : NSObject
 
-@property int lev21x;
-@property int lev21y;
-@property int imageX;
-@property int imageY;
-@property int refno;
-@property float trueAz;
-@property int adjustedRot;
-@property int rampID;
+@property (nonatomic) int lev21x, lev21y;
+@property (nonatomic) int imageX, imageY;
+@property (nonatomic) int refno, rampID;
+@property (nonatomic) CGFloat trueAz;
+@property (nonatomic) int adjustedRot;
 
 @end
 
 @interface MPRamp : NSObject
 
-@property int rampNum;
+@property (nonatomic) int rampNum;
 @property (nonatomic, strong) NSString *rampID;
-@property int timeComplete;
-@property bool rampExists;
-@property bool isComplete;
-@property float approximateHeading;
-@property int   adjustedRot;
-@property bool rampInXWalk;
-@property bool xWalkisComplete;
-@property bool signalisComplete;
-@property enum textures texture;
-@property enum obstructions upperLandingObstruction;
-@property enum obstructions lowerLandingObstruction;
-@property enum obstructions rampObstruction;
-@property bool hasRampCracks;
-@property bool hasUpperLandingCracks;
-@property bool hasStreetLandingCracks;
-@property int rampWidth;
-@property int rampDepth;
-@property float rampSlopeFront;
-@property float rampSlopeSide;
-@property float rampSlopeHeading;
-@property float upperLandingSlopeFront;
-@property float upperLandingSlopeSide;
-@property float upperLandingSlopeHeading;
-@property float streetLandingSlopeFront;
-@property float streetLandingSlopeSide;
-@property float streetLandingSlopeHeading;
-@property float flareLeftSlopeFront;
-@property float flareLeftSlopeSide;
-@property float flareLeftSlopeHeading;
-@property float flareRightSlopeFront;
-@property float flareRightSlopeSide;
-@property float flareRightSlopeHeading;
-@property bool hasPEDSignal;
-@property bool hasPEDButton;
-@property int PEDButtonHeight;
-@property int PEDButtonDist;
-@property float SteepTopOfCurb;
-@property float PedRampLip;
-@property int lev21x;
-@property int lev21y;
+@property (nonatomic) int timeComplete;
+@property (nonatomic) BOOL rampExists;
+@property (nonatomic) BOOL isComplete;
+@property (nonatomic) CGFloat approximateHeading;
+@property (nonatomic) int adjustedRot;
+@property (nonatomic) BOOL rampInXWalk;
+@property (nonatomic) BOOL xWalkisComplete;
+@property (nonatomic) BOOL signalisComplete;
+@property (nonatomic) enum textures texture;
+@property (nonatomic) enum obstructions upperLandingObstruction;
+@property (nonatomic) enum obstructions lowerLandingObstruction;
+@property (nonatomic) enum obstructions rampObstruction;
+@property (nonatomic) BOOL hasRampCracks;
+@property (nonatomic) BOOL hasUpperLandingCracks;
+@property (nonatomic) BOOL hasStreetLandingCracks;
+@property (nonatomic) int rampWidth, rampDepth;
+@property (nonatomic) CGFloat rampSlopeFront;
+@property (nonatomic) CGFloat rampSlopeSide;
+@property (nonatomic) CGFloat rampSlopeHeading;
+@property (nonatomic) CGFloat upperLandingSlopeFront;
+@property (nonatomic) CGFloat upperLandingSlopeSide;
+@property (nonatomic) CGFloat upperLandingSlopeHeading;
+@property (nonatomic) CGFloat streetLandingSlopeFront;
+@property (nonatomic) CGFloat streetLandingSlopeSide;
+@property (nonatomic) CGFloat streetLandingSlopeHeading;
+@property (nonatomic) CGFloat flareLeftSlopeFront;
+@property (nonatomic) CGFloat flareLeftSlopeSide;
+@property (nonatomic) CGFloat flareLeftSlopeHeading;
+@property (nonatomic) CGFloat flareRightSlopeFront;
+@property (nonatomic) CGFloat flareRightSlopeSide;
+@property (nonatomic) CGFloat flareRightSlopeHeading;
+@property (nonatomic) BOOL hasPEDSignal, hasPEDButton;
+@property (nonatomic) int PEDButtonHeight, PEDButtonDist;
+@property (nonatomic) CGFloat SteepTopOfCurb;
+@property (nonatomic) CGFloat PedRampLip;
+@property (nonatomic) int lev21x, lev21y;
 
 @end
 
 @interface MPIntersection : NSObject
 
-@property int intID;
-@property bool dataUpdated;
-@property int intRotation;
-@property bool doLater;
-@property int timeComplete;
-@property int currentCorner;
-@property int currentSignal;
-@property int currentObstruction;
-@property float currentCornerHeading;
-@property (nonatomic, strong) MPRamp *currentRamp;
-@property (nonatomic, strong) NSString *name1;
-@property (nonatomic, strong) NSString *name2;
-@property (nonatomic, strong) NSString *name3;
-@property bool signal23Exists;
-@property bool signal45Exists;
-@property bool signal67Exists;
-@property bool signal81Exists;
-@property int signal23lev21x;
-@property int signal23lev21y;
-@property int signal45lev21x;
-@property int signal45lev21y;
-@property int signal67lev21x;
-@property int signal67lev21y;
-@property int signal81lev21x;
-@property int signal81lev21y;
-@property bool xWalkAExists;
-@property bool xWalkBExists;
-@property bool xWalkCExists;
-@property bool xWalkDExists;
-@property int xWalkAlev21x;
-@property int xWalkAlev21y;
-@property int xWalkBlev21x;
-@property int xWalkBlev21y;
-@property int xWalkClev21x;
-@property int xWalkClev21y;
-@property int xWalkDlev21x;
-@property int xWalkDlev21y;
-@property int  corner23heading;
-@property int  corner45heading;
-@property int  corner67heading;
-@property int  corner81heading;
-@property bool corner23isComplete;
-@property bool corner45isComplete;
-@property bool corner67isComplete;
-@property bool corner81isComplete;
-@property int quadDev0, quadDev90, quadDev180, quadDev270;
-@property int lev21x, lev21y;
-@property double lat,lon;
-@property (nonatomic,strong) NSMutableArray *ramps;
+@property (nonatomic) int intID;
+@property (nonatomic) BOOL dataUpdated;
+@property (nonatomic) int intRotation;
+@property (nonatomic) BOOL doLater;
+@property (nonatomic) int timeComplete;
+@property (nonatomic) int currentCorner;
+@property (nonatomic) int currentSignal;
+@property (nonatomic) int currentObstruction;
+@property (nonatomic) float currentCornerHeading;
+@property (nonatomic) MPRamp *currentRamp;
+@property (nonatomic) NSString *name1;
+@property (nonatomic) NSString *name2;
+@property (nonatomic) NSString *name3;
+@property (nonatomic) BOOL signal23Exists;
+@property (nonatomic) BOOL signal45Exists;
+@property (nonatomic) BOOL signal67Exists;
+@property (nonatomic) BOOL signal81Exists;
+@property (nonatomic) int signal23lev21x;
+@property (nonatomic) int signal23lev21y;
+@property (nonatomic) int signal45lev21x;
+@property (nonatomic) int signal45lev21y;
+@property (nonatomic) int signal67lev21x;
+@property (nonatomic) int signal67lev21y;
+@property (nonatomic) int signal81lev21x;
+@property (nonatomic) int signal81lev21y;
+@property (nonatomic) BOOL xWalkAExists;
+@property (nonatomic) BOOL xWalkBExists;
+@property (nonatomic) BOOL xWalkCExists;
+@property (nonatomic) BOOL xWalkDExists;
+@property (nonatomic) int xWalkAlev21x;
+@property (nonatomic) int xWalkAlev21y;
+@property (nonatomic) int xWalkBlev21x;
+@property (nonatomic) int xWalkBlev21y;
+@property (nonatomic) int xWalkClev21x;
+@property (nonatomic) int xWalkClev21y;
+@property (nonatomic) int xWalkDlev21x;
+@property (nonatomic) int xWalkDlev21y;
+@property (nonatomic) int corner23heading;
+@property (nonatomic) int corner45heading;
+@property (nonatomic) int corner67heading;
+@property (nonatomic) int corner81heading;
+@property (nonatomic) BOOL corner23isComplete;
+@property (nonatomic) BOOL corner45isComplete;
+@property (nonatomic) BOOL corner67isComplete;
+@property (nonatomic) BOOL corner81isComplete;
+@property (nonatomic) int quadDev0, quadDev90, quadDev180, quadDev270;
+@property (nonatomic) int lev21x, lev21y;
+@property (nonatomic) double lat,lon;
+@property (nonatomic) NSMutableArray *ramps;
 
 - (void) setRampsXWalkAndSignal;
 
