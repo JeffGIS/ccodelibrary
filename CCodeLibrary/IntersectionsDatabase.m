@@ -1061,15 +1061,9 @@ static IntersectionsDatabase *_database;
     int *pInt, i;
     
     [self open];
-    strcpy(dataFile,path.UTF8String);
     
-    if ((pUB = strrchr(dataFile, '_')))
-        *pUB = 0;
-    
-    else
-        goto Exit;
-    
-    strcpy(indexFile, dataFile);
+    strcpy(indexFile, path.UTF8String);
+    strcpy(dataFile,indexFile);
     strcat(indexFile, "/intersection_index.bin");
     strcat(dataFile, "/intersection_data.bin");
     fidData = fopen(dataFile, "rb");
@@ -1155,7 +1149,7 @@ Exit:
         else
         {
             if (DecompressGMZipFile ((LPSTR)path.UTF8String,(LPSTR)toDirectory.UTF8String))
-                status = [self loadIntersectionTextToDatabase:path];
+                status = [self loadIntersectionTextToDatabase:toDirectory];
             
             else
             {
