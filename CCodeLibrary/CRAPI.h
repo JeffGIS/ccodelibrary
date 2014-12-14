@@ -24,7 +24,7 @@
 @property (nonatomic) NSString *imageDirectory;
 @property (nonatomic) NSString *uploadDirectory;
 @property (nonatomic) int currentGeoid;
-@property (nonatomic) NSString * currentManageriPad;
+@property (nonatomic) NSString *currentManageriPad;
 @property (nonatomic) int currentUserID;
 @property (nonatomic) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
