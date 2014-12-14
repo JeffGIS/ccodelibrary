@@ -402,7 +402,7 @@
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:imageFile
                                                                                  error:nil].fileSize;
-    if (fileSize > 0 && refresh == NO)
+    if (fileSize > 0 && !refresh)
         return imageFile;
     
     NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=%@", lat, lon, zoom, GOOGLE_API_KEY];

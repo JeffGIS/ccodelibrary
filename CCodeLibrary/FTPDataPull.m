@@ -113,7 +113,7 @@
 
 - (void)startReceive:(NSString *)fileName
 {
-    if (self.hasFailed == NO)
+    if (!self.hasFailed)
     {
         self.fileName = fileName;
         [self setUpFTP];
@@ -131,7 +131,7 @@
     
     if (!success || ![NetworkManager.sharedInstance isBinaryURL:url])
     {
-        if (self.hasFailed == NO)
+        if (!self.hasFailed)
         {
             if (self.currentFtp == self.ftpSite)
             {
@@ -272,7 +272,7 @@ didReceiveResponse:(NSURLResponse *)response
     
     NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
     
-    if (self.hasFailed == NO && !self.useOnlyPrimaryFTP)
+    if (!self.hasFailed && !self.useOnlyPrimaryFTP)
     {
         if ([self.currentFtp isEqualToString:self.ftpSite])
         {

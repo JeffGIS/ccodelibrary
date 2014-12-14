@@ -161,7 +161,7 @@
 
 - (void)updateButtonAppearance:(UIButton *)button
 {
-    if (button.enabled == YES)
+    if (button.enabled)
     {
         button.backgroundColor = UIColor.whiteColor;
         button.layer.borderColor = UserDefaults.defaults.green.CGColor;
@@ -192,7 +192,7 @@
     slopes[1] = self.sideSlope;
     heading = self.avgHeading;
     
-    if (self.unable == YES)
+    if (self.unable)
         slopes[0] = slopes[1] = heading = -9999.0;
     
     [self.delegate gssiSlopeViewController:self
@@ -237,7 +237,7 @@
 {
     self.motionManager.deviceMotionUpdateInterval = 0.02;
     
-    if (CLLocationManager.headingAvailable == YES && self.hasRun == NO)
+    if (CLLocationManager.headingAvailable && !self.hasRun)
         [self.locationManager startUpdatingHeading];
     
     if ([self.motionManager isDeviceMotionAvailable])
@@ -295,7 +295,7 @@
         {
             [self.motionManager stopDeviceMotionUpdates];
             
-            if (self.hasRun == YES)
+            if (self.hasRun)
             {
                 self.x2 = (self.sumX / LONG_COUNT);
                 self.y2 = (self.sumY / LONG_COUNT);

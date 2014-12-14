@@ -253,7 +253,7 @@ static UserDefaults *_defaults;
 - (NSString *)localFilePath
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *documentsDirectory = paths.firstObject;
     return documentsDirectory;
 }
 
@@ -688,7 +688,7 @@ static UserDefaults *_defaults;
         if ([string characterAtIndex:i] == ')')
             deleteMode = NO;
         
-        if ([string characterAtIndex:i] == ':' && deleteMode == YES)
+        if ([string characterAtIndex:i] == ':' && deleteMode)
         {
             string = [string stringByReplacingCharactersInRange:NSMakeRange(i,1) withString:@""];
             i--;

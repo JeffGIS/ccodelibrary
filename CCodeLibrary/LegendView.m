@@ -20,7 +20,7 @@
     CGRect frame;
     _size = 15.0;
     
-    if (hasComplexView == YES)
+    if (hasComplexView)
         frame = CGRectMake(origin.x, origin.y, width, height);
     
     else
@@ -55,7 +55,7 @@
         [self setupLabel:self.notAssigned
                textColor:blue];
         
-        if (hasComplexView == YES)
+        if (hasComplexView)
         {
             self.complex = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 3.0) + margin), labelWidth, labelHeight)];
             self.numInts = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 4.0) + margin), labelWidth, labelHeight)];
@@ -90,7 +90,7 @@
         [self setupView:self.notAssignedMarker
         backgroundColor:blue];
         
-        if (hasComplexView == YES)
+        if (hasComplexView)
         {
             self.complexMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, ((labelHeight * 3.0) + buffer), _size, _size)];
             

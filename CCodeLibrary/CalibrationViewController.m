@@ -253,7 +253,7 @@
         {
             [self.motionManager stopDeviceMotionUpdates];
             
-            if (self.hasRun == YES)
+            if (self.hasRun)
             {
                 self.x2 = (self.sumX - (self.xAdj * LONG_COUNT)) / LONG_COUNT;
                 self.y2 = (self.sumY - (self.yAdj * LONG_COUNT)) / LONG_COUNT;

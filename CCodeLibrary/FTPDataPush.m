@@ -116,7 +116,7 @@ enum {
 
 - (BOOL)startSend:(NSString *)fileName
 {
-    if (self.hasFailed == NO)
+    if (!self.hasFailed)
     {
         _fileSize = (long)[NSFileManager.defaultManager attributesOfItemAtPath:self.filePath
                                                                          error:nil].fileSize;
@@ -136,7 +136,7 @@ enum {
     
     if (!success || ![NetworkManager.sharedInstance isBinaryURL:url])
     {
-        if (self.hasFailed == NO)
+        if (!self.hasFailed)
         {
             if (self.currentFtp == self.ftpSite)
             {
@@ -332,7 +332,7 @@ enum {
 #pragma unused(error)
     assert(theConnection == self.connection);
     
-    if (self.hasFailed == NO)
+    if (!self.hasFailed)
     {
         NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
         
