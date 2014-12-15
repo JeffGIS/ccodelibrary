@@ -13,7 +13,6 @@
     
     if (self)
     {
-        self.backgroundColor = nil;
         self.opaque = NO;
         self.mapView = mapView;
     }

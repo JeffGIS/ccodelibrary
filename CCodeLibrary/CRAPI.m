@@ -20,8 +20,8 @@
         _allowedZooms[1] = 20;
         _allowedZooms[2] = 19;
         
-        self.documentsDirectory = UserDefaults.defaults.localFilePath;
-        //self.documentsDirectory = UserDefaults.defaults.sharedFilePath;
+        _documentsDirectory = UserDefaults.defaults.localFilePath;
+        //_documentsDirectory = UserDefaults.defaults.sharedFilePath;
     }
     
     return self;
@@ -29,15 +29,15 @@
 
 + (CRAPI *)sharedInstance
 {
-    static CRAPI *_sharedInstance = nil;
+    static CRAPI *sharedInstance = nil;
     static dispatch_once_t oncePredicate;
     
     dispatch_once(&oncePredicate,
                   ^{
-                      _sharedInstance = [[CRAPI alloc] init];
+                      sharedInstance = [[CRAPI alloc] init];
                   });
     
-    return _sharedInstance;
+    return sharedInstance;
 }
 
 - (int)currentGeoid
@@ -47,29 +47,29 @@
 
 - (void)setCurrentGeoid:(int)geoid
 {
-    BOOL rtn = TRUE;
     if (geoid != _currentGeoidValue)
     {
         _currentGeoidValue = geoid;
-        self.outputDirectory = [NSString stringWithFormat:@"%@/%i/ADAFiles", self.documentsDirectory, _currentGeoidValue];
-        self.imageDirectory = [NSString stringWithFormat:@"%@/%i/IntersectionImages", UserDefaults.defaults.sharedFilePath, _currentGeoidValue];
+        _outputDirectory = [NSString stringWithFormat:@"%@/%i/ADAFiles", _documentsDirectory, _currentGeoidValue];
+        _imageDirectory = [NSString stringWithFormat:@"%@/%i/IntersectionImages", UserDefaults.defaults.sharedFilePath, _currentGeoidValue];
         
-        rtn = [NSFileManager.defaultManager createDirectoryAtPath:self.outputDirectory
+        [NSFileManager.defaultManager createDirectoryAtPath:_outputDirectory
                                 withIntermediateDirectories:YES
                                                  attributes:nil
                                                       error:nil];
         
-        rtn = [NSFileManager.defaultManager createDirectoryAtPath:self.imageDirectory
+        [NSFileManager.defaultManager createDirectoryAtPath:_imageDirectory
                                 withIntermediateDirectories:YES
                                                  attributes:nil
                                                       error:nil];
-        self.uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i", self.currentManageriPad,geoid];
+        
+        _uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i", _currentManageriPad, geoid];
     }
 }
 
 - (NSString *)uploadDirectory
 {
-    NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i", self.currentManageriPad, _currentGeoidValue];
+    NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i", _currentManageriPad, _currentGeoidValue];
     return uploadDirectory;
 }
 - (void)intersectionInit:(MPIntersection *)currentIntersection
@@ -175,6 +175,7 @@
         }
      
     }
+    
     if (minDiff < 45)
         rtn = minRot;
     
@@ -350,17 +351,17 @@
 
 - (NSString *)getOutputDirectory
 {
-    return self.outputDirectory;
+    return _outputDirectory;
 }
 
 - (BOOL)intersectionAlreadyCompleted:(int)intID
 {
-    NSString *outputFile = [NSString stringWithFormat:@"%@/Intersection_%i.txt", self.outputDirectory, intID];
+    NSString *outputFile = [NSString stringWithFormat:@"%@/Intersection_%i.txt", _outputDirectory, intID];
     
     if ([NSFileManager.defaultManager fileExistsAtPath:outputFile])
         return YES;
     
-    outputFile = [NSString stringWithFormat:@"%@/Uploaded_Intersection_%i.txt", self.outputDirectory, intID];
+    outputFile = [NSString stringWithFormat:@"%@/Uploaded_Intersection_%i.txt", _outputDirectory, intID];
     
     if ([NSFileManager.defaultManager fileExistsAtPath:outputFile])
         return YES;
@@ -374,10 +375,10 @@
     
     for (int i = 0; i< _numAllowedZooms; i++)
     {
-        NSString *imageFile = [self.imageDirectory stringByAppendingPathComponent:
+        NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:
                                [NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, _allowedZooms[i]]];
         
-        NSString *cptFile = [self.imageDirectory stringByAppendingPathComponent:
+        NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:
                              [NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, _allowedZooms[i]]];
         
         [manager removeItemAtPath:imageFile
@@ -390,15 +391,15 @@
 
 - (NSString *)getImageFileforIntersection:(int)intersectionID
                                     atLat:(double)lat
-                                    andLon:(double)lon
+                                   andLon:(double)lon
                                   andZoom:(int)zoom
                              forceRefresh:(BOOL)refresh
 {
     if (refresh)
         [self deleteImagesForAllZooms:intersectionID];
     
-    NSString *imageFile = [self.imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, zoom]];
-    NSString *cptFile = [self.imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, zoom]];
+    NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, zoom]];
+    NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, zoom]];
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:imageFile
                                                                                  error:nil].fileSize;
@@ -449,7 +450,7 @@
                              encoding:NSUTF8StringEncoding
                                 error:&err])
         {
-
+            NSLog(@"ERROR (getImageFileforIntersection): %@", err);
         }
     }
     
@@ -461,12 +462,10 @@
                                   pitch:(CGFloat)pitch
                                     fov:(CGFloat)fov
 {
-    UIImage *image = nil;
-    
     NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=%f&heading=%f&pitch=%f&sensor=false&key=%@", atLatLon.lat, atLatLon.lon, fov, heading, pitch, GOOGLE_API_KEY];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
+    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
     return image;
 }
 

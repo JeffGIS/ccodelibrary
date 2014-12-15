@@ -4,7 +4,7 @@
 #define GM_ADDRESS @"74.36.97.189"
 #define GM_ADDRESSx @"192.168.254.39"
 #define GM_ADDRESSy @"192.168.1.144"
-#define GM_PORT    22335
+#define GM_PORT 22335
 
 #import "GeoMasterServer.h"
 #import "Reachability.h"
@@ -18,10 +18,8 @@ static GeoMasterServer *_open = nil;
 
 + (GeoMasterServer *)open
 {
-    if (_open == nil)
-    {
+    if (!_open)
         _open = [[GeoMasterServer alloc] init];
-    }
     
     return _open;
 }
@@ -43,9 +41,11 @@ static GeoMasterServer *_open = nil;
 {
     if (_openTimer)
         [_openTimer invalidate];
+    
     if (_responseTimer)
         [_responseTimer invalidate];
-    if (_inputStream != nil)
+    
+    if (_inputStream)
     {
         [_inputStream close];
         
@@ -56,7 +56,7 @@ static GeoMasterServer *_open = nil;
         _inputStream = nil;
     }
     
-    if (_outputStream != nil)
+    if (_outputStream)
     {
         [_outputStream close];
         [_outputStream removeFromRunLoop:NSRunLoop.currentRunLoop

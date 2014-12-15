@@ -14,7 +14,6 @@
     
     if (self)
     {
-        self.backgroundColor = nil;
         self.opaque = NO;
         self.geoid = geoid;
         self.mapView = mapView;

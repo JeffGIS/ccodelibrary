@@ -9,7 +9,7 @@ static UserDefaults *_defaults;
 
 + (UserDefaults *)defaults
 {
-    if (_defaults == nil)
+    if (!_defaults)
         _defaults = [[UserDefaults alloc] init];
     
     return _defaults;

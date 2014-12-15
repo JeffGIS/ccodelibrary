@@ -9,10 +9,8 @@ static ManagePlacesDatabase *_database;
 
 + (ManagePlacesDatabase *)database
 {
-    if (_database == nil)
-    {
+    if (!_database)
         _database = [[ManagePlacesDatabase alloc] init];
-    }
     
     return _database;
 }

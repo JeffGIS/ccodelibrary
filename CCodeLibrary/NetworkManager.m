@@ -31,7 +31,6 @@
     NSString *scheme;
     
     assert(str);
-    result = nil;
     
     trimmedStr = [str stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
     if ((trimmedStr) && (trimmedStr.length != 0))

@@ -32,7 +32,7 @@
 
 - (CMMotionManager *)motionManager
 {
-    CMMotionManager *motionManager = nil;
+    CMMotionManager *motionManager;
     id appDelegate = UIApplication.sharedApplication.delegate;
     
     if ([appDelegate respondsToSelector:@selector(motionManager)])

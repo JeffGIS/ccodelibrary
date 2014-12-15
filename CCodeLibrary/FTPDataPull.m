@@ -108,7 +108,11 @@
 
 - (BOOL)isReceiving
 {
-    return (self.connection != nil);
+    if (self.connection)
+        return YES;
+    
+    else
+        return NO;
 }
 
 - (void)startReceive:(NSString *)fileName
@@ -119,17 +123,12 @@
         [self setUpFTP];
     }
     
-    BOOL success;
-    NSURL *url;
-    NSMutableURLRequest *request;
-    
     assert(!self.connection);
     assert(!self.fileStream);
     
-    url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
-    success = (url != nil);
+    NSURL *url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
     
-    if (!success || ![NetworkManager.sharedInstance isBinaryURL:url])
+    if (!url || ![NetworkManager.sharedInstance isBinaryURL:url])
     {
         if (!self.hasFailed)
         {
@@ -146,10 +145,9 @@
             }
             
             url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
-            success = (url != nil);
         }
         
-        if (!success)
+        if (!url)
         {
             NSAssert(0, @"ERROR: Invalid URL");
             return;
@@ -172,7 +170,7 @@
     [self.fileStream setProperty:@"YES"
                           forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
     
-    request = [NSMutableURLRequest requestWithURL:url];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     assert(request);
     
     int itimeout = request.timeoutInterval;
@@ -191,13 +189,13 @@
 - (void)stopReceiveWithStatus:(int)status
                  statusString:(NSString *)statusString
 {
-    if (self.connection != nil)
+    if (self.connection)
     {
         [self.connection cancel];
         self.connection = nil;
     }
     
-    if (self.fileStream != nil)
+    if (self.fileStream)
     {
         [self.fileStream close];
         self.fileStream = nil;

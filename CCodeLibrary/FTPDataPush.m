@@ -111,7 +111,11 @@ enum {
 
 - (BOOL)isReceiving
 {
-    return (self.connection != nil);
+    if (self.connection)
+        return YES;
+    
+    else
+        return NO;
 }
 
 - (BOOL)startSend:(NSString *)fileName
@@ -132,9 +136,8 @@ enum {
     assert(!self.fileStream);
     
     NSURL *url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
-    BOOL success = (url != nil);
     
-    if (!success || ![NetworkManager.sharedInstance isBinaryURL:url])
+    if (!url || ![NetworkManager.sharedInstance isBinaryURL:url])
     {
         if (!self.hasFailed)
         {
@@ -151,10 +154,9 @@ enum {
             }
             
             url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
-            success = (url != nil);
         }
         
-        if (!success)
+        if (!url)
         {
             NSAssert(0, @"ERROR: Invalid URL");
             return NO;
@@ -184,8 +186,8 @@ enum {
     self.networkStream = (__bridge NSOutputStream *)ftpStream;
     if (self.username.length != 0)
     {
-        success = [self.networkStream setProperty:self.username
-                                           forKey:(id)kCFStreamPropertyFTPUserName];
+        BOOL success = [self.networkStream setProperty:self.username
+                                                forKey:(id)kCFStreamPropertyFTPUserName];
         
         if (!success)
             return NO;

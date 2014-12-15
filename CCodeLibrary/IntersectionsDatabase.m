@@ -10,10 +10,9 @@
 
 static IntersectionsDatabase *_database;
 
-
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid
 {
-    if (_database == nil || _database.geoid != geoid)
+    if (!_database || _database.geoid != geoid)
         _database = [[IntersectionsDatabase alloc] initWithGeoid:geoid];
     
     return _database;
@@ -51,7 +50,7 @@ static IntersectionsDatabase *_database;
 
 - (BOOL)createIntersectionsTable
 {
-    char **error = nil;
+    char **error;
     BOOL rtn;
     
     [self open];
@@ -482,10 +481,10 @@ static IntersectionsDatabase *_database;
     return !rtn;
 }
 
-- (MPIntersection*)getMPIntersectionFromDB:(int)intID
-                                 withRamps:(BOOL)wantRamps
+- (MPIntersection *)getMPIntersectionFromDB:(int)intID
+                                  withRamps:(BOOL)wantRamps
 {
-    MPIntersection *mpint = nil;
+    MPIntersection *mpint;
     double lat, lon;
     [self open];
     
@@ -855,7 +854,7 @@ static IntersectionsDatabase *_database;
     NSString *query = [NSString stringWithFormat:@"SELECT intX, intY FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement;
     CGPoint intersectionPoint;
-    IntersectionPoint *intpt = nil;
+    IntersectionPoint *intpt;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "setCurrentIntersectionPoint1");
     
@@ -980,7 +979,7 @@ static IntersectionsDatabase *_database;
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
                                                 WithStatus:(int)status
 {
-    IntersectionPoint *intpt = nil;
+    IntersectionPoint *intpt;
     
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%i AND assignedTo=%i ORDER BY intID ASC",status,user];
@@ -1049,7 +1048,7 @@ static IntersectionsDatabase *_database;
 {
     BOOL rtn = INTDB_FAILED;
     char dataFile[PATH_MAX], indexFile[PATH_MAX];
-    LPSTR pUB;
+    //LPSTR pUB;
     FILE *fidData, *fidIndex;
     char data[258], index[256];
     int maxData = 256;
@@ -1071,7 +1070,7 @@ static IntersectionsDatabase *_database;
     
     NSLog (@"loadIntersectionTextToDatabase fopen file: %s", indexFile);
     
-    if (fidData == nil || fidIndex == nil)
+    if (!fidData || !fidIndex)
         goto Exit;
     
     if (![self createIntersectionsTable])
@@ -1159,7 +1158,7 @@ Exit:
             }
         }
         
-        if (self.delegate != nil)
+        if (self.delegate)
         {
             [self.delegate intersectionsDatabase:[self databasePath:self.geoid]
                                          didLoad:@""
@@ -1261,7 +1260,7 @@ Exit:
     
     if (fileSize > 0 && !forceReload)
     {
-        if (self.delegate != nil)
+        if (self.delegate)
         {
             [self.delegate intersectionsDatabase:dbPath
                                          didLoad:@""
@@ -1291,7 +1290,7 @@ Exit:
     
     if (fileSize > 0 && !forceReload)
     {
-        if (self.delegate != nil)
+        if (self.delegate)
         {
             [self.delegate intersectionsDatabase:dbPath
                                          didLoad:@""
@@ -1341,8 +1340,10 @@ Exit:
 int SQLOK(int sqlReturn, char *method)
 {
     if (sqlReturn != SQLITE_OK)
+    {
         [_database logError:sqlReturn
                      method:method];
+    }
     
     return sqlReturn;
 }

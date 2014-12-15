@@ -9,7 +9,7 @@ static FacilitiesDatabase *_database;
 
 + (FacilitiesDatabase *)databaseForGeoid:(int)geoid
 {
-    if (_database == nil || _database.geoid != geoid)
+    if (!_database || _database.geoid != geoid)
         _database = [[FacilitiesDatabase alloc] initWithGeoid:geoid];
     
     return _database;
@@ -122,7 +122,7 @@ static FacilitiesDatabase *_database;
     
     if (fileSize > 0 && !forceReload)
     {
-        if (self.delegate != nil)
+        if (self.delegate)
         {
             [self.delegate facilitiesDatabase:dbPath
                                       didLoad:@""
@@ -268,7 +268,7 @@ static FacilitiesDatabase *_database;
     NSString *query = [NSString stringWithFormat:@"SELECT facX, facY FROM Facilities WHERE facID=%i", facID];
     sqlite3_stmt *statement;
     CGPoint facilityPoint;
-    FacilityPoint *facpt = nil;
+    FacilityPoint *facpt;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getCurrentFacilityPoint1");
     
@@ -348,7 +348,7 @@ static FacilitiesDatabase *_database;
 - (Facility *)getFacilityFromDB:(int)facID
                       withRamps:(BOOL)wantRamps
 {
-    Facility *fac = nil;
+    Facility *fac;
     
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Facilities WHERE facID=%i", facID];
     sqlite3_stmt *statement;
@@ -371,7 +371,7 @@ static FacilitiesDatabase *_database;
 - (FacilityPoint *)getFirstAssignedFacilityPointWithStatus0
 {
     {
-        FacilityPoint *facpt = nil;
+        FacilityPoint *facpt;
         
         NSString *query = [NSString stringWithFormat:@"SELECT facID, facX, facY FROM Facilities WHERE status=0 ORDER BY facID ASC"];
         sqlite3_stmt *statement;
@@ -473,7 +473,7 @@ static FacilitiesDatabase *_database;
     
     NSLog (@"loadFacilityTextToDatabase fopen file: %s", indexFile);
     
-    if (fidData == nil || fidIndex == nil)
+    if (!fidData || !fidIndex)
         goto Exit;
     
     [self createFacilitiesTable];
@@ -548,11 +548,11 @@ Exit:
         
         else
         {
-            DecompressGMZipFile ((LPSTR)path.UTF8String,(LPSTR)toDirectory.UTF8String);
+            DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String);
             status = [self loadFacilityTextToDatabase:path];
         }
         
-        if (self.delegate != nil)
+        if (self.delegate)
         {
             [self.delegate facilitiesDatabase:[self databasePath:self.geoid]
                                       didLoad:@""

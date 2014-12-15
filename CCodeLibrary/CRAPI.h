@@ -16,8 +16,6 @@
 
 @interface CRAPI : NSObject
 
-+ (CRAPI *)sharedInstance;
-
 @property (nonatomic) int currentModule;
 @property (nonatomic) NSString *documentsDirectory;
 @property (nonatomic) NSString *outputDirectory;
@@ -38,6 +36,8 @@
 @property (nonatomic) NSString *calibrateHeight;
 @property (nonatomic) NSMutableArray *assignediPadsArray;
 @property (nonatomic) Colors *defaultColors;
+
++ (CRAPI *)sharedInstance;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
 - (void)intersectionInit:(MPIntersection *)currentIntersection;

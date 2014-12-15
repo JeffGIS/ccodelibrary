@@ -9,7 +9,7 @@ static SharedDefaults *_defaults;
 
 + (SharedDefaults *)defaults
 {
-    if (_defaults == nil)
+    if (!_defaults)
         _defaults = [[SharedDefaults alloc] init];
     
     return _defaults;
