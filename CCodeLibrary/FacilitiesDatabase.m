@@ -94,8 +94,8 @@ static FacilitiesDatabase *_database;
 - (void)getPlaceFacilityFile:(GSSiPopoverView *)popover
                     forGeoid:(int)geoid
 {
-    NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
-    //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
+    //NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
+    NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
     
     NSString *fileName = [NSString stringWithFormat:@"%7.7i_Facilities.gcf", geoid];
     

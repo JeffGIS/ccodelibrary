@@ -1199,8 +1199,8 @@ Exit:
 - (void)getPlaceIntersectionFile:(GSSiPopoverView *)popover
                         forGeoid:(int)geoid
 {
-    NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
-    //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
+    //NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
+    NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
     
     NSString *fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
     
