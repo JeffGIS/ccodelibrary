@@ -50,7 +50,7 @@ static IntersectionsDatabase *_database;
 
 - (BOOL)createIntersectionsTable
 {
-    char **error;
+    char *error=NULL;
     BOOL rtn;
     
     [self open];
@@ -90,21 +90,21 @@ static IntersectionsDatabase *_database;
                        streetNames CHAR(512),\
                        streetAZMs CHAR(128));"];
     
-    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error), "createIntersectionsTable2");
+    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), "createIntersectionsTable2");
     sqlite3_free(error);
     
     if (rtn != SQLITE_OK)
         return rtn;
     
     query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Intersections (intX);"];
-    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error), "createIntersectionsTable3");
+    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), "createIntersectionsTable3");
     sqlite3_free(error);
     
     if (rtn != SQLITE_OK)
         return rtn;
     
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Intersections (intY);"];
-    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, error), "createIntersectionsTable4");
+    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), "createIntersectionsTable4");
     sqlite3_free(error);
     
     if (rtn == SQLITE_OK)
