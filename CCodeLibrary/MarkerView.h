@@ -7,7 +7,7 @@
 
 @class MarkerView;
 
-@protocol MarkerViewDelegate<NSObject>
+@protocol MarkerViewDelegate <NSObject>
 
 - (void)setupProgressLabelTextForTotalIntersections:(int)totalIntersections
                                           completed:(int)completed
@@ -19,13 +19,15 @@
 
 @interface MarkerView : UIView
 
-- (id)initWithMapView:(GMSMapView *)mapView;
+- (id)initWithMapView:(GMSMapView *)mapView
+             areaFile:(NSString *)areaFile;
 
 @property (nonatomic, weak) id <MarkerViewDelegate> delegate;
-@property LPTRANDATA pTranWToBMP, pTranBMPToW;
-@property GMSMapView *mapView;
-@property IntersectionsDatabase *database;
-@property NSArray *tempDemoArray;
-@property BOOL showOnlyIntersectionsWithRamps;
-
+@property (nonatomic) LPTRANDATA pTranWToBMP, pTranBMPToW;
+@property (nonatomic) GMSMapView *mapView;
+@property (nonatomic) GMSProjection *projection;
+@property (nonatomic) IntersectionsDatabase *database;
+@property (nonatomic) NSArray *tempDemoArray;
+@property (nonatomic) BOOL showOnlyIntersectionsWithRamps;
+@property (nonatomic) NSString *areaFile;
 @end

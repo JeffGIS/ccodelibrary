@@ -5,7 +5,7 @@
 
 @class GSSiPopoverView;
 
-@protocol GSSiPopoverViewDelegate
+@protocol GSSiPopoverViewDelegate <NSObject>
 
 - (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView;
 

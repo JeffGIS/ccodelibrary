@@ -10,7 +10,7 @@
 
 @class GetAssignments;
 
-@protocol GetAssignmentsDelegate  <NSObject>
+@protocol GetAssignmentsDelegate <NSObject>
 
 - (void)getAssignments:(GetAssignments *)server
             didGetFile:(NSString *)path

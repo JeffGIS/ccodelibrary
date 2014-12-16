@@ -2,10 +2,19 @@
 //  CCodeLibrary
 
 #import "MarkerView.h"
+#import "MathUtil.h"
+#import "UserDefaults.h"
+
+#define COORDINATE_MULTIPLIER 10000000.0
+#define MAX_AREA_POINTS 15000
 
 @implementation MarkerView
+{
+    UIColor *_blue;
+}
 
 - (id)initWithMapView:(GMSMapView *)mapView
+             areaFile:(NSString *)areaFile
 {
     CGRect frame = mapView.frame;
     frame.origin.x = frame.origin.y = 0;
@@ -15,6 +24,9 @@
     {
         self.opaque = NO;
         self.mapView = mapView;
+        self.projection = mapView.projection;
+        self.areaFile = areaFile;
+        _blue = UserDefaults.defaults.appleBlue;
     }
     
     return self;
@@ -22,25 +34,22 @@
 
 - (void)drawRect:(CGRect)rect
 {
-    GMSProjection *projection = self.mapView.projection;
     CGRect pointRect;
-    int numComplete = 0;
-    int numComplex;
-    int totRamps = 0;
-    int totIntersections = 0;
-    int notAssigned = 0;
+    int numComplete = 0, numComplex = 0, totRamps = 0, totIntersections = 0, notAssigned = 0;
     int module = CRAPI.sharedInstance.currentModule;
 
     CGFloat zoom = self.mapView.camera.zoom;
     CGFloat maxZoom = self.mapView.maxZoom;
     CGFloat maxSize = 60.0;
-    CGFloat size;
     CGContextRef context = UIGraphicsGetCurrentContext();
-    size =  maxSize / (1.0 + maxZoom - zoom);
+    
+    [self maskCityBoundsInContext:context];
+    
+    CGFloat size =  maxSize / (1.0 + maxZoom - zoom);
     
     IBOUNDS bounds21 = [CRAPI.sharedInstance boundsFromRect:self.bounds
                                                      atZoom:21
-                                            usingProjection:projection];
+                                            usingProjection:_projection];
     
     //[_database assignAllIntersectionTo:1];
     NSArray *pointsArray = [_database getIntersectionPointsFromDatabaseinBounds:bounds21];
@@ -51,7 +60,7 @@
         CLLocationCoordinate2D latlon;
         latlon.latitude = info.latitude;
         latlon.longitude = info.longitude;
-        CGPoint pt = [projection pointForCoordinate:latlon];
+        CGPoint pt = [_projection pointForCoordinate:latlon];
         
         if ((pt.x > - size) && (pt.x < (self.mapView.frame.size.width + size) &&
                                         (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
@@ -114,5 +123,158 @@
     int ii=1;
     ii++;
 }
+
+- (void)drawCityBoundsInContext:(CGContextRef)context
+{
+    FILE *fid = fopen(self.areaFile.UTF8String,"rb");
+    int nLoops, nPoints, ix, iy;
+    int *pnPointsInLoop;
+    bounds bnds;
+    LPDPOINT pPoints;
+    
+    InitBounds(&bnds);
+    bnds.xmn = -180.0;
+    bnds.ymn = 0.0;
+    bnds.xmx = 0.0;
+    bnds.ymx = 80.0;
+    
+    if (fid && fread(&nPoints, sizeof(int), 1, fid))
+    {
+        if (nPoints > 2 && fread(&nLoops, sizeof(int), 1, fid))
+        {
+            pnPointsInLoop = malloc(nLoops * sizeof(int));
+            
+            if (nLoops > 1)
+                fread(pnPointsInLoop, sizeof(int), nLoops, fid);
+            
+            else
+                *pnPointsInLoop = nPoints;
+            
+            pPoints = (LPDPOINT)malloc(sizeof(DPOINT)*nPoints);
+            
+            for (int i = 0; i < nPoints ; i++)
+            {
+                fread(&ix, sizeof(int), 1, fid);
+                fread(&iy, sizeof(int), 1, fid);
+                pPoints[i].y = (double)(iy) / COORDINATE_MULTIPLIER;
+                pPoints[i].x = (double)(ix) / COORDINATE_MULTIPLIER;
+            }
+            
+            int i = 0;
+            
+            for (int iloop = 0; iloop < nLoops; iloop++)
+            {
+                for (int j = 0; j < pnPointsInLoop[iloop]; j++ ,i++)
+                {
+                    CLLocationCoordinate2D llPoint;
+                    llPoint.latitude = pPoints[i].y;
+                    llPoint.longitude = pPoints[i].x;
+                    CGPoint pt = [self.projection pointForCoordinate:llPoint];
+                    
+                    if (j == 0)
+                        CGContextMoveToPoint(context, pt.x, pt.y);
+                    
+                    else
+                        CGContextAddLineToPoint(context, pt.x, pt.y);
+                }
+                
+                if (!CGContextIsPathEmpty(context))
+                {
+                    CGContextSetLineWidth(context, 3.0);
+                    CGContextSetStrokeColorWithColor(context, _blue.CGColor);
+                    CGContextDrawPath(context, kCGPathStroke);
+                }
+                
+                if (iloop)
+                    i++;
+            }
+            
+            free(pPoints);
+        }
+    }
+    
+    fclose(fid);
+    
+    if (pnPointsInLoop)
+        free(pnPointsInLoop);
+}
+
+- (void)maskCityBoundsInContext:(CGContextRef)context
+{
+    FILE *fid = fopen(self.areaFile.UTF8String,"rb");
+    int nLoops, nPoints, ix, iy;
+    int *pnPointsInLoop = 0;
+    bounds bnds;
+    LPDPOINT pPoints;
+    
+    InitBounds(&bnds);
+    bnds.xmn = -180.0;
+    bnds.ymn = 0.0;
+    bnds.xmx = 0.0;
+    bnds.ymx = 80.0;
+    
+    if (fid && fread (&nPoints, sizeof(int), 1, fid))
+    {
+        if (nPoints > MAX_AREA_POINTS)
+        {
+            fclose(fid);
+            
+            [self drawCityBoundsInContext:context];
+            
+            return;
+        }
+        
+        if (nPoints > 2 && fread(&nLoops, sizeof(int), 1, fid))
+        {
+            pnPointsInLoop = malloc(nLoops * sizeof(int));
+            
+            if (nLoops > 1)
+                fread(pnPointsInLoop, sizeof(int), nLoops, fid);
+            
+            else
+                *pnPointsInLoop = nPoints;
+            
+            pPoints = (LPDPOINT)malloc(sizeof(DPOINT)*nPoints);
+            
+            for (int i = 0; i < nPoints; i++)
+            {
+                fread(&ix, sizeof(int), 1, fid);
+                fread(&iy, sizeof(int), 1, fid);
+                pPoints[i].y = (double)(iy) / COORDINATE_MULTIPLIER;
+                pPoints[i].x = (double)(ix) / COORDINATE_MULTIPLIER;
+            }
+            
+            CreateMask(&pPoints, &nPoints, &bnds);
+            CLLocationCoordinate2D llPoint;
+            
+            for (int i = 0; i < nPoints; i++)
+            {
+                llPoint.latitude = pPoints[i].y;
+                llPoint.longitude = pPoints[i].x;
+                CGPoint pt = [self.projection pointForCoordinate:llPoint];
+                
+                if (i == 0)
+                    CGContextMoveToPoint(context, pt.x, pt.y);
+                
+                else
+                    CGContextAddLineToPoint(context, pt.x, pt.y);
+            }
+            
+            free(pnPointsInLoop);
+            free(pPoints);
+        }
+    }
+    
+    fclose(fid);
+    
+    if (!CGContextIsPathEmpty(context))
+    {
+        CGContextSetLineWidth(context, 3.0);
+        CGContextSetFillColorWithColor(context, UserDefaults.defaults.polygonFillColor.CGColor);
+        CGContextSetStrokeColorWithColor(context, _blue.CGColor);
+        CGContextDrawPath(context, kCGPathFillStroke);
+    }
+}
+
 
 @end

@@ -6,7 +6,7 @@
 
 @class CustomAlert;
 
-@protocol CustomAlertDelegate
+@protocol CustomAlertDelegate <NSObject>
 
 - (void)customAlertView:(CustomAlert *)alertView
    clickedButtonAtIndex:(NSInteger)buttonIndex;

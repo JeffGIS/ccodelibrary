@@ -14,7 +14,7 @@
 
 @class FTPDataPush;
 
-@protocol FTPDataPushDelegate  <NSObject>
+@protocol FTPDataPushDelegate <NSObject>
 
 - (void) FTPdidComplete:(int)status
                filePath:(NSString *)path;

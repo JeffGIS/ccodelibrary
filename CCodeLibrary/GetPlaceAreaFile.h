@@ -10,7 +10,7 @@
 
 @class GetPlaceAreaFile;
 
-@protocol GetPlaceAreaFileDelegate  <NSObject>
+@protocol GetPlaceAreaFileDelegate <NSObject>
 
 - (void)getPlaceAreaFile:(GetPlaceAreaFile *)server
               didGetFile:(NSString *)path

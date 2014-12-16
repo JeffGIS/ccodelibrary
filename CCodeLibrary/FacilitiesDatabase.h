@@ -17,7 +17,7 @@
 #define FAC_STATUS_COMPLEX 2
 
 #define FAC_NO_NETWORK_CONNECTION 3
-#define FAC_NO_UPLOADED_FILE    4
+#define FAC_NO_UPLOADED_FILE 4
 
 @class FacilitiesDatabase;
 
