@@ -16,6 +16,7 @@
     //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
     
     NSString *fileName = [NSString stringWithFormat:@"%@_%i.txt", manager, geoid];
+    NSLog(@"%@", fileName);
     
     _pull = FTPDataPull.pull;
     _pull.delegate = self;
