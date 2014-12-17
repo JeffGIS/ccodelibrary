@@ -1,3 +1,7 @@
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
 #endif
+
+#ifndef DEBUG
+    #define NSLog(...);
+#endif

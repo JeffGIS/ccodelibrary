@@ -1112,10 +1112,7 @@ static IntersectionsDatabase *_database;
         SQLOK(sqlite3_bind_text(statement, 30, intStruct.streetAzms, -1, SQLITE_STATIC), "loadIntersectionTextToDatabase5");
 
         if (sqlite3_step(statement) != SQLITE_DONE)
-        {
             NSLog(@"Error inserting intersection. '%s'", sqlite3_errmsg(_database));
-            rtn = NO;
-        }
         
         nLoaded++;
         SQLOK(sqlite3_reset(statement), "loadIntersectionTextToDatabase6");
@@ -1147,7 +1144,7 @@ Exit:
         
         else
         {
-            if (DecompressGMZipFile ((LPSTR)path.UTF8String,(LPSTR)toDirectory.UTF8String))
+            if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String))
                 status = [self loadIntersectionTextToDatabase:toDirectory];
             
             else
@@ -1332,10 +1329,8 @@ Exit:
 - (void)logError:(int)sqlReturn
           method:(char *)method
 {
-    int ierr = sqlite3_errcode(_database);
-    const char *errmess = sqlite3_errmsg(_database);
-    NSString *logMess = [NSString stringWithFormat:@"SQLite Error %i in %s = %i:%s", sqlReturn, method, ierr, errmess];
-    NSLog(@"%@", logMess);
+    NSLog(@"%@", [NSString stringWithFormat:@"SQLite Error %i in %s = %i:%s",
+                  sqlReturn, method, sqlite3_errcode(_database), sqlite3_errmsg(_database)]);
 }
 
 int SQLOK(int sqlReturn, char *method)

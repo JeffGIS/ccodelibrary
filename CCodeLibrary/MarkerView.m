@@ -51,7 +51,6 @@
                                                      atZoom:21
                                             usingProjection:_projection];
     
-    //[_database assignAllIntersectionTo:1];
     if (_database)
     {
         NSArray *pointsArray = [_database getIntersectionPointsFromDatabaseinBounds:bounds21];
@@ -121,12 +120,6 @@
     return;
 }
 
-- (void)dealloc
-{
-    int ii=1;
-    ii++;
-}
-
 - (void)drawCityBoundsInContext:(CGContextRef)context
 {
     FILE *fid = fopen(self.areaFile.UTF8String,"rb");
@@ -159,8 +152,8 @@
             {
                 fread(&ix, sizeof(int), 1, fid);
                 fread(&iy, sizeof(int), 1, fid);
-                pPoints[i].y = (double)(iy) / COORDINATE_MULTIPLIER;
-                pPoints[i].x = (double)(ix) / COORDINATE_MULTIPLIER;
+                pPoints[i].y = (CGFloat)(iy) / COORDINATE_MULTIPLIER;
+                pPoints[i].x = (CGFloat)(ix) / COORDINATE_MULTIPLIER;
             }
             
             int i = 0;
@@ -204,7 +197,7 @@
 
 - (void)maskCityBoundsInContext:(CGContextRef)context
 {
-    FILE *fid = fopen(self.areaFile.UTF8String,"rb");
+    FILE *fid = fopen(self.areaFile.UTF8String, "rb");
     int nLoops, nPoints, ix, iy;
     int *pnPointsInLoop = 0;
     bounds bnds;
@@ -243,8 +236,8 @@
             {
                 fread(&ix, sizeof(int), 1, fid);
                 fread(&iy, sizeof(int), 1, fid);
-                pPoints[i].y = (double)(iy) / COORDINATE_MULTIPLIER;
-                pPoints[i].x = (double)(ix) / COORDINATE_MULTIPLIER;
+                pPoints[i].y = ((CGFloat)(iy) / COORDINATE_MULTIPLIER);
+                pPoints[i].x = ((CGFloat)(ix) / COORDINATE_MULTIPLIER);
             }
             
             CreateMask(&pPoints, &nPoints, &bnds);
@@ -272,13 +265,10 @@
     
     if (!CGContextIsPathEmpty(context))
     {
-        //CGContextSetLineWidth(context, 3.0);
         CGContextSetFillColorWithColor(context, UserDefaults.defaults.polygonFillColor.CGColor);
-        //CGContextSetStrokeColorWithColor(context, _blue.CGColor);
         CGContextDrawPath(context, kCGPathFill);
         [self drawCityBoundsInContext:context];
     }
 }
-
 
 @end

@@ -169,7 +169,6 @@ static GeoMasterServer *_open = nil;
 - (void)stream:(NSStream *)theStream
    handleEvent:(NSStreamEvent)streamEvent
 {
-    int ii;
     NSLog(@"GMServer Stream Event %li", (long)streamEvent);
 	
 	switch (streamEvent)
@@ -265,7 +264,6 @@ static GeoMasterServer *_open = nil;
 			break;
             
         case NSStreamEventHasSpaceAvailable:
-            ii = 1;
             break;
             
 		default:

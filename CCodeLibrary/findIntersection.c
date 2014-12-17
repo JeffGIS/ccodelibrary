@@ -128,9 +128,10 @@ int FindIntersectionFromID (const char *indexPath, const char *dataPath, int int
                             char *intAZMS, int *pnumStreets, int *pnRamps, int *plev21x, int *plev21y)
 {
     int rtn = 0;
-    int len, fileLen, nrecs, idint, iOffset;
+    int fileLen, nrecs, idint, iOffset;
+    //int len;
     char indxtxt[256];
-    char *pLoc = indxtxt;
+    char *pLoc;
     char *pAZ, *pnumRamp;
     FILE *fid = fopen(indexPath,"rb");
     
@@ -145,7 +146,7 @@ int FindIntersectionFromID (const char *indexPath, const char *dataPath, int int
     
     while (nrecs--)
     {
-        len = (int)fread(indxtxt, 1, RECLEN, fid);
+        //len = (int)fread(indxtxt, 1, RECLEN, fid);
         pLoc = strchr(indxtxt,'\t')+1;
         idint = atoi(pLoc);
         
@@ -208,7 +209,8 @@ int FindIntersection(const char *indexPath, const char *dataPath, int x, int y, 
     int rtn = 0;
     char indxtxt[256], *pAZ, *pnumRamp;
     char *pLoc = indxtxt;
-    long len, fileLen;
+    //long len;
+    long fileLen;
     int intAtY, intAtX;
     int minDist[MAXINT] = {INT_MAX};
     long ioffset[MAXINT];
@@ -233,9 +235,9 @@ int FindIntersection(const char *indexPath, const char *dataPath, int x, int y, 
     ReadHeaderRecord(fid);
     fseek(fid, 0, 2);
     fileLen = (int)ftell(fid) - FIRSTRECLEN;
-    nrecs = (fileLen / RECLEN);
+    //nrecs = (fileLen / RECLEN);
     fseek(fid, FIRSTRECLEN, 0);
-    len = (int)fread(pLoc, 1, RECLEN, fid);
+    //len = (int)fread(pLoc, 1, RECLEN, fid);
     GetCoords(pLoc, &intAtX, &intAtY);
     
     if (intAtY > yStop)
@@ -245,7 +247,7 @@ int FindIntersection(const char *indexPath, const char *dataPath, int x, int y, 
     nrecs = (fileLen / RECLEN);
     right = nrecs - 1;
     fseek(fid, (right * RECLEN) + FIRSTRECLEN, 0);
-    len = fread(pLoc, 1, RECLEN, fid);
+    //len = fread(pLoc, 1, RECLEN, fid);
     GetCoords(pLoc, &intAtX, &intAtY);
     
     if (intAtY < yStart)
@@ -258,7 +260,7 @@ int FindIntersection(const char *indexPath, const char *dataPath, int x, int y, 
     while (right - left > 1)
     {
         fseek(fid, (iloc * RECLEN) + FIRSTRECLEN, 0);
-        len = fread(pLoc, 1, RECLEN, fid);
+        //len = fread(pLoc, 1, RECLEN, fid);
         GetCoords(pLoc, &intAtX, &intAtY);
         
         if (intAtY == yStart)
@@ -304,7 +306,7 @@ int FindIntersection(const char *indexPath, const char *dataPath, int x, int y, 
         
         iloc ++;
         fseek(fid, (iloc * RECLEN) + FIRSTRECLEN, 0);
-        len = fread(pLoc, 1, RECLEN, fid);
+        //len = fread(pLoc, 1, RECLEN, fid);
         GetCoords(pLoc, &intAtX, &intAtY);
     }
     

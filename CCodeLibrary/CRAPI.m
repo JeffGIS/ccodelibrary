@@ -343,7 +343,7 @@
     if (diff < dist)
     {
         devider = 4;
-        dist = diff;
+        //dist = diff;
     }
     
     return devider;

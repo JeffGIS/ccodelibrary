@@ -27,7 +27,6 @@
 #import "IntersectionRecord.h"
 #import "ManagePlacesDatabase.h"
 #import "GSSiPopoverView.h"
-#import "MaskCityBounds.h"
 #import "CRAPI.h"
 #import "SharedDefaults.h"
 #import "FacilitiesDatabase.h"

@@ -30,4 +30,5 @@
 @property (nonatomic) NSArray *tempDemoArray;
 @property (nonatomic) BOOL showOnlyIntersectionsWithRamps;
 @property (nonatomic) NSString *areaFile;
+
 @end
