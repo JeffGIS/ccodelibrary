@@ -24,7 +24,7 @@ didReceiveMessage:(NSString *)message
 
 @end
 
-@interface GeoMasterServer : NSObject<NSStreamDelegate>
+@interface GeoMasterServer : NSObject <NSStreamDelegate>
 @property (nonatomic, weak) id <GeoMasterServerDelegate> delegate;
 
 + (GeoMasterServer *)open;

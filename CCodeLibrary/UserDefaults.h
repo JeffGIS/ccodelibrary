@@ -32,6 +32,7 @@
 - (UIImage *)imageTarget;
 - (UIImage *)yellowArrow;
 - (UIImage *)whiteArrow;
+- (UIImage *)redArrow;
 - (UIImage *)triangleImage;
 - (UIImage *)redCircle;
 - (NSString *)googleKey;

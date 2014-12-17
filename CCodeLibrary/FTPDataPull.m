@@ -369,6 +369,8 @@ didReceiveResponse:(NSURLResponse *)response
 
 - (void)dealloc
 {
+    NSLog(@"FTPDataPull dealloc");
+    
     [self stopReceiveWithStatus:FTP_STOP
                    statusString:@"Stopped"];
 }

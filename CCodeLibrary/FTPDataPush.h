@@ -43,7 +43,7 @@
 @property (nonatomic, assign, readwrite ) BOOL useOnlyPrimaryFTP;
 @property (nonatomic) int geoid;
 @property (nonatomic) CGFloat progress;
-@property (strong, nonatomic)GSSiPopoverView *popover;
+@property (nonatomic) GSSiPopoverView *popover;
 @property (nonatomic) NSUInteger totalDataSent;
 
 + (FTPDataPush *)push;
@@ -52,7 +52,7 @@
    fromDirectory:(NSString *)fromDirectory
           toFile:(NSString *)toFileName
      toDirectory:(NSString *)toDirectory
-  deleteWhenDone:(BOOL)delete;
+  deleteWhenDone:(BOOL)deleteWhenDone;
 
 - (BOOL)startSend:(NSString *)fileName;
 
