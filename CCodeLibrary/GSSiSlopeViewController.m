@@ -40,7 +40,7 @@
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = UserDefaults.defaults.appleBlue;
+    self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
     self.calibrationOption = SLOPE_STABILITY;
     self.maxX = self.maxY = -1.0;
     self.minX = self.minY = 1.0;
@@ -122,16 +122,16 @@
 
 - (void)setupArrowView
 {
-    self.arrowView = [[UIImageView alloc] initWithFrame:CGRectMake(240.0, 20.0, 288.0, 320.0)];
-    self.arrowView.image = UserDefaults.defaults.whiteArrow;
+    self.arrowView = [[UIImageView alloc] initWithFrame:CGRectMake(260.0, 20.0, 248.0, 320.0)];
+    self.arrowView.image = UserDefaults.defaults.redArrow;
     [self.view addSubview:self.arrowView];
 }
 
 - (void)setupProgressView
 {
     self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(60.0, 781.0, 648.0, 9.0)];
-    self.progressView.progressTintColor = UIColor.whiteColor;
-    self.progressView.trackTintColor = UIColor.blackColor;
+    self.progressView.progressTintColor = UIColor.greenColor;
+    self.progressView.trackTintColor = UIColor.redColor;
     self.progressView.progress = 0.0;
     [self.view addSubview:self.progressView];
     self.progressView.hidden = YES;
@@ -143,18 +143,11 @@
     [button setTitle:title
             forState:UIControlStateNormal];
     
-    [button setTitleColor:UIColor.lightGrayColor
-                 forState:UIControlStateHighlighted];
-    
-    [button setTitleColor:UIColor.blackColor
+    [button setTitleColor:CRAPI.sharedInstance.defaultColors.titleColor
                  forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.grayColor
-                 forState:UIControlStateDisabled];
     
     button.titleLabel.font = [UIFont boldSystemFontOfSize:84.0];
     button.layer.cornerRadius = 10.0;
-    button.layer.borderWidth = 6.0;
     
     [self updateButtonAppearance:button];
 }
@@ -162,21 +155,29 @@
 - (void)updateButtonAppearance:(UIButton *)button
 {
     if (button.enabled)
-    {
-        button.backgroundColor = UIColor.whiteColor;
-        button.layer.borderColor = UserDefaults.defaults.green.CGColor;
-    }
+        button.backgroundColor = CRAPI.sharedInstance.defaultColors.enabledColor;
     
     else
-    {
-        button.backgroundColor = UserDefaults.defaults.green;
-        button.layer.borderColor = UIColor.grayColor.CGColor;
-    }
+        button.backgroundColor = CRAPI.sharedInstance.defaultColors.disabledColor;
 }
 
 - (void)setupLabel:(UILabel *)label
 {
-    label.textColor = UIColor.whiteColor;
+    if (CRAPI.sharedInstance.currentModule == DETAIL_MODULE)
+    {
+        if ([UserDefaults.defaults pickAdjustedTextColorForColor1:CRAPI.sharedInstance.defaultColors.backgroundColor
+                                                           color2:CRAPI.sharedInstance.defaultColors.disabledColor])
+        {
+            label.textColor = [UserDefaults.defaults lightColorForColor:CRAPI.sharedInstance.defaultColors.disabledColor];
+        }
+        
+        else
+            label.textColor = [UserDefaults.defaults darkColorForColor:CRAPI.sharedInstance.defaultColors.disabledColor];
+    }
+    
+    else
+        label.textColor = CRAPI.sharedInstance.defaultColors.textColor;
+    
     label.font = [UIFont boldSystemFontOfSize:44.0];
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 0;
