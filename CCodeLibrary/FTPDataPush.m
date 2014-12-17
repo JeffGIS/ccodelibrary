@@ -43,7 +43,7 @@ enum {
    fromDirectory:(NSString *)fromDirectory
           toFile:(NSString *)toFileName
      toDirectory:(NSString *)toDirectory
-  deleteWhenDone:(BOOL)delete
+  deleteWhenDone:(BOOL)deleteWhenDone
 {
     
     _toDirectory = toDirectory;
@@ -407,6 +407,8 @@ enum {
 
 - (void)dealloc
 {
+    NSLog(@"FTPDataPush dealloc");
+    
     [self stopSendWithStatus:FTP_STOP
                    statusString:@"Stopped"];
 }
