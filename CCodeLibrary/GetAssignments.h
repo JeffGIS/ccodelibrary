@@ -18,7 +18,7 @@
 
 @end
 
-@interface GetAssignments : NSObject<FTPDataPullDelegate>
+@interface GetAssignments : NSObject <FTPDataPullDelegate>
 
 @property (nonatomic, weak) id <GetAssignmentsDelegate> delegate;
 

@@ -30,8 +30,8 @@ static GeoMasterServer *_open = nil;
     
     if (self)
     {
-        self.output = @"";
-        self.ipAddress = GM_ADDRESS;
+        _output = @"";
+        _ipAddress = GM_ADDRESS;
     }
 
     return self;
@@ -73,16 +73,16 @@ static GeoMasterServer *_open = nil;
     NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
     bool rtn = NO;
     
-    self.responseTimeoutInSeconds = connectionTimeoutInSeconds;
+    _responseTimeoutInSeconds = connectionTimeoutInSeconds;
     if(remoteHostStatus == NotReachable)
     {
         [self closeServer];
     
-        if (self.delegate)
+        if (_delegate)
         {
-            [self.delegate GMServer:self
-                    didReceiveError:@"Internet Connection Not Available"
-                         withStatus:remoteHostStatus];
+            [_delegate GMServer:self
+                didReceiveError:@"Internet Connection Not Available"
+                     withStatus:remoteHostStatus];
         }
         
         return rtn;
@@ -90,7 +90,9 @@ static GeoMasterServer *_open = nil;
     
 	CFReadStreamRef readStream;
 	CFWriteStreamRef writeStream;
-    CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)(self.ipAddress), GM_PORT, &readStream, &writeStream);
+    
+    CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)(_ipAddress),
+                                       GM_PORT, &readStream, &writeStream);
 	
 	_inputStream = (__bridge NSInputStream *)readStream;
 	_outputStream = (__bridge NSOutputStream *)writeStream;
@@ -126,26 +128,28 @@ static GeoMasterServer *_open = nil;
     
     if (_responseTimer)
         [_responseTimer invalidate];
+    
     if (_data.length != rc)
     {
-        if (self.delegate)
+        if (_delegate)
         {
-            [self.delegate GMServer:self
-                    didReceiveError:@"Failed to send message"
-                         withStatus:GM_SEND_FAILED];
+            [_delegate GMServer:self
+                didReceiveError:@"Failed to send message"
+                     withStatus:GM_SEND_FAILED];
         }
     }
+    
     else
     {
     
-        _responseTimer = [NSTimer scheduledTimerWithTimeInterval:self.responseTimeoutInSeconds
-                                                  target:self
-                                                selector:@selector(serverFailedToRespond)
-                                                userInfo:nil
-                                                 repeats:NO];
+        _responseTimer = [NSTimer scheduledTimerWithTimeInterval:_responseTimeoutInSeconds
+                                                          target:self
+                                                        selector:@selector(serverFailedToRespond)
+                                                        userInfo:nil
+                                                         repeats:NO];
     }
-
 }
+
 - (BOOL)sendMessage:(NSString *)message
 {
     _data = [[NSData alloc] initWithData:[message dataUsingEncoding:NSUTF8StringEncoding]];
@@ -177,8 +181,8 @@ static GeoMasterServer *_open = nil;
             
             _openTimer = nil;
             
-            if (self.delegate && theStream == _outputStream)
-                [self.delegate GMServerDidOpen:self];
+            if (_delegate && theStream == _outputStream)
+                [_delegate GMServerDidOpen:self];
 
 			break;
             
@@ -209,11 +213,12 @@ static GeoMasterServer *_open = nil;
                         {
                             if (_responseTimer)
                                 [_responseTimer invalidate];
-                            if (self.delegate)
+                            
+                            if (_delegate)
                             {
-                                [self.delegate GMServer:self
-                                      didReceiveMessage:_output
-                                             withStatus:GM_OK];
+                                [_delegate GMServer:self
+                                  didReceiveMessage:_output
+                                         withStatus:GM_OK];
                             }
                             
 							_output = @"";
@@ -231,11 +236,11 @@ static GeoMasterServer *_open = nil;
             if (_responseTimer)
                 [_responseTimer invalidate];
             
-            if (self.delegate)
+            if (_delegate)
             {
-                [self.delegate GMServer:self
-                        didReceiveError:theStream.streamError.localizedDescription
-                             withStatus:theStream.streamError.code];
+                [_delegate GMServer:self
+                    didReceiveError:theStream.streamError.localizedDescription
+                         withStatus:theStream.streamError.code];
             }
         }
 			break;
@@ -249,11 +254,12 @@ static GeoMasterServer *_open = nil;
             
             if (_responseTimer)
                 [_responseTimer invalidate];
-			if (self.delegate)
+            
+			if (_delegate)
             {
-                [self.delegate GMServer:self
-                        didReceiveError:@"Server closed"
-                             withStatus:streamEvent];
+                [_delegate GMServer:self
+                    didReceiveError:@"Server closed"
+                         withStatus:streamEvent];
             }
 			
 			break;
@@ -265,11 +271,12 @@ static GeoMasterServer *_open = nil;
 		default:
             if (_responseTimer)
                 [_responseTimer invalidate];
-			if (self.delegate)
+            
+			if (_delegate)
             {
-                [self.delegate GMServer:self
-                        didReceiveError:@"Unknown error"
-                             withStatus:streamEvent];
+                [_delegate GMServer:self
+                    didReceiveError:@"Unknown error"
+                         withStatus:streamEvent];
             }
 	}
 }
@@ -278,11 +285,11 @@ static GeoMasterServer *_open = nil;
 {
     [self closeServer];
     
-    if (self.delegate)
+    if (_delegate)
     {
-        [self.delegate GMServer:self
-                didReceiveError:@"Server failed to respond"
-                     withStatus:GM_NO_RESPONSE];
+        [_delegate GMServer:self
+            didReceiveError:@"Server failed to respond"
+                 withStatus:GM_NO_RESPONSE];
     }
     
 }
@@ -290,17 +297,17 @@ static GeoMasterServer *_open = nil;
 {
     [self closeServer];
    
-    if (self.delegate)
+    if (_delegate)
     {
-        [self.delegate GMServer:self
-                didReceiveError:@"Server failed to open"
-                     withStatus:GM_OPEN_FAILED];
+        [_delegate GMServer:self
+            didReceiveError:@"Server failed to open"
+                 withStatus:GM_OPEN_FAILED];
     }
 }
 
 - (void)messageReceived:(NSString *)message
 {
-	[self.messages addObject:message];
+	[_messages addObject:message];
 }
 
 @end

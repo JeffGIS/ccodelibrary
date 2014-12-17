@@ -58,12 +58,9 @@
 
 - (BOOL)isBinaryURL:(NSURL *)url
 {
-    BOOL result;
-    NSString *extension;
-    
     assert(url);
-    extension = url.pathExtension;
-    result = NO;
+    NSString *extension = url.pathExtension;
+    BOOL result = NO;
     
     if (extension)
     {
@@ -79,12 +76,9 @@
 
 - (BOOL)isImageURL:(NSURL *)url
 {
-    BOOL result;
-    NSString *extension;
-    
     assert(url);
-    extension = url.pathExtension;
-    result = NO;
+    NSString *extension = url.pathExtension;
+    BOOL result = NO;
     
     if (extension)
     {
