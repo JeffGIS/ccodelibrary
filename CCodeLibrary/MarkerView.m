@@ -6,7 +6,7 @@
 #import "UserDefaults.h"
 
 #define COORDINATE_MULTIPLIER 10000000.0
-#define MAX_AREA_POINTS 15000
+#define MAX_AREA_POINTS 85000
 
 @implementation MarkerView
 {
@@ -52,67 +52,70 @@
                                             usingProjection:_projection];
     
     //[_database assignAllIntersectionTo:1];
-    NSArray *pointsArray = [_database getIntersectionPointsFromDatabaseinBounds:bounds21];
-    
-    for (int i = 0; i < pointsArray.count; i++)
+    if (_database)
     {
-        IntersectionPoint *info = (IntersectionPoint *)pointsArray[i];
-        CLLocationCoordinate2D latlon;
-        latlon.latitude = info.latitude;
-        latlon.longitude = info.longitude;
-        CGPoint pt = [_projection pointForCoordinate:latlon];
+        NSArray *pointsArray = [_database getIntersectionPointsFromDatabaseinBounds:bounds21];
         
-        if ((pt.x > - size) && (pt.x < (self.mapView.frame.size.width + size) &&
-                                        (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
+        for (int i = 0; i < pointsArray.count; i++)
         {
-            if (!info.nramps && self.showOnlyIntersectionsWithRamps)
-                continue;
+            IntersectionPoint *info = (IntersectionPoint *)pointsArray[i];
+            CLLocationCoordinate2D latlon;
+            latlon.latitude = info.latitude;
+            latlon.longitude = info.longitude;
+            CGPoint pt = [_projection pointForCoordinate:latlon];
             
-            totIntersections++;
-            CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
-            CGContextSetFillColorWithColor(context, UIColor.blackColor.CGColor);
-            totRamps += info.nramps;
-            
-            if (!info.assignedTo)
-                CGContextSetFillColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
-            
-            else if ((module == PRELIM_MODULE && !info.status) || (module == MANAGEMENT_MODULE) ||
-                     (module == DETAIL_MODULE && info.status == INT_STATUS_PRELIMCOMPLETE))
+            if ((pt.x > - size) && (pt.x < (self.mapView.frame.size.width + size) &&
+                                            (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
             {
-                CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+                if (!info.nramps && self.showOnlyIntersectionsWithRamps)
+                    continue;
+                
+                totIntersections++;
+                CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
+                CGContextSetFillColorWithColor(context, UIColor.blackColor.CGColor);
+                totRamps += info.nramps;
+                
+                if (!info.assignedTo)
+                    CGContextSetFillColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
+                
+                else if ((module == PRELIM_MODULE && !info.status) || (module == MANAGEMENT_MODULE) ||
+                         (module == DETAIL_MODULE && info.status == INT_STATUS_PRELIMCOMPLETE))
+                {
+                    CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+                }
+                
+                else if ((module == PRELIM_MODULE && info.status == INT_STATUS_PRELIMCOMPLETE) ||
+                         (module == DETAIL_MODULE && info.status == INT_STATUS_DETAILCOMPLETE))
+                {
+                    numComplete++;
+                    CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
+                }
+                
+                else if (info.status == INT_STATUS_COMPLEX)
+                {
+                    numComplex++;
+                    CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
+                }
+                
+                if (!info.assignedTo)
+                    notAssigned++;
+                
+                pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
+                CGContextSetLineWidth(context, (size / 12.0));
+                CGContextFillEllipseInRect(context, pointRect);
+                CGContextStrokeEllipseInRect(context, pointRect);
+                CGContextFillPath(context);
             }
-            
-            else if ((module == PRELIM_MODULE && info.status == INT_STATUS_PRELIMCOMPLETE) ||
-                     (module == DETAIL_MODULE && info.status == INT_STATUS_DETAILCOMPLETE))
-            {
-                numComplete++;
-                CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
-            }
-            
-            else if (info.status == INT_STATUS_COMPLEX)
-            {
-                numComplex++;
-                CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
-            }
-            
-            if (!info.assignedTo)
-                notAssigned++;
-            
-            pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
-            CGContextSetLineWidth(context, (size / 12.0));
-            CGContextFillEllipseInRect(context, pointRect);
-            CGContextStrokeEllipseInRect(context, pointRect);
-            CGContextFillPath(context);
         }
-    }
-    
-    if (self.delegate)
-    {
-        [self.delegate setupProgressLabelTextForTotalIntersections:(int)totIntersections
-                                                         completed:(int)numComplete
-                                                           complex:numComplex
-                                                          numRamps:totRamps
-                                                       notAssigned:notAssigned];
+        
+        if (self.delegate)
+        {
+            [self.delegate setupProgressLabelTextForTotalIntersections:(int)totIntersections
+                                                             completed:(int)numComplete
+                                                               complex:numComplex
+                                                              numRamps:totRamps
+                                                           notAssigned:notAssigned];
+        }
     }
     
     return;
@@ -269,10 +272,11 @@
     
     if (!CGContextIsPathEmpty(context))
     {
-        CGContextSetLineWidth(context, 3.0);
+        //CGContextSetLineWidth(context, 3.0);
         CGContextSetFillColorWithColor(context, UserDefaults.defaults.polygonFillColor.CGColor);
-        CGContextSetStrokeColorWithColor(context, _blue.CGColor);
-        CGContextDrawPath(context, kCGPathFillStroke);
+        //CGContextSetStrokeColorWithColor(context, _blue.CGColor);
+        CGContextDrawPath(context, kCGPathFill);
+        [self drawCityBoundsInContext:context];
     }
 }
 

@@ -177,14 +177,14 @@ static GeoMasterServer *_open = nil;
             
             _openTimer = nil;
             
-            if (self.delegate && theStream == _outputStream)
+            if (_outputStream && self.delegate && theStream == _outputStream)
                 [self.delegate GMServerDidOpen:self];
 
 			break;
             
 		case NSStreamEventHasBytesAvailable:
 			
-            if (theStream == _inputStream)
+            if (_inputStream && theStream == _inputStream)
             {
 				uint8_t buffer[1024];
 				long len, origlen;
