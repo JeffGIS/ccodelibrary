@@ -1212,6 +1212,7 @@ Exit:
     
     [pull getFile:fileName
     fromDirectory:@"Bill/PlaceIntersections"
+           toFile:fileName
       toDirectory:documentsDirectory
      forceRefresh:NO];
 }

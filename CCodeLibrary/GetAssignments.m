@@ -16,7 +16,6 @@
     //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
     
     NSString *fileName = [NSString stringWithFormat:@"%@_%i.txt", manager, geoid];
-    NSLog(@"%@", fileName);
     
     _pull = FTPDataPull.pull;
     _pull.delegate = self;
@@ -24,9 +23,10 @@
     _pull.useOnlyPrimaryFTP = YES;
     
     [_pull getFile:fileName
-    fromDirectory:@"Bill/Assignments"
-      toDirectory:documentsDirectory
-     forceRefresh:YES];
+     fromDirectory:@"Bill/Assignments"
+            toFile:fileName
+       toDirectory:documentsDirectory
+      forceRefresh:YES];
     
     return YES;
 }

@@ -44,23 +44,18 @@
 @property (nonatomic, copy, readwrite) NSString *currentFtp;
 @property (nonatomic, copy, readwrite) NSString *urlText;
 @property (nonatomic, assign, readwrite) BOOL hasFailed;
-@property BOOL haveCalledDelegate;
+@property (nonatomic) BOOL haveCalledDelegate;
 @property (nonatomic) int geoid;
 @property (nonatomic) NSUInteger totalDataReceived;
 @property (nonatomic) NSUInteger fileSize;
 @property (nonatomic) CGFloat progress;
-@property (strong, nonatomic)GSSiPopoverView *popover;
+@property (nonatomic) GSSiPopoverView *popover;
 
 + (FTPDataPull *)pull;
 
 - (void)getFile:(NSString *)fileName
   fromDirectory:(NSString *)fromDirectory
          toFile:(NSString *)toFileName
-    toDirectory:(NSString *)toDirectory
-   forceRefresh:(BOOL)refresh;
-
-- (void)getFile:(NSString *)fileName
-  fromDirectory:(NSString *)fromDirectory
     toDirectory:(NSString *)toDirectory
    forceRefresh:(BOOL)refresh;
 

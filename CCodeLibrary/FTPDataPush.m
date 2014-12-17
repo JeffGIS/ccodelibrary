@@ -41,41 +41,27 @@ enum {
 
 - (BOOL)sendFile:(NSString *)fileName
    fromDirectory:(NSString *)fromDirectory
-     toDirectory:(NSString *)toDirectory
-  deleteWhenDone:(BOOL)delete
-{
-    BOOL rtn = [self sendFile:fileName
-                fromDirectory:fromDirectory
-                       toFile:fileName
-                  toDirectory:toDirectory
-               deleteWhenDone:delete];
-    
-    return rtn;
-}
-
-- (BOOL)sendFile:(NSString *)fileName
-   fromDirectory:(NSString *)fromDirectory
           toFile:(NSString *)toFileName
      toDirectory:(NSString *)toDirectory
   deleteWhenDone:(BOOL)delete
 {
     
-    self.toDirectory = toDirectory;
-    self.directory = fromDirectory;
-    self.fileName = fileName;
-    self.toFileName = toFileName;
-    self.filePath = [NSString stringWithFormat:@"%@/%@", self.directory,self.fileName];
-    assert(self.filePath);
+    _toDirectory = toDirectory;
+    _directory = fromDirectory;
+    _fileName = fileName;
+    _toFileName = toFileName;
+    _filePath = [NSString stringWithFormat:@"%@/%@", _directory,_fileName];
+    assert(_filePath);
     
     _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
     
     if(remoteHostStatus == NotReachable)
     {
-        if (self.delegate)
+        if (_delegate)
         {
-            [self.delegate FTPdidComplete:FTP_CONNECTION_FAILED
-                                 filePath:nil];
+            [_delegate FTPdidComplete:FTP_CONNECTION_FAILED
+                             filePath:nil];
         }
         
         return NO;
@@ -86,7 +72,7 @@ enum {
 
 - (void)sendDidStart
 {
-    NSLog(@"Attempting to Push %@ to %@", self.filePath, self.currentFtp);
+    NSLog(@"Attempting to Push %@ to %@", _filePath, _currentFtp);
     [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 
@@ -96,22 +82,22 @@ enum {
     
     if (!statusString)
     {
-        assert(self.filePath);
+        assert(_filePath);
         status = 1;
     }
     
     [NetworkManager.sharedInstance didStopNetworkOperation];
     
-    if (self.delegate)
+    if (_delegate)
     {
-        [self.delegate FTPdidComplete:status
-                             filePath:self.filePath];
+        [_delegate FTPdidComplete:status
+                             filePath:_filePath];
     }
 }
 
 - (BOOL)isReceiving
 {
-    if (self.connection)
+    if (_connection)
         return YES;
     
     else
@@ -120,40 +106,40 @@ enum {
 
 - (BOOL)startSend:(NSString *)fileName
 {
-    if (!self.hasFailed)
+    if (!_hasFailed)
     {
-        _fileSize = (long)[NSFileManager.defaultManager attributesOfItemAtPath:self.filePath
+        _fileSize = (long)[NSFileManager.defaultManager attributesOfItemAtPath:_filePath
                                                                          error:nil].fileSize;
         
         if (!_fileSize)
             return NO;
         
-        self.fileName = fileName;
+        _fileName = fileName;
         [self setUpFTP];
     }
     
-    assert(!self.connection);
-    assert(!self.fileStream);
+    assert(!_connection);
+    assert(!_fileStream);
     
-    NSURL *url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
+    NSURL *url = [NetworkManager.sharedInstance smartURLForString:_urlText];
     
     if (!url || ![NetworkManager.sharedInstance isBinaryURL:url])
     {
-        if (!self.hasFailed)
+        if (!_hasFailed)
         {
-            if (self.currentFtp == self.ftpSite)
+            if (_currentFtp == _ftpSite)
             {
                 [self setToFtpSite2];
-                self.currentFtp = self.ftpSite2;
+                _currentFtp = _ftpSite2;
             }
             
             else
             {
                 [self setToFtpSite1];
-                self.currentFtp = self.ftpSite;
+                _currentFtp = _ftpSite;
             }
             
-            url = [NetworkManager.sharedInstance smartURLForString:self.urlText];
+            url = [NetworkManager.sharedInstance smartURLForString:_urlText];
         }
         
         if (!url)
@@ -169,10 +155,10 @@ enum {
         }
     }
     
-    self.fileStream = [NSInputStream inputStreamWithFileAtPath:self.filePath];
-    assert(self.fileStream);
+    _fileStream = [NSInputStream inputStreamWithFileAtPath:_filePath];
+    assert(_fileStream);
     
-    [self.fileStream open];
+    [_fileStream open];
     
     NSLog(@"URL: %@", url);
     
@@ -183,32 +169,32 @@ enum {
         return NO;
     }
     
-    self.networkStream = (__bridge NSOutputStream *)ftpStream;
-    if (self.username.length != 0)
+    _networkStream = (__bridge NSOutputStream *)ftpStream;
+    if (_username.length != 0)
     {
-        BOOL success = [self.networkStream setProperty:self.username
-                                                forKey:(id)kCFStreamPropertyFTPUserName];
+        BOOL success = [_networkStream setProperty:_username
+                                            forKey:(id)kCFStreamPropertyFTPUserName];
         
         if (!success)
             return NO;
         
-        success = [self.networkStream setProperty:self.password
-                                           forKey:(id)kCFStreamPropertyFTPPassword];
+        success = [_networkStream setProperty:_password
+                                       forKey:(id)kCFStreamPropertyFTPPassword];
         
         if (!success)
             return NO;
     }
     
-    self.networkStream.delegate = self;
+    _networkStream.delegate = self;
     
-    [self.networkStream scheduleInRunLoop:NSRunLoop.currentRunLoop
+    [_networkStream scheduleInRunLoop:NSRunLoop.currentRunLoop
                                   forMode:NSDefaultRunLoopMode];
     
-    [self.networkStream open];
+    [_networkStream open];
     CFRelease(ftpStream);
     
-    self.totalDataSent = 0;
-    self.progress = 0.0;
+    _totalDataSent = 0;
+    _progress = 0.0;
     
     [self sendDidStart];
     return YES;
@@ -217,20 +203,20 @@ enum {
 - (void)stopSendWithStatus:(int)status
               statusString:(NSString *)statusString
 {
-    if (self.networkStream)
+    if (_networkStream)
     {
-        [self.networkStream removeFromRunLoop:NSRunLoop.currentRunLoop
+        [_networkStream removeFromRunLoop:NSRunLoop.currentRunLoop
                                       forMode:NSDefaultRunLoopMode];
         
-        self.networkStream.delegate = nil;
-        [self.networkStream close];
-        self.networkStream = nil;
+        _networkStream.delegate = nil;
+        [_networkStream close];
+        _networkStream = nil;
     }
     
-    if (self.fileStream)
+    if (_fileStream)
     {
-        [self.fileStream close];
-        self.fileStream = nil;
+        [_fileStream close];
+        _fileStream = nil;
     }
     
     [self sendDidStopWithStatus:status
@@ -241,7 +227,7 @@ enum {
    handleEvent:(NSStreamEvent)eventCode
 {
 #pragma unused(aStream)
-    assert(aStream == self.networkStream);
+    assert(aStream == _networkStream);
     
     switch (eventCode)
     {
@@ -253,179 +239,155 @@ enum {
             break;
             
         case NSStreamEventHasSpaceAvailable:
-        {
-            if (self.bufferOffset == self.bufferLimit)
+            if (_bufferOffset == _bufferLimit)
             {
                 NSInteger bytesRead;
                 
-                bytesRead = [self.fileStream read:self.buffer
-                                        maxLength:kSendBufferSize];
+                bytesRead = [_fileStream read:_buffer
+                                    maxLength:kSendBufferSize];
                 
                 if (bytesRead == -1)
                 {
                     [self stopSendWithStatus:FTP_CONNECTION_FAILED
-                                statusString:@"File read error"];
+                                statusString:@"File Read Error"];
                 }
                 
                 else if (bytesRead == 0)
                 {
                     [self stopSendWithStatus:FTP_OK
-                                statusString:@""];
+                                statusString:@"Network Write Error"];
                 }
                 
                 else
                 {
-                    self.bufferOffset = 0;
-                    self.bufferLimit  = bytesRead;
+                    _bufferOffset = 0;
+                    _bufferLimit = bytesRead;
                 }
             }
             
-            if (self.bufferOffset != self.bufferLimit)
+            if (_bufferOffset != _bufferLimit)
             {
-                NSInteger bytesWritten = [self.networkStream write:&self.buffer[self.bufferOffset]
-                                                         maxLength:self.bufferLimit - self.bufferOffset];
+                NSInteger bytesWritten = [_networkStream write:&_buffer[_bufferOffset]
+                                                     maxLength:(_bufferLimit - _bufferOffset)];
                 
                 assert(bytesWritten);
                 
                 if (bytesWritten == -1)
                 {
                     [self stopSendWithStatus:FTP_CONNECTION_FAILED
-                                statusString:@"Network write error"];
+                                statusString:@"Unable to Connect"];
                 }
                 
                 else
                 {
-                    self.bufferOffset += bytesWritten;
+                    _bufferOffset += bytesWritten;
                     _totBytesWritten += bytesWritten;
-                    self.progress = (CGFloat)_totBytesWritten / (CGFloat)_fileSize;
+                    _progress = ((CGFloat)_totBytesWritten / (CGFloat)_fileSize);
                     
-                    if (self.popover)
-                        [self.popover updateProgress:self.progress];
+                    if (_popover)
+                        [_popover updateProgress:_progress];
                 }
             }
-        }
+            
             break;
             
         case NSStreamEventErrorOccurred:
-        {
-            [self stopSendWithStatus:FTP_CONNECTION_FAILED
-                        statusString:@"Unable to connect"];
-        }
-            break;
-            
-        case NSStreamEventEndEncountered:
-        {
-            ii=1;
-        }
-            break;
-            
-        default:
-        {
-            assert(NO);
-        }
-            break;
-    }
-}
-
-- (void)connection:(NSURLConnection *)theConnection
-  didFailWithError:(NSError *)error
-{
-#pragma unused(theConnection)
-#pragma unused(error)
-    assert(theConnection == self.connection);
-    
-    if (!self.hasFailed)
-    {
-        NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
-        
-        [self stopSendWithStatus:FTP_CONNECTION_FAILED
-                    statusString:error.localizedDescription];
-        
-        if (!self.useOnlyPrimaryFTP)
-        {
-            if ([self.currentFtp isEqualToString:self.ftpSite])
+            if (!_hasFailed)
             {
-                [self setToFtpSite2];
-                self.currentFtp = self.ftpSite2;
-                
-                [UserDefaults.defaults saveString:self.currentFtp
-                                           forKey:@"CurrentFtp"];
-                
-                self.hasFailed = YES;
+                NSLog(@"NSStream Error %li:%@", (long)aStream.streamError.code, aStream.streamError.localizedDescription);
                 
                 [self stopSendWithStatus:FTP_CONNECTION_FAILED
-                            statusString:error.localizedDescription];
+                            statusString:aStream.streamError.localizedDescription];
                 
-                [self sendFile:self.fileName
-                 fromDirectory:self.directory
-                   toDirectory:self.toDirectory
-                deleteWhenDone:NO];
+                if (!self.useOnlyPrimaryFTP)
+                {
+                    if ([_currentFtp isEqualToString:_ftpSite])
+                    {
+                        [self setToFtpSite2];
+                        _currentFtp = _ftpSite2;
+                        
+                        [UserDefaults.defaults saveString:_currentFtp
+                                                   forKey:@"CurrentFtp"];
+                        
+                        _hasFailed = YES;
+                        
+                        [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                                    statusString:aStream.streamError.localizedDescription];
+                        
+                        [self sendFile:_fileName
+                         fromDirectory:_directory
+                                toFile:_fileName
+                           toDirectory:_toDirectory
+                        deleteWhenDone:NO];
+                    }
+                    
+                    else
+                    {
+                        [self setToFtpSite1];
+                        _currentFtp = _ftpSite;
+                        
+                        [UserDefaults.defaults saveString:_currentFtp
+                                                   forKey:@"CurrentFtp"];
+                        
+                        _hasFailed = YES;
+                        
+                        [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                                    statusString:aStream.streamError.localizedDescription];
+                        
+                        [self sendFile:_fileName
+                         fromDirectory:_directory
+                                toFile:_fileName
+                           toDirectory:_toDirectory
+                        deleteWhenDone:NO];
+                    }
+                }
             }
             
             else
             {
-                [self setToFtpSite1];
-                self.currentFtp = self.ftpSite;
-                
-                [UserDefaults.defaults saveString:self.currentFtp
-                                           forKey:@"CurrentFtp"];
-                
-                self.hasFailed = YES;
+                //remove file to ensure partially transferred files are not used
+                [NSFileManager.defaultManager removeItemAtPath:_filePath
+                                                         error:nil];
                 
                 [self stopSendWithStatus:FTP_CONNECTION_FAILED
-                            statusString:error.localizedDescription];
-            
-                [self sendFile:self.fileName
-                 fromDirectory:self.directory
-                   toDirectory:self.toDirectory
-                deleteWhenDone:NO];
+                            statusString:aStream.streamError.localizedDescription];
+                
+                NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, aStream.streamError.localizedDescription);
+                
+                _currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
+                
+                [UserDefaults.defaults saveString:_currentFtp
+                                           forKey:@"CurrentFtp"];
+                
+                _hasFailed = NO;
             }
-        }
-    }
-    
-    else
-    {
-        //remove file to ensure partially transferred files are not used
-        [NSFileManager.defaultManager removeItemAtPath:self.filePath
-                                                 error:nil];
-        
-        [self stopSendWithStatus:FTP_CONNECTION_FAILED
-                    statusString:error.localizedDescription];
-        
-        NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, error.localizedDescription);
-        
-        self.currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
-        
-        [UserDefaults.defaults saveString:self.currentFtp
-                                   forKey:@"CurrentFtp"];
-        
-        self.hasFailed = NO;
-    }
-}
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)theConnection
-{
-#pragma unused(theConnection)
-    assert(theConnection == self.connection);
-    
-    [self stopSendWithStatus:FTP_OK
-                   statusString:@""];
+            break;
+            
+        case NSStreamEventEndEncountered:
+            ii = 1;
+            break;
+            
+        default:
+            assert(NO);
+            break;
+    }
 }
 
 - (void)setUpFTP
 {
-    self.ftpSite = @"gssidata.com";
-    self.username = @"GSSiData";
-    self.password = @"GSSi";
+    _ftpSite = @"gssidata.com";
+    _username = @"GSSiData";
+    _password = @"GSSi";
     self.port = @"14147";
     
-    self.ftpSite2 = @"thmgis.com";
-    self.username2 = @"waypoint";
-    self.password2 = @"pointway4*";
+    _ftpSite2 = @"thmgis.com";
+    _username2 = @"waypoint";
+    _password2 = @"pointway4*";
     
-    self.currentFtp = [UserDefaults.defaults stringForKey:@"CurrentFtp"];
+    _currentFtp = [UserDefaults.defaults stringForKey:@"CurrentFtp"];
     
-    if (self.currentFtp == self.ftpSite2)
+    if (_currentFtp == _ftpSite2)
         [self setToFtpSite2];
     
     else
@@ -434,13 +396,13 @@ enum {
 
 - (void)setToFtpSite1
 {
-    self.urlText = [NSString stringWithFormat:@"@%@:%@/%@/%@",self.ftpSite, self.port, self.toDirectory, self.toFileName];
+    _urlText = [NSString stringWithFormat:@"@%@:%@/%@/%@",_ftpSite, self.port, _toDirectory, _toFileName];
 
 }
 
 - (void)setToFtpSite2
 {
-    self.urlText = [NSString stringWithFormat:@"@%@/%@/%@",self.ftpSite2, self.toDirectory, self.toFileName];
+    _urlText = [NSString stringWithFormat:@"@%@/%@/%@",_ftpSite2, _toDirectory, _toFileName];
 }
 
 - (void)dealloc

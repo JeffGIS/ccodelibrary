@@ -54,11 +54,6 @@
      toDirectory:(NSString *)toDirectory
   deleteWhenDone:(BOOL)delete;
 
-- (BOOL)sendFile:(NSString *)fileName
-   fromDirectory:(NSString *)fromDirectory
-     toDirectory:(NSString *)toDirectory
-  deleteWhenDone:(BOOL)delete;
-
 - (BOOL)startSend:(NSString *)fileName;
 
 - (void)stopSendWithStatus:(int)status

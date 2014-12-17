@@ -107,6 +107,7 @@ static FacilitiesDatabase *_database;
     
     [pull getFile:fileName
     fromDirectory:@"Bill/PlaceFacilities"
+           toFile:fileName
       toDirectory:documentsDirectory
      forceRefresh:NO];
 }

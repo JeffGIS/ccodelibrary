@@ -166,7 +166,7 @@ static GeoMasterServer *_open = nil;
    handleEvent:(NSStreamEvent)streamEvent
 {
     int ii;
-	NSLog(@"stream event %lu", (long)streamEvent);
+    NSLog(@"GMServer Stream Event %li", (long)streamEvent);
 	
 	switch (streamEvent)
     {
@@ -226,16 +226,16 @@ static GeoMasterServer *_open = nil;
             
 		case NSStreamEventErrorOccurred:
         {
-            NSError *theError = theStream.streamError;
             [self closeServer];
             
             if (_responseTimer)
                 [_responseTimer invalidate];
+            
             if (self.delegate)
             {
                 [self.delegate GMServer:self
-                        didReceiveError:theError.localizedDescription
-                             withStatus:theError.code];
+                        didReceiveError:theStream.streamError.localizedDescription
+                             withStatus:theStream.streamError.code];
             }
         }
 			break;

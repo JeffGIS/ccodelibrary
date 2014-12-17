@@ -20,6 +20,7 @@
     
     [pull getFile:fileName
     fromDirectory:@"Bill/PlaceAreas"
+           toFile:fileName
       toDirectory:documentsDirectory
      forceRefresh:NO];
     
