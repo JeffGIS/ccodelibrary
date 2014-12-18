@@ -49,19 +49,22 @@
 #define RADIANS_SLOPE(degrees) (100.0 * sin(RADIANS(degrees)))
 
 typedef NS_ENUM(NSUInteger, MMLMFrom) {
+    MMLMNone,
     MMLMStatusMap,
     MMLMAssignInt,
     MMLMSelectCity
 };
 
 typedef NS_ENUM(NSUInteger, MSCFrom) {
+    MSCNone,
     MSCSelectCity,
     MSCManageiPads,
 };
 
 typedef NS_ENUM(NSUInteger, GMSList) {
-    SetList,
-    GetList,
+    GMSNone,
+    GMSSetList,
+    GMSGetList,
 };
 
 @interface CCodeLibrary : NSObject
