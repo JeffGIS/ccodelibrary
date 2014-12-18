@@ -214,6 +214,14 @@ static UserDefaults *_defaults;
     return redArrow;
 }
 
+- (UIImage *)deleteButton
+{
+    UIImage *deleteButton = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"deleteButton"
+                                                                                           ofType:@"png"]];
+    
+    return deleteButton;
+}
+
 - (NSString *)googleKey
 {
     NSString *googleKey = @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q";
@@ -503,6 +511,67 @@ static UserDefaults *_defaults;
     
         [_defaults synchronize];
     }
+}
+
+- (void)removeLocationFromListAtIndex:(NSUInteger)index
+{
+    NSMutableArray *namesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"NamesArray"]];
+    NSMutableArray *statesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"StatesArray"]];
+    NSMutableArray *geoidsArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"GeoidsArray"]];
+    NSMutableArray *bounds_wArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_wArray"]];
+    NSMutableArray *bounds_sArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_sArray"]];
+    NSMutableArray *bounds_eArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_eArray"]];
+    NSMutableArray *bounds_nArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_nArray"]];
+    NSArray *locationList;
+    
+    [namesArray removeObjectAtIndex:index];
+    
+    if (namesArray.count == 0)
+    {
+        namesArray = statesArray = geoidsArray = bounds_wArray =
+        bounds_sArray = bounds_eArray = bounds_nArray = nil;
+        
+        locationList = nil;
+    }
+    
+    else
+    {
+        [statesArray removeObjectAtIndex:index];
+        [geoidsArray removeObjectAtIndex:index];
+        [bounds_wArray removeObjectAtIndex:index];
+        [bounds_sArray removeObjectAtIndex:index];
+        [bounds_eArray removeObjectAtIndex:index];
+        [bounds_nArray removeObjectAtIndex:index];
+        
+        locationList = [[NSArray alloc] initWithObjects:namesArray, statesArray, geoidsArray,
+                        bounds_wArray, bounds_sArray, bounds_eArray, bounds_nArray, nil];
+    }
+    
+    [_defaults setObject:namesArray
+                  forKey:@"NamesArray"];
+    
+    [_defaults setObject:statesArray
+                  forKey:@"StatesArray"];
+    
+    [_defaults setObject:geoidsArray
+                  forKey:@"GeoidsArray"];
+    
+    [_defaults setObject:bounds_wArray
+                  forKey:@"Bounds_wArray"];
+    
+    [_defaults setObject:bounds_sArray
+                  forKey:@"Bounds_sArray"];
+    
+    [_defaults setObject:bounds_eArray
+                  forKey:@"Bounds_eArray"];
+    
+    [_defaults setObject:bounds_nArray
+                  forKey:@"Bounds_nArray"];
+    
+    [_defaults setObject:locationList
+                  forKey:@"LocationList"];
+    
+    [_defaults synchronize];
 }
 
 - (UIColor *)lightColorForColor:(UIColor *)color

@@ -35,6 +35,7 @@
 - (UIImage *)redArrow;
 - (UIImage *)triangleImage;
 - (UIImage *)redCircle;
+- (UIImage *)deleteButton;
 - (NSString *)googleKey;
 - (NSString *)removeEndingReturn:(NSString *)string;
 - (NSString *)removeTextInsideParentheses:(NSString *)string;
@@ -89,6 +90,8 @@
                          bounds_s:(CGFloat)bounds_s
                          bounds_e:(CGFloat)bounds_e
                          bounds_n:(CGFloat)bounds_n;
+
+- (void)removeLocationFromListAtIndex:(NSUInteger)index;
 
 - (UIColor *)lightColorForColor:(UIColor *)color;
 - (UIColor *)darkColorForColor:(UIColor *)color;
