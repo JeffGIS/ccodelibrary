@@ -10,12 +10,12 @@
 
 - (BOOL)getAssignments:(GSSiPopoverView *)popover
               forGeoid:(int)geoid
-          underManager:(NSString *)manager
+          underManager:(int)manager
 {
     NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
     //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
     
-    NSString *fileName = [NSString stringWithFormat:@"%@_%i.txt", manager, geoid];
+    NSString *fileName = [NSString stringWithFormat:@"%i_%i.txt", manager, geoid];
     
     _pull = FTPDataPull.pull;
     _pull.delegate = self;

@@ -24,6 +24,6 @@
 
 - (BOOL)getAssignments:(GSSiPopoverView *)popover
               forGeoid:(int)geoid
-          underManager:(NSString *)manager;
+          underManager:(int)manager;
 
 @end

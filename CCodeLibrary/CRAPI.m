@@ -35,6 +35,7 @@
     dispatch_once(&oncePredicate,
                   ^{
                       sharedInstance = [[CRAPI alloc] init];
+                      sharedInstance.currentUserID = -1;
                   });
     
     return sharedInstance;
@@ -63,13 +64,13 @@
                                                  attributes:nil
                                                       error:nil];
         
-        _uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i", _currentManageriPad, geoid];
+        _uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, geoid];
     }
 }
 
 - (NSString *)uploadDirectory
 {
-    NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%@/%i", _currentManageriPad, _currentGeoidValue];
+    NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, _currentGeoidValue];
     return uploadDirectory;
 }
 - (void)intersectionInit:(MPIntersection *)currentIntersection
