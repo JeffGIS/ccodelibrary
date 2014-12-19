@@ -508,6 +508,17 @@ static UserDefaults *_defaults;
     
         [_defaults setObject:locationList
                       forKey:@"LocationList"];
+        
+        NSString *key = [NSString stringWithFormat:@"iPads:%i", geoid];
+        
+        NSString *managerDevice = [NSString stringWithFormat:@"%@(%@)",
+                                   UIDevice.currentDevice.identifierForVendor.UUIDString,
+                                   UIDevice.currentDevice.name];
+        
+        NSArray *iPadArray = [NSArray arrayWithObject:managerDevice];
+        
+        [_defaults setObject:iPadArray
+                      forKey:key];
     
         [_defaults synchronize];
     }
