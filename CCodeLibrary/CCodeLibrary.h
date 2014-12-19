@@ -65,6 +65,7 @@ typedef NS_ENUM(NSUInteger, GMSList) {
     GMSNone,
     GMSSetList,
     GMSGetList,
+    GMSDelete,
 };
 
 @interface CCodeLibrary : NSObject
