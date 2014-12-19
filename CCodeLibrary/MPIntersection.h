@@ -48,7 +48,7 @@ enum obstructions {
 @interface MPRamp : NSObject
 
 @property (nonatomic) int rampNum;
-@property (nonatomic, strong) NSString *rampID;
+@property (nonatomic, copy) NSString *rampID;
 @property (nonatomic) int timeComplete;
 @property (nonatomic) BOOL rampExists;
 @property (nonatomic) BOOL isComplete;
@@ -100,9 +100,9 @@ enum obstructions {
 @property (nonatomic) int currentObstruction;
 @property (nonatomic) float currentCornerHeading;
 @property (nonatomic) MPRamp *currentRamp;
-@property (nonatomic) NSString *name1;
-@property (nonatomic) NSString *name2;
-@property (nonatomic) NSString *name3;
+@property (nonatomic, copy) NSString *name1;
+@property (nonatomic, copy) NSString *name2;
+@property (nonatomic, copy) NSString *name3;
 @property (nonatomic) BOOL signal23Exists;
 @property (nonatomic) BOOL signal45Exists;
 @property (nonatomic) BOOL signal67Exists;

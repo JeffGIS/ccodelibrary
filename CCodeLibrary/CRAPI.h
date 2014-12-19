@@ -17,23 +17,23 @@
 @interface CRAPI : NSObject
 
 @property (nonatomic) int currentModule;
-@property (nonatomic) NSString *documentsDirectory;
-@property (nonatomic) NSString *outputDirectory;
-@property (nonatomic) NSString *imageDirectory;
-@property (nonatomic) NSString *uploadDirectory;
+@property (nonatomic, copy) NSString *documentsDirectory;
+@property (nonatomic, copy) NSString *outputDirectory;
+@property (nonatomic, copy) NSString *imageDirectory;
+@property (nonatomic, copy) NSString *uploadDirectory;
 @property (nonatomic) int currentGeoid;
 @property (nonatomic) int currentManageriPad;
 @property (nonatomic) int currentUserID;
-@property (nonatomic) NSString *currentCityNameAndState;
+@property (nonatomic, copy) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
-@property (nonatomic) NSString *googleKey;
+@property (nonatomic, copy) NSString *googleKey;
 @property (nonatomic) BOOL refreshMap;
 @property (nonatomic) NSArray *placesArray;
 @property (nonatomic) NSArray *currentPlaceArray;
-@property (nonatomic) NSString *placeAreaFile;
+@property (nonatomic, copy) NSString *placeAreaFile;
 @property (nonatomic) BOOL doCompassCalibrate;
-@property (nonatomic) NSString *calibrateLength;
-@property (nonatomic) NSString *calibrateHeight;
+@property (nonatomic, copy) NSString *calibrateLength;
+@property (nonatomic, copy) NSString *calibrateHeight;
 @property (nonatomic) NSMutableArray *assignediPadsArray;
 @property (nonatomic) Colors *defaultColors;
 

@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface Facility : NSObject
 
@@ -10,7 +11,7 @@
 @property int imageX;
 @property int imageY;
 @property int refno;
-@property float trueAz;
+@property CGFloat trueAz;
 @property int adjustedRot;
 @property int facID;
 

@@ -29,6 +29,6 @@
 @property (nonatomic) IntersectionsDatabase *database;
 @property (nonatomic) NSArray *tempDemoArray;
 @property (nonatomic) BOOL showOnlyIntersectionsWithRamps;
-@property (nonatomic) NSString *areaFile;
+@property (nonatomic, copy) NSString *areaFile;
 
 @end

@@ -7,6 +7,7 @@
 #define GM_NO_RESPONSE 103
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @class GeoMasterServer;
 
@@ -30,17 +31,15 @@ didReceiveMessage:(NSString *)message
 + (GeoMasterServer *)open;
 
 @property (nonatomic, retain) NSMutableArray *messages;
-@property (nonatomic, retain)NSInputStream *inputStream;
-@property (nonatomic, retain)NSOutputStream *outputStream;
-@property (nonatomic, retain)NSString *output;
-@property NSString * ipAddress;
-@property BOOL didOpen;
-@property int messageID;
-@property NSTimer *openTimer;
-@property NSTimer *sendTimer;
-@property NSTimer *responseTimer;
-@property float responseTimeoutInSeconds;
-@property NSData *data;
+@property (nonatomic, retain) NSInputStream *inputStream;
+@property (nonatomic, retain) NSOutputStream *outputStream;
+@property (nonatomic, copy) NSString *output;
+@property (nonatomic, copy) NSString *ipAddress;
+@property (nonatomic) BOOL didOpen;
+@property (nonatomic) NSUInteger messageID;
+@property (nonatomic) NSTimer *openTimer, *sendTimer, *responseTimer;
+@property (nonatomic) CGFloat responseTimeoutInSeconds;
+@property (nonatomic) NSData *data;
 
 - (BOOL) initCommunication:(float)connectionTimeoutInSeconds;
 - (void) closeServer;
