@@ -42,6 +42,8 @@
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
+- (void)startTransaction;
+- (void)commitTransaction;
 - (void)getUploadedIntersectionDatabase:(GSSiPopoverView *)popover;
 - (void)getPlaceIntersectionDatabase:(GSSiPopoverView *)popover;
 - (NSMutableArray *)getIntersectionPointsFromDatabase;

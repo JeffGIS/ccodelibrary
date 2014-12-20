@@ -1326,6 +1326,16 @@ Exit:
     NSLog(@"Intersections Database dealloc");
 }
 
+- (void)startTransaction
+{
+    [self open];
+    SQLOK(sqlite3_exec(_database, "BEGIN", 0, 0, 0),"Start transaction");
+}
+- (void)commitTransaction
+{
+    SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0),"End transaction");
+}
+
 - (void)logError:(int)sqlReturn
           method:(char *)method
 {
