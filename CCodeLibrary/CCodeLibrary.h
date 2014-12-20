@@ -48,32 +48,32 @@
 #define RADIANS(degrees) ((degrees) / 180.0 * M_PI)
 #define RADIANS_SLOPE(degrees) (100.0 * sin(RADIANS(degrees)))
 
-typedef NS_ENUM(NSUInteger, MMLMFrom)
+typedef NS_ENUM(NSInteger, MMLMFrom)
 {
-    MMLMNone,
+    MMLMDefault,
     MMLMStatusMap,
     MMLMAssignInt,
     MMLMSelectCity
 };
 
-typedef NS_ENUM(NSUInteger, MSCFrom)
+typedef NS_ENUM(NSInteger, MSCFrom)
 {
-    MSCNone,
+    MSCDefault,
     MSCSelectCity,
     MSCManageiPads,
 };
 
-typedef NS_ENUM(NSUInteger, GMSList)
+typedef NS_ENUM(NSInteger, GMSList)
 {
-    GMSNone,
+    GMSDefault,
     GMSSetList,
     GMSGetList,
     GMSDelete,
 };
 
-typedef NS_ENUM(NSUInteger, GMSMessageID)
+typedef NS_ENUM(NSInteger, GMSMessageID)
 {
-    GMSMessageNone,
+    GMSMessageDefault,
     GMSMessageOpenConnect,
     GMSMessageSetNearby,
     GMSMessageCheckNearby,
