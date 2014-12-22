@@ -7,6 +7,7 @@
 #import <Foundation/Foundation.h>
 #import "FTPDataPull.h"
 #import "GSSiPopoverView.h"
+#import "GSSiEnums.h"
 
 @class GetAssignments;
 

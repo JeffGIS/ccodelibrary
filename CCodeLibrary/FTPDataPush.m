@@ -60,7 +60,7 @@ enum {
     {
         if (_delegate)
         {
-            [_delegate FTPdidComplete:FTP_CONNECTION_FAILED
+            [_delegate FTPdidComplete:FTPStatusConnectionFailed
                              filePath:nil];
         }
         
@@ -83,7 +83,7 @@ enum {
     if (!statusString)
     {
         assert(_filePath);
-        status = 1;
+        status = FTPStatusStop;
     }
     
     [NetworkManager.sharedInstance didStopNetworkOperation];
@@ -91,7 +91,7 @@ enum {
     if (_delegate)
     {
         [_delegate FTPdidComplete:status
-                             filePath:_filePath];
+                         filePath:_filePath];
     }
 }
 
@@ -248,13 +248,13 @@ enum {
                 
                 if (bytesRead == -1)
                 {
-                    [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                    [self stopSendWithStatus:FTPStatusConnectionFailed
                                 statusString:@"File Read Error"];
                 }
                 
                 else if (bytesRead == 0)
                 {
-                    [self stopSendWithStatus:FTP_OK
+                    [self stopSendWithStatus:FTPStatusOK
                                 statusString:@"Network Write Error"];
                 }
                 
@@ -274,7 +274,7 @@ enum {
                 
                 if (bytesWritten == -1)
                 {
-                    [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                    [self stopSendWithStatus:FTPStatusConnectionFailed
                                 statusString:@"Unable to Connect"];
                 }
                 
@@ -296,7 +296,7 @@ enum {
             {
                 NSLog(@"NSStream Error %li:%@", (long)aStream.streamError.code, aStream.streamError.localizedDescription);
                 
-                [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                [self stopSendWithStatus:FTPStatusConnectionFailed
                             statusString:aStream.streamError.localizedDescription];
                 
                 if (!self.useOnlyPrimaryFTP)
@@ -311,7 +311,7 @@ enum {
                         
                         _hasFailed = YES;
                         
-                        [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                        [self stopSendWithStatus:FTPStatusConnectionFailed
                                     statusString:aStream.streamError.localizedDescription];
                         
                         [self sendFile:_fileName
@@ -331,7 +331,7 @@ enum {
                         
                         _hasFailed = YES;
                         
-                        [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                        [self stopSendWithStatus:FTPStatusConnectionFailed
                                     statusString:aStream.streamError.localizedDescription];
                         
                         [self sendFile:_fileName
@@ -349,10 +349,10 @@ enum {
                 [NSFileManager.defaultManager removeItemAtPath:_filePath
                                                          error:nil];
                 
-                [self stopSendWithStatus:FTP_CONNECTION_FAILED
+                [self stopSendWithStatus:FTPStatusConnectionFailed
                             statusString:aStream.streamError.localizedDescription];
                 
-                NSLog(@"ERROR %i:%@", FTP_CONNECTION_FAILED, aStream.streamError.localizedDescription);
+                NSLog(@"ERROR %i:%@", FTPStatusConnectionFailed, aStream.streamError.localizedDescription);
                 
                 _currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
                 
@@ -409,7 +409,7 @@ enum {
 {
     NSLog(@"FTPDataPush dealloc");
     
-    [self stopSendWithStatus:FTP_STOP
+    [self stopSendWithStatus:FTPStatusStop
                    statusString:@"Stopped"];
 }
 

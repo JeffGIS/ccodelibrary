@@ -1133,7 +1133,7 @@ Exit:
 - (void)FTPdidComplete:(int)status
               filePath:(NSString *)path
 {
-    if (status == FTP_OK)
+    if (status == FTPStatusOK)
     {
         NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
                                                                 andName:[NSString stringWithFormat:@"/%i",self.geoid]
@@ -1163,7 +1163,7 @@ Exit:
         }
     }
     
-    else if (status == FTP_CONNECTION_FAILED)
+    else if (status == FTPStatusConnectionFailed)
     {
         if (self.gettingUploaded)
         {
@@ -1180,12 +1180,12 @@ Exit:
         }
     }
     
-    else if (status == FTP_CONNECTION_FAILED_TRYING_SECONDARY)
+    else if (status == FTPStatusConnectionFailedTryingSecondary)
     {
         
     }
     
-    else if (status != FTP_STOP)
+    else if (status != FTPStatusStop)
     {
         [self.delegate intersectionsDatabase:nil
                                      didLoad:@"FTP failure"

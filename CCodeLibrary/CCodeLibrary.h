@@ -31,6 +31,7 @@
 #import "SharedDefaults.h"
 #import "FacilitiesDatabase.h"
 #import "LegendView.h"
+#import "GSSiEnums.h"
 
 #define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"
 #define iPAD_HEIGHT 1024.0
@@ -47,38 +48,6 @@
 #define DEGREES(radians) ((radians) * (180.0 / M_PI))
 #define RADIANS(degrees) ((degrees) / 180.0 * M_PI)
 #define RADIANS_SLOPE(degrees) (100.0 * sin(RADIANS(degrees)))
-
-typedef NS_ENUM(NSInteger, MMLMFrom)
-{
-    MMLMDefault,
-    MMLMStatusMap,
-    MMLMAssignInt,
-    MMLMSelectCity
-};
-
-typedef NS_ENUM(NSInteger, MSCFrom)
-{
-    MSCDefault,
-    MSCSelectCity,
-    MSCManageiPads,
-};
-
-typedef NS_ENUM(NSInteger, GMSList)
-{
-    GMSDefault,
-    GMSSetList,
-    GMSGetList,
-    GMSDelete,
-};
-
-typedef NS_ENUM(NSInteger, GMSMessageID)
-{
-    GMSMessageDefault,
-    GMSMessageOpenConnect,
-    GMSMessageSetNearby,
-    GMSMessageCheckNearby,
-    GMSMessageCancelConnect,
-};
 
 @interface CCodeLibrary : NSObject
 

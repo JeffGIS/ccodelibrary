@@ -51,7 +51,7 @@
         {
             if (_delegate && !_haveCalledDelegate)
             {
-                [_delegate FTPdidComplete:FTP_CONNECTION_FAILED
+                [_delegate FTPdidComplete:FTPStatusConnectionFailed
                                  filePath:nil];
                 
                 _haveCalledDelegate = YES;
@@ -65,7 +65,7 @@
     
     else if (_delegate && !_haveCalledDelegate)
     {
-        [_delegate FTPdidComplete:FTP_OK
+        [_delegate FTPdidComplete:FTPStatusOK
                          filePath:_filePath];
         
         _haveCalledDelegate = YES;
@@ -242,7 +242,7 @@ didReceiveResponse:(NSURLResponse *)response
         
         if (bytesWritten <= 0)
         {
-            [self stopReceiveWithStatus:FTP_FILE_WRITE_ERROR
+            [self stopReceiveWithStatus:FTPStatusFileWriteError
                            statusString:@"File write error"];
             break;
         }
@@ -275,7 +275,7 @@ didReceiveResponse:(NSURLResponse *)response
             
             _hasFailed = YES;
             
-            [self stopReceiveWithStatus:FTP_CONNECTION_FAILED_TRYING_SECONDARY
+            [self stopReceiveWithStatus:FTPStatusConnectionFailedTryingSecondary
                            statusString:error.localizedDescription];
             
             _haveCalledDelegate = NO;
@@ -297,7 +297,7 @@ didReceiveResponse:(NSURLResponse *)response
             
             _hasFailed = YES;
             
-            [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
+            [self stopReceiveWithStatus:FTPStatusConnectionFailed
                            statusString:error.localizedDescription];
             
             [self getFile:_fileName
@@ -314,7 +314,7 @@ didReceiveResponse:(NSURLResponse *)response
         [NSFileManager.defaultManager removeItemAtPath:_filePath
                                                  error:nil];
 
-        [self stopReceiveWithStatus:FTP_CONNECTION_FAILED
+        [self stopReceiveWithStatus:FTPStatusConnectionFailed
                        statusString:error.localizedDescription];
         
         _currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
@@ -331,7 +331,7 @@ didReceiveResponse:(NSURLResponse *)response
 #pragma unused(theConnection)
     assert(theConnection == _connection);
     
-    [self stopReceiveWithStatus:FTP_OK
+    [self stopReceiveWithStatus:FTPStatusOK
                    statusString:@""];
 }
 
@@ -371,7 +371,7 @@ didReceiveResponse:(NSURLResponse *)response
 {
     NSLog(@"FTPDataPull dealloc");
     
-    [self stopReceiveWithStatus:FTP_STOP
+    [self stopReceiveWithStatus:FTPStatusStop
                    statusString:@"Stopped"];
 }
 

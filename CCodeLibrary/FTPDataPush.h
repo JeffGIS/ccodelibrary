@@ -4,13 +4,7 @@
 #import <Foundation/Foundation.h>
 #import "UserDefaults.h"
 #import "GSSiPopoverView.h"
-
-#define FTP_OK 0
-#define FTP_STOP 1
-#define FTP_CANCEL 2
-#define FTP_FILE_WRITE_ERROR 101
-#define FTP_CONNECTION_FAILED 102
-#define FTP_FAILED_TO_UNZIP 103
+#import "GSSiEnums.h"
 
 @class FTPDataPush;
 

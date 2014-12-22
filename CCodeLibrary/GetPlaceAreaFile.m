@@ -30,10 +30,10 @@
 - (void)FTPdidComplete:(int)status
               filePath:(NSString *)path
 {
-    if (status == FTP_OK)
+    if (status == FTPStatusOK)
         status = AF_OK;
     
-    else if (status != FTP_CONNECTION_FAILED_TRYING_SECONDARY)
+    else if (status != FTPStatusConnectionFailedTryingSecondary)
     {
         status = AF_FAILED;
         path = @"";

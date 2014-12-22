@@ -34,10 +34,10 @@
 - (void)FTPdidComplete:(int)status
               filePath:(NSString *)path
 {
-    if (status == FTP_CONNECTION_FAILED_TRYING_SECONDARY)
+    if (status == FTPStatusConnectionFailedTryingSecondary)
         return;
     
-    if (status == FTP_OK)
+    if (status == FTPStatusOK)
         status = GETASS_OK;
     
     else

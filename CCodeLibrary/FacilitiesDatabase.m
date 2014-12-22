@@ -537,7 +537,7 @@ Exit:
 - (void)FTPdidComplete:(int)status
               filePath:(NSString *)path
 {
-    if (status == FTP_OK)
+    if (status == FTPStatusOK)
     {
         NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
                                                                 andName:[NSString stringWithFormat:@"/%i",self.geoid] create:YES];
@@ -558,7 +558,7 @@ Exit:
         }
     }
     
-    else if (status == FTP_CONNECTION_FAILED)
+    else if (status == FTPStatusConnectionFailed)
     {
         if (self.gettingUploaded)
             [self.delegate facilitiesDatabase:nil
@@ -570,7 +570,7 @@ Exit:
                                    withStatus:FAC_NO_NETWORK_CONNECTION];
     }
     
-    else if (status != FTP_STOP)
+    else if (status != FTPStatusStop)
     {
         [self.delegate facilitiesDatabase:nil
                                   didLoad:@"FTP failure"

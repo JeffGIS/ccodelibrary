@@ -19,6 +19,7 @@
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
+		A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */ = {isa = PBXBuildFile; fileRef = A90EBDC81A48874B001E72CF /* GSSiEnums.m */; };
 		A90FC1F41A07F593003AF763 /* CalibrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A90FC1F31A07F593003AF763 /* CalibrationViewController.m */; };
 		A926F21119D9FC18007C392A /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = A926F21019D9FC18007C392A /* CircleView.m */; };
 		A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770C19F7F9F40062906E /* SharedDefaults.m */; };
@@ -98,6 +99,8 @@
 		1FB3605519AE7E8200592B1D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagePlacesDatabase.h; sourceTree = "<group>"; };
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
+		A90EBDC71A48874B001E72CF /* GSSiEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiEnums.h; sourceTree = "<group>"; };
+		A90EBDC81A48874B001E72CF /* GSSiEnums.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiEnums.m; sourceTree = "<group>"; };
 		A90FC1F21A07F593003AF763 /* CalibrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalibrationViewController.h; sourceTree = "<group>"; };
 		A90FC1F31A07F593003AF763 /* CalibrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalibrationViewController.m; sourceTree = "<group>"; };
 		A926F20F19D9FC18007C392A /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
@@ -350,6 +353,8 @@
 				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
 				EB1A69741999A6A9005A1CCB /* CRAPI.h */,
 				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
+				A90EBDC71A48874B001E72CF /* GSSiEnums.h */,
+				A90EBDC81A48874B001E72CF /* GSSiEnums.m */,
 				EB521B7B19D649DC00DA0D5A /* MaskCityBounds.h */,
 				EB521B7C19D649DC00DA0D5A /* MaskCityBounds.m */,
 				A94A770B19F7F9F40062906E /* SharedDefaults.h */,
@@ -488,6 +493,7 @@
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,
 				A94A771619F8079E0062906E /* FacilityPoint.m in Sources */,
 				A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */,
+				A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
