@@ -78,19 +78,19 @@
                     CGContextSetFillColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
                 
                 else if ((module == PRELIM_MODULE && !info.status) || (module == MANAGEMENT_MODULE) ||
-                         (module == DETAIL_MODULE && info.status == INT_STATUS_PRELIMCOMPLETE))
+                         (module == DETAIL_MODULE && info.status == IntStatusPrelimComplete))
                 {
                     CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
                 }
                 
-                else if ((module == PRELIM_MODULE && info.status == INT_STATUS_PRELIMCOMPLETE) ||
-                         (module == DETAIL_MODULE && info.status == INT_STATUS_DETAILCOMPLETE))
+                else if ((module == PRELIM_MODULE && info.status == IntStatusPrelimComplete) ||
+                         (module == DETAIL_MODULE && info.status == IntStatusDetailComplete))
                 {
                     numComplete++;
                     CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
                 }
                 
-                else if (info.status == INT_STATUS_COMPLEX)
+                else if (info.status == IntStatusComplex)
                 {
                     numComplex++;
                     CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);

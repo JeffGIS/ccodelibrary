@@ -72,7 +72,7 @@ enum {
 
 - (void)sendDidStart
 {
-    NSLog(@"Attempting to Push %@ to %@", _filePath, _currentFtp);
+    NSLog(@"Attempting to Push %@ to %@", _filePath, _urlText);
     [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 
@@ -159,8 +159,6 @@ enum {
     assert(_fileStream);
     
     [_fileStream open];
-    
-    NSLog(@"URL: %@", url);
     
     CFWriteStreamRef ftpStream = CFWriteStreamCreateWithFTPURL(NULL, (__bridge CFURLRef) url);
     if (!ftpStream)
@@ -352,7 +350,7 @@ enum {
                 [self stopSendWithStatus:FTPStatusConnectionFailed
                             statusString:aStream.streamError.localizedDescription];
                 
-                NSLog(@"ERROR %i:%@", FTPStatusConnectionFailed, aStream.streamError.localizedDescription);
+                NSLog(@"ERROR %li:%@", (long)FTPStatusConnectionFailed, aStream.streamError.localizedDescription);
                 
                 _currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
                 
@@ -396,13 +394,13 @@ enum {
 
 - (void)setToFtpSite1
 {
-    _urlText = [NSString stringWithFormat:@"@%@:%@/%@/%@",_ftpSite, self.port, _toDirectory, _toFileName];
+    _urlText = [NSString stringWithFormat:@"%@:%@/%@/%@",_ftpSite, self.port, _toDirectory, _toFileName];
 
 }
 
 - (void)setToFtpSite2
 {
-    _urlText = [NSString stringWithFormat:@"@%@/%@/%@",_ftpSite2, _toDirectory, _toFileName];
+    _urlText = [NSString stringWithFormat:@"%@/%@/%@",_ftpSite2, _toDirectory, _toFileName];
 }
 
 - (void)dealloc

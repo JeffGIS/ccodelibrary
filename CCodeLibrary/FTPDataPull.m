@@ -74,7 +74,7 @@
 
 - (void)receiveDidStart
 {
-    NSLog(@"Attempting to PULL %@ from %@", _fileName, _currentFtp);
+    NSLog(@"Attempting to PULL %@ from %@/%@", _fileName, _currentFtp, _directory);
     [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 

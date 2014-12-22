@@ -926,7 +926,7 @@ static IntersectionsDatabase *_database;
 }
 
 - (BOOL)assignIntersection:(int)intID
-                        To:(int)user
+                        to:(int)user
 {
     BOOL rtn;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
@@ -939,8 +939,8 @@ static IntersectionsDatabase *_database;
 }
 
 - (BOOL)assignIntersectionsFrom:(int)intID
-                             To:(int)endID
-                         ToUser:(int)user
+                             to:(int)endID
+                         toUser:(int)user
 {
     BOOL rtn;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
@@ -960,6 +960,7 @@ static IntersectionsDatabase *_database;
     [self open];
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i",
                        iTime, user];
+    
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
@@ -972,17 +973,20 @@ static IntersectionsDatabase *_database;
     [self open];
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE assignedTo=0",
                        iTime, user];
+    
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
 
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
-                                                WithStatus:(int)status
+                                                withStatus:(int)status
 {
     IntersectionPoint *intpt;
     
     [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%i AND assignedTo=%i ORDER BY intID ASC",status,user];
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%i AND assignedTo=%i ORDER BY intID ASC",
+                       status, user];
+    
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getFirstIntersectionPointAssignedTo1");
@@ -1046,7 +1050,7 @@ static IntersectionsDatabase *_database;
 
 - (int)loadIntersectionTextToDatabase:(NSString *)path
 {
-    BOOL rtn = INTDB_FAILED;
+    BOOL rtn = INTDBStatusFailed;
     char dataFile[PATH_MAX], indexFile[PATH_MAX];
     //LPSTR pUB;
     FILE *fidData, *fidIndex;
@@ -1120,7 +1124,7 @@ static IntersectionsDatabase *_database;
     
     SQLOK(sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, NULL), "loadIntersectionTextToDatabase7");
     SQLOK(sqlite3_finalize(self.statement), "loadIntersectionTextToDatabase8");
-    rtn = INTDB_OK;
+    rtn = INTDBStatusOK;
     
 Exit2:
     fclose(fidIndex);
@@ -1151,7 +1155,7 @@ Exit:
             {
                 [NSFileManager.defaultManager removeItemAtPath:path
                                                          error:nil];
-                status = INT_FAILED_TO_UNZIP;
+                status = INTDBStatusFailedToUnzip;
             }
         }
         
@@ -1169,14 +1173,14 @@ Exit:
         {
             [self.delegate intersectionsDatabase:nil
                                          didLoad:@"File not found"
-                                      withStatus:INT_NO_UPLOADED_FILE];
+                                      withStatus:INTDBStatusNoUploadedFile];
         }
         
         else
         {
             [self.delegate intersectionsDatabase:nil
                                          didLoad:@"File not found"
-                                      withStatus:INT_NO_NETWORK_CONNECTION];
+                                      withStatus:INTDBStatusNoNetworkConnection];
         }
     }
     
@@ -1189,7 +1193,7 @@ Exit:
     {
         [self.delegate intersectionsDatabase:nil
                                      didLoad:@"FTP failure"
-                                  withStatus:INTDB_FAILED];
+                                  withStatus:INTDBStatusFailed];
     }
 }
 
@@ -1262,7 +1266,7 @@ Exit:
         {
             [self.delegate intersectionsDatabase:dbPath
                                          didLoad:@""
-                                      withStatus:INTDB_OK];
+                                      withStatus:INTDBStatusOK];
         }
     }
     
@@ -1292,7 +1296,7 @@ Exit:
         {
             [self.delegate intersectionsDatabase:dbPath
                                          didLoad:@""
-                                      withStatus:INTDB_OK];
+                                      withStatus:INTDBStatusOK];
         }
     }
     

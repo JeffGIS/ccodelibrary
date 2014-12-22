@@ -127,7 +127,7 @@ static FacilitiesDatabase *_database;
         {
             [self.delegate facilitiesDatabase:dbPath
                                       didLoad:@""
-                                   withStatus:INTDB_OK];
+                                   withStatus:INTDBStatusOK];
         }
     }
     
@@ -528,7 +528,7 @@ static FacilitiesDatabase *_database;
     
     fclose(fidIndex);
     fclose(fidData);
-    rtn = INTDB_OK;
+    rtn = INTDBStatusOK;
     
 Exit:
     return rtn;

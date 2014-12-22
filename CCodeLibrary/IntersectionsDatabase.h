@@ -4,19 +4,21 @@
 #import "CCodeLibrary.h"
 #import <sqlite3.h>
 
-#define INTDB_OK 0
-#define INTDB_FAILED 1
+
+//#define INTDBStatusOK 0
+//#define INTDBStatusFailed 1
 
 #define INT_TEXT_INDEX 1
 #define INT_TEXT_DATA 2
 
-#define INT_STATUS_PRELIMCOMPLETE 1
-#define INT_STATUS_COMPLEX 2
-#define INT_STATUS_DETAILCOMPLETE 3
+//#define IntStatusPrelimComplete 1
+//#define IntStatusComplex 2
+//#define IntStatusDetailComplete 3
 
-#define INT_NO_NETWORK_CONNECTION 3
-#define INT_NO_UPLOADED_FILE 4
-#define INT_FAILED_TO_UNZIP 5
+//#define INTDBStatusNoNetworkConnection 3
+//#define INTDBStatusNoUploadedFile 4
+//#define INTDBStatusFailedToUnzip 5
+
 
 @class IntersectionsDatabase;
 
@@ -68,13 +70,18 @@
 - (MPIntersection*) getMPIntersectionFromDB:(int)intID
                                   withRamps:(BOOL)wantRamps;
 
-- (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user WithStatus:(int)status;
+- (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
+                                                withStatus:(int)status;
 
 - (BOOL)setIntersectionStatusTo:(int)status
                 forIntersection:(int)intID;
 
-- (BOOL)assignIntersection:(int)intID To:(int)user;
-- (BOOL)assignIntersectionsFrom:(int)intID To:(int)endID ToUser:(int)user;
+- (BOOL)assignIntersection:(int)intID
+                        to:(int)user;
+
+- (BOOL)assignIntersectionsFrom:(int)intID
+                             to:(int)endID
+                         toUser:(int)user;
 
 - (BOOL)assignAllIntersectionTo:(int)user;
 - (BOOL)assignRemainingIntersectionsTo:(int)user;

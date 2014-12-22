@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, GMSStatus)
     GMSStatusDelete,
 };
 
-typedef NS_ENUM(NSInteger, GMSMessageID)
+typedef NS_ENUM(NSInteger, GMSMessage)
 {
     GMSMessageDefault,
     GMSMessageOpenConnect,
@@ -47,6 +47,24 @@ typedef NS_ENUM(NSInteger, FTPStatus)
     FTPStatusConnectionFailed,
     FTPStatusConnectionFailedTryingSecondary,
     FTPStatusFailedToUnzip,
+};
+
+typedef NS_ENUM(NSInteger, INTDBStatus)
+{
+    INTDBStatusDefault,
+    INTDBStatusOK,
+    INTDBStatusFailed,
+    INTDBStatusNoNetworkConnection,
+    INTDBStatusNoUploadedFile,
+    INTDBStatusFailedToUnzip,
+};
+
+typedef NS_ENUM(NSInteger, IntStatus)
+{
+    IntStatusDefault,
+    IntStatusPrelimComplete,
+    IntStatusComplex,
+    IntStatusDetailComplete,
 };
 
 @end
