@@ -127,7 +127,7 @@
     }
 }
 
-- (void)showAfter:(float)seconds
+- (void)showAfter:(CGFloat)seconds
         withTitle:(NSString *)title
         andButton:(NSString *)button
 {
@@ -146,7 +146,7 @@
           withTitle:title];
 }
 
-- (void)showAfter:(float)seconds
+- (void)showAfter:(CGFloat)seconds
         withTitle:(NSString *)title
 {
     self.title = title;
@@ -167,7 +167,7 @@
         [self show];
 }
 
-- (void)updateProgress:(float)progress
+- (void)updateProgress:(CGFloat)progress
 {
     _progressView.progress = progress;
 }

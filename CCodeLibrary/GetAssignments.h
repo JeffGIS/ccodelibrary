@@ -1,9 +1,6 @@
 //  GetAssignments.h
 //  CCodeLibrary
 
-#define GETASS_OK 0
-#define GETASS_FAILED 101
-
 #import <Foundation/Foundation.h>
 #import "FTPDataPull.h"
 #import "GSSiPopoverView.h"

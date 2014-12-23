@@ -17,6 +17,7 @@
 @end
 
 @interface GetPlaceAreaFile : NSObject<FTPDataPullDelegate>
+
 @property (nonatomic, weak) id <GetPlaceAreaFileDelegate> delegate;
 
 - (BOOL)getPlaceAreaFile:(GSSiPopoverView*)popover

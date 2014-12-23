@@ -99,4 +99,11 @@ typedef NS_ENUM(NSInteger, IntElementType)
     IntElementTypeIntersection,
 };
 
+typedef NS_ENUM(NSInteger, GetAssStatus)
+{
+    GetAssStatusDefault,
+    GetAssStatusOK,
+    GetAssStatusFailed,
+};
+
 @end

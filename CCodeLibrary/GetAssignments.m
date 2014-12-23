@@ -38,11 +38,11 @@
         return;
     
     if (status == FTPStatusOK)
-        status = GETASS_OK;
+        status = GetAssStatusOK;
     
     else
     {
-        status = GETASS_FAILED;
+        status = GetAssStatusFailed;
         path = @"";
     }
     

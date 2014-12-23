@@ -5,12 +5,6 @@
 #import <CoreGraphics/CoreGraphics.h>
 
 @interface PlacesInfo : NSObject
-{
-    NSString *_name, *_geoid, *_statecode;
-    CGFloat _bounds_w, _bounds_s, _bounds_e, _bounds_n;
-    NSNumber *_latitude, *_longitude;
-    int _statefp;
-}
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *geoid;

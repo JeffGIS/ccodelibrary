@@ -102,4 +102,6 @@
 
 - (CGFloat)getTotalRGBforColor:(UIColor *)color;
 
+- (void)shakeButton:(UIButton *)button;
+
 @end

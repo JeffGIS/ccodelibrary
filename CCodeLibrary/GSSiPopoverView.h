@@ -27,14 +27,14 @@
 - (id)initWithView:(UIView *)fromView;
 - (void)popoverCancel:(UIButton *)sender;
 
-- (void)showAfter:(float)seconds
+- (void)showAfter:(CGFloat)seconds
         withTitle:(NSString*)title;
 
-- (void)showAfter:(float)seconds
+- (void)showAfter:(CGFloat)seconds
         withTitle:(NSString *)title
         andButton:(NSString *)button;
 
-- (void)updateProgress:(float)progress;
+- (void)updateProgress:(CGFloat)progress;
 - (void)hide;
 
 @end

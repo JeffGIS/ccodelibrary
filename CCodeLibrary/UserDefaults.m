@@ -839,4 +839,18 @@ static UserDefaults *_defaults;
     return string;
 }
 
+- (void)shakeButton:(UIButton *)button
+{
+    CATransform3D transform = CATransform3DMakeRotation(0.08, 0.0, 0.0, 1.0);
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform"];
+    animation.toValue = [NSValue valueWithCATransform3D:transform];
+    animation.autoreverses = YES;
+    animation.duration = 0.1;
+    animation.repeatCount =  HUGE_VALF;
+    animation.delegate = self;
+    
+    [button.layer addAnimation:animation
+                        forKey:@"shakeAnimation"];
+}
+
 @end
