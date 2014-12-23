@@ -55,7 +55,7 @@
         {
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
             
-            if (type == INT_ELEMENT_TYPE_RAMP)
+            if (type == IntElementTypeRamp)
             {
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
                 pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
@@ -65,23 +65,30 @@
                 CGContextFillPath(context);
             }
             
-            else if (type == INT_ELEMENT_TYPE_XWALK)
+            else if (type == IntElementTypeXWalk)
             {
                 CGContextSetFillColorWithColor(context, UIColor.whiteColor.CGColor);
-                pointRect = CGRectMake(pt.x - ((size * 1.35) / 2.0), pt.y - ((size * 0.5) / 2.0), (size * 1.35), (size * 0.5));
+                
+                pointRect = CGRectMake((pt.x - ((size * 1.35) / 2.0)),
+                                       (pt.y - ((size * 0.5) / 2.0)),
+                                       (size * 1.35), (size * 0.5));
+                
                 CGContextSetLineWidth(context, borderWidth);
                 CGContextFillRect(context, pointRect);
                 CGContextStrokeRect(context, pointRect);
                 CGContextFillPath(context);
             }
             
-            else if (type == INT_ELEMENT_TYPE_SIGNAL)
+            else if (type == IntElementTypeSignal)
             {
                 UIImage *image = UserDefaults.defaults.triangleImage;
-                [image drawInRect:CGRectMake(pt.x - ((size * 1.25) / 2.0), pt.y - ((size * 1.75) / 2.0), (size * 1.25), (size * 1.75))];
+                
+                [image drawInRect:CGRectMake((pt.x - ((size * 1.25) / 2.0)),
+                                             (pt.y - ((size * 1.75) / 2.0)),
+                                             (size * 1.25), (size * 1.75))];
             }
             
-            else if (type == INT_ELEMENT_TYPE_INTERSECTION)
+            else if (type == IntElementTypeIntersection)
             {
                 size = 40.0, borderWidth = 2.0;
                 CGContextSetFillColorWithColor(context, UserDefaults.defaults.green.CGColor);

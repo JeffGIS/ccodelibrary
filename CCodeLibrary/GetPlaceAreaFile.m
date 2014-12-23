@@ -31,11 +31,11 @@
               filePath:(NSString *)path
 {
     if (status == FTPStatusOK)
-        status = AF_OK;
+        status = AreaFileStatusOK;
     
     else if (status != FTPStatusConnectionFailedTryingSecondary)
     {
-        status = AF_FAILED;
+        status = AreaFileStatusFailed;
         path = @"";
     }
     

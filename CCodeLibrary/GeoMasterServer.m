@@ -135,7 +135,7 @@ static GeoMasterServer *_open = nil;
         {
             [_delegate GMServer:self
                 didReceiveError:@"Failed to send message"
-                     withStatus:GM_SEND_FAILED];
+                     withStatus:GMServerStatusSendFailed];
         }
     }
     
@@ -217,7 +217,7 @@ static GeoMasterServer *_open = nil;
                             {
                                 [_delegate GMServer:self
                                   didReceiveMessage:_output
-                                         withStatus:GM_OK];
+                                         withStatus:GMServerStatusOK];
                             }
                             
 							_output = @"";
@@ -287,7 +287,7 @@ static GeoMasterServer *_open = nil;
     {
         [_delegate GMServer:self
             didReceiveError:@"Server failed to respond"
-                 withStatus:GM_NO_RESPONSE];
+                 withStatus:GMServerStatusNoResponse];
     }
     
 }
@@ -299,7 +299,7 @@ static GeoMasterServer *_open = nil;
     {
         [_delegate GMServer:self
             didReceiveError:@"Server failed to open"
-                 withStatus:GM_OPEN_FAILED];
+                 withStatus:GMServerStatusOpenFailed];
     }
 }
 

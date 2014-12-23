@@ -67,4 +67,36 @@ typedef NS_ENUM(NSInteger, IntStatus)
     IntStatusDetailComplete,
 };
 
+typedef NS_ENUM(NSInteger, AreaFileStatus)
+{
+    AreaFileStatusDefault,
+    AreaFileStatusOK,
+    AreaFileStatusFailed,
+};
+
+typedef NS_ENUM(NSInteger, GMServerStatus)
+{
+    GMServerStatusDefault,
+    GMServerStatusOK,
+    GMServerStatusOpenFailed,
+    GMServerStatusSendFailed,
+    GMServerStatusNoResponse,
+};
+
+typedef NS_ENUM(NSInteger, IntTextType)
+{
+    IntTextTypeDefault,
+    IntTextTypeIndex,
+    IntTextTypeData,
+};
+
+typedef NS_ENUM(NSInteger, IntElementType)
+{
+    IntElementTypeDefault,
+    IntElementTypeRamp,
+    IntElementTypeXWalk,
+    IntElementTypeSignal,
+    IntElementTypeIntersection,
+};
+
 @end

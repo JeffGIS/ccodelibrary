@@ -831,4 +831,12 @@ static UserDefaults *_defaults;
     return mutableString;
 }
 
+- (NSString *)removeOpeningSpaces:(NSString *)string
+{
+    while ([string characterAtIndex:0] == ' ')
+        string = [string substringFromIndex:1];
+    
+    return string;
+}
+
 @end

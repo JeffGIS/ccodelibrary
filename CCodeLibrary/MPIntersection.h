@@ -4,7 +4,6 @@
 #define RAMP 1
 #define STREET 2
 #define UPPER 3
-#define RAMP 1
 #define STREETLANDING 2
 #define UPPERLANDING 3
 #define FLARELEFT 4

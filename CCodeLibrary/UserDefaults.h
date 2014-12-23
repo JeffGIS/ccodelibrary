@@ -51,6 +51,7 @@
 - (NSString *)includeTextAfterPipe:(NSString *)string;
 - (NSString *)includeTextAfterFirstColon:(NSString *)string;
 - (NSString *)addSpaceAfterComma:(NSString *)string;
+- (NSString *)removeOpeningSpaces:(NSString *)string;
 - (UIImage *)invertImage:(UIImage *)image;
 - (void)disableWebKitDiskImageCache;
 - (NSString *)sharedFilePath;

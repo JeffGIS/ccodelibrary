@@ -1,9 +1,6 @@
 //  GetPlaceAreaFile.h
 //  CCodeLibrary
 
-#define AF_OK 0
-#define AF_FAILED 101
-
 #import <Foundation/Foundation.h>
 #import "FTPDataPull.h"
 #import "GSSiPopoverView.h"

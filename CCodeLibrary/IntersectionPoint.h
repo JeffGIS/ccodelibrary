@@ -3,11 +3,6 @@
 
 #import <Foundation/Foundation.h>
 
-#define INT_ELEMENT_TYPE_RAMP 1
-#define INT_ELEMENT_TYPE_XWALK 2
-#define INT_ELEMENT_TYPE_SIGNAL 3
-#define INT_ELEMENT_TYPE_INTERSECTION 4
-
 @interface IntersectionPoint : NSObject
 
 @property int intID;

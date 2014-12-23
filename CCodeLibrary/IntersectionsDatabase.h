@@ -4,22 +4,6 @@
 #import "CCodeLibrary.h"
 #import <sqlite3.h>
 
-
-//#define INTDBStatusOK 0
-//#define INTDBStatusFailed 1
-
-#define INT_TEXT_INDEX 1
-#define INT_TEXT_DATA 2
-
-//#define IntStatusPrelimComplete 1
-//#define IntStatusComplex 2
-//#define IntStatusDetailComplete 3
-
-//#define INTDBStatusNoNetworkConnection 3
-//#define INTDBStatusNoUploadedFile 4
-//#define INTDBStatusFailedToUnzip 5
-
-
 @class IntersectionsDatabase;
 
 @protocol IntersectionsDatabaseDelegate <NSObject>
@@ -27,7 +11,6 @@
 - (void) intersectionsDatabase:(NSString *)databasePath
                        didLoad:(NSString *)message
                     withStatus:(int)status;
-
 @end
 
 @interface IntersectionsDatabase : NSObject<FTPDataPullDelegate>

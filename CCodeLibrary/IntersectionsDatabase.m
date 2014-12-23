@@ -627,7 +627,7 @@ static IntersectionsDatabase *_database;
         int intX = sqlite3_column_int(statement, 2);
         int intY = sqlite3_column_int(statement, 3);
         IntersectionElement *intEl = [[IntersectionElement alloc] init];
-        intEl.type = INT_ELEMENT_TYPE_INTERSECTION;
+        intEl.type = IntElementTypeIntersection;
         intEl.lev21x = intX;
         intEl.lev21y = intY;
         
@@ -646,9 +646,9 @@ static IntersectionsDatabase *_database;
                     IntersectionElement *intEl = [[IntersectionElement alloc] init];
                     intEl.intID = intID;
                     intEl.elementID = (i - 3);
-                    intEl.type = INT_ELEMENT_TYPE_RAMP;
-                    intEl.lev21x = intX + offsetx;
-                    intEl.lev21y = intY + offsety;
+                    intEl.type = IntElementTypeRamp;
+                    intEl.lev21x = (intX + offsetx);
+                    intEl.lev21y = (intY + offsety);
                     [dataArray addObject:intEl];
                 }
             }
@@ -664,9 +664,9 @@ static IntersectionsDatabase *_database;
                     IntersectionElement *intEl = [[IntersectionElement alloc] init];
                     intEl.intID = intID;
                     intEl.elementID = (i - 15);
-                    intEl.type = INT_ELEMENT_TYPE_XWALK;
-                    intEl.lev21x = intX + offsetx;
-                    intEl.lev21y = intY + offsety;
+                    intEl.type = IntElementTypeXWalk;
+                    intEl.lev21x = (intX + offsetx);
+                    intEl.lev21y = (intY + offsety);
                     [dataArray addObject:intEl];
                 }
             }
@@ -682,9 +682,9 @@ static IntersectionsDatabase *_database;
                     IntersectionElement *intEl = [[IntersectionElement alloc] init];
                     intEl.intID = intID;
                     intEl.elementID = (i - 19);
-                    intEl.type = INT_ELEMENT_TYPE_SIGNAL;
-                    intEl.lev21x = intX + offsetx;
-                    intEl.lev21y = intY + offsety;
+                    intEl.type = IntElementTypeSignal;
+                    intEl.lev21x = (intX + offsetx);
+                    intEl.lev21y = (intY + offsety);
                     [dataArray addObject:intEl];
                 }
             }
@@ -1039,11 +1039,11 @@ static IntersectionsDatabase *_database;
     NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
     //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
     
-    if (type == INT_TEXT_DATA)
-        path = [NSString stringWithFormat:@"%@/%i/intersection_data.bin", documentsDirectory, self.geoid];
+    if (type == IntTextTypeData)
+        path = [NSString stringWithFormat:@"%@/%i/intersection_data.bin", documentsDirectory, _geoid];
     
     else
-        path = [NSString stringWithFormat:@"%@/%i/intersection_index.bin", documentsDirectory, self.geoid];
+        path = [NSString stringWithFormat:@"%@/%i/intersection_index.bin", documentsDirectory, _geoid];
     
     return path;
 }
