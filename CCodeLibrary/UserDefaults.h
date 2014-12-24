@@ -103,5 +103,6 @@
 - (CGFloat)getTotalRGBforColor:(UIColor *)color;
 
 - (void)shakeButton:(UIButton *)button;
+- (void)deleteFilesForGeoid:(int)geoid;
 
 @end

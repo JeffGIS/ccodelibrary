@@ -285,8 +285,8 @@ static UserDefaults *_defaults;
         
         else
         {
-            NSComparisonResult result = [[UserDefaults.defaults includeTextInsideParentheses:[array objectAtIndex:i]]
-                                         compare:[UserDefaults.defaults includeTextInsideParentheses:[newArray objectAtIndex:index]]
+            NSComparisonResult result = [[self includeTextInsideParentheses:[array objectAtIndex:i]]
+                                         compare:[self includeTextInsideParentheses:[newArray objectAtIndex:index]]
                                          options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
             
             while (result == NSOrderedDescending)
@@ -296,8 +296,8 @@ static UserDefaults *_defaults;
                 if (index == newArray.count)
                     break;
                 
-                result = [[UserDefaults.defaults includeTextInsideParentheses:[array objectAtIndex:i]]
-                          compare:[UserDefaults.defaults includeTextInsideParentheses:[newArray objectAtIndex:index]]
+                result = [[self includeTextInsideParentheses:[array objectAtIndex:i]]
+                          compare:[self includeTextInsideParentheses:[newArray objectAtIndex:index]]
                           options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
             }
             
@@ -851,6 +851,48 @@ static UserDefaults *_defaults;
     
     [button.layer addAnimation:animation
                         forKey:@"shakeAnimation"];
+}
+
+- (void)deleteFilesForGeoid:(int)geoid
+{
+    NSFileManager *fileManager = NSFileManager.defaultManager;
+    NSError *error;
+    BOOL success;
+    NSString *fileName = [NSString stringWithFormat:@"Place_%7.7i_Area.bin", geoid];
+    NSString *filePath = [self.sharedFilePath stringByAppendingPathComponent:fileName];
+    
+    if ([fileManager fileExistsAtPath:filePath])
+    {
+        success = [fileManager removeItemAtPath:filePath
+                                          error:&error];
+        
+        if (success)
+            NSLog(@"Deleted %@ from device", fileName);
+        
+        else
+            NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
+    }
+    
+    else
+        NSLog(@"%@ was not pulled. No need to delete", fileName);
+    
+    fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
+    filePath = [self.sharedFilePath stringByAppendingPathComponent:fileName];
+    
+    if ([fileManager fileExistsAtPath:filePath])
+    {
+        success = [fileManager removeItemAtPath:filePath
+                                          error:&error];
+        
+        if (success)
+            NSLog(@"Deleted %@ from device", fileName);
+        
+        else
+            NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
+    }
+    
+    else
+        NSLog(@"%@ was never pulled", fileName);
 }
 
 @end
