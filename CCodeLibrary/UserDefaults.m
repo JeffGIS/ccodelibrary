@@ -857,7 +857,9 @@ static UserDefaults *_defaults;
 {
     NSFileManager *fileManager = NSFileManager.defaultManager;
     NSError *error;
-    BOOL success;
+    BOOL success, isDir;
+    
+    //delete PlaceArea.bin file
     NSString *fileName = [NSString stringWithFormat:@"Place_%7.7i_Area.bin", geoid];
     NSString *filePath = [self.sharedFilePath stringByAppendingPathComponent:fileName];
     
@@ -876,6 +878,7 @@ static UserDefaults *_defaults;
     else
         NSLog(@"%@ was not pulled. No need to delete", fileName);
     
+    //delete Intersections.gcf file
     fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
     filePath = [self.sharedFilePath stringByAppendingPathComponent:fileName];
     
@@ -893,6 +896,29 @@ static UserDefaults *_defaults;
     
     else
         NSLog(@"%@ was never pulled", fileName);
+    
+    //delete IntersectionImages directory
+    fileName = [NSString stringWithFormat:@"%i/IntersectionImages", geoid];
+    filePath = [self.sharedFilePath stringByAppendingPathComponent:fileName];
+    
+    if ([fileManager fileExistsAtPath:filePath
+                          isDirectory:&isDir])
+    {
+        if (isDir)
+        {
+            success = [fileManager removeItemAtPath:filePath
+                                              error:&error];
+            
+            if (success)
+                NSLog(@"Deleted %@ from device", fileName);
+            
+            else
+                NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
+        }
+    }
+    
+    else
+        NSLog(@"%@ was never created", fileName);
 }
 
 @end

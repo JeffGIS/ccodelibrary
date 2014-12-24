@@ -430,7 +430,7 @@
         char txt[1024];
         double pixelX, pixelY;
         int factor = pow(2,21-zoom);
-        NSError *err;
+        NSError *error;
 
         LatLongToPixelXYd(lat, lon, 21, &pixelX, &pixelY);
         
@@ -449,9 +449,9 @@
         if (![outcontents writeToFile:cptFile
                            atomically:NO
                              encoding:NSUTF8StringEncoding
-                                error:&err])
+                                error:&error])
         {
-            NSLog(@"ERROR (getImageFileforIntersection): %@", err);
+            NSLog(@"ERROR (getImageFileforIntersection): %@", error.localizedDescription);
         }
     }
     
