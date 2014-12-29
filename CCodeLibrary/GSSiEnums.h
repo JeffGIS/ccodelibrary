@@ -10,7 +10,8 @@ typedef NS_ENUM(NSInteger, MMLMFrom)
     MMLMFromDefault,
     MMLMFromStatusMap,
     MMLMFromAssignInt,
-    MMLMFromSelectCity
+    MMLMFromSelectCity,
+    MMLMFromPriorityLocations,
 };
 
 typedef NS_ENUM(NSInteger, MSCFrom)
@@ -18,6 +19,7 @@ typedef NS_ENUM(NSInteger, MSCFrom)
     MSCFromDefault,
     MSCFromSelectCity,
     MSCFromManageiPads,
+    MSCFromPriorityLocations,
 };
 
 typedef NS_ENUM(NSInteger, GMSStatus)
