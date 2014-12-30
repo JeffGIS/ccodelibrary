@@ -942,7 +942,7 @@ static UserDefaults *_defaults;
 {
     NSMutableArray *locationArray = [[NSMutableArray alloc] init];
     NSMutableArray *namesArray = [[NSMutableArray alloc] init];
-    NSInteger divisor = (NSInteger)roundf(((span.latitudeDelta + span.longitudeDelta) / 2.0) * 80);
+    NSInteger divisor = (NSInteger)roundf(((span.latitudeDelta + span.longitudeDelta) / 2.0) * 60);
     __block NSInteger count = 0;
     
     for (int i = 0; i < divisor; i++)
