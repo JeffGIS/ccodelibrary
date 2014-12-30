@@ -30,6 +30,8 @@
 		A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */ = {isa = PBXBuildFile; fileRef = A96B07BE19FBF276005A73B0 /* LegendView.m */; };
 		A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9735AF019E779DF00894359 /* SystemConfiguration.framework */; };
 		A9735AF419E77B6800894359 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A9735AF319E77B6800894359 /* Reachability.m */; };
+		A97867341A521934000A9BB8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A97867331A521934000A9BB8 /* MapKit.framework */; };
+		A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = A97867361A5219FD000A9BB8 /* PriorityLocation.m */; };
 		A9A9C8DF19CD04E100A63E94 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A9C8DE19CD04E100A63E94 /* GoogleMaps.framework */; };
 		A9C525D01A3B59880056711F /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C525CF1A3B59880056711F /* Colors.m */; };
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
@@ -120,6 +122,9 @@
 		A9735AF019E779DF00894359 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		A9735AF219E77B6800894359 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		A9735AF319E77B6800894359 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		A97867331A521934000A9BB8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		A97867351A5219FD000A9BB8 /* PriorityLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PriorityLocation.h; sourceTree = "<group>"; };
+		A97867361A5219FD000A9BB8 /* PriorityLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PriorityLocation.m; sourceTree = "<group>"; };
 		A9A9C8DE19CD04E100A63E94 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		A9C525CE1A3B59880056711F /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		A9C525CF1A3B59880056711F /* Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Colors.m; sourceTree = "<group>"; };
@@ -178,6 +183,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A97867341A521934000A9BB8 /* MapKit.framework in Frameworks */,
 				A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */,
 				1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */,
 				1F101D2319AE94910006E1D5 /* QuartzCore.framework in Frameworks */,
@@ -237,6 +243,8 @@
 				1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */,
 				1F838AE819B1021C00943A8C /* PlacesInfo.h */,
 				1F838AE919B1021C00943A8C /* PlacesInfo.m */,
+				A97867351A5219FD000A9BB8 /* PriorityLocation.h */,
+				A97867361A5219FD000A9BB8 /* PriorityLocation.m */,
 			);
 			name = Places;
 			sourceTree = "<group>";
@@ -330,6 +338,7 @@
 		EBA2E45C199527660085B2E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A97867331A521934000A9BB8 /* MapKit.framework */,
 				A9735AF019E779DF00894359 /* SystemConfiguration.framework */,
 				A9A9C8DE19CD04E100A63E94 /* GoogleMaps.framework */,
 				1F838AEB19B1026700943A8C /* CoreGraphics.framework */,
@@ -473,6 +482,7 @@
 			files = (
 				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,
 				EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */,
+				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,
 				A94A771319F807570062906E /* Facility.m in Sources */,
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,

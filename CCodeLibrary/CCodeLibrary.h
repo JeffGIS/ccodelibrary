@@ -32,6 +32,7 @@
 #import "FacilitiesDatabase.h"
 #import "LegendView.h"
 #import "GSSiEnums.h"
+#import "PriorityLocation.h"
 
 #define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"
 #define iPAD_HEIGHT 1024.0

@@ -5,11 +5,26 @@
 #import <UIKit/UIKit.h>
 #import "CRAPI.h"
 #import "Colors.h"
+#import <MapKit/MapKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import "PriorityLocation.h"
+#import "GSSiEnums.h"
+#import "GSSiPopoverView.h"
+
+@class UserDefaults;
+
+@protocol UserDefaultsDelegate <NSObject>
+
+- (void)didFinishPriorityLocationArray:(NSMutableArray *)locationArray;
+
+@end
 
 @interface UserDefaults : NSObject
 {
     NSUserDefaults *_defaults;
 }
+
+@property (nonatomic, weak) id <UserDefaultsDelegate> delegate;
 
 + (UserDefaults *)defaults;
 
@@ -104,5 +119,9 @@
 
 - (void)shakeButton:(UIButton *)button;
 - (void)deleteFilesForGeoid:(int)geoid;
+
+- (void)priorityLocationArrayForSpan:(MKCoordinateSpan)span
+                              origin:(CLLocationCoordinate2D)origin
+                         popoverView:(GSSiPopoverView *)popover;
 
 @end

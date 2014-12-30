@@ -108,4 +108,10 @@ typedef NS_ENUM(NSInteger, GetAssStatus)
     GetAssStatusFailed,
 };
 
+typedef NS_ENUM(NSInteger, PriorityLocationType)
+{
+    PriorityLocationTypeDefault,
+    PriorityLocationTypeSchool,
+};
+
 @end
