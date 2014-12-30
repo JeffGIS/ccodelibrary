@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "UserDefaults.h"
+#import "MathUtil.h"
 
 @implementation UserDefaults
 
@@ -938,6 +939,7 @@ static UserDefaults *_defaults;
 
 - (void)priorityLocationArrayForSpan:(MKCoordinateSpan)span
                               origin:(CLLocationCoordinate2D)origin
+                              bounds:(dbounds)bounds
                          popoverView:(GSSiPopoverView *)popover
 {
     NSMutableArray *locationArray = [[NSMutableArray alloc] init];
@@ -966,6 +968,11 @@ static UserDefaults *_defaults;
                     pLoc.coordinate = item.placemark.coordinate;
                     pLoc.name = item.name.capitalizedString;
                     
+                    DPOINT dPoint;
+                    dPoint.x = pLoc.coordinate.longitude;
+                    dPoint.y = pLoc.coordinate.latitude;
+                    
+                    if (pointInDBounds (&dPoint,&bounds))
                     if (![namesArray containsObject:pLoc.name])
                     {
                         int index = 0;

@@ -126,6 +126,7 @@
 
 - (void)priorityLocationArrayForSpan:(MKCoordinateSpan)span
                               origin:(CLLocationCoordinate2D)origin
+                              bounds:(dbounds)bounds
                          popoverView:(GSSiPopoverView *)popover;
 
 @end

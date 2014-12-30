@@ -11,6 +11,8 @@
 #define	HALFPI PY/2
 #define RADtoDEG 57.295779513082322
 #define DEGtoRAD 0.017453292519943296
+#define  RADDEG    1.7453292519943396e-2
+#define  DEGRAD    5.7295779513082322e1
 #define MFT 3.280833333333333e0
 #define FTM 3.04800609601219e-1
 
@@ -167,5 +169,23 @@ struct PlaneVec3
 	vec3 point;
 	vec3 normal;
 };
+typedef double CLocationDegrees;
+typedef struct
+{
+    CLocationDegrees latitude;
+    CLocationDegrees longitude;
+} CLocationCoordinate2D;
+
+typedef struct
+{
+    CLocationDegrees latitudeDelta;
+    CLocationDegrees longitudeDelta;
+} MCoordinateSpan;
+
+typedef struct
+{
+    CLocationCoordinate2D center;
+    MCoordinateSpan span;
+} MCoordinateRegion;
 
 #endif

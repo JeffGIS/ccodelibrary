@@ -87,10 +87,11 @@ LPTRANDATA  LoadTranFromCPT (const char * Name, int dir);
 void MNMXCORLtoMNMXCORD (MNMXCORL *in,MNMXCORD *out);
 void MNMXCORDtoMNMXCORL (MNMXCORD *in,MNMXCORL *out);
 void InflateMNMXCORL (LPMNMXCORL pBounds, int Value);
-double ArcDistance(DPOINT p1, DPOINT p2);
-DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
 int diffInDegrees (int angle1,int angle2);
 bool CreateMask (LPDPOINT *pPointsIN, int *pnPoints,bounds *pbnds);
 int fgetstring (char * str,int maxlen,FILE * fid);
+DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
+double ArcDistanceLL (CLocationCoordinate2D *coord1,CLocationCoordinate2D *coord2);
+bool pointInDBounds (DPOINT *pt,dbounds *bounds);
 
 #endif
