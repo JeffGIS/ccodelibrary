@@ -942,17 +942,18 @@ static UserDefaults *_defaults;
 {
     NSMutableArray *locationArray = [[NSMutableArray alloc] init];
     NSMutableArray *namesArray = [[NSMutableArray alloc] init];
-    NSInteger divisor = (NSInteger)roundf(((span.latitudeDelta + span.longitudeDelta) / 2.0) * 1000);
+    NSInteger divisor = (NSInteger)roundf(((span.latitudeDelta + span.longitudeDelta) / 2.0) * 80);
     __block NSInteger count = 0;
     
     for (int i = 0; i < divisor; i++)
     {
         for (int j = 0; j < divisor; j++)
         {
-            CLLocationCoordinate2D center = {(origin.latitude - (span.latitudeDelta / 2.0) + (span.latitudeDelta * i)),
-                (origin.longitude + (span.longitudeDelta / 2.0) + (span.longitudeDelta * j))};
+            CLLocationCoordinate2D center = {(origin.latitude - (span.latitudeDelta / (divisor * 2.0)) - ((span.latitudeDelta / divisor) * i)),
+                (origin.longitude + (span.longitudeDelta / (divisor * 2.0)) + ((span.longitudeDelta / divisor * j)))};
             
-            MKCoordinateRegion region = {center, span};
+            MKCoordinateRegion region = {center, {(span.latitudeDelta / divisor), (span.longitudeDelta / divisor)}};
+            
             MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
             request.region = region;
             request.naturalLanguageQuery = @"school";
@@ -968,30 +969,36 @@ static UserDefaults *_defaults;
                     
                     if (![namesArray containsObject:pLoc.name])
                     {
-                        int index = 0;
-                        
-                        if (namesArray.count > 0)
+                        if (pLoc.coordinate.latitude <= origin.latitude &&
+                            pLoc.coordinate.latitude >= (origin.latitude - span.latitudeDelta) &&
+                            pLoc.coordinate.longitude >= origin.longitude &&
+                            pLoc.coordinate.longitude <= (origin.longitude + span.longitudeDelta))
                         {
-                            NSComparisonResult result = [pLoc.name compare:[namesArray objectAtIndex:index]
-                                                                   options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+                            int index = 0;
                             
-                            while (result == NSOrderedDescending)
+                            if (namesArray.count > 0)
                             {
-                                index++;
+                                NSComparisonResult result = [pLoc.name compare:[namesArray objectAtIndex:index]
+                                                                       options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
                                 
-                                if (index == namesArray.count)
-                                    break;
-                                
-                                result = [pLoc.name compare:[namesArray objectAtIndex:index]
-                                                    options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+                                while (result == NSOrderedDescending)
+                                {
+                                    index++;
+                                    
+                                    if (index == namesArray.count)
+                                        break;
+                                    
+                                    result = [pLoc.name compare:[namesArray objectAtIndex:index]
+                                                        options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+                                }
                             }
+                            
+                            [namesArray insertObject:pLoc.name
+                                             atIndex:index];
+                            
+                            [locationArray insertObject:pLoc
+                                                atIndex:index];
                         }
-                        
-                        [namesArray insertObject:pLoc.name
-                                         atIndex:index];
-                        
-                        [locationArray insertObject:pLoc
-                                            atIndex:index];
                     }
                 }
                 
