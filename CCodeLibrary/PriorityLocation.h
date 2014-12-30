@@ -4,7 +4,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface PriorityLocation : NSObject
+@interface PriorityLocation : NSObject <NSCoding>
 
 @property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic, copy) NSString *name;

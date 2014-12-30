@@ -67,6 +67,12 @@ static UserDefaults *_defaults;
     return defaultFloat;
 }
 
+- (NSData *)NSDataForKey:(NSString *)key
+{
+    NSData *data = [_defaults objectForKey:key];
+    return data;
+}
+
 - (NSArray *)locationList
 {
     NSArray *locationList = [_defaults arrayForKey:@"LocationList"];
@@ -391,6 +397,15 @@ static UserDefaults *_defaults;
 {
     [_defaults setFloat:CGFloat
                  forKey:key];
+    
+    [_defaults synchronize];
+}
+
+- (void)saveNSData:(NSData *)data
+            forKey:(NSString *)key
+{
+    [_defaults setObject:data
+                  forKey:key];
     
     [_defaults synchronize];
 }
