@@ -73,6 +73,8 @@
 - (NSString *)sharedFilePath;
 - (NSString *)localFilePath;
 - (NSMutableArray *)sortByContentsOfParentheses:(NSMutableArray *)array;
+- (NSArray *)priorityLocationKeywords;
+- (NSArray *)priorityLocationTypes;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green

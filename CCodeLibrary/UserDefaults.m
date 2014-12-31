@@ -318,6 +318,22 @@ static UserDefaults *_defaults;
     return newArray;
 }
 
+- (NSArray *)priorityLocationKeywords
+{
+    NSArray *priorityKeywords = @[@"school", @"medical", @"hospital", @"library", @"employment", @"post office",
+                                  @"government", @"hotel", @"nursing home", @"assisted living"];
+    
+    return priorityKeywords;
+}
+
+- (NSArray *)priorityLocationTypes
+{
+    NSArray *priorityTypes = @[@"Schools", @"Medical Facilities", @"Hospitals", @"Libraries", @"Employment Centers", @"Post Offices",
+                               @"Government Centers", @"Hotels", @"Nursing Homes", @"Assisted Living Centers"];
+    
+    return priorityTypes;
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue
@@ -877,7 +893,7 @@ static UserDefaults *_defaults;
     
     //delete PlaceArea.bin file
     NSString *fileName = [NSString stringWithFormat:@"Place_%7.7i_Area.bin", geoid];
-    NSString *filePath = [self.sharedFilePath stringByAppendingPathComponent:fileName];
+    NSString *filePath = [[self sharedFilePath] stringByAppendingPathComponent:fileName];
     
     if ([fileManager fileExistsAtPath:filePath])
     {
@@ -896,7 +912,7 @@ static UserDefaults *_defaults;
     
     //delete Intersections.gcf file
     fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
-    filePath = [self.sharedFilePath stringByAppendingPathComponent:fileName];
+    filePath = [[self sharedFilePath] stringByAppendingPathComponent:fileName];
     
     if ([fileManager fileExistsAtPath:filePath])
     {
@@ -915,7 +931,7 @@ static UserDefaults *_defaults;
     
     //delete IntersectionImages directory
     fileName = [NSString stringWithFormat:@"%i/IntersectionImages", geoid];
-    filePath = [self.sharedFilePath stringByAppendingPathComponent:fileName];
+    filePath = [[self sharedFilePath] stringByAppendingPathComponent:fileName];
     
     if ([fileManager fileExistsAtPath:filePath
                           isDirectory:&isDir])
@@ -944,30 +960,35 @@ static UserDefaults *_defaults;
 {
     NSMutableArray *locationArray = [[NSMutableArray alloc] init];
     NSMutableArray *namesArray = [[NSMutableArray alloc] init];
+    NSMutableArray *latitudesArray = [[NSMutableArray alloc] init];
     NSInteger divisor = (NSInteger)roundf(((span.latitudeDelta + span.longitudeDelta) / 2.0) * 60);
+    divisor = min(divisor, 5);
     __block NSInteger count = 0;
+    NSArray *priorityKeywords = [self priorityLocationKeywords];
+    NSArray *priorityTypes = [self priorityLocationTypes];
+    NSInteger totalQueries = (divisor * divisor * priorityKeywords.count);
+    NSLog(@"Total queries = %li (%li sections * %lu types)",
+          (long)totalQueries, (divisor * divisor), (unsigned long)priorityKeywords.count);
     
-    for (int i = 0; i < divisor; i++)
+    for (int ptc = 0; ptc < priorityKeywords.count; ptc++)
     {
-        for (int j = 0; j < divisor; j++)
+        for (int i = 0; i < divisor; i++)
         {
-            CLLocationCoordinate2D center = {(origin.latitude - (span.latitudeDelta / (divisor * 2.0)) - ((span.latitudeDelta / divisor) * i)),
-                (origin.longitude + (span.longitudeDelta / (divisor * 2.0)) + ((span.longitudeDelta / divisor * j)))};
-            
-            MKCoordinateRegion region = {center, {(span.latitudeDelta / divisor), (span.longitudeDelta / divisor)}};
-            
-            MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
-            request.region = region;
-            request.naturalLanguageQuery = @"school";
-            MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
-            
-            [search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error) {
-                for (MKMapItem *item in response.mapItems)
-                {
-                    PriorityLocation *pLoc = [[PriorityLocation alloc] init];
-                    pLoc.type = PriorityLocationTypeSchool;
-                    pLoc.coordinate = item.placemark.coordinate;
-                    pLoc.name = item.name.capitalizedString;
+            for (int j = 0; j < divisor; j++)
+            {
+                CLLocationCoordinate2D center = {(origin.latitude - (span.latitudeDelta / (divisor * 2.0)) - ((span.latitudeDelta / divisor) * i)),
+                    (origin.longitude + (span.longitudeDelta / (divisor * 2.0)) + ((span.longitudeDelta / divisor * j)))};
+                
+                MKCoordinateRegion region = {center, {(span.latitudeDelta / divisor), (span.longitudeDelta / divisor)}};
+                
+                MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
+                request.region = region;
+                request.naturalLanguageQuery = priorityTypes[ptc];
+                MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
+                
+                [search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error) {
+                    if (error)
+                        NSLog(@"MKLocalSearch Error (%@:%i:%i) - %@", priorityTypes[ptc], i, j, error.localizedDescription);
                     
                     DPOINT dPoint;
                     dPoint.x = pLoc.coordinate.longitude;
@@ -976,48 +997,101 @@ static UserDefaults *_defaults;
                     if (pointInDBounds (&dPoint,&bounds))
                     if (![namesArray containsObject:pLoc.name])
                     {
-                        if (pLoc.coordinate.latitude <= origin.latitude &&
-                            pLoc.coordinate.latitude >= (origin.latitude - span.latitudeDelta) &&
-                            pLoc.coordinate.longitude >= origin.longitude &&
-                            pLoc.coordinate.longitude <= (origin.longitude + span.longitudeDelta))
+                        popover.popoverLabel.text = [NSString stringWithFormat:@"Importing %@", priorityTypes[ptc]];
+                        
+                        for (MKMapItem *item in response.mapItems)
                         {
-                            int index = 0;
+                            PriorityLocation *pLoc = [[PriorityLocation alloc] init];
                             
-                            if (namesArray.count > 0)
+                            switch (ptc)
                             {
-                                NSComparisonResult result = [pLoc.name compare:[namesArray objectAtIndex:index]
-                                                                       options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
-                                
-                                while (result == NSOrderedDescending)
+                                case 0:
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeSchool];
+                                    break;
+                                    
+                                case 1:
+                                case 2:
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeMedical];
+                                    break;
+                                    
+                                case 3:
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeLibrary];
+                                    break;
+                                    
+                                case 4:
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeEmployment];
+                                    break;
+                                    
+                                case 5:
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypePostOffice];
+                                    break;
+                                    
+                                case 6:
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeGovernment];
+                                    break;
+                                    
+                                case 7:
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeHotel];
+                                    break;
+                                    
+                                case 8:
+                                case 9:
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeSeniorResidential];
+                                    break;
+                            }
+                           
+                            pLoc.coordinate = item.placemark.coordinate;
+                            pLoc.name = item.name.capitalizedString;
+                            NSString *latitude = [NSString stringWithFormat:@"%f", pLoc.coordinate.latitude];
+                            
+                            if (![namesArray containsObject:pLoc.name] || ![latitudesArray containsObject:latitude])
+                            {
+                                if (pLoc.coordinate.latitude <= origin.latitude &&
+                                    pLoc.coordinate.latitude >= (origin.latitude - span.latitudeDelta) &&
+                                    pLoc.coordinate.longitude >= origin.longitude &&
+                                    pLoc.coordinate.longitude <= (origin.longitude + span.longitudeDelta))
                                 {
-                                    index++;
+                                    int index = 0;
                                     
-                                    if (index == namesArray.count)
-                                        break;
+                                    if (namesArray.count > 0)
+                                    {
+                                        NSComparisonResult result = [pLoc.name compare:[namesArray objectAtIndex:index]
+                                                                               options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+                                        
+                                        while (result == NSOrderedDescending)
+                                        {
+                                            index++;
+                                            
+                                            if (index == namesArray.count)
+                                                break;
+                                            
+                                            result = [pLoc.name compare:[namesArray objectAtIndex:index]
+                                                                options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+                                        }
+                                    }
                                     
-                                    result = [pLoc.name compare:[namesArray objectAtIndex:index]
-                                                        options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+                                    [latitudesArray addObject:latitude];
+                                    
+                                    [namesArray insertObject:pLoc.name
+                                                     atIndex:index];
+                                    
+                                    [locationArray insertObject:pLoc
+                                                        atIndex:index];
                                 }
                             }
-                            
-                            [namesArray insertObject:pLoc.name
-                                             atIndex:index];
-                            
-                            [locationArray insertObject:pLoc
-                                                atIndex:index];
                         }
                     }
-                }
-                
-                count++;
-                popover.progressView.progress = ((CGFloat)count / (CGFloat)(divisor * divisor));
-                
-                if (count == (divisor * divisor))
-                {
-                    if (self.delegate)
-                        [self.delegate didFinishPriorityLocationArray:locationArray];
-                }
-            }];
+                    
+                    count++;
+                    popover.progressView.progress = ((CGFloat)count / (CGFloat)totalQueries);
+                    
+                    if (count == totalQueries)
+                    {
+                        if (self.delegate)
+                            [self.delegate didFinishPriorityLocationArray:locationArray];
+                    }
+                }];
+            }
         }
     }
 }

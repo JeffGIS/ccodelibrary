@@ -8,6 +8,6 @@
 
 @property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic) NSInteger type;
+@property (nonatomic) NSNumber *type;
 
 @end
