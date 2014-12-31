@@ -960,44 +960,53 @@ static UserDefaults *_defaults;
             MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
             
             [search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error) {
-                for (MKMapItem *item in response.mapItems)
+                if (error)
+                    NSLog(@"MKLocalSearch Error: %@", error.localizedDescription);
+                
+                if (response.mapItems.count == 0)
+                    NSLog(@"MKLocalSearch %i:%i - No Results Found", i, j);
+                
+                else
                 {
-                    PriorityLocation *pLoc = [[PriorityLocation alloc] init];
-                    pLoc.type = PriorityLocationTypeSchool;
-                    pLoc.coordinate = item.placemark.coordinate;
-                    pLoc.name = item.name.capitalizedString;
-                    
-                    if (![namesArray containsObject:pLoc.name])
+                    for (MKMapItem *item in response.mapItems)
                     {
-                        if (pLoc.coordinate.latitude <= origin.latitude &&
-                            pLoc.coordinate.latitude >= (origin.latitude - span.latitudeDelta) &&
-                            pLoc.coordinate.longitude >= origin.longitude &&
-                            pLoc.coordinate.longitude <= (origin.longitude + span.longitudeDelta))
+                        PriorityLocation *pLoc = [[PriorityLocation alloc] init];
+                        pLoc.type = PriorityLocationTypeSchool;
+                        pLoc.coordinate = item.placemark.coordinate;
+                        pLoc.name = item.name.capitalizedString;
+                        
+                        if (![namesArray containsObject:pLoc.name])
                         {
-                            int index = 0;
-                            
-                            if (namesArray.count > 0)
+                            if (pLoc.coordinate.latitude <= origin.latitude &&
+                                pLoc.coordinate.latitude >= (origin.latitude - span.latitudeDelta) &&
+                                pLoc.coordinate.longitude >= origin.longitude &&
+                                pLoc.coordinate.longitude <= (origin.longitude + span.longitudeDelta))
                             {
-                                NSComparisonResult result = [pLoc.name compare:[namesArray objectAtIndex:index]
-                                                                       options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+                                int index = 0;
                                 
-                                while (result == NSOrderedDescending)
+                                if (namesArray.count > 0)
                                 {
-                                    index++;
+                                    NSComparisonResult result = [pLoc.name compare:[namesArray objectAtIndex:index]
+                                                                           options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
                                     
-                                    if (index == namesArray.count)
-                                        break;
-                                    
-                                    result = [pLoc.name compare:[namesArray objectAtIndex:index]
-                                                        options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+                                    while (result == NSOrderedDescending)
+                                    {
+                                        index++;
+                                        
+                                        if (index == namesArray.count)
+                                            break;
+                                        
+                                        result = [pLoc.name compare:[namesArray objectAtIndex:index]
+                                                            options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+                                    }
                                 }
+                                
+                                [namesArray insertObject:pLoc.name
+                                                 atIndex:index];
+                                
+                                [locationArray insertObject:pLoc
+                                                    atIndex:index];
                             }
-                            
-                            [namesArray insertObject:pLoc.name
-                                             atIndex:index];
-                            
-                            [locationArray insertObject:pLoc
-                                                atIndex:index];
                         }
                     }
                 }
