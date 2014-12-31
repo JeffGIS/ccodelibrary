@@ -10,7 +10,7 @@
     if (self)
     {
         _name = [aDecoder decodeObjectForKey:@"PriorityName"];
-        _type = [aDecoder decodeIntForKey:@"PriorityType"];
+        _type = [aDecoder decodeObjectForKey:@"PriorityType"];
         _coordinate.latitude = [aDecoder decodeFloatForKey:@"PriorityLatitude"];
         _coordinate.longitude = [aDecoder decodeFloatForKey:@"PriorityLongitude"];
     }
@@ -23,8 +23,8 @@
     [aCoder encodeObject:_name
                   forKey:@"PriorityName"];
     
-    [aCoder encodeInteger:_type
-                   forKey:@"PriorityType"];
+    [aCoder encodeObject:_type
+                  forKey:@"PriorityType"];
     
     [aCoder encodeFloat:_coordinate.latitude
                  forKey:@"PriorityLatitude"];

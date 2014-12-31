@@ -1002,37 +1002,37 @@ static UserDefaults *_defaults;
                             switch (ptc)
                             {
                                 case 0:
-                                    pLoc.type = PriorityLocationTypeSchool;
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeSchool];
                                     break;
                                     
                                 case 1:
                                 case 2:
-                                    pLoc.type = PriorityLocationTypeMedical;
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeMedical];
                                     break;
                                     
                                 case 3:
-                                    pLoc.type = PriorityLocationTypeLibrary;
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeLibrary];
                                     break;
                                     
                                 case 4:
-                                    pLoc.type = PriorityLocationTypeEmployment;
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeEmployment];
                                     break;
                                     
                                 case 5:
-                                    pLoc.type = PriorityLocationTypePostOffice;
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypePostOffice];
                                     break;
                                     
                                 case 6:
-                                    pLoc.type = PriorityLocationTypeGovernment;
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeGovernment];
                                     break;
                                     
                                 case 7:
-                                    pLoc.type = PriorityLocationTypeHotel;
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeHotel];
                                     break;
                                     
                                 case 8:
                                 case 9:
-                                    pLoc.type = PriorityLocationTypeSeniorResidential;
+                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeSeniorResidential];
                                     break;
                             }
                            
