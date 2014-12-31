@@ -317,10 +317,18 @@ static UserDefaults *_defaults;
     return newArray;
 }
 
+- (NSArray *)priorityLocationKeywords
+{
+    NSArray *priorityKeywords = @[@"school", @"medical", @"hospital", @"library", @"employment", @"post office",
+                                  @"government", @"hotel", @"nursing home", @"assisted living"];
+    
+    return priorityKeywords;
+}
+
 - (NSArray *)priorityLocationTypes
 {
-    NSArray *priorityTypes = @[@"school", @"medical", @"hospital", @"library", @"employment", @"post office",
-                               @"government", @"hotel", @"nursing home", @"assisted living"];
+    NSArray *priorityTypes = @[@"Schools", @"Medical Facilities", @"Hospitals", @"Libraries", @"Employment Centers", @"Post Offices",
+                               @"Government Centers", @"Hotels", @"Nursing Homes", @"Assisted Living Centers"];
     
     return priorityTypes;
 }
@@ -884,7 +892,7 @@ static UserDefaults *_defaults;
     
     //delete PlaceArea.bin file
     NSString *fileName = [NSString stringWithFormat:@"Place_%7.7i_Area.bin", geoid];
-    NSString *filePath = [self.sharedFilePath stringByAppendingPathComponent:fileName];
+    NSString *filePath = [[self sharedFilePath] stringByAppendingPathComponent:fileName];
     
     if ([fileManager fileExistsAtPath:filePath])
     {
@@ -903,7 +911,7 @@ static UserDefaults *_defaults;
     
     //delete Intersections.gcf file
     fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
-    filePath = [self.sharedFilePath stringByAppendingPathComponent:fileName];
+    filePath = [[self sharedFilePath] stringByAppendingPathComponent:fileName];
     
     if ([fileManager fileExistsAtPath:filePath])
     {
@@ -922,7 +930,7 @@ static UserDefaults *_defaults;
     
     //delete IntersectionImages directory
     fileName = [NSString stringWithFormat:@"%i/IntersectionImages", geoid];
-    filePath = [self.sharedFilePath stringByAppendingPathComponent:fileName];
+    filePath = [[self sharedFilePath] stringByAppendingPathComponent:fileName];
     
     if ([fileManager fileExistsAtPath:filePath
                           isDirectory:&isDir])
@@ -954,12 +962,13 @@ static UserDefaults *_defaults;
     NSInteger divisor = (NSInteger)roundf(((span.latitudeDelta + span.longitudeDelta) / 2.0) * 60);
     divisor = min(divisor, 5);
     __block NSInteger count = 0;
-    NSArray *priorityTypes = self.priorityLocationTypes;
-    NSInteger totalQueries = (divisor * divisor * priorityTypes.count);
+    NSArray *priorityKeywords = [self priorityLocationKeywords];
+    NSArray *priorityTypes = [self priorityLocationTypes];
+    NSInteger totalQueries = (divisor * divisor * priorityKeywords.count);
     NSLog(@"Total queries = %li (%li sections * %lu types)",
-          (long)totalQueries, (divisor * divisor), (unsigned long)priorityTypes.count);
+          (long)totalQueries, (divisor * divisor), (unsigned long)priorityKeywords.count);
     
-    for (int ptc = 0; ptc < priorityTypes.count; ptc++)
+    for (int ptc = 0; ptc < priorityKeywords.count; ptc++)
     {
         for (int i = 0; i < divisor; i++)
         {
@@ -984,6 +993,8 @@ static UserDefaults *_defaults;
                     
                     else
                     {
+                        popover.popoverLabel.text = [NSString stringWithFormat:@"Importing %@", priorityTypes[ptc]];
+                        
                         for (MKMapItem *item in response.mapItems)
                         {
                             PriorityLocation *pLoc = [[PriorityLocation alloc] init];
