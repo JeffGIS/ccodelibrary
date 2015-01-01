@@ -333,6 +333,63 @@ static UserDefaults *_defaults;
     return priorityTypes;
 }
 
+- (void)drawAccessoryImageForType:(NSInteger)type
+                             cell:(UITableViewCell *)cell
+{
+    CGFloat size = (cell.frame.size.height * 0.8);
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake((cell.frame.size.width - size), (size / 2.0), size, size)];
+    
+    switch (type)
+    {
+        case PriorityLocationTypeSchool:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"school"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeMedical:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"medical"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeLibrary:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"library"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeEmployment:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"employment"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypePostOffice:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"postOffice"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeGovernment:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"government"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeHotel:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"hotel"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeSeniorResidential:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"seniorResidential"
+                                                                                             ofType:@"png"]];
+            break;
+    }
+    
+    if (imageView.image)
+        cell.accessoryView = imageView;
+    
+    else
+        cell.accessoryView = nil;
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue

@@ -76,6 +76,9 @@
 - (NSArray *)priorityLocationKeywords;
 - (NSArray *)priorityLocationTypes;
 
+- (void)drawAccessoryImageForType:(NSInteger)type
+                             cell:(UITableViewCell *)cell;
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue
