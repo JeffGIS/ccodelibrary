@@ -10,6 +10,71 @@
 #include <stdio.h>
 #include <limits.h>
 
+double ArcDistance(DPOINT p1, DPOINT p2)
+// returns distance in meters between two lat-longs
+{
+    double GreatCircle, cos_c, ArcCos, sina,sinb, cosa, cosb, cosl;
+    
+    sina =  sin(p1.y/DEGRAD);
+    sinb =  sin(p2.y/DEGRAD);
+    cosa =  cos(p1.y/DEGRAD);
+    cosb =  cos(p2.y/DEGRAD);
+    cosl =  cos((p2.x-p1.x)/DEGRAD);
+    
+    cos_c = sina*sinb+cosa*cosb*cosl;
+    ArcCos = acos(cos_c);
+    GreatCircle = fabs(6371100 * ArcCos);
+    
+    
+    {
+        return GreatCircle;
+    }
+}
+
+DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction)
+{
+    DPOINT LatLong;
+    //given:          Fixed 7 Oct 96 lda
+    //  Point N is at the North Pole
+    //  Point A is at the Given Lat,Long
+    //  Length of two sides of a triangle and the angle it forms
+    
+    double  cosc,cosb,cosa,sinb,sinc,sina,cosC,cosA;
+    
+    cosc = cos(Dist/6371100);
+    sinc = sin(Dist/6371100);
+    cosb = cos((90e0-Lat)/DEGRAD);
+    sinb = sin((90e0-Lat)/DEGRAD);
+    cosa = cos(Direction)*sinb*sinc+cosb*cosc;
+    cosA = acos(cosa);
+    cosA *= DEGRAD;
+    LatLong.y = 90e0 - cosA;
+    sina = acos(cosa);
+    sina = sin(sina);
+    cosC = (cosc-(cosb*cosa)) / (sinb*sina);
+    cosC = max (-1.0,min (cosC,1.0));
+    cosC = acos(cosC);
+    cosC *= DEGRAD;
+    if(Direction > PY)
+        LatLong.x = Long - cosC;
+    else
+        LatLong.x = Long + cosC;
+    
+    {
+        return LatLong;
+    }
+}
+bool pointInDBounds (DPOINT *pt,dbounds *pBounds)
+{
+    bool rtn = true;
+    
+    if (pt->x < pBounds->xmn || pt->x > pBounds->xmx ||
+        pt->y < pBounds->ymn || pt->y > pBounds->ymx)
+        rtn = false;
+    
+    return rtn;
+}
+
 float MaxF(float l, float r)
 {
 	return l > r ? l : r;
@@ -1003,57 +1068,12 @@ Exit2:
     return;
 }
 
-//returns distance in meters between two lat-longs
-double ArcDistance(DPOINT p1, DPOINT p2)
-{
-    double GreatCircle, cos_c, ArcCos, sina,sinb, cosa, cosb, cosl;
-    
-    sina = sin(p1.y / DEGtoRAD);
-    sinb = sin(p2.y / DEGtoRAD);
-    cosa = cos(p1.y / DEGtoRAD);
-    cosb = cos(p2.y / DEGtoRAD);
-    cosl = cos((p2.x - p1.x) / DEGtoRAD);
-    
-    cos_c = sina*sinb+cosa*cosb*cosl;
-    ArcCos = acos(cos_c);
-    GreatCircle = fabs(6371100 * ArcCos);
-    return GreatCircle;
-}
-
 double Acos(double v)
 {
 	v = max(-1.0e0, v);
 	v = min(1.0e0, v);
 	v = acos(v);
 	return v;
-}
-
-DPOINT NewLatLong(double Lat, double Long, double Dist, double Direction)
-{
-    DPOINT LatLong;
-    double  cosc, cosb, cosa, sinb, sinc, sina, cosC, cosA;
-    
-    cosc = cos(Dist / 6371100);
-    sinc = sin(Dist / 6371100);
-    cosb = cos((90e0 - Lat) /DEGtoRAD);
-    sinb = sin((90e0 - Lat) /DEGtoRAD);
-    cosa = cos(Direction) * sinb * sinc + cosb * cosc;
-    cosA = Acos(cosa);
-    cosA *= DEGtoRAD;
-    LatLong.y = 90e0 - cosA;
-    sina = Acos(cosa);
-    sina = sin(sina);
-    cosC = (cosc - (cosb * cosa)) / (sinb * sina);
-    cosC = Acos(cosC);
-    cosC *= DEGtoRAD;
-    
-    if (Direction > PY)
-        LatLong.x = Long - cosC;
-    
-    else
-        LatLong.x = Long + cosC;
-    
-    return LatLong;
 }
 
 dvec2 PointOnEllipseAtAngle(double a, double b, double az)

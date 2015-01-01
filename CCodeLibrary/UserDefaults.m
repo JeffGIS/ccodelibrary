@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "UserDefaults.h"
+#import "MathUtil.h"
 
 @implementation UserDefaults
 
@@ -1011,6 +1012,7 @@ static UserDefaults *_defaults;
 
 - (void)priorityLocationArrayForSpan:(MKCoordinateSpan)span
                               origin:(CLLocationCoordinate2D)origin
+                              bounds:(dbounds)bounds
                          popoverView:(GSSiPopoverView *)popover
 {
     NSMutableArray *locationArray = [[NSMutableArray alloc] init];
@@ -1045,10 +1047,6 @@ static UserDefaults *_defaults;
                     if (error)
                         NSLog(@"MKLocalSearch Error (%@:%i:%i) - %@", priorityTypes[ptc], i, j, error.localizedDescription);
                     
-                    if (response.mapItems.count == 0)
-                        NSLog(@"MKLocalSearch (%@:%i:%i) - No Results Found", priorityTypes[ptc], i, j);
-                    
-                    else
                     {
                         popover.popoverLabel.text = [NSString stringWithFormat:@"Importing %@", priorityTypes[ptc]];
                         
