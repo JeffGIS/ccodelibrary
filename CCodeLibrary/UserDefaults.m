@@ -1010,15 +1010,16 @@ static UserDefaults *_defaults;
         NSLog(@"%@ was never created", fileName);
 }
 
-- (void)priorityLocationArrayForSpan:(MKCoordinateSpan)span
-                              origin:(CLLocationCoordinate2D)origin
-                              bounds:(dbounds)bounds
-                         popoverView:(GSSiPopoverView *)popover
+- (void)priorityLocationArrayForBounds:(dbounds)bounds
+                           popoverView:(GSSiPopoverView *)popover
 {
+    CGFloat longSpan = fabs(bounds.xmn - bounds.xmx);
+    CGFloat latSpan = fabs(bounds.ymx - bounds.ymn);
+    
     NSMutableArray *locationArray = [[NSMutableArray alloc] init];
     NSMutableArray *namesArray = [[NSMutableArray alloc] init];
     NSMutableArray *latitudesArray = [[NSMutableArray alloc] init];
-    NSInteger divisor = (NSInteger)roundf(((span.latitudeDelta + span.longitudeDelta) / 2.0) * 60);
+    NSInteger divisor = (NSInteger)roundf(((latSpan + longSpan) / 2.0) * 60);
     divisor = min(divisor, 5);
     __block NSInteger count = 0;
     NSArray *priorityKeywords = [self priorityLocationKeywords];
@@ -1033,10 +1034,10 @@ static UserDefaults *_defaults;
         {
             for (int j = 0; j < divisor; j++)
             {
-                CLLocationCoordinate2D center = {(origin.latitude - (span.latitudeDelta / (divisor * 2.0)) - ((span.latitudeDelta / divisor) * i)),
-                    (origin.longitude + (span.longitudeDelta / (divisor * 2.0)) + ((span.longitudeDelta / divisor * j)))};
+                CLLocationCoordinate2D center = {(bounds.ymx - (latSpan / (divisor * 2.0)) - ((latSpan / divisor) * i)),
+                    (bounds.xmn + (longSpan / (divisor * 2.0)) + ((longSpan / divisor * j)))};
                 
-                MKCoordinateRegion region = {center, {(span.latitudeDelta / divisor), (span.longitudeDelta / divisor)}};
+                MKCoordinateRegion region = {center, {(latSpan / divisor), (longSpan / divisor)}};
                 
                 MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
                 request.region = region;
@@ -1060,10 +1061,10 @@ static UserDefaults *_defaults;
                             
                             if (![namesArray containsObject:pLoc.name] || ![latitudesArray containsObject:latitude])
                             {
-                                if (pLoc.coordinate.latitude <= origin.latitude &&
-                                    pLoc.coordinate.latitude >= (origin.latitude - span.latitudeDelta) &&
-                                    pLoc.coordinate.longitude >= origin.longitude &&
-                                    pLoc.coordinate.longitude <= (origin.longitude + span.longitudeDelta))
+                                if (pLoc.coordinate.latitude <= bounds.ymx &&
+                                    pLoc.coordinate.latitude >= (bounds.ymx - latSpan) &&
+                                    pLoc.coordinate.longitude >= bounds.xmn &&
+                                    pLoc.coordinate.longitude <= (bounds.xmn + longSpan))
                                 {
                                     switch (ptc)
                                     {

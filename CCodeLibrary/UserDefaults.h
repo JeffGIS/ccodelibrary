@@ -129,9 +129,7 @@
 - (void)shakeButton:(UIButton *)button;
 - (void)deleteFilesForGeoid:(int)geoid;
 
-- (void)priorityLocationArrayForSpan:(MKCoordinateSpan)span
-                              origin:(CLLocationCoordinate2D)origin
-                              bounds:(dbounds)bounds
-                         popoverView:(GSSiPopoverView *)popover;
+- (void)priorityLocationArrayForBounds:(dbounds)bounds
+                           popoverView:(GSSiPopoverView *)popover;
 
 @end
