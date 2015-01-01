@@ -13,6 +13,7 @@
         _type = [aDecoder decodeObjectForKey:@"PriorityType"];
         _coordinate.latitude = [aDecoder decodeFloatForKey:@"PriorityLatitude"];
         _coordinate.longitude = [aDecoder decodeFloatForKey:@"PriorityLongitude"];
+        _radius = [aDecoder decodeFloatForKey:@"PriorityRadius"];
     }
     
     return self;
@@ -31,6 +32,9 @@
     
     [aCoder encodeFloat:_coordinate.longitude
                  forKey:@"PriorityLongitude"];
+    
+    [aCoder encodeFloat:_radius
+                 forKey:@"PriorityRadius"];
 }
 
 @end

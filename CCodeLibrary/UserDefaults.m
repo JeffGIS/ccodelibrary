@@ -1002,46 +1002,9 @@ static UserDefaults *_defaults;
                         for (MKMapItem *item in response.mapItems)
                         {
                             PriorityLocation *pLoc = [[PriorityLocation alloc] init];
-                            
-                            switch (ptc)
-                            {
-                                case 0:
-                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeSchool];
-                                    break;
-                                    
-                                case 1:
-                                case 2:
-                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeMedical];
-                                    break;
-                                    
-                                case 3:
-                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeLibrary];
-                                    break;
-                                    
-                                case 4:
-                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeEmployment];
-                                    break;
-                                    
-                                case 5:
-                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypePostOffice];
-                                    break;
-                                    
-                                case 6:
-                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeGovernment];
-                                    break;
-                                    
-                                case 7:
-                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeHotel];
-                                    break;
-                                    
-                                case 8:
-                                case 9:
-                                    pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeSeniorResidential];
-                                    break;
-                            }
-                           
-                            pLoc.coordinate = item.placemark.coordinate;
-                            pLoc.name = item.name.capitalizedString;
+                            pLoc.coordinate = [(CLCircularRegion *)item.placemark.region center];
+                            pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
+                            pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name.capitalizedString];
                             NSString *latitude = [NSString stringWithFormat:@"%f", pLoc.coordinate.latitude];
                             
                             if (![namesArray containsObject:pLoc.name] || ![latitudesArray containsObject:latitude])
@@ -1051,6 +1014,43 @@ static UserDefaults *_defaults;
                                     pLoc.coordinate.longitude >= origin.longitude &&
                                     pLoc.coordinate.longitude <= (origin.longitude + span.longitudeDelta))
                                 {
+                                    switch (ptc)
+                                    {
+                                        case 0:
+                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeSchool];
+                                            break;
+                                            
+                                        case 1:
+                                        case 2:
+                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeMedical];
+                                            break;
+                                            
+                                        case 3:
+                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeLibrary];
+                                            break;
+                                            
+                                        case 4:
+                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeEmployment];
+                                            break;
+                                            
+                                        case 5:
+                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypePostOffice];
+                                            break;
+                                            
+                                        case 6:
+                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeGovernment];
+                                            break;
+                                            
+                                        case 7:
+                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeHotel];
+                                            break;
+                                            
+                                        case 8:
+                                        case 9:
+                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeSeniorResidential];
+                                            break;
+                                    }
+                                    
                                     int index = 0;
                                     
                                     if (namesArray.count > 0)
