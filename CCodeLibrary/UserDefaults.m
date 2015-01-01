@@ -1025,7 +1025,7 @@ static UserDefaults *_defaults;
     NSArray *priorityTypes = [self priorityLocationTypes];
     NSInteger totalQueries = (divisor * divisor * priorityKeywords.count);
     NSLog(@"Total queries = %li (%li sections * %lu types)",
-          (long)totalQueries, (divisor * divisor), (unsigned long)priorityKeywords.count);
+          (long)totalQueries, (long)(divisor * divisor), (unsigned long)priorityKeywords.count);
     
     for (int ptc = 0; ptc < priorityKeywords.count; ptc++)
     {
