@@ -990,12 +990,6 @@ static UserDefaults *_defaults;
                     if (error)
                         NSLog(@"MKLocalSearch Error (%@:%i:%i) - %@", priorityTypes[ptc], i, j, error.localizedDescription);
                     
-                    DPOINT dPoint;
-                    dPoint.x = pLoc.coordinate.longitude;
-                    dPoint.y = pLoc.coordinate.latitude;
-                    
-                    if (pointInDBounds (&dPoint,&bounds))
-                    if (![namesArray containsObject:pLoc.name])
                     {
                         popover.popoverLabel.text = [NSString stringWithFormat:@"Importing %@", priorityTypes[ptc]];
                         
