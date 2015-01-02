@@ -119,6 +119,7 @@ typedef NS_ENUM(NSInteger, PriorityLocationType)
     PriorityLocationTypeGovernment,
     PriorityLocationTypeHotel,
     PriorityLocationTypeSeniorResidential,
+    PriorityLocationTypeCustom,
 };
 
 @end

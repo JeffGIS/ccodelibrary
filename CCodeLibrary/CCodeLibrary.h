@@ -36,6 +36,7 @@
 #import "PointInAreaClass.h"
 
 #define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"
+#define GOOGLE_SERVER_KEY @"AIzaSyBQvw3ROLNlUtuSlVdnk0zLvnbonh3I3vw"
 #define iPAD_HEIGHT 1024.0
 #define iPAD_WIDTH 768.0
 #define APP_GROUP_ID @"group.com.GSSi.SurveyApps";
