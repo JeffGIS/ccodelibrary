@@ -958,6 +958,7 @@ static UserDefaults *_defaults;
                               bounds:(dbounds)bounds
                          popoverView:(GSSiPopoverView *)popover
 {
+    PointInAreaClass *pia = [[PointInAreaClass alloc]init];
     NSMutableArray *locationArray = [[NSMutableArray alloc] init];
     NSMutableArray *namesArray = [[NSMutableArray alloc] init];
     NSMutableArray *latitudesArray = [[NSMutableArray alloc] init];

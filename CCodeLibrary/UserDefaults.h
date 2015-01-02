@@ -8,6 +8,7 @@
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "PriorityLocation.h"
+#import "PointInAreaClass.h"
 #import "GSSiEnums.h"
 #import "GSSiPopoverView.h"
 
