@@ -1014,6 +1014,10 @@ static UserDefaults *_defaults;
                            popoverView:(GSSiPopoverView *)popover
 {
     PointInAreaClass *pia = [[PointInAreaClass alloc]init];
+
+    CGFloat longSpan = fabs(bounds.xmn - bounds.xmx);
+    CGFloat latSpan = fabs(bounds.ymx - bounds.ymn);
+    
     NSMutableArray *locationArray = [[NSMutableArray alloc] init];
     NSMutableArray *namesArray = [[NSMutableArray alloc] init];
     NSMutableArray *latitudesArray = [[NSMutableArray alloc] init];
@@ -1056,7 +1060,10 @@ static UserDefaults *_defaults;
                             pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
                             pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name.capitalizedString];
                             NSString *latitude = [NSString stringWithFormat:@"%f", pLoc.coordinate.latitude];
-                            
+                            DPOINT dp;
+                            dp.x = pLoc.coordinate.longitude;
+                            dp.y = pLoc.coordinate.latitude;
+                            if ([pia DPointInArea:&dp])
                             if (![namesArray containsObject:pLoc.name] || ![latitudesArray containsObject:latitude])
                             {
                                 if (pLoc.coordinate.latitude <= bounds.ymx &&

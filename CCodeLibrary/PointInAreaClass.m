@@ -22,6 +22,14 @@
     return self;
 }
 
+- (void)dealloc
+{
+    if (self.bitmapData)
+        free (self.bitmapData);
+    if (self.context)
+        CGContextRelease(self.context);
+}
+
 CGContextRef MyCreateBitmapContext (int pixelsWide,
                                     int pixelsHigh, void**bmData)
 {
@@ -53,5 +61,10 @@ CGContextRef MyCreateBitmapContext (int pixelsWide,
     }
     *bmData = bitmapData;
     return context;// 7
+}
+
+- (bool) DPointInArea:(DPOINT *)dPoint
+{
+    return true;
 }
 @end
