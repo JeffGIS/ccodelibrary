@@ -27,7 +27,6 @@
 @property (nonatomic) GMSMapView *mapView;
 @property (nonatomic) GMSProjection *projection;
 @property (nonatomic) IntersectionsDatabase *database;
-@property (nonatomic) NSArray *tempDemoArray;
 @property (nonatomic) BOOL showOnlyIntersectionsWithRamps;
 @property (nonatomic, copy) NSString *areaFile;
 
