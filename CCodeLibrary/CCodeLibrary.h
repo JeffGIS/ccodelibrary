@@ -38,10 +38,6 @@
 #define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"
 #define iPAD_HEIGHT 1024.0
 #define iPAD_WIDTH 768.0
-#define ROCHESTER_MN 2754880
-#define MINNEAPOLIS_MN 2743000
-#define CRYSTAL_LAKE_IL 1717887
-#define EAGAN_MN 2717288
 #define APP_GROUP_ID @"group.com.GSSi.SurveyApps";
 #define NUMREADINGS 30
 #define LEFT 1

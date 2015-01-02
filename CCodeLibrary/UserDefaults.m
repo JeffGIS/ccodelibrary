@@ -334,6 +334,63 @@ static UserDefaults *_defaults;
     return priorityTypes;
 }
 
+- (void)drawAccessoryImageForType:(NSInteger)type
+                             cell:(UITableViewCell *)cell
+{
+    CGFloat size = (cell.frame.size.height * 0.8);
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake((cell.frame.size.width - size), (size / 2.0), size, size)];
+    
+    switch (type)
+    {
+        case PriorityLocationTypeSchool:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"school"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeMedical:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"medical"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeLibrary:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"library"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeEmployment:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"employment"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypePostOffice:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"postOffice"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeGovernment:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"government"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeHotel:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"hotel"
+                                                                                             ofType:@"png"]];
+            break;
+            
+        case PriorityLocationTypeSeniorResidential:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"seniorResidential"
+                                                                                             ofType:@"png"]];
+            break;
+    }
+    
+    if (imageView.image)
+        cell.accessoryView = imageView;
+    
+    else
+        cell.accessoryView = nil;
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue
@@ -953,23 +1010,21 @@ static UserDefaults *_defaults;
         NSLog(@"%@ was never created", fileName);
 }
 
-- (void)priorityLocationArrayForSpan:(MKCoordinateSpan)span
-                              origin:(CLLocationCoordinate2D)origin
-                              bounds:(dbounds)bounds
-                         popoverView:(GSSiPopoverView *)popover
+- (void)priorityLocationArrayForBounds:(dbounds)bounds
+                           popoverView:(GSSiPopoverView *)popover
 {
     PointInAreaClass *pia = [[PointInAreaClass alloc]init];
     NSMutableArray *locationArray = [[NSMutableArray alloc] init];
     NSMutableArray *namesArray = [[NSMutableArray alloc] init];
     NSMutableArray *latitudesArray = [[NSMutableArray alloc] init];
-    NSInteger divisor = (NSInteger)roundf(((span.latitudeDelta + span.longitudeDelta) / 2.0) * 60);
+    NSInteger divisor = (NSInteger)roundf(((latSpan + longSpan) / 2.0) * 60);
     divisor = min(divisor, 5);
     __block NSInteger count = 0;
     NSArray *priorityKeywords = [self priorityLocationKeywords];
     NSArray *priorityTypes = [self priorityLocationTypes];
     NSInteger totalQueries = (divisor * divisor * priorityKeywords.count);
     NSLog(@"Total queries = %li (%li sections * %lu types)",
-          (long)totalQueries, (divisor * divisor), (unsigned long)priorityKeywords.count);
+          (long)totalQueries, (long)(divisor * divisor), (unsigned long)priorityKeywords.count);
     
     for (int ptc = 0; ptc < priorityKeywords.count; ptc++)
     {
@@ -977,10 +1032,10 @@ static UserDefaults *_defaults;
         {
             for (int j = 0; j < divisor; j++)
             {
-                CLLocationCoordinate2D center = {(origin.latitude - (span.latitudeDelta / (divisor * 2.0)) - ((span.latitudeDelta / divisor) * i)),
-                    (origin.longitude + (span.longitudeDelta / (divisor * 2.0)) + ((span.longitudeDelta / divisor * j)))};
+                CLLocationCoordinate2D center = {(bounds.ymx - (latSpan / (divisor * 2.0)) - ((latSpan / divisor) * i)),
+                    (bounds.xmn + (longSpan / (divisor * 2.0)) + ((longSpan / divisor * j)))};
                 
-                MKCoordinateRegion region = {center, {(span.latitudeDelta / divisor), (span.longitudeDelta / divisor)}};
+                MKCoordinateRegion region = {center, {(latSpan / divisor), (longSpan / divisor)}};
                 
                 MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
                 request.region = region;
@@ -1004,10 +1059,10 @@ static UserDefaults *_defaults;
                             
                             if (![namesArray containsObject:pLoc.name] || ![latitudesArray containsObject:latitude])
                             {
-                                if (pLoc.coordinate.latitude <= origin.latitude &&
-                                    pLoc.coordinate.latitude >= (origin.latitude - span.latitudeDelta) &&
-                                    pLoc.coordinate.longitude >= origin.longitude &&
-                                    pLoc.coordinate.longitude <= (origin.longitude + span.longitudeDelta))
+                                if (pLoc.coordinate.latitude <= bounds.ymx &&
+                                    pLoc.coordinate.latitude >= (bounds.ymx - latSpan) &&
+                                    pLoc.coordinate.longitude >= bounds.xmn &&
+                                    pLoc.coordinate.longitude <= (bounds.xmn + longSpan))
                                 {
                                     switch (ptc)
                                     {

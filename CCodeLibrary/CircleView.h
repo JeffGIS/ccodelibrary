@@ -10,7 +10,6 @@
 - (id)initWithMapView:(GMSMapView *)mapView
      forCityWithGeoid:(int)geoid;
 
-@property LPTRANDATA pTranWToBMP, pTranBMPToW;
 @property GMSMapView *mapView;
 @property IntersectionsDatabase *database;
 @property int geoid;
