@@ -1,10 +1,5 @@
-//
 //  PointInAreaClass.m
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 1/1/15.
-//  Copyright (c) 2015 GSSi. All rights reserved.
-//
 
 #import "PointInAreaClass.h"
 
@@ -13,58 +8,60 @@
 - (id)init
 {
     self = [super init];
+    
     if (self)
     {
-        void * bmData;
-        self.context = MyCreateBitmapContext (1024,1024,&bmData);
-        self.bitmapData = bmData;
+        void *bmData;
+        _context = MyCreateBitmapContext(1024, 1024, &bmData);
+        _bitmapData = bmData;
     }
+    
     return self;
 }
 
 - (void)dealloc
 {
-    if (self.bitmapData)
-        free (self.bitmapData);
-    if (self.context)
-        CGContextRelease(self.context);
+    if (_bitmapData)
+        free (_bitmapData);
+    
+    if (_context)
+        CGContextRelease(_context);
 }
 
-CGContextRef MyCreateBitmapContext (int pixelsWide,
-                                    int pixelsHigh, void**bmData)
+CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh, void **bmData)
 {
-    CGContextRef    context = NULL;
+    CGContextRef context = NULL;
     CGColorSpaceRef colorSpace;
-    void * bitmapData=NULL;
+    void *bitmapData = NULL;
+    int bitmapByteCount, bitmapBytesPerRow;
     
-    int             bitmapByteCount;
-    int             bitmapBytesPerRow;
-    
-    bitmapBytesPerRow   = (pixelsWide);// 1
-    bitmapByteCount     = (bitmapBytesPerRow * pixelsHigh);
+    bitmapBytesPerRow = (pixelsWide); //1
+    bitmapByteCount = (bitmapBytesPerRow *pixelsHigh);
     
     colorSpace = CGColorSpaceCreateDeviceGray();
-    bitmapData = malloc( bitmapByteCount );// 3
-    if (bitmapData != NULL)
+    bitmapData = malloc(bitmapByteCount); //3
+    
+    if (bitmapData)
     {
-        context = CGBitmapContextCreate (bitmapData,// 4
-                                         pixelsWide,
-                                         pixelsHigh,
-                                         8,      // bits per component
-                                         bitmapBytesPerRow,
-                                         colorSpace,0);
-        if (context== NULL)
-        {
-            free (bitmapData);// 5
-        }
-        CGColorSpaceRelease( colorSpace );// 6
+        context = CGBitmapContextCreate(bitmapData, //4
+                                        pixelsWide,
+                                        pixelsHigh,
+                                        8, //bits per component
+                                        bitmapBytesPerRow,
+                                        colorSpace,0);
+        if (!context)
+            free (bitmapData); //5
+        
+        CGColorSpaceRelease(colorSpace); //6
     }
+    
     *bmData = bitmapData;
-    return context;// 7
+    return context; //7
 }
 
-- (bool) DPointInArea:(DPOINT *)dPoint
+- (BOOL)DPointInArea:(DPOINT *)dPoint
 {
-    return true;
+    return YES;
 }
+
 @end

@@ -1013,7 +1013,7 @@ static UserDefaults *_defaults;
 - (void)priorityLocationArrayForBounds:(dbounds)bounds
                            popoverView:(GSSiPopoverView *)popover
 {
-    PointInAreaClass *pia = [[PointInAreaClass alloc]init];
+    PointInAreaClass *pia = [[PointInAreaClass alloc] init];
 
     CGFloat longSpan = fabs(bounds.xmn - bounds.xmx);
     CGFloat latSpan = fabs(bounds.ymx - bounds.ymn);
@@ -1063,9 +1063,11 @@ static UserDefaults *_defaults;
                             DPOINT dp;
                             dp.x = pLoc.coordinate.longitude;
                             dp.y = pLoc.coordinate.latitude;
-                            if ([pia DPointInArea:&dp])
-                            if (![namesArray containsObject:pLoc.name] || ![latitudesArray containsObject:latitude])
+                            
+                            if (([pia DPointInArea:&dp]) &&
+                                (![namesArray containsObject:pLoc.name] || ![latitudesArray containsObject:latitude]))
                             {
+                                //this condition will be replaced with the DPointInArea BOOL
                                 if (pLoc.coordinate.latitude <= bounds.ymx &&
                                     pLoc.coordinate.latitude >= (bounds.ymx - latSpan) &&
                                     pLoc.coordinate.longitude >= bounds.xmn &&
