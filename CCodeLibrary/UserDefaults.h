@@ -7,25 +7,11 @@
 #import "Colors.h"
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
-#import "PriorityLocation.h"
-#import "PointInAreaClass.h"
-#import "GSSiEnums.h"
-#import "GSSiPopoverView.h"
-
-@class UserDefaults;
-
-@protocol UserDefaultsDelegate <NSObject>
-
-- (void)didFinishPriorityLocationArray:(NSMutableArray *)locationArray;
-
-@end
 
 @interface UserDefaults : NSObject
 {
     NSUserDefaults *_defaults;
 }
-
-@property (nonatomic, weak) id <UserDefaultsDelegate> delegate;
 
 + (UserDefaults *)defaults;
 
@@ -74,11 +60,6 @@
 - (NSString *)sharedFilePath;
 - (NSString *)localFilePath;
 - (NSMutableArray *)sortByContentsOfParentheses:(NSMutableArray *)array;
-- (NSArray *)priorityLocationKeywords;
-- (NSArray *)priorityLocationTypes;
-
-- (void)drawAccessoryImageForType:(NSInteger)type
-                             cell:(UITableViewCell *)cell;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
@@ -129,8 +110,5 @@
 
 - (void)shakeButton:(UIButton *)button;
 - (void)deleteFilesForGeoid:(int)geoid;
-
-- (void)priorityLocationArrayForBounds:(dbounds)bounds
-                           popoverView:(GSSiPopoverView *)popover;
 
 @end

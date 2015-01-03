@@ -34,6 +34,7 @@
 		A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = A97867361A5219FD000A9BB8 /* PriorityLocation.m */; };
 		A9A9C8DF19CD04E100A63E94 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A9C8DE19CD04E100A63E94 /* GoogleMaps.framework */; };
 		A9C525D01A3B59880056711F /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C525CF1A3B59880056711F /* Colors.m */; };
+		A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */; };
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
 		EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C21219ED378400F0688B /* FTPDataPush.m */; };
@@ -129,6 +130,8 @@
 		A9A9C8DE19CD04E100A63E94 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		A9C525CE1A3B59880056711F /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		A9C525CF1A3B59880056711F /* Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Colors.m; sourceTree = "<group>"; };
+		A9C8ED3A1A5849F700DF9856 /* GetPriorityLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPriorityLocations.h; sourceTree = "<group>"; };
+		A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPriorityLocations.m; sourceTree = "<group>"; };
 		A9D5A8AE1A0D0A7A00314E8B /* GSSiSlopeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiSlopeViewController.h; sourceTree = "<group>"; };
 		A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiSlopeViewController.m; sourceTree = "<group>"; };
 		EB05C20E19EA999F00F0688B /* ElementOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementOverlayView.h; sourceTree = "<group>"; };
@@ -242,6 +245,8 @@
 			children = (
 				EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */,
 				EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */,
+				A9C8ED3A1A5849F700DF9856 /* GetPriorityLocations.h */,
+				A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */,
 				1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */,
 				1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */,
 				1F838AE819B1021C00943A8C /* PlacesInfo.h */,
@@ -510,6 +515,7 @@
 				A94A771619F8079E0062906E /* FacilityPoint.m in Sources */,
 				A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */,
 				A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */,
+				A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
