@@ -193,8 +193,44 @@
     
     if (pnPointsInLoop)
         free(pnPointsInLoop);
+    //[self testPIA:context];
 }
 
+- (void) testPIA:(CGContextRef)context
+{
+    CGRect pointRect;
+    CGFloat size = 8;
+    PointInAreaClass *pia = [[PointInAreaClass alloc] init];
+    CLLocationCoordinate2D llPoint;
+    
+    
+    llPoint.latitude = pia.bounds.ymn;
+    while (llPoint.latitude < pia.bounds.ymx)
+    {
+        llPoint.longitude = pia.bounds.xmn;
+        while (llPoint.longitude <  pia.bounds.xmx)
+        {
+            DPOINT pt;
+            pt.x = llPoint.longitude;
+            pt.y = llPoint.latitude;
+            if ([pia DPointInArea:&pt])
+            {
+            CGPoint pt = [self.projection pointForCoordinate:llPoint];
+            CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
+            CGContextSetFillColorWithColor(context, UIColor.blackColor.CGColor);
+                CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+            pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
+            CGContextSetLineWidth(context, (size / 12.0));
+            CGContextFillEllipseInRect(context, pointRect);
+            CGContextStrokeEllipseInRect(context, pointRect);
+            CGContextFillPath(context);
+            }
+            llPoint.longitude += (pia.bounds.xmx - pia.bounds.xmn)/100.0;
+        }
+        llPoint.latitude += (pia.bounds.ymx - pia.bounds.ymn)/100.0;
+    }
+
+}
 - (void)maskCityBoundsInContext:(CGContextRef)context
 {
     FILE *fid = fopen(self.areaFile.UTF8String, "rb");

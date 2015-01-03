@@ -14,9 +14,12 @@
     if (self)
     {
         void * bmData;
-        self.areaFile = CRAPI.sharedInstance.placeAreaFile;
-        self.context = MyCreateBitmapContext (1024,1024,&bmData);
+        self.colorSpace = CGColorSpaceCreateDeviceGray();
+        self.width = self.height = 4096;
+        self.context = createBitmapContext (self.width,self.height,self.colorSpace,&bmData);
         self.bitmapData = bmData;
+        self.areaFile = CRAPI.sharedInstance.placeAreaFile;
+
     }
     
     return self;
@@ -29,23 +32,31 @@
     
     if (_context)
         CGContextRelease(_context);
+    CGColorSpaceRelease(_colorSpace);
 }
 
-CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh, void **bmData)
+- (void)setAreaFile:(NSString *)areaFile
+{
+    self.bounds = getAreaFileBounds (areaFile.UTF8String);
+    if (self.context)
+        [self loadAreaIntoContext:areaFile];
+    
+}
+
+CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh,CGColorSpaceRef colorSpace, void **bmData)
 {
     CGContextRef context = NULL;
-    CGColorSpaceRef colorSpace;
     void *bitmapData = NULL;
     int bitmapByteCount, bitmapBytesPerRow;
     
     bitmapBytesPerRow = (pixelsWide); //1
     bitmapByteCount = (bitmapBytesPerRow *pixelsHigh);
     
-    colorSpace = CGColorSpaceCreateDeviceGray();
     bitmapData = malloc(bitmapByteCount); //3
     
     if (bitmapData)
     {
+        memset (bitmapData,0,bitmapByteCount);
         context = CGBitmapContextCreate(bitmapData, //4
                                         pixelsWide,
                                         pixelsHigh,
@@ -53,9 +64,8 @@ CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh, void **bmData
                                         bitmapBytesPerRow,
                                         colorSpace,0);
         if (!context)
-            free (bitmapData); //5
+            free (bitmapData);
         
-        CGColorSpaceRelease(colorSpace); //6
     }
     
     *bmData = bitmapData;
@@ -121,11 +131,6 @@ dbounds getAreaFileBounds (const char * areaFile)
 
 }
 
-- (void)setAreaFile:(NSString *)areaFile
-{
-    self.bounds = getAreaFileBounds (areaFile.UTF8String);
-}
-
 - (void)drawAreaInContext:(CGContextRef)context
 {
     FILE *fid = fopen(self.areaFile.UTF8String, "rb");
@@ -186,9 +191,105 @@ dbounds getAreaFileBounds (const char * areaFile)
     
 }
 
+- (CGPoint) projectPointToContext:(CLLocationCoordinate2D*)Point from:(int)from
+{
+    CGPoint pt;
+    
+    pt.x = Point->longitude - _bounds.xmn;
+    pt.x = pt.x / (_bounds.xmx - _bounds.xmn);
+    if (from)
+        pt.y = Point->latitude - _bounds.ymn;
+    else
+        pt.y = _bounds.ymx - Point->latitude;
+    pt.y = pt.y / (_bounds.ymx - _bounds.ymn);
+    pt.x *= _width;
+    pt.y *= _height;
+    return pt;
+}
+
+- (bool) loadAreaIntoContext:(NSString *)areaFile
+{
+    bool rtn = false;
+    FILE *fid = fopen(areaFile.UTF8String,"rb");
+    int nLoops, nPoints, ix, iy;
+    int *pnPointsInLoop = 0;
+    LPDPOINT pPoints;
+    
+    if (fid && fread (&nPoints, sizeof(int), 1, fid))
+    {
+        
+        if (nPoints > 2 && fread(&nLoops, sizeof(int), 1, fid))
+        {
+            pnPointsInLoop = malloc(nLoops * sizeof(int));
+            
+            if (nLoops > 1)
+                fread(pnPointsInLoop, sizeof(int), nLoops, fid);
+            
+            else
+                *pnPointsInLoop = nPoints;
+            
+            pPoints = (LPDPOINT)malloc(sizeof(DPOINT)*nPoints);
+            
+            for (int i = 0; i < nPoints; i++)
+            {
+                fread(&ix, sizeof(int), 1, fid);
+                fread(&iy, sizeof(int), 1, fid);
+                pPoints[i].y = (double)(iy) / COORDINATE_MULTIPLIER;
+                pPoints[i].x = (double)(ix) / COORDINATE_MULTIPLIER;
+            }
+            
+            CLLocationCoordinate2D llPoint;
+            
+            for (int i = 0; i < nPoints; i++)
+            {
+                llPoint.latitude = pPoints[i].y;
+                llPoint.longitude = pPoints[i].x;
+                CGPoint pt = [self projectPointToContext:&llPoint from:0];
+                
+                if (i == 0)
+                    CGContextMoveToPoint(_context, pt.x, pt.y);
+                
+                else
+                    CGContextAddLineToPoint(_context, pt.x, pt.y);
+            }
+            
+            free(pnPointsInLoop);
+            free(pPoints);
+        }
+    }
+    
+    fclose(fid);
+    
+    if (!CGContextIsPathEmpty(_context))
+    {
+        const CGFloat white[2]={1,1};
+        
+        CGColorRef whiteRef = CGColorCreate(_colorSpace, white);
+        CGContextSetFillColorWithColor(_context, whiteRef);
+        CGContextDrawPath(_context, kCGPathFill);
+        rtn = true;
+    }
+    return rtn;
+}
+
 - (bool) DPointInArea:(DPOINT *)dPoint
 {
-    return YES;
+    CLLocationCoordinate2D llPoint;
+    
+    llPoint.latitude = dPoint->y;
+    llPoint.longitude = dPoint->x;
+    CGPoint pt = [self projectPointToContext:&llPoint from:1];
+    
+    if (pt.x > -0.5 && pt.x < _width - 0.5 &&
+        pt.y > -0.5 && pt.y < _height - 0.5)
+    {
+        int row = (pt.y + 0.5);
+        int col = (pt.x + 0.5);
+        BYTE bitmapValue = _bitmapData[row * _width + col];
+        if (bitmapValue)
+            return true;
+    }
+    return false;
 }
 
 @end

@@ -15,6 +15,7 @@ typedef unsigned long ULONG_PTR, *PULONG_PTR;
 typedef ULONG_PTR DWORD_PTR;
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
+typedef unsigned char BYTE;
 typedef unsigned char *LPBYTE;
 typedef struct {double x,y;}DPOINT;
 typedef struct {double lon,lat;}LLPOINT;
