@@ -33,6 +33,7 @@
 #import "LegendView.h"
 #import "GSSiEnums.h"
 #import "PriorityLocation.h"
+#import "PointInAreaClass.h"
 #import "GetPriorityLocations.h"
 
 #define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"

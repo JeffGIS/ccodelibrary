@@ -92,7 +92,7 @@ int diffInDegrees (int angle1,int angle2);
 bool CreateMask (LPDPOINT *pPointsIN, int *pnPoints,bounds *pbnds);
 int fgetstring (char * str,int maxlen,FILE * fid);
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
-double ArcDistanceLL (CLocationCoordinate2D *coord1,CLocationCoordinate2D *coord2);
+double ArcDistance(DPOINT p1, DPOINT p2);
 bool pointInDBounds (DPOINT *pt,dbounds *bounds);
 
 #endif

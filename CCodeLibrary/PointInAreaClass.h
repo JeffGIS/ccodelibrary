@@ -11,8 +11,11 @@
 
 - (BOOL)DPointInArea:(DPOINT *)dPoint;
 
+@property int width;
+@property int height;
+@property CGColorSpaceRef colorSpace;
 @property CGContextRef context;
 @property (nonatomic) NSString * areaFile;
 @property dbounds bounds;
-@property void * bitmapData;
+@property LPBYTE bitmapData;
 @end
