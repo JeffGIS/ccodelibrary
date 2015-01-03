@@ -3,6 +3,12 @@
 
 #import "GetPriorityLocations.h"
 
+@interface GetPriorityLocations ()
+
+@property (nonatomic) NSArray *keywords, *types;
+
+@end
+
 @implementation GetPriorityLocations
 
 static GetPriorityLocations *_getLocations;
@@ -15,20 +21,18 @@ static GetPriorityLocations *_getLocations;
     return _getLocations;
 }
 
-- (NSArray *)priorityLocationKeywords
+- (id)init
 {
-    NSArray *priorityKeywords = @[@"school", @"medical", @"hospital", @"library", @"employment", @"post office",
-                                  @"government", @"hotel", @"nursing home", @"assisted living"];
+    if ((self = [super init]))
+    {
+        _keywords = @[@"school", @"medical", @"hospital", @"library", @"employment", @"post office",
+                      @"government", @"hotel", @"nursing home", @"assisted living"];
     
-    return priorityKeywords;
-}
-
-- (NSArray *)priorityLocationTypes
-{
-    NSArray *priorityTypes = @[@"Schools", @"Medical Facilities", @"Hospitals", @"Libraries", @"Employment Centers", @"Post Offices",
-                               @"Government Centers", @"Hotels", @"Nursing Homes", @"Assisted Living Centers"];
+        _types = @[@"Schools", @"Medical Facilities", @"Hospitals", @"Libraries", @"Employment Centers", @"Post Offices",
+                   @"Government Centers", @"Hotels", @"Nursing Homes", @"Assisted Living Centers"];
+    }
     
-    return priorityTypes;
+    return self;
 }
 
 - (void)drawAccessoryImageForType:(NSInteger)type
@@ -88,6 +92,50 @@ static GetPriorityLocations *_getLocations;
         cell.accessoryView = nil;
 }
 
+- (NSNumber *)assignTypeForPtc:(NSInteger)ptc
+{
+    NSNumber *type;
+    
+    switch (ptc)
+    {
+        case 0:
+            type = [NSNumber numberWithInteger:PriorityLocationTypeSchool];
+            break;
+            
+        case 1:
+        case 2:
+            type = [NSNumber numberWithInteger:PriorityLocationTypeMedical];
+            break;
+            
+        case 3:
+            type = [NSNumber numberWithInteger:PriorityLocationTypeLibrary];
+            break;
+            
+        case 4:
+            type = [NSNumber numberWithInteger:PriorityLocationTypeEmployment];
+            break;
+            
+        case 5:
+            type = [NSNumber numberWithInteger:PriorityLocationTypePostOffice];
+            break;
+            
+        case 6:
+            type = [NSNumber numberWithInteger:PriorityLocationTypeGovernment];
+            break;
+            
+        case 7:
+            type = [NSNumber numberWithInteger:PriorityLocationTypeHotel];
+            break;
+            
+        case 8:
+        case 9:
+            type = [NSNumber numberWithInteger:PriorityLocationTypeSeniorResidential];
+            break;
+    }
+    
+    return type;
+}
+
 - (void)priorityLocationArrayForBounds:(dbounds)bounds
                            popoverView:(GSSiPopoverView *)popover
 {
@@ -102,13 +150,11 @@ static GetPriorityLocations *_getLocations;
     NSInteger divisor = (NSInteger)roundf(((latSpan + longSpan) / 2.0) * 60);
     divisor = min(divisor, 5);
     __block NSInteger count = 0;
-    NSArray *priorityKeywords = [self priorityLocationKeywords];
-    NSArray *priorityTypes = [self priorityLocationTypes];
-    NSInteger totalQueries = (divisor * divisor * priorityKeywords.count);
+    NSInteger totalQueries = (divisor * divisor * _keywords.count);
     NSLog(@"Total queries = %li (%li sections * %lu types)",
-          (long)totalQueries, (long)(divisor * divisor), (unsigned long)priorityKeywords.count);
+          (long)totalQueries, (long)(divisor * divisor), (unsigned long)_keywords.count);
     
-    for (int ptc = 0; ptc < priorityKeywords.count; ptc++)
+    for (int ptc = 0; ptc < _keywords.count; ptc++)
     {
         for (int i = 0; i < divisor; i++)
         {
@@ -121,15 +167,15 @@ static GetPriorityLocations *_getLocations;
                 
                 MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
                 request.region = region;
-                request.naturalLanguageQuery = priorityTypes[ptc];
+                request.naturalLanguageQuery = _types[ptc];
                 MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
                 
                 [search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error) {
                     if (error)
-                        NSLog(@"MKLocalSearch Error (%@:%i:%i) - %@", priorityTypes[ptc], i, j, error.localizedDescription);
+                        NSLog(@"MKLocalSearch Error (%@:%i:%i) - %@", _types[ptc], i, j, error.localizedDescription);
                     
                     {
-                        popover.popoverLabel.text = [NSString stringWithFormat:@"Importing %@", priorityTypes[ptc]];
+                        popover.popoverLabel.text = [NSString stringWithFormat:@"Importing %@", _types[ptc]];
                         
                         for (MKMapItem *item in response.mapItems)
                         {
@@ -151,44 +197,9 @@ static GetPriorityLocations *_getLocations;
                                     pLoc.coordinate.longitude >= bounds.xmn &&
                                     pLoc.coordinate.longitude <= (bounds.xmn + longSpan))
                                 {
-                                    switch (ptc)
-                                    {
-                                        case 0:
-                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeSchool];
-                                            break;
-                                            
-                                        case 1:
-                                        case 2:
-                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeMedical];
-                                            break;
-                                            
-                                        case 3:
-                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeLibrary];
-                                            break;
-                                            
-                                        case 4:
-                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeEmployment];
-                                            break;
-                                            
-                                        case 5:
-                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypePostOffice];
-                                            break;
-                                            
-                                        case 6:
-                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeGovernment];
-                                            break;
-                                            
-                                        case 7:
-                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeHotel];
-                                            break;
-                                            
-                                        case 8:
-                                        case 9:
-                                            pLoc.type = [NSNumber numberWithInteger:PriorityLocationTypeSeniorResidential];
-                                            break;
-                                    }
+                                    pLoc.type = [self assignTypeForPtc:ptc];
                                     
-                                    int index = 0;
+                                    NSInteger index = 0;
                                     
                                     if (namesArray.count > 0)
                                     {
