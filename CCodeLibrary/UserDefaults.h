@@ -22,8 +22,6 @@
     NSUserDefaults *_defaults;
 }
 
-@property (nonatomic, weak) id <UserDefaultsDelegate> delegate;
-
 + (UserDefaults *)defaults;
 
 - (UIColor *)colorForKey:(NSString *)key;
@@ -71,11 +69,6 @@
 - (NSString *)sharedFilePath;
 - (NSString *)localFilePath;
 - (NSMutableArray *)sortByContentsOfParentheses:(NSMutableArray *)array;
-- (NSArray *)priorityLocationKeywords;
-- (NSArray *)priorityLocationTypes;
-
-- (void)drawAccessoryImageForType:(NSInteger)type
-                             cell:(UITableViewCell *)cell;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
@@ -126,8 +119,5 @@
 
 - (void)shakeButton:(UIButton *)button;
 - (void)deleteFilesForGeoid:(int)geoid;
-
-- (void)priorityLocationArrayForBounds:(dbounds)bounds
-                           popoverView:(GSSiPopoverView *)popover;
 
 @end
