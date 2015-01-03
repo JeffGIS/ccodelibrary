@@ -3,6 +3,8 @@
 
 #import "GetPriorityLocations.h"
 
+#define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+
 @interface GetPriorityLocations ()
 
 @property (nonatomic) NSArray *keywords, *types;
@@ -137,7 +139,7 @@ static GetPriorityLocations *_getLocations;
 }
 
 - (void)priorityLocationArrayForBounds:(dbounds)bounds
-                           popoverView:(GSSiPopoverView *)popover
+                               popover:(GSSiPopoverView *)popover
 {
     PointInAreaClass *pia = [[PointInAreaClass alloc] init];
     
@@ -242,6 +244,38 @@ static GetPriorityLocations *_getLocations;
             }
         }
     }
+}
+
+- (void)customPriorityLocationSearchForKeyword:(NSString *)keyword
+                                        target:(CLLocationCoordinate2D)target
+                                        radius:(CGFloat)radius
+{
+    NSString *query = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%f&keyword=%@&key=%@", target.latitude, target.longitude, radius, keyword, GOOGLE_SERVER_KEY];
+    
+    NSLog(@"%@", query);
+    
+    NSURL *queryURL = [NSURL URLWithString:query];
+    
+    dispatch_async(kBgQueue, ^{
+        NSData *data = [NSData dataWithContentsOfURL:queryURL];
+        
+        [self performSelectorOnMainThread:@selector(nearbySearchResults:)
+                               withObject:data
+                            waitUntilDone:YES];
+    });
+}
+
+-(void)nearbySearchResults:(NSData *)responseData
+{
+    NSError *error;
+    
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData
+                                                         options:kNilOptions
+                                                           error:&error];
+    
+    NSArray *places = [json objectForKey:@"results"];
+    NSLog(@"Google Data: %@", places);
+    NSLog(@"Places Count: %lu", (unsigned long)places.count);
 }
 
 @end

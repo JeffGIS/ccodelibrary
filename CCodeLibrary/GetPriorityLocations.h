@@ -29,6 +29,10 @@
                              cell:(UITableViewCell *)cell;
 
 - (void)priorityLocationArrayForBounds:(dbounds)bounds
-                           popoverView:(GSSiPopoverView *)popover;
+                               popover:(GSSiPopoverView *)popover;
+
+- (void)customPriorityLocationSearchForKeyword:(NSString *)keyword
+                                        target:(CLLocationCoordinate2D)target
+                                        radius:(CGFloat)radius;
 
 @end

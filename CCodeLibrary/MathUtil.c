@@ -24,8 +24,6 @@ double ArcDistance(DPOINT p1, DPOINT p2)
     cos_c = sina*sinb+cosa*cosb*cosl;
     ArcCos = acos(cos_c);
     GreatCircle = fabs(6371100 * ArcCos);
-    
-    
     {
         return GreatCircle;
     }
