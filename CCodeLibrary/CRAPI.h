@@ -22,8 +22,8 @@
 @property (nonatomic, copy) NSString *imageDirectory;
 @property (nonatomic, copy) NSString *uploadDirectory;
 @property (nonatomic) int currentGeoid;
-@property (nonatomic) int currentManageriPad;   //sequence number for manager iPad - created by GMServer
-@property (nonatomic) int currentUserID;        //sequence number for this iPad
+@property (nonatomic) int currentManageriPad; //sequence number for manager iPad - created by GMServer
+@property (nonatomic) int currentUserID; //sequence number for this iPad
 @property (nonatomic, copy) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
 @property (nonatomic, copy) NSString *googleKey;

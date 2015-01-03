@@ -67,7 +67,7 @@ static GeoMasterServer *_open = nil;
     }
 }
 
-- (BOOL)initCommunication:(float)connectionTimeoutInSeconds
+- (BOOL)initCommunication:(CGFloat)connectionTimeoutInSeconds
 {
     _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
