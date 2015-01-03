@@ -202,8 +202,14 @@
     CGFloat size = 8;
     PointInAreaClass *pia = [[PointInAreaClass alloc] init];
     CLLocationCoordinate2D llPoint;
+    DPOINT p1, p2;
     
-    
+    p1.x = pia.bounds.xmn;
+    p1.y = pia.bounds.ymn;
+    p2.x = pia.bounds.xmx;
+    p2.y = pia.bounds.ymx;
+    double d = ArcDistance(p1,p2);
+
     llPoint.latitude = pia.bounds.ymn;
     while (llPoint.latitude < pia.bounds.ymx)
     {
