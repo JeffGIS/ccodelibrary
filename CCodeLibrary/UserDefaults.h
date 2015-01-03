@@ -3,14 +3,11 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "CRAPI.h"
-#import "Colors.h"
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
-#import "PriorityLocation.h"
-#import "PointInAreaClass.h"
-#import "GSSiEnums.h"
 #import "GSSiPopoverView.h"
+#import "Colors.h"
+#import "CCodeTypes.h"
 
 @class UserDefaults;
 

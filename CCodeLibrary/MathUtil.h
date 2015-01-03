@@ -66,6 +66,7 @@ float DeltaAZ (float *AZ1, float *AZ2);
 float BTWNTWOPI (float AZ1);
 void InitBounds (bounds* bnds);
 void AddPointToBounds (bounds* bnds,vec2 *pt);
+void AddDPointToBounds(dbounds *pBounds, DPOINT *pt);
 void InitDBounds (dbounds* bnds);
 void InitIBounds (IBOUNDS* bnds);
 IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist);

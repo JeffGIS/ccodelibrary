@@ -3,6 +3,10 @@
 
 #import "UserDefaults.h"
 #import "MathUtil.h"
+#import "PriorityLocation.h"
+#import "PointInAreaClass.h"
+#import "GSSiEnums.h"
+#import "CRAPI.h"
 
 @implementation UserDefaults
 

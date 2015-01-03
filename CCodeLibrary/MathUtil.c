@@ -605,6 +605,15 @@ void AddPointToDBounds(dbounds *pBounds, dvec2 *pt)
     return;
 }
 
+void AddDPointToBounds(dbounds *pBounds, DPOINT *pt)
+{
+    pBounds->xmn = min(pBounds->xmn, pt->x);
+    pBounds->ymn = min(pBounds->ymn, pt->y);
+    pBounds->xmx = max(pBounds->xmx, pt->x);
+    pBounds->ymx = max(pBounds->ymx, pt->y);
+    return;
+}
+
 void AddPointToIBounds(IBOUNDS *pBounds, IPOINT *pt)
 {
     pBounds->xmn = min(pBounds->xmn, pt->x);
