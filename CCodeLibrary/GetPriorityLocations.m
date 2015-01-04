@@ -8,6 +8,10 @@
 @interface GetPriorityLocations ()
 
 @property (nonatomic) NSArray *keywords, *types;
+@property (nonatomic) NSString *query, *keyword;
+@property (nonatomic) BOOL hasToken;
+@property (nonatomic) NSMutableArray *nearbySearchArray;
+@property (nonatomic) GSSiPopoverView *popoverView;
 
 @end
 
@@ -141,6 +145,7 @@ static GetPriorityLocations *_getLocations;
 - (void)priorityLocationArrayForBounds:(dbounds)bounds
                                popover:(GSSiPopoverView *)popover
 {
+    _popoverView = popover;
     PointInAreaClass *pia = [[PointInAreaClass alloc] init];
     
     CGFloat longSpan = fabs(bounds.xmn - bounds.xmx);
@@ -153,6 +158,7 @@ static GetPriorityLocations *_getLocations;
     divisor = min(divisor, 5);
     __block NSInteger count = 0;
     NSInteger totalQueries = (divisor * divisor * _keywords.count);
+    
     NSLog(@"Total queries = %li (%li sections * %lu types)",
           (long)totalQueries, (long)(divisor * divisor), (unsigned long)_keywords.count);
     
@@ -177,27 +183,24 @@ static GetPriorityLocations *_getLocations;
                         NSLog(@"MKLocalSearch Error (%@:%i:%i) - %@", _types[ptc], i, j, error.localizedDescription);
                     
                     {
-                        popover.popoverLabel.text = [NSString stringWithFormat:@"Importing %@", _types[ptc]];
+                        _popoverView.popoverLabel.text = [NSString stringWithFormat:@"Importing %@", _types[ptc]];
                         
                         for (MKMapItem *item in response.mapItems)
                         {
                             PriorityLocation *pLoc = [[PriorityLocation alloc] init];
                             pLoc.coordinate = [(CLCircularRegion *)item.placemark.region center];
-                            pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
-                            pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name.capitalizedString];
-                            NSString *latitude = [NSString stringWithFormat:@"%f", pLoc.coordinate.latitude];
+                            
                             DPOINT dp;
                             dp.x = pLoc.coordinate.longitude;
                             dp.y = pLoc.coordinate.latitude;
                             
-                            if (([pia DPointInArea:&dp]) &&
-                                (![namesArray containsObject:pLoc.name] || ![latitudesArray containsObject:latitude]))
+                            if ([pia DPointInArea:&dp])
                             {
-                                //this condition will be replaced with the DPointInArea BOOL
-                                if (pLoc.coordinate.latitude <= bounds.ymx &&
-                                    pLoc.coordinate.latitude >= (bounds.ymx - latSpan) &&
-                                    pLoc.coordinate.longitude >= bounds.xmn &&
-                                    pLoc.coordinate.longitude <= (bounds.xmn + longSpan))
+                                pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
+                                pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name.capitalizedString];
+                                NSString *latitude = [NSString stringWithFormat:@"%f", pLoc.coordinate.latitude];
+                                
+                                if ((![namesArray containsObject:pLoc.name]) || (![latitudesArray containsObject:latitude]))
                                 {
                                     pLoc.type = [self assignTypeForPtc:ptc];
                                     
@@ -233,7 +236,7 @@ static GetPriorityLocations *_getLocations;
                     }
                     
                     count++;
-                    popover.progressView.progress = ((CGFloat)count / (CGFloat)totalQueries);
+                    _popoverView.progressView.progress = ((CGFloat)count / (CGFloat)totalQueries);
                     
                     if (count == totalQueries)
                     {
@@ -249,11 +252,25 @@ static GetPriorityLocations *_getLocations;
 - (void)customPriorityLocationSearchForKeyword:(NSString *)keyword
                                         target:(CLLocationCoordinate2D)target
                                         radius:(CGFloat)radius
+                                       popover:(GSSiPopoverView *)popover
 {
-    NSString *query = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%f&keyword=%@&key=%@", target.latitude, target.longitude, radius, keyword, GOOGLE_SERVER_KEY];
+    _nearbySearchArray = [[NSMutableArray alloc] init];
     
-    NSLog(@"%@", query);
+    _popoverView = popover;
+    _keyword = keyword;
     
+    keyword = [keyword stringByReplacingOccurrencesOfString:@" "
+                                                 withString:@"%20"];
+    
+    _query = [NSString stringWithFormat:
+              @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%f&keyword=%%22%@%%22&key=%@",
+              target.latitude, target.longitude, radius, keyword, GOOGLE_SERVER_KEY];
+    
+    [self performCustomSearchForQuery:_query];
+}
+
+- (void)performCustomSearchForQuery:(NSString *)query
+{
     NSURL *queryURL = [NSURL URLWithString:query];
     
     dispatch_async(kBgQueue, ^{
@@ -267,15 +284,86 @@ static GetPriorityLocations *_getLocations;
 
 -(void)nearbySearchResults:(NSData *)responseData
 {
+    PointInAreaClass *pia = [[PointInAreaClass alloc] init];
     NSError *error;
+    CGFloat lat, lon;
     
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData
                                                          options:kNilOptions
                                                            error:&error];
     
-    NSArray *places = [json objectForKey:@"results"];
-    NSLog(@"Google Data: %@", places);
-    NSLog(@"Places Count: %lu", (unsigned long)places.count);
+    if (error)
+        NSLog(@"Google Nearby Search Error: %@", error.localizedDescription);
+    
+    NSArray *results = [json objectForKey:@"results"];
+    NSString *status = [json objectForKey:@"status"];
+    NSString *nextPageToken = [json objectForKey:@"next_page_token"];
+    
+    if ([status isEqualToString:@"OK"])
+    {
+        for (int i = 0; i < results.count; i++)
+        {
+            lat = [[[[[results objectAtIndex:i] objectForKey:@"geometry"] objectForKey:@"location"] valueForKey:@"lat"] floatValue];
+            lon = [[[[[results objectAtIndex:i] objectForKey:@"geometry"] objectForKey:@"location"] valueForKey:@"lng"] floatValue];
+            
+            DPOINT dp;
+            dp.x = lon;
+            dp.y = lat;
+            
+            if ([pia DPointInArea:&dp])
+            {
+                PriorityLocation *pLoc = [[PriorityLocation alloc] init];
+                pLoc.coordinate = CLLocationCoordinate2DMake(lat, lon);
+                pLoc.name = [[results objectAtIndex:i] objectForKey:@"name"];
+                [_nearbySearchArray addObject:pLoc];
+                _popoverView.popoverLabel.text = [NSString stringWithFormat:@"Searching for %@\n(%lu results so far)",
+                                                  _keyword, (unsigned long)_nearbySearchArray.count];
+            }
+        }
+
+        if (nextPageToken)
+        {
+            _hasToken = YES;
+            _query = [NSString stringWithFormat:
+                      @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=%@&key=%@",
+                      nextPageToken, GOOGLE_SERVER_KEY];
+            
+            [self performSelector:@selector(performNextPageSearch)
+                       withObject:self
+                       afterDelay:2.0];
+        }
+        
+        else
+        {
+            if (self.delegate)
+                [self.delegate didFinishCustomNearbySearchArray:_nearbySearchArray];
+        }
+    }
+    
+    else if ([status isEqualToString:@"INVALID_REQUEST"] && (_hasToken == YES))
+    {
+        [self performSelector:@selector(performNextPageSearch)
+                   withObject:self
+                   afterDelay:1.0];
+    }
+    
+    else if ([status isEqualToString:@"ZERO_RESULTS"])
+    {
+        _popoverView.popoverLabel.text = @"No Results Found";
+        
+        [_popoverView.popoverCancel setTitle:@"OK"
+                                    forState:UIControlStateNormal];
+        
+        _popoverView.popoverCancel.hidden = NO;
+    }
+    
+    else
+        NSLog(@"Google Nearby Search Error: %@", status);
+}
+
+- (void)performNextPageSearch
+{
+    [self performCustomSearchForQuery:_query];
 }
 
 @end
