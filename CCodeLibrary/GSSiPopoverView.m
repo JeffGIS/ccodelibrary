@@ -157,10 +157,10 @@
         self.showTime = NSDate.timeIntervalSinceReferenceDate;
         
         self.timer = [NSTimer scheduledTimerWithTimeInterval:seconds
-                                         target:self
+                                                      target:self
                                                     selector:@selector(showFromTimer:)
-                                       userInfo:nil
-                                        repeats:NO];
+                                                    userInfo:nil
+                                                     repeats:NO];
     }
     
     else

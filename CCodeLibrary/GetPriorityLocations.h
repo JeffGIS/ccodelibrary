@@ -4,6 +4,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import <CoreLocation/CoreLocation.h>
 #import "PriorityLocation.h"
 #import "PointInAreaClass.h"
 #import "GSSiEnums.h"
@@ -15,7 +16,9 @@
 
 @protocol GetPriorityLocationsDelegate <NSObject>
 
+@optional
 - (void)didFinishPriorityLocationArray:(NSMutableArray *)locationArray;
+- (void)didFinishCustomNearbySearchArray:(NSMutableArray *)nearbySearchArray;
 
 @end
 
@@ -29,6 +32,11 @@
                              cell:(UITableViewCell *)cell;
 
 - (void)priorityLocationArrayForBounds:(dbounds)bounds
-                           popoverView:(GSSiPopoverView *)popover;
+                               popover:(GSSiPopoverView *)popover;
+
+- (void)customPriorityLocationSearchForKeyword:(NSString *)keyword
+                                        target:(CLLocationCoordinate2D)target
+                                        radius:(CGFloat)radius
+                                       popover:(GSSiPopoverView *)popover;
 
 @end

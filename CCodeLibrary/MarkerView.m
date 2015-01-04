@@ -196,7 +196,7 @@
     //[self testPIA:context];
 }
 
-- (void) testPIA:(CGContextRef)context
+- (void)testPIA:(CGContextRef)context
 {
     CGRect pointRect;
     CGFloat size = 8;
@@ -208,7 +208,7 @@
     p1.y = pia.bounds.ymn;
     p2.x = pia.bounds.xmx;
     p2.y = pia.bounds.ymx;
-    double d = ArcDistance(p1,p2);
+    //double d = ArcDistance(p1,p2);
 
     llPoint.latitude = pia.bounds.ymn;
     while (llPoint.latitude < pia.bounds.ymx)
@@ -219,20 +219,23 @@
             DPOINT pt;
             pt.x = llPoint.longitude;
             pt.y = llPoint.latitude;
+            
             if ([pia DPointInArea:&pt])
             {
-            CGPoint pt = [self.projection pointForCoordinate:llPoint];
-            CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
-            CGContextSetFillColorWithColor(context, UIColor.blackColor.CGColor);
+                CGPoint pt = [self.projection pointForCoordinate:llPoint];
+                CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
+                CGContextSetFillColorWithColor(context, UIColor.blackColor.CGColor);
                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
-            pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
-            CGContextSetLineWidth(context, (size / 12.0));
-            CGContextFillEllipseInRect(context, pointRect);
-            CGContextStrokeEllipseInRect(context, pointRect);
-            CGContextFillPath(context);
+                pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
+                CGContextSetLineWidth(context, (size / 12.0));
+                CGContextFillEllipseInRect(context, pointRect);
+                CGContextStrokeEllipseInRect(context, pointRect);
+                CGContextFillPath(context);
             }
+            
             llPoint.longitude += (pia.bounds.xmx - pia.bounds.xmn)/100.0;
         }
+        
         llPoint.latitude += (pia.bounds.ymx - pia.bounds.ymn)/100.0;
     }
 
