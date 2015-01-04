@@ -15,7 +15,7 @@
     {
         void * bmData;
         self.colorSpace = CGColorSpaceCreateDeviceGray();
-        self.width = self.height = 4096;
+        self.width = self.height = 2048;
         self.context = createBitmapContext (self.width,self.height,self.colorSpace,&bmData);
         self.bitmapData = bmData;
         self.areaFile = CRAPI.sharedInstance.placeAreaFile;
@@ -196,12 +196,12 @@ dbounds getAreaFileBounds (const char * areaFile)
     CGPoint pt;
     
     pt.x = Point->longitude - _bounds.xmn;
-    pt.x = pt.x / (_bounds.xmx - _bounds.xmn);
+    pt.x /= (_bounds.xmx - _bounds.xmn);
     if (from)
         pt.y = Point->latitude - _bounds.ymn;
     else
         pt.y = _bounds.ymx - Point->latitude;
-    pt.y = pt.y / (_bounds.ymx - _bounds.ymn);
+    pt.y /= (_bounds.ymx - _bounds.ymn);
     pt.x *= _width;
     pt.y *= _height;
     return pt;
