@@ -31,11 +31,8 @@ static GetPriorityLocations *_getLocations;
 {
     if ((self = [super init]))
     {
-        _keywords = @[@"school", @"medical", @"hospital", @"library", @"employment", @"post office",
-                      @"government", @"hotel", @"nursing home", @"assisted living"];
-    
-        _types = @[@"Schools", @"Medical Facilities", @"Hospitals", @"Libraries", @"Employment Centers", @"Post Offices",
-                   @"Government Centers", @"Hotels", @"Nursing Homes", @"Assisted Living Centers"];
+        _keywords = @[@"Schools", @"Hospitals", @"Medical", @"Libraries", @"Employment",
+                      @"Post Offices", @"Government", @"Hotels", @"Nursing Homes", @"Assisted Living"];
     }
     
     return self;
@@ -175,15 +172,16 @@ static GetPriorityLocations *_getLocations;
                 
                 MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
                 request.region = region;
-                request.naturalLanguageQuery = _types[ptc];
+                request.naturalLanguageQuery = _keywords[ptc];
                 MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
                 
                 [search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error) {
                     if (error)
-                        NSLog(@"MKLocalSearch Error (%@:%i:%i) - %@", _types[ptc], i, j, error.localizedDescription);
+                        NSLog(@"MKLocalSearch Error (%@:%i:%i) - %@", _keywords[ptc], i, j, error.localizedDescription);
                     
                     {
-                        _popoverView.popoverLabel.text = [NSString stringWithFormat:@"Importing %@", _types[ptc]];
+                        _popoverView.popoverLabel.text = [NSString stringWithFormat:@"Importing\n%@", _keywords[ptc]];
+                        NSLog(@"%@", response.mapItems);
                         
                         for (MKMapItem *item in response.mapItems)
                         {
