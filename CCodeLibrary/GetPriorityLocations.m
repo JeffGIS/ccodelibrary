@@ -27,6 +27,25 @@ static GetPriorityLocations *_getLocations;
     return _getLocations;
 }
 
++ (void)savePriorityLocations:(NSMutableArray *)contents
+{
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:contents];
+    
+    [UserDefaults.defaults saveNSData:data
+                               forKey:[NSString stringWithFormat:@"PriorityLocationsFor%i",
+                                       CRAPI.sharedInstance.currentGeoid]];
+}
+
++ (NSMutableArray *)getPriorityLocations
+{
+    NSData *data = [UserDefaults.defaults NSDataForKey:[NSString stringWithFormat:@"PriorityLocationsFor%i",
+                                                        CRAPI.sharedInstance.currentGeoid]];
+    
+    
+    NSMutableArray *contents = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:data]];
+    return contents;
+}
+
 - (id)init
 {
     if ((self = [super init]))
@@ -242,7 +261,10 @@ static GetPriorityLocations *_getLocations;
                     if (count == totalQueries)
                     {
                         if (self.delegate)
+                        {
                             [self.delegate didFinishPriorityLocationArray:locationArray];
+                            [GetPriorityLocations savePriorityLocations:locationArray];
+                        }
                     }
                 }];
             }
@@ -369,12 +391,7 @@ static GetPriorityLocations *_getLocations;
 
 - (void)addCustomPriorityLocationToList:(PriorityLocation *)pLoc
 {
-    NSData *data = [UserDefaults.defaults NSDataForKey:[NSString stringWithFormat:@"PriorityLocationsFor%i",
-                                                        CRAPI.sharedInstance.currentGeoid]];
-    
-    
-    NSMutableArray *contents = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:data]];
-    
+    NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
     NSInteger index = 0;
     PriorityLocation *pLocs = contents[index];
     
@@ -396,11 +413,7 @@ static GetPriorityLocations *_getLocations;
     [contents insertObject:pLoc
                    atIndex:index];
     
-    data = [NSKeyedArchiver archivedDataWithRootObject:contents];
-    
-    [UserDefaults.defaults saveNSData:data
-                               forKey:[NSString stringWithFormat:@"PriorityLocationsFor%i",
-                                       CRAPI.sharedInstance.currentGeoid]];
+    [GetPriorityLocations savePriorityLocations:contents];
 }
 
 @end

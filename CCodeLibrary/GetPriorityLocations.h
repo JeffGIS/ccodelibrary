@@ -27,6 +27,8 @@
 @property (nonatomic, weak) id <GetPriorityLocationsDelegate> delegate;
 
 + (GetPriorityLocations *)getLocations;
++ (void)savePriorityLocations:(NSMutableArray *)contents;
++ (NSMutableArray *)getPriorityLocations;
 
 - (void)drawAccessoryImageForType:(NSInteger)type
                              cell:(UITableViewCell *)cell;
