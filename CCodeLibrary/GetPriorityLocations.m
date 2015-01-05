@@ -86,6 +86,10 @@ static GetPriorityLocations *_getLocations;
             imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"seniorResidential"
                                                                                              ofType:@"png"]];
             break;
+            
+        case PriorityLocationTypeCustom:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"custom"
+                                                                                             ofType:@"png"]];
     }
     
     if (imageView.image)
@@ -181,7 +185,6 @@ static GetPriorityLocations *_getLocations;
                     
                     {
                         _popoverView.popoverLabel.text = [NSString stringWithFormat:@"Importing\n%@", _keywords[ptc]];
-                        NSLog(@"%@", response.mapItems);
                         
                         for (MKMapItem *item in response.mapItems)
                         {
@@ -362,6 +365,42 @@ static GetPriorityLocations *_getLocations;
 - (void)performNextPageSearch
 {
     [self performCustomSearchForQuery:_query];
+}
+
+- (void)addCustomPriorityLocationToList:(PriorityLocation *)pLoc
+{
+    NSData *data = [UserDefaults.defaults NSDataForKey:[NSString stringWithFormat:@"PriorityLocationsFor%i",
+                                                        CRAPI.sharedInstance.currentGeoid]];
+    
+    
+    NSMutableArray *contents = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:data]];
+    
+    NSInteger index = 0;
+    PriorityLocation *pLocs = contents[index];
+    
+    NSComparisonResult result = [pLoc.name compare:pLocs.name
+                                           options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+        
+    while (result == NSOrderedDescending)
+    {
+        index++;
+        PriorityLocation *pLocs = contents[index];
+        
+        if (index == contents.count)
+            break;
+        
+        result = [pLoc.name compare:pLocs.name
+                            options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+    }
+    
+    [contents insertObject:pLoc
+                   atIndex:index];
+    
+    data = [NSKeyedArchiver archivedDataWithRootObject:contents];
+    
+    [UserDefaults.defaults saveNSData:data
+                               forKey:[NSString stringWithFormat:@"PriorityLocationsFor%i",
+                                       CRAPI.sharedInstance.currentGeoid]];
 }
 
 @end

@@ -39,4 +39,6 @@
                                         radius:(CGFloat)radius
                                        popover:(GSSiPopoverView *)popover;
 
+- (void)addCustomPriorityLocationToList:(PriorityLocation *)pLoc;
+
 @end
