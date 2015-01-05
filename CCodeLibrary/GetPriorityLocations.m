@@ -262,8 +262,8 @@ static GetPriorityLocations *_getLocations;
                     {
                         if (self.delegate)
                         {
-                            [self.delegate didFinishPriorityLocationArray:locationArray];
                             [GetPriorityLocations savePriorityLocations:locationArray];
+                            [self.delegate didFinishPriorityLocationArray:locationArray];
                         }
                     }
                 }];
@@ -410,8 +410,14 @@ static GetPriorityLocations *_getLocations;
                             options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
     }
     
-    [contents insertObject:pLoc
-                   atIndex:index];
+    if (index == contents.count)
+        [contents addObject:pLoc];
+    
+    else
+    {
+        [contents insertObject:pLoc
+                       atIndex:index];
+    }
     
     [GetPriorityLocations savePriorityLocations:contents];
 }
