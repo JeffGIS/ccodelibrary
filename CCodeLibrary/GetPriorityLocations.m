@@ -449,7 +449,7 @@ static GetPriorityLocations *_getLocations;
             if ([pia DPointInArea:&dp])
             {
                 pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
-                pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name.capitalizedString];
+                pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name];
                 [contents addObject:pLoc];
             }
         }
