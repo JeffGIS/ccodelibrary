@@ -19,6 +19,7 @@
 @optional
 - (void)didFinishPriorityLocationArray:(NSMutableArray *)locationArray;
 - (void)didFinishCustomNearbySearchArray:(NSMutableArray *)nearbySearchArray;
+- (void)didFinishWithZeroResults;
 
 @end
 
@@ -42,5 +43,9 @@
                                        popover:(GSSiPopoverView *)popover;
 
 - (void)addCustomPriorityLocationToList:(PriorityLocation *)pLoc;
+
+- (void)tryMKLocalSearch:(NSString *)keyword
+                  region:(MKCoordinateRegion)region
+                 popover:(GSSiPopoverView *)popover;
 
 @end

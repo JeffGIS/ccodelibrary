@@ -12,6 +12,8 @@
 @property (nonatomic) BOOL hasToken;
 @property (nonatomic) NSMutableArray *nearbySearchArray;
 @property (nonatomic) GSSiPopoverView *popoverView;
+@property (nonatomic) CGFloat radius;
+@property (nonatomic) CLLocationCoordinate2D target;
 
 @end
 
@@ -279,15 +281,14 @@ static GetPriorityLocations *_getLocations;
 {
     _nearbySearchArray = [[NSMutableArray alloc] init];
     
-    _popoverView = popover;
-    _keyword = keyword;
+    _popoverView = popover, _keyword = keyword;
+    _radius = radius, _target = target;
     
-    keyword = [keyword stringByReplacingOccurrencesOfString:@" "
-                                                 withString:@"%20"];
+    keyword = [keyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     _query = [NSString stringWithFormat:
-              @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%f&keyword=%%22%@%%22&key=%@",
-              target.latitude, target.longitude, radius, keyword, GOOGLE_SERVER_KEY];
+              @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%f&keyword=%@&key=%@",
+              _target.latitude, _target.longitude, _radius, keyword, GOOGLE_SERVER_KEY];
     
     [self performCustomSearchForQuery:_query];
 }
@@ -339,7 +340,8 @@ static GetPriorityLocations *_getLocations;
                 pLoc.coordinate = CLLocationCoordinate2DMake(lat, lon);
                 pLoc.name = [[results objectAtIndex:i] objectForKey:@"name"];
                 [_nearbySearchArray addObject:pLoc];
-                _popoverView.popoverLabel.text = [NSString stringWithFormat:@"Searching for %@\n(%lu results so far)",
+                
+                _popoverView.popoverLabel.text = [NSString stringWithFormat:@"Searching for\n%@\n(%lu results so far)",
                                                   _keyword, (unsigned long)_nearbySearchArray.count];
             }
         }
@@ -372,12 +374,8 @@ static GetPriorityLocations *_getLocations;
     
     else if ([status isEqualToString:@"ZERO_RESULTS"])
     {
-        _popoverView.popoverLabel.text = @"No Results Found";
-        
-        [_popoverView.popoverCancel setTitle:@"OK"
-                                    forState:UIControlStateNormal];
-        
-        _popoverView.popoverCancel.hidden = NO;
+        if (self.delegate)
+            [self.delegate didFinishWithZeroResults];
     }
     
     else
@@ -421,6 +419,44 @@ static GetPriorityLocations *_getLocations;
     }
     
     [GetPriorityLocations savePriorityLocations:contents];
+}
+
+- (void)tryMKLocalSearch:(NSString *)keyword
+                  region:(MKCoordinateRegion)region
+                  popover:(GSSiPopoverView *)popover
+{
+    PointInAreaClass *pia = [[PointInAreaClass alloc] init];
+    NSMutableArray *contents = [[NSMutableArray alloc] init];
+    
+    MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
+    request.region = region;
+    request.naturalLanguageQuery = keyword;
+    MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
+    
+    [search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error) {
+        if (error)
+            NSLog(@"MKLocalSearch Error (%@) - %@", keyword, error.localizedDescription);
+    
+        for (MKMapItem *item in response.mapItems)
+        {
+            PriorityLocation *pLoc = [[PriorityLocation alloc] init];
+            pLoc.coordinate = [(CLCircularRegion *)item.placemark.region center];
+                
+            DPOINT dp;
+            dp.x = pLoc.coordinate.longitude;
+            dp.y = pLoc.coordinate.latitude;
+                
+            if ([pia DPointInArea:&dp])
+            {
+                pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
+                pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name.capitalizedString];
+                [contents addObject:pLoc];
+            }
+        }
+        
+        if (self.delegate)
+            [self.delegate didFinishCustomNearbySearchArray:contents];
+    }];
 }
 
 @end
