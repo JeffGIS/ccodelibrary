@@ -401,10 +401,11 @@ static GetPriorityLocations *_getLocations;
     while (result == NSOrderedDescending)
     {
         index++;
-        PriorityLocation *pLocs = contents[index];
         
         if (index == contents.count)
             break;
+        
+        PriorityLocation *pLocs = contents[index];
         
         result = [pLoc.name compare:pLocs.name
                             options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
