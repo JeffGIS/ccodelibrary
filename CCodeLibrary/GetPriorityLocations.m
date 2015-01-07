@@ -284,10 +284,13 @@ static GetPriorityLocations *_getLocations;
     _popoverView = popover, _keyword = keyword;
     _radius = radius, _target = target;
     
+    keyword = [keyword stringByAppendingString:[NSString stringWithFormat:@" %@",
+                                                CRAPI.sharedInstance.currentCityNameAndState]];
+    
     keyword = [keyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     _query = [NSString stringWithFormat:
-              @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%f&keyword=%@&key=%@",
+              @"https://maps.googleapis.com/maps/api/place/textsearch/json?location=%f,%f&radius=%f&query=%@&key=%@",
               _target.latitude, _target.longitude, _radius, keyword, GOOGLE_SERVER_KEY];
     
     [self performCustomSearchForQuery:_query];
@@ -318,6 +321,8 @@ static GetPriorityLocations *_getLocations;
     
     if (error)
         NSLog(@"Google Nearby Search Error: %@", error.localizedDescription);
+    
+    NSLog(@"%@", json);
     
     NSArray *results = [json objectForKey:@"results"];
     NSString *status = [json objectForKey:@"status"];
