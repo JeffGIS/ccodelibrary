@@ -1,5 +1,3 @@
-
-//
 //  PointInAreaClass.h
 //  CCodeLibrary
 
@@ -18,4 +16,5 @@
 @property (nonatomic) NSString * areaFile;
 @property dbounds bounds;
 @property LPBYTE bitmapData;
+
 @end

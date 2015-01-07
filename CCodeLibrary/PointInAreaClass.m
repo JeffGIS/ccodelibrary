@@ -262,13 +262,14 @@ dbounds getAreaFileBounds (const char * areaFile)
     
     if (!CGContextIsPathEmpty(_context))
     {
-        const CGFloat white[2]={1,1};
+        const CGFloat white[2] = {1, 1};
         
         CGColorRef whiteRef = CGColorCreate(_colorSpace, white);
         CGContextSetFillColorWithColor(_context, whiteRef);
         CGContextDrawPath(_context, kCGPathFill);
         rtn = true;
     }
+    
     return rtn;
 }
 
@@ -278,7 +279,9 @@ dbounds getAreaFileBounds (const char * areaFile)
     
     llPoint.latitude = dPoint->y;
     llPoint.longitude = dPoint->x;
-    CGPoint pt = [self projectPointToContext:&llPoint from:1];
+    
+    CGPoint pt = [self projectPointToContext:&llPoint
+                                        from:1];
     
     if (pt.x > -0.5 && pt.x < _width - 0.5 &&
         pt.y > -0.5 && pt.y < _height - 0.5)
@@ -286,10 +289,12 @@ dbounds getAreaFileBounds (const char * areaFile)
         int row = (pt.y + 0.5);
         int col = (pt.x + 0.5);
         BYTE bitmapValue = _bitmapData[row * _width + col];
+        
         if (bitmapValue)
             return true;
     }
-    return false;
+    
+    return NO;
 }
 
 @end
