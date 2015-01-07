@@ -370,6 +370,15 @@ static UserDefaults *_defaults;
     [_defaults synchronize];
 }
 
+- (void)saveNSInteger:(NSInteger)integer
+               forKey:(NSString *)key
+{
+    [_defaults setInteger:integer
+                   forKey:key];
+    
+    [_defaults synchronize];
+}
+
 - (void)saveBool:(BOOL)boolean
           forKey:(NSString *)key
 {

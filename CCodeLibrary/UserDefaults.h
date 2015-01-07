@@ -81,6 +81,9 @@
 - (void)saveInteger:(int)integer
              forKey:(NSString *)key;
 
+- (void)saveNSInteger:(NSInteger)integer
+               forKey:(NSString *)key;
+
 - (void)saveBool:(BOOL)boolean
           forKey:(NSString *)key;
 
