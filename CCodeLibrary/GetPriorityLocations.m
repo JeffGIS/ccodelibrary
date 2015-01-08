@@ -8,7 +8,7 @@
 @interface GetPriorityLocations ()
 
 @property (nonatomic) NSArray *keywords, *types;
-@property (nonatomic) NSString *query, *keyword;
+@property (nonatomic, copy) NSString *query, *keyword;
 @property (nonatomic) BOOL hasToken;
 @property (nonatomic) NSMutableArray *nearbySearchArray;
 @property (nonatomic) GSSiPopoverView *popoverView;
