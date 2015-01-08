@@ -233,6 +233,14 @@ static UserDefaults *_defaults;
     return deleteButton;
 }
 
+- (UIImage *)googleMapsImage
+{
+    UIImage *googleMapsImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"googleMaps"
+                                                                                              ofType:@"png"]];
+    
+    return googleMapsImage;
+}
+
 - (NSString *)googleKey
 {
     NSString *googleKey = @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q";

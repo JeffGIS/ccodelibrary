@@ -322,8 +322,6 @@ static GetPriorityLocations *_getLocations;
     if (error)
         NSLog(@"Google Nearby Search Error: %@", error.localizedDescription);
     
-    NSLog(@"%@", json);
-    
     NSArray *results = [json objectForKey:@"results"];
     NSString *status = [json objectForKey:@"status"];
     NSString *nextPageToken = [json objectForKey:@"next_page_token"];

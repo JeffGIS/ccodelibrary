@@ -48,6 +48,7 @@
 - (UIImage *)triangleImage;
 - (UIImage *)redCircle;
 - (UIImage *)deleteButton;
+- (UIImage *)googleMapsImage;
 - (NSString *)googleKey;
 - (NSString *)removeEndingReturn:(NSString *)string;
 - (NSString *)removeTextInsideParentheses:(NSString *)string;
