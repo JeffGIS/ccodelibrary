@@ -14,6 +14,7 @@
         _coordinate.latitude = [aDecoder decodeFloatForKey:@"PriorityLatitude"];
         _coordinate.longitude = [aDecoder decodeFloatForKey:@"PriorityLongitude"];
         _radius = [aDecoder decodeFloatForKey:@"PriorityRadius"];
+        _offset = [aDecoder decodeIntegerForKey:@"PriorityOffset"];
     }
     
     return self;
@@ -35,6 +36,8 @@
     
     [aCoder encodeFloat:_radius
                  forKey:@"PriorityRadius"];
+    
+    [aCoder encodeInteger:_offset forKey:@"PriorityOffset"];
 }
 
 @end

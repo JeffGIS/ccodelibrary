@@ -50,4 +50,12 @@
 
 - (NSArray *)categoryNames;
 
+- (void)changePriorityLocationOffset:(NSInteger)offset
+                      forPLocAtIndex:(NSInteger)index;
+
+- (void)changePriorityLocationOffset:(NSInteger)offset
+                             forType:(NSInteger)type;
+
+- (void)changeGlobalPriorityLocationOffset:(NSInteger)offset;
+
 @end

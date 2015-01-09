@@ -9,6 +9,7 @@
 
 @property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic) CGFloat radius;
+@property (nonatomic) NSInteger offset;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic) NSNumber *type;
 

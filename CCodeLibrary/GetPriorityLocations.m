@@ -225,6 +225,7 @@ static GetPriorityLocations *_getLocations;
                             if ([pia DPointInArea:&dp])
                             {
                                 pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
+                                pLoc.offset = 50.0;//This is the default value
                                 pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name.capitalizedString];
                                 NSString *latitude = [NSString stringWithFormat:@"%f", pLoc.coordinate.latitude];
                                 
@@ -458,14 +459,81 @@ static GetPriorityLocations *_getLocations;
             if ([pia DPointInArea:&dp])
             {
                 pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
+                pLoc.offset = 50.0;//This is the default value
                 pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name];
                 [contents addObject:pLoc];
             }
         }
         
         if (self.delegate)
+        {
+            [GetPriorityLocations savePriorityLocations:contents];
             [self.delegate didFinishCustomNearbySearchArray:contents];
+        }
     }];
+}
+
+- (void)changePriorityLocationOffset:(NSInteger)offset
+                      forPLocAtIndex:(NSInteger)index
+{
+    NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
+    PriorityLocation *pLoc = contents[index];
+    pLoc.offset = offset;
+    
+    [contents replaceObjectAtIndex:index
+                        withObject:pLoc];
+    
+    if (self.delegate)
+    {
+        [GetPriorityLocations savePriorityLocations:contents];
+        [self.delegate didFinishPriorityLocationArray:contents];
+    }
+}
+
+- (void)changePriorityLocationOffset:(NSInteger)offset
+                             forType:(NSInteger)type
+{
+    NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
+    NSNumber *pLocType = [NSNumber numberWithInteger:type];
+    
+    for (int i = 0; i < contents.count; i++)
+    {
+        PriorityLocation *pLoc = contents[i];
+        
+        if (pLoc.type == pLocType)
+        {
+            pLoc.offset = offset;
+            
+            [contents replaceObjectAtIndex:i
+                                withObject:pLoc];
+        }
+    }
+    
+    if (self.delegate)
+    {
+        [GetPriorityLocations savePriorityLocations:contents];
+        [self.delegate didFinishPriorityLocationArray:contents];
+    }
+}
+
+- (void)changeGlobalPriorityLocationOffset:(NSInteger)offset
+{
+    NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
+    
+    for (int i = 0; i < contents.count; i++)
+    {
+        PriorityLocation *pLoc = contents[i];
+        pLoc.offset = offset;
+        
+        [contents replaceObjectAtIndex:i
+                            withObject:pLoc];
+    }
+    
+    if (self.delegate)
+    {
+        [GetPriorityLocations savePriorityLocations:contents];
+        [self.delegate didFinishPriorityLocationArray:contents];
+    }
 }
 
 @end

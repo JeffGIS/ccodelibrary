@@ -40,12 +40,13 @@
             PriorityLocation *pLoc = contents[i];
             CLLocationCoordinate2D coordinate = pLoc.coordinate;
             CGPoint pt = [projection pointForCoordinate:coordinate];
+            CGFloat radius = min(pLoc.radius, 150.0);
             
-            CGFloat size = [projection pointsForMeters:min((pLoc.radius + 50.0), 200.0)
-                                          atCoordinate:self.mapView.camera.target];
+            CGFloat size = [projection pointsForMeters:(radius + pLoc.offset)
+                                          atCoordinate:_mapView.camera.target];
             
-            if ((pt.x > - size) && (pt.x < (self.mapView.frame.size.width + size) &&
-                                    (pt.y > - size) && (pt.y < self.mapView.frame.size.height + size)))
+            if ((pt.x > - size) && (pt.x < (_mapView.frame.size.width + size) &&
+                                    (pt.y > - size) && (pt.y < _mapView.frame.size.height + size)))
             {
                 CGContextSetFillColorWithColor(context, UIColor.orangeColor.CGColor);
                 pointRect = CGRectMake((pt.x - size), (pt.y - size), (size * 2.0), (size * 2.0));
