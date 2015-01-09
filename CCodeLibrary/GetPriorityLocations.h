@@ -48,4 +48,6 @@
                   region:(MKCoordinateRegion)region
                  popover:(GSSiPopoverView *)popover;
 
+- (NSArray *)categoryNames;
+
 @end

@@ -123,4 +123,12 @@ typedef NS_ENUM(NSInteger, PriorityLocationType)
     PriorityLocationTypeCustom,
 };
 
+typedef NS_ENUM(NSInteger, PriorityOffsetSetting)
+{
+    PriorityOffsetSettingDefault,
+    PriorityOffsetSettingGlobal,
+    PriorityOffsetSettingCategory,
+    PriorityOffsetSettingIndividual,
+};
+
 @end

@@ -164,6 +164,12 @@ static GetPriorityLocations *_getLocations;
     return type;
 }
 
+- (NSArray *)categoryNames
+{
+    return @[@"Default", @"Schools", @"Medical Facilities", @"Libraries", @"Employment Centers",
+             @"Post Offices", @"Government Buildings", @"Hotels", @"Senior Residential", @"Custom"];
+}
+
 - (void)priorityLocationArrayForBounds:(dbounds)bounds
                                popover:(GSSiPopoverView *)popover
 {

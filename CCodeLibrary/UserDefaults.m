@@ -241,6 +241,30 @@ static UserDefaults *_defaults;
     return googleMapsImage;
 }
 
+- (UIImage *)redSliderThumb
+{
+    UIImage *redSliderThumb = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"redSliderThumb"
+                                                                                             ofType:@"png"]];
+    
+    return redSliderThumb;
+}
+
+- (UIImage *)metalSliderRight
+{
+    UIImage *metalSliderRight = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"metalSliderRight"
+                                                                                               ofType:@"png"]];
+    
+    return metalSliderRight;
+}
+
+- (UIImage *)metalSliderLeft
+{
+    UIImage *metalSliderLeft = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"metalSliderLeft"
+                                                                                              ofType:@"png"]];
+    
+    return metalSliderLeft;
+}
+
 - (NSString *)googleKey
 {
     NSString *googleKey = @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q";

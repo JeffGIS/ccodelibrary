@@ -49,6 +49,9 @@
 - (UIImage *)redCircle;
 - (UIImage *)deleteButton;
 - (UIImage *)googleMapsImage;
+- (UIImage *)redSliderThumb;
+- (UIImage *)metalSliderRight;
+- (UIImage *)metalSliderLeft;
 - (NSString *)googleKey;
 - (NSString *)removeEndingReturn:(NSString *)string;
 - (NSString *)removeTextInsideParentheses:(NSString *)string;
