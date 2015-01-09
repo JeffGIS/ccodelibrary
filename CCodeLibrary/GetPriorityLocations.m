@@ -536,4 +536,16 @@ static GetPriorityLocations *_getLocations;
     }
 }
 
+- (void)removePLocFromListAtIndex:(NSInteger)index
+{
+    NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
+    [contents removeObjectAtIndex:index];
+    
+    if (self.delegate)
+    {
+        [GetPriorityLocations savePriorityLocations:contents];
+        [self.delegate didFinishPriorityLocationArray:contents];
+    }
+}
+
 @end

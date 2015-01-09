@@ -57,5 +57,6 @@
                              forType:(NSInteger)type;
 
 - (void)changeGlobalPriorityLocationOffset:(NSInteger)offset;
+- (void)removePLocFromListAtIndex:(NSInteger)index;
 
 @end
