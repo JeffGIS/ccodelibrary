@@ -225,7 +225,7 @@ static GetPriorityLocations *_getLocations;
                             if ([pia DPointInArea:&dp])
                             {
                                 pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
-                                pLoc.offset = 50.0;//This is the default value
+                                pLoc.offset = DEFAULT_OFFSET;
                                 pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name.capitalizedString];
                                 NSString *latitude = [NSString stringWithFormat:@"%f", pLoc.coordinate.latitude];
                                 
@@ -459,7 +459,7 @@ static GetPriorityLocations *_getLocations;
             if ([pia DPointInArea:&dp])
             {
                 pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
-                pLoc.offset = 50.0;//This is the default value
+                pLoc.offset = DEFAULT_OFFSET;
                 pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name];
                 [contents addObject:pLoc];
             }

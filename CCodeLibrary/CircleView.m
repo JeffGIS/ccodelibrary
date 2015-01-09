@@ -41,8 +41,9 @@
             CLLocationCoordinate2D coordinate = pLoc.coordinate;
             CGPoint pt = [projection pointForCoordinate:coordinate];
             CGFloat radius = min(pLoc.radius, 150.0);
+            CGFloat offset = (pLoc.offset * METERS_PER_FOOT);
             
-            CGFloat size = [projection pointsForMeters:(radius + pLoc.offset)
+            CGFloat size = [projection pointsForMeters:(radius + offset)
                                           atCoordinate:_mapView.camera.target];
             
             if ((pt.x > - size) && (pt.x < (_mapView.frame.size.width + size) &&

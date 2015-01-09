@@ -173,7 +173,7 @@ dbounds getAreaFileBounds (const char * areaFile)
             {
                 llPoint.latitude = pPoints[i].y;
                 llPoint.longitude = pPoints[i].x;
-                CGPoint pt;// = [self.projection pointForCoordinate:llPoint];
+                CGPoint pt; // = [self.projection pointForCoordinate:llPoint];
                 
                 if (i == 0)
                     CGContextMoveToPoint(context, pt.x, pt.y);
