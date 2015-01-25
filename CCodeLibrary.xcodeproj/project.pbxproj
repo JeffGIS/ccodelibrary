@@ -44,7 +44,6 @@
 		EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB919BCB9C400F6D9F0 /* IntersectionPoint.m */; };
 		EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */ = {isa = PBXBuildFile; fileRef = EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */; };
 		EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */; };
-		EB521B7D19D649DC00DA0D5A /* MaskCityBounds.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7C19D649DC00DA0D5A /* MaskCityBounds.m */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
 		EBA2E472199527660085B2E0 /* libCCodeLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */; };
@@ -150,8 +149,6 @@
 		EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInAreaClass.m; sourceTree = "<group>"; };
 		EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPlaceAreaFile.h; sourceTree = "<group>"; };
 		EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPlaceAreaFile.m; sourceTree = "<group>"; };
-		EB521B7B19D649DC00DA0D5A /* MaskCityBounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaskCityBounds.h; sourceTree = "<group>"; };
-		EB521B7C19D649DC00DA0D5A /* MaskCityBounds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MaskCityBounds.m; sourceTree = "<group>"; };
 		EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCCodeLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CCodeLibrary-Prefix.pch"; sourceTree = "<group>"; };
 		EBA2E462199527660085B2E0 /* CCodeLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCodeLibrary.h; sourceTree = "<group>"; };
@@ -372,8 +369,6 @@
 				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
 				A90EBDC71A48874B001E72CF /* GSSiEnums.h */,
 				A90EBDC81A48874B001E72CF /* GSSiEnums.m */,
-				EB521B7B19D649DC00DA0D5A /* MaskCityBounds.h */,
-				EB521B7C19D649DC00DA0D5A /* MaskCityBounds.m */,
 				EB36639A1A55A97C00ABA486 /* PointInAreaClass.h */,
 				EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */,
 				A94A770B19F7F9F40062906E /* SharedDefaults.h */,
@@ -508,7 +503,6 @@
 				EBAEED0719B601710084A579 /* minilzo.c in Sources */,
 				EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */,
 				EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */,
-				EB521B7D19D649DC00DA0D5A /* MaskCityBounds.m in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
 				EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */,
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,

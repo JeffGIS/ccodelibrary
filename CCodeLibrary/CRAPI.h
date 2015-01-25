@@ -6,7 +6,6 @@
 #import "MPIntersection.h"
 #import "Facility.h"
 #import "UserDefaults.h"
-#import "GoogleMaps/GoogleMaps.h"
 #import "Colors.h"
 
 #define MANAGEMENT_MODULE 1
@@ -77,14 +76,6 @@ forGeoid:(int)geoid;
 - (NSString*)directoryFromPath:(NSString*)path
                        andName:(NSString*)name
                         create:(BOOL)create;
-
-- (IPOINT)PointAtZoom:(int)zoom
-        fromViewPoint:(CGPoint)pt
-      usingProjection:(GMSProjection *)projection;
-
-- (IBOUNDS)boundsFromRect:(CGRect)rect
-                   atZoom:(int)zoom
-          usingProjection:(GMSProjection *)projection;
 
 - (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon
           usingTransformation:(LPTRANDATA)pTranWToBMP;
