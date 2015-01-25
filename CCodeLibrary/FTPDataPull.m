@@ -121,7 +121,7 @@
     
     NSURL *url = [NetworkManager.sharedInstance smartURLForString:_urlText];
     
-    if (!url || ![NetworkManager.sharedInstance isBinaryURL:url])
+    if (!url)// why do we care if binary or not? || ![NetworkManager.sharedInstance isBinaryURL:url])
     {
         if (!_hasFailed)
         {

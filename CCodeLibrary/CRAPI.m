@@ -504,7 +504,7 @@ forGeoid:(int)geoid
     return outDir;
 }
 
-- (IPOINT)PointAtZoom:(int)zoom
+/*- (IPOINT)PointAtZoom:(int)zoom
         fromViewPoint:(CGPoint)pt
       usingProjection:(GMSProjection *)projection
 {
@@ -554,7 +554,7 @@ forGeoid:(int)geoid
     AddPointToIBounds(&iBounds, &pt21);
     return iBounds;
 }
-
+*/
 - (IBOUNDS) CGRectToIBounds:(CGRect)rect
 {
     IBOUNDS iBounds;
