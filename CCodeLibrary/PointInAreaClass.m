@@ -273,7 +273,7 @@ dbounds getAreaFileBounds (const char * areaFile)
     return rtn;
 }
 
-- (bool) DPointInArea:(DPOINT *)dPoint
+- (BOOL)DPointInArea:(DPOINT *)dPoint
 {
     CLLocationCoordinate2D llPoint;
     
