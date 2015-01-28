@@ -9,14 +9,6 @@
 #import "Colors.h"
 #import "CCodeTypes.h"
 
-@class UserDefaults;
-
-@protocol UserDefaultsDelegate <NSObject>
-
-- (void)didFinishPriorityLocationArray:(NSMutableArray *)locationArray;
-
-@end
-
 @interface UserDefaults : NSObject
 {
     NSUserDefaults *_defaults;

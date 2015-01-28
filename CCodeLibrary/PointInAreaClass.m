@@ -13,12 +13,12 @@
     
     if (self)
     {
-        void * bmData;
-        self.colorSpace = CGColorSpaceCreateDeviceGray();
-        self.width = self.height = 2048;
-        self.context = createBitmapContext (self.width,self.height,self.colorSpace,&bmData);
-        self.bitmapData = bmData;
-        self.areaFile = CRAPI.sharedInstance.placeAreaFile;
+        void *bmData;
+        _colorSpace = CGColorSpaceCreateDeviceGray();
+        _width = _height = 2048;
+        _context = createBitmapContext (self.width,self.height,self.colorSpace,&bmData);
+        _bitmapData = bmData;
+        _areaFile = CRAPI.sharedInstance.placeAreaFile;
 
     }
     

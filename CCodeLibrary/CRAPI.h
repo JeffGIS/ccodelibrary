@@ -35,6 +35,8 @@
 @property (nonatomic, copy) NSString *calibrateHeight;
 @property (nonatomic) NSMutableArray *assignediPadsArray;
 @property (nonatomic) Colors *defaultColors;
+@property (nonatomic) NSInteger GMMSetting;
+@property (nonatomic) NSString *currentPID;
 
 + (CRAPI *)sharedInstance;
 

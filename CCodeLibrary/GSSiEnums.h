@@ -131,4 +131,10 @@ typedef NS_ENUM(NSInteger, PriorityOffsetSetting)
     PriorityOffsetSettingIndividual,
 };
 
+typedef NS_ENUM(NSInteger, GMMSetting)
+{
+    GMMSettingDefault,
+    GMMSettingPID,
+};
+
 @end
