@@ -172,4 +172,9 @@
     _progressView.progress = progress;
 }
 
+- (void)setTitle:(NSString *)title
+{
+    self.popoverLabel.text = title;
+}
+
 @end
