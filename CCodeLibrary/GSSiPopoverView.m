@@ -5,10 +5,15 @@
 #import "FTPDataPull.h"
 
 #define MIN_SHOWTIME 2
+
+@interface GSSiPopoverView ()
+
+@property (nonatomic) UIFont *font;
+
+@end
+
 @implementation GSSiPopoverView
-{
-    UIFont *_font;
-}
+
 
 - (id)initWithView:(UIView *)fromView
 {
@@ -20,6 +25,7 @@
         UIView *popoverView = self;
         self.fromView = fromView;
         popoverView.backgroundColor = UIColor.clearColor;
+        _font = [UIFont boldSystemFontOfSize:40.0];
         
         _popover = [[UIView alloc] initWithFrame:CGRectMake((fromView.frame.size.width / 4.0), (fromView.frame.size.height / 4.0),
                                                             (fromView.frame.size.width / 2.0), (fromView.frame.size.height / 2.0))];
@@ -28,6 +34,7 @@
                                                    green:0.0
                                                     blue:0.3
                                                    alpha:0.85];
+        
         _popover.layer.cornerRadius = 20.0;
         
         _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
@@ -46,9 +53,8 @@
         
         _popoverCancel.layer.cornerRadius = 10.0;
         _popoverCancel.backgroundColor = UIColor.whiteColor;
-        
-        _font = [UIFont boldSystemFontOfSize:40.0];
         _popoverCancel.titleLabel.font = _font;
+        _popoverCancel.titleLabel.adjustsFontSizeToFitWidth = YES;
         
         [_popoverCancel setTitleColor:UIColor.blackColor
                              forState:UIControlStateNormal];
@@ -71,6 +77,7 @@
         _popoverLabel.numberOfLines = 0;
         _popoverLabel.text = self.title;
         _popoverLabel.textAlignment = NSTextAlignmentCenter;
+        _popoverLabel.adjustsFontSizeToFitWidth = YES;
         
         [popoverView addSubview:_popover];
         [_popover addSubview:_progressView];
