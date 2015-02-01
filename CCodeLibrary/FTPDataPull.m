@@ -51,7 +51,7 @@
         {
             if (_delegate && !_haveCalledDelegate)
             {
-                [_delegate FTPdidComplete:FTPStatusConnectionFailed
+                [_delegate FTPdidComplete:_option withStatus:FTPStatusConnectionFailed
                                  filePath:nil];
                 
                 _haveCalledDelegate = YES;
@@ -65,7 +65,7 @@
     
     else if (_delegate && !_haveCalledDelegate)
     {
-        [_delegate FTPdidComplete:FTPStatusOK
+        [_delegate FTPdidComplete:_option withStatus:FTPStatusOK
                          filePath:_filePath];
         
         _haveCalledDelegate = YES;
@@ -92,7 +92,7 @@
     
     if (_delegate && !_haveCalledDelegate)
     {
-       [_delegate FTPdidComplete:status
+        [_delegate FTPdidComplete:_option withStatus:status
                              filePath:_filePath];
         
         _haveCalledDelegate = YES;

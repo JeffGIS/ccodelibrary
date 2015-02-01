@@ -11,7 +11,8 @@
 
 @protocol FTPDataPullDelegate <NSObject>
 
-- (void) FTPdidComplete:(int)status
+- (void) FTPdidComplete:(int)option
+             withStatus:(int)status
                filePath:(NSString *)path;
 
 @end
@@ -44,7 +45,7 @@
 @property (nonatomic) NSUInteger fileSize;
 @property (nonatomic) CGFloat progress;
 @property (nonatomic) GSSiPopoverView *popover;
-
+@property int option;
 + (FTPDataPull *)pull;
 
 - (void)getFile:(NSString *)fileName
