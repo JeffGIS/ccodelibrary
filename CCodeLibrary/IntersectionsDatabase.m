@@ -1134,7 +1134,8 @@ Exit:
     return rtn;
 }
 
-- (void)FTPdidComplete:(int)status
+- (void)FTPdidComplete:(int)option
+            withStatus:(int)status
               filePath:(NSString *)path
 {
     if (status == FTPStatusOK)

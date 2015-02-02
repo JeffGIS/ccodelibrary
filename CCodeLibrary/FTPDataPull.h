@@ -11,9 +11,9 @@
 
 @protocol FTPDataPullDelegate <NSObject>
 
-- (void) FTPdidComplete:(int)option
-             withStatus:(int)status
-               filePath:(NSString *)path;
+- (void)FTPdidComplete:(int)option
+            withStatus:(int)status
+              filePath:(NSString *)path;
 
 @end
 
