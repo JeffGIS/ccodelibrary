@@ -46,6 +46,7 @@
 @property (nonatomic) CGFloat progress;
 @property (nonatomic) GSSiPopoverView *popover;
 @property int option;
+
 + (FTPDataPull *)pull;
 
 - (void)getFile:(NSString *)fileName
