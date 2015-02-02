@@ -191,25 +191,29 @@ dbounds getAreaFileBounds (const char * areaFile)
     
 }
 
-- (CGPoint) projectPointToContext:(CLLocationCoordinate2D*)Point from:(int)from
+- (CGPoint)projectPointToContext:(CLLocationCoordinate2D *)Point
+                            from:(int)from
 {
     CGPoint pt;
     
     pt.x = Point->longitude - _bounds.xmn;
     pt.x /= (_bounds.xmx - _bounds.xmn);
+    
     if (from)
         pt.y = Point->latitude - _bounds.ymn;
+    
     else
         pt.y = _bounds.ymx - Point->latitude;
+    
     pt.y /= (_bounds.ymx - _bounds.ymn);
     pt.x *= _width;
     pt.y *= _height;
     return pt;
 }
 
-- (bool) loadAreaIntoContext:(NSString *)areaFile
+- (BOOL)loadAreaIntoContext:(NSString *)areaFile
 {
-    bool rtn = false;
+    BOOL rtn = NO;
     FILE *fid = fopen(areaFile.UTF8String,"rb");
     int nLoops, nPoints, ix, iy;
     int *pnPointsInLoop = 0;
@@ -267,7 +271,7 @@ dbounds getAreaFileBounds (const char * areaFile)
         CGColorRef whiteRef = CGColorCreate(_colorSpace, white);
         CGContextSetFillColorWithColor(_context, whiteRef);
         CGContextDrawPath(_context, kCGPathFill);
-        rtn = true;
+        rtn = YES;
     }
     
     return rtn;
