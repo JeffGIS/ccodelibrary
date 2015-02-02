@@ -930,10 +930,13 @@ static UserDefaults *_defaults;
                                           error:&error];
         
         if (success)
+        {
             NSLog(@"Deleted %@ from device", fileName);
-        
+        }
         else
+        {
             NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
+        }
     }
     
     else
@@ -949,10 +952,13 @@ static UserDefaults *_defaults;
                                           error:&error];
         
         if (success)
+        {
             NSLog(@"Deleted %@ from device", fileName);
-        
+        }
         else
+        {
             NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
+        }
     }
     
     else
@@ -971,10 +977,13 @@ static UserDefaults *_defaults;
                                               error:&error];
             
             if (success)
+            {
                 NSLog(@"Deleted %@ from device", fileName);
-            
+            }
             else
+            {
                 NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
+            }
         }
     }
     

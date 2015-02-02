@@ -125,7 +125,7 @@
 {
     FILE *fid = fopen(self.areaFile.UTF8String,"rb");
     int nLoops, nPoints, ix, iy;
-    int *pnPointsInLoop;
+    int *pnPointsInLoop=0;
     bounds bnds;
     LPDPOINT pPoints;
     
