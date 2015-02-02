@@ -37,6 +37,7 @@
 @property (nonatomic) Colors *defaultColors;
 @property (nonatomic) NSInteger GMMSetting;
 @property (nonatomic) NSString *currentPID;
+@property (nonatomic) NSString *currentAddress;
 
 + (CRAPI *)sharedInstance;
 

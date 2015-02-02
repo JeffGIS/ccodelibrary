@@ -135,6 +135,7 @@ typedef NS_ENUM(NSInteger, GMMSetting)
 {
     GMMSettingDefault,
     GMMSettingPID,
+    GMMSettingAddress,
 };
 
 @end

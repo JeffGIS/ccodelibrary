@@ -792,6 +792,17 @@ static UserDefaults *_defaults;
     return string;
 }
 
+- (NSString *)includeTextBeforeLastTab:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"\t"
+                                  options:NSBackwardsSearch];
+    
+    if (range.location != NSNotFound)
+        string = [string substringToIndex:range.location];
+    
+    return string;
+}
+
 - (NSString *)includeTextBeforeSecondTabFromEnd:(NSString *)string
 {
     NSRange range = [string rangeOfString:@"\t"
@@ -806,6 +817,25 @@ static UserDefaults *_defaults;
         
         if (range.location != NSNotFound)
             string = [string substringToIndex:range.location];
+    }
+    
+    return string;
+}
+
+- (NSString *)includeTextAfterSecondTabFromEnd:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"\t"
+                                  options:NSBackwardsSearch];
+    
+    if (range.location != NSNotFound)
+    {
+        string = [string substringToIndex:range.location];
+        
+        range = [string rangeOfString:@"\t"
+                              options:NSBackwardsSearch];
+        
+        if (range.location != NSNotFound)
+            string = [string substringFromIndex:(range.location + 1)];
     }
     
     return string;
