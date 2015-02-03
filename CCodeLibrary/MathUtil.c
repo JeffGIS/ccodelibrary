@@ -886,6 +886,17 @@ bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long 
     return true;
 }
 
+void CloseTRANS2 (LPTRANDATA *phlpTran)
+{
+    LPTRANDATA  TranPtr = *phlpTran;
+    
+    if (TranPtr)
+        free (TranPtr);
+    *phlpTran = 0;
+    return;
+    
+}
+
 LPTRANDATA STRAN2(int ID, double X1[], double Y1[], double X2[], double Y2[], int N, float *RSQMIN)
 {
 	double ANGLE1, ANGLE2, ANGLE, DEN, SINANG, COSANG, DX1, DX2, DY1, DY2, SCLRAT,
@@ -1053,6 +1064,33 @@ Exit:
     return TranPtr;
 }
 
+LPTRANDATA  STRANBoundsToBounds (LPMNMXCORD FromRect,LPMNMXCORD ToRect)
+{
+    LPTRANDATA  hTran;
+    double	XFROM[4],YFROM[4],XTO[4],YTO[4];
+    float	RSQMIN;
+    
+    XFROM[0] = FromRect->xmn;
+    XFROM[1] = FromRect->xmn;
+    XFROM[2] = FromRect->xmx;
+    XFROM[3] = FromRect->xmx;
+    YFROM[0] = FromRect->ymn;
+    YFROM[1] = FromRect->ymx;
+    YFROM[2] = FromRect->ymn;
+    YFROM[3] = FromRect->ymx;
+    XTO[0] = ToRect->xmn;
+    XTO[1] = ToRect->xmn;
+    XTO[2] = ToRect->xmx;
+    XTO[3] = ToRect->xmx;
+    YTO[0] = ToRect->ymn;
+    YTO[1] = ToRect->ymx;
+    YTO[2] = ToRect->ymn;
+    YTO[3] = ToRect->ymx;   
+    
+    hTran = STRAN2 (1665,XFROM,YFROM,XTO,YTO,4,(LPFLOAT)&RSQMIN);
+    return hTran;
+}
+
 void TRANS2(double XIN, double YIN, double *XOUT,double *YOUT, LPTRANDATA TranPtr)
 {
 	double XI, YI;
@@ -1147,6 +1185,26 @@ void TranMNMXCORL(MNMXCORL *in, MNMXCORL *out, LPTRANDATA TranPtr)
 	TranMNMXCORD(&ind, &outd, TranPtr);
 	MNMXCORDtoMNMXCORL(&outd, out);
 	return;
+}
+DPOINT TranDPOINT (LPDPOINT pPoint,LPTRANDATA  hTran)
+{
+    DPOINT Point;
+    
+    TRANS2 (pPoint->x,pPoint->y, &Point.x,&Point.y,hTran);
+    return Point;
+}
+
+IPOINT TranIPOINT (IPOINT InPoint,LPTRANDATA  hTran)
+{
+    DPOINT	Point,OutPoint;
+    IPOINT	RtnPoint;
+    
+    Point.x = InPoint.x;
+    Point.y = InPoint.y;
+    TRANS2 (Point.x,Point.y, &OutPoint.x,&OutPoint.y,hTran);
+    RtnPoint.x = IDNINT(OutPoint.x);
+    RtnPoint.y = IDNINT(OutPoint.y);
+    return RtnPoint;
 }
 
 int fgetstring(char *str, int maxlen, FILE *fid)

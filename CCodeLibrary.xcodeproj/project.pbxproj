@@ -326,7 +326,6 @@
 			children = (
 				EBA2E45F199527660085B2E0 /* CCodeLibrary */,
 				EBA2E473199527660085B2E0 /* CCodeLibraryTests */,
-				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E45B199527660085B2E0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -352,6 +351,7 @@
 				1FB3605319AE7E7D00592B1D /* Foundation.framework */,
 			);
 			name = Frameworks;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
@@ -369,6 +369,7 @@
 				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
 				A90EBDC71A48874B001E72CF /* GSSiEnums.h */,
 				A90EBDC81A48874B001E72CF /* GSSiEnums.m */,
+				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EB36639A1A55A97C00ABA486 /* PointInAreaClass.h */,
 				EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */,
 				A94A770B19F7F9F40062906E /* SharedDefaults.h */,

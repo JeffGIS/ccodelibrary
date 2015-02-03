@@ -23,6 +23,7 @@
     if (self)
     {
         self.opaque = NO;
+        self.backgroundColor = UIColor.clearColor;
         self.mapView = mapView;
         self.projection = mapView.projection;
         self.areaFile = areaFile;
