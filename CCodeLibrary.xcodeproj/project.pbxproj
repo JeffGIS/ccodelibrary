@@ -369,13 +369,13 @@
 				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
 				A90EBDC71A48874B001E72CF /* GSSiEnums.h */,
 				A90EBDC81A48874B001E72CF /* GSSiEnums.m */,
-				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EB36639A1A55A97C00ABA486 /* PointInAreaClass.h */,
 				EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */,
 				A94A770B19F7F9F40062906E /* SharedDefaults.h */,
 				A94A770C19F7F9F40062906E /* SharedDefaults.m */,
 				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
+				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);
 			path = CCodeLibrary;
