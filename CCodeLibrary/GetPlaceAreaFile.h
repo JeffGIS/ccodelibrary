@@ -16,7 +16,7 @@
 
 @end
 
-@interface GetPlaceAreaFile : NSObject<FTPDataPullDelegate>
+@interface GetPlaceAreaFile : NSObject <FTPDataPullDelegate>
 
 @property (nonatomic, weak) id <GetPlaceAreaFileDelegate> delegate;
 
