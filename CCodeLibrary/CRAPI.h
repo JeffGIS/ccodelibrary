@@ -38,6 +38,7 @@
 @property (nonatomic) NSInteger GMMSetting;
 @property (nonatomic) NSString *currentPID;
 @property (nonatomic) NSString *currentAddress;
+@property (nonatomic) NSMutableArray *annotations;
 
 //temporary visibility stuff
 @property BOOL GMTilesVisible;
