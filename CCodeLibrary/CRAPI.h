@@ -39,6 +39,13 @@
 @property (nonatomic) NSString *currentPID;
 @property (nonatomic) NSString *currentAddress;
 
+//temporary visibility stuff
+@property BOOL GMTilesVisible;
+@property int parcelsVisibleAtZoom;
+@property int sewerVisibleAtZoom;
+@property int parcelShadingOption;
+
+
 + (CRAPI *)sharedInstance;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
