@@ -46,6 +46,7 @@
 @property int sewerVisibleAtZoom;
 @property int parcelShadingOption;
 @property int showTileInfo;
+@property BOOL showParcelBoundary;
 
 
 + (CRAPI *)sharedInstance;
