@@ -138,4 +138,13 @@ typedef NS_ENUM(NSInteger, GMMSetting)
     GMMSettingAddress,
 };
 
+typedef NS_ENUM(NSInteger, PropertyTableViewSetting)
+{
+    PropertyTableViewSettingDefault,
+    PropertyTableViewSettingOptions,
+    PropertyTableViewSettingPropertyReport,
+    PropertyTableViewSettingRankings,
+    PropertyTableViewSettingComputedValues,
+};
+
 @end
