@@ -952,6 +952,17 @@ static UserDefaults *_defaults;
     return mutableString;
 }
 
+- (NSString *)addSpaceAfterColon:(NSString *)string
+{
+    NSMutableString *mutableString = [NSMutableString stringWithString:string];
+    NSRange range = [mutableString rangeOfString:@":"];
+    
+    if (range.location != NSNotFound)
+        [mutableString insertString:@" " atIndex:(range.location + 1)];
+    
+    return mutableString;
+}
+
 - (NSString *)removeOpeningSpaces:(NSString *)string
 {
     while ([string characterAtIndex:0] == ' ')
