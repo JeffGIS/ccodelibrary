@@ -143,6 +143,7 @@ typedef NS_ENUM(NSInteger, PropertyTableViewSetting)
     PropertyTableViewSettingDefault,
     PropertyTableViewSettingOptions,
     PropertyTableViewSettingPropertyReport,
+    PropertyTableViewSettingHCWebsite,
     PropertyTableViewSettingRankings,
     PropertyTableViewSettingComputedValues,
 };
