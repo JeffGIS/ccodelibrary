@@ -66,6 +66,7 @@
 - (NSString *)addSpaceAfterComma:(NSString *)string;
 - (NSString *)addSpaceAfterColon:(NSString *)string;
 - (NSString *)removeOpeningSpaces:(NSString *)string;
+- (NSMutableAttributedString *)addLineBreakToLastSpace:(NSString *)string;
 - (UIImage *)invertImage:(UIImage *)image;
 - (void)disableWebKitDiskImageCache;
 - (NSString *)sharedFilePath;

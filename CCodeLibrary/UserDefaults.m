@@ -868,7 +868,10 @@ static UserDefaults *_defaults;
     NSRange end = [mutableString rangeOfString:@")"];
     
     if ((start.location != NSNotFound) && (end.location != NSNotFound))
-        [mutableString deleteCharactersInRange:(NSRange){(start.location - 1), (end.location - start.location + 2)}];
+    {
+        [mutableString deleteCharactersInRange:(NSRange){(start.location - 1),
+            (end.location - start.location + 2)}];
+    }
     
     return mutableString;
 }
@@ -957,7 +960,10 @@ static UserDefaults *_defaults;
     NSRange range = [mutableString rangeOfString:@","];
     
     if (range.location != NSNotFound)
-        [mutableString insertString:@" " atIndex:(range.location + 1)];
+    {
+        [mutableString insertString:@" "
+                            atIndex:(range.location + 1)];
+    }
     
     return mutableString;
 }
@@ -968,7 +974,10 @@ static UserDefaults *_defaults;
     NSRange range = [mutableString rangeOfString:@":"];
     
     if (range.location != NSNotFound)
-        [mutableString insertString:@" " atIndex:(range.location + 1)];
+    {
+        [mutableString insertString:@" "
+                            atIndex:(range.location + 1)];
+    }
     
     return mutableString;
 }
@@ -979,6 +988,36 @@ static UserDefaults *_defaults;
         string = [string substringFromIndex:1];
     
     return string;
+}
+
+- (NSMutableAttributedString *)addLineBreakToLastSpace:(NSString *)string
+{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+    
+    [attributedString addAttribute:NSForegroundColorAttributeName
+                             value:UIColor.whiteColor
+                             range:NSMakeRange(0, attributedString.length)];
+    
+    NSMutableAttributedString *append = [[NSMutableAttributedString alloc] initWithString:@"   .\n"];
+    
+    
+    [append addAttribute:NSForegroundColorAttributeName
+                   value:UIColor.clearColor
+                   range:NSMakeRange(0, append.length)];
+    
+    NSRange range = [string rangeOfString:@" "
+                                  options:NSBackwardsSearch];
+    
+    if (range.location != NSNotFound)
+    {
+        [attributedString replaceCharactersInRange:NSMakeRange(range.location, 1)
+                              withAttributedString:append];
+    }
+    
+    [append deleteCharactersInRange:NSMakeRange((append.length - 1), 1)];
+    
+    [attributedString appendAttributedString:append];
+    return attributedString;
 }
 
 - (void)shakeButton:(UIButton *)button
