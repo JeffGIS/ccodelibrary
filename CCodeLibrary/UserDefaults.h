@@ -62,6 +62,7 @@
 - (NSString *)includeTextBeforePipe:(NSString *)string;
 - (NSString *)includeTextAfterPipe:(NSString *)string;
 - (NSString *)includeTextAfterFirstColon:(NSString *)string;
+- (NSString *)includeTextBeforeColon:(NSString *)string;
 - (NSString *)addSpaceAfterComma:(NSString *)string;
 - (NSString *)addSpaceAfterColon:(NSString *)string;
 - (NSString *)removeOpeningSpaces:(NSString *)string;

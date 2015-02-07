@@ -941,6 +941,16 @@ static UserDefaults *_defaults;
     return string;
 }
 
+- (NSString *)includeTextBeforeColon:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@":"];
+    
+    if (range.location != NSNotFound)
+        string = [string substringToIndex:(range.location)];
+    
+    return string;
+}
+
 - (NSString *)addSpaceAfterComma:(NSString *)string
 {
     NSMutableString *mutableString = [NSMutableString stringWithString:string];
