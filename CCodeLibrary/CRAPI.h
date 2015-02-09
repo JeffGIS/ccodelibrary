@@ -8,10 +8,13 @@
 #import "UserDefaults.h"
 #import "Colors.h"
 
-#define MANAGEMENT_MODULE 1
-#define PRELIM_MODULE 2
-#define DETAIL_MODULE 3
-#define FACILITIES_MODULE 4
+#define MANAGEMENT_MODULE   1
+#define PRELIM_MODULE       2
+#define DETAIL_MODULE       3
+#define FACILITIES_MODULE   4
+
+#define PROJECT_MPLS        1
+#define PROJECT_METROGIS    2
 
 @interface CRAPI : NSObject
 
@@ -39,6 +42,7 @@
 @property (nonatomic) NSString *currentPID;
 @property (nonatomic) NSString *currentAddress;
 @property (nonatomic) NSMutableArray *annotations;
+@property int project;
 
 //temporary visibility stuff
 @property BOOL GMTilesVisible;
