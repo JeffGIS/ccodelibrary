@@ -148,4 +148,13 @@ typedef NS_ENUM(NSInteger, PropertyTableViewSetting)
     PropertyTableViewSettingComputedValues,
 };
 
+typedef NS_ENUM(NSInteger, MapViewScreenSetting)
+{
+    MapViewScreenSettingDefault,
+    MapViewScreenSettingFullscreen,
+    MapViewScreenSettingSplitScreen,
+    MapViewScreenSettingTriScreen,
+    MapViewScreenSettingSplitBottomScreen,
+};
+
 @end
