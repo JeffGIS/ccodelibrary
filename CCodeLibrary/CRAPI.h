@@ -51,6 +51,7 @@
 @property int parcelShadingOption;
 @property int showTileInfo;
 @property BOOL showParcelBoundary;
+@property (nonatomic) NSInteger basemap;
 
 
 + (CRAPI *)sharedInstance;
