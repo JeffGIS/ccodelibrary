@@ -167,7 +167,7 @@
     assert(request);
     
     int itimeout = request.timeoutInterval;
-    [request setTimeoutInterval:(itimeout / 8)];
+    [request setTimeoutInterval:(itimeout / 2)];
     
     _connection = [NSURLConnection connectionWithRequest:request
                                                     delegate:self];
