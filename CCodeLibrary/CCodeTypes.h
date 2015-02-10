@@ -4,6 +4,7 @@
 #ifndef CCodeLibrary_CCodeTypes_h
 #define CCodeLibrary_CCodeTypes_h
 
+typedef int * LPINT;
 typedef char *LPSTR;
 typedef LPSTR HPSTR;
 #define TRUE 1
