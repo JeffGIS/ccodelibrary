@@ -157,4 +157,11 @@ typedef NS_ENUM(NSInteger, MapViewScreenSetting)
     MapViewScreenSettingSplitBottomScreen,
 };
 
+typedef NS_ENUM(NSInteger, BasemapSetting)
+{
+    BasemapSettingDefault,
+    BasemapSettingOSM,
+    BasemapSettingApple,
+};
+
 @end
