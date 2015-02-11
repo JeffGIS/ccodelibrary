@@ -50,6 +50,7 @@
 @property int parcelsVisibleAtZoom;
 @property int sewerVisibleAtZoom;
 @property int parcelShadingOption;
+@property int parcelTextOption;
 @property int showTileInfo;
 @property BOOL showParcelBoundary;
 @property (nonatomic) NSInteger basemap;

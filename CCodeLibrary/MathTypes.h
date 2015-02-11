@@ -15,6 +15,7 @@
 #define  DEGRAD    5.7295779513082322e1
 #define MFT 3.280833333333333e0
 #define FTM 3.04800609601219e-1
+#define ACRES_PER_SQMETER   0.000247105
 
 #ifndef max
 #define max(a,b)(((a) > (b)) ? (a) : (b))
