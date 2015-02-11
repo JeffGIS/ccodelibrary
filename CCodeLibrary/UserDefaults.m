@@ -984,8 +984,25 @@ static UserDefaults *_defaults;
 
 - (NSString *)removeOpeningSpaces:(NSString *)string
 {
-    while ([string characterAtIndex:0] == ' ')
-        string = [string substringFromIndex:1];
+    if (![string  isEqualToString:@""])
+    {
+        while ([string characterAtIndex:0] == ' ')
+            string = [string substringFromIndex:1];
+    }
+    
+    return string;
+}
+
+- (NSString *)removeOpeningReturn:(NSString *)string
+{
+    if (![string  isEqualToString:@""])
+    {
+        while ([string characterAtIndex:0] == '\n' ||
+               [string characterAtIndex:0] == '\r')
+        {
+            string = [string substringFromIndex:1];
+        }
+    }
     
     return string;
 }
