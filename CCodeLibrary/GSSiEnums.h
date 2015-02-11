@@ -136,6 +136,9 @@ typedef NS_ENUM(NSInteger, GMMSetting)
     GMMSettingDefault,
     GMMSettingPID,
     GMMSettingAddress,
+    GMMSettingPropOwner,
+    GMMSettingIntersection,
+    GMMSettingBoundaries,
 };
 
 typedef NS_ENUM(NSInteger, PropertyTableViewSetting)

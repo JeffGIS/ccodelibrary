@@ -41,6 +41,7 @@
 @property (nonatomic) NSInteger GMMSetting;
 @property (nonatomic) NSString *currentPID;
 @property (nonatomic) NSString *currentAddress;
+@property (nonatomic) NSString *currentPropOwner;
 @property (nonatomic) NSMutableArray *annotations;
 @property int project;
 
