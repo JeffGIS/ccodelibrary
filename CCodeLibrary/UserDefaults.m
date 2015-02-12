@@ -988,6 +988,7 @@ static UserDefaults *_defaults;
     
     while (*pstring && *pstring == ' ')
         pstring++;
+    
     string = [NSString stringWithUTF8String:pstring];
    
     return string;
@@ -999,6 +1000,7 @@ static UserDefaults *_defaults;
     
     while (*pstring && (*pstring == '\n' || *pstring == '\r'))
         pstring++;
+    
     string = [NSString stringWithUTF8String:pstring];
     
     return string;
