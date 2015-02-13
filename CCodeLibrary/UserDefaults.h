@@ -67,6 +67,7 @@
 - (NSString *)addSpaceAfterColon:(NSString *)string;
 - (NSString *)removeOpeningSpaces:(NSString *)string;
 - (NSString *)removeOpeningReturn:(NSString *)string;
+- (NSString *)removePIDPrefix:(NSString *)string;
 - (NSMutableAttributedString *)addLineBreakToLastSpace:(NSString *)string;
 - (UIImage *)invertImage:(UIImage *)image;
 - (void)disableWebKitDiskImageCache;

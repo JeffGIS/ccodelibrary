@@ -1006,6 +1006,16 @@ static UserDefaults *_defaults;
     return string;
 }
 
+- (NSString *)removePIDPrefix:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"-"];
+    
+    if (range.location != NSNotFound)
+        string = [string substringFromIndex:(range.location + 1)];
+    
+    return string;
+}
+
 - (NSMutableAttributedString *)addLineBreakToLastSpace:(NSString *)string
 {
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
