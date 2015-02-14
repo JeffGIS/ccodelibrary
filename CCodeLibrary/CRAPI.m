@@ -555,7 +555,7 @@ forGeoid:(int)geoid
     return iBounds;
 }
 */
-- (IBOUNDS) CGRectToIBounds:(CGRect)rect
+- (IBOUNDS)CGRectToIBounds:(CGRect)rect
 {
     IBOUNDS iBounds;
     iBounds.xmn = rect.origin.x;
