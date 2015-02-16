@@ -24,14 +24,24 @@
     return self;
 }
 
-- (void)getFile:(NSString *)fileName
+- (int)getFile:(NSString *)fileName
   fromDirectory:(NSString *)fromDirectory
          toFile:(NSString *)toFileName
     toDirectory:(NSString *)toDirectory
    forceRefresh:(BOOL)refresh
 
 {
+    int rtn = FTPStatusOK;
+    
     _toDirectory = toDirectory;
+    if (_createDirectory)
+    {
+        [NSFileManager.defaultManager createDirectoryAtPath:_toDirectory
+                                withIntermediateDirectories:YES
+                                                 attributes:nil
+                                                      error:nil];
+    }
+    
     _directory = fromDirectory;
     _fileName = fileName;
     _toFileName = toFileName;
@@ -57,12 +67,13 @@
                 _haveCalledDelegate = YES;
             }
             
-            return;
+            return FTPStatusConnectionFailed;
         }
         
         [self startReceive:fileName];
     }
-    
+    else if (_returnIfExists)
+        rtn = FTPStatusFileExists;
     else if (_delegate && !_haveCalledDelegate)
     {
         [_delegate FTPdidComplete:_option withStatus:FTPStatusOK
@@ -70,6 +81,7 @@
         
         _haveCalledDelegate = YES;
     }
+    return rtn;
 }
 
 - (void)receiveDidStart
@@ -337,10 +349,20 @@ didReceiveResponse:(NSURLResponse *)response
 
 - (void)setUpFTP
 {
-    _ftpSite = @"gssidata.com";
-    self.username = @"GSSiData";
-    self.password = @"GSSi";
-    self.port = @"14147";
+    if (_ftpSiteOveride)
+    {
+        _ftpSite = _ftpSiteOveride;
+        self.username = _usernameOveride;
+        self.password = _passwordOveride;
+        self.port = _portOveride;
+    }
+    else
+    {
+        _ftpSite = @"gssidata.com";
+        self.username = @"GSSiData";
+        self.password = @"GSSi";
+        self.port = @"14147";
+    }
     
     _ftpSite2 = @"thmgis.com";
     self.username2 = @"waypoint";

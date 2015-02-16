@@ -25,12 +25,18 @@
 @property (nonatomic, strong, readwrite) NSURLConnection *connection;
 @property (nonatomic, copy, readwrite) NSString *filePath;
 @property (nonatomic, strong, readwrite) NSOutputStream *fileStream;
+@property (nonatomic, copy, readwrite) NSString *ftpSiteOveride;
+@property (nonatomic, copy, readwrite) NSString *usernameOveride;
+@property (nonatomic, copy, readwrite) NSString *passwordOveride;
+@property (nonatomic, copy, readwrite) NSString *portOveride;
 @property (nonatomic, copy, readwrite) NSString *ftpSite;
 @property (nonatomic, copy, readwrite) NSString *username;
 @property (nonatomic, copy, readwrite) NSString *password;
 @property (nonatomic, copy, readwrite) NSString *port;
 @property (nonatomic, copy, readwrite) NSString *directory;
 @property (nonatomic, copy, readwrite) NSString *toDirectory;
+@property BOOL createDirectory;
+@property BOOL returnIfExists;
 @property (nonatomic, copy, readwrite) NSString *fileName;
 @property (nonatomic, copy, readwrite) NSString *toFileName;
 @property (nonatomic, copy, readwrite) NSString *ftpSite2;
@@ -49,7 +55,7 @@
 
 + (FTPDataPull *)pull;
 
-- (void)getFile:(NSString *)fileName
+- (int)getFile:(NSString *)fileName
   fromDirectory:(NSString *)fromDirectory
          toFile:(NSString *)toFileName
     toDirectory:(NSString *)toDirectory
