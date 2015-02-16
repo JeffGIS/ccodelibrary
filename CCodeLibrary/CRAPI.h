@@ -59,6 +59,8 @@
 @property NSString *currentOverallBoundaryType;
 @property int currentOverallBoundaryRefno;
 
+@property NSString * currentPlatImagePath;
+
 
 + (CRAPI *)sharedInstance;
 
