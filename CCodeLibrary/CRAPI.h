@@ -54,12 +54,10 @@
 @property int showTileInfo;
 @property BOOL showParcelBoundary;
 @property (nonatomic) NSInteger basemap;
-
 @property NSString *currentOverallBoundaryName;
 @property NSString *currentOverallBoundaryType;
 @property int currentOverallBoundaryRefno;
-
-@property NSString * currentPlatImagePath;
+@property NSString *currentPlatImagePath;
 
 
 + (CRAPI *)sharedInstance;
