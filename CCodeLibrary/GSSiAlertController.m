@@ -3,8 +3,15 @@
 
 #import "GSSiAlertController.h"
 
+@interface GSSiAlertController ()
+
+@property (nonatomic, weak) UIViewController *viewController;
+
+@end
+
 @implementation GSSiAlertController
 
+//need to pass in current viewController instance to allow UIAlertController presentation
 - (id)initWithViewController:(UIViewController *)viewController
 {
     self = [super init];
@@ -15,11 +22,12 @@
     return self;
 }
 
+//creates both UIAlertController (iOS 8) and UIAlertView (iOS 7 and earlier)
 - (void)showAlertWithTitle:(NSString *)title
                    message:(NSString *)message
-         cancelButtonTitle:(NSString *)cancelButtonTitle
-         otherButtonTitles:(NSArray *)otherButtonTitles
- destructiveButtonPosition:(NSUInteger)destructiveButtonPosition;
+         cancelButtonTitle:(NSString *)cancelButtonTitle//this parameter cannot be nil
+         otherButtonTitles:(NSArray *)otherButtonTitles//this is an array, not nil-terminated list of strings
+ destructiveButtonPosition:(NSUInteger)destructiveButtonPosition;//1-indexed position (use 0 if none)
 {
     if (UIAlertController.class)
     {
@@ -37,7 +45,7 @@
                                                                  if (_delegate)
                                                                  {
                                                                      [_delegate gssiAlert:self
-                                                                     clickedButtonAtIndex:0];
+                                                                     clickedButtonAtIndex:0];//cancel button always at index 0
                                                                  }
                                                              }];
         
@@ -58,7 +66,7 @@
                                                          
                                                          if (_delegate)
                                                              [_delegate gssiAlert:self
-                                                             clickedButtonAtIndex:(i + 1)];
+                                                             clickedButtonAtIndex:(i + 1)];//other buttons at index 1 and higher
                                                      }];
             }
             
@@ -73,7 +81,7 @@
                                                          
                                                          if (_delegate)
                                                              [_delegate gssiAlert:self
-                                                             clickedButtonAtIndex:(i + 1)];
+                                                             clickedButtonAtIndex:(i + 1)];//other buttons at index 1 and higher
                                                      }];
             }
             
@@ -100,6 +108,7 @@
     }
 }
 
+//cancel button is always at index 0; other buttons are 1 and higher
 - (void)alertView:(UIAlertView *)alertView
 clickedButtonAtIndex:(NSInteger)buttonIndex
 {
