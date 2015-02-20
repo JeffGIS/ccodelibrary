@@ -168,4 +168,12 @@ typedef NS_ENUM(NSInteger, BasemapSetting)
     BasemapSettingApple,
 };
 
+typedef NS_ENUM(NSInteger, CensusZoomSetting)
+{
+    CensusZoomSettingCancel,
+    CensusZoomSettingBlock,
+    CensusZoomSettingBlockGroup,
+    CensusZoomSettingTract,
+};
+
 @end
