@@ -21,6 +21,8 @@
         _allowedZooms[2] = 19;
         
         _documentsDirectory = UserDefaults.defaults.localFilePath;
+        _extractFile = [NSString stringWithFormat:@"%@/extract.png", _documentsDirectory];
+        
         //_documentsDirectory = UserDefaults.defaults.sharedFilePath;
     }
     

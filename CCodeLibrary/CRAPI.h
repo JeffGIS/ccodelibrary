@@ -60,6 +60,7 @@
 @property int currentOverallBoundaryRefno;
 
 @property NSString * currentPlatImagePath;
+@property NSString * extractFile;
 
 
 + (CRAPI *)sharedInstance;
