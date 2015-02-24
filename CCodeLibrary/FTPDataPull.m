@@ -352,21 +352,22 @@ didReceiveResponse:(NSURLResponse *)response
     if (_ftpSiteOveride)
     {
         _ftpSite = _ftpSiteOveride;
-        self.username = _usernameOveride;
-        self.password = _passwordOveride;
-        self.port = _portOveride;
+        _username = _usernameOveride;
+        _password = _passwordOveride;
+        _port = _portOveride;
     }
+    
     else
     {
         _ftpSite = @"gssidata.com";
-        self.username = @"GSSiData";
-        self.password = @"GSSi";
-        self.port = @"14147";
+        _username = @"GSSiData";
+        _password = @"GSSi";
+        _port = @"14147";
     }
     
     _ftpSite2 = @"thmgis.com";
-    self.username2 = @"waypoint";
-    self.password2 = @"pointway4*";
+    _username2 = @"waypoint";
+    _password2 = @"pointway4*";
     
     _currentFtp = [UserDefaults.defaults stringForKey:@"CurrentFtp"];
     
@@ -379,14 +380,14 @@ didReceiveResponse:(NSURLResponse *)response
 
 - (void)setToFtpSite1
 {
-    _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@", self.username,
-                    self.password, _ftpSite, self.port, self.directory, _fileName];
+    _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@",
+                _username, _password, _ftpSite, _port, _directory, _fileName];
 }
 
 - (void)setToFtpSite2
 {
-    _urlText = [NSString stringWithFormat:@"%@:%@@%@/%@/%@", self.username2,
-                    self.password2, _ftpSite2, self.directory, _fileName];
+    _urlText = [NSString stringWithFormat:@"%@:%@@%@/%@/%@",
+                _username2, _password2, _ftpSite2, _directory, _fileName];
 }
 
 - (void)dealloc

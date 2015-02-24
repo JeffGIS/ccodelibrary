@@ -154,7 +154,6 @@ typedef NS_ENUM(NSInteger, PropertyTableViewSetting)
 
 typedef NS_ENUM(NSInteger, MapViewScreenSetting)
 {
-    MapViewScreenSettingDefault,
     MapViewScreenSettingFullscreen,
     MapViewScreenSettingSplitScreen,
     MapViewScreenSettingTriScreen,
@@ -174,6 +173,12 @@ typedef NS_ENUM(NSInteger, CensusZoomSetting)
     CensusZoomSettingBlock,
     CensusZoomSettingBlockGroup,
     CensusZoomSettingTract,
+};
+
+typedef NS_ENUM(NSInteger, MapTypeSetting)
+{
+    MapTypeSettingStandard,
+    MapTypeSettingHybrid,
 };
 
 @end
