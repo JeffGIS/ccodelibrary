@@ -32,8 +32,8 @@
 		A9735AF419E77B6800894359 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A9735AF319E77B6800894359 /* Reachability.m */; };
 		A97867341A521934000A9BB8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A97867331A521934000A9BB8 /* MapKit.framework */; };
 		A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = A97867361A5219FD000A9BB8 /* PriorityLocation.m */; };
-		A9A3DDE81A9D903800DE7F9F /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A3DDE71A9D903800DE7F9F /* GoogleMaps.framework */; };
-		A9A3DDEE1A9D909600DE7F9F /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A9A3DDED1A9D909600DE7F9F /* GoogleMaps.bundle */; };
+		A99CD8C21A9DB89E0049F271 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A99CD8C11A9DB89E0049F271 /* GoogleMaps.framework */; };
+		A99CD8C41A9DB8AE0049F271 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A99CD8C31A9DB8AE0049F271 /* GoogleMaps.bundle */; };
 		A9C525D01A3B59880056711F /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C525CF1A3B59880056711F /* Colors.m */; };
 		A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */; };
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
@@ -128,8 +128,8 @@
 		A97867331A521934000A9BB8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		A97867351A5219FD000A9BB8 /* PriorityLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PriorityLocation.h; sourceTree = "<group>"; };
 		A97867361A5219FD000A9BB8 /* PriorityLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PriorityLocation.m; sourceTree = "<group>"; };
-		A9A3DDE71A9D903800DE7F9F /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
-		A9A3DDED1A9D909600DE7F9F /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
+		A99CD8C11A9DB89E0049F271 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
+		A99CD8C31A9DB8AE0049F271 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
 		A9C525CE1A3B59880056711F /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		A9C525CF1A3B59880056711F /* Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Colors.m; sourceTree = "<group>"; };
 		A9C8ED3A1A5849F700DF9856 /* GetPriorityLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPriorityLocations.h; sourceTree = "<group>"; };
@@ -192,7 +192,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A97867341A521934000A9BB8 /* MapKit.framework in Frameworks */,
-				A9A3DDE81A9D903800DE7F9F /* GoogleMaps.framework in Frameworks */,
+				A99CD8C21A9DB89E0049F271 /* GoogleMaps.framework in Frameworks */,
 				A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */,
 				1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */,
 				1F101D2319AE94910006E1D5 /* QuartzCore.framework in Frameworks */,
@@ -349,8 +349,8 @@
 		EBA2E45C199527660085B2E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A9A3DDED1A9D909600DE7F9F /* GoogleMaps.bundle */,
-				A9A3DDE71A9D903800DE7F9F /* GoogleMaps.framework */,
+				A99CD8C31A9DB8AE0049F271 /* GoogleMaps.bundle */,
+				A99CD8C11A9DB89E0049F271 /* GoogleMaps.framework */,
 				A97867331A521934000A9BB8 /* MapKit.framework */,
 				A9735AF019E779DF00894359 /* SystemConfiguration.framework */,
 				1F838AEB19B1026700943A8C /* CoreGraphics.framework */,
@@ -484,7 +484,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9A3DDEE1A9D909600DE7F9F /* GoogleMaps.bundle in Resources */,
+				A99CD8C41A9DB8AE0049F271 /* GoogleMaps.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
