@@ -474,6 +474,12 @@ float distpd(vec2 *Point1, vec2 *Point2)
                        (Point1->y - Point2->y) * (Point1->y - Point2->y));
 }
 
+double ddistp(DPOINT *Point1, DPOINT *Point2)
+{
+    return (double)sqrt((Point1->x - Point2->x) * (Point1->x - Point2->x) +
+                       (Point1->y - Point2->y) * (Point1->y - Point2->y));
+}
+
 double LDIST(double X1, double Y1, double X2, double Y2)
 {
 	double xdf = (X1 - X2);
@@ -506,6 +512,15 @@ vec2 newpt(vec2 *OldPoint, float AZM, float DIS)
 dvec2 dnewpt(dvec2 *OldPoint, double AZM, double DIS)
 {
     dvec2 NewPoint;
+    
+    NewPoint.x = OldPoint->x + DIS * cos(AZM);
+    NewPoint.y = OldPoint->y + DIS * sin(AZM);
+    return NewPoint;
+}
+
+DPOINT dnewpoint(DPOINT *OldPoint, double AZM, double DIS)
+{
+    DPOINT NewPoint;
     
     NewPoint.x = OldPoint->x + DIS * cos(AZM);
     NewPoint.y = OldPoint->y + DIS * sin(AZM);
