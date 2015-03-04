@@ -535,7 +535,7 @@ float getazmd(vec2 *Point1, vec2 *Point2)
 
 double getazd(LPDPOINT Point1, LPDPOINT Point2)
 {
-	double rtn = DTWOPI(atan2((Point2->y - Point1->y), (Point2->x - Point1->x)));
+    double rtn = DTWOPI(atan2((Point2->y - Point1->y), (Point2->x - Point1->x)));
 	return rtn;
 }
 
