@@ -19,7 +19,6 @@
         _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
         _bitmapData = bmData;
         _areaFile = CRAPI.sharedInstance.placeAreaFile;
-
     }
     
     return self;
