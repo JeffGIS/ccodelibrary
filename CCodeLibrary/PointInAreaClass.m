@@ -16,7 +16,7 @@
         void *bmData;
         _colorSpace = CGColorSpaceCreateDeviceGray();
         _width = _height = 2048;
-        _context = createBitmapContext (self.width,self.height,self.colorSpace,&bmData);
+        _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
         _bitmapData = bmData;
         _areaFile = CRAPI.sharedInstance.placeAreaFile;
 
@@ -32,18 +32,20 @@
     
     if (_context)
         CGContextRelease(_context);
+    
     CGColorSpaceRelease(_colorSpace);
 }
 
 - (void)setAreaFile:(NSString *)areaFile
 {
-    self.bounds = getAreaFileBounds (areaFile.UTF8String);
+    self.bounds = getAreaFileBounds(areaFile.UTF8String);
+    
     if (self.context)
         [self loadAreaIntoContext:areaFile];
     
 }
 
-CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh,CGColorSpaceRef colorSpace, void **bmData)
+CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void **bmData)
 {
     CGContextRef context = NULL;
     void *bitmapData = NULL;
