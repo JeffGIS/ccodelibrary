@@ -149,13 +149,7 @@ typedef struct
 	float ymx;
 }  bounds;
 
-typedef struct
-{
-	double xmn;
-	double ymn;
-	double xmx;
-	double ymx;
-}  dbounds;
+typedef MNMXCORD dbounds;
 
 vec4 MakeVec4(float singleValue);
 
