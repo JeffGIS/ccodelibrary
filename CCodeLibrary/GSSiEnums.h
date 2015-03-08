@@ -181,4 +181,13 @@ typedef NS_ENUM(NSInteger, MapTypeSetting)
     MapTypeSettingHybrid,
 };
 
+typedef NS_ENUM(NSInteger, MapToolbarOrientation)
+{
+    MapToolbarOrientationDefault,
+    MapToolbarOrientationTop,
+    MapToolbarOrientationBottom,
+    MapToolbarOrientationLeft,
+    MapToolbarOrientationRight,
+};
+
 @end
