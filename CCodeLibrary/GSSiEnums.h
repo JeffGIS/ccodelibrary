@@ -175,6 +175,14 @@ typedef NS_ENUM(NSInteger, CensusZoomSetting)
     CensusZoomSettingTract,
 };
 
+typedef NS_ENUM(NSInteger, SewerPipeSetting)
+{
+    SewerPipeSettingCancel,
+    SewerPipeSettingAttributes,
+    SewerPipeSettingTraceUp,
+    SewerPipeSettingTraceDown,
+};
+
 typedef NS_ENUM(NSInteger, MapTypeSetting)
 {
     MapTypeSettingStandard,
