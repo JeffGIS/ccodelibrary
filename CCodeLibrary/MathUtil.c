@@ -589,6 +589,43 @@ void InitIBounds(IBOUNDS *bnds)
     return;
 }
 
+LPDPOINT PointsFromCorners (CORNERPOINTS* pCornerPoints)
+{
+    LPDPOINT pPoints = malloc (4 * sizeof (DPOINT));
+    
+    pPoints[0].x = pCornerPoints->nearLeft.x;
+    pPoints[0].y = pCornerPoints->nearLeft.y;
+    pPoints[1].x = pCornerPoints->farLeft.x;
+    pPoints[1].y = pCornerPoints->farLeft.y;
+    pPoints[2].x = pCornerPoints->farRight.x;
+    pPoints[2].y = pCornerPoints->farRight.y;
+    pPoints[3].x = pCornerPoints->nearRight.x;
+    pPoints[3].y = pCornerPoints->nearRight.y;
+    
+    return pPoints;
+}
+
+MNMXCORD PolyBounds (LPDPOINT points,int npoints)
+{
+    MNMXCORD bounds;
+    
+    InitDBounds(&bounds);
+    for (int i=0;i<npoints;i++)
+    {
+        AddDPointToBounds(&bounds, &points[i]);
+    }
+    return bounds;
+}
+
+MNMXCORD CornerPointBounds (CORNERPOINTS* pCornerPoints)
+{
+    MNMXCORD bounds;
+    LPDPOINT pCorners = PointsFromCorners (pCornerPoints);
+    
+    bounds = PolyBounds (pCorners,4);
+    free (pCorners);
+    return bounds;
+}
 IBOUNDS IBoundsFromPointAndDist(IPOINT pt, int dist)
 {
     IBOUNDS bnds;
@@ -1100,7 +1137,34 @@ LPTRANDATA  STRANBoundsToBounds (LPMNMXCORD FromRect,LPMNMXCORD ToRect)
     YTO[0] = ToRect->ymn;
     YTO[1] = ToRect->ymx;
     YTO[2] = ToRect->ymn;
-    YTO[3] = ToRect->ymx;   
+    YTO[3] = ToRect->ymx;
+    
+    hTran = STRAN2 (1665,XFROM,YFROM,XTO,YTO,4,(LPFLOAT)&RSQMIN);
+    return hTran;
+}
+
+LPTRANDATA  STRANCornersToBounds (CORNERPOINTS *corners,LPMNMXCORD ToRect)
+{
+    LPTRANDATA  hTran;
+    double	XFROM[4],YFROM[4],XTO[4],YTO[4];
+    float	RSQMIN;
+    
+    XFROM[0] = corners->nearLeft.x;
+    XFROM[1] = corners->farLeft.x;
+    XFROM[2] = corners->farRight.x;
+    XFROM[3] = corners->nearRight.x;
+    YFROM[0] = corners->nearLeft.y;
+    YFROM[1] = corners->farLeft.y;
+    YFROM[2] = corners->farRight.y;
+    YFROM[3] = corners->nearRight.y;
+    XTO[0] = ToRect->xmn;
+    XTO[1] = ToRect->xmn;
+    XTO[2] = ToRect->xmx;
+    XTO[3] = ToRect->xmx;
+    YTO[0] = ToRect->ymn;
+    YTO[1] = ToRect->ymx;
+    YTO[2] = ToRect->ymx;
+    YTO[3] = ToRect->ymn;
     
     hTran = STRAN2 (1665,XFROM,YFROM,XTO,YTO,4,(LPFLOAT)&RSQMIN);
     return hTran;
