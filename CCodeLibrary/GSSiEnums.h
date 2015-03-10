@@ -198,4 +198,11 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
     MapToolbarOrientationRight,
 };
 
+typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
+{
+    MarkerInfoWindowTypeDefault,
+    MarkerInfoWindowTypePID,
+    MarkerInfoWindowTypeSewer,
+};
+
 @end
