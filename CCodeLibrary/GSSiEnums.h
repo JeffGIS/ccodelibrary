@@ -150,6 +150,8 @@ typedef NS_ENUM(NSInteger, PropertyTableViewSetting)
     PropertyTableViewSettingHCWebsite,
     PropertyTableViewSettingRankings,
     PropertyTableViewSettingComputedValues,
+    PropertyTableViewSettingStreetView,
+    PropertyTableViewSettingCensusArea,
 };
 
 typedef NS_ENUM(NSInteger, MapViewScreenSetting)
@@ -181,6 +183,7 @@ typedef NS_ENUM(NSInteger, SewerPipeSetting)
     SewerPipeSettingAttributes,
     SewerPipeSettingTraceUp,
     SewerPipeSettingTraceDown,
+    SewerPipeSettingRemoveTrace,
 };
 
 typedef NS_ENUM(NSInteger, MapTypeSetting)
