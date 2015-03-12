@@ -10,6 +10,19 @@
 #include <stdio.h>
 #include <limits.h>
 
+double LTWOPI (double AZ1)
+{
+    if (AZ1<0)
+    {
+        return (TWOPI + fmod(AZ1,TWOPI));
+    }
+    if (AZ1 == 0)
+    {
+        return (AZ1);
+    }
+    return (fmod(AZ1,TWOPI));
+}
+
 double ArcDistance(DPOINT p1, DPOINT p2)
 // returns distance in meters between two lat-longs
 {

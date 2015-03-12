@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+double LTWOPI (double AZ1);
+
 //1D
 float ClockwiseDegFromNorth (float deg);
 float DegreesToRadians(float degrees);
