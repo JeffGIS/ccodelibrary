@@ -88,6 +88,7 @@ double DTWOPI (double az);
 vec3 GetTriangleNormal (vec3 * vertex1,vec3 * vertex2,vec3 * vertex3);
 double ComputeMaxSlope (double frontSlope,double sideSlope);
 LPTRANDATA STRAN2 (int ID,double X1[], double Y1[],double X2[],double Y2[],int N, LPFLOAT RSQMIN);
+LPTRANDATA STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,LPFLOAT pRSQMIN);//,int Type,LPMNMXCORD pBounds);
 LPTRANDATA  STRANBoundsToBounds (LPMNMXCORD FromRect,LPMNMXCORD ToRect);
 LPTRANDATA  STRANCornersToBounds (CORNERPOINTS *corners,LPMNMXCORD ToRect);
 void CloseTRANS2 (LPTRANDATA *phlpTran);
@@ -95,6 +96,7 @@ void TRANS2(double XIN, double YIN, LPDOUBLE XOUT, LPDOUBLE YOUT, LPTRANDATA Tra
 void TranMNMXCORL (MNMXCORL * in,MNMXCORL * out,LPTRANDATA TranPtr);
 void TranMNMXCORD (MNMXCORD * in,MNMXCORD * out,LPTRANDATA TranPtr);
 DPOINT TranDPOINT (LPDPOINT pPoint,LPTRANDATA  hTran);
+void TranPoints(LPDPOINT FromPt, LPDPOINT ToPt, int nPt, LPTRANDATA hTran);
 IPOINT TranIPPOINT (IPOINT InPoint,LPTRANDATA  hTran);
 LPTRANDATA  LoadTranFromBPW (char * Name, int dir);
 LPTRANDATA  LoadTranFromCPT (const char * Name, int dir);

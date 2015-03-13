@@ -1129,6 +1129,32 @@ Exit:
     return TranPtr;
 }
 
+LPTRANDATA STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,LPFLOAT pRSQMIN)//,int Type,LPMNMXCORD pBounds)
+{
+    LPTRANDATA hTran;
+    LPDOUBLE XFROM = (LPDOUBLE)malloc (nPt * 4 * sizeof(double)+4);
+    LPDOUBLE YFROM = &XFROM[nPt];
+    LPDOUBLE XTO = &YFROM[nPt];
+    LPDOUBLE YTO = &XTO[nPt];
+    float	RSQMIN;
+    int	i;
+    
+    for (i=0;i<nPt;i++)
+    {
+        XFROM[i] = FromPt[i].x;
+        YFROM[i] = FromPt[i].y;
+        XTO[i] = ToPt[i].x;
+        YTO[i] = ToPt[i].y;
+    }
+    
+    hTran = STRAN2 (0,XFROM,YFROM,XTO,YTO,nPt,(LPFLOAT)&RSQMIN);//,Type,pBounds);
+    if (pRSQMIN)
+        *pRSQMIN = RSQMIN;
+    free (XFROM);
+    return hTran;
+}
+
+
 LPTRANDATA  STRANBoundsToBounds (LPMNMXCORD FromRect,LPMNMXCORD ToRect)
 {
     LPTRANDATA  hTran;
@@ -1284,6 +1310,14 @@ DPOINT TranDPOINT (LPDPOINT pPoint,LPTRANDATA  hTran)
     
     TRANS2 (pPoint->x,pPoint->y, &Point.x,&Point.y,hTran);
     return Point;
+}
+
+void TranPoints(LPDPOINT FromPt, LPDPOINT ToPt, int nPt, LPTRANDATA hTran)
+{
+    for (int i = 0; i < nPt; i++)
+    {
+        ToPt[i] = TranDPOINT(&FromPt[i], hTran);
+    }
 }
 
 IPOINT TranIPOINT (IPOINT InPoint,LPTRANDATA  hTran)
