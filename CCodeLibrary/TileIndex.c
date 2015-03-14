@@ -95,6 +95,14 @@ void LatLongToPixelXYd(double latitudein, double longitudein, int levelOfDetail,
     *pixelY = Clip(y * mapSize, 0, mapSize - 1);
     *pixelY = (mapSize - 1) - *pixelY;
 }
+DPOINT LatLongPointToPixelPoint(DPOINT llPoint, int levelOfDetail)
+{
+    DPOINT pixPt;
+    
+    LatLongToPixelXYd(llPoint.y, llPoint.x, levelOfDetail, &pixPt.x, &pixPt.y);
+    
+    return pixPt;
+}
 
 /*
     Converts a pixel from pixel XY coordinates at a specified level of detail into latitude/longitude WGS-84 coordinates (in degrees).

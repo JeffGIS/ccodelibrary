@@ -52,6 +52,7 @@ double GroundResolution(double latitude, int levelOfDetail);
 void LatLongToPixelXY(double latitudein, double longitudein, int levelOfDetail, int *pixelX, int *pixelY);
 void LatLongToPixelXY_old(double latitudein, double longitudein, int levelOfDetail, int *pixelX, int *pixelY);
 void LatLongToPixelXYd(double latitudein, double longitudein, int levelOfDetail, double *pixelX, double *pixelY);
+DPOINT LatLongPointToPixelPoint(DPOINT llPoint, int levelOfDetail);
 void PixelXYToLatLong(int pixelX, int pixelY, int levelOfDetail, double *latitude, double *longitude);
 void PixelXYToLatLong_old(int pixelX, int pixelY, int levelOfDetail, double *latitude, double *longitude);
 void PixelXYToLatLongd(double pixelX, double pixelY, int levelOfDetail, double *latitude, double *longitude);

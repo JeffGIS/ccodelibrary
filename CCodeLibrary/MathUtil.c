@@ -962,7 +962,7 @@ void CloseTRANS2 (LPTRANDATA *phlpTran)
     
 }
 
-LPTRANDATA STRAN2(int ID, double X1[], double Y1[], double X2[], double Y2[], int N, float *RSQMIN)
+LPTRANDATA STRAN2(int ID, double X1[], double Y1[], double X2[], double Y2[], int N, int Type,float *RSQMIN)
 {
 	double ANGLE1, ANGLE2, ANGLE, DEN, SINANG, COSANG, DX1, DX2, DY1, DY2, SCLRAT,
     ANGLED, BASX1, BASX2, BASY1, BASY2, D,TOTD, *XT1, *YT1, *XT2, *YT2;
@@ -988,7 +988,7 @@ Start:
     YT2 = YT1 + MAXTRANPOINTS;
     TranPtr = (LPTRANDATA) calloc(1, sizeof(TRANDATA));
     
-    if (N == 2) goto S10;
+    if (N == 2 || Type == 2) goto S10;
     
     BASX1 = DBL_MAX;
     BASX2 = DBL_MAX;
@@ -1129,7 +1129,7 @@ Exit:
     return TranPtr;
 }
 
-LPTRANDATA STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,LPFLOAT pRSQMIN)//,int Type,LPMNMXCORD pBounds)
+LPTRANDATA STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN)//,LPMNMXCORD pBounds)
 {
     LPTRANDATA hTran;
     LPDOUBLE XFROM = (LPDOUBLE)malloc (nPt * 4 * sizeof(double)+4);
@@ -1147,7 +1147,7 @@ LPTRANDATA STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,LPFLOAT pRSQMIN)//
         YTO[i] = ToPt[i].y;
     }
     
-    hTran = STRAN2 (0,XFROM,YFROM,XTO,YTO,nPt,(LPFLOAT)&RSQMIN);//,Type,pBounds);
+    hTran = STRAN2 (0,XFROM,YFROM,XTO,YTO,nPt,Type,(LPFLOAT)&RSQMIN);//,pBounds);
     if (pRSQMIN)
         *pRSQMIN = RSQMIN;
     free (XFROM);
@@ -1178,7 +1178,7 @@ LPTRANDATA  STRANBoundsToBounds (LPMNMXCORD FromRect,LPMNMXCORD ToRect)
     YTO[2] = ToRect->ymn;
     YTO[3] = ToRect->ymx;
     
-    hTran = STRAN2 (1665,XFROM,YFROM,XTO,YTO,4,(LPFLOAT)&RSQMIN);
+    hTran = STRAN2 (1665,XFROM,YFROM,XTO,YTO,4,1,(LPFLOAT)&RSQMIN);
     return hTran;
 }
 
@@ -1205,7 +1205,7 @@ LPTRANDATA  STRANCornersToBounds (CORNERPOINTS *corners,LPMNMXCORD ToRect)
     YTO[2] = ToRect->ymx;
     YTO[3] = ToRect->ymn;
     
-    hTran = STRAN2 (1665,XFROM,YFROM,XTO,YTO,4,(LPFLOAT)&RSQMIN);
+    hTran = STRAN2 (1665,XFROM,YFROM,XTO,YTO,4,1,(LPFLOAT)&RSQMIN);
     return hTran;
 }
 
@@ -1397,10 +1397,10 @@ LPTRANDATA  LoadTranFromBPW(char *Name, int dir)
 		YTO[3] = wy + 100 * yres;
         
         if (dir == 2)
-            TranPtr = STRAN2(1660, XTO, YTO, XFROM, YFROM, 4, &RSQMIN);
+            TranPtr = STRAN2(1660, XTO, YTO, XFROM, YFROM, 4, 1,&RSQMIN);
         
         else
-            TranPtr = STRAN2(1660, XFROM, YFROM, XTO, YTO, 4, &RSQMIN);
+            TranPtr = STRAN2(1660, XFROM, YFROM, XTO, YTO, 4, 1,&RSQMIN);
         
 		fclose(Fid);
 	}
@@ -1426,10 +1426,10 @@ LPTRANDATA  LoadTranFromCPT(const char *Name, int dir)
         }
         
         if (dir == 2)
-            TranPtr = STRAN2 (1660 ,XTO, YTO, XFROM, YFROM, 4, &RSQMIN);
+            TranPtr = STRAN2 (1660 ,XTO, YTO, XFROM, YFROM, 4, 1,&RSQMIN);
         
         else
-            TranPtr = STRAN2 (1660, XFROM, YFROM, XTO, YTO, 4, &RSQMIN);
+            TranPtr = STRAN2 (1660, XFROM, YFROM, XTO, YTO, 4, 1,&RSQMIN);
         
 		fclose(Fid);
 	}
