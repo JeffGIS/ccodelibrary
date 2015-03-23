@@ -154,7 +154,7 @@
         
         if (!url)
         {
-            NSAssert(0, @"ERROR: Invalid URL");
+            //NSAssert(0, @"ERROR: Invalid URL");
             return;
         }
         
