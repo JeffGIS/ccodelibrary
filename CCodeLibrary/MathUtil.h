@@ -81,6 +81,7 @@ vec3 GetTriangleNormal (vec3 * vertex1,vec3 * vertex2,vec3 * vertex3);
 double ComputeMaxSlope (double frontSlope,double sideSlope);
 LPTRANDATA STRAN2 (int ID,double X1[], double Y1[],double X2[],double Y2[],int N, LPFLOAT RSQMIN);
 void TRANS2(double XIN, double YIN, LPDOUBLE XOUT, LPDOUBLE YOUT, LPTRANDATA TranPtr);
+void CloseTRANS2 (LPTRANDATA *phlpTran);
 void TranMNMXCORL (MNMXCORL * in,MNMXCORL * out,LPTRANDATA TranPtr);
 void TranMNMXCORD (MNMXCORD * in,MNMXCORD * out,LPTRANDATA TranPtr);
 LPTRANDATA  LoadTranFromBPW (char * Name, int dir);

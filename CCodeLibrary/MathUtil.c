@@ -886,6 +886,17 @@ bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long 
     return true;
 }
 
+void CloseTRANS2 (LPTRANDATA *phlpTran)
+{
+    LPTRANDATA  TranPtr = *phlpTran;
+    
+    if (TranPtr)
+        free (TranPtr);
+    *phlpTran = 0;
+    return;
+    
+}   
+
 LPTRANDATA STRAN2(int ID, double X1[], double Y1[], double X2[], double Y2[], int N, float *RSQMIN)
 {
 	double ANGLE1, ANGLE2, ANGLE, DEN, SINANG, COSANG, DX1, DX2, DY1, DY2, SCLRAT,
