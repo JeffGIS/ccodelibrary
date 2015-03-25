@@ -25,15 +25,16 @@
 }
 
 - (int)getFile:(NSString *)fileName
-  fromDirectory:(NSString *)fromDirectory
-         toFile:(NSString *)toFileName
-    toDirectory:(NSString *)toDirectory
-   forceRefresh:(BOOL)refresh
+ fromDirectory:(NSString *)fromDirectory
+        toFile:(NSString *)toFileName
+   toDirectory:(NSString *)toDirectory
+  forceRefresh:(BOOL)refresh
 
 {
     int rtn = FTPStatusOK;
     
     _toDirectory = toDirectory;
+    
     if (_createDirectory)
     {
         [NSFileManager.defaultManager createDirectoryAtPath:_toDirectory
@@ -61,7 +62,8 @@
         {
             if (_delegate && !_haveCalledDelegate)
             {
-                [_delegate FTPdidComplete:_option withStatus:FTPStatusConnectionFailed
+                [_delegate FTPdidComplete:_option
+                               withStatus:FTPStatusConnectionFailed
                                  filePath:nil];
                 
                 _haveCalledDelegate = YES;
@@ -72,15 +74,19 @@
         
         [self startReceive:fileName];
     }
+    
     else if (_returnIfExists)
         rtn = FTPStatusFileExists;
+    
     else if (_delegate && !_haveCalledDelegate)
     {
-        [_delegate FTPdidComplete:_option withStatus:FTPStatusOK
+        [_delegate FTPdidComplete:_option
+                       withStatus:FTPStatusOK
                          filePath:_filePath];
         
         _haveCalledDelegate = YES;
     }
+    
     return rtn;
 }
 
@@ -104,8 +110,9 @@
     
     if (_delegate && !_haveCalledDelegate)
     {
-        [_delegate FTPdidComplete:_option withStatus:status
-                             filePath:_filePath];
+        [_delegate FTPdidComplete:_option
+                       withStatus:status
+                         filePath:_filePath];
         
         _haveCalledDelegate = YES;
     }
