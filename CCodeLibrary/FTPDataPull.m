@@ -140,7 +140,7 @@
     
     NSURL *url = [NetworkManager.sharedInstance smartURLForString:_urlText];
     
-    if (!url)// why do we care if binary or not? || ![NetworkManager.sharedInstance isBinaryURL:url])
+    if (!url)
     {
         if (!_hasFailed)
         {
@@ -160,16 +160,7 @@
         }
         
         if (!url)
-        {
-            //NSAssert(0, @"ERROR: Invalid URL");
             return;
-        }
-        
-        else if (![NetworkManager.sharedInstance isBinaryURL:url])
-        {
-            NSAssert(0, @"ERROR: NOT a binary file");
-            return;
-        }
     }
     
     _fileStream = [NSOutputStream outputStreamToFileAtPath:_filePath
