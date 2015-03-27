@@ -110,5 +110,6 @@ int fgetstring (char * str,int maxlen,FILE * fid);
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
 double ArcDistance(DPOINT p1, DPOINT p2);
 bool pointInDBounds (DPOINT *pt,dbounds *bounds);
+bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator);
 
 #endif

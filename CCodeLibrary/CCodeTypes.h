@@ -4,6 +4,9 @@
 #ifndef CCodeLibrary_CCodeTypes_h
 #define CCodeLibrary_CCodeTypes_h
 
+typedef unsigned int HANDLE;
+typedef HANDLE *LPHANDLE;
+typedef int    *LPBOOL;
 typedef int * LPINT;
 typedef char *LPSTR;
 typedef LPSTR HPSTR;
@@ -22,6 +25,7 @@ typedef struct {double x,y;}DPOINT;
 typedef struct {DPOINT nearLeft,farLeft,farRight,nearRight;}CORNERPOINTS;
 typedef struct {double lon,lat;}LLPOINT;
 typedef DPOINT *LPDPOINT;
+typedef DPOINT *HPDPOINT;
 typedef LLPOINT *LPLLPOINT;
 typedef float *LPFLOAT;
 typedef double *LPDOUBLE;

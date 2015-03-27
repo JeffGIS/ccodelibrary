@@ -41,6 +41,7 @@
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
 		EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C21219ED378400F0688B /* FTPDataPush.m */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
+		EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */ = {isa = PBXBuildFile; fileRef = EB268A171AC5E9F700A68EC8 /* code.c */; };
 		EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */; };
 		EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */; };
 		EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB919BCB9C400F6D9F0 /* IntersectionPoint.m */; };
@@ -144,6 +145,9 @@
 		EB05C21219ED378400F0688B /* FTPDataPush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPDataPush.m; sourceTree = "<group>"; };
 		EB1A69741999A6A9005A1CCB /* CRAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRAPI.h; sourceTree = "<group>"; };
 		EB1A69751999A6A9005A1CCB /* CRAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRAPI.m; sourceTree = "<group>"; };
+		EB268A171AC5E9F700A68EC8 /* code.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = code.c; sourceTree = "<group>"; };
+		EB268A181AC5E9F700A68EC8 /* gssitype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gssitype.h; sourceTree = "<group>"; };
+		EB268A191AC5E9F700A68EC8 /* gmlimits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gmlimits.h; sourceTree = "<group>"; };
 		EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntersectionsDatabase.h; sourceTree = "<group>"; };
 		EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntersectionsDatabase.m; sourceTree = "<group>"; };
 		EB2C7DB219BA5A6F00F6D9F0 /* IntersectionRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntersectionRecord.h; sourceTree = "<group>"; };
@@ -262,6 +266,9 @@
 		A94A771D19F813040062906E /* CCode */ = {
 			isa = PBXGroup;
 			children = (
+				EB268A171AC5E9F700A68EC8 /* code.c */,
+				EB268A181AC5E9F700A68EC8 /* gssitype.h */,
+				EB268A191AC5E9F700A68EC8 /* gmlimits.h */,
 				EBAEED0A19B610260084A579 /* CCodeTypes.h */,
 				EBAEED0B19B61FB80084A579 /* compress.h */,
 				EBAEED0819B605E20084A579 /* compress.c */,
@@ -519,6 +526,7 @@
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,
 				A94A771619F8079E0062906E /* FacilityPoint.m in Sources */,
 				A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */,
+				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
 				A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */,
 				A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
