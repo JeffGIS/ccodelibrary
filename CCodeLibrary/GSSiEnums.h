@@ -159,6 +159,7 @@ typedef NS_ENUM(NSInteger, MapViewScreenSetting)
     MapViewScreenSettingFullscreen,
     MapViewScreenSettingSplitScreen,
     MapViewScreenSettingTriScreen,
+    MapViewScreenSettingPlatView,
     MapViewScreenSettingSplitBottomScreen,
 };
 
