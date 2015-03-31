@@ -111,5 +111,7 @@ DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
 double ArcDistance(DPOINT p1, DPOINT p2);
 bool pointInDBounds (DPOINT *pt,dbounds *bounds);
 bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator);
+bool PICK_POINT_ON_LINE (DPOINT pickPoint,double pickAp,LPDPOINT pPickedPoint,long nPnts,HPDPOINT lpPointsIn);
+
 
 #endif
