@@ -7,7 +7,7 @@
 
 @interface SpreadsheetView ()
 
-@property (nonatomic) UIView *contentView;
+@property (nonatomic) UIView *contentView, *overlayView;
 @property (nonatomic) NSArray *alphabet;
 @property (nonatomic) NSDate *touchDown, *touchUp;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
