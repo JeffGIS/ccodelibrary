@@ -148,10 +148,10 @@ typedef NS_ENUM(NSInteger, PropertyTableViewSetting)
     PropertyTableViewSettingOptions,
     PropertyTableViewSettingPropertyReport,
     PropertyTableViewSettingHCWebsite,
-    PropertyTableViewSettingRankings,
-    PropertyTableViewSettingComputedValues,
     PropertyTableViewSettingStreetView,
     PropertyTableViewSettingCensusArea,
+    PropertyTableViewSettingPropList,
+    PropertyTableViewSettingDestinations,
 };
 
 typedef NS_ENUM(NSInteger, MapViewScreenSetting)
@@ -180,11 +180,13 @@ typedef NS_ENUM(NSInteger, CensusZoomSetting)
 
 typedef NS_ENUM(NSInteger, SewerPipeSetting)
 {
-    SewerPipeSettingCancel,
+    SewerPipeSettingDefault,
     SewerPipeSettingAttributes,
     SewerPipeSettingTraceUp,
     SewerPipeSettingTraceDown,
     SewerPipeSettingRemoveTrace,
+    SewerPipeSettingUpdateCleanDate,
+    SewerPipeSettingUpdateNotes,
 };
 
 typedef NS_ENUM(NSInteger, MapTypeSetting)
