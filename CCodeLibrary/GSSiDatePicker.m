@@ -6,6 +6,7 @@
 @interface GSSiDatePicker ()
 
 @property (nonatomic) UIView *overlayView;
+@property (nonatomic) NSDateFormatter *dateFormatter;
 
 @end
 
@@ -23,6 +24,10 @@
     datePicker.layer.cornerRadius = 10.0;
     datePicker.datePickerMode = UIDatePickerModeDate;
     datePicker.alpha = 0.0;
+    
+    datePicker.dateFormatter = [[NSDateFormatter alloc] init];
+    [datePicker.dateFormatter setDateFormat:@"MM-dd-yyyy"];
+    datePicker.dateString = [datePicker.dateFormatter stringFromDate:datePicker.date];
     
     [datePicker addTarget:datePicker
                    action:@selector(datePickerValueChanged:)
@@ -79,9 +84,7 @@
 
 - (void)datePickerValueChanged:(GSSiDatePicker *)datePicker
 {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"MM-dd-yyyy"];
-    _dateString = [dateFormatter stringFromDate:datePicker.date];
+    _dateString = [_dateFormatter stringFromDate:datePicker.date];
 }
 
 @end
