@@ -2,7 +2,14 @@
 //  CCodeLibrary
 
 #import "GSSiNotesView.h"
-#import "../../CCodeLibrary/CCodeLibrary/UserDefaults.h"
+#import "UserDefaults.h"
+
+typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
+{
+    GSSiNotesViewOptionCancel,
+    GSSiNotesViewOptionReplace,
+    GSSiNotesViewOptionAddToList,
+};
 
 @interface GSSiNotesView ()
 
@@ -13,10 +20,14 @@
 @property (nonatomic) UILabel *notesLabel;
 @property (nonatomic) UITextView *textView;
 @property (nonatomic) UITableView *tableView;
+@property (nonatomic) NSMutableArray *notesArray;
 
 @end
 
 @implementation GSSiNotesView
+{
+    NSString *_alertItems[2];
+}
 
 + (GSSiNotesView *)showNotesViewWithView:(UIView *)view
                                 delegate:(id)delegate
@@ -140,7 +151,11 @@
     notesView.tableView.layer.borderColor = UIColor.blackColor.CGColor;
     notesView.tableView.layer.borderWidth = (buttonFontSize / 8.0);
     notesView.tableView.delegate = notesView;
+    notesView.tableView.dataSource = notesView;
     notesView.tableView.rowHeight = buttonSize.height;
+    
+    [notesView.tableView registerClass:UITableViewCell.class
+                forCellReuseIdentifier:@"Cell"];
     
     [notesView addSubview:notesView.tableView];
     
@@ -167,6 +182,8 @@
                          notesView.overlayView.alpha = 0.6;
                          notesView.alpha = 1.0;
                      }];
+    
+    notesView.notesArray = [[NSMutableArray alloc] init];
     
     return notesView;
 }
@@ -261,12 +278,45 @@
 - (void)cancelNotes:(UIButton *)button
 {
     if (_delegate)
-        [_delegate notesViewdidCancel:self];
+        [_delegate notesViewDidCancel:self];
 }
 
 - (void)addToList:(UIButton *)button
 {
+    NSString *note = _textView.text;
     
+    if ([note isEqualToString:@""])
+        return;
+    
+    if ([note containsString:@"\n"])
+    {
+        NSArray *tempArray = [note componentsSeparatedByString:@"\n"];
+        note = tempArray.lastObject;
+    }
+    
+    if ([_notesArray containsObject:note])
+        return;
+    
+    for (NSString *listItem in _notesArray)
+    {
+        if([listItem caseInsensitiveCompare:note] == NSOrderedSame)
+        {
+            if (_delegate)
+            {
+                [_delegate notesView:self
+             didFindMatchBetweenNote:note
+                       andItemInList:listItem];
+                
+                _alertItems[0] = note;
+                _alertItems[1] = listItem;
+            }
+            
+            return;
+        }
+    }
+    
+    [_notesArray addObject:note];
+    [_tableView reloadData];
 }
 
 - (void)dismissKeyboard:(UIButton *)button
@@ -285,6 +335,60 @@
 {
     _overlayClearButton.enabled = NO;
     _viewClearButton.enabled = NO;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section
+{
+    return _notesArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"
+                                                            forIndexPath:indexPath];
+    
+    if (!cell)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                      reuseIdentifier:@"Cell"];
+    }
+    
+    cell.textLabel.textColor = UIColor.blackColor;
+    cell.textLabel.font = [UIFont boldSystemFontOfSize:_buttonFontSize];
+    cell.textLabel.text = _notesArray[indexPath.row];
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    
+    return cell;
+}
+
+- (void)gssiAlert:(GSSiAlertController *)gssiAlert
+clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSUInteger index;
+    
+    switch (buttonIndex)
+    {
+        case GSSiNotesViewOptionCancel:
+            break;
+            
+        case GSSiNotesViewOptionReplace:
+            index = [_notesArray indexOfObject:_alertItems[1]];
+            [_notesArray removeObject:_alertItems[1]];
+            
+        case GSSiNotesViewOptionAddToList:
+            [_notesArray insertObject:_alertItems[0]
+                              atIndex:index];
+            
+            [_tableView reloadData];
+            break;
+    }
 }
 
 @end

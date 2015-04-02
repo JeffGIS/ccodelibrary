@@ -2,20 +2,25 @@
 //  CCodeLibrary
 
 #import <UIKit/UIKit.h>
+#import "GSSiAlertController.h"
 
 @class GSSiNotesView;
 
 @protocol GSSiNotesViewDelegate <NSObject>
 
-- (void)notesViewdidCancel:(GSSiNotesView *)notesView;
+- (void)notesViewDidCancel:(GSSiNotesView *)notesView;
 
 - (void)notesView:(GSSiNotesView *)notesView
      didSaveNotes:(NSString *)notes
              list:(NSArray *)list;
 
+- (void)notesView:(GSSiNotesView *)notesView
+didFindMatchBetweenNote:(NSString *)note
+    andItemInList:(NSString *)itemInList;
+
 @end
 
-@interface GSSiNotesView : UIView <UITextViewDelegate,UITableViewDataSource,UITableViewDelegate>
+@interface GSSiNotesView : UIView <UITextViewDelegate,UITableViewDataSource,UITableViewDelegate,GSSiAlertDelegate>
 
 @property (nonatomic, weak) id <GSSiNotesViewDelegate> delegate;
 
