@@ -48,16 +48,25 @@
     return datePicker;
 }
 
-- (void)hideDatePicker
+- (void)hideDatePicker:(BOOL)animated
 {
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         _overlayView.alpha = 0.0;
-                         self.alpha = 0.0;
-                     } completion:^(BOOL finished) {
-                         [self removeFromSuperview];
-                         [_overlayView removeFromSuperview];
-                     }];
+    if (animated)
+    {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             _overlayView.alpha = 0.0;
+                             self.alpha = 0.0;
+                         } completion:^(BOOL finished) {
+                             [self removeFromSuperview];
+                             [_overlayView removeFromSuperview];
+                         }];
+    }
+    
+    else
+    {
+        [self removeFromSuperview];
+        [_overlayView removeFromSuperview];
+    }
 }
 
 - (void)bringToFrontOfView:(UIView *)view

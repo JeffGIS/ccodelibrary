@@ -9,7 +9,7 @@
 
 + (GSSiDatePicker *)showDatePickerWithView:(UIView *)view;
 
-- (void)hideDatePicker;
+- (void)hideDatePicker:(BOOL)animated;
 - (void)bringToFrontOfView:(UIView *)view;
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration
