@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "GSSiNotesView.h"
+#import "../../CCodeLibrary/CCodeLibrary/UserDefaults.h"
 
 @interface GSSiNotesView ()
 
@@ -166,6 +167,9 @@
     [button setTitleColor:UIColor.whiteColor
                  forState:UIControlStateNormal];
     
+    [button setTitleColor:UserDefaults.defaults.appleBlue
+                 forState:UIControlStateHighlighted];
+    
     [button addTarget:target
                action:selector
      forControlEvents:UIControlEventTouchUpInside];
@@ -233,6 +237,13 @@
 - (void)addToList:(UIButton *)button
 {
     
+}
+
+- (void)touchesBegan:(NSSet *)touches
+           withEvent:(UIEvent *)event
+{
+    if ([_textView isFirstResponder])
+        [_textView resignFirstResponder];
 }
 
 @end
