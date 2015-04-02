@@ -749,6 +749,7 @@ BOOL PICK_POINT_ON_LINE (DPOINT pickPoint,double pickAp,LPDPOINT pPickedPoint,lo
     long fromPt;
     MNMXCORD bounds;
     
+    PickPointBase = pickPoint;
     bounds.xmn = pickPoint.x - pickAp;
     bounds.xmx = pickPoint.x + pickAp;
     bounds.ymn = pickPoint.y - pickAp;
