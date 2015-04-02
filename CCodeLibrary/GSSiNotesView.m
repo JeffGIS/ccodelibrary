@@ -236,7 +236,8 @@
 
 - (void)addToList:(UIButton *)button
 {
-    
+    if ([_textView isFirstResponder])
+        [_textView resignFirstResponder];
 }
 
 - (void)touchesBegan:(NSSet *)touches
