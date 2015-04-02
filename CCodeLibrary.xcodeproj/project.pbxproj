@@ -37,6 +37,7 @@
 		A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */; };
 		A99CD8C21A9DB89E0049F271 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A99CD8C11A9DB89E0049F271 /* GoogleMaps.framework */; };
 		A99CD8C41A9DB8AE0049F271 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A99CD8C31A9DB8AE0049F271 /* GoogleMaps.bundle */; };
+		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
 		A9C525D01A3B59880056711F /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C525CF1A3B59880056711F /* Colors.m */; };
 		A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */; };
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
@@ -140,6 +141,8 @@
 		A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpreadSheetViewCell.m; sourceTree = "<group>"; };
 		A99CD8C11A9DB89E0049F271 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		A99CD8C31A9DB8AE0049F271 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
+		A9ADCB1C1ACD0870000E5C00 /* GSSiNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiNotesView.h; sourceTree = "<group>"; };
+		A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiNotesView.m; sourceTree = "<group>"; };
 		A9C525CE1A3B59880056711F /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		A9C525CF1A3B59880056711F /* Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Colors.m; sourceTree = "<group>"; };
 		A9C8ED3A1A5849F700DF9856 /* GetPriorityLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPriorityLocations.h; sourceTree = "<group>"; };
@@ -313,6 +316,8 @@
 				A9D952B11A96D484008B9156 /* GSSiAlertController.m */,
 				A99050861ACB942F00C6AAAF /* GSSiDatePicker.h */,
 				A99050871ACB942F00C6AAAF /* GSSiDatePicker.m */,
+				A9ADCB1C1ACD0870000E5C00 /* GSSiNotesView.h */,
+				A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */,
 				EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */,
 				EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */,
 				A9D5A8AE1A0D0A7A00314E8B /* GSSiSlopeViewController.h */,
@@ -543,6 +548,7 @@
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,
 				A94A771619F8079E0062906E /* FacilityPoint.m in Sources */,
 				A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */,
+				A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */,
 				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
 				A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */,
 				A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */,
