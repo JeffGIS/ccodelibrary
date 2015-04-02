@@ -8,6 +8,7 @@
 
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UIButton *cancelButton, *saveButton, *addToListButton;
+@property (nonatomic) UIButton *viewClearButton, *overlayClearButton;
 @property (nonatomic) CGFloat cornerRadius, buttonFontSize;
 @property (nonatomic) UILabel *notesLabel;
 @property (nonatomic) UITextView *textView;
@@ -143,6 +144,24 @@
     
     [notesView addSubview:notesView.tableView];
     
+    notesView.overlayClearButton = [[UIButton alloc] initWithFrame:notesView.overlayView.frame];
+    notesView.overlayClearButton.enabled = NO;
+    
+    [notesView setupClearButton:notesView.overlayClearButton
+                         target:notesView
+                       selector:@selector(dismissKeyboard:)];
+    
+    [notesView.overlayView addSubview:notesView.overlayClearButton];
+    
+    notesView.viewClearButton = [[UIButton alloc] initWithFrame:notesView.frame];
+    notesView.viewClearButton.enabled = NO;
+    
+    [notesView setupClearButton:notesView.viewClearButton
+                         target:notesView
+                       selector:@selector(dismissKeyboard:)];
+    
+    [notesView addSubview:notesView.viewClearButton];
+    
     [UIView animateWithDuration:0.25
                      animations:^{
                          notesView.overlayView.alpha = 0.6;
@@ -150,6 +169,17 @@
                      }];
     
     return notesView;
+}
+
+- (void)setupClearButton:(UIButton *)button
+                  target:(id)target
+                selector:(SEL)selector
+{
+    button.backgroundColor = UIColor.clearColor;
+    
+    [button addTarget:target
+               action:selector
+     forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setupButton:(UIButton *)button
@@ -236,15 +266,25 @@
 
 - (void)addToList:(UIButton *)button
 {
+    
+}
+
+- (void)dismissKeyboard:(UIButton *)button
+{
     if ([_textView isFirstResponder])
         [_textView resignFirstResponder];
 }
 
-- (void)touchesBegan:(NSSet *)touches
-           withEvent:(UIEvent *)event
+- (void)textViewDidBeginEditing:(UITextView *)textView
 {
-    if ([_textView isFirstResponder])
-        [_textView resignFirstResponder];
+    _overlayClearButton.enabled = YES;
+    _viewClearButton.enabled = YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    _overlayClearButton.enabled = NO;
+    _viewClearButton.enabled = NO;
 }
 
 @end
