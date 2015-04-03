@@ -1035,7 +1035,7 @@ C*/
 	     else
 	     	ii=1;
       } */
-      counts[2]++;
+//      counts[2]++;
       if (pNextXIntersect)
       	*pNextXIntersect = DBL_MAX;
       A2 =  (double) 0;
