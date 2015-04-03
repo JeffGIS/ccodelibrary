@@ -403,6 +403,9 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
 
 - (void)saveNotes:(UIButton *)button
 {
+    if ([_textView isFirstResponder])
+        [_textView resignFirstResponder];
+    
     if (_delegate)
     {
         [_delegate notesView:self
@@ -413,12 +416,18 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
 
 - (void)cancelNotes:(UIButton *)button
 {
+    if ([_textView isFirstResponder])
+        [_textView resignFirstResponder];
+    
     if (_delegate)
         [_delegate notesViewDidCancel:self];
 }
 
 - (void)addToList:(UIButton *)button
 {
+    if ([_textView isFirstResponder])
+        [_textView resignFirstResponder];
+    
     NSString *note = _textView.text;
     
     if ([note isEqualToString:@""])
@@ -473,6 +482,9 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
 {
     _overlayClearButton.enabled = YES;
     _viewClearButton.enabled = YES;
+    [self bringSubviewToFront:_addToListButton];
+    [self bringSubviewToFront:_saveButton];
+    [self bringSubviewToFront:_cancelButton];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
