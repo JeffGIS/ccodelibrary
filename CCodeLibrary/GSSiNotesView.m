@@ -559,6 +559,22 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
+- (BOOL)tableView:(UITableView *)tableView
+canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView
+commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [_notesArray removeObjectAtIndex:indexPath.row];
+    
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+              withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
 - (void)gssiAlert:(GSSiAlertController *)gssiAlert
 clickedButtonAtIndex:(NSInteger)buttonIndex
 {
