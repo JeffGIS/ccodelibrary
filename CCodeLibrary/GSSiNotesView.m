@@ -368,6 +368,41 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *cellText = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
+    NSString *note = _textView.text;
+    
+    [tableView deselectRowAtIndexPath:indexPath
+                             animated:YES];
+    
+    if ([note isEqualToString:@""])
+    {
+        _textView.text = cellText;
+        return;
+    }
+    
+    if (![note containsString:@"\n"])
+    {
+        if (![note isEqualToString:cellText])
+        {
+            _textView.text = [_textView.text stringByAppendingString:
+                              [NSString stringWithFormat:@"\n%@", cellText]];
+        }
+        
+        return;
+    }
+    
+    NSArray *tempArray = [note componentsSeparatedByString:@"\n"];
+    
+    if (![tempArray containsObject:cellText])
+    {
+        _textView.text = [_textView.text stringByAppendingString:
+                          [NSString stringWithFormat:@"\n%@", cellText]];
+    }
+}
+
 - (void)gssiAlert:(GSSiAlertController *)gssiAlert
 clickedButtonAtIndex:(NSInteger)buttonIndex
 {
