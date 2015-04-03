@@ -272,6 +272,7 @@ dbounds getAreaFileBounds (const char * areaFile)
         CGColorRef whiteRef = CGColorCreate(_colorSpace, white);
         CGContextSetFillColorWithColor(_context, whiteRef);
         CGContextDrawPath(_context, kCGPathFill);
+        CGColorRelease(whiteRef);
         rtn = YES;
     }
     

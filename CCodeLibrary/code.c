@@ -5,6 +5,7 @@
 #define _MAX_PATH   260
 #define LF_FACESIZE         32
 
+#undef HUGE
 #define HUGE
 #define FAR
 #define NEAR
@@ -236,26 +237,32 @@ LPVOID GlobalLock (HANDLE hmem)
 {
 	return (LPVOID)hmem;
 }
+
 void GlobalUnlock (HANDLE hmem)
 {
 	return;
 }
+
 static void GSSiEnterProg (int id)
 {
 	return;
 }
+
 static BOOL RefInNet (int ref)
 {
 	return FALSE;
 }
+
 static BOOL GetGlobalBVal2 (LPSTR Global,BOOL Default)
 {
 	return FALSE;
 }
+
 static int PickListDelete (int i)
 {
 	return i;
 }
+
 static void DBoundsInit (LPMNMXCORD lpRect)
 #if ENABLETRACE
 {GSSiEnterProg (257);
@@ -623,11 +630,11 @@ static BOOL LineInBoundsD (long NPNTS, HPDPOINT POINTS,double TotDist,LPDOUBLE P
 {GSSiEnterProg (1017);
 #endif
 {    HPDPOINT    BPOINT, EPOINT;
-     double     Dist, MinOffDist, MinPCT, MinAZ;
+     double     Dist, MinOffDist, MinPCT = 0.0, MinAZ = 0.0;
      DPOINT     MinPickedPoint;
      double     YMN, YMX, XMN, XMX, XDIFF;
      double     SLOPE, YINT, X, Y;
-     long       i, MinFromPt;
+     long       i, MinFromPt = 0;
      short		nfound;
      
      if (IgnoreBounds || PickDeletes)
@@ -768,7 +775,7 @@ BOOL PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUB
 	DPOINT	BeginPoint, EndPoint, PickedPoint, WPoint, LastWPoint, NearPoint,FromPoint,ToPoint; 
 	HPDPOINT lpPoints = lpPointsIn;//lpPointsIn[1]
 	//POINT	BeginPointFile, EndPointFile, PickedPointFile;
-	int	i, mini;
+	int	i, mini = 0;
 	double	PCT, OffDist, TotDistW, AZ[3], MinDist, Dist, Area=0;
 	BOOL	First=TRUE, rtn=FALSE;   
 	MNMXCORD	Rect;       
@@ -1000,9 +1007,9 @@ C*/
     HPDPOINT lpPoint;
 #endif
 
-    double   A1, A2, INTX, INTY, XP, YP, XMID1, XMID2, YMID1, YMID2, AMID,
+    double   A1, A2, INTX, INTY, XP, YP, XMID1 = 0.0, XMID2, YMID1 = 0.0, YMID2, AMID,
              PAX1, PAY1, PAX2, PAY2, MXX, MNY, MXY,
-             XMIDMN, XMIDMX, YMIDMN, YMIDMX, XMID2_NEED, YMID2_NEED;
+             XMIDMN, XMIDMX, YMIDMN, YMIDMX, XMID2_NEED = 0.0, YMID2_NEED = 0.0;
 
     BOOL HAVE_MID1, NEED_MID1, p_in_a;
 
@@ -1168,7 +1175,7 @@ static BOOL LININT (double L1X1, double L1Y1, double L1X2, double L1Y2,
 {GSSiEnterProg (360);
 #endif
 {
-      double SLOPE1, SLOPE2, YINT1, YINT2, X, Y, XDIFF, YDIFF;
+      double SLOPE1 = 0.0, SLOPE2 = 0.0, YINT1, YINT2, X, Y, XDIFF, YDIFF;
       BOOL INF1, INF2;
       
       if ( (L1X1 ==L2X1 && L1Y1 ==L2Y1) ||

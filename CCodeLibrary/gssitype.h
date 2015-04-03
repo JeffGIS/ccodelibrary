@@ -5,8 +5,7 @@
 #include <ctype.h>      
 #if WIN32
 
-
-#define HUGE 
+#define HUGE
 #define _fstrncpy strncpy
 #define _fstrncmp strncmp
 #define _fstrnicmp strnicmp
