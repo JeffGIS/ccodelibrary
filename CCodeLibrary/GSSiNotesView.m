@@ -270,8 +270,8 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     if (_delegate)
     {
         [_delegate notesView:self
-                didSaveNotes:nil
-                        list:nil];
+                didSaveNotes:_textView.text
+                        list:_notesArray.copy];
     }
 }
 
