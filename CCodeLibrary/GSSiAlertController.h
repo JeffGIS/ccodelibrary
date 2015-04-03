@@ -15,7 +15,6 @@ clickedButtonAtIndex:(NSInteger)buttonIndex;
 
 @interface GSSiAlertController : NSObject <UIAlertViewDelegate>
 
-@property (nonatomic) NSInteger option;
 @property (nonatomic, weak) id <GSSiAlertDelegate> delegate;
 
 - (id)initWithViewController:(UIViewController *)viewController;
