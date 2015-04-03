@@ -39,19 +39,41 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
         viewMargin = 16.0;
-        margin = 12.0;
-        buttonSize = CGSizeMake(100.0, 40.0);
         cornerRadius = 6.0;
         buttonFontSize = 24.0;
+        
+        if (UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeLeft ||
+            UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeRight)
+        {
+            margin = 8.0;
+            buttonSize = CGSizeMake(100.0, 32.0);
+        }
+        
+        else
+        {
+            margin = 12.0;
+            buttonSize = CGSizeMake(100.0, 40.0);
+        }
     }
     
     else
     {
         viewMargin = 40.0;
-        margin = 16.0;
-        buttonSize = CGSizeMake(180.0, 60.0);
         cornerRadius = 10.0;
         buttonFontSize = 36.0;
+        
+        if (UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeLeft ||
+            UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeRight)
+        {
+            margin = 12.0;
+            buttonSize = CGSizeMake(180.0, 52.0);
+        }
+        
+        else
+        {
+            margin = 16.0;
+            buttonSize = CGSizeMake(180.0, 60.0);
+        }
     }
     
     CGRect frame = CGRectMake(viewMargin, viewMargin, (view.frame.size.width - (viewMargin * 2.0)),
@@ -103,6 +125,14 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
                             CGRectMake(margin, (buttonSize.height + margin),
                                        (frame.size.width - (margin * 2.0)), buttonSize.height)];
     
+    if (UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeLeft ||
+        UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeRight)
+    {
+        notesView.notesLabel.frame = CGRectMake(notesView.saveButton.frame.size.width + (margin * 2.0), margin,
+                                                (frame.size.width - (margin * 4.0) - (buttonSize.width * 2.0)),
+                                                buttonSize.height);
+    }
+    
     notesView.notesLabel.backgroundColor = UIColor.clearColor;
     notesView.notesLabel.textColor = UIColor.blackColor;
     notesView.notesLabel.font = [UIFont boldSystemFontOfSize:notesView.buttonFontSize];
@@ -115,6 +145,14 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     notesView.textView = [[UITextView alloc] initWithFrame:
                           CGRectMake(margin, ((buttonSize.height * 2.0) + margin),
                                      (frame.size.width - (margin * 2.0)), (frame.size.height * 0.3))];
+    
+    if (UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeLeft ||
+        UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeRight)
+    {
+        notesView.textView.frame = CGRectMake(margin, (buttonSize.height + (margin * 2.0)),
+                                              (frame.size.width - (margin * 2.0)), (frame.size.height * 0.3));
+    }
+    
     
     notesView.textView.layer.cornerRadius = notesView.cornerRadius;
     notesView.textView.backgroundColor = UIColor.whiteColor;
@@ -250,9 +288,48 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
 }
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration
+        toInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                   tabBarHeight:(CGFloat)tabBarHeight
 {
+    CGPoint origin = self.frame.origin;
     CGRect superviewFrame = self.superview.frame;
+    
+    CGSize buttonSize;
+    CGFloat margin;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft ||
+            toInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
+        {
+            margin = 8.0;
+            buttonSize = CGSizeMake(100.0, 32.0);
+        }
+        
+        else
+        {
+            margin = 12.0;
+            buttonSize = CGSizeMake(100.0, 40.0);
+        }
+    }
+    
+    else
+    {
+        if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft ||
+            toInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
+        {
+            margin = 12.0;
+            buttonSize = CGSizeMake(180.0, 52.0);
+        }
+        
+        else
+        {
+            margin = 16.0;
+            buttonSize = CGSizeMake(180.0, 60.0);
+        }
+    }
+    
+    _tableView.rowHeight = buttonSize.height;
     
     [UIView animateWithDuration:duration
                      animations:^{
@@ -260,8 +337,67 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
                                                          (superviewFrame.size.height + tabBarHeight),
                                                          (superviewFrame.size.width - tabBarHeight));
                          
-                         self.center = CGPointMake(((superviewFrame.size.height + tabBarHeight) / 2.0),
-                                                   ((superviewFrame.size.width - tabBarHeight) / 2.0));
+                         self.frame = CGRectMake(origin.y, origin.x,
+                                                 ((superviewFrame.size.height + tabBarHeight) - (origin.y * 2.0)),
+                                                 ((superviewFrame.size.width - tabBarHeight) - (origin.x * 2.0)));
+                         
+                         _saveButton.frame = CGRectMake(margin, margin, buttonSize.width, buttonSize.height);
+                         
+                         _cancelButton.frame = CGRectMake(((self.frame.size.width - margin) - buttonSize.width),
+                                                          margin, buttonSize.width, buttonSize.height);
+                     }];
+    
+    switch (toInterfaceOrientation)
+    {
+        case UIInterfaceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
+        {
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 _notesLabel.frame = CGRectMake(_saveButton.frame.size.width + (margin * 2.0), margin,
+                                                                (self.frame.size.width - (margin * 4.0) - (buttonSize.width * 2.0)),
+                                                                buttonSize.height);
+                                 
+                                 _textView.frame = CGRectMake(margin, (buttonSize.height + (margin * 2.0)),
+                                                              (self.frame.size.width - (margin * 2.0)),
+                                                              (self.frame.size.height * 0.3));
+                             }];
+        }
+            break;
+            
+        case UIInterfaceOrientationPortrait:
+        case UIInterfaceOrientationPortraitUpsideDown:
+        {
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 _notesLabel.frame = CGRectMake(margin, (buttonSize.height + margin),
+                                                                (self.frame.size.width - (margin * 2.0)),
+                                                                buttonSize.height);
+                                 
+                                 _textView.frame = CGRectMake(margin, ((buttonSize.height * 2.0) + margin),
+                                                              (self.frame.size.width - (margin * 2.0)),
+                                                              (self.frame.size.height * 0.3));
+                             }];
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         _addToListButton.frame =
+                         CGRectMake(((self.frame.size.width / 2.0) - buttonSize.width),
+                                    ((_textView.frame.origin.y + _textView.frame.size.height) + margin),
+                                    (buttonSize.width * 2.0), buttonSize.height);
+                         
+                         _tableView.frame =
+                         CGRectMake(margin, ((_addToListButton.frame.origin.y +
+                                              _addToListButton.frame.size.height) + margin),
+                                    (self.frame.size.width - (margin * 2.0)),
+                                    self.frame.size.height - ((_addToListButton.frame.origin.y +
+                                                               _addToListButton.frame.size.height) + margin) - margin);
                      }];
 }
 

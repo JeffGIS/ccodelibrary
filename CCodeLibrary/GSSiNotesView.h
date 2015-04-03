@@ -32,6 +32,7 @@ didFindMatchBetweenNote:(NSString *)note
 - (void)bringToFrontOfView:(UIView *)view;
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration
+        toInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                   tabBarHeight:(CGFloat)tabBarHeight;
 
 @end
