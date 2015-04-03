@@ -428,11 +428,14 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     {
         NSArray *tempArray = [note componentsSeparatedByString:@"\n"];
         NSInteger l = tempArray.count;
+        
         do
         {
             l--;
             note = tempArray[l];
-        } while (l && [note isEqual:@""]);
+        }
+        
+        while (l && [note isEqualToString:@""]);
     }
     
     if ([_notesArray containsObject:note])
