@@ -427,7 +427,12 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     if ([note containsString:@"\n"])
     {
         NSArray *tempArray = [note componentsSeparatedByString:@"\n"];
-        note = tempArray.lastObject;
+        NSInteger l = tempArray.count;
+        do
+        {
+            l--;
+            note = tempArray[l];
+        } while (l && [note isEqual:@""]);
     }
     
     if ([_notesArray containsObject:note])
