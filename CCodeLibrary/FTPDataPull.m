@@ -28,6 +28,8 @@
  refreshOption:(NSInteger)refreshOption
 
 {
+    int rtn = FTPStatusOK;
+    
     _toDirectory = toDirectory;
     _refreshOption = refreshOption;
     
