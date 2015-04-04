@@ -26,7 +26,7 @@
      fromDirectory:@"Bill/Assignments"
             toFile:fileName
        toDirectory:documentsDirectory
-      forceRefresh:YES];
+     refreshOption:FTPDataPullRefreshOptionCheckFileSize];
     
     return YES;
 }

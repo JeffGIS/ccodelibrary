@@ -7,6 +7,14 @@
 #import "GSSiPopoverView.h"
 #import "GSSiEnums.h"
 
+typedef NS_ENUM(NSInteger, FTPDataPullRefreshOption)
+{
+    FTPDataPullRefreshOptionDefault,
+    FTPDataPullRefreshOptionUseFileIfExists,
+    FTPDataPullRefreshOptionOverwriteFile,
+    FTPDataPullRefreshOptionCheckFileSize,
+};
+
 @class FTPDataPull;
 
 @protocol FTPDataPullDelegate <NSObject>
@@ -36,7 +44,6 @@
 @property (nonatomic, copy, readwrite) NSString *directory;
 @property (nonatomic, copy, readwrite) NSString *toDirectory;
 @property BOOL createDirectory;
-@property BOOL returnIfExists;
 @property (nonatomic, copy, readwrite) NSString *fileName;
 @property (nonatomic, copy, readwrite) NSString *toFileName;
 @property (nonatomic, copy, readwrite) NSString *ftpSite2;
@@ -48,7 +55,7 @@
 @property (nonatomic) BOOL haveCalledDelegate;
 @property (nonatomic) int geoid;
 @property (nonatomic) NSUInteger totalDataReceived;
-@property (nonatomic) NSUInteger fileSize;
+@property (nonatomic) unsigned long long fileSize;
 @property (nonatomic) CGFloat progress;
 @property (nonatomic) GSSiPopoverView *popover;
 @property int option;
@@ -56,10 +63,10 @@
 + (FTPDataPull *)pull;
 
 - (int)getFile:(NSString *)fileName
-  fromDirectory:(NSString *)fromDirectory
-         toFile:(NSString *)toFileName
-    toDirectory:(NSString *)toDirectory
-   forceRefresh:(BOOL)refresh;
+ fromDirectory:(NSString *)fromDirectory
+        toFile:(NSString *)toFileName
+   toDirectory:(NSString *)toDirectory
+ refreshOption:(NSInteger)refreshOption;
 
 - (void)startReceive:(NSString *)fileName;
 

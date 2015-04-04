@@ -18,15 +18,15 @@ enum {
 @property (nonatomic, readonly) uint8_t *buffer;
 @property (nonatomic, assign) size_t bufferOffset;
 @property (nonatomic, assign) size_t bufferLimit;
+@property (nonatomic) Reachability *reachability;
+@property (nonatomic) long fileSize, totBytesWritten;
+@property (nonatomic) int ii;
 
 @end
 
 @implementation FTPDataPush
 {
-    Reachability *_reachability;
-    long _fileSize, _totBytesWritten;
     uint8_t _buffer[kSendBufferSize];
-    int ii;
 }
 
 + (FTPDataPush *)push
@@ -363,7 +363,7 @@ enum {
             break;
             
         case NSStreamEventEndEncountered:
-            ii = 1;
+            _ii = 1;
             break;
             
         default:

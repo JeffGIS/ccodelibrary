@@ -4,36 +4,34 @@
 #import "FTPDataPull.h"
 #import "Reachability.h"
 
+@interface FTPDataPull ()
+
+@property (nonatomic) Reachability *reachability;
+@property (nonatomic) unsigned long long existingFileSize;
+@property (nonatomic) NSInteger refreshOption;
+
+@end
+
 @implementation FTPDataPull
-{
-    Reachability *_reachability;
-}
 
 + (FTPDataPull *)pull
 {
-    return [[FTPDataPull alloc] init];
-}
-
-- (id)init
-{
-    self = [super init];
-    
-    if (self)
-        _haveCalledDelegate = NO;
-    
-    return self;
+    FTPDataPull *pull = [[FTPDataPull alloc] init];
+    pull.haveCalledDelegate = NO;
+    return pull;
 }
 
 - (int)getFile:(NSString *)fileName
  fromDirectory:(NSString *)fromDirectory
         toFile:(NSString *)toFileName
    toDirectory:(NSString *)toDirectory
-  forceRefresh:(BOOL)refresh
+ refreshOption:(NSInteger)refreshOption
 
 {
-    int rtn = FTPStatusOK;
-    
     _toDirectory = toDirectory;
+    _refreshOption = refreshOption;
+    
+    _createDirectory = NO;
     
     if (_createDirectory)
     {
@@ -49,11 +47,11 @@
     _filePath = [NSString stringWithFormat:@"%@/%@", _toDirectory, _toFileName];
     assert(_filePath);
     
-    unsigned long long fileSize = [NSFileManager.defaultManager
-                                   attributesOfItemAtPath:_filePath
-                                   error:nil].fileSize;
+    _existingFileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_filePath
+                                                                       error:nil].fileSize;
     
-    if (refresh || fileSize == 0)
+    if (_refreshOption == FTPDataPullRefreshOptionOverwriteFile ||
+        _refreshOption == FTPDataPullRefreshOptionCheckFileSize)
     {
         _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
         NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
@@ -75,17 +73,17 @@
         [self startReceive:fileName];
     }
     
-    else if (_returnIfExists)
+    else if (_refreshOption == FTPDataPullRefreshOptionUseFileIfExists)
         rtn = FTPStatusFileExists;
     
-    else if (_delegate && !_haveCalledDelegate)
+    /*else if (_delegate && !_haveCalledDelegate)
     {
         [_delegate FTPdidComplete:_option
                        withStatus:FTPStatusOK
                          filePath:_filePath];
         
         _haveCalledDelegate = YES;
-    }
+    }*/
     
     return rtn;
 }
@@ -164,14 +162,12 @@
     }
     
     _fileStream = [NSOutputStream outputStreamToFileAtPath:_filePath
-                                                        append:NO];
+                                                    append:NO];
     
     assert(_fileStream);
     
-    [_fileStream open];
-    
     [_fileStream setProperty:@"YES"
-                          forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
+                      forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     assert(request);
@@ -180,7 +176,7 @@
     [request setTimeoutInterval:(itimeout / 2)];
     
     _connection = [NSURLConnection connectionWithRequest:request
-                                                    delegate:self];
+                                                delegate:self];
     
     assert(_connection);
     _totalDataReceived = 0;
@@ -220,6 +216,16 @@ didReceiveResponse:(NSURLResponse *)response
     assert(response);
     
     _fileSize = (int)response.expectedContentLength;
+    
+    if (_fileSize == _existingFileSize &&
+        _refreshOption == FTPDataPullRefreshOptionCheckFileSize)
+    {
+        [self stopReceiveWithStatus:FTPStatusFileExists
+                       statusString:@"File Already Exists"];
+    }
+    
+    else
+        [_fileStream open];
 }
 
 - (void)connection:(NSURLConnection *)theConnection
@@ -294,7 +300,7 @@ didReceiveResponse:(NSURLResponse *)response
             fromDirectory:_directory
                    toFile:_fileName
               toDirectory:_toDirectory
-             forceRefresh:NO];
+            refreshOption:FTPDataPullRefreshOptionCheckFileSize];
         }
         
         else
@@ -314,7 +320,7 @@ didReceiveResponse:(NSURLResponse *)response
             fromDirectory:_directory
                    toFile:_fileName
               toDirectory:_toDirectory
-             forceRefresh:NO];
+            refreshOption:FTPDataPullRefreshOptionCheckFileSize];
         }
     }
     
