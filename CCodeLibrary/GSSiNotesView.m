@@ -468,7 +468,19 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
         }
     }
     
+    [self addNoteToArray:note];
+    [_tableView reloadData];
+}
+
+- (void)addNoteToArray:(NSString *)note
+{
     [_notesArray addObject:note];
+    
+    NSSortDescriptor *sortOrder = [NSSortDescriptor sortDescriptorWithKey:nil
+                                                                ascending:YES];
+    
+    NSArray *tempArray = [_notesArray sortedArrayUsingDescriptors: [NSArray arrayWithObject:sortOrder]];
+    _notesArray = [NSMutableArray arrayWithArray:tempArray];
     [_tableView reloadData];
 }
 
@@ -485,12 +497,30 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     [self bringSubviewToFront:_addToListButton];
     [self bringSubviewToFront:_saveButton];
     [self bringSubviewToFront:_cancelButton];
+    
+    if (![_textView.text isEqualToString:@""])
+        _textView.text = [NSString stringWithFormat:@"%@\n", _textView.text];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
     _overlayClearButton.enabled = NO;
     _viewClearButton.enabled = NO;
+    
+    NSString *note = _textView.text;
+    
+    if ([note containsString:@"\n"])
+    {
+        NSMutableArray *tempArray = [NSMutableArray arrayWithArray:[note componentsSeparatedByString:@"\n"]];
+       
+        for (int i = (int)(tempArray.count - 1); i > 0; i--)
+        {
+            if ([tempArray[i] isEqualToString:@""])
+                [tempArray removeObjectAtIndex:i];
+        }
+        
+        _textView.text = [[tempArray valueForKey:@"description"] componentsJoinedByString:@"\n"];
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
