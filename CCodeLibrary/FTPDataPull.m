@@ -168,14 +168,6 @@
     
     assert(_fileStream);
     
-    [_fileStream open];
-    if ([_fileStream streamStatus] == NSStreamStatusError)
-    {
-        [_fileStream close];
-        _fileStream = nil;
-        return;
-    }
-    
     [_fileStream setProperty:@"YES"
                       forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
     
@@ -235,7 +227,15 @@ didReceiveResponse:(NSURLResponse *)response
     }
     
     else
+    {
         [_fileStream open];
+        
+        if (_fileStream.streamStatus == NSStreamStatusError)
+        {
+            [self stopReceiveWithStatus:FTPStatusFileWriteError
+                           statusString:_fileStream.streamError.localizedDescription];
+        }
+    }
 }
 
 - (void)connection:(NSURLConnection *)theConnection
