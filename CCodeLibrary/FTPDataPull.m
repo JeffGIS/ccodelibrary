@@ -169,6 +169,12 @@
     assert(_fileStream);
     
     [_fileStream open];
+    if ([_fileStream streamStatus] == NSStreamStatusError)
+    {
+        [_fileStream close];
+        _fileStream = nil;
+        return;
+    }
     
     [_fileStream setProperty:@"YES"
                           forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
