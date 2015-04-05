@@ -109,7 +109,7 @@ static FacilitiesDatabase *_database;
     fromDirectory:@"Bill/PlaceFacilities"
            toFile:fileName
       toDirectory:documentsDirectory
-     forceRefresh:NO];
+    refreshOption:FTPDataPullRefreshOptionCheckFileSize];
 }
 
 - (void)getFacilitiesDatabase:(GSSiPopoverView *)popover

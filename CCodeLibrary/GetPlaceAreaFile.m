@@ -22,7 +22,7 @@
     fromDirectory:@"Bill/PlaceAreas"
            toFile:fileName
       toDirectory:documentsDirectory
-     forceRefresh:NO];
+    refreshOption:FTPDataPullRefreshOptionCheckFileSize];
     
     return YES;
 }

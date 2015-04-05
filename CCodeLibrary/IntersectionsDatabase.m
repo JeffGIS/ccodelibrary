@@ -1216,7 +1216,7 @@ Exit:
     fromDirectory:@"Bill/PlaceIntersections"
            toFile:fileName
       toDirectory:documentsDirectory
-     forceRefresh:NO];
+     refreshOption:FTPDataPullRefreshOptionCheckFileSize];
 }
 
 - (void)getUploadedIntersectionFile:(GSSiPopoverView *)popover
@@ -1243,7 +1243,7 @@ Exit:
     fromDirectory:@"Bill/UploadedIntersections"
            toFile:@"Intersections.sqlite3"
       toDirectory:toDirectory
-     forceRefresh:YES];
+    refreshOption:FTPDataPullRefreshOptionCheckFileSize];
 }
 
 - (void)getInitialIntersectionFile:(NSTimer *)timer
