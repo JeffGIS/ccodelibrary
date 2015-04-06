@@ -33,8 +33,6 @@
     _toDirectory = toDirectory;
     _refreshOption = refreshOption;
     
-    _createDirectory = NO;
-    
     if (_createDirectory)
     {
         [NSFileManager.defaultManager createDirectoryAtPath:_toDirectory
@@ -219,6 +217,8 @@ didReceiveResponse:(NSURLResponse *)response
     
     _fileSize = (int)response.expectedContentLength;
     
+    NSLog(@"FileSizeOnDevice:%llu,FileSizeOnFTP:%llu", _existingFileSize, _fileSize);
+    
     if (_fileSize == _existingFileSize &&
         _refreshOption == FTPDataPullRefreshOptionCheckFileSize)
     {
@@ -232,6 +232,8 @@ didReceiveResponse:(NSURLResponse *)response
         
         if (_fileStream.streamStatus == NSStreamStatusError)
         {
+            NSLog(@"StreamStatus:%lu", _fileStream.streamStatus);
+            
             [self stopReceiveWithStatus:FTPStatusFileWriteError
                            statusString:_fileStream.streamError.localizedDescription];
         }
