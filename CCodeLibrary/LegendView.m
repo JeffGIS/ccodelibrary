@@ -17,7 +17,7 @@
     UIColor *blue = UserDefaults.defaults.appleBlue;
     UIColor *gray = UIColor.darkGrayColor;
     UIColor *black = UIColor.blackColor;
-    CGRect frame;
+    CGRect frame = CGRectZero;
     _size = 15.0;
     
     if (hasComplexView)

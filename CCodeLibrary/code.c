@@ -219,7 +219,7 @@ static BOOL WantOnlyShapePoints=FALSE;
 static BOOL InSnapNode=FALSE;
 static int NumPicked;
 static PICKDATA	PickList[MAXPICKITEMS+3];
-static	long	counts[3]={0,0,0};
+//static long counts[3] = {0,0,0};
 
 static short LINSEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
             double A2,double *X3,double *Y3);
@@ -228,7 +228,7 @@ short LINSEC_TOL (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
 static short LIN_SEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
              double A2,double *X3,double *Y3);
 static double LTWOPI (double AZ1);
-static double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
+//static double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
 BOOL  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator);
 
 static double	P_TOL = 1e-4;
@@ -243,10 +243,11 @@ void GlobalUnlock (HANDLE hmem)
 	return;
 }
 
-static void GSSiEnterProg (int id)
+/*static void GSSiEnterProg (int id)
 {
 	return;
 }
+*/
 
 static BOOL RefInNet (int ref)
 {
@@ -398,6 +399,7 @@ GSSiExitProg (373);
 }
 #endif
 }
+
 static double ldistp(DPOINT Point1, DPOINT Point2)
 #if ENABLETRACE
 {GSSiEnterProg (379);
@@ -407,13 +409,14 @@ static double ldistp(DPOINT Point1, DPOINT Point2)
 #if ENABLETRACE
 GSSiExitProg (379);
 #endif
-    return (sqrt (pow(Point1.x-Point2.x,2)
-            +pow(Point1.y-Point2.y,2)));
+    return (sqrt (pow(Point1.x - Point2.x, 2) +
+                  pow(Point1.y - Point2.y, 2)));
 }
 #if ENABLETRACE
 }
 #endif
 }
+
 double l2ddistfrom3d (DPOINT3D Point1, DPOINT3D Point2)
 #if ENABLETRACE
 {GSSiEnterProg (379);
@@ -423,8 +426,8 @@ double l2ddistfrom3d (DPOINT3D Point1, DPOINT3D Point2)
 #if ENABLETRACE
 GSSiExitProg (379);
 #endif
-    return (sqrt (pow(Point1.x-Point2.x,2)
-            +pow(Point1.y-Point2.y,2)));
+    return (sqrt (pow(Point1.x - Point2.x, 2) +
+                  pow(Point1.y - Point2.y, 2)));
 }
 #if ENABLETRACE
 }
@@ -773,11 +776,13 @@ BOOL PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUB
 {GSSiEnterProg (707);
 #endif
 {
-	DPOINT	BeginPoint, EndPoint, PickedPoint, WPoint, LastWPoint, NearPoint,FromPoint,ToPoint; 
+	DPOINT PickedPoint, WPoint, LastWPoint, NearPoint;
+    //DPOINT BeginPoint, EndPoint, FromPoint, ToPoint;
 	HPDPOINT lpPoints = lpPointsIn;//lpPointsIn[1]
 	//POINT	BeginPointFile, EndPointFile, PickedPointFile;
 	int	i, mini = 0;
-	double	PCT, OffDist, TotDistW, AZ[3], MinDist, Dist, Area=0;
+    double	PCT, OffDist, TotDistW, AZ[3], MinDist, Dist;
+    //double Area = 0;
 	BOOL	First=TRUE, rtn=FALSE;   
 	MNMXCORD	Rect;       
 	long	FromPtID=-1;
@@ -810,7 +815,7 @@ GSSiExitProg (707);
 }
 	
 	TotDistW=0;  
-	BeginPoint = *lpPoints;
+	//BeginPoint = *lpPoints;
 	MinDist = DBL_MAX;
 	DBoundsInit (&Rect); 
 	if (nPnts > 1)
@@ -842,7 +847,9 @@ GSSiExitProg (707);
 			}
 		}
 	}
-	EndPoint = LastWPoint;
+    
+	//EndPoint = LastWPoint;
+    
     if (PickingByRefno)
     {
     	PCT = 0.5;
@@ -852,16 +859,19 @@ GSSiExitProg (707);
 		//BeginPointFile = BasePtToFilePt (BeginPoint);
     	goto Add;
     }
+    
     if (PickOnlyEndPoints)
     {   
     	OffDist = MinDist;
 	    if (OffDist > PickApW) 
-			goto Exit;  
+			goto Exit;
+        
 		if (mini)
 		{
 			PCT = 1;  
 			AZ[1] = AZ[2];
 		}
+        
 		else
 		{
 			PCT = 0; 
@@ -869,6 +879,7 @@ GSSiExitProg (707);
 		}
 		PickedPoint = NearPoint;
 	}
+    
 	else
 	{
 		if (!LineInBoundsD (nPnts,lpPointsIn,TotDistW,&PCT,&OffDist,&AZ[1],
@@ -902,37 +913,48 @@ Add:
 	rtn = TRUE;
 	if (PinA)
 //		OffDist = PinA; 
-		OffDist = fabs(OffDist) + PinA;  
+		OffDist = fabs(OffDist) + PinA;
+    
 	if (InSnapNode)
 		OffDist = ldistp (PickPointBase,NearPoint);
+    
 	if (!PickingByRefno)
 	{
 		//PickedPointFile = BasePtToFilePt (PickedPoint);
 		//BeginPointFile = BasePtToFilePt (BeginPoint);
 		//EndPointFile = BasePtToFilePt (EndPoint);
 	}
-	if (Type == 3)
-		Area = ComputeAreaAreaD (lpPointsIn,nPnts,&TotDistW); 
+    
+	/*if (Type == 3)
+		Area = ComputeAreaAreaD(lpPointsIn, nPnts, &TotDistW);
+    
 	if (pSize)
-		TotDistW = *pSize; 
-	if (GetGlobalBVal2 ("[%PICKPOINTFIRST]",FALSE))
+		TotDistW = *pSize;*/
+    
+	if (GetGlobalBVal2("[%PICKPOINTFIRST]",FALSE))
 	{
 		if (Type == 1)
 			OffDist = 0;
+        
 		else if (OffDist >= 0)
 			OffDist += P_TOL;
+        
 		else
 			OffDist -= P_TOL;
 	}
+    
 	if (nPnts == 1 && pSize)
-		ExpandBounds (&Rect, *pSize);  
-	if (FromPtID > -1 && nPnts > 1)
+		ExpandBounds(&Rect, *pSize);
+    
+	/*if (FromPtID > -1 && nPnts > 1)
 	{
 		FromPoint = lpPointsIn[FromPtID];
 		ToPoint = lpPointsIn[FromPtID+1];
 	}
+    
 	else
-		FromPoint = ToPoint = *lpPointsIn;
+		FromPoint = ToPoint = *lpPointsIn;*/
+    
 	/*PickListAdd (FileNum,SubFile,FileInIndex,ItemSeg,CurrentRefno,CurrentDesc,PolyID,
 				   Type,PCT,OffDist,AZ,TotDistW,CurrentItem,CurElement,
 				   BeginPoint,EndPoint,PickedPoint,NearPoint,mini,fabs(Area),&Rect,
@@ -947,7 +969,9 @@ GSSiExitProg (707);
 #if ENABLETRACE
 }
 #endif
-} 
+}
+
+/*
 static double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim)
 #if ENABLETRACE
 {GSSiEnterProg (404);
@@ -981,7 +1005,9 @@ GSSiExitProg (404);
 #if ENABLETRACE
 }
 #endif
-}  
+}
+*/
+
 BOOL  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator)
 #if ENABLETRACE
 {GSSiEnterProg (359);
@@ -1016,8 +1042,9 @@ C*/
 
     long  IRC ;
     DWORD	ip;
-    short NIN,ii; 
-	LPPIAAStruct pPIAA;
+    short NIN;
+    //short ii;
+	//LPPIAAStruct pPIAA;
       
       /*if (pAccelerator)
       { 
@@ -1057,9 +1084,10 @@ C*/
       
       if (pAccelerator && *pAccelerator)
       {
-		pPIAA = (LPPIAAStruct)GlobalLock (*pAccelerator); 
+		//pPIAA = (LPPIAAStruct)GlobalLock (*pAccelerator);
 		GlobalUnlock (*pAccelerator);
       }
+    
       lpPoint = lpAreaPoints + (nPoints-1);
       PAX1 = lpPoint->x;
       PAY1 = lpPoint->y;
@@ -1170,6 +1198,8 @@ GSSiExitProg (359);
 }
 #endif
 }
+
+/*
 static BOOL LININT (double L1X1, double L1Y1, double L1X2, double L1Y2,
 			 double L2X1, double L2Y1, double L2X2, double L2Y2)
 #if ENABLETRACE
@@ -1206,24 +1236,24 @@ static BOOL LININT (double L1X1, double L1Y1, double L1X2, double L1Y2,
       goto S250;
  S60: if (!INF2) goto S300;
       goto S200;
-//******* SLOPE1 IS INFINITE - SLOPE2 IS NOT
+//SLOPE1 IS INFINITE - SLOPE2 IS NOT
 S100: X      = L1X1;
       Y      = SLOPE2 * X + YINT2;
       goto S500;
-//******* SLOPE2 IS INFINITE - SLOPE1 IS NOT
+//SLOPE2 IS INFINITE - SLOPE1 IS NOT
 S200: X      = L2X1;
       Y      = SLOPE1 * X + YINT1;
       goto S500;
-//******* BOTH SLOPES ARE INFINITE
+//BOTH SLOPES ARE INFINITE
 S250: if (L1X1 ==L2X1) goto S510;
       goto S550;
-//****** NIETHER SLOPE IS INFINITE
+//NIETHER SLOPE IS INFINITE
 S300: if (SLOPE1 !=SLOPE2) goto S310;
       if (YINT1  !=YINT2)  goto S550;
       goto S510;
 S310: X      = (YINT2 - YINT1) / (SLOPE1 - SLOPE2);
       Y      = SLOPE1 * X + YINT1;
-//****** DETERMINE IF THE POINT X,Y IS ON BOTH LINES
+//DETERMINE IF THE POINT X,Y IS ON BOTH LINES
 S500: if (X <min (L1X1,L1X2) || X > max (L1X1,L1X2) ||
           X <min (L2X1,L2X2) || X > max (L2X1,L2X2) ||
           Y <min (L1Y1,L1Y2) || Y > max (L1Y1,L1Y2) ||
@@ -1247,6 +1277,7 @@ GSSiExitProg (360);
 }
 #endif
 }
+*/
 
 static short LIN_SEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
              double A2,double *X3,double *Y3)

@@ -608,7 +608,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)gssiAlert:(GSSiAlertController *)gssiAlert
 clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSUInteger index;
+    NSUInteger index = 0;
     
     switch (buttonIndex)
     {

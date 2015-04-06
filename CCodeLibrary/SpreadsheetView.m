@@ -20,7 +20,7 @@
                                      columns:(NSUInteger)columns
                                         view:(UIView *)view
 {
-    CGRect frame;
+    CGRect frame = CGRectZero;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {

@@ -87,7 +87,7 @@ int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long
         BigRead(FidTF, (HPSTR)&CompressedLength, 4);
     }
     
-    lRec = (int)GSSifilelength(Fid);
+    //lRec = (int)GSSifilelength(Fid);
     fclose(Fid);
     rtn = TRUE;
     

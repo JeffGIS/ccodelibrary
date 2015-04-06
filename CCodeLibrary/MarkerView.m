@@ -49,6 +49,7 @@
     CGFloat size =  maxSize / (1.0 + maxZoom - zoom);
     
     IBOUNDS bounds21;
+    
     /*= [CRAPI.sharedInstance boundsFromRect:self.bounds
                                                      atZoom:21
                                             usingProjection:_projection];*/
@@ -126,7 +127,7 @@
 {
     FILE *fid = fopen(self.areaFile.UTF8String,"rb");
     int nLoops, nPoints, ix, iy;
-    int *pnPointsInLoop=0;
+    int *pnPointsInLoop = 0;
     bounds bnds;
     LPDPOINT pPoints;
     

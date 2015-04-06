@@ -195,7 +195,7 @@ dbounds getAreaFileBounds (const char * areaFile)
 - (CGPoint)projectPointToContext:(CLLocationCoordinate2D *)Point
                             from:(int)from
 {
-    CGPoint pt;
+    CGPoint pt = CGPointZero;
     
     pt.x = Point->longitude - _bounds.xmn;
     pt.x /= (_bounds.xmx - _bounds.xmn);

@@ -473,8 +473,8 @@
 }
 
 
-- (BOOL)getPlaceIntersectionFile:(id)id
-forGeoid:(int)geoid
+- (BOOL)getPlaceIntersectionFile:(id)intFile
+                        forGeoid:(int)geoid
 {
     return YES;
 }
@@ -506,7 +506,7 @@ forGeoid:(int)geoid
     return outDir;
 }
 
-/*- (IPOINT)PointAtZoom:(int)zoom
+/*-(IPOINT)PointAtZoom:(int)zoom
         fromViewPoint:(CGPoint)pt
       usingProjection:(GMSProjection *)projection
 {
@@ -521,7 +521,7 @@ forGeoid:(int)geoid
           usingProjection:(GMSProjection *)projection
 {
     IBOUNDS iBounds;
-    CGPoint pt;
+    CGPoint pt = CGPointZero;
     IPOINT pt21;
     
     InitIBounds(&iBounds);
@@ -557,6 +557,7 @@ forGeoid:(int)geoid
     return iBounds;
 }
 */
+
 - (IBOUNDS)CGRectToIBounds:(CGRect)rect
 {
     IBOUNDS iBounds;
@@ -567,23 +568,25 @@ forGeoid:(int)geoid
     return iBounds;
 }
 
+/*
 - (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon
           usingTransformation:(LPTRANDATA)pTranWToBMP
 {
-    CGPoint pt;
+    CGPoint pt = CGPointZero;
     return pt;
 }
+*/
 
 - (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt
                usingTransformation:(LPTRANDATA)pTranWToBMP
 {
-    CGPoint pt;
+    CGPoint pt = CGPointZero;
     TRANS2(lev21pt.x, lev21pt.y, (LPDOUBLE)&pt.x, (LPDOUBLE)&pt.y, pTranWToBMP);
     return pt;
 }
 
 - (IBOUNDS)boundsFromRect:(CGRect)rect
-          usingTransformation:(LPTRANDATA)pTranBMPToW
+      usingTransformation:(LPTRANDATA)pTranBMPToW
 {
     IBOUNDS iBounds, outBounds;
     iBounds = [self CGRectToIBounds:rect];

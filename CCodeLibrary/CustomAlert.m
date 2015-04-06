@@ -13,7 +13,7 @@
   cancelButtonTitle:(NSString *)cancelButtonTitle
    otherButtonTitle:(NSString *)otherButtonTitle
 {
-    CGRect frame;
+    CGRect frame = CGRectZero;
     
     if (UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeLeft ||
         UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeRight)

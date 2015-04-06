@@ -97,15 +97,15 @@
                                   pitch:(CGFloat)pitch
                                     fov:(CGFloat)fov;
 
-- (BOOL)getPlaceIntersectionFile:(id)id
-forGeoid:(int)geoid;
+- (BOOL)getPlaceIntersectionFile:(id)intFile
+                        forGeoid:(int)geoid;
 
 - (NSString*)directoryFromPath:(NSString*)path
                        andName:(NSString*)name
                         create:(BOOL)create;
 
-- (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon
-          usingTransformation:(LPTRANDATA)pTranWToBMP;
+/*- (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon
+          usingTransformation:(LPTRANDATA)pTranWToBMP;*/
 
 - (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt
                usingTransformation:(LPTRANDATA)pTranWToBMP;
