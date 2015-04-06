@@ -62,6 +62,7 @@
             {
                 [_delegate FTPdidComplete:_option
                                withStatus:FTPStatusConnectionFailed
+                          andStatusString:@"Cannot reach server"
                                  filePath:nil];
                 
                 _haveCalledDelegate = YES;
@@ -110,6 +111,7 @@
     {
         [_delegate FTPdidComplete:_option
                        withStatus:status
+                  andStatusString:statusString
                          filePath:_filePath];
         
         _haveCalledDelegate = YES;
