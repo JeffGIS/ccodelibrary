@@ -29,6 +29,7 @@
 
 - (void)FTPdidComplete:(int)option
             withStatus:(int)status
+       andStatusString:(NSString *)statusString
               filePath:(NSString *)path
 {
     if (status == FTPStatusOK)

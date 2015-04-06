@@ -19,9 +19,10 @@ typedef NS_ENUM(NSInteger, FTPDataPullRefreshOption)
 
 @protocol FTPDataPullDelegate <NSObject>
 
+@optional
 - (void)FTPdidComplete:(int)option
             withStatus:(int)status
-       andStatusString:(NSString*)statusString
+       andStatusString:(NSString *)statusString
               filePath:(NSString *)path;
 
 @end
