@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, FTPStatus)
     FTPStatusConnectionFailedTryingSecondary,
     FTPStatusFailedToUnzip,
     FTPStatusFileExists,
-    FTPStatusUserCancel
+    FTPStatusUserCancel,
 };
 
 typedef NS_ENUM(NSInteger, INTDBStatus)

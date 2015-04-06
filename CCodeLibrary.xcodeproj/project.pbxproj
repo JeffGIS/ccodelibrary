@@ -42,6 +42,7 @@
 		A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */; };
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
 		A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D952B11A96D484008B9156 /* GSSiAlertController.m */; };
+		A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
 		EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C21219ED378400F0688B /* FTPDataPush.m */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
@@ -151,6 +152,8 @@
 		A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiSlopeViewController.m; sourceTree = "<group>"; };
 		A9D952B01A96D484008B9156 /* GSSiAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiAlertController.h; sourceTree = "<group>"; };
 		A9D952B11A96D484008B9156 /* GSSiAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiAlertController.m; sourceTree = "<group>"; };
+		A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RampTypeView.h; sourceTree = "<group>"; };
+		A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RampTypeView.m; sourceTree = "<group>"; };
 		EB05C20E19EA999F00F0688B /* ElementOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementOverlayView.h; sourceTree = "<group>"; };
 		EB05C20F19EA999F00F0688B /* ElementOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElementOverlayView.m; sourceTree = "<group>"; };
 		EB05C21119ED378400F0688B /* FTPDataPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDataPush.h; sourceTree = "<group>"; };
@@ -326,6 +329,8 @@
 				A96B07BE19FBF276005A73B0 /* LegendView.m */,
 				1F7E00A819CA8892006AFABA /* MarkerView.h */,
 				1F7E00A919CA8892006AFABA /* MarkerView.m */,
+				A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */,
+				A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */,
 				A99050891ACB947000C6AAAF /* SpreadsheetView.h */,
 				A990508A1ACB947000C6AAAF /* SpreadsheetView.m */,
 				A990508B1ACB947000C6AAAF /* SpreadSheetViewCell.h */,
@@ -561,6 +566,7 @@
 				1F7E00AA19CA8892006AFABA /* MarkerView.m in Sources */,
 				A926F21119D9FC18007C392A /* CircleView.m in Sources */,
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,
+				A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */,
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,
 				A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */,
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
