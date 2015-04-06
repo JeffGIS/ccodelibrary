@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, FTPDataPullRefreshOption)
 
 @end
 
-@interface FTPDataPull : NSObject <NSURLConnectionDataDelegate>
+@interface FTPDataPull : NSObject <NSURLConnectionDataDelegate,GSSiPopoverViewDelegate>
 
 @property (nonatomic, weak) id <FTPDataPullDelegate> delegate;
 @property (nonatomic, assign, readonly ) BOOL isReceiving;

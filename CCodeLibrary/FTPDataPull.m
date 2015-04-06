@@ -9,6 +9,7 @@
 @property (nonatomic) Reachability *reachability;
 @property (nonatomic) unsigned long long existingFileSize;
 @property (nonatomic) NSInteger refreshOption;
+@property id <GSSiPopoverViewDelegate> savePopoverDelegate;
 
 @end
 
@@ -72,19 +73,15 @@
         }
         
         [self startReceive:fileName];
+        if (_popover)
+        {
+            _savePopoverDelegate = _popover.delegate;
+            _popover.delegate = self;
+        }
     }
     
     else if (_refreshOption == FTPDataPullRefreshOptionUseFileIfExists)
         rtn = FTPStatusFileExists;
-    
-    /*else if (_delegate && !_haveCalledDelegate)
-    {
-        [_delegate FTPdidComplete:_option
-                       withStatus:FTPStatusOK
-                         filePath:_filePath];
-        
-        _haveCalledDelegate = YES;
-    }*/
     
     return rtn;
 }
@@ -190,6 +187,11 @@
 - (void)stopReceiveWithStatus:(int)status
                  statusString:(NSString *)statusString
 {
+    if (_popover)
+    {
+        _popover.delegate = _savePopoverDelegate;
+        [_popover hide];
+    }
     if (_connection)
     {
         [_connection cancel];
@@ -415,5 +417,10 @@ didReceiveResponse:(NSURLResponse *)response
     [self stopReceiveWithStatus:FTPStatusStop
                    statusString:@"Stopped"];
 }
+- (void) GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
+{
+    [self stopReceiveWithStatus:FTPStatusUserCancel
+                   statusString:@"Canceled by User"];
 
+}
 @end
