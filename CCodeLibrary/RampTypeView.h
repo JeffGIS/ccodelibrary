@@ -3,6 +3,19 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, RampType)
+{
+    RampTypeDefault,
+    RampTypePerp,
+    RampTypeCombPerpWalk,
+    RampTypeCombPerpNonWalk,
+    RampTypeOneWayDirCurbGutter,
+    RampTypeOneWayDirBlendTrans,
+    RampTypeParallel,
+    RampTypeDepressedCorner,
+    RampTypeFan,
+};
+
 @class RampTypeView;
 
 @protocol RampTypeViewDelegate <NSObject>
