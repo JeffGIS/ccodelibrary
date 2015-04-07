@@ -24,4 +24,6 @@ typedef NS_ENUM(NSInteger, RampType)
 + (RampTypeView *)showRampTypeViewWithView:(UIView *)view
                                   delegate:(id)delegate;
 
+- (void)hideRampTypeView:(BOOL)animated;
+
 @end

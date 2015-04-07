@@ -4,6 +4,17 @@
 #import "RampTypeView.h"
 #import "UserDefaults.h"
 
+@interface RampTypeView ()
+
+@property (nonatomic) NSArray *rampImages, *rampImageLabelText;
+@property (nonatomic) UIView *buttonView;
+@property (nonatomic) CGRect originalButtonFrame, originalLabelFrame;
+@property (nonatomic) BOOL inZoomedMode;
+@property (nonatomic) UIButton *selectButton;
+@property (nonatomic) NSInteger zoomedIndex, selectedIndex;
+
+@end
+
 @implementation RampTypeView
 
 + (RampTypeView *)showRampTypeViewWithView:(UIView *)view
@@ -11,11 +22,18 @@
 {
     RampTypeView *rtView = [[RampTypeView alloc] initWithFrame:view.frame];
     rtView.delegate = delegate;
+    rtView.rampImages = [rtView arrayOfButtonImages];
+    rtView.rampImageLabelText = [rtView arrayOfButtonLabelText];
     rtView.backgroundColor = UserDefaults.defaults.appleBlue;
     rtView.alpha = 0.0;
     [view addSubview:rtView];
     
-    UIButton *returnButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 20.0, 240.0, 50.0)];
+    rtView.selectedIndex = [UserDefaults.defaults integerForKey:@"SelectedRampType"];
+    
+    if (rtView.selectedIndex == 0)
+        rtView.selectedIndex = 1;
+    
+    UIButton *returnButton = [[UIButton alloc] initWithFrame:CGRectMake(42.0, 20.0, 240.0, 50.0)];
     
     [rtView setupButton:returnButton
                  target:rtView
@@ -24,11 +42,29 @@
     
     [rtView addSubview:returnButton];
     
-    UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(42.0, 90.0, 684.0, 912.0)];
+    rtView.buttonView = [[UIView alloc] initWithFrame:CGRectMake(42.0, 90.0, 684.0, 912.0)];
+    rtView.buttonView.backgroundColor = UIColor.blackColor;
     
-    [rtView addSubview:buttonView];
+    [rtView addSubview:rtView.buttonView];
     
-    CGSize buttonSize = CGSizeMake((buttonView.frame.size.width / 3.0), (buttonView.frame.size.height / 4.0));
+    rtView.selectButton = [[UIButton alloc] initWithFrame:CGRectMake(64.0, (rtView.frame.size.height - 100.0),
+                                                                        (rtView.frame.size.width - 128.0), 60.0)];
+    
+    rtView.selectButton.alpha = 0.0;
+    rtView.selectButton.hidden = YES;
+    
+    [rtView setupButton:rtView.selectButton
+                 target:rtView
+               selector:@selector(selectButtonTapped:)
+                  title:@"Select This Ramp Type"];
+    
+    [rtView.selectButton setTitleColor:UIColor.whiteColor
+                              forState:UIControlStateDisabled];
+    
+    [rtView addSubview:rtView.selectButton];
+    
+    CGSize buttonSize = CGSizeMake(((rtView.buttonView.frame.size.width - 8.0) / 3.0),
+                                   ((rtView.buttonView.frame.size.height - 8.0) / 4.0));
    
     NSInteger tag = 0;
     
@@ -36,35 +72,45 @@
     {
         for (int column = 0; column < 3; column++)
         {
-            UIButton *rtButton = [[UIButton alloc] initWithFrame:CGRectMake((column * buttonSize.width),
-                                                                            (row * buttonSize.height),
+            UIButton *rtButton = [[UIButton alloc] initWithFrame:CGRectMake(((column * buttonSize.width) + 4.0),
+                                                                            ((row * buttonSize.height) + 4.0),
                                                                             buttonSize.width, buttonSize.height)];
             
             tag ++;
             rtButton.tag = tag;
+            rtButton.imageEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 44.0, 4.0);
+            rtButton.layer.borderColor = UIColor.greenColor.CGColor;
+            rtButton.layer.borderWidth = 0.0;
             
-            rtButton.backgroundColor = UIColor.whiteColor;
-            rtButton.layer.borderColor = UIColor.blackColor.CGColor;
-            rtButton.layer.borderWidth = 4.0;
-            rtButton.titleLabel.font = [UIFont boldSystemFontOfSize:80.0];
-            rtButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-            
-            [rtButton setTitleColor:UIColor.blackColor
-                           forState:UIControlStateNormal];
-            
-            [rtButton setTitleColor:UIColor.lightGrayColor
-                           forState:UIControlStateHighlighted];
-            
-            [rtButton setTitle:[NSString stringWithFormat:@"%ld", (long)tag]
-                      forState:UIControlStateNormal];
-            
-            [rtButton addTarget:rtView
-                         action:@selector(rtButtonTapped:)
-               forControlEvents:UIControlEventTouchUpInside];
-            
-            [buttonView addSubview:rtButton];
+            if (tag <= rtView.rampImages.count)
+            {
+                [rtButton setImage:rtView.rampImages[tag - 1]
+                          forState:UIControlStateNormal];
+                
+                if (tag <= rtView.rampImageLabelText.count)
+                {
+                    UILabel *rampImageLabel = [[UILabel alloc] initWithFrame:CGRectMake(4.0, (buttonSize.height - 44.0),
+                                                                                        (buttonSize.width - 8.0), 40.0)];
+                    
+                    rampImageLabel.backgroundColor = UIColor.lightGrayColor;
+                    rampImageLabel.textColor = UIColor.blackColor;
+                    rampImageLabel.textAlignment = NSTextAlignmentCenter;
+                    rampImageLabel.font = [UIFont boldSystemFontOfSize:16.0];
+                    rampImageLabel.numberOfLines = 0;
+                    rampImageLabel.text = rtView.rampImageLabelText[tag - 1];
+                    [rtButton addSubview:rampImageLabel];
+                }
+                
+                [rtButton addTarget:rtView
+                             action:@selector(rtButtonTapped:)
+                   forControlEvents:UIControlEventTouchUpInside];
+                
+                [rtView.buttonView addSubview:rtButton];
+            }
         }
     }
+    
+    [rtView highlightSelectedButton];
     
     [UIView animateWithDuration:0.25
                      animations:^{
@@ -100,12 +146,170 @@
 
 - (void)returnButtonTapped:(UIButton *)button
 {
-    [self hideRampTypeView:YES];
+    if (_inZoomedMode == NO)
+    {
+        [self hideRampTypeView:YES];
+        
+        if (_delegate)
+        {
+            [_delegate rampTypeView:self
+                  didReturnRampType:_selectedIndex];
+        }
+    }
+    
+    else
+    {
+        _inZoomedMode = NO;
+        
+        for (UIButton *buttons in _buttonView.subviews)
+        {
+            if ([buttons isKindOfClass:UIButton.class])
+            {
+                if (!buttons.hidden)
+                {
+                    [UIView animateWithDuration:0.25
+                                     animations:^{
+                                         buttons.frame = _originalButtonFrame;
+                                         buttons.imageEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 44.0, 4.0);
+                                     } completion:^(BOOL finished) {
+                                         buttons.userInteractionEnabled = YES;
+                                     }];
+                    
+                    for (UILabel *labels in buttons.subviews)
+                    {
+                        if ([labels isKindOfClass:UILabel.class])
+                        {
+                            [UIView animateWithDuration:0.25
+                                             animations:^{
+                                                 labels.frame = _originalLabelFrame;
+                                                 labels.font = [UIFont boldSystemFontOfSize:16.0];
+                                             }];
+                        }
+                    }
+                }
+                
+                else
+                {
+                    buttons.hidden = NO;
+                    
+                    [UIView animateWithDuration:0.25
+                                     animations:^{
+                                         buttons.alpha = 1.0;
+                                     }];
+                }
+            }
+        }
+        
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             _selectButton.alpha = 0.0;
+                         } completion:^(BOOL finished) {
+                             _selectButton.hidden = YES;
+                         }];
+    }
 }
 
 - (void)rtButtonTapped:(UIButton *)button
 {
-    NSLog(@"SelectedButton:%ld", (long)button.tag);
+    _inZoomedMode = YES;
+    button.userInteractionEnabled = NO;
+    _zoomedIndex = button.tag;
+    
+    if (_zoomedIndex == _selectedIndex)
+    {
+        [_selectButton setTitle:@"This is the Selected Ramp Type"
+                       forState:UIControlStateNormal];
+        
+        _selectButton.backgroundColor = _buttonView.backgroundColor;
+        _selectButton.enabled = NO;
+    }
+    
+    else
+    {
+        [_selectButton setTitle:@"Select This Ramp Type"
+                       forState:UIControlStateNormal];
+        
+        _selectButton.backgroundColor = UIColor.whiteColor;
+        _selectButton.enabled = YES;
+    }
+    
+    for (UIButton *buttons in _buttonView.subviews)
+    {
+        if ([buttons isKindOfClass:UIButton.class])
+        {
+            if (buttons != button)
+            {
+                [UIView animateWithDuration:0.25
+                                 animations:^{
+                                     buttons.alpha = 0.0;
+                                 } completion:^(BOOL finished) {
+                                     buttons.hidden = YES;
+                                 }];
+            }
+            
+        }
+    }
+    
+    _originalButtonFrame = button.frame;
+    
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         button.frame = CGRectMake(4.0, 4.0,
+                                                   (_buttonView.frame.size.width - 8.0),
+                                                   (_buttonView.frame.size.height - 8.0));
+                         
+                         button.imageEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 4.0, 4.0);
+                     }];
+    
+    for (UILabel *labels in button.subviews)
+    {
+        if ([labels isKindOfClass:UILabel.class])
+        {
+            _originalLabelFrame = labels.frame;
+            
+            [UIView animateWithDuration:0.25
+                             animations:^{
+                                 labels.frame = CGRectMake(4.0, 4.0,
+                                                           (button.frame.size.width - 8.0), 96.0);
+                                 
+                                 labels.font = [UIFont boldSystemFontOfSize:40.0];
+                             }];
+        }
+    }
+    
+    _selectButton.hidden = NO;
+    [self bringSubviewToFront:_selectButton];
+    
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         _selectButton.alpha = 1.0;
+                     }];
+}
+
+- (void)selectButtonTapped:(UIButton *)button
+{
+    _selectedIndex = _zoomedIndex;
+    
+    [self performSelector:@selector(returnButtonTapped:)
+               withObject:nil
+               afterDelay:0.0];
+    
+    [self highlightSelectedButton];
+}
+
+- (void)highlightSelectedButton
+{
+    for (UIButton *buttons in _buttonView.subviews)
+    {
+        if ([buttons isKindOfClass:UIButton.class])
+        {
+            if (buttons.tag == _selectedIndex)
+                buttons.layer.borderWidth = 4.0;
+            
+            else
+                buttons.layer.borderWidth = 0.0;
+        }
+    }
 }
 
 - (void)hideRampTypeView:(BOOL)animated
@@ -122,6 +326,60 @@
     
     else
         [self removeFromSuperview];
+}
+
+- (NSArray *)arrayOfButtonImages
+{
+    NSMutableArray *tempArray = [[NSMutableArray alloc] init];
+    
+    UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"PerpendicularRamp"
+                                                                                        ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularWalkableRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularNonWalkableRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalAdjacentToCurbRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalBlendedTransitionRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ParallelRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"DepressedCornerRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"FanRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    NSArray *imageArray = tempArray.copy;
+    
+    return imageArray;
+}
+
+- (NSArray *)arrayOfButtonLabelText
+{
+    return @[@"Perpendicular", @"Combined Perpendicular With Walkable Surface", @"Combined Perpendicular With Non-Walkable Surface", @"One Way Directional Adjacent to Curb & Gutter", @"One Way Directional Blended Transition", @"Parallel", @"Depressed Corner", @"Fan"];
 }
 
 @end
