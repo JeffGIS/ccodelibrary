@@ -22,8 +22,8 @@
 {
     RampTypeView *rtView = [[RampTypeView alloc] initWithFrame:view.frame];
     rtView.delegate = delegate;
-    rtView.rampImages = [rtView arrayOfButtonImages];
-    rtView.rampImageLabelText = [rtView arrayOfButtonLabelText];
+    rtView.rampImages = rtView.arrayOfButtonImages;
+    rtView.rampImageLabelText = rtView.arrayOfButtonLabelText;
     rtView.backgroundColor = UserDefaults.defaults.appleBlue;
     rtView.alpha = 0.0;
     [view addSubview:rtView];

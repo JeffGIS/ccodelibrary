@@ -33,5 +33,6 @@ typedef NS_ENUM(NSInteger, RampType)
                                   delegate:(id)delegate;
 
 - (void)hideRampTypeView:(BOOL)animated;
+- (NSArray *)arrayOfButtonLabelText;
 
 @end
