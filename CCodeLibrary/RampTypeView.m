@@ -155,8 +155,6 @@
 {
     if (_inZoomedMode == NO)
     {
-        [self hideRampTypeView:YES];
-        
         if (_delegate)
         {
             [_delegate rampTypeView:self
