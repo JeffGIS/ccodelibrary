@@ -33,7 +33,7 @@
     if (rtView.selectedIndex == 0)
         rtView.selectedIndex = 1;
     
-    UIButton *returnButton = [[UIButton alloc] initWithFrame:CGRectMake(42.0, 20.0, 240.0, 50.0)];
+    UIButton *returnButton = [[UIButton alloc] initWithFrame:CGRectMake(42.0, 26.0, 180.0, 50.0)];
     
     [rtView setupButton:returnButton
                  target:rtView
@@ -41,6 +41,13 @@
                   title:@"< Return"];
     
     [rtView addSubview:returnButton];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(242.0, 20.0, 484.0, 60.0)];
+    titleLabel.text = @"Select Ramp Type";
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.textColor = UIColor.whiteColor;
+    titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
+    [rtView addSubview:titleLabel];
     
     rtView.buttonView = [[UIView alloc] initWithFrame:CGRectMake(42.0, 90.0, 684.0, 912.0)];
     rtView.buttonView.backgroundColor = UIColor.blackColor;

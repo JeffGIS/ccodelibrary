@@ -3,11 +3,6 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSInteger, RampType)
-{
-    RampTypeDefault,
-};
-
 @class RampTypeView;
 
 @protocol RampTypeViewDelegate <NSObject>
