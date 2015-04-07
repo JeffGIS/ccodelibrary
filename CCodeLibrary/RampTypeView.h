@@ -5,7 +5,6 @@
 
 typedef NS_ENUM(NSInteger, RampType)
 {
-    RampTypeDefault,
     RampTypePerp,
     RampTypeCombPerpWalk,
     RampTypeCombPerpNonWalk,
@@ -28,11 +27,11 @@ typedef NS_ENUM(NSInteger, RampType)
 @interface RampTypeView : UIView
 
 @property (nonatomic, weak) id <RampTypeViewDelegate> delegate;
+@property (nonatomic) NSArray *rampImageLabelText;
 
 + (RampTypeView *)showRampTypeViewWithView:(UIView *)view
                                   delegate:(id)delegate;
 
 - (void)hideRampTypeView:(BOOL)animated;
-- (NSArray *)arrayOfButtonLabelText;
 
 @end

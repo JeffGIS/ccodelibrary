@@ -6,7 +6,7 @@
 
 @interface RampTypeView ()
 
-@property (nonatomic) NSArray *rampImages, *rampImageLabelText;
+@property (nonatomic) NSArray *rampImages;
 @property (nonatomic) UIView *buttonView;
 @property (nonatomic) CGRect originalButtonFrame, originalLabelFrame;
 @property (nonatomic) BOOL inZoomedMode;
@@ -22,16 +22,13 @@
 {
     RampTypeView *rtView = [[RampTypeView alloc] initWithFrame:view.frame];
     rtView.delegate = delegate;
-    rtView.rampImages = rtView.arrayOfButtonImages;
-    rtView.rampImageLabelText = rtView.arrayOfButtonLabelText;
+    rtView.rampImages = [rtView arrayOfButtonImages];
+    rtView.rampImageLabelText = [rtView arrayOfButtonLabelText];
     rtView.backgroundColor = UserDefaults.defaults.appleBlue;
     rtView.alpha = 0.0;
     [view addSubview:rtView];
     
     rtView.selectedIndex = [UserDefaults.defaults integerForKey:@"SelectedRampType"];
-    
-    if (rtView.selectedIndex == 0)
-        rtView.selectedIndex = 1;
     
     UIButton *returnButton = [[UIButton alloc] initWithFrame:CGRectMake(42.0, 26.0, 180.0, 50.0)];
     
@@ -83,15 +80,14 @@
                                                                             ((row * buttonSize.height) + 4.0),
                                                                             buttonSize.width, buttonSize.height)];
             
-            tag ++;
             rtButton.tag = tag;
             rtButton.imageEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 44.0, 4.0);
             rtButton.layer.borderColor = UIColor.greenColor.CGColor;
             rtButton.layer.borderWidth = 0.0;
             
-            if (tag <= rtView.rampImages.count)
+            if (tag < rtView.rampImages.count)
             {
-                [rtButton setImage:rtView.rampImages[tag - 1]
+                [rtButton setImage:rtView.rampImages[tag]
                           forState:UIControlStateNormal];
                 
                 if (tag <= rtView.rampImageLabelText.count)
@@ -104,7 +100,7 @@
                     rampImageLabel.textAlignment = NSTextAlignmentCenter;
                     rampImageLabel.font = [UIFont boldSystemFontOfSize:16.0];
                     rampImageLabel.numberOfLines = 0;
-                    rampImageLabel.text = rtView.rampImageLabelText[tag - 1];
+                    rampImageLabel.text = rtView.rampImageLabelText[tag];
                     [rtButton addSubview:rampImageLabel];
                 }
                 
@@ -114,6 +110,8 @@
                 
                 [rtView.buttonView addSubview:rtButton];
             }
+            
+            tag ++;
         }
     }
     
