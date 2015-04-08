@@ -32,7 +32,7 @@
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path
 {
-    if (status == FTPStatusOK)
+    if (status == FTPStatusOK || status == FTPStatusFileExists)
         status = AreaFileStatusOK;
     
     else if (status != FTPStatusConnectionFailedTryingSecondary)

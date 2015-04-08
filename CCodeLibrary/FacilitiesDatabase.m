@@ -539,7 +539,7 @@ Exit:
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path
 {
-    if (status == FTPStatusOK)
+    if (status == FTPStatusOK || status == FTPStatusFileExists)
     {
         NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
                                                                 andName:[NSString stringWithFormat:@"/%i",self.geoid] create:YES];

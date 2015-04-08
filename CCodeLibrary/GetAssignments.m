@@ -39,7 +39,7 @@
     if (status == FTPStatusConnectionFailedTryingSecondary)
         return;
     
-    if (status == FTPStatusOK)
+    if (status == FTPStatusOK || status == FTPStatusFileExists)
         status = GetAssStatusOK;
     
     else
