@@ -91,10 +91,11 @@
 - (void)popoverCancel:(UIButton *)sender
 {
     _popoverCancel.titleLabel.font = _font;
-    [self removeFromSuperview];
     
     if (self.delegate)
         [self.delegate GSSiPopoverViewdidCancel:self];
+    
+    [self removeFromSuperview];
 }
 
 - (void)showFromTimer:(NSTimer*)timer
