@@ -190,7 +190,6 @@
     if (_popover)
     {
         _popover.delegate = _savePopoverDelegate;
-        [_popover hide];
     }
     if (_connection)
     {
