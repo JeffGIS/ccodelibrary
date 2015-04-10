@@ -48,11 +48,9 @@
     
     CGFloat size =  maxSize / (1.0 + maxZoom - zoom);
     
-    IBOUNDS bounds21;
-    
-    /*= [CRAPI.sharedInstance boundsFromRect:self.bounds
+    IBOUNDS bounds21 = [CRAPI.sharedInstance boundsFromRect:self.bounds
                                                      atZoom:21
-                                            usingProjection:_projection];*/
+                                            usingProjection:_projection];
     
     if (_database)
     {

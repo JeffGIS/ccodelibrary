@@ -506,7 +506,7 @@
     return outDir;
 }
 
-/*-(IPOINT)PointAtZoom:(int)zoom
+-(IPOINT)PointAtZoom:(int)zoom
         fromViewPoint:(CGPoint)pt
       usingProjection:(GMSProjection *)projection
 {
@@ -556,7 +556,7 @@
     AddPointToIBounds(&iBounds, &pt21);
     return iBounds;
 }
-*/
+
 
 - (IBOUNDS)CGRectToIBounds:(CGRect)rect
 {
@@ -568,14 +568,14 @@
     return iBounds;
 }
 
-/*
+
 - (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon
           usingTransformation:(LPTRANDATA)pTranWToBMP
 {
     CGPoint pt = CGPointZero;
     return pt;
 }
-*/
+
 
 - (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt
                usingTransformation:(LPTRANDATA)pTranWToBMP

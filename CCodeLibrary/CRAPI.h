@@ -7,6 +7,7 @@
 #import "Facility.h"
 #import "UserDefaults.h"
 #import "Colors.h"
+#import "GoogleMaps/GoogleMaps.h"
 
 #define MANAGEMENT_MODULE   1
 #define PRELIM_MODULE       2
@@ -112,5 +113,9 @@
 
 - (IBOUNDS)boundsFromRect:(CGRect)rect
       usingTransformation:(LPTRANDATA)pTranBMPToW;
+
+- (IBOUNDS)boundsFromRect:(CGRect)rect
+                   atZoom:(int)zoom
+          usingProjection:(GMSProjection *)projection;
 
 @end
