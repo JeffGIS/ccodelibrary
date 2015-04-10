@@ -164,13 +164,6 @@ typedef NS_ENUM(NSInteger, MapViewScreenSetting)
     MapViewScreenSettingSplitBottomScreen,
 };
 
-typedef NS_ENUM(NSInteger, BasemapSetting)
-{
-    BasemapSettingDefault,
-    BasemapSettingOSM,
-    BasemapSettingApple,
-};
-
 typedef NS_ENUM(NSInteger, CensusZoomSetting)
 {
     CensusZoomSettingCancel,
