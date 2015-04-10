@@ -203,6 +203,7 @@ typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
     MarkerInfoWindowTypeDefault,
     MarkerInfoWindowTypePID,
     MarkerInfoWindowTypeStormSewer,
+    MarkerInfoWindowTypeCustom,
 };
 
 @end
