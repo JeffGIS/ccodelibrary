@@ -190,6 +190,14 @@ typedef NS_ENUM(NSInteger, CustomSetting)
     CustomSettingSnapToLine,
 };
 
+typedef NS_ENUM(NSInteger, AlleyWallSetting)
+{
+    AlleyWallSettingDefault,
+    AlleyWallSettingMoveWallPoint,
+    AlleyWallSettingDeleteWallPoint,
+    AlleyWallSettingEditWallAttributes,
+};
+
 typedef NS_ENUM(NSInteger, MapTypeSetting)
 {
     MapTypeSettingStandard,
@@ -210,6 +218,7 @@ typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
     MarkerInfoWindowTypeDefault,
     MarkerInfoWindowTypePID,
     MarkerInfoWindowTypeStormSewer,
+    MarkerInfoWindowTypeAlleyWall,
     MarkerInfoWindowTypeCustom,
 };
 
