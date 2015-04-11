@@ -6,10 +6,11 @@
 
 @interface GSSiBumpDetector ()
 
-@property (nonatomic) NSInteger countdownTime;
+@property (nonatomic) NSInteger countdownTime, countdownStart;
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic) UILabel *countdownLabel, *titleLabel;
 @property (nonatomic) UIButton *startButton, *cancelButton;
+@property (nonatomic) BOOL timerIsFiring;
 
 @end
 
@@ -21,17 +22,12 @@
 {
     GSSiBumpDetector *bumpDetector = [[GSSiBumpDetector alloc] initWithFrame:view.frame];
     bumpDetector.delegate = delegate;
-    bumpDetector.countdownTime = countdownTime;
+    bumpDetector.countdownTime = bumpDetector.countdownStart = countdownTime;
+    bumpDetector.timerIsFiring = NO;
     bumpDetector.backgroundColor = UserDefaults.defaults.appleBlue;
     bumpDetector.alpha = 0.0;
     
     [view addSubview:bumpDetector];
-    
-    bumpDetector.timer = [NSTimer timerWithTimeInterval:1.0
-                                                 target:bumpDetector
-                                               selector:@selector(updateCountdown:)
-                                               userInfo:nil
-                                                repeats:YES];
     
     CGSize size = view.frame.size;
     
@@ -43,7 +39,7 @@
     bumpDetector.countdownLabel.font = [UIFont boldSystemFontOfSize:360.0];
     bumpDetector.countdownLabel.textAlignment = NSTextAlignmentCenter;
     bumpDetector.countdownLabel.adjustsFontSizeToFitWidth = YES;
-    bumpDetector.countdownLabel.text = [NSString stringWithFormat:@"%ld", (long)bumpDetector.countdownTime];
+    [bumpDetector updateCountdownLabelText];
     
     [bumpDetector addSubview:bumpDetector.countdownLabel];
     
@@ -126,18 +122,62 @@
 
 - (void)updateCountdown:(NSTimer *)timer
 {
-    
+    _countdownTime--;
+    [self updateCountdownLabelText];
 }
 
 - (void)startBumpDetection:(UIButton *)button
 {
+    if (_timerIsFiring)
+    {
+        if (_timer.valid)
+        {
+            [_timer invalidate];
+            
+            if (!_timer.valid)
+            {
+                _timerIsFiring = NO;
+                _countdownTime = _countdownStart;
+                [self updateCountdownLabelText];
+                
+                [_startButton setTitle:@"Start"
+                              forState:UIControlStateNormal];
+            }
+        }
+        
+        return;
+    }
     
+    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                              target:self
+                                            selector:@selector(updateCountdown:)
+                                            userInfo:nil
+                                             repeats:YES];
+    
+    if (_timer.valid)
+    {
+        _timerIsFiring = YES;
+        
+        [_startButton setTitle:@"Stop"
+                      forState:UIControlStateNormal];
+    }
+}
+
+- (void)updateCountdownLabelText
+{
+    _countdownLabel.text = [NSString stringWithFormat:@"%ld", (long)_countdownTime];
 }
 
 - (void)cancelBumpDetection:(UIButton *)button
 {
+    if (_timer.valid)
+        [_timer invalidate];
+    
     if (_delegate)
         [_delegate bumpDetectorDidCancel:self];
+    
+    else
+        [self hideBumpDetector:YES];
 }
 
 @end
