@@ -21,6 +21,7 @@
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
 		A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */ = {isa = PBXBuildFile; fileRef = A90EBDC81A48874B001E72CF /* GSSiEnums.m */; };
 		A90FC1F41A07F593003AF763 /* CalibrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A90FC1F31A07F593003AF763 /* CalibrationViewController.m */; };
+		A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = A92382AC1AD986010027659B /* GSSiBumpDetector.m */; };
 		A926F21119D9FC18007C392A /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = A926F21019D9FC18007C392A /* CircleView.m */; };
 		A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770C19F7F9F40062906E /* SharedDefaults.m */; };
 		A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770F19F8045C0062906E /* FacilitiesDatabase.m */; };
@@ -115,6 +116,8 @@
 		A90EBDC81A48874B001E72CF /* GSSiEnums.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiEnums.m; sourceTree = "<group>"; };
 		A90FC1F21A07F593003AF763 /* CalibrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalibrationViewController.h; sourceTree = "<group>"; };
 		A90FC1F31A07F593003AF763 /* CalibrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalibrationViewController.m; sourceTree = "<group>"; };
+		A92382AB1AD986010027659B /* GSSiBumpDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiBumpDetector.h; sourceTree = "<group>"; };
+		A92382AC1AD986010027659B /* GSSiBumpDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiBumpDetector.m; sourceTree = "<group>"; };
 		A926F20F19D9FC18007C392A /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
 		A926F21019D9FC18007C392A /* CircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleView.m; sourceTree = "<group>"; };
 		A94A770B19F7F9F40062906E /* SharedDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedDefaults.h; sourceTree = "<group>"; };
@@ -320,6 +323,8 @@
 				EB05C20F19EA999F00F0688B /* ElementOverlayView.m */,
 				A9D952B01A96D484008B9156 /* GSSiAlertController.h */,
 				A9D952B11A96D484008B9156 /* GSSiAlertController.m */,
+				A92382AB1AD986010027659B /* GSSiBumpDetector.h */,
+				A92382AC1AD986010027659B /* GSSiBumpDetector.m */,
 				A99050861ACB942F00C6AAAF /* GSSiDatePicker.h */,
 				A99050871ACB942F00C6AAAF /* GSSiDatePicker.m */,
 				A9ADCB1C1ACD0870000E5C00 /* GSSiNotesView.h */,
@@ -578,6 +583,7 @@
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
 				A94A771919F807CE0062906E /* FacilityRecord.m in Sources */,
+				A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */,
 			);
