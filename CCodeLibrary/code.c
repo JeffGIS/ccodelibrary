@@ -751,7 +751,7 @@ GSSiExitProg (1017);
 #endif
 }
 
-BOOL PICK_POINT_ON_LINE (DPOINT pickPoint,double pickAp,LPDPOINT pPickedPoint,long nPnts,HPDPOINT lpPointsIn)
+BOOL PICK_POINT_ON_LINE (DPOINT pickPoint,MNMXCORD pickBounds,LPDPOINT pPickedPoint,long nPnts,HPDPOINT lpPointsIn)
 {
     BOOL rtn = FALSE;
     double offDist, totDist=0;
@@ -760,13 +760,8 @@ BOOL PICK_POINT_ON_LINE (DPOINT pickPoint,double pickAp,LPDPOINT pPickedPoint,lo
     MNMXCORD bounds;
     
     PickPointBase = pickPoint;
-    bounds.xmn = pickPoint.x - pickAp;
-    bounds.xmx = pickPoint.x + pickAp;
-    bounds.ymn = pickPoint.y - pickAp;
-    bounds.ymx = pickPoint.y + pickAp;
-    
     rtn = LineInBoundsD (nPnts, lpPointsIn,totDist,&pct,
-                         &offDist,&az,&bounds,pPickedPoint,&fromPt);
+                         &offDist,&az,&pickBounds,pPickedPoint,&fromPt);
     
     return rtn;
 }

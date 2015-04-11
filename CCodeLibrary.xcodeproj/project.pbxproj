@@ -51,6 +51,7 @@
 		EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */; };
 		EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB919BCB9C400F6D9F0 /* IntersectionPoint.m */; };
 		EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */ = {isa = PBXBuildFile; fileRef = EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */; };
+		EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EB3CC5F61AD95F8B002453A9 /* PickedItem.m */; };
 		EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
@@ -171,6 +172,8 @@
 		EB2C7DB919BCB9C400F6D9F0 /* IntersectionPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntersectionPoint.m; sourceTree = "<group>"; };
 		EB36639A1A55A97C00ABA486 /* PointInAreaClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointInAreaClass.h; sourceTree = "<group>"; };
 		EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInAreaClass.m; sourceTree = "<group>"; };
+		EB3CC5F51AD95F8B002453A9 /* PickedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickedItem.h; sourceTree = "<group>"; };
+		EB3CC5F61AD95F8B002453A9 /* PickedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickedItem.m; sourceTree = "<group>"; };
 		EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPlaceAreaFile.h; sourceTree = "<group>"; };
 		EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPlaceAreaFile.m; sourceTree = "<group>"; };
 		EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCCodeLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -397,6 +400,8 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				EB3CC5F51AD95F8B002453A9 /* PickedItem.h */,
+				EB3CC5F61AD95F8B002453A9 /* PickedItem.m */,
 				A94A771D19F813040062906E /* CCode */,
 				A94A771A19F812940062906E /* Facilities */,
 				A94A771B19F812AA0062906E /* Intersections */,
@@ -565,6 +570,7 @@
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
 				1F7E00AA19CA8892006AFABA /* MarkerView.m in Sources */,
 				A926F21119D9FC18007C392A /* CircleView.m in Sources */,
+				EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */,
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,
 				A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */,
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,

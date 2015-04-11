@@ -15,6 +15,7 @@
     if (self)
     {
         _currentGeoidValue = 0;
+        _pickApInPixels = 50;
         _numAllowedZooms = 3;
         _allowedZooms[0] = 21;
         _allowedZooms[1] = 20;
@@ -594,4 +595,20 @@
     return outBounds;
 }
 
+- (dbounds) getPickApBoundsAtPoint:(LLPOINT*)pt
+{
+    dbounds bnds;
+
+    CGFloat pickApMeters = (_pickApInPixels * GroundResolution(pt->lat, (int)_currentZoom));
+
+    DPOINT pt1 = NewLatLong(pt->lat, pt->lon, pickApMeters, 0);
+    double pickapY = pt1.y - pt->lat;
+    DPOINT pt2 = NewLatLong(pt->lat, pt->lon, pickApMeters, HALFPI);
+    double pickapX = pt2.x - pt->lon;
+    bnds.xmn = (pt->lon - pickapX);
+    bnds.xmx = (pt->lon + pickapX);
+    bnds.ymn = (pt->lat - pickapY);
+    bnds.ymx = (pt->lat + pickapY);
+    return bnds;
+}
 @end

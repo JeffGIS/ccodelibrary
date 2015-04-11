@@ -40,6 +40,7 @@
 #import "GSSiDatePicker.h"
 #import "GSSiNotesView.h"
 #import "RampTypeView.h"
+#import "PickedItem.h"
 
 #define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"
 #define GOOGLE_SERVER_KEY @"AIzaSyBQvw3ROLNlUtuSlVdnk0zLvnbonh3I3vw"

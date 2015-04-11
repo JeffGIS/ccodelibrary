@@ -44,6 +44,8 @@
 @property (nonatomic) NSString *currentAddress;
 @property (nonatomic) NSString *currentPropOwner;
 @property (nonatomic) NSMutableArray *annotations;
+@property CGFloat currentZoom;
+@property int pickApInPixels;
 @property int project;
 
 //temporary visibility stuff
@@ -117,5 +119,8 @@
 - (IBOUNDS)boundsFromRect:(CGRect)rect
                    atZoom:(int)zoom
           usingProjection:(GMSProjection *)projection;
+
+- (dbounds) getPickApBoundsAtPoint:(LLPOINT *)pt;
+
 
 @end
