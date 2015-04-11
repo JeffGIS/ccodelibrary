@@ -183,6 +183,13 @@ typedef NS_ENUM(NSInteger, SewerPipeSetting)
     SewerPipeSettingUpdateNotes,
 };
 
+typedef NS_ENUM(NSInteger, CustomSetting)
+{
+    CustomSettingDefault,
+    CustomSettingSnapToNode,
+    CustomSettingSnapToLine,
+};
+
 typedef NS_ENUM(NSInteger, MapTypeSetting)
 {
     MapTypeSettingStandard,
