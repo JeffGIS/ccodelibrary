@@ -56,8 +56,8 @@
 @property (nonatomic) CGFloat target;
 @property (nonatomic) CGFloat forceFlip;
 @property (nonatomic) BOOL unable;
-@property (nonatomic, retain) CLLocationManager *locationManager;
-@property (nonatomic, retain) CMMotionManager *motionManager;
+@property (nonatomic) CLLocationManager *locationManager;
+@property (nonatomic) CMMotionManager *motionManager;
 
 - (id)initWithTarget:(CGFloat)target
            forceFlip:(CGFloat)forceFlip;

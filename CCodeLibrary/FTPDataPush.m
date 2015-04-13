@@ -13,8 +13,8 @@ enum {
 @interface FTPDataPush ()
 
 @property (nonatomic, readonly) BOOL isSending;
-@property (nonatomic, retain) NSOutputStream *networkStream;
-@property (nonatomic, retain) NSInputStream *fileStream;
+@property (nonatomic) NSOutputStream *networkStream;
+@property (nonatomic) NSInputStream *fileStream;
 @property (nonatomic, readonly) uint8_t *buffer;
 @property (nonatomic, assign) size_t bufferOffset;
 @property (nonatomic, assign) size_t bufferLimit;

@@ -4,6 +4,7 @@
 #import "GSSiBumpDetector.h"
 #import "UserDefaults.h"
 #import <AVFoundation/AVAudioPlayer.h>
+#import <CoreMotion/CoreMotion.h>
 
 @interface GSSiBumpDetector ()
 
@@ -11,9 +12,13 @@
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic) UILabel *countdownLabel, *titleLabel;
 @property (nonatomic) UIButton *startButton, *cancelButton;
-@property (nonatomic) BOOL timerIsFiring;
+@property (nonatomic) BOOL timerIsFiring, isFirstTime, isComplete;
 @property (nonatomic) UIColor *green;
 @property (nonatomic) AVAudioPlayer *beep, *finalBeep;
+@property (nonatomic) CMMotionManager *motionManager;
+@property (nonatomic) CMAcceleration userAcceleration, gravity;
+@property (nonatomic) NSDate *startTime;
+@property (nonatomic) NSTimeInterval elapsedTime;
 
 @end
 
@@ -26,7 +31,8 @@
     GSSiBumpDetector *bumpDetector = [[GSSiBumpDetector alloc] initWithFrame:view.frame];
     bumpDetector.delegate = delegate;
     bumpDetector.countdownTime = bumpDetector.countdownStart = countdownTime;
-    bumpDetector.timerIsFiring = NO;
+    bumpDetector.timerIsFiring = bumpDetector.isComplete = NO;
+    bumpDetector.isFirstTime = YES;
     bumpDetector.backgroundColor = UserDefaults.defaults.appleBlue;
     bumpDetector.alpha = 0.0;
     
@@ -111,6 +117,8 @@
     [bumpDetector.finalBeep prepareToPlay];
     bumpDetector.finalBeep.volume = 1.0;
     
+    bumpDetector.motionManager = [[CMMotionManager alloc] init];
+    
     return bumpDetector;
 }
 
@@ -173,7 +181,29 @@
 
 - (void)startBumpDetection:(UIButton *)button
 {
-    if (_timerIsFiring)
+    if (_isComplete)
+    {
+        if (_delegate)
+        {
+            [_delegate bumpDetector:self
+              didReturnTimeInterval:_elapsedTime];
+        }
+    }
+    
+    else if (_motionManager.deviceMotionActive)
+    {
+        [_motionManager stopDeviceMotionUpdates];
+        _isFirstTime = YES;
+        
+        [self updateCountdownLabelText];
+        
+        _startButton.backgroundColor = _green;
+        
+        [_startButton setTitle:@"Start"
+                      forState:UIControlStateNormal];
+    }
+    
+    else if (_timerIsFiring)
     {
         if (_timer.valid)
         {
@@ -191,24 +221,25 @@
                               forState:UIControlStateNormal];
             }
         }
-        
-        return;
     }
     
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
-                                              target:self
-                                            selector:@selector(updateCountdown:)
-                                            userInfo:nil
-                                             repeats:YES];
-    
-    if (_timer.valid)
+    else
     {
-        _timerIsFiring = YES;
+        _timer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                  target:self
+                                                selector:@selector(updateCountdown:)
+                                                userInfo:nil
+                                                 repeats:YES];
         
-        _startButton.backgroundColor = UIColor.redColor;
-        
-        [_startButton setTitle:@"Stop"
-                      forState:UIControlStateNormal];
+        if (_timer.valid)
+        {
+            _timerIsFiring = YES;
+            
+            _startButton.backgroundColor = UIColor.redColor;
+            
+            [_startButton setTitle:@"Stop"
+                          forState:UIControlStateNormal];
+        }
     }
 }
 
@@ -218,11 +249,46 @@
         _countdownLabel.text = [NSString stringWithFormat:@"%ld", (long)_countdownTime];
     
     else
-        _countdownLabel.text = @"Waiting for Collision";
+    {
+        if (_timer.valid)
+        {
+            [_timer invalidate];
+            
+            if (!_timer.valid)
+            {
+                _timerIsFiring = NO;
+                _countdownTime = _countdownStart;
+            }
+        }
+        
+        [self startMotionManager];
+    }
 }
 
 - (void)cancelBumpDetection:(UIButton *)button
 {
+    if (_isComplete)
+    {
+        [self updateCountdownLabelText];
+        
+        _startButton.backgroundColor = _green;
+        
+        [_startButton setTitle:@"Start"
+                      forState:UIControlStateNormal];
+        
+        [_startButton setTitleColor:UIColor.whiteColor
+                           forState:UIControlStateNormal];
+        
+        _startButton.layer.borderColor = UIColor.whiteColor.CGColor;
+        
+        [_cancelButton setTitle:@"Cancel"
+                       forState:UIControlStateNormal];
+        
+        _isComplete = NO;
+        
+        return;
+    }
+    
     if (_timer.valid)
         [_timer invalidate];
     
@@ -231,6 +297,72 @@
     
     else
         [self hideBumpDetector:YES];
+}
+
+- (void)startMotionManager
+{
+    _motionManager.deviceMotionUpdateInterval = 0.02;
+    
+    if ([_motionManager isDeviceMotionAvailable])
+    {
+        _startTime = NSDate.date;
+        
+        [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical
+                                                            toQueue:NSOperationQueue.currentQueue
+                                                        withHandler:^(CMDeviceMotion *deviceMotion, NSError *error){
+                                                            [self detectMotion:deviceMotion];
+                                                                
+                                                                if(error)
+                                                                    NSLog(@"CMDeviceMotion Error:%@", error);
+                                                            }];
+    }
+}
+
+- (void)detectMotion:(CMDeviceMotion *)deviceMotion
+{
+    _elapsedTime = [NSDate.date timeIntervalSinceDate:_startTime];
+    _countdownLabel.text = [NSString stringWithFormat:@"Elapsed\nTime:\n%.03f\nseconds", _elapsedTime];
+    
+    if (!_isFirstTime)
+    {
+        CGFloat sumXa = (_userAcceleration.x + _gravity.x);
+        CGFloat sumYa = (_userAcceleration.y + _gravity.y);
+        CGFloat sumZa= (_userAcceleration.z + _gravity.z);
+        CGFloat sumXb = (deviceMotion.userAcceleration.x + deviceMotion.gravity.x);
+        CGFloat sumYb = (deviceMotion.userAcceleration.y + deviceMotion.gravity.y);
+        CGFloat sumZb= (deviceMotion.userAcceleration.z + deviceMotion.gravity.z);
+        
+        CGFloat diffX = fabs(sumXa - sumXb);
+        CGFloat diffY = fabs(sumYa - sumYb);
+        CGFloat diffZ = fabs(sumZa - sumZb);
+        CGFloat maxDiff = max(diffX, max(diffY, diffZ));
+        
+        if (maxDiff > 0.1)
+        {
+            [self.motionManager stopDeviceMotionUpdates];
+            _isFirstTime = _isComplete = YES;
+            _startButton.backgroundColor = UIColor.whiteColor;
+            
+            [_startButton setTitleColor:UIColor.blackColor
+                               forState:UIControlStateNormal];
+            
+            _startButton.layer.borderColor = UIColor.blackColor.CGColor;
+            
+            [_startButton setTitle:@"Use It"
+                          forState:UIControlStateNormal];
+            
+            [_cancelButton setTitle:@"Do Over"
+                           forState:UIControlStateNormal];
+            
+            return;
+        }
+    }
+    
+    else
+        _isFirstTime = NO;
+    
+    _userAcceleration = deviceMotion.userAcceleration;
+    _gravity = deviceMotion.gravity;
 }
 
 @end

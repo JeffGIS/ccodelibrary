@@ -26,9 +26,9 @@ didReceiveMessage:(NSString *)message
 
 + (GeoMasterServer *)open;
 
-@property (nonatomic, retain) NSMutableArray *messages;
-@property (nonatomic, retain) NSInputStream *inputStream;
-@property (nonatomic, retain) NSOutputStream *outputStream;
+@property (nonatomic) NSMutableArray *messages;
+@property (nonatomic) NSInputStream *inputStream;
+@property (nonatomic) NSOutputStream *outputStream;
 @property (nonatomic, copy) NSString *output;
 @property (nonatomic, copy) NSString *ipAddress;
 @property (nonatomic) BOOL didOpen;
