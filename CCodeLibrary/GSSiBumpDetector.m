@@ -26,6 +26,7 @@
 
 + (GSSiBumpDetector *)showBumpDetectorWithView:(UIView *)view
                                   coundownTime:(NSInteger)countdownTime
+                                         title:(NSString *)title
                                       delegate:(id)delegate
 {
     GSSiBumpDetector *bumpDetector = [[GSSiBumpDetector alloc] initWithFrame:view.frame];
@@ -45,8 +46,8 @@
     
     CGSize size = view.frame.size;
     
-    bumpDetector.countdownLabel = [[UILabel alloc] initWithFrame:CGRectMake((size.width * 0.2), (size.height * 0.2),
-                                                                            (size.width * 0.6), (size.height * 0.6))];
+    bumpDetector.countdownLabel = [[UILabel alloc] initWithFrame:CGRectMake((size.width * 0.1), (size.height * 0.2),
+                                                                            (size.width * 0.8), (size.height * 0.6))];
     
     bumpDetector.countdownLabel.backgroundColor = UIColor.blackColor;
     bumpDetector.countdownLabel.textColor = UIColor.whiteColor;
@@ -56,6 +57,9 @@
     bumpDetector.countdownLabel.numberOfLines = 0;
     bumpDetector.countdownLabel.layer.borderColor = UIColor.whiteColor.CGColor;
     bumpDetector.countdownLabel.layer.borderWidth = 4.0;
+    bumpDetector.countdownLabel.layer.cornerRadius = 10.0;
+    bumpDetector.countdownLabel.layer.masksToBounds = YES;
+    bumpDetector.countdownLabel.layer.backgroundColor = UIColor.blackColor.CGColor;
     [bumpDetector updateCountdownLabelText];
     
     [bumpDetector addSubview:bumpDetector.countdownLabel];
@@ -68,10 +72,11 @@
     bumpDetector.titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
     bumpDetector.titleLabel.textAlignment = NSTextAlignmentCenter;
     bumpDetector.titleLabel.adjustsFontSizeToFitWidth = YES;
+    bumpDetector.titleLabel.numberOfLines = 2;
     bumpDetector.titleLabel.layer.shadowColor = UIColor.blackColor.CGColor;
     bumpDetector.titleLabel.layer.shadowOffset = CGSizeMake(2.0, 2.0);
     bumpDetector.titleLabel.layer.shadowOpacity = 1.0;
-    bumpDetector.titleLabel.text = @"Collision Detection Manager";
+    bumpDetector.titleLabel.text = [NSString stringWithFormat:@"Collision Detection Manager\n%@", title];
     
     [bumpDetector addSubview:bumpDetector.titleLabel];
     
@@ -185,8 +190,15 @@
     {
         if (_delegate)
         {
+            NSDecimal dIn = [[NSNumber numberWithDouble:_elapsedTime] decimalValue];
+            NSDecimal dOut;
+            NSDecimalRound(&dOut, &dIn, 1, NSRoundPlain);
+            
+            NSDecimalNumber *result = [NSDecimalNumber decimalNumberWithDecimal:dOut];
+            NSString *resultString = result.stringValue;
+            
             [_delegate bumpDetector:self
-              didReturnTimeInterval:_elapsedTime];
+              didReturnTimeInterval:resultString];
         }
     }
     
@@ -321,7 +333,7 @@
 - (void)detectMotion:(CMDeviceMotion *)deviceMotion
 {
     _elapsedTime = [NSDate.date timeIntervalSinceDate:_startTime];
-    _countdownLabel.text = [NSString stringWithFormat:@"Elapsed\nTime:\n%.03f\nseconds", _elapsedTime];
+    _countdownLabel.text = [NSString stringWithFormat:@"Elapsed\nTime:\n%.01f\nseconds", _elapsedTime];
     
     if (!_isFirstTime)
     {
@@ -363,6 +375,44 @@
     
     _userAcceleration = deviceMotion.userAcceleration;
     _gravity = deviceMotion.gravity;
+}
+
+- (void)willRotateWithDuration:(NSTimeInterval)duration
+        toInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                  tabBarHeight:(CGFloat)tabBarHeight
+{
+    CGRect frame = self.frame;
+    
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         self.frame = CGRectMake(frame.origin.y, frame.origin.x,
+                                                 ((frame.size.height + tabBarHeight)),
+                                                 ((frame.size.width - tabBarHeight)));
+                     }];
+    
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         _countdownLabel.frame = CGRectMake(((frame.size.height + tabBarHeight) * 0.1),
+                                                            ((frame.size.width - tabBarHeight) * 0.2),
+                                                            ((frame.size.height + tabBarHeight) * 0.8),
+                                                            ((frame.size.width - tabBarHeight) * 0.6));
+                         
+                         _titleLabel.frame = CGRectMake(20.0, 20.0,
+                                                        (frame.size.height + tabBarHeight - 40.0),
+                                                        (((frame.size.width - tabBarHeight) * 0.2) - 40.0));
+                         
+                         _startButton.frame = CGRectMake(((frame.size.height + tabBarHeight) * 0.05),
+                                                         ((frame.size.width - tabBarHeight) * 0.85),
+                                                         ((frame.size.height + tabBarHeight) * 0.4),
+                                                         ((frame.size.width - tabBarHeight) * 0.1));
+                         
+                         _cancelButton.frame = CGRectMake(((frame.size.height + tabBarHeight) * 0.55),
+                                                         ((frame.size.width - tabBarHeight) * 0.85),
+                                                         ((frame.size.height + tabBarHeight) * 0.4),
+                                                         ((frame.size.width - tabBarHeight) * 0.1));
+                         
+                     }];
+    
 }
 
 @end

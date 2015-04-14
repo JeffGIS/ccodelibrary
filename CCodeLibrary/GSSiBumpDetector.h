@@ -9,7 +9,7 @@
 @protocol GSSiBumpDetectorDelegate <NSObject>
 
 - (void)bumpDetector:(GSSiBumpDetector *)bumpDetector
-didReturnTimeInterval:(NSTimeInterval)timeInterval;
+didReturnTimeInterval:(NSString *)timeInterval;
 
 - (void)bumpDetectorDidCancel:(GSSiBumpDetector *)bumpDetector;
 
@@ -21,8 +21,13 @@ didReturnTimeInterval:(NSTimeInterval)timeInterval;
 
 + (GSSiBumpDetector *)showBumpDetectorWithView:(UIView *)view
                                   coundownTime:(NSInteger)countdownTime
+                                         title:(NSString *)title
                                       delegate:(id)delegate;
 
 - (void)hideBumpDetector:(BOOL)animated;
+
+- (void)willRotateWithDuration:(NSTimeInterval)duration
+        toInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                  tabBarHeight:(CGFloat)tabBarHeight;
 
 @end
