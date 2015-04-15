@@ -47,6 +47,7 @@
 @property CGFloat currentZoom;
 @property int pickApInPixels;
 @property int project;
+@property (nonatomic, copy) NSString *sharedFilePath;
 
 //temporary visibility stuff
 @property BOOL GMTilesVisible;

@@ -611,4 +611,19 @@
     bnds.ymx = (pt->lat + pickapY);
     return bnds;
 }
+
+- (NSString *)sharedFilePath
+{
+    NSFileManager *fileManager = NSFileManager.defaultManager;
+    
+    NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:
+                                @"group.com.GSSi.SurveyApps"];
+    
+    [groupContainerURL setResourceValue:[NSNumber numberWithBool:YES]
+                                 forKey:NSURLIsExcludedFromBackupKey
+                                  error:nil];
+    
+    return groupContainerURL.relativePath;
+}
+
 @end
