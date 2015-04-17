@@ -8,6 +8,7 @@
 @interface HelpButton ()
 
 @property (nonatomic) UIView *view;
+@property (nonatomic) UITabBar *tabBar;
 
 @end
 
@@ -17,10 +18,12 @@
                                     size:(CGFloat)size
                                     view:(UIView *)view
                                      tag:(NSInteger)tag
+                                  tabBar:(UITabBar *)tabBar
 {
     HelpButton *helpButton = [[HelpButton alloc] initWithFrame:CGRectMake(origin.x, origin.y, size, size)];
     helpButton.tag = tag;
     helpButton.view = view;
+    helpButton.tabBar = tabBar;
     
     [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"greenHelpButton"
                                                                                         ofType:@"png"]]
@@ -65,8 +68,9 @@
             break;
     }
     
-    HelpWebView *helpWebView = [HelpWebView showHelpWebView:self.view
-                                                presenterID:presenterID];
+    HelpWebView *helpWebView = [HelpWebView showHelpWebView:_view
+                                                presenterID:presenterID
+                                                     tabBar:_tabBar];
 #pragma unused(helpWebView)
 }
 

@@ -6,7 +6,8 @@
 @interface HelpWebView : UIView
 
 + (HelpWebView *)showHelpWebView:(UIView *)view
-                     presenterID:(NSString *)presenterID;
+                     presenterID:(NSString *)presenterID
+                          tabBar:(UITabBar *)tabBar;
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration
         toInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation

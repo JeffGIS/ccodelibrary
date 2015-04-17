@@ -8,6 +8,7 @@
 @interface HelpWebView ()
 
 @property (nonatomic) UIWebView *webView;
+@property (nonatomic) UITabBar *tabBar;
 
 @end
 
@@ -15,10 +16,14 @@
 
 + (HelpWebView *)showHelpWebView:(UIView *)view
                      presenterID:(NSString *)presenterID
+                          tabBar:(UITabBar *)tabBar
 {
-    HelpWebView *helpView = [[HelpWebView alloc] initWithFrame:view.frame];
+    UIScreen *screen = UIScreen.mainScreen;
+    
+    HelpWebView *helpView = [[HelpWebView alloc] initWithFrame:screen.bounds];
     helpView.backgroundColor = UIColor.darkGrayColor;
     helpView.alpha = 0.0;
+    helpView.tabBar = tabBar;
     
     [view addSubview:helpView];
     
@@ -88,6 +93,7 @@
     [UIView animateWithDuration:0.25
                      animations:^{
                          helpView.alpha = 1.0;
+                         tabBar.alpha = 0.0;
                      }];
     
     return helpView;
@@ -98,6 +104,7 @@
     [UIView animateWithDuration:0.25
                      animations:^{
                          self.alpha = 0.0;
+                         _tabBar.alpha = 1.0;
                      } completion:^(BOOL finished) {
                          [self removeFromSuperview];
                      }];
@@ -112,15 +119,13 @@
     [UIView animateWithDuration:duration
                      animations:^{
                          self.frame = CGRectMake(frame.origin.y, frame.origin.x,
-                                                 ((frame.size.height + tabBarHeight)),
-                                                 ((frame.size.width - tabBarHeight)));
+                                                 frame.size.height, frame.size.width);
                      }];
     
     [UIView animateWithDuration:duration
                      animations:^{
-                         _webView.frame = CGRectMake(0.0, 60.0,
-                                                     (frame.size.height + tabBarHeight),
-                                                     ((frame.size.width - tabBarHeight) - 60.0));
+                         _webView.frame = CGRectMake(0.0, 60.0, frame.size.height,
+                                                     (frame.size.width - 60.0));
                      }];
 }
 

@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger, HelpButtonPresenter)
 + (HelpButton *)showHelpButtonWithOrigin:(CGPoint)origin
                                     size:(CGFloat)size
                                     view:(UIView *)view
-                                     tag:(NSInteger)tag;
+                                     tag:(NSInteger)tag
+                                  tabBar:(UITabBar *)tabBar;
 
 @end
