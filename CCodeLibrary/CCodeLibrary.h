@@ -42,6 +42,8 @@
 #import "RampTypeView.h"
 #import "PickedItem.h"
 #import "GSSiBumpDetector.h"
+#import "HelpButton.h"
+#import "HelpWebView.h"
 
 #define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"
 #define GOOGLE_SERVER_KEY @"AIzaSyBQvw3ROLNlUtuSlVdnk0zLvnbonh3I3vw"

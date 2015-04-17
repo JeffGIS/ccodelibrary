@@ -412,7 +412,6 @@
                                                          ((frame.size.width - tabBarHeight) * 0.1));
                          
                      }];
-    
 }
 
 @end

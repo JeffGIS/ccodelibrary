@@ -98,16 +98,17 @@
     [self removeFromSuperview];
 }
 
-- (void)showFromTimer:(NSTimer*)timer
+- (void)showFromTimer:(NSTimer *)timer
 {
     [self show];
 }
+
 - (void)show
 {
     [self.fromView addSubview:self];
 }
 
-- (void) hideFromTimer:(NSTimer *)timer
+- (void)hideFromTimer:(NSTimer *)timer
 {
     [self hide];
 }
