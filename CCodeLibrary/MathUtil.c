@@ -75,6 +75,21 @@ DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction)
         return LatLong;
     }
 }
+
+bool findClosestPoint (LPDPOINT pPoint,LPDPOINT pNearPt,double *mind,LPDPOINT p1)
+{
+    double d = ArcDistance(*p1,*pPoint);
+    
+    if (d < *mind)
+    {
+        *mind = d;
+        *pNearPt = *pPoint;
+        return TRUE;
+    }
+    
+    return FALSE;
+}
+
 bool pointInDBounds (DPOINT *pt,dbounds *pBounds)
 {
     bool rtn = true;

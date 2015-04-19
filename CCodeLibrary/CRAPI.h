@@ -50,9 +50,9 @@
 @property (nonatomic, copy) NSString *sharedFilePath;
 
 //temporary visibility stuff
-@property BOOL GMTilesVisible;
-@property int parcelsVisibleAtZoom;
-@property int sewerVisibleAtZoom;
+//@property BOOL GMTilesVisible;
+//@property int parcelsVisibleAtZoom;
+//@property int sewerVisibleAtZoom;
 @property int showPlats;
 @property int parcelShadingOption;
 @property int parcelTextOption;
