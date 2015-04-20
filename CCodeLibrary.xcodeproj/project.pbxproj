@@ -44,6 +44,7 @@
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
 		A9C525D01A3B59880056711F /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C525CF1A3B59880056711F /* Colors.m */; };
 		A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */; };
+		A9D269E61AE562E100A5C38E /* TableViewCellLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D269E51AE562E100A5C38E /* TableViewCellLabel.m */; };
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
 		A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D952B11A96D484008B9156 /* GSSiAlertController.m */; };
 		A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */; };
@@ -160,6 +161,8 @@
 		A9C525CF1A3B59880056711F /* Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Colors.m; sourceTree = "<group>"; };
 		A9C8ED3A1A5849F700DF9856 /* GetPriorityLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPriorityLocations.h; sourceTree = "<group>"; };
 		A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPriorityLocations.m; sourceTree = "<group>"; };
+		A9D269E41AE562E100A5C38E /* TableViewCellLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewCellLabel.h; sourceTree = "<group>"; };
+		A9D269E51AE562E100A5C38E /* TableViewCellLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewCellLabel.m; sourceTree = "<group>"; };
 		A9D5A8AE1A0D0A7A00314E8B /* GSSiSlopeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiSlopeViewController.h; sourceTree = "<group>"; };
 		A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiSlopeViewController.m; sourceTree = "<group>"; };
 		A9D952B01A96D484008B9156 /* GSSiAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiAlertController.h; sourceTree = "<group>"; };
@@ -356,6 +359,8 @@
 				A990508A1ACB947000C6AAAF /* SpreadsheetView.m */,
 				A990508B1ACB947000C6AAAF /* SpreadSheetViewCell.h */,
 				A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */,
+				A9D269E41AE562E100A5C38E /* TableViewCellLabel.h */,
+				A9D269E51AE562E100A5C38E /* TableViewCellLabel.m */,
 				1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */,
 				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 			);
@@ -581,6 +586,7 @@
 				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
 				A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */,
 				A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */,
+				A9D269E61AE562E100A5C38E /* TableViewCellLabel.m in Sources */,
 				A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
