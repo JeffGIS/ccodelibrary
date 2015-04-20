@@ -216,9 +216,11 @@ typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
 typedef NS_ENUM(NSInteger, DigitizationMode)
 {
     DigitizationModeCustom,
-    DigitizationModeAlleyWall,
+    DigitizationModeAlleyWallNew,
+    DigitizationModeAlleyWallMove,
     DigitizationModeSewer,
     DigitizationModeProperty,
+    DigitizationModeCurbRamps,
 };
 
 @end

@@ -61,7 +61,6 @@
 @property NSString *currentOverallBoundaryName;
 @property NSString *currentOverallBoundaryType;
 @property int currentOverallBoundaryRefno;
-@property BOOL inDigitizeMode;
 
 @property NSString *currentPlatImagePath;
 @property NSString *currentPlatType;
