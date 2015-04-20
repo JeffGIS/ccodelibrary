@@ -70,7 +70,10 @@
         _uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, geoid];
     }
 }
-
+-(void)setCurrentZoom:(CGFloat)zoom
+{
+    _currentZoom = zoom;
+}
 - (NSString *)uploadDirectory
 {
     NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, _currentGeoidValue];

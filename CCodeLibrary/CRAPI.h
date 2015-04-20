@@ -44,7 +44,7 @@
 @property (nonatomic) NSString *currentAddress;
 @property (nonatomic) NSString *currentPropOwner;
 @property (nonatomic) NSMutableArray *annotations;
-@property CGFloat currentZoom;
+@property (nonatomic) CGFloat currentZoom;
 @property int pickApInPixels;
 @property int project;
 @property (nonatomic, copy) NSString *sharedFilePath;
