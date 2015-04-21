@@ -1137,4 +1137,21 @@ static UserDefaults *_defaults;
         NSLog(@"%@ was never created", fileName);
 }
 
+- (UIImage *)imageWithColor:(UIColor *)color
+                  andFrame:(CGRect)frame
+{
+    {
+        UIGraphicsBeginImageContext(frame.size);
+        
+        UIBezierPath *bezPath = [UIBezierPath bezierPathWithRect:
+                                 CGRectMake(0.0, 0.0, frame.size.width, frame.size.height)];
+        
+        [color setFill];
+        [bezPath fill];
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return image;
+    }
+}
+
 @end

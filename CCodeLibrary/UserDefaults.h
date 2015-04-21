@@ -128,4 +128,7 @@
 - (void)shakeButton:(UIButton *)button;
 - (void)deleteFilesForGeoid:(int)geoid;
 
+- (UIImage *)imageWithColor:(UIColor *)color
+                   andFrame:(CGRect)frame;
+
 @end
