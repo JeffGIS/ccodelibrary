@@ -67,6 +67,7 @@
 		EBA2E47A199527660085B2E0 /* CCodeLibraryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E479199527660085B2E0 /* CCodeLibraryTests.m */; };
 		EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E48419952BCA0085B2E0 /* MathUtil.c */; };
 		EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E48819952BCA0085B2E0 /* TileIndex.c */; };
+		EBAB31C71AE6DC2D00C5CCEF /* NamedColors.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */; };
 		EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */; };
 		EBAEED0719B601710084A579 /* minilzo.c in Sources */ = {isa = PBXBuildFile; fileRef = EBAEED0519B601710084A579 /* minilzo.c */; };
 		EBAEED0919B605E20084A579 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = EBAEED0819B605E20084A579 /* compress.c */; };
@@ -212,6 +213,9 @@
 		EBA2E48619952BCA0085B2E0 /* rotate256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotate256.h; sourceTree = "<group>"; };
 		EBA2E48719952BCA0085B2E0 /* TileGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileGraphics.h; sourceTree = "<group>"; };
 		EBA2E48819952BCA0085B2E0 /* TileIndex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TileIndex.c; sourceTree = "<group>"; };
+		EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = colorsByName.h; sourceTree = "<group>"; };
+		EBAB31C51AE6DC2D00C5CCEF /* NamedColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NamedColors.h; sourceTree = "<group>"; };
+		EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NamedColors.m; sourceTree = "<group>"; };
 		EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoMasterServer.h; sourceTree = "<group>"; };
 		EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoMasterServer.m; sourceTree = "<group>"; };
 		EBAEED0319B601710084A579 /* lzoconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzoconf.h; sourceTree = "<group>"; };
@@ -341,6 +345,7 @@
 		A94A771E19F813810062906E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */,
 				A90FC1F21A07F593003AF763 /* CalibrationViewController.h */,
 				A90FC1F31A07F593003AF763 /* CalibrationViewController.m */,
 				A926F20F19D9FC18007C392A /* CircleView.h */,
@@ -467,6 +472,8 @@
 				A94A770C19F7F9F40062906E /* SharedDefaults.m */,
 				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
+				EBAB31C51AE6DC2D00C5CCEF /* NamedColors.h */,
+				EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */,
 				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);
@@ -626,6 +633,7 @@
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,
 				A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */,
 				A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */,
+				EBAB31C71AE6DC2D00C5CCEF /* NamedColors.m in Sources */,
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,
 				A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */,
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,

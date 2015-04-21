@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "NVColorWheel.h"
+#import "NamedColors.h"
 
 @interface NVColorWheel ()
 
@@ -9,7 +10,9 @@
 @property (nonatomic) UIView *overlayView, *displayView;
 @property (nonatomic) UIButton *cancelButton, *saveButton;
 @property (nonatomic) UIColor *pickedColor;
+@property (nonatomic) NSString *pickedColorName;
 @property (nonatomic) id item;
+@property (nonatomic) NamedColors *namedColors;
 
 @end
 
@@ -25,6 +28,7 @@
                                                                                     ofType:@"png"]];
     
     NVColorWheel *colorWheel = [[NVColorWheel alloc] initWithImage:image];
+    colorWheel.namedColors = [[NamedColors alloc]init];
     
     UIScreen *screen = UIScreen.mainScreen;
     colorWheel.overlayView = [[UIView alloc] initWithFrame:screen.bounds];
@@ -135,7 +139,11 @@
     UITouch *touch = event.allTouches.anyObject;
     CGPoint loc = [touch locationInView:self];
     _pickedColor = [self colorOfPoint:loc];
-    _displayView.backgroundColor = _pickedColor;
+    
+    int index = [_namedColors getNearestNamedColorIndex:_pickedColor];
+    
+    _displayView.backgroundColor = [_namedColors colorFromIndex:index];
+    _pickedColorName = [_namedColors colorNameFromIndex:index];
 }
 
 - (void)touchesMoved:(NSSet *)touches
@@ -144,7 +152,10 @@
     UITouch *touch = event.allTouches.anyObject;
     CGPoint loc = [touch locationInView:self];
     _pickedColor = [self colorOfPoint:loc];
-    _displayView.backgroundColor = _pickedColor;
+    int index = [_namedColors getNearestNamedColorIndex:_pickedColor];
+    
+    _displayView.backgroundColor = [_namedColors colorFromIndex:index];
+    _pickedColorName = [_namedColors colorNameFromIndex:index];
 }
 
 - (void)touchesEnded:(NSSet *)touches
@@ -152,8 +163,11 @@
 {
     UITouch *touch = event.allTouches.anyObject;
     CGPoint loc = [touch locationInView:self];
-    UIColor *pickedColor = [self colorOfPoint:loc];
-    _displayView.backgroundColor = pickedColor;
+    _pickedColor = [self colorOfPoint:loc];
+    int index = [_namedColors getNearestNamedColorIndex:_pickedColor];
+    
+    _displayView.backgroundColor = [_namedColors colorFromIndex:index];
+    _pickedColorName = [_namedColors colorNameFromIndex:index];
 }
 
 - (void)hideColorWheel:(BOOL)animated
