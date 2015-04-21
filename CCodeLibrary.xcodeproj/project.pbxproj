@@ -20,6 +20,8 @@
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
 		A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FAF1AE5F3A900CBFEE7 /* TableViewCellButton.m */; };
+		A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */; };
+		A90D1FBC1AE6184800CBFEE7 /* UIView+ColorOfPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */; };
 		A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */ = {isa = PBXBuildFile; fileRef = A90EBDC81A48874B001E72CF /* GSSiEnums.m */; };
 		A90FC1F41A07F593003AF763 /* CalibrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A90FC1F31A07F593003AF763 /* CalibrationViewController.m */; };
 		A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F6E8C1AE0A73B00822F42 /* HelpButton.m */; };
@@ -119,6 +121,10 @@
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
 		A90D1FAE1AE5F3A900CBFEE7 /* TableViewCellButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewCellButton.h; sourceTree = "<group>"; };
 		A90D1FAF1AE5F3A900CBFEE7 /* TableViewCellButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewCellButton.m; sourceTree = "<group>"; };
+		A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVColorWheel.h; sourceTree = "<group>"; };
+		A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVColorWheel.m; sourceTree = "<group>"; };
+		A90D1FBA1AE6184800CBFEE7 /* UIView+ColorOfPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ColorOfPoint.h"; sourceTree = "<group>"; };
+		A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ColorOfPoint.m"; sourceTree = "<group>"; };
 		A90EBDC71A48874B001E72CF /* GSSiEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiEnums.h; sourceTree = "<group>"; };
 		A90EBDC81A48874B001E72CF /* GSSiEnums.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiEnums.m; sourceTree = "<group>"; };
 		A90FC1F21A07F593003AF763 /* CalibrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalibrationViewController.h; sourceTree = "<group>"; };
@@ -252,6 +258,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A90D1FB61AE6174700CBFEE7 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				A90D1FBA1AE6184800CBFEE7 /* UIView+ColorOfPoint.h */,
+				A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
 		A94A771A19F812940062906E /* Facilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -356,6 +371,8 @@
 				A96B07BE19FBF276005A73B0 /* LegendView.m */,
 				1F7E00A819CA8892006AFABA /* MarkerView.h */,
 				1F7E00A919CA8892006AFABA /* MarkerView.m */,
+				A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */,
+				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
 				A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */,
 				A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */,
 				A99050891ACB947000C6AAAF /* SpreadsheetView.h */,
@@ -429,6 +446,7 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				A90D1FB61AE6174700CBFEE7 /* Categories */,
 				A94A771D19F813040062906E /* CCode */,
 				A94A771A19F812940062906E /* Facilities */,
 				A94A771B19F812AA0062906E /* Intersections */,
@@ -573,6 +591,7 @@
 				A9735AF419E77B6800894359 /* Reachability.m in Sources */,
 				A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */,
 				A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */,
+				A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */,
 				A90FC1F41A07F593003AF763 /* CalibrationViewController.m in Sources */,
 				1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */,
 				1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */,
@@ -592,6 +611,7 @@
 				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
 				A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */,
 				A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */,
+				A90D1FBC1AE6184800CBFEE7 /* UIView+ColorOfPoint.m in Sources */,
 				A9D269E61AE562E100A5C38E /* TableViewCellLabel.m in Sources */,
 				A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,

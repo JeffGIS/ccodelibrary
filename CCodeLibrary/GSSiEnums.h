@@ -223,4 +223,11 @@ typedef NS_ENUM(NSInteger, DigitizationMode)
     DigitizationModeCurbRamps,
 };
 
+typedef NS_ENUM(NSInteger, GMLayerSetting)
+{
+    GMLayerSettingOn,
+    GMLayerSettingOff,
+    GMLayerSettingAuto,
+};
+
 @end
