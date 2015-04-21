@@ -19,6 +19,7 @@
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
+		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
 		A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FAF1AE5F3A900CBFEE7 /* TableViewCellButton.m */; };
 		A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */; };
 		A90D1FBC1AE6184800CBFEE7 /* UIView+ColorOfPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */; };
@@ -120,6 +121,8 @@
 		1FB3605519AE7E8200592B1D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagePlacesDatabase.h; sourceTree = "<group>"; };
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
+		A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVHeadingViewController.h; sourceTree = "<group>"; };
+		A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVHeadingViewController.m; sourceTree = "<group>"; };
 		A90D1FAE1AE5F3A900CBFEE7 /* TableViewCellButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewCellButton.h; sourceTree = "<group>"; };
 		A90D1FAF1AE5F3A900CBFEE7 /* TableViewCellButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewCellButton.m; sourceTree = "<group>"; };
 		A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVColorWheel.h; sourceTree = "<group>"; };
@@ -378,6 +381,8 @@
 				1F7E00A919CA8892006AFABA /* MarkerView.m */,
 				A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */,
 				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
+				A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */,
+				A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */,
 				A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */,
 				A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */,
 				A99050891ACB947000C6AAAF /* SpreadsheetView.h */,
@@ -609,6 +614,7 @@
 				EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */,
 				EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
+				A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */,
 				A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */,
 				EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */,
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,
