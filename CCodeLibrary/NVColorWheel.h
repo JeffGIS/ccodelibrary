@@ -28,4 +28,7 @@
 
 - (void)hideColorWheel:(BOOL)animated;
 
+- (void)willRotateWithDuration:(NSTimeInterval)duration
+        toInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation;
+
 @end
