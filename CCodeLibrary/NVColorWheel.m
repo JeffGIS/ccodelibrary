@@ -7,7 +7,7 @@
 @interface NVColorWheel ()
 
 @property (nonatomic) UITabBar *tabBar;
-@property (nonatomic) UIView *overlayView, *displayView, *pickedColorView;
+@property (nonatomic) UIView *overlayView, *colorView;
 @property (nonatomic) UILabel *colorNameLabel;
 @property (nonatomic) UIButton *cancelButton, *saveButton;
 @property (nonatomic) UIColor *pickedColor;
@@ -62,63 +62,45 @@
     
     int index = [colorWheel.namedColors getNearestNamedColorIndex:startColor];
     colorWheel.pickedColor = [colorWheel.namedColors colorFromIndex:index];
+    colorWheel.pickedColorName = [colorWheel.namedColors colorNameFromIndex:index];
     
-    CGRect displayViewFrame, pickedColorViewFrame, colorNameLabelFrame;
+    
+    CGRect colorNameLabelFrame;
     
     if (UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeLeft ||
         UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeRight)
     {
-        displayViewFrame = CGRectMake((view.frame.size.width * 0.1), colorWheel.displayViewTop,
+        colorNameLabelFrame = CGRectMake((view.frame.size.width * 0.1), colorWheel.displayViewTop,
                                       (view.frame.size.width * 0.8), (view.frame.size.height * 0.1));
-        
-        pickedColorViewFrame = CGRectMake(0.0, 0.0,
-                                          (displayViewFrame.size.width * 0.5),
-                                          displayViewFrame.size.height);
-        
-        colorNameLabelFrame = CGRectMake((displayViewFrame.size.width * 0.5), 0.0,
-                                         (displayViewFrame.size.width * 0.5),
-                                         displayViewFrame.size.height);
     }
     
     else
     {
-        displayViewFrame = CGRectMake((view.frame.size.width * 0.1), colorWheel.displayViewTop,
-                                      (view.frame.size.width * 0.8), (view.frame.size.height * 0.2));
-        
-        pickedColorViewFrame = CGRectMake(0.0, 0.0,
-                                          displayViewFrame.size.width,
-                                          (displayViewFrame.size.height * 0.5));
-        
-        colorNameLabelFrame = CGRectMake(0.0, (displayViewFrame.size.height * 0.5),
-                                         displayViewFrame.size.width,
-                                         (displayViewFrame.size.height * 0.5));
+        colorNameLabelFrame = CGRectMake((view.frame.size.width * 0.1), colorWheel.displayViewTop,
+                                      (view.frame.size.width * 0.8), (view.frame.size.height * 0.15));
     }
     
-    colorWheel.displayView = [[UIView alloc] initWithFrame:displayViewFrame];
+    colorWheel.colorView = [[UIView alloc] initWithFrame:colorNameLabelFrame];
+    colorWheel.colorView.backgroundColor = [colorWheel.namedColors colorFromIndex:index];
     
-    colorWheel.displayView.alpha = 0.0;
-    colorWheel.displayView.backgroundColor = UIColor.blackColor;
+    [view addSubview:colorWheel.colorView];
     
-    [view addSubview:colorWheel.displayView];
+    colorWheel.colorNameLabel = [[UILabel alloc] initWithFrame:
+                                 CGRectMake(0.0, 0.0, colorWheel.colorView.frame.size.width,
+                                            colorWheel.colorView.frame.size.height)];
     
-    colorWheel.pickedColorView = [[UIView alloc] initWithFrame:pickedColorViewFrame];
-    
-    colorWheel.pickedColorView.backgroundColor = [colorWheel.namedColors colorFromIndex:index];
-    
-    [colorWheel.displayView addSubview:colorWheel.pickedColorView];
-    
-    colorWheel.colorNameLabel = [[UILabel alloc] initWithFrame:colorNameLabelFrame];
-    
-    colorWheel.pickedColorName = [colorWheel.namedColors colorNameFromIndex:index];
-    
-    colorWheel.colorNameLabel.backgroundColor = UIColor.blackColor;
+    colorWheel.colorNameLabel.backgroundColor = UIColor.clearColor;
     colorWheel.colorNameLabel.text = colorWheel.pickedColorName;
     colorWheel.colorNameLabel.textColor = UIColor.whiteColor;
     colorWheel.colorNameLabel.textAlignment = NSTextAlignmentCenter;
     colorWheel.colorNameLabel.adjustsFontSizeToFitWidth = YES;
-    colorWheel.colorNameLabel.font = [UIFont boldSystemFontOfSize:48.0];
+    colorWheel.colorNameLabel.font = [UIFont boldSystemFontOfSize:52.0];
+    colorWheel.colorNameLabel.layer.shadowColor = UIColor.blackColor.CGColor;
+    colorWheel.colorNameLabel.layer.shadowOpacity = 1.0;
+    colorWheel.colorNameLabel.layer.shadowRadius = 6.0;
+    colorWheel.colorNameLabel.layer.shadowOffset = CGSizeZero;
     
-    [colorWheel.displayView addSubview:colorWheel.colorNameLabel];
+    [colorWheel.colorView addSubview:colorWheel.colorNameLabel];
     
     colorWheel.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake((bounds.size.width * 0.1),
                                                                          (bounds.size.height * 0.88),
@@ -168,7 +150,7 @@
                      animations:^{
                          colorWheel.alpha = 1.0;
                          colorWheel.overlayView.alpha = 1.0;
-                         colorWheel.displayView.alpha = 1.0;
+                         colorWheel.colorView.alpha = 1.0;
                          colorWheel.cancelButton.alpha = 1.0;
                          colorWheel.saveButton.alpha = 1.0;
                          colorWheel.tabBar.alpha = 0.0;
@@ -198,13 +180,19 @@
 {
     UITouch *touch = event.allTouches.anyObject;
     CGPoint loc = [touch locationInView:self];
-    _pickedColor = [self colorOfPoint:loc];
     
-    int index = [_namedColors getNearestNamedColorIndex:_pickedColor];
-    
-    _pickedColorView.backgroundColor = [_namedColors colorFromIndex:index];
-    _pickedColorName = [_namedColors colorNameFromIndex:index];
-    _colorNameLabel.text = _pickedColorName;
+    if (loc.x > 2.0 && loc.y > 2.0 &&
+        loc.x < (self.frame.size.width - 2.0) &&
+        loc.y < (self.frame.size.height - 2.0))
+    {
+        _pickedColor = [self colorOfPoint:loc];
+        
+        int index = [_namedColors getNearestNamedColorIndex:_pickedColor];
+        
+        _colorView.backgroundColor = [_namedColors colorFromIndex:index];
+        _pickedColorName = [_namedColors colorNameFromIndex:index];
+        _colorNameLabel.text = _pickedColorName;
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches
@@ -212,12 +200,19 @@
 {
     UITouch *touch = event.allTouches.anyObject;
     CGPoint loc = [touch locationInView:self];
-    _pickedColor = [self colorOfPoint:loc];
-    int index = [_namedColors getNearestNamedColorIndex:_pickedColor];
     
-    _pickedColorView.backgroundColor = [_namedColors colorFromIndex:index];
-    _pickedColorName = [_namedColors colorNameFromIndex:index];
-    _colorNameLabel.text = _pickedColorName;
+    if (loc.x > 2.0 && loc.y > 2.0 &&
+        loc.x < (self.frame.size.width - 2.0) &&
+        loc.y < (self.frame.size.height - 2.0))
+    {
+        _pickedColor = [self colorOfPoint:loc];
+        
+        int index = [_namedColors getNearestNamedColorIndex:_pickedColor];
+        
+        _colorView.backgroundColor = [_namedColors colorFromIndex:index];
+        _pickedColorName = [_namedColors colorNameFromIndex:index];
+        _colorNameLabel.text = _pickedColorName;
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches
@@ -225,12 +220,19 @@
 {
     UITouch *touch = event.allTouches.anyObject;
     CGPoint loc = [touch locationInView:self];
-    _pickedColor = [self colorOfPoint:loc];
-    int index = [_namedColors getNearestNamedColorIndex:_pickedColor];
     
-    _pickedColorView.backgroundColor = [_namedColors colorFromIndex:index];
-    _pickedColorName = [_namedColors colorNameFromIndex:index];
-    _colorNameLabel.text = _pickedColorName;
+    if (loc.x > 2.0 && loc.y > 2.0 &&
+        loc.x < (self.frame.size.width - 2.0) &&
+        loc.y < (self.frame.size.height - 2.0))
+    {
+        _pickedColor = [self colorOfPoint:loc];
+        
+        int index = [_namedColors getNearestNamedColorIndex:_pickedColor];
+        
+        _colorView.backgroundColor = [_namedColors colorFromIndex:index];
+        _pickedColorName = [_namedColors colorNameFromIndex:index];
+        _colorNameLabel.text = _pickedColorName;
+    }
 }
 
 - (void)hideColorWheel:(BOOL)animated
@@ -239,14 +241,14 @@
                      animations:^{
                          self.alpha = 0.0;
                          _overlayView.alpha = 0.0;
-                         _displayView.alpha = 0.0;
+                         _colorView.alpha = 0.0;
                          _cancelButton.alpha = 0.0;
                          _saveButton.alpha = 0.0;
                          _tabBar.alpha = 1.0;
                      } completion:^(BOOL finished) {
                          _tabBar.userInteractionEnabled = YES;
                          [_overlayView removeFromSuperview];
-                         [_displayView removeFromSuperview];
+                         [_colorView removeFromSuperview];
                          [_saveButton removeFromSuperview];
                          [_cancelButton removeFromSuperview];
                          [self removeFromSuperview];
@@ -284,17 +286,12 @@
     {
         [UIView animateWithDuration:duration
                          animations:^{
-                             _displayView.frame = CGRectMake(bounds.size.height * 0.1,
-                                                             _displayViewTop, (bounds.size.height * 0.8),
-                                                             (bounds.size.width * 0.1));
+                             _colorView.frame = CGRectMake(bounds.size.height * 0.1,
+                                                           _displayViewTop, (bounds.size.height * 0.8),
+                                                           (bounds.size.width * 0.1));
                              
-                             _pickedColorView.frame = CGRectMake(0.0, 0.0,
-                                                                 _displayView.frame.size.width * 0.5,
-                                                                 _displayView.frame.size.height);
-                             
-                             _colorNameLabel.frame = CGRectMake((_displayView.frame.size.width * 0.5), 0.0,
-                                                                _displayView.frame.size.width * 0.5,
-                                                                _displayView.frame.size.height);
+                             _colorNameLabel.frame = CGRectMake(0.0, 0.0, _colorView.frame.size.width,
+                                                                _colorView.frame.size.height);
                          }];
     }
     
@@ -302,18 +299,12 @@
     {
         [UIView animateWithDuration:duration
                          animations:^{
-                             _displayView.frame = CGRectMake(bounds.size.height * 0.1,
-                                                             _displayViewTop, (bounds.size.height * 0.8),
-                                                             (bounds.size.width * 0.2));
+                             _colorView.frame = CGRectMake(bounds.size.height * 0.1,
+                                                           _displayViewTop, (bounds.size.height * 0.8),
+                                                           (bounds.size.width * 0.15));
                              
-                             _pickedColorView.frame = CGRectMake(0.0, 0.0,
-                                                                 _displayView.frame.size.width,
-                                                                 _displayView.frame.size.height * 0.5);
-                             
-                             _colorNameLabel.frame = CGRectMake(0.0,
-                                                                (_displayView.frame.size.height * 0.5),
-                                                                _displayView.frame.size.width,
-                                                                (_displayView.frame.size.height * 0.5));
+                             _colorNameLabel.frame = CGRectMake(0.0, 0.0, _colorView.frame.size.width,
+                                                                _colorView.frame.size.height);
                          }];
     }
 }
