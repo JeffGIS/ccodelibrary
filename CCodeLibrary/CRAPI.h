@@ -53,7 +53,7 @@
 //@property BOOL GMTilesVisible;
 //@property int parcelsVisibleAtZoom;
 //@property int sewerVisibleAtZoom;
-@property int showPlats;
+@property (nonatomic) int showPlats;
 @property int parcelShadingOption;
 @property int parcelTextOption;
 @property int showTileInfo;
