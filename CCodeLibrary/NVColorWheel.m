@@ -8,6 +8,7 @@
 
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIView *overlayView, *displayView;
+@property (nonatomic) UILabel *colorNameLabel;
 @property (nonatomic) UIButton *cancelButton, *saveButton;
 @property (nonatomic) UIColor *pickedColor;
 @property (nonatomic) NSString *pickedColorName;
@@ -28,7 +29,7 @@
                                                                                     ofType:@"png"]];
     
     NVColorWheel *colorWheel = [[NVColorWheel alloc] initWithImage:image];
-    colorWheel.namedColors = [[NamedColors alloc]init];
+    colorWheel.namedColors = [[NamedColors alloc] init];
     
     UIScreen *screen = UIScreen.mainScreen;
     colorWheel.overlayView = [[UIView alloc] initWithFrame:screen.bounds];
@@ -49,16 +50,37 @@
     colorWheel.alpha = 0.0;
     [view addSubview:colorWheel];
     
+    int index = [colorWheel.namedColors getNearestNamedColorIndex:startColor];
+    colorWheel.pickedColor = [colorWheel.namedColors colorFromIndex:index];
+    colorWheel.displayView.backgroundColor = colorWheel.pickedColor;
+    
     colorWheel.displayView = [[UIView alloc] initWithFrame:CGRectMake((view.frame.size.width * 0.1),
-                                                                      (view.frame.size.height * 0.05) ,
+                                                                      (view.frame.size.height * 0.04) ,
                                                                       (view.frame.size.width * 0.8),
-                                                                      (view.frame.size.height * 0.1))];
+                                                                      (view.frame.size.height * 0.08))];
     
     colorWheel.displayView.alpha = 0.0;
     colorWheel.displayView.layer.cornerRadius = 10.0;
-    colorWheel.displayView.backgroundColor = startColor;
+    colorWheel.displayView.backgroundColor = [colorWheel.namedColors colorFromIndex:index];
     
     [view addSubview:colorWheel.displayView];
+    
+    colorWheel.colorNameLabel = [[UILabel alloc] initWithFrame:CGRectMake((view.frame.size.width * 0.1),
+                                                                          (view.frame.size.height * 0.12) ,
+                                                                          (view.frame.size.width * 0.8),
+                                                                          (view.frame.size.height * 0.08))];
+    
+    colorWheel.pickedColorName = [colorWheel.namedColors colorNameFromIndex:index];
+    
+    colorWheel.colorNameLabel.alpha = 0.0;
+    colorWheel.colorNameLabel.backgroundColor = UIColor.clearColor;
+    colorWheel.colorNameLabel.text = colorWheel.pickedColorName.capitalizedString;
+    colorWheel.colorNameLabel.textColor = UIColor.whiteColor;
+    colorWheel.colorNameLabel.textAlignment = NSTextAlignmentCenter;
+    colorWheel.colorNameLabel.adjustsFontSizeToFitWidth = YES;
+    colorWheel.colorNameLabel.font = [UIFont boldSystemFontOfSize:48.0];
+    
+    [view addSubview:colorWheel.colorNameLabel];
     
     colorWheel.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake((view.frame.size.width * 0.1),
                                                                          (view.frame.size.height * 0.85),
@@ -109,6 +131,7 @@
                          colorWheel.alpha = 1.0;
                          colorWheel.overlayView.alpha = 0.7;
                          colorWheel.displayView.alpha = 1.0;
+                         colorWheel.colorNameLabel.alpha = 1.0;
                          colorWheel.cancelButton.alpha = 1.0;
                          colorWheel.saveButton.alpha = 1.0;
                          colorWheel.tabBar.alpha = 0.3;
@@ -144,6 +167,7 @@
     
     _displayView.backgroundColor = [_namedColors colorFromIndex:index];
     _pickedColorName = [_namedColors colorNameFromIndex:index];
+    _colorNameLabel.text = _pickedColorName.capitalizedString;
 }
 
 - (void)touchesMoved:(NSSet *)touches
@@ -156,6 +180,7 @@
     
     _displayView.backgroundColor = [_namedColors colorFromIndex:index];
     _pickedColorName = [_namedColors colorNameFromIndex:index];
+    _colorNameLabel.text = _pickedColorName.capitalizedString;
 }
 
 - (void)touchesEnded:(NSSet *)touches
@@ -168,6 +193,7 @@
     
     _displayView.backgroundColor = [_namedColors colorFromIndex:index];
     _pickedColorName = [_namedColors colorNameFromIndex:index];
+    _colorNameLabel.text = _pickedColorName.capitalizedString;
 }
 
 - (void)hideColorWheel:(BOOL)animated
@@ -177,6 +203,7 @@
                          self.alpha = 0.0;
                          _overlayView.alpha = 0.0;
                          _displayView.alpha = 0.0;
+                         _colorNameLabel.alpha = 0.0;
                          _cancelButton.alpha = 0.0;
                          _saveButton.alpha = 0.0;
                          _tabBar.alpha = 1.0;
@@ -184,6 +211,7 @@
                          _tabBar.userInteractionEnabled = YES;
                          [_overlayView removeFromSuperview];
                          [_displayView removeFromSuperview];
+                         [_colorNameLabel removeFromSuperview];
                          [_saveButton removeFromSuperview];
                          [_cancelButton removeFromSuperview];
                          [self removeFromSuperview];
