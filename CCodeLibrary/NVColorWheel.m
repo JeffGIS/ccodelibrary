@@ -24,7 +24,7 @@
                                   tabBar:(UITabBar *)tabBar
                                      tag:(NSInteger)tag
 {
-    UIImage *image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"colorWheel"
+    UIImage *image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"colormap"
                                                                                     ofType:@"png"]];
     
     NVColorWheel *colorWheel = [[NVColorWheel alloc] initWithImage:image];
