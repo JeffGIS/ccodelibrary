@@ -74,6 +74,10 @@
 {
     _currentZoom = zoom;
 }
+-(void)setShowPlats:(int)showPlats
+{
+    _showPlats = showPlats;
+}
 - (NSString *)uploadDirectory
 {
     NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, _currentGeoidValue];
