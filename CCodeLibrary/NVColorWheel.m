@@ -37,7 +37,12 @@
     CGRect bounds = UIScreen.mainScreen.bounds;
     
     colorWheel.overlayView = [[UIView alloc] initWithFrame:bounds];
-    colorWheel.overlayView.backgroundColor = UIColor.blackColor;
+    
+    colorWheel.overlayView.backgroundColor = [UIColor colorWithRed:0.2
+                                                             green:0.2
+                                                              blue:0.2
+                                                             alpha:1.0];
+    
     colorWheel.overlayView.alpha = 0.0;
     [view addSubview:colorWheel.overlayView];
     
@@ -116,14 +121,14 @@
     [colorWheel.displayView addSubview:colorWheel.colorNameLabel];
     
     colorWheel.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake((bounds.size.width * 0.1),
-                                                                         (bounds.size.height * 0.85),
-                                                                         (bounds.size.width * 0.3),
-                                                                         (bounds.size.height * 0.06))];
+                                                                         (bounds.size.height * 0.88),
+                                                                         (bounds.size.width * 0.35),
+                                                                         (bounds.size.height * 0.08))];
     
     colorWheel.cancelButton.alpha = 0.0;
     colorWheel.cancelButton.layer.cornerRadius = cornerRadius;
     colorWheel.cancelButton.backgroundColor = UIColor.whiteColor;
-    colorWheel.cancelButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    colorWheel.cancelButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
     
     [colorWheel.cancelButton setTitle:@"Cancel"
                              forState:UIControlStateNormal];
@@ -138,14 +143,14 @@
     [view addSubview:colorWheel.cancelButton];
     
     colorWheel.saveButton = [[UIButton alloc] initWithFrame:CGRectMake((bounds.size.width * 0.6),
-                                                                       (bounds.size.height * 0.85),
-                                                                       (bounds.size.width * 0.3),
-                                                                       (bounds.size.height * 0.06))];
+                                                                       (bounds.size.height * 0.88),
+                                                                       (bounds.size.width * 0.35),
+                                                                       (bounds.size.height * 0.08))];
     
     colorWheel.saveButton.alpha = 0.0;
     colorWheel.saveButton.layer.cornerRadius = cornerRadius;
     colorWheel.saveButton.backgroundColor = UIColor.whiteColor;
-    colorWheel.saveButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    colorWheel.saveButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
     
     [colorWheel.saveButton setTitle:@"Save"
                              forState:UIControlStateNormal];
@@ -162,11 +167,11 @@
     [UIView animateWithDuration:0.25
                      animations:^{
                          colorWheel.alpha = 1.0;
-                         colorWheel.overlayView.alpha = 0.7;
+                         colorWheel.overlayView.alpha = 1.0;
                          colorWheel.displayView.alpha = 1.0;
                          colorWheel.cancelButton.alpha = 1.0;
                          colorWheel.saveButton.alpha = 1.0;
-                         colorWheel.tabBar.alpha = 0.3;
+                         colorWheel.tabBar.alpha = 0.0;
                      }];
     
     return colorWheel;
@@ -263,14 +268,14 @@
                                                    self.superview.center.x);
                          
                          _cancelButton.frame = CGRectMake((bounds.size.height * 0.1),
-                                                          (bounds.size.width * 0.85),
-                                                          (bounds.size.height * 0.3),
-                                                          (bounds.size.width * 0.06));
+                                                          (bounds.size.width * 0.88),
+                                                          (bounds.size.height * 0.35),
+                                                          (bounds.size.width * 0.08));
                          
                          _saveButton.frame = CGRectMake((bounds.size.height * 0.6),
-                                                        (bounds.size.width * 0.85),
-                                                        (bounds.size.height * 0.3),
-                                                        (bounds.size.width * 0.06));
+                                                        (bounds.size.width * 0.88),
+                                                        (bounds.size.height * 0.35),
+                                                        (bounds.size.width * 0.08));
                      }];
     
     
@@ -279,7 +284,7 @@
     {
         [UIView animateWithDuration:duration
                          animations:^{
-                             _displayView.frame = CGRectMake((bounds.size.height * 0.1 + (_tabBar.frame.size.height / 2.0)),
+                             _displayView.frame = CGRectMake(bounds.size.height * 0.1,
                                                              _displayViewTop, (bounds.size.height * 0.8),
                                                              (bounds.size.width * 0.1));
                              
@@ -297,7 +302,7 @@
     {
         [UIView animateWithDuration:duration
                          animations:^{
-                             _displayView.frame = CGRectMake((bounds.size.height * 0.1 + (_tabBar.frame.size.height / 2.0)),
+                             _displayView.frame = CGRectMake(bounds.size.height * 0.1,
                                                              _displayViewTop, (bounds.size.height * 0.8),
                                                              (bounds.size.width * 0.2));
                              
