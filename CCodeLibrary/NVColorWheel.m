@@ -82,6 +82,7 @@
     
     colorWheel.colorView = [[UIView alloc] initWithFrame:colorNameLabelFrame];
     colorWheel.colorView.backgroundColor = [colorWheel.namedColors colorFromIndex:index];
+    colorWheel.colorView.alpha = 0.0; 
     
     [view addSubview:colorWheel.colorView];
     
