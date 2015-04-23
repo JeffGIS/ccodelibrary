@@ -172,7 +172,8 @@
     {
         [_delegate colorWheel:self
                didReturnColor:_pickedColor
-                          tag:self.tag];
+                    colorName:_pickedColorName
+               forViewWithTag:self.tag];
     }
 }
 

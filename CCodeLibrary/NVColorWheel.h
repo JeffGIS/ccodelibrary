@@ -10,7 +10,8 @@
 
 - (void)colorWheel:(NVColorWheel *)colorWheel
     didReturnColor:(UIColor *)color
-               tag:(NSInteger)tag;
+         colorName:(NSString *)colorName
+    forViewWithTag:(NSInteger)tag;
 
 - (void)colorWheelDidCancel:(NVColorWheel *)colorWheel;
 
