@@ -87,7 +87,7 @@
     
     sliderView.slider.minimumValue = minValue;
     sliderView.slider.maximumValue = maxValue;
-    sliderView.slider.value = startValue;
+    sliderView.slider.value = roundf(startValue);
     
     [sliderView.slider addTarget:sliderView
                           action:@selector(sliderValueChanged:)
@@ -102,7 +102,7 @@
                                          (sliderView.frame.size.height * 0.1))];
     
     sliderView.sliderLabel.backgroundColor = UIColor.clearColor;
-    sliderView.sliderLabel.text = [NSString stringWithFormat:@"%ld", (long)sliderView.slider.value];
+    sliderView.sliderLabel.text = [NSString stringWithFormat:@"%.0f", sliderView.slider.value];
     sliderView.sliderLabel.textColor = UIColor.blackColor;
     sliderView.sliderLabel.font = [UIFont boldSystemFontOfSize:56.0];
     sliderView.sliderLabel.textAlignment = NSTextAlignmentCenter;
@@ -168,7 +168,8 @@
 
 - (void)sliderValueChanged:(UISlider *)slider
 {
-    _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
+    CGFloat value = roundf(slider.value);
+    _sliderLabel.text = [NSString stringWithFormat:@"%.0f", value];
 }
 
 - (void)cancelButtonTapped:(UIButton *)button
@@ -181,8 +182,10 @@
 {
     if (_delegate)
     {
+        CGFloat value = roundf(_slider.value);
+        
         [_delegate sliderView:self
-               didReturnValue:_slider.value
+               didReturnValue:value
                forViewWithTag:self.tag];
     }
 }
