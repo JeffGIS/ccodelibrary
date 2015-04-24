@@ -73,9 +73,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                 title:@"< Return"
              fontSize:32.0];
     
-    _startCancelButton = [[UIButton alloc] initWithFrame:CGRectMake((self.view.frame.size.width * 0.3),
-                                                                    (self.view.frame.size.height - 120.0),
-                                                                    (self.view.frame.size.width * 0.4), 80.0)];
+    _startCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(220.0, 904.0, 328.0, 80.0)];
     
     [self setupButton:_startCancelButton
                target:self
@@ -84,10 +82,9 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
              fontSize:44.0];
     
     _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-    _progressView.frame = CGRectMake(0.0, 0.0, (self.view.frame.size.width * 0.8), 0.0);
+    _progressView.frame = CGRectMake(0.0, 0.0, 640.0, 0.0);
     
-    _progressView.center = CGPointMake((self.view.frame.size.width / 2.0),
-                                       (((_arrowView.frame.origin.y + _arrowView.frame.size.height) +
+    _progressView.center = CGPointMake(384.0, (((_arrowView.frame.origin.y + _arrowView.frame.size.height) +
                                          _startCancelButton.frame.origin.y) / 2.0));
     
     _progressView.progress = 0.0;
@@ -135,19 +132,20 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                                                      [NSBundle.mainBundle pathForResource:@"coolArrow"
                                                                                    ofType:@"png"]]];
     
-    _arrowView.frame = CGRectMake(0.0, 0.0, _arrowView.image.size.width, (_arrowView.image.size.height * 1.5));
-    _arrowView.center = self.view.center;
+    _arrowView.frame = CGRectMake(0.0, 0.0, _arrowView.image.size.width,
+                                  (_arrowView.image.size.height * 1.5));
+    
+    _arrowView.center = CGPointMake(384.0, 512.0);
     
     [self.view addSubview:_arrowView];
 }
 
 - (void)setupHeadingLabel
 {
-    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0,
-                                                              (self.view.frame.size.width * 0.6), 120.0)];
+    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 408.0, 120.0)];
     
-    _headingLabel.center = CGPointMake((self.view.frame.size.width / 2.0),
-                                       ((_arrowView.frame.origin.y + 80.0) / 2.0));
+    _headingLabel.center = CGPointMake(384.0, (((_arrowView.frame.origin.y + _returnButton.frame.size.height) +
+                                               _returnButton.frame.origin.y) / 2.0));
     
     _headingLabel.backgroundColor = UIColor.clearColor;
     _headingLabel.textColor = UIColor.whiteColor;
@@ -190,12 +188,10 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 
 - (void)setupProgressInfoLabel
 {
-    _progressInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0,
-                                                                   (self.view.frame.size.width * 0.8), 40.0)];
+    _progressInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 640.0, 40.0)];
     
-    _progressInfoLabel.center = CGPointMake((self.view.frame.size.width / 2.0),
-                                            (((_arrowView.frame.origin.y + _arrowView.frame.size.height) +
-                                              _progressView.frame.origin.y) / 2.0));
+    _progressInfoLabel.center = CGPointMake(384.0, (((_arrowView.frame.origin.y + _arrowView.frame.size.height) +
+                                                     _progressView.frame.origin.y) / 2.0));
     
     _progressInfoLabel.backgroundColor = UIColor.clearColor;
     _progressInfoLabel.textColor = UIColor.whiteColor;
@@ -379,10 +375,14 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
     return YES;
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-                                duration:(NSTimeInterval)duration
+- (NSUInteger)supportedInterfaceOrientations
 {
-    
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
 }
 
 @end
