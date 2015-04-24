@@ -190,7 +190,7 @@
     {
         if (_delegate)
         {
-            NSDecimal dIn = [[NSNumber numberWithDouble:_elapsedTime] decimalValue];
+            NSDecimal dIn = [NSNumber numberWithDouble:_elapsedTime].decimalValue;
             NSDecimal dOut;
             NSDecimalRound(&dOut, &dIn, 1, NSRoundPlain);
             
