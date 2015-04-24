@@ -8,7 +8,6 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 {
     NVHeadingStatusDefault,
     NVHeadingStatusReady,
-    NVHeadingStatusCheckingStability,
     NVHeadingStatusGettingHeading,
     NVHeadingStatusComplete,
 };
@@ -20,10 +19,10 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 @property (nonatomic) UIButton *returnButton, *startCancelButton;
 @property (nonatomic) UIProgressView *progressView;
 @property NVHeadingStatus status;
-@property BOOL firstTime;
 @property (nonatomic) NSDate *startTime;
-@property (nonatomic) CGFloat minHeading, maxHeading, sumHeading, avgHeading;
-@property (nonatomic) NSInteger counter;
+@property CGFloat referenceHeading,minHeading, maxHeading, sumHeading, avgHeading;
+@property NSInteger counter;
+@property NSInteger numDesiredReadings;
 @property (nonatomic) CGFloat stabilityFactor;
 
 @end
@@ -31,11 +30,12 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 @implementation NVHeadingViewController
 
 + (NVHeadingViewController *)showHeadingViewControllerWithDelegate:(id)delegate
-                                                   stabilityFactor:(CGFloat)stabilityFactor
+                                                   stabilityFactor:(CGFloat)stabilityFactor numReadings:(NSInteger)nRead
 {
     NVHeadingViewController *headingVC = [[NVHeadingViewController alloc] init];
     headingVC.delegate = delegate;
     headingVC.stabilityFactor = stabilityFactor;
+    headingVC.numDesiredReadings = nRead;
     
     if ([delegate isKindOfClass:UIViewController.class])
     {
@@ -53,14 +53,19 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     view.backgroundColor = UserDefaults.defaults.appleBlue;
     self.view = view;
 }
-
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationPortrait;
+}
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    _firstTime = YES;
     _counter = 0;
-    _minHeading = _maxHeading = _sumHeading = _avgHeading = 0.0;
     
     [self setupArrowView];
     [self setupHeadingLabel];
@@ -93,7 +98,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     _progressView.progress = 0.0;
     _progressView.trackTintColor = UIColor.blackColor;
     _progressView.progressTintColor = UIColor.whiteColor;
-    _progressView.hidden = YES;
+    _progressView.hidden = NO;
     [self.view addSubview:_progressView];
     
     [self setupProgressInfoLabel];
@@ -122,6 +127,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     [super viewDidAppear:animated];
     
     _status = NVHeadingStatusReady;
+    _progressInfoLabel.text = @"Touch Start to when ready to begin measurement";
 }
 
 - (void)didReceiveMemoryWarning
@@ -237,19 +243,21 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     {
         case NVHeadingStatusComplete:
             if (CLLocationManager.headingAvailable)
+            {
                 [_locationManager startUpdatingHeading];
+            }
             
         case NVHeadingStatusReady:
-            _progressInfoLabel.text = @"Checking Stability";
+            _progressInfoLabel.text = @"Taking Measurement";
             _returnButton.enabled = NO;
             
             [_startCancelButton setTitle:@"Cancel"
                                 forState:UIControlStateNormal];
             
-            _status = NVHeadingStatusCheckingStability;
+            _status = NVHeadingStatusGettingHeading;
+            _counter = 0;
             break;
             
-        case NVHeadingStatusCheckingStability:
         case NVHeadingStatusGettingHeading:
             _progressInfoLabel.text = @"";
             _returnButton.enabled = YES;
@@ -264,9 +272,19 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
             break;
     }
     
-    _firstTime = YES;
-    _progressView.hidden = YES;
+    _progressView.hidden = NO;
     _progressView.progress = 0.0;
+}
+
+-(CGFloat)correctedHeading:(CGFloat)heading
+{
+    CGFloat corrected = heading;
+    
+    if (_referenceHeading - heading < -180)
+        corrected = heading - 360.0;
+    else if (_referenceHeading - heading > 180)
+        corrected = heading + 360.0;
+    return corrected;
 }
 
 - (void)locationManager:(CLLocationManager *)manager
@@ -277,66 +295,41 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     
     switch (_status)
     {
-        case NVHeadingStatusCheckingStability:
-            if (_firstTime)
-            {
-                _minHeading = _maxHeading = newHeading.trueHeading;
-                _startTime = NSDate.date;
-                _firstTime = NO;
-            }
-            
-            else
-            {
-                _minHeading = min(_minHeading, newHeading.trueHeading);
-                _maxHeading = max(_maxHeading, newHeading.trueHeading);
-            }
-            
-            if ([NSDate.date timeIntervalSinceDate:_startTime] >= 1.0)
-            {
-                if (abs((_maxHeading - _minHeading) < _stabilityFactor))
-                {
-                    _status = NVHeadingStatusGettingHeading;
-                    _progressView.hidden = NO;
-                    _progressView.progress = 0.0;
-                    _progressInfoLabel.text = @"Collecting Heading Measurement";
-                    _minHeading = _maxHeading = _sumHeading = _avgHeading = 0.0;
-                    _counter = 0;
-                }
-                
-                _startTime = NSDate.date;
-                _firstTime = YES;
-            }
-            
-            break;
-        
         case NVHeadingStatusGettingHeading:
-            if (_firstTime)
+        {
+            CGFloat heading;
+            if (!_counter)
             {
-                _minHeading = _maxHeading = newHeading.trueHeading;
-                _firstTime = NO;
+                _sumHeading = heading = _referenceHeading = _minHeading = _maxHeading = newHeading.trueHeading;
+                
             }
             
             else
             {
-                _minHeading = min(_minHeading, newHeading.trueHeading);
-                _maxHeading = max(_maxHeading, newHeading.trueHeading);
+                heading = [self correctedHeading:newHeading.trueHeading];
+                _minHeading = min(_minHeading, heading);
+                _maxHeading = max(_maxHeading, heading);
+                _sumHeading += heading;
             }
             
-            _progressView.progress = ([NSDate.date timeIntervalSinceDate:_startTime] / 1.0);
-            _sumHeading += newHeading.trueHeading;
             _counter++;
+            _progressView.progress = (CGFloat)_counter / _numDesiredReadings;
             
-            if ([NSDate.date timeIntervalSinceDate:_startTime] >= 1.0)
+            if (abs((_maxHeading - _minHeading) < _stabilityFactor))
             {
-                if (abs((_maxHeading - _minHeading) < _stabilityFactor))
+                if (_counter >= _numDesiredReadings)
                 {
                     _status = NVHeadingStatusComplete;
                     _returnButton.enabled = YES;
                     _progressView.progress = 1.0;
                     _progressInfoLabel.text = @"Heading Measurement Complete";
                     _avgHeading = (_sumHeading / _counter);
+                    if (_avgHeading > 360.0)
+                        _avgHeading -= 360.0;
+                    else if (_avgHeading < 0)
+                        _avgHeading += 360.0;
                     
-                    _headingLabel.text = [NSString stringWithFormat:@"Average Heading:\n%.0f\u00B0",
+                    _headingLabel.text = [NSString stringWithFormat:@"Average Heading:\n%.1f\u00B0",
                                           _avgHeading];
                     
                     [_startCancelButton setTitle:@"Start"
@@ -344,18 +337,13 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                     
                     [_locationManager stopUpdatingHeading];
                 }
-                
-                else
-                {
-                    _progressInfoLabel.text = @"Checking Stability";
-                    _progressView.hidden = YES;
-                    _progressView.progress = 0.0;
-                    _status = NVHeadingStatusCheckingStability;
-                    _startTime = NSDate.date;
-                }
-                
-                _firstTime = YES;
             }
+            else
+            {
+                _counter = 0;
+                _progressView.progress = 0.0;
+            }
+        }
             
         default:
             break;
