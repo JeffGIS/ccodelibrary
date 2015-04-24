@@ -53,14 +53,6 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     view.backgroundColor = UserDefaults.defaults.appleBlue;
     self.view = view;
 }
-- (NSUInteger)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationPortrait;
-}
-- (BOOL)shouldAutorotate
-{
-    return NO;
-}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
