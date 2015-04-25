@@ -20,9 +20,8 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 @property (nonatomic) UIProgressView *progressView;
 @property NVHeadingStatus status;
 @property (nonatomic) NSDate *startTime;
-@property CGFloat referenceHeading,minHeading, maxHeading, sumHeading, avgHeading;
-@property NSInteger counter;
-@property NSInteger numDesiredReadings;
+@property CGFloat referenceHeading, minHeading, maxHeading, sumHeading, avgHeading;
+@property NSInteger counter, numDesiredReadings;
 @property (nonatomic) CGFloat stabilityFactor;
 
 @end
@@ -30,7 +29,8 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 @implementation NVHeadingViewController
 
 + (NVHeadingViewController *)showHeadingViewControllerWithDelegate:(id)delegate
-                                                   stabilityFactor:(CGFloat)stabilityFactor numReadings:(NSInteger)nRead
+                                                   stabilityFactor:(CGFloat)stabilityFactor
+                                                       numReadings:(NSInteger)nRead
 {
     NVHeadingViewController *headingVC = [[NVHeadingViewController alloc] init];
     headingVC.delegate = delegate;
@@ -53,6 +53,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     view.backgroundColor = UserDefaults.defaults.appleBlue;
     self.view = view;
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -231,9 +232,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     {
         case NVHeadingStatusComplete:
             if (CLLocationManager.headingAvailable)
-            {
                 [_locationManager startUpdatingHeading];
-            }
             
         case NVHeadingStatusReady:
             _progressInfoLabel.text = @"Taking Measurement";
@@ -270,8 +269,10 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     
     if (_referenceHeading - heading < -180)
         corrected = heading - 360.0;
+    
     else if (_referenceHeading - heading > 180)
         corrected = heading + 360.0;
+    
     return corrected;
 }
 
@@ -286,10 +287,11 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
         case NVHeadingStatusGettingHeading:
         {
             CGFloat heading;
+            
             if (!_counter)
             {
-                _sumHeading = heading = _referenceHeading = _minHeading = _maxHeading = newHeading.trueHeading;
-                
+                _sumHeading = heading = _referenceHeading = _minHeading =
+                _maxHeading = newHeading.trueHeading;
             }
             
             else
@@ -301,7 +303,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
             }
             
             _counter++;
-            _progressView.progress = (CGFloat)_counter / _numDesiredReadings;
+            _progressView.progress = ((CGFloat)_counter / _numDesiredReadings);
             
             if (abs((_maxHeading - _minHeading) < _stabilityFactor))
             {
@@ -312,8 +314,10 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                     _progressView.progress = 1.0;
                     _progressInfoLabel.text = @"Heading Measurement Complete";
                     _avgHeading = (_sumHeading / _counter);
+                    
                     if (_avgHeading > 360.0)
                         _avgHeading -= 360.0;
+                    
                     else if (_avgHeading < 0)
                         _avgHeading += 360.0;
                     

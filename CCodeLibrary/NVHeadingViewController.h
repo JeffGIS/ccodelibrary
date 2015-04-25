@@ -21,6 +21,7 @@
 @property (nonatomic) CLLocationManager *locationManager;
 
 + (NVHeadingViewController *)showHeadingViewControllerWithDelegate:(id)delegate
-                                                   stabilityFactor:(CGFloat)stabilityFactor numReadings:(NSInteger)nRead;
+                                                   stabilityFactor:(CGFloat)stabilityFactor
+                                                       numReadings:(NSInteger)nRead;
 
 @end
