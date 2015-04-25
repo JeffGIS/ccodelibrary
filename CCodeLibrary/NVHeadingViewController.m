@@ -330,6 +330,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                     [_locationManager stopUpdatingHeading];
                 }
             }
+            
             else
             {
                 _counter = 0;
