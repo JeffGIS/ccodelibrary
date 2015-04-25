@@ -53,6 +53,7 @@
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
 		A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D952B11A96D484008B9156 /* GSSiAlertController.m */; };
 		A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */; };
+		A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
 		EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C21219ED378400F0688B /* FTPDataPush.m */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
@@ -185,6 +186,8 @@
 		A9D952B11A96D484008B9156 /* GSSiAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiAlertController.m; sourceTree = "<group>"; };
 		A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RampTypeView.h; sourceTree = "<group>"; };
 		A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RampTypeView.m; sourceTree = "<group>"; };
+		A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVVideoHeadingViewController.h; sourceTree = "<group>"; };
+		A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVVideoHeadingViewController.m; sourceTree = "<group>"; };
 		EB05C20E19EA999F00F0688B /* ElementOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementOverlayView.h; sourceTree = "<group>"; };
 		EB05C20F19EA999F00F0688B /* ElementOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElementOverlayView.m; sourceTree = "<group>"; };
 		EB05C21119ED378400F0688B /* FTPDataPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDataPush.h; sourceTree = "<group>"; };
@@ -386,6 +389,8 @@
 				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
 				A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */,
 				A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */,
+				A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */,
+				A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */,
 				A91F36921AE9739400602BCE /* NVSliderView.h */,
 				A91F36931AE9739400602BCE /* NVSliderView.m */,
 				A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */,
@@ -614,6 +619,7 @@
 				1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */,
 				EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */,
 				EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */,
+				A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */,
 				EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */,
 				EBAEED0719B601710084A579 /* minilzo.c in Sources */,
 				EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */,
