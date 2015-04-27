@@ -6,7 +6,6 @@
 #import "CRAPI.h"
 
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-#define DEFAULT_OFFSET 150 //150 feet -> this is the default value
 
 @interface GetPriorityLocations ()
 
