@@ -44,6 +44,72 @@
 		A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A99050871ACB942F00C6AAAF /* GSSiDatePicker.m */; };
 		A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508A1ACB947000C6AAAF /* SpreadsheetView.m */; };
 		A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */; };
+		A99C88FB1AEDDFDE00A0856F /* UIView+ColorOfPoint.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90D1FC11AE6510F00CBFEE7 /* UIView+ColorOfPoint.h */; };
+		A99C88FC1AEDDFE300A0856F /* gssitype.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB268A181AC5E9F700A68EC8 /* gssitype.h */; };
+		A99C88FD1AEDDFE700A0856F /* gmlimits.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB268A191AC5E9F700A68EC8 /* gmlimits.h */; };
+		A99C88FE1AEDDFEB00A0856F /* CCodeTypes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEED0A19B610260084A579 /* CCodeTypes.h */; };
+		A99C88FF1AEDDFF000A0856F /* compress.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEED0B19B61FB80084A579 /* compress.h */; };
+		A99C89001AEDDFF400A0856F /* lzodefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEED0419B601710084A579 /* lzodefs.h */; };
+		A99C89011AEDDFF800A0856F /* lzoconf.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEED0319B601710084A579 /* lzoconf.h */; };
+		A99C89021AEDDFFD00A0856F /* MathTypes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E48319952BCA0085B2E0 /* MathTypes.h */; };
+		A99C89031AEDE00200A0856F /* MathUtil.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E48519952BCA0085B2E0 /* MathUtil.h */; };
+		A99C89041AEDE00500A0856F /* minilzo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEED0619B601710084A579 /* minilzo.h */; };
+		A99C89051AEDE00900A0856F /* rotate256.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E48619952BCA0085B2E0 /* rotate256.h */; };
+		A99C89061AEDE00D00A0856F /* TileGraphics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E48719952BCA0085B2E0 /* TileGraphics.h */; };
+		A99C89071AEDE01100A0856F /* FacilitiesDatabase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A94A770E19F8045C0062906E /* FacilitiesDatabase.h */; };
+		A99C89081AEDE01500A0856F /* Facility.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A94A771119F807570062906E /* Facility.h */; };
+		A99C89091AEDE01A00A0856F /* FacilityRecord.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A94A771719F807CE0062906E /* FacilityRecord.h */; };
+		A99C890A1AEDE01F00A0856F /* FacilityPoint.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A94A771419F8079E0062906E /* FacilityPoint.h */; };
+		A99C890B1AEDE02500A0856F /* MPIntersection.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBB1BFCA199DD7C10059B547 /* MPIntersection.h */; };
+		A99C890C1AEDE02A00A0856F /* IntersectionsDatabase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */; };
+		A99C890D1AEDE03000A0856F /* IntersectionPoint.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB2C7DB819BCB9C400F6D9F0 /* IntersectionPoint.h */; };
+		A99C890E1AEDE03500A0856F /* IntersectionRecord.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB2C7DB219BA5A6F00F6D9F0 /* IntersectionRecord.h */; };
+		A99C890F1AEDE03B00A0856F /* FTPDataPull.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F0B41F919AEAE0A00981F57 /* FTPDataPull.h */; };
+		A99C89101AEDE04000A0856F /* FTPDataPush.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB05C21119ED378400F0688B /* FTPDataPush.h */; };
+		A99C89111AEDE04600A0856F /* GeoMasterServer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */; };
+		A99C89121AEDE04C00A0856F /* GetAssignments.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBB9A61819FFC02900685716 /* GetAssignments.h */; };
+		A99C89131AEDE05300A0856F /* NetworkManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F3A544419A412490029DBEA /* NetworkManager.h */; };
+		A99C89141AEDE05800A0856F /* Reachability.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9735AF219E77B6800894359 /* Reachability.h */; };
+		A99C89151AEDE06300A0856F /* GetPlaceAreaFile.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */; };
+		A99C89161AEDE06B00A0856F /* GetPriorityLocations.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9C8ED3A1A5849F700DF9856 /* GetPriorityLocations.h */; };
+		A99C89171AEDE07300A0856F /* ManagePlacesDatabase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */; };
+		A99C89181AEDE07800A0856F /* PriorityLocation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A97867351A5219FD000A9BB8 /* PriorityLocation.h */; };
+		A99C89191AEDE07F00A0856F /* PlacesInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F838AE819B1021C00943A8C /* PlacesInfo.h */; };
+		A99C891A1AEDE08700A0856F /* colorsByName.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */; };
+		A99C891B1AEDE08D00A0856F /* CalibrationViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90FC1F21A07F593003AF763 /* CalibrationViewController.h */; };
+		A99C891C1AEDE09600A0856F /* CircleView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A926F20F19D9FC18007C392A /* CircleView.h */; };
+		A99C891D1AEDE09D00A0856F /* CustomAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F3A544D19A449460029DBEA /* CustomAlert.h */; };
+		A99C891E1AEDE0A300A0856F /* Colors.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9C525CE1A3B59880056711F /* Colors.h */; };
+		A99C891F1AEDE0AD00A0856F /* ElementOverlayView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB05C20E19EA999F00F0688B /* ElementOverlayView.h */; };
+		A99C89201AEDE0B400A0856F /* GSSiAlertController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D952B01A96D484008B9156 /* GSSiAlertController.h */; };
+		A99C89211AEDE0BC00A0856F /* GSSiBumpDetector.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A92382AB1AD986010027659B /* GSSiBumpDetector.h */; };
+		A99C89221AEDE0C500A0856F /* GSSiNotesView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9ADCB1C1ACD0870000E5C00 /* GSSiNotesView.h */; };
+		A99C89231AEDE0CC00A0856F /* GSSiDatePicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99050861ACB942F00C6AAAF /* GSSiDatePicker.h */; };
+		A99C89241AEDE0D100A0856F /* GSSiPopoverView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */; };
+		A99C89251AEDE0D900A0856F /* GSSiSlopeViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D5A8AE1A0D0A7A00314E8B /* GSSiSlopeViewController.h */; };
+		A99C89261AEDE0E200A0856F /* HelpButton.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A91F6E8B1AE0A73B00822F42 /* HelpButton.h */; };
+		A99C89271AEDE0E700A0856F /* HelpWebView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A97C621D1AE0C59200DA7738 /* HelpWebView.h */; };
+		A99C89281AEDE0EF00A0856F /* LegendView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A96B07BD19FBF276005A73B0 /* LegendView.h */; };
+		A99C89291AEDE0F500A0856F /* MarkerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F7E00A819CA8892006AFABA /* MarkerView.h */; };
+		A99C892A1AEDE0FA00A0856F /* NVSliderView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A91F36921AE9739400602BCE /* NVSliderView.h */; };
+		A99C892B1AEDE0FF00A0856F /* RampTypeView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */; };
+		A99C892C1AEDE10300A0856F /* SpreadsheetView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99050891ACB947000C6AAAF /* SpreadsheetView.h */; };
+		A99C892D1AEDE10A00A0856F /* NVColorWheel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */; };
+		A99C892E1AEDE10F00A0856F /* NVVideoHeadingViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */; };
+		A99C892F1AEDE11400A0856F /* NVHeadingViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */; };
+		A99C89301AEDE11B00A0856F /* SpreadSheetViewCell.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A990508B1ACB947000C6AAAF /* SpreadSheetViewCell.h */; };
+		A99C89311AEDE12800A0856F /* TableViewCellButton.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90D1FAE1AE5F3A900CBFEE7 /* TableViewCellButton.h */; };
+		A99C89321AEDE13000A0856F /* TableViewCellLabel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D269E41AE562E100A5C38E /* TableViewCellLabel.h */; };
+		A99C89331AEDE13500A0856F /* VerticalSegmentedControl.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */; };
+		A99C89341AEDE13F00A0856F /* CRAPI.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB1A69741999A6A9005A1CCB /* CRAPI.h */; };
+		A99C89351AEDE14600A0856F /* GSSiEnums.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90EBDC71A48874B001E72CF /* GSSiEnums.h */; };
+		A99C89361AEDE14E00A0856F /* PickedItem.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB3CC5F51AD95F8B002453A9 /* PickedItem.h */; };
+		A99C89371AEDE15700A0856F /* NamedColors.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB31C51AE6DC2D00C5CCEF /* NamedColors.h */; };
+		A99C89381AEDE15F00A0856F /* UserDefaults.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */; };
+		A99C89391AEDE16700A0856F /* SharedDefaults.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A94A770B19F7F9F40062906E /* SharedDefaults.h */; };
+		A99C893A1AEDE16C00A0856F /* PointInAreaClass.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB36639A1A55A97C00ABA486 /* PointInAreaClass.h */; };
+		A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */ = {isa = PBXBuildFile; fileRef = A99C893C1AEDE1B900A0856F /* GSSiDefs.m */; };
+		A99C893E1AEDE1E200A0856F /* GSSiDefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99C893B1AEDE1B900A0856F /* GSSiDefs.h */; };
 		A99CD8C21A9DB89E0049F271 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A99CD8C11A9DB89E0049F271 /* GoogleMaps.framework */; };
 		A99CD8C41A9DB8AE0049F271 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A99CD8C31A9DB8AE0049F271 /* GoogleMaps.bundle */; };
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
@@ -94,9 +160,74 @@
 		EBA2E458199527660085B2E0 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
 			files = (
+				A99C893E1AEDE1E200A0856F /* GSSiDefs.h in CopyFiles */,
+				A99C893A1AEDE16C00A0856F /* PointInAreaClass.h in CopyFiles */,
+				A99C89391AEDE16700A0856F /* SharedDefaults.h in CopyFiles */,
+				A99C89381AEDE15F00A0856F /* UserDefaults.h in CopyFiles */,
+				A99C89371AEDE15700A0856F /* NamedColors.h in CopyFiles */,
+				A99C89361AEDE14E00A0856F /* PickedItem.h in CopyFiles */,
+				A99C89351AEDE14600A0856F /* GSSiEnums.h in CopyFiles */,
+				A99C89341AEDE13F00A0856F /* CRAPI.h in CopyFiles */,
+				A99C89331AEDE13500A0856F /* VerticalSegmentedControl.h in CopyFiles */,
+				A99C89321AEDE13000A0856F /* TableViewCellLabel.h in CopyFiles */,
+				A99C89311AEDE12800A0856F /* TableViewCellButton.h in CopyFiles */,
+				A99C89301AEDE11B00A0856F /* SpreadSheetViewCell.h in CopyFiles */,
+				A99C892F1AEDE11400A0856F /* NVHeadingViewController.h in CopyFiles */,
+				A99C892E1AEDE10F00A0856F /* NVVideoHeadingViewController.h in CopyFiles */,
+				A99C892D1AEDE10A00A0856F /* NVColorWheel.h in CopyFiles */,
+				A99C892C1AEDE10300A0856F /* SpreadsheetView.h in CopyFiles */,
+				A99C892B1AEDE0FF00A0856F /* RampTypeView.h in CopyFiles */,
+				A99C892A1AEDE0FA00A0856F /* NVSliderView.h in CopyFiles */,
+				A99C89291AEDE0F500A0856F /* MarkerView.h in CopyFiles */,
+				A99C89281AEDE0EF00A0856F /* LegendView.h in CopyFiles */,
+				A99C89271AEDE0E700A0856F /* HelpWebView.h in CopyFiles */,
+				A99C89261AEDE0E200A0856F /* HelpButton.h in CopyFiles */,
+				A99C89251AEDE0D900A0856F /* GSSiSlopeViewController.h in CopyFiles */,
+				A99C89241AEDE0D100A0856F /* GSSiPopoverView.h in CopyFiles */,
+				A99C89231AEDE0CC00A0856F /* GSSiDatePicker.h in CopyFiles */,
+				A99C89221AEDE0C500A0856F /* GSSiNotesView.h in CopyFiles */,
+				A99C89211AEDE0BC00A0856F /* GSSiBumpDetector.h in CopyFiles */,
+				A99C89201AEDE0B400A0856F /* GSSiAlertController.h in CopyFiles */,
+				A99C891F1AEDE0AD00A0856F /* ElementOverlayView.h in CopyFiles */,
+				A99C891E1AEDE0A300A0856F /* Colors.h in CopyFiles */,
+				A99C891D1AEDE09D00A0856F /* CustomAlert.h in CopyFiles */,
+				A99C891C1AEDE09600A0856F /* CircleView.h in CopyFiles */,
+				A99C891B1AEDE08D00A0856F /* CalibrationViewController.h in CopyFiles */,
+				A99C891A1AEDE08700A0856F /* colorsByName.h in CopyFiles */,
+				A99C89191AEDE07F00A0856F /* PlacesInfo.h in CopyFiles */,
+				A99C89181AEDE07800A0856F /* PriorityLocation.h in CopyFiles */,
+				A99C89171AEDE07300A0856F /* ManagePlacesDatabase.h in CopyFiles */,
+				A99C89161AEDE06B00A0856F /* GetPriorityLocations.h in CopyFiles */,
+				A99C89151AEDE06300A0856F /* GetPlaceAreaFile.h in CopyFiles */,
+				A99C89141AEDE05800A0856F /* Reachability.h in CopyFiles */,
+				A99C89131AEDE05300A0856F /* NetworkManager.h in CopyFiles */,
+				A99C89121AEDE04C00A0856F /* GetAssignments.h in CopyFiles */,
+				A99C89111AEDE04600A0856F /* GeoMasterServer.h in CopyFiles */,
+				A99C89101AEDE04000A0856F /* FTPDataPush.h in CopyFiles */,
+				A99C890F1AEDE03B00A0856F /* FTPDataPull.h in CopyFiles */,
+				A99C890E1AEDE03500A0856F /* IntersectionRecord.h in CopyFiles */,
+				A99C890D1AEDE03000A0856F /* IntersectionPoint.h in CopyFiles */,
+				A99C890C1AEDE02A00A0856F /* IntersectionsDatabase.h in CopyFiles */,
+				A99C890B1AEDE02500A0856F /* MPIntersection.h in CopyFiles */,
+				A99C890A1AEDE01F00A0856F /* FacilityPoint.h in CopyFiles */,
+				A99C89091AEDE01A00A0856F /* FacilityRecord.h in CopyFiles */,
+				A99C89081AEDE01500A0856F /* Facility.h in CopyFiles */,
+				A99C89071AEDE01100A0856F /* FacilitiesDatabase.h in CopyFiles */,
+				A99C89061AEDE00D00A0856F /* TileGraphics.h in CopyFiles */,
+				A99C89051AEDE00900A0856F /* rotate256.h in CopyFiles */,
+				A99C89041AEDE00500A0856F /* minilzo.h in CopyFiles */,
+				A99C89031AEDE00200A0856F /* MathUtil.h in CopyFiles */,
+				A99C89021AEDDFFD00A0856F /* MathTypes.h in CopyFiles */,
+				A99C89011AEDDFF800A0856F /* lzoconf.h in CopyFiles */,
+				A99C89001AEDDFF400A0856F /* lzodefs.h in CopyFiles */,
+				A99C88FF1AEDDFF000A0856F /* compress.h in CopyFiles */,
+				A99C88FE1AEDDFEB00A0856F /* CCodeTypes.h in CopyFiles */,
+				A99C88FD1AEDDFE700A0856F /* gmlimits.h in CopyFiles */,
+				A99C88FC1AEDDFE300A0856F /* gssitype.h in CopyFiles */,
+				A99C88FB1AEDDFDE00A0856F /* UIView+ColorOfPoint.h in CopyFiles */,
 				EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -170,6 +301,8 @@
 		A990508A1ACB947000C6AAAF /* SpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpreadsheetView.m; sourceTree = "<group>"; };
 		A990508B1ACB947000C6AAAF /* SpreadSheetViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpreadSheetViewCell.h; sourceTree = "<group>"; };
 		A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpreadSheetViewCell.m; sourceTree = "<group>"; };
+		A99C893B1AEDE1B900A0856F /* GSSiDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiDefs.h; sourceTree = "<group>"; };
+		A99C893C1AEDE1B900A0856F /* GSSiDefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiDefs.m; sourceTree = "<group>"; };
 		A99CD8C11A9DB89E0049F271 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		A99CD8C31A9DB8AE0049F271 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
 		A9ADCB1C1ACD0870000E5C00 /* GSSiNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiNotesView.h; sourceTree = "<group>"; };
@@ -477,6 +610,8 @@
 				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
 				EB1A69741999A6A9005A1CCB /* CRAPI.h */,
 				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
+				A99C893B1AEDE1B900A0856F /* GSSiDefs.h */,
+				A99C893C1AEDE1B900A0856F /* GSSiDefs.m */,
 				A90EBDC71A48874B001E72CF /* GSSiEnums.h */,
 				A90EBDC81A48874B001E72CF /* GSSiEnums.m */,
 				EB3CC5F51AD95F8B002453A9 /* PickedItem.h */,
@@ -658,6 +793,7 @@
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
 				A94A771919F807CE0062906E /* FacilityRecord.m in Sources */,
 				A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */,
+				A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */,
 			);

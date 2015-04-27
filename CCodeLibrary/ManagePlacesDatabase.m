@@ -2,6 +2,9 @@
 //  CCodeLibrary
 
 #import "ManagePlacesDatabase.h"
+#import "UserDefaults.h"
+#import "PlacesInfo.h"
+#import "IntersectionsDatabase.h"
 
 @implementation ManagePlacesDatabase
 

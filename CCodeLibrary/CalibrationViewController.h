@@ -1,7 +1,7 @@
 //  CalibrationViewController.h
 //  CCodeLibrary
 
-#import "CCodeLibrary.h"
+#import <UIKit/UIKit.h>
 #import <CoreMotion/CoreMotion.h>
 
 @interface CalibrationViewController : UIViewController

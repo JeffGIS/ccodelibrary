@@ -1,7 +1,10 @@
 //  IntersectionsDatabase.h
 //  CCodeLibrary
 
-#import "CCodeLibrary.h"
+#import "IntersectionsDatabase.h"
+#import "IntersectionPoint.h"
+#import "MPIntersection.h"
+#import "FTPDataPull.h"
 #import <sqlite3.h>
 
 @class IntersectionsDatabase;

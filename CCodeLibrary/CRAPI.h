@@ -48,11 +48,6 @@
 @property int pickApInPixels;
 @property int project;
 @property (nonatomic, copy) NSString *sharedFilePath;
-
-//temporary visibility stuff
-//@property BOOL GMTilesVisible;
-//@property int parcelsVisibleAtZoom;
-//@property int sewerVisibleAtZoom;
 @property (nonatomic) int showPlats;
 @property int parcelShadingOption;
 @property int parcelTextOption;
@@ -103,12 +98,9 @@
 - (BOOL)getPlaceIntersectionFile:(id)intFile
                         forGeoid:(int)geoid;
 
-- (NSString*)directoryFromPath:(NSString*)path
+- (NSString *)directoryFromPath:(NSString*)path
                        andName:(NSString*)name
                         create:(BOOL)create;
-
-/*- (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)latlon
-          usingTransformation:(LPTRANDATA)pTranWToBMP;*/
 
 - (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt
                usingTransformation:(LPTRANDATA)pTranWToBMP;

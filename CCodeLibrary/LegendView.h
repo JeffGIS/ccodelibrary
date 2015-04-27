@@ -1,7 +1,7 @@
 //  LegendView.h
 //  CCodeLibrary
 
-#import "CCodeLibrary.h"
+#import <UIKit/UIKit.h>
 
 @interface LegendView : UIView
 

@@ -2,7 +2,7 @@
 //  GMMobile
 
 #import <Foundation/Foundation.h>
-#import "../../CCodeLibrary/CCodeLibrary/CCodeLibrary.h"
+#import "CCodeTypes.h"
 
 typedef NS_ENUM(NSInteger, PickItemTypes) {
     PTPid,

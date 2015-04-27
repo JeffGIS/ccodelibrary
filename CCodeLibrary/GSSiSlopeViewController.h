@@ -1,7 +1,7 @@
 //  GSSiSlopeViewController.h
 //  CCodeLibrary
 
-#import "CCodeLibrary.h"
+#import <UIKit/UIKit.h>
 #import <CoreMotion/CoreMotion.h>
 #import <CoreLocation/CoreLocation.h>
 

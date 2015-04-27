@@ -4,6 +4,8 @@
 #define COORDINATE_MULTIPLIER 10000000.0
 
 #import "PointInAreaClass.h"
+#import "CRAPI.h"
+#import "MathUtil.h"
 
 @implementation PointInAreaClass
 

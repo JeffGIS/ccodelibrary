@@ -2,6 +2,12 @@
 //  CCodeLibrary
 
 #import "FacilitiesDatabase.h"
+#import "IntersectionsDatabase.h"
+#import "TileGraphics.h"
+#import "MathTypes.h"
+#import "MathUtil.h"
+#import "CRAPI.h"
+#import "compress.h"
 
 @implementation FacilitiesDatabase
 

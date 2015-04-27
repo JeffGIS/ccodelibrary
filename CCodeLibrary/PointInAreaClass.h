@@ -3,7 +3,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import "CCodeLibrary.h"
+#import "CCodeTypes.h"
 
 @interface PointInAreaClass : NSObject
 

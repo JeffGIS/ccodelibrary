@@ -1,7 +1,10 @@
 //  CRAPI.m
 //  CCodeLibrary
 
-#import "CCodeLibrary.h"
+#import "CRAPI.h"
+#import "GSSiDefs.h"
+#import "MathUtil.h"
+#import "TileGraphics.h"
 
 @implementation CRAPI
 {

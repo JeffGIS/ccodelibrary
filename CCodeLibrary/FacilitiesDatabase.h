@@ -1,11 +1,11 @@
 //  FacilitiesDatabase.h
 //  CCodeLibrary
 
-#import "CCodeLibrary.h"
 #import "Facility.h"
 #import "FacilityPoint.h"
 #import "FacilityRecord.h"
 #import <sqlite3.h>
+#import "FTPDataPull.h"
 
 #define FACDB_OK 0
 #define FACDB_FAILED 1

@@ -2,7 +2,6 @@
 //  CCodeLibrary
 
 #import <sqlite3.h>
-#import "CCodeLibrary.h"
 
 @interface ManagePlacesDatabase : NSObject
 {

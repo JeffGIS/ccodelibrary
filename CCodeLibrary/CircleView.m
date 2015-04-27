@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "CircleView.h"
+#import "GSSiDefs.h"
 
 @implementation CircleView
 

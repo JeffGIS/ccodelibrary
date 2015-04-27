@@ -2,6 +2,11 @@
 //  CCodeLibrary
 
 #import "IntersectionsDatabase.h"
+#import "IntersectionRecord.h"
+#import "CRAPI.h"
+#import "TileGraphics.h"
+#import "MathUtil.h"
+#import "compress.h"
 
 @implementation IntersectionsDatabase
 {

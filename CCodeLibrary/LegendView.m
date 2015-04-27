@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "LegendView.h"
+#import "UserDefaults.h"
 
 @implementation LegendView
 {
