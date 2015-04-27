@@ -3,6 +3,7 @@
 
 #import "CircleView.h"
 #import "GSSiDefs.h"
+#import "PriorityLocation.h"
 
 @implementation CircleView
 

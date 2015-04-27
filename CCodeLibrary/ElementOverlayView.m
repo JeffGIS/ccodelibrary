@@ -1,6 +1,7 @@
 //  ElementOverlayView.m
 //  CCodeLibrary
 
+#import "CCodeLibrary.h"
 #import "ElementOverlayView.h"
 
 @implementation ElementOverlayView

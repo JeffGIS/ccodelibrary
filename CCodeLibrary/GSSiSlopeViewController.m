@@ -2,7 +2,7 @@
 //  CCodeLibrary
 
 #import "GSSiSlopeViewController.h"
-
+#import "CCodeLibrary.h"
 #define SLOPE_STABILITY 0
 #define SLOPE_BEGIN 1
 #define SHORT_COUNT 50
