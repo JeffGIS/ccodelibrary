@@ -2,6 +2,8 @@
 //  CCodeLibrary
 
 #import "GSSiSlopeViewController.h"
+#import "CRAPI.h"
+#import "MathUtil.h"
 
 #define SLOPE_STABILITY 0
 #define SLOPE_BEGIN 1
