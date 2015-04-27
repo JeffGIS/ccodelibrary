@@ -9,7 +9,7 @@
 @protocol NVHeadingViewControllerDelegate <NSObject>
 
 - (void)headingViewController:(NVHeadingViewController *)headingViewController
-             didReturnHeading:(NSInteger)heading;
+             didReturnHeading:(CGFloat)heading;
 
 - (void)headingViewControllerDidCancel:(NVHeadingViewController *)headingViewController;
 

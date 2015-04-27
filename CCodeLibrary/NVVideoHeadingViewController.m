@@ -182,15 +182,8 @@ typedef NS_ENUM(NSInteger, NVVideoHeadingStatus)
     {
         if (_delegate)
         {
-            NSDecimal dIn = [NSNumber numberWithDouble:_avgHeading].decimalValue;
-            NSDecimal dOut;
-            NSDecimalRound(&dOut, &dIn, 0, NSRoundPlain);
-            
-            NSDecimalNumber *result = [NSDecimalNumber decimalNumberWithDecimal:dOut];
-            NSInteger resultInteger = result.integerValue;
-            
             [_delegate videoHeadingViewController:self
-                                 didReturnHeading:resultInteger];
+                                 didReturnHeading:_avgHeading];
         }
     }
     

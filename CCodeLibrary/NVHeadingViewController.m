@@ -215,7 +215,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
             NSInteger resultInteger = result.integerValue;
             
             [_delegate headingViewController:self
-                            didReturnHeading:resultInteger];
+                            didReturnHeading:_avgHeading];
         }
     }
     

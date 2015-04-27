@@ -9,7 +9,7 @@
 @protocol NVVideoHeadingViewControllerDelegate <NSObject>
 
 - (void)videoHeadingViewController:(NVVideoHeadingViewController *)videoHeadingViewController
-                  didReturnHeading:(NSInteger)heading;
+                  didReturnHeading:(CGFloat)heading;
 
 - (void)videoHeadingViewControllerDidCancel:(NVVideoHeadingViewController *)videoHeadingViewController;
 
