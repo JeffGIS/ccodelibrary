@@ -6,8 +6,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "CCodeTypes.h"
-#import "MPIntersection.h"
-#import "IntersectionPoint.h"
+//#import "MPIntersection.h"
+//#import "IntersectionPoint.h"
 #import "FTPDataPull.h"
 #import "FTPDataPush.h"
 #import "CustomAlert.h"
@@ -16,7 +16,7 @@
 #import "NetworkManager.h"
 #import "TileGraphics.h"
 #import "UserDefaults.h"
-#import "MPIntersection.h"
+//#import "MPIntersection.h"
 #import "PlacesInfo.h"
 #import "GeoMasterServer.h"
 #import "compress.h"
