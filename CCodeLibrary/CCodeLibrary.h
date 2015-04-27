@@ -6,7 +6,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "CCodeTypes.h"
-#import "MPIntersection.h"
 #import "IntersectionPoint.h"
 #import "FTPDataPull.h"
 #import "FTPDataPush.h"
