@@ -143,16 +143,11 @@ typedef NS_ENUM(NSInteger, GMMSetting)
     GMMSettingBoundaries,
 };
 
-typedef NS_ENUM(NSInteger, PropertyTableViewSetting)
+typedef NS_ENUM(NSInteger, GMLayerSetting)
 {
-    PropertyTableViewSettingDefault,
-    PropertyTableViewSettingOptions,
-    PropertyTableViewSettingPropertyReport,
-    PropertyTableViewSettingHCWebsite,
-    PropertyTableViewSettingStreetView,
-    PropertyTableViewSettingCensusArea,
-    PropertyTableViewSettingPropList,
-    PropertyTableViewSettingDestinations,
+    GMLayerSettingOn,
+    GMLayerSettingOff,
+    GMLayerSettingAuto,
 };
 
 typedef NS_ENUM(NSInteger, MapViewScreenSetting)
@@ -162,72 +157,6 @@ typedef NS_ENUM(NSInteger, MapViewScreenSetting)
     MapViewScreenSettingTriScreen,
     MapViewScreenSettingPlatView,
     MapViewScreenSettingSplitBottomScreen,
-};
-
-typedef NS_ENUM(NSInteger, CensusZoomSetting)
-{
-    CensusZoomSettingCancel,
-    CensusZoomSettingBlock,
-    CensusZoomSettingBlockGroup,
-    CensusZoomSettingTract,
-};
-
-typedef NS_ENUM(NSInteger, SewerPipeSetting)
-{
-    SewerPipeSettingDefault,
-    SewerPipeSettingAttributes,
-    SewerPipeSettingTraceUp,
-    SewerPipeSettingTraceDown,
-    SewerPipeSettingRemoveTrace,
-    SewerPipeSettingUpdateCleanDate,
-    SewerPipeSettingUpdateNotes,
-};
-
-typedef NS_ENUM(NSInteger, CustomSetting)
-{
-    CustomSettingDefault,
-    CustomSettingSnapToNode,
-    CustomSettingSnapToLine,
-};
-
-typedef NS_ENUM(NSInteger, AlleyWallSetting)
-{
-    AlleyWallSettingDefault,
-    AlleyWallSettingMoveWallPoint,
-    AlleyWallSettingDeleteWallPoint,
-    AlleyWallSettingEditWallAttributes,
-};
-
-typedef NS_ENUM(NSInteger, MapTypeSetting)
-{
-    MapTypeSettingStandard,
-    MapTypeSettingHybrid,
-};
-
-typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
-{
-    MarkerInfoWindowTypeDefault,
-    MarkerInfoWindowTypePID,
-    MarkerInfoWindowTypeStormSewer,
-    MarkerInfoWindowTypeAlleyWall,
-    MarkerInfoWindowTypeCustom,
-};
-
-typedef NS_ENUM(NSInteger, DigitizationMode)
-{
-    DigitizationModeCustom,
-    DigitizationModeAlleyWallNew,
-    DigitizationModeAlleyWallMove,
-    DigitizationModeSewer,
-    DigitizationModeProperty,
-    DigitizationModeCurbRamps,
-};
-
-typedef NS_ENUM(NSInteger, GMLayerSetting)
-{
-    GMLayerSettingOn,
-    GMLayerSettingOff,
-    GMLayerSettingAuto,
 };
 
 @end
