@@ -3,6 +3,8 @@
 
 #import "CCodeLibrary.h"
 #import "ElementOverlayView.h"
+#import "CRAPI.h"
+#import "MathUtil.h"
 
 @implementation ElementOverlayView
 
