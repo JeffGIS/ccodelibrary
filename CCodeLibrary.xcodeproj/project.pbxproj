@@ -120,6 +120,9 @@
 		A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D952B11A96D484008B9156 /* GSSiAlertController.m */; };
 		A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */; };
 		A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */; };
+		A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E792831AEFE989005DA4BB /* NVLegendView.m */; };
+		A9E792851AEFEB89005DA4BB /* NVLegendView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E792821AEFE989005DA4BB /* NVLegendView.h */; };
+		A9E792861AEFEB91005DA4BB /* NVLargeAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */; };
 		A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
 		EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C21219ED378400F0688B /* FTPDataPush.m */; };
@@ -164,6 +167,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A9E792861AEFEB91005DA4BB /* NVLargeAlertView.h in CopyFiles */,
+				A9E792851AEFEB89005DA4BB /* NVLegendView.h in CopyFiles */,
 				A99C893E1AEDE1E200A0856F /* GSSiDefs.h in CopyFiles */,
 				A99C893A1AEDE16C00A0856F /* PointInAreaClass.h in CopyFiles */,
 				A99C89391AEDE16700A0856F /* SharedDefaults.h in CopyFiles */,
@@ -322,6 +327,8 @@
 		A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RampTypeView.m; sourceTree = "<group>"; };
 		A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVLargeAlertView.h; sourceTree = "<group>"; };
 		A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVLargeAlertView.m; sourceTree = "<group>"; };
+		A9E792821AEFE989005DA4BB /* NVLegendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVLegendView.h; sourceTree = "<group>"; };
+		A9E792831AEFE989005DA4BB /* NVLegendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVLegendView.m; sourceTree = "<group>"; };
 		A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVVideoHeadingViewController.h; sourceTree = "<group>"; };
 		A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVVideoHeadingViewController.m; sourceTree = "<group>"; };
 		EB05C20E19EA999F00F0688B /* ElementOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementOverlayView.h; sourceTree = "<group>"; };
@@ -527,6 +534,8 @@
 				A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */,
 				A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */,
 				A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */,
+				A9E792821AEFE989005DA4BB /* NVLegendView.h */,
+				A9E792831AEFE989005DA4BB /* NVLegendView.m */,
 				A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */,
 				A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */,
 				A91F36921AE9739400602BCE /* NVSliderView.h */,
@@ -748,6 +757,7 @@
 				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,
 				A94A771319F807570062906E /* Facility.m in Sources */,
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
+				A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */,
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				A9735AF419E77B6800894359 /* Reachability.m in Sources */,

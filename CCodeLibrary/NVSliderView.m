@@ -192,16 +192,26 @@
 
 - (void)hideSliderView:(BOOL)animated
 {
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         self.alpha = 0.0;
-                         _overlayView.alpha = 0.0;
-                         _tabBar.alpha = 1.0;
-                     } completion:^(BOOL finished) {
-                         _tabBar.userInteractionEnabled = YES;
-                         [_overlayView removeFromSuperview];
-                         [self removeFromSuperview];
-                     }];
+    if (animated)
+    {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             self.alpha = 0.0;
+                             _overlayView.alpha = 0.0;
+                             _tabBar.alpha = 1.0;
+                         } completion:^(BOOL finished) {
+                             _tabBar.userInteractionEnabled = YES;
+                             [_overlayView removeFromSuperview];
+                             [self removeFromSuperview];
+                         }];
+    }
+    
+    else
+    {
+        _tabBar.userInteractionEnabled = YES;
+        [_overlayView removeFromSuperview];
+        [self removeFromSuperview];
+    }
 }
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration

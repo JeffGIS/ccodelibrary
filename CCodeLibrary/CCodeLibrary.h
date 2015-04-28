@@ -50,6 +50,7 @@
 #import "NVSliderView.h"
 #import "NVVideoHeadingViewController.h"
 #import "GSSiDefs.h"
+#import "NVLegendView.h"
 
 @interface CCodeLibrary : NSObject
 
