@@ -10,6 +10,8 @@
 - (void)sliderView:(NVSliderController *)sliderView
     didReturnValue:(CGFloat)value;
 
+- (void)sliderViewDidCancel:(NVSliderController *)sliderView;
+
 @end
 
 @interface NVSliderController : UIView
