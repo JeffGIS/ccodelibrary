@@ -84,8 +84,6 @@
         
         [ticView addSubview:midHighTic];
         
-        NSLog(@"%f,%f,%f,%f,%f", lowTic.center.x, midLowTic.center.x, middleTic.center.x, midHighTic.center.x, highTic.center.x);
-        
         CGFloat capHeight = 29.0;
         CGFloat capWidth = (capHeight / 2.0);
         
