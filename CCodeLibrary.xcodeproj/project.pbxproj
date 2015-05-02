@@ -116,6 +116,7 @@
 		A9C525D01A3B59880056711F /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C525CF1A3B59880056711F /* Colors.m */; };
 		A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */; };
 		A9D269E61AE562E100A5C38E /* TableViewCellLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D269E51AE562E100A5C38E /* TableViewCellLabel.m */; };
+		A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3A06B1AF539E600E0D834 /* NVSliderController.m */; };
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
 		A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D952B11A96D484008B9156 /* GSSiAlertController.m */; };
 		A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */; };
@@ -319,6 +320,8 @@
 		A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPriorityLocations.m; sourceTree = "<group>"; };
 		A9D269E41AE562E100A5C38E /* TableViewCellLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewCellLabel.h; sourceTree = "<group>"; };
 		A9D269E51AE562E100A5C38E /* TableViewCellLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewCellLabel.m; sourceTree = "<group>"; };
+		A9D3A06A1AF539E600E0D834 /* NVSliderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSliderController.h; sourceTree = "<group>"; };
+		A9D3A06B1AF539E600E0D834 /* NVSliderController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSliderController.m; sourceTree = "<group>"; };
 		A9D5A8AE1A0D0A7A00314E8B /* GSSiSlopeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiSlopeViewController.h; sourceTree = "<group>"; };
 		A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiSlopeViewController.m; sourceTree = "<group>"; };
 		A9D952B01A96D484008B9156 /* GSSiAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiAlertController.h; sourceTree = "<group>"; };
@@ -538,6 +541,8 @@
 				A9E792831AEFE989005DA4BB /* NVLegendView.m */,
 				A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */,
 				A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */,
+				A9D3A06A1AF539E600E0D834 /* NVSliderController.h */,
+				A9D3A06B1AF539E600E0D834 /* NVSliderController.m */,
 				A91F36921AE9739400602BCE /* NVSliderView.h */,
 				A91F36931AE9739400602BCE /* NVSliderView.m */,
 				A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */,
@@ -757,6 +762,7 @@
 				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,
 				A94A771319F807570062906E /* Facility.m in Sources */,
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
+				A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */,
 				A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */,
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
