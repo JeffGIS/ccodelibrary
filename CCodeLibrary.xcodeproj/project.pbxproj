@@ -117,6 +117,7 @@
 		A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */; };
 		A9D269E61AE562E100A5C38E /* TableViewCellLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D269E51AE562E100A5C38E /* TableViewCellLabel.m */; };
 		A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3A06B1AF539E600E0D834 /* NVSliderController.m */; };
+		A9D3A06D1AF53A4700E0D834 /* NVSliderController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D3A06A1AF539E600E0D834 /* NVSliderController.h */; };
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
 		A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D952B11A96D484008B9156 /* GSSiAlertController.m */; };
 		A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */; };
@@ -168,6 +169,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A9D3A06D1AF53A4700E0D834 /* NVSliderController.h in CopyFiles */,
 				A9E792861AEFEB91005DA4BB /* NVLargeAlertView.h in CopyFiles */,
 				A9E792851AEFEB89005DA4BB /* NVLegendView.h in CopyFiles */,
 				A99C893E1AEDE1E200A0856F /* GSSiDefs.h in CopyFiles */,
