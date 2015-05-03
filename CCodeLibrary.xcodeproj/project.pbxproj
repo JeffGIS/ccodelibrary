@@ -38,6 +38,7 @@
 		A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9735AF019E779DF00894359 /* SystemConfiguration.framework */; };
 		A9735AF419E77B6800894359 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A9735AF319E77B6800894359 /* Reachability.m */; };
 		A97407C61AF6A63900B2FF30 /* NVProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97407C51AF6A63900B2FF30 /* NVProgressView.m */; };
+		A97407C71AF6A71C00B2FF30 /* NVProgressView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A97407C41AF6A63900B2FF30 /* NVProgressView.h */; };
 		A97867341A521934000A9BB8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A97867331A521934000A9BB8 /* MapKit.framework */; };
 		A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = A97867361A5219FD000A9BB8 /* PriorityLocation.m */; };
 		A97B72781ADB4912001ACFAE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A97B72771ADB4912001ACFAE /* AVFoundation.framework */; };
@@ -170,6 +171,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A97407C71AF6A71C00B2FF30 /* NVProgressView.h in CopyFiles */,
 				A9D3A06D1AF53A4700E0D834 /* NVSliderController.h in CopyFiles */,
 				A9E792861AEFEB91005DA4BB /* NVLargeAlertView.h in CopyFiles */,
 				A9E792851AEFEB89005DA4BB /* NVLegendView.h in CopyFiles */,

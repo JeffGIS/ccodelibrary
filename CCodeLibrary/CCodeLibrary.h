@@ -53,6 +53,7 @@
 #import "NVLegendView.h"
 #import "NVLargeAlertView.h"
 #import "NVSliderController.h"
+#import "NVProgressView.h"
 
 @interface CCodeLibrary : NSObject
 
