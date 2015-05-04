@@ -207,14 +207,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     {
         if (_delegate)
         {
-            NSDecimal dIn = [NSNumber numberWithDouble:_avgHeading].decimalValue;
-            NSDecimal dOut;
-            NSDecimalRound(&dOut, &dIn, 0, NSRoundPlain);
-            
-            NSDecimalNumber *result = [NSDecimalNumber decimalNumberWithDecimal:dOut];
-            NSInteger resultInteger = result.integerValue;
-            
-            [_delegate headingViewController:self
+           [_delegate headingViewController:self
                             didReturnHeading:_avgHeading];
         }
     }

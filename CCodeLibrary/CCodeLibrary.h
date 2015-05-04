@@ -54,6 +54,7 @@
 #import "NVLargeAlertView.h"
 #import "NVSliderController.h"
 #import "NVProgressView.h"
+#import "NVPhotoViewController.h"
 
 @interface CCodeLibrary : NSObject
 

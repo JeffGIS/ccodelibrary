@@ -29,6 +29,8 @@
 		A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F6E8C1AE0A73B00822F42 /* HelpButton.m */; };
 		A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = A92382AC1AD986010027659B /* GSSiBumpDetector.m */; };
 		A926F21119D9FC18007C392A /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = A926F21019D9FC18007C392A /* CircleView.m */; };
+		A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */; };
+		A92E0BA81AF7A461008A44AC /* NVPhotoViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */; };
 		A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770C19F7F9F40062906E /* SharedDefaults.m */; };
 		A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770F19F8045C0062906E /* FacilitiesDatabase.m */; };
 		A94A771319F807570062906E /* Facility.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A771219F807570062906E /* Facility.m */; };
@@ -171,6 +173,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A92E0BA81AF7A461008A44AC /* NVPhotoViewController.h in CopyFiles */,
 				A97407C71AF6A71C00B2FF30 /* NVProgressView.h in CopyFiles */,
 				A9D3A06D1AF53A4700E0D834 /* NVSliderController.h in CopyFiles */,
 				A9E792861AEFEB91005DA4BB /* NVLargeAlertView.h in CopyFiles */,
@@ -286,6 +289,8 @@
 		A92382AC1AD986010027659B /* GSSiBumpDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiBumpDetector.m; sourceTree = "<group>"; };
 		A926F20F19D9FC18007C392A /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
 		A926F21019D9FC18007C392A /* CircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleView.m; sourceTree = "<group>"; };
+		A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPhotoViewController.h; sourceTree = "<group>"; };
+		A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPhotoViewController.m; sourceTree = "<group>"; };
 		A94A770B19F7F9F40062906E /* SharedDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedDefaults.h; sourceTree = "<group>"; };
 		A94A770C19F7F9F40062906E /* SharedDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedDefaults.m; sourceTree = "<group>"; };
 		A94A770E19F8045C0062906E /* FacilitiesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacilitiesDatabase.h; sourceTree = "<group>"; };
@@ -546,6 +551,8 @@
 				A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */,
 				A9E792821AEFE989005DA4BB /* NVLegendView.h */,
 				A9E792831AEFE989005DA4BB /* NVLegendView.m */,
+				A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */,
+				A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */,
 				A97407C41AF6A63900B2FF30 /* NVProgressView.h */,
 				A97407C51AF6A63900B2FF30 /* NVProgressView.m */,
 				A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */,
@@ -771,6 +778,7 @@
 				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,
 				A94A771319F807570062906E /* Facility.m in Sources */,
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
+				A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */,
 				A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */,
 				A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */,
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
