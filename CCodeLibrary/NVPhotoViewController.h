@@ -3,7 +3,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NVPhotoViewController : UIViewController
+@interface NVPhotoViewController : UIViewController <UIGestureRecognizerDelegate>
 
 + (NVPhotoViewController *)viewerWithPhotosFromDirectory:(NSString *)directory;
 

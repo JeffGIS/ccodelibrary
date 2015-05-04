@@ -10,6 +10,8 @@
 @property (nonatomic) UIImageView *photoView;
 @property (nonatomic) NSString *directory;
 @property (nonatomic) NSArray *imageArray;
+@property (nonatomic) NSInteger imageIndex;
+@property (nonatomic) UILabel *photoLabel;
 
 @end
 
@@ -66,18 +68,44 @@
         _imageArray = [directoryContents filteredArrayUsingPredicate:filter];
     }
     
-    NSLog(@"%@,%@", _imageArray, directoryContents);
-    
     _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 100.0, self.view.frame.size.width,
                                                                (self.view.frame.size.height - 200.0))];
     
-    _photoView.backgroundColor = UIColor.whiteColor;
     _photoView.contentScaleFactor = UIViewContentModeScaleAspectFit;
+    _photoView.userInteractionEnabled = YES;
     
-    _photoView.image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@",
-                                                         _directory, _imageArray.firstObject]];
+    _imageIndex = 0;
     
     [self.view addSubview:_photoView];
+    
+    if (_imageArray.count > 1)
+    {
+        UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                                        action:@selector(imageLeftSwiped:)];
+        
+        leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
+        
+        [_photoView addGestureRecognizer:leftSwipe];
+        
+        UISwipeGestureRecognizer *rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                                         action:@selector(imageRightSwiped:)];
+        
+        rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
+        
+        [_photoView addGestureRecognizer:rightSwipe];
+    }
+    
+    _photoLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, self.view.frame.size.height - 80.0,
+                                                            self.view.frame.size.width - 40.0, 60.0)];
+    
+    _photoLabel.backgroundColor = UIColor.clearColor;
+    _photoLabel.textColor = UIColor.whiteColor;
+    _photoLabel.textAlignment = NSTextAlignmentCenter;
+    _photoLabel.font = [UIFont boldSystemFontOfSize:48.0];
+    
+    [self.view addSubview:_photoLabel];
+    
+    [self updateImage];
 }
 
 - (void)didReceiveMemoryWarning
@@ -89,6 +117,43 @@
 {
     [self dismissViewControllerAnimated:YES
                              completion:nil];
+}
+
+- (void)imageLeftSwiped:(UISwipeGestureRecognizer *)gesture
+{
+    if (_imageIndex == (_imageArray.count - 1))
+        _imageIndex = 0;
+    
+    else
+        _imageIndex++;
+    
+    [self updateImage];
+}
+
+- (void)imageRightSwiped:(UISwipeGestureRecognizer *)gesture
+{
+    if (_imageIndex == 0)
+        _imageIndex = (_imageArray.count - 1);
+    
+    else
+        _imageIndex--;
+    
+    [self updateImage];
+}
+
+- (void)updateImage
+{
+    if (_imageArray.count)
+    {
+        _photoView.image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@",
+                                                             _directory, _imageArray[_imageIndex]]];
+        
+        _photoLabel.text = [NSString stringWithFormat:@"Photo %ld of %lu",
+                            (_imageIndex + 1), (unsigned long)_imageArray.count];
+    }
+    
+    else
+        _photoLabel.text = @"No photos exist for this item";
 }
 
 @end
