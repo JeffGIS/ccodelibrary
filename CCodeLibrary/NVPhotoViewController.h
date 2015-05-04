@@ -5,4 +5,6 @@
 
 @interface NVPhotoViewController : UIViewController
 
++ (NVPhotoViewController *)viewerWithPhotosFromDirectory:(NSString *)directory;
+
 @end

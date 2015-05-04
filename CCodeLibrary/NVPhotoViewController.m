@@ -8,10 +8,19 @@
 
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) UIImageView *photoView;
+@property (nonatomic) NSString *directory;
+@property (nonatomic) NSArray *imageArray;
 
 @end
 
 @implementation NVPhotoViewController
+
++ (NVPhotoViewController *)viewerWithPhotosFromDirectory:(NSString *)directory
+{
+    NVPhotoViewController *photoViewer = [[NVPhotoViewController alloc] init];
+    photoViewer.directory = directory;
+    return photoViewer;
+}
 
 - (void)loadView
 {
@@ -42,11 +51,31 @@
     
     [self.view addSubview:_returnButton];
     
-    _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, 100.0,
-                                                               (self.view.frame.size.width - 40.0),
+    NSFileManager *fileManager = NSFileManager.defaultManager;
+    NSError *error;
+    
+    NSArray *directoryContents = [fileManager contentsOfDirectoryAtPath:_directory
+                                                                  error:&error];
+    
+    if (error)
+        NSLog(@"File Directory Error:%@", error.localizedDescription);
+    
+    else
+    {
+        NSPredicate *filter = [NSPredicate predicateWithFormat:@"self ENDSWITH '.jpg'"];
+        _imageArray = [directoryContents filteredArrayUsingPredicate:filter];
+    }
+    
+    NSLog(@"%@,%@", _imageArray, directoryContents);
+    
+    _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 100.0, self.view.frame.size.width,
                                                                (self.view.frame.size.height - 200.0))];
     
     _photoView.backgroundColor = UIColor.whiteColor;
+    _photoView.contentScaleFactor = UIViewContentModeScaleAspectFit;
+    
+    _photoView.image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@",
+                                                         _directory, _imageArray.firstObject]];
     
     [self.view addSubview:_photoView];
 }
