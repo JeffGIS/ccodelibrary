@@ -114,6 +114,7 @@
           usingProjection:(GMSProjection *)projection;
 
 - (dbounds) getPickApBoundsAtPoint:(LLPOINT *)pt;
+- (dbounds) getBoundsAtPoint:(CLLocationCoordinate2D*)pt andDist:(CGFloat)meters;
 
 
 @end

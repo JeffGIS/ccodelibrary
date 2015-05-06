@@ -605,12 +605,27 @@
     return outBounds;
 }
 
+- (dbounds) getBoundsAtPoint:(CLLocationCoordinate2D*)pt andDist:(CGFloat)meters
+{
+    dbounds bnds;
+    
+    DPOINT pt1 = NewLatLong(pt->latitude, pt->longitude, meters, 0);
+    double pickapY = pt1.y - pt->latitude;
+    DPOINT pt2 = NewLatLong(pt->latitude, pt->longitude, meters, HALFPI);
+    double pickapX = pt2.x - pt->longitude;
+    bnds.xmn = (pt->longitude - pickapX);
+    bnds.xmx = (pt->longitude + pickapX);
+    bnds.ymn = (pt->latitude - pickapY);
+    bnds.ymx = (pt->latitude + pickapY);
+    return bnds;
+}
+
 - (dbounds) getPickApBoundsAtPoint:(LLPOINT*)pt
 {
     dbounds bnds;
-
+    
     CGFloat pickApMeters = (_pickApInPixels * GroundResolution(pt->lat, (int)_currentZoom));
-
+    
     DPOINT pt1 = NewLatLong(pt->lat, pt->lon, pickApMeters, 0);
     double pickapY = pt1.y - pt->lat;
     DPOINT pt2 = NewLatLong(pt->lat, pt->lon, pickApMeters, HALFPI);
