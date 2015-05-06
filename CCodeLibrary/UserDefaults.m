@@ -954,6 +954,47 @@ static UserDefaults *_defaults;
     return string;
 }
 
+- (NSString *)includeTextBeforeComma:(NSString *)string;
+{
+    NSRange range = [string rangeOfString:@","];
+    
+    if (range.location != NSNotFound)
+        string = [string substringToIndex:(range.location)];
+    
+    return string;
+}
+
+- (NSString *)includeTextBeforeSlash:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"/"];
+    
+    if (range.location != NSNotFound)
+        string = [string substringToIndex:(range.location)];
+    
+    return string;
+}
+
+- (NSString *)includeTextAfterSlash:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"/"];
+    
+    if (range.location != NSNotFound)
+        string = [string substringFromIndex:(range.location + 1)];
+    
+    return string;
+}
+
+- (NSString *)includeTextBeforeLastSlash:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@"/"
+                                  options:NSBackwardsSearch];
+    
+    if (range.location != NSNotFound)
+        string = [string substringToIndex:range.location];
+    
+    return string;
+}
+
 - (NSString *)addSpaceAfterComma:(NSString *)string
 {
     NSMutableString *mutableString = [NSMutableString stringWithString:string];
@@ -1152,6 +1193,25 @@ static UserDefaults *_defaults;
         UIGraphicsEndImageContext();
         return image;
     }
+}
+
+- (NSString *)reverseString:(NSString *)string;
+{
+    if (!string)
+        return nil;
+    
+    if ([string isEqualToString:@""])
+        return @"";
+    
+    NSMutableString *reversedString = [[NSMutableString alloc] init];
+    
+    [string enumerateSubstringsInRange:NSMakeRange(0, string.length)
+                               options:NSStringEnumerationReverse|NSStringEnumerationByComposedCharacterSequences
+                            usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+        [reversedString appendString:substring];
+    }];
+    
+    return reversedString;
 }
 
 @end

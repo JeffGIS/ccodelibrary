@@ -27,6 +27,8 @@
 		A90FC1F41A07F593003AF763 /* CalibrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A90FC1F31A07F593003AF763 /* CalibrationViewController.m */; };
 		A91F36941AE9739400602BCE /* NVSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F36931AE9739400602BCE /* NVSliderView.m */; };
 		A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F6E8C1AE0A73B00822F42 /* HelpButton.m */; };
+		A9237F851AFA929200D10E96 /* NVTextAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = A9237F841AFA929200D10E96 /* NVTextAlert.m */; };
+		A9237F861AFA92BA00D10E96 /* NVTextAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9237F831AFA929200D10E96 /* NVTextAlert.h */; };
 		A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = A92382AC1AD986010027659B /* GSSiBumpDetector.m */; };
 		A926F21119D9FC18007C392A /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = A926F21019D9FC18007C392A /* CircleView.m */; };
 		A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */; };
@@ -173,6 +175,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A9237F861AFA92BA00D10E96 /* NVTextAlert.h in CopyFiles */,
 				A92E0BA81AF7A461008A44AC /* NVPhotoViewController.h in CopyFiles */,
 				A97407C71AF6A71C00B2FF30 /* NVProgressView.h in CopyFiles */,
 				A9D3A06D1AF53A4700E0D834 /* NVSliderController.h in CopyFiles */,
@@ -285,6 +288,8 @@
 		A91F36931AE9739400602BCE /* NVSliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSliderView.m; sourceTree = "<group>"; };
 		A91F6E8B1AE0A73B00822F42 /* HelpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpButton.h; sourceTree = "<group>"; };
 		A91F6E8C1AE0A73B00822F42 /* HelpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpButton.m; sourceTree = "<group>"; };
+		A9237F831AFA929200D10E96 /* NVTextAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextAlert.h; sourceTree = "<group>"; };
+		A9237F841AFA929200D10E96 /* NVTextAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextAlert.m; sourceTree = "<group>"; };
 		A92382AB1AD986010027659B /* GSSiBumpDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiBumpDetector.h; sourceTree = "<group>"; };
 		A92382AC1AD986010027659B /* GSSiBumpDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiBumpDetector.m; sourceTree = "<group>"; };
 		A926F20F19D9FC18007C392A /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
@@ -561,6 +566,8 @@
 				A9D3A06B1AF539E600E0D834 /* NVSliderController.m */,
 				A91F36921AE9739400602BCE /* NVSliderView.h */,
 				A91F36931AE9739400602BCE /* NVSliderView.m */,
+				A9237F831AFA929200D10E96 /* NVTextAlert.h */,
+				A9237F841AFA929200D10E96 /* NVTextAlert.m */,
 				A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */,
 				A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */,
 				A99050891ACB947000C6AAAF /* SpreadsheetView.h */,
@@ -816,6 +823,7 @@
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
+				A9237F851AFA929200D10E96 /* NVTextAlert.m in Sources */,
 				EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */,
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
 				A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */,

@@ -63,6 +63,10 @@
 - (NSString *)includeTextAfterPipe:(NSString *)string;
 - (NSString *)includeTextAfterFirstColon:(NSString *)string;
 - (NSString *)includeTextBeforeColon:(NSString *)string;
+- (NSString *)includeTextBeforeComma:(NSString *)string;
+- (NSString *)includeTextBeforeSlash:(NSString *)string;
+- (NSString *)includeTextAfterSlash:(NSString *)string;
+- (NSString *)includeTextBeforeLastSlash:(NSString *)string;
 - (NSString *)addSpaceAfterComma:(NSString *)string;
 - (NSString *)addSpaceAfterColon:(NSString *)string;
 - (NSString *)removeOpeningSpaces:(NSString *)string;
@@ -130,5 +134,7 @@
 
 - (UIImage *)imageWithColor:(UIColor *)color
                    andFrame:(CGRect)frame;
+
+- (NSString *)reverseString:(NSString *)string;
 
 @end

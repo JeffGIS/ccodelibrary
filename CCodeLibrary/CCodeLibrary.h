@@ -55,6 +55,7 @@
 #import "NVSliderController.h"
 #import "NVProgressView.h"
 #import "NVPhotoViewController.h"
+#import "NVTextAlert.h"
 
 @interface CCodeLibrary : NSObject
 
