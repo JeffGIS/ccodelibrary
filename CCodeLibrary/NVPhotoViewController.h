@@ -5,6 +5,7 @@
 
 @interface NVPhotoViewController : UIViewController <UIGestureRecognizerDelegate>
 
-+ (NVPhotoViewController *)viewerWithPhotosFromDirectory:(NSString *)directory;
++ (NVPhotoViewController *)viewerWithPhotosFromDirectory:(NSString *)directory
+                                          withIdentifier:(NSString *)identifier;
 
 @end

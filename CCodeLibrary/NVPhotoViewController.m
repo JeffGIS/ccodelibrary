@@ -8,7 +8,7 @@
 
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) UIImageView *photoView;
-@property (nonatomic) NSString *directory;
+@property (nonatomic, copy) NSString *directory, *identifier;
 @property (nonatomic) NSArray *imageArray;
 @property (nonatomic) NSInteger imageIndex;
 @property (nonatomic) UILabel *photoLabel;
@@ -18,9 +18,11 @@
 @implementation NVPhotoViewController
 
 + (NVPhotoViewController *)viewerWithPhotosFromDirectory:(NSString *)directory
+                                          withIdentifier:(NSString *)identifier
 {
     NVPhotoViewController *photoViewer = [[NVPhotoViewController alloc] init];
     photoViewer.directory = directory;
+    photoViewer.identifier = identifier;
     return photoViewer;
 }
 
