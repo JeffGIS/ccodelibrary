@@ -64,9 +64,20 @@
     if (error)
         NSLog(@"File Directory Error:%@", error.localizedDescription);
     
-    else
+    else if (directoryContents.count)
     {
-        NSPredicate *filter = [NSPredicate predicateWithFormat:@"self ENDSWITH '.jpg'"];
+        NSString *string1 = [NSString stringWithFormat:@"AlleyWallInventory_%@", _identifier];
+        NSString *string2 = [NSString stringWithFormat:@"UploadedAlleyWallInventory_%@", _identifier];
+        
+        NSPredicate *jpgFilter = [NSPredicate predicateWithFormat:
+                                  @"self ENDSWITH[cd] '.jpg'"];
+        
+        NSPredicate *idFilter = [NSPredicate predicateWithFormat:
+                                 @"self BEGINSWITH[cd] %@ OR self BEGINSWITH[cd] %@", string1, string2];
+        
+        NSPredicate *filter = [NSCompoundPredicate andPredicateWithSubpredicates:
+                               [NSArray arrayWithObjects:jpgFilter, idFilter, nil]];
+        
         _imageArray = [directoryContents filteredArrayUsingPredicate:filter];
     }
     

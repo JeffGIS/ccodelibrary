@@ -56,7 +56,6 @@
 #import "NVProgressView.h"
 #import "NVPhotoViewController.h"
 #import "NVTextAlert.h"
-#import "JSSingleton.h"
 
 @interface CCodeLibrary : NSObject
 
