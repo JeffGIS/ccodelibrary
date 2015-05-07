@@ -26,7 +26,7 @@
         
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.png", _documentsDirectory];
-        
+        _organizationName = @"MPLSPubWorks";
         //_documentsDirectory = UserDefaults.defaults.sharedFilePath;
     }
     
@@ -47,6 +47,15 @@
     return sharedInstance;
 }
 
+- (NSString*)sharedOutputDirectory
+{
+    NSString* outdir = [NSString stringWithFormat:@"%@/OutputFiles",self.sharedFilePath];
+    [NSFileManager.defaultManager createDirectoryAtPath:outdir
+                            withIntermediateDirectories:YES
+                                             attributes:nil
+                                                  error:nil];
+    return outdir;
+}
 - (int)currentGeoid
 {
     return _currentGeoidValue;
