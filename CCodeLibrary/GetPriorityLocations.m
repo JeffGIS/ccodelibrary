@@ -210,58 +210,59 @@ static GetPriorityLocations *_getLocations;
                 
                 [search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error) {
                     if (error)
-                        NSLog(@"MKLocalSearch Error (%@:%i:%i) - %@", _keywords[ptc], i, j, error.localizedDescription);
-                    
                     {
-                        _popoverView.popoverLabel.text = [NSString stringWithFormat:@"Importing\n%@", _keywords[ptc]];
+                        NSLog(@"MKLocalSearch Error (%@:%i:%i) - %@",
+                              _keywords[ptc], i, j, error.localizedDescription);
+                    }
+                    
+                    _popoverView.popoverLabel.text = [NSString stringWithFormat:@"Importing\n%@", _keywords[ptc]];
+                    
+                    for (MKMapItem *item in response.mapItems)
+                    {
+                        PriorityLocation *pLoc = [[PriorityLocation alloc] init];
+                        pLoc.coordinate = [(CLCircularRegion *)item.placemark.region center];
                         
-                        for (MKMapItem *item in response.mapItems)
+                        DPOINT dp;
+                        dp.x = pLoc.coordinate.longitude;
+                        dp.y = pLoc.coordinate.latitude;
+                        
+                        //if ([pia DPointInArea:&dp])
                         {
-                            PriorityLocation *pLoc = [[PriorityLocation alloc] init];
-                            pLoc.coordinate = [(CLCircularRegion *)item.placemark.region center];
+                            pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
+                            pLoc.offset = DEFAULT_OFFSET;
+                            pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name.capitalizedString];
+                            NSString *latitude = [NSString stringWithFormat:@"%f", pLoc.coordinate.latitude];
                             
-                            DPOINT dp;
-                            dp.x = pLoc.coordinate.longitude;
-                            dp.y = pLoc.coordinate.latitude;
-                            
-                            if ([pia DPointInArea:&dp])
+                            if ((![namesArray containsObject:pLoc.name]) || (![latitudesArray containsObject:latitude]))
                             {
-                                pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
-                                pLoc.offset = DEFAULT_OFFSET;
-                                pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name.capitalizedString];
-                                NSString *latitude = [NSString stringWithFormat:@"%f", pLoc.coordinate.latitude];
+                                pLoc.type = [self assignTypeForPtc:ptc];
                                 
-                                if ((![namesArray containsObject:pLoc.name]) || (![latitudesArray containsObject:latitude]))
+                                NSInteger index = 0;
+                                
+                                if (namesArray.count > 0)
                                 {
-                                    pLoc.type = [self assignTypeForPtc:ptc];
+                                    NSComparisonResult result = [pLoc.name compare:[namesArray objectAtIndex:index]
+                                                                           options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
                                     
-                                    NSInteger index = 0;
-                                    
-                                    if (namesArray.count > 0)
+                                    while (result == NSOrderedDescending)
                                     {
-                                        NSComparisonResult result = [pLoc.name compare:[namesArray objectAtIndex:index]
-                                                                               options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+                                        index++;
                                         
-                                        while (result == NSOrderedDescending)
-                                        {
-                                            index++;
-                                            
-                                            if (index == namesArray.count)
-                                                break;
-                                            
-                                            result = [pLoc.name compare:[namesArray objectAtIndex:index]
-                                                                options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
-                                        }
+                                        if (index == namesArray.count)
+                                            break;
+                                        
+                                        result = [pLoc.name compare:[namesArray objectAtIndex:index]
+                                                            options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
                                     }
-                                    
-                                    [latitudesArray addObject:latitude];
-                                    
-                                    [namesArray insertObject:pLoc.name
-                                                     atIndex:index];
-                                    
-                                    [locationArray insertObject:pLoc
-                                                        atIndex:index];
                                 }
+                                
+                                [latitudesArray addObject:latitude];
+                                
+                                [namesArray insertObject:pLoc.name
+                                                 atIndex:index];
+                                
+                                [locationArray insertObject:pLoc
+                                                    atIndex:index];
                             }
                         }
                     }
