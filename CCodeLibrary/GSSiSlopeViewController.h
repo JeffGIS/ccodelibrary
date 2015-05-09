@@ -5,20 +5,24 @@
 #import <CoreLocation/CoreLocation.h>
 #import <UIKit/UIKit.h>
 
+typedef struct NVSlopeData {
+    CGFloat accelX;
+    CGFloat accelY;
+    CGFloat accelZ;
+    CGFloat gravX;
+    CGFloat gravY;
+    CGFloat gravZ;
+    CGFloat yaw;
+    CGFloat pitch;
+    CGFloat roll;
+} NVSlopeData;
+
 @class GSSiSlopeViewController;
 
 @protocol GSSiSlopeViewControllerDelegate <NSObject>
 
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
-                didReturnAccelX:(CGFloat)accelX
-                         accelY:(CGFloat)accelY
-                         accelZ:(CGFloat)accelZ
-                          gravX:(CGFloat)gravX
-                          gravY:(CGFloat)gravY
-                          gravZ:(CGFloat)gravZ
-                            yaw:(CGFloat)yaw
-                          pitch:(CGFloat)pitch
-                           roll:(CGFloat)roll
+             didReturnSlopeData:(NVSlopeData)slopeData
                          slopes:(CGFloat *)slopes
                         heading:(CGFloat)heading;
 

@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 @property (nonatomic) CGFloat xRange, yRange, zRange;
 @property (nonatomic) CGFloat maxX, minX, maxY, minY, maxZ, minZ;
 @property (nonatomic) CGFloat gSumX, gSumY, gSumZ, aSumX, aSumY, aSumZ, yawSum, pitchSum, rollSum;
-@property (nonatomic) CGFloat gx, gy, gz, ax, ay, az, yaw, pitch, roll;
+@property (nonatomic) NVSlopeData data;
 @property (nonatomic) NSInteger counter, headingCounter;
 @property (nonatomic) CGFloat sumHeading, avgHeading, frontSlope, sideSlope, maxSlope;
 @property (nonatomic) UILabel *headingLabel;
@@ -236,15 +236,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     if (_delegate)
     {
         [_delegate gssiSlopeViewController:self
-                           didReturnAccelX:_ax
-                                    accelY:_ay
-                                    accelZ:_az
-                                     gravX:_gx
-                                     gravY:_gy
-                                     gravZ:_gz
-                                       yaw:_yaw
-                                     pitch:_pitch
-                                      roll:_roll
+                        didReturnSlopeData:_data
                                     slopes:slopes
                                    heading:heading];
     }
@@ -311,20 +303,24 @@ typedef NS_ENUM(NSInteger, SCStatus)
         [_motionManager stopAccelerometerUpdates];
         [_locationManager stopUpdatingHeading];
         
-        _gx = (_gSumX / COUNT);
-        _gy = (_gSumY / COUNT);
-        _gz = (_gSumZ / COUNT);
+        _data.gravX = (_gSumX / COUNT);
+        _data.gravY = (_gSumY / COUNT);
+        _data.gravZ = (_gSumZ / COUNT);
         
-        _ax = (_aSumX / COUNT);
-        _ay = (_aSumY / COUNT);
-        _az = (_aSumZ / COUNT);
+        _data.accelX = (_aSumX / COUNT);
+        _data.accelY = (_aSumY / COUNT);
+        _data.accelZ = (_aSumZ / COUNT);
         
-        _yaw = (_yawSum / COUNT);
-        _pitch = (_pitchSum / COUNT);
-        _roll = (_rollSum / COUNT);
+        _data.yaw = (_yawSum / COUNT);
+        _data.pitch = (_pitchSum / COUNT);
+        _data.roll = (_rollSum / COUNT);
         
-        _frontSlope = (100.0 * sin(-atan2(_ay, sqrt(pow(_ax, 2) + pow(_az, 2)))));
-        _sideSlope = (100.0 * sin(atan2(_ax, sqrt(pow(_ay, 2) + pow(_az, 2)))));
+        _frontSlope = (100.0 * sin(-atan2(_data.accelY, sqrt(pow(_data.accelX, 2) +
+                                                             pow(_data.accelZ, 2)))));
+        
+        _sideSlope = (100.0 * sin(atan2(_data.accelX, sqrt(pow(_data.accelY, 2) +
+                                                           pow(_data.accelZ, 2)))));
+        
         _maxSlope = ComputeMaxSlope(_frontSlope, _sideSlope);
         _avgHeading = (_sumHeading / _headingCounter);
         
