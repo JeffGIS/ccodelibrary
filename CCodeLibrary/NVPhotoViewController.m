@@ -161,8 +161,8 @@
         _photoView.image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@",
                                                              _directory, _imageArray[_imageIndex]]];
         
-        _photoLabel.text = [NSString stringWithFormat:@"Photo %ld of %lu",
-                            (_imageIndex + 1), (unsigned long)_imageArray.count];
+        _photoLabel.text = [NSString stringWithFormat:@"Photo %lu of %lu",
+                            (unsigned long)(_imageIndex + 1), (unsigned long)_imageArray.count];
     }
     
     else

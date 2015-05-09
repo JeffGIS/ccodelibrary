@@ -4,33 +4,34 @@
 #import "GSSiSlopeViewController.h"
 #import "CRAPI.h"
 #import "MathUtil.h"
+#import "NVProgressView.h"
 
-#define SLOPE_STABILITY 0
-#define SLOPE_BEGIN 1
-#define SHORT_COUNT 50
-#define LONG_COUNT 200
 #define SC_START 0
 #define SC_CANCEL 1
+#define COUNT 60
 
 @interface GSSiSlopeViewController ()
+
+@property (nonatomic) UIButton *unableButton, *startCancelButton;
+@property (nonatomic) UIImageView *arrowView;
+@property (nonatomic) NVProgressView *progressView;
+@property (nonatomic) UILabel *frontSlopeLabel, *sideSlopeLabel, *maxSlopeLabel, *promptLabel;
+@property BOOL startCancelState, unable;
+@property (nonatomic) CGFloat steadyDiff;
+@property (nonatomic) CGFloat xRange, yRange, zRange;
+@property (nonatomic) CGFloat maxX, minX, maxY, minY, maxZ, minZ;
+@property (nonatomic) CGFloat gSumX, gSumY, gSumZ, aSumX, aSumY, aSumZ, yawSum, pitchSum, rollSum;
+@property (nonatomic) CGFloat gx, gy, gz, ax, ay, az, yaw, pitch, roll;
+@property (nonatomic) NSInteger counter, headingCounter;
+@property (nonatomic) CGFloat sumHeading, avgHeading, frontSlope, sideSlope, maxSlope;
+@property (nonatomic) UILabel *headingLabel;
+@property (nonatomic) CGFloat target, forceFlip;
+@property (nonatomic) CLLocationManager *locationManager;
+@property (nonatomic) CMMotionManager *motionManager;
 
 @end
 
 @implementation GSSiSlopeViewController
-
-- (id)initWithTarget:(CGFloat)target
-           forceFlip:(CGFloat)forceFlip
-{
-    self = [super init];
-    
-    if (self)
-    {
-        self.target = target;
-        self.forceFlip = forceFlip;
-    }
-    
-    return self;
-}
 
 - (void)loadView
 {
@@ -43,17 +44,17 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
-    self.calibrationOption = SLOPE_STABILITY;
-    self.maxX = self.maxY = -1.0;
-    self.minX = self.minY = 1.0;
-    self.xRange = self.yRange = 0.0;
-    self.sumX = self.sumY = 0.0;
-    self.sumHeading = self.avgHeading = 0.0;
-    self.counter = self.headingCounter = 0;
-    self.startCancelState = SC_START;
-    self.hasRun = NO;
-    self.headingCounter = 0;
-    self.unable = YES;
+    _steadyDiff = 0.015;
+    _maxX = _maxY = _maxZ = -10.0;
+    _minX = _minY = _minZ = 10.0;
+    _gSumX = _gSumY = _gSumZ = 0.0;
+    _aSumX = _aSumY = _aSumZ = 0.0;
+    _yawSum = _pitchSum = _rollSum = 0.0;
+    _frontSlope = _sideSlope = _maxSlope = 0.0;
+    _sumHeading = _avgHeading = 0.0;
+    _counter = _headingCounter = 0;
+    _startCancelState = SC_START;
+    _unable = YES;
     
     [self setupUnableButton];
     [self setupStartCancelButton];
@@ -61,9 +62,12 @@
     [self setupLabels];
     [self setupProgressView];
     
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-    self.motionManager = [[CMMotionManager alloc] init];
+    _locationManager = [[CLLocationManager alloc] init];
+    _locationManager.delegate = self;
+    _locationManager.headingFilter = kCLHeadingFilterNone;
+    _locationManager.headingOrientation = CLDeviceOrientationUnknown;
+    
+    _motionManager = [[CMMotionManager alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
@@ -73,70 +77,82 @@
 
 - (void)setupUnableButton
 {
-    self.unableButton = [[UIButton alloc] initWithFrame:CGRectMake(184.0, 904.0, 400.0, 100.0)];
+    _unableButton = [[UIButton alloc] initWithFrame:CGRectMake(184.0, 904.0, 400.0, 100.0)];
     
-    [self.unableButton addTarget:self
-                          action:@selector(goBack:)
-                forControlEvents:UIControlEventTouchUpInside];
+    [_unableButton addTarget:self
+                      action:@selector(goBack:)
+            forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addSubview:self.unableButton];
+    [self.view addSubview:_unableButton];
     
-    [self setupButton:self.unableButton
+    [_unableButton setTitleColor:UserDefaults.defaults.appleBlue
+                        forState:UIControlStateHighlighted];
+    
+    [self setupButton:_unableButton
                 title:@"Unable"];
 }
 
 - (void)setupStartCancelButton
 {
-    self.startCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(184.0, 564.0, 400.0, 100.0)];
+    _startCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(184.0, 564.0, 400.0, 100.0)];
     
-    [self.startCancelButton addTarget:self
-                               action:@selector(startCancel:)
-                     forControlEvents:UIControlEventTouchUpInside];
+    [_startCancelButton addTarget:self
+                           action:@selector(startCancel:)
+                 forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addSubview:self.startCancelButton];
+    [self.view addSubview:_startCancelButton];
     
-    [self setupButton:self.startCancelButton
+    [_startCancelButton setTitleColor:UserDefaults.defaults.appleBlue
+                             forState:UIControlStateHighlighted];
+    
+    [self setupButton:_startCancelButton
                 title:@"Start"];
 }
 
 - (void)setupLabels
 {
-    self.headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 614.0, 568.0, 60.0)];
-    self.frontSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 684.0, 568.0, 60.0)];
-    self.sideSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 754.0, 568.0, 60.0)];
-    self.maxSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 824.0, 568.0, 60.0)];
-    self.promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 340.0, 728.0, 194.0)];
+    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 614.0, 568.0, 60.0)];
+    _frontSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 684.0, 568.0, 60.0)];
+    _sideSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 754.0, 568.0, 60.0)];
+    _maxSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 824.0, 568.0, 60.0)];
+    _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 340.0, 728.0, 194.0)];
     
-    [self.view addSubview:self.headingLabel];
-    [self.view addSubview:self.frontSlopeLabel];
-    [self.view addSubview:self.sideSlopeLabel];
-    [self.view addSubview:self.maxSlopeLabel];
-    [self.view addSubview:self.promptLabel];
+    [self.view addSubview:_headingLabel];
+    [self.view addSubview:_frontSlopeLabel];
+    [self.view addSubview:_sideSlopeLabel];
+    [self.view addSubview:_maxSlopeLabel];
+    [self.view addSubview:_promptLabel];
     
-    [self setupLabel:self.headingLabel];
-    [self setupLabel:self.frontSlopeLabel];
-    [self setupLabel:self.sideSlopeLabel];
-    [self setupLabel:self.maxSlopeLabel];
-    [self setupLabel:self.promptLabel];
+    [self setupLabel:_headingLabel];
+    [self setupLabel:_frontSlopeLabel];
+    [self setupLabel:_sideSlopeLabel];
+    [self setupLabel:_maxSlopeLabel];
+    [self setupLabel:_promptLabel];
     
-    self.promptLabel.text = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
+    _promptLabel.text = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
 }
 
 - (void)setupArrowView
 {
-    self.arrowView = [[UIImageView alloc] initWithFrame:CGRectMake(260.0, 20.0, 248.0, 320.0)];
-    self.arrowView.image = UserDefaults.defaults.redArrow;
-    [self.view addSubview:self.arrowView];
+    _arrowView = [[UIImageView alloc] initWithFrame:CGRectMake(260.0, 20.0, 248.0, 320.0)];
+    
+    _arrowView.image = [UIImage imageWithContentsOfFile:
+                        [NSBundle.mainBundle pathForResource:@"coolArrow"
+                                                      ofType:@"png"]];
+    
+    [self.view addSubview:_arrowView];
 }
 
 - (void)setupProgressView
 {
-    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(60.0, 781.0, 648.0, 9.0)];
-    self.progressView.progressTintColor = UIColor.greenColor;
-    self.progressView.trackTintColor = UIColor.redColor;
-    self.progressView.progress = 0.0;
-    [self.view addSubview:self.progressView];
-    self.progressView.hidden = YES;
+    _progressView = [[NVProgressView alloc] initWithCenter:CGPointMake(384.0, 786.0)
+                                                     width:688.0
+                                                trackColor:UIColor.blackColor
+                                             progressColor:UIColor.whiteColor];
+    
+    _progressView.progress = 0.0;
+    [self.view addSubview:_progressView];
+    _progressView.hidden = YES;
 }
 
 - (void)setupButton:(UIButton *)button
@@ -183,207 +199,189 @@
     label.font = [UIFont boldSystemFontOfSize:44.0];
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 0;
+    label.adjustsFontSizeToFitWidth = YES;
 }
 
 - (void)goBack:(UIButton *)button
 {
-    [self.motionManager stopDeviceMotionUpdates];
+    [_motionManager stopDeviceMotionUpdates];
+    [_motionManager stopAccelerometerUpdates];
     
-    float slopes[2], heading;
+    CGFloat slopes[2], heading;
     
-    slopes[0] = self.frontSlope;
-    slopes[1] = self.sideSlope;
-    heading = self.avgHeading;
+    slopes[0] = _frontSlope;
+    slopes[1] = _sideSlope;
+    heading = _avgHeading;
     
-    if (self.unable)
+    if (_unable)
         slopes[0] = slopes[1] = heading = -9999.0;
     
-    [self.delegate gssiSlopeViewController:self
-                          didMeasureSlopes:slopes
-                                   heading:heading];
-    
-    if (CRAPI.sharedInstance.currentModule == FACILITIES_MODULE)
+    if (_delegate)
     {
-        [self dismissViewControllerAnimated:YES
-                                 completion:nil];
+        [_delegate gssiSlopeViewController:self
+                           didReturnAccelX:_ax
+                                    accelY:_ay
+                                    accelZ:_az
+                                     gravX:_gx
+                                     gravY:_gy
+                                     gravZ:_gz
+                                       yaw:_yaw
+                                     pitch:_pitch
+                                      roll:_roll
+                                    slopes:slopes
+                                   heading:heading];
     }
 }
 
 - (void)startCancel:(UIButton *)button
 {
-    if (self.startCancelState == SC_START)
+    if (_startCancelState == SC_START)
     {
         [self startMotionManager];
-        self.startCancelState = SC_CANCEL;
-        self.unableButton.enabled = NO;
-        self.progressView.hidden = NO;
+        _startCancelState = SC_CANCEL;
+        _unableButton.enabled = NO;
+        _progressView.hidden = NO;
         
-        [self.startCancelButton setTitle:@"Cancel"
-                                forState:UIControlStateNormal];
+        [_startCancelButton setTitle:@"Cancel"
+                            forState:UIControlStateNormal];
     }
     
-    else if (self.startCancelState == SC_CANCEL)
+    else if (_startCancelState == SC_CANCEL)
     {
-        [self.motionManager stopDeviceMotionUpdates];
-        self.startCancelState = SC_START;
-        self.unableButton.enabled = YES;
-        self.progressView.hidden = YES;
+        [_motionManager stopDeviceMotionUpdates];
+        _startCancelState = SC_START;
+        _unableButton.enabled = YES;
+        _progressView.hidden = YES;
         
-        [self.startCancelButton setTitle:@"Start"
-                                forState:UIControlStateNormal];
+        [_startCancelButton setTitle:@"Start"
+                            forState:UIControlStateNormal];
     }
     
-    [self updateButtonAppearance:self.unableButton];
+    [self updateButtonAppearance:_unableButton];
 }
 
 - (void)startMotionManager
 {
-    self.motionManager.deviceMotionUpdateInterval = 0.02;
+    _motionManager.deviceMotionUpdateInterval = 0.05;
+    _motionManager.accelerometerUpdateInterval = 0.05;
     
-    if (CLLocationManager.headingAvailable && !self.hasRun)
-        [self.locationManager startUpdatingHeading];
+    if (CLLocationManager.headingAvailable)
+        [_locationManager startUpdatingHeading];
     
-    if ([self.motionManager isDeviceMotionAvailable])
+    if ([_motionManager isAccelerometerAvailable])
+        [_motionManager startAccelerometerUpdates];
+    
+    if ([_motionManager isDeviceMotionAvailable])
     {
-        [self.motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical
-                                                                toQueue:NSOperationQueue.currentQueue
-                                                            withHandler:^(CMDeviceMotion *deviceMotion, NSError *error){
-                                                                [self computeSlopeFromGravity:deviceMotion.gravity];
-                                                                
-                                                                if(error)
-                                                                    NSLog(@"%@", error);
-                                                            }];
+        [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical
+                                                            toQueue:NSOperationQueue.currentQueue
+                                                        withHandler:^(CMDeviceMotion *deviceMotion, NSError *error){
+                                                            [self computeSlopeFromDeviceMotion:deviceMotion];
+                                                            
+                                                            if(error)
+                                                                NSLog(@"DeviceMotionError:%@", error.localizedDescription);
+                                                        }];
     }
 }
 
-- (void)computeSlopeFromGravity:(CMAcceleration)gravity
+- (void)computeSlopeFromDeviceMotion:(CMDeviceMotion *)deviceMotion
 {
-    if (self.calibrationOption == SLOPE_STABILITY)
+    _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
+    
+    if (_counter == COUNT)
     {
-        self.promptLabel.text = @"Verifying Stability";
-        self.progressView.progress = 0.0;
+        [_motionManager stopDeviceMotionUpdates];
+        [_motionManager stopAccelerometerUpdates];
+        [_locationManager stopUpdatingHeading];
         
-        if (self.counter == SHORT_COUNT)
-        {
-            self.counter = 0;
-            
-            if (self.yRange < 0.0005 && self.xRange < 0.0005)
-                self.calibrationOption = SLOPE_BEGIN;
-            
-            else
-            {
-                self.maxX = self.maxY = -1.0;
-                self.minX = self.minY = 1.0;
-                self.xRange = self.yRange = 0.0;
-            }
-        }
+        _gx = (_gSumX / COUNT);
+        _gy = (_gSumY / COUNT);
+        _gz = (_gSumZ / COUNT);
         
-        else
-        {
-            self.maxX = max(self.maxX, gravity.x);
-            self.minX = min(self.minX, gravity.x);
-            self.maxY = max(self.maxY, gravity.y);
-            self.minY = min(self.minY, gravity.y);
-            self.xRange = (self.maxX - self.minX);
-            self.yRange = (self.maxY - self.minY);
-            self.counter++;
-        }
+        _ax = (_aSumX / COUNT);
+        _ay = (_aSumY / COUNT);
+        _az = (_aSumZ / COUNT);
+        
+        _yaw = (_yawSum / COUNT);
+        _pitch = (_pitchSum / COUNT);
+        _roll = (_rollSum / COUNT);
+        
+        _frontSlope = (100.0 * sin(-atan2(_ay, sqrt(pow(_ax, 2) + pow(_az, 2)))));
+        _sideSlope = (100.0 * sin(atan2(_ax, sqrt(pow(_ay, 2) + pow(_az, 2)))));
+        _maxSlope = ComputeMaxSlope(_frontSlope, _sideSlope);
+        _avgHeading = (_sumHeading / _headingCounter);
+        
+        [self slopeMeasurementComplete];
     }
     
-    else if (self.calibrationOption == SLOPE_BEGIN)
+    else if (_counter < COUNT)
     {
-        self.promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
+        CMAcceleration acceleration = _motionManager.accelerometerData.acceleration;
         
-        if (self.counter == LONG_COUNT)
+        _maxX = max(_maxX, acceleration.x);
+        _minX = min(_minX, acceleration.x);
+        _maxY = max(_maxY, acceleration.y);
+        _minY = min(_minY, acceleration.y);
+        _maxZ = max(_maxZ, acceleration.z);
+        _minZ = min(_minZ, acceleration.z);
+        _xRange = (_maxX - _minX);
+        _yRange = (_maxY - _minY);
+        _zRange = (_maxZ - _minZ);
+        
+        if (_yRange > _steadyDiff || _xRange > _steadyDiff || _zRange > _steadyDiff)
         {
-            [self.motionManager stopDeviceMotionUpdates];
-            
-            if (self.hasRun)
-            {
-                self.x2 = (self.sumX / LONG_COUNT);
-                self.y2 = (self.sumY / LONG_COUNT);
-                
-                self.x1 -= ((self.x1 + self.x2) / 2.0);
-                self.y1 -= ((self.y1 + self.y2) / 2.0);
-                
-                self.frontSlope = (100.0 * sin(-atan2(self.y1, sqrt(pow(self.x1, 2) + pow(self.z, 2)))));
-                self.sideSlope = (100.0 * sin(atan2(self.x1, sqrt(pow(self.y1, 2) + pow(self.z, 2)))));
-                self.maxSlope = ComputeMaxSlope(self.frontSlope, self.sideSlope);
-                
-                [self slopeMeasurementComplete];
-            }
-            
-            else
-            {
-                [self.locationManager stopUpdatingHeading];
-                self.locationManager.delegate = nil;
-                self.avgHeading = (self.sumHeading / self.headingCounter);
-                
-                self.x1 = (self.sumX / LONG_COUNT);
-                self.y1 = (self.sumY / LONG_COUNT);
-                self.z = (self.sumZ / LONG_COUNT);
-                self.hasRun = YES;
-                
-                self.frontSlope = (100.0 * sin(-atan2(self.y1, sqrt(pow(self.x1, 2) + pow(self.z, 2)))));
-                self.sideSlope = (100.0 * sin(atan2(self.x1, sqrt(pow(self.y1, 2) + pow(self.z, 2)))));
-                self.maxSlope = ComputeMaxSlope(self.frontSlope, self.sideSlope);
-                
-                if (self.maxSlope < (self.target - self.forceFlip) || (self.maxSlope > (self.target + self.forceFlip)))
-                    [self slopeMeasurementComplete];
-                
-                else
-                {
-                    self.promptLabel.text = @"Flip the iPad in the opposite direction and tap 'Continue' to calibrate measurement.";
-                    
-                    [self.startCancelButton setTitle:@"Continue"
-                                            forState:UIControlStateNormal];
-                    
-                    self.counter = 0;
-                    self.sumX = self.sumY = 0.0;
-                    self.calibrationOption = SLOPE_STABILITY;
-                    self.startCancelState = SC_START;
-                }
-            }
+            _maxX = _maxY = _maxZ = -10.0;
+            _minX = _minY = _minZ = 10.0;
+            _gSumX = _gSumY = _gSumZ = 0.0;
+            _aSumX = _aSumY = _aSumZ = 0.0;
+            _yawSum = _pitchSum = _rollSum = 0.0;
+            _counter = 0;
         }
         
-        else
-        {
-            self.sumX += gravity.x;
-            self.sumY += gravity.y;
-            self.sumZ += gravity.z;
-            self.counter++;
-            self.progressView.progress = (self.counter / (CGFloat)LONG_COUNT);
-        }
+        _counter++;
+        
+        _aSumX += _motionManager.accelerometerData.acceleration.x;
+        _aSumY += _motionManager.accelerometerData.acceleration.y;
+        _aSumZ += _motionManager.accelerometerData.acceleration.z;
+        
+        _gSumX += deviceMotion.gravity.x;
+        _gSumY += deviceMotion.gravity.y;
+        _gSumZ += deviceMotion.gravity.z;
+        
+        _yawSum += deviceMotion.attitude.yaw;
+        _pitchSum += deviceMotion.attitude.pitch;
+        _rollSum += deviceMotion.attitude.roll;
+        
+        _progressView.progress = (_counter / (CGFloat)COUNT);
     }
 }
 
 - (void)slopeMeasurementComplete
 {
-    self.headingLabel.text = [NSString stringWithFormat:@"Heading = %.02f\u00B0", self.avgHeading];
-    self.frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", self.frontSlope];
-    self.sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f%%", self.sideSlope];
-    self.maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", self.maxSlope];
+    _headingLabel.text = [NSString stringWithFormat:@"Heading = %.02f\u00B0", _avgHeading];
+    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _frontSlope];
+    _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f%%", _sideSlope];
+    _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _maxSlope];
     
-    self.promptLabel.text = @"Press 'Done' to continue inventory.";
+    _promptLabel.text = @"Press 'Done' to continue inventory.";
     
-    [self.unableButton setTitle:@"Done"
-                       forState:UIControlStateNormal];
+    [_unableButton setTitle:@"Done"
+                   forState:UIControlStateNormal];
     
-    self.unable = NO;
+    _unable = NO;
     
-    self.startCancelButton.hidden = YES;
-    self.unableButton.enabled = YES;
-    [self updateButtonAppearance:self.unableButton];
+    _startCancelButton.hidden = YES;
+    _unableButton.enabled = YES;
+    [self updateButtonAppearance:_unableButton];
     
-    self.progressView.hidden = YES;
-    self.hasRun = NO;
+    _progressView.hidden = YES;
 }
 
 - (void)locationManager:(CLLocationManager *)manager
        didUpdateHeading:(CLHeading *)newHeading
 {
-    self.sumHeading += newHeading.trueHeading;
-    self.headingCounter++;
+    _sumHeading += newHeading.trueHeading;
+    _headingCounter++;
 }
 
 @end

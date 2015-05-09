@@ -235,7 +235,7 @@ didReceiveResponse:(NSURLResponse *)response
         
         if (_fileStream.streamStatus == NSStreamStatusError)
         {
-            NSLog(@"StreamStatus:%lu", _fileStream.streamStatus);
+            NSLog(@"StreamStatus:%lu", (unsigned long)_fileStream.streamStatus);
             
             [self stopReceiveWithStatus:FTPStatusFileWriteError
                            statusString:_fileStream.streamError.localizedDescription];
