@@ -38,4 +38,6 @@ typedef struct NVSlopeData {
                                                        flipRadius:(CGFloat)flipRadius
                                                          delegate:(id)delegate;
 
+@property (nonatomic) CGFloat calibrationTarget, flipRadius;
+
 @end

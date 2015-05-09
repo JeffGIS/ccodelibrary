@@ -20,7 +20,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
 @property (nonatomic) UIImageView *arrowView;
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UILabel *frontSlopeLabel, *sideSlopeLabel, *maxSlopeLabel, *promptLabel;
-@property (nonatomic) CGFloat steadyDiff, calibrationTarget, flipRadius;
 @property (nonatomic) CGFloat xRange, yRange, zRange;
 @property (nonatomic) CGFloat maxX, minX, maxY, minY, maxZ, minZ;
 @property (nonatomic) CGFloat gSumX, gSumY, gSumZ, aSumX, aSumY, aSumZ, yawSum, pitchSum, rollSum;
@@ -28,7 +27,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 @property (nonatomic) NSInteger counter, headingCounter;
 @property (nonatomic) CGFloat sumHeading, avgHeading, frontSlope, sideSlope, maxSlope;
 @property (nonatomic) UILabel *headingLabel;
-@property (nonatomic) CGFloat target, forceFlip;
+@property (nonatomic) CGFloat target, forceFlip, steadyDiff;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) CMMotionManager *motionManager;
 @property SCStatus status;
