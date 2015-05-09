@@ -127,6 +127,8 @@
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
 		A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D952B11A96D484008B9156 /* GSSiAlertController.m */; };
 		A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */; };
+		A9E2130E1AFE4BFC005ECBBA /* NVImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E2130D1AFE4BFC005ECBBA /* NVImagePickerController.m */; };
+		A9E2130F1AFE4C2B005ECBBA /* NVImagePickerController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */; };
 		A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */; };
 		A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E792831AEFE989005DA4BB /* NVLegendView.m */; };
 		A9E792851AEFEB89005DA4BB /* NVLegendView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E792821AEFE989005DA4BB /* NVLegendView.h */; };
@@ -175,6 +177,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A9E2130F1AFE4C2B005ECBBA /* NVImagePickerController.h in CopyFiles */,
 				A9237F861AFA92BA00D10E96 /* NVTextAlert.h in CopyFiles */,
 				A92E0BA81AF7A461008A44AC /* NVPhotoViewController.h in CopyFiles */,
 				A97407C71AF6A71C00B2FF30 /* NVProgressView.h in CopyFiles */,
@@ -345,6 +348,8 @@
 		A9D952B11A96D484008B9156 /* GSSiAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiAlertController.m; sourceTree = "<group>"; };
 		A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RampTypeView.h; sourceTree = "<group>"; };
 		A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RampTypeView.m; sourceTree = "<group>"; };
+		A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVImagePickerController.h; sourceTree = "<group>"; };
+		A9E2130D1AFE4BFC005ECBBA /* NVImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVImagePickerController.m; sourceTree = "<group>"; };
 		A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVLargeAlertView.h; sourceTree = "<group>"; };
 		A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVLargeAlertView.m; sourceTree = "<group>"; };
 		A9E792821AEFE989005DA4BB /* NVLegendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVLegendView.h; sourceTree = "<group>"; };
@@ -552,6 +557,8 @@
 				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
 				A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */,
 				A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */,
+				A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */,
+				A9E2130D1AFE4BFC005ECBBA /* NVImagePickerController.m */,
 				A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */,
 				A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */,
 				A9E792821AEFE989005DA4BB /* NVLegendView.h */,
@@ -801,6 +808,7 @@
 				EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */,
 				EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */,
 				A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */,
+				A9E2130E1AFE4BFC005ECBBA /* NVImagePickerController.m in Sources */,
 				EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */,
 				EBAEED0719B601710084A579 /* minilzo.c in Sources */,
 				EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */,
