@@ -64,12 +64,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
     _steadyDiff = 0.015;
     _maxX = _maxY = _maxZ = -10.0;
     _minX = _minY = _minZ = 10.0;
-    _gSumX = _gSumY = _gSumZ = 0.0;
-    _aSumX = _aSumY = _aSumZ = 0.0;
-    _yawSum = _pitchSum = _rollSum = 0.0;
-    _frontSlope = _sideSlope = _maxSlope = 0.0;
-    _sumHeading = _avgHeading = 0.0;
-    _counter = _headingCounter = 0;
     _status = SCStatusStart;
     _unable = YES;
     
