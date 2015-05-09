@@ -29,7 +29,9 @@
 @interface GSSiSlopeViewController : UIViewController <CLLocationManagerDelegate>
 
 @property (nonatomic, weak) id <GSSiSlopeViewControllerDelegate> delegate;
-@property (nonatomic) NSString *which;
-@property (nonatomic) NSInteger mode;
+
++ (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
+                                                       flipRadius:(CGFloat)flipRadius
+                                                         delegate:(id)delegate;
 
 @end

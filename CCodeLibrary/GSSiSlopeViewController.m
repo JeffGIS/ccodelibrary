@@ -6,8 +6,12 @@
 #import "MathUtil.h"
 #import "NVProgressView.h"
 
-#define SC_START 0
-#define SC_CANCEL 1
+typedef NS_ENUM(NSInteger, SCStatus)
+{
+    SCStatusStart,
+    SCStatusCancel,
+};
+
 #define COUNT 60
 
 @interface GSSiSlopeViewController ()
@@ -16,8 +20,7 @@
 @property (nonatomic) UIImageView *arrowView;
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UILabel *frontSlopeLabel, *sideSlopeLabel, *maxSlopeLabel, *promptLabel;
-@property BOOL startCancelState, unable;
-@property (nonatomic) CGFloat steadyDiff;
+@property (nonatomic) CGFloat steadyDiff, calibrationTarget, flipRadius;
 @property (nonatomic) CGFloat xRange, yRange, zRange;
 @property (nonatomic) CGFloat maxX, minX, maxY, minY, maxZ, minZ;
 @property (nonatomic) CGFloat gSumX, gSumY, gSumZ, aSumX, aSumY, aSumZ, yawSum, pitchSum, rollSum;
@@ -28,10 +31,24 @@
 @property (nonatomic) CGFloat target, forceFlip;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) CMMotionManager *motionManager;
+@property SCStatus status;
+@property BOOL unable;
 
 @end
 
 @implementation GSSiSlopeViewController
+
++ (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
+                                                       flipRadius:(CGFloat)flipRadius
+                                                         delegate:(id)delegate
+{
+    GSSiSlopeViewController *slopeController = [[GSSiSlopeViewController alloc] init];
+    slopeController.calibrationTarget = calibrationTarget;
+    slopeController.flipRadius = flipRadius;
+    slopeController.delegate = delegate;
+    
+    return slopeController;
+}
 
 - (void)loadView
 {
@@ -53,7 +70,7 @@
     _frontSlope = _sideSlope = _maxSlope = 0.0;
     _sumHeading = _avgHeading = 0.0;
     _counter = _headingCounter = 0;
-    _startCancelState = SC_START;
+    _status = SCStatusStart;
     _unable = YES;
     
     [self setupUnableButton];
@@ -235,10 +252,10 @@
 
 - (void)startCancel:(UIButton *)button
 {
-    if (_startCancelState == SC_START)
+    if (_status == SCStatusStart)
     {
         [self startMotionManager];
-        _startCancelState = SC_CANCEL;
+        _status = SCStatusCancel;
         _unableButton.enabled = NO;
         _progressView.hidden = NO;
         
@@ -246,10 +263,10 @@
                             forState:UIControlStateNormal];
     }
     
-    else if (_startCancelState == SC_CANCEL)
+    else if (_status == SCStatusCancel)
     {
         [_motionManager stopDeviceMotionUpdates];
-        _startCancelState = SC_START;
+        _status = SCStatusStart;
         _unableButton.enabled = YES;
         _progressView.hidden = YES;
         
@@ -382,6 +399,16 @@
 {
     _sumHeading += newHeading.trueHeading;
     _headingCounter++;
+}
+
+- (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
+{
+    BOOL rtn = NO;
+    
+    if (_delegate)
+        rtn = [_delegate shouldUseCalibration:self];
+    
+    return rtn;
 }
 
 @end
