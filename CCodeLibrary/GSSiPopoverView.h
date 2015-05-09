@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import <UIKit/UIKit.h>
+#import "NVProgressView.h"
 
 @class GSSiPopoverView;
 
@@ -16,7 +17,7 @@
 @property (nonatomic, weak) id <GSSiPopoverViewDelegate> delegate;
 @property (nonatomic) UIView *popover;
 @property (nonatomic) UIView *fromView;
-@property (nonatomic) UIProgressView *progressView;
+@property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UIButton *popoverCancel;
 @property (nonatomic) UILabel *popoverLabel;
 @property (nonatomic) BOOL inShowAfter;

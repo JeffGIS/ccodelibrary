@@ -37,13 +37,11 @@
         
         _popover.layer.cornerRadius = 20.0;
         
-        _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-        CGRect progFrame = _popover.frame;
-        progFrame.size.width *= 0.75;
-        _progressView.frame = progFrame;
-        _progressView.center = CGPointMake((_popover.frame.size.width / 2.0), (_popover.frame.size.height / 2.0));
-        _progressView.progressTintColor = UIColor.whiteColor;
-        _progressView.trackTintColor = UserDefaults.defaults.appleBlue;
+        _progressView = [[NVProgressView alloc] initWithCenter:CGPointMake((_popover.frame.size.width / 2.0), (_popover.frame.size.height / 2.0))
+                                                         width:(_popover.frame.size.width * 0.8)
+                                                    trackColor:UIColor.blackColor
+                                                 progressColor:UIColor.whiteColor];
+                         
         _progressView.progress = 0.0;
         
         _popoverCancel = [[UIButton alloc] initWithFrame:CGRectMake((_popover.frame.size.width * 0.25),
