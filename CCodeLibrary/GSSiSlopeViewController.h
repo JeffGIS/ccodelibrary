@@ -1,8 +1,6 @@
 //  GSSiSlopeViewController.h
 //  CCodeLibrary
 
-#import <CoreMotion/CoreMotion.h>
-#import <CoreLocation/CoreLocation.h>
 #import <UIKit/UIKit.h>
 
 typedef struct NVSlopeData {
@@ -31,7 +29,7 @@ typedef struct NVSlopeData {
 
 @end
 
-@interface GSSiSlopeViewController : UIViewController <CLLocationManagerDelegate>
+@interface GSSiSlopeViewController : UIViewController
 
 @property (nonatomic, weak) id <GSSiSlopeViewControllerDelegate> delegate;
 
@@ -39,6 +37,6 @@ typedef struct NVSlopeData {
                                                        flipRadius:(CGFloat)flipRadius
                                                          delegate:(id)delegate;
 
-@property (nonatomic) CGFloat calibrationTarget, flipRadius;
+@property (nonatomic) CGFloat calibrationTarget, flipRadius, steadyDiff;
 
 @end

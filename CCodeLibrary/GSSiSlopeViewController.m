@@ -1,6 +1,8 @@
 //  SlopeViewController.m
 //  CCodeLibrary
 
+#import <CoreMotion/CoreMotion.h>
+#import <CoreLocation/CoreLocation.h>
 #import "GSSiSlopeViewController.h"
 #import "CRAPI.h"
 #import "MathUtil.h"
@@ -24,14 +26,13 @@ typedef NS_ENUM(NSInteger, SCStatus)
 @property (nonatomic) CGFloat maxX, minX, maxY, minY, maxZ, minZ;
 @property (nonatomic) CGFloat gSumX, gSumY, gSumZ, aSumX, aSumY, aSumZ, yawSum, pitchSum, rollSum;
 @property (nonatomic) NVSlopeData data;
-@property (nonatomic) NSInteger counter, headingCounter;
+@property (nonatomic) NSInteger counter;
 @property (nonatomic) CGFloat sumHeading, maxSlope;
 @property (nonatomic) UILabel *headingLabel;
-@property (nonatomic) CGFloat target, forceFlip, steadyDiff;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) CMMotionManager *motionManager;
 @property SCStatus status;
-@property BOOL unable;
+@property BOOL unable, hasRun;
 
 @end
 
@@ -73,9 +74,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [self setupProgressView];
     
     _locationManager = [[CLLocationManager alloc] init];
-    _locationManager.delegate = self;
     _locationManager.headingFilter = kCLHeadingFilterNone;
-    _locationManager.headingOrientation = CLDeviceOrientationUnknown;
+    _locationManager.headingOrientation = CLDeviceOrientationFaceDown;
     
     _motionManager = [[CMMotionManager alloc] init];
 }
@@ -207,8 +207,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 - (void)goBack:(UIButton *)button
 {
-    [_motionManager stopDeviceMotionUpdates];
-    [_motionManager stopAccelerometerUpdates];
+    [self stopMotionManager];
     
     if (_unable)
         _data.frontSlope = _data.sideSlope = _data.heading = -9999.0;
@@ -225,6 +224,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     if (_status == SCStatusStart)
     {
         [self startMotionManager];
+        
         _status = SCStatusCancel;
         _unableButton.enabled = NO;
         _progressView.hidden = NO;
@@ -235,7 +235,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
     
     else if (_status == SCStatusCancel)
     {
-        [_motionManager stopDeviceMotionUpdates];
+        [self stopMotionManager];
+        
         _status = SCStatusStart;
         _unableButton.enabled = YES;
         _progressView.hidden = YES;
@@ -252,7 +253,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     _motionManager.deviceMotionUpdateInterval = 0.05;
     _motionManager.accelerometerUpdateInterval = 0.05;
     
-    if (CLLocationManager.headingAvailable)
+    if (CLLocationManager.headingAvailable && !_hasRun)
         [_locationManager startUpdatingHeading];
     
     if ([_motionManager isAccelerometerAvailable])
@@ -269,42 +270,95 @@ typedef NS_ENUM(NSInteger, SCStatus)
                                                                 NSLog(@"DeviceMotionError:%@", error.localizedDescription);
                                                         }];
     }
+    
+    _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
+}
+
+- (void)stopMotionManager
+{
+    [_motionManager stopDeviceMotionUpdates];
+    [_motionManager stopAccelerometerUpdates];
+    [_locationManager stopUpdatingHeading];
 }
 
 - (void)computeSlopeFromDeviceMotion:(CMDeviceMotion *)deviceMotion
 {
-    _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
-    
     if (_counter == COUNT)
     {
-        [_motionManager stopDeviceMotionUpdates];
-        [_motionManager stopAccelerometerUpdates];
-        [_locationManager stopUpdatingHeading];
+        [self stopMotionManager];
         
-        _data.gravX[0] = (_gSumX / COUNT);
-        _data.gravY[0] = (_gSumY / COUNT);
-        _data.gravZ[0] = (_gSumZ / COUNT);
+        if (_hasRun)
+        {
+            _data.gravX[1] = (_gSumX / COUNT);
+            _data.gravY[1] = (_gSumY / COUNT);
+            _data.gravZ[1] = (_gSumZ / COUNT);
+            
+            _data.accelX[1] = (_aSumX / COUNT);
+            _data.accelY[1] = (_aSumY / COUNT);
+            _data.accelZ[1] = (_aSumZ / COUNT);
+            
+            _data.yaw[1] = (_yawSum / COUNT);
+            _data.pitch[1] = (_pitchSum / COUNT);
+            _data.roll[1] = (_rollSum / COUNT);
+            
+            CGFloat frontSlope2 = (100.0 * sin(-atan2(_data.accelY[1],
+                                                      sqrt(pow(_data.accelX[1], 2) +
+                                                           pow(_data.accelZ[1], 2)))));
+            
+            CGFloat sideSlope2 = (100.0 * sin(atan2(_data.accelX[1],
+                                                    sqrt(pow(_data.accelY[1], 2) +
+                                                         pow(_data.accelZ[1], 2)))));
+            
+            _data.frontSlope -= ((_data.frontSlope + frontSlope2) / 2.0);
+            _data.sideSlope -= ((_data.sideSlope + sideSlope2) / 2.0);
+            _maxSlope = ComputeMaxSlope(_data.frontSlope, _data.sideSlope);
+            
+            [self slopeMeasurementComplete];
+        }
         
-        _data.accelX[0] = (_aSumX / COUNT);
-        _data.accelY[0] = (_aSumY / COUNT);
-        _data.accelZ[0] = (_aSumZ / COUNT);
-        
-        _data.yaw[0] = (_yawSum / COUNT);
-        _data.pitch[0] = (_pitchSum / COUNT);
-        _data.roll[0] = (_rollSum / COUNT);
-        
-        _data.frontSlope = (100.0 * sin(-atan2(_data.accelY[0],
-                                               sqrt(pow(_data.accelX[0], 2) +
-                                                    pow(_data.accelZ[0], 2)))));
-        
-        _data.sideSlope = (100.0 * sin(atan2(_data.accelX[0],
-                                             sqrt(pow(_data.accelY[0], 2) +
-                                                  pow(_data.accelZ[0], 2)))));
-        
-        _maxSlope = ComputeMaxSlope(_data.frontSlope, _data.sideSlope);
-        _data.heading = (_sumHeading / _headingCounter);
-        
-        [self slopeMeasurementComplete];
+        else
+        {
+            _data.gravX[0] = (_gSumX / COUNT);
+            _data.gravY[0] = (_gSumY / COUNT);
+            _data.gravZ[0] = (_gSumZ / COUNT);
+            
+            _data.accelX[0] = (_aSumX / COUNT);
+            _data.accelY[0] = (_aSumY / COUNT);
+            _data.accelZ[0] = (_aSumZ / COUNT);
+            
+            _data.yaw[0] = (_yawSum / COUNT);
+            _data.pitch[0] = (_pitchSum / COUNT);
+            _data.roll[0] = (_rollSum / COUNT);
+            
+            _data.frontSlope = (100.0 * sin(-atan2(_data.accelY[0],
+                                                   sqrt(pow(_data.accelX[0], 2) +
+                                                        pow(_data.accelZ[0], 2)))));
+            
+            _data.sideSlope = (100.0 * sin(atan2(_data.accelX[0],
+                                                 sqrt(pow(_data.accelY[0], 2) +
+                                                      pow(_data.accelZ[0], 2)))));
+            
+            _maxSlope = ComputeMaxSlope(_data.frontSlope, _data.sideSlope);
+            _data.heading = (_sumHeading / COUNT);
+            
+            if (_maxSlope < (_calibrationTarget - _flipRadius) ||
+                (_maxSlope > (_calibrationTarget + _flipRadius)))
+            {
+                [self slopeMeasurementComplete];
+            }
+            
+            else
+            {
+                _hasRun = YES;
+                _promptLabel.text = @"Flip the iPad in the opposite direction and tap 'Continue' to calibrate measurement.";
+                
+                [_startCancelButton setTitle:@"Continue"
+                                    forState:UIControlStateNormal];
+                
+                [self resetSumsAndCounter];
+                _status = SCStatusStart;
+            }
+        }
     }
     
     else if (_counter < COUNT)
@@ -322,14 +376,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _zRange = (_maxZ - _minZ);
         
         if (_yRange > _steadyDiff || _xRange > _steadyDiff || _zRange > _steadyDiff)
-        {
-            _maxX = _maxY = _maxZ = -10.0;
-            _minX = _minY = _minZ = 10.0;
-            _gSumX = _gSumY = _gSumZ = 0.0;
-            _aSumX = _aSumY = _aSumZ = 0.0;
-            _yawSum = _pitchSum = _rollSum = 0.0;
-            _counter = 0;
-        }
+            [self resetSumsAndCounter];
         
         _counter++;
         
@@ -345,8 +392,21 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _pitchSum += deviceMotion.attitude.pitch;
         _rollSum += deviceMotion.attitude.roll;
         
+        _sumHeading += _locationManager.heading.trueHeading;
+        
         _progressView.progress = (_counter / (CGFloat)COUNT);
     }
+}
+
+- (void)resetSumsAndCounter
+{
+    _maxX = _maxY = _maxZ = -10.0;
+    _minX = _minY = _minZ = 10.0;
+    _gSumX = _gSumY = _gSumZ = 0.0;
+    _aSumX = _aSumY = _aSumZ = 0.0;
+    _yawSum = _pitchSum = _rollSum = 0.0;
+    _sumHeading = 0.0;
+    _counter = 0;
 }
 
 - (void)slopeMeasurementComplete
@@ -368,13 +428,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [self updateButtonAppearance:_unableButton];
     
     _progressView.hidden = YES;
-}
-
-- (void)locationManager:(CLLocationManager *)manager
-       didUpdateHeading:(CLHeading *)newHeading
-{
-    _sumHeading += newHeading.trueHeading;
-    _headingCounter++;
+    _hasRun = NO;
 }
 
 - (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
