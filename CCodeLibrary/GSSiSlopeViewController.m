@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 @property (nonatomic) CGFloat gSumX, gSumY, gSumZ, aSumX, aSumY, aSumZ, yawSum, pitchSum, rollSum;
 @property (nonatomic) NVSlopeData data;
 @property (nonatomic) NSInteger counter, headingCounter;
-@property (nonatomic) CGFloat sumHeading, avgHeading, frontSlope, sideSlope, maxSlope;
+@property (nonatomic) CGFloat sumHeading, maxSlope;
 @property (nonatomic) UILabel *headingLabel;
 @property (nonatomic) CGFloat target, forceFlip, steadyDiff;
 @property (nonatomic) CLLocationManager *locationManager;
@@ -93,8 +93,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
                       action:@selector(goBack:)
             forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addSubview:_unableButton];
-    
     [_unableButton setTitleColor:UserDefaults.defaults.appleBlue
                         forState:UIControlStateHighlighted];
     
@@ -110,8 +108,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
                            action:@selector(startCancel:)
                  forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addSubview:_startCancelButton];
-    
     [_startCancelButton setTitleColor:UserDefaults.defaults.appleBlue
                              forState:UIControlStateHighlighted];
     
@@ -126,12 +122,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
     _sideSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 754.0, 568.0, 60.0)];
     _maxSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 824.0, 568.0, 60.0)];
     _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 340.0, 728.0, 194.0)];
-    
-    [self.view addSubview:_headingLabel];
-    [self.view addSubview:_frontSlopeLabel];
-    [self.view addSubview:_sideSlopeLabel];
-    [self.view addSubview:_maxSlopeLabel];
-    [self.view addSubview:_promptLabel];
     
     [self setupLabel:_headingLabel];
     [self setupLabel:_frontSlopeLabel];
@@ -178,6 +168,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     button.layer.cornerRadius = 10.0;
     
     [self updateButtonAppearance:button];
+    [self.view addSubview:button];
 }
 
 - (void)updateButtonAppearance:(UIButton *)button
@@ -210,6 +201,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 0;
     label.adjustsFontSizeToFitWidth = YES;
+    
+    [self.view addSubview:label];
 }
 
 - (void)goBack:(UIButton *)button
@@ -217,21 +210,13 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [_motionManager stopDeviceMotionUpdates];
     [_motionManager stopAccelerometerUpdates];
     
-    CGFloat slopes[2], heading;
-    
-    slopes[0] = _frontSlope;
-    slopes[1] = _sideSlope;
-    heading = _avgHeading;
-    
     if (_unable)
-        slopes[0] = slopes[1] = heading = -9999.0;
+        _data.frontSlope = _data.sideSlope = _data.heading = -9999.0;
     
     if (_delegate)
     {
         [_delegate gssiSlopeViewController:self
-                        didReturnSlopeData:_data
-                                    slopes:slopes
-                                   heading:heading];
+                        didReturnSlopeData:_data];
     }
 }
 
@@ -296,26 +281,28 @@ typedef NS_ENUM(NSInteger, SCStatus)
         [_motionManager stopAccelerometerUpdates];
         [_locationManager stopUpdatingHeading];
         
-        _data.gravX = (_gSumX / COUNT);
-        _data.gravY = (_gSumY / COUNT);
-        _data.gravZ = (_gSumZ / COUNT);
+        _data.gravX[0] = (_gSumX / COUNT);
+        _data.gravY[0] = (_gSumY / COUNT);
+        _data.gravZ[0] = (_gSumZ / COUNT);
         
-        _data.accelX = (_aSumX / COUNT);
-        _data.accelY = (_aSumY / COUNT);
-        _data.accelZ = (_aSumZ / COUNT);
+        _data.accelX[0] = (_aSumX / COUNT);
+        _data.accelY[0] = (_aSumY / COUNT);
+        _data.accelZ[0] = (_aSumZ / COUNT);
         
-        _data.yaw = (_yawSum / COUNT);
-        _data.pitch = (_pitchSum / COUNT);
-        _data.roll = (_rollSum / COUNT);
+        _data.yaw[0] = (_yawSum / COUNT);
+        _data.pitch[0] = (_pitchSum / COUNT);
+        _data.roll[0] = (_rollSum / COUNT);
         
-        _frontSlope = (100.0 * sin(-atan2(_data.accelY, sqrt(pow(_data.accelX, 2) +
-                                                             pow(_data.accelZ, 2)))));
+        _data.frontSlope = (100.0 * sin(-atan2(_data.accelY[0],
+                                               sqrt(pow(_data.accelX[0], 2) +
+                                                    pow(_data.accelZ[0], 2)))));
         
-        _sideSlope = (100.0 * sin(atan2(_data.accelX, sqrt(pow(_data.accelY, 2) +
-                                                           pow(_data.accelZ, 2)))));
+        _data.sideSlope = (100.0 * sin(atan2(_data.accelX[0],
+                                             sqrt(pow(_data.accelY[0], 2) +
+                                                  pow(_data.accelZ[0], 2)))));
         
-        _maxSlope = ComputeMaxSlope(_frontSlope, _sideSlope);
-        _avgHeading = (_sumHeading / _headingCounter);
+        _maxSlope = ComputeMaxSlope(_data.frontSlope, _data.sideSlope);
+        _data.heading = (_sumHeading / _headingCounter);
         
         [self slopeMeasurementComplete];
     }
@@ -364,9 +351,9 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 - (void)slopeMeasurementComplete
 {
-    _headingLabel.text = [NSString stringWithFormat:@"Heading = %.02f\u00B0", _avgHeading];
-    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _frontSlope];
-    _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f%%", _sideSlope];
+    _headingLabel.text = [NSString stringWithFormat:@"Heading = %.02f\u00B0", _data.heading];
+    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlope];
+    _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f%%", _data.sideSlope];
     _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _maxSlope];
     
     _promptLabel.text = @"Press 'Done' to continue inventory.";

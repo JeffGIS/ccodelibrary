@@ -6,15 +6,18 @@
 #import <UIKit/UIKit.h>
 
 typedef struct NVSlopeData {
-    CGFloat accelX;
-    CGFloat accelY;
-    CGFloat accelZ;
-    CGFloat gravX;
-    CGFloat gravY;
-    CGFloat gravZ;
-    CGFloat yaw;
-    CGFloat pitch;
-    CGFloat roll;
+    CGFloat accelX[2];
+    CGFloat accelY[2];
+    CGFloat accelZ[2];
+    CGFloat gravX[2];
+    CGFloat gravY[2];
+    CGFloat gravZ[2];
+    CGFloat yaw[2];
+    CGFloat pitch[2];
+    CGFloat roll[2];
+    CGFloat frontSlope;
+    CGFloat sideSlope;
+    CGFloat heading;
 } NVSlopeData;
 
 @class GSSiSlopeViewController;
@@ -22,9 +25,7 @@ typedef struct NVSlopeData {
 @protocol GSSiSlopeViewControllerDelegate <NSObject>
 
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
-             didReturnSlopeData:(NVSlopeData)slopeData
-                         slopes:(CGFloat *)slopes
-                        heading:(CGFloat)heading;
+             didReturnSlopeData:(NVSlopeData)slopeData;
 
 - (BOOL)shouldUseCalibration:(GSSiSlopeViewController *)controller;
 
