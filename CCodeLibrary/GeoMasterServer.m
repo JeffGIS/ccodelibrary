@@ -1,9 +1,6 @@
 //  GeoMasterServer.m
 //  CCodeLibrary
 
-#define GM_ADDRESS @"74.39.76.33"
-#define GM_ADDRESSx @"192.168.254.39"
-#define GM_ADDRESSy @"192.168.1.144"
 #define GM_PORT 22335
 
 #import "GeoMasterServer.h"
@@ -31,7 +28,7 @@ static GeoMasterServer *_open = nil;
     if (self)
     {
         _output = @"";
-        _ipAddress = GM_ADDRESS;
+        _ipAddress = @"gssiserver1.com";
     }
 
     return self;
