@@ -52,7 +52,12 @@
     CGFloat alertHeight = (titleHeight + 160.0);
     CGFloat alertWidth = (titleWidth + 40.0);
     
-    largeAlert.frame = CGRectMake(0.0, 0.0, alertWidth, alertHeight);
+    if (bottomButtonText)
+        largeAlert.frame = CGRectMake(0.0, 0.0, alertWidth, alertHeight);
+    
+    else
+        largeAlert.frame = CGRectMake(0.0, 0.0, alertWidth, (alertHeight - 60.0));
+    
     largeAlert.center = CGPointMake((bounds.size.width / 2.0), (bounds.size.height / 2.0));
     largeAlert.backgroundColor = UIColor.whiteColor;
     largeAlert.alpha = 0.0;
@@ -81,22 +86,29 @@
             break;
             
         case NVLargeAlertIndexBottomButton:
-            [largeAlert.bottomButton setTitleColor:UIColor.redColor
-                                          forState:UIControlStateNormal];
+            if (bottomButtonText)
+            {
+                [largeAlert.bottomButton setTitleColor:UIColor.redColor
+                                              forState:UIControlStateNormal];
+            }
+            
             break;
     }
     
     [largeAlert addSubview:largeAlert.topButton];
     
-    largeAlert.bottomButton = [[UIButton alloc] initWithFrame:CGRectMake(-1.0, (alertHeight - 61.0), (alertWidth + 2.0), 62.0)];
-    
-    [largeAlert setupButton:largeAlert.bottomButton
-                     target:largeAlert
-                   selector:@selector(bottomButtonTapped:)
-                      title:bottomButtonText
-                       font:largeAlert.font];
-    
-    [largeAlert addSubview:largeAlert.bottomButton];
+    if (bottomButtonText)
+    {
+        largeAlert.bottomButton = [[UIButton alloc] initWithFrame:CGRectMake(-1.0, (alertHeight - 61.0), (alertWidth + 2.0), 62.0)];
+        
+        [largeAlert setupButton:largeAlert.bottomButton
+                         target:largeAlert
+                       selector:@selector(bottomButtonTapped:)
+                          title:bottomButtonText
+                           font:largeAlert.font];
+        
+        [largeAlert addSubview:largeAlert.bottomButton];
+    }
     
     [UIView animateWithDuration:0.25
                      animations:^{
