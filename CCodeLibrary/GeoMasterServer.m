@@ -28,7 +28,7 @@ static GeoMasterServer *_open = nil;
     if (self)
     {
         _output = @"";
-        _ipAddress = @"gssiserver1.com";
+        _ipAddress = @"gssidata.com";
     }
 
     return self;
