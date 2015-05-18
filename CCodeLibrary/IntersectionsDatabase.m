@@ -16,14 +16,14 @@
 
 @implementation IntersectionsDatabase
 
-static IntersectionsDatabase *_database;
+static IntersectionsDatabase *_statdatabase=nil;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid
 {
-    if (!_database || _database.geoid != geoid)
-        _database = [[IntersectionsDatabase alloc] initWithGeoid:geoid];
+    if (!_statdatabase || _statdatabase.geoid != geoid)
+        _statdatabase = [[IntersectionsDatabase alloc] initWithGeoid:geoid];
     
-    return _database;
+    return _statdatabase;
 }
 
 - (id)initWithGeoid:(int)geoid
@@ -1365,6 +1365,7 @@ Exit:
 - (void)dealloc
 {
     sqlite3_close(_database);
+    _statdatabase = nil;
     NSLog(@"Intersections Database dealloc");
 }
 
@@ -1389,7 +1390,7 @@ int SQLOK(int sqlReturn, char *method)
 {
     if (sqlReturn != SQLITE_OK)
     {
-        [_database logError:sqlReturn
+        [_statdatabase logError:sqlReturn
                      method:method];
     }
     
