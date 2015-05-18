@@ -11,14 +11,14 @@
 
 @implementation FacilitiesDatabase
 
-static FacilitiesDatabase *_database;
+static FacilitiesDatabase *_statdatabase=nil;
 
 + (FacilitiesDatabase *)databaseForGeoid:(int)geoid
 {
-    if (!_database || _database.geoid != geoid)
-        _database = [[FacilitiesDatabase alloc] initWithGeoid:geoid];
+    if (!_statdatabase || _statdatabase.geoid != geoid)
+        _statdatabase = [[FacilitiesDatabase alloc] initWithGeoid:geoid];
     
-    return _database;
+    return _statdatabase;
 }
 
 - (id)initWithGeoid:(int)geoid
@@ -608,6 +608,7 @@ Exit:
 - (void)dealloc
 {
     sqlite3_close(_database);
+    _statdatabase = nil;
 }
 
 - (void)logError:(int)sqlReturn
