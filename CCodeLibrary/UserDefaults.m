@@ -691,7 +691,7 @@ static UserDefaults *_defaults;
 - (BOOL)pickAdjustedTextColorForColor1:(UIColor *)color1
                                 color2:(UIColor *)color2
 {
-    BOOL rtn;
+    BOOL rtn = NO;
     CGFloat red1, green1, blue1, alpha1;
     CGFloat red2, green2, blue2, alpha2;
     

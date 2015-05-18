@@ -52,7 +52,7 @@ static FacilitiesDatabase *_database;
 
 - (void)createFacilitiesTable
 {
-    char *error;
+    char *error = NULL;
     
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Facilities;"];
     
@@ -148,7 +148,7 @@ static FacilitiesDatabase *_database;
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     NSString *query = [NSString stringWithFormat:@"SELECT facX, facY FROM Facilities"];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getFacilityPointsFromDatabase1");
     
@@ -177,7 +177,7 @@ static FacilitiesDatabase *_database;
                        FROM Facilities WHERE facX >= %i AND facX <= %i AND facY >= %i AND facY <= %i",
                        (int)bounds.xmn, (int)bounds.xmx, (int)bounds.ymn, (int)bounds.ymx];
     
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getFacilityPointsFromDatabaseinBounds1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
@@ -228,7 +228,7 @@ static FacilitiesDatabase *_database;
                        @"SELECT facID, assignedTo, facX, facY FROM Facilities WHERE facX >= %i AND facX <= %i AND facY >= %i AND facY <= %i",
                        (int)bounds.xmn,(int)bounds.xmx,(int)bounds.ymn,(int)bounds.ymx];
     
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getFacilityPointsWithinDistance1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
@@ -273,7 +273,7 @@ static FacilitiesDatabase *_database;
 - (FacilityPoint *)getCurrentFacilityPoint:(int)facID
 {
     NSString *query = [NSString stringWithFormat:@"SELECT facX, facY FROM Facilities WHERE facID=%i", facID];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     CGPoint facilityPoint;
     FacilityPoint *facpt;
     
@@ -300,7 +300,7 @@ static FacilitiesDatabase *_database;
 {
     NSString * rtn = [[NSString alloc] init];
     NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetAZMs FROM Facilities WHERE facID=%i", facID];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getCurrentFacilityAZMs1");
     
@@ -318,14 +318,14 @@ static FacilitiesDatabase *_database;
 
 - (BOOL)setCurrentFacilityPoint:(FacilityPoint *)facpt
 {
-    BOOL rtn;
+    BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     int lev21x, lev21y;
     LatLongToPixelXY(facpt.latitude, facpt.longitude, 21, &lev21x, &lev21y);
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Facilities SET lastUpdateTime=%i, facX=%i, facY=%i WHERE facID=%i",
                        iTime, lev21x, lev21y, facpt.facID];
-    char *error;
+    char *error = NULL;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
     return !rtn;
@@ -334,7 +334,7 @@ static FacilitiesDatabase *_database;
 - (BOOL)storeFacilityToDB:(Facility *)fac
                withStatus:(int)status
 {
-    BOOL rtn;
+    BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Facilities SET lastUpdateTime=%i, status=%i,\
@@ -346,7 +346,7 @@ static FacilitiesDatabase *_database;
                        fac.lev21y,
                        fac.facID];
     
-    char *error;
+    char *error = NULL;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
     return !rtn;
@@ -358,7 +358,7 @@ static FacilitiesDatabase *_database;
     Facility *fac;
     
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Facilities WHERE facID=%i", facID];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getFacilityFromDB1");
     
@@ -381,7 +381,7 @@ static FacilitiesDatabase *_database;
         FacilityPoint *facpt;
         
         NSString *query = [NSString stringWithFormat:@"SELECT facID, facX, facY FROM Facilities WHERE status=0 ORDER BY facID ASC"];
-        sqlite3_stmt *statement;
+        sqlite3_stmt *statement = NULL;
         
         SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getFirstAssignedFacilityPointWithStatus01");
         
@@ -406,13 +406,13 @@ static FacilitiesDatabase *_database;
 - (BOOL)setFacilityStatusTo:(int)status
                 forFacility:(int)facID
 {
-    BOOL rtn;
+    BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Facilities SET lastUpdateTime=%i, status=%i WHERE facID=%i",
                        iTime, status, facID];
     
-    char *error;
+    char *error = NULL;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
     return !rtn;
@@ -421,12 +421,12 @@ static FacilitiesDatabase *_database;
 - (BOOL)assignFacility:(int)facID
                     to:(int)user
 {
-    BOOL rtn;
+    BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Facilities SET lastUpdateTime=%i, assignedTo=%i WHERE facID=%i",
                        iTime, user, facID];
-    char *error;
+    char *error = NULL;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
     return !rtn;
@@ -459,8 +459,8 @@ static FacilitiesDatabase *_database;
     int maxIndex = 100;
     int nLoaded = 0;
     char buffer[] = "INSERT INTO Facilities VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    sqlite3_stmt *statement;
-    char *error;
+    sqlite3_stmt *statement = NULL;
+    char *error = NULL;
     FACILITY_STRUCT facStruct = {0};
     int *pInt, i;
     
@@ -589,7 +589,7 @@ Exit:
 - (int)getCountOfFacilities
 {
     NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Facilities"];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     int count = 0;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getCountOfFacilities1");
     

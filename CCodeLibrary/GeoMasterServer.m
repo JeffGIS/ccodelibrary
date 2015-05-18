@@ -68,7 +68,7 @@ static GeoMasterServer *_open = nil;
 {
     _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
-    bool rtn = NO;
+    BOOL rtn = NO;
     
     _responseTimeoutInSeconds = connectionTimeoutInSeconds;
     if(remoteHostStatus == NotReachable)
@@ -85,16 +85,16 @@ static GeoMasterServer *_open = nil;
         return rtn;
     }
     
-	CFReadStreamRef readStream;
-	CFWriteStreamRef writeStream;
+	CFReadStreamRef readStream = NULL;
+	CFWriteStreamRef writeStream = NULL;
     
     CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)(_ipAddress),
                                        GM_PORT, &readStream, &writeStream);
 	
 	_inputStream = (__bridge NSInputStream *)readStream;
 	_outputStream = (__bridge NSOutputStream *)writeStream;
-	[_inputStream setDelegate:self];
-	[_outputStream setDelegate:self];
+    _inputStream.delegate = self;
+    _outputStream.delegate = self;
     
 	[_inputStream scheduleInRunLoop:NSRunLoop.currentRunLoop
                             forMode:NSDefaultRunLoopMode];
@@ -187,7 +187,8 @@ static GeoMasterServer *_open = nil;
             if (_inputStream && theStream == _inputStream)
             {
 				uint8_t buffer[1024];
-				long len, origlen;
+                long len = 0;
+                long origlen = 0;
 				
 				while (_inputStream.hasBytesAvailable)
                 {

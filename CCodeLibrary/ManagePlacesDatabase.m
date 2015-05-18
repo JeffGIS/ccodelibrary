@@ -63,7 +63,7 @@ static ManagePlacesDatabase *_database;
     
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT name, geoid FROM places WHERE statefp=%i", code];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getCityList");
     
@@ -92,7 +92,7 @@ static ManagePlacesDatabase *_database;
     
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT bounds_w, bounds_s, bounds_e, bounds_n FROM places WHERE geoid=%i", geoid];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getPlaceBounds");
     
@@ -120,7 +120,7 @@ static ManagePlacesDatabase *_database;
 {
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT name FROM places WHERE geoid=%i", geoid];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     NSString *placeName = @"";
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getPlaceName");
@@ -142,7 +142,7 @@ static ManagePlacesDatabase *_database;
 {
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT statefp FROM places WHERE geoid=%i", geoid];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     int statefp = -1;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getPlaceStatefp");
@@ -161,7 +161,7 @@ static ManagePlacesDatabase *_database;
     
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT name, statefp, bounds_w, bounds_s, bounds_e, bounds_n FROM places WHERE geoid=%i", geoid];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getPlaceInfo");
     
@@ -198,7 +198,7 @@ static ManagePlacesDatabase *_database;
 {
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT name, statefp, bounds_w, bounds_s, bounds_e, bounds_n FROM places WHERE geoid=%i", geoid];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "addLocationToList");
     
@@ -231,7 +231,7 @@ static ManagePlacesDatabase *_database;
 {
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT statecode FROM states WHERE statefp=%i", statefp];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     NSString *stateCode = @"";
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getStateCodeForStatefp");
@@ -252,7 +252,7 @@ static ManagePlacesDatabase *_database;
 {
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT statename FROM states WHERE statefp=%i", statefp];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     NSString *stateName = @"";
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getStateNameForStatefp");
@@ -273,7 +273,7 @@ static ManagePlacesDatabase *_database;
 {
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT statefp FROM states WHERE statename='%@'", stateName];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     int statefp = -1;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getStatefpForStateName");
@@ -290,7 +290,7 @@ static ManagePlacesDatabase *_database;
 {
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT statefp FROM states WHERE statecode='%@'", stateCode];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     int statefp = -1;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getStatefpForStateCode");
@@ -309,7 +309,7 @@ static ManagePlacesDatabase *_database;
     
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT statename FROM states"];
-    sqlite3_stmt *statement;
+    sqlite3_stmt *statement = NULL;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "stateList");
     

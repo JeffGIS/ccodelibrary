@@ -26,7 +26,6 @@
 @property BOOL gettingUploaded;
 @property BOOL isOpen;
 @property NSString *path;
-@property sqlite3_stmt *statement;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
