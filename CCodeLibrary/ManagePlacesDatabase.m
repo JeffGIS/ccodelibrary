@@ -8,7 +8,7 @@
 
 @implementation ManagePlacesDatabase
 
-static ManagePlacesDatabase *_statdatabase=nil;
+static ManagePlacesDatabase *_statdatabase = nil;
 
 + (ManagePlacesDatabase *)database
 {

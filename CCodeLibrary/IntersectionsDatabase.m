@@ -16,7 +16,7 @@
 
 @implementation IntersectionsDatabase
 
-static IntersectionsDatabase *_statdatabase=nil;
+static IntersectionsDatabase *_statdatabase = nil;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid
 {

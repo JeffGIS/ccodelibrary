@@ -11,7 +11,7 @@
 
 @implementation FacilitiesDatabase
 
-static FacilitiesDatabase *_statdatabase=nil;
+static FacilitiesDatabase *_statdatabase = nil;
 
 + (FacilitiesDatabase *)databaseForGeoid:(int)geoid
 {

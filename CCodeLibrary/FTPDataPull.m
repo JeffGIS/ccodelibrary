@@ -73,6 +73,7 @@
         }
         
         [self startReceive:fileName];
+        
         if (_popover)
         {
             _savePopoverDelegate = _popover.delegate;
@@ -188,9 +189,8 @@
                  statusString:(NSString *)statusString
 {
     if (_popover)
-    {
         _popover.delegate = _savePopoverDelegate;
-    }
+    
     if (_connection)
     {
         [_connection cancel];
