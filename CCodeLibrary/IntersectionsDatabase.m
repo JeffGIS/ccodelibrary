@@ -843,8 +843,8 @@ static IntersectionsDatabase *_database;
             *plev21x = intX;
             *plev21y = intY;
             *pNumStreets = nStreets;
-            strcpy(intText,pStreets);
-            strcpy(intAZMs,pAZMS);
+            strcpy(intText, pStreets);
+            strcpy(intAZMs, pAZMS);
         }
         
         SQLOK(sqlite3_finalize(statement), "findIntersection2");
@@ -863,8 +863,10 @@ static IntersectionsDatabase *_database;
     LatLongToPixelXY(intpt.latitude, intpt.longitude, 21, &lev21x, &lev21y);
     
     [self open];
+    
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, intX=%i, intY=%i WHERE intID=%i",
                        iTime, lev21x, lev21y, intpt.intID];
+    
     char *error = NULL;
     rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
@@ -902,7 +904,7 @@ static IntersectionsDatabase *_database;
 - (NSString *)getCurrentIntersectionAZMs:(int)intID
                                 nStreets:(int *)pnStreets
 {
-    NSString *rtn = [[NSString alloc] init];
+    NSString *rtn = @"";
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetAZMs FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement = NULL;
@@ -1086,7 +1088,7 @@ static IntersectionsDatabase *_database;
     //LPSTR pUB;
     FILE *fidData = NULL;
     FILE *fidIndex = NULL;
-    char data[258], index[256];
+    char data[512], index[512];
     int maxData = 256;
     int maxIndex = 100;
     int nLoaded = 0;
@@ -1099,7 +1101,7 @@ static IntersectionsDatabase *_database;
     [self open];
     
     strcpy(indexFile, path.UTF8String);
-    strcpy(dataFile,indexFile);
+    strcpy(dataFile, indexFile);
     strcat(indexFile, "/intersection_index.bin");
     strcat(dataFile, "/intersection_data.bin");
     fidData = fopen(dataFile, "rb");

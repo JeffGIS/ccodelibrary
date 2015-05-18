@@ -4,12 +4,10 @@
 #import <sqlite3.h>
 
 @interface ManagePlacesDatabase : NSObject
-{
-    sqlite3 *_database;
-}
 
 @property BOOL isOpen;
-@property NSString *path;
+@property (nonatomic, copy) NSString *path;
+@property sqlite3 *database;
 
 + (ManagePlacesDatabase *)database;
 

@@ -11,21 +11,18 @@
 
 @protocol IntersectionsDatabaseDelegate <NSObject>
 
-- (void) intersectionsDatabase:(NSString *)databasePath
-                       didLoad:(NSString *)message
-                    withStatus:(int)status;
+- (void)intersectionsDatabase:(NSString *)databasePath
+                      didLoad:(NSString *)message
+                   withStatus:(int)status;
 @end
 
-@interface IntersectionsDatabase : NSObject<FTPDataPullDelegate>
-{
-    sqlite3 *_database;
-}
+@interface IntersectionsDatabase : NSObject <FTPDataPullDelegate>
 
 @property (nonatomic, weak) id <IntersectionsDatabaseDelegate> delegate;
-@property int geoid;
-@property BOOL gettingUploaded;
-@property BOOL isOpen;
-@property NSString *path;
+@property (nonatomic) int geoid;
+@property BOOL gettingUploaded, isOpen;
+@property (nonatomic, copy) NSString *path;
+@property sqlite3 *database;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
