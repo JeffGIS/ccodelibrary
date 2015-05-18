@@ -68,7 +68,7 @@ int DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec, LPBYTE pCompressedRec
 int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long MaxLength)
 {
 	int lRec, rtn = FALSE;
-    LPBYTE	pRec = malloc(MaxLength);
+    LPBYTE	pRec = malloc(MaxLength * 2);
     LPBYTE	pCompressedRec = malloc(MaxLength * 2);
     int	CompressedLength, LenRead = 0;
 	FILE *Fid = fopen(FileToGet,"wb");
