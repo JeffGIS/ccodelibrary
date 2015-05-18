@@ -8,14 +8,14 @@
 
 @implementation ManagePlacesDatabase
 
-static ManagePlacesDatabase *_database;
+static ManagePlacesDatabase *_statdatabase=nil;
 
 + (ManagePlacesDatabase *)database
 {
-    if (!_database)
-        _database = [[ManagePlacesDatabase alloc] init];
+    if (!_statdatabase)
+        _statdatabase = [[ManagePlacesDatabase alloc] init];
     
-    return _database;
+    return _statdatabase;
 }
 
 - (id)init
@@ -35,6 +35,7 @@ static ManagePlacesDatabase *_database;
 - (void)dealloc
 {
     sqlite3_close(_database);
+    _statdatabase = nil;
     NSLog(@"Places Database dealloc");
 }
 
