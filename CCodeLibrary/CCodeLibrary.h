@@ -1,10 +1,6 @@
 //  CCodeLibrary.h
 //  CCodeLibrary
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-#import <QuartzCore/QuartzCore.h>
-#import <CoreGraphics/CoreGraphics.h>
 #import "CCodeTypes.h"
 #import "IntersectionPoint.h"
 #import "FTPDataPull.h"

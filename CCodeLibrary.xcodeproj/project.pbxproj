@@ -13,7 +13,6 @@
 		1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */; };
 		1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544519A412490029DBEA /* NetworkManager.m */; };
 		1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544E19A449460029DBEA /* CustomAlert.m */; };
-		1F7E00AA19CA8892006AFABA /* MarkerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7E00A919CA8892006AFABA /* MarkerView.m */; };
 		1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F838AE919B1021C00943A8C /* PlacesInfo.m */; };
 		1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F838AEB19B1026700943A8C /* CoreGraphics.framework */; };
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
@@ -96,7 +95,6 @@
 		A99C89261AEDE0E200A0856F /* HelpButton.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A91F6E8B1AE0A73B00822F42 /* HelpButton.h */; };
 		A99C89271AEDE0E700A0856F /* HelpWebView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A97C621D1AE0C59200DA7738 /* HelpWebView.h */; };
 		A99C89281AEDE0EF00A0856F /* LegendView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A96B07BD19FBF276005A73B0 /* LegendView.h */; };
-		A99C89291AEDE0F500A0856F /* MarkerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F7E00A819CA8892006AFABA /* MarkerView.h */; };
 		A99C892A1AEDE0FA00A0856F /* NVSliderView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A91F36921AE9739400602BCE /* NVSliderView.h */; };
 		A99C892B1AEDE0FF00A0856F /* RampTypeView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */; };
 		A99C892C1AEDE10300A0856F /* SpreadsheetView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99050891ACB947000C6AAAF /* SpreadsheetView.h */; };
@@ -116,7 +114,6 @@
 		A99C893A1AEDE16C00A0856F /* PointInAreaClass.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB36639A1A55A97C00ABA486 /* PointInAreaClass.h */; };
 		A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */ = {isa = PBXBuildFile; fileRef = A99C893C1AEDE1B900A0856F /* GSSiDefs.m */; };
 		A99C893E1AEDE1E200A0856F /* GSSiDefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99C893B1AEDE1B900A0856F /* GSSiDefs.h */; };
-		A99CD8C21A9DB89E0049F271 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A99CD8C11A9DB89E0049F271 /* GoogleMaps.framework */; };
 		A99CD8C41A9DB8AE0049F271 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A99CD8C31A9DB8AE0049F271 /* GoogleMaps.bundle */; };
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
 		A9C525D01A3B59880056711F /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C525CF1A3B59880056711F /* Colors.m */; };
@@ -202,7 +199,6 @@
 				A99C892C1AEDE10300A0856F /* SpreadsheetView.h in CopyFiles */,
 				A99C892B1AEDE0FF00A0856F /* RampTypeView.h in CopyFiles */,
 				A99C892A1AEDE0FA00A0856F /* NVSliderView.h in CopyFiles */,
-				A99C89291AEDE0F500A0856F /* MarkerView.h in CopyFiles */,
 				A99C89281AEDE0EF00A0856F /* LegendView.h in CopyFiles */,
 				A99C89271AEDE0E700A0856F /* HelpWebView.h in CopyFiles */,
 				A99C89261AEDE0E200A0856F /* HelpButton.h in CopyFiles */,
@@ -266,8 +262,6 @@
 		1F3A544519A412490029DBEA /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		1F3A544D19A449460029DBEA /* CustomAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlert.h; sourceTree = "<group>"; };
 		1F3A544E19A449460029DBEA /* CustomAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlert.m; sourceTree = "<group>"; };
-		1F7E00A819CA8892006AFABA /* MarkerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkerView.h; sourceTree = "<group>"; };
-		1F7E00A919CA8892006AFABA /* MarkerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarkerView.m; sourceTree = "<group>"; };
 		1F838AE819B1021C00943A8C /* PlacesInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesInfo.h; sourceTree = "<group>"; };
 		1F838AE919B1021C00943A8C /* PlacesInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlacesInfo.m; sourceTree = "<group>"; };
 		1F838AEB19B1026700943A8C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -330,7 +324,6 @@
 		A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpreadSheetViewCell.m; sourceTree = "<group>"; };
 		A99C893B1AEDE1B900A0856F /* GSSiDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiDefs.h; sourceTree = "<group>"; };
 		A99C893C1AEDE1B900A0856F /* GSSiDefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiDefs.m; sourceTree = "<group>"; };
-		A99CD8C11A9DB89E0049F271 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		A99CD8C31A9DB8AE0049F271 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
 		A9ADCB1C1ACD0870000E5C00 /* GSSiNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiNotesView.h; sourceTree = "<group>"; };
 		A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiNotesView.m; sourceTree = "<group>"; };
@@ -419,7 +412,6 @@
 			files = (
 				A97B72781ADB4912001ACFAE /* AVFoundation.framework in Frameworks */,
 				A97867341A521934000A9BB8 /* MapKit.framework in Frameworks */,
-				A99CD8C21A9DB89E0049F271 /* GoogleMaps.framework in Frameworks */,
 				A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */,
 				1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */,
 				1F101D2319AE94910006E1D5 /* QuartzCore.framework in Frameworks */,
@@ -551,8 +543,6 @@
 				A97C621E1AE0C59200DA7738 /* HelpWebView.m */,
 				A96B07BD19FBF276005A73B0 /* LegendView.h */,
 				A96B07BE19FBF276005A73B0 /* LegendView.m */,
-				1F7E00A819CA8892006AFABA /* MarkerView.h */,
-				1F7E00A919CA8892006AFABA /* MarkerView.m */,
 				A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */,
 				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
 				A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */,
@@ -633,7 +623,6 @@
 			children = (
 				A99CD8C31A9DB8AE0049F271 /* GoogleMaps.bundle */,
 				A97B72771ADB4912001ACFAE /* AVFoundation.framework */,
-				A99CD8C11A9DB89E0049F271 /* GoogleMaps.framework */,
 				A97867331A521934000A9BB8 /* MapKit.framework */,
 				A9735AF019E779DF00894359 /* SystemConfiguration.framework */,
 				1F838AEB19B1026700943A8C /* CoreGraphics.framework */,
@@ -835,7 +824,6 @@
 				EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */,
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
 				A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */,
-				1F7E00AA19CA8892006AFABA /* MarkerView.m in Sources */,
 				A926F21119D9FC18007C392A /* CircleView.m in Sources */,
 				EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */,
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,

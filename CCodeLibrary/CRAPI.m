@@ -485,7 +485,8 @@
                                   pitch:(CGFloat)pitch
                                     fov:(CGFloat)fov
 {
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=%f&heading=%f&pitch=%f&sensor=false&key=%@", atLatLon.lat, atLatLon.lon, fov, heading, pitch, GOOGLE_API_KEY];
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=%f&heading=%f&pitch=%f&sensor=false&key=%@",
+                              atLatLon.lat, atLatLon.lon, fov, heading, pitch, GOOGLE_API_KEY];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
@@ -525,58 +526,6 @@
     free(str);
     return outDir;
 }
-
--(IPOINT)PointAtZoom:(int)zoom
-        fromViewPoint:(CGPoint)pt
-      usingProjection:(GMSProjection *)projection
-{
-    IPOINT zoomPt;
-    CLLocationCoordinate2D latlon = [projection coordinateForPoint:pt];
-    LatLongToPixelXY(latlon.latitude, latlon.longitude, zoom, &zoomPt.x, &zoomPt.y);
-    return zoomPt;
-}
-
-- (IBOUNDS)boundsFromRect:(CGRect)rect
-                   atZoom:(int)zoom
-          usingProjection:(GMSProjection *)projection
-{
-    IBOUNDS iBounds;
-    CGPoint pt = CGPointZero;
-    IPOINT pt21;
-    
-    InitIBounds(&iBounds);
-    pt.x = rect.origin.x;
-    pt.y = rect.origin.y;
-    
-    pt21 = [self PointAtZoom:21
-               fromViewPoint:pt
-             usingProjection:projection];
-    
-    AddPointToIBounds(&iBounds, &pt21);
-    pt.x += rect.size.width;
-    
-    pt21 = [self PointAtZoom:21
-               fromViewPoint:pt
-             usingProjection:projection];
-    
-    AddPointToIBounds(&iBounds, &pt21);
-    pt.y += rect.size.height;
-    
-    pt21 = [self PointAtZoom:21
-               fromViewPoint:pt
-             usingProjection:projection];
-    
-    AddPointToIBounds(&iBounds, &pt21);
-    pt.x = rect.origin.x;
-    
-    pt21 = [self PointAtZoom:21
-               fromViewPoint:pt
-             usingProjection:projection];
-    
-    AddPointToIBounds(&iBounds, &pt21);
-    return iBounds;
-}
-
 
 - (IBOUNDS)CGRectToIBounds:(CGRect)rect
 {
