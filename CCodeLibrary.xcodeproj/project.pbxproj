@@ -55,11 +55,8 @@
 		A99C88FD1AEDDFE700A0856F /* gmlimits.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB268A191AC5E9F700A68EC8 /* gmlimits.h */; };
 		A99C88FE1AEDDFEB00A0856F /* CCodeTypes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEED0A19B610260084A579 /* CCodeTypes.h */; };
 		A99C88FF1AEDDFF000A0856F /* compress.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEED0B19B61FB80084A579 /* compress.h */; };
-		A99C89001AEDDFF400A0856F /* lzodefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEED0419B601710084A579 /* lzodefs.h */; };
-		A99C89011AEDDFF800A0856F /* lzoconf.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEED0319B601710084A579 /* lzoconf.h */; };
 		A99C89021AEDDFFD00A0856F /* MathTypes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E48319952BCA0085B2E0 /* MathTypes.h */; };
 		A99C89031AEDE00200A0856F /* MathUtil.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E48519952BCA0085B2E0 /* MathUtil.h */; };
-		A99C89041AEDE00500A0856F /* minilzo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEED0619B601710084A579 /* minilzo.h */; };
 		A99C89051AEDE00900A0856F /* rotate256.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E48619952BCA0085B2E0 /* rotate256.h */; };
 		A99C89061AEDE00D00A0856F /* TileGraphics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E48719952BCA0085B2E0 /* TileGraphics.h */; };
 		A99C89071AEDE01100A0856F /* FacilitiesDatabase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A94A770E19F8045C0062906E /* FacilitiesDatabase.h */; };
@@ -144,6 +141,7 @@
 		EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */ = {isa = PBXBuildFile; fileRef = EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */; };
 		EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EB3CC5F61AD95F8B002453A9 /* PickedItem.m */; };
 		EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */; };
+		EB86BFA71B0B62520074728E /* minilzo.c in Sources */ = {isa = PBXBuildFile; fileRef = EB86BFA51B0B62520074728E /* minilzo.c */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
 		EBA2E472199527660085B2E0 /* libCCodeLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */; };
@@ -152,7 +150,6 @@
 		EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E48819952BCA0085B2E0 /* TileIndex.c */; };
 		EBAB31C71AE6DC2D00C5CCEF /* NamedColors.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */; };
 		EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */; };
-		EBAEED0719B601710084A579 /* minilzo.c in Sources */ = {isa = PBXBuildFile; fileRef = EBAEED0519B601710084A579 /* minilzo.c */; };
 		EBAEED0919B605E20084A579 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = EBAEED0819B605E20084A579 /* compress.c */; };
 		EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */; };
 		EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1BFCB199DD7C10059B547 /* MPIntersection.m */; };
@@ -239,11 +236,8 @@
 				A99C89071AEDE01100A0856F /* FacilitiesDatabase.h in CopyFiles */,
 				A99C89061AEDE00D00A0856F /* TileGraphics.h in CopyFiles */,
 				A99C89051AEDE00900A0856F /* rotate256.h in CopyFiles */,
-				A99C89041AEDE00500A0856F /* minilzo.h in CopyFiles */,
 				A99C89031AEDE00200A0856F /* MathUtil.h in CopyFiles */,
 				A99C89021AEDDFFD00A0856F /* MathTypes.h in CopyFiles */,
-				A99C89011AEDDFF800A0856F /* lzoconf.h in CopyFiles */,
-				A99C89001AEDDFF400A0856F /* lzodefs.h in CopyFiles */,
 				A99C88FF1AEDDFF000A0856F /* compress.h in CopyFiles */,
 				A99C88FE1AEDDFEB00A0856F /* CCodeTypes.h in CopyFiles */,
 				A99C88FD1AEDDFE700A0856F /* gmlimits.h in CopyFiles */,
@@ -377,6 +371,10 @@
 		EB3CC5F61AD95F8B002453A9 /* PickedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickedItem.m; sourceTree = "<group>"; };
 		EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPlaceAreaFile.h; sourceTree = "<group>"; };
 		EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPlaceAreaFile.m; sourceTree = "<group>"; };
+		EB86BFA51B0B62520074728E /* minilzo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minilzo.c; sourceTree = "<group>"; };
+		EB86BFA61B0B62520074728E /* minilzo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minilzo.h; sourceTree = "<group>"; };
+		EB86BFA81B0B62A30074728E /* lzoconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzoconf.h; sourceTree = "<group>"; };
+		EB86BFA91B0B62A30074728E /* lzodefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzodefs.h; sourceTree = "<group>"; };
 		EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCCodeLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CCodeLibrary-Prefix.pch"; sourceTree = "<group>"; };
 		EBA2E462199527660085B2E0 /* CCodeLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCodeLibrary.h; sourceTree = "<group>"; };
@@ -395,10 +393,6 @@
 		EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NamedColors.m; sourceTree = "<group>"; };
 		EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoMasterServer.h; sourceTree = "<group>"; };
 		EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoMasterServer.m; sourceTree = "<group>"; };
-		EBAEED0319B601710084A579 /* lzoconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzoconf.h; sourceTree = "<group>"; };
-		EBAEED0419B601710084A579 /* lzodefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzodefs.h; sourceTree = "<group>"; };
-		EBAEED0519B601710084A579 /* minilzo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minilzo.c; sourceTree = "<group>"; };
-		EBAEED0619B601710084A579 /* minilzo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minilzo.h; sourceTree = "<group>"; };
 		EBAEED0819B605E20084A579 /* compress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress.c; sourceTree = "<group>"; };
 		EBAEED0A19B610260084A579 /* CCodeTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCodeTypes.h; sourceTree = "<group>"; };
 		EBAEED0B19B61FB80084A579 /* compress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress.h; sourceTree = "<group>"; };
@@ -498,6 +492,10 @@
 		A94A771D19F813040062906E /* CCode */ = {
 			isa = PBXGroup;
 			children = (
+				EB86BFA81B0B62A30074728E /* lzoconf.h */,
+				EB86BFA91B0B62A30074728E /* lzodefs.h */,
+				EB86BFA51B0B62520074728E /* minilzo.c */,
+				EB86BFA61B0B62520074728E /* minilzo.h */,
 				EB268A171AC5E9F700A68EC8 /* code.c */,
 				EB268A181AC5E9F700A68EC8 /* gssitype.h */,
 				EB268A191AC5E9F700A68EC8 /* gmlimits.h */,
@@ -505,13 +503,9 @@
 				EBAEED0B19B61FB80084A579 /* compress.h */,
 				EBAEED0819B605E20084A579 /* compress.c */,
 				1F101D2619AE96EB0006E1D5 /* findIntersection.c */,
-				EBAEED0319B601710084A579 /* lzoconf.h */,
-				EBAEED0419B601710084A579 /* lzodefs.h */,
 				EBA2E48319952BCA0085B2E0 /* MathTypes.h */,
 				EBA2E48519952BCA0085B2E0 /* MathUtil.h */,
 				EBA2E48419952BCA0085B2E0 /* MathUtil.c */,
-				EBAEED0619B601710084A579 /* minilzo.h */,
-				EBAEED0519B601710084A579 /* minilzo.c */,
 				EBA2E48619952BCA0085B2E0 /* rotate256.h */,
 				EBA2E48719952BCA0085B2E0 /* TileGraphics.h */,
 				EBA2E48819952BCA0085B2E0 /* TileIndex.c */,
@@ -810,7 +804,6 @@
 				A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */,
 				A9E2130E1AFE4BFC005ECBBA /* NVImagePickerController.m in Sources */,
 				EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */,
-				EBAEED0719B601710084A579 /* minilzo.c in Sources */,
 				EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */,
 				EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
@@ -820,6 +813,7 @@
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,
 				A91F36941AE9739400602BCE /* NVSliderView.m in Sources */,
 				A94A771619F8079E0062906E /* FacilityPoint.m in Sources */,
+				EB86BFA71B0B62520074728E /* minilzo.c in Sources */,
 				A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */,
 				A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */,
 				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
