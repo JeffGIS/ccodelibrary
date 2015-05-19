@@ -20,12 +20,12 @@ static FTPDataPull * _statpull = nil;
 + (FTPDataPull *)pull
 {
     if (!_statpull)
-    {
         _statpull = [[FTPDataPull alloc] init];
-    }
+    
     _statpull.haveCalledDelegate = NO;
     return _statpull;
 }
+
 - (id)init
 {
     self = [super init];
