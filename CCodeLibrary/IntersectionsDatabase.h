@@ -23,6 +23,7 @@
 @property BOOL gettingUploaded, isOpen;
 @property (nonatomic, copy) NSString *path;
 @property sqlite3 *database;
+@property FTPDataPull *pull;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 

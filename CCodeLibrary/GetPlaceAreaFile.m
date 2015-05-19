@@ -14,11 +14,11 @@
     
     NSString *fileName = [NSString stringWithFormat:@"Place_%7.7i_Area.bin", geoid];
     
-    FTPDataPull *pull = FTPDataPull.pull;
-    pull.delegate = self;
-    pull.popover = popover;
-    
-    [pull getFile:fileName
+    _pull = FTPDataPull.pull;
+    _pull.delegate = self;
+    _pull.popover = popover;
+    _pull.createDirectory = YES;
+    [_pull getFile:fileName
     fromDirectory:@"Bill/PlaceAreas"
            toFile:fileName
       toDirectory:documentsDirectory
@@ -45,5 +45,8 @@
                          didGetFile:path
                          withStatus:status];
 }
-
+-(void) dealloc
+{
+    self.delegate = nil;
+}
 @end

@@ -2,6 +2,8 @@
 //  CCodeLibrary
 
 #define GM_PORT 22335
+//#define GM_SERVER @"gssidata.com"
+#define GM_SERVER @"gssiserver1.com"
 
 #import "GeoMasterServer.h"
 #import "Reachability.h"
@@ -28,7 +30,7 @@ static GeoMasterServer *_open = nil;
     if (self)
     {
         _output = @"";
-        _ipAddress = @"gssidata.com";
+        _ipAddress = GM_SERVER;
     }
 
     return self;
@@ -305,5 +307,8 @@ static GeoMasterServer *_open = nil;
 {
 	[_messages addObject:message];
 }
-
+-(void) dealloc
+{
+    _open = nil;
+}
 @end

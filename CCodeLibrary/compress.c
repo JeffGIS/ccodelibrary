@@ -20,15 +20,15 @@ long GSSifilelength(FILE *fid)
     return fileLen;
 }
 
-long BigRead(FILE *fid, LPVOID pmem, long len)
+long __attribute__ ((noinline)) BigRead(FILE *fid, LPVOID pmem, long len)
 {
     long didRead = fread(pmem, len, 1, fid);
     return didRead;
 }
 
-long BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc)
+long __attribute__ ((noinline)) BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc)
 {
-    long bytesWritten = fwrite(pbuf, len, 1, fid);
+    long bytesWritten = fwrite(pbuf, 1, len, fid);
     return bytesWritten;
 }
 
@@ -53,14 +53,18 @@ int InitLZO (void)
 
 int DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec, LPBYTE pCompressedRec, DWORD CompressedLen)
 {
-	int	DCLen, rtn;
+    lzo_uint DCLen;
+    int rtn;
     
 	if (InitLZO())
 	{
-		rtn = lzo1x_decompress(pCompressedRec, (lzo_uint)CompressedLen, pDecompressedRec, (lzo_uint *)&DCLen, NULL);
+		rtn = lzo1x_decompress_safe (pCompressedRec, (lzo_uint)CompressedLen, pDecompressedRec, (lzo_uint *)&DCLen, NULL);
         
 		if (rtn == 0)
-        	return DCLen;
+        {
+            rtn = (int)DCLen;
+        	return rtn;
+        }
 	}
     
 	return 0;
@@ -68,8 +72,6 @@ int DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec, LPBYTE pCompressedRec
 int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long MaxLength)
 {
 	int lRec, rtn = FALSE;
-    LPBYTE	pRec = malloc(MaxLength * 2);
-    LPBYTE	pCompressedRec = malloc(MaxLength * 2);
     int	CompressedLength, LenRead = 0;
 	FILE *Fid = fopen(FileToGet,"wb");
 	
@@ -80,20 +82,21 @@ int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long
     
 	while (CompressedLength > 0)
 	{
+        LPBYTE	pCompressedRec = (LPBYTE)malloc(CompressedLength +32);
+        LPBYTE	pRec = (LPBYTE)malloc(MaxLength * 2);
 		LenRead += CompressedLength + 4;
 		BigRead(FidTF,pCompressedRec,CompressedLength);
 		lRec = DecompressBinaryRecordUnsafe(pRec, pCompressedRec, CompressedLength);
     	BigWrite(Fid ,pRec ,lRec, -1);
         BigRead(FidTF, (HPSTR)&CompressedLength, 4);
+        free (pCompressedRec);
+        free(pRec);
     }
     
-    //lRec = (int)GSSifilelength(Fid);
     fclose(Fid);
     rtn = TRUE;
     
 Exit:
-    free(pCompressedRec);
-    free(pRec);
     return rtn;
 }
 
@@ -135,11 +138,13 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory)
         BigRead (FidTF, File, len);
         
         if (!(pBS = strrchr(File,'\\')))
+        {
             pBS = File;
-        
+        }
         else
+        {
             pBS++;
-        
+        }
         sprintf(OutFile, "%s/%s", toDirectory, pBS);
         rtn = GetFileFromTransferFile(0, FidTF, OutFile,  MaxLength);
         BigRead(FidTF, &len, 4);
