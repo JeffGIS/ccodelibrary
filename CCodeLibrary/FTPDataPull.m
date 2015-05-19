@@ -13,13 +13,18 @@
 
 @end
 
+static FTPDataPull * _statpull = nil;
+
 @implementation FTPDataPull
 
 + (FTPDataPull *)pull
 {
-    FTPDataPull *pull = [[FTPDataPull alloc] init];
-    pull.haveCalledDelegate = NO;
-    return pull;
+    if (!_statpull)
+    {
+        _statpull = [[FTPDataPull alloc] init];
+    }
+    _statpull.haveCalledDelegate = NO;
+    return _statpull;
 }
 
 - (int)getFile:(NSString *)fileName
@@ -415,6 +420,7 @@ didReceiveResponse:(NSURLResponse *)response
     
     [self stopReceiveWithStatus:FTPStatusStop
                    statusString:@"Stopped"];
+    _statpull = nil;
 }
 - (void) GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
 {
