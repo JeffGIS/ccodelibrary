@@ -176,7 +176,7 @@ static GetPriorityLocations *_getLocations;
                                popover:(GSSiPopoverView *)popover
 {
     _popoverView = popover;
-    PointInAreaClass *pia = [[PointInAreaClass alloc] init];
+    //PointInAreaClass *pia = [[PointInAreaClass alloc] init];
     
     CGFloat longSpan = fabs(bounds.xmn - bounds.xmx);
     CGFloat latSpan = fabs(bounds.ymx - bounds.ymn);
