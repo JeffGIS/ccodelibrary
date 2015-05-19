@@ -26,6 +26,12 @@ static FTPDataPull * _statpull = nil;
     _statpull.haveCalledDelegate = NO;
     return _statpull;
 }
+- (id)init
+{
+    self = [super init];
+    
+    return self;
+}
 
 - (int)getFile:(NSString *)fileName
  fromDirectory:(NSString *)fromDirectory

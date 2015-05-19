@@ -1244,12 +1244,13 @@ Exit:
     NSString *fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
     
     self.gettingUploaded = NO;
-    FTPDataPull *pull = FTPDataPull.pull;
-    pull.delegate = self;
-    pull.popover = popover;
-    pull.useOnlyPrimaryFTP = NO;
+    _pull = FTPDataPull.pull;
+    _pull.delegate = self;
+    _pull.popover = popover;
+    _pull.useOnlyPrimaryFTP = NO;
+    _pull.createDirectory = YES;
     
-    [pull getFile:fileName
+    [_pull getFile:fileName
     fromDirectory:@"Bill/PlaceIntersections"
            toFile:fileName
       toDirectory:documentsDirectory

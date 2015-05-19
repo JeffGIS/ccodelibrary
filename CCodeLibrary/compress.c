@@ -20,13 +20,13 @@ long GSSifilelength(FILE *fid)
     return fileLen;
 }
 
-long BigRead(FILE *fid, LPVOID pmem, long len)
+long __attribute__ ((noinline)) BigRead(FILE *fid, LPVOID pmem, long len)
 {
     long didRead = fread(pmem, len, 1, fid);
     return didRead;
 }
 
-long BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc)
+long __attribute__ ((noinline)) BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc)
 {
     long bytesWritten = fwrite(pbuf, len, 1, fid);
     return bytesWritten;
@@ -135,11 +135,13 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory)
         BigRead (FidTF, File, len);
         
         if (!(pBS = strrchr(File,'\\')))
+        {
             pBS = File;
-        
+        }
         else
+        {
             pBS++;
-        
+        }
         sprintf(OutFile, "%s/%s", toDirectory, pBS);
         rtn = GetFileFromTransferFile(0, FidTF, OutFile,  MaxLength);
         BigRead(FidTF, &len, 4);
