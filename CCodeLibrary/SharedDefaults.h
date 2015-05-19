@@ -16,6 +16,7 @@
 - (BOOL)boolForKey:(NSString *)key;
 - (NSString *)stringForKey:(NSString *)key;
 - (CGFloat)CGFloatForKey:(NSString *)key;
+- (NSDate *)dateForKey:(NSString *)key;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
@@ -39,5 +40,8 @@
 
 - (void)saveCGFloat:(CGFloat)CGFloat
              forKey:(NSString *)key;
+
+- (void)saveDate:(NSDate *)date
+          forKey:(NSString *)key;
 
 @end
