@@ -38,5 +38,7 @@ typedef struct NVSlopeData {
                                                          delegate:(id)delegate;
 
 @property (nonatomic) CGFloat calibrationTarget, flipRadius, steadyDiff;
+@property (nonatomic) NSString *which;
+@property (nonatomic) NSInteger mode;
 
 @end

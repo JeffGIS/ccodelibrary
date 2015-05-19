@@ -14,9 +14,13 @@
      didSaveNotes:(NSString *)notes
              list:(NSArray *)list;
 
+@optional
+
 - (void)notesView:(GSSiNotesView *)notesView
 didFindMatchBetweenNote:(NSString *)note
     andItemInList:(NSString *)itemInList;
+
+- (NSArray *)arrayOfPickableNotesItemsForNotesView:(GSSiNotesView *)notesView;
 
 @end
 
@@ -26,7 +30,10 @@ didFindMatchBetweenNote:(NSString *)note
 
 + (GSSiNotesView *)showNotesViewWithView:(UIView *)view
                                 delegate:(id)delegate
-                            titleSubject:(NSString *)titleSubject;
+                                   title:(NSString *)title
+                            currentValue:(NSString *)value
+                        allowAutoCorrect:(BOOL)autoCorrect;
+
 
 - (void)hideNotesView:(BOOL)animated;
 - (void)bringToFrontOfView:(UIView *)view;

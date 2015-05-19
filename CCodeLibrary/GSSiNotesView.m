@@ -21,6 +21,7 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
 @property (nonatomic) UITextView *textView;
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) NSMutableArray *notesArray;
+@property (nonatomic) BOOL listUpdated;
 
 @end
 
@@ -31,7 +32,10 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
 
 + (GSSiNotesView *)showNotesViewWithView:(UIView *)view
                                 delegate:(id)delegate
-                            titleSubject:(NSString *)titleSubject
+                                   title:(NSString *)title
+                            currentValue:(NSString *)value
+                        allowAutoCorrect:(BOOL)autoCorrect;
+
 {
     CGSize buttonSize;
     CGFloat cornerRadius, buttonFontSize, viewMargin, margin;
@@ -81,11 +85,12 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     
     GSSiNotesView *notesView = [[GSSiNotesView alloc] initWithFrame:frame];
     notesView.delegate = delegate;
+    notesView.listUpdated = NO;
     notesView.cornerRadius = cornerRadius;
     notesView.buttonFontSize = buttonFontSize;
     
     notesView.center = CGPointMake((view.frame.size.width / 2.0),
-                                    (view.frame.size.height / 2.0));
+                                   (view.frame.size.height / 2.0));
     
     notesView.backgroundColor = [UIColor colorWithRed:(240.0 / 255.0)
                                                 green:(255.0 / 255.0)
@@ -136,7 +141,7 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     notesView.notesLabel.backgroundColor = UIColor.clearColor;
     notesView.notesLabel.textColor = UIColor.blackColor;
     notesView.notesLabel.font = [UIFont boldSystemFontOfSize:notesView.buttonFontSize];
-    notesView.notesLabel.text = [NSString stringWithFormat:@"Notes for Pipe #%@", titleSubject];
+    notesView.notesLabel.text = title;
     notesView.notesLabel.textAlignment = NSTextAlignmentCenter;
     notesView.notesLabel.adjustsFontSizeToFitWidth = YES;
     
@@ -153,7 +158,10 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
                                               (frame.size.width - (margin * 2.0)), (frame.size.height * 0.3));
     }
     
-    
+    notesView.textView.text = value;
+    notesView.textView.autocorrectionType = UITextAutocorrectionTypeNo;
+    if (autoCorrect)
+        notesView.textView.autocorrectionType = UITextAutocorrectionTypeYes;
     notesView.textView.layer.cornerRadius = notesView.cornerRadius;
     notesView.textView.backgroundColor = UIColor.whiteColor;
     notesView.textView.layer.borderColor = UIColor.blackColor.CGColor;
@@ -222,6 +230,12 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
                      }];
     
     notesView.notesArray = [[NSMutableArray alloc] init];
+    
+    if (notesView.delegate)
+    {
+        [notesView.notesArray addObjectsFromArray:
+         [notesView.delegate arrayOfPickableNotesItemsForNotesView:notesView]];
+    }
     
     return notesView;
 }
@@ -408,9 +422,19 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     
     if (_delegate)
     {
-        [_delegate notesView:self
-                didSaveNotes:_textView.text
-                        list:_notesArray.copy];
+        if (_listUpdated)
+        {
+            [_delegate notesView:self
+                    didSaveNotes:_textView.text
+                            list:_notesArray.copy];
+        }
+        else
+        {
+            [_delegate notesView:self
+                    didSaveNotes:_textView.text
+                            list:nil];
+            
+        }
     }
 }
 
@@ -481,6 +505,7 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     
     NSArray *tempArray = [_notesArray sortedArrayUsingDescriptors: [NSArray arrayWithObject:sortOrder]];
     _notesArray = [NSMutableArray arrayWithArray:tempArray];
+    _listUpdated = YES;
     [_tableView reloadData];
 }
 
@@ -512,7 +537,7 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     if ([note containsString:@"\n"])
     {
         NSMutableArray *tempArray = [NSMutableArray arrayWithArray:[note componentsSeparatedByString:@"\n"]];
-       
+        
         for (int i = (int)(tempArray.count - 1); i > 0; i--)
         {
             if ([tempArray[i] isEqualToString:@""])

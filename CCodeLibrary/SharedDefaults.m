@@ -61,6 +61,12 @@ static SharedDefaults *_defaults;
     return defaultFloat;
 }
 
+- (NSDate *)dateForKey:(NSString *)key
+{
+    NSDate *defaultDate = [_defaults objectForKey:key];
+    return defaultDate;
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue
@@ -141,6 +147,15 @@ static SharedDefaults *_defaults;
 {
     [_defaults setFloat:CGFloat
                  forKey:key];
+    
+    [_defaults synchronize];
+}
+
+- (void)saveDate:(NSDate *)date
+          forKey:(NSString *)key
+{
+    [_defaults setObject:date
+                  forKey:key];
     
     [_defaults synchronize];
 }
