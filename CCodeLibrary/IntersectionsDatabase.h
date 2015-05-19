@@ -50,7 +50,7 @@
 - (BOOL)storeMPIntersectionToDB:(MPIntersection *)mpint
                      withStatus:(int)status;
 
-- (MPIntersection*) getMPIntersectionFromDB:(int)intID
+- (MPIntersection *) getMPIntersectionFromDB:(int)intID
                                   withRamps:(BOOL)wantRamps;
 
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
