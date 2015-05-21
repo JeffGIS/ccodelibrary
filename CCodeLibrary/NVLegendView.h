@@ -13,9 +13,12 @@
 - (NSUInteger)countForRowInLegendViewAtIndex:(NSUInteger)index;
 - (NSString *)titleForLegendView;
 
+- (void)legendView:(NVLegendView *)legendView
+didChangeSelectedIndex:(NSUInteger)index;
+
 @end
 
-@interface NVLegendView : UIView
+@interface NVLegendView : UIView <UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) id <NVLegendViewDelegate> delegate;
 

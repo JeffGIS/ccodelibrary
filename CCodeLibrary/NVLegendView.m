@@ -8,6 +8,7 @@
 
 @property CGFloat minWidth;
 @property CGPoint origin;
+@property NSUInteger selectedIndex;
 
 @end
 
@@ -28,6 +29,12 @@
     legendView.minWidth = 0.0;
     legendView.origin = origin;
     
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:legendView
+                                                                                 action:@selector(legendViewWasTapped:)];
+    
+    tapGesture.delegate = legendView;
+    [legendView addGestureRecognizer:tapGesture];
+    
     [legendView loadView];
     [view addSubview:legendView];
     
@@ -47,10 +54,11 @@
         
         if (title && ![title isEqualToString:@""])
         {
-            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, originY, 0.0, height)];
+            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, originY, 0.0, height)];
             titleLabel.text = [_delegate titleForLegendView];
             titleLabel.textAlignment = NSTextAlignmentCenter;
             titleLabel.textColor = UIColor.blackColor;
+            titleLabel.backgroundColor = UIColor.clearColor;
             titleLabel.font = font;
             _minWidth = (titleLabel.intrinsicContentSize.width + (xMargin * 2.0));
             [self addSubview:titleLabel];
@@ -68,6 +76,7 @@
             
             label.textAlignment = NSTextAlignmentLeft;
             label.textColor = [_delegate colorForRowInLegendViewAtIndex:index];
+            label.backgroundColor = UIColor.clearColor;
             label.font = font;
             label.tag = ((index + 1) * 10);
             _minWidth = max(_minWidth, (label.intrinsicContentSize.width + (xMargin * 2.0)));
@@ -77,12 +86,24 @@
         
         for (UILabel *labels in self.subviews)
         {
-            labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
-                                      _minWidth, labels.frame.size.height);
+            if (labels.tag > 9)
+            {
+                labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
+                                          (_minWidth - (xMargin * 2.0)), labels.frame.size.height);
+            }
+            
+            else
+            {
+                labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
+                                          _minWidth, labels.frame.size.height);
+            }
         }
         
         self.frame = CGRectMake(_origin.x, _origin.y, _minWidth,
                                 ((height * totalRows) + (yMargin * 2.0)));
+        
+        _selectedIndex = 0;
+        [self highlightAtIndex:_selectedIndex];
     }
 }
 
@@ -106,6 +127,44 @@
                            [_delegate nameForRowInLegendViewAtIndex:index],
                            (unsigned long)[_delegate countForRowInLegendViewAtIndex:index]];
         }
+    }
+}
+
+- (void)highlightAtIndex:(NSUInteger)index
+{
+    if (_delegate)
+    {
+        for (UILabel *labels in self.subviews)
+        {
+            if (labels.tag == ((index + 1) * 10))
+            {
+                labels.backgroundColor = [_delegate colorForRowInLegendViewAtIndex:index];
+                labels.textColor = UIColor.whiteColor;
+            }
+            
+            else if (labels.tag > 9)
+            {
+                labels.backgroundColor = UIColor.clearColor;
+                labels.textColor = [_delegate colorForRowInLegendViewAtIndex:((labels.tag / 10) - 1)];
+            }
+        }
+    }
+}
+
+- (void)legendViewWasTapped:(UITapGestureRecognizer *)gesture
+{
+    if (_delegate)
+    {
+        if (_selectedIndex == [_delegate numberOfRowsInLegendView] - 1)
+            _selectedIndex = 0;
+        
+        else
+            _selectedIndex++;
+        
+        [self highlightAtIndex:_selectedIndex];
+        
+        [_delegate legendView:self
+       didChangeSelectedIndex:_selectedIndex];
     }
 }
 
