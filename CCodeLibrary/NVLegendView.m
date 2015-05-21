@@ -6,7 +6,8 @@
 
 @interface NVLegendView ()
 
-@property (nonatomic) UILabel *titleLabel, *completedLabel, *toBeDoneLabel, *pctCompletedLabel;
+@property CGFloat minWidth;
+@property CGPoint origin;
 
 @end
 
@@ -14,96 +15,98 @@
 
 + (NVLegendView *)showLegendViewAtOrigin:(CGPoint)origin
                                   inView:(UIView *)view
-                                   title:(NSString *)title;
+                                delegate:(id)delegate
 {
-    NVLegendView *legendView = [[NVLegendView alloc] initWithFrame:CGRectMake(origin.x, origin.y, 220.0, 120.0)];
+    NVLegendView *legendView = [[NVLegendView alloc] init];
+    legendView.delegate = delegate;
     legendView.layer.cornerRadius = 10.0;
     legendView.layer.masksToBounds = YES;
     legendView.layer.borderColor = UIColor.blackColor.CGColor;
     legendView.layer.borderWidth = 4.0;
     legendView.userInteractionEnabled = YES;
     legendView.backgroundColor = UIColor.whiteColor;
-    legendView.alpha = 0.0;
+    legendView.minWidth = 0.0;
+    legendView.origin = origin;
     
+    [legendView loadView];
     [view addSubview:legendView];
-    
-    legendView.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, legendView.frame.size.width,
-                                                                      (legendView.frame.size.height / 4.0))];
-    
-    [legendView setupLabel:legendView.titleLabel
-                      text:title
-                 alignment:NSTextAlignmentCenter
-                     color:UIColor.blackColor];
-    
-    [legendView addSubview:legendView.titleLabel];
-    
-    legendView.completedLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, (legendView.frame.size.height * 0.25),
-                                                                          (legendView.frame.size.width - 12.0),
-                                                                          (legendView.frame.size.height * 0.25))];
-    
-    [legendView setupLabel:legendView.completedLabel
-                      text:@"Completed: 245"
-                 alignment:NSTextAlignmentLeft
-                     color:UserDefaults.defaults.darkGreen];
-    
-    [legendView addSubview:legendView.completedLabel];
-    
-    legendView.toBeDoneLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, (legendView.frame.size.height * 0.5),
-                                                                         (legendView.frame.size.width - 12.0),
-                                                                         (legendView.frame.size.height * 0.25))];
-
-    [legendView setupLabel:legendView.toBeDoneLabel
-                      text:@"To Be Done: 160"
-                 alignment:NSTextAlignmentLeft
-                     color:UIColor.redColor];
-    
-    [legendView addSubview:legendView.toBeDoneLabel];
-    
-    legendView.pctCompletedLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, (legendView.frame.size.height * 0.75),
-                                                                             (legendView.frame.size.width - 12.0),
-                                                                             (legendView.frame.size.height * 0.25))];
-    
-    [legendView setupLabel:legendView.pctCompletedLabel
-                      text:@"Percent Done: 60.49%"
-                 alignment:NSTextAlignmentLeft
-                     color:UIColor.blueColor];
-    
-    [legendView addSubview:legendView.pctCompletedLabel];
-    
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         legendView.alpha = 1.0;
-                     }];
     
     return legendView;
 }
 
-- (void)setupLabel:(UILabel *)label
-              text:(NSString *)text
-         alignment:(NSTextAlignment)alignment
-             color:(UIColor *)color
+- (void)loadView
 {
-    label.text = text;
-    label.textAlignment = alignment;
-    label.textColor = color;
-    label.backgroundColor = UIColor.clearColor;
-    label.font = [UIFont boldSystemFontOfSize:18.0];
+    if (_delegate)
+    {
+        UIFont *font = [UIFont boldSystemFontOfSize:18.0];
+        CGFloat height = 24.0, xMargin = 8.0, yMargin = 4.0;
+        CGFloat originY = yMargin;
+        NSString *title = [_delegate titleForLegendView];
+        NSUInteger numberOfRows = [_delegate numberOfRowsInLegendView];
+        NSUInteger totalRows = numberOfRows;
+        
+        if (title && ![title isEqualToString:@""])
+        {
+            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, originY, 0.0, height)];
+            titleLabel.text = [_delegate titleForLegendView];
+            titleLabel.textAlignment = NSTextAlignmentCenter;
+            titleLabel.textColor = UIColor.blackColor;
+            titleLabel.font = font;
+            _minWidth = (titleLabel.intrinsicContentSize.width + (xMargin * 2.0));
+            [self addSubview:titleLabel];
+            originY += height;
+            totalRows++;
+        }
+        
+        for (int index = 0; index < numberOfRows; index++)
+        {
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, originY, 0.0, height)];
+            
+            label.text = [NSString stringWithFormat:@"%@ (%lu)",
+                          [_delegate nameForRowInLegendViewAtIndex:index],
+                          (unsigned long)[_delegate countForRowInLegendViewAtIndex:index]];
+            
+            label.textAlignment = NSTextAlignmentLeft;
+            label.textColor = [_delegate colorForRowInLegendViewAtIndex:index];
+            label.font = font;
+            label.tag = ((index + 1) * 10);
+            _minWidth = max(_minWidth, (label.intrinsicContentSize.width + (xMargin * 2.0)));
+            [self addSubview:label];
+            originY += height;
+        }
+        
+        for (UILabel *labels in self.subviews)
+        {
+            labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
+                                      _minWidth, labels.frame.size.height);
+        }
+        
+        self.frame = CGRectMake(_origin.x, _origin.y, _minWidth,
+                                ((height * totalRows) + (yMargin * 2.0)));
+    }
 }
 
-- (void)hideLegendView:(BOOL)animated
+- (void)reloadView
 {
-    if (animated)
+    for (UIView *subviews in self.subviews)
+        [subviews removeFromSuperview];
+        
+    [self loadView];
+}
+
+- (void)reloadData
+{
+    for (UILabel *labels in self.subviews)
     {
-        [UIView animateWithDuration:0.25
-                         animations:^{
-                             self.alpha = 0.0;
-                         } completion:^(BOOL finished) {
-                             [self removeFromSuperview];
-                         }];
+        if (labels.tag > 9)
+        {
+            NSUInteger index = ((labels.tag / 10) - 1);
+            
+            labels.text = [NSString stringWithFormat:@"%@ (%lu)",
+                           [_delegate nameForRowInLegendViewAtIndex:index],
+                           (unsigned long)[_delegate countForRowInLegendViewAtIndex:index]];
+        }
     }
-    
-    else
-        [self removeFromSuperview];
 }
 
 @end
