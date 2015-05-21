@@ -16,6 +16,12 @@
 - (void)legendView:(NVLegendView *)legendView
 didChangeSelectedIndex:(NSUInteger)index;
 
+- (void)legendView:(NVLegendView *)legendView
+wasDraggedToOrigin:(CGPoint)origin;
+
+- (void)legendView:(NVLegendView *)legendView
+ wasPinchedToScale:(CGFloat)scale;
+
 @end
 
 @interface NVLegendView : UIView <UIGestureRecognizerDelegate>
@@ -24,6 +30,7 @@ didChangeSelectedIndex:(NSUInteger)index;
 
 + (NVLegendView *)showLegendViewAtOrigin:(CGPoint)origin
                                   inView:(UIView *)view
+                          containerFrame:(CGRect)containerFrame
                                 delegate:(id)delegate;
 
 - (void)reloadView;

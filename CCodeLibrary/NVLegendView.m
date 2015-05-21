@@ -6,9 +6,10 @@
 
 @interface NVLegendView ()
 
-@property CGFloat minWidth;
-@property CGPoint origin;
-@property NSUInteger selectedIndex;
+@property (nonatomic) CGFloat minWidth, originalHeight;
+@property (nonatomic) CGPoint origin;
+@property (nonatomic) NSUInteger selectedIndex;
+@property (nonatomic) CGRect containerFrame;
 
 @end
 
@@ -16,6 +17,7 @@
 
 + (NVLegendView *)showLegendViewAtOrigin:(CGPoint)origin
                                   inView:(UIView *)view
+                          containerFrame:(CGRect)containerFrame
                                 delegate:(id)delegate
 {
     NVLegendView *legendView = [[NVLegendView alloc] init];
@@ -28,12 +30,25 @@
     legendView.backgroundColor = UIColor.whiteColor;
     legendView.minWidth = 0.0;
     legendView.origin = origin;
+    legendView.containerFrame = containerFrame;
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:legendView
                                                                                  action:@selector(legendViewWasTapped:)];
     
     tapGesture.delegate = legendView;
     [legendView addGestureRecognizer:tapGesture];
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:legendView
+                                                                                 action:@selector(legendViewWasPanned:)];
+    
+    panGesture.delegate = legendView;
+    [legendView addGestureRecognizer:panGesture];
+    
+    UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:legendView
+                                                                                       action:@selector(legendViewWasPinched:)];
+    
+    pinchGesture.delegate = legendView;
+    [legendView addGestureRecognizer:pinchGesture];
     
     [legendView loadView];
     [view addSubview:legendView];
@@ -102,6 +117,7 @@
         self.frame = CGRectMake(_origin.x, _origin.y, _minWidth,
                                 ((height * totalRows) + (yMargin * 2.0)));
         
+        _originalHeight = self.frame.size.height;
         _selectedIndex = 0;
         [self highlightAtIndex:_selectedIndex];
     }
@@ -166,6 +182,41 @@
         [_delegate legendView:self
        didChangeSelectedIndex:_selectedIndex];
     }
+}
+
+- (void)legendViewWasPanned:(UIPanGestureRecognizer *)gesture
+{
+    CGPoint translation = [gesture translationInView:gesture.view];
+    
+    CGPoint newCenter = CGPointMake(gesture.view.center.x + translation.x,
+                                    gesture.view.center.y + translation.y);
+    
+    if (((newCenter.x - (self.frame.size.width / 2.0)) > _containerFrame.origin.x) &&
+        ((newCenter.y - (self.frame.size.height / 2.0)) > _containerFrame.origin.y) &&
+        ((newCenter.x + (self.frame.size.width / 2.0)) < (_containerFrame.origin.x + _containerFrame.size.width)) &&
+        ((newCenter.y + (self.frame.size.height / 2.0)) < (_containerFrame.origin.y + _containerFrame.size.height)))
+    {
+        gesture.view.center = newCenter;
+    }
+        
+    if (gesture.state == UIGestureRecognizerStateEnded)
+    {
+        if (_delegate)
+        {
+            [_delegate legendView:self
+               wasDraggedToOrigin:gesture.view.frame.origin];
+        }
+        
+        return;
+    }
+    
+    [gesture setTranslation:CGPointMake(0.0, 0.0)
+                     inView:gesture.view];
+}
+
+- (void)legendViewWasPinched:(UIPinchGestureRecognizer *)gesture
+{
+    
 }
 
 @end
