@@ -158,6 +158,9 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
                                               (frame.size.width - (margin * 2.0)), (frame.size.height * 0.3));
     }
     
+    if (!value)
+        value = @"";
+    
     notesView.textView.text = value;
     notesView.textView.autocorrectionType = UITextAutocorrectionTypeNo;
     if (autoCorrect)

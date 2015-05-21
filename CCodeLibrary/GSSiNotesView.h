@@ -34,7 +34,6 @@ didFindMatchBetweenNote:(NSString *)note
                             currentValue:(NSString *)value
                         allowAutoCorrect:(BOOL)autoCorrect;
 
-
 - (void)hideNotesView:(BOOL)animated;
 - (void)bringToFrontOfView:(UIView *)view;
 
