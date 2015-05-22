@@ -6,8 +6,8 @@
 
 @interface NVLegendView ()
 
-@property (nonatomic) CGFloat minWidth, originalHeight;
-@property (nonatomic) CGPoint origin;
+@property (nonatomic) CGFloat minWidth, originalHeight, zoomLevel, lastScale;
+@property (nonatomic) CGPoint origin, viewCenter;
 @property (nonatomic) NSUInteger selectedIndex;
 @property (nonatomic) CGRect containerFrame;
 
@@ -29,6 +29,7 @@
     legendView.userInteractionEnabled = YES;
     legendView.backgroundColor = UIColor.whiteColor;
     legendView.minWidth = 0.0;
+    legendView.zoomLevel = 1.0;
     legendView.origin = origin;
     legendView.containerFrame = containerFrame;
     
@@ -188,16 +189,16 @@
 {
     CGPoint translation = [gesture translationInView:gesture.view];
     
-    CGPoint newCenter = CGPointMake(gesture.view.center.x + translation.x,
-                                    gesture.view.center.y + translation.y);
+    CGFloat centerX = (gesture.view.center.x + translation.x * _zoomLevel);
+    CGFloat centerY = (gesture.view.center.y + translation.y * _zoomLevel);
     
-    if (((newCenter.x - (self.frame.size.width / 2.0)) > _containerFrame.origin.x) &&
-        ((newCenter.y - (self.frame.size.height / 2.0)) > _containerFrame.origin.y) &&
-        ((newCenter.x + (self.frame.size.width / 2.0)) < (_containerFrame.origin.x + _containerFrame.size.width)) &&
-        ((newCenter.y + (self.frame.size.height / 2.0)) < (_containerFrame.origin.y + _containerFrame.size.height)))
-    {
-        gesture.view.center = newCenter;
-    }
+    centerX = min(centerX, ((_containerFrame.origin.x + _containerFrame.size.width) - (self.frame.size.width / 2.0)));
+    centerX = max(centerX, (_containerFrame.origin.x + (self.frame.size.width / 2.0)));
+    
+    centerY = min(centerY, ((_containerFrame.origin.y + _containerFrame.size.height) - (self.frame.size.height / 2.0)));
+    centerY = max(centerY, (_containerFrame.origin.y + (self.frame.size.height / 2.0)));
+    
+    gesture.view.center = CGPointMake(centerX, centerY);
         
     if (gesture.state == UIGestureRecognizerStateEnded)
     {
@@ -229,8 +230,13 @@
                                          [_delegate legendView:self
                                             wasDraggedToOrigin:gesture.view.frame.origin];
                                      }
+                                     
+                                     _viewCenter = gesture.view.center;
                                  }];
             }
+        
+        else
+            _viewCenter = gesture.view.center;
     }
     
     [gesture setTranslation:CGPointMake(0.0, 0.0)
@@ -239,7 +245,67 @@
 
 - (void)legendViewWasPinched:(UIPinchGestureRecognizer *)gesture
 {
+    if (gesture.state == UIGestureRecognizerStateEnded)
+    {
+        _zoomLevel = (gesture.view.frame.size.height / _originalHeight);
+        _viewCenter = gesture.view.center;
+        
+        if (_delegate)
+        {
+            [_delegate legendView:self
+                wasPinchedToScale:_zoomLevel];
+        }
+        
+        return;
+    }
     
+    if(gesture.state == UIGestureRecognizerStateBegan)
+        _lastScale = gesture.scale;
+    
+    CGPoint origin = gesture.view.frame.origin;
+    CGFloat currentScale = [[gesture.view.layer valueForKeyPath:@"transform.scale"] floatValue];
+    
+    const CGFloat kMaxScale = 2.2, kMinScale = 0.8;
+    
+    CGFloat newScale = (1.0 - (_lastScale - gesture.scale));
+    newScale = min(newScale, kMaxScale / currentScale);
+    newScale = max(newScale, kMinScale / currentScale);
+    
+    CGAffineTransform transform = CGAffineTransformScale(gesture.view.transform, newScale, newScale);
+    gesture.view.transform = transform;
+    _lastScale = gesture.scale;
+    CGRect frame = gesture.view.frame;
+    
+    if (_viewCenter.x < (_containerFrame.size.width / 2.0) &&
+        _viewCenter.y < (_containerFrame.size.height / 2.0))
+    {
+        frame.origin = origin;
+        gesture.view.frame = frame;
+    }
+    
+    else if (_viewCenter.x > (_containerFrame.size.width / 2.0) &&
+             _viewCenter.y > (_containerFrame.size.height / 2.0))
+    {
+        frame.origin.x = (origin.x - ((origin.x - frame.origin.x) * 2.0));
+        frame.origin.y = (origin.y - ((origin.y - frame.origin.y) * 2.0));
+        gesture.view.frame = frame;
+    }
+    
+    else if (_viewCenter.x > (_containerFrame.size.width / 2.0) &&
+             _viewCenter.y < (_containerFrame.size.height / 2.0))
+    {
+        frame.origin.x = (origin.x - ((origin.x - frame.origin.x) * 2.0));
+        frame.origin.y = origin.y;
+        gesture.view.frame = frame;
+    }
+    
+    else if (_viewCenter.x < (_containerFrame.size.width / 2.0) &&
+             _viewCenter.y > (_containerFrame.size.height / 2.0))
+    {
+        frame.origin.x = origin.x;
+        frame.origin.y = (origin.y - ((origin.y - frame.origin.y) * 2.0));
+        gesture.view.frame = frame;
+    }
 }
 
 @end
