@@ -225,18 +225,26 @@
                                      gesture.view.center = CGPointMake(centerX, centerY);
                                  }
                                  completion:^(BOOL finished) {
+                                     _viewCenter = gesture.view.center;
+                                     
                                      if (_delegate)
                                      {
                                          [_delegate legendView:self
                                             wasDraggedToOrigin:gesture.view.frame.origin];
                                      }
-                                     
-                                     _viewCenter = gesture.view.center;
                                  }];
             }
         
         else
-            _viewCenter = gesture.view.center;
+        {
+             _viewCenter = gesture.view.center;
+            
+            if (_delegate)
+            {
+                [_delegate legendView:self
+                   wasDraggedToOrigin:gesture.view.frame.origin];
+            }
+        }
     }
     
     [gesture setTranslation:CGPointMake(0.0, 0.0)
