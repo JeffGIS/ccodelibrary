@@ -330,13 +330,13 @@ typedef NS_ENUM(NSInteger, SCStatus)
             _data.pitch[0] = (_pitchSum / COUNT);
             _data.roll[0] = (_rollSum / COUNT);
             
-            _data.frontSlope = (100.0 * sin(-atan2(_data.accelY[0],
-                                                   sqrt(pow(_data.accelX[0], 2) +
-                                                        pow(_data.accelZ[0], 2)))));
+            _data.frontSlope = (tan(-atan2(_data.accelY[0],
+                                        sqrt(pow(_data.accelX[0], 2) +
+                                             pow(_data.accelZ[0], 2)))) * 100.0);
             
-            _data.sideSlope = (100.0 * sin(atan2(_data.accelX[0],
-                                                 sqrt(pow(_data.accelY[0], 2) +
-                                                      pow(_data.accelZ[0], 2)))));
+            _data.sideSlope = (tan(atan2(_data.accelX[0],
+                                      sqrt(pow(_data.accelY[0], 2) +
+                                           pow(_data.accelZ[0], 2)))) * 100.0);
             
             _maxSlope = ComputeMaxSlope(_data.frontSlope, _data.sideSlope);
             _data.heading = (_sumHeading / COUNT);
