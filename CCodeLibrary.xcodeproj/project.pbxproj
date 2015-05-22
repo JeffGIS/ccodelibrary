@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */; };
-		1F101D2319AE94910006E1D5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F101D2219AE94910006E1D5 /* QuartzCore.framework */; };
 		1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F101D2619AE96EB0006E1D5 /* findIntersection.c */; };
 		1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */; };
 		1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544519A412490029DBEA /* NetworkManager.m */; };
@@ -32,6 +31,7 @@
 		A926F21119D9FC18007C392A /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = A926F21019D9FC18007C392A /* CircleView.m */; };
 		A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */; };
 		A92E0BA81AF7A461008A44AC /* NVPhotoViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */; };
+		A93FBE071B0ED5890019A8F3 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A93FBE061B0ED5890019A8F3 /* GoogleMaps.framework */; };
 		A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770C19F7F9F40062906E /* SharedDefaults.m */; };
 		A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770F19F8045C0062906E /* FacilitiesDatabase.m */; };
 		A94A771319F807570062906E /* Facility.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A771219F807570062906E /* Facility.m */; };
@@ -49,7 +49,6 @@
 		A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A99050871ACB942F00C6AAAF /* GSSiDatePicker.m */; };
 		A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508A1ACB947000C6AAAF /* SpreadsheetView.m */; };
 		A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */; };
-		A9948F7A1B0BCC8A0047C562 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9948F791B0BCC8A0047C562 /* GoogleMaps.framework */; };
 		A99C88FB1AEDDFDE00A0856F /* UIView+ColorOfPoint.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90D1FC11AE6510F00CBFEE7 /* UIView+ColorOfPoint.h */; };
 		A99C88FC1AEDDFE300A0856F /* gssitype.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB268A181AC5E9F700A68EC8 /* gssitype.h */; };
 		A99C88FD1AEDDFE700A0856F /* gmlimits.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB268A191AC5E9F700A68EC8 /* gmlimits.h */; };
@@ -248,7 +247,6 @@
 /* Begin PBXFileReference section */
 		1F0B41F919AEAE0A00981F57 /* FTPDataPull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDataPull.h; sourceTree = "<group>"; };
 		1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPDataPull.m; sourceTree = "<group>"; };
-		1F101D2219AE94910006E1D5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1F101D2619AE96EB0006E1D5 /* findIntersection.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = findIntersection.c; sourceTree = "<group>"; };
 		1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerticalSegmentedControl.h; sourceTree = "<group>"; };
 		1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerticalSegmentedControl.m; sourceTree = "<group>"; };
@@ -287,6 +285,7 @@
 		A926F21019D9FC18007C392A /* CircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleView.m; sourceTree = "<group>"; };
 		A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPhotoViewController.h; sourceTree = "<group>"; };
 		A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPhotoViewController.m; sourceTree = "<group>"; };
+		A93FBE061B0ED5890019A8F3 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		A94A770B19F7F9F40062906E /* SharedDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedDefaults.h; sourceTree = "<group>"; };
 		A94A770C19F7F9F40062906E /* SharedDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedDefaults.m; sourceTree = "<group>"; };
 		A94A770E19F8045C0062906E /* FacilitiesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacilitiesDatabase.h; sourceTree = "<group>"; };
@@ -316,7 +315,6 @@
 		A990508A1ACB947000C6AAAF /* SpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpreadsheetView.m; sourceTree = "<group>"; };
 		A990508B1ACB947000C6AAAF /* SpreadSheetViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpreadSheetViewCell.h; sourceTree = "<group>"; };
 		A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpreadSheetViewCell.m; sourceTree = "<group>"; };
-		A9948F791B0BCC8A0047C562 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		A99C893B1AEDE1B900A0856F /* GSSiDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiDefs.h; sourceTree = "<group>"; };
 		A99C893C1AEDE1B900A0856F /* GSSiDefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiDefs.m; sourceTree = "<group>"; };
 		A9ADCB1C1ACD0870000E5C00 /* GSSiNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiNotesView.h; sourceTree = "<group>"; };
@@ -408,9 +406,8 @@
 				A97867341A521934000A9BB8 /* MapKit.framework in Frameworks */,
 				A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */,
 				1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */,
-				1F101D2319AE94910006E1D5 /* QuartzCore.framework in Frameworks */,
 				1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */,
-				A9948F7A1B0BCC8A0047C562 /* GoogleMaps.framework in Frameworks */,
+				A93FBE071B0ED5890019A8F3 /* GoogleMaps.framework in Frameworks */,
 				1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -616,12 +613,11 @@
 		EBA2E45C199527660085B2E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A9948F791B0BCC8A0047C562 /* GoogleMaps.framework */,
+				A93FBE061B0ED5890019A8F3 /* GoogleMaps.framework */,
 				A97B72771ADB4912001ACFAE /* AVFoundation.framework */,
 				A97867331A521934000A9BB8 /* MapKit.framework */,
 				A9735AF019E779DF00894359 /* SystemConfiguration.framework */,
 				1F838AEB19B1026700943A8C /* CoreGraphics.framework */,
-				1F101D2219AE94910006E1D5 /* QuartzCore.framework */,
 				1FB3605519AE7E8200592B1D /* UIKit.framework */,
 				1FB3605319AE7E7D00592B1D /* Foundation.framework */,
 			);
