@@ -6,7 +6,7 @@
 
 @interface NVLegendView ()
 
-@property (nonatomic) CGFloat minWidth, originalHeight, zoomLevel, lastScale;
+@property (nonatomic) CGFloat originalHeight, zoomLevel, lastScale;
 @property (nonatomic) CGPoint origin, viewCenter;
 @property (nonatomic) NSUInteger selectedIndex;
 @property (nonatomic) CGRect containerFrame;
@@ -28,7 +28,6 @@
     legendView.layer.borderWidth = 4.0;
     legendView.userInteractionEnabled = YES;
     legendView.backgroundColor = UIColor.whiteColor;
-    legendView.minWidth = 0.0;
     legendView.zoomLevel = 1.0;
     legendView.origin = origin;
     legendView.containerFrame = containerFrame;
@@ -62,8 +61,8 @@
     if (_delegate)
     {
         UIFont *font = [UIFont boldSystemFontOfSize:18.0];
-        CGFloat height = 24.0, xMargin = 8.0, yMargin = 4.0;
-        CGFloat originY = yMargin, markerHeight = (height * 0.75);
+        CGFloat height = 24.0, xMargin = 8.0, yMargin = 6.0, minWidth = 0.0;
+        CGFloat originY = yMargin, markerHeight = (height * 0.75), countWidth = 0.0;
         NSString *title = [_delegate titleForLegendView];
         NSUInteger numberOfRows = [_delegate numberOfRowsInLegendView];
         NSUInteger totalRows = numberOfRows;
@@ -76,7 +75,7 @@
             titleLabel.textColor = UIColor.blackColor;
             titleLabel.backgroundColor = UIColor.clearColor;
             titleLabel.font = font;
-            _minWidth = (titleLabel.intrinsicContentSize.width + (xMargin * 2.0));
+            minWidth = (titleLabel.intrinsicContentSize.width + (xMargin * 2.0));
             [self addSubview:titleLabel];
             originY += height;
             totalRows++;
@@ -96,16 +95,15 @@
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake((((xMargin * 2.0) + markerHeight) - self.layer.borderWidth),
                                                                        originY, 0.0, height)];
             
-            label.text = [NSString stringWithFormat:@"%@ (%lu)",
-                          [_delegate nameForRowInLegendViewAtIndex:index],
-                          (unsigned long)[_delegate countForRowInLegendViewAtIndex:index]];
+            label.text = [NSString stringWithFormat:@"%@",
+                          [_delegate nameForRowInLegendViewAtIndex:index]];
             
             label.textAlignment = NSTextAlignmentLeft;
             label.textColor = UIColor.blackColor;
             label.backgroundColor = UIColor.clearColor;
             label.font = font;
             label.tag = ((index + 1) * 10);
-            _minWidth = max(_minWidth, (((label.intrinsicContentSize.width + (xMargin * 4.0)) + markerHeight)) - self.layer.borderWidth);
+            minWidth = max(minWidth, (((label.intrinsicContentSize.width + (xMargin * 3.0)) + markerHeight)) - self.layer.borderWidth);
             [self addSubview:label];
             originY += height;
         }
@@ -117,19 +115,53 @@
                 if (labels.tag > 9)
                 {
                     labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
-                                              (((_minWidth - (xMargin * 4.0)) - markerHeight) + self.layer.borderWidth),
+                                              (((minWidth - (xMargin * 3.0)) - markerHeight) + self.layer.borderWidth),
+                                              labels.frame.size.height);
+                    
+                    NSUInteger index = ((labels.tag / 10) - 1);
+                    
+                    UILabel *countLabel = [[UILabel alloc] init];
+                    
+                    countLabel.text = [NSString stringWithFormat:@"%lu",
+                                       (unsigned long)[_delegate countForRowInLegendViewAtIndex:index]];
+                    
+                    countLabel.textAlignment = NSTextAlignmentLeft;
+                    countLabel.textColor = UIColor.blackColor;
+                    countLabel.backgroundColor = UIColor.clearColor;
+                    countLabel.font = font;
+                    countLabel.tag = (labels.tag + 1);
+                    countWidth = max(countWidth, countLabel.intrinsicContentSize.width);
+                    
+                    countLabel.frame = CGRectMake((labels.frame.size.width + xMargin),
+                                                  0.0, countLabel.intrinsicContentSize.width, height);
+                    
+                    [labels addSubview:countLabel];
+                }
+            }
+        }
+        
+        minWidth += (countWidth + xMargin);
+        
+        for (UILabel *labels in self.subviews)
+        {
+            if ([labels isKindOfClass:UILabel.class])
+            {
+                if (labels.tag > 9)
+                {
+                    labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
+                                              (((minWidth - (xMargin * 3.0)) - markerHeight) + self.layer.borderWidth),
                                               labels.frame.size.height);
                 }
                 
                 else
                 {
                     labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
-                                              _minWidth, labels.frame.size.height);
+                                              (minWidth - xMargin), labels.frame.size.height);
                 }
             }
         }
         
-        self.frame = CGRectMake(_origin.x, _origin.y, _minWidth,
+        self.frame = CGRectMake(_origin.x, _origin.y, minWidth,
                                 ((height * totalRows) + (yMargin * 2.0)));
         
         _originalHeight = self.frame.size.height;
@@ -167,16 +199,33 @@
     {
         for (UILabel *labels in self.subviews)
         {
-            if (labels.tag == ((index + 1) * 10))
+            NSUInteger tag = ((index + 1) * 10);
+            
+            if (labels.tag == tag)
             {
                 labels.backgroundColor = UIColor.blackColor;
                 labels.textColor = UIColor.whiteColor;
+                
+                for (UILabel *countLabels in labels.subviews)
+                {
+                    if (countLabels.tag == (tag + 1))
+                    {
+                        countLabels.backgroundColor = UIColor.blackColor;
+                        countLabels.textColor = UIColor.whiteColor;
+                    }
+                }
             }
             
             else if (labels.tag > 9)
             {
                 labels.backgroundColor = UIColor.clearColor;
                 labels.textColor = UIColor.blackColor;
+                
+                for (UILabel *countLabels in labels.subviews)
+                {
+                    countLabels.backgroundColor = UIColor.clearColor;
+                    countLabels.textColor = UIColor.blackColor;
+                }
             }
         }
     }
