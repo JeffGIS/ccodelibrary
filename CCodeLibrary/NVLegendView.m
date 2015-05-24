@@ -186,9 +186,14 @@
         {
             NSUInteger index = ((labels.tag / 10) - 1);
             
-            labels.text = [NSString stringWithFormat:@"%@ (%lu)",
-                           [_delegate nameForRowInLegendViewAtIndex:index],
-                           (unsigned long)[_delegate countForRowInLegendViewAtIndex:index]];
+            labels.text = [NSString stringWithFormat:@"%@",
+                           [_delegate nameForRowInLegendViewAtIndex:index]];
+            
+            for (UILabel *countLabels in labels.subviews)
+            {
+                countLabels.text = [NSString stringWithFormat:@"%lu",
+                                    (unsigned long)[_delegate countForRowInLegendViewAtIndex:index]];
+            }
         }
     }
 }
