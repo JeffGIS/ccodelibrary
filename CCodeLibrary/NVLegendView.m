@@ -63,7 +63,7 @@
     {
         UIFont *font = [UIFont boldSystemFontOfSize:18.0];
         CGFloat height = 24.0, xMargin = 8.0, yMargin = 4.0;
-        CGFloat originY = yMargin;
+        CGFloat originY = yMargin, markerHeight = (height * 0.75);
         NSString *title = [_delegate titleForLegendView];
         NSUInteger numberOfRows = [_delegate numberOfRowsInLegendView];
         NSUInteger totalRows = numberOfRows;
@@ -84,34 +84,48 @@
         
         for (int index = 0; index < numberOfRows; index++)
         {
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(xMargin, originY, 0.0, height)];
+            UIView *marker = [[UIView alloc] initWithFrame:CGRectMake(xMargin, (originY + (height * 0.125)),
+                                                                      markerHeight, markerHeight)];
+            
+            marker.backgroundColor = [_delegate colorForRowInLegendViewAtIndex:index];
+            marker.layer.cornerRadius = (markerHeight / 2.0);
+            marker.layer.borderColor = UIColor.blackColor.CGColor;
+            marker.layer.borderWidth = 1.0;
+            [self addSubview:marker];
+            
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake((((xMargin * 2.0) + markerHeight) - self.layer.borderWidth),
+                                                                       originY, 0.0, height)];
             
             label.text = [NSString stringWithFormat:@"%@ (%lu)",
                           [_delegate nameForRowInLegendViewAtIndex:index],
                           (unsigned long)[_delegate countForRowInLegendViewAtIndex:index]];
             
             label.textAlignment = NSTextAlignmentLeft;
-            label.textColor = [_delegate colorForRowInLegendViewAtIndex:index];
+            label.textColor = UIColor.blackColor;
             label.backgroundColor = UIColor.clearColor;
             label.font = font;
             label.tag = ((index + 1) * 10);
-            _minWidth = max(_minWidth, (label.intrinsicContentSize.width + (xMargin * 2.0)));
+            _minWidth = max(_minWidth, (((label.intrinsicContentSize.width + (xMargin * 4.0)) + markerHeight)) - self.layer.borderWidth);
             [self addSubview:label];
             originY += height;
         }
         
         for (UILabel *labels in self.subviews)
         {
-            if (labels.tag > 9)
+            if ([labels isKindOfClass:UILabel.class])
             {
-                labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
-                                          (_minWidth - (xMargin * 2.0)), labels.frame.size.height);
-            }
-            
-            else
-            {
-                labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
-                                          _minWidth, labels.frame.size.height);
+                if (labels.tag > 9)
+                {
+                    labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
+                                              (((_minWidth - (xMargin * 4.0)) - markerHeight) + self.layer.borderWidth),
+                                              labels.frame.size.height);
+                }
+                
+                else
+                {
+                    labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
+                                              _minWidth, labels.frame.size.height);
+                }
             }
         }
         
@@ -155,14 +169,14 @@
         {
             if (labels.tag == ((index + 1) * 10))
             {
-                labels.backgroundColor = [_delegate colorForRowInLegendViewAtIndex:index];
+                labels.backgroundColor = UIColor.blackColor;
                 labels.textColor = UIColor.whiteColor;
             }
             
             else if (labels.tag > 9)
             {
                 labels.backgroundColor = UIColor.clearColor;
-                labels.textColor = [_delegate colorForRowInLegendViewAtIndex:((labels.tag / 10) - 1)];
+                labels.textColor = UIColor.blackColor;
             }
         }
     }
