@@ -31,7 +31,8 @@ wasDraggedToOrigin:(CGPoint)origin;
 + (NVLegendView *)showLegendViewAtOrigin:(CGPoint)origin
                                   inView:(UIView *)view
                           containerFrame:(CGRect)containerFrame
-                                delegate:(id)delegate;
+                                delegate:(id)delegate
+                              selectable:(BOOL)selectable;
 
 - (void)reloadView;
 - (void)reloadData;

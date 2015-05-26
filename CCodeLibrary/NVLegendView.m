@@ -19,6 +19,7 @@
                                   inView:(UIView *)view
                           containerFrame:(CGRect)containerFrame
                                 delegate:(id)delegate
+                              selectable:(BOOL)selectable;
 {
     NVLegendView *legendView = [[NVLegendView alloc] init];
     legendView.delegate = delegate;
@@ -32,11 +33,14 @@
     legendView.origin = origin;
     legendView.containerFrame = containerFrame;
     
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:legendView
-                                                                                 action:@selector(legendViewWasTapped:)];
-    
-    tapGesture.delegate = legendView;
-    [legendView addGestureRecognizer:tapGesture];
+    if (selectable)
+    {
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:legendView
+                                                                                     action:@selector(legendViewWasTapped:)];
+        
+        tapGesture.delegate = legendView;
+        [legendView addGestureRecognizer:tapGesture];
+    }
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:legendView
                                                                                  action:@selector(legendViewWasPanned:)];
@@ -83,14 +87,19 @@
         
         for (int index = 0; index < numberOfRows; index++)
         {
-            UIView *marker = [[UIView alloc] initWithFrame:CGRectMake(xMargin, (originY + (height * 0.125)),
-                                                                      markerHeight, markerHeight)];
+            UIColor *color = [_delegate colorForRowInLegendViewAtIndex:index];
             
-            marker.backgroundColor = [_delegate colorForRowInLegendViewAtIndex:index];
-            marker.layer.cornerRadius = (markerHeight / 2.0);
-            marker.layer.borderColor = UIColor.blackColor.CGColor;
-            marker.layer.borderWidth = 1.0;
-            [self addSubview:marker];
+            if (color)
+            {
+                UIView *marker = [[UIView alloc] initWithFrame:CGRectMake(xMargin, (originY + (height * 0.125)),
+                                                                          markerHeight, markerHeight)];
+                
+                marker.backgroundColor = color;
+                marker.layer.cornerRadius = (markerHeight / 2.0);
+                marker.layer.borderColor = UIColor.blackColor.CGColor;
+                marker.layer.borderWidth = 1.0;
+                [self addSubview:marker];
+            }
             
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake((((xMargin * 2.0) + markerHeight) - self.layer.borderWidth),
                                                                        originY, 0.0, height)];
