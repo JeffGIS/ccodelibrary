@@ -28,7 +28,6 @@
 		A9237F851AFA929200D10E96 /* NVTextAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = A9237F841AFA929200D10E96 /* NVTextAlert.m */; };
 		A9237F861AFA92BA00D10E96 /* NVTextAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9237F831AFA929200D10E96 /* NVTextAlert.h */; };
 		A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = A92382AC1AD986010027659B /* GSSiBumpDetector.m */; };
-		A926F21119D9FC18007C392A /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = A926F21019D9FC18007C392A /* CircleView.m */; };
 		A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */; };
 		A92E0BA81AF7A461008A44AC /* NVPhotoViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */; };
 		A93FBE071B0ED5890019A8F3 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A93FBE061B0ED5890019A8F3 /* GoogleMaps.framework */; };
@@ -79,7 +78,6 @@
 		A99C89191AEDE07F00A0856F /* PlacesInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F838AE819B1021C00943A8C /* PlacesInfo.h */; };
 		A99C891A1AEDE08700A0856F /* colorsByName.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */; };
 		A99C891B1AEDE08D00A0856F /* CalibrationViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90FC1F21A07F593003AF763 /* CalibrationViewController.h */; };
-		A99C891C1AEDE09600A0856F /* CircleView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A926F20F19D9FC18007C392A /* CircleView.h */; };
 		A99C891D1AEDE09D00A0856F /* CustomAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F3A544D19A449460029DBEA /* CustomAlert.h */; };
 		A99C891E1AEDE0A300A0856F /* Colors.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9C525CE1A3B59880056711F /* Colors.h */; };
 		A99C891F1AEDE0AD00A0856F /* ElementOverlayView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB05C20E19EA999F00F0688B /* ElementOverlayView.h */; };
@@ -207,7 +205,6 @@
 				A99C891F1AEDE0AD00A0856F /* ElementOverlayView.h in CopyFiles */,
 				A99C891E1AEDE0A300A0856F /* Colors.h in CopyFiles */,
 				A99C891D1AEDE09D00A0856F /* CustomAlert.h in CopyFiles */,
-				A99C891C1AEDE09600A0856F /* CircleView.h in CopyFiles */,
 				A99C891B1AEDE08D00A0856F /* CalibrationViewController.h in CopyFiles */,
 				A99C891A1AEDE08700A0856F /* colorsByName.h in CopyFiles */,
 				A99C89191AEDE07F00A0856F /* PlacesInfo.h in CopyFiles */,
@@ -281,8 +278,6 @@
 		A9237F841AFA929200D10E96 /* NVTextAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextAlert.m; sourceTree = "<group>"; };
 		A92382AB1AD986010027659B /* GSSiBumpDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiBumpDetector.h; sourceTree = "<group>"; };
 		A92382AC1AD986010027659B /* GSSiBumpDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiBumpDetector.m; sourceTree = "<group>"; };
-		A926F20F19D9FC18007C392A /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
-		A926F21019D9FC18007C392A /* CircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleView.m; sourceTree = "<group>"; };
 		A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPhotoViewController.h; sourceTree = "<group>"; };
 		A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPhotoViewController.m; sourceTree = "<group>"; };
 		A93FBE061B0ED5890019A8F3 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
@@ -509,8 +504,6 @@
 				EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */,
 				A90FC1F21A07F593003AF763 /* CalibrationViewController.h */,
 				A90FC1F31A07F593003AF763 /* CalibrationViewController.m */,
-				A926F20F19D9FC18007C392A /* CircleView.h */,
-				A926F21019D9FC18007C392A /* CircleView.m */,
 				1F3A544D19A449460029DBEA /* CustomAlert.h */,
 				1F3A544E19A449460029DBEA /* CustomAlert.m */,
 				A9C525CE1A3B59880056711F /* Colors.h */,
@@ -814,7 +807,6 @@
 				EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */,
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
 				A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */,
-				A926F21119D9FC18007C392A /* CircleView.m in Sources */,
 				EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */,
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,
 				A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */,

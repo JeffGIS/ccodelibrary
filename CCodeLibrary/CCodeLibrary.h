@@ -53,7 +53,6 @@
 #import "NVPhotoViewController.h"
 #import "NVTextAlert.h"
 #import "NVImagePickerController.h"
-#import "CircleView.h"
 
 @interface CCodeLibrary : NSObject
 
