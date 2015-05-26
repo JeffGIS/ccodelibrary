@@ -960,6 +960,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     
     [self open];
+    
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE intID=%i",
                        iTime, user, intID];
     
