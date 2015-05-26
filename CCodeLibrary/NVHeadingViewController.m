@@ -3,6 +3,7 @@
 
 #import "NVHeadingViewController.h"
 #import "UserDefaults.h"
+#import "NVProgressView.h"
 
 typedef NS_ENUM(NSInteger, NVHeadingStatus)
 {
@@ -17,7 +18,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 @property (nonatomic) UIImageView *arrowView;
 @property (nonatomic) UILabel *headingLabel, *progressInfoLabel;
 @property (nonatomic) UIButton *returnButton, *startCancelButton;
-@property (nonatomic) UIProgressView *progressView;
+@property (nonatomic) NVProgressView *progressView;
 @property NVHeadingStatus status;
 @property (nonatomic) NSDate *startTime;
 @property CGFloat referenceHeading, minHeading, maxHeading, sumHeading, avgHeading;
@@ -79,18 +80,16 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                 title:@"Start"
              fontSize:44.0];
     
-    _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-    _progressView.frame = CGRectMake(0.0, 0.0, 640.0, 0.0);
+    CGPoint center = CGPointMake(384.0, (((_arrowView.frame.origin.y + _arrowView.frame.size.height) +
+                                          _startCancelButton.frame.origin.y) / 2.0));
     
-    _progressView.center = CGPointMake(384.0, (((_arrowView.frame.origin.y + _arrowView.frame.size.height) +
-                                         _startCancelButton.frame.origin.y) / 2.0));
+    _progressView = [[NVProgressView alloc] initWithCenter:center
+                                                     width:688.0
+                                                trackColor:UIColor.blackColor
+                                             progressColor:UIColor.whiteColor];
     
     _progressView.progress = 0.0;
-    _progressView.trackTintColor = UIColor.blackColor;
-    _progressView.progressTintColor = UIColor.whiteColor;
-    _progressView.hidden = NO;
     [self.view addSubview:_progressView];
-    
     [self setupProgressInfoLabel];
     
     CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
@@ -132,9 +131,9 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                                                                                    ofType:@"png"]]];
     
     _arrowView.frame = CGRectMake(0.0, 0.0, _arrowView.image.size.width,
-                                  (_arrowView.image.size.height * 1.5));
+                                  (_arrowView.image.size.height * 1.3));
     
-    _arrowView.center = CGPointMake(384.0, 512.0);
+    _arrowView.center = CGPointMake(384.0, 500.0);
     
     [self.view addSubview:_arrowView];
 }
