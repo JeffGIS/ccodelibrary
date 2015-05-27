@@ -3,6 +3,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, NVSliderConfiguration)
+{
+    NVSliderConfigurationDefault,
+    NVSliderConfigurationManualSlope,
+};
+
 @class NVSliderController;
 
 @protocol NVSliderControllerDelegate <NSObject>
@@ -23,7 +29,8 @@
           startValue:(CGFloat)startValue
             minValue:(CGFloat)minValue
             maxValue:(CGFloat)maxValue
-            delegate:(id)delegate;
+            delegate:(id)delegate
+       configuration:(NVSliderConfiguration)configuration;
 
 - (void)showSliderControllerInView:(UIView *)view
                           animated:(BOOL)animated

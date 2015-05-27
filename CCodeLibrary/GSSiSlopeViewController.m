@@ -272,7 +272,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
                                                                  startValue:_data.frontSlope
                                                                    minValue:(_data.frontSlope - 2.0)
                                                                    maxValue:(_data.frontSlope + 2.0)
-                                                                   delegate:self];
+                                                                   delegate:self
+                                                              configuration:NVSliderConfigurationManualSlope];
     
     [slider showSliderControllerInView:self.view
                               animated:YES
@@ -477,12 +478,18 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)sliderView:(NVSliderController *)sliderView
     didReturnValue:(CGFloat)value
 {
+    _data.frontSlope = value;
+    _maxSlope = ComputeMaxSlope(_data.frontSlope, _data.sideSlope);
     
+    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlope];
+    _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _maxSlope];
+    
+    [sliderView hideSliderController:YES];
 }
 
 - (void)sliderViewDidCancel:(NVSliderController *)sliderView
 {
-    
+    [sliderView hideSliderController:YES];
 }
 
 @end
