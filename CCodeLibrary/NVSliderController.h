@@ -25,4 +25,10 @@
             maxValue:(CGFloat)maxValue
             delegate:(id)delegate;
 
+- (void)showSliderControllerInView:(UIView *)view
+                          animated:(BOOL)animated
+                           overlay:(BOOL)overlay;
+
+- (void)hideSliderController:(BOOL)animated;
+
 @end

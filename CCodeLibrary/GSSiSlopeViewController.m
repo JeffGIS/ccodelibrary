@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 @interface GSSiSlopeViewController ()
 
-@property (nonatomic) UIButton *unableButton, *startCancelButton;
+@property (nonatomic) UIButton *unableButton, *startCancelButton, *manualButton;
 @property (nonatomic) UIImageView *arrowView;
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UILabel *frontSlopeLabel, *sideSlopeLabel, *maxSlopeLabel, *promptLabel;
@@ -72,6 +72,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [self setupArrowView];
     [self setupLabels];
     [self setupProgressView];
+    [self setupManualButton];
     
     _locationManager = [[CLLocationManager alloc] init];
     _locationManager.headingFilter = kCLHeadingFilterNone;
@@ -93,9 +94,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
                       action:@selector(goBack:)
             forControlEvents:UIControlEventTouchUpInside];
     
-    [_unableButton setTitleColor:UserDefaults.defaults.appleBlue
-                        forState:UIControlStateHighlighted];
-    
     [self setupButton:_unableButton
                 title:@"Unable"];
 }
@@ -107,9 +105,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [_startCancelButton addTarget:self
                            action:@selector(startCancel:)
                  forControlEvents:UIControlEventTouchUpInside];
-    
-    [_startCancelButton setTitleColor:UserDefaults.defaults.appleBlue
-                             forState:UIControlStateHighlighted];
     
     [self setupButton:_startCancelButton
                 title:@"Start"];
@@ -155,6 +150,24 @@ typedef NS_ENUM(NSInteger, SCStatus)
     _progressView.hidden = YES;
 }
 
+- (void)setupManualButton
+{
+    _manualButton = [[UIButton alloc] initWithFrame:CGRectMake(104.0, (((_promptLabel.center.y * 2.0) + _headingLabel.center.y) / 3.0),
+                                                               560.0, 80.0)];
+    
+    [_manualButton addTarget:self
+                      action:@selector(manual:)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    _manualButton.hidden = YES;
+    
+    [self setupButton:_manualButton
+                title:@"Manual Measurement"];
+    
+    _manualButton.titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
+    _manualButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+}
+
 - (void)setupButton:(UIButton *)button
               title:(NSString *)title
 {
@@ -164,8 +177,12 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [button setTitleColor:CRAPI.sharedInstance.defaultColors.titleColor
                  forState:UIControlStateNormal];
     
+    [button setTitleColor:UserDefaults.defaults.appleBlue
+                 forState:UIControlStateHighlighted];
+    
     button.titleLabel.font = [UIFont boldSystemFontOfSize:84.0];
     button.layer.cornerRadius = 10.0;
+    button.titleLabel.textAlignment = NSTextAlignmentCenter;
     
     [self updateButtonAppearance:button];
     [self.view addSubview:button];
@@ -246,6 +263,20 @@ typedef NS_ENUM(NSInteger, SCStatus)
     }
     
     [self updateButtonAppearance:_unableButton];
+}
+
+- (void)manual:(UIButton *)button
+{
+    NVSliderController *slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                                      width:728.0
+                                                                 startValue:_data.frontSlope
+                                                                   minValue:(_data.frontSlope - 2.0)
+                                                                   maxValue:(_data.frontSlope + 2.0)
+                                                                   delegate:self];
+    
+    [slider showSliderControllerInView:self.view
+                              animated:YES
+                               overlay:YES];
 }
 
 - (void)startMotionManager
@@ -429,6 +460,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
     
     _progressView.hidden = YES;
     _hasRun = NO;
+    
+    _manualButton.hidden = NO;
 }
 
 - (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
@@ -439,6 +472,17 @@ typedef NS_ENUM(NSInteger, SCStatus)
         rtn = [_delegate shouldUseCalibration:self];
     
     return rtn;
+}
+
+- (void)sliderView:(NVSliderController *)sliderView
+    didReturnValue:(CGFloat)value
+{
+    
+}
+
+- (void)sliderViewDidCancel:(NVSliderController *)sliderView
+{
+    
 }
 
 @end

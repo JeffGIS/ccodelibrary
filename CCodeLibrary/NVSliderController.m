@@ -9,6 +9,7 @@
 @property (nonatomic) UISlider *slider;
 @property (nonatomic) UILabel *sliderLabel;
 @property (nonatomic) UIButton *saveButton, *cancelButton;
+@property (nonatomic) UIView *overlayView;
 
 @end
 
@@ -199,6 +200,40 @@
 {
     if (_delegate)
         [_delegate sliderViewDidCancel:self];
+}
+
+- (void)showSliderControllerInView:(UIView *)view
+                          animated:(BOOL)animated
+                           overlay:(BOOL)overlay
+{
+    if (overlay)
+    {
+        CGRect bounds = UIScreen.mainScreen.bounds;
+        _overlayView = [[UIView alloc] initWithFrame:bounds];
+        _overlayView.backgroundColor = UIColor.blackColor;
+        _overlayView.alpha = 0.0;
+        [view addSubview:_overlayView];
+        self.layer.borderWidth = 0.0;
+    }
+
+    if (animated)
+        self.alpha = 0.0;
+    
+    [view addSubview:self];
+    
+    if (animated)
+    {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             _overlayView.alpha = 0.7;
+                             self.alpha = 1.0;
+                         }];
+    }
+}
+
+- (void)hideSliderController:(BOOL)animated
+{
+    
 }
 
 @end

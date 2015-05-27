@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import <UIKit/UIKit.h>
+#import "NVSliderController.h"
 
 typedef struct NVSlopeData {
     CGFloat accelX[2];
@@ -29,7 +30,7 @@ typedef struct NVSlopeData {
 
 @end
 
-@interface GSSiSlopeViewController : UIViewController
+@interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate>
 
 @property (nonatomic, weak) id <GSSiSlopeViewControllerDelegate> delegate;
 
