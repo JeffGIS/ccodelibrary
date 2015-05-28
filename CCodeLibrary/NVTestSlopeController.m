@@ -33,6 +33,8 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
 @property (nonatomic) CGFloat xRange, yRange, zRange;
 @property (nonatomic) CGFloat maxX, minX, maxY, minY, maxZ, minZ;
 @property (nonatomic) CGFloat gSumX, gSumY, gSumZ, aSumX, aSumY, aSumZ, yawSum, pitchSum, rollSum;
+@property (nonatomic) CGFloat rmSum11, rmSum12, rmSum13, rmSum21, rmSum22, rmSum23, rmSum31, rmSum32, rmSum33;
+@property (nonatomic) CGFloat qSumX, qSumY, qSumZ, qSumW;
 @property (nonatomic) NVSlopeTestData data;
 @property (nonatomic) NSInteger counter;
 @property (nonatomic) CGFloat sumTrueHeading, sumMagneticHeading;
@@ -332,6 +334,21 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
         _data.pitch = (_pitchSum / COUNT);
         _data.roll = (_rollSum / COUNT);
         
+        _data.rm11 = (_rmSum11 / COUNT);
+        _data.rm12 = (_rmSum12 / COUNT);
+        _data.rm13 = (_rmSum13 / COUNT);
+        _data.rm21 = (_rmSum21 / COUNT);
+        _data.rm22 = (_rmSum22 / COUNT);
+        _data.rm23 = (_rmSum23 / COUNT);
+        _data.rm31 = (_rmSum31 / COUNT);
+        _data.rm32 = (_rmSum32 / COUNT);
+        _data.rm33 = (_rmSum33 / COUNT);
+        
+        _data.quatX = (_qSumX / COUNT);
+        _data.quatY = (_qSumY / COUNT);
+        _data.quatZ = (_qSumZ / COUNT);
+        _data.quatW = (_qSumW / COUNT);
+        
         _data.trueHeading = (_sumTrueHeading / COUNT);
         _data.magneticHeading = (_sumMagneticHeading / COUNT);
         
@@ -373,6 +390,21 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
         _pitchSum += deviceMotion.attitude.pitch;
         _rollSum += deviceMotion.attitude.roll;
         
+        _rmSum11 += deviceMotion.attitude.rotationMatrix.m11;
+        _rmSum12 += deviceMotion.attitude.rotationMatrix.m12;
+        _rmSum13 += deviceMotion.attitude.rotationMatrix.m13;
+        _rmSum21 += deviceMotion.attitude.rotationMatrix.m21;
+        _rmSum22 += deviceMotion.attitude.rotationMatrix.m22;
+        _rmSum23 += deviceMotion.attitude.rotationMatrix.m23;
+        _rmSum31 += deviceMotion.attitude.rotationMatrix.m31;
+        _rmSum32 += deviceMotion.attitude.rotationMatrix.m32;
+        _rmSum33 += deviceMotion.attitude.rotationMatrix.m33;
+        
+        _qSumX += deviceMotion.attitude.quaternion.x;
+        _qSumY += deviceMotion.attitude.quaternion.y;
+        _qSumZ += deviceMotion.attitude.quaternion.z;
+        _qSumW += deviceMotion.attitude.quaternion.w;
+        
         _sumTrueHeading += _locationManager.heading.trueHeading;
         _sumMagneticHeading += _locationManager.heading.magneticHeading;
         
@@ -387,6 +419,10 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
     _gSumX = _gSumY = _gSumZ = 0.0;
     _aSumX = _aSumY = _aSumZ = 0.0;
     _yawSum = _pitchSum = _rollSum = 0.0;
+    _rmSum11 = _rmSum12 = _rmSum13 = 0.0;
+    _rmSum21 = _rmSum22 = _rmSum23 = 0.0;
+    _rmSum31 = _rmSum32 = _rmSum33 = 0.0;
+    _qSumX = _qSumY = _qSumZ = _qSumW = 0.0;
     _sumTrueHeading = _sumMagneticHeading =  0.0;
     _counter = 0;
 }
