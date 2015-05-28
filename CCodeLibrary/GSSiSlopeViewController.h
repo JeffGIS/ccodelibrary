@@ -23,10 +23,10 @@ typedef struct NVSlopeData {
 
 @protocol GSSiSlopeViewControllerDelegate <NSObject>
 
+- (BOOL)shouldUseCalibration:(GSSiSlopeViewController *)controller;
+
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
              didReturnSlopeData:(NVSlopeData)slopeData;
-
-- (BOOL)shouldUseCalibration:(GSSiSlopeViewController *)controller;
 
 @end
 
@@ -38,7 +38,6 @@ typedef struct NVSlopeData {
                                                        flipRadius:(CGFloat)flipRadius
                                                          delegate:(id)delegate;
 
-@property (nonatomic) CGFloat calibrationTarget, flipRadius, steadyDiff;
 @property (nonatomic) NSString *which;
 @property (nonatomic) NSInteger mode;
 

@@ -110,6 +110,8 @@
 		A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */ = {isa = PBXBuildFile; fileRef = A99C893C1AEDE1B900A0856F /* GSSiDefs.m */; };
 		A99C893E1AEDE1E200A0856F /* GSSiDefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99C893B1AEDE1B900A0856F /* GSSiDefs.h */; };
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
+		A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */; };
+		A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */; };
 		A9C525D01A3B59880056711F /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C525CF1A3B59880056711F /* Colors.m */; };
 		A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */; };
 		A9D269E61AE562E100A5C38E /* TableViewCellLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D269E51AE562E100A5C38E /* TableViewCellLabel.m */; };
@@ -168,6 +170,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */,
 				A9E2130F1AFE4C2B005ECBBA /* NVImagePickerController.h in CopyFiles */,
 				A9237F861AFA92BA00D10E96 /* NVTextAlert.h in CopyFiles */,
 				A92E0BA81AF7A461008A44AC /* NVPhotoViewController.h in CopyFiles */,
@@ -314,6 +317,8 @@
 		A99C893C1AEDE1B900A0856F /* GSSiDefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiDefs.m; sourceTree = "<group>"; };
 		A9ADCB1C1ACD0870000E5C00 /* GSSiNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiNotesView.h; sourceTree = "<group>"; };
 		A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiNotesView.m; sourceTree = "<group>"; };
+		A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTestSlopeController.h; sourceTree = "<group>"; };
+		A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTestSlopeController.m; sourceTree = "<group>"; };
 		A9C525CE1A3B59880056711F /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		A9C525CF1A3B59880056711F /* Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Colors.m; sourceTree = "<group>"; };
 		A9C8ED3A1A5849F700DF9856 /* GetPriorityLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPriorityLocations.h; sourceTree = "<group>"; };
@@ -542,6 +547,8 @@
 				A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */,
 				A97407C41AF6A63900B2FF30 /* NVProgressView.h */,
 				A97407C51AF6A63900B2FF30 /* NVProgressView.m */,
+				A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */,
+				A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */,
 				A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */,
 				A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */,
 				A9D3A06A1AF539E600E0D834 /* NVSliderController.h */,
@@ -766,6 +773,7 @@
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
 				A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */,
 				A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */,
+				A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */,
 				A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */,
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,

@@ -216,6 +216,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     label.font = [UIFont systemFontOfSize:20.0];
     label.textColor = UIColor.redColor;
     label.textAlignment = NSTextAlignmentCenter;
+    label.adjustsFontSizeToFitWidth = YES;
     [_ticView addSubview:label];
 }
 
