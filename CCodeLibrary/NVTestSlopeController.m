@@ -278,6 +278,7 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
                                                            topButtonText:@"Heading"
                                                         bottomButtonText:@"Slope"
                                                         destructiveIndex:NVLargeAlertIndexNone];
+#pragma unused(alert)
 }
 
 - (void)startMotionManager
