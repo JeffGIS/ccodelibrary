@@ -36,6 +36,8 @@
 		A94A771319F807570062906E /* Facility.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A771219F807570062906E /* Facility.m */; };
 		A94A771619F8079E0062906E /* FacilityPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A771519F8079E0062906E /* FacilityPoint.m */; };
 		A94A771919F807CE0062906E /* FacilityRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A771819F807CE0062906E /* FacilityRecord.m */; };
+		A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = A951CD1E1B18E070009C13E2 /* NVTwoTextAlert.m */; };
+		A951CD201B18E581009C13E2 /* NVTwoTextAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A951CD1D1B18E070009C13E2 /* NVTwoTextAlert.h */; };
 		A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */ = {isa = PBXBuildFile; fileRef = A96B07BE19FBF276005A73B0 /* LegendView.m */; };
 		A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9735AF019E779DF00894359 /* SystemConfiguration.framework */; };
 		A9735AF419E77B6800894359 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A9735AF319E77B6800894359 /* Reachability.m */; };
@@ -170,6 +172,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A951CD201B18E581009C13E2 /* NVTwoTextAlert.h in CopyFiles */,
 				A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */,
 				A9E2130F1AFE4C2B005ECBBA /* NVImagePickerController.h in CopyFiles */,
 				A9237F861AFA92BA00D10E96 /* NVTextAlert.h in CopyFiles */,
@@ -294,6 +297,8 @@
 		A94A771519F8079E0062906E /* FacilityPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacilityPoint.m; sourceTree = "<group>"; };
 		A94A771719F807CE0062906E /* FacilityRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacilityRecord.h; sourceTree = "<group>"; };
 		A94A771819F807CE0062906E /* FacilityRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacilityRecord.m; sourceTree = "<group>"; };
+		A951CD1D1B18E070009C13E2 /* NVTwoTextAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTwoTextAlert.h; sourceTree = "<group>"; };
+		A951CD1E1B18E070009C13E2 /* NVTwoTextAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTwoTextAlert.m; sourceTree = "<group>"; };
 		A96B07BD19FBF276005A73B0 /* LegendView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegendView.h; sourceTree = "<group>"; };
 		A96B07BE19FBF276005A73B0 /* LegendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegendView.m; sourceTree = "<group>"; };
 		A9735AF019E779DF00894359 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -557,6 +562,8 @@
 				A91F36931AE9739400602BCE /* NVSliderView.m */,
 				A9237F831AFA929200D10E96 /* NVTextAlert.h */,
 				A9237F841AFA929200D10E96 /* NVTextAlert.m */,
+				A951CD1D1B18E070009C13E2 /* NVTwoTextAlert.h */,
+				A951CD1E1B18E070009C13E2 /* NVTwoTextAlert.m */,
 				A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */,
 				A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */,
 				A99050891ACB947000C6AAAF /* SpreadsheetView.h */,
@@ -766,6 +773,7 @@
 			files = (
 				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,
 				A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */,
+				A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */,
 				EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */,
 				A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */,
 				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,

@@ -59,6 +59,7 @@
 @property NSString *currentOverallBoundaryType;
 @property int currentOverallBoundaryRefno;
 @property BOOL setToAlleyWalls;
+@property NSString *sourceApp;
 
 @property NSString *currentPlatImagePath;
 @property NSString *currentPlatType;
