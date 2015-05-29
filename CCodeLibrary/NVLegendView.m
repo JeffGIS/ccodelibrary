@@ -10,6 +10,7 @@
 @property (nonatomic) CGPoint origin, viewCenter;
 @property (nonatomic) NSUInteger selectedIndex;
 @property (nonatomic) CGRect containerFrame;
+@property BOOL selectable;
 
 @end
 
@@ -19,7 +20,8 @@
                                   inView:(UIView *)view
                           containerFrame:(CGRect)containerFrame
                                 delegate:(id)delegate
-                              selectable:(BOOL)selectable;
+                              selectable:(BOOL)selectable
+                                animated:(BOOL)animated
 {
     NVLegendView *legendView = [[NVLegendView alloc] init];
     legendView.delegate = delegate;
@@ -32,8 +34,9 @@
     legendView.zoomLevel = 1.0;
     legendView.origin = origin;
     legendView.containerFrame = containerFrame;
+    legendView.selectable = selectable;
     
-    if (selectable)
+    if (legendView.selectable)
     {
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:legendView
                                                                                      action:@selector(legendViewWasTapped:)];
@@ -55,9 +58,36 @@
     [legendView addGestureRecognizer:pinchGesture];
     
     [legendView loadView];
-    [view addSubview:legendView];
+    
+    if (animated)
+    {
+        legendView.alpha = 0.0;
+        [view addSubview:legendView];
+        
+        [UIView animateWithDuration:0.25 animations:^{
+            legendView.alpha = 1.0;
+        }];
+    }
+    
+    else
+        [view addSubview:legendView];
     
     return legendView;
+}
+
+- (void)hideLegendView:(BOOL)animated
+{
+    if (animated)
+    {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            [self removeFromSuperview];
+        }];
+    }
+    
+    else
+        [self removeFromSuperview];
 }
 
 - (void)loadView
@@ -69,20 +99,22 @@
         CGFloat originY = yMargin, markerHeight = (height * 0.75), countWidth = 0.0;
         NSString *title = [_delegate titleForLegendView];
         NSUInteger numberOfRows = [_delegate numberOfRowsInLegendView];
-        NSUInteger totalRows = numberOfRows;
+        CGFloat titleHeight = 0.0;
         
         if (title && ![title isEqualToString:@""])
         {
-            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, originY, 0.0, height)];
+            UILabel *titleLabel = [[UILabel alloc] init];
             titleLabel.text = [_delegate titleForLegendView];
             titleLabel.textAlignment = NSTextAlignmentCenter;
             titleLabel.textColor = UIColor.blackColor;
             titleLabel.backgroundColor = UIColor.clearColor;
+            titleLabel.numberOfLines = 0;
             titleLabel.font = font;
+            titleLabel.frame = CGRectMake(0.0, originY, 0.0, titleLabel.intrinsicContentSize.height);
             minWidth = (titleLabel.intrinsicContentSize.width + (xMargin * 2.0));
             [self addSubview:titleLabel];
-            originY += height;
-            totalRows++;
+            titleHeight = titleLabel.frame.size.height;
+            originY += titleHeight;
         }
         
         for (int index = 0; index < numberOfRows; index++)
@@ -165,17 +197,19 @@
                 else
                 {
                     labels.frame = CGRectMake(labels.frame.origin.x, labels.frame.origin.y,
-                                              (minWidth - xMargin), labels.frame.size.height);
+                                              minWidth, labels.frame.size.height);
                 }
             }
         }
         
         self.frame = CGRectMake(_origin.x, _origin.y, minWidth,
-                                ((height * totalRows) + (yMargin * 2.0)));
+                                (titleHeight + (height * numberOfRows) + (yMargin * 2.0)));
         
         _originalHeight = self.frame.size.height;
         _selectedIndex = 0;
-        [self highlightAtIndex:_selectedIndex];
+        
+        if (_selectable)
+            [self highlightAtIndex:_selectedIndex];
     }
 }
 
@@ -185,26 +219,6 @@
         [subviews removeFromSuperview];
         
     [self loadView];
-}
-
-- (void)reloadData
-{
-    for (UILabel *labels in self.subviews)
-    {
-        if (labels.tag > 9)
-        {
-            NSUInteger index = ((labels.tag / 10) - 1);
-            
-            labels.text = [NSString stringWithFormat:@"%@",
-                           [_delegate nameForRowInLegendViewAtIndex:index]];
-            
-            for (UILabel *countLabels in labels.subviews)
-            {
-                countLabels.text = [NSString stringWithFormat:@"%lu",
-                                    (unsigned long)[_delegate countForRowInLegendViewAtIndex:index]];
-            }
-        }
-    }
 }
 
 - (void)highlightAtIndex:(NSUInteger)index
@@ -304,7 +318,7 @@
                                  completion:^(BOOL finished) {
                                      _viewCenter = gesture.view.center;
                                      
-                                     if (_delegate)
+                                     if (_delegate && [_delegate respondsToSelector:@selector(legendView:wasDraggedToOrigin:)])
                                      {
                                          [_delegate legendView:self
                                             wasDraggedToOrigin:gesture.view.frame.origin];
@@ -316,7 +330,7 @@
         {
              _viewCenter = gesture.view.center;
             
-            if (_delegate)
+            if (_delegate && [_delegate respondsToSelector:@selector(legendView:wasDraggedToOrigin:)])
             {
                 [_delegate legendView:self
                    wasDraggedToOrigin:gesture.view.frame.origin];
@@ -335,7 +349,7 @@
         _zoomLevel = (gesture.view.frame.size.height / _originalHeight);
         _viewCenter = gesture.view.center;
         
-        if (_delegate)
+        if (_delegate && [_delegate respondsToSelector:@selector(legendView:wasPinchedToScale:)])
         {
             [_delegate legendView:self
                 wasPinchedToScale:_zoomLevel];

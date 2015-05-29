@@ -13,6 +13,8 @@
 - (NSUInteger)countForRowInLegendViewAtIndex:(NSUInteger)index;
 - (NSString *)titleForLegendView;
 
+@optional
+
 - (void)legendView:(NVLegendView *)legendView
 didChangeSelectedIndex:(NSUInteger)index;
 
@@ -32,9 +34,10 @@ wasDraggedToOrigin:(CGPoint)origin;
                                   inView:(UIView *)view
                           containerFrame:(CGRect)containerFrame
                                 delegate:(id)delegate
-                              selectable:(BOOL)selectable;
+                              selectable:(BOOL)selectable
+                                animated:(BOOL)animated;
 
+- (void)hideLegendView:(BOOL)animated;
 - (void)reloadView;
-- (void)reloadData;
 
 @end
