@@ -25,6 +25,7 @@
 @property (nonatomic, copy) NSString *uploadDirectory;
 @property (nonatomic, copy) NSString *sharedOutputDirectory;
 @property (nonatomic, copy) NSString *organizationName;
+@property int deviceNumber;
 
 @property (nonatomic) int currentGeoid;
 @property (nonatomic) int currentManageriPad; //sequence number for manager iPad - created by GMServer

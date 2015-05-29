@@ -26,7 +26,6 @@
         
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.png", _documentsDirectory];
-        _organizationName = @"MPLSPubWorks";
         //_documentsDirectory = UserDefaults.defaults.sharedFilePath;
     }
     
