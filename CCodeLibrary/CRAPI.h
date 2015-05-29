@@ -115,6 +115,8 @@
 
 - (dbounds) getBoundsAtPoint:(CLLocationCoordinate2D*)pt
                      andDist:(CGFloat)meters;
+- (void) clearOutputDirectory;
+- (BOOL) appendString:(NSString*)str toFile:(NSString*)file;
 
 
 @end
