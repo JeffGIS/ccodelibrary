@@ -19,7 +19,9 @@
                                   delegate:(id)delegate
                                      title:(NSString *)title
                             topPlaceholder:(NSString *)topPlaceholder
+                                   topText:(NSString *)topText
                          bottomPlaceholder:(NSString *)bottomPlaceholder
+                                bottomText:(NSString *)bottomText
 {
     NVTwoTextAlert *textAlert = [[NVTwoTextAlert alloc] init];
     
@@ -69,6 +71,10 @@
     [textAlert setupTextField:textAlert.topTextField];
     textAlert.topTextField.keyboardType = UIKeyboardTypeAlphabet;
     textAlert.topTextField.placeholder = topPlaceholder;
+    
+    if (topText && ![topText isEqualToString:@""])
+        textAlert.topTextField.text = topText;
+    
     [textAlert addSubview:textAlert.topTextField];
     
     textAlert.bottomTextField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, (alertHeight - 80.0), (alertWidth - 40.0), 60.0)];
@@ -76,6 +82,10 @@
     [textAlert setupTextField:textAlert.bottomTextField];
     textAlert.bottomTextField.keyboardType = UIKeyboardTypeNumberPad;
     textAlert.bottomTextField.placeholder = bottomPlaceholder;
+    
+    if (bottomText && ![bottomText isEqualToString:@""])
+        textAlert.topTextField.text = bottomText;
+    
     [textAlert addSubview:textAlert.bottomTextField];
     
     [UIView animateWithDuration:0.25

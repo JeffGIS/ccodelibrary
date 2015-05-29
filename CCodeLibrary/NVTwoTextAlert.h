@@ -23,7 +23,9 @@
                                   delegate:(id)delegate
                                      title:(NSString *)title
                             topPlaceholder:(NSString *)topPlaceholder
-                         bottomPlaceholder:(NSString *)bottomPlaceholder;
+                                   topText:(NSString *)topText
+                         bottomPlaceholder:(NSString *)bottomPlaceholder
+                                bottomText:(NSString *)bottomText;
 
 - (void)hideTwoTextAlert:(BOOL)animated;
 
