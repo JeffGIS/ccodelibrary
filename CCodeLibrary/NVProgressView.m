@@ -38,11 +38,14 @@
 
 - (void)setProgress:(CGFloat)progress
 {
-    _progressTrackView.frame = CGRectMake(0.0, 0.0,
+    dispatch_async(dispatch_get_main_queue(),
+                   ^{
+                       _progressTrackView.frame = CGRectMake(0.0, 0.0,
                                           (self.frame.size.width * progress),
                                           self.frame.size.height);
     
-    _progress = progress;
+                       _progress = progress;
+                   });
 }
 
 @end
