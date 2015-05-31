@@ -624,7 +624,7 @@
     }
     else
     {
-        NSString* newLine = [NSString stringWithFormat:@"\r\n%@]",str];
+        NSString* newLine = [NSString stringWithFormat:@"\r\n%@",str];
         NSFileHandle *myHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
         [myHandle seekToEndOfFile];
         [myHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
