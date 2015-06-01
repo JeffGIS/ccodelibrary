@@ -23,7 +23,7 @@
         _allowedZooms[0] = 21;
         _allowedZooms[1] = 20;
         _allowedZooms[2] = 19;
-        
+        _maxDevices = 32;
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.png", _documentsDirectory];
         //_documentsDirectory = UserDefaults.defaults.sharedFilePath;
@@ -632,4 +632,14 @@
     return YES;
 }
 
+- (NSInteger) adjustNextRefno:(NSInteger)refno
+{
+    NSInteger nextRef = refno % _maxDevices;
+    
+    if (nextRef < _deviceNumber)
+        nextRef = refno - nextRef + _deviceNumber;
+    else
+        nextRef = refno - nextRef + _maxDevices +_deviceNumber;
+    return nextRef;
+}
 @end
