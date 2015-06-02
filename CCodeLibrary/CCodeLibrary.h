@@ -54,6 +54,7 @@
 #import "NVTextAlert.h"
 #import "NVImagePickerController.h"
 #import "NVTwoTextAlert.h"
+#import "UIApplication+VersionBuild.h"
 
 @interface CCodeLibrary : NSObject
 
