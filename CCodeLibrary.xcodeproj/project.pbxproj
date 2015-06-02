@@ -23,6 +23,7 @@
 		A90D1FBC1AE6184800CBFEE7 /* UIView+ColorOfPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */; };
 		A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */ = {isa = PBXBuildFile; fileRef = A90EBDC81A48874B001E72CF /* GSSiEnums.m */; };
 		A90FC1F41A07F593003AF763 /* CalibrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A90FC1F31A07F593003AF763 /* CalibrationViewController.m */; };
+		A91D34F31B1E27BE005A61E2 /* UIApplication+VersionBuild.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */; };
 		A91F36941AE9739400602BCE /* NVSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F36931AE9739400602BCE /* NVSliderView.m */; };
 		A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F6E8C1AE0A73B00822F42 /* HelpButton.m */; };
 		A9237F851AFA929200D10E96 /* NVTextAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = A9237F841AFA929200D10E96 /* NVTextAlert.m */; };
@@ -112,7 +113,6 @@
 		A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */ = {isa = PBXBuildFile; fileRef = A99C893C1AEDE1B900A0856F /* GSSiDefs.m */; };
 		A99C893E1AEDE1E200A0856F /* GSSiDefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99C893B1AEDE1B900A0856F /* GSSiDefs.h */; };
 		A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */ = {isa = PBXBuildFile; fileRef = A99F9B861B1E06E400CA8DA6 /* UIApplication+VersionBuild.m */; };
-		A99F9B881B1E07E000CA8DA6 /* UIApplication+VersionBuild.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */; };
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
 		A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */; };
 		A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */; };
@@ -174,7 +174,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				A99F9B881B1E07E000CA8DA6 /* UIApplication+VersionBuild.h in CopyFiles */,
+				A91D34F31B1E27BE005A61E2 /* UIApplication+VersionBuild.h in CopyFiles */,
 				A951CD201B18E581009C13E2 /* NVTwoTextAlert.h in CopyFiles */,
 				A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */,
 				A9E2130F1AFE4C2B005ECBBA /* NVImagePickerController.h in CopyFiles */,
