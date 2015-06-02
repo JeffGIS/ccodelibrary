@@ -90,9 +90,9 @@ enum obstructions {
 @interface MPIntersection : NSObject
 
 @property (nonatomic) int intID;
-@property (nonatomic) BOOL dataUpdated;
+@property BOOL dataUpdated;
 @property (nonatomic) int intRotation;
-@property (nonatomic) BOOL doLater;
+@property BOOL doLater;
 @property (nonatomic) int timeComplete;
 @property (nonatomic) int currentCorner;
 @property (nonatomic) int currentSignal;
@@ -102,10 +102,10 @@ enum obstructions {
 @property (nonatomic, copy) NSString *name1;
 @property (nonatomic, copy) NSString *name2;
 @property (nonatomic, copy) NSString *name3;
-@property (nonatomic) BOOL signal23Exists;
-@property (nonatomic) BOOL signal45Exists;
-@property (nonatomic) BOOL signal67Exists;
-@property (nonatomic) BOOL signal81Exists;
+@property BOOL signal23Exists;
+@property BOOL signal45Exists;
+@property BOOL signal67Exists;
+@property BOOL signal81Exists;
 @property (nonatomic) int signal23lev21x;
 @property (nonatomic) int signal23lev21y;
 @property (nonatomic) int signal45lev21x;
@@ -114,10 +114,10 @@ enum obstructions {
 @property (nonatomic) int signal67lev21y;
 @property (nonatomic) int signal81lev21x;
 @property (nonatomic) int signal81lev21y;
-@property (nonatomic) BOOL xWalkAExists;
-@property (nonatomic) BOOL xWalkBExists;
-@property (nonatomic) BOOL xWalkCExists;
-@property (nonatomic) BOOL xWalkDExists;
+@property BOOL xWalkAExists;
+@property BOOL xWalkBExists;
+@property BOOL xWalkCExists;
+@property BOOL xWalkDExists;
 @property (nonatomic) int xWalkAlev21x;
 @property (nonatomic) int xWalkAlev21y;
 @property (nonatomic) int xWalkBlev21x;
@@ -130,14 +130,15 @@ enum obstructions {
 @property (nonatomic) int corner45heading;
 @property (nonatomic) int corner67heading;
 @property (nonatomic) int corner81heading;
-@property (nonatomic) BOOL corner23isComplete;
-@property (nonatomic) BOOL corner45isComplete;
-@property (nonatomic) BOOL corner67isComplete;
-@property (nonatomic) BOOL corner81isComplete;
+@property BOOL corner23isComplete;
+@property BOOL corner45isComplete;
+@property BOOL corner67isComplete;
+@property BOOL corner81isComplete;
 @property (nonatomic) int quadDev0, quadDev90, quadDev180, quadDev270;
 @property (nonatomic) int lev21x, lev21y;
 @property (nonatomic) double lat,lon;
 @property (nonatomic) NSMutableArray *ramps;
+@property (nonatomic) int pairedMode;
 
 - (void) setRampsXWalkAndSignal;
 
