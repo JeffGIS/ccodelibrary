@@ -33,10 +33,11 @@
     if (!lastCalDate)
         lastCalText = [NSString stringWithFormat:@"Not calibrated"];
     
-    _lastCalibrationlabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 976.0, 728.0, 40.0)];
+    _lastCalibrationlabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 984.0, 728.0, 32.0)];
     
     [self setupLabel:_lastCalibrationlabel
-                text:lastCalText];
+                text:lastCalText
+            fontSize:24.0];
     
     _returnButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 20.0, 160.0, 60.0)];
     _returnButton.enabled = YES;
@@ -50,7 +51,8 @@
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(220.0, 20.0, 368.0, 60.0)];
     
     [self setupLabel:_titleLabel
-                text:@"Calibration Manager"];
+                text:@"Calibration Manager"
+            fontSize:48.0];
     
     _calibrationValues = [SharedDefaults.defaults calibrationValueArray];
     
@@ -58,7 +60,7 @@
     
     [self setupCalibrationButtons];
     
-    _testButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 902.0, 354.0, 64.0)];
+    _testButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 912.0, 354.0, 64.0)];
     
     [self setupButton:_testButton
              selector:@selector(testButtonTapped:)
@@ -66,7 +68,7 @@
               enabled:YES
              fontSize:56.0];
     
-    _editButton = [[UIButton alloc] initWithFrame:CGRectMake(394.0, 902.0, 354.0, 64.0)];
+    _editButton = [[UIButton alloc] initWithFrame:CGRectMake(394.0, 912.0, 354.0, 64.0)];
     
     [self setupButton:_editButton
              selector:@selector(editButtonTapped:)
@@ -142,10 +144,11 @@
         yOrigin += (buttonHeight + margin);
     }
     
-    _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, (yOrigin - margin), buttonWidth, ((902.0 - yOrigin) + margin))];
+    _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, (yOrigin - margin), buttonWidth, ((912.0 - yOrigin) + margin))];
     
     [self setupLabel:_promptLabel
-                text:@"Tap on 'Calibrate 0.00%' to begin Slope Calibration routine"];
+                text:@"Place iPad on a flat surface and tap on\n'Calibrate 0.00%' to begin calibration routine."
+            fontSize:34.0];
 }
 
 - (void)setupButton:(UIButton *)button
@@ -183,13 +186,14 @@
 }
 
 - (void)setupLabel:(UILabel *)label
-             text:(NSString *)text
+              text:(NSString *)text
+          fontSize:(CGFloat)fontSize
 {
     label.backgroundColor = UIColor.clearColor;
     label.text = text;
     label.textColor = CRAPI.sharedInstance.defaultColors.textColor;
     label.textAlignment = NSTextAlignmentCenter;
-    label.font = [UIFont boldSystemFontOfSize:36.0];
+    label.font = [UIFont boldSystemFontOfSize:fontSize];
     label.adjustsFontSizeToFitWidth = YES;
     label.numberOfLines = 0;
     
