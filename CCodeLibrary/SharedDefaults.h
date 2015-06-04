@@ -17,6 +17,7 @@
 - (NSString *)stringForKey:(NSString *)key;
 - (CGFloat)CGFloatForKey:(NSString *)key;
 - (NSDate *)dateForKey:(NSString *)key;
+- (NSArray *)calibrationValueArray;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
@@ -43,5 +44,7 @@
 
 - (void)saveDate:(NSDate *)date
           forKey:(NSString *)key;
+
+- (void)saveCalibrationValueArray:(NSArray *)array;
 
 @end
