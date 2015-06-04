@@ -48,6 +48,11 @@
 		A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = A97867361A5219FD000A9BB8 /* PriorityLocation.m */; };
 		A97B72781ADB4912001ACFAE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A97B72771ADB4912001ACFAE /* AVFoundation.framework */; };
 		A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97C621E1AE0C59200DA7738 /* HelpWebView.m */; };
+		A98A57A81B20ADE600906FBC /* NVCalibrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A98A57A71B20ADE600906FBC /* NVCalibrationController.m */; };
+		A98A57A91B20AEC800906FBC /* lzoconf.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB86BFA81B0B62A30074728E /* lzoconf.h */; };
+		A98A57AA1B20AECD00906FBC /* lzodefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB86BFA91B0B62A30074728E /* lzodefs.h */; };
+		A98A57AB1B20AED200906FBC /* minilzo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB86BFA61B0B62520074728E /* minilzo.h */; };
+		A98A57AC1B20AEE400906FBC /* NVCalibrationController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A98A57A61B20ADE600906FBC /* NVCalibrationController.h */; };
 		A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A99050871ACB942F00C6AAAF /* GSSiDatePicker.m */; };
 		A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508A1ACB947000C6AAAF /* SpreadsheetView.m */; };
 		A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */; };
@@ -174,6 +179,10 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A98A57AC1B20AEE400906FBC /* NVCalibrationController.h in CopyFiles */,
+				A98A57AB1B20AED200906FBC /* minilzo.h in CopyFiles */,
+				A98A57AA1B20AECD00906FBC /* lzodefs.h in CopyFiles */,
+				A98A57A91B20AEC800906FBC /* lzoconf.h in CopyFiles */,
 				A91D34F31B1E27BE005A61E2 /* UIApplication+VersionBuild.h in CopyFiles */,
 				A951CD201B18E581009C13E2 /* NVTwoTextAlert.h in CopyFiles */,
 				A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */,
@@ -315,6 +324,8 @@
 		A97B72771ADB4912001ACFAE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		A97C621D1AE0C59200DA7738 /* HelpWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpWebView.h; sourceTree = "<group>"; };
 		A97C621E1AE0C59200DA7738 /* HelpWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpWebView.m; sourceTree = "<group>"; };
+		A98A57A61B20ADE600906FBC /* NVCalibrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalibrationController.h; sourceTree = "<group>"; };
+		A98A57A71B20ADE600906FBC /* NVCalibrationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCalibrationController.m; sourceTree = "<group>"; };
 		A99050861ACB942F00C6AAAF /* GSSiDatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiDatePicker.h; sourceTree = "<group>"; };
 		A99050871ACB942F00C6AAAF /* GSSiDatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiDatePicker.m; sourceTree = "<group>"; };
 		A99050891ACB947000C6AAAF /* SpreadsheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpreadsheetView.h; sourceTree = "<group>"; };
@@ -545,6 +556,8 @@
 				A97C621E1AE0C59200DA7738 /* HelpWebView.m */,
 				A96B07BD19FBF276005A73B0 /* LegendView.h */,
 				A96B07BE19FBF276005A73B0 /* LegendView.m */,
+				A98A57A61B20ADE600906FBC /* NVCalibrationController.h */,
+				A98A57A71B20ADE600906FBC /* NVCalibrationController.m */,
 				A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */,
 				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
 				A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */,
@@ -781,6 +794,7 @@
 				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,
 				A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */,
 				A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */,
+				A98A57A81B20ADE600906FBC /* NVCalibrationController.m in Sources */,
 				EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */,
 				A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */,
 				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,
