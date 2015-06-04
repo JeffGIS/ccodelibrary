@@ -14,8 +14,13 @@ typedef struct NVSlopeData {
     CGFloat yaw[2];
     CGFloat pitch[2];
     CGFloat roll[2];
-    CGFloat frontSlope;
-    CGFloat sideSlope;
+    CGFloat frontSlopeDegrees;
+    CGFloat sideSlopeDegrees;
+    CGFloat frontSlopePct;
+    CGFloat sideSlopePct;
+    CGFloat maxSlopePct;
+    CGFloat maxSlopeDegrees;
+    CGFloat maxSlopeDeflection;
     CGFloat heading;
 } NVSlopeData;
 

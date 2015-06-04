@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 @property (nonatomic) CGFloat gSumX, gSumY, gSumZ, aSumX, aSumY, aSumZ, yawSum, pitchSum, rollSum;
 @property (nonatomic) NVSlopeData data;
 @property (nonatomic) NSInteger counter;
-@property (nonatomic) CGFloat sumHeading, maxSlope;
+@property (nonatomic) CGFloat sumHeading;
 @property (nonatomic) UILabel *headingLabel;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) CMMotionManager *motionManager;
@@ -228,7 +228,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [self stopMotionManager];
     
     if (_unable)
-        _data.frontSlope = _data.sideSlope = _data.heading = -9999.0;
+        _data.frontSlopePct = _data.sideSlopePct = _data.frontSlopeDegrees = _data.sideSlopeDegrees = _data.heading = -9999.0;
     
     if (_delegate)
     {
@@ -270,9 +270,9 @@ typedef NS_ENUM(NSInteger, SCStatus)
 {
     NVSliderController *slider = [[NVSliderController alloc] initWithCenter:self.view.center
                                                                       width:728.0
-                                                                 startValue:_data.frontSlope
-                                                                   minValue:(_data.frontSlope - 2.0)
-                                                                   maxValue:(_data.frontSlope + 2.0)
+                                                                 startValue:_data.frontSlopePct
+                                                                   minValue:(_data.frontSlopePct - 2.0)
+                                                                   maxValue:(_data.frontSlopePct + 2.0)
                                                                    delegate:self
                                                               configuration:NVSliderConfigurationManualSlope];
     
@@ -314,6 +314,43 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [_locationManager stopUpdatingHeading];
 }
 
+double square (double x)
+{
+    return x*x;
+}
+
+- (void) slopesFromAccelerometer:(int)nReadings
+{
+/*double xyz[3];
+double ax, ay, az;
+xyz[0] = _data.accelX[0];
+xyz[1] = _data.accelY[0];
+xyz[2] = _data.accelZ[0];
+ax = xyz[0];
+ay = xyz[1];
+az = xyz[2];
+double xAngle = atan( ax / (sqrt(square(ay) + square(az))));
+double yAngle = atan( ay / (sqrt(square(ax) + square(az))));
+double zAngle = atan( sqrt(square(ax) + square(ay)) / az);
+
+xAngle *= 180.00;   yAngle *= 180.00;   zAngle *= 180.00;
+xAngle /= 3.141592; yAngle /= 3.141592; zAngle /= 3.141592;*/
+    double denom = sqrt (square(_data.accelX[0])+square(_data.accelY[0])+square(_data.accelZ[0]));
+    double angz = acos (_data.accelZ[0]/denom);
+    double angy = acos (_data.accelY[0]/denom);
+    double angx = acos (_data.accelX[0]/denom);
+    angx *= RADtoDEG;
+    angy *= RADtoDEG;
+    angz *= RADtoDEG;
+    angx = 90.0 - angx;
+    angy = 180.0 - angy;
+    angz = 180.0 - angz;
+    _data.frontSlopeDegrees = angz;
+    _data.sideSlopeDegrees = angx;
+    _data.frontSlopePct = tan(_data.frontSlopeDegrees * DEGtoRAD) * 100;
+    _data.sideSlopePct = tan(_data.sideSlopeDegrees * DEGtoRAD) * 100;
+    _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
+}
 - (void)computeSlopeFromDeviceMotion:(CMDeviceMotion *)deviceMotion
 {
     if (_counter == COUNT)
@@ -334,17 +371,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
             _data.pitch[1] = (_pitchSum / COUNT);
             _data.roll[1] = (_rollSum / COUNT);
             
-            CGFloat frontSlope2 = (100.0 * sin(-atan2(_data.accelY[1],
-                                                      sqrt(pow(_data.accelX[1], 2) +
-                                                           pow(_data.accelZ[1], 2)))));
-            
-            CGFloat sideSlope2 = (100.0 * sin(atan2(_data.accelX[1],
-                                                    sqrt(pow(_data.accelY[1], 2) +
-                                                         pow(_data.accelZ[1], 2)))));
-            
-            _data.frontSlope -= ((_data.frontSlope + frontSlope2) / 2.0);
-            _data.sideSlope -= ((_data.sideSlope + sideSlope2) / 2.0);
-            _maxSlope = ComputeMaxSlope(_data.frontSlope, _data.sideSlope);
+            [self slopesFromAccelerometer:2];
             
             [self slopeMeasurementComplete];
         }
@@ -359,23 +386,14 @@ typedef NS_ENUM(NSInteger, SCStatus)
             _data.accelY[0] = (_aSumY / COUNT);
             _data.accelZ[0] = (_aSumZ / COUNT);
             
-            _data.yaw[0] = (_yawSum / COUNT);
-            _data.pitch[0] = (_pitchSum / COUNT);
-            _data.roll[0] = (_rollSum / COUNT);
+            _data.yaw[0] = (_yawSum / COUNT) * RADtoDEG;
+            _data.pitch[0] = (_pitchSum / COUNT) * RADtoDEG;
+            _data.roll[0] = (_rollSum / COUNT) * RADtoDEG;
             
-            _data.frontSlope = (tan(-atan2(_data.accelY[0],
-                                        sqrt(pow(_data.accelX[0], 2) +
-                                             pow(_data.accelZ[0], 2)))) * 100.0);
-            
-            _data.sideSlope = (tan(atan2(_data.accelX[0],
-                                      sqrt(pow(_data.accelY[0], 2) +
-                                           pow(_data.accelZ[0], 2)))) * 100.0);
-            
-            _maxSlope = ComputeMaxSlope(_data.frontSlope, _data.sideSlope);
             _data.heading = (_sumHeading / COUNT);
-            
-            if (_maxSlope < (_calibrationTarget - _flipRadius) ||
-                (_maxSlope > (_calibrationTarget + _flipRadius)))
+            [self slopesFromAccelerometer:1];
+            if (_data.maxSlopePct < (_calibrationTarget - _flipRadius) ||
+                (_data.maxSlopePct > (_calibrationTarget + _flipRadius)))
             {
                 [self slopeMeasurementComplete];
             }
@@ -392,6 +410,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
                 _status = SCStatusStart;
             }
         }
+        _counter++;
     }
     
     else if (_counter < COUNT)
@@ -413,14 +432,16 @@ typedef NS_ENUM(NSInteger, SCStatus)
         
         _counter++;
         
-        _aSumX += _motionManager.accelerometerData.acceleration.x;
-        _aSumY += _motionManager.accelerometerData.acceleration.y;
-        _aSumZ += _motionManager.accelerometerData.acceleration.z;
+        _aSumX += acceleration.x;
+        _aSumY += acceleration.y;
+        _aSumZ += acceleration.z;
         
         _gSumX += deviceMotion.gravity.x;
         _gSumY += deviceMotion.gravity.y;
         _gSumZ += deviceMotion.gravity.z;
-        
+        double uacx = deviceMotion.userAcceleration.x;
+        double uacy = deviceMotion.userAcceleration.y;
+        double uacz = deviceMotion.userAcceleration.z;
         _yawSum += deviceMotion.attitude.yaw;
         _pitchSum += deviceMotion.attitude.pitch;
         _rollSum += deviceMotion.attitude.roll;
@@ -445,9 +466,10 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)slopeMeasurementComplete
 {
     _headingLabel.text = [NSString stringWithFormat:@"Heading = %.02f\u00B0", _data.heading];
-    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlope];
-    _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f%%", _data.sideSlope];
-    _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _maxSlope];
+    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlopeDegrees];
+    _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f%%", _data.sideSlopeDegrees];
+    _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _data.maxSlopePct];
+    _maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f", _data.accelX[0],_data.accelY[0],_data.accelZ[0]];
     
     _promptLabel.text = @"Press 'Done' to continue inventory.";
     
@@ -479,11 +501,11 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)sliderView:(NVSliderController *)sliderView
     didReturnValue:(CGFloat)value
 {
-    _data.frontSlope = value;
-    _maxSlope = ComputeMaxSlope(_data.frontSlope, _data.sideSlope);
+    _data.frontSlopePct = value;
+    _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
     
-    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlope];
-    _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _maxSlope];
+    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlopePct];
+    _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _data.maxSlopePct];
     
     [sliderView hideSliderController:YES];
 }

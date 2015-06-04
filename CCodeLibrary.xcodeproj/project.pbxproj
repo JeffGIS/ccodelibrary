@@ -360,6 +360,7 @@
 		EB268A171AC5E9F700A68EC8 /* code.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = code.c; sourceTree = "<group>"; };
 		EB268A181AC5E9F700A68EC8 /* gssitype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gssitype.h; sourceTree = "<group>"; };
 		EB268A191AC5E9F700A68EC8 /* gmlimits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gmlimits.h; sourceTree = "<group>"; };
+		EB2AB09C1B1F281000BF9515 /* SlopeFromAccelerometer.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = SlopeFromAccelerometer.pdf; sourceTree = "<group>"; };
 		EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntersectionsDatabase.h; sourceTree = "<group>"; };
 		EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntersectionsDatabase.m; sourceTree = "<group>"; };
 		EB2C7DB219BA5A6F00F6D9F0 /* IntersectionRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntersectionRecord.h; sourceTree = "<group>"; };
@@ -676,6 +677,7 @@
 		EBA2E460199527660085B2E0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				EB2AB09C1B1F281000BF9515 /* SlopeFromAccelerometer.pdf */,
 				EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */,
 			);
 			name = "Supporting Files";

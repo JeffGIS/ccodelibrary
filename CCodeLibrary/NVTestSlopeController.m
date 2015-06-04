@@ -315,6 +315,42 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
     [_motionManager stopAccelerometerUpdates];
     [_locationManager stopUpdatingHeading];
 }
+double square (double x)
+{
+    return x * x;
+}
+- (void) slopesFromAccelerometer:(int)nReadings
+{
+    /*double xyz[3];
+     double ax, ay, az;
+     xyz[0] = _data.accelX[0];
+     xyz[1] = _data.accelY[0];
+     xyz[2] = _data.accelZ[0];
+     ax = xyz[0];
+     ay = xyz[1];
+     az = xyz[2];
+     double xAngle = atan( ax / (sqrt(square(ay) + square(az))));
+     double yAngle = atan( ay / (sqrt(square(ax) + square(az))));
+     double zAngle = atan( sqrt(square(ax) + square(ay)) / az);
+     
+     xAngle *= 180.00;   yAngle *= 180.00;   zAngle *= 180.00;
+     xAngle /= 3.141592; yAngle /= 3.141592; zAngle /= 3.141592;*/
+    double denom = sqrt (square(_data.accelX)+square(_data.accelY)+square(_data.accelZ));
+    double angz = acos (_data.accelZ/denom);
+    double angy = acos (_data.accelY/denom);
+    double angx = acos (_data.accelX/denom);
+    angx *= RADtoDEG;
+    angy *= RADtoDEG;
+    angz *= RADtoDEG;
+    angx = 90.0 - angx;
+    angy = 180.0 - angy;
+    angz = 180.0 - angz;
+    _data.deviceSlopeDegrees = angz;
+//    _data.sideSlopeDegrees = angx;
+    _data.deviceSlopePct = tan(_data.deviceSlopeDegrees * DEGtoRAD) * 100;
+    //_data.sideSlopePct = tan(_data.sideSlopeDegrees * DEGtoRAD) * 100;
+    //_data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
+}
 
 - (void)computeSlopeFromDeviceMotion:(CMDeviceMotion *)deviceMotion
 {
@@ -352,9 +388,7 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
         _data.trueHeading = (_sumTrueHeading / COUNT);
         _data.magneticHeading = (_sumMagneticHeading / COUNT);
         
-        _data.deviceSlope = (tan(-atan2(_data.accelY,
-                                        sqrt(pow(_data.accelX, 2) +
-                                             pow(_data.accelZ, 2)))) * 100.0);
+        [self slopesFromAccelerometer:1];
         
         [self slopeMeasurementComplete];
     }
@@ -410,6 +444,8 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
         
         _progressView.progress = (_counter / (CGFloat)COUNT);
     }
+    else
+        _counter++;
 }
 
 - (void)resetSumsAndCounter
@@ -431,7 +467,7 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
 {
     _headingLabel.text = [NSString stringWithFormat:@"Device Heading = %.02f\u00B0", _data.trueHeading];
     _frontSlopeLabel.text = [NSString stringWithFormat:@"Manual Heading = %.02f\u00B0", _data.manualHeading];
-    _sideSlopeLabel.text = [NSString stringWithFormat:@"Device Slope = %+.02f%%", _data.deviceSlope];
+    _sideSlopeLabel.text = [NSString stringWithFormat:@"Device Slope = %+.02f%%", _data.deviceSlopeDegrees];
     _maxSlopeLabel.text = [NSString stringWithFormat:@"Manual Slope = %+.02f%%", _data.manualSlope];
     
     _promptLabel.text = @"Press 'Done' to continue inventory.";
@@ -499,7 +535,7 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
             
         case NVLargeAlertIndexBottomButton:
             _manualType = ManualMeasurementTypeSlope;
-            value = _data.deviceSlope;
+            value = _data.deviceSlopeDegrees;
             radius = 4.0;
             break;
             
