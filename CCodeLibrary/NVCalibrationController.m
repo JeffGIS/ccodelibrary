@@ -56,8 +56,6 @@
     
     _calibrationValues = [SharedDefaults.defaults calibrationValueArray];
     
-    _calibrationValues = @[@(0), @(8.33), @(3), @(4), @(5)];
-    
     [self setupCalibrationButtons];
     
     _testButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 912.0, 354.0, 64.0)];
@@ -86,12 +84,12 @@
 {
     NSUInteger yOrigin = 96.0;
     CGFloat buttonWidth = 728.0, margin = 14.0;
+    CGFloat buttonHeight = 62.0, fontSize = 48.0;
     
     for (int i = 0; i < _calibrationValues.count; i++)
     {
         BOOL enabled = NO;
         NSString *title = @"";
-        CGFloat buttonHeight = 62.0, fontSize = 48.0;
         
         UIButton *frontButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, yOrigin,
                                                                            buttonWidth, buttonHeight)];
@@ -143,6 +141,8 @@
         
         yOrigin += (buttonHeight + margin);
     }
+    
+    yOrigin += ((5 - _calibrationValues.count) * ((buttonHeight + margin) * 2.0));
     
     _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, (yOrigin - margin), buttonWidth, ((912.0 - yOrigin) + margin))];
     
