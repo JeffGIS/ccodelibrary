@@ -89,25 +89,46 @@
     for (int i = 0; i < _calibrationValues.count; i++)
     {
         BOOL enabled = NO;
-        NSString *title = @"";
+        NSString *title = @"", *valueString = @"";
         
         UIButton *frontButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, yOrigin,
                                                                            buttonWidth, buttonHeight)];
         
         frontButton.tag = (i * 2);
         
+        CGFloat floatValue = [_calibrationValues[0][i] floatValue];
+        NSInteger intValue = [_calibrationValues[0][i] integerValue];
+        
+        NVCalibrationType type = (NVCalibrationType)[_calibrationValues[1][i] integerValue];
+        
+        switch (type)
+        {
+            case NVCalibrationTypeRunningSlope:
+                valueString = [NSString stringWithFormat:@"%.2f%%", floatValue];
+                break;
+                
+            case NVCalibrationTypeDegrees:
+                valueString = [NSString stringWithFormat:@"%.2f\u00B0", floatValue];
+                break;
+                
+            case NVCalibrationTypeRiseRun:
+                valueString = [NSString stringWithFormat:@"1:%ld", (long)intValue];
+                break;
+                
+            default:
+                break;
+        }
+        
         if (frontButton.tag == 0)
         {
             enabled = YES;
             
-            title = [NSString stringWithFormat:@"Calibrate %.2f%%",
-                     [_calibrationValues[i] floatValue]];
+            title = [NSString stringWithFormat:@"Calibrate %@", valueString];
         }
         
         else
         {
-            title = [NSString stringWithFormat:@"Calibrate %.2f%% Front",
-                     [_calibrationValues[i] floatValue]];
+            title = [NSString stringWithFormat:@"Calibrate %@ Front", valueString];
         }
         
         [self setupButton:frontButton
@@ -127,8 +148,7 @@
             
             frontButton.tag = ((i * 2) + 1);
             
-            title = [NSString stringWithFormat:@"Calibrate %.2f%% Side",
-                     [_calibrationValues[i] floatValue]];
+            title = [NSString stringWithFormat:@"Calibrate %@ Side", valueString];
             
             [self setupButton:sideButton
                      selector:@selector(calibrateButtonTapped:)
@@ -144,7 +164,8 @@
     
     yOrigin += ((5 - _calibrationValues.count) * ((buttonHeight + margin) * 2.0));
     
-    _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, (yOrigin - margin), buttonWidth, ((912.0 - yOrigin) + margin))];
+    _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, (yOrigin - margin), buttonWidth,
+                                                             ((912.0 - yOrigin) + margin))];
     
     [self setupLabel:_promptLabel
                 text:@"Place iPad on a flat surface and tap on\n'Calibrate 0.00%' to begin calibration routine."

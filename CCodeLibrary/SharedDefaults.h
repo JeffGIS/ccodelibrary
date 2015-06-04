@@ -4,6 +4,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, NVCalibrationType) {
+    NVCalibrationTypeDefault,
+    NVCalibrationTypeRunningSlope,
+    NVCalibrationTypeDegrees,
+    NVCalibrationTypeRiseRun,
+};
+
 @interface SharedDefaults : NSObject
 {
     NSUserDefaults *_defaults;

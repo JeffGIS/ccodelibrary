@@ -72,7 +72,14 @@ static SharedDefaults *_defaults;
     NSArray *defaultArray = [_defaults arrayForKey:@"CalibrationValueArray"];
     
     if (!defaultArray.count)
-        defaultArray = [NSArray arrayWithObjects:@(0.0), @(100.0 / 12.0), nil];
+    {
+        NSArray *valuesArray = [NSArray arrayWithObjects:@(0.0), @(100.0 / 12.0), nil];
+        
+        NSArray *typesArray = [NSArray arrayWithObjects:@(NVCalibrationTypeRunningSlope),
+                               @(NVCalibrationTypeRunningSlope), nil];
+        
+        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, nil];
+    }
     
     return defaultArray;
 }
