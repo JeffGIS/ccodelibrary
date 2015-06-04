@@ -67,6 +67,23 @@ static SharedDefaults *_defaults;
     return defaultDate;
 }
 
+- (NSArray *)calibrationValueArray
+{
+    NSArray *defaultArray = [_defaults arrayForKey:@"CalibrationValueArray"];
+    
+    if (!defaultArray.count)
+    {
+        NSArray *valuesArray = [NSArray arrayWithObjects:@(0.0), @(100.0 / 12.0), nil];
+        
+        NSArray *typesArray = [NSArray arrayWithObjects:@(NVCalibrationTypeRunningSlope),
+                               @(NVCalibrationTypeRunningSlope), nil];
+        
+        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, nil];
+    }
+    
+    return defaultArray;
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue
@@ -156,6 +173,14 @@ static SharedDefaults *_defaults;
 {
     [_defaults setObject:date
                   forKey:key];
+    
+    [_defaults synchronize];
+}
+
+- (void)saveCalibrationValueArray:(NSArray *)array
+{
+    [_defaults setObject:array
+                  forKey:@"CalibrationValueArray"];
     
     [_defaults synchronize];
 }

@@ -4,6 +4,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, NVCalibrationType) {
+    NVCalibrationTypeDefault,
+    NVCalibrationTypeRunningSlope,
+    NVCalibrationTypeDegrees,
+    NVCalibrationTypeRiseRun,
+};
+
 @interface SharedDefaults : NSObject
 {
     NSUserDefaults *_defaults;
@@ -17,6 +24,7 @@
 - (NSString *)stringForKey:(NSString *)key;
 - (CGFloat)CGFloatForKey:(NSString *)key;
 - (NSDate *)dateForKey:(NSString *)key;
+- (NSArray *)calibrationValueArray;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
@@ -43,5 +51,7 @@
 
 - (void)saveDate:(NSDate *)date
           forKey:(NSString *)key;
+
+- (void)saveCalibrationValueArray:(NSArray *)array;
 
 @end

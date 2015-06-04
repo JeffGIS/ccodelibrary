@@ -23,6 +23,7 @@
 		A90D1FBC1AE6184800CBFEE7 /* UIView+ColorOfPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */; };
 		A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */ = {isa = PBXBuildFile; fileRef = A90EBDC81A48874B001E72CF /* GSSiEnums.m */; };
 		A90FC1F41A07F593003AF763 /* CalibrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A90FC1F31A07F593003AF763 /* CalibrationViewController.m */; };
+		A91D34F31B1E27BE005A61E2 /* UIApplication+VersionBuild.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */; };
 		A91F36941AE9739400602BCE /* NVSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F36931AE9739400602BCE /* NVSliderView.m */; };
 		A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F6E8C1AE0A73B00822F42 /* HelpButton.m */; };
 		A9237F851AFA929200D10E96 /* NVTextAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = A9237F841AFA929200D10E96 /* NVTextAlert.m */; };
@@ -47,6 +48,11 @@
 		A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = A97867361A5219FD000A9BB8 /* PriorityLocation.m */; };
 		A97B72781ADB4912001ACFAE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A97B72771ADB4912001ACFAE /* AVFoundation.framework */; };
 		A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97C621E1AE0C59200DA7738 /* HelpWebView.m */; };
+		A98A57A81B20ADE600906FBC /* NVCalibrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A98A57A71B20ADE600906FBC /* NVCalibrationController.m */; };
+		A98A57A91B20AEC800906FBC /* lzoconf.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB86BFA81B0B62A30074728E /* lzoconf.h */; };
+		A98A57AA1B20AECD00906FBC /* lzodefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB86BFA91B0B62A30074728E /* lzodefs.h */; };
+		A98A57AB1B20AED200906FBC /* minilzo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB86BFA61B0B62520074728E /* minilzo.h */; };
+		A98A57AC1B20AEE400906FBC /* NVCalibrationController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A98A57A61B20ADE600906FBC /* NVCalibrationController.h */; };
 		A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A99050871ACB942F00C6AAAF /* GSSiDatePicker.m */; };
 		A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508A1ACB947000C6AAAF /* SpreadsheetView.m */; };
 		A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */; };
@@ -112,7 +118,6 @@
 		A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */ = {isa = PBXBuildFile; fileRef = A99C893C1AEDE1B900A0856F /* GSSiDefs.m */; };
 		A99C893E1AEDE1E200A0856F /* GSSiDefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99C893B1AEDE1B900A0856F /* GSSiDefs.h */; };
 		A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */ = {isa = PBXBuildFile; fileRef = A99F9B861B1E06E400CA8DA6 /* UIApplication+VersionBuild.m */; };
-		A99F9B881B1E07E000CA8DA6 /* UIApplication+VersionBuild.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */; };
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
 		A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */; };
 		A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */; };
@@ -174,7 +179,11 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				A99F9B881B1E07E000CA8DA6 /* UIApplication+VersionBuild.h in CopyFiles */,
+				A98A57AC1B20AEE400906FBC /* NVCalibrationController.h in CopyFiles */,
+				A98A57AB1B20AED200906FBC /* minilzo.h in CopyFiles */,
+				A98A57AA1B20AECD00906FBC /* lzodefs.h in CopyFiles */,
+				A98A57A91B20AEC800906FBC /* lzoconf.h in CopyFiles */,
+				A91D34F31B1E27BE005A61E2 /* UIApplication+VersionBuild.h in CopyFiles */,
 				A951CD201B18E581009C13E2 /* NVTwoTextAlert.h in CopyFiles */,
 				A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */,
 				A9E2130F1AFE4C2B005ECBBA /* NVImagePickerController.h in CopyFiles */,
@@ -315,6 +324,8 @@
 		A97B72771ADB4912001ACFAE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		A97C621D1AE0C59200DA7738 /* HelpWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpWebView.h; sourceTree = "<group>"; };
 		A97C621E1AE0C59200DA7738 /* HelpWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpWebView.m; sourceTree = "<group>"; };
+		A98A57A61B20ADE600906FBC /* NVCalibrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalibrationController.h; sourceTree = "<group>"; };
+		A98A57A71B20ADE600906FBC /* NVCalibrationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCalibrationController.m; sourceTree = "<group>"; };
 		A99050861ACB942F00C6AAAF /* GSSiDatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiDatePicker.h; sourceTree = "<group>"; };
 		A99050871ACB942F00C6AAAF /* GSSiDatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiDatePicker.m; sourceTree = "<group>"; };
 		A99050891ACB947000C6AAAF /* SpreadsheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpreadsheetView.h; sourceTree = "<group>"; };
@@ -546,6 +557,8 @@
 				A97C621E1AE0C59200DA7738 /* HelpWebView.m */,
 				A96B07BD19FBF276005A73B0 /* LegendView.h */,
 				A96B07BE19FBF276005A73B0 /* LegendView.m */,
+				A98A57A61B20ADE600906FBC /* NVCalibrationController.h */,
+				A98A57A71B20ADE600906FBC /* NVCalibrationController.m */,
 				A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */,
 				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
 				A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */,
@@ -783,6 +796,7 @@
 				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,
 				A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */,
 				A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */,
+				A98A57A81B20ADE600906FBC /* NVCalibrationController.m in Sources */,
 				EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */,
 				A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */,
 				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,
