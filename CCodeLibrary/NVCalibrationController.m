@@ -171,7 +171,7 @@
         }
     }
     
-    yOrigin += ((5 - _calibrationValues.count) * ((buttonHeight + margin) * 2.0));
+    yOrigin += ((10 - _counter) * (buttonHeight + margin));
     
     if (![self.view.subviews containsObject:_promptLabel])
     {
@@ -235,8 +235,6 @@
 
 - (void)returnButtonTapped:(UIButton *)button
 {
-    [SharedDefaults.defaults saveCalibrationValueArray:_calibrationValues];
-    
     [self dismissViewControllerAnimated:YES
                              completion:nil];
 }

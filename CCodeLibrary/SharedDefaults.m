@@ -81,6 +81,8 @@ static SharedDefaults *_defaults;
         NSArray *selectedArray = @[@YES, @YES];
         
         defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, nil];
+        
+        [self saveCalibrationValueArray:defaultArray];
     }
     
     return defaultArray;
