@@ -10,6 +10,9 @@
 @property (nonatomic) UIButton *returnButton, *testButton, *editButton;
 @property (nonatomic) UILabel *titleLabel, *lastCalibrationlabel, *promptLabel;
 @property (nonatomic) NSArray *calibrationValues;
+@property NVCalibrationType currentType;
+@property (nonatomic) CGFloat currentValue;
+@property NSInteger currentIndex, counter;
 
 @end
 
@@ -26,6 +29,9 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
+    _currentType = NVCalibrationTypeDefault;
+    _currentValue = 0.0;
+    _currentIndex = 0, _counter = 1;
     
     NSDate *lastCalDate = [SharedDefaults.defaults dateForKey:@"LastCalibrationDate"];
     NSString *lastCalText = @"";
@@ -94,10 +100,9 @@
         UIButton *frontButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, yOrigin,
                                                                            buttonWidth, buttonHeight)];
         
-        frontButton.tag = (i * 2);
+        frontButton.tag = _counter;
         
         CGFloat floatValue = [_calibrationValues[0][i] floatValue];
-        NSInteger intValue = [_calibrationValues[0][i] integerValue];
         
         NVCalibrationType type = (NVCalibrationType)[_calibrationValues[1][i] integerValue];
         
@@ -112,24 +117,21 @@
                 break;
                 
             case NVCalibrationTypeRiseRun:
-                valueString = [NSString stringWithFormat:@"1:%ld", (long)intValue];
+                valueString = [NSString stringWithFormat:@"1:%i", (int)floatValue];
                 break;
                 
             default:
                 break;
         }
         
-        if (frontButton.tag == 0)
+        if (frontButton.tag < 2)
         {
             enabled = YES;
-            
             title = [NSString stringWithFormat:@"Calibrate %@", valueString];
         }
         
         else
-        {
             title = [NSString stringWithFormat:@"Calibrate %@ Front", valueString];
-        }
         
         [self setupButton:frontButton
                  selector:@selector(calibrateButtonTapped:)
@@ -139,14 +141,15 @@
         
         [self.view addSubview:frontButton];
         
-        if (frontButton.tag > 0)
+        if (frontButton.tag > 1)
         {
             yOrigin += (buttonHeight + margin);
+            _counter++;
             
             UIButton *sideButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, yOrigin,
                                                                               buttonWidth, buttonHeight)];
             
-            frontButton.tag = ((i * 2) + 1);
+            sideButton.tag = _counter;
             
             title = [NSString stringWithFormat:@"Calibrate %@ Side", valueString];
             
@@ -160,6 +163,7 @@
         }
         
         yOrigin += (buttonHeight + margin);
+        _counter++;
     }
     
     yOrigin += ((5 - _calibrationValues.count) * ((buttonHeight + margin) * 2.0));
@@ -231,11 +235,63 @@
 
 - (void)calibrateButtonTapped:(UIButton *)button
 {
+    NSUInteger index = ((_currentIndex + 1) / 2);
+    NSString *valueString = @"", *buttonString = @"";
     
+    _currentValue = [_calibrationValues[0][index] floatValue];
+    _currentType = (NVCalibrationType)[_calibrationValues[1][index] integerValue];
+    
+    GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
+                                                                                          flipRadius:0.0
+                                                                                            delegate:self];
+    
+    [self presentViewController:slopeVC
+                       animated:YES
+                     completion:nil];
+    
+    if (_currentIndex == _calibrationValues.count)
+        _promptLabel.text = @"Calibration Routine is Complete.";
+    
+    else
+    {
+        index = ((_currentIndex + 2) / 2);
+        
+        CGFloat nextValue = [_calibrationValues[0][index] floatValue];
+        NVCalibrationType nextType = (NVCalibrationType)[_calibrationValues[1][index] integerValue];
+        
+        switch (nextType)
+        {
+            case NVCalibrationTypeRunningSlope:
+                valueString = [NSString stringWithFormat:@"%.2f%%", nextValue];
+                break;
+                
+            case NVCalibrationTypeDegrees:
+                valueString = [NSString stringWithFormat:@"%.2f\u00B0", nextValue];
+                break;
+                
+            case NVCalibrationTypeRiseRun:
+                valueString = [NSString stringWithFormat:@"1:%i", (int)nextValue];
+                break;
+                
+            default:
+                break;
+        }
+        
+        for (UIButton *buttons in self.view.subviews)
+        {
+            if (buttons.tag == _currentIndex + 2)
+                buttonString = buttons.titleLabel.text;
+        }
+        
+        _promptLabel.text = [NSString stringWithFormat:@"Place iPad on a %@ surface and tap on\n'%@' to continue.",
+                             valueString, buttonString];
+    }
 }
 
 - (void)testButtonTapped:(UIButton *)button
 {
+    _currentType = NVCalibrationTypeDefault;
+    
     GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                           flipRadius:0.0
                                                                                             delegate:self];
@@ -263,6 +319,41 @@
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
              didReturnSlopeData:(NVSlopeData)slopeData
 {
+    switch (_currentType)
+    {
+        case NVCalibrationTypeRunningSlope:
+            break;
+            
+        case NVCalibrationTypeDegrees:
+            break;
+            
+        case NVCalibrationTypeRiseRun:
+            break;
+            
+        default:
+            break;
+    }
+    
+    if (slopeData.frontSlope != -9999.0)
+    {
+        _currentIndex++;
+        
+        for (UIButton *buttons in self.view.subviews)
+        {
+            if (buttons.tag == _currentIndex + 1)
+            {
+                buttons.enabled = YES;
+                buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.enabledColor;
+            }
+            
+            else if (buttons.tag > 0)
+            {
+                buttons.enabled = NO;
+                buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.disabledColor;
+            }
+        }
+    }
+    
     [controller dismissViewControllerAnimated:YES
                                    completion:nil];
 }
