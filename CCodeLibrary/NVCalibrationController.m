@@ -637,7 +637,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                                                        minValue:0.0
                                                        maxValue:100.0
                                                        delegate:self
-                                                  configuration:NVSliderConfigurationDefault];
+                                                  configuration:NVSliderConfigurationCalibrationRunningSlope];
             
         }
             break;
@@ -650,12 +650,22 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                                                        minValue:0.0
                                                        maxValue:90.0
                                                        delegate:self
-                                                  configuration:NVSliderConfigurationDefault];
+                                                  configuration:NVSliderConfigurationCalibrationDegrees];
             
         }
             break;
             
         case NVCalibrationTypeRiseRun:
+        {
+            slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                          width:(self.view.frame.size.width - 40.0)
+                                                     startValue:0.0
+                                                       minValue:0.0
+                                                       maxValue:48.0
+                                                       delegate:self
+                                                  configuration:NVSliderConfigurationCalibrationRiseRun];
+            
+        }
             break;
             
         default:
