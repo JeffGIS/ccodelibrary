@@ -13,6 +13,7 @@
 @property NVCalibrationType currentType;
 @property (nonatomic) CGFloat currentValue;
 @property NSInteger currentIndex, counter;
+@property (nonatomic, copy) NSString *previousPromptText;
 
 @end
 
@@ -243,6 +244,7 @@
 {
     NSUInteger index = ((_currentIndex + 1) / 2);
     NSString *valueString = @"", *buttonString = @"";
+    _previousPromptText = _promptLabel.text;
     
     _currentValue = [_calibrationValues[NVCalibrationArrayIndexValue][index] floatValue];
     _currentType = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][index] integerValue];
@@ -255,7 +257,7 @@
                        animated:YES
                      completion:nil];
     
-    if (_currentIndex == _calibrationValues.count)
+    if (_currentIndex == [_calibrationValues[NVCalibrationArrayIndexValue] count])
         _promptLabel.text = @"Calibration Routine is Complete.";
     
     else
@@ -370,24 +372,30 @@
             break;
     }
     
-    if (slopeData.frontSlope != -9999.0)
+    if (_currentType != NVCalibrationTypeDefault)
     {
-        _currentIndex++;
-        
-        for (UIButton *buttons in self.view.subviews)
+        if (slopeData.frontSlope != -9999.0)
         {
-            if (buttons.tag == _currentIndex + 1)
-            {
-                buttons.enabled = YES;
-                buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.enabledColor;
-            }
+            _currentIndex++;
             
-            else if (buttons.tag > 0)
+            for (UIButton *buttons in self.view.subviews)
             {
-                buttons.enabled = NO;
-                buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.disabledColor;
+                if (buttons.tag == _currentIndex + 1)
+                {
+                    buttons.enabled = YES;
+                    buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.enabledColor;
+                }
+                
+                else if (buttons.tag > 0)
+                {
+                    buttons.enabled = NO;
+                    buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.disabledColor;
+                }
             }
         }
+        
+        else
+            _promptLabel.text = _previousPromptText;
     }
     
     [controller dismissViewControllerAnimated:YES
