@@ -4,13 +4,14 @@
 #import "NVCalibrationController.h"
 #import "CRAPI.h"
 #import "SharedDefaults.h"
+#import "VerticalSegmentedControl.h"
 
 @interface NVCalibrationController ()
 
 @property (nonatomic) UIButton *returnButton, *testButton, *editButton;
 @property (nonatomic) UILabel *titleLabel, *lastCalibrationlabel, *promptLabel;
 @property (nonatomic) NSArray *calibrationValues;
-@property NVCalibrationType currentType;
+@property NVCalibrationType currentType, newType;
 @property (nonatomic) CGFloat currentValue;
 @property NSInteger currentIndex, counter;
 @property (nonatomic, copy) NSString *previousPromptText;
@@ -30,7 +31,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
-    _currentType = NVCalibrationTypeDefault;
+    _currentType = NVCalibrationTypeDefault, _newType = NVCalibrationTypeRunningSlope;
     _currentValue = 0.0;
     _currentIndex = 0;
 
@@ -415,7 +416,7 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-    return [_calibrationValues[NVCalibrationArrayIndexValue] count];
+    return min(([_calibrationValues[NVCalibrationArrayIndexValue] count] + 1), 5);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
@@ -431,48 +432,93 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
                                       reuseIdentifier:cellIdentifier];
     }
     
-    CGFloat floatValue = [_calibrationValues[NVCalibrationArrayIndexValue][indexPath.row] floatValue];
-    NVCalibrationType type = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][indexPath.row] integerValue];
-    BOOL selected = [_calibrationValues[NVCalibrationArrayIndexSelected][indexPath.row] boolValue];
-    
-    switch (type)
+    if (indexPath.row == [_calibrationValues[NVCalibrationArrayIndexValue] count])
     {
-        case NVCalibrationTypeRunningSlope:
-            cell.textLabel.text = [NSString stringWithFormat:@"%.2f%%", floatValue];
-            break;
-            
-        case NVCalibrationTypeDegrees:
-            cell.textLabel.text = [NSString stringWithFormat:@"%.2f\u00B0", floatValue];
-            break;
-            
-        case NVCalibrationTypeRiseRun:
-            cell.textLabel.text = [NSString stringWithFormat:@"1:%i", (int)floatValue];
-            break;
-            
-        default:
-            break;
-    }
-    
-    if (selected)
-    {
-        UIImageView *checkmarkView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:
-                                                                         [NSBundle.mainBundle pathForResource:@"checkmark"
-                                                                                                       ofType:@"png"]]];
+        cell.backgroundColor = UserDefaults.defaults.appleGray;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        checkmarkView.frame = CGRectMake(0.0, 0.0, 80.0, 80.0);
-        checkmarkView.contentMode = UIViewContentModeScaleToFill;
-        cell.accessoryView = checkmarkView;
+        VerticalSegmentedControl *segControl = [[VerticalSegmentedControl alloc]
+                                                initWithSectionTitles:@[@"Running Slope", @"Slope Angle", @"Rise Run"]];
+        
+        segControl.frame = CGRectMake(80.0, 10.0, 280.0, (tableView.rowHeight - 20.0));
+        segControl.backgroundColor = UIColor.blackColor;
+        segControl.layer.cornerRadius = 10.0;
+        segControl.layer.masksToBounds = YES;
+        segControl.textColor = UIColor.grayColor;
+        segControl.selectedTextColor = UIColor.whiteColor;
+        segControl.textFont = [UIFont boldSystemFontOfSize:32.0];
+        segControl.selectionIndicatorThickness = 0.0;
+        segControl.textAlignment = VerticalSegmentedControlTextAlignmentCenter;
+        
+        [segControl addTarget:self
+                       action:@selector(segControlValueChanged:)
+             forControlEvents:UIControlEventValueChanged];
+        
+        [cell.contentView addSubview:segControl];
+        
+        UIButton *addValueButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 80.0, 80.0)];
+        
+        [addValueButton setImage:[UIImage imageWithContentsOfFile:
+                                  [NSBundle.mainBundle pathForResource:@"greenPlusSign"
+                                                                ofType:@"png"]]
+                        forState:UIControlStateNormal];
+        
+        addValueButton.center = CGPointMake(((576.0 + (segControl.frame.origin.x + segControl.frame.size.width)) / 2.0),
+                                            (tableView.rowHeight / 2.0));
+        
+        [addValueButton addTarget:self
+                           action:@selector(addCalibrationValue:)
+                 forControlEvents:UIControlEventTouchUpInside];
+        
+        [cell.contentView addSubview:addValueButton];
     }
     
     else
-        cell.accessoryView = nil;
-    
-    cell.textLabel.textColor = UIColor.blackColor;
-    cell.textLabel.font = [UIFont boldSystemFontOfSize:56.0];
-    cell.textLabel.textAlignment = NSTextAlignmentLeft;
-    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-    cell.indentationLevel = 1;
-    cell.indentationWidth = 60.0;
+    {
+        CGFloat floatValue = [_calibrationValues[NVCalibrationArrayIndexValue][indexPath.row] floatValue];
+        NVCalibrationType type = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][indexPath.row] integerValue];
+        BOOL selected = [_calibrationValues[NVCalibrationArrayIndexSelected][indexPath.row] boolValue];
+        
+        switch (type)
+        {
+            case NVCalibrationTypeRunningSlope:
+                cell.textLabel.text = [NSString stringWithFormat:@"%.2f%%", floatValue];
+                break;
+                
+            case NVCalibrationTypeDegrees:
+                cell.textLabel.text = [NSString stringWithFormat:@"%.2f\u00B0", floatValue];
+                break;
+                
+            case NVCalibrationTypeRiseRun:
+                cell.textLabel.text = [NSString stringWithFormat:@"1:%i", (int)floatValue];
+                break;
+                
+            default:
+                break;
+        }
+        
+        if (selected)
+        {
+            UIImageView *checkmarkView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:
+                                                                             [NSBundle.mainBundle pathForResource:@"checkmark"
+                                                                                                           ofType:@"png"]]];
+            
+            checkmarkView.frame = CGRectMake(0.0, 0.0, 80.0, 80.0);
+            checkmarkView.contentMode = UIViewContentModeScaleToFill;
+            cell.accessoryView = checkmarkView;
+        }
+        
+        else
+            cell.accessoryView = nil;
+        
+        cell.backgroundColor = UIColor.whiteColor;
+        cell.textLabel.textColor = UIColor.blackColor;
+        cell.textLabel.font = [UIFont boldSystemFontOfSize:56.0];
+        cell.textLabel.textAlignment = NSTextAlignmentLeft;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        cell.indentationLevel = 1;
+        cell.indentationWidth = 60.0;
+    }
     
     return cell;
 }
@@ -548,7 +594,8 @@ viewForHeaderInSection:(NSInteger)section
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row > 0)
+    if (indexPath.row > 0 &&
+        indexPath.row < [_calibrationValues[NVCalibrationArrayIndexValue] count])
     {
         BOOL selected = [_calibrationValues[NVCalibrationArrayIndexSelected][indexPath.row] boolValue];
         
@@ -574,6 +621,16 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     
     [tableView deselectRowAtIndexPath:indexPath
                              animated:YES];
+}
+
+- (void)addCalibrationValue:(UIButton *)button
+{
+    NSLog(@"%ld", (long)_newType);
+}
+
+- (void)segControlValueChanged:(VerticalSegmentedControl *)segControl
+{
+    _newType = (NVCalibrationType)(segControl.selectedSegmentIndex + 1);
 }
 
 @end
