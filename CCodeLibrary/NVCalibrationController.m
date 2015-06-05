@@ -15,6 +15,7 @@
 @property (nonatomic) CGFloat currentValue;
 @property NSInteger currentIndex, counter;
 @property (nonatomic, copy) NSString *previousPromptText;
+@property BOOL hasBeenFlipped;
 
 @end
 
@@ -34,6 +35,7 @@
     _currentType = NVCalibrationTypeDefault, _newType = NVCalibrationTypeRunningSlope;
     _currentValue = 0.0;
     _currentIndex = 0;
+    _hasBeenFlipped = NO;
 
     NSDate *lastCalDate = [SharedDefaults.defaults dateForKey:@"LastCalibrationDate"];
     NSString *lastCalText = @"";
@@ -553,8 +555,8 @@ viewForHeaderInSection:(NSInteger)section
     
     for (UIButton *buttons in headerView.subviews)
     {
-        if (buttons.tag == 333)
-            return headerView;
+        if (buttons.tag > 332 && buttons.tag < 336)
+            [buttons removeFromSuperview];
     }
     
     UIButton *returnButton = [[UIButton alloc] initWithFrame:CGRectMake(10.0, 30.0, 140.0,
@@ -579,6 +581,54 @@ viewForHeaderInSection:(NSInteger)section
            forControlEvents:UIControlEventTouchUpInside];
     
     [headerView addSubview:returnButton];
+    
+    UIButton *uploadButton = [[UIButton alloc] initWithFrame:
+                              CGRectMake((headerView.frame.size.width - ((returnButton.frame.size.height + 10.0) * 2.0)),
+                                         returnButton.frame.origin.y,
+                                         returnButton.frame.size.height,
+                                         returnButton.frame.size.height)];
+    
+    uploadButton.layer.cornerRadius = 10.0;
+    uploadButton.tag = 334;
+    uploadButton.backgroundColor = UIColor.whiteColor;
+    uploadButton.imageEdgeInsets = UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0);
+    uploadButton.layer.borderColor = UIColor.blackColor.CGColor;
+    uploadButton.layer.borderWidth = 2.0;
+    
+    [uploadButton setImage:[UIImage imageWithContentsOfFile:
+                            [NSBundle.mainBundle pathForResource:@"uploadCloud"
+                                                          ofType:@"png"]]
+                  forState:UIControlStateNormal];
+    
+    [uploadButton addTarget:self
+                     action:@selector(uploadValues:)
+           forControlEvents:UIControlEventTouchUpInside];
+    
+    [headerView addSubview:uploadButton];
+    
+    UIButton *downloadButton = [[UIButton alloc] initWithFrame:
+                                CGRectMake((headerView.frame.size.width - (returnButton.frame.size.height + 10.0)),
+                                           returnButton.frame.origin.y,
+                                           returnButton.frame.size.height,
+                                           returnButton.frame.size.height)];
+    
+    downloadButton.layer.cornerRadius = 10.0;
+    downloadButton.tag = 335;
+    downloadButton.backgroundColor = UIColor.whiteColor;
+    downloadButton.imageEdgeInsets = UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0);
+    downloadButton.layer.borderColor = UIColor.blackColor.CGColor;
+    downloadButton.layer.borderWidth = 2.0;
+    
+    [downloadButton setImage:[UIImage imageWithContentsOfFile:
+                              [NSBundle.mainBundle pathForResource:@"downloadCloud"
+                                                            ofType:@"png"]]
+                    forState:UIControlStateNormal];
+    
+    [downloadButton addTarget:self
+                       action:@selector(downloadValues:)
+             forControlEvents:UIControlEventTouchUpInside];
+    
+    [headerView addSubview:downloadButton];
     
     return headerView;
 }
@@ -693,8 +743,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         {
             slider = [[NVSliderController alloc] initWithCenter:self.view.center
                                                           width:(self.view.frame.size.width - 40.0)
-                                                     startValue:0.0
-                                                       minValue:0.0
+                                                     startValue:1.0
+                                                       minValue:1.0
                                                        maxValue:48.0
                                                        delegate:self
                                                   configuration:NVSliderConfigurationCalibrationRiseRun];
@@ -739,6 +789,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)sliderViewDidCancel:(NVSliderController *)sliderView
 {
     [sliderView hideSliderController:YES];
+}
+
+- (void)uploadValues:(UIButton *)button
+{
+    //implement upload calibration values to server here
+}
+
+- (void)downloadValues:(UIButton *)button
+{
+    //implement download calibration values to server here
 }
 
 @end
