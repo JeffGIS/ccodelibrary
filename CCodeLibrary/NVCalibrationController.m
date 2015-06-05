@@ -625,12 +625,65 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)addCalibrationValue:(UIButton *)button
 {
-    NSLog(@"%ld", (long)_newType);
+    NVSliderController *slider = nil;
+    
+    switch (_newType)
+    {
+        case NVCalibrationTypeRunningSlope:
+        {
+            slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                          width:(self.view.frame.size.width - 40.0)
+                                                     startValue:0.0
+                                                       minValue:0.0
+                                                       maxValue:100.0
+                                                       delegate:self
+                                                  configuration:NVSliderConfigurationDefault];
+            
+        }
+            break;
+            
+        case NVCalibrationTypeDegrees:
+        {
+            slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                          width:(self.view.frame.size.width - 40.0)
+                                                     startValue:0.0
+                                                       minValue:0.0
+                                                       maxValue:90.0
+                                                       delegate:self
+                                                  configuration:NVSliderConfigurationDefault];
+            
+        }
+            break;
+            
+        case NVCalibrationTypeRiseRun:
+            break;
+            
+        default:
+            break;
+    }
+    
+    if (slider)
+    {
+        [slider showSliderControllerInView:self.view
+                                  animated:YES
+                                   overlay:YES];
+    }
 }
 
 - (void)segControlValueChanged:(VerticalSegmentedControl *)segControl
 {
     _newType = (NVCalibrationType)(segControl.selectedSegmentIndex + 1);
+}
+
+- (void)sliderView:(NVSliderController *)sliderView
+    didReturnValue:(CGFloat)value
+{
+    [sliderView hideSliderController:YES];
+}
+
+- (void)sliderViewDidCancel:(NVSliderController *)sliderView
+{
+    [sliderView hideSliderController:YES];
 }
 
 @end
