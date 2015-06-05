@@ -73,12 +73,14 @@ static SharedDefaults *_defaults;
     
     if (!defaultArray.count)
     {
-        NSArray *valuesArray = [NSArray arrayWithObjects:@(0.0), @(100.0 / 12.0), nil];
+        NSArray *valuesArray = @[@(0.0), @(100.0 / 12.0)];
         
-        NSArray *typesArray = [NSArray arrayWithObjects:@(NVCalibrationTypeRunningSlope),
-                               @(NVCalibrationTypeRunningSlope), nil];
+        NSArray *typesArray = @[@(NVCalibrationTypeRunningSlope),
+                                @(NVCalibrationTypeRunningSlope)];
         
-        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, nil];
+        NSArray *selectedArray = @[@YES, @YES];
+        
+        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, nil];
     }
     
     return defaultArray;
@@ -183,6 +185,30 @@ static SharedDefaults *_defaults;
                   forKey:@"CalibrationValueArray"];
     
     [_defaults synchronize];
+}
+
+- (void)setCalibrationValueSelected:(BOOL)selected
+                            atIndex:(NSUInteger)index
+{
+    NSArray *defaultArray = [_defaults arrayForKey:@"CalibrationValueArray"];
+    
+    if (defaultArray.count)
+    {
+        NSMutableArray *selectedArray = [defaultArray[NVCalibrationArrayIndexSelected] mutableCopy];
+        
+        [selectedArray replaceObjectAtIndex:index
+                                 withObject:@(selected)];
+        
+        NSArray *valuesArray = defaultArray[NVCalibrationArrayIndexValue];
+        NSArray *typesArray = defaultArray[NVCalibrationArrayIndexType];
+        
+        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, nil];
+        
+        [_defaults setObject:defaultArray
+                      forKey:@"CalibrationValueArray"];
+        
+        [_defaults synchronize];
+    }
 }
 
 @end

@@ -11,6 +11,12 @@ typedef NS_ENUM(NSInteger, NVCalibrationType) {
     NVCalibrationTypeRiseRun,
 };
 
+typedef NS_ENUM(NSInteger, NVCalibrationArrayIndex) {
+    NVCalibrationArrayIndexValue,
+    NVCalibrationArrayIndexType,
+    NVCalibrationArrayIndexSelected,
+};
+
 @interface SharedDefaults : NSObject
 {
     NSUserDefaults *_defaults;
@@ -53,5 +59,8 @@ typedef NS_ENUM(NSInteger, NVCalibrationType) {
           forKey:(NSString *)key;
 
 - (void)saveCalibrationValueArray:(NSArray *)array;
+
+- (void)setCalibrationValueSelected:(BOOL)selected
+                            atIndex:(NSUInteger)index;
 
 @end
