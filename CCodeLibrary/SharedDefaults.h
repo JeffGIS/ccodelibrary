@@ -63,4 +63,9 @@ typedef NS_ENUM(NSInteger, NVCalibrationArrayIndex) {
 - (void)setCalibrationValueSelected:(BOOL)selected
                             atIndex:(NSUInteger)index;
 
+- (void)addCalibrationValue:(CGFloat)value
+                     ofType:(NVCalibrationType)type;
+
+- (void)deleteCalibrationValueAtIndex:(NSUInteger)index;
+
 @end

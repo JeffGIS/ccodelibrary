@@ -432,10 +432,17 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
                                       reuseIdentifier:cellIdentifier];
     }
     
+    for (UIView *subviews in cell.contentView.subviews)
+    {
+        if (subviews.tag == 444 || subviews.tag == 555)
+            [subviews removeFromSuperview];
+    }
+    
     if (indexPath.row == [_calibrationValues[NVCalibrationArrayIndexValue] count])
     {
         cell.backgroundColor = UserDefaults.defaults.appleGray;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.accessoryView = nil;
         
         VerticalSegmentedControl *segControl = [[VerticalSegmentedControl alloc]
                                                 initWithSectionTitles:@[@"Running Slope", @"Slope Angle", @"Rise Run"]];
@@ -449,6 +456,8 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
         segControl.textFont = [UIFont boldSystemFontOfSize:32.0];
         segControl.selectionIndicatorThickness = 0.0;
         segControl.textAlignment = VerticalSegmentedControlTextAlignmentCenter;
+        segControl.selectedSegmentIndex = (_newType - 1);
+        segControl.tag = 444;
         
         [segControl addTarget:self
                        action:@selector(segControlValueChanged:)
@@ -457,6 +466,7 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
         [cell.contentView addSubview:segControl];
         
         UIButton *addValueButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 80.0, 80.0)];
+        addValueButton.tag = 555;
         
         [addValueButton setImage:[UIImage imageWithContentsOfFile:
                                   [NSBundle.mainBundle pathForResource:@"greenPlusSign"
@@ -517,7 +527,7 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
         cell.textLabel.textAlignment = NSTextAlignmentLeft;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell.indentationLevel = 1;
-        cell.indentationWidth = 60.0;
+        cell.indentationWidth = 120.0;
     }
     
     return cell;
@@ -541,10 +551,17 @@ viewForHeaderInSection:(NSInteger)section
     [headerView addSubview:headerLabel];
     headerView.backgroundColor = UserDefaults.defaults.appleGray;
     
+    for (UIButton *buttons in headerView.subviews)
+    {
+        if (buttons.tag == 333)
+            return headerView;
+    }
+    
     UIButton *returnButton = [[UIButton alloc] initWithFrame:CGRectMake(10.0, 30.0, 140.0,
                                                                         (headerView.frame.size.height - 60.0))];
     
     returnButton.layer.cornerRadius = 10.0;
+    returnButton.tag = 333;
     returnButton.backgroundColor = UIColor.blackColor;
     returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
     
@@ -623,6 +640,23 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                              animated:YES];
 }
 
+- (BOOL)tableView:(UITableView *)tableView
+canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView
+commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [SharedDefaults.defaults deleteCalibrationValueAtIndex:indexPath.row];
+    _calibrationValues = SharedDefaults.defaults.calibrationValueArray;
+    
+    [tableView reloadSections:[NSIndexSet indexSetWithIndex:0]
+              withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
 - (void)addCalibrationValue:(UIButton *)button
 {
     NVSliderController *slider = nil;
@@ -688,7 +722,18 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)sliderView:(NVSliderController *)sliderView
     didReturnValue:(CGFloat)value
 {
-    [sliderView hideSliderController:YES];
+     [sliderView hideSliderController:YES];
+    
+    [SharedDefaults.defaults addCalibrationValue:value
+                                          ofType:_newType];
+    
+    _calibrationValues = SharedDefaults.defaults.calibrationValueArray;
+    
+    for (UITableView *tableViews in self.view.subviews)
+    {
+        if ([tableViews isKindOfClass:UITableView.class])
+            [tableViews reloadData];
+    }
 }
 
 - (void)sliderViewDidCancel:(NVSliderController *)sliderView
