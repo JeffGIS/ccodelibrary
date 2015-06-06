@@ -37,16 +37,15 @@
     _currentIndex = 0;
     _hasBeenFlipped = YES;
 
-    NSDate *lastCalDate = [SharedDefaults.defaults dateForKey:@"LastCalibrationDate"];
-    NSString *lastCalText = @"";
+    NSString *lastCalDate = [SharedDefaults.defaults stringForKey:@"LastCalibrationDate"];
     
-    if (!lastCalDate)
-        lastCalText = [NSString stringWithFormat:@"Not calibrated"];
+    if (!lastCalDate || [lastCalDate isEqualToString:@""])
+        lastCalDate = [NSString stringWithFormat:@"Not calibrated"];
     
     _lastCalibrationlabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 984.0, 728.0, 32.0)];
     
     [self setupLabel:_lastCalibrationlabel
-                text:lastCalText
+                text:lastCalDate
             fontSize:24.0];
     
     _returnButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 20.0, 160.0, 60.0)];
@@ -265,6 +264,17 @@
     if (_currentIndex == [_calibrationValues[NVCalibrationArrayIndexValue] count])
     {
         _promptLabel.text = @"Calibration Routine is Complete.";
+        
+        NSString *currentDate = [NSDateFormatter localizedStringFromDate:NSDate.date
+                                                               dateStyle:NSDateFormatterLongStyle
+                                                               timeStyle:NSDateFormatterLongStyle];
+        
+        NSString *lastCalDate = [NSString stringWithFormat:@"Calibrated on %@", currentDate];
+        _lastCalibrationlabel.text = lastCalDate;
+        
+        [SharedDefaults.defaults saveString:lastCalDate
+                                     forKey:@"LastCalibrationDate"];
+        
         _nextPromptText = _promptLabel.text;
     }
     
