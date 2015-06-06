@@ -14,7 +14,7 @@
 @property NVCalibrationType currentType, newType;
 @property (nonatomic) CGFloat currentValue;
 @property NSInteger currentIndex, counter;
-@property (nonatomic, copy) NSString *previousPromptText;
+@property (nonatomic, copy) NSString *previousPromptText, *nextPromptText;
 @property BOOL hasBeenFlipped;
 
 @end
@@ -35,7 +35,7 @@
     _currentType = NVCalibrationTypeDefault, _newType = NVCalibrationTypeRunningSlope;
     _currentValue = 0.0;
     _currentIndex = 0;
-    _hasBeenFlipped = NO;
+    _hasBeenFlipped = YES;
 
     NSDate *lastCalDate = [SharedDefaults.defaults dateForKey:@"LastCalibrationDate"];
     NSString *lastCalText = @"";
@@ -261,7 +261,10 @@
                      completion:nil];
     
     if (_currentIndex == [_calibrationValues[NVCalibrationArrayIndexValue] count])
+    {
         _promptLabel.text = @"Calibration Routine is Complete.";
+        _nextPromptText = _promptLabel.text;
+    }
     
     else
     {
@@ -296,6 +299,8 @@
         
         _promptLabel.text = [NSString stringWithFormat:@"Place iPad on a %@ surface and tap on\n'%@' to continue.",
                              valueString, buttonString];
+        
+        _nextPromptText = _promptLabel.text;
     }
 }
 
@@ -375,11 +380,15 @@
             break;
     }
     
+    [controller dismissViewControllerAnimated:YES
+                                   completion:nil];
+    
     if (_currentType != NVCalibrationTypeDefault)
     {
-        if (slopeData.frontSlope != -9999.0)
+        if (slopeData.frontSlope != -9999.0 && _hasBeenFlipped)
         {
             _currentIndex++;
+            _hasBeenFlipped = NO;
             
             for (UIButton *buttons in self.view.subviews)
             {
@@ -398,11 +407,25 @@
         }
         
         else
+        {
             _promptLabel.text = _previousPromptText;
+            
+            if (slopeData.frontSlope != -9999.0)
+            {
+                _hasBeenFlipped = YES;
+                
+                NSString *title = @"Flip the iPad around and press 'OK' to continue.";
+                
+                NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
+                                                                            delegate:self
+                                                                               title:title
+                                                                       topButtonText:@"OK"
+                                                                    bottomButtonText:nil
+                                                                    destructiveIndex:NVLargeAlertIndexNone];
+#pragma unused(alert)
+            }
+        }
     }
-    
-    [controller dismissViewControllerAnimated:YES
-                                   completion:nil];
 }
 
 - (BOOL)shouldUseCalibration:(GSSiSlopeViewController *)controller
@@ -799,6 +822,25 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)downloadValues:(UIButton *)button
 {
     //implement download calibration values to server here
+}
+
+- (void)largeAlertView:(NVLargeAlertView *)largeAlertView
+didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
+{
+    if (buttonIndex == NVLargeAlertIndexTopButton)
+    {
+        GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
+                                                                                              flipRadius:0.0
+                                                                                                delegate:self];
+        
+        [self presentViewController:slopeVC
+                           animated:YES
+                         completion:nil];
+        
+        _promptLabel.text = _nextPromptText;
+    }
+    
+    [largeAlertView hideLargeAlertView:NO];
 }
 
 @end
