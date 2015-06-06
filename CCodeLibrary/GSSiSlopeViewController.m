@@ -493,4 +493,9 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [sliderView hideSliderController:YES];
 }
 
+- (void)removeManualMeasurementButton
+{
+    [_manualButton removeFromSuperview];
+}
+
 @end

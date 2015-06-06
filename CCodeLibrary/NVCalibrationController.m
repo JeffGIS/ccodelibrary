@@ -260,6 +260,8 @@
                        animated:YES
                      completion:nil];
     
+    [slopeVC removeManualMeasurementButton];
+    
     if (_currentIndex == [_calibrationValues[NVCalibrationArrayIndexValue] count])
     {
         _promptLabel.text = @"Calibration Routine is Complete.";
@@ -315,6 +317,8 @@
     [self presentViewController:slopeVC
                        animated:YES
                      completion:nil];
+    
+    [slopeVC removeManualMeasurementButton];
 }
 
 - (void)editButtonTapped:(UIButton *)button
@@ -836,6 +840,8 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
         [self presentViewController:slopeVC
                            animated:YES
                          completion:nil];
+        
+        [slopeVC removeManualMeasurementButton];
         
         _promptLabel.text = _nextPromptText;
     }
