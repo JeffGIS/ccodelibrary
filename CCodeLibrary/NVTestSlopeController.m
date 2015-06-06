@@ -352,9 +352,11 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
         _data.trueHeading = (_sumTrueHeading / COUNT);
         _data.magneticHeading = (_sumMagneticHeading / COUNT);
         
-        _data.deviceSlope = (tan(-atan2(_data.accelY,
-                                        sqrt(pow(_data.accelX, 2) +
-                                             pow(_data.accelZ, 2)))) * 100.0);
+        _data.deviceSlopeDegrees = ((-atan2(_data.accelY,
+                                            sqrt(pow(_data.accelX, 2) +
+                                                 pow(_data.accelZ, 2)))) * (180.0 / M_PI));
+        
+        _data.deviceSlope = ((tan(_data.deviceSlopeDegrees / (180.0 / M_PI))) * 100.0);
         
         [self slopeMeasurementComplete];
     }

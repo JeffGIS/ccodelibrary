@@ -29,6 +29,7 @@ typedef struct NVSlopeTestData {
     CGFloat quatZ;
     CGFloat quatW;
     CGFloat deviceSlope;
+    CGFloat deviceSlopeDegrees;
     CGFloat manualSlope;
     CGFloat magneticHeading;
     CGFloat trueHeading;
