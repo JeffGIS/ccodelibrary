@@ -515,4 +515,9 @@ xAngle /= 3.141592; yAngle /= 3.141592; zAngle /= 3.141592;*/
     [sliderView hideSliderController:YES];
 }
 
+- (void)removeManualMeasurementButton
+{
+    [_manualButton removeFromSuperview];
+}
+
 @end

@@ -38,12 +38,13 @@ typedef struct NVSlopeData {
 @interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate>
 
 @property (nonatomic, weak) id <GSSiSlopeViewControllerDelegate> delegate;
+@property (nonatomic, copy) NSString *which;
+@property NSInteger mode;
 
 + (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
                                                        flipRadius:(CGFloat)flipRadius
                                                          delegate:(id)delegate;
 
-@property (nonatomic) NSString *which;
-@property (nonatomic) NSInteger mode;
+- (void)removeManualMeasurementButton;
 
 @end

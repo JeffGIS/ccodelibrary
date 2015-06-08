@@ -136,11 +136,31 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         
         _sliderLabel.backgroundColor = UIColor.clearColor;
         
-        if (_configuration == NVSliderConfigurationManualSlope)
-            _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
-        
-        else
-            _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
+        switch (_configuration)
+        {
+            case NVSliderConfigurationManualSlope:
+                _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
+                break;
+                
+            case NVSliderConfigurationDefault:
+                _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
+                break;
+                
+            case NVSliderConfigurationCalibrationRunningSlope:
+                _sliderLabel.text = [NSString stringWithFormat:@"%.0f%%", _slider.value];
+                break;
+                
+            case NVSliderConfigurationCalibrationDegrees:
+                _sliderLabel.text = [NSString stringWithFormat:@"%.0f\u00B0", _slider.value];
+                break;
+                
+            case NVSliderConfigurationCalibrationRiseRun:
+                _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
+                break;
+                
+            default:
+                break;
+        }
         
         _sliderLabel.textColor = UIColor.blackColor;
         _sliderLabel.font = [UIFont boldSystemFontOfSize:56.0];
@@ -274,6 +294,9 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             break;
             
         case NVSliderConfigurationDefault:
+        case NVSliderConfigurationCalibrationRunningSlope:
+        case NVSliderConfigurationCalibrationDegrees:
+        case NVSliderConfigurationCalibrationRiseRun:
         {
             switch (_range)
             {
@@ -330,22 +353,64 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 
 - (void)sliderValueChanged:(NVSliderController *)slider
 {
-    if (_configuration == NVSliderConfigurationManualSlope)
+    switch (_configuration)
     {
-        if (_range == NVSliderControllerRangeTwo)
-            _sliderLabel.text = [NSString stringWithFormat:@"%.2f", _slider.value];
-        
-        else
-            _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
-    }
-    
-    else
-    {
-        if (_range == NVSliderControllerRangeTwo)
-            _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
-        
-        else
-            _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
+        case NVSliderConfigurationManualSlope:
+        {
+            if (_range == NVSliderControllerRangeTwo)
+                _sliderLabel.text = [NSString stringWithFormat:@"%.2f", _slider.value];
+            
+            else
+                _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
+        }
+            
+            break;
+            
+        case NVSliderConfigurationDefault:
+        {
+            if (_range == NVSliderControllerRangeTwo)
+                _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
+            
+            else
+                _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
+        }
+            
+            break;
+            
+        case NVSliderConfigurationCalibrationRunningSlope:
+        {
+            if (_range == NVSliderControllerRangeTwo)
+                _sliderLabel.text = [NSString stringWithFormat:@"%.2f%%", _slider.value];
+            
+            else if (_range == NVSliderControllerRangeTen)
+                _sliderLabel.text = [NSString stringWithFormat:@"%.1f%%", _slider.value];
+            
+            else
+                _sliderLabel.text = [NSString stringWithFormat:@"%.0f%%", _slider.value];
+        }
+            
+            break;
+            
+        case NVSliderConfigurationCalibrationDegrees:
+        {
+            if (_range == NVSliderControllerRangeTwo)
+                _sliderLabel.text = [NSString stringWithFormat:@"%.2f\u00B0", _slider.value];
+            
+            else if (_range == NVSliderControllerRangeTen)
+                _sliderLabel.text = [NSString stringWithFormat:@"%.1f\u00B0", _slider.value];
+            
+            else
+                _sliderLabel.text = [NSString stringWithFormat:@"%.0f\u00B0", _slider.value];
+        }
+            
+            break;
+            
+        case NVSliderConfigurationCalibrationRiseRun:
+            _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
+            break;
+            
+        default:
+            break;
     }
 }
 
@@ -407,6 +472,10 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             break;
             
         case NVSliderConfigurationDefault:
+        case NVSliderConfigurationCalibrationRunningSlope:
+        case NVSliderConfigurationCalibrationDegrees:
+        case NVSliderConfigurationCalibrationRiseRun:
+            
         {
             switch (_range)
             {
@@ -415,14 +484,34 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                     _slider.minimumValue = (_slider.value - 5.0);
                     _slider.maximumValue = (_slider.value + 5.0);
                     _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
+                    
+                    if (_configuration == NVSliderConfigurationCalibrationRunningSlope)
+                        _sliderLabel.text = [NSString stringWithFormat:@"%.1f%%", _slider.value];
+                    
+                    else if (_configuration == NVSliderConfigurationCalibrationDegrees)
+                        _sliderLabel.text = [NSString stringWithFormat:@"%.1f\u00B0", _slider.value];
+                    
+                    else if (_configuration == NVSliderConfigurationCalibrationRiseRun)
+                        _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
+                    
                     _range = NVSliderControllerRangeTen;
                     break;
                     
                 case NVSliderControllerRangeTen:
-                    _slider.value = roundf(_slider.value);
+                    _slider.value = ((roundf(_slider.value * 10.0)) / 10.0);
                     _slider.minimumValue = (_slider.value - 1.0);
                     _slider.maximumValue = (_slider.value + 1.0);
                     _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
+                    
+                    if (_configuration == NVSliderConfigurationCalibrationRunningSlope)
+                        _sliderLabel.text = [NSString stringWithFormat:@"%.2f%%", _slider.value];
+                    
+                    else if (_configuration == NVSliderConfigurationCalibrationDegrees)
+                        _sliderLabel.text = [NSString stringWithFormat:@"%.2f\u00B0", _slider.value];
+                    
+                    else if (_configuration == NVSliderConfigurationCalibrationRiseRun)
+                        _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
+                    
                     _range = NVSliderControllerRangeTwo;
                     break;
                     
@@ -431,6 +520,16 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                     _slider.minimumValue = _minValue;
                     _slider.maximumValue = _maxValue;
                     _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
+                    
+                    if (_configuration == NVSliderConfigurationCalibrationRunningSlope)
+                        _sliderLabel.text = [NSString stringWithFormat:@"%.0f%%", _slider.value];
+                    
+                    else if (_configuration == NVSliderConfigurationCalibrationDegrees)
+                        _sliderLabel.text = [NSString stringWithFormat:@"%.0f\u00B0", _slider.value];
+                    
+                    else if (_configuration == NVSliderConfigurationCalibrationRiseRun)
+                        _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
+                    
                     _range = NVSliderControllerRangeMax;
                     break;
                     
