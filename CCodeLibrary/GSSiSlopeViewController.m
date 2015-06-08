@@ -314,7 +314,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [_locationManager stopUpdatingHeading];
 }
 
-double square (double x)
+static double square (double x)
 {
     return x*x;
 }
