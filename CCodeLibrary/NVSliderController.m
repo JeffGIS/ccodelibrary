@@ -418,14 +418,9 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
     if (_delegate)
     {
-        if (_configuration == NVSliderConfigurationDefault &&
-            _range != NVSliderControllerRangeTwo)
-        {
-            _slider.value = roundf(_slider.value);
-        }
-        
+        CGFloat value = [_sliderLabel.text floatValue];
         [_delegate sliderView:self
-               didReturnValue:_slider.value];
+               didReturnValue:value];
     }
 }
 

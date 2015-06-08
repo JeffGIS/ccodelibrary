@@ -399,7 +399,7 @@
     
     if (_currentType != NVCalibrationTypeDefault)
     {
-        if (slopeData.frontSlope != -9999.0 && _hasBeenFlipped)
+        if (slopeData.frontSlopePct != -9999.0 && _hasBeenFlipped)
         {
             _currentIndex++;
             _hasBeenFlipped = NO;
@@ -424,7 +424,7 @@
         {
             _promptLabel.text = _previousPromptText;
             
-            if (slopeData.frontSlope != -9999.0)
+            if (slopeData.frontSlopePct != -9999.0)
             {
                 _hasBeenFlipped = YES;
                 

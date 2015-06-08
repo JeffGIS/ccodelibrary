@@ -86,6 +86,7 @@ double LDIST(double X1,double Y1,double X2,double Y2);
 double LGETAZ(double X1, double Y1, double X2, double Y2);
 double DTWOPI (double az);
 vec3 GetTriangleNormal (vec3 * vertex1,vec3 * vertex2,vec3 * vertex3);
+double square (double x);
 double ComputeMaxSlope (double frontSlope,double sideSlope);
 LPTRANDATA STRAN2 (int ID,double X1[], double Y1[],double X2[],double Y2[],int N, int Type,LPFLOAT RSQMIN);
 LPTRANDATA STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN);//,LPMNMXCORD pBounds);

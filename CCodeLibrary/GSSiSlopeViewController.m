@@ -314,27 +314,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [_locationManager stopUpdatingHeading];
 }
 
-static double square (double x)
-{
-    return x*x;
-}
-
 - (void) slopesFromAccelerometer:(int)nReadings
 {
-/*double xyz[3];
-double ax, ay, az;
-xyz[0] = _data.accelX[0];
-xyz[1] = _data.accelY[0];
-xyz[2] = _data.accelZ[0];
-ax = xyz[0];
-ay = xyz[1];
-az = xyz[2];
-double xAngle = atan( ax / (sqrt(square(ay) + square(az))));
-double yAngle = atan( ay / (sqrt(square(ax) + square(az))));
-double zAngle = atan( sqrt(square(ax) + square(ay)) / az);
-
-xAngle *= 180.00;   yAngle *= 180.00;   zAngle *= 180.00;
-xAngle /= 3.141592; yAngle /= 3.141592; zAngle /= 3.141592;*/
     double denom = sqrt (square(_data.accelX[0])+square(_data.accelY[0])+square(_data.accelZ[0]));
     double angz = acos (_data.accelZ[0]/denom);
     double angy = acos (_data.accelY[0]/denom);
@@ -342,10 +323,10 @@ xAngle /= 3.141592; yAngle /= 3.141592; zAngle /= 3.141592;*/
     angx *= RADtoDEG;
     angy *= RADtoDEG;
     angz *= RADtoDEG;
-    angx = 90.0 - angx;
-    angy = 180.0 - angy;
+    angx = angx - 90.0;
+    angy = angy - 90.0;
     angz = 180.0 - angz;
-    _data.frontSlopeDegrees = angz;
+    _data.frontSlopeDegrees = angy;
     _data.sideSlopeDegrees = angx;
     _data.frontSlopePct = tan(_data.frontSlopeDegrees * DEGtoRAD) * 100;
     _data.sideSlopePct = tan(_data.sideSlopeDegrees * DEGtoRAD) * 100;

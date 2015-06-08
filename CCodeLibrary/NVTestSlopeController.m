@@ -315,26 +315,8 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
     [_motionManager stopAccelerometerUpdates];
     [_locationManager stopUpdatingHeading];
 }
-double square (double x)
-{
-    return x * x;
-}
 - (void) slopesFromAccelerometer:(int)nReadings
 {
-    /*double xyz[3];
-     double ax, ay, az;
-     xyz[0] = _data.accelX[0];
-     xyz[1] = _data.accelY[0];
-     xyz[2] = _data.accelZ[0];
-     ax = xyz[0];
-     ay = xyz[1];
-     az = xyz[2];
-     double xAngle = atan( ax / (sqrt(square(ay) + square(az))));
-     double yAngle = atan( ay / (sqrt(square(ax) + square(az))));
-     double zAngle = atan( sqrt(square(ax) + square(ay)) / az);
-     
-     xAngle *= 180.00;   yAngle *= 180.00;   zAngle *= 180.00;
-     xAngle /= 3.141592; yAngle /= 3.141592; zAngle /= 3.141592;*/
     double denom = sqrt (square(_data.accelX)+square(_data.accelY)+square(_data.accelZ));
     double angz = acos (_data.accelZ/denom);
     double angy = acos (_data.accelY/denom);
@@ -342,14 +324,13 @@ double square (double x)
     angx *= RADtoDEG;
     angy *= RADtoDEG;
     angz *= RADtoDEG;
-    angx = 90.0 - angx;
-    angy = 180.0 - angy;
+    angx = angx - 90.0;
+    angy = angy - 90.0;
     angz = 180.0 - angz;
-    _data.deviceSlopeDegrees = angz;
-//    _data.sideSlopeDegrees = angx;
+    _data.deviceSlopeDegrees = angy;
+    _data.deviceSideSlopeDegrees = angx;
     _data.deviceSlopePct = tan(_data.deviceSlopeDegrees * DEGtoRAD) * 100;
-    //_data.sideSlopePct = tan(_data.sideSlopeDegrees * DEGtoRAD) * 100;
-    //_data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
+    _data.deviceSideSlopePct = tan(_data.deviceSideSlopeDegrees * DEGtoRAD) * 100;
 }
 
 - (void)computeSlopeFromDeviceMotion:(CMDeviceMotion *)deviceMotion
@@ -366,9 +347,9 @@ double square (double x)
         _data.accelY = (_aSumY / COUNT);
         _data.accelZ = (_aSumZ / COUNT);
         
-        _data.yaw = (_yawSum / COUNT);
-        _data.pitch = (_pitchSum / COUNT);
-        _data.roll = (_rollSum / COUNT);
+        _data.yaw = (_yawSum / COUNT)*RADtoDEG;
+        _data.pitch = (_pitchSum / COUNT)*RADtoDEG;
+        _data.roll = (_rollSum / COUNT)*RADtoDEG;
         
         _data.rm11 = (_rmSum11 / COUNT);
         _data.rm12 = (_rmSum12 / COUNT);
@@ -389,6 +370,8 @@ double square (double x)
         _data.magneticHeading = (_sumMagneticHeading / COUNT);
         
         [self slopesFromAccelerometer:1];
+        
+        _data.deviceSlopePct = ((tan(_data.deviceSlopeDegrees / (180.0 / M_PI))) * 100.0);
         
         [self slopeMeasurementComplete];
     }
