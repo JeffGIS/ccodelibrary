@@ -450,10 +450,10 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)slopeMeasurementComplete
 {
     _headingLabel.text = [NSString stringWithFormat:@"Heading = %.02f\u00B0", _data.heading];
-    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlopeDegrees];
-    _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f%%", _data.sideSlopeDegrees];
+    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %.02f\u00B0", _data.frontSlopeDegrees];
+    _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %.02f\u00B0", _data.sideSlopeDegrees];
     _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _data.maxSlopePct];
-    _maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f", _data.accelX[0],_data.accelY[0],_data.accelZ[0]];
+    _maxSlopeLabel.text = [NSString stringWithFormat:@"ax:%.5f, ay:%.5f, az:%.5f", _data.accelX[0], _data.accelY[0], _data.accelZ[0]];
     
     _promptLabel.text = @"Press 'Done' to continue inventory.";
     
