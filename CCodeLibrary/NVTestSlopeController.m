@@ -315,18 +315,19 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
     [_motionManager stopAccelerometerUpdates];
     [_locationManager stopUpdatingHeading];
 }
-- (void) slopesFromAccelerometer:(int)nReadings
+
+- (void)slopesFromAccelerometer:(int)nReadings
 {
-    double denom = sqrt (square(_data.accelX)+square(_data.accelY)+square(_data.accelZ));
-    double angz = acos (_data.accelZ/denom);
-    double angy = acos (_data.accelY/denom);
-    double angx = acos (_data.accelX/denom);
+    CGFloat denom = sqrt(square(_data.accelX) + square(_data.accelY) + square(_data.accelZ));
+    CGFloat angz = acos(_data.accelZ / denom);
+    CGFloat angy = acos(_data.accelY / denom);
+    CGFloat angx = acos(_data.accelX / denom);
     angx *= RADtoDEG;
     angy *= RADtoDEG;
     angz *= RADtoDEG;
-    angx = angx - 90.0;
-    angy = angy - 90.0;
-    angz = 180.0 - angz;
+    angx = (angx - 90.0);
+    angy = (angy - 90.0);
+    angz = (180.0 - angz);
     _data.deviceSlopeDegrees = angy;
     _data.deviceSideSlopeDegrees = angx;
     _data.deviceSlopePct = tan(_data.deviceSlopeDegrees * DEGtoRAD) * 100;
@@ -370,9 +371,6 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
         _data.magneticHeading = (_sumMagneticHeading / COUNT);
         
         [self slopesFromAccelerometer:1];
-        
-        _data.deviceSlopePct = ((tan(_data.deviceSlopeDegrees / (180.0 / M_PI))) * 100.0);
-        
         [self slopeMeasurementComplete];
     }
     

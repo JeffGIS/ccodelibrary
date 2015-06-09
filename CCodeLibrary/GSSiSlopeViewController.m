@@ -314,24 +314,25 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [_locationManager stopUpdatingHeading];
 }
 
-- (void) slopesFromAccelerometer:(int)nReadings
+- (void)slopesFromAccelerometer:(int)nReadings
 {
-    double denom = sqrt (square(_data.accelX[0])+square(_data.accelY[0])+square(_data.accelZ[0]));
-    double angz = acos (_data.accelZ[0]/denom);
-    double angy = acos (_data.accelY[0]/denom);
-    double angx = acos (_data.accelX[0]/denom);
+    CGFloat denom = sqrt(square(_data.accelX[0]) + square(_data.accelY[0]) + square(_data.accelZ[0]));
+    CGFloat angz = acos(_data.accelZ[0] / denom);
+    CGFloat angy = acos(_data.accelY[0] / denom);
+    CGFloat angx = acos(_data.accelX[0] / denom);
     angx *= RADtoDEG;
     angy *= RADtoDEG;
     angz *= RADtoDEG;
-    angx = angx - 90.0;
-    angy = angy - 90.0;
-    angz = 180.0 - angz;
+    angx = (angx - 90.0);
+    angy = (angy - 90.0);
+    angz = (180.0 - angz);
     _data.frontSlopeDegrees = angy;
     _data.sideSlopeDegrees = angx;
     _data.frontSlopePct = tan(_data.frontSlopeDegrees * DEGtoRAD) * 100;
     _data.sideSlopePct = tan(_data.sideSlopeDegrees * DEGtoRAD) * 100;
     _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
 }
+
 - (void)computeSlopeFromDeviceMotion:(CMDeviceMotion *)deviceMotion
 {
     if (_counter == COUNT)
@@ -353,7 +354,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
             _data.roll[1] = (_rollSum / COUNT);
             
             [self slopesFromAccelerometer:2];
-            
             [self slopeMeasurementComplete];
         }
         
@@ -372,7 +372,9 @@ typedef NS_ENUM(NSInteger, SCStatus)
             _data.roll[0] = (_rollSum / COUNT) * RADtoDEG;
             
             _data.heading = (_sumHeading / COUNT);
+            
             [self slopesFromAccelerometer:1];
+            
             if (_data.maxSlopePct < (_calibrationTarget - _flipRadius) ||
                 (_data.maxSlopePct > (_calibrationTarget + _flipRadius)))
             {
@@ -391,6 +393,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
                 _status = SCStatusStart;
             }
         }
+        
         _counter++;
     }
     
@@ -420,9 +423,9 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _gSumX += deviceMotion.gravity.x;
         _gSumY += deviceMotion.gravity.y;
         _gSumZ += deviceMotion.gravity.z;
-        double uacx = deviceMotion.userAcceleration.x;
-        double uacy = deviceMotion.userAcceleration.y;
-        double uacz = deviceMotion.userAcceleration.z;
+        CGFloat uacx = deviceMotion.userAcceleration.x;
+        CGFloat uacy = deviceMotion.userAcceleration.y;
+        CGFloat uacz = deviceMotion.userAcceleration.z;
         _yawSum += deviceMotion.attitude.yaw;
         _pitchSum += deviceMotion.attitude.pitch;
         _rollSum += deviceMotion.attitude.roll;
