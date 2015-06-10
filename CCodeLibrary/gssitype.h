@@ -3777,7 +3777,7 @@ typedef SHOWVAL *LPSHOWVAL;
 void SetOldStructSizes (void);
 
 #define ExtCreatePen GSSiEXTCREATEPEN
-HPEN WINAPI GSSiEXTCREATEPEN(DWORD iPenStyle,
+HPEN GSSiEXTCREATEPEN(DWORD iPenStyle,
 									DWORD cWidth,
                                     CONST LOGBRUSH *plbrush,
                                     DWORD cStyle,

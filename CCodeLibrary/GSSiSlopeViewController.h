@@ -3,6 +3,7 @@
 
 #import <UIKit/UIKit.h>
 #import "NVSliderController.h"
+#import <CoreLocation/CoreLocation.h>
 
 typedef struct NVSlopeData {
     CGFloat accelX[2];
@@ -28,21 +29,25 @@ typedef struct NVSlopeData {
 
 @protocol GSSiSlopeViewControllerDelegate <NSObject>
 
-- (BOOL)shouldUseCalibration:(GSSiSlopeViewController *)controller;
-
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
              didReturnSlopeData:(NVSlopeData)slopeData;
 
 @end
 
-@interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate>
+@interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate,CLLocationManagerDelegate>
 
 @property (nonatomic, weak) id <GSSiSlopeViewControllerDelegate> delegate;
 @property (nonatomic, copy) NSString *which;
 @property NSInteger mode;
+@property BOOL displayDegrees;
+@property BOOL useCalibration;
+@property BOOL useHeadingCalibration;
+@property NSString *promptText;
 
 + (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
                                                        flipRadius:(CGFloat)flipRadius
+                                                   useCalibration:(BOOL)useCalibration
+                                                   displayDegrees:(BOOL)displayDegrees
                                                          delegate:(id)delegate;
 
 - (void)removeManualMeasurementButton;

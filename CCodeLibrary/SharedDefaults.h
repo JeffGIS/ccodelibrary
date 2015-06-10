@@ -15,6 +15,7 @@ typedef NS_ENUM(NSInteger, NVCalibrationArrayIndex) {
     NVCalibrationArrayIndexValue,
     NVCalibrationArrayIndexType,
     NVCalibrationArrayIndexSelected,
+    NVCalibrationArrayDeviceValues,
 };
 
 @interface SharedDefaults : NSObject

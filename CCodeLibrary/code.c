@@ -36,7 +36,7 @@ typedef HANDLE	HGDIOBJ;
 typedef unsigned long DWORD ;
 
 #define WINAPI      __stdcall
-typedef int (FAR WINAPI *FARPROC)();
+typedef int (FAR *FARPROC)();
 
 typedef struct tagSIZE
 {

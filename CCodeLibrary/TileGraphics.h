@@ -63,5 +63,3 @@ int QuadKeyToTileXY(char *quadKey, int *tileX, int *tileY, int *levelOfDetail);
 int FindIntersection (const char *indexPath, const char *dataPath, int x, int y, char *intText, char *intAZMS, int *pnumStreets, int *pnRamps, int iWant, int *plev21x, int *plev21y);
 int FindIntersectionFromID (const char *indexPath,const char *dataPath, int intID, char *intText,char *intAZMS,int *pnumStreets,int *pnRamps,int *plev21x, int *plev21y);
 int GetCornerIDFromHeading (int heading,int IntersectionCorrection);
-double DeltaAngle (double AZ1, double AZ2);
-int Between0And360 (int ival);

@@ -20,6 +20,9 @@
 @end
 
 @implementation NVCalibrationController
+{
+    CGFloat _deviceValues[5][4];
+}
 
 - (void)loadView
 {
@@ -35,7 +38,7 @@
     _currentType = NVCalibrationTypeDefault, _newType = NVCalibrationTypeRunningSlope;
     _currentValue = 0.0;
     _currentIndex = 0;
-    _hasBeenFlipped = YES;
+    _hasBeenFlipped = NO;
 
     NSString *lastCalDate = [SharedDefaults.defaults stringForKey:@"LastCalibrationDate"];
     
@@ -116,11 +119,11 @@
             switch (type)
             {
                 case NVCalibrationTypeRunningSlope:
-                    valueString = [NSString stringWithFormat:@"%.2f%%", floatValue];
+                    valueString = [NSString stringWithFormat:@"%.1f%%", floatValue];
                     break;
                     
                 case NVCalibrationTypeDegrees:
-                    valueString = [NSString stringWithFormat:@"%.2f\u00B0", floatValue];
+                    valueString = [NSString stringWithFormat:@"%.1f\u00B0", floatValue];
                     break;
                     
                 case NVCalibrationTypeRiseRun:
@@ -182,7 +185,7 @@
                                                                  ((912.0 - yOrigin) + margin))];
         
         [self setupLabel:_promptLabel
-                    text:@"Place iPad on a flat surface and tap on\n'Calibrate 0.00%' to begin calibration routine."
+                    text:@"Place the iPad on the level surface and tap on\n'Calibrate 0.0%' to begin calibration routine."
                 fontSize:34.0];
     }
 }
@@ -253,7 +256,13 @@
     
     GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                           flipRadius:0.0
-                                                                                            delegate:self];
+                                        useCalibration:NO displayDegrees:_currentValue==NVCalibrationTypeDegrees                                                                                            delegate:self];
+    if (!_currentIndex)
+        slopeVC.promptText = @"Place the iPad on the level surface and tap 'Start' to begin measurement.";
+    else if (_currentIndex % 2)
+        slopeVC.promptText = @"Place the iPad with the arrow pointing upslope and tap 'Start' to begin measurement.";
+    else
+        slopeVC.promptText = @"Place the iPad with the arrow pointing to the left of the upslope and tap 'Start' to begin measurement.";
     
     [self presentViewController:slopeVC
                        animated:YES
@@ -265,6 +274,8 @@
     {
         _promptLabel.text = @"Calibration Routine is Complete.";
         
+        [SharedDefaults.defaults saveCalibrationValueArray:_calibrationValues];
+
         NSString *currentDate = [NSDateFormatter localizedStringFromDate:NSDate.date
                                                                dateStyle:NSDateFormatterLongStyle
                                                                timeStyle:NSDateFormatterLongStyle];
@@ -288,11 +299,11 @@
         switch (nextType)
         {
             case NVCalibrationTypeRunningSlope:
-                valueString = [NSString stringWithFormat:@"%.2f%%", nextValue];
+                valueString = [NSString stringWithFormat:@"%.1f%%", nextValue];
                 break;
                 
             case NVCalibrationTypeDegrees:
-                valueString = [NSString stringWithFormat:@"%.2f\u00B0", nextValue];
+                valueString = [NSString stringWithFormat:@"%.1f\u00B0", nextValue];
                 break;
                 
             case NVCalibrationTypeRiseRun:
@@ -309,8 +320,13 @@
                 buttonString = buttons.titleLabel.text;
         }
         
-        _promptLabel.text = [NSString stringWithFormat:@"Place iPad on a %@ surface and tap on\n'%@' to continue.",
+        if (!(_currentIndex % 2))
+            _promptLabel.text = [NSString stringWithFormat:@"Place the iPad on the %@ surface with the arrow pointing upslope and tap on\n'%@' to continue.",
+                                 valueString, buttonString];
+        else
+            _promptLabel.text = [NSString stringWithFormat:@"Place the iPad on the %@ surface with the arrow pointing to the left of the upslope and tap on\n'%@' to continue.",
                              valueString, buttonString];
+        
         
         _nextPromptText = _promptLabel.text;
     }
@@ -322,13 +338,14 @@
     
     GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                           flipRadius:0.0
-                                                                                            delegate:self];
+                                        useCalibration:YES displayDegrees:_currentType==NVCalibrationTypeDegrees                                                                                            delegate:self];
     
     [self presentViewController:slopeVC
                        animated:YES
                      completion:nil];
     
     [slopeVC removeManualMeasurementButton];
+    slopeVC.displayDegrees = YES;
 }
 
 - (void)editButtonTapped:(UIButton *)button
@@ -396,11 +413,19 @@
     
     [controller dismissViewControllerAnimated:YES
                                    completion:nil];
-    
+    if (slopeData.frontSlopePct == -9999.0)
+    {
+        _currentIndex = 0;
+        [self setupCalibrationButtons];
+        _promptLabel.text = @"Place the iPad on the level surface and tap on\n'Calibrate 0.0%' to begin calibration routine.";
+        return;
+    }
     if (_currentType != NVCalibrationTypeDefault)
     {
-        if (slopeData.frontSlopePct != -9999.0 && _hasBeenFlipped)
+        if (_hasBeenFlipped)
         {
+            _deviceValues[_currentIndex][1] = slopeData.frontSlopeDegrees;
+            _deviceValues[_currentIndex][3] = slopeData.sideSlopeDegrees;
             _currentIndex++;
             _hasBeenFlipped = NO;
             
@@ -422,13 +447,15 @@
         
         else
         {
+            _deviceValues[_currentIndex][0] = slopeData.frontSlopeDegrees;
+            _deviceValues[_currentIndex][2] = slopeData.sideSlopeDegrees;
             _promptLabel.text = _previousPromptText;
             
             if (slopeData.frontSlopePct != -9999.0)
             {
                 _hasBeenFlipped = YES;
                 
-                NSString *title = @"Flip the iPad around and press 'OK' to continue.";
+                NSString *title = @"Turn the iPad 180 degrees and press 'OK' to continue.";
                 
                 NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
                                                                             delegate:self
@@ -531,11 +558,11 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
         switch (type)
         {
             case NVCalibrationTypeRunningSlope:
-                cell.textLabel.text = [NSString stringWithFormat:@"%.2f%%", floatValue];
+                cell.textLabel.text = [NSString stringWithFormat:@"%.1f%%", floatValue];
                 break;
                 
             case NVCalibrationTypeDegrees:
-                cell.textLabel.text = [NSString stringWithFormat:@"%.2f\u00B0", floatValue];
+                cell.textLabel.text = [NSString stringWithFormat:@"%.1f\u00B0", floatValue];
                 break;
                 
             case NVCalibrationTypeRiseRun:
@@ -845,8 +872,8 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
     {
         GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                               flipRadius:0.0
-                                                                                                delegate:self];
-        
+                                            useCalibration:NO displayDegrees:_currentValue==NVCalibrationTypeDegrees                                                                                               delegate:self];
+        slopeVC.promptText = @"";
         [self presentViewController:slopeVC
                            animated:YES
                          completion:nil];

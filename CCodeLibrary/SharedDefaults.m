@@ -71,16 +71,24 @@ static SharedDefaults *_defaults;
 {
     NSArray *defaultArray = [_defaults arrayForKey:@"CalibrationValueArray"];
     
-    if (!defaultArray.count)
+    if (!defaultArray.count < 4)
     {
-        NSArray *valuesArray = @[@(0.0), @(8.33)];
+        NSArray *valuesArray = @[@(0.0), @(8.3)];
         
         NSArray *typesArray = @[@(NVCalibrationTypeRunningSlope),
                                 @(NVCalibrationTypeRunningSlope)];
         
         NSArray *selectedArray = @[@YES, @YES];
         
-        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, nil];
+        //device values always in degrees. value[0] is front/back flat slope average, value[1] is side slope flat average,
+        // value[2] is front slope for calibration slope 1, value[3] is back slope for calibration slope 1,
+        // value[4] is left side slope for calibration slope 1, value[5] is right side slope for calibration slope 1,
+        // value[6] is front slope for calibration slope 2, value[7] is back slope for calibration slope 2,
+        // value[8] is left side slope for calibration slope 2, value[9] is right side slope for calibration slope 2,
+        // etc
+        NSArray *deviceValuesArray = @[@(0.0), @(4.74)];
+        
+        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
         
         [self saveCalibrationValueArray:defaultArray];
     }
@@ -223,12 +231,13 @@ static SharedDefaults *_defaults;
         NSMutableArray *valuesArray = [defaultArray[NVCalibrationArrayIndexValue] mutableCopy];
         NSMutableArray *typesArray = [defaultArray[NVCalibrationArrayIndexType] mutableCopy];
         NSMutableArray *selectedArray = [defaultArray[NVCalibrationArrayIndexSelected] mutableCopy];
+        NSMutableArray *deviceValuesArray = [defaultArray[NVCalibrationArrayDeviceValues] mutableCopy];
         
         [valuesArray addObject:@(value)];
         [typesArray addObject:@(type)];
         [selectedArray addObject:@YES];
         
-        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, nil];
+        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray,nil];
         
         [_defaults setObject:defaultArray
                       forKey:@"CalibrationValueArray"];

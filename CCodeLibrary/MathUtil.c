@@ -1487,3 +1487,50 @@ bool CreateMask(LPDPOINT *pPointsIN, int *pnPoints, bounds *pbnds)
     *pPointsIN = pNewPoints;
     return true;
 }
+double DeltaAngle (double AZ1, double AZ2)
+{
+    double daz;
+    
+    AZ1 = Between0And360((int)AZ1);
+    AZ2 = Between0And360((int)AZ2);
+    AZ1 *= DEGtoRAD;
+    AZ2 *= DEGtoRAD;
+    daz =  AZ2 - AZ1;
+    
+    if (daz < -PY)
+        daz += TWOPI;
+    
+    else if (daz > PY)
+        daz -= TWOPI;
+    
+    return (daz * RADtoDEG);
+}
+
+int iDist(double X1, double Y1, double X2, double Y2)
+{
+    double xdf = (X1-X2);
+    double ydf = (Y1-Y2);
+    return (int)sqrt(xdf *xdf + ydf *ydf);
+}
+
+int Between0And360 (int ival)
+{
+    if (ival < 0)
+        return 360 + ival;
+    
+    else if (ival > 360)
+        return ival % 360;
+    
+    return ival;
+}
+
+double Between0And360D (double ival)
+{
+    if (ival < 0)
+        return 360.0 + ival;
+    
+    else if (ival > 360.0)
+        return fmod (ival,360.0);
+    
+    return ival;
+}
