@@ -410,31 +410,34 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 - (BOOL)loadCalibration
 {
-    BOOL rtn = FALSE;
+    BOOL rtn = NO;
    
-    NSArray * calibrationValues = [SharedDefaults.defaults calibrationValueArray];
-    NSArray * targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
-    _nCalibrationPoints = [targetValues count];
+    NSArray *calibrationValues = [SharedDefaults.defaults calibrationValueArray];
+    NSArray *targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
+    _nCalibrationPoints = targetValues.count;
+    
     if (_nCalibrationPoints > 1 && _nCalibrationPoints < 6)
     {
         _targetValues[0] = 0.0;
-        NSArray * deviceValuesArray = [calibrationValues[NVCalibrationArrayDeviceValues] copy];
+        NSArray *deviceValuesArray = [calibrationValues[NVCalibrationArrayDeviceValues] copy];
         NSNumber *num = deviceValuesArray[0];
-        _deviceValues[0][0] = [num doubleValue];
+        _deviceValues[0][0] = num.doubleValue;
         num = deviceValuesArray[1];
-        _deviceValues[0][1] = [(NSNumber*)deviceValuesArray[1] doubleValue];
+        _deviceValues[0][1] = [(NSNumber *)deviceValuesArray[1] doubleValue];
         int dvIndex = 2;
-        for (int i=1;i<_nCalibrationPoints;i++)
+        
+        for (int i = 1; i < _nCalibrationPoints; i++)
         {
             NSNumber *num = targetValues[i];
-            _targetValues[i] = [num doubleValue];
-            for (int j = 0;j<4;j++)
-            {
-                _deviceValues[i][j] = [(NSNumber*)deviceValuesArray[dvIndex++] doubleValue];
-            }
+            _targetValues[i] = num.doubleValue;
+            
+            for (int j = 0; j < 4; j++)
+                _deviceValues[i][j] = [(NSNumber *)deviceValuesArray[dvIndex++] doubleValue];
         }
+        
         rtn = YES;
     }
+    
     return rtn;
 }
 
