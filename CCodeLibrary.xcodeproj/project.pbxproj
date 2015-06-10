@@ -22,7 +22,6 @@
 		A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */; };
 		A90D1FBC1AE6184800CBFEE7 /* UIView+ColorOfPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */; };
 		A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */ = {isa = PBXBuildFile; fileRef = A90EBDC81A48874B001E72CF /* GSSiEnums.m */; };
-		A90FC1F41A07F593003AF763 /* CalibrationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A90FC1F31A07F593003AF763 /* CalibrationViewController.m */; };
 		A91D34F31B1E27BE005A61E2 /* UIApplication+VersionBuild.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */; };
 		A91F36941AE9739400602BCE /* NVSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F36931AE9739400602BCE /* NVSliderView.m */; };
 		A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F6E8C1AE0A73B00822F42 /* HelpButton.m */; };
@@ -85,7 +84,6 @@
 		A99C89181AEDE07800A0856F /* PriorityLocation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A97867351A5219FD000A9BB8 /* PriorityLocation.h */; };
 		A99C89191AEDE07F00A0856F /* PlacesInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F838AE819B1021C00943A8C /* PlacesInfo.h */; };
 		A99C891A1AEDE08700A0856F /* colorsByName.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */; };
-		A99C891B1AEDE08D00A0856F /* CalibrationViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90FC1F21A07F593003AF763 /* CalibrationViewController.h */; };
 		A99C891D1AEDE09D00A0856F /* CustomAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F3A544D19A449460029DBEA /* CustomAlert.h */; };
 		A99C891E1AEDE0A300A0856F /* Colors.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9C525CE1A3B59880056711F /* Colors.h */; };
 		A99C891F1AEDE0AD00A0856F /* ElementOverlayView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB05C20E19EA999F00F0688B /* ElementOverlayView.h */; };
@@ -223,7 +221,6 @@
 				A99C891F1AEDE0AD00A0856F /* ElementOverlayView.h in CopyFiles */,
 				A99C891E1AEDE0A300A0856F /* Colors.h in CopyFiles */,
 				A99C891D1AEDE09D00A0856F /* CustomAlert.h in CopyFiles */,
-				A99C891B1AEDE08D00A0856F /* CalibrationViewController.h in CopyFiles */,
 				A99C891A1AEDE08700A0856F /* colorsByName.h in CopyFiles */,
 				A99C89191AEDE07F00A0856F /* PlacesInfo.h in CopyFiles */,
 				A99C89181AEDE07800A0856F /* PriorityLocation.h in CopyFiles */,
@@ -286,8 +283,6 @@
 		A90D1FC11AE6510F00CBFEE7 /* UIView+ColorOfPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ColorOfPoint.h"; sourceTree = "<group>"; };
 		A90EBDC71A48874B001E72CF /* GSSiEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiEnums.h; sourceTree = "<group>"; };
 		A90EBDC81A48874B001E72CF /* GSSiEnums.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiEnums.m; sourceTree = "<group>"; };
-		A90FC1F21A07F593003AF763 /* CalibrationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalibrationViewController.h; sourceTree = "<group>"; };
-		A90FC1F31A07F593003AF763 /* CalibrationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalibrationViewController.m; sourceTree = "<group>"; };
 		A91F36921AE9739400602BCE /* NVSliderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSliderView.h; sourceTree = "<group>"; };
 		A91F36931AE9739400602BCE /* NVSliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSliderView.m; sourceTree = "<group>"; };
 		A91F6E8B1AE0A73B00822F42 /* HelpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpButton.h; sourceTree = "<group>"; };
@@ -531,8 +526,6 @@
 			isa = PBXGroup;
 			children = (
 				EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */,
-				A90FC1F21A07F593003AF763 /* CalibrationViewController.h */,
-				A90FC1F31A07F593003AF763 /* CalibrationViewController.m */,
 				1F3A544D19A449460029DBEA /* CustomAlert.h */,
 				1F3A544E19A449460029DBEA /* CustomAlert.m */,
 				A9C525CE1A3B59880056711F /* Colors.h */,
@@ -814,7 +807,6 @@
 				A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,
 				A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */,
-				A90FC1F41A07F593003AF763 /* CalibrationViewController.m in Sources */,
 				1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */,
 				1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */,
 				EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */,

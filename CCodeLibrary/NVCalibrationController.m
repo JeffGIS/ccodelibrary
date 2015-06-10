@@ -40,15 +40,15 @@
     _currentIndex = 0;
     _hasBeenFlipped = NO;
 
-    NSString *lastCalDate = [SharedDefaults.defaults stringForKey:@"LastCalibrationDate"];
+    NSString *lastCalString = [SharedDefaults.defaults stringForKey:@"LastCalString"];
     
-    if (!lastCalDate || [lastCalDate isEqualToString:@""])
-        lastCalDate = [NSString stringWithFormat:@"Not calibrated"];
+    if (!lastCalString || [lastCalString isEqualToString:@""])
+        lastCalString = [NSString stringWithFormat:@"This device has NOT been calibrated"];
     
     _lastCalibrationlabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 984.0, 728.0, 32.0)];
     
     [self setupLabel:_lastCalibrationlabel
-                text:lastCalDate
+                text:lastCalString
             fontSize:24.0];
     
     _returnButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 20.0, 160.0, 60.0)];
@@ -293,6 +293,7 @@
                      completion:nil];
     
     [slopeVC removeManualMeasurementButton];
+    [slopeVC removeCalDateLabel];
     
     if (_currentIndex == [_calibrationValues[NVCalibrationArrayIndexValue] count])
     {
@@ -304,11 +305,20 @@
                                                                dateStyle:NSDateFormatterLongStyle
                                                                timeStyle:NSDateFormatterLongStyle];
         
-        NSString *lastCalDate = [NSString stringWithFormat:@"Calibrated on %@", currentDate];
-        _lastCalibrationlabel.text = lastCalDate;
+        NSDate *date = NSDate.date;
         
-        [SharedDefaults.defaults saveString:lastCalDate
-                                     forKey:@"LastCalibrationDate"];
+        [SharedDefaults.defaults saveDate:date
+                                   forKey:@"LastCalDate"];
+        
+        NSString *dateString = [NSDateFormatter localizedStringFromDate:date
+                                                              dateStyle:NSDateFormatterLongStyle
+                                                              timeStyle:NSDateFormatterLongStyle];
+    
+        NSString *lastCalString = [NSString stringWithFormat:@"Calibrated on %@", dateString];
+        _lastCalibrationlabel.text = lastCalString;
+        
+        [SharedDefaults.defaults saveString:lastCalString
+                                     forKey:@"LastCalString"];
         
         _nextPromptText = _promptLabel.text;
     }
@@ -375,6 +385,7 @@
                      completion:nil];
     
     [slopeVC removeManualMeasurementButton];
+    [slopeVC removeCalDateLabel];
     slopeVC.displayDegrees = YES;
 }
 
@@ -955,6 +966,7 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
                          completion:nil];
         
         [slopeVC removeManualMeasurementButton];
+        [slopeVC removeCalDateLabel];
         
         _promptLabel.text = _nextPromptText;
     }

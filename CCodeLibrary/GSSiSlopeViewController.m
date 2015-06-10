@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 @property (nonatomic) NVSlopeData data;
 @property (nonatomic) NSInteger counter, headingCounter;
 @property (nonatomic) CGFloat sumHeading, baseHeading;
-@property (nonatomic) UILabel *headingLabel;
+@property (nonatomic) UILabel *headingLabel, *calDateLabel;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) CMMotionManager *motionManager;
 @property SCStatus status;
@@ -76,6 +76,45 @@ typedef NS_ENUM(NSInteger, SCStatus)
         [self loadCalibration];
     }
     
+    _calDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 964.0, 728.0, 60.0)];
+    _calDateLabel.backgroundColor = UIColor.clearColor;
+    _calDateLabel.font = [UIFont boldSystemFontOfSize:28.0];
+    _calDateLabel.adjustsFontSizeToFitWidth = YES;
+    _calDateLabel.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:_calDateLabel];
+    
+    NSDate *date = NSDate.date;
+    NSDate *lastCalDate = [SharedDefaults.defaults dateForKey:@"LastCalDate"];
+    NSDateFormatter *dayFormatter = [[NSDateFormatter alloc] init];
+    [dayFormatter setDateFormat:@"dd"];
+    NSString *currentDay = [dayFormatter stringFromDate:date];
+    NSString *lastCalDay = [dayFormatter stringFromDate:lastCalDate];
+    NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
+    [timeFormatter setDateFormat:@"HH:mm a"];
+    [timeFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+    NSString *lastCalTime = [timeFormatter stringFromDate:lastCalDate];
+    
+    NSTimeInterval timeSinceCal = [date timeIntervalSinceDate:lastCalDate];
+    timeSinceCal = floor(timeSinceCal / 86400);
+    
+    if (timeSinceCal > 5)
+    {
+        _calDateLabel.text = @"WARNING: Slope not calibrated.";
+        _calDateLabel.textColor = UIColor.redColor;
+    }
+    
+    else if (timeSinceCal > 1 || ![currentDay isEqualToString:lastCalDay])
+    {
+        _calDateLabel.text = [NSString stringWithFormat:@"WARNING: Calibrated %.0f days ago.", timeSinceCal];
+        _calDateLabel.textColor = UIColor.redColor;
+    }
+    
+    else
+    {
+        _calDateLabel.text = [NSString stringWithFormat:@"Calibrated today at %@", lastCalTime];
+        _calDateLabel.textColor = UIColor.blackColor;
+    }
+    
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
     _steadyDiff = 0.015;
     _maxX = _maxY = _maxZ = -10.0;
@@ -107,7 +146,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 - (void)setupUnableButton
 {
-    _unableButton = [[UIButton alloc] initWithFrame:CGRectMake(184.0, 904.0, 400.0, 100.0)];
+    _unableButton = [[UIButton alloc] initWithFrame:CGRectMake(184.0, 884.0, 400.0, 80.0)];
     
     [_unableButton addTarget:self
                       action:@selector(goBack:)
@@ -119,7 +158,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 - (void)setupStartCancelButton
 {
-    _startCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(184.0, 564.0, 400.0, 100.0)];
+    _startCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(184.0, 564.0, 400.0, 80.0)];
     
     [_startCancelButton addTarget:self
                            action:@selector(startCancel:)
@@ -131,11 +170,14 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 - (void)setupLabels
 {
-    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 614.0, 568.0, 60.0)];
-    _frontSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 684.0, 568.0, 60.0)];
-    _sideSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 754.0, 568.0, 60.0)];
-    _maxSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 824.0, 568.0, 60.0)];
-    _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 340.0, 728.0, 194.0)];
+    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 594.0, 568.0, 60.0)];
+    _frontSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 664.0, 568.0, 60.0)];
+    _sideSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 734.0, 568.0, 60.0)];
+    _maxSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 804.0, 568.0, 60.0)];
+    _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 728.0, 194.0)];
+    
+    _promptLabel.center = CGPointMake(384.0, (((_arrowView.frame.origin.y + _arrowView.frame.size.height) +
+                                               _startCancelButton.frame.origin.y) / 2.0));
     
     [self setupLabel:_headingLabel];
     [self setupLabel:_frontSlopeLabel];
@@ -159,7 +201,9 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 - (void)setupProgressView
 {
-    _progressView = [[NVProgressView alloc] initWithCenter:CGPointMake(384.0, 786.0)
+    CGPoint pvCenter = CGPointMake(384.0, ((_startCancelButton.center.y + _unableButton.center.y) / 2.0));
+    
+    _progressView = [[NVProgressView alloc] initWithCenter:pvCenter
                                                      width:688.0
                                                 trackColor:UIColor.blackColor
                                              progressColor:UIColor.whiteColor];
@@ -171,7 +215,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 - (void)setupManualButton
 {
-    _manualButton = [[UIButton alloc] initWithFrame:CGRectMake(104.0, (((_promptLabel.center.y * 2.0) + _headingLabel.center.y) / 3.0),
+    _manualButton = [[UIButton alloc] initWithFrame:CGRectMake(104.0, (((_promptLabel.center.y * 3.0) + _headingLabel.center.y) / 4.0),
                                                                560.0, 80.0)];
     
     [_manualButton addTarget:self
@@ -391,7 +435,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
     return rtn;
 }
 
-- (CGFloat)adjustSlope:(CGFloat)slope isSideSlope:(BOOL)isSideSlope
+- (CGFloat)adjustSlope:(CGFloat)slope
+           isSideSlope:(BOOL)isSideSlope
 {
     CGFloat adjustedSlope = slope;
     if (isSideSlope)
@@ -405,6 +450,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     
     return adjustedSlope;
 }
+
 - (void)slopesFromAccelerometer:(int)nReadings
 {
     CGFloat denom = sqrt(square(_data.accelX[0]) + square(_data.accelY[0]) + square(_data.accelZ[0]));
@@ -417,16 +463,24 @@ typedef NS_ENUM(NSInteger, SCStatus)
     angx = (angx - 90.0);
     angy = (angy - 90.0);
     angz = (180.0 - angz);
-    _data.frontSlopeDegrees = [self adjustSlope:angy isSideSlope:NO];
-    _data.sideSlopeDegrees = [self adjustSlope:angx isSideSlope:YES];
+    
+    _data.frontSlopeDegrees = [self adjustSlope:angy
+                                    isSideSlope:NO];
+    
+    _data.sideSlopeDegrees = [self adjustSlope:angx
+                                   isSideSlope:YES];
+    
     _data.frontSlopePct = tan(_data.frontSlopeDegrees * DEGtoRAD) * 100;
     _data.sideSlopePct = tan(_data.sideSlopeDegrees * DEGtoRAD) * 100;
     _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
 }
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+
+- (void)locationManager:(CLLocationManager *)manager
+       didFailWithError:(NSError *)error
 {
-    NSLog (@"location error");
+    NSLog(@"location ERROR:%@", error.localizedDescription);
 }
+
 - (void)locationManager:(CLLocationManager *)manager
        didUpdateHeading:(CLHeading *)newHeading
 {
@@ -452,12 +506,13 @@ typedef NS_ENUM(NSInteger, SCStatus)
         
         if (_hasRun)
         {
+            [self stopManagers];
+            
             _data.accelX[1] = (_aSumX / COUNT);
             _data.accelY[1] = (_aSumY / COUNT);
             _data.accelZ[1] = (_aSumZ / COUNT);
             
             [self slopesFromAccelerometer:2];
-            
             [self slopeMeasurementComplete];
             [self stopManagers];
         }
@@ -469,8 +524,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
             _data.accelY[0] = (_aSumY / COUNT);
             _data.accelZ[0] = (_aSumZ / COUNT);
             
-            _data.heading = _baseHeading - (_sumHeading / _headingCounter);
-            _data.heading = Between0And360D  (_data.heading);
+            _data.heading = (_baseHeading - (_sumHeading / _headingCounter));
+            _data.heading = Between0And360D(_data.heading);
             [self slopesFromAccelerometer:1];
             
             if (_data.maxSlopePct < (_calibrationTarget - _flipRadius) ||
@@ -705,6 +760,11 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)removeManualMeasurementButton
 {
     [_manualButton removeFromSuperview];
+}
+
+- (void)removeCalDateLabel
+{
+    [_calDateLabel removeFromSuperview];
 }
 
 @end
