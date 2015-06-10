@@ -315,6 +315,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     
     _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
 }
+
 - (void)startManagers
 {
     typedef void (^CMAccelerometerHandler)(CMAccelerometerData *accelerometerData, NSError *error);
@@ -322,7 +323,9 @@ typedef NS_ENUM(NSInteger, SCStatus)
     
     if (CLLocationManager.headingAvailable && !_hasRun)
         [_locationManager startUpdatingHeading];
+    
     if ([_motionManager isAccelerometerAvailable])
+    {
         [_motionManager startAccelerometerUpdatesToQueue:NSOperationQueue.currentQueue
                                              withHandler:^(CMAccelerometerData *accelerometerData, NSError *error){
                                                  [self computeSlopeFromAccelerometer:accelerometerData];
@@ -330,6 +333,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
                                                  if(error)
                                                      NSLog(@"DeviceMotionError:%@", error.localizedDescription);
                                              }];
+    }
 
     _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
 }
@@ -340,7 +344,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [_locationManager stopUpdatingHeading];
     _locationManager.delegate = nil;
 }
-
 
 - (void)stopMotionManager
 {
@@ -376,11 +379,15 @@ typedef NS_ENUM(NSInteger, SCStatus)
 {
     if (!_headingCounter)
         _baseHeading = newHeading.trueHeading;
-    double headingOffset = _baseHeading - newHeading.trueHeading;
+    
+    CGFloat headingOffset = (_baseHeading - newHeading.trueHeading);
+    
     if (headingOffset < -180)
         headingOffset += 360.0;
+    
     if (headingOffset > 180)
         headingOffset -= 360.0;
+    
     _sumHeading += headingOffset;
     _headingCounter++;
 }
@@ -411,6 +418,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
             _data.heading = _baseHeading - (_sumHeading / _headingCounter);
             _data.heading = Between0And360D  (_data.heading);
             [self slopesFromAccelerometer:1];
+            
             if (_data.maxSlopePct < (_calibrationTarget - _flipRadius) ||
                 (_data.maxSlopePct > (_calibrationTarget + _flipRadius)))
             {
@@ -429,6 +437,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
                 _status = SCStatusStart;
             }
         }
+        
         if (_headingCounter)
             _counter++;
     }
@@ -447,8 +456,12 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _yRange = (_maxY - _minY);
         _zRange = (_maxZ - _minZ);
         
-        if (_yRange > _steadyDiff || _xRange > _steadyDiff || _zRange > _steadyDiff)
+        if (_yRange > _steadyDiff ||
+            _xRange > _steadyDiff ||
+            _zRange > _steadyDiff)
+        {
             [self resetSumsAndCounter];
+        }
         
         
         _aSumX += acceleration.x;
@@ -534,21 +547,25 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _minY = min(_minY, acceleration.y);
         _maxZ = max(_maxZ, acceleration.z);
         _minZ = min(_minZ, acceleration.z);
+        
         _xRange = (_maxX - _minX);
         _yRange = (_maxY - _minY);
         _zRange = (_maxZ - _minZ);
         
-        if (_yRange > _steadyDiff || _xRange > _steadyDiff || _zRange > _steadyDiff)
+        if (_yRange > _steadyDiff ||
+            _xRange > _steadyDiff ||
+            _zRange > _steadyDiff)
+        {
             [self resetSumsAndCounter];
-        
+        }
         
         _aSumX += acceleration.x;
         _aSumY += acceleration.y;
         _aSumZ += acceleration.z;
-        
         _gSumX += deviceMotion.gravity.x;
         _gSumY += deviceMotion.gravity.y;
         _gSumZ += deviceMotion.gravity.z;
+        
         _yawSum += deviceMotion.attitude.yaw;
         _pitchSum += deviceMotion.attitude.pitch;
         _rollSum += deviceMotion.attitude.roll;
@@ -579,8 +596,11 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f\u00B0", _data.frontSlopeDegrees];
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f\u00B0", _data.sideSlopeDegrees];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f\u00B0", _data.maxSlopePct];
-        _maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f", _data.accelX[0],_data.accelY[0],_data.accelZ[0]];
+        
+        _maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f",
+                               _data.accelX[0], _data.accelY[0], _data.accelZ[0]];
     }
+    
     else
     {
         _headingLabel.text = [NSString stringWithFormat:@"Heading = %.01f\u00B0", _data.heading];
@@ -588,6 +608,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f%%", _data.sideSlopePct];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f%%", _data.maxSlopePct];
     }
+    
     _promptLabel.text = @"Press 'Done' to continue.";
     
     [_unableButton setTitle:@"Done"
