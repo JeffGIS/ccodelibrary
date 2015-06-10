@@ -245,8 +245,28 @@
                              completion:nil];
 }
 
+- (void)setTestEditButtonsEnabled:(BOOL)enabled
+{
+    _testButton.enabled = enabled;
+    _editButton.enabled = enabled;
+    
+    if (enabled)
+    {
+        _testButton.backgroundColor = UserDefaults.defaults.defaultColors.enabledColor;
+        _editButton.backgroundColor = UserDefaults.defaults.defaultColors.enabledColor;
+    }
+    
+    else
+    {
+        _testButton.backgroundColor = UserDefaults.defaults.defaultColors.disabledColor;
+        _editButton.backgroundColor = UserDefaults.defaults.defaultColors.disabledColor;
+    }
+}
+
 - (void)calibrateButtonTapped:(UIButton *)button
 {
+    [self setTestEditButtonsEnabled:NO];
+    
     NSUInteger index = ((_currentIndex + 1) / 2);
     NSString *valueString = @"", *buttonString = @"";
     _previousPromptText = _promptLabel.text;
@@ -256,11 +276,15 @@
     
     GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                           flipRadius:0.0
-                                        useCalibration:NO displayDegrees:_currentValue==NVCalibrationTypeDegrees                                                                                            delegate:self];
+                                                                                      useCalibration:NO
+                                                                                      displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
+                                                                                            delegate:self];
     if (!_currentIndex)
         slopeVC.promptText = @"Place the iPad on the level surface and tap 'Start' to begin measurement.";
+    
     else if (_currentIndex % 2)
         slopeVC.promptText = @"Place the iPad with the arrow pointing upslope and tap 'Start' to begin measurement.";
+    
     else
         slopeVC.promptText = @"Place the iPad with the arrow pointing to the left of the upslope and tap 'Start' to begin measurement.";
     
@@ -273,6 +297,8 @@
     if (_currentIndex == [_calibrationValues[NVCalibrationArrayIndexValue] count])
     {
         _promptLabel.text = @"Calibration Routine is Complete.";
+        
+        [self setTestEditButtonsEnabled:YES];
         
         [SharedDefaults.defaults saveCalibrationValueArray:_calibrationValues];
 
@@ -321,12 +347,16 @@
         }
         
         if (!(_currentIndex % 2))
+        {
             _promptLabel.text = [NSString stringWithFormat:@"Place the iPad on the %@ surface with the arrow pointing upslope and tap on\n'%@' to continue.",
                                  valueString, buttonString];
+        }
+        
         else
+        {
             _promptLabel.text = [NSString stringWithFormat:@"Place the iPad on the %@ surface with the arrow pointing to the left of the upslope and tap on\n'%@' to continue.",
                              valueString, buttonString];
-        
+        }
         
         _nextPromptText = _promptLabel.text;
     }
@@ -338,7 +368,9 @@
     
     GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                           flipRadius:0.0
-                                        useCalibration:YES displayDegrees:_currentType==NVCalibrationTypeDegrees                                                                                            delegate:self];
+                                                                                      useCalibration:YES
+                                                                                      displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                                                            delegate:self];
     
     [self presentViewController:slopeVC
                        animated:YES
@@ -413,6 +445,7 @@
     
     [controller dismissViewControllerAnimated:YES
                                    completion:nil];
+    
     if (slopeData.frontSlopePct == -9999.0)
     {
         _currentIndex = 0;
@@ -420,6 +453,7 @@
         _promptLabel.text = @"Place the iPad on the level surface and tap on\n'Calibrate 0.0%' to begin calibration routine.";
         return;
     }
+    
     if (_currentType != NVCalibrationTypeDefault)
     {
         if (_hasBeenFlipped)
@@ -872,8 +906,12 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
     {
         GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                               flipRadius:0.0
-                                            useCalibration:NO displayDegrees:_currentValue==NVCalibrationTypeDegrees                                                                                               delegate:self];
+                                                                                          useCalibration:NO
+                                                                                          displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
+                                                                                                delegate:self];
+        
         slopeVC.promptText = @"";
+        
         [self presentViewController:slopeVC
                            animated:YES
                          completion:nil];
