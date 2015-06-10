@@ -59,6 +59,12 @@ typedef NS_ENUM(NSInteger, SCStatus)
     slopeController.useHeadingCalibration = YES;
     slopeController.delegate = delegate;
     slopeController.promptText = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
+    
+    if (useCalibration)
+    {
+        [slopeController loadCalibration];
+    }
+    
     return slopeController;
 }
 
@@ -514,12 +520,12 @@ typedef NS_ENUM(NSInteger, SCStatus)
             
             [self slopesFromAccelerometer:2];
             [self slopeMeasurementComplete];
-            [self stopManagers];
         }
         
         else if (_headingCounter)
         {
             [self stopManagers];
+            
             _data.accelX[0] = (_aSumX / COUNT);
             _data.accelY[0] = (_aSumY / COUNT);
             _data.accelZ[0] = (_aSumZ / COUNT);
