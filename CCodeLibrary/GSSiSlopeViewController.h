@@ -51,5 +51,6 @@ typedef struct NVSlopeData {
                                                          delegate:(id)delegate;
 
 - (void)removeManualMeasurementButton;
+- (void)removeCalDateLabel;
 
 @end

@@ -7,6 +7,7 @@
 #import "CRAPI.h"
 #import "MathUtil.h"
 #import "NVProgressView.h"
+#import "SharedDefaults.h"
 
 typedef NS_ENUM(NSInteger, SCStatus)
 {
@@ -29,7 +30,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 @property (nonatomic) NVSlopeData data;
 @property (nonatomic) NSInteger counter, headingCounter;
 @property (nonatomic) CGFloat sumHeading, baseHeading;
-@property (nonatomic) UILabel *headingLabel;
+@property (nonatomic) UILabel *headingLabel, *calDateLabel;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) CMMotionManager *motionManager;
 @property SCStatus status;
@@ -71,6 +72,45 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _calDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 964.0, 728.0, 60.0)];
+    _calDateLabel.backgroundColor = UIColor.clearColor;
+    _calDateLabel.font = [UIFont boldSystemFontOfSize:28.0];
+    _calDateLabel.adjustsFontSizeToFitWidth = YES;
+    _calDateLabel.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:_calDateLabel];
+    
+    NSDate *date = NSDate.date;
+    NSDate *lastCalDate = [SharedDefaults.defaults dateForKey:@"LastCalDate"];
+    NSDateFormatter *dayFormatter = [[NSDateFormatter alloc] init];
+    [dayFormatter setDateFormat:@"dd"];
+    NSString *currentDay = [dayFormatter stringFromDate:date];
+    NSString *lastCalDay = [dayFormatter stringFromDate:lastCalDate];
+    NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
+    [timeFormatter setDateFormat:@"HH:mm a"];
+    [timeFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+    NSString *lastCalTime = [timeFormatter stringFromDate:lastCalDate];
+    
+    NSTimeInterval timeSinceCal = [date timeIntervalSinceDate:lastCalDate];
+    timeSinceCal = floor(timeSinceCal / 86400);
+    
+    if (timeSinceCal > 5)
+    {
+        _calDateLabel.text = @"WARNING: Slope not calibrated.";
+        _calDateLabel.textColor = UIColor.redColor;
+    }
+    
+    else if (timeSinceCal > 1 || ![currentDay isEqualToString:lastCalDay])
+    {
+        _calDateLabel.text = [NSString stringWithFormat:@"WARNING: Calibrated %.0f days ago.", timeSinceCal];
+        _calDateLabel.textColor = UIColor.redColor;
+    }
+    
+    else
+    {
+        _calDateLabel.text = [NSString stringWithFormat:@"Calibrated today at %@", lastCalTime];
+        _calDateLabel.textColor = UIColor.blackColor;
+    }
     
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
     _steadyDiff = 0.015;
@@ -683,6 +723,11 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)removeManualMeasurementButton
 {
     [_manualButton removeFromSuperview];
+}
+
+- (void)removeCalDateLabel
+{
+    [_calDateLabel removeFromSuperview];
 }
 
 @end
