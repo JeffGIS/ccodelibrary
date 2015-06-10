@@ -549,6 +549,9 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _gSumX += deviceMotion.gravity.x;
         _gSumY += deviceMotion.gravity.y;
         _gSumZ += deviceMotion.gravity.z;
+        CGFloat uacx = deviceMotion.userAcceleration.x;
+        CGFloat uacy = deviceMotion.userAcceleration.y;
+        CGFloat uacz = deviceMotion.userAcceleration.z;
         _yawSum += deviceMotion.attitude.yaw;
         _pitchSum += deviceMotion.attitude.pitch;
         _rollSum += deviceMotion.attitude.roll;
