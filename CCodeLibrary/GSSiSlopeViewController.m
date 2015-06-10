@@ -103,14 +103,16 @@ typedef NS_ENUM(NSInteger, SCStatus)
     NSTimeInterval timeSinceCal = [date timeIntervalSinceDate:lastCalDate];
     timeSinceCal = floor(timeSinceCal / 86400);
     
-    if (timeSinceCal > 5)
+    if (timeSinceCal > 5.0)
     {
         _calDateLabel.text = @"WARNING: Slope not calibrated.";
         _calDateLabel.textColor = UIColor.redColor;
     }
     
-    else if (timeSinceCal > 1 || ![currentDay isEqualToString:lastCalDay])
+    else if (timeSinceCal > 1.0 || ![currentDay isEqualToString:lastCalDay])
     {
+        timeSinceCal = max(timeSinceCal, 1.0);
+        
         _calDateLabel.text = [NSString stringWithFormat:@"WARNING: Calibrated %.0f days ago.", timeSinceCal];
         _calDateLabel.textColor = UIColor.redColor;
     }
