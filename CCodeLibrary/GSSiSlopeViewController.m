@@ -53,7 +53,10 @@ typedef NS_ENUM(NSInteger, SCStatus)
     slopeController.useHeadingCalibration = YES;
     slopeController.delegate = delegate;
     slopeController.promptText = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
-    
+    if (useCalibration)
+    {
+        [slopeController loadCalibration];
+    }
     return slopeController;
 }
 
@@ -352,6 +355,19 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [_locationManager stopUpdatingHeading];
 }
 
+- (BOOL)loadCalibration
+{
+    BOOL rtn = FALSE;
+    
+    return rtn;
+}
+
+- (CGFloat)adjustSlope:(CGFloat)slope isSideSlope:(BOOL)isSideSlope
+{
+    CGFloat adjustedSlope = slope;
+    
+    return adjustedSlope;
+}
 - (void)slopesFromAccelerometer:(int)nReadings
 {
     CGFloat denom = sqrt(square(_data.accelX[0]) + square(_data.accelY[0]) + square(_data.accelZ[0]));
@@ -364,8 +380,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
     angx = (angx - 90.0);
     angy = (angy - 90.0);
     angz = (180.0 - angz);
-    _data.frontSlopeDegrees = angy;
-    _data.sideSlopeDegrees = angx;
+    _data.frontSlopeDegrees = [self adjustSlope:angy isSideSlope:NO];
+    _data.sideSlopeDegrees = [self adjustSlope:angx isSideSlope:YES];
     _data.frontSlopePct = tan(_data.frontSlopeDegrees * DEGtoRAD) * 100;
     _data.sideSlopePct = tan(_data.sideSlopeDegrees * DEGtoRAD) * 100;
     _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
@@ -565,9 +581,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _gSumX += deviceMotion.gravity.x;
         _gSumY += deviceMotion.gravity.y;
         _gSumZ += deviceMotion.gravity.z;
-        CGFloat uacx = deviceMotion.userAcceleration.x;
-        CGFloat uacy = deviceMotion.userAcceleration.y;
-        CGFloat uacz = deviceMotion.userAcceleration.z;
+        
         _yawSum += deviceMotion.attitude.yaw;
         _pitchSum += deviceMotion.attitude.pitch;
         _rollSum += deviceMotion.attitude.roll;

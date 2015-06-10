@@ -300,8 +300,7 @@
         
         [self setTestEditButtonsEnabled:YES];
         
-        [SharedDefaults.defaults saveCalibrationValueArray:_calibrationValues];
-
+        [self saveCalibrationValues];
         NSString *currentDate = [NSDateFormatter localizedStringFromDate:NSDate.date
                                                                dateStyle:NSDateFormatterLongStyle
                                                                timeStyle:NSDateFormatterLongStyle];
@@ -503,6 +502,44 @@
     }
 }
 
+- (BOOL)saveCalibrationValues
+{
+    BOOL rtn = TRUE;
+    
+    NSMutableArray *deviceValuesArray = [[NSMutableArray alloc]init];
+    NSNumber * levelFront = [NSNumber numberWithDouble:(_deviceValues[0][0]+_deviceValues[0][1])/2.0];
+    NSNumber * levelSide = [NSNumber numberWithDouble:(_deviceValues[0][2]+_deviceValues[0][3])/2.0];
+    [deviceValuesArray addObject:levelFront];
+    [deviceValuesArray addObject:levelSide];
+    for (int i = 1; i < [_calibrationValues[NVCalibrationArrayIndexValue] count]; i++)
+    {
+        BOOL selected = [_calibrationValues[NVCalibrationArrayIndexSelected][i] boolValue];
+        
+        if (!selected)
+            break;
+        NSNumber * frontUpslope = [NSNumber numberWithDouble:_deviceValues[i][0]];
+        NSNumber * frontDownslope = [NSNumber numberWithDouble:_deviceValues[i][1]];
+        [deviceValuesArray addObject:frontUpslope];
+        [deviceValuesArray addObject:frontDownslope];
+        
+        NSNumber * sideUpslope = [NSNumber numberWithDouble:_deviceValues[i][2]];
+        NSNumber * sideDownslope = [NSNumber numberWithDouble:_deviceValues[i][3]];
+        [deviceValuesArray addObject:sideUpslope];
+        [deviceValuesArray addObject:sideDownslope];
+        
+    }
+    NSMutableArray *valuesArray = [_calibrationValues[NVCalibrationArrayIndexValue] mutableCopy];
+    NSMutableArray *typesArray = [_calibrationValues[NVCalibrationArrayIndexType] mutableCopy];
+    NSMutableArray *selectedArray = [_calibrationValues[NVCalibrationArrayIndexSelected] mutableCopy];
+    
+    
+    NSArray *newArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray,nil];
+    
+
+    [SharedDefaults.defaults saveCalibrationValueArray:newArray];
+
+    return rtn;
+}
 - (BOOL)shouldUseCalibration:(GSSiSlopeViewController *)controller
 {
     return YES;

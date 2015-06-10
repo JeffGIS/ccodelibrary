@@ -211,8 +211,9 @@ static SharedDefaults *_defaults;
         
         NSArray *valuesArray = defaultArray[NVCalibrationArrayIndexValue];
         NSArray *typesArray = defaultArray[NVCalibrationArrayIndexType];
+        NSArray *deviceValuesArray = defaultArray[NVCalibrationArrayDeviceValues];
         
-        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, nil];
+        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray,deviceValuesArray, nil];
         
         [_defaults setObject:defaultArray
                       forKey:@"CalibrationValueArray"];
