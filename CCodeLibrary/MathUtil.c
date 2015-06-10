@@ -747,7 +747,8 @@ vec3 GetTriangleNormal(vec3 *vertex1, vec3 *vertex2, vec3 *vertex3)
 	NormalizeVec3(&vNormal);
     return vNormal;
 }
-double square (double x)
+
+double square(double x)
 {
     return x * x;
 }

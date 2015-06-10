@@ -349,18 +349,18 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [_locationManager stopUpdatingHeading];
 }
 
-- (void) slopesFromAccelerometer:(int)nReadings
+- (void)slopesFromAccelerometer:(int)nReadings
 {
-    double denom = sqrt (square(_data.accelX[0])+square(_data.accelY[0])+square(_data.accelZ[0]));
-    double angz = acos (_data.accelZ[0]/denom);
-    double angy = acos (_data.accelY[0]/denom);
-    double angx = acos (_data.accelX[0]/denom);
+    CGFloat denom = sqrt(square(_data.accelX[0]) + square(_data.accelY[0]) + square(_data.accelZ[0]));
+    CGFloat angz = acos(_data.accelZ[0] / denom);
+    CGFloat angy = acos(_data.accelY[0] / denom);
+    CGFloat angx = acos(_data.accelX[0] / denom);
     angx *= RADtoDEG;
     angy *= RADtoDEG;
     angz *= RADtoDEG;
-    angx = angx - 90.0;
-    angy = angy - 90.0;
-    angz = 180.0 - angz;
+    angx = (angx - 90.0);
+    angy = (angy - 90.0);
+    angz = (180.0 - angz);
     _data.frontSlopeDegrees = angy;
     _data.sideSlopeDegrees = angx;
     _data.frontSlopePct = tan(_data.frontSlopeDegrees * DEGtoRAD) * 100;
@@ -482,7 +482,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
             _data.roll[1] = (_rollSum / COUNT);
             
             [self slopesFromAccelerometer:2];
-            
             [self slopeMeasurementComplete];
         }
         
@@ -502,6 +501,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
             
             _data.heading = _baseHeading - (_sumHeading / COUNT);
             [self slopesFromAccelerometer:1];
+            
             if (_data.maxSlopePct < (_calibrationTarget - _flipRadius) ||
                 (_data.maxSlopePct > (_calibrationTarget + _flipRadius)))
             {
@@ -520,6 +520,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
                 _status = SCStatusStart;
             }
         }
+        
         _counter++;
     }
     
