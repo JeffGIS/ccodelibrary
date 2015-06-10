@@ -441,17 +441,48 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (CGFloat)adjustSlope:(CGFloat)slope
            isSideSlope:(BOOL)isSideSlope
 {
-    CGFloat adjustedSlope = slope;
+    CGFloat adjustedSlope;
+    CGFloat priorValue;
+    CGFloat deviceDegreesPerTrueDegrees;
+    int index, i;
+    
     if (isSideSlope)
     {
-        
+        priorValue = _deviceValues[0][1];
+        if (slope < priorValue)
+            index = 2;
+        else
+            index = 3;
     }
     else
     {
-        
+        priorValue = _deviceValues[0][0];
+        if (slope < priorValue)
+            index = 1;
+        else
+            index = 0;
     }
-    
-    return adjustedSlope;
+    deviceDegreesPerTrueDegrees = (fabs (_deviceValues[1][index]) - fabs (priorValue)) / (_targetValues[1] - _targetValues[0]);
+    for (i = 1;i<_nCalibrationPoints;i++)
+    {
+        if (fabs (slope) >= fabs (priorValue) &&
+            fabs (slope) <= fabs (_deviceValues[i][index]))
+        {
+            adjustedSlope = _targetValues[i-1] + (fabs (slope) - fabs (priorValue)) * deviceDegreesPerTrueDegrees;
+            if (index == 0 || index == 2)
+                return -adjustedSlope;
+            else
+                return adjustedSlope;
+        }
+        deviceDegreesPerTrueDegrees = (fabs (_deviceValues[i][index]) - fabs (priorValue)) / (_targetValues[i] - _targetValues[i-1]);
+        priorValue = _deviceValues[i][index];
+    }
+    i = (int)_nCalibrationPoints;
+    adjustedSlope = _targetValues[i-1] + (fabs (slope) - fabs (priorValue)) * deviceDegreesPerTrueDegrees;
+    if (index == 0 || index == 2)
+        return -adjustedSlope;
+    else
+        return adjustedSlope;
 }
 
 - (void)slopesFromAccelerometer:(int)nReadings
