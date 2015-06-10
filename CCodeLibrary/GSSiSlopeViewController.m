@@ -60,11 +60,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
     slopeController.delegate = delegate;
     slopeController.promptText = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
     
-    if (useCalibration)
-    {
-        [slopeController loadCalibration];
-    }
-    
     return slopeController;
 }
 
