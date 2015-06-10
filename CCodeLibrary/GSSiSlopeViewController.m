@@ -7,6 +7,7 @@
 #import "CRAPI.h"
 #import "MathUtil.h"
 #import "NVProgressView.h"
+#import "SharedDefaults.h"
 
 typedef NS_ENUM(NSInteger, SCStatus)
 {
@@ -38,6 +39,11 @@ typedef NS_ENUM(NSInteger, SCStatus)
 @end
 
 @implementation GSSiSlopeViewController
+{
+    CGFloat _deviceValues[5][4];
+    CGFloat _targetValues[5];
+    NSInteger _nCalibrationPoints;
+}
 
 + (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
                                                        flipRadius:(CGFloat)flipRadius
@@ -53,10 +59,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
     slopeController.useHeadingCalibration = YES;
     slopeController.delegate = delegate;
     slopeController.promptText = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
-    if (useCalibration)
-    {
-        [slopeController loadCalibration];
-    }
     return slopeController;
 }
 
@@ -69,6 +71,10 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (_useCalibration)
+    {
+        [self loadCalibration];
+    }
     
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
     _steadyDiff = 0.015;
@@ -358,13 +364,44 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (BOOL)loadCalibration
 {
     BOOL rtn = FALSE;
-    
+   
+    NSArray * calibrationValues = [SharedDefaults.defaults calibrationValueArray];
+    NSArray * targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
+    _nCalibrationPoints = [targetValues count];
+    if (_nCalibrationPoints > 1 && _nCalibrationPoints < 6)
+    {
+        _targetValues[0] = 0.0;
+        NSArray * deviceValuesArray = [calibrationValues[NVCalibrationArrayDeviceValues] copy];
+        NSNumber *num = deviceValuesArray[0];
+        _deviceValues[0][0] = [num doubleValue];
+        num = deviceValuesArray[1];
+        _deviceValues[0][1] = [(NSNumber*)deviceValuesArray[1] doubleValue];
+        int dvIndex = 2;
+        for (int i=1;i<_nCalibrationPoints;i++)
+        {
+            NSNumber *num = targetValues[i];
+            _targetValues[i] = [num doubleValue];
+            for (int j = 0;j<4;j++)
+            {
+                _deviceValues[i][j] = [(NSNumber*)deviceValuesArray[dvIndex++] doubleValue];
+            }
+        }
+        rtn = YES;
+    }
     return rtn;
 }
 
 - (CGFloat)adjustSlope:(CGFloat)slope isSideSlope:(BOOL)isSideSlope
 {
     CGFloat adjustedSlope = slope;
+    if (isSideSlope)
+    {
+        
+    }
+    else
+    {
+        
+    }
     
     return adjustedSlope;
 }
@@ -412,7 +449,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
 {
     if (_counter == COUNT)
     {
-        [self stopManagers];
         
         if (_hasRun)
         {
@@ -423,10 +459,12 @@ typedef NS_ENUM(NSInteger, SCStatus)
             [self slopesFromAccelerometer:2];
             
             [self slopeMeasurementComplete];
+            [self stopManagers];
         }
         
         else if (_headingCounter)
         {
+            [self stopManagers];
             _data.accelX[0] = (_aSumX / COUNT);
             _data.accelY[0] = (_aSumY / COUNT);
             _data.accelZ[0] = (_aSumZ / COUNT);

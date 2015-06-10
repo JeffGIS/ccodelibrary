@@ -300,7 +300,6 @@
         
         [self setTestEditButtonsEnabled:YES];
         
-        [self saveCalibrationValues];
         NSString *currentDate = [NSDateFormatter localizedStringFromDate:NSDate.date
                                                                dateStyle:NSDateFormatterLongStyle
                                                                timeStyle:NSDateFormatterLongStyle];
@@ -461,7 +460,9 @@
             _deviceValues[_currentIndex][3] = slopeData.sideSlopeDegrees;
             _currentIndex++;
             _hasBeenFlipped = NO;
-            
+            if (_currentIndex > [_calibrationValues[NVCalibrationArrayIndexValue] count])
+                [self saveCalibrationValues];
+
             for (UIButton *buttons in self.view.subviews)
             {
                 if (buttons.tag == _currentIndex + 1)
