@@ -172,7 +172,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 - (void)setupManualButton
 {
-    _manualButton = [[UIButton alloc] initWithFrame:CGRectMake(104.0, (((_promptLabel.center.y * 2.0) + _headingLabel.center.y) / 3.0),
+    _manualButton = [[UIButton alloc] initWithFrame:CGRectMake(104.0, (((_promptLabel.center.y * 3.0) + _headingLabel.center.y) / 4.0),
                                                                560.0, 80.0)];
     
     [_manualButton addTarget:self
