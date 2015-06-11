@@ -9,6 +9,10 @@
 #import "NVProgressView.h"
 #import "SharedDefaults.h"
 
+static CGFloat _deviceVals[5][4];
+static CGFloat _targetValues[5];
+static NSInteger _nCalibrationPoints;
+
 typedef NS_ENUM(NSInteger, SCStatus)
 {
     SCStatusStart,
@@ -29,6 +33,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
 @property (nonatomic) CGFloat gSumX, gSumY, gSumZ, aSumX, aSumY, aSumZ, yawSum, pitchSum, rollSum;
 @property (nonatomic) NVSlopeData data;
 @property (nonatomic) NSInteger counter, headingCounter;
+@property CGFloat minHead, maxHead;
+@property CGFloat lastDegrees;
 @property (nonatomic) CGFloat sumHeading, baseHeading;
 @property (nonatomic) UILabel *headingLabel, *calDateLabel;
 @property (nonatomic) CLLocationManager *locationManager;
@@ -40,9 +46,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 @implementation GSSiSlopeViewController
 {
-    CGFloat _deviceValues[5][4];
-    CGFloat _targetValues[5];
-    NSInteger _nCalibrationPoints;
 }
 
 + (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
@@ -375,7 +378,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)startManagers
 {
     typedef void (^CMAccelerometerHandler)(CMAccelerometerData *accelerometerData, NSError *error);
-    _motionManager.accelerometerUpdateInterval = 0.01;
+    _motionManager.accelerometerUpdateInterval = 0.04;
     
     if (CLLocationManager.headingAvailable && !_hasRun)
         [_locationManager startUpdatingHeading];
@@ -415,24 +418,28 @@ typedef NS_ENUM(NSInteger, SCStatus)
     NSArray *calibrationValues = [SharedDefaults.defaults calibrationValueArray];
     NSArray *targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
     _nCalibrationPoints = targetValues.count;
-    
+    int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][1] integerValue];
+    _displayDegrees = (currentType == NVCalibrationTypeDegrees);
+        
     if (_nCalibrationPoints > 1 && _nCalibrationPoints < 6)
     {
         _targetValues[0] = 0.0;
         NSArray *deviceValuesArray = [calibrationValues[NVCalibrationArrayDeviceValues] copy];
         NSNumber *num = deviceValuesArray[0];
-        _deviceValues[0][0] = num.doubleValue;
+        _deviceVals[0][0] = num.doubleValue;
         num = deviceValuesArray[1];
-        _deviceValues[0][1] = [(NSNumber *)deviceValuesArray[1] doubleValue];
+        _deviceVals[0][1] = [(NSNumber *)deviceValuesArray[1] doubleValue];
         int dvIndex = 2;
         
         for (int i = 1; i < _nCalibrationPoints; i++)
         {
             NSNumber *num = targetValues[i];
             _targetValues[i] = num.doubleValue;
-            
+            int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] integerValue];
+            if (currentType == NVCalibrationTypeRunningSlope)
+                _targetValues[i] = atan (_targetValues[i]/100.0) * RADtoDEG;
             for (int j = 0; j < 4; j++)
-                _deviceValues[i][j] = [(NSNumber *)deviceValuesArray[dvIndex++] doubleValue];
+                _deviceVals[i][j] = [(NSNumber *)deviceValuesArray[dvIndex++] doubleValue];
         }
         
         rtn = YES;
@@ -446,46 +453,57 @@ typedef NS_ENUM(NSInteger, SCStatus)
 {
     CGFloat adjustedSlope;
     CGFloat priorValue;
-    CGFloat deviceDegreesPerTrueDegrees;
+    CGFloat trueDegreesPerDeviceDegree;
     int index, i;
     
+    if (!_useCalibration)
+        return slope;
     if (isSideSlope)
     {
-        priorValue = _deviceValues[0][1];
+        priorValue = _deviceVals[0][1];
         if (slope < priorValue)
-            index = 2;
-        else
             index = 3;
+        else
+            index = 2;
     }
     else
     {
-        priorValue = _deviceValues[0][0];
+        priorValue = _deviceVals[0][0];
         if (slope < priorValue)
             index = 1;
         else
             index = 0;
     }
-    deviceDegreesPerTrueDegrees = (fabs (_deviceValues[1][index]) - fabs (priorValue)) / (_targetValues[1] - _targetValues[0]);
+    trueDegreesPerDeviceDegree = fabs ((_targetValues[1] - _targetValues[0]) / (_deviceVals[1][index] - priorValue));
     for (i = 1;i<_nCalibrationPoints;i++)
     {
-        if (fabs (slope) >= fabs (priorValue) &&
-            fabs (slope) <= fabs (_deviceValues[i][index]))
+        if (index == 1 || index == 3)//downslope
         {
-            adjustedSlope = _targetValues[i-1] + (fabs (slope) - fabs (priorValue)) * deviceDegreesPerTrueDegrees;
-            if (index == 0 || index == 2)
-                return -adjustedSlope;
-            else
+            if (slope >= _deviceVals[i][index])
+            {
+                adjustedSlope = -_targetValues[i-1] - fabs(slope - priorValue) * trueDegreesPerDeviceDegree;
                 return adjustedSlope;
+            }
         }
-        deviceDegreesPerTrueDegrees = (fabs (_deviceValues[i][index]) - fabs (priorValue)) / (_targetValues[i] - _targetValues[i-1]);
-        priorValue = _deviceValues[i][index];
+        else//upslope
+        {
+            if (slope <= _deviceVals[i][index])
+            {
+                adjustedSlope = _targetValues[i-1] + fabs(slope - priorValue) * trueDegreesPerDeviceDegree;
+                return adjustedSlope;
+            }
+        }
+        if (i < _nCalibrationPoints-1)
+            trueDegreesPerDeviceDegree = fabs((_targetValues[i] - _targetValues[i-1]) / (_deviceVals[i][index] - priorValue));
+        priorValue = _deviceVals[i][index];
     }
     i = (int)_nCalibrationPoints;
-    adjustedSlope = _targetValues[i-1] + (fabs (slope) - fabs (priorValue)) * deviceDegreesPerTrueDegrees;
-    if (index == 0 || index == 2)
-        return -adjustedSlope;
+    if (index == 1 || index == 3)//downslope
+        adjustedSlope = -_targetValues[i-1] - fabs(slope - priorValue) * trueDegreesPerDeviceDegree;
     else
-        return adjustedSlope;
+        adjustedSlope = _targetValues[i-1] + fabs(slope - priorValue) * trueDegreesPerDeviceDegree;
+
+    return adjustedSlope;
 }
 
 - (void)slopesFromAccelerometer:(int)nReadings
@@ -500,6 +518,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     angx = (angx - 90.0);
     angy = (angy - 90.0);
     angz = (180.0 - angz);
+    _lastDegrees = angy;
     
     _data.frontSlopeDegrees = [self adjustSlope:angy
                                     isSideSlope:NO];
@@ -517,6 +536,20 @@ typedef NS_ENUM(NSInteger, SCStatus)
 {
     NSLog(@"location ERROR:%@", error.localizedDescription);
 }
+-(CGFloat)correctedHeading:(CGFloat)heading
+{
+    CGFloat corrected = heading;
+    
+    _minHead = min (_minHead,heading);
+    _maxHead = max (_maxHead,heading);
+    if (_baseHeading - heading < -180)
+        corrected = heading - 360.0;
+    
+    else if (_baseHeading - heading > 180)
+        corrected = heading + 360.0;
+    
+    return corrected;
+}
 
 - (void)locationManager:(CLLocationManager *)manager
        didUpdateHeading:(CLHeading *)newHeading
@@ -524,15 +557,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     if (!_headingCounter)
         _baseHeading = newHeading.trueHeading;
     
-    CGFloat headingOffset = (_baseHeading - newHeading.trueHeading);
-    
-    if (headingOffset < -180)
-        headingOffset += 360.0;
-    
-    if (headingOffset > 180)
-        headingOffset -= 360.0;
-    
-    _sumHeading += headingOffset;
+    _sumHeading += [self correctedHeading:newHeading.trueHeading];
     _headingCounter++;
 }
 
@@ -561,7 +586,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
             _data.accelY[0] = (_aSumY / COUNT);
             _data.accelZ[0] = (_aSumZ / COUNT);
             
-            _data.heading = (_baseHeading - (_sumHeading / _headingCounter));
+            _data.heading = _sumHeading / _headingCounter;
             _data.heading = Between0And360D(_data.heading);
             [self slopesFromAccelerometer:1];
             
@@ -732,6 +757,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
     _sumHeading = 0.0;
     _counter = 0;
     _headingCounter = 0;
+    _minHead = 10000;
+    _maxHead = -10000;
 }
 
 - (void)slopeMeasurementComplete
@@ -753,6 +780,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f%%", _data.frontSlopePct];
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f%%", _data.sideSlopePct];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f%%", _data.maxSlopePct];
+        _maxSlopeLabel.text = [NSString stringWithFormat:@"%.3f %ld %.1f %.1f", _lastDegrees,_headingCounter,_minHead,_maxHead];
     }
     
     _promptLabel.text = @"Press 'Done' to continue.";
@@ -803,5 +831,15 @@ typedef NS_ENUM(NSInteger, SCStatus)
 {
     [_calDateLabel removeFromSuperview];
 }
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
+
 
 @end

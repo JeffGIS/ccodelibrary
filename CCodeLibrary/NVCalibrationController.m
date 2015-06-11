@@ -6,6 +6,18 @@
 #import "SharedDefaults.h"
 #import "VerticalSegmentedControl.h"
 
+static CGFloat _deviceValues[9][4];
+// [0][0] = level frontslope
+// [0][1] = level sideslope
+// [1][0] = first upslope
+// [1][1] = first downslope
+// [2][2] = first side right up
+// [2][3] = first side right down
+// [3][0] = second upslope
+// [3][1] = second downslope
+// [4][2] = second side right up
+// [4][3] = second side right down
+
 @interface NVCalibrationController ()
 
 @property (nonatomic) UIButton *returnButton, *testButton, *editButton;
@@ -20,9 +32,6 @@
 @end
 
 @implementation NVCalibrationController
-{
-    CGFloat _deviceValues[5][4];
-}
 
 - (void)loadView
 {
@@ -382,7 +391,6 @@
     
     [slopeVC removeManualMeasurementButton];
     [slopeVC removeCalDateLabel];
-    slopeVC.displayDegrees = YES;
 }
 
 - (void)editButtonTapped:(UIButton *)button
@@ -477,7 +485,6 @@
                     buttons.enabled = YES;
                     buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.enabledColor;
                 }
-                
                 else if (buttons.tag > 0)
                 {
                     buttons.enabled = NO;
@@ -485,7 +492,6 @@
                 }
             }
         }
-        
         else
         {
             _deviceValues[_currentIndex][0] = slopeData.frontSlopeDegrees;
@@ -526,14 +532,14 @@
         
         if (!selected)
             break;
-        
-        NSNumber *frontUpslope = [NSNumber numberWithDouble:_deviceValues[i][0]];
-        NSNumber *frontDownslope = [NSNumber numberWithDouble:_deviceValues[i][1]];
+        int j = (i-1)*2 + 1;
+        NSNumber *frontUpslope = [NSNumber numberWithDouble:_deviceValues[j][0]];
+        NSNumber *frontDownslope = [NSNumber numberWithDouble:_deviceValues[j][1]];
         [deviceValuesArray addObject:frontUpslope];
         [deviceValuesArray addObject:frontDownslope];
         
-        NSNumber *sideUpslope = [NSNumber numberWithDouble:_deviceValues[i][2]];
-        NSNumber *sideDownslope = [NSNumber numberWithDouble:_deviceValues[i][3]];
+        NSNumber *sideUpslope = [NSNumber numberWithDouble:_deviceValues[j+1][2]];
+        NSNumber *sideDownslope = [NSNumber numberWithDouble:_deviceValues[j+1][3]];
         [deviceValuesArray addObject:sideUpslope];
         [deviceValuesArray addObject:sideDownslope];
         
