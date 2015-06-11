@@ -233,7 +233,7 @@ static SharedDefaults *_defaults;
         NSMutableArray *valuesArray = [defaultArray[NVCalibrationArrayIndexValue] mutableCopy];
         NSMutableArray *typesArray = [defaultArray[NVCalibrationArrayIndexType] mutableCopy];
         NSMutableArray *selectedArray = [defaultArray[NVCalibrationArrayIndexSelected] mutableCopy];
-        NSMutableArray *deviceValuesArray = [defaultArray[NVCalibrationArrayDeviceValues] mutableCopy];
+        NSArray *deviceValuesArray = defaultArray[NVCalibrationArrayDeviceValues];
         
         [valuesArray addObject:@(value)];
         [typesArray addObject:@(type)];
@@ -257,7 +257,7 @@ static SharedDefaults *_defaults;
         NSMutableArray *valuesArray = [defaultArray[NVCalibrationArrayIndexValue] mutableCopy];
         NSMutableArray *typesArray = [defaultArray[NVCalibrationArrayIndexType] mutableCopy];
         NSMutableArray *selectedArray = [defaultArray[NVCalibrationArrayIndexSelected] mutableCopy];
-        NSMutableArray *deviceValuesArray = [defaultArray[NVCalibrationArrayDeviceValues] mutableCopy];
+        NSArray *deviceValuesArray = defaultArray[NVCalibrationArrayDeviceValues];
         
         [valuesArray removeObjectAtIndex:index];
         [typesArray removeObjectAtIndex:index];
