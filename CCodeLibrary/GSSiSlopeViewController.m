@@ -45,8 +45,6 @@ typedef NS_ENUM(NSInteger, SCStatus)
 @end
 
 @implementation GSSiSlopeViewController
-{
-}
 
 + (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
                                                        flipRadius:(CGFloat)flipRadius
@@ -75,10 +73,9 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     if (_useCalibration)
-    {
         [self loadCalibration];
-    }
     
     _calDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 964.0, 728.0, 60.0)];
     _calDateLabel.backgroundColor = UIColor.clearColor;
@@ -89,36 +86,46 @@ typedef NS_ENUM(NSInteger, SCStatus)
     
     NSDate *date = NSDate.date;
     NSDate *lastCalDate = [SharedDefaults.defaults dateForKey:@"LastCalDate"];
-    NSDateFormatter *dayFormatter = [[NSDateFormatter alloc] init];
-    [dayFormatter setDateFormat:@"dd"];
-    NSString *currentDay = [dayFormatter stringFromDate:date];
-    NSString *lastCalDay = [dayFormatter stringFromDate:lastCalDate];
-    NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
-    [timeFormatter setDateFormat:@"HH:mm a"];
-    [timeFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-    NSString *lastCalTime = [timeFormatter stringFromDate:lastCalDate];
     
-    NSTimeInterval timeSinceCal = [date timeIntervalSinceDate:lastCalDate];
-    timeSinceCal = floor(timeSinceCal / 86400);
-    
-    if (timeSinceCal > 5.0)
+    if (lastCalDate)
     {
-        _calDateLabel.text = @"WARNING: Slope not calibrated.";
-        _calDateLabel.textColor = UIColor.redColor;
-    }
-    
-    else if (timeSinceCal > 1.0 || ![currentDay isEqualToString:lastCalDay])
-    {
-        timeSinceCal = max(timeSinceCal, 1.0);
+        NSDateFormatter *dayFormatter = [[NSDateFormatter alloc] init];
+        [dayFormatter setDateFormat:@"dd"];
+        NSString *currentDay = [dayFormatter stringFromDate:date];
+        NSString *lastCalDay = [dayFormatter stringFromDate:lastCalDate];
+        NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
+        [timeFormatter setDateFormat:@"HH:mm a"];
+        [timeFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+        NSString *lastCalTime = [timeFormatter stringFromDate:lastCalDate];
         
-        _calDateLabel.text = [NSString stringWithFormat:@"WARNING: Calibrated %.0f days ago.", timeSinceCal];
-        _calDateLabel.textColor = UIColor.redColor;
+        NSTimeInterval timeSinceCal = [date timeIntervalSinceDate:lastCalDate];
+        timeSinceCal = floor(timeSinceCal / 86400);
+        
+        if (timeSinceCal > 5.0)
+        {
+            _calDateLabel.text = @"WARNING: Slope not calibrated.";
+            _calDateLabel.textColor = UIColor.redColor;
+        }
+        
+        else if (timeSinceCal > 1.0 || ![currentDay isEqualToString:lastCalDay])
+        {
+            timeSinceCal = max(timeSinceCal, 1.0);
+            
+            _calDateLabel.text = [NSString stringWithFormat:@"WARNING: Calibrated %.0f days ago.", timeSinceCal];
+            _calDateLabel.textColor = UIColor.redColor;
+        }
+        
+        else
+        {
+            _calDateLabel.text = [NSString stringWithFormat:@"Calibrated today at %@", lastCalTime];
+            _calDateLabel.textColor = UIColor.blackColor;
+        }
     }
     
     else
     {
-        _calDateLabel.text = [NSString stringWithFormat:@"Calibrated today at %@", lastCalTime];
-        _calDateLabel.textColor = UIColor.blackColor;
+        _calDateLabel.text = @"WARNING: This device has NOT been calibrated.";
+        _calDateLabel.textColor = UIColor.redColor;
     }
     
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
@@ -436,8 +443,10 @@ typedef NS_ENUM(NSInteger, SCStatus)
             NSNumber *num = targetValues[i];
             _targetValues[i] = num.doubleValue;
             int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] integerValue];
+            
             if (currentType == NVCalibrationTypeRunningSlope)
-                _targetValues[i] = atan (_targetValues[i]/100.0) * RADtoDEG;
+                _targetValues[i] = (atan(_targetValues[i]/100.0) * RADtoDEG);
+            
             for (int j = 0; j < 4; j++)
                 _deviceVals[i][j] = [(NSNumber *)deviceValuesArray[dvIndex++] doubleValue];
         }
@@ -458,14 +467,18 @@ typedef NS_ENUM(NSInteger, SCStatus)
     
     if (!_useCalibration)
         return slope;
+    
     if (isSideSlope)
     {
         priorValue = _deviceVals[0][1];
+        
         if (slope < priorValue)
             index = 3;
+        
         else
             index = 2;
     }
+    
     else
     {
         priorValue = _deviceVals[0][0];
@@ -474,8 +487,11 @@ typedef NS_ENUM(NSInteger, SCStatus)
         else
             index = 0;
     }
-    trueDegreesPerDeviceDegree = fabs ((_targetValues[1] - _targetValues[0]) / (_deviceVals[1][index] - priorValue));
-    for (i = 1;i<_nCalibrationPoints;i++)
+    
+    trueDegreesPerDeviceDegree = fabs((_targetValues[1] - _targetValues[0]) /
+                                      (_deviceVals[1][index] - priorValue));
+    
+    for (i = 1 ; i < _nCalibrationPoints; i++)
     {
         if (index == 1 || index == 3)//downslope
         {
@@ -485,6 +501,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
                 return adjustedSlope;
             }
         }
+        
         else//upslope
         {
             if (slope <= _deviceVals[i][index])
@@ -493,15 +510,23 @@ typedef NS_ENUM(NSInteger, SCStatus)
                 return adjustedSlope;
             }
         }
-        if (i < _nCalibrationPoints-1)
-            trueDegreesPerDeviceDegree = fabs((_targetValues[i] - _targetValues[i-1]) / (_deviceVals[i][index] - priorValue));
+        
+        if (i < _nCalibrationPoints -1 )
+        {
+            trueDegreesPerDeviceDegree = fabs((_targetValues[i] - _targetValues[i-1]) /
+                                              (_deviceVals[i][index] - priorValue));
+        }
+        
         priorValue = _deviceVals[i][index];
     }
+    
     i = (int)_nCalibrationPoints;
+    
     if (index == 1 || index == 3)//downslope
-        adjustedSlope = -_targetValues[i-1] - fabs(slope - priorValue) * trueDegreesPerDeviceDegree;
+        adjustedSlope = (-_targetValues[i - 1] - fabs(slope - priorValue) * trueDegreesPerDeviceDegree);
+    
     else
-        adjustedSlope = _targetValues[i-1] + fabs(slope - priorValue) * trueDegreesPerDeviceDegree;
+        adjustedSlope = (_targetValues[i - 1] + fabs(slope - priorValue) * trueDegreesPerDeviceDegree);
 
     return adjustedSlope;
 }
@@ -526,8 +551,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
     _data.sideSlopeDegrees = [self adjustSlope:angx
                                    isSideSlope:YES];
     
-    _data.frontSlopePct = tan(_data.frontSlopeDegrees * DEGtoRAD) * 100;
-    _data.sideSlopePct = tan(_data.sideSlopeDegrees * DEGtoRAD) * 100;
+    _data.frontSlopePct = (tan(_data.frontSlopeDegrees * DEGtoRAD) * 100);
+    _data.sideSlopePct = (tan(_data.sideSlopeDegrees * DEGtoRAD) * 100);
     _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
 }
 
@@ -536,12 +561,14 @@ typedef NS_ENUM(NSInteger, SCStatus)
 {
     NSLog(@"location ERROR:%@", error.localizedDescription);
 }
+
 -(CGFloat)correctedHeading:(CGFloat)heading
 {
     CGFloat corrected = heading;
     
-    _minHead = min (_minHead,heading);
-    _maxHead = max (_maxHead,heading);
+    _minHead = min(_minHead,heading);
+    _maxHead = max(_maxHead,heading);
+    
     if (_baseHeading - heading < -180)
         corrected = heading - 360.0;
     
@@ -840,6 +867,5 @@ typedef NS_ENUM(NSInteger, SCStatus)
 {
     return NO;
 }
-
 
 @end

@@ -27,7 +27,7 @@ static CGFloat _deviceValues[9][4];
 @property (nonatomic) CGFloat currentValue;
 @property NSInteger currentIndex, counter;
 @property (nonatomic, copy) NSString *previousPromptText, *nextPromptText;
-@property BOOL hasBeenFlipped;
+@property BOOL hasBeenFlipped, hasBeenCalibrated;
 
 @end
 
@@ -48,11 +48,15 @@ static CGFloat _deviceValues[9][4];
     _currentValue = 0.0;
     _currentIndex = 0;
     _hasBeenFlipped = NO;
+    _hasBeenCalibrated = YES;
 
     NSString *lastCalString = [SharedDefaults.defaults stringForKey:@"LastCalString"];
     
     if (!lastCalString || [lastCalString isEqualToString:@""])
+    {
         lastCalString = [NSString stringWithFormat:@"This device has NOT been calibrated"];
+        _hasBeenCalibrated = NO;
+    }
     
     _lastCalibrationlabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 984.0, 728.0, 32.0)];
     
@@ -304,31 +308,8 @@ static CGFloat _deviceValues[9][4];
     [slopeVC removeManualMeasurementButton];
     [slopeVC removeCalDateLabel];
     
-    if (_currentIndex == [_calibrationValues[NVCalibrationArrayIndexValue] count])
-    {
-        _promptLabel.text = @"Calibration Routine is Complete.";
-        
-        [self setTestEditButtonsEnabled:YES];
-        
-        NSDate *date = NSDate.date;
-        
-        [SharedDefaults.defaults saveDate:date
-                                   forKey:@"LastCalDate"];
-        
-        NSString *dateString = [NSDateFormatter localizedStringFromDate:date
-                                                              dateStyle:NSDateFormatterLongStyle
-                                                              timeStyle:NSDateFormatterLongStyle];
-    
-        NSString *lastCalString = [NSString stringWithFormat:@"Calibrated on %@", dateString];
-        _lastCalibrationlabel.text = lastCalString;
-        
-        [SharedDefaults.defaults saveString:lastCalString
-                                     forKey:@"LastCalString"];
-        
-        _nextPromptText = _promptLabel.text;
-    }
-    
-    else
+    if (_currentIndex < [_calibrationValues[NVCalibrationArrayIndexValue] count] &&
+        [_calibrationValues[NVCalibrationArrayIndexValue] count] > 1)
     {
         index = ((_currentIndex + 2) / 2);
         
@@ -379,11 +360,25 @@ static CGFloat _deviceValues[9][4];
 {
     _currentType = NVCalibrationTypeDefault;
     
-    GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
-                                                                                          flipRadius:0.0
-                                                                                      useCalibration:YES
-                                                                                      displayDegrees:(_currentType == NVCalibrationTypeDegrees)
-                                                                                            delegate:self];
+    GSSiSlopeViewController *slopeVC = nil;
+    
+    if (_hasBeenCalibrated)
+    {
+        slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
+                                                                     flipRadius:0.0
+                                                                 useCalibration:YES
+                                                                 displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                                       delegate:self];
+    }
+    
+    else
+    {
+        slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
+                                                                     flipRadius:0.0
+                                                                 useCalibration:NO
+                                                                 displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                                       delegate:self];
+    }
     
     [self presentViewController:slopeVC
                        animated:YES
@@ -441,21 +436,6 @@ static CGFloat _deviceValues[9][4];
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
              didReturnSlopeData:(NVSlopeData)slopeData
 {
-    switch (_currentType)
-    {
-        case NVCalibrationTypeRunningSlope:
-            break;
-            
-        case NVCalibrationTypeDegrees:
-            break;
-            
-        case NVCalibrationTypeRiseRun:
-            break;
-            
-        default:
-            break;
-    }
-    
     [controller dismissViewControllerAnimated:YES
                                    completion:nil];
     
@@ -463,6 +443,7 @@ static CGFloat _deviceValues[9][4];
     {
         _currentIndex = 0;
         [self setupCalibrationButtons];
+        [self setTestEditButtonsEnabled:YES];
         _promptLabel.text = @"Place the iPad on the level surface and tap on\n'Calibrate 0.0%' to begin calibration routine.";
         return;
     }
@@ -475,8 +456,33 @@ static CGFloat _deviceValues[9][4];
             _deviceValues[_currentIndex][3] = slopeData.sideSlopeDegrees;
             _currentIndex++;
             _hasBeenFlipped = NO;
-            if (_currentIndex > [_calibrationValues[NVCalibrationArrayIndexValue] count])
+            
+            if (_currentIndex > [_calibrationValues[NVCalibrationArrayIndexValue] count] ||
+                [_calibrationValues[NVCalibrationArrayIndexValue] count] == 1)
+            {
                 [self saveCalibrationValues];
+                
+                _promptLabel.text = @"Calibration Routine is Complete.";
+                
+                [self setTestEditButtonsEnabled:YES];
+                
+                NSDate *date = NSDate.date;
+                
+                [SharedDefaults.defaults saveDate:date
+                                           forKey:@"LastCalDate"];
+                
+                NSString *dateString = [NSDateFormatter localizedStringFromDate:date
+                                                                      dateStyle:NSDateFormatterLongStyle
+                                                                      timeStyle:NSDateFormatterLongStyle];
+                
+                NSString *lastCalString = [NSString stringWithFormat:@"Calibrated on %@", dateString];
+                _lastCalibrationlabel.text = lastCalString;
+                
+                [SharedDefaults.defaults saveString:lastCalString
+                                             forKey:@"LastCalString"];
+                
+                _currentIndex = 0;
+            }
 
             for (UIButton *buttons in self.view.subviews)
             {
@@ -485,6 +491,7 @@ static CGFloat _deviceValues[9][4];
                     buttons.enabled = YES;
                     buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.enabledColor;
                 }
+                
                 else if (buttons.tag > 0)
                 {
                     buttons.enabled = NO;
@@ -492,6 +499,7 @@ static CGFloat _deviceValues[9][4];
                 }
             }
         }
+        
         else
         {
             _deviceValues[_currentIndex][0] = slopeData.frontSlopeDegrees;
@@ -518,7 +526,7 @@ static CGFloat _deviceValues[9][4];
 
 - (BOOL)saveCalibrationValues
 {
-    BOOL rtn = TRUE;
+    BOOL rtn = YES;
     
     NSMutableArray *deviceValuesArray = [[NSMutableArray alloc] init];
     NSNumber *levelFront = [NSNumber numberWithDouble:(_deviceValues[0][0]+_deviceValues[0][1]) / 2.0];
@@ -532,7 +540,8 @@ static CGFloat _deviceValues[9][4];
         
         if (!selected)
             break;
-        int j = (i-1)*2 + 1;
+        
+        int j = ((i - 1) * 2 + 1);
         NSNumber *frontUpslope = [NSNumber numberWithDouble:_deviceValues[j][0]];
         NSNumber *frontDownslope = [NSNumber numberWithDouble:_deviceValues[j][1]];
         [deviceValuesArray addObject:frontUpslope];
@@ -542,7 +551,6 @@ static CGFloat _deviceValues[9][4];
         NSNumber *sideDownslope = [NSNumber numberWithDouble:_deviceValues[j+1][3]];
         [deviceValuesArray addObject:sideUpslope];
         [deviceValuesArray addObject:sideDownslope];
-        
     }
     
     NSMutableArray *valuesArray = [_calibrationValues[NVCalibrationArrayIndexValue] mutableCopy];
@@ -554,6 +562,7 @@ static CGFloat _deviceValues[9][4];
 
     return rtn;
 }
+
 - (BOOL)shouldUseCalibration:(GSSiSlopeViewController *)controller
 {
     return YES;
