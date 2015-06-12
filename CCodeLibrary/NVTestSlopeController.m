@@ -237,6 +237,7 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
     {
         _data.batteryLevel = UIDevice.currentDevice.batteryLevel;
         _data.orientation = UIDevice.currentDevice.orientation;
+        _data.time = NSDate.timeIntervalSinceReferenceDate;
         
         [_delegate testSlopeViewController:self
                     didReturnSlopeTestData:_data];
