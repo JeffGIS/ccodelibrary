@@ -318,8 +318,6 @@ static SharedDefaults *_defaults;
                          
                          CGFloat diff = (jVal - iVal);
                          range = min(range, diff);
-                         
-                         NSLog(@"%f,%f,%f", iVal, jVal, range);
                      }
                  }
              }
