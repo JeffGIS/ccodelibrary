@@ -68,5 +68,7 @@ typedef NS_ENUM(NSInteger, NVCalibrationArrayIndex) {
                      ofType:(NVCalibrationType)type;
 
 - (void)deleteCalibrationValueAtIndex:(NSUInteger)index;
+- (NSUInteger)calibrationValueSelectedCount;
+- (CGFloat)calibrationValueMinRange;
 
 @end

@@ -6,6 +6,18 @@
 #import "SharedDefaults.h"
 #import "VerticalSegmentedControl.h"
 
+static CGFloat _deviceValues[9][4];
+// [0][0] = level frontslope
+// [0][1] = level sideslope
+// [1][0] = first upslope
+// [1][1] = first downslope
+// [2][2] = first side right up
+// [2][3] = first side right down
+// [3][0] = second upslope
+// [3][1] = second downslope
+// [4][2] = second side right up
+// [4][3] = second side right down
+
 @interface NVCalibrationController ()
 
 @property (nonatomic) UIButton *returnButton, *testButton, *editButton;
@@ -15,14 +27,11 @@
 @property (nonatomic) CGFloat currentValue;
 @property NSInteger currentIndex, counter;
 @property (nonatomic, copy) NSString *previousPromptText, *nextPromptText;
-@property BOOL hasBeenFlipped;
+@property BOOL hasBeenFlipped, hasBeenCalibrated;
 
 @end
 
 @implementation NVCalibrationController
-{
-    CGFloat _deviceValues[5][4];
-}
 
 - (void)loadView
 {
@@ -39,11 +48,15 @@
     _currentValue = 0.0;
     _currentIndex = 0;
     _hasBeenFlipped = NO;
+    _hasBeenCalibrated = YES;
 
     NSString *lastCalString = [SharedDefaults.defaults stringForKey:@"LastCalString"];
     
     if (!lastCalString || [lastCalString isEqualToString:@""])
+    {
         lastCalString = [NSString stringWithFormat:@"This device has NOT been calibrated"];
+        _hasBeenCalibrated = NO;
+    }
     
     _lastCalibrationlabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 984.0, 728.0, 32.0)];
     
@@ -295,33 +308,9 @@
     [slopeVC removeManualMeasurementButton];
     [slopeVC removeCalDateLabel];
     
-    if (_currentIndex == [_calibrationValues[NVCalibrationArrayIndexValue] count])
-    {
-        _promptLabel.text = @"Calibration Routine is Complete.";
-        
-        [self setTestEditButtonsEnabled:YES];
-        
-        [self saveCalibrationValues];
-        
-        NSDate *date = NSDate.date;
-        
-        [SharedDefaults.defaults saveDate:date
-                                   forKey:@"LastCalDate"];
-        
-        NSString *dateString = [NSDateFormatter localizedStringFromDate:date
-                                                              dateStyle:NSDateFormatterLongStyle
-                                                              timeStyle:NSDateFormatterLongStyle];
+    NSUInteger selectedCount = SharedDefaults.defaults.calibrationValueSelectedCount;
     
-        NSString *lastCalString = [NSString stringWithFormat:@"Calibrated on %@", dateString];
-        _lastCalibrationlabel.text = lastCalString;
-        
-        [SharedDefaults.defaults saveString:lastCalString
-                                     forKey:@"LastCalString"];
-        
-        _nextPromptText = _promptLabel.text;
-    }
-    
-    else
+    if (_currentIndex < selectedCount && selectedCount > 1)
     {
         index = ((_currentIndex + 2) / 2);
         
@@ -372,11 +361,25 @@
 {
     _currentType = NVCalibrationTypeDefault;
     
-    GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
-                                                                                          flipRadius:0.0
-                                                                                      useCalibration:YES
-                                                                                      displayDegrees:(_currentType == NVCalibrationTypeDegrees)
-                                                                                            delegate:self];
+    GSSiSlopeViewController *slopeVC = nil;
+    
+    if (_hasBeenCalibrated)
+    {
+        slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
+                                                                     flipRadius:0.0
+                                                                 useCalibration:YES
+                                                                 displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                                       delegate:self];
+    }
+    
+    else
+    {
+        slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
+                                                                     flipRadius:0.0
+                                                                 useCalibration:NO
+                                                                 displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                                       delegate:self];
+    }
     
     [self presentViewController:slopeVC
                        animated:YES
@@ -384,7 +387,6 @@
     
     [slopeVC removeManualMeasurementButton];
     [slopeVC removeCalDateLabel];
-    slopeVC.displayDegrees = YES;
 }
 
 - (void)editButtonTapped:(UIButton *)button
@@ -435,21 +437,6 @@
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
              didReturnSlopeData:(NVSlopeData)slopeData
 {
-    switch (_currentType)
-    {
-        case NVCalibrationTypeRunningSlope:
-            break;
-            
-        case NVCalibrationTypeDegrees:
-            break;
-            
-        case NVCalibrationTypeRiseRun:
-            break;
-            
-        default:
-            break;
-    }
-    
     [controller dismissViewControllerAnimated:YES
                                    completion:nil];
     
@@ -457,6 +444,7 @@
     {
         _currentIndex = 0;
         [self setupCalibrationButtons];
+        [self setTestEditButtonsEnabled:YES];
         _promptLabel.text = @"Place the iPad on the level surface and tap on\n'Calibrate 0.0%' to begin calibration routine.";
         return;
     }
@@ -470,6 +458,34 @@
             _currentIndex++;
             _hasBeenFlipped = NO;
             
+            NSUInteger selectedCount = SharedDefaults.defaults.calibrationValueSelectedCount;
+            
+            if (_currentIndex > selectedCount || selectedCount == 1)
+            {
+                [self saveCalibrationValues];
+                
+                _promptLabel.text = @"Calibration Routine is Complete.";
+                
+                [self setTestEditButtonsEnabled:YES];
+                
+                NSDate *date = NSDate.date;
+                
+                [SharedDefaults.defaults saveDate:date
+                                           forKey:@"LastCalDate"];
+                
+                NSString *dateString = [NSDateFormatter localizedStringFromDate:date
+                                                                      dateStyle:NSDateFormatterLongStyle
+                                                                      timeStyle:NSDateFormatterLongStyle];
+                
+                NSString *lastCalString = [NSString stringWithFormat:@"Calibrated on %@", dateString];
+                _lastCalibrationlabel.text = lastCalString;
+                
+                [SharedDefaults.defaults saveString:lastCalString
+                                             forKey:@"LastCalString"];
+                
+                _currentIndex = 0;
+            }
+
             for (UIButton *buttons in self.view.subviews)
             {
                 if (buttons.tag == _currentIndex + 1)
@@ -504,7 +520,8 @@
                                                                        topButtonText:@"OK"
                                                                     bottomButtonText:nil
                                                                     destructiveIndex:NVLargeAlertIndexNone];
-#pragma unused(alert)
+                
+                alert.tag = 11111;
             }
         }
     }
@@ -512,42 +529,43 @@
 
 - (BOOL)saveCalibrationValues
 {
-    BOOL rtn = TRUE;
+    BOOL rtn = YES;
     
-    NSMutableArray *deviceValuesArray = [[NSMutableArray alloc]init];
-    NSNumber * levelFront = [NSNumber numberWithDouble:(_deviceValues[0][0]+_deviceValues[0][1])/2.0];
-    NSNumber * levelSide = [NSNumber numberWithDouble:(_deviceValues[0][2]+_deviceValues[0][3])/2.0];
+    NSMutableArray *deviceValuesArray = [[NSMutableArray alloc] init];
+    NSNumber *levelFront = [NSNumber numberWithDouble:(_deviceValues[0][0]+_deviceValues[0][1]) / 2.0];
+    NSNumber *levelSide = [NSNumber numberWithDouble:(_deviceValues[0][2]+_deviceValues[0][3]) / 2.0];
     [deviceValuesArray addObject:levelFront];
     [deviceValuesArray addObject:levelSide];
+    
     for (int i = 1; i < [_calibrationValues[NVCalibrationArrayIndexValue] count]; i++)
     {
         BOOL selected = [_calibrationValues[NVCalibrationArrayIndexSelected][i] boolValue];
         
         if (!selected)
             break;
-        NSNumber * frontUpslope = [NSNumber numberWithDouble:_deviceValues[i][0]];
-        NSNumber * frontDownslope = [NSNumber numberWithDouble:_deviceValues[i][1]];
+        
+        int j = ((i - 1) * 2 + 1);
+        NSNumber *frontUpslope = [NSNumber numberWithDouble:_deviceValues[j][0]];
+        NSNumber *frontDownslope = [NSNumber numberWithDouble:_deviceValues[j][1]];
         [deviceValuesArray addObject:frontUpslope];
         [deviceValuesArray addObject:frontDownslope];
         
-        NSNumber * sideUpslope = [NSNumber numberWithDouble:_deviceValues[i][2]];
-        NSNumber * sideDownslope = [NSNumber numberWithDouble:_deviceValues[i][3]];
+        NSNumber *sideUpslope = [NSNumber numberWithDouble:_deviceValues[j+1][2]];
+        NSNumber *sideDownslope = [NSNumber numberWithDouble:_deviceValues[j+1][3]];
         [deviceValuesArray addObject:sideUpslope];
         [deviceValuesArray addObject:sideDownslope];
-        
     }
+    
     NSMutableArray *valuesArray = [_calibrationValues[NVCalibrationArrayIndexValue] mutableCopy];
     NSMutableArray *typesArray = [_calibrationValues[NVCalibrationArrayIndexType] mutableCopy];
     NSMutableArray *selectedArray = [_calibrationValues[NVCalibrationArrayIndexSelected] mutableCopy];
+    NSArray *newArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
     
-    
-    NSArray *newArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray,nil];
-    
-
     [SharedDefaults.defaults saveCalibrationValueArray:newArray];
 
     return rtn;
 }
+
 - (BOOL)shouldUseCalibration:(GSSiSlopeViewController *)controller
 {
     return YES;
@@ -590,7 +608,7 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
         cell.accessoryView = nil;
         
         VerticalSegmentedControl *segControl = [[VerticalSegmentedControl alloc]
-                                                initWithSectionTitles:@[@"Running Slope", @"Slope Angle", @"Rise Run"]];
+                                                initWithSectionTitles:@[@"Running Slope", @"Slope Angle"]];
         
         segControl.frame = CGRectMake(80.0, 10.0, 280.0, (tableView.rowHeight - 20.0));
         segControl.backgroundColor = UIColor.blackColor;
@@ -598,7 +616,7 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
         segControl.layer.masksToBounds = YES;
         segControl.textColor = UIColor.grayColor;
         segControl.selectedTextColor = UIColor.whiteColor;
-        segControl.textFont = [UIFont boldSystemFontOfSize:32.0];
+        segControl.textFont = [UIFont boldSystemFontOfSize:36.0];
         segControl.selectionIndicatorThickness = 0.0;
         segControl.textAlignment = VerticalSegmentedControlTextAlignmentCenter;
         segControl.selectedSegmentIndex = (_newType - 1);
@@ -778,6 +796,37 @@ viewForHeaderInSection:(NSInteger)section
 
 - (void)dismissTableView:(UIButton *)button
 {
+    NSUInteger selected = SharedDefaults.defaults.calibrationValueSelectedCount;
+    CGFloat range = SharedDefaults.defaults.calibrationValueMinRange;
+    
+    if (selected == 1)
+    {
+        NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
+                                                                    delegate:self
+                                                                       title:@"At least 2 values are required to calibrate your device. You currently have only 1 selected value. You will need to select or add an additional value before calibrating."
+                                                               topButtonText:@"OK"
+                                                            bottomButtonText:nil
+                                                            destructiveIndex:NVLargeAlertIndexNone];
+        alert.tag = 22222;
+    }
+    
+    else if (range < 1.0)
+    {
+        NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
+                                                                    delegate:self
+                                                                       title:@"Calibration values must be at least 1\u00B0 apart and must be in ascending slope order. You will need to fix this by removing and/or adding values before calibrating."
+                                                               topButtonText:@"OK"
+                                                            bottomButtonText:nil
+                                                            destructiveIndex:NVLargeAlertIndexNone];
+        alert.tag = 22222;
+    }
+    
+    else
+        [self handleTableViewDismissal];
+}
+
+- (void)handleTableViewDismissal
+{
     for (UIView *views in self.view.subviews)
     {
         if (views.tag == 111 || views.tag == 222)
@@ -949,25 +998,34 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
 {
     if (buttonIndex == NVLargeAlertIndexTopButton)
     {
-        GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
-                                                                                              flipRadius:0.0
-                                                                                          useCalibration:NO
-                                                                                          displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
-                                                                                                delegate:self];
+        if (largeAlertView.tag == 11111)
+        {
+            GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
+                                                                                                  flipRadius:0.0
+                                                                                              useCalibration:NO
+                                                                                              displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
+                                                                                                    delegate:self];
+            
+            slopeVC.promptText = @"";
+            
+            [self presentViewController:slopeVC
+                               animated:YES
+                             completion:nil];
+            
+            [slopeVC removeManualMeasurementButton];
+            [slopeVC removeCalDateLabel];
+            
+            _promptLabel.text = _nextPromptText;
+            
+            [largeAlertView hideLargeAlertView:NO];
+        }
         
-        slopeVC.promptText = @"";
-        
-        [self presentViewController:slopeVC
-                           animated:YES
-                         completion:nil];
-        
-        [slopeVC removeManualMeasurementButton];
-        [slopeVC removeCalDateLabel];
-        
-        _promptLabel.text = _nextPromptText;
+        else if (largeAlertView.tag == 22222)
+        {
+            [largeAlertView hideLargeAlertView:NO];
+            [self handleTableViewDismissal];
+        }
     }
-    
-    [largeAlertView hideLargeAlertView:NO];
 }
 
 @end
