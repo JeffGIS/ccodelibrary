@@ -56,6 +56,7 @@
 #import "NVTwoTextAlert.h"
 #import "UIApplication+VersionBuild.h"
 #import "NVCalibrationController.h"
+#import "CurbRampData.h"
 
 @interface CCodeLibrary : NSObject
 

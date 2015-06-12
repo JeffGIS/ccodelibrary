@@ -25,7 +25,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
         self.path = [NSBundle.mainBundle pathForResource:@"places"
                                                   ofType:@"sqlite3"];
         
-        self.isOpen = SQLOK(sqlite3_open(self.path.UTF8String, &_database), "init(Places)");
+        self.isOpen = SQLOK(sqlite3_open(self.path.UTF8String, &_database),_database);
         NSLog(@"Places Database init");
     }
     
@@ -43,7 +43,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
 {
     if (!self.isOpen)
     {
-        self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), "open(Places)");
+        self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database),_database);
         NSLog(@"Places Database open");
     }
 }
@@ -66,7 +66,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT name, geoid FROM places WHERE statefp=%i", code];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getCityList");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
         while (sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -95,7 +95,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT bounds_w, bounds_s, bounds_e, bounds_n FROM places WHERE geoid=%i", geoid];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getPlaceBounds");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -124,7 +124,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     NSString *placeName = @"";
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getPlaceName");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -146,7 +146,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     int statefp = -1;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getPlaceStatefp");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
         statefp = (int)sqlite3_column_int(statement, 0);
@@ -164,7 +164,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT name, statefp, bounds_w, bounds_s, bounds_e, bounds_n FROM places WHERE geoid=%i", geoid];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getPlaceInfo");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -201,7 +201,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT name, statefp, bounds_w, bounds_s, bounds_e, bounds_n FROM places WHERE geoid=%i", geoid];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "addLocationToList");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -235,7 +235,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     NSString *stateCode = @"";
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getStateCodeForStatefp");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -256,7 +256,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     NSString *stateName = @"";
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getStateNameForStatefp");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -277,7 +277,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     int statefp = -1;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getStatefpForStateName");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
         statefp = (int)sqlite3_column_int(statement, 0);
@@ -294,7 +294,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     int statefp = -1;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getStatefpForStateCode");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
         statefp = (int)sqlite3_column_int(statement, 0);
@@ -312,7 +312,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT statename FROM states"];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "stateList");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
