@@ -129,7 +129,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     }
     
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
-    _steadyDiff = 0.015;
+    _steadyDiff = 0.0087;
     _maxX = _maxY = _maxZ = -10.0;
     _minX = _minY = _minZ = 10.0;
     _status = SCStatusStart;
@@ -425,7 +425,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     NSArray *calibrationValues = [SharedDefaults.defaults calibrationValueArray];
     NSArray *targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
     _nCalibrationPoints = targetValues.count;
-    int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][1] integerValue];
+    int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][0] integerValue];
     _displayDegrees = (currentType == NVCalibrationTypeDegrees);
         
     if (_nCalibrationPoints > 1 && _nCalibrationPoints < 6)
@@ -445,10 +445,13 @@ typedef NS_ENUM(NSInteger, SCStatus)
             int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] integerValue];
             
             if (currentType == NVCalibrationTypeRunningSlope)
-                _targetValues[i] = (atan(_targetValues[i]/100.0) * RADtoDEG);
+                _targetValues[i] = (atan(_targetValues[i] / 100.0) * RADtoDEG);
             
             for (int j = 0; j < 4; j++)
-                _deviceVals[i][j] = [(NSNumber *)deviceValuesArray[dvIndex++] doubleValue];
+            {
+                if ((dvIndex + 1) < [calibrationValues[NVCalibrationArrayDeviceValues] count])
+                    _deviceVals[i][j] = [(NSNumber *)deviceValuesArray[dvIndex++] doubleValue];
+            }
         }
         
         rtn = YES;
