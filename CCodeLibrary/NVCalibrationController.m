@@ -520,7 +520,8 @@ static CGFloat _deviceValues[9][4];
                                                                        topButtonText:@"OK"
                                                                     bottomButtonText:nil
                                                                     destructiveIndex:NVLargeAlertIndexNone];
-#pragma unused(alert)
+                
+                alert.tag = 11111;
             }
         }
     }
@@ -607,7 +608,7 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
         cell.accessoryView = nil;
         
         VerticalSegmentedControl *segControl = [[VerticalSegmentedControl alloc]
-                                                initWithSectionTitles:@[@"Running Slope", @"Slope Angle", @"Rise Run"]];
+                                                initWithSectionTitles:@[@"Running Slope", @"Slope Angle"]];
         
         segControl.frame = CGRectMake(80.0, 10.0, 280.0, (tableView.rowHeight - 20.0));
         segControl.backgroundColor = UIColor.blackColor;
@@ -615,7 +616,7 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
         segControl.layer.masksToBounds = YES;
         segControl.textColor = UIColor.grayColor;
         segControl.selectedTextColor = UIColor.whiteColor;
-        segControl.textFont = [UIFont boldSystemFontOfSize:32.0];
+        segControl.textFont = [UIFont boldSystemFontOfSize:36.0];
         segControl.selectionIndicatorThickness = 0.0;
         segControl.textAlignment = VerticalSegmentedControlTextAlignmentCenter;
         segControl.selectedSegmentIndex = (_newType - 1);
@@ -795,6 +796,37 @@ viewForHeaderInSection:(NSInteger)section
 
 - (void)dismissTableView:(UIButton *)button
 {
+    NSUInteger selected = SharedDefaults.defaults.calibrationValueSelectedCount;
+    CGFloat range = SharedDefaults.defaults.calibrationValueMinRange;
+    
+    if (selected == 1)
+    {
+        NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
+                                                                    delegate:self
+                                                                       title:@"At least 2 values are required to calibrate your device. You currently have only 1 selected value. You will need to select or add an additional value before calibrating."
+                                                               topButtonText:@"OK"
+                                                            bottomButtonText:nil
+                                                            destructiveIndex:NVLargeAlertIndexNone];
+        alert.tag = 22222;
+    }
+    
+    else if (range < 1.0)
+    {
+        NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
+                                                                    delegate:self
+                                                                       title:@"Calibration values must be at least 1\u00B0 apart and must be in ascending slope order. You will need to fix this by removing and/or adding values before calibrating."
+                                                               topButtonText:@"OK"
+                                                            bottomButtonText:nil
+                                                            destructiveIndex:NVLargeAlertIndexNone];
+        alert.tag = 22222;
+    }
+    
+    else
+        [self handleTableViewDismissal];
+}
+
+- (void)handleTableViewDismissal
+{
     for (UIView *views in self.view.subviews)
     {
         if (views.tag == 111 || views.tag == 222)
@@ -966,25 +998,34 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
 {
     if (buttonIndex == NVLargeAlertIndexTopButton)
     {
-        GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
-                                                                                              flipRadius:0.0
-                                                                                          useCalibration:NO
-                                                                                          displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
-                                                                                                delegate:self];
+        if (largeAlertView.tag == 11111)
+        {
+            GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
+                                                                                                  flipRadius:0.0
+                                                                                              useCalibration:NO
+                                                                                              displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
+                                                                                                    delegate:self];
+            
+            slopeVC.promptText = @"";
+            
+            [self presentViewController:slopeVC
+                               animated:YES
+                             completion:nil];
+            
+            [slopeVC removeManualMeasurementButton];
+            [slopeVC removeCalDateLabel];
+            
+            _promptLabel.text = _nextPromptText;
+            
+            [largeAlertView hideLargeAlertView:NO];
+        }
         
-        slopeVC.promptText = @"";
-        
-        [self presentViewController:slopeVC
-                           animated:YES
-                         completion:nil];
-        
-        [slopeVC removeManualMeasurementButton];
-        [slopeVC removeCalDateLabel];
-        
-        _promptLabel.text = _nextPromptText;
+        else if (largeAlertView.tag == 22222)
+        {
+            [largeAlertView hideLargeAlertView:NO];
+            [self handleTableViewDismissal];
+        }
     }
-    
-    [largeAlertView hideLargeAlertView:NO];
 }
 
 @end

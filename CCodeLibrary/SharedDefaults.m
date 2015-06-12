@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "SharedDefaults.h"
+#import "MathUtil.h"
 
 @implementation SharedDefaults
 
@@ -288,6 +289,41 @@ static SharedDefaults *_defaults;
     }
     
     return count;
+}
+
+- (CGFloat)calibrationValueMinRange
+{
+    CGFloat range = 100.0;
+    
+    NSArray *defaultArray = [_defaults arrayForKey:@"CalibrationValueArray"];
+    NSArray *valuesArray = defaultArray[NVCalibrationArrayIndexValue];
+    NSArray *typesArray = defaultArray[NVCalibrationArrayIndexType];
+    
+    if (valuesArray.count > 1)
+    {
+        for (int i = 0; i < valuesArray.count; i++)
+        {
+            for (int j = 0; j < valuesArray.count; j++)
+            {
+                if (i < j)
+                {
+                    CGFloat iVal = [valuesArray[i] floatValue];
+                    CGFloat jVal = [valuesArray[j] floatValue];
+                    
+                    if ([typesArray[i] integerValue] == NVCalibrationTypeRunningSlope)
+                        iVal = (atan(iVal / 100) * RADtoDEG);
+                    
+                    if ([typesArray[j] integerValue] == NVCalibrationTypeRunningSlope)
+                        jVal = (atan(jVal / 100) * RADtoDEG);
+                    
+                    CGFloat diff = (jVal - iVal);
+                    range = min(range, diff);
+                }
+            }
+        }
+    }
+    
+    return range;
 }
 
 @end

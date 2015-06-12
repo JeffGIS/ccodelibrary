@@ -38,6 +38,7 @@ typedef struct NVSlopeTestData {
     CGFloat manualHeading;
     CGFloat batteryLevel;
     UIDeviceOrientation orientation;
+    NSTimeInterval time;
 } NVSlopeTestData;
 
 @class NVTestSlopeController;
