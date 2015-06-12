@@ -445,11 +445,11 @@ typedef NS_ENUM(NSInteger, SCStatus)
             int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] integerValue];
             
             if (currentType == NVCalibrationTypeRunningSlope)
-                _targetValues[i] = (atan(_targetValues[i] / 100.0) * RADtoDEG);
+                _targetValues[i] = ((_targetValues[i] / 100.0) * RADtoDEG);
             
             for (int j = 0; j < 4; j++)
             {
-                if ((dvIndex + 1) < [calibrationValues[NVCalibrationArrayDeviceValues] count])
+                if ((dvIndex + 1) < deviceValuesArray.count)
                     _deviceVals[i][j] = [(NSNumber *)deviceValuesArray[dvIndex++] doubleValue];
             }
         }
@@ -463,10 +463,10 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (CGFloat)adjustSlope:(CGFloat)slope
            isSideSlope:(BOOL)isSideSlope
 {
-    CGFloat adjustedSlope;
-    CGFloat priorValue;
-    CGFloat trueDegreesPerDeviceDegree;
-    int index, i;
+    CGFloat adjustedSlope = 0.0;
+    CGFloat priorValue = 0.0;
+    CGFloat trueDegreesPerDeviceDegree = 0.0;
+    int index = 0, i = 0;
     
     if (!_useCalibration)
         return slope;
@@ -485,8 +485,10 @@ typedef NS_ENUM(NSInteger, SCStatus)
     else
     {
         priorValue = _deviceVals[0][0];
+        
         if (slope < priorValue)
             index = 1;
+        
         else
             index = 0;
     }

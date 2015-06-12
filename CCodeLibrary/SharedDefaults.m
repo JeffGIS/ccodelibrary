@@ -87,7 +87,7 @@ static SharedDefaults *_defaults;
         // value[8] is left side slope for calibration slope 2, value[9] is right side slope for calibration slope 2,
         // etc
         
-        NSArray *deviceValuesArray = @[@(0.0), @(4.74)];
+        NSArray *deviceValuesArray = @[@(0.0), @(4.755)];
         
         defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
         
