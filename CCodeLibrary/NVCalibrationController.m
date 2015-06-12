@@ -308,8 +308,9 @@ static CGFloat _deviceValues[9][4];
     [slopeVC removeManualMeasurementButton];
     [slopeVC removeCalDateLabel];
     
-    if (_currentIndex < [_calibrationValues[NVCalibrationArrayIndexValue] count] &&
-        [_calibrationValues[NVCalibrationArrayIndexValue] count] > 1)
+    NSUInteger selectedCount = SharedDefaults.defaults.calibrationValueSelectedCount;
+    
+    if (_currentIndex < selectedCount && selectedCount > 1)
     {
         index = ((_currentIndex + 2) / 2);
         
@@ -457,8 +458,9 @@ static CGFloat _deviceValues[9][4];
             _currentIndex++;
             _hasBeenFlipped = NO;
             
-            if (_currentIndex > [_calibrationValues[NVCalibrationArrayIndexValue] count] ||
-                [_calibrationValues[NVCalibrationArrayIndexValue] count] == 1)
+            NSUInteger selectedCount = SharedDefaults.defaults.calibrationValueSelectedCount;
+            
+            if (_currentIndex > selectedCount || selectedCount == 1)
             {
                 [self saveCalibrationValues];
                 

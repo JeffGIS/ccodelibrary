@@ -87,7 +87,7 @@ static SharedDefaults *_defaults;
         // value[8] is left side slope for calibration slope 2, value[9] is right side slope for calibration slope 2,
         // etc
         
-        NSArray *deviceValuesArray = @[@(0.0), @(4.755)];
+        NSArray *deviceValuesArray = @[@(0.0), @(4.745)];
         
         defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
         
@@ -270,6 +270,24 @@ static SharedDefaults *_defaults;
         
         [_defaults synchronize];
     }
+}
+
+- (NSUInteger)calibrationValueSelectedCount
+{
+    NSUInteger count = 0;
+    
+    NSArray *defaultArray = [_defaults arrayForKey:@"CalibrationValueArray"];
+    NSArray *selectedArray = defaultArray[NVCalibrationArrayIndexSelected];
+    
+    for (int i = 0; i < selectedArray.count; i++)
+    {
+        BOOL selected = [selectedArray[i] boolValue];
+        
+        if (selected)
+            count++;
+    }
+    
+    return count;
 }
 
 @end

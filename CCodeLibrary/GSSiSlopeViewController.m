@@ -445,7 +445,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
             int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] integerValue];
             
             if (currentType == NVCalibrationTypeRunningSlope)
-                _targetValues[i] = ((_targetValues[i] / 100.0) * RADtoDEG);
+                _targetValues[i] = (atan(_targetValues[i] / 100) * RADtoDEG);
             
             for (int j = 0; j < 4; j++)
             {
