@@ -10,7 +10,8 @@ typedef NS_ENUM(NSInteger, PickItemTypes) {
     PTStormSewerPoint,
     PTStormSewerPlat,
     PTAlleyWallPt,
-    PTAlleyLine
+    PTAlleyLine,
+    PTCRIntersectionPt,
 };
 
 @interface PickedItem : NSObject
