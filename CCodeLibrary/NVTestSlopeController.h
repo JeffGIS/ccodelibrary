@@ -3,7 +3,6 @@
 
 #import <UIKit/UIKit.h>
 #import "NVSliderController.h"
-#import "NVLargeAlertView.h"
 
 typedef struct NVSlopeTestData {
     CGFloat accelX;
@@ -32,13 +31,19 @@ typedef struct NVSlopeTestData {
     CGFloat deviceSlopePct;
     CGFloat deviceSideSlopeDegrees;
     CGFloat deviceSideSlopePct;
-    CGFloat manualSlope;
+    CGFloat manualSlopeDegrees;
+    CGFloat manualSlopePct;
+    CGFloat manualSideSlopeDegrees;
+    CGFloat manualSideSlopePct;
     CGFloat magneticHeading;
     CGFloat trueHeading;
     CGFloat manualHeading;
     CGFloat batteryLevel;
     UIDeviceOrientation orientation;
     NSTimeInterval time;
+    CGFloat headingError;
+    CGFloat slopeErrorDegrees;
+    CGFloat sideSlopeErrorDegrees;
 } NVSlopeTestData;
 
 @class NVTestSlopeController;
@@ -52,7 +57,7 @@ typedef struct NVSlopeTestData {
 
 @end
 
-@interface NVTestSlopeController : UIViewController <NVSliderControllerDelegate,NVLargeAlertViewDelegate>
+@interface NVTestSlopeController : UIViewController <NVSliderControllerDelegate>
 
 @property (nonatomic, weak) id <NVTestSlopeControllerDelegate> delegate;
 
