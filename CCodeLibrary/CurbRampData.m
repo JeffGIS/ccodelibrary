@@ -11,18 +11,10 @@
 #import "CRAPI.h"
 int SQLOK(int sqlReturn, sqlite3 *database);
 
-extern int keepProcessing;
 static int fileSequence = 0;
 
 @implementation CurbRampData
 
-
-- (BOOL) continue
-{
-    if (self.processingID == keepProcessing)
-        return YES;
-    return NO;
-}
 
 - (id)init
 {
@@ -79,7 +71,7 @@ static int fileSequence = 0;
     
     if (_isOpen && _fileSize > 0)
     {
-        NSString *query = [NSString stringWithFormat:@"SELECT max(Version) FROM ALLEYWALLS_VERSION"];
+        NSString *query = [NSString stringWithFormat:@"SELECT max(Version) FROM CURBRAMP_VERSION"];
         
         sqlite3_stmt *statement = NULL;
         
