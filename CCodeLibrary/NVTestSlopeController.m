@@ -14,21 +14,18 @@ typedef NS_ENUM(NSInteger, SCStatus)
     SCStatusCancel,
 };
 
-typedef NS_ENUM(NSInteger, ManualMeasurementType)
-{
-    ManualMeasurementTypeDefault,
-    ManualMeasurementTypeHeading,
-    ManualMeasurementTypeSlope,
-};
+#define FRONT 111
+#define SIDE 222
+#define HEADING 333
 
 #define COUNT 60
 
 @interface NVTestSlopeController ()
 
-@property (nonatomic) UIButton *unableButton, *startCancelButton, *manualButton;
+@property (nonatomic) UIButton *unableButton, *startCancelButton, *manualFrontButton, *manualSideButton, *manualHeadingButton;
 @property (nonatomic) UIImageView *arrowView;
 @property (nonatomic) NVProgressView *progressView;
-@property (nonatomic) UILabel *frontSlopeLabel, *sideSlopeLabel, *maxSlopeLabel, *promptLabel;
+@property (nonatomic) UILabel *headingLabel, *frontSlopeLabel, *sideSlopeLabel, *maxSlopeLabel, *promptLabel;
 @property (nonatomic) CGFloat steadyDiff;
 @property (nonatomic) CGFloat xRange, yRange, zRange;
 @property (nonatomic) CGFloat maxX, minX, maxY, minY, maxZ, minZ;
@@ -38,11 +35,9 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
 @property (nonatomic) NVSlopeTestData data;
 @property (nonatomic) NSInteger counter;
 @property (nonatomic) CGFloat sumTrueHeading, sumMagneticHeading;
-@property (nonatomic) UILabel *headingLabel;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) CMMotionManager *motionManager;
 @property SCStatus status;
-@property ManualMeasurementType manualType;
 
 @end
 
@@ -79,7 +74,7 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
     [self setupArrowView];
     [self setupLabels];
     [self setupProgressView];
-    [self setupManualButton];
+    [self setupManualButtons];
     
     _locationManager = [[CLLocationManager alloc] init];
     _locationManager.headingFilter = kCLHeadingFilterNone;
@@ -119,10 +114,11 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
 
 - (void)setupLabels
 {
-    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 614.0, 568.0, 60.0)];
-    _frontSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 684.0, 568.0, 60.0)];
-    _sideSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 754.0, 568.0, 60.0)];
-    _maxSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 824.0, 568.0, 60.0)];
+    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 614.0, 728.0, 60.0)];
+    _frontSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 684.0, 728.0, 60.0)];
+    _sideSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 754.0, 728.0, 60.0)];
+    _maxSlopeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 824.0, 728.0, 60.0)];
+    
     _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 340.0, 728.0, 194.0)];
     
     [self setupLabel:_headingLabel];
@@ -157,22 +153,54 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
     _progressView.hidden = YES;
 }
 
-- (void)setupManualButton
+- (void)setupManualButtons
 {
-    _manualButton = [[UIButton alloc] initWithFrame:CGRectMake(104.0, (((_promptLabel.center.y * 2.0) + _headingLabel.center.y) / 3.0),
-                                                               560.0, 80.0)];
+    _manualFrontButton = [[UIButton alloc] initWithFrame:CGRectMake(40.0, (((_promptLabel.center.y * 2.0) + _headingLabel.center.y) / 3.0),
+                                                                    216.0, 80.0)];
     
-    [_manualButton addTarget:self
-                      action:@selector(manual:)
-            forControlEvents:UIControlEventTouchUpInside];
+    _manualSideButton = [[UIButton alloc] initWithFrame:CGRectMake(276.0, (((_promptLabel.center.y * 2.0) + _headingLabel.center.y) / 3.0),
+                                                                   216.0, 80.0)];
     
-    _manualButton.hidden = YES;
+    _manualHeadingButton = [[UIButton alloc] initWithFrame:CGRectMake(512.0, (((_promptLabel.center.y * 2.0) + _headingLabel.center.y) / 3.0),
+                                                                   216.0, 80.0)];
     
-    [self setupButton:_manualButton
-                title:@"Manual Measurement"];
+    _manualFrontButton.tag = FRONT;
+    _manualSideButton.tag = SIDE;
+    _manualHeadingButton.tag = HEADING;
     
-    _manualButton.titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
-    _manualButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    [_manualFrontButton addTarget:self
+                           action:@selector(manual:)
+                 forControlEvents:UIControlEventTouchUpInside];
+    
+    [_manualSideButton addTarget:self
+                          action:@selector(manual:)
+                forControlEvents:UIControlEventTouchUpInside];
+    
+    [_manualHeadingButton addTarget:self
+                             action:@selector(manual:)
+                   forControlEvents:UIControlEventTouchUpInside];
+    
+    _manualFrontButton.hidden = YES;
+    _manualSideButton.hidden = YES;
+    _manualHeadingButton.hidden = YES;
+    
+    [self setupButton:_manualFrontButton
+                title:@"Front"];
+    
+    [self setupButton:_manualSideButton
+                title:@"Side"];
+    
+    [self setupButton:_manualHeadingButton
+                title:@"Heading"];
+    
+    _manualFrontButton.titleLabel.font = [UIFont boldSystemFontOfSize:44.0];
+    _manualFrontButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    
+    _manualSideButton.titleLabel.font = [UIFont boldSystemFontOfSize:44.0];
+    _manualSideButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    
+    _manualHeadingButton.titleLabel.font = [UIFont boldSystemFontOfSize:44.0];
+    _manualHeadingButton.titleLabel.adjustsFontSizeToFitWidth = YES;
 }
 
 - (void)setupButton:(UIButton *)button
@@ -275,13 +303,42 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
 
 - (void)manual:(UIButton *)button
 {
-    NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
-                                                                delegate:self
-                                                                   title:@"Which Manual Measurement Type?"
-                                                           topButtonText:@"Heading"
-                                                        bottomButtonText:@"Slope"
-                                                        destructiveIndex:NVLargeAlertIndexNone];
-#pragma unused(alert)
+    CGFloat value = 0.0, radius = 0.0;
+    
+    switch (button.tag)
+    {
+        case HEADING:
+            value = _data.trueHeading;
+            radius = 30.0;
+            break;
+            
+        case FRONT:
+            value = _data.deviceSlopePct;
+            radius = 4.0;
+            break;
+            
+        case SIDE:
+            value = _data.deviceSideSlopePct;
+            radius = 4.0;
+            break;
+            
+        default:
+            break;
+    }
+    
+    NVSliderController *slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                                      width:728.0
+                                                                 startValue:value
+                                                                   minValue:(value - radius)
+                                                                   maxValue:(value + radius)
+                                                                   delegate:self
+                                                              configuration:NVSliderConfigurationManualSlope];
+    
+    slider.tag = button.tag;
+    
+    [slider showSliderControllerInView:self.view
+                              animated:YES
+                               overlay:YES];
 }
 
 - (void)startMotionManager
@@ -447,10 +504,17 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
 
 - (void)slopeMeasurementComplete
 {
-    _headingLabel.text = [NSString stringWithFormat:@"Device Heading = %.02f\u00B0", _data.trueHeading];
-    _frontSlopeLabel.text = [NSString stringWithFormat:@"Manual Heading = %.02f\u00B0", _data.manualHeading];
-    _sideSlopeLabel.text = [NSString stringWithFormat:@"Device Slope = %+.02f%%", _data.deviceSlopeDegrees];
-    _maxSlopeLabel.text = [NSString stringWithFormat:@"Manual Slope = %+.02f%%", _data.manualSlope];
+    _headingLabel.text = [NSString stringWithFormat:@"H: %.02f\u00B0 | %.02f\u00B0",
+                          _data.trueHeading, _data.manualHeading];
+    
+    _frontSlopeLabel.text = [NSString stringWithFormat:@"FS: %+.02f%%(%+.02f\u00B0) | %+.02f%%(%+.02f\u00B0)",
+                             _data.deviceSlopePct, _data.deviceSlopeDegrees, _data.manualSlopePct, _data.manualSlopeDegrees];
+    
+    _sideSlopeLabel.text = [NSString stringWithFormat:@"SS: %+.02f%%(%+.02f\u00B0) | %+.02f%%(%+.02f\u00B0)",
+                            _data.deviceSideSlopePct, _data.deviceSideSlopeDegrees, _data.manualSideSlopePct, _data.manualSideSlopeDegrees];
+    
+    _maxSlopeLabel.text = [NSString stringWithFormat:@"E: (fs)%+.02f\u00B0 | (ss)%+.02f\u00B0 | (h)%+.02f\u00B0",
+                           _data.slopeErrorDegrees, _data.sideSlopeErrorDegrees, _data.headingError];
     
     _promptLabel.text = @"Press 'Done' to continue inventory.";
     
@@ -462,7 +526,9 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
     [self updateButtonAppearance:_unableButton];
     
     _progressView.hidden = YES;
-    _manualButton.hidden = NO;
+    _manualFrontButton.hidden = NO;
+    _manualSideButton.hidden = NO;
+    _manualHeadingButton.hidden = NO;
 }
 
 - (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
@@ -478,21 +544,50 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
 - (void)sliderView:(NVSliderController *)sliderView
     didReturnValue:(CGFloat)value
 {
-    switch (_manualType)
+    switch (sliderView.tag)
     {
-        case ManualMeasurementTypeHeading:
+        case HEADING:
             _data.manualHeading = value;
-            _frontSlopeLabel.text = [NSString stringWithFormat:@"Manual Heading = %.02f\u00B0", _data.manualHeading];
+            _data.headingError = (_data.trueHeading - _data.manualHeading);
+            
+            _headingLabel.text = [NSString stringWithFormat:@"H: %.02f\u00B0 | %.02f\u00B0",
+                                  _data.trueHeading, _data.manualHeading];
+            
+            _manualHeadingButton.layer.borderColor = UIColor.greenColor.CGColor;
+            _manualHeadingButton.layer.borderWidth = 4.0;
+            
             break;
             
-        case ManualMeasurementTypeSlope:
-            _data.manualSlope = value;
-            _maxSlopeLabel.text = [NSString stringWithFormat:@"Manual Slope = %+.02f%%", _data.manualSlope];
+        case FRONT:
+            _data.manualSlopePct = value;
+            _data.manualSlopeDegrees = (atan(value / 100) * RADtoDEG);
+            _data.slopeErrorDegrees = (_data.deviceSlopeDegrees - _data.manualSlopeDegrees);
+            
+            _frontSlopeLabel.text = [NSString stringWithFormat:@"FS: %+.02f%%(%+.02f\u00B0) | %+.02f%%(%+.02f\u00B0)",
+                                     _data.deviceSlopePct, _data.deviceSlopeDegrees, _data.manualSlopePct, _data.manualSlopeDegrees];
+            
+            _manualFrontButton.layer.borderColor = UIColor.greenColor.CGColor;
+            _manualFrontButton.layer.borderWidth = 4.0;
+            break;
+            
+        case SIDE:
+            _data.manualSideSlopePct = value;
+            _data.manualSideSlopeDegrees = (atan(value / 100) * RADtoDEG);
+            _data.sideSlopeErrorDegrees = (_data.deviceSideSlopeDegrees - _data.manualSideSlopeDegrees);
+            
+            _sideSlopeLabel.text = [NSString stringWithFormat:@"SS: %+.02f%%(%+.02f\u00B0) | %+.02f%%(%+.02f\u00B0)",
+                                    _data.deviceSideSlopePct, _data.deviceSideSlopeDegrees, _data.manualSideSlopePct, _data.manualSideSlopeDegrees];
+            
+            _manualSideButton.layer.borderColor = UIColor.greenColor.CGColor;
+            _manualSideButton.layer.borderWidth = 4.0;
             break;
         
         default:
             break;
     }
+    
+    _maxSlopeLabel.text = [NSString stringWithFormat:@"E: (fs)%+.02f\u00B0 | (ss)%+.02f\u00B0 | (h)%+.02f\u00B0",
+                           _data.slopeErrorDegrees, _data.sideSlopeErrorDegrees, _data.headingError];
     
     [sliderView hideSliderController:YES];
 }
@@ -500,44 +595,6 @@ typedef NS_ENUM(NSInteger, ManualMeasurementType)
 - (void)sliderViewDidCancel:(NVSliderController *)sliderView
 {
     [sliderView hideSliderController:YES];
-}
-
-- (void)largeAlertView:(NVLargeAlertView *)largeAlertView
-   didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
-{
-    CGFloat value = 0.0, radius = 0.0;
-    
-    switch (buttonIndex)
-    {
-        case NVLargeAlertIndexTopButton:
-            _manualType = ManualMeasurementTypeHeading;
-            value = _data.trueHeading;
-            radius = 30.0;
-            break;
-            
-        case NVLargeAlertIndexBottomButton:
-            _manualType = ManualMeasurementTypeSlope;
-            value = _data.deviceSlopeDegrees;
-            radius = 4.0;
-            break;
-            
-        default:
-            break;
-    }
-    
-    [largeAlertView hideLargeAlertView:NO];
-    
-    NVSliderController *slider = [[NVSliderController alloc] initWithCenter:self.view.center
-                                                                      width:728.0
-                                                                 startValue:value
-                                                                   minValue:(value - radius)
-                                                                   maxValue:(value + radius)
-                                                                   delegate:self
-                                                              configuration:NVSliderConfigurationManualSlope];
-    
-    [slider showSliderControllerInView:self.view
-                              animated:YES
-                               overlay:YES];
 }
 
 @end
