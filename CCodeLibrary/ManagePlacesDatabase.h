@@ -3,6 +3,8 @@
 
 #import <sqlite3.h>
 
+int SQLOK(int sqlReturn, sqlite3 *database);
+
 @interface ManagePlacesDatabase : NSObject
 
 @property BOOL isOpen;
