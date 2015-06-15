@@ -434,7 +434,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
         NSArray *deviceValuesArray = [calibrationValues[NVCalibrationArrayDeviceValues] copy];
         NSNumber *num = deviceValuesArray[0];
         _deviceVals[0][0] = num.doubleValue;
-        num = deviceValuesArray[1];
+        //num = deviceValuesArray[1];
         _deviceVals[0][1] = [(NSNumber *)deviceValuesArray[1] doubleValue];
         int dvIndex = 2;
         
@@ -539,15 +539,15 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)slopesFromAccelerometer:(int)nReadings
 {
     CGFloat denom = sqrt(square(_data.accelX[0]) + square(_data.accelY[0]) + square(_data.accelZ[0]));
-    CGFloat angz = acos(_data.accelZ[0] / denom);
+    //CGFloat angz = acos(_data.accelZ[0] / denom);
     CGFloat angy = acos(_data.accelY[0] / denom);
     CGFloat angx = acos(_data.accelX[0] / denom);
     angx *= RADtoDEG;
     angy *= RADtoDEG;
-    angz *= RADtoDEG;
+    //angz *= RADtoDEG;
     angx = (angx - 90.0);
     angy = (angy - 90.0);
-    angz = (180.0 - angz);
+    //angz = (180.0 - angz);
     _lastDegrees = angy;
     
     _data.frontSlopeDegrees = [self adjustSlope:angy
@@ -812,7 +812,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f%%", _data.frontSlopePct];
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f%%", _data.sideSlopePct];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f%%", _data.maxSlopePct];
-        _maxSlopeLabel.text = [NSString stringWithFormat:@"%.3f %ld %.1f %.1f", _lastDegrees,_headingCounter,_minHead,_maxHead];
+        _maxSlopeLabel.text = [NSString stringWithFormat:@"%.3f %ld %.1f %.1f", _lastDegrees,(long)_headingCounter,_minHead,_maxHead];
     }
     
     _promptLabel.text = @"Press 'Done' to continue.";
