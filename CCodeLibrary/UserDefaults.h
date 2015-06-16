@@ -136,5 +136,6 @@
                    andFrame:(CGRect)frame;
 
 - (NSString *)reverseString:(NSString *)string;
+- (NSArray *)mapTypes;
 
 @end

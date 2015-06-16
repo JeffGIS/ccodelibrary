@@ -1214,4 +1214,9 @@ static UserDefaults *_defaults;
     return reversedString;
 }
 
+- (NSArray *)mapTypes
+{
+    return @[@"Completion Status", @"Ramp Issues", @"Data Quality"];
+}
+
 @end
