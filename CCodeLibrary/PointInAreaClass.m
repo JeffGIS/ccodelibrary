@@ -16,11 +16,11 @@
     if (self)
     {
         void *bmData = NULL;
-        self.colorSpace = CGColorSpaceCreateDeviceGray();
-        self.width = 2048;
-        self.height = 2048;
-        self.context = createBitmapContext(self.width, self.height, self.colorSpace, &bmData);
-        self.bitmapData = bmData;
+        _colorSpace = CGColorSpaceCreateDeviceGray();
+        _width = 2048;
+        _height = 2048;
+        _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
+        _bitmapData = bmData;
         self.areaFile = CRAPI.sharedInstance.placeAreaFile;
     }
     
@@ -40,9 +40,9 @@
 
 - (void)setAreaFile:(NSString *)areaFile
 {
-    self.bounds = getAreaFileBounds(areaFile.UTF8String);
+    _bounds = getAreaFileBounds(areaFile.UTF8String);
     
-    if (self.context)
+    if (_context)
         [self loadAreaIntoContext:areaFile];
     
 }
@@ -139,7 +139,7 @@ dbounds getAreaFileBounds (const char * areaFile)
 
 - (void)drawAreaInContext:(CGContextRef)context
 {
-    FILE *fid = fopen(self.areaFile.UTF8String, "rb");
+    FILE *fid = fopen(_areaFile.UTF8String, "rb");
     int nLoops, nPoints, ix, iy;
     int *pnPointsInLoop = 0;
     bounds bnds;
