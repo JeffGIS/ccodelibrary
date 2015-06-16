@@ -44,7 +44,7 @@ static int fileSequence = 0;
         self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"CurbRamp Database open");
         
-        _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
+        _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:_path
                                                                    error:nil].fileSize;
     }
 }

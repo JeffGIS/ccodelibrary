@@ -377,15 +377,15 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)slopesFromAccelerometer:(int)nReadings
 {
     CGFloat denom = sqrt(square(_data.accelX) + square(_data.accelY) + square(_data.accelZ));
-    CGFloat angz = acos(_data.accelZ / denom);
+    //CGFloat angz = acos(_data.accelZ / denom);
     CGFloat angy = acos(_data.accelY / denom);
     CGFloat angx = acos(_data.accelX / denom);
     angx *= RADtoDEG;
     angy *= RADtoDEG;
-    angz *= RADtoDEG;
+    //angz *= RADtoDEG;
     angx = (angx - 90.0);
     angy = (angy - 90.0);
-    angz = (180.0 - angz);
+    //angz = (180.0 - angz);
     _data.deviceSlopeDegrees = angy;
     _data.deviceSideSlopeDegrees = angx;
     _data.deviceSlopePct = tan(_data.deviceSlopeDegrees * DEGtoRAD) * 100;
