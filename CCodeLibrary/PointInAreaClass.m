@@ -15,10 +15,11 @@
     
     if (self)
     {
-        void *bmData;
+        void *bmData = NULL;
         self.colorSpace = CGColorSpaceCreateDeviceGray();
-        self.width = _height = 2048;
-        self.context = createBitmapContext(_width, _height, _colorSpace, &bmData);
+        self.width = 2048;
+        self.height = 2048;
+        self.context = createBitmapContext(self.width, self.height, self.colorSpace, &bmData);
         self.bitmapData = bmData;
         self.areaFile = CRAPI.sharedInstance.placeAreaFile;
     }
@@ -67,8 +68,10 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
                                         bitmapBytesPerRow,
                                         colorSpace,0);
         if (!context)
+        {
             free (bitmapData);
-        
+            bitmapData = NULL;
+        }
     }
     
     *bmData = bitmapData;
