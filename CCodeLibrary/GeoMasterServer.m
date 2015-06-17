@@ -16,14 +16,14 @@
 
 @implementation GeoMasterServer
 
-static GeoMasterServer *_open = nil;
+static GeoMasterServer *statServer = nil;
 
 + (GeoMasterServer *)open
 {
-    if (!_open)
-        _open = [[GeoMasterServer alloc] init];
-    
-    return _open;
+    if (!statServer)
+        statServer = [[GeoMasterServer alloc] init];
+    statServer.output = @"";
+    return statServer;
 }
 
 - (id)init
@@ -37,6 +37,12 @@ static GeoMasterServer *_open = nil;
     }
 
     return self;
+}
+
+- (void)dealloc
+{
+    statServer = nil;
+    NSLog(@"GMServer dealloc");
 }
 
 - (void)closeServer
@@ -313,9 +319,5 @@ static GeoMasterServer *_open = nil;
 	[_messages addObject:message];
 }
 
-- (void)dealloc
-{
-    _open = nil;
-}
 
 @end
