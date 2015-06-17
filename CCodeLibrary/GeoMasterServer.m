@@ -8,10 +8,13 @@
 #import "GeoMasterServer.h"
 #import "Reachability.h"
 
+@interface GeoMasterServer ()
+
+@property (nonatomic) Reachability *reachability;
+
+@end
+
 @implementation GeoMasterServer
-{
-    Reachability *_reachability;
-}
 
 static GeoMasterServer *_open = nil;
 
@@ -36,7 +39,7 @@ static GeoMasterServer *_open = nil;
     return self;
 }
 
-- (void) closeServer
+- (void)closeServer
 {
     if (_openTimer)
         [_openTimer invalidate];
@@ -58,6 +61,7 @@ static GeoMasterServer *_open = nil;
     if (_outputStream)
     {
         [_outputStream close];
+        
         [_outputStream removeFromRunLoop:NSRunLoop.currentRunLoop
                                  forMode:NSDefaultRunLoopMode];
         
@@ -73,6 +77,7 @@ static GeoMasterServer *_open = nil;
     BOOL rtn = NO;
     
     _responseTimeoutInSeconds = connectionTimeoutInSeconds;
+    
     if(remoteHostStatus == NotReachable)
     {
         [self closeServer];
@@ -145,7 +150,7 @@ static GeoMasterServer *_open = nil;
                                                           target:self
                                                         selector:@selector(serverFailedToRespond)
                                                         userInfo:nil
-                                                         repeats:NO];
+                                                        repeats:NO];
     }
 }
 
@@ -162,7 +167,7 @@ static GeoMasterServer *_open = nil;
                                                 userInfo:nil
                                                  repeats:NO];
 	
-    return true;
+    return YES;
 }
 
 - (void)stream:(NSStream *)theStream
@@ -179,8 +184,8 @@ static GeoMasterServer *_open = nil;
             
             _openTimer = nil;
             
-            if (_outputStream && self.delegate && theStream == _outputStream)
-                [self.delegate GMServerDidOpen:self];
+            if (_outputStream && _delegate && theStream == _outputStream)
+                [_delegate GMServerDidOpen:self];
 
 			break;
             
@@ -206,7 +211,7 @@ static GeoMasterServer *_open = nil;
                                                                   length:len
                                                                 encoding:NSUTF8StringEncoding];
                         
-                        _output  = [_output stringByAppendingString:buff];
+                        _output = [_output stringByAppendingString:buff];
                         
                         if (!buffer[origlen - 1])
                         {
@@ -220,7 +225,7 @@ static GeoMasterServer *_open = nil;
                                          withStatus:GMServerStatusOK];
                             }
                             
-							_output = @"";
+							//_output = @"";
 						}
 					}
 				}
@@ -279,7 +284,7 @@ static GeoMasterServer *_open = nil;
 	}
 }
 
-- (void) serverFailedToRespond
+- (void)serverFailedToRespond
 {
     [self closeServer];
     
@@ -307,8 +312,10 @@ static GeoMasterServer *_open = nil;
 {
 	[_messages addObject:message];
 }
--(void) dealloc
+
+- (void)dealloc
 {
     _open = nil;
 }
+
 @end
