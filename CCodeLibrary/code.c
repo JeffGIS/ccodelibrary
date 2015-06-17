@@ -401,20 +401,11 @@ GSSiExitProg (373);
 }
 
 static double ldistp(DPOINT Point1, DPOINT Point2)
-#if ENABLETRACE
-{GSSiEnterProg (379);
-#endif
 {
-{
-#if ENABLETRACE
-GSSiExitProg (379);
-#endif
-    return (sqrt (pow(Point1.x - Point2.x, 2) +
-                  pow(Point1.y - Point2.y, 2)));
-}
-#if ENABLETRACE
-}
-#endif
+    double x = Point1.x - Point2.x;
+    double y = Point1.y - Point2.y;
+    double rtn = x*x + y*y;
+    return sqrt (rtn);
 }
 
 double l2ddistfrom3d (DPOINT3D Point1, DPOINT3D Point2)
@@ -556,6 +547,9 @@ short LINSEC_TOL (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
 
     double X2, Y2, Z1, Z2, DM1, DM2, TOL, ADIFF,  TAZ;
     short       RC;
+    
+    *X3 = 0;
+    *Y3 = 0;
 
       if (INTOL == 0.0) { TOL = 1e-4;}
       else { TOL = INTOL;}
@@ -784,6 +778,8 @@ BOOL PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUB
    	double	PickDist;   
 MNMXCORD WBounds;
 
+    if (nPnts == 0)
+        return FALSE;
 	if (PickNET)
 	{
 		if (!RefInNet (CurrentRefno))
