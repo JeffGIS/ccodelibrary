@@ -778,7 +778,7 @@ BOOL PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUB
    	double	PickDist;   
 MNMXCORD WBounds;
 
-    if (nPnts == 0)
+    if (nPnts <= 0)
         return FALSE;
 	if (PickNET)
 	{
