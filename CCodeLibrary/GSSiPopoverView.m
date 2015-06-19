@@ -184,4 +184,8 @@
     self.popoverLabel.text = title;
 }
 
+- (void)dealloc
+{
+    NSLog(@"Popover dealloc");
+}
 @end

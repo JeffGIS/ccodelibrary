@@ -184,7 +184,7 @@ static FTPDataPull * _statpull = nil;
     assert(request);
     
     int itimeout = request.timeoutInterval;
-    [request setTimeoutInterval:(itimeout / 2)];
+    [request setTimeoutInterval:(itimeout * 1)];
     
     _connection = [NSURLConnection connectionWithRequest:request
                                                 delegate:self];
@@ -192,6 +192,8 @@ static FTPDataPull * _statpull = nil;
     assert(_connection);
     _totalDataReceived = 0;
     _progress = 0.0;
+    if (_popover)
+        [_popover updateProgress:_progress];
     
     [self receiveDidStart];
 }
