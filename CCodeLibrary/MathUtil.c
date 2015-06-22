@@ -665,6 +665,16 @@ IBOUNDS IBoundsFromPointAndDist(IPOINT pt, int dist)
     return bnds;
 }
 
+CGRect MNMXCORDtoCGRect (LPMNMXCORD pBounds)
+{
+    CGRect rect;
+    
+    rect.origin.x = pBounds->xmn;
+    rect.origin.y = pBounds->ymn;
+    rect.size.height = pBounds->ymx - pBounds->ymn;
+    rect.size.width  = pBounds->xmx - pBounds->xmn;
+    return rect;
+}
 IPOINT IBoundsMid(IBOUNDS *bnds)
 {
     IPOINT pt;

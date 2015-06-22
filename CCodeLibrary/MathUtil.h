@@ -3,6 +3,7 @@
 #include "CCodeTypes.h"
 #include <stdbool.h>
 #include <stdio.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 double LTWOPI (double AZ1);
 
@@ -108,6 +109,7 @@ LPTRANDATA  LoadTranFromBPW (char * Name, int dir);
 LPTRANDATA  LoadTranFromCPT (const char * Name, int dir);
 void MNMXCORLtoMNMXCORD (MNMXCORL *in,MNMXCORD *out);
 void MNMXCORDtoMNMXCORL (MNMXCORD *in,MNMXCORL *out);
+CGRect MNMXCORDtoCGRect (LPMNMXCORD pBounds);
 void InflateMNMXCORL (LPMNMXCORL pBounds, int Value);
 int diffInDegrees (int angle1,int angle2);
 bool CreateMask (LPDPOINT *pPointsIN, int *pnPoints,bounds *pbnds);
