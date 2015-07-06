@@ -57,6 +57,7 @@
 #import "UIApplication+VersionBuild.h"
 #import "NVCalibrationController.h"
 #import "CurbRampData.h"
+#import "NVPDFSnapshotter.h"
 
 @interface CCodeLibrary : NSObject
 

@@ -18,6 +18,8 @@
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
 		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
+		A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */ = {isa = PBXBuildFile; fileRef = A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */; };
+		A90C6E971B4A237600D87DB8 /* NVPDFSnapshotter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */; };
 		A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FAF1AE5F3A900CBFEE7 /* TableViewCellButton.m */; };
 		A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */; };
 		A90D1FBC1AE6184800CBFEE7 /* UIView+ColorOfPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */; };
@@ -180,6 +182,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A90C6E971B4A237600D87DB8 /* NVPDFSnapshotter.h in CopyFiles */,
 				EBAB42331B2B3CEF00C36FFC /* CurbRampData.h in CopyFiles */,
 				A98A57AC1B20AEE400906FBC /* NVCalibrationController.h in CopyFiles */,
 				A98A57AB1B20AED200906FBC /* minilzo.h in CopyFiles */,
@@ -279,6 +282,8 @@
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
 		A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVHeadingViewController.h; sourceTree = "<group>"; };
 		A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVHeadingViewController.m; sourceTree = "<group>"; };
+		A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPDFSnapshotter.h; sourceTree = "<group>"; };
+		A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPDFSnapshotter.m; sourceTree = "<group>"; };
 		A90D1FAE1AE5F3A900CBFEE7 /* TableViewCellButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewCellButton.h; sourceTree = "<group>"; };
 		A90D1FAF1AE5F3A900CBFEE7 /* TableViewCellButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewCellButton.m; sourceTree = "<group>"; };
 		A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVColorWheel.h; sourceTree = "<group>"; };
@@ -572,6 +577,8 @@
 				A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */,
 				A9E792821AEFE989005DA4BB /* NVLegendView.h */,
 				A9E792831AEFE989005DA4BB /* NVLegendView.m */,
+				A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */,
+				A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */,
 				A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */,
 				A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */,
 				A97407C41AF6A63900B2FF30 /* NVProgressView.h */,
@@ -824,6 +831,7 @@
 				A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */,
 				A9735AF419E77B6800894359 /* Reachability.m in Sources */,
 				A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */,
+				A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */,
 				A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,
 				A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */,
