@@ -424,9 +424,9 @@ static CGFloat _deviceValues[9][4];
     }];
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
-    return UIInterfaceOrientationMaskPortrait;
+    return UIInterfaceOrientationPortrait;
 }
 
 - (BOOL)shouldAutorotate
