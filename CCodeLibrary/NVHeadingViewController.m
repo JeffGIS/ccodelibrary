@@ -102,8 +102,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     if (status == kCLAuthorizationStatusNotDetermined)
         [_locationManager requestWhenInUseAuthorization];
     
-    else if (status == kCLAuthorizationStatusAuthorized ||
-             status == kCLAuthorizationStatusAuthorizedAlways ||
+    else if (status == kCLAuthorizationStatusAuthorizedAlways ||
              status == kCLAuthorizationStatusAuthorizedWhenInUse)
     {
         if (CLLocationManager.headingAvailable)
@@ -338,8 +337,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 - (void)locationManager:(CLLocationManager *)manager
 didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
-    if (status == kCLAuthorizationStatusAuthorized ||
-        status == kCLAuthorizationStatusAuthorizedAlways ||
+    if (status == kCLAuthorizationStatusAuthorizedAlways ||
         status == kCLAuthorizationStatusAuthorizedWhenInUse)
     {
         if (CLLocationManager.headingAvailable)

@@ -863,6 +863,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 {
     [_calDateLabel removeFromSuperview];
 }
+
 - (NSUInteger)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskPortrait;
