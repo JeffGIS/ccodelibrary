@@ -3,6 +3,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 
 typedef NS_ENUM(NSInteger, NVCalibrationType) {
     NVCalibrationTypeDefault,
@@ -32,6 +33,7 @@ typedef NS_ENUM(NSInteger, NVCalibrationArrayIndex) {
 - (CGFloat)CGFloatForKey:(NSString *)key;
 - (NSDate *)dateForKey:(NSString *)key;
 - (NSArray *)calibrationValueArray;
+- (CLLocationCoordinate2D)coordinateForKey:(NSString *)key;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
@@ -58,6 +60,9 @@ typedef NS_ENUM(NSInteger, NVCalibrationArrayIndex) {
 
 - (void)saveDate:(NSDate *)date
           forKey:(NSString *)key;
+
+- (void)saveCoordinate:(CLLocationCoordinate2D)coordinate
+                forKey:(NSString *)key;
 
 - (void)saveCalibrationValueArray:(NSArray *)array;
 
