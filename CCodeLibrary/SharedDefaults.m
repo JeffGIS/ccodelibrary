@@ -102,7 +102,7 @@ static SharedDefaults *_defaults;
 {
     CGFloat latitude = [_defaults floatForKey:[NSString stringWithFormat:@"%@Latitide", key]];
     CGFloat longitude = [_defaults floatForKey:[NSString stringWithFormat:@"%@Longitude", key]];
-    NSLog(@"%f,%f", latitude, longitude);
+    
     return CLLocationCoordinate2DMake(latitude, longitude);
 }
 
