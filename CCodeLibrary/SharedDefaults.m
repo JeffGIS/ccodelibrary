@@ -98,6 +98,14 @@ static SharedDefaults *_defaults;
     return defaultArray;
 }
 
+- (CLLocationCoordinate2D)coordinateForKey:(NSString *)key
+{
+    CGFloat latitude = [_defaults floatForKey:[NSString stringWithFormat:@"%@Latitide", key]];
+    CGFloat longitude = [_defaults floatForKey:[NSString stringWithFormat:@"%@Longitude", key]];
+    
+    return CLLocationCoordinate2DMake(latitude, longitude);
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue
@@ -187,6 +195,18 @@ static SharedDefaults *_defaults;
 {
     [_defaults setObject:date
                   forKey:key];
+    
+    [_defaults synchronize];
+}
+
+- (void)saveCoordinate:(CLLocationCoordinate2D)coordinate
+                forKey:(NSString *)key
+{
+    [_defaults setFloat:coordinate.latitude
+                 forKey:[NSString stringWithFormat:@"%@Latitide", key]];
+    
+    [_defaults setFloat:coordinate.longitude
+                 forKey:[NSString stringWithFormat:@"%@Longitude", key]];
     
     [_defaults synchronize];
 }

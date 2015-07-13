@@ -314,9 +314,9 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
     return YES;
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
-    return UIInterfaceOrientationMaskPortrait;
+    return UIInterfaceOrientationPortrait;
 }
 
 - (BOOL)shouldAutorotate
