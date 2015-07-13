@@ -31,38 +31,20 @@ static IntersectionsDatabase *_statdatabase = nil;
     if ((self = [super init]))
     {
         self.geoid = geoid;
-        self.path = [self databasePath:geoid];
-        self.isOpen = SQLOKint(sqlite3_open(self.path.UTF8String, &_database), "initWithGeoid(Intersections)");
+        self.curbRampData = [CurbRampData databaseForGeoid:geoid];
         NSLog(@"Intersections Database init");
     }
     
     return self;
 }
 
-- (NSString *)databasePath:(int)geoid
-{
-    NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
-    //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
-    
-    NSString *subDir = [NSString stringWithFormat:@"%@/%i", documentsDirectory, geoid];
-    NSFileManager *fileManager = NSFileManager.defaultManager;
-    
-    [fileManager createDirectoryAtPath:subDir
-           withIntermediateDirectories:YES
-                            attributes:nil
-                                 error:nil];
-    
-    NSString *dbPath = [NSString stringWithFormat:@"%@/%i/Intersections.sqlite3", documentsDirectory, geoid];
-    return dbPath;
-}
-
-- (BOOL)createIntersectionsTable
+/*- (BOOL)createIntersectionsTable_old
 {
     char *error = NULL;
     BOOL rtn = NO;
     
     [self open];
-    NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;"];
+    NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;DROP TABLE IF EXISTS Intersections_index;"];
     
     SQLOKint(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), "createIntersectionsTable1");
     
@@ -71,6 +53,8 @@ static IntersectionsDatabase *_statdatabase = nil;
                        lastUpdateTime INTEGER,\
                        status INTEGER,\
                        assignedTo INTEGER,\
+                       latitude double,\
+                       longitude double,\
                        intX INTEGER,\
                        intY INTEGER,\
                        rotation INTEGER,\
@@ -96,7 +80,8 @@ static IntersectionsDatabase *_statdatabase = nil;
                        signal67 INTEGER,\
                        nStreets INTEGER,\
                        streetNames CHAR(512),\
-                       streetAZMs CHAR(128));"];
+                       streetAZMs CHAR(128));\
+                       CREATE VIRTUAL TABLE Intersections_index IF NOT EXISTS USING rtree(id,minX, maxX, minY, maxY);"];
     
     rtn = SQLOKint(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), "createIntersectionsTable2");
     sqlite3_free(error);
@@ -119,7 +104,7 @@ static IntersectionsDatabase *_statdatabase = nil;
         rtn = YES;
     
     return rtn;
-}
+}*/
 
 - (int)getOffsetCoord:(MPIntersection *)mpint
                     x:(int)x
@@ -437,7 +422,7 @@ static IntersectionsDatabase *_statdatabase = nil;
 {
     BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
-    [self open];
+    [self.curbRampData open];
    
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
                        intX=%i,\
@@ -488,9 +473,9 @@ static IntersectionsDatabase *_statdatabase = nil;
                        [self getSignalCoord:mpint signal:67],
                        mpint.intID];
     
-    char *error = NULL;
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
-    sqlite3_free(error);
+    rtn = [self.curbRampData executeCmd:(char *)query.UTF8String sendToServer:YES useUniqueFile:NO];
+    [self.curbRampData close];
+
     return !rtn;
 }
 
@@ -505,7 +490,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement = NULL;
     
-    SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getMPIntersectionFromDB1");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "getMPIntersectionFromDB1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -550,7 +535,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     [self open];
     
-    SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getIntersectionPointsFromDatabase1");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "getIntersectionPointsFromDatabase1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -581,7 +566,7 @@ static IntersectionsDatabase *_statdatabase = nil;
                        (int)bounds.xmn, (int)bounds.xmx, (int)bounds.ymn, (int)bounds.ymx];
     
     sqlite3_stmt *statement = NULL;
-    SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getIntersectionPointsFromDatabaseinBounds1");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "getIntersectionPointsFromDatabaseinBounds1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -634,7 +619,7 @@ static IntersectionsDatabase *_statdatabase = nil;
                        (int)bounds.xmn, (int)bounds.xmx, (int)bounds.ymn, (int)bounds.ymx];
     
     sqlite3_stmt *statement = NULL;
-    SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getIntersectionElementsFromDatabaseinBounds1");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "getIntersectionElementsFromDatabaseinBounds1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -727,7 +712,7 @@ static IntersectionsDatabase *_statdatabase = nil;
                        (int)bounds.xmn,(int)bounds.xmx,(int)bounds.ymn,(int)bounds.ymx];
     
     sqlite3_stmt *statement = NULL;
-    SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getIntersectionPointsWithinDistance1");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "getIntersectionPointsWithinDistance1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -782,7 +767,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",intID];
     sqlite3_stmt *statement = NULL;
-    SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "findIntersectionFromID1");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "findIntersectionFromID1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -831,7 +816,7 @@ static IntersectionsDatabase *_statdatabase = nil;
                            intpt.intID];
         
         sqlite3_stmt *statement = NULL;
-        SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "findIntersection1");
+        SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "findIntersection1");
         
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -868,7 +853,7 @@ static IntersectionsDatabase *_statdatabase = nil;
                        iTime, lev21x, lev21y, intpt.intID];
     
     char *error = NULL;
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
+    rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
     return !rtn;
 }
@@ -882,7 +867,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     IntersectionPoint *intpt;
     intpt.latitude = 0.0, intpt.longitude = 0.0;
     
-    SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "setCurrentIntersectionPoint1");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "setCurrentIntersectionPoint1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -909,7 +894,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetAZMs FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement = NULL;
     
-    SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getCurentIntersectionAZMs1");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "getCurentIntersectionAZMs1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -929,7 +914,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Intersections"];
     sqlite3_stmt *statement = NULL;
     int count = 0;
-    SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getCountOfIntersections1");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "getCountOfIntersections1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
         count = sqlite3_column_int(statement, 0);
@@ -949,7 +934,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i WHERE intID=%i",
                        iTime, status, intID];
     
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
+    rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
 
@@ -964,7 +949,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE intID=%i",
                        iTime, user, intID];
     
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
+    rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
 
@@ -980,7 +965,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE intID>=%i AND intID <=%i",
                        iTime, user, intID, endID];
     
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
+    rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
 
@@ -994,7 +979,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i",
                        iTime, user];
     
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
+    rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
 
@@ -1007,7 +992,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE assignedTo=0",
                        iTime, user];
     
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL);
+    rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
 }
 
@@ -1023,7 +1008,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getFirstIntersectionPointAssignedTo1");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "getFirstIntersectionPointAssignedTo1");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -1050,7 +1035,7 @@ static IntersectionsDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedTo FROM Intersections WHERE assignedTo != 0 ORDER BY assignedTo,intID ASC"];
     sqlite3_stmt *statement = NULL;
     
-    SQLOKint(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), "getAssignments1");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "getAssignments1");
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -1113,11 +1098,11 @@ static IntersectionsDatabase *_statdatabase = nil;
     if (!fidData || !fidIndex)
         goto Exit;
     
-    if (![self createIntersectionsTable])
+    if (![self.curbRampData createIntersectionsTable])
         goto Exit2;
     
-    SQLOKint(sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL), "loadIntersectionTextToDatabase1");
-    SQLOKint(sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, NULL), "loadIntersectionTextToDatabase2");
+    SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, buffer, -1, &statement, NULL), "loadIntersectionTextToDatabase1");
+    SQLOKint(sqlite3_exec(self.curbRampData.database, "BEGIN TRANSACTION", NULL, NULL, NULL), "loadIntersectionTextToDatabase2");
     
     fgetstring(index, maxIndex, fidIndex);
     
@@ -1150,16 +1135,16 @@ static IntersectionsDatabase *_statdatabase = nil;
             SQLOKint(sqlite3_bind_int(statement, i, *pInt), "loadIntersectionTextToDatabase3");
         
         SQLOKint(sqlite3_bind_text(statement, 29, intStruct.streetNames, -1, SQLITE_STATIC), "loadIntersectionTextToDatabase4");
-        SQLOKint(sqlite3_bind_text(statement, 30, intStruct.streetAzms, -1, SQLITE_STATIC), "loadIntersectionTextToDatabase5");
+        //SQLOKint(sqlite3_bind_text(statement, 30, intStruct.streetAzms, -1, SQLITE_STATIC), "loadIntersectionTextToDatabase5");
 
         if (sqlite3_step(statement) != SQLITE_DONE)
-            NSLog(@"Error inserting intersection. '%s'", sqlite3_errmsg(_database));
+            NSLog(@"Error inserting intersection. '%s'", sqlite3_errmsg(self.curbRampData.database));
         
         nLoaded++;
         SQLOKint(sqlite3_reset(statement), "loadIntersectionTextToDatabase6");
     }
     
-    SQLOKint(sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, NULL), "loadIntersectionTextToDatabase7");
+    SQLOKint(sqlite3_exec(self.curbRampData.database, "COMMIT TRANSACTION", NULL, NULL, NULL), "loadIntersectionTextToDatabase7");
     SQLOKint(sqlite3_finalize(statement), "loadIntersectionTextToDatabase8");
     rtn = INTDBStatusOK;
     
@@ -1183,8 +1168,7 @@ Exit:
                                                                  create:YES];
         
         if (self.gettingUploaded)
-            SQLOKint(sqlite3_open(self.path.UTF8String, &_database), "FTPdidComplete(Intersections)");
-        
+            [self.curbRampData open];
         else
         {
             if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String))
@@ -1200,7 +1184,7 @@ Exit:
         
         if (self.delegate)
         {
-            [self.delegate intersectionsDatabase:[self databasePath:self.geoid]
+            [self.delegate intersectionsDatabase:[self.curbRampData databasePath:self.geoid]
                                          didLoad:@""
                                       withStatus:status];
         }
@@ -1293,7 +1277,7 @@ Exit:
 
 - (void)getPlaceIntersectionDatabase:(GSSiPopoverView *)popover
 {
-    NSString *dbPath = [self databasePath:self.geoid];
+    NSString *dbPath = [self.curbRampData databasePath:self.geoid];
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
                                                                                  error:nil].fileSize;
@@ -1324,7 +1308,7 @@ Exit:
 
 - (void)getUploadedIntersectionDatabase:(GSSiPopoverView *)popover
 {
-    NSString *dbPath = [self databasePath:self.geoid];
+    NSString *dbPath = [self.curbRampData databasePath:self.geoid];
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
                                                                                  error:nil].fileSize;
@@ -1350,23 +1334,17 @@ Exit:
 
 - (void)open
 {
-    if (!self.isOpen)
-    {
-        self.isOpen = !SQLOKint(sqlite3_open(self.path.UTF8String, &_database), "open(Intersections)");
-        NSLog(@"Intersections Database open");
-    }
+    [self.curbRampData open];
 }
 
 - (void)close
 {
-    sqlite3_close(_database);
+    [self.curbRampData close];
     NSLog(@"Intersections Database close");
-    self.isOpen = NO;
 }
 
 - (void)dealloc
 {
-    sqlite3_close(_database);
     _statdatabase = nil;
     NSLog(@"Intersections Database dealloc");
 }
@@ -1374,18 +1352,18 @@ Exit:
 - (void)startTransaction
 {
     [self open];
-    SQLOKint(sqlite3_exec(_database, "BEGIN", 0, 0, 0),"Start transaction");
+    SQLOKint(sqlite3_exec(self.curbRampData.database, "BEGIN", 0, 0, 0),"Start transaction");
 }
 - (void)commitTransaction
 {
-    SQLOKint(sqlite3_exec(_database, "COMMIT", 0, 0, 0),"End transaction");
+    SQLOKint(sqlite3_exec(self.curbRampData.database, "COMMIT", 0, 0, 0),"End transaction");
 }
 
 - (void)logError:(int)sqlReturn
           method:(char *)method
 {
     NSLog(@"%@", [NSString stringWithFormat:@"SQLite Error %i in %s = %i:%s",
-                  sqlReturn, method, sqlite3_errcode(_database), sqlite3_errmsg(_database)]);
+                  sqlReturn, method, sqlite3_errcode(self.curbRampData.database), sqlite3_errmsg(self.curbRampData.database)]);
 }
 
 int SQLOKint(int sqlReturn, char *method)

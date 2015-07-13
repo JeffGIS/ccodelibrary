@@ -6,6 +6,7 @@
 #import "MPIntersection.h"
 #import "FTPDataPull.h"
 #import <sqlite3.h>
+#import "CurbRampData.h"
 
 @class IntersectionsDatabase;
 
@@ -20,9 +21,8 @@
 
 @property (nonatomic, weak) id <IntersectionsDatabaseDelegate> delegate;
 @property (nonatomic) int geoid;
-@property BOOL gettingUploaded, isOpen;
-@property (nonatomic, copy) NSString *path;
-@property sqlite3 *database;
+@property BOOL gettingUploaded;
+@property CurbRampData *curbRampData;
 @property FTPDataPull *pull;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
