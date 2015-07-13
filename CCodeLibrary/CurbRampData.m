@@ -24,7 +24,7 @@ static int fileSequence = 0;
     {
         _documentsDirectory = UserDefaults.defaults.sharedFilePath;
         _fileName = @"CurbRamps.sqlite";
-        _path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
+        _path = [NSString stringWithFormat:@"%@/%i/%@", _documentsDirectory, CRAPI.sharedInstance.currentGeoid,_fileName];
         
     }
     
