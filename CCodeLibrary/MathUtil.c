@@ -10,6 +10,13 @@
 #include <stdio.h>
 #include <limits.h>
 
+bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol)
+{
+    if (fabs(p1->x - p2->x) >tol ||
+        fabs(p1->y - p2->y) >tol)
+        return FALSE;
+    return TRUE;
+}
 double LTWOPI (double AZ1)
 {
     if (AZ1<0)
