@@ -32,7 +32,6 @@
 		A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = A92382AC1AD986010027659B /* GSSiBumpDetector.m */; };
 		A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */; };
 		A92E0BA81AF7A461008A44AC /* NVPhotoViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */; };
-		A93FBE071B0ED5890019A8F3 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A93FBE061B0ED5890019A8F3 /* GoogleMaps.framework */; };
 		A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770C19F7F9F40062906E /* SharedDefaults.m */; };
 		A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770F19F8045C0062906E /* FacilitiesDatabase.m */; };
 		A94A771319F807570062906E /* Facility.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A771219F807570062906E /* Facility.m */; };
@@ -302,7 +301,6 @@
 		A92382AC1AD986010027659B /* GSSiBumpDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiBumpDetector.m; sourceTree = "<group>"; };
 		A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPhotoViewController.h; sourceTree = "<group>"; };
 		A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPhotoViewController.m; sourceTree = "<group>"; };
-		A93FBE061B0ED5890019A8F3 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		A94A770B19F7F9F40062906E /* SharedDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedDefaults.h; sourceTree = "<group>"; };
 		A94A770C19F7F9F40062906E /* SharedDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedDefaults.m; sourceTree = "<group>"; };
 		A94A770E19F8045C0062906E /* FacilitiesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacilitiesDatabase.h; sourceTree = "<group>"; };
@@ -437,7 +435,6 @@
 				A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */,
 				1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */,
 				1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */,
-				A93FBE071B0ED5890019A8F3 /* GoogleMaps.framework in Frameworks */,
 				1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -651,7 +648,6 @@
 		EBA2E45C199527660085B2E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A93FBE061B0ED5890019A8F3 /* GoogleMaps.framework */,
 				A97B72771ADB4912001ACFAE /* AVFoundation.framework */,
 				A97867331A521934000A9BB8 /* MapKit.framework */,
 				A9735AF019E779DF00894359 /* SystemConfiguration.framework */,
