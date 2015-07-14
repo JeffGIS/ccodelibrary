@@ -159,4 +159,15 @@ typedef NS_ENUM(NSInteger, MapViewScreenSetting)
     MapViewScreenSettingSplitBottomScreen,
 };
 
+typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
+{
+    MarkerInfoWindowTypeDefault,
+    MarkerInfoWindowTypePID,
+    MarkerInfoWindowTypeStormSewer,
+    MarkerInfoWindowTypeAlleyWall,
+    MarkerInfoWindowTypeAlleyLine,
+    MarkerInfoWindowTypeCustom,
+    MarkerInfoWindowTypeCRInt
+};
+
 @end

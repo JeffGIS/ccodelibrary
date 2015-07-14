@@ -24,6 +24,12 @@ static SharedDefaults *_defaults;
     return self;
 }
 
+- (NSArray *)arrayForKey:(NSString *)key
+{
+    NSArray *defaultArray = [_defaults arrayForKey:key];
+    return defaultArray;
+}
+
 - (UIColor *)colorForKey:(NSString *)key
 {
     CGFloat red = [_defaults floatForKey:[NSString stringWithFormat:@"%@Red", key]];
@@ -60,6 +66,12 @@ static SharedDefaults *_defaults;
 {
     CGFloat defaultFloat = [_defaults floatForKey:key];
     return defaultFloat;
+}
+
+- (NSData *)NSDataForKey:(NSString *)key
+{
+    NSData *data = [_defaults objectForKey:key];
+    return data;
 }
 
 - (NSDate *)dateForKey:(NSString *)key
@@ -104,6 +116,15 @@ static SharedDefaults *_defaults;
     CGFloat longitude = [_defaults floatForKey:[NSString stringWithFormat:@"%@Longitude", key]];
     
     return CLLocationCoordinate2DMake(latitude, longitude);
+}
+
+- (void)saveArray:(NSArray *)array
+           forKey:(NSString *)key
+{
+    [_defaults setObject:array
+                  forKey:key];
+    
+    [_defaults synchronize];
 }
 
 - (void)saveColorWithRed:(CGFloat)red
@@ -186,6 +207,15 @@ static SharedDefaults *_defaults;
 {
     [_defaults setFloat:CGFloat
                  forKey:key];
+    
+    [_defaults synchronize];
+}
+
+- (void)saveNSData:(NSData *)data
+            forKey:(NSString *)key
+{
+    [_defaults setObject:data
+                  forKey:key];
     
     [_defaults synchronize];
 }

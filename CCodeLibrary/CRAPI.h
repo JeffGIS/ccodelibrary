@@ -62,6 +62,8 @@
 @property int currentOverallBoundaryRefno;
 @property BOOL setToAlleyWalls;
 @property NSString *sourceApp;
+@property BOOL pipeTraceFlyoverSelected;
+@property (nonatomic) NSMutableArray *pipeCoordsArray;
 
 @property NSString *currentPlatImagePath;
 @property NSString *currentPlatType;

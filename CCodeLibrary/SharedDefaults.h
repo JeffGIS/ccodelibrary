@@ -26,14 +26,19 @@ typedef NS_ENUM(NSInteger, NVCalibrationArrayIndex) {
 
 + (SharedDefaults *)defaults;
 
+- (NSArray *)arrayForKey:(NSString *)key;
 - (UIColor *)colorForKey:(NSString *)key;
 - (NSInteger)integerForKey:(NSString *)key;
 - (BOOL)boolForKey:(NSString *)key;
 - (NSString *)stringForKey:(NSString *)key;
 - (CGFloat)CGFloatForKey:(NSString *)key;
+- (NSData *)NSDataForKey:(NSString *)key;
 - (NSDate *)dateForKey:(NSString *)key;
 - (NSArray *)calibrationValueArray;
 - (CLLocationCoordinate2D)coordinateForKey:(NSString *)key;
+
+- (void)saveArray:(NSArray *)array
+           forKey:(NSString *)key;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
@@ -57,6 +62,9 @@ typedef NS_ENUM(NSInteger, NVCalibrationArrayIndex) {
 
 - (void)saveCGFloat:(CGFloat)CGFloat
              forKey:(NSString *)key;
+
+- (void)saveNSData:(NSData *)data
+            forKey:(NSString *)key;
 
 - (void)saveDate:(NSDate *)date
           forKey:(NSString *)key;
