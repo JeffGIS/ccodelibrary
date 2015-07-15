@@ -57,7 +57,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     slopeController.flipRadius = flipRadius;
     slopeController.displayDegrees = displayDegrees;
     slopeController.useCalibration = useCalibration;
-    slopeController.useHeadingCalibration = YES;
+    slopeController.useHeadingCalibration = NO;
     slopeController.delegate = delegate;
     slopeController.promptText = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
     
@@ -556,7 +556,12 @@ typedef NS_ENUM(NSInteger, SCStatus)
     _data.sideSlopeDegrees = [self adjustSlope:angx
                                    isSideSlope:YES];
     
+    NSLog(@"%f", _data.frontSlopeDegrees);
+    
     _data.frontSlopePct = (tan(_data.frontSlopeDegrees * DEGtoRAD) * 100);
+    
+    NSLog(@"%f", _data.frontSlopePct);
+    
     _data.sideSlopePct = (tan(_data.sideSlopeDegrees * DEGtoRAD) * 100);
     _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
 }
