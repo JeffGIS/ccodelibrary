@@ -42,11 +42,15 @@ typedef struct NVSlopeData {
 @property BOOL displayDegrees;
 @property BOOL useCalibration;
 @property BOOL useHeadingCalibration;
+@property CGFloat steadyFactor;
+@property CGFloat countFactor;
 @property NSString *promptText;
 
 + (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
                                                        flipRadius:(CGFloat)flipRadius
                                                    useCalibration:(BOOL)useCalibration
+                                                     steadyFactor:(CGFloat)steadyFac
+                                                      countFactor:(CGFloat)countFac
                                                    displayDegrees:(BOOL)displayDegrees
                                                          delegate:(id)delegate;
 

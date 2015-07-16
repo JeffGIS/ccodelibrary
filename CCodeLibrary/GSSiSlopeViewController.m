@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     SCStatusCancel,
 };
 
-#define COUNT 100
+static int COUNT=100;
 
 @interface GSSiSlopeViewController ()
 
@@ -49,6 +49,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
 + (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
                                                        flipRadius:(CGFloat)flipRadius
                                                    useCalibration:(BOOL)useCalibration
+                                                     steadyFactor:(CGFloat)steadyFac
+                                                      countFactor:(CGFloat)countFac
                                                    displayDegrees:(BOOL)displayDegrees
                                                          delegate:(id)delegate
 {
@@ -59,6 +61,11 @@ typedef NS_ENUM(NSInteger, SCStatus)
     slopeController.useCalibration = useCalibration;
     slopeController.useHeadingCalibration = NO;
     slopeController.delegate = delegate;
+    slopeController.steadyFactor = max (steadyFac,1.0);
+    if (countFac)
+        slopeController.countFactor = countFac;
+    else
+        slopeController.countFactor = 1.0;
     slopeController.promptText = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
     
     return slopeController;
@@ -129,7 +136,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
     }
     
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
-    _steadyDiff = 0.0087;
+    _steadyDiff = 0.0087 * _steadyFactor;
+    COUNT = 100 * _countFactor;
     _maxX = _maxY = _maxZ = -10.0;
     _minX = _minY = _minZ = 10.0;
     _status = SCStatusStart;
@@ -317,6 +325,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     if (_status == SCStatusStart)
     {
         [self startManagers];
+        [self resetSumsAndCounter];
         
         _status = SCStatusCancel;
         _unableButton.enabled = NO;
@@ -805,10 +814,10 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _headingLabel.text = [NSString stringWithFormat:@"Heading = %.01f\u00B0", _data.heading];
         _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f\u00B0", _data.frontSlopeDegrees];
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f\u00B0", _data.sideSlopeDegrees];
-        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f\u00B0", _data.maxSlopePct];
+        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f\u00B0", _data.maxSlopeDegrees];
         
-        _maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f",
-                               _data.accelX[0], _data.accelY[0], _data.accelZ[0]];
+       // _maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f",
+       //                        _data.accelX[0], _data.accelY[0], _data.accelZ[0]];
     }
     
     else

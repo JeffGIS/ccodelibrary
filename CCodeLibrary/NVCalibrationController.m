@@ -290,6 +290,8 @@ static CGFloat _deviceValues[9][4];
     GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                           flipRadius:0.0
                                                                                       useCalibration:NO
+                                                                                        steadyFactor:0
+                                                                                         countFactor:0
                                                                                       displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
                                                                                             delegate:self];
     if (!_currentIndex)
@@ -368,6 +370,8 @@ static CGFloat _deviceValues[9][4];
         slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                      flipRadius:0.0
                                                                  useCalibration:YES
+                                                                   steadyFactor:0
+                                                                    countFactor:0
                                                                  displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                        delegate:self];
     }
@@ -377,6 +381,8 @@ static CGFloat _deviceValues[9][4];
         slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                      flipRadius:0.0
                                                                  useCalibration:NO
+                                                                   steadyFactor:0
+                                                                    countFactor:0
                                                                  displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                        delegate:self];
     }
@@ -1003,6 +1009,8 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
             GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                                   flipRadius:0.0
                                                                                               useCalibration:NO
+                                                                                                steadyFactor:0
+                                                                                                 countFactor:0
                                                                                               displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
                                                                                                     delegate:self];
             
