@@ -56,6 +56,8 @@
 		A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A99050871ACB942F00C6AAAF /* GSSiDatePicker.m */; };
 		A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508A1ACB947000C6AAAF /* SpreadsheetView.m */; };
 		A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */; };
+		A99873251B59ACC100200CA9 /* SewerData.m in Sources */ = {isa = PBXBuildFile; fileRef = A99873241B59ACC100200CA9 /* SewerData.m */; };
+		A99873261B59ACD500200CA9 /* SewerData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99873231B59ACC100200CA9 /* SewerData.h */; };
 		A99C88FB1AEDDFDE00A0856F /* UIView+ColorOfPoint.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90D1FC11AE6510F00CBFEE7 /* UIView+ColorOfPoint.h */; };
 		A99C88FC1AEDDFE300A0856F /* gssitype.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB268A181AC5E9F700A68EC8 /* gssitype.h */; };
 		A99C88FD1AEDDFE700A0856F /* gmlimits.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB268A191AC5E9F700A68EC8 /* gmlimits.h */; };
@@ -181,6 +183,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A99873261B59ACD500200CA9 /* SewerData.h in CopyFiles */,
 				A90C6E971B4A237600D87DB8 /* NVPDFSnapshotter.h in CopyFiles */,
 				EBAB42331B2B3CEF00C36FFC /* CurbRampData.h in CopyFiles */,
 				A98A57AC1B20AEE400906FBC /* NVCalibrationController.h in CopyFiles */,
@@ -334,6 +337,8 @@
 		A990508A1ACB947000C6AAAF /* SpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpreadsheetView.m; sourceTree = "<group>"; };
 		A990508B1ACB947000C6AAAF /* SpreadSheetViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpreadSheetViewCell.h; sourceTree = "<group>"; };
 		A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpreadSheetViewCell.m; sourceTree = "<group>"; };
+		A99873231B59ACC100200CA9 /* SewerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SewerData.h; sourceTree = "<group>"; };
+		A99873241B59ACC100200CA9 /* SewerData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SewerData.m; sourceTree = "<group>"; };
 		A99C893B1AEDE1B900A0856F /* GSSiDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiDefs.h; sourceTree = "<group>"; };
 		A99C893C1AEDE1B900A0856F /* GSSiDefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiDefs.m; sourceTree = "<group>"; };
 		A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+VersionBuild.h"; sourceTree = "<group>"; };
@@ -725,6 +730,8 @@
 			children = (
 				EBAB422D1B2B073A00C36FFC /* CurbRampData.h */,
 				EBAB422E1B2B073A00C36FFC /* CurbRampData.m */,
+				A99873231B59ACC100200CA9 /* SewerData.h */,
+				A99873241B59ACC100200CA9 /* SewerData.m */,
 			);
 			name = Databases;
 			sourceTree = "<group>";
@@ -855,6 +862,7 @@
 				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
 				A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */,
 				A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */,
+				A99873251B59ACC100200CA9 /* SewerData.m in Sources */,
 				A90D1FBC1AE6184800CBFEE7 /* UIView+ColorOfPoint.m in Sources */,
 				A9D269E61AE562E100A5C38E /* TableViewCellLabel.m in Sources */,
 				A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */,

@@ -58,6 +58,7 @@
 #import "NVCalibrationController.h"
 #import "CurbRampData.h"
 #import "NVPDFSnapshotter.h"
+#import "SewerData.h"
 
 @interface CCodeLibrary : NSObject
 
