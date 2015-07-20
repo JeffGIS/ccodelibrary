@@ -85,7 +85,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
     
     if (self)
     {
-        _documentsDirectory = UserDefaults.defaults.localFilePath;
+        _documentsDirectory = UserDefaults.defaults.sharedFilePath;
         _fileName = @"Sewer.sqlite";
         _path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
         _pointsArray = [[NSMutableArray alloc] init];
