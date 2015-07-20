@@ -32,6 +32,9 @@
 		A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = A92382AC1AD986010027659B /* GSSiBumpDetector.m */; };
 		A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */; };
 		A92E0BA81AF7A461008A44AC /* NVPhotoViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */; };
+		A933D9F61B5D499500D621CD /* NVPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = A933D9F51B5D499500D621CD /* NVPipe.m */; };
+		A933D9FA1B5D4E2800D621CD /* NVPipe.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A933D9F41B5D499500D621CD /* NVPipe.h */; };
+		A933D9FD1B5D4FEF00D621CD /* NV3DMath.m in Sources */ = {isa = PBXBuildFile; fileRef = A933D9FC1B5D4FEF00D621CD /* NV3DMath.m */; };
 		A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770C19F7F9F40062906E /* SharedDefaults.m */; };
 		A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770F19F8045C0062906E /* FacilitiesDatabase.m */; };
 		A94A771319F807570062906E /* Facility.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A771219F807570062906E /* Facility.m */; };
@@ -183,6 +186,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A933D9FA1B5D4E2800D621CD /* NVPipe.h in CopyFiles */,
 				A99873261B59ACD500200CA9 /* SewerData.h in CopyFiles */,
 				A90C6E971B4A237600D87DB8 /* NVPDFSnapshotter.h in CopyFiles */,
 				EBAB42331B2B3CEF00C36FFC /* CurbRampData.h in CopyFiles */,
@@ -304,6 +308,10 @@
 		A92382AC1AD986010027659B /* GSSiBumpDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiBumpDetector.m; sourceTree = "<group>"; };
 		A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPhotoViewController.h; sourceTree = "<group>"; };
 		A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPhotoViewController.m; sourceTree = "<group>"; };
+		A933D9F41B5D499500D621CD /* NVPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPipe.h; sourceTree = "<group>"; };
+		A933D9F51B5D499500D621CD /* NVPipe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPipe.m; sourceTree = "<group>"; };
+		A933D9FB1B5D4FEF00D621CD /* NV3DMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NV3DMath.h; sourceTree = "<group>"; };
+		A933D9FC1B5D4FEF00D621CD /* NV3DMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NV3DMath.m; sourceTree = "<group>"; };
 		A94A770B19F7F9F40062906E /* SharedDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedDefaults.h; sourceTree = "<group>"; };
 		A94A770C19F7F9F40062906E /* SharedDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedDefaults.m; sourceTree = "<group>"; };
 		A94A770E19F8045C0062906E /* FacilitiesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacilitiesDatabase.h; sourceTree = "<group>"; };
@@ -464,6 +472,17 @@
 				A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */,
 			);
 			name = Categories;
+			sourceTree = "<group>";
+		};
+		A933D9F31B5D494600D621CD /* 3D Views */ = {
+			isa = PBXGroup;
+			children = (
+				A933D9FB1B5D4FEF00D621CD /* NV3DMath.h */,
+				A933D9FC1B5D4FEF00D621CD /* NV3DMath.m */,
+				A933D9F41B5D499500D621CD /* NVPipe.h */,
+				A933D9F51B5D499500D621CD /* NVPipe.m */,
+			);
+			name = "3D Views";
 			sourceTree = "<group>";
 		};
 		A94A771A19F812940062906E /* Facilities */ = {
@@ -667,9 +686,10 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
-				EBAB422C1B2B071700C36FFC /* Databases */,
+				A933D9F31B5D494600D621CD /* 3D Views */,
 				A90D1FB61AE6174700CBFEE7 /* Categories */,
 				A94A771D19F813040062906E /* CCode */,
+				EBAB422C1B2B071700C36FFC /* Databases */,
 				A94A771A19F812940062906E /* Facilities */,
 				A94A771B19F812AA0062906E /* Intersections */,
 				A94A771F19F813EB0062906E /* Network */,
@@ -830,8 +850,10 @@
 				A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */,
 				A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */,
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
+				A933D9FD1B5D4FEF00D621CD /* NV3DMath.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */,
+				A933D9F61B5D499500D621CD /* NVPipe.m in Sources */,
 				A9735AF419E77B6800894359 /* Reachability.m in Sources */,
 				A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */,
 				A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */,
