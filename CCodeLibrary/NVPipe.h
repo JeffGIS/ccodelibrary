@@ -7,15 +7,17 @@ typedef NS_ENUM(NSInteger, NVTexture)
 };
 
 #import <SceneKit/SceneKit.h>
+#import <SpriteKit/SpriteKit.h>
 
 @interface NVPipe : SCNTube
 
-@property SCNVector3 eulerAngles;
-@property SCNVector3 position;
+@property (nonatomic) SCNVector3 eulerAngles;
+@property (nonatomic) SCNVector3 position;
 
 + (NVPipe *)pipeWithPointA:(SCNVector3)pointA
                     pointB:(SCNVector3)pointB
                   diameter:(CGFloat)diameter
-                   texture:(NVTexture)texture;
+                   texture:(NVTexture)texture
+                      name:(NSString *)name;
 
 @end
