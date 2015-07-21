@@ -434,12 +434,15 @@ static CGFloat _deviceValues[9][4];
 {
     return UIInterfaceOrientationPortrait;
 }
-
+- (NSUInteger)supportedInterfaceOrientations
+{
+    UIInterfaceOrientationMask mask = UIInterfaceOrientationMaskPortrait;
+    return mask;
+}
 - (BOOL)shouldAutorotate
 {
     return NO;
 }
-
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
              didReturnSlopeData:(NVSlopeData)slopeData
 {
