@@ -920,7 +920,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                           width:(self.view.frame.size.width - 40.0)
                                                      startValue:0.0
                                                        minValue:0.0
-                                                       maxValue:90.0
+                                                       maxValue:180.0
                                                        delegate:self
                                                   configuration:NVSliderConfigurationCalibrationDegrees];
             

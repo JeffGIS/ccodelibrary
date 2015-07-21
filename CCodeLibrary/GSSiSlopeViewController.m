@@ -353,6 +353,7 @@ static int COUNT=100;
 - (void)manual:(UIButton *)button
 {
     NVSliderController *slider;
+    
     if (_displayDegrees)
     {
         slider = [[NVSliderController alloc] initWithCenter:self.view.center
@@ -363,6 +364,7 @@ static int COUNT=100;
                                                    delegate:self
                                               configuration:NVSliderConfigurationManualSlope];
     }
+    
     else
     {
         slider = [[NVSliderController alloc] initWithCenter:self.view.center
