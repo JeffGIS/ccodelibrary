@@ -10,6 +10,7 @@
                     pointB:(SCNVector3)pointB
                   diameter:(CGFloat)diameter
                    texture:(NVTexture)texture
+                      name:(NSString *)name;
 {
     CGFloat height = [NV3DMath distanceFromPointA:pointA
                                            pointB:pointB];
@@ -23,6 +24,15 @@
     
     pipe.position = [NV3DMath centerPointFromPointA:pointA
                                              pointB:pointB];
+    
+    pipe.name = name;
+    pipe.radialSegmentCount = 64.0;
+    
+    UIImage *textureImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"pipeTexture"
+                                                                                           ofType:@"png"]];
+    
+    SKTexture *pipeTexture = [SKTexture textureWithImage:textureImage];
+    pipe.firstMaterial.diffuse.contents = pipeTexture;
     
     return pipe;
 }

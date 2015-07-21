@@ -352,14 +352,28 @@ static int COUNT=100;
 
 - (void)manual:(UIButton *)button
 {
-    NVSliderController *slider = [[NVSliderController alloc] initWithCenter:self.view.center
-                                                                      width:728.0
-                                                                 startValue:_data.frontSlopePct
-                                                                   minValue:(_data.frontSlopePct - 2.0)
-                                                                   maxValue:(_data.frontSlopePct + 2.0)
-                                                                   delegate:self
-                                                              configuration:NVSliderConfigurationManualSlope];
-    
+    NVSliderController *slider;
+    if (_displayDegrees)
+    {
+        slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                      width:728.0
+                                                 startValue:_data.frontSlopeDegrees
+                                                   minValue:(_data.frontSlopeDegrees - 2.0)
+                                                   maxValue:(_data.frontSlopeDegrees + 2.0)
+                                                   delegate:self
+                                              configuration:NVSliderConfigurationManualSlope];
+    }
+    else
+    {
+        slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                      width:728.0
+                                                 startValue:_data.frontSlopePct
+                                                   minValue:(_data.frontSlopePct - 2.0)
+                                                   maxValue:(_data.frontSlopePct + 2.0)
+                                                   delegate:self
+                                              configuration:NVSliderConfigurationManualSlope];
+    }
+   
     [slider showSliderControllerInView:self.view
                               animated:YES
                                overlay:YES];
@@ -854,12 +868,22 @@ static int COUNT=100;
 - (void)sliderView:(NVSliderController *)sliderView
     didReturnValue:(CGFloat)value
 {
-    _data.frontSlopePct = value;
-    _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
-    
-    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlopePct];
-    _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _data.maxSlopePct];
-    
+    if (_displayDegrees)
+    {
+        _data.frontSlopeDegrees = value;
+        _data.maxSlopeDegrees = value;//ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
+        
+        _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f\u00B0", _data.frontSlopeDegrees];
+        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f\u00B0", _data.maxSlopeDegrees];
+    }
+    else
+    {
+        _data.frontSlopePct = value;
+        _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
+        
+        _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlopePct];
+        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _data.maxSlopePct];
+    }
     [sliderView hideSliderController:YES];
 }
 
