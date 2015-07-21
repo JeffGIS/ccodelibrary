@@ -430,19 +430,6 @@ static CGFloat _deviceValues[9][4];
     }];
 }
 
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
-{
-    return UIInterfaceOrientationPortrait;
-}
-- (NSUInteger)supportedInterfaceOrientations
-{
-    UIInterfaceOrientationMask mask = UIInterfaceOrientationMaskPortrait;
-    return mask;
-}
-- (BOOL)shouldAutorotate
-{
-    return NO;
-}
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
              didReturnSlopeData:(NVSlopeData)slopeData
 {
@@ -1037,6 +1024,21 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
             [self handleTableViewDismissal];
         }
     }
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
 }
 
 @end

@@ -882,11 +882,12 @@ static int COUNT=100;
 {
     return UIInterfaceOrientationPortrait;
 }
+
 - (NSUInteger)supportedInterfaceOrientations
 {
-    UIInterfaceOrientationMask mask = UIInterfaceOrientationMaskPortrait;
-    return mask;
+    return UIInterfaceOrientationMaskPortrait;
 }
+
 - (BOOL)shouldAutorotate
 {
     return NO;
