@@ -433,6 +433,8 @@ static CGFloat _deviceValues[9][4];
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
              didReturnSlopeData:(NVSlopeData)slopeData
 {
+    NSLog(@"currentIndex:%ld", (long)_currentIndex);
+    
     [controller dismissViewControllerAnimated:YES
                                    completion:nil];
     
@@ -456,7 +458,15 @@ static CGFloat _deviceValues[9][4];
             
             NSUInteger selectedCount = SharedDefaults.defaults.calibrationValueSelectedCount;
             
-            if (_currentIndex > selectedCount || selectedCount == 1)
+            NSLog(@"%lu", (unsigned long)selectedCount);
+            
+            NSUInteger correction = (selectedCount - 1);
+            correction *= 2.0;
+            selectedCount = (correction + 1);
+            
+            NSLog(@"count:%lu, index:%ld", (unsigned long)selectedCount, (long)_currentIndex);
+            
+            if (_currentIndex >= selectedCount || selectedCount == 1)
             {
                 [self saveCalibrationValues];
                 
