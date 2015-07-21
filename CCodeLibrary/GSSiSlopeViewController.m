@@ -816,8 +816,8 @@ static int COUNT=100;
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f\u00B0", _data.sideSlopeDegrees];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f\u00B0", _data.maxSlopeDegrees];
         
-       // _maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f",
-       //                        _data.accelX[0], _data.accelY[0], _data.accelZ[0]];
+        _maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f",
+                               _data.accelX[0], _data.accelY[0], _data.accelZ[0]];
     }
     
     else

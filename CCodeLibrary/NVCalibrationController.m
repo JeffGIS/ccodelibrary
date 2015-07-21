@@ -292,7 +292,7 @@ static CGFloat _deviceValues[9][4];
                                                                                       useCalibration:NO
                                                                                         steadyFactor:0
                                                                                          countFactor:0
-                                                                                      displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
+                                                                                      displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                                             delegate:self];
     if (!_currentIndex)
         slopeVC.promptText = @"Place the iPad on the level surface and tap 'Start' to begin measurement.";
@@ -1001,7 +1001,7 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
                                                                                               useCalibration:NO
                                                                                                 steadyFactor:0
                                                                                                  countFactor:0
-                                                                                              displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
+                                                                                              displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                                                     delegate:self];
             
             slopeVC.promptText = @"";
