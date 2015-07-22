@@ -4,6 +4,8 @@
 typedef NS_ENUM(NSInteger, NVTexture)
 {
     NVTextureNone,
+    NVTexturePipe,
+    NVTextureManhole,
 };
 
 #import <SceneKit/SceneKit.h>
