@@ -44,20 +44,21 @@ typedef struct NVSlopeData {
 @property BOOL useHeadingCalibration;
 @property CGFloat steadyFactor;
 @property CGFloat countFactor;
+@property CGFloat criticalValue;
+@property CGFloat criticalSideValue;
 @property NSString *promptText;
+@property CGFloat errorValue;
+@property BOOL selfTest;
 
-+ (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
-                                                       flipRadius:(CGFloat)flipRadius
-                                                numCriticalValues:(int)nCritical
-                                                   criticalValues:(CGFloat*)critVals
-                                                numCriticalSideValues:(int)nCriticalSide
-                                                   criticalSideValues:(CGFloat*)critSideVals
-                                                       errorValue:(CGFloat)errval
-                                                   useCalibration:(BOOL)useCalibration
-                                                     steadyFactor:(CGFloat)steadyFac
-                                                      countFactor:(CGFloat)countFac
-                                                   displayDegrees:(BOOL)displayDegrees
-                                                         delegate:(id)delegate;
++ (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(CGFloat)criticalVal
+                                            criticalSideValue:(CGFloat)criticalSideVal
+                                                   errorValue:(CGFloat)errVal
+                                               useCalibration:(BOOL)useCalibration
+                                                     selfTest:(BOOL)selfTest
+                                                 steadyFactor:(CGFloat)steadyFac
+                                                  countFactor:(CGFloat)countFac
+                                               displayDegrees:(BOOL)displayDegrees
+                                                     delegate:(id)delegate;
 
 - (void)removeManualMeasurementButton;
 - (void)removeCalDateLabel;

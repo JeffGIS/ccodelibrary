@@ -27,7 +27,7 @@ static int COUNT=100;
 @property (nonatomic) UIImageView *arrowView;
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UILabel *frontSlopeLabel, *sideSlopeLabel, *maxSlopeLabel, *promptLabel;
-@property (nonatomic) CGFloat calibrationTarget, flipRadius, steadyDiff;
+@property (nonatomic) CGFloat steadyDiff;
 @property (nonatomic) CGFloat xRange, yRange, zRange;
 @property (nonatomic) CGFloat maxX, minX, maxY, minY, maxZ, minZ;
 @property (nonatomic) CGFloat gSumX, gSumY, gSumZ, aSumX, aSumY, aSumZ, yawSum, pitchSum, rollSum;
@@ -46,22 +46,17 @@ static int COUNT=100;
 
 @implementation GSSiSlopeViewController
 
-+ (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
-                                                       flipRadius:(CGFloat)flipRadius
-                                                numCriticalValues:(int)nCritical
-                                                   criticalValues:(CGFloat*)critVals
-                                            numCriticalSideValues:(int)nCriticalSide
-                                               criticalSideValues:(CGFloat*)critSideVals
-                                                       errorValue:(CGFloat)errval
-                                                   useCalibration:(BOOL)useCalibration
-                                                     steadyFactor:(CGFloat)steadyFac
-                                                      countFactor:(CGFloat)countFac
-                                                   displayDegrees:(BOOL)displayDegrees
-                                                         delegate:(id)delegate;
++ (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(CGFloat)criticalVal
+                                            criticalSideValue:(CGFloat)criticalSideVal
+                                                   errorValue:(CGFloat)errVal
+                                               useCalibration:(BOOL)useCalibration
+                                                     selfTest:(BOOL)selfTest
+                                                 steadyFactor:(CGFloat)steadyFac
+                                                  countFactor:(CGFloat)countFac
+                                               displayDegrees:(BOOL)displayDegrees
+                                                     delegate:(id)delegate;
 {
     GSSiSlopeViewController *slopeController = [[GSSiSlopeViewController alloc] init];
-    slopeController.calibrationTarget = calibrationTarget;
-    slopeController.flipRadius = flipRadius;
     slopeController.displayDegrees = displayDegrees;
     slopeController.useCalibration = useCalibration;
     slopeController.useHeadingCalibration = NO;
@@ -71,6 +66,10 @@ static int COUNT=100;
         slopeController.countFactor = countFac;
     else
         slopeController.countFactor = 1.0;
+    slopeController.criticalValue = criticalVal;
+    slopeController.criticalSideValue = criticalSideVal;
+    slopeController.errorValue = errVal;
+    slopeController.selfTest = selfTest;
     slopeController.promptText = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
     
     return slopeController;
@@ -665,8 +664,8 @@ static int COUNT=100;
             }
             [self slopesFromAccelerometer:1];
             
-            if (_data.maxSlopePct < (_calibrationTarget - _flipRadius) ||
-                (_data.maxSlopePct > (_calibrationTarget + _flipRadius)))
+            if (_data.maxSlopePct < (_criticalValue - _errorValue) ||
+                (_data.maxSlopePct > (_criticalValue + _errorValue)))
             {
                 [self slopeMeasurementComplete];
             }
@@ -761,8 +760,8 @@ static int COUNT=100;
             _data.heading = _baseHeading - (_sumHeading / COUNT);
             [self slopesFromAccelerometer:1];
             
-            if (_data.maxSlopePct < (_calibrationTarget - _flipRadius) ||
-                (_data.maxSlopePct > (_calibrationTarget + _flipRadius)))
+            if (_data.maxSlopePct < (_criticalValue - _errorValue) ||
+                (_data.maxSlopePct > (_criticalValue + _errorValue)))
             {
                 [self slopeMeasurementComplete];
             }
