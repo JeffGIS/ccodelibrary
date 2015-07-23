@@ -289,6 +289,11 @@ static CGFloat _deviceValues[9][4];
     
     GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                           flipRadius:0.0
+                                                                                   numCriticalValues:0
+                                                                                      criticalValues:0
+                                                                               numCriticalSideValues:0
+                                                                                  criticalSideValues:0
+                                                                                          errorValue:0
                                                                                       useCalibration:NO
                                                                                         steadyFactor:0
                                                                                          countFactor:0
@@ -369,6 +374,11 @@ static CGFloat _deviceValues[9][4];
     {
         slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                      flipRadius:0.0
+                                                              numCriticalValues:0
+                                                                 criticalValues:0
+                                                          numCriticalSideValues:0
+                                                             criticalSideValues:0
+                                                                     errorValue:0
                                                                  useCalibration:YES
                                                                    steadyFactor:0
                                                                     countFactor:0
@@ -380,6 +390,11 @@ static CGFloat _deviceValues[9][4];
     {
         slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                      flipRadius:0.0
+                                                              numCriticalValues:0
+                                                                 criticalValues:0
+                                                          numCriticalSideValues:0
+                                                             criticalSideValues:0
+                                                                     errorValue:0
                                                                  useCalibration:NO
                                                                    steadyFactor:0
                                                                     countFactor:0
@@ -1008,6 +1023,11 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
         {
             GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                                   flipRadius:0.0
+                                                                                           numCriticalValues:0
+                                                                                              criticalValues:0
+                                                                                       numCriticalSideValues:0
+                                                                                          criticalSideValues:0
+                                                                                                  errorValue:0
                                                                                               useCalibration:NO
                                                                                                 steadyFactor:0
                                                                                                  countFactor:0

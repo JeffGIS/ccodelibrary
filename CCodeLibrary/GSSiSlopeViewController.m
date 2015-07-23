@@ -48,11 +48,16 @@ static int COUNT=100;
 
 + (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
                                                        flipRadius:(CGFloat)flipRadius
+                                                numCriticalValues:(int)nCritical
+                                                   criticalValues:(CGFloat*)critVals
+                                            numCriticalSideValues:(int)nCriticalSide
+                                               criticalSideValues:(CGFloat*)critSideVals
+                                                       errorValue:(CGFloat)errval
                                                    useCalibration:(BOOL)useCalibration
                                                      steadyFactor:(CGFloat)steadyFac
                                                       countFactor:(CGFloat)countFac
                                                    displayDegrees:(BOOL)displayDegrees
-                                                         delegate:(id)delegate
+                                                         delegate:(id)delegate;
 {
     GSSiSlopeViewController *slopeController = [[GSSiSlopeViewController alloc] init];
     slopeController.calibrationTarget = calibrationTarget;
@@ -640,7 +645,7 @@ static int COUNT=100;
             [self slopeMeasurementComplete];
         }
         
-        else if (_headingCounter)
+        else if (_headingCounter || !CLLocationManager.headingAvailable)
         {
             [self stopManagers];
             
@@ -648,8 +653,16 @@ static int COUNT=100;
             _data.accelY[0] = (_aSumY / COUNT);
             _data.accelZ[0] = (_aSumZ / COUNT);
             
-            _data.heading = _sumHeading / _headingCounter;
-            _data.heading = Between0And360D(_data.heading);
+            if (_headingCounter)
+            {
+                _data.heading = _sumHeading / _headingCounter;
+                _data.heading = Between0And360D(_data.heading);
+            }
+            else
+            {
+                _data.heading = 999;
+                _headingCounter = 1;
+            }
             [self slopesFromAccelerometer:1];
             
             if (_data.maxSlopePct < (_calibrationTarget - _flipRadius) ||
