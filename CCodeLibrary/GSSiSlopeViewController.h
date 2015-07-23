@@ -48,6 +48,11 @@ typedef struct NVSlopeData {
 
 + (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
                                                        flipRadius:(CGFloat)flipRadius
+                                                numCriticalValues:(int)nCritical
+                                                   criticalValues:(CGFloat*)critVals
+                                                numCriticalSideValues:(int)nCriticalSide
+                                                   criticalSideValues:(CGFloat*)critSideVals
+                                                       errorValue:(CGFloat)errval
                                                    useCalibration:(BOOL)useCalibration
                                                      steadyFactor:(CGFloat)steadyFac
                                                       countFactor:(CGFloat)countFac
