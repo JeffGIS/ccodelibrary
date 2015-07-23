@@ -202,8 +202,6 @@ static CurbRampData *_statdatabase = nil;
                        longitude double;\
                        CREATE VIRTUAL TABLE Intersections_index IF NOT EXISTS USING rtree(id,minX, maxX, minY, maxY);"];
     
-    rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
-    
     rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
     [self close];
     return rtn;
