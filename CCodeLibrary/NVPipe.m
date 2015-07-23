@@ -12,8 +12,8 @@
                    texture:(NVTexture)texture
                       name:(NSString *)name;
 {
-    CGFloat height = [NV3DMath distanceFromPointA:pointA
-                                           pointB:pointB];
+    CGFloat height = [NV3DMath distance3DFromPointA:pointA
+                                             pointB:pointB];
     
     NVPipe *pipe = [super tubeWithInnerRadius:(diameter * 0.35)
                                   outerRadius:(diameter * 0.50)
@@ -28,11 +28,33 @@
     pipe.name = name;
     pipe.radialSegmentCount = 64.0;
     
-    UIImage *textureImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"pipeTexture"
-                                                                                           ofType:@"png"]];
-    
-    SKTexture *pipeTexture = [SKTexture textureWithImage:textureImage];
-    pipe.firstMaterial.diffuse.contents = pipeTexture;
+    switch (texture)
+    {
+        case NVTextureManhole:
+        {
+            UIImage *textureImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"manholeTexture"
+                                                                                                   ofType:@"png"]];
+            
+            SKTexture *skTexture = [SKTexture textureWithImage:textureImage];
+            pipe.firstMaterial.diffuse.contents = skTexture;
+        }
+            
+            break;
+            
+        case NVTexturePipe:
+        {
+            UIImage *textureImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"pipeTexture"
+                                                                                                   ofType:@"png"]];
+            
+            SKTexture *skTexture = [SKTexture textureWithImage:textureImage];
+            pipe.firstMaterial.diffuse.contents = skTexture;
+        }
+            
+            break;
+            
+        default:
+            break;
+    }
     
     return pipe;
 }
