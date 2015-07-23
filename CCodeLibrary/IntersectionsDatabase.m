@@ -140,7 +140,7 @@ static IntersectionsDatabase *_statdatabase = nil;
                  ramp:(int)r
                  from:(sqlite3_stmt *)statement
 {
-    int icol = (7 + (r - 1));
+    int icol = (9 + (r - 1));
     int icoord = sqlite3_column_int(statement, icol);
     
     short offsetx = LOWORD(icoord);
@@ -498,6 +498,7 @@ static IntersectionsDatabase *_statdatabase = nil;
         mpint.intID = intID;
         mpint.lev21x = sqlite3_column_int(statement, 4);
         mpint.lev21y = sqlite3_column_int(statement, 5);
+        mpint.intRotation = sqlite3_column_int(statement, 6);
         PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
         mpint.lat = lat;
         mpint.lon = lon;
@@ -788,6 +789,19 @@ static IntersectionsDatabase *_statdatabase = nil;
     return rtn;
 }
 
+void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
+{
+    double deg = pRot ? atof (pRot):0.0;
+    double az = LTWOPI(deg * DEGtoRAD * HALFPI);
+    double azms[4];
+    for (int i=0;i<4;i++)
+    {
+        azms[i] = LTWOPI(az + HALFPI * i);
+    }
+    sprintf (intAZMs,"%.4f|%.4f|%.4f|%.4f",azms[0],azms[1],azms[2],azms[3]);
+    return;
+}
+
 - (int)findIntersection:(int)lev21x
                       y:(int)lev21y
        intersectionText:(char *)intText
@@ -812,7 +826,7 @@ static IntersectionsDatabase *_statdatabase = nil;
         
         [self open];
         
-        NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",
+        NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs, rotation FROM Intersections WHERE intID = %i",
                            intpt.intID];
         
         sqlite3_stmt *statement = NULL;
@@ -825,11 +839,15 @@ static IntersectionsDatabase *_statdatabase = nil;
             int nStreets = sqlite3_column_int(statement,2);
             LPSTR pStreets = (LPSTR)sqlite3_column_text(statement, 3);
             LPSTR pAZMS = (LPSTR)sqlite3_column_text(statement, 4);
+            LPSTR pRot = (LPSTR)sqlite3_column_text(statement, 5);
             *plev21x = intX;
             *plev21y = intY;
             *pNumStreets = nStreets;
             strcpy(intText, pStreets);
-            strcpy(intAZMs, pAZMS);
+            if (pAZMS)
+                strcpy(intAZMs, pAZMS);
+            else
+                ComputeAZMsFromRotation (pRot,intAZMs);
         }
         
         SQLOKint(sqlite3_finalize(statement), "findIntersection2");

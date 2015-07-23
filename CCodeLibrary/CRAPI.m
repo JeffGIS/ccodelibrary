@@ -180,7 +180,7 @@
             fromAZMs:(NSArray *)azms
           withIntRot:(int)intRot
 {
-    int rtn = normalRot;
+    int rtn = normalRot+intRot;
     int minDiff = 999;
     int minRot = 0;
     
@@ -207,10 +207,11 @@
 - (void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm
                                    forInt:(MPIntersection *)currentIntersection
 {
-    currentIntersection.intRotation = [self intRotFromintAZMS:intAzm];
+    if (!currentIntersection.intRotation)
+        currentIntersection.intRotation = [self intRotFromintAZMS:intAzm];
     NSArray *azm = [intAzm componentsSeparatedByString:@"|"];
     
-    currentIntersection.quadDev0 = 0;
+    currentIntersection.quadDev0 = currentIntersection.intRotation;
     
     currentIntersection.quadDev90 = [self adjustQuadDev:90
                                                fromAZMs:azm

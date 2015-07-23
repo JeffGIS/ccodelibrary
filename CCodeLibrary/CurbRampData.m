@@ -50,7 +50,9 @@ static CurbRampData *_statdatabase = nil;
                                  error:nil];
     
     NSString *dbPath = [NSString stringWithFormat:@"%@/%i/CurbRamps.sqlite3", documentsDirectory, geoid];
-    
+    _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:dbPath
+                                                                          error:nil].fileSize;
+   
     return dbPath;
 }
 
@@ -165,8 +167,6 @@ static CurbRampData *_statdatabase = nil;
                        lastUpdateTime INTEGER,\
                        status INTEGER,\
                        assignedTo INTEGER,\
-                       latitude double,\
-                       longitude double,\
                        intX INTEGER,\
                        intY INTEGER,\
                        rotation INTEGER,\
@@ -192,7 +192,9 @@ static CurbRampData *_statdatabase = nil;
                        signal67 INTEGER,\
                        nStreets INTEGER,\
                        streetNames CHAR(512),\
-                       streetAZMs CHAR(128));\
+                       streetAZMs CHAR(128))\
+                       latitude double,\
+                       longitude double;\
                        CREATE VIRTUAL TABLE Intersections_index IF NOT EXISTS USING rtree(id,minX, maxX, minY, maxY);"];
     
     rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
