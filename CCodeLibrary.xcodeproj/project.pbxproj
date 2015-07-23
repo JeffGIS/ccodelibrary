@@ -32,7 +32,9 @@
 		A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = A92382AC1AD986010027659B /* GSSiBumpDetector.m */; };
 		A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */; };
 		A92E0BA81AF7A461008A44AC /* NVPhotoViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */; };
-		A93FBE071B0ED5890019A8F3 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A93FBE061B0ED5890019A8F3 /* GoogleMaps.framework */; };
+		A933D9F61B5D499500D621CD /* NVPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = A933D9F51B5D499500D621CD /* NVPipe.m */; };
+		A933D9FA1B5D4E2800D621CD /* NVPipe.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A933D9F41B5D499500D621CD /* NVPipe.h */; };
+		A933D9FD1B5D4FEF00D621CD /* NV3DMath.m in Sources */ = {isa = PBXBuildFile; fileRef = A933D9FC1B5D4FEF00D621CD /* NV3DMath.m */; };
 		A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770C19F7F9F40062906E /* SharedDefaults.m */; };
 		A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A770F19F8045C0062906E /* FacilitiesDatabase.m */; };
 		A94A771319F807570062906E /* Facility.m in Sources */ = {isa = PBXBuildFile; fileRef = A94A771219F807570062906E /* Facility.m */; };
@@ -57,6 +59,8 @@
 		A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = A99050871ACB942F00C6AAAF /* GSSiDatePicker.m */; };
 		A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508A1ACB947000C6AAAF /* SpreadsheetView.m */; };
 		A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */; };
+		A99873251B59ACC100200CA9 /* SewerData.m in Sources */ = {isa = PBXBuildFile; fileRef = A99873241B59ACC100200CA9 /* SewerData.m */; };
+		A99873261B59ACD500200CA9 /* SewerData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99873231B59ACC100200CA9 /* SewerData.h */; };
 		A99C88FB1AEDDFDE00A0856F /* UIView+ColorOfPoint.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90D1FC11AE6510F00CBFEE7 /* UIView+ColorOfPoint.h */; };
 		A99C88FC1AEDDFE300A0856F /* gssitype.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB268A181AC5E9F700A68EC8 /* gssitype.h */; };
 		A99C88FD1AEDDFE700A0856F /* gmlimits.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB268A191AC5E9F700A68EC8 /* gmlimits.h */; };
@@ -182,6 +186,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A933D9FA1B5D4E2800D621CD /* NVPipe.h in CopyFiles */,
+				A99873261B59ACD500200CA9 /* SewerData.h in CopyFiles */,
 				A90C6E971B4A237600D87DB8 /* NVPDFSnapshotter.h in CopyFiles */,
 				EBAB42331B2B3CEF00C36FFC /* CurbRampData.h in CopyFiles */,
 				A98A57AC1B20AEE400906FBC /* NVCalibrationController.h in CopyFiles */,
@@ -302,7 +308,10 @@
 		A92382AC1AD986010027659B /* GSSiBumpDetector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiBumpDetector.m; sourceTree = "<group>"; };
 		A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPhotoViewController.h; sourceTree = "<group>"; };
 		A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPhotoViewController.m; sourceTree = "<group>"; };
-		A93FBE061B0ED5890019A8F3 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
+		A933D9F41B5D499500D621CD /* NVPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPipe.h; sourceTree = "<group>"; };
+		A933D9F51B5D499500D621CD /* NVPipe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPipe.m; sourceTree = "<group>"; };
+		A933D9FB1B5D4FEF00D621CD /* NV3DMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NV3DMath.h; sourceTree = "<group>"; };
+		A933D9FC1B5D4FEF00D621CD /* NV3DMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NV3DMath.m; sourceTree = "<group>"; };
 		A94A770B19F7F9F40062906E /* SharedDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedDefaults.h; sourceTree = "<group>"; };
 		A94A770C19F7F9F40062906E /* SharedDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedDefaults.m; sourceTree = "<group>"; };
 		A94A770E19F8045C0062906E /* FacilitiesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacilitiesDatabase.h; sourceTree = "<group>"; };
@@ -336,6 +345,8 @@
 		A990508A1ACB947000C6AAAF /* SpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpreadsheetView.m; sourceTree = "<group>"; };
 		A990508B1ACB947000C6AAAF /* SpreadSheetViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpreadSheetViewCell.h; sourceTree = "<group>"; };
 		A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpreadSheetViewCell.m; sourceTree = "<group>"; };
+		A99873231B59ACC100200CA9 /* SewerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SewerData.h; sourceTree = "<group>"; };
+		A99873241B59ACC100200CA9 /* SewerData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SewerData.m; sourceTree = "<group>"; };
 		A99C893B1AEDE1B900A0856F /* GSSiDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiDefs.h; sourceTree = "<group>"; };
 		A99C893C1AEDE1B900A0856F /* GSSiDefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiDefs.m; sourceTree = "<group>"; };
 		A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+VersionBuild.h"; sourceTree = "<group>"; };
@@ -437,7 +448,6 @@
 				A9735AF119E779DF00894359 /* SystemConfiguration.framework in Frameworks */,
 				1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */,
 				1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */,
-				A93FBE071B0ED5890019A8F3 /* GoogleMaps.framework in Frameworks */,
 				1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -462,6 +472,17 @@
 				A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */,
 			);
 			name = Categories;
+			sourceTree = "<group>";
+		};
+		A933D9F31B5D494600D621CD /* 3D Views */ = {
+			isa = PBXGroup;
+			children = (
+				A933D9FB1B5D4FEF00D621CD /* NV3DMath.h */,
+				A933D9FC1B5D4FEF00D621CD /* NV3DMath.m */,
+				A933D9F41B5D499500D621CD /* NVPipe.h */,
+				A933D9F51B5D499500D621CD /* NVPipe.m */,
+			);
+			name = "3D Views";
 			sourceTree = "<group>";
 		};
 		A94A771A19F812940062906E /* Facilities */ = {
@@ -651,7 +672,6 @@
 		EBA2E45C199527660085B2E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A93FBE061B0ED5890019A8F3 /* GoogleMaps.framework */,
 				A97B72771ADB4912001ACFAE /* AVFoundation.framework */,
 				A97867331A521934000A9BB8 /* MapKit.framework */,
 				A9735AF019E779DF00894359 /* SystemConfiguration.framework */,
@@ -666,9 +686,10 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
-				EBAB422C1B2B071700C36FFC /* Databases */,
+				A933D9F31B5D494600D621CD /* 3D Views */,
 				A90D1FB61AE6174700CBFEE7 /* Categories */,
 				A94A771D19F813040062906E /* CCode */,
+				EBAB422C1B2B071700C36FFC /* Databases */,
 				A94A771A19F812940062906E /* Facilities */,
 				A94A771B19F812AA0062906E /* Intersections */,
 				A94A771F19F813EB0062906E /* Network */,
@@ -729,6 +750,8 @@
 			children = (
 				EBAB422D1B2B073A00C36FFC /* CurbRampData.h */,
 				EBAB422E1B2B073A00C36FFC /* CurbRampData.m */,
+				A99873231B59ACC100200CA9 /* SewerData.h */,
+				A99873241B59ACC100200CA9 /* SewerData.m */,
 			);
 			name = Databases;
 			sourceTree = "<group>";
@@ -827,8 +850,10 @@
 				A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */,
 				A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */,
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
+				A933D9FD1B5D4FEF00D621CD /* NV3DMath.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */,
+				A933D9F61B5D499500D621CD /* NVPipe.m in Sources */,
 				A9735AF419E77B6800894359 /* Reachability.m in Sources */,
 				A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */,
 				A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */,
@@ -859,6 +884,7 @@
 				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
 				A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */,
 				A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */,
+				A99873251B59ACC100200CA9 /* SewerData.m in Sources */,
 				A90D1FBC1AE6184800CBFEE7 /* UIView+ColorOfPoint.m in Sources */,
 				A9D269E61AE562E100A5C38E /* TableViewCellLabel.m in Sources */,
 				A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */,

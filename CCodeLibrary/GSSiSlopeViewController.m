@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     SCStatusCancel,
 };
 
-#define COUNT 100
+static int COUNT=100;
 
 @interface GSSiSlopeViewController ()
 
@@ -48,17 +48,29 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 + (GSSiSlopeViewController *)slopeControllerWithCalibrationTarget:(CGFloat)calibrationTarget
                                                        flipRadius:(CGFloat)flipRadius
+                                                numCriticalValues:(int)nCritical
+                                                   criticalValues:(CGFloat*)critVals
+                                            numCriticalSideValues:(int)nCriticalSide
+                                               criticalSideValues:(CGFloat*)critSideVals
+                                                       errorValue:(CGFloat)errval
                                                    useCalibration:(BOOL)useCalibration
+                                                     steadyFactor:(CGFloat)steadyFac
+                                                      countFactor:(CGFloat)countFac
                                                    displayDegrees:(BOOL)displayDegrees
-                                                         delegate:(id)delegate
+                                                         delegate:(id)delegate;
 {
     GSSiSlopeViewController *slopeController = [[GSSiSlopeViewController alloc] init];
     slopeController.calibrationTarget = calibrationTarget;
     slopeController.flipRadius = flipRadius;
     slopeController.displayDegrees = displayDegrees;
     slopeController.useCalibration = useCalibration;
-    slopeController.useHeadingCalibration = YES;
+    slopeController.useHeadingCalibration = NO;
     slopeController.delegate = delegate;
+    slopeController.steadyFactor = max (steadyFac,1.0);
+    if (countFac)
+        slopeController.countFactor = countFac;
+    else
+        slopeController.countFactor = 1.0;
     slopeController.promptText = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
     
     return slopeController;
@@ -129,7 +141,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
     }
     
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
-    _steadyDiff = 0.0087;
+    _steadyDiff = 0.01 * _steadyFactor;
+    COUNT = 100 * _countFactor;
     _maxX = _maxY = _maxZ = -10.0;
     _minX = _minY = _minZ = 10.0;
     _status = SCStatusStart;
@@ -317,6 +330,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     if (_status == SCStatusStart)
     {
         [self startManagers];
+        [self resetSumsAndCounter];
         
         _status = SCStatusCancel;
         _unableButton.enabled = NO;
@@ -343,14 +357,30 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 - (void)manual:(UIButton *)button
 {
-    NVSliderController *slider = [[NVSliderController alloc] initWithCenter:self.view.center
-                                                                      width:728.0
-                                                                 startValue:_data.frontSlopePct
-                                                                   minValue:(_data.frontSlopePct - 2.0)
-                                                                   maxValue:(_data.frontSlopePct + 2.0)
-                                                                   delegate:self
-                                                              configuration:NVSliderConfigurationManualSlope];
+    NVSliderController *slider;
     
+    if (_displayDegrees)
+    {
+        slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                      width:728.0
+                                                 startValue:_data.frontSlopeDegrees
+                                                   minValue:(_data.frontSlopeDegrees - 2.0)
+                                                   maxValue:(_data.frontSlopeDegrees + 2.0)
+                                                   delegate:self
+                                              configuration:NVSliderConfigurationManualSlope];
+    }
+    
+    else
+    {
+        slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                      width:728.0
+                                                 startValue:_data.frontSlopePct
+                                                   minValue:(_data.frontSlopePct - 2.0)
+                                                   maxValue:(_data.frontSlopePct + 2.0)
+                                                   delegate:self
+                                              configuration:NVSliderConfigurationManualSlope];
+    }
+   
     [slider showSliderControllerInView:self.view
                               animated:YES
                                overlay:YES];
@@ -556,7 +586,12 @@ typedef NS_ENUM(NSInteger, SCStatus)
     _data.sideSlopeDegrees = [self adjustSlope:angx
                                    isSideSlope:YES];
     
+    NSLog(@"%f", _data.frontSlopeDegrees);
+    
     _data.frontSlopePct = (tan(_data.frontSlopeDegrees * DEGtoRAD) * 100);
+    
+    NSLog(@"%f", _data.frontSlopePct);
+    
     _data.sideSlopePct = (tan(_data.sideSlopeDegrees * DEGtoRAD) * 100);
     _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
 }
@@ -610,7 +645,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
             [self slopeMeasurementComplete];
         }
         
-        else if (_headingCounter)
+        else if (_headingCounter || !CLLocationManager.headingAvailable)
         {
             [self stopManagers];
             
@@ -618,8 +653,16 @@ typedef NS_ENUM(NSInteger, SCStatus)
             _data.accelY[0] = (_aSumY / COUNT);
             _data.accelZ[0] = (_aSumZ / COUNT);
             
-            _data.heading = _sumHeading / _headingCounter;
-            _data.heading = Between0And360D(_data.heading);
+            if (_headingCounter)
+            {
+                _data.heading = _sumHeading / _headingCounter;
+                _data.heading = Between0And360D(_data.heading);
+            }
+            else
+            {
+                _data.heading = 999;
+                _headingCounter = 1;
+            }
             [self slopesFromAccelerometer:1];
             
             if (_data.maxSlopePct < (_calibrationTarget - _flipRadius) ||
@@ -800,7 +843,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
         _headingLabel.text = [NSString stringWithFormat:@"Heading = %.01f\u00B0", _data.heading];
         _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f\u00B0", _data.frontSlopeDegrees];
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f\u00B0", _data.sideSlopeDegrees];
-        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f\u00B0", _data.maxSlopePct];
+        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f\u00B0", _data.maxSlopeDegrees];
         
         _maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f",
                                _data.accelX[0], _data.accelY[0], _data.accelZ[0]];
@@ -840,12 +883,22 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (void)sliderView:(NVSliderController *)sliderView
     didReturnValue:(CGFloat)value
 {
-    _data.frontSlopePct = value;
-    _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
-    
-    _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlopePct];
-    _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _data.maxSlopePct];
-    
+    if (_displayDegrees)
+    {
+        _data.frontSlopeDegrees = value;
+        _data.maxSlopeDegrees = value;//ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
+        
+        _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f\u00B0", _data.frontSlopeDegrees];
+        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f\u00B0", _data.maxSlopeDegrees];
+    }
+    else
+    {
+        _data.frontSlopePct = value;
+        _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
+        
+        _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlopePct];
+        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _data.maxSlopePct];
+    }
     [sliderView hideSliderController:YES];
 }
 
@@ -867,6 +920,11 @@ typedef NS_ENUM(NSInteger, SCStatus)
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
     return UIInterfaceOrientationPortrait;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 - (BOOL)shouldAutorotate

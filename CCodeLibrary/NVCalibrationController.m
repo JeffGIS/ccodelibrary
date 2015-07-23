@@ -289,8 +289,15 @@ static CGFloat _deviceValues[9][4];
     
     GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                           flipRadius:0.0
+                                                                                   numCriticalValues:0
+                                                                                      criticalValues:0
+                                                                               numCriticalSideValues:0
+                                                                                  criticalSideValues:0
+                                                                                          errorValue:0
                                                                                       useCalibration:NO
-                                                                                      displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
+                                                                                        steadyFactor:0
+                                                                                         countFactor:0
+                                                                                      displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                                             delegate:self];
     if (!_currentIndex)
         slopeVC.promptText = @"Place the iPad on the level surface and tap 'Start' to begin measurement.";
@@ -367,7 +374,14 @@ static CGFloat _deviceValues[9][4];
     {
         slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                      flipRadius:0.0
+                                                              numCriticalValues:0
+                                                                 criticalValues:0
+                                                          numCriticalSideValues:0
+                                                             criticalSideValues:0
+                                                                     errorValue:0
                                                                  useCalibration:YES
+                                                                   steadyFactor:0
+                                                                    countFactor:0
                                                                  displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                        delegate:self];
     }
@@ -376,7 +390,14 @@ static CGFloat _deviceValues[9][4];
     {
         slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                      flipRadius:0.0
+                                                              numCriticalValues:0
+                                                                 criticalValues:0
+                                                          numCriticalSideValues:0
+                                                             criticalSideValues:0
+                                                                     errorValue:0
                                                                  useCalibration:NO
+                                                                   steadyFactor:0
+                                                                    countFactor:0
                                                                  displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                        delegate:self];
     }
@@ -424,19 +445,11 @@ static CGFloat _deviceValues[9][4];
     }];
 }
 
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
-{
-    return UIInterfaceOrientationPortrait;
-}
-
-- (BOOL)shouldAutorotate
-{
-    return NO;
-}
-
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
              didReturnSlopeData:(NVSlopeData)slopeData
 {
+    NSLog(@"currentIndex:%ld", (long)_currentIndex);
+    
     [controller dismissViewControllerAnimated:YES
                                    completion:nil];
     
@@ -460,7 +473,15 @@ static CGFloat _deviceValues[9][4];
             
             NSUInteger selectedCount = SharedDefaults.defaults.calibrationValueSelectedCount;
             
-            if (_currentIndex > selectedCount || selectedCount == 1)
+            NSLog(@"%lu", (unsigned long)selectedCount);
+            
+            NSUInteger correction = (selectedCount - 1);
+            correction *= 2.0;
+            selectedCount = (correction + 1);
+            
+            NSLog(@"count:%lu, index:%ld", (unsigned long)selectedCount, (long)_currentIndex);
+            
+            if (_currentIndex >= selectedCount || selectedCount == 1)
             {
                 [self saveCalibrationValues];
                 
@@ -924,7 +945,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                           width:(self.view.frame.size.width - 40.0)
                                                      startValue:0.0
                                                        minValue:0.0
-                                                       maxValue:90.0
+                                                       maxValue:180.0
                                                        delegate:self
                                                   configuration:NVSliderConfigurationCalibrationDegrees];
             
@@ -1002,8 +1023,15 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
         {
             GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCalibrationTarget:0.0
                                                                                                   flipRadius:0.0
+                                                                                           numCriticalValues:0
+                                                                                              criticalValues:0
+                                                                                       numCriticalSideValues:0
+                                                                                          criticalSideValues:0
+                                                                                                  errorValue:0
                                                                                               useCalibration:NO
-                                                                                              displayDegrees:(_currentValue == NVCalibrationTypeDegrees)
+                                                                                                steadyFactor:0
+                                                                                                 countFactor:0
+                                                                                              displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                                                     delegate:self];
             
             slopeVC.promptText = @"";
@@ -1026,6 +1054,21 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
             [self handleTableViewDismissal];
         }
     }
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
 }
 
 @end

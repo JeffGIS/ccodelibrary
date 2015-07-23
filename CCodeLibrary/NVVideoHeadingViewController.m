@@ -319,6 +319,11 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
     return UIInterfaceOrientationPortrait;
 }
 
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 - (BOOL)shouldAutorotate
 {
     return NO;

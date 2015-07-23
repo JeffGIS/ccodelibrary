@@ -34,14 +34,19 @@
     return toInterfaceOrientation == UIInterfaceOrientationPortrait;
 }
 
-- (BOOL)shouldAutorotate
-{
-    return NO;
-}
-
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
     return UIInterfaceOrientationPortrait;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
 }
 
 @end

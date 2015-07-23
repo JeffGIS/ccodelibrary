@@ -24,14 +24,18 @@ static CurbRampData *_statdatabase = nil;
     
     return _statdatabase;
 }
+- (id)init
+{
+    self = [super init];
+    return self;
+}
 - (id)initWithGeoid:(int)geoid
 {
     if ((self = [super init]))
     {
-        self.geoid = geoid;
-        self.path = [self databasePath:geoid];
-        self.isOpen = sqlite3_open(self.path.UTF8String, &_database);
-        NSLog(@"CurbRamp Database init");
+        _documentsDirectory = UserDefaults.defaults.sharedFilePath;
+        _fileName = @"CurbRamps.sqlite";
+        _path = [self databasePath:geoid];
     }
     
     return self;
@@ -114,6 +118,7 @@ static CurbRampData *_statdatabase = nil;
     }
     
     [self close];
+    return -1;
     return rtn;
 }
 
@@ -199,6 +204,8 @@ static CurbRampData *_statdatabase = nil;
     
     rtn = SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
     
+    rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
+    [self close];
     return rtn;
     
 }
