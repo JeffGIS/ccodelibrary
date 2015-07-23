@@ -77,11 +77,10 @@
     [_fileStream setProperty:@"YES"
                       forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url
+                                             cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                         timeoutInterval:60.0];
     assert(request);
-    
-    int itimeout = request.timeoutInterval;
-    [request setTimeoutInterval:(itimeout * 1)];
     
     _connection = [NSURLConnection connectionWithRequest:request
                                                 delegate:self];
@@ -100,6 +99,8 @@
 - (void)connection:(NSURLConnection *)theConnection
   didFailWithError:(NSError *)error
 {
+    assert(theConnection == _connection);
+    
     NSLog(@"NSURLConnection Error %li:%@", (long)error.code, error.localizedDescription);
 }
 
