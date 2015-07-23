@@ -10,6 +10,7 @@
 @property (nonatomic, copy) NSString *directory, *username, *password, *port, *ftpDomain, *urlText;
 @property (nonatomic) NSURLConnection *connection;
 @property (nonatomic) NSOutputStream *fileStream;
+@property (nonatomic) NSMutableData *mutableData;
 
 @end
 
@@ -74,9 +75,6 @@
     
     assert(_fileStream);
     
-    [_fileStream setProperty:@"YES"
-                      forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
-    
     NSURLRequest *request = [NSURLRequest requestWithURL:url
                                              cachePolicy:NSURLRequestUseProtocolCachePolicy
                                          timeoutInterval:60.0];
@@ -96,34 +94,103 @@
     [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 
-- (void)connection:(NSURLConnection *)theConnection
+- (void)connection:(NSURLConnection *)connection
   didFailWithError:(NSError *)error
 {
-    assert(theConnection == _connection);
+    assert(connection == _connection);
     
     NSLog(@"NSURLConnection Error %li:%@", (long)error.code, error.localizedDescription);
+    
+    [self stopReceiveWithStatus:FTPStatusConnectionFailed
+                   statusString:error.localizedDescription];
 }
 
-- (void)connection:(NSURLConnection *)theConnection
-didReceiveResponse:(NSURLResponse *)response
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    assert(theConnection == _connection);
-    assert(response);
+    assert(connection == _connection);
     
-   [_fileStream open];
-}
-
-- (void)connection:(NSURLConnection *)theConnection
-    didReceiveData:(NSData *)data
-{
-    assert(theConnection == _connection);
-    
-    if (data && _delegate)
+    if (_mutableData && _delegate)
     {
         [_delegate FTPDirectoryListDidCompleteWithStatus:FTPStatusOK
                                             statusString:@"Directory List Successful"
-                                           directoryList:data];
+                                           directoryList:_mutableData];
     }
+    
+    [self stopReceiveWithStatus:FTPStatusOK
+                   statusString:@"NSURL Did Finish Loading"];
+}
+
+- (void)connection:(NSURLConnection *)connection
+didReceiveResponse:(NSURLResponse *)response
+{
+    assert(connection == _connection);
+    assert(response);
+    
+    _mutableData = [[NSMutableData alloc] init];
+    
+    [_fileStream open];
+    
+    if (_fileStream.streamStatus == NSStreamStatusError)
+    {
+        NSLog(@"StreamStatus:%lu", (unsigned long)_fileStream.streamStatus);
+        
+        [self stopReceiveWithStatus:FTPStatusFileWriteError
+                       statusString:_fileStream.streamError.localizedDescription];
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection
+    didReceiveData:(NSData *)data
+{
+    assert(connection == _connection);
+    
+    [_mutableData appendData:data];
+}
+
+- (void)stopReceiveWithStatus:(FTPStatus)status
+                 statusString:(NSString *)statusString
+{
+    if (_connection)
+    {
+        [_connection cancel];
+        _connection = nil;
+    }
+    
+    if (_fileStream)
+    {
+        [_fileStream close];
+        _fileStream = nil;
+    }
+    
+    [self receiveDidStopWithStatus:status
+                      statusString:statusString];
+}
+
+- (void)receiveDidStopWithStatus:(FTPStatus)status
+                    statusString:(NSString *)statusString
+{
+    
+    if (!statusString)
+        status = 1;
+    
+    [NetworkManager.sharedInstance didStopNetworkOperation];
+    
+    if (_delegate)
+    {
+        [_delegate FTPDirectoryListDidCompleteWithStatus:status
+                                            statusString:statusString
+                                           directoryList:nil];
+        
+    }
+}
+
+- (BOOL)isReceiving
+{
+    if (_connection)
+        return YES;
+    
+    else
+        return NO;
 }
 
 @end
