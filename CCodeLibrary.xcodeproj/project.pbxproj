@@ -132,6 +132,8 @@
 		A9D3A06D1AF53A4700E0D834 /* NVSliderController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D3A06A1AF539E600E0D834 /* NVSliderController.h */; };
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
 		A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D952B11A96D484008B9156 /* GSSiAlertController.m */; };
+		A9DDC08A1B613EF4000DEEA9 /* FTPDirectoryList.m in Sources */ = {isa = PBXBuildFile; fileRef = A9DDC0891B613EF4000DEEA9 /* FTPDirectoryList.m */; };
+		A9DDC08B1B6153FD000DEEA9 /* FTPDirectoryList.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9DDC0881B613EF4000DEEA9 /* FTPDirectoryList.h */; };
 		A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */; };
 		A9E2130E1AFE4BFC005ECBBA /* NVImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E2130D1AFE4BFC005ECBBA /* NVImagePickerController.m */; };
 		A9E2130F1AFE4C2B005ECBBA /* NVImagePickerController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */; };
@@ -186,6 +188,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A9DDC08B1B6153FD000DEEA9 /* FTPDirectoryList.h in CopyFiles */,
 				A933D9FA1B5D4E2800D621CD /* NVPipe.h in CopyFiles */,
 				A99873261B59ACD500200CA9 /* SewerData.h in CopyFiles */,
 				A90C6E971B4A237600D87DB8 /* NVPDFSnapshotter.h in CopyFiles */,
@@ -367,6 +370,8 @@
 		A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiSlopeViewController.m; sourceTree = "<group>"; };
 		A9D952B01A96D484008B9156 /* GSSiAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiAlertController.h; sourceTree = "<group>"; };
 		A9D952B11A96D484008B9156 /* GSSiAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiAlertController.m; sourceTree = "<group>"; };
+		A9DDC0881B613EF4000DEEA9 /* FTPDirectoryList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDirectoryList.h; sourceTree = "<group>"; };
+		A9DDC0891B613EF4000DEEA9 /* FTPDirectoryList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPDirectoryList.m; sourceTree = "<group>"; };
 		A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RampTypeView.h; sourceTree = "<group>"; };
 		A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RampTypeView.m; sourceTree = "<group>"; };
 		A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVImagePickerController.h; sourceTree = "<group>"; };
@@ -639,6 +644,8 @@
 				1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */,
 				EB05C21119ED378400F0688B /* FTPDataPush.h */,
 				EB05C21219ED378400F0688B /* FTPDataPush.m */,
+				A9DDC0881B613EF4000DEEA9 /* FTPDirectoryList.h */,
+				A9DDC0891B613EF4000DEEA9 /* FTPDirectoryList.m */,
 				EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */,
 				EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */,
 				EBB9A61819FFC02900685716 /* GetAssignments.h */,
@@ -907,6 +914,7 @@
 				A94A771919F807CE0062906E /* FacilityRecord.m in Sources */,
 				A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */,
 				A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */,
+				A9DDC08A1B613EF4000DEEA9 /* FTPDirectoryList.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */,
 				A97407C61AF6A63900B2FF30 /* NVProgressView.m in Sources */,
