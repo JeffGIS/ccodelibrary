@@ -98,6 +98,12 @@
 }
 
 - (void)connection:(NSURLConnection *)theConnection
+  didFailWithError:(NSError *)error
+{
+    NSLog(@"NSURLConnection Error %li:%@", (long)error.code, error.localizedDescription);
+}
+
+- (void)connection:(NSURLConnection *)theConnection
 didReceiveResponse:(NSURLResponse *)response
 {
     assert(theConnection == _connection);
