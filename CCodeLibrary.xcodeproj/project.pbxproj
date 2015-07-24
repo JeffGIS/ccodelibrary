@@ -127,6 +127,8 @@
 		A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */; };
 		A9C525D01A3B59880056711F /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C525CF1A3B59880056711F /* Colors.m */; };
 		A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */; };
+		A9D258C71B62C67F00DF553A /* FTPDirectoryCreate.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D258C61B62C67F00DF553A /* FTPDirectoryCreate.m */; };
+		A9D258C81B62C6CC00DF553A /* FTPDirectoryCreate.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D258C51B62C67F00DF553A /* FTPDirectoryCreate.h */; };
 		A9D269E61AE562E100A5C38E /* TableViewCellLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D269E51AE562E100A5C38E /* TableViewCellLabel.m */; };
 		A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3A06B1AF539E600E0D834 /* NVSliderController.m */; };
 		A9D3A06D1AF53A4700E0D834 /* NVSliderController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D3A06A1AF539E600E0D834 /* NVSliderController.h */; };
@@ -188,6 +190,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A9D258C81B62C6CC00DF553A /* FTPDirectoryCreate.h in CopyFiles */,
 				A9DDC08B1B6153FD000DEEA9 /* FTPDirectoryList.h in CopyFiles */,
 				A933D9FA1B5D4E2800D621CD /* NVPipe.h in CopyFiles */,
 				A99873261B59ACD500200CA9 /* SewerData.h in CopyFiles */,
@@ -362,6 +365,8 @@
 		A9C525CF1A3B59880056711F /* Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Colors.m; sourceTree = "<group>"; };
 		A9C8ED3A1A5849F700DF9856 /* GetPriorityLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPriorityLocations.h; sourceTree = "<group>"; };
 		A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPriorityLocations.m; sourceTree = "<group>"; };
+		A9D258C51B62C67F00DF553A /* FTPDirectoryCreate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDirectoryCreate.h; sourceTree = "<group>"; };
+		A9D258C61B62C67F00DF553A /* FTPDirectoryCreate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPDirectoryCreate.m; sourceTree = "<group>"; };
 		A9D269E41AE562E100A5C38E /* TableViewCellLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewCellLabel.h; sourceTree = "<group>"; };
 		A9D269E51AE562E100A5C38E /* TableViewCellLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewCellLabel.m; sourceTree = "<group>"; };
 		A9D3A06A1AF539E600E0D834 /* NVSliderController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSliderController.h; sourceTree = "<group>"; };
@@ -644,6 +649,8 @@
 				1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */,
 				EB05C21119ED378400F0688B /* FTPDataPush.h */,
 				EB05C21219ED378400F0688B /* FTPDataPush.m */,
+				A9D258C51B62C67F00DF553A /* FTPDirectoryCreate.h */,
+				A9D258C61B62C67F00DF553A /* FTPDirectoryCreate.m */,
 				A9DDC0881B613EF4000DEEA9 /* FTPDirectoryList.h */,
 				A9DDC0891B613EF4000DEEA9 /* FTPDirectoryList.m */,
 				EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */,
@@ -917,6 +924,7 @@
 				A9DDC08A1B613EF4000DEEA9 /* FTPDirectoryList.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */,
+				A9D258C71B62C67F00DF553A /* FTPDirectoryCreate.m in Sources */,
 				A97407C61AF6A63900B2FF30 /* NVProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

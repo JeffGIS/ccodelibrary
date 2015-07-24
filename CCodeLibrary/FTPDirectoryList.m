@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "FTPDirectoryList.h"
+#import "NetworkManager.h"
 #import "Reachability.h"
 
 @interface FTPDirectoryList ()

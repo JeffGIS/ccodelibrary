@@ -2,7 +2,6 @@
 //  CCodeLibrary
 
 #import <Foundation/Foundation.h>
-#import "NetworkManager.h"
 #import "GSSiEnums.h"
 
 @class FTPDirectoryList;
