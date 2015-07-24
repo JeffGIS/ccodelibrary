@@ -15,7 +15,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 @interface NVSliderController ()
 
 @property (nonatomic) UISlider *slider;
-@property (nonatomic) UILabel *sliderLabel, *lowTic, *highTic, *midTic, *midLowTic, *midHighTic;
+@property (nonatomic) UILabel *sliderLabel, *lowTic, *highTic, *midTic, *midLowTic, *midHighTic, *promptLabel;
 @property (nonatomic) UIButton *saveButton, *cancelButton, *rangeButton;
 @property (nonatomic) UIView *ticView, *overlayView;
 @property (nonatomic) CGFloat minValue, maxValue;
@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             maxValue:(CGFloat)maxValue
             delegate:(id)delegate
        configuration:(NVSliderConfiguration)configuration
+                type:(NVSliderMeasurementType)type
 {
     CGFloat height = 260.0;
     
@@ -50,6 +51,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         _range = NVSliderControllerRangeMax;
         _minValue = minValue;
         _maxValue = maxValue;
+        _type = type;
         
         CGFloat ticMargin = ((UserDefaults.defaults.redSliderThumb.size.width / 2.0) - 10.0);
         
@@ -556,6 +558,31 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         self.layer.borderWidth = 0.0;
     }
     
+    if (_type != NVSliderMeasurementTypeDefault)
+    {
+        _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.origin.x, (self.frame.origin.y - 120.0),
+                                                              self.frame.size.width, 80.0)];
+        
+        _promptLabel.backgroundColor = UIColor.whiteColor;
+        _promptLabel.layer.cornerRadius = 6.0;
+        _promptLabel.layer.masksToBounds = YES;
+        _promptLabel.textColor = _sliderLabel.textColor;
+        _promptLabel.textAlignment = _sliderLabel.textAlignment;
+        _promptLabel.font = _sliderLabel.font;
+        _promptLabel.adjustsFontSizeToFitWidth = YES;
+        
+        if (_type == NVSliderMeasurementTypeFrontSlope)
+            _promptLabel.text = @"Manual Front Slope Measurement Required";
+        
+        else if (_type == NVSliderMeasurementTypeSideSlope)
+            _promptLabel.text = @"Manual Side Slope Measurement Required";
+        
+        if (animated)
+            _promptLabel.alpha = 0.0;
+        
+        [view addSubview:_promptLabel];
+    }
+    
     if (animated)
         self.alpha = 0.0;
     
@@ -566,6 +593,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         [UIView animateWithDuration:0.25
                          animations:^{
                              _overlayView.alpha = 0.7;
+                             _promptLabel.alpha = 1.0;
                              self.alpha = 1.0;
                          }];
     }
@@ -578,9 +606,11 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         [UIView animateWithDuration:0.25
                          animations:^{
                              _overlayView.alpha = 0.0;
+                             _promptLabel.alpha = 0.0;
                              self.alpha = 0.0;
                          } completion:^(BOOL finished) {
                              [_overlayView removeFromSuperview];
+                             [_promptLabel removeFromSuperview];
                              [self removeFromSuperview];
                          }];
     }

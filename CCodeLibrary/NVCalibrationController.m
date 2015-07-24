@@ -287,15 +287,15 @@ static CGFloat _deviceValues[9][4];
     _currentValue = [_calibrationValues[NVCalibrationArrayIndexValue][index] floatValue];
     _currentType = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][index] integerValue];
     
-    GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:0
-                                                                               criticalSideValue:0
-                                                                                          errorValue:0
-                                                                                      useCalibration:NO
+    GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:0.0
+                                                                               criticalSideValue:0.0
+                                                                                      errorValue:0.0
+                                                                                  useCalibration:NO
                                                                                         selfTest:NO
-                                                                                        steadyFactor:0
-                                                                                         countFactor:0
-                                                                                      displayDegrees:(_currentType == NVCalibrationTypeDegrees)
-                                                                                            delegate:self];
+                                                                                    steadyFactor:0.0
+                                                                                     countFactor:0.0
+                                                                                  displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                                                        delegate:self];
     if (!_currentIndex)
         slopeVC.promptText = @"Place the iPad on the level surface and tap 'Start' to begin measurement.";
     
@@ -925,7 +925,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                        minValue:0.0
                                                        maxValue:100.0
                                                        delegate:self
-                                                  configuration:NVSliderConfigurationCalibrationRunningSlope];
+                                                  configuration:NVSliderConfigurationCalibrationRunningSlope
+                                                           type:NVSliderMeasurementTypeDefault];
             
         }
             break;
@@ -938,7 +939,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                        minValue:0.0
                                                        maxValue:180.0
                                                        delegate:self
-                                                  configuration:NVSliderConfigurationCalibrationDegrees];
+                                                  configuration:NVSliderConfigurationCalibrationDegrees
+                                                           type:NVSliderMeasurementTypeDefault];
             
         }
             break;
@@ -951,7 +953,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                        minValue:1.0
                                                        maxValue:48.0
                                                        delegate:self
-                                                  configuration:NVSliderConfigurationCalibrationRiseRun];
+                                                  configuration:NVSliderConfigurationCalibrationRiseRun
+                                                           type:NVSliderMeasurementTypeDefault];
             
         }
             break;

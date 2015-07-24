@@ -5,24 +5,31 @@
 #import "NVSliderController.h"
 #import <CoreLocation/CoreLocation.h>
 
+typedef NS_ENUM(NSInteger, NVManualStatus)
+{
+    NVManualStatusDevice,
+    NVManualStatusManual,
+    NVManualStatusCancelled,
+};
+
 typedef struct NVSlopeData {
     CGFloat accelX[2];
     CGFloat accelY[2];
     CGFloat accelZ[2];
-    CGFloat gravX[2];
-    CGFloat gravY[2];
-    CGFloat gravZ[2];
-    CGFloat yaw[2];
-    CGFloat pitch[2];
-    CGFloat roll[2];
     CGFloat frontSlopeDegrees;
     CGFloat sideSlopeDegrees;
     CGFloat frontSlopePct;
     CGFloat sideSlopePct;
+    CGFloat manualFrontSlopeDegrees;
+    CGFloat manualSideSlopeDegrees;
+    CGFloat manualFrontSlopePct;
+    CGFloat manualSideSlopePct;
     CGFloat maxSlopePct;
     CGFloat maxSlopeDegrees;
     CGFloat maxSlopeDeflection;
     CGFloat heading;
+    NVManualStatus frontManualStatus;
+    NVManualStatus sideManualStatus;
 } NVSlopeData;
 
 @class GSSiSlopeViewController;

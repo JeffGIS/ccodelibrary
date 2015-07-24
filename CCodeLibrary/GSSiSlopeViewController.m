@@ -30,7 +30,7 @@ static int COUNT=100;
 @property (nonatomic) CGFloat steadyDiff;
 @property (nonatomic) CGFloat xRange, yRange, zRange;
 @property (nonatomic) CGFloat maxX, minX, maxY, minY, maxZ, minZ;
-@property (nonatomic) CGFloat gSumX, gSumY, gSumZ, aSumX, aSumY, aSumZ, yawSum, pitchSum, rollSum;
+@property (nonatomic) CGFloat aSumX, aSumY, aSumZ;
 @property (nonatomic) NVSlopeData data;
 @property (nonatomic) NSInteger counter, headingCounter;
 @property CGFloat minHead, maxHead;
@@ -62,10 +62,12 @@ static int COUNT=100;
     slopeController.useHeadingCalibration = NO;
     slopeController.delegate = delegate;
     slopeController.steadyFactor = max (steadyFac,1.0);
+    
     if (countFac)
         slopeController.countFactor = countFac;
     else
         slopeController.countFactor = 1.0;
+    
     slopeController.criticalValue = criticalVal;
     slopeController.criticalSideValue = criticalSideVal;
     slopeController.errorValue = errVal;
@@ -366,7 +368,8 @@ static int COUNT=100;
                                                    minValue:(_data.frontSlopeDegrees - 2.0)
                                                    maxValue:(_data.frontSlopeDegrees + 2.0)
                                                    delegate:self
-                                              configuration:NVSliderConfigurationManualSlope];
+                                              configuration:NVSliderConfigurationManualSlope
+                                                       type:NVSliderMeasurementTypeFrontSlope];
     }
     
     else
@@ -377,38 +380,13 @@ static int COUNT=100;
                                                    minValue:(_data.frontSlopePct - 2.0)
                                                    maxValue:(_data.frontSlopePct + 2.0)
                                                    delegate:self
-                                              configuration:NVSliderConfigurationManualSlope];
+                                              configuration:NVSliderConfigurationManualSlope
+                                                       type:NVSliderMeasurementTypeFrontSlope];
     }
    
     [slider showSliderControllerInView:self.view
                               animated:YES
                                overlay:YES];
-}
-
-- (void)startMotionManager
-{
-    _motionManager.deviceMotionUpdateInterval = 0.05;
-    _motionManager.accelerometerUpdateInterval = 0.05;
-    
-    if (CLLocationManager.headingAvailable && !_hasRun)
-        [_locationManager startUpdatingHeading];
-    
-    if ([_motionManager isAccelerometerAvailable])
-        [_motionManager startAccelerometerUpdates];
-    
-    if ([_motionManager isDeviceMotionAvailable])
-    {
-        [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical
-                                                            toQueue:NSOperationQueue.currentQueue
-                                                        withHandler:^(CMDeviceMotion *deviceMotion, NSError *error){
-                                                            [self computeSlopeFromDeviceMotion:deviceMotion];
-                                                            
-                                                            if(error)
-                                                                NSLog(@"DeviceMotionError:%@", error.localizedDescription);
-                                                        }];
-    }
-    
-    _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
 }
 
 - (void)startManagers
@@ -585,14 +563,10 @@ static int COUNT=100;
     _data.sideSlopeDegrees = [self adjustSlope:angx
                                    isSideSlope:YES];
     
-    NSLog(@"%f", _data.frontSlopeDegrees);
-    
     _data.frontSlopePct = (tan(_data.frontSlopeDegrees * DEGtoRAD) * 100);
-    
-    NSLog(@"%f", _data.frontSlopePct);
-    
     _data.sideSlopePct = (tan(_data.sideSlopeDegrees * DEGtoRAD) * 100);
     _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
+    _data.maxSlopeDegrees = (atan(_data.maxSlopePct / 100) * RADtoDEG);
 }
 
 - (void)locationManager:(CLLocationManager *)manager
@@ -662,10 +636,11 @@ static int COUNT=100;
                 _data.heading = 999;
                 _headingCounter = 1;
             }
+            
             [self slopesFromAccelerometer:1];
             
             if (_data.maxSlopePct < (_criticalValue - _errorValue) ||
-                (_data.maxSlopePct > (_criticalValue + _errorValue)))
+                (_data.maxSlopePct > (_criticalValue + _errorValue)) || !_selfTest)
             {
                 [self slopeMeasurementComplete];
             }
@@ -719,115 +694,11 @@ static int COUNT=100;
     }
 }
 
-- (void)computeSlopeFromDeviceMotion:(CMDeviceMotion *)deviceMotion
-{
-    if (_counter == COUNT)
-    {
-        [self stopMotionManager];
-        
-        if (_hasRun)
-        {
-            _data.gravX[1] = (_gSumX / COUNT);
-            _data.gravY[1] = (_gSumY / COUNT);
-            _data.gravZ[1] = (_gSumZ / COUNT);
-            
-            _data.accelX[1] = (_aSumX / COUNT);
-            _data.accelY[1] = (_aSumY / COUNT);
-            _data.accelZ[1] = (_aSumZ / COUNT);
-            
-            _data.yaw[1] = (_yawSum / COUNT);
-            _data.pitch[1] = (_pitchSum / COUNT);
-            _data.roll[1] = (_rollSum / COUNT);
-            
-            [self slopesFromAccelerometer:2];
-            [self slopeMeasurementComplete];
-        }
-        
-        else
-        {
-            _data.gravX[0] = (_gSumX / COUNT);
-            _data.gravY[0] = (_gSumY / COUNT);
-            _data.gravZ[0] = (_gSumZ / COUNT);
-            
-            _data.accelX[0] = (_aSumX / COUNT);
-            _data.accelY[0] = (_aSumY / COUNT);
-            _data.accelZ[0] = (_aSumZ / COUNT);
-            
-            _data.yaw[0] = (_yawSum / COUNT) * RADtoDEG;
-            _data.pitch[0] = (_pitchSum / COUNT) * RADtoDEG;
-            _data.roll[0] = (_rollSum / COUNT) * RADtoDEG;
-            
-            _data.heading = _baseHeading - (_sumHeading / COUNT);
-            [self slopesFromAccelerometer:1];
-            
-            if (_data.maxSlopePct < (_criticalValue - _errorValue) ||
-                (_data.maxSlopePct > (_criticalValue + _errorValue)))
-            {
-                [self slopeMeasurementComplete];
-            }
-            
-            else
-            {
-                _hasRun = YES;
-                _promptLabel.text = @"Flip the iPad in the opposite direction and tap 'Continue' to calibrate measurement.";
-                
-                [_startCancelButton setTitle:@"Continue"
-                                    forState:UIControlStateNormal];
-                
-                [self resetSumsAndCounter];
-                _status = SCStatusStart;
-            }
-        }
-        
-        _counter++;
-    }
-    
-    else if (_counter < COUNT)
-    {
-        CMAcceleration acceleration = _motionManager.accelerometerData.acceleration;
-        
-        _maxX = max(_maxX, acceleration.x);
-        _minX = min(_minX, acceleration.x);
-        _maxY = max(_maxY, acceleration.y);
-        _minY = min(_minY, acceleration.y);
-        _maxZ = max(_maxZ, acceleration.z);
-        _minZ = min(_minZ, acceleration.z);
-        
-        _xRange = (_maxX - _minX);
-        _yRange = (_maxY - _minY);
-        _zRange = (_maxZ - _minZ);
-        
-        if (_yRange > _steadyDiff ||
-            _xRange > _steadyDiff ||
-            _zRange > _steadyDiff)
-        {
-            [self resetSumsAndCounter];
-        }
-        
-        _aSumX += acceleration.x;
-        _aSumY += acceleration.y;
-        _aSumZ += acceleration.z;
-        _gSumX += deviceMotion.gravity.x;
-        _gSumY += deviceMotion.gravity.y;
-        _gSumZ += deviceMotion.gravity.z;
-        
-        _yawSum += deviceMotion.attitude.yaw;
-        _pitchSum += deviceMotion.attitude.pitch;
-        _rollSum += deviceMotion.attitude.roll;
-        
-        _counter++;
-       
-        _progressView.progress = (_counter / (CGFloat)COUNT);
-    }
-}
-
 - (void)resetSumsAndCounter
 {
     _maxX = _maxY = _maxZ = -10.0;
     _minX = _minY = _minZ = 10.0;
-    _gSumX = _gSumY = _gSumZ = 0.0;
     _aSumX = _aSumY = _aSumZ = 0.0;
-    _yawSum = _pitchSum = _rollSum = 0.0;
     _sumHeading = 0.0;
     _counter = 0;
     _headingCounter = 0;
@@ -844,8 +715,8 @@ static int COUNT=100;
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f\u00B0", _data.sideSlopeDegrees];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f\u00B0", _data.maxSlopeDegrees];
         
-        _maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f",
-                               _data.accelX[0], _data.accelY[0], _data.accelZ[0]];
+        /*_maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f",
+                               _data.accelX[0], _data.accelY[0], _data.accelZ[0]];*/
     }
     
     else
@@ -854,7 +725,9 @@ static int COUNT=100;
         _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f%%", _data.frontSlopePct];
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f%%", _data.sideSlopePct];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f%%", _data.maxSlopePct];
-        _maxSlopeLabel.text = [NSString stringWithFormat:@"%.3f %ld %.1f %.1f", _lastDegrees,(long)_headingCounter,_minHead,_maxHead];
+        
+        /*_maxSlopeLabel.text = [NSString stringWithFormat:@"%.3f %ld %.1f %.1f",
+        _lastDegrees,(long)_headingCounter,_minHead,_maxHead];*/
     }
     
     _promptLabel.text = @"Press 'Done' to continue.";
@@ -872,6 +745,40 @@ static int COUNT=100;
     _hasRun = NO;
     
     _manualButton.hidden = NO;
+    
+    if ((fabs(_data.frontSlopePct) > (_criticalValue - _errorValue)) &&
+        (fabs(_data.frontSlopePct) < (_criticalValue + _errorValue)))
+    {
+        NVSliderController *slider;
+        
+        if (_displayDegrees)
+        {
+            slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                          width:728.0
+                                                     startValue:_data.frontSlopeDegrees
+                                                       minValue:(_data.frontSlopeDegrees - 2.0)
+                                                       maxValue:(_data.frontSlopeDegrees + 2.0)
+                                                       delegate:self
+                                                  configuration:NVSliderConfigurationManualSlope
+                                                           type:NVSliderMeasurementTypeFrontSlope];
+        }
+        
+        else
+        {
+            slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                          width:728.0
+                                                     startValue:_data.frontSlopePct
+                                                       minValue:(_data.frontSlopePct - 2.0)
+                                                       maxValue:(_data.frontSlopePct + 2.0)
+                                                       delegate:self
+                                                  configuration:NVSliderConfigurationManualSlope
+                                                           type:NVSliderMeasurementTypeFrontSlope];
+        }
+        
+        [slider showSliderControllerInView:self.view
+                                  animated:YES
+                                   overlay:YES];
+    }
 }
 
 - (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
@@ -882,27 +789,104 @@ static int COUNT=100;
 - (void)sliderView:(NVSliderController *)sliderView
     didReturnValue:(CGFloat)value
 {
+    NVSliderMeasurementType type = sliderView.type;
+    
     if (_displayDegrees)
     {
-        _data.frontSlopeDegrees = value;
-        _data.maxSlopeDegrees = value;//ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
-        
-        _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f\u00B0", _data.frontSlopeDegrees];
-        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f\u00B0", _data.maxSlopeDegrees];
+        switch (type)
+        {
+            case NVSliderMeasurementTypeFrontSlope:
+                _data.manualFrontSlopeDegrees = value;
+                _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f\u00B0", _data.manualFrontSlopeDegrees];
+                _data.frontManualStatus = NVManualStatusManual;
+                break;
+                
+            case NVSliderMeasurementTypeSideSlope:
+                _data.manualSideSlopeDegrees = value;
+                _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f\u00B0", _data.manualSideSlopeDegrees];
+                _data.sideManualStatus = NVManualStatusManual;
+                break;
+                
+            default:
+                break;
+        }
     }
+    
     else
     {
-        _data.frontSlopePct = value;
-        _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
-        
-        _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.frontSlopePct];
-        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.02f%%", _data.maxSlopePct];
+        switch (type)
+        {
+            case NVSliderMeasurementTypeFrontSlope:
+                _data.manualFrontSlopePct = value;
+                _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.manualFrontSlopePct];
+                _data.frontManualStatus = NVManualStatusManual;
+                break;
+                
+            case NVSliderMeasurementTypeSideSlope:
+                _data.manualSideSlopePct = value;
+                _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f%%", _data.manualSideSlopePct];
+                _data.sideManualStatus = NVManualStatusManual;
+                break;
+                
+            default:
+                break;
+        }
     }
+    
     [sliderView hideSliderController:YES];
+    
+    if ((type == NVSliderMeasurementTypeFrontSlope) &&
+        (fabs(_data.sideSlopePct) > (_criticalSideValue - _errorValue)) &&
+        (fabs(_data.sideSlopePct) < (_criticalSideValue + _errorValue)))
+    {
+        NVSliderController *slider;
+        
+        if (_displayDegrees)
+        {
+            slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                          width:728.0
+                                                     startValue:_data.sideSlopeDegrees
+                                                       minValue:(_data.sideSlopeDegrees - 2.0)
+                                                       maxValue:(_data.sideSlopeDegrees + 2.0)
+                                                       delegate:self
+                                                  configuration:NVSliderConfigurationManualSlope
+                                                           type:NVSliderMeasurementTypeSideSlope];
+        }
+        
+        else
+        {
+            slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                          width:728.0
+                                                     startValue:_data.sideSlopePct
+                                                       minValue:(_data.sideSlopePct - 2.0)
+                                                       maxValue:(_data.sideSlopePct + 2.0)
+                                                       delegate:self
+                                                  configuration:NVSliderConfigurationManualSlope
+                                                           type:NVSliderMeasurementTypeSideSlope];
+        }
+        
+        [slider showSliderControllerInView:self.view
+                                  animated:YES
+                                   overlay:YES];
+    }
 }
 
 - (void)sliderViewDidCancel:(NVSliderController *)sliderView
 {
+    switch (sliderView.type)
+    {
+        case NVSliderMeasurementTypeFrontSlope:
+            _data.frontManualStatus = NVManualStatusCancelled;
+            break;
+            
+        case NVSliderMeasurementTypeSideSlope:
+            _data.sideManualStatus = NVManualStatusCancelled;
+            break;
+            
+        default:
+            break;
+    }
+    
     [sliderView hideSliderController:YES];
 }
 

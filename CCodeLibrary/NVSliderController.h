@@ -12,6 +12,13 @@ typedef NS_ENUM(NSInteger, NVSliderConfiguration)
     NVSliderConfigurationCalibrationRiseRun,
 };
 
+typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
+{
+    NVSliderMeasurementTypeDefault,
+    NVSliderMeasurementTypeFrontSlope,
+    NVSliderMeasurementTypeSideSlope,
+};
+
 @class NVSliderController;
 
 @protocol NVSliderControllerDelegate <NSObject>
@@ -26,6 +33,7 @@ typedef NS_ENUM(NSInteger, NVSliderConfiguration)
 @interface NVSliderController : UIView
 
 @property (nonatomic, weak) id <NVSliderControllerDelegate> delegate;
+@property NVSliderMeasurementType type;
 
 - (id)initWithCenter:(CGPoint)center
                width:(CGFloat)width
@@ -33,7 +41,8 @@ typedef NS_ENUM(NSInteger, NVSliderConfiguration)
             minValue:(CGFloat)minValue
             maxValue:(CGFloat)maxValue
             delegate:(id)delegate
-       configuration:(NVSliderConfiguration)configuration;
+       configuration:(NVSliderConfiguration)configuration
+                type:(NVSliderMeasurementType)type;
 
 - (void)showSliderControllerInView:(UIView *)view
                           animated:(BOOL)animated
