@@ -373,7 +373,7 @@ static int COUNT=100;
                                                    maxValue:(_data.frontSlopeDegrees + 2.0)
                                                    delegate:self
                                               configuration:NVSliderConfigurationManualSlope
-                                                       type:NVSliderMeasurementTypeFrontSlope];
+                                                       type:NVSliderMeasurementTypeDefault];
     }
     
     else
@@ -385,7 +385,7 @@ static int COUNT=100;
                                                    maxValue:(_data.frontSlopePct + 2.0)
                                                    delegate:self
                                               configuration:NVSliderConfigurationManualSlope
-                                                       type:NVSliderMeasurementTypeFrontSlope];
+                                                       type:NVSliderMeasurementTypeDefault];
     }
    
     [slider showSliderControllerInView:self.view
@@ -800,6 +800,7 @@ static int COUNT=100;
         switch (type)
         {
             case NVSliderMeasurementTypeFrontSlope:
+            case NVSliderMeasurementTypeDefault:
                 _data.manualFrontSlopeDegrees = value;
                 _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f\u00B0", _data.manualFrontSlopeDegrees];
                 _data.frontManualStatus = NVManualStatusManual;
@@ -821,6 +822,7 @@ static int COUNT=100;
         switch (type)
         {
             case NVSliderMeasurementTypeFrontSlope:
+            case NVSliderMeasurementTypeDefault:
                 _data.manualFrontSlopePct = value;
                 _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.manualFrontSlopePct];
                 _data.frontManualStatus = NVManualStatusManual;
