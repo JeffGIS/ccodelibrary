@@ -11,6 +11,8 @@
 @property (nonatomic, copy) NSString *directory, *username, *password, *port, *ftpDomain, *urlText;
 @property (nonatomic) NSOutputStream *networkStream;
 @property (nonatomic) NSInputStream *fileStream;
+@property (nonatomic) NSArray *directories;
+@property NSInteger directoryCount;
 
 @end
 
@@ -26,12 +28,14 @@
 {
     FTPDirectoryCreate *ftpDirCreate = [[FTPDirectoryCreate alloc] init];
     
+    ftpDirCreate.directories = directories;
     ftpDirCreate.ftpDomain = ftpDomain;
     ftpDirCreate.directory = directory;
     ftpDirCreate.username = username;
     ftpDirCreate.password = password;
     ftpDirCreate.port = port;
     ftpDirCreate.delegate = delegate;
+    ftpDirCreate.directoryCount = 0;
     
     if ([ftpDirCreate reachabilityStatus] == NotReachable)
     {
@@ -43,8 +47,11 @@
         }
     }
     
-    else
-        [ftpDirCreate startSend];
+    else if (ftpDirCreate.directories.count)
+    {
+        NSString *currentDir = ftpDirCreate.directories[ftpDirCreate.directoryCount];
+        [ftpDirCreate startSendDirectory:currentDir];
+    }
     
     return ftpDirCreate;
 }
@@ -57,15 +64,22 @@
     return reachabilityStatus;
 }
 
-- (void)startSend
+- (void)startSendDirectory:(NSString *)currentDir
 {
     assert(!_fileStream);
+    assert(currentDir);
+    
+    if (_port && ![_port isEqualToString:@""])
+        _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@/", _username, _password, _ftpDomain, _port, _directory, currentDir];
+    
+    else
+        _urlText = [NSString stringWithFormat:@"%@:%@@%@/%@/%@/", _username, _password, _ftpDomain, _directory, currentDir];
     
     NSURL *url = [NetworkManager.sharedInstance smartURLForString:_urlText];
     
     assert(url);
     
-    _fileStream = [NSInputStream inputStreamWithFileAtPath:_directory];
+    _fileStream = [NSInputStream inputStreamWithFileAtPath:currentDir];
     assert(_fileStream);
     
     [_fileStream open];
@@ -102,13 +116,92 @@
     [_networkStream open];
     CFRelease(ftpStream);
     
-    [self sendDidStart];
+    [self sendDidStartDirectory:currentDir];
 }
 
-- (void)sendDidStart
+- (void)sendDidStartDirectory:(NSString *)currentDir
 {
-    NSLog(@"Attempting to CREATE DIR LIST in %@", _urlText);
+    NSLog(@"Attempting to CREATE %@ in %@/%@", currentDir, _ftpDomain, _directory);
     [NetworkManager.sharedInstance didStartNetworkOperation];
+}
+
+- (void)stream:(NSStream *)aStream
+   handleEvent:(NSStreamEvent)eventCode
+{
+    assert(aStream == _networkStream);
+    
+    switch (eventCode)
+    {
+        case NSStreamEventNone:
+            break;
+        
+        case NSStreamEventOpenCompleted:
+            break;
+            
+        case NSStreamEventHasBytesAvailable:
+            break;
+            
+        case NSStreamEventHasSpaceAvailable:
+            break;
+            
+        case NSStreamEventErrorOccurred:
+            [self stopSendWithStatus:FTPStatusConnectionFailed
+                        statusString:aStream.streamError.localizedDescription];
+            break;
+        
+        case NSStreamEventEndEncountered:
+            [self stopSendWithStatus:FTPStatusOK
+                        statusString:aStream.streamError.localizedDescription];
+            break;
+    }
+}
+
+- (void)stopSendWithStatus:(int)status
+              statusString:(NSString *)statusString
+{
+    if (_networkStream)
+    {
+        [_networkStream removeFromRunLoop:NSRunLoop.currentRunLoop
+                                  forMode:NSDefaultRunLoopMode];
+        
+        _networkStream.delegate = nil;
+        [_networkStream close];
+        _networkStream = nil;
+    }
+    
+    if (_fileStream)
+    {
+        [_fileStream close];
+        _fileStream = nil;
+    }
+    
+    [self sendDidStopWithStatus:status
+                   statusString:statusString];
+}
+
+- (void)sendDidStopWithStatus:(int)status
+                 statusString:(NSString *)statusString
+{
+    
+    if (!statusString)
+        status = FTPStatusStop;
+    
+    [NetworkManager.sharedInstance didStopNetworkOperation];
+    
+    _directoryCount++;
+    
+    if (_directoryCount >= _directories.count)
+    {
+        if (_delegate)
+        {
+            [_delegate FTPDirectoryCreateDidCompleteWithStatus:status
+                                                  statusString:statusString
+                                                     directory:_directory];
+        }
+    }
+    
+    else
+        [self startSendDirectory:_directories[_directoryCount]];
 }
 
 @end
