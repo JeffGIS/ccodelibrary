@@ -74,6 +74,10 @@ static int COUNT=100;
     slopeController.selfTest = selfTest;
     slopeController.promptText = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
     
+    NVSlopeData data;
+    memset(&data, 0, sizeof(data));
+    slopeController.data = data;
+    
     return slopeController;
 }
 
