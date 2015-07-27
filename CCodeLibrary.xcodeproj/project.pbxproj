@@ -125,6 +125,9 @@
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
 		A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */; };
 		A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */; };
+		A9C1835F1B6674A600780BF6 /* NVMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C1835E1B6674A600780BF6 /* NVMesh.m */; };
+		A9C183601B66776000780BF6 /* NVMesh.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9C1835D1B6674A600780BF6 /* NVMesh.h */; };
+		A9C183611B66776600780BF6 /* NV3DMath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A933D9FB1B5D4FEF00D621CD /* NV3DMath.h */; };
 		A9C525D01A3B59880056711F /* Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C525CF1A3B59880056711F /* Colors.m */; };
 		A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */; };
 		A9D258C71B62C67F00DF553A /* FTPDirectoryCreate.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D258C61B62C67F00DF553A /* FTPDirectoryCreate.m */; };
@@ -190,6 +193,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A9C183611B66776600780BF6 /* NV3DMath.h in CopyFiles */,
+				A9C183601B66776000780BF6 /* NVMesh.h in CopyFiles */,
 				A9D258C81B62C6CC00DF553A /* FTPDirectoryCreate.h in CopyFiles */,
 				A9DDC08B1B6153FD000DEEA9 /* FTPDirectoryList.h in CopyFiles */,
 				A933D9FA1B5D4E2800D621CD /* NVPipe.h in CopyFiles */,
@@ -361,6 +366,8 @@
 		A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiNotesView.m; sourceTree = "<group>"; };
 		A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTestSlopeController.h; sourceTree = "<group>"; };
 		A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTestSlopeController.m; sourceTree = "<group>"; };
+		A9C1835D1B6674A600780BF6 /* NVMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVMesh.h; sourceTree = "<group>"; };
+		A9C1835E1B6674A600780BF6 /* NVMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVMesh.m; sourceTree = "<group>"; };
 		A9C525CE1A3B59880056711F /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		A9C525CF1A3B59880056711F /* Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Colors.m; sourceTree = "<group>"; };
 		A9C8ED3A1A5849F700DF9856 /* GetPriorityLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPriorityLocations.h; sourceTree = "<group>"; };
@@ -489,6 +496,8 @@
 			children = (
 				A933D9FB1B5D4FEF00D621CD /* NV3DMath.h */,
 				A933D9FC1B5D4FEF00D621CD /* NV3DMath.m */,
+				A9C1835D1B6674A600780BF6 /* NVMesh.h */,
+				A9C1835E1B6674A600780BF6 /* NVMesh.m */,
 				A933D9F41B5D499500D621CD /* NVPipe.h */,
 				A933D9F51B5D499500D621CD /* NVPipe.m */,
 			);
@@ -895,6 +904,7 @@
 				EB86BFA71B0B62520074728E /* minilzo.c in Sources */,
 				A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */,
 				A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */,
+				A9C1835F1B6674A600780BF6 /* NVMesh.m in Sources */,
 				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
 				A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */,
 				A990508D1ACB947000C6AAAF /* SpreadsheetView.m in Sources */,
