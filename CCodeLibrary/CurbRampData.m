@@ -132,7 +132,7 @@ static CurbRampData *_statdatabase = nil;
         if (uniqueFile || !_sendToServerFile)
         {
             int iTime = NSDate.timeIntervalSinceReferenceDate;
-            _sendToServerFile = [NSString stringWithFormat:@"%@/AlleyWallInventory_SQL_%i-%i.txt",
+            _sendToServerFile = [NSString stringWithFormat:@"%@/CurbRampInventory_%i-%i.sql",
                                  CRAPI.sharedInstance.sharedOutputDirectory,iTime,fileSequence++];
             rtn = [[NSString stringWithUTF8String:cmd] writeToFile:_sendToServerFile
                                                         atomically:YES
