@@ -2,7 +2,7 @@
 //  CCodeLibrary
 
 #import "NVMesh.h"
-#import "CCodeLibrary/MathUtil.h"
+#import "MathUtil.h"
 
 @implementation NVMesh
 
@@ -38,6 +38,8 @@
         meshNormals[j + 2] = meshNormals[j + 1] = meshNormals[j] =
         SCNVector3Make(normal.x, normal.y, normal.z);
     }
+    
+    free(trianglePoints);
     
     SCNGeometrySource *normalsSource = [SCNGeometrySource geometrySourceWithNormals:meshNormals
                                                                               count:pointCount];
