@@ -39,6 +39,8 @@
         SCNVector3Make(normal.x, normal.y, normal.z);
     }
     
+    free(trianglePoints);
+    
     SCNGeometrySource *normalsSource = [SCNGeometrySource geometrySourceWithNormals:meshNormals
                                                                               count:pointCount];
     
