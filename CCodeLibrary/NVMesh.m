@@ -2,7 +2,7 @@
 //  CCodeLibrary
 
 #import "NVMesh.h"
-#import "CCodeLibrary/MathUtil.h"
+#import "MathUtil.h"
 
 @implementation NVMesh
 
