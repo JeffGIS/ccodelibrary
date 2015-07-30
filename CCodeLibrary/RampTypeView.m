@@ -9,9 +9,10 @@
 @property (nonatomic) NSArray *rampImages;
 @property (nonatomic) UIView *buttonView;
 @property (nonatomic) CGRect originalButtonFrame, originalLabelFrame;
-@property (nonatomic) BOOL inZoomedMode;
+@property BOOL inZoomedMode;
 @property (nonatomic) UIButton *selectButton;
-@property (nonatomic) NSInteger zoomedIndex, selectedIndex;
+@property NSInteger zoomedIndex, selectedIndex;
+@property RampTypeEditOption editOption;
 
 @end
 
@@ -19,6 +20,8 @@
 
 + (RampTypeView *)showRampTypeViewWithView:(UIView *)view
                                   delegate:(id)delegate
+                              selectedType:(RampType)selectedType
+                                editOption:(RampTypeEditOption)editOption
 {
     RampTypeView *rtView = [[RampTypeView alloc] initWithFrame:view.frame];
     rtView.delegate = delegate;
@@ -26,9 +29,9 @@
     rtView.rampImageLabelText = [rtView arrayOfButtonLabelText];
     rtView.backgroundColor = UserDefaults.defaults.appleBlue;
     rtView.alpha = 0.0;
+    rtView.selectedIndex = selectedType;
+    rtView.editOption = editOption;
     [view addSubview:rtView];
-    
-    rtView.selectedIndex = [UserDefaults.defaults integerForKey:@"SelectedRampType"];
     
     UIButton *returnButton = [[UIButton alloc] initWithFrame:CGRectMake(42.0, 26.0, 180.0, 50.0)];
     
@@ -156,7 +159,8 @@
         if (_delegate)
         {
             [_delegate rampTypeView:self
-                  didReturnRampType:_selectedIndex];
+                  didReturnRampType:_selectedIndex
+                         editOption:_editOption];
         }
     }
     

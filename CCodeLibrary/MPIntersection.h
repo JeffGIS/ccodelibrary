@@ -12,6 +12,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "RampTypeView.h"
 
 enum textures {
     smoothConcrete=1,
@@ -49,20 +50,20 @@ enum obstructions {
 @property (nonatomic) int rampNum;
 @property (nonatomic, copy) NSString *rampID;
 @property (nonatomic) int timeComplete;
-@property (nonatomic) BOOL rampExists;
-@property (nonatomic) BOOL isComplete;
+@property BOOL rampExists;
+@property BOOL isComplete;
 @property (nonatomic) CGFloat approximateHeading;
 @property (nonatomic) int adjustedRot;
-@property (nonatomic) BOOL rampInXWalk;
-@property (nonatomic) BOOL xWalkisComplete;
-@property (nonatomic) BOOL signalisComplete;
+@property BOOL rampInXWalk;
+@property BOOL xWalkisComplete;
+@property BOOL signalisComplete;
 @property (nonatomic) enum textures texture;
 @property (nonatomic) enum obstructions upperLandingObstruction;
 @property (nonatomic) enum obstructions lowerLandingObstruction;
 @property (nonatomic) enum obstructions rampObstruction;
-@property (nonatomic) BOOL hasRampCracks;
-@property (nonatomic) BOOL hasUpperLandingCracks;
-@property (nonatomic) BOOL hasStreetLandingCracks;
+@property BOOL hasRampCracks;
+@property BOOL hasUpperLandingCracks;
+@property BOOL hasStreetLandingCracks;
 @property (nonatomic) int rampWidth, rampDepth;
 @property (nonatomic) CGFloat rampSlopeFront;
 @property (nonatomic) CGFloat rampSlopeSide;
@@ -79,11 +80,12 @@ enum obstructions {
 @property (nonatomic) CGFloat flareRightSlopeFront;
 @property (nonatomic) CGFloat flareRightSlopeSide;
 @property (nonatomic) CGFloat flareRightSlopeHeading;
-@property (nonatomic) BOOL hasPEDSignal, hasPEDButton;
+@property BOOL hasPEDSignal, hasPEDButton;
 @property (nonatomic) int PEDButtonHeight, PEDButtonDist;
 @property (nonatomic) CGFloat SteepTopOfCurb;
 @property (nonatomic) CGFloat PedRampLip;
 @property (nonatomic) int lev21x, lev21y;
+@property RampType rampType;
 
 @end
 
