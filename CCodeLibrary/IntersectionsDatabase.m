@@ -778,8 +778,8 @@ static IntersectionsDatabase *_statdatabase = nil;
     {
         int intX = sqlite3_column_int(statement, 0);
         int intY = sqlite3_column_int(statement, 1);
-        int nStreets = sqlite3_column_int(statement,2);
-        LPSTR pStreets = (LPSTR)sqlite3_column_text(statement, 3);
+        int nStreets = sqlite3_column_int(statement,27);
+        LPSTR pStreets = (LPSTR)sqlite3_column_text(statement, 28);
         LPSTR pAZMS = (LPSTR)sqlite3_column_text(statement, 4);
         *plev21x = intX;
         *plev21y = intY;
