@@ -3,12 +3,13 @@
 
 #import "RampTypeView.h"
 #import "UserDefaults.h"
+#import "TableViewCellLabel.h"
 
 @interface RampTypeView ()
 
 @property (nonatomic) NSArray *rampImages;
 @property (nonatomic) UIView *buttonView;
-@property (nonatomic) CGRect originalButtonFrame, originalLabelFrame;
+@property (nonatomic) CGRect originalButtonFrame, originalLabelFrame, originalNumberLabelFrame;
 @property BOOL inZoomedMode;
 @property (nonatomic) UIButton *selectButton;
 @property NSInteger zoomedIndex, selectedIndex;
@@ -105,6 +106,18 @@
                     rampImageLabel.numberOfLines = 0;
                     rampImageLabel.text = rtView.rampImageLabelText[tag];
                     [rtButton addSubview:rampImageLabel];
+                    
+                    TableViewCellLabel *rtNumberLabel = [[TableViewCellLabel alloc] initWithFrame:
+                                                         CGRectMake(4.0, 4.0, (buttonSize.width - 8.0), (buttonSize.height - 44.0))];
+                    
+                    rtNumberLabel.backgroundColor = UIColor.clearColor;
+                    rtNumberLabel.textColor = UserDefaults.defaults.appleBlue;
+                    rtNumberLabel.alpha = 0.4;
+                    rtNumberLabel.textAlignment = NSTextAlignmentCenter;
+                    rtNumberLabel.font = [UIFont boldSystemFontOfSize:200.0];
+                    rtNumberLabel.adjustsFontSizeToFitWidth = YES;
+                    rtNumberLabel.text = [NSString stringWithFormat:@"%li", (tag + 1)];
+                    [rtButton addSubview:rtNumberLabel];
                 }
                 
                 [rtButton addTarget:rtView
@@ -184,12 +197,22 @@
                     
                     for (UILabel *labels in buttons.subviews)
                     {
-                        if ([labels isKindOfClass:UILabel.class])
+                        if ([labels isKindOfClass:UILabel.class] &&
+                            ![labels isKindOfClass:TableViewCellLabel.class])
                         {
                             [UIView animateWithDuration:0.25
                                              animations:^{
                                                  labels.frame = _originalLabelFrame;
                                                  labels.font = [UIFont boldSystemFontOfSize:16.0];
+                                             }];
+                        }
+                        
+                        else if ([labels isKindOfClass:TableViewCellLabel.class])
+                        {
+                            [UIView animateWithDuration:0.25
+                                             animations:^{
+                                                 labels.frame = _originalNumberLabelFrame;
+                                                 labels.font = [UIFont boldSystemFontOfSize:200.0];
                                              }];
                         }
                     }
@@ -270,7 +293,8 @@
     
     for (UILabel *labels in button.subviews)
     {
-        if ([labels isKindOfClass:UILabel.class])
+        if ([labels isKindOfClass:UILabel.class] &&
+            ![labels isKindOfClass:TableViewCellLabel.class])
         {
             _originalLabelFrame = labels.frame;
             
@@ -280,6 +304,19 @@
                                                            (button.frame.size.width - 8.0), 96.0);
                                  
                                  labels.font = [UIFont boldSystemFontOfSize:40.0];
+                             }];
+        }
+        
+        else if ([labels isKindOfClass:TableViewCellLabel.class])
+        {
+            _originalNumberLabelFrame = labels.frame;
+            
+            [UIView animateWithDuration:0.25
+                             animations:^{
+                                 labels.frame = CGRectMake(4.0, 100.0,(button.frame.size.width - 8.0),
+                                                           (button.frame.size.height - 200.0));
+                                 
+                                 labels.font = [UIFont boldSystemFontOfSize:400.0];
                              }];
         }
     }
