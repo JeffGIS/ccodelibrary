@@ -26,8 +26,8 @@
 {
     RampTypeView *rtView = [[RampTypeView alloc] initWithFrame:view.frame];
     rtView.delegate = delegate;
-    rtView.rampImages = [rtView arrayOfButtonImages];
-    rtView.rampImageLabelText = [rtView arrayOfButtonLabelText];
+    rtView.rampImages = [RampTypeView rampTypeImages];
+    rtView.rampImageLabelText = [RampTypeView rampTypeText];
     rtView.backgroundColor = UserDefaults.defaults.appleBlue;
     rtView.alpha = 0.0;
     rtView.selectedIndex = selectedType;
@@ -140,6 +140,63 @@
     
     return rtView;
 }
+
++ (NSArray *)rampTypeImages
+{
+    NSMutableArray *tempArray = [[NSMutableArray alloc] init];
+    
+    UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"PerpendicularRamp"
+                                                                                        ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularWalkableRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularNonWalkableRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalAdjacentToCurbRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalBlendedTransitionRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ParallelRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"DepressedCornerRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"FanRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    NSArray *imageArray = tempArray.copy;
+    
+    return imageArray;
+}
+
++ (NSArray *)rampTypeText
+{
+    return @[@"Perpendicular", @"Combined Perpendicular With Walkable Surface",
+             @"Combined Perpendicular With Non-Walkable Surface", @"One Way Directional Adjacent to Curb & Gutter",
+             @"One Way Directional Blended Transition", @"Parallel", @"Depressed Corner", @"Fan"];
+}
+
 
 - (void)setupButton:(UIButton *)button
              target:(id)target
@@ -370,60 +427,6 @@
     
     else
         [self removeFromSuperview];
-}
-
-- (NSArray *)arrayOfButtonImages
-{
-    NSMutableArray *tempArray = [[NSMutableArray alloc] init];
-    
-    UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"PerpendicularRamp"
-                                                                                        ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularWalkableRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularNonWalkableRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalAdjacentToCurbRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalBlendedTransitionRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ParallelRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"DepressedCornerRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"FanRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    NSArray *imageArray = tempArray.copy;
-    
-    return imageArray;
-}
-
-- (NSArray *)arrayOfButtonLabelText
-{
-    return @[@"Perpendicular", @"Combined Perpendicular With Walkable Surface", @"Combined Perpendicular With Non-Walkable Surface", @"One Way Directional Adjacent to Curb & Gutter", @"One Way Directional Blended Transition", @"Parallel", @"Depressed Corner", @"Fan"];
 }
 
 @end

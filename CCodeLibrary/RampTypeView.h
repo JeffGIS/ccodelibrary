@@ -42,6 +42,9 @@ typedef NS_ENUM(NSInteger, RampTypeEditOption)
                               selectedType:(RampType)selectedType
                                 editOption:(RampTypeEditOption)editOption;
 
++ (NSArray *)rampTypeImages;
++ (NSArray *)rampTypeText;
+
 - (void)hideRampTypeView:(BOOL)animated;
 
 @end
