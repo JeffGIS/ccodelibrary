@@ -3,12 +3,13 @@
 
 #import "RampTypeView.h"
 #import "UserDefaults.h"
+#import "TableViewCellLabel.h"
 
 @interface RampTypeView ()
 
 @property (nonatomic) NSArray *rampImages;
 @property (nonatomic) UIView *buttonView;
-@property (nonatomic) CGRect originalButtonFrame, originalLabelFrame;
+@property (nonatomic) CGRect originalButtonFrame, originalLabelFrame, originalNumberLabelFrame;
 @property BOOL inZoomedMode;
 @property (nonatomic) UIButton *selectButton;
 @property NSInteger zoomedIndex, selectedIndex;
@@ -25,8 +26,8 @@
 {
     RampTypeView *rtView = [[RampTypeView alloc] initWithFrame:view.frame];
     rtView.delegate = delegate;
-    rtView.rampImages = [rtView arrayOfButtonImages];
-    rtView.rampImageLabelText = [rtView arrayOfButtonLabelText];
+    rtView.rampImages = [RampTypeView rampTypeImages];
+    rtView.rampImageLabelText = [RampTypeView rampTypeText];
     rtView.backgroundColor = UserDefaults.defaults.appleBlue;
     rtView.alpha = 0.0;
     rtView.selectedIndex = selectedType;
@@ -105,6 +106,18 @@
                     rampImageLabel.numberOfLines = 0;
                     rampImageLabel.text = rtView.rampImageLabelText[tag];
                     [rtButton addSubview:rampImageLabel];
+                    
+                    TableViewCellLabel *rtNumberLabel = [[TableViewCellLabel alloc] initWithFrame:
+                                                         CGRectMake(4.0, 4.0, (buttonSize.width - 8.0), (buttonSize.height - 44.0))];
+                    
+                    rtNumberLabel.backgroundColor = UIColor.clearColor;
+                    rtNumberLabel.textColor = UserDefaults.defaults.appleBlue;
+                    rtNumberLabel.alpha = 0.4;
+                    rtNumberLabel.textAlignment = NSTextAlignmentCenter;
+                    rtNumberLabel.font = [UIFont boldSystemFontOfSize:200.0];
+                    rtNumberLabel.adjustsFontSizeToFitWidth = YES;
+                    rtNumberLabel.text = [NSString stringWithFormat:@"%li", (tag + 1)];
+                    [rtButton addSubview:rtNumberLabel];
                 }
                 
                 [rtButton addTarget:rtView
@@ -127,6 +140,63 @@
     
     return rtView;
 }
+
++ (NSArray *)rampTypeImages
+{
+    NSMutableArray *tempArray = [[NSMutableArray alloc] init];
+    
+    UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"PerpendicularRamp"
+                                                                                        ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularWalkableRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularNonWalkableRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalAdjacentToCurbRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalBlendedTransitionRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ParallelRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"DepressedCornerRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"FanRamp"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
+    NSArray *imageArray = tempArray.copy;
+    
+    return imageArray;
+}
+
++ (NSArray *)rampTypeText
+{
+    return @[@"Perpendicular", @"Combined Perpendicular With Walkable Surface",
+             @"Combined Perpendicular With Non-Walkable Surface", @"One Way Directional Adjacent to Curb & Gutter",
+             @"One Way Directional Blended Transition", @"Parallel", @"Depressed Corner", @"Fan"];
+}
+
 
 - (void)setupButton:(UIButton *)button
              target:(id)target
@@ -184,12 +254,22 @@
                     
                     for (UILabel *labels in buttons.subviews)
                     {
-                        if ([labels isKindOfClass:UILabel.class])
+                        if ([labels isKindOfClass:UILabel.class] &&
+                            ![labels isKindOfClass:TableViewCellLabel.class])
                         {
                             [UIView animateWithDuration:0.25
                                              animations:^{
                                                  labels.frame = _originalLabelFrame;
                                                  labels.font = [UIFont boldSystemFontOfSize:16.0];
+                                             }];
+                        }
+                        
+                        else if ([labels isKindOfClass:TableViewCellLabel.class])
+                        {
+                            [UIView animateWithDuration:0.25
+                                             animations:^{
+                                                 labels.frame = _originalNumberLabelFrame;
+                                                 labels.font = [UIFont boldSystemFontOfSize:200.0];
                                              }];
                         }
                     }
@@ -270,7 +350,8 @@
     
     for (UILabel *labels in button.subviews)
     {
-        if ([labels isKindOfClass:UILabel.class])
+        if ([labels isKindOfClass:UILabel.class] &&
+            ![labels isKindOfClass:TableViewCellLabel.class])
         {
             _originalLabelFrame = labels.frame;
             
@@ -280,6 +361,19 @@
                                                            (button.frame.size.width - 8.0), 96.0);
                                  
                                  labels.font = [UIFont boldSystemFontOfSize:40.0];
+                             }];
+        }
+        
+        else if ([labels isKindOfClass:TableViewCellLabel.class])
+        {
+            _originalNumberLabelFrame = labels.frame;
+            
+            [UIView animateWithDuration:0.25
+                             animations:^{
+                                 labels.frame = CGRectMake(4.0, 100.0,(button.frame.size.width - 8.0),
+                                                           (button.frame.size.height - 200.0));
+                                 
+                                 labels.font = [UIFont boldSystemFontOfSize:400.0];
                              }];
         }
     }
@@ -333,60 +427,6 @@
     
     else
         [self removeFromSuperview];
-}
-
-- (NSArray *)arrayOfButtonImages
-{
-    NSMutableArray *tempArray = [[NSMutableArray alloc] init];
-    
-    UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"PerpendicularRamp"
-                                                                                        ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularWalkableRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularNonWalkableRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalAdjacentToCurbRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalBlendedTransitionRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ParallelRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"DepressedCornerRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"FanRamp"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    NSArray *imageArray = tempArray.copy;
-    
-    return imageArray;
-}
-
-- (NSArray *)arrayOfButtonLabelText
-{
-    return @[@"Perpendicular", @"Combined Perpendicular With Walkable Surface", @"Combined Perpendicular With Non-Walkable Surface", @"One Way Directional Adjacent to Curb & Gutter", @"One Way Directional Blended Transition", @"Parallel", @"Depressed Corner", @"Fan"];
 }
 
 @end
