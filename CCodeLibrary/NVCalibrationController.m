@@ -439,8 +439,6 @@ static CGFloat _deviceValues[9][4];
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
              didReturnSlopeData:(NVSlopeData)slopeData
 {
-    NSLog(@"currentIndex:%ld", (long)_currentIndex);
-    
     [controller dismissViewControllerAnimated:YES
                                    completion:nil];
     
@@ -464,13 +462,9 @@ static CGFloat _deviceValues[9][4];
             
             NSUInteger selectedCount = SharedDefaults.defaults.calibrationValueSelectedCount;
             
-            NSLog(@"%lu", (unsigned long)selectedCount);
-            
             NSUInteger correction = (selectedCount - 1);
             correction *= 2.0;
             selectedCount = (correction + 1);
-            
-            NSLog(@"count:%lu, index:%ld", (unsigned long)selectedCount, (long)_currentIndex);
             
             if (_currentIndex >= selectedCount || selectedCount == 1)
             {
@@ -544,8 +538,9 @@ static CGFloat _deviceValues[9][4];
     BOOL rtn = YES;
     
     NSMutableArray *deviceValuesArray = [[NSMutableArray alloc] init];
-    NSNumber *levelFront = [NSNumber numberWithDouble:(_deviceValues[0][0]+_deviceValues[0][1]) / 2.0];
-    NSNumber *levelSide = [NSNumber numberWithDouble:(_deviceValues[0][2]+_deviceValues[0][3]) / 2.0];
+    NSNumber *levelFront = [NSNumber numberWithDouble:(_deviceValues[0][0] + _deviceValues[0][1]) / 2.0];
+    NSNumber *levelSide = [NSNumber numberWithDouble:(_deviceValues[0][2] + _deviceValues[0][3]) / 2.0];
+
     [deviceValuesArray addObject:levelFront];
     [deviceValuesArray addObject:levelSide];
     
@@ -562,15 +557,15 @@ static CGFloat _deviceValues[9][4];
         [deviceValuesArray addObject:frontUpslope];
         [deviceValuesArray addObject:frontDownslope];
         
-        NSNumber *sideUpslope = [NSNumber numberWithDouble:_deviceValues[j+1][2]];
-        NSNumber *sideDownslope = [NSNumber numberWithDouble:_deviceValues[j+1][3]];
+        NSNumber *sideUpslope = [NSNumber numberWithDouble:_deviceValues[j + 1][2]];
+        NSNumber *sideDownslope = [NSNumber numberWithDouble:_deviceValues[j + 1][3]];
         [deviceValuesArray addObject:sideUpslope];
         [deviceValuesArray addObject:sideDownslope];
     }
     
-    NSMutableArray *valuesArray = [_calibrationValues[NVCalibrationArrayIndexValue] mutableCopy];
-    NSMutableArray *typesArray = [_calibrationValues[NVCalibrationArrayIndexType] mutableCopy];
-    NSMutableArray *selectedArray = [_calibrationValues[NVCalibrationArrayIndexSelected] mutableCopy];
+    NSArray *valuesArray = _calibrationValues[NVCalibrationArrayIndexValue];
+    NSArray *typesArray = _calibrationValues[NVCalibrationArrayIndexType];
+    NSArray *selectedArray = _calibrationValues[NVCalibrationArrayIndexSelected];
     NSArray *newArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
     
     [SharedDefaults.defaults saveCalibrationValueArray:newArray];
@@ -897,7 +892,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (BOOL)tableView:(UITableView *)tableView
 canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return YES;
+    if (indexPath.row == 0)
+        return NO;
+    
+    else
+        return YES;
 }
 
 - (void)tableView:(UITableView *)tableView

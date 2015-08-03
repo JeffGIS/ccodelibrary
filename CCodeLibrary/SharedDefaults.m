@@ -266,11 +266,7 @@ static SharedDefaults *_defaults;
         NSArray *deviceValuesArray = defaultArray[NVCalibrationArrayDeviceValues];
         
         defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
-        
-        [_defaults setObject:defaultArray
-                      forKey:@"CalibrationValueArray"];
-        
-        [_defaults synchronize];
+        [self saveCalibrationValueArray:defaultArray];
     }
 }
 
@@ -291,11 +287,7 @@ static SharedDefaults *_defaults;
         [selectedArray addObject:@YES];
         
         defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
-        
-        [_defaults setObject:defaultArray
-                      forKey:@"CalibrationValueArray"];
-        
-        [_defaults synchronize];
+        [self saveCalibrationValueArray:defaultArray];
     }
 }
 
@@ -315,11 +307,7 @@ static SharedDefaults *_defaults;
         [selectedArray removeObjectAtIndex:index];
         
         defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
-        
-        [_defaults setObject:defaultArray
-                      forKey:@"CalibrationValueArray"];
-        
-        [_defaults synchronize];
+        [self saveCalibrationValueArray:defaultArray];
     }
 }
 
