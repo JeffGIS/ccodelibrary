@@ -50,13 +50,7 @@ static CGFloat _deviceValues[9][4];
     _hasBeenFlipped = NO;
     _hasBeenCalibrated = YES;
 
-    NSString *lastCalString = [SharedDefaults.defaults stringForKey:@"LastCalString"];
-    
-    if (!lastCalString || [lastCalString isEqualToString:@""])
-    {
-        lastCalString = [NSString stringWithFormat:@"This device has NOT been calibrated"];
-        _hasBeenCalibrated = NO;
-    }
+    NSString *lastCalString = [self refreshCalDateLabel];
     
     _lastCalibrationlabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 984.0, 728.0, 32.0)];
     
@@ -105,6 +99,19 @@ static CGFloat _deviceValues[9][4];
     [super didReceiveMemoryWarning];
 }
 
+- (NSString *)refreshCalDateLabel
+{
+    NSString *lastCalString = [SharedDefaults.defaults stringForKey:@"LastCalString"];
+    
+    if (!lastCalString || [lastCalString isEqualToString:@""])
+    {
+        lastCalString = [NSString stringWithFormat:@"This device has NOT been calibrated"];
+        _hasBeenCalibrated = NO;
+    }
+    
+    return lastCalString;
+}
+
 - (void)setupCalibrationButtons
 {
     NSUInteger yOrigin = 96.0;
@@ -114,80 +121,75 @@ static CGFloat _deviceValues[9][4];
     
     for (int i = 0; i < [_calibrationValues[NVCalibrationArrayIndexValue] count]; i++)
     {
-        BOOL selected = [_calibrationValues[NVCalibrationArrayIndexSelected][i] boolValue];
+        BOOL enabled = NO;
+        NSString *title = @"", *valueString = @"";
         
-        if (selected)
+        UIButton *frontButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, yOrigin,
+                                                                           buttonWidth, buttonHeight)];
+        
+        frontButton.tag = _counter;
+        
+        CGFloat floatValue = [_calibrationValues[NVCalibrationArrayIndexValue][i] floatValue];
+        NVCalibrationType type = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][i] integerValue];
+        
+        switch (type)
         {
-            BOOL enabled = NO;
-            NSString *title = @"", *valueString = @"";
+            case NVCalibrationTypeRunningSlope:
+                valueString = [NSString stringWithFormat:@"%.1f%%", floatValue];
+                break;
+                
+            case NVCalibrationTypeDegrees:
+                valueString = [NSString stringWithFormat:@"%.1f\u00B0", floatValue];
+                break;
+                
+            case NVCalibrationTypeRiseRun:
+                valueString = [NSString stringWithFormat:@"1:%i", (int)floatValue];
+                break;
+                
+            default:
+                break;
+        }
+        
+        if (frontButton.tag < 2)
+        {
+            enabled = YES;
+            title = [NSString stringWithFormat:@"Calibrate %@", valueString];
+        }
+        
+        else
+            title = [NSString stringWithFormat:@"Calibrate %@ Front", valueString];
+        
+        [self setupButton:frontButton
+                 selector:@selector(calibrateButtonTapped:)
+                    title:title
+                  enabled:enabled
+                 fontSize:fontSize];
+        
+        [self.view addSubview:frontButton];
+        
+        if (frontButton.tag > 1)
+        {
+            yOrigin += (buttonHeight + margin);
+            _counter++;
             
-            UIButton *frontButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, yOrigin,
-                                                                               buttonWidth, buttonHeight)];
+            UIButton *sideButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, yOrigin,
+                                                                              buttonWidth, buttonHeight)];
             
-            frontButton.tag = _counter;
+            sideButton.tag = _counter;
             
-            CGFloat floatValue = [_calibrationValues[NVCalibrationArrayIndexValue][i] floatValue];
-            NVCalibrationType type = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][i] integerValue];
+            title = [NSString stringWithFormat:@"Calibrate %@ Side", valueString];
             
-            switch (type)
-            {
-                case NVCalibrationTypeRunningSlope:
-                    valueString = [NSString stringWithFormat:@"%.1f%%", floatValue];
-                    break;
-                    
-                case NVCalibrationTypeDegrees:
-                    valueString = [NSString stringWithFormat:@"%.1f\u00B0", floatValue];
-                    break;
-                    
-                case NVCalibrationTypeRiseRun:
-                    valueString = [NSString stringWithFormat:@"1:%i", (int)floatValue];
-                    break;
-                    
-                default:
-                    break;
-            }
-            
-            if (frontButton.tag < 2)
-            {
-                enabled = YES;
-                title = [NSString stringWithFormat:@"Calibrate %@", valueString];
-            }
-            
-            else
-                title = [NSString stringWithFormat:@"Calibrate %@ Front", valueString];
-            
-            [self setupButton:frontButton
+            [self setupButton:sideButton
                      selector:@selector(calibrateButtonTapped:)
                         title:title
                       enabled:enabled
                      fontSize:fontSize];
             
             [self.view addSubview:frontButton];
-            
-            if (frontButton.tag > 1)
-            {
-                yOrigin += (buttonHeight + margin);
-                _counter++;
-                
-                UIButton *sideButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, yOrigin,
-                                                                                  buttonWidth, buttonHeight)];
-                
-                sideButton.tag = _counter;
-                
-                title = [NSString stringWithFormat:@"Calibrate %@ Side", valueString];
-                
-                [self setupButton:sideButton
-                         selector:@selector(calibrateButtonTapped:)
-                            title:title
-                          enabled:enabled
-                         fontSize:fontSize];
-                
-                [self.view addSubview:frontButton];
-            }
-            
-            yOrigin += (buttonHeight + margin);
-            _counter++;
         }
+        
+        yOrigin += (buttonHeight + margin);
+        _counter++;
     }
     
     yOrigin += ((10 - _counter) * (buttonHeight + margin));
@@ -312,9 +314,9 @@ static CGFloat _deviceValues[9][4];
     [slopeVC removeManualMeasurementButton];
     [slopeVC removeCalDateLabel];
     
-    NSUInteger selectedCount = SharedDefaults.defaults.calibrationValueSelectedCount;
+    NSUInteger count = [_calibrationValues[0] count];
     
-    if (_currentIndex < selectedCount && selectedCount > 1)
+    if (_currentIndex < count && count > 1)
     {
         index = ((_currentIndex + 2) / 2);
         
@@ -460,13 +462,13 @@ static CGFloat _deviceValues[9][4];
             _currentIndex++;
             _hasBeenFlipped = NO;
             
-            NSUInteger selectedCount = SharedDefaults.defaults.calibrationValueSelectedCount;
+            NSUInteger count = [_calibrationValues[0] count];
             
-            NSUInteger correction = (selectedCount - 1);
-            correction *= 2.0;
-            selectedCount = (correction + 1);
+            count -= 1;
+            count *= 2;
+            count += 1;
             
-            if (_currentIndex >= selectedCount || selectedCount == 1)
+            if (_currentIndex >= count || count == 1)
             {
                 [self saveCalibrationValues];
                 
@@ -546,11 +548,6 @@ static CGFloat _deviceValues[9][4];
     
     for (int i = 1; i < [_calibrationValues[NVCalibrationArrayIndexValue] count]; i++)
     {
-        BOOL selected = [_calibrationValues[NVCalibrationArrayIndexSelected][i] boolValue];
-        
-        if (!selected)
-            break;
-        
         int j = ((i - 1) * 2 + 1);
         NSNumber *frontUpslope = [NSNumber numberWithDouble:_deviceValues[j][0]];
         NSNumber *frontDownslope = [NSNumber numberWithDouble:_deviceValues[j][1]];
@@ -565,7 +562,7 @@ static CGFloat _deviceValues[9][4];
     
     NSArray *valuesArray = _calibrationValues[NVCalibrationArrayIndexValue];
     NSArray *typesArray = _calibrationValues[NVCalibrationArrayIndexType];
-    NSArray *selectedArray = _calibrationValues[NVCalibrationArrayIndexSelected];
+    NSArray *selectedArray = @[@YES];//this is just a placeholder
     NSArray *newArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
     
     [SharedDefaults.defaults saveCalibrationValueArray:newArray];
@@ -612,7 +609,6 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
     {
         cell.backgroundColor = UserDefaults.defaults.appleGray;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.accessoryView = nil;
         
         VerticalSegmentedControl *segControl = [[VerticalSegmentedControl alloc]
                                                 initWithSectionTitles:@[@"Running Slope", @"Slope Angle"]];
@@ -657,7 +653,6 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
     {
         CGFloat floatValue = [_calibrationValues[NVCalibrationArrayIndexValue][indexPath.row] floatValue];
         NVCalibrationType type = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][indexPath.row] integerValue];
-        BOOL selected = [_calibrationValues[NVCalibrationArrayIndexSelected][indexPath.row] boolValue];
         
         switch (type)
         {
@@ -677,27 +672,12 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
                 break;
         }
         
-        if (selected)
-        {
-            UIImageView *checkmarkView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:
-                                                                             [NSBundle.mainBundle pathForResource:@"checkmark"
-                                                                                                           ofType:@"png"]]];
-            
-            checkmarkView.frame = CGRectMake(0.0, 0.0, 80.0, 80.0);
-            checkmarkView.contentMode = UIViewContentModeScaleToFill;
-            cell.accessoryView = checkmarkView;
-        }
-        
-        else
-            cell.accessoryView = nil;
-        
         cell.backgroundColor = UIColor.whiteColor;
         cell.textLabel.textColor = UIColor.blackColor;
         cell.textLabel.font = [UIFont boldSystemFontOfSize:56.0];
         cell.textLabel.textAlignment = NSTextAlignmentLeft;
-        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-        cell.indentationLevel = 1;
-        cell.indentationWidth = 120.0;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.textLabel.textAlignment = NSTextAlignmentCenter;
     }
     
     return cell;
@@ -803,10 +783,10 @@ viewForHeaderInSection:(NSInteger)section
 
 - (void)dismissTableView:(UIButton *)button
 {
-    NSUInteger selected = SharedDefaults.defaults.calibrationValueSelectedCount;
+    NSUInteger count = [_calibrationValues[0] count];
     CGFloat range = SharedDefaults.defaults.calibrationValueMinRange;
     
-    if (selected == 1)
+    if (count == 1)
     {
         NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
                                                                     delegate:self
@@ -852,41 +832,11 @@ viewForHeaderInSection:(NSInteger)section
                                  }
                                  
                                  [self setupCalibrationButtons];
+                                 NSString *lastCalString = [self refreshCalDateLabel];
+                                 _lastCalibrationlabel.text = lastCalString;
                              }];
         }
     }
-}
-
-- (void)tableView:(UITableView *)tableView
-didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.row > 0 &&
-        indexPath.row < [_calibrationValues[NVCalibrationArrayIndexValue] count])
-    {
-        BOOL selected = [_calibrationValues[NVCalibrationArrayIndexSelected][indexPath.row] boolValue];
-        
-        [SharedDefaults.defaults setCalibrationValueSelected:!selected
-                                                     atIndex:indexPath.row];
-        
-        _calibrationValues = [SharedDefaults.defaults calibrationValueArray];
-        
-        if (selected)
-            [tableView cellForRowAtIndexPath:indexPath].accessoryView = nil;
-        
-        else
-        {
-            UIImageView *checkmarkView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:
-                                                                             [NSBundle.mainBundle pathForResource:@"checkmark"
-                                                                                                           ofType:@"png"]]];
-            
-            checkmarkView.frame = CGRectMake(0.0, 0.0, 80.0, 80.0);
-            checkmarkView.contentMode = UIViewContentModeScaleToFill;
-            [tableView cellForRowAtIndexPath:indexPath].accessoryView = checkmarkView;
-        }
-    }
-    
-    [tableView deselectRowAtIndexPath:indexPath
-                             animated:YES];
 }
 
 - (BOOL)tableView:(UITableView *)tableView
@@ -912,6 +862,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)addCalibrationValue:(UIButton *)button
 {
+    if ([_calibrationValues[0] count] > 3)
+        return;
+    
     NVSliderController *slider = nil;
     
     switch (_newType)
@@ -973,6 +926,15 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)segControlValueChanged:(VerticalSegmentedControl *)segControl
 {
     _newType = (NVCalibrationType)(segControl.selectedSegmentIndex + 1);
+    
+    [SharedDefaults.defaults setCalibrationValueArrayToType:_newType];
+    _calibrationValues = SharedDefaults.defaults.calibrationValueArray;
+    
+    for (UITableView *tableViews in self.view.subviews)
+    {
+        if ([tableViews isKindOfClass:UITableView.class])
+            [tableViews reloadData];
+    }
 }
 
 - (void)sliderView:(NVSliderController *)sliderView
