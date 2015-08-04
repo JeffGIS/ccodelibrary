@@ -323,4 +323,47 @@ static SharedDefaults *_defaults;
     return range;
 }
 
+- (void)setCalibrationValueArrayToType:(NVCalibrationType)type
+{
+    NSArray *defaultArray = [_defaults arrayForKey:@"CalibrationValueArray"];
+    
+    if (defaultArray.count)
+    {
+        NSMutableArray *valuesArray = [defaultArray[NVCalibrationArrayIndexValue] mutableCopy];
+        NSMutableArray *typesArray = [defaultArray[NVCalibrationArrayIndexType] mutableCopy];
+        NSArray *selectedArray = @[@YES];//this is just a placeholder
+        NSArray *deviceValuesArray = defaultArray[NVCalibrationArrayDeviceValues];
+        
+        if (valuesArray.count == typesArray.count)
+        {
+            for (int i = 0; i < valuesArray.count; i++)
+            {
+                CGFloat value = [valuesArray[i] floatValue];
+                NVCalibrationType type = [typesArray[i] integerValue];
+                
+                if (type == NVCalibrationTypeDegrees)
+                {
+                    value = tan(value * DEGtoRAD) * 100;
+                    type = NVCalibrationTypeRunningSlope;
+                }
+                
+                else if (type == NVCalibrationTypeRunningSlope)
+                {
+                    value = (atan(value / 100) * RADtoDEG);
+                    type = NVCalibrationTypeDegrees;
+                }
+                
+                [valuesArray replaceObjectAtIndex:i
+                                       withObject:@(value)];
+                
+                [typesArray replaceObjectAtIndex:i
+                                      withObject:@(type)];
+            }
+            
+            defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
+            [self saveCalibrationValueArray:defaultArray];
+        }
+    }
+}
+
 @end

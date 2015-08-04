@@ -917,6 +917,15 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)segControlValueChanged:(VerticalSegmentedControl *)segControl
 {
     _newType = (NVCalibrationType)(segControl.selectedSegmentIndex + 1);
+    
+    [SharedDefaults.defaults setCalibrationValueArrayToType:_newType];
+    _calibrationValues = SharedDefaults.defaults.calibrationValueArray;
+    
+    for (UITableView *tableViews in self.view.subviews)
+    {
+        if ([tableViews isKindOfClass:UITableView.class])
+            [tableViews reloadData];
+    }
 }
 
 - (void)sliderView:(NVSliderController *)sliderView
