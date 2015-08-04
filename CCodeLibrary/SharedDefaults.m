@@ -265,6 +265,7 @@ static SharedDefaults *_defaults;
         [typesArray addObject:@(type)];
         
         defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
+        defaultArray = [self resetDeviceValuesArray:defaultArray];
         [self saveCalibrationValueArray:defaultArray];
     }
 }
@@ -284,6 +285,7 @@ static SharedDefaults *_defaults;
         [typesArray removeObjectAtIndex:index];
         
         defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
+        defaultArray = [self resetDeviceValuesArray:defaultArray];
         [self saveCalibrationValueArray:defaultArray];
     }
 }
@@ -364,6 +366,27 @@ static SharedDefaults *_defaults;
             [self saveCalibrationValueArray:defaultArray];
         }
     }
+}
+
+- (NSArray *)resetDeviceValuesArray:(NSArray *)calibrationArray
+{
+    NSMutableArray *defaultArray = calibrationArray.mutableCopy;
+    
+    if (defaultArray.count)
+    {
+        NSArray *deviceValuesArray = @[@(0.0), @(4.745)];
+        
+        [defaultArray replaceObjectAtIndex:3
+                                withObject:deviceValuesArray];
+    }
+    
+    [SharedDefaults.defaults saveDate:nil
+                               forKey:@"LastCalDate"];
+    
+    [SharedDefaults.defaults saveString:nil
+                                 forKey:@"LastCalString"];
+    
+    return defaultArray;
 }
 
 @end

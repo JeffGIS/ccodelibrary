@@ -50,13 +50,7 @@ static CGFloat _deviceValues[9][4];
     _hasBeenFlipped = NO;
     _hasBeenCalibrated = YES;
 
-    NSString *lastCalString = [SharedDefaults.defaults stringForKey:@"LastCalString"];
-    
-    if (!lastCalString || [lastCalString isEqualToString:@""])
-    {
-        lastCalString = [NSString stringWithFormat:@"This device has NOT been calibrated"];
-        _hasBeenCalibrated = NO;
-    }
+    NSString *lastCalString = [self refreshCalDateLabel];
     
     _lastCalibrationlabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 984.0, 728.0, 32.0)];
     
@@ -103,6 +97,19 @@ static CGFloat _deviceValues[9][4];
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (NSString *)refreshCalDateLabel
+{
+    NSString *lastCalString = [SharedDefaults.defaults stringForKey:@"LastCalString"];
+    
+    if (!lastCalString || [lastCalString isEqualToString:@""])
+    {
+        lastCalString = [NSString stringWithFormat:@"This device has NOT been calibrated"];
+        _hasBeenCalibrated = NO;
+    }
+    
+    return lastCalString;
 }
 
 - (void)setupCalibrationButtons
@@ -825,6 +832,8 @@ viewForHeaderInSection:(NSInteger)section
                                  }
                                  
                                  [self setupCalibrationButtons];
+                                 NSString *lastCalString = [self refreshCalDateLabel];
+                                 _lastCalibrationlabel.text = lastCalString;
                              }];
         }
     }
