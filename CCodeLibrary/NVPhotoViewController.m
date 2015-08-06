@@ -56,15 +56,13 @@
     [self.view addSubview:_returnButton];
     
     NSFileManager *fileManager = NSFileManager.defaultManager;
-    NSError *error;
+    NSError *error = nil;
     
     NSArray *directoryContents = [fileManager contentsOfDirectoryAtPath:_directory
                                                                   error:&error];
     
     if (error)
-    {
         NSLog(@"File Directory Error:%@", error.localizedDescription);
-    }
     
     else if (directoryContents.count)
     {
@@ -86,7 +84,7 @@
     _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 100.0, self.view.frame.size.width,
                                                                (self.view.frame.size.height - 200.0))];
     
-    _photoView.contentScaleFactor = UIViewContentModeScaleAspectFit;
+    _photoView.contentMode = UIViewContentModeScaleAspectFit;
     _photoView.userInteractionEnabled = YES;
     
     _imageIndex = 0;
