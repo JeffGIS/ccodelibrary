@@ -123,6 +123,7 @@
 		A99C893E1AEDE1E200A0856F /* GSSiDefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99C893B1AEDE1B900A0856F /* GSSiDefs.h */; };
 		A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */ = {isa = PBXBuildFile; fileRef = A99F9B861B1E06E400CA8DA6 /* UIApplication+VersionBuild.m */; };
 		A9A7E3601B75361800DC7F3D /* NVInventoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9A7E35F1B75361800DC7F3D /* NVInventoryViewController.m */; };
+		A9A7E3611B75447500DC7F3D /* NVInventoryViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9A7E35E1B75361800DC7F3D /* NVInventoryViewController.h */; };
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
 		A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */; };
 		A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */; };
@@ -194,6 +195,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A9A7E3611B75447500DC7F3D /* NVInventoryViewController.h in CopyFiles */,
 				A9C183611B66776600780BF6 /* NV3DMath.h in CopyFiles */,
 				A9C183601B66776000780BF6 /* NVMesh.h in CopyFiles */,
 				A9D258C81B62C6CC00DF553A /* FTPDirectoryCreate.h in CopyFiles */,
