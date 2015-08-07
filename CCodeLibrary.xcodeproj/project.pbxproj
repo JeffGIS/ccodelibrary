@@ -122,6 +122,7 @@
 		A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */ = {isa = PBXBuildFile; fileRef = A99C893C1AEDE1B900A0856F /* GSSiDefs.m */; };
 		A99C893E1AEDE1E200A0856F /* GSSiDefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99C893B1AEDE1B900A0856F /* GSSiDefs.h */; };
 		A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */ = {isa = PBXBuildFile; fileRef = A99F9B861B1E06E400CA8DA6 /* UIApplication+VersionBuild.m */; };
+		A9A7E3601B75361800DC7F3D /* NVInventoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9A7E35F1B75361800DC7F3D /* NVInventoryViewController.m */; };
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
 		A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */; };
 		A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */; };
@@ -362,6 +363,8 @@
 		A99C893C1AEDE1B900A0856F /* GSSiDefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiDefs.m; sourceTree = "<group>"; };
 		A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+VersionBuild.h"; sourceTree = "<group>"; };
 		A99F9B861B1E06E400CA8DA6 /* UIApplication+VersionBuild.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+VersionBuild.m"; sourceTree = "<group>"; };
+		A9A7E35E1B75361800DC7F3D /* NVInventoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVInventoryViewController.h; sourceTree = "<group>"; };
+		A9A7E35F1B75361800DC7F3D /* NVInventoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVInventoryViewController.m; sourceTree = "<group>"; };
 		A9ADCB1C1ACD0870000E5C00 /* GSSiNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiNotesView.h; sourceTree = "<group>"; };
 		A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiNotesView.m; sourceTree = "<group>"; };
 		A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTestSlopeController.h; sourceTree = "<group>"; };
@@ -613,6 +616,8 @@
 				A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */,
 				A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */,
 				A9E2130D1AFE4BFC005ECBBA /* NVImagePickerController.m */,
+				A9A7E35E1B75361800DC7F3D /* NVInventoryViewController.h */,
+				A9A7E35F1B75361800DC7F3D /* NVInventoryViewController.m */,
 				A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */,
 				A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */,
 				A9E792821AEFE989005DA4BB /* NVLegendView.h */,
@@ -934,6 +939,7 @@
 				A9DDC08A1B613EF4000DEEA9 /* FTPDirectoryList.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */,
+				A9A7E3601B75361800DC7F3D /* NVInventoryViewController.m in Sources */,
 				A9D258C71B62C67F00DF553A /* FTPDirectoryCreate.m in Sources */,
 				A97407C61AF6A63900B2FF30 /* NVProgressView.m in Sources */,
 			);
