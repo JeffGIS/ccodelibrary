@@ -50,8 +50,13 @@
     
     [view addSubview:rampButton];
     
+    CGFloat rightMargin = 20.0;
+    
+    if (tag > 8)
+        rightMargin = 24.0;
+    
     rampButton.rampTypeLabel = [[UILabel alloc] initWithFrame:
-                                CGRectMake((rampButton.frame.size.width - 20.0),
+                                CGRectMake((rampButton.frame.size.width - rightMargin),
                                            ((rampButton.frame.size.height / 2.0) - 6.0),
                                            12.0, 12.0)];
     

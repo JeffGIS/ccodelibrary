@@ -11,6 +11,9 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
     NVUpdateOptionMove,
 };
 
+#define FROM_HOME   1
+#define FROM_CORNER 2
+
 #import <UIKit/UIKit.h>
 #import "MPIntersection.h"
 #import "NVLargeAlertView.h"
@@ -25,7 +28,7 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 
 @end
 
-@interface NVInventoryViewController : UIViewController <NVLargeAlertViewDelegate,CLLocationManagerDelegate>
+@interface NVInventoryViewController : UIViewController <NVLargeAlertViewDelegate,CLLocationManagerDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, weak) id <NVInventoryViewControllerDelegate> delegate;
 @property (nonatomic) MPIntersection *currentIntersection;
@@ -33,6 +36,7 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 
 + (NVInventoryViewController *)showInventoryViewControllerForIntersection:(MPIntersection *)intersection
                                                                  delegate:(id)delegate
-                                                                     from:(NSInteger)from;
+                                                                     from:(NSInteger)from
+                                                          draggableTarget:(BOOL)draggableTarget;
 
 @end

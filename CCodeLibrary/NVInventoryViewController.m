@@ -14,7 +14,7 @@
 
 @interface NVInventoryViewController ()
 
-@property (nonatomic) UIImageView *backgroundImage;
+@property (nonatomic) UIImageView *backgroundImage, *imageTargetView;
 @property (nonatomic) UIButton *cancelButton, *doneButton;
 @property (nonatomic) UIButton *addRampButton, *addSignalButton, *addXWalkButton;
 @property (nonatomic) UIButton *editItemButton, *rampTypeButton, *currentEditButton;
@@ -26,12 +26,14 @@
 @property (nonatomic) UISegmentedControl *zoomSC;
 @property (nonatomic) NVRampButton *ramp1, *ramp2, *ramp3, *ramp4, *ramp5, *ramp6, *ramp7, *ramp8;
 @property (nonatomic) NVRampButton *ramp23, *ramp45, *ramp67, *ramp81;
-@property BOOL firstTime;
+@property BOOL firstTime, draggableTarget;
 @property NVUpdateOption updateOption;
 @property (nonatomic) NVSignalButton *signal23, *signal45, *signal67, *signal81;
 @property (nonatomic) NVXWalkButton *xWalkA, *xWalkB, *xWalkC, *xWalkD;
 @property RampType currentRampType;
 @property (nonatomic) UILabel *headingLabel;
+@property (nonatomic) CGPoint newTarget;
+@property (nonatomic) CGFloat targetSize;
 
 @end
 
@@ -39,12 +41,14 @@
 
 + (NVInventoryViewController *)showInventoryViewControllerForIntersection:(MPIntersection *)intersection
                                                                  delegate:(id)delegate
-                                                                     from:(NSInteger)from;
+                                                                     from:(NSInteger)from
+                                                          draggableTarget:(BOOL)draggableTarget;
 {
     NVInventoryViewController *inventoryVC = [[NVInventoryViewController alloc] init];
     inventoryVC.currentIntersection = intersection;
     inventoryVC.delegate = delegate;
     inventoryVC.from = from;
+    inventoryVC.draggableTarget = draggableTarget;
     
     if ([delegate isKindOfClass:UIViewController.class])
     {
@@ -73,6 +77,7 @@
     _pTranWToBMP = _pTranBMPToW = 0;
     _updateOption = NVUpdateOptionNone;
     _currentRampType = [UserDefaults.defaults integerForKey:@"CurrentRampType"];
+    _targetSize = 160.0;
     
     _backgroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 98.0, 768.0, 768.0)];
     _backgroundImage.clipsToBounds = YES;
@@ -105,6 +110,9 @@
     [self setupXWalkButtons];
     [self setupSignalButtons];
     [self setBKImage:NO];
+    
+    if (_draggableTarget)
+        [self setupImageTarget];
     
     _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(468.0, 958.0, 284.0, 66.0)];
     _headingLabel.backgroundColor = UIColor.clearColor;
@@ -403,7 +411,7 @@
             y -= (rampButton.frame.size.height / 2.0);
             
             rampButton.frame = CGRectMake(x, y, rampButton.frame.size.width, rampButton.frame.size.height);
-            rampButton.type = _currentRampType;
+            rampButton.type = ramp.rampType;
             rampButton.hidden = NO;
         }
     }
@@ -565,19 +573,19 @@
     
     _ramp23 = [NVRampButton addToView:self.view
                                  tag:9
-                               title:@"9"];
+                               title:@"23"];
     
     _ramp45 = [NVRampButton addToView:self.view
                                  tag:10
-                               title:@"10"];
+                               title:@"45"];
     
     _ramp67 = [NVRampButton addToView:self.view
                                  tag:11
-                               title:@"11"];
+                               title:@"67"];
     
     _ramp81 = [NVRampButton addToView:self.view
                                  tag:12
-                               title:@"12"];
+                               title:@"81"];
     
     [self addTargets:_ramp1];
     [self addTargets:_ramp2];
@@ -769,7 +777,249 @@
 
 - (void)editItem:(UIButton *)button
 {
+    if (!_editItemButton.selected)
+    {
+        [self deselectAll];
+        _editItemButton.selected = YES;
+        _updateOption = NVUpdateOptionEdit;
+    }
     
+    else
+    {
+        _editItemButton.selected = NO;
+        _updateOption = NVUpdateOptionNone;
+    }
+    
+    [self updateBottomButtonAppearance];
+}
+
+- (void)buttonTapped:(UIButton *)button
+{
+    if (_updateOption != NVUpdateOptionEdit)
+        return;
+    
+    [self performItemEdit:button];
+}
+
+- (void)performItemEdit:(UIButton *)button
+{
+    _currentEditButton = button;
+    
+    if (button == _xWalkA || button == _xWalkB ||
+        button == _xWalkC || button == _xWalkD)
+    {
+        UIAlertView *xWalkEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit XWalk"
+                                                                   message:nil
+                                                                  delegate:self
+                                                         cancelButtonTitle:@"Cancel"
+                                                         otherButtonTitles:@"Delete",nil];
+        [xWalkEditOptions show];
+    }
+    
+    else if (button == _signal81 || button == _signal23 ||
+             button == _signal45 || button == _signal67)
+    {
+        UIAlertView *signalEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit Signal"
+                                                                    message:nil
+                                                                   delegate:self
+                                                          cancelButtonTitle:@"Cancel"
+                                                          otherButtonTitles:@"Delete",nil];
+        
+        [signalEditOptions show];
+    }
+    
+    else
+    {
+        UIAlertView *rampEditOptions = nil;
+        MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:_currentEditButton.tag];
+        
+        if ([self isMiddleRamp:_currentEditButton.tag] && [self isMiddleRampType:ramp.rampType])
+        {
+            rampEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit Ramp"
+                                                         message:nil
+                                                        delegate:self
+                                               cancelButtonTitle:@"Cancel"
+                                               otherButtonTitles:@"Delete",@"Change Ramp Type",nil];
+        }
+        
+        else
+        {
+            rampEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit Ramp"
+                                                         message:nil
+                                                        delegate:self
+                                               cancelButtonTitle:@"Cancel"
+                                               otherButtonTitles:@"Delete",@"Change Ramp Type",@"Change to Left Ramp",@"Change to Middle Ramp",@"Change to Right Ramp",nil];
+        }
+        
+        [rampEditOptions show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView
+clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    int rampID = 0, switchWith = 0;
+    
+    switch (buttonIndex)
+    {
+        case 1://delete
+            if (_currentEditButton == _xWalkA)
+                _currentIntersection.xWalkAExists = NO;
+            
+            else if (_currentEditButton == _xWalkB)
+                _currentIntersection.xWalkBExists = NO;
+            
+            else if (_currentEditButton == _xWalkC)
+                _currentIntersection.xWalkCExists = NO;
+            
+            else if (_currentEditButton == _xWalkD)
+                _currentIntersection.xWalkDExists = NO;
+            
+            else if (_currentEditButton == _signal81)
+                _currentIntersection.signal81Exists = NO;
+            
+            else if (_currentEditButton == _signal23)
+                _currentIntersection.signal23Exists = NO;
+            
+            else if (_currentEditButton == _signal45)
+                _currentIntersection.signal45Exists = NO;
+            
+            else if (_currentEditButton == _signal67)
+                _currentIntersection.signal67Exists = NO;
+            
+            else if ((rampID = (int)_currentEditButton.tag))
+            {
+                MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                ramp.rampExists = NO;
+                ramp.isComplete = YES;
+                ramp.rampType = 0;
+            }
+            
+            [self setupButtons:NO];
+            break;
+            
+        case 2://change ramp type
+            if ((rampID = (int)_currentEditButton.tag))
+            {
+                MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                
+                RampTypeView *rtv = [RampTypeView showRampTypeViewWithView:self.view
+                                                                  delegate:self
+                                                              selectedType:ramp.rampType
+                                                                editOption:RampTypeEditOptionIndividual];
+#pragma unused(rtv)
+            }
+            
+            break;
+            
+        case 3://change to left ramp
+            if ((rampID = (int)_currentEditButton.tag))
+            {
+                MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                switchWith = [self getLeftRampIDFromRampID:rampID];
+                
+                if (switchWith > 0)
+                {
+                    MPRamp *switchRamp = [_currentIntersection.ramps objectAtIndex:switchWith];
+                    int savex = ramp.lev21x;
+                    int savey = ramp.lev21y;
+                    int savear = ramp.adjustedRot;
+                    CGFloat saveah = ramp.approximateHeading;
+                    ramp.lev21x = switchRamp.lev21x;
+                    ramp.lev21y = switchRamp.lev21y;
+                    ramp.adjustedRot = switchRamp.adjustedRot;
+                    ramp.approximateHeading = switchRamp.approximateHeading;
+                    switchRamp.lev21x = savex;
+                    switchRamp.lev21y = savey;
+                    switchRamp.adjustedRot = savear;
+                    switchRamp.approximateHeading = saveah;
+                    switchRamp.rampType = ramp.rampType;
+                    ramp.rampType = 0;
+                    ramp.rampExists = NO;
+                    ramp.isComplete = YES;
+                    switchRamp.rampExists = YES;
+                    switchRamp.isComplete = NO;
+                }
+            }
+            
+            [self setupButtons:NO];
+            break;
+            
+        case 4://change to middle ramp
+            if ((rampID = (int)_currentEditButton.tag))
+            {
+                MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                switchWith = [self getMiddleRampIDFromRampID:rampID];
+                int otherID = [self getOtherRampIDFromRampID:rampID];
+                
+                if (switchWith > 0)
+                {
+                    MPRamp *switchRamp = [_currentIntersection.ramps objectAtIndex:switchWith];
+                    MPRamp *otherRamp = [_currentIntersection.ramps objectAtIndex:otherID];
+                    int savex = ramp.lev21x;
+                    int savey = ramp.lev21y;
+                    int savear = ramp.adjustedRot;
+                    CGFloat saveah = ramp.approximateHeading;
+                    ramp.lev21x = switchRamp.lev21x;
+                    ramp.lev21y = switchRamp.lev21y;
+                    ramp.adjustedRot = switchRamp.adjustedRot;
+                    ramp.approximateHeading = switchRamp.approximateHeading;
+                    switchRamp.lev21x = savex;
+                    switchRamp.lev21y = savey;
+                    switchRamp.adjustedRot = savear;
+                    switchRamp.approximateHeading = saveah;
+                    switchRamp.rampType = ramp.rampType;
+                    ramp.rampType = 0;
+                    ramp.rampExists = NO;
+                    ramp.isComplete = YES;
+                    switchRamp.rampExists = YES;
+                    switchRamp.isComplete = NO;
+                    otherRamp.rampType = 0;
+                    otherRamp.rampExists = NO;
+                    otherRamp.isComplete = YES;
+                }
+            }
+            
+            [self setupButtons:NO];
+            break;
+            
+        case 5://change to right ramp
+            if ((rampID = (int)_currentEditButton.tag))
+            {
+                MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                switchWith = [self getRightRampIDFromRampID:rampID];
+                
+                if (switchWith > 0)
+                {
+                    MPRamp *switchRamp = [_currentIntersection.ramps objectAtIndex:switchWith];
+                    int savex = ramp.lev21x;
+                    int savey = ramp.lev21y;
+                    int savear = ramp.adjustedRot;
+                    CGFloat saveah = ramp.approximateHeading;
+                    ramp.lev21x = switchRamp.lev21x;
+                    ramp.lev21y = switchRamp.lev21y;
+                    ramp.adjustedRot = switchRamp.adjustedRot;
+                    ramp.approximateHeading = switchRamp.approximateHeading;
+                    switchRamp.lev21x = savex;
+                    switchRamp.lev21y = savey;
+                    switchRamp.adjustedRot = savear;
+                    switchRamp.approximateHeading = saveah;
+                    switchRamp.rampType = ramp.rampType;
+                    ramp.rampType = 0;
+                    ramp.rampExists = NO;
+                    ramp.isComplete = YES;
+                    switchRamp.rampExists = YES;
+                    switchRamp.isComplete = NO;
+                }
+            }
+            
+            [self setupButtons:NO];
+            break;
+    }
+
+    _editItemButton.selected = NO;
+    _updateOption = NVUpdateOptionNone;
+    [self updateBottomButtonAppearance];
 }
 
 - (void)rampType:(UIButton *)button
@@ -841,15 +1091,7 @@
                action:@selector(buttonTapped:)
      forControlEvents:UIControlEventTouchUpInside];
     
-    _updateOption = 0;
-}
-
-- (void)buttonTapped:(UIButton *)button
-{
-    if (_updateOption != NVUpdateOptionEdit)
-        return;
-    
-    [self editItem:button];
+    _updateOption = NVUpdateOptionNone;
 }
 
 - (void)pointPicked:(UIGestureRecognizer *)gesture
@@ -964,7 +1206,7 @@
                 }
             }
             
-            _updateOption = 0;
+            _updateOption = NVUpdateOptionNone;
             break;
             
         case NVUpdateOptionAddRamp:
@@ -1021,19 +1263,16 @@
                     switchRamp.adjustedRot = savear;
                     switchRamp.approximateHeading = saveah;
                     switchRamp.rampType = savert;
-                    
-                    NVRampButton *rampButton = (NVRampButton *)[self.view viewWithTag:rampID];
-                    
-                    NVRampButton *existingButton = (NVRampButton *)[self.view viewWithTag:switchWith];
-                    
                 }
                 
                 if ([self isMiddleRampType:_currentRampType])
                 {
                     _currentEditButton = (UIButton *)[self.view viewWithTag:rampID];
                     
-                    /*[self alertView:nil
-               clickedButtonAtIndex:4];*/
+                    [self alertView:nil
+               clickedButtonAtIndex:4];
+                    
+                    _updateOption = NVUpdateOptionAddRamp;
                 }
             }
         }
@@ -1448,8 +1687,8 @@
             
             if (![self isMiddleRamp:_currentEditButton.tag] && [self isMiddleRampType:rampType])
             {
-                /*[self alertView:nil
-           clickedButtonAtIndex:4];*/
+                [self alertView:nil
+           clickedButtonAtIndex:4];
             }
         }
             
@@ -1460,6 +1699,65 @@
     }
     
     [rampTypeView hideRampTypeView:YES];
+}
+
+- (void)setupImageTarget
+{
+    _imageTargetView = [[UIImageView alloc] initWithImage:UserDefaults.defaults.imageTarget];
+    
+    _imageTargetView.frame = CGRectMake ((_backgroundImage.frame.size.width / 2.0) - (_targetSize / 2.0),
+                                         (_backgroundImage.frame.size.height / 2.0) - (_targetSize / 2.0), _targetSize, _targetSize);
+    
+    _imageTargetView.userInteractionEnabled = YES;
+    
+    UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(targetDragged:)];
+    
+    gesture.cancelsTouchesInView = NO;
+    
+    [_imageTargetView addGestureRecognizer:gesture];
+    [_backgroundImage addSubview:_imageTargetView];
+}
+
+//this method is called continuosly while the target is being dragged
+- (void)targetDragged:(UIPanGestureRecognizer *)gesture
+{
+    //only called after the target is done being dragged
+    if (gesture.state == UIGestureRecognizerStateEnded)
+    {
+        CGFloat x = 0.0, y = 0.0, lat = 0.0, lon = 0.0;
+        TRANS2((_newTarget.x * _xFactor) - _xOffset, (_newTarget.y * _yFactor) - _yOffset + (_targetSize / 2.0), &x, &y, _pTranBMPToW);
+        
+        IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
+        IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersectionID];
+        
+        PixelXYToLatLongd(x, y, _currentZoom, &lat, &lon);
+        info.latitude = lat;
+        info.longitude = lon;
+        [database setCurrentIntersectionPoint:info];
+        [self setBKImage:YES];
+        
+        _imageTargetView.frame = CGRectMake ((_backgroundImage.frame.size.width / 2.0) - (_targetSize / 2.0),
+                                             (_backgroundImage.frame.size.height / 2.0) - (_targetSize / 2.0), _targetSize, _targetSize);
+    }
+    
+    //called continuosly while the target is being dragged
+    UIImageView *target = (UIImageView *)gesture.view;
+    CGPoint translation = [gesture translationInView:target];
+    
+    CGPoint newTarget = CGPointMake(target.center.x + translation.x,
+                                    target.center.y + translation.y);
+    
+    if (newTarget.x > 0.0 && newTarget.y > 0.0 &&
+        newTarget.x < _backgroundImage.frame.size.width &&
+        newTarget.y < _backgroundImage.frame.size.height)
+    {
+        _newTarget = newTarget;
+        target.center = _newTarget;
+        
+        [gesture setTranslation:CGPointZero
+                         inView:target];
+    }
 }
 
 @end
