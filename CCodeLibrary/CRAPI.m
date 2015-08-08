@@ -94,6 +94,7 @@
     NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, _currentGeoidValue];
     return uploadDirectory;
 }
+
 - (void)intersectionInit:(MPIntersection *)currentIntersection
 {
     currentIntersection.intID = -1;

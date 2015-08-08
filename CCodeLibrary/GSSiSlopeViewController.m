@@ -433,10 +433,10 @@ static int COUNT=100;
 {
     BOOL rtn = NO;
    
-    NSArray *calibrationValues = [SharedDefaults.defaults calibrationValueArray];
+    NSArray *calibrationValues = SharedDefaults.defaults.calibrationValueArray;
     NSArray *targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
     _nCalibrationPoints = targetValues.count;
-    int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][0] integerValue];
+    int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][0] intValue];
     _displayDegrees = (currentType == NVCalibrationTypeDegrees);
         
     if (_nCalibrationPoints > 1 && _nCalibrationPoints < 6)
@@ -453,7 +453,7 @@ static int COUNT=100;
         {
             NSNumber *num = targetValues[i];
             _targetValues[i] = num.doubleValue;
-            int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] integerValue];
+            int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] intValue];
             
             if (currentType == NVCalibrationTypeRunningSlope)
                 _targetValues[i] = (atan(_targetValues[i] / 100) * RADtoDEG);

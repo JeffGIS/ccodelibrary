@@ -89,8 +89,8 @@ static CurbRampData *_statdatabase = nil;
 {
     [self close];
     
-    //BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
-    //error:nil];
+    BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
+    error:nil];
 }
 
 - (int)datasetVersion
@@ -167,7 +167,7 @@ static CurbRampData *_statdatabase = nil;
     
     SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), _database);
     
-    NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (\
+    NSString *query = [NSString stringWithFormat:@"CREATE TABLE Intersections (\
                        intID INTEGER PRIMARY KEY,\
                        lastUpdateTime INTEGER,\
                        status INTEGER,\

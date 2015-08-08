@@ -75,6 +75,19 @@
                       title:topButtontext
                        font:largeAlert.font];
     
+    if (bottomButtonText)
+    {
+        largeAlert.bottomButton = [[UIButton alloc] initWithFrame:CGRectMake(-1.0, (alertHeight - 61.0), (alertWidth + 2.0), 62.0)];
+        
+        [largeAlert setupButton:largeAlert.bottomButton
+                         target:largeAlert
+                       selector:@selector(bottomButtonTapped:)
+                          title:bottomButtonText
+                           font:largeAlert.font];
+        
+        [largeAlert addSubview:largeAlert.bottomButton];
+    }
+    
     switch (destructiveIndex)
     {
         case NVLargeAlertIndexNone:
@@ -96,19 +109,6 @@
     }
     
     [largeAlert addSubview:largeAlert.topButton];
-    
-    if (bottomButtonText)
-    {
-        largeAlert.bottomButton = [[UIButton alloc] initWithFrame:CGRectMake(-1.0, (alertHeight - 61.0), (alertWidth + 2.0), 62.0)];
-        
-        [largeAlert setupButton:largeAlert.bottomButton
-                         target:largeAlert
-                       selector:@selector(bottomButtonTapped:)
-                          title:bottomButtonText
-                           font:largeAlert.font];
-        
-        [largeAlert addSubview:largeAlert.bottomButton];
-    }
     
     [UIView animateWithDuration:0.25
                      animations:^{

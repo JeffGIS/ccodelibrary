@@ -15,12 +15,20 @@ typedef NS_ENUM(NSInteger, RampType)
     RampTypeFan,
 };
 
+typedef NS_ENUM(NSInteger, RampTypeEditOption)
+{
+    RampTypeEditOptionDefault,
+    RampTypeEditOptionGlobal,
+    RampTypeEditOptionIndividual,
+};
+
 @class RampTypeView;
 
 @protocol RampTypeViewDelegate <NSObject>
 
 - (void)rampTypeView:(RampTypeView *)rampTypeView
-   didReturnRampType:(NSInteger)rampType;
+   didReturnRampType:(RampType)rampType
+          editOption:(RampTypeEditOption)editOption;
 
 @end
 
@@ -30,7 +38,12 @@ typedef NS_ENUM(NSInteger, RampType)
 @property (nonatomic) NSArray *rampImageLabelText;
 
 + (RampTypeView *)showRampTypeViewWithView:(UIView *)view
-                                  delegate:(id)delegate;
+                                  delegate:(id)delegate
+                              selectedType:(RampType)selectedType
+                                editOption:(RampTypeEditOption)editOption;
+
++ (NSArray *)rampTypeImages;
++ (NSArray *)rampTypeText;
 
 - (void)hideRampTypeView:(BOOL)animated;
 
