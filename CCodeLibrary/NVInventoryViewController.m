@@ -1057,11 +1057,19 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
         UITouch *touch = [[event touchesForView:button] anyObject];
         CGPoint previousLocation = [touch previousLocationInView:button];
         CGPoint location = [touch locationInView:button];
-        CGFloat delta_x = (location.x - previousLocation.x);
-        CGFloat delta_y = (location.y - previousLocation.y);
+        CGFloat deltaX = (location.x - previousLocation.x);
+        CGFloat deltaY = (location.y - previousLocation.y);
         
-        button.center = CGPointMake(button.center.x + delta_x,
-                                    button.center.y + delta_y);
+        CGPoint newCenter = CGPointMake(button.center.x + deltaX,
+                                        button.center.y + deltaY);
+        
+        if (newCenter.x > (_backgroundImage.frame.origin.x + (button.frame.size.width / 2.0)) &&
+            newCenter.x < ((_backgroundImage.frame.origin.x + _backgroundImage.frame.size.width) - (button.frame.size.width / 2.0)) &&
+            newCenter.y > (_backgroundImage.frame.origin.y + (button.frame.size.height / 2.0)) &&
+            newCenter.y < ((_backgroundImage.frame.origin.y + _backgroundImage.frame.size.height) - (button.frame.size.height / 2.0)))
+        {
+            button.center = newCenter;
+        }
     }
 }
 
