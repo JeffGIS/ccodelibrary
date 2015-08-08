@@ -5,6 +5,8 @@
 
 @interface NVImagePickerController : UIImagePickerController
 
+@property BOOL showsTimeStamp;
+
 - (id)initWithDelegate:(id)delegate;
 
 @end

@@ -116,7 +116,7 @@
                     rtNumberLabel.textAlignment = NSTextAlignmentCenter;
                     rtNumberLabel.font = [UIFont boldSystemFontOfSize:200.0];
                     rtNumberLabel.adjustsFontSizeToFitWidth = YES;
-                    rtNumberLabel.text = [NSString stringWithFormat:@"%li", (tag + 1)];
+                    rtNumberLabel.text = [NSString stringWithFormat:@"%li", (long)(tag + 1)];
                     [rtButton addSubview:rtNumberLabel];
                 }
                 
