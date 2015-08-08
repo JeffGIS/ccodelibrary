@@ -124,6 +124,9 @@
 		A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */ = {isa = PBXBuildFile; fileRef = A99F9B861B1E06E400CA8DA6 /* UIApplication+VersionBuild.m */; };
 		A9A7E3601B75361800DC7F3D /* NVInventoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9A7E35F1B75361800DC7F3D /* NVInventoryViewController.m */; };
 		A9A7E3611B75447500DC7F3D /* NVInventoryViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9A7E35E1B75361800DC7F3D /* NVInventoryViewController.h */; };
+		A9A7E3641B75663500DC7F3D /* NVRampButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A9A7E3631B75663500DC7F3D /* NVRampButton.m */; };
+		A9A7E3671B75795300DC7F3D /* NVSignalButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A9A7E3661B75795300DC7F3D /* NVSignalButton.m */; };
+		A9A7E36A1B75796500DC7F3D /* NVXWalkButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A9A7E3691B75796500DC7F3D /* NVXWalkButton.m */; };
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
 		A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */; };
 		A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */; };
@@ -367,6 +370,12 @@
 		A99F9B861B1E06E400CA8DA6 /* UIApplication+VersionBuild.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+VersionBuild.m"; sourceTree = "<group>"; };
 		A9A7E35E1B75361800DC7F3D /* NVInventoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVInventoryViewController.h; sourceTree = "<group>"; };
 		A9A7E35F1B75361800DC7F3D /* NVInventoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVInventoryViewController.m; sourceTree = "<group>"; };
+		A9A7E3621B75663500DC7F3D /* NVRampButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRampButton.h; sourceTree = "<group>"; };
+		A9A7E3631B75663500DC7F3D /* NVRampButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRampButton.m; sourceTree = "<group>"; };
+		A9A7E3651B75795300DC7F3D /* NVSignalButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSignalButton.h; sourceTree = "<group>"; };
+		A9A7E3661B75795300DC7F3D /* NVSignalButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSignalButton.m; sourceTree = "<group>"; };
+		A9A7E3681B75796500DC7F3D /* NVXWalkButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVXWalkButton.h; sourceTree = "<group>"; };
+		A9A7E3691B75796500DC7F3D /* NVXWalkButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVXWalkButton.m; sourceTree = "<group>"; };
 		A9ADCB1C1ACD0870000E5C00 /* GSSiNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiNotesView.h; sourceTree = "<group>"; };
 		A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiNotesView.m; sourceTree = "<group>"; };
 		A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTestSlopeController.h; sourceTree = "<group>"; };
@@ -630,6 +639,12 @@
 				A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */,
 				A97407C41AF6A63900B2FF30 /* NVProgressView.h */,
 				A97407C51AF6A63900B2FF30 /* NVProgressView.m */,
+				A9A7E3621B75663500DC7F3D /* NVRampButton.h */,
+				A9A7E3631B75663500DC7F3D /* NVRampButton.m */,
+				A9A7E3651B75795300DC7F3D /* NVSignalButton.h */,
+				A9A7E3661B75795300DC7F3D /* NVSignalButton.m */,
+				A9A7E3681B75796500DC7F3D /* NVXWalkButton.h */,
+				A9A7E3691B75796500DC7F3D /* NVXWalkButton.m */,
 				A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */,
 				A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */,
 				A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */,
@@ -875,6 +890,7 @@
 				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,
 				A94A771319F807570062906E /* Facility.m in Sources */,
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
+				A9A7E3671B75795300DC7F3D /* NVSignalButton.m in Sources */,
 				A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */,
 				A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */,
 				A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */,
@@ -883,6 +899,7 @@
 				A933D9FD1B5D4FEF00D621CD /* NV3DMath.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */,
+				A9A7E3641B75663500DC7F3D /* NVRampButton.m in Sources */,
 				A933D9F61B5D499500D621CD /* NVPipe.m in Sources */,
 				A9735AF419E77B6800894359 /* Reachability.m in Sources */,
 				A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */,
@@ -924,6 +941,7 @@
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
 				A9237F851AFA929200D10E96 /* NVTextAlert.m in Sources */,
 				EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */,
+				A9A7E36A1B75796500DC7F3D /* NVXWalkButton.m in Sources */,
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
 				A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */,
 				EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */,
