@@ -692,33 +692,12 @@
 
 - (void)cancel:(UIButton *)button
 {
-    NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
-                                                                delegate:self
-                                                                   title:@"Do you really want to cancel all changes to this intersection?"
-                                                           topButtonText:@"NO"
-                                                        bottomButtonText:@"YES"
-                                                        destructiveIndex:NVLargeAlertIndexBottomButton];
-#pragma unused(alert)
-}
-
-- (void)largeAlertView:(NVLargeAlertView *)largeAlertView
-   didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
-{
-    [largeAlertView hideLargeAlertView:YES];
-    
-    switch (buttonIndex)
-    {
-        case NVLargeAlertIndexTopButton:
-            break;
-            
-        case NVLargeAlertIndexBottomButton:
-            [self dismissViewControllerAnimated:YES
-                                     completion:nil];
-            break;
-            
-        default:
-            break;
-    }
+    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                      delegate:self
+                                                         title:@"Do you really want to cancel all changes to this intersection?"
+                                               buttonTextArray:@[@"NO", @"YES"]
+                                              destructiveIndex:2];
+    alert.tag = 999;
 }
 
 - (void)addRamp:(UIButton *)button
@@ -804,62 +783,60 @@
 - (void)performItemEdit:(UIButton *)button
 {
     _currentEditButton = button;
+    NVAlertView *alert = nil;
     
-    if (button == _xWalkA || button == _xWalkB ||
-        button == _xWalkC || button == _xWalkD)
+    if ([button isKindOfClass:NVXWalkButton.class])
     {
-        UIAlertView *xWalkEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit XWalk"
-                                                                   message:nil
-                                                                  delegate:self
-                                                         cancelButtonTitle:@"Cancel"
-                                                         otherButtonTitles:@"Delete",nil];
-        [xWalkEditOptions show];
+        alert = [NVAlertView showLargeAlertViewinView:self.view
+                                             delegate:self
+                                                title:@"Edit XWalk"
+                                      buttonTextArray:@[@"Cancel", @"Delete"]
+                                     destructiveIndex:2];
     }
     
-    else if (button == _signal81 || button == _signal23 ||
-             button == _signal45 || button == _signal67)
+    else if ([button isKindOfClass:NVSignalButton.class])
     {
-        UIAlertView *signalEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit Signal"
-                                                                    message:nil
-                                                                   delegate:self
-                                                          cancelButtonTitle:@"Cancel"
-                                                          otherButtonTitles:@"Delete",nil];
-        
-        [signalEditOptions show];
+        alert = [NVAlertView showLargeAlertViewinView:self.view
+                                             delegate:self
+                                                title:@"Edit Signal"
+                                      buttonTextArray:@[@"Cancel", @"Delete"]
+                                     destructiveIndex:2];
     }
     
     else
     {
-        UIAlertView *rampEditOptions = nil;
+        NSArray *rampOptions = nil;
         MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:_currentEditButton.tag];
         
         if ([self isMiddleRamp:_currentEditButton.tag] && [self isMiddleRampType:ramp.rampType])
-        {
-            rampEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit Ramp"
-                                                         message:nil
-                                                        delegate:self
-                                               cancelButtonTitle:@"Cancel"
-                                               otherButtonTitles:@"Delete",@"Change Ramp Type",nil];
-            
-            [rampEditOptions show];
-        }
+            rampOptions = @[@"Cancel", @"Delete", @"Change Ramp Type"];
         
         else
         {
-            NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                              delegate:self
-                                                                 title:@"Edit Ramp"
-                                                       buttonTextArray:@[@"Cancel", @"Delete", @"Change Ramp Type", @"Change to Left Ramp",
-                                                                         @"Change to Middle Ramp", @"Change to Right Ramp"]
-                                                      destructiveIndex:0];
+            rampOptions = @[@"Cancel", @"Delete", @"Change Ramp Type", @"Change to Left Ramp",
+                            @"Change to Middle Ramp", @"Change to Right Ramp"];
         }
+        
+        alert = [NVAlertView showLargeAlertViewinView:self.view
+                                             delegate:self
+                                                title:@"Edit Ramp"
+                                      buttonTextArray:rampOptions
+                                     destructiveIndex:2];
     }
 }
 
-- (void)alertView:(UIAlertView *)alertView
-clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
 {
+    [alertView hideLargeAlertView:YES];
+    
     int rampID = 0, switchWith = 0;
+    
+    if (alertView.tag == 999 && buttonIndex == 1)
+    {
+        [self dismissViewControllerAnimated:YES
+                                 completion:nil];
+    }
     
     switch (buttonIndex)
     {
@@ -1017,7 +994,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
             [self setupButtons:NO];
             break;
     }
-
+    
     _editItemButton.selected = NO;
     _updateOption = NVUpdateOptionNone;
     [self updateBottomButtonAppearance];
@@ -1279,7 +1256,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
                     _currentEditButton = (UIButton *)[self.view viewWithTag:rampID];
                     
                     [self alertView:nil
-               clickedButtonAtIndex:4];
+                didTapButtonAtIndex:4];
                     
                     _updateOption = NVUpdateOptionAddRamp;
                 }
@@ -1697,7 +1674,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
             if (![self isMiddleRamp:_currentEditButton.tag] && [self isMiddleRampType:rampType])
             {
                 [self alertView:nil
-           clickedButtonAtIndex:4];
+            didTapButtonAtIndex:4];
             }
         }
             

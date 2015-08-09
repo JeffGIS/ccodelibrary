@@ -8,7 +8,6 @@
 
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UILabel *titleLabel;
-
 @end
 
 @implementation NVAlertView
@@ -33,7 +32,7 @@
     
     [view addSubview:alert.overlayView];
     
-    CGFloat width = 340.0, margin = 20.0, yPosition = 20.0;
+    CGFloat width = 340.0, yPosition = 10.0;
     
     UIFont *font = [UIFont boldSystemFontOfSize:28.0];
     
@@ -41,7 +40,7 @@
                                         font:font
                                        width:width];
     
-    alert.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(margin, yPosition, width, height)];
+    alert.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, yPosition, (width - 20.0), height)];
     alert.titleLabel.text = title;
     alert.titleLabel.font = font;
     alert.titleLabel.numberOfLines = 0;
@@ -50,7 +49,7 @@
     alert.titleLabel.textColor = UIColor.blackColor;
     alert.titleLabel.textAlignment = NSTextAlignmentCenter;
     
-    yPosition += height;
+    yPosition += (height + 10.0);
     
     for (int i = 0; i < buttonTextArray.count; i++)
     {
@@ -60,32 +59,49 @@
                                             font:font
                                            width:width];
         
-        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(margin, yPosition, width, height)];
+        height += 10.0;
+        
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(-1.0 , yPosition, (width + 2.0), height)];
         
         button.tag = (i + 1);
         button.backgroundColor = UIColor.clearColor;
         button.titleLabel.font = font;
         button.layer.borderColor = UIColor.lightGrayColor.CGColor;
         button.layer.borderWidth = 1.0;
+        button.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+        button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        button.titleLabel.numberOfLines = 0;
+        button.titleLabel.adjustsFontSizeToFitWidth = YES;
+        button.titleLabel.textAlignment = NSTextAlignmentCenter;
         
         [button setTitle:title
                 forState:UIControlStateNormal];
         
-        [button setTitleColor:UserDefaults.defaults.appleBlue
-                     forState:UIControlStateNormal];
+        if (destructiveIndex == (i + 1))
+        {
+            [button setTitleColor:UIColor.redColor
+                         forState:UIControlStateNormal];
+        }
+        
+        else
+        {
+            [button setTitleColor:UserDefaults.defaults.appleBlue
+                         forState:UIControlStateNormal];
+        }
         
         [button setTitleColor:UIColor.lightGrayColor
                      forState:UIControlStateHighlighted];
         
-        [button addTarget:self
+        [button addTarget:alert
                    action:@selector(buttonTapped:)
          forControlEvents:UIControlEventTouchUpInside];
         
         [alert addSubview:button];
         
-        yPosition += height;
+        yPosition += (height - 1.0);
     }
     
+    alert.frame = CGRectMake(0.0, 0.0, width, yPosition);
     alert.center = CGPointMake((bounds.size.width / 2.0), (bounds.size.height / 2.0));
     alert.backgroundColor = UIColor.whiteColor;
     alert.alpha = 0.0;
@@ -106,7 +122,11 @@
 
 - (void)buttonTapped:(UIButton *)button
 {
-    
+    if (_delegate)
+    {
+        [_delegate alertView:self
+         didTapButtonAtIndex:(button.tag - 1)];
+    }
 }
 
 - (void)hideLargeAlertView:(BOOL)animated

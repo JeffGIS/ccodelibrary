@@ -8,7 +8,7 @@
 @protocol NVAlertViewDelegate <NSObject>
 
 - (void)alertView:(NVAlertView *)alertView
-didTapButtonAtIndex:(NSUInteger)buttonIndex;
+didTapButtonAtIndex:(NSInteger)buttonIndex;
 
 @end
 

@@ -130,7 +130,8 @@
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
 		A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */; };
 		A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */; };
-		A9BF333A1B76FCED00A72E17 /* NVAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BF33391B76FCED00A72E17 /* NVAlertView.m */; };
+		A9BF333B1B770CF600A72E17 /* NVAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BF33391B76FCED00A72E17 /* NVAlertView.m */; };
+		A9BF333C1B770E8E00A72E17 /* NVAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BF33381B76FCED00A72E17 /* NVAlertView.h */; };
 		A9C1835F1B6674A600780BF6 /* NVMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C1835E1B6674A600780BF6 /* NVMesh.m */; };
 		A9C183601B66776000780BF6 /* NVMesh.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9C1835D1B6674A600780BF6 /* NVMesh.h */; };
 		A9C183611B66776600780BF6 /* NV3DMath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A933D9FB1B5D4FEF00D621CD /* NV3DMath.h */; };
@@ -199,6 +200,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				A9BF333C1B770E8E00A72E17 /* NVAlertView.h in CopyFiles */,
 				A9A7E3611B75447500DC7F3D /* NVInventoryViewController.h in CopyFiles */,
 				A9C183611B66776600780BF6 /* NV3DMath.h in CopyFiles */,
 				A9C183601B66776000780BF6 /* NVMesh.h in CopyFiles */,
@@ -886,10 +888,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9BF333B1B770CF600A72E17 /* NVAlertView.m in Sources */,
 				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,
 				A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */,
 				A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */,
-				A9BF333A1B76FCED00A72E17 /* NVAlertView.m in Sources */,
 				A98A57A81B20ADE600906FBC /* NVCalibrationController.m in Sources */,
 				EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */,
 				A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */,
