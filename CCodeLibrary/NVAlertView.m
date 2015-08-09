@@ -1,0 +1,142 @@
+//  NVAlertView.m
+//  CCodeLibrary
+
+#import "NVAlertView.h"
+#import "UserDefaults.h"
+
+@interface NVAlertView ()
+
+@property (nonatomic) UIView *overlayView;
+@property (nonatomic) UILabel *titleLabel;
+
+@end
+
+@implementation NVAlertView
+
++ (NVAlertView *)showLargeAlertViewinView:(UIView *)view
+                                 delegate:(id)delegate
+                                    title:(NSString *)title
+                          buttonTextArray:(NSArray *)buttonTextArray
+                         destructiveIndex:(NSUInteger)destructiveIndex
+{
+    if (!view || !delegate || !title || !buttonTextArray)
+        return nil;
+    
+    NVAlertView *alert = [[NVAlertView alloc] init];
+    
+    CGRect bounds = UIScreen.mainScreen.bounds;
+    
+    alert.overlayView = [[UIView alloc] initWithFrame:bounds];
+    alert.overlayView.backgroundColor = UIColor.blackColor;
+    alert.overlayView.alpha = 0.0;
+    alert.delegate = delegate;
+    
+    [view addSubview:alert.overlayView];
+    
+    CGFloat width = 340.0, margin = 20.0, yPosition = 20.0;
+    
+    UIFont *font = [UIFont boldSystemFontOfSize:28.0];
+    
+    CGFloat height = [alert getHeightForText:title
+                                        font:font
+                                       width:width];
+    
+    alert.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(margin, yPosition, width, height)];
+    alert.titleLabel.text = title;
+    alert.titleLabel.font = font;
+    alert.titleLabel.numberOfLines = 0;
+    alert.titleLabel.adjustsFontSizeToFitWidth = YES;
+    alert.titleLabel.backgroundColor = UIColor.clearColor;
+    alert.titleLabel.textColor = UIColor.blackColor;
+    alert.titleLabel.textAlignment = NSTextAlignmentCenter;
+    
+    yPosition += height;
+    
+    for (int i = 0; i < buttonTextArray.count; i++)
+    {
+        NSString *title = buttonTextArray[i];
+        
+        CGFloat height = [alert getHeightForText:title
+                                            font:font
+                                           width:width];
+        
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(margin, yPosition, width, height)];
+        
+        button.tag = (i + 1);
+        button.backgroundColor = UIColor.clearColor;
+        button.titleLabel.font = font;
+        button.layer.borderColor = UIColor.lightGrayColor.CGColor;
+        button.layer.borderWidth = 1.0;
+        
+        [button setTitle:title
+                forState:UIControlStateNormal];
+        
+        [button setTitleColor:UserDefaults.defaults.appleBlue
+                     forState:UIControlStateNormal];
+        
+        [button setTitleColor:UIColor.lightGrayColor
+                     forState:UIControlStateHighlighted];
+        
+        [button addTarget:self
+                   action:@selector(buttonTapped:)
+         forControlEvents:UIControlEventTouchUpInside];
+        
+        [alert addSubview:button];
+        
+        yPosition += height;
+    }
+    
+    alert.center = CGPointMake((bounds.size.width / 2.0), (bounds.size.height / 2.0));
+    alert.backgroundColor = UIColor.whiteColor;
+    alert.alpha = 0.0;
+    alert.layer.cornerRadius = 10.0;
+    alert.clipsToBounds = YES;
+    
+    [view addSubview:alert];
+    [alert addSubview:alert.titleLabel];
+    
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         alert.overlayView.alpha = 0.7;
+                         alert.alpha = 1.0;
+                     }];
+    
+    return alert;
+}
+
+- (void)buttonTapped:(UIButton *)button
+{
+    
+}
+
+- (void)hideLargeAlertView:(BOOL)animated
+{
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         self.alpha = 0.0;
+                         _overlayView.alpha = 0.0;
+                     } completion:^(BOOL finished) {
+                         [_overlayView removeFromSuperview];
+                         [self removeFromSuperview];
+                     }];
+}
+
+- (CGFloat)getHeightForText:(NSString *)text
+                       font:(UIFont *)font
+                      width:(CGFloat)width
+{
+    CGSize constraint = CGSizeMake(width , 20000.0);
+    CGSize titleSize;
+    CGFloat totalHeight;
+    
+    titleSize = [text boundingRectWithSize:constraint
+                                   options:NSStringDrawingUsesLineFragmentOrigin
+                                attributes:@{NSFontAttributeName:font}
+                                   context:nil].size;
+    
+    totalHeight = ceil(titleSize.height);
+    CGFloat height = MAX(totalHeight, 40.0);
+    return height;
+}
+
+@end

@@ -840,18 +840,19 @@
                                                         delegate:self
                                                cancelButtonTitle:@"Cancel"
                                                otherButtonTitles:@"Delete",@"Change Ramp Type",nil];
+            
+            [rampEditOptions show];
         }
         
         else
         {
-            rampEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit Ramp"
-                                                         message:nil
-                                                        delegate:self
-                                               cancelButtonTitle:@"Cancel"
-                                               otherButtonTitles:@"Delete",@"Change Ramp Type",@"Change to Left Ramp",@"Change to Middle Ramp",@"Change to Right Ramp",nil];
+            NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                              delegate:self
+                                                                 title:@"Edit Ramp"
+                                                       buttonTextArray:@[@"Cancel", @"Delete", @"Change Ramp Type", @"Change to Left Ramp",
+                                                                         @"Change to Middle Ramp", @"Change to Right Ramp"]
+                                                      destructiveIndex:0];
         }
-        
-        [rampEditOptions show];
     }
 }
 
