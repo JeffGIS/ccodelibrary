@@ -633,16 +633,15 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
               withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
-- (void)gssiAlert:(GSSiAlertController *)gssiAlert
-clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     NSUInteger index = 0;
     
+    [alertView hideLargeAlertView:YES];
+    
     switch (buttonIndex)
     {
-        case GSSiNotesViewOptionCancel:
-            break;
-            
         case GSSiNotesViewOptionReplace:
             index = [_notesArray indexOfObject:_alertItems[1]];
             [_notesArray removeObject:_alertItems[1]];
@@ -652,6 +651,9 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
                               atIndex:index];
             
             [_tableView reloadData];
+            break;
+            
+        default:
             break;
     }
 }

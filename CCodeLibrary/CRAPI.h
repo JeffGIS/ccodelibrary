@@ -7,6 +7,7 @@
 #import "Facility.h"
 #import "UserDefaults.h"
 #import "Colors.h"
+#import "NVAlertView.h"
 
 #define MANAGEMENT_MODULE   1
 #define PRELIM_MODULE       2
@@ -16,7 +17,7 @@
 #define PROJECT_MPLS        1
 #define PROJECT_METROGIS    2
 
-@interface CRAPI : NSObject
+@interface CRAPI : NSObject <NVAlertViewDelegate>
 
 @property (nonatomic) int currentModule;
 @property (nonatomic, copy) NSString *documentsDirectory;
@@ -57,15 +58,16 @@
 @property int parcelTextOption;
 @property int showTileInfo;
 @property BOOL showParcelBoundary;
-@property NSString *currentOverallBoundaryName;
-@property NSString *currentOverallBoundaryType;
+@property (nonatomic, copy) NSString *currentOverallBoundaryName;
+@property (nonatomic, copy) NSString *currentOverallBoundaryType;
 @property int currentOverallBoundaryRefno;
 @property BOOL setToAlleyWalls;
-@property NSString *sourceApp;
+@property (nonatomic, copy) NSString *sourceApp;
+@property (nonatomic) UIView *currentView;
 
-@property NSString *currentPlatImagePath;
-@property NSString *currentPlatType;
-@property NSString *extractFile;
+@property (nonatomic, copy) NSString *currentPlatImagePath;
+@property (nonatomic, copy) NSString *currentPlatType;
+@property (nonatomic, copy) NSString *extractFile;
 
 + (CRAPI *)sharedInstance;
 
