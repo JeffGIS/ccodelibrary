@@ -31,7 +31,7 @@
 @property (nonatomic) NVSignalButton *signal23, *signal45, *signal67, *signal81;
 @property (nonatomic) NVXWalkButton *xWalkA, *xWalkB, *xWalkC, *xWalkD;
 @property RampType currentRampType;
-@property (nonatomic) UILabel *headingLabel;
+@property (nonatomic) UILabel *headingLabel, *intersectionLabel;
 @property (nonatomic) CGPoint newTarget;
 @property (nonatomic) CGFloat targetSize;
 
@@ -89,17 +89,15 @@
     [_backgroundImage addGestureRecognizer:tapGesture];
     [self.view addSubview:_backgroundImage];
     
-    _doneButton = [[UIButton alloc] init];
-    _cancelButton = [[UIButton alloc] init];
+    _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(224.0, 20.0, 320.0, 70.0)];
+    _cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 20.0, 148.0, 70.0)];
     
     [self setupButton:_doneButton
-                frame:CGRectMake(224.0, 16.0, 320.0, 74.0)
              selector:@selector(done:)
                 title:@"Done"
              fontSize:56.0];
     
     [self setupButton:_cancelButton
-                frame:CGRectMake(20.0, 16.0, 148.0, 74.0)
              selector:@selector(cancel:)
                 title:@"Cancel"
              fontSize:40.0];
@@ -114,13 +112,18 @@
     if (_draggableTarget)
         [self setupImageTarget];
     
-    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(468.0, 958.0, 284.0, 66.0)];
-    _headingLabel.backgroundColor = UIColor.clearColor;
-    _headingLabel.textColor = UIColor.whiteColor;
-    _headingLabel.textAlignment = NSTextAlignmentCenter;
+    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(600.0, 20.0, 148.0, 70.0)];
     _headingLabel.font = [UIFont boldSystemFontOfSize:60.0];
-    _headingLabel.adjustsFontSizeToFitWidth = YES;
-    [self.view addSubview:_headingLabel];
+    [self setupLabel:_headingLabel];
+    
+    _intersectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(_addXWalkButton.frame.origin.x,
+                                                                   _zoomSC.frame.origin.y,
+                                                                   752.0 - _addXWalkButton.frame.origin.x,
+                                                                   _zoomSC.frame.size.height)];
+    
+    _intersectionLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
+    [self setupLabel:_intersectionLabel];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -160,6 +163,15 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (void)setupLabel:(UILabel *)label
+{
+    label.backgroundColor = UIColor.clearColor;
+    label.textColor = UIColor.whiteColor;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.adjustsFontSizeToFitWidth = YES;
+    [self.view addSubview:label];
 }
 
 - (void)setBKImage:(BOOL)forceRefresh;
@@ -232,7 +244,7 @@
 {
     if (doesExist)
     {
-        CGFloat bmpx = 0.0, bmpy = 0.0;
+        double bmpx = 0.0, bmpy = 0.0;
         TRANS2(x, y, &bmpx, &bmpy, _pTranWToBMP);
         x = bmpx;
         y = bmpy;
@@ -261,7 +273,7 @@
 {
     if (doesExist)
     {
-        CGFloat bmpx = 0.0, bmpy = 0.0;
+        double bmpx = 0.0, bmpy = 0.0;
         TRANS2(x, y, &bmpx, &bmpy, _pTranWToBMP);
         x = bmpx;
         y = bmpy;
@@ -330,7 +342,7 @@
     for (int i = 1; i < 13; i++)
     {
         int x = 0, y = 0;
-        CGFloat bmpx = 0.0, bmpy = 0.0;
+        double bmpx = 0.0, bmpy = 0.0;
         NVRampButton *rampButton = nil;
         
         ramp = [_currentIntersection.ramps objectAtIndex:i];
@@ -439,50 +451,52 @@
     CGFloat outBorder = 16.0;
     CGFloat inBorder = ((768.0 - ((width * 5.0) + (outBorder * 2.0))) / 4.0);
     
-    _addRampButton = [[UIButton alloc] init];
-    _addSignalButton = [[UIButton alloc] init];
-    _addXWalkButton = [[UIButton alloc] init];
-    _editItemButton =  [[UIButton alloc] init];
-    _rampTypeButton = [[UIButton alloc] init];
+    _addRampButton = [[UIButton alloc] initWithFrame:
+                      CGRectMake(outBorder, top, width, height)];
+    
+    _addSignalButton = [[UIButton alloc] initWithFrame:
+                        CGRectMake((outBorder + width + inBorder), top, width, height)];
+    
+    _addXWalkButton = [[UIButton alloc] initWithFrame:
+                       CGRectMake((outBorder + ((width + inBorder) * 2.0)), top, width, height)];
+    
+    _editItemButton =  [[UIButton alloc] initWithFrame:
+                        CGRectMake((outBorder + ((width + inBorder) * 3.0)), top, width, height)];
+    
+    _rampTypeButton = [[UIButton alloc] initWithFrame:
+                       CGRectMake((outBorder + ((width + inBorder) * 4.0)), top, width, height)];
     
     [self setupButton:_addRampButton
-                frame:CGRectMake(outBorder, top, width, height)
              selector:@selector(addRamp:)
                 title:@"Add\nRamp"
              fontSize:32.0];
     
     [self setupButton:_addSignalButton
-                frame:CGRectMake((outBorder + width + inBorder), top, width, height)
              selector:@selector(addSignal:)
                 title:@"Add\nSignal"
              fontSize:32.0];
     
     [self setupButton:_addXWalkButton
-                frame:CGRectMake((outBorder + ((width + inBorder) * 2.0)), top, width, height)
              selector:@selector(addXWalk:)
                 title:@"Add\nXWalk"
              fontSize:32.0];
     
     [self setupButton:_editItemButton
-                frame:CGRectMake((outBorder + ((width + inBorder) * 3.0)), top, width, height)
              selector:@selector(editItem:)
                 title:@"Edit\nItem"
              fontSize:32.0];
     
     [self setupButton:_rampTypeButton
-                frame:CGRectMake((outBorder + ((width + inBorder) * 4.0)), top, width, height)
              selector:@selector(rampType:)
                 title:[NSString stringWithFormat:@"Ramp\nType %li", ((long)_currentRampType + 1)]
              fontSize:32.0];
 }
 
 - (void)setupButton:(UIButton *)button
-              frame:(CGRect)frame
            selector:(SEL)selector
               title:(NSString *)title
            fontSize:(CGFloat)fontSize
 {
-    button.frame = frame;
     button.backgroundColor = UserDefaults.defaults.appleBlue;
     button.layer.cornerRadius = 10.0;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -1711,7 +1725,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     //only called after the target is done being dragged
     if (gesture.state == UIGestureRecognizerStateEnded)
     {
-        CGFloat x = 0.0, y = 0.0, lat = 0.0, lon = 0.0;
+        double x = 0.0, y = 0.0, lat = 0.0, lon = 0.0;
         TRANS2((_newTarget.x * _xFactor) - _xOffset, (_newTarget.y * _yFactor) - _yOffset + (_targetSize / 2.0), &x, &y, _pTranBMPToW);
         
         IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
@@ -1744,6 +1758,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         [gesture setTranslation:CGPointZero
                          inView:target];
     }
+}
+
+- (UIStatusBarStyle) preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 @end
