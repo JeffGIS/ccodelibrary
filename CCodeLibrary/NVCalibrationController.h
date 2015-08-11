@@ -4,8 +4,8 @@
 #import <UIKit/UIKit.h>
 #import "GSSiSlopeViewController.h"
 #import "NVSliderController.h"
-#import "NVLargeAlertView.h"
+#import "NVAlertView.h"
 
-@interface NVCalibrationController : UIViewController <GSSiSlopeViewControllerDelegate,UITableViewDataSource,UITableViewDelegate,NVSliderControllerDelegate,NVLargeAlertViewDelegate>
+@interface NVCalibrationController : UIViewController <GSSiSlopeViewControllerDelegate,UITableViewDataSource,UITableViewDelegate,NVSliderControllerDelegate,NVAlertViewDelegate>
 
 @end

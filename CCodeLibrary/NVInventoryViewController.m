@@ -187,6 +187,8 @@
     _latitude = info.latitude;
     _longitude = info.longitude;
     
+    CRAPI.sharedInstance.currentView = self.view;
+    
     _pathToImageFile = [CRAPI.sharedInstance getImageFileforIntersection:_currentIntersectionID
                                                                    atLat:_latitude
                                                                   andLon:_longitude

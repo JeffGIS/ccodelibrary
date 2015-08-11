@@ -2,7 +2,7 @@
 //  CCodeLibrary
 
 #import <UIKit/UIKit.h>
-#import "GSSiAlertController.h"
+#import "NVAlertView.h"
 
 @class GSSiNotesView;
 
@@ -24,7 +24,7 @@ didFindMatchBetweenNote:(NSString *)note
 
 @end
 
-@interface GSSiNotesView : UIView <UITextViewDelegate,UITableViewDataSource,UITableViewDelegate,GSSiAlertDelegate>
+@interface GSSiNotesView : UIView <UITextViewDelegate,UITableViewDataSource,UITableViewDelegate,NVAlertViewDelegate>
 
 @property (nonatomic, weak) id <GSSiNotesViewDelegate> delegate;
 
