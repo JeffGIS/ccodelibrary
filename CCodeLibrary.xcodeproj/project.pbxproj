@@ -17,6 +17,7 @@
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
+		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
 		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
 		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
 		A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */ = {isa = PBXBuildFile; fileRef = A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */; };
@@ -201,6 +202,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */,
 				A9BF333C1B770E8E00A72E17 /* NVAlertView.h in CopyFiles */,
 				A9A7E3611B75447500DC7F3D /* NVInventoryViewController.h in CopyFiles */,
 				A9C183611B66776600780BF6 /* NV3DMath.h in CopyFiles */,
@@ -629,8 +631,6 @@
 				A96B07BE19FBF276005A73B0 /* LegendView.m */,
 				A9BF33381B76FCED00A72E17 /* NVAlertView.h */,
 				A9BF33391B76FCED00A72E17 /* NVAlertView.m */,
-				69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */,
-				69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */,
 				A98A57A61B20ADE600906FBC /* NVCalibrationController.h */,
 				A98A57A71B20ADE600906FBC /* NVCalibrationController.m */,
 				A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */,
@@ -653,6 +653,8 @@
 				A97407C51AF6A63900B2FF30 /* NVProgressView.m */,
 				A9A7E3621B75663500DC7F3D /* NVRampButton.h */,
 				A9A7E3631B75663500DC7F3D /* NVRampButton.m */,
+				69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */,
+				69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */,
 				A9A7E3651B75795300DC7F3D /* NVSignalButton.h */,
 				A9A7E3661B75795300DC7F3D /* NVSignalButton.m */,
 				A9A7E3681B75796500DC7F3D /* NVXWalkButton.h */,

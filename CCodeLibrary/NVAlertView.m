@@ -8,6 +8,7 @@
 
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UILabel *titleLabel;
+
 @end
 
 @implementation NVAlertView
