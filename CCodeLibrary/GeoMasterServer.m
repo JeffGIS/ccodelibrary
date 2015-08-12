@@ -79,7 +79,8 @@ static GeoMasterServer *statServer = nil;
 - (BOOL)initCommunication:(CGFloat)connectionTimeoutInSeconds
 {
     BOOL rtn = NO;
-/*    _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
+    
+    _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
     
     if(remoteHostStatus == NotReachable)
@@ -95,7 +96,7 @@ static GeoMasterServer *statServer = nil;
         
         return rtn;
     }
-*/    
+    
     _responseTimeoutInSeconds = connectionTimeoutInSeconds;
 	CFReadStreamRef readStream = NULL;
 	CFWriteStreamRef writeStream = NULL;
