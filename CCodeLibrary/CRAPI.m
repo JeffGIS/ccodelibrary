@@ -422,8 +422,11 @@
     if (refresh)
         [self deleteImagesForAllZooms:intersectionID];
     
-    NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg", intersectionID, zoom]];
-    NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt", intersectionID, zoom]];
+    NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg",
+                                                                           intersectionID, zoom]];
+    
+    NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt",
+                                                                         intersectionID, zoom]];
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:imageFile
                                                                                  error:nil].fileSize;
@@ -438,22 +441,22 @@
     int rtn = [UIImageJPEGRepresentation(image, 0.8) writeToFile:imageFile
                                                       atomically:YES];
     
-    if (!rtn)
+    if (!rtn && _currentView)
     {
-        UIAlertView *getError = [[UIAlertView alloc] initWithTitle:@"Error getting intersection image."
-                                                           message:@"Unable to access server."
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:_currentView
                                                           delegate:self
-                                                 cancelButtonTitle:@"Continue"
-                                                 otherButtonTitles:nil];
-        [getError show];
+                                                             title:@"Error getting intersection image. Unable to access server."
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
+#pragma unused(alert)
     }
     
     else
     {
-        char txt[1024];
-        double pixelX, pixelY;
-        int factor = pow(2,21-zoom);
-        NSError *error;
+        char txt[1024] = {0};
+        double pixelX = 0.0, pixelY = 0.0;
+        int factor = pow(2, (21 - zoom));
+        NSError *error = nil;
 
         LatLongToPixelXYd(lat, lon, 21, &pixelX, &pixelY);
         
@@ -479,6 +482,12 @@
     }
     
     return imageFile;
+}
+
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView hideLargeAlertView:YES];
 }
 
 - (UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon

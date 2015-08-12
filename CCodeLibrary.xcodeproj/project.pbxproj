@@ -17,6 +17,8 @@
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
+		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
+		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
 		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
 		A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */ = {isa = PBXBuildFile; fileRef = A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */; };
 		A90C6E971B4A237600D87DB8 /* NVPDFSnapshotter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */; };
@@ -130,6 +132,8 @@
 		A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */; };
 		A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */; };
 		A9BCBBF11B176549007C5C48 /* NVTestSlopeController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */; };
+		A9BF333B1B770CF600A72E17 /* NVAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9BF33391B76FCED00A72E17 /* NVAlertView.m */; };
+		A9BF333C1B770E8E00A72E17 /* NVAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9BF33381B76FCED00A72E17 /* NVAlertView.h */; };
 		A9C1835F1B6674A600780BF6 /* NVMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = A9C1835E1B6674A600780BF6 /* NVMesh.m */; };
 		A9C183601B66776000780BF6 /* NVMesh.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9C1835D1B6674A600780BF6 /* NVMesh.h */; };
 		A9C183611B66776600780BF6 /* NV3DMath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A933D9FB1B5D4FEF00D621CD /* NV3DMath.h */; };
@@ -198,6 +202,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */,
+				A9BF333C1B770E8E00A72E17 /* NVAlertView.h in CopyFiles */,
 				A9A7E3611B75447500DC7F3D /* NVInventoryViewController.h in CopyFiles */,
 				A9C183611B66776600780BF6 /* NV3DMath.h in CopyFiles */,
 				A9C183601B66776000780BF6 /* NVMesh.h in CopyFiles */,
@@ -303,6 +309,8 @@
 		1FB3605519AE7E8200592B1D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagePlacesDatabase.h; sourceTree = "<group>"; };
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
+		69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSecretAlertView.h; sourceTree = "<group>"; };
+		69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSecretAlertView.m; sourceTree = "<group>"; };
 		A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVHeadingViewController.h; sourceTree = "<group>"; };
 		A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVHeadingViewController.m; sourceTree = "<group>"; };
 		A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPDFSnapshotter.h; sourceTree = "<group>"; };
@@ -380,6 +388,8 @@
 		A9ADCB1D1ACD0870000E5C00 /* GSSiNotesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiNotesView.m; sourceTree = "<group>"; };
 		A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTestSlopeController.h; sourceTree = "<group>"; };
 		A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTestSlopeController.m; sourceTree = "<group>"; };
+		A9BF33381B76FCED00A72E17 /* NVAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NVAlertView.h; path = ../../ccodelibrary/CCodeLibrary/NVAlertView.h; sourceTree = "<group>"; };
+		A9BF33391B76FCED00A72E17 /* NVAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NVAlertView.m; path = ../../ccodelibrary/CCodeLibrary/NVAlertView.m; sourceTree = "<group>"; };
 		A9C1835D1B6674A600780BF6 /* NVMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVMesh.h; sourceTree = "<group>"; };
 		A9C1835E1B6674A600780BF6 /* NVMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVMesh.m; sourceTree = "<group>"; };
 		A9C525CE1A3B59880056711F /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
@@ -619,6 +629,8 @@
 				A97C621E1AE0C59200DA7738 /* HelpWebView.m */,
 				A96B07BD19FBF276005A73B0 /* LegendView.h */,
 				A96B07BE19FBF276005A73B0 /* LegendView.m */,
+				A9BF33381B76FCED00A72E17 /* NVAlertView.h */,
+				A9BF33391B76FCED00A72E17 /* NVAlertView.m */,
 				A98A57A61B20ADE600906FBC /* NVCalibrationController.h */,
 				A98A57A71B20ADE600906FBC /* NVCalibrationController.m */,
 				A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */,
@@ -641,6 +653,8 @@
 				A97407C51AF6A63900B2FF30 /* NVProgressView.m */,
 				A9A7E3621B75663500DC7F3D /* NVRampButton.h */,
 				A9A7E3631B75663500DC7F3D /* NVRampButton.m */,
+				69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */,
+				69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */,
 				A9A7E3651B75795300DC7F3D /* NVSignalButton.h */,
 				A9A7E3661B75795300DC7F3D /* NVSignalButton.m */,
 				A9A7E3681B75796500DC7F3D /* NVXWalkButton.h */,
@@ -881,6 +895,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9BF333B1B770CF600A72E17 /* NVAlertView.m in Sources */,
 				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,
 				A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */,
 				A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */,
@@ -954,6 +969,7 @@
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
 				A94A771919F807CE0062906E /* FacilityRecord.m in Sources */,
+				69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */,
 				A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */,
 				A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */,
 				A9DDC08A1B613EF4000DEEA9 /* FTPDirectoryList.m in Sources */,

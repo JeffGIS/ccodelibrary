@@ -31,7 +31,7 @@
 @property (nonatomic) NVSignalButton *signal23, *signal45, *signal67, *signal81;
 @property (nonatomic) NVXWalkButton *xWalkA, *xWalkB, *xWalkC, *xWalkD;
 @property RampType currentRampType;
-@property (nonatomic) UILabel *headingLabel;
+@property (nonatomic) UILabel *headingLabel, *intersectionLabel;
 @property (nonatomic) CGPoint newTarget;
 @property (nonatomic) CGFloat targetSize;
 
@@ -89,17 +89,15 @@
     [_backgroundImage addGestureRecognizer:tapGesture];
     [self.view addSubview:_backgroundImage];
     
-    _doneButton = [[UIButton alloc] init];
-    _cancelButton = [[UIButton alloc] init];
+    _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(224.0, 20.0, 320.0, 70.0)];
+    _cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 20.0, 148.0, 70.0)];
     
     [self setupButton:_doneButton
-                frame:CGRectMake(224.0, 16.0, 320.0, 74.0)
              selector:@selector(done:)
                 title:@"Done"
              fontSize:56.0];
     
     [self setupButton:_cancelButton
-                frame:CGRectMake(20.0, 16.0, 148.0, 74.0)
              selector:@selector(cancel:)
                 title:@"Cancel"
              fontSize:40.0];
@@ -114,13 +112,18 @@
     if (_draggableTarget)
         [self setupImageTarget];
     
-    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(468.0, 958.0, 284.0, 66.0)];
-    _headingLabel.backgroundColor = UIColor.clearColor;
-    _headingLabel.textColor = UIColor.whiteColor;
-    _headingLabel.textAlignment = NSTextAlignmentCenter;
+    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(600.0, 20.0, 148.0, 70.0)];
     _headingLabel.font = [UIFont boldSystemFontOfSize:60.0];
-    _headingLabel.adjustsFontSizeToFitWidth = YES;
-    [self.view addSubview:_headingLabel];
+    [self setupLabel:_headingLabel];
+    
+    _intersectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(_addXWalkButton.frame.origin.x,
+                                                                   _zoomSC.frame.origin.y,
+                                                                   752.0 - _addXWalkButton.frame.origin.x,
+                                                                   _zoomSC.frame.size.height)];
+    
+    _intersectionLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
+    [self setupLabel:_intersectionLabel];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -162,6 +165,15 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void)setupLabel:(UILabel *)label
+{
+    label.backgroundColor = UIColor.clearColor;
+    label.textColor = UIColor.whiteColor;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.adjustsFontSizeToFitWidth = YES;
+    [self.view addSubview:label];
+}
+
 - (void)setBKImage:(BOOL)forceRefresh;
 {
     CGRect windowBounds = CGRectZero;
@@ -174,6 +186,8 @@
     
     _latitude = info.latitude;
     _longitude = info.longitude;
+    
+    CRAPI.sharedInstance.currentView = self.view;
     
     _pathToImageFile = [CRAPI.sharedInstance getImageFileforIntersection:_currentIntersectionID
                                                                    atLat:_latitude
@@ -232,7 +246,7 @@
 {
     if (doesExist)
     {
-        CGFloat bmpx = 0.0, bmpy = 0.0;
+        double bmpx = 0.0, bmpy = 0.0;
         TRANS2(x, y, &bmpx, &bmpy, _pTranWToBMP);
         x = bmpx;
         y = bmpy;
@@ -261,7 +275,7 @@
 {
     if (doesExist)
     {
-        CGFloat bmpx = 0.0, bmpy = 0.0;
+        double bmpx = 0.0, bmpy = 0.0;
         TRANS2(x, y, &bmpx, &bmpy, _pTranWToBMP);
         x = bmpx;
         y = bmpy;
@@ -330,7 +344,7 @@
     for (int i = 1; i < 13; i++)
     {
         int x = 0, y = 0;
-        CGFloat bmpx = 0.0, bmpy = 0.0;
+        double bmpx = 0.0, bmpy = 0.0;
         NVRampButton *rampButton = nil;
         
         ramp = [_currentIntersection.ramps objectAtIndex:i];
@@ -439,50 +453,52 @@
     CGFloat outBorder = 16.0;
     CGFloat inBorder = ((768.0 - ((width * 5.0) + (outBorder * 2.0))) / 4.0);
     
-    _addRampButton = [[UIButton alloc] init];
-    _addSignalButton = [[UIButton alloc] init];
-    _addXWalkButton = [[UIButton alloc] init];
-    _editItemButton =  [[UIButton alloc] init];
-    _rampTypeButton = [[UIButton alloc] init];
+    _addRampButton = [[UIButton alloc] initWithFrame:
+                      CGRectMake(outBorder, top, width, height)];
+    
+    _addSignalButton = [[UIButton alloc] initWithFrame:
+                        CGRectMake((outBorder + width + inBorder), top, width, height)];
+    
+    _addXWalkButton = [[UIButton alloc] initWithFrame:
+                       CGRectMake((outBorder + ((width + inBorder) * 2.0)), top, width, height)];
+    
+    _editItemButton =  [[UIButton alloc] initWithFrame:
+                        CGRectMake((outBorder + ((width + inBorder) * 3.0)), top, width, height)];
+    
+    _rampTypeButton = [[UIButton alloc] initWithFrame:
+                       CGRectMake((outBorder + ((width + inBorder) * 4.0)), top, width, height)];
     
     [self setupButton:_addRampButton
-                frame:CGRectMake(outBorder, top, width, height)
              selector:@selector(addRamp:)
                 title:@"Add\nRamp"
              fontSize:32.0];
     
     [self setupButton:_addSignalButton
-                frame:CGRectMake((outBorder + width + inBorder), top, width, height)
              selector:@selector(addSignal:)
                 title:@"Add\nSignal"
              fontSize:32.0];
     
     [self setupButton:_addXWalkButton
-                frame:CGRectMake((outBorder + ((width + inBorder) * 2.0)), top, width, height)
              selector:@selector(addXWalk:)
                 title:@"Add\nXWalk"
              fontSize:32.0];
     
     [self setupButton:_editItemButton
-                frame:CGRectMake((outBorder + ((width + inBorder) * 3.0)), top, width, height)
              selector:@selector(editItem:)
                 title:@"Edit\nItem"
              fontSize:32.0];
     
     [self setupButton:_rampTypeButton
-                frame:CGRectMake((outBorder + ((width + inBorder) * 4.0)), top, width, height)
              selector:@selector(rampType:)
                 title:[NSString stringWithFormat:@"Ramp\nType %li", ((long)_currentRampType + 1)]
              fontSize:32.0];
 }
 
 - (void)setupButton:(UIButton *)button
-              frame:(CGRect)frame
            selector:(SEL)selector
               title:(NSString *)title
            fontSize:(CGFloat)fontSize
 {
-    button.frame = frame;
     button.backgroundColor = UserDefaults.defaults.appleBlue;
     button.layer.cornerRadius = 10.0;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -692,33 +708,12 @@
 
 - (void)cancel:(UIButton *)button
 {
-    NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
-                                                                delegate:self
-                                                                   title:@"Do you really want to cancel all changes to this intersection?"
-                                                           topButtonText:@"NO"
-                                                        bottomButtonText:@"YES"
-                                                        destructiveIndex:NVLargeAlertIndexBottomButton];
-#pragma unused(alert)
-}
-
-- (void)largeAlertView:(NVLargeAlertView *)largeAlertView
-   didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
-{
-    [largeAlertView hideLargeAlertView:YES];
-    
-    switch (buttonIndex)
-    {
-        case NVLargeAlertIndexTopButton:
-            break;
-            
-        case NVLargeAlertIndexBottomButton:
-            [self dismissViewControllerAnimated:YES
-                                     completion:nil];
-            break;
-            
-        default:
-            break;
-    }
+    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                      delegate:self
+                                                         title:@"Do you really want to cancel all changes to this intersection?"
+                                               buttonTextArray:@[@"NO", @"YES"]
+                                              destructiveIndex:2];
+    alert.tag = 999;
 }
 
 - (void)addRamp:(UIButton *)button
@@ -804,61 +799,60 @@
 - (void)performItemEdit:(UIButton *)button
 {
     _currentEditButton = button;
+    NVAlertView *alert = nil;
     
-    if (button == _xWalkA || button == _xWalkB ||
-        button == _xWalkC || button == _xWalkD)
+    if ([button isKindOfClass:NVXWalkButton.class])
     {
-        UIAlertView *xWalkEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit XWalk"
-                                                                   message:nil
-                                                                  delegate:self
-                                                         cancelButtonTitle:@"Cancel"
-                                                         otherButtonTitles:@"Delete",nil];
-        [xWalkEditOptions show];
+        alert = [NVAlertView showLargeAlertViewinView:self.view
+                                             delegate:self
+                                                title:@"Edit XWalk"
+                                      buttonTextArray:@[@"Cancel", @"Delete"]
+                                     destructiveIndex:2];
     }
     
-    else if (button == _signal81 || button == _signal23 ||
-             button == _signal45 || button == _signal67)
+    else if ([button isKindOfClass:NVSignalButton.class])
     {
-        UIAlertView *signalEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit Signal"
-                                                                    message:nil
-                                                                   delegate:self
-                                                          cancelButtonTitle:@"Cancel"
-                                                          otherButtonTitles:@"Delete",nil];
-        
-        [signalEditOptions show];
+        alert = [NVAlertView showLargeAlertViewinView:self.view
+                                             delegate:self
+                                                title:@"Edit Signal"
+                                      buttonTextArray:@[@"Cancel", @"Delete"]
+                                     destructiveIndex:2];
     }
     
     else
     {
-        UIAlertView *rampEditOptions = nil;
+        NSArray *rampOptions = nil;
         MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:_currentEditButton.tag];
         
         if ([self isMiddleRamp:_currentEditButton.tag] && [self isMiddleRampType:ramp.rampType])
-        {
-            rampEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit Ramp"
-                                                         message:nil
-                                                        delegate:self
-                                               cancelButtonTitle:@"Cancel"
-                                               otherButtonTitles:@"Delete",@"Change Ramp Type",nil];
-        }
+            rampOptions = @[@"Cancel", @"Delete", @"Change Ramp Type"];
         
         else
         {
-            rampEditOptions = [[UIAlertView alloc] initWithTitle:@"Edit Ramp"
-                                                         message:nil
-                                                        delegate:self
-                                               cancelButtonTitle:@"Cancel"
-                                               otherButtonTitles:@"Delete",@"Change Ramp Type",@"Change to Left Ramp",@"Change to Middle Ramp",@"Change to Right Ramp",nil];
+            rampOptions = @[@"Cancel", @"Delete", @"Change Ramp Type", @"Change to Left Ramp",
+                            @"Change to Middle Ramp", @"Change to Right Ramp"];
         }
         
-        [rampEditOptions show];
+        alert = [NVAlertView showLargeAlertViewinView:self.view
+                                             delegate:self
+                                                title:@"Edit Ramp"
+                                      buttonTextArray:rampOptions
+                                     destructiveIndex:2];
     }
 }
 
-- (void)alertView:(UIAlertView *)alertView
-clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
 {
+    [alertView hideLargeAlertView:YES];
+    
     int rampID = 0, switchWith = 0;
+    
+    if (alertView.tag == 999 && buttonIndex == 1)
+    {
+        [self dismissViewControllerAnimated:YES
+                                 completion:nil];
+    }
     
     switch (buttonIndex)
     {
@@ -1016,7 +1010,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
             [self setupButtons:NO];
             break;
     }
-
+    
     _editItemButton.selected = NO;
     _updateOption = NVUpdateOptionNone;
     [self updateBottomButtonAppearance];
@@ -1110,7 +1104,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)updateButtons:(CGPoint)location
 {
-    CGFloat x = 0.0, y = 0.0;
+    double x = 0.0, y = 0.0;
     CGRect windowBounds = CGRectZero;
     CGSize imageSize = CGSizeZero;
     int xWalkID = 0, signalID = 0, rampID = 0;
@@ -1278,7 +1272,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
                     _currentEditButton = (UIButton *)[self.view viewWithTag:rampID];
                     
                     [self alertView:nil
-               clickedButtonAtIndex:4];
+                didTapButtonAtIndex:4];
                     
                     _updateOption = NVUpdateOptionAddRamp;
                 }
@@ -1696,7 +1690,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
             if (![self isMiddleRamp:_currentEditButton.tag] && [self isMiddleRampType:rampType])
             {
                 [self alertView:nil
-           clickedButtonAtIndex:4];
+            didTapButtonAtIndex:4];
             }
         }
             
@@ -1733,7 +1727,7 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
     //only called after the target is done being dragged
     if (gesture.state == UIGestureRecognizerStateEnded)
     {
-        CGFloat x = 0.0, y = 0.0, lat = 0.0, lon = 0.0;
+        double x = 0.0, y = 0.0, lat = 0.0, lon = 0.0;
         TRANS2((_newTarget.x * _xFactor) - _xOffset, (_newTarget.y * _yFactor) - _yOffset + (_targetSize / 2.0), &x, &y, _pTranBMPToW);
         
         IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
@@ -1766,6 +1760,11 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
         [gesture setTranslation:CGPointZero
                          inView:target];
     }
+}
+
+- (UIStatusBarStyle) preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 @end

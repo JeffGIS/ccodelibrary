@@ -9,7 +9,6 @@
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UILabel *titleLabel;
 @property (nonatomic) UIButton *topButton, *bottomButton;
-@property (nonatomic) UIFont *font;
 
 @end
 
@@ -34,15 +33,15 @@
     [view addSubview:largeAlert.overlayView];
     
     CGFloat titleWidth = 340.0;
-    largeAlert.font = [UIFont boldSystemFontOfSize:28.0];
+    UIFont *font = [UIFont boldSystemFontOfSize:28.0];
     
     CGFloat titleHeight = [largeAlert getHeightForText:title
-                                                  font:largeAlert.font
+                                                  font:font
                                                  width:titleWidth];
     
     largeAlert.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 20.0, titleWidth, titleHeight)];
     largeAlert.titleLabel.text = title;
-    largeAlert.titleLabel.font = largeAlert.font;
+    largeAlert.titleLabel.font = font;
     largeAlert.titleLabel.numberOfLines = 0;
     largeAlert.titleLabel.adjustsFontSizeToFitWidth = YES;
     largeAlert.titleLabel.backgroundColor = UIColor.clearColor;
@@ -73,7 +72,7 @@
                      target:largeAlert
                    selector:@selector(topButtonTapped:)
                       title:topButtontext
-                       font:largeAlert.font];
+                       font:font];
     
     if (bottomButtonText)
     {
@@ -83,7 +82,7 @@
                          target:largeAlert
                        selector:@selector(bottomButtonTapped:)
                           title:bottomButtonText
-                           font:largeAlert.font];
+                           font:font];
         
         [largeAlert addSubview:largeAlert.bottomButton];
     }

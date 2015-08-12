@@ -520,14 +520,11 @@ static CGFloat _deviceValues[9][4];
             {
                 _hasBeenFlipped = YES;
                 
-                NSString *title = @"Turn the iPad 180 degrees and press 'OK' to continue.";
-                
-                NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
-                                                                            delegate:self
-                                                                               title:title
-                                                                       topButtonText:@"OK"
-                                                                    bottomButtonText:nil
-                                                                    destructiveIndex:NVLargeAlertIndexNone];
+                NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                                  delegate:self
+                                                                     title:@"Turn the iPad 180 degrees and press 'OK' to continue."
+                                                           buttonTextArray:@[@"OK"]
+                                                          destructiveIndex:0];
                 
                 alert.tag = 11111;
             }
@@ -788,23 +785,21 @@ viewForHeaderInSection:(NSInteger)section
     
     if (count == 1)
     {
-        NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
-                                                                    delegate:self
-                                                                       title:@"At least 2 values are required to calibrate your device. You currently have only 1 selected value. You will need to select or add an additional value before calibrating."
-                                                               topButtonText:@"OK"
-                                                            bottomButtonText:nil
-                                                            destructiveIndex:NVLargeAlertIndexNone];
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                          delegate:self
+                                                             title:@"At least 2 values are required to calibrate your device. You currently have only 1 selected value. You will need to select or add an additional value before calibrating."
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
         alert.tag = 22222;
     }
     
     else if (range < 1.0)
     {
-        NVLargeAlertView *alert = [NVLargeAlertView showLargeAlertViewinView:self.view
-                                                                    delegate:self
-                                                                       title:@"Calibration values must be at least 1\u00B0 apart and must be in ascending slope order. You will need to fix this by removing and/or adding values before calibrating."
-                                                               topButtonText:@"OK"
-                                                            bottomButtonText:nil
-                                                            destructiveIndex:NVLargeAlertIndexNone];
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                          delegate:self
+                                                             title:@"Calibration values must be at least 1\u00B0 apart and must be in ascending slope order. You will need to fix this by removing and/or adding values before calibrating."
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
         alert.tag = 22222;
     }
     
@@ -969,22 +964,25 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     //implement download calibration values to server here
 }
 
-- (void)largeAlertView:(NVLargeAlertView *)largeAlertView
-didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == NVLargeAlertIndexTopButton)
+    [alertView hideLargeAlertView:NO];
+    
+    if (buttonIndex == 0)
     {
-        if (largeAlertView.tag == 11111)
+        if (alertView.tag == 11111)
         {
-            GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:0
-                                                                                       criticalSideValue:0
-                                                                                              errorValue:0
-                                                                                          useCalibration:NO
-                                                                                                selfTest:NO
-                                                                                                steadyFactor:0
-                                                                                                 countFactor:0
-                                                                                              displayDegrees:(_currentType == NVCalibrationTypeDegrees)
-                                                                                                    delegate:self];
+            GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController
+                                                slopeControllerWithCriticalValue:0
+                                                criticalSideValue:0
+                                                errorValue:0
+                                                useCalibration:NO
+                                                selfTest:NO
+                                                steadyFactor:0
+                                                countFactor:0
+                                                displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                delegate:self];
             
             slopeVC.promptText = @"";
             
@@ -996,15 +994,10 @@ didTapButtonAtIndex:(NVLargeAlertIndex)buttonIndex
             [slopeVC removeCalDateLabel];
             
             _promptLabel.text = _nextPromptText;
-            
-            [largeAlertView hideLargeAlertView:NO];
         }
         
-        else if (largeAlertView.tag == 22222)
-        {
-            [largeAlertView hideLargeAlertView:NO];
+        else if (alertView.tag == 22222)
             [self handleTableViewDismissal];
-        }
     }
 }
 
