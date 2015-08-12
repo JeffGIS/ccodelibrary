@@ -800,6 +800,7 @@
 {
     _currentEditButton = button;
     NVAlertView *alert = nil;
+#pragma unused(alert)
     
     if ([button isKindOfClass:NVXWalkButton.class])
     {
