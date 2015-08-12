@@ -454,7 +454,7 @@
     else
     {
         char txt[1024] = {0};
-        CGFloat pixelX = 0.0, pixelY = 0.0;
+        double pixelX = 0.0, pixelY = 0.0;
         int factor = pow(2, (21 - zoom));
         NSError *error = nil;
 

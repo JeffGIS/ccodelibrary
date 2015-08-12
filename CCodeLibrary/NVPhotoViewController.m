@@ -62,7 +62,11 @@
                                                                   error:&error];
     
     if (error)
-        NSLog(@"File Directory Error:%@", error.localizedDescription);
+    {
+        #ifdef DEBUG
+            NSLog(@"File Directory Error:%@", error.localizedDescription);
+        #endif
+    }
     
     else if (directoryContents.count)
     {

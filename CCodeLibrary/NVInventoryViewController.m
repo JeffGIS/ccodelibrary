@@ -1104,7 +1104,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)updateButtons:(CGPoint)location
 {
-    CGFloat x = 0.0, y = 0.0;
+    double x = 0.0, y = 0.0;
     CGRect windowBounds = CGRectZero;
     CGSize imageSize = CGSizeZero;
     int xWalkID = 0, signalID = 0, rampID = 0;
