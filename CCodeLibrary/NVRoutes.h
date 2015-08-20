@@ -18,7 +18,7 @@
 
 + (NVRoutes *)getTotalDistanceArrayFromCoords:(CLLocationCoordinate2D *)fromCoords
                                 numFromCoords:(NSUInteger)numFromCoords
-                                toCoordinates:(CLLocationCoordinate2D *)toCoords
+                                     toCoords:(CLLocationCoordinate2D *)toCoords
                                   numToCoords:(NSUInteger)numToCoords
                                      delegate:(id)delegate;
 

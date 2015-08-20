@@ -14,7 +14,7 @@
 
 + (NVRoutes *)getTotalDistanceArrayFromCoords:(CLLocationCoordinate2D *)fromCoords
                                 numFromCoords:(NSUInteger)numFromCoords
-                                toCoordinates:(CLLocationCoordinate2D *)toCoords
+                                     toCoords:(CLLocationCoordinate2D *)toCoords
                                   numToCoords:(NSUInteger)numToCoords
                                      delegate:(id)delegate
 {
@@ -39,7 +39,7 @@
         
         for (int j = 0; j < numToCoords; j++)
         {
-            MKPlacemark *tpm = [[MKPlacemark alloc] initWithCoordinate:fromCoords[i]
+            MKPlacemark *tpm = [[MKPlacemark alloc] initWithCoordinate:toCoords[j]
                                                      addressDictionary:nil];
             
             MKMapItem *tmi = [[MKMapItem alloc] initWithPlacemark:tpm];
