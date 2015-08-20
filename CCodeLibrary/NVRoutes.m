@@ -12,24 +12,25 @@
 
 @implementation NVRoutes
 
-+ (NVRoutes *)getTotalDistanceArrayFromCoords:(CLLocationCoordinate2D *)fromCoords
-                                numFromCoords:(NSUInteger)numFromCoords
-                                     toCoords:(CLLocationCoordinate2D *)toCoords
-                                  numToCoords:(NSUInteger)numToCoords
++ (NVRoutes *)getTotalDistanceArrayFromCoords:(NSArray *)fromCoords
+                                     toCoords:(NSArray *)toCoords
                                      delegate:(id)delegate
 {
+    if (!fromCoords.count || !toCoords.count)
+        return nil;
+    
     NVRoutes *routes = [[NVRoutes alloc] init];
     routes.delegate = delegate;
     routes.count = 0;
-    routes.distanceArray = [[NSMutableArray alloc] initWithCapacity:numFromCoords];
+    routes.distanceArray = [[NSMutableArray alloc] initWithCapacity:fromCoords.count];
     
-    for (int i = 0; i < numFromCoords; i++)
+    for (int i = 0; i < fromCoords.count; i++)
         [routes.distanceArray addObject:NSNull.null];
     
-    for (int i = 0; i < numFromCoords; i++)
+    for (int i = 0; i < fromCoords.count; i++)
     {
-        MKPlacemark *fpm = [[MKPlacemark alloc] initWithCoordinate:fromCoords[i]
-                                                          addressDictionary:nil];
+        MKPlacemark *fpm = [[MKPlacemark alloc] initWithCoordinate:[fromCoords[i] coordinate]
+                                                 addressDictionary:nil];
         
         MKMapItem *fmi = [[MKMapItem alloc] initWithPlacemark:fpm];
         
@@ -37,9 +38,9 @@
         __block CLLocationDistance jDistance = 0.0;
         __block BOOL receivedError = NO;
         
-        for (int j = 0; j < numToCoords; j++)
+        for (int j = 0; j < toCoords.count; j++)
         {
-            MKPlacemark *tpm = [[MKPlacemark alloc] initWithCoordinate:toCoords[j]
+            MKPlacemark *tpm = [[MKPlacemark alloc] initWithCoordinate:[toCoords[j] coordinate]
                                                      addressDictionary:nil];
             
             MKMapItem *tmi = [[MKMapItem alloc] initWithPlacemark:tpm];
@@ -71,14 +72,14 @@
                      MKRoute *theRoute = response.routes[0];
                      jDistance += theRoute.distance;
                      
-                     if (jCount == numToCoords)
+                     if (jCount == toCoords.count)
                      {
                          [routes.distanceArray replaceObjectAtIndex:i
                                                          withObject:[NSNumber numberWithDouble:jDistance]];
                      }
                  }
                  
-                 if (routes.count == (numToCoords * numFromCoords) && routes.delegate)
+                 if (routes.count == (toCoords.count * fromCoords.count) && routes.delegate)
                      [routes.delegate NVRoutesDidReturnDistanceArray:routes.distanceArray];
              }];
         }

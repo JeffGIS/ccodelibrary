@@ -16,10 +16,8 @@
 
 @property (nonatomic, weak) id <NVRoutesDelegate> delegate;
 
-+ (NVRoutes *)getTotalDistanceArrayFromCoords:(CLLocationCoordinate2D *)fromCoords
-                                numFromCoords:(NSUInteger)numFromCoords
-                                     toCoords:(CLLocationCoordinate2D *)toCoords
-                                  numToCoords:(NSUInteger)numToCoords
++ (NVRoutes *)getTotalDistanceArrayFromCoords:(NSArray *)fromCoords
+                                     toCoords:(NSArray *)toCoords
                                      delegate:(id)delegate;
 
 @end
