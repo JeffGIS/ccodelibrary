@@ -8,7 +8,8 @@
 
 @protocol NVRoutesDelegate <NSObject>
 
-- (void)NVRoutesDidReturnDistanceArray:(NSArray *)distanceArray;
+- (void)NVRoutesDidReturnDistanceArray:(NSArray *)distanceArray
+                             forCoords:(NSArray *)coords;
 
 @end
 

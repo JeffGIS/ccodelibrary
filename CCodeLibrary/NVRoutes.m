@@ -6,6 +6,7 @@
 @interface NVRoutes ()
 
 @property (nonatomic) NSMutableArray *distanceArray;
+@property (nonatomic) NSArray *fromCoords;
 @property NSUInteger count;
 
 @end
@@ -22,14 +23,15 @@
     NVRoutes *routes = [[NVRoutes alloc] init];
     routes.delegate = delegate;
     routes.count = 0;
-    routes.distanceArray = [[NSMutableArray alloc] initWithCapacity:fromCoords.count];
+    routes.fromCoords = fromCoords;
+    routes.distanceArray = [[NSMutableArray alloc] initWithCapacity:routes.fromCoords.count];
     
-    for (int i = 0; i < fromCoords.count; i++)
+    for (int i = 0; i < routes.fromCoords.count; i++)
         [routes.distanceArray addObject:NSNull.null];
     
-    for (int i = 0; i < fromCoords.count; i++)
+    for (int i = 0; i < routes.fromCoords.count; i++)
     {
-        MKPlacemark *fpm = [[MKPlacemark alloc] initWithCoordinate:[fromCoords[i] coordinate]
+        MKPlacemark *fpm = [[MKPlacemark alloc] initWithCoordinate:[routes.fromCoords[i] coordinate]
                                                  addressDictionary:nil];
         
         MKMapItem *fmi = [[MKMapItem alloc] initWithPlacemark:fpm];
@@ -79,8 +81,9 @@
                      }
                  }
                  
-                 if (routes.count == (toCoords.count * fromCoords.count) && routes.delegate)
-                     [routes.delegate NVRoutesDidReturnDistanceArray:routes.distanceArray];
+                 if (routes.count == (toCoords.count * routes.fromCoords.count) && routes.delegate)
+                     [routes.delegate NVRoutesDidReturnDistanceArray:routes.distanceArray
+                                                           forCoords:routes.fromCoords];
              }];
         }
     }
