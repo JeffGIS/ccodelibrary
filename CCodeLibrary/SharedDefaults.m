@@ -84,6 +84,8 @@ static SharedDefaults *_defaults;
 {
     NSArray *defaultArray = [_defaults arrayForKey:@"CalibrationValueArray"];
     
+    NSLog(@"%@", defaultArray);
+    
     if (defaultArray.count < 4)
     {
         NSArray *valuesArray = @[@(0.0), @(8.3)];
@@ -374,10 +376,26 @@ static SharedDefaults *_defaults;
     
     if (defaultArray.count)
     {
-        NSArray *deviceValuesArray = @[@(0.0), @(4.745)];
+        NSArray *valuesArray = defaultArray[NVCalibrationArrayIndexValue];
+        NSArray *typesArray = defaultArray[NVCalibrationArrayIndexType];
+        NSMutableArray *deviceValuesArray = [[NSMutableArray alloc] init];
+        
+        if (valuesArray.count == typesArray.count)
+        {
+            for (int i = 0; i < valuesArray.count; i++)
+            {
+                CGFloat value = [valuesArray[i] floatValue];
+                NVCalibrationType type = [typesArray[i] integerValue];
+                
+                if (type == NVCalibrationTypeRunningSlope)
+                    value = (atan(value / 100) * RADtoDEG);
+                
+                [deviceValuesArray addObject:@(value)];
+            }
         
         [defaultArray replaceObjectAtIndex:3
                                 withObject:deviceValuesArray];
+        }
     }
     
     [SharedDefaults.defaults saveDate:nil

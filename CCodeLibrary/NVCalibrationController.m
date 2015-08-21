@@ -376,10 +376,10 @@ static CGFloat _deviceValues[9][4];
                                                                  errorValue:0
                                                              useCalibration:YES
                                                                    selfTest:NO
-                                                                   steadyFactor:0
-                                                                    countFactor:0
-                                                                 displayDegrees:(_currentType == NVCalibrationTypeDegrees)
-                                                                       delegate:self];
+                                                               steadyFactor:0
+                                                                countFactor:0
+                                                             displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                                   delegate:self];
     }
     
     else
@@ -389,10 +389,10 @@ static CGFloat _deviceValues[9][4];
                                                                  errorValue:0
                                                              useCalibration:NO
                                                                    selfTest:NO
-                                                                   steadyFactor:0
-                                                                    countFactor:0
-                                                                 displayDegrees:(_currentType == NVCalibrationTypeDegrees)
-                                                                       delegate:self];
+                                                               steadyFactor:0
+                                                                countFactor:0
+                                                             displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                                   delegate:self];
     }
     
     [self presentViewController:slopeVC
@@ -973,16 +973,15 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     {
         if (alertView.tag == 11111)
         {
-            GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController
-                                                slopeControllerWithCriticalValue:0
-                                                criticalSideValue:0
-                                                errorValue:0
-                                                useCalibration:NO
-                                                selfTest:NO
-                                                steadyFactor:0
-                                                countFactor:0
-                                                displayDegrees:(_currentType == NVCalibrationTypeDegrees)
-                                                delegate:self];
+            GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:0
+                                                                                       criticalSideValue:0
+                                                                                              errorValue:0
+                                                                                          useCalibration:NO
+                                                                                                selfTest:NO
+                                                                                            steadyFactor:0
+                                                                                             countFactor:0
+                                                                                          displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                                                                delegate:self];
             
             slopeVC.promptText = @"";
             
