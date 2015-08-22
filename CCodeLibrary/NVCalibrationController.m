@@ -316,10 +316,10 @@ static CGFloat _deviceValues[9][4];
     
     NSUInteger count = [_calibrationValues[0] count];
     
-    if (_currentIndex < count && count > 1)
+    index = ((_currentIndex + 2) / 2);
+    
+    if ((index < count) && (count > 1))
     {
-        index = ((_currentIndex + 2) / 2);
-        
         CGFloat nextValue = [_calibrationValues[NVCalibrationArrayIndexValue][index] floatValue];
         NVCalibrationType nextType = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][index] integerValue];
         
@@ -347,16 +347,18 @@ static CGFloat _deviceValues[9][4];
                 buttonString = buttons.titleLabel.text;
         }
         
-        if (!(_currentIndex % 2))
+        if (_currentIndex % 2)
         {
-            _promptLabel.text = [NSString stringWithFormat:@"Place the iPad on the %@ surface with the arrow pointing upslope and tap on\n'%@' to continue.",
+            _promptLabel.text = [NSString stringWithFormat:
+                                 @"Place the iPad on the %@ surface with the arrow pointing to the left of the upslope and tap on\n'%@' to continue.",
                                  valueString, buttonString];
         }
         
         else
         {
-            _promptLabel.text = [NSString stringWithFormat:@"Place the iPad on the %@ surface with the arrow pointing to the left of the upslope and tap on\n'%@' to continue.",
-                             valueString, buttonString];
+            _promptLabel.text = [NSString stringWithFormat:
+                                 @"Place the iPad on the %@ surface with the arrow pointing upslope and tap on\n'%@' to continue.",
+                                 valueString, buttonString];
         }
         
         _nextPromptText = _promptLabel.text;

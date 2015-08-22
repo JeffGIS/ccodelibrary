@@ -84,8 +84,6 @@ static SharedDefaults *_defaults;
 {
     NSArray *defaultArray = [_defaults arrayForKey:@"CalibrationValueArray"];
     
-    NSLog(@"%@", defaultArray);
-    
     if (defaultArray.count < 4)
     {
         NSArray *valuesArray = @[@(0.0), @(8.3)];
