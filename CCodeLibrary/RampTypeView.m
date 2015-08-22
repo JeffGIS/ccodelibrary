@@ -145,42 +145,42 @@
 {
     NSMutableArray *tempArray = [[NSMutableArray alloc] init];
     
-    UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"PerpendicularRamp"
+    UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"Perp"
                                                                                         ofType:@"png"]];
     
     [tempArray addObject:rampImage];
     
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularWalkableRamp"
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ComPerpWalkable"
                                                                                ofType:@"png"]];
     
     [tempArray addObject:rampImage];
     
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"CombinedPerpendicularNonWalkableRamp"
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ComPerpNonWalkable"
                                                                                ofType:@"png"]];
     
     [tempArray addObject:rampImage];
     
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalAdjacentToCurbRamp"
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayAdj"
                                                                                ofType:@"png"]];
     
     [tempArray addObject:rampImage];
     
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayDirectionalBlendedTransitionRamp"
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayBlend"
                                                                                ofType:@"png"]];
     
     [tempArray addObject:rampImage];
     
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ParallelRamp"
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"Parallel"
                                                                                ofType:@"png"]];
     
     [tempArray addObject:rampImage];
     
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"DepressedCornerRamp"
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"DepCorner"
                                                                                ofType:@"png"]];
     
     [tempArray addObject:rampImage];
     
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"FanRamp"
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"Fan"
                                                                                ofType:@"png"]];
     
     [tempArray addObject:rampImage];
