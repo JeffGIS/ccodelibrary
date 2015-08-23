@@ -146,7 +146,7 @@ static int COUNT=100;
     }
     
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
-    _steadyDiff = 0.01 * _steadyFactor;
+    _steadyDiff = 0.02 * _steadyFactor;
     COUNT = 100 * _countFactor;
     _maxX = _maxY = _maxZ = -10.0;
     _minX = _minY = _minZ = 10.0;

@@ -11,6 +11,7 @@
 @property (nonatomic) NSArray *alphabet;
 @property (nonatomic) NSDate *touchDown, *touchUp;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
+@property (nonatomic) NSUInteger rows, columns;
 
 @end
 
@@ -42,14 +43,16 @@
     else
         spreadsheetView.columnWidth = 160.0;
     
+    spreadsheetView.rows = rows;
+    spreadsheetView.columns = columns;
     spreadsheetView.rowHeight = 40.0;
     spreadsheetView.overlayView = [[UIView alloc] initWithFrame:view.frame];
     spreadsheetView.overlayView.backgroundColor = UIColor.blackColor;
     spreadsheetView.overlayView.alpha = 0.6;
     [view addSubview:spreadsheetView.overlayView];
     
-    spreadsheetView.contentSize = CGSizeMake(((columns + 1) * spreadsheetView.columnWidth),
-                                             ((rows + 1) * spreadsheetView.rowHeight));
+    spreadsheetView.contentSize = CGSizeMake(((spreadsheetView.columns + 1) * spreadsheetView.columnWidth),
+                                             ((spreadsheetView.rows + 1) * spreadsheetView.rowHeight));
     
     spreadsheetView.backgroundColor = UIColor.blackColor;
     spreadsheetView.layer.borderColor = UIColor.blackColor.CGColor;
@@ -62,9 +65,9 @@
     spreadsheetView.alphabet = @[@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M",
                                  @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z"];
     
-    for (int r = 0; r <= rows; r++)
+    for (int r = 0; r <= spreadsheetView.rows; r++)
     {
-        for (int c = 0; c <= columns; c++)
+        for (int c = 0; c <= spreadsheetView.columns; c++)
         {
             SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake((c * spreadsheetView.columnWidth),
                                                                                               (r * spreadsheetView.rowHeight),
@@ -101,13 +104,14 @@
                 cell.textColor = UIColor.blackColor;
             }
             
-            cell.row = r;
-            cell.column = c;
+            cell.row = (NSUInteger)r;
+            cell.column = (NSUInteger)c;
             cell.text = cell.identifier;
             [spreadsheetView.contentView addSubview:cell];
         }
     }
     
+    [view addSubview:spreadsheetView];
     return spreadsheetView;
 }
 
@@ -213,6 +217,16 @@
                                                  ((superviewFrame.size.height + tabBarHeight) - (origin.y * 2.0)),
                                                  ((superviewFrame.size.width - tabBarHeight) - (origin.x * 2.0)));
                      }];
+}
+
+- (void)setTextArray:(NSArray *)textArray
+    forColumnAtIndex:(NSUInteger)columnIndex
+{
+    for (SpreadSheetViewCell *cell in _contentView.subviews)
+    {
+        if (cell.column == columnIndex && cell.row != 0)
+            cell.text = textArray[(cell.row - 1)];
+    }
 }
 
 @end

@@ -17,6 +17,8 @@
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
+		692ACC671B86309B00400B36 /* NVRoutes.m in Sources */ = {isa = PBXBuildFile; fileRef = 692ACC661B86309B00400B36 /* NVRoutes.m */; };
+		692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692ACC651B86309B00400B36 /* NVRoutes.h */; };
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
 		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
 		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
@@ -202,6 +204,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */,
 				697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */,
 				A9BF333C1B770E8E00A72E17 /* NVAlertView.h in CopyFiles */,
 				A9A7E3611B75447500DC7F3D /* NVInventoryViewController.h in CopyFiles */,
@@ -309,6 +312,8 @@
 		1FB3605519AE7E8200592B1D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagePlacesDatabase.h; sourceTree = "<group>"; };
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
+		692ACC651B86309B00400B36 /* NVRoutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRoutes.h; sourceTree = "<group>"; };
+		692ACC661B86309B00400B36 /* NVRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRoutes.m; sourceTree = "<group>"; };
 		69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSecretAlertView.h; sourceTree = "<group>"; };
 		69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSecretAlertView.m; sourceTree = "<group>"; };
 		A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVHeadingViewController.h; sourceTree = "<group>"; };
@@ -427,7 +432,6 @@
 		EB268A171AC5E9F700A68EC8 /* code.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = code.c; sourceTree = "<group>"; };
 		EB268A181AC5E9F700A68EC8 /* gssitype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gssitype.h; sourceTree = "<group>"; };
 		EB268A191AC5E9F700A68EC8 /* gmlimits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gmlimits.h; sourceTree = "<group>"; };
-		EB2AB09C1B1F281000BF9515 /* SlopeFromAccelerometer.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = SlopeFromAccelerometer.pdf; sourceTree = "<group>"; };
 		EB2C7DAF19BA004900F6D9F0 /* IntersectionsDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntersectionsDatabase.h; sourceTree = "<group>"; };
 		EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntersectionsDatabase.m; sourceTree = "<group>"; };
 		EB2C7DB219BA5A6F00F6D9F0 /* IntersectionRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntersectionRecord.h; sourceTree = "<group>"; };
@@ -567,6 +571,8 @@
 				A9C8ED3B1A5849F800DF9856 /* GetPriorityLocations.m */,
 				1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */,
 				1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */,
+				692ACC651B86309B00400B36 /* NVRoutes.h */,
+				692ACC661B86309B00400B36 /* NVRoutes.m */,
 				1F838AE819B1021C00943A8C /* PlacesInfo.h */,
 				1F838AE919B1021C00943A8C /* PlacesInfo.m */,
 				A97867351A5219FD000A9BB8 /* PriorityLocation.h */,
@@ -781,7 +787,6 @@
 		EBA2E460199527660085B2E0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				EB2AB09C1B1F281000BF9515 /* SlopeFromAccelerometer.pdf */,
 				EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -938,6 +943,7 @@
 				EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */,
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,
 				A91F36941AE9739400602BCE /* NVSliderView.m in Sources */,
+				692ACC671B86309B00400B36 /* NVRoutes.m in Sources */,
 				EBAB422F1B2B073A00C36FFC /* CurbRampData.m in Sources */,
 				A94A771619F8079E0062906E /* FacilityPoint.m in Sources */,
 				EB86BFA71B0B62520074728E /* minilzo.c in Sources */,

@@ -7,6 +7,6 @@
 
 @property (nonatomic) NSString *identifier;
 @property (nonatomic) BOOL selected;
-@property (nonatomic) int row, column;
+@property (nonatomic) NSUInteger row, column;
 
 @end

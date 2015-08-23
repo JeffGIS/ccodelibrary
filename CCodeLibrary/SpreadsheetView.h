@@ -14,4 +14,7 @@
 - (void)willRotateWithDuration:(NSTimeInterval)duration
                   tabBarHeight:(CGFloat)tabBarHeight;
 
+- (void)setTextArray:(NSArray *)textArray
+    forColumnAtIndex:(NSUInteger)columnIndex;
+
 @end
