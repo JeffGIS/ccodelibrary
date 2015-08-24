@@ -50,6 +50,7 @@
 @property (nonatomic) NSString *currentPropOwner;
 @property (nonatomic) NSMutableArray *annotations;
 @property (nonatomic) CGFloat currentZoom;
+@property BOOL controlledInterface;
 @property int pickApInPixels;
 @property int project;
 @property (nonatomic, copy) NSString *sharedFilePath;
