@@ -150,6 +150,11 @@
     
     [tempArray addObject:rampImage];
     
+    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"PerpNonWalkable"
+                                                                               ofType:@"png"]];
+    
+    [tempArray addObject:rampImage];
+    
     rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ComPerpWalkable"
                                                                                ofType:@"png"]];
     
@@ -192,9 +197,9 @@
 
 + (NSArray *)rampTypeText
 {
-    return @[@"Perpendicular", @"Combined Perpendicular With Walkable Surface",
-             @"Combined Perpendicular With Non-Walkable Surface", @"One Way Directional Adjacent to Curb & Gutter",
-             @"One Way Directional Blended Transition", @"Parallel", @"Depressed Corner", @"Fan"];
+    return @[@"Perpendicular", @"Perpendicular With\nNon-Walkable Surface", @"Combined Perpendicular\nWith Walkable Surface",
+             @"Combined Perpendicular\nWith Non-Walkable Surface", @"One Way Directional\nAdjacent to Curb & Gutter",
+             @"One Way Directional\nBlended Transition", @"Parallel", @"Depressed Corner", @"Fan"];
 }
 
 
@@ -270,6 +275,8 @@
                                              animations:^{
                                                  labels.frame = _originalNumberLabelFrame;
                                                  labels.font = [UIFont boldSystemFontOfSize:200.0];
+                                                 labels.alpha = 0.4;
+                                                 labels.backgroundColor = UIColor.clearColor;
                                              }];
                         }
                     }
@@ -357,8 +364,8 @@
             
             [UIView animateWithDuration:0.25
                              animations:^{
-                                 labels.frame = CGRectMake(4.0, 4.0,
-                                                           (button.frame.size.width - 8.0), 96.0);
+                                 labels.frame = CGRectMake(100.0, 4.0,
+                                                           (button.frame.size.width - 104.0), 96.0);
                                  
                                  labels.font = [UIFont boldSystemFontOfSize:40.0];
                              }];
@@ -370,10 +377,10 @@
             
             [UIView animateWithDuration:0.25
                              animations:^{
-                                 labels.frame = CGRectMake(4.0, 100.0,(button.frame.size.width - 8.0),
-                                                           (button.frame.size.height - 200.0));
-                                 
-                                 labels.font = [UIFont boldSystemFontOfSize:400.0];
+                                 labels.frame = CGRectMake(4.0, 4.0, 96.0, 96.0);
+                                 labels.font = [UIFont boldSystemFontOfSize:112.0];
+                                 labels.alpha = 1.0;
+                                 labels.backgroundColor = UIColor.whiteColor;
                              }];
         }
     }
