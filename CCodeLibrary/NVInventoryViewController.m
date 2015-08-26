@@ -1236,11 +1236,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                         CGFloat d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y, ramp.lev21x, ramp.lev21y);
                         CGFloat az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y, ramp.lev21x, ramp.lev21y);
                         dvec2 pt = {_currentIntersection.lev21x, _currentIntersection.lev21y};
-                        dvec2 np = dnewpt(&pt,az+HALFPI/6,d);
+                        dvec2 np = dnewpt(&pt, (az - (HALFPI / 6)), d);
                         leftRamp.lev21x = np.x;
                         leftRamp.lev21y = np.y;
                         
-                        np = dnewpt(&pt,az-HALFPI/6,d);
+                        np = dnewpt(&pt, (az + (HALFPI / 6)), d);
                         rightRamp.lev21x = np.x;
                         rightRamp.lev21y = np.y;
                     }
@@ -1334,7 +1334,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                         CGFloat d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
                         CGFloat az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
                         dvec2 pt = {_currentIntersection.lev21x, _currentIntersection.lev21y};
-                        dvec2 np = dnewpt(&pt,az-HALFPI/6,d);
+                        dvec2 np = dnewpt(&pt, (az - (HALFPI / 6)), d);
                         sideRamp.lev21x = np.x;
                         sideRamp.lev21y = np.y;
                         ramp.adjustedRot = Between0And360(ClockwiseDegFromNorth ((az * RADtoDEG) + _currentIntersection.intRotation));
@@ -1353,13 +1353,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                         az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
                         pt.x = _currentIntersection.lev21x;
                         pt.y = _currentIntersection.lev21y;
-                        np = dnewpt(&pt,az+HALFPI/6,d);
+                        np = dnewpt(&pt, (az + (HALFPI / 6)), d);
                         sideRamp.lev21x = np.x;
                         sideRamp.lev21y = np.y;
                         ramp.adjustedRot = Between0And360(ClockwiseDegFromNorth ((az * RADtoDEG) + _currentIntersection.intRotation));
                         ramp.approximateHeading = Between0And360(az*RADtoDEG);
                     }
-
                 }
             }
         }
