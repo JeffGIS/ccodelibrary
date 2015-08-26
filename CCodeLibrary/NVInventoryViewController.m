@@ -347,7 +347,7 @@
         double bmpx = 0.0, bmpy = 0.0;
         NVRampButton *rampButton = nil;
         
-        ramp = [_currentIntersection.ramps objectAtIndex:i];
+        ramp = _currentIntersection.ramps[i];
         
         switch (i)
         {
@@ -823,7 +823,7 @@
     else
     {
         NSArray *rampOptions = nil;
-        MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:_currentEditButton.tag];
+        MPRamp *ramp = _currentIntersection.ramps[_currentEditButton.tag];
         
         if ([self isMiddleRamp:_currentEditButton.tag] && [self isMiddleRampType:ramp.rampType])
             rampOptions = @[@"Cancel", @"Delete", @"Change Ramp Type"];
@@ -884,19 +884,19 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             
             else if ((rampID = (int)_currentEditButton.tag))
             {
-                MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                MPRamp *ramp = _currentIntersection.ramps[rampID];
                 ramp.rampExists = NO;
                 ramp.isComplete = YES;
                 ramp.rampType = 0;
                 
                 if (rampID > 8)
                 {
-                    MPRamp *sideRamp = [_currentIntersection.ramps objectAtIndex:[self getLeftRampIDFromRampID:rampID]];
+                    MPRamp *sideRamp = _currentIntersection.ramps[[self getLeftRampIDFromRampID:rampID]];
                     sideRamp.rampExists = NO;
                     sideRamp.isComplete = YES;
                     sideRamp.rampType = 0;
                     
-                    sideRamp = [_currentIntersection.ramps objectAtIndex:[self getRightRampIDFromRampID:rampID]];
+                    sideRamp = _currentIntersection.ramps[[self getRightRampIDFromRampID:rampID]];
                     sideRamp.rampExists = NO;
                     sideRamp.isComplete = YES;
                     sideRamp.rampType = 0;
@@ -909,15 +909,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         case 2://change ramp type
             if ((rampID = (int)_currentEditButton.tag))
             {
-                MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                MPRamp *ramp = _currentIntersection.ramps[rampID];
                 
                 RampTypeView *rtv = [RampTypeView showRampTypeViewWithView:self.view
                                                                   delegate:self
                                                               selectedType:ramp.rampType
                                                                 editOption:RampTypeEditOptionIndividual];
 #pragma unused(rtv)
-                
-                
             }
             
             break;
@@ -925,12 +923,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         case 3://change to left ramp
             if ((rampID = (int)_currentEditButton.tag))
             {
-                MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                MPRamp *ramp = _currentIntersection.ramps[rampID];
                 switchWith = [self getLeftRampIDFromRampID:rampID];
                 
                 if (switchWith > 0)
                 {
-                    MPRamp *switchRamp = [_currentIntersection.ramps objectAtIndex:switchWith];
+                    MPRamp *switchRamp = _currentIntersection.ramps[switchWith];
                     int savex = ramp.lev21x;
                     int savey = ramp.lev21y;
                     int savear = ramp.adjustedRot;
@@ -958,14 +956,14 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         case 4://change to middle ramp
             if ((rampID = (int)_currentEditButton.tag))
             {
-                MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                MPRamp *ramp = _currentIntersection.ramps[rampID];
                 switchWith = [self getMiddleRampIDFromRampID:rampID];
                 int otherID = [self getOtherRampIDFromRampID:rampID];
                 
                 if (switchWith > 0)
                 {
-                    MPRamp *switchRamp = [_currentIntersection.ramps objectAtIndex:switchWith];
-                    MPRamp *otherRamp = [_currentIntersection.ramps objectAtIndex:otherID];
+                    MPRamp *switchRamp = _currentIntersection.ramps[switchWith];
+                    MPRamp *otherRamp = _currentIntersection.ramps[otherID];
                     int savex = ramp.lev21x;
                     int savey = ramp.lev21y;
                     int savear = ramp.adjustedRot;
@@ -987,6 +985,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     otherRamp.rampType = 0;
                     otherRamp.rampExists = NO;
                     otherRamp.isComplete = YES;
+                    
+                    if ([self isCombinedRampType:switchRamp.rampType])
+                        [self addSideRamps:switchRamp];
                 }
             }
             
@@ -996,12 +997,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         case 5://change to right ramp
             if ((rampID = (int)_currentEditButton.tag))
             {
-                MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                MPRamp *ramp = _currentIntersection.ramps[rampID];
                 switchWith = [self getRightRampIDFromRampID:rampID];
                 
                 if (switchWith > 0)
                 {
-                    MPRamp *switchRamp = [_currentIntersection.ramps objectAtIndex:switchWith];
+                    MPRamp *switchRamp = _currentIntersection.ramps[switchWith];
                     int savex = ramp.lev21x;
                     int savey = ramp.lev21y;
                     int savear = ramp.adjustedRot;
@@ -1217,16 +1218,15 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 
                 if (rampID > 0)
                 {
-                    MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                    MPRamp *ramp = _currentIntersection.ramps[rampID];
                     
                     ramp.lev21x = x;
                     ramp.lev21y = y;
                     
-                    if (([(NVRampButton *)_currentEditButton type] == RampTypeCombPerpNonWalk) ||
-                        ([(NVRampButton *)_currentEditButton type] == RampTypeCombPerpWalk))
+                    if ([self isCombinedRampType:[(NVRampButton *)_currentEditButton type]])
                     {
-                        MPRamp *leftRamp = [_currentIntersection.ramps objectAtIndex:[self getLeftRampIDFromRampID:rampID]];
-                        MPRamp *rightRamp = [_currentIntersection.ramps objectAtIndex:[self getRightRampIDFromRampID:rampID]];
+                        MPRamp *leftRamp = _currentIntersection.ramps[[self getLeftRampIDFromRampID:rampID]];
+                        MPRamp *rightRamp = _currentIntersection.ramps[[self getRightRampIDFromRampID:rampID]];
                         
                         CGFloat d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y, ramp.lev21x, ramp.lev21y);
                         CGFloat az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y, ramp.lev21x, ramp.lev21y);
@@ -1254,14 +1254,14 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                           switchWithRampID:&switchWith];
             
             int middleID = [self getMiddleRampIDFromRampID:rampID];
-            MPRamp *middleRamp = [_currentIntersection.ramps objectAtIndex:middleID];
+            MPRamp *middleRamp = _currentIntersection.ramps[middleID];
             
             if (middleRamp.rampExists)
                 return;
             
             if (rampID > 0)
             {
-                MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:rampID];
+                MPRamp *ramp = _currentIntersection.ramps[rampID];
                 DPOINT pt = {0.0,0.0}, midPt = {0.0, 0.0};
                 CGFloat az = 0.0;
                 ramp.rampType = _currentRampType;
@@ -1280,7 +1280,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 if (switchWith < 0)
                     switchWith = -switchWith;
                 
-                MPRamp *switchRamp = [_currentIntersection.ramps objectAtIndex:switchWith];
+                MPRamp *switchRamp = _currentIntersection.ramps[switchWith];
                 
                 if (ramp.adjustedRot < switchRamp.adjustedRot)
                 {
@@ -1308,52 +1308,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     [self alertView:nil
                 didTapButtonAtIndex:4];
                     
-                    _updateOption = NVUpdateOptionAddRamp;
-                    int indx = [self getMiddleRampIDFromRampID:ramp.rampNum];
-                    ramp = [_currentIntersection.ramps objectAtIndex:indx];
+                    ramp = _currentIntersection.ramps[[self getMiddleRampIDFromRampID:ramp.rampNum]];
                     
-                    if (ramp.rampType == RampTypeCombPerpWalk ||
-                        ramp.rampType == RampTypeCombPerpNonWalk)
-                    {
-                        indx = [self getLeftRampIDFromRampID:ramp.rampNum];
-                        MPRamp *sideRamp = [_currentIntersection.ramps objectAtIndex:indx];
-                        
-                        if (ramp.rampType == RampTypeCombPerpWalk)
-                            sideRamp.rampType = RampTypeCombLeftWalk;
-                        
-                        else
-                            sideRamp.rampType = RampTypeCombLeftNonWalk;
-                        
-                        sideRamp.rampExists = YES;
-                        sideRamp.isComplete = NO;
-                        CGFloat d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
-                        CGFloat az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
-                        dvec2 pt = {_currentIntersection.lev21x, _currentIntersection.lev21y};
-                        dvec2 np = dnewpt(&pt, (az - (HALFPI / 6)), d);
-                        sideRamp.lev21x = np.x;
-                        sideRamp.lev21y = np.y;
-                        ramp.adjustedRot = Between0And360(ClockwiseDegFromNorth ((az * RADtoDEG) + _currentIntersection.intRotation));
-                        ramp.approximateHeading = Between0And360(az*RADtoDEG);
-                        indx = [self getRightRampIDFromRampID:ramp.rampNum];
-                        sideRamp = [_currentIntersection.ramps objectAtIndex:indx];
-                        
-                        if (ramp.rampType == RampTypeCombPerpWalk)
-                            sideRamp.rampType = RampTypeCombRightWalk;
-                        else
-                            sideRamp.rampType = RampTypeCombRightNonWalk;
-                        
-                        sideRamp.rampExists = YES;
-                        sideRamp.isComplete = NO;
-                        d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
-                        az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
-                        pt.x = _currentIntersection.lev21x;
-                        pt.y = _currentIntersection.lev21y;
-                        np = dnewpt(&pt, (az + (HALFPI / 6)), d);
-                        sideRamp.lev21x = np.x;
-                        sideRamp.lev21y = np.y;
-                        ramp.adjustedRot = Between0And360(ClockwiseDegFromNorth ((az * RADtoDEG) + _currentIntersection.intRotation));
-                        ramp.approximateHeading = Between0And360(az*RADtoDEG);
-                    }
+                    if ([self isCombinedRampType:ramp.rampType])
+                        [self addSideRamps:ramp];
                 }
             }
         }
@@ -1437,6 +1395,49 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         [self setupButtons:NO];
 }
 
+- (void)addSideRamps:(MPRamp *)ramp
+{
+    _updateOption = NVUpdateOptionAddRamp;
+    
+    MPRamp *sideRamp = _currentIntersection.ramps[[self getLeftRampIDFromRampID:ramp.rampNum]];
+    
+    if (ramp.rampType == RampTypeCombPerpWalk)
+        sideRamp.rampType = RampTypeCombLeftWalk;
+    
+    else
+        sideRamp.rampType = RampTypeCombLeftNonWalk;
+    
+    sideRamp.rampExists = YES;
+    sideRamp.isComplete = NO;
+    CGFloat d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
+    CGFloat az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
+    dvec2 pt = {_currentIntersection.lev21x, _currentIntersection.lev21y};
+    dvec2 np = dnewpt(&pt, (az - (HALFPI / 6)), d);
+    sideRamp.lev21x = np.x;
+    sideRamp.lev21y = np.y;
+    ramp.adjustedRot = Between0And360(ClockwiseDegFromNorth ((az * RADtoDEG) + _currentIntersection.intRotation));
+    ramp.approximateHeading = Between0And360(az*RADtoDEG);
+    
+    sideRamp = _currentIntersection.ramps[[self getRightRampIDFromRampID:ramp.rampNum]];
+    
+    if (ramp.rampType == RampTypeCombPerpWalk)
+        sideRamp.rampType = RampTypeCombRightWalk;
+    else
+        sideRamp.rampType = RampTypeCombRightNonWalk;
+    
+    sideRamp.rampExists = YES;
+    sideRamp.isComplete = NO;
+    d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
+    az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
+    pt.x = _currentIntersection.lev21x;
+    pt.y = _currentIntersection.lev21y;
+    np = dnewpt(&pt, (az + (HALFPI / 6)), d);
+    sideRamp.lev21x = np.x;
+    sideRamp.lev21y = np.y;
+    ramp.adjustedRot = Between0And360(ClockwiseDegFromNorth ((az * RADtoDEG) + _currentIntersection.intRotation));
+    ramp.approximateHeading = Between0And360(az*RADtoDEG);
+}
+
 - (int)getXRampIDFromX:(int)x
                   andY:(int)y
       switchWithRampID:(int *)switchID
@@ -1452,8 +1453,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     switch (corner)
     {
         case 81:
-            ramp1 = [_currentIntersection.ramps objectAtIndex:8];
-            ramp2 = [_currentIntersection.ramps objectAtIndex:1];
+            ramp1 = _currentIntersection.ramps[8];
+            ramp2 = _currentIntersection.ramps[1];
             
             if (ramp1.rampExists && ramp2.rampExists)
                 break;
@@ -1476,8 +1477,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             break;
             
         case 23:
-            ramp1 = [_currentIntersection.ramps objectAtIndex:2];
-            ramp2 = [_currentIntersection.ramps objectAtIndex:3];
+            ramp1 = _currentIntersection.ramps[2];
+            ramp2 = _currentIntersection.ramps[3];
             
             if (ramp1.rampExists && ramp2.rampExists)
                 break;
@@ -1500,8 +1501,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             break;
             
         case 45:
-            ramp1 = [_currentIntersection.ramps objectAtIndex:4];
-            ramp2 = [_currentIntersection.ramps objectAtIndex:5];
+            ramp1 = _currentIntersection.ramps[4];
+            ramp2 = _currentIntersection.ramps[5];
             
             if (ramp1.rampExists && ramp2.rampExists)
                 break;
@@ -1524,8 +1525,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             break;
             
         case 67:
-            ramp1 = [_currentIntersection.ramps objectAtIndex:6];
-            ramp2 = [_currentIntersection.ramps objectAtIndex:7];
+            ramp1 = _currentIntersection.ramps[6];
+            ramp2 = _currentIntersection.ramps[7];
             
             if (ramp1.rampExists && ramp2.rampExists)
                 break;
@@ -1738,6 +1739,19 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     return rtn;
 }
 
+- (BOOL)isCombinedRampType:(RampType)rampType
+{
+    BOOL rtn = NO;
+    
+    if (rampType == RampTypeCombPerpNonWalk ||
+        rampType == RampTypeCombPerpWalk)
+    {
+        rtn = YES;
+    }
+    
+    return rtn;
+}
+
 - (void)rampTypeView:(RampTypeView *)rampTypeView
    didReturnRampType:(RampType)rampType
           editOption:(RampTypeEditOption)editOption
@@ -1760,7 +1774,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             
         case RampTypeEditOptionIndividual:
         {
-            MPRamp *ramp = [_currentIntersection.ramps objectAtIndex:_currentEditButton.tag];
+            MPRamp *ramp = _currentIntersection.ramps[_currentEditButton.tag];
             ramp.rampType = rampType;
             
             NVRampButton *rampButton = (NVRampButton *)_currentEditButton;
@@ -1770,6 +1784,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             {
                 [self alertView:nil
             didTapButtonAtIndex:4];
+            }
+            
+            else if ([self isCombinedRampType:rampType])
+            {
+                [self addSideRamps:ramp];
+                [self setupButtons:NO];
             }
         }
             
