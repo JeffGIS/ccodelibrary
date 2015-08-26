@@ -1276,6 +1276,46 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 didTapButtonAtIndex:4];
                     
                     _updateOption = NVUpdateOptionAddRamp;
+                    int indx = [self getMiddleRampIDFromRampID:ramp.rampNum];
+                    ramp = [_currentIntersection.ramps objectAtIndex:indx];
+                    if (ramp.rampType == RampTypeCombPerpWalk ||
+                        ramp.rampType == RampTypeCombPerpNonWalk)
+                    {
+                        indx = [self getLeftRampIDFromRampID:ramp.rampNum];
+                        MPRamp *sideRamp = [_currentIntersection.ramps objectAtIndex:indx];
+                        if (ramp.rampType == RampTypeCombPerpWalk)
+                            sideRamp.rampType = RampTypeCombLeftWalk;
+                        else
+                            sideRamp.rampType = RampTypeCombLeftNonWalk;
+                        sideRamp.rampExists = YES;
+                        sideRamp.isComplete = NO;
+                        CGFloat d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
+                        CGFloat az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
+                        dvec2 pt = {_currentIntersection.lev21x, _currentIntersection.lev21y};
+                        dvec2 np = dnewpt(&pt,az-HALFPI/6,d);
+                        sideRamp.lev21x = np.x;
+                        sideRamp.lev21y = np.y;
+                        ramp.adjustedRot = Between0And360(ClockwiseDegFromNorth ((az * RADtoDEG) + _currentIntersection.intRotation));
+                        ramp.approximateHeading = Between0And360(az*RADtoDEG);
+                        indx = [self getRightRampIDFromRampID:ramp.rampNum];
+                        sideRamp = [_currentIntersection.ramps objectAtIndex:indx];
+                        if (ramp.rampType == RampTypeCombPerpWalk)
+                            sideRamp.rampType = RampTypeCombRightWalk;
+                        else
+                            sideRamp.rampType = RampTypeCombRightNonWalk;
+                        sideRamp.rampExists = YES;
+                        sideRamp.isComplete = NO;
+                        d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
+                        az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
+                        pt.x = _currentIntersection.lev21x;
+                        pt.y = _currentIntersection.lev21y;
+                        np = dnewpt(&pt,az+HALFPI/6,d);
+                        sideRamp.lev21x = np.x;
+                        sideRamp.lev21y = np.y;
+                        ramp.adjustedRot = Between0And360(ClockwiseDegFromNorth ((az * RADtoDEG) + _currentIntersection.intRotation));
+                        ramp.approximateHeading = Between0And360(az*RADtoDEG);
+                    }
+
                 }
             }
         }
