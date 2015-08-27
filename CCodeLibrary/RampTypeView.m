@@ -89,7 +89,7 @@
             rtButton.layer.borderColor = UIColor.greenColor.CGColor;
             rtButton.layer.borderWidth = 0.0;
             
-            if (tag < rtView.rampImages.count)
+            if (tag < RampTypeCombLeftWalk)
             {
                 [rtButton setImage:rtView.rampImages[tag]
                           forState:UIControlStateNormal];
