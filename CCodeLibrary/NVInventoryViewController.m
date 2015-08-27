@@ -426,7 +426,7 @@
             
             rampButton.frame = CGRectMake(x, y, rampButton.frame.size.width, rampButton.frame.size.height);
             rampButton.type = ramp.rampType;
-            rampButton.hidden = NO;
+            rampButton.hidden = (rampButton.type > 9);
         }
     }
     
@@ -1775,6 +1775,23 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         case RampTypeEditOptionIndividual:
         {
             MPRamp *ramp = _currentIntersection.ramps[_currentEditButton.tag];
+            
+            if ([self isCombinedRampType:ramp.rampType] &&
+                ![self isCombinedRampType:rampType])
+            {
+                MPRamp *sideRamp = _currentIntersection.ramps[[self getLeftRampIDFromRampID:ramp.rampNum]];
+                sideRamp.rampExists = NO;
+                sideRamp.isComplete = YES;
+                sideRamp.rampType = 0;
+                
+                sideRamp = _currentIntersection.ramps[[self getRightRampIDFromRampID:ramp.rampNum]];
+                sideRamp.rampExists = NO;
+                sideRamp.isComplete = YES;
+                sideRamp.rampType = 0;
+                
+                [self setupButtons:NO];
+            }
+            
             ramp.rampType = rampType;
             
             NVRampButton *rampButton = (NVRampButton *)_currentEditButton;
