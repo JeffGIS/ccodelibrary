@@ -17,8 +17,8 @@ typedef NS_ENUM(NSInteger, RampType)
     RampTypeCombLeftWalk,//left side of RampTypeCombPerpWalk
     RampTypeCombRightWalk,//right side of RampTypeCombPerpWalk
     RampTypeCombLeftNonWalk,//left side of RampTypeCombPerpNonWalk
-    RampTypeCombRightNonWalk//right side of RampTypeCombPerpNonWalk
-
+    RampTypeCombRightNonWalk,//right side of RampTypeCombPerpNonWalk
+    rampTypeCount //always last item
 };
 
 typedef NS_ENUM(NSInteger, RampTypeEditOption)

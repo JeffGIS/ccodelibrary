@@ -143,52 +143,27 @@
 
 + (NSArray *)rampTypeImages
 {
-    NSMutableArray *tempArray = [[NSMutableArray alloc] init];
+    NSArray *imageNames = @[@"Perp",
+                            @"PerpNonWalkable",
+                            @"ComPerpWalkable",
+                            @"ComPerpNonWalkable",
+                            @"OneWayAdj",
+                            @"OneWayBlend",
+                            @"Parallel",
+                            @"DepCorner",
+                            @"Fan",
+                            @"ComPerpWalkable_leftRamp",
+                            @"ComPerpWalkable_rightRamp",
+                            @"ComPerpNonWalkable_leftRamp",
+                            @"ComPerpNonWalkable_rightRamp"];
     
-    UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"Perp"
-                                                                                        ofType:@"png"]];
+    NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:rampTypeCount];
     
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"PerpNonWalkable"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ComPerpWalkable"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ComPerpNonWalkable"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayAdj"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"OneWayBlend"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"Parallel"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"DepCorner"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
-    
-    rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"Fan"
-                                                                               ofType:@"png"]];
-    
-    [tempArray addObject:rampImage];
+    for (int i=0;i<rampTypeCount;i++)
+    {
+        UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:imageNames[i]                                                                                   ofType:@"png"]];
+        [tempArray insertObject:rampImage atIndex:i];
+    }
     
     NSArray *imageArray = tempArray.copy;
     
