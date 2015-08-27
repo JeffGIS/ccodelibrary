@@ -426,7 +426,7 @@
             
             rampButton.frame = CGRectMake(x, y, rampButton.frame.size.width, rampButton.frame.size.height);
             rampButton.type = ramp.rampType;
-            rampButton.hidden = (rampButton.type > 9);
+            rampButton.hidden = (rampButton.type > 8);
         }
     }
     
