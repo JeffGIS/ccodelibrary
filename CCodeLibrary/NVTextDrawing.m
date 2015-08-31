@@ -5,7 +5,7 @@
 
 @implementation NVTextDrawing
 
-+ (void)getTextContainerPoints:(LPDPOINT)textPoints
++ (int)getTextContainerPoints:(LPDPOINT)textPoints
               attributedString:(NSAttributedString *)attributedString
 {
     NSArray *textLines = [attributedString.string componentsSeparatedByString:@"\n"];
@@ -19,6 +19,7 @@
 
     NSRange glyphRange = {0,1};
     NSUInteger location = 0;
+    int nPoints = 0;
     
     for (int i = 0; i < textLines.count; i++)
     {
@@ -35,8 +36,8 @@
         DPOINT minXY = {glyphRect.origin.x, glyphRect.origin.y};
         DPOINT maxXY = {glyphRect.size.width + minXY.x, glyphRect.size.height + minXY.y};
         
-        textPoints[i * 2] = minXY;
-        textPoints[(i * 2) + 1] = maxXY;
+        textPoints[nPoints++] = minXY;
+        textPoints[nPoints++] = maxXY;
         
         location += (length + 1);
     }
@@ -55,8 +56,9 @@
         DPOINT center = {(glyphRect.origin.x + (glyphRect.size.width / 2.0)),
                         (glyphRect.origin.y + (glyphRect.size.height / 2.0))};
         
-        textPoints[i + (textLines.count * 2)] = center;
+        textPoints[nPoints++] = center;
     }
+    return nPoints;
 }
 
 @end
