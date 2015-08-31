@@ -80,6 +80,12 @@ enum obstructions {
 @property (nonatomic) CGFloat flareRightSlopeFront;
 @property (nonatomic) CGFloat flareRightSlopeSide;
 @property (nonatomic) CGFloat flareRightSlopeHeading;
+@property (nonatomic) CGFloat swkLeftSlopeFront;
+@property (nonatomic) CGFloat swkLeftSlopeSide;
+@property (nonatomic) CGFloat swkLeftSlopeHeading;
+@property (nonatomic) CGFloat swkRightSlopeFront;
+@property (nonatomic) CGFloat swkRightSlopeSide;
+@property (nonatomic) CGFloat swkRightSlopeHeading;
 @property BOOL hasPEDSignal, hasPEDButton;
 @property (nonatomic) int PEDButtonHeight, PEDButtonDist;
 @property (nonatomic) CGFloat SteepTopOfCurb;

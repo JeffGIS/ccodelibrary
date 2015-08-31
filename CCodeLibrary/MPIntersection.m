@@ -49,6 +49,12 @@
 @synthesize flareRightSlopeSide;
 @synthesize flareRightSlopeFront;
 @synthesize flareRightSlopeHeading;
+@synthesize swkLeftSlopeSide;
+@synthesize swkLeftSlopeFront;
+@synthesize swkLeftSlopeHeading;
+@synthesize swkRightSlopeSide;
+@synthesize swkRightSlopeFront;
+@synthesize swkRightSlopeHeading;
 @synthesize hasPEDButton;
 @synthesize hasPEDSignal;
 @synthesize PEDButtonDist;
