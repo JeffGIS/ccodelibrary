@@ -6,7 +6,7 @@
 
 @interface NVTextDrawing : NSObject
 
-+ (void)getTextContainerPoints:(LPDPOINT)llpoints
++ (void)getTextContainerPoints:(LPDPOINT)textPoints
               attributedString:(NSAttributedString *)attributedString;
 
 @end
