@@ -31,8 +31,6 @@
         DPOINT center = {(glyphRect.origin.x + (glyphRect.size.width / 2.0)),
                         (glyphRect.origin.y + (glyphRect.size.height / 2.0))};
         
-        NSLog(@"%f,%f", center.x, center.y);
-        
         llpoints[i] = center;
     }
 }
