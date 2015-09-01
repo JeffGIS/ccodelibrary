@@ -21,7 +21,7 @@
         _height = 2048;
         _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
         _bitmapData = bmData;
-        self.areaFile = CRAPI.sharedInstance.placeAreaFile;
+        _areaFile = CRAPI.sharedInstance.placeAreaFile;
     }
     
     return self;
@@ -44,14 +44,13 @@
     
     if (_context)
         [self loadAreaIntoContext:areaFile];
-    
 }
 
 CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void **bmData)
 {
     CGContextRef context = NULL;
     void *bitmapData = NULL;
-    int bitmapByteCount, bitmapBytesPerRow;
+    int bitmapByteCount = 0, bitmapBytesPerRow = 0;
     
     bitmapBytesPerRow = (pixelsWide); //1
     bitmapByteCount = (bitmapBytesPerRow *pixelsHigh);
@@ -61,35 +60,33 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
     if (bitmapData)
     {
         memset (bitmapData,0,bitmapByteCount);
-        context = CGBitmapContextCreate(bitmapData, //4
-                                        pixelsWide,
-                                        pixelsHigh,
-                                        8, //bits per component
-                                        bitmapBytesPerRow,
-                                        colorSpace,0);
+        
+        context = CGBitmapContextCreate(bitmapData, pixelsWide, pixelsHigh, 8,
+                                        bitmapBytesPerRow, colorSpace,0);
+        
         if (!context)
         {
-            free (bitmapData);
+            free(bitmapData);
             bitmapData = NULL;
         }
     }
     
     *bmData = bitmapData;
-    return context; //7
+    return context;
 }
 
-dbounds getAreaFileBounds (const char * areaFile)
+dbounds getAreaFileBounds(const char *areaFile)
 {
-    dbounds bounds;
-    int nLoops, nPoints, ix, iy;
+    dbounds bounds = {0};
+    int nLoops = 0, nPoints = 0, ix = 0, iy = 0;
     int *pnPointsInLoop = 0;
-    LPDPOINT pPoints;
-
-    
+    LPDPOINT pPoints = NULL;
     InitDBounds(&bounds);
+    
     if (areaFile)
     {
         FILE *fid = fopen(areaFile, "rb");
+        
         if (fid && fread(&nPoints, sizeof(int), 1, fid))
         {
             if (nPoints > 2 && fread(&nLoops, sizeof(int), 1, fid))
@@ -117,9 +114,8 @@ dbounds getAreaFileBounds (const char * areaFile)
                 for (int iloop = 0; iloop < nLoops; iloop++)
                 {
                     for (int j = 0; j < pnPointsInLoop[iloop]; j++ ,i++)
-                    {
                         AddDPointToBounds(&bounds, &pPoints[i]);
-                    }
+                    
                     if (iloop)
                         i++;
                 }
@@ -133,6 +129,7 @@ dbounds getAreaFileBounds (const char * areaFile)
         if (pnPointsInLoop)
             free(pnPointsInLoop);
     }
+    
     return bounds;
 
 }
@@ -140,10 +137,10 @@ dbounds getAreaFileBounds (const char * areaFile)
 - (void)drawAreaInContext:(CGContextRef)context
 {
     FILE *fid = fopen(_areaFile.UTF8String, "rb");
-    int nLoops, nPoints, ix, iy;
+    int nLoops = 0, nPoints = 0, ix = 0, iy = 0;
     int *pnPointsInLoop = 0;
-    bounds bnds;
-    LPDPOINT pPoints;
+    bounds bnds = {0};
+    LPDPOINT pPoints = NULL;
     
     bnds.xmn = -180.0;
     bnds.ymn = 0.0;
@@ -173,7 +170,7 @@ dbounds getAreaFileBounds (const char * areaFile)
             }
             
             CreateMask(&pPoints, &nPoints, &bnds);
-            CLLocationCoordinate2D llPoint;
+            CLLocationCoordinate2D llPoint = {0};
             
             for (int i = 0; i < nPoints; i++)
             {
@@ -221,13 +218,12 @@ dbounds getAreaFileBounds (const char * areaFile)
 {
     BOOL rtn = NO;
     FILE *fid = fopen(areaFile.UTF8String,"rb");
-    int nLoops, nPoints, ix, iy;
+    int nLoops = 0, nPoints = 0, ix = 0, iy = 0;
     int *pnPointsInLoop = 0;
-    LPDPOINT pPoints;
+    LPDPOINT pPoints = NULL;
     
     if (fid && fread (&nPoints, sizeof(int), 1, fid))
     {
-        
         if (nPoints > 2 && fread(&nLoops, sizeof(int), 1, fid))
         {
             pnPointsInLoop = malloc(nLoops * sizeof(int));
@@ -286,7 +282,7 @@ dbounds getAreaFileBounds (const char * areaFile)
 
 - (BOOL)DPointInArea:(DPOINT *)dPoint
 {
-    CLLocationCoordinate2D llPoint;
+    CLLocationCoordinate2D llPoint = {0};
     
     llPoint.latitude = dPoint->y;
     llPoint.longitude = dPoint->x;
@@ -302,7 +298,7 @@ dbounds getAreaFileBounds (const char * areaFile)
         BYTE bitmapValue = _bitmapData[row * _width + col];
         
         if (bitmapValue)
-            return true;
+            return YES;
     }
     
     return NO;

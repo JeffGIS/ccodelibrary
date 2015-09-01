@@ -8,6 +8,8 @@
 #define UPPERLANDING 3
 #define FLARELEFT 4
 #define FLARERIGHT 5
+#define SWKLEFT 6
+#define SWKRIGHT 7
 #define HEADINGERRORDIF 50
 
 #import <Foundation/Foundation.h>
