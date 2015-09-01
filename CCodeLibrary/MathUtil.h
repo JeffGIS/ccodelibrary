@@ -78,6 +78,10 @@ void AddPointToBounds (bounds* bnds,vec2 *pt);
 void AddDPointToBounds(dbounds *pBounds, DPOINT *pt);
 void InitDBounds (dbounds* bnds);
 void InitIBounds (IBOUNDS* bnds);
+double BoundsWidth(dbounds* bnds);
+double BoundsHeight(dbounds* bnds);
+double MNMXCORDWidth(MNMXCORD* bnds);
+double MNMXCORDHeight(MNMXCORD* bnds);
 LPDPOINT PointsFromCorners (CORNERPOINTS* pCornerPoints);
 MNMXCORD CornerPointBounds (CORNERPOINTS* cornerPoints);
 IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist);
@@ -121,6 +125,7 @@ bool pointInDBounds (DPOINT *pt,dbounds *bounds);
 bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator);
 bool PICK_POINT_ON_LINE (DPOINT pickPoint,MNMXCORD pickBounds,LPDPOINT pPickedPoint,long nPnts,HPDPOINT lpPointsIn);
 bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol);
+double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
 
 
 #endif

@@ -170,6 +170,7 @@
 		EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */ = {isa = PBXBuildFile; fileRef = EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */; };
 		EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EB3CC5F61AD95F8B002453A9 /* PickedItem.m */; };
 		EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4DB2571B9600AA008157D8 /* PointInArea.m */; };
+		EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB4DB2561B9600AA008157D8 /* PointInArea.h */; };
 		EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */; };
 		EB86BFA71B0B62520074728E /* minilzo.c in Sources */ = {isa = PBXBuildFile; fileRef = EB86BFA51B0B62520074728E /* minilzo.c */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
@@ -207,6 +208,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */,
 				697B37721B94C0E00066978B /* NVTextDrawing.h in CopyFiles */,
 				692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */,
 				697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */,

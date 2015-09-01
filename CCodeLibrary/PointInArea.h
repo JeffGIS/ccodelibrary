@@ -19,6 +19,7 @@
 
 - (BOOL)DPointInArea:(DPOINT *)dPoint;
 
+@property int maxDimension;
 @property int width;
 @property int height;
 @property CGColorSpaceRef colorSpace;

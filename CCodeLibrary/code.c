@@ -962,12 +962,8 @@ GSSiExitProg (707);
 #endif
 }
 
-/*
-static double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim)
-#if ENABLETRACE
-{GSSiEnterProg (404);
-#endif
-{    
+double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim)
+{
 	int	i; 
 	DPOINT	BeginPoint, LastPoint;
 	double	Area=0,Perim=0;    
@@ -987,17 +983,9 @@ static double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim)
 	Area += (LastPoint.y - BeginPoint.y) * (BeginPoint.x + LastPoint.x) / 2;  
 	if (pPerim)
 		*pPerim = Perim;
-{
-#if ENABLETRACE
-GSSiExitProg (404);
-#endif
 	return (Area);
 }
-#if ENABLETRACE
-}
-#endif
-}
-*/
+
 
 BOOL  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator)
 #if ENABLETRACE

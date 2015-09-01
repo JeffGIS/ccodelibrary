@@ -6,6 +6,9 @@
 @implementation NVTextDrawing
 
 + (NSUInteger)getTextContainerPoints:(LPDPOINT)textPoints
+                             totArea:(CGFloat*)totArea
+               averageCharacterWidth:(CGFloat*)aveCharWidth
+               averageCharacterHeight:(CGFloat*)aveCharHeight
                     attributedString:(NSAttributedString *)attributedString
 {
     NSArray *textLines = [attributedString.string componentsSeparatedByString:@"\n"];
@@ -19,7 +22,10 @@
 
     NSRange glyphRange = {0,1};
     NSUInteger location = 0, nPoints = 0;
+    CGFloat totWidth = 0, totHeight = 0;
+    NSInteger totChar = 0;
     
+    *totArea = 0;
     for (int i = 0; i < textLines.count; i++)
     {
         NSUInteger length = [textLines[i] length];
@@ -39,6 +45,10 @@
         textPoints[nPoints++] = maxXY;
         
         location += (length + 1);
+        (*totArea) += (maxXY.x - minXY.x) * (maxXY.y - minXY.y);
+        totWidth += maxXY.x - minXY.x;
+        totHeight += maxXY.y - minXY.y;
+        totChar += length;
     }
     
     for (int i = 0; i < attributedString.length; i++)
@@ -57,7 +67,10 @@
         
         textPoints[nPoints++] = center;
     }
-    
+    if (totChar)
+        *aveCharWidth = totWidth / totChar;
+    if(textLines.count)
+        *aveCharHeight = totHeight / textLines.count;
     return nPoints;
 }
 

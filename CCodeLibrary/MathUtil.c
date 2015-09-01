@@ -1552,3 +1552,23 @@ double Between0And360D (double ival)
     
     return ival;
 }
+double BoundsWidth(dbounds* bnds)
+{
+    double w = bnds->xmx - bnds->xmn;
+    return w;
+}
+double BoundsHeight(dbounds* bnds)
+{
+    double h = bnds->ymx - bnds->ymn;
+    return h;
+}
+double MNMXCORDWidth(MNMXCORD* bnds)
+{
+    double w = bnds->xmx - bnds->xmn;
+    return w;
+}
+double MNMXCORDHeight(MNMXCORD* bnds)
+{
+    double h = bnds->ymx - bnds->ymn;
+    return h;
+}

@@ -41,8 +41,19 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
 
     _bounds = getAreaBounds (nPoints,pPoints);
     _colorSpace = CGColorSpaceCreateDeviceGray();
-    _width = 2048;
-    _height = 2048;
+    if (!_maxDimension)
+        _maxDimension = 2048;
+    _width = _maxDimension;
+    _height = _maxDimension;
+    CGFloat wb = BoundsWidth (&_bounds);
+    CGFloat hb = BoundsHeight (&_bounds);
+    
+    if (wb > 0 && wb > hb)
+        _height *= hb / wb;
+    else if (hb > 0)
+        _width *= wb / hb;
+    _height += _height % 4;
+    _width += _width % 4;
     _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
     _bitmapData = bmData;
     
