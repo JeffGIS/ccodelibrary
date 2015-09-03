@@ -29,23 +29,6 @@
     for (int i = 0; i < textLines.count; i++)
     {
         NSString *textLineString = textLines[i];
-        
-        if ([textLineString characterAtIndex:0] == ' ')
-        {
-            NSMutableString *tempString = textLineString.mutableCopy;
-            NSRange firstCharRange = {0,1};
-            [tempString deleteCharactersInRange:firstCharRange];
-            textLineString = tempString;
-        }
-        
-        if ([textLineString characterAtIndex:(textLineString.length - 1)] == ' ')
-        {
-            NSMutableString *tempString = textLineString.mutableCopy;
-            NSRange lastCharRange = {(textLineString.length - 1),1};
-            [tempString deleteCharactersInRange:lastCharRange];
-            textLineString = tempString;
-        }
-        
         NSUInteger length = textLineString.length;
         NSRange range = {location, length};
         
@@ -74,7 +57,7 @@
             [attributedString.string characterAtIndex:i] != '\r')
         {
             NSRange range = {i,1};
-            
+                
             [layoutManager characterRangeForGlyphRange:range
                                       actualGlyphRange:&glyphRange];
             
