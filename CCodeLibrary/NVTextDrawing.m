@@ -16,7 +16,7 @@
     NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:attributedString];
     NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
     [textStorage addLayoutManager:layoutManager];
-    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:CGSizeMake(768.0, 1024.0)];
+    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:CGSizeMake(7680.0, 10240.0)];
     textContainer.lineFragmentPadding = 0.0;
     [layoutManager addTextContainer:textContainer];
 
