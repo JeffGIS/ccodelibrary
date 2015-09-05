@@ -56,7 +56,7 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
     _width += _width % 4;
     _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
     _bitmapData = bmData;
-    
+    CGContextSetAllowsAntialiasing(_context, NO);
     
     for (int i = 0; i < nPoints; i++)
     {
