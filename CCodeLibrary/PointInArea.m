@@ -120,15 +120,19 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
 - (BOOL)DPointInArea:(DPOINT *)dPoint
 {
     
+    int row=-999;
+    int col;
+    BYTE bitmapValue;
+    static int ii=1;
     CGPoint pt = [self projectPointToContext:dPoint
-                                        from:1];
+                                        from:ii];
     
     if (pt.x > -0.5 && pt.x < _width - 0.5 &&
         pt.y > -0.5 && pt.y < _height - 0.5)
     {
-        int row = (pt.y + 0.5);
-        int col = (pt.x + 0.5);
-        BYTE bitmapValue = _bitmapData[row * _width + col];
+        row = (pt.y + 0.5);
+        col = (pt.x + 0.5);
+        bitmapValue = _bitmapData[row * _width + col];
         
         if (bitmapValue)
             return true;

@@ -6,13 +6,14 @@
 @implementation NVTextDrawing
 
 + (NSUInteger)getTextContainerPoints:(LPDPOINT)textPoints
+                            numLines:(NSInteger *)pnLines
                              totArea:(CGFloat *)totArea
                averageCharacterWidth:(CGFloat *)aveCharWidth
                averageCharacterHeight:(CGFloat *)aveCharHeight
                     attributedString:(NSAttributedString *)attributedString
 {
     NSArray *textLines = [attributedString.string componentsSeparatedByString:@"\n"];
-    
+    *pnLines = textLines.count;
     NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:attributedString];
     NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
     [textStorage addLayoutManager:layoutManager];

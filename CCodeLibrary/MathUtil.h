@@ -86,6 +86,7 @@ LPDPOINT PointsFromCorners (CORNERPOINTS* pCornerPoints);
 MNMXCORD CornerPointBounds (CORNERPOINTS* cornerPoints);
 IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist);
 IPOINT IBoundsMid (IBOUNDS* bnds);
+DPOINT DBoundsMid(MNMXCORD *bnds);
 void AddPointToDBounds (dbounds* bnds,dvec2 *pt);
 void AddDPointToBounds (MNMXCORD* bnds,DPOINT *pt);
 void AddPointToIBounds (IBOUNDS* pBounds,IPOINT *pt);

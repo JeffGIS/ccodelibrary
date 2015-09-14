@@ -691,6 +691,15 @@ IPOINT IBoundsMid(IBOUNDS *bnds)
     return pt;
 }
 
+DPOINT DBoundsMid(MNMXCORD *bnds)
+{
+    DPOINT pt;
+    
+    pt.x = (int)(bnds->xmn + (bnds->xmx - bnds->xmn) / 2);
+    pt.y = (int)(bnds->ymn + (bnds->ymx - bnds->ymn) / 2);
+    return pt;
+}
+
 void AddPointToDBounds(dbounds *pBounds, dvec2 *pt)
 {
     pBounds->xmn = min(pBounds->xmn, pt->x);

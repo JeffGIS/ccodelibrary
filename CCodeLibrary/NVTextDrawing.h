@@ -7,6 +7,7 @@
 @interface NVTextDrawing : NSObject
 
 + (NSUInteger)getTextContainerPoints:(LPDPOINT)textPoints
+                            numLines:(NSInteger *)pnLines
                              totArea:(CGFloat*)totArea
                averageCharacterWidth:(CGFloat*)aveCharWidth
               averageCharacterHeight:(CGFloat*)aveCharHeight
