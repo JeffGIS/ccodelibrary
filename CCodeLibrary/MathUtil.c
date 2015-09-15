@@ -1533,6 +1533,16 @@ double DeltaAngle (double AZ1, double AZ2)
     return (daz * RADtoDEG);
 }
 
+bool DPointInBounds (LPDPOINT pt,LPMNMXCORD pbounds)
+{
+    if (pt->x < pbounds->xmn ||
+        pt->x > pbounds->xmx ||
+        pt->y < pbounds->ymn ||
+        pt->y > pbounds->ymx)
+        return FALSE;
+    return TRUE;
+}
+
 int iDist(double X1, double Y1, double X2, double Y2)
 {
     double xdf = (X1-X2);
