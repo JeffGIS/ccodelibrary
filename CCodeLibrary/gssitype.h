@@ -3884,6 +3884,160 @@ HPALETTE WINAPI GSSiCREATEPALETTE(const LOGPALETTE FAR*);
 HBITMAP WINAPI GSSiCREATEDIBSECTION (HDC hDC,BITMAPINFO *lpbmi,UINT usage, VOID **ppvBits,HANDLE hSection,DWORD offset);
 */
  
+#define HUGE
+#define FAR
+#define NEAR
+#define CONST	const
+typedef int HFILE;
+typedef float FLOAT;
+typedef char *LPSTR;
+typedef char const *LPCSTR;
+typedef long LONG;
+typedef short SHORT;
+typedef short *LPSHORT;
+typedef long *LPLONG;
+typedef	unsigned char BYTE;
+typedef char CHAR;
+typedef void *LPVOID;
+typedef int	COLORREF;
+
+typedef int BOOL;
+typedef short BOOL16;
+typedef unsigned int HANDLE;
+typedef HANDLE	HFONT;
+typedef HANDLE	HDC;
+typedef HANDLE	HRGN;
+typedef HANDLE  HBITMAP;
+typedef HANDLE *LPHANDLE;
+typedef HANDLE	HGDIOBJ;
+typedef unsigned long DWORD ;
+
+#define WINAPI      __stdcall
+typedef int (FAR *FARPROC)();
+
+typedef struct tagSIZE
+{
+    LONG        cx;
+    LONG        cy;
+} SIZE, *PSIZE, *LPSIZE;
+
+typedef struct
+{
+    short   y;
+    short   x;
+} POINTS, *PPOINTS, *LPPOINTS;
+typedef struct
+{
+    int   y;
+    int   x;
+} POINT, *PPOINT, *LPPOINT;
+typedef struct
+{
+    LONG    left;
+    LONG    top;
+    LONG    right;
+    LONG    bottom;
+} RECT, *PRECT, NEAR *NPRECT, FAR *LPRECT;
+
+typedef HANDLE				HCURSOR;
+typedef short				FAR *LPSHORT;
+typedef float			 	FAR *LPFLOAT;
+typedef float   			HUGE *HPFLOAT;
+typedef double  			FAR *LPDOUBLE;
+typedef double  			HUGE *HPDOUBLE;
+typedef DPOINT  			FAR *LPDPOINT;
+typedef DPOINT  			HUGE *HPDPOINT;
+typedef POINTS				*HPPOINTS;
+typedef struct{double x,y,z;} DPOINT3D;
+typedef DPOINT3D  			FAR *LPDPOINT3D;
+typedef DPOINT3D  			HUGE *HPDPOINT3D;
+typedef DPOINT				FPOINT;
+typedef FPOINT  			FAR *LPFPOINT;
+typedef FPOINT  			HUGE *HPFPOINT;
+typedef struct{float x,y;}  FLTPOINT;
+typedef FLTPOINT			*LPFLTPOINT;
+typedef POINT				HUGE *HPPOINT;
+typedef void				HUGE* LPHUGE;
+typedef struct{long x,y;} LPOINT;
+typedef LPOINT  			FAR *LPLPOINT;
+typedef LPOINT  			HUGE *HPLPOINT;
+typedef HANDLE				HDIB32;
+typedef HDIB32				FAR *LPHDIB32;
+typedef RECT				HUGE *HPRECT;
+typedef unsigned short		WORD;
+typedef unsigned short		USHORT;
+typedef unsigned int		UINT;
+typedef unsigned long		ULONG;
+
+typedef unsigned long ULONG_PTR, *PULONG_PTR;
+
+typedef struct tagLOGBRUSH
+{
+    UINT        lbStyle;
+    COLORREF    lbColor;
+    ULONG_PTR   lbHatch;
+} LOGBRUSH, *PLOGBRUSH, NEAR *NPLOGBRUSH, FAR *LPLOGBRUSH;
+
+typedef struct  tagXFORM
+{
+    FLOAT   eM11;
+    FLOAT   eM12;
+    FLOAT   eM21;
+    FLOAT   eM22;
+    FLOAT   eDx;
+    FLOAT   eDy;
+} XFORM, *PXFORM, FAR *LPXFORM;
+
+typedef struct tagRGBTRIPLE {
+    BYTE    rgbtBlue;
+    BYTE    rgbtGreen;
+    BYTE    rgbtRed;
+} RGBTRIPLE, *PRGBTRIPLE, NEAR *NPRGBTRIPLE, FAR *LPRGBTRIPLE;
+typedef struct tagLOGFONTA
+{
+    LONG      lfHeight;
+    LONG      lfWidth;
+    LONG      lfEscapement;
+    LONG      lfOrientation;
+    LONG      lfWeight;
+    BYTE      lfItalic;
+    BYTE      lfUnderline;
+    BYTE      lfStrikeOut;
+    BYTE      lfCharSet;
+    BYTE      lfOutPrecision;
+    BYTE      lfClipPrecision;
+    BYTE      lfQuality;
+    BYTE      lfPitchAndFamily;
+    CHAR      lfFaceName[LF_FACESIZE];
+} LOGFONT, *PLOGFONT, NEAR *NPLOGFONT, FAR *LPLOGFONT;
+
+#define TRUE	1
+#define FALSE	0
+#define  CFTCM   2.83170164938e-2
+#define  CMCFT   3.5314454833912e1
+#define  CMCYD   1.3079427716264e0
+#define  CYDCM   7.645594553315e-1
+#define  FTM     3.04800609601219e-1
+#define  HAFSEC    1.388888888888889e-5
+#define  HALFPI    1.570796326794896e0
+#define  MFT       3.280833333333333e0
+#define  PIHALF    4.712388980384689e0
+#define  PY        3.141592653589793e0
+#define  RADDEG    1.74532925199433e-2
+#define  DEGRAD    5.729577951308232e1
+#define  SFTSM     9.2903411613274e-2
+#define  SMSFT     1.076386736111111e1
+#define  TWOPI     6.283185307179586e0
+#define  ACRSM     4046.872609874253e0
+#define  INCHES_PER_CM  0.3937e0
+#define  MAX_GAP_BTWN_LINKS    0.1e0
+#define  ZERO$  -2146450000
+#define  TMPRF$ -2146483000
+#define	 NULLREF 0
+#define RADtoDEG 57.295779513082322
+#define DEGtoRAD 0.017453292519943296
+#define max(a,b)    (((a) > (b)) ? (a) : (b))
+#define min(a,b)    (((a) < (b)) ? (a) : (b))
 
 void GSSiGLOBALLOCCLOSE (void);
 

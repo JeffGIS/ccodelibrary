@@ -3,9 +3,11 @@
 
 #ifndef CCodeLibrary_CCodeTypes_h
 #define CCodeLibrary_CCodeTypes_h
+#include <stdbool.h>
 
 typedef unsigned int HANDLE;
 typedef HANDLE *LPHANDLE;
+typedef bool    BOOL;
 typedef int    *LPBOOL;
 typedef int * LPINT;
 typedef char *LPSTR;
@@ -14,7 +16,8 @@ typedef LPSTR HPSTR;
 #define FALSE 0
 typedef void *LPVOID;
 typedef int HWND;
-typedef unsigned long LONG;
+typedef long LONG;
+typedef long *LPLONG;
 typedef unsigned long ULONG_PTR, *PULONG_PTR;
 typedef ULONG_PTR DWORD_PTR;
 typedef unsigned short WORD;

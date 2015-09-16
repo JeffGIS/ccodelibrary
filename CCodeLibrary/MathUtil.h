@@ -1,9 +1,12 @@
 #ifndef __MATHUTIL_H
 #define __MATHUTIL_H
-#include "CCodeTypes.h"
-#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include <float.h>
+#include <math.h>
 #include <stdio.h>
 #import <CoreGraphics/CoreGraphics.h>
+#include "CCodeTypes.h"
 
 double LTWOPI (double AZ1);
 
@@ -128,6 +131,9 @@ bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int
 bool PICK_POINT_ON_LINE (DPOINT pickPoint,MNMXCORD pickBounds,LPDPOINT pPickedPoint,long nPnts,HPDPOINT lpPointsIn);
 bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol);
 double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
+LPSTR Truncate(LPSTR Text);
+LPSTR OneSpace(LPSTR Arg1);
+LPSTR ReplaceChar(LPSTR str, char from, char to);
 
 
 #endif

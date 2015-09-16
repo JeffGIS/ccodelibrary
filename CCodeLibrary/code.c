@@ -1,209 +1,10 @@
-#include <float.h>
-#include <math.h>
-
+#include "MathUtil.h"
 #define MAX_PATH	260
 #define _MAX_PATH   260
 #define LF_FACESIZE         32
 
-#undef HUGE
-#define HUGE
-#define FAR
-#define NEAR
-#define CONST	const
-typedef int HFILE;
-typedef float FLOAT;
-typedef char *LPSTR;
-typedef char const *LPCSTR;
-typedef long LONG;
-typedef short SHORT;
-typedef short *LPSHORT;
-typedef long *LPLONG;
-typedef	unsigned char BYTE;
-typedef char CHAR;
-typedef void *LPVOID;
-typedef int	COLORREF;
-
-typedef int BOOL;
-typedef short BOOL16;
-typedef unsigned int HANDLE;
-typedef HANDLE HWND;
-typedef HANDLE	HFONT;
-typedef HANDLE	HDC;
-typedef HANDLE	HRGN;
-typedef HANDLE  HBITMAP;
-typedef HANDLE *LPHANDLE;
-typedef HANDLE	HGDIOBJ;
-typedef unsigned long DWORD ;
-
-#define WINAPI      __stdcall
-typedef int (FAR *FARPROC)();
-
-typedef struct tagSIZE
-{
-    LONG        cx;
-    LONG        cy;
-} SIZE, *PSIZE, *LPSIZE;
-
-typedef struct
-{
-    short   y;
-    short   x;
-} POINTS, *PPOINTS, *LPPOINTS;
-typedef struct
-{
-    int   y;
-    int   x;
-} POINT, *PPOINT, *LPPOINT;
-typedef struct
-{
-    LONG    left;
-    LONG    top;
-    LONG    right;
-    LONG    bottom;
-} RECT, *PRECT, NEAR *NPRECT, FAR *LPRECT;
-
-typedef HANDLE				HCURSOR;
-typedef short				FAR *LPSHORT;
-typedef float			 	FAR *LPFLOAT;
-typedef float   			HUGE *HPFLOAT;
-typedef double  			FAR *LPDOUBLE;
-typedef double  			HUGE *HPDOUBLE;
-typedef struct{double x,y;} DPOINT;
-typedef DPOINT  			FAR *LPDPOINT;
-typedef DPOINT  			HUGE *HPDPOINT;
-typedef POINTS				*HPPOINTS;
-typedef struct{double x,y,z;} DPOINT3D;
-typedef DPOINT3D  			FAR *LPDPOINT3D;
-typedef DPOINT3D  			HUGE *HPDPOINT3D;
-typedef DPOINT				FPOINT;
-typedef FPOINT  			FAR *LPFPOINT;
-typedef FPOINT  			HUGE *HPFPOINT;
-typedef struct{float x,y;}  FLTPOINT;
-typedef FLTPOINT			*LPFLTPOINT;
-typedef POINT				HUGE *HPPOINT;
-typedef void				HUGE* LPHUGE;
-typedef struct{long x,y;} LPOINT;
-typedef LPOINT  			FAR *LPLPOINT;         
-typedef LPOINT  			HUGE *HPLPOINT;         
-typedef HANDLE				HDIB32; 
-typedef HDIB32				FAR *LPHDIB32; 
-typedef RECT				HUGE *HPRECT;
-typedef unsigned short		WORD;
-typedef unsigned short		USHORT;
-typedef unsigned int		UINT;
-typedef unsigned long		ULONG;
-
-typedef unsigned long ULONG_PTR, *PULONG_PTR;
-
-typedef struct tagLOGBRUSH
-  {
-    UINT        lbStyle;
-    COLORREF    lbColor;
-    ULONG_PTR   lbHatch;
-  } LOGBRUSH, *PLOGBRUSH, NEAR *NPLOGBRUSH, FAR *LPLOGBRUSH;
-
-typedef struct  tagXFORM
-  {
-    FLOAT   eM11;
-    FLOAT   eM12;
-    FLOAT   eM21;
-    FLOAT   eM22;
-    FLOAT   eDx;
-    FLOAT   eDy;
-  } XFORM, *PXFORM, FAR *LPXFORM;
-
-typedef struct tagRGBTRIPLE {
-        BYTE    rgbtBlue;
-        BYTE    rgbtGreen;
-        BYTE    rgbtRed;
-} RGBTRIPLE, *PRGBTRIPLE, NEAR *NPRGBTRIPLE, FAR *LPRGBTRIPLE;
-typedef struct tagLOGFONTA
-{
-    LONG      lfHeight;
-    LONG      lfWidth;
-    LONG      lfEscapement;
-    LONG      lfOrientation;
-    LONG      lfWeight;
-    BYTE      lfItalic;
-    BYTE      lfUnderline;
-    BYTE      lfStrikeOut;
-    BYTE      lfCharSet;
-    BYTE      lfOutPrecision;
-    BYTE      lfClipPrecision;
-    BYTE      lfQuality;
-    BYTE      lfPitchAndFamily;
-    CHAR      lfFaceName[LF_FACESIZE];
-} LOGFONT, *PLOGFONT, NEAR *NPLOGFONT, FAR *LPLOGFONT;
-
-#include "gssitype.h"
-#define TRUE	1
-#define FALSE	0
-#define  CFTCM   2.83170164938e-2
-#define  CMCFT   3.5314454833912e1
-#define  CMCYD   1.3079427716264e0
-#define  CYDCM   7.645594553315e-1
-#define  FTM     3.04800609601219e-1
-#define  HAFSEC    1.388888888888889e-5
-#define  HALFPI    1.570796326794896e0
-#define  MFT       3.280833333333333e0
-#define  PIHALF    4.712388980384689e0
-#define  PY        3.141592653589793e0
-#define  RADDEG    1.74532925199433e-2
-#define  DEGRAD    5.729577951308232e1
-#define  SFTSM     9.2903411613274e-2
-#define  SMSFT     1.076386736111111e1
-#define  TWOPI     6.283185307179586e0
-#define  ACRSM     4046.872609874253e0  
-#define  INCHES_PER_CM  0.3937e0
-#define  MAX_GAP_BTWN_LINKS    0.1e0 
-#define  ZERO$  -2146450000 
-#define  TMPRF$ -2146483000   
-#define	 NULLREF 0
-#define RADtoDEG 57.295779513082322
-#define DEGtoRAD 0.017453292519943296
-#define max(a,b)    (((a) > (b)) ? (a) : (b))
-#define min(a,b)    (((a) < (b)) ? (a) : (b))
+//#undef HUGE
 #define		MAXPICKITEMS		32
-
-
-/*typedef	struct
-	{	LONG	Segment;
-		WORD	Offset, Element;
-		LONG	Refno;   
-		short	ViewID,
-				ConfigID;
-		short	FileNum;
-		USHORT	FileInIndex;
-		short	SubFile;
-		unsigned	short	Type:8, 
-						HasText:1,
-						HasTextPointer:1, 
-						HiPrecis:1, 
-						Blocked:1,
-						IsDispersed:1,
-						IsDeleted:1,
-						filler2:2;
-		short	Desc,
-		 		PolyID;
-		UINT	NearPoint;
-		short	NearSeg,
-		 		UDILen;
-		UINT	NumPoints;
-		double	Length,
-		 		PCT,
-		 		OffDist,
-		 		BPAZ,PPAZ,EPAZ,
-		 		Area;
-		DPOINT	BeginPoint, EndPoint, PickedPoint, NodePoint, FromPoint, ToPoint; //for curves NodePoint = POC 
-		POINT	BeginPointFile, EndPointFile, PickedPointFile;
-		MNMXCORD Rect;
-		float	Elev; 
-		char	Prefix[33], UDI[65];
-		ULONG	MSLink;
-	} PICKDATA;   
-typedef	PICKDATA	FAR	*LPPICKDATA;
-*/
-
 
 static BOOL PickNET=FALSE;
 static HANDLE hProfileSymbols = 0;
@@ -218,7 +19,7 @@ static BOOL PickDeletes=FALSE;
 static BOOL WantOnlyShapePoints=FALSE;
 static BOOL InSnapNode=FALSE;
 static int NumPicked;
-static PICKDATA	PickList[MAXPICKITEMS+3];
+//static PICKDATA	PickList[MAXPICKITEMS+3];
 //static long counts[3] = {0,0,0};
 
 static short LINSEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
@@ -227,9 +28,8 @@ short LINSEC_TOL (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
       double A2,double *X3,double *Y3,double INTOL);
 static short LIN_SEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
              double A2,double *X3,double *Y3);
-static double LTWOPI (double AZ1);
 //static double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
-BOOL  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator);
+bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator);
 
 static double	P_TOL = 1e-4;
 
@@ -335,7 +135,7 @@ GSSiExitProg (665);
 #endif
 }
 
-static double LTWOPI (double AZ1)
+double LTWOPI (double AZ1)
 #if ENABLETRACE
 {GSSiEnterProg (375);
 #endif
@@ -364,7 +164,7 @@ GSSiExitProg (375);
 }
 #endif
 }
-static double LGETAZ(double X1, double Y1, double X2, double Y2)
+double LGETAZ(double X1, double Y1, double X2, double Y2)
 #if ENABLETRACE
 {GSSiEnterProg (374);
 #endif
@@ -383,7 +183,7 @@ GSSiExitProg (374);
 
 
 
-static double getazd (HPDPOINT Point1, HPDPOINT Point2)
+double getazd (HPDPOINT Point1, HPDPOINT Point2)
 #if ENABLETRACE
 {GSSiEnterProg (373);
 #endif
@@ -425,7 +225,7 @@ GSSiExitProg (379);
 #endif
 }
 
-static double LDIST(double X1,double Y1,double X2,double Y2)
+double LDIST(double X1,double Y1,double X2,double Y2)
 { 
 	double xdf = (X1-X2);
 	double ydf = (Y1-Y2);
@@ -745,7 +545,7 @@ GSSiExitProg (1017);
 #endif
 }
 
-BOOL PICK_POINT_ON_LINE(DPOINT pickPoint, MNMXCORD pickBounds, LPDPOINT pPickedPoint, long nPnts, HPDPOINT lpPointsIn)
+bool PICK_POINT_ON_LINE(DPOINT pickPoint, MNMXCORD pickBounds, LPDPOINT pPickedPoint, long nPnts, HPDPOINT lpPointsIn)
 {
     BOOL rtn = FALSE;
     double offDist, totDist=0;
@@ -760,7 +560,7 @@ BOOL PICK_POINT_ON_LINE(DPOINT pickPoint, MNMXCORD pickBounds, LPDPOINT pPickedP
     return rtn;
 }
 
-BOOL PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUBLE pAZ,LPDOUBLE pSize, long PinA)
+bool PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUBLE pAZ,LPDOUBLE pSize, long PinA)
 #if ENABLETRACE
 {GSSiEnterProg (707);
 #endif
@@ -892,13 +692,13 @@ GSSiExitProg (707);
 //		OffDist = max (0,fabs(OffDist)-AddToPickAp);
 	for (i=0; i<NumPicked; i++)
 	{
-		if (CurrentRefno == PickList[i].Refno)
+/*		if (CurrentRefno == PickList[i].Refno)
 		{
 			if (fabs(OffDist)<fabs(PickList[i].OffDist))
 				PickListDelete((int)i);
 			else
 				goto Exit;
-		}
+		}*/
 	} 
 Add: 
 	rtn = TRUE;
@@ -987,7 +787,7 @@ double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim)
 }
 
 
-BOOL  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator)
+bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator)
 #if ENABLETRACE
 {GSSiEnterProg (359);
 #endif
@@ -1290,4 +1090,162 @@ GSSiExitProg (361);
 }
 #endif
  }
+
+void TRAN (void *source, void *dest, size_t count)
+{
+    memmove(dest, source, count);
+    return;
+}
+
+LPSTR REPLAC(LPSTR STRING, LPSTR OLD, LPSTR NEW, int MAXLEN)
+{
+    LPSTR IBEG, loc, new;
+    
+    short STRLEN, CURLEN, OLDLEN, NEWLEN, IDIFF;
+    long  MOVELEN;
+    
+    OLDLEN = strlen(OLD);
+    NEWLEN = strlen(NEW);
+    STRLEN = strlen(STRING);
+    IBEG = STRING;
+    IDIFF = NEWLEN - OLDLEN;
+    
+    while (*IBEG)
+    {
+        IBEG = strstr(IBEG, OLD);
+        
+        if (!IBEG)
+            goto Exit;
+        
+        if (!IDIFF)
+        {
+            new = NEW;
+            
+            while (*new)
+                *IBEG++ = *new++;
+        }
+        
+        else if (IDIFF < 0)
+        {
+            loc = IBEG + OLDLEN;
+            new = NEW;
+            
+            while (*new)
+                *IBEG++ = *new++;
+            
+            new = IBEG;
+            
+            while (*loc)
+                *new++ = *loc++;
+            
+            *new = 0;
+            STRLEN += IDIFF;
+        }
+        
+        else
+        {
+            CURLEN = IBEG - STRING;
+            MOVELEN = STRLEN - CURLEN;
+            STRLEN += IDIFF;
+            
+            if (STRLEN > MAXLEN)
+            {
+                STRLEN = MAXLEN;
+                goto Exit;
+            }
+            
+            TRAN (IBEG + OLDLEN, IBEG + NEWLEN, (size_t)MOVELEN);
+            new = NEW;
+            
+            while (*new)
+                *IBEG++ = *new++;
+        }
+    }
+    
+Exit:
+    loc = STRING + STRLEN;
+    *loc = '\0';
+    return (STRING);
+}
+
+LPSTR ReplaceChar(LPSTR str, char from, char to)
+{
+    LPSTR Instr = str;
+    
+    while (*str)
+    {
+        if (*str == from)
+            *str = to;
+        
+        str++;
+    }
+    
+    return Instr;
+}
+
+LPSTR OneSpace(LPSTR Arg1)
+{
+    BOOL LastWasBlank, HaveNonBlank = FALSE;
+    LPSTR OutLoc, SaveArg1, SaveOutLoc;
+    long l;
+    
+    Truncate(Arg1);
+    SaveArg1 = Arg1;
+    l = strlen(Arg1);
+    
+    if (!l)
+        return (Arg1);
+    
+    OutLoc = malloc(l + 1);
+    SaveOutLoc = OutLoc;
+    LastWasBlank = FALSE;
+    
+    while (*Arg1)
+    {
+        if (*Arg1 == '\t')
+            *Arg1 = ' ';
+        
+        if (*Arg1 != ' ')
+        {
+            if (LastWasBlank && HaveNonBlank)
+                *OutLoc++ = ' ';
+            
+            LastWasBlank = FALSE;
+            HaveNonBlank = TRUE;
+            *OutLoc++ = *Arg1;
+        }
+        
+        else
+            LastWasBlank = TRUE;
+        
+        Arg1++;
+    }
+    
+    *OutLoc = 0;
+    strcpy(SaveArg1, SaveOutLoc);
+    free (SaveOutLoc);
+    return (Arg1);
+}
+
+LPSTR Truncate(LPSTR Text)
+{
+    LPSTR rtn, EndChar;
+    
+    rtn = Text;
+    EndChar = strchr(Text, 0);
+    
+    while (EndChar > Text)
+    {
+        EndChar--;
+        
+        if (*EndChar != ' ')
+            goto Exit;
+        
+        *EndChar = 0;
+    }
+    
+Exit:
+    return (rtn);
+}
+
 
