@@ -4,6 +4,8 @@
 //#include <commdlg.h>
 #include <ctype.h>  
 #define HUGE
+#define FAR
+#define NEAR
 #define HANDLE16	HANDLE
 #define HFILE16		HFILE
 #define HPEN16		HPEN
@@ -701,56 +703,6 @@ typedef struct
     } VARINFO;
 typedef VARINFO FAR *VARPNT;     
 
-typedef	struct
-	{	LONG	Segment;
-		WORD	Offset, Element;
-		LONG	Refno;   
-		short	ViewID,
-				ConfigID;
-		short	FileNum;
-		USHORT	FileInIndex;
-		short	SubFile;
-		unsigned	short	Type:8, 
-						HasText:1,
-						HasTextPointer:1, 
-						HiPrecis:1, 
-						Blocked:1,
-						IsDispersed:1,
-						IsDeleted:1,
-						filler2:2;
-		short	Desc,
-		 		PolyID;
-		UINT	NearPoint;
-		short	NearSeg,
-		 		UDILen;
-		UINT	NumPoints;
-		double	Length,
-		 		PCT,
-		 		OffDist,
-		 		BPAZ,PPAZ,EPAZ,
-		 		Area;
-		DPOINT	BeginPoint, EndPoint, PickedPoint, NodePoint, FromPoint, ToPoint; //for curves NodePoint = POC 
-		POINT	BeginPointFile, EndPointFile, PickedPointFile;
-		MNMXCORD Rect;
-		float	Elev; 
-		char	Prefix[33], UDI[65];
-		ULONG	MSLink;
-	} PICKDATA;   
-typedef	PICKDATA	FAR	*LPPICKDATA;
-
-typedef	struct
-	{	LONG	Segment;
-		WORD	Offset, Element;
-		LONG	Refno;   
-		LPVOID	View;
-		short	FileNum;
-		USHORT	FileInIndex;
-		short	SubFile,
-		 		Type;
-		short	Desc,
-		 		PolyID;
-	} PICKDATAHEADER;   
-typedef	PICKDATAHEADER	FAR	*LPPICKDATAHEADER;
 
 typedef struct	{short	Number;
 			 HANDLE	Handle;} SYMDESC;

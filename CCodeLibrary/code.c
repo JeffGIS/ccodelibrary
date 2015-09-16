@@ -19,6 +19,56 @@ static BOOL PickDeletes=FALSE;
 static BOOL WantOnlyShapePoints=FALSE;
 static BOOL InSnapNode=FALSE;
 static int NumPicked;
+typedef	struct
+{	LONG	Segment;
+    WORD	Offset, Element;
+    LONG	Refno;
+    short	ViewID,
+				ConfigID;
+    short	FileNum;
+    unsigned short	FileInIndex;
+    short	SubFile;
+    unsigned	short	Type:8,
+        HasText:1,
+        HasTextPointer:1,
+        HiPrecis:1,
+        Blocked:1,
+        IsDispersed:1,
+        IsDeleted:1,
+        filler2:2;
+    short	Desc,
+    PolyID;
+    unsigned int	NearPoint;
+    short	NearSeg,
+    UDILen;
+    unsigned int	NumPoints;
+    double	Length,
+    PCT,
+    OffDist,
+    BPAZ,PPAZ,EPAZ,
+    Area;
+    DPOINT	BeginPoint, EndPoint, PickedPoint, NodePoint, FromPoint, ToPoint; //for curves NodePoint = POC
+    POINT	BeginPointFile, EndPointFile, PickedPointFile;
+    MNMXCORD Rect;
+    float	Elev;
+    char	Prefix[33], UDI[65];
+    unsigned long	MSLink;
+} PICKDATA;
+typedef	PICKDATA	*LPPICKDATA;
+
+typedef	struct
+{	LONG	Segment;
+    WORD	Offset, Element;
+    LONG	Refno;
+    LPVOID	View;
+    short	FileNum;
+    unsigned short	FileInIndex;
+    short	SubFile,
+    Type;
+    short	Desc,
+    PolyID;
+} PICKDATAHEADER;
+typedef	PICKDATAHEADER	*LPPICKDATAHEADER;
 static PICKDATA	PickList[MAXPICKITEMS+3];
 //static long counts[3] = {0,0,0};
 

@@ -25,6 +25,8 @@ typedef unsigned long DWORD;
 typedef unsigned char BYTE;
 typedef unsigned char *LPBYTE;
 typedef struct {double x,y;}DPOINT;
+typedef struct {int x,y;}POINT;
+typedef POINT *LPPOINT;
 typedef struct {DPOINT nearLeft,farLeft,farRight,nearRight;}CORNERPOINTS;
 typedef struct {double lon,lat;}LLPOINT;
 typedef DPOINT *LPDPOINT;
