@@ -19,7 +19,7 @@ static BOOL PickDeletes=FALSE;
 static BOOL WantOnlyShapePoints=FALSE;
 static BOOL InSnapNode=FALSE;
 static int NumPicked;
-//static PICKDATA	PickList[MAXPICKITEMS+3];
+static PICKDATA	PickList[MAXPICKITEMS+3];
 //static long counts[3] = {0,0,0};
 
 static short LINSEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
@@ -207,8 +207,7 @@ static double ldistp(DPOINT Point1, DPOINT Point2)
     double rtn = x*x + y*y;
     return sqrt (rtn);
 }
-
-double l2ddistfrom3d (DPOINT3D Point1, DPOINT3D Point2)
+double l2ddistfrom3d (DPOINT Point1, DPOINT Point2)
 #if ENABLETRACE
 {GSSiEnterProg (379);
 #endif
@@ -692,13 +691,13 @@ GSSiExitProg (707);
 //		OffDist = max (0,fabs(OffDist)-AddToPickAp);
 	for (i=0; i<NumPicked; i++)
 	{
-/*		if (CurrentRefno == PickList[i].Refno)
+		if (CurrentRefno == PickList[i].Refno)
 		{
 			if (fabs(OffDist)<fabs(PickList[i].OffDist))
 				PickListDelete((int)i);
 			else
 				goto Exit;
-		}*/
+		}
 	} 
 Add: 
 	rtn = TRUE;
@@ -807,12 +806,7 @@ C*       AUTHOR: JEFF SMITH                                           *
 C*                                                                    *
 C**********************************************************************
 C*/
-#if WIN32
     DPOINT  *lpPoint;
-#else
-    HPDPOINT lpPoint;
-#endif
-
     double   A1, A2, INTX, INTY, XP, YP, XMID1 = 0.0, XMID2, YMID1 = 0.0, YMID2, AMID,
              PAX1, PAY1, PAX2, PAY2, MXX, MNY, MXY,
              XMIDMN, XMIDMX, YMIDMN, YMIDMX, XMID2_NEED = 0.0, YMID2_NEED = 0.0;

@@ -2,68 +2,14 @@
 #include <stdlib.h>  
 #include <time.h>    
 //#include <commdlg.h>
-#include <ctype.h>      
-#if WIN32
-
+#include <ctype.h>  
 #define HUGE
-#define _fstrncpy strncpy
-#define _fstrncmp strncmp
-#define _fstrnicmp strnicmp
-#define _fstrlen strlen
-#define _fstrcmp strcmp
-#define _fstrcpy strcpy
-#define _fstrstr strstr
-#define _fstrlwr strlwr
-#define _fstrcat strcat
-#define _fstrupr strupr
-#define _fstrchr strchr
-#define _fstrrchr strrchr
-#define _fstricmp stricmp
-#define _fstrcspn strcspn
-#define _fstrncat strncat
-#define _fstrspn strspn
-#define _fstrpbrk strpbrk
-#define _fmemccpy memccpy
-#define _fmemmove memmove
-#define hmemmove memmove
-#define _fmemcpy memcpy
-#define _fstrset strset
-#define _fmemicmp memicmp 
-#define _fmemcmp memcmp
-#define hmemcpy memcpy
-#define _fmemset memset
-
-#define HANDLE16	unsigned short
-#define HFILE16		HANDLE16   
-#define HPEN16		HANDLE16
-#define HBRUSH16	HANDLE16    
-#define BOOL16		short
-#define HCURSOR16	HANDLE16
-#define HWND16		HANDLE16
-#define HDC16		HANDLE16
-#define HRGN16		HANDLE16
-#define HBITMAP16	HANDLE16
-#define HBITMAP		HANDLE		
-
-//typedef RGBTRIPLE	*LPRGBTRIPLE;
-typedef int	HFILE;
-typedef HFILE		FAR *LPHFILE;    
-typedef struct
-{
-    short left;
-    short top;
-    short right;
-    short bottom;
-} RECT16;
-typedef RECT16	FAR *LPRECT16;
-#else
 #define HANDLE16	HANDLE
 #define HFILE16		HFILE
 #define HPEN16		HPEN
 #define HBRUSH16	HBRUSH      
 #define POINT16		POINT
 #define RECT16		RECT
-#endif 
 
 #define WM_F1DOWN	    0x0500  
 #define	INDCOD	31100 
