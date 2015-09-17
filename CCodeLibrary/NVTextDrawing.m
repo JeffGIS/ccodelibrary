@@ -103,6 +103,7 @@
     {
         
     }
+    
     if (polyPartLen)
         free (polyPartLen);
     
@@ -228,7 +229,7 @@
                                rectMidY:fitY[iFit]
                                   width:(textWidth * fontFactor)
                                  height:(textHeight * fontFactor)
-                               rotation:HALFPI
+                               rotation:rotation
                                fontSize:fontSize
                               textColor:textColor];
             }
@@ -396,6 +397,7 @@ ofLongestStraightLine:(int)nPoints
           minLength:(CGFloat)minLength
 {
     BOOL rtn = NO;
+    CGFloat longestLine = 0.0, currentRot = 0.0;
     nPoints--;
     
     LPDPOINT wrappedPoints = (LPDPOINT)malloc(sizeof(DPOINT) * (nPoints * 2));
@@ -421,10 +423,22 @@ ofLongestStraightLine:(int)nPoints
         
         while ((maxDiff < offset) && (numPoints < nPoints));
         
-        NSLog(@"%i[%li]::a:%f, b:%f, maxDiff:%f, locOfMaxDiff:%li", i, numPoints, a, b, maxDiff, locOfMaxDiff);
+        CGFloat lineLength = GetPolyLengthD(&wrappedPoints[i], numPoints);
+        
+        if (lineLength > longestLine)
+        {
+            currentRot = b;
+            longestLine = lineLength;
+        }
     }
     
     free(wrappedPoints);
+    
+    if (longestLine > minLength)
+    {
+        *rotation = currentRot;
+        rtn = YES;
+    }
     
     return rtn;
 }

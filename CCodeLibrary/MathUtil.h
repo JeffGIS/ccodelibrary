@@ -140,5 +140,6 @@ double l2ddistfrom3d (DPOINT3D Point1, DPOINT3D Point2);
 double ldistp(DPOINT Point1, DPOINT Point2);
 double idist(POINT Point1, POINT Point2);
 double GetPolyLength (LPPOINT lpPoints,long nPnts);
+double GetPolyLengthD (HPDPOINT lpPoints,long nPnts);
 
 #endif
