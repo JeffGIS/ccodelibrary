@@ -189,11 +189,11 @@ ofLongestStraightLine:(int)nPoints
         {
             numPoints++;
             LINFIT(&wrappedPoints[i], numPoints, &a, &b, &maxDiff, &locOfMaxDiff);
-            
-            NSLog(@"%i[%li]::a:%f, b:%f, maxDiff:%f, locOfMaxDiff:%li", i, numPoints, a, b, maxDiff, locOfMaxDiff);
         }
         
         while ((maxDiff < offset) && (numPoints < nPoints));
+        
+        NSLog(@"%i[%li]::a:%f, b:%f, maxDiff:%f, locOfMaxDiff:%li", i, numPoints, a, b, maxDiff, locOfMaxDiff);
     }
     
     free(wrappedPoints);
