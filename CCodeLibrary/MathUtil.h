@@ -135,5 +135,4 @@ LPSTR Truncate(LPSTR Text);
 LPSTR OneSpace(LPSTR Arg1);
 LPSTR ReplaceChar(LPSTR str, char from, char to);
 
-
 #endif

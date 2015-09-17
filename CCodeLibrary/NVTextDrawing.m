@@ -7,33 +7,31 @@
 
 @implementation NVTextDrawing
 
-+ (NSInteger) drawTextInArea
+bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long *LOFMDF);
+
++ (void)drawText:(NSString *)text
+   inRotatedRect:(CGContextRef)context
+        rectMidX:(CGFloat)mpX
+        rectMidY:(CGFloat)mpY
+           width:(CGFloat)textWidth
+          height:(CGFloat)textHeight
+        rotation:(CGFloat)rotateRadians
+        fontSize:(CGFloat)fontSize
+       textColor:(UIColor *)textColor
 {
-    NSInteger rtn = 0;
-    
-    return rtn;
-}
-+ (void) drawText:(NSString*)text
-    inRotatedRect:(CGContextRef)context
-         rectMidX:(CGFloat)mpX
-         rectMidY:(CGFloat)mpY
-            width:(CGFloat)textWidth
-           height:(CGFloat)textHeight
-         rotation:(CGFloat)rotateRadians
-         fontSize:(CGFloat)fontSize
-        textColor:(UIColor*)textColor
-{
-    CGRect rect;
+    CGRect rect = CGRectZero;
     NSAttributedString *attString = nil;
     
-    rect.size.height = -textHeight * 1.1;
-    rect.size.width  = textWidth   * 1.1;
-    rect.origin.x =  - rect.size.width  / 2;
-    rect.origin.y =  + textHeight / 2;
+    rect.size.height = (-textHeight * 1.1);
+    rect.size.width  = (textWidth * 1.1);
+    rect.origin.x =  (-rect.size.width  / 2.0);
+    rect.origin.y =  (textHeight / 2.0);
+    
     CGContextSaveGState(context);
-    CGContextTranslateCTM(context,mpX,mpY);
+    CGContextTranslateCTM(context, mpX, mpY);
     CGContextRotateCTM(context,rotateRadians);
-/*    if (dbug)
+    
+    /*if (dbug)
     {
         CGRect rectmp = CGRectMake(fitX[iFit]-8, fitY[iFit],16, 2);
         CGContextSetGrayFillColor(context, 0.5, 0.5);
@@ -41,8 +39,10 @@
         CGContextSetGrayFillColor(context, 0, 0.8);
         CGContextFillRect(context, rectmp);
     }*/
+    
     CTFontRef fontRef = CTFontCreateWithName((CFStringRef)NULL,
                                              fontSize, NULL);
+    
     NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
     style.alignment = NSTextAlignmentCenter;
     
@@ -60,7 +60,7 @@
     
     CFRelease(fontRef);
     
-/*    if (ConfigurationControl.sharedInstance.GMTilesVisible == YES)
+    /*if (ConfigurationControl.sharedInstance.GMTilesVisible == YES)
     {
         attString = [[NSAttributedString alloc] initWithString:text
                                                     attributes:shadowAttributes];
@@ -161,113 +161,26 @@
     return nPoints;
 }
 
-BOOL LINFIT (HPDPOINT pPoint,LONG N,LPDOUBLE A,LPDOUBLE B,LPDOUBLE MAXDIF,LPLONG LOFMDF)
-#if ENABLETRACE
-{GSSiEnterProg (1200);
-#endif
-    {
-        /*C******* SPECIFICATIONS ************************************************
-         C*                                                                     *
-         C*       PROGRAM SUMMARY                                               *
-         C*       ------- -------                                               *
-         C*    LINFIT (LINE FIT) FINDS, THROUGH A LEAST SQUARES TECHNIQUE, THE  *
-         C*    PARAMETERS A AND B OF THE EQUATION                               *
-         C*                                                                     *
-         C*                 RAWELV = A + B * RAWDIS                             *
-         C*                                                                     *
-         C*    WHICH DESCRIBES THE LINE OF BEST FIT FOR THE N VALUES OF         *
-         C*    RAWDIS, RAWELV. THE MAXIMUM VERTICAL DISTANCE FROM ANY RAWELV    *
-         C*    TO THE LINE IS ALSO COMPUTED AND RETURNED ALONG THE LOCATION OF  *
-         C*    THAT RAWELV IN THE RAWELV ARRAY.                                 *
-         C*                                                                     *
-         C*       ARGUMENT DESCRIPTION                                          *
-         C*       -------- -----------                                          *
-         C*    X       R*8 (N)  DISTANCES,OR RAWDIS VALUES, OF DATA TO BE FIT.  *
-         C*    Y       R*8 (N)  ELEVATIONS, OR RAWELV VALUES, OF DATA TO BE FIT.*
-         C*    N       I*4      NUMBER OF POINTS TO BE FIT                      *
-         C*    A       R*8      0 DEGREE COEFFICIENT OF THE LINER EQUATION      *
-         C*    B       R*8      1ST DEGREE COEFFICIENT OF THE LINEAR EQUATION   *
-         C*    MAXDIF  R*8      THE MAXIMUM DISTANCE DISCUSSED ABOVE            *
-         C*    LOFMDF  I*4      THE LOCATION OF THE MAXIMUM DIFFERENCE          *
-         C*                                                                     *
-         C*       AUTHOR                                                        *
-         C*       ------                                                        *
-         C*      JEFF SMITH                                                     *
-         C*                                                                     *
-         C***********************************************************************  */
-        double SUMX=0, SUMY=0, XAVE, YAVE, SMXDYD, SMXDSQ, SUMXY=0, SUMXSQ=0, DIFF;
-        double	SUMxy=0, SUMx2=0;
-        long	I;
-        HPDPOINT	pPointIn=pPoint;
-        
-        for (I=0;I<N;I++,pPoint++)
-        {
-            SUMX   += pPoint->x;
-            SUMY   += pPoint->y;
-            SUMXY  += pPoint->x * pPoint->y;
-            SUMXSQ += pPoint->x * pPoint->x;
-        }
-        XAVE   = SUMX / N;
-        YAVE   = SUMY / N;
-        SMXDSQ = SUMXSQ - (SUMX * SUMX) / N;
-        SMXDYD = SUMXY  - (SUMX * SUMY) / N;
-        if (!SMXDSQ)
-        {
-#if ENABLETRACE
-            GSSiExitProg (1200);
-#endif
-            return FALSE;
-        }
-        *B      = SMXDYD / SMXDSQ;
-        *A      = YAVE - *B * XAVE;
-        if (MAXDIF)
-        {
-            *LOFMDF = 0;
-            *MAXDIF = 0;
-        }
-        pPoint = pPointIn;
-        for (I=0;I<N;I++,pPoint++)
-        {
-            SUMxy += (pPoint->x - XAVE) * (pPoint->y - YAVE);
-            SUMx2 += pow (pPoint->x - XAVE,2);
-        }
-        if (!SUMx2)
-        {
-#if ENABLETRACE
-            GSSiExitProg (1200);
-#endif
-            return FALSE;
-        }
-        *B = SUMxy / SUMx2;
-        pPoint = pPointIn;
-        for (I=0;I<N;I++,pPoint++)
-        {
-            DIFF = fabs (pPoint->y - (*A + *B * pPoint->x));
-            if (MAXDIF && DIFF > *MAXDIF)
-            {
-                *MAXDIF = DIFF;
-                *LOFMDF = I;
-            }
-        }
-        {
-#if ENABLETRACE
-            GSSiExitProg (1200);
-#endif
-            return TRUE;
-        }
-#if ENABLETRACE
-    }
-#endif
-}
-
--(BOOL)getRotation:(CGFloat*)rotation
++ (BOOL)getRotation:(CGFloat *)rotation
 ofLongestStraightLine:(int)nPoints
-            points:(DPOINT*)pPoints
-         maxOffset:(CGFloat)offset
-         minLength:(CGFloat)minLength
+             points:(DPOINT *)pPoints
+          maxOffset:(CGFloat)offset
+          minLength:(CGFloat)minLength
 {
-    BOOL rtn = FALSE;
+    BOOL rtn = NO;
+    
+    double a = 0.0, b = 0.0, maxDiff = 0.0;
+    long locOfMaxDiff = 0;
+    
+    //for (int i = 0; i < nPoints; i++)
+    //{
+        if (LINFIT(pPoints, 3, &a, &b, &maxDiff, &locOfMaxDiff))
+        {
+            NSLog(@"a:%f, b:%f, maxDiff:%f, locOfMaxDiff:%li", a, b, maxDiff, locOfMaxDiff);
+        }
+    //}
     
     return rtn;
 }
+
 @end
