@@ -1,9 +1,89 @@
 //  NVTextDrawing.m
 //  CCodeLibrary
 
+@import CoreText;
 #import "NVTextDrawing.h"
+#import "CCodeLibrary/MathUtil.h"
 
 @implementation NVTextDrawing
+
++ (NSInteger) drawTextInArea
+{
+    NSInteger rtn = 0;
+    
+    return rtn;
+}
++ (void) drawText:(NSString*)text
+    inRotatedRect:(CGContextRef)context
+         rectMidX:(CGFloat)mpX
+         rectMidY:(CGFloat)mpY
+            width:(CGFloat)textWidth
+           height:(CGFloat)textHeight
+         rotation:(CGFloat)rotateRadians
+         fontSize:(CGFloat)fontSize
+        textColor:(UIColor*)textColor
+{
+    CGRect rect;
+    NSAttributedString *attString = nil;
+    
+    rect.size.height = -textHeight * 1.1;
+    rect.size.width  = textWidth   * 1.1;
+    rect.origin.x =  - rect.size.width  / 2;
+    rect.origin.y =  + textHeight / 2;
+    CGContextSaveGState(context);
+    CGContextTranslateCTM(context,mpX,mpY);
+    CGContextRotateCTM(context,rotateRadians);
+/*    if (dbug)
+    {
+        CGRect rectmp = CGRectMake(fitX[iFit]-8, fitY[iFit],16, 2);
+        CGContextSetGrayFillColor(context, 0.5, 0.5);
+        CGContextFillRect(context, rect);
+        CGContextSetGrayFillColor(context, 0, 0.8);
+        CGContextFillRect(context, rectmp);
+    }*/
+    CTFontRef fontRef = CTFontCreateWithName((CFStringRef)NULL,
+                                             fontSize, NULL);
+    NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
+    style.alignment = NSTextAlignmentCenter;
+    
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                (__bridge id)fontRef, kCTFontAttributeName,
+                                style, kCTParagraphStyleAttributeName,
+                                textColor.CGColor, kCTForegroundColorAttributeName,
+                                nil];
+    
+    NSDictionary *shadowAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      (__bridge id)fontRef, kCTFontAttributeName,
+                                      style, kCTParagraphStyleAttributeName,
+                                      UIColor.whiteColor.CGColor, kCTForegroundColorAttributeName,
+                                      nil];
+    
+    CFRelease(fontRef);
+    
+/*    if (ConfigurationControl.sharedInstance.GMTilesVisible == YES)
+    {
+        attString = [[NSAttributedString alloc] initWithString:text
+                                                    attributes:shadowAttributes];
+        
+        [self drawTextShadowForRect:rect
+                          attString:attString
+                            context:context];
+    }*/
+    
+    CGPathRef path = CGPathCreateWithRect(rect, NULL);
+    
+    attString = [[NSAttributedString alloc] initWithString:text
+                                                attributes:attributes];
+    
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, attString.length), path, NULL);
+    CTFrameDraw(frame, context);
+    
+    CFRelease(frame);
+    CFRelease(framesetter);
+    CGPathRelease(path);
+    CGContextRestoreGState(context);
+}
 
 + (NSUInteger)getTextContainerPoints:(LPDPOINT)textPoints
                             numLines:(NSInteger *)pnLines
