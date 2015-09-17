@@ -3,11 +3,239 @@
 
 @import CoreText;
 #import "NVTextDrawing.h"
-#import "CCodeLibrary/MathUtil.h"
 
 @implementation NVTextDrawing
 
-bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long *LOFMDF);
++ (int) numLinesInText:(const char *)txt
+{
+    int numLines = 1;
+    
+    while (*txt)
+    {
+        if (*txt++ == '\n')
+            numLines++;
+    }
+    return numLines;
+}
+
++ (void)drawText:(NSString *)text
+       inContext:(CGContextRef)context
+   withinPolygon:(LPDPOINT)pPoints
+   withNumPoints:(NSInteger)numPoints
+     andNumLoops:(NSInteger)numLoops
+         loopLen:(int*)polyPartLen
+    withinBounds:(LPMNMXCORD)pBounds
+        fontSize:(CGFloat)fontSize
+     minFontSize:(CGFloat)minFontSize
+       textColor:(UIColor *)textColor
+{
+    NSInteger nLines;
+    CGFloat textArea;
+    CGFloat aveCharWidth,aveCharHeight;
+
+    PointInArea *pia = [[PointInArea alloc] init];
+    pia.maxDimension = 256;
+    
+    CGFloat areaSize = ComputeAreaAreaD(pPoints, numPoints, 0);
+    MNMXCORD areaBounds = PolyBounds(pPoints, (int)numPoints);
+    if (pBounds)
+    {
+        areaBounds.xmn = max (areaBounds.xmn,pBounds->xmn);
+        areaBounds.ymn = max (areaBounds.ymn,pBounds->ymn);
+        areaBounds.xmx = min (areaBounds.xmx,pBounds->xmx);
+        areaBounds.ymx = min (areaBounds.ymx,pBounds->ymx);
+    }
+    DPOINT areaMid = DBoundsMid(&areaBounds);
+    CGFloat areaWidth = MNMXCORDWidth(&areaBounds);
+    CGFloat areaHeight = MNMXCORDHeight(&areaBounds);
+    
+    [pia loadArea:(int)numPoints
+         numLoops:(int)numLoops
+      polyPartLen:polyPartLen
+           points:pPoints];
+    
+    int numTextLines = [NVTextDrawing numLinesInText:text.UTF8String];
+    
+    CTFontRef textPointFontRef = CTFontCreateWithName((CFStringRef)NULL,
+                                                      fontSize, NULL);
+    
+    NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
+    style.alignment = NSTextAlignmentCenter;
+    
+    NSDictionary *textPointAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         (__bridge id)textPointFontRef, kCTFontAttributeName,
+                                         style, kCTParagraphStyleAttributeName,
+                                         nil];
+    
+    CFRelease(textPointFontRef);
+    
+    NSAttributedString *textPointString = [[NSAttributedString alloc] initWithString:text
+                                                                          attributes:textPointAttributes];
+    
+    // LPDPOINT textPoints = (LPDPOINT)malloc((sizeof(DPOINT) * (textPointString.length + 32)) + 4);//enough memory for 16 lines
+    DPOINT textPoints[256] = {0};
+    
+    int nTextPoints = (int)[NVTextDrawing getTextContainerPoints:textPoints
+                                                    numLines:&nLines
+                                                     totArea:&textArea
+                                       averageCharacterWidth:&aveCharWidth
+                                      averageCharacterHeight:&aveCharHeight
+                                            attributedString:textPointString];
+    
+    MNMXCORD textBounds = PolyBounds(textPoints, nTextPoints);
+    CGFloat textWidth = MNMXCORDWidth(&textBounds);
+    CGFloat textHeight = MNMXCORDHeight(&textBounds);
+    DPOINT textMid = DBoundsMid(&textBounds);
+    
+    for (int i = 0; i < nTextPoints; i++)
+    {
+        textPoints[i].x -= textMid.x;
+        textPoints[i].y -= textMid.y;
+    }
+    
+    CGFloat rotation = 0.0;
+    
+    if ([NVTextDrawing getRotation:&rotation
+             ofLongestStraightLine:(int)numPoints
+                            points:pPoints
+                         maxOffset:10.0
+                         minLength:textWidth])
+    {
+        
+    }
+    if (polyPartLen)
+        free (polyPartLen);
+    
+    free(pPoints);
+    
+    
+    //LPDPOINT testPoints = (LPDPOINT)malloc(nTextPoints * sizeof(DPOINT) + 4);
+    DPOINT testPoints[256];
+    
+    /*if (ii){ //debug stuff
+        int ir=0, ic;
+        CGFloat xoffset = 0.0, yoffset = 0.0;
+        CGFloat xinc = 1;
+        CGFloat yinc = 1;
+        CGRect areaRect = CGRectMake(areaBounds.xmn, areaBounds.ymn, areaWidth, areaHeight);
+        while (yoffset < curbounds.ymx)
+        {
+            xoffset = curbounds.xmn;
+            ic = 0;
+            while (xoffset < curbounds.xmx)
+            {
+                DPOINT pt = {xoffset,yoffset};
+                if ([pia DPointInArea:&pt])
+                {
+                    CGRect rect = CGRectMake(xoffset, yoffset, 2, 2);
+                    CGContextSetGrayFillColor(context, 0.5, 0.5);
+                    
+                    CGContextFillRect(context, rect);
+                }
+                xoffset += xinc;
+            }
+            ir++;
+            yoffset += yinc;
+        }
+        CGContextSetGrayFillColor(context, 1, 1);
+        CGContextFillRect(context, areaRect);
+    }*/
+    if (areaSize && textArea)
+    {
+        CGFloat desiredTextFactor = 1.0;
+        CGFloat textFactor = (areaSize / textArea);
+        CGFloat textFactor2 = 1;
+        CGFloat minTextFactor = (desiredTextFactor * ((CGFloat)minFontSize / (CGFloat)fontSize) * ((CGFloat)minFontSize / (CGFloat)fontSize));
+        CGFloat shrink = 0.95;
+        NSInteger numFit = 0;
+#define MAXFIT 256
+        CGFloat fitX[MAXFIT] = {0}, fitY[MAXFIT] = {0};
+        CGFloat xoffset = 0.0, yoffset = 0.0;
+        BOOL firstFit = YES;
+    Top:
+        while (!numFit && (textFactor > minTextFactor))
+        {
+            CGFloat xinc = (aveCharWidth * textFactor)/2;
+            CGFloat yinc = (aveCharHeight * textFactor)/2;
+            yoffset = areaMid.y - areaHeight + textHeight * textFactor/2;
+            
+            while (yoffset < areaBounds.ymx)
+            {
+                xoffset = areaMid.x - areaWidth/2 + textWidth * textFactor/2;
+                
+                while (xoffset < areaBounds.xmx)
+                {
+                    for (int i = 0; i < nTextPoints; i++)
+                    {
+                        testPoints[i].x = textPoints[i].x * textFactor * textFactor2 + xoffset;
+                        testPoints[i].y = yoffset - textPoints[i].y * textFactor * textFactor2;
+                        if (!DPointInBounds (&testPoints[i],pBounds))
+                            goto NextX;
+                        if (![pia DPointInArea:&testPoints[i]])
+                            goto NextX;
+                    }
+                    /*if (ii)
+                    {
+                        for (int i = 0; i < nTextPoints; i++)
+                        {
+                            static CGFloat pctBlack = 0;
+                            CGRect rect = CGRectMake(testPoints[i].x, testPoints[i].y, 16, 16);
+                            CGContextSetGrayFillColor(context, pctBlack, 1);
+                            CGContextFillRect(context, rect);
+                        }
+                    }*/
+                    if (numFit < MAXFIT)
+                    {
+                        if (firstFit)
+                        {
+                            firstFit = NO;
+                            textFactor2 = 0.95;
+                            goto Top;
+                        }
+                        fitX[numFit] = xoffset;
+                        fitY[numFit++] = yoffset;
+                    }
+                    
+                NextX:
+                    xoffset += xinc;
+                }
+                
+                yoffset += yinc;
+            }
+            
+            textFactor *= shrink;
+        }
+        
+        if (numFit)
+        {
+            CGFloat fontFactor = min(textFactor*textFactor2, desiredTextFactor);
+            fontSize *= fontFactor;
+            fontSize *= 0.9;
+            
+            if (fontSize >= minFontSize)
+            {
+                NSInteger iFit = numFit / 2;
+                if (!(numFit%2))
+                {
+                    fitX[iFit] += fitX[iFit-1];
+                    fitX[iFit] /= 2;
+                    fitY[iFit] += fitY[iFit-1];
+                    fitY[iFit] /= 2;
+                }
+                [NVTextDrawing drawText:text
+                          inRotatedRect:context
+                               rectMidX:fitX[iFit]
+                               rectMidY:fitY[iFit]
+                                  width:(textWidth * fontFactor)
+                                 height:(textHeight * fontFactor)
+                               rotation:HALFPI
+                               fontSize:fontSize
+                              textColor:textColor];
+            }
+        }
+    }
+    
+}
 
 + (void)drawText:(NSString *)text
    inRotatedRect:(CGContextRef)context
@@ -18,7 +246,7 @@ bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long 
         rotation:(CGFloat)rotateRadians
         fontSize:(CGFloat)fontSize
        textColor:(UIColor *)textColor
-{
+    {
     CGRect rect = CGRectZero;
     NSAttributedString *attString = nil;
     

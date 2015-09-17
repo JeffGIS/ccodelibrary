@@ -1591,3 +1591,131 @@ double MNMXCORDHeight(MNMXCORD* bnds)
     double h = bnds->ymx - bnds->ymn;
     return h;
 }
+double GetPolyMaxDistBetweenPoints (HPDPOINT lpPoints,long nPnts,LPLONG pMaxDistPointID)
+{
+    double MaxDist=-1, d;
+    DWORD	i;
+    HPDPOINT	lpPoints2=lpPoints+1;
+    
+    *pMaxDistPointID = -1;
+    for (i=1;i<nPnts;i++,lpPoints++,lpPoints2++)
+    {
+        d = ldistpp(lpPoints,lpPoints2);
+        if (d > MaxDist)
+        {
+            MaxDist = d;
+            *pMaxDistPointID = i-1;
+        }
+    }
+    return MaxDist;
+}
+
+double GetPolyLengthD (HPDPOINT lpPoints,long nPnts)
+#if ENABLETRACE
+{GSSiEnterProg (999);
+#endif
+    {
+        double Dist=0;
+        DWORD	i;
+        HPDPOINT	lpPoints2=lpPoints+1;
+        
+        for (i=1;i<nPnts;i++,lpPoints++,lpPoints2++)
+            Dist += ldistp(*lpPoints,*lpPoints2);
+        {
+#if ENABLETRACE
+            GSSiExitProg (999);
+#endif
+            return Dist;
+        }
+#if ENABLETRACE
+    }
+#endif
+}
+
+double GetPolyLength (LPPOINT lpPoints,long nPnts)
+#if ENABLETRACE
+{GSSiEnterProg (999);
+#endif
+    {
+        double Dist=0;
+        DWORD	i;
+        LPPOINT	lpPoints2=lpPoints+1;
+        
+        for (i=1;i<nPnts;i++,lpPoints++,lpPoints2++)
+            Dist += idist(*lpPoints,*lpPoints2);
+        {
+#if ENABLETRACE
+            GSSiExitProg (999);
+#endif
+            return Dist;
+        }
+#if ENABLETRACE
+    }
+#endif
+}
+double idist(POINT Point1, POINT Point2)
+#if ENABLETRACE
+{GSSiEnterProg (378);
+#endif
+    {
+        {
+#if ENABLETRACE
+            GSSiExitProg (378);
+#endif
+            return (sqrt (pow((double)Point1.x-(double)Point2.x,2)
+                          +pow((double)Point1.y-(double)Point2.y,2)));
+        }
+#if ENABLETRACE
+    }
+#endif
+}
+double ldistp(DPOINT Point1, DPOINT Point2)
+#if ENABLETRACE
+{GSSiEnterProg (379);
+#endif
+    {
+        {
+#if ENABLETRACE
+            GSSiExitProg (379);
+#endif
+            return (sqrt (pow(Point1.x-Point2.x,2)
+                          +pow(Point1.y-Point2.y,2)));
+        }
+#if ENABLETRACE
+    }
+#endif
+}
+double l2ddistfrom3d (DPOINT3D Point1, DPOINT3D Point2)
+#if ENABLETRACE
+{GSSiEnterProg (379);
+#endif
+    {
+        {
+#if ENABLETRACE
+            GSSiExitProg (379);
+#endif
+            return (sqrt (pow(Point1.x-Point2.x,2)
+                          +pow(Point1.y-Point2.y,2)));
+        }
+#if ENABLETRACE
+    }
+#endif
+}
+double ldistpp(LPDPOINT Point1, LPDPOINT Point2)
+#if ENABLETRACE
+{GSSiEnterProg (379);
+#endif
+    {
+        {
+#if ENABLETRACE
+            GSSiExitProg (379);
+#endif
+            return (sqrt (pow(Point1->x-Point2->x,2)
+                          +pow(Point1->y-Point2->y,2)));
+        }
+#if ENABLETRACE
+    }
+#endif
+}
+
+

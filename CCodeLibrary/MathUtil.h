@@ -134,5 +134,11 @@ double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
 LPSTR Truncate(LPSTR Text);
 LPSTR OneSpace(LPSTR Arg1);
 LPSTR ReplaceChar(LPSTR str, char from, char to);
+bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long *LOFMDF);
+double ldistpp(LPDPOINT Point1, LPDPOINT Point2);
+double l2ddistfrom3d (DPOINT3D Point1, DPOINT3D Point2);
+double ldistp(DPOINT Point1, DPOINT Point2);
+double idist(POINT Point1, POINT Point2);
+double GetPolyLength (LPPOINT lpPoints,long nPnts);
 
 #endif
