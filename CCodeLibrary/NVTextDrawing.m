@@ -260,4 +260,14 @@ BOOL LINFIT (HPDPOINT pPoint,LONG N,LPDOUBLE A,LPDOUBLE B,LPDOUBLE MAXDIF,LPLONG
 #endif
 }
 
+-(BOOL)getRotation:(CGFloat*)rotation
+ofLongestStraightLine:(int)nPoints
+            points:(DPOINT*)pPoints
+         maxOffset:(CGFloat)offset
+         minLength:(CGFloat)minLength
+{
+    BOOL rtn = FALSE;
+    
+    return rtn;
+}
 @end
