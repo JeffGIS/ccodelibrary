@@ -168,17 +168,35 @@ ofLongestStraightLine:(int)nPoints
           minLength:(CGFloat)minLength
 {
     BOOL rtn = NO;
+    nPoints--;
+    
+    LPDPOINT wrappedPoints = (LPDPOINT)malloc(sizeof(DPOINT) * (nPoints * 2));
+    
+    for (int i = 0; i < nPoints; i++)
+    {
+        wrappedPoints[i] = pPoints[i];
+        wrappedPoints[nPoints + i] = pPoints[i];
+    }
     
     double a = 0.0, b = 0.0, maxDiff = 0.0;
     long locOfMaxDiff = 0;
     
-    //for (int i = 0; i < nPoints; i++)
-    //{
-        if (LINFIT(pPoints, 3, &a, &b, &maxDiff, &locOfMaxDiff))
+    for (int i = 0; i < nPoints; i++)
+    {
+        long numPoints = 2;
+        
+        do
         {
-            NSLog(@"a:%f, b:%f, maxDiff:%f, locOfMaxDiff:%li", a, b, maxDiff, locOfMaxDiff);
+            numPoints++;
+            LINFIT(&wrappedPoints[i], numPoints, &a, &b, &maxDiff, &locOfMaxDiff);
+            
+            NSLog(@"%i[%li]::a:%f, b:%f, maxDiff:%f, locOfMaxDiff:%li", i, numPoints, a, b, maxDiff, locOfMaxDiff);
         }
-    //}
+        
+        while ((maxDiff < offset) && (numPoints < nPoints));
+    }
+    
+    free(wrappedPoints);
     
     return rtn;
 }
