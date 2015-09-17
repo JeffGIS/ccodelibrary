@@ -2,9 +2,20 @@
 //  CCodeLibrary
 
 #import <UIKit/UIKit.h>
-#import "CCodeTypes.h"
+#import "CCodeLibrary.h"
 
 @interface NVTextDrawing : NSObject
+
++ (void)drawText:(NSString *)text
+       inContext:(CGContextRef)context
+   withinPolygon:(LPDPOINT)pPoints
+   withNumPoints:(NSInteger)numPoints
+     andNumLoops:(NSInteger)numLoops
+         loopLen:(int*)polyPartLen
+    withinBounds:(LPMNMXCORD)pBounds
+        fontSize:(CGFloat)fontSize
+     minFontSize:(CGFloat)minFontSize
+       textColor:(UIColor *)textColor;
 
 + (void)drawText:(NSString *)text
    inRotatedRect:(CGContextRef)context

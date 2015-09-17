@@ -250,29 +250,6 @@ GSSiExitProg (373);
 #endif
 }
 
-static double ldistp(DPOINT Point1, DPOINT Point2)
-{
-    double x = Point1.x - Point2.x;
-    double y = Point1.y - Point2.y;
-    double rtn = x*x + y*y;
-    return sqrt (rtn);
-}
-double l2ddistfrom3d (DPOINT Point1, DPOINT Point2)
-#if ENABLETRACE
-{GSSiEnterProg (379);
-#endif
-{
-{
-#if ENABLETRACE
-GSSiExitProg (379);
-#endif
-    return (sqrt (pow(Point1.x - Point2.x, 2) +
-                  pow(Point1.y - Point2.y, 2)));
-}
-#if ENABLETRACE
-}
-#endif
-}
 
 double LDIST(double X1,double Y1,double X2,double Y2)
 { 
