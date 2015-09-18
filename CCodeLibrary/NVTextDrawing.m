@@ -448,6 +448,9 @@ ofLongestStraightLine:(int)nPoints
         free(wrappedPoints);
     }
     
+    if ((currentRot > HALFPI) && (currentRot < (3.0 * HALFPI)))
+        currentRot = LTWOPI(currentRot + M_PI);
+    
     if (longestLine > minLength)
     {
         *rotation = currentRot;
