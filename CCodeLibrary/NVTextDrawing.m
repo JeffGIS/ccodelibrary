@@ -98,7 +98,7 @@
     if ([NVTextDrawing getRotation:&rotation
              ofLongestStraightLine:(int)numPoints
                             points:pPoints
-                         maxOffset:10.0
+                         maxOffset:1.0
                          minLength:textWidth])
     {
         
@@ -400,39 +400,53 @@ ofLongestStraightLine:(int)nPoints
     CGFloat longestLine = 0.0, currentRot = 0.0;
     nPoints--;
     
-    LPDPOINT wrappedPoints = (LPDPOINT)malloc(sizeof(DPOINT) * (nPoints * 2));
-    
     for (int i = 0; i < nPoints; i++)
     {
-        wrappedPoints[i] = pPoints[i];
-        wrappedPoints[nPoints + i] = pPoints[i];
-    }
-    
-    double a = 0.0, b = 0.0, maxDiff = 0.0;
-    long locOfMaxDiff = 0;
-    
-    for (int i = 0; i < nPoints; i++)
-    {
-        long numPoints = 2;
-        
-        do
-        {
-            numPoints++;
-            LINFIT(&wrappedPoints[i], numPoints, &a, &b, &maxDiff, &locOfMaxDiff);
-        }
-        
-        while ((maxDiff < offset) && (numPoints < nPoints));
-        
-        CGFloat lineLength = GetPolyLengthD(&wrappedPoints[i], numPoints);
+        CGFloat lineLength = GetPolyLengthD(&pPoints[i], 2);
         
         if (lineLength > longestLine)
         {
-            currentRot = b;
+            currentRot = getazd(&pPoints[i], &pPoints[i + 1]);
             longestLine = lineLength;
         }
     }
     
-    free(wrappedPoints);
+    if (nPoints > 4)
+    {
+        LPDPOINT wrappedPoints = (LPDPOINT)malloc(sizeof(DPOINT) * (nPoints * 2));
+        
+        for (int i = 0; i < nPoints; i++)
+        {
+            wrappedPoints[i] = pPoints[i];
+            wrappedPoints[nPoints + i] = pPoints[i];
+        }
+        
+        double a = 0.0, b = 0.0, maxDiff = 0.0;
+        long locOfMaxDiff = 0;
+        
+        for (int i = 0; i < nPoints; i++)
+        {
+            long numPoints = 2;
+            
+            do
+            {
+                numPoints++;
+                LINFIT(&wrappedPoints[i], numPoints, &a, &b, &maxDiff, &locOfMaxDiff);
+            }
+            
+            while ((maxDiff < offset) && (numPoints < nPoints));
+            
+            CGFloat lineLength = GetPolyLengthD(&wrappedPoints[i], numPoints);
+            
+            if ((lineLength > longestLine) && (maxDiff < offset))
+            {
+                currentRot = b;
+                longestLine = lineLength;
+            }
+        }
+        
+        free(wrappedPoints);
+    }
     
     if (longestLine > minLength)
     {
