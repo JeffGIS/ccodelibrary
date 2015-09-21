@@ -37,17 +37,19 @@ char *EncodeString(LPDPOINT llpoints, int numPoints)
         
         while (sgn_dlat >= 0x20)
         {
-            char latChar = (char)((0x20 | (sgn_dlat & 0x1f)) + 63);
-            encodedString[index++] = latChar;
+            encodedString[index++] = (char)((0x20 | (sgn_dlat & 0x1f)) + 63);
             sgn_dlat >>= 5;
         }
         
+        encodedString[index++] = (char)(sgn_dlat + 63);
+        
         while (sgn_dlng >= 0x20)
         {
-            char lngChar = (char)((0x20 | (sgn_dlng & 0x1f)) + 63);
-            encodedString[index++] = lngChar;
+            encodedString[index++] = (char)((0x20 | (sgn_dlng & 0x1f)) + 63);
             sgn_dlng >>= 5;
         }
+        
+        encodedString[index++] = (char)(sgn_dlng + 63);
     }
     
     char *result = (char *)malloc(sizeof(char) * index);
