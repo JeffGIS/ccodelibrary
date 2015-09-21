@@ -4,15 +4,74 @@
 #include "PolylineCompression.h"
 #include <string.h>
 
+char *EncodeString(LPDPOINT llpoints, int numPoints)
+{
+    int maxSize = (numPoints * 10);
+    char *encodedString = (char *)malloc((sizeof(char) * maxSize) + 4);
+    
+    int index = 0;
+    int dlat = 0, dlng = 0;
+    double oldLat = 0.0, oldLng = 0.0;
+    
+    for (int i = 0; i < numPoints; i++)
+    {
+        DPOINT point = llpoints[i];
+        
+        int newLat = (int)(point.y * 1e+5);
+        int newLng = (int)(point.x * 1e+5);
+        
+        dlat = (newLat - oldLat);
+        dlng = (newLng - oldLng);
+        
+        oldLat = newLat;
+        oldLng = newLng;
+        
+        int sgn_dlat = (dlat << 1);
+        int sgn_dlng = (dlng << 1);
+        
+        if (dlat < 0)
+            sgn_dlat = ~(sgn_dlat);
+        
+        if (dlng < 0)
+            sgn_dlng = ~(sgn_dlng);
+        
+        while (sgn_dlat >= 0x20)
+        {
+            char latChar = (char)((0x20 | (sgn_dlat & 0x1f)) + 63);
+            encodedString[index++] = latChar;
+            sgn_dlat >>= 5;
+        }
+        
+        while (sgn_dlng >= 0x20)
+        {
+            char lngChar = (char)((0x20 | (sgn_dlng & 0x1f)) + 63);
+            encodedString[index++] = lngChar;
+            sgn_dlng >>= 5;
+        }
+    }
+    
+    char *result = (char *)malloc(sizeof(char) * index);
+    
+    for (int i = 0; i < index; i++)
+    {
+        result[i] = encodedString[i];
+    }
+    
+    free(encodedString);
+    
+    return result;
+}
+
 LPDPOINT DecodeString(const char *encodedString, int *numPoints)
 {
     int index = 0, nPoints = 0;
-    float lat = 0, lng = 0;
+    double lat = 0, lng = 0;
     
     unsigned long len = strlen(encodedString);
+    
     int maxSize = ceil(len / 4) + 1;
     
-    LPDPOINT llpoints = malloc((sizeof(DPOINT) * maxSize) + 4);
+    LPDPOINT llpoints = (LPDPOINT)malloc((sizeof(DPOINT) * maxSize) + 4);
     
     while (index < len)
     {
@@ -21,32 +80,35 @@ LPDPOINT DecodeString(const char *encodedString, int *numPoints)
         
         do
         {
-            b = encodedString[index++] - 63;
+            b = (encodedString[index++] - 63);
             result |= (b & 0x1f) << shift;
             shift += 5;
         }
         
         while (b >= 0x20);
         
-        float dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+        double dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
         lat += dlat;
         
         shift = 0, result = 0;
         
         do
         {
-            b = encodedString[index++] - 63;
+            b = (encodedString[index++] - 63);
             result |= (b & 0x1f) << shift;
             shift += 5;
         }
         
         while (b >= 0x20);
         
-        float dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+        double dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
         lng += dlng;
         
-        float finalLat = (lat * 1e-5);
-        float finalLong = (lng * 1e-5);
+        double finalLat = (lat * 1e-5);
+        double finalLong = (lng * 1e-5);
+        
+        if (nPoints > maxSize)
+            llpoints = realloc(llpoints, ((sizeof(DPOINT) * nPoints) + 4));
         
         llpoints[nPoints].x = finalLong;
         llpoints[nPoints++].y = finalLat;
@@ -54,7 +116,7 @@ LPDPOINT DecodeString(const char *encodedString, int *numPoints)
     
     *numPoints = nPoints;
     
-    llpoints = realloc(llpoints, ((sizeof(DPOINT) * nPoints) + 4));
+    llpoints = (LPDPOINT)realloc(llpoints, (sizeof(DPOINT) * nPoints));
     
     return llpoints;
 }
