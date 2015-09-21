@@ -8,6 +8,6 @@
 #include "MathUtil.h"
 
 char *EncodeString(LPDPOINT llpoints, int numPoints);
-LPDPOINT DecodeString(const char *encodedString, int *numPoints);
+LPDPOINT DecodeString(char *encodedString, int *numPoints);
 
 #endif
