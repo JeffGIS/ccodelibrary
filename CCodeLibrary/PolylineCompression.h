@@ -5,5 +5,8 @@
 #define PolylineCompression_h
 
 #include <stdio.h>
+#include "MathUtil.h"
 
-#endif /* PolylineCompression_h */
+LPDPOINT DecodeString(const char *encodedString, int *numPoints);
+
+#endif

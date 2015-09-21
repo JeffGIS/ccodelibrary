@@ -3,19 +3,16 @@
 
 #include "PolylineCompression.h"
 #include <string.h>
-#include "MathUtil.h"
 
-void DecodeString(const char *encodedString, LPDPOINT *llpoints, int *numPoints)
+LPDPOINT DecodeString(const char *encodedString, int *numPoints)
 {
-    unsigned long len = strlen(encodedString);
-    int maxSize = ceil(len / 4);
-    
-    llpoints = realloc(llpoints, (sizeof(DPOINT) * maxSize) + 4);
-    
-    int index = 0;
+    int index = 0, nPoints = 0;
     float lat = 0, lng = 0;
     
-    *numPoints = 0;
+    unsigned long len = strlen(encodedString);
+    int maxSize = ceil(len / 4) + 1;
+    
+    LPDPOINT llpoints = malloc((sizeof(DPOINT) * maxSize) + 4);
     
     while (index < len)
     {
@@ -51,9 +48,13 @@ void DecodeString(const char *encodedString, LPDPOINT *llpoints, int *numPoints)
         float finalLat = (lat * 1e-5);
         float finalLong = (lng * 1e-5);
         
-        DPOINT point = {finalLat, finalLong};
-        *llpoints[*numPoints++] = point;
+        llpoints[nPoints].x = finalLong;
+        llpoints[nPoints++].y = finalLat;
     }
     
-    llpoints = realloc(llpoints, (sizeof(DPOINT) * *numPoints) + 4);
+    *numPoints = nPoints;
+    
+    llpoints = realloc(llpoints, ((sizeof(DPOINT) * nPoints) + 4));
+    
+    return llpoints;
 }

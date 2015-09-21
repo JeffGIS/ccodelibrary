@@ -23,6 +23,7 @@
 		697B37721B94C0E00066978B /* NVTextDrawing.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697B376F1B94B7D60066978B /* NVTextDrawing.h */; };
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
 		699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */ = {isa = PBXBuildFile; fileRef = 699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */; settings = {ASSET_TAGS = (); }; };
+		699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */; };
 		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
 		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
 		A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */ = {isa = PBXBuildFile; fileRef = A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */; };
@@ -209,6 +210,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */,
 				EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */,
 				697B37721B94C0E00066978B /* NVTextDrawing.h in CopyFiles */,
 				692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */,
