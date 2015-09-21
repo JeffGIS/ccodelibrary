@@ -1718,4 +1718,3 @@ double ldistpp(LPDPOINT Point1, LPDPOINT Point2)
 #endif
 }
 
-
