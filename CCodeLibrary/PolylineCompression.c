@@ -113,8 +113,8 @@ LPDPOINT DecodeString(char *encodedString, int *numPoints)
         double finalLat = (lat * 1e-5);
         double finalLong = (lng * 1e-5);
         
-        if (nPoints > maxSize)
-            llpoints = realloc(llpoints, ((sizeof(DPOINT) * nPoints) + 4));
+        if (nPoints >= maxSize)
+            llpoints = realloc(llpoints, ((sizeof(DPOINT) * (nPoints+1)) + 4));
         
         llpoints[nPoints].x = finalLong;
         llpoints[nPoints++].y = finalLat;
