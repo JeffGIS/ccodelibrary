@@ -11,7 +11,7 @@ char *EncodeString(LPDPOINT llpoints, int numPoints)
     
     int index = 0;
     int dlat = 0, dlng = 0;
-    double oldLat = 0.0, oldLng = 0.0;
+    int oldLat = 0, oldLng = 0;
     
     for (int i = 0; i < numPoints; i++)
     {
