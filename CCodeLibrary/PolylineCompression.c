@@ -45,7 +45,7 @@ char *EncodeString(LPDPOINT llpoints, int numPoints)
         }
         
         encodedString[index++] = (char)(sgn_dlat + 63);
-        
+         
         while (sgn_dlng >= 0x20)
         {
             encodedString[index++] = (char)((0x20 | (sgn_dlng & 0x1f)) + 63);
@@ -62,7 +62,7 @@ char *EncodeString(LPDPOINT llpoints, int numPoints)
     
     result[index] = 0;
     
-    ReplaceChar(result, '\'', '\\');
+    ReplaceChar(result, '\'', '&');
     
     free(encodedString);
     
@@ -74,7 +74,7 @@ LPDPOINT DecodeString(char *encodedString, int *numPoints)
     int index = 0, nPoints = 0;
     double lat = 0, lng = 0;
     
-    ReplaceChar(encodedString, '\\', '\'');
+    ReplaceChar(encodedString, '&', '\'');
     
     unsigned long len = strlen(encodedString);
     
