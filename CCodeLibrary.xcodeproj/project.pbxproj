@@ -24,6 +24,8 @@
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
 		699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */ = {isa = PBXBuildFile; fileRef = 699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */; settings = {ASSET_TAGS = (); }; };
 		699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */; };
+		69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C441A91BB474B200D026A7 /* NVTabBarEdit.m */; settings = {ASSET_TAGS = (); }; };
+		69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C441A81BB474B200D026A7 /* NVTabBarEdit.h */; };
 		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
 		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
 		A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */ = {isa = PBXBuildFile; fileRef = A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */; };
@@ -210,6 +212,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */,
 				699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */,
 				EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */,
 				697B37721B94C0E00066978B /* NVTextDrawing.h in CopyFiles */,
@@ -327,6 +330,8 @@
 		697B37701B94B7D60066978B /* NVTextDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextDrawing.m; sourceTree = "<group>"; };
 		699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PolylineCompression.c; sourceTree = "<group>"; };
 		699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineCompression.h; sourceTree = "<group>"; };
+		69C441A81BB474B200D026A7 /* NVTabBarEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTabBarEdit.h; sourceTree = "<group>"; };
+		69C441A91BB474B200D026A7 /* NVTabBarEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTabBarEdit.m; sourceTree = "<group>"; };
 		69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSecretAlertView.h; sourceTree = "<group>"; };
 		69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSecretAlertView.m; sourceTree = "<group>"; };
 		A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVHeadingViewController.h; sourceTree = "<group>"; };
@@ -690,6 +695,8 @@
 				A9D3A06B1AF539E600E0D834 /* NVSliderController.m */,
 				A91F36921AE9739400602BCE /* NVSliderView.h */,
 				A91F36931AE9739400602BCE /* NVSliderView.m */,
+				69C441A81BB474B200D026A7 /* NVTabBarEdit.h */,
+				69C441A91BB474B200D026A7 /* NVTabBarEdit.m */,
 				A9237F831AFA929200D10E96 /* NVTextAlert.h */,
 				A9237F841AFA929200D10E96 /* NVTextAlert.m */,
 				A951CD1D1B18E070009C13E2 /* NVTwoTextAlert.h */,
@@ -992,6 +999,7 @@
 				EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */,
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,
 				A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */,
+				69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */,
 				A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */,
 				EBAB31C71AE6DC2D00C5CCEF /* NamedColors.m in Sources */,
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,
