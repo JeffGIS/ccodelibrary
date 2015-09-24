@@ -9,7 +9,9 @@
 
 + (SpreadsheetView *)spreadsheetViewWithRows:(NSUInteger)rows
                                      columns:(NSUInteger)columns
-                                        view:(UIView *)view;
+                                        view:(UIView *)view
+                                       frame:(CGRect)frame
+                                returnHidden:(BOOL)returnHidden;
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration
                   tabBarHeight:(CGFloat)tabBarHeight;

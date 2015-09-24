@@ -12,6 +12,7 @@
 @property (nonatomic) NSDate *touchDown, *touchUp;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
 @property (nonatomic) NSUInteger rows, columns;
+@property BOOL returnHidden;
 
 @end
 
@@ -20,19 +21,22 @@
 + (SpreadsheetView *)spreadsheetViewWithRows:(NSUInteger)rows
                                      columns:(NSUInteger)columns
                                         view:(UIView *)view
+                                       frame:(CGRect)frame
+                                returnHidden:(BOOL)returnHidden
 {
-    CGRect frame = CGRectZero;
-    
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    if (frame.size.height == 0.0 || frame.size.width == 0.0)
     {
-        frame = CGRectMake(20.0, 20.0, (view.frame.size.width - 40.0),
-                           (view.frame.size.height - 40.0));
-    }
-    
-    else
-    {
-        frame = CGRectMake(60.0, 60.0, (view.frame.size.width - 120.0),
-                           (view.frame.size.height - 120.0));
+        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        {
+            frame = CGRectMake(20.0, 20.0, (view.frame.size.width - 40.0),
+                               (view.frame.size.height - 40.0));
+        }
+        
+        else
+        {
+            frame = CGRectMake(60.0, 60.0, (view.frame.size.width - 120.0),
+                               (view.frame.size.height - 120.0));
+        }
     }
     
     SpreadsheetView *spreadsheetView = [[SpreadsheetView alloc] initWithFrame:frame];
@@ -43,6 +47,7 @@
     else
         spreadsheetView.columnWidth = 160.0;
     
+    spreadsheetView.returnHidden = returnHidden;
     spreadsheetView.rows = rows;
     spreadsheetView.columns = columns;
     spreadsheetView.rowHeight = 40.0;
@@ -78,9 +83,18 @@
             {
                 cell.identifier = @"< Return";
                 cell.font = [UIFont boldSystemFontOfSize:24.0];
-                cell.backgroundColor = UIColor.blackColor;
-                cell.textColor = UIColor.whiteColor;
                 
+                if (!spreadsheetView.returnHidden)
+                {
+                    cell.backgroundColor = UIColor.blackColor;
+                    cell.textColor = UIColor.whiteColor;
+                }
+                
+                else
+                {
+                    cell.backgroundColor = UserDefaults.defaults.appleGray;
+                    cell.textColor = UIColor.clearColor;
+                }
             }
             
             else if (r == 0)
@@ -138,8 +152,14 @@
     
     if (xPoint == 0 && yPoint == 0)
     {
-        [_overlayView removeFromSuperview];
-        [self removeFromSuperview];
+        if (!_returnHidden)
+        {
+            [_overlayView removeFromSuperview];
+            [self removeFromSuperview];
+        }
+        
+        else
+            return;
     }
     
     else if (xPoint == 0)
