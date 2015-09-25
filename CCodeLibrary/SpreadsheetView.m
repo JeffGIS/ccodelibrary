@@ -233,9 +233,9 @@
                                                          (superviewFrame.size.height + tabBarHeight),
                                                          (superviewFrame.size.width - tabBarHeight));
                          
-                         self.frame = CGRectMake(origin.y, origin.x,
-                                                 ((superviewFrame.size.height + tabBarHeight) - (origin.y * 2.0)),
-                                                 ((superviewFrame.size.width - tabBarHeight) - (origin.x * 2.0)));
+                         self.frame = CGRectMake(origin.x, origin.y,
+                                                 ((superviewFrame.size.height + tabBarHeight) - origin.x),
+                                                 ((superviewFrame.size.width - tabBarHeight) - origin.y));
                      }];
 }
 
