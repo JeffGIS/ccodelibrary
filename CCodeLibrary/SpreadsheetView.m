@@ -12,6 +12,7 @@
 @property (nonatomic) NSDate *touchDown, *touchUp;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
 @property (nonatomic) NSUInteger rows, columns;
+@property (nonatomic) UITextField *currentTextField;
 @property BOOL returnHidden;
 
 @end
@@ -47,6 +48,7 @@
     else
         spreadsheetView.columnWidth = 160.0;
     
+    spreadsheetView.currentTextField = nil;
     spreadsheetView.returnHidden = returnHidden;
     spreadsheetView.rows = rows;
     spreadsheetView.columns = columns;
@@ -138,6 +140,12 @@
 - (void)touchesEnded:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
+    if (_currentTextField)
+    {
+        [_currentTextField resignFirstResponder];
+        return;
+    }
+    
     _touchUp = [NSDate dateWithTimeIntervalSinceNow:0.0];
     CGFloat timeInterval = (_touchUp.timeIntervalSinceNow - _touchDown.timeIntervalSinceNow);
     
@@ -216,9 +224,19 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    return NO;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    _currentTextField = textField;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    _currentTextField = nil;
     _cellForEditing.text = textField.text;
     [textField removeFromSuperview];
-    return NO;
 }
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration
