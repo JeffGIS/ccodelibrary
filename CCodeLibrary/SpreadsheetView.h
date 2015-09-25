@@ -19,4 +19,7 @@
 - (void)setTextArray:(NSArray *)textArray
     forColumnAtIndex:(NSUInteger)columnIndex;
 
+- (void)setTextArray:(NSArray *)textArray
+       forRowAtIndex:(NSUInteger)rowIndex;
+
 @end

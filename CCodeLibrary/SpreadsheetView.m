@@ -76,10 +76,16 @@
     {
         for (int c = 0; c <= spreadsheetView.columns; c++)
         {
-            SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake((c * spreadsheetView.columnWidth),
+            SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake(((c - 0.5) * spreadsheetView.columnWidth),
                                                                                               (r * spreadsheetView.rowHeight),
                                                                                               spreadsheetView.columnWidth,
                                                                                               spreadsheetView.rowHeight)];
+            
+            if (c == 0)
+            {
+                cell.frame = CGRectMake(0.0, cell.frame.origin.y,
+                                        (cell.frame.size.width / 2.0), cell.frame.size.height);
+            }
             
             if (r == 0 && c == 0)
             {
@@ -264,6 +270,16 @@
     {
         if (cell.column == columnIndex && cell.row != 0)
             cell.text = textArray[(cell.row - 1)];
+    }
+}
+
+- (void)setTextArray:(NSArray *)textArray
+       forRowAtIndex:(NSUInteger)rowIndex
+{
+    for (SpreadSheetViewCell *cell in _contentView.subviews)
+    {
+        if (cell.row == rowIndex && cell.column != 0)
+            cell.text = textArray[(cell.column - 1)];
     }
 }
 
