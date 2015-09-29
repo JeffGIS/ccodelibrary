@@ -43,16 +43,21 @@
     SpreadsheetView *spreadsheetView = [[SpreadsheetView alloc] initWithFrame:frame];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
         spreadsheetView.columnWidth = 120.0;
+        spreadsheetView.rowHeight = 36.0;
+    }
     
     else
-        spreadsheetView.columnWidth = 160.0;
+    {
+        spreadsheetView.columnWidth = 200.0;
+        spreadsheetView.rowHeight = 48.0;
+    }
     
     spreadsheetView.currentTextField = nil;
     spreadsheetView.returnHidden = returnHidden;
     spreadsheetView.rows = rows;
     spreadsheetView.columns = columns;
-    spreadsheetView.rowHeight = 40.0;
     spreadsheetView.overlayView = [[UIView alloc] initWithFrame:view.frame];
     spreadsheetView.overlayView.backgroundColor = UIColor.blackColor;
     spreadsheetView.overlayView.alpha = 0.6;
@@ -76,16 +81,10 @@
     {
         for (int c = 0; c <= spreadsheetView.columns; c++)
         {
-            SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake(((c - 0.5) * spreadsheetView.columnWidth),
+            SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake((c * spreadsheetView.columnWidth),
                                                                                               (r * spreadsheetView.rowHeight),
                                                                                               spreadsheetView.columnWidth,
                                                                                               spreadsheetView.rowHeight)];
-            
-            if (c == 0)
-            {
-                cell.frame = CGRectMake(0.0, cell.frame.origin.y,
-                                        (cell.frame.size.width / 2.0), cell.frame.size.height);
-            }
             
             if (r == 0 && c == 0)
             {
@@ -108,6 +107,7 @@
             else if (r == 0)
             {
                 cell.identifier = spreadsheetView.alphabet[c - 1];
+                cell.text = cell.identifier;
                 cell.font = [UIFont boldSystemFontOfSize:24.0];
                 cell.backgroundColor = UserDefaults.defaults.appleGray;
             }
@@ -115,6 +115,7 @@
             else if (c == 0)
             {
                 cell.identifier = [NSString stringWithFormat:@"%i", r];
+                cell.text = cell.identifier;
                 cell.font = [UIFont boldSystemFontOfSize:24.0];
                 cell.backgroundColor = UserDefaults.defaults.appleGray;
             }
@@ -128,7 +129,7 @@
             
             cell.row = (NSUInteger)r;
             cell.column = (NSUInteger)c;
-            cell.text = cell.identifier;
+            cell.adjustsFontSizeToFitWidth = YES;
             [spreadsheetView.contentView addSubview:cell];
         }
     }
@@ -268,7 +269,7 @@
 {
     for (SpreadSheetViewCell *cell in _contentView.subviews)
     {
-        if (cell.column == columnIndex && cell.row != 0)
+        if (cell.column == columnIndex && cell.row != 0 && cell.row <= textArray.count)
             cell.text = textArray[(cell.row - 1)];
     }
 }
@@ -280,6 +281,17 @@
     {
         if (cell.row == rowIndex && cell.column != 0)
             cell.text = textArray[(cell.column - 1)];
+    }
+}
+
+- (void)setText:(NSString *)text
+   forCellAtRow:(NSUInteger)row
+         column:(NSUInteger)column
+{
+    for (SpreadSheetViewCell *cell in _contentView.subviews)
+    {
+        if (cell.row == row && cell.column == column)
+            cell.text = text;
     }
 }
 

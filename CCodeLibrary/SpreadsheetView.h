@@ -22,4 +22,8 @@
 - (void)setTextArray:(NSArray *)textArray
        forRowAtIndex:(NSUInteger)rowIndex;
 
+- (void)setText:(NSString *)text
+   forCellAtRow:(NSUInteger)row
+         column:(NSUInteger)column;
+
 @end
