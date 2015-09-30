@@ -7,7 +7,7 @@
 
 @interface SpreadsheetView ()
 
-@property (nonatomic) UIView *contentView, *overlayView;
+@property (nonatomic) UIView *contentView;
 @property (nonatomic) NSArray *alphabet;
 @property (nonatomic) NSDate *touchDown, *touchUp;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
@@ -58,10 +58,6 @@
     spreadsheetView.returnHidden = returnHidden;
     spreadsheetView.rows = rows;
     spreadsheetView.columns = columns;
-    spreadsheetView.overlayView = [[UIView alloc] initWithFrame:view.frame];
-    spreadsheetView.overlayView.backgroundColor = UIColor.blackColor;
-    spreadsheetView.overlayView.alpha = 0.6;
-    [view addSubview:spreadsheetView.overlayView];
     
     spreadsheetView.contentSize = CGSizeMake(((spreadsheetView.columns + 1) * spreadsheetView.columnWidth),
                                              ((spreadsheetView.rows + 1) * spreadsheetView.rowHeight));
@@ -69,6 +65,7 @@
     spreadsheetView.backgroundColor = UIColor.blackColor;
     spreadsheetView.layer.borderColor = UIColor.blackColor.CGColor;
     spreadsheetView.layer.borderWidth = 2.0;
+    spreadsheetView.bounces = NO;
     
     spreadsheetView.contentView = [[UIView alloc] initWithFrame:spreadsheetView.bounds];
     spreadsheetView.contentView.backgroundColor = UIColor.clearColor;
@@ -168,10 +165,7 @@
     if (xPoint == 0 && yPoint == 0)
     {
         if (!_returnHidden)
-        {
-            [_overlayView removeFromSuperview];
             [self removeFromSuperview];
-        }
         
         else
             return;
@@ -254,10 +248,6 @@
     
     [UIView animateWithDuration:duration
                      animations:^{
-                         _overlayView.frame = CGRectMake(superviewFrame.origin.y, superviewFrame.origin.x,
-                                                         (superviewFrame.size.height + tabBarHeight),
-                                                         (superviewFrame.size.width - tabBarHeight));
-                         
                          self.frame = CGRectMake(origin.x, origin.y,
                                                  ((superviewFrame.size.height + tabBarHeight) - origin.x),
                                                  ((superviewFrame.size.width - tabBarHeight) - origin.y));
