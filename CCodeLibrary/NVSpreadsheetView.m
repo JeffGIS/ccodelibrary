@@ -10,6 +10,7 @@
 @property (nonatomic) UIScrollView *contentView, *rowHeaderView, *columnHeaderView;
 @property (nonatomic) NSDate *touchDown, *touchUp;
 @property (nonatomic) NSArray *alphabet;
+@property (nonatomic) CGFloat headerFontSize;
 
 @end
 
@@ -28,8 +29,20 @@
     ssv.columns = columns;
     ssv.editable = editable;
     ssv.selectable = selectable;
-    ssv.rowHeight = 53.0;
-    ssv.columnWidth = 212.0;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        ssv.rowHeight = 27.0;
+        ssv.columnWidth = 108.0;
+        ssv.headerFontSize = 12.0;
+    }
+    
+    else
+    {
+        ssv.rowHeight = 54.0;
+        ssv.columnWidth = 216.0;
+        ssv.headerFontSize = 24.0;
+    }
     
     SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake(0.0, 0.0, ssv.columnWidth, ssv.rowHeight)];
     cell.row = 0;
@@ -59,7 +72,7 @@
         
         cell.row = (NSUInteger)(r + 1);
         cell.column = 0;
-        cell.font = [UIFont boldSystemFontOfSize:24.0];
+        cell.font = [UIFont boldSystemFontOfSize:ssv.headerFontSize];
         cell.identifier = [NSString stringWithFormat:@"%i", (r + 1)];
         cell.text = cell.identifier;
         cell.backgroundColor = UserDefaults.defaults.appleGray;
@@ -94,7 +107,7 @@
         
         cell.row = 0;
         cell.column = (NSUInteger)(c + 1);
-        cell.font = [UIFont boldSystemFontOfSize:24.0];
+        cell.font = [UIFont boldSystemFontOfSize:ssv.headerFontSize];
         cell.identifier = ssv.alphabet[c];
         cell.text = cell.identifier;
         cell.backgroundColor = UserDefaults.defaults.appleGray;
