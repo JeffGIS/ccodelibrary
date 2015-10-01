@@ -23,4 +23,7 @@
    forCellAtRow:(NSUInteger)row
          column:(NSUInteger)column;
 
+- (void)willRotateWithDuration:(NSTimeInterval)duration
+                  tabBarHeight:(CGFloat)tabBarHeight;
+
 @end
