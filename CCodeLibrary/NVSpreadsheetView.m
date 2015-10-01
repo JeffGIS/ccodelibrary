@@ -8,6 +8,7 @@
 @interface NVSpreadsheetView ()
 
 @property (nonatomic) UIScrollView *contentView, *rowHeaderView, *columnHeaderView;
+@property (nonatomic) NSDate *touchDown, *touchUp;
 @property (nonatomic) NSArray *alphabet;
 
 @end
@@ -46,6 +47,11 @@
     ssv.rowHeaderView.layer.borderWidth = 1.5;
     ssv.rowHeaderView.delegate = ssv;
     
+    UITapGestureRecognizer *rowHeaderTap = [[UITapGestureRecognizer alloc] initWithTarget:ssv
+                                                                                   action:@selector(ssvTapped:)];
+    
+    [ssv.rowHeaderView addGestureRecognizer:rowHeaderTap];
+    
     for (int r = 0; r < ssv.rows; r++)
     {
         SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake(0.0, (r * ssv.rowHeight),
@@ -76,6 +82,11 @@
     ssv.columnHeaderView.layer.borderWidth = 1.5;
     ssv.columnHeaderView.delegate = ssv;
     
+    UITapGestureRecognizer *columnHeaderTap = [[UITapGestureRecognizer alloc] initWithTarget:ssv
+                                                                                      action:@selector(ssvTapped:)];
+    
+    [ssv.columnHeaderView addGestureRecognizer:columnHeaderTap];
+    
     for (int c = 0; c < ssv.columns; c++)
     {
         SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake((c * ssv.columnWidth), 0.0,
@@ -103,15 +114,21 @@
     ssv.contentView.layer.borderWidth = 1.5;
     ssv.contentView.delegate = ssv;
     
-    for (int r = 0; r <= ssv.rows; r++)
+    UITapGestureRecognizer *contentTap = [[UITapGestureRecognizer alloc] initWithTarget:ssv
+                                                                                 action:@selector(ssvTapped:)];
+    
+    [ssv.contentView addGestureRecognizer:contentTap];
+    
+    for (int r = 0; r < ssv.rows; r++)
     {
-        for (int c = 0; c <= ssv.columns; c++)
+        for (int c = 0; c < ssv.columns; c++)
         {
             SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake((c * ssv.columnWidth), (r * ssv.rowHeight),
                                                                                               ssv.columnWidth, ssv.rowHeight)];
             
             cell.row = (NSUInteger)(r + 1);
             cell.column = (NSUInteger)(c + 1);
+            cell.identifier = [NSString stringWithFormat:@"%@%lu", ssv.alphabet[c], (unsigned long)cell.row];
             cell.backgroundColor = UIColor.whiteColor;
             
             [ssv.contentView addSubview:cell];
@@ -158,6 +175,57 @@
     {
         if ([cell isKindOfClass:SpreadSheetViewCell.class] && cell.row == row && cell.column == column)
             cell.text = text;
+    }
+}
+
+- (void)ssvTapped:(UITapGestureRecognizer *)gesture
+{
+    CGPoint point = [gesture locationInView:gesture.view];
+    NSString *selection = @"";
+    
+    int xID = (point.x / _columnWidth);
+    int yID = (point.y / _rowHeight);
+    
+    if (gesture.view == _contentView)
+    {
+        selection = [NSString stringWithFormat:@"%@%i", _alphabet[xID], (yID + 1)];
+        
+        for (SpreadSheetViewCell *cell in _contentView.subviews)
+        {
+            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
+                [cell.identifier isEqualToString:selection])
+            {
+                NSLog(@"Cell %@:\"%@\"", cell.identifier, cell.text);
+            }
+        }
+    }
+    
+    else if (gesture.view == _rowHeaderView)
+    {
+        selection = [NSString stringWithFormat:@"%i", (yID + 1)];
+        
+        for (SpreadSheetViewCell *cell in _rowHeaderView.subviews)
+        {
+            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
+                [cell.identifier isEqualToString:selection])
+            {
+                NSLog(@"Row Header %@:\"%@\"", cell.identifier, cell.text);
+            }
+        }
+    }
+    
+    else if (gesture.view == _columnHeaderView)
+    {
+        selection = [NSString stringWithFormat:@"%@", _alphabet[xID]];
+        
+        for (SpreadSheetViewCell *cell in _columnHeaderView.subviews)
+        {
+            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
+                [cell.identifier isEqualToString:selection])
+            {
+                NSLog(@"Column Header %@:\"%@\"", cell.identifier, cell.text);
+            }
+        }
     }
 }
 
