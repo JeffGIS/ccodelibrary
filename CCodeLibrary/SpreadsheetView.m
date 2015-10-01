@@ -126,7 +126,6 @@
             
             cell.row = (NSUInteger)r;
             cell.column = (NSUInteger)c;
-            cell.adjustsFontSizeToFitWidth = YES;
             [spreadsheetView.contentView addSubview:cell];
         }
     }

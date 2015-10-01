@@ -15,6 +15,8 @@
         self.textAlignment = NSTextAlignmentCenter;
         self.layer.borderWidth = 1.0;
         self.layer.borderColor = UIColor.blackColor.CGColor;
+        self.adjustsFontSizeToFitWidth = YES;
+        self.numberOfLines = 2;
     }
     
     return self;
