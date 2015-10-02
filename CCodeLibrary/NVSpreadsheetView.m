@@ -11,6 +11,7 @@
 @property (nonatomic) NSDate *touchDown, *touchUp;
 @property (nonatomic) NSArray *alphabet;
 @property (nonatomic) CGFloat headerFontSize;
+@property (nonatomic) UIView *rowHeaderOverlap, *columnHeaderOverlap;
 
 @end
 
@@ -150,6 +151,24 @@
     
     [ssv addSubview:ssv.contentView];
     
+    ssv.rowHeaderOverlap = [[UIView alloc] initWithFrame:CGRectMake((ssv.contentView.frame.origin.x + ssv.contentView.layer.borderWidth),
+                                                                    ssv.rowHeaderView.layer.borderWidth, 4.0,
+                                                                    ssv.frame.size.height - (ssv.contentView.layer.borderWidth * 2.0))];
+    
+    ssv.rowHeaderOverlap.backgroundColor = UIColor.yellowColor;
+    ssv.rowHeaderOverlap.alpha = 0.5;
+    ssv.rowHeaderOverlap.hidden = YES;
+    [ssv addSubview:ssv.rowHeaderOverlap];
+    
+    ssv.columnHeaderOverlap = [[UIView alloc] initWithFrame:CGRectMake(ssv.columnHeaderView.layer.borderWidth,
+                                                                       (ssv.contentView.frame.origin.y + ssv.contentView.layer.borderWidth),
+                                                                       ssv.frame.size.width - (ssv.contentView.layer.borderWidth * 2.0), 4.0)];
+    
+    ssv.columnHeaderOverlap.backgroundColor = UIColor.yellowColor;
+    ssv.columnHeaderOverlap.alpha = 0.5;
+    ssv.columnHeaderOverlap.hidden = YES;
+    [ssv addSubview:ssv.columnHeaderOverlap];
+    
     [view addSubview:ssv];
     
     return ssv;
@@ -250,6 +269,9 @@
     {
         _rowHeaderView.contentOffset = CGPointMake(0.0, offset.y);
         _columnHeaderView.contentOffset = CGPointMake(offset.x, 0.0);
+        
+        _rowHeaderOverlap.hidden = (offset.x < 1.0);
+        _columnHeaderOverlap.hidden = (offset.y < 1.0);
     }
     
     else if (scrollView == _rowHeaderView)
