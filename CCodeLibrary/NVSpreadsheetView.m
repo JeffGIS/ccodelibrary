@@ -32,11 +32,14 @@
     ssv.editable = editable;
     ssv.selectable = selectable;
     
+    CGFloat rtobMargin = 0.0;
+    
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
         ssv.rowHeight = 27.0;
         ssv.columnWidth = 108.0;
         ssv.headerFontSize = 12.0;
+        rtobMargin = 2.0;
     }
     
     else
@@ -44,6 +47,7 @@
         ssv.rowHeight = 54.0;
         ssv.columnWidth = 216.0;
         ssv.headerFontSize = 24.0;
+        rtobMargin = 5.0;
     }
     
     SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake(0.0, 0.0, ssv.columnWidth, ssv.rowHeight)];
@@ -54,10 +58,14 @@
     
     [ssv addSubview:cell];
     
-    ssv.returnToOrigin = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, (ssv.rowHeight + 30.0), (ssv.rowHeight - 10.0))];
+    ssv.returnToOrigin = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, (ssv.rowHeight + (rtobMargin * 6.0)),
+                                                                    (ssv.rowHeight - (rtobMargin * 2.0)))];
     ssv.returnToOrigin.center = cell.center;
     ssv.returnToOrigin.backgroundColor = UIColor.whiteColor;
-    ssv.returnToOrigin.imageEdgeInsets = UIEdgeInsetsMake(5.0, 25.0, 5.0, 25.0);
+    
+    ssv.returnToOrigin.imageEdgeInsets = UIEdgeInsetsMake(rtobMargin, (rtobMargin * 5.0),
+                                                          rtobMargin, (rtobMargin * 5.0));
+    
     ssv.returnToOrigin.layer.cornerRadius = 4.0;
     ssv.returnToOrigin.layer.borderWidth = 1.0;
     ssv.returnToOrigin.layer.borderColor = UIColor.darkGrayColor.CGColor;
