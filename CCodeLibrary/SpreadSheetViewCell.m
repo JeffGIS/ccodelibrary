@@ -22,6 +22,13 @@
     return self;
 }
 
+- (void)drawTextInRect:(CGRect)rect
+{
+    UIEdgeInsets insets = {0.0, 5.0, 0.0, 5.0};
+    
+    [super drawTextInRect:UIEdgeInsetsInsetRect(rect, insets)];
+}
+
 - (void)setSelected:(BOOL)selected
 {
     if (selected == YES)
