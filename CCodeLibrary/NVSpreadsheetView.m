@@ -12,6 +12,7 @@
 @property (nonatomic) NSArray *alphabet;
 @property (nonatomic) CGFloat headerFontSize;
 @property (nonatomic) UIView *rowHeaderOverlap, *columnHeaderOverlap;
+@property (nonatomic) UIButton *returnToOrigin;
 
 @end
 
@@ -50,7 +51,26 @@
     cell.column = 0;
     cell.backgroundColor = UserDefaults.defaults.appleGray;
     cell.layer.borderWidth = 1.5;
+    
     [ssv addSubview:cell];
+    
+    ssv.returnToOrigin = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, (ssv.rowHeight + 30.0), (ssv.rowHeight - 10.0))];
+    ssv.returnToOrigin.center = cell.center;
+    ssv.returnToOrigin.backgroundColor = UIColor.whiteColor;
+    ssv.returnToOrigin.imageEdgeInsets = UIEdgeInsetsMake(5.0, 25.0, 5.0, 25.0);
+    ssv.returnToOrigin.layer.cornerRadius = 4.0;
+    ssv.returnToOrigin.layer.borderWidth = 1.0;
+    ssv.returnToOrigin.layer.borderColor = UIColor.darkGrayColor.CGColor;
+    
+    [ssv.returnToOrigin setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"diagonalArrow"
+                                                                                                ofType:@"png"]]
+                        forState:UIControlStateNormal];
+    
+    [ssv.returnToOrigin addTarget:ssv
+                           action:@selector(returnToOrigin:)
+                 forControlEvents:UIControlEventTouchUpInside];
+    
+    [ssv addSubview:ssv.returnToOrigin];
     
     ssv.rowHeaderView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, ssv.rowHeight, ssv.columnWidth,
                                                                        (ssv.frame.size.height - ssv.rowHeight))];
@@ -306,6 +326,18 @@
                                                          (self.frame.size.width - _columnWidth),
                                                          (self.frame.size.height - _rowHeight));
                      }];
+}
+
+- (void)returnToOrigin:(UIButton *)button
+{
+    [_rowHeaderView setContentOffset:_rowHeaderView.contentOffset
+                            animated:NO];
+    
+    [_columnHeaderView setContentOffset:_columnHeaderView.contentOffset
+                               animated:NO];
+    
+    [_contentView setContentOffset:CGPointMake(0.0, 0.0)
+                          animated:YES];
 }
 
 @end
