@@ -24,7 +24,7 @@
 
 @property (nonatomic, weak) id <NVSpreadsheetViewDelegate> delegate;
 @property BOOL editable, selectable;
-@property NSUInteger rows, columns;
+@property NSUInteger rows, columns, activeColumns;
 @property CGFloat rowHeight, columnWidth;
 
 + (NVSpreadsheetView *)showSpreadsheetWithRows:(NSUInteger)rows

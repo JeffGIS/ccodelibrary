@@ -37,6 +37,7 @@
     ssv.selectable = selectable;
     ssv.delegate = delegate;
     ssv.inEditMode = NO;
+    ssv.activeColumns = 0;
     
     ssv.textField = [[UITextField alloc] init];
     ssv.textField.delegate = ssv;
@@ -279,7 +280,8 @@
         for (SpreadSheetViewCell *cell in _contentView.subviews)
         {
             if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
-                [cell.identifier isEqualToString:selection])
+                [cell.identifier isEqualToString:selection] &&
+                cell.column <= _activeColumns)
             {
                 NSLog(@"Cell %@:\"%@\"", cell.identifier, cell.text);
             }
@@ -330,13 +332,11 @@
         for (SpreadSheetViewCell *cell in _contentView.subviews)
         {
             if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
-                [cell.identifier isEqualToString:selection])
+                [cell.identifier isEqualToString:selection] &&
+                cell.row == 1 && cell.column <= _activeColumns)
             {
-                if (cell.row == 1)
-                {
-                    [self editCell:cell
-                            inView:_contentView];
-                }
+                [self editCell:cell
+                        inView:_contentView];
             }
         }
     }
@@ -471,8 +471,8 @@
         else if (_cellForEditing.superview == _contentView)
         {
             [_delegate ssvDidEditText:textField.text
-                         forCellAtRow:(_cellForEditing.row - 1)
-                               column:(_cellForEditing.column - 1)];
+                         forCellAtRow:_cellForEditing.row
+                               column:_cellForEditing.column];
         }
     }
 }
