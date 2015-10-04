@@ -142,11 +142,6 @@
     
     [ssv.columnHeaderView addGestureRecognizer:columnHeaderTap];
     
-    UILongPressGestureRecognizer *columnHeaderLP = [[UILongPressGestureRecognizer alloc] initWithTarget:ssv
-                                                                                                 action:@selector(ssvLongPressed:)];
-    
-    [ssv.columnHeaderView addGestureRecognizer:columnHeaderLP];
-    
     for (int c = 0; c < ssv.columns; c++)
     {
         SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake((c * ssv.columnWidth), 0.0,
@@ -178,6 +173,11 @@
                                                                                  action:@selector(ssvTapped:)];
     
     [ssv.contentView addGestureRecognizer:contentTap];
+    
+    UILongPressGestureRecognizer *contentLP = [[UILongPressGestureRecognizer alloc] initWithTarget:ssv
+                                                                                            action:@selector(ssvLongPressed:)];
+    
+    [ssv.contentView addGestureRecognizer:contentLP];
     
     for (int r = 0; r < ssv.rows; r++)
     {
@@ -332,8 +332,11 @@
             if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
                 [cell.identifier isEqualToString:selection])
             {
-                [self editCell:cell
-                        inView:_contentView];
+                if (cell.row == 1)
+                {
+                    [self editCell:cell
+                            inView:_contentView];
+                }
             }
         }
     }
@@ -448,11 +451,30 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    _cellForEditing.text = _textField.text;
-    [_textField removeFromSuperview];
+    _cellForEditing.text = textField.text;
+    [textField removeFromSuperview];
     
-    if (_cellForEditing.superview == _columnHeaderView && _delegate)
-        [_delegate ssvDidEditColumnHeaderAtIndex:(_cellForEditing.column - 1)];
+    if (_delegate)
+    {
+        if (_cellForEditing.superview == _columnHeaderView)
+        {
+            [_delegate ssvDidEditColumnHeaderText:textField.text
+                                          atIndex:(_cellForEditing.column - 1)];
+        }
+        
+        else if (_cellForEditing.superview == _rowHeaderView)
+        {
+            [_delegate ssvDidEditRowHeaderText:textField.text
+                                       atIndex:(_cellForEditing.row - 1)];
+        }
+        
+        else if (_cellForEditing.superview == _contentView)
+        {
+            [_delegate ssvDidEditText:textField.text
+                         forCellAtRow:(_cellForEditing.row - 1)
+                               column:(_cellForEditing.column - 1)];
+        }
+    }
 }
 
 @end

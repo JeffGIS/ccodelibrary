@@ -7,7 +7,16 @@
 
 @protocol NVSpreadsheetViewDelegate <NSObject>
 
-- (void)ssvDidEditColumnHeaderAtIndex:(NSUInteger)index;
+@optional
+- (void)ssvDidEditColumnHeaderText:(NSString *)text
+                           atIndex:(NSUInteger)index;
+
+- (void)ssvDidEditRowHeaderText:(NSString *)text
+                        atIndex:(NSUInteger)index;
+
+- (void)ssvDidEditText:(NSString *)text
+          forCellAtRow:(NSUInteger)row
+                column:(NSUInteger)column;
 
 @end
 
