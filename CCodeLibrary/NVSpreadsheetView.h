@@ -3,8 +3,17 @@
 
 #import <UIKit/UIKit.h>
 
-@interface NVSpreadsheetView : UIView <UIScrollViewDelegate>
+@class NVSpreadsheetView;
 
+@protocol NVSpreadsheetViewDelegate <NSObject>
+
+- (void)ssvDidEditColumnHeaderAtIndex:(NSUInteger)index;
+
+@end
+
+@interface NVSpreadsheetView : UIView <UIScrollViewDelegate,UITextFieldDelegate>
+
+@property (nonatomic, weak) id <NVSpreadsheetViewDelegate> delegate;
 @property BOOL editable, selectable;
 @property NSUInteger rows, columns;
 @property CGFloat rowHeight, columnWidth;
@@ -14,7 +23,8 @@
                                           view:(UIView *)view
                                          frame:(CGRect)frame
                                       editable:(BOOL)editable
-                                    selectable:(BOOL)selectable;
+                                    selectable:(BOOL)selectable
+                                      delegate:(id)delegate;
 
 - (void)setRowHeaderText:(NSArray *)rowHeaderText;
 - (void)setColumnHeaderText:(NSArray *)columnHeaderText;

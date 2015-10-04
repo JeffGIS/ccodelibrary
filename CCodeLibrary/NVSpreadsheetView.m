@@ -13,6 +13,9 @@
 @property (nonatomic) CGFloat headerFontSize;
 @property (nonatomic) UIView *rowHeaderOverlap, *columnHeaderOverlap;
 @property (nonatomic) UIButton *returnToOrigin;
+@property (nonatomic) SpreadSheetViewCell *cellForEditing;
+@property (nonatomic) UITextField *textField;
+@property BOOL inEditMode;
 
 @end
 
@@ -24,6 +27,7 @@
                                          frame:(CGRect)frame
                                       editable:(BOOL)editable
                                     selectable:(BOOL)selectable
+                                      delegate:(id)delegate
 {
     NVSpreadsheetView *ssv = [[NVSpreadsheetView alloc] initWithFrame:frame];
     ssv.backgroundColor = UserDefaults.defaults.appleGray;
@@ -31,6 +35,15 @@
     ssv.columns = columns;
     ssv.editable = editable;
     ssv.selectable = selectable;
+    ssv.delegate = delegate;
+    ssv.inEditMode = NO;
+    
+    ssv.textField = [[UITextField alloc] init];
+    ssv.textField.delegate = ssv;
+    ssv.textField.layer.borderColor = UIColor.redColor.CGColor;
+    ssv.textField.layer.borderWidth = 6.0;
+    ssv.textField.textAlignment = NSTextAlignmentCenter;
+    ssv.textField.clearButtonMode = UITextFieldViewModeAlways;
     
     CGFloat rtobMargin = 0.0;
     
@@ -128,6 +141,11 @@
                                                                                       action:@selector(ssvTapped:)];
     
     [ssv.columnHeaderView addGestureRecognizer:columnHeaderTap];
+    
+    UILongPressGestureRecognizer *columnHeaderLP = [[UILongPressGestureRecognizer alloc] initWithTarget:ssv
+                                                                                                 action:@selector(ssvLongPressed:)];
+    
+    [ssv.columnHeaderView addGestureRecognizer:columnHeaderLP];
     
     for (int c = 0; c < ssv.columns; c++)
     {
@@ -240,6 +258,14 @@
 
 - (void)ssvTapped:(UITapGestureRecognizer *)gesture
 {
+    if ([_columnHeaderView.subviews containsObject:_textField] ||
+        [_rowHeaderView.subviews containsObject:_textField] ||
+        [_contentView.subviews containsObject:_textField])
+    {
+        [_textField resignFirstResponder];
+        return;
+    }
+    
     CGPoint point = [gesture locationInView:gesture.view];
     NSString *selection = @"";
     
@@ -284,6 +310,60 @@
                 [cell.identifier isEqualToString:selection])
             {
                 NSLog(@"Column Header %@:\"%@\"", cell.identifier, cell.text);
+            }
+        }
+    }
+}
+
+- (void)ssvLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    CGPoint point = [gesture locationInView:gesture.view];
+    NSString *selection = @"";
+    
+    int xID = (point.x / _columnWidth);
+    int yID = (point.y / _rowHeight);
+    
+    if (gesture.view == _contentView)
+    {
+        selection = [NSString stringWithFormat:@"%@%i", _alphabet[xID], (yID + 1)];
+        
+        for (SpreadSheetViewCell *cell in _contentView.subviews)
+        {
+            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
+                [cell.identifier isEqualToString:selection])
+            {
+                [self editCell:cell
+                        inView:_contentView];
+            }
+        }
+    }
+    
+    else if (gesture.view == _rowHeaderView)
+    {
+        selection = [NSString stringWithFormat:@"%i", (yID + 1)];
+        
+        for (SpreadSheetViewCell *cell in _rowHeaderView.subviews)
+        {
+            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
+                [cell.identifier isEqualToString:selection])
+            {
+                [self editCell:cell
+                        inView:_rowHeaderView];
+            }
+        }
+    }
+    
+    else if (gesture.view == _columnHeaderView)
+    {
+        selection = [NSString stringWithFormat:@"%@", _alphabet[xID]];
+        
+        for (SpreadSheetViewCell *cell in _columnHeaderView.subviews)
+        {
+            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
+                [cell.identifier isEqualToString:selection])
+            {
+                [self editCell:cell
+                        inView:_columnHeaderView];
             }
         }
     }
@@ -346,6 +426,33 @@
     
     [_contentView setContentOffset:CGPointMake(0.0, 0.0)
                           animated:YES];
+}
+
+- (void)editCell:(SpreadSheetViewCell *)cell
+          inView:(UIScrollView *)view
+{
+    _textField.text = cell.text;
+    _textField.font = cell.font;
+    _textField.frame = cell.frame;
+    _textField.backgroundColor = cell.backgroundColor;
+    [view addSubview:_textField];
+    [_textField becomeFirstResponder];
+    _cellForEditing = cell;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return NO;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    _cellForEditing.text = _textField.text;
+    [_textField removeFromSuperview];
+    
+    if (_cellForEditing.superview == _columnHeaderView && _delegate)
+        [_delegate ssvDidEditColumnHeaderAtIndex:(_cellForEditing.column - 1)];
 }
 
 @end
