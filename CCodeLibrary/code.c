@@ -2,7 +2,7 @@
 #define MAX_PATH	260
 #define _MAX_PATH   260
 #define LF_FACESIZE         32
-
+#define BOOL bool
 //#undef HUGE
 #define		MAXPICKITEMS		32
 

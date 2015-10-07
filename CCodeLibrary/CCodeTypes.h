@@ -7,7 +7,7 @@
 
 typedef unsigned int HANDLE;
 typedef HANDLE *LPHANDLE;
-typedef bool    BOOL;
+//typedef bool    BOOL;
 typedef int    *LPBOOL;
 typedef int * LPINT;
 typedef char *LPSTR;
