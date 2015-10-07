@@ -26,6 +26,12 @@
     textAlert.overlayView = [[UIView alloc] initWithFrame:bounds];
     textAlert.overlayView.backgroundColor = UIColor.blackColor;
     textAlert.overlayView.alpha = 0.0;
+    
+    UITapGestureRecognizer *overlayTap = [[UITapGestureRecognizer alloc] initWithTarget:textAlert
+                                                                                 action:@selector(overlayTapped:)];
+    
+    [textAlert.overlayView addGestureRecognizer:overlayTap];
+    
     textAlert.delegate = delegate;
     textAlert.minimumCharacters = 2;
     textAlert.keyboardType = UIKeyboardTypeAlphabet;
@@ -81,6 +87,8 @@
                      animations:^{
                          textAlert.overlayView.alpha = 0.7;
                          textAlert.alpha = 1.0;
+                     } completion:^(BOOL finished) {
+                         [textAlert.textField becomeFirstResponder];
                      }];
     
     return textAlert;
@@ -127,14 +135,16 @@
     else
     {
         [textField resignFirstResponder];
-        
-        if (_delegate)
-        {
-            [_delegate textAlert:self
-                   didReturnText:textField.text];
-        }
-        
         return YES;
+    }
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (_delegate)
+    {
+        [_delegate textAlert:self
+               didReturnText:textField.text];
     }
 }
 
@@ -159,6 +169,17 @@
 - (UIKeyboardType)keyboardType
 {
     return _textField.keyboardType;
+}
+
+- (void)touchesEnded:(NSSet *)touches
+           withEvent:(UIEvent *)event
+{
+    [_textField resignFirstResponder];
+}
+
+- (void)overlayTapped:(UITapGestureRecognizer *)gesture
+{
+    [_textField resignFirstResponder];
 }
 
 @end
