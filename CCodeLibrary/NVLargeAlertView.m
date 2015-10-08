@@ -163,14 +163,23 @@
 
 - (void)hideLargeAlertView:(BOOL)animated
 {
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         self.alpha = 0.0;
-                         _overlayView.alpha = 0.0;
-                     } completion:^(BOOL finished) {
-                         [_overlayView removeFromSuperview];
-                         [self removeFromSuperview];
-                     }];
+    if (animated)
+    {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             self.alpha = 0.0;
+                             _overlayView.alpha = 0.0;
+                         } completion:^(BOOL finished) {
+                             [_overlayView removeFromSuperview];
+                             [self removeFromSuperview];
+                         }];
+    }
+    
+    else
+    {
+        [_overlayView removeFromSuperview];
+        [self removeFromSuperview];
+    }
 }
 
 - (CGFloat)getHeightForText:(NSString *)text

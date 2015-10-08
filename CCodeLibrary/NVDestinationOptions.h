@@ -8,7 +8,7 @@
 @protocol NVDestinationOptionsDelegate <NSObject>
 
 - (void)destinationOptions:(NVDestinationOptions *)destinationOptions
-        didReturnFrequency:(CGFloat)frequency
+        didReturnFrequency:(NSInteger)frequency
                 timeDepart:(NSInteger)timeDepart
                 timeReturn:(NSInteger)timeReturn
              destinationID:(NSInteger)destinationID;
@@ -21,7 +21,7 @@
 
 + (NVDestinationOptions *)showDestinationOptionsInView:(UIView *)view
                                               delegate:(id)delegate
-                                             frequency:(CGFloat)frequency
+                                             frequency:(NSInteger)frequency
                                             timeDepart:(NSInteger)timeDepart
                                             timeReturn:(NSInteger)timeReturn
                                          destinationID:(NSInteger)destinationID;
