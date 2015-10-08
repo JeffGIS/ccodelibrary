@@ -15,7 +15,7 @@
 
 @end
 
-@interface NVDestinationOptions : UIView
+@interface NVDestinationOptions : UIView <UIPickerViewDelegate,UIPickerViewDataSource>
 
 @property (nonatomic, weak) id <NVDestinationOptionsDelegate> delegate;
 
