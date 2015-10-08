@@ -29,6 +29,8 @@
 		69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C441A91BB474B200D026A7 /* NVTabBarEdit.m */; settings = {ASSET_TAGS = (); }; };
 		69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C441A81BB474B200D026A7 /* NVTabBarEdit.h */; };
 		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
+		69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */; settings = {ASSET_TAGS = (); }; };
+		69F5B2301BC5F6CD00119212 /* NVDestinationOptions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */; };
 		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
 		A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */ = {isa = PBXBuildFile; fileRef = A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */; };
 		A90C6E971B4A237600D87DB8 /* NVPDFSnapshotter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */; };
@@ -214,6 +216,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69F5B2301BC5F6CD00119212 /* NVDestinationOptions.h in CopyFiles */,
 				6960F4D71BBCD25100A5681C /* NVSpreadsheetView.h in CopyFiles */,
 				69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */,
 				699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */,
@@ -339,6 +342,8 @@
 		69C441A91BB474B200D026A7 /* NVTabBarEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTabBarEdit.m; sourceTree = "<group>"; };
 		69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSecretAlertView.h; sourceTree = "<group>"; };
 		69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSecretAlertView.m; sourceTree = "<group>"; };
+		69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDestinationOptions.h; sourceTree = "<group>"; };
+		69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDestinationOptions.m; sourceTree = "<group>"; };
 		A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVHeadingViewController.h; sourceTree = "<group>"; };
 		A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVHeadingViewController.m; sourceTree = "<group>"; };
 		A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPDFSnapshotter.h; sourceTree = "<group>"; };
@@ -668,6 +673,8 @@
 				A98A57A71B20ADE600906FBC /* NVCalibrationController.m */,
 				A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */,
 				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
+				69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */,
+				69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */,
 				A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */,
 				A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */,
 				A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */,
@@ -974,6 +981,7 @@
 				EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */,
 				EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */,
 				EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */,
+				69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
 				A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */,
 				A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */,
