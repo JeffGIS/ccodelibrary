@@ -104,6 +104,10 @@
     destOpt.frequencyPicker.layer.borderWidth = 4.0;
     destOpt.frequencyPicker.layer.cornerRadius = destOpt.cornerRadius;
     
+    [destOpt.frequencyPicker selectRow:[destOpt pickerIndexForFrequency:destOpt.frequency]
+                           inComponent:0
+                              animated:NO];
+    
     [destOpt addSubview:destOpt.frequencyPicker];
     
     UILabel *fpLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.11),
@@ -118,6 +122,8 @@
     
     destOpt.departTimePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.6),
                                                                               (minBounds * 0.44), (minBounds * 0.38))];
+    
+    destOpt.departTimePicker.date = [destOpt getDateForTime:destOpt.timeDepart];
     
     [destOpt setupDatePicker:destOpt.departTimePicker];
     [destOpt addSubview:destOpt.departTimePicker];
@@ -134,6 +140,8 @@
     
     destOpt.returnTimePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.6),
                                                                               (minBounds * 0.44), (minBounds * 0.38))];
+    
+    destOpt.returnTimePicker.date = [destOpt getDateForTime:destOpt.timeReturn];
     
     [destOpt setupDatePicker:destOpt.returnTimePicker];
     [destOpt addSubview:destOpt.returnTimePicker];
@@ -217,6 +225,15 @@
 {
     if (_delegate)
     {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"HHmm"];
+        
+        NSString *timeString = [formatter stringFromDate:_departTimePicker.date];
+        _timeDepart = timeString.integerValue;
+        
+        timeString = [formatter stringFromDate:_returnTimePicker.date];
+        _timeReturn = timeString.integerValue;
+        
         [_delegate destinationOptions:self
                    didReturnFrequency:_frequency
                            timeDepart:_timeDepart
@@ -265,7 +282,123 @@ rowHeightForComponent:(NSInteger)component
       didSelectRow:(NSInteger)row
        inComponent:(NSInteger)component
 {
+    _frequency = [self monthlyFrequencyForPickerOption:_frequencyTitles[row]];
+}
+
+- (NSInteger)monthlyFrequencyForPickerOption:(NSString *)pickerOption
+{
+    NSInteger frequency = 0;
     
+    if ([pickerOption isEqualToString:@"Once per month"])
+        frequency = 1;
+    
+    else if ([pickerOption isEqualToString:@"Twice per month"])
+        frequency = 2;
+    
+    else if ([pickerOption isEqualToString:@"3 times per month"])
+        frequency = 3;
+    
+    else if ([pickerOption isEqualToString:@"Once per week"])
+        frequency = 4;
+    
+    else if ([pickerOption isEqualToString:@"Twice per week"])
+        frequency = 8;
+    
+    else if ([pickerOption isEqualToString:@"3 times per week"])
+        frequency = 12;
+    
+    else if ([pickerOption isEqualToString:@"4 times per week"])
+        frequency = 16;
+    
+    else if ([pickerOption isEqualToString:@"5 times per week"])
+        frequency = 20;
+    
+    else if ([pickerOption isEqualToString:@"6 times per week"])
+        frequency = 24;
+    
+    else if ([pickerOption isEqualToString:@"Once per day"])
+        frequency = 28;
+    
+    else if ([pickerOption isEqualToString:@"Twice per day"])
+        frequency = 56;
+    
+    else if ([pickerOption isEqualToString:@"3 times per day"])
+        frequency = 84;
+
+    return frequency;
+}
+
+- (NSUInteger)pickerIndexForFrequency:(NSInteger)frequency
+{
+    NSUInteger index = 0;
+    
+    switch (frequency)
+    {
+        case 2:
+            index = 1;
+            break;
+            
+        case 3:
+            index = 2;
+            break;
+            
+        case 4:
+            index = 3;
+            break;
+            
+        case 8:
+            index = 4;
+            break;
+            
+        case 12:
+            index = 5;
+            break;
+            
+        case 16:
+            index = 6;
+            break;
+            
+        case 20:
+            index = 7;
+            break;
+            
+        case 24:
+            index = 8;
+            break;
+            
+        case 28:
+            index = 9;
+            break;
+            
+        case 56:
+            index = 10;
+            break;
+            
+        case 84:
+            index = 11;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return index;
+}
+
+- (NSDate *)getDateForTime:(NSInteger)time
+{
+    NSInteger hours = (time / 100);
+    NSInteger minutes = (time - (hours * 100));
+    
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDate *date = [calendar dateBySettingHour:hours
+                                        minute:minutes
+                                        second:0
+                                        ofDate:NSDate.date
+                                       options:0];
+    
+    return date;
 }
 
 @end
