@@ -6,6 +6,7 @@
 @interface NVDestinationOptions ()
 
 @property (nonatomic) UIView *overlayView;
+@property (nonatomic) UITabBar *tabBar;
 
 @end
 
@@ -18,12 +19,6 @@
                                             timeReturn:(NSInteger)timeReturn
                                          destinationID:(NSInteger)destinationID
 {
-    if ([delegate isKindOfClass:UIViewController.class])
-    {
-        UIViewController *vc = (UIViewController *)delegate;
-        vc.tabBarController.tabBar.hidden = YES;
-    }
-    
     NVDestinationOptions *destOpt = [[NVDestinationOptions alloc] init];
     
     CGRect bounds = UIScreen.mainScreen.bounds;
@@ -33,7 +28,22 @@
     destOpt.overlayView.alpha = 0.0;
     destOpt.delegate = delegate;
     
+    if ([destOpt.delegate isKindOfClass:UIViewController.class])
+    {
+        UIViewController *vc = (UIViewController *)destOpt.delegate;
+        destOpt.tabBar = vc.tabBarController.tabBar;
+    }
+    
     [view addSubview:destOpt.overlayView];
+    
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         destOpt.overlayView.alpha = 0.7;
+                         destOpt.alpha = 1.0;
+                         
+                         if (destOpt.tabBar)
+                             destOpt.tabBar.alpha = 0.2;
+                     }];
     
     return destOpt;
 }
