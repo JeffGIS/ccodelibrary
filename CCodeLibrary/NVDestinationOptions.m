@@ -86,7 +86,6 @@
                                          destinationID:(NSInteger)destinationID
 {
     CGRect bounds = UIScreen.mainScreen.bounds;
-    
     CGFloat minBounds = (MIN(bounds.size.width, bounds.size.height) * 0.9);
     
     NVDestinationOptions *destOpt =
