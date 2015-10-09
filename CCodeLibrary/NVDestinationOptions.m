@@ -26,6 +26,7 @@
     {
         case 1:
             frequencyTitle = @"Once per month";
+            break;
             
         case 2:
             frequencyTitle = @"Twice per month";
