@@ -18,6 +18,66 @@
 
 @implementation NVDestinationOptions
 
++ (NSString *)frequencyTitleForFrequency:(NSInteger)frequency
+{
+    NSString *frequencyTitle = @"";
+    
+    switch (frequency)
+    {
+        case 1:
+            frequencyTitle = @"Once per month";
+            
+        case 2:
+            frequencyTitle = @"Twice per month";
+            break;
+            
+        case 3:
+            frequencyTitle = @"3 times per month";
+            break;
+            
+        case 4:
+            frequencyTitle = @"Once per week";
+            break;
+            
+        case 8:
+            frequencyTitle = @"Twice per week";
+            break;
+            
+        case 12:
+            frequencyTitle = @"3 times per week";
+            break;
+            
+        case 16:
+            frequencyTitle = @"4 times per week";
+            break;
+            
+        case 20:
+            frequencyTitle = @"5 times per week";
+            break;
+            
+        case 24:
+            frequencyTitle = @"6 times per week";
+            break;
+            
+        case 28:
+            frequencyTitle = @"Once per day";
+            break;
+            
+        case 56:
+            frequencyTitle = @"Twice per day";
+            break;
+            
+        case 84:
+            frequencyTitle = @"3 times per day";
+            break;
+            
+        default:
+            break;
+    }
+    
+    return frequencyTitle;
+}
+
 + (NVDestinationOptions *)showDestinationOptionsInView:(UIView *)view
                                               delegate:(id)delegate
                                              frequency:(NSInteger)frequency

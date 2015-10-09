@@ -77,7 +77,7 @@
     textAlert.textField.backgroundColor = UserDefaults.defaults.appleGray;
     textAlert.textField.layer.cornerRadius = 10.0;
     textAlert.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textAlert.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    textAlert.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
     textAlert.textField.keyboardType = textAlert.keyboardType;
     textAlert.textField.adjustsFontSizeToFitWidth = YES;
     

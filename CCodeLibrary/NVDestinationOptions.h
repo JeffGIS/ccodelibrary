@@ -19,6 +19,8 @@
 
 @property (nonatomic, weak) id <NVDestinationOptionsDelegate> delegate;
 
++ (NSString *)frequencyTitleForFrequency:(NSInteger)frequency;
+
 + (NVDestinationOptions *)showDestinationOptionsInView:(UIView *)view
                                               delegate:(id)delegate
                                              frequency:(NSInteger)frequency
