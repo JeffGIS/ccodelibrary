@@ -45,4 +45,6 @@
 - (void)willRotateWithDuration:(NSTimeInterval)duration
                   tabBarHeight:(CGFloat)tabBarHeight;
 
+- (void)clearContents;
+
 @end
