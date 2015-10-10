@@ -79,6 +79,35 @@
     return frequencyTitle;
 }
 
++ (NSDate *)getDateForTime:(NSInteger)time
+{
+    NSDate *date = NSDate.date;
+    
+    NSInteger hours = (time / 100);
+    NSInteger minutes = (time - (hours * 100));
+    
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    calendar.locale = NSLocale.currentLocale;
+    calendar.timeZone = NSTimeZone.localTimeZone;
+    
+    NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYearForWeekOfYear|NSCalendarUnitWeekOfYear|
+                                        NSCalendarUnitWeekday|NSCalendarUnitHour|NSCalendarUnitMinute
+                                                   fromDate:date];
+    
+    if (dateComponents.weekday != WeekDayMonday)
+    {
+        dateComponents.weekday = WeekDayMonday;
+        dateComponents.weekOfYear += 1;
+    }
+    
+    dateComponents.hour = hours;
+    dateComponents.minute = minutes;
+    
+    date = [calendar dateFromComponents:dateComponents];
+    
+    return date;
+}
+
 + (NVDestinationOptions *)showDestinationOptionsInView:(UIView *)view
                                               delegate:(id)delegate
                                              frequency:(NSInteger)frequency
@@ -183,7 +212,7 @@
     destOpt.departTimePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.6),
                                                                               (minBounds * 0.44), (minBounds * 0.38))];
     
-    destOpt.departTimePicker.date = [destOpt getDateForTime:destOpt.timeDepart];
+    destOpt.departTimePicker.date = [NVDestinationOptions getDateForTime:destOpt.timeDepart];
     
     [destOpt setupDatePicker:destOpt.departTimePicker];
     [destOpt addSubview:destOpt.departTimePicker];
@@ -201,7 +230,7 @@
     destOpt.returnTimePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.6),
                                                                               (minBounds * 0.44), (minBounds * 0.38))];
     
-    destOpt.returnTimePicker.date = [destOpt getDateForTime:destOpt.timeReturn];
+    destOpt.returnTimePicker.date = [NVDestinationOptions getDateForTime:destOpt.timeReturn];
     
     [destOpt setupDatePicker:destOpt.returnTimePicker];
     [destOpt addSubview:destOpt.returnTimePicker];
@@ -443,22 +472,6 @@ rowHeightForComponent:(NSInteger)component
     }
     
     return index;
-}
-
-- (NSDate *)getDateForTime:(NSInteger)time
-{
-    NSInteger hours = (time / 100);
-    NSInteger minutes = (time - (hours * 100));
-    
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    
-    NSDate *date = [calendar dateBySettingHour:hours
-                                        minute:minutes
-                                        second:0
-                                        ofDate:NSDate.date
-                                       options:0];
-    
-    return date;
 }
 
 @end

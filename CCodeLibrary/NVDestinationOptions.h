@@ -3,6 +3,18 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, WeekDay)
+{
+    WeekDayNone,
+    WeekDaySunday,
+    WeekDayMonday,
+    WeekDayTuesday,
+    WeekDayWednesday,
+    WeekDayThursday,
+    WeekDayFriday,
+    WeekDaySaturday,
+};
+
 @class NVDestinationOptions;
 
 @protocol NVDestinationOptionsDelegate <NSObject>
@@ -20,6 +32,7 @@
 @property (nonatomic, weak) id <NVDestinationOptionsDelegate> delegate;
 
 + (NSString *)frequencyTitleForFrequency:(NSInteger)frequency;
++ (NSDate *)getDateForTime:(NSInteger)time;
 
 + (NVDestinationOptions *)showDestinationOptionsInView:(UIView *)view
                                               delegate:(id)delegate
