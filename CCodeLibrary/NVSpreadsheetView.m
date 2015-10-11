@@ -477,4 +477,17 @@
     }
 }
 
+- (void)clearContents
+{
+    for (int r = 1; r <= _rows; r++)
+    {
+        for (int c = 1; c <= _columns; c++)
+        {
+            [self setText:@""
+             forCellAtRow:(NSUInteger)r
+                   column:(NSUInteger)c];
+        }
+    }
+}
+
 @end
