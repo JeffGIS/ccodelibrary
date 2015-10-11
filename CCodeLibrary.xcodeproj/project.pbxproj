@@ -189,6 +189,8 @@
 		EBA2E47A199527660085B2E0 /* CCodeLibraryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E479199527660085B2E0 /* CCodeLibraryTests.m */; };
 		EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E48419952BCA0085B2E0 /* MathUtil.c */; };
 		EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E48819952BCA0085B2E0 /* TileIndex.c */; };
+		EBA517B71BCA1355005A9CA8 /* CrimeData.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA517B61BCA1355005A9CA8 /* CrimeData.m */; settings = {ASSET_TAGS = (); }; };
+		EBA517B81BCA1405005A9CA8 /* CrimeData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA517B51BCA1355005A9CA8 /* CrimeData.h */; };
 		EBAB31C71AE6DC2D00C5CCEF /* NamedColors.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */; };
 		EBAB422F1B2B073A00C36FFC /* CurbRampData.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAB422E1B2B073A00C36FFC /* CurbRampData.m */; };
 		EBAB42321B2B1A5E00C36FFC /* SQLiteLib.c in Sources */ = {isa = PBXBuildFile; fileRef = EBAB42301B2B1A5E00C36FFC /* SQLiteLib.c */; };
@@ -218,6 +220,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EBA517B81BCA1405005A9CA8 /* CrimeData.h in CopyFiles */,
 				6948D5D61BC7845F009CA04F /* NVStaticMapView.h in CopyFiles */,
 				69F5B2301BC5F6CD00119212 /* NVDestinationOptions.h in CopyFiles */,
 				6960F4D71BBCD25100A5681C /* NVSpreadsheetView.h in CopyFiles */,
@@ -496,6 +499,8 @@
 		EBA2E48619952BCA0085B2E0 /* rotate256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotate256.h; sourceTree = "<group>"; };
 		EBA2E48719952BCA0085B2E0 /* TileGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileGraphics.h; sourceTree = "<group>"; };
 		EBA2E48819952BCA0085B2E0 /* TileIndex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TileIndex.c; sourceTree = "<group>"; };
+		EBA517B51BCA1355005A9CA8 /* CrimeData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrimeData.h; sourceTree = "<group>"; };
+		EBA517B61BCA1355005A9CA8 /* CrimeData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrimeData.m; sourceTree = "<group>"; };
 		EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = colorsByName.h; sourceTree = "<group>"; };
 		EBAB31C51AE6DC2D00C5CCEF /* NamedColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NamedColors.h; sourceTree = "<group>"; };
 		EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NamedColors.m; sourceTree = "<group>"; };
@@ -865,6 +870,8 @@
 				EBAB422E1B2B073A00C36FFC /* CurbRampData.m */,
 				A99873231B59ACC100200CA9 /* SewerData.h */,
 				A99873241B59ACC100200CA9 /* SewerData.m */,
+				EBA517B51BCA1355005A9CA8 /* CrimeData.h */,
+				EBA517B61BCA1355005A9CA8 /* CrimeData.m */,
 			);
 			name = Databases;
 			sourceTree = "<group>";
@@ -953,6 +960,7 @@
 				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,
 				A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */,
 				A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */,
+				EBA517B71BCA1355005A9CA8 /* CrimeData.m in Sources */,
 				A98A57A81B20ADE600906FBC /* NVCalibrationController.m in Sources */,
 				EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */,
 				A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */,

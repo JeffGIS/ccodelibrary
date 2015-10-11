@@ -60,6 +60,7 @@
 #import "CurbRampData.h"
 #import "NVPDFSnapshotter.h"
 #import "SewerData.h"
+#import "CrimeData.h"
 
 @interface CCodeLibrary : NSObject
 
