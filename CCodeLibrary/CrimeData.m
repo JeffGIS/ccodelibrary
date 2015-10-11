@@ -211,10 +211,9 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         }
         else
         {
-            color = UIColor.greenColor.CGColor;
-            size = 10.0;
+            color = UIColor.brownColor.CGColor;
+            size = 16.0;
         }
-        color = _red.CGColor;
         [self drawCrimePoint:context
                      atPoint:&llpoint
                    withColor:color
