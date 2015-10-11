@@ -21,6 +21,8 @@
 @property LPTRANDATA pTranViewtoLL;
 @property long long fileSize;
 @property int processingID;
+@property int zoom;
+@property int minUCR, maxUCR;
 
 - (void)open;
 - (void)close;
@@ -30,6 +32,11 @@
 
 - (void)startTransaction;
 - (void)commitTransaction;
+
+-(void)displayCrimePoints:(CGContextRef)context
+                llCorners:(CORNERPOINTS *) latlonCornerPoints
+                 LLBounds:(MNMXCORD *)platlonBounds
+               viewBounds:(MNMXCORD *)pvbounds;
 
 
 @end

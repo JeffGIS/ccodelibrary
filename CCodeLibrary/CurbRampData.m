@@ -118,7 +118,7 @@ static CurbRampData *_statdatabase = nil;
     }
     
     [self close];
-    return -1;
+    //return -1;
     return rtn;
 }
 
