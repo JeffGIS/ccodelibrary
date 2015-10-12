@@ -5,7 +5,7 @@
 
 typedef NS_ENUM(NSInteger, DateRangeButton)
 {
-    DateRangeButtonDefault,
+    DateRangeButtonNone,
     DateRangeButtonToday,
     DateRangeButtonYesterday,
     DateRangeButtonThisWeek,
@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger, DateRangeButton)
 
 typedef NS_ENUM(NSInteger, DateRangeInverval)
 {
-    DateRangeInvervalDefault,
+    DateRangeInvervalNone,
     DateRangeInvervalDay,
     DateRangeInvervalWeek,
     DateRangeInvervalMonth,
