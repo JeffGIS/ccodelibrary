@@ -3,6 +3,7 @@
 
 #import "NVDateRange.h"
 #import "UserDefaults.h"
+#import "NVDestinationOptions.h"
 
 @interface NVDateRange ()
 
@@ -35,7 +36,7 @@
     nvdr.cornerRadius = (minBounds / 60.0);
     nvdr.fromDate = fromDate;
     nvdr.toDate = toDate;
-    nvdr.interval = DateRangeInvervalWeek;
+    nvdr.interval = DateRangeInvervalNone;
     
     nvdr.alpha = 0.0;
     nvdr.backgroundColor = UserDefaults.defaults.defaultColors.backgroundColor;
@@ -83,7 +84,18 @@
     }
     
     else
-        nvdr.fromDatePicker.date = [nvdr startOfDayDateForDate:NSDate.date];
+    {
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        calendar.locale = NSLocale.currentLocale;
+        calendar.timeZone = NSTimeZone.localTimeZone;
+        
+        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
+                                            NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
+                                                       fromDate:NSDate.date];
+        
+        dateComponents.day -= 6;
+        nvdr.fromDatePicker.date = [nvdr startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+    }
     
     [nvdr setupDatePicker:nvdr.fromDatePicker];
     
@@ -372,7 +384,107 @@
 
 - (void)bottomButtonTapped:(UIButton *)button
 {
-    NSLog(@"bottom button:%li", (long)button.tag);
+    NSDate *fromDate = nil;
+    NSDate *toDate = nil;
+    
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    calendar.locale = NSLocale.currentLocale;
+    calendar.timeZone = NSTimeZone.localTimeZone;
+    
+    NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
+                                        NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
+                                                   fromDate:NSDate.date];
+    
+    switch ((DateRangeButton)button.tag)
+    {
+        case DateRangeButtonToday:
+            fromDate = [self startOfDayDateForDate:NSDate.date];
+            toDate = [self endOfDayDateForDate:NSDate.date];
+            break;
+            
+        case DateRangeButtonYesterday:
+            dateComponents.day -= 1;
+            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            toDate = [self endOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            break;
+            
+        case DateRangeButtonThisWeek:
+            dateComponents.day -= (dateComponents.weekday - 1);
+            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            toDate = [self endOfDayDateForDate:NSDate.date];
+            
+            break;
+            
+        case DateRangeButtonLastWeek:
+            dateComponents.day -= ((dateComponents.weekday - 1) + 7);
+            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            
+            dateComponents.day += 6;
+            toDate = [self endOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            break;
+            
+        case DateRangeButtonPastWeek:
+            dateComponents.day -= 6;
+            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            toDate = [self endOfDayDateForDate:NSDate.date];
+            break;
+            
+        case DateRangeButtonThisMonth:
+            dateComponents.day = 1;
+            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            toDate = [self endOfDayDateForDate:NSDate.date];
+            break;
+            
+        case DateRangeButtonLastMonth:
+            dateComponents.day = 0;
+            toDate = [self endOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            
+            dateComponents.month -= 1;
+            dateComponents.day = 1;
+            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            break;
+            
+        case DateRangeButtonThisYear:
+            dateComponents.month = 1;
+            dateComponents.day = 1;
+            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            toDate = [self endOfDayDateForDate:NSDate.date];
+            break;
+            
+        case DateRangeButtonLastYear:
+            dateComponents.month = 1;
+            dateComponents.day = 0;
+            toDate = [self endOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            
+            dateComponents.year -= 1;
+            dateComponents.day = 1;
+            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            
+            break;
+            
+        case DateRangeButtonPastYear:
+            dateComponents.year -= 1;
+            dateComponents.day += 1;
+            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            toDate = [self endOfDayDateForDate:NSDate.date];
+            break;
+            
+        case DateRangeButtonNone:
+        default:
+            break;
+    }
+    
+    [_fromDatePicker setDate:fromDate
+                    animated:YES];
+    
+    _fromDateLabel.text = [self formattedDate:fromDate];
+    
+    [_toDatePicker setDate:[self endOfDayDateForDate:toDate]
+                  animated:YES];
+    
+    _toDateLabel.text = [self formattedDate:toDate];
+    
+    
 }
 
 - (void)datePickerValueChanged:(UIDatePicker *)datePicker
