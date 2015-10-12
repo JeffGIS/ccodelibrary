@@ -15,6 +15,7 @@
 @property (nonatomic) UILabel *fromDateLabel, *toDateLabel;
 @property (nonatomic) DateRangeInverval interval;
 @property (nonatomic) NSCalendar *calendar;
+@property (nonatomic) NSInteger maxDate;
 
 @end
 
@@ -33,15 +34,17 @@
     nvdr.center = CGPointMake((bounds.size.width / 2.0),
                               (bounds.size.height / 2.0));
     
+    nvdr.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    nvdr.calendar.locale = NSLocale.currentLocale;
+    nvdr.calendar.timeZone = NSTimeZone.localTimeZone;
+    
     nvdr.delegate = delegate;
     nvdr.cornerRadius = (minBounds / 60.0);
     nvdr.fromDate = fromDate;
     nvdr.toDate = toDate;
     nvdr.interval = DateRangeInvervalNone;
-    
-    nvdr.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    nvdr.calendar.locale = NSLocale.currentLocale;
-    nvdr.calendar.timeZone = NSTimeZone.localTimeZone;
+    nvdr.minDate = 631173600;
+    nvdr.maxDate = [nvdr endOfDayDateForDate:NSDate.date].timeIntervalSince1970;
     
     nvdr.alpha = 0.0;
     nvdr.backgroundColor = UserDefaults.defaults.defaultColors.backgroundColor;
@@ -496,7 +499,13 @@
 {
     if (datePicker == _fromDatePicker)
     {
-        if (_interval)
+        if (_fromDatePicker.date.timeIntervalSince1970 < _minDate)
+        {
+            [_fromDatePicker setDate:[NSDate dateWithTimeIntervalSince1970:_minDate]
+                            animated:YES];
+        }
+        
+        if (_interval != DateRangeInvervalNone)
         {
             NSDateComponents *dateComponents = [_calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
                                                 NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
@@ -521,15 +530,51 @@
                     dateComponents.day -= 1;
                     break;
                     
-                case DateRangeInvervalNone:
                 default:
                     break;
             }
             
-            [_toDatePicker setDate:[self endOfDayDateForDate:[_calendar dateFromComponents:dateComponents]]
+            NSDate *newDate = [self endOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
+            
+            if (newDate.timeIntervalSince1970 > _maxDate)
+                newDate = [NSDate dateWithTimeIntervalSince1970:_maxDate];
+            
+            dateComponents = [_calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
+                              NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
+                                          fromDate:newDate];
+            
+            switch (_interval)
+            {
+                case DateRangeInvervalDay:
+                    break;
+                    
+                case DateRangeInvervalWeek:
+                    dateComponents.day -= 6;
+                    break;
+                    
+                case DateRangeInvervalMonth:
+                    dateComponents.month -= 1;
+                    dateComponents.day += 1;
+                    break;
+                    
+                case DateRangeInvervalYear:
+                    dateComponents.year -= 1;
+                    dateComponents.day += 1;
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            [_toDatePicker setDate:newDate
                           animated:YES];
             
             _toDateLabel.text = [self formattedDate:_toDatePicker.date];
+            
+            [_fromDatePicker setDate:[self startOfDayDateForDate:[_calendar dateFromComponents:dateComponents]]
+                            animated:YES];
+            
+            _fromDateLabel.text = [self formattedDate:_fromDatePicker.date];
         }
         
         if (_fromDatePicker.date.timeIntervalSince1970 > _toDatePicker.date.timeIntervalSince1970)
@@ -541,10 +586,18 @@
         }
         
         _fromDateLabel.text = [self formattedDate:_fromDatePicker.date];
+        
+        
     }
     
     else
     {
+        if (_toDatePicker.date.timeIntervalSince1970 > _maxDate)
+        {
+            [_toDatePicker setDate:[NSDate dateWithTimeIntervalSince1970:_maxDate]
+                          animated:YES];
+        }
+        
         if (_toDatePicker.date.timeIntervalSince1970 < _fromDatePicker.date.timeIntervalSince1970)
         {
             [_fromDatePicker setDate:[self startOfDayDateForDate:_toDatePicker.date]

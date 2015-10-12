@@ -40,6 +40,7 @@ didReturnFromDate:(NSInteger)fromDate
 @interface NVDateRange : UIView
 
 @property (nonatomic, weak) id <NVDateRangeDelegate> delegate;
+@property (nonatomic) NSInteger minDate;
 
 + (NVDateRange *)showDateRangeInView:(UIView *)view
                             delegate:(id)delegate
