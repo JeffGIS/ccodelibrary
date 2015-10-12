@@ -219,7 +219,6 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                    withColor:color
                      andSize:(size * sizeFactor)];
     }
-    
     SQLOK(sqlite3_finalize(statement), _database);
     [self close];
 }
