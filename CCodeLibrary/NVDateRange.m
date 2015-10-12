@@ -1,0 +1,424 @@
+//  NVDateRange.m
+//  CCodeLibrary
+
+#import "NVDateRange.h"
+#import "UserDefaults.h"
+
+@interface NVDateRange ()
+
+@property (nonatomic) UIView *overlayView;
+@property (nonatomic) UITabBar *tabBar;
+@property (nonatomic) UIDatePicker *fromDatePicker, *toDatePicker;
+@property (nonatomic) CGFloat cornerRadius;
+@property (nonatomic) NSInteger fromDate, toDate;
+@property (nonatomic) UILabel *fromDateLabel, *toDateLabel;
+
+@end
+
+@implementation NVDateRange
+
++ (NVDateRange *)showDateRangeInView:(UIView *)view
+                            delegate:(id)delegate
+                            fromDate:(NSInteger)fromDate
+                              toDate:(NSInteger)toDate
+{
+    CGRect bounds = UIScreen.mainScreen.bounds;
+    CGFloat minBounds = (MIN(bounds.size.width, bounds.size.height) * 0.9);
+    
+    NVDateRange *nvdr = [[NVDateRange alloc] initWithFrame:CGRectMake(0.0, 0.0, minBounds, minBounds)];
+    
+    nvdr.center = CGPointMake((bounds.size.width / 2.0),
+                              (bounds.size.height / 2.0));
+    
+    nvdr.delegate = delegate;
+    nvdr.cornerRadius = (minBounds / 60.0);
+    nvdr.fromDate = fromDate;
+    nvdr.toDate = toDate;
+    
+    nvdr.alpha = 0.0;
+    nvdr.backgroundColor = UserDefaults.defaults.defaultColors.backgroundColor;
+    nvdr.layer.cornerRadius = nvdr.cornerRadius;
+    
+    if ([nvdr.delegate isKindOfClass:UIViewController.class])
+    {
+        UIViewController *vc = (UIViewController *)nvdr.delegate;
+        nvdr.tabBar = vc.tabBarController.tabBar;
+    }
+    
+    nvdr.overlayView = [[UIView alloc] initWithFrame:bounds];
+    nvdr.overlayView.backgroundColor = UIColor.blackColor;
+    nvdr.overlayView.alpha = 0.0;
+    
+    [view addSubview:nvdr.overlayView];
+    
+    UIButton *returnButton = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.02), (minBounds * 0.02),
+                                                                        (minBounds * 0.21), (minBounds * 0.1))];
+    
+    [nvdr setupButton:returnButton
+                title:@"< Return"
+             selector:@selector(returnButtonTapped:)];
+    
+    [nvdr addSubview:returnButton];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.25), (minBounds * 0.01),
+                                                                    (minBounds * 0.5), (minBounds * 0.14))];
+    
+    [nvdr setupLabel:titleLabel];
+    
+    titleLabel.text = @"Date Range\nController";
+    titleLabel.font = [UIFont boldSystemFontOfSize:44.0];
+    titleLabel.numberOfLines = 2;
+    
+    [nvdr addSubview:titleLabel];
+    
+    nvdr.fromDatePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.22),
+                                                                              (minBounds * 0.44), (minBounds * 0.4))];
+    
+    if (toDate && fromDate)
+    {
+        nvdr.fromDatePicker.date = [nvdr startOfDayDateForDate:
+                                  [NSDate dateWithTimeIntervalSince1970:fromDate]];
+    }
+    
+    else
+        nvdr.fromDatePicker.date = [nvdr startOfDayDateForDate:NSDate.date];
+    
+    [nvdr setupDatePicker:nvdr.fromDatePicker];
+    
+    [nvdr.fromDatePicker addTarget:nvdr
+                            action:@selector(datePickerValueChanged:)
+                  forControlEvents:UIControlEventValueChanged];
+    
+    [nvdr addSubview:nvdr.fromDatePicker];
+    
+    UILabel *fdpLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.17),
+                                                                  (minBounds * 0.44), (minBounds * 0.05))];
+    
+    [nvdr setupLabel:fdpLabel];
+    
+    fdpLabel.text = @"Select From Date";
+    fdpLabel.font = [UIFont systemFontOfSize:24.0];
+    
+    [nvdr addSubview:fdpLabel];
+    
+    nvdr.fromDateLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.62),
+                                                                   (minBounds * 0.44), (minBounds * 0.05))];
+    
+    [nvdr setupLabel:nvdr.fromDateLabel];
+    
+    nvdr.fromDateLabel.text = [nvdr formattedDate:nvdr.fromDatePicker.date];
+    nvdr.fromDateLabel.font = [UIFont systemFontOfSize:24.0];
+    
+    [nvdr addSubview:nvdr.fromDateLabel];
+    
+    nvdr.toDatePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.22),
+                                                                         (minBounds * 0.44), (minBounds * 0.4))];
+    
+    if (toDate && fromDate)
+    {
+        nvdr.toDatePicker.date = [nvdr endOfDayDateForDate:
+                                  [NSDate dateWithTimeIntervalSince1970:toDate]];
+    }
+    
+    else
+        nvdr.toDatePicker.date = [nvdr endOfDayDateForDate:NSDate.date];
+    
+    [nvdr setupDatePicker:nvdr.toDatePicker];
+    
+    [nvdr.toDatePicker addTarget:nvdr
+                          action:@selector(datePickerValueChanged:)
+                forControlEvents:UIControlEventValueChanged];
+    
+    [nvdr addSubview:nvdr.toDatePicker];
+    
+    UILabel *tdpLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.17),
+                                                                  (minBounds * 0.44), (minBounds * 0.05))];
+    
+    [nvdr setupLabel:tdpLabel];
+    
+    tdpLabel.text = @"Select To Date";
+    tdpLabel.font = [UIFont systemFontOfSize:24.0];
+    
+    [nvdr addSubview:tdpLabel];
+    
+    nvdr.toDateLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.62),
+                                                                   (minBounds * 0.44), (minBounds * 0.05))];
+    
+    [nvdr setupLabel:nvdr.toDateLabel];
+    
+    nvdr.toDateLabel.text = [nvdr formattedDate:nvdr.toDatePicker.date];
+    nvdr.toDateLabel.font = [UIFont systemFontOfSize:24.0];
+    
+    [nvdr addSubview:nvdr.toDateLabel];
+    
+    UIButton *today = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.02), (minBounds * 0.7),
+                                                                 (minBounds * 0.176), (minBounds * 0.12))];
+    
+    [nvdr setupButton:today
+                title:@"Today"
+             selector:@selector(bottomButtonTapped:)];
+    
+    today.tag = 1;
+    
+    [nvdr addSubview:today];
+    
+    UIButton *yesterday = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.216), (minBounds * 0.7),
+                                                                     (minBounds * 0.176), (minBounds * 0.12))];
+    
+    [nvdr setupButton:yesterday
+                title:@"Yesterday"
+             selector:@selector(bottomButtonTapped:)];
+    
+    yesterday.tag = 2;
+    
+    [nvdr addSubview:yesterday];
+    
+    UIButton *thisWeek = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.412), (minBounds * 0.7),
+                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    
+    [nvdr setupButton:thisWeek
+                title:@"This\nWeek"
+             selector:@selector(bottomButtonTapped:)];
+    
+    thisWeek.tag = 3;
+    thisWeek.titleLabel.numberOfLines = 2;
+    
+    [nvdr addSubview:thisWeek];
+    
+    UIButton *lastWeek = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.608), (minBounds * 0.7),
+                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    
+    [nvdr setupButton:lastWeek
+                title:@"Last\nWeek"
+             selector:@selector(bottomButtonTapped:)];
+    
+    lastWeek.tag = 4;
+    lastWeek.titleLabel.numberOfLines = 2;
+    
+    [nvdr addSubview:lastWeek];
+    
+    UIButton *pastWeek = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.804), (minBounds * 0.7),
+                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    
+    [nvdr setupButton:pastWeek
+                title:@"Past\nWeek"
+             selector:@selector(bottomButtonTapped:)];
+    
+    pastWeek.tag = 5;
+    pastWeek.titleLabel.numberOfLines = 2;
+    
+    [nvdr addSubview:pastWeek];
+    
+    UIButton *thisMonth = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.02), (minBounds * 0.85),
+                                                                     (minBounds * 0.176), (minBounds * 0.12))];
+    
+    [nvdr setupButton:thisMonth
+                title:@"This Month"
+             selector:@selector(bottomButtonTapped:)];
+    
+    thisMonth.tag = 6;
+    thisMonth.titleLabel.numberOfLines = 2;
+    
+    [nvdr addSubview:thisMonth];
+    
+    UIButton *lastMonth = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.216), (minBounds * 0.85),
+                                                                     (minBounds * 0.176), (minBounds * 0.12))];
+    
+    [nvdr setupButton:lastMonth
+                title:@"Last Month"
+             selector:@selector(bottomButtonTapped:)];
+    
+    lastMonth.tag = 7;
+    lastMonth.titleLabel.numberOfLines = 2;
+    
+    [nvdr addSubview:lastMonth];
+    
+    UIButton *thisYear = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.412), (minBounds * 0.85),
+                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    
+    [nvdr setupButton:thisYear
+                title:@"This\nYear"
+             selector:@selector(bottomButtonTapped:)];
+    
+    thisYear.tag = 8;
+    thisYear.titleLabel.numberOfLines = 2;
+    
+    [nvdr addSubview:thisYear];
+    
+    UIButton *lastYear = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.608), (minBounds * 0.85),
+                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    
+    [nvdr setupButton:lastYear
+                title:@"Last\nYear"
+             selector:@selector(bottomButtonTapped:)];
+    
+    lastYear.tag = 9;
+    lastYear.titleLabel.numberOfLines = 2;
+    
+    [nvdr addSubview:lastYear];
+    
+    UIButton *pastYear = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.804), (minBounds * 0.85),
+                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    
+    [nvdr setupButton:pastYear
+                title:@"Past\nYear"
+             selector:@selector(bottomButtonTapped:)];
+    
+    pastYear.tag = 10;
+    pastYear.titleLabel.numberOfLines = 2;
+    
+    [nvdr addSubview:pastYear];
+    
+    [view addSubview:nvdr];
+    
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         nvdr.overlayView.alpha = 0.7;
+                         nvdr.alpha = 1.0;
+                         
+                         if (nvdr.tabBar)
+                         {
+                             nvdr.tabBar.alpha = 0.2;
+                             nvdr.tabBar.userInteractionEnabled = NO;
+                         }
+                     }];
+    
+    return nvdr;
+}
+
+- (void)setupButton:(UIButton *)button
+              title:(NSString *)title
+           selector:(SEL)selector
+{
+    button.backgroundColor = UIColor.blackColor;
+    
+    [button setTitle:title
+            forState:UIControlStateNormal];
+    
+    [button setTitleColor:UIColor.whiteColor
+                 forState:UIControlStateNormal];
+    
+    [button setTitleColor:UIColor.grayColor
+                 forState:UIControlStateHighlighted];
+    
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
+    button.titleLabel.adjustsFontSizeToFitWidth = YES;
+    button.titleLabel.textAlignment = NSTextAlignmentCenter;
+    button.layer.cornerRadius = _cornerRadius;
+    
+    [button addTarget:self
+               action:selector
+     forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)setupLabel:(UILabel *)label
+{
+    label.backgroundColor = UIColor.clearColor;
+    label.adjustsFontSizeToFitWidth = YES;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = UIColor.blackColor;
+}
+
+- (void)setupDatePicker:(UIDatePicker *)datePicker
+{
+    datePicker.backgroundColor = UIColor.whiteColor;
+    datePicker.layer.borderColor = UIColor.blackColor.CGColor;
+    datePicker.layer.borderWidth = 4.0;
+    datePicker.layer.cornerRadius = _cornerRadius;
+    datePicker.datePickerMode = UIDatePickerModeDate;
+}
+
+- (void)hideDateRange:(BOOL)animated
+{
+    if (animated)
+    {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             self.alpha = 0.0;
+                             _overlayView.alpha = 0.0;
+                             
+                             if (_tabBar)
+                             {
+                                 _tabBar.alpha = 1.0;
+                                 _tabBar.userInteractionEnabled = YES;
+                             }
+                         } completion:^(BOOL finished) {
+                             [_overlayView removeFromSuperview];
+                             [self removeFromSuperview];
+                         }];
+    }
+    
+    else
+    {
+        [_overlayView removeFromSuperview];
+        [self removeFromSuperview];
+        
+        _tabBar.alpha = 1.0;
+        _tabBar.userInteractionEnabled = YES;
+    }
+}
+
+- (void)returnButtonTapped:(UIButton *)button
+{
+    if (_delegate)
+    {
+        [_delegate dateRange:self
+           didReturnFromDate:_fromDatePicker.date.timeIntervalSince1970
+                      toDate:_toDatePicker.date.timeIntervalSince1970];
+    }
+}
+
+- (void)bottomButtonTapped:(UIButton *)button
+{
+    NSLog(@"bottom button:%li", (long)button.tag);
+}
+
+- (void)datePickerValueChanged:(UIDatePicker *)datePicker
+{
+    if (datePicker == _fromDatePicker)
+        _fromDateLabel.text = [self formattedDate:_fromDatePicker.date];
+    
+    else
+        _toDateLabel.text = [self formattedDate:_toDatePicker.date];
+}
+
+- (NSString *)formattedDate:(NSDate *)date
+{
+    NSString *formattedDate = @"";
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"EEE MMM dd HH:mm:ss yyyy";
+    formattedDate = [dateFormatter stringFromDate:date];
+    
+    return formattedDate;
+}
+
+- (NSDate *)startOfDayDateForDate:(NSDate *)date
+{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDate *newDate = [calendar dateBySettingHour:0
+                                           minute:0
+                                           second:0
+                                           ofDate:date
+                                          options:NSCalendarMatchStrictly];
+    
+    return newDate;
+    
+}
+
+
+- (NSDate *)endOfDayDateForDate:(NSDate *)date
+{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDate *newDate = [calendar dateBySettingHour:23
+                                           minute:59
+                                           second:59
+                                           ofDate:date
+                                          options:NSCalendarMatchStrictly];
+    
+    return newDate;
+}
+
+@end

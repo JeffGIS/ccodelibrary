@@ -26,7 +26,7 @@
     datePicker.alpha = 0.0;
     
     datePicker.dateFormatter = [[NSDateFormatter alloc] init];
-    [datePicker.dateFormatter setDateFormat:@"MM-dd-yyyy"];
+    datePicker.dateFormatter.dateFormat = @"MM-dd-yyyy";
     datePicker.dateString = [datePicker.dateFormatter stringFromDate:datePicker.date];
     
     [datePicker addTarget:datePicker
