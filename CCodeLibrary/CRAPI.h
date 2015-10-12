@@ -70,6 +70,7 @@
 @property (nonatomic, copy) NSString *currentPlatType;
 @property (nonatomic, copy) NSString *extractFile;
 @property BOOL resetPropList, resetDestinations, clearSpreadsheet;
+@property NSInteger fromDate, toDate;
 
 + (CRAPI *)sharedInstance;
 
