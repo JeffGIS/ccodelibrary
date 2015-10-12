@@ -12,6 +12,7 @@
 @property (nonatomic) CGFloat cornerRadius;
 @property (nonatomic) NSInteger fromDate, toDate;
 @property (nonatomic) UILabel *fromDateLabel, *toDateLabel;
+@property (nonatomic) DateRangeInverval interval;
 
 @end
 
@@ -34,6 +35,7 @@
     nvdr.cornerRadius = (minBounds / 60.0);
     nvdr.fromDate = fromDate;
     nvdr.toDate = toDate;
+    nvdr.interval = DateRangeInvervalWeek;
     
     nvdr.alpha = 0.0;
     nvdr.backgroundColor = UserDefaults.defaults.defaultColors.backgroundColor;
@@ -376,10 +378,30 @@
 - (void)datePickerValueChanged:(UIDatePicker *)datePicker
 {
     if (datePicker == _fromDatePicker)
+    {
+        if (_fromDatePicker.date.timeIntervalSince1970 > _toDatePicker.date.timeIntervalSince1970)
+        {
+            [_toDatePicker setDate:[self endOfDayDateForDate:_fromDatePicker.date]
+                          animated:YES];
+            
+            _toDateLabel.text = [self formattedDate:_toDatePicker.date];
+        }
+        
         _fromDateLabel.text = [self formattedDate:_fromDatePicker.date];
+    }
     
     else
+    {
+        if (_toDatePicker.date.timeIntervalSince1970 < _fromDatePicker.date.timeIntervalSince1970)
+        {
+            [_fromDatePicker setDate:[self startOfDayDateForDate:_toDatePicker.date]
+                            animated:YES];
+            
+            _fromDateLabel.text = [self formattedDate:_fromDatePicker.date];
+        }
+        
         _toDateLabel.text = [self formattedDate:_toDatePicker.date];
+    }
 }
 
 - (NSString *)formattedDate:(NSDate *)date

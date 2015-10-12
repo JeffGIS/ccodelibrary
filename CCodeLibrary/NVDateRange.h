@@ -3,6 +3,30 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, DateRangeButton)
+{
+    DateRangeButtonDefault,
+    DateRangeButtonToday,
+    DateRangeButtonYesterday,
+    DateRangeButtonThisWeek,
+    DateRangeButtonLastWeek,
+    DateRangeButtonPastWeek,
+    DateRangeButtonThisMonth,
+    DateRangeButtonLastMonth,
+    DateRangeButtonThisYear,
+    DateRangeButtonLastYear,
+    DateRangeButtonPastYear,
+};
+
+typedef NS_ENUM(NSInteger, DateRangeInverval)
+{
+    DateRangeInvervalDefault,
+    DateRangeInvervalDay,
+    DateRangeInvervalWeek,
+    DateRangeInvervalMonth,
+    DateRangeInvervalYear,
+};
+
 @class NVDateRange;
 
 @protocol NVDateRangeDelegate <NSObject>
