@@ -14,6 +14,7 @@
 @property (nonatomic) NSInteger fromDate, toDate;
 @property (nonatomic) UILabel *fromDateLabel, *toDateLabel;
 @property (nonatomic) DateRangeInverval interval;
+@property (nonatomic) NSCalendar *calendar;
 
 @end
 
@@ -37,6 +38,10 @@
     nvdr.fromDate = fromDate;
     nvdr.toDate = toDate;
     nvdr.interval = DateRangeInvervalNone;
+    
+    nvdr.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    nvdr.calendar.locale = NSLocale.currentLocale;
+    nvdr.calendar.timeZone = NSTimeZone.localTimeZone;
     
     nvdr.alpha = 0.0;
     nvdr.backgroundColor = UserDefaults.defaults.defaultColors.backgroundColor;
@@ -85,16 +90,12 @@
     
     else
     {
-        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-        calendar.locale = NSLocale.currentLocale;
-        calendar.timeZone = NSTimeZone.localTimeZone;
-        
-        NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
+        NSDateComponents *dateComponents = [nvdr.calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
                                             NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
-                                                       fromDate:NSDate.date];
+                                                            fromDate:NSDate.date];
         
         dateComponents.day -= 6;
-        nvdr.fromDatePicker.date = [nvdr startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+        nvdr.fromDatePicker.date = [nvdr startOfDayDateForDate:[nvdr.calendar dateFromComponents:dateComponents]];
     }
     
     [nvdr setupDatePicker:nvdr.fromDatePicker];
@@ -387,86 +388,90 @@
     NSDate *fromDate = nil;
     NSDate *toDate = nil;
     
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    calendar.locale = NSLocale.currentLocale;
-    calendar.timeZone = NSTimeZone.localTimeZone;
-    
-    NSDateComponents *dateComponents = [calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
+    NSDateComponents *dateComponents = [_calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
                                         NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
-                                                   fromDate:NSDate.date];
+                                                    fromDate:NSDate.date];
     
     switch ((DateRangeButton)button.tag)
     {
         case DateRangeButtonToday:
             fromDate = [self startOfDayDateForDate:NSDate.date];
             toDate = [self endOfDayDateForDate:NSDate.date];
+            _interval = DateRangeInvervalDay;
             break;
             
         case DateRangeButtonYesterday:
             dateComponents.day -= 1;
-            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
-            toDate = [self endOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            fromDate = [self startOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
+            toDate = [self endOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
+            _interval = DateRangeInvervalDay;
             break;
             
         case DateRangeButtonThisWeek:
             dateComponents.day -= (dateComponents.weekday - 1);
-            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            fromDate = [self startOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
             toDate = [self endOfDayDateForDate:NSDate.date];
-            
+            _interval = DateRangeInvervalWeek;
             break;
             
         case DateRangeButtonLastWeek:
             dateComponents.day -= ((dateComponents.weekday - 1) + 7);
-            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            fromDate = [self startOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
             
             dateComponents.day += 6;
-            toDate = [self endOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            toDate = [self endOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
+            _interval = DateRangeInvervalWeek;
             break;
             
         case DateRangeButtonPastWeek:
             dateComponents.day -= 6;
-            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            fromDate = [self startOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
             toDate = [self endOfDayDateForDate:NSDate.date];
+            _interval = DateRangeInvervalWeek;
             break;
             
         case DateRangeButtonThisMonth:
             dateComponents.day = 1;
-            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            fromDate = [self startOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
             toDate = [self endOfDayDateForDate:NSDate.date];
+            _interval = DateRangeInvervalMonth;
             break;
             
         case DateRangeButtonLastMonth:
             dateComponents.day = 0;
-            toDate = [self endOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            toDate = [self endOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
             
             dateComponents.month -= 1;
             dateComponents.day = 1;
-            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            fromDate = [self startOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
+            _interval = DateRangeInvervalMonth;
             break;
             
         case DateRangeButtonThisYear:
             dateComponents.month = 1;
             dateComponents.day = 1;
-            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            fromDate = [self startOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
             toDate = [self endOfDayDateForDate:NSDate.date];
+            _interval = DateRangeInvervalYear;
             break;
             
         case DateRangeButtonLastYear:
             dateComponents.month = 1;
             dateComponents.day = 0;
-            toDate = [self endOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            toDate = [self endOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
             
             dateComponents.year -= 1;
             dateComponents.day = 1;
-            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
-            
+            fromDate = [self startOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
+            _interval = DateRangeInvervalYear;
             break;
             
         case DateRangeButtonPastYear:
             dateComponents.year -= 1;
             dateComponents.day += 1;
-            fromDate = [self startOfDayDateForDate:[calendar dateFromComponents:dateComponents]];
+            fromDate = [self startOfDayDateForDate:[_calendar dateFromComponents:dateComponents]];
             toDate = [self endOfDayDateForDate:NSDate.date];
+            _interval = DateRangeInvervalYear;
             break;
             
         case DateRangeButtonNone:
@@ -491,6 +496,42 @@
 {
     if (datePicker == _fromDatePicker)
     {
+        if (_interval)
+        {
+            NSDateComponents *dateComponents = [_calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
+                                                NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
+                                                            fromDate:_fromDatePicker.date];
+            
+            switch (_interval)
+            {
+                case DateRangeInvervalDay:
+                    break;
+                    
+                case DateRangeInvervalWeek:
+                    dateComponents.day += 6;
+                    break;
+                    
+                case DateRangeInvervalMonth:
+                    dateComponents.month += 1;
+                    dateComponents.day -= 1;
+                    break;
+                    
+                case DateRangeInvervalYear:
+                    dateComponents.year += 1;
+                    dateComponents.day -= 1;
+                    break;
+                    
+                case DateRangeInvervalNone:
+                default:
+                    break;
+            }
+            
+            [_toDatePicker setDate:[self endOfDayDateForDate:[_calendar dateFromComponents:dateComponents]]
+                          animated:YES];
+            
+            _toDateLabel.text = [self formattedDate:_toDatePicker.date];
+        }
+        
         if (_fromDatePicker.date.timeIntervalSince1970 > _toDatePicker.date.timeIntervalSince1970)
         {
             [_toDatePicker setDate:[self endOfDayDateForDate:_fromDatePicker.date]
@@ -513,6 +554,7 @@
         }
         
         _toDateLabel.text = [self formattedDate:_toDatePicker.date];
+        _interval = DateRangeInvervalNone;
     }
 }
 
@@ -529,13 +571,11 @@
 
 - (NSDate *)startOfDayDateForDate:(NSDate *)date
 {
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    
-    NSDate *newDate = [calendar dateBySettingHour:0
-                                           minute:0
-                                           second:0
-                                           ofDate:date
-                                          options:NSCalendarMatchStrictly];
+    NSDate *newDate = [_calendar dateBySettingHour:0
+                                            minute:0
+                                            second:0
+                                            ofDate:date
+                                           options:NSCalendarMatchStrictly];
     
     return newDate;
     
@@ -544,13 +584,11 @@
 
 - (NSDate *)endOfDayDateForDate:(NSDate *)date
 {
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    
-    NSDate *newDate = [calendar dateBySettingHour:23
-                                           minute:59
-                                           second:59
-                                           ofDate:date
-                                          options:NSCalendarMatchStrictly];
+    NSDate *newDate = [_calendar dateBySettingHour:23
+                                            minute:59
+                                            second:59
+                                            ofDate:date
+                                           options:NSCalendarMatchStrictly];
     
     return newDate;
 }
