@@ -161,7 +161,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     DPOINT BasePt;
     int UCR;
     int controlNbr;
-    int fromTime=1388556000, toTime=1420091999;
+    int fromTime=(int)CRAPI.sharedInstance.fromDate, toTime=(int)CRAPI.sharedInstance.toDate;
     int fromDate, toDate;
     int nFound=0;
     LPSTR offense;
@@ -219,7 +219,6 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                    withColor:color
                      andSize:(size * sizeFactor)];
     }
-    
     SQLOK(sqlite3_finalize(statement), _database);
     [self close];
 }
