@@ -13,4 +13,12 @@
 replaceViewControllerAtIndex:(NSUInteger)index
       withViewController:(UIViewController *)viewController;
 
++ (void)tabBarController:(UITabBarController *)tabBarController
+                 setText:(NSString *)text
+          forItemAtIndex:(NSUInteger)index;
+
++ (void)tabBarController:(UITabBarController *)tabBarController
+                setImage:(UIImage *)image
+          forItemAtIndex:(NSUInteger)index;
+
 @end
