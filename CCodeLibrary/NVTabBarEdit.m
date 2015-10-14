@@ -6,61 +6,111 @@
 @implementation NVTabBarEdit
 
 + (void)tabBarController:(UITabBarController *)tabBarController
-       removeItemAtIndex:(NSUInteger)index
+removeViewControllerWithID:(NSString *)ID
+                animated:(BOOL)animated
 {
-    if (index < tabBarController.viewControllers.count)
+    if (!tabBarController || !ID)
+        return;
+    
+    NSMutableArray *newTabBarVCs = tabBarController.viewControllers.mutableCopy;
+    for (UIViewController *vcs in newTabBarVCs)
     {
-        NSMutableArray *newTabBarVCs = tabBarController.viewControllers.mutableCopy;
-        [newTabBarVCs removeObjectAtIndex:index];
-        
-        tabBarController.viewControllers = newTabBarVCs.copy;
+        if ([vcs.restorationIdentifier isEqualToString:ID])
+        {
+            [newTabBarVCs removeObject:vcs];
+            break;
+        }
     }
+    
+    [tabBarController setViewControllers:newTabBarVCs.copy
+                                animated:animated];
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController
-replaceViewControllerAtIndex:(NSUInteger)index
+replaceViewControllerWithID:(NSString *)ID
       withViewController:(UIViewController *)viewController
 {
-    if (index < tabBarController.viewControllers.count)
+    if (!tabBarController || !ID || !viewController)
+        return;
+    
+    NSMutableArray *newTabBarVCs = tabBarController.viewControllers.mutableCopy;
+        
+    for (UIViewController *vcs in newTabBarVCs)
     {
-        NSMutableArray *newTabBarVCs = tabBarController.viewControllers.mutableCopy;
-        
-        [newTabBarVCs replaceObjectAtIndex:index
-                                withObject:viewController];
-        
-        tabBarController.viewControllers = newTabBarVCs.copy;
+        if ([vcs.restorationIdentifier isEqualToString:ID])
+        {
+            [newTabBarVCs replaceObjectAtIndex:[newTabBarVCs indexOfObject:vcs]
+                                    withObject:viewController];
+            
+            break;
+        }
     }
+    
+        tabBarController.viewControllers = newTabBarVCs.copy;
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController
     insertViewController:(UIViewController *)viewController
                  atIndex:(NSUInteger)index
+                animated:(BOOL)animated
 {
-    if (index <= tabBarController.viewControllers.count)
+    if (!tabBarController || !viewController ||
+        (index > tabBarController.viewControllers.count))
+        return;
+    
+    NSMutableArray *newTabBarVCs = tabBarController.viewControllers.mutableCopy;
+    
+    for (UIViewController *vcs in newTabBarVCs)
     {
-        NSMutableArray *newTabBarVCs = tabBarController.viewControllers.mutableCopy;
-        
-        [newTabBarVCs insertObject:viewController
-                           atIndex:index];
-        
-        tabBarController.viewControllers = newTabBarVCs.copy;
+        if ([vcs.restorationIdentifier isEqualToString:viewController.restorationIdentifier])
+            return;
     }
+    
+    [newTabBarVCs insertObject:viewController
+                       atIndex:index];
+    
+    [tabBarController setViewControllers:newTabBarVCs.copy
+                                animated:animated];
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController
                  setText:(NSString *)text
-          forItemAtIndex:(NSUInteger)index
+ forViewControllerWithID:(NSString *)ID
 {
-    if (index < tabBarController.tabBar.items.count)
-        tabBarController.tabBar.items[index].title = text;
+    if (!tabBarController || !text || !ID)
+        return;
+    
+    NSArray *tabBarVCs = tabBarController.viewControllers;
+    
+    for (UIViewController *vcs in tabBarVCs)
+    {
+        if ([vcs.restorationIdentifier isEqualToString:ID])
+        {
+            NSUInteger index = [tabBarVCs indexOfObject:vcs];
+            tabBarController.tabBar.items[index].title = text;
+            break;
+        }
+    }
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController
                 setImage:(UIImage *)image
-          forItemAtIndex:(NSUInteger)index
+ forViewControllerWithID:(NSString *)ID
 {
-    if (index < tabBarController.tabBar.items.count)
-        tabBarController.tabBar.items[index].image = image;
+    if (!tabBarController || !image || !ID)
+        return;
+    
+    NSArray *tabBarVCs = tabBarController.viewControllers;
+    
+    for (UIViewController *vcs in tabBarVCs)
+    {
+        if ([vcs.restorationIdentifier isEqualToString:ID])
+        {
+            NSUInteger index = [tabBarVCs indexOfObject:vcs];
+            tabBarController.tabBar.items[index].image = image;
+            break;
+        }
+    }
 }
 
 @end

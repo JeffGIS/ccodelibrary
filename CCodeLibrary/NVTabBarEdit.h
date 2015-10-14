@@ -6,22 +6,24 @@
 @interface NVTabBarEdit : NSObject
 
 + (void)tabBarController:(UITabBarController *)tabBarController
-       removeItemAtIndex:(NSUInteger)index;
+removeViewControllerWithID:(NSString *)ID
+                animated:(BOOL)animated;
 
 + (void)tabBarController:(UITabBarController *)tabBarController
-replaceViewControllerAtIndex:(NSUInteger)index
+replaceViewControllerWithID:(NSString *)ID
       withViewController:(UIViewController *)viewController;
 
 + (void)tabBarController:(UITabBarController *)tabBarController
-                 setText:(NSString *)text
-          forItemAtIndex:(NSUInteger)index;
+    insertViewController:(UIViewController *)viewController
+                 atIndex:(NSUInteger)index
+                animated:(BOOL)animated;
 
 + (void)tabBarController:(UITabBarController *)tabBarController
-    insertViewController:(UIViewController *)viewController
-                 atIndex:(NSUInteger)index;
+                 setText:(NSString *)text
+ forViewControllerWithID:(NSString *)ID;
 
 + (void)tabBarController:(UITabBarController *)tabBarController
                 setImage:(UIImage *)image
-          forItemAtIndex:(NSUInteger)index;
+ forViewControllerWithID:(NSString *)ID;
 
 @end
