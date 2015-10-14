@@ -7,21 +7,19 @@
 
 + (void)tabBarController:(UITabBarController *)tabBarController
        removeItemAtIndex:(NSUInteger)index
-                animated:(BOOL)animated
 {
     if (index < tabBarController.viewControllers.count)
     {
         NSMutableArray *newTabBarVCs = tabBarController.viewControllers.mutableCopy;
         [newTabBarVCs removeObjectAtIndex:index];
         
-        [tabBarController setViewControllers:newTabBarVCs
-                                    animated:animated];
+        tabBarController.viewControllers = newTabBarVCs.copy;
     }
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController
 replaceViewControllerAtIndex:(NSUInteger)index
-      withViewController:(UIViewController *)viewController;
+      withViewController:(UIViewController *)viewController
 {
     if (index < tabBarController.viewControllers.count)
     {
@@ -30,7 +28,22 @@ replaceViewControllerAtIndex:(NSUInteger)index
         [newTabBarVCs replaceObjectAtIndex:index
                                 withObject:viewController];
         
-        tabBarController.viewControllers = newTabBarVCs;
+        tabBarController.viewControllers = newTabBarVCs.copy;
+    }
+}
+
++ (void)tabBarController:(UITabBarController *)tabBarController
+    insertViewController:(UIViewController *)viewController
+                 atIndex:(NSUInteger)index
+{
+    if (index <= tabBarController.viewControllers.count)
+    {
+        NSMutableArray *newTabBarVCs = tabBarController.viewControllers.mutableCopy;
+        
+        [newTabBarVCs insertObject:viewController
+                           atIndex:index];
+        
+        tabBarController.viewControllers = newTabBarVCs.copy;
     }
 }
 

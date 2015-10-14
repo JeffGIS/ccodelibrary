@@ -6,8 +6,7 @@
 @interface NVTabBarEdit : NSObject
 
 + (void)tabBarController:(UITabBarController *)tabBarController
-       removeItemAtIndex:(NSUInteger)index
-                animated:(BOOL)animated;
+       removeItemAtIndex:(NSUInteger)index;
 
 + (void)tabBarController:(UITabBarController *)tabBarController
 replaceViewControllerAtIndex:(NSUInteger)index
@@ -16,6 +15,10 @@ replaceViewControllerAtIndex:(NSUInteger)index
 + (void)tabBarController:(UITabBarController *)tabBarController
                  setText:(NSString *)text
           forItemAtIndex:(NSUInteger)index;
+
++ (void)tabBarController:(UITabBarController *)tabBarController
+    insertViewController:(UIViewController *)viewController
+                 atIndex:(NSUInteger)index;
 
 + (void)tabBarController:(UITabBarController *)tabBarController
                 setImage:(UIImage *)image
