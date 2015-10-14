@@ -61,6 +61,12 @@
     return _currentGeoidValue;
 }
 
+- (void)setCurrentManageriPad:(int)currentManageriPad
+{
+    _currentManageriPad = currentManageriPad;
+    _uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, _currentGeoidValue];
+}
+
 - (void)setCurrentGeoid:(int)geoid
 {
     if (geoid != _currentGeoidValue)

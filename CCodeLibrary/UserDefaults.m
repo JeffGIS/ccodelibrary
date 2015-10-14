@@ -920,6 +920,16 @@ static UserDefaults *_defaults;
     return string;
 }
 
+- (NSString *)includeTextAfterClosingParentheses:(NSString *)string
+{
+    NSRange range = [string rangeOfString:@")" options:NSBackwardsSearch];
+    
+    if (range.location != NSNotFound)
+        string = [string substringFromIndex:(range.location+1)];
+    
+    return string;
+}
+
 - (NSString *)includeTextInsideParentheses:(NSString *)string
 {
     NSRange start = [string rangeOfString:@"("];

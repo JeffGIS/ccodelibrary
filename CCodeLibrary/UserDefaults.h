@@ -50,6 +50,7 @@
 - (NSString *)removeTextInsideParenthesesWithoutSpaces:(NSString *)string;
 - (NSString *)removeColonInsideParentheses:(NSString *)string;
 - (NSString *)includeTextBeforeParentheses:(NSString *)string;
+- (NSString *)includeTextAfterClosingParentheses:(NSString *)string;
 - (NSString *)includeTextInsideParentheses:(NSString *)string;
 - (NSString *)includeTextAfterHyphen:(NSString *)string;
 - (NSString *)includeTextBeforeHyphen:(NSString *)string;
