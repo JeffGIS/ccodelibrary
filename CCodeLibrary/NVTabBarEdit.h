@@ -26,4 +26,11 @@ replaceViewControllerWithID:(NSString *)ID
                 setImage:(UIImage *)image
  forViewControllerWithID:(NSString *)ID;
 
++ (UIViewController *)viewControllerWithID:(NSString *)ID
+                        inTabBarController:(UITabBarController *)tabBarController
+                                     index:(NSUInteger *)index;
+
++ (NSInteger)indexOfViewControllerWithID:(NSString *)ID
+                      inTabBarController:(UITabBarController *)tabBarController;
+
 @end
