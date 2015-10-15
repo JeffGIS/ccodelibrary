@@ -21,6 +21,29 @@
 
 @implementation NVDateRange
 
++ (void)getPastWeekFromDate:(NSInteger *)fromDate
+                     toDate:(NSInteger *)toDate
+{
+    NVDateRange *nvdr = [[NVDateRange alloc] init];
+    
+    nvdr.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    nvdr.calendar.locale = NSLocale.currentLocale;
+    nvdr.calendar.timeZone = NSTimeZone.localTimeZone;
+    
+    NSDateComponents *dateComponents = [nvdr.calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
+                                        NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
+                                                   fromDate:NSDate.date];
+    
+    dateComponents.day -= 6;
+    
+    NSDate *fd = [nvdr startOfDayDateForDate:[nvdr.calendar dateFromComponents:dateComponents]];
+    NSDate *td = [nvdr endOfDayDateForDate:NSDate.date];
+    
+    *fromDate = fd.timeIntervalSince1970;
+    *toDate = td.timeIntervalSince1970;
+    
+}
+
 + (NVDateRange *)showDateRangeInView:(UIView *)view
                             delegate:(id)delegate
                             fromDate:(NSInteger)fromDate
@@ -85,10 +108,10 @@
     nvdr.fromDatePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.22),
                                                                               (minBounds * 0.44), (minBounds * 0.4))];
     
-    if (toDate && fromDate)
+    if (nvdr.toDate && nvdr.fromDate)
     {
         nvdr.fromDatePicker.date = [nvdr startOfDayDateForDate:
-                                  [NSDate dateWithTimeIntervalSince1970:fromDate]];
+                                    [NSDate dateWithTimeIntervalSince1970:nvdr.fromDate]];
     }
     
     else
@@ -132,10 +155,10 @@
     nvdr.toDatePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.22),
                                                                          (minBounds * 0.44), (minBounds * 0.4))];
     
-    if (toDate && fromDate)
+    if (nvdr.toDate && nvdr.fromDate)
     {
         nvdr.toDatePicker.date = [nvdr endOfDayDateForDate:
-                                  [NSDate dateWithTimeIntervalSince1970:toDate]];
+                                  [NSDate dateWithTimeIntervalSince1970:nvdr.toDate]];
     }
     
     else
