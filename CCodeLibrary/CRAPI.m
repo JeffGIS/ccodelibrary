@@ -442,31 +442,19 @@
     if (fileSize > 0 && !refresh)
         return imageFile;
     
-    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=false&key=%@", lat, lon, zoom, GOOGLE_API_KEY];
+    NSString *staticMapUrl = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&sensor=true&key=%@", lat, lon, zoom, GOOGLE_API_KEY];
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
     
     int rtn = [UIImageJPEGRepresentation(image, 0.8) writeToFile:imageFile
                                                       atomically:YES];
-    
-    if (!rtn && _currentView)
-    {
-        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:_currentView
-                                                          delegate:self
-                                                             title:@"Error getting intersection image. Unable to access server."
-                                                   buttonTextArray:@[@"OK"]
-                                                  destructiveIndex:0];
-#pragma unused(alert)
-    }
-    
-    else
     {
         char txt[1024] = {0};
         double pixelX = 0.0, pixelY = 0.0;
         int factor = pow(2, (21 - zoom));
         NSError *error = nil;
-
+        
         LatLongToPixelXYd(lat, lon, 21, &pixelX, &pixelY);
         
         sprintf(txt, "0 0 %f %f\r\n\
@@ -490,6 +478,17 @@
         }
     }
     
+    if (!rtn && _currentView)
+    {
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:_currentView
+                                                          delegate:self
+                                                             title:@"Error getting intersection image. Unable to access server."
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
+#pragma unused(alert)
+    }
+    
+   
     return imageFile;
 }
 

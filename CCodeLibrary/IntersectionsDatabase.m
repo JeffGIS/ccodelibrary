@@ -770,7 +770,7 @@ static IntersectionsDatabase *_statdatabase = nil;
 {
     int rtn = 0;
     [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs FROM Intersections WHERE intID = %i",intID];
+    NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, nStreets, streetNames, streetAZMs, rotation FROM Intersections WHERE intID = %i",intID];
     sqlite3_stmt *statement = NULL;
     SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), "findIntersectionFromID1");
     
@@ -778,14 +778,18 @@ static IntersectionsDatabase *_statdatabase = nil;
     {
         int intX = sqlite3_column_int(statement, 0);
         int intY = sqlite3_column_int(statement, 1);
-        int nStreets = sqlite3_column_int(statement,27);
-        LPSTR pStreets = (LPSTR)sqlite3_column_text(statement, 28);
+        int nStreets = sqlite3_column_int(statement,2);
+        LPSTR pStreets = (LPSTR)sqlite3_column_text(statement, 3);
         LPSTR pAZMS = (LPSTR)sqlite3_column_text(statement, 4);
+        LPSTR pRot = (LPSTR)sqlite3_column_text(statement, 5);
         *plev21x = intX;
         *plev21y = intY;
         *pNumStreets = nStreets;
         strcpy(intText, pStreets);
-        strcpy(intAZMs, pAZMS);
+        if (pAZMS)
+            strcpy(intAZMs, pAZMS);
+        else
+            ComputeAZMsFromRotation (pRot,intAZMs);
         rtn = intID;
     }
     

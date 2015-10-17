@@ -221,6 +221,11 @@
     _backgroundImage.image = backImage;
     windowBounds = _backgroundImage.frame;
     imageSize = _backgroundImage.intrinsicContentSize;
+    if (imageSize.width < 0 || imageSize.height < 0)
+    {
+        imageSize.width = 640;
+        imageSize.height = 640;
+    }
     _xFactor = (CGFloat)imageSize.width / (CGFloat)windowBounds.size.width;
     _yFactor = (CGFloat)imageSize.height / (CGFloat)windowBounds.size.height;
     _xOffset = (windowBounds.origin.x * _xFactor);
@@ -1146,6 +1151,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     windowBounds = _backgroundImage.frame;
     //imageSize = _backgroundImage.image.size;
     imageSize = _backgroundImage.intrinsicContentSize;
+    if (imageSize.width < 0 || imageSize.height < 0)
+    {
+        imageSize.width = 640;
+        imageSize.height = 640;
+    }
     x = windowBounds.size.width;
     y = windowBounds.size.height;
     _xFactor = (CGFloat)imageSize.width / (CGFloat)windowBounds.size.width;
