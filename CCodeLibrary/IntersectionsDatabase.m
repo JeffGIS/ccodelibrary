@@ -1203,12 +1203,11 @@ Exit:
                 status = INTDBStatusFailedToUnzip;
             }
         }
-        
         if (self.delegate)
         {
             [self.delegate intersectionsDatabase:[self.curbRampData databasePath:self.geoid]
                                          didLoad:@""
-                                      withStatus:status];
+                                      withStatus:INTDBStatusOK];
         }
     }
     

@@ -61,6 +61,7 @@
 #import "NVPDFSnapshotter.h"
 #import "SewerData.h"
 #import "CrimeData.h"
+#import "StringFunctions.h"
 
 @interface CCodeLibrary : NSObject
 

@@ -31,7 +31,9 @@
 
 @property (nonatomic) int currentGeoid;
 @property (nonatomic) int currentManageriPad; //sequence number for manager iPad - created by GMServer
-@property (nonatomic) int currentUserID; //sequence number for this iPad
+@property (nonatomic) int currentiPadWithinManager;
+@property (nonatomic) int totiPadWithinManager;
+@property (nonatomic) int GSSiPadNumber; //sequence number for this iPad
 @property (nonatomic, copy) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
 @property (nonatomic, copy) NSString *googleKey;
@@ -126,6 +128,9 @@
 - (void) clearOutputDirectory;
 - (BOOL) appendString:(NSString*)str toFile:(NSString*)file;
 - (NSInteger) adjustNextRefno:(NSInteger)refno;
+- (void)processPlacesArray:(NSUInteger) row;
+- (void)loadiPadParametersForGeoid:(int)geoid;
+- (void)setiPadParametersFromGeoid:(int)geoid;
 
 
 @end

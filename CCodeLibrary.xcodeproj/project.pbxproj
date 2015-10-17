@@ -184,6 +184,8 @@
 		EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4DB2571B9600AA008157D8 /* PointInArea.m */; };
 		EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB4DB2561B9600AA008157D8 /* PointInArea.h */; };
 		EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */; };
+		EB7C6A161BD158D8006E985B /* StringFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7C6A151BD158D8006E985B /* StringFunctions.m */; settings = {ASSET_TAGS = (); }; };
+		EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB7C6A141BD158D8006E985B /* StringFunctions.h */; };
 		EB86BFA71B0B62520074728E /* minilzo.c in Sources */ = {isa = PBXBuildFile; fileRef = EB86BFA51B0B62520074728E /* minilzo.c */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
@@ -222,6 +224,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */,
 				69B36F1B1BCB1C8F004C4B69 /* NVDateRange.h in CopyFiles */,
 				EBA517B81BCA1405005A9CA8 /* CrimeData.h in CopyFiles */,
 				6948D5D61BC7845F009CA04F /* NVStaticMapView.h in CopyFiles */,
@@ -487,6 +490,8 @@
 		EB4DB2571B9600AA008157D8 /* PointInArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInArea.m; sourceTree = "<group>"; };
 		EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPlaceAreaFile.h; sourceTree = "<group>"; };
 		EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPlaceAreaFile.m; sourceTree = "<group>"; };
+		EB7C6A141BD158D8006E985B /* StringFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringFunctions.h; sourceTree = "<group>"; };
+		EB7C6A151BD158D8006E985B /* StringFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringFunctions.m; sourceTree = "<group>"; };
 		EB86BFA51B0B62520074728E /* minilzo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minilzo.c; sourceTree = "<group>"; };
 		EB86BFA61B0B62520074728E /* minilzo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minilzo.h; sourceTree = "<group>"; };
 		EB86BFA81B0B62A30074728E /* lzoconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzoconf.h; sourceTree = "<group>"; };
@@ -841,6 +846,8 @@
 				EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */,
 				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
+				EB7C6A141BD158D8006E985B /* StringFunctions.h */,
+				EB7C6A151BD158D8006E985B /* StringFunctions.m */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";
@@ -1045,6 +1052,7 @@
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,
 				A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */,
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
+				EB7C6A161BD158D8006E985B /* StringFunctions.m in Sources */,
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
 				A94A771919F807CE0062906E /* FacilityRecord.m in Sources */,
 				69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */,

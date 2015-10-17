@@ -5,6 +5,7 @@
 #import "GSSiDefs.h"
 #import "MathUtil.h"
 #import "TileGraphics.h"
+#import "StringFunctions.h"
 
 @implementation CRAPI
 {
@@ -41,7 +42,7 @@
     dispatch_once(&oncePredicate,
                   ^{
                       sharedInstance = [[CRAPI alloc] init];
-                      sharedInstance.currentUserID = -1;
+                      sharedInstance.GSSiPadNumber = -1;
                   });
     
     return sharedInstance;
@@ -88,6 +89,7 @@
         _uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, geoid];
     }
 }
+
 -(void)setCurrentZoom:(CGFloat)zoom
 {
     _currentZoom = zoom;
@@ -660,4 +662,77 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         nextRef = refno - nextRef + _maxDevices +_deviceNumber;
     return nextRef;
 }
+
+- (void)processPlacesArray:(NSUInteger) row
+{
+   
+    if (row >= CRAPI.sharedInstance.placesArray.count)
+    {
+        row = (CRAPI.sharedInstance.placesArray.count - 1);
+        
+        [UserDefaults.defaults saveInteger:(int)row
+                                    forKey:@"SelectedRow"];
+    }
+    
+    if (_placesArray.count == 1 || row >= _placesArray.count ||
+        self.currentGeoid == 0)
+        row = 0;
+    
+    NSString *locationLabelText = [UserDefaults.defaults includeTextInsideParentheses:[_placesArray objectAtIndex:row]];
+    _currentCityNameAndState = [UserDefaults.defaults addSpaceAfterComma:locationLabelText];
+    NSString *geoid = [UserDefaults.defaults includeTextBeforeParentheses:[_placesArray objectAtIndex:row]];
+    NSString *manager = [UserDefaults.defaults includeTextAfterClosingParentheses:[_placesArray objectAtIndex:row]];
+    NSString *managerNumber = textBefore (manager,@"-");
+    NSString *withinManager = textAfter (manager,@"-");
+    NSString *numWithinManager = textBefore (withinManager,@"of");
+    NSString *totWithinManager = textAfter (withinManager,@"of");
+    
+    self.currentGeoid = geoid.intValue;
+    [UserDefaults.defaults saveInteger:self.currentGeoid
+                                forKey:@"CurrentGeoid"];
+    
+    _currentManageriPad = managerNumber.intValue;
+    _currentiPadWithinManager = numWithinManager.intValue;
+    _totiPadWithinManager = totWithinManager.intValue;
+    NSString *key = [NSString stringWithFormat:@"ManagerForGeoid:%i",geoid.intValue];
+    [UserDefaults.defaults saveInteger:_currentManageriPad
+                                forKey:key];
+    key = [NSString stringWithFormat:@"iPadWithinManagerForGeoid:%i",geoid.intValue];
+    [UserDefaults.defaults saveInteger:_currentiPadWithinManager
+                                forKey:key];
+    key = [NSString stringWithFormat:@"totiPadWithinManagerForGeoid:%i",geoid.intValue];
+    [UserDefaults.defaults saveInteger:_totiPadWithinManager
+                                forKey:key];
+    
+}
+- (void)loadiPadParametersForGeoid:(int)geoid
+{
+    _GSSiPadNumber = (int)[UserDefaults.defaults integerForKey:@"GSSiPadNumber"];
+    
+    NSString *key = [NSString stringWithFormat:@"ManagerForGeoid:%i",geoid];
+    _currentManageriPad = (int)[UserDefaults.defaults integerForKey:key];
+    
+    key = [NSString stringWithFormat:@"iPadWithinManagerForGeoid:%i",geoid];
+    _currentiPadWithinManager = (int)[UserDefaults.defaults integerForKey:key];
+    
+    key = [NSString stringWithFormat:@"totiPadWithinManagerForGeoid:%i",geoid];
+    _totiPadWithinManager = (int)[UserDefaults.defaults integerForKey:key];
+}
+
+- (void)setiPadParametersFromGeoid:(int)geoid
+{
+    int row = 0;
+    
+    while (row < _placesArray.count)
+    {
+        NSString *place = _placesArray[row];
+        int goid = (int)place.integerValue;
+        
+        if (goid == geoid)
+            [self processPlacesArray:row];
+        row++;
+    }
+}
+
+
 @end
