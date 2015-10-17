@@ -10,7 +10,3 @@
 NSString* textBeforeColon(NSString *string);
 NSString* textBefore (NSString *string,NSString* before);
 NSString* textAfter (NSString *string,NSString* after);
-
-@interface StringFunctions : NSObject
-
-@end

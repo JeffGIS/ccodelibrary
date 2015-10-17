@@ -8,7 +8,6 @@
 
 #import "StringFunctions.h"
 
-@implementation StringFunctions
 
 NSString* textBeforeColon(NSString *string)
 {
@@ -41,6 +40,3 @@ NSString* textAfter (NSString *string,NSString* after)
         string = @"";
     return string;
 }
-
-
-@end
