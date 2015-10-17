@@ -37,7 +37,7 @@
     ssv.selectable = selectable;
     ssv.delegate = delegate;
     ssv.inEditMode = NO;
-    ssv.activeColumns = 0;
+    ssv.activeColumns = ssv.activeRows = 0;
     
     ssv.textField = [[UITextField alloc] init];
     ssv.textField.delegate = ssv;
@@ -270,27 +270,28 @@
     CGPoint point = [gesture locationInView:gesture.view];
     NSString *selection = @"";
     
-    int xID = (point.x / _columnWidth);
-    int yID = (point.y / _rowHeight);
+    NSUInteger xID = (point.x / _columnWidth);
+    NSUInteger yID = (point.y / _rowHeight);
     
     if (gesture.view == _contentView)
     {
-        selection = [NSString stringWithFormat:@"%@%i", _alphabet[xID], (yID + 1)];
+        selection = [NSString stringWithFormat:@"%@%lu", _alphabet[xID], (yID + 1)];
         
         for (SpreadSheetViewCell *cell in _contentView.subviews)
         {
             if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
                 [cell.identifier isEqualToString:selection] &&
-                cell.column <= _activeColumns)
+                cell.column <= _activeColumns && cell.row <= _activeRows && _delegate)
             {
-                NSLog(@"Cell %@:\"%@\"", cell.identifier, cell.text);
+                [_delegate ssvCellWasTappedAtRowIndex:(yID + 1)
+                                          columnIndex:(xID + 1)];
             }
         }
     }
     
     else if (gesture.view == _rowHeaderView)
     {
-        selection = [NSString stringWithFormat:@"%i", (yID + 1)];
+        selection = [NSString stringWithFormat:@"%lu", (yID + 1)];
         
         for (SpreadSheetViewCell *cell in _rowHeaderView.subviews)
         {

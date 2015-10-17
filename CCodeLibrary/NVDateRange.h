@@ -42,6 +42,9 @@ didReturnFromDate:(NSInteger)fromDate
 @property (nonatomic, weak) id <NVDateRangeDelegate> delegate;
 @property (nonatomic) NSInteger minDate;
 
++ (void)getPastWeekFromDate:(NSInteger *)fromDate
+                     toDate:(NSInteger *)toDate;
+
 + (NVDateRange *)showDateRangeInView:(UIView *)view
                             delegate:(id)delegate
                             fromDate:(NSInteger)fromDate

@@ -113,4 +113,50 @@ replaceViewControllerWithID:(NSString *)ID
     }
 }
 
++ (UIViewController *)viewControllerWithID:(NSString *)ID
+                        inTabBarController:(UITabBarController *)tabBarController
+                                     index:(NSUInteger *)index
+{
+    UIViewController *viewController = nil;
+    
+    if (!tabBarController || !ID)
+        return nil;
+    
+    NSArray *tabBarVCs = tabBarController.viewControllers;
+    
+    for (UIViewController *vcs in tabBarVCs)
+    {
+        if ([vcs.restorationIdentifier isEqualToString:ID])
+        {
+            viewController = vcs;
+            *index = [tabBarVCs indexOfObject:vcs];
+            break;
+        }
+    }
+    
+    return viewController;
+}
+
++ (NSInteger)indexOfViewControllerWithID:(NSString *)ID
+                      inTabBarController:(UITabBarController *)tabBarController
+{
+    NSInteger index = -1;
+    
+    if (!tabBarController || !ID)
+        return -1;
+    
+    NSArray *tabBarVCs = tabBarController.viewControllers;
+    
+    for (UIViewController *vcs in tabBarVCs)
+    {
+        if ([vcs.restorationIdentifier isEqualToString:ID])
+        {
+            index = [tabBarVCs indexOfObject:vcs];
+            break;
+        }
+    }
+    
+    return index;
+}
+
 @end

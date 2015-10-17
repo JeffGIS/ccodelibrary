@@ -18,13 +18,16 @@
           forCellAtRow:(NSUInteger)row
                 column:(NSUInteger)column;
 
+- (void)ssvCellWasTappedAtRowIndex:(NSUInteger)rowIndex
+                       columnIndex:(NSUInteger)columnIndex;
+
 @end
 
 @interface NVSpreadsheetView : UIView <UIScrollViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic, weak) id <NVSpreadsheetViewDelegate> delegate;
 @property BOOL editable, selectable;
-@property NSUInteger rows, columns, activeColumns;
+@property NSUInteger rows, columns, activeColumns, activeRows;
 @property CGFloat rowHeight, columnWidth;
 
 + (NVSpreadsheetView *)showSpreadsheetWithRows:(NSUInteger)rows
