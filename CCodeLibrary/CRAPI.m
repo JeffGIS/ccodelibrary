@@ -446,7 +446,9 @@
     
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
-    
+//    NSString *MPLSurl = [NSString stringWithFormat:@"http://gssidata.com/MPLSADA/%lu/%lu/%lu.png",
+//                     (unsigned long)zoom, (unsigned long)y, (unsigned long)x];
+
     int rtn = [UIImageJPEGRepresentation(image, 0.8) writeToFile:imageFile
                                                       atomically:YES];
     {
