@@ -88,6 +88,8 @@
         
         _uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, geoid];
     }
+    if (geoid == 2743000)//MPLS
+        self.controlledInterface = NO;
 }
 
 -(void)setCurrentZoom:(CGFloat)zoom
@@ -445,12 +447,20 @@
     NSString *staticMapUrl =
     [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&key=%@",
      lat, lon, zoom, GOOGLE_API_KEY];
-    
+    int pixelx,pixely;
+    int tilex,tiley;
+    LatLongToPixelXY_old(lat,lon, zoom, &pixelx, &pixely);
+    PixelXYToTileXY(pixelx, pixely,&tilex,&tiley);
     NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
-//    NSString *MPLSurl = [NSString stringWithFormat:@"http://gssidata.com/MPLSADA/%lu/%lu/%lu.png",
-//                     (unsigned long)zoom, (unsigned long)y, (unsigned long)x];
-
+    BOOL MPLS=FALSE;
+    if (MPLS)
+    {
+        NSString *MPLSurls = [NSString stringWithFormat:@"https://gssidata.com/MPLSADA/%lu/%lu/%lu.jp2",
+                              (unsigned long)zoom, (unsigned long)tiley, (unsigned long)tilex];
+        NSURL *MPLSurl = [NSURL URLWithString:[MPLSurls stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        image = [UIImage imageWithData: [NSData dataWithContentsOfURL:MPLSurl]];
+    }
     int rtn = [UIImageJPEGRepresentation(image, 0.8) writeToFile:imageFile
                                                       atomically:YES];
     {
