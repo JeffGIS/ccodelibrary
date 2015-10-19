@@ -38,7 +38,7 @@ enum obstructions {
 };
 
 @interface PSRamp : NSObject
-
+//Preliminary Survey Ramps
 @property (nonatomic) int lev21x, lev21y;
 @property (nonatomic) int imageX, imageY;
 @property (nonatomic) int refno, rampID;
