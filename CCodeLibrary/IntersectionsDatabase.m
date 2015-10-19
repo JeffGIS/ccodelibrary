@@ -421,10 +421,106 @@ static IntersectionsDatabase *_statdatabase = nil;
                      withStatus:(int)status
 {
     BOOL rtn = NO;
+    NSString *cmd;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     [self.curbRampData open];
+    for (int i = 1; i < 13; i++)
+    {
+        MPRamp *ramp = [mpint.ramps objectAtIndex:i];
+        char rampID[32];
+        
+        mpint.currentRamp = ramp;
+        
+        if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
+        {
+            strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
+            cmd = [NSString stringWithUTF8String:"UPDATE Ramps SET \
+                    intID=%i;rampNum=%i,\r\n\
+                    rampID=\"%s\";\r\n\
+                    rampExists=%i;\r\n\
+                    timeComplete=%i;\r\n\
+                    approximateHeading=%f;\r\n\
+                    rampInXWalk=%i;\r\n\
+                    xWalkisComplete=%i;\r\n\
+                    signalisComplete=%i;\r\n\
+                    texture=%i;\r\n\
+                    upperLandingObstruction=%i;\r\n\
+                    lowerLandingObstruction=%i;\r\n\
+                    rampObstruction=%i;\r\n\
+                    hasRampCracks=%i;\r\n\
+                    hasUpperLandingCracks=%i;\r\n\
+                    hasStreetLandingCracks=%i;\r\n\
+                    rampWidth=%i;\r\n\
+                    rampDepth=%i;\r\n\
+                    rampSlopeFront=%f;\r\n\
+                    rampSlopeSide=%f;\r\n\
+                    rampSlopeHeading=%f;\r\n\
+                    upperLandingSlopeFront=%f;\r\n\
+                    upperLandingSlopeSide=%f;\r\n\
+                    upperLandingSlopeHeading=%f;\r\n\
+                    streetLandingSlopeFront=%f;\r\n\
+                    streetLandingSlopeSide=%f;\r\n\
+                    streetLandingSlopeHeading=%f;\r\n\
+                    flareLeftSlopeFront=%f;\r\n\
+                    flareLeftSlopeSide=%f;\r\n\
+                    flareLeftSlopeHeading=%f;\r\n\
+                    flareRightSlopeFront=%f;\r\n\
+                    flareRightSlopeSide=%f;\r\n\
+                    flareRightSlopeHeading=%f;\r\n\
+                    hasPEDSignal=%i;\r\n\
+                    hasPEDButton=%i;\r\n\
+                    PEDButtonHeight=%i;\r\n\
+                    PEDButtonDist=%i;\r\n\
+                    SteepTopOfCurb=%f;\r\n\
+                    lev21x=%i;\r\n\
+                    lev21y=%i;\r\n\
+                    PedRampLip=%f);\r\n",
+                    (int)mpint.intID,
+                    (int)ramp.rampNum,
+                    rampID,
+                    ramp.rampExists,
+                    ramp.timeComplete,
+                    ramp.approximateHeading,
+                    (int)ramp.rampInXWalk,
+                    (int)ramp.xWalkisComplete,
+                    (int)ramp.signalisComplete,
+                    (int)ramp.texture,
+                    (int)ramp.upperLandingObstruction,
+                    (int)ramp.lowerLandingObstruction,
+                    (int)ramp.rampObstruction,
+                    (int)ramp.hasRampCracks,
+                    (int)ramp.hasUpperLandingCracks,
+                    (int)ramp.hasStreetLandingCracks,
+                    ramp.rampWidth,
+                    ramp.rampDepth,
+                    ramp.rampSlopeFront,
+                    ramp.rampSlopeSide,
+                    ramp.rampSlopeHeading,
+                    ramp.upperLandingSlopeFront,
+                    ramp.upperLandingSlopeSide,
+                    ramp.upperLandingSlopeHeading,
+                    ramp.streetLandingSlopeFront,
+                    ramp.streetLandingSlopeSide,
+                    ramp.streetLandingSlopeHeading,
+                    ramp.flareLeftSlopeFront,
+                    ramp.flareLeftSlopeSide,
+                    ramp.flareLeftSlopeHeading,
+                    ramp.flareRightSlopeFront,
+                    ramp.flareRightSlopeSide,
+                    ramp.flareRightSlopeHeading,
+                    (int)ramp.hasPEDSignal,
+                    (int)ramp.hasPEDButton,
+                    ramp.PEDButtonHeight,
+                    ramp.PEDButtonDist,
+                    ramp.SteepTopOfCurb,
+                    ramp.lev21x,
+                    ramp.lev21y,
+                    ramp.PedRampLip);
+        }
+    }
+    
    
-    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
+    cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
                        intX=%i,\
                        intY=%i,\
                        ramp1=%i,\
@@ -473,7 +569,7 @@ static IntersectionsDatabase *_statdatabase = nil;
                        [self getSignalCoord:mpint signal:67],
                        mpint.intID];
     
-    rtn = [self.curbRampData executeCmd:(char *)query.UTF8String sendToServer:YES useUniqueFile:NO];
+    rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:NO];
     [self.curbRampData close];
 
     return !rtn;
@@ -1124,7 +1220,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     if (!fidData || !fidIndex)
         goto Exit;
     
-    if (![self.curbRampData createIntersectionsTable])
+    if (![self.curbRampData createIntersectionsTable:YES])
         goto Exit2;
     
     SQLOKint(sqlite3_prepare_v2(self.curbRampData.database, buffer, -1, &statement, NULL), "loadIntersectionTextToDatabase1");

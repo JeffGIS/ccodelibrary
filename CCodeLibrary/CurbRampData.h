@@ -25,7 +25,7 @@
 - (void)open;
 - (void)close;
 - (void)clear;
-- (BOOL)createIntersectionsTable;
+- (BOOL)createIntersectionsTable:(BOOL)dropExistingTables;
 - (NSString *)databasePath:(int)geoid;
 
 - (BOOL)executeCmd:(char *)cmd

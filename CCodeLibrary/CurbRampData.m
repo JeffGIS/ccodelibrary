@@ -36,6 +36,7 @@ static CurbRampData *_statdatabase = nil;
         _documentsDirectory = UserDefaults.defaults.sharedFilePath;
         _fileName = @"CurbRamps.sqlite";
         _path = [self databasePath:geoid];
+        [self createIntersectionsTable:NO];
     }
     
     return self;
@@ -158,16 +159,17 @@ static CurbRampData *_statdatabase = nil;
     SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
 }
 
-- (BOOL)createIntersectionsTable
+- (BOOL)createIntersectionsTable:(BOOL)dropExistingTables
 {
     BOOL rtn = NO;
     
     [self open];
-    NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;DROP TABLE IF EXISTS Intersections_index;"];
+    NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;DROP TABLE IF EXISTS Intersections_index;DROP TABLE IF EXISTS Ramps;"];
     
-    SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), _database);
+    if (dropExistingTables)
+        SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), _database);
 //create intersection table
-    NSString *query = [NSString stringWithFormat:@"CREATE TABLE Intersections (\
+    NSString *query = [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Intersections (\
                        intID INTEGER PRIMARY KEY,\
                        lastUpdateTime INTEGER,\
                        status INTEGER,\
@@ -200,57 +202,63 @@ static CurbRampData *_statdatabase = nil;
                        streetAZMs CHAR(128),\
                        latitude REAL,\
                        longitude REAL);\
-                       CREATE VIRTUAL TABLE Intersections_index USING rtree(id,minX, maxX, minY, maxY);"];
+                       CREATE VIRTUAL TABLE IF NOT EXISTS Intersections_index USING rtree(id,minX, maxX, minY, maxY);"];
     
     rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
 //create ramp table
-    /*
-     (nonatomic) int rampNum;
-     (nonatomic, copy) NSString *rampID;
-     (nonatomic) int timeComplete;
-     BOOL rampExists;
-     BOOL isComplete;
-     (nonatomic) CGFloat approximateHeading;
-     (nonatomic) int adjustedRot;
-     BOOL rampInXWalk;
-     BOOL xWalkisComplete;
-     BOOL signalisComplete;
-     (nonatomic) enum textures texture;
-     (nonatomic) enum obstructions upperLandingObstruction;
-     (nonatomic) enum obstructions lowerLandingObstruction;
-     (nonatomic) enum obstructions rampObstruction;
-     BOOL hasRampCracks;
-     BOOL hasUpperLandingCracks;
-     BOOL hasStreetLandingCracks;
-     (nonatomic) int rampWidth, rampDepth;
-     (nonatomic) CGFloat rampSlopeFront;
-     (nonatomic) CGFloat rampSlopeSide;
-     (nonatomic) CGFloat rampSlopeHeading;
-     (nonatomic) CGFloat upperLandingSlopeFront;
-     (nonatomic) CGFloat upperLandingSlopeSide;
-     (nonatomic) CGFloat upperLandingSlopeHeading;
-     (nonatomic) CGFloat streetLandingSlopeFront;
-     (nonatomic) CGFloat streetLandingSlopeSide;
-     (nonatomic) CGFloat streetLandingSlopeHeading;
-     (nonatomic) CGFloat flareLeftSlopeFront;
-     (nonatomic) CGFloat flareLeftSlopeSide;
-     (nonatomic) CGFloat flareLeftSlopeHeading;
-     (nonatomic) CGFloat flareRightSlopeFront;
-     (nonatomic) CGFloat flareRightSlopeSide;
-     (nonatomic) CGFloat flareRightSlopeHeading;
-     (nonatomic) CGFloat swkLeftSlopeFront;
-     (nonatomic) CGFloat swkLeftSlopeSide;
-     (nonatomic) CGFloat swkLeftSlopeHeading;
-     (nonatomic) CGFloat swkRightSlopeFront;
-     (nonatomic) CGFloat swkRightSlopeSide;
-     (nonatomic) CGFloat swkRightSlopeHeading;
-     BOOL hasPEDSignal, hasPEDButton;
-     (nonatomic) int PEDButtonHeight, PEDButtonDist;
-     (nonatomic) CGFloat SteepTopOfCurb;
-     (nonatomic) CGFloat PedRampLip;
-     (nonatomic) int lev21x, lev21y;
-     RampType rampType;
-    */
+    query = [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Ramps (\
+             intID,\
+             rampNum INT,\
+             rampID CHAR(16),\
+             timeComplete INT,\
+             rampExists INT,\
+             isComplete INT,\
+             approximateHeading REAL,\
+             adjustedRot INT,\
+             rampInXWalk INT,\
+             xWalkisComplete INT,\
+             signalisComplete INT,\
+             texture INT,\
+             upperLandingObstruction INT,\
+             lowerLandingObstruction INT,\
+             rampObstruction INT,\
+             hasRampCracks INT,\
+             hasUpperLandingCracks INT,\
+             hasStreetLandingCracks INT,\
+             rampWidth INT,\
+             rampDepth INT,\
+             rampSlopeFront REAL,\
+             rampSlopeSide REAL,\
+             rampSlopeHeading REAL,\
+             upperLandingSlopeFront REAL,\
+             upperLandingSlopeSide REAL,\
+             upperLandingSlopeHeading REAL,\
+             streetLandingSlopeFront REAL,\
+             streetLandingSlopeSide REAL,\
+             streetLandingSlopeHeading REAL,\
+             flareLeftSlopeFront REAL,\
+             flareLeftSlopeSide REAL,\
+             flareLeftSlopeHeading REAL,\
+             flareRightSlopeFront REAL,\
+             flareRightSlopeSide REAL,\
+             flareRightSlopeHeading REAL,\
+             swkLeftSlopeFront REAL,\
+             swkLeftSlopeSide REAL,\
+             swkLeftSlopeHeading REAL,\
+             swkRightSlopeFront REAL,\
+             swkRightSlopeSide REAL,\
+             swkRightSlopeHeading REAL,\
+             hasPEDSignal INT,\
+             hasPEDButton INT,\
+             PEDButtonHeight INT,\
+             PEDButtonDist INT,\
+             SteepTopOfCurb INT,\
+             PedRampLip INT,\
+             lev21x INT, lev21y INT,\
+             rampType INT,\
+             PRIMARY KEY (intID,rampNum ASC));"];
+   
+    rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
 
     [self close];
     return rtn;

@@ -546,8 +546,11 @@
                                   andZoom:(int)zoom
                              forceRefresh:(BOOL)refresh
 {
-    BOOL MPLS = YES;
+    BOOL MPLS = NO;
     refresh = YES;
+    if (CRAPI.sharedInstance.currentGeoid == 2743000)
+        MPLS = YES;
+
     
     if (refresh)
         [self deleteImagesForAllZooms:intersectionID];
