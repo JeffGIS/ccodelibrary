@@ -471,11 +471,11 @@
         
         while (x < worldxEnd)
         {
-            NSString *MPLSurls = [NSString stringWithFormat:@"http://gssidata.com/MPLSADA/%lu/%lu/%lu.jp2",
-                                  (unsigned long)zoom, (unsigned long)tiley, (unsigned long)tilex];
             
-            NSURL *mapUrl = [NSURL URLWithString:[MPLSurls stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
+            UIImage *image = [self getTileImageForZoom:zoom
+                                                 tilex:tilex
+                                                 tiley:tiley];
+            
             nxpixels = min(xinc, (size - xincomposite));
             nypixels = min(yinc, (size - yincomposite));
             
@@ -502,6 +502,42 @@
     UIGraphicsEndImageContext();
     
     return compositeImage;
+}
+
+- (UIImage *)getTileImageForZoom:(int)zoom
+                           tilex:(int)tilex
+                           tiley:(int)tiley
+{
+    UIImage *tileImage = nil;
+    
+    NSString *sharedDir = UserDefaults.defaults.sharedFilePath;
+    
+    NSString *filepath = [NSString stringWithFormat:@"%@/%i_%lu_%lu_%lu.jp2",
+                          sharedDir, self.currentGeoid,
+                          (unsigned long)zoom, (unsigned long)tiley, (unsigned long)tilex];
+    
+    NSFileManager *fileManager = NSFileManager.defaultManager;
+    
+    if ([fileManager fileExistsAtPath:filepath])
+        tileImage = [UIImage imageWithContentsOfFile:filepath];
+    
+    else
+    {
+        NSString *MPLSurls = [NSString stringWithFormat:@"http://gssidata.com/MPLSADA/%lu/%lu/%lu.jp2",
+                                  (unsigned long)zoom, (unsigned long)tiley, (unsigned long)tilex];
+            
+        NSURL *mapUrl = [NSURL URLWithString:[MPLSurls stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        tileImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
+        
+        if (![UIImageJPEGRepresentation(tileImage, 0.8) writeToFile:filepath
+                                                         atomically:YES])
+        {
+            NSLog(@"Tile Image Write ERROR at filepath:%@",
+                  filepath);
+        }
+    }
+    
+    return tileImage;
 }
 
 - (NSString *)getImageFileforIntersection:(int)intersectionID
