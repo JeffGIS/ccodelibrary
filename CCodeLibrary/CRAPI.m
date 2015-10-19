@@ -424,13 +424,80 @@
     }
 }
 
+- (UIImage*)getMPLSImage:(int)size
+                   atLat:(double)lat
+                  andLon:(double)lon
+                 andZoom:(int)zoom
+{
+    UIImage* compositeImage=nil;
+    int worldx, worldy;
+    int worldxEnd, worldyEnd;
+    int tilex, tiley, tilexLeft;
+    int xinc, yinc;
+    int xintile, yintile, xintileLeft;
+    int xincomposite, yincomposite=0;
+    int nxpixels, nypixels;
+    int x,y;
+    
+    //get world pixel coordinates of center of composite image at current zoom
+    LatLongToPixelXY_old(lat,lon, zoom, &worldx, &worldy);
+    //adjust to upper left corner of composite image
+    worldx -= size/2;
+    worldy -= size/2;
+    worldxEnd = worldx + size;
+    worldyEnd = worldy + size;
+    //get tile x and y index
+    PixelXYToTileXY(worldx, worldy,&tilex,&tiley);
+    tilexLeft = tilex;
+    //get pixel within tile coordinates
+    xintile = xintileLeft = worldx % 256;
+    yintile = worldy % 256;
+    xinc = 256 - xintile;
+    yinc = 256 - yintile;
+    y = worldy;
+    while (y < worldyEnd)
+    {
+        xincomposite = 0;
+        x = worldx;
+        tilex = tilexLeft;
+        xintile = xintileLeft;
+        while (x < worldxEnd)
+        {
+            NSString *MPLSurls = [NSString stringWithFormat:@"http://gssidata.com/MPLSADA/%lu/%lu/%lu.jp2",
+                                  (unsigned long)zoom, (unsigned long)tiley, (unsigned long)tilex];
+            
+            NSURL *mapUrl = [NSURL URLWithString:[MPLSurls stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            UIImage* image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
+            nxpixels = min (xinc,size - xincomposite);
+            nypixels = min (yinc,size - yincomposite);
+            //move a rectangular portion of image nxpixels by nypixels in size starting at xintile,yintile
+            //into composite at xincomposite,yincomposite
+            
+            // to be completed by Bill
+            
+            tilex++;
+            x += xinc;
+            xinc = 256;
+            xincomposite += 256;
+            xintile = 0;
+        }
+        y += yinc;
+        yinc = 256;
+        tiley++;
+        yincomposite += 256;
+        yintile = 0;
+    }
+    
+    return compositeImage;
+}
+
 - (NSString *)getImageFileforIntersection:(int)intersectionID
                                     atLat:(double)lat
                                    andLon:(double)lon
                                   andZoom:(int)zoom
                              forceRefresh:(BOOL)refresh
 {
-    BOOL MPLS = NO;
+    BOOL MPLS = YES;
     refresh = YES;
     
     if (refresh)
@@ -447,31 +514,17 @@
     if (fileSize > 0 && !refresh)
         return imageFile;
     
-    int pixelx = 0, pixely = 0;
-    int tilex = 0, tiley = 0;
-    
-    LatLongToPixelXY_old(lat,lon, zoom, &pixelx, &pixely);
-    PixelXYToTileXY(pixelx, pixely,&tilex,&tiley);
-    
     UIImage *image = nil;
-    NSURL *mapUrl = nil;
     
     if (MPLS)
-    {
-        NSString *MPLSurls = [NSString stringWithFormat:@"http://gssidata.com/MPLSADA/%lu/%lu/%lu.jp2",
-                              (unsigned long)zoom, (unsigned long)tiley, (unsigned long)tilex];
-        
-        mapUrl = [NSURL URLWithString:[MPLSurls stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
-    }
-    
+        image = [self getMPLSImage:640 atLat:lat andLon:lon andZoom:zoom];
     else
     {
         NSString *staticMapUrl =
         [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&key=%@",
          lat, lon, zoom, GOOGLE_API_KEY];
         
-        mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
     }
     
