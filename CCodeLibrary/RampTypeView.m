@@ -145,24 +145,27 @@
 {
     NSArray *imageNames = @[@"Perp",
                             @"PerpNonWalkable",
-                            @"ComPerpWalkable",
-                            @"ComPerpNonWalkable",
+                            @"ComPerp",
+                            @"ComPerpNW",
                             @"OneWayAdj",
                             @"OneWayBlend",
                             @"Parallel",
                             @"DepCorner",
                             @"Fan",
-                            @"ComPerpWalkable_leftRamp",
-                            @"ComPerpWalkable_rightRamp",
-                            @"ComPerpNonWalkable_leftRamp",
-                            @"ComPerpNonWalkable_rightRamp"];
+                            @"ComPerp_leftRamp",
+                            @"ComPerp_rightRamp",
+                            @"ComPerpNW_leftRamp",
+                            @"ComPerpNW_rightRamp"];
     
     NSMutableArray *tempArray = [[NSMutableArray alloc] initWithCapacity:rampTypeCount];
     
-    for (int i=0;i<rampTypeCount;i++)
+    for (int i = 0; i < rampTypeCount; i++)
     {
-        UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:imageNames[i]                                                                                   ofType:@"png"]];
-        [tempArray insertObject:rampImage atIndex:i];
+        UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:imageNames[i]
+                                                                                            ofType:@"png"]];
+        
+        [tempArray insertObject:rampImage
+                        atIndex:i];
     }
     
     NSArray *imageArray = tempArray.copy;
