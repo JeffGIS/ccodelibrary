@@ -430,6 +430,9 @@
                                   andZoom:(int)zoom
                              forceRefresh:(BOOL)refresh
 {
+    BOOL MPLS = YES;
+    refresh = YES;
+    
     if (refresh)
         [self deleteImagesForAllZooms:intersectionID];
     
@@ -444,23 +447,34 @@
     if (fileSize > 0 && !refresh)
         return imageFile;
     
-    NSString *staticMapUrl =
-    [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&key=%@",
-     lat, lon, zoom, GOOGLE_API_KEY];
-    int pixelx,pixely;
-    int tilex,tiley;
+    int pixelx = 0, pixely = 0;
+    int tilex = 0, tiley = 0;
+    
     LatLongToPixelXY_old(lat,lon, zoom, &pixelx, &pixely);
     PixelXYToTileXY(pixelx, pixely,&tilex,&tiley);
-    NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
-    BOOL MPLS=FALSE;
+    
+    UIImage *image = nil;
+    NSURL *mapUrl = nil;
+    
     if (MPLS)
     {
-        NSString *MPLSurls = [NSString stringWithFormat:@"https://gssidata.com/MPLSADA/%lu/%lu/%lu.jp2",
+        NSString *MPLSurls = [NSString stringWithFormat:@"http://gssidata.com/MPLSADA/%lu/%lu/%lu.jp2",
                               (unsigned long)zoom, (unsigned long)tiley, (unsigned long)tilex];
-        NSURL *MPLSurl = [NSURL URLWithString:[MPLSurls stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        image = [UIImage imageWithData: [NSData dataWithContentsOfURL:MPLSurl]];
+        
+        mapUrl = [NSURL URLWithString:[MPLSurls stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
     }
+    
+    else
+    {
+        NSString *staticMapUrl =
+        [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&key=%@",
+         lat, lon, zoom, GOOGLE_API_KEY];
+        
+        mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
+    }
+    
     int rtn = [UIImageJPEGRepresentation(image, 0.8) writeToFile:imageFile
                                                       atomically:YES];
     {
