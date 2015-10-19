@@ -430,7 +430,7 @@
                                   andZoom:(int)zoom
                              forceRefresh:(BOOL)refresh
 {
-    BOOL MPLS = YES;
+    BOOL MPLS = NO;
     refresh = YES;
     
     if (refresh)
