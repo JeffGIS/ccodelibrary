@@ -467,6 +467,7 @@
         x = worldx;
         tilex = tilexLeft;
         xintile = xintileLeft;
+        xinc = (256 - xintile);
         
         while (x < worldxEnd)
         {
@@ -475,8 +476,8 @@
             
             NSURL *mapUrl = [NSURL URLWithString:[MPLSurls stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
-            nxpixels = min(xinc, size - xincomposite);
-            nypixels = min(yinc, size - yincomposite);
+            nxpixels = min(xinc, (size - xincomposite));
+            nypixels = min(yinc, (size - yincomposite));
             
             CGImageRef subimage = CGImageCreateWithImageInRect(image.CGImage, CGRectMake(xintile, yintile, nxpixels, nypixels));
             image = [UIImage imageWithCGImage:subimage];
@@ -486,14 +487,14 @@
             tilex++;
             x += xinc;
             xinc = 256;
-            xincomposite += 256;
+            xincomposite += nxpixels;
             xintile = 0;
         }
         
+        tiley++;
         y += yinc;
         yinc = 256;
-        tiley++;
-        yincomposite += 256;
+        yincomposite += nypixels;
         yintile = 0;
     }
     
