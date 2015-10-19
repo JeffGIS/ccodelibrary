@@ -424,56 +424,64 @@
     }
 }
 
-- (UIImage*)getMPLSImage:(int)size
-                   atLat:(double)lat
-                  andLon:(double)lon
-                 andZoom:(int)zoom
+- (UIImage *)getMPLSImage:(int)size
+                    atLat:(double)lat
+                   andLon:(double)lon
+                  andZoom:(int)zoom
 {
-    UIImage* compositeImage=nil;
-    int worldx, worldy;
-    int worldxEnd, worldyEnd;
-    int tilex, tiley, tilexLeft;
-    int xinc, yinc;
-    int xintile, yintile, xintileLeft;
-    int xincomposite, yincomposite=0;
-    int nxpixels, nypixels;
-    int x,y;
+    UIImage *compositeImage = nil;
+    int worldx = 0, worldy = 0;
+    int worldxEnd = 0, worldyEnd = 0;
+    int tilex = 0, tiley = 0, tilexLeft = 0;
+    int xinc = 0, yinc = 0;
+    int xintile = 0, yintile = 0, xintileLeft = 0;
+    int xincomposite = 0, yincomposite=0;
+    int nxpixels = 0, nypixels = 0;
+    int x = 0, y = 0;
     
     //get world pixel coordinates of center of composite image at current zoom
     LatLongToPixelXY_old(lat,lon, zoom, &worldx, &worldy);
+    
     //adjust to upper left corner of composite image
-    worldx -= size/2;
-    worldy -= size/2;
-    worldxEnd = worldx + size;
-    worldyEnd = worldy + size;
+    worldx -= (size / 2);
+    worldy -= (size / 2);
+    worldxEnd = (worldx + size);
+    worldyEnd = (worldy + size);
+    
     //get tile x and y index
-    PixelXYToTileXY(worldx, worldy,&tilex,&tiley);
+    PixelXYToTileXY(worldx, worldy, &tilex, &tiley);
     tilexLeft = tilex;
+    
     //get pixel within tile coordinates
-    xintile = xintileLeft = worldx % 256;
-    yintile = worldy % 256;
-    xinc = 256 - xintile;
-    yinc = 256 - yintile;
+    xintile = xintileLeft = (worldx % 256);
+    yintile = (worldy % 256);
+    xinc = (256 - xintile);
+    yinc = (256 - yintile);
     y = worldy;
+    
+    UIGraphicsBeginImageContext(CGSizeMake(size, size));
+    
     while (y < worldyEnd)
     {
         xincomposite = 0;
         x = worldx;
         tilex = tilexLeft;
         xintile = xintileLeft;
+        
         while (x < worldxEnd)
         {
             NSString *MPLSurls = [NSString stringWithFormat:@"http://gssidata.com/MPLSADA/%lu/%lu/%lu.jp2",
                                   (unsigned long)zoom, (unsigned long)tiley, (unsigned long)tilex];
             
             NSURL *mapUrl = [NSURL URLWithString:[MPLSurls stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-            UIImage* image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
-            nxpixels = min (xinc,size - xincomposite);
-            nypixels = min (yinc,size - yincomposite);
-            //move a rectangular portion of image nxpixels by nypixels in size starting at xintile,yintile
-            //into composite at xincomposite,yincomposite
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
+            nxpixels = min(xinc, size - xincomposite);
+            nypixels = min(yinc, size - yincomposite);
             
-            // to be completed by Bill
+            CGImageRef subimage = CGImageCreateWithImageInRect(image.CGImage, CGRectMake(xintile, yintile, nxpixels, nypixels));
+            image = [UIImage imageWithCGImage:subimage];
+            
+            [image drawInRect:CGRectMake(xincomposite, yincomposite, nxpixels, nypixels)];
             
             tilex++;
             x += xinc;
@@ -481,12 +489,16 @@
             xincomposite += 256;
             xintile = 0;
         }
+        
         y += yinc;
         yinc = 256;
         tiley++;
         yincomposite += 256;
         yintile = 0;
     }
+    
+    compositeImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
     
     return compositeImage;
 }
@@ -517,7 +529,13 @@
     UIImage *image = nil;
     
     if (MPLS)
-        image = [self getMPLSImage:640 atLat:lat andLon:lon andZoom:zoom];
+    {
+        image = [self getMPLSImage:640
+                             atLat:lat
+                            andLon:lon
+                           andZoom:zoom];
+    }
+    
     else
     {
         NSString *staticMapUrl =
