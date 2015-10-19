@@ -166,7 +166,7 @@ static CurbRampData *_statdatabase = nil;
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;DROP TABLE IF EXISTS Intersections_index;"];
     
     SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), _database);
-    
+//create intersection table
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE Intersections (\
                        intID INTEGER PRIMARY KEY,\
                        lastUpdateTime INTEGER,\
@@ -203,6 +203,55 @@ static CurbRampData *_statdatabase = nil;
                        CREATE VIRTUAL TABLE Intersections_index USING rtree(id,minX, maxX, minY, maxY);"];
     
     rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
+//create ramp table
+    /*
+     (nonatomic) int rampNum;
+     (nonatomic, copy) NSString *rampID;
+     (nonatomic) int timeComplete;
+     BOOL rampExists;
+     BOOL isComplete;
+     (nonatomic) CGFloat approximateHeading;
+     (nonatomic) int adjustedRot;
+     BOOL rampInXWalk;
+     BOOL xWalkisComplete;
+     BOOL signalisComplete;
+     (nonatomic) enum textures texture;
+     (nonatomic) enum obstructions upperLandingObstruction;
+     (nonatomic) enum obstructions lowerLandingObstruction;
+     (nonatomic) enum obstructions rampObstruction;
+     BOOL hasRampCracks;
+     BOOL hasUpperLandingCracks;
+     BOOL hasStreetLandingCracks;
+     (nonatomic) int rampWidth, rampDepth;
+     (nonatomic) CGFloat rampSlopeFront;
+     (nonatomic) CGFloat rampSlopeSide;
+     (nonatomic) CGFloat rampSlopeHeading;
+     (nonatomic) CGFloat upperLandingSlopeFront;
+     (nonatomic) CGFloat upperLandingSlopeSide;
+     (nonatomic) CGFloat upperLandingSlopeHeading;
+     (nonatomic) CGFloat streetLandingSlopeFront;
+     (nonatomic) CGFloat streetLandingSlopeSide;
+     (nonatomic) CGFloat streetLandingSlopeHeading;
+     (nonatomic) CGFloat flareLeftSlopeFront;
+     (nonatomic) CGFloat flareLeftSlopeSide;
+     (nonatomic) CGFloat flareLeftSlopeHeading;
+     (nonatomic) CGFloat flareRightSlopeFront;
+     (nonatomic) CGFloat flareRightSlopeSide;
+     (nonatomic) CGFloat flareRightSlopeHeading;
+     (nonatomic) CGFloat swkLeftSlopeFront;
+     (nonatomic) CGFloat swkLeftSlopeSide;
+     (nonatomic) CGFloat swkLeftSlopeHeading;
+     (nonatomic) CGFloat swkRightSlopeFront;
+     (nonatomic) CGFloat swkRightSlopeSide;
+     (nonatomic) CGFloat swkRightSlopeHeading;
+     BOOL hasPEDSignal, hasPEDButton;
+     (nonatomic) int PEDButtonHeight, PEDButtonDist;
+     (nonatomic) CGFloat SteepTopOfCurb;
+     (nonatomic) CGFloat PedRampLip;
+     (nonatomic) int lev21x, lev21y;
+     RampType rampType;
+    */
+
     [self close];
     return rtn;
     
