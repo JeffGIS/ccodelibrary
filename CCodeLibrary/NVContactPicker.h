@@ -4,6 +4,8 @@
 @import UIKit;
 @import Contacts;
 @import ContactsUI;
+@import AddressBook;
+@import AddressBookUI;
 
 @class NVContactPicker;
 
@@ -15,7 +17,7 @@
 
 @end
 
-@interface NVContactPicker : NSObject <CNContactPickerDelegate>
+@interface NVContactPicker : NSObject <CNContactPickerDelegate,ABPeoplePickerNavigationControllerDelegate>
 
 @property (nonatomic, weak) id <NVContactPickerDelegate> delegate;
 

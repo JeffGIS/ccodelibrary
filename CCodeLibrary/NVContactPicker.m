@@ -6,6 +6,7 @@
 @interface NVContactPicker ()
 
 @property (nonatomic) CNContactPickerViewController *cpvc;
+@property (nonatomic) ABPeoplePickerNavigationController *abpnc;
 
 @end
 
@@ -29,6 +30,19 @@
         }
     }
     
+    else
+    {
+        nvcp.abpnc = [[ABPeoplePickerNavigationController alloc] init];
+        nvcp.abpnc.peoplePickerDelegate = nvcp;
+        
+        if ([delegate isKindOfClass:UIViewController.class])
+        {
+            [delegate presentViewController:nvcp.abpnc
+                                   animated:YES
+                                 completion:nil];
+        }
+    }
+    
     return nvcp;
 }
 
@@ -41,6 +55,21 @@
                   didReturnEmail:contact.emailAddresses[0].value
                   forContactName:[NSString stringWithFormat:@"%@ %@",
                                   contact.givenName, contact.familyName]];
+    }
+}
+
+- (void)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
+                         didSelectPerson:(ABRecordRef)person
+{
+    if (_delegate)
+    {
+        CFStringRef nameRef = ABRecordCopyCompositeName(person);
+        ABMultiValueRef emailMultiValue = ABRecordCopyValue(person, kABPersonEmailProperty);
+        CFStringRef emailRef = ABMultiValueCopyValueAtIndex(emailMultiValue, 0);
+        
+        [_delegate contactPicker:self
+                  didReturnEmail:(__bridge NSString *)emailRef
+                  forContactName:(__bridge NSString *)nameRef];
     }
 }
 
