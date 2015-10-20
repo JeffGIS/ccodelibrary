@@ -1188,18 +1188,17 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
     
     if (flip)
     {
-        invertOut = [UserDefaults.defaults includeTextBeforeTab:text];
-        invertIn = [UserDefaults.defaults includeTextAfterLastTab:text];
+        invertOut = textBeforeTab(text);
+        invertIn = textAfterLastTab(text);
     }
     
     else
     {
-        invertIn = [UserDefaults.defaults includeTextBeforeTab:text];
-        invertOut = [UserDefaults.defaults includeTextAfterLastTab:text];
+        invertIn = textBeforeTab(text);
+        invertOut = textAfterLastTab(text);
     }
     
-    NSString *pipe = [UserDefaults.defaults includeTextBeforeTab:
-                      [UserDefaults.defaults includeTextAfterTab:text]];
+    NSString *pipe = textBeforeTab(textAfterTab(text));
     
     CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"GillSans-Bold", fontSize, NULL);
     

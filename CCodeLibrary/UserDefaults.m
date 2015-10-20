@@ -316,44 +316,6 @@ static UserDefaults *_defaults;
     return documentsDirectory;
 }
 
-- (NSMutableArray *)sortByContentsOfParentheses:(NSMutableArray *)array
-{
-    NSMutableArray *newArray = [[NSMutableArray alloc] init];
-    int index = 0;
-    
-    for (int i = 0; i < array.count; i++)
-    {
-        if (newArray.count == 0)
-            [newArray addObject:array[0]];
-        
-        else
-        {
-            NSComparisonResult result = [[self includeTextInsideParentheses:[array objectAtIndex:i]]
-                                         compare:[self includeTextInsideParentheses:[newArray objectAtIndex:index]]
-                                         options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
-            
-            while (result == NSOrderedDescending)
-            {
-                index++;
-                
-                if (index == newArray.count)
-                    break;
-                
-                result = [[self includeTextInsideParentheses:[array objectAtIndex:i]]
-                          compare:[self includeTextInsideParentheses:[newArray objectAtIndex:index]]
-                          options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
-            }
-            
-            [newArray insertObject:[array objectAtIndex:i]
-                           atIndex:index];
-            
-            index = 0;
-        }
-    }
-  
-    return newArray;
-}
-
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue
@@ -1206,25 +1168,6 @@ static UserDefaults *_defaults;
         UIGraphicsEndImageContext();
         return image;
     }
-}
-
-- (NSString *)reverseString:(NSString *)string;
-{
-    if (!string)
-        return nil;
-    
-    if ([string isEqualToString:@""])
-        return @"";
-    
-    NSMutableString *reversedString = [[NSMutableString alloc] init];
-    
-    [string enumerateSubstringsInRange:NSMakeRange(0, string.length)
-                               options:NSStringEnumerationReverse|NSStringEnumerationByComposedCharacterSequences
-                            usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
-        [reversedString appendString:substring];
-    }];
-    
-    return reversedString;
 }
 
 - (NSArray *)mapTypes

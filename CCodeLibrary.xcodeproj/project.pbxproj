@@ -840,14 +840,14 @@
 				697B37701B94B7D60066978B /* NVTextDrawing.m */,
 				A94A770B19F7F9F40062906E /* SharedDefaults.h */,
 				A94A770C19F7F9F40062906E /* SharedDefaults.m */,
+				EB7C6A141BD158D8006E985B /* StringFunctions.h */,
+				EB7C6A151BD158D8006E985B /* StringFunctions.m */,
 				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
 				EBAB31C51AE6DC2D00C5CCEF /* NamedColors.h */,
 				EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */,
 				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
-				EB7C6A141BD158D8006E985B /* StringFunctions.h */,
-				EB7C6A151BD158D8006E985B /* StringFunctions.m */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";

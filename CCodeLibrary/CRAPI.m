@@ -783,7 +783,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     else
     {
-        NSString* newLine = [NSString stringWithFormat:@"\r\n%@",str];
+        NSString *newLine = [NSString stringWithFormat:@"\r\n%@", str];
         NSFileHandle *myHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
         [myHandle seekToEndOfFile];
         [myHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
@@ -804,7 +804,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)processPlacesArray:(NSUInteger) row
 {
-   
     if (row >= CRAPI.sharedInstance.placesArray.count)
     {
         row = (CRAPI.sharedInstance.placesArray.count - 1);
@@ -815,18 +814,21 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     if (_placesArray.count == 1 || row >= _placesArray.count ||
         self.currentGeoid == 0)
+    {
         row = 0;
+    }
     
-    NSString *locationLabelText = [UserDefaults.defaults includeTextInsideParentheses:[_placesArray objectAtIndex:row]];
-    _currentCityNameAndState = [UserDefaults.defaults addSpaceAfterComma:locationLabelText];
-    NSString *geoid = [UserDefaults.defaults includeTextBeforeParentheses:[_placesArray objectAtIndex:row]];
-    NSString *manager = [UserDefaults.defaults includeTextAfterClosingParentheses:[_placesArray objectAtIndex:row]];
-    NSString *managerNumber = textBefore (manager,@"-");
-    NSString *withinManager = textAfter (manager,@"-");
-    NSString *numWithinManager = textBefore (withinManager,@"of");
-    NSString *totWithinManager = textAfter (withinManager,@"of");
+    NSString *locationLabelText = textInsideParentheses(_placesArray[row]);
+    _currentCityNameAndState = addSpaceAfterComma(locationLabelText);
+    NSString *geoid = textBeforeParentheses(_placesArray[row]);
+    NSString *manager = textAfterClosingParentheses(_placesArray[row]);
+    NSString *managerNumber = textBeforeHyphen(manager);
+    NSString *withinManager = textAfterHyphen(manager);
+    NSString *numWithinManager = textBefore(withinManager, @"of");
+    NSString *totWithinManager = textAfter(withinManager, @"of");
     
     self.currentGeoid = geoid.intValue;
+    
     [UserDefaults.defaults saveInteger:self.currentGeoid
                                 forKey:@"CurrentGeoid"];
     
@@ -869,9 +871,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         
         if (goid == geoid)
             [self processPlacesArray:row];
+        
         row++;
     }
 }
-
 
 @end

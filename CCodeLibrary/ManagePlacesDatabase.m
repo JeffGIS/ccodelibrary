@@ -73,8 +73,8 @@ static ManagePlacesDatabase *_statdatabase = nil;
             char *nameChar = (char *)sqlite3_column_text(statement, 0);
             NSString *geoid = [NSString stringWithFormat:@"%i", sqlite3_column_int(statement, 1)];
             NSString *name = [[NSString alloc] initWithUTF8String:nameChar];
-            name = [UserDefaults.defaults removeEndingReturn:name];
-            name = [UserDefaults.defaults removeTextInsideParentheses:name];
+            name = removeEndingReturn(name);
+            name = removeTextInsideParentheses(name);
             
             PlacesInfo *info = [[PlacesInfo alloc] initWithName:name
                                                           geoid:geoid];
@@ -130,8 +130,8 @@ static ManagePlacesDatabase *_statdatabase = nil;
     {
         char *placeNameChar = (char *)sqlite3_column_text(statement, 0);
         placeName = [[NSString alloc] initWithUTF8String:placeNameChar];
-        placeName = [UserDefaults.defaults removeEndingReturn:placeName];
-        placeName = [UserDefaults.defaults removeTextInsideParentheses:placeName];
+        placeName = removeEndingReturn(placeName);
+        placeName = removeTextInsideParentheses(placeName);
     }
         
     sqlite3_finalize(statement);
@@ -175,8 +175,8 @@ static ManagePlacesDatabase *_statdatabase = nil;
         CGFloat bounds_e = sqlite3_column_double(statement, 4);
         CGFloat bounds_n = sqlite3_column_double(statement, 5);
         NSString *name = [[NSString alloc] initWithUTF8String:nameChar];
-        name = [UserDefaults.defaults removeEndingReturn:name];
-        name = [UserDefaults.defaults removeTextInsideParentheses:name];
+        name = removeEndingReturn(name);
+        name = removeTextInsideParentheses(name);
         
         NSString *stateCode = [[NSString alloc] initWithString:[self getStateCodeForStatefp:statefp]];
         
@@ -212,8 +212,8 @@ static ManagePlacesDatabase *_statdatabase = nil;
         CGFloat bounds_e = sqlite3_column_double(statement, 4);
         CGFloat bounds_n = sqlite3_column_double(statement, 5);
         NSString *name = [[NSString alloc] initWithUTF8String:nameChar];
-        name = [UserDefaults.defaults removeEndingReturn:name];
-        name = [UserDefaults.defaults removeTextInsideParentheses:name];
+        name = removeEndingReturn(name);
+        name = removeTextInsideParentheses(name);
 
         [UserDefaults.defaults addLocationToListWithName:name
                                                    state:[self getStateCodeForStatefp:statefp]
@@ -241,7 +241,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     {
         char *stateCodeChar = (char *)sqlite3_column_text(statement, 0);
         stateCode = [[NSString alloc] initWithUTF8String:stateCodeChar];
-        stateCode = [UserDefaults.defaults removeEndingReturn:stateCode];
+        stateCode = removeEndingReturn(stateCode);
     }
         
     sqlite3_finalize(statement);
@@ -262,7 +262,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     {
         char *stateCodeChar = (char *)sqlite3_column_text(statement, 0);
         stateName = [[NSString alloc] initWithUTF8String:stateCodeChar];
-        stateName = [UserDefaults.defaults removeEndingReturn:stateName];
+        stateName = removeEndingReturn(stateName);
     }
 
     sqlite3_finalize(statement);
@@ -318,7 +318,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     {
         char *stateCodeChar = (char *)sqlite3_column_text(statement, 0);
         NSString *stateName = [[NSString alloc] initWithUTF8String:stateCodeChar];
-        stateName = [UserDefaults.defaults removeEndingReturn:stateName];
+        stateName = removeEndingReturn(stateName);
         [dataArray addObject:stateName];
     }
         
