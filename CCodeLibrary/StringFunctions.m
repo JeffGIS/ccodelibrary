@@ -217,7 +217,7 @@ NSString *removeTextInsideParentheses(NSString *string)
     return mutableString.copy;
 }
 
-NSString *textInsideParenthesesWithoutSpaces(NSString *string)
+NSString *removeTextInsideParenthesesWithoutSpaces(NSString *string)
 {
     if (!string)
         return nil;

@@ -17,7 +17,7 @@ NSString *textAfterSecondTabFromEnd(NSString *string);
 NSString *textBeforePipe(NSString *string);
 NSString *textAfterPipe(NSString *string);
 NSString *removeTextInsideParentheses(NSString *string);
-NSString *textInsideParenthesesWithoutSpaces(NSString *string);
+NSString *removeTextInsideParenthesesWithoutSpaces(NSString *string);
 NSString *removeColonInsideParentheses(NSString *string);
 NSString *textBeforeParentheses(NSString *string);
 NSString *textAfterClosingParentheses(NSString *string);
