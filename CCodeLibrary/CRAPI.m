@@ -5,7 +5,6 @@
 #import "GSSiDefs.h"
 #import "MathUtil.h"
 #import "TileGraphics.h"
-#import "StringFunctions.h"
 
 @implementation CRAPI
 {
