@@ -19,6 +19,8 @@
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
 		692ACC671B86309B00400B36 /* NVRoutes.m in Sources */ = {isa = PBXBuildFile; fileRef = 692ACC661B86309B00400B36 /* NVRoutes.m */; };
 		692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692ACC651B86309B00400B36 /* NVRoutes.h */; };
+		69450DAD1BD5F6120079F7EC /* NVContactPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 69450DAC1BD5F6120079F7EC /* NVContactPicker.m */; settings = {ASSET_TAGS = (); }; };
+		69450DAE1BD5FA2B0079F7EC /* NVContactPicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69450DAB1BD5F6120079F7EC /* NVContactPicker.h */; };
 		6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6948D5D41BC780EE009CA04F /* NVStaticMapView.m */; settings = {ASSET_TAGS = (); }; };
 		6948D5D61BC7845F009CA04F /* NVStaticMapView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6948D5D31BC780EE009CA04F /* NVStaticMapView.h */; };
 		6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */; settings = {ASSET_TAGS = (); }; };
@@ -222,6 +224,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69450DAE1BD5FA2B0079F7EC /* NVContactPicker.h in CopyFiles */,
 				EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */,
 				69B36F1B1BCB1C8F004C4B69 /* NVDateRange.h in CopyFiles */,
 				EBA517B81BCA1405005A9CA8 /* CrimeData.h in CopyFiles */,
@@ -341,6 +344,8 @@
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
 		692ACC651B86309B00400B36 /* NVRoutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRoutes.h; sourceTree = "<group>"; };
 		692ACC661B86309B00400B36 /* NVRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRoutes.m; sourceTree = "<group>"; };
+		69450DAB1BD5F6120079F7EC /* NVContactPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVContactPicker.h; sourceTree = "<group>"; };
+		69450DAC1BD5F6120079F7EC /* NVContactPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVContactPicker.m; sourceTree = "<group>"; };
 		6948D5D31BC780EE009CA04F /* NVStaticMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVStaticMapView.h; sourceTree = "<group>"; };
 		6948D5D41BC780EE009CA04F /* NVStaticMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVStaticMapView.m; sourceTree = "<group>"; };
 		6960F4D41BBCC80800A5681C /* NVSpreadsheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSpreadsheetView.h; sourceTree = "<group>"; };
@@ -688,6 +693,8 @@
 				A98A57A71B20ADE600906FBC /* NVCalibrationController.m */,
 				A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */,
 				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
+				69450DAB1BD5F6120079F7EC /* NVContactPicker.h */,
+				69450DAC1BD5F6120079F7EC /* NVContactPicker.m */,
 				69B36F181BCB0F30004C4B69 /* NVDateRange.h */,
 				69B36F191BCB0F30004C4B69 /* NVDateRange.m */,
 				69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */,
@@ -995,6 +1002,7 @@
 				1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */,
 				1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */,
 				EBAB42321B2B1A5E00C36FFC /* SQLiteLib.c in Sources */,
+				69450DAD1BD5F6120079F7EC /* NVContactPicker.m in Sources */,
 				EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */,
 				EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */,
 				A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */,

@@ -434,7 +434,8 @@ static IntersectionsDatabase *_statdatabase = nil;
         if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
         {
             strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
-            cmd = [NSString stringWithUTF8String:"UPDATE Ramps SET \
+            
+            cmd = [NSString stringWithFormat:@"UPDATE Ramps SET \
                     intID=%i;rampNum=%i,\r\n\
                     rampID=\"%s\";\r\n\
                     rampExists=%i;\r\n\
@@ -515,7 +516,7 @@ static IntersectionsDatabase *_statdatabase = nil;
                     ramp.SteepTopOfCurb,
                     ramp.lev21x,
                     ramp.lev21y,
-                    ramp.PedRampLip);
+                    ramp.PedRampLip];
         }
     }
     
