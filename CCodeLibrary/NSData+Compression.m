@@ -72,7 +72,7 @@
         NSLog(@"Original size:%zu, minilz size:%lu", sourceBufferSize, (unsigned long)destinationBufferSize);
         
         return [NSData dataWithBytesNoCopy:destinationBuffer
-                                    length:status
+                                    length:(NSUInteger)destinationBufferSize
                               freeWhenDone:YES];
     }
 }
