@@ -25,7 +25,51 @@
     else
         
     {
-        NSLog(@"Original size:%lu, Compressed size:%zu", (unsigned long)sourceBufferSize, status);
+        NSLog(@"Original size:%lu, lzfse size:%zu", (unsigned long)sourceBufferSize, status);
+        
+        return [NSData dataWithBytesNoCopy:destinationBuffer
+                                    length:status
+                              freeWhenDone:YES];
+    }
+}
+
++ (NSData *)lzCompressFileAtPath:(NSString *)filePath
+{
+    if (lzo_init() != LZO_E_OK)
+    {
+        NSLog(@"LZO INIT ERROR");
+        return nil;
+    }
+    
+    NSData *data = [NSData dataWithContentsOfFile:filePath];
+    
+    lzo_bytep sourceBuffer = (lzo_bytep)data.bytes;
+    lzo_uint sourceBufferSize = (lzo_uint)data.length;
+    lzo_uint destinationBufferSize = 0;
+    
+    lzo_bytep destinationBuffer = (lzo_bytep)malloc(sourceBufferSize);
+    lzo_bytep wrkmem = (lzo_bytep)malloc(LZO1X_1_MEM_COMPRESS);
+    
+    if (destinationBuffer == NULL || wrkmem == NULL)
+    {
+        NSLog(@"LZO MEMORY ERROR");
+        return nil;
+    }
+    
+    int status = lzo1x_1_compress(sourceBuffer, sourceBufferSize, destinationBuffer, &destinationBufferSize, wrkmem);
+    
+    free(wrkmem);
+    
+    if (status != LZO_E_OK)
+    {
+        NSLog(@"LZO COMPRESSION ERROR");
+        return nil;
+    }
+    
+    else
+        
+    {
+        NSLog(@"Original size:%zu, minilz size:%lu", sourceBufferSize, (unsigned long)destinationBufferSize);
         
         return [NSData dataWithBytesNoCopy:destinationBuffer
                                     length:status
