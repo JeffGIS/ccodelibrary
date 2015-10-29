@@ -11,5 +11,6 @@
 + (NSData *)compressFileAtPath:(NSString *)filePath;
 + (NSData *)lzCompressFileAtPath:(NSString *)filePath;
 - (NSString *)MD5;
+- (NSString *)SHA256;
 
 @end

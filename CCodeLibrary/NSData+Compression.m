@@ -83,10 +83,28 @@
     
     if (CC_MD5(self.bytes, (CC_LONG)self.length, md5Buffer))
     {
-        NSMutableString *output = NSMutableString.string;
+        NSMutableString *output = [NSMutableString stringWithCapacity:(CC_MD5_DIGEST_LENGTH * 2)];
         
         for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
             [output appendFormat:@"%02x", (int)md5Buffer[i]];
+        
+        return output.copy;
+    }
+    
+    else
+        return nil;
+}
+
+- (NSString *)SHA256
+{
+    unsigned char sha256Buffer[CC_SHA256_DIGEST_LENGTH];
+    
+    if (CC_SHA256(self.bytes, (CC_LONG)self.length, sha256Buffer))
+    {
+        NSMutableString *output = [NSMutableString stringWithCapacity:(CC_SHA256_DIGEST_LENGTH * 2)];
+        
+        for (int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++)
+            [output appendFormat:@"%02x", (int)sha256Buffer[i]];
         
         return output.copy;
     }
