@@ -809,4 +809,22 @@ static UserDefaults *_defaults;
     return @[@"Completion Status", @"Ramp Issues", @"Data Quality"];
 }
 
+UIImage *grayscaleImage(UIImage *image)
+{
+    CGRect imageRect = CGRectMake(0, 0, image.size.width, image.size.height);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    
+    CGContextRef context = CGBitmapContextCreate(nil, image.size.width, image.size.height,
+                                                 8, 0, colorSpace, (CGBitmapInfo)kCGImageAlphaNone);
+    
+    CGContextDrawImage(context, imageRect, image.CGImage);
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    UIImage *grayscaleImage = [UIImage imageWithCGImage:imageRef];
+    CGColorSpaceRelease(colorSpace);
+    CGContextRelease(context);
+    CFRelease(imageRef);
+    
+    return grayscaleImage;
+}
+
 @end

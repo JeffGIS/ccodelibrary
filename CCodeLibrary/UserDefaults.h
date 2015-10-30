@@ -108,4 +108,6 @@
 
 - (NSArray *)mapTypes;
 
+UIImage *grayscaleImage(UIImage *image);
+
 @end
