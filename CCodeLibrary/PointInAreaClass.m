@@ -64,6 +64,8 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
         context = CGBitmapContextCreate(bitmapData, pixelsWide, pixelsHigh, 8,
                                         bitmapBytesPerRow, colorSpace,0);
         
+        CGContextSetShouldAntialias(context, NO);
+        
         if (!context)
         {
             free(bitmapData);
