@@ -28,6 +28,7 @@
 		697B37711B94B7D60066978B /* NVTextDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 697B37701B94B7D60066978B /* NVTextDrawing.m */; };
 		697B37721B94C0E00066978B /* NVTextDrawing.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697B376F1B94B7D60066978B /* NVTextDrawing.h */; };
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
+		698A012E1BE44A2F00758BA6 /* UIView+StackedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */; };
 		6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 6992A8871BE0040C00FB53F0 /* NSData+Compression.m */; };
 		6992A8891BE00AB100FB53F0 /* NSData+Compression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6992A8861BE0040C00FB53F0 /* NSData+Compression.h */; };
 		699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */ = {isa = PBXBuildFile; fileRef = 699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */; };
@@ -355,6 +356,8 @@
 		6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSpreadsheetView.m; sourceTree = "<group>"; };
 		697B376F1B94B7D60066978B /* NVTextDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextDrawing.h; sourceTree = "<group>"; };
 		697B37701B94B7D60066978B /* NVTextDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextDrawing.m; sourceTree = "<group>"; };
+		698A012C1BE44A2F00758BA6 /* UIView+StackedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+StackedView.h"; sourceTree = "<group>"; };
+		698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+StackedView.m"; sourceTree = "<group>"; };
 		6992A8861BE0040C00FB53F0 /* NSData+Compression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Compression.h"; sourceTree = "<group>"; };
 		6992A8871BE0040C00FB53F0 /* NSData+Compression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Compression.m"; sourceTree = "<group>"; };
 		699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PolylineCompression.c; sourceTree = "<group>"; };
@@ -570,6 +573,8 @@
 				A99F9B861B1E06E400CA8DA6 /* UIApplication+VersionBuild.m */,
 				A90D1FC11AE6510F00CBFEE7 /* UIView+ColorOfPoint.h */,
 				A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */,
+				698A012C1BE44A2F00758BA6 /* UIView+StackedView.h */,
+				698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */,
 				6992A8861BE0040C00FB53F0 /* NSData+Compression.h */,
 				6992A8871BE0040C00FB53F0 /* NSData+Compression.m */,
 			);
@@ -1023,6 +1028,7 @@
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
 				A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */,
 				A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */,
+				698A012E1BE44A2F00758BA6 /* UIView+StackedView.m in Sources */,
 				EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */,
 				69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */,
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,
