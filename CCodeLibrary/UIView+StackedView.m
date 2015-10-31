@@ -11,7 +11,7 @@
     
     for (UIView *views in self.superview.subviews)
     {
-        if ([views isKindOfClass:self.class])
+        if ([views isKindOfClass:self.class] && (self != views))
         {
             if (CGRectIntersectsRect(views.frame, self.frame))
                 return YES;
