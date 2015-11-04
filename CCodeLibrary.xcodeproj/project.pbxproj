@@ -208,6 +208,8 @@
 		EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1BFCB199DD7C10059B547 /* MPIntersection.m */; };
 		EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB9A61919FFC02900685716 /* GetAssignments.m */; };
 		EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */; };
+		EBFC2A301BE90A0F00E0C1B3 /* DisplayCharacteristics.m in Sources */ = {isa = PBXBuildFile; fileRef = EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */; };
+		EBFC2A311BE90AE900E0C1B3 /* DisplayCharacteristics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -227,6 +229,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EBFC2A311BE90AE900E0C1B3 /* DisplayCharacteristics.h in CopyFiles */,
 				6992A8891BE00AB100FB53F0 /* NSData+Compression.h in CopyFiles */,
 				69450DAE1BD5FA2B0079F7EC /* NVContactPicker.h in CopyFiles */,
 				EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */,
@@ -539,6 +542,8 @@
 		EBB9A61919FFC02900685716 /* GetAssignments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAssignments.m; sourceTree = "<group>"; };
 		EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiPopoverView.h; sourceTree = "<group>"; };
 		EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiPopoverView.m; sourceTree = "<group>"; };
+		EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayCharacteristics.h; sourceTree = "<group>"; };
+		EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayCharacteristics.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -838,6 +843,8 @@
 				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
 				EB1A69741999A6A9005A1CCB /* CRAPI.h */,
 				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
+				EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */,
+				EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */,
 				A99C893B1AEDE1B900A0856F /* GSSiDefs.h */,
 				A99C893C1AEDE1B900A0856F /* GSSiDefs.m */,
 				A90EBDC71A48874B001E72CF /* GSSiEnums.h */,
@@ -1058,6 +1065,7 @@
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
 				A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */,
 				EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */,
+				EBFC2A301BE90A0F00E0C1B3 /* DisplayCharacteristics.m in Sources */,
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,
 				A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */,
 				69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */,

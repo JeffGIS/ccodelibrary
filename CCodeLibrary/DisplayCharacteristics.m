@@ -1,0 +1,13 @@
+//
+//  DisplayCharacteristics.m
+//  CCodeLibrary
+//
+//  Created by JEFFREY E SMITH on 11/3/15.
+//  Copyright © 2015 GSSi. All rights reserved.
+//
+
+#import "DisplayCharacteristics.h"
+
+@implementation DisplayCharacteristics
+
+@end

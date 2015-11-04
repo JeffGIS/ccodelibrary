@@ -60,6 +60,7 @@
 #import "NVPDFSnapshotter.h"
 #import "SewerData.h"
 #import "CrimeData.h"
+#import "DisplayCharacteristics.h"
 
 @interface CCodeLibrary : NSObject
 
