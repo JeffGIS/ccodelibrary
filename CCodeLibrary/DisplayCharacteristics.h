@@ -7,6 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+typedef NS_ENUM(NSInteger, PointSymbols)
+{
+    CrossSym,
+    PlusSym,
+    DiamondSym,
+    TriangleSym,
+    SquareSym,
+    Star1Sym,
+    Star2Sym,
+    CircleSym,
+    ArsonSym,
+};
+
 
 typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
     AerialPass=1,
@@ -19,6 +32,7 @@ typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
 @interface DisplayCharacteristics : NSObject
 
 @property int itemBeginTime, itemEndTime;
+@property PointSymbols pointSymbol;
 
 
 @end
