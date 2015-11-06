@@ -19,6 +19,8 @@
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
 		692ACC671B86309B00400B36 /* NVRoutes.m in Sources */ = {isa = PBXBuildFile; fileRef = 692ACC661B86309B00400B36 /* NVRoutes.m */; };
 		692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692ACC651B86309B00400B36 /* NVRoutes.h */; };
+		693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */; };
+		693C9BA11BEC529600564F93 /* UIImage+ImageFromColor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */; };
 		69450DAD1BD5F6120079F7EC /* NVContactPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 69450DAC1BD5F6120079F7EC /* NVContactPicker.m */; };
 		69450DAE1BD5FA2B0079F7EC /* NVContactPicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69450DAB1BD5F6120079F7EC /* NVContactPicker.h */; };
 		6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6948D5D41BC780EE009CA04F /* NVStaticMapView.m */; };
@@ -229,6 +231,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				693C9BA11BEC529600564F93 /* UIImage+ImageFromColor.h in CopyFiles */,
 				EBFC2A311BE90AE900E0C1B3 /* DisplayCharacteristics.h in CopyFiles */,
 				6992A8891BE00AB100FB53F0 /* NSData+Compression.h in CopyFiles */,
 				69450DAE1BD5FA2B0079F7EC /* NVContactPicker.h in CopyFiles */,
@@ -351,6 +354,8 @@
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
 		692ACC651B86309B00400B36 /* NVRoutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRoutes.h; sourceTree = "<group>"; };
 		692ACC661B86309B00400B36 /* NVRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRoutes.m; sourceTree = "<group>"; };
+		693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageFromColor.h"; sourceTree = "<group>"; };
+		693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageFromColor.m"; sourceTree = "<group>"; };
 		69450DAB1BD5F6120079F7EC /* NVContactPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVContactPicker.h; sourceTree = "<group>"; };
 		69450DAC1BD5F6120079F7EC /* NVContactPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVContactPicker.m; sourceTree = "<group>"; };
 		6948D5D31BC780EE009CA04F /* NVStaticMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVStaticMapView.h; sourceTree = "<group>"; };
@@ -576,6 +581,8 @@
 			children = (
 				A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */,
 				A99F9B861B1E06E400CA8DA6 /* UIApplication+VersionBuild.m */,
+				693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */,
+				693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */,
 				A90D1FC11AE6510F00CBFEE7 /* UIView+ColorOfPoint.h */,
 				A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */,
 				698A012C1BE44A2F00758BA6 /* UIView+StackedView.h */,
@@ -1063,6 +1070,7 @@
 				EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */,
 				A9A7E36A1B75796500DC7F3D /* NVXWalkButton.m in Sources */,
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
+				693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */,
 				A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */,
 				EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */,
 				EBFC2A301BE90A0F00E0C1B3 /* DisplayCharacteristics.m in Sources */,
