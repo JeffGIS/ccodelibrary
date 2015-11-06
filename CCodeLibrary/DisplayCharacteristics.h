@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CCodeTypes.h"
 typedef NS_ENUM(NSInteger, PointSymbols)
 {
     CrossSym,
@@ -31,6 +32,7 @@ typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
 
 @interface DisplayCharacteristics : NSObject
 
+@property DPOINT dPoint;
 @property int itemBeginTime, itemEndTime;
 @property int UCR;
 @property PointSymbols pointSymbol;
