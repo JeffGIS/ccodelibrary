@@ -32,7 +32,9 @@ typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
 @interface DisplayCharacteristics : NSObject
 
 @property int itemBeginTime, itemEndTime;
+@property int UCR;
 @property PointSymbols pointSymbol;
+@property UIColor *color;
 
 
 @end
