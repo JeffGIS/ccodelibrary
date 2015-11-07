@@ -105,7 +105,7 @@ gplan (J, plan, pobj)
     }
 
   /* Point to start of table of arguments. */
-  p = plan->arg_tbl;
+  p = (signed char *)plan->arg_tbl;
   /* Point to tabulated cosine and sine amplitudes.  */
 #ifdef _MSC_VER
   pl = (double FAR *) plan->lon_tbl;
@@ -470,7 +470,7 @@ g3plan (J, plan, pobj, objnum)
     }
 
   /* Point to start of table of arguments. */
-  p = plan->arg_tbl;
+  p = (signed char *)plan->arg_tbl;
   /* Point to tabulated cosine and sine amplitudes.  */
 #ifdef _MSC_VER
   pl = (long FAR *) plan->lon_tbl;
@@ -642,7 +642,7 @@ g2plan (J, plan, pobj)
     }
 
   /* Point to start of table of arguments. */
-  p = plan->arg_tbl;
+  p = (signed char *)plan->arg_tbl;
   /* Point to tabulated cosine and sine amplitudes.  */
 #ifdef _MSC_VER
   pl = (long FAR *) plan->lon_tbl;
@@ -787,7 +787,7 @@ g1plan (J, plan)
     }
 
   /* Point to start of table of arguments. */
-  p = plan->arg_tbl;
+  p = (signed char *)plan->arg_tbl;
   /* Point to tabulated cosine and sine amplitudes.  */
 #ifdef _MSC_VER
   pl = (long FAR *) plan->lon_tbl;

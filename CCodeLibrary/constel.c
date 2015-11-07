@@ -150,7 +150,7 @@ char *greek[NGREEK] = {
 int showcname( in )
 char *in;
 {
-char *g, *p, *q;
+char *g = NULL, *p, *q;
 char ans[80];
 int i;
 
@@ -683,7 +683,7 @@ double epoch;
       k = i << 2;
       if (ra >= bndries[k] && ra < bndries[k+1] && dec > bndries[k+2])
 	{
-	  k = bndries[k+3];
+	  k = (int)bndries[k+3];
 	  return (constel[k]);
 	}
     }

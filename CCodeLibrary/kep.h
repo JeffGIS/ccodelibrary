@@ -76,7 +76,7 @@ extern double jdeps, eps, coseps, sineps;
 extern double jvearth, vearth[];
 
 /* DEBUG = 1 to enable miscellaneous printouts. */
-#define DEBUG 0
+//#define DEBUG 0
 
 /* Get ANSI C prototypes, if you want them.  */
 #if __STDC__

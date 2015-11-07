@@ -23,7 +23,7 @@ for( i=0; i<3; i++ )
 E = 0.0;
 for( i=0; i<3; i++ )
 	E += e[i]*e[i];
-E = sqrt(E);
+    E = sqrt(E);
 
 for( k=0; k<2; k++ )
 	{
