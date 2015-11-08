@@ -37,6 +37,8 @@ typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
 @property int UCR;
 @property PointSymbols pointSymbol;
 @property UIColor *color;
+@property NSString * string1;
+@property NSString * string2;
 
 
 @end
