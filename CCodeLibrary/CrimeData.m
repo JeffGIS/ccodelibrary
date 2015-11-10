@@ -49,7 +49,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
 - (void)dealloc
 {
     [self close];
-    NSLog(@"Sewer Database dealloc");
+    NSLog(@"Crime Database dealloc");
 }
 
 - (void)open
@@ -57,7 +57,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     if (!_isOpen)
     {
         _isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
-        NSLog(@"Sewer Database open");
+        NSLog(@"Crime Database open");
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
                                                                    error:nil].fileSize;
@@ -69,7 +69,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     if (_isOpen)
     {
         SQLOK(sqlite3_close(_database),_database);
-        NSLog(@"Sewer Database close");
+        NSLog(@"Crime Database close");
     }
     _isOpen = NO;
 }
