@@ -1285,9 +1285,9 @@ Exit:
 {
     if (status == FTPStatusOK || status == FTPStatusFileExists)
     {
-        NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
+        /*NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
                                                                 andName:[NSString stringWithFormat:@"/%i",self.geoid]
-                                                                 create:YES];
+                                                                 create:YES];*/
         
         if (self.gettingUploaded)
             [self.curbRampData open];

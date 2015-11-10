@@ -452,9 +452,9 @@
     tilexLeft = tilex;
     
     //get pixel within tile coordinates
-    xintile = xintileLeft = (worldx % 256);
+    //xintile = xintileLeft = (worldx % 256);
     yintile = (worldy % 256);
-    xinc = (256 - xintile);
+    //xinc = (256 - xintile);
     yinc = (256 - yintile);
     y = worldy;
     
