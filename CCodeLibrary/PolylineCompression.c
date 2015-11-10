@@ -118,7 +118,8 @@ LPDPOINT DecodeString(char *encodedString, int *numPoints)
     
     *numPoints = nPoints;
     
-    llpoints = (LPDPOINT)realloc(llpoints, (sizeof(DPOINT) * nPoints));
+    if (nPoints > 0)
+        llpoints = (LPDPOINT)realloc(llpoints, (sizeof(DPOINT) * nPoints));
     
     return llpoints;
 }

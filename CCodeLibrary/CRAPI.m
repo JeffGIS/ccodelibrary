@@ -480,6 +480,7 @@
             
             CGImageRef subimage = CGImageCreateWithImageInRect(image.CGImage, CGRectMake(xintile, yintile, nxpixels, nypixels));
             image = [UIImage imageWithCGImage:subimage];
+            CGImageRelease(subimage);
             
             [image drawInRect:CGRectMake(xincomposite, yincomposite, nxpixels, nypixels)];
             

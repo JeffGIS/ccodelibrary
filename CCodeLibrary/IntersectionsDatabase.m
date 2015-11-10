@@ -435,7 +435,7 @@ static IntersectionsDatabase *_statdatabase = nil;
         {
             strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
             
-            cmd = [NSString stringWithFormat:@"UPDATE Ramps SET \
+            /*cmd = [NSString stringWithFormat:@"UPDATE Ramps SET \
                     intID=%i;rampNum=%i,\r\n\
                     rampID=\"%s\";\r\n\
                     rampExists=%i;\r\n\
@@ -516,10 +516,9 @@ static IntersectionsDatabase *_statdatabase = nil;
                     ramp.SteepTopOfCurb,
                     ramp.lev21x,
                     ramp.lev21y,
-                    ramp.PedRampLip];
+                    ramp.PedRampLip];*/
         }
     }
-    
    
     cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
                        intX=%i,\
@@ -599,7 +598,7 @@ static IntersectionsDatabase *_statdatabase = nil;
         PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
         mpint.lat = lat;
         mpint.lon = lon;
-        int nStreets = sqlite3_column_int(statement, 27);
+        //int nStreets = sqlite3_column_int(statement, 27);
         LPSTR streets = (LPSTR)sqlite3_column_text(statement, 28);
         NSString *streetString = [NSString stringWithUTF8String:streets];
         mpint.name1 = [streetString stringByReplacingOccurrencesOfString:@"|" withString:@"\n"];
@@ -1294,14 +1293,14 @@ Exit:
             [self.curbRampData open];
         else
         {
-            if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String))
-                status = [self loadIntersectionTextToDatabase:toDirectory];
+            //if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String))
+                //status = [self loadIntersectionTextToDatabase:toDirectory];
             
-            else
+            //else
             {
                 [NSFileManager.defaultManager removeItemAtPath:path
                                                          error:nil];
-                status = INTDBStatusFailedToUnzip;
+                //status = INTDBStatusFailedToUnzip;
             }
         }
         if (self.delegate)

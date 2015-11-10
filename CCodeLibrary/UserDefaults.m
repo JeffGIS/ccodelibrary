@@ -722,19 +722,15 @@ static UserDefaults *_defaults;
         success = [fileManager removeItemAtPath:filePath
                                           error:&error];
         
-#ifdef DEBUG
         if (success)
             NSLog(@"Deleted %@ from device", fileName);
         
         else
             NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
-#endif
     }
     
-#ifdef DEBUG
     else
         NSLog(@"%@ was not pulled. No need to delete", fileName);
-#endif
     
     //delete Intersections.gcf file
     fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
@@ -745,19 +741,15 @@ static UserDefaults *_defaults;
         success = [fileManager removeItemAtPath:filePath
                                           error:&error];
         
-#ifdef DEBUG
         if (success)
             NSLog(@"Deleted %@ from device", fileName);
         
         else
             NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
-#endif
     }
     
-#ifdef DEBUG
     else
         NSLog(@"%@ was never pulled", fileName);
-#endif
     
     //delete IntersectionImages directory
     fileName = [NSString stringWithFormat:@"%i/IntersectionImages", geoid];
@@ -771,20 +763,16 @@ static UserDefaults *_defaults;
             success = [fileManager removeItemAtPath:filePath
                                               error:&error];
 
-#ifdef DEBUG
             if (success)
                 NSLog(@"Deleted %@ from device", fileName);
             
             else
                 NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
-#endif
         }
     }
     
-#ifdef DEBUG
     else
         NSLog(@"%@ was never created", fileName);
-#endif
 }
 
 - (UIImage *)imageWithColor:(UIColor *)color

@@ -29,9 +29,9 @@
      minFontSize:(CGFloat)minFontSize
        textColor:(UIColor *)textColor
 {
-    NSInteger nLines;
-    CGFloat textArea;
-    CGFloat aveCharWidth,aveCharHeight;
+    NSInteger nLines = 0;
+    CGFloat textArea = 0.0;
+    CGFloat aveCharWidth = 0.0, aveCharHeight = 0.0;
 
     PointInArea *pia = [[PointInArea alloc] init];
     pia.maxDimension = 256;
@@ -54,7 +54,7 @@
       polyPartLen:polyPartLen
            points:pPoints];
     
-    int numTextLines = [NVTextDrawing numLinesInText:text.UTF8String];
+    //int numTextLines = [NVTextDrawing numLinesInText:text.UTF8String];
     
     CTFontRef textPointFontRef = CTFontCreateWithName((CFStringRef)NULL,
                                                       fontSize, NULL);
@@ -281,11 +281,11 @@
                                 textColor.CGColor, kCTForegroundColorAttributeName,
                                 nil];
     
-    NSDictionary *shadowAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+    /*NSDictionary *shadowAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                       (__bridge id)fontRef, kCTFontAttributeName,
                                       style, kCTParagraphStyleAttributeName,
                                       UIColor.whiteColor.CGColor, kCTForegroundColorAttributeName,
-                                      nil];
+                                      nil];*/
     
     CFRelease(fontRef);
     
