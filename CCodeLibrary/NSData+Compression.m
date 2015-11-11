@@ -19,6 +19,7 @@
     if (!status)
     {
         NSLog(@"Compression ERROR");
+        free(destinationBuffer);
         return nil;
     }
     
@@ -53,6 +54,8 @@
     if (destinationBuffer == NULL || wrkmem == NULL)
     {
         NSLog(@"LZO MEMORY ERROR");
+        free(destinationBuffer);
+        free(wrkmem);
         return nil;
     }
     
@@ -63,6 +66,7 @@
     if (status != LZO_E_OK)
     {
         NSLog(@"LZO COMPRESSION ERROR");
+        free(destinationBuffer);
         return nil;
     }
     

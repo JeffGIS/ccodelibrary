@@ -19,6 +19,8 @@
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
 		692ACC671B86309B00400B36 /* NVRoutes.m in Sources */ = {isa = PBXBuildFile; fileRef = 692ACC661B86309B00400B36 /* NVRoutes.m */; };
 		692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692ACC651B86309B00400B36 /* NVRoutes.h */; };
+		693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */; };
+		693C9BA11BEC529600564F93 /* UIImage+ImageFromColor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */; };
 		69450DAD1BD5F6120079F7EC /* NVContactPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 69450DAC1BD5F6120079F7EC /* NVContactPicker.m */; };
 		69450DAE1BD5FA2B0079F7EC /* NVContactPicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69450DAB1BD5F6120079F7EC /* NVContactPicker.h */; };
 		6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6948D5D41BC780EE009CA04F /* NVStaticMapView.m */; };
@@ -28,6 +30,7 @@
 		697B37711B94B7D60066978B /* NVTextDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 697B37701B94B7D60066978B /* NVTextDrawing.m */; };
 		697B37721B94C0E00066978B /* NVTextDrawing.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697B376F1B94B7D60066978B /* NVTextDrawing.h */; };
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
+		698A012E1BE44A2F00758BA6 /* UIView+StackedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */; };
 		6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 6992A8871BE0040C00FB53F0 /* NSData+Compression.m */; };
 		6992A8891BE00AB100FB53F0 /* NSData+Compression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6992A8861BE0040C00FB53F0 /* NSData+Compression.h */; };
 		699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */ = {isa = PBXBuildFile; fileRef = 699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */; };
@@ -207,6 +210,51 @@
 		EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1BFCB199DD7C10059B547 /* MPIntersection.m */; };
 		EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB9A61919FFC02900685716 /* GetAssignments.m */; };
 		EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */; };
+		EBC01D071BED1C8C0004C751 /* aa.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CD91BED1C8C0004C751 /* aa.c */; };
+		EBC01D081BED1C8C0004C751 /* altaz.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CDA1BED1C8C0004C751 /* altaz.c */; };
+		EBC01D091BED1C8C0004C751 /* angles.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CDB1BED1C8C0004C751 /* angles.c */; };
+		EBC01D0A1BED1C8C0004C751 /* annuab.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CDC1BED1C8C0004C751 /* annuab.c */; };
+		EBC01D0B1BED1C8C0004C751 /* arcdot.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CDD1BED1C8C0004C751 /* arcdot.c */; };
+		EBC01D0C1BED1C8C0004C751 /* conjunct.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CDE1BED1C8C0004C751 /* conjunct.c */; };
+		EBC01D0D1BED1C8C0004C751 /* constel.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CDF1BED1C8C0004C751 /* constel.c */; };
+		EBC01D0E1BED1C8C0004C751 /* deflec.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CE01BED1C8C0004C751 /* deflec.c */; };
+		EBC01D0F1BED1C8C0004C751 /* deltat.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CE11BED1C8C0004C751 /* deltat.c */; };
+		EBC01D101BED1C8C0004C751 /* diurab.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CE21BED1C8C0004C751 /* diurab.c */; };
+		EBC01D111BED1C8C0004C751 /* diurpx.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CE31BED1C8C0004C751 /* diurpx.c */; };
+		EBC01D121BED1C8C0004C751 /* dms.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CE41BED1C8C0004C751 /* dms.c */; };
+		EBC01D131BED1C8C0004C751 /* domoon.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CE51BED1C8C0004C751 /* domoon.c */; };
+		EBC01D141BED1C8C0004C751 /* ear404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CE61BED1C8C0004C751 /* ear404.c */; };
+		EBC01D151BED1C8C0004C751 /* epsiln.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CE71BED1C8C0004C751 /* epsiln.c */; };
+		EBC01D161BED1C8C0004C751 /* fk4fk5.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CE81BED1C8C0004C751 /* fk4fk5.c */; };
+		EBC01D171BED1C8C0004C751 /* gplan.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CE91BED1C8C0004C751 /* gplan.c */; };
+		EBC01D181BED1C8C0004C751 /* jup404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CEA1BED1C8C0004C751 /* jup404.c */; };
+		EBC01D191BED1C8C0004C751 /* kepler.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CEC1BED1C8C0004C751 /* kepler.c */; };
+		EBC01D1A1BED1C8C0004C751 /* kfiles.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CED1BED1C8C0004C751 /* kfiles.c */; };
+		EBC01D1B1BED1C8C0004C751 /* lightt.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CEE1BED1C8C0004C751 /* lightt.c */; };
+		EBC01D1C1BED1C8C0004C751 /* lonlat.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CEF1BED1C8C0004C751 /* lonlat.c */; };
+		EBC01D1D1BED1C8C0004C751 /* mar404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CF01BED1C8C0004C751 /* mar404.c */; };
+		EBC01D1E1BED1C8C0004C751 /* mer404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CF11BED1C8C0004C751 /* mer404.c */; };
+		EBC01D1F1BED1C8C0004C751 /* mlat404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CF21BED1C8C0004C751 /* mlat404.c */; };
+		EBC01D201BED1C8C0004C751 /* mlr404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CF31BED1C8C0004C751 /* mlr404.c */; };
+		EBC01D211BED1C8C0004C751 /* moonrise.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CF41BED1C8C0004C751 /* moonrise.c */; };
+		EBC01D221BED1C8C0004C751 /* nep404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CF51BED1C8C0004C751 /* nep404.c */; };
+		EBC01D231BED1C8C0004C751 /* nutate.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CF61BED1C8C0004C751 /* nutate.c */; };
+		EBC01D241BED1C8C0004C751 /* plu404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CF81BED1C8C0004C751 /* plu404.c */; };
+		EBC01D251BED1C8C0004C751 /* precess.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CF91BED1C8C0004C751 /* precess.c */; };
+		EBC01D261BED1C8C0004C751 /* refrac.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CFB1BED1C8C0004C751 /* refrac.c */; };
+		EBC01D271BED1C8C0004C751 /* rplanet.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CFC1BED1C8C0004C751 /* rplanet.c */; };
+		EBC01D281BED1C8C0004C751 /* rstar.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CFD1BED1C8C0004C751 /* rstar.c */; };
+		EBC01D291BED1C8C0004C751 /* sat404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CFE1BED1C8C0004C751 /* sat404.c */; };
+		EBC01D2A1BED1C8C0004C751 /* sidrlt.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CFF1BED1C8C0004C751 /* sidrlt.c */; };
+		EBC01D2B1BED1C8C0004C751 /* sun.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D001BED1C8C0004C751 /* sun.c */; };
+		EBC01D2C1BED1C8C0004C751 /* tdb.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D011BED1C8C0004C751 /* tdb.c */; };
+		EBC01D2D1BED1C8C0004C751 /* trnsit.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D021BED1C8C0004C751 /* trnsit.c */; };
+		EBC01D2E1BED1C8C0004C751 /* ura404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D031BED1C8C0004C751 /* ura404.c */; };
+		EBC01D2F1BED1C8C0004C751 /* vearth.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D041BED1C8C0004C751 /* vearth.c */; };
+		EBC01D301BED1C8C0004C751 /* ven404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D051BED1C8C0004C751 /* ven404.c */; };
+		EBC01D311BED1C8C0004C751 /* zatan2.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D061BED1C8C0004C751 /* zatan2.c */; };
+		EBFC2A301BE90A0F00E0C1B3 /* DisplayCharacteristics.m in Sources */ = {isa = PBXBuildFile; fileRef = EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */; };
+		EBFC2A311BE90AE900E0C1B3 /* DisplayCharacteristics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -226,6 +274,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				693C9BA11BEC529600564F93 /* UIImage+ImageFromColor.h in CopyFiles */,
+				EBFC2A311BE90AE900E0C1B3 /* DisplayCharacteristics.h in CopyFiles */,
 				6992A8891BE00AB100FB53F0 /* NSData+Compression.h in CopyFiles */,
 				69450DAE1BD5FA2B0079F7EC /* NVContactPicker.h in CopyFiles */,
 				EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */,
@@ -347,6 +397,8 @@
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
 		692ACC651B86309B00400B36 /* NVRoutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRoutes.h; sourceTree = "<group>"; };
 		692ACC661B86309B00400B36 /* NVRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRoutes.m; sourceTree = "<group>"; };
+		693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageFromColor.h"; sourceTree = "<group>"; };
+		693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageFromColor.m"; sourceTree = "<group>"; };
 		69450DAB1BD5F6120079F7EC /* NVContactPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVContactPicker.h; sourceTree = "<group>"; };
 		69450DAC1BD5F6120079F7EC /* NVContactPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVContactPicker.m; sourceTree = "<group>"; };
 		6948D5D31BC780EE009CA04F /* NVStaticMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVStaticMapView.h; sourceTree = "<group>"; };
@@ -355,6 +407,8 @@
 		6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSpreadsheetView.m; sourceTree = "<group>"; };
 		697B376F1B94B7D60066978B /* NVTextDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextDrawing.h; sourceTree = "<group>"; };
 		697B37701B94B7D60066978B /* NVTextDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextDrawing.m; sourceTree = "<group>"; };
+		698A012C1BE44A2F00758BA6 /* UIView+StackedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+StackedView.h"; sourceTree = "<group>"; };
+		698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+StackedView.m"; sourceTree = "<group>"; };
 		6992A8861BE0040C00FB53F0 /* NSData+Compression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Compression.h"; sourceTree = "<group>"; };
 		6992A8871BE0040C00FB53F0 /* NSData+Compression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Compression.m"; sourceTree = "<group>"; };
 		699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PolylineCompression.c; sourceTree = "<group>"; };
@@ -536,6 +590,54 @@
 		EBB9A61919FFC02900685716 /* GetAssignments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAssignments.m; sourceTree = "<group>"; };
 		EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiPopoverView.h; sourceTree = "<group>"; };
 		EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiPopoverView.m; sourceTree = "<group>"; };
+		EBC01CD91BED1C8C0004C751 /* aa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = aa.c; sourceTree = "<group>"; };
+		EBC01CDA1BED1C8C0004C751 /* altaz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = altaz.c; sourceTree = "<group>"; };
+		EBC01CDB1BED1C8C0004C751 /* angles.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = angles.c; sourceTree = "<group>"; };
+		EBC01CDC1BED1C8C0004C751 /* annuab.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = annuab.c; sourceTree = "<group>"; };
+		EBC01CDD1BED1C8C0004C751 /* arcdot.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = arcdot.c; sourceTree = "<group>"; };
+		EBC01CDE1BED1C8C0004C751 /* conjunct.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = conjunct.c; sourceTree = "<group>"; };
+		EBC01CDF1BED1C8C0004C751 /* constel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = constel.c; sourceTree = "<group>"; };
+		EBC01CE01BED1C8C0004C751 /* deflec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = deflec.c; sourceTree = "<group>"; };
+		EBC01CE11BED1C8C0004C751 /* deltat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = deltat.c; sourceTree = "<group>"; };
+		EBC01CE21BED1C8C0004C751 /* diurab.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = diurab.c; sourceTree = "<group>"; };
+		EBC01CE31BED1C8C0004C751 /* diurpx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = diurpx.c; sourceTree = "<group>"; };
+		EBC01CE41BED1C8C0004C751 /* dms.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dms.c; sourceTree = "<group>"; };
+		EBC01CE51BED1C8C0004C751 /* domoon.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = domoon.c; sourceTree = "<group>"; };
+		EBC01CE61BED1C8C0004C751 /* ear404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ear404.c; sourceTree = "<group>"; };
+		EBC01CE71BED1C8C0004C751 /* epsiln.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = epsiln.c; sourceTree = "<group>"; };
+		EBC01CE81BED1C8C0004C751 /* fk4fk5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fk4fk5.c; sourceTree = "<group>"; };
+		EBC01CE91BED1C8C0004C751 /* gplan.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gplan.c; sourceTree = "<group>"; };
+		EBC01CEA1BED1C8C0004C751 /* jup404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jup404.c; sourceTree = "<group>"; };
+		EBC01CEB1BED1C8C0004C751 /* kep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kep.h; sourceTree = "<group>"; };
+		EBC01CEC1BED1C8C0004C751 /* kepler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kepler.c; sourceTree = "<group>"; };
+		EBC01CED1BED1C8C0004C751 /* kfiles.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kfiles.c; sourceTree = "<group>"; };
+		EBC01CEE1BED1C8C0004C751 /* lightt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lightt.c; sourceTree = "<group>"; };
+		EBC01CEF1BED1C8C0004C751 /* lonlat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lonlat.c; sourceTree = "<group>"; };
+		EBC01CF01BED1C8C0004C751 /* mar404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mar404.c; sourceTree = "<group>"; };
+		EBC01CF11BED1C8C0004C751 /* mer404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mer404.c; sourceTree = "<group>"; };
+		EBC01CF21BED1C8C0004C751 /* mlat404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mlat404.c; sourceTree = "<group>"; };
+		EBC01CF31BED1C8C0004C751 /* mlr404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mlr404.c; sourceTree = "<group>"; };
+		EBC01CF41BED1C8C0004C751 /* moonrise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = moonrise.c; sourceTree = "<group>"; };
+		EBC01CF51BED1C8C0004C751 /* nep404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nep404.c; sourceTree = "<group>"; };
+		EBC01CF61BED1C8C0004C751 /* nutate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nutate.c; sourceTree = "<group>"; };
+		EBC01CF71BED1C8C0004C751 /* plantbl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = plantbl.h; sourceTree = "<group>"; };
+		EBC01CF81BED1C8C0004C751 /* plu404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = plu404.c; sourceTree = "<group>"; };
+		EBC01CF91BED1C8C0004C751 /* precess.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = precess.c; sourceTree = "<group>"; };
+		EBC01CFA1BED1C8C0004C751 /* protos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = protos.h; sourceTree = "<group>"; };
+		EBC01CFB1BED1C8C0004C751 /* refrac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = refrac.c; sourceTree = "<group>"; };
+		EBC01CFC1BED1C8C0004C751 /* rplanet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rplanet.c; sourceTree = "<group>"; };
+		EBC01CFD1BED1C8C0004C751 /* rstar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rstar.c; sourceTree = "<group>"; };
+		EBC01CFE1BED1C8C0004C751 /* sat404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sat404.c; sourceTree = "<group>"; };
+		EBC01CFF1BED1C8C0004C751 /* sidrlt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sidrlt.c; sourceTree = "<group>"; };
+		EBC01D001BED1C8C0004C751 /* sun.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sun.c; sourceTree = "<group>"; };
+		EBC01D011BED1C8C0004C751 /* tdb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tdb.c; sourceTree = "<group>"; };
+		EBC01D021BED1C8C0004C751 /* trnsit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trnsit.c; sourceTree = "<group>"; };
+		EBC01D031BED1C8C0004C751 /* ura404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ura404.c; sourceTree = "<group>"; };
+		EBC01D041BED1C8C0004C751 /* vearth.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vearth.c; sourceTree = "<group>"; };
+		EBC01D051BED1C8C0004C751 /* ven404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ven404.c; sourceTree = "<group>"; };
+		EBC01D061BED1C8C0004C751 /* zatan2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zatan2.c; sourceTree = "<group>"; };
+		EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayCharacteristics.h; sourceTree = "<group>"; };
+		EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayCharacteristics.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -568,8 +670,12 @@
 			children = (
 				A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */,
 				A99F9B861B1E06E400CA8DA6 /* UIApplication+VersionBuild.m */,
+				693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */,
+				693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */,
 				A90D1FC11AE6510F00CBFEE7 /* UIView+ColorOfPoint.h */,
 				A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */,
+				698A012C1BE44A2F00758BA6 /* UIView+StackedView.h */,
+				698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */,
 				6992A8861BE0040C00FB53F0 /* NSData+Compression.h */,
 				6992A8871BE0040C00FB53F0 /* NSData+Compression.m */,
 			);
@@ -820,6 +926,7 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				EBC01D331BED1CE20004C751 /* SolarCalculator */,
 				A933D9F31B5D494600D621CD /* 3D Views */,
 				A90D1FB61AE6174700CBFEE7 /* Categories */,
 				A94A771D19F813040062906E /* CCode */,
@@ -833,6 +940,8 @@
 				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
 				EB1A69741999A6A9005A1CCB /* CRAPI.h */,
 				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
+				EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */,
+				EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */,
 				A99C893B1AEDE1B900A0856F /* GSSiDefs.h */,
 				A99C893C1AEDE1B900A0856F /* GSSiDefs.m */,
 				A90EBDC71A48874B001E72CF /* GSSiEnums.h */,
@@ -895,6 +1004,59 @@
 				EBA517B61BCA1355005A9CA8 /* CrimeData.m */,
 			);
 			name = Databases;
+			sourceTree = "<group>";
+		};
+		EBC01D331BED1CE20004C751 /* SolarCalculator */ = {
+			isa = PBXGroup;
+			children = (
+				EBC01CD91BED1C8C0004C751 /* aa.c */,
+				EBC01CDA1BED1C8C0004C751 /* altaz.c */,
+				EBC01CDB1BED1C8C0004C751 /* angles.c */,
+				EBC01CDC1BED1C8C0004C751 /* annuab.c */,
+				EBC01CDD1BED1C8C0004C751 /* arcdot.c */,
+				EBC01CDE1BED1C8C0004C751 /* conjunct.c */,
+				EBC01CDF1BED1C8C0004C751 /* constel.c */,
+				EBC01CE01BED1C8C0004C751 /* deflec.c */,
+				EBC01CE11BED1C8C0004C751 /* deltat.c */,
+				EBC01CE21BED1C8C0004C751 /* diurab.c */,
+				EBC01CE31BED1C8C0004C751 /* diurpx.c */,
+				EBC01CE41BED1C8C0004C751 /* dms.c */,
+				EBC01CE51BED1C8C0004C751 /* domoon.c */,
+				EBC01CE61BED1C8C0004C751 /* ear404.c */,
+				EBC01CE71BED1C8C0004C751 /* epsiln.c */,
+				EBC01CE81BED1C8C0004C751 /* fk4fk5.c */,
+				EBC01CE91BED1C8C0004C751 /* gplan.c */,
+				EBC01CEA1BED1C8C0004C751 /* jup404.c */,
+				EBC01CEB1BED1C8C0004C751 /* kep.h */,
+				EBC01CEC1BED1C8C0004C751 /* kepler.c */,
+				EBC01CED1BED1C8C0004C751 /* kfiles.c */,
+				EBC01CEE1BED1C8C0004C751 /* lightt.c */,
+				EBC01CEF1BED1C8C0004C751 /* lonlat.c */,
+				EBC01CF01BED1C8C0004C751 /* mar404.c */,
+				EBC01CF11BED1C8C0004C751 /* mer404.c */,
+				EBC01CF21BED1C8C0004C751 /* mlat404.c */,
+				EBC01CF31BED1C8C0004C751 /* mlr404.c */,
+				EBC01CF41BED1C8C0004C751 /* moonrise.c */,
+				EBC01CF51BED1C8C0004C751 /* nep404.c */,
+				EBC01CF61BED1C8C0004C751 /* nutate.c */,
+				EBC01CF71BED1C8C0004C751 /* plantbl.h */,
+				EBC01CF81BED1C8C0004C751 /* plu404.c */,
+				EBC01CF91BED1C8C0004C751 /* precess.c */,
+				EBC01CFA1BED1C8C0004C751 /* protos.h */,
+				EBC01CFB1BED1C8C0004C751 /* refrac.c */,
+				EBC01CFC1BED1C8C0004C751 /* rplanet.c */,
+				EBC01CFD1BED1C8C0004C751 /* rstar.c */,
+				EBC01CFE1BED1C8C0004C751 /* sat404.c */,
+				EBC01CFF1BED1C8C0004C751 /* sidrlt.c */,
+				EBC01D001BED1C8C0004C751 /* sun.c */,
+				EBC01D011BED1C8C0004C751 /* tdb.c */,
+				EBC01D021BED1C8C0004C751 /* trnsit.c */,
+				EBC01D031BED1C8C0004C751 /* ura404.c */,
+				EBC01D041BED1C8C0004C751 /* vearth.c */,
+				EBC01D051BED1C8C0004C751 /* ven404.c */,
+				EBC01D061BED1C8C0004C751 /* zatan2.c */,
+			);
+			name = SolarCalculator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -978,18 +1140,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBC01D081BED1C8C0004C751 /* altaz.c in Sources */,
 				A9BF333B1B770CF600A72E17 /* NVAlertView.m in Sources */,
+				EBC01D241BED1C8C0004C751 /* plu404.c in Sources */,
 				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,
 				A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */,
+				EBC01D101BED1C8C0004C751 /* diurab.c in Sources */,
 				A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */,
 				EBA517B71BCA1355005A9CA8 /* CrimeData.m in Sources */,
 				A98A57A81B20ADE600906FBC /* NVCalibrationController.m in Sources */,
 				EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */,
 				A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */,
+				EBC01D0D1BED1C8C0004C751 /* constel.c in Sources */,
 				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,
 				A94A771319F807570062906E /* Facility.m in Sources */,
+				EBC01D301BED1C8C0004C751 /* ven404.c in Sources */,
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
 				A9A7E3671B75795300DC7F3D /* NVSignalButton.m in Sources */,
+				EBC01D131BED1C8C0004C751 /* domoon.c in Sources */,
+				EBC01D221BED1C8C0004C751 /* nep404.c in Sources */,
 				A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */,
 				A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */,
 				A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */,
@@ -1003,26 +1172,45 @@
 				A9735AF419E77B6800894359 /* Reachability.m in Sources */,
 				A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */,
 				A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */,
+				EBC01D2E1BED1C8C0004C751 /* ura404.c in Sources */,
+				EBC01D1E1BED1C8C0004C751 /* mer404.c in Sources */,
 				6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */,
 				A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */,
+				EBC01D191BED1C8C0004C751 /* kepler.c in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,
+				EBC01D161BED1C8C0004C751 /* fk4fk5.c in Sources */,
 				A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */,
 				1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */,
 				1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */,
 				EBAB42321B2B1A5E00C36FFC /* SQLiteLib.c in Sources */,
+				EBC01D251BED1C8C0004C751 /* precess.c in Sources */,
 				69450DAD1BD5F6120079F7EC /* NVContactPicker.m in Sources */,
 				EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */,
 				EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */,
 				A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */,
 				A9E2130E1AFE4BFC005ECBBA /* NVImagePickerController.m in Sources */,
+				EBC01D2F1BED1C8C0004C751 /* vearth.c in Sources */,
 				EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */,
 				EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */,
+				EBC01D181BED1C8C0004C751 /* jup404.c in Sources */,
+				EBC01D111BED1C8C0004C751 /* diurpx.c in Sources */,
 				EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */,
+				EBC01D1B1BED1C8C0004C751 /* lightt.c in Sources */,
+				EBC01D311BED1C8C0004C751 /* zatan2.c in Sources */,
+				EBC01D121BED1C8C0004C751 /* dms.c in Sources */,
 				EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */,
+				EBC01D211BED1C8C0004C751 /* moonrise.c in Sources */,
 				69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */,
+				EBC01D1A1BED1C8C0004C751 /* kfiles.c in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
+				EBC01D071BED1C8C0004C751 /* aa.c in Sources */,
+				EBC01D201BED1C8C0004C751 /* mlr404.c in Sources */,
 				A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */,
 				A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */,
+				EBC01D151BED1C8C0004C751 /* epsiln.c in Sources */,
+				EBC01D0C1BED1C8C0004C751 /* conjunct.c in Sources */,
+				698A012E1BE44A2F00758BA6 /* UIView+StackedView.m in Sources */,
+				EBC01D2B1BED1C8C0004C751 /* sun.c in Sources */,
 				EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */,
 				69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */,
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,
@@ -1031,31 +1219,45 @@
 				EBAB422F1B2B073A00C36FFC /* CurbRampData.m in Sources */,
 				A94A771619F8079E0062906E /* FacilityPoint.m in Sources */,
 				EB86BFA71B0B62520074728E /* minilzo.c in Sources */,
+				EBC01D171BED1C8C0004C751 /* gplan.c in Sources */,
 				A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */,
 				A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */,
 				A9C1835F1B6674A600780BF6 /* NVMesh.m in Sources */,
 				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
+				EBC01D2A1BED1C8C0004C751 /* sidrlt.c in Sources */,
 				A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */,
 				A99873251B59ACC100200CA9 /* SewerData.m in Sources */,
+				EBC01D0E1BED1C8C0004C751 /* deflec.c in Sources */,
 				A90D1FBC1AE6184800CBFEE7 /* UIView+ColorOfPoint.m in Sources */,
+				EBC01D271BED1C8C0004C751 /* rplanet.c in Sources */,
 				A9D269E61AE562E100A5C38E /* TableViewCellLabel.m in Sources */,
+				EBC01D091BED1C8C0004C751 /* angles.c in Sources */,
 				A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */,
 				6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
+				EBC01D0A1BED1C8C0004C751 /* annuab.c in Sources */,
 				697B37711B94B7D60066978B /* NVTextDrawing.m in Sources */,
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
+				EBC01D2C1BED1C8C0004C751 /* tdb.c in Sources */,
 				A9237F851AFA929200D10E96 /* NVTextAlert.m in Sources */,
 				EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */,
 				A9A7E36A1B75796500DC7F3D /* NVXWalkButton.m in Sources */,
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
+				693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */,
 				A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */,
+				EBC01D231BED1C8C0004C751 /* nutate.c in Sources */,
+				EBC01D0B1BED1C8C0004C751 /* arcdot.c in Sources */,
 				EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */,
+				EBC01D291BED1C8C0004C751 /* sat404.c in Sources */,
+				EBFC2A301BE90A0F00E0C1B3 /* DisplayCharacteristics.m in Sources */,
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,
 				A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */,
 				69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */,
 				A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */,
+				EBC01D2D1BED1C8C0004C751 /* trnsit.c in Sources */,
+				EBC01D281BED1C8C0004C751 /* rstar.c in Sources */,
 				EBAB31C71AE6DC2D00C5CCEF /* NamedColors.m in Sources */,
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,
 				A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */,
@@ -1063,14 +1265,20 @@
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
 				EB7C6A161BD158D8006E985B /* StringFunctions.m in Sources */,
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
+				EBC01D261BED1C8C0004C751 /* refrac.c in Sources */,
 				A94A771919F807CE0062906E /* FacilityRecord.m in Sources */,
 				69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */,
 				A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */,
 				A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */,
 				A9DDC08A1B613EF4000DEEA9 /* FTPDirectoryList.m in Sources */,
+				EBC01D141BED1C8C0004C751 /* ear404.c in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
+				EBC01D0F1BED1C8C0004C751 /* deltat.c in Sources */,
+				EBC01D1F1BED1C8C0004C751 /* mlat404.c in Sources */,
+				EBC01D1C1BED1C8C0004C751 /* lonlat.c in Sources */,
 				EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */,
 				A9A7E3601B75361800DC7F3D /* NVInventoryViewController.m in Sources */,
+				EBC01D1D1BED1C8C0004C751 /* mar404.c in Sources */,
 				A9D258C71B62C67F00DF553A /* FTPDirectoryCreate.m in Sources */,
 				A97407C61AF6A63900B2FF30 /* NVProgressView.m in Sources */,
 			);

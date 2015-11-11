@@ -70,6 +70,10 @@
         [_delegate contactPicker:self
                   didReturnEmail:(__bridge NSString *)emailRef
                   forContactName:(__bridge NSString *)nameRef];
+        
+        CFRelease(nameRef);
+        CFRelease(emailMultiValue);
+        CFRelease(emailRef);
     }
 }
 

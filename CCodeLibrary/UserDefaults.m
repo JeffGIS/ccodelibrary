@@ -722,19 +722,15 @@ static UserDefaults *_defaults;
         success = [fileManager removeItemAtPath:filePath
                                           error:&error];
         
-#ifdef DEBUG
         if (success)
             NSLog(@"Deleted %@ from device", fileName);
         
         else
             NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
-#endif
     }
     
-#ifdef DEBUG
     else
         NSLog(@"%@ was not pulled. No need to delete", fileName);
-#endif
     
     //delete Intersections.gcf file
     fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
@@ -745,19 +741,15 @@ static UserDefaults *_defaults;
         success = [fileManager removeItemAtPath:filePath
                                           error:&error];
         
-#ifdef DEBUG
         if (success)
             NSLog(@"Deleted %@ from device", fileName);
         
         else
             NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
-#endif
     }
     
-#ifdef DEBUG
     else
         NSLog(@"%@ was never pulled", fileName);
-#endif
     
     //delete IntersectionImages directory
     fileName = [NSString stringWithFormat:@"%i/IntersectionImages", geoid];
@@ -771,20 +763,16 @@ static UserDefaults *_defaults;
             success = [fileManager removeItemAtPath:filePath
                                               error:&error];
 
-#ifdef DEBUG
             if (success)
                 NSLog(@"Deleted %@ from device", fileName);
             
             else
                 NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
-#endif
         }
     }
     
-#ifdef DEBUG
     else
         NSLog(@"%@ was never created", fileName);
-#endif
 }
 
 - (UIImage *)imageWithColor:(UIColor *)color
@@ -807,6 +795,24 @@ static UserDefaults *_defaults;
 - (NSArray *)mapTypes
 {
     return @[@"Completion Status", @"Ramp Issues", @"Data Quality"];
+}
+
+UIImage *grayscaleImage(UIImage *image)
+{
+    CGRect imageRect = CGRectMake(0, 0, image.size.width, image.size.height);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    
+    CGContextRef context = CGBitmapContextCreate(nil, image.size.width, image.size.height,
+                                                 8, 0, colorSpace, (CGBitmapInfo)kCGImageAlphaNone);
+    
+    CGContextDrawImage(context, imageRect, image.CGImage);
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    UIImage *grayscaleImage = [UIImage imageWithCGImage:imageRef];
+    CGColorSpaceRelease(colorSpace);
+    CGContextRelease(context);
+    CFRelease(imageRef);
+    
+    return grayscaleImage;
 }
 
 @end

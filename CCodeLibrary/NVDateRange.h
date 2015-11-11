@@ -45,6 +45,9 @@ didReturnFromDate:(NSInteger)fromDate
 + (void)getPastWeekFromDate:(NSInteger *)fromDate
                      toDate:(NSInteger *)toDate;
 
++ (void)getLastYearFromDate:(NSInteger *)fromDate
+                     toDate:(NSInteger *)toDate;
+
 + (NVDateRange *)showDateRangeInView:(UIView *)view
                             delegate:(id)delegate
                             fromDate:(NSInteger)fromDate

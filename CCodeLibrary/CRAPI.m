@@ -452,9 +452,9 @@
     tilexLeft = tilex;
     
     //get pixel within tile coordinates
-    xintile = xintileLeft = (worldx % 256);
+    //xintile = xintileLeft = (worldx % 256);
     yintile = (worldy % 256);
-    xinc = (256 - xintile);
+    //xinc = (256 - xintile);
     yinc = (256 - yintile);
     y = worldy;
     
@@ -480,6 +480,7 @@
             
             CGImageRef subimage = CGImageCreateWithImageInRect(image.CGImage, CGRectMake(xintile, yintile, nxpixels, nypixels));
             image = [UIImage imageWithCGImage:subimage];
+            CGImageRelease(subimage);
             
             [image drawInRect:CGRectMake(xincomposite, yincomposite, nxpixels, nypixels)];
             

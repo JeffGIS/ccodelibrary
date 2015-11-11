@@ -44,6 +44,31 @@
     
 }
 
++ (void)getLastYearFromDate:(NSInteger *)fromDate
+                     toDate:(NSInteger *)toDate
+{
+    NVDateRange *nvdr = [[NVDateRange alloc] init];
+    
+    nvdr.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    nvdr.calendar.locale = NSLocale.currentLocale;
+    nvdr.calendar.timeZone = NSTimeZone.localTimeZone;
+    
+    NSDateComponents *dateComponents = [nvdr.calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
+                                        NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
+                                                        fromDate:NSDate.date];
+    
+    dateComponents.month = 1;
+    dateComponents.day = 0;
+    NSDate *td = [nvdr endOfDayDateForDate:[nvdr.calendar dateFromComponents:dateComponents]];
+    
+    dateComponents.year -= 1;
+    dateComponents.day = 1;
+    NSDate *fd = [nvdr startOfDayDateForDate:[nvdr.calendar dateFromComponents:dateComponents]];
+    
+    *fromDate = fd.timeIntervalSince1970;
+    *toDate = td.timeIntervalSince1970;
+}
+
 + (NVDateRange *)showDateRangeInView:(UIView *)view
                             delegate:(id)delegate
                             fromDate:(NSInteger)fromDate
