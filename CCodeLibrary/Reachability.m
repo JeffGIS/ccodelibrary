@@ -68,7 +68,6 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 			returnValue->_alwaysReturnLocalWiFiStatus = NO;
 		}
         
-        CFRelease(reachability);
 	}
     
 	return returnValue;

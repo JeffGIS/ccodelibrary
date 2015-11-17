@@ -169,8 +169,8 @@ static CurbRampData *_statdatabase = nil;
     if (dropExistingTables)
         SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), _database);
 //create intersection table
-    NSString *query = @"";
-    /*[NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Intersections (\
+    NSString *query =
+    [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Intersections (\
                        intID INTEGER PRIMARY KEY,\
                        lastUpdateTime INTEGER,\
                        status INTEGER,\
@@ -203,12 +203,12 @@ static CurbRampData *_statdatabase = nil;
                        streetAZMs CHAR(128),\
                        latitude REAL,\
                        longitude REAL);\
-                       CREATE VIRTUAL TABLE IF NOT EXISTS Intersections_index USING rtree(id,minX, maxX, minY, maxY);"];*/
+                       CREATE VIRTUAL TABLE IF NOT EXISTS Intersections_index USING rtree(id,minX, maxX, minY, maxY);"];
     
-    //rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
+    rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
 //create ramp table
     query = [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Ramps (\
-             intID,\
+             intID INT,\
              rampNum INT,\
              rampID CHAR(16),\
              timeComplete INT,\

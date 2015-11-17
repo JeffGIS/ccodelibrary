@@ -98,7 +98,7 @@ static GeoMasterServer *statServer = nil;
         
         return rtn;
     }
-    
+    _reachability = nil;
     _responseTimeoutInSeconds = connectionTimeoutInSeconds;
 	CFReadStreamRef readStream = NULL;
 	CFWriteStreamRef writeStream = NULL;
