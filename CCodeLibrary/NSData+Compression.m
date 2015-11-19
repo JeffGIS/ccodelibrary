@@ -5,7 +5,7 @@
 
 @implementation NSData (Compression)
 
-+ (NSData *)compressFileAtPath:(NSString *)filePath
+/*+ (NSData *)compressFileAtPath:(NSString *)filePath
 {
     NSData *data = [NSData dataWithContentsOfFile:filePath];
     const void *sourceBuffer = data.bytes;
@@ -32,7 +32,7 @@
                                     length:status
                               freeWhenDone:YES];
     }
-}
+}*/
 
 + (NSData *)lzCompressFileAtPath:(NSString *)filePath
 {
