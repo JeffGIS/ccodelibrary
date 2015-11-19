@@ -21,9 +21,10 @@
 @property NSInteger fileSize;
 @property (nonatomic) int datasetVersion;
 
-+ (CurbRampData *)databaseForGeoid:(int)geoid;
-- (void)open;
-- (void)close;
++ (CurbRampData *)databaseForGeoid:(int)geoid
+                            create:(BOOL)create;
+- (BOOL)open;
+- (void)close:(BOOL)opened;
 - (void)clear;
 - (BOOL)createIntersectionsTable:(BOOL)dropExistingTables;
 - (NSString *)databasePath:(int)geoid;

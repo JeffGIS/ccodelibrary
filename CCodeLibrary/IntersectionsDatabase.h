@@ -73,7 +73,7 @@
 
 - (NSString *)intersectionTextPath:(int)type;
 - (int)getCountOfIntersections;
-- (void)close;
+- (void)close:(BOOL)opened;
 
 - (int)loadIntersectionTextToDatabase:(NSString *)path;
 
