@@ -173,7 +173,8 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     }
 }
 
-ram
+- (int)getXWalkCoord:(MPIntersection *)mpint
+               xWalk:(char)xw
 {
     int icoord = 0;
     
