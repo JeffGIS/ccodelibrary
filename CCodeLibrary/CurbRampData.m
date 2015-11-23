@@ -132,14 +132,42 @@ static CurbRampData *_statdatabase = nil;
     //return -1;
     return rtn;
 }
-
+- (int) getNextUploadFileNum:(int)iPad
+{
+    int rtn = 1;
+    BOOL opened = [self open];
+    
+    if (_isOpen && _fileSize > 0)
+    {
+        NSString *query = [NSString stringWithFormat:@"SELECT lastUpdateFileNum FROM Updates WHERE iPadID = %i",iPad];
+        
+        sqlite3_stmt *statement = NULL;
+        
+        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        
+        if (sqlite3_step(statement) == SQLITE_ROW)
+        {
+            rtn = sqlite3_column_int(statement, 0);
+        }
+        
+        SQLOK(sqlite3_finalize(statement), _database);
+        query = [NSString stringWithFormat:@"UPDATE Updates SET lastUpdateFileNum=%i  WHERE iPadID = %i",rtn+1,iPad];
+        SQLOK(sqlite3_exec(_database, query.UTF8String, 0, 0, 0), _database);
+    }
+    
+    [self close:opened];
+    return rtn;
+}
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer
      useUniqueFile:(BOOL)uniqueFile
 {
+
     BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     if (rtn && sendToServer)
     {
+        int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
+        int nextFileNum = [self getNextUploadFileNum:iPad];
         if (uniqueFile || !_sendToServerFile)
         {
             int iTime = NSDate.timeIntervalSinceReferenceDate;
@@ -269,6 +297,10 @@ static CurbRampData *_statdatabase = nil;
              rampType INT,\
              PRIMARY KEY (intID,rampNum ASC));"];
    
+    rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
+    query = [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Updates (\
+             iPadID INT,\
+             lastUpdateFileNum INT);"];
     rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
 
     [self close:opened];

@@ -173,8 +173,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     }
 }
 
-- (int)getXWalkCoord:(MPIntersection *)mpint
-               xWalk:(char)xw
+ram
 {
     int icoord = 0;
     
@@ -434,6 +433,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     double lat,lon;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     BOOL opened = [self.curbRampData open];
+    BOOL newFile = YES;
     for (int i = 1; i < 13; i++)
     {
         MPRamp *ramp = [mpint.ramps objectAtIndex:i];
@@ -445,49 +445,47 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         {
             strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
             
-            /*cmd = [NSString stringWithFormat:@"UPDATE Ramps SET \
-                    intID=%i;rampNum=%i,\r\n\
-                    rampID=\"%s\";\r\n\
-                    rampExists=%i;\r\n\
-                    timeComplete=%i;\r\n\
-                    approximateHeading=%f;\r\n\
-                    rampInXWalk=%i;\r\n\
-                    xWalkisComplete=%i;\r\n\
-                    signalisComplete=%i;\r\n\
-                    texture=%i;\r\n\
-                    upperLandingObstruction=%i;\r\n\
-                    lowerLandingObstruction=%i;\r\n\
-                    rampObstruction=%i;\r\n\
-                    hasRampCracks=%i;\r\n\
-                    hasUpperLandingCracks=%i;\r\n\
-                    hasStreetLandingCracks=%i;\r\n\
-                    rampWidth=%i;\r\n\
-                    rampDepth=%i;\r\n\
-                    rampSlopeFront=%f;\r\n\
-                    rampSlopeSide=%f;\r\n\
-                    rampSlopeHeading=%f;\r\n\
-                    upperLandingSlopeFront=%f;\r\n\
-                    upperLandingSlopeSide=%f;\r\n\
-                    upperLandingSlopeHeading=%f;\r\n\
-                    streetLandingSlopeFront=%f;\r\n\
-                    streetLandingSlopeSide=%f;\r\n\
-                    streetLandingSlopeHeading=%f;\r\n\
-                    flareLeftSlopeFront=%f;\r\n\
-                    flareLeftSlopeSide=%f;\r\n\
-                    flareLeftSlopeHeading=%f;\r\n\
-                    flareRightSlopeFront=%f;\r\n\
-                    flareRightSlopeSide=%f;\r\n\
-                    flareRightSlopeHeading=%f;\r\n\
-                    hasPEDSignal=%i;\r\n\
-                    hasPEDButton=%i;\r\n\
-                    PEDButtonHeight=%i;\r\n\
-                    PEDButtonDist=%i;\r\n\
-                    SteepTopOfCurb=%f;\r\n\
-                    lev21x=%i;\r\n\
-                    lev21y=%i;\r\n\
-                    PedRampLip=%f);\r\n",
-                    (int)mpint.intID,
-                    (int)ramp.rampNum,
+            cmd = [NSString stringWithFormat:@"UPDATE Ramps SET \
+                    rampID=\"%s\",\r\n\
+                    rampExists=%i,\r\n\
+                    timeComplete=%i,\r\n\
+                    approximateHeading=%f,\r\n\
+                    rampInXWalk=%i,\r\n\
+                    xWalkisComplete=%i,\r\n\
+                    signalisComplete=%i,\r\n\
+                    texture=%i,\r\n\
+                    upperLandingObstruction=%i,\r\n\
+                    lowerLandingObstruction=%i,\r\n\
+                    rampObstruction=%i,\r\n\
+                    hasRampCracks=%i,\r\n\
+                    hasUpperLandingCracks=%i,\r\n\
+                    hasStreetLandingCracks=%i,\r\n\
+                    rampWidth=%i,\r\n\
+                    rampDepth=%i,\r\n\
+                    rampSlopeFront=%f,\r\n\
+                    rampSlopeSide=%f,\r\n\
+                    rampSlopeHeading=%f,\r\n\
+                    upperLandingSlopeFront=%f,\r\n\
+                    upperLandingSlopeSide=%f,\r\n\
+                    upperLandingSlopeHeading=%f,\r\n\
+                    streetLandingSlopeFront=%f,\r\n\
+                    streetLandingSlopeSide=%f,\r\n\
+                    streetLandingSlopeHeading=%f,\r\n\
+                    flareLeftSlopeFront=%f,\r\n\
+                    flareLeftSlopeSide=%f,\r\n\
+                    flareLeftSlopeHeading=%f,\r\n\
+                    flareRightSlopeFront=%f,\r\n\
+                    flareRightSlopeSide=%f,\r\n\
+                    flareRightSlopeHeading=%f,\r\n\
+                    hasPEDSignal=%i,\r\n\
+                    hasPEDButton=%i,\r\n\
+                    PEDButtonHeight=%i,\r\n\
+                    PEDButtonDist=%i,\r\n\
+                    SteepTopOfCurb=%f,\r\n\
+                    lev21x=%i,\r\n\
+                    lev21y=%i,\r\n\
+                    PedRampLip=%f \r\n\
+                    WHERE intID=%i AND rampNum=%i",
                     rampID,
                     ramp.rampExists,
                     ramp.timeComplete,
@@ -526,9 +524,14 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                     ramp.SteepTopOfCurb,
                     ramp.lev21x,
                     ramp.lev21y,
-                    ramp.PedRampLip];*/
+                    ramp.PedRampLip,
+                   (int)mpint.intID,
+                   (int)ramp.rampNum];
+            rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:newFile];
+            newFile = NO;
         }
     }
+
     PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
    
     cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
@@ -583,7 +586,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                        lat,lon,
                        mpint.intID];
     
-    rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:NO];
+    rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:newFile];
     cmd = [NSString stringWithFormat:@"UPDATE Intersections_index SET minY=%f,minX=%f,maxY=%f,maxX=%f WHERE Intersections_index.id=%ld",
              lat,lon,lat,lon, (long)mpint.intID];
     rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:NO];
