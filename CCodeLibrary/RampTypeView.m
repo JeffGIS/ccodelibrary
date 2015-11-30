@@ -112,7 +112,7 @@
                     
                     rtNumberLabel.backgroundColor = UIColor.clearColor;
                     rtNumberLabel.textColor = UserDefaults.defaults.appleBlue;
-                    rtNumberLabel.alpha = 0.4;
+                    rtNumberLabel.alpha = 0.3;
                     rtNumberLabel.textAlignment = NSTextAlignmentCenter;
                     rtNumberLabel.font = [UIFont boldSystemFontOfSize:200.0];
                     rtNumberLabel.adjustsFontSizeToFitWidth = YES;
