@@ -72,7 +72,7 @@
     [rtView addSubview:rtView.selectButton];
     
     CGSize buttonSize = CGSizeMake(((rtView.buttonView.frame.size.width - 8.0) / 3.0),
-                                   ((rtView.buttonView.frame.size.height - 8.0) / 4.0));
+                                   ((rtView.buttonView.frame.size.height - 8.0) / 3.0));
    
     NSInteger tag = 0;
     
@@ -88,6 +88,8 @@
             rtButton.imageEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 44.0, 4.0);
             rtButton.layer.borderColor = UIColor.greenColor.CGColor;
             rtButton.layer.borderWidth = 0.0;
+            rtButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+            rtButton.imageView.backgroundColor = UIColor.whiteColor;
             
             if (tag < RampTypeCombLeftWalk)
             {
