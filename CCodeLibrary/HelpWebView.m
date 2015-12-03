@@ -153,7 +153,10 @@
                                                                    NSUInteger index = range.location;
                                                                    
                                                                    if ([[ytURL substringToIndex:index] isEqualToString:_youtubeID])
+                                                                   {
                                                                        urlString = [ytURL substringFromIndex:index];
+                                                                       break;
+                                                                   }
                                                                }
                                                                
                                                                YTPlayerView *youTubePlayer = [[YTPlayerView alloc] initWithFrame:_webView.frame];
