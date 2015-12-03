@@ -4,6 +4,7 @@
 #import "HelpWebView.h"
 #import "UserDefaults.h"
 #import "GSSiPopoverView.h"
+#import "Y
 
 @interface HelpWebView ()
 
