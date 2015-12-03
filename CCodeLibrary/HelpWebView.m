@@ -9,6 +9,7 @@
 
 @property (nonatomic) UIWebView *webView;
 @property (nonatomic) UITabBar *tabBar;
+@property (nonatomic) NSString *youtubeID;
 
 @end
 
@@ -24,6 +25,9 @@
     helpView.backgroundColor = UIColor.darkGrayColor;
     helpView.alpha = 0.0;
     helpView.tabBar = tabBar;
+    
+    helpView.youtubeID = [presenterID stringByReplacingOccurrencesOfString:@" "
+                                                                withString:@""];
     
     [view addSubview:helpView];
     
@@ -53,12 +57,28 @@
                                                                    helpView.frame.size.height - 60.0)];
     helpView.webView.scalesPageToFit = YES;
     helpView.webView.userInteractionEnabled = YES;
+    helpView.webView.allowsInlineMediaPlayback = YES;
+    helpView.webView.mediaPlaybackRequiresUserAction = NO;
     helpView.webView.backgroundColor = UIColor.lightGrayColor;
     [helpView addSubview:helpView.webView];
     
-    presenterID = @"ManageMyLocationMap";
+    UIButton *youTubeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    youTubeButton.frame = CGRectMake(0.0, 0.0, 160.0, 113.0);
     
-    NSString *path = [NSBundle.mainBundle pathForResource:presenterID
+    youTubeButton.center = CGPointMake((helpView.webView.frame.size.width / 2.0),
+                                       (helpView.webView.frame.size.height - 60.0));
+    
+    [youTubeButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"YouTubeIcon"
+                                                                                           ofType:@"png"]]
+                   forState:UIControlStateNormal];
+    
+    [youTubeButton addTarget:helpView
+                      action:@selector(playYouTubeVideo:)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    [helpView.webView addSubview:youTubeButton];
+    
+    NSString *path = [NSBundle.mainBundle pathForResource:helpView.youtubeID
                                                    ofType:@"pdf"];
     
     if (!path)
@@ -99,15 +119,108 @@
     return helpView;
 }
 
+- (void)playYouTubeVideo:(UIButton *)button
+{
+    NSURL *url = [NSURL URLWithString:@"ftp://waypoint:pointway4*@thmgis.com/Bill/YouTubeURLs.txt"];
+    NSURLSession *urlSession = NSURLSession.sharedSession;
+    
+    NSURLSessionDataTask *dataTask = [urlSession dataTaskWithURL:url
+                                               completionHandler:^(NSData * _Nullable data,
+                                                                   NSURLResponse * _Nullable response,
+                                                                   NSError * _Nullable error) {
+                                                   
+                                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                                       if (error)
+                                                       {
+                                                           NSLog(@"YouTube URL Request ERROR from %@:%@",
+                                                                 url.description, error.localizedDescription);
+                                                       }
+                                                       
+                                                       else
+                                                       {
+                                                           NSString *dataString = [[NSString alloc] initWithData:data
+                                                                                                        encoding:NSUTF8StringEncoding];
+                                                           
+                                                           if ([dataString containsString:_youtubeID])
+                                                           {
+                                                               NSArray *urlArray = [dataString componentsSeparatedByString:@"\n"];
+                                                               NSString *urlString = @"";
+                                                               
+                                                               for (int i = 0; i < urlArray.count; i++)
+                                                               {
+                                                                   NSString *ytURL = urlArray[i];
+                                                                   NSRange range = [ytURL rangeOfString:@"\t"];
+                                                                   NSUInteger index = range.location;
+                                                                   
+                                                                   if ([[ytURL substringToIndex:index] isEqualToString:_youtubeID])
+                                                                   {
+                                                                       urlString = [ytURL substringFromIndex:index];
+                                                                       break;
+                                                                   }
+                                                               }
+                                                               
+                                                               YTPlayerView *youTubePlayer = [[YTPlayerView alloc] initWithFrame:_webView.frame];
+                                                               youTubePlayer.delegate = self;
+                                                               [self addSubview:youTubePlayer];
+                                                               
+                                                               [youTubePlayer loadWithVideoId:urlString];
+                                                           }
+                                                       }
+                                                       
+                                                       [urlSession invalidateAndCancel];
+                                                   });
+                                               }];
+    
+    [dataTask resume];
+}
+
+- (UIColor *)playerViewPreferredWebViewBackgroundColor:(YTPlayerView *)playerView
+{
+    return UIColor.blackColor;
+}
+
+- (void)playerViewDidBecomeReady:(YTPlayerView *)playerView
+{
+    [playerView playVideo];
+}
+
+- (void)playerView:(YTPlayerView *)playerView
+  didChangeToState:(YTPlayerState)state
+{
+    if (state == kYTPlayerStateEnded)
+        [playerView removeFromSuperview];
+}
+
 - (void)dismissHelp:(UIButton *)button
 {
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         self.alpha = 0.0;
-                         _tabBar.alpha = 1.0;
-                     } completion:^(BOOL finished) {
-                         [self removeFromSuperview];
-                     }];
+    BOOL inVideoMode = NO;
+    YTPlayerView *youTubePlayer = nil;
+    
+    for (YTPlayerView *ytpvs in self.subviews)
+    {
+        if ([ytpvs isKindOfClass:YTPlayerView.class])
+        {
+            youTubePlayer = ytpvs;
+            inVideoMode = YES;
+        }
+    }
+    
+    if (inVideoMode)
+    {
+        [youTubePlayer stopVideo];
+        [youTubePlayer removeFromSuperview];
+    }
+    
+    else
+    {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             self.alpha = 0.0;
+                             _tabBar.alpha = 1.0;
+                         } completion:^(BOOL finished) {
+                             [self removeFromSuperview];
+                         }];
+    }
 }
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration
