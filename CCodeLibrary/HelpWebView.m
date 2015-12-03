@@ -143,9 +143,18 @@
                                                            
                                                            if ([dataString containsString:_youtubeID])
                                                            {
-                                                               NSRange range = [dataString rangeOfString:_youtubeID];
-                                                               NSUInteger indexOfURL = ((range.location + _youtubeID.length) + 1);
-                                                               NSString *urlString = [dataString substringFromIndex:indexOfURL];
+                                                               NSArray *urlArray = [dataString componentsSeparatedByString:@"\n"];
+                                                               NSString *urlString = @"";
+                                                               
+                                                               for (int i = 0; i < urlArray.count; i++)
+                                                               {
+                                                                   NSString *ytURL = urlArray[i];
+                                                                   NSRange range = [ytURL rangeOfString:@"\t"];
+                                                                   NSUInteger index = range.location;
+                                                                   
+                                                                   if ([[ytURL substringToIndex:index] isEqualToString:_youtubeID])
+                                                                       urlString = [ytURL substringFromIndex:index];
+                                                               }
                                                                
                                                                YTPlayerView *youTubePlayer = [[YTPlayerView alloc] initWithFrame:_webView.frame];
                                                                youTubePlayer.delegate = self;
