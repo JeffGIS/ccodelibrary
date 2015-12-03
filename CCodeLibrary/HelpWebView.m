@@ -4,7 +4,7 @@
 #import "HelpWebView.h"
 #import "UserDefaults.h"
 #import "GSSiPopoverView.h"
-#import "Y
+#import "YTPlayerView.h"
 
 @interface HelpWebView ()
 
@@ -135,6 +135,8 @@
                                                        {
                                                            NSLog(@"YouTube URL Request ERROR from %@:%@",
                                                                  url.description, error.localizedDescription);
+                                                           
+                                                           //nJF4pTMkWwQ
                                                        }
                                                        
                                                        else
@@ -148,7 +150,13 @@
                                                                NSUInteger indexOfURL = ((range.location + _youtubeID.length) + 1);
                                                                NSString *urlString = [dataString substringFromIndex:indexOfURL];
                                                                
+                                                               NSLog(@"%@", urlString);
                                                                
+                                                               YTPlayerView *youTubePlayer = [[YTPlayerView alloc] initWithFrame:self.frame];
+                                                               youTubePlayer.backgroundColor = UIColor.blackColor;
+                                                               [self addSubview:youTubePlayer];
+                                                               [youTubePlayer loadWithVideoId:urlString];
+                                                               [youTubePlayer playVideo];
                                                            }
                                                        }
                                                        

@@ -31,7 +31,6 @@
 		697B37721B94C0E00066978B /* NVTextDrawing.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697B376F1B94B7D60066978B /* NVTextDrawing.h */; };
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
 		698A012E1BE44A2F00758BA6 /* UIView+StackedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */; };
-		698F98791C10B95F009F2F01 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 698F98781C10B95F009F2F01 /* Assets.bundle */; };
 		698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698F987B1C10B96B009F2F01 /* YTPlayerView.m */; };
 		6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 6992A8871BE0040C00FB53F0 /* NSData+Compression.m */; };
 		6992A8891BE00AB100FB53F0 /* NSData+Compression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6992A8861BE0040C00FB53F0 /* NSData+Compression.h */; };
@@ -411,7 +410,6 @@
 		697B37701B94B7D60066978B /* NVTextDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextDrawing.m; sourceTree = "<group>"; };
 		698A012C1BE44A2F00758BA6 /* UIView+StackedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+StackedView.h"; sourceTree = "<group>"; };
 		698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+StackedView.m"; sourceTree = "<group>"; };
-		698F98781C10B95F009F2F01 /* Assets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Assets.bundle; sourceTree = "<group>"; };
 		698F987A1C10B96B009F2F01 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
 		698F987B1C10B96B009F2F01 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
 		6992A8861BE0040C00FB53F0 /* NSData+Compression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Compression.h"; sourceTree = "<group>"; };
@@ -919,7 +917,6 @@
 			children = (
 				698F987A1C10B96B009F2F01 /* YTPlayerView.h */,
 				698F987B1C10B96B009F2F01 /* YTPlayerView.m */,
-				698F98781C10B95F009F2F01 /* Assets.bundle */,
 				A97B72771ADB4912001ACFAE /* AVFoundation.framework */,
 				A97867331A521934000A9BB8 /* MapKit.framework */,
 				A9735AF019E779DF00894359 /* SystemConfiguration.framework */,
@@ -1138,7 +1135,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				698F98791C10B95F009F2F01 /* Assets.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
