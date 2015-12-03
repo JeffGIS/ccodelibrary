@@ -4,7 +4,6 @@
 #import "HelpWebView.h"
 #import "UserDefaults.h"
 #import "GSSiPopoverView.h"
-#import "YTPlayerView.h"
 
 @interface HelpWebView ()
 
@@ -135,8 +134,6 @@
                                                        {
                                                            NSLog(@"YouTube URL Request ERROR from %@:%@",
                                                                  url.description, error.localizedDescription);
-                                                           
-                                                           //nJF4pTMkWwQ
                                                        }
                                                        
                                                        else
@@ -150,13 +147,11 @@
                                                                NSUInteger indexOfURL = ((range.location + _youtubeID.length) + 1);
                                                                NSString *urlString = [dataString substringFromIndex:indexOfURL];
                                                                
-                                                               NSLog(@"%@", urlString);
-                                                               
-                                                               YTPlayerView *youTubePlayer = [[YTPlayerView alloc] initWithFrame:self.frame];
-                                                               youTubePlayer.backgroundColor = UIColor.blackColor;
+                                                               YTPlayerView *youTubePlayer = [[YTPlayerView alloc] initWithFrame:_webView.frame];
+                                                               youTubePlayer.delegate = self;
                                                                [self addSubview:youTubePlayer];
+                                                               
                                                                [youTubePlayer loadWithVideoId:urlString];
-                                                               [youTubePlayer playVideo];
                                                            }
                                                        }
                                                        
@@ -167,15 +162,53 @@
     [dataTask resume];
 }
 
+- (UIColor *)playerViewPreferredWebViewBackgroundColor:(YTPlayerView *)playerView
+{
+    return UIColor.blackColor;
+}
+
+- (void)playerViewDidBecomeReady:(YTPlayerView *)playerView
+{
+    [playerView playVideo];
+}
+
+- (void)playerView:(YTPlayerView *)playerView
+  didChangeToState:(YTPlayerState)state
+{
+    if (state == kYTPlayerStateEnded)
+        [playerView removeFromSuperview];
+}
+
 - (void)dismissHelp:(UIButton *)button
 {
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         self.alpha = 0.0;
-                         _tabBar.alpha = 1.0;
-                     } completion:^(BOOL finished) {
-                         [self removeFromSuperview];
-                     }];
+    BOOL inVideoMode = NO;
+    YTPlayerView *youTubePlayer = nil;
+    
+    for (YTPlayerView *ytpvs in self.subviews)
+    {
+        if ([ytpvs isKindOfClass:YTPlayerView.class])
+        {
+            youTubePlayer = ytpvs;
+            inVideoMode = YES;
+        }
+    }
+    
+    if (inVideoMode)
+    {
+        [youTubePlayer stopVideo];
+        [youTubePlayer removeFromSuperview];
+    }
+    
+    else
+    {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             self.alpha = 0.0;
+                             _tabBar.alpha = 1.0;
+                         } completion:^(BOOL finished) {
+                             [self removeFromSuperview];
+                         }];
+    }
 }
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration

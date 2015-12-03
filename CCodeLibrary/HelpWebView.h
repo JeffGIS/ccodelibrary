@@ -1,9 +1,10 @@
 //  HelpWebView.h
 //  CCodeLibrary
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+#import "YTPlayerView.h"
 
-@interface HelpWebView : UIView
+@interface HelpWebView : UIView <YTPlayerViewDelegate>
 
 + (HelpWebView *)showHelpWebView:(UIView *)view
                      presenterID:(NSString *)presenterID

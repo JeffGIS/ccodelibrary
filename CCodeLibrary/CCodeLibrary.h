@@ -37,8 +37,6 @@
 #import "RampTypeView.h"
 #import "PickedItem.h"
 #import "GSSiBumpDetector.h"
-#import "HelpButton.h"
-#import "HelpWebView.h"
 #import "TableViewCellLabel.h"
 #import "TableViewCellButton.h"
 #import "NVColorWheel.h"
