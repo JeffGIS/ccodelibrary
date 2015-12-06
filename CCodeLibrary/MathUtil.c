@@ -1535,10 +1535,11 @@ double DeltaAngle (double AZ1, double AZ2)
 
 bool DPointInBounds (LPDPOINT pt,LPMNMXCORD pbounds)
 {
-    if (pt->x < pbounds->xmn ||
+    if (pbounds &&
+        (pt->x < pbounds->xmn ||
         pt->x > pbounds->xmx ||
         pt->y < pbounds->ymn ||
-        pt->y > pbounds->ymx)
+        pt->y > pbounds->ymx))
         return FALSE;
     return TRUE;
 }
@@ -1716,5 +1717,19 @@ double ldistpp(LPDPOINT Point1, LPDPOINT Point2)
 #if ENABLETRACE
     }
 #endif
+}
+LPDPOINT PointsFromCGRect (CGRect *pRect)
+{
+    LPDPOINT pPoints = (LPDPOINT)malloc (4*sizeof(DPOINT));
+    
+    pPoints[0].x = pRect->origin.x;
+    pPoints[0].y = pRect->origin.y;
+    pPoints[1].x = pRect->origin.x;
+    pPoints[1].y = pRect->origin.y + pRect->size.height;
+    pPoints[2].x = pRect->origin.x + pRect->size.width;
+    pPoints[2].y = pRect->origin.y + pRect->size.height;
+    pPoints[3].x = pRect->origin.x + pRect->size.width;
+    pPoints[3].y = pRect->origin.y;
+    return pPoints;
 }
 

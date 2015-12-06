@@ -40,4 +40,8 @@
           maxOffset:(CGFloat)offset
           minLength:(CGFloat)minLength;
 
++ (void)drawTextShadowForRect:(CGRect)rect
+                    attString:(NSAttributedString *)attString
+                      context:(CGContextRef)context;
+
 @end
