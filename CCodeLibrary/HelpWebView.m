@@ -160,6 +160,7 @@
                                                                }
                                                                
                                                                YTPlayerView *youTubePlayer = [[YTPlayerView alloc] initWithFrame:_webView.frame];
+                                                               youTubePlayer.playbackQuality = kYTPlaybackQualityAuto;
                                                                youTubePlayer.delegate = self;
                                                                [self addSubview:youTubePlayer];
                                                                
