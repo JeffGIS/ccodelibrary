@@ -4,12 +4,13 @@
 #import "HelpWebView.h"
 #import "UserDefaults.h"
 #import "GSSiPopoverView.h"
+@import MediaPlayer;
 
 @interface HelpWebView ()
 
 @property (nonatomic) UIWebView *webView;
 @property (nonatomic) UITabBar *tabBar;
-@property (nonatomic) NSString *youtubeID;
+@property (nonatomic) MPMoviePlayerController *mpController;
 
 @end
 
@@ -25,9 +26,6 @@
     helpView.backgroundColor = UIColor.darkGrayColor;
     helpView.alpha = 0.0;
     helpView.tabBar = tabBar;
-    
-    helpView.youtubeID = [presenterID stringByReplacingOccurrencesOfString:@" "
-                                                                withString:@""];
     
     [view addSubview:helpView];
     
@@ -63,22 +61,23 @@
     [helpView addSubview:helpView.webView];
     
     UIButton *youTubeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    youTubeButton.frame = CGRectMake(0.0, 0.0, 160.0, 113.0);
+    youTubeButton.frame = CGRectMake(0.0, 0.0, 90.0, 90.0);
     
     youTubeButton.center = CGPointMake((helpView.webView.frame.size.width / 2.0),
-                                       (helpView.webView.frame.size.height - 60.0));
+                                       (helpView.webView.frame.size.height - 45.0));
     
-    [youTubeButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"YouTubeIcon"
+    [youTubeButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"videoplaybutton"
                                                                                            ofType:@"png"]]
                    forState:UIControlStateNormal];
     
     [youTubeButton addTarget:helpView
-                      action:@selector(playYouTubeVideo:)
+                      action:@selector(playVideo:)
             forControlEvents:UIControlEventTouchUpInside];
     
     [helpView.webView addSubview:youTubeButton];
     
-    NSString *path = [NSBundle.mainBundle pathForResource:helpView.youtubeID
+    NSString *path = [NSBundle.mainBundle pathForResource:[presenterID stringByReplacingOccurrencesOfString:@" "
+                                                                                                 withString:@""]
                                                    ofType:@"pdf"];
     
     if (!path)
@@ -119,6 +118,73 @@
     return helpView;
 }
 
+- (void)playVideo:(UIButton *)button
+{
+    NSURL *videoURL = [NSURL fileURLWithPath:[NSBundle.mainBundle pathForResource:@"ODR_CRISInventoryScreen"
+                                                                           ofType:@"mp4"]];
+    
+    _mpController = [[MPMoviePlayerController alloc] initWithContentURL:videoURL];
+    
+    _mpController.controlStyle = MPMovieControlStyleFullscreen;
+    [_mpController prepareToPlay];
+    
+    UIWindow *backgroundWindow = UIApplication.sharedApplication.keyWindow;
+    
+    _mpController.view.frame = backgroundWindow.frame;
+    [backgroundWindow addSubview:_mpController.view];
+    
+    UIView *statusBarBlocker = [[UIView alloc] initWithFrame:
+                                CGRectMake(0.0, 0.0, backgroundWindow.frame.size.width, 20.0)];
+    
+    statusBarBlocker.backgroundColor = UIColor.blackColor;
+    [backgroundWindow addSubview:statusBarBlocker];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(promoVideoFinished:)
+                                               name:MPMoviePlayerPlaybackDidFinishNotification
+                                             object:_mpController];
+    
+    [_mpController play];
+}
+
+- (void)promoVideoFinished:(NSNotification *)notification
+{
+    [_mpController.view removeFromSuperview];
+    
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:MPMoviePlayerPlaybackDidFinishNotification
+                                                object:_mpController];
+    
+    _mpController = nil;
+}
+
+- (void)dismissHelp:(UIButton *)button
+{
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         self.alpha = 0.0;
+                         _tabBar.alpha = 1.0;
+                     } completion:^(BOOL finished) {
+                         [self removeFromSuperview];
+                     }];
+}
+
+- (void)willRotateWithDuration:(NSTimeInterval)duration
+        toInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                  tabBarHeight:(CGFloat)tabBarHeight
+{
+    UIWindow *backgroundWindow = UIApplication.sharedApplication.keyWindow;
+    
+    if ([backgroundWindow.subviews containsObject:_mpController.view])
+    {
+        [UIView animateWithDuration:duration animations:^{
+            _mpController.view.frame = CGRectMake(0.0, 0.0, backgroundWindow.frame.size.height,
+                                                  backgroundWindow.frame.size.width);
+        }];
+    }
+}
+
+/*
 - (void)playYouTubeVideo:(UIButton *)button
 {
     NSURL *url = [NSURL URLWithString:@"ftp://waypoint:pointway4*@thmgis.com/Bill/YouTubeURLs.txt"];
@@ -191,56 +257,6 @@
     if (state == kYTPlayerStateEnded)
         [playerView removeFromSuperview];
 }
-
-- (void)dismissHelp:(UIButton *)button
-{
-    BOOL inVideoMode = NO;
-    YTPlayerView *youTubePlayer = nil;
-    
-    for (YTPlayerView *ytpvs in self.subviews)
-    {
-        if ([ytpvs isKindOfClass:YTPlayerView.class])
-        {
-            youTubePlayer = ytpvs;
-            inVideoMode = YES;
-        }
-    }
-    
-    if (inVideoMode)
-    {
-        [youTubePlayer stopVideo];
-        [youTubePlayer removeFromSuperview];
-    }
-    
-    else
-    {
-        [UIView animateWithDuration:0.25
-                         animations:^{
-                             self.alpha = 0.0;
-                             _tabBar.alpha = 1.0;
-                         } completion:^(BOOL finished) {
-                             [self removeFromSuperview];
-                         }];
-    }
-}
-
-- (void)willRotateWithDuration:(NSTimeInterval)duration
-        toInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-                  tabBarHeight:(CGFloat)tabBarHeight
-{
-    CGRect frame = self.frame;
-    
-    [UIView animateWithDuration:duration
-                     animations:^{
-                         self.frame = CGRectMake(frame.origin.y, frame.origin.x,
-                                                 frame.size.height, frame.size.width);
-                     }];
-    
-    [UIView animateWithDuration:duration
-                     animations:^{
-                         _webView.frame = CGRectMake(0.0, 60.0, frame.size.height,
-                                                     (frame.size.width - 60.0));
-                     }];
-}
+*/
 
 @end

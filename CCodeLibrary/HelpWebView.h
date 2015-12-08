@@ -2,9 +2,9 @@
 //  CCodeLibrary
 
 @import UIKit;
-#import "YTPlayerView.h"
+//#import "YTPlayerView.h"
 
-@interface HelpWebView : UIView <YTPlayerViewDelegate>
+@interface HelpWebView : UIView //<YTPlayerViewDelegate>
 
 + (HelpWebView *)showHelpWebView:(UIView *)view
                      presenterID:(NSString *)presenterID
