@@ -41,7 +41,6 @@ static FTPDataPull * _statpull = nil;
 
 {
     int rtn = FTPStatusOK;
-    
     _toDirectory = toDirectory;
     _refreshOption = refreshOption;
     
