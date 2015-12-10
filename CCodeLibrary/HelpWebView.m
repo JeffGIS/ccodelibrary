@@ -106,7 +106,7 @@
         [helpView.webView loadData:pdfData
                           MIMEType:@"application/pdf"
                   textEncodingName:@"UTF-8"
-                           baseURL:url];
+                           baseURL:nil];
     }
     
     [UIView animateWithDuration:0.25
