@@ -8,6 +8,15 @@
 #import <sqlite3.h>
 #import "CurbRampData.h"
 
+typedef NS_ENUM(NSInteger, IntersectionStatusOption)
+{
+    IntersectionStatusOptionDefault,
+    IntersectionStatusOptionOriginal,
+    IntersectionStatusOptionScheduled,
+    IntersectionStatusOptionBuilt,
+    IntersectionStatusOptionInventoried,
+};
+
 @class IntersectionsDatabase;
 
 @protocol IntersectionsDatabaseDelegate <NSObject>
