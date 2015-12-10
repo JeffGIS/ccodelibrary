@@ -40,7 +40,7 @@ static CurbRampData *_statdatabase = nil;
         _fileName = @"CurbRamps.sqlite";
         _path = [self databasePath:geoid];
         if (create)
-            [self createIntersectionsTable:NO];
+            [self createIntersectionsTable:YES];
     }
     
     return self;
@@ -75,7 +75,6 @@ static CurbRampData *_statdatabase = nil;
     BOOL rtn = FALSE;
     if (!_isOpen)
     {
-        self.isOpen = YES;
         self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"CurbRamp Database open");
         
