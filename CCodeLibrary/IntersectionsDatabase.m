@@ -1067,7 +1067,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     return count;
 }
 
-- (BOOL)setIntersectionStatusTo:(int)status
+- (BOOL)setIntersectionStatusTo:(IntersectionStatus)status
                 forIntersection:(int)intID
 {
     BOOL rtn = NO;
@@ -1076,7 +1076,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     [self open];
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i WHERE intID=%i",
-                       iTime, status, intID];
+                       iTime, (int)status, intID];
     
     rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;
