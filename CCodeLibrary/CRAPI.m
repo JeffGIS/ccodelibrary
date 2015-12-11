@@ -881,7 +881,24 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     _mapToolbarProgress = mapToolbarProgress;
     
     [CRAPI.sharedInstance.mapToolbar.progressView setProgress:_mapToolbarProgress
-                                                     animated:YES];
+                                                     animated:NO];
 }
 
+-(void) updateProgress:(int)tot
+               current:(int)current
+{
+    static int currentProgress = 0;
+    int progress = 0;
+    if (tot)
+        progress = (current * 100) / tot;
+    
+    if (progress != currentProgress)
+    {
+        currentProgress = progress;
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           CRAPI.sharedInstance.mapToolbarProgress = (float)currentProgress/100.0;
+                       });
+    }
+}
 @end

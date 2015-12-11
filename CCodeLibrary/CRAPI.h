@@ -135,5 +135,7 @@
 - (void)loadiPadParametersForGeoid:(int)geoid;
 - (void)setiPadParametersFromGeoid:(int)geoid;
 
+-(void) updateProgress:(int)tot
+               current:(int)current;
 
 @end
