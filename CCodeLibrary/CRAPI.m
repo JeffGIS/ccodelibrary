@@ -876,4 +876,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
 }
 
+- (void)setMapToolbarProgress:(CGFloat)mapToolbarProgress
+{
+    _mapToolbarProgress = mapToolbarProgress;
+    
+    [CRAPI.sharedInstance.mapToolbar.progressView setProgress:_mapToolbarProgress
+                                                     animated:YES];
+}
+
 @end

@@ -12,7 +12,7 @@
     UIGraphicsBeginPDFPageWithInfo([views[0] bounds], NULL);
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    for(UIView *view in views)
+    for (UIView *view in views)
         [view.layer renderInContext:context];
     
     UIGraphicsEndPDFContext();

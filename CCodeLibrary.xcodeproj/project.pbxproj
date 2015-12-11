@@ -26,6 +26,8 @@
 		69450DAE1BD5FA2B0079F7EC /* NVContactPicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69450DAB1BD5F6120079F7EC /* NVContactPicker.h */; };
 		6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6948D5D41BC780EE009CA04F /* NVStaticMapView.m */; };
 		6948D5D61BC7845F009CA04F /* NVStaticMapView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6948D5D31BC780EE009CA04F /* NVStaticMapView.h */; };
+		694F00791C1B4BBA0074AF72 /* MapToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 694F00781C1B4BBA0074AF72 /* MapToolbar.m */; };
+		694F007A1C1B4C4B0074AF72 /* MapToolbar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 694F00771C1B4BBA0074AF72 /* MapToolbar.h */; };
 		6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */; };
 		6960F4D71BBCD25100A5681C /* NVSpreadsheetView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6960F4D41BBCC80800A5681C /* NVSpreadsheetView.h */; };
 		697B37711B94B7D60066978B /* NVTextDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 697B37701B94B7D60066978B /* NVTextDrawing.m */; };
@@ -276,6 +278,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				694F007A1C1B4C4B0074AF72 /* MapToolbar.h in CopyFiles */,
 				690E829F1C11055F00AB410E /* YTPlayerView.h in CopyFiles */,
 				693C9BA11BEC529600564F93 /* UIImage+ImageFromColor.h in CopyFiles */,
 				EBFC2A311BE90AE900E0C1B3 /* DisplayCharacteristics.h in CopyFiles */,
@@ -406,6 +409,8 @@
 		69450DAC1BD5F6120079F7EC /* NVContactPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVContactPicker.m; sourceTree = "<group>"; };
 		6948D5D31BC780EE009CA04F /* NVStaticMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVStaticMapView.h; sourceTree = "<group>"; };
 		6948D5D41BC780EE009CA04F /* NVStaticMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVStaticMapView.m; sourceTree = "<group>"; };
+		694F00771C1B4BBA0074AF72 /* MapToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapToolbar.h; sourceTree = "<group>"; };
+		694F00781C1B4BBA0074AF72 /* MapToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapToolbar.m; sourceTree = "<group>"; };
 		6960F4D41BBCC80800A5681C /* NVSpreadsheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSpreadsheetView.h; sourceTree = "<group>"; };
 		6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSpreadsheetView.m; sourceTree = "<group>"; };
 		697B376F1B94B7D60066978B /* NVTextDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextDrawing.h; sourceTree = "<group>"; };
@@ -805,6 +810,8 @@
 				A97C621E1AE0C59200DA7738 /* HelpWebView.m */,
 				A96B07BD19FBF276005A73B0 /* LegendView.h */,
 				A96B07BE19FBF276005A73B0 /* LegendView.m */,
+				694F00771C1B4BBA0074AF72 /* MapToolbar.h */,
+				694F00781C1B4BBA0074AF72 /* MapToolbar.m */,
 				A9BF33381B76FCED00A72E17 /* NVAlertView.h */,
 				A9BF33391B76FCED00A72E17 /* NVAlertView.m */,
 				A98A57A61B20ADE600906FBC /* NVCalibrationController.h */,
@@ -1167,6 +1174,7 @@
 				EBC01D131BED1C8C0004C751 /* domoon.c in Sources */,
 				EBC01D221BED1C8C0004C751 /* nep404.c in Sources */,
 				A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */,
+				694F00791C1B4BBA0074AF72 /* MapToolbar.m in Sources */,
 				A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */,
 				A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */,
 				A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */,

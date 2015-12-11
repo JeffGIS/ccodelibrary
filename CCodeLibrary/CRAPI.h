@@ -8,6 +8,7 @@
 #import "UserDefaults.h"
 #import "Colors.h"
 #import "NVAlertView.h"
+#import "MapToolbar.h"
 
 #define MANAGEMENT_MODULE   1
 #define PRELIM_MODULE       2
@@ -73,6 +74,8 @@
 @property (nonatomic, copy) NSString *extractFile;
 @property BOOL resetPropList, resetDestinations, clearSpreadsheet;
 @property NSInteger fromDate, toDate;
+@property (strong, nonatomic) MapToolbar *mapToolbar;
+@property (nonatomic) CGFloat mapToolbarProgress;
 
 + (CRAPI *)sharedInstance;
 
