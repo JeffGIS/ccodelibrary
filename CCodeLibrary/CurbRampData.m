@@ -248,6 +248,7 @@ static CurbRampData *_statdatabase = nil;
              intID INT,\
              rampNum INT,\
              rampID CHAR(16),\
+             yearRebuilt INT,\
              timeComplete INT,\
              rampExists INT,\
              isComplete INT,\
