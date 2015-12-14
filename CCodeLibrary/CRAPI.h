@@ -65,7 +65,7 @@
 @property (nonatomic, copy) NSString *currentOverallBoundaryName;
 @property (nonatomic, copy) NSString *currentOverallBoundaryType;
 @property int currentOverallBoundaryRefno;
-@property BOOL setToAlleyWalls;
+@property BOOL setToAlleyWalls, isFromGMMobile;
 @property (nonatomic, copy) NSString *sourceApp;
 @property (nonatomic) UIView *currentView;
 
