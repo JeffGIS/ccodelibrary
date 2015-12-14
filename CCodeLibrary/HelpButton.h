@@ -11,6 +11,7 @@ typedef NS_ENUM(NSInteger, HelpButtonPresenter)
     HelpButtonPresenterFindVC,
     HelpButtonPresenterApplicationsVC,
     HelpButtonPresenterSettingsVC,
+    HelpButtonPresenterCRISInventoryVC,
 };
 
 

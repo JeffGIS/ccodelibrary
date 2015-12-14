@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
-#import "MathUtil.h"
 
 @interface CrimeData : NSObject
 @property sqlite3 *database;
@@ -17,12 +16,7 @@
 @property (nonatomic, copy) NSString *documentsDirectory;
 @property (nonatomic, copy) NSString *fileName;
 @property (nonatomic, copy) NSString *path;
-@property LPTRANDATA pTranLLtoView;
-@property LPTRANDATA pTranViewtoLL;
 @property long long fileSize;
-@property int processingID;
-@property int zoom;
-@property int minUCR, maxUCR;
 
 - (void)open;
 - (void)close;
@@ -32,11 +26,5 @@
 
 - (void)startTransaction;
 - (void)commitTransaction;
-
--(void)displayCrimePoints:(CGContextRef)context
-                llCorners:(CORNERPOINTS *) latlonCornerPoints
-                 LLBounds:(MNMXCORD *)platlonBounds
-               viewBounds:(MNMXCORD *)pvbounds;
-
 
 @end

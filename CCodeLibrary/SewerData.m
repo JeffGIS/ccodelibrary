@@ -7,6 +7,7 @@ extern int keepProcessing;
 #import "CRAPI.h"
 #import "MathUtil.h"
 #import "PickedItem.h"
+#import "NVTextDrawing.h"
 
 static BOOL _createDirectory = YES;
 
@@ -1188,18 +1189,17 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
     
     if (flip)
     {
-        invertOut = [UserDefaults.defaults includeTextBeforeTab:text];
-        invertIn = [UserDefaults.defaults includeTextAfterLastTab:text];
+        invertOut = textBeforeTab(text);
+        invertIn = textAfterLastTab(text);
     }
     
     else
     {
-        invertIn = [UserDefaults.defaults includeTextBeforeTab:text];
-        invertOut = [UserDefaults.defaults includeTextAfterLastTab:text];
+        invertIn = textBeforeTab(text);
+        invertOut = textAfterLastTab(text);
     }
     
-    NSString *pipe = [UserDefaults.defaults includeTextBeforeTab:
-                      [UserDefaults.defaults includeTextAfterTab:text]];
+    NSString *pipe = textBeforeTab(textAfterTab(text));
     
     CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"GillSans-Bold", fontSize, NULL);
     
@@ -1251,7 +1251,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
         attString = [[NSAttributedString alloc] initWithString:pipe
                                                     attributes:shadowAttributes];
         
-        [self drawTextShadowForRect:rect1
+        [NVTextDrawing drawTextShadowForRect:rect1
                           attString:attString
                             context:context];
         
@@ -1290,7 +1290,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
         attString = [[NSAttributedString alloc] initWithString:invertOut
                                                     attributes:shadowAttributes];
         
-        [self drawTextShadowForRect:rect2
+        [NVTextDrawing drawTextShadowForRect:rect2
                           attString:attString
                             context:context];
         
@@ -1329,7 +1329,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
         attString = [[NSAttributedString alloc] initWithString:invertIn
                                                     attributes:shadowAttributes];
         
-        [self drawTextShadowForRect:rect3
+        [NVTextDrawing drawTextShadowForRect:rect3
                           attString:attString
                             context:context];
         
@@ -1348,65 +1348,6 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
     }
     
     CGContextRestoreGState(context);
-}
-
-- (void)drawTextShadowForRect:(CGRect)rect
-                    attString:(NSAttributedString *)attString
-                      context:(CGContextRef)context
-{
-    CGFloat shadowOffset = 2.0;
-    
-    CGRect shadowRect = CGRectMake((rect.origin.x + shadowOffset), (rect.origin.y + shadowOffset),
-                                   rect.size.width, rect.size.height);
-    
-    CGPathRef shadowPath = CGPathCreateWithRect(shadowRect, NULL);
-    
-    CTFramesetterRef shadowFramesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
-    CTFrameRef shadowFrame = CTFramesetterCreateFrame(shadowFramesetter, CFRangeMake(0, 0), shadowPath, NULL);
-    CTFrameDraw(shadowFrame, context);
-    
-    CFRelease(shadowFrame);
-    CFRelease(shadowPath);
-    CFRelease(shadowFramesetter);
-    
-    CGRect shadowRect2 = CGRectMake((rect.origin.x - shadowOffset), (rect.origin.y - shadowOffset),
-                                   rect.size.width, rect.size.height);
-    
-    CGPathRef shadowPath2 = CGPathCreateWithRect(shadowRect2, NULL);
-    
-    CTFramesetterRef shadowFramesetter2 = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
-    CTFrameRef shadowFrame2 = CTFramesetterCreateFrame(shadowFramesetter2, CFRangeMake(0, 0), shadowPath2, NULL);
-    CTFrameDraw(shadowFrame2, context);
-    
-    CFRelease(shadowFrame2);
-    CFRelease(shadowPath2);
-    CFRelease(shadowFramesetter2);
-    
-    CGRect shadowRect3 = CGRectMake((rect.origin.x + shadowOffset), (rect.origin.y - shadowOffset),
-                                   rect.size.width, rect.size.height);
-    
-    CGPathRef shadowPath3 = CGPathCreateWithRect(shadowRect3, NULL);
-    
-    CTFramesetterRef shadowFramesetter3 = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
-    CTFrameRef shadowFrame3 = CTFramesetterCreateFrame(shadowFramesetter3, CFRangeMake(0, 0), shadowPath3, NULL);
-    CTFrameDraw(shadowFrame3, context);
-    
-    CFRelease(shadowFrame3);
-    CFRelease(shadowPath3);
-    CFRelease(shadowFramesetter3);
-    
-    CGRect shadowRect4 = CGRectMake((rect.origin.x - shadowOffset), (rect.origin.y + shadowOffset),
-                                    rect.size.width, rect.size.height);
-    
-    CGPathRef shadowPath4 = CGPathCreateWithRect(shadowRect4, NULL);
-    
-    CTFramesetterRef shadowFramesetter4 = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
-    CTFrameRef shadowFrame4 = CTFramesetterCreateFrame(shadowFramesetter4, CFRangeMake(0, 0), shadowPath4, NULL);
-    CTFrameDraw(shadowFrame4, context);
-    
-    CFRelease(shadowFrame4);
-    CFRelease(shadowPath4);
-    CFRelease(shadowFramesetter4);
 }
 
 - (void)displayStormPoint:(CGContextRef)context

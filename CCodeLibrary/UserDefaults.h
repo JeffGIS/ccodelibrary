@@ -45,40 +45,10 @@
 - (UIImage *)metalSliderRight;
 - (UIImage *)metalSliderLeft;
 - (NSString *)googleKey;
-- (NSString *)removeEndingReturn:(NSString *)string;
-- (NSString *)removeTextInsideParentheses:(NSString *)string;
-- (NSString *)removeTextInsideParenthesesWithoutSpaces:(NSString *)string;
-- (NSString *)removeColonInsideParentheses:(NSString *)string;
-- (NSString *)includeTextBeforeParentheses:(NSString *)string;
-- (NSString *)includeTextAfterClosingParentheses:(NSString *)string;
-- (NSString *)includeTextInsideParentheses:(NSString *)string;
-- (NSString *)includeTextAfterHyphen:(NSString *)string;
-- (NSString *)includeTextBeforeHyphen:(NSString *)string;
-- (NSString *)includeTextBeforeTab:(NSString *)string;
-- (NSString *)includeTextAfterTab:(NSString *)string;
-- (NSString *)includeTextAfterLastTab:(NSString *)string;
-- (NSString *)includeTextBeforeLastTab:(NSString *)string;
-- (NSString *)includeTextBeforeSecondTabFromEnd:(NSString *)string;
-- (NSString *)includeTextAfterSecondTabFromEnd:(NSString *)string;
-- (NSString *)includeTextBeforePipe:(NSString *)string;
-- (NSString *)includeTextAfterPipe:(NSString *)string;
-- (NSString *)includeTextAfterFirstColon:(NSString *)string;
-- (NSString *)includeTextBeforeColon:(NSString *)string;
-- (NSString *)includeTextBeforeComma:(NSString *)string;
-- (NSString *)includeTextBeforeSlash:(NSString *)string;
-- (NSString *)includeTextAfterSlash:(NSString *)string;
-- (NSString *)includeTextBeforeLastSlash:(NSString *)string;
-- (NSString *)addSpaceAfterComma:(NSString *)string;
-- (NSString *)addSpaceAfterColon:(NSString *)string;
-- (NSString *)removeOpeningSpaces:(NSString *)string;
-- (NSString *)removeOpeningReturn:(NSString *)string;
-- (NSString *)removePIDPrefix:(NSString *)string;
-- (NSMutableAttributedString *)addLineBreakToLastSpace:(NSString *)string;
 - (UIImage *)invertImage:(UIImage *)image;
 - (void)disableWebKitDiskImageCache;
 - (NSString *)sharedFilePath;
 - (NSString *)localFilePath;
-- (NSMutableArray *)sortByContentsOfParentheses:(NSMutableArray *)array;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
@@ -136,7 +106,8 @@
 - (UIImage *)imageWithColor:(UIColor *)color
                    andFrame:(CGRect)frame;
 
-- (NSString *)reverseString:(NSString *)string;
 - (NSArray *)mapTypes;
+
+UIImage *grayscaleImage(UIImage *image);
 
 @end

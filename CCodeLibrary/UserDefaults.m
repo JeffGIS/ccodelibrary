@@ -316,44 +316,6 @@ static UserDefaults *_defaults;
     return documentsDirectory;
 }
 
-- (NSMutableArray *)sortByContentsOfParentheses:(NSMutableArray *)array
-{
-    NSMutableArray *newArray = [[NSMutableArray alloc] init];
-    int index = 0;
-    
-    for (int i = 0; i < array.count; i++)
-    {
-        if (newArray.count == 0)
-            [newArray addObject:array[0]];
-        
-        else
-        {
-            NSComparisonResult result = [[self includeTextInsideParentheses:[array objectAtIndex:i]]
-                                         compare:[self includeTextInsideParentheses:[newArray objectAtIndex:index]]
-                                         options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
-            
-            while (result == NSOrderedDescending)
-            {
-                index++;
-                
-                if (index == newArray.count)
-                    break;
-                
-                result = [[self includeTextInsideParentheses:[array objectAtIndex:i]]
-                          compare:[self includeTextInsideParentheses:[newArray objectAtIndex:index]]
-                          options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
-            }
-            
-            [newArray insertObject:[array objectAtIndex:i]
-                           atIndex:index];
-            
-            index = 0;
-        }
-    }
-  
-    return newArray;
-}
-
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue
@@ -731,372 +693,6 @@ static UserDefaults *_defaults;
     return RGB;
 }
 
-- (NSString *)removeEndingReturn:(NSString *)string
-{
-    NSString *end = [NSString stringWithFormat:@"%@", [string substringFromIndex:(string.length - 1)]];
-    
-    if ([end isEqualToString:@"\r"])
-        string = [NSString stringWithFormat:@"%@", [string substringToIndex:(string.length - 1)]];
-    
-    return string;
-}
-
-- (NSString *)includeTextAfterHyphen:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"-"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringFromIndex:(range.location + 1)];
-    
-    return string;
-}
-
-- (NSString *)includeTextBeforeHyphen:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"-"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringToIndex:(range.location)];
-    
-    return string;
-}
-
-- (NSString *)includeTextBeforeTab:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"\t"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringToIndex:(range.location)];
-    
-    return string;
-}
-
-- (NSString *)includeTextAfterTab:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"\t"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringFromIndex:(range.location + 1)];
-    
-    return string;
-}
-
-- (NSString *)includeTextAfterLastTab:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"\t"
-                                  options:NSBackwardsSearch];
-    
-    if (range.location != NSNotFound)
-        string = [string substringFromIndex:(range.location + 1)];
-    
-    return string;
-}
-
-- (NSString *)includeTextBeforeLastTab:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"\t"
-                                  options:NSBackwardsSearch];
-    
-    if (range.location != NSNotFound)
-        string = [string substringToIndex:range.location];
-    
-    return string;
-}
-
-- (NSString *)includeTextBeforeSecondTabFromEnd:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"\t"
-                                  options:NSBackwardsSearch];
-    
-    if (range.location != NSNotFound)
-    {
-        string = [string substringToIndex:range.location];
-        
-        range = [string rangeOfString:@"\t"
-                              options:NSBackwardsSearch];
-        
-        if (range.location != NSNotFound)
-            string = [string substringToIndex:range.location];
-    }
-    
-    return string;
-}
-
-- (NSString *)includeTextAfterSecondTabFromEnd:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"\t"
-                                  options:NSBackwardsSearch];
-    
-    if (range.location != NSNotFound)
-    {
-        string = [string substringToIndex:range.location];
-        
-        range = [string rangeOfString:@"\t"
-                              options:NSBackwardsSearch];
-        
-        if (range.location != NSNotFound)
-            string = [string substringFromIndex:(range.location + 1)];
-    }
-    
-    return string;
-}
-
-- (NSString *)includeTextBeforePipe:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"|"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringToIndex:(range.location)];
-    
-    return string;
-}
-
-- (NSString *)includeTextAfterPipe:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"|"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringFromIndex:(range.location + 1)];
-    
-    return string;
-}
-
-- (NSString *)removeTextInsideParentheses:(NSString *)string
-{
-    NSMutableString *mutableString = [NSMutableString stringWithString:string];
-    NSRange start = [mutableString rangeOfString:@"("];
-    NSRange end = [mutableString rangeOfString:@")"];
-    
-    if ((start.location != NSNotFound) && (end.location != NSNotFound))
-    {
-        [mutableString deleteCharactersInRange:(NSRange){(start.location - 1),
-            (end.location - start.location + 2)}];
-    }
-    
-    return mutableString;
-}
-
-- (NSString *)removeTextInsideParenthesesWithoutSpaces:(NSString *)string
-{
-    NSMutableString *mutableString = [NSMutableString stringWithString:string];
-    NSRange start = [mutableString rangeOfString:@"("];
-    NSRange end = [mutableString rangeOfString:@")"];
-    
-    if ((start.location != NSNotFound) && (end.location != NSNotFound))
-        [mutableString deleteCharactersInRange:(NSRange){start.location, (end.location - start.location + 1)}];
-    
-    return mutableString;
-}
-
-- (NSString *)removeColonInsideParentheses:(NSString *)string
-{
-    BOOL deleteMode = NO;
-    
-    for (int i = 0; i < string.length; i++)
-    {
-        if ([string characterAtIndex:i] == '(')
-            deleteMode = YES;
-        
-        if ([string characterAtIndex:i] == ')')
-            deleteMode = NO;
-        
-        if ([string characterAtIndex:i] == ':' && deleteMode)
-        {
-            string = [string stringByReplacingCharactersInRange:NSMakeRange(i,1) withString:@""];
-            i--;
-        }
-    }
-    
-    return string;
-}
-
-- (NSString *)includeTextBeforeParentheses:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"("];
-    
-    if (range.location != NSNotFound)
-        string = [string substringToIndex:(range.location)];
-    
-    return string;
-}
-
-- (NSString *)includeTextAfterClosingParentheses:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@")" options:NSBackwardsSearch];
-    
-    if (range.location != NSNotFound)
-        string = [string substringFromIndex:(range.location+1)];
-    
-    return string;
-}
-
-- (NSString *)includeTextInsideParentheses:(NSString *)string
-{
-    NSRange start = [string rangeOfString:@"("];
-    NSRange end = [string rangeOfString:@")"];
-    
-    if ((start.location != NSNotFound) && (end.location != NSNotFound))
-    {
-        string = [string substringToIndex:end.location];
-        string = [string substringFromIndex:(start.location + 1)];
-    }
-    
-    return string;
-}
-
-- (NSString *)includeTextAfterFirstColon:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@":"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringFromIndex:(range.location + 1)];
-    
-    return string;
-}
-
-- (NSString *)includeTextBeforeColon:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@":"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringToIndex:(range.location)];
-    
-    return string;
-}
-
-- (NSString *)includeTextBeforeComma:(NSString *)string;
-{
-    NSRange range = [string rangeOfString:@","];
-    
-    if (range.location != NSNotFound)
-        string = [string substringToIndex:(range.location)];
-    
-    return string;
-}
-
-- (NSString *)includeTextBeforeSlash:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"/"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringToIndex:(range.location)];
-    
-    return string;
-}
-
-- (NSString *)includeTextAfterSlash:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"/"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringFromIndex:(range.location + 1)];
-    
-    return string;
-}
-
-- (NSString *)includeTextBeforeLastSlash:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"/"
-                                  options:NSBackwardsSearch];
-    
-    if (range.location != NSNotFound)
-        string = [string substringToIndex:range.location];
-    
-    return string;
-}
-
-- (NSString *)addSpaceAfterComma:(NSString *)string
-{
-    NSMutableString *mutableString = [NSMutableString stringWithString:string];
-    NSRange range = [mutableString rangeOfString:@","];
-    
-    if (range.location != NSNotFound)
-    {
-        [mutableString insertString:@" "
-                            atIndex:(range.location + 1)];
-    }
-    
-    return mutableString;
-}
-
-- (NSString *)addSpaceAfterColon:(NSString *)string
-{
-    NSMutableString *mutableString = [NSMutableString stringWithString:string];
-    NSRange range = [mutableString rangeOfString:@":"];
-    
-    if (range.location != NSNotFound)
-    {
-        [mutableString insertString:@" "
-                            atIndex:(range.location + 1)];
-    }
-    
-    return mutableString;
-}
-
-- (NSString *)removeOpeningSpaces:(NSString *)string
-{
-    LPSTR pstring = (LPSTR)string.UTF8String;
-    
-    while (*pstring && *pstring == ' ')
-        pstring++;
-    
-    string = [NSString stringWithUTF8String:pstring];
-   
-    return string;
-}
-
-- (NSString *)removeOpeningReturn:(NSString *)string
-{
-    LPSTR pstring = (LPSTR)string.UTF8String;
-    
-    while (*pstring && (*pstring == '\n' || *pstring == '\r'))
-        pstring++;
-    
-    string = [NSString stringWithUTF8String:pstring];
-    
-    return string;
-}
-
-- (NSString *)removePIDPrefix:(NSString *)string
-{
-    NSRange range = [string rangeOfString:@"-"];
-    
-    if (range.location != NSNotFound)
-        string = [string substringFromIndex:(range.location + 1)];
-    
-    return string;
-}
-
-- (NSMutableAttributedString *)addLineBreakToLastSpace:(NSString *)string
-{
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
-    
-    [attributedString addAttribute:NSForegroundColorAttributeName
-                             value:UIColor.whiteColor
-                             range:NSMakeRange(0, attributedString.length)];
-    
-    NSMutableAttributedString *append = [[NSMutableAttributedString alloc] initWithString:@"   .\n"];
-    
-    
-    [append addAttribute:NSForegroundColorAttributeName
-                   value:UIColor.clearColor
-                   range:NSMakeRange(0, append.length)];
-    
-    NSRange range = [string rangeOfString:@" "
-                                  options:NSBackwardsSearch];
-    
-    if (range.location != NSNotFound)
-    {
-        [attributedString replaceCharactersInRange:NSMakeRange(range.location, 1)
-                              withAttributedString:append];
-    }
-    
-    [append deleteCharactersInRange:NSMakeRange((append.length - 1), 1)];
-    
-    [attributedString appendAttributedString:append];
-    return attributedString;
-}
-
 - (void)shakeButton:(UIButton *)button
 {
     CATransform3D transform = CATransform3DMakeRotation(0.08, 0.0, 0.0, 1.0);
@@ -1126,19 +722,15 @@ static UserDefaults *_defaults;
         success = [fileManager removeItemAtPath:filePath
                                           error:&error];
         
-#ifdef DEBUG
         if (success)
             NSLog(@"Deleted %@ from device", fileName);
         
         else
             NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
-#endif
     }
     
-#ifdef DEBUG
     else
         NSLog(@"%@ was not pulled. No need to delete", fileName);
-#endif
     
     //delete Intersections.gcf file
     fileName = [NSString stringWithFormat:@"%7.7i_Intersections.gcf", geoid];
@@ -1149,19 +741,15 @@ static UserDefaults *_defaults;
         success = [fileManager removeItemAtPath:filePath
                                           error:&error];
         
-#ifdef DEBUG
         if (success)
             NSLog(@"Deleted %@ from device", fileName);
         
         else
             NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
-#endif
     }
     
-#ifdef DEBUG
     else
         NSLog(@"%@ was never pulled", fileName);
-#endif
     
     //delete IntersectionImages directory
     fileName = [NSString stringWithFormat:@"%i/IntersectionImages", geoid];
@@ -1175,20 +763,16 @@ static UserDefaults *_defaults;
             success = [fileManager removeItemAtPath:filePath
                                               error:&error];
 
-#ifdef DEBUG
             if (success)
                 NSLog(@"Deleted %@ from device", fileName);
             
             else
                 NSLog(@"Could not delete %@:%@ ", fileName, error.localizedDescription);
-#endif
         }
     }
     
-#ifdef DEBUG
     else
         NSLog(@"%@ was never created", fileName);
-#endif
 }
 
 - (UIImage *)imageWithColor:(UIColor *)color
@@ -1208,28 +792,27 @@ static UserDefaults *_defaults;
     }
 }
 
-- (NSString *)reverseString:(NSString *)string;
-{
-    if (!string)
-        return nil;
-    
-    if ([string isEqualToString:@""])
-        return @"";
-    
-    NSMutableString *reversedString = [[NSMutableString alloc] init];
-    
-    [string enumerateSubstringsInRange:NSMakeRange(0, string.length)
-                               options:NSStringEnumerationReverse|NSStringEnumerationByComposedCharacterSequences
-                            usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
-        [reversedString appendString:substring];
-    }];
-    
-    return reversedString;
-}
-
 - (NSArray *)mapTypes
 {
     return @[@"Completion Status", @"Ramp Issues", @"Data Quality"];
+}
+
+UIImage *grayscaleImage(UIImage *image)
+{
+    CGRect imageRect = CGRectMake(0, 0, image.size.width, image.size.height);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    
+    CGContextRef context = CGBitmapContextCreate(nil, image.size.width, image.size.height,
+                                                 8, 0, colorSpace, (CGBitmapInfo)kCGImageAlphaNone);
+    
+    CGContextDrawImage(context, imageRect, image.CGImage);
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    UIImage *grayscaleImage = [UIImage imageWithCGImage:imageRef];
+    CGColorSpaceRelease(colorSpace);
+    CGContextRelease(context);
+    CFRelease(imageRef);
+    
+    return grayscaleImage;
 }
 
 @end

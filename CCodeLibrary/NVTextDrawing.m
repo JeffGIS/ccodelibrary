@@ -29,9 +29,9 @@
      minFontSize:(CGFloat)minFontSize
        textColor:(UIColor *)textColor
 {
-    NSInteger nLines;
-    CGFloat textArea;
-    CGFloat aveCharWidth,aveCharHeight;
+    NSInteger nLines = 0;
+    CGFloat textArea = 0.0;
+    CGFloat aveCharWidth = 0.0, aveCharHeight = 0.0;
 
     PointInArea *pia = [[PointInArea alloc] init];
     pia.maxDimension = 256;
@@ -54,7 +54,7 @@
       polyPartLen:polyPartLen
            points:pPoints];
     
-    int numTextLines = [NVTextDrawing numLinesInText:text.UTF8String];
+    //int numTextLines = [NVTextDrawing numLinesInText:text.UTF8String];
     
     CTFontRef textPointFontRef = CTFontCreateWithName((CFStringRef)NULL,
                                                       fontSize, NULL);
@@ -94,7 +94,7 @@
     }
     
     CGFloat rotation = 0.0;
-    
+/*
     if ([NVTextDrawing getRotation:&rotation
              ofLongestStraightLine:(int)numPoints
                             points:pPoints
@@ -103,12 +103,7 @@
     {
         
     }
-    
-    if (polyPartLen)
-        free (polyPartLen);
-    
-    free(pPoints);
-    
+*/    
     
     //LPDPOINT testPoints = (LPDPOINT)malloc(nTextPoints * sizeof(DPOINT) + 4);
     DPOINT testPoints[256];
@@ -289,16 +284,25 @@
     
     CFRelease(fontRef);
     
-    /*if (ConfigurationControl.sharedInstance.GMTilesVisible == YES)
+/*   if (ConfigurationControl.sharedInstance.GMTilesVisible == YES)
     {
+        CGRect shadowRect = rect;
+        shadowRect.origin.x += 1;
+        shadowRect.origin.y += 1;
+        CGPathRef path = CGPathCreateWithRect(shadowRect, NULL);
         attString = [[NSAttributedString alloc] initWithString:text
                                                     attributes:shadowAttributes];
         
-        [self drawTextShadowForRect:rect
-                          attString:attString
-                            context:context];
+        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
+        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, attString.length), path, NULL);
+        CTFrameDraw(frame, context);
     }*/
     
+    attString = [[NSAttributedString alloc] initWithString:text
+                                                attributes:shadowAttributes];
+    [self drawTextShadowForRect:rect
+         attString:attString
+         context:context];
     CGPathRef path = CGPathCreateWithRect(rect, NULL);
     
     attString = [[NSAttributedString alloc] initWithString:text
@@ -459,5 +463,64 @@ ofLongestStraightLine:(int)nPoints
     
     return rtn;
 }
++ (void)drawTextShadowForRect:(CGRect)rect
+                    attString:(NSAttributedString *)attString
+                      context:(CGContextRef)context
+{
+    CGFloat shadowOffset = 2.0;
+    
+    CGRect shadowRect = CGRectMake((rect.origin.x + shadowOffset), (rect.origin.y + shadowOffset),
+                                   rect.size.width, rect.size.height);
+    
+    CGPathRef shadowPath = CGPathCreateWithRect(shadowRect, NULL);
+    
+    CTFramesetterRef shadowFramesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
+    CTFrameRef shadowFrame = CTFramesetterCreateFrame(shadowFramesetter, CFRangeMake(0, 0), shadowPath, NULL);
+    CTFrameDraw(shadowFrame, context);
+    
+    CFRelease(shadowFrame);
+    CFRelease(shadowPath);
+    CFRelease(shadowFramesetter);
+    
+    CGRect shadowRect2 = CGRectMake((rect.origin.x - shadowOffset), (rect.origin.y - shadowOffset),
+                                    rect.size.width, rect.size.height);
+    
+    CGPathRef shadowPath2 = CGPathCreateWithRect(shadowRect2, NULL);
+    
+    CTFramesetterRef shadowFramesetter2 = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
+    CTFrameRef shadowFrame2 = CTFramesetterCreateFrame(shadowFramesetter2, CFRangeMake(0, 0), shadowPath2, NULL);
+    CTFrameDraw(shadowFrame2, context);
+    
+    CFRelease(shadowFrame2);
+    CFRelease(shadowPath2);
+    CFRelease(shadowFramesetter2);
+    
+    CGRect shadowRect3 = CGRectMake((rect.origin.x + shadowOffset), (rect.origin.y - shadowOffset),
+                                    rect.size.width, rect.size.height);
+    
+    CGPathRef shadowPath3 = CGPathCreateWithRect(shadowRect3, NULL);
+    
+    CTFramesetterRef shadowFramesetter3 = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
+    CTFrameRef shadowFrame3 = CTFramesetterCreateFrame(shadowFramesetter3, CFRangeMake(0, 0), shadowPath3, NULL);
+    CTFrameDraw(shadowFrame3, context);
+    
+    CFRelease(shadowFrame3);
+    CFRelease(shadowPath3);
+    CFRelease(shadowFramesetter3);
+    
+    CGRect shadowRect4 = CGRectMake((rect.origin.x - shadowOffset), (rect.origin.y + shadowOffset),
+                                    rect.size.width, rect.size.height);
+    
+    CGPathRef shadowPath4 = CGPathCreateWithRect(shadowRect4, NULL);
+    
+    CTFramesetterRef shadowFramesetter4 = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
+    CTFrameRef shadowFrame4 = CTFramesetterCreateFrame(shadowFramesetter4, CFRangeMake(0, 0), shadowPath4, NULL);
+    CTFrameDraw(shadowFrame4, context);
+    
+    CFRelease(shadowFrame4);
+    CFRelease(shadowPath4);
+    CFRelease(shadowFramesetter4);
+}
+
 
 @end

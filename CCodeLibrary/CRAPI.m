@@ -5,7 +5,6 @@
 #import "GSSiDefs.h"
 #import "MathUtil.h"
 #import "TileGraphics.h"
-#import "StringFunctions.h"
 
 @implementation CRAPI
 {
@@ -453,9 +452,9 @@
     tilexLeft = tilex;
     
     //get pixel within tile coordinates
-    xintile = xintileLeft = (worldx % 256);
+    //xintile = xintileLeft = (worldx % 256);
     yintile = (worldy % 256);
-    xinc = (256 - xintile);
+    //xinc = (256 - xintile);
     yinc = (256 - yintile);
     y = worldy;
     
@@ -481,6 +480,7 @@
             
             CGImageRef subimage = CGImageCreateWithImageInRect(image.CGImage, CGRectMake(xintile, yintile, nxpixels, nypixels));
             image = [UIImage imageWithCGImage:subimage];
+            CGImageRelease(subimage);
             
             [image drawInRect:CGRectMake(xincomposite, yincomposite, nxpixels, nypixels)];
             
@@ -783,7 +783,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     else
     {
-        NSString* newLine = [NSString stringWithFormat:@"\r\n%@",str];
+        NSString *newLine = [NSString stringWithFormat:@"\r\n%@", str];
         NSFileHandle *myHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
         [myHandle seekToEndOfFile];
         [myHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
@@ -804,7 +804,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)processPlacesArray:(NSUInteger) row
 {
-   
     if (row >= CRAPI.sharedInstance.placesArray.count)
     {
         row = (CRAPI.sharedInstance.placesArray.count - 1);
@@ -815,18 +814,21 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     if (_placesArray.count == 1 || row >= _placesArray.count ||
         self.currentGeoid == 0)
+    {
         row = 0;
+    }
     
-    NSString *locationLabelText = [UserDefaults.defaults includeTextInsideParentheses:[_placesArray objectAtIndex:row]];
-    _currentCityNameAndState = [UserDefaults.defaults addSpaceAfterComma:locationLabelText];
-    NSString *geoid = [UserDefaults.defaults includeTextBeforeParentheses:[_placesArray objectAtIndex:row]];
-    NSString *manager = [UserDefaults.defaults includeTextAfterClosingParentheses:[_placesArray objectAtIndex:row]];
-    NSString *managerNumber = textBefore (manager,@"-");
-    NSString *withinManager = textAfter (manager,@"-");
-    NSString *numWithinManager = textBefore (withinManager,@"of");
-    NSString *totWithinManager = textAfter (withinManager,@"of");
+    NSString *locationLabelText = textInsideParentheses(_placesArray[row]);
+    _currentCityNameAndState = addSpaceAfterComma(locationLabelText);
+    NSString *geoid = textBeforeParentheses(_placesArray[row]);
+    NSString *manager = textAfterClosingParentheses(_placesArray[row]);
+    NSString *managerNumber = textBeforeHyphen(manager);
+    NSString *withinManager = textAfterHyphen(manager);
+    NSString *numWithinManager = textBefore(withinManager, @"of");
+    NSString *totWithinManager = textAfter(withinManager, @"of");
     
     self.currentGeoid = geoid.intValue;
+    
     [UserDefaults.defaults saveInteger:self.currentGeoid
                                 forKey:@"CurrentGeoid"];
     
@@ -869,9 +871,34 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         
         if (goid == geoid)
             [self processPlacesArray:row];
+        
         row++;
     }
 }
 
+- (void)setMapToolbarProgress:(CGFloat)mapToolbarProgress
+{
+    _mapToolbarProgress = mapToolbarProgress;
+    
+    [CRAPI.sharedInstance.mapToolbar.progressView setProgress:_mapToolbarProgress
+                                                     animated:NO];
+}
 
+-(void) updateProgress:(int)tot
+               current:(int)current
+{
+    static int currentProgress = 0;
+    int progress = 0;
+    if (tot)
+        progress = (current * 100) / tot;
+    
+    if (progress != currentProgress)
+    {
+        currentProgress = progress;
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           CRAPI.sharedInstance.mapToolbarProgress = (float)currentProgress/100.0;
+                       });
+    }
+}
 @end

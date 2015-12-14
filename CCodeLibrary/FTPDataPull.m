@@ -41,7 +41,6 @@ static FTPDataPull * _statpull = nil;
 
 {
     int rtn = FTPStatusOK;
-    
     _toDirectory = toDirectory;
     _refreshOption = refreshOption;
     
@@ -93,7 +92,10 @@ static FTPDataPull * _statpull = nil;
     }
     
     else if (_refreshOption == FTPDataPullRefreshOptionUseFileIfExists)
+    {
         rtn = FTPStatusFileExists;
+        [_popover hide];
+    }
     
     return rtn;
 }

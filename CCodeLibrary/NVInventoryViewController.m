@@ -11,6 +11,7 @@
 #import "NVSignalButton.h"
 #import "NVXWalkButton.h"
 #import "RampTypeView.h"
+#import "HelpButton.h"
 
 @interface NVInventoryViewController ()
 
@@ -34,6 +35,7 @@
 @property (nonatomic) UILabel *headingLabel, *intersectionLabel;
 @property (nonatomic) CGPoint newTarget;
 @property (nonatomic) CGFloat targetSize;
+@property (nonatomic) HelpButton *helpButton;
 
 @end
 
@@ -112,7 +114,7 @@
     if (_draggableTarget)
         [self setupImageTarget];
     
-    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(600.0, 20.0, 148.0, 70.0)];
+    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(544.0, 20.0, 146.0, 70.0)];
     _headingLabel.font = [UIFont boldSystemFontOfSize:60.0];
     [self setupLabel:_headingLabel];
     
@@ -124,6 +126,12 @@
     _intersectionLabel.font = [UIFont boldSystemFontOfSize:32.0];
     _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
     [self setupLabel:_intersectionLabel];
+    
+    _helpButton = [HelpButton showHelpButtonWithOrigin:CGPointMake(690.0, 20.0)
+                                                  size:70.0
+                                                  view:self.view
+                                                   tag:HelpButtonPresenterCRISInventoryVC
+                                                tabBar:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated

@@ -8,6 +8,16 @@
 #import <sqlite3.h>
 #import "CurbRampData.h"
 
+typedef NS_ENUM(NSInteger, IntersectionStatus)
+{
+    IntersectionStatusDefault,
+    IntersectionStatusNeverSurveyed,
+    IntersectionStatusOriginalSurvey,
+    IntersectionStatusScheduledForRebuild,
+    IntersectionStatusBuilt,
+    IntersectionStatusResurveyed,
+};
+
 @class IntersectionsDatabase;
 
 @protocol IntersectionsDatabaseDelegate <NSObject>
@@ -56,7 +66,7 @@
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
                                                 withStatus:(int)status;
 
-- (BOOL)setIntersectionStatusTo:(int)status
+- (BOOL)setIntersectionStatusTo:(IntersectionStatus)status
                 forIntersection:(int)intID;
 
 - (BOOL)assignIntersection:(int)intID
@@ -73,7 +83,7 @@
 
 - (NSString *)intersectionTextPath:(int)type;
 - (int)getCountOfIntersections;
-- (void)close;
+- (void)close:(BOOL)opened;
 
 - (int)loadIntersectionTextToDatabase:(NSString *)path;
 

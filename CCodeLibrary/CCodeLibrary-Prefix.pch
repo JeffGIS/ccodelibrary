@@ -1,7 +1,11 @@
+//  CCodeLibrary-Prefix.pch
+//  CCodeLibrary
+
 #ifdef __OBJC__
-    #import <Foundation/Foundation.h>
+    @import Foundation;
+    #import "StringFunctions.h"
 #endif
 
 #ifndef DEBUG
-    #define NSLog(...);
+    #define NSLog(s,...)
 #endif

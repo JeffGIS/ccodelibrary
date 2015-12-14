@@ -51,6 +51,7 @@ enum {
     _fileName = fileName;
     _toFileName = toFileName;
     _filePath = [NSString stringWithFormat:@"%@/%@", _directory,_fileName];
+    
     assert(_filePath);
     
     _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
@@ -123,7 +124,7 @@ enum {
     
     NSURL *url = [NetworkManager.sharedInstance smartURLForString:_urlText];
     
-    if (!url || ![NetworkManager.sharedInstance isBinaryURL:url])
+    if (!url)
     {
         if (!_hasFailed)
         {
@@ -145,12 +146,6 @@ enum {
         if (!url)
         {
             NSAssert(0, @"ERROR: Invalid URL");
-            return NO;
-        }
-        
-        else if (![NetworkManager.sharedInstance isBinaryURL:url])
-        {
-            NSAssert(0, @"ERROR: Invalid file type");
             return NO;
         }
     }

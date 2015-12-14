@@ -64,6 +64,10 @@
             presenterID = @"Settings View";
             break;
             
+        case HelpButtonPresenterCRISInventoryVC:
+            presenterID = @"CRIS Inventory View";
+            break;
+            
         default:
             break;
     }

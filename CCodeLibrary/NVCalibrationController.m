@@ -1007,7 +1007,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     return UIInterfaceOrientationPortrait;
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskPortrait;
 }

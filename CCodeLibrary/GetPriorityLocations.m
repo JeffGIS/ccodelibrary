@@ -230,10 +230,13 @@ static GetPriorityLocations *_getLocations;
                         {
                             pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
                             pLoc.offset = DEFAULT_OFFSET;
-                            pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name.capitalizedString];
-                            NSString *latitude = [NSString stringWithFormat:@"%f", pLoc.coordinate.latitude];
+                            pLoc.name = removeOpeningSpaces(item.name.capitalizedString);
                             
-                            if ((![namesArray containsObject:pLoc.name]) || (![latitudesArray containsObject:latitude]))
+                            NSString *latitude = [NSString stringWithFormat:@"%f",
+                                                  pLoc.coordinate.latitude];
+                            
+                            if ((![namesArray containsObject:pLoc.name]) ||
+                                (![latitudesArray containsObject:latitude]))
                             {
                                 pLoc.type = [self assignTypeForPtc:ptc];
                                 
@@ -463,7 +466,7 @@ static GetPriorityLocations *_getLocations;
             {
                 pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
                 pLoc.offset = DEFAULT_OFFSET;
-                pLoc.name = [UserDefaults.defaults removeOpeningSpaces:item.name];
+                pLoc.name = removeOpeningSpaces(item.name);
                 [contents addObject:pLoc];
             }
         }

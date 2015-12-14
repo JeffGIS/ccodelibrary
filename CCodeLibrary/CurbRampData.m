@@ -18,9 +18,11 @@ static int fileSequence = 0;
 static CurbRampData *_statdatabase = nil;
 
 + (CurbRampData *)databaseForGeoid:(int)geoid
+                            create:(BOOL)create
 {
     if (!_statdatabase || _statdatabase.geoid != geoid)
-        _statdatabase = [[CurbRampData alloc] initWithGeoid:geoid];
+        _statdatabase = [[CurbRampData alloc] initWithGeoid:geoid
+                                                     create:create];
     
     return _statdatabase;
 }
@@ -30,13 +32,15 @@ static CurbRampData *_statdatabase = nil;
     return self;
 }
 - (id)initWithGeoid:(int)geoid
+             create:(BOOL)create
 {
     if ((self = [super init]))
     {
         _documentsDirectory = UserDefaults.defaults.sharedFilePath;
         _fileName = @"CurbRamps.sqlite";
         _path = [self databasePath:geoid];
-        [self createIntersectionsTable:NO];
+        if (create)
+            [self createIntersectionsTable:YES];
     }
     
     return self;
@@ -66,38 +70,43 @@ static CurbRampData *_statdatabase = nil;
     sqlite3_close(_database);
     NSLog(@"CurbRamp Database dealloc");
 }
-- (void)open
+- (BOOL)open
 {
+    BOOL rtn = FALSE;
     if (!_isOpen)
     {
-        self.isOpen = YES;
         self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"CurbRamp Database open");
         
         _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:_path
                                                                    error:nil].fileSize;
+        rtn = TRUE;
     }
+    return rtn;
 }
 
-- (void)close
+- (void)close:(BOOL)opened
 {
-    SQLOK(sqlite3_close(_database),_database);
-    NSLog(@"CurbRamp Database close");
-    self.isOpen = NO;
+    if (opened)
+    {
+        SQLOK(sqlite3_close(_database),_database);
+        NSLog(@"CurbRamp Database close");
+        self.isOpen = NO;
+    }
 }
 
 - (void)clear
 {
-    [self close];
+    [self close:TRUE];
     
-    BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
-    error:nil];
+    //BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
+                                                       //error:nil];
 }
 
 - (int)datasetVersion
 {
     int rtn = -1;
-    [self open];
+    BOOL opened = [self open];
     
     if (_isOpen && _fileSize > 0)
     {
@@ -118,18 +127,46 @@ static CurbRampData *_statdatabase = nil;
         SQLOK(sqlite3_finalize(statement), _database);
     }
     
-    [self close];
+    [self close:opened];
     //return -1;
     return rtn;
 }
-
+- (int) getNextUploadFileNum:(int)iPad
+{
+    int rtn = 1;
+    BOOL opened = [self open];
+    
+    if (_isOpen && _fileSize > 0)
+    {
+        NSString *query = [NSString stringWithFormat:@"SELECT lastUpdateFileNum FROM Updates WHERE iPadID = %i",iPad];
+        
+        sqlite3_stmt *statement = NULL;
+        
+        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        
+        if (sqlite3_step(statement) == SQLITE_ROW)
+        {
+            rtn = sqlite3_column_int(statement, 0);
+        }
+        
+        SQLOK(sqlite3_finalize(statement), _database);
+        query = [NSString stringWithFormat:@"UPDATE Updates SET lastUpdateFileNum=%i  WHERE iPadID = %i",rtn+1,iPad];
+        SQLOK(sqlite3_exec(_database, query.UTF8String, 0, 0, 0), _database);
+    }
+    
+    [self close:opened];
+    return rtn;
+}
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer
      useUniqueFile:(BOOL)uniqueFile
 {
+
     BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     if (rtn && sendToServer)
     {
+        int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
+        int nextFileNum = [self getNextUploadFileNum:iPad];
         if (uniqueFile || !_sendToServerFile)
         {
             int iTime = NSDate.timeIntervalSinceReferenceDate;
@@ -163,13 +200,14 @@ static CurbRampData *_statdatabase = nil;
 {
     BOOL rtn = NO;
     
-    [self open];
+    BOOL opened = [self open];
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;DROP TABLE IF EXISTS Intersections_index;DROP TABLE IF EXISTS Ramps;"];
     
     if (dropExistingTables)
         SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), _database);
 //create intersection table
-    NSString *query = [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Intersections (\
+    NSString *query =
+    [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Intersections (\
                        intID INTEGER PRIMARY KEY,\
                        lastUpdateTime INTEGER,\
                        status INTEGER,\
@@ -207,9 +245,10 @@ static CurbRampData *_statdatabase = nil;
     rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
 //create ramp table
     query = [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Ramps (\
-             intID,\
+             intID INT,\
              rampNum INT,\
              rampID CHAR(16),\
+             yearRebuilt INT,\
              timeComplete INT,\
              rampExists INT,\
              isComplete INT,\
@@ -259,8 +298,12 @@ static CurbRampData *_statdatabase = nil;
              PRIMARY KEY (intID,rampNum ASC));"];
    
     rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
+    query = [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Updates (\
+             iPadID INT,\
+             lastUpdateFileNum INT);"];
+    rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
 
-    [self close];
+    [self close:opened];
     return rtn;
     
 }
