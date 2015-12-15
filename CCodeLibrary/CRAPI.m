@@ -423,6 +423,7 @@
     }
 }
 
+/*
 - (UIImage *)getMPLSImage:(int)size
                     atLat:(double)lat
                    andLon:(double)lon
@@ -635,7 +636,7 @@
 didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     [alertView hideLargeAlertView:YES];
-}
+}*/
 
 - (UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
                                 heading:(CGFloat)heading

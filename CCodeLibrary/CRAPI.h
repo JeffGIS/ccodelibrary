@@ -134,6 +134,7 @@
 - (void)processPlacesArray:(NSUInteger) row;
 - (void)loadiPadParametersForGeoid:(int)geoid;
 - (void)setiPadParametersFromGeoid:(int)geoid;
+- (void)deleteImagesForAllZooms:(int)intersectionID;
 
 -(void) updateProgress:(int)tot
                current:(int)current;
