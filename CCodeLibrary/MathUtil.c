@@ -1747,12 +1747,15 @@ static bool rectIntersectsRects (CGRect * testRect,int nRects,CGRect * rects)
 CGRect largestRect(float aspectRatio, int precision, CGRect bounds, int nRects, CGRect *rects)
 {
     //aspectRatio is width/height
+#define MAXRECT 256
+    CGPoint origins[MAXRECT];
+    int nRect = 0;
     CGRect largeRect = CGRectZero;
     CGRect testRect = CGRectZero;
-    int minY = (bounds.origin.y - bounds.size.height / 2);
-    int minX = (bounds.origin.x - bounds.size.width / 2);
-    int maxY = (bounds.origin.y + bounds.size.height / 2);
-    int maxX = (bounds.origin.x + bounds.size.width / 2);
+    int minY = bounds.origin.y;
+    int minX = bounds.origin.x;
+    int maxY = bounds.origin.y + bounds.size.height;
+    int maxX = bounds.origin.x + bounds.size.width;
     int y = minY;
     
     while (y < maxY)
@@ -1774,14 +1777,19 @@ CGRect largestRect(float aspectRatio, int precision, CGRect bounds, int nRects, 
             }
             
             if (testRect.size.width > largeRect.size.width)
-                largeRect = testRect;
             {
-                x += precision;
+                largeRect = testRect;
+                nRect = 0;
             }
+            if (nRect < MAXRECT &&
+                testRect.size.width == largeRect.size.width)
+                origins[nRect++] = testRect.origin;
+            x += precision;
         }
         
         y += precision;
     }
-    
+    if (nRect > 2)
+        largeRect.origin = origins[nRect/2];
     return largeRect;
 }
