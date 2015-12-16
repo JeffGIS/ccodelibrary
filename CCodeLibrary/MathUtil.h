@@ -143,5 +143,6 @@ double GetPolyLength (LPPOINT lpPoints,long nPnts);
 double GetPolyLengthD (HPDPOINT lpPoints,long nPnts);
 int GetAltitudeAndAzOfSun (DPOINT LatLon,double Height,time_t systime,double *pAltitude,double *pAz);
 LPDPOINT PointsFromCGRect (CGRect *pRect);
+CGRect largestRect (float aspectRatio,int precision,CGRect bounds,int nRects,CGRect* rects);
 
 #endif
