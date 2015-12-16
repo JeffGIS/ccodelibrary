@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 #import "MPIntersection.h"
 #import "NVAlertView.h"
 #import <CoreLocation/CoreLocation.h>
+#import "NVTileCompiler.h"
 
 @class NVInventoryViewController;
 
@@ -28,7 +29,7 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 
 @end
 
-@interface NVInventoryViewController : UIViewController <NVAlertViewDelegate,CLLocationManagerDelegate>
+@interface NVInventoryViewController : UIViewController <NVAlertViewDelegate,CLLocationManagerDelegate, NVTileCompilerDelegate>
 
 @property (nonatomic, weak) id <NVInventoryViewControllerDelegate> delegate;
 @property (nonatomic) MPIntersection *currentIntersection;

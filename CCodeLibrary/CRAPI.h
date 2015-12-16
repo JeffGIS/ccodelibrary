@@ -65,7 +65,7 @@
 @property (nonatomic, copy) NSString *currentOverallBoundaryName;
 @property (nonatomic, copy) NSString *currentOverallBoundaryType;
 @property int currentOverallBoundaryRefno;
-@property BOOL setToAlleyWalls;
+@property BOOL setToAlleyWalls, isFromGMMobile;
 @property (nonatomic, copy) NSString *sourceApp;
 @property (nonatomic) UIView *currentView;
 
@@ -134,6 +134,7 @@
 - (void)processPlacesArray:(NSUInteger) row;
 - (void)loadiPadParametersForGeoid:(int)geoid;
 - (void)setiPadParametersFromGeoid:(int)geoid;
+- (void)deleteImagesForAllZooms:(int)intersectionID;
 
 -(void) updateProgress:(int)tot
                current:(int)current;
