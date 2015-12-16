@@ -1744,36 +1744,44 @@ static bool rectIntersectsRects (CGRect * testRect,int nRects,CGRect * rects)
     return FALSE;
 }
 
-CGRect largestRect (float aspectRatio,int precision,CGRect bounds,int nRects,CGRect* rects)
+CGRect largestRect(float aspectRatio, int precision, CGRect bounds, int nRects, CGRect *rects)
 {
     //aspectRatio is width/height
     CGRect largeRect = CGRectZero;
-    CGRect testRect;
-    int minY = bounds.origin.y - bounds.size.height/2;
-    int minX = bounds.origin.x - bounds.size.width/2;
-    int maxY = bounds.origin.y + bounds.size.height/2;
-    int maxX = bounds.origin.x + bounds.size.width/2;
+    CGRect testRect = CGRectZero;
+    int minY = (bounds.origin.y - bounds.size.height / 2);
+    int minX = (bounds.origin.x - bounds.size.width / 2);
+    int maxY = (bounds.origin.y + bounds.size.height / 2);
+    int maxX = (bounds.origin.x + bounds.size.width / 2);
     int y = minY;
+    
     while (y < maxY)
     {
         int x = minX;
+        
         while (x < maxX)
         {
             testRect.origin.x = x;
             testRect.origin.y = y;
-            testRect.size.width = precision * aspectRatio;
+            testRect.size.width = (precision * aspectRatio);
             testRect.size.height = precision;
+            
             while (CGRectContainsRect(bounds,testRect) &&
                    !rectIntersectsRects (&testRect,nRects,rects))
             {
-                testRect.size.width += precision * aspectRatio;
+                testRect.size.width += (precision * aspectRatio);
                 testRect.size.height += precision;
             }
+            
             if (testRect.size.width > largeRect.size.width)
                 largeRect = testRect;
-            x += precision;
+            {
+                x += precision;
+            }
         }
+        
         y += precision;
     }
+    
     return largeRect;
 }
