@@ -25,4 +25,6 @@
 
 - (void)hideTextAlert:(BOOL)animated;
 
+- (void)willRotateWithDuration:(NSTimeInterval)duration;
+
 @end

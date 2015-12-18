@@ -23,7 +23,7 @@
     
     CGRect bounds = UIScreen.mainScreen.bounds;
     
-    textAlert.overlayView = [[UIView alloc] initWithFrame:bounds];
+    textAlert.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1024.0, 1024.0)];
     textAlert.overlayView.backgroundColor = UIColor.blackColor;
     textAlert.overlayView.alpha = 0.0;
     
@@ -185,6 +185,14 @@
 - (void)setText:(NSString *)text
 {
     _textField.text = text;
+}
+
+- (void)willRotateWithDuration:(NSTimeInterval)duration
+{
+    [UIView animateWithDuration:duration animations:^{
+        self.center = CGPointMake((self.superview.frame.size.height / 2.0),
+                                  (self.superview.frame.size.width / 2.0));
+    }];
 }
 
 @end
