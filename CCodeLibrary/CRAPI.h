@@ -77,6 +77,7 @@
 @property (strong, nonatomic) MapToolbar *mapToolbar;
 @property (nonatomic) CGFloat mapToolbarProgress;
 @property BOOL showPolylineForBounds, maskBoundsForBounds;
+@property (nonatomic, copy) NSString *offsetForBounds;
 
 + (CRAPI *)sharedInstance;
 

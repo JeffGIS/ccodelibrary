@@ -38,7 +38,7 @@
     
     [view addSubview:textAlert.overlayView];
     
-    CGFloat titleWidth = 340.0;
+    CGFloat titleWidth = (view.frame.size.width * 0.5);
     textAlert.font = [UIFont boldSystemFontOfSize:32.0];
     
     CGFloat titleHeight = [textAlert getHeightForText:title
@@ -180,6 +180,11 @@
 - (void)overlayTapped:(UITapGestureRecognizer *)gesture
 {
     [_textField resignFirstResponder];
+}
+
+- (void)setText:(NSString *)text
+{
+    _textField.text = text;
 }
 
 @end
