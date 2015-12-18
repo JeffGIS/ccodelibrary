@@ -76,6 +76,7 @@
 @property NSInteger fromDate, toDate;
 @property (strong, nonatomic) MapToolbar *mapToolbar;
 @property (nonatomic) CGFloat mapToolbarProgress;
+@property BOOL showPolylineForBounds, maskBoundsForBounds;
 
 + (CRAPI *)sharedInstance;
 
