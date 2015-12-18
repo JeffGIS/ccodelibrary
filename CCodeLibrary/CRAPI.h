@@ -7,7 +7,7 @@
 #import "Facility.h"
 #import "UserDefaults.h"
 #import "Colors.h"
-#import "NVAlertView.h"
+//#import "NVAlertView.h"
 #import "MapToolbar.h"
 
 #define MANAGEMENT_MODULE   1
@@ -18,7 +18,7 @@
 #define PROJECT_MPLS        1
 #define PROJECT_METROGIS    2
 
-@interface CRAPI : NSObject <NVAlertViewDelegate>
+@interface CRAPI : NSObject //<NVAlertViewDelegate>
 
 @property (nonatomic) int currentModule;
 @property (nonatomic, copy) NSString *documentsDirectory;
