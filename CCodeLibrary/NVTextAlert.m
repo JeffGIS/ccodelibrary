@@ -20,10 +20,15 @@
                                title:(NSString *)title
 {
     NVTextAlert *textAlert = [[NVTextAlert alloc] init];
-    
     CGRect bounds = UIScreen.mainScreen.bounds;
+    CGFloat longestSide = MAX(bounds.size.height, bounds.size.width);
+    CGFloat shortestSide = MIN(bounds.size.height, bounds.size.width);
+    CGFloat sizeFactor = 20.0;
     
-    textAlert.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 1024.0, 1024.0)];
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        sizeFactor = 12.0;
+    
+    textAlert.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, longestSide, longestSide)];
     textAlert.overlayView.backgroundColor = UIColor.blackColor;
     textAlert.overlayView.alpha = 0.0;
     
@@ -38,14 +43,14 @@
     
     [view addSubview:textAlert.overlayView];
     
-    CGFloat titleWidth = (view.frame.size.width * 0.5);
-    textAlert.font = [UIFont boldSystemFontOfSize:32.0];
+    CGFloat titleWidth = (shortestSide * 0.75);
+    textAlert.font = [UIFont boldSystemFontOfSize:(sizeFactor * 1.6)];
     
     CGFloat titleHeight = [textAlert getHeightForText:title
                                                  font:textAlert.font
                                                 width:titleWidth];
     
-    textAlert.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 20.0, titleWidth, titleHeight)];
+    textAlert.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(sizeFactor, sizeFactor, titleWidth, titleHeight)];
     textAlert.titleLabel.text = title;
     textAlert.titleLabel.font = textAlert.font;
     textAlert.titleLabel.numberOfLines = 0;
@@ -54,28 +59,30 @@
     textAlert.titleLabel.textColor = UIColor.blackColor;
     textAlert.titleLabel.textAlignment = NSTextAlignmentCenter;
     
-    CGFloat alertHeight = (titleHeight + 120.0);
-    CGFloat alertWidth = (titleWidth + 40.0);
+    CGFloat alertHeight = (titleHeight + (sizeFactor * 6.0));
+    CGFloat alertWidth = (titleWidth + (sizeFactor * 2.0));
     
     textAlert.frame = CGRectMake(0.0, 0.0, alertWidth, alertHeight);
-    textAlert.center = CGPointMake((bounds.size.width / 2.0), (bounds.size.height / 2.0));
+    textAlert.center = CGPointMake((bounds.size.width / 2.0), (bounds.size.height / 4.0));
     textAlert.backgroundColor = UIColor.whiteColor;
     textAlert.alpha = 0.0;
-    textAlert.layer.cornerRadius = 10.0;
+    textAlert.layer.cornerRadius = (sizeFactor / 2.0);
     textAlert.clipsToBounds = YES;
     
     [view addSubview:textAlert];
     [textAlert addSubview:textAlert.titleLabel];
     
-    textAlert.textField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, (alertHeight - 80.0), (alertWidth - 40.0), 60.0)];
+    textAlert.textField = [[UITextField alloc] initWithFrame:CGRectMake(sizeFactor, (alertHeight - (sizeFactor * 4.0)),
+                                                                        (alertWidth - (sizeFactor * 2.0)), (sizeFactor * 3.0))];
+    
     textAlert.textField.delegate = textAlert;
     textAlert.textField.textAlignment = NSTextAlignmentCenter;
     textAlert.textField.textColor = UIColor.blackColor;
     textAlert.textField.font = textAlert.font;
     textAlert.textField.layer.borderColor = UIColor.darkGrayColor.CGColor;
-    textAlert.textField.layer.borderWidth = 4.0;
+    textAlert.textField.layer.borderWidth = (sizeFactor / 5.0);
     textAlert.textField.backgroundColor = UserDefaults.defaults.appleGray;
-    textAlert.textField.layer.cornerRadius = 10.0;
+    textAlert.textField.layer.cornerRadius = (sizeFactor / 2.0);
     textAlert.textField.autocorrectionType = UITextAutocorrectionTypeNo;
     textAlert.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
     textAlert.textField.keyboardType = textAlert.keyboardType;
@@ -191,7 +198,7 @@
 {
     [UIView animateWithDuration:duration animations:^{
         self.center = CGPointMake((self.superview.frame.size.height / 2.0),
-                                  (self.superview.frame.size.width / 2.0));
+                                  (self.superview.frame.size.width / 4.0));
     }];
 }
 
