@@ -24,7 +24,6 @@
                                title:(NSString *)title;
 
 - (void)hideTextAlert:(BOOL)animated;
-
 - (void)willRotateWithDuration:(NSTimeInterval)duration;
 
 @end
