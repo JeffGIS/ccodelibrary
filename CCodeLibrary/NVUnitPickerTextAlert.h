@@ -8,7 +8,8 @@
 @protocol NVUnitPickerTextAlertDelegate <NSObject>
 
 - (void)textAlert:(NVUnitPickerTextAlert *)textAlert
-    didReturnText:(NSString *)text;
+   didReturnValue:(NSString *)value
+            units:(NSString *)units;
 
 @end
 

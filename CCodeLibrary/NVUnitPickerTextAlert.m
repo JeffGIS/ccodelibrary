@@ -172,8 +172,8 @@ rowHeightForComponent:(NSInteger)component
         NSInteger row = [_picker selectedRowInComponent:0];
         
         [_delegate textAlert:self
-               didReturnText:[NSString stringWithFormat:@"%@ %@",
-                              textField.text, _pickerArray[row]]];
+              didReturnValue:textField.text
+                       units:_pickerArray[row]];
     }
 }
 
@@ -182,9 +182,14 @@ shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string
 {
     
-    NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789"] invertedSet];
+    NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789."] invertedSet];
     NSString *filtered = [[string componentsSeparatedByCharactersInSet:cs] componentsJoinedByString:@""];
-    return [string isEqualToString:filtered];
+    
+    if ([string isEqualToString:@"."] && [textField.text containsString:@"."])
+        return NO;
+    
+    else
+        return [string isEqualToString:filtered];
 }
 
 - (void)hideTextAlert:(BOOL)animated
