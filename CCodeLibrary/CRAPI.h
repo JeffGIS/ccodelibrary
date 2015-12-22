@@ -75,6 +75,7 @@
 @property BOOL resetPropList, resetDestinations, clearSpreadsheet;
 @property NSInteger fromDate, toDate;
 @property (strong, nonatomic) MapToolbar *mapToolbar;
+@property (strong, nonatomic) UIViewController *mapVC;
 @property (nonatomic) CGFloat mapToolbarProgress;
 @property BOOL showPolylineForBounds, maskBoundsForBounds;
 @property (nonatomic, copy) NSString *offsetForBounds;
