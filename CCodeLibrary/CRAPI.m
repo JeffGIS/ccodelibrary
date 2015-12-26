@@ -885,15 +885,20 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                      animated:NO];
 }
 
--(void) updateProgress:(int)tot
-               current:(int)current
+-(void) updateProgress:(NSInteger)tot
+               current:(NSInteger)current
 {
-    static int currentProgress = 0;
-    int progress = 0;
+    static NSInteger currentProgress = -1;
+    NSInteger progress = 0;
+    if (tot < 0)
+    {
+        currentProgress = -1;
+        return;
+    }
     if (tot)
         progress = (current * 100) / tot;
     
-    if (progress != currentProgress)
+    if (progress > currentProgress)
     {
         currentProgress = progress;
         dispatch_async(dispatch_get_main_queue(),

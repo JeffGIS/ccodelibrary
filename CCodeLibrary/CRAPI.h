@@ -140,7 +140,7 @@
 - (void)setiPadParametersFromGeoid:(int)geoid;
 - (void)deleteImagesForAllZooms:(int)intersectionID;
 
--(void) updateProgress:(int)tot
-               current:(int)current;
+-(void) updateProgress:(NSInteger)tot
+               current:(NSInteger)current;
 
 @end
