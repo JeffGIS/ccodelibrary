@@ -3,11 +3,12 @@
 
 #import "MapToolbar.h"
 #import "UserDefaults.h"
+#import "HelpButton.h"
 
 @interface MapToolbar ()
 
 @property (nonatomic) UIButton *extentsButton, *userLocationButton, *legendsButton, *digitizeButton;
-@property (nonatomic) UIButton *grayscaleButton, *clearMarkerButton, *emailPDFButton;
+@property (nonatomic) UIButton *grayscaleButton, *clearMarkerButton, *emailPDFButton, *helpButton;
 @property (nonatomic) UISegmentedControl *mapTypeSC, *platSC;
 @property (nonatomic) CGSize size;
 @property BOOL configChanged, myLocationEnabled, platOverride;
@@ -45,6 +46,9 @@
                            value:YES];
     
     [mt setConfigurationProperty:MapToolbarPropertyWantProgressBar
+                           value:YES];
+    
+    [mt setConfigurationProperty:MapToolbarPropertyWantHelpButton
                            value:YES];
     
     [mt setConfigurationProperty:MapToolbarPropertyWantPlat
@@ -144,6 +148,18 @@
     
     //email PDF button added by default
     [mt addSubview:mt.emailPDFButton];
+    
+    mt.helpButton = [[UIButton alloc] initWithFrame:CGRectMake(((mt.buttonSize * 5.0) + (mt.buttonMargin * 5.0)),
+                                                               mt.buttonMargin, mt.buttonSize, mt.buttonSize)];
+    
+    [mt setupButton:mt.helpButton
+         imageTitle:@"questionMark"
+         edgeInsets:UIEdgeInsetsMake(4.0, -2.0, 4.0, -2.0)
+             target:mt
+           selector:@selector(helpButtonSelected:)];
+    
+    //email PDF button added by default
+    [mt addSubview:mt.helpButton];
     
     mt.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(mt.buttonMargin, mt.size.height - 10.0,
                                                                        mt.size.width - (mt.buttonMargin * 2.0), 4.0)];
@@ -289,6 +305,12 @@
         [_delegate mapToolbarDidSelectEmailPDF];
 }
 
+- (void)helpButtonSelected:(UIButton *)button
+{
+    if (_delegate)
+        [_delegate mapToolbarDidSelectHelpButton];
+}
+
 - (void)mapTypeSelected:(UISegmentedControl *)segControl
 {
     if (_delegate)
@@ -388,6 +410,13 @@
         xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
     }
     
+    if (_wantHelpButton)
+    {
+        _helpButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+        yCount += (_buttonMargin + _buttonSize);
+        xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+    }
+    
     if (_wantMapType)
     {
         _mapTypeSC.frame = CGRectMake(_buttonMargin, yCount, _mapTypeSCVertWidth, _SCHeight);
@@ -480,6 +509,12 @@
     if (_wantEmailPDF)
     {
         _emailPDFButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
+        xCount += (_buttonMargin + _buttonSize);
+    }
+    
+    if (_wantHelpButton)
+    {
+        _helpButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
         xCount += (_buttonMargin + _buttonSize);
     }
     
@@ -608,7 +643,8 @@
     [self setPreviousConfiguration];
     
     _wantDigitize = _wantExtents = _wantLegends = _wantMapType =
-    _wantGrayscale = _wantUserLocation = NO;
+    _wantGrayscale = _wantUserLocation = _wantHelpButton =
+    _wantEmailPDF = _wantProgressBar = _wantClearMarkers = NO;
     
     _wantPlat = _configChanged = YES;
     
@@ -646,6 +682,7 @@
     _previousConfig[MapToolbarPropertyWantLegends] = _wantLegends;
     _previousConfig[MapToolbarPropertyWantExtents] = _wantExtents;
     _previousConfig[MapToolbarPropertyWantDigitize] = _wantDigitize;
+    _previousConfig[MapToolbarPropertyWantHelpButton] = _wantHelpButton;
 }
 
 - (void)getPreviousConfiguration
@@ -660,6 +697,7 @@
     _wantLegends = _previousConfig[MapToolbarPropertyWantLegends];
     _wantExtents = _previousConfig[MapToolbarPropertyWantExtents];
     _wantDigitize = _previousConfig[MapToolbarPropertyWantDigitize];
+    _wantHelpButton = _previousConfig[MapToolbarPropertyWantHelpButton];
 }
 
 - (void)setConfigurationProperty:(MapToolbarProperty)property
@@ -706,6 +744,9 @@
         case MapToolbarPropertyWantProgressBar:
             _wantProgressBar = value;
             break;
+            
+        case MapToolbarPropertyWantHelpButton:
+            _wantHelpButton = value;
             
         default:
             break;
@@ -836,6 +877,22 @@
         {
             if ([self.subviews containsObject:_emailPDFButton])
                 [_emailPDFButton removeFromSuperview];
+        }
+        
+        if (_wantHelpButton)
+        {
+            _helpButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
+            
+            if (![self.subviews containsObject:_helpButton])
+                [self addSubview:_helpButton];
+            
+            xCount += (_buttonMargin + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_helpButton])
+                [_helpButton removeFromSuperview];
         }
         
         if (_wantMapType)
@@ -971,6 +1028,57 @@
         {
             if ([self.subviews containsObject:_grayscaleButton])
                 [_grayscaleButton removeFromSuperview];
+        }
+        
+        if (_wantClearMarkers)
+        {
+            _clearMarkerButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+            
+            if (![self.subviews containsObject:_clearMarkerButton])
+                [self addSubview:_clearMarkerButton];
+            
+            yCount += (_buttonMargin + _buttonSize);
+            xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_clearMarkerButton])
+                [_clearMarkerButton removeFromSuperview];
+        }
+        
+        if (_wantEmailPDF)
+        {
+            _emailPDFButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+            
+            if (![self.subviews containsObject:_emailPDFButton])
+                [self addSubview:_emailPDFButton];
+            
+            yCount += (_buttonMargin + _buttonSize);
+            xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_emailPDFButton])
+                [_emailPDFButton removeFromSuperview];
+        }
+        
+        if (_wantHelpButton)
+        {
+            _helpButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+            
+            if (![self.subviews containsObject:_helpButton])
+                [self addSubview:_helpButton];
+            
+            yCount += (_buttonMargin + _buttonSize);
+            xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_helpButton])
+                [_helpButton removeFromSuperview];
         }
         
         if (_wantMapType)

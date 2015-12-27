@@ -3,7 +3,7 @@
 
 #import "GSSiEnums.h"
 
-#define NUMMapToolbarProperty 10
+#define NUMMapToolbarProperty 11
 
 typedef NS_ENUM(NSInteger, MapToolbarProperty)
 {
@@ -17,6 +17,7 @@ typedef NS_ENUM(NSInteger, MapToolbarProperty)
     MapToolbarPropertyWantClearMarkers,
     MapToolbarPropertyWantEmailPDF,
     MapToolbarPropertyWantProgressBar,
+    MapToolbarPropertyWantHelpButton,
 };
 
 typedef NS_ENUM(NSInteger, MapToolbarOrientation)
@@ -39,6 +40,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 - (void)mapToolbarDidSelectGrayscale;
 - (void)mapToolbarDidSelectClearMarkers;
 - (void)mapToolbarDidSelectEmailPDF;
+- (void)mapToolbarDidSelectHelpButton;
 - (void)mapToolbarDidSelectDigitize;
 - (void)mapToolbarDidSelectLegends;
 - (void)mapToolbarDidFinishDrag;
@@ -51,7 +53,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 @property (nonatomic) MapToolbarOrientation orientation;
 @property (readonly) BOOL wantPlat, wantDigitize, wantMapType, wantUserLocation;
 @property (readonly) BOOL wantExtents, wantLegends, wantGrayscale, wantClearMarkers;
-@property (readonly) BOOL wantEmailPDF, wantProgressBar;
+@property (readonly) BOOL wantEmailPDF, wantProgressBar, wantHelpButton;
 @property (nonatomic) UIProgressView *progressView;
 
 + (MapToolbar *)showMapToolbarWithCenter:(CGPoint)center
