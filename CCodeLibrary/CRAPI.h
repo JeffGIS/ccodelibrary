@@ -141,6 +141,8 @@
 - (void)deleteImagesForAllZooms:(int)intersectionID;
 
 -(void) updateProgress:(NSInteger)tot
-               current:(NSInteger)current;
+               current:(NSInteger)current
+                 range:(int)iRange
+             numRanges:(int)nRanges;
 
 @end

@@ -887,6 +887,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 -(void) updateProgress:(NSInteger)tot
                current:(NSInteger)current
+                 range:(int)iRange
+             numRanges:(int)nRanges
 {
     static NSInteger currentProgress = -1;
     NSInteger progress = 0;
@@ -895,9 +897,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         currentProgress = -1;
         return;
     }
-    if (tot)
-        progress = (current * 100) / tot;
-    
+    if (!tot)
+        return;
+    CGFloat baseProgress = (CGFloat)iRange / nRanges;
+    CGFloat thisProgress = baseProgress + current / (CGFloat)(tot * nRanges);
+    progress = thisProgress * 100;
     if (progress > currentProgress)
     {
         currentProgress = progress;
