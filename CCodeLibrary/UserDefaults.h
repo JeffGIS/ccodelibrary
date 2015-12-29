@@ -27,6 +27,7 @@
 - (NSArray *)locationList;
 - (NSArray *)iPadList;
 - (UIColor *)appleBlue;
+- (UIColor *)lightBlue;
 - (UIColor *)green;
 - (UIColor *)darkGreen;
 - (UIColor *)appleGray;

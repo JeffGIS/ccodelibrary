@@ -106,6 +106,16 @@ static UserDefaults *_defaults;
     return appleBlue;
 }
 
+- (UIColor *)lightBlue
+{
+    UIColor *lightBlue = [UIColor colorWithRed:(204.0 / 255.0)
+                                         green:(229.0 / 255.0)
+                                          blue:1.0
+                                         alpha:1.0];
+    
+    return lightBlue;
+}
+
 - (UIColor *)green
 {
     UIColor *green = [UIColor colorWithRed:(160.0 / 255.0)
