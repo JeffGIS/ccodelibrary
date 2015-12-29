@@ -15,6 +15,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex;
 @interface NVAlertView : UIView
 
 @property (nonatomic, weak) id <NVAlertViewDelegate> delegate;
+@property (nonatomic) NSString *identifier;
 
 + (NVAlertView *)showLargeAlertViewinView:(UIView *)view
                                  delegate:(id)delegate
