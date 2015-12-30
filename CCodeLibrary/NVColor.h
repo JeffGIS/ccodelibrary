@@ -7,6 +7,16 @@
 
 NVColor *color(int r, int g, int b);
 
++ (NSArray *)allColors;
++ (NSArray *)lightColors;
++ (NSArray *)mediumColors;
++ (NSArray *)darkColors;
++ (NSArray *)pastelColors;
++ (NSArray *)boldColors;
++ (NSArray *)neutralColors;
++ (NSArray *)warmColors;
++ (NSArray *)coolColors;
+
 + (instancetype)maroonColor;
 + (instancetype)darkRedColor;
 + (instancetype)brownColor;
@@ -35,7 +45,6 @@ NVColor *color(int r, int g, int b);
 + (instancetype)darkOliveGreenColor;
 + (instancetype)oliveDrabColor;
 + (instancetype)lawnGreenColor;
-+ (instancetype)chartreuseColor;
 + (instancetype)greenYellowColor;
 + (instancetype)darkGreenColor;
 + (instancetype)greenColor;

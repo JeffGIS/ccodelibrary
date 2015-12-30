@@ -28,6 +28,8 @@
 		693C9BA11BEC529600564F93 /* UIImage+ImageFromColor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */; };
 		694304161C334E5A0077EC9F /* NVColorSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 694304151C334E5A0077EC9F /* NVColorSet.m */; };
 		6943041F1C3351E20077EC9F /* NVColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943041E1C3351E20077EC9F /* NVColor.m */; };
+		694304201C336DC00077EC9F /* NVColor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6943041D1C3351E20077EC9F /* NVColor.h */; };
+		694304211C336DCC0077EC9F /* NVColorSet.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 694304141C334E5A0077EC9F /* NVColorSet.h */; };
 		69450DAD1BD5F6120079F7EC /* NVContactPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 69450DAC1BD5F6120079F7EC /* NVContactPicker.m */; };
 		69450DAE1BD5FA2B0079F7EC /* NVContactPicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69450DAB1BD5F6120079F7EC /* NVContactPicker.h */; };
 		6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6948D5D41BC780EE009CA04F /* NVStaticMapView.m */; };
@@ -284,6 +286,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				694304211C336DCC0077EC9F /* NVColorSet.h in CopyFiles */,
+				694304201C336DC00077EC9F /* NVColor.h in CopyFiles */,
 				6919EAF91C27B3EE00A9D0F1 /* NVUnitPickerTextAlert.h in CopyFiles */,
 				691636231C1FDA11000C61B8 /* NVTileCompiler.h in CopyFiles */,
 				694F007A1C1B4C4B0074AF72 /* MapToolbar.h in CopyFiles */,

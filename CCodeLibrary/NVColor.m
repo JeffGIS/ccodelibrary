@@ -13,6 +13,51 @@ NVColor *colorFromRGB(int r, int g, int b)
                                       alpha:1.0];
 }
 
++ (NSArray *)allColors
+{
+    return @[NVColor.maroonColor, NVColor.darkRedColor, NVColor.brownColor, NVColor.firebrickColor, NVColor.crimsonColor, NVColor.redColor, NVColor.tomatoColor, NVColor.coralColor, NVColor.indianRedColor, NVColor.lightCoralColor, NVColor.darkSalmonColor, NVColor.salmonColor, NVColor.lightSalmonColor, NVColor.orangeRedColor, NVColor.darkOrangeColor, NVColor.orangeColor, NVColor.goldColor, NVColor.darkGoldenrodColor, NVColor.goldenrodColor, NVColor.paleGoldenrodColor, NVColor.darkKhakiColor, NVColor.khakiColor, NVColor.oliveColor, NVColor.yellowColor, NVColor.yellowGreenColor, NVColor.darkOliveGreenColor, NVColor.oliveDrabColor, NVColor.lawnGreenColor, NVColor.greenYellowColor, NVColor.darkGreenColor, NVColor.greenColor, NVColor.forestGreenColor, NVColor.limeColor, NVColor.limeGreenColor, NVColor.lightGreenColor, NVColor.paleGreenColor, NVColor.darkSeaGreenColor, NVColor.mediumSpringGreenColor, NVColor.springGreenColor, NVColor.seaGreenColor, NVColor.mediumAquamarineColor, NVColor.mediumSeaGreenColor, NVColor.lightSeaGreenColor, NVColor.darkSlateGrayColor, NVColor.tealColor, NVColor.darkCyanColor, NVColor.cyanColor, NVColor.lightCyanColor, NVColor.darkTurquoiseColor, NVColor.turquoiseColor, NVColor.mediumTurquoiseColor, NVColor.paleTurquoiseColor, NVColor.aquamarineColor, NVColor.powderBlueColor, NVColor.cadetBlueColor, NVColor.steelBlueColor, NVColor.cornflowerBlueColor, NVColor.deepSkyBlueColor, NVColor.dodgerBlueColor, NVColor.lightBlueColor, NVColor.skyBlueColor, NVColor.lightSkyBlueColor, NVColor.midnightBlueColor, NVColor.navyColor, NVColor.darkBlueColor, NVColor.mediumBlueColor, NVColor.blueColor, NVColor.royalBlueColor, NVColor.blueVioletColor, NVColor.indigoColor, NVColor.darkSlateBlueColor, NVColor.slateBlueColor, NVColor.mediumSlateBlueColor, NVColor.mediumPurpleColor, NVColor.darkMagentaColor, NVColor.darkVioletColor, NVColor.darkOrchidColor, NVColor.mediumOrchidColor, NVColor.purpleColor, NVColor.thistleColor, NVColor.plumColor, NVColor.violetColor, NVColor.magentaColor, NVColor.orchidColor, NVColor.mediumVioletRedColor, NVColor.paleVioletRedColor, NVColor.deepPinkColor, NVColor.hotPinkColor, NVColor.lightPinkColor, NVColor.pinkColor, NVColor.antiqueWhiteColor, NVColor.beigeColor, NVColor.bisqueColor, NVColor.blanchedAlmondColor, NVColor.wheatColor, NVColor.cornSilkColor, NVColor.lemonChiffonColor, NVColor.lightGoldenrodYellowColor, NVColor.lightYellowColor, NVColor.saddleBrownColor, NVColor.siennaColor, NVColor.chocolateColor, NVColor.peruColor, NVColor.sandyBrownColor, NVColor.burlywoodColor, NVColor.tanColor, NVColor.rosyBrownColor, NVColor.moccasinColor, NVColor.navajoWhiteColor, NVColor.peachPuffColor, NVColor.mistyRoseColor, NVColor.lavenderBlushColor, NVColor.linenColor, NVColor.oldLaceColor, NVColor.papayaWhipColor, NVColor.seashellColor, NVColor.mintCreamColor, NVColor.slateGrayColor, NVColor.lightSlateGrayColor, NVColor.lightSteelBlueColor, NVColor.lavenderColor, NVColor.floralWhiteColor, NVColor.aliceBlueColor, NVColor.ghostWhiteColor, NVColor.honeydewColor, NVColor.ivoryColor, NVColor.azureColor, NVColor.snowColor, NVColor.dimGrayColor, NVColor.grayColor, NVColor.darkGrayColor, NVColor.silverColor, NVColor.lightGrayColor, NVColor.gainsboroColor, NVColor.whiteSmokeColor];
+}
+
++ (NSArray *)lightColors
+{
+    return @[NVColor.tomatoColor, NVColor.coralColor, NVColor.lightCoralColor, NVColor.lightSalmonColor, NVColor.paleGoldenrodColor, NVColor.khakiColor, NVColor.yellowColor, NVColor.greenYellowColor, NVColor.lightGreenColor, NVColor.paleGreenColor, NVColor.springGreenColor, NVColor.lightSeaGreenColor, NVColor.cyanColor, NVColor.lightCyanColor, NVColor.paleTurquoiseColor, NVColor.aquamarineColor, NVColor.powderBlueColor, NVColor.lightBlueColor, NVColor.skyBlueColor, NVColor.lightSkyBlueColor, NVColor.thistleColor, NVColor.plumColor, NVColor.violetColor, NVColor.orchidColor, NVColor.paleVioletRedColor, NVColor.hotPinkColor, NVColor.lightPinkColor, NVColor.pinkColor, NVColor.antiqueWhiteColor, NVColor.beigeColor, NVColor.bisqueColor, NVColor.blanchedAlmondColor, NVColor.wheatColor, NVColor.cornSilkColor, NVColor.lemonChiffonColor, NVColor.lightGoldenrodYellowColor, NVColor.lightYellowColor, NVColor.burlywoodColor, NVColor.tanColor, NVColor.moccasinColor, NVColor.navajoWhiteColor, NVColor.peachPuffColor, NVColor.mistyRoseColor, NVColor.lavenderBlushColor, NVColor.linenColor, NVColor.oldLaceColor, NVColor.papayaWhipColor, NVColor.seashellColor, NVColor.mintCreamColor, NVColor.lightSteelBlueColor, NVColor.lavenderColor, NVColor.floralWhiteColor, NVColor.aliceBlueColor, NVColor.ghostWhiteColor, NVColor.honeydewColor, NVColor.ivoryColor, NVColor.azureColor, NVColor.snowColor, NVColor.silverColor, NVColor.lightGrayColor, NVColor.gainsboroColor, NVColor.whiteSmokeColor];
+}
+
++ (NSArray *)mediumColors
+{
+    return @[NVColor.brownColor, NVColor.firebrickColor, NVColor.crimsonColor, NVColor.redColor, NVColor.indianRedColor, NVColor.salmonColor, NVColor.orangeRedColor, NVColor.orangeColor, NVColor.goldColor, NVColor.goldenrodColor, NVColor.yellowGreenColor, NVColor.lawnGreenColor, NVColor.limeColor, NVColor.limeGreenColor, NVColor.mediumSpringGreenColor, NVColor.mediumAquamarineColor, NVColor.mediumSeaGreenColor, NVColor.turquoiseColor, NVColor.mediumTurquoiseColor, NVColor.cadetBlueColor, NVColor.steelBlueColor, NVColor.cornflowerBlueColor, NVColor.deepSkyBlueColor, NVColor.dodgerBlueColor, NVColor.mediumBlueColor, NVColor.blueColor, NVColor.royalBlueColor, NVColor.blueVioletColor, NVColor.slateBlueColor, NVColor.mediumSlateBlueColor, NVColor.mediumPurpleColor, NVColor.mediumOrchidColor, NVColor.magentaColor, NVColor.mediumVioletRedColor, NVColor.deepPinkColor, NVColor.chocolateColor, NVColor.peruColor, NVColor.sandyBrownColor, NVColor.rosyBrownColor, NVColor.lightSlateGrayColor, NVColor.dimGrayColor, NVColor.grayColor, NVColor.darkGrayColor, NVColor.silverColor];
+}
+
++ (NSArray *)darkColors
+{
+    return @[NVColor.maroonColor, NVColor.darkRedColor, NVColor.darkSalmonColor, NVColor.darkOrangeColor, NVColor.darkGoldenrodColor, NVColor.darkKhakiColor, NVColor.oliveColor, NVColor.darkOliveGreenColor, NVColor.oliveDrabColor, NVColor.darkGreenColor, NVColor.greenColor, NVColor.forestGreenColor, NVColor.darkSeaGreenColor, NVColor.seaGreenColor, NVColor.darkSlateGrayColor, NVColor.tealColor, NVColor.darkCyanColor, NVColor.darkTurquoiseColor, NVColor.midnightBlueColor, NVColor.navyColor, NVColor.darkBlueColor, NVColor.indigoColor, NVColor.darkSlateBlueColor, NVColor.darkMagentaColor, NVColor.darkVioletColor, NVColor.darkOrchidColor, NVColor.purpleColor, NVColor.saddleBrownColor, NVColor.siennaColor, NVColor.slateGrayColor, NVColor.silverColor];
+}
+
++ (NSArray *)pastelColors
+{
+    return @[NVColor.coralColor, NVColor.lightCoralColor, NVColor.darkSalmonColor, NVColor.salmonColor, NVColor.lightSalmonColor, NVColor.paleGoldenrodColor, NVColor.khakiColor, NVColor.yellowGreenColor, NVColor.greenYellowColor, NVColor.lightGreenColor, NVColor.paleGreenColor, NVColor.springGreenColor, NVColor.mediumAquamarineColor, NVColor.lightCyanColor, NVColor.paleTurquoiseColor, NVColor.aquamarineColor, NVColor.powderBlueColor, NVColor.lightBlueColor, NVColor.skyBlueColor, NVColor.lightSkyBlueColor, NVColor.thistleColor, NVColor.plumColor, NVColor.violetColor, NVColor.orchidColor, NVColor.paleVioletRedColor, NVColor.lightPinkColor, NVColor.pinkColor, NVColor.antiqueWhiteColor, NVColor.beigeColor, NVColor.bisqueColor, NVColor.blanchedAlmondColor, NVColor.wheatColor, NVColor.cornSilkColor, NVColor.lemonChiffonColor, NVColor.lightGoldenrodYellowColor, NVColor.lightYellowColor, NVColor.moccasinColor, NVColor.navajoWhiteColor, NVColor.peachPuffColor, NVColor.mistyRoseColor, NVColor.lavenderBlushColor, NVColor.linenColor, NVColor.oldLaceColor, NVColor.papayaWhipColor, NVColor.seashellColor, NVColor.mintCreamColor, NVColor.lavenderColor, NVColor.floralWhiteColor, NVColor.aliceBlueColor, NVColor.ghostWhiteColor, NVColor.honeydewColor, NVColor.ivoryColor, NVColor.azureColor, NVColor.snowColor];
+}
+
++ (NSArray *)boldColors
+{
+    return @[NVColor.maroonColor, NVColor.darkRedColor, NVColor.brownColor, NVColor.firebrickColor, NVColor.crimsonColor, NVColor.redColor, NVColor.orangeColor, NVColor.goldColor, NVColor.yellowColor, NVColor.darkGreenColor, NVColor.greenColor, NVColor.forestGreenColor, NVColor.seaGreenColor, NVColor.tealColor, NVColor.darkCyanColor, NVColor.dodgerBlueColor, NVColor.midnightBlueColor, NVColor.navyColor, NVColor.darkBlueColor, NVColor.mediumBlueColor, NVColor.blueColor, NVColor.indigoColor, NVColor.darkSlateBlueColor, NVColor.darkMagentaColor, NVColor.purpleColor, NVColor.mediumVioletRedColor, NVColor.slateGrayColor];
+}
+
++ (NSArray *)neutralColors
+{
+    return @[NVColor.brownColor, NVColor.firebrickColor, NVColor.darkGoldenrodColor, NVColor.goldenrodColor, NVColor.paleGoldenrodColor, NVColor.darkKhakiColor, NVColor.khakiColor, NVColor.oliveColor, NVColor.saddleBrownColor, NVColor.siennaColor, NVColor.chocolateColor, NVColor.peruColor, NVColor.sandyBrownColor, NVColor.burlywoodColor, NVColor.tanColor, NVColor.rosyBrownColor, NVColor.moccasinColor, NVColor.navajoWhiteColor, NVColor.peachPuffColor, NVColor.linenColor, NVColor.oldLaceColor, NVColor.papayaWhipColor, NVColor.seashellColor, NVColor.floralWhiteColor, NVColor.ivoryColor];
+}
+
++ (NSArray *)warmColors
+{
+    return @[NVColor.maroonColor, NVColor.darkRedColor, NVColor.brownColor, NVColor.firebrickColor, NVColor.crimsonColor, NVColor.redColor, NVColor.tomatoColor, NVColor.coralColor, NVColor.indianRedColor, NVColor.lightCoralColor, NVColor.darkSalmonColor, NVColor.salmonColor, NVColor.lightSalmonColor, NVColor.orangeRedColor, NVColor.darkOrangeColor, NVColor.orangeColor, NVColor.goldColor, NVColor.darkGoldenrodColor, NVColor.goldenrodColor, NVColor.khakiColor, NVColor.oliveColor, NVColor.yellowColor, NVColor.yellowGreenColor, NVColor.antiqueWhiteColor, NVColor.bisqueColor, NVColor.blanchedAlmondColor, NVColor.wheatColor, NVColor.cornSilkColor, NVColor.lemonChiffonColor, NVColor.lightGoldenrodYellowColor, NVColor.lightYellowColor, NVColor.sandyBrownColor, NVColor.moccasinColor, NVColor.navajoWhiteColor, NVColor.peachPuffColor, NVColor.linenColor, NVColor.oldLaceColor, NVColor.papayaWhipColor, NVColor.seashellColor, NVColor.floralWhiteColor, NVColor.ivoryColor];
+}
+
++ (NSArray *)coolColors
+{
+    return @[NVColor.oliveColor, NVColor.yellowGreenColor, NVColor.darkOliveGreenColor, NVColor.oliveDrabColor, NVColor.lawnGreenColor, NVColor.greenYellowColor, NVColor.darkGreenColor, NVColor.greenColor, NVColor.forestGreenColor, NVColor.limeColor, NVColor.limeGreenColor, NVColor.lightGreenColor, NVColor.paleGreenColor, NVColor.darkSeaGreenColor, NVColor.mediumSpringGreenColor, NVColor.springGreenColor, NVColor.seaGreenColor, NVColor.mediumAquamarineColor, NVColor.mediumSeaGreenColor, NVColor.lightSeaGreenColor, NVColor.darkSlateGrayColor, NVColor.tealColor, NVColor.darkCyanColor, NVColor.cyanColor, NVColor.lightCyanColor, NVColor.darkTurquoiseColor, NVColor.turquoiseColor, NVColor.mediumTurquoiseColor, NVColor.paleTurquoiseColor, NVColor.aquamarineColor, NVColor.powderBlueColor, NVColor.cadetBlueColor, NVColor.steelBlueColor, NVColor.cornflowerBlueColor, NVColor.deepSkyBlueColor, NVColor.dodgerBlueColor, NVColor.lightBlueColor, NVColor.skyBlueColor, NVColor.lightSkyBlueColor, NVColor.midnightBlueColor, NVColor.navyColor, NVColor.darkBlueColor, NVColor.mediumBlueColor, NVColor.blueColor, NVColor.royalBlueColor, NVColor.blueVioletColor, NVColor.indigoColor, NVColor.darkSlateBlueColor, NVColor.slateBlueColor, NVColor.mediumSlateBlueColor, NVColor.mediumPurpleColor, NVColor.darkMagentaColor, NVColor.darkVioletColor, NVColor.darkOrchidColor, NVColor.mediumOrchidColor, NVColor.purpleColor, NVColor.mediumVioletRedColor, NVColor.rosyBrownColor, NVColor.slateGrayColor, NVColor.lightSlateGrayColor];
+}
+
 + (instancetype)maroonColor
 {
     return colorFromRGB(128,0,0);
@@ -151,11 +196,6 @@ NVColor *colorFromRGB(int r, int g, int b)
 + (instancetype)lawnGreenColor
 {
     return colorFromRGB(124,252,0);
-}
-
-+ (instancetype)chartreuseColor
-{
-    return colorFromRGB(127,255,0);
 }
 
 + (instancetype)greenYellowColor
