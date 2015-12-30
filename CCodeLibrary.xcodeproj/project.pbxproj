@@ -26,6 +26,8 @@
 		692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692ACC651B86309B00400B36 /* NVRoutes.h */; };
 		693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */; };
 		693C9BA11BEC529600564F93 /* UIImage+ImageFromColor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */; };
+		694304161C334E5A0077EC9F /* NVColorSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 694304151C334E5A0077EC9F /* NVColorSet.m */; };
+		6943041F1C3351E20077EC9F /* NVColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943041E1C3351E20077EC9F /* NVColor.m */; };
 		69450DAD1BD5F6120079F7EC /* NVContactPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 69450DAC1BD5F6120079F7EC /* NVContactPicker.m */; };
 		69450DAE1BD5FA2B0079F7EC /* NVContactPicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69450DAB1BD5F6120079F7EC /* NVContactPicker.h */; };
 		6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6948D5D41BC780EE009CA04F /* NVStaticMapView.m */; };
@@ -415,6 +417,10 @@
 		692ACC661B86309B00400B36 /* NVRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRoutes.m; sourceTree = "<group>"; };
 		693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageFromColor.h"; sourceTree = "<group>"; };
 		693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageFromColor.m"; sourceTree = "<group>"; };
+		694304141C334E5A0077EC9F /* NVColorSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVColorSet.h; sourceTree = "<group>"; };
+		694304151C334E5A0077EC9F /* NVColorSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVColorSet.m; sourceTree = "<group>"; };
+		6943041D1C3351E20077EC9F /* NVColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVColor.h; sourceTree = "<group>"; };
+		6943041E1C3351E20077EC9F /* NVColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVColor.m; sourceTree = "<group>"; };
 		69450DAB1BD5F6120079F7EC /* NVContactPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVContactPicker.h; sourceTree = "<group>"; };
 		69450DAC1BD5F6120079F7EC /* NVContactPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVContactPicker.m; sourceTree = "<group>"; };
 		6948D5D31BC780EE009CA04F /* NVStaticMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVStaticMapView.h; sourceTree = "<group>"; };
@@ -828,6 +834,10 @@
 				A98A57A71B20ADE600906FBC /* NVCalibrationController.m */,
 				A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */,
 				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
+				6943041D1C3351E20077EC9F /* NVColor.h */,
+				6943041E1C3351E20077EC9F /* NVColor.m */,
+				694304141C334E5A0077EC9F /* NVColorSet.h */,
+				694304151C334E5A0077EC9F /* NVColorSet.m */,
 				69450DAB1BD5F6120079F7EC /* NVContactPicker.h */,
 				69450DAC1BD5F6120079F7EC /* NVContactPicker.m */,
 				69B36F181BCB0F30004C4B69 /* NVDateRange.h */,
@@ -1206,6 +1216,7 @@
 				EBC01D2E1BED1C8C0004C751 /* ura404.c in Sources */,
 				EBC01D1E1BED1C8C0004C751 /* mer404.c in Sources */,
 				6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */,
+				6943041F1C3351E20077EC9F /* NVColor.m in Sources */,
 				A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */,
 				EBC01D191BED1C8C0004C751 /* kepler.c in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,
@@ -1226,6 +1237,7 @@
 				EBC01D181BED1C8C0004C751 /* jup404.c in Sources */,
 				EBC01D111BED1C8C0004C751 /* diurpx.c in Sources */,
 				EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */,
+				694304161C334E5A0077EC9F /* NVColorSet.m in Sources */,
 				EBC01D1B1BED1C8C0004C751 /* lightt.c in Sources */,
 				EBC01D311BED1C8C0004C751 /* zatan2.c in Sources */,
 				EBC01D121BED1C8C0004C751 /* dms.c in Sources */,

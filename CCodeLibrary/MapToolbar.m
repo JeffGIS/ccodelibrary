@@ -4,6 +4,7 @@
 #import "MapToolbar.h"
 #import "UserDefaults.h"
 #import "HelpButton.h"
+#import "NVColor.h"
 
 @interface MapToolbar ()
 
