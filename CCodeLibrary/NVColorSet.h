@@ -36,4 +36,8 @@ typedef NS_ENUM(NSInteger, NVColorOption)
 + (NSArray *)colorOptions;
 + (NSArray *)randomColorPaletteOptions;
 
++ (NSArray *)bluesArrayWithNumComponents:(NSUInteger)numComponents;
++ (NSArray *)redsArrayWithNumComponents:(NSUInteger)numComponents;
++ (NSArray *)greensArrayWithNumComponents:(NSUInteger)numComponents;
+
 @end
