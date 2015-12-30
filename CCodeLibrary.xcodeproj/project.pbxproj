@@ -12,6 +12,8 @@
 		1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */; };
 		1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544519A412490029DBEA /* NetworkManager.m */; };
 		1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544E19A449460029DBEA /* CustomAlert.m */; };
+		1F829A9A1C342BDD00DD429C /* FileLister.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F829A991C342BDD00DD429C /* FileLister.m */; };
+		1F829A9B1C342F6200DD429C /* FileLister.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F829A981C342BDD00DD429C /* FileLister.h */; };
 		1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F838AE919B1021C00943A8C /* PlacesInfo.m */; };
 		1F838AEC19B1026700943A8C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F838AEB19B1026700943A8C /* CoreGraphics.framework */; };
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
@@ -286,6 +288,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				1F829A9B1C342F6200DD429C /* FileLister.h in CopyFiles */,
 				694304211C336DCC0077EC9F /* NVColorSet.h in CopyFiles */,
 				694304201C336DC00077EC9F /* NVColor.h in CopyFiles */,
 				6919EAF91C27B3EE00A9D0F1 /* NVUnitPickerTextAlert.h in CopyFiles */,
@@ -406,6 +409,8 @@
 		1F3A544519A412490029DBEA /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		1F3A544D19A449460029DBEA /* CustomAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlert.h; sourceTree = "<group>"; };
 		1F3A544E19A449460029DBEA /* CustomAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlert.m; sourceTree = "<group>"; };
+		1F829A981C342BDD00DD429C /* FileLister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileLister.h; sourceTree = "<group>"; };
+		1F829A991C342BDD00DD429C /* FileLister.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileLister.m; sourceTree = "<group>"; };
 		1F838AE819B1021C00943A8C /* PlacesInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesInfo.h; sourceTree = "<group>"; };
 		1F838AE919B1021C00943A8C /* PlacesInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlacesInfo.m; sourceTree = "<group>"; };
 		1F838AEB19B1026700943A8C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1006,6 +1011,8 @@
 				EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */,
 				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
+				1F829A981C342BDD00DD429C /* FileLister.h */,
+				1F829A991C342BDD00DD429C /* FileLister.m */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";
@@ -1208,6 +1215,7 @@
 				A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */,
 				691636221C1FC790000C61B8 /* NVTileCompiler.m in Sources */,
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
+				1F829A9A1C342BDD00DD429C /* FileLister.m in Sources */,
 				A933D9FD1B5D4FEF00D621CD /* NV3DMath.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */,
