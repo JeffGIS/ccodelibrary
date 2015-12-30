@@ -84,4 +84,118 @@
              @"Pastel", @"Bold", @"Neutral", @"Warm", @"Cool"];
 }
 
++ (NSArray *)bluesArrayWithNumComponents:(NSUInteger)numComponents
+{
+    NSMutableArray *colorArray = NSMutableArray.array;
+    CGFloat blue = 153.0, red = 0.0, green = 0.0;
+    NSUInteger partialCount = (numComponents / 4);
+    NSUInteger remainder = (numComponents - partialCount);
+    CGFloat incBlue = ((255.0 - blue) / partialCount);
+    CGFloat incRed = (204.0 / remainder);
+    CGFloat incGreen = (229.0 / remainder);
+    
+    for (int i = 0; i < partialCount; i++)
+    {
+        UIColor *color = [UIColor colorWithRed:(red / 255.0)
+                                         green:(green / 255.0)
+                                          blue:(blue / 255.0)
+                                         alpha:1.0];
+        
+        blue += incBlue;
+        
+        [colorArray addObject:color];
+    }
+    
+    for (int i = 0; i < remainder; i++)
+    {
+        UIColor *color = [UIColor colorWithRed:(red / 255.0)
+                                         green:(green / 255.0)
+                                          blue:(blue / 255.0)
+                                         alpha:1.0];
+        
+        red += incRed;
+        green += incGreen;
+        
+        [colorArray addObject:color];
+    }
+    
+    return colorArray.copy;
+}
+
++ (NSArray *)redsArrayWithNumComponents:(NSUInteger)numComponents
+{
+    NSMutableArray *colorArray = NSMutableArray.array;
+    CGFloat red = 153.0, blue = 0.0, green = 0.0;
+    NSUInteger partialCount = (numComponents / 3);
+    NSUInteger remainder = (numComponents - partialCount);
+    CGFloat incRed = ((255.0 - red) / partialCount);
+    CGFloat incGreen = (204.0 / remainder);
+    CGFloat incBlue = (229.0 / remainder);
+    
+    for (int i = 0; i < partialCount; i++)
+    {
+        UIColor *color = [UIColor colorWithRed:(red / 255.0)
+                                         green:(green / 255.0)
+                                          blue:(blue / 255.0)
+                                         alpha:1.0];
+        
+        red += incRed;
+        
+        [colorArray addObject:color];
+    }
+    
+    for (int i = 0; i < remainder; i++)
+    {
+        UIColor *color = [UIColor colorWithRed:(red / 255.0)
+                                         green:(green / 255.0)
+                                          blue:(blue / 255.0)
+                                         alpha:1.0];
+        
+        blue += incBlue;
+        green += incGreen;
+        
+        [colorArray addObject:color];
+    }
+    
+    return colorArray.copy;
+}
+
++ (NSArray *)greensArrayWithNumComponents:(NSUInteger)numComponents
+{
+    NSMutableArray *colorArray = NSMutableArray.array;
+    CGFloat green = 102.0, red = 0.0, blue = 0.0;
+    NSUInteger partialCount = (numComponents / 1.5);
+    NSUInteger remainder = (numComponents - partialCount);
+    CGFloat incGreen = ((255.0 - green) / partialCount);
+    CGFloat incBlue = (204.0 / remainder);
+    CGFloat incRed = (229.0 / remainder);
+    
+    for (int i = 0; i < partialCount; i++)
+    {
+        UIColor *color = [UIColor colorWithRed:(red / 255.0)
+                                         green:(green / 255.0)
+                                          blue:(blue / 255.0)
+                                         alpha:1.0];
+        
+        green += incGreen;
+        
+        [colorArray addObject:color];
+    }
+    
+    for (int i = 0; i < remainder; i++)
+    {
+        UIColor *color = [UIColor colorWithRed:(red / 255.0)
+                                         green:(green / 255.0)
+                                          blue:(blue / 255.0)
+                                         alpha:1.0];
+        
+        red += incRed;
+        blue += incBlue;
+        
+        [colorArray addObject:color];
+    }
+    
+    return colorArray.copy;
+}
+
 @end
