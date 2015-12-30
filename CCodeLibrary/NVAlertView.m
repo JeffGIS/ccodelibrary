@@ -6,7 +6,6 @@
 
 @interface NVAlertView ()
 
-@property (nonatomic) UIView *overlayView;
 @property (nonatomic) UILabel *titleLabel;
 
 @end
@@ -31,6 +30,7 @@
     alert.overlayView.backgroundColor = UIColor.blackColor;
     alert.overlayView.alpha = 0.0;
     alert.delegate = delegate;
+    alert.buttonBorderColor = UIColor.lightGrayColor;
     
     [view addSubview:alert.overlayView];
     
@@ -68,7 +68,7 @@
         button.tag = (i + 1);
         button.backgroundColor = UIColor.clearColor;
         button.titleLabel.font = font;
-        button.layer.borderColor = UIColor.lightGrayColor.CGColor;
+        button.layer.borderColor = alert.buttonBorderColor.CGColor;
         button.layer.borderWidth = 1.0;
         button.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
@@ -167,6 +167,17 @@
         self.center = CGPointMake((self.superview.frame.size.height / 2.0),
                                   (self.superview.frame.size.width / 2.0));
     }];
+}
+
+- (void)setButtonBorderColor:(UIColor *)buttonBorderColor
+{
+    for (UIButton *buttons in self.subviews)
+    {
+        if ([buttons isKindOfClass:UIButton.class] && buttons.tag > 0)
+            buttons.layer.borderColor = buttonBorderColor.CGColor;
+    }
+    
+    _buttonBorderColor = buttonBorderColor;
 }
 
 @end
