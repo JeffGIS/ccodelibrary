@@ -6,6 +6,7 @@
 
 typedef NS_ENUM(NSInteger, NVColorType)
 {
+    NVColorTypeDefault,
     NVColorTypeAll,
     NVColorTypeLight,
     NVColorTypeMedium,
@@ -17,9 +18,22 @@ typedef NS_ENUM(NSInteger, NVColorType)
     NVColorTypeCool,
 };
 
+typedef NS_ENUM(NSInteger, NVColorOption)
+{
+    NVColorOptionDefault,
+    NVColorOptionReds,
+    NVColorOptionGreens,
+    NVColorOptionBlues,
+    NVColorOptionRandom,
+    NVColorOptionCustom,
+};
+
 @interface NVColorSet : NSObject
 
 + (NSArray *)randomColorArrayOfType:(NVColorType)type
                       numComponents:(NSUInteger)numComponents;
+
++ (NSArray *)colorOptions;
++ (NSArray *)randomColorPaletteOptions;
 
 @end

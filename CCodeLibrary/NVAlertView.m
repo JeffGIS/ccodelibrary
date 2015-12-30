@@ -25,8 +25,9 @@
     NVAlertView *alert = [[NVAlertView alloc] init];
     
     CGRect bounds = UIScreen.mainScreen.bounds;
+    CGFloat longestSide = MAX(bounds.size.height, bounds.size.width);
     
-    alert.overlayView = [[UIView alloc] initWithFrame:bounds];
+    alert.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, longestSide, longestSide)];
     alert.overlayView.backgroundColor = UIColor.blackColor;
     alert.overlayView.alpha = 0.0;
     alert.delegate = delegate;
@@ -158,6 +159,14 @@
     totalHeight = ceil(titleSize.height);
     CGFloat height = MAX(totalHeight, 40.0);
     return height;
+}
+
+- (void)willRotateWithDuration:(NSTimeInterval)duration
+{
+    [UIView animateWithDuration:duration animations:^{
+        self.center = CGPointMake((self.superview.frame.size.height / 2.0),
+                                  (self.superview.frame.size.width / 2.0));
+    }];
 }
 
 @end

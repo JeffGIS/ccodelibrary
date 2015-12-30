@@ -47,6 +47,9 @@
         case NVColorTypeCool:
             colorArray = NVColor.coolColors;
             break;
+            
+        default:
+            break;
     }
     
     NSUInteger randomIndex = 0;
@@ -68,6 +71,17 @@
     }
     
     return randomColorArray.copy;
+}
+
++ (NSArray *)colorOptions
+{
+    return @[@"Cancel", @"Reds", @"Greens", @"Blues", @"Random", @"Custom"];
+}
+
++ (NSArray *)randomColorPaletteOptions
+{
+    return @[@"Cancel", @"All", @"Light", @"Medium", @"Dark",
+             @"Pastel", @"Bold", @"Neutral", @"Warm", @"Cool"];
 }
 
 @end
