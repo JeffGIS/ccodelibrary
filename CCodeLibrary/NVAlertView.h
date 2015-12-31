@@ -18,6 +18,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex;
 @property (nonatomic) NSString *identifier;
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UIColor *buttonBorderColor;
+@property (nonatomic) UITabBar *tabBar;
 
 + (NVAlertView *)showLargeAlertViewinView:(UIView *)view
                                  delegate:(id)delegate
