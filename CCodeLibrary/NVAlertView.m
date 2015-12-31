@@ -163,9 +163,11 @@
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration
 {
+    CGRect bounds = UIScreen.mainScreen.bounds;
+    
     [UIView animateWithDuration:duration animations:^{
-        self.center = CGPointMake((self.superview.frame.size.height / 2.0 + _tabBar.frame.size.height / 2.0),
-                                  (self.superview.frame.size.width / 2.0));
+        self.center = CGPointMake((bounds.size.width / 2.0),
+                                  (bounds.size.height / 2.0));
     }];
 }
 
