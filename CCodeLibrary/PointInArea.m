@@ -9,7 +9,47 @@
 #import "PointInArea.h"
 #import "MathUtil.h"
 
-CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void **bmData);
+CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void **bmData)
+{
+    CGContextRef context = NULL;
+    void *bitmapData = NULL;
+    int bitmapByteCount = 0, bitmapBytesPerRow = 0;
+    
+    bitmapBytesPerRow = (pixelsWide); //1
+    bitmapByteCount = (bitmapBytesPerRow *pixelsHigh);
+    
+    bitmapData = malloc(bitmapByteCount); //3
+    
+    if (bitmapData)
+    {
+        memset (bitmapData,0,bitmapByteCount);
+        
+        context = CGBitmapContextCreate(bitmapData, pixelsWide, pixelsHigh, 8,
+                                        bitmapBytesPerRow, colorSpace,0);
+        
+        CGContextSetShouldAntialias(context, NO);
+        
+        if (!context)
+        {
+            free(bitmapData);
+            bitmapData = NULL;
+        }
+    }
+    
+    *bmData = bitmapData;
+    return context;
+}
+dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
+{
+    dbounds bounds;
+    
+    InitDBounds(&bounds);
+    for (int i=0;i<nPoints;i++)
+    {
+        AddDPointToBounds(&bounds, &pPoints[i]);
+    }
+    return bounds;
+}
 
 @implementation PointInArea
 
@@ -31,8 +71,10 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
 
 - (BOOL) loadArea:(int)nPoints
          numLoops:(int)nLoops
-      polyPartLen:(int*)pnPointsInLoop
+      polyPartLen:(int*)pPartLen
            points:(LPDPOINT)pPoints
+    boundaryWidth:(CGFloat)lineWidth
+
 {
     BOOL rtn = NO;
     void *bmData = NULL;
@@ -56,8 +98,10 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
     _width += _width % 4;
     _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
     _bitmapData = bmData;
+    const CGFloat white[2] = {1, 1};
+    const CGFloat gray[2] = {0.5, 1};
     CGContextSetAllowsAntialiasing(_context, NO);
-    
+    CGContextSetShouldAntialias(_context,NO);
     for (int i = 0; i < nPoints; i++)
     {
         CGPoint pt = [self projectPointToContext:&pPoints[i] from:0];
@@ -68,32 +112,57 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
         else
             CGContextAddLineToPoint(_context, pt.x, pt.y);
     }
-    
+    CGColorRef whiteRef = CGColorCreate(_colorSpace, white);
+    CGColorRef grayRef  = CGColorCreate(_colorSpace, gray);
+    CGContextSetFillColorWithColor(_context, whiteRef);
+    CGContextSetStrokeColorWithColor(_context, grayRef);
     if (!CGContextIsPathEmpty(_context))
     {
-        const CGFloat white[2] = {1, 1};
-        
-        CGColorRef whiteRef = CGColorCreate(_colorSpace, white);
-        CGContextSetFillColorWithColor(_context, whiteRef);
-        CGContextDrawPath(_context, kCGPathFill);
-        CGColorRelease(whiteRef);
+        if (lineWidth > 0 && nLoops == 1)
+        {
+            CGContextSetLineWidth(_context,lineWidth);
+            CGContextDrawPath(_context, kCGPathFillStroke);
+        }
+        else
+            CGContextDrawPath(_context, kCGPathFill);
         rtn = YES;
     }
+    if (nLoops > 1 && lineWidth > 0)
+    {
+        int ip = 0;
+        //int ii;
+        
+        for (int loop = 0; loop < nLoops; loop++)
+        {
+            CGPoint pt = [self projectPointToContext:&pPoints[ip] from:0];
+            
+            CGContextMoveToPoint(_context, pt.x, pt.y);
+            ip++;
+            //ii = pPartLen[loop];
+            
+            for (int i = 1; i < pPartLen[loop]; i++)
+            {
+                pt = [self projectPointToContext:&pPoints[ip] from:0];
+                CGContextAddLineToPoint(_context,  pt.x, pt.y);
+                ip++;
+            }
+            
+            if (loop)
+                ip++;
+            
+            if (!CGContextIsPathEmpty(_context))
+            {
+                CGContextDrawPath(_context, kCGPathStroke);
+            }
+        }
+        
+        //ii = ip;
+    }
+    CGColorRelease(whiteRef);
+    CGColorRelease(grayRef);
     
     return rtn;
 
-}
-
-dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
-{
-    dbounds bounds;
-    
-    InitDBounds(&bounds);
-    for (int i=0;i<nPoints;i++)
-    {
-        AddDPointToBounds(&bounds, &pPoints[i]);
-    }
-    return bounds;
 }
 
 - (CGPoint)projectPointToContext:(LPDPOINT)Point
@@ -117,12 +186,12 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
 }
 
 
-- (BOOL)DPointInArea:(DPOINT *)dPoint
+- (int)DPointInArea:(DPOINT *)dPoint
 {
     
     int row=-999;
     int col;
-    BYTE bitmapValue;
+    int bitmapValue;
     static int ii=1;
     CGPoint pt = [self projectPointToContext:dPoint
                                         from:ii];
@@ -132,13 +201,17 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
     {
         row = (pt.y + 0.5);
         col = (pt.x + 0.5);
-        bitmapValue = _bitmapData[row * _width + col];
+        bitmapValue = (unsigned int)_bitmapData[row * _width + col];
         
+        if (bitmapValue == 255)
+            return 1;
+        if (bitmapValue == 128)
+            return 2;
         if (bitmapValue)
-            return true;
+            return 4;
     }
     
-    return NO;
+    return 0;
 }
 
 @end

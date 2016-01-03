@@ -29,6 +29,7 @@
 #import "GSSiEnums.h"
 #import "PriorityLocation.h"
 #import "PointInArea.h"
+#import "PointInAreas.h"
 #import "PointInAreaClass.h"
 #import "GetPriorityLocations.h"
 #import "GSSiAlertController.h"

@@ -623,6 +623,23 @@ void InitIBounds(IBOUNDS *bnds)
     bnds->ymx = INT_MIN;
     return;
 }
+void AddMinMaxD (LPMNMXCORD mm1, LPMNMXCORD mm2)
+{
+    mm1->xmn = min (mm1->xmn,mm2->xmn);
+    mm1->xmx = max (mm1->xmx,mm2->xmx);
+    mm1->ymn = min (mm1->ymn,mm2->ymn);
+    mm1->ymx = max (mm1->ymx,mm2->ymx);
+    return;
+}
+
+void AddMinMaxL (LPMNMXCORL mm1, LPMNMXCORL mm2)
+{
+    mm1->xmn = min (mm1->xmn,mm2->xmn);
+    mm1->xmx = max (mm1->xmx,mm2->xmx);
+    mm1->ymn = min (mm1->ymn,mm2->ymn);
+    mm1->ymx = max (mm1->ymx,mm2->ymx);
+    return;
+}
 
 LPDPOINT PointsFromCorners (CORNERPOINTS* pCornerPoints)
 {

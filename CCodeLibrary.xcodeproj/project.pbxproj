@@ -220,6 +220,8 @@
 		EBAEED0919B605E20084A579 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = EBAEED0819B605E20084A579 /* compress.c */; };
 		EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */; };
 		EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1BFCB199DD7C10059B547 /* MPIntersection.m */; };
+		EBB3C42C1C36F6E000054DB5 /* PointInAreas.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB3C42B1C36F6E000054DB5 /* PointInAreas.m */; };
+		EBB3C42E1C37143000054DB5 /* PointInAreas.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBB3C42A1C36F6E000054DB5 /* PointInAreas.h */; };
 		EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB9A61919FFC02900685716 /* GetAssignments.m */; };
 		EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */; };
 		EBC01D071BED1C8C0004C751 /* aa.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CD91BED1C8C0004C751 /* aa.c */; };
@@ -286,6 +288,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EBB3C42E1C37143000054DB5 /* PointInAreas.h in CopyFiles */,
 				694304211C336DCC0077EC9F /* NVColorSet.h in CopyFiles */,
 				694304201C336DC00077EC9F /* NVColor.h in CopyFiles */,
 				6919EAF91C27B3EE00A9D0F1 /* NVUnitPickerTextAlert.h in CopyFiles */,
@@ -616,6 +619,8 @@
 		EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaults.m; sourceTree = "<group>"; };
 		EBB1BFCA199DD7C10059B547 /* MPIntersection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPIntersection.h; sourceTree = "<group>"; };
 		EBB1BFCB199DD7C10059B547 /* MPIntersection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPIntersection.m; sourceTree = "<group>"; };
+		EBB3C42A1C36F6E000054DB5 /* PointInAreas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointInAreas.h; sourceTree = "<group>"; };
+		EBB3C42B1C36F6E000054DB5 /* PointInAreas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInAreas.m; sourceTree = "<group>"; };
 		EBB9A61819FFC02900685716 /* GetAssignments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAssignments.h; sourceTree = "<group>"; };
 		EBB9A61919FFC02900685716 /* GetAssignments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAssignments.m; sourceTree = "<group>"; };
 		EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiPopoverView.h; sourceTree = "<group>"; };
@@ -994,6 +999,8 @@
 				EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */,
 				EB4DB2561B9600AA008157D8 /* PointInArea.h */,
 				EB4DB2571B9600AA008157D8 /* PointInArea.m */,
+				EBB3C42B1C36F6E000054DB5 /* PointInAreas.m */,
+				EBB3C42A1C36F6E000054DB5 /* PointInAreas.h */,
 				697B376F1B94B7D60066978B /* NVTextDrawing.h */,
 				697B37701B94B7D60066978B /* NVTextDrawing.m */,
 				A94A770B19F7F9F40062906E /* SharedDefaults.h */,
@@ -1268,6 +1275,7 @@
 				EB86BFA71B0B62520074728E /* minilzo.c in Sources */,
 				EBC01D171BED1C8C0004C751 /* gplan.c in Sources */,
 				A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */,
+				EBB3C42C1C36F6E000054DB5 /* PointInAreas.m in Sources */,
 				A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */,
 				A9C1835F1B6674A600780BF6 /* NVMesh.m in Sources */,
 				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
