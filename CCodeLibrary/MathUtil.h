@@ -85,6 +85,8 @@ double BoundsWidth(dbounds* bnds);
 double BoundsHeight(dbounds* bnds);
 double MNMXCORDWidth(MNMXCORD* bnds);
 double MNMXCORDHeight(MNMXCORD* bnds);
+void AddMinMaxD (LPMNMXCORD mm1, LPMNMXCORD mm2);
+void AddMinMaxL (LPMNMXCORL mm1, LPMNMXCORL mm2);
 LPDPOINT PointsFromCorners (CORNERPOINTS* pCornerPoints);
 MNMXCORD CornerPointBounds (CORNERPOINTS* cornerPoints);
 IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist);

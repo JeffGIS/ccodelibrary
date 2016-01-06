@@ -23,7 +23,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex;
                                  delegate:(id)delegate
                                     title:(NSString *)title
                           buttonTextArray:(NSArray *)buttonTextArray
-                         destructiveIndex:(NSUInteger)destructiveIndex;
+                         destructiveIndex:(NSUInteger)destructiveIndex;//1-indexed (use '0' if none)
 
 - (void)hideLargeAlertView:(BOOL)animated;
 - (void)willRotateWithDuration:(NSTimeInterval)duration;

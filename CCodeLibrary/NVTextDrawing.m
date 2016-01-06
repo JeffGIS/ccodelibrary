@@ -52,7 +52,8 @@
     [pia loadArea:(int)numPoints
          numLoops:(int)numLoops
       polyPartLen:polyPartLen
-           points:pPoints];
+           points:pPoints
+    boundaryWidth:0];
     
     //int numTextLines = [NVTextDrawing numLinesInText:text.UTF8String];
     
