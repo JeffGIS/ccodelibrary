@@ -290,7 +290,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				1F829A9B1C342F6200DD429C /* FileLister.h in CopyFiles */,
+				EBB3C42E1C37143000054DB5 /* PointInAreas.h in CopyFiles */,
+                1F829A9B1C342F6200DD429C /* FileLister.h in CopyFiles */,
 				694304211C336DCC0077EC9F /* NVColorSet.h in CopyFiles */,
 				694304201C336DC00077EC9F /* NVColor.h in CopyFiles */,
 				6919EAF91C27B3EE00A9D0F1 /* NVUnitPickerTextAlert.h in CopyFiles */,
