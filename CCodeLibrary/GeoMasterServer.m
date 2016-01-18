@@ -1,11 +1,11 @@
 //  GeoMasterServer.m
 //  CCodeLibrary
 
-//#define GM_PORT 22335
+#define GM_PORT 22335
 //#define GM_SERVER @"gssidata.com"
 #define GM_SERVER @"gssiserver1.com"
 //#define GM_SERVER @"74.39.73.120"
-#define GM_PORT 501
+//#define GM_PORT 501
 
 #import "GeoMasterServer.h"
 #import "Reachability.h"
