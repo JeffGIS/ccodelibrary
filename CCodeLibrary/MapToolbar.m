@@ -96,7 +96,6 @@
     [mt setupButton:mt.userLocationButton
          imageTitle:@"userLocation"
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
-             target:mt
            selector:@selector(userLocationSelected:)];
 
     //add user location button added by default
@@ -108,8 +107,12 @@
     [mt setupButton:mt.extentsButton
          imageTitle:@"zoom"
          edgeInsets:UIEdgeInsetsMake(-2.0, -2.0, -2.0, -2.0)
-             target:mt
            selector:@selector(extentsSelected:)];
+    
+    UILongPressGestureRecognizer *lpGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:mt
+                                                                                            action:@selector(extentsLongPressed:)];
+    
+    [mt.extentsButton addGestureRecognizer:lpGesture];
   
     //add extents button added by default
     [mt addSubview:mt.extentsButton];
@@ -120,7 +123,6 @@
     [mt setupButton:mt.grayscaleButton
          imageTitle:@"grayscale"
          edgeInsets:UIEdgeInsetsZero
-             target:mt
            selector:@selector(grayscaleSelected:)];
     
     //grayscale button added by default
@@ -132,7 +134,6 @@
     [mt setupButton:mt.clearMarkerButton
          imageTitle:@"clearMarkers"
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
-             target:mt
            selector:@selector(clearMarkersSelected:)];
     
     //clear marker button added by default
@@ -144,7 +145,6 @@
     [mt setupButton:mt.emailPDFButton
          imageTitle:@"emailIcon"
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
-             target:mt
            selector:@selector(emailPDFSelected:)];
     
     //email PDF button added by default
@@ -156,7 +156,6 @@
     [mt setupButton:mt.helpButton
          imageTitle:@"questionMark"
          edgeInsets:UIEdgeInsetsMake(4.0, -2.0, 4.0, -2.0)
-             target:mt
            selector:@selector(helpButtonSelected:)];
     
     //email PDF button added by default
@@ -179,7 +178,6 @@
     
     [mt setupSegControl:mt.mapTypeSC
    selectedSegmentIndex:0
-                 target:mt
                selector:@selector(mapTypeSelected:)];
     
     //map type SC is NOT added by default
@@ -189,7 +187,6 @@
     [mt setupButton:mt.digitizeButton
          imageTitle:@"plusSign"
          edgeInsets:UIEdgeInsetsMake(3.0, 3.0, 3.0, 3.0)
-             target:mt
            selector:@selector(digitizeSelected:)];
     
     //digitize button is NOT added by default
@@ -199,7 +196,6 @@
     [mt setupButton:mt.legendsButton
          imageTitle:@"list"
          edgeInsets:UIEdgeInsetsZero
-             target:mt
            selector:@selector(legendsSelected:)];
     
     //legends button is NOT added by default
@@ -208,7 +204,6 @@
     
     [mt setupSegControl:mt.platSC
    selectedSegmentIndex:MapViewScreenSettingFullscreen
-                 target:mt
                selector:@selector(splitScreenSettingSelected:)];
     
     //plat SC is NOT added by default
@@ -225,7 +220,6 @@
 - (void)setupButton:(UIButton *)button
          imageTitle:(NSString *)imageTitle
          edgeInsets:(UIEdgeInsets)edgeInsets
-             target:(id)target
            selector:(SEL)selector
 {
     button.imageEdgeInsets = edgeInsets;
@@ -239,14 +233,23 @@
                                                                                     ofType:@"png"]]
             forState:UIControlStateNormal];
     
-    [button addTarget:target
+    [button addTarget:self
                action:selector
      forControlEvents:UIControlEventTouchUpInside];
+    
+    [button addTarget:self
+               action:@selector(buttonPressedDown:)
+     forControlEvents:UIControlEventTouchDown];
+}
+
+- (void)buttonPressedDown:(UIButton *)button
+{
+    button.layer.borderColor = UIColor.darkGrayColor.CGColor;
+    button.layer.borderWidth = 6.0;
 }
 
 - (void)setupSegControl:(UISegmentedControl *)segControl
    selectedSegmentIndex:(NSInteger)selectedSegmentIndex
-                 target:(id)target
                selector:(SEL)selector
 {
     segControl.backgroundColor = UIColor.whiteColor;
@@ -257,13 +260,16 @@
     segControl.layer.masksToBounds = YES;
     segControl.selectedSegmentIndex = MapViewScreenSettingFullscreen;
     
-    [segControl addTarget:target
+    [segControl addTarget:self
                    action:selector
          forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)userLocationSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     _myLocationEnabled = !_myLocationEnabled;
     
     if (_myLocationEnabled)
@@ -284,30 +290,60 @@
 
 - (void)extentsSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectZoomExtent];
 }
 
+- (void)extentsLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        _extentsButton.layer.borderColor = UIColor.greenColor.CGColor;
+        _extentsButton.layer.borderWidth = 6.0;
+    }
+    
+    else if (gesture.state == UIGestureRecognizerStateEnded)
+    {
+        _extentsButton.layer.borderColor = UIColor.blackColor.CGColor;
+        _extentsButton.layer.borderWidth = 2.0;
+    }
+}
+
 - (void)grayscaleSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectGrayscale];
 }
 
 - (void)clearMarkersSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectClearMarkers];
 }
 
 - (void)emailPDFSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectEmailPDF];
 }
 
 - (void)helpButtonSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectHelpButton];
 }
@@ -320,12 +356,18 @@
 
 - (void)digitizeSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectDigitize];
 }
 
 - (void)legendsSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectLegends];
 }
@@ -343,6 +385,15 @@
     if (gesture.state == UIGestureRecognizerStateBegan ||
         gesture.state == UIGestureRecognizerStateChanged)
     {
+        if (gesture.state == UIGestureRecognizerStateBegan)
+        {
+            for (UIButton *buttons in self.subviews)
+            {
+                buttons.layer.borderColor = UIColor.blackColor.CGColor;
+                buttons.layer.borderWidth = 2.0;
+            }
+        }
+        
         gesture.view.center = CGPointMake(gesture.view.center.x + translation.x,
                                           gesture.view.center.y + translation.y);
         
