@@ -53,6 +53,7 @@
 		69B36F1B1BCB1C8F004C4B69 /* NVDateRange.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69B36F181BCB0F30004C4B69 /* NVDateRange.h */; };
 		69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C441A91BB474B200D026A7 /* NVTabBarEdit.m */; };
 		69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C441A81BB474B200D026A7 /* NVTabBarEdit.h */; };
+		69C8DB4E1C515BFB0062AE84 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 69C8DB4D1C515BFB0062AE84 /* .gitignore */; };
 		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
 		69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */; };
 		69F5B2301BC5F6CD00119212 /* NVDestinationOptions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */; };
@@ -291,7 +292,7 @@
 			dstSubfolderSpec = 16;
 			files = (
 				EBB3C42E1C37143000054DB5 /* PointInAreas.h in CopyFiles */,
-                1F829A9B1C342F6200DD429C /* FileLister.h in CopyFiles */,
+				1F829A9B1C342F6200DD429C /* FileLister.h in CopyFiles */,
 				694304211C336DCC0077EC9F /* NVColorSet.h in CopyFiles */,
 				694304201C336DC00077EC9F /* NVColor.h in CopyFiles */,
 				6919EAF91C27B3EE00A9D0F1 /* NVUnitPickerTextAlert.h in CopyFiles */,
@@ -455,6 +456,7 @@
 		69B36F191BCB0F30004C4B69 /* NVDateRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDateRange.m; sourceTree = "<group>"; };
 		69C441A81BB474B200D026A7 /* NVTabBarEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTabBarEdit.h; sourceTree = "<group>"; };
 		69C441A91BB474B200D026A7 /* NVTabBarEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTabBarEdit.m; sourceTree = "<group>"; };
+		69C8DB4D1C515BFB0062AE84 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSecretAlertView.h; sourceTree = "<group>"; };
 		69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSecretAlertView.m; sourceTree = "<group>"; };
 		69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDestinationOptions.h; sourceTree = "<group>"; };
@@ -1027,6 +1029,7 @@
 		EBA2E460199527660085B2E0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				69C8DB4D1C515BFB0062AE84 /* .gitignore */,
 				EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -1186,6 +1189,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69C8DB4E1C515BFB0062AE84 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
