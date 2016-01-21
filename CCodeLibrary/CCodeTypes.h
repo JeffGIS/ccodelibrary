@@ -5,6 +5,11 @@
 #define CCodeLibrary_CCodeTypes_h
 #include <stdbool.h>
 
+#define MAX_PATH	260
+#define _MAX_PATH   260
+#define LF_FACESIZE         32
+
+
 typedef unsigned int HANDLE;
 typedef HANDLE *LPHANDLE;
 //typedef bool    BOOL;

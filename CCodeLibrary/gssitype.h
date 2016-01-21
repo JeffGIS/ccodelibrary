@@ -3,6 +3,7 @@
 #include <time.h>    
 //#include <commdlg.h>
 #include <ctype.h>  
+
 #define HUGE
 #define FAR
 #define NEAR
