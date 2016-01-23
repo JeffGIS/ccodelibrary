@@ -93,6 +93,7 @@ IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist);
 IPOINT IBoundsMid (IBOUNDS* bnds);
 DPOINT DBoundsMid(MNMXCORD *bnds);
 bool DPointInBounds (LPDPOINT pt,LPMNMXCORD pbounds);
+bool BoundsInBounds (LPMNMXCORD pBounds1,LPMNMXCORD pBounds2,short Opt);
 void AddPointToDBounds (dbounds* bnds,dvec2 *pt);
 void AddDPointToBounds (MNMXCORD* bnds,DPOINT *pt);
 void AddPointToIBounds (IBOUNDS* pBounds,IPOINT *pt);

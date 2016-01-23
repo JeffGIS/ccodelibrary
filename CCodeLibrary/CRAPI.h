@@ -18,6 +18,13 @@
 #define PROJECT_MPLS        1
 #define PROJECT_METROGIS    2
 
+typedef NS_ENUM(NSInteger, CrimeMapMode)
+{
+    PINMAP,
+    HOTSPOT,
+    CHOROPLETH,
+};
+
 @interface CRAPI : NSObject //<NVAlertViewDelegate>
 
 @property (nonatomic) int currentModule;
@@ -74,6 +81,8 @@
 @property (nonatomic, copy) NSString *extractFile;
 @property BOOL resetPropList, resetDestinations, clearSpreadsheet;
 @property NSInteger fromDate, toDate;
+@property NSInteger crimeMode;
+@property NSString * crimeTarget;
 @property (strong, nonatomic) MapToolbar *mapToolbar;
 @property (strong, nonatomic) UIViewController *mapVC;
 @property (nonatomic) CGFloat mapToolbarProgress;

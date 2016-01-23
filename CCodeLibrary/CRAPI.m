@@ -28,6 +28,8 @@
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.png", _documentsDirectory];
         //_documentsDirectory = UserDefaults.defaults.sharedFilePath;
+        _crimeMode = PINMAP;
+        _crimeTarget = @"Minneapolis Neighborhoods";
     }
     
     return self;

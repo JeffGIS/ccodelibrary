@@ -1549,6 +1549,41 @@ double DeltaAngle (double AZ1, double AZ2)
     
     return (daz * RADtoDEG);
 }
+bool BoundsInBounds (LPMNMXCORD pBounds1,LPMNMXCORD pBounds2,short Opt)
+#if ENABLETRACE
+{GSSiEnterProg (259);
+#endif
+    {
+        bool InBounds=TRUE;
+        
+        switch (Opt)
+        {
+            case 0: //bounds 1 completely in bounds2
+                if (pBounds1->xmn < pBounds2->xmn ||
+                    pBounds1->xmx > pBounds2->xmx ||
+                    pBounds1->ymn < pBounds2->ymn ||
+                    pBounds1->ymx > pBounds2->ymx)
+                    InBounds=FALSE;
+                break;
+                
+            case 1: //bounds 1 at least partially in bounds2
+                if (pBounds1->xmx < pBounds2->xmn ||
+                    pBounds1->xmn > pBounds2->xmx ||
+                    pBounds1->ymx < pBounds2->ymn ||
+                    pBounds1->ymn > pBounds2->ymx)
+                    InBounds=FALSE; 
+                break;
+        }
+        {
+#if ENABLETRACE
+            GSSiExitProg (259);
+#endif
+            return InBounds;
+        }
+#if ENABLETRACE
+    }
+#endif
+}
 
 bool DPointInBounds (LPDPOINT pt,LPMNMXCORD pbounds)
 {
