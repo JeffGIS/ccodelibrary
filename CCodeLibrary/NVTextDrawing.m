@@ -285,7 +285,7 @@
     
     CFRelease(fontRef);
     
-/*   if (ConfigurationControl.sharedInstance.GMTilesVisible == YES)
+/*   if (ConfigurationControl.sharedInstance.GMTilesVisible)
     {
         CGRect shadowRect = rect;
         shadowRect.origin.x += 1;

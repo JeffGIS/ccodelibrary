@@ -31,7 +31,7 @@
 
 - (void)setSelected:(BOOL)selected
 {
-    if (selected == YES)
+    if (selected)
     {
         if (_row == 0 || _column == 0)
         {

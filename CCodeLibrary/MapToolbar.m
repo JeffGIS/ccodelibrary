@@ -16,6 +16,7 @@
 @property (nonatomic) CGFloat buttonSize, switchHeight, switchWidth, SCHeight, mapTypeSCWidth, mapTypeSCVertWidth;
 @property (nonatomic) CGFloat buttonMargin, switchMargin, SCMargin, platSCWidth, platSCVertWidth;
 @property (nonatomic) UIProgressView *progressView;
+@property (nonatomic) NSTimer *helpBackgroundToggleTimer;
 
 @end
 
@@ -29,7 +30,7 @@
                                 delegate:(id)delegate;
 {
     MapToolbar *mt = [[MapToolbar alloc] init];
-    mt.configChanged = mt.myLocationEnabled = mt.platOverride = NO;
+    mt.configChanged = mt.myLocationEnabled = mt.platOverride = mt.helpLongPressed = NO;
     
     //set default configuration
     [mt setConfigurationProperty:MapToolbarPropertyWantUserLocation
@@ -158,6 +159,11 @@
          imageTitle:@"questionMark"
          edgeInsets:UIEdgeInsetsMake(4.0, -2.0, 4.0, -2.0)
            selector:@selector(helpButtonSelected:)];
+    
+    UILongPressGestureRecognizer *helpLpGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:mt
+                                                                                                action:@selector(helpLongPressed:)];
+    
+    [mt.helpButton addGestureRecognizer:helpLpGesture];
     
     //email PDF button added by default
     [mt addSubview:mt.helpButton];
@@ -345,8 +351,59 @@
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = 2.0;
     
-    if (_delegate)
+    if (_helpLongPressed)
+        [self endHBLongPressMode];
+    
+    else if (_delegate)
         [_delegate mapToolbarDidSelectHelpButton];
+}
+
+- (void)helpLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan && !_helpLongPressed)
+    {
+        _helpButton.layer.borderColor = UIColor.greenColor.CGColor;
+        _helpButton.layer.borderWidth = 6.0;
+    }
+    
+    else if (gesture.state == UIGestureRecognizerStateEnded)
+    {
+        _helpButton.layer.borderColor = UIColor.blackColor.CGColor;
+        _helpButton.layer.borderWidth = 2.0;
+        
+        if (_helpLongPressed)
+            [self endHBLongPressMode];
+        
+        else
+            [self beginHBLongPressMode];
+    }
+}
+
+- (void)beginHBLongPressMode
+{
+    _helpLongPressed = YES;
+    
+    _helpBackgroundToggleTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                                  target:self
+                                                                selector:@selector(toggleHelpBackground)
+                                                                userInfo:nil
+                                                                 repeats:YES];
+}
+
+- (void)endHBLongPressMode
+{
+    _helpLongPressed = NO;
+    [_helpBackgroundToggleTimer invalidate];
+    _helpButton.backgroundColor = UIColor.whiteColor;
+}
+
+- (void)toggleHelpBackground
+{
+    if (_helpButton.backgroundColor == UIColor.whiteColor)
+        _helpButton.backgroundColor = UIColor.redColor;
+    
+    else
+        _helpButton.backgroundColor = UIColor.whiteColor;
 }
 
 - (void)mapTypeSelected:(UISegmentedControl *)segControl
