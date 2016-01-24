@@ -54,7 +54,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 @property (readonly) BOOL wantPlat, wantDigitize, wantMapType, wantUserLocation;
 @property (readonly) BOOL wantExtents, wantLegends, wantGrayscale, wantClearMarkers;
 @property (readonly) BOOL wantEmailPDF, wantProgressBar, wantHelpButton;
-@property (nonatomic) UIProgressView *progressView;
+@property (nonatomic) CGFloat progress;
 
 + (MapToolbar *)showMapToolbarWithCenter:(CGPoint)center
                                    view:(UIView *)view

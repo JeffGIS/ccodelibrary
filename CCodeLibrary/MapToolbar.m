@@ -15,6 +15,7 @@
 @property BOOL configChanged, myLocationEnabled, platOverride;
 @property (nonatomic) CGFloat buttonSize, switchHeight, switchWidth, SCHeight, mapTypeSCWidth, mapTypeSCVertWidth;
 @property (nonatomic) CGFloat buttonMargin, switchMargin, SCMargin, platSCWidth, platSCVertWidth;
+@property (nonatomic) UIProgressView *progressView;
 
 @end
 
@@ -389,8 +390,11 @@
         {
             for (UIButton *buttons in self.subviews)
             {
-                buttons.layer.borderColor = UIColor.blackColor.CGColor;
-                buttons.layer.borderWidth = 2.0;
+                if ([buttons isKindOfClass:UIButton.class])
+                {
+                    buttons.layer.borderColor = UIColor.blackColor.CGColor;
+                    buttons.layer.borderWidth = 2.0;
+                }
             }
         }
         
@@ -493,7 +497,8 @@
         self.frame = CGRectMake(0.0, 0.0, xCount, (yCount + 10.0));
         
         _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
-                                         self.frame.size.width - (_buttonMargin * 2.0), 4.0);
+                                         self.frame.size.width - (_buttonMargin * 2.0),
+                                         _progressView.frame.size.height);
     }
     
     for (UIView *views in self.subviews)
@@ -591,7 +596,8 @@
     if (_wantProgressBar)
     {
         _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
-                                         self.frame.size.width - (_buttonMargin * 2.0), 4.0);
+                                         self.frame.size.width - (_buttonMargin * 2.0),
+                                         _progressView.frame.size.height);
     }
     
     [_mapTypeSC setTitle:@"Standard"
@@ -988,7 +994,8 @@
         if (_wantProgressBar)
         {
             _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
-                                             self.frame.size.width - (_buttonMargin * 2.0), 4.0);
+                                             self.frame.size.width - (_buttonMargin * 2.0),
+                                             _progressView.frame.size.height);
         }
     }
     
@@ -1188,7 +1195,8 @@
                                     self.frame.size.width, (self.frame.size.height + 10.0));
             
             _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
-                                             self.frame.size.width - (_buttonMargin * 2.0), 4.0);
+                                             self.frame.size.width - (_buttonMargin * 2.0),
+                                             _progressView.frame.size.height);
         }
         
         for (UIView *views in self.subviews)
@@ -1201,6 +1209,14 @@
         [self splitScreenSettingSelected:MapViewScreenSettingFullscreen];
         _platSC.selectedSegmentIndex = MapViewScreenSettingFullscreen;
     }
+}
+
+- (void)setProgress:(CGFloat)progress
+{
+    _progress = progress;
+    
+    [_progressView setProgress:_progress
+                      animated:NO];
 }
 
 @end

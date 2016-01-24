@@ -879,14 +879,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
 }
 
-- (void)setMapToolbarProgress:(CGFloat)mapToolbarProgress
-{
-    _mapToolbarProgress = mapToolbarProgress;
-    
-    [CRAPI.sharedInstance.mapToolbar.progressView setProgress:_mapToolbarProgress
-                                                     animated:NO];
-}
-
 -(void) updateProgress:(NSInteger)tot
                current:(NSInteger)current
                  range:(int)iRange
@@ -909,7 +901,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         currentProgress = progress;
         dispatch_async(dispatch_get_main_queue(),
                        ^{
-                           CRAPI.sharedInstance.mapToolbarProgress = (float)currentProgress/100.0;
+                           CRAPI.sharedInstance.mapToolbar.progress = (float)currentProgress/100.0;
                        });
     }
 }
