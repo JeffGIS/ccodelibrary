@@ -13,6 +13,11 @@ typedef NS_ENUM(NSInteger, GraphicElementTypes)
     CrimePoint,
     StreetIntersection,
     CurbRamp,
+    FiberLines,
+    FiberPoints,
+    Hydrant,
+    WaterMain,
+    WaterMeter,
 };
 typedef NS_ENUM(NSInteger, PointSymbols)
 {
