@@ -21,6 +21,7 @@
 - (void)createDisplayColors;
 - (int)DPointInArea:(DPOINT *)dPoint;
 - (CGColorRef)colorForArea:(NSString*)areaID;
+- (double)countForArea:(NSString*)areaID;
 
 
 @property int loadPass;

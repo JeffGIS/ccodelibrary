@@ -265,6 +265,19 @@
     return numAreasIn;
 }
 
+- (double)countForArea:(NSString*)areaID
+{
+    double rtn = -1;
+    for (AreaData *ad in _areaInfo)
+    {
+        if ([ad.areaID isEqualToString:areaID])
+        {
+            rtn = ad.count;
+            break;
+        }
+    }
+    return rtn;
+}
 - (CGColorRef)colorForArea:(NSString*)areaID
 {
     CGColorRef cref = 0;
