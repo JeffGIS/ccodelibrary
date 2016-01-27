@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, GraphicElementTypes)
     Hydrant,
     WaterMain,
     WaterMeter,
+    PDFBounds,
 };
 typedef NS_ENUM(NSInteger, PointSymbols)
 {

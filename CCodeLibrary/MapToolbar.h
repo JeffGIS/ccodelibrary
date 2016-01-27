@@ -44,6 +44,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 - (void)mapToolbarDidSelectDigitize;
 - (void)mapToolbarDidSelectLegends;
 - (void)mapToolbarDidFinishDrag;
+- (void)mapToolbarDidLongPressEmailPDF;
 
 @end
 
