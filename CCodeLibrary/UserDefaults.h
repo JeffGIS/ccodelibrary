@@ -111,4 +111,7 @@
 
 UIImage *grayscaleImage(UIImage *image);
 
+CLLocationDirection getHeading(CLLocationCoordinate2D fromCoord,
+                               CLLocationCoordinate2D toCoord);
+
 @end

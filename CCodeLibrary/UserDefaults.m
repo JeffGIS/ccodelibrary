@@ -8,6 +8,9 @@
 #import "GSSiEnums.h"
 #import "CRAPI.h"
 
+#define degreesToRadians(x) (M_PI * x / 180.0)
+#define radiansToDegrees(x) (x * 180.0 / M_PI)
+
 @implementation UserDefaults
 
 static UserDefaults *_defaults;
@@ -823,6 +826,24 @@ UIImage *grayscaleImage(UIImage *image)
     CFRelease(imageRef);
     
     return grayscaleImage;
+}
+
+CLLocationDirection getHeading(CLLocationCoordinate2D fromCoord,
+                               CLLocationCoordinate2D toCoord)
+{
+    CGFloat fLat = degreesToRadians(fromCoord.latitude);
+    CGFloat fLng = degreesToRadians(fromCoord.longitude);
+    CGFloat tLat = degreesToRadians(toCoord.latitude);
+    CGFloat tLng = degreesToRadians(toCoord.longitude);
+    
+    CGFloat degree = radiansToDegrees(atan2(sin(tLng - fLng) * cos(tLat),
+                                            cos(fLat) * sin(tLat) - sin(fLat) * cos(tLat) * cos(tLng - fLng)));
+    
+    if (degree >= 0.0)
+        return (CLLocationDirection)degree;
+    
+    else
+        return (CLLocationDirection)(360.0 + degree);
 }
 
 @end
