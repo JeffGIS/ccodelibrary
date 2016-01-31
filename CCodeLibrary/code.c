@@ -111,25 +111,6 @@ static int PickListDelete (int i)
 	return i;
 }
 
-static void DBoundsInit (LPMNMXCORD lpRect)
-#if ENABLETRACE
-{GSSiEnterProg (257);
-#endif
-{
-    lpRect->xmn = DBL_MAX;
-    lpRect->ymn = DBL_MAX;
-    lpRect->xmx = -DBL_MAX;
-    lpRect->ymx = -DBL_MAX;
-{
-#if ENABLETRACE
-GSSiExitProg (257);
-#endif
-	return;
-}
-#if ENABLETRACE
-}
-#endif
-} 
 static void ExpandBounds (LPMNMXCORD Bounds, double Adjust)
 #if ENABLETRACE
 {GSSiEnterProg (261);

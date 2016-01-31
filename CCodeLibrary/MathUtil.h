@@ -81,6 +81,7 @@ void AddPointToBounds (bounds* bnds,vec2 *pt);
 void AddDPointToBounds(dbounds *pBounds, DPOINT *pt);
 void InitDBounds (dbounds* bnds);
 void InitIBounds (IBOUNDS* bnds);
+void DBoundsInit(LPMNMXCORD bnds);
 double BoundsWidth(dbounds* bnds);
 double BoundsHeight(dbounds* bnds);
 double MNMXCORDWidth(MNMXCORD* bnds);

@@ -615,6 +615,15 @@ void InitDBounds(dbounds *bnds)
     return;
 }
 
+void DBoundsInit(LPMNMXCORD bnds)
+{
+    bnds->xmn = DBL_MAX;
+    bnds->ymn = DBL_MAX;
+    bnds->xmx = -DBL_MAX;
+    bnds->ymx = -DBL_MAX;
+    return;
+}
+
 void InitIBounds(IBOUNDS *bnds)
 {
     bnds->xmn = INT_MAX;

@@ -89,6 +89,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property BOOL showPolylineForBounds, maskBoundsForBounds;
 @property (nonatomic, copy) NSString *offsetForBounds;
 @property (nonatomic) int offsetForBoundsInMeters;
+@property NSString * selectBoundaryFromMapType;
 
 + (CRAPI *)sharedInstance;
 
