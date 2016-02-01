@@ -17,6 +17,8 @@ NVColor *color(int r, int g, int b);
 + (NSArray *)warmColors;
 + (NSArray *)coolColors;
 
++ (instancetype)randomColorFromArray:(NSArray*)NVColorArray
+                           ForString:(NSString*)string;
 + (instancetype)maroonColor;
 + (instancetype)darkRedColor;
 + (instancetype)brownColor;

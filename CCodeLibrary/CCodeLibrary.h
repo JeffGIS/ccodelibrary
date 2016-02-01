@@ -40,6 +40,7 @@
 #import "GSSiBumpDetector.h"
 #import "TableViewCellLabel.h"
 #import "TableViewCellButton.h"
+#import "NVColor.h"
 #import "NVColorWheel.h"
 #import "NVHeadingViewController.h"
 #import "NVSliderView.h"

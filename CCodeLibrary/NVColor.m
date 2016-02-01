@@ -743,4 +743,11 @@ NVColor *colorFromRGB(int r, int g, int b)
     return colorFromRGB(255,255,255);
 }
 
++ (instancetype)randomColorFromArray:(NSArray*)NVColorArray
+                           ForString:(NSString*)string
+{
+    return colorFromRGB(169,169,169);
+  
+}
+
 @end
