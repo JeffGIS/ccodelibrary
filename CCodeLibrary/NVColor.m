@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "NVColor.h"
+#import "CRAPI.h"
 
 @implementation NVColor
 
@@ -56,6 +57,24 @@ NVColor *colorFromRGB(int r, int g, int b)
 + (NSArray *)coolColors
 {
     return @[NVColor.oliveColor, NVColor.yellowGreenColor, NVColor.darkOliveGreenColor, NVColor.oliveDrabColor, NVColor.lawnGreenColor, NVColor.greenYellowColor, NVColor.darkGreenColor, NVColor.greenColor, NVColor.forestGreenColor, NVColor.limeColor, NVColor.limeGreenColor, NVColor.lightGreenColor, NVColor.paleGreenColor, NVColor.darkSeaGreenColor, NVColor.mediumSpringGreenColor, NVColor.springGreenColor, NVColor.seaGreenColor, NVColor.mediumAquamarineColor, NVColor.mediumSeaGreenColor, NVColor.lightSeaGreenColor, NVColor.darkSlateGrayColor, NVColor.tealColor, NVColor.darkCyanColor, NVColor.cyanColor, NVColor.lightCyanColor, NVColor.darkTurquoiseColor, NVColor.turquoiseColor, NVColor.mediumTurquoiseColor, NVColor.paleTurquoiseColor, NVColor.aquamarineColor, NVColor.powderBlueColor, NVColor.cadetBlueColor, NVColor.steelBlueColor, NVColor.cornflowerBlueColor, NVColor.deepSkyBlueColor, NVColor.dodgerBlueColor, NVColor.lightBlueColor, NVColor.skyBlueColor, NVColor.lightSkyBlueColor, NVColor.midnightBlueColor, NVColor.navyColor, NVColor.darkBlueColor, NVColor.mediumBlueColor, NVColor.blueColor, NVColor.royalBlueColor, NVColor.blueVioletColor, NVColor.indigoColor, NVColor.darkSlateBlueColor, NVColor.slateBlueColor, NVColor.mediumSlateBlueColor, NVColor.mediumPurpleColor, NVColor.darkMagentaColor, NVColor.darkVioletColor, NVColor.darkOrchidColor, NVColor.mediumOrchidColor, NVColor.purpleColor, NVColor.mediumVioletRedColor, NVColor.rosyBrownColor, NVColor.slateGrayColor, NVColor.lightSlateGrayColor];
+}
+
++ (instancetype)randomColorFromArray:(NSArray *)NVColorArray
+                           forString:(NSString *)string
+{
+    NVColor *randomColor = [CRAPI.sharedInstance.colorForAreaDictionary objectForKey:string];
+    
+    if (!randomColor)
+    {
+        NSUInteger randomIndex = 0;
+        randomIndex = arc4random() % NVColorArray.count;
+        randomColor = (NVColor *)NVColorArray[randomIndex];
+        
+        [CRAPI.sharedInstance.colorForAreaDictionary setObject:randomColor
+                                                        forKey:string];
+    }
+    
+    return randomColor;
 }
 
 + (instancetype)maroonColor

@@ -82,14 +82,15 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property BOOL resetPropList, resetDestinations, clearSpreadsheet;
 @property NSInteger fromDate, toDate;
 @property NSInteger crimeMode;
-@property NSString * crimeTarget;
+@property (nonatomic, copy) NSString *crimeTarget;
 @property (strong, nonatomic) MapToolbar *mapToolbar;
 @property (strong, nonatomic) UIViewController *mapVC;
 @property (nonatomic) CGFloat mapToolbarProgress;
 @property BOOL showPolylineForBounds, maskBoundsForBounds;
 @property (nonatomic, copy) NSString *offsetForBounds;
 @property (nonatomic) int offsetForBoundsInMeters;
-@property NSString * selectBoundaryFromMapType;
+@property (nonatomic, copy) NSString *selectBoundaryFromMapType;
+@property (nonatomic) NSMutableDictionary *colorForAreaDictionary;
 
 + (CRAPI *)sharedInstance;
 
