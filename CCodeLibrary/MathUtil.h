@@ -9,6 +9,7 @@
 #include "CCodeTypes.h"
 
 double LTWOPI (double AZ1);
+void setP_TOL (double val);
 
 //1D
 float ClockwiseDegFromNorth (float deg);

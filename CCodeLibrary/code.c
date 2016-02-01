@@ -78,8 +78,12 @@ static short LIN_SEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
 //static double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
 bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator);
 
-static double	P_TOL = 1e-4;
+static double	P_TOL = 1e-7;
 
+void setP_TOL (double val)
+{
+    P_TOL = val;
+}
 LPVOID GlobalLock (HANDLE hmem)
 {
 	return (LPVOID)hmem;

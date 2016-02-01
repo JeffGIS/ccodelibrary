@@ -92,7 +92,10 @@
     if (geoid == 2743000)//MPLS
         self.controlledInterface = NO;
 }
-
+-(void)setCurrentOverallBoundaryName:(NSString *)currentOverallBoundaryName
+{
+    _currentOverallBoundaryName = currentOverallBoundaryName;
+}
 -(void)setCurrentZoom:(CGFloat)zoom
 {
     _currentZoom = zoom;
