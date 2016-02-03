@@ -196,6 +196,8 @@
 		EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C21219ED378400F0688B /* FTPDataPush.m */; };
 		EB0E4FE71C60D21700849766 /* HotSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0E4FE61C60D21700849766 /* HotSpot.m */; };
 		EB0E4FE81C60D2C700849766 /* HotSpot.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB0E4FE51C60D21700849766 /* HotSpot.h */; };
+		EB0E4FF51C62785200849766 /* SymbolDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0E4FF41C62785200849766 /* SymbolDictionary.m */; };
+		EB0E4FF61C6278AD00849766 /* SymbolDictionary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB0E4FF31C62785200849766 /* SymbolDictionary.h */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
 		EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */ = {isa = PBXBuildFile; fileRef = EB268A171AC5E9F700A68EC8 /* code.c */; };
 		EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */; };
@@ -293,8 +295,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB0E4FF61C6278AD00849766 /* SymbolDictionary.h in CopyFiles */,
 				EB0E4FE81C60D2C700849766 /* HotSpot.h in CopyFiles */,
-				6955DB801C57E8710066CD83 /* NVPDFViewer.h in CopyFiles */,
 				EBB3C42E1C37143000054DB5 /* PointInAreas.h in CopyFiles */,
 				1F829A9B1C342F6200DD429C /* FileLister.h in CopyFiles */,
 				694304211C336DCC0077EC9F /* NVColorSet.h in CopyFiles */,
@@ -576,6 +578,8 @@
 		EB05C21219ED378400F0688B /* FTPDataPush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPDataPush.m; sourceTree = "<group>"; };
 		EB0E4FE51C60D21700849766 /* HotSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HotSpot.h; sourceTree = "<group>"; };
 		EB0E4FE61C60D21700849766 /* HotSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HotSpot.m; sourceTree = "<group>"; };
+		EB0E4FF31C62785200849766 /* SymbolDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SymbolDictionary.h; sourceTree = "<group>"; };
+		EB0E4FF41C62785200849766 /* SymbolDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SymbolDictionary.m; sourceTree = "<group>"; };
 		EB1A69741999A6A9005A1CCB /* CRAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRAPI.h; sourceTree = "<group>"; };
 		EB1A69751999A6A9005A1CCB /* CRAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRAPI.m; sourceTree = "<group>"; };
 		EB268A171AC5E9F700A68EC8 /* code.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = code.c; sourceTree = "<group>"; };
@@ -986,6 +990,8 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				EB0E4FF31C62785200849766 /* SymbolDictionary.h */,
+				EB0E4FF41C62785200849766 /* SymbolDictionary.m */,
 				EBC01D331BED1CE20004C751 /* SolarCalculator */,
 				A933D9F31B5D494600D621CD /* 3D Views */,
 				A90D1FB61AE6174700CBFEE7 /* Categories */,
@@ -1279,6 +1285,7 @@
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
 				EBC01D071BED1C8C0004C751 /* aa.c in Sources */,
 				EBC01D201BED1C8C0004C751 /* mlr404.c in Sources */,
+				EB0E4FF51C62785200849766 /* SymbolDictionary.m in Sources */,
 				A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */,
 				A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */,
 				EBC01D151BED1C8C0004C751 /* epsiln.c in Sources */,
