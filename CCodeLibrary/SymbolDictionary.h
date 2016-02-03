@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CCodeLibrary/CCodeLibrary.h"
+#import "DisplayCharacteristics.h"
 
 
 @interface SymbolDictionary : NSObject

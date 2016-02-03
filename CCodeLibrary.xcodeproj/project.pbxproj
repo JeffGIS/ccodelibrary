@@ -198,6 +198,8 @@
 		EB0E4FE81C60D2C700849766 /* HotSpot.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB0E4FE51C60D21700849766 /* HotSpot.h */; };
 		EB0E4FF51C62785200849766 /* SymbolDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0E4FF41C62785200849766 /* SymbolDictionary.m */; };
 		EB0E4FF61C6278AD00849766 /* SymbolDictionary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB0E4FF31C62785200849766 /* SymbolDictionary.h */; };
+		EB0E4FFD1C6288BF00849766 /* DispersePoint.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0E4FFC1C6288BF00849766 /* DispersePoint.m */; };
+		EB0E4FFE1C6289A200849766 /* DispersePoint.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB0E4FFB1C6288BF00849766 /* DispersePoint.h */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
 		EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */ = {isa = PBXBuildFile; fileRef = EB268A171AC5E9F700A68EC8 /* code.c */; };
 		EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */; };
@@ -295,6 +297,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB0E4FFE1C6289A200849766 /* DispersePoint.h in CopyFiles */,
 				EB0E4FF61C6278AD00849766 /* SymbolDictionary.h in CopyFiles */,
 				EB0E4FE81C60D2C700849766 /* HotSpot.h in CopyFiles */,
 				EBB3C42E1C37143000054DB5 /* PointInAreas.h in CopyFiles */,
@@ -580,6 +583,8 @@
 		EB0E4FE61C60D21700849766 /* HotSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HotSpot.m; sourceTree = "<group>"; };
 		EB0E4FF31C62785200849766 /* SymbolDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SymbolDictionary.h; sourceTree = "<group>"; };
 		EB0E4FF41C62785200849766 /* SymbolDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SymbolDictionary.m; sourceTree = "<group>"; };
+		EB0E4FFB1C6288BF00849766 /* DispersePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispersePoint.h; sourceTree = "<group>"; };
+		EB0E4FFC1C6288BF00849766 /* DispersePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispersePoint.m; sourceTree = "<group>"; };
 		EB1A69741999A6A9005A1CCB /* CRAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRAPI.h; sourceTree = "<group>"; };
 		EB1A69751999A6A9005A1CCB /* CRAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRAPI.m; sourceTree = "<group>"; };
 		EB268A171AC5E9F700A68EC8 /* code.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = code.c; sourceTree = "<group>"; };
@@ -1036,6 +1041,8 @@
 				EB0E4FE61C60D21700849766 /* HotSpot.m */,
 				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
+				EB0E4FFB1C6288BF00849766 /* DispersePoint.h */,
+				EB0E4FFC1C6288BF00849766 /* DispersePoint.m */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";
@@ -1337,6 +1344,7 @@
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,
 				A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */,
 				69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */,
+				EB0E4FFD1C6288BF00849766 /* DispersePoint.m in Sources */,
 				A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */,
 				EBC01D2D1BED1C8C0004C751 /* trnsit.c in Sources */,
 				EBC01D281BED1C8C0004C751 /* rstar.c in Sources */,
