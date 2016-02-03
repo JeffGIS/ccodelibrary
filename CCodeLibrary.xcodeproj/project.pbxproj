@@ -196,6 +196,8 @@
 		A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
 		EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C21219ED378400F0688B /* FTPDataPush.m */; };
+		EB0E4FE71C60D21700849766 /* HotSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0E4FE61C60D21700849766 /* HotSpot.m */; };
+		EB0E4FE81C60D2C700849766 /* HotSpot.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB0E4FE51C60D21700849766 /* HotSpot.h */; };
 		EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1A69751999A6A9005A1CCB /* CRAPI.m */; };
 		EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */ = {isa = PBXBuildFile; fileRef = EB268A171AC5E9F700A68EC8 /* code.c */; };
 		EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */; };
@@ -293,6 +295,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB0E4FE81C60D2C700849766 /* HotSpot.h in CopyFiles */,
 				6955DB801C57E8710066CD83 /* NVPDFViewer.h in CopyFiles */,
 				EBB3C42E1C37143000054DB5 /* PointInAreas.h in CopyFiles */,
 				1F829A9B1C342F6200DD429C /* FileLister.h in CopyFiles */,
@@ -575,6 +578,8 @@
 		EB05C20F19EA999F00F0688B /* ElementOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElementOverlayView.m; sourceTree = "<group>"; };
 		EB05C21119ED378400F0688B /* FTPDataPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDataPush.h; sourceTree = "<group>"; };
 		EB05C21219ED378400F0688B /* FTPDataPush.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPDataPush.m; sourceTree = "<group>"; };
+		EB0E4FE51C60D21700849766 /* HotSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HotSpot.h; sourceTree = "<group>"; };
+		EB0E4FE61C60D21700849766 /* HotSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HotSpot.m; sourceTree = "<group>"; };
 		EB1A69741999A6A9005A1CCB /* CRAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRAPI.h; sourceTree = "<group>"; };
 		EB1A69751999A6A9005A1CCB /* CRAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRAPI.m; sourceTree = "<group>"; };
 		EB268A171AC5E9F700A68EC8 /* code.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = code.c; sourceTree = "<group>"; };
@@ -1025,10 +1030,12 @@
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
 				EBAB31C51AE6DC2D00C5CCEF /* NamedColors.h */,
 				EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */,
-				EBA2E45C199527660085B2E0 /* Frameworks */,
-				EBA2E460199527660085B2E0 /* Supporting Files */,
 				1F829A981C342BDD00DD429C /* FileLister.h */,
 				1F829A991C342BDD00DD429C /* FileLister.m */,
+				EB0E4FE51C60D21700849766 /* HotSpot.h */,
+				EB0E4FE61C60D21700849766 /* HotSpot.m */,
+				EBA2E45C199527660085B2E0 /* Frameworks */,
+				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";
@@ -1356,6 +1363,7 @@
 				A9A7E3601B75361800DC7F3D /* NVInventoryViewController.m in Sources */,
 				EBC01D1D1BED1C8C0004C751 /* mar404.c in Sources */,
 				A9D258C71B62C67F00DF553A /* FTPDirectoryCreate.m in Sources */,
+				EB0E4FE71C60D21700849766 /* HotSpot.m in Sources */,
 				A97407C61AF6A63900B2FF30 /* NVProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
