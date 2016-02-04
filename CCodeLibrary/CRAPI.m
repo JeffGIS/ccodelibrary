@@ -17,6 +17,7 @@
     
     if (self)
     {
+        _keepProcessing = 0;
         _currentGeoidValue = 0;
         _pickApInPixels = 50;
         _numAllowedZooms = 3;
@@ -99,6 +100,10 @@
 -(void)setCurrentZoom:(CGFloat)zoom
 {
     _currentZoom = zoom;
+}
+-(void)setKeepProcessing:(int)kp
+{
+    _keepProcessing = kp;
 }
 -(void)setShowPlats:(int)showPlats
 {

@@ -1,7 +1,6 @@
 //  SewerData.m
 //  GMMobile
 
-extern int keepProcessing;
 
 #import "SewerData.h"
 #import "CRAPI.h"
@@ -25,7 +24,7 @@ static BOOL _createDirectory = YES;
 
 - (BOOL)continue
 {
-    if (self.processingID == keepProcessing)
+    if (self.processingID == CRAPI.sharedInstance.keepProcessing)
         return YES;
     
     return NO;
