@@ -528,7 +528,7 @@
 		A990508B1ACB947000C6AAAF /* SpreadSheetViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpreadSheetViewCell.h; sourceTree = "<group>"; };
 		A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpreadSheetViewCell.m; sourceTree = "<group>"; };
 		A99873231B59ACC100200CA9 /* SewerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SewerData.h; sourceTree = "<group>"; };
-		A99873241B59ACC100200CA9 /* SewerData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SewerData.m; sourceTree = "<group>"; };
+		A99873241B59ACC100200CA9 /* SewerData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SewerData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		A99C893B1AEDE1B900A0856F /* GSSiDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiDefs.h; sourceTree = "<group>"; };
 		A99C893C1AEDE1B900A0856F /* GSSiDefs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiDefs.m; sourceTree = "<group>"; };
 		A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+VersionBuild.h"; sourceTree = "<group>"; };
