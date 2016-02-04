@@ -27,6 +27,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
     MapToolbarOrientationBottom,
     MapToolbarOrientationLeft,
     MapToolbarOrientationRight,
+    MapToolbarOrientationMinimized,
 };
 
 @class MapToolbar;
@@ -45,18 +46,20 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 - (void)mapToolbarDidSelectLegends;
 - (void)mapToolbarDidFinishDrag;
 - (void)mapToolbarDidLongPressEmailPDF;
+- (void)mapToolbarDidWantExpand;
 
 @end
 
 @interface MapToolbar : UIView <UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) id <MapToolbarDelegate> delegate;
-@property (nonatomic) MapToolbarOrientation orientation;
+@property (nonatomic) MapToolbarOrientation orientation, previousOrientation;
 @property (readonly) BOOL wantPlat, wantDigitize, wantMapType, wantUserLocation;
 @property (readonly) BOOL wantExtents, wantLegends, wantGrayscale, wantClearMarkers;
 @property (readonly) BOOL wantEmailPDF, wantProgressBar, wantHelpButton;
 @property (nonatomic) CGFloat progress;
 @property BOOL helpLongPressed;
+@property (nonatomic) CGRect previousFrame;
 
 + (MapToolbar *)showMapToolbarWithCenter:(CGPoint)center
                                    view:(UIView *)view
@@ -79,5 +82,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 - (void)willRotateWithDuration:(NSTimeInterval)duration
                   tabBarHeight:(CGFloat)tabBarHeight
                statusBarHeight:(CGFloat)statusBarHeight;
+
+- (void)addExpandButton;
 
 @end

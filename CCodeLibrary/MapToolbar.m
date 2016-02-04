@@ -89,6 +89,8 @@
     mt.layer.borderColor = UIColor.blackColor.CGColor;
     mt.delegate = delegate;
     mt.orientation = MapToolbarOrientationTop;
+    mt.previousOrientation = MapToolbarOrientationDefault;
+    mt.previousFrame = CGRectZero;
     
     [view addSubview:mt];
     
@@ -461,6 +463,9 @@
 
 - (void)mapToolbarDragged:(UIPanGestureRecognizer *)gesture
 {
+    if (_orientation == MapToolbarOrientationMinimized)
+        return;
+    
     CGPoint translation = [gesture translationInView:gesture.view.superview];
     
     if (gesture.state == UIGestureRecognizerStateBegan ||
@@ -755,7 +760,7 @@
         }
             break;
             
-        case MapToolbarOrientationDefault:
+        default:
             break;
     }
 }
@@ -1297,6 +1302,38 @@
     
     [_progressView setProgress:_progress
                       animated:NO];
+}
+
+- (void)addExpandButton
+{
+    UIButton *expandButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    expandButton.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
+    expandButton.backgroundColor = UIColor.clearColor;
+    expandButton.titleLabel.font = [UIFont boldSystemFontOfSize:24.0];
+    expandButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    
+    [expandButton setTitle:@"MT"
+                  forState:UIControlStateNormal];
+    
+    [expandButton setTitleColor:UIColor.whiteColor
+                       forState:UIControlStateNormal];
+    
+    [expandButton setTitleColor:UIColor.darkGrayColor
+                       forState:UIControlStateHighlighted];
+    
+    [expandButton addTarget:self
+                     action:@selector(expandToolbar:)
+           forControlEvents:UIControlEventTouchUpInside];
+    
+    [self addSubview:expandButton];
+}
+
+- (void)expandToolbar:(UIButton *)button
+{
+    [button removeFromSuperview];
+    
+    if (_delegate)
+        [_delegate mapToolbarDidWantExpand];
 }
 
 @end
