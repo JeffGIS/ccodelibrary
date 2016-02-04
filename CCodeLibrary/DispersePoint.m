@@ -39,12 +39,13 @@
     dp.height = height;
     dp.grid = calloc (width*height,sizeof(unsigned short));
     
-    [db executeCmd:"CREATE TEMP TABLE DISPERSE (id INT PRIMARY KEY,'ControlNbr' ,SEQUENCE INT, X INT, Y INT, SYMBOL INT);"];
+    [db executeCmd:"DROP TABLE IF EXISTS DISPERSE;CREATE TEMP TABLE DISPERSE (ControlNbr INT,Sequence INT, X INT, Y INT, Symbol INT, Size INT, Color INT);"];
     
     return dp;
 }
 
 - (void) addPoint:(DPOINT *)pPoint
+       controlNbr:(int)cnbr
       usingSymbol:(PointSymbols)sym
         withColor:(CGColorRef)color
           andSize:(CGFloat)size
@@ -52,7 +53,8 @@
 {
     int indx = [self gridIndex:pPoint->y column:pPoint->x];
     int seq = _grid[indx]++;
-    
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO DISPERSE VALUES(%i,%i,%i,%i,%i,%f,%lli);",cnbr,seq,IDNINT(pPoint->x),IDNINT(pPoint->y),(int)sym,size,(long long)color];
+    [_cd executeCmd:(LPSTR)cmd.UTF8String];
 }
 
 

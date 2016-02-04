@@ -109,7 +109,9 @@
             int indx = [self gridIndex:row column:col];
             if (_grid1[indx])
             {
-                colors[3] = pow((CGFloat)_grid1[indx],0.75) / pow(_maxGridVal,0.75);
+                colors[3] = pow((CGFloat)_grid1[indx],0.5) / pow(_maxGridVal,0.5);
+//                colors[3] = log10((CGFloat)_grid1[indx]) / log10(_maxGridVal);
+//                colors[3] = log((CGFloat)_grid1[indx]) / log(_maxGridVal);
                 colors[1] = colors[2] = 1.0 - colors[3];
                 CGColorRef color = CGColorCreate(colorspace,colors);
                 CGContextSetFillColorWithColor(context,color);

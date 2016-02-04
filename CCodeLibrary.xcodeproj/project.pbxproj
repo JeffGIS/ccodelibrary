@@ -1039,10 +1039,10 @@
 				1F829A991C342BDD00DD429C /* FileLister.m */,
 				EB0E4FE51C60D21700849766 /* HotSpot.h */,
 				EB0E4FE61C60D21700849766 /* HotSpot.m */,
-				EBA2E45C199527660085B2E0 /* Frameworks */,
-				EBA2E460199527660085B2E0 /* Supporting Files */,
 				EB0E4FFB1C6288BF00849766 /* DispersePoint.h */,
 				EB0E4FFC1C6288BF00849766 /* DispersePoint.m */,
+				EBA2E45C199527660085B2E0 /* Frameworks */,
+				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";
