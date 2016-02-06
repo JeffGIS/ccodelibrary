@@ -25,5 +25,6 @@
                  PointSize:(int)pointSize;
 - (void) addPointAtX:(int)x andY:(int)y;
 - (void) display:(CGContextRef)context;
+- (void) dump:(NSString*)outFile;
 
 @end

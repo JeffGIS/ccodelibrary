@@ -121,4 +121,18 @@
         }
     }
 }
+- (void) dump:(NSString*)outFile
+{
+    for (int row = 0;row < _height; row++)
+    {
+        for (int col = 0; col < _width; col++)
+        {
+            int indx = [self gridIndex:row column:col];
+            if (_grid1[indx])
+            {
+            }
+        }
+    }
+
+}
 @end

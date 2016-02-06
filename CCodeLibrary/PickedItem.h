@@ -16,7 +16,7 @@ typedef NS_ENUM(NSInteger, PickItemTypes) {
 
 @interface PickedItem : NSObject
 @property int itemType;
-@property int refno;
+@property NSInteger refno;
 @property double distance;
 @property NSString *identifier;
 @property NSString *symbolName;

@@ -721,8 +721,8 @@ DPOINT DBoundsMid(MNMXCORD *bnds)
 {
     DPOINT pt;
     
-    pt.x = (int)(bnds->xmn + (bnds->xmx - bnds->xmn) / 2);
-    pt.y = (int)(bnds->ymn + (bnds->ymx - bnds->ymn) / 2);
+    pt.x = (bnds->xmn + (bnds->xmx - bnds->xmn) / 2);
+    pt.y = (bnds->ymn + (bnds->ymx - bnds->ymn) / 2);
     return pt;
 }
 

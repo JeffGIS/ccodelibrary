@@ -188,18 +188,33 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
      andDelegate:(id)delegate
 {
     BOOL fileExists = NO;
-    NSString *actualPlatID = [SewerData getActualPlatFileName:platID];
+    NSString *fromDir;
     NSString *toDir = [NSString stringWithFormat:@"%@/%@Plats", _documentsDirectory, type];
-    NSString *fileName = [NSString stringWithFormat:@"%@.jpg", actualPlatID];
     FTPDataPull *pull = FTPDataPull.pull;
     pull.delegate = delegate;
     pull.popover = popover;
     pull.useOnlyPrimaryFTP = YES;
     pull.option = GET_STORMPLAT;
+    NSString * fileName;
     
-    [popover showAfter:1.5
-             withTitle:[NSString stringWithFormat:@"Get %@ Plat %@",
-                        type, actualPlatID]];
+    if ([type isEqualToString:@"pdf"])
+    {
+        fileName = [NSString stringWithFormat:@"%@", platID];
+        fromDir = @"MapleGrove/As-built/PDF";
+        pull.option = GET_PDFFILE;
+        [popover showAfter:1.5
+                 withTitle:[NSString stringWithFormat:@"Get PDF %@",
+                            platID]];
+    }
+    else
+    {
+        NSString *actualPlatID = [SewerData getActualPlatFileName:platID];
+        fileName = [NSString stringWithFormat:@"%@.jpg", actualPlatID];
+        fromDir = [NSString stringWithFormat:@"GMMobile/sewerplats/%@", type];
+        [popover showAfter:1.5
+                 withTitle:[NSString stringWithFormat:@"Get %@ Plat %@",
+                            type, actualPlatID]];
+    }
 
     pull.createDirectory = _createDirectory;
     
@@ -212,7 +227,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
         fromDirectory:[NSString stringWithFormat:@"Sewer/%@/Plats",type]*/
    
     if ([pull getFile:fileName
-        fromDirectory:[NSString stringWithFormat:@"GMMobile/sewerplats/%@", type]
+        fromDirectory:fromDir
                toFile:fileName
           toDirectory:toDir
         refreshOption:FTPDataPullRefreshOptionCheckFileSize] == FTPStatusFileExists)
