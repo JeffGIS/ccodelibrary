@@ -7,7 +7,7 @@
 //
 
 #import "HotSpot.h"
-#import "CCodeLibrary/mathutil.h"
+#import "MathUtil.h"
 
 @implementation HotSpot
 - (void) releaseMem

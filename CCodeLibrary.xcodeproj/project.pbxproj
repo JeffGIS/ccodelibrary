@@ -55,6 +55,8 @@
 		69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C441A81BB474B200D026A7 /* NVTabBarEdit.h */; };
 		69C8DB4E1C515BFB0062AE84 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 69C8DB4D1C515BFB0062AE84 /* .gitignore */; };
 		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
+		69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E8E6681C66802F00CB26CB /* NSData+CRC.m */; };
+		69E8E66A1C66809E00CB26CB /* NSData+CRC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E8E6671C66802F00CB26CB /* NSData+CRC.h */; };
 		69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */; };
 		69F5B2301BC5F6CD00119212 /* NVDestinationOptions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */; };
 		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
@@ -297,6 +299,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69E8E66A1C66809E00CB26CB /* NSData+CRC.h in CopyFiles */,
 				EB0E4FFE1C6289A200849766 /* DispersePoint.h in CopyFiles */,
 				EB0E4FF61C6278AD00849766 /* SymbolDictionary.h in CopyFiles */,
 				EB0E4FE81C60D2C700849766 /* HotSpot.h in CopyFiles */,
@@ -468,6 +471,8 @@
 		69C8DB4D1C515BFB0062AE84 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSecretAlertView.h; sourceTree = "<group>"; };
 		69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSecretAlertView.m; sourceTree = "<group>"; };
+		69E8E6671C66802F00CB26CB /* NSData+CRC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CRC.h"; sourceTree = "<group>"; };
+		69E8E6681C66802F00CB26CB /* NSData+CRC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CRC.m"; sourceTree = "<group>"; };
 		69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDestinationOptions.h; sourceTree = "<group>"; };
 		69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDestinationOptions.m; sourceTree = "<group>"; };
 		A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVHeadingViewController.h; sourceTree = "<group>"; };
@@ -735,6 +740,8 @@
 				698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */,
 				6992A8861BE0040C00FB53F0 /* NSData+Compression.h */,
 				6992A8871BE0040C00FB53F0 /* NSData+Compression.m */,
+				69E8E6671C66802F00CB26CB /* NSData+CRC.h */,
+				69E8E6681C66802F00CB26CB /* NSData+CRC.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1354,6 +1361,7 @@
 				6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */,
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
 				EB7C6A161BD158D8006E985B /* StringFunctions.m in Sources */,
+				69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */,
 				698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */,
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
 				EBC01D261BED1C8C0004C751 /* refrac.c in Sources */,

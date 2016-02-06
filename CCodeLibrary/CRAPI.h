@@ -91,7 +91,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic, copy) NSString *offsetForBounds;
 @property (nonatomic) int offsetForBoundsInMeters;
 @property (nonatomic, copy) NSString *selectBoundaryFromMapType;
-@property (nonatomic) NSMutableDictionary *colorForAreaDictionary;
 @property (nonatomic) int keepProcessing;
 
 + (CRAPI *)sharedInstance;
