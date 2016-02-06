@@ -32,7 +32,8 @@
     
     assert(str);
     
-    trimmedStr = [str stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
+    trimmedStr = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
     if ((trimmedStr) && (trimmedStr.length != 0))
     {
         schemeMarkerRange = [trimmedStr rangeOfString:@"://"];

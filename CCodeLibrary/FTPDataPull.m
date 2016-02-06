@@ -171,7 +171,12 @@ static FTPDataPull * _statpull = nil;
         }
         
         if (!url)
+        {
+            [self stopReceiveWithStatus:FTPStatusCancel
+                           statusString:[NSString stringWithFormat:@"%@ is not a valid URL", url]];
+            
             return;
+        }
     }
     
     _fileStream = [NSOutputStream outputStreamToFileAtPath:_filePath
@@ -193,6 +198,7 @@ static FTPDataPull * _statpull = nil;
     assert(_connection);
     _totalDataReceived = 0;
     _progress = 0.0;
+    
     if (_popover)
         [_popover updateProgress:_progress];
     
