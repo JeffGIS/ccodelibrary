@@ -14,24 +14,25 @@
                usingPolynomial:DEFAULT_POLYNOMIAL];
 }
 
--(uint32_t)crc32WithSeed:(uint32_t)seed
+- (uint32_t)crc32WithSeed:(uint32_t)seed
 {
     return [self crc32WithSeed:seed
                usingPolynomial:DEFAULT_POLYNOMIAL];
 }
 
--(uint32_t)crc32UsingPolynomial:(uint32_t)poly
+- (uint32_t)crc32UsingPolynomial:(uint32_t)poly
 {
-    return [self crc32WithSeed:DEFAULT_SEED usingPolynomial:poly];
+    return [self crc32WithSeed:DEFAULT_SEED
+                usingPolynomial:poly];
 }
 
--(uint32_t)crc32WithSeed:(uint32_t)seed
-         usingPolynomial:(uint32_t)poly
+- (uint32_t)crc32WithSeed:(uint32_t)seed
+          usingPolynomial:(uint32_t)poly
 {
     uint32_t *pTable = malloc(sizeof(uint32_t) * 256);
     generateCRC32Table(pTable, poly);
     
-    uint32_t crc    = seed;
+    uint32_t crc = seed;
     uint8_t *pBytes = (uint8_t *)self.bytes;
     uint32_t length = (uint32_t)self.length;
     
