@@ -33,13 +33,13 @@
 - (void)documentPicker:(UIDocumentPickerViewController *)controller
   didPickDocumentAtURL:(NSURL *)url
 {
-    if (_delegate)
+    if ([_delegate respondsToSelector:@selector(documentManagerDidComplete)])
         [_delegate documentManagerDidComplete];
 }
 
 - (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller
 {
-    if (_delegate)
+    if ([_delegate respondsToSelector:@selector(documentManagerWasCancelled)])
         [_delegate documentManagerWasCancelled];
 }
 
