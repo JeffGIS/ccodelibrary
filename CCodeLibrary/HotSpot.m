@@ -122,18 +122,29 @@
         }
     }
 }
-- (void) dump:(NSString*)outFile
+- (BOOL) dump:(NSString*)outFile
 {
+    if (!_maxGridVal)
+        return FALSE;
+    NSString * filepath = [NSString stringWithFormat:@"%@/%@.bin",CRAPI.sharedInstance.sharedFilePath,outFile];
+    FILE *Fid = fopen(filepath.UTF8String,"wb");
+    if (Fid == NULL)
+        return FALSE;
+    BYTE *pgrid = malloc (_width*_height*sizeof(BYTE)+4);
+    
     for (int row = 0;row < _height; row++)
     {
         for (int col = 0; col < _width; col++)
         {
             int indx = [self gridIndex:row column:col];
-            if (_grid1[indx])
-            {
-            }
+            pgrid[indx] = 32 * _grid1[indx] / _maxGridVal;
         }
     }
-    //[CRAPI.sharedInstance.docManager exportDocumentFromFilepath:filepath delegate:self];
+    BigWrite(Fid ,&_height ,sizeof(int), -1);
+    BigWrite(Fid ,&_width ,sizeof(int), -1);
+    BigWrite(Fid ,pgrid ,_width*_height*sizeof(BYTE), -1);
+    fclose(Fid);
+    //[CRAPI.sharedInstance.docManager exportDocumentFromFilepath:filepath delegate:nil];
+    return TRUE;
 }
 @end

@@ -8,29 +8,8 @@
 #include <string.h>
 #include "compress.h"
 #include "minilzo.h"
+#include "mathutil.h"
 #define BOOL int
-
-long GSSifilelength(FILE *fid)
-{
-    long fileLen;
-    long curloc = ftell(fid);
-    fseek(fid, 0, SEEK_END);
-    fileLen = ftell(fid);
-    fseek(fid, curloc, SEEK_SET);
-    return fileLen;
-}
-
-long __attribute__ ((noinline)) BigRead(FILE *fid, LPVOID pmem, long len)
-{
-    long didRead = fread(pmem, len, 1, fid);
-    return didRead;
-}
-
-long __attribute__ ((noinline)) BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc)
-{
-    long bytesWritten = fwrite(pbuf, 1, len, fid);
-    return bytesWritten;
-}
 
 void ExpandText(LPSTR txt)
 {
