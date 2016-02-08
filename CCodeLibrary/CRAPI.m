@@ -31,6 +31,7 @@
         //_documentsDirectory = UserDefaults.defaults.sharedFilePath;
         _crimeMode = PINMAP;
         _crimeTarget = @"Minneapolis Neighborhoods";
+        _docManager = NVDocumentManager.new;
     }
     
     return self;
