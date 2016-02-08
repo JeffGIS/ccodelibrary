@@ -72,8 +72,11 @@
             break;
     }
     
-    if ([_delegate respondsToSelector:@selector(documentManagerDidCompleteWithMessage:)])
-        [_delegate documentManagerDidCompleteWithMessage:message];
+    if ([_delegate respondsToSelector:@selector(documentManagerDidCompleteWithMessage:filepath:)])
+    {
+        [_delegate documentManagerDidCompleteWithMessage:message
+                                                filepath:url.path];
+    }
 }
 
 - (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller
@@ -99,8 +102,11 @@
             break;
     }
     
-    if ([_delegate respondsToSelector:@selector(documentManagerDidCompleteWithMessage:)])
-        [_delegate documentManagerDidCompleteWithMessage:message];
+    if ([_delegate respondsToSelector:@selector(documentManagerDidCompleteWithMessage:filepath:)])
+    {
+        [_delegate documentManagerDidCompleteWithMessage:message
+                                                filepath:nil];
+    }
 }
 
 @end

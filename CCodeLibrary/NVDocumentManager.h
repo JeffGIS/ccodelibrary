@@ -8,7 +8,8 @@
 @protocol NVDocumentManagerDelegate <NSObject>
 
 @optional
-- (void)documentManagerDidCompleteWithMessage:(NSString *)message;
+- (void)documentManagerDidCompleteWithMessage:(NSString *)message
+                                     filepath:(NSString *)filepath;
 
 @end
 
