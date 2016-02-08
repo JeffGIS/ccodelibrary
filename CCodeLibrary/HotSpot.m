@@ -8,6 +8,7 @@
 
 #import "HotSpot.h"
 #import "MathUtil.h"
+#import "CRAPI.h"
 
 @implementation HotSpot
 - (void) releaseMem
@@ -133,6 +134,6 @@
             }
         }
     }
-
+    //[CRAPI.sharedInstance.docManager exportDocumentFromFilepath:filepath delegate:self];
 }
 @end
