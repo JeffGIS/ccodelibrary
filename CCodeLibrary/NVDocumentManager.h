@@ -8,8 +8,7 @@
 @protocol NVDocumentManagerDelegate <NSObject>
 
 @optional
-- (void)documentManagerDidComplete;
-- (void)documentManagerWasCancelled;
+- (void)documentManagerDidCompleteWithMessage:(NSString *)message;
 
 @end
 
@@ -19,5 +18,7 @@
 
 - (void)exportDocumentFromFilepath:(NSString *)filepath
                           delegate:(id)delegate;
+
+- (void)importFileWithDelegate:(id)delegate;
 
 @end

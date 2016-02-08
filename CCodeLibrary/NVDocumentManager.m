@@ -30,17 +30,77 @@
                          completion:nil];
 }
 
+- (void)importFileWithDelegate:(id)delegate
+{
+    if (![delegate isKindOfClass:UIViewController.class])
+        return;
+    
+    _delegate = delegate;
+    
+    _documentPicker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.content", @"public.composite-content", @"public.data"]
+                                                                             inMode:UIDocumentPickerModeImport];
+    
+    _documentPicker.delegate = self;
+    _documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    [delegate presentViewController:_documentPicker
+                           animated:NO
+                         completion:nil];
+}
+
 - (void)documentPicker:(UIDocumentPickerViewController *)controller
   didPickDocumentAtURL:(NSURL *)url
 {
-    if ([_delegate respondsToSelector:@selector(documentManagerDidComplete)])
-        [_delegate documentManagerDidComplete];
+    NSString *message = @"";
+    
+    switch (controller.documentPickerMode)
+    {
+        case UIDocumentPickerModeImport:
+            message = @"Import Document Completed";
+            break;
+            
+        case UIDocumentPickerModeExportToService:
+            message = @"Export Document Completed";
+            break;
+            
+        case UIDocumentPickerModeMoveToService:
+            message = @"Move Document Completed";
+            break;
+            
+        case UIDocumentPickerModeOpen:
+            message = @"Open Document Completed";
+            break;
+    }
+    
+    if ([_delegate respondsToSelector:@selector(documentManagerDidCompleteWithMessage:)])
+        [_delegate documentManagerDidCompleteWithMessage:message];
 }
 
 - (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller
 {
-    if ([_delegate respondsToSelector:@selector(documentManagerWasCancelled)])
-        [_delegate documentManagerWasCancelled];
+    NSString *message = @"";
+    
+    switch (controller.documentPickerMode)
+    {
+        case UIDocumentPickerModeImport:
+            message = @"Import Document Cancelled";
+            break;
+            
+        case UIDocumentPickerModeExportToService:
+            message = @"Export Document Cancelled";
+            break;
+            
+        case UIDocumentPickerModeMoveToService:
+            message = @"Move Document Cancelled";
+            break;
+            
+        case UIDocumentPickerModeOpen:
+            message = @"Open Document Cancelled";
+            break;
+    }
+    
+    if ([_delegate respondsToSelector:@selector(documentManagerDidCompleteWithMessage:)])
+        [_delegate documentManagerDidCompleteWithMessage:message];
 }
 
 @end
