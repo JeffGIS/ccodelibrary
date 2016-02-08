@@ -9,6 +9,7 @@
 #import "Colors.h"
 //#import "NVAlertView.h"
 #import "MapToolbar.h"
+#import "NVDocumentManager.h"
 
 #define MANAGEMENT_MODULE   1
 #define PRELIM_MODULE       2
@@ -92,6 +93,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic) int offsetForBoundsInMeters;
 @property (nonatomic, copy) NSString *selectBoundaryFromMapType;
 @property (nonatomic) int keepProcessing;
+@property (nonatomic) NVDocumentManager *docManager;
 
 + (CRAPI *)sharedInstance;
 

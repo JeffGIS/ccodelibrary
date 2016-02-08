@@ -47,6 +47,8 @@
 		698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698F987B1C10B96B009F2F01 /* YTPlayerView.m */; };
 		6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 6992A8871BE0040C00FB53F0 /* NSData+Compression.m */; };
 		6992A8891BE00AB100FB53F0 /* NSData+Compression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6992A8861BE0040C00FB53F0 /* NSData+Compression.h */; };
+		6998225E1C6904E4003476DD /* NVDocumentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6998225D1C6904E4003476DD /* NVDocumentManager.m */; };
+		6998225F1C690A38003476DD /* NVDocumentManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6998225C1C6904E4003476DD /* NVDocumentManager.h */; };
 		699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */ = {isa = PBXBuildFile; fileRef = 699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */; };
 		699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */; };
 		69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B36F191BCB0F30004C4B69 /* NVDateRange.m */; };
@@ -299,6 +301,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				6998225F1C690A38003476DD /* NVDocumentManager.h in CopyFiles */,
 				69E8E66A1C66809E00CB26CB /* NSData+CRC.h in CopyFiles */,
 				EB0E4FFE1C6289A200849766 /* DispersePoint.h in CopyFiles */,
 				EB0E4FF61C6278AD00849766 /* SymbolDictionary.h in CopyFiles */,
@@ -462,6 +465,8 @@
 		698F987B1C10B96B009F2F01 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTPlayerView.m; path = ../YTPlayerView.m; sourceTree = "<group>"; };
 		6992A8861BE0040C00FB53F0 /* NSData+Compression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Compression.h"; sourceTree = "<group>"; };
 		6992A8871BE0040C00FB53F0 /* NSData+Compression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Compression.m"; sourceTree = "<group>"; };
+		6998225C1C6904E4003476DD /* NVDocumentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDocumentManager.h; sourceTree = "<group>"; };
+		6998225D1C6904E4003476DD /* NVDocumentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDocumentManager.m; sourceTree = "<group>"; };
 		699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PolylineCompression.c; sourceTree = "<group>"; };
 		699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineCompression.h; sourceTree = "<group>"; };
 		69B36F181BCB0F30004C4B69 /* NVDateRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDateRange.h; sourceTree = "<group>"; };
@@ -959,6 +964,8 @@
 				EBB9A61919FFC02900685716 /* GetAssignments.m */,
 				1F3A544419A412490029DBEA /* NetworkManager.h */,
 				1F3A544519A412490029DBEA /* NetworkManager.m */,
+				6998225C1C6904E4003476DD /* NVDocumentManager.h */,
+				6998225D1C6904E4003476DD /* NVDocumentManager.m */,
 				691636201C1FC790000C61B8 /* NVTileCompiler.h */,
 				691636211C1FC790000C61B8 /* NVTileCompiler.m */,
 				A9735AF219E77B6800894359 /* Reachability.h */,
@@ -1262,6 +1269,7 @@
 				A933D9F61B5D499500D621CD /* NVPipe.m in Sources */,
 				A9735AF419E77B6800894359 /* Reachability.m in Sources */,
 				6919EAF81C27AF1700A9D0F1 /* NVUnitPickerTextAlert.m in Sources */,
+				6998225E1C6904E4003476DD /* NVDocumentManager.m in Sources */,
 				A94A770D19F7F9F40062906E /* SharedDefaults.m in Sources */,
 				A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */,
 				EBC01D2E1BED1C8C0004C751 /* ura404.c in Sources */,
