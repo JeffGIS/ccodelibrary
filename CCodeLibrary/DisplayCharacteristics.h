@@ -19,7 +19,14 @@ typedef NS_ENUM(NSInteger, GraphicElementTypes)
     WaterMain,
     WaterMeter,
     PDFBounds,
+    StormMain,
+    StormManhole,
+    StormPressurePipe,
+    SanitaryMain,
+    SanitaryManhole,
+    SanitaryPressurizedMain,
 };
+
 typedef NS_ENUM(NSInteger, PointSymbols)
 {
     CrossSym,
@@ -32,7 +39,6 @@ typedef NS_ENUM(NSInteger, PointSymbols)
     CircleSym,
     ArsonSym,
 };
-
 
 typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
     AerialPass=1,
@@ -56,6 +62,5 @@ typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
 @property float width;
 @property NSString * string1;
 @property NSString * string2;
-
 
 @end
