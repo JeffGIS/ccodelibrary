@@ -7,7 +7,6 @@
 
 + (void)tabBarController:(UITabBarController *)tabBarController
 removeViewControllerWithID:(NSString *)ID
-                animated:(BOOL)animated
 {
     if (!tabBarController || !ID)
         return;
@@ -23,7 +22,7 @@ removeViewControllerWithID:(NSString *)ID
     }
     
     [tabBarController setViewControllers:newTabBarVCs.copy
-                                animated:animated];
+                                animated:NO];
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController
@@ -52,7 +51,6 @@ replaceViewControllerWithID:(NSString *)ID
 + (void)tabBarController:(UITabBarController *)tabBarController
     insertViewController:(UIViewController *)viewController
                  atIndex:(NSUInteger)index
-                animated:(BOOL)animated
 {
     if (!tabBarController || !viewController ||
         (index > tabBarController.viewControllers.count))
@@ -70,7 +68,7 @@ replaceViewControllerWithID:(NSString *)ID
                        atIndex:index];
     
     [tabBarController setViewControllers:newTabBarVCs.copy
-                                animated:animated];
+                                animated:NO];
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController
