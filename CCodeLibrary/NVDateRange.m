@@ -75,12 +75,10 @@
                               toDate:(NSInteger)toDate
 {
     CGRect bounds = UIScreen.mainScreen.bounds;
-    CGFloat minBounds = (MIN(bounds.size.width, bounds.size.height) * 0.9);
+    CGFloat minBounds = (MIN(bounds.size.width, bounds.size.height) * 0.95);
     
-    NVDateRange *nvdr = [[NVDateRange alloc] initWithFrame:CGRectMake(0.0, 0.0, minBounds, minBounds)];
-    
-    nvdr.center = CGPointMake((bounds.size.width / 2.0),
-                              (bounds.size.height / 2.0));
+    NVDateRange *nvdr = [[NVDateRange alloc] init];
+    nvdr.translatesAutoresizingMaskIntoConstraints = NO;
     
     nvdr.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     nvdr.calendar.locale = NSLocale.currentLocale;
@@ -104,11 +102,19 @@
         nvdr.tabBar = vc.tabBarController.tabBar;
     }
     
-    nvdr.overlayView = [[UIView alloc] initWithFrame:bounds];
+    nvdr.overlayView = [[UIView alloc] init];
+    nvdr.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
     nvdr.overlayView.backgroundColor = UIColor.blackColor;
     nvdr.overlayView.alpha = 0.0;
     
     [view addSubview:nvdr.overlayView];
+    
+    [nvdr.overlayView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor].active = YES;
+    [nvdr.overlayView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor].active = YES;
+    [nvdr.overlayView.topAnchor constraintEqualToAnchor:view.topAnchor].active = YES;
+    
+    [nvdr.overlayView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor
+                                                  constant:nvdr.tabBar.frame.size.height].active = YES;
     
     UIButton *returnButton = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.02), (minBounds * 0.02),
                                                                         (minBounds * 0.21), (minBounds * 0.1))];
@@ -122,10 +128,10 @@
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.25), (minBounds * 0.01),
                                                                     (minBounds * 0.5), (minBounds * 0.14))];
     
-    [nvdr setupLabel:titleLabel];
+    [nvdr setupLabel:titleLabel
+            fontSize:44.0];
     
     titleLabel.text = @"Date Range\nController";
-    titleLabel.font = [UIFont boldSystemFontOfSize:44.0];
     titleLabel.numberOfLines = 2;
     
     [nvdr addSubview:titleLabel];
@@ -160,20 +166,20 @@
     UILabel *fdpLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.17),
                                                                   (minBounds * 0.44), (minBounds * 0.05))];
     
-    [nvdr setupLabel:fdpLabel];
+    [nvdr setupLabel:fdpLabel
+            fontSize:24.0];
     
     fdpLabel.text = @"Select From Date";
-    fdpLabel.font = [UIFont systemFontOfSize:24.0];
     
     [nvdr addSubview:fdpLabel];
     
     nvdr.fromDateLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.62),
                                                                    (minBounds * 0.44), (minBounds * 0.05))];
     
-    [nvdr setupLabel:nvdr.fromDateLabel];
+    [nvdr setupLabel:nvdr.fromDateLabel
+            fontSize:24.0];
     
     nvdr.fromDateLabel.text = [nvdr formattedDate:nvdr.fromDatePicker.date];
-    nvdr.fromDateLabel.font = [UIFont systemFontOfSize:24.0];
     
     [nvdr addSubview:nvdr.fromDateLabel];
     
@@ -200,20 +206,20 @@
     UILabel *tdpLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.17),
                                                                   (minBounds * 0.44), (minBounds * 0.05))];
     
-    [nvdr setupLabel:tdpLabel];
+    [nvdr setupLabel:tdpLabel
+            fontSize:24.0];
     
     tdpLabel.text = @"Select To Date";
-    tdpLabel.font = [UIFont systemFontOfSize:24.0];
     
     [nvdr addSubview:tdpLabel];
     
     nvdr.toDateLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.62),
                                                                    (minBounds * 0.44), (minBounds * 0.05))];
     
-    [nvdr setupLabel:nvdr.toDateLabel];
+    [nvdr setupLabel:nvdr.toDateLabel
+            fontSize:24.0];
     
     nvdr.toDateLabel.text = [nvdr formattedDate:nvdr.toDatePicker.date];
-    nvdr.toDateLabel.font = [UIFont systemFontOfSize:24.0];
     
     [nvdr addSubview:nvdr.toDateLabel];
     
@@ -337,6 +343,13 @@
     
     [view addSubview:nvdr];
     
+    [nvdr.heightAnchor constraintEqualToConstant:minBounds].active = YES;
+    [nvdr.widthAnchor constraintEqualToConstant:minBounds].active = YES;
+    [nvdr.centerXAnchor constraintEqualToAnchor:view.centerXAnchor].active = YES;
+    
+    [nvdr.centerYAnchor constraintEqualToAnchor:view.centerYAnchor
+                                       constant:(nvdr.tabBar.frame.size.height / 2.0)].active = YES;
+    
     [UIView animateWithDuration:0.25
                      animations:^{
                          nvdr.overlayView.alpha = 0.7;
@@ -344,7 +357,7 @@
                          
                          if (nvdr.tabBar)
                          {
-                             nvdr.tabBar.alpha = 0.2;
+                             nvdr.tabBar.alpha = 0.0;
                              nvdr.tabBar.userInteractionEnabled = NO;
                          }
                      }];
@@ -367,7 +380,12 @@
     [button setTitleColor:UIColor.grayColor
                  forState:UIControlStateHighlighted];
     
-    button.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:14.0];
+    
+    else
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
+    
     button.titleLabel.adjustsFontSizeToFitWidth = YES;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     button.layer.cornerRadius = _cornerRadius;
@@ -378,8 +396,13 @@
 }
 
 - (void)setupLabel:(UILabel *)label
+          fontSize:(CGFloat)fontSize
 {
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        fontSize /= 1.5;
+    
     label.backgroundColor = UIColor.clearColor;
+    label.font = [UIFont systemFontOfSize:fontSize];
     label.adjustsFontSizeToFitWidth = YES;
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = UIColor.blackColor;
@@ -389,7 +412,13 @@
 {
     datePicker.backgroundColor = UIColor.whiteColor;
     datePicker.layer.borderColor = UIColor.blackColor.CGColor;
-    datePicker.layer.borderWidth = 4.0;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        datePicker.layer.borderWidth = 2.0;
+    
+    else
+        datePicker.layer.borderWidth = 4.0;
+    
     datePicker.layer.cornerRadius = _cornerRadius;
     datePicker.datePickerMode = UIDatePickerModeDate;
 }
