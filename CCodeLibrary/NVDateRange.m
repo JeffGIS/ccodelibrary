@@ -76,6 +76,10 @@
 {
     CGRect bounds = UIScreen.mainScreen.bounds;
     CGFloat minBounds = (MIN(bounds.size.width, bounds.size.height) * 0.95);
+    CGFloat outerMargin = 40.0, innerMargin = 16.0;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        outerMargin = 12.0, innerMargin = 6.0;
     
     NVDateRange *nvdr = [[NVDateRange alloc] init];
     nvdr.translatesAutoresizingMaskIntoConstraints = NO;
@@ -116,8 +120,22 @@
     [nvdr.overlayView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor
                                                   constant:nvdr.tabBar.frame.size.height].active = YES;
     
-    UIButton *returnButton = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.02), (minBounds * 0.02),
-                                                                        (minBounds * 0.21), (minBounds * 0.1))];
+    [view addSubview:nvdr];
+    
+    [nvdr.leadingAnchor constraintEqualToAnchor:view.leadingAnchor
+                                       constant:outerMargin].active = YES;
+    
+    [nvdr.trailingAnchor constraintEqualToAnchor:view.trailingAnchor
+                                        constant:-outerMargin].active = YES;
+    
+    [nvdr.topAnchor constraintEqualToAnchor:view.topAnchor
+                                   constant:outerMargin].active = YES;
+    
+    [nvdr.bottomAnchor constraintEqualToAnchor:view.bottomAnchor
+                                      constant:(nvdr.tabBar.frame.size.height - outerMargin)].active = YES;
+    
+    UIButton *returnButton = [[UIButton alloc] init];
+    returnButton.translatesAutoresizingMaskIntoConstraints = NO;
     
     [nvdr setupButton:returnButton
                 title:@"< Return"
@@ -125,16 +143,28 @@
     
     [nvdr addSubview:returnButton];
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.25), (minBounds * 0.01),
-                                                                    (minBounds * 0.5), (minBounds * 0.14))];
+    [returnButton.leadingAnchor constraintEqualToAnchor:nvdr.leadingAnchor
+                                               constant:innerMargin].active = YES;
+    
+    [returnButton.topAnchor constraintEqualToAnchor:nvdr.topAnchor
+                                           constant:innerMargin].active = YES;
+    
+    UILabel *titleLabel = [[UILabel alloc] init];
     
     [nvdr setupLabel:titleLabel
-            fontSize:44.0];
+            fontSize:36.0];
     
-    titleLabel.text = @"Date Range\nController";
-    titleLabel.numberOfLines = 2;
+    titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    titleLabel.text = @"Date Range";
     
     [nvdr addSubview:titleLabel];
+    
+    [titleLabel.leadingAnchor constraintEqualToAnchor:returnButton.trailingAnchor
+                                             constant:innerMargin].active = YES;
+    
+    [titleLabel.topAnchor constraintEqualToAnchor:returnButton.topAnchor].active = YES;
+    [titleLabel.bottomAnchor constraintEqualToAnchor:returnButton.bottomAnchor].active = YES;
+    [titleLabel.centerXAnchor constraintEqualToAnchor:view.centerXAnchor].active = YES;
     
     nvdr.fromDatePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.22),
                                                                               (minBounds * 0.44), (minBounds * 0.4))];
@@ -163,8 +193,8 @@
     
     [nvdr addSubview:nvdr.fromDatePicker];
     
-    UILabel *fdpLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.17),
-                                                                  (minBounds * 0.44), (minBounds * 0.05))];
+    UILabel *fdpLabel = [[UILabel alloc] init];
+    fdpLabel.translatesAutoresizingMaskIntoConstraints = NO;
     
     [nvdr setupLabel:fdpLabel
             fontSize:24.0];
@@ -172,6 +202,32 @@
     fdpLabel.text = @"Select From Date";
     
     [nvdr addSubview:fdpLabel];
+    
+    [fdpLabel.leadingAnchor constraintEqualToAnchor:returnButton.leadingAnchor].active = YES;
+    
+    [fdpLabel.topAnchor constraintEqualToAnchor:returnButton.bottomAnchor
+                                       constant:innerMargin].active = YES;
+    
+    [fdpLabel.trailingAnchor constraintEqualToAnchor:nvdr.centerXAnchor
+                                       constant:(-innerMargin / 2.0)].active = YES;
+    
+    UILabel *tdpLabel = [[UILabel alloc] init];
+    tdpLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [nvdr setupLabel:tdpLabel
+            fontSize:24.0];
+    
+    tdpLabel.text = @"Select To Date";
+    
+    [nvdr addSubview:tdpLabel];
+    
+    [tdpLabel.leadingAnchor constraintEqualToAnchor:nvdr.centerXAnchor
+                                           constant:(innerMargin / 2.0)].active = YES;
+    
+    [tdpLabel.topAnchor constraintEqualToAnchor:fdpLabel.topAnchor].active = YES;
+    
+    [tdpLabel.trailingAnchor constraintEqualToAnchor:nvdr.trailingAnchor
+                                            constant:-innerMargin].active = YES;
     
     nvdr.fromDateLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.62),
                                                                    (minBounds * 0.44), (minBounds * 0.05))];
@@ -202,16 +258,6 @@
                 forControlEvents:UIControlEventValueChanged];
     
     [nvdr addSubview:nvdr.toDatePicker];
-    
-    UILabel *tdpLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.17),
-                                                                  (minBounds * 0.44), (minBounds * 0.05))];
-    
-    [nvdr setupLabel:tdpLabel
-            fontSize:24.0];
-    
-    tdpLabel.text = @"Select To Date";
-    
-    [nvdr addSubview:tdpLabel];
     
     nvdr.toDateLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.62),
                                                                    (minBounds * 0.44), (minBounds * 0.05))];
@@ -341,15 +387,6 @@
     
     [nvdr addSubview:pastYear];
     
-    [view addSubview:nvdr];
-    
-    [nvdr.heightAnchor constraintEqualToConstant:minBounds].active = YES;
-    [nvdr.widthAnchor constraintEqualToConstant:minBounds].active = YES;
-    [nvdr.centerXAnchor constraintEqualToAnchor:view.centerXAnchor].active = YES;
-    
-    [nvdr.centerYAnchor constraintEqualToAnchor:view.centerYAnchor
-                                       constant:(nvdr.tabBar.frame.size.height / 2.0)].active = YES;
-    
     [UIView animateWithDuration:0.25
                      animations:^{
                          nvdr.overlayView.alpha = 0.7;
@@ -381,10 +418,10 @@
                  forState:UIControlStateHighlighted];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        button.titleLabel.font = [UIFont boldSystemFontOfSize:14.0];
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
     
     else
-        button.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
     
     button.titleLabel.adjustsFontSizeToFitWidth = YES;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -402,10 +439,12 @@
         fontSize /= 1.5;
     
     label.backgroundColor = UIColor.clearColor;
-    label.font = [UIFont systemFontOfSize:fontSize];
+    label.font = [UIFont boldSystemFontOfSize:fontSize];
     label.adjustsFontSizeToFitWidth = YES;
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = UIColor.blackColor;
+    label.layer.borderColor = UIColor.redColor.CGColor;
+    label.layer.borderWidth = 1.0;
 }
 
 - (void)setupDatePicker:(UIDatePicker *)datePicker
