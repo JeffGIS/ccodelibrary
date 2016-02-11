@@ -79,7 +79,7 @@
     CGFloat outerMargin = 40.0, innerMargin = 16.0;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        outerMargin = 12.0, innerMargin = 6.0;
+        outerMargin = 16.0, innerMargin = 4.0;
     
     NVDateRange *nvdr = [[NVDateRange alloc] init];
     nvdr.translatesAutoresizingMaskIntoConstraints = NO;
@@ -225,11 +225,8 @@
     
     [nvdr addSubview:nvdr.fromDatePicker];
     
-    [nvdr.fromDatePicker.leadingAnchor constraintEqualToAnchor:fdpLabel.leadingAnchor].active = YES;
-    [nvdr.fromDatePicker.trailingAnchor constraintEqualToAnchor:fdpLabel.trailingAnchor].active = YES;
-    
-    [nvdr.fromDatePicker.topAnchor constraintEqualToAnchor:fdpLabel.bottomAnchor
-                                       constant:(innerMargin / 4.0)].active = YES;
+    [nvdr.fromDatePicker.topAnchor constraintEqualToAnchor:fdpLabel.bottomAnchor].active = YES;
+    [nvdr.fromDatePicker.centerXAnchor constraintEqualToAnchor:fdpLabel.centerXAnchor].active = YES;
     
     nvdr.toDatePicker = [[UIDatePicker alloc] init];
     
@@ -250,11 +247,8 @@
     
     [nvdr addSubview:nvdr.toDatePicker];
     
-    [nvdr.toDatePicker.leadingAnchor constraintEqualToAnchor:tdpLabel.leadingAnchor].active = YES;
-    [nvdr.toDatePicker.trailingAnchor constraintEqualToAnchor:tdpLabel.trailingAnchor].active = YES;
-    
-    [nvdr.toDatePicker.topAnchor constraintEqualToAnchor:tdpLabel.bottomAnchor
-                                                constant:(innerMargin / 4.0)].active = YES;
+    [nvdr.toDatePicker.topAnchor constraintEqualToAnchor:tdpLabel.bottomAnchor].active = YES;
+    [nvdr.toDatePicker.centerXAnchor constraintEqualToAnchor:tdpLabel.centerXAnchor].active = YES;
     
     nvdr.fromDateLabel = [[UILabel alloc] init];
     
@@ -265,11 +259,9 @@
     
     [nvdr addSubview:nvdr.fromDateLabel];
     
-    [nvdr.fromDateLabel.leadingAnchor constraintEqualToAnchor:nvdr.fromDatePicker.leadingAnchor].active = YES;
-    [nvdr.fromDateLabel.trailingAnchor constraintEqualToAnchor:nvdr.fromDatePicker.trailingAnchor].active = YES;
-    
-    [nvdr.fromDateLabel.topAnchor constraintEqualToAnchor:nvdr.fromDatePicker.bottomAnchor
-                                                 constant:(innerMargin / 4.0)].active = YES;
+    [nvdr.fromDateLabel.leadingAnchor constraintEqualToAnchor:fdpLabel.leadingAnchor].active = YES;
+    [nvdr.fromDateLabel.trailingAnchor constraintEqualToAnchor:fdpLabel.trailingAnchor].active = YES;
+    [nvdr.fromDateLabel.topAnchor constraintEqualToAnchor:nvdr.fromDatePicker.bottomAnchor].active = YES;
     
     nvdr.toDateLabel = [[UILabel alloc] init];
     
@@ -280,11 +272,9 @@
     
     [nvdr addSubview:nvdr.toDateLabel];
     
-    [nvdr.toDateLabel.leadingAnchor constraintEqualToAnchor:nvdr.toDatePicker.leadingAnchor].active = YES;
-    [nvdr.toDateLabel.trailingAnchor constraintEqualToAnchor:nvdr.toDatePicker.trailingAnchor].active = YES;
-    
-    [nvdr.toDateLabel.topAnchor constraintEqualToAnchor:nvdr.toDatePicker.bottomAnchor
-                                               constant:(innerMargin / 4.0)].active = YES;
+    [nvdr.toDateLabel.leadingAnchor constraintEqualToAnchor:tdpLabel.leadingAnchor].active = YES;
+    [nvdr.toDateLabel.trailingAnchor constraintEqualToAnchor:tdpLabel.trailingAnchor].active = YES;
+    [nvdr.toDateLabel.topAnchor constraintEqualToAnchor:nvdr.toDatePicker.bottomAnchor].active = YES;
     
     UIButton *today = [[UIButton alloc] init];
     
@@ -433,8 +423,7 @@
     [lastYear.bottomAnchor constraintEqualToAnchor:nvdr.bottomAnchor
                                           constant:-innerMargin].active = YES;
     
-    UIButton *pastYear = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.804), (minBounds * 0.85),
-                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    UIButton *pastYear = [[UIButton alloc] init];
     
     [nvdr setupButton:pastYear
                 title:@"Past Year"
@@ -462,6 +451,36 @@
     [thisYear.heightAnchor constraintEqualToAnchor:thisMonth.heightAnchor].active = YES;
     [thisMonth.heightAnchor constraintEqualToAnchor:lastWeek.heightAnchor].active = YES;
     [lastWeek.heightAnchor constraintEqualToAnchor:yesterday.heightAnchor].active = YES;
+    
+    [nvdr.fromDatePicker.heightAnchor constraintEqualToAnchor:today.heightAnchor
+                                                   multiplier:3.0].active = YES;
+    
+    [nvdr.toDatePicker.heightAnchor constraintEqualToAnchor:yesterday.heightAnchor
+                                                 multiplier:3.0].active = YES;
+    
+    [returnButton.heightAnchor constraintEqualToAnchor:today.heightAnchor].active = YES;
+    
+    [fdpLabel.heightAnchor constraintEqualToAnchor:returnButton.heightAnchor
+                                        multiplier:0.4].active = YES;
+    
+    [tdpLabel.heightAnchor constraintEqualToAnchor:fdpLabel.heightAnchor].active = YES;
+    [nvdr.fromDateLabel.heightAnchor constraintEqualToAnchor:fdpLabel.heightAnchor].active = YES;
+    [nvdr.toDateLabel.heightAnchor constraintEqualToAnchor:tdpLabel.heightAnchor].active = YES;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        [nvdr.fromDatePicker.widthAnchor constraintEqualToAnchor:today.widthAnchor
+                                                      multiplier:2.0].active = YES;
+        
+        [nvdr.toDatePicker.widthAnchor constraintEqualToAnchor:yesterday.widthAnchor
+                                                    multiplier:2.0].active = YES;
+    }
+    
+    else
+    {
+        [nvdr.fromDatePicker.widthAnchor constraintEqualToAnchor:today.widthAnchor].active = YES;
+        [nvdr.toDatePicker.widthAnchor constraintEqualToAnchor:yesterday.widthAnchor].active = YES;
+    }
     
     [UIView animateWithDuration:0.25
                      animations:^{
@@ -513,7 +532,7 @@
           fontSize:(CGFloat)fontSize
 {
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        fontSize /= 1.5;
+        fontSize /= 1.8;
     
     label.backgroundColor = UIColor.clearColor;
     label.font = [UIFont boldSystemFontOfSize:fontSize];
@@ -529,7 +548,10 @@
     datePicker.layer.borderColor = UIColor.blackColor.CGColor;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
         datePicker.layer.borderWidth = 2.0;
+        datePicker.transform = CGAffineTransformMakeScale(0.5, 1.0);
+    }
     
     else
         datePicker.layer.borderWidth = 4.0;
