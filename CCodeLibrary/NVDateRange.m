@@ -135,7 +135,6 @@
                                       constant:(nvdr.tabBar.frame.size.height - outerMargin)].active = YES;
     
     UIButton *returnButton = [[UIButton alloc] init];
-    returnButton.translatesAutoresizingMaskIntoConstraints = NO;
     
     [nvdr setupButton:returnButton
                 title:@"< Return"
@@ -154,7 +153,6 @@
     [nvdr setupLabel:titleLabel
             fontSize:36.0];
     
-    titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     titleLabel.text = @"Date Range";
     
     [nvdr addSubview:titleLabel];
@@ -166,8 +164,42 @@
     [titleLabel.bottomAnchor constraintEqualToAnchor:returnButton.bottomAnchor].active = YES;
     [titleLabel.centerXAnchor constraintEqualToAnchor:view.centerXAnchor].active = YES;
     
-    nvdr.fromDatePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.22),
-                                                                              (minBounds * 0.44), (minBounds * 0.4))];
+    UILabel *fdpLabel = [[UILabel alloc] init];
+    
+    [nvdr setupLabel:fdpLabel
+            fontSize:24.0];
+    
+    fdpLabel.text = @"Select From Date";
+    
+    [nvdr addSubview:fdpLabel];
+    
+    [fdpLabel.leadingAnchor constraintEqualToAnchor:returnButton.leadingAnchor].active = YES;
+    
+    [fdpLabel.topAnchor constraintEqualToAnchor:returnButton.bottomAnchor
+                                       constant:innerMargin].active = YES;
+    
+    [fdpLabel.trailingAnchor constraintEqualToAnchor:nvdr.centerXAnchor
+                                            constant:(-innerMargin / 2.0)].active = YES;
+    
+    UILabel *tdpLabel = [[UILabel alloc] init];
+    
+    [nvdr setupLabel:tdpLabel
+            fontSize:24.0];
+    
+    tdpLabel.text = @"Select To Date";
+    
+    [nvdr addSubview:tdpLabel];
+    
+    [tdpLabel.leadingAnchor constraintEqualToAnchor:nvdr.centerXAnchor
+                                           constant:(innerMargin / 2.0)].active = YES;
+    
+    [tdpLabel.topAnchor constraintEqualToAnchor:returnButton.bottomAnchor
+                                       constant:innerMargin].active = YES;
+    
+    [tdpLabel.trailingAnchor constraintEqualToAnchor:nvdr.trailingAnchor
+                                            constant:-innerMargin].active = YES;
+    
+    nvdr.fromDatePicker = [[UIDatePicker alloc] init];
     
     if (nvdr.toDate && nvdr.fromDate)
     {
@@ -193,54 +225,13 @@
     
     [nvdr addSubview:nvdr.fromDatePicker];
     
-    UILabel *fdpLabel = [[UILabel alloc] init];
-    fdpLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [nvdr.fromDatePicker.leadingAnchor constraintEqualToAnchor:fdpLabel.leadingAnchor].active = YES;
+    [nvdr.fromDatePicker.trailingAnchor constraintEqualToAnchor:fdpLabel.trailingAnchor].active = YES;
     
-    [nvdr setupLabel:fdpLabel
-            fontSize:24.0];
+    [nvdr.fromDatePicker.topAnchor constraintEqualToAnchor:fdpLabel.bottomAnchor
+                                       constant:(innerMargin / 4.0)].active = YES;
     
-    fdpLabel.text = @"Select From Date";
-    
-    [nvdr addSubview:fdpLabel];
-    
-    [fdpLabel.leadingAnchor constraintEqualToAnchor:returnButton.leadingAnchor].active = YES;
-    
-    [fdpLabel.topAnchor constraintEqualToAnchor:returnButton.bottomAnchor
-                                       constant:innerMargin].active = YES;
-    
-    [fdpLabel.trailingAnchor constraintEqualToAnchor:nvdr.centerXAnchor
-                                       constant:(-innerMargin / 2.0)].active = YES;
-    
-    UILabel *tdpLabel = [[UILabel alloc] init];
-    tdpLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [nvdr setupLabel:tdpLabel
-            fontSize:24.0];
-    
-    tdpLabel.text = @"Select To Date";
-    
-    [nvdr addSubview:tdpLabel];
-    
-    [tdpLabel.leadingAnchor constraintEqualToAnchor:nvdr.centerXAnchor
-                                           constant:(innerMargin / 2.0)].active = YES;
-    
-    [tdpLabel.topAnchor constraintEqualToAnchor:fdpLabel.topAnchor].active = YES;
-    
-    [tdpLabel.trailingAnchor constraintEqualToAnchor:nvdr.trailingAnchor
-                                            constant:-innerMargin].active = YES;
-    
-    nvdr.fromDateLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.05), (minBounds * 0.62),
-                                                                   (minBounds * 0.44), (minBounds * 0.05))];
-    
-    [nvdr setupLabel:nvdr.fromDateLabel
-            fontSize:24.0];
-    
-    nvdr.fromDateLabel.text = [nvdr formattedDate:nvdr.fromDatePicker.date];
-    
-    [nvdr addSubview:nvdr.fromDateLabel];
-    
-    nvdr.toDatePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.22),
-                                                                         (minBounds * 0.44), (minBounds * 0.4))];
+    nvdr.toDatePicker = [[UIDatePicker alloc] init];
     
     if (nvdr.toDate && nvdr.fromDate)
     {
@@ -259,8 +250,28 @@
     
     [nvdr addSubview:nvdr.toDatePicker];
     
-    nvdr.toDateLabel = [[UILabel alloc] initWithFrame:CGRectMake((minBounds * 0.51), (minBounds * 0.62),
-                                                                   (minBounds * 0.44), (minBounds * 0.05))];
+    [nvdr.toDatePicker.leadingAnchor constraintEqualToAnchor:tdpLabel.leadingAnchor].active = YES;
+    [nvdr.toDatePicker.trailingAnchor constraintEqualToAnchor:tdpLabel.trailingAnchor].active = YES;
+    
+    [nvdr.toDatePicker.topAnchor constraintEqualToAnchor:tdpLabel.bottomAnchor
+                                                constant:(innerMargin / 4.0)].active = YES;
+    
+    nvdr.fromDateLabel = [[UILabel alloc] init];
+    
+    [nvdr setupLabel:nvdr.fromDateLabel
+            fontSize:24.0];
+    
+    nvdr.fromDateLabel.text = [nvdr formattedDate:nvdr.fromDatePicker.date];
+    
+    [nvdr addSubview:nvdr.fromDateLabel];
+    
+    [nvdr.fromDateLabel.leadingAnchor constraintEqualToAnchor:nvdr.fromDatePicker.leadingAnchor].active = YES;
+    [nvdr.fromDateLabel.trailingAnchor constraintEqualToAnchor:nvdr.fromDatePicker.trailingAnchor].active = YES;
+    
+    [nvdr.fromDateLabel.topAnchor constraintEqualToAnchor:nvdr.fromDatePicker.bottomAnchor
+                                                 constant:(innerMargin / 4.0)].active = YES;
+    
+    nvdr.toDateLabel = [[UILabel alloc] init];
     
     [nvdr setupLabel:nvdr.toDateLabel
             fontSize:24.0];
@@ -269,8 +280,13 @@
     
     [nvdr addSubview:nvdr.toDateLabel];
     
-    UIButton *today = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.02), (minBounds * 0.7),
-                                                                 (minBounds * 0.176), (minBounds * 0.12))];
+    [nvdr.toDateLabel.leadingAnchor constraintEqualToAnchor:nvdr.toDatePicker.leadingAnchor].active = YES;
+    [nvdr.toDateLabel.trailingAnchor constraintEqualToAnchor:nvdr.toDatePicker.trailingAnchor].active = YES;
+    
+    [nvdr.toDateLabel.topAnchor constraintEqualToAnchor:nvdr.toDatePicker.bottomAnchor
+                                               constant:(innerMargin / 4.0)].active = YES;
+    
+    UIButton *today = [[UIButton alloc] init];
     
     [nvdr setupButton:today
                 title:@"Today"
@@ -280,8 +296,13 @@
     
     [nvdr addSubview:today];
     
-    UIButton *yesterday = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.216), (minBounds * 0.7),
-                                                                     (minBounds * 0.176), (minBounds * 0.12))];
+    [today.leadingAnchor constraintEqualToAnchor:nvdr.fromDateLabel.leadingAnchor].active = YES;
+    [today.trailingAnchor constraintEqualToAnchor:nvdr.fromDateLabel.trailingAnchor].active = YES;
+    
+    [today.topAnchor constraintEqualToAnchor:nvdr.fromDateLabel.bottomAnchor
+                                    constant:innerMargin].active = YES;
+    
+    UIButton *yesterday = [[UIButton alloc] init];
     
     [nvdr setupButton:yesterday
                 title:@"Yesterday"
@@ -291,101 +312,156 @@
     
     [nvdr addSubview:yesterday];
     
-    UIButton *thisWeek = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.412), (minBounds * 0.7),
-                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    [yesterday.leadingAnchor constraintEqualToAnchor:nvdr.toDateLabel.leadingAnchor].active = YES;
+    [yesterday.trailingAnchor constraintEqualToAnchor:nvdr.toDateLabel.trailingAnchor].active = YES;
+    
+    [yesterday.topAnchor constraintEqualToAnchor:nvdr.toDateLabel.bottomAnchor
+                                        constant:innerMargin].active = YES;
+    
+    UIButton *thisWeek = [[UIButton alloc] init];
     
     [nvdr setupButton:thisWeek
-                title:@"This\nWeek"
+                title:@"This Week"
              selector:@selector(bottomButtonTapped:)];
     
     thisWeek.tag = 3;
-    thisWeek.titleLabel.numberOfLines = 2;
     
     [nvdr addSubview:thisWeek];
     
-    UIButton *lastWeek = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.608), (minBounds * 0.7),
-                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    [thisWeek.leadingAnchor constraintEqualToAnchor:today.leadingAnchor].active = YES;
+    [thisWeek.trailingAnchor constraintEqualToAnchor:today.trailingAnchor].active = YES;
+    
+    [thisWeek.topAnchor constraintEqualToAnchor:today.bottomAnchor
+                                       constant:innerMargin].active = YES;
+    
+    UIButton *lastWeek = [[UIButton alloc] init];
     
     [nvdr setupButton:lastWeek
-                title:@"Last\nWeek"
+                title:@"Last Week"
              selector:@selector(bottomButtonTapped:)];
     
     lastWeek.tag = 4;
-    lastWeek.titleLabel.numberOfLines = 2;
     
     [nvdr addSubview:lastWeek];
     
-    UIButton *pastWeek = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.804), (minBounds * 0.7),
-                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    [lastWeek.leadingAnchor constraintEqualToAnchor:yesterday.leadingAnchor].active = YES;
+    [lastWeek.trailingAnchor constraintEqualToAnchor:yesterday.trailingAnchor].active = YES;
+    
+    [lastWeek.topAnchor constraintEqualToAnchor:yesterday.bottomAnchor
+                                       constant:innerMargin].active = YES;
+    
+    UIButton *pastWeek = [[UIButton alloc] init];
     
     [nvdr setupButton:pastWeek
-                title:@"Past\nWeek"
+                title:@"Past Week"
              selector:@selector(bottomButtonTapped:)];
     
     pastWeek.tag = 5;
-    pastWeek.titleLabel.numberOfLines = 2;
     
     [nvdr addSubview:pastWeek];
     
-    UIButton *thisMonth = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.02), (minBounds * 0.85),
-                                                                     (minBounds * 0.176), (minBounds * 0.12))];
+    [pastWeek.leadingAnchor constraintEqualToAnchor:thisWeek.leadingAnchor].active = YES;
+    [pastWeek.trailingAnchor constraintEqualToAnchor:thisWeek.trailingAnchor].active = YES;
+    
+    [pastWeek.topAnchor constraintEqualToAnchor:thisWeek.bottomAnchor
+                                       constant:innerMargin].active = YES;
+    
+    UIButton *thisMonth = [[UIButton alloc] init];
     
     [nvdr setupButton:thisMonth
                 title:@"This Month"
              selector:@selector(bottomButtonTapped:)];
     
     thisMonth.tag = 6;
-    thisMonth.titleLabel.numberOfLines = 2;
     
     [nvdr addSubview:thisMonth];
     
-    UIButton *lastMonth = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.216), (minBounds * 0.85),
-                                                                     (minBounds * 0.176), (minBounds * 0.12))];
+    [thisMonth.leadingAnchor constraintEqualToAnchor:lastWeek.leadingAnchor].active = YES;
+    [thisMonth.trailingAnchor constraintEqualToAnchor:lastWeek.trailingAnchor].active = YES;
+    
+    [thisMonth.topAnchor constraintEqualToAnchor:lastWeek.bottomAnchor
+                                        constant:innerMargin].active = YES;
+    
+    UIButton *lastMonth = [[UIButton alloc] init];
     
     [nvdr setupButton:lastMonth
                 title:@"Last Month"
              selector:@selector(bottomButtonTapped:)];
     
     lastMonth.tag = 7;
-    lastMonth.titleLabel.numberOfLines = 2;
     
     [nvdr addSubview:lastMonth];
     
-    UIButton *thisYear = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.412), (minBounds * 0.85),
-                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    [lastMonth.leadingAnchor constraintEqualToAnchor:pastWeek.leadingAnchor].active = YES;
+    [lastMonth.trailingAnchor constraintEqualToAnchor:pastWeek.trailingAnchor].active = YES;
+    
+    [lastMonth.topAnchor constraintEqualToAnchor:pastWeek.bottomAnchor
+                                        constant:innerMargin].active = YES;
+    
+    UIButton *thisYear = [[UIButton alloc] init];
     
     [nvdr setupButton:thisYear
-                title:@"This\nYear"
+                title:@"This Year"
              selector:@selector(bottomButtonTapped:)];
     
     thisYear.tag = 8;
-    thisYear.titleLabel.numberOfLines = 2;
     
     [nvdr addSubview:thisYear];
     
-    UIButton *lastYear = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.608), (minBounds * 0.85),
-                                                                    (minBounds * 0.176), (minBounds * 0.12))];
+    [thisYear.leadingAnchor constraintEqualToAnchor:thisMonth.leadingAnchor].active = YES;
+    [thisYear.trailingAnchor constraintEqualToAnchor:thisMonth.trailingAnchor].active = YES;
+    
+    [thisYear.topAnchor constraintEqualToAnchor:thisMonth.bottomAnchor
+                                       constant:innerMargin].active = YES;
+    
+    UIButton *lastYear = [[UIButton alloc] init];
     
     [nvdr setupButton:lastYear
-                title:@"Last\nYear"
+                title:@"Last Year"
              selector:@selector(bottomButtonTapped:)];
     
     lastYear.tag = 9;
-    lastYear.titleLabel.numberOfLines = 2;
     
     [nvdr addSubview:lastYear];
+    
+    [lastYear.leadingAnchor constraintEqualToAnchor:lastMonth.leadingAnchor].active = YES;
+    [lastYear.trailingAnchor constraintEqualToAnchor:lastMonth.trailingAnchor].active = YES;
+    
+    [lastYear.topAnchor constraintEqualToAnchor:lastMonth.bottomAnchor
+                                       constant:innerMargin].active = YES;
+    
+    [lastYear.bottomAnchor constraintEqualToAnchor:nvdr.bottomAnchor
+                                          constant:-innerMargin].active = YES;
     
     UIButton *pastYear = [[UIButton alloc] initWithFrame:CGRectMake((minBounds * 0.804), (minBounds * 0.85),
                                                                     (minBounds * 0.176), (minBounds * 0.12))];
     
     [nvdr setupButton:pastYear
-                title:@"Past\nYear"
+                title:@"Past Year"
              selector:@selector(bottomButtonTapped:)];
     
     pastYear.tag = 10;
-    pastYear.titleLabel.numberOfLines = 2;
     
     [nvdr addSubview:pastYear];
+    
+    [pastYear.leadingAnchor constraintEqualToAnchor:thisYear.leadingAnchor].active = YES;
+    [pastYear.trailingAnchor constraintEqualToAnchor:thisYear.trailingAnchor].active = YES;
+    
+    [pastYear.topAnchor constraintEqualToAnchor:thisYear.bottomAnchor
+                                       constant:innerMargin].active = YES;
+    
+    [pastYear.bottomAnchor constraintEqualToAnchor:nvdr.bottomAnchor
+                                          constant:-innerMargin].active = YES;
+    
+    [lastYear.heightAnchor constraintEqualToAnchor:lastMonth.heightAnchor].active = YES;
+    [lastMonth.heightAnchor constraintEqualToAnchor:pastWeek.heightAnchor].active = YES;
+    [pastWeek.heightAnchor constraintEqualToAnchor:thisWeek.heightAnchor].active = YES;
+    [thisWeek.heightAnchor constraintEqualToAnchor:today.heightAnchor].active = YES;
+    
+    [pastYear.heightAnchor constraintEqualToAnchor:thisYear.heightAnchor].active = YES;
+    [thisYear.heightAnchor constraintEqualToAnchor:thisMonth.heightAnchor].active = YES;
+    [thisMonth.heightAnchor constraintEqualToAnchor:lastWeek.heightAnchor].active = YES;
+    [lastWeek.heightAnchor constraintEqualToAnchor:yesterday.heightAnchor].active = YES;
     
     [UIView animateWithDuration:0.25
                      animations:^{
@@ -426,6 +502,7 @@
     button.titleLabel.adjustsFontSizeToFitWidth = YES;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     button.layer.cornerRadius = _cornerRadius;
+    button.translatesAutoresizingMaskIntoConstraints = NO;
     
     [button addTarget:self
                action:selector
@@ -443,8 +520,7 @@
     label.adjustsFontSizeToFitWidth = YES;
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = UIColor.blackColor;
-    label.layer.borderColor = UIColor.redColor.CGColor;
-    label.layer.borderWidth = 1.0;
+    label.translatesAutoresizingMaskIntoConstraints = NO;
 }
 
 - (void)setupDatePicker:(UIDatePicker *)datePicker
@@ -460,6 +536,7 @@
     
     datePicker.layer.cornerRadius = _cornerRadius;
     datePicker.datePickerMode = UIDatePickerModeDate;
+    datePicker.translatesAutoresizingMaskIntoConstraints = NO;
 }
 
 - (void)hideDateRange:(BOOL)animated
