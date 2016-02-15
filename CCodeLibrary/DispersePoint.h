@@ -20,7 +20,7 @@
 + (DispersePoint *)initWithWidth:(int)width
                           Height:(int)height
                      andDatabase:(CrimeData*)db;
-- (void) addPoint:(DPOINT *)pPoint
+- (BOOL) addPoint:(DPOINT *)pPoint
        controlNbr:(int)cnbr
       usingSymbol:(PointSymbols)sym
         withColor:(CGColorRef)color

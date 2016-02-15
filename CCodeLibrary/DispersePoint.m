@@ -39,12 +39,12 @@
     dp.height = height;
     dp.grid = calloc (width*height,sizeof(unsigned short));
     
-    [db executeCmd:"DROP TABLE IF EXISTS DISPERSE;CREATE TEMP TABLE DISPERSE (ControlNbr INT,Sequence INT, X INT, Y INT, Symbol INT, Size INT, Color INT);"];
+    [db executeCmd:"DROP TABLE IF EXISTS DISPERSE;CREATE TEMP TABLE DISPERSE (ControlNbr INT,Sequence INT, X INT, Y INT, Symbol INT, Size INT, Color INT);CREATE VIRTUAL TABLE IF NOT EXISTS DISPERSE_index USING rtree(ControlNbr,minX, maxX, minY, maxY);"];
     
     return dp;
 }
 
-- (void) addPoint:(DPOINT *)pPoint
+- (BOOL) addPoint:(DPOINT *)pPoint
        controlNbr:(int)cnbr
       usingSymbol:(PointSymbols)sym
         withColor:(CGColorRef)color
@@ -52,9 +52,12 @@
 
 {
     int indx = [self gridIndex:pPoint->y column:pPoint->x];
+    if (indx < 0)
+        return FALSE;
     int seq = _grid[indx]++;
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO DISPERSE VALUES(%i,%i,%i,%i,%i,%f,%lli);",cnbr,seq,IDNINT(pPoint->x),IDNINT(pPoint->y),(int)sym,size,(long long)color];
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO DISPERSE VALUES(%i,%i,%i,%i,%i,%f,%lli);INSERT INTO DISPERSE_index VALUES(%i,%f,%f,%f,%f",cnbr,seq,IDNINT(pPoint->x),IDNINT(pPoint->y),(int)sym,size,(long long)color,cnbr,pPoint->x-1,pPoint->x+1,pPoint->y-1,pPoint->y+1];
     [_cd executeCmd:(LPSTR)cmd.UTF8String];
+    return TRUE;
 }
 
 

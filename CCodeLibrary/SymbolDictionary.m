@@ -33,9 +33,19 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                   lineColor:(CGColorRef)lcolor
                   lineWidth:(CGFloat)lwidth
 {
+    BOOL dispersed = FALSE;
+    static int ii=1;
+    CGFloat origSize = size;
+    if (lwidth < 0)
+    {
+        dispersed = TRUE;
+        lwidth = -lwidth;
+    }
+    if (size < 30)
+        dispersed = FALSE;
+    if (size < 60)
+        lwidth = 1;
     CGContextSetFillColorWithColor(context,fcolor);
-    CGContextSetLineWidth(context, lwidth);
-    CGContextSetStrokeColorWithColor(context,lcolor);
     
     if (sym == CircleSym)
     {
@@ -44,6 +54,14 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                                       (pt->y - size / 2.0), size, size);
 
         CGContextFillEllipseInRect(context, pointRect);
+        /*if (dispersed)
+        {
+            CGContextSetLineWidth(context, lwidth*4);
+            CGContextSetStrokeColorWithColor(context,UIColor.whiteColor.CGColor);
+            CGContextStrokeEllipseInRect(context, pointRect);
+        }*/
+        CGContextSetLineWidth(context, lwidth);
+        CGContextSetStrokeColorWithColor(context,lcolor);
         CGContextStrokeEllipseInRect(context, pointRect);
     }
     else
@@ -51,6 +69,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
         LPDPOINT pPoints;
         int nPt;
         size *= 0.1;
+        CGFloat yinc = 0;
         switch (sym)
         {
             case CrossSym:
@@ -67,6 +86,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                 size *= 0.8;
                 break;
             case TriangleSym:
+                yinc = 14;
                 pPoints = Triangle;
                 nPt = sizeof (Triangle)/sizeof(DPOINT);
                 size *= 0.8;
@@ -82,6 +102,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                 nPt = sizeof (Star1)/sizeof(DPOINT);
                 break;
             case Star2Sym:
+                yinc = 7;
                 pPoints = Star2;
                 nPt = sizeof (Star2)/sizeof(DPOINT);
                 break;
@@ -92,18 +113,48 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                 break;
                 
         }
-        CGContextMoveToPoint(context, Adjust(pPoints[0].x,pt->x,size), Adjust(pPoints[0].y,pt->y,size));
+        CGContextMoveToPoint(context, Adjust(pPoints[0].x,pt->x,size), Adjust(pPoints[0].y,pt->y+yinc*ii,size));
         for (int i = 1; i < nPt; i++)
         {
-            CGContextAddLineToPoint(context, Adjust(pPoints[i].x,pt->x,size),Adjust(pPoints[i].y,pt->y,size));
+            CGContextAddLineToPoint(context, Adjust(pPoints[i].x,pt->x,size),Adjust(pPoints[i].y,pt->y+yinc*ii,size));
         }
         
         if (!CGContextIsPathEmpty(context))
         {
-//            CGPathRef path = CGContextCopyPath(context);
-//            CGContextFillPath(context);
-            CGContextDrawPath(context, kCGPathEOFillStroke);
+            /*if (dispersed)
+            {
+                CGPathRef path = CGContextCopyPath(context);
+                CGContextFillPath(context);
+                CGContextAddPath(context, path);
+                CGContextSetLineWidth(context, lwidth*4);
+                CGContextSetStrokeColorWithColor(context,UIColor.whiteColor.CGColor);
+                CGContextStrokePath(context);
+                CGContextAddPath(context, path);
+                CGContextSetLineWidth(context, lwidth);
+                CGContextSetStrokeColorWithColor(context,lcolor);
+                CGContextStrokePath(context);
+            }
+            else*/
+            {
+                CGContextSetLineWidth(context, lwidth);
+                CGContextSetStrokeColorWithColor(context,lcolor);
+                CGContextDrawPath(context, kCGPathEOFillStroke);
+            }
+
         }
+    }
+    if (dispersed)
+    {
+        size = origSize * 0.5;
+        CGRect pointRect = CGRectMake((pt->x - size / 2.0),
+                                      (pt->y - size / 2.0), size, size);
+        size *= 0.03;
+        CGContextSetLineWidth(context, 3*size);
+        CGContextSetStrokeColorWithColor(context,UIColor.whiteColor.CGColor);
+        CGContextStrokeEllipseInRect(context, pointRect);
+        CGContextSetLineWidth(context, size);
+        CGContextSetStrokeColorWithColor(context,UIColor.blackColor.CGColor);
+        CGContextStrokeEllipseInRect(context, pointRect);
     }
 
 }
@@ -117,7 +168,7 @@ UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor)
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGContextSetFillColorWithColor(context,symColor.CGColor);
-    CGContextSetLineWidth(context, 2.0);
+    CGContextSetLineWidth(context, 1.0);
     CGContextSetStrokeColorWithColor(context,UIColor.blackColor.CGColor);
     
     size -= 4.0;
