@@ -56,6 +56,10 @@
 		69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C441A91BB474B200D026A7 /* NVTabBarEdit.m */; };
 		69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C441A81BB474B200D026A7 /* NVTabBarEdit.h */; };
 		69C8DB4E1C515BFB0062AE84 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 69C8DB4D1C515BFB0062AE84 /* .gitignore */; };
+		69D5EFB21C7237AB004CE1C0 /* NVCalendarVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFB11C7237AB004CE1C0 /* NVCalendarVC.m */; };
+		69D5EFB51C7237FD004CE1C0 /* NVCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFB41C7237FD004CE1C0 /* NVCalendarView.m */; };
+		69D5EFB61C7239EC004CE1C0 /* NVCalendarVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D5EFB01C7237AB004CE1C0 /* NVCalendarVC.h */; };
+		69D5EFBC1C7248DB004CE1C0 /* NVCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFBB1C7248DB004CE1C0 /* NVCalendarCell.m */; };
 		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
 		69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E8E6681C66802F00CB26CB /* NSData+CRC.m */; };
 		69E8E66A1C66809E00CB26CB /* NSData+CRC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E8E6671C66802F00CB26CB /* NSData+CRC.h */; };
@@ -301,6 +305,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69D5EFB61C7239EC004CE1C0 /* NVCalendarVC.h in CopyFiles */,
 				6998225F1C690A38003476DD /* NVDocumentManager.h in CopyFiles */,
 				69E8E66A1C66809E00CB26CB /* NSData+CRC.h in CopyFiles */,
 				EB0E4FFE1C6289A200849766 /* DispersePoint.h in CopyFiles */,
@@ -474,6 +479,12 @@
 		69C441A81BB474B200D026A7 /* NVTabBarEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTabBarEdit.h; sourceTree = "<group>"; };
 		69C441A91BB474B200D026A7 /* NVTabBarEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTabBarEdit.m; sourceTree = "<group>"; };
 		69C8DB4D1C515BFB0062AE84 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		69D5EFB01C7237AB004CE1C0 /* NVCalendarVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalendarVC.h; sourceTree = "<group>"; };
+		69D5EFB11C7237AB004CE1C0 /* NVCalendarVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCalendarVC.m; sourceTree = "<group>"; };
+		69D5EFB31C7237FD004CE1C0 /* NVCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalendarView.h; sourceTree = "<group>"; };
+		69D5EFB41C7237FD004CE1C0 /* NVCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCalendarView.m; sourceTree = "<group>"; };
+		69D5EFBA1C7248DB004CE1C0 /* NVCalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalendarCell.h; sourceTree = "<group>"; };
+		69D5EFBB1C7248DB004CE1C0 /* NVCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCalendarCell.m; sourceTree = "<group>"; };
 		69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSecretAlertView.h; sourceTree = "<group>"; };
 		69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSecretAlertView.m; sourceTree = "<group>"; };
 		69E8E6671C66802F00CB26CB /* NSData+CRC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CRC.h"; sourceTree = "<group>"; };
@@ -732,6 +743,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		69D5EFAF1C72377D004CE1C0 /* Calendar Interface */ = {
+			isa = PBXGroup;
+			children = (
+				69D5EFB01C7237AB004CE1C0 /* NVCalendarVC.h */,
+				69D5EFB11C7237AB004CE1C0 /* NVCalendarVC.m */,
+				69D5EFB31C7237FD004CE1C0 /* NVCalendarView.h */,
+				69D5EFB41C7237FD004CE1C0 /* NVCalendarView.m */,
+				69D5EFBA1C7248DB004CE1C0 /* NVCalendarCell.h */,
+				69D5EFBB1C7248DB004CE1C0 /* NVCalendarCell.m */,
+			);
+			name = "Calendar Interface";
+			sourceTree = "<group>";
+		};
 		A90D1FB61AE6174700CBFEE7 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -844,6 +868,7 @@
 		A94A771E19F813810062906E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				69D5EFAF1C72377D004CE1C0 /* Calendar Interface */,
 				EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */,
 				1F3A544D19A449460029DBEA /* CustomAlert.h */,
 				1F3A544E19A449460029DBEA /* CustomAlert.m */,
@@ -1279,6 +1304,7 @@
 				A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */,
 				EBC01D191BED1C8C0004C751 /* kepler.c in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,
+				69D5EFB51C7237FD004CE1C0 /* NVCalendarView.m in Sources */,
 				EBC01D161BED1C8C0004C751 /* fk4fk5.c in Sources */,
 				A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */,
 				1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */,
@@ -1373,6 +1399,7 @@
 				698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */,
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
 				EBC01D261BED1C8C0004C751 /* refrac.c in Sources */,
+				69D5EFBC1C7248DB004CE1C0 /* NVCalendarCell.m in Sources */,
 				A94A771919F807CE0062906E /* FacilityRecord.m in Sources */,
 				69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */,
 				A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */,
@@ -1383,6 +1410,7 @@
 				EBC01D0F1BED1C8C0004C751 /* deltat.c in Sources */,
 				EBC01D1F1BED1C8C0004C751 /* mlat404.c in Sources */,
 				EBC01D1C1BED1C8C0004C751 /* lonlat.c in Sources */,
+				69D5EFB21C7237AB004CE1C0 /* NVCalendarVC.m in Sources */,
 				EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */,
 				A9A7E3601B75361800DC7F3D /* NVInventoryViewController.m in Sources */,
 				EBC01D1D1BED1C8C0004C751 /* mar404.c in Sources */,
