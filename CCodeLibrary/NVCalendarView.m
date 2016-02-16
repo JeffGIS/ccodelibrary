@@ -9,6 +9,7 @@
 @property (nonatomic) NSString *title;
 @property (nonatomic) UIFont *font;
 @property (nonatomic) NVCalendarCell *titleLabel, *sun, *mon, *tues, *wed, *thurs, *fri, *sat;
+@property (nonatomic) NVCalendarCell *currentCell;
 @property NSInteger index, startDay, numDays;
 
 @end
@@ -520,7 +521,23 @@
 {
     UITouch *touch = event.allTouches.anyObject;
     CGPoint loc = [touch locationInView:self];
+    [self handleTouchAtLoc:loc];
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event
+{
+    UITouch *touch = event.allTouches.anyObject;
+    CGPoint loc = [touch locationInView:self];
     
+    if (CGRectContainsPoint(_currentCell.frame, loc))
+        return;
+    
+    [self handleTouchAtLoc:loc];
+}
+
+- (void)handleTouchAtLoc:(CGPoint)loc
+{
     for (NVCalendarCell *cells in self.subviews)
     {
         if ([cells isKindOfClass:NVCalendarCell.class])
@@ -528,13 +545,18 @@
             if (cells.tag > 8 && ![cells.text isEqualToString:@""])
             {
                 if (CGRectContainsPoint(cells.frame, loc))
+                {
                     cells.selected = !cells.selected;
+                    _currentCell = cells;
+                }
             }
             
             else if (cells.tag > 1 && cells.tag < 9)
             {
                 if (CGRectContainsPoint(cells.frame, loc))
                 {
+                    _currentCell = cells;
+                    
                     for (int i = 7; i < 43; i += 7)
                     {
                         NVCalendarCell *cell = (NVCalendarCell *)[self viewWithTag:(cells.tag + i)];
@@ -549,6 +571,8 @@
             {
                 if (CGRectContainsPoint(cells.frame, loc))
                 {
+                    _currentCell = cells;
+                    
                     for (NVCalendarCell *theCells in self.subviews)
                     {
                         if ([theCells isKindOfClass:NVCalendarCell.class])
