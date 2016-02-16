@@ -57,9 +57,11 @@
 - (void)setupReturnButton
 {
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
+    _returnButton.frame = CGRectMake(_margin, (_margin / 2.0), (_margin * 10.0), 40.0);
     _returnButton.backgroundColor = UIColor.clearColor;
     _returnButton.titleLabel.font = _font;
+    _returnButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+    _returnButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     
     [_returnButton setTitle:@"< Return"
                     forState:UIControlStateNormal];
@@ -75,12 +77,6 @@
             forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:_returnButton];
-    
-    [_returnButton.topAnchor constraintEqualToAnchor:self.view.topAnchor
-                                            constant:(_margin / 2.0)].active = YES;
-    
-    [_returnButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
-                                                constant:_margin].active = YES;
 }
 
 - (void)setupCalendarView
@@ -90,8 +86,8 @@
     
     [self.view addSubview:_calendarView];
     
-    [_calendarView.topAnchor constraintEqualToAnchor:_returnButton.bottomAnchor
-                                            constant:_margin].active = YES;
+    [_calendarView.topAnchor constraintEqualToAnchor:self.view.topAnchor
+                                            constant:((_margin / 2.0) + 40.0)].active = YES;
     
     [_calendarView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
                                                 constant:_margin].active = YES;

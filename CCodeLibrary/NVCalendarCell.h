@@ -6,6 +6,7 @@
 @interface NVCalendarCell : UILabel
 
 - (id)initWithText:(NSString *)text
-               tag:(NSUInteger)tag;
+               tag:(NSUInteger)tag
+           numDays:(NSInteger)numDays;
 
 @end
