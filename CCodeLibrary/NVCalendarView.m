@@ -10,13 +10,17 @@
 @property (nonatomic) UIFont *font;
 @property (nonatomic) NVCalendarCell *titleLabel, *sun, *mon, *tues, *wed, *thurs, *fri, *sat;
 @property (nonatomic) NVCalendarCell *currentCell;
-@property NSInteger index, startDay, numDays;
+@property (nonatomic) NSInteger index, startDay;
+@property (nonatomic) NSUInteger numDays;
 
 @end
 
 @implementation NVCalendarView
 
-- (id)initWithTitle:(NSString *)title
+- (id)initWithMonth:(NSInteger)month
+               year:(NSInteger)year
+           firstDay:(NSInteger)firstDay
+            numDays:(NSUInteger)numDays
 {
     self = [super init];
     
@@ -25,10 +29,12 @@
         self.backgroundColor = UIColor.blackColor;
         self.layer.borderColor = UIColor.blackColor.CGColor;
         self.layer.masksToBounds = YES;
-        _title = title;
-        _index = 1;
-        _startDay = 9;
-        _numDays = 29;
+        
+        NSDateFormatter *df = [[NSDateFormatter alloc] init];
+        NSString *monthName = [df.monthSymbols objectAtIndex:(month - 1)];
+        
+        _title = [NSString stringWithFormat:@"%@ %li", monthName, (long)year];
+        _index = 1, _startDay = (firstDay + 7), _numDays = numDays;
         
         if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
         {

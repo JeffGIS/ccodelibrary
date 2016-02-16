@@ -5,4 +5,6 @@
 
 @interface NVCalendarVC : UIViewController
 
+- (id)initWithCalendarName:(NSString *)name;
+
 @end

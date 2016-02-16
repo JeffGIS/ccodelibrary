@@ -11,10 +11,24 @@
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) NVCalendarView *calendarView;
 @property (nonatomic) CGFloat margin;
+@property (nonatomic) NSString *name;
+@property (nonatomic) NSMutableSet *calendarSet;
+@property (nonatomic) NSDateComponents *currentCalendar;
+@property (nonatomic) NSUInteger numDays;
 
 @end
 
 @implementation NVCalendarVC
+
+- (id)initWithCalendarName:(NSString *)name
+{
+    self = [super init];
+    
+    if (self)
+        _name = name;
+    
+    return self;
+}
 
 - (void)loadView
 {
@@ -27,6 +41,28 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = UserDefaults.defaults.appleBlue;
+    _calendarSet = [[NSMutableSet alloc] initWithSet:[UserDefaults.defaults setForKey:_name]];
+    NSCalendar *calendar = NSCalendar.currentCalendar;
+    
+    _currentCalendar = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday
+                                   fromDate:NSDate.date];
+    
+    _currentCalendar.day = 1;
+    
+    NSDate *firstDay = [calendar dateFromComponents:_currentCalendar];
+    
+    _currentCalendar = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday
+                                   fromDate:firstDay];
+    
+    NSDateComponents *nextMonth = _currentCalendar.copy;
+    nextMonth.month += 1;
+    nextMonth.day = 0;
+    NSDate *lastDay = [calendar dateFromComponents:nextMonth];
+    
+    nextMonth = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday
+                            fromDate:lastDay];
+    
+    _numDays = nextMonth.day;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
@@ -81,7 +117,11 @@
 
 - (void)setupCalendarView
 {
-    _calendarView = [[NVCalendarView alloc] initWithTitle:@"February 2016"];
+    _calendarView = [[NVCalendarView alloc] initWithMonth:_currentCalendar.month
+                                                     year:_currentCalendar.year
+                                                 firstDay:_currentCalendar.weekday
+                                                  numDays:_numDays];
+    
     _calendarView.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self.view addSubview:_calendarView];

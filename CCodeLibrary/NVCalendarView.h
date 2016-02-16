@@ -5,6 +5,9 @@
 
 @interface NVCalendarView : UIView
 
-- (id)initWithTitle:(NSString *)title;
+- (id)initWithMonth:(NSInteger)month
+               year:(NSInteger)year
+           firstDay:(NSInteger)firstDay
+            numDays:(NSUInteger)numDays;
 
 @end
