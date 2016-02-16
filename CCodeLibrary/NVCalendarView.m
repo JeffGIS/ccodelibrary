@@ -21,7 +21,7 @@
     
     if (self)
     {
-        self.backgroundColor = UIColor.whiteColor;
+        self.backgroundColor = UIColor.blackColor;
         self.layer.borderColor = UIColor.blackColor.CGColor;
         self.layer.masksToBounds = YES;
         _title = title;
@@ -513,6 +513,54 @@
 {
     cell.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:cell];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event
+{
+    UITouch *touch = event.allTouches.anyObject;
+    CGPoint loc = [touch locationInView:self];
+    
+    for (NVCalendarCell *cells in self.subviews)
+    {
+        if ([cells isKindOfClass:NVCalendarCell.class])
+        {
+            if (cells.tag > 8 && ![cells.text isEqualToString:@""])
+            {
+                if (CGRectContainsPoint(cells.frame, loc))
+                    cells.selected = !cells.selected;
+            }
+            
+            else if (cells.tag > 1 && cells.tag < 9)
+            {
+                if (CGRectContainsPoint(cells.frame, loc))
+                {
+                    for (int i = 7; i < 43; i += 7)
+                    {
+                        NVCalendarCell *cell = (NVCalendarCell *)[self viewWithTag:(cells.tag + i)];
+                        
+                        if (![cell.text isEqualToString:@""])
+                            cell.selected = !cell.selected;
+                    }
+                }
+            }
+            
+            else if (cells.tag == 1)
+            {
+                if (CGRectContainsPoint(cells.frame, loc))
+                {
+                    for (NVCalendarCell *theCells in self.subviews)
+                    {
+                        if ([theCells isKindOfClass:NVCalendarCell.class])
+                        {
+                            if (theCells.tag > 8 && ![theCells.text isEqualToString:@""])
+                                theCells.selected = !theCells.selected;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @end

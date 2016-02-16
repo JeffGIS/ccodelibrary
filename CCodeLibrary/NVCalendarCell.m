@@ -3,6 +3,7 @@
 
 #import "NVCalendarCell.h"
 #import "UserDefaults.h"
+#import "NVColor.h"
 
 @interface NVCalendarCell ()
 
@@ -30,12 +31,21 @@
             self.backgroundColor = UserDefaults.defaults.appleGray;
         
         else
+            self.backgroundColor = UIColor.whiteColor;
+        
+        if (tag == 1)
+        {
             self.backgroundColor = UIColor.clearColor;
+            self.textColor = UIColor.whiteColor;
+        }
+        
+        else
+            self.textColor = UIColor.blackColor;
+            
         
         self.text = text;
         self.tag = tag;
-        self.layer.borderColor = UIColor.blackColor.CGColor;
-        self.textColor = UIColor.blackColor;
+        self.layer.borderColor = UIColor.darkGrayColor.CGColor;
         self.textAlignment = NSTextAlignmentCenter;
         self.adjustsFontSizeToFitWidth = YES;
         
@@ -43,6 +53,9 @@
         {
             self.layer.borderWidth = 1.0;
             self.font = [UIFont boldSystemFontOfSize:18.0];
+            
+            if (tag == 1)
+                self.font = [UIFont boldSystemFontOfSize:24.0];
         }
         
         
@@ -50,10 +63,24 @@
         {
             self.layer.borderWidth = 2.0;
             self.font = [UIFont boldSystemFontOfSize:36.0];
+            
+            if (tag == 1)
+                self.font = [UIFont boldSystemFontOfSize:48.0];
         }
     }
     
     return self;
+}
+
+- (void)setSelected:(BOOL)selected
+{
+    _selected = selected;
+    
+    if (selected)
+        self.backgroundColor = NVColor.limeGreenColor;
+    
+    else
+        self.backgroundColor = UIColor.whiteColor;
 }
 
 @end
