@@ -52,7 +52,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     NSLog(@"Crime Database dealloc");
 }
 
-- (void)open
+- (BOOL)open
 {
     if (!_isOpen)
     {
@@ -61,7 +61,9 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
                                                                    error:nil].fileSize;
+        return TRUE;
     }
+    return FALSE;
 }
 
 - (void)close
@@ -74,12 +76,13 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     _isOpen = NO;
 }
 
-- (void)clear
+- (BOOL)clear
 {
     [self close];
     
-    //BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
-    //error:nil];
+    BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
+    error:nil];
+    return st;
 }
 
 - (int) datasetVersion

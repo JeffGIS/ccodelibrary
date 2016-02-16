@@ -15,6 +15,7 @@
 @property CrimeData* cd;
 @property int width;
 @property int height;
+@property int nextID;
 @property unsigned short * grid;
 
 + (DispersePoint *)initWithWidth:(int)width

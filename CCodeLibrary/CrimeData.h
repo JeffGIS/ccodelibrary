@@ -18,9 +18,9 @@
 @property (nonatomic, copy) NSString *path;
 @property long long fileSize;
 
-- (void)open;
+- (BOOL)open;
 - (void)close;
-- (void)clear;
+- (BOOL)clear;
 
 - (BOOL)executeCmd:(char *)cmd;
 

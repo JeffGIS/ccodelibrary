@@ -7,6 +7,7 @@
 //
 
 #import "SymbolDictionary.h"
+#import "mathutil.h"
 
 static double Adjust (double sym,double loc, double size)
 {
@@ -145,16 +146,24 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
     }
     if (dispersed)
     {
-        size = origSize * 0.5;
-        CGRect pointRect = CGRectMake((pt->x - size / 2.0),
-                                      (pt->y - size / 2.0), size, size);
-        size *= 0.03;
+        size = origSize * 0.25;
+        CGRect pointRect = CGRectMake((pt->x - size),
+                                      (pt->y - size), size*2, size*2);
+        CGFloat az = getazd(pt, &pt[1]);
+        DPOINT ptOnCircle = dnewpoint(pt,az,size);
+        CGPoint points[2];
+        points[0].x = pt->x;
+        points[0].y = pt->y;
+        points[1].x = ptOnCircle.x;
+        points[1].y = ptOnCircle.y;
+        size *= 0.06;
         CGContextSetLineWidth(context, 3*size);
         CGContextSetStrokeColorWithColor(context,UIColor.whiteColor.CGColor);
         CGContextStrokeEllipseInRect(context, pointRect);
         CGContextSetLineWidth(context, size);
         CGContextSetStrokeColorWithColor(context,UIColor.blackColor.CGColor);
         CGContextStrokeEllipseInRect(context, pointRect);
+        CGContextStrokeLineSegments(context, points,2);
     }
 
 }
