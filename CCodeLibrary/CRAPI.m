@@ -765,6 +765,19 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     return bnds;
 }
 
+- (dbounds) getPixelPickApBoundsAtPoint:(DPOINT*)pt
+{
+    dbounds bnds;
+    
+    double pickapY = _pickApInPixels;
+    double pickapX = _pickApInPixels;
+    bnds.xmn = (pt->x - pickapX);
+    bnds.xmx = (pt->x + pickapX);
+    bnds.ymn = (pt->y - pickapY);
+    bnds.ymx = (pt->y + pickapY);
+    return bnds;
+}
+
 - (NSString *)sharedFilePath
 {
     NSFileManager *fileManager = NSFileManager.defaultManager;

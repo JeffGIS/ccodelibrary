@@ -61,6 +61,7 @@
 #import "NVPDFSnapshotter.h"
 #import "SewerData.h"
 #import "CrimeData.h"
+#import "DispersePoint.h"
 #import "DisplayCharacteristics.h"
 #import "FileLister.h"
 

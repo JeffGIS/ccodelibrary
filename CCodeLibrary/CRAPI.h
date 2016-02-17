@@ -143,6 +143,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
       usingTransformation:(LPTRANDATA)pTranBMPToW;
 
 - (dbounds) getPickApBoundsAtPoint:(LLPOINT *)pt;
+- (dbounds) getPixelPickApBoundsAtPoint:(DPOINT*)pt;
 
 - (dbounds) getBoundsAtPoint:(CLLocationCoordinate2D*)pt
                      andDist:(CGFloat)meters;

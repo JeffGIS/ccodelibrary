@@ -7,7 +7,6 @@
 //
 
 #import "HotSpot.h"
-#import "MathUtil.h"
 #import "CRAPI.h"
 
 @implementation HotSpot
@@ -45,6 +44,7 @@
                     Height:(int)height
                   NumGrids:(int)nGrids
                  PointSize:(int)pointSize
+                      tran:(LPTRANDATA)pTranLLtoView
 {
     HotSpot * hs = [[HotSpot alloc]init];
     if (pointSize % 2)

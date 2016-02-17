@@ -21,6 +21,7 @@ float MaxF(float l, float r);
 int Max(int l, int r);
 
 //2D
+POINT DPointToPoint (DPOINT *dpt);
 float DotVec2(vec2* vec0, vec2* vec1);
 void LerpVec2(vec2* out_lerpedPos, vec2* p0, vec2* p1, float t);
 void NormalizeVec2(vec2* vec);
@@ -111,6 +112,7 @@ LPTRANDATA STRAN2 (int ID,double X1[], double Y1[],double X2[],double Y2[],int N
 LPTRANDATA STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN);//,LPMNMXCORD pBounds);
 LPTRANDATA  STRANBoundsToBounds (LPMNMXCORD FromRect,LPMNMXCORD ToRect);
 LPTRANDATA  STRANCornersToBounds (CORNERPOINTS *corners,LPMNMXCORD ToRect);
+LPTRANDATA  STRANBoundsToCorners (CORNERPOINTS *corners,LPMNMXCORD ToRect);
 void CloseTRANS2 (LPTRANDATA *phlpTran);
 void TRANS2(double XIN, double YIN, LPDOUBLE XOUT, LPDOUBLE YOUT, LPTRANDATA TranPtr);
 void CloseTRANS2 (LPTRANDATA *phlpTran);

@@ -12,6 +12,7 @@ typedef NS_ENUM(NSInteger, PickItemTypes) {
     PTAlleyWallPt,
     PTAlleyLine,
     PTCRIntersectionPt,
+    PTCrime,
 };
 
 @interface PickedItem : NSObject
@@ -20,6 +21,7 @@ typedef NS_ENUM(NSInteger, PickItemTypes) {
 @property double distance;
 @property NSString *identifier;
 @property NSString *symbolName;
+@property NSInteger time;
 @property DPOINT pickedPoint;
 
 + (PickedItem *) nearestPickedItem:(NSMutableArray *)highlightList;

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MathUtil.h"
 
 @interface HotSpot : NSObject
 @property int width;
@@ -22,7 +23,8 @@
 + (HotSpot *)initWithWidth:(int)width
                     Height:(int)height
                   NumGrids:(int)nGrids
-                 PointSize:(int)pointSize;
+                 PointSize:(int)pointSize
+                      tran:(LPTRANDATA)pTranLLtoView;
 - (void) addPointAtX:(int)x andY:(int)y;
 - (void) display:(CGContextRef)context;
 - (BOOL) dump:(NSString*)outFile;

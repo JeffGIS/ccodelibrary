@@ -160,6 +160,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
         CGContextSetLineWidth(context, 3*size);
         CGContextSetStrokeColorWithColor(context,UIColor.whiteColor.CGColor);
         CGContextStrokeEllipseInRect(context, pointRect);
+        CGContextStrokeLineSegments(context, points,2);
         CGContextSetLineWidth(context, size);
         CGContextSetStrokeColorWithColor(context,UIColor.blackColor.CGColor);
         CGContextStrokeEllipseInRect(context, pointRect);

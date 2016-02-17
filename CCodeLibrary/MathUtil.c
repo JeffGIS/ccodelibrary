@@ -535,6 +535,15 @@ double HeadingToAzimuth (double heading)
 	return rtn;
 }
 
+POINT DPointToPoint (DPOINT *dpt)
+{
+    POINT pt;
+    
+    pt.x = IDNINT (dpt->x);
+    pt.y = IDNINT (dpt->y);
+    return pt;
+}
+
 vec2 newpt(vec2 *OldPoint, float AZM, float DIS)
 {
     vec2 NewPoint;
@@ -1278,6 +1287,33 @@ LPTRANDATA  STRANCornersToBounds (CORNERPOINTS *corners,LPMNMXCORD ToRect)
     YTO[3] = ToRect->ymn;
     
     hTran = STRAN2 (1665,XFROM,YFROM,XTO,YTO,4,1,(LPFLOAT)&RSQMIN);
+    return hTran;
+}
+
+LPTRANDATA  STRANBoundsToCorners (CORNERPOINTS *corners,LPMNMXCORD ToRect)
+{
+    LPTRANDATA  hTran;
+    double	XFROM[4],YFROM[4],XTO[4],YTO[4];
+    float	RSQMIN;
+    
+    XFROM[0] = corners->nearLeft.x;
+    XFROM[1] = corners->farLeft.x;
+    XFROM[2] = corners->farRight.x;
+    XFROM[3] = corners->nearRight.x;
+    YFROM[0] = corners->nearLeft.y;
+    YFROM[1] = corners->farLeft.y;
+    YFROM[2] = corners->farRight.y;
+    YFROM[3] = corners->nearRight.y;
+    XTO[0] = ToRect->xmn;
+    XTO[1] = ToRect->xmn;
+    XTO[2] = ToRect->xmx;
+    XTO[3] = ToRect->xmx;
+    YTO[0] = ToRect->ymn;
+    YTO[1] = ToRect->ymx;
+    YTO[2] = ToRect->ymx;
+    YTO[3] = ToRect->ymn;
+    
+    hTran = STRAN2 (1665,XTO,YTO,XFROM,YFROM,4,1,(LPFLOAT)&RSQMIN);
     return hTran;
 }
 
