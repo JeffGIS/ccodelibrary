@@ -81,12 +81,6 @@ static UserDefaults *_defaults;
     return data;
 }
 
-- (NSSet *)setForKey:(NSString *)key
-{
-    NSSet *set = [_defaults objectForKey:key];
-    return set;
-}
-
 - (NSArray *)locationList
 {
     NSArray *locationList = [_defaults arrayForKey:@"LocationList"];
@@ -432,15 +426,6 @@ static UserDefaults *_defaults;
             forKey:(NSString *)key
 {
     [_defaults setObject:data
-                  forKey:key];
-    
-    [_defaults synchronize];
-}
-
-- (void)saveSet:(NSSet *)set
-         forKey:(NSString *)key
-{
-    [_defaults setObject:set
                   forKey:key];
     
     [_defaults synchronize];

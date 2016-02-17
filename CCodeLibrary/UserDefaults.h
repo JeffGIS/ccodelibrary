@@ -23,7 +23,6 @@
 - (NSArray *)arrayForKey:(NSString *)key;
 - (CGFloat)CGFloatForKey:(NSString *)key;
 - (NSData *)NSDataForKey:(NSString *)key;
-- (NSSet *)setForKey:(NSString *)key;
 - (NSArray *)geoidList;
 - (NSArray *)locationList;
 - (NSArray *)iPadList;
@@ -80,9 +79,6 @@
 
 - (void)saveNSData:(NSData *)data
             forKey:(NSString *)key;
-
-- (void)saveSet:(NSSet *)set
-         forKey:(NSString *)key;
 
 - (void)setStatus:(int)status
          forGeoid:(int)geoid;

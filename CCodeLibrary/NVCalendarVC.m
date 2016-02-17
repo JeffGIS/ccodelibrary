@@ -11,7 +11,6 @@
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) NVCalendarView *calendarView;
 @property (nonatomic) CGFloat margin;
-@property (nonatomic) NSString *name;
 @property (nonatomic) NSMutableSet *calendarSet;
 @property (nonatomic) NSDateComponents *currentCalendar;
 @property (nonatomic) NSUInteger numDays;
@@ -19,16 +18,6 @@
 @end
 
 @implementation NVCalendarVC
-
-- (id)initWithCalendarName:(NSString *)name
-{
-    self = [super init];
-    
-    if (self)
-        _name = name;
-    
-    return self;
-}
 
 - (void)loadView
 {
@@ -41,7 +30,6 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = UserDefaults.defaults.appleBlue;
-    _calendarSet = [[NSMutableSet alloc] initWithSet:[UserDefaults.defaults setForKey:_name]];
     NSCalendar *calendar = NSCalendar.currentCalendar;
     
     _currentCalendar = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitWeekday

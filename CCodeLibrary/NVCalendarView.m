@@ -3,6 +3,7 @@
 
 #import "NVCalendarView.h"
 #import "NVCalendarCell.h"
+#import "UserDefaults.h"
 
 @interface NVCalendarView ()
 
@@ -10,8 +11,9 @@
 @property (nonatomic) UIFont *font;
 @property (nonatomic) NVCalendarCell *titleLabel, *sun, *mon, *tues, *wed, *thurs, *fri, *sat;
 @property (nonatomic) NVCalendarCell *currentCell;
-@property (nonatomic) NSInteger index, startDay;
+@property (nonatomic) NSInteger index, startDay, month, year;
 @property (nonatomic) NSUInteger numDays;
+@property (nonatomic) NSMutableArray *calendarArray;
 
 @end
 
@@ -29,12 +31,15 @@
         self.backgroundColor = UIColor.blackColor;
         self.layer.borderColor = UIColor.blackColor.CGColor;
         self.layer.masksToBounds = YES;
+        _month = month, _year = year;
         
         NSDateFormatter *df = [[NSDateFormatter alloc] init];
-        NSString *monthName = [df.monthSymbols objectAtIndex:(month - 1)];
+        NSString *monthName = [df.monthSymbols objectAtIndex:(_month - 1)];
         
-        _title = [NSString stringWithFormat:@"%@ %li", monthName, (long)year];
+        _title = [NSString stringWithFormat:@"%@ %li", monthName, (long)_year];
         _index = 1, _startDay = (firstDay + 7), _numDays = numDays;
+        
+        _calendarArray = [[NSMutableArray alloc] initWithArray:[UserDefaults.defaults arrayForKey:@"TestCalendarArray"]];
         
         if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
         {
@@ -520,6 +525,12 @@
 {
     cell.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:cell];
+    
+    if (cell.tag > 8 && ![cell.text isEqualToString:@""])
+    {
+        if ([_calendarArray containsObject:[self identifierForCell:cell]])
+            cell.selected = YES;
+    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches
@@ -552,8 +563,13 @@
             {
                 if (CGRectContainsPoint(cells.frame, loc))
                 {
-                    cells.selected = !cells.selected;
                     _currentCell = cells;
+                    
+                    if (!cells.selected)
+                        [self addCell:cells];
+                    
+                    else
+                        [self removeCell:cells];
                 }
             }
             
@@ -568,7 +584,13 @@
                         NVCalendarCell *cell = (NVCalendarCell *)[self viewWithTag:(cells.tag + i)];
                         
                         if (![cell.text isEqualToString:@""])
-                            cell.selected = !cell.selected;
+                        {
+                            if (!cell.selected)
+                                [self addCell:cell];
+                            
+                            else
+                                [self removeCell:cell];
+                        }
                     }
                 }
             }
@@ -584,13 +606,49 @@
                         if ([theCells isKindOfClass:NVCalendarCell.class])
                         {
                             if (theCells.tag > 8 && ![theCells.text isEqualToString:@""])
-                                theCells.selected = !theCells.selected;
+                            {
+                                if (!theCells.selected)
+                                    [self addCell:theCells];
+                                
+                                else
+                                    [self removeCell:theCells];
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+
+- (void)addCell:(NVCalendarCell *)cell
+{
+    [_calendarArray addObject:[self identifierForCell:cell]];
+    [self saveCalendarArray];
+    cell.selected = YES;
+}
+
+- (void)removeCell:(NVCalendarCell *)cell
+{
+    [_calendarArray removeObject:[self identifierForCell:cell]];
+    [self saveCalendarArray];
+    cell.selected = NO;
+}
+
+- (void)saveCalendarArray
+{
+    [UserDefaults.defaults saveArray:_calendarArray.copy
+                              forKey:@"TestCalendarArray"];
+}
+
+- (NSString *)identifierForCell:(NVCalendarCell *)cell
+{
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    formatter.minimumIntegerDigits = 2;
+    
+    NSString *monthString = [formatter stringFromNumber:[NSNumber numberWithInteger:_month]];
+    NSString *dayString = [formatter stringFromNumber:[NSNumber numberWithInteger:cell.text.integerValue]];
+    return [NSString stringWithFormat:@"%li%@%@", (long)_year, monthString, dayString];
 }
 
 @end
