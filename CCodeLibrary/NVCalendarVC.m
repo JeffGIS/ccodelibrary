@@ -51,6 +51,7 @@
     }
     
     [self setupReturnButton];
+    [self setupTopButtons];
     [self setupCalendarView];
 }
 
@@ -96,7 +97,10 @@
                                                 constant:_margin].active = YES;
     
     [_returnButton.heightAnchor constraintEqualToConstant:40.0].active = YES;
-    
+}
+
+- (void)setupTopButtons
+{
     UIButton *nextYear = [UIButton buttonWithType:UIButtonTypeCustom];
     nextYear.translatesAutoresizingMaskIntoConstraints = NO;
     nextYear.backgroundColor = UIColor.clearColor;
@@ -183,7 +187,7 @@
                                        constant:(_margin / 2.0)].active = YES;
     
     [lastYear.leadingAnchor constraintEqualToAnchor:_returnButton.trailingAnchor
-                                            constant:_margin].active = YES;
+                                           constant:_margin].active = YES;
     
     [lastYear.trailingAnchor constraintEqualToAnchor:lastMonth.leadingAnchor].active = YES;
     [lastYear.heightAnchor constraintEqualToAnchor:_returnButton.heightAnchor].active = YES;
