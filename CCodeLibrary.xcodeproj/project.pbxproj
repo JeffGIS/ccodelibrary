@@ -61,6 +61,8 @@
 		69D5EFB61C7239EC004CE1C0 /* NVCalendarVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D5EFB01C7237AB004CE1C0 /* NVCalendarVC.h */; };
 		69D5EFBC1C7248DB004CE1C0 /* NVCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFBB1C7248DB004CE1C0 /* NVCalendarCell.m */; };
 		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
+		69DE24281C76311D00680B00 /* NVTextVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69DE24271C76311D00680B00 /* NVTextVC.m */; };
+		69DE24291C76319B00680B00 /* NVTextVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69DE24261C76311D00680B00 /* NVTextVC.h */; };
 		69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E8E6681C66802F00CB26CB /* NSData+CRC.m */; };
 		69E8E66A1C66809E00CB26CB /* NSData+CRC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E8E6671C66802F00CB26CB /* NSData+CRC.h */; };
 		69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */; };
@@ -305,6 +307,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69DE24291C76319B00680B00 /* NVTextVC.h in CopyFiles */,
 				69D5EFB61C7239EC004CE1C0 /* NVCalendarVC.h in CopyFiles */,
 				6998225F1C690A38003476DD /* NVDocumentManager.h in CopyFiles */,
 				69E8E66A1C66809E00CB26CB /* NSData+CRC.h in CopyFiles */,
@@ -487,6 +490,8 @@
 		69D5EFBB1C7248DB004CE1C0 /* NVCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCalendarCell.m; sourceTree = "<group>"; };
 		69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSecretAlertView.h; sourceTree = "<group>"; };
 		69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSecretAlertView.m; sourceTree = "<group>"; };
+		69DE24261C76311D00680B00 /* NVTextVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextVC.h; sourceTree = "<group>"; };
+		69DE24271C76311D00680B00 /* NVTextVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextVC.m; sourceTree = "<group>"; };
 		69E8E6671C66802F00CB26CB /* NSData+CRC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CRC.h"; sourceTree = "<group>"; };
 		69E8E6681C66802F00CB26CB /* NSData+CRC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CRC.m"; sourceTree = "<group>"; };
 		69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDestinationOptions.h; sourceTree = "<group>"; };
@@ -942,6 +947,8 @@
 				A9A7E3691B75796500DC7F3D /* NVXWalkButton.m */,
 				A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */,
 				A9BCBBEF1B175FB7007C5C48 /* NVTestSlopeController.m */,
+				69DE24261C76311D00680B00 /* NVTextVC.h */,
+				69DE24271C76311D00680B00 /* NVTextVC.m */,
 				A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */,
 				A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */,
 				A9D3A06A1AF539E600E0D834 /* NVSliderController.h */,
@@ -1327,6 +1334,7 @@
 				EBC01D311BED1C8C0004C751 /* zatan2.c in Sources */,
 				EBC01D121BED1C8C0004C751 /* dms.c in Sources */,
 				EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */,
+				69DE24281C76311D00680B00 /* NVTextVC.m in Sources */,
 				EBC01D211BED1C8C0004C751 /* moonrise.c in Sources */,
 				69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */,
 				EBC01D1A1BED1C8C0004C751 /* kfiles.c in Sources */,
