@@ -1034,8 +1034,6 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
-				EB0E4FF31C62785200849766 /* SymbolDictionary.h */,
-				EB0E4FF41C62785200849766 /* SymbolDictionary.m */,
 				EBC01D331BED1CE20004C751 /* SolarCalculator */,
 				A933D9F31B5D494600D621CD /* 3D Views */,
 				A90D1FB61AE6174700CBFEE7 /* Categories */,
@@ -1080,6 +1078,8 @@
 				EB0E4FE61C60D21700849766 /* HotSpot.m */,
 				EB0E4FFB1C6288BF00849766 /* DispersePoint.h */,
 				EB0E4FFC1C6288BF00849766 /* DispersePoint.m */,
+				EB0E4FF31C62785200849766 /* SymbolDictionary.h */,
+				EB0E4FF41C62785200849766 /* SymbolDictionary.m */,
 				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);

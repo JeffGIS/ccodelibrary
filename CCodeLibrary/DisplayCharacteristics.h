@@ -29,6 +29,7 @@ typedef NS_ENUM(NSInteger, GraphicElementTypes)
 
 typedef NS_ENUM(NSInteger, PointSymbols)
 {
+    NoSym,
     CrossSym,
     PlusSym,
     DiamondSym,
