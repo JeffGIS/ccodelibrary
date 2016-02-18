@@ -12,9 +12,15 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 #import "CrimeData.h"
 #import "UserDefaults.h"
 #import "CRAPI.h"
+#import "GeomasterServer.h"
+#import "GSSiPopoverView.h"
 
-@interface CrimeData ()
+@interface CrimeData () <GeoMasterServerDelegate,GSSiPopoverViewDelegate>
 @property (nonatomic) UIColor *red;
+@property (nonatomic) GeoMasterServer *GMServer;
+@property (nonatomic) GSSiPopoverView *popoverView;
+@property (nonatomic) NSTimer *updateTimer;
+
 @end
 
 @implementation CrimeData
@@ -88,7 +94,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
 - (int) datasetVersion
 {
     int rtn = -1;
-    [self open];
+    BOOL opened = [self open];
     if (_isOpen && _fileSize > 0)
     {
         NSString *query = [NSString stringWithFormat:@"SELECT max(id) FROM OFFENSEXY"];
@@ -104,7 +110,30 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         }
         SQLOK(sqlite3_finalize(statement), _database);
     }
-    [self close];
+    if (opened)
+        [self close];
+    return rtn;
+}
+
+- (NSInteger) lastUpdate
+{
+    NSInteger rtn = -1;
+    BOOL opened = [self open];
+    if (_isOpen && _fileSize > 0)
+    {
+        NSString *query = [NSString stringWithFormat:@"SELECT LastUpdate FROM UPDATES"];
+        
+        sqlite3_stmt *statement = NULL;
+        
+        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        if (sqlite3_step(statement) == SQLITE_ROW)
+        {
+            rtn = sqlite3_column_int(statement, 0);
+        }
+        SQLOK(sqlite3_finalize(statement), _database);
+    }
+    if (opened)
+        [self close];
     return rtn;
 }
 
@@ -134,5 +163,129 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     
     return report;
 }
+
+- (BOOL)update:(UIView *)fromView
+{
+    BOOL rtn = FALSE;
+    _GMServer = GeoMasterServer.open;
+    _GMServer.delegate = self;
+    _GMServer.messageID = GMSMessageGetPoliceUpdate;
+    [_GMServer initCommunication:5.0];
+    _popoverView = [[GSSiPopoverView alloc] initWithView:fromView];
+    _popoverView.delegate = self;
+
+    _popoverView.progressView.hidden = YES;
+    
+    [_popoverView showAfter:0.0
+                  withTitle:@"Waiting\nto Connect\nto Manager"];
+    
+    return rtn;
+}
+
+- (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
+{
+    [popoverView hide];
+}
+
+- (void)closeGMServer
+{
+    if (_GMServer)
+    {
+        [_popoverView hide];
+        [_GMServer closeServer];
+        _GMServer.delegate = nil;
+    }
+    
+    _GMServer = nil;
+}
+
+- (void)GMServerDidOpen:(GeoMasterServer *)server
+{
+    NSString *msg = @"";
+    
+    switch (server.messageID)
+    {
+        case GMSMessageGetPoliceUpdate:
+            msg = [NSString stringWithFormat:@"$M(LastPoliceUpdate)\r\n"];
+            break;
+            
+    }
+    
+    if (msg)
+        [_GMServer sendMessage:msg];
+    
+    NSLog(@"GMServer Query: %@", msg);
+}
+
+- (void)GMServer:(GeoMasterServer *)server
+didReceiveMessage:(NSString *)message
+      withStatus:(long)status
+{
+    NSLog(@"GMServer Message(Police Update): %@", message);
+    
+    if (status == GMServerStatusOK)
+    {
+        switch (server.messageID)
+        {
+            case GMSMessageGetPoliceUpdate:
+            {
+                _myLastUpdate = [self lastUpdate];
+                _serversLastUpdate = message.integerValue;
+                
+                if (_serversLastUpdate > _myLastUpdate)
+                {
+                    if (_updateTimer)
+                        [_updateTimer invalidate];
+                    
+                    _updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.25
+                                                                  target:self
+                                                                  selector:@selector(updateFromServer:)
+                                                                userInfo:nil
+                                                                 repeats:NO];
+                    
+                }
+            }
+                break;
+        }
+    }
+    [self closeGMServer];
+    
+}
+
+
+- (void)GMServer:(GeoMasterServer *)server
+ didReceiveError:(NSString *)error
+      withStatus:(long)status
+{
+    [self closeGMServer];
+    
+    NSString *titleMessage = @"";
+    
+    if ([error isEqualToString:@"Internet Connection Not Available"])
+        titleMessage = @"Network Error";
+    
+    else
+        titleMessage = @"GMServer Error";
+    
+    UIAlertView *serverError = [[UIAlertView alloc] initWithTitle:titleMessage
+                                                          message:error
+                                                         delegate:nil
+                                                cancelButtonTitle:@"OK"
+                                                otherButtonTitles:nil];
+    
+    [serverError show];
+}
+
+- (void)updateFromServer:(NSTimer *)timer
+{
+    if (_myLastUpdate >= _serversLastUpdate)
+    {
+        [_popoverView hide];
+        return;
+    }
+    
+    
+}
+
 
 @end

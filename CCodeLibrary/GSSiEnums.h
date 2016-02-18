@@ -38,6 +38,7 @@ typedef NS_ENUM(NSInteger, GMSMessage)
     GMSMessageSetNearby,
     GMSMessageCheckNearby,
     GMSMessageCancelConnect,
+    GMSMessageGetPoliceUpdate,
 };
 
 typedef NS_ENUM(NSInteger, FTPStatus)

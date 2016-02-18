@@ -17,6 +17,9 @@
 @property (nonatomic, copy) NSString *fileName;
 @property (nonatomic, copy) NSString *path;
 @property long long fileSize;
+@property NSInteger myLastUpdate;
+@property NSInteger serversLastUpdate;
+
 
 - (BOOL)open;
 - (void)close;
@@ -27,5 +30,5 @@
 - (void)startTransaction;
 - (void)commitTransaction;
 + (NSString *)reportForControlNumber:(NSInteger)cnumber;
-
+- (BOOL)update:(UIView *)fromView;
 @end

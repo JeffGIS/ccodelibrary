@@ -122,7 +122,7 @@ static GeoMasterServer *statServer = nil;
     
     _openTimer = [NSTimer scheduledTimerWithTimeInterval:connectionTimeoutInSeconds
                                                   target:self
-                                                selector:@selector(serverFailedToOpen)
+                                                selector:@selector(serverFailedToOpen:)
                                                 userInfo:nil
                                                  repeats:NO];
     
@@ -131,7 +131,7 @@ static GeoMasterServer *statServer = nil;
 	return rtn;
 }
 
-- (void)doSendMessage
+- (void)doSendMessage:(NSTimer *)timer
 {
     NSLog(@"data.length = %lu", (unsigned long)_data.length);
     
@@ -156,7 +156,7 @@ static GeoMasterServer *statServer = nil;
     
         _responseTimer = [NSTimer scheduledTimerWithTimeInterval:_responseTimeoutInSeconds
                                                           target:self
-                                                        selector:@selector(serverFailedToRespond)
+                                                        selector:@selector(serverFailedToRespond:)
                                                         userInfo:nil
                                                         repeats:NO];
     }
@@ -171,7 +171,7 @@ static GeoMasterServer *statServer = nil;
 
     _sendTimer = [NSTimer scheduledTimerWithTimeInterval:0.01
                                                   target:self
-                                                selector:@selector(doSendMessage)
+                                                selector:@selector(doSendMessage:)
                                                 userInfo:nil
                                                  repeats:NO];
 	
@@ -292,7 +292,7 @@ static GeoMasterServer *statServer = nil;
 	}
 }
 
-- (void)serverFailedToRespond
+- (void)serverFailedToRespond:(NSTimer *)timer
 {
     [self closeServer];
     
@@ -304,7 +304,7 @@ static GeoMasterServer *statServer = nil;
     }
     
 }
-- (void)serverFailedToOpen
+- (void)serverFailedToOpen:(NSTimer *)timer
 {
     [self closeServer];
    
