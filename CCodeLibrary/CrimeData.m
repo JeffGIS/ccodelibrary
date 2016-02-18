@@ -125,5 +125,14 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
 }
 
++ (NSString *)reportForControlNumber:(NSInteger)cnumber
+{
+    NSString *file = [NSBundle.mainBundle pathForResource:@"3496595"
+                                                   ofType:@"TXT"];
+    NSError *error = nil;
+    NSString *report = [NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:&error];
+    
+    return report;
+}
 
 @end

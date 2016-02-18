@@ -26,5 +26,6 @@
 
 - (void)startTransaction;
 - (void)commitTransaction;
++ (NSString *)reportForControlNumber:(NSInteger)cnumber;
 
 @end
