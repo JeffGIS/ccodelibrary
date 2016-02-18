@@ -5,6 +5,6 @@
 
 @interface NVTextVC : UIViewController
 
-- (id)initWithTextFromFileAtPath:(NSString *)filePath;
+- (id)initWithText:(NSString *)text;
 
 @end
