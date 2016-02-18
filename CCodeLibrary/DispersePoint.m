@@ -198,6 +198,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     DPOINT p1, p2, minpt;
     int minref = 0;
     int npicked = 0;
+    int minsym = 0;
     NSString * minID=@"";
     NSInteger time = 0;
     NSInteger minTime = 0;
@@ -216,7 +217,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     minpt = p1;
     dbounds bnds = [CRAPI.sharedInstance getPixelPickApBoundsAtPoint:&screenPoint];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT ControlNbr, DispersedX, DispersedY,Time,Offense FROM DISPERSE,DISPERSE_index WHERE DISPERSE.id=DISPERSE_index.id AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f",
+    NSString *query = [NSString stringWithFormat:@"SELECT ControlNbr, DispersedX, DispersedY,Time,Offense,Symbol FROM DISPERSE,DISPERSE_index WHERE DISPERSE.id=DISPERSE_index.id AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f",
                        bnds.xmn, bnds.xmx, bnds.ymn, bnds.ymx];
     
     
@@ -229,12 +230,14 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         p2.y = sqlite3_column_double(statement, 2);
         time = sqlite3_column_int(statement, 3);
         LPSTR offense = (LPSTR)sqlite3_column_text(statement, 4);
+        int symbol = sqlite3_column_int(statement, 5);
         d = ldistpp(&p1, &p2);
         
         if (d < mind)
         {
             npicked++;
             minref = refno;
+            minsym = symbol;
             mind = d;
             minpt = p2;
             minID = [NSString stringWithUTF8String:offense];
@@ -247,6 +250,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     {
         PickedItem *pi = [[PickedItem alloc]init];
         pi.itemType = PTCrime;
+        pi.symbol = minsym;
         pi.distance = mind;
         pi.pickedPoint = TranDPOINT(&minpt, _pTranViewtoLL);
         pi.symbolName = @"CRIME";
