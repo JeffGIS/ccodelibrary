@@ -9,7 +9,7 @@
 @property (nonatomic) NSString *text;
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) UITextView *textView;
-@property (nonatomic) CGFloat margin;
+@property (nonatomic) CGFloat margin, fontSize;
 @property (nonatomic) UIFont *font;
 @property (nonatomic) UIScrollView *scrollView;
 
@@ -18,12 +18,14 @@
 @implementation NVTextVC
 
 - (id)initWithText:(NSString *)text
+          fontSize:(CGFloat)fontSize
 {
     self = [super init];
     
     if (self)
     {
         _text = text;
+        _fontSize = fontSize;
     }
     
     return self;
@@ -104,7 +106,7 @@
 - (void)setupTextView
 {
     UIFont *font = [UIFont fontWithName:@"CourierNewPS-BoldMT"
-                                   size:16.0];
+                                   size:_fontSize];
     
     _text = [_text stringByReplacingOccurrencesOfString:@"\t"
                                              withString:@"    "];
@@ -159,7 +161,7 @@ CGSize sizeOfString(NSString *string, UIFont *font)
     }
     
     CGFloat stringHeight = (font.lineHeight * numLines);
-    CGFloat stringWidth = (longestLine * 10.0);
+    CGFloat stringWidth = (longestLine * (font.pointSize * 0.6));
     
     return CGSizeMake(stringWidth, stringHeight);
 }
