@@ -14,13 +14,14 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 #import "CRAPI.h"
 #import "GeomasterServer.h"
 #import "GSSiPopoverView.h"
+#import "FTPDataPull.h"
 
-@interface CrimeData () <GeoMasterServerDelegate,GSSiPopoverViewDelegate>
+@interface CrimeData () <GeoMasterServerDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate>
 @property (nonatomic) UIColor *red;
 @property (nonatomic) GeoMasterServer *GMServer;
 @property (nonatomic) GSSiPopoverView *popoverView;
 @property (nonatomic) NSTimer *updateTimer;
-
+@property FTPDataPull *pull;
 @end
 
 @implementation CrimeData
@@ -283,8 +284,48 @@ didReceiveMessage:(NSString *)message
         [_popoverView hide];
         return;
     }
+    [_popoverView showAfter:0.0
+                  withTitle:[NSString stringWithFormat:@"Get update %li",_myLastUpdate+1]];
     
+    BOOL fileExists = NO;
+    NSString *fileName = [NSString stringWithFormat:@"%li.gcf"];
+    NSString *fromDir;
+    NSString *toDir = [NSString stringWithFormat:@"%@/%@Plats", _documentsDirectory];
+    _pull = FTPDataPull.pull;
+    _pull.delegate = self;
+    _pull.popover = _popoverView;
+    _pull.useOnlyPrimaryFTP = YES;
+    _pull.dataType = FTPDataCrimes;
+    if ([_pull getFile:fileName
+        fromDirectory:fromDir
+               toFile:fileName
+          toDirectory:toDir
+        refreshOption:FTPDataPullRefreshOptionCheckFileSize] == FTPStatusFileExists)
+    {
+        fileExists = YES;
+    }
+  
+}
+
+
+/*pull.ftpSiteOveride = @"74.42.136.100";
+ pull.usernameOveride = @"GMMobile";
+ pull.passwordOveride = @"GeoMaster";
+ pull.portOveride = @"21";
+ 
+ if ([pull getFile:fileName
+ fromDirectory:[NSString stringWithFormat:@"Sewer/%@/Plats",type]*/
+- (void)FTPdidComplete:(FTPDataType)dataType
+            withStatus:(int)status
+       andStatusString:(NSString *)statusString
+              filePath:(NSString *)path
+{
+    [_popoverView hide];
     
+    if (status == FTPStatusOK)
+    {
+        
+    }
 }
 
 

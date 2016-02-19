@@ -542,7 +542,7 @@ Exit:
     return rtn;
 }
 
-- (void)FTPdidComplete:(int)option
+- (void)FTPdidComplete:(FTPDataType)dataType
             withStatus:(int)status
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path

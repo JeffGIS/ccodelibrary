@@ -194,14 +194,14 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
     pull.delegate = delegate;
     pull.popover = popover;
     pull.useOnlyPrimaryFTP = YES;
-    pull.option = GET_STORMPLAT;
+    pull.dataType = FTPDataPlat;
     NSString * fileName;
     
     if ([type isEqualToString:@"pdf"])
     {
         fileName = [NSString stringWithFormat:@"%@", platID];
         fromDir = @"MapleGrove/As-built/PDF";
-        pull.option = GET_PDFFILE;
+        pull.dataType = FTPDataPDF;
         [popover showAfter:1.5
                  withTitle:[NSString stringWithFormat:@"Get PDF %@",
                             platID]];
@@ -239,7 +239,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
     return fileExists;
 }
 
-- (void)FTPdidComplete:(int)option
+- (void)FTPdidComplete:(FTPDataType)dataType
             withStatus:(int)status
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path

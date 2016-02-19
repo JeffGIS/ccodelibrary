@@ -71,7 +71,7 @@ static FTPDataPull * _statpull = nil;
         {
             if (_delegate && !_haveCalledDelegate)
             {
-                [_delegate FTPdidComplete:_option
+                [_delegate FTPdidComplete:_dataType
                                withStatus:FTPStatusConnectionFailed
                           andStatusString:@"Cannot reach server"
                                  filePath:nil];
@@ -120,7 +120,7 @@ static FTPDataPull * _statpull = nil;
     
     if (_delegate && !_haveCalledDelegate)
     {
-        [_delegate FTPdidComplete:_option
+        [_delegate FTPdidComplete:_dataType
                        withStatus:status
                   andStatusString:statusString
                          filePath:_filePath];

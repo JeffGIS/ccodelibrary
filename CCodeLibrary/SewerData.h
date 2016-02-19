@@ -2,9 +2,6 @@
 //  GMMobile
 
 #define COORDINATE_FACTOR 10000000.0
-#define GET_SANPLATx 11
-#define GET_STORMPLAT 12
-#define GET_PDFFILE 13
 
 #define PLAT_TYPE_SANITARY  1
 #define PLAT_TYPE_STORM     2
