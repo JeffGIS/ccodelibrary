@@ -21,6 +21,17 @@ typedef NS_ENUM(NSInteger, FTPDataType)
     FTPDataPDF,
     FTPDataCrimes,
     FTPDataOther,
+    GetDatabaseSettingProperty,
+    GetDatabaseSettingTiles,
+    GetDatabaseSettingParcels,
+    GetDatabaseSettingAreas,
+    GetDatabaseSettingSewer,
+    GetDatabaseSettingPlan,
+    GetDatabaseSettingCensus,
+    GetDatabaseSettingAlleyWall,
+    GetDatabaseSettingCurbRamp,
+    GetDatabaseSettingCrimes,
+    GetDatabaseSettingMapleGrove,
 };
 
 @class FTPDataPull;
