@@ -26,6 +26,5 @@ didTapButtonAtIndex:(NSInteger)buttonIndex;
                          destructiveIndex:(NSUInteger)destructiveIndex;//1-indexed (use '0' if none)
 
 - (void)hideLargeAlertView:(BOOL)animated;
-- (void)willRotateWithDuration:(NSTimeInterval)duration;
 
 @end
