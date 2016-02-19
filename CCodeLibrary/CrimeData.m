@@ -238,7 +238,7 @@ didReceiveMessage:(NSString *)message
                     if (_updateTimer)
                         [_updateTimer invalidate];
                     
-                    _updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.25
+                    _updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.05
                                                                   target:self
                                                                   selector:@selector(updateFromServer:)
                                                                 userInfo:nil
@@ -288,9 +288,9 @@ didReceiveMessage:(NSString *)message
                   withTitle:[NSString stringWithFormat:@"Get update %li",_myLastUpdate+1]];
     
     BOOL fileExists = NO;
-    NSString *fileName = [NSString stringWithFormat:@"%li.gcf"];
-    NSString *fromDir;
-    NSString *toDir = [NSString stringWithFormat:@"%@/%@Plats", _documentsDirectory];
+    NSString *fileName = [NSString stringWithFormat:@"%li.gcf",_myLastUpdate+1];
+    NSString *fromDir = @"GMMobile/Reports";
+    NSString *toDir = [NSString stringWithFormat:@"%@/Reports", _documentsDirectory];
     _pull = FTPDataPull.pull;
     _pull.delegate = self;
     _pull.popover = _popoverView;
@@ -320,11 +320,15 @@ didReceiveMessage:(NSString *)message
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path
 {
-    [_popoverView hide];
     
     if (status == FTPStatusOK)
     {
-        
+        _myLastUpdate++;
+        _updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.05
+                                                        target:self
+                                                      selector:@selector(updateFromServer:)
+                                                      userInfo:nil
+                                                       repeats:NO];
     }
 }
 
