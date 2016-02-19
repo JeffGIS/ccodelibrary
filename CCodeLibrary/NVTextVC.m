@@ -9,20 +9,23 @@
 @property (nonatomic) NSString *text;
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) UITextView *textView;
-@property (nonatomic) CGFloat margin;
+@property (nonatomic) CGFloat margin, fontSize;
 @property (nonatomic) UIFont *font;
+@property (nonatomic) UIScrollView *scrollView;
 
 @end
 
 @implementation NVTextVC
 
 - (id)initWithText:(NSString *)text
+          fontSize:(CGFloat)fontSize
 {
     self = [super init];
     
     if (self)
     {
         _text = text;
+        _fontSize = fontSize;
     }
     
     return self;
@@ -102,35 +105,65 @@
 
 - (void)setupTextView
 {
-    _textView = [[UITextView alloc] init];
-    _textView.translatesAutoresizingMaskIntoConstraints = NO;
+    UIFont *font = [UIFont fontWithName:@"CourierNewPS-BoldMT"
+                                   size:_fontSize];
+    
+    _text = [_text stringByReplacingOccurrencesOfString:@"\t"
+                                             withString:@"    "];
+    
+    CGSize textSize = sizeOfString(_text, font);
+    
+    _textView = [[UITextView alloc] initWithFrame:CGRectMake(0.0, 0.0, textSize.width, textSize.height)];
     _textView.text = _text;
-    _textView.layer.borderColor = UIColor.blackColor.CGColor;
-    _textView.layer.borderWidth = 2.0;
+    _textView.font = font;
     _textView.editable = NO;
+    _textView.scrollEnabled = NO;
+
+    _scrollView = [[UIScrollView alloc] init];
+    _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    _scrollView.layer.borderColor = UIColor.blackColor.CGColor;
+    _scrollView.layer.borderWidth = 2.0;
+    _scrollView.contentSize = textSize;
+    _scrollView.directionalLockEnabled = YES;
     
-    _textView.font = [UIFont fontWithName:@"CourierNewPS-BoldMT"
-                                     size:16.0];
+    [self.view addSubview:_scrollView];
     
-    [self.view addSubview:_textView];
+    [_scrollView.topAnchor constraintEqualToAnchor:_returnButton.bottomAnchor
+                                          constant:(_margin / 2.0)].active = YES;
     
-    [_textView.topAnchor constraintEqualToAnchor:_returnButton.bottomAnchor
-                                        constant:(_margin / 2.0)].active = YES;
+    [_scrollView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
+                                              constant:_margin].active = YES;
     
-    [_textView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
-                                            constant:_margin].active = YES;
+    [_scrollView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor
+                                               constant:-_margin].active = YES;
     
-    [_textView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor
+    [_scrollView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor
                                              constant:-_margin].active = YES;
     
-    [_textView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor
-                                           constant:-_margin].active = YES;
+    [_scrollView addSubview:_textView];
 }
 
 - (void)dismiss:(UIButton *)button
 {
     [self dismissViewControllerAnimated:YES
                              completion:nil];
+}
+
+CGSize sizeOfString(NSString *string, UIFont *font)
+{
+    NSUInteger numLines, index, longestLine, stringLength = string.length;
+    
+    for (index = 0, numLines = 0, longestLine = 0; index < stringLength; numLines++)
+    {
+        NSUInteger oldIndex = index;
+        index = NSMaxRange([string lineRangeForRange:NSMakeRange(index, 0)]);
+        longestLine = MAX(longestLine, (index - oldIndex));
+    }
+    
+    CGFloat stringHeight = (font.lineHeight * numLines);
+    CGFloat stringWidth = (longestLine * (font.pointSize * 0.6));
+    
+    return CGSizeMake(stringWidth, stringHeight);
 }
 
 @end

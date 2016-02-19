@@ -156,7 +156,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
 
 + (NSString *)reportForControlNumber:(NSInteger)cnumber
 {
-    NSString *file = [NSBundle.mainBundle pathForResource:@"3496595"
+    NSString *file = [NSBundle.mainBundle pathForResource:@"3496486"
                                                    ofType:@"TXT"];
     NSError *error = nil;
     NSString *report = [NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:&error];
