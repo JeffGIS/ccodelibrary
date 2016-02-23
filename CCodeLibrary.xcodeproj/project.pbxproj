@@ -43,6 +43,8 @@
 		697B37711B94B7D60066978B /* NVTextDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 697B37701B94B7D60066978B /* NVTextDrawing.m */; };
 		697B37721B94C0E00066978B /* NVTextDrawing.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697B376F1B94B7D60066978B /* NVTextDrawing.h */; };
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
+		6986AF841C7C119E0059DD1B /* NVDigitizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6986AF831C7C119E0059DD1B /* NVDigitizerView.m */; };
+		6986AF851C7CBD820059DD1B /* NVDigitizerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6986AF821C7C119E0059DD1B /* NVDigitizerView.h */; };
 		698A012E1BE44A2F00758BA6 /* UIView+StackedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */; };
 		698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698F987B1C10B96B009F2F01 /* YTPlayerView.m */; };
 		6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 6992A8871BE0040C00FB53F0 /* NSData+Compression.m */; };
@@ -307,6 +309,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				6986AF851C7CBD820059DD1B /* NVDigitizerView.h in CopyFiles */,
 				69DE24291C76319B00680B00 /* NVTextVC.h in CopyFiles */,
 				69D5EFB61C7239EC004CE1C0 /* NVCalendarVC.h in CopyFiles */,
 				6998225F1C690A38003476DD /* NVDocumentManager.h in CopyFiles */,
@@ -467,6 +470,8 @@
 		6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSpreadsheetView.m; sourceTree = "<group>"; };
 		697B376F1B94B7D60066978B /* NVTextDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextDrawing.h; sourceTree = "<group>"; };
 		697B37701B94B7D60066978B /* NVTextDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextDrawing.m; sourceTree = "<group>"; };
+		6986AF821C7C119E0059DD1B /* NVDigitizerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDigitizerView.h; sourceTree = "<group>"; };
+		6986AF831C7C119E0059DD1B /* NVDigitizerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDigitizerView.m; sourceTree = "<group>"; };
 		698A012C1BE44A2F00758BA6 /* UIView+StackedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+StackedView.h"; sourceTree = "<group>"; };
 		698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+StackedView.m"; sourceTree = "<group>"; };
 		698F987A1C10B96B009F2F01 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTPlayerView.h; path = ../YTPlayerView.h; sourceTree = "<group>"; };
@@ -917,6 +922,8 @@
 				69B36F191BCB0F30004C4B69 /* NVDateRange.m */,
 				69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */,
 				69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */,
+				6986AF821C7C119E0059DD1B /* NVDigitizerView.h */,
+				6986AF831C7C119E0059DD1B /* NVDigitizerView.m */,
 				A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */,
 				A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */,
 				A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */,
@@ -1402,6 +1409,7 @@
 				A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */,
 				6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */,
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
+				6986AF841C7C119E0059DD1B /* NVDigitizerView.m in Sources */,
 				EB7C6A161BD158D8006E985B /* StringFunctions.m in Sources */,
 				69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */,
 				698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */,
