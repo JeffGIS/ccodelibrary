@@ -8,7 +8,7 @@
 @property (nonatomic, weak) id <NVDigitizerViewDelegate> delegate;
 @property (nonatomic) NSMutableArray *coordinates;
 @property (nonatomic) UIImageView *targetView;
-@property (nonatomic) CGFloat targetSize, markerSize;
+@property (nonatomic) CGFloat targetSize, markerSize, yOffset;
 @property BOOL clearMarkers;
 
 @end
@@ -28,24 +28,23 @@
     nvdv.markerSize = 24.0;
     nvdv.clearMarkers = NO;
     nvdv.delegate = delegate;
+    nvdv.yOffset = constrainedView.frame.origin.y;
     nvdv.backgroundColor = UIColor.clearColor;
     nvdv.translatesAutoresizingMaskIntoConstraints = NO;
+    
     [view addSubview:nvdv];
     
-    [nvdv.leadingAnchor constraintEqualToAnchor:view.leadingAnchor].active = YES;
-    [nvdv.trailingAnchor constraintEqualToAnchor:view.trailingAnchor].active = YES;
-    [nvdv.topAnchor constraintEqualToAnchor:view.topAnchor].active = YES;
-    [nvdv.bottomAnchor constraintEqualToAnchor:view.bottomAnchor].active = YES;
+    [nvdv.leadingAnchor constraintEqualToAnchor:constrainedView.leadingAnchor].active = YES;
+    [nvdv.trailingAnchor constraintEqualToAnchor:constrainedView.trailingAnchor].active = YES;
+    [nvdv.bottomAnchor constraintEqualToAnchor:constrainedView.bottomAnchor].active = YES;
+    [nvdv.topAnchor constraintEqualToAnchor:constrainedView.topAnchor].active = YES;
     
     nvdv.targetView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:
                                                           [NSBundle.mainBundle pathForResource:@"newCrosshairs"
                                                                                         ofType:@"png"]]];
     
-    nvdv.targetView.frame = CGRectMake((CGRectGetMinX(constrainedView.frame) +
-                                       CGRectGetMidX(constrainedView.frame)) - (nvdv.targetSize / 2.0),
-                                       (CGRectGetMinY(constrainedView.frame) +
-                                       CGRectGetMidY(constrainedView.frame)) - (nvdv.targetSize / 2.0),
-                                       nvdv.targetSize, nvdv.targetSize);
+    nvdv.targetView.center = CGPointMake(CGRectGetMidX(constrainedView.frame),
+                                         CGRectGetMidY(constrainedView.frame));
     
     nvdv.targetView.userInteractionEnabled = YES;
     [nvdv addSubview:nvdv.targetView];
@@ -124,6 +123,14 @@
         CGContextStrokeEllipseInRect(context, markerFrame);
         CGContextFillPath(context);
     }
+}
+
+- (void)placeTargetInCenter
+{
+    [UIView animateWithDuration:0.25 animations:^{
+        _targetView.center = CGPointMake(CGRectGetMidY(self.frame) + _yOffset,
+                                         CGRectGetMidX(self.frame) - _yOffset);
+    }];
 }
 
 @end

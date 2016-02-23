@@ -20,5 +20,6 @@
                            delegate:(id)delegate;
 
 - (void)clearDigitizerView;
+- (void)placeTargetInCenter;
 
 @end
