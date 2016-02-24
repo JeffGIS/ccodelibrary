@@ -10,7 +10,7 @@
 @property (nonatomic) NSMutableArray *coordinates;
 @property (nonatomic) UIImageView *targetView;
 @property (nonatomic) CGFloat targetSize, markerSize, yOffset;
-@property BOOL clearMarkers, targetDragged, targetTapped, finalDisplayMode;
+@property BOOL clearMarkers, targetTapped, finalDisplayMode;
 
 @end
 
@@ -34,7 +34,6 @@
     
     nvdv.markerSize = 20.0;
     nvdv.clearMarkers = NO;
-    nvdv.targetDragged = NO;
     nvdv.targetTapped = NO;
     nvdv.finalDisplayMode = NO;
     nvdv.delegate = delegate;
@@ -102,7 +101,6 @@
     [gesture setTranslation:CGPointZero
                      inView:self];
     
-    _targetDragged = YES;
     _targetTapped = NO;
     [self setNeedsDisplay];
 }
@@ -143,18 +141,19 @@
         return;
     }
     
-    if (_targetDragged && _coordinates.count)
+    if (_coordinates.count)
     {
         NSValue *lastValue = _coordinates.lastObject;
         CGPoint lastPoint = [_delegate pointForCoordinate:lastValue.MKCoordinateValue];
         
-        CGContextSetStrokeColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
-        CGContextSetLineWidth(context, 12.0);
-        CGContextMoveToPoint(context, lastPoint.x, lastPoint.y);
-        CGContextAddLineToPoint(context, _targetView.center.x, _targetView.center.y);
-        CGContextStrokePath(context);
-        
-        _targetDragged = NO;
+        if (lastPoint.x != _targetView.center.x && lastPoint.y != _targetView.center.y)
+        {
+            CGContextSetStrokeColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
+            CGContextSetLineWidth(context, 12.0);
+            CGContextMoveToPoint(context, lastPoint.x, lastPoint.y);
+            CGContextAddLineToPoint(context, _targetView.center.x, _targetView.center.y);
+            CGContextStrokePath(context);
+        }
     }
     
     for (int i = 1; i < _coordinates.count; i++)
@@ -170,7 +169,7 @@
         CGContextAddLineToPoint(context, point2.x, point2.y);
         CGContextStrokePath(context);
         
-        if (_targetTapped || _finalDisplayMode)
+        if (_finalDisplayMode)
         {
             if (_coordinates.count > 2)
             {
@@ -179,12 +178,7 @@
                 CGPoint point1 = [_delegate pointForCoordinate:value1.MKCoordinateValue];
                 CGPoint point2 = [_delegate pointForCoordinate:value2.MKCoordinateValue];
                 
-                if (_finalDisplayMode)
-                    CGContextSetStrokeColorWithColor(context, UIColor.redColor.CGColor);
-                
-                else
-                    CGContextSetStrokeColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
-                    
+                CGContextSetStrokeColorWithColor(context, UIColor.redColor.CGColor);
                 CGContextSetLineWidth(context, 6.0);
                 CGContextMoveToPoint(context, point1.x, point1.y);
                 CGContextAddLineToPoint(context, point2.x, point2.y);
