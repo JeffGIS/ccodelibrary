@@ -10,6 +10,7 @@
 
 - (CLLocationCoordinate2D)coordinateForPoint:(CGPoint)point;
 - (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)coordinate;
+- (void)digitizerViewDidComplete:(NVDigitizerView *)digitizerView;
 
 @end
 

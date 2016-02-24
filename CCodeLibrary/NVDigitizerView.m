@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "NVDigitizerView.h"
+#import "UserDefaults.h"
 
 @interface NVDigitizerView ()
 
@@ -9,7 +10,7 @@
 @property (nonatomic) NSMutableArray *coordinates;
 @property (nonatomic) UIImageView *targetView;
 @property (nonatomic) CGFloat targetSize, markerSize, yOffset;
-@property BOOL clearMarkers;
+@property BOOL clearMarkers, targetDragged, targetTapped, finalDisplayMode;
 
 @end
 
@@ -24,9 +25,18 @@
     
     NVDigitizerView *nvdv = NVDigitizerView.new;
     nvdv.coordinates = NSMutableArray.array;
-    nvdv.targetSize = 200.0;
-    nvdv.markerSize = 24.0;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        nvdv.targetSize = 200.0;
+    
+    else
+        nvdv.targetSize = 300.0;
+    
+    nvdv.markerSize = 20.0;
     nvdv.clearMarkers = NO;
+    nvdv.targetDragged = NO;
+    nvdv.targetTapped = NO;
+    nvdv.finalDisplayMode = NO;
     nvdv.delegate = delegate;
     nvdv.yOffset = constrainedView.frame.origin.y;
     nvdv.backgroundColor = UIColor.clearColor;
@@ -42,6 +52,8 @@
     nvdv.targetView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:
                                                           [NSBundle.mainBundle pathForResource:@"newCrosshairs"
                                                                                         ofType:@"png"]]];
+    
+    nvdv.targetView.frame = CGRectMake(0.0, 0.0, nvdv.targetSize, nvdv.targetSize);
     
     nvdv.targetView.center = CGPointMake(CGRectGetMidX(constrainedView.frame),
                                          CGRectGetMidY(constrainedView.frame));
@@ -65,11 +77,19 @@
 - (BOOL)pointInside:(CGPoint)point
           withEvent:(UIEvent *)event
 {
-    if (CGRectContainsPoint(_targetView.frame, point))
+    if (CGRectContainsPoint(_targetView.frame, point) || _finalDisplayMode)
         return YES;
     
     else
         return NO;
+}
+
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event
+{
+    if (_finalDisplayMode)
+        [_delegate digitizerViewDidComplete:self];
 }
 
 - (void)targetViewDragged:(UIPanGestureRecognizer *)gesture
@@ -81,12 +101,27 @@
     
     [gesture setTranslation:CGPointZero
                      inView:self];
+    
+    _targetDragged = YES;
+    _targetTapped = NO;
+    [self setNeedsDisplay];
 }
 
 - (void)targetViewTapped:(UITapGestureRecognizer *)gesture
 {
-    CLLocationCoordinate2D coord = [_delegate coordinateForPoint:gesture.view.center];
-    [_coordinates addObject:[NSValue valueWithMKCoordinate:coord]];
+    if (_targetTapped)
+    {
+        _targetView.hidden = YES;
+        _finalDisplayMode = YES;
+    }
+    
+    else
+    {
+        CLLocationCoordinate2D coord = [_delegate coordinateForPoint:gesture.view.center];
+        [_coordinates addObject:[NSValue valueWithMKCoordinate:coord]];
+        _targetTapped = YES;
+    }
+    
     [self setNeedsDisplay];
 }
 
@@ -104,20 +139,70 @@
     {
         CGContextClearRect(context, self.frame);
         _clearMarkers = NO;
+        _targetTapped = NO;
         return;
+    }
+    
+    if (_targetDragged && _coordinates.count)
+    {
+        NSValue *lastValue = _coordinates.lastObject;
+        CGPoint lastPoint = [_delegate pointForCoordinate:lastValue.MKCoordinateValue];
+        
+        CGContextSetStrokeColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
+        CGContextSetLineWidth(context, 12.0);
+        CGContextMoveToPoint(context, lastPoint.x, lastPoint.y);
+        CGContextAddLineToPoint(context, _targetView.center.x, _targetView.center.y);
+        CGContextStrokePath(context);
+        
+        _targetDragged = NO;
+    }
+    
+    for (int i = 1; i < _coordinates.count; i++)
+    {
+        NSValue *value1 = _coordinates[i - 1];
+        NSValue *value2 = _coordinates[i];
+        CGPoint point1 = [_delegate pointForCoordinate:value1.MKCoordinateValue];
+        CGPoint point2 = [_delegate pointForCoordinate:value2.MKCoordinateValue];
+        
+        CGContextSetStrokeColorWithColor(context, UIColor.redColor.CGColor);
+        CGContextSetLineWidth(context, 6.0);
+        CGContextMoveToPoint(context, point1.x, point1.y);
+        CGContextAddLineToPoint(context, point2.x, point2.y);
+        CGContextStrokePath(context);
+        
+        if (_targetTapped || _finalDisplayMode)
+        {
+            if (_coordinates.count > 2)
+            {
+                NSValue *value1 = _coordinates.lastObject;
+                NSValue *value2 = _coordinates.firstObject;
+                CGPoint point1 = [_delegate pointForCoordinate:value1.MKCoordinateValue];
+                CGPoint point2 = [_delegate pointForCoordinate:value2.MKCoordinateValue];
+                
+                if (_finalDisplayMode)
+                    CGContextSetStrokeColorWithColor(context, UIColor.redColor.CGColor);
+                
+                else
+                    CGContextSetStrokeColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
+                    
+                CGContextSetLineWidth(context, 6.0);
+                CGContextMoveToPoint(context, point1.x, point1.y);
+                CGContextAddLineToPoint(context, point2.x, point2.y);
+                CGContextStrokePath(context);
+            }
+        }
     }
     
     for (NSValue *values in _coordinates)
     {
-        CLLocationCoordinate2D coord = values.MKCoordinateValue;
-        CGPoint point = [_delegate pointForCoordinate:coord];
+        CGPoint point = [_delegate pointForCoordinate:values.MKCoordinateValue];
         
         CGRect markerFrame = CGRectMake((point.x - _markerSize / 2.0),
                                         (point.y - _markerSize / 2.0),
                                         _markerSize, _markerSize);
         
-        CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 1.0);
-        CGContextSetRGBFillColor(context, 1.0, 0.0, 0.0, 1.0);
+        CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
+        CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
         CGContextSetLineWidth(context, 2.0);
         CGContextFillEllipseInRect (context, markerFrame);
         CGContextStrokeEllipseInRect(context, markerFrame);
