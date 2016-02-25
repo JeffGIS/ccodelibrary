@@ -11,6 +11,7 @@
 @property (nonatomic) UIImageView *targetView;
 @property (nonatomic) CGFloat targetSize, markerSize, yOffset;
 @property BOOL clearMarkers, targetTapped, finalDisplayMode;
+@property NSInteger touchedItemIndex;
 
 @end
 
@@ -33,6 +34,7 @@
         nvdv.targetSize = 300.0;
     
     nvdv.markerSize = 20.0;
+    nvdv.touchedItemIndex = -1;
     nvdv.clearMarkers = NO;
     nvdv.targetTapped = NO;
     nvdv.finalDisplayMode = NO;
@@ -88,7 +90,55 @@
            withEvent:(UIEvent *)event
 {
     if (_finalDisplayMode)
-        [_delegate digitizerViewDidComplete:self];
+    {
+        _touchedItemIndex = -1;
+        
+        NSMutableArray *pointList = NSMutableArray.array;
+        NSMutableArray *indexList = NSMutableArray.array;
+        UITouch *touch = event.allTouches.anyObject;
+        CGPoint loc = [touch locationInView:self];
+        
+        for (NSValue *values in _coordinates)
+        {
+            CGPoint point = [_delegate pointForCoordinate:values.MKCoordinateValue];
+            
+            if (point.x > (loc.x - _markerSize * 2.0) &&
+                point.x < (loc.x + _markerSize * 2.0) &&
+                point.y > (loc.y - _markerSize * 2.0) &&
+                point.y < (loc.y + _markerSize * 2.0))
+                {
+                    [pointList addObject:[NSValue valueWithCGPoint:point]];
+                    
+                    [indexList addObject:[NSNumber numberWithInteger:
+                                          [_coordinates indexOfObject:values]]];
+                }
+        }
+        
+        CGFloat distance = CGFLOAT_MAX;
+        
+        for (NSValue *values in pointList)
+        {
+            CGPoint point = values.CGPointValue;
+            CGFloat distX = (point.x - loc.x);
+            CGFloat distY = (point.y - loc.y);
+            CGFloat totDist = (distX * distX) + (distY * distY);
+            
+            if (totDist < distance)
+            {
+                NSInteger index = [pointList indexOfObject:values];
+                NSNumber *storedIndex = [indexList objectAtIndex:index];
+                _touchedItemIndex = storedIndex.integerValue;
+                distance = totDist;
+            }
+                
+        }
+        
+        if (_touchedItemIndex > -1)
+            [self setNeedsDisplay];
+            
+        else
+            [_delegate digitizerViewDidComplete:self];
+    }
 }
 
 - (void)targetViewDragged:(UIPanGestureRecognizer *)gesture
@@ -191,13 +241,23 @@
     {
         CGPoint point = [_delegate pointForCoordinate:values.MKCoordinateValue];
         
+        CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
+        CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+        CGContextSetLineWidth(context, 2.0);
+        
         CGRect markerFrame = CGRectMake((point.x - _markerSize / 2.0),
                                         (point.y - _markerSize / 2.0),
                                         _markerSize, _markerSize);
         
-        CGContextSetStrokeColorWithColor(context, UIColor.blackColor.CGColor);
-        CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
-        CGContextSetLineWidth(context, 2.0);
+        if ([_coordinates indexOfObject:values] == _touchedItemIndex)
+        {
+            CGContextSetFillColorWithColor(context, UserDefaults.defaults.green.CGColor);
+            CGContextSetLineWidth(context, 4.0);
+            
+            markerFrame = CGRectMake((point.x - _markerSize), (point.y - _markerSize),
+                                     (_markerSize * 2.0), (_markerSize * 2.0));
+        }
+        
         CGContextFillEllipseInRect (context, markerFrame);
         CGContextStrokeEllipseInRect(context, markerFrame);
         CGContextFillPath(context);
