@@ -1327,7 +1327,7 @@ Exit:
             [self.curbRampData open];
         else
         {
-            if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String))
+            if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0))
                 status = [self loadIntersectionTextToDatabase:toDirectory];
             
             else

@@ -1441,6 +1441,14 @@ IPOINT TranIPOINT (IPOINT InPoint,LPTRANDATA  hTran)
     return RtnPoint;
 }
 
+long FileLength (FILE *fid)
+{
+    fseek(fid, 0, SEEK_END);
+    long totLen = ftell(fid);
+    fseek(fid, 0, SEEK_SET);
+    return totLen;
+}
+
 int fgetstring(char *str, int maxlen, FILE *fid)
 {
     int ln;

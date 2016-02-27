@@ -36,6 +36,7 @@
         andButton:(NSString *)button;
 
 - (void)updateProgress:(CGFloat)progress;
+- (void)show;
 - (void)hide;
 
 @end

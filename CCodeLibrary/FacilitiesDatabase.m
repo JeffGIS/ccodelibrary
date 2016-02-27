@@ -556,7 +556,7 @@ Exit:
         
         else
         {
-            DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String);
+            DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0);
             status = [self loadFacilityTextToDatabase:path];
         }
         

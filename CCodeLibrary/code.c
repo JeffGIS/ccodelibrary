@@ -1263,7 +1263,7 @@ long GSSifilelength(FILE *fid)
 
 long __attribute__ ((noinline)) BigRead(FILE *fid, LPVOID pmem, long len)
 {
-    long didRead = fread(pmem, len, 1, fid);
+    long didRead = fread(pmem, 1,len,  fid);
     return didRead;
 }
 

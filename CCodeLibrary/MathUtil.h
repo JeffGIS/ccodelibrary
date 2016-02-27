@@ -154,5 +154,6 @@ CGRect largestRect (float aspectRatio,int precision,CGRect bounds,int nRects,CGR
 long GSSifilelength(FILE *fid);
 long BigRead(FILE *fid, LPVOID pmem, long len);
 long BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc);
+long FileLength (FILE *fid);
 
 #endif
