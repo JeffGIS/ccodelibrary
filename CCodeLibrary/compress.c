@@ -113,7 +113,8 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
     fseek(FidTF, 0, SEEK_SET);
     fread(&Version, sizeof(short), 1, FidTF);
     fread(&MaxLength, sizeof(int), 1, FidTF);
-    fseek(FidTF, offset, SEEK_SET);
+    if (offset)
+        fseek(FidTF, offset, SEEK_SET);
     BigRead(FidTF, &len, 4);
     
     while (rtn && len > 0)

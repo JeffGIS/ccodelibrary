@@ -392,6 +392,12 @@ didReceiveMessage:(NSString *)message
     BOOL rtn = FALSE;
     CGFloat totLen;
     NSString *toDirectory = [NSString stringWithFormat:@"%@/Reports", _documentsDirectory];
+    [NSFileManager.defaultManager createDirectoryAtPath:toDirectory
+                            withIntermediateDirectories:YES
+                                             attributes:nil
+                                                  error:nil];
+    
+
     int fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:path
                                                                   error:nil].fileSize;
 
