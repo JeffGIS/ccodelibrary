@@ -6,6 +6,6 @@
 #import "CCodeTypes.h"
 
 int GetFileFromTransferFile(HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long MaxLength);
-int DecompressGMZipFile(char *TransferFileName, char *toDirectory);
+int DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,int nfilestodecompress);
 
 #endif

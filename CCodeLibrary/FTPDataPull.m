@@ -41,7 +41,12 @@ static FTPDataPull * _statpull = nil;
 
 {
     int rtn = FTPStatusOK;
-    _toDirectory = toDirectory;
+    
+    if ([toDirectory characterAtIndex:toDirectory.length-1] == '/')
+        _toDirectory = [toDirectory substringToIndex:toDirectory.length-1];
+    else
+        _toDirectory = toDirectory;
+    
     _refreshOption = refreshOption;
     
     if (_createDirectory)
@@ -184,18 +189,15 @@ static FTPDataPull * _statpull = nil;
     
     assert(_fileStream);
     
-    [_fileStream setProperty:@"YES"
-                      forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
-    
     NSURLRequest *request = [NSURLRequest requestWithURL:url
                                              cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                         timeoutInterval:60.0];
+                                         timeoutInterval:30.0];
     assert(request);
     
     _connection = [NSURLConnection connectionWithRequest:request
                                                 delegate:self];
-    
     assert(_connection);
+
     _totalDataReceived = 0;
     _progress = 0.0;
     
