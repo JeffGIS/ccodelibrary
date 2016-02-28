@@ -10,8 +10,9 @@
 @property (nonatomic) NSMutableArray *coordinates;
 @property (nonatomic) UIImageView *targetView;
 @property (nonatomic) CGFloat targetSize, markerSize, yOffset;
-@property BOOL clearMarkers, targetTapped, finalDisplayMode;
+@property BOOL clearMarkers, targetTapped, finalDisplayMode, pathTouched, pathZoomed;
 @property NSInteger touchedItemIndex;
+@property (nonatomic) CGMutablePathRef path;
 
 @end
 
@@ -38,10 +39,13 @@
     nvdv.clearMarkers = NO;
     nvdv.targetTapped = NO;
     nvdv.finalDisplayMode = NO;
+    nvdv.pathTouched = NO;
+    nvdv.pathZoomed = NO;
     nvdv.delegate = delegate;
     nvdv.yOffset = constrainedView.frame.origin.y;
     nvdv.backgroundColor = UIColor.clearColor;
     nvdv.translatesAutoresizingMaskIntoConstraints = NO;
+    nvdv.path = CGPathCreateMutable();
     
     [view addSubview:nvdv];
     
@@ -73,6 +77,11 @@
     [nvdv.targetView addGestureRecognizer:tap];
     
     return nvdv;
+}
+
+- (void)dealloc
+{
+    CGPathRelease(_path);
 }
 
 - (BOOL)pointInside:(CGPoint)point
@@ -135,9 +144,59 @@
         
         if (_touchedItemIndex > -1)
             [self setNeedsDisplay];
-            
+        
+        else if (CGPathContainsPoint(_path, nil, loc, FALSE))
+        {
+            _pathTouched = YES;
+            [self setNeedsDisplay];
+        }
+        
         else
+        {
+            int numPoints = (int)(_coordinates.count + 1);
+            LPDPOINT llpoints = malloc(numPoints * sizeof(DPOINT) + 4);
+            
+            for (int i = 0; i < _coordinates.count; i++)
+            {
+                NSValue *value = _coordinates[i];
+                llpoints[i].x = value.MKCoordinateValue.longitude;
+                llpoints[i].y = value.MKCoordinateValue.latitude;
+            }
+            
+            NSValue *value = _coordinates[0];
+            llpoints[numPoints - 1].x = value.MKCoordinateValue.longitude;
+            llpoints[numPoints - 1].y = value.MKCoordinateValue.latitude;
+            
+            const char *filePath = [NSString stringWithFormat:@"%@/testArea.bin", UserDefaults.defaults.localFilePath].UTF8String;
+            FILE *testAreaFile = fopen(filePath, "wb");
+            
+            fwrite(&numPoints, sizeof(int), 1, testAreaFile);
+            fwrite(llpoints, sizeof(DPOINT), numPoints, testAreaFile);
+            fclose(testAreaFile);
+            free(llpoints);
+            
+            NSLog(@"NVDigitizerView did write test area file to %s", filePath);
+            
             [_delegate digitizerViewDidComplete:self];
+        }
+    }
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event
+{
+    if (_pathTouched)
+    {
+        _pathTouched = NO;
+        
+        if (!_pathZoomed)
+        {
+            [self zoomToExtents];
+            _pathZoomed = YES;
+        }
+        
+        else
+            [self setNeedsDisplay];
     }
 }
 
@@ -182,8 +241,9 @@
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
+    _path = CGPathCreateMutable();
     
-    if (_clearMarkers)
+    if (_clearMarkers || !_coordinates.count)
     {
         CGContextClearRect(context, self.frame);
         _clearMarkers = NO;
@@ -191,7 +251,7 @@
         return;
     }
     
-    if (_coordinates.count)
+    if (!_finalDisplayMode)
     {
         NSValue *lastValue = _coordinates.lastObject;
         CGPoint lastPoint = [_delegate pointForCoordinate:lastValue.MKCoordinateValue];
@@ -206,36 +266,38 @@
         }
     }
     
+    CGContextSetStrokeColorWithColor(context, UIColor.redColor.CGColor);
+    
+    if (_pathTouched)
+        CGContextSetRGBFillColor(context, 0.0, 0.0, 1.0, 0.4);
+    
+    else
+        CGContextSetRGBFillColor(context, 1.0, 1.0, 0.0, 0.4);
+    
+    CGContextSetLineWidth(context, 6.0);
+    NSValue *value = _coordinates[0];
+    CGPoint point = [_delegate pointForCoordinate:value.MKCoordinateValue];
+    CGPathMoveToPoint(_path, nil, point.x, point.y);
+    
     for (int i = 1; i < _coordinates.count; i++)
     {
-        NSValue *value1 = _coordinates[i - 1];
-        NSValue *value2 = _coordinates[i];
-        CGPoint point1 = [_delegate pointForCoordinate:value1.MKCoordinateValue];
-        CGPoint point2 = [_delegate pointForCoordinate:value2.MKCoordinateValue];
-        
-        CGContextSetStrokeColorWithColor(context, UIColor.redColor.CGColor);
-        CGContextSetLineWidth(context, 6.0);
-        CGContextMoveToPoint(context, point1.x, point1.y);
-        CGContextAddLineToPoint(context, point2.x, point2.y);
-        CGContextStrokePath(context);
-        
-        if (_finalDisplayMode)
+        NSValue *value = _coordinates[i];
+        CGPoint point = [_delegate pointForCoordinate:value.MKCoordinateValue];
+        CGPathAddLineToPoint(_path, nil, point.x, point.y);
+    }
+    
+    if (_finalDisplayMode)
+    {
+        if (_coordinates.count > 2)
         {
-            if (_coordinates.count > 2)
-            {
-                NSValue *value1 = _coordinates.lastObject;
-                NSValue *value2 = _coordinates.firstObject;
-                CGPoint point1 = [_delegate pointForCoordinate:value1.MKCoordinateValue];
-                CGPoint point2 = [_delegate pointForCoordinate:value2.MKCoordinateValue];
-                
-                CGContextSetStrokeColorWithColor(context, UIColor.redColor.CGColor);
-                CGContextSetLineWidth(context, 6.0);
-                CGContextMoveToPoint(context, point1.x, point1.y);
-                CGContextAddLineToPoint(context, point2.x, point2.y);
-                CGContextStrokePath(context);
-            }
+            NSValue *value = _coordinates.firstObject;
+            CGPoint point = [_delegate pointForCoordinate:value.MKCoordinateValue];
+            CGPathAddLineToPoint(_path, nil, point.x, point.y);
         }
     }
+    
+    CGContextAddPath(context, _path);
+    CGContextDrawPath(context, kCGPathFillStroke);
     
     for (NSValue *values in _coordinates)
     {
@@ -270,6 +332,46 @@
         _targetView.center = CGPointMake(CGRectGetMidY(self.frame) + _yOffset,
                                          CGRectGetMidX(self.frame) - _yOffset);
     }];
+}
+
+- (void)zoomToExtents
+{
+    CGFloat minLat = 0.0, maxLat = 0.0, minLon = 0.0, maxLon = 0.0;
+    
+    for (NSValue *values in _coordinates)
+    {
+        CLLocationCoordinate2D coord = values.MKCoordinateValue;
+        
+        if (minLat == 0.0)
+            minLat = coord.latitude;
+        
+        else
+            minLat = MIN(minLat, coord.latitude);
+        
+        if (maxLat == 0.0)
+            maxLat = coord.latitude;
+        
+        else
+            maxLat = MAX(maxLat, coord.latitude);
+        
+        if (minLon == 0.0)
+            minLon = coord.longitude;
+        
+        else
+            minLon = MIN(minLon, coord.longitude);
+        
+        if (maxLon == 0.0)
+            maxLon = coord.longitude;
+        
+        else
+            maxLon = MAX(maxLon, coord.longitude);
+    }
+    
+    CLLocationCoordinate2D nearLeft = CLLocationCoordinate2DMake(minLat, minLon);
+    CLLocationCoordinate2D farRight = CLLocationCoordinate2DMake(maxLat, maxLon);
+    
+    [_delegate zoomMapToNearLeft:nearLeft
+                        farRight:farRight];
 }
 
 @end
