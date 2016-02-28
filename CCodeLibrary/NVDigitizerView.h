@@ -12,6 +12,9 @@
 - (CGPoint)pointForCoordinate:(CLLocationCoordinate2D)coordinate;
 - (void)digitizerViewDidComplete:(NVDigitizerView *)digitizerView;
 
+- (void)zoomMapToNearLeft:(CLLocationCoordinate2D)nearLeft
+                 farRight:(CLLocationCoordinate2D)farRight;
+
 @end
 
 @interface NVDigitizerView : UIView
