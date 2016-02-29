@@ -10,7 +10,7 @@
 @property (nonatomic) NSMutableArray *coordinates;
 @property (nonatomic) UIImageView *targetView;
 @property (nonatomic) CGFloat targetSize, markerSize, yOffset;
-@property BOOL clearMarkers, targetTapped, finalDisplayMode, pathTouched, pathZoomed;
+@property BOOL clearMarkers, targetTapped, finalDisplayMode, pathTouched;
 @property NSInteger touchedItemIndex;
 @property (nonatomic) CGMutablePathRef path;
 
@@ -40,7 +40,6 @@
     nvdv.targetTapped = NO;
     nvdv.finalDisplayMode = NO;
     nvdv.pathTouched = NO;
-    nvdv.pathZoomed = NO;
     nvdv.delegate = delegate;
     nvdv.yOffset = constrainedView.frame.origin.y;
     nvdv.backgroundColor = UIColor.clearColor;
@@ -75,6 +74,13 @@
                                                                           action:@selector(targetViewTapped:)];
     
     [nvdv.targetView addGestureRecognizer:tap];
+    
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]
+                                               initWithTarget:nvdv
+                                               action:@selector(targetViewLongPressed:)];
+    
+    
+    [nvdv.targetView addGestureRecognizer:longPress];
     
     return nvdv;
 }
@@ -188,15 +194,8 @@
     if (_pathTouched)
     {
         _pathTouched = NO;
-        
-        if (!_pathZoomed)
-        {
-            [self zoomToExtents];
-            _pathZoomed = YES;
-        }
-        
-        else
-            [self setNeedsDisplay];
+        [self setNeedsDisplay];
+        [self zoomToExtents];
     }
 }
 
@@ -230,6 +229,21 @@
     }
     
     [self setNeedsDisplay];
+}
+
+- (void)targetViewLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (_coordinates.count)
+    {
+        NSValue *lastValue = _coordinates.lastObject;
+        CGPoint lastPoint = [_delegate pointForCoordinate:lastValue.MKCoordinateValue];
+        _targetTapped = YES;
+        
+        [UIView animateWithDuration:0.25 animations:^{
+            _targetView.center = lastPoint;
+            [self setNeedsDisplay];
+        }];
+    }
 }
 
 - (void)clearDigitizerView
