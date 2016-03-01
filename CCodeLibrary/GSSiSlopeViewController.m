@@ -234,10 +234,8 @@ static int COUNT=100;
 {
     CGPoint pvCenter = CGPointMake(384.0, ((_startCancelButton.center.y + _unableButton.center.y) / 2.0));
     
-    _progressView = [[NVProgressView alloc] initWithCenter:pvCenter
-                                                     width:688.0
-                                                trackColor:UIColor.blackColor
-                                             progressColor:UIColor.whiteColor];
+    _progressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
+                                                 progressColor:UIColor.whiteColor];
     
     _progressView.progress = 0.0;
     [self.view addSubview:_progressView];
