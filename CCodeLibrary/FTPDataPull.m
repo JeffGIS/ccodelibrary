@@ -439,10 +439,12 @@ didReceiveResponse:(NSURLResponse *)response
                    statusString:@"Stopped"];
     _statpull = nil;
 }
-- (void) GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
+
+- (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
 {
     [self stopReceiveWithStatus:FTPStatusUserCancel
                    statusString:@"Canceled by User"];
 
 }
+
 @end

@@ -21,6 +21,7 @@ enum {
 @property (nonatomic) Reachability *reachability;
 @property (nonatomic) long fileSize, totBytesWritten;
 @property (nonatomic) int ii;
+@property id <GSSiPopoverViewDelegate> savePopoverDelegate;
 
 @end
 
@@ -70,6 +71,12 @@ enum {
         return NO;
     }
     
+    if (_popover)
+    {
+        _savePopoverDelegate = _popover.delegate;
+        _popover.delegate = self;
+    }
+    
     return [self startSend:fileName];
 }
 
@@ -82,7 +89,6 @@ enum {
 - (void)sendDidStopWithStatus:(int)status
                  statusString:(NSString *)statusString
 {
-    
     if (!statusString)
     {
         assert(_filePath);
@@ -201,6 +207,9 @@ enum {
 - (void)stopSendWithStatus:(int)status
               statusString:(NSString *)statusString
 {
+    if (_popover)
+        _popover.delegate = _savePopoverDelegate;
+    
     if (_networkStream)
     {
         [_networkStream removeFromRunLoop:NSRunLoop.currentRunLoop
@@ -409,6 +418,12 @@ enum {
     
     [self stopSendWithStatus:FTPStatusStop
                    statusString:@"Stopped"];
+}
+
+- (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
+{
+    [self stopSendWithStatus:FTPStatusUserCancel
+                statusString:@"Canceled by User"];
 }
 
 @end
