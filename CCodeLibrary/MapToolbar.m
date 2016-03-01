@@ -13,7 +13,7 @@
 @property (nonatomic) UISegmentedControl *mapTypeSC, *platSC;
 @property (nonatomic) CGSize size;
 @property BOOL configChanged, myLocationEnabled, platOverride;
-@property (nonatomic) CGFloat buttonSize, switchHeight, switchWidth, SCHeight, mapTypeSCWidth, mapTypeSCVertWidth;
+@property (nonatomic) CGFloat buttonSize, switchHeight, switchWidth, SCHeight, mapTypeSCWidth;
 @property (nonatomic) CGFloat buttonMargin, switchMargin, SCMargin, platSCWidth, platSCVertWidth;
 @property (nonatomic) UIProgressView *progressView;
 @property (nonatomic) NSTimer *helpBackgroundToggleTimer;
@@ -67,9 +67,9 @@
                            value:NO];
     
     //set internal sizes for all devices
-    mt.buttonSize = 47.0, mt.SCHeight = 29.0, mt.mapTypeSCWidth = 128.0;
+    mt.buttonSize = 47.0, mt.SCHeight = 29.0, mt.mapTypeSCWidth = 76.0;
     mt.buttonMargin = 8.0, mt.switchMargin = 16.0, mt.SCMargin = 17.0, mt.platSCWidth = 196.0;
-    mt.mapTypeSCVertWidth = 76.0, mt.platSCVertWidth = 112.0;
+    mt.platSCVertWidth = 112.0;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
@@ -184,11 +184,7 @@
     //progress view added by default
     [mt addSubview:mt.progressView];
     
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        mt.mapTypeSC = [[UISegmentedControl alloc] initWithItems:@[@"Stnd", @"Hybd"]];
-    
-    else
-        mt.mapTypeSC = [[UISegmentedControl alloc] initWithItems:@[@"Standard", @"Hybrid"]];
+    mt.mapTypeSC = [[UISegmentedControl alloc] initWithItems:@[@"Stnd", @"Hybd"]];
     
     [mt setupSegControl:mt.mapTypeSC
    selectedSegmentIndex:0
@@ -266,8 +262,8 @@
    selectedSegmentIndex:(NSInteger)selectedSegmentIndex
                selector:(SEL)selector
 {
-    segControl.backgroundColor = UIColor.whiteColor;
-    segControl.tintColor = UIColor.blackColor;
+    segControl.backgroundColor = UIColor.blackColor;
+    segControl.tintColor = UIColor.whiteColor;
     segControl.layer.cornerRadius = 4.0;
     segControl.layer.borderColor = UIColor.blackColor.CGColor;
     segControl.layer.borderWidth = 2.0;
@@ -560,9 +556,9 @@
     
     if (_wantMapType)
     {
-        _mapTypeSC.frame = CGRectMake(_buttonMargin, yCount, _mapTypeSCVertWidth, _SCHeight);
+        _mapTypeSC.frame = CGRectMake(_buttonMargin, yCount, _mapTypeSCWidth, _SCHeight);
         yCount += (_buttonMargin + _SCHeight);
-        xCount = max(xCount, (_buttonMargin * 2.0) + _mapTypeSCVertWidth);
+        xCount = max(xCount, (_buttonMargin * 2.0) + _mapTypeSCWidth);
     }
     
     if (_wantPlat)
@@ -588,12 +584,6 @@
     
     for (UIView *views in self.subviews)
         views.center = CGPointMake(self.center.x, views.center.y);
-    
-    [_mapTypeSC setTitle:@"Stnd"
-       forSegmentAtIndex:0];
-    
-    [_mapTypeSC setTitle:@"Hybd"
-       forSegmentAtIndex:1];
     
     [_platSC setTitle:@"F"
     forSegmentAtIndex:0];
@@ -684,12 +674,6 @@
                                          self.frame.size.width - (_buttonMargin * 2.0),
                                          _progressView.frame.size.height);
     }
-    
-    [_mapTypeSC setTitle:@"Standard"
-       forSegmentAtIndex:0];
-    
-    [_mapTypeSC setTitle:@"Hybrid"
-       forSegmentAtIndex:1];
     
     [_platSC setTitle:@"Full"
            forSegmentAtIndex:0];
@@ -1227,13 +1211,13 @@
         
         if (_wantMapType)
         {
-            _mapTypeSC.frame = CGRectMake(_buttonMargin, yCount, _mapTypeSCVertWidth, _SCHeight);
+            _mapTypeSC.frame = CGRectMake(_buttonMargin, yCount, _mapTypeSCWidth, _SCHeight);
             
             if (![self.subviews containsObject:_mapTypeSC])
                 [self addSubview:_mapTypeSC];
             
             yCount += (_buttonMargin + _SCHeight);
-            xCount = max(xCount, (_buttonMargin * 2.0) + _mapTypeSCVertWidth);
+            xCount = max(xCount, (_buttonMargin * 2.0) + _mapTypeSCWidth);
         }
         
         else
