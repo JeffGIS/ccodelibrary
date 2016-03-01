@@ -61,8 +61,10 @@ enum {
     {
         if (_delegate)
         {
-            [_delegate FTPdidComplete:FTPStatusConnectionFailed
-                             filePath:nil];
+            [_delegate FTPPushDidComplete:_dataType
+                               withStatus:FTPStatusConnectionFailed
+                          andStatusString:@"Host not reachable"
+                                 filePath:nil];
         }
         
         return NO;
@@ -91,8 +93,10 @@ enum {
     
     if (_delegate)
     {
-        [_delegate FTPdidComplete:status
-                         filePath:_filePath];
+        [_delegate FTPPushDidComplete:_dataType
+                           withStatus:status
+                      andStatusString:statusString
+                             filePath:_filePath];
     }
 }
 
