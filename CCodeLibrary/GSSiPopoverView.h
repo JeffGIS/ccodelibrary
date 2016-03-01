@@ -15,12 +15,11 @@
 @interface GSSiPopoverView : UIView
 
 @property (nonatomic, weak) id <GSSiPopoverViewDelegate> delegate;
-@property (nonatomic) UIView *popover;
-@property (nonatomic) UIView *fromView;
+@property (nonatomic) UIView *popover, *fromView;
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UIButton *popoverCancel;
-@property (nonatomic) UILabel *popoverLabel;
-@property (nonatomic) BOOL inShowAfter;
+@property (nonatomic) UILabel *popoverLabel, *progressLabel;
+@property BOOL inShowAfter;
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic) int showTime;
 @property (nonatomic) NSString *title;
@@ -29,7 +28,7 @@
 - (void)popoverCancel:(UIButton *)sender;
 
 - (void)showAfter:(CGFloat)seconds
-        withTitle:(NSString*)title;
+        withTitle:(NSString *)title;
 
 - (void)showAfter:(CGFloat)seconds
         withTitle:(NSString *)title

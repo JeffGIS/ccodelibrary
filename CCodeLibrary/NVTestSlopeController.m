@@ -143,10 +143,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
 
 - (void)setupProgressView
 {
-    _progressView = [[NVProgressView alloc] initWithCenter:CGPointMake(384.0, 786.0)
-                                                     width:688.0
-                                                trackColor:UIColor.blackColor
-                                             progressColor:UIColor.whiteColor];
+    _progressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
+                                                 progressColor:UIColor.whiteColor];
     
     _progressView.progress = 0.0;
     [self.view addSubview:_progressView];
