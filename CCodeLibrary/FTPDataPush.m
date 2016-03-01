@@ -160,6 +160,7 @@ enum {
     [_fileStream open];
     
     CFWriteStreamRef ftpStream = CFWriteStreamCreateWithFTPURL(NULL, (__bridge CFURLRef) url);
+    
     if (!ftpStream)
     {
         NSAssert(0, @"Unable to open ftpstream");
@@ -185,7 +186,7 @@ enum {
     _networkStream.delegate = self;
     
     [_networkStream scheduleInRunLoop:NSRunLoop.currentRunLoop
-                                  forMode:NSDefaultRunLoopMode];
+                              forMode:NSDefaultRunLoopMode];
     
     [_networkStream open];
     CFRelease(ftpStream);
@@ -203,7 +204,7 @@ enum {
     if (_networkStream)
     {
         [_networkStream removeFromRunLoop:NSRunLoop.currentRunLoop
-                                      forMode:NSDefaultRunLoopMode];
+                                  forMode:NSDefaultRunLoopMode];
         
         _networkStream.delegate = nil;
         [_networkStream close];
