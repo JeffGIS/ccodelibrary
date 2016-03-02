@@ -20,7 +20,7 @@
     else
         NSLog(@"Error Obtaining File System Info (Domain:%@, Code:%ld)", error.domain, (long)error.code);
     
-    return freeSpace;
+    return (freeSpace - 209715200);
 }
 
 @end
