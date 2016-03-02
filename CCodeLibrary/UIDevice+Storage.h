@@ -5,6 +5,6 @@
 
 @interface UIDevice (Storage)
 
-+ (NSUInteger)availableStorageSpace;
++ (uint64_t)availableStorageSpace;
 
 @end
