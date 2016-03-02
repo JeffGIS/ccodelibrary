@@ -398,8 +398,8 @@ didReceiveMessage:(NSString *)message
                                                   error:nil];
     
 
-    int fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:path
-                                                                  error:nil].fileSize;
+    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:path
+                                                                       error:nil].fileSize;
 
     _popoverView.title = [NSString stringWithFormat:@"Loading update %li",(long)_myLastUpdate+1];
     if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0))

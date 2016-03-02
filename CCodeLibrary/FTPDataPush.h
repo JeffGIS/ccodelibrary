@@ -18,7 +18,7 @@
 
 @end
 
-@interface FTPDataPush : NSObject <NSStreamDelegate>
+@interface FTPDataPush : NSObject <NSStreamDelegate, GSSiPopoverViewDelegate>
 
 @property (nonatomic, weak) id <FTPDataPushDelegate> delegate;
 @property (nonatomic, strong, readwrite) NSURLConnection *connection;

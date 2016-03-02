@@ -82,8 +82,8 @@ Next:
         goto Next;
     }
 
-    int outFileSize = [NSFileManager.defaultManager attributesOfItemAtPath:outFile
-                                                                       error:nil].fileSize;
+    int outFileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:outFile
+                                                                          error:nil].fileSize;
     *pTotSize = totSize;
     return totFiles;
 }
