@@ -67,6 +67,8 @@
 		69DE24291C76319B00680B00 /* NVTextVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69DE24261C76311D00680B00 /* NVTextVC.h */; };
 		69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E8E6681C66802F00CB26CB /* NSData+CRC.m */; };
 		69E8E66A1C66809E00CB26CB /* NSData+CRC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E8E6671C66802F00CB26CB /* NSData+CRC.h */; };
+		69EB2C2A1C8755C100E1F21E /* UIDevice+Storage.m in Sources */ = {isa = PBXBuildFile; fileRef = 69EB2C291C8755C100E1F21E /* UIDevice+Storage.m */; };
+		69EB2C2B1C87579E00E1F21E /* UIDevice+Storage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69EB2C281C8755C100E1F21E /* UIDevice+Storage.h */; };
 		69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */; };
 		69F5B2301BC5F6CD00119212 /* NVDestinationOptions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */; };
 		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
@@ -309,6 +311,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69EB2C2B1C87579E00E1F21E /* UIDevice+Storage.h in CopyFiles */,
 				6986AF851C7CBD820059DD1B /* NVDigitizerView.h in CopyFiles */,
 				69DE24291C76319B00680B00 /* NVTextVC.h in CopyFiles */,
 				69D5EFB61C7239EC004CE1C0 /* NVCalendarVC.h in CopyFiles */,
@@ -499,6 +502,8 @@
 		69DE24271C76311D00680B00 /* NVTextVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextVC.m; sourceTree = "<group>"; };
 		69E8E6671C66802F00CB26CB /* NSData+CRC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CRC.h"; sourceTree = "<group>"; };
 		69E8E6681C66802F00CB26CB /* NSData+CRC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CRC.m"; sourceTree = "<group>"; };
+		69EB2C281C8755C100E1F21E /* UIDevice+Storage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+Storage.h"; sourceTree = "<group>"; };
+		69EB2C291C8755C100E1F21E /* UIDevice+Storage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+Storage.m"; sourceTree = "<group>"; };
 		69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDestinationOptions.h; sourceTree = "<group>"; };
 		69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDestinationOptions.m; sourceTree = "<group>"; };
 		A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVHeadingViewController.h; sourceTree = "<group>"; };
@@ -771,6 +776,8 @@
 			children = (
 				A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */,
 				A99F9B861B1E06E400CA8DA6 /* UIApplication+VersionBuild.m */,
+				69EB2C281C8755C100E1F21E /* UIDevice+Storage.h */,
+				69EB2C291C8755C100E1F21E /* UIDevice+Storage.m */,
 				693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */,
 				693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */,
 				A90D1FC11AE6510F00CBFEE7 /* UIView+ColorOfPoint.h */,
@@ -1333,6 +1340,7 @@
 				EBC01D2F1BED1C8C0004C751 /* vearth.c in Sources */,
 				EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */,
 				EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */,
+				69EB2C2A1C8755C100E1F21E /* UIDevice+Storage.m in Sources */,
 				EBC01D181BED1C8C0004C751 /* jup404.c in Sources */,
 				EBC01D111BED1C8C0004C751 /* diurpx.c in Sources */,
 				EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */,
