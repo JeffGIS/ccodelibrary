@@ -55,9 +55,9 @@
 		699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */; };
 		69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B36F191BCB0F30004C4B69 /* NVDateRange.m */; };
 		69B36F1B1BCB1C8F004C4B69 /* NVDateRange.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69B36F181BCB0F30004C4B69 /* NVDateRange.h */; };
+		69C183431C87A4B1000833FC /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 69C183421C87A4B1000833FC /* .gitignore */; };
 		69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C441A91BB474B200D026A7 /* NVTabBarEdit.m */; };
 		69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C441A81BB474B200D026A7 /* NVTabBarEdit.h */; };
-		69C8DB4E1C515BFB0062AE84 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 69C8DB4D1C515BFB0062AE84 /* .gitignore */; };
 		69D5EFB21C7237AB004CE1C0 /* NVCalendarVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFB11C7237AB004CE1C0 /* NVCalendarVC.m */; };
 		69D5EFB51C7237FD004CE1C0 /* NVCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFB41C7237FD004CE1C0 /* NVCalendarView.m */; };
 		69D5EFB61C7239EC004CE1C0 /* NVCalendarVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D5EFB01C7237AB004CE1C0 /* NVCalendarVC.h */; };
@@ -487,9 +487,9 @@
 		699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineCompression.h; sourceTree = "<group>"; };
 		69B36F181BCB0F30004C4B69 /* NVDateRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDateRange.h; sourceTree = "<group>"; };
 		69B36F191BCB0F30004C4B69 /* NVDateRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDateRange.m; sourceTree = "<group>"; };
+		69C183421C87A4B1000833FC /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		69C441A81BB474B200D026A7 /* NVTabBarEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTabBarEdit.h; sourceTree = "<group>"; };
 		69C441A91BB474B200D026A7 /* NVTabBarEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTabBarEdit.m; sourceTree = "<group>"; };
-		69C8DB4D1C515BFB0062AE84 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		69D5EFB01C7237AB004CE1C0 /* NVCalendarVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalendarVC.h; sourceTree = "<group>"; };
 		69D5EFB11C7237AB004CE1C0 /* NVCalendarVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCalendarVC.m; sourceTree = "<group>"; };
 		69D5EFB31C7237FD004CE1C0 /* NVCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalendarView.h; sourceTree = "<group>"; };
@@ -1023,6 +1023,7 @@
 		EBA2E451199527660085B2E0 = {
 			isa = PBXGroup;
 			children = (
+				69C183421C87A4B1000833FC /* .gitignore */,
 				EBA2E45F199527660085B2E0 /* CCodeLibrary */,
 				EBA2E473199527660085B2E0 /* CCodeLibraryTests */,
 				EBA2E45B199527660085B2E0 /* Products */,
@@ -1110,7 +1111,6 @@
 		EBA2E460199527660085B2E0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				69C8DB4D1C515BFB0062AE84 /* .gitignore */,
 				EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -1270,7 +1270,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				69C8DB4E1C515BFB0062AE84 /* .gitignore in Resources */,
+				69C183431C87A4B1000833FC /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
