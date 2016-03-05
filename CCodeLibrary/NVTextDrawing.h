@@ -6,6 +6,8 @@
 
 @interface NVTextDrawing : NSObject
 
+@property NSInteger processingID;
+
 + (void)drawText:(NSString *)text
        inContext:(CGContextRef)context
    withinPolygon:(LPDPOINT)pPoints
@@ -15,7 +17,8 @@
     withinBounds:(LPMNMXCORD)pBounds
         fontSize:(CGFloat)fontSize
      minFontSize:(CGFloat)minFontSize
-       textColor:(UIColor *)textColor;
+       textColor:(UIColor *)textColor
+    processingID:(NSInteger)processingID;
 
 + (void)drawText:(NSString *)text
    inRotatedRect:(CGContextRef)context
