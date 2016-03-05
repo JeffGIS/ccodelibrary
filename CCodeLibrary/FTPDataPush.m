@@ -388,6 +388,11 @@ enum {
     _password = @"GSSi";
     self.port = @"14147";
     
+    _ftpSite = @"192.168.254.39";
+    _username = @"GSSiLocal";
+    _password = @"GSSi";
+    _port = @"21";
+    
     _ftpSite2 = @"thmgis.com";
     _username2 = @"waypoint";
     _password2 = @"pointway4*";
