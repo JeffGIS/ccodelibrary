@@ -224,6 +224,9 @@
 		EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4DB2571B9600AA008157D8 /* PointInArea.m */; };
 		EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB4DB2561B9600AA008157D8 /* PointInArea.h */; };
 		EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */; };
+		EB568F391C8C9BAB00C45ACE /* CompressDecompress.m in Sources */ = {isa = PBXBuildFile; fileRef = EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */; };
+		EB568F3A1C8CA52D00C45ACE /* CompressDecompress.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */; };
+		EB568F3B1C8CA70E00C45ACE /* CompressDecompress.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB568F371C8C9BAB00C45ACE /* CompressDecompress.h */; };
 		EB7C6A161BD158D8006E985B /* StringFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7C6A151BD158D8006E985B /* StringFunctions.m */; };
 		EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB7C6A141BD158D8006E985B /* StringFunctions.h */; };
 		EB86BFA71B0B62520074728E /* minilzo.c in Sources */ = {isa = PBXBuildFile; fileRef = EB86BFA51B0B62520074728E /* minilzo.c */; };
@@ -311,6 +314,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB568F3B1C8CA70E00C45ACE /* CompressDecompress.h in CopyFiles */,
+				EB568F3A1C8CA52D00C45ACE /* CompressDecompress.m in CopyFiles */,
 				69EB2C2B1C87579E00E1F21E /* UIDevice+Storage.h in CopyFiles */,
 				6986AF851C7CBD820059DD1B /* NVDigitizerView.h in CopyFiles */,
 				69DE24291C76319B00680B00 /* NVTextVC.h in CopyFiles */,
@@ -640,6 +645,8 @@
 		EB4DB2571B9600AA008157D8 /* PointInArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInArea.m; sourceTree = "<group>"; };
 		EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPlaceAreaFile.h; sourceTree = "<group>"; };
 		EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPlaceAreaFile.m; sourceTree = "<group>"; };
+		EB568F371C8C9BAB00C45ACE /* CompressDecompress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CompressDecompress.h; path = ../CompressDecompress.h; sourceTree = "<group>"; };
+		EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CompressDecompress.m; path = ../CompressDecompress.m; sourceTree = "<group>"; };
 		EB7C6A141BD158D8006E985B /* StringFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringFunctions.h; sourceTree = "<group>"; };
 		EB7C6A151BD158D8006E985B /* StringFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringFunctions.m; sourceTree = "<group>"; };
 		EB86BFA51B0B62520074728E /* minilzo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minilzo.c; sourceTree = "<group>"; };
@@ -1070,6 +1077,8 @@
 				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
 				EB1A69741999A6A9005A1CCB /* CRAPI.h */,
 				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
+				EB568F371C8C9BAB00C45ACE /* CompressDecompress.h */,
+				EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */,
 				EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */,
 				EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */,
 				A99C893B1AEDE1B900A0856F /* GSSiDefs.h */,
@@ -1409,6 +1418,7 @@
 				A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */,
 				69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */,
 				EB0E4FFD1C6288BF00849766 /* DispersePoint.m in Sources */,
+				EB568F391C8C9BAB00C45ACE /* CompressDecompress.m in Sources */,
 				A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */,
 				EBC01D2D1BED1C8C0004C751 /* trnsit.c in Sources */,
 				EBC01D281BED1C8C0004C751 /* rstar.c in Sources */,
