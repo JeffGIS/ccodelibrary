@@ -3,6 +3,7 @@
 
 #import "GSSiPopoverView.h"
 #import "FTPDataPull.h"
+#import "CRAPI.h"
 
 #define MIN_SHOWTIME 2
 
@@ -178,6 +179,7 @@
 - (void)show
 {
     [_fromView addSubview:self];
+    CRAPI.sharedInstance.blockShake = YES;
     
     [self.leadingAnchor constraintEqualToAnchor:_fromView.leadingAnchor].active = YES;
     [self.trailingAnchor constraintEqualToAnchor:_fromView.trailingAnchor].active = YES;
@@ -193,6 +195,7 @@
 - (void)hide
 {
     [_timer invalidate];
+    CRAPI.sharedInstance.blockShake = NO;
     
     if (self.superview)
     {
