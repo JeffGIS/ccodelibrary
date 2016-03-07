@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, FTPDataType)
     GetDatabaseSettingCurbRamp,
     GetDatabaseSettingCrimes,
     GetDatabaseSettingMapleGrove,
+    GetDatabaseSettingNVMetro,
 };
 
 @class FTPDataPull;
