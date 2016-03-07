@@ -15,19 +15,18 @@
                     outputTo:(NSString *)outFile
                          totalSize:(NSInteger*)pTotSize
 {
-    NSFileManager *fileMgr;
-    NSString *entry;
-    NSString *documentsDir;
+    NSString *entry = @"";
+    NSString *documentsDir = @"";
     NSDirectoryEnumerator *enumerator;
     BOOL isDirectory;
-    NSInteger fileSize;
+    NSInteger fileSize = 0;
     NSInteger totFiles = 0, totSize = 0;
     BOOL rtn;
     BOOL first = TRUE;
     BOOL all = FALSE;
     
     // Create file manager
-    fileMgr = [NSFileManager defaultManager];
+    NSFileManager *fileMgr = NSFileManager.defaultManager;
     
     // Path to documents directory
     documentsDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
@@ -60,20 +59,27 @@ Next:
         else
         {
             totFiles++;
-            fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:entry
-                                                                      error:nil].fileSize;
+            fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:entry
+                                                                                 error:nil].fileSize;
+            
             totSize += fileSize;
-            outLine = [NSString stringWithFormat:@"%s\t%li",entry.UTF8String,fileSize];
+            outLine = [NSString stringWithFormat:@"%s\t%ld", entry.UTF8String, (long)fileSize];
+            
             if (first)
                 rtn = [[NSString stringWithUTF8String:outLine.UTF8String] writeToFile:outFile
                                                                          atomically:YES
                                                                            encoding:NSUTF8StringEncoding
                                                                               error:nil];
             else
-                [CRAPI.sharedInstance appendString:outLine toFile:outFile];
+            {
+                [CRAPI.sharedInstance appendString:outLine
+                                            toFile:outFile];
+            }
+            
             first = FALSE;
         }
     }
+    
     if (all)
     {
         inPath = CRAPI.sharedInstance.sharedFilePath;
