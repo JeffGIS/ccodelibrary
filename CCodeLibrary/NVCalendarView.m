@@ -129,130 +129,130 @@
 
 - (void)setupCells
 {
-    NVCalendarCell *a1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *a1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *a2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *a2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *a3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *a3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *a4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *a4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *a5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *a5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *a6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *a6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *a7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *a7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *b1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *b1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *b2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *b2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *b3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *b3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *b4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *b4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *b5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *b5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *b6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *b6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *b7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *b7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *c1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *c1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *c2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *c2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *c3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *c3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *c4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *c4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *c5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *c5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *c6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *c6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *c7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *c7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *d1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *d1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *d2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *d2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *d3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *d3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *d4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *d4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *d5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *d5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *d6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *d6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *d7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *d7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *e1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *e1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *e2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *e2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *e3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *e3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *e4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *e4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *e5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *e5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *e6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *e6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *e7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *e7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *f1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *f1 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *f2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *f2 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *f3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *f3 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *f4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *f4 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *f5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *f5 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *f6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *f6 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
-    NVCalendarCell *f7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%li", (_index - _startDay)]
+    NVCalendarCell *f7 = [[NVCalendarCell alloc] initWithText:[NSString stringWithFormat:@"%ld", (long)(_index - _startDay)]
                                                           tag:_index numDays:_numDays];_index++;
     
     [self addCellToView:a1];
