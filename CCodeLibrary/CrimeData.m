@@ -119,6 +119,21 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         [self close];
     return rtn;
 }
+- (int) maxID
+{
+    int rtn = -1;
+    NSString *query = [NSString stringWithFormat:@"SELECT max(id) FROM OFFENSEXY"];
+    
+    sqlite3_stmt *statement = NULL;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        rtn = sqlite3_column_int(statement, 0);
+    }
+    SQLOK(sqlite3_finalize(statement), _database);
+    return rtn;
+}
 
 - (NSInteger) lastUpdate
 {
@@ -141,6 +156,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     }
     if (opened)
         [self close];
+    rtn = 567;
     return rtn;
 }
 
@@ -281,7 +297,7 @@ didReceiveMessage:(NSString *)message
             {
                 _myLastUpdate = [self lastUpdate];
                 _serversLastUpdate = message.integerValue;
-                
+                _serversLastUpdate =570;
                 if (_updateTimer)
                     [_updateTimer invalidate];
                 
@@ -387,6 +403,61 @@ didReceiveMessage:(NSString *)message
     }
 }
 
+-(int) idForCnum:(int)cnum
+          andSeq:(int)seq
+{
+    int rtn = -1;
+    NSString *query = [NSString stringWithFormat:@"SELECT id FROM OFFENSEXY WHERE ControlNbr = %li AND OffenseOrder = %i",(long)cnum, seq ];
+    sqlite3_stmt *statement = NULL;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        rtn = sqlite3_column_int(statement, 0);
+    }
+    SQLOK(sqlite3_finalize(statement),_database);
+    if (rtn < 0)
+    {
+        rtn = [self maxID] + 1;
+    }
+    
+    return rtn;
+}
+-(void) getIdForUpdate:(LPSTR)str
+{
+    static char fromString[32], toString[32];
+    
+    int cnum;
+    int  seq;
+    
+    LPSTR pLoc = strstr (str,"OFFENSEXY VALUES(|");
+    if (pLoc)
+    {
+        pLoc += 18;
+        LPSTR pEnd = strchr (pLoc,'|');
+        if (pEnd)
+        {
+            *pEnd = 0;
+            strncpy (fromString,pLoc-1,sizeof(fromString));
+            strcat (fromString,"|");
+            *pEnd++ = '|';
+            pLoc = pEnd + 1;
+            pEnd = strchr (pLoc,'\'');
+            *(pEnd-1) = 0;
+            sscanf (pLoc,"%i,%i",&cnum,&seq);
+            *(pEnd-1) = ',';
+            int id = [self idForCnum:cnum
+                              andSeq:seq];
+            sprintf (toString,"%i",id);
+            REPLAC(str, fromString, toString, INPUTBUFSIZE);
+        }
+
+    }
+    else
+    {
+        REPLAC(str, fromString, toString, INPUTBUFSIZE);
+    }
+}
 -(BOOL) loadUpdate:(NSString *)path
 {
     BOOL rtn = FALSE;
@@ -412,6 +483,7 @@ didReceiveMessage:(NSString *)message
         [self startTransaction];
         while (_keepGoing && fgetstring(str, (INPUTBUFSIZE - 2), fid))
         {
+            [self getIdForUpdate:str];
             [self executeCmd:str];
             [_popoverView updateProgress:ftell(fid) / totLen];
         }

@@ -116,7 +116,10 @@
     NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, _currentGeoidValue];
     return uploadDirectory;
 }
-
+-(void) setBlockShake:(BOOL)blockShake
+{
+    _blockShake = blockShake;
+}
 - (void)intersectionInit:(MPIntersection *)currentIntersection
 {
     currentIntersection.intID = -1;
