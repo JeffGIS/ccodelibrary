@@ -88,7 +88,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (strong, nonatomic) MapToolbar *mapToolbar;
 @property (strong, nonatomic) UIViewController *mapVC;
 @property (nonatomic) CGFloat mapToolbarProgress;
-@property BOOL showPolylineForBounds, maskBoundsForBounds;
+@property BOOL showPolylineForBounds, maskBoundsForBounds, blockShake;
 @property (nonatomic, copy) NSString *offsetForBounds;
 @property (nonatomic) int offsetForBoundsInMeters;
 @property (nonatomic, copy) NSString *selectBoundaryFromMapType;

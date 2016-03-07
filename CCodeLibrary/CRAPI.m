@@ -26,6 +26,7 @@
         _allowedZooms[2] = 19;
         _maxDevices = 32;
         _controlledInterface = TRUE;
+        _blockShake = NO;
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.png", _documentsDirectory];
         //_documentsDirectory = UserDefaults.defaults.sharedFilePath;
