@@ -72,6 +72,13 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
                                                                    error:nil].fileSize;
+        if (_fileSize > 0)
+        {
+            [self startTransaction];
+            [self executeCmd:"CREATE INDEX IF NOT EXISTS OFFENSEXY_KEY ON OFFENSEXY (ControlNbr, OffenseOrder)"];
+            [self commitTransaction];
+        }
+
         return TRUE;
     }
     return FALSE;
@@ -115,6 +122,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         }
         SQLOK(sqlite3_finalize(statement), _database);
     }
+
     if (opened)
         [self close];
     return rtn;
@@ -156,7 +164,8 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     }
     if (opened)
         [self close];
-    rtn = 567;
+    if (!rtn)
+        rtn = 576;
     return rtn;
 }
 
@@ -297,7 +306,7 @@ didReceiveMessage:(NSString *)message
             {
                 _myLastUpdate = [self lastUpdate];
                 _serversLastUpdate = message.integerValue;
-                _serversLastUpdate =570;
+                //_serversLastUpdate =570;
                 if (_updateTimer)
                     [_updateTimer invalidate];
                 
