@@ -1113,6 +1113,7 @@ LPSTR REPLAC(LPSTR STRING, LPSTR OLD, LPSTR NEW, int MAXLEN)
     IBEG = STRING;
     IDIFF = NEWLEN - OLDLEN;
     
+    if (OLDLEN)
     while (*IBEG)
     {
         IBEG = strstr(IBEG, OLD);
