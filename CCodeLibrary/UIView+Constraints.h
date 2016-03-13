@@ -11,4 +11,6 @@
                     top:(CGFloat)top
                  bottom:(CGFloat)bottom;
 
+- (void)removeAllConstraints;
+
 @end
