@@ -132,7 +132,9 @@
         CensusData *cend = [[CensusData alloc]init];
         for (AreaData *ad in _areaInfo)
         {
-            
+            NSString * value = [cend value:_adjustValue
+                               forAreaType:_areaType
+                                   withKey:ad.areaID];
         }
     }
 }
@@ -141,6 +143,8 @@
 {
     
     NSInteger maxCount = 0;
+    
+    [self adjustCounts];
     for (AreaData *ad in _areaInfo)
     {
         maxCount = max (maxCount,ad.count);

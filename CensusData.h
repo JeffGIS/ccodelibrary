@@ -7,7 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <sqlite3.h>
 
 @interface CensusData : NSObject
+
+@property sqlite3 *database;
+@property (atomic) BOOL isOpen;
+@property (nonatomic, copy) NSString *documentsDirectory;
+@property (nonatomic, copy) NSString *fileName;
+@property (nonatomic, copy) NSString *path;
+@property NSInteger fileSize;
+
+-(NSString*) value:(NSString*)valueName
+       forAreaType:(NSString*) areaType
+           withKey:(NSString*)areaID;
 
 @end
