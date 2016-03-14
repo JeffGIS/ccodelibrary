@@ -45,12 +45,13 @@
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
 		6986AF841C7C119E0059DD1B /* NVDigitizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6986AF831C7C119E0059DD1B /* NVDigitizerView.m */; };
 		6986AF851C7CBD820059DD1B /* NVDigitizerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6986AF821C7C119E0059DD1B /* NVDigitizerView.h */; };
-		698A012E1BE44A2F00758BA6 /* UIView+StackedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */; };
 		698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698F987B1C10B96B009F2F01 /* YTPlayerView.m */; };
 		6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 6992A8871BE0040C00FB53F0 /* NSData+Compression.m */; };
 		6992A8891BE00AB100FB53F0 /* NSData+Compression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6992A8861BE0040C00FB53F0 /* NSData+Compression.h */; };
 		6998225E1C6904E4003476DD /* NVDocumentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6998225D1C6904E4003476DD /* NVDocumentManager.m */; };
 		6998225F1C690A38003476DD /* NVDocumentManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6998225C1C6904E4003476DD /* NVDocumentManager.h */; };
+		69987CF71C94683F000EC26F /* UIView+Constraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 69987CF61C94683F000EC26F /* UIView+Constraints.m */; };
+		69987CF81C946890000EC26F /* UIView+Constraints.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69987CF51C94683F000EC26F /* UIView+Constraints.h */; };
 		699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */ = {isa = PBXBuildFile; fileRef = 699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */; };
 		699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */; };
 		69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B36F191BCB0F30004C4B69 /* NVDateRange.m */; };
@@ -315,6 +316,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69987CF81C946890000EC26F /* UIView+Constraints.h in CopyFiles */,
 				EB568F3B1C8CA70E00C45ACE /* CompressDecompress.h in CopyFiles */,
 				EB568F3A1C8CA52D00C45ACE /* CompressDecompress.m in CopyFiles */,
 				69EB2C2B1C87579E00E1F21E /* UIDevice+Storage.h in CopyFiles */,
@@ -481,14 +483,14 @@
 		697B37701B94B7D60066978B /* NVTextDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextDrawing.m; sourceTree = "<group>"; };
 		6986AF821C7C119E0059DD1B /* NVDigitizerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDigitizerView.h; sourceTree = "<group>"; };
 		6986AF831C7C119E0059DD1B /* NVDigitizerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDigitizerView.m; sourceTree = "<group>"; };
-		698A012C1BE44A2F00758BA6 /* UIView+StackedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+StackedView.h"; sourceTree = "<group>"; };
-		698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+StackedView.m"; sourceTree = "<group>"; };
 		698F987A1C10B96B009F2F01 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTPlayerView.h; path = ../YTPlayerView.h; sourceTree = "<group>"; };
 		698F987B1C10B96B009F2F01 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTPlayerView.m; path = ../YTPlayerView.m; sourceTree = "<group>"; };
 		6992A8861BE0040C00FB53F0 /* NSData+Compression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Compression.h"; sourceTree = "<group>"; };
 		6992A8871BE0040C00FB53F0 /* NSData+Compression.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Compression.m"; sourceTree = "<group>"; };
 		6998225C1C6904E4003476DD /* NVDocumentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDocumentManager.h; sourceTree = "<group>"; };
 		6998225D1C6904E4003476DD /* NVDocumentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDocumentManager.m; sourceTree = "<group>"; };
+		69987CF51C94683F000EC26F /* UIView+Constraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Constraints.h"; sourceTree = "<group>"; };
+		69987CF61C94683F000EC26F /* UIView+Constraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Constraints.m"; sourceTree = "<group>"; };
 		699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PolylineCompression.c; sourceTree = "<group>"; };
 		699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineCompression.h; sourceTree = "<group>"; };
 		69B36F181BCB0F30004C4B69 /* NVDateRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDateRange.h; sourceTree = "<group>"; };
@@ -792,8 +794,8 @@
 				693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */,
 				A90D1FC11AE6510F00CBFEE7 /* UIView+ColorOfPoint.h */,
 				A90D1FBB1AE6184800CBFEE7 /* UIView+ColorOfPoint.m */,
-				698A012C1BE44A2F00758BA6 /* UIView+StackedView.h */,
-				698A012D1BE44A2F00758BA6 /* UIView+StackedView.m */,
+				69987CF51C94683F000EC26F /* UIView+Constraints.h */,
+				69987CF61C94683F000EC26F /* UIView+Constraints.m */,
 				6992A8861BE0040C00FB53F0 /* NSData+Compression.h */,
 				6992A8871BE0040C00FB53F0 /* NSData+Compression.m */,
 				69E8E6671C66802F00CB26CB /* NSData+CRC.h */,
@@ -1337,6 +1339,7 @@
 				6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */,
 				6943041F1C3351E20077EC9F /* NVColor.m in Sources */,
 				A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */,
+				69987CF71C94683F000EC26F /* UIView+Constraints.m in Sources */,
 				EBC01D191BED1C8C0004C751 /* kepler.c in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,
 				69D5EFB51C7237FD004CE1C0 /* NVCalendarView.m in Sources */,
@@ -1375,7 +1378,6 @@
 				A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */,
 				EBC01D151BED1C8C0004C751 /* epsiln.c in Sources */,
 				EBC01D0C1BED1C8C0004C751 /* conjunct.c in Sources */,
-				698A012E1BE44A2F00758BA6 /* UIView+StackedView.m in Sources */,
 				EBC01D2B1BED1C8C0004C751 /* sun.c in Sources */,
 				EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */,
 				69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */,
