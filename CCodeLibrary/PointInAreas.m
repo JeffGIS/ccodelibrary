@@ -12,6 +12,7 @@
 
 #import "PointInAreas.h"
 #import "PointInArea.h"
+#import "CensusData.h"
 
 @interface AreaData : NSObject
 @property NSString * areaID;
@@ -124,8 +125,21 @@
     _loadPass++;
 }
 
+-(void) adjustCounts
+{
+    if (_adjustValue)
+    {
+        CensusData *cend = [[CensusData alloc]init];
+        for (AreaData *ad in _areaInfo)
+        {
+            
+        }
+    }
+}
+
 - (void)createDisplayColors
 {
+    
     NSInteger maxCount = 0;
     for (AreaData *ad in _areaInfo)
     {
@@ -273,6 +287,10 @@
         if ([ad.areaID isEqualToString:areaID])
         {
             rtn = ad.count;
+            if (_adjustValue)
+            {
+                
+            }
             break;
         }
     }

@@ -85,6 +85,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property NSInteger fromDate, toDate;
 @property NSInteger crimeMode;
 @property (nonatomic, copy) NSString *crimeTarget;
+@property (nonatomic, copy) NSString *crimeAdjustValue;
 @property (strong, nonatomic) MapToolbar *mapToolbar;
 @property (strong, nonatomic) UIViewController *mapVC;
 @property (nonatomic) CGFloat mapToolbarProgress;

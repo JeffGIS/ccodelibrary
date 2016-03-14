@@ -23,7 +23,8 @@
 - (CGColorRef)colorForArea:(NSString*)areaID;
 - (double)countForArea:(NSString*)areaID;
 
-
+@property NSString * areaType;
+@property NSString * adjustValue;
 @property int loadPass;
 @property int numAreas;
 @property NSMutableArray* areaInfo;
