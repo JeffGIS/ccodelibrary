@@ -58,7 +58,7 @@
     sqlite3_stmt *statement = NULL;
     
     NSString * value=@"";
-    NSString *query = [NSString stringWithFormat:@"SELECT '%@' FROM CENSUSBLOCKDATA WHERE GEOG_UNIT ='%@'",valueName,areaID];
+    NSString *query = [NSString stringWithFormat:@"SELECT [%@] FROM CENSUS%@DATA WHERE GEOG_UNIT ='%@'",valueName,areaType,areaID];
     BOOL opened = [self open];
     
     
