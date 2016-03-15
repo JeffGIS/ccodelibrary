@@ -105,25 +105,10 @@
 
 - (void)setupTextView
 {
-    UIFont *font = [UIFont fontWithName:@"CourierNewPS-BoldMT"
-                                   size:_fontSize];
-    
-    _text = [_text stringByReplacingOccurrencesOfString:@"\t"
-                                             withString:@"    "];
-    
-    CGSize textSize = sizeOfString(_text, font);
-    
-    _textView = [[UITextView alloc] initWithFrame:CGRectMake(0.0, 0.0, textSize.width, textSize.height)];
-    _textView.text = _text;
-    _textView.font = font;
-    _textView.editable = NO;
-    _textView.scrollEnabled = NO;
-
     _scrollView = [[UIScrollView alloc] init];
     _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
     _scrollView.layer.borderColor = UIColor.blackColor.CGColor;
     _scrollView.layer.borderWidth = 2.0;
-    _scrollView.contentSize = textSize;
     _scrollView.directionalLockEnabled = YES;
     
     [self.view addSubview:_scrollView];
@@ -139,6 +124,25 @@
     
     [_scrollView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor
                                              constant:-_margin].active = YES;
+    
+    [self.view layoutSubviews];
+    
+    UIFont *font = [UIFont fontWithName:@"CourierNewPS-BoldMT"
+                                   size:_fontSize];
+    
+    _text = [_text stringByReplacingOccurrencesOfString:@"\t"
+                                             withString:@"    "];
+    
+    CGSize textSize = sizeOfString(_text, font);
+    textSize.height = MAX(_scrollView.frame.size.height, textSize.height);
+    textSize.width = MAX(_scrollView.frame.size.width, textSize.width);
+    _scrollView.contentSize = textSize;
+    
+    _textView = [[UITextView alloc] initWithFrame:CGRectMake(0.0, 0.0, textSize.width, textSize.height)];
+    _textView.text = _text;
+    _textView.font = font;
+    _textView.editable = NO;
+    _textView.scrollEnabled = NO;
     
     [_scrollView addSubview:_textView];
 }
