@@ -24,6 +24,7 @@
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.backgroundColor = UIColor.clearColor;
         _fromView = fromView;
+        _hideAtCancel = YES;
         
         _font = [UIFont boldSystemFontOfSize:40.0];
         
@@ -168,7 +169,8 @@
     if (_delegate)
         [_delegate GSSiPopoverViewdidCancel:self];
     
-    [self removeFromSuperview];
+    if (_hideAtCancel)
+        [self removeFromSuperview];
 }
 
 - (void)showFromTimer:(NSTimer *)timer
@@ -268,6 +270,12 @@
 - (void)setTitle:(NSString *)title
 {
     _popoverLabel.text = title;
+}
+
+- (void)setCancelButtonTitle:(NSString *)title
+{
+    [_popoverCancel setTitle:title
+                    forState:UIControlStateNormal];
 }
 
 - (void)dealloc

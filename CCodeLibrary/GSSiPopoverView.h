@@ -19,10 +19,10 @@
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UIButton *popoverCancel;
 @property (nonatomic) UILabel *popoverLabel, *progressLabel;
-@property BOOL inShowAfter;
+@property BOOL inShowAfter, hideAtCancel;
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic) int showTime;
-@property (nonatomic) NSString *title;
+@property (nonatomic) NSString *title, *cancelButtonTitle;
 
 - (id)initWithView:(UIView *)fromView;
 - (void)popoverCancel:(UIButton *)sender;
