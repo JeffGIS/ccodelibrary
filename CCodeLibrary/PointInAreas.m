@@ -19,6 +19,7 @@
 @property CGFloat colorDef;
 @property int color;
 @property double count;
+@property double areaInPixels;
 @property CGColorRef displayColor;
 @end
 
@@ -185,6 +186,8 @@
             
         case 1:
         {
+            CGPoint	BeginPoint, LastPoint;
+            double	Area=0,Perim=0;
             AreaData *ad = [self findByAreaID:areaID];
             if (!ad)
                 break;
@@ -194,11 +197,21 @@
                 CGPoint pt = [self projectPointToContext:&pPoints[i] from:0];
                 
                 if (i == 0)
+                {
+                    BeginPoint = pt;
                     CGContextMoveToPoint(_context, pt.x, pt.y);
-                
+                }
                 else
+                {
                     CGContextAddLineToPoint(_context, pt.x, pt.y);
-            }
+                    //Perim += ldistp(LastPoint,*lpDpoints);
+                    Area += ( LastPoint.y - pt.y) * (pt.x + LastPoint.x) / 2;
+                }
+                LastPoint = pt;
+           }
+            //Perim += ldistp(LastPoint,BeginPoint);
+            Area += (LastPoint.y - BeginPoint.y) * (BeginPoint.x + LastPoint.x) / 2;  
+            ad.areaInPixels = fabs (Area);
             
             if (!CGContextIsPathEmpty(_context))
             {
@@ -216,7 +229,7 @@
             
         }
     }
-            return rtn;
+    return rtn;
     
 }
 
