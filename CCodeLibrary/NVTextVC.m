@@ -15,10 +15,6 @@
 
 @end
 
-@interface NVTextVC () <UIScrollViewDelegate>
-
-@end
-
 @implementation NVTextVC
 
 - (id)initWithText:(NSString *)text
@@ -30,6 +26,9 @@
     {
         _text = text;
         _fontSize = fontSize;
+        _zoomingEnabled = YES;
+        _minFontSize = 8.0, _maxFontSize = 64.0;
+        _clampTextViewToText = YES;
     }
     
     return self;
@@ -139,8 +138,13 @@
                                              withString:@"    "];
     
     CGSize textSize = sizeOfString(_text, font);
-    textSize.height = MAX(_scrollView.frame.size.height, textSize.height);
-    textSize.width = MAX(_scrollView.frame.size.width, textSize.width);
+    
+    if (!_clampTextViewToText)
+    {
+        textSize.height = MAX(_scrollView.frame.size.height, textSize.height);
+        textSize.width = MAX(_scrollView.frame.size.width, textSize.width);
+    }
+    
     _scrollView.contentSize = textSize;
     
     _textView = [[UITextView alloc] initWithFrame:CGRectMake(0.0, 0.0, textSize.width, textSize.height)];
@@ -150,6 +154,42 @@
     _textView.scrollEnabled = NO;
     
     [_scrollView addSubview:_textView];
+    
+    if (_zoomingEnabled)
+    {
+        UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(textWasPinched:)];
+        
+        [_textView addGestureRecognizer:pinch];
+    }
+}
+
+- (void)textWasPinched:(UIPinchGestureRecognizer *)gesture
+{
+    _fontSize = floorf(((_fontSize * gesture.scale) * 10.0) + 0.5) / 10.0;
+    _fontSize = MIN(_fontSize, _maxFontSize);
+    _fontSize = MAX(_fontSize, _minFontSize);
+    
+    UIFont *font = [UIFont fontWithName:@"CourierNewPS-BoldMT"
+                                   size:_fontSize];
+    
+    if (font != _textView.font)
+    {
+        CGSize textSize = sizeOfString(_text, font);
+        
+        if (!_clampTextViewToText)
+        {
+            textSize.height = MAX(_scrollView.frame.size.height, textSize.height);
+            textSize.width = MAX(_scrollView.frame.size.width, textSize.width);
+        }
+        
+        _scrollView.contentSize = textSize;
+        
+        _textView.frame = CGRectMake(0.0, 0.0, textSize.width, textSize.height);
+        _textView.font = font;
+        
+        gesture.scale = 1.0;
+    }
 }
 
 - (void)dismiss:(UIButton *)button
@@ -173,11 +213,6 @@ CGSize sizeOfString(NSString *string, UIFont *font)
     CGFloat stringWidth = (longestLine * (font.pointSize * 0.6));
     
     return CGSizeMake(stringWidth, stringHeight);
-}
-
-- (void)scrollViewDidZoom:(UIScrollView *)scrollView
-{
-    
 }
 
 @end

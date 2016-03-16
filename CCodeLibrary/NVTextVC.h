@@ -5,6 +5,9 @@
 
 @interface NVTextVC : UIViewController
 
+@property (nonatomic) CGFloat minFontSize, maxFontSize;
+@property BOOL zoomingEnabled, clampTextViewToText;
+
 - (id)initWithText:(NSString *)text
           fontSize:(CGFloat)fontSize;
 
