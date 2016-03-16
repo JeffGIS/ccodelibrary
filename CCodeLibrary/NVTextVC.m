@@ -15,6 +15,10 @@
 
 @end
 
+@interface NVTextVC () <UIScrollViewDelegate>
+
+@end
+
 @implementation NVTextVC
 
 - (id)initWithText:(NSString *)text
@@ -110,6 +114,7 @@
     _scrollView.layer.borderColor = UIColor.blackColor.CGColor;
     _scrollView.layer.borderWidth = 2.0;
     _scrollView.directionalLockEnabled = YES;
+    _scrollView.backgroundColor = UIColor.darkGrayColor;
     
     [self.view addSubview:_scrollView];
     
@@ -168,6 +173,11 @@ CGSize sizeOfString(NSString *string, UIFont *font)
     CGFloat stringWidth = (longestLine * (font.pointSize * 0.6));
     
     return CGSizeMake(stringWidth, stringHeight);
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
+    
 }
 
 @end
