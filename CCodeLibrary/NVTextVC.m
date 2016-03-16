@@ -27,7 +27,8 @@
         _text = text;
         _fontSize = fontSize;
         _zoomingEnabled = YES;
-        _minFontSize = 8.0, _maxFontSize = 64.0;
+        _minFontSize = (_fontSize / 2.0);
+        _maxFontSize = (_fontSize * 2.0);
         _clampTextViewToText = YES;
     }
     
