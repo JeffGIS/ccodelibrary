@@ -39,5 +39,6 @@
           andSize:(CGFloat)size;
 - (int)pickDispersedPoint:(LLPOINT *)pt
             highlightList:(NSMutableArray*)hlist;
++ (NSArray *)getDispersedPoints;
 
 @end

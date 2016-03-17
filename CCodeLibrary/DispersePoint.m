@@ -408,5 +408,56 @@ POINT AddjustPointLoc (POINT Point,float Size,int Sequence)
 #endif
 }
 
++ (NSArray *)getDispersedPoints
+{
+    NSMutableArray *array=[[NSMutableArray alloc]init];
+    sqlite3_stmt *statement = NULL;
+    DPOINT p2;
+    int minsym = 0;
+    NSInteger time = 0;
+    DispersePoint *dp=[[DispersePoint alloc]init];
+    
+    BOOL opened = [dp open];
+    if (![dp restoreTran])
+    {
+        if (opened)
+            [dp close];
+        return 0;
+    }
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT ControlNbr, DispersedX, DispersedY,Time,Offense,Symbol FROM DISPERSE"];
+    
+    
+    SQLOK(sqlite3_prepare_v2(dp.database, query.UTF8String, -1, &statement, 0), dp.database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int refno = sqlite3_column_int(statement, 0);
+        p2.x = sqlite3_column_double(statement, 1);
+        p2.y = sqlite3_column_double(statement, 2);
+        time = sqlite3_column_int(statement, 3);
+        LPSTR offense = (LPSTR)sqlite3_column_text(statement, 4);
+        int symbol = sqlite3_column_int(statement, 5);
+        PickedItem *pi = [[PickedItem alloc]init];
+        pi.itemType = PTCrime;
+        pi.symbol = minsym;
+        pi.screenPoint = p2;
+        pi.pickedPoint = TranDPOINT(&p2, dp.pTranViewtoLL);
+        pi.symbolName = @"CRIME";
+        pi.refno = refno;
+        pi.time  = time;
+        pi.identifier = [NSString stringWithUTF8String:offense];
+        [array addObject:pi];
+       
+    }
+    
+    SQLOK(sqlite3_finalize(statement), dp.database);
+    
+    if (opened)
+        [dp close];
+    return array;
+}
+
+
 
 @end

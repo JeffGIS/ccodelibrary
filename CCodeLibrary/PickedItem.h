@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, PickItemTypes) {
 @property NSString *symbolName;
 @property NSInteger time;
 @property DPOINT pickedPoint;
+@property DPOINT screenPoint;
 
 + (PickedItem *) nearestPickedItem:(NSMutableArray *)highlightList;
 
