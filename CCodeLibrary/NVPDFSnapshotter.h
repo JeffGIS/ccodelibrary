@@ -6,6 +6,7 @@
 
 @interface NVPDFSnapshotter : NSObject
 
-+ (NSData *)pdfFromViews:(NSArray *)views;
++ (NSData *)pdfFromViews:(NSArray *)views
+                 reports:(NSArray *)reports;
 
 @end
