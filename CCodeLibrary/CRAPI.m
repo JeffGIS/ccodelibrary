@@ -111,6 +111,10 @@
 {
     _showPlats = showPlats;
 }
+-(void) setCrimeAdjustValue:(NSString *)crimeAdjustValue
+{
+    _crimeAdjustValue = crimeAdjustValue;
+}
 - (NSString *)uploadDirectory
 {
     NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, _currentGeoidValue];

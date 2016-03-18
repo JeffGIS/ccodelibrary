@@ -140,7 +140,7 @@
     }
 }
 
-- (void)createDisplayColors
+- (void)createDisplayColors:(PointInAreas*)piasAdjust
 {
     
     NSInteger maxCount = 0;

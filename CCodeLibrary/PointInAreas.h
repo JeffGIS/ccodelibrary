@@ -18,7 +18,7 @@
       polyPartLen:(int*)polyPartLen
            points:(LPDPOINT)points;
 - (void) areasLoaded;
-- (void)createDisplayColors;
+- (void)createDisplayColors:(PointInAreas*)piasAdjust;
 - (int)DPointInArea:(DPOINT *)dPoint;
 - (CGColorRef)colorForArea:(NSString*)areaID;
 - (double)countForArea:(NSString*)areaID;
