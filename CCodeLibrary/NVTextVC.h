@@ -11,4 +11,6 @@
 - (id)initWithText:(NSString *)text
           fontSize:(CGFloat)fontSize;
 
+CGSize sizeOfString(NSString *string, UIFont *font);
+
 @end
