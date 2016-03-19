@@ -162,7 +162,7 @@ static int ii;
             CGColorRef blackRef;
             if (_nColorBytes > 1)
             {
-                CGFloat black[4] = {0, 0, 0, 0};
+                CGFloat black[4] = {0, 0, 0, 1};
                 blackRef = CGColorCreate(_colorSpace, black);
             }
             else
@@ -196,11 +196,11 @@ static int ii;
         loc *= 4;
         _bitmapData[loc+3] = 0;
         iArea = *(unsigned int*)&_bitmapData[loc];
-/*        unsigned int bitmapValue1 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes];
-        unsigned int bitmapValue2 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+1];
-        unsigned int bitmapValue3 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+2];
-        unsigned int bitmapValue4 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+3];
-        ii=1;*/
+        unsigned int bitmapValue1 = (unsigned int)_bitmapData[loc];
+        unsigned int bitmapValue2 = (unsigned int)_bitmapData[loc+1];
+        unsigned int bitmapValue3 = (unsigned int)_bitmapData[loc+2];
+        unsigned int bitmapValue4 = (unsigned int)_bitmapData[loc+3];
+        ii=1;
     }
     else
         iArea = (unsigned int)_bitmapData[loc];
@@ -222,7 +222,7 @@ static int ii;
                                    withKey:ad.areaID];
             ad.value = [cvalue doubleValue];
             if (ad.areaInPixels)
-                ad.valuePerPixel = ad.valuePerPixel/ad.areaInPixels;
+                ad.valuePerPixel = ad.value/ad.areaInPixels;
             
         }
         [cend close:opened];
@@ -246,20 +246,24 @@ static int ii;
 - (void)createDisplayColors:(PointInAreas*)piasAdjust
 {
     
-    NSInteger maxCount = 0;
+    CGFloat maxCount = 0;
+    CGFloat maxValue = 0;
     
     if (piasAdjust)
         [piasAdjust adjustCounts:self];
     for (AreaData *ad in _areaInfo)
     {
+        if (ad.value)
+            ad.count /= ad.value;
         maxCount = max (maxCount,ad.count);
+        maxValue = max (maxValue,ad.value);
     }
     for (AreaData *ad in _areaInfo)
     {
         CGFloat clr = 0;
         if (maxCount)
             clr = 1.0 - ad.count/maxCount;
-        CGFloat color[2] = {clr, 0.7};
+        CGFloat color[4] = {clr,clr,clr, 0.7};
         ad.displayColor = CGColorCreate(_colorSpace, color);
     }
 
