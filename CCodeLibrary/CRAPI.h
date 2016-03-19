@@ -7,7 +7,6 @@
 #import "Facility.h"
 #import "UserDefaults.h"
 #import "Colors.h"
-//#import "NVAlertView.h"
 #import "MapToolbar.h"
 #import "NVDocumentManager.h"
 
@@ -26,7 +25,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
     CHOROPLETH,
 };
 
-@interface CRAPI : NSObject //<NVAlertViewDelegate>
+@interface CRAPI : NSObject
 
 @property (nonatomic) int currentModule;
 @property (nonatomic, copy) NSString *documentsDirectory;
@@ -46,11 +45,10 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic, copy) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
 @property (nonatomic, copy) NSString *googleKey;
-@property (nonatomic) BOOL refreshMap;
+@property BOOL refreshMap, doCompassCalibrate, showParcelBoundary;
 @property (nonatomic) NSArray *placesArray;
 @property (nonatomic) NSArray *currentPlaceArray;
 @property (nonatomic, copy) NSString *placeAreaFile;
-@property (nonatomic) BOOL doCompassCalibrate;
 @property (nonatomic, copy) NSString *calibrateLength;
 @property (nonatomic, copy) NSString *calibrateHeight;
 @property (nonatomic) NSMutableArray *assignediPadsArray;
@@ -69,7 +67,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property int parcelShadingOption;
 @property int parcelTextOption;
 @property int showTileInfo;
-@property BOOL showParcelBoundary;
 @property (nonatomic, copy) NSString *currentOverallBoundaryName;
 @property (nonatomic, copy) NSString *currentOverallBoundaryType;
 @property int currentOverallBoundaryRefno;
@@ -90,8 +87,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (strong, nonatomic) MapToolbar *mapToolbar;
 @property (strong, nonatomic) UIViewController *mapVC;
 @property (nonatomic) CGFloat mapToolbarProgress;
-@property BOOL showPolylineForBounds, maskBoundsForBounds;
-@property (nonatomic) BOOL blockShake;
+@property BOOL showPolylineForBounds, maskBoundsForBounds, becameActive;
 @property (nonatomic, copy) NSString *offsetForBounds;
 @property (nonatomic) int offsetForBoundsInMeters;
 @property (nonatomic, copy) NSString *selectBoundaryFromMapType;
@@ -121,12 +117,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (BOOL)intersectionAlreadyCompleted:(int)intID;
 - (NSString *)getOutputDirectory;
 
-- (NSString *)getImageFileforIntersection:(int)intersectionID
-                                    atLat:(double)lat
-                                   andLon:(double)lon
-                                  andZoom:(int)zoom
-                             forceRefresh:(BOOL)refresh;
-
 - (UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
                                 heading:(CGFloat)heading
                                   pitch:(CGFloat)pitch
@@ -135,8 +125,8 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (BOOL)getPlaceIntersectionFile:(id)intFile
                         forGeoid:(int)geoid;
 
-- (NSString *)directoryFromPath:(NSString*)path
-                       andName:(NSString*)name
+- (NSString *)directoryFromPath:(NSString *)path
+                       andName:(NSString *)name
                         create:(BOOL)create;
 
 - (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt
@@ -145,20 +135,24 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (IBOUNDS)boundsFromRect:(CGRect)rect
       usingTransformation:(LPTRANDATA)pTranBMPToW;
 
-- (dbounds) getPickApBoundsAtPoint:(LLPOINT *)pt;
-- (dbounds) getPixelPickApBoundsAtPoint:(DPOINT*)pt;
+- (dbounds)getPickApBoundsAtPoint:(LLPOINT *)pt;
+- (dbounds)getPixelPickApBoundsAtPoint:(DPOINT *)pt;
 
-- (dbounds) getBoundsAtPoint:(CLLocationCoordinate2D*)pt
-                     andDist:(CGFloat)meters;
-- (void) clearOutputDirectory;
-- (BOOL) appendString:(NSString*)str toFile:(NSString*)file;
-- (NSInteger) adjustNextRefno:(NSInteger)refno;
+- (dbounds)getBoundsAtPoint:(CLLocationCoordinate2D *)pt
+                    andDist:(CGFloat)meters;
+
+- (void)clearOutputDirectory;
+
+- (BOOL)appendString:(NSString *)str
+              toFile:(NSString *)file;
+
+- (NSInteger)adjustNextRefno:(NSInteger)refno;
 - (void)processPlacesArray:(NSUInteger) row;
 - (void)loadiPadParametersForGeoid:(int)geoid;
 - (void)setiPadParametersFromGeoid:(int)geoid;
 - (void)deleteImagesForAllZooms:(int)intersectionID;
 
--(void) updateProgress:(NSInteger)tot
+- (void)updateProgress:(NSInteger)tot
                current:(NSInteger)current
                  range:(int)iRange
              numRanges:(int)nRanges;

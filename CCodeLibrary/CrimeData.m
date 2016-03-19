@@ -353,12 +353,16 @@ didReceiveMessage:(NSString *)message
     if (_myLastUpdate >= _serversLastUpdate)
     {
         _popoverView.title = @"Data up-to-date";
+        
         [_popoverView.popoverCancel setTitle:@"OK"
                         forState:UIControlStateNormal];
+        
         _popoverView.progressView.hidden = YES;
+        _popoverView.progressLabel.hidden = YES;
         [_popoverView show];
         return;
     }
+    
     [_popoverView showAfter:0.0
                   withTitle:[NSString stringWithFormat:@"Get update %i",(int)_myLastUpdate+1]];
     

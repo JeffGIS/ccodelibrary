@@ -26,10 +26,8 @@
         _allowedZooms[2] = 19;
         _maxDevices = 32;
         _controlledInterface = TRUE;
-        _blockShake = NO;
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.png", _documentsDirectory];
-        //_documentsDirectory = UserDefaults.defaults.sharedFilePath;
         _crimeMode = PINMAP;
         _crimeTarget = @"Minneapolis Neighborhoods";
         _docManager = NVDocumentManager.new;
@@ -95,35 +93,38 @@
     if (geoid == 2743000)//MPLS
         self.controlledInterface = NO;
 }
+
 -(void)setCurrentOverallBoundaryName:(NSString *)currentOverallBoundaryName
 {
     _currentOverallBoundaryName = currentOverallBoundaryName;
 }
+
 -(void)setCurrentZoom:(CGFloat)zoom
 {
     _currentZoom = zoom;
 }
+
 -(void)setKeepProcessing:(int)kp
 {
     _keepProcessing = kp;
 }
+
 -(void)setShowPlats:(int)showPlats
 {
     _showPlats = showPlats;
 }
+
 -(void) setCrimeAdjustValue:(NSString *)crimeAdjustValue
 {
     _crimeAdjustValue = crimeAdjustValue;
 }
+
 - (NSString *)uploadDirectory
 {
     NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, _currentGeoidValue];
     return uploadDirectory;
 }
--(void) setBlockShake:(BOOL)blockShake
-{
-    _blockShake = blockShake;
-}
+
 - (void)intersectionInit:(MPIntersection *)currentIntersection
 {
     currentIntersection.intID = -1;
@@ -442,221 +443,6 @@
     }
 }
 
-/*
-- (UIImage *)getMPLSImage:(int)size
-                    atLat:(double)lat
-                   andLon:(double)lon
-                  andZoom:(int)zoom
-{
-    UIImage *compositeImage = nil;
-    int worldx = 0, worldy = 0;
-    int worldxEnd = 0, worldyEnd = 0;
-    int tilex = 0, tiley = 0, tilexLeft = 0;
-    int xinc = 0, yinc = 0;
-    int xintile = 0, yintile = 0, xintileLeft = 0;
-    int xincomposite = 0, yincomposite=0;
-    int nxpixels = 0, nypixels = 0;
-    int x = 0, y = 0;
-    
-    //get world pixel coordinates of center of composite image at current zoom
-    LatLongToPixelXY_old(lat,lon, zoom, &worldx, &worldy);
-    
-    //adjust to upper left corner of composite image
-    worldx -= (size / 2);
-    worldy -= (size / 2);
-    worldxEnd = (worldx + size);
-    worldyEnd = (worldy + size);
-    
-    //get tile x and y index
-    PixelXYToTileXY(worldx, worldy, &tilex, &tiley);
-    tilexLeft = tilex;
-    
-    //get pixel within tile coordinates
-    //xintile = xintileLeft = (worldx % 256);
-    yintile = (worldy % 256);
-    //xinc = (256 - xintile);
-    yinc = (256 - yintile);
-    y = worldy;
-    
-    UIGraphicsBeginImageContext(CGSizeMake(size, size));
-    
-    while (y < worldyEnd)
-    {
-        xincomposite = 0;
-        x = worldx;
-        tilex = tilexLeft;
-        xintile = xintileLeft;
-        xinc = (256 - xintile);
-        
-        while (x < worldxEnd)
-        {
-            
-            UIImage *image = [self getTileImageForZoom:zoom
-                                                 tilex:tilex
-                                                 tiley:tiley];
-            
-            nxpixels = min(xinc, (size - xincomposite));
-            nypixels = min(yinc, (size - yincomposite));
-            
-            CGImageRef subimage = CGImageCreateWithImageInRect(image.CGImage, CGRectMake(xintile, yintile, nxpixels, nypixels));
-            image = [UIImage imageWithCGImage:subimage];
-            CGImageRelease(subimage);
-            
-            [image drawInRect:CGRectMake(xincomposite, yincomposite, nxpixels, nypixels)];
-            
-            tilex++;
-            x += xinc;
-            xinc = 256;
-            xincomposite += nxpixels;
-            xintile = 0;
-        }
-        
-        tiley++;
-        y += yinc;
-        yinc = 256;
-        yincomposite += nypixels;
-        yintile = 0;
-    }
-    
-    compositeImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return compositeImage;
-}
-
-- (UIImage *)getTileImageForZoom:(int)zoom
-                           tilex:(int)tilex
-                           tiley:(int)tiley
-{
-    UIImage *tileImage = nil;
-    
-    NSString *sharedDir = UserDefaults.defaults.sharedFilePath;
-    
-    NSString *filepath = [NSString stringWithFormat:@"%@/%i_%lu_%lu_%lu.jp2",
-                          sharedDir, self.currentGeoid,
-                          (unsigned long)zoom, (unsigned long)tiley, (unsigned long)tilex];
-    
-    NSFileManager *fileManager = NSFileManager.defaultManager;
-    
-    if ([fileManager fileExistsAtPath:filepath])
-        tileImage = [UIImage imageWithContentsOfFile:filepath];
-    
-    else
-    {
-        NSString *MPLSurls = [NSString stringWithFormat:@"http://gssidata.com/MPLSADA/%lu/%lu/%lu.jp2",
-                                  (unsigned long)zoom, (unsigned long)tiley, (unsigned long)tilex];
-            
-        NSURL *mapUrl = [NSURL URLWithString:[MPLSurls stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        tileImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
-        
-        if (![UIImageJPEGRepresentation(tileImage, 0.8) writeToFile:filepath
-                                                         atomically:YES])
-        {
-            NSLog(@"Tile Image Write ERROR at filepath:%@",
-                  filepath);
-        }
-    }
-    
-    return tileImage;
-}
-
-- (NSString *)getImageFileforIntersection:(int)intersectionID
-                                    atLat:(double)lat
-                                   andLon:(double)lon
-                                  andZoom:(int)zoom
-                             forceRefresh:(BOOL)refresh
-{
-    BOOL MPLS = NO;
-    refresh = YES;
-    if (CRAPI.sharedInstance.currentGeoid == 2743000)
-        MPLS = YES;
-
-    
-    if (refresh)
-        [self deleteImagesForAllZooms:intersectionID];
-    
-    NSString *imageFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.jpg",
-                                                                           intersectionID, zoom]];
-    
-    NSString *cptFile = [_imageDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Int_%i_%i.cpt",
-                                                                         intersectionID, zoom]];
-    
-    unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:imageFile
-                                                                                 error:nil].fileSize;
-    if (fileSize > 0 && !refresh)
-        return imageFile;
-    
-    UIImage *image = nil;
-    
-    if (MPLS)
-    {
-        image = [self getMPLSImage:640
-                             atLat:lat
-                            andLon:lon
-                           andZoom:zoom];
-    }
-    
-    else
-    {
-        NSString *staticMapUrl =
-        [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&key=%@",
-         lat, lon, zoom, GOOGLE_API_KEY];
-        
-        NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
-    }
-    
-    int rtn = [UIImageJPEGRepresentation(image, 0.8) writeToFile:imageFile
-                                                      atomically:YES];
-    {
-        char txt[1024] = {0};
-        double pixelX = 0.0, pixelY = 0.0;
-        int factor = pow(2, (21 - zoom));
-        NSError *error = nil;
-        
-        LatLongToPixelXYd(lat, lon, 21, &pixelX, &pixelY);
-        
-        sprintf(txt, "0 0 %f %f\r\n\
-                640 0 %f %f\r\n\
-                640 640 %f %f\r\n\
-                0 640 %f %f\r\n",
-                pixelX - 320 * factor, pixelY + 320 * factor,
-                pixelX + 320 * factor, pixelY + 320 * factor,
-                pixelX + 320 * factor, pixelY - 320 * factor,
-                pixelX - 320 * factor, pixelY - 320 * factor);
-        
-        NSString *outcontents = [NSString stringWithCString:txt
-                                                   encoding:NSUTF8StringEncoding];
-        
-        if (![outcontents writeToFile:cptFile
-                           atomically:NO
-                             encoding:NSUTF8StringEncoding
-                                error:&error])
-        {
-            NSLog(@"ERROR (getImageFileforIntersection): %@", error.localizedDescription);
-        }
-    }
-    
-    if (!rtn && _currentView)
-    {
-        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:_currentView
-                                                          delegate:self
-                                                             title:@"Error getting intersection image. Unable to access server."
-                                                   buttonTextArray:@[@"OK"]
-                                                  destructiveIndex:0];
-#pragma unused(alert)
-    }
-    
-   
-    return imageFile;
-}
-
-- (void)alertView:(NVAlertView *)alertView
-didTapButtonAtIndex:(NSInteger)buttonIndex
-{
-    [alertView hideLargeAlertView:YES];
-}*/
-
 - (UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
                                 heading:(CGFloat)heading
                                   pitch:(CGFloat)pitch
@@ -741,7 +527,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     return outBounds;
 }
 
-- (dbounds) getBoundsAtPoint:(CLLocationCoordinate2D*)pt andDist:(CGFloat)meters
+- (dbounds)getBoundsAtPoint:(CLLocationCoordinate2D *)pt
+                    andDist:(CGFloat)meters
 {
     dbounds bnds;
     
@@ -756,7 +543,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     return bnds;
 }
 
-- (dbounds) getPickApBoundsAtPoint:(LLPOINT*)pt
+- (dbounds)getPickApBoundsAtPoint:(LLPOINT *)pt
 {
     dbounds bnds;
     
@@ -810,10 +597,14 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
              toFile:(NSString*)filePath
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
+    
     if(![fileManager fileExistsAtPath:filePath])
     {
-        [str writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        [str writeToFile:filePath
+              atomically:YES encoding:NSUTF8StringEncoding
+                   error:nil];
     }
+    
     else
     {
         NSString *newLine = [NSString stringWithFormat:@"\r\n%@", str];
@@ -821,10 +612,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         [myHandle seekToEndOfFile];
         [myHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
     }
+    
     return YES;
 }
 
-- (NSInteger) adjustNextRefno:(NSInteger)refno
+- (NSInteger)adjustNextRefno:(NSInteger)refno
 {
     NSInteger nextRef = refno % _maxDevices;
     
@@ -935,4 +727,5 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                        });
     }
 }
+
 @end
