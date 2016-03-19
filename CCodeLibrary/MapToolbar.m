@@ -785,7 +785,7 @@
             [UIView animateWithDuration:duration
                              animations:^{
                                  self.center = CGPointMake(((superviewFrame.size.width - offset) / 2.0),
-                                                           ((superviewFrame.size.height - tabBarHeight) -
+                                                           ((superviewFrame.size.height) -
                                                             (self.frame.size.height / 2.0)));
                              }];
         }
@@ -796,7 +796,7 @@
             [UIView animateWithDuration:duration
                              animations:^{
                                  self.center = CGPointMake((self.frame.size.width / 2.0),
-                                                           ((superviewFrame.size.height - tabBarHeight) / 2.0));
+                                                           (superviewFrame.size.height / 2.0));
                              }];
         }
             break;
@@ -806,7 +806,7 @@
             [UIView animateWithDuration:duration
                              animations:^{
                                  self.center = CGPointMake(((superviewFrame.size.width - offset) - (self.frame.size.width / 2.0)),
-                                                           ((superviewFrame.size.width - tabBarHeight) / 2.0));
+                                                           (superviewFrame.size.width / 2.0));
                              }];
         }
             break;
