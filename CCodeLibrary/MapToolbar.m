@@ -31,6 +31,8 @@
 {
     MapToolbar *mt = [[MapToolbar alloc] init];
     mt.configChanged = mt.myLocationEnabled = mt.platOverride = mt.helpLongPressed = NO;
+    mt.legendOffset = 0.0;
+    mt.isOffset = NO;
     
     //set default configuration
     [mt setConfigurationProperty:MapToolbarPropertyWantUserLocation
@@ -462,6 +464,8 @@
     if (_orientation == MapToolbarOrientationMinimized)
         return;
     
+    [self.superview bringSubviewToFront:self];
+    
     CGPoint translation = [gesture translationInView:gesture.view.superview];
     
     if (gesture.state == UIGestureRecognizerStateBegan ||
@@ -698,6 +702,10 @@
                statusBarHeight:(CGFloat)statusBarHeight
 {
     CGRect superviewFrame = self.superview.frame;
+    CGFloat offset = 0.0;
+    
+    if (_isOffset)
+        offset = _legendOffset;
     
     switch (_orientation)
     {
@@ -705,7 +713,7 @@
         {
             [UIView animateWithDuration:duration
                              animations:^{
-                                 self.center = CGPointMake(((superviewFrame.size.height + tabBarHeight) / 2.0),
+                                 self.center = CGPointMake((((superviewFrame.size.height + tabBarHeight) - offset) / 2.0),
                                                            (statusBarHeight + (self.frame.size.height / 2.0)));
                                  
                              }];
@@ -716,7 +724,7 @@
         {
             [UIView animateWithDuration:duration
                              animations:^{
-                                 self.center = CGPointMake(((superviewFrame.size.height + tabBarHeight) / 2.0),
+                                 self.center = CGPointMake((((superviewFrame.size.height + tabBarHeight) - offset) / 2.0),
                                                            ((superviewFrame.size.width - tabBarHeight) -
                                                             (self.frame.size.height / 2.0)));
                              }];
@@ -737,9 +745,68 @@
         {
             [UIView animateWithDuration:duration
                              animations:^{
-                                 self.center = CGPointMake(((superviewFrame.size.height + tabBarHeight) -
+                                 self.center = CGPointMake((((superviewFrame.size.height + tabBarHeight) - offset) -
                                                             (self.frame.size.width / 2.0)),
                                                            ((superviewFrame.size.width - tabBarHeight) / 2.0));
+                             }];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)didRotateWithDuration:(NSTimeInterval)duration
+                 tabBarHeight:(CGFloat)tabBarHeight
+              statusBarHeight:(CGFloat)statusBarHeight
+{
+    CGRect superviewFrame = self.superview.frame;
+    CGFloat offset = 0.0;
+    
+    if (_isOffset)
+        offset = _legendOffset;
+    
+    switch (_orientation)
+    {
+        case MapToolbarOrientationTop:
+        {
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 self.center = CGPointMake(((superviewFrame.size.width - offset) / 2.0),
+                                                           (statusBarHeight + (self.frame.size.height / 2.0)));
+                                 
+                             }];
+        }
+            break;
+            
+        case MapToolbarOrientationBottom:
+        {
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 self.center = CGPointMake(((superviewFrame.size.width - offset) / 2.0),
+                                                           ((superviewFrame.size.height) -
+                                                            (self.frame.size.height / 2.0)));
+                             }];
+        }
+            break;
+            
+        case MapToolbarOrientationLeft:
+        {
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 self.center = CGPointMake((self.frame.size.width / 2.0),
+                                                           (superviewFrame.size.height / 2.0));
+                             }];
+        }
+            break;
+            
+        case MapToolbarOrientationRight:
+        {
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 self.center = CGPointMake(((superviewFrame.size.width - offset) - (self.frame.size.width / 2.0)),
+                                                           (superviewFrame.size.width / 2.0));
                              }];
         }
             break;
@@ -1318,6 +1385,31 @@
     
     if (_delegate)
         [_delegate mapToolbarDidWantExpand];
+}
+
+- (void)adjustFrameToScrollView
+{
+    CGRect superviewFrame = self.superview.frame;
+    CGFloat offset = 0.0;
+    
+    if (_isOffset)
+        offset = _legendOffset;
+    
+    switch (_orientation)
+    {
+        case MapToolbarOrientationTop:
+        case MapToolbarOrientationBottom:
+            self.center = CGPointMake(((superviewFrame.size.width - offset) / 2.0), self.center.y);
+            break;
+            
+        case MapToolbarOrientationRight:
+            self.center = CGPointMake(((superviewFrame.size.width - offset) -
+                                       (self.frame.size.width / 2.0)), self.center.y);
+            break;
+            
+        default:
+            break;
+    }
 }
 
 @end

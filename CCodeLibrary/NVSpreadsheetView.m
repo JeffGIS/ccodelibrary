@@ -420,6 +420,33 @@
                      }];
 }
 
+- (void)didRotateWithDuration:(NSTimeInterval)duration
+                 tabBarHeight:(CGFloat)tabBarHeight
+{
+    CGPoint origin = self.frame.origin;
+    CGRect superviewFrame = self.superview.frame;
+    
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         self.frame = CGRectMake(origin.x, origin.y,
+                                                 (superviewFrame.size.width - origin.x),
+                                                 (superviewFrame.size.height - origin.y));
+                         
+                         _rowHeaderView.frame = CGRectMake(_rowHeaderView.frame.origin.x,
+                                                           _rowHeaderView.frame.origin.y,
+                                                           _columnWidth, (self.frame.size.height - _rowHeight));
+                         
+                         _columnHeaderView.frame = CGRectMake(_columnHeaderView.frame.origin.x,
+                                                              _columnHeaderView.frame.origin.y,
+                                                              (self.frame.size.width - _columnWidth), _rowHeight);
+                         
+                         _contentView.frame = CGRectMake(_contentView.frame.origin.x,
+                                                         _contentView.frame.origin.y,
+                                                         (self.frame.size.width - _columnWidth),
+                                                         (self.frame.size.height - _rowHeight));
+                     }];
+}
+
 - (void)returnToOrigin:(UIButton *)button
 {
     [_rowHeaderView setContentOffset:_rowHeaderView.contentOffset

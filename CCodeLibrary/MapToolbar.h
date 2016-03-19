@@ -57,8 +57,8 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 @property (readonly) BOOL wantPlat, wantDigitize, wantMapType, wantUserLocation;
 @property (readonly) BOOL wantExtents, wantLegends, wantGrayscale, wantClearMarkers;
 @property (readonly) BOOL wantEmailPDF, wantProgressBar, wantHelpButton;
-@property (nonatomic) CGFloat progress;
-@property BOOL helpLongPressed;
+@property (nonatomic) CGFloat progress, legendOffset;
+@property BOOL helpLongPressed, isOffset;
 @property (nonatomic) CGRect previousFrame;
 
 + (MapToolbar *)showMapToolbarWithCenter:(CGPoint)center
@@ -83,6 +83,11 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
                   tabBarHeight:(CGFloat)tabBarHeight
                statusBarHeight:(CGFloat)statusBarHeight;
 
+- (void)didRotateWithDuration:(NSTimeInterval)duration
+                 tabBarHeight:(CGFloat)tabBarHeight
+              statusBarHeight:(CGFloat)statusBarHeight;
+
+- (void)adjustFrameToScrollView;
 - (void)addExpandButton;
 
 @end
