@@ -250,7 +250,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
 
     _popoverView.progressView.hidden = NO;
     
-    [_popoverView showAfter:0.0
+    [_popoverView showAfter:2.0
                   withTitle:@"Waiting\nto Connect\nto Manager"];
     
     return rtn;
@@ -352,14 +352,17 @@ didReceiveMessage:(NSString *)message
 {
     if (_myLastUpdate >= _serversLastUpdate)
     {
-        _popoverView.title = @"Data up-to-date";
-        
-        [_popoverView.popoverCancel setTitle:@"OK"
-                        forState:UIControlStateNormal];
-        
-        _popoverView.progressView.hidden = YES;
-        _popoverView.progressLabel.hidden = YES;
-        [_popoverView show];
+        if (!_popoverView.isHidden)
+        {
+            _popoverView.title = @"Data up-to-date";
+            
+            [_popoverView.popoverCancel setTitle:@"OK"
+                                        forState:UIControlStateNormal];
+            
+            _popoverView.progressView.hidden = YES;
+            _popoverView.progressLabel.hidden = YES;
+            [_popoverView show];
+        }
         return;
     }
     
