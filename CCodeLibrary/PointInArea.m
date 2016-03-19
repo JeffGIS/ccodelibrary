@@ -14,8 +14,16 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
     CGContextRef context = NULL;
     void *bitmapData = NULL;
     int bitmapByteCount = 0, bitmapBytesPerRow = 0;
-    
-    bitmapBytesPerRow = (pixelsWide); //1
+    int nc = (int)CGColorSpaceGetNumberOfComponents(colorSpace);
+    uint32_t flags = 0;
+    if (nc > 1)
+    {
+        nc++;
+        flags = kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big;
+        flags = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little;
+        flags = kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Big;
+    }
+    bitmapBytesPerRow = nc * pixelsWide;
     bitmapByteCount = (bitmapBytesPerRow *pixelsHigh);
     
     bitmapData = malloc(bitmapByteCount); //3
@@ -25,14 +33,20 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
         memset (bitmapData,0,bitmapByteCount);
         
         context = CGBitmapContextCreate(bitmapData, pixelsWide, pixelsHigh, 8,
-                                        bitmapBytesPerRow, colorSpace,0);
-        
-        CGContextSetShouldAntialias(context, NO);
+                                        bitmapBytesPerRow, colorSpace,flags);
         
         if (!context)
         {
             free(bitmapData);
             bitmapData = NULL;
+        }
+        else
+        {
+            int bi = (int)CGBitmapContextGetBytesPerRow(context);
+            if (bi != bitmapBytesPerRow)
+                bi=1;
+            
+            CGContextSetShouldAntialias(context, NO);
         }
     }
     

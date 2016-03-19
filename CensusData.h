@@ -18,6 +18,9 @@
 @property (nonatomic, copy) NSString *path;
 @property NSInteger fileSize;
 
+- (BOOL)open;
+- (void)close:(BOOL)opened;
+
 -(NSString*) value:(NSString*)valueName
        forAreaType:(NSString*) areaType
            withKey:(NSString*)areaID;

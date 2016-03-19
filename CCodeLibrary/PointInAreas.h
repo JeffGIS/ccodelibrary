@@ -31,6 +31,8 @@
 @property int maxDimension;
 @property int width;
 @property int height;
+@property int nColorComponents;
+@property int nColorBytes;
 @property CGColorSpaceRef colorSpace;
 @property CGContextRef context;
 @property dbounds fullBounds;

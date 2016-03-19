@@ -14,12 +14,16 @@
 #import "PointInArea.h"
 #import "CensusData.h"
 
+typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
+
 @interface AreaData : NSObject
 @property NSString * areaID;
-@property CGFloat colorDef;
-@property int color;
+@property COLORDEF colordef;
+@property int icolor;
 @property double count;
 @property double areaInPixels;
+@property double value;
+@property double valuePerPixel;
 @property CGColorRef displayColor;
 @end
 
@@ -27,6 +31,8 @@
 @end
 
 @implementation PointInAreas
+
+static int ii;
 
 - (void) releaseMem
 {
@@ -59,9 +65,34 @@
 {
     [self releaseMem];
 }
+
+- (void) setColor:(int)iColor
+         areaData:(AreaData*)ad
+{
+    COLORDEF cd;
+    
+    if (_nColorComponents == 1)
+    {
+        cd.c1 = iColor / 255.0;
+        cd.c2 = 1.0;
+    }
+    else
+    {
+        BYTE bcolor[4];
+        
+        LPLONG pInt = (LPLONG)&bcolor;
+        *pInt = iColor;
+        cd.c1 = bcolor[0] / 255.0;
+        cd.c2 = bcolor[1] / 255.0;
+        cd.c3 = bcolor[2] / 255.0;
+        cd.c4 = 1.0;
+    }
+    ad.colordef = cd;
+}
 - (void) areasLoaded
 {
     void *bmData = NULL;
+    COLORDEF cd;
 
     switch (_loadPass)
     {
@@ -70,7 +101,7 @@
             CGRect rect;
             _iArea = 0;
             [self releaseMem];
-            _colorSpace = CGColorSpaceCreateDeviceGray();
+            _colorSpace = CGColorSpaceCreateDeviceRGB();
             if (!_maxDimension)
                 _maxDimension = 2048;
             _width = _maxDimension;
@@ -85,30 +116,60 @@
             _height += _height % 4;
             _width += _width % 4;
             _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
+            _nColorComponents = (int)CGColorSpaceGetNumberOfComponents(_colorSpace);
+            if (_nColorComponents == 3)
+                _nColorBytes = 4;
+            else
+                _nColorBytes = 1;
             _bitmapData = bmData;
             CGContextSetAllowsAntialiasing(_context, NO);
             CGContextSetShouldAntialias(_context, NO);
             rect = CGRectMake(0, 0,  _width,_height);
             for (AreaData *ad in _areaInfo)
             {
-                ad.colorDef = ++_iArea/(CGFloat)(_numAreas+1);
-                CGFloat color[2] = {ad.colorDef, 1};
-                CGColorRef colorRef = CGColorCreate(_colorSpace, color);
+                [self setColor:++_iArea
+                      areaData:ad];
+                cd = ad.colordef;
+                CGColorRef colorRef = CGColorCreate(_colorSpace, (CGFloat*)&cd);
                 CGContextSetFillColorWithColor(_context, colorRef);
                 CGContextFillRect(_context,rect);
                 CGColorRelease(colorRef);
-                int bitmapValue = (unsigned int)_bitmapData[4 * _width + 4];
-                ad.color = bitmapValue;
+                unsigned int bitmapValue;
+                if (_nColorBytes > 1)
+                {
+                    _bitmapData[(4 * _width + 4)*_nColorBytes+3] = 0;
+                    bitmapValue = *(unsigned int*)&_bitmapData[(4 * _width + 4)*_nColorBytes];
+                    unsigned int bitmapValue1 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes];
+                    unsigned int bitmapValue2 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+1];
+                    unsigned int bitmapValue3 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+2];
+                    unsigned int bitmapValue4 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+3];
+                    ii=1;
+                }
+                else
+                    bitmapValue = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes];
+
+                ad.icolor = bitmapValue;
+                if (bitmapValue != _iArea)
+                    ii=1;
             }
-            CGFloat border[2] = {1, 1};
+            CGFloat border[4] = {1, 1, 1, 1};
             CGColorRef borderRef = CGColorCreate(_colorSpace, border);
             CGContextSetFillColorWithColor(_context, borderRef);
             rect = CGRectMake(0, 0, _width,_height);
             CGContextFillRect(_context,rect);
             CGColorRelease(borderRef);
             _borderColor = (unsigned int)_bitmapData[4 * _width + 4];
-            CGFloat black[2] = {0, 1};
-            CGColorRef blackRef = CGColorCreate(_colorSpace, black);
+            CGColorRef blackRef;
+            if (_nColorBytes > 1)
+            {
+                CGFloat black[4] = {0, 0, 0, 0};
+                blackRef = CGColorCreate(_colorSpace, black);
+            }
+            else
+            {
+                CGFloat black[2] = {0, 1};
+                blackRef = CGColorCreate(_colorSpace, black);
+            }
             CGContextSetFillColorWithColor(_context, blackRef);
             rect = CGRectMake(0, 0, _width,_height);
             CGContextFillRect(_context,rect);
@@ -126,16 +187,58 @@
     _loadPass++;
 }
 
--(void) adjustCounts
+-(AreaData *) getAreaAtLoc:(int)loc
+{
+    AreaData * ad = nil;
+    int iArea;
+    if (_nColorBytes > 1)
+    {
+        loc *= 4;
+        _bitmapData[loc+3] = 0;
+        iArea = *(unsigned int*)&_bitmapData[loc];
+/*        unsigned int bitmapValue1 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes];
+        unsigned int bitmapValue2 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+1];
+        unsigned int bitmapValue3 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+2];
+        unsigned int bitmapValue4 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+3];
+        ii=1;*/
+    }
+    else
+        iArea = (unsigned int)_bitmapData[loc];
+    if (iArea && iArea <= [_areaInfo count])
+        ad = _areaInfo[iArea-1];
+    return ad;
+}
+
+-(void) adjustCounts:(PointInAreas *)piaTarget
 {
     if (_adjustValue)
     {
         CensusData *cend = [[CensusData alloc]init];
+        BOOL opened = [cend open];
         for (AreaData *ad in _areaInfo)
         {
-            NSString * value = [cend value:_adjustValue
+            NSString * cvalue = [cend value:_adjustValue
                                forAreaType:_areaType
                                    withKey:ad.areaID];
+            ad.value = [cvalue doubleValue];
+            if (ad.areaInPixels)
+                ad.valuePerPixel = ad.valuePerPixel/ad.areaInPixels;
+            
+        }
+        [cend close:opened];
+        for (int irow = 0;irow < _height;irow++)
+        {
+            for (int icol = 0;icol < _width;icol++)
+            {
+                int loc = irow * _width + icol;
+                AreaData *adTarget = [piaTarget getAreaAtLoc:loc];
+                AreaData *adAdjust = [self getAreaAtLoc:loc];
+                if (adTarget && adAdjust)
+                {
+                    adTarget.value += adAdjust.valuePerPixel;
+                }
+
+            }
         }
     }
 }
@@ -145,7 +248,8 @@
     
     NSInteger maxCount = 0;
     
-    [self adjustCounts];
+    if (piasAdjust)
+        [piasAdjust adjustCounts:self];
     for (AreaData *ad in _areaInfo)
     {
         maxCount = max (maxCount,ad.count);
@@ -215,8 +319,8 @@
             
             if (!CGContextIsPathEmpty(_context))
             {
-                CGFloat color[2] = {ad.colorDef, 1};
-                CGColorRef colorRef = CGColorCreate(_colorSpace, color);
+                COLORDEF cd = ad.colordef;
+                CGColorRef colorRef = CGColorCreate(_colorSpace, (CGFloat*)&cd);
                 CGContextSetFillColorWithColor(_context, colorRef);
                 CGContextDrawPath(_context, kCGPathFill);
                 CGColorRelease(colorRef);
@@ -269,30 +373,17 @@
     {
         row = (pt.y + 0.5);
         col = (pt.x + 0.5);
-        bitmapValue = (unsigned int)_bitmapData[row * _width + col];
         
-        if (bitmapValue)
+        AreaData *ad = [self getAreaAtLoc:row * _width + col];
+        if (ad)
         {
-           if (bitmapValue == _borderColor)
-           {
-               
-           }
-           else
-               for (AreaData *ad in _areaInfo)
-               {
-                   if (bitmapValue == ad.color)
-                   {
-                       ad.count++;
-                       numAreasIn++;
-                       break;
-                   }
-               }
-            return numAreasIn;
+            ad.count++;
+            numAreasIn++;
         }
-        else
-            _numOutside++;
     }
-    
+    else
+        _numOutside++;
+
     return numAreasIn;
 }
 
