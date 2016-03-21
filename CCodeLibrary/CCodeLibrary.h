@@ -64,6 +64,7 @@
 #import "DispersePoint.h"
 #import "DisplayCharacteristics.h"
 #import "FileLister.h"
+#import "TextOptions.h"
 
 @interface CCodeLibrary : NSObject
 

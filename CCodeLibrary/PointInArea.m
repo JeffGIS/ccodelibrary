@@ -202,7 +202,6 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
 
 - (int)DPointInArea:(DPOINT *)dPoint
 {
-    
     int row=-999;
     int col;
     int bitmapValue;
@@ -215,6 +214,30 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
     {
         row = (pt.y + 0.5);
         col = (pt.x + 0.5);
+        bitmapValue = (unsigned int)_bitmapData[row * _width + col];
+        
+        if (bitmapValue == 255)
+            return 1;
+        if (bitmapValue == 128)
+            return 2;
+        if (bitmapValue)
+            return 4;
+    }
+    
+    return 0;
+}
+
+- (int)screenPointInArea:(DPOINT *)pt
+{
+    int row=-999;
+    int col;
+    int bitmapValue;
+    
+    if (pt->x > -0.5 && pt->x < _width - 0.5 &&
+        pt->y > -0.5 && pt->y < _height - 0.5)
+    {
+        row = (pt->y + 0.5);
+        col = (pt->x + 0.5);
         bitmapValue = (unsigned int)_bitmapData[row * _width + col];
         
         if (bitmapValue == 255)

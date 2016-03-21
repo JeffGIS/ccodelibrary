@@ -1043,6 +1043,16 @@ void CloseTRANS2 (LPTRANDATA *phlpTran)
     
 }
 
+LPTRANDATA STRANCopy (LPTRANDATA pTran)
+{
+    if (!pTran)
+        return 0;
+    LPTRANDATA pTranCopy = malloc (sizeof(TRANDATA));
+    
+    memmove (pTranCopy,pTran,sizeof(TRANDATA));
+    return pTranCopy;
+}
+
 LPTRANDATA STRAN2(int ID, double X1[], double Y1[], double X2[], double Y2[], int N, int Type,float *RSQMIN)
 {
 	double ANGLE1, ANGLE2, ANGLE, DEN, SINANG, COSANG, DX1, DX2, DY1, DY2, SCLRAT,

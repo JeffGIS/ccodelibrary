@@ -23,6 +23,7 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints);
     boundaryWidth:(CGFloat)lineWidth;
 
 - (int)DPointInArea:(DPOINT *)dPoint;
+- (int)screenPointInArea:(DPOINT *)pt;
 
 @property int maxDimension;
 @property int width;

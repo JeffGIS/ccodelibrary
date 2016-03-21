@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "CCodeTypes.h"
+#import "PointInArea.h"
 
 @interface PointInAreas : NSObject
 
@@ -17,8 +18,10 @@
          numLoops:(int)nLoops
       polyPartLen:(int*)polyPartLen
            points:(LPDPOINT)points;
-- (void) areasLoaded;
-- (void)createDisplayColors:(PointInAreas*)piasAdjust;
+- (void) areasLoaded:(PointInAreas*)boundsPias
+         convertToLL:(LPTRANDATA)pTran;
+- (void)createDisplayColors:(PointInAreas*)piasAdjust
+                       mask:(PointInArea*)piaMask;
 - (int)DPointInArea:(DPOINT *)dPoint;
 - (CGColorRef)colorForArea:(NSString*)areaID;
 - (double)countForArea:(NSString*)areaID;
@@ -31,6 +34,7 @@
 @property int maxDimension;
 @property int width;
 @property int height;
+@property int bytesPerRow;
 @property int nColorComponents;
 @property int nColorBytes;
 @property CGColorSpaceRef colorSpace;
@@ -40,4 +44,6 @@
 @property int borderColor;
 @property int iArea;
 @property NSInteger numOutside;
+@property LPTRANDATA pTranContextToWorld;
+
 @end

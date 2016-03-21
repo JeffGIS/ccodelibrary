@@ -113,11 +113,7 @@ typedef struct
 	float y;
 }  vec2;
 
-typedef struct
-{
-	double x;
-	double y;
-}  dvec2;
+typedef DPOINT  dvec2;
 
 typedef struct
 {

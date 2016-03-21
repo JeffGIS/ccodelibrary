@@ -6,12 +6,13 @@
 //  Copyright © 2016 GSSi. All rights reserved.
 //
 
+#define MINAREAPCT 2.0
+
+#import "PointInAreas.h"
 
 #import "CRAPI.h"
 #import "MathUtil.h"
 
-#import "PointInAreas.h"
-#import "PointInArea.h"
 #import "CensusData.h"
 
 typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
@@ -22,6 +23,8 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 @property int icolor;
 @property double count;
 @property double areaInPixels;
+@property int pixelsInMask;
+@property float pctInMask;
 @property double value;
 @property double valuePerPixel;
 @property CGColorRef displayColor;
@@ -45,6 +48,7 @@ static int ii;
     
     if (_context)
         CGContextRelease(_context);
+    CloseTRANS2(&_pTranContextToWorld);
     
     CGColorSpaceRelease(_colorSpace);
     
@@ -89,7 +93,50 @@ static int ii;
     }
     ad.colordef = cd;
 }
-- (void) areasLoaded
+
+-(void) setContextTran:(LPTRANDATA)pTranViewToLL
+{
+    CloseTRANS2(&_pTranContextToWorld);
+    
+    LPMNMXCORD in = &_fullBounds;
+    MNMXCORD llBounds;
+    dbounds outb;
+    InitDBounds(&outb);
+    InitDBounds(&llBounds);
+    
+    DPOINT ptv = {in->xmn,in->ymn};
+    DPOINT pt = [self projectPointToContext:&ptv
+                                          from:0];
+    AddPointToDBounds(&outb, &pt);
+    DPOINT ptw = TranDPOINT(&ptv, pTranViewToLL);
+    AddPointToDBounds(&llBounds, &ptw);
+
+    ptv.x = in->xmn; ptv.y = in->ymx;
+    pt = [self projectPointToContext:&ptv
+                                       from:0];
+    AddPointToDBounds(&outb, &pt);
+    ptw = TranDPOINT(&ptv, pTranViewToLL);
+    AddPointToDBounds(&llBounds, &ptw);
+    
+    ptv.x = in->xmx; ptv.y = in->ymx;
+    pt = [self projectPointToContext:&ptv
+                                from:0];
+    AddPointToDBounds(&outb, &pt);
+    ptw = TranDPOINT(&ptv, pTranViewToLL);
+    AddPointToDBounds(&llBounds, &ptw);
+    
+    ptv.x = in->xmx; ptv.y = in->ymn;
+    pt = [self projectPointToContext:&ptv
+                                from:0];
+    AddPointToDBounds(&outb, &pt);
+    ptw = TranDPOINT(&ptv, pTranViewToLL);
+    AddPointToDBounds(&llBounds, &ptw);
+   
+    _pTranContextToWorld = STRANBoundsToBounds(&outb, &llBounds);
+}
+
+- (void) areasLoaded:(PointInAreas*)boundsPias
+         convertToLL:(LPTRANDATA)pTranViewToLL
 {
     void *bmData = NULL;
     COLORDEF cd;
@@ -106,6 +153,8 @@ static int ii;
                 _maxDimension = 2048;
             _width = _maxDimension;
             _height = _maxDimension;
+            if (boundsPias)
+                _fullBounds = boundsPias.fullBounds;
             CGFloat wb = BoundsWidth (&_fullBounds);
             CGFloat hb = BoundsHeight (&_fullBounds);
             
@@ -115,7 +164,9 @@ static int ii;
                 _width *= wb / hb;
             _height += _height % 4;
             _width += _width % 4;
+            [self setContextTran:pTranViewToLL];
             _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
+            _bytesPerRow = (int)CGBitmapContextGetBytesPerRow(_context);
             _nColorComponents = (int)CGColorSpaceGetNumberOfComponents(_colorSpace);
             if (_nColorComponents == 3)
                 _nColorBytes = 4;
@@ -244,6 +295,7 @@ static int ii;
 }
 
 - (void)createDisplayColors:(PointInAreas*)piasAdjust
+                       mask:(PointInArea*)piaMask
 {
     
     CGFloat maxCount = 0;
@@ -251,19 +303,49 @@ static int ii;
     
     if (piasAdjust)
         [piasAdjust adjustCounts:self];
+    for (int irow = 0;irow < _height;irow++)
+    {
+        for (int icol = 0;icol < _width;icol++)
+        {
+            DPOINT pt = {icol,irow};
+            if (piaMask)
+            {
+                pt = TranDPOINT(&pt, _pTranContextToWorld);
+            }
+            if (!piaMask || [piaMask DPointInArea:&pt])
+            {
+                int loc = irow * _width + icol;
+                AreaData *adTarget = [self getAreaAtLoc:loc];
+                if (adTarget)
+                    adTarget.pixelsInMask++;
+            }
+        }
+    }
     for (AreaData *ad in _areaInfo)
     {
         if (ad.value)
             ad.count /= ad.value;
-        maxCount = max (maxCount,ad.count);
-        maxValue = max (maxValue,ad.value);
+        else
+            ii=1;
+        ad.pctInMask = 100.0 * ad.pixelsInMask / ad.areaInPixels;
+        if (ad.pctInMask >= MINAREAPCT)
+        {
+            maxCount = max (maxCount,ad.count);
+            maxValue = max (maxValue,ad.value);
+        }
     }
     for (AreaData *ad in _areaInfo)
     {
-        CGFloat clr = 0;
-        if (maxCount)
-            clr = 1.0 - ad.count/maxCount;
-        CGFloat color[4] = {clr,clr,clr, 0.7};
+        CGFloat clr = 1;
+        CGFloat alpha = 0.7;
+        if (ad.pctInMask >= MINAREAPCT)
+        {
+            if (maxCount)
+                clr = 1.0 - ad.count/maxCount;
+        }
+        else
+            alpha = 0;
+        CGFloat color[4] = {clr,clr,clr, alpha};
         ad.displayColor = CGColorCreate(_colorSpace, color);
     }
 
@@ -294,7 +376,7 @@ static int ii;
             
         case 1:
         {
-            CGPoint	BeginPoint, LastPoint;
+            DPOINT	BeginPoint, LastPoint;
             double	Area=0,Perim=0;
             AreaData *ad = [self findByAreaID:areaID];
             if (!ad)
@@ -302,7 +384,7 @@ static int ii;
             CGContextBeginPath(_context);
             for (int i = 0; i < nPoints; i++)
             {
-                CGPoint pt = [self projectPointToContext:&pPoints[i] from:0];
+                DPOINT pt = [self projectPointToContext:&pPoints[i] from:0];
                 
                 if (i == 0)
                 {
@@ -341,10 +423,10 @@ static int ii;
     
 }
 
-- (CGPoint)projectPointToContext:(LPDPOINT)Point
+- (DPOINT)projectPointToContext:(LPDPOINT)Point
                             from:(int)from
 {
-    CGPoint pt = CGPointZero;
+    DPOINT pt;
     
     pt.x = Point->x - _fullBounds.xmn;
     pt.x /= (_fullBounds.xmx - _fullBounds.xmn);
@@ -369,7 +451,7 @@ static int ii;
     int col;
     int bitmapValue;
     static int ii=1;
-    CGPoint pt = [self projectPointToContext:dPoint
+    DPOINT pt = [self projectPointToContext:dPoint
                                         from:ii];
     
     if (pt.x > -0.5 && pt.x < _width - 0.5 &&
@@ -399,10 +481,6 @@ static int ii;
         if ([ad.areaID isEqualToString:areaID])
         {
             rtn = ad.count;
-            if (_adjustValue)
-            {
-                
-            }
             break;
         }
     }
