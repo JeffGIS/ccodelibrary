@@ -352,7 +352,7 @@ didReceiveMessage:(NSString *)message
 {
     if (_myLastUpdate >= _serversLastUpdate)
     {
-        if (!_popoverView.isHidden)
+        if ([_popoverView.fromView.subviews containsObject:_popoverView])
         {
             _popoverView.title = @"Data up-to-date";
             
@@ -361,8 +361,8 @@ didReceiveMessage:(NSString *)message
             
             _popoverView.progressView.hidden = YES;
             _popoverView.progressLabel.hidden = YES;
-            [_popoverView show];
         }
+        
         return;
     }
     
@@ -378,6 +378,7 @@ didReceiveMessage:(NSString *)message
     _pull.popover = _popoverView;
     _pull.useOnlyPrimaryFTP = YES;
     _pull.dataType = FTPDataCrimes;
+    
     if ([_pull getFile:fileName
         fromDirectory:fromDir
                toFile:fileName
@@ -389,14 +390,6 @@ didReceiveMessage:(NSString *)message
   
 }
 
-
-/*pull.ftpSiteOveride = @"74.42.136.100";
- pull.usernameOveride = @"GMMobile";
- pull.passwordOveride = @"GeoMaster";
- pull.portOveride = @"21";
- 
- if ([pull getFile:fileName
- fromDirectory:[NSString stringWithFormat:@"Sewer/%@/Plats",type]*/
 - (void)FTPdidComplete:(FTPDataType)dataType
             withStatus:(int)status
        andStatusString:(NSString *)statusString
