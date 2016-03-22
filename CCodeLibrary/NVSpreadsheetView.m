@@ -10,11 +10,11 @@
 @property (nonatomic) UIScrollView *contentView, *rowHeaderView, *columnHeaderView;
 @property (nonatomic) NSDate *touchDown, *touchUp;
 @property (nonatomic) NSArray *alphabet;
-@property (nonatomic) CGFloat headerFontSize;
+@property (nonatomic) CGFloat headerFontSize, borderWidth;
 @property (nonatomic) UIView *rowHeaderOverlap, *columnHeaderOverlap;
 @property (nonatomic) UIButton *returnToOrigin;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
-@property (nonatomic) UITextField *textField;
+@property (nonatomic) UITextField *textField, *titleTextField;
 @property BOOL inEditMode;
 
 @end
@@ -30,7 +30,7 @@
                                       delegate:(id)delegate
 {
     NVSpreadsheetView *ssv = [[NVSpreadsheetView alloc] initWithFrame:frame];
-    ssv.backgroundColor = UserDefaults.defaults.appleGray;
+    ssv.backgroundColor = UIColor.grayColor;
     ssv.rows = rows;
     ssv.columns = columns;
     ssv.editable = editable;
@@ -38,6 +38,7 @@
     ssv.delegate = delegate;
     ssv.inEditMode = NO;
     ssv.activeColumns = ssv.activeRows = 0;
+    ssv.borderWidth = 1.5;
     
     ssv.textField = [[UITextField alloc] init];
     ssv.textField.delegate = ssv;
@@ -50,7 +51,7 @@
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
-        ssv.rowHeight = 27.0;
+        ssv.rowHeight = 28.0;
         ssv.columnWidth = 108.0;
         ssv.headerFontSize = 12.0;
         rtobMargin = 2.0;
@@ -58,13 +59,25 @@
     
     else
     {
-        ssv.rowHeight = 54.0;
+        ssv.rowHeight = 48.0;
         ssv.columnWidth = 216.0;
         ssv.headerFontSize = 24.0;
         rtobMargin = 5.0;
     }
     
-    SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake(0.0, 0.0, ssv.columnWidth, ssv.rowHeight)];
+    ssv.titleTextField = [[UITextField alloc] initWithFrame:CGRectMake(0.0, 0.0, ssv.frame.size.width, ssv.rowHeight)];
+    ssv.titleTextField.delegate = ssv;
+    ssv.titleTextField.textAlignment = NSTextAlignmentCenter;
+    ssv.titleTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    ssv.titleTextField.placeholder = @"Tap to Enter Title Here";
+    ssv.titleTextField.font = [UIFont boldSystemFontOfSize:(ssv.headerFontSize * 1.5)];
+    ssv.titleTextField.textColor = UIColor.whiteColor;
+    
+    [ssv addSubview:ssv.titleTextField];
+    
+    SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake(-ssv.borderWidth, ssv.rowHeight,
+                                                                                      (ssv.columnWidth + ssv.borderWidth),
+                                                                                      ssv.rowHeight)];
     cell.row = 0;
     cell.column = 0;
     cell.backgroundColor = UserDefaults.defaults.appleGray;
@@ -94,7 +107,8 @@
     
     [ssv addSubview:ssv.returnToOrigin];
     
-    ssv.rowHeaderView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, ssv.rowHeight, ssv.columnWidth,
+    ssv.rowHeaderView = [[UIScrollView alloc] initWithFrame:CGRectMake(-ssv.borderWidth, (ssv.rowHeight * 2.0),
+                                                                       (ssv.columnWidth + ssv.borderWidth),
                                                                        (ssv.frame.size.height - ssv.rowHeight))];
     
     ssv.rowHeaderView.bounces = NO;
@@ -111,7 +125,8 @@
     for (int r = 0; r < ssv.rows; r++)
     {
         SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake(0.0, (r * ssv.rowHeight),
-                                                                                          ssv.columnWidth, ssv.rowHeight)];
+                                                                                          (ssv.columnWidth + ssv.borderWidth),
+                                                                                          ssv.rowHeight)];
         
         cell.row = (NSUInteger)(r + 1);
         cell.column = 0;
@@ -128,8 +143,8 @@
     ssv.alphabet = @[@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M",
                      @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z"];
     
-    ssv.columnHeaderView = [[UIScrollView alloc] initWithFrame:CGRectMake(ssv.columnWidth, 0.0,
-                                                                          (ssv.frame.size.width - ssv.columnWidth),
+    ssv.columnHeaderView = [[UIScrollView alloc] initWithFrame:CGRectMake(ssv.columnWidth, ssv.rowHeight,
+                                                                          ((ssv.frame.size.width - ssv.columnWidth) + ssv.borderWidth),
                                                                           ssv.rowHeight)];
     
     ssv.columnHeaderView.bounces = NO;
@@ -160,8 +175,8 @@
     
     [ssv addSubview:ssv.columnHeaderView];
     
-    ssv.contentView = [[UIScrollView alloc] initWithFrame:CGRectMake(ssv.columnWidth, ssv.rowHeight,
-                                                                     (ssv.frame.size.width - ssv.columnWidth),
+    ssv.contentView = [[UIScrollView alloc] initWithFrame:CGRectMake(ssv.columnWidth, (ssv.rowHeight * 2.0),
+                                                                     ((ssv.frame.size.width - ssv.columnWidth) + ssv.borderWidth),
                                                                      ssv.frame.size.height - ssv.rowHeight)];
     
     ssv.contentView.bounces = NO;
@@ -199,7 +214,7 @@
     [ssv addSubview:ssv.contentView];
     
     ssv.rowHeaderOverlap = [[UIView alloc] initWithFrame:CGRectMake((ssv.contentView.frame.origin.x + ssv.contentView.layer.borderWidth),
-                                                                    ssv.rowHeaderView.layer.borderWidth, 4.0,
+                                                                    (ssv.columnHeaderView.frame.origin.y + ssv.rowHeaderView.layer.borderWidth), 4.0,
                                                                     ssv.frame.size.height - (ssv.contentView.layer.borderWidth * 2.0))];
     
     ssv.rowHeaderOverlap.backgroundColor = UIColor.yellowColor;
@@ -259,11 +274,15 @@
 
 - (void)ssvTapped:(UITapGestureRecognizer *)gesture
 {
-    if ([_columnHeaderView.subviews containsObject:_textField] ||
-        [_rowHeaderView.subviews containsObject:_textField] ||
-        [_contentView.subviews containsObject:_textField])
+    if (_textField.isFirstResponder)
     {
         [_textField resignFirstResponder];
+        return;
+    }
+    
+    else if (_titleTextField.isFirstResponder)
+    {
+        [_titleTextField resignFirstResponder];
         return;
     }
     
@@ -405,17 +424,23 @@
                                                  ((superviewFrame.size.height + tabBarHeight) - origin.x),
                                                  ((superviewFrame.size.width - tabBarHeight) - origin.y));
                          
+                         _titleTextField.frame = CGRectMake(_titleTextField.frame.origin.x,
+                                                           _titleTextField.frame.origin.y,
+                                                            self.frame.size.width, _rowHeight);
+                         
                          _rowHeaderView.frame = CGRectMake(_rowHeaderView.frame.origin.x,
                                                            _rowHeaderView.frame.origin.y,
-                                                           _columnWidth, (self.frame.size.height - _rowHeight));
+                                                           (_columnWidth + _borderWidth),
+                                                           (self.frame.size.height - _rowHeight));
                          
                          _columnHeaderView.frame = CGRectMake(_columnHeaderView.frame.origin.x,
                                                               _columnHeaderView.frame.origin.y,
-                                                              (self.frame.size.width - _columnWidth), _rowHeight);
+                                                              ((self.frame.size.width - _columnWidth) + _borderWidth),
+                                                              _rowHeight);
                          
                          _contentView.frame = CGRectMake(_contentView.frame.origin.x,
                                                          _contentView.frame.origin.y,
-                                                         (self.frame.size.width - _columnWidth),
+                                                         ((self.frame.size.width - _columnWidth) + _borderWidth),
                                                          (self.frame.size.height - _rowHeight));
                      }];
 }
@@ -432,17 +457,23 @@
                                                  (superviewFrame.size.width - origin.x),
                                                  (superviewFrame.size.height - origin.y));
                          
+                         _titleTextField.frame = CGRectMake(_titleTextField.frame.origin.x,
+                                                            _titleTextField.frame.origin.y,
+                                                            self.frame.size.width, _rowHeight);
+                         
                          _rowHeaderView.frame = CGRectMake(_rowHeaderView.frame.origin.x,
                                                            _rowHeaderView.frame.origin.y,
-                                                           _columnWidth, (self.frame.size.height - _rowHeight));
+                                                           (_columnWidth + _borderWidth),
+                                                           (self.frame.size.height - _rowHeight));
                          
                          _columnHeaderView.frame = CGRectMake(_columnHeaderView.frame.origin.x,
                                                               _columnHeaderView.frame.origin.y,
-                                                              (self.frame.size.width - _columnWidth), _rowHeight);
+                                                              ((self.frame.size.width - _columnWidth) + _borderWidth),
+                                                              _rowHeight);
                          
                          _contentView.frame = CGRectMake(_contentView.frame.origin.x,
                                                          _contentView.frame.origin.y,
-                                                         (self.frame.size.width - _columnWidth),
+                                                         ((self.frame.size.width - _columnWidth) + _borderWidth),
                                                          (self.frame.size.height - _rowHeight));
                      }];
 }
@@ -479,28 +510,31 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    _cellForEditing.text = textField.text;
-    [textField removeFromSuperview];
-    
-    if (_delegate)
+    if (textField == _textField)
     {
-        if (_cellForEditing.superview == _columnHeaderView)
-        {
-            [_delegate ssvDidEditColumnHeaderText:textField.text
-                                          atIndex:(_cellForEditing.column - 1)];
-        }
+        _cellForEditing.text = textField.text;
+        [textField removeFromSuperview];
         
-        else if (_cellForEditing.superview == _rowHeaderView)
+        if (_delegate)
         {
-            [_delegate ssvDidEditRowHeaderText:textField.text
-                                       atIndex:(_cellForEditing.row - 1)];
-        }
-        
-        else if (_cellForEditing.superview == _contentView)
-        {
-            [_delegate ssvDidEditText:textField.text
-                         forCellAtRow:_cellForEditing.row
-                               column:_cellForEditing.column];
+            if (_cellForEditing.superview == _columnHeaderView)
+            {
+                [_delegate ssvDidEditColumnHeaderText:textField.text
+                                              atIndex:(_cellForEditing.column - 1)];
+            }
+            
+            else if (_cellForEditing.superview == _rowHeaderView)
+            {
+                [_delegate ssvDidEditRowHeaderText:textField.text
+                                           atIndex:(_cellForEditing.row - 1)];
+            }
+            
+            else if (_cellForEditing.superview == _contentView)
+            {
+                [_delegate ssvDidEditText:textField.text
+                             forCellAtRow:_cellForEditing.row
+                                   column:_cellForEditing.column];
+            }
         }
     }
 }
