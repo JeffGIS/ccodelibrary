@@ -12,5 +12,6 @@
                  bottom:(CGFloat)bottom;
 
 - (void)removeAllConstraints;
+- (UIViewController *)parentViewController;
 
 @end

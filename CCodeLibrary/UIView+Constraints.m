@@ -44,4 +44,17 @@
     [self removeConstraints:self.constraints];
 }
 
+- (UIViewController *)parentViewController
+{
+    for (UIView *next = self; next; next = next.superview)
+    {
+        UIResponder *nextResponder = next.nextResponder;
+        
+        if ([nextResponder isKindOfClass:UIViewController.class])
+            return (UIViewController *)nextResponder;
+    }
+    
+    return nil;
+}
+
 @end

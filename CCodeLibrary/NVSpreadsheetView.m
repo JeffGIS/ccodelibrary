@@ -4,8 +4,10 @@
 #import "NVSpreadsheetView.h"
 #import "SpreadSheetViewCell.h"
 #import "UserDefaults.h"
+#import "NVAlertView.h"
+@import MessageUI;
 
-@interface NVSpreadsheetView ()
+@interface NVSpreadsheetView () <NVAlertViewDelegate,MFMailComposeViewControllerDelegate>
 
 @property (nonatomic) UIScrollView *contentView, *rowHeaderView, *columnHeaderView;
 @property (nonatomic) NSDate *touchDown, *touchUp;
@@ -360,26 +362,26 @@
 
 - (void)setRowHeaderText:(NSArray *)rowHeaderText
 {
-    for (SpreadSheetViewCell *cell in _rowHeaderView.subviews)
+    for (SpreadSheetViewCell *cells in _rowHeaderView.subviews)
     {
-        if ([cell isKindOfClass:SpreadSheetViewCell.class] && cell.row <= rowHeaderText.count)
+        if ([cells isKindOfClass:SpreadSheetViewCell.class] && cells.row <= rowHeaderText.count)
         {
-            NSString *text = rowHeaderText[cell.row - 1];
+            NSString *text = rowHeaderText[cells.row - 1];
             
             text = [text stringByReplacingOccurrencesOfString:@" ("
                                                    withString:@"\n("];
             
-            cell.text = text;
+            cells.text = text;
         }
     }
 }
 
 - (void)setColumnHeaderText:(NSArray *)columnHeaderText
 {
-    for (SpreadSheetViewCell *cell in _columnHeaderView.subviews)
+    for (SpreadSheetViewCell *cells in _columnHeaderView.subviews)
     {
-        if ([cell isKindOfClass:SpreadSheetViewCell.class] && cell.column <= columnHeaderText.count)
-            cell.text = columnHeaderText[cell.column - 1];
+        if ([cells isKindOfClass:SpreadSheetViewCell.class] && cells.column <= columnHeaderText.count)
+            cells.text = columnHeaderText[cells.column - 1];
     }
 }
 
@@ -387,10 +389,10 @@
    forCellAtRow:(NSUInteger)row
          column:(NSUInteger)column
 {
-    for (SpreadSheetViewCell *cell in _contentView.subviews)
+    for (SpreadSheetViewCell *cells in _contentView.subviews)
     {
-        if ([cell isKindOfClass:SpreadSheetViewCell.class] && cell.row == row && cell.column == column)
-            cell.text = text;
+        if ([cells isKindOfClass:SpreadSheetViewCell.class] && cells.row == row && cells.column == column)
+            cells.text = text;
     }
 }
 
@@ -418,11 +420,11 @@
     {
         selection = [NSString stringWithFormat:@"%@%ld", _alphabet[xID], (long)(yID + 1)];
         
-        for (SpreadSheetViewCell *cell in _contentView.subviews)
+        for (SpreadSheetViewCell *cells in _contentView.subviews)
         {
-            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
-                [cell.identifier isEqualToString:selection] &&
-                cell.column <= _activeColumns && cell.row <= _activeRows && _delegate)
+            if ([cells isKindOfClass:SpreadSheetViewCell.class] &&
+                [cells.identifier isEqualToString:selection] &&
+                cells.column <= _activeColumns && cells.row <= _activeRows && _delegate)
             {
                 [_delegate ssvCellWasTappedAtRowIndex:(yID + 1)
                                           columnIndex:(xID + 1)];
@@ -434,12 +436,12 @@
     {
         selection = [NSString stringWithFormat:@"%ld", (long)(yID + 1)];
         
-        for (SpreadSheetViewCell *cell in _rowHeaderView.subviews)
+        for (SpreadSheetViewCell *cells in _rowHeaderView.subviews)
         {
-            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
-                [cell.identifier isEqualToString:selection])
+            if ([cells isKindOfClass:SpreadSheetViewCell.class] &&
+                [cells.identifier isEqualToString:selection])
             {
-                NSLog(@"Row Header %@:\"%@\"", cell.identifier, cell.text);
+                NSLog(@"Row Header %@:\"%@\"", cells.identifier, cells.text);
             }
         }
     }
@@ -448,12 +450,12 @@
     {
         selection = [NSString stringWithFormat:@"%@", _alphabet[xID]];
         
-        for (SpreadSheetViewCell *cell in _columnHeaderView.subviews)
+        for (SpreadSheetViewCell *cells in _columnHeaderView.subviews)
         {
-            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
-                [cell.identifier isEqualToString:selection])
+            if ([cells isKindOfClass:SpreadSheetViewCell.class] &&
+                [cells.identifier isEqualToString:selection])
             {
-                NSLog(@"Column Header %@:\"%@\"", cell.identifier, cell.text);
+                NSLog(@"Column Header %@:\"%@\"", cells.identifier, cells.text);
             }
         }
     }
@@ -471,13 +473,13 @@
     {
         selection = [NSString stringWithFormat:@"%@%i", _alphabet[xID], (yID + 1)];
         
-        for (SpreadSheetViewCell *cell in _contentView.subviews)
+        for (SpreadSheetViewCell *cells in _contentView.subviews)
         {
-            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
-                [cell.identifier isEqualToString:selection] &&
-                cell.row == 1 && cell.column <= _activeColumns)
+            if ([cells isKindOfClass:SpreadSheetViewCell.class] &&
+                [cells.identifier isEqualToString:selection] &&
+                cells.row == 1 && cells.column <= _activeColumns)
             {
-                [self editCell:cell
+                [self editCell:cells
                         inView:_contentView];
             }
         }
@@ -487,12 +489,12 @@
     {
         selection = [NSString stringWithFormat:@"%i", (yID + 1)];
         
-        for (SpreadSheetViewCell *cell in _rowHeaderView.subviews)
+        for (SpreadSheetViewCell *cells in _rowHeaderView.subviews)
         {
-            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
-                [cell.identifier isEqualToString:selection])
+            if ([cells isKindOfClass:SpreadSheetViewCell.class] &&
+                [cells.identifier isEqualToString:selection])
             {
-                [self editCell:cell
+                [self editCell:cells
                         inView:_rowHeaderView];
             }
         }
@@ -502,12 +504,12 @@
     {
         selection = [NSString stringWithFormat:@"%@", _alphabet[xID]];
         
-        for (SpreadSheetViewCell *cell in _columnHeaderView.subviews)
+        for (SpreadSheetViewCell *cells in _columnHeaderView.subviews)
         {
-            if ([cell isKindOfClass:SpreadSheetViewCell.class] &&
-                [cell.identifier isEqualToString:selection])
+            if ([cells isKindOfClass:SpreadSheetViewCell.class] &&
+                [cells.identifier isEqualToString:selection])
             {
-                [self editCell:cell
+                [self editCell:cells
                         inView:_columnHeaderView];
             }
         }
@@ -548,7 +550,12 @@
 
 - (void)export:(UIButton *)button
 {
-    
+    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
+                                                      delegate:self
+                                                         title:@"Select Export Method"
+                                               buttonTextArray:@[@"Export as Email Attachment", @"Export to Cloud", @"Cancel"]
+                                              destructiveIndex:0];
+#pragma unused(alert)
 }
 
 - (void)delete:(UIButton *)button
@@ -564,6 +571,149 @@
 - (void)select:(UIButton *)button
 {
     
+}
+
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex)
+    {
+        case 0://Export as Email Attachment
+        {
+            if (MFMailComposeViewController.canSendMail)
+            {
+                NSMutableArray *rowHeaders = NSMutableArray.array;
+                NSMutableArray *contents = NSMutableArray.array;
+                NSMutableString *tabbedOutput = NSMutableString.string;
+                
+                for (SpreadSheetViewCell *cells in _rowHeaderView.subviews)
+                {
+                    if ([cells isKindOfClass:SpreadSheetViewCell.class])
+                    {
+                        if (cells.row <= _activeRows)
+                        {
+                            NSString *text = @"";
+                            
+                            if (cells.text)
+                            {
+                                text = [cells.text stringByReplacingOccurrencesOfString:@"\n"
+                                                                             withString:@" "];
+                            }
+                            
+                            [rowHeaders addObject:text];
+                        }
+                    }
+                }
+                
+                for (SpreadSheetViewCell *cells in _contentView.subviews)
+                {
+                    if ([cells isKindOfClass:SpreadSheetViewCell.class])
+                    {
+                        if (cells.row <= _activeRows && cells.column <= _activeColumns)
+                        {
+                            NSString *text = @"";
+                            
+                            if (cells.text)
+                            {
+                                text = [cells.text stringByReplacingOccurrencesOfString:@"\n"
+                                                                             withString:@" "];
+                            }
+                            
+                            [contents addObject:text];
+                        }
+                    }
+                }
+                
+                NSInteger index = 0;
+                
+                [tabbedOutput appendFormat:@"%@", rowHeaders[0]];
+                
+                for (int i = 0; i < _activeColumns; i++)
+                    [tabbedOutput appendFormat:@"\t%@", contents[index++]];
+                
+                for (int i = 1; i < rowHeaders.count; i++)
+                {
+                    [tabbedOutput appendFormat:@"\n%@", rowHeaders[i]];
+                    
+                    for (int j = 0; j < _activeColumns; j++)
+                        [tabbedOutput appendFormat:@"\t%@", contents[index++]];
+                }
+                
+                NSString *fileName = @"Spreadsheet.txt";
+                
+                if (_titleTextField.text.length)
+                    fileName = [NSString stringWithFormat:@"%@.txt", _titleTextField.text];
+                
+                fileName = [fileName stringByReplacingOccurrencesOfString:@" " withString:@""];
+                
+                MFMailComposeViewController *composer = MFMailComposeViewController.new;
+                composer.mailComposeDelegate = self;
+                composer.subject = [NSString stringWithFormat:@"%@ from GMMobile", fileName];
+                
+                [composer setMessageBody:@"The tab-delimited text file attached to this email was created by GMMobile."
+                                  isHTML:NO];
+                
+                [composer setToRecipients:[NSArray arrayWithObjects:@"jeffgis@aol.com", @"wildbillmunson@gmail.com", nil]];
+                
+                [composer addAttachmentData:[tabbedOutput dataUsingEncoding:NSUTF8StringEncoding]
+                                   mimeType:@"text/plain"
+                                   fileName:fileName];
+                
+                [self.parentViewController presentViewController:composer
+                                                        animated:YES
+                                                      completion:nil];
+            }
+            
+            else
+            {
+                NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
+                                                                  delegate:self
+                                                                     title:@"ERROR: No mail account setup on device."
+                                                           buttonTextArray:@[@"OK"]
+                                                          destructiveIndex:0];
+#pragma unused(alert)
+            }
+        }
+            break;
+            
+        case 1://Export to Cloud
+            break;
+            
+        default:
+            break;
+    }
+    
+    [alertView hideLargeAlertView:YES];
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError *)error
+{
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            NSLog(@"Mail cancelled");
+            break;
+            
+        case MFMailComposeResultSaved:
+            NSLog(@"Mail saved");
+            break;
+            
+        case MFMailComposeResultSent:
+            NSLog(@"Mail sent");
+            break;
+            
+        case MFMailComposeResultFailed:
+            NSLog(@"Mail sent failure:%@", error.localizedDescription);
+            break;
+            
+        default:
+            break;
+    }
+    
+    [self.parentViewController dismissViewControllerAnimated:YES
+                                                  completion:nil];
 }
 
 - (void)editCell:(SpreadSheetViewCell *)cell

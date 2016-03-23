@@ -33,12 +33,8 @@
     
     [view addSubview:alert.overlayView];
     
-    if ([delegate isKindOfClass:UIViewController.class])
-    {
-        UIViewController *vc = (UIViewController *)delegate;
-        alert.tabBar = vc.tabBarController.tabBar;
-        alert.tabBar.userInteractionEnabled = NO;
-    }
+    alert.tabBar = view.parentViewController.tabBarController.tabBar;
+    alert.tabBar.userInteractionEnabled = NO;
     
     [alert.overlayView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor].active = YES;
     [alert.overlayView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor].active = YES;
