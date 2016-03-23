@@ -12,7 +12,7 @@
 @property (nonatomic) NSArray *alphabet;
 @property (nonatomic) CGFloat headerFontSize, borderWidth;
 @property (nonatomic) UIView *rowHeaderOverlap, *columnHeaderOverlap;
-@property (nonatomic) UIButton *returnToOrigin;
+@property (nonatomic) UIButton *returnToOrigin, *delete, *export, *create, *select;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
 @property (nonatomic) UITextField *textField, *titleTextField;
 @property BOOL inEditMode;
@@ -67,6 +67,94 @@
     
     [ssv constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
+    ssv.export = [UIButton buttonWithType:UIButtonTypeCustom];
+    ssv.export.translatesAutoresizingMaskIntoConstraints = NO;
+    ssv.export.backgroundColor = UIColor.clearColor;
+    
+    ssv.export.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
+                                                  (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
+    
+    [ssv.export setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteUpload"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
+    
+    [ssv.export addTarget:ssv
+                   action:@selector(export:)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    [ssv addSubview:ssv.export];
+    
+    [ssv.export.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor].active = YES;
+    [ssv.export.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
+    [ssv.export.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.export.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    
+    ssv.delete = [UIButton buttonWithType:UIButtonTypeCustom];
+    ssv.delete.translatesAutoresizingMaskIntoConstraints = NO;
+    ssv.delete.backgroundColor = UIColor.clearColor;
+    
+    ssv.delete.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
+                                                  (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
+    
+    [ssv.delete setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteTrashCan"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
+    
+    [ssv.delete addTarget:ssv
+                   action:@selector(delete:)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    [ssv addSubview:ssv.delete];
+    
+    [ssv.delete.leadingAnchor constraintEqualToAnchor:ssv.export.trailingAnchor].active = YES;
+    [ssv.delete.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
+    [ssv.delete.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.delete.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    
+    ssv.create = [UIButton buttonWithType:UIButtonTypeCustom];
+    ssv.create.translatesAutoresizingMaskIntoConstraints = NO;
+    ssv.create.backgroundColor = UIColor.clearColor;
+    
+    ssv.create.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
+                                                  (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
+    
+    [ssv.create setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whitePlus"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
+    
+    [ssv.create addTarget:ssv
+                   action:@selector(create:)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    [ssv addSubview:ssv.create];
+    
+    [ssv.create.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor].active = YES;
+    [ssv.create.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
+    [ssv.create.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.create.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    
+    ssv.select = [UIButton buttonWithType:UIButtonTypeCustom];
+    ssv.select.translatesAutoresizingMaskIntoConstraints = NO;
+    ssv.select.backgroundColor = UIColor.clearColor;
+    
+    ssv.select.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
+                                                  (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
+    
+    [ssv.select setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteList"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
+    
+    [ssv.select addTarget:ssv
+                   action:@selector(select:)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    [ssv addSubview:ssv.select];
+    
+    [ssv.select.trailingAnchor constraintEqualToAnchor:ssv.create.leadingAnchor].active = YES;
+    [ssv.select.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
+    [ssv.select.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.select.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    
     ssv.titleTextField = UITextField.new;
     ssv.titleTextField.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.titleTextField.delegate = ssv;
@@ -75,11 +163,12 @@
     ssv.titleTextField.placeholder = @"Tap to Enter Title Here";
     ssv.titleTextField.font = [UIFont boldSystemFontOfSize:(ssv.headerFontSize * 1.5)];
     ssv.titleTextField.textColor = UIColor.whiteColor;
+    ssv.titleTextField.adjustsFontSizeToFitWidth = YES;
     
     [ssv addSubview:ssv.titleTextField];
     
-    [ssv.titleTextField.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor].active = YES;
-    [ssv.titleTextField.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor].active = YES;
+    [ssv.titleTextField.leadingAnchor constraintEqualToAnchor:ssv.delete.trailingAnchor].active = YES;
+    [ssv.titleTextField.trailingAnchor constraintEqualToAnchor:ssv.select.leadingAnchor].active = YES;
     [ssv.titleTextField.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
     [ssv.titleTextField.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
     
@@ -455,6 +544,26 @@
     
     [_contentView setContentOffset:CGPointMake(0.0, 0.0)
                           animated:YES];
+}
+
+- (void)export:(UIButton *)button
+{
+    
+}
+
+- (void)delete:(UIButton *)button
+{
+    
+}
+
+- (void)create:(UIButton *)button
+{
+    
+}
+
+- (void)select:(UIButton *)button
+{
+    
 }
 
 - (void)editCell:(SpreadSheetViewCell *)cell
