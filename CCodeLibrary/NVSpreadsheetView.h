@@ -33,7 +33,6 @@
 + (NVSpreadsheetView *)showSpreadsheetWithRows:(NSUInteger)rows
                                        columns:(NSUInteger)columns
                                           view:(UIView *)view
-                                         frame:(CGRect)frame
                                       editable:(BOOL)editable
                                     selectable:(BOOL)selectable
                                       delegate:(id)delegate;
@@ -44,12 +43,6 @@
 - (void)setText:(NSString *)text
    forCellAtRow:(NSUInteger)row
          column:(NSUInteger)column;
-
-- (void)willRotateWithDuration:(NSTimeInterval)duration
-                  tabBarHeight:(CGFloat)tabBarHeight;
-
-- (void)didRotateWithDuration:(NSTimeInterval)duration
-                 tabBarHeight:(CGFloat)tabBarHeight;
 
 - (void)clearContents;
 

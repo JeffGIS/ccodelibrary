@@ -24,12 +24,12 @@
 + (NVSpreadsheetView *)showSpreadsheetWithRows:(NSUInteger)rows
                                        columns:(NSUInteger)columns
                                           view:(UIView *)view
-                                         frame:(CGRect)frame
                                       editable:(BOOL)editable
                                     selectable:(BOOL)selectable
                                       delegate:(id)delegate
 {
-    NVSpreadsheetView *ssv = [[NVSpreadsheetView alloc] initWithFrame:frame];
+    NVSpreadsheetView *ssv = NVSpreadsheetView.new;
+    ssv.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.backgroundColor = UIColor.grayColor;
     ssv.rows = rows;
     ssv.columns = columns;
@@ -47,14 +47,13 @@
     ssv.textField.textAlignment = NSTextAlignmentCenter;
     ssv.textField.clearButtonMode = UITextFieldViewModeAlways;
     
-    CGFloat rtobMargin = 0.0;
+    CGFloat borderWidth = 1.5;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
         ssv.rowHeight = 28.0;
         ssv.columnWidth = 108.0;
         ssv.headerFontSize = 12.0;
-        rtobMargin = 2.0;
     }
     
     else
@@ -62,10 +61,14 @@
         ssv.rowHeight = 48.0;
         ssv.columnWidth = 216.0;
         ssv.headerFontSize = 24.0;
-        rtobMargin = 5.0;
     }
     
-    ssv.titleTextField = [[UITextField alloc] initWithFrame:CGRectMake(0.0, 0.0, ssv.frame.size.width, ssv.rowHeight)];
+    [view addSubview:ssv];
+    
+    [ssv constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    
+    ssv.titleTextField = UITextField.new;
+    ssv.titleTextField.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.titleTextField.delegate = ssv;
     ssv.titleTextField.textAlignment = NSTextAlignmentCenter;
     ssv.titleTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -75,27 +78,35 @@
     
     [ssv addSubview:ssv.titleTextField];
     
-    SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake(-ssv.borderWidth, ssv.rowHeight,
-                                                                                      (ssv.columnWidth + ssv.borderWidth),
-                                                                                      ssv.rowHeight)];
+    [ssv.titleTextField.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor].active = YES;
+    [ssv.titleTextField.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor].active = YES;
+    [ssv.titleTextField.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
+    [ssv.titleTextField.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    
+    SpreadSheetViewCell *cell = SpreadSheetViewCell.new;
+    cell.translatesAutoresizingMaskIntoConstraints = NO;
     cell.row = 0;
     cell.column = 0;
     cell.backgroundColor = UserDefaults.defaults.appleGray;
-    cell.layer.borderWidth = 1.5;
+    cell.layer.borderWidth = borderWidth;
     
     [ssv addSubview:cell];
     
-    ssv.returnToOrigin = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, (ssv.rowHeight + (rtobMargin * 6.0)),
-                                                                    (ssv.rowHeight - (rtobMargin * 2.0)))];
-    ssv.returnToOrigin.center = cell.center;
+    [cell.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor constant:-borderWidth].active = YES;
+    [cell.topAnchor constraintEqualToAnchor:ssv.topAnchor constant:ssv.rowHeight].active = YES;
+    [cell.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [cell.widthAnchor constraintEqualToConstant:(ssv.columnWidth + borderWidth)].active = YES;
+    
+    ssv.returnToOrigin = [UIButton buttonWithType:UIButtonTypeCustom];
+    ssv.returnToOrigin.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.returnToOrigin.backgroundColor = UIColor.whiteColor;
     
-    ssv.returnToOrigin.imageEdgeInsets = UIEdgeInsetsMake(rtobMargin, (rtobMargin * 5.0),
-                                                          rtobMargin, (rtobMargin * 5.0));
+    ssv.returnToOrigin.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.columnWidth * 0.1),
+                                                          (ssv.rowHeight * 0.1), (ssv.columnWidth * 0.1));
     
     ssv.returnToOrigin.layer.cornerRadius = 4.0;
     ssv.returnToOrigin.layer.borderWidth = 1.0;
-    ssv.returnToOrigin.layer.borderColor = UIColor.darkGrayColor.CGColor;
+    ssv.returnToOrigin.layer.borderColor = UIColor.blackColor.CGColor;
     
     [ssv.returnToOrigin setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"diagonalArrow"
                                                                                                 ofType:@"png"]]
@@ -107,15 +118,25 @@
     
     [ssv addSubview:ssv.returnToOrigin];
     
-    ssv.rowHeaderView = [[UIScrollView alloc] initWithFrame:CGRectMake(-ssv.borderWidth, (ssv.rowHeight * 2.0),
-                                                                       (ssv.columnWidth + ssv.borderWidth),
-                                                                       (ssv.frame.size.height - ssv.rowHeight))];
+    [ssv.returnToOrigin.centerXAnchor constraintEqualToAnchor:cell.centerXAnchor].active = YES;
+    [ssv.returnToOrigin.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor].active = YES;
+    [ssv.returnToOrigin.widthAnchor constraintEqualToConstant:(ssv.columnWidth * 0.4)].active = YES;
+    [ssv.returnToOrigin.heightAnchor constraintEqualToConstant:(ssv.rowHeight * 0.8)].active = YES;
     
+    ssv.rowHeaderView = UIScrollView.new;
+    ssv.rowHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.rowHeaderView.bounces = NO;
     ssv.rowHeaderView.contentSize = CGSizeMake(ssv.columnWidth, (ssv.rowHeight * ssv.rows));
     ssv.rowHeaderView.layer.borderColor = UIColor.blackColor.CGColor;
-    ssv.rowHeaderView.layer.borderWidth = 1.5;
+    ssv.rowHeaderView.layer.borderWidth = borderWidth;
     ssv.rowHeaderView.delegate = ssv;
+    
+    [ssv addSubview:ssv.rowHeaderView];
+    
+    [ssv.rowHeaderView.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor constant:-borderWidth].active = YES;
+    [ssv.rowHeaderView.topAnchor constraintEqualToAnchor:cell.bottomAnchor].active = YES;
+    [ssv.rowHeaderView.widthAnchor constraintEqualToConstant:(ssv.columnWidth + borderWidth)].active = YES;
+    [ssv.rowHeaderView.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
     
     UITapGestureRecognizer *rowHeaderTap = [[UITapGestureRecognizer alloc] initWithTarget:ssv
                                                                                    action:@selector(ssvTapped:)];
@@ -138,20 +159,23 @@
         [ssv.rowHeaderView addSubview:cell];
     }
     
-    [ssv addSubview:ssv.rowHeaderView];
-    
     ssv.alphabet = @[@"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M",
                      @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z"];
     
-    ssv.columnHeaderView = [[UIScrollView alloc] initWithFrame:CGRectMake(ssv.columnWidth, ssv.rowHeight,
-                                                                          ((ssv.frame.size.width - ssv.columnWidth) + ssv.borderWidth),
-                                                                          ssv.rowHeight)];
-    
+    ssv.columnHeaderView = UIScrollView.new;
+    ssv.columnHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.columnHeaderView.bounces = NO;
     ssv.columnHeaderView.contentSize = CGSizeMake((ssv.columnWidth * ssv.columns), ssv.rowHeight);
     ssv.columnHeaderView.layer.borderColor = UIColor.blackColor.CGColor;
-    ssv.columnHeaderView.layer.borderWidth = 1.5;
+    ssv.columnHeaderView.layer.borderWidth = borderWidth;
     ssv.columnHeaderView.delegate = ssv;
+    
+    [ssv addSubview:ssv.columnHeaderView];
+    
+    [ssv.columnHeaderView.leadingAnchor constraintEqualToAnchor:cell.trailingAnchor].active = YES;
+    [ssv.columnHeaderView.topAnchor constraintEqualToAnchor:ssv.titleTextField.bottomAnchor].active = YES;
+    [ssv.columnHeaderView.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.columnHeaderView.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor constant:borderWidth].active = YES;
     
     UITapGestureRecognizer *columnHeaderTap = [[UITapGestureRecognizer alloc] initWithTarget:ssv
                                                                                       action:@selector(ssvTapped:)];
@@ -173,17 +197,20 @@
         [ssv.columnHeaderView addSubview:cell];
     }
     
-    [ssv addSubview:ssv.columnHeaderView];
-    
-    ssv.contentView = [[UIScrollView alloc] initWithFrame:CGRectMake(ssv.columnWidth, (ssv.rowHeight * 2.0),
-                                                                     ((ssv.frame.size.width - ssv.columnWidth) + ssv.borderWidth),
-                                                                     ssv.frame.size.height - ssv.rowHeight)];
-    
+    ssv.contentView = UIScrollView.new;
+    ssv.contentView.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.contentView.bounces = NO;
     ssv.contentView.contentSize = CGSizeMake((ssv.columnWidth * ssv.columns), (ssv.rowHeight * ssv.rows));
     ssv.contentView.layer.borderColor = UIColor.blackColor.CGColor;
-    ssv.contentView.layer.borderWidth = 1.5;
+    ssv.contentView.layer.borderWidth = borderWidth;
     ssv.contentView.delegate = ssv;
+    
+    [ssv addSubview:ssv.contentView];
+    
+    [ssv.contentView.leadingAnchor constraintEqualToAnchor:ssv.rowHeaderView.trailingAnchor].active = YES;
+    [ssv.contentView.topAnchor constraintEqualToAnchor:ssv.columnHeaderView.bottomAnchor].active = YES;
+    [ssv.contentView.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
+    [ssv.contentView.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor constant:borderWidth].active = YES;
     
     UITapGestureRecognizer *contentTap = [[UITapGestureRecognizer alloc] initWithTarget:ssv
                                                                                  action:@selector(ssvTapped:)];
@@ -211,27 +238,33 @@
         }
     }
     
-    [ssv addSubview:ssv.contentView];
+    CGFloat headerOverlapWidth = 4.0;
     
-    ssv.rowHeaderOverlap = [[UIView alloc] initWithFrame:CGRectMake((ssv.contentView.frame.origin.x + ssv.contentView.layer.borderWidth),
-                                                                    (ssv.columnHeaderView.frame.origin.y + ssv.rowHeaderView.layer.borderWidth), 4.0,
-                                                                    ssv.frame.size.height - (ssv.contentView.layer.borderWidth * 2.0))];
-    
+    ssv.rowHeaderOverlap = UIView.new;
+    ssv.rowHeaderOverlap.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.rowHeaderOverlap.backgroundColor = UIColor.yellowColor;
     ssv.rowHeaderOverlap.alpha = 0.5;
     ssv.rowHeaderOverlap.hidden = YES;
+    
     [ssv addSubview:ssv.rowHeaderOverlap];
     
-    ssv.columnHeaderOverlap = [[UIView alloc] initWithFrame:CGRectMake(ssv.columnHeaderView.layer.borderWidth,
-                                                                       (ssv.contentView.frame.origin.y + ssv.contentView.layer.borderWidth),
-                                                                       ssv.frame.size.width - (ssv.contentView.layer.borderWidth * 2.0), 4.0)];
+    [ssv.rowHeaderOverlap.leadingAnchor constraintEqualToAnchor:ssv.contentView.leadingAnchor constant:borderWidth].active = YES;
+    [ssv.rowHeaderOverlap.topAnchor constraintEqualToAnchor:ssv.columnHeaderView.topAnchor].active = YES;
+    [ssv.rowHeaderOverlap.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
+    [ssv.rowHeaderOverlap.widthAnchor constraintEqualToConstant:headerOverlapWidth].active = YES;
     
+    ssv.columnHeaderOverlap = UIView.new;
+    ssv.columnHeaderOverlap.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.columnHeaderOverlap.backgroundColor = UIColor.yellowColor;
     ssv.columnHeaderOverlap.alpha = 0.5;
     ssv.columnHeaderOverlap.hidden = YES;
+    
     [ssv addSubview:ssv.columnHeaderOverlap];
     
-    [view addSubview:ssv];
+    [ssv.columnHeaderOverlap.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor].active = YES;
+    [ssv.columnHeaderOverlap.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor].active = YES;
+    [ssv.columnHeaderOverlap.topAnchor constraintEqualToAnchor:ssv.contentView.topAnchor constant:borderWidth].active = YES;
+    [ssv.columnHeaderOverlap.heightAnchor constraintEqualToConstant:headerOverlapWidth].active = YES;
     
     return ssv;
 }
@@ -410,72 +443,6 @@
     
     else if (scrollView == _columnHeaderView)
         _contentView.contentOffset = CGPointMake(offset.x, _contentView.contentOffset.y);
-}
-
-- (void)willRotateWithDuration:(NSTimeInterval)duration
-                  tabBarHeight:(CGFloat)tabBarHeight
-{
-    CGPoint origin = self.frame.origin;
-    CGRect superviewFrame = self.superview.frame;
-    
-    [UIView animateWithDuration:duration
-                     animations:^{
-                         self.frame = CGRectMake(origin.x, origin.y,
-                                                 ((superviewFrame.size.height + tabBarHeight) - origin.x),
-                                                 ((superviewFrame.size.width - tabBarHeight) - origin.y));
-                         
-                         _titleTextField.frame = CGRectMake(_titleTextField.frame.origin.x,
-                                                           _titleTextField.frame.origin.y,
-                                                            self.frame.size.width, _rowHeight);
-                         
-                         _rowHeaderView.frame = CGRectMake(_rowHeaderView.frame.origin.x,
-                                                           _rowHeaderView.frame.origin.y,
-                                                           (_columnWidth + _borderWidth),
-                                                           (self.frame.size.height - _rowHeight));
-                         
-                         _columnHeaderView.frame = CGRectMake(_columnHeaderView.frame.origin.x,
-                                                              _columnHeaderView.frame.origin.y,
-                                                              ((self.frame.size.width - _columnWidth) + _borderWidth),
-                                                              _rowHeight);
-                         
-                         _contentView.frame = CGRectMake(_contentView.frame.origin.x,
-                                                         _contentView.frame.origin.y,
-                                                         ((self.frame.size.width - _columnWidth) + _borderWidth),
-                                                         (self.frame.size.height - _rowHeight));
-                     }];
-}
-
-- (void)didRotateWithDuration:(NSTimeInterval)duration
-                 tabBarHeight:(CGFloat)tabBarHeight
-{
-    CGPoint origin = self.frame.origin;
-    CGRect superviewFrame = self.superview.frame;
-    
-    [UIView animateWithDuration:duration
-                     animations:^{
-                         self.frame = CGRectMake(origin.x, origin.y,
-                                                 (superviewFrame.size.width - origin.x),
-                                                 (superviewFrame.size.height - origin.y));
-                         
-                         _titleTextField.frame = CGRectMake(_titleTextField.frame.origin.x,
-                                                            _titleTextField.frame.origin.y,
-                                                            self.frame.size.width, _rowHeight);
-                         
-                         _rowHeaderView.frame = CGRectMake(_rowHeaderView.frame.origin.x,
-                                                           _rowHeaderView.frame.origin.y,
-                                                           (_columnWidth + _borderWidth),
-                                                           (self.frame.size.height - _rowHeight));
-                         
-                         _columnHeaderView.frame = CGRectMake(_columnHeaderView.frame.origin.x,
-                                                              _columnHeaderView.frame.origin.y,
-                                                              ((self.frame.size.width - _columnWidth) + _borderWidth),
-                                                              _rowHeight);
-                         
-                         _contentView.frame = CGRectMake(_contentView.frame.origin.x,
-                                                         _contentView.frame.origin.y,
-                                                         ((self.frame.size.width - _columnWidth) + _borderWidth),
-                                                         (self.frame.size.height - _rowHeight));
-                     }];
 }
 
 - (void)returnToOrigin:(UIButton *)button
