@@ -224,7 +224,7 @@ main ()
 	  */
       jd += 4.0;
     }
-  exit (0);
+  /*exit(0);*/
 }
 
 /* Search for improved rise and set time estimates.  */

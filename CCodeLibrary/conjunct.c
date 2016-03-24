@@ -165,7 +165,7 @@ int main()
       jtocal(t);
       t0 = t;
     }
-exit(0);
+/*exit(0);*/
 }
 
 
@@ -322,7 +322,7 @@ else if ((objnum > 0) && (objnum < 10))
 	kepler( TDT, &objorb, q, polar );
 	}
 else
-	exit(1);
+	/*exit(1);*/
 
 /* Adjust for light time (planetary aberration)
 */

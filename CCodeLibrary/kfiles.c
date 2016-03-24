@@ -137,7 +137,7 @@ if( f )
 		case 2: printf("Input time is UT.\n" );
 			break;
 		default: printf("Illegal jdflag\n" );
-		exit(0);
+		/*exit(0);*/
 		}
 	fgets( s, 80, f );
 	sscanf( s, "%lf", &dtgiven );
