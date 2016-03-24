@@ -56,6 +56,7 @@
 		699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */; };
 		69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B36F191BCB0F30004C4B69 /* NVDateRange.m */; };
 		69B36F1B1BCB1C8F004C4B69 /* NVDateRange.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69B36F181BCB0F30004C4B69 /* NVDateRange.h */; };
+		69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */ = {isa = PBXBuildFile; fileRef = 69BB52761CA4689E00DA7BC2 /* ExitApp.c */; };
 		69C183431C87A4B1000833FC /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 69C183421C87A4B1000833FC /* .gitignore */; };
 		69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C441A91BB474B200D026A7 /* NVTabBarEdit.m */; };
 		69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C441A81BB474B200D026A7 /* NVTabBarEdit.h */; };
@@ -498,6 +499,8 @@
 		699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineCompression.h; sourceTree = "<group>"; };
 		69B36F181BCB0F30004C4B69 /* NVDateRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDateRange.h; sourceTree = "<group>"; };
 		69B36F191BCB0F30004C4B69 /* NVDateRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDateRange.m; sourceTree = "<group>"; };
+		69BB52761CA4689E00DA7BC2 /* ExitApp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ExitApp.c; sourceTree = "<group>"; };
+		69BB52771CA4689E00DA7BC2 /* ExitApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExitApp.h; sourceTree = "<group>"; };
 		69C183421C87A4B1000833FC /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		69C441A81BB474B200D026A7 /* NVTabBarEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTabBarEdit.h; sourceTree = "<group>"; };
 		69C441A91BB474B200D026A7 /* NVTabBarEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTabBarEdit.m; sourceTree = "<group>"; };
@@ -1123,6 +1126,8 @@
 				EB0E4FFC1C6288BF00849766 /* DispersePoint.m */,
 				EB0E4FF31C62785200849766 /* SymbolDictionary.h */,
 				EB0E4FF41C62785200849766 /* SymbolDictionary.m */,
+				69BB52771CA4689E00DA7BC2 /* ExitApp.h */,
+				69BB52761CA4689E00DA7BC2 /* ExitApp.c */,
 				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);
@@ -1267,7 +1272,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = GSSi;
 			};
 			buildConfigurationList = EBA2E455199527660085B2E0 /* Build configuration list for PBXProject "CCodeLibrary" */;
@@ -1325,6 +1330,7 @@
 				EBC01D221BED1C8C0004C751 /* nep404.c in Sources */,
 				A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */,
 				694F00791C1B4BBA0074AF72 /* MapToolbar.m in Sources */,
+				69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */,
 				A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */,
 				A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */,
 				A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */,

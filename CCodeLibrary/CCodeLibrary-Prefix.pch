@@ -7,6 +7,8 @@
     #import "UIView+Constraints.h"
 #endif
 
+#include "ExitApp.h"
+
 #ifndef DEBUG
     #define NSLog(s,...)
 #endif

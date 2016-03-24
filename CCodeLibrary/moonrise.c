@@ -224,7 +224,7 @@ main ()
 	  */
       jd += 4.0;
     }
-  /*exit(0);*/
+  exitApp(__func__);
 }
 
 /* Search for improved rise and set time estimates.  */
