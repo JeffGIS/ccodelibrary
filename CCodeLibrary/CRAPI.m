@@ -601,7 +601,8 @@
     if(![fileManager fileExistsAtPath:filePath])
     {
         [str writeToFile:filePath
-              atomically:YES encoding:NSUTF8StringEncoding
+              atomically:YES
+                encoding:NSUTF8StringEncoding
                    error:nil];
     }
     

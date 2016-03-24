@@ -6,36 +6,67 @@
 @interface NVDocumentManager () <UIDocumentPickerDelegate>
 
 @property (nonatomic) UIDocumentPickerViewController *documentPicker;
+@property (nonatomic) NSString *filepath;
+@property BOOL deleteWhenDone;
 
 @end
 
 @implementation NVDocumentManager
 
 - (void)exportDocumentFromFilepath:(NSString *)filepath
-                                  delegate:(id)delegate
+                          delegate:(id)delegate
+                    deleteWhenDone:(BOOL)deleteWhenDone
 {
-    if (!filepath || ![delegate isKindOfClass:UIViewController.class])
+    if (!filepath || !([delegate isKindOfClass:UIViewController.class] ||
+                       [delegate isKindOfClass:UIView.class]))
+    {
         return;
+    }
     
     _delegate = delegate;
+    _filepath = filepath;
+    _deleteWhenDone = deleteWhenDone;
+    UIViewController *vc = nil;
     
-    _documentPicker = [[UIDocumentPickerViewController alloc] initWithURL:[NSURL fileURLWithPath:filepath]
+    if ([_delegate isKindOfClass:UIViewController.class])
+        vc = (UIViewController *)_delegate;
+    
+    else
+    {
+        UIView *view = (UIView *)_delegate;
+        vc = view.parentViewController;
+    }
+    
+    _documentPicker = [[UIDocumentPickerViewController alloc] initWithURL:[NSURL fileURLWithPath:_filepath]
                                                                    inMode:UIDocumentPickerModeExportToService];
     
     _documentPicker.delegate = self;
     _documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
     
-    [delegate presentViewController:_documentPicker
-                           animated:NO
-                         completion:nil];
+    [vc presentViewController:_documentPicker
+                     animated:NO
+                   completion:nil];
 }
 
 - (void)importFileWithDelegate:(id)delegate
 {
-    if (![delegate isKindOfClass:UIViewController.class])
+    if (([delegate isKindOfClass:UIViewController.class] ||
+         [delegate isKindOfClass:UIView.class]))
+    {
         return;
+    }
     
     _delegate = delegate;
+    UIViewController *vc = nil;
+    
+    if ([_delegate isKindOfClass:UIViewController.class])
+        vc = (UIViewController *)_delegate;
+    
+    else
+    {
+        UIView *view = (UIView *)_delegate;
+        vc = view.parentViewController;
+    }
     
     _documentPicker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.content", @"public.composite-content", @"public.data"]
                                                                              inMode:UIDocumentPickerModeImport];
@@ -43,9 +74,9 @@
     _documentPicker.delegate = self;
     _documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
     
-    [delegate presentViewController:_documentPicker
-                           animated:NO
-                         completion:nil];
+    [vc presentViewController:_documentPicker
+                     animated:NO
+                   completion:nil];
 }
 
 - (void)documentPicker:(UIDocumentPickerViewController *)controller
@@ -70,6 +101,17 @@
         case UIDocumentPickerModeOpen:
             message = @"Open Document Completed";
             break;
+    }
+    
+    if (_deleteWhenDone)
+    {
+        NSError *error = nil;
+        
+        [NSFileManager.defaultManager removeItemAtPath:_filepath
+                                                 error:&error];
+        
+        if (error)
+            NSLog(@"Export to Cloud Delete Local File When Done ERROR:%@", error);
     }
     
     if ([_delegate respondsToSelector:@selector(documentManagerDidCompleteWithMessage:filepath:)])

@@ -6,8 +6,9 @@
 #import "UserDefaults.h"
 #import "NVAlertView.h"
 @import MessageUI;
+#import "CRAPI.h"
 
-@interface NVSpreadsheetView () <NVAlertViewDelegate,MFMailComposeViewControllerDelegate>
+@interface NVSpreadsheetView () <NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate>
 
 @property (nonatomic) UIScrollView *contentView, *rowHeaderView, *columnHeaderView;
 @property (nonatomic) NSDate *touchDown, *touchUp;
@@ -555,7 +556,7 @@
                                                          title:@"Select Export Method"
                                                buttonTextArray:@[@"Export as Email Attachment", @"Export to Cloud", @"Cancel"]
                                               destructiveIndex:0];
-#pragma unused(alert)
+    alert.identifier = @"ExportPrompt";
 }
 
 - (void)delete:(UIButton *)button
@@ -576,111 +577,75 @@
 - (void)alertView:(NVAlertView *)alertView
 didTapButtonAtIndex:(NSInteger)buttonIndex
 {
-    switch (buttonIndex)
+    if ([alertView.identifier isEqualToString:@"ExportPrompt"])
     {
-        case 0://Export as Email Attachment
+        switch (buttonIndex)
         {
-            if (MFMailComposeViewController.canSendMail)
+            case 0://Export as Email Attachment
             {
-                NSMutableArray *rowHeaders = NSMutableArray.array;
-                NSMutableArray *contents = NSMutableArray.array;
-                NSMutableString *tabbedOutput = NSMutableString.string;
-                
-                for (SpreadSheetViewCell *cells in _rowHeaderView.subviews)
+                if (MFMailComposeViewController.canSendMail)
                 {
-                    if ([cells isKindOfClass:SpreadSheetViewCell.class])
-                    {
-                        if (cells.row <= _activeRows)
-                        {
-                            NSString *text = @"";
-                            
-                            if (cells.text)
-                            {
-                                text = [cells.text stringByReplacingOccurrencesOfString:@"\n"
-                                                                             withString:@" "];
-                            }
-                            
-                            [rowHeaders addObject:text];
-                        }
-                    }
-                }
-                
-                for (SpreadSheetViewCell *cells in _contentView.subviews)
-                {
-                    if ([cells isKindOfClass:SpreadSheetViewCell.class])
-                    {
-                        if (cells.row <= _activeRows && cells.column <= _activeColumns)
-                        {
-                            NSString *text = @"";
-                            
-                            if (cells.text)
-                            {
-                                text = [cells.text stringByReplacingOccurrencesOfString:@"\n"
-                                                                             withString:@" "];
-                            }
-                            
-                            [contents addObject:text];
-                        }
-                    }
-                }
-                
-                NSInteger index = 0;
-                
-                [tabbedOutput appendFormat:@"%@", rowHeaders[0]];
-                
-                for (int i = 0; i < _activeColumns; i++)
-                    [tabbedOutput appendFormat:@"\t%@", contents[index++]];
-                
-                for (int i = 1; i < rowHeaders.count; i++)
-                {
-                    [tabbedOutput appendFormat:@"\n%@", rowHeaders[i]];
+                    NSString *tabbedOutput = [self tabbedOutput];
+                    NSString *fileName = [self fileName];
                     
-                    for (int j = 0; j < _activeColumns; j++)
-                        [tabbedOutput appendFormat:@"\t%@", contents[index++]];
+                    MFMailComposeViewController *composer = MFMailComposeViewController.new;
+                    composer.mailComposeDelegate = self;
+                    composer.subject = [NSString stringWithFormat:@"%@ from GMMobile", fileName];
+                    
+                    [composer setMessageBody:@"The tab-delimited text file attached to this email was created by GMMobile."
+                                      isHTML:NO];
+                    
+                    [composer setToRecipients:[NSArray arrayWithObjects:@"jeffgis@aol.com", @"wildbillmunson@gmail.com", nil]];
+                    
+                    [composer addAttachmentData:[tabbedOutput dataUsingEncoding:NSUTF8StringEncoding]
+                                       mimeType:@"text/plain"
+                                       fileName:fileName];
+                    
+                    [self.parentViewController presentViewController:composer
+                                                            animated:YES
+                                                          completion:nil];
                 }
                 
-                NSString *fileName = @"Spreadsheet.txt";
-                
-                if (_titleTextField.text.length)
-                    fileName = [NSString stringWithFormat:@"%@.txt", _titleTextField.text];
-                
-                fileName = [fileName stringByReplacingOccurrencesOfString:@" " withString:@""];
-                
-                MFMailComposeViewController *composer = MFMailComposeViewController.new;
-                composer.mailComposeDelegate = self;
-                composer.subject = [NSString stringWithFormat:@"%@ from GMMobile", fileName];
-                
-                [composer setMessageBody:@"The tab-delimited text file attached to this email was created by GMMobile."
-                                  isHTML:NO];
-                
-                [composer setToRecipients:[NSArray arrayWithObjects:@"jeffgis@aol.com", @"wildbillmunson@gmail.com", nil]];
-                
-                [composer addAttachmentData:[tabbedOutput dataUsingEncoding:NSUTF8StringEncoding]
-                                   mimeType:@"text/plain"
-                                   fileName:fileName];
-                
-                [self.parentViewController presentViewController:composer
-                                                        animated:YES
-                                                      completion:nil];
-            }
-            
-            else
-            {
-                NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
-                                                                  delegate:self
-                                                                     title:@"ERROR: No mail account setup on device."
-                                                           buttonTextArray:@[@"OK"]
-                                                          destructiveIndex:0];
+                else
+                {
+                    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
+                                                                      delegate:self
+                                                                         title:@"ERROR: No mail account setup on device."
+                                                               buttonTextArray:@[@"OK"]
+                                                              destructiveIndex:0];
 #pragma unused(alert)
+                }
             }
+                break;
+                
+            case 1://Export to Cloud
+            {
+                NSString *tabbedOutput = [self tabbedOutput];
+                NSString *fileName = [self fileName];
+                NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
+                NSString *filepath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
+                NSError *error = nil;
+                
+                [tabbedOutput writeToFile:filepath
+                               atomically:YES
+                                 encoding:NSUTF8StringEncoding
+                                    error:&error];
+                
+                if (error)
+                    NSLog(@"Export to Cloud File Write ERROR:%@", error);
+                
+                else
+                {
+                    [CRAPI.sharedInstance.docManager exportDocumentFromFilepath:filepath
+                                                                       delegate:self
+                                                                 deleteWhenDone:YES];
+                }
+            }
+                break;
+                
+            default:
+                break;
         }
-            break;
-            
-        case 1://Export to Cloud
-            break;
-            
-        default:
-            break;
     }
     
     [alertView hideLargeAlertView:YES];
@@ -690,22 +655,25 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
           didFinishWithResult:(MFMailComposeResult)result
                         error:(NSError *)error
 {
+    NSString *resultString = @"";
+    
     switch (result)
     {
         case MFMailComposeResultCancelled:
-            NSLog(@"Mail cancelled");
+            resultString = @"Mail Cancelled";
             break;
             
         case MFMailComposeResultSaved:
-            NSLog(@"Mail saved");
+            resultString = @"Mail Saved";
             break;
             
         case MFMailComposeResultSent:
-            NSLog(@"Mail sent");
+            resultString = @"Mail Sent";
             break;
             
         case MFMailComposeResultFailed:
-            NSLog(@"Mail sent failure:%@", error.localizedDescription);
+            resultString = [NSString stringWithFormat:@"Mail Send failure:%@",
+                            error.localizedDescription];
             break;
             
         default:
@@ -714,6 +682,98 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     [self.parentViewController dismissViewControllerAnimated:YES
                                                   completion:nil];
+    
+    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
+                                                      delegate:self
+                                                         title:resultString
+                                               buttonTextArray:@[@"OK"]
+                                              destructiveIndex:0];
+#pragma unused(alert)
+}
+
+- (void)documentManagerDidCompleteWithMessage:(NSString *)message
+                                     filepath:(NSString *)filepath
+{
+    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
+                                                      delegate:self
+                                                         title:message
+                                               buttonTextArray:@[@"OK"]
+                                              destructiveIndex:0];
+#pragma unused(alert)
+}
+
+- (NSString *)tabbedOutput
+{
+    NSMutableArray *rowHeaders = NSMutableArray.array;
+    NSMutableArray *contents = NSMutableArray.array;
+    NSMutableString *tabbedOutput = NSMutableString.string;
+    
+    for (SpreadSheetViewCell *cells in _rowHeaderView.subviews)
+    {
+        if ([cells isKindOfClass:SpreadSheetViewCell.class])
+        {
+            if (cells.row <= _activeRows)
+            {
+                NSString *text = @"";
+                
+                if (cells.text)
+                {
+                    text = [cells.text stringByReplacingOccurrencesOfString:@"\n"
+                                                                 withString:@" "];
+                }
+                
+                [rowHeaders addObject:text];
+            }
+        }
+    }
+    
+    for (SpreadSheetViewCell *cells in _contentView.subviews)
+    {
+        if ([cells isKindOfClass:SpreadSheetViewCell.class])
+        {
+            if (cells.row <= _activeRows && cells.column <= _activeColumns)
+            {
+                NSString *text = @"";
+                
+                if (cells.text)
+                {
+                    text = [cells.text stringByReplacingOccurrencesOfString:@"\n"
+                                                                 withString:@" "];
+                }
+                
+                [contents addObject:text];
+            }
+        }
+    }
+    
+    NSInteger index = 0;
+    
+    [tabbedOutput appendFormat:@"%@", rowHeaders[0]];
+    
+    for (int i = 0; i < _activeColumns; i++)
+        [tabbedOutput appendFormat:@"\t%@", contents[index++]];
+    
+    for (int i = 1; i < rowHeaders.count; i++)
+    {
+        [tabbedOutput appendFormat:@"\n%@", rowHeaders[i]];
+        
+        for (int j = 0; j < _activeColumns; j++)
+            [tabbedOutput appendFormat:@"\t%@", contents[index++]];
+    }
+    
+    return tabbedOutput.copy;
+}
+
+- (NSString *)fileName
+{
+    NSString *fileName = @"Spreadsheet.txt";
+    
+    if (_titleTextField.text.length)
+        fileName = [NSString stringWithFormat:@"%@.txt", _titleTextField.text];
+    
+    fileName = [fileName stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    return fileName;
 }
 
 - (void)editCell:(SpreadSheetViewCell *)cell

@@ -154,7 +154,9 @@
     BigWrite(Fid, pgrid, (_width * _height) * sizeof(BYTE), -1);
     fclose(Fid);
     
-    //[CRAPI.sharedInstance.docManager exportDocumentFromFilepath:filepath delegate:nil];
+    /*[CRAPI.sharedInstance.docManager exportDocumentFromFilepath:filepath
+                                                       delegate:nil
+                                                 deleteWhenDone:NO];*/
     
     return TRUE;
 }
