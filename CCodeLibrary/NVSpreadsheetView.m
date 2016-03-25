@@ -562,6 +562,13 @@
 - (void)delete:(UIButton *)button
 {
     
+    
+    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
+                                                      delegate:self
+                                                         title:[NSString stringWithFormat:@"Are you sure you want to delete %@?", [self fileName]]
+                                               buttonTextArray:@[@"YES", @"NO"]
+                                              destructiveIndex:1];
+    alert.identifier = @"DeletePrompt";
 }
 
 - (void)create:(UIButton *)button
@@ -645,6 +652,17 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 
             default:
                 break;
+        }
+    }
+    
+    if ([alertView.identifier isEqualToString:@"DeletePrompt"])
+    {
+        if (buttonIndex == 0)
+        {
+            [self clearContents];
+            _titleTextField.text = @"";
+            CRAPI.sharedInstance.resetPropList = YES;
+            CRAPI.sharedInstance.resetDestinations = YES;
         }
     }
     
