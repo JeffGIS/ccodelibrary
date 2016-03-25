@@ -9,6 +9,7 @@
 @implementation NVPDFSnapshotter
 
 + (NSData *)pdfFromViews:(NSArray *)views
+             legendsView:(UIView *)legendsView
              pickedItems:(NSArray *)pickedItems
 {
     NSMutableData *pdf = NSMutableData.data;
@@ -18,6 +19,14 @@
     
     for (UIView *view in views)
         [view.layer renderInContext:context];
+    
+    if (legendsView.subviews)
+    {
+        UIGraphicsBeginPDFPageWithInfo(legendsView.bounds, NULL);
+        legendsView.hidden = NO;
+        [legendsView.layer renderInContext:context];
+        [legendsView removeFromSuperview];
+    }
     
     if (pickedItems.count)
     {
