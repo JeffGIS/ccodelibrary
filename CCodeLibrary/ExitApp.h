@@ -6,6 +6,6 @@
 
 #include <stdio.h>
 
-void exitApp(char *callingFunctionSignature);
+void exitApp(const char *callingFunctionSignature);
 
 #endif /* ExitApp_h */
