@@ -153,11 +153,6 @@
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
            selector:@selector(emailPDFSelected:)];
     
-    UILongPressGestureRecognizer *emailLpGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:mt
-                                                                                                 action:@selector(emailLongPressed:)];
-    
-    [mt.emailPDFButton addGestureRecognizer:emailLpGesture];
-    
     //email PDF button added by default
     [mt addSubview:mt.emailPDFButton];
     
@@ -349,24 +344,6 @@
     
     if (_delegate)
         [_delegate mapToolbarDidSelectEmailPDF];
-}
-
-- (void)emailLongPressed:(UILongPressGestureRecognizer *)gesture
-{
-    if (gesture.state == UIGestureRecognizerStateBegan)
-    {
-        _emailPDFButton.layer.borderColor = UIColor.greenColor.CGColor;
-        _emailPDFButton.layer.borderWidth = 6.0;
-    }
-    
-    else if (gesture.state == UIGestureRecognizerStateEnded)
-    {
-        _emailPDFButton.layer.borderColor = UIColor.blackColor.CGColor;
-        _emailPDFButton.layer.borderWidth = 2.0;
-        
-        if (_delegate)
-            [_delegate mapToolbarDidLongPressEmailPDF];
-    }
 }
 
 - (void)helpButtonSelected:(UIButton *)button
