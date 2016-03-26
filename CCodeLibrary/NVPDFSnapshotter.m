@@ -20,25 +20,14 @@
     for (UIView *view in views)
         [view.layer renderInContext:context];
     
-    if (legendsView.subviews)
-    {
-        UIGraphicsBeginPDFPageWithInfo(legendsView.bounds, NULL);
-        legendsView.hidden = NO;
-        [legendsView.layer renderInContext:context];
-        [legendsView removeFromSuperview];
-    }
+    PickedItem *pi = NULL;
+    NSString *report = nil;
+    CGSize textSize = CGSizeZero;
+    CGFloat linkWidth = 10.0, pageMargin = 10.0;;
     
     if (pickedItems.count)
     {
-        UIFont *font = [UIFont fontWithName:@"CourierNewPS-BoldMT"
-                                       size:6.0];
-        
-        NSDictionary *attributes = @{NSFontAttributeName:font};
-        CGSize textSize = CGSizeZero;
-        CGFloat linkWidth = 10.0, pageMargin = 10.0;
         CGRect linkFrame = CGRectZero;
-        PickedItem *pi = NULL;
-        NSString *report = nil;
         
         for (int i = 0; i < pickedItems.count; i++)
         {
@@ -55,9 +44,25 @@
                                                            (long)pi.refno], linkFrame);
             }
         }
-        
+    }
+    
+    if (legendsView.subviews)
+    {
+        UIGraphicsBeginPDFPageWithInfo(legendsView.bounds, NULL);
+        legendsView.hidden = NO;
+        [legendsView.layer renderInContext:context];
+        [legendsView removeFromSuperview];
+    }
+    
+    if (pickedItems.count)
+    {
         for (int i = 0; i < pickedItems.count; i++)
         {
+            UIFont *font = [UIFont fontWithName:@"CourierNewPS-BoldMT"
+                                           size:6.0];
+            
+            NSDictionary *attributes = @{NSFontAttributeName:font};
+            
             pi = (PickedItem *)pickedItems[i];
             report = [CrimeData reportForControlNumber:pi.refno];
             
