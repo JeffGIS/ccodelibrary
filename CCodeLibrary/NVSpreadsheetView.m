@@ -66,6 +66,9 @@
         ssv.headerFontSize = 24.0;
     }
     
+    UIEdgeInsets insets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
+                                           (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
+    
     [view addSubview:ssv];
     
     [ssv constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
@@ -73,9 +76,7 @@
     ssv.export = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.export.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.export.backgroundColor = UIColor.clearColor;
-    
-    ssv.export.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
-                                                  (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
+    ssv.export.imageEdgeInsets = insets;
     
     [ssv.export setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteUpload"
                                                                                         ofType:@"png"]]
@@ -95,9 +96,7 @@
     ssv.delete = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.delete.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.delete.backgroundColor = UIColor.clearColor;
-    
-    ssv.delete.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
-                                                  (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
+    ssv.delete.imageEdgeInsets = insets;
     
     [ssv.delete setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteTrashCan"
                                                                                         ofType:@"png"]]
@@ -118,17 +117,23 @@
     ssv.mapIt.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.mapIt.backgroundColor = UIColor.clearColor;
     ssv.mapIt.selected = CRAPI.sharedInstance.mapPropList;
+    ssv.mapIt.imageEdgeInsets = insets;
     
-    ssv.mapIt.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
-                                                 (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
-    
-    [ssv.mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"redPin"
+    [ssv.mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapItWithX"
                                                                                        ofType:@"png"]]
                forState:UIControlStateNormal];
     
-    [ssv.mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"greenPin"
+    [ssv.mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapItWithX"
+                                                                                       ofType:@"png"]]
+               forState:UIControlStateNormal|UIControlStateHighlighted];
+    
+    [ssv.mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapIt"
                                                                                        ofType:@"png"]]
                forState:UIControlStateSelected];
+    
+    [ssv.mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapIt"
+                                                                                       ofType:@"png"]]
+               forState:UIControlStateSelected|UIControlStateHighlighted];
     
     [ssv.mapIt addTarget:ssv
                   action:@selector(toggleMapIt:)
@@ -144,9 +149,7 @@
     ssv.create = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.create.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.create.backgroundColor = UIColor.clearColor;
-    
-    ssv.create.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
-                                                  (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
+    ssv.create.imageEdgeInsets = insets;
     
     [ssv.create setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whitePlus"
                                                                                         ofType:@"png"]]
@@ -166,9 +169,7 @@
     ssv.select = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.select.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.select.backgroundColor = UIColor.clearColor;
-    
-    ssv.select.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
-                                                  (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
+    ssv.select.imageEdgeInsets = insets;
     
     [ssv.select setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteList"
                                                                                         ofType:@"png"]]
@@ -219,9 +220,7 @@
     ssv.returnToOrigin = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.returnToOrigin.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.returnToOrigin.backgroundColor = UIColor.whiteColor;
-    
-    ssv.returnToOrigin.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.columnWidth * 0.1),
-                                                          (ssv.rowHeight * 0.1), (ssv.columnWidth * 0.1));
+    ssv.returnToOrigin.imageEdgeInsets = insets;
     
     ssv.returnToOrigin.layer.cornerRadius = 4.0;
     ssv.returnToOrigin.layer.borderWidth = 1.0;
