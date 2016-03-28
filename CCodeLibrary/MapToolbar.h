@@ -3,7 +3,7 @@
 
 #import "GSSiEnums.h"
 
-#define NUMMapToolbarProperty 11
+#define NUMMapToolbarProperty 12
 
 typedef NS_ENUM(NSInteger, MapToolbarProperty)
 {
@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, MapToolbarProperty)
     MapToolbarPropertyWantEmailPDF,
     MapToolbarPropertyWantProgressBar,
     MapToolbarPropertyWantHelpButton,
+    MapToolbarPropertyWantReturnButton,
 };
 
 typedef NS_ENUM(NSInteger, MapToolbarOrientation)
@@ -44,6 +45,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 - (void)mapToolbarDidSelectHelpButton;
 - (void)mapToolbarDidSelectDigitize;
 - (void)mapToolbarDidSelectLegends;
+- (void)mapToolbarDidSelectReturnButton;
 - (void)mapToolbarDidFinishDrag;
 - (void)mapToolbarDidWantExpand;
 
@@ -55,7 +57,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 @property (nonatomic) MapToolbarOrientation orientation, previousOrientation;
 @property (readonly) BOOL wantPlat, wantDigitize, wantMapType, wantUserLocation;
 @property (readonly) BOOL wantExtents, wantLegends, wantGrayscale, wantClearMarkers;
-@property (readonly) BOOL wantEmailPDF, wantProgressBar, wantHelpButton;
+@property (readonly) BOOL wantEmailPDF, wantProgressBar, wantHelpButton, wantReturnButton;
 @property (nonatomic) CGFloat progress, legendOffset;
 @property BOOL helpLongPressed, isOffset;
 @property (nonatomic) CGRect previousFrame;
