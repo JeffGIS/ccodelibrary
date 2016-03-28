@@ -70,7 +70,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic, copy) NSString *currentOverallBoundaryName;
 @property (nonatomic, copy) NSString *currentOverallBoundaryType;
 @property int currentOverallBoundaryRefno;
-@property BOOL setToAlleyWalls, isFromGMMobile;
+@property BOOL setToAlleyWalls, isFromGMMobile, mapPropList, mapDestinations;
 @property (nonatomic, copy) NSString *sourceApp;
 @property (nonatomic) UIView *currentView;
 

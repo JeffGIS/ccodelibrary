@@ -15,7 +15,7 @@
 @property (nonatomic) NSArray *alphabet;
 @property (nonatomic) CGFloat headerFontSize, borderWidth;
 @property (nonatomic) UIView *rowHeaderOverlap, *columnHeaderOverlap;
-@property (nonatomic) UIButton *returnToOrigin, *delete, *export, *create, *select;
+@property (nonatomic) UIButton *returnToOrigin, *delete, *export, *create, *select, *mapIt;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
 @property (nonatomic) UITextField *textField, *titleTextField;
 @property BOOL inEditMode;
@@ -114,6 +114,33 @@
     [ssv.delete.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
     [ssv.delete.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
     
+    ssv.mapIt = [UIButton buttonWithType:UIButtonTypeCustom];
+    ssv.mapIt.translatesAutoresizingMaskIntoConstraints = NO;
+    ssv.mapIt.backgroundColor = UIColor.clearColor;
+    ssv.mapIt.selected = CRAPI.sharedInstance.mapPropList;
+    
+    ssv.mapIt.imageEdgeInsets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
+                                                 (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
+    
+    [ssv.mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"redPin"
+                                                                                       ofType:@"png"]]
+               forState:UIControlStateNormal];
+    
+    [ssv.mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"greenPin"
+                                                                                       ofType:@"png"]]
+               forState:UIControlStateSelected];
+    
+    [ssv.mapIt addTarget:ssv
+                  action:@selector(toggleMapIt:)
+        forControlEvents:UIControlEventTouchUpInside];
+    
+    [ssv addSubview:ssv.mapIt];
+    
+    [ssv.mapIt.leadingAnchor constraintEqualToAnchor:ssv.delete.trailingAnchor].active = YES;
+    [ssv.mapIt.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
+    [ssv.mapIt.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.mapIt.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    
     ssv.create = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.create.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.create.backgroundColor = UIColor.clearColor;
@@ -170,7 +197,7 @@
     
     [ssv addSubview:ssv.titleTextField];
     
-    [ssv.titleTextField.leadingAnchor constraintEqualToAnchor:ssv.delete.trailingAnchor].active = YES;
+    [ssv.titleTextField.leadingAnchor constraintEqualToAnchor:ssv.mapIt.trailingAnchor].active = YES;
     [ssv.titleTextField.trailingAnchor constraintEqualToAnchor:ssv.select.leadingAnchor].active = YES;
     [ssv.titleTextField.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
     [ssv.titleTextField.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
@@ -569,6 +596,12 @@
                                                buttonTextArray:@[@"YES", @"NO"]
                                               destructiveIndex:1];
     alert.identifier = @"DeletePrompt";
+}
+
+- (void)toggleMapIt:(UIButton *)button
+{
+    button.selected = !button.selected;
+    CRAPI.sharedInstance.mapPropList = button.selected;
 }
 
 - (void)create:(UIButton *)button
