@@ -50,7 +50,7 @@
     return sharedInstance;
 }
 
-- (NSString*)sharedOutputDirectory
+- (NSString *)sharedOutputDirectory
 {
     NSString* outdir = [NSString stringWithFormat:@"%@/OutputFiles",self.sharedFilePath];
     [NSFileManager.defaultManager createDirectoryAtPath:outdir
