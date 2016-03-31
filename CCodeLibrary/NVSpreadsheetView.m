@@ -13,7 +13,7 @@
 @property (nonatomic) UIScrollView *contentView, *rowHeaderView, *columnHeaderView;
 @property (nonatomic) NSDate *touchDown, *touchUp;
 @property (nonatomic) NSArray *alphabet;
-@property (nonatomic) CGFloat headerFontSize, borderWidth;
+@property (nonatomic) CGFloat fontSize, borderWidth;
 @property (nonatomic) UIView *rowHeaderOverlap, *columnHeaderOverlap;
 @property (nonatomic) UIButton *returnToOrigin, *delete, *export, *create, *select, *mapIt, *swap;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
@@ -27,6 +27,7 @@
 + (NVSpreadsheetView *)showSpreadsheetWithRows:(NSUInteger)rows
                                        columns:(NSUInteger)columns
                                           view:(UIView *)view
+                                       flipped:(BOOL)flipped
                                       delegate:(id)delegate
 {
     NVSpreadsheetView *ssv = NVSpreadsheetView.new;
@@ -36,6 +37,7 @@
     ssv.columns = columns;
     ssv.delegate = delegate;
     ssv.inEditMode = NO;
+    ssv.flipped = flipped;
     ssv.activeColumns = ssv.activeRows = 0;
     ssv.borderWidth = 1.5;
     
@@ -51,16 +53,16 @@
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
-        ssv.rowHeight = 28.0;
+        ssv.rowHeight = 36.0;
         ssv.columnWidth = 108.0;
-        ssv.headerFontSize = 12.0;
+        ssv.fontSize = 14.0;
     }
     
     else
     {
-        ssv.rowHeight = 48.0;
+        ssv.rowHeight = 56.0;
         ssv.columnWidth = 216.0;
-        ssv.headerFontSize = 24.0;
+        ssv.fontSize = 24.0;
     }
     
     UIEdgeInsets insets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
@@ -189,7 +191,7 @@
     ssv.titleTextField.textAlignment = NSTextAlignmentCenter;
     ssv.titleTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     ssv.titleTextField.placeholder = @"Tap to Enter Title Here";
-    ssv.titleTextField.font = [UIFont boldSystemFontOfSize:(ssv.headerFontSize * 1.5)];
+    ssv.titleTextField.font = [UIFont boldSystemFontOfSize:(ssv.fontSize * 1.5)];
     ssv.titleTextField.textColor = UIColor.whiteColor;
     ssv.titleTextField.adjustsFontSizeToFitWidth = YES;
     
@@ -267,17 +269,29 @@
     ssv.rowHeaderView = UIScrollView.new;
     ssv.rowHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.rowHeaderView.bounces = NO;
-    ssv.rowHeaderView.contentSize = CGSizeMake(ssv.columnWidth, (ssv.rowHeight * ssv.rows));
     ssv.rowHeaderView.layer.borderColor = UIColor.blackColor.CGColor;
     ssv.rowHeaderView.layer.borderWidth = borderWidth;
     ssv.rowHeaderView.delegate = ssv;
     
     [ssv addSubview:ssv.rowHeaderView];
     
-    [ssv.rowHeaderView.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor constant:-borderWidth].active = YES;
-    [ssv.rowHeaderView.topAnchor constraintEqualToAnchor:cell.bottomAnchor].active = YES;
-    [ssv.rowHeaderView.widthAnchor constraintEqualToConstant:(ssv.columnWidth + borderWidth)].active = YES;
-    [ssv.rowHeaderView.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
+    if (ssv.flipped)
+    {
+        ssv.rowHeaderView.contentSize = CGSizeMake((ssv.columnWidth * ssv.rows), ssv.rowHeight);
+        [ssv.rowHeaderView.leadingAnchor constraintEqualToAnchor:cell.trailingAnchor].active = YES;
+        [ssv.rowHeaderView.topAnchor constraintEqualToAnchor:ssv.titleTextField.bottomAnchor].active = YES;
+        [ssv.rowHeaderView.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+        [ssv.rowHeaderView.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor constant:borderWidth].active = YES;
+    }
+    
+    else
+    {
+        ssv.rowHeaderView.contentSize = CGSizeMake(ssv.columnWidth, (ssv.rowHeight * ssv.rows));
+        [ssv.rowHeaderView.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor constant:-borderWidth].active = YES;
+        [ssv.rowHeaderView.topAnchor constraintEqualToAnchor:cell.bottomAnchor].active = YES;
+        [ssv.rowHeaderView.widthAnchor constraintEqualToConstant:(ssv.columnWidth + borderWidth)].active = YES;
+        [ssv.rowHeaderView.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
+    }
     
     UITapGestureRecognizer *rowHeaderTap = [[UITapGestureRecognizer alloc] initWithTarget:ssv
                                                                                    action:@selector(ssvTapped:)];
@@ -286,13 +300,19 @@
     
     for (int r = 0; r < ssv.rows; r++)
     {
-        SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake(0.0, (r * ssv.rowHeight),
-                                                                                          (ssv.columnWidth + ssv.borderWidth),
-                                                                                          ssv.rowHeight)];
+        CGRect cellFrame = CGRectZero;
+        
+        if (ssv.flipped)
+            cellFrame = CGRectMake((r * ssv.columnWidth), 0.0, ssv.columnWidth, ssv.rowHeight);
+        
+        else
+            cellFrame = CGRectMake(0.0, (r * ssv.rowHeight), (ssv.columnWidth + ssv.borderWidth), ssv.rowHeight);
+        
+        SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:cellFrame];
         
         cell.row = (NSUInteger)(r + 1);
         cell.column = 0;
-        cell.font = [UIFont boldSystemFontOfSize:ssv.headerFontSize];
+        cell.font = [UIFont boldSystemFontOfSize:ssv.fontSize];
         cell.identifier = [NSString stringWithFormat:@"%i", (r + 1)];
         cell.text = cell.identifier;
         cell.backgroundColor = UserDefaults.defaults.appleGray;
@@ -306,17 +326,29 @@
     ssv.columnHeaderView = UIScrollView.new;
     ssv.columnHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.columnHeaderView.bounces = NO;
-    ssv.columnHeaderView.contentSize = CGSizeMake((ssv.columnWidth * ssv.columns), ssv.rowHeight);
     ssv.columnHeaderView.layer.borderColor = UIColor.blackColor.CGColor;
     ssv.columnHeaderView.layer.borderWidth = borderWidth;
     ssv.columnHeaderView.delegate = ssv;
     
     [ssv addSubview:ssv.columnHeaderView];
     
-    [ssv.columnHeaderView.leadingAnchor constraintEqualToAnchor:cell.trailingAnchor].active = YES;
-    [ssv.columnHeaderView.topAnchor constraintEqualToAnchor:ssv.titleTextField.bottomAnchor].active = YES;
-    [ssv.columnHeaderView.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
-    [ssv.columnHeaderView.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor constant:borderWidth].active = YES;
+    if (ssv.flipped)
+    {
+        ssv.columnHeaderView.contentSize = CGSizeMake(ssv.columnWidth, (ssv.rowHeight * ssv.columns));
+        [ssv.columnHeaderView.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor constant:-borderWidth].active = YES;
+        [ssv.columnHeaderView.topAnchor constraintEqualToAnchor:cell.bottomAnchor].active = YES;
+        [ssv.columnHeaderView.widthAnchor constraintEqualToConstant:(ssv.columnWidth + borderWidth)].active = YES;
+        [ssv.columnHeaderView.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
+    }
+    
+    else
+    {
+        ssv.columnHeaderView.contentSize = CGSizeMake((ssv.columnWidth * ssv.columns), ssv.rowHeight);
+        [ssv.columnHeaderView.leadingAnchor constraintEqualToAnchor:cell.trailingAnchor].active = YES;
+        [ssv.columnHeaderView.topAnchor constraintEqualToAnchor:ssv.titleTextField.bottomAnchor].active = YES;
+        [ssv.columnHeaderView.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+        [ssv.columnHeaderView.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor constant:borderWidth].active = YES;
+    }
     
     UITapGestureRecognizer *columnHeaderTap = [[UITapGestureRecognizer alloc] initWithTarget:ssv
                                                                                       action:@selector(ssvTapped:)];
@@ -325,12 +357,19 @@
     
     for (int c = 0; c < ssv.columns; c++)
     {
-        SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake((c * ssv.columnWidth), 0.0,
-                                                                                          ssv.columnWidth, ssv.rowHeight)];
+        CGRect cellFrame = CGRectZero;
+        
+        if (ssv.flipped)
+            cellFrame = CGRectMake(0.0, (c * ssv.rowHeight), (ssv.columnWidth + ssv.borderWidth), ssv.rowHeight);
+        
+        else
+            cellFrame = CGRectMake((c * ssv.columnWidth), 0.0, ssv.columnWidth, ssv.rowHeight);
+        
+        SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:cellFrame];
         
         cell.row = 0;
         cell.column = (NSUInteger)(c + 1);
-        cell.font = [UIFont boldSystemFontOfSize:ssv.headerFontSize];
+        cell.font = [UIFont boldSystemFontOfSize:ssv.fontSize];
         cell.identifier = ssv.alphabet[c];
         cell.text = cell.identifier;
         cell.backgroundColor = UserDefaults.defaults.appleGray;
@@ -341,15 +380,26 @@
     ssv.contentView = UIScrollView.new;
     ssv.contentView.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.contentView.bounces = NO;
-    ssv.contentView.contentSize = CGSizeMake((ssv.columnWidth * ssv.columns), (ssv.rowHeight * ssv.rows));
     ssv.contentView.layer.borderColor = UIColor.blackColor.CGColor;
     ssv.contentView.layer.borderWidth = borderWidth;
     ssv.contentView.delegate = ssv;
     
     [ssv addSubview:ssv.contentView];
     
-    [ssv.contentView.leadingAnchor constraintEqualToAnchor:ssv.rowHeaderView.trailingAnchor].active = YES;
-    [ssv.contentView.topAnchor constraintEqualToAnchor:ssv.columnHeaderView.bottomAnchor].active = YES;
+    if (ssv.flipped)
+    {
+        ssv.contentView.contentSize = CGSizeMake((ssv.columnWidth * ssv.rows), (ssv.rowHeight * ssv.columns));
+        [ssv.contentView.leadingAnchor constraintEqualToAnchor:ssv.columnHeaderView.trailingAnchor].active = YES;
+        [ssv.contentView.topAnchor constraintEqualToAnchor:ssv.rowHeaderView.bottomAnchor].active = YES;
+    }
+    
+    else
+    {
+        ssv.contentView.contentSize = CGSizeMake((ssv.columnWidth * ssv.columns), (ssv.rowHeight * ssv.rows));
+        [ssv.contentView.leadingAnchor constraintEqualToAnchor:ssv.rowHeaderView.trailingAnchor].active = YES;
+        [ssv.contentView.topAnchor constraintEqualToAnchor:ssv.columnHeaderView.bottomAnchor].active = YES;
+    }
+    
     [ssv.contentView.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
     [ssv.contentView.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor constant:borderWidth].active = YES;
     
@@ -366,13 +416,21 @@
     {
         for (int c = 0; c < ssv.columns; c++)
         {
-            SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:CGRectMake((c * ssv.columnWidth), (r * ssv.rowHeight),
-                                                                                              ssv.columnWidth, ssv.rowHeight)];
+            CGRect cellFrame = CGRectZero;
+            
+            if (ssv.flipped)
+                cellFrame = CGRectMake((r * ssv.columnWidth), (c * ssv.rowHeight), ssv.columnWidth, ssv.rowHeight);
+            
+            else
+                cellFrame = CGRectMake((c * ssv.columnWidth), (r * ssv.rowHeight), ssv.columnWidth, ssv.rowHeight);
+            
+            SpreadSheetViewCell *cell = [[SpreadSheetViewCell alloc] initWithFrame:cellFrame];
             
             cell.row = (NSUInteger)(r + 1);
             cell.column = (NSUInteger)(c + 1);
             cell.identifier = [NSString stringWithFormat:@"%@%lu", ssv.alphabet[c], (unsigned long)cell.row];
             cell.backgroundColor = UIColor.whiteColor;
+            cell.font = [UIFont systemFontOfSize:ssv.fontSize];
             
             [ssv.contentView addSubview:cell];
         }
@@ -389,9 +447,14 @@
     [ssv addSubview:ssv.rowHeaderOverlap];
     
     [ssv.rowHeaderOverlap.leadingAnchor constraintEqualToAnchor:ssv.contentView.leadingAnchor constant:borderWidth].active = YES;
-    [ssv.rowHeaderOverlap.topAnchor constraintEqualToAnchor:ssv.columnHeaderView.topAnchor].active = YES;
     [ssv.rowHeaderOverlap.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
     [ssv.rowHeaderOverlap.widthAnchor constraintEqualToConstant:headerOverlapWidth].active = YES;
+    
+    if (ssv.flipped)
+        [ssv.rowHeaderOverlap.topAnchor constraintEqualToAnchor:ssv.rowHeaderView.topAnchor].active = YES;
+    
+    else
+        [ssv.rowHeaderOverlap.topAnchor constraintEqualToAnchor:ssv.columnHeaderView.topAnchor].active = YES;
     
     ssv.columnHeaderOverlap = UIView.new;
     ssv.columnHeaderOverlap.translatesAutoresizingMaskIntoConstraints = NO;
@@ -467,9 +530,23 @@
     
     CGPoint point = [gesture locationInView:gesture.view];
     NSString *selection = @"";
+    NSUInteger xID = 0, yID = 0, actRows = 0, actColumns = 0;
     
-    NSUInteger xID = (point.x / _columnWidth);
-    NSUInteger yID = (point.y / _rowHeight);
+    if (_flipped)
+    {
+        xID = (point.y / _rowHeight);
+        yID = (point.x / _columnWidth);
+        actRows = _activeColumns;
+        actColumns = _activeRows;
+    }
+    
+    else
+    {
+        xID = (point.x / _columnWidth);
+        yID = (point.y / _rowHeight);
+        actRows = _activeRows;
+        actColumns = _activeColumns;
+    }
     
     if (gesture.view == _contentView)
     {
@@ -520,9 +597,23 @@
 {
     CGPoint point = [gesture locationInView:gesture.view];
     NSString *selection = @"";
+    NSUInteger xID = 0, yID = 0, actRows = 0, actColumns = 0;
     
-    int xID = (point.x / _columnWidth);
-    int yID = (point.y / _rowHeight);
+    if (_flipped)
+    {
+        xID = (point.y / _rowHeight);
+        yID = (point.x / _columnWidth);
+        actRows = _activeColumns;
+        actColumns = _activeRows;
+    }
+    
+    else
+    {
+        xID = (point.x / _columnWidth);
+        yID = (point.y / _rowHeight);
+        actRows = _activeRows;
+        actColumns = _activeColumns;
+    }
     
     if (gesture.view == _contentView)
     {
@@ -576,18 +667,39 @@
     
     if (scrollView == _contentView)
     {
-        _rowHeaderView.contentOffset = CGPointMake(0.0, offset.y);
-        _columnHeaderView.contentOffset = CGPointMake(offset.x, 0.0);
+        if (_flipped)
+        {
+            _rowHeaderView.contentOffset = CGPointMake(offset.x, 0.0);
+            _columnHeaderView.contentOffset = CGPointMake(0.0, offset.y);
+        }
+        
+        else
+        {
+            _rowHeaderView.contentOffset = CGPointMake(0.0, offset.y);
+            _columnHeaderView.contentOffset = CGPointMake(offset.x, 0.0);
+        }
         
         _rowHeaderOverlap.hidden = (offset.x < 1.0);
         _columnHeaderOverlap.hidden = (offset.y < 1.0);
     }
     
     else if (scrollView == _rowHeaderView)
-        _contentView.contentOffset = CGPointMake(_contentView.contentOffset.x, offset.y);
+    {
+        if (_flipped)
+            _contentView.contentOffset = CGPointMake(offset.x, _contentView.contentOffset.y);
+        
+        else
+            _contentView.contentOffset = CGPointMake(_contentView.contentOffset.x, offset.y);
+    }
     
     else if (scrollView == _columnHeaderView)
-        _contentView.contentOffset = CGPointMake(offset.x, _contentView.contentOffset.y);
+    {
+        if (_flipped)
+            _contentView.contentOffset = CGPointMake(_contentView.contentOffset.x, offset.y);
+        
+        else
+            _contentView.contentOffset = CGPointMake(offset.x, _contentView.contentOffset.y);
+    }
 }
 
 - (void)returnToOrigin:(UIButton *)button
@@ -604,7 +716,10 @@
 
 - (void)swap:(UIButton *)button
 {
+    _flipped = !_flipped;
     
+    if (_delegate && [_delegate respondsToSelector:@selector(ssvDidSetFlipped:)])
+        [_delegate ssvDidSetFlipped:_flipped];
 }
 
 - (void)export:(UIButton *)button
@@ -619,8 +734,6 @@
 
 - (void)delete:(UIButton *)button
 {
-    
-    
     NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
                                                       delegate:self
                                                          title:[NSString stringWithFormat:@"Are you sure you want to delete %@?", [self fileName]]
@@ -918,14 +1031,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)clearContents
 {
-    for (int r = 1; r <= _rows; r++)
+    for (SpreadSheetViewCell *cells in _contentView.subviews)
     {
-        for (int c = 1; c <= _columns; c++)
-        {
-            [self setText:@""
-             forCellAtRow:(NSUInteger)r
-                   column:(NSUInteger)c];
-        }
+        if ([cells isKindOfClass:SpreadSheetViewCell.class])
+            cells.text = @"";
+    }
+    
+    for (SpreadSheetViewCell *cells in _columnHeaderView.subviews)
+    {
+        if ([cells isKindOfClass:SpreadSheetViewCell.class])
+            cells.text = cells.identifier;
     }
 }
 

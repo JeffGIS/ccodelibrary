@@ -78,7 +78,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic, copy) NSString *currentPlatType;
 @property (nonatomic, copy) NSString *selectedPDFID;
 @property (nonatomic, copy) NSString *extractFile;
-@property BOOL resetPropList, resetDestinations, clearSpreadsheet;
+@property BOOL resetPropList, resetDestinations;
 @property NSInteger fromDate, toDate;
 @property NSInteger crimeMode;
 @property (nonatomic, copy) NSString *crimeTarget;

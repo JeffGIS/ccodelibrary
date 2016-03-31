@@ -1,7 +1,7 @@
 //  NVSpreadsheetView.h
 //  CCodeLibrary
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 @class NVSpreadsheetView;
 
@@ -21,17 +21,21 @@
 - (void)ssvCellWasTappedAtRowIndex:(NSUInteger)rowIndex
                        columnIndex:(NSUInteger)columnIndex;
 
+- (void)ssvDidSetFlipped:(BOOL)flipped;
+
 @end
 
 @interface NVSpreadsheetView : UIView <UIScrollViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic, weak) id <NVSpreadsheetViewDelegate> delegate;
-@property NSUInteger rows, columns, activeColumns, activeRows;
-@property CGFloat rowHeight, columnWidth;
+@property (nonatomic) NSUInteger rows, columns, activeColumns, activeRows;
+@property (nonatomic) CGFloat rowHeight, columnWidth;
+@property BOOL flipped;
 
 + (NVSpreadsheetView *)showSpreadsheetWithRows:(NSUInteger)rows
                                        columns:(NSUInteger)columns
                                           view:(UIView *)view
+                                       flipped:(BOOL)flipped
                                       delegate:(id)delegate;
 
 - (void)setRowHeaderText:(NSArray *)rowHeaderText;
