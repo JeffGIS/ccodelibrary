@@ -707,6 +707,33 @@ IBOUNDS IBoundsFromPointAndDist(IPOINT pt, int dist)
     return bnds;
 }
 
+MNMXCORD BoundsFromPointAndDist(DPOINT pt, double dist)
+{
+    MNMXCORD bnds;
+    
+    bnds.xmn = pt.x - dist;
+    bnds.xmx = pt.x + dist;
+    bnds.ymn = pt.y - dist;
+    bnds.ymx = pt.y + dist;
+    return bnds;
+}
+
+MNMXCORD BoundsFromLLPointAndDist(LLPOINT pt, double distInMeters)
+{
+    MNMXCORD bnds;
+    
+    DPOINT pt1 = NewLatLong(pt.lat, pt.lon, distInMeters, 0);
+    double pickapY = pt1.y - pt.lat;
+    DPOINT pt2 = NewLatLong(pt.lat, pt.lon, distInMeters, HALFPI);
+    double pickapX = pt2.x - pt.lon;
+    bnds.xmn = (pt.lon - pickapX);
+    bnds.xmx = (pt.lon + pickapX);
+    bnds.ymn = (pt.lat - pickapY);
+    bnds.ymx = (pt.lat + pickapY);
+    
+    return bnds;
+}
+
 CGRect MNMXCORDtoCGRect (LPMNMXCORD pBounds)
 {
     CGRect rect;
@@ -1562,7 +1589,7 @@ LPTRANDATA  LoadTranFromCPT(const char *Name, int dir)
 	return TranPtr;
 }
 
-bool CreateMask(LPDPOINT *pPointsIN, int *pnPoints, bounds *pbnds)
+bool CreateMask(LPDPOINT *pPointsIN, int *pnPoints, LPMNMXCORD pbnds)
 {
     LPDPOINT pPoints = *pPointsIN;
     int nNewPoints = 5;
