@@ -15,7 +15,7 @@
 @property (nonatomic) NSArray *alphabet;
 @property (nonatomic) CGFloat headerFontSize, borderWidth;
 @property (nonatomic) UIView *rowHeaderOverlap, *columnHeaderOverlap;
-@property (nonatomic) UIButton *returnToOrigin, *delete, *export, *create, *select, *mapIt;
+@property (nonatomic) UIButton *returnToOrigin, *delete, *export, *create, *select, *mapIt, *swap;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
 @property (nonatomic) UITextField *textField, *titleTextField;
 @property BOOL inEditMode;
@@ -233,10 +233,36 @@
     
     [ssv addSubview:ssv.returnToOrigin];
     
-    [ssv.returnToOrigin.centerXAnchor constraintEqualToAnchor:cell.centerXAnchor].active = YES;
+    [ssv.returnToOrigin.centerXAnchor constraintEqualToAnchor:cell.centerXAnchor constant:(ssv.columnWidth * 0.25)].active = YES;
     [ssv.returnToOrigin.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor].active = YES;
     [ssv.returnToOrigin.widthAnchor constraintEqualToConstant:(ssv.columnWidth * 0.4)].active = YES;
     [ssv.returnToOrigin.heightAnchor constraintEqualToConstant:(ssv.rowHeight * 0.8)].active = YES;
+    
+    ssv.swap = [UIButton buttonWithType:UIButtonTypeCustom];
+    ssv.swap.translatesAutoresizingMaskIntoConstraints = NO;
+    ssv.swap.backgroundColor = UIColor.whiteColor;
+    
+    ssv.swap.imageEdgeInsets = UIEdgeInsetsMake((-ssv.rowHeight * 0.1), (-ssv.rowHeight * 0.1),
+                                                (-ssv.rowHeight * 0.1), (-ssv.rowHeight * 0.1));
+    
+    ssv.swap.layer.cornerRadius = 4.0;
+    ssv.swap.layer.borderWidth = 1.0;
+    ssv.swap.layer.borderColor = UIColor.blackColor.CGColor;
+    
+    [ssv.swap setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"swapIcon"
+                                                                                      ofType:@"png"]]
+              forState:UIControlStateNormal];
+    
+    [ssv.swap addTarget:ssv
+                 action:@selector(swap:)
+       forControlEvents:UIControlEventTouchUpInside];
+    
+    [ssv addSubview:ssv.swap];
+    
+    [ssv.swap.centerXAnchor constraintEqualToAnchor:cell.centerXAnchor constant:(-ssv.columnWidth * 0.25)].active = YES;
+    [ssv.swap.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor].active = YES;
+    [ssv.swap.widthAnchor constraintEqualToConstant:(ssv.columnWidth * 0.4)].active = YES;
+    [ssv.swap.heightAnchor constraintEqualToConstant:(ssv.rowHeight * 0.8)].active = YES;
     
     ssv.rowHeaderView = UIScrollView.new;
     ssv.rowHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -574,6 +600,11 @@
     
     [_contentView setContentOffset:CGPointMake(0.0, 0.0)
                           animated:YES];
+}
+
+- (void)swap:(UIButton *)button
+{
+    
 }
 
 - (void)export:(UIButton *)button
