@@ -56,12 +56,15 @@ typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
 @property DPOINT dPoint;
 @property int itemBeginTime, itemEndTime;
 @property int UCR;
+@property int iValue;
 @property int sunAngle;
 @property PointSymbols pointSymbol;
-@property UIColor *color;
+@property UIColor *penColor;
+@property UIColor *fillColor;
 @property float size;
 @property float width;
 @property NSString * string1;
 @property NSString * string2;
+
 
 @end

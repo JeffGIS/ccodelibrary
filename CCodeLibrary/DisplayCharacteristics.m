@@ -20,9 +20,11 @@
     another.itemBeginTime = self.itemBeginTime;
     another.itemEndTime = self.itemEndTime;
     another.UCR = self.UCR;
+    another.iValue = self.iValue;
     another.sunAngle = self.sunAngle;
     another.pointSymbol = self.pointSymbol;
-    another.color = self.color;
+    another.fillColor = self.fillColor;
+    another.penColor = self.penColor;
     another.size = self.size;
     another.width = self.width;
     another.string1 = self.string1.copy;
