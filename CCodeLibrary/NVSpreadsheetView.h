@@ -26,15 +26,12 @@
 @interface NVSpreadsheetView : UIView <UIScrollViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic, weak) id <NVSpreadsheetViewDelegate> delegate;
-@property BOOL editable, selectable;
 @property NSUInteger rows, columns, activeColumns, activeRows;
 @property CGFloat rowHeight, columnWidth;
 
 + (NVSpreadsheetView *)showSpreadsheetWithRows:(NSUInteger)rows
                                        columns:(NSUInteger)columns
                                           view:(UIView *)view
-                                      editable:(BOOL)editable
-                                    selectable:(BOOL)selectable
                                       delegate:(id)delegate;
 
 - (void)setRowHeaderText:(NSArray *)rowHeaderText;

@@ -27,8 +27,6 @@
 + (NVSpreadsheetView *)showSpreadsheetWithRows:(NSUInteger)rows
                                        columns:(NSUInteger)columns
                                           view:(UIView *)view
-                                      editable:(BOOL)editable
-                                    selectable:(BOOL)selectable
                                       delegate:(id)delegate
 {
     NVSpreadsheetView *ssv = NVSpreadsheetView.new;
@@ -36,19 +34,18 @@
     ssv.backgroundColor = UIColor.grayColor;
     ssv.rows = rows;
     ssv.columns = columns;
-    ssv.editable = editable;
-    ssv.selectable = selectable;
     ssv.delegate = delegate;
     ssv.inEditMode = NO;
     ssv.activeColumns = ssv.activeRows = 0;
     ssv.borderWidth = 1.5;
     
-    ssv.textField = [[UITextField alloc] init];
+    ssv.textField = UITextField.new;
     ssv.textField.delegate = ssv;
     ssv.textField.layer.borderColor = UIColor.redColor.CGColor;
     ssv.textField.layer.borderWidth = 6.0;
     ssv.textField.textAlignment = NSTextAlignmentCenter;
     ssv.textField.clearButtonMode = UITextFieldViewModeAlways;
+    ssv.textField.adjustsFontSizeToFitWidth = YES;
     
     CGFloat borderWidth = 1.5;
     
@@ -335,10 +332,9 @@
     
     [ssv.contentView addGestureRecognizer:contentTap];
     
-    UILongPressGestureRecognizer *contentLP = [[UILongPressGestureRecognizer alloc] initWithTarget:ssv
-                                                                                            action:@selector(ssvLongPressed:)];
-    
-    [ssv.contentView addGestureRecognizer:contentLP];
+    UILongPressGestureRecognizer *headerLP = [[UILongPressGestureRecognizer alloc] initWithTarget:ssv
+                                                                                           action:@selector(ssvLongPressed:)];
+    [ssv.columnHeaderView addGestureRecognizer:headerLP];
     
     for (int r = 0; r < ssv.rows; r++)
     {
@@ -416,9 +412,15 @@
    forCellAtRow:(NSUInteger)row
          column:(NSUInteger)column
 {
+    for (SpreadSheetViewCell *cells in _columnHeaderView.subviews)
+    {
+        if ([cells isKindOfClass:SpreadSheetViewCell.class] && row == 1 && cells.column == column)
+            cells.text = text;
+    }
+    
     for (SpreadSheetViewCell *cells in _contentView.subviews)
     {
-        if ([cells isKindOfClass:SpreadSheetViewCell.class] && cells.row == row && cells.column == column)
+        if ([cells isKindOfClass:SpreadSheetViewCell.class] && cells.row == (row - 1) && cells.column == column)
             cells.text = text;
     }
 }
@@ -503,8 +505,7 @@
         for (SpreadSheetViewCell *cells in _contentView.subviews)
         {
             if ([cells isKindOfClass:SpreadSheetViewCell.class] &&
-                [cells.identifier isEqualToString:selection] &&
-                cells.row == 1 && cells.column <= _activeColumns)
+                [cells.identifier isEqualToString:selection] && cells.column <= _activeColumns)
             {
                 [self editCell:cells
                         inView:_contentView];
@@ -519,7 +520,7 @@
         for (SpreadSheetViewCell *cells in _rowHeaderView.subviews)
         {
             if ([cells isKindOfClass:SpreadSheetViewCell.class] &&
-                [cells.identifier isEqualToString:selection])
+                [cells.identifier isEqualToString:selection] && cells.row <= _activeRows)
             {
                 [self editCell:cells
                         inView:_rowHeaderView];
@@ -534,7 +535,7 @@
         for (SpreadSheetViewCell *cells in _columnHeaderView.subviews)
         {
             if ([cells isKindOfClass:SpreadSheetViewCell.class] &&
-                [cells.identifier isEqualToString:selection])
+                [cells.identifier isEqualToString:selection] && cells.column <= _activeColumns)
             {
                 [self editCell:cells
                         inView:_columnHeaderView];
@@ -855,21 +856,30 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         {
             if (_cellForEditing.superview == _columnHeaderView)
             {
-                [_delegate ssvDidEditColumnHeaderText:textField.text
-                                              atIndex:(_cellForEditing.column - 1)];
+                if ([_delegate respondsToSelector:@selector(ssvDidEditColumnHeaderText:atIndex:)])
+                {
+                    [_delegate ssvDidEditColumnHeaderText:textField.text
+                                                  atIndex:_cellForEditing.column];
+                }
             }
             
             else if (_cellForEditing.superview == _rowHeaderView)
             {
-                [_delegate ssvDidEditRowHeaderText:textField.text
-                                           atIndex:(_cellForEditing.row - 1)];
+                if ([_delegate respondsToSelector:@selector(ssvDidEditRowHeaderText:atIndex:)])
+                {
+                    [_delegate ssvDidEditRowHeaderText:textField.text
+                                               atIndex:_cellForEditing.row];
+                }
             }
             
             else if (_cellForEditing.superview == _contentView)
             {
-                [_delegate ssvDidEditText:textField.text
-                             forCellAtRow:_cellForEditing.row
-                                   column:_cellForEditing.column];
+                if ([_delegate respondsToSelector:@selector(ssvDidEditText:forCellAtRow:column:)])
+                {
+                    [_delegate ssvDidEditText:textField.text
+                                 forCellAtRow:_cellForEditing.row
+                                       column:_cellForEditing.column];
+                }
             }
         }
     }
