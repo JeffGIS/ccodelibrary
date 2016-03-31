@@ -255,6 +255,10 @@
                                                                                       ofType:@"png"]]
               forState:UIControlStateNormal];
     
+    [ssv.swap setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"swapIconHighlighted"
+                                                                                      ofType:@"png"]]
+              forState:UIControlStateHighlighted];
+    
     [ssv.swap addTarget:ssv
                  action:@selector(swap:)
        forControlEvents:UIControlEventTouchUpInside];
