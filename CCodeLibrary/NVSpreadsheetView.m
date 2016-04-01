@@ -62,7 +62,7 @@
     {
         ssv.rowHeight = 56.0;
         ssv.columnWidth = 216.0;
-        ssv.fontSize = 24.0;
+        ssv.fontSize = 20.0;
     }
     
     UIEdgeInsets insets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
