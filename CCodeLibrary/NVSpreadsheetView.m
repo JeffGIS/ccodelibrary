@@ -190,10 +190,10 @@
     ssv.titleTextField.delegate = ssv;
     ssv.titleTextField.textAlignment = NSTextAlignmentCenter;
     ssv.titleTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    ssv.titleTextField.placeholder = @"Tap to Enter Title Here";
     ssv.titleTextField.font = [UIFont boldSystemFontOfSize:(ssv.fontSize * 1.5)];
     ssv.titleTextField.textColor = UIColor.whiteColor;
     ssv.titleTextField.adjustsFontSizeToFitWidth = YES;
+    ssv.titleTextField.text = [delegate ssvGetTitleText];
     
     [ssv addSubview:ssv.titleTextField];
     
@@ -740,7 +740,7 @@
 {
     NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
                                                       delegate:self
-                                                         title:[NSString stringWithFormat:@"Are you sure you want to delete %@?", [self fileName]]
+                                                         title:[NSString stringWithFormat:@"Are you sure you want to delete %@?", _titleTextField.text]
                                                buttonTextArray:@[@"YES", @"NO"]
                                               destructiveIndex:1];
     alert.identifier = @"DeletePrompt";
@@ -754,12 +754,28 @@
 
 - (void)create:(UIButton *)button
 {
+    if ([_delegate respondsToSelector:@selector(ssvCreateWasTapped)])
+    {
+        [_delegate ssvCreateWasTapped];
+        _titleTextField.text = [_delegate ssvGetTitleText];
+    }
     
 }
 
 - (void)select:(UIButton *)button
 {
+    int selectedFile = 0;
     
+    if ([_delegate respondsToSelector:@selector(ssvGetFileList)])
+    {
+        NSArray * fileList = [_delegate ssvGetFileList];
+        
+        if (fileList.count > 0)
+        {
+            [_delegate ssvSetCurrentFile:fileList[selectedFile]];
+            _titleTextField.text = [_delegate ssvGetTitleText];
+        }
+    }
 }
 
 - (void)alertView:(NVAlertView *)alertView
@@ -840,10 +856,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     {
         if (buttonIndex == 0)
         {
-            [self clearContents];
-            _titleTextField.text = @"";
-            CRAPI.sharedInstance.resetPropList = YES;
-            CRAPI.sharedInstance.resetDestinations = YES;
+            [_delegate ssvDeleteCurrentFile];
         }
     }
     
@@ -995,7 +1008,18 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    if (textField == _textField)
+    if (textField == _titleTextField)
+    {
+        if (_delegate)
+        {
+            if ([_delegate respondsToSelector:@selector(ssvDidEditTitleText:)])
+            {
+                [_delegate ssvDidEditTitleText:textField.text];
+                _titleTextField.text = [_delegate ssvGetTitleText];
+            }
+        }
+    }
+    else if (textField == _textField)
     {
         _cellForEditing.text = textField.text;
         [textField removeFromSuperview];
