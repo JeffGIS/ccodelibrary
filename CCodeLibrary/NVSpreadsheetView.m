@@ -374,8 +374,8 @@
         cell.row = 0;
         cell.column = (NSUInteger)(c + 1);
         cell.font = [UIFont boldSystemFontOfSize:ssv.fontSize];
-        cell.identifier = [NSString stringWithFormat:@"Property %@", ssv.alphabet[c]];
-        cell.text = cell.identifier;
+        cell.identifier = ssv.alphabet[c];
+        cell.text = [NSString stringWithFormat:@"Property %@", cell.identifier];
         cell.backgroundColor = UserDefaults.defaults.appleGray;
         
         [ssv.columnHeaderView addSubview:cell];
