@@ -62,7 +62,7 @@
     {
         ssv.rowHeight = 56.0;
         ssv.columnWidth = 216.0;
-        ssv.fontSize = 24.0;
+        ssv.fontSize = 20.0;
     }
     
     UIEdgeInsets insets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
@@ -375,7 +375,7 @@
         cell.column = (NSUInteger)(c + 1);
         cell.font = [UIFont boldSystemFontOfSize:ssv.fontSize];
         cell.identifier = ssv.alphabet[c];
-        cell.text = cell.identifier;
+        cell.text = [NSString stringWithFormat:@"Property %@", cell.identifier];
         cell.backgroundColor = UserDefaults.defaults.appleGray;
         
         [ssv.columnHeaderView addSubview:cell];
