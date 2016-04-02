@@ -18,7 +18,6 @@
 @property (nonatomic) UIButton *returnToOrigin, *delete, *export, *create, *select, *mapIt, *swap;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
 @property (nonatomic) UITextField *textField, *titleTextField;
-@property BOOL inEditMode;
 
 @end
 
@@ -36,7 +35,6 @@
     ssv.rows = rows;
     ssv.columns = columns;
     ssv.delegate = delegate;
-    ssv.inEditMode = NO;
     ssv.flipped = flipped;
     ssv.activeColumns = ssv.activeRows = 0;
     ssv.borderWidth = 1.5;
@@ -754,21 +752,20 @@
 
 - (void)create:(UIButton *)button
 {
-    if ([_delegate respondsToSelector:@selector(ssvCreateWasTapped)])
+    if (_delegate && [_delegate respondsToSelector:@selector(ssvCreateWasTapped)])
     {
         [_delegate ssvCreateWasTapped];
         _titleTextField.text = [_delegate ssvGetTitleText];
     }
-    
 }
 
 - (void)select:(UIButton *)button
 {
     int selectedFile = 0;
     
-    if ([_delegate respondsToSelector:@selector(ssvGetFileList)])
+    if (_delegate && [_delegate respondsToSelector:@selector(ssvGetFileList)])
     {
-        NSArray * fileList = [_delegate ssvGetFileList];
+        NSArray *fileList = [_delegate ssvGetFileList];
         
         if (fileList.count > 0)
         {
@@ -857,6 +854,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         if (buttonIndex == 0)
         {
             [_delegate ssvDeleteCurrentFile];
+            _titleTextField.text = [_delegate ssvGetTitleText];
         }
     }
     

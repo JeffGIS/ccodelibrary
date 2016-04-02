@@ -24,16 +24,12 @@
 - (void)ssvDidSetFlipped:(BOOL)flipped;
 
 - (NSString *)ssvGetTitleText;
-
 - (NSArray *)ssvGetFileList;
-
-- (void)ssvSetCurrentFile:(NSString*)file;
-
+- (void)ssvSetCurrentFile:(NSString *)file;
 - (BOOL)ssvDeleteCurrentFile;
-
 - (void)ssvCreateWasTapped;
-
 - (BOOL)ssvDidEditTitleText:(NSString *)text;
+
 @end
 
 @interface NVSpreadsheetView : UIView <UIScrollViewDelegate,UITextFieldDelegate>
