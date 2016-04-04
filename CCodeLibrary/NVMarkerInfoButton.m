@@ -21,14 +21,14 @@
 {
     if (!delegate || !view)
     {
-        NSLog(@"ERROR:Cannot set delegate or view to nil");
+        NSLog(@"NVMarkerInfoButton ERROR:Cannot set delegate or view to nil");
         return nil;
     }
     
     if (![delegate respondsToSelector:@selector(pointForCoordinate:)] ||
         ![delegate respondsToSelector:@selector(statusBarHeight:)])
     {
-        NSLog(@"ERROR:Delegate must respond to all selectors in protocol");
+        NSLog(@"NVMarkerInfoButton ERROR:Delegate must respond to all selectors in protocol");
         return nil;
     }
     
@@ -48,8 +48,12 @@
                                                                                    ofType:@"png"]];
             break;
             
-        case NVMarkerInfoButtonTypeDestinationsIndividual:
         case NVMarkerInfoButtonTypeDestinationsGroup:
+            image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"orangeInfoMarker"
+                                                                                   ofType:@"png"]];
+            break;
+            
+        case NVMarkerInfoButtonTypeDestinationsIndividual:
         case NVMarkerInfoButtonTypeDefault:
             image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"blueInfoMarker"
                                                                                    ofType:@"png"]];
@@ -73,7 +77,7 @@
     
     nvmib.label = UILabel.new;
     nvmib.label.translatesAutoresizingMaskIntoConstraints = NO;
-    nvmib.label.font = [UIFont systemFontOfSize:12.0];
+    nvmib.label.font = [UIFont systemFontOfSize:16.0];
     nvmib.label.adjustsFontSizeToFitWidth = YES;
     nvmib.label.textAlignment = NSTextAlignmentCenter;
     nvmib.label.numberOfLines = 2;

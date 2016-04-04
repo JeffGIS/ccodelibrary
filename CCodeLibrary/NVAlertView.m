@@ -22,9 +22,8 @@
     if (!view || !delegate || !title || !buttonTextArray)
         return nil;
     
-    NVAlertView *alert = [[NVAlertView alloc] init];
-    
-    alert.overlayView = [[UIView alloc] init];
+    NVAlertView *alert = NVAlertView.new;
+    alert.overlayView = UIView.new;
     alert.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
     alert.overlayView.backgroundColor = UIColor.blackColor;
     alert.overlayView.alpha = 0.0;

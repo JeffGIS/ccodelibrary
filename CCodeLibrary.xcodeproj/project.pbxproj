@@ -38,6 +38,8 @@
 		6948D5D61BC7845F009CA04F /* NVStaticMapView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6948D5D31BC780EE009CA04F /* NVStaticMapView.h */; };
 		694F00791C1B4BBA0074AF72 /* MapToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 694F00781C1B4BBA0074AF72 /* MapToolbar.m */; };
 		694F007A1C1B4C4B0074AF72 /* MapToolbar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 694F00771C1B4BBA0074AF72 /* MapToolbar.h */; };
+		6956B9981CB230210070416B /* NVPopoverTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6956B9971CB230210070416B /* NVPopoverTableView.m */; };
+		6956B9991CB235490070416B /* NVPopoverTableView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6956B9961CB230210070416B /* NVPopoverTableView.h */; };
 		6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */; };
 		6960F4D71BBCD25100A5681C /* NVSpreadsheetView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6960F4D41BBCC80800A5681C /* NVSpreadsheetView.h */; };
 		697560BE1CB18D5A006EEA14 /* NVMarkerInfoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 697560BD1CB18D5A006EEA14 /* NVMarkerInfoButton.m */; };
@@ -321,6 +323,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				6956B9991CB235490070416B /* NVPopoverTableView.h in CopyFiles */,
 				697560BF1CB19AF9006EEA14 /* NVMarkerInfoButton.h in CopyFiles */,
 				EB23A7971CA04BF900F83E6C /* TextOptions.h in CopyFiles */,
 				69987CF81C946890000EC26F /* UIView+Constraints.h in CopyFiles */,
@@ -484,6 +487,8 @@
 		6948D5D41BC780EE009CA04F /* NVStaticMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVStaticMapView.m; sourceTree = "<group>"; };
 		694F00771C1B4BBA0074AF72 /* MapToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapToolbar.h; sourceTree = "<group>"; };
 		694F00781C1B4BBA0074AF72 /* MapToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapToolbar.m; sourceTree = "<group>"; };
+		6956B9961CB230210070416B /* NVPopoverTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPopoverTableView.h; sourceTree = "<group>"; };
+		6956B9971CB230210070416B /* NVPopoverTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPopoverTableView.m; sourceTree = "<group>"; };
 		6960F4D41BBCC80800A5681C /* NVSpreadsheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSpreadsheetView.h; sourceTree = "<group>"; };
 		6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSpreadsheetView.m; sourceTree = "<group>"; };
 		697560BC1CB18D5A006EEA14 /* NVMarkerInfoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVMarkerInfoButton.h; sourceTree = "<group>"; };
@@ -972,6 +977,8 @@
 				A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */,
 				A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */,
 				A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */,
+				6956B9961CB230210070416B /* NVPopoverTableView.h */,
+				6956B9971CB230210070416B /* NVPopoverTableView.m */,
 				A97407C41AF6A63900B2FF30 /* NVProgressView.h */,
 				A97407C51AF6A63900B2FF30 /* NVProgressView.m */,
 				A9A7E3621B75663500DC7F3D /* NVRampButton.h */,
@@ -1387,6 +1394,7 @@
 				EBC01D1B1BED1C8C0004C751 /* lightt.c in Sources */,
 				EBC01D311BED1C8C0004C751 /* zatan2.c in Sources */,
 				EBC01D121BED1C8C0004C751 /* dms.c in Sources */,
+				6956B9981CB230210070416B /* NVPopoverTableView.m in Sources */,
 				EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */,
 				69DE24281C76311D00680B00 /* NVTextVC.m in Sources */,
 				EBC01D211BED1C8C0004C751 /* moonrise.c in Sources */,
