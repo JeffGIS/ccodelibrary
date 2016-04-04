@@ -40,6 +40,8 @@
 		694F007A1C1B4C4B0074AF72 /* MapToolbar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 694F00771C1B4BBA0074AF72 /* MapToolbar.h */; };
 		6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */; };
 		6960F4D71BBCD25100A5681C /* NVSpreadsheetView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6960F4D41BBCC80800A5681C /* NVSpreadsheetView.h */; };
+		697560BE1CB18D5A006EEA14 /* NVMarkerInfoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 697560BD1CB18D5A006EEA14 /* NVMarkerInfoButton.m */; };
+		697560BF1CB19AF9006EEA14 /* NVMarkerInfoButton.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697560BC1CB18D5A006EEA14 /* NVMarkerInfoButton.h */; };
 		697B37711B94B7D60066978B /* NVTextDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 697B37701B94B7D60066978B /* NVTextDrawing.m */; };
 		697B37721B94C0E00066978B /* NVTextDrawing.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697B376F1B94B7D60066978B /* NVTextDrawing.h */; };
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
@@ -486,6 +488,8 @@
 		694F00781C1B4BBA0074AF72 /* MapToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapToolbar.m; sourceTree = "<group>"; };
 		6960F4D41BBCC80800A5681C /* NVSpreadsheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSpreadsheetView.h; sourceTree = "<group>"; };
 		6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSpreadsheetView.m; sourceTree = "<group>"; };
+		697560BC1CB18D5A006EEA14 /* NVMarkerInfoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVMarkerInfoButton.h; sourceTree = "<group>"; };
+		697560BD1CB18D5A006EEA14 /* NVMarkerInfoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVMarkerInfoButton.m; sourceTree = "<group>"; };
 		697B376F1B94B7D60066978B /* NVTextDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextDrawing.h; sourceTree = "<group>"; };
 		697B37701B94B7D60066978B /* NVTextDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextDrawing.m; sourceTree = "<group>"; };
 		6986AF821C7C119E0059DD1B /* NVDigitizerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDigitizerView.h; sourceTree = "<group>"; };
@@ -966,6 +970,8 @@
 				A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */,
 				A9E792821AEFE989005DA4BB /* NVLegendView.h */,
 				A9E792831AEFE989005DA4BB /* NVLegendView.m */,
+				697560BC1CB18D5A006EEA14 /* NVMarkerInfoButton.h */,
+				697560BD1CB18D5A006EEA14 /* NVMarkerInfoButton.m */,
 				A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */,
 				A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */,
 				A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */,
@@ -1337,6 +1343,7 @@
 				A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */,
 				EBC01D0D1BED1C8C0004C751 /* constel.c in Sources */,
 				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,
+				697560BE1CB18D5A006EEA14 /* NVMarkerInfoButton.m in Sources */,
 				A94A771319F807570062906E /* Facility.m in Sources */,
 				EBC01D301BED1C8C0004C751 /* ven404.c in Sources */,
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
