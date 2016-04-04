@@ -323,7 +323,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				EB95A1A81CB18BE900158B40 /* PercentInArea.h in CopyFiles */,
+				697560BF1CB19AF9006EEA14 /* NVMarkerInfoButton.h in CopyFiles */,
 				EB23A7971CA04BF900F83E6C /* TextOptions.h in CopyFiles */,
 				69987CF81C946890000EC26F /* UIView+Constraints.h in CopyFiles */,
 				EB568F3B1C8CA70E00C45ACE /* CompressDecompress.h in CopyFiles */,
