@@ -93,7 +93,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic, copy) NSString *selectBoundaryFromMapType;
 @property (nonatomic) int keepProcessing;
 @property (nonatomic) NVDocumentManager *docManager;
-@property (nonatomic, copy) NSString *zwsID;
 @property BOOL mapPropList, mapIndividualDest, mapGroupDest;
 
 + (CRAPI *)sharedInstance;
