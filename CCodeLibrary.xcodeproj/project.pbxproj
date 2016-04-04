@@ -235,6 +235,8 @@
 		EB7C6A161BD158D8006E985B /* StringFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7C6A151BD158D8006E985B /* StringFunctions.m */; };
 		EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB7C6A141BD158D8006E985B /* StringFunctions.h */; };
 		EB86BFA71B0B62520074728E /* minilzo.c in Sources */ = {isa = PBXBuildFile; fileRef = EB86BFA51B0B62520074728E /* minilzo.c */; };
+		EB95A1A71CB16EF500158B40 /* PercentInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB95A1A61CB16EF500158B40 /* PercentInArea.m */; };
+		EB95A1A81CB18BE900158B40 /* PercentInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB95A1A51CB16EF500158B40 /* PercentInArea.h */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
 		EBA2E472199527660085B2E0 /* libCCodeLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */; };
@@ -319,6 +321,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB95A1A81CB18BE900158B40 /* PercentInArea.h in CopyFiles */,
 				EB23A7971CA04BF900F83E6C /* TextOptions.h in CopyFiles */,
 				69987CF81C946890000EC26F /* UIView+Constraints.h in CopyFiles */,
 				EB568F3B1C8CA70E00C45ACE /* CompressDecompress.h in CopyFiles */,
@@ -666,6 +669,8 @@
 		EB86BFA61B0B62520074728E /* minilzo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minilzo.h; sourceTree = "<group>"; };
 		EB86BFA81B0B62A30074728E /* lzoconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzoconf.h; sourceTree = "<group>"; };
 		EB86BFA91B0B62A30074728E /* lzodefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzodefs.h; sourceTree = "<group>"; };
+		EB95A1A51CB16EF500158B40 /* PercentInArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PercentInArea.h; sourceTree = "<group>"; };
+		EB95A1A61CB16EF500158B40 /* PercentInArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PercentInArea.m; sourceTree = "<group>"; };
 		EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCCodeLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CCodeLibrary-Prefix.pch"; sourceTree = "<group>"; };
 		EBA2E462199527660085B2E0 /* CCodeLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCodeLibrary.h; sourceTree = "<group>"; };
@@ -1040,6 +1045,57 @@
 			name = Network;
 			sourceTree = "<group>";
 		};
+		EB95A1A41CB16EAF00158B40 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
+				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
+				EB568F371C8C9BAB00C45ACE /* CompressDecompress.h */,
+				EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */,
+				EB1A69741999A6A9005A1CCB /* CRAPI.h */,
+				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
+				EB0E4FFB1C6288BF00849766 /* DispersePoint.h */,
+				EB0E4FFC1C6288BF00849766 /* DispersePoint.m */,
+				EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */,
+				EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */,
+				69BB52761CA4689E00DA7BC2 /* ExitApp.c */,
+				69BB52771CA4689E00DA7BC2 /* ExitApp.h */,
+				1F829A981C342BDD00DD429C /* FileLister.h */,
+				1F829A991C342BDD00DD429C /* FileLister.m */,
+				A99C893B1AEDE1B900A0856F /* GSSiDefs.h */,
+				A99C893C1AEDE1B900A0856F /* GSSiDefs.m */,
+				A90EBDC71A48874B001E72CF /* GSSiEnums.h */,
+				A90EBDC81A48874B001E72CF /* GSSiEnums.m */,
+				EB0E4FE51C60D21700849766 /* HotSpot.h */,
+				EB0E4FE61C60D21700849766 /* HotSpot.m */,
+				EBAB31C51AE6DC2D00C5CCEF /* NamedColors.h */,
+				EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */,
+				697B376F1B94B7D60066978B /* NVTextDrawing.h */,
+				697B37701B94B7D60066978B /* NVTextDrawing.m */,
+				EB95A1A51CB16EF500158B40 /* PercentInArea.h */,
+				EB95A1A61CB16EF500158B40 /* PercentInArea.m */,
+				EB3CC5F51AD95F8B002453A9 /* PickedItem.h */,
+				EB3CC5F61AD95F8B002453A9 /* PickedItem.m */,
+				EB4DB2561B9600AA008157D8 /* PointInArea.h */,
+				EB4DB2571B9600AA008157D8 /* PointInArea.m */,
+				EB36639A1A55A97C00ABA486 /* PointInAreaClass.h */,
+				EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */,
+				EBB3C42A1C36F6E000054DB5 /* PointInAreas.h */,
+				EBB3C42B1C36F6E000054DB5 /* PointInAreas.m */,
+				A94A770B19F7F9F40062906E /* SharedDefaults.h */,
+				A94A770C19F7F9F40062906E /* SharedDefaults.m */,
+				EB7C6A141BD158D8006E985B /* StringFunctions.h */,
+				EB7C6A151BD158D8006E985B /* StringFunctions.m */,
+				EB0E4FF31C62785200849766 /* SymbolDictionary.h */,
+				EB0E4FF41C62785200849766 /* SymbolDictionary.m */,
+				EB23A7941CA04AF700F83E6C /* TextOptions.h */,
+				EB23A7951CA04AF700F83E6C /* TextOptions.m */,
+				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
+				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
 		EBA2E451199527660085B2E0 = {
 			isa = PBXGroup;
 			children = (
@@ -1086,48 +1142,7 @@
 				A94A771F19F813EB0062906E /* Network */,
 				A94A771C19F812DE0062906E /* Places */,
 				A94A771E19F813810062906E /* Views */,
-				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
-				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
-				EB1A69741999A6A9005A1CCB /* CRAPI.h */,
-				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
-				EB568F371C8C9BAB00C45ACE /* CompressDecompress.h */,
-				EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */,
-				EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */,
-				EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */,
-				A99C893B1AEDE1B900A0856F /* GSSiDefs.h */,
-				A99C893C1AEDE1B900A0856F /* GSSiDefs.m */,
-				A90EBDC71A48874B001E72CF /* GSSiEnums.h */,
-				A90EBDC81A48874B001E72CF /* GSSiEnums.m */,
-				EB3CC5F51AD95F8B002453A9 /* PickedItem.h */,
-				EB3CC5F61AD95F8B002453A9 /* PickedItem.m */,
-				EB36639A1A55A97C00ABA486 /* PointInAreaClass.h */,
-				EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */,
-				EB4DB2561B9600AA008157D8 /* PointInArea.h */,
-				EB4DB2571B9600AA008157D8 /* PointInArea.m */,
-				EBB3C42B1C36F6E000054DB5 /* PointInAreas.m */,
-				EBB3C42A1C36F6E000054DB5 /* PointInAreas.h */,
-				697B376F1B94B7D60066978B /* NVTextDrawing.h */,
-				697B37701B94B7D60066978B /* NVTextDrawing.m */,
-				A94A770B19F7F9F40062906E /* SharedDefaults.h */,
-				A94A770C19F7F9F40062906E /* SharedDefaults.m */,
-				EB7C6A141BD158D8006E985B /* StringFunctions.h */,
-				EB7C6A151BD158D8006E985B /* StringFunctions.m */,
-				EB23A7941CA04AF700F83E6C /* TextOptions.h */,
-				EB23A7951CA04AF700F83E6C /* TextOptions.m */,
-				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
-				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
-				EBAB31C51AE6DC2D00C5CCEF /* NamedColors.h */,
-				EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */,
-				1F829A981C342BDD00DD429C /* FileLister.h */,
-				1F829A991C342BDD00DD429C /* FileLister.m */,
-				EB0E4FE51C60D21700849766 /* HotSpot.h */,
-				EB0E4FE61C60D21700849766 /* HotSpot.m */,
-				EB0E4FFB1C6288BF00849766 /* DispersePoint.h */,
-				EB0E4FFC1C6288BF00849766 /* DispersePoint.m */,
-				EB0E4FF31C62785200849766 /* SymbolDictionary.h */,
-				EB0E4FF41C62785200849766 /* SymbolDictionary.m */,
-				69BB52771CA4689E00DA7BC2 /* ExitApp.h */,
-				69BB52761CA4689E00DA7BC2 /* ExitApp.c */,
+				EB95A1A41CB16EAF00158B40 /* Other */,
 				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);
@@ -1435,6 +1450,7 @@
 				EBC01D0B1BED1C8C0004C751 /* arcdot.c in Sources */,
 				EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */,
 				EBC01D291BED1C8C0004C751 /* sat404.c in Sources */,
+				EB95A1A71CB16EF500158B40 /* PercentInArea.m in Sources */,
 				EBFC2A301BE90A0F00E0C1B3 /* DisplayCharacteristics.m in Sources */,
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,
 				A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */,
