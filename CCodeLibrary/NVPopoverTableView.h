@@ -16,6 +16,8 @@
 
 @interface NVPopoverTableView : UIView
 
+@property (nonatomic) NSString *title;
+
 + (instancetype)showPopoverTableViewInView:(UIView *)view
                                   delegate:(id)delegate
                                      title:(NSString *)title

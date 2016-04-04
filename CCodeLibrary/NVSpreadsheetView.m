@@ -8,6 +8,7 @@
 @import MessageUI;
 #import "CRAPI.h"
 #import "NVPopoverTableView.h"
+#import "NVWebKitVC.h"
 
 @interface NVSpreadsheetView () <NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate>
 
@@ -16,7 +17,7 @@
 @property (nonatomic) NSArray *alphabet;
 @property (nonatomic) CGFloat fontSize, borderWidth;
 @property (nonatomic) UIView *rowHeaderOverlap, *columnHeaderOverlap;
-@property (nonatomic) UIButton *returnToOrigin, *delete, *export, *create, *select, *mapIt, *swap;
+@property (nonatomic) UIButton *returnToOrigin, *delete, *export, *create, *select, *mapIt, *swap, *realtor;
 @property (nonatomic) SpreadSheetViewCell *cellForEditing;
 @property (nonatomic) UITextField *textField, *titleTextField;
 
@@ -184,6 +185,26 @@
     [ssv.select.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
     [ssv.select.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
     
+    ssv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
+    ssv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
+    ssv.realtor.backgroundColor = UIColor.clearColor;
+    ssv.realtor.imageEdgeInsets = insets;
+    
+    [ssv.realtor setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteHouse"
+                                                                                         ofType:@"png"]]
+                 forState:UIControlStateNormal];
+    
+    [ssv.realtor addTarget:ssv
+                    action:@selector(realtor:)
+          forControlEvents:UIControlEventTouchUpInside];
+    
+    [ssv addSubview:ssv.realtor];
+    
+    [ssv.realtor.trailingAnchor constraintEqualToAnchor:ssv.select.leadingAnchor].active = YES;
+    [ssv.realtor.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
+    [ssv.realtor.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.realtor.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    
     ssv.titleTextField = UITextField.new;
     ssv.titleTextField.translatesAutoresizingMaskIntoConstraints = NO;
     ssv.titleTextField.delegate = ssv;
@@ -197,7 +218,7 @@
     [ssv addSubview:ssv.titleTextField];
     
     [ssv.titleTextField.leadingAnchor constraintEqualToAnchor:ssv.mapIt.trailingAnchor].active = YES;
-    [ssv.titleTextField.trailingAnchor constraintEqualToAnchor:ssv.select.leadingAnchor].active = YES;
+    [ssv.titleTextField.trailingAnchor constraintEqualToAnchor:ssv.realtor.leadingAnchor].active = YES;
     [ssv.titleTextField.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
     [ssv.titleTextField.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
     
@@ -780,12 +801,38 @@
     }
 }
 
+- (void)realtor:(UIButton *)button
+{
+    NSArray *realtorList = @[@"www.edinarealty.com", @"www.remax.com", @"www.trulia.com", @"www.zillow.com"];
+    
+    NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self
+                                                                      delegate:self
+                                                                         title:@"Select Realtor Website"
+                                                                     textArray:realtorList
+                                                                 includeCancel:YES];
+#pragma unused(nvptv)
+}
+
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView
     didSelectRowWithText:(NSString *)text
 {
     [popoverTableView hide:YES];
-    [_delegate ssvSetCurrentFile:text];
-    _titleTextField.text = [_delegate ssvGetTitleText];
+    
+    if ([popoverTableView.title isEqualToString:@"Select Spreadsheet"])
+    {
+        [_delegate ssvSetCurrentFile:text];
+        _titleTextField.text = [_delegate ssvGetTitleText];
+    }
+    
+    else if ([popoverTableView.title isEqualToString:@"Select Realtor Website"])
+    {
+        NVWebKitVC *nvwkvc = NVWebKitVC.new;
+        nvwkvc.urlString = text;
+        
+        [self.parentViewController presentViewController:nvwkvc
+                                                animated:YES
+                                              completion:nil];
+    }
 }
 
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
