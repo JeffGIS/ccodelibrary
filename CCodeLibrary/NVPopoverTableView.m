@@ -31,7 +31,8 @@
         return nil;
     }
     
-    if (![delegate respondsToSelector:@selector(popoverTableView:didSelectRowWithText:)])
+    if (![delegate respondsToSelector:@selector(popoverTableView:didSelectRowWithText:)] ||
+        ![delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
     {
         NSLog(@"NVPopoverTableView ERROR:Delegate must respond to all selectors in protocol");
         return nil;
