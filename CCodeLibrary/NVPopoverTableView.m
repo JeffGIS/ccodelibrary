@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "NVPopoverTableView.h"
+#import "UserDefaults.h"
 
 @interface NVPopoverTableView () <UITableViewDelegate,UITableViewDataSource>
 
@@ -11,6 +12,8 @@
 @property (nonatomic) NSArray *textArray;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIView *overlayView;
+@property (nonatomic) UIFont *font;
+@property BOOL includeCancel;
 
 @end
 
@@ -20,11 +23,28 @@
                                   delegate:(id)delegate
                                      title:(NSString *)title
                                  textArray:(NSArray *)textArray
+                             includeCancel:(BOOL)includeCancel
 {
     if (!delegate || !view || !title || !textArray)
     {
         NSLog(@"NVPopoverTableView ERROR:Cannot set delegate, view, title or textArray to nil");
         return nil;
+    }
+    
+    if (![delegate respondsToSelector:@selector(popoverTableView:didSelectRowWithText:)])
+    {
+        NSLog(@"NVPopoverTableView ERROR:Delegate must respond to all selectors in protocol");
+        return nil;
+    }
+    
+    if (includeCancel)
+    {
+        NSMutableArray *tempArray = [NSMutableArray arrayWithArray:textArray];
+        
+        [tempArray insertObject:@"Cancel"
+                        atIndex:0];
+        
+        textArray = tempArray.copy;
     }
     
     NVPopoverTableView *nvptv = NVPopoverTableView.new;
@@ -34,6 +54,7 @@
     nvptv.delegate = delegate;
     nvptv.title = title;
     nvptv.textArray = textArray;
+    nvptv.includeCancel = includeCancel;
     
     nvptv.overlayView = UIView.new;
     nvptv.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -48,12 +69,12 @@
     nvptv.tabBar.userInteractionEnabled = NO;
     
     CGFloat margin = 100.0, cornerRadius = 16.0, rowHeight = 52.0;
-    UIFont *font = [UIFont boldSystemFontOfSize:28.0];
+    nvptv.font = [UIFont boldSystemFontOfSize:28.0];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
         margin = 40.0, cornerRadius = 8.0, rowHeight = 44.0;
-        font = [UIFont boldSystemFontOfSize:20.0];
+        nvptv.font = [UIFont boldSystemFontOfSize:20.0];
     }
     
     [view addSubview:nvptv];
@@ -61,13 +82,17 @@
     [nvptv constrainToView:view leading:margin trailing:-margin top:margin
                     bottom:(-margin + (nvptv.tabBar.frame.size.height / 2.0))];
     
-    nvptv.tableView = UITableView.new;
+    nvptv.tableView = [[UITableView alloc] initWithFrame:CGRectZero
+                                                   style:UITableViewStylePlain];
+    
     nvptv.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     nvptv.tableView.layer.cornerRadius = 10.0;
     nvptv.tableView.dataSource = nvptv;
     nvptv.tableView.delegate = nvptv;
     nvptv.tableView.rowHeight = rowHeight;
     nvptv.tableView.sectionHeaderHeight = rowHeight;
+    nvptv.tableView.backgroundColor = UIColor.whiteColor;
+    nvptv.tableView.delaysContentTouches = NO;
     
     [nvptv addSubview:nvptv.tableView];
     
@@ -83,6 +108,31 @@
     return nvptv;
 }
 
+- (void)hide:(BOOL)animated;
+{
+    if (animated)
+    {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             self.alpha = 0.0;
+                             _overlayView.alpha = 0.0;
+                             _tabBar.alpha = 1.0;
+                         } completion:^(BOOL finished) {
+                             [_overlayView removeFromSuperview];
+                             [self removeFromSuperview];
+                             _tabBar.userInteractionEnabled = YES;
+                         }];
+    }
+    
+    else
+    {
+        [_overlayView removeFromSuperview];
+        [self removeFromSuperview];
+        _tabBar.alpha = 1.0;
+        _tabBar.userInteractionEnabled = YES;
+    }
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -92,6 +142,20 @@
  numberOfRowsInSection:(NSInteger)section
 {
     return MAX(_textArray.count, 1);
+}
+
+-(UIView *)tableView:(UITableView *)tableView
+viewForHeaderInSection:(NSInteger)section
+{
+    UILabel *label = UILabel.new;
+    label.text= _title;
+    label.backgroundColor = UserDefaults.defaults.appleGray;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.font = _font;
+    label.adjustsFontSizeToFitWidth = YES;
+    label.textColor = UIColor.blackColor;
+    
+    return label;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
@@ -107,7 +171,36 @@
                                       reuseIdentifier:cellIdentifier];
     }
     
+    cell.textLabel.text = _textArray[indexPath.row];
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    cell.textLabel.font = _font;
+    cell.textLabel.adjustsFontSizeToFitWidth = YES;
+    
+    if (_includeCancel && indexPath.row == 0)
+        cell.textLabel.textColor = UIColor.redColor;
+    
+    else
+        cell.textLabel.textColor = UserDefaults.defaults.appleBlue;
+    
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (_delegate)
+    {
+        if (_includeCancel && indexPath.row == 0)
+            [_delegate popoverTableViewDidCancel:self];
+        
+        else
+        {
+            NSString *text = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
+            
+            [_delegate popoverTableView:self
+                   didSelectRowWithText:text];
+        }
+    }
 }
 
 @end

@@ -772,14 +772,25 @@
         {
             NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self
                                                                               delegate:self
-                                                                                 title:@"Available Spreadsheets"
-                                                                             textArray:fileList];
+                                                                                 title:@"Select Spreadsheet"
+                                                                             textArray:fileList
+                                                                         includeCancel:YES];
 #pragma unused(nvptv)
-            
-            /*[_delegate ssvSetCurrentFile:fileList[selectedFile]];
-            _titleTextField.text = [_delegate ssvGetTitleText];*/
         }
     }
+}
+
+- (void)popoverTableView:(NVPopoverTableView *)popoverTableView
+    didSelectRowWithText:(NSString *)text
+{
+    [popoverTableView hide:YES];
+    [_delegate ssvSetCurrentFile:text];
+    _titleTextField.text = [_delegate ssvGetTitleText];
+}
+
+- (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
+{
+    [popoverTableView hide:YES];
 }
 
 - (void)alertView:(NVAlertView *)alertView
