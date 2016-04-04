@@ -7,8 +7,9 @@
 #import "NVAlertView.h"
 @import MessageUI;
 #import "CRAPI.h"
+#import "NVPopoverTableView.h"
 
-@interface NVSpreadsheetView () <NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate>
+@interface NVSpreadsheetView () <NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate>
 
 @property (nonatomic) UIScrollView *contentView, *rowHeaderView, *columnHeaderView;
 @property (nonatomic) NSDate *touchDown, *touchUp;
@@ -60,7 +61,7 @@
     {
         ssv.rowHeight = 56.0;
         ssv.columnWidth = 216.0;
-        ssv.fontSize = 20.0;
+        ssv.fontSize = 19.0;
     }
     
     UIEdgeInsets insets = UIEdgeInsetsMake((ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1),
@@ -767,12 +768,29 @@
     {
         NSArray *fileList = [_delegate ssvGetFileList];
         
-        if (fileList.count > 0)
+        if (fileList.count > 0 && [_delegate respondsToSelector:@selector(ssvSetCurrentFile:)])
         {
-            [_delegate ssvSetCurrentFile:fileList[selectedFile]];
-            _titleTextField.text = [_delegate ssvGetTitleText];
+            NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self
+                                                                              delegate:self
+                                                                                 title:@"Select Spreadsheet"
+                                                                             textArray:fileList
+                                                                         includeCancel:YES];
+#pragma unused(nvptv)
         }
     }
+}
+
+- (void)popoverTableView:(NVPopoverTableView *)popoverTableView
+    didSelectRowWithText:(NSString *)text
+{
+    [popoverTableView hide:YES];
+    [_delegate ssvSetCurrentFile:text];
+    _titleTextField.text = [_delegate ssvGetTitleText];
+}
+
+- (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
+{
+    [popoverTableView hide:YES];
 }
 
 - (void)alertView:(NVAlertView *)alertView
