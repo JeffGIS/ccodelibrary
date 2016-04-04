@@ -26,6 +26,8 @@
 		6919EAF91C27B3EE00A9D0F1 /* NVUnitPickerTextAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6919EAF61C27AF1700A9D0F1 /* NVUnitPickerTextAlert.h */; };
 		692ACC671B86309B00400B36 /* NVRoutes.m in Sources */ = {isa = PBXBuildFile; fileRef = 692ACC661B86309B00400B36 /* NVRoutes.m */; };
 		692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692ACC651B86309B00400B36 /* NVRoutes.h */; };
+		6938F3901CB2C85700DD975D /* NVWebKitVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6938F38F1CB2C85700DD975D /* NVWebKitVC.m */; };
+		6938F3911CB2C98E00DD975D /* NVWebKitVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6938F38E1CB2C85600DD975D /* NVWebKitVC.h */; };
 		693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */; };
 		693C9BA11BEC529600564F93 /* UIImage+ImageFromColor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */; };
 		694304161C334E5A0077EC9F /* NVColorSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 694304151C334E5A0077EC9F /* NVColorSet.m */; };
@@ -323,6 +325,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				6938F3911CB2C98E00DD975D /* NVWebKitVC.h in CopyFiles */,
 				6956B9991CB235490070416B /* NVPopoverTableView.h in CopyFiles */,
 				697560BF1CB19AF9006EEA14 /* NVMarkerInfoButton.h in CopyFiles */,
 				EB23A7971CA04BF900F83E6C /* TextOptions.h in CopyFiles */,
@@ -475,6 +478,8 @@
 		6919EAF71C27AF1700A9D0F1 /* NVUnitPickerTextAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVUnitPickerTextAlert.m; sourceTree = "<group>"; };
 		692ACC651B86309B00400B36 /* NVRoutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRoutes.h; sourceTree = "<group>"; };
 		692ACC661B86309B00400B36 /* NVRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRoutes.m; sourceTree = "<group>"; };
+		6938F38E1CB2C85600DD975D /* NVWebKitVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVWebKitVC.h; sourceTree = "<group>"; };
+		6938F38F1CB2C85700DD975D /* NVWebKitVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVWebKitVC.m; sourceTree = "<group>"; };
 		693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageFromColor.h"; sourceTree = "<group>"; };
 		693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageFromColor.m"; sourceTree = "<group>"; };
 		694304141C334E5A0077EC9F /* NVColorSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVColorSet.h; sourceTree = "<group>"; };
@@ -1009,6 +1014,8 @@
 				6919EAF71C27AF1700A9D0F1 /* NVUnitPickerTextAlert.m */,
 				A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */,
 				A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */,
+				6938F38E1CB2C85600DD975D /* NVWebKitVC.h */,
+				6938F38F1CB2C85700DD975D /* NVWebKitVC.m */,
 				A9A7E3681B75796500DC7F3D /* NVXWalkButton.h */,
 				A9A7E3691B75796500DC7F3D /* NVXWalkButton.m */,
 				A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */,
@@ -1356,6 +1363,7 @@
 				A933D9FD1B5D4FEF00D621CD /* NV3DMath.m in Sources */,
 				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */,
+				6938F3901CB2C85700DD975D /* NVWebKitVC.m in Sources */,
 				A9A7E3641B75663500DC7F3D /* NVRampButton.m in Sources */,
 				A933D9F61B5D499500D621CD /* NVPipe.m in Sources */,
 				A9735AF419E77B6800894359 /* Reachability.m in Sources */,
