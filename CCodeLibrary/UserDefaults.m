@@ -329,6 +329,11 @@ static UserDefaults *_defaults;
     return documentsDirectory;
 }
 
+- (NSArray *)realtorList
+{
+    return @[@"www.edinarealty.com", @"www.remax.com", @"www.trulia.com", @"www.zillow.com/homes"];
+}
+
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
                     blue:(CGFloat)blue

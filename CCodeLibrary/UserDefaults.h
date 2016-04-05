@@ -50,6 +50,7 @@
 - (void)disableWebKitDiskImageCache;
 - (NSString *)sharedFilePath;
 - (NSString *)localFilePath;
+- (NSArray *)realtorList;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
