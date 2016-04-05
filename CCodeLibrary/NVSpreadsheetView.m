@@ -8,6 +8,7 @@
 @import MessageUI;
 #import "CRAPI.h"
 #import "NVPopoverTableView.h"
+#import "NVWebView.h"
 
 @interface NVSpreadsheetView () <NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate>
 
@@ -802,17 +803,14 @@
 
 - (void)realtor:(UIButton *)button
 {
-    if ([_delegate respondsToSelector:@selector(ssvDidRequestWebViewAtURL:)])
-    {
-        NSArray *realtorList = @[@"www.edinarealty.com", @"www.remax.com", @"www.trulia.com", @"www.zillow.com/homes"];
-        
-        NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self
-                                                                          delegate:self
-                                                                             title:@"Select Realtor Website"
-                                                                         textArray:realtorList
-                                                                     includeCancel:YES];
+    NSArray *realtorList = @[@"www.edinarealty.com", @"www.remax.com", @"www.trulia.com", @"www.zillow.com/homes"];
+    
+    NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self
+                                                                      delegate:self
+                                                                         title:@"Select Realtor Website"
+                                                                     textArray:realtorList
+                                                                 includeCancel:YES];
 #pragma unused(nvptv)
-    }
 }
 
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView
@@ -827,7 +825,10 @@
     }
     
     else if ([popoverTableView.title isEqualToString:@"Select Realtor Website"])
-        [_delegate ssvDidRequestWebViewAtURL:text];
+    {
+        NVWebView *nvwv = [NVWebView showWebViewInView:self
+                                             urlString:text];
+    }
 }
 
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
