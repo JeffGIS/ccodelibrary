@@ -8,7 +8,6 @@
 @import MessageUI;
 #import "CRAPI.h"
 #import "NVPopoverTableView.h"
-#import "NVWebKitVC.h"
 
 @interface NVSpreadsheetView () <NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate>
 
@@ -803,14 +802,17 @@
 
 - (void)realtor:(UIButton *)button
 {
-    NSArray *realtorList = @[@"www.edinarealty.com", @"www.remax.com", @"www.trulia.com", @"www.zillow.com/homes"];
-    
-    NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self
-                                                                      delegate:self
-                                                                         title:@"Select Realtor Website"
-                                                                     textArray:realtorList
-                                                                 includeCancel:YES];
+    if ([_delegate respondsToSelector:@selector(ssvDidRequestWebViewAtURL:)])
+    {
+        NSArray *realtorList = @[@"www.edinarealty.com", @"www.remax.com", @"www.trulia.com", @"www.zillow.com/homes"];
+        
+        NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self
+                                                                          delegate:self
+                                                                             title:@"Select Realtor Website"
+                                                                         textArray:realtorList
+                                                                     includeCancel:YES];
 #pragma unused(nvptv)
+    }
 }
 
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView
@@ -825,14 +827,7 @@
     }
     
     else if ([popoverTableView.title isEqualToString:@"Select Realtor Website"])
-    {
-        NVWebKitVC *nvwkvc = NVWebKitVC.new;
-        nvwkvc.urlString = text;
-        
-        [self.parentViewController presentViewController:nvwkvc
-                                                animated:YES
-                                              completion:nil];
-    }
+        [_delegate ssvDidRequestWebViewAtURL:text];
 }
 
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView

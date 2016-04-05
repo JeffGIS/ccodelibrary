@@ -112,7 +112,7 @@
 
 - (void)realtor:(UIButton *)button
 {
-    NSArray *realtorList = @[@"www.edinarealty.com", @"www.remax.com", @"www.trulia.com", @"www.zillow.com"];
+    NSArray *realtorList = @[@"www.edinarealty.com", @"www.remax.com", @"www.trulia.com", @"www.zillow.com/homes"];
     
     NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
                                                                       delegate:self

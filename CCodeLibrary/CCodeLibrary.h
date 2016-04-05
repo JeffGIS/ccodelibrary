@@ -30,7 +30,6 @@
 #import "PriorityLocation.h"
 #import "PointInArea.h"
 #import "PointInAreas.h"
-#import "PercentInArea.h"
 #import "HotSpot.h"
 #import "PointInAreaClass.h"
 #import "GetPriorityLocations.h"

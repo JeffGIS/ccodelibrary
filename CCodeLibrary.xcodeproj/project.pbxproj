@@ -64,6 +64,7 @@
 		69B36F1B1BCB1C8F004C4B69 /* NVDateRange.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69B36F181BCB0F30004C4B69 /* NVDateRange.h */; };
 		69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */ = {isa = PBXBuildFile; fileRef = 69BB52761CA4689E00DA7BC2 /* ExitApp.c */; };
 		69C183431C87A4B1000833FC /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 69C183421C87A4B1000833FC /* .gitignore */; };
+		69C3DFA31CB3807200DC1779 /* PercentInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB95A1A51CB16EF500158B40 /* PercentInArea.h */; };
 		69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C441A91BB474B200D026A7 /* NVTabBarEdit.m */; };
 		69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C441A81BB474B200D026A7 /* NVTabBarEdit.h */; };
 		69D5EFB21C7237AB004CE1C0 /* NVCalendarVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFB11C7237AB004CE1C0 /* NVCalendarVC.m */; };
@@ -242,7 +243,6 @@
 		EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB7C6A141BD158D8006E985B /* StringFunctions.h */; };
 		EB86BFA71B0B62520074728E /* minilzo.c in Sources */ = {isa = PBXBuildFile; fileRef = EB86BFA51B0B62520074728E /* minilzo.c */; };
 		EB95A1A71CB16EF500158B40 /* PercentInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB95A1A61CB16EF500158B40 /* PercentInArea.m */; };
-		EB95A1A81CB18BE900158B40 /* PercentInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB95A1A51CB16EF500158B40 /* PercentInArea.h */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
 		EBA2E472199527660085B2E0 /* libCCodeLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */; };
@@ -327,6 +327,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69C3DFA31CB3807200DC1779 /* PercentInArea.h in CopyFiles */,
 				6938F3911CB2C98E00DD975D /* NVWebKitVC.h in CopyFiles */,
 				6956B9991CB235490070416B /* NVPopoverTableView.h in CopyFiles */,
 				697560BF1CB19AF9006EEA14 /* NVMarkerInfoButton.h in CopyFiles */,

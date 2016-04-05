@@ -22,6 +22,7 @@
                        columnIndex:(NSUInteger)columnIndex;
 
 - (void)ssvDidSetFlipped:(BOOL)flipped;
+- (void)ssvDidRequestWebViewAtURL:(NSString *)URL;
 
 - (NSString *)ssvGetTitleText;
 - (NSArray *)ssvGetFileList;
