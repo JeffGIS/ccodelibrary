@@ -66,7 +66,7 @@ static FTPDataPull * _statpull = nil;
     _existingFileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_filePath
                                                                        error:nil].fileSize;
     
-    if (_refreshOption == FTPDataPullRefreshOptionOverwriteFile ||
+    if (!_existingFileSize || _refreshOption == FTPDataPullRefreshOptionOverwriteFile ||
         _refreshOption == FTPDataPullRefreshOptionCheckFileSize)
     {
         _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
