@@ -100,6 +100,15 @@ static FTPDataPull * _statpull = nil;
     {
         rtn = FTPStatusFileExists;
         [_popover hide];
+        if (_delegate && !_haveCalledDelegate)
+        {
+            [_delegate FTPdidComplete:_dataType
+                           withStatus:FTPStatusOK
+                      andStatusString:@"File exists"
+                             filePath:_filePath];
+            
+            _haveCalledDelegate = YES;
+        }
     }
     
     return rtn;
