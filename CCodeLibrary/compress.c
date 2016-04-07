@@ -8,29 +8,8 @@
 #include <string.h>
 #include "compress.h"
 #include "minilzo.h"
+#include "mathutil.h"
 #define BOOL int
-
-long GSSifilelength(FILE *fid)
-{
-    long fileLen;
-    long curloc = ftell(fid);
-    fseek(fid, 0, SEEK_END);
-    fileLen = ftell(fid);
-    fseek(fid, curloc, SEEK_SET);
-    return fileLen;
-}
-
-long __attribute__ ((noinline)) BigRead(FILE *fid, LPVOID pmem, long len)
-{
-    long didRead = fread(pmem, len, 1, fid);
-    return didRead;
-}
-
-long __attribute__ ((noinline)) BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc)
-{
-    long bytesWritten = fwrite(pbuf, 1, len, fid);
-    return bytesWritten;
-}
 
 void ExpandText(LPSTR txt)
 {
@@ -100,7 +79,7 @@ Exit:
     return rtn;
 }
 
-BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory)
+BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,int nfilestodecompress)
 {
     int	len, MaxLength;
     char File[PATH_MAX], OutFile[PATH_MAX];
@@ -109,11 +88,14 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory)
     BOOL rtn = TRUE;
     LPSTR pBS;
     FidTF = fopen(TransferFileName,"rb");
+    long fileLen;
+    long nFilesRead = 0;
     
     if (FidTF == NULL)
         return FALSE;
     
-    if (GSSifilelength(FidTF) < 14)
+    fileLen = GSSifilelength(FidTF);
+    if (fileLen < 14 || fileLen < offset)
     {
         rtn = FALSE;
         goto Exit;
@@ -131,6 +113,8 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory)
     fseek(FidTF, 0, SEEK_SET);
     fread(&Version, sizeof(short), 1, FidTF);
     fread(&MaxLength, sizeof(int), 1, FidTF);
+    if (offset)
+        fseek(FidTF, offset, SEEK_SET);
     BigRead(FidTF, &len, 4);
     
     while (rtn && len > 0)
@@ -147,6 +131,9 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory)
         }
         sprintf(OutFile, "%s/%s", toDirectory, pBS);
         rtn = GetFileFromTransferFile(0, FidTF, OutFile,  MaxLength);
+        nFilesRead++;
+        if (!rtn || (nfilestodecompress && nFilesRead >= nfilestodecompress))
+            goto Exit;
         BigRead(FidTF, &len, 4);
     }
     

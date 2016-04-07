@@ -7,8 +7,8 @@
 #import "Facility.h"
 #import "UserDefaults.h"
 #import "Colors.h"
-#import "NVAlertView.h"
 #import "MapToolbar.h"
+#import "NVDocumentManager.h"
 
 #define MANAGEMENT_MODULE   1
 #define PRELIM_MODULE       2
@@ -18,7 +18,14 @@
 #define PROJECT_MPLS        1
 #define PROJECT_METROGIS    2
 
-@interface CRAPI : NSObject <NVAlertViewDelegate>
+typedef NS_ENUM(NSInteger, CrimeMapMode)
+{
+    PINMAP,
+    HOTSPOT,
+    CHOROPLETH,
+};
+
+@interface CRAPI : NSObject
 
 @property (nonatomic) int currentModule;
 @property (nonatomic, copy) NSString *documentsDirectory;
@@ -38,11 +45,10 @@
 @property (nonatomic, copy) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
 @property (nonatomic, copy) NSString *googleKey;
-@property (nonatomic) BOOL refreshMap;
+@property BOOL refreshMap, doCompassCalibrate, showParcelBoundary;
 @property (nonatomic) NSArray *placesArray;
 @property (nonatomic) NSArray *currentPlaceArray;
 @property (nonatomic, copy) NSString *placeAreaFile;
-@property (nonatomic) BOOL doCompassCalibrate;
 @property (nonatomic, copy) NSString *calibrateLength;
 @property (nonatomic, copy) NSString *calibrateHeight;
 @property (nonatomic) NSMutableArray *assignediPadsArray;
@@ -61,21 +67,33 @@
 @property int parcelShadingOption;
 @property int parcelTextOption;
 @property int showTileInfo;
-@property BOOL showParcelBoundary;
 @property (nonatomic, copy) NSString *currentOverallBoundaryName;
 @property (nonatomic, copy) NSString *currentOverallBoundaryType;
 @property int currentOverallBoundaryRefno;
-@property BOOL setToAlleyWalls;
+@property BOOL setToAlleyWalls, isFromGMMobile;
 @property (nonatomic, copy) NSString *sourceApp;
 @property (nonatomic) UIView *currentView;
 
 @property (nonatomic, copy) NSString *currentPlatImagePath;
 @property (nonatomic, copy) NSString *currentPlatType;
+@property (nonatomic, copy) NSString *selectedPDFID;
 @property (nonatomic, copy) NSString *extractFile;
-@property BOOL resetPropList, resetDestinations, clearSpreadsheet;
+@property BOOL resetPropList, resetDestinations;
 @property NSInteger fromDate, toDate;
+@property NSInteger crimeMode;
+@property (nonatomic, copy) NSString *crimeTarget;
+@property (nonatomic, copy) NSString *crimeAdjustValue;
+@property (nonatomic, copy) NSString *crimeAdjustValueArea;
 @property (strong, nonatomic) MapToolbar *mapToolbar;
+@property (strong, nonatomic) UIViewController *mapVC;
 @property (nonatomic) CGFloat mapToolbarProgress;
+@property BOOL showPolylineForBounds, maskBoundsForBounds, becameActive;
+@property (nonatomic, copy) NSString *offsetForBounds;
+@property (nonatomic) int offsetForBoundsInMeters;
+@property (nonatomic, copy) NSString *selectBoundaryFromMapType;
+@property (nonatomic) int keepProcessing;
+@property (nonatomic) NVDocumentManager *docManager;
+@property BOOL mapPropList, mapIndividualDest, mapGroupDest;
 
 + (CRAPI *)sharedInstance;
 
@@ -100,12 +118,6 @@
 - (BOOL)intersectionAlreadyCompleted:(int)intID;
 - (NSString *)getOutputDirectory;
 
-- (NSString *)getImageFileforIntersection:(int)intersectionID
-                                    atLat:(double)lat
-                                   andLon:(double)lon
-                                  andZoom:(int)zoom
-                             forceRefresh:(BOOL)refresh;
-
 - (UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
                                 heading:(CGFloat)heading
                                   pitch:(CGFloat)pitch
@@ -114,8 +126,8 @@
 - (BOOL)getPlaceIntersectionFile:(id)intFile
                         forGeoid:(int)geoid;
 
-- (NSString *)directoryFromPath:(NSString*)path
-                       andName:(NSString*)name
+- (NSString *)directoryFromPath:(NSString *)path
+                       andName:(NSString *)name
                         create:(BOOL)create;
 
 - (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt
@@ -124,18 +136,26 @@
 - (IBOUNDS)boundsFromRect:(CGRect)rect
       usingTransformation:(LPTRANDATA)pTranBMPToW;
 
-- (dbounds) getPickApBoundsAtPoint:(LLPOINT *)pt;
+- (dbounds)getPickApBoundsAtPoint:(LLPOINT *)pt;
+- (dbounds)getPixelPickApBoundsAtPoint:(DPOINT *)pt;
 
-- (dbounds) getBoundsAtPoint:(CLLocationCoordinate2D*)pt
-                     andDist:(CGFloat)meters;
-- (void) clearOutputDirectory;
-- (BOOL) appendString:(NSString*)str toFile:(NSString*)file;
-- (NSInteger) adjustNextRefno:(NSInteger)refno;
+- (dbounds)getBoundsAtPoint:(CLLocationCoordinate2D *)pt
+                    andDist:(CGFloat)meters;
+
+- (void)clearOutputDirectory;
+
+- (BOOL)appendString:(NSString *)str
+              toFile:(NSString *)file;
+
+- (NSInteger)adjustNextRefno:(NSInteger)refno;
 - (void)processPlacesArray:(NSUInteger) row;
 - (void)loadiPadParametersForGeoid:(int)geoid;
 - (void)setiPadParametersFromGeoid:(int)geoid;
+- (void)deleteImagesForAllZooms:(int)intersectionID;
 
--(void) updateProgress:(int)tot
-               current:(int)current;
+- (void)updateProgress:(NSInteger)tot
+               current:(NSInteger)current
+                 range:(int)iRange
+             numRanges:(int)nRanges;
 
 @end

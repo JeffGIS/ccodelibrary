@@ -547,3 +547,16 @@ NSMutableArray *sortByContentsOfParentheses(NSMutableArray *array)
     
     return newArray;
 }
+
+uint occurrencesOfCharacter(unichar character, NSString *string)
+{
+    uint count = 0;
+    
+    for(int i = 0; i < string.length; i++)
+    {
+        if ([string characterAtIndex:i] == character)
+            count++;
+    }
+    
+    return count;
+}

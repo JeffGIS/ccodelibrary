@@ -21,6 +21,7 @@ enum {
 @property (nonatomic) Reachability *reachability;
 @property (nonatomic) long fileSize, totBytesWritten;
 @property (nonatomic) int ii;
+@property id <GSSiPopoverViewDelegate> savePopoverDelegate;
 
 @end
 
@@ -61,11 +62,19 @@ enum {
     {
         if (_delegate)
         {
-            [_delegate FTPdidComplete:FTPStatusConnectionFailed
-                             filePath:nil];
+            [_delegate FTPPushDidComplete:_dataType
+                               withStatus:FTPStatusConnectionFailed
+                          andStatusString:@"Host not reachable"
+                                 filePath:nil];
         }
         
         return NO;
+    }
+    
+    if (_popover)
+    {
+        _savePopoverDelegate = _popover.delegate;
+        _popover.delegate = self;
     }
     
     return [self startSend:fileName];
@@ -80,7 +89,6 @@ enum {
 - (void)sendDidStopWithStatus:(int)status
                  statusString:(NSString *)statusString
 {
-    
     if (!statusString)
     {
         assert(_filePath);
@@ -91,8 +99,10 @@ enum {
     
     if (_delegate)
     {
-        [_delegate FTPdidComplete:status
-                         filePath:_filePath];
+        [_delegate FTPPushDidComplete:_dataType
+                           withStatus:status
+                      andStatusString:statusString
+                             filePath:_filePath];
     }
 }
 
@@ -156,6 +166,7 @@ enum {
     [_fileStream open];
     
     CFWriteStreamRef ftpStream = CFWriteStreamCreateWithFTPURL(NULL, (__bridge CFURLRef) url);
+    
     if (!ftpStream)
     {
         NSAssert(0, @"Unable to open ftpstream");
@@ -181,7 +192,7 @@ enum {
     _networkStream.delegate = self;
     
     [_networkStream scheduleInRunLoop:NSRunLoop.currentRunLoop
-                                  forMode:NSDefaultRunLoopMode];
+                              forMode:NSDefaultRunLoopMode];
     
     [_networkStream open];
     CFRelease(ftpStream);
@@ -196,10 +207,13 @@ enum {
 - (void)stopSendWithStatus:(int)status
               statusString:(NSString *)statusString
 {
+    if (_popover)
+        _popover.delegate = _savePopoverDelegate;
+    
     if (_networkStream)
     {
         [_networkStream removeFromRunLoop:NSRunLoop.currentRunLoop
-                                      forMode:NSDefaultRunLoopMode];
+                                  forMode:NSDefaultRunLoopMode];
         
         _networkStream.delegate = nil;
         [_networkStream close];
@@ -372,7 +386,12 @@ enum {
     _ftpSite = @"gssidata.com";
     _username = @"GSSiData";
     _password = @"GSSi";
-    self.port = @"14147";
+    _port = @"14147";
+    
+    //_ftpSite = @"192.168.254.39";
+    //_username = @"GSSiLocal";
+    //_password = @"GSSi";
+    //_port = @"21";
     
     _ftpSite2 = @"thmgis.com";
     _username2 = @"waypoint";
@@ -404,6 +423,12 @@ enum {
     
     [self stopSendWithStatus:FTPStatusStop
                    statusString:@"Stopped"];
+}
+
+- (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
+{
+    [self stopSendWithStatus:FTPStatusUserCancel
+                statusString:@"Canceled by User"];
 }
 
 @end

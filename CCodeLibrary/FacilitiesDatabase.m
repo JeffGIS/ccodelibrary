@@ -542,7 +542,7 @@ Exit:
     return rtn;
 }
 
-- (void)FTPdidComplete:(int)option
+- (void)FTPdidComplete:(FTPDataType)dataType
             withStatus:(int)status
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path
@@ -556,7 +556,7 @@ Exit:
         
         else
         {
-            DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String);
+            DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0);
             status = [self loadFacilityTextToDatabase:path];
         }
         

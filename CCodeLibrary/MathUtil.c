@@ -535,6 +535,15 @@ double HeadingToAzimuth (double heading)
 	return rtn;
 }
 
+POINT DPointToPoint (DPOINT *dpt)
+{
+    POINT pt;
+    
+    pt.x = IDNINT (dpt->x);
+    pt.y = IDNINT (dpt->y);
+    return pt;
+}
+
 vec2 newpt(vec2 *OldPoint, float AZM, float DIS)
 {
     vec2 NewPoint;
@@ -615,12 +624,38 @@ void InitDBounds(dbounds *bnds)
     return;
 }
 
+void DBoundsInit(LPMNMXCORD bnds)
+{
+    bnds->xmn = DBL_MAX;
+    bnds->ymn = DBL_MAX;
+    bnds->xmx = -DBL_MAX;
+    bnds->ymx = -DBL_MAX;
+    return;
+}
+
 void InitIBounds(IBOUNDS *bnds)
 {
     bnds->xmn = INT_MAX;
     bnds->ymn = INT_MAX;
     bnds->xmx = INT_MIN;
     bnds->ymx = INT_MIN;
+    return;
+}
+void AddMinMaxD (LPMNMXCORD mm1, LPMNMXCORD mm2)
+{
+    mm1->xmn = min (mm1->xmn,mm2->xmn);
+    mm1->xmx = max (mm1->xmx,mm2->xmx);
+    mm1->ymn = min (mm1->ymn,mm2->ymn);
+    mm1->ymx = max (mm1->ymx,mm2->ymx);
+    return;
+}
+
+void AddMinMaxL (LPMNMXCORL mm1, LPMNMXCORL mm2)
+{
+    mm1->xmn = min (mm1->xmn,mm2->xmn);
+    mm1->xmx = max (mm1->xmx,mm2->xmx);
+    mm1->ymn = min (mm1->ymn,mm2->ymn);
+    mm1->ymx = max (mm1->ymx,mm2->ymx);
     return;
 }
 
@@ -672,6 +707,33 @@ IBOUNDS IBoundsFromPointAndDist(IPOINT pt, int dist)
     return bnds;
 }
 
+MNMXCORD BoundsFromPointAndDist(DPOINT pt, double dist)
+{
+    MNMXCORD bnds;
+    
+    bnds.xmn = pt.x - dist;
+    bnds.xmx = pt.x + dist;
+    bnds.ymn = pt.y - dist;
+    bnds.ymx = pt.y + dist;
+    return bnds;
+}
+
+MNMXCORD BoundsFromLLPointAndDist(LLPOINT pt, double distInMeters)
+{
+    MNMXCORD bnds;
+    
+    DPOINT pt1 = NewLatLong(pt.lat, pt.lon, distInMeters, 0);
+    double pickapY = pt1.y - pt.lat;
+    DPOINT pt2 = NewLatLong(pt.lat, pt.lon, distInMeters, HALFPI);
+    double pickapX = pt2.x - pt.lon;
+    bnds.xmn = (pt.lon - pickapX);
+    bnds.xmx = (pt.lon + pickapX);
+    bnds.ymn = (pt.lat - pickapY);
+    bnds.ymx = (pt.lat + pickapY);
+    
+    return bnds;
+}
+
 CGRect MNMXCORDtoCGRect (LPMNMXCORD pBounds)
 {
     CGRect rect;
@@ -695,8 +757,8 @@ DPOINT DBoundsMid(MNMXCORD *bnds)
 {
     DPOINT pt;
     
-    pt.x = (int)(bnds->xmn + (bnds->xmx - bnds->xmn) / 2);
-    pt.y = (int)(bnds->ymn + (bnds->ymx - bnds->ymn) / 2);
+    pt.x = (bnds->xmn + (bnds->xmx - bnds->xmn) / 2);
+    pt.y = (bnds->ymn + (bnds->ymx - bnds->ymn) / 2);
     return pt;
 }
 
@@ -1008,6 +1070,16 @@ void CloseTRANS2 (LPTRANDATA *phlpTran)
     
 }
 
+LPTRANDATA STRANCopy (LPTRANDATA pTran)
+{
+    if (!pTran)
+        return 0;
+    LPTRANDATA pTranCopy = malloc (sizeof(TRANDATA));
+    
+    memmove (pTranCopy,pTran,sizeof(TRANDATA));
+    return pTranCopy;
+}
+
 LPTRANDATA STRAN2(int ID, double X1[], double Y1[], double X2[], double Y2[], int N, int Type,float *RSQMIN)
 {
 	double ANGLE1, ANGLE2, ANGLE, DEN, SINANG, COSANG, DX1, DX2, DY1, DY2, SCLRAT,
@@ -1255,6 +1327,33 @@ LPTRANDATA  STRANCornersToBounds (CORNERPOINTS *corners,LPMNMXCORD ToRect)
     return hTran;
 }
 
+LPTRANDATA  STRANBoundsToCorners (CORNERPOINTS *corners,LPMNMXCORD ToRect)
+{
+    LPTRANDATA  hTran;
+    double	XFROM[4],YFROM[4],XTO[4],YTO[4];
+    float	RSQMIN;
+    
+    XFROM[0] = corners->nearLeft.x;
+    XFROM[1] = corners->farLeft.x;
+    XFROM[2] = corners->farRight.x;
+    XFROM[3] = corners->nearRight.x;
+    YFROM[0] = corners->nearLeft.y;
+    YFROM[1] = corners->farLeft.y;
+    YFROM[2] = corners->farRight.y;
+    YFROM[3] = corners->nearRight.y;
+    XTO[0] = ToRect->xmn;
+    XTO[1] = ToRect->xmn;
+    XTO[2] = ToRect->xmx;
+    XTO[3] = ToRect->xmx;
+    YTO[0] = ToRect->ymn;
+    YTO[1] = ToRect->ymx;
+    YTO[2] = ToRect->ymx;
+    YTO[3] = ToRect->ymn;
+    
+    hTran = STRAN2 (1665,XTO,YTO,XFROM,YFROM,4,1,(LPFLOAT)&RSQMIN);
+    return hTran;
+}
+
 void TRANS2(double XIN, double YIN, double *XOUT,double *YOUT, LPTRANDATA TranPtr)
 {
 	double XI, YI;
@@ -1379,6 +1478,14 @@ IPOINT TranIPOINT (IPOINT InPoint,LPTRANDATA  hTran)
     return RtnPoint;
 }
 
+long FileLength (FILE *fid)
+{
+    fseek(fid, 0, SEEK_END);
+    long totLen = ftell(fid);
+    fseek(fid, 0, SEEK_SET);
+    return totLen;
+}
+
 int fgetstring(char *str, int maxlen, FILE *fid)
 {
     int ln;
@@ -1482,7 +1589,7 @@ LPTRANDATA  LoadTranFromCPT(const char *Name, int dir)
 	return TranPtr;
 }
 
-bool CreateMask(LPDPOINT *pPointsIN, int *pnPoints, bounds *pbnds)
+bool CreateMask(LPDPOINT *pPointsIN, int *pnPoints, LPMNMXCORD pbnds)
 {
     LPDPOINT pPoints = *pPointsIN;
     int nNewPoints = 5;
@@ -1531,6 +1638,41 @@ double DeltaAngle (double AZ1, double AZ2)
         daz -= TWOPI;
     
     return (daz * RADtoDEG);
+}
+bool BoundsInBounds (LPMNMXCORD pBounds1,LPMNMXCORD pBounds2,short Opt)
+#if ENABLETRACE
+{GSSiEnterProg (259);
+#endif
+    {
+        bool InBounds=TRUE;
+        
+        switch (Opt)
+        {
+            case 0: //bounds 1 completely in bounds2
+                if (pBounds1->xmn < pBounds2->xmn ||
+                    pBounds1->xmx > pBounds2->xmx ||
+                    pBounds1->ymn < pBounds2->ymn ||
+                    pBounds1->ymx > pBounds2->ymx)
+                    InBounds=FALSE;
+                break;
+                
+            case 1: //bounds 1 at least partially in bounds2
+                if (pBounds1->xmx < pBounds2->xmn ||
+                    pBounds1->xmn > pBounds2->xmx ||
+                    pBounds1->ymx < pBounds2->ymn ||
+                    pBounds1->ymn > pBounds2->ymx)
+                    InBounds=FALSE; 
+                break;
+        }
+        {
+#if ENABLETRACE
+            GSSiExitProg (259);
+#endif
+            return InBounds;
+        }
+#if ENABLETRACE
+    }
+#endif
 }
 
 bool DPointInBounds (LPDPOINT pt,LPMNMXCORD pbounds)
@@ -1733,3 +1875,63 @@ LPDPOINT PointsFromCGRect (CGRect *pRect)
     return pPoints;
 }
 
+static bool rectIntersectsRects (CGRect * testRect,int nRects,CGRect * rects)
+{
+    
+    for (int i=0; i< nRects; i++)
+    {
+        if (CGRectIntersectsRect(*testRect,rects[i]))
+            return TRUE;
+    }
+    return FALSE;
+}
+
+CGRect largestRect(float aspectRatio, int precision, CGRect bounds, int nRects, CGRect *rects)
+{
+    //aspectRatio is width/height
+#define MAXRECT 256
+    CGPoint origins[MAXRECT];
+    int nRect = 0;
+    CGRect largeRect = CGRectZero;
+    CGRect testRect = CGRectZero;
+    int minY = bounds.origin.y;
+    int minX = bounds.origin.x;
+    int maxY = bounds.origin.y + bounds.size.height;
+    int maxX = bounds.origin.x + bounds.size.width;
+    int y = minY;
+    
+    while (y < maxY)
+    {
+        int x = minX;
+        
+        while (x < maxX)
+        {
+            testRect.origin.x = x;
+            testRect.origin.y = y;
+            testRect.size.width = (precision * aspectRatio);
+            testRect.size.height = precision;
+            
+            while (CGRectContainsRect(bounds,testRect) &&
+                   !rectIntersectsRects (&testRect,nRects,rects))
+            {
+                testRect.size.width += (precision * aspectRatio);
+                testRect.size.height += precision;
+            }
+            
+            if (testRect.size.width > largeRect.size.width)
+            {
+                largeRect = testRect;
+                nRect = 0;
+            }
+            if (nRect < MAXRECT &&
+                testRect.size.width == largeRect.size.width)
+                origins[nRect++] = testRect.origin;
+            x += precision;
+        }
+        
+        y += precision;
+    }
+    if (nRect > 2)
+        largeRect.origin = origins[nRect/2];
+    return largeRect;
+}

@@ -184,9 +184,6 @@
 
 - (void)setBKImage:(BOOL)forceRefresh;
 {
-    CGRect windowBounds = CGRectZero;
-    CGSize imageSize = CGSizeZero;
-    
     _imageName = [NSString stringWithFormat:@"%i", _currentIntersectionID];
     
     IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
@@ -197,11 +194,22 @@
     
     CRAPI.sharedInstance.currentView = self.view;
     
-    _pathToImageFile = [CRAPI.sharedInstance getImageFileforIntersection:_currentIntersectionID
-                                                                   atLat:_latitude
-                                                                  andLon:_longitude
-                                                                 andZoom:_currentZoom
-                                                            forceRefresh:forceRefresh];
+    NVTileCompiler *nvtc = [NVTileCompiler compileImageForIntersectionID:_currentIntersectionID
+                                                                     lat:_latitude
+                                                                     lon:_longitude
+                                                                    zoom:_currentZoom
+                                                            forceRefresh:forceRefresh
+                                                                delegate:self
+                                                             currentView:self.view];
+#pragma unused(nvtc)
+}
+
+- (void)tileCompilerReturnedImagePath:(NSString *)imagePath
+{
+    _pathToImageFile = imagePath;
+    
+    CGRect windowBounds = CGRectZero;
+    CGSize imageSize = CGSizeZero;
     
     if (_pathToImageFile)
     {
@@ -210,8 +218,9 @@
     }
     
     UIImage *backImage = [UIImage imageWithContentsOfFile:_pathToImageFile];
+    
     int pixelx = 0, pixely = 0;
-    LatLongToPixelXY(info.latitude, info.longitude, _currentZoom, &pixelx, &pixely);
+    LatLongToPixelXY(_latitude, _longitude, _currentZoom, &pixelx, &pixely);
     
     NSString *intAzms = @"";
     
@@ -229,11 +238,13 @@
     _backgroundImage.image = backImage;
     windowBounds = _backgroundImage.frame;
     imageSize = _backgroundImage.intrinsicContentSize;
+    
     if (imageSize.width < 0 || imageSize.height < 0)
     {
         imageSize.width = 640;
         imageSize.height = 640;
     }
+    
     _xFactor = (CGFloat)imageSize.width / (CGFloat)windowBounds.size.width;
     _yFactor = (CGFloat)imageSize.height / (CGFloat)windowBounds.size.height;
     _xOffset = (windowBounds.origin.x * _xFactor);
@@ -859,6 +870,9 @@
 didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     [alertView hideLargeAlertView:YES];
+    
+    if (alertView.tag == 777)
+        return;
     
     int rampID = 0, switchWith = 0;
     

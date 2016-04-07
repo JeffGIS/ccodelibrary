@@ -38,6 +38,7 @@ typedef NS_ENUM(NSInteger, GMSMessage)
     GMSMessageSetNearby,
     GMSMessageCheckNearby,
     GMSMessageCancelConnect,
+    GMSMessageGetPoliceUpdate,
 };
 
 typedef NS_ENUM(NSInteger, FTPStatus)
@@ -167,7 +168,8 @@ typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
     MarkerInfoWindowTypeAlleyWall,
     MarkerInfoWindowTypeAlleyLine,
     MarkerInfoWindowTypeCustom,
-    MarkerInfoWindowTypeCRInt
+    MarkerInfoWindowTypeCRInt,
+    MarkerInfoWindowTypeCrime,
 };
 
 @end

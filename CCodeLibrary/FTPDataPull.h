@@ -15,13 +15,33 @@ typedef NS_ENUM(NSInteger, FTPDataPullRefreshOption)
     FTPDataPullRefreshOptionCheckFileSize,
 };
 
+typedef NS_ENUM(NSInteger, FTPDataType)
+{
+    FTPDataPlat,
+    FTPDataPDF,
+    FTPDataCrimes,
+    FTPDataOther,
+    GetDatabaseSettingProperty,
+    GetDatabaseSettingTiles,
+    GetDatabaseSettingParcels,
+    GetDatabaseSettingAreas,
+    GetDatabaseSettingSewer,
+    GetDatabaseSettingPlan,
+    GetDatabaseSettingCensus,
+    GetDatabaseSettingAlleyWall,
+    GetDatabaseSettingCurbRamp,
+    GetDatabaseSettingCrimes,
+    GetDatabaseSettingMapleGrove,
+    GetDatabaseSettingNVMetro,
+};
+
 @class FTPDataPull;
 
 @protocol FTPDataPullDelegate <NSObject>
 
 @optional
 
-- (void)FTPdidComplete:(int)option
+- (void)FTPdidComplete:(FTPDataType)dataType
             withStatus:(int)status
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path;
@@ -61,7 +81,7 @@ typedef NS_ENUM(NSInteger, FTPDataPullRefreshOption)
 @property (nonatomic) unsigned long long fileSize;
 @property (nonatomic) CGFloat progress;
 @property (nonatomic) GSSiPopoverView *popover;
-@property int option;
+@property FTPDataType dataType;
 
 + (FTPDataPull *)pull;
 

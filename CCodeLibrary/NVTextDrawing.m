@@ -6,6 +6,16 @@
 
 @implementation NVTextDrawing
 
++ (BOOL)continue:(NSInteger) processingID
+{
+    if (!processingID)
+        return YES;
+    if (processingID == CRAPI.sharedInstance.keepProcessing)
+        return YES;
+    return NO;
+}
+
+
 + (int) numLinesInText:(const char *)txt
 {
     int numLines = 1;
@@ -28,6 +38,8 @@
         fontSize:(CGFloat)fontSize
      minFontSize:(CGFloat)minFontSize
        textColor:(UIColor *)textColor
+    processingID:(NSInteger)processingID
+
 {
     NSInteger nLines = 0;
     CGFloat textArea = 0.0;
@@ -36,7 +48,7 @@
     PointInArea *pia = [[PointInArea alloc] init];
     pia.maxDimension = 256;
     
-    CGFloat areaSize = ComputeAreaAreaD(pPoints, numPoints, 0);
+    CGFloat areaSize = fabs(ComputeAreaAreaD(pPoints, numPoints, 0));
     MNMXCORD areaBounds = PolyBounds(pPoints, (int)numPoints);
     if (pBounds)
     {
@@ -52,7 +64,8 @@
     [pia loadArea:(int)numPoints
          numLoops:(int)numLoops
       polyPartLen:polyPartLen
-           points:pPoints];
+           points:pPoints
+    boundaryWidth:0];
     
     //int numTextLines = [NVTextDrawing numLinesInText:text.UTF8String];
     
@@ -142,17 +155,17 @@
         CGFloat textFactor = (areaSize / textArea);
         CGFloat textFactor2 = 1;
         CGFloat minTextFactor = (desiredTextFactor * ((CGFloat)minFontSize / (CGFloat)fontSize) * ((CGFloat)minFontSize / (CGFloat)fontSize));
-        CGFloat shrink = 0.95;
+        CGFloat shrink = 0.90;
         NSInteger numFit = 0;
 #define MAXFIT 256
         CGFloat fitX[MAXFIT] = {0}, fitY[MAXFIT] = {0};
         CGFloat xoffset = 0.0, yoffset = 0.0;
         BOOL firstFit = YES;
     Top:
-        while (!numFit && (textFactor > minTextFactor))
+        while (!numFit && (textFactor > minTextFactor && [self continue:processingID]))
         {
-            CGFloat xinc = (aveCharWidth * textFactor)/2;
-            CGFloat yinc = (aveCharHeight * textFactor)/2;
+            CGFloat xinc = max (aveCharWidth/2,(aveCharWidth * textFactor)/2);
+            CGFloat yinc = max (aveCharHeight/2,(aveCharHeight * textFactor)/2);
             yoffset = areaMid.y - areaHeight + textHeight * textFactor/2;
             
             while (yoffset < areaBounds.ymx)
@@ -202,7 +215,7 @@
             textFactor *= shrink;
         }
         
-        if (numFit)
+        if (numFit && [self continue:processingID])
         {
             CGFloat fontFactor = min(textFactor*textFactor2, desiredTextFactor);
             fontSize *= fontFactor;
@@ -284,7 +297,7 @@
     
     CFRelease(fontRef);
     
-/*   if (ConfigurationControl.sharedInstance.GMTilesVisible == YES)
+/*   if (ConfigurationControl.sharedInstance.GMTilesVisible)
     {
         CGRect shadowRect = rect;
         shadowRect.origin.x += 1;

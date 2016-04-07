@@ -3,16 +3,20 @@
 
 #import "MapToolbar.h"
 #import "UserDefaults.h"
+#import "HelpButton.h"
+#import "NVColor.h"
 
 @interface MapToolbar ()
 
 @property (nonatomic) UIButton *extentsButton, *userLocationButton, *legendsButton, *digitizeButton;
-@property (nonatomic) UIButton *grayscaleButton, *clearMarkerButton, *emailPDFButton;
+@property (nonatomic) UIButton *grayscaleButton, *clearMarkerButton, *emailPDFButton, *helpButton, *returnButton;
 @property (nonatomic) UISegmentedControl *mapTypeSC, *platSC;
 @property (nonatomic) CGSize size;
 @property BOOL configChanged, myLocationEnabled, platOverride;
-@property (nonatomic) CGFloat buttonSize, switchHeight, switchWidth, SCHeight, mapTypeSCWidth, mapTypeSCVertWidth;
+@property (nonatomic) CGFloat buttonSize, switchHeight, switchWidth, SCHeight, mapTypeSCWidth;
 @property (nonatomic) CGFloat buttonMargin, switchMargin, SCMargin, platSCWidth, platSCVertWidth;
+@property (nonatomic) UIProgressView *progressView;
+@property (nonatomic) NSTimer *helpBackgroundToggleTimer;
 
 @end
 
@@ -26,7 +30,9 @@
                                 delegate:(id)delegate;
 {
     MapToolbar *mt = [[MapToolbar alloc] init];
-    mt.configChanged = mt.myLocationEnabled = mt.platOverride = NO;
+    mt.configChanged = mt.myLocationEnabled = mt.platOverride = mt.helpLongPressed = NO;
+    mt.legendOffset = 0.0;
+    mt.isOffset = NO;
     
     //set default configuration
     [mt setConfigurationProperty:MapToolbarPropertyWantUserLocation
@@ -47,6 +53,9 @@
     [mt setConfigurationProperty:MapToolbarPropertyWantProgressBar
                            value:YES];
     
+    [mt setConfigurationProperty:MapToolbarPropertyWantHelpButton
+                           value:YES];
+    
     [mt setConfigurationProperty:MapToolbarPropertyWantPlat
                            value:NO];
     
@@ -59,10 +68,13 @@
     [mt setConfigurationProperty:MapToolbarPropertyWantLegends
                            value:NO];
     
+    [mt setConfigurationProperty:MapToolbarPropertyWantReturnButton
+                           value:NO];
+    
     //set internal sizes for all devices
-    mt.buttonSize = 47.0, mt.SCHeight = 29.0, mt.mapTypeSCWidth = 128.0;
+    mt.buttonSize = 47.0, mt.SCHeight = 29.0, mt.mapTypeSCWidth = 76.0;
     mt.buttonMargin = 8.0, mt.switchMargin = 16.0, mt.SCMargin = 17.0, mt.platSCWidth = 196.0;
-    mt.mapTypeSCVertWidth = 76.0, mt.platSCVertWidth = 112.0;
+    mt.platSCVertWidth = 112.0;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
@@ -82,68 +94,98 @@
     mt.layer.borderColor = UIColor.blackColor.CGColor;
     mt.delegate = delegate;
     mt.orientation = MapToolbarOrientationTop;
+    mt.previousOrientation = MapToolbarOrientationDefault;
+    mt.previousFrame = CGRectZero;
     
     [view addSubview:mt];
     
-    mt.userLocationButton = [[UIButton alloc] initWithFrame:CGRectMake(mt.buttonMargin, mt.buttonMargin,
-                                                                       mt.buttonSize, mt.buttonSize)];
+    mt.userLocationButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    mt.userLocationButton.frame = CGRectMake(mt.buttonMargin, mt.buttonMargin,
+                                             mt.buttonSize, mt.buttonSize);
     
     [mt setupButton:mt.userLocationButton
          imageTitle:@"userLocation"
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
-             target:mt
            selector:@selector(userLocationSelected:)];
 
     //add user location button added by default
     [mt addSubview:mt.userLocationButton];
     
-    mt.extentsButton = [[UIButton alloc] initWithFrame:CGRectMake((mt.buttonSize + (mt.buttonMargin * 2.0)),
-                                                                  mt.buttonMargin, mt.buttonSize, mt.buttonSize)];
+    mt.extentsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    mt.extentsButton.frame = CGRectMake((mt.buttonSize + (mt.buttonMargin * 2.0)),
+                                        mt.buttonMargin, mt.buttonSize, mt.buttonSize);
     
     [mt setupButton:mt.extentsButton
          imageTitle:@"zoom"
          edgeInsets:UIEdgeInsetsMake(-2.0, -2.0, -2.0, -2.0)
-             target:mt
            selector:@selector(extentsSelected:)];
+    
+    UILongPressGestureRecognizer *lpGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:mt
+                                                                                            action:@selector(extentsLongPressed:)];
+    
+    [mt.extentsButton addGestureRecognizer:lpGesture];
   
     //add extents button added by default
     [mt addSubview:mt.extentsButton];
     
-    mt.grayscaleButton = [[UIButton alloc] initWithFrame:CGRectMake(((mt.buttonSize * 2.0) + (mt.buttonMargin * 3.0)),
-                                                                    mt.buttonMargin, mt.buttonSize, mt.buttonSize)];
+    mt.grayscaleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    mt.grayscaleButton.frame = CGRectMake(((mt.buttonSize * 2.0) + (mt.buttonMargin * 3.0)),
+                                          mt.buttonMargin, mt.buttonSize, mt.buttonSize);
     
     [mt setupButton:mt.grayscaleButton
          imageTitle:@"grayscale"
          edgeInsets:UIEdgeInsetsZero
-             target:mt
            selector:@selector(grayscaleSelected:)];
     
     //grayscale button added by default
     [mt addSubview:mt.grayscaleButton];
     
-    mt.clearMarkerButton = [[UIButton alloc] initWithFrame:CGRectMake(((mt.buttonSize * 3.0) + (mt.buttonMargin * 4.0)),
-                                                                      mt.buttonMargin, mt.buttonSize, mt.buttonSize)];
+    mt.clearMarkerButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
+    mt.clearMarkerButton.frame = CGRectMake(((mt.buttonSize * 3.0) + (mt.buttonMargin * 4.0)),
+                                            mt.buttonMargin, mt.buttonSize, mt.buttonSize);
+
     [mt setupButton:mt.clearMarkerButton
          imageTitle:@"clearMarkers"
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
-             target:mt
            selector:@selector(clearMarkersSelected:)];
     
     //clear marker button added by default
     [mt addSubview:mt.clearMarkerButton];
     
-    mt.emailPDFButton = [[UIButton alloc] initWithFrame:CGRectMake(((mt.buttonSize * 4.0) + (mt.buttonMargin * 5.0)),
-                                                                   mt.buttonMargin, mt.buttonSize, mt.buttonSize)];
+    mt.emailPDFButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    mt.emailPDFButton.frame = CGRectMake(((mt.buttonSize * 4.0) + (mt.buttonMargin * 5.0)),
+                                         mt.buttonMargin, mt.buttonSize, mt.buttonSize);
     
     [mt setupButton:mt.emailPDFButton
          imageTitle:@"emailIcon"
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
-             target:mt
            selector:@selector(emailPDFSelected:)];
     
     //email PDF button added by default
     [mt addSubview:mt.emailPDFButton];
+    
+    mt.helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    mt.helpButton.frame = CGRectMake(((mt.buttonSize * 5.0) + (mt.buttonMargin * 5.0)),
+                                     mt.buttonMargin, mt.buttonSize, mt.buttonSize);
+    
+    [mt setupButton:mt.helpButton
+         imageTitle:@"questionMark"
+         edgeInsets:UIEdgeInsetsMake(4.0, -2.0, 4.0, -2.0)
+           selector:@selector(helpButtonSelected:)];
+    
+    UILongPressGestureRecognizer *helpLpGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:mt
+                                                                                                action:@selector(helpLongPressed:)];
+    
+    [mt.helpButton addGestureRecognizer:helpLpGesture];
+    
+    //email PDF button added by default
+    [mt addSubview:mt.helpButton];
     
     mt.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(mt.buttonMargin, mt.size.height - 10.0,
                                                                        mt.size.width - (mt.buttonMargin * 2.0), 4.0)];
@@ -154,53 +196,58 @@
     //progress view added by default
     [mt addSubview:mt.progressView];
     
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        mt.mapTypeSC = [[UISegmentedControl alloc] initWithItems:@[@"Stnd", @"Hybd"]];
-    
-    else
-        mt.mapTypeSC = [[UISegmentedControl alloc] initWithItems:@[@"Standard", @"Hybrid"]];
+    mt.mapTypeSC = [[UISegmentedControl alloc] initWithItems:@[@"Stnd", @"Hybd"]];
     
     [mt setupSegControl:mt.mapTypeSC
    selectedSegmentIndex:0
-                 target:mt
                selector:@selector(mapTypeSelected:)];
     
     //map type SC is NOT added by default
-    
-    mt.digitizeButton = [[UIButton alloc] init];
+    mt.digitizeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [mt setupButton:mt.digitizeButton
          imageTitle:@"plusSign"
          edgeInsets:UIEdgeInsetsMake(3.0, 3.0, 3.0, 3.0)
-             target:mt
            selector:@selector(digitizeSelected:)];
     
     //digitize button is NOT added by default
-    
-    mt.legendsButton = [[UIButton alloc] init];
+    mt.legendsButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [mt setupButton:mt.legendsButton
          imageTitle:@"list"
          edgeInsets:UIEdgeInsetsZero
-             target:mt
            selector:@selector(legendsSelected:)];
     
     //legends button is NOT added by default
-    
     mt.platSC = [[UISegmentedControl alloc] initWithItems:@[@"Full", @"Split", @"Tri", @"Plat"]];
     
     [mt setupSegControl:mt.platSC
    selectedSegmentIndex:MapViewScreenSettingFullscreen
-                 target:mt
                selector:@selector(splitScreenSettingSelected:)];
     
     //plat SC is NOT added by default
-    
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:mt
                                                                                  action:@selector(mapToolbarDragged:)];
     
     panGesture.delegate = mt;
     [mt addGestureRecognizer:panGesture];
+    
+    //return button is NOT added by default
+    mt.returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [mt setupButton:mt.returnButton
+         imageTitle:nil
+         edgeInsets:UIEdgeInsetsZero
+           selector:@selector(returnButtonSelected:)];
+    
+    [mt.returnButton setTitle:@"< Return"
+                     forState:UIControlStateNormal];
+    
+    [mt.returnButton setTitleColor:UIColor.blackColor
+                          forState:UIControlStateNormal];
+    
+    mt.returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
+    mt.returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     
     return mt;
 }
@@ -208,7 +255,6 @@
 - (void)setupButton:(UIButton *)button
          imageTitle:(NSString *)imageTitle
          edgeInsets:(UIEdgeInsets)edgeInsets
-             target:(id)target
            selector:(SEL)selector
 {
     button.imageEdgeInsets = edgeInsets;
@@ -218,35 +264,50 @@
     button.layer.borderWidth = 2.0;
     button.layer.masksToBounds = YES;
     
-    [button setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:imageTitle
-                                                                                    ofType:@"png"]]
-            forState:UIControlStateNormal];
+    if (imageTitle && imageTitle.length)
+    {
+        [button setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:imageTitle
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
+    }
     
-    [button addTarget:target
+    [button addTarget:self
                action:selector
      forControlEvents:UIControlEventTouchUpInside];
+    
+    [button addTarget:self
+               action:@selector(buttonPressedDown:)
+     forControlEvents:UIControlEventTouchDown];
+}
+
+- (void)buttonPressedDown:(UIButton *)button
+{
+    button.layer.borderColor = UIColor.darkGrayColor.CGColor;
+    button.layer.borderWidth = 6.0;
 }
 
 - (void)setupSegControl:(UISegmentedControl *)segControl
    selectedSegmentIndex:(NSInteger)selectedSegmentIndex
-                 target:(id)target
                selector:(SEL)selector
 {
-    segControl.backgroundColor = UIColor.whiteColor;
-    segControl.tintColor = UIColor.blackColor;
+    segControl.backgroundColor = UIColor.blackColor;
+    segControl.tintColor = UIColor.whiteColor;
     segControl.layer.cornerRadius = 4.0;
     segControl.layer.borderColor = UIColor.blackColor.CGColor;
     segControl.layer.borderWidth = 2.0;
     segControl.layer.masksToBounds = YES;
     segControl.selectedSegmentIndex = MapViewScreenSettingFullscreen;
     
-    [segControl addTarget:target
+    [segControl addTarget:self
                    action:selector
          forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)userLocationSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     _myLocationEnabled = !_myLocationEnabled;
     
     if (_myLocationEnabled)
@@ -267,26 +328,122 @@
 
 - (void)extentsSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectZoomExtent];
 }
 
+- (void)extentsLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        _extentsButton.layer.borderColor = UIColor.greenColor.CGColor;
+        _extentsButton.layer.borderWidth = 6.0;
+    }
+    
+    else if (gesture.state == UIGestureRecognizerStateEnded)
+    {
+        _extentsButton.layer.borderColor = UIColor.blackColor.CGColor;
+        _extentsButton.layer.borderWidth = 2.0;
+    }
+}
+
 - (void)grayscaleSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectGrayscale];
 }
 
 - (void)clearMarkersSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectClearMarkers];
 }
 
 - (void)emailPDFSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectEmailPDF];
+}
+
+- (void)helpButtonSelected:(UIButton *)button
+{
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
+    if (_helpLongPressed)
+        [self endHBLongPressMode];
+    
+    else if (_delegate)
+        [_delegate mapToolbarDidSelectHelpButton];
+}
+
+- (void)returnButtonSelected:(UIButton *)button
+{
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
+    if (_delegate)
+        [_delegate mapToolbarDidSelectReturnButton];
+}
+
+- (void)helpLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan && !_helpLongPressed)
+    {
+        _helpButton.layer.borderColor = UIColor.greenColor.CGColor;
+        _helpButton.layer.borderWidth = 6.0;
+    }
+    
+    else if (gesture.state == UIGestureRecognizerStateEnded)
+    {
+        _helpButton.layer.borderColor = UIColor.blackColor.CGColor;
+        _helpButton.layer.borderWidth = 2.0;
+        
+        if (_helpLongPressed)
+            [self endHBLongPressMode];
+        
+        else
+            [self beginHBLongPressMode];
+    }
+}
+
+- (void)beginHBLongPressMode
+{
+    _helpLongPressed = YES;
+    
+    _helpBackgroundToggleTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                                  target:self
+                                                                selector:@selector(toggleHelpBackground)
+                                                                userInfo:nil
+                                                                 repeats:YES];
+}
+
+- (void)endHBLongPressMode
+{
+    _helpLongPressed = NO;
+    [_helpBackgroundToggleTimer invalidate];
+    _helpButton.backgroundColor = UIColor.whiteColor;
+}
+
+- (void)toggleHelpBackground
+{
+    if (_helpButton.backgroundColor == UIColor.whiteColor)
+        _helpButton.backgroundColor = UIColor.redColor;
+    
+    else
+        _helpButton.backgroundColor = UIColor.whiteColor;
 }
 
 - (void)mapTypeSelected:(UISegmentedControl *)segControl
@@ -297,12 +454,18 @@
 
 - (void)digitizeSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectDigitize];
 }
 
 - (void)legendsSelected:(UIButton *)button
 {
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = 2.0;
+    
     if (_delegate)
         [_delegate mapToolbarDidSelectLegends];
 }
@@ -315,11 +478,28 @@
 
 - (void)mapToolbarDragged:(UIPanGestureRecognizer *)gesture
 {
+    if (_orientation == MapToolbarOrientationMinimized)
+        return;
+    
+    [self.superview bringSubviewToFront:self];
+    
     CGPoint translation = [gesture translationInView:gesture.view.superview];
     
     if (gesture.state == UIGestureRecognizerStateBegan ||
         gesture.state == UIGestureRecognizerStateChanged)
     {
+        if (gesture.state == UIGestureRecognizerStateBegan)
+        {
+            for (UIButton *buttons in self.subviews)
+            {
+                if ([buttons isKindOfClass:UIButton.class])
+                {
+                    buttons.layer.borderColor = UIColor.blackColor.CGColor;
+                    buttons.layer.borderWidth = 2.0;
+                }
+            }
+        }
+        
         gesture.view.center = CGPointMake(gesture.view.center.x + translation.x,
                                           gesture.view.center.y + translation.y);
         
@@ -338,6 +518,18 @@
 {
     CGFloat yCount = _buttonMargin;
     CGFloat xCount = 0.0;
+    
+    if (_wantReturnButton)
+    {
+        _returnButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, (_buttonSize * 2.0));
+        _returnButton.titleLabel.numberOfLines = 2;
+        
+        [_returnButton setTitle:@"<\nR"
+                       forState:UIControlStateNormal];
+        
+        yCount += (_buttonMargin + (_buttonSize * 2.0));
+        xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+    }
     
     if (_wantUserLocation)
     {
@@ -388,11 +580,18 @@
         xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
     }
     
+    if (_wantHelpButton)
+    {
+        _helpButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+        yCount += (_buttonMargin + _buttonSize);
+        xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+    }
+    
     if (_wantMapType)
     {
-        _mapTypeSC.frame = CGRectMake(_buttonMargin, yCount, _mapTypeSCVertWidth, _SCHeight);
+        _mapTypeSC.frame = CGRectMake(_buttonMargin, yCount, _mapTypeSCWidth, _SCHeight);
         yCount += (_buttonMargin + _SCHeight);
-        xCount = max(xCount, (_buttonMargin * 2.0) + _mapTypeSCVertWidth);
+        xCount = max(xCount, (_buttonMargin * 2.0) + _mapTypeSCWidth);
     }
     
     if (_wantPlat)
@@ -412,17 +611,12 @@
         self.frame = CGRectMake(0.0, 0.0, xCount, (yCount + 10.0));
         
         _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
-                                         self.frame.size.width - (_buttonMargin * 2.0), 4.0);
+                                         self.frame.size.width - (_buttonMargin * 2.0),
+                                         _progressView.frame.size.height);
     }
     
     for (UIView *views in self.subviews)
         views.center = CGPointMake(self.center.x, views.center.y);
-    
-    [_mapTypeSC setTitle:@"Stnd"
-       forSegmentAtIndex:0];
-    
-    [_mapTypeSC setTitle:@"Hybd"
-       forSegmentAtIndex:1];
     
     [_platSC setTitle:@"F"
     forSegmentAtIndex:0];
@@ -440,6 +634,17 @@
 - (void)animateToHorizontalOrientation
 {
     CGFloat xCount = _buttonMargin;
+    
+    if (_wantReturnButton)
+    {
+        _returnButton.frame = CGRectMake(xCount, _buttonMargin, (_buttonSize * 3.0), _buttonSize);
+        _returnButton.titleLabel.numberOfLines = 1;
+        
+        [_returnButton setTitle:@"< Return"
+                       forState:UIControlStateNormal];
+        
+        xCount += (_buttonMargin + (_buttonSize * 3.0));
+    }
     
     if (_wantUserLocation)
     {
@@ -483,6 +688,12 @@
         xCount += (_buttonMargin + _buttonSize);
     }
     
+    if (_wantHelpButton)
+    {
+        _helpButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
+        xCount += (_buttonMargin + _buttonSize);
+    }
+    
     if (_wantMapType)
     {
         _mapTypeSC.frame = CGRectMake(xCount, _SCMargin, _mapTypeSCWidth, _SCHeight);
@@ -504,14 +715,9 @@
     if (_wantProgressBar)
     {
         _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
-                                         self.frame.size.width - (_buttonMargin * 2.0), 4.0);
+                                         self.frame.size.width - (_buttonMargin * 2.0),
+                                         _progressView.frame.size.height);
     }
-    
-    [_mapTypeSC setTitle:@"Standard"
-       forSegmentAtIndex:0];
-    
-    [_mapTypeSC setTitle:@"Hybrid"
-       forSegmentAtIndex:1];
     
     [_platSC setTitle:@"Full"
            forSegmentAtIndex:0];
@@ -536,6 +742,10 @@
                statusBarHeight:(CGFloat)statusBarHeight
 {
     CGRect superviewFrame = self.superview.frame;
+    CGFloat offset = 0.0;
+    
+    if (_isOffset)
+        offset = _legendOffset;
     
     switch (_orientation)
     {
@@ -543,7 +753,7 @@
         {
             [UIView animateWithDuration:duration
                              animations:^{
-                                 self.center = CGPointMake(((superviewFrame.size.height + tabBarHeight) / 2.0),
+                                 self.center = CGPointMake((((superviewFrame.size.height + tabBarHeight) - offset) / 2.0),
                                                            (statusBarHeight + (self.frame.size.height / 2.0)));
                                  
                              }];
@@ -554,7 +764,7 @@
         {
             [UIView animateWithDuration:duration
                              animations:^{
-                                 self.center = CGPointMake(((superviewFrame.size.height + tabBarHeight) / 2.0),
+                                 self.center = CGPointMake((((superviewFrame.size.height + tabBarHeight) - offset) / 2.0),
                                                            ((superviewFrame.size.width - tabBarHeight) -
                                                             (self.frame.size.height / 2.0)));
                              }];
@@ -575,14 +785,73 @@
         {
             [UIView animateWithDuration:duration
                              animations:^{
-                                 self.center = CGPointMake(((superviewFrame.size.height + tabBarHeight) -
+                                 self.center = CGPointMake((((superviewFrame.size.height + tabBarHeight) - offset) -
                                                             (self.frame.size.width / 2.0)),
                                                            ((superviewFrame.size.width - tabBarHeight) / 2.0));
                              }];
         }
             break;
             
-        case MapToolbarOrientationDefault:
+        default:
+            break;
+    }
+}
+
+- (void)didRotateWithDuration:(NSTimeInterval)duration
+                 tabBarHeight:(CGFloat)tabBarHeight
+              statusBarHeight:(CGFloat)statusBarHeight
+{
+    CGRect superviewFrame = self.superview.frame;
+    CGFloat offset = 0.0;
+    
+    if (_isOffset)
+        offset = _legendOffset;
+    
+    switch (_orientation)
+    {
+        case MapToolbarOrientationTop:
+        {
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 self.center = CGPointMake(((superviewFrame.size.width - offset) / 2.0),
+                                                           (statusBarHeight + (self.frame.size.height / 2.0)));
+                                 
+                             }];
+        }
+            break;
+            
+        case MapToolbarOrientationBottom:
+        {
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 self.center = CGPointMake(((superviewFrame.size.width - offset) / 2.0),
+                                                           ((superviewFrame.size.height) -
+                                                            (self.frame.size.height / 2.0)));
+                             }];
+        }
+            break;
+            
+        case MapToolbarOrientationLeft:
+        {
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 self.center = CGPointMake((self.frame.size.width / 2.0),
+                                                           (superviewFrame.size.height / 2.0));
+                             }];
+        }
+            break;
+            
+        case MapToolbarOrientationRight:
+        {
+            [UIView animateWithDuration:duration
+                             animations:^{
+                                 self.center = CGPointMake(((superviewFrame.size.width - offset) - (self.frame.size.width / 2.0)),
+                                                           (superviewFrame.size.width / 2.0));
+                             }];
+        }
+            break;
+            
+        default:
             break;
     }
 }
@@ -608,7 +877,8 @@
     [self setPreviousConfiguration];
     
     _wantDigitize = _wantExtents = _wantLegends = _wantMapType =
-    _wantGrayscale = _wantUserLocation = NO;
+    _wantGrayscale = _wantUserLocation = _wantHelpButton =
+    _wantEmailPDF = _wantProgressBar = _wantClearMarkers = _wantReturnButton = NO;
     
     _wantPlat = _configChanged = YES;
     
@@ -646,6 +916,8 @@
     _previousConfig[MapToolbarPropertyWantLegends] = _wantLegends;
     _previousConfig[MapToolbarPropertyWantExtents] = _wantExtents;
     _previousConfig[MapToolbarPropertyWantDigitize] = _wantDigitize;
+    _previousConfig[MapToolbarPropertyWantHelpButton] = _wantHelpButton;
+    _previousConfig[MapToolbarPropertyWantHelpButton] = _wantReturnButton;
 }
 
 - (void)getPreviousConfiguration
@@ -660,6 +932,8 @@
     _wantLegends = _previousConfig[MapToolbarPropertyWantLegends];
     _wantExtents = _previousConfig[MapToolbarPropertyWantExtents];
     _wantDigitize = _previousConfig[MapToolbarPropertyWantDigitize];
+    _wantHelpButton = _previousConfig[MapToolbarPropertyWantHelpButton];
+    _wantReturnButton = _previousConfig[MapToolbarPropertyWantReturnButton];
 }
 
 - (void)setConfigurationProperty:(MapToolbarProperty)property
@@ -707,6 +981,12 @@
             _wantProgressBar = value;
             break;
             
+        case MapToolbarPropertyWantHelpButton:
+            _wantHelpButton = value;
+            
+        case MapToolbarPropertyWantReturnButton:
+            _wantReturnButton = value;
+            
         default:
             break;
     }
@@ -725,6 +1005,26 @@
         _orientation == MapToolbarOrientationBottom)
     {
         CGFloat xCount = _buttonMargin;
+        
+        if (_wantReturnButton)
+        {
+            _returnButton.frame = CGRectMake(xCount, _buttonMargin, (_buttonSize * 3.0), _buttonSize);
+            _returnButton.titleLabel.numberOfLines = 1;
+            
+            [_returnButton setTitle:@"< Return"
+                           forState:UIControlStateNormal];
+            
+            if (![self.subviews containsObject:_returnButton])
+                [self addSubview:_returnButton];
+            
+            xCount += (_buttonMargin + (_buttonSize * 3.0));
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_returnButton])
+                [_returnButton removeFromSuperview];
+        }
         
         if (_wantUserLocation)
         {
@@ -838,6 +1138,22 @@
                 [_emailPDFButton removeFromSuperview];
         }
         
+        if (_wantHelpButton)
+        {
+            _helpButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
+            
+            if (![self.subviews containsObject:_helpButton])
+                [self addSubview:_helpButton];
+            
+            xCount += (_buttonMargin + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_helpButton])
+                [_helpButton removeFromSuperview];
+        }
+        
         if (_wantMapType)
         {
             _mapTypeSC.frame = CGRectMake(xCount, _SCMargin, _mapTypeSCWidth, _SCHeight);
@@ -879,7 +1195,14 @@
         if (_wantProgressBar)
         {
             _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
-                                             self.frame.size.width - (_buttonMargin * 2.0), 4.0);
+                                             self.frame.size.width - (_buttonMargin * 2.0),
+                                             _progressView.frame.size.height);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_progressView])
+                [_progressView removeFromSuperview];
         }
     }
     
@@ -887,6 +1210,27 @@
     {
         CGFloat yCount = _buttonMargin;
         CGFloat xCount = 0.0;
+        
+        if (_wantReturnButton)
+        {
+            _returnButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, (_buttonSize * 2.0));
+            _returnButton.titleLabel.numberOfLines = 2;
+            
+            [_returnButton setTitle:@"<\nR"
+                           forState:UIControlStateNormal];
+            
+            if (![self.subviews containsObject:_returnButton])
+                [self addSubview:_returnButton];
+            
+            yCount += (_buttonMargin + (_buttonSize * 2.0));
+            xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_returnButton])
+                [_returnButton removeFromSuperview];
+        }
         
         if (_wantUserLocation)
         {
@@ -973,15 +1317,66 @@
                 [_grayscaleButton removeFromSuperview];
         }
         
+        if (_wantClearMarkers)
+        {
+            _clearMarkerButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+            
+            if (![self.subviews containsObject:_clearMarkerButton])
+                [self addSubview:_clearMarkerButton];
+            
+            yCount += (_buttonMargin + _buttonSize);
+            xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_clearMarkerButton])
+                [_clearMarkerButton removeFromSuperview];
+        }
+        
+        if (_wantEmailPDF)
+        {
+            _emailPDFButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+            
+            if (![self.subviews containsObject:_emailPDFButton])
+                [self addSubview:_emailPDFButton];
+            
+            yCount += (_buttonMargin + _buttonSize);
+            xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_emailPDFButton])
+                [_emailPDFButton removeFromSuperview];
+        }
+        
+        if (_wantHelpButton)
+        {
+            _helpButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+            
+            if (![self.subviews containsObject:_helpButton])
+                [self addSubview:_helpButton];
+            
+            yCount += (_buttonMargin + _buttonSize);
+            xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_helpButton])
+                [_helpButton removeFromSuperview];
+        }
+        
         if (_wantMapType)
         {
-            _mapTypeSC.frame = CGRectMake(_buttonMargin, yCount, _mapTypeSCVertWidth, _SCHeight);
+            _mapTypeSC.frame = CGRectMake(_buttonMargin, yCount, _mapTypeSCWidth, _SCHeight);
             
             if (![self.subviews containsObject:_mapTypeSC])
                 [self addSubview:_mapTypeSC];
             
             yCount += (_buttonMargin + _SCHeight);
-            xCount = max(xCount, (_buttonMargin * 2.0) + _mapTypeSCVertWidth);
+            xCount = max(xCount, (_buttonMargin * 2.0) + _mapTypeSCWidth);
         }
         
         else
@@ -1028,7 +1423,14 @@
                                     self.frame.size.width, (self.frame.size.height + 10.0));
             
             _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
-                                             self.frame.size.width - (_buttonMargin * 2.0), 4.0);
+                                             self.frame.size.width - (_buttonMargin * 2.0),
+                                             _progressView.frame.size.height);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_progressView])
+                [_progressView removeFromSuperview];
         }
         
         for (UIView *views in self.subviews)
@@ -1040,6 +1442,71 @@
         _platOverride = YES;
         [self splitScreenSettingSelected:MapViewScreenSettingFullscreen];
         _platSC.selectedSegmentIndex = MapViewScreenSettingFullscreen;
+    }
+}
+
+- (void)setProgress:(CGFloat)progress
+{
+    _progress = progress;
+    
+    [_progressView setProgress:_progress
+                      animated:NO];
+}
+
+- (void)addExpandButton
+{
+    UIButton *expandButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    expandButton.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
+    expandButton.backgroundColor = UIColor.clearColor;
+    expandButton.titleLabel.font = [UIFont boldSystemFontOfSize:24.0];
+    expandButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    
+    [expandButton setTitle:@"MT"
+                  forState:UIControlStateNormal];
+    
+    [expandButton setTitleColor:UIColor.whiteColor
+                       forState:UIControlStateNormal];
+    
+    [expandButton setTitleColor:UIColor.darkGrayColor
+                       forState:UIControlStateHighlighted];
+    
+    [expandButton addTarget:self
+                     action:@selector(expandToolbar:)
+           forControlEvents:UIControlEventTouchUpInside];
+    
+    [self addSubview:expandButton];
+}
+
+- (void)expandToolbar:(UIButton *)button
+{
+    [button removeFromSuperview];
+    
+    if (_delegate)
+        [_delegate mapToolbarDidWantExpand];
+}
+
+- (void)adjustFrameToScrollView
+{
+    CGRect superviewFrame = self.superview.frame;
+    CGFloat offset = 0.0;
+    
+    if (_isOffset)
+        offset = _legendOffset;
+    
+    switch (_orientation)
+    {
+        case MapToolbarOrientationTop:
+        case MapToolbarOrientationBottom:
+            self.center = CGPointMake(((superviewFrame.size.width - offset) / 2.0), self.center.y);
+            break;
+            
+        case MapToolbarOrientationRight:
+            self.center = CGPointMake(((superviewFrame.size.width - offset) -
+                                       (self.frame.size.width / 2.0)), self.center.y);
+            break;
+            
+        default:
+            break;
     }
 }
 

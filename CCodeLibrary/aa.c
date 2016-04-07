@@ -354,7 +354,7 @@ getnum( "Planet number 0-9 or 88 to read star, 99 to read orbit",
 
 switch(objnum)
 	{
-	case -1: exit(0);
+    case -1:exitApp(__func__);
 	case 0: elobject = 0;
 		printf( "\n                   The Sun\n" );
 		break;

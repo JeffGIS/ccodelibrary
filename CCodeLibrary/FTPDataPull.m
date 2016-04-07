@@ -41,7 +41,12 @@ static FTPDataPull * _statpull = nil;
 
 {
     int rtn = FTPStatusOK;
-    _toDirectory = toDirectory;
+    
+    if ([toDirectory characterAtIndex:toDirectory.length-1] == '/')
+        _toDirectory = [toDirectory substringToIndex:toDirectory.length-1];
+    else
+        _toDirectory = toDirectory;
+    
     _refreshOption = refreshOption;
     
     if (_createDirectory)
@@ -61,7 +66,7 @@ static FTPDataPull * _statpull = nil;
     _existingFileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_filePath
                                                                        error:nil].fileSize;
     
-    if (_refreshOption == FTPDataPullRefreshOptionOverwriteFile ||
+    if (!_existingFileSize || _refreshOption == FTPDataPullRefreshOptionOverwriteFile ||
         _refreshOption == FTPDataPullRefreshOptionCheckFileSize)
     {
         _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
@@ -71,7 +76,7 @@ static FTPDataPull * _statpull = nil;
         {
             if (_delegate && !_haveCalledDelegate)
             {
-                [_delegate FTPdidComplete:_option
+                [_delegate FTPdidComplete:_dataType
                                withStatus:FTPStatusConnectionFailed
                           andStatusString:@"Cannot reach server"
                                  filePath:nil];
@@ -95,6 +100,15 @@ static FTPDataPull * _statpull = nil;
     {
         rtn = FTPStatusFileExists;
         [_popover hide];
+        if (_delegate && !_haveCalledDelegate)
+        {
+            [_delegate FTPdidComplete:_dataType
+                           withStatus:FTPStatusOK
+                      andStatusString:@"File exists"
+                             filePath:_filePath];
+            
+            _haveCalledDelegate = YES;
+        }
     }
     
     return rtn;
@@ -120,7 +134,7 @@ static FTPDataPull * _statpull = nil;
     
     if (_delegate && !_haveCalledDelegate)
     {
-        [_delegate FTPdidComplete:_option
+        [_delegate FTPdidComplete:_dataType
                        withStatus:status
                   andStatusString:statusString
                          filePath:_filePath];
@@ -171,7 +185,12 @@ static FTPDataPull * _statpull = nil;
         }
         
         if (!url)
+        {
+            [self stopReceiveWithStatus:FTPStatusCancel
+                           statusString:[NSString stringWithFormat:@"%@ is not a valid URL", url]];
+            
             return;
+        }
     }
     
     _fileStream = [NSOutputStream outputStreamToFileAtPath:_filePath
@@ -179,20 +198,18 @@ static FTPDataPull * _statpull = nil;
     
     assert(_fileStream);
     
-    [_fileStream setProperty:@"YES"
-                      forKey:(id)kCFStreamPropertyFTPFetchResourceInfo];
-    
     NSURLRequest *request = [NSURLRequest requestWithURL:url
                                              cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                         timeoutInterval:60.0];
+                                         timeoutInterval:30.0];
     assert(request);
     
     _connection = [NSURLConnection connectionWithRequest:request
                                                 delegate:self];
-    
     assert(_connection);
+
     _totalDataReceived = 0;
     _progress = 0.0;
+    
     if (_popover)
         [_popover updateProgress:_progress];
     
@@ -396,6 +413,12 @@ didReceiveResponse:(NSURLResponse *)response
         _username = @"GSSiData";
         _password = @"GSSi";
         _port = @"14147";
+        
+       /* _ftpSite = @"192.168.254.39";
+        _username = @"GSSiLocal";
+        _password = @"GSSi";
+        _port = @"21";*/
+
     }
     
     _ftpSite2 = @"thmgis.com";
@@ -431,10 +454,12 @@ didReceiveResponse:(NSURLResponse *)response
                    statusString:@"Stopped"];
     _statpull = nil;
 }
-- (void) GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
+
+- (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
 {
     [self stopReceiveWithStatus:FTPStatusUserCancel
                    statusString:@"Canceled by User"];
 
 }
+
 @end

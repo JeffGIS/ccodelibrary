@@ -17,11 +17,13 @@
 @property (nonatomic, weak) id <NVTextAlertDelegate> delegate;
 @property (nonatomic) UIKeyboardType keyboardType;
 @property (nonatomic) NSInteger minimumCharacters;
+@property (nonatomic, copy) NSString *text;
 
 + (NVTextAlert *)showTextAlertinView:(UIView *)view
                             delegate:(id)delegate
                                title:(NSString *)title;
 
 - (void)hideTextAlert:(BOOL)animated;
+- (void)willRotateWithDuration:(NSTimeInterval)duration;
 
 @end

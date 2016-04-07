@@ -1,7 +1,7 @@
 //  NVSpreadsheetView.h
 //  CCodeLibrary
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 @class NVSpreadsheetView;
 
@@ -21,21 +21,28 @@
 - (void)ssvCellWasTappedAtRowIndex:(NSUInteger)rowIndex
                        columnIndex:(NSUInteger)columnIndex;
 
+- (void)ssvDidSetFlipped:(BOOL)flipped;
+
+- (NSString *)ssvGetTitleText;
+- (NSArray *)ssvGetFileList;
+- (void)ssvSetCurrentFile:(NSString *)file;
+- (BOOL)ssvDeleteCurrentFile;
+- (void)ssvCreateWasTapped;
+- (BOOL)ssvDidEditTitleText:(NSString *)text;
+
 @end
 
 @interface NVSpreadsheetView : UIView <UIScrollViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic, weak) id <NVSpreadsheetViewDelegate> delegate;
-@property BOOL editable, selectable;
-@property NSUInteger rows, columns, activeColumns, activeRows;
-@property CGFloat rowHeight, columnWidth;
+@property (nonatomic) NSUInteger rows, columns, activeColumns, activeRows;
+@property (nonatomic) CGFloat rowHeight, columnWidth;
+@property BOOL flipped;
 
 + (NVSpreadsheetView *)showSpreadsheetWithRows:(NSUInteger)rows
                                        columns:(NSUInteger)columns
                                           view:(UIView *)view
-                                         frame:(CGRect)frame
-                                      editable:(BOOL)editable
-                                    selectable:(BOOL)selectable
+                                       flipped:(BOOL)flipped
                                       delegate:(id)delegate;
 
 - (void)setRowHeaderText:(NSArray *)rowHeaderText;
@@ -44,9 +51,6 @@
 - (void)setText:(NSString *)text
    forCellAtRow:(NSUInteger)row
          column:(NSUInteger)column;
-
-- (void)willRotateWithDuration:(NSTimeInterval)duration
-                  tabBarHeight:(CGFloat)tabBarHeight;
 
 - (void)clearContents;
 

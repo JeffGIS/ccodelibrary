@@ -8,7 +8,7 @@
 
 @interface NSData (Compression)
 
-//+ (NSData *)compressFileAtPath:(NSString *)filePath;
++ (NSData *)compressFileAtPath:(NSString *)filePath;
 + (NSData *)lzCompressFileAtPath:(NSString *)filePath;
 - (NSString *)MD5;
 - (NSString *)SHA256;

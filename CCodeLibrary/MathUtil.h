@@ -9,6 +9,7 @@
 #include "CCodeTypes.h"
 
 double LTWOPI (double AZ1);
+void setP_TOL (double val);
 
 //1D
 float ClockwiseDegFromNorth (float deg);
@@ -20,6 +21,7 @@ float MaxF(float l, float r);
 int Max(int l, int r);
 
 //2D
+POINT DPointToPoint (DPOINT *dpt);
 float DotVec2(vec2* vec0, vec2* vec1);
 void LerpVec2(vec2* out_lerpedPos, vec2* p0, vec2* p1, float t);
 void NormalizeVec2(vec2* vec);
@@ -81,16 +83,22 @@ void AddPointToBounds (bounds* bnds,vec2 *pt);
 void AddDPointToBounds(dbounds *pBounds, DPOINT *pt);
 void InitDBounds (dbounds* bnds);
 void InitIBounds (IBOUNDS* bnds);
+void DBoundsInit(LPMNMXCORD bnds);
 double BoundsWidth(dbounds* bnds);
 double BoundsHeight(dbounds* bnds);
 double MNMXCORDWidth(MNMXCORD* bnds);
 double MNMXCORDHeight(MNMXCORD* bnds);
+void AddMinMaxD (LPMNMXCORD mm1, LPMNMXCORD mm2);
+void AddMinMaxL (LPMNMXCORL mm1, LPMNMXCORL mm2);
 LPDPOINT PointsFromCorners (CORNERPOINTS* pCornerPoints);
 MNMXCORD CornerPointBounds (CORNERPOINTS* cornerPoints);
 IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist);
+MNMXCORD BoundsFromPointAndDist(DPOINT pt, double dist);
+MNMXCORD BoundsFromLLPointAndDist(LLPOINT pt, double distInMeters);
 IPOINT IBoundsMid (IBOUNDS* bnds);
 DPOINT DBoundsMid(MNMXCORD *bnds);
 bool DPointInBounds (LPDPOINT pt,LPMNMXCORD pbounds);
+bool BoundsInBounds (LPMNMXCORD pBounds1,LPMNMXCORD pBounds2,short Opt);
 void AddPointToDBounds (dbounds* bnds,dvec2 *pt);
 void AddDPointToBounds (MNMXCORD* bnds,DPOINT *pt);
 void AddPointToIBounds (IBOUNDS* pBounds,IPOINT *pt);
@@ -106,9 +114,11 @@ LPTRANDATA STRAN2 (int ID,double X1[], double Y1[],double X2[],double Y2[],int N
 LPTRANDATA STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN);//,LPMNMXCORD pBounds);
 LPTRANDATA  STRANBoundsToBounds (LPMNMXCORD FromRect,LPMNMXCORD ToRect);
 LPTRANDATA  STRANCornersToBounds (CORNERPOINTS *corners,LPMNMXCORD ToRect);
+LPTRANDATA  STRANBoundsToCorners (CORNERPOINTS *corners,LPMNMXCORD ToRect);
 void CloseTRANS2 (LPTRANDATA *phlpTran);
 void TRANS2(double XIN, double YIN, LPDOUBLE XOUT, LPDOUBLE YOUT, LPTRANDATA TranPtr);
 void CloseTRANS2 (LPTRANDATA *phlpTran);
+LPTRANDATA STRANCopy (LPTRANDATA pTran);
 void TranMNMXCORL (MNMXCORL * in,MNMXCORL * out,LPTRANDATA TranPtr);
 void TranMNMXCORD (MNMXCORD * in,MNMXCORD * out,LPTRANDATA TranPtr);
 DPOINT TranDPOINT (LPDPOINT pPoint,LPTRANDATA  hTran);
@@ -121,7 +131,7 @@ void MNMXCORDtoMNMXCORL (MNMXCORD *in,MNMXCORL *out);
 CGRect MNMXCORDtoCGRect (LPMNMXCORD pBounds);
 void InflateMNMXCORL (LPMNMXCORL pBounds, int Value);
 int diffInDegrees (int angle1,int angle2);
-bool CreateMask (LPDPOINT *pPointsIN, int *pnPoints,bounds *pbnds);
+bool CreateMask (LPDPOINT *pPointsIN, int *pnPoints,LPMNMXCORD pbnds);
 int fgetstring (char * str,int maxlen,FILE * fid);
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
 double ArcDistance(DPOINT p1, DPOINT p2);
@@ -133,6 +143,7 @@ bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol);
 double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
 LPSTR Truncate(LPSTR Text);
 LPSTR OneSpace(LPSTR Arg1);
+LPSTR REPLAC(LPSTR STRING, LPSTR OLD, LPSTR NEW, int MAXLEN);
 LPSTR ReplaceChar(LPSTR str, char from, char to);
 bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long *LOFMDF);
 double ldistpp(LPDPOINT Point1, LPDPOINT Point2);
@@ -143,5 +154,10 @@ double GetPolyLength (LPPOINT lpPoints,long nPnts);
 double GetPolyLengthD (HPDPOINT lpPoints,long nPnts);
 int GetAltitudeAndAzOfSun (DPOINT LatLon,double Height,time_t systime,double *pAltitude,double *pAz);
 LPDPOINT PointsFromCGRect (CGRect *pRect);
+CGRect largestRect (float aspectRatio,int precision,CGRect bounds,int nRects,CGRect* rects);
+long GSSifilelength(FILE *fid);
+long BigRead(FILE *fid, LPVOID pmem, long len);
+long BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc);
+long FileLength (FILE *fid);
 
 #endif

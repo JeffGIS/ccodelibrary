@@ -6,8 +6,8 @@
 
 @interface NVAlertView ()
 
-@property (nonatomic) UIView *overlayView;
 @property (nonatomic) UILabel *titleLabel;
+@property (nonatomic) UITabBar *tabBar;
 
 @end
 
@@ -22,26 +22,39 @@
     if (!view || !delegate || !title || !buttonTextArray)
         return nil;
     
-    NVAlertView *alert = [[NVAlertView alloc] init];
-    
-    CGRect bounds = UIScreen.mainScreen.bounds;
-    
-    alert.overlayView = [[UIView alloc] initWithFrame:bounds];
+    NVAlertView *alert = NVAlertView.new;
+    alert.overlayView = UIView.new;
+    alert.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
     alert.overlayView.backgroundColor = UIColor.blackColor;
     alert.overlayView.alpha = 0.0;
     alert.delegate = delegate;
+    alert.buttonBorderColor = UIColor.lightGrayColor;
     
     [view addSubview:alert.overlayView];
     
-    CGFloat width = 340.0, yPosition = 10.0;
+    alert.tabBar = view.parentViewController.tabBarController.tabBar;
+    alert.tabBar.userInteractionEnabled = NO;
     
+    [alert.overlayView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor].active = YES;
+    [alert.overlayView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor].active = YES;
+    [alert.overlayView.topAnchor constraintEqualToAnchor:view.topAnchor].active = YES;
+    [alert.overlayView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor].active = YES;
+    
+    CGFloat width = 340.0, heightSpacer = 10.0;
     UIFont *font = [UIFont boldSystemFontOfSize:28.0];
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        width = 240.0, heightSpacer = 6.0, font = [UIFont boldSystemFontOfSize:20.0];
+    
+    CGFloat yPosition = heightSpacer;
     
     CGFloat height = [alert getHeightForText:title
                                         font:font
                                        width:width];
     
-    alert.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, yPosition, (width - 20.0), height)];
+    alert.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(heightSpacer, yPosition,
+                                                                 (width - (heightSpacer * 2.0)), height)];
+    
     alert.titleLabel.text = title;
     alert.titleLabel.font = font;
     alert.titleLabel.numberOfLines = 0;
@@ -50,7 +63,9 @@
     alert.titleLabel.textColor = UIColor.blackColor;
     alert.titleLabel.textAlignment = NSTextAlignmentCenter;
     
-    yPosition += (height + 10.0);
+    [alert addSubview:alert.titleLabel];
+    
+    yPosition += (height + heightSpacer);
     
     for (int i = 0; i < buttonTextArray.count; i++)
     {
@@ -60,14 +75,15 @@
                                             font:font
                                            width:width];
         
-        height += 10.0;
+        height += heightSpacer;
         
-        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(-1.0 , yPosition, (width + 2.0), height)];
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(-1.0 , yPosition,
+                                                                      (width + 2.0), height)];
         
         button.tag = (i + 1);
         button.backgroundColor = UIColor.clearColor;
         button.titleLabel.font = font;
-        button.layer.borderColor = UIColor.lightGrayColor.CGColor;
+        button.layer.borderColor = alert.buttonBorderColor.CGColor;
         button.layer.borderWidth = 1.0;
         button.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
@@ -102,20 +118,31 @@
         yPosition += (height - 1.0);
     }
     
-    alert.frame = CGRectMake(0.0, 0.0, width, yPosition);
-    alert.center = CGPointMake((bounds.size.width / 2.0), (bounds.size.height / 2.0));
+    alert.translatesAutoresizingMaskIntoConstraints = NO;
     alert.backgroundColor = UIColor.whiteColor;
     alert.alpha = 0.0;
-    alert.layer.cornerRadius = 10.0;
+    alert.layer.cornerRadius = heightSpacer;
     alert.clipsToBounds = YES;
     
     [view addSubview:alert];
-    [alert addSubview:alert.titleLabel];
+    
+    [alert.leadingAnchor constraintEqualToAnchor:view.centerXAnchor
+                                        constant:(-width / 2.0)].active = YES;
+    
+    [alert.trailingAnchor constraintEqualToAnchor:view.centerXAnchor
+                                        constant:(width / 2.0)].active = YES;
+    
+    [alert.topAnchor constraintEqualToAnchor:view.centerYAnchor
+                                    constant:(-yPosition / 2.0)].active = YES;
+    
+    [alert.bottomAnchor constraintEqualToAnchor:view.centerYAnchor
+                                       constant:(yPosition / 2.0)].active = YES;
     
     [UIView animateWithDuration:0.25
                      animations:^{
                          alert.overlayView.alpha = 0.7;
                          alert.alpha = 1.0;
+                         alert.tabBar.alpha = 0.3;
                      }];
     
     return alert;
@@ -123,6 +150,7 @@
 
 - (void)buttonTapped:(UIButton *)button
 {
+    
     if (_delegate)
     {
         [_delegate alertView:self
@@ -136,9 +164,11 @@
                      animations:^{
                          self.alpha = 0.0;
                          _overlayView.alpha = 0.0;
+                         _tabBar.alpha = 1.0;
                      } completion:^(BOOL finished) {
                          [_overlayView removeFromSuperview];
                          [self removeFromSuperview];
+                         _tabBar.userInteractionEnabled = YES;
                      }];
 }
 
@@ -147,8 +177,8 @@
                       width:(CGFloat)width
 {
     CGSize constraint = CGSizeMake(width , 20000.0);
-    CGSize titleSize;
-    CGFloat totalHeight;
+    CGSize titleSize = CGSizeZero;
+    CGFloat totalHeight = 0.0;
     
     titleSize = [text boundingRectWithSize:constraint
                                    options:NSStringDrawingUsesLineFragmentOrigin
@@ -158,6 +188,17 @@
     totalHeight = ceil(titleSize.height);
     CGFloat height = MAX(totalHeight, 40.0);
     return height;
+}
+
+- (void)setButtonBorderColor:(UIColor *)buttonBorderColor
+{
+    for (UIButton *buttons in self.subviews)
+    {
+        if ([buttons isKindOfClass:UIButton.class] && buttons.tag > 0)
+            buttons.layer.borderColor = buttonBorderColor.CGColor;
+    }
+    
+    _buttonBorderColor = buttonBorderColor;
 }
 
 @end

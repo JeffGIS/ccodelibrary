@@ -4,6 +4,7 @@
 #define COORDINATE_MULTIPLIER 10000000.0
 
 #import "PointInAreaClass.h"
+#import "PointInArea.h"
 #import "CRAPI.h"
 #import "MathUtil.h"
 
@@ -44,37 +45,6 @@
     
     if (_context)
         [self loadAreaIntoContext:areaFile];
-}
-
-CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void **bmData)
-{
-    CGContextRef context = NULL;
-    void *bitmapData = NULL;
-    int bitmapByteCount = 0, bitmapBytesPerRow = 0;
-    
-    bitmapBytesPerRow = (pixelsWide); //1
-    bitmapByteCount = (bitmapBytesPerRow *pixelsHigh);
-    
-    bitmapData = malloc(bitmapByteCount); //3
-    
-    if (bitmapData)
-    {
-        memset (bitmapData,0,bitmapByteCount);
-        
-        context = CGBitmapContextCreate(bitmapData, pixelsWide, pixelsHigh, 8,
-                                        bitmapBytesPerRow, colorSpace,0);
-        
-        CGContextSetShouldAntialias(context, NO);
-        
-        if (!context)
-        {
-            free(bitmapData);
-            bitmapData = NULL;
-        }
-    }
-    
-    *bmData = bitmapData;
-    return context;
 }
 
 dbounds getAreaFileBounds(const char *areaFile)

@@ -381,7 +381,7 @@ static GetPriorityLocations *_getLocations;
         }
     }
     
-    else if ([status isEqualToString:@"INVALID_REQUEST"] && (_hasToken == YES))
+    else if ([status isEqualToString:@"INVALID_REQUEST"] && _hasToken)
     {
         [self performSelector:@selector(performNextPageSearch)
                    withObject:self

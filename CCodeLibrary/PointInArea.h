@@ -10,14 +10,20 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "CCodeTypes.h"
 
+CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void **bmData);
+dbounds getAreaBounds (int nPoints,LPDPOINT pPoints);
+
+
 @interface PointInArea : NSObject
 
 - (BOOL) loadArea:(int)nPoints
          numLoops:(int)nLoops
       polyPartLen:(int*)polyPartLen
-           points:(LPDPOINT)points;
+           points:(LPDPOINT)points
+    boundaryWidth:(CGFloat)lineWidth;
 
-- (BOOL)DPointInArea:(DPOINT *)dPoint;
+- (int)DPointInArea:(DPOINT *)dPoint;
+- (int)screenPointInArea:(DPOINT *)pt;
 
 @property int maxDimension;
 @property int width;

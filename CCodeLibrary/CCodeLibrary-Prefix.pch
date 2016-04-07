@@ -4,7 +4,10 @@
 #ifdef __OBJC__
     @import Foundation;
     #import "StringFunctions.h"
+    #import "UIView+Constraints.h"
 #endif
+
+#include "ExitApp.h"
 
 #ifndef DEBUG
     #define NSLog(s,...)

@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import <Foundation/Foundation.h>
+#import "FTPDataPull.h"
 #import "UserDefaults.h"
 #import "GSSiPopoverView.h"
 #import "GSSiEnums.h"
@@ -10,12 +11,14 @@
 
 @protocol FTPDataPushDelegate <NSObject>
 
-- (void) FTPdidComplete:(int)status
-               filePath:(NSString *)path;
+- (void)FTPPushDidComplete:(FTPDataType)dataType
+                withStatus:(int)status
+           andStatusString:(NSString *)statusString
+                  filePath:(NSString *)path;
 
 @end
 
-@interface FTPDataPush : NSObject <NSStreamDelegate>
+@interface FTPDataPush : NSObject <NSStreamDelegate, GSSiPopoverViewDelegate>
 
 @property (nonatomic, weak) id <FTPDataPushDelegate> delegate;
 @property (nonatomic, strong, readwrite) NSURLConnection *connection;
@@ -39,6 +42,7 @@
 @property (nonatomic) CGFloat progress;
 @property (nonatomic) GSSiPopoverView *popover;
 @property (nonatomic) NSUInteger totalDataSent;
+@property FTPDataType dataType;
 
 + (FTPDataPush *)push;
 

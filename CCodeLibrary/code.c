@@ -1,7 +1,4 @@
 #include "MathUtil.h"
-#define MAX_PATH	260
-#define _MAX_PATH   260
-#define LF_FACESIZE         32
 #define BOOL bool
 //#undef HUGE
 #define		MAXPICKITEMS		32
@@ -81,8 +78,12 @@ static short LIN_SEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
 //static double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
 bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator);
 
-static double	P_TOL = 1e-4;
+static double	P_TOL = 1e-7;
 
+void setP_TOL (double val)
+{
+    P_TOL = val;
+}
 LPVOID GlobalLock (HANDLE hmem)
 {
 	return (LPVOID)hmem;
@@ -114,25 +115,6 @@ static int PickListDelete (int i)
 	return i;
 }
 
-static void DBoundsInit (LPMNMXCORD lpRect)
-#if ENABLETRACE
-{GSSiEnterProg (257);
-#endif
-{
-    lpRect->xmn = DBL_MAX;
-    lpRect->ymn = DBL_MAX;
-    lpRect->xmx = -DBL_MAX;
-    lpRect->ymx = -DBL_MAX;
-{
-#if ENABLETRACE
-GSSiExitProg (257);
-#endif
-	return;
-}
-#if ENABLETRACE
-}
-#endif
-} 
 static void ExpandBounds (LPMNMXCORD Bounds, double Adjust)
 #if ENABLETRACE
 {GSSiEnterProg (261);
@@ -1131,6 +1113,7 @@ LPSTR REPLAC(LPSTR STRING, LPSTR OLD, LPSTR NEW, int MAXLEN)
     IBEG = STRING;
     IDIFF = NEWLEN - OLDLEN;
     
+    if (OLDLEN)
     while (*IBEG)
     {
         IBEG = strstr(IBEG, OLD);
@@ -1267,6 +1250,28 @@ LPSTR Truncate(LPSTR Text)
     
 Exit:
     return (rtn);
+}
+
+long GSSifilelength(FILE *fid)
+{
+    long fileLen;
+    long curloc = ftell(fid);
+    fseek(fid, 0, SEEK_END);
+    fileLen = ftell(fid);
+    fseek(fid, curloc, SEEK_SET);
+    return fileLen;
+}
+
+long __attribute__ ((noinline)) BigRead(FILE *fid, LPVOID pmem, long len)
+{
+    long didRead = fread(pmem, 1,len,  fid);
+    return didRead;
+}
+
+long __attribute__ ((noinline)) BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc)
+{
+    long bytesWritten = fwrite(pbuf, 1, len, fid);
+    return bytesWritten;
 }
 
 

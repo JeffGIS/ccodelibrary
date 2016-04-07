@@ -27,6 +27,7 @@
 - (NSArray *)locationList;
 - (NSArray *)iPadList;
 - (UIColor *)appleBlue;
+- (UIColor *)lightBlue;
 - (UIColor *)green;
 - (UIColor *)darkGreen;
 - (UIColor *)appleGray;
@@ -49,6 +50,7 @@
 - (void)disableWebKitDiskImageCache;
 - (NSString *)sharedFilePath;
 - (NSString *)localFilePath;
+- (NSArray *)realtorList;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
@@ -109,5 +111,8 @@
 - (NSArray *)mapTypes;
 
 UIImage *grayscaleImage(UIImage *image);
+
+CLLocationDirection getHeading(CLLocationCoordinate2D fromCoord,
+                               CLLocationCoordinate2D toCoord);
 
 @end

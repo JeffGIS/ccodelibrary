@@ -13,9 +13,23 @@ typedef NS_ENUM(NSInteger, GraphicElementTypes)
     CrimePoint,
     StreetIntersection,
     CurbRamp,
+    FiberLines,
+    FiberPoints,
+    Hydrant,
+    WaterMain,
+    WaterMeter,
+    PDFBounds,
+    StormMain,
+    StormManhole,
+    StormPressurePipe,
+    SanitaryMain,
+    SanitaryManhole,
+    SanitaryPressurizedMain,
 };
+
 typedef NS_ENUM(NSInteger, PointSymbols)
 {
+    NoSym,
     CrossSym,
     PlusSym,
     DiamondSym,
@@ -27,7 +41,6 @@ typedef NS_ENUM(NSInteger, PointSymbols)
     ArsonSym,
 };
 
-
 typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
     AerialPass=1,
     PickPass=2,
@@ -38,13 +51,18 @@ typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
 
 @interface DisplayCharacteristics : NSObject
 
+@property NSInteger refno;
 @property GraphicElementTypes elementType;
 @property DPOINT dPoint;
 @property int itemBeginTime, itemEndTime;
 @property int UCR;
+@property int iValue;
+@property int sunAngle;
 @property PointSymbols pointSymbol;
-@property UIColor *color;
+@property UIColor *penColor;
+@property UIColor *fillColor;
 @property float size;
+@property float width;
 @property NSString * string1;
 @property NSString * string2;
 

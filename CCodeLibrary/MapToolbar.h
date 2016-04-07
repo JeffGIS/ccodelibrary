@@ -3,7 +3,7 @@
 
 #import "GSSiEnums.h"
 
-#define NUMMapToolbarProperty 10
+#define NUMMapToolbarProperty 12
 
 typedef NS_ENUM(NSInteger, MapToolbarProperty)
 {
@@ -17,6 +17,8 @@ typedef NS_ENUM(NSInteger, MapToolbarProperty)
     MapToolbarPropertyWantClearMarkers,
     MapToolbarPropertyWantEmailPDF,
     MapToolbarPropertyWantProgressBar,
+    MapToolbarPropertyWantHelpButton,
+    MapToolbarPropertyWantReturnButton,
 };
 
 typedef NS_ENUM(NSInteger, MapToolbarOrientation)
@@ -26,6 +28,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
     MapToolbarOrientationBottom,
     MapToolbarOrientationLeft,
     MapToolbarOrientationRight,
+    MapToolbarOrientationMinimized,
 };
 
 @class MapToolbar;
@@ -39,20 +42,25 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 - (void)mapToolbarDidSelectGrayscale;
 - (void)mapToolbarDidSelectClearMarkers;
 - (void)mapToolbarDidSelectEmailPDF;
+- (void)mapToolbarDidSelectHelpButton;
 - (void)mapToolbarDidSelectDigitize;
 - (void)mapToolbarDidSelectLegends;
+- (void)mapToolbarDidSelectReturnButton;
 - (void)mapToolbarDidFinishDrag;
+- (void)mapToolbarDidWantExpand;
 
 @end
 
 @interface MapToolbar : UIView <UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) id <MapToolbarDelegate> delegate;
-@property (nonatomic) MapToolbarOrientation orientation;
+@property (nonatomic) MapToolbarOrientation orientation, previousOrientation;
 @property (readonly) BOOL wantPlat, wantDigitize, wantMapType, wantUserLocation;
 @property (readonly) BOOL wantExtents, wantLegends, wantGrayscale, wantClearMarkers;
-@property (readonly) BOOL wantEmailPDF, wantProgressBar;
-@property (nonatomic) UIProgressView *progressView;
+@property (readonly) BOOL wantEmailPDF, wantProgressBar, wantHelpButton, wantReturnButton;
+@property (nonatomic) CGFloat progress, legendOffset;
+@property BOOL helpLongPressed, isOffset;
+@property (nonatomic) CGRect previousFrame;
 
 + (MapToolbar *)showMapToolbarWithCenter:(CGPoint)center
                                    view:(UIView *)view
@@ -75,5 +83,12 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 - (void)willRotateWithDuration:(NSTimeInterval)duration
                   tabBarHeight:(CGFloat)tabBarHeight
                statusBarHeight:(CGFloat)statusBarHeight;
+
+- (void)didRotateWithDuration:(NSTimeInterval)duration
+                 tabBarHeight:(CGFloat)tabBarHeight
+              statusBarHeight:(CGFloat)statusBarHeight;
+
+- (void)adjustFrameToScrollView;
+- (void)addExpandButton;
 
 @end

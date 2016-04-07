@@ -29,6 +29,8 @@
 #import "GSSiEnums.h"
 #import "PriorityLocation.h"
 #import "PointInArea.h"
+#import "PointInAreas.h"
+#import "HotSpot.h"
 #import "PointInAreaClass.h"
 #import "GetPriorityLocations.h"
 #import "GSSiAlertController.h"
@@ -39,6 +41,7 @@
 #import "GSSiBumpDetector.h"
 #import "TableViewCellLabel.h"
 #import "TableViewCellButton.h"
+#import "NVColor.h"
 #import "NVColorWheel.h"
 #import "NVHeadingViewController.h"
 #import "NVSliderView.h"
@@ -58,7 +61,10 @@
 #import "NVPDFSnapshotter.h"
 #import "SewerData.h"
 #import "CrimeData.h"
+#import "DispersePoint.h"
 #import "DisplayCharacteristics.h"
+#import "FileLister.h"
+#import "TextOptions.h"
 
 @interface CCodeLibrary : NSObject
 

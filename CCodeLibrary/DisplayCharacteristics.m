@@ -10,4 +10,28 @@
 
 @implementation DisplayCharacteristics
 
+-(id) copyWithZone: (NSZone *) zone
+{
+    DisplayCharacteristics *another = [[DisplayCharacteristics allocWithZone: zone] init];
+    
+    another.refno = self.refno;
+    another.elementType = self.elementType;
+    another.dPoint = self.dPoint;
+    another.itemBeginTime = self.itemBeginTime;
+    another.itemEndTime = self.itemEndTime;
+    another.UCR = self.UCR;
+    another.iValue = self.iValue;
+    another.sunAngle = self.sunAngle;
+    another.pointSymbol = self.pointSymbol;
+    another.fillColor = self.fillColor;
+    another.penColor = self.penColor;
+    another.size = self.size;
+    another.width = self.width;
+    another.string1 = self.string1.copy;
+    another.string2 = self.string2.copy;
+    
+    return another;
+}
+
+
 @end

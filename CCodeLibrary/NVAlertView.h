@@ -15,12 +15,15 @@ didTapButtonAtIndex:(NSInteger)buttonIndex;
 @interface NVAlertView : UIView
 
 @property (nonatomic, weak) id <NVAlertViewDelegate> delegate;
+@property (nonatomic) NSString *identifier;
+@property (nonatomic) UIView *overlayView;
+@property (nonatomic) UIColor *buttonBorderColor;
 
 + (NVAlertView *)showLargeAlertViewinView:(UIView *)view
                                  delegate:(id)delegate
                                     title:(NSString *)title
                           buttonTextArray:(NSArray *)buttonTextArray
-                         destructiveIndex:(NSUInteger)destructiveIndex;
+                         destructiveIndex:(NSUInteger)destructiveIndex;//1-indexed (use '0' if none)
 
 - (void)hideLargeAlertView:(BOOL)animated;
 
