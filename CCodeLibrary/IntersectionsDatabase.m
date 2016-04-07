@@ -1391,7 +1391,7 @@ Exit:
     fromDirectory:@"Bill/PlaceIntersections"
            toFile:fileName
       toDirectory:documentsDirectory
-     refreshOption:FTPDataPullRefreshOptionCheckFileSize];
+     refreshOption:FTPDataPullRefreshOptionUseFileIfExists];
 }
 
 - (void)getUploadedIntersectionFile:(GSSiPopoverView *)popover
