@@ -150,6 +150,7 @@
 
 - (void)buttonTapped:(UIButton *)button
 {
+    
     if (_delegate)
     {
         [_delegate alertView:self

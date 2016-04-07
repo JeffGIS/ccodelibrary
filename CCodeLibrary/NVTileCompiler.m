@@ -283,22 +283,26 @@ didCompleteWithError:(NSError *)error
     
     if (!rtn && _currentView)
     {
-        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:_currentView
-                                                          delegate:self
-                                                             title:@"Error getting intersection image. Unable to access server."
-                                                   buttonTextArray:@[@"OK"]
-                                                  destructiveIndex:0];
-#pragma unused(alert)
+        [self performSelectorOnMainThread:@selector(presentAlertInCurrentView)
+                               withObject:nil
+                            waitUntilDone:NO];
     }
     
     if (rtn && _delegate)
         [_delegate tileCompilerReturnedImagePath:_imagePath];
 }
 
-- (void)alertView:(NVAlertView *)alertView
-didTapButtonAtIndex:(NSInteger)buttonIndex
+- (void)presentAlertInCurrentView
 {
-    [alertView hideLargeAlertView:YES];
+    if (![_currentView viewWithTag:77777])
+    {
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:_currentView
+                                                          delegate:_delegate
+                                                             title:@"Error getting intersection image. Unable to access server."
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
+        alert.tag = 77777;
+    }
 }
 
 @end

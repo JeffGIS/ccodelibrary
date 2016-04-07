@@ -871,6 +871,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     [alertView hideLargeAlertView:YES];
     
+    if (alertView.tag == 777)
+        return;
+    
     int rampID = 0, switchWith = 0;
     
     if (alertView.tag == 999 && buttonIndex == 1)

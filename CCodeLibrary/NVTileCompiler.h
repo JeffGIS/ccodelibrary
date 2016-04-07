@@ -12,7 +12,7 @@
 
 @end
 
-@interface NVTileCompiler : NSObject <NSURLSessionDataDelegate,NSURLSessionTaskDelegate,NVAlertViewDelegate>
+@interface NVTileCompiler : NSObject <NSURLSessionDataDelegate,NSURLSessionTaskDelegate>
 
 @property (nonatomic, weak) id <NVTileCompilerDelegate> delegate;
 

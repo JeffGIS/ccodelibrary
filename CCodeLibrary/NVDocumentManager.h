@@ -3,7 +3,7 @@
 
 @import UIKit;
 
-@class NVTileCompiler;
+@class NVDocumentManager;
 
 @protocol NVDocumentManagerDelegate <NSObject>
 
