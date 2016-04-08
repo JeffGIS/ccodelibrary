@@ -21,54 +21,7 @@
                         urlString:(NSString *)urlString
 {
     NVWebView *nvwv = NVWebView.new;
-    nvwv.translatesAutoresizingMaskIntoConstraints = NO;
-    nvwv.backgroundColor = UIColor.grayColor;
-    nvwv.headerHeight = 48.0;
-    nvwv.headerSideMargin = 8.0;
-    nvwv.alpha = 0.0;
-    
-    nvwv.tabBar = view.parentViewController.tabBarController.tabBar;
-    nvwv.tabBar.userInteractionEnabled = NO;
-    
-    [view addSubview:nvwv];
-    
-    [nvwv constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:nvwv.tabBar.frame.size.height];
-    
-    nvwv.webView = WKWebView.new;
-    nvwv.webView.translatesAutoresizingMaskIntoConstraints = NO;
-    nvwv.webView.allowsBackForwardNavigationGestures = YES;
-    nvwv.webView.navigationDelegate = self;
-    
-    [nvwv addSubview:nvwv.webView];
-    
-    [nvwv.webView constrainToView:nvwv leading:0.0 trailing:0.0 top:nvwv.headerHeight bottom:0.0];
-    
-    nvwv.returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    nvwv.returnButton.translatesAutoresizingMaskIntoConstraints = NO;
-    nvwv.returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
-    nvwv.returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    nvwv.returnButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    
-    [nvwv.returnButton setTitle:@"< Return"
-                       forState:UIControlStateNormal];
-    
-    [nvwv.returnButton setTitleColor:UIColor.whiteColor
-                            forState:UIControlStateNormal];
-    
-    [nvwv.returnButton setTitleColor:UserDefaults.defaults.appleGray
-                            forState:UIControlStateHighlighted];
-    
-    [nvwv.returnButton addTarget:nvwv
-                          action:@selector(returnButtonTapped:)
-                forControlEvents:UIControlEventTouchUpInside];
-    
-    [nvwv addSubview:nvwv.returnButton];
-    
-    [nvwv.returnButton.leadingAnchor constraintEqualToAnchor:nvwv.leadingAnchor
-                                                    constant:nvwv.headerSideMargin].active = YES;
-    
-    [nvwv.returnButton.topAnchor constraintEqualToAnchor:nvwv.topAnchor].active = YES;
-    [nvwv.returnButton.bottomAnchor constraintEqualToAnchor:nvwv.webView.topAnchor].active = YES;
+    [nvwv addWebViewToView:view];
     
     nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -97,13 +50,85 @@
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
     [nvwv.webView loadRequest:urlRequest];
     
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         nvwv.alpha = 1.0;
-                         nvwv.tabBar.alpha = 0.0;
-                     }];
+    [nvwv show];
     
     return nvwv;
+}
+
++ (instancetype)showWebViewInView:(UIView *)view
+                   showFileAtPath:(NSString *)path
+{
+    NVWebView *nvwv = NVWebView.new;
+    [nvwv addWebViewToView:view];
+    
+    NSURL *url = [NSURL fileURLWithPath:path];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [nvwv.webView loadRequest:request];
+    
+    [nvwv show];
+    
+    return nvwv;
+}
+
+- (void)addWebViewToView:(UIView *)view
+{
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    self.backgroundColor = UIColor.grayColor;
+    _headerHeight = 48.0;
+    _headerSideMargin = 8.0;
+    self.alpha = 0.0;
+    
+    _tabBar = view.parentViewController.tabBarController.tabBar;
+    _tabBar.userInteractionEnabled = NO;
+    
+    [view addSubview:self];
+    
+    [self constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:_tabBar.frame.size.height];
+    
+    _webView = WKWebView.new;
+    _webView.translatesAutoresizingMaskIntoConstraints = NO;
+    _webView.allowsBackForwardNavigationGestures = YES;
+    _webView.navigationDelegate = self;
+    
+    [self addSubview:_webView];
+    
+    [_webView constrainToView:self leading:0.0 trailing:0.0 top:_headerHeight bottom:0.0];
+    
+    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
+    _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    _returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    _returnButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    
+    [_returnButton setTitle:@"< Return"
+                   forState:UIControlStateNormal];
+    
+    [_returnButton setTitleColor:UIColor.whiteColor
+                        forState:UIControlStateNormal];
+    
+    [_returnButton setTitleColor:UserDefaults.defaults.appleGray
+                        forState:UIControlStateHighlighted];
+    
+    [_returnButton addTarget:self
+                      action:@selector(returnButtonTapped:)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    [self addSubview:_returnButton];
+    
+    [_returnButton.leadingAnchor constraintEqualToAnchor:self.leadingAnchor
+                                                constant:_headerSideMargin].active = YES;
+    
+    [_returnButton.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
+    [_returnButton.bottomAnchor constraintEqualToAnchor:_webView.topAnchor].active = YES;
+}
+
+- (void)show
+{
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         self.alpha = 1.0;
+                         _tabBar.alpha = 0.0;
+                     }];
 }
 
 - (void)hide:(BOOL)animated
