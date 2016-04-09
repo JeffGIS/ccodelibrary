@@ -13,6 +13,7 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 
 #define FROM_HOME   1
 #define FROM_CORNER 2
+#define FROM_PRELIM 3
 
 #import <UIKit/UIKit.h>
 #import "MPIntersection.h"

@@ -46,7 +46,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic) int currentIntersection;
 @property (nonatomic, copy) NSString *googleKey;
 @property BOOL refreshMap, doCompassCalibrate, showParcelBoundary;
-@property (nonatomic) NSArray *placesArray;
+@property (nonatomic) NSMutableArray *placesArray;
 @property (nonatomic) NSArray *currentPlaceArray;
 @property (nonatomic, copy) NSString *placeAreaFile;
 @property (nonatomic, copy) NSString *calibrateLength;
@@ -148,6 +148,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
               toFile:(NSString *)file;
 
 - (NSInteger)adjustNextRefno:(NSInteger)refno;
+- (BOOL)processPlacesFor:(NSString*)message;
 - (void)processPlacesArray:(NSUInteger) row;
 - (void)loadiPadParametersForGeoid:(int)geoid;
 - (void)setiPadParametersFromGeoid:(int)geoid;

@@ -628,6 +628,16 @@
     return nextRef;
 }
 
+- (BOOL)processPlacesFor:(NSString*)message
+{
+    _GSSiPadNumber = atoi(&message.UTF8String[9]);
+    
+    _placesArray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
+    [_placesArray removeObjectAtIndex:0];
+    _GSSiPadNumber = atoi(&message.UTF8String[9]);
+    return TRUE;
+}
+
 - (void)processPlacesArray:(NSUInteger) row
 {
     if (row >= CRAPI.sharedInstance.placesArray.count)

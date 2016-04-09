@@ -143,7 +143,7 @@
     _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
     _locationManager.headingFilter = kCLHeadingFilterNone;
     
-    if (CLLocationManager.headingAvailable)
+    if (CLLocationManager.headingAvailable && _from != FROM_PRELIM)
         [_locationManager startUpdatingHeading];
 }
 

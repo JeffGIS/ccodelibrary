@@ -1107,7 +1107,8 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE intID>=%i AND intID <=%i",
                        iTime, user, intID, endID];
     
-    rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL);
+    rtn = SQLOK(sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL), self.curbRampData.database);
+
     return !rtn;
 }
 
@@ -1283,11 +1284,6 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         SQLOK(sqlite3_bind_text(statement, 30, intStruct.streetAzms, -1, SQLITE_STATIC),self.curbRampData.database);
         SQLOK(sqlite3_bind_double(statement, 31,lat), self.curbRampData.database);
         SQLOK(sqlite3_bind_double(statement, 32,lon), self.curbRampData.database);
-        SQLOK(sqlite3_bind_int(statement, 33,intStruct.intID), self.curbRampData.database);
-        SQLOK(sqlite3_bind_double(statement, 34,lon), self.curbRampData.database);
-        SQLOK(sqlite3_bind_double(statement, 35,lat), self.curbRampData.database);
-        SQLOK(sqlite3_bind_double(statement, 36,lon), self.curbRampData.database);
-        SQLOK(sqlite3_bind_double(statement, 37,lat), self.curbRampData.database);
 
         if (sqlite3_step(statement) != SQLITE_DONE)
             NSLog(@"Error inserting intersection. '%s'", sqlite3_errmsg(self.curbRampData.database));
