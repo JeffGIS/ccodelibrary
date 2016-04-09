@@ -580,10 +580,13 @@
         {
             if ([cells isKindOfClass:SpreadSheetViewCell.class] &&
                 [cells.identifier isEqualToString:selection] &&
-                cells.column <= _activeColumns && cells.row <= _activeRows && _delegate)
+                cells.column <= _activeColumns && cells.row <= _activeRows)
             {
-                [_delegate ssvCellWasTappedAtRowIndex:(yID + 1)
-                                          columnIndex:(xID + 1)];
+                if (_delegate && [_delegate respondsToSelector:@selector(ssvCellWasTappedAtRowIndex:columnIndex:)])
+                {
+                    [_delegate ssvCellWasTappedAtRowIndex:(yID + 1)
+                                              columnIndex:(xID + 1)];
+                }
             }
         }
     }
@@ -598,6 +601,9 @@
                 [cells.identifier isEqualToString:selection])
             {
                 NSLog(@"Row Header %@:\"%@\"", cells.identifier, cells.text);
+                
+                if (_delegate && [_delegate respondsToSelector:@selector(ssvRowHeaderWasTappedAtIndex:)])
+                    [_delegate ssvRowHeaderWasTappedAtIndex:cells.identifier.integerValue];
             }
         }
     }
@@ -818,8 +824,12 @@
     
     if ([popoverTableView.title isEqualToString:@"Select Spreadsheet"])
     {
-        [_delegate ssvSetCurrentFile:text];
-        _titleTextField.text = [_delegate ssvGetTitleText];
+        if (_delegate && [_delegate respondsToSelector:@selector(ssvSetCurrentFile:)] &&
+            [_delegate respondsToSelector:@selector(ssvGetFileList)])
+        {
+            [_delegate ssvSetCurrentFile:text];
+            _titleTextField.text = [_delegate ssvGetTitleText];
+        }
     }
     
     else if ([popoverTableView.title isEqualToString:@"Select Realtor Website"])
@@ -912,8 +922,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     {
         if (buttonIndex == 0)
         {
-            [_delegate ssvDeleteCurrentFile];
-            _titleTextField.text = [_delegate ssvGetTitleText];
+            if (_delegate && [_delegate respondsToSelector:@selector(ssvDeleteCurrentFile)] &&
+                [_delegate respondsToSelector:@selector(ssvGetTitleText)])
+            {
+                [_delegate ssvDeleteCurrentFile];
+                _titleTextField.text = [_delegate ssvGetTitleText];
+            }
         }
     }
     
@@ -1067,13 +1081,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     if (textField == _titleTextField)
     {
-        if (_delegate)
+        if (_delegate && [_delegate respondsToSelector:@selector(ssvDidEditTitleText:)])
         {
-            if ([_delegate respondsToSelector:@selector(ssvDidEditTitleText:)])
-            {
-                [_delegate ssvDidEditTitleText:textField.text];
-                _titleTextField.text = [_delegate ssvGetTitleText];
-            }
+            [_delegate ssvDidEditTitleText:textField.text];
+            _titleTextField.text = [_delegate ssvGetTitleText];
         }
     }
     else if (textField == _textField)

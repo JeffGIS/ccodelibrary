@@ -21,6 +21,7 @@
 - (void)ssvCellWasTappedAtRowIndex:(NSUInteger)rowIndex
                        columnIndex:(NSUInteger)columnIndex;
 
+- (void)ssvRowHeaderWasTappedAtIndex:(NSUInteger)rowHeaderIndex;
 - (void)ssvDidSetFlipped:(BOOL)flipped;
 
 - (NSString *)ssvGetTitleText;
