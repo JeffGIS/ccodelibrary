@@ -709,7 +709,8 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
         intpt.latitude = lat;
         intpt.longitude = lon;
-        intpt.assignedTo = assignedTo;
+        if (assignedTo)
+            intpt.assignedTo = assignedTo;
         intpt.status = status;
         intpt.nramps = nRamps;
         
@@ -1102,13 +1103,14 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     
-    [self open];
+    BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE intID>=%i AND intID <=%i",
                        iTime, user, intID, endID];
     
     rtn = SQLOK(sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL), self.curbRampData.database);
 
+    [self close:opened];
     return !rtn;
 }
 
@@ -1144,7 +1146,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 {
     IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
     
-    [self open];
+    BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%i AND assignedTo=%i ORDER BY intID ASC",
                        status, user];
@@ -1167,6 +1169,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     }
     
     SQLOK(sqlite3_finalize(statement), self.curbRampData.database);
+    [self close:opened];
     return intpt;
 }
 
@@ -1430,7 +1433,7 @@ Exit:
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
                                                                                  error:nil].fileSize;
     
-    BOOL forceReload = YES;
+    BOOL forceReload = NO;
     
     if (fileSize > 0 && !forceReload)
     {

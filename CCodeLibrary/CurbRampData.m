@@ -39,7 +39,7 @@ static CurbRampData *_statdatabase = nil;
         _documentsDirectory = UserDefaults.defaults.sharedFilePath;
         _fileName = @"CurbRamps.sqlite";
         _path = [self databasePath:geoid];
-        if (create)
+        if (!_fileSize || create)
             [self createIntersectionsTable:YES];
     }
     

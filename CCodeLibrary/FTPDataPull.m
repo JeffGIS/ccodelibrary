@@ -37,7 +37,7 @@ static FTPDataPull * _statpull = nil;
  fromDirectory:(NSString *)fromDirectory
         toFile:(NSString *)toFileName
    toDirectory:(NSString *)toDirectory
- refreshOption:(NSInteger)refreshOption
+ refreshOption:(FTPDataPullRefreshOption)refreshOption
 
 {
     int rtn = FTPStatusOK;

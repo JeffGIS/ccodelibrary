@@ -42,7 +42,7 @@ typedef NS_ENUM(NSInteger, FTPDataType)
 @optional
 
 - (void)FTPdidComplete:(FTPDataType)dataType
-            withStatus:(int)status
+            withStatus:(FTPStatus)status
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path;
 
@@ -89,7 +89,7 @@ typedef NS_ENUM(NSInteger, FTPDataType)
  fromDirectory:(NSString *)fromDirectory
         toFile:(NSString *)toFileName
    toDirectory:(NSString *)toDirectory
- refreshOption:(NSInteger)refreshOption;
+ refreshOption:(FTPDataPullRefreshOption)refreshOption;
 
 - (void)startReceive:(NSString *)fileName;
 
