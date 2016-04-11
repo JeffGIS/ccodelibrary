@@ -725,9 +725,19 @@
     
     if (_delegate)
     {
-        [_delegate inventoryViewController:self
-                           didSetInventory:_currentIntersection];
+        MPIntersection * nextIntersection = [_delegate inventoryViewController:self
+                                                               didSetInventory:_currentIntersection];
+        if (nextIntersection != nil)
+        {
+            _currentIntersection = nextIntersection;
+            _currentIntersectionID = _currentIntersection.intID;
+            [self setBKImage:NO];
+            return;
+        }
     }
+    [self dismissViewControllerAnimated:YES
+                             completion:nil];
+
 }
 
 - (void)cancel:(UIButton *)button
