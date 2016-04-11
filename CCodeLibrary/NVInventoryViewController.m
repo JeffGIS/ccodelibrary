@@ -16,13 +16,13 @@
 @interface NVInventoryViewController ()
 
 @property (nonatomic) UIImageView *backgroundImage, *imageTargetView;
-@property (nonatomic) UIButton *cancelButton, *doneButton;
+@property (nonatomic) UIButton *cancelButton, *doneButton, *complexButton;
 @property (nonatomic) UIButton *addRampButton, *addSignalButton, *addXWalkButton;
 @property (nonatomic) UIButton *editItemButton, *rampTypeButton, *currentEditButton;
-@property (nonatomic, copy) NSString *imageName, *pathToImageFile, *pathToBPWFile;
+@property (nonatomic, copy) NSString *pathToImageFile, *pathToBPWFile;
 @property (nonatomic) LPTRANDATA pTranWToBMP, pTranBMPToW;
 @property (nonatomic) CGFloat xFactor, yFactor, xOffset, yOffset, latitude, longitude;
-@property int currentIntersectionID, currentZoom;
+@property int currentIntersectionID, currentZoom, initialZoom;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) UISegmentedControl *zoomSC;
 @property (nonatomic) NVRampButton *ramp1, *ramp2, *ramp3, *ramp4, *ramp5, *ramp6, *ramp7, *ramp8;
@@ -75,6 +75,7 @@
     
     _currentIntersectionID = _currentIntersection.intID;
     _currentZoom = 21;
+    _initialZoom = _currentZoom;
     _firstTime = YES;
     _pTranWToBMP = _pTranBMPToW = 0;
     _updateOption = NVUpdateOptionNone;
@@ -97,12 +98,34 @@
     [self setupButton:_doneButton
              selector:@selector(done:)
                 title:@"Done"
-             fontSize:56.0];
+             fontSize:52.0];
     
     [self setupButton:_cancelButton
              selector:@selector(cancel:)
                 title:@"Cancel"
-             fontSize:40.0];
+             fontSize:32.0];
+    
+    if (_from == FROM_PRELIM)
+    {
+        [_doneButton setTitle:@"Next"
+                     forState:UIControlStateNormal];
+        
+        _complexButton = [[UIButton alloc] initWithFrame:CGRectMake(600.0, 20.0, 148.0, 70.0)];
+        
+        [self setupButton:_complexButton
+                 selector:@selector(complex:)
+                    title:@"Complex"
+                 fontSize:32.0];
+    }
+    
+    else
+    {
+        _helpButton = [HelpButton showHelpButtonWithOrigin:CGPointMake(690.0, 20.0)
+                                                      size:70.0
+                                                      view:self.view
+                                                       tag:HelpButtonPresenterCRISInventoryVC
+                                                    tabBar:nil];
+    }
     
     [self setupBottomButtons];
     [self setupZoomSC];
@@ -126,12 +149,6 @@
     _intersectionLabel.font = [UIFont boldSystemFontOfSize:32.0];
     _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
     [self setupLabel:_intersectionLabel];
-    
-    _helpButton = [HelpButton showHelpButtonWithOrigin:CGPointMake(690.0, 20.0)
-                                                  size:70.0
-                                                  view:self.view
-                                                   tag:HelpButtonPresenterCRISInventoryVC
-                                                tabBar:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -184,8 +201,6 @@
 
 - (void)setBKImage:(BOOL)forceRefresh;
 {
-    _imageName = [NSString stringWithFormat:@"%i", _currentIntersectionID];
-    
     IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
     IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersectionID];
     
@@ -723,21 +738,24 @@
 {
     [_currentIntersection setRampsXWalkAndSignal];
     _currentIntersection.zoomLevel = _currentZoom;
+    
     if (_delegate)
     {
-        MPIntersection * nextIntersection = [_delegate inventoryViewController:self
-                                                               didSetInventory:_currentIntersection];
+        MPIntersection *nextIntersection = [_delegate inventoryViewController:self
+                                                              didSetInventory:_currentIntersection];
+        
         if (nextIntersection != nil)
         {
             _currentIntersection = nextIntersection;
             _currentIntersectionID = _currentIntersection.intID;
             [self setBKImage:NO];
+            _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
             return;
         }
     }
+    
     [self dismissViewControllerAnimated:YES
                              completion:nil];
-
 }
 
 - (void)cancel:(UIButton *)button
@@ -748,6 +766,30 @@
                                                buttonTextArray:@[@"NO", @"YES"]
                                               destructiveIndex:2];
     alert.tag = 999;
+}
+
+- (void)complex:(UIButton *)button
+{
+    [_currentIntersection setRampsXWalkAndSignal];
+    _currentIntersection.zoomLevel = _currentZoom;
+    
+    if (_delegate)
+    {
+        MPIntersection *nextIntersection = [_delegate inventoryViewController:self
+                                                                didSetComplex:_currentIntersection];
+        
+        if (nextIntersection != nil)
+        {
+            _currentIntersection = nextIntersection;
+            _currentIntersectionID = _currentIntersection.intID;
+            [self setBKImage:NO];
+            _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
+            return;
+        }
+    }
+    
+    [self dismissViewControllerAnimated:YES
+                             completion:nil];
 }
 
 - (void)addRamp:(UIButton *)button
@@ -1168,8 +1210,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     {
         return;
     }
-    
-    _imageName = [NSString stringWithFormat:@"%i", _currentIntersection.intID];
     
     if (_pTranBMPToW)
         free(_pTranBMPToW);
@@ -1891,7 +1931,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
         IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersectionID];
         
-        PixelXYToLatLongd(x, y, _currentZoom, &lat, &lon);
+        PixelXYToLatLongd(x, y, _initialZoom, &lat, &lon);
         info.latitude = lat;
         info.longitude = lon;
         [database setCurrentIntersectionPoint:info];
