@@ -754,12 +754,16 @@
         }
     }
     
+    CRAPI.sharedInstance.refreshMap = YES;
+    
     [self dismissViewControllerAnimated:YES
                              completion:nil];
 }
 
 - (void)cancel:(UIButton *)button
 {
+    CRAPI.sharedInstance.refreshMap = YES;
+    
     NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                       delegate:self
                                                          title:@"Do you really want to cancel all changes to this intersection?"
@@ -787,6 +791,8 @@
             return;
         }
     }
+    
+    CRAPI.sharedInstance.refreshMap = YES;
     
     [self dismissViewControllerAnimated:YES
                              completion:nil];
