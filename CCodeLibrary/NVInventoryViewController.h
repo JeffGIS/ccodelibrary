@@ -31,6 +31,9 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 - (MPIntersection *)inventoryViewController:(NVInventoryViewController *)controller
                               didSetComplex:(MPIntersection *)intersection;
 
+- (void)inventoryViewController:(NVInventoryViewController *)controller
+     showStreetViewAtCoordinate:(CLLocationCoordinate2D)coordinate;
+
 @end
 
 @interface NVInventoryViewController : UIViewController <NVAlertViewDelegate,CLLocationManagerDelegate, NVTileCompilerDelegate>

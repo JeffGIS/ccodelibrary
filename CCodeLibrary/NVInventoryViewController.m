@@ -116,6 +116,11 @@
                  selector:@selector(complex:)
                     title:@"Complex"
                  fontSize:32.0];
+        
+        UILongPressGestureRecognizer *lp = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                         action:@selector(longPressed:)];
+        
+        [self.backgroundImage addGestureRecognizer:lp];
     }
     
     else
@@ -1202,6 +1207,18 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     CGPoint location = [gesture locationInView:self.view];
     [self updateButtons:location];
+}
+
+- (void)longPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        if (_delegate)
+        {
+            [_delegate inventoryViewController:self
+                    showStreetViewAtCoordinate:CLLocationCoordinate2DMake(_latitude, _longitude)];
+        }
+    }
 }
 
 - (void)updateButtons:(CGPoint)location
