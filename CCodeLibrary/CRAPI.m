@@ -634,6 +634,7 @@
     
     _placesArray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
     [_placesArray removeObjectAtIndex:0];
+    
     _GSSiPadNumber = atoi(&message.UTF8String[9]);
     return TRUE;
 }
