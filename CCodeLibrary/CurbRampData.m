@@ -5,6 +5,7 @@
 //  Created by JEFFREY E SMITH on 6/12/15.
 //  Copyright (c) 2015 GSSi. All rights reserved.
 //
+#define CURRENT_INTERSECTION_VERSION "1.1"
 
 #import "CurbRampData.h"
 #import "UserDefaults.h"
@@ -185,29 +186,65 @@ static CurbRampData *_statdatabase = nil;
     return rtn;
 }
 
-- (void)startTransaction
+- (BOOL)startTransaction
 {
-    [self open];
+    BOOL opened = [self open];
     SQLOK(sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    return opened;
 }
 
 - (void)commitTransaction
 {
     SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
 }
+- (BOOL)isCurrentVersion
+{
+    BOOL rtn = FALSE;
+    BOOL opened = [self open];
+    int dbVersion, currentVersion;
+    
+    if (_isOpen && _fileSize > 0)
+    {
+        NSString *query = [NSString stringWithFormat:@"SELECT VersionID FROM VERSION"];// WHERE vid=1"];
+        
+        sqlite3_stmt *statement = NULL;
+        
+        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        
+        if (sqlite3_step(statement) == SQLITE_ROW)
+        {
+            LPSTR version = (LPSTR)sqlite3_column_text(statement, 0);
+            
+            if (version)
+            {
+                dbVersion = atoi(version);
+                currentVersion = atoi(CURRENT_INTERSECTION_VERSION);
+                if (dbVersion == currentVersion)
+                    rtn = TRUE;
+            }
+        }
+        
+        SQLOK(sqlite3_finalize(statement), _database);
+    }
+    
+    [self close:opened];
+    return rtn;
+}
 
 - (BOOL)createIntersectionsTable:(BOOL)dropExistingTables
 {
     BOOL rtn = NO;
     
-    BOOL opened = [self open];
-    NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;DROP TABLE IF EXISTS Intersections_index;DROP TABLE IF EXISTS Ramps;"];
+    BOOL opened = [self startTransaction];
+    NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;DROP TABLE IF EXISTS Intersections_index;DROP TABLE IF EXISTS Ramps; DROP TABLE IF EXISTS VERSION;"];
     
     if (dropExistingTables)
         SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), _database);
 //create intersection table
     NSString *query =
-    [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Intersections (\
+    [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS VERSION (vid INTEGER PRIMARY KEY,VersionID CHAR(6));\
+ INSERT INTO VERSION VALUES(1,'%s');\
+ CREATE TABLE IF NOT EXISTS Intersections (\
  intID INTEGER PRIMARY KEY,\
  lastUpdateTime INTEGER,\
  status INTEGER,\
@@ -243,7 +280,7 @@ static CurbRampData *_statdatabase = nil;
  intersectionComment CHAR(256),\
  doLater INTEGER,\
  zoomLevel INTEGER);\
- CREATE VIRTUAL TABLE IF NOT EXISTS Intersections_index USING rtree(id,minX, maxX, minY, maxY);"];
+ CREATE VIRTUAL TABLE IF NOT EXISTS Intersections_index USING rtree(id,minX, maxX, minY, maxY);",CURRENT_INTERSECTION_VERSION];
     
     rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
 //create ramp table
@@ -306,7 +343,7 @@ static CurbRampData *_statdatabase = nil;
              iPadID INT,\
              lastUpdateFileNum INT);"];
     rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
-
+    [self commitTransaction];
     [self close:opened];
     return rtn;
     

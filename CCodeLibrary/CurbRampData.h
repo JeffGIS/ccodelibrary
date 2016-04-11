@@ -34,8 +34,9 @@
       sendToServer:(BOOL)sendToServer
      useUniqueFile:(BOOL)uniqueFile;
 
-- (void)startTransaction;
+- (BOOL)startTransaction;
 - (void)commitTransaction;
+- (BOOL)isCurrentVersion;
 
 
 @end
