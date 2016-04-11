@@ -722,7 +722,7 @@
 - (void)done:(UIButton *)button
 {
     [_currentIntersection setRampsXWalkAndSignal];
-    
+    _currentIntersection.zoomLevel = _currentZoom;
     if (_delegate)
     {
         MPIntersection * nextIntersection = [_delegate inventoryViewController:self

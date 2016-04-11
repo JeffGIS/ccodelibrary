@@ -10,12 +10,12 @@
 
 typedef NS_ENUM(NSInteger, IntersectionStatus)
 {
-    IntersectionStatusDefault,
-    IntersectionStatusNeverSurveyed,
-    IntersectionStatusOriginalSurvey,
-    IntersectionStatusScheduledForRebuild,
-    IntersectionStatusBuilt,
-    IntersectionStatusResurveyed,
+    InitialStatus,
+    PreliminarySurveyComplete,
+    OriginalSurveyComplete,
+    ScheduledForRebuild,
+    IntersectionRebuilt,
+    ResurveyedAfterRebuild,
 };
 
 @class IntersectionsDatabase;
@@ -57,8 +57,11 @@ typedef NS_ENUM(NSInteger, IntersectionStatus)
 
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;
 
+- (BOOL)storeIntersection:(MPIntersection*)currentIntersection
+               withStatus:(IntersectionStatus)status;
+
 - (BOOL)storeMPIntersectionToDB:(MPIntersection *)mpint
-                     withStatus:(int)status;
+                     withStatus:(IntersectionStatus)status;
 
 - (MPIntersection *) getMPIntersectionFromDB:(int)intID
                                   withRamps:(BOOL)wantRamps;

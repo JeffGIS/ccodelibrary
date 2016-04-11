@@ -119,6 +119,75 @@
     return self;
 }
 
+- (void)intersectionInit
+{
+    self.intID = -1;
+    self.dataUpdated = NO;
+    self.intRotation = 0;
+    self.doLater = NO;
+    self.timeComplete = 0;
+    self.name1 = @"NOTYETSET";
+    self.signal23Exists = NO;
+    self.signal45Exists = NO;
+    self.signal67Exists = NO;
+    self.signal81Exists = NO;
+    self.xWalkAExists = NO;
+    self.xWalkBExists = NO;
+    self.xWalkCExists = NO;
+    self.xWalkDExists = NO;
+    self.corner23isComplete = NO;
+    self.corner45isComplete = NO;
+    self.corner67isComplete = NO;
+    self.corner81isComplete = NO;
+    self.quadDev0 = 0;
+    self.quadDev90 = 90;
+    self.quadDev180 = 180;
+    self.quadDev270 = 270;
+    self.intersectionComment = @"";
+    
+    for (int i = 1; i < 13; i++)
+    {
+        MPRamp *ramp = [self.ramps objectAtIndex:i];
+        ramp.rampNum = i;
+        ramp.rampExists = NO;
+        ramp.timeComplete = 0;
+        ramp.isComplete = YES;
+        ramp.xWalkisComplete = YES;
+        ramp.signalisComplete = YES;
+        ramp.hasPEDButton = NO;
+        ramp.hasPEDSignal = NO;
+        ramp.SteepTopOfCurb = 0;
+        ramp.PedRampLip = 0;
+        ramp.rampComment = @"";
+        switch (i)
+        {
+            default:
+                if (i % 2)
+                    ramp.rampID = [NSString stringWithFormat:@"%i(Left)",i];
+                
+                else
+                    ramp.rampID = [NSString stringWithFormat:@"%i(Right)",i];
+                break;
+                
+            case 9:
+                ramp.rampID = @"23 (Middle)";
+                break;
+                
+            case 10:
+                ramp.rampID = @"45 (Middle)";
+                break;
+                
+            case 11:
+                ramp.rampID = @"67 (Middle)";
+                break;
+                
+            case 12:
+                ramp.rampID = @"81 (Middle)";
+                break;
+        }
+    }
+}
+
 - (void) setRampsXWalkAndSignal
 {
     MPIntersection *currentIntersection = self;

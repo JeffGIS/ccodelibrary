@@ -98,7 +98,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 + (CRAPI *)sharedInstance;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
-- (void)intersectionInit:(MPIntersection *)currentIntersection;
 - (void)facilityInit:(Facility *)currentFacility;
 
 - (void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm
