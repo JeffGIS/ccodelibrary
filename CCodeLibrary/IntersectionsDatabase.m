@@ -509,51 +509,18 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
         {
             strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
-            cmd = [NSString stringWithFormat:@"UPDATE Ramps SET \
-rampID='%s',\
-rampExists=%i,\
-timeComplete=%i,\
-approximateHeading=%f,\
-rampInXWalk=%i,\
-xWalkisComplete=%i,\
-signalisComplete=%i,\
-texture=%i,\
-upperLandingObstruction=%i,\
-lowerLandingObstruction=%i,\
-rampObstruction=%i,\
-hasRampCracks=%i,\
-hasUpperLandingCracks=%i,\
-hasStreetLandingCracks=%i,\
-rampWidth=%i,\
-rampDepth=%i,\
-rampSlopeFront=%f,\
-rampSlopeSide=%f,\
-rampSlopeHeading=%f,\
-upperLandingSlopeFront=%f,\
-upperLandingSlopeSide=%f,\
-upperLandingSlopeHeading=%f,\
-streetLandingSlopeFront=%f,\
-streetLandingSlopeSide=%f,\
-streetLandingSlopeHeading=%f,\
-flareLeftSlopeFront=%f,\
-flareLeftSlopeSide=%f,\
-flareLeftSlopeHeading=%f,\
-flareRightSlopeFront=%f,\
-flareRightSlopeSide=%f,\
-flareRightSlopeHeading=%f,\
-hasPEDSignal=%i,\
-hasPEDButton=%i,\
-PEDButtonHeight=%i,\
-PEDButtonDist=%i,\
-SteepTopOfCurb=%f,\
-lev21x=%i,\
-lev21y=%i,\
-rampComment='%s',\
-PedRampLip=%f WHERE intID=%i AND rampNum=%i;",
+            cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO Ramps VALUES(\
+%i,%i,'%s',0,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\
+%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\
+%i,%i,%i,%i,%i,%i,%i,%i,%i,'%@');",
+                   (int)mpint.intID,
+                   (int)ramp.rampNum,
                     rampID,
-                    ramp.rampExists,
                     ramp.timeComplete,
+                    ramp.rampExists,
+                    ramp.isComplete,
                     ramp.approximateHeading,
+                    ramp.adjustedRot,
                     (int)ramp.rampInXWalk,
                     (int)ramp.xWalkisComplete,
                     (int)ramp.signalisComplete,
@@ -564,8 +531,8 @@ PedRampLip=%f WHERE intID=%i AND rampNum=%i;",
                     (int)ramp.hasRampCracks,
                     (int)ramp.hasUpperLandingCracks,
                     (int)ramp.hasStreetLandingCracks,
-                    ramp.rampWidth,
-                    ramp.rampDepth,
+                    (int)ramp.rampWidth,
+                    (int)ramp.rampDepth,
                     ramp.rampSlopeFront,
                     ramp.rampSlopeSide,
                     ramp.rampSlopeHeading,
@@ -581,17 +548,22 @@ PedRampLip=%f WHERE intID=%i AND rampNum=%i;",
                     ramp.flareRightSlopeFront,
                     ramp.flareRightSlopeSide,
                     ramp.flareRightSlopeHeading,
+                    ramp.swkLeftSlopeFront,
+                    ramp.swkLeftSlopeSide,
+                    ramp.swkLeftSlopeHeading,
+                    ramp.swkRightSlopeFront,
+                    ramp.swkRightSlopeSide,
+                    ramp.swkRightSlopeHeading,
                     (int)ramp.hasPEDSignal,
                     (int)ramp.hasPEDButton,
                     ramp.PEDButtonHeight,
                     ramp.PEDButtonDist,
                     ramp.SteepTopOfCurb,
+                    ramp.PedRampLip,
                     ramp.lev21x,
                     ramp.lev21y,
-                    ramp.rampComment.UTF8String,
-                   ramp.PedRampLip,
-                   (int)mpint.intID,
-                   (int)ramp.rampNum];
+                    ramp.rampType,
+                    ramp.rampComment];
             rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:newFile];
         }
     }
@@ -1134,6 +1106,24 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         count = sqlite3_column_int(statement, 0);
     
     SQLOK(sqlite3_finalize(statement), self.curbRampData.database);
+    
+    [self close:opened];
+    return count;
+}
+
+- (int)getCountOfRamps
+{
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Ramps"];
+    sqlite3_stmt *statement = NULL;
+    int count = 0;
+    SQLOK(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL),self.curbRampData.database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+        count = sqlite3_column_int(statement, 0);
+    
+    SQLOK(sqlite3_finalize(statement), self.curbRampData.database);
+    
     [self close:opened];
     return count;
 }
@@ -1510,8 +1500,10 @@ Exit:
                                                                                  error:nil].fileSize;
     
     BOOL forceReload = NO;
+    int nIntersections = [self getCountOfIntersections];
+    int nRamps = [self getCountOfRamps];
     
-    if (fileSize > 0 && !forceReload && [self getCountOfIntersections] > 0 && [_curbRampData isCurrentVersion])
+    if (fileSize > 0 && !forceReload && nIntersections > 0 && [_curbRampData isCurrentVersion])
     {
         if (self.delegate)
         {
