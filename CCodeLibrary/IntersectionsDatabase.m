@@ -1435,7 +1435,7 @@ Exit:
     
     BOOL forceReload = NO;
     
-    if (fileSize > 0 && !forceReload)
+    if (fileSize > 0 && !forceReload && [self getCountOfIntersections] > 0)
     {
         if (self.delegate)
         {
