@@ -67,7 +67,7 @@ typedef NS_ENUM(NSInteger, IntersectionStatus)
                                   withRamps:(BOOL)wantRamps;
 
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
-                                                withStatus:(int)status;
+                                                withStatus:(IntersectionStatus)status;
 
 - (BOOL)setIntersectionStatusTo:(IntersectionStatus)status
                 forIntersection:(int)intID;

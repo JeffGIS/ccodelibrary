@@ -1124,7 +1124,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
 - (int)getCountOfIntersections
 {
-    [self open];
+    BOOL opened = [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Intersections"];
     sqlite3_stmt *statement = NULL;
     int count = 0;
@@ -1134,6 +1134,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         count = sqlite3_column_int(statement, 0);
     
     SQLOK(sqlite3_finalize(statement), self.curbRampData.database);
+    [self close:opened];
     return count;
 }
 
@@ -1214,7 +1215,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 }
 
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
-                                                withStatus:(int)status
+                                                withStatus:(IntersectionStatus)status
 {
     IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
     
@@ -1510,7 +1511,7 @@ Exit:
     
     BOOL forceReload = NO;
     
-    if (fileSize > 0 && !forceReload && [self getCountOfIntersections] > 0)
+    if (fileSize > 0 && !forceReload && [self getCountOfIntersections] > 0 && [_curbRampData isCurrentVersion])
     {
         if (self.delegate)
         {
