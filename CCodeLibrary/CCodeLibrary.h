@@ -13,6 +13,7 @@
 #import "UserDefaults.h"
 #import "MPIntersection.h"
 #import "PlacesInfo.h"
+#import "CityOrOrganizationData.h"
 #import "GeoMasterServer.h"
 #import "compress.h"
 #import "VerticalSegmentedControl.h"

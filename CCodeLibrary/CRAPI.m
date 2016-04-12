@@ -5,6 +5,7 @@
 #import "GSSiDefs.h"
 #import "MathUtil.h"
 #import "TileGraphics.h"
+#import "CityOrOrganizationData.h"
 
 @implementation CRAPI
 {
@@ -559,14 +560,29 @@
         nextRef = refno - nextRef + _maxDevices +_deviceNumber;
     return nextRef;
 }
-
 - (BOOL)processPlacesFor:(NSString*)message
 {
     _GSSiPadNumber = atoi(&message.UTF8String[9]);
     
-    _placesArray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
-    [_placesArray removeObjectAtIndex:0];
-    
+    NSMutableArray *placearray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
+    [placearray removeObjectAtIndex:0];
+    _placesArray = NSMutableArray.new;
+    for (NSString *str in placearray)
+    {
+        CityOrOrganizationData *c = [[CityOrOrganizationData alloc]init];
+        c.fullDescription = str;
+        c.name = textInsideParentheses(str);
+        c.number = [textBeforeParentheses(str) integerValue];
+        NSString *manager = textAfterClosingParentheses(str);
+        c.managerNumber = [textBeforeHyphen(manager) integerValue];
+        c.withinManager = [textAfterHyphen(manager) integerValue];
+        c.totWithinManager = [textAfter(manager,@"of") integerValue];
+
+        [_placesArray addObject:c];
+    }
+
+    [_placesArray sortUsingSelector:@selector(compareName:)];
+
     _GSSiPadNumber = atoi(&message.UTF8String[9]);
     return TRUE;
 }
@@ -587,30 +603,24 @@
         row = 0;
     }
     
-    NSString *locationLabelText = textInsideParentheses(_placesArray[row]);
-    _currentCityNameAndState = addSpaceAfterComma(locationLabelText);
-    NSString *geoid = textBeforeParentheses(_placesArray[row]);
-    NSString *manager = textAfterClosingParentheses(_placesArray[row]);
-    NSString *managerNumber = textBeforeHyphen(manager);
-    NSString *withinManager = textAfterHyphen(manager);
-    NSString *numWithinManager = textBefore(withinManager, @"of");
-    NSString *totWithinManager = textAfter(withinManager, @"of");
+    CityOrOrganizationData *c = _placesArray[row];
+    _currentCityNameAndState = addSpaceAfterComma(c.name);
     
-    self.currentGeoid = geoid.intValue;
+    self.currentGeoid  = c.number;
     
     [UserDefaults.defaults saveInteger:self.currentGeoid
                                 forKey:@"CurrentGeoid"];
     
-    _currentManageriPad = managerNumber.intValue;
-    _currentiPadWithinManager = numWithinManager.intValue;
-    _totiPadWithinManager = totWithinManager.intValue;
-    NSString *key = [NSString stringWithFormat:@"ManagerForGeoid:%i",geoid.intValue];
+    _currentManageriPad = c.managerNumber;
+    _currentiPadWithinManager = c.withinManager;
+    _totiPadWithinManager = c.totWithinManager;
+    NSString *key = [NSString stringWithFormat:@"ManagerForGeoid:%i",self.currentGeoid ];
     [UserDefaults.defaults saveInteger:_currentManageriPad
                                 forKey:key];
-    key = [NSString stringWithFormat:@"iPadWithinManagerForGeoid:%i",geoid.intValue];
+    key = [NSString stringWithFormat:@"iPadWithinManagerForGeoid:%i",self.currentGeoid ];
     [UserDefaults.defaults saveInteger:_currentiPadWithinManager
                                 forKey:key];
-    key = [NSString stringWithFormat:@"totiPadWithinManagerForGeoid:%i",geoid.intValue];
+    key = [NSString stringWithFormat:@"totiPadWithinManagerForGeoid:%i",self.currentGeoid ];
     [UserDefaults.defaults saveInteger:_totiPadWithinManager
                                 forKey:key];
     
