@@ -42,6 +42,9 @@ static FTPDataPull * _statpull = nil;
 {
     int rtn = FTPStatusOK;
     
+    if (_connection)
+        return FTPStatusBusy;
+    
     if ([toDirectory characterAtIndex:toDirectory.length-1] == '/')
         _toDirectory = [toDirectory substringToIndex:toDirectory.length-1];
     else
