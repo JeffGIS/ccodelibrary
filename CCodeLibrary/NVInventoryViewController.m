@@ -1215,23 +1215,24 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     if (gesture.state == UIGestureRecognizerStateBegan)
     {
-        //point touched (within map image) -> location
-        //center coordinate of map image -> _latitude & _longitude
-        //current zoom level -> _currentZoom
+        CGFloat x = gesture.view.frame.size.width;
+        CGFloat y = gesture.view.frame.size.height;
         
-        //need to convert location (CGPoint) to real-world coordinate (CLLocationCoordinate2D)
+        LLPOINT target = {0};
+        TRANS2(location.x, location.y, &x, &y, _pTranBMPToW);
+        PixelXYToLatLongd(x, y, 21, &target.lat, &target.lon);
         
         if (_delegate)
         {
             [_delegate inventoryViewController:self
-                    showStreetViewAtCoordinate:CLLocationCoordinate2DMake(_latitude, _longitude)];
+                    showStreetViewAtCoordinate:CLLocationCoordinate2DMake(target.lat, target.lon)];
         }
     }
 }
 
 - (void)updateButtons:(CGPoint)location
 {
-    double x = 0.0, y = 0.0;
+    CGFloat x = 0.0, y = 0.0;
     CGRect windowBounds = CGRectZero;
     CGSize imageSize = CGSizeZero;
     int xWalkID = 0, signalID = 0, rampID = 0;
