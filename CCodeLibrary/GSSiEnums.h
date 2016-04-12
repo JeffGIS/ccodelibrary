@@ -66,14 +66,6 @@ typedef NS_ENUM(NSInteger, INTDBStatus)
     INTDBStatusFailedToUnzip,
 };
 
-typedef NS_ENUM(NSInteger, IntStatus)
-{
-    IntStatusDefault,
-    IntStatusPrelimComplete,
-    IntStatusComplex,
-    IntStatusDetailComplete,
-};
-
 typedef NS_ENUM(NSInteger, AreaFileStatus)
 {
     AreaFileStatusDefault,
