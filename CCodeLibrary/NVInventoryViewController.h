@@ -25,6 +25,10 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 
 @protocol NVInventoryViewControllerDelegate <NSObject>
 
+@optional
+- (void)inventoryViewController:(NVInventoryViewController *)controller
+           didCompleteInventory:(MPIntersection *)intersection;
+
 - (MPIntersection *)inventoryViewController:(NVInventoryViewController *)controller
                             didSetInventory:(MPIntersection *)intersection;
 

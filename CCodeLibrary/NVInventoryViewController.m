@@ -741,28 +741,37 @@
 
 - (void)done:(UIButton *)button
 {
-    [_currentIntersection setRampsXWalkAndSignal];
-    _currentIntersection.zoomLevel = _currentZoom;
-    
-    if (_delegate)
+    if (_from == FROM_PRELIM)
     {
-        MPIntersection *nextIntersection = [_delegate inventoryViewController:self
-                                                              didSetInventory:_currentIntersection];
+        [_currentIntersection setRampsXWalkAndSignal];
+        _currentIntersection.zoomLevel = _currentZoom;
         
-        if (nextIntersection != nil)
+        if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didSetInventory:)])
         {
-            _currentIntersection = nextIntersection;
-            _currentIntersectionID = _currentIntersection.intID;
-            [self setBKImage:NO];
-            _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
-            return;
+            MPIntersection *nextIntersection = [_delegate inventoryViewController:self
+                                                                  didSetInventory:_currentIntersection];
+            
+            if (nextIntersection != nil)
+            {
+                _currentIntersection = nextIntersection;
+                _currentIntersectionID = _currentIntersection.intID;
+                [self setBKImage:NO];
+                _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
+                return;
+            }
         }
+        
+        CRAPI.sharedInstance.refreshMap = YES;
+        
+        [self dismissViewControllerAnimated:YES
+                                 completion:nil];
     }
     
-    CRAPI.sharedInstance.refreshMap = YES;
-    
-    [self dismissViewControllerAnimated:YES
-                             completion:nil];
+    else if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didCompleteInventory:)])
+    {
+        [_delegate inventoryViewController:self
+                      didCompleteInventory:_currentIntersection];
+    }
 }
 
 - (void)cancel:(UIButton *)button
@@ -782,7 +791,7 @@
     [_currentIntersection setRampsXWalkAndSignal];
     _currentIntersection.zoomLevel = _currentZoom;
     
-    if (_delegate)
+    if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didSetComplex:)])
     {
         MPIntersection *nextIntersection = [_delegate inventoryViewController:self
                                                                 didSetComplex:_currentIntersection];
@@ -1222,7 +1231,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         TRANS2(location.x, location.y, &x, &y, _pTranBMPToW);
         PixelXYToLatLongd(x, y, 21, &target.lat, &target.lon);
         
-        if (_delegate)
+        if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:showStreetViewAtCoordinate:)])
         {
             [_delegate inventoryViewController:self
                     showStreetViewAtCoordinate:CLLocationCoordinate2DMake(target.lat, target.lon)];
