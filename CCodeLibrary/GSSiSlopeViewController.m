@@ -91,9 +91,6 @@ static int COUNT=100;
 {
     [super viewDidLoad];
     
-    if (_useCalibration)
-        [self loadCalibration];
-    
     _calDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 964.0, 728.0, 60.0)];
     _calDateLabel.backgroundColor = UIColor.clearColor;
     _calDateLabel.font = [UIFont boldSystemFontOfSize:28.0];
@@ -143,7 +140,11 @@ static int COUNT=100;
     {
         _calDateLabel.text = @"WARNING: This device has NOT been calibrated.";
         _calDateLabel.textColor = UIColor.redColor;
+        _useCalibration = NO;
     }
+    
+    if (_useCalibration)
+        [self loadCalibration];
     
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
     _steadyDiff = 0.02 * _steadyFactor;
@@ -234,8 +235,10 @@ static int COUNT=100;
 {
     CGPoint pvCenter = CGPointMake(384.0, ((_startCancelButton.center.y + _unableButton.center.y) / 2.0));
     
-    _progressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
-                                                 progressColor:UIColor.whiteColor];
+    _progressView = [[NVProgressView alloc] initWithCenter:pvCenter
+                                                     width:688.0
+                                                trackColor:UIColor.blackColor
+                                             progressColor:UIColor.whiteColor];
     
     _progressView.progress = 0.0;
     [self.view addSubview:_progressView];
