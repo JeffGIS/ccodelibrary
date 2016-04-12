@@ -10,4 +10,9 @@
 - (id)initWithTrackColor:(UIColor *)trackColor
            progressColor:(UIColor *)progressColor;
 
+- (id)initWithCenter:(CGPoint)center
+               width:(CGFloat)width
+          trackColor:(UIColor *)trackColor
+       progressColor:(UIColor *)progressColor;
+
 @end
