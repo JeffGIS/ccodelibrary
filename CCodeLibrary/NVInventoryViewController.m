@@ -1211,8 +1211,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)longPressed:(UILongPressGestureRecognizer *)gesture
 {
+    CGPoint location = [gesture locationInView:gesture.view];
+    
     if (gesture.state == UIGestureRecognizerStateBegan)
     {
+        //point touched (within map image) -> location
+        //center coordinate of map image -> _latitude & _longitude
+        //current zoom level -> _currentZoom
+        
+        //need to convert location (CGPoint) to real-world coordinate (CLLocationCoordinate2D)
+        
         if (_delegate)
         {
             [_delegate inventoryViewController:self
