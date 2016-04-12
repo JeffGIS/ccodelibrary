@@ -766,7 +766,12 @@
         [self dismissViewControllerAnimated:YES
                                  completion:nil];
     }
-    
+    else if (_from == FROM_CORNER)
+    {
+        [_delegate inventoryViewController:self
+                           didSetInventory:_currentIntersection];
+
+    }
     else if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didCompleteInventory:)])
     {
         [_delegate inventoryViewController:self
@@ -1245,7 +1250,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     CGRect windowBounds = CGRectZero;
     CGSize imageSize = CGSizeZero;
     int xWalkID = 0, signalID = 0, rampID = 0;
-    
+    MPRamp *sideRamp;
+
     if (_updateOption == NVUpdateOptionEdit ||
         _updateOption == NVUpdateOptionNone)
     {
@@ -1441,37 +1447,54 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             break;
             
         case NVUpdateOptionAddXWalk:
+        {
             xWalkID = [self getXWalkIDFromX:x
                                        andY:y];
-            
+
             switch (xWalkID)
         {
             case 1://A
                 _currentIntersection.xWalkAExists = YES;
+                sideRamp = _currentIntersection.ramps[1];
+                sideRamp.xWalkisComplete = NO;
+                sideRamp = _currentIntersection.ramps[2];
+                sideRamp.xWalkisComplete = NO;
                 _currentIntersection.xWalkAlev21x = x;
                 _currentIntersection.xWalkAlev21y = y;
                 break;
                 
             case 2://B
                 _currentIntersection.xWalkBExists = YES;
+                sideRamp = _currentIntersection.ramps[3];
+                sideRamp.xWalkisComplete = NO;
+                sideRamp = _currentIntersection.ramps[4];
+                sideRamp.xWalkisComplete = NO;
                 _currentIntersection.xWalkBlev21x = x;
                 _currentIntersection.xWalkBlev21y = y;
                 break;
                 
             case 3://C
                 _currentIntersection.xWalkCExists = YES;
+                sideRamp = _currentIntersection.ramps[5];
+                sideRamp.xWalkisComplete = NO;
+                sideRamp = _currentIntersection.ramps[6];
+                sideRamp.xWalkisComplete = NO;
                 _currentIntersection.xWalkClev21x = x;
                 _currentIntersection.xWalkClev21y = y;
                 break;
                 
             case 4://D
                 _currentIntersection.xWalkDExists = YES;
+                sideRamp = _currentIntersection.ramps[7];
+                sideRamp.xWalkisComplete = NO;
+                sideRamp = _currentIntersection.ramps[8];
+                sideRamp.xWalkisComplete = NO;
                 _currentIntersection.xWalkDlev21x = x;
                 _currentIntersection.xWalkDlev21y = y;
                 break;
         }
             break;
-            
+        }
         case NVUpdateOptionAddSignal:
             signalID = [self getSignalIDFromX:x
                                          andY:y];
@@ -1480,24 +1503,40 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         {
             case 81:
                 _currentIntersection.signal81Exists = YES;
+                sideRamp = _currentIntersection.ramps[7];
+                sideRamp.signalisComplete = NO;
+                sideRamp = _currentIntersection.ramps[2];
+                sideRamp.signalisComplete = NO;
                 _currentIntersection.signal81lev21x = x;
                 _currentIntersection.signal81lev21y = y;
                 break;
                 
             case 23:
                 _currentIntersection.signal23Exists = YES;
+                sideRamp = _currentIntersection.ramps[1];
+                sideRamp.signalisComplete = NO;
+                sideRamp = _currentIntersection.ramps[4];
+                sideRamp.signalisComplete = NO;
                 _currentIntersection.signal23lev21x = x;
                 _currentIntersection.signal23lev21y = y;
                 break;
                 
             case 45:
                 _currentIntersection.signal45Exists = YES;
+                sideRamp = _currentIntersection.ramps[3];
+                sideRamp.signalisComplete = NO;
+                sideRamp = _currentIntersection.ramps[6];
+                sideRamp.signalisComplete = NO;
                 _currentIntersection.signal45lev21x = x;
                 _currentIntersection.signal45lev21y = y;
                 break;
                 
             case 67:
                 _currentIntersection.signal67Exists = YES;
+                sideRamp = _currentIntersection.ramps[5];
+                sideRamp.signalisComplete = NO;
+                sideRamp = _currentIntersection.ramps[8];
+                sideRamp.signalisComplete = NO;
                 _currentIntersection.signal67lev21x = x;
                 _currentIntersection.signal67lev21y = y;
                 break;
