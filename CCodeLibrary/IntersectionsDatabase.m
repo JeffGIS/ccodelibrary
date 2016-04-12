@@ -1207,7 +1207,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
                                                 withStatus:(IntersectionStatus)status
 {
-    IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
+    IntersectionPoint *intpt = nil;
     
     BOOL opened = [self open];
     
@@ -1220,6 +1220,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
+        intpt = [[IntersectionPoint alloc] init];
         int intID = sqlite3_column_int(statement, 0);
         int intX = sqlite3_column_int(statement, 1);
         int intY = sqlite3_column_int(statement, 2);

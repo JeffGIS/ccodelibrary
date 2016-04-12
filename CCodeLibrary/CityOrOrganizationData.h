@@ -16,4 +16,5 @@
 @property NSInteger managerNumber;
 @property NSInteger withinManager;
 @property NSInteger totWithinManager;
+@property NSInteger GSSiPadNumber;
 @end

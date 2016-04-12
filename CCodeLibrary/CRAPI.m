@@ -550,6 +550,13 @@
     return YES;
 }
 
+- (NSMutableArray*) getPlacesArray
+{
+    NSMutableArray * array;
+    
+    return array;
+}
+
 - (NSInteger)adjustNextRefno:(NSInteger)refno
 {
     NSInteger nextRef = refno % _maxDevices;
@@ -560,8 +567,13 @@
         nextRef = refno - nextRef + _maxDevices +_deviceNumber;
     return nextRef;
 }
-- (BOOL)processPlacesFor:(NSString*)message
+- (BOOL)processPlaces
 {
+    NSString *message = [UserDefaults.defaults stringForKey:@"PlacesString"];
+    
+    if (strncmp(message.UTF8String,"PlacesFor", 9))
+        return FALSE;
+    
     _GSSiPadNumber = atoi(&message.UTF8String[9]);
     
     NSMutableArray *placearray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
@@ -577,16 +589,21 @@
         c.managerNumber = [textBeforeHyphen(manager) integerValue];
         c.withinManager = [textAfterHyphen(manager) integerValue];
         c.totWithinManager = [textAfter(manager,@"of") integerValue];
-
+        c.GSSiPadNumber = _GSSiPadNumber;
         [_placesArray addObject:c];
     }
 
     [_placesArray sortUsingSelector:@selector(compareName:)];
 
-    _GSSiPadNumber = atoi(&message.UTF8String[9]);
+
     return TRUE;
 }
 
+- (void)savePlacesString:(NSString*)placesString
+{
+    [UserDefaults.defaults saveString:placesString
+                                forKey:@"PlacesString"];
+}
 - (void)processPlacesArray:(NSUInteger) row
 {
     if (row >= CRAPI.sharedInstance.placesArray.count)
@@ -604,6 +621,7 @@
     }
     
     CityOrOrganizationData *c = _placesArray[row];
+    _GSSiPadNumber = c.GSSiPadNumber;
     _currentCityNameAndState = addSpaceAfterComma(c.name);
     
     self.currentGeoid  = c.number;
