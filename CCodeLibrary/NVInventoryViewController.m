@@ -130,6 +130,10 @@
                                                       view:self.view
                                                        tag:HelpButtonPresenterCRISInventoryVC
                                                     tabBar:nil];
+        
+        _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(544.0, 20.0, 146.0, 70.0)];
+        _headingLabel.font = [UIFont boldSystemFontOfSize:60.0];
+        [self setupLabel:_headingLabel];
     }
     
     [self setupBottomButtons];
@@ -141,10 +145,6 @@
     
     if (_draggableTarget)
         [self setupImageTarget];
-    
-    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(544.0, 20.0, 146.0, 70.0)];
-    _headingLabel.font = [UIFont boldSystemFontOfSize:60.0];
-    [self setupLabel:_headingLabel];
     
     _intersectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(_addXWalkButton.frame.origin.x,
                                                                    _zoomSC.frame.origin.y,
@@ -160,13 +160,16 @@
 {
     [super viewDidAppear:animated];
     
-    _locationManager = [[CLLocationManager alloc] init];
-    _locationManager.delegate = self;
-    _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
-    _locationManager.headingFilter = kCLHeadingFilterNone;
-    
-    if (CLLocationManager.headingAvailable && _from != FROM_PRELIM)
-        [_locationManager startUpdatingHeading];
+    if (_from != FROM_PRELIM)
+    {
+        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.delegate = self;
+        _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
+        _locationManager.headingFilter = kCLHeadingFilterNone;
+        
+        if (CLLocationManager.headingAvailable)
+            [_locationManager startUpdatingHeading];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
