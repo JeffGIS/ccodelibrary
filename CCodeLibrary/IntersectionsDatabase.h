@@ -8,17 +8,6 @@
 #import <sqlite3.h>
 #import "CurbRampData.h"
 
-typedef NS_ENUM(NSInteger, IntersectionStatus)
-{
-    InitialStatus,
-    PreliminarySurveyComplete,
-    OriginalSurveyComplete,
-    ScheduledForRebuild,
-    IntersectionRebuilt,
-    ResurveyedAfterRebuild,
-    PreliminarySurveyComplex,
-};
-
 @class IntersectionsDatabase;
 
 @protocol IntersectionsDatabaseDelegate <NSObject>

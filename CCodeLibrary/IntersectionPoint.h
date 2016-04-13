@@ -2,12 +2,23 @@
 //  CCodeLibrary
 
 #import <Foundation/Foundation.h>
+typedef NS_ENUM(NSInteger, IntersectionStatus)
+{
+    InitialStatus,
+    ComplexStatus,
+    PreliminarySurveyComplete,
+    OriginalSurveyComplete,
+    ScheduledForRebuild,
+    IntersectionRebuilt,
+    ResurveyedAfterRebuild,
+};
+
 
 @interface IntersectionPoint : NSObject
 
 @property int intID;
 @property short assignedTo;
-@property short status;
+@property IntersectionStatus status;
 @property int nramps;
 @property double latitude;
 @property double longitude;
