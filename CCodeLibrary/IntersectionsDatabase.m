@@ -149,7 +149,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                  ramp:(int)r
                  from:(sqlite3_stmt *)statement
 {
-    int icol = (9 + (r - 1));
+    int icol = (7 + (r - 1));
     int icoord = sqlite3_column_int(statement, icol);
     
     short offsetx = LOWORD(icoord);
