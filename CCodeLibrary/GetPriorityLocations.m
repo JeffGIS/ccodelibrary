@@ -222,7 +222,7 @@ static GetPriorityLocations *_getLocations;
                         dp.x = pLoc.coordinate.longitude;
                         dp.y = pLoc.coordinate.latitude;
                         
-                        //if ([pia DPointInArea:&dp])
+                        if ([pia DPointInArea:&dp])
                         {
                             pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
                             pLoc.offset = DEFAULT_OFFSET;

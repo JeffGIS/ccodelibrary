@@ -8,6 +8,7 @@
 @interface PointInAreaClass : NSObject
 
 - (BOOL)DPointInArea:(DPOINT *)dPoint;
+- (void)setAreaFile:(NSString *)areaFile;
 
 @property int width, height;
 @property (nonatomic) CGColorSpaceRef colorSpace;
@@ -15,5 +16,6 @@
 @property (nonatomic) NSString *areaFile;
 @property (nonatomic) dbounds bounds;
 @property (nonatomic) LPBYTE bitmapData;
+@property BOOL areaLoaded;
 
 @end
