@@ -184,13 +184,9 @@ static GetPriorityLocations *_getLocations;
     NSMutableArray *locationArray = [[NSMutableArray alloc] init];
     NSMutableArray *namesArray = [[NSMutableArray alloc] init];
     NSMutableArray *latitudesArray = [[NSMutableArray alloc] init];
-    NSInteger divisor = (NSInteger)roundf(((latSpan + longSpan) / 2.0) * 60);
-    divisor = min(divisor, 5);
+    NSUInteger divisor = 2;
     __block NSInteger count = 0;
-    NSInteger totalQueries = (divisor * divisor * _keywords.count);
-    
-    NSLog(@"Total queries = %li (%li sections * %lu types)",
-          (long)totalQueries, (long)(divisor * divisor), (unsigned long)_keywords.count);
+    NSUInteger totalQueries = (divisor * divisor * _keywords.count);
     
     for (int ptc = 0; ptc < _keywords.count; ptc++)
     {
@@ -226,7 +222,7 @@ static GetPriorityLocations *_getLocations;
                         dp.x = pLoc.coordinate.longitude;
                         dp.y = pLoc.coordinate.latitude;
                         
-                        if ([pia DPointInArea:&dp])
+                        //if ([pia DPointInArea:&dp])
                         {
                             pLoc.radius = [(CLCircularRegion *)item.placemark.region radius];
                             pLoc.offset = DEFAULT_OFFSET;
@@ -271,7 +267,7 @@ static GetPriorityLocations *_getLocations;
                     }
                     
                     count++;
-                    _popoverView.progressView.progress = ((CGFloat)count / (CGFloat)totalQueries);
+                    [_popoverView updateProgress:((CGFloat)count / (CGFloat)totalQueries)];
                     
                     if (count == totalQueries)
                     {
