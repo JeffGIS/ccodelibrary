@@ -7,6 +7,7 @@
 #import "PointInAreaClass.h"
 #import "GSSiEnums.h"
 #import "CRAPI.h"
+#import "GSSiDefs.h"
 
 #define degreesToRadians(x) (M_PI * x / 180.0)
 #define radiansToDegrees(x) (x * 180.0 / M_PI)
@@ -313,7 +314,7 @@ static UserDefaults *_defaults;
 - (NSString *)sharedFilePath
 {
     NSFileManager *fileManager = NSFileManager.defaultManager;
-    NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:@"group.com.GSSi.SurveyApps"];
+    NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:APP_GROUP_ID];
     
     [groupContainerURL setResourceValue:[NSNumber numberWithBool:YES]
                                  forKey:NSURLIsExcludedFromBackupKey

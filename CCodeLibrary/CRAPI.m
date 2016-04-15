@@ -510,8 +510,7 @@
 {
     NSFileManager *fileManager = NSFileManager.defaultManager;
     
-    NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:
-                                @"group.com.GSSi.SurveyApps"];
+    NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:APP_GROUP_ID];
     
     [groupContainerURL setResourceValue:[NSNumber numberWithBool:YES]
                                  forKey:NSURLIsExcludedFromBackupKey
