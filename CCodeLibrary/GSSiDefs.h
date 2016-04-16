@@ -7,7 +7,7 @@
 #define GOOGLE_SERVER_KEY @"AIzaSyBQvw3ROLNlUtuSlVdnk0zLvnbonh3I3vw"
 #define iPAD_HEIGHT 1024.0
 #define iPAD_WIDTH 768.0
-#define APP_GROUP_ID @"group.com.geographicsoftwarespecialists.appgroup"//@"group.com.GSSi.SurveyApps"
+#define APP_GROUP_ID @"group.com.gssi.appgroup"
 #define NUMREADINGS 30
 #define LEFT 1
 #define MIDDLE 2
