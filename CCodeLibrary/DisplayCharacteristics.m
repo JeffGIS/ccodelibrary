@@ -10,6 +10,19 @@
 
 @implementation DisplayCharacteristics
 
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.size = 1;
+        self.width = 1;
+        self.penColor = UIColor.blackColor;
+        self.fillColor = UIColor.grayColor;
+    }
+    return self;
+}
 -(id) copyWithZone: (NSZone *) zone
 {
     DisplayCharacteristics *another = [[DisplayCharacteristics allocWithZone: zone] init];
