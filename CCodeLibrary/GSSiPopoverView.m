@@ -42,7 +42,7 @@
         
         CGFloat tabBarAdj = 0.0;
         
-        if ([[NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleDisplayName"] isEqualToString:@"GMMobile"])
+        if ([[NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleDisplayName"] isEqualToString:@"NVMobile"])
             tabBarAdj = 24.5;
         
         CGFloat width = MIN(fromView.frame.size.height, fromView.frame.size.width);
