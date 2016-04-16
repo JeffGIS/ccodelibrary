@@ -181,16 +181,12 @@ static GetPriorityLocations *_getLocations;
     CGFloat longSpan = fabs(bounds.xmn - bounds.xmx);
     CGFloat latSpan = fabs(bounds.ymx - bounds.ymn);
     
-    NSMutableArray *locationArray = [[NSMutableArray alloc] init];
-    NSMutableArray *namesArray = [[NSMutableArray alloc] init];
-    NSMutableArray *latitudesArray = [[NSMutableArray alloc] init];
-    NSInteger divisor = (NSInteger)roundf(((latSpan + longSpan) / 2.0) * 60);
-    divisor = min(divisor, 5);
+    NSMutableArray *locationArray = NSMutableArray.array;
+    NSMutableArray *namesArray = NSMutableArray.array;
+    NSMutableArray *latitudesArray = NSMutableArray.array;
+    NSUInteger divisor = 2;
     __block NSInteger count = 0;
-    NSInteger totalQueries = (divisor * divisor * _keywords.count);
-    
-    NSLog(@"Total queries = %li (%li sections * %lu types)",
-          (long)totalQueries, (long)(divisor * divisor), (unsigned long)_keywords.count);
+    NSUInteger totalQueries = (divisor * divisor * _keywords.count);
     
     for (int ptc = 0; ptc < _keywords.count; ptc++)
     {
@@ -271,7 +267,7 @@ static GetPriorityLocations *_getLocations;
                     }
                     
                     count++;
-                    _popoverView.progressView.progress = ((CGFloat)count / (CGFloat)totalQueries);
+                    [_popoverView updateProgress:((CGFloat)count / (CGFloat)totalQueries)];
                     
                     if (count == totalQueries)
                     {
@@ -292,10 +288,10 @@ static GetPriorityLocations *_getLocations;
                                         radius:(CGFloat)radius
                                        popover:(GSSiPopoverView *)popover
 {
-    _nearbySearchArray = [[NSMutableArray alloc] init];
-    
+    _nearbySearchArray = NSMutableArray.array;
     _popoverView = popover, _keyword = keyword;
     _radius = radius, _target = target;
+    _popoverView.progressLabel.hidden = YES;
     
     keyword = [keyword stringByAppendingString:[NSString stringWithFormat:@" %@",
                                                 CRAPI.sharedInstance.currentCityNameAndState]];
@@ -322,7 +318,7 @@ static GetPriorityLocations *_getLocations;
     });
 }
 
--(void)nearbySearchResults:(NSData *)responseData
+- (void)nearbySearchResults:(NSData *)responseData
 {
     PointInAreaClass *pia = [[PointInAreaClass alloc] init];
     NSError *error;
@@ -350,7 +346,7 @@ static GetPriorityLocations *_getLocations;
             dp.x = lon;
             dp.y = lat;
             
-            if ([pia DPointInArea:&dp])
+            //if ([pia DPointInArea:&dp])
             {
                 PriorityLocation *pLoc = [[PriorityLocation alloc] init];
                 pLoc.coordinate = CLLocationCoordinate2DMake(lat, lon);
@@ -376,6 +372,8 @@ static GetPriorityLocations *_getLocations;
         
         else
         {
+            _popoverView.progressLabel.hidden = NO;
+            
             if (self.delegate)
                 [self.delegate didFinishCustomNearbySearchArray:_nearbySearchArray];
         }

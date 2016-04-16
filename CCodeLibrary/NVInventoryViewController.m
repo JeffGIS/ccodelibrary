@@ -16,13 +16,13 @@
 @interface NVInventoryViewController ()
 
 @property (nonatomic) UIImageView *backgroundImage, *imageTargetView;
-@property (nonatomic) UIButton *cancelButton, *doneButton;
+@property (nonatomic) UIButton *cancelButton, *doneButton, *complexButton;
 @property (nonatomic) UIButton *addRampButton, *addSignalButton, *addXWalkButton;
 @property (nonatomic) UIButton *editItemButton, *rampTypeButton, *currentEditButton;
-@property (nonatomic, copy) NSString *imageName, *pathToImageFile, *pathToBPWFile;
+@property (nonatomic, copy) NSString *pathToImageFile, *pathToBPWFile;
 @property (nonatomic) LPTRANDATA pTranWToBMP, pTranBMPToW;
 @property (nonatomic) CGFloat xFactor, yFactor, xOffset, yOffset, latitude, longitude;
-@property int currentIntersectionID, currentZoom;
+@property int currentIntersectionID, currentZoom, initialZoom;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) UISegmentedControl *zoomSC;
 @property (nonatomic) NVRampButton *ramp1, *ramp2, *ramp3, *ramp4, *ramp5, *ramp6, *ramp7, *ramp8;
@@ -75,6 +75,7 @@
     
     _currentIntersectionID = _currentIntersection.intID;
     _currentZoom = 21;
+    _initialZoom = _currentZoom;
     _firstTime = YES;
     _pTranWToBMP = _pTranBMPToW = 0;
     _updateOption = NVUpdateOptionNone;
@@ -97,12 +98,43 @@
     [self setupButton:_doneButton
              selector:@selector(done:)
                 title:@"Done"
-             fontSize:56.0];
+             fontSize:52.0];
     
     [self setupButton:_cancelButton
              selector:@selector(cancel:)
                 title:@"Cancel"
-             fontSize:40.0];
+             fontSize:32.0];
+    
+    if (_from == FROM_PRELIM)
+    {
+        [_doneButton setTitle:@"Next"
+                     forState:UIControlStateNormal];
+        
+        _complexButton = [[UIButton alloc] initWithFrame:CGRectMake(600.0, 20.0, 148.0, 70.0)];
+        
+        [self setupButton:_complexButton
+                 selector:@selector(complex:)
+                    title:@"Complex"
+                 fontSize:32.0];
+        
+        UILongPressGestureRecognizer *lp = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                         action:@selector(longPressed:)];
+        
+        [self.backgroundImage addGestureRecognizer:lp];
+    }
+    
+    else
+    {
+        _helpButton = [HelpButton showHelpButtonWithOrigin:CGPointMake(690.0, 20.0)
+                                                      size:70.0
+                                                      view:self.view
+                                                       tag:HelpButtonPresenterCRISInventoryVC
+                                                    tabBar:nil];
+        
+        _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(544.0, 20.0, 146.0, 70.0)];
+        _headingLabel.font = [UIFont boldSystemFontOfSize:60.0];
+        [self setupLabel:_headingLabel];
+    }
     
     [self setupBottomButtons];
     [self setupZoomSC];
@@ -114,10 +146,6 @@
     if (_draggableTarget)
         [self setupImageTarget];
     
-    _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(544.0, 20.0, 146.0, 70.0)];
-    _headingLabel.font = [UIFont boldSystemFontOfSize:60.0];
-    [self setupLabel:_headingLabel];
-    
     _intersectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(_addXWalkButton.frame.origin.x,
                                                                    _zoomSC.frame.origin.y,
                                                                    752.0 - _addXWalkButton.frame.origin.x,
@@ -126,25 +154,22 @@
     _intersectionLabel.font = [UIFont boldSystemFontOfSize:32.0];
     _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
     [self setupLabel:_intersectionLabel];
-    
-    _helpButton = [HelpButton showHelpButtonWithOrigin:CGPointMake(690.0, 20.0)
-                                                  size:70.0
-                                                  view:self.view
-                                                   tag:HelpButtonPresenterCRISInventoryVC
-                                                tabBar:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    _locationManager = [[CLLocationManager alloc] init];
-    _locationManager.delegate = self;
-    _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
-    _locationManager.headingFilter = kCLHeadingFilterNone;
-    
-    if (CLLocationManager.headingAvailable && _from != FROM_PRELIM)
-        [_locationManager startUpdatingHeading];
+    if (_from != FROM_PRELIM)
+    {
+        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.delegate = self;
+        _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
+        _locationManager.headingFilter = kCLHeadingFilterNone;
+        
+        if (CLLocationManager.headingAvailable)
+            [_locationManager startUpdatingHeading];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -184,8 +209,6 @@
 
 - (void)setBKImage:(BOOL)forceRefresh;
 {
-    _imageName = [NSString stringWithFormat:@"%i", _currentIntersectionID];
-    
     IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
     IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersectionID];
     
@@ -721,23 +744,80 @@
 
 - (void)done:(UIButton *)button
 {
-    [_currentIntersection setRampsXWalkAndSignal];
-    
-    if (_delegate)
+    if (_from == FROM_PRELIM)
+    {
+        [_currentIntersection setRampsXWalkAndSignal];
+        _currentIntersection.zoomLevel = _currentZoom;
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didSetInventory:)])
+        {
+            MPIntersection *nextIntersection = [_delegate inventoryViewController:self
+                                                                  didSetInventory:_currentIntersection];
+            
+            if (nextIntersection != nil)
+            {
+                _currentIntersection = nextIntersection;
+                _currentIntersectionID = _currentIntersection.intID;
+                [self setBKImage:NO];
+                _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
+                return;
+            }
+        }
+        
+        CRAPI.sharedInstance.refreshMap = YES;
+        
+        [self dismissViewControllerAnimated:YES
+                                 completion:nil];
+    }
+    else if (_from == FROM_CORNER)
     {
         [_delegate inventoryViewController:self
                            didSetInventory:_currentIntersection];
+
+    }
+    else if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didCompleteInventory:)])
+    {
+        [_delegate inventoryViewController:self
+                      didCompleteInventory:_currentIntersection];
     }
 }
 
 - (void)cancel:(UIButton *)button
 {
+    CRAPI.sharedInstance.refreshMap = YES;
+    
     NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                       delegate:self
                                                          title:@"Do you really want to cancel all changes to this intersection?"
                                                buttonTextArray:@[@"NO", @"YES"]
                                               destructiveIndex:2];
     alert.tag = 999;
+}
+
+- (void)complex:(UIButton *)button
+{
+    [_currentIntersection setRampsXWalkAndSignal];
+    _currentIntersection.zoomLevel = _currentZoom;
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didSetComplex:)])
+    {
+        MPIntersection *nextIntersection = [_delegate inventoryViewController:self
+                                                                didSetComplex:_currentIntersection];
+        
+        if (nextIntersection != nil)
+        {
+            _currentIntersection = nextIntersection;
+            _currentIntersectionID = _currentIntersection.intID;
+            [self setBKImage:NO];
+            _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
+            return;
+        }
+    }
+    
+    CRAPI.sharedInstance.refreshMap = YES;
+    
+    [self dismissViewControllerAnimated:YES
+                             completion:nil];
 }
 
 - (void)addRamp:(UIButton *)button
@@ -1146,20 +1226,40 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     [self updateButtons:location];
 }
 
+- (void)longPressed:(UILongPressGestureRecognizer *)gesture
+{
+    CGPoint location = [gesture locationInView:gesture.view];
+    
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        CGFloat x = gesture.view.frame.size.width;
+        CGFloat y = gesture.view.frame.size.height;
+        
+        LLPOINT target = {0};
+        TRANS2(location.x, location.y, &x, &y, _pTranBMPToW);
+        PixelXYToLatLongd(x, y, 21, &target.lat, &target.lon);
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:showStreetViewAtCoordinate:)])
+        {
+            [_delegate inventoryViewController:self
+                    showStreetViewAtCoordinate:CLLocationCoordinate2DMake(target.lat, target.lon)];
+        }
+    }
+}
+
 - (void)updateButtons:(CGPoint)location
 {
-    double x = 0.0, y = 0.0;
+    CGFloat x = 0.0, y = 0.0;
     CGRect windowBounds = CGRectZero;
     CGSize imageSize = CGSizeZero;
     int xWalkID = 0, signalID = 0, rampID = 0;
-    
+    MPRamp *sideRamp;
+
     if (_updateOption == NVUpdateOptionEdit ||
         _updateOption == NVUpdateOptionNone)
     {
         return;
     }
-    
-    _imageName = [NSString stringWithFormat:@"%i", _currentIntersection.intID];
     
     if (_pTranBMPToW)
         free(_pTranBMPToW);
@@ -1350,37 +1450,54 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             break;
             
         case NVUpdateOptionAddXWalk:
+        {
             xWalkID = [self getXWalkIDFromX:x
                                        andY:y];
-            
+
             switch (xWalkID)
         {
             case 1://A
                 _currentIntersection.xWalkAExists = YES;
+                sideRamp = _currentIntersection.ramps[1];
+                sideRamp.xWalkisComplete = NO;
+                sideRamp = _currentIntersection.ramps[2];
+                sideRamp.xWalkisComplete = NO;
                 _currentIntersection.xWalkAlev21x = x;
                 _currentIntersection.xWalkAlev21y = y;
                 break;
                 
             case 2://B
                 _currentIntersection.xWalkBExists = YES;
+                sideRamp = _currentIntersection.ramps[3];
+                sideRamp.xWalkisComplete = NO;
+                sideRamp = _currentIntersection.ramps[4];
+                sideRamp.xWalkisComplete = NO;
                 _currentIntersection.xWalkBlev21x = x;
                 _currentIntersection.xWalkBlev21y = y;
                 break;
                 
             case 3://C
                 _currentIntersection.xWalkCExists = YES;
+                sideRamp = _currentIntersection.ramps[5];
+                sideRamp.xWalkisComplete = NO;
+                sideRamp = _currentIntersection.ramps[6];
+                sideRamp.xWalkisComplete = NO;
                 _currentIntersection.xWalkClev21x = x;
                 _currentIntersection.xWalkClev21y = y;
                 break;
                 
             case 4://D
                 _currentIntersection.xWalkDExists = YES;
+                sideRamp = _currentIntersection.ramps[7];
+                sideRamp.xWalkisComplete = NO;
+                sideRamp = _currentIntersection.ramps[8];
+                sideRamp.xWalkisComplete = NO;
                 _currentIntersection.xWalkDlev21x = x;
                 _currentIntersection.xWalkDlev21y = y;
                 break;
         }
             break;
-            
+        }
         case NVUpdateOptionAddSignal:
             signalID = [self getSignalIDFromX:x
                                          andY:y];
@@ -1389,24 +1506,40 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         {
             case 81:
                 _currentIntersection.signal81Exists = YES;
+                sideRamp = _currentIntersection.ramps[7];
+                sideRamp.signalisComplete = NO;
+                sideRamp = _currentIntersection.ramps[2];
+                sideRamp.signalisComplete = NO;
                 _currentIntersection.signal81lev21x = x;
                 _currentIntersection.signal81lev21y = y;
                 break;
                 
             case 23:
                 _currentIntersection.signal23Exists = YES;
+                sideRamp = _currentIntersection.ramps[1];
+                sideRamp.signalisComplete = NO;
+                sideRamp = _currentIntersection.ramps[4];
+                sideRamp.signalisComplete = NO;
                 _currentIntersection.signal23lev21x = x;
                 _currentIntersection.signal23lev21y = y;
                 break;
                 
             case 45:
                 _currentIntersection.signal45Exists = YES;
+                sideRamp = _currentIntersection.ramps[3];
+                sideRamp.signalisComplete = NO;
+                sideRamp = _currentIntersection.ramps[6];
+                sideRamp.signalisComplete = NO;
                 _currentIntersection.signal45lev21x = x;
                 _currentIntersection.signal45lev21y = y;
                 break;
                 
             case 67:
                 _currentIntersection.signal67Exists = YES;
+                sideRamp = _currentIntersection.ramps[5];
+                sideRamp.signalisComplete = NO;
+                sideRamp = _currentIntersection.ramps[8];
+                sideRamp.signalisComplete = NO;
                 _currentIntersection.signal67lev21x = x;
                 _currentIntersection.signal67lev21y = y;
                 break;
@@ -1881,7 +2014,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
         IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersectionID];
         
-        PixelXYToLatLongd(x, y, _currentZoom, &lat, &lon);
+        PixelXYToLatLongd(x, y, _initialZoom, &lat, &lon);
         info.latitude = lat;
         info.longitude = lon;
         [database setCurrentIntersectionPoint:info];

@@ -45,6 +45,7 @@
     
     if (_context)
         [self loadAreaIntoContext:areaFile];
+    _areaLoaded = TRUE;
 }
 
 dbounds getAreaFileBounds(const char *areaFile)
@@ -108,6 +109,8 @@ dbounds getAreaFileBounds(const char *areaFile)
 
 - (void)drawAreaInContext:(CGContextRef)context
 {
+    if (!_areaLoaded)
+        [self setAreaFile:_areaFile];
     FILE *fid = fopen(_areaFile.UTF8String, "rb");
     int nLoops = 0, nPoints = 0, ix = 0, iy = 0;
     int *pnPointsInLoop = 0;
@@ -254,6 +257,8 @@ dbounds getAreaFileBounds(const char *areaFile)
 
 - (BOOL)DPointInArea:(DPOINT *)dPoint
 {
+    if (!_areaLoaded)
+        [self setAreaFile:_areaFile];
     CLLocationCoordinate2D llPoint = {0};
     
     llPoint.latitude = dPoint->y;

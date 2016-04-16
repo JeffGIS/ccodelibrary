@@ -53,6 +53,7 @@ typedef NS_ENUM(NSInteger, FTPStatus)
     FTPStatusFailedToUnzip,
     FTPStatusFileExists,
     FTPStatusUserCancel,
+    FTPStatusBusy,
 };
 
 typedef NS_ENUM(NSInteger, INTDBStatus)
@@ -63,14 +64,6 @@ typedef NS_ENUM(NSInteger, INTDBStatus)
     INTDBStatusNoNetworkConnection,
     INTDBStatusNoUploadedFile,
     INTDBStatusFailedToUnzip,
-};
-
-typedef NS_ENUM(NSInteger, IntStatus)
-{
-    IntStatusDefault,
-    IntStatusPrelimComplete,
-    IntStatusComplex,
-    IntStatusDetailComplete,
 };
 
 typedef NS_ENUM(NSInteger, AreaFileStatus)

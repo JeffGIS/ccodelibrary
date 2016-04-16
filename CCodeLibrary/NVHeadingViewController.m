@@ -83,8 +83,10 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     CGPoint center = CGPointMake(384.0, (((_arrowView.frame.origin.y + _arrowView.frame.size.height) +
                                           _startCancelButton.frame.origin.y) / 2.0));
     
-    _progressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
-                                                 progressColor:UIColor.whiteColor];
+    _progressView = [[NVProgressView alloc] initWithCenter:center
+                                                     width:688.0
+                                                trackColor:UIColor.blackColor
+                                             progressColor:UIColor.whiteColor];
     
     _progressView.progress = 0.0;
     [self.view addSubview:_progressView];

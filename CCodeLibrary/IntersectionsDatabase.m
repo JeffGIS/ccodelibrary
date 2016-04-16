@@ -149,7 +149,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                  ramp:(int)r
                  from:(sqlite3_stmt *)statement
 {
-    int icol = (9 + (r - 1));
+    int icol = (7 + (r - 1));
     int icoord = sqlite3_column_int(statement, icol);
     
     short offsetx = LOWORD(icoord);
@@ -425,9 +425,73 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
             break;
     }
 }
+- (BOOL)storeIntersection:(MPIntersection*)currentIntersection
+               withStatus:(IntersectionStatus)status
+{
+    BOOL rtn = FALSE;
+    
+    for (int i = 1; i < 13; i++)
+    {
+        MPRamp *ramp = [currentIntersection.ramps objectAtIndex:i];
+        
+        switch (i)
+        {
+            case 1:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkAExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal23Exists;
+                break;
+                
+            case 2:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkAExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal81Exists;
+                break;
+                
+            case 3:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkBExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal45Exists;
+                break;
+                
+            case 4:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkBExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal23Exists;
+                break;
+                
+            case 5:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkCExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal67Exists;
+                break;
+                
+            case 6:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkCExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal45Exists;
+                break;
+                
+            case 7:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkDExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal81Exists;
+                break;
+                
+            case 8:
+                ramp.xWalkisComplete = ramp.rampExists ? !currentIntersection.xWalkDExists : YES;
+                ramp.signalisComplete = !currentIntersection.signal67Exists;
+                break;
+                
+            default:
+                ramp.xWalkisComplete = YES;
+                ramp.signalisComplete = YES;
+                break;
+        }
+    }
+    
+    
+    rtn = [self storeMPIntersectionToDB:currentIntersection
+                                 withStatus:status];
+    
+    return rtn;
+}
 
 - (BOOL)storeMPIntersectionToDB:(MPIntersection*)mpint
-                     withStatus:(int)status
+                     withStatus:(IntersectionStatus)status
 {
     BOOL rtn = NO;
     NSString *cmd;
@@ -445,53 +509,18 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
         {
             strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
-            cmd = [NSString stringWithFormat:@"UPDATE Ramps SET \
-                    intID=%i;rampNum=%i,\r\n\
-                    rampID=\"%s\";\r\n\
-                    rampExists=%i;\r\n\
-                    timeComplete=%i;\r\n\
-                    approximateHeading=%f;\r\n\
-                    rampInXWalk=%i;\r\n\
-                    xWalkisComplete=%i;\r\n\
-                    signalisComplete=%i;\r\n\
-                    texture=%i;\r\n\
-                    upperLandingObstruction=%i;\r\n\
-                    lowerLandingObstruction=%i;\r\n\
-                    rampObstruction=%i;\r\n\
-                    hasRampCracks=%i;\r\n\
-                    hasUpperLandingCracks=%i;\r\n\
-                    hasStreetLandingCracks=%i;\r\n\
-                    rampWidth=%i;\r\n\
-                    rampDepth=%i;\r\n\
-                    rampSlopeFront=%f;\r\n\
-                    rampSlopeSide=%f;\r\n\
-                    rampSlopeHeading=%f;\r\n\
-                    upperLandingSlopeFront=%f;\r\n\
-                    upperLandingSlopeSide=%f;\r\n\
-                    upperLandingSlopeHeading=%f;\r\n\
-                    streetLandingSlopeFront=%f;\r\n\
-                    streetLandingSlopeSide=%f;\r\n\
-                    streetLandingSlopeHeading=%f;\r\n\
-                    flareLeftSlopeFront=%f;\r\n\
-                    flareLeftSlopeSide=%f;\r\n\
-                    flareLeftSlopeHeading=%f;\r\n\
-                    flareRightSlopeFront=%f;\r\n\
-                    flareRightSlopeSide=%f;\r\n\
-                    flareRightSlopeHeading=%f;\r\n\
-                    hasPEDSignal=%i;\r\n\
-                    hasPEDButton=%i;\r\n\
-                    PEDButtonHeight=%i;\r\n\
-                    PEDButtonDist=%i;\r\n\
-                    SteepTopOfCurb=%f;\r\n\
-                    lev21x=%i;\r\n\
-                    lev21y=%i;\r\n\
-                    PedRampLip=%f);\r\n",
-                    (int)mpint.intID,
-                    (int)ramp.rampNum,
+            cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO Ramps VALUES(\
+%i,%i,'%s',0,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\
+%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\
+%i,%i,%i,%i,%i,%i,%i,%i,%i,'%@');",
+                   (int)mpint.intID,
+                   (int)ramp.rampNum,
                     rampID,
-                    ramp.rampExists,
                     ramp.timeComplete,
+                    ramp.rampExists,
+                    ramp.isComplete,
                     ramp.approximateHeading,
+                    ramp.adjustedRot,
                     (int)ramp.rampInXWalk,
                     (int)ramp.xWalkisComplete,
                     (int)ramp.signalisComplete,
@@ -502,8 +531,8 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                     (int)ramp.hasRampCracks,
                     (int)ramp.hasUpperLandingCracks,
                     (int)ramp.hasStreetLandingCracks,
-                    ramp.rampWidth,
-                    ramp.rampDepth,
+                    (int)ramp.rampWidth,
+                    (int)ramp.rampDepth,
                     ramp.rampSlopeFront,
                     ramp.rampSlopeSide,
                     ramp.rampSlopeHeading,
@@ -519,46 +548,59 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                     ramp.flareRightSlopeFront,
                     ramp.flareRightSlopeSide,
                     ramp.flareRightSlopeHeading,
+                    ramp.swkLeftSlopeFront,
+                    ramp.swkLeftSlopeSide,
+                    ramp.swkLeftSlopeHeading,
+                    ramp.swkRightSlopeFront,
+                    ramp.swkRightSlopeSide,
+                    ramp.swkRightSlopeHeading,
                     (int)ramp.hasPEDSignal,
                     (int)ramp.hasPEDButton,
                     ramp.PEDButtonHeight,
                     ramp.PEDButtonDist,
                     ramp.SteepTopOfCurb,
+                    ramp.PedRampLip,
                     ramp.lev21x,
                     ramp.lev21y,
-                   ramp.PedRampLip];
+                    ramp.rampType,
+                    ramp.rampComment];
+            rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:newFile];
         }
     }
 
     PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
    
     cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
-                       intX=%i,\
-                       intY=%i,\
-                       ramp1=%i,\
-                       ramp2=%i,\
-                       ramp3=%i,\
-                       ramp4=%i,\
-                       ramp5=%i,\
-                       ramp6=%i,\
-                       ramp7=%i,\
-                       ramp8=%i,\
-                       ramp81=%i,\
-                       ramp23=%i,\
-                       ramp45=%i,\
-                       ramp67=%i,\
-                       xWalkA=%i,\
-                       xWalkB=%i,\
-                       xWalkC=%i,\
-                       xWalkD=%i,\
-                       signal81=%i,\
-                       signal23=%i,\
-                       signal45=%i,\
-                       signal67=%i,\
-                       latitude=%f,\
-                       longitude=%f \
-                       WHERE intID=%i",
+doLater=%i,\
+intX=%i,\
+intY=%i,\
+ramp1=%i,\
+ramp2=%i,\
+ramp3=%i,\
+ramp4=%i,\
+ramp5=%i,\
+ramp6=%i,\
+ramp7=%i,\
+ramp8=%i,\
+ramp81=%i,\
+ramp23=%i,\
+ramp45=%i,\
+ramp67=%i,\
+xWalkA=%i,\
+xWalkB=%i,\
+xWalkC=%i,\
+xWalkD=%i,\
+signal81=%i,\
+signal23=%i,\
+signal45=%i,\
+signal67=%i,\
+latitude=%f,\
+longitude=%f,\
+zoomLevel=%i,\
+intersectionComment='%s' \
+WHERE intID=%i;",
                        iTime, status,
+                       mpint.doLater,
                        mpint.lev21x,
                        mpint.lev21y,
                        [self getRampCoord:mpint ramp:1],
@@ -582,6 +624,8 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                        [self getSignalCoord:mpint signal:45],
                        [self getSignalCoord:mpint signal:67],
                        lat,lon,
+                       mpint.zoomLevel,
+                       mpint.intersectionComment.UTF8String,
                        mpint.intID];
     
     rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:newFile];
@@ -598,6 +642,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                                   withRamps:(BOOL)wantRamps
 {
     MPIntersection *mpint = [[MPIntersection alloc] init];
+    [mpint intersectionInit];
     double lat = 0.0;
     double lon = 0.0;
     [self open];
@@ -609,7 +654,6 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
-        [CRAPI.sharedInstance intersectionInit:mpint];
         mpint.intID = intID;
         mpint.lev21x = sqlite3_column_int(statement, 4);
         mpint.lev21y = sqlite3_column_int(statement, 5);
@@ -709,7 +753,8 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
         intpt.latitude = lat;
         intpt.longitude = lon;
-        intpt.assignedTo = assignedTo;
+        if (assignedTo)
+            intpt.assignedTo = assignedTo;
         intpt.status = status;
         intpt.nramps = nRamps;
         
@@ -1051,7 +1096,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
 - (int)getCountOfIntersections
 {
-    [self open];
+    BOOL opened = [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Intersections"];
     sqlite3_stmt *statement = NULL;
     int count = 0;
@@ -1061,6 +1106,25 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         count = sqlite3_column_int(statement, 0);
     
     SQLOK(sqlite3_finalize(statement), self.curbRampData.database);
+    
+    [self close:opened];
+    return count;
+}
+
+- (int)getCountOfRamps
+{
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Ramps"];
+    sqlite3_stmt *statement = NULL;
+    int count = 0;
+    SQLOK(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL),self.curbRampData.database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+        count = sqlite3_column_int(statement, 0);
+    
+    SQLOK(sqlite3_finalize(statement), self.curbRampData.database);
+    
+    [self close:opened];
     return count;
 }
 
@@ -1102,13 +1166,14 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     
-    [self open];
+    BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE intID>=%i AND intID <=%i",
                        iTime, user, intID, endID];
     
     rtn = SQLOK(sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL), self.curbRampData.database);
 
+    [self close:opened];
     return !rtn;
 }
 
@@ -1140,11 +1205,11 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 }
 
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
-                                                withStatus:(int)status
+                                                withStatus:(IntersectionStatus)status
 {
-    IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
+    IntersectionPoint *intpt = nil;
     
-    [self open];
+    BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%i AND assignedTo=%i ORDER BY intID ASC",
                        status, user];
@@ -1155,6 +1220,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
+        intpt = [[IntersectionPoint alloc] init];
         int intID = sqlite3_column_int(statement, 0);
         int intX = sqlite3_column_int(statement, 1);
         int intY = sqlite3_column_int(statement, 2);
@@ -1167,6 +1233,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     }
     
     SQLOK(sqlite3_finalize(statement), self.curbRampData.database);
+    [self close:opened];
     return intpt;
 }
 
@@ -1221,7 +1288,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     int maxData = 256;
     int maxIndex = 100;
     int nLoaded = 0;
-    char buffer[] = "INSERT INTO Intersections VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);\
+    char buffer[] = "INSERT INTO Intersections VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);\
     INSERT INTO Intersections_index VALUES (?,?,?,?,?);";
     sqlite3_stmt *statement = NULL;
     INTERSECTION_STRUCT intStruct = {0};
@@ -1284,6 +1351,9 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         SQLOK(sqlite3_bind_text(statement, 30, intStruct.streetAzms, -1, SQLITE_STATIC),self.curbRampData.database);
         SQLOK(sqlite3_bind_double(statement, 31,lat), self.curbRampData.database);
         SQLOK(sqlite3_bind_double(statement, 32,lon), self.curbRampData.database);
+        SQLOK(sqlite3_bind_text(statement, 33, intStruct.comment, -1, SQLITE_STATIC), self.curbRampData.database);
+        SQLOK(sqlite3_bind_int(statement, 34, intStruct.doLater), self.curbRampData.database);
+        SQLOK(sqlite3_bind_int(statement, 35, intStruct.zoomLevel), self.curbRampData.database);
 
         if (sqlite3_step(statement) != SQLITE_DONE)
             NSLog(@"Error inserting intersection. '%s'", sqlite3_errmsg(self.curbRampData.database));
@@ -1430,9 +1500,11 @@ Exit:
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
                                                                                  error:nil].fileSize;
     
-    BOOL forceReload = YES;
+    BOOL forceReload = NO;
+    int nIntersections = [self getCountOfIntersections];
+    int nRamps = [self getCountOfRamps];
     
-    if (fileSize > 0 && !forceReload)
+    if (fileSize > 0 && !forceReload && nIntersections > 0 && [_curbRampData isCurrentVersion])
     {
         if (self.delegate)
         {

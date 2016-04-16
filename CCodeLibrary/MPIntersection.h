@@ -93,6 +93,7 @@ enum obstructions {
 @property (nonatomic) CGFloat SteepTopOfCurb;
 @property (nonatomic) CGFloat PedRampLip;
 @property (nonatomic) int lev21x, lev21y;
+@property NSString * rampComment;
 @property RampType rampType;
 
 @end
@@ -102,6 +103,7 @@ enum obstructions {
 @property (nonatomic) int intID;
 @property BOOL dataUpdated;
 @property (nonatomic) int intRotation;
+@property int zoomLevel;
 @property BOOL doLater;
 @property (nonatomic) int timeComplete;
 @property (nonatomic) int currentCorner;
@@ -147,9 +149,11 @@ enum obstructions {
 @property (nonatomic) int quadDev0, quadDev90, quadDev180, quadDev270;
 @property (nonatomic) int lev21x, lev21y;
 @property (nonatomic) double lat,lon;
+@property NSString * intersectionComment;
 @property (nonatomic) NSMutableArray *ramps;
 @property (nonatomic) int pairedMode;
 
+- (void)intersectionInit;
 - (void) setRampsXWalkAndSignal;
 
 @end

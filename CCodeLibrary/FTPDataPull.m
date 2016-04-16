@@ -37,10 +37,13 @@ static FTPDataPull * _statpull = nil;
  fromDirectory:(NSString *)fromDirectory
         toFile:(NSString *)toFileName
    toDirectory:(NSString *)toDirectory
- refreshOption:(NSInteger)refreshOption
+ refreshOption:(FTPDataPullRefreshOption)refreshOption
 
 {
     int rtn = FTPStatusOK;
+    
+    if (_connection)
+        return FTPStatusBusy;
     
     if ([toDirectory characterAtIndex:toDirectory.length-1] == '/')
         _toDirectory = [toDirectory substringToIndex:toDirectory.length-1];

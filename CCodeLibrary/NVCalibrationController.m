@@ -200,7 +200,7 @@ static CGFloat _deviceValues[9][4];
                                                                  ((912.0 - yOrigin) + margin))];
         
         [self setupLabel:_promptLabel
-                    text:@"Place the iPad on the level surface and tap on\n'Calibrate 0.0%' to begin calibration routine."
+                    text:@"Place the iPad on the level surface\nand tap on'Calibrate 0.0%'\nto begin calibration routine."
                 fontSize:34.0];
     }
 }

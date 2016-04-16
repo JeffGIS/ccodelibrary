@@ -98,7 +98,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 + (CRAPI *)sharedInstance;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
-- (void)intersectionInit:(MPIntersection *)currentIntersection;
 - (void)facilityInit:(Facility *)currentFacility;
 
 - (void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm
@@ -148,7 +147,8 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
               toFile:(NSString *)file;
 
 - (NSInteger)adjustNextRefno:(NSInteger)refno;
-- (BOOL)processPlacesFor:(NSString*)message;
+- (void)savePlacesString:(NSString*)placesString;
+- (BOOL)processPlaces;
 - (void)processPlacesArray:(NSUInteger) row;
 - (void)loadiPadParametersForGeoid:(int)geoid;
 - (void)setiPadParametersFromGeoid:(int)geoid;

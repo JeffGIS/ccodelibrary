@@ -2,7 +2,6 @@
 //  CCodeLibrary
 
 @import UIKit;
-#import "NVAlertView.h"
 
 @class NVTileCompiler;
 
@@ -12,7 +11,7 @@
 
 @end
 
-@interface NVTileCompiler : NSObject <NSURLSessionDataDelegate,NSURLSessionTaskDelegate>
+@interface NVTileCompiler : NSObject
 
 @property (nonatomic, weak) id <NVTileCompilerDelegate> delegate;
 

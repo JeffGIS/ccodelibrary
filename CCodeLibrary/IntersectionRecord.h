@@ -34,6 +34,9 @@ typedef struct {
     int nStreets;
     char streetNames[512];
     char streetAzms[128];
+    char comment[256];
+    int  zoomLevel;
+    int  doLater;
 }INTERSECTION_STRUCT;
 
 @interface IntersectionRecord : NSObject

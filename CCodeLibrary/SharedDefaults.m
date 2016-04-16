@@ -3,6 +3,7 @@
 
 #import "SharedDefaults.h"
 #import "MathUtil.h"
+#import "GSSiDefs.h"
 
 @implementation SharedDefaults
 
@@ -19,7 +20,7 @@ static SharedDefaults *_defaults;
 - (id)init
 {
     if ((self = [super init]))
-        _defaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.com.GSSi.SurveyApps"];
+        _defaults = [[NSUserDefaults alloc] initWithSuiteName:APP_GROUP_ID];
     
     return self;
 }

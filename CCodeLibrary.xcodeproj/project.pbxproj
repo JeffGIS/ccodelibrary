@@ -216,6 +216,8 @@
 		A9E792861AEFEB91005DA4BB /* NVLargeAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */; };
 		A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */; };
 		BB6777981C95C13200A2D508 /* CensusData.m in Sources */ = {isa = PBXBuildFile; fileRef = BB6777971C95C13200A2D508 /* CensusData.m */; };
+		BBE299521CBD1D6C0045B3DC /* CityOrOrganizationData.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */; };
+		BBE299531CBD30BB0045B3DC /* CityOrOrganizationData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
 		EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C21219ED378400F0688B /* FTPDataPush.m */; };
 		EB0E4FE71C60D21700849766 /* HotSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0E4FE61C60D21700849766 /* HotSpot.m */; };
@@ -327,6 +329,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				BBE299531CBD30BB0045B3DC /* CityOrOrganizationData.h in CopyFiles */,
 				69C3DFA71CB4118D00DC1779 /* NVWebView.h in CopyFiles */,
 				69C3DFA31CB3807200DC1779 /* PercentInArea.h in CopyFiles */,
 				6956B9991CB235490070416B /* NVPopoverTableView.h in CopyFiles */,
@@ -645,6 +648,8 @@
 		A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVVideoHeadingViewController.m; sourceTree = "<group>"; };
 		BB6777961C95C13200A2D508 /* CensusData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CensusData.h; path = ../CensusData.h; sourceTree = "<group>"; };
 		BB6777971C95C13200A2D508 /* CensusData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CensusData.m; path = ../CensusData.m; sourceTree = "<group>"; };
+		BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityOrOrganizationData.h; sourceTree = "<group>"; };
+		BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityOrOrganizationData.m; sourceTree = "<group>"; };
 		EB05C20E19EA999F00F0688B /* ElementOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementOverlayView.h; sourceTree = "<group>"; };
 		EB05C20F19EA999F00F0688B /* ElementOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElementOverlayView.m; sourceTree = "<group>"; };
 		EB05C21119ED378400F0688B /* FTPDataPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDataPush.h; sourceTree = "<group>"; };
@@ -1071,6 +1076,8 @@
 			children = (
 				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
 				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
+				BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */,
+				BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */,
 				EB568F371C8C9BAB00C45ACE /* CompressDecompress.h */,
 				EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */,
 				EB1A69741999A6A9005A1CCB /* CRAPI.h */,
@@ -1346,6 +1353,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBC01D081BED1C8C0004C751 /* altaz.c in Sources */,
+				BBE299521CBD1D6C0045B3DC /* CityOrOrganizationData.m in Sources */,
 				A9BF333B1B770CF600A72E17 /* NVAlertView.m in Sources */,
 				EBC01D241BED1C8C0004C751 /* plu404.c in Sources */,
 				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,

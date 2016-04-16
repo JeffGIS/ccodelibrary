@@ -5,6 +5,7 @@
 #import "GSSiDefs.h"
 #import "MathUtil.h"
 #import "TileGraphics.h"
+#import "CityOrOrganizationData.h"
 
 @implementation CRAPI
 {
@@ -123,74 +124,6 @@
 {
     NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, _currentGeoidValue];
     return uploadDirectory;
-}
-
-- (void)intersectionInit:(MPIntersection *)currentIntersection
-{
-    currentIntersection.intID = -1;
-    currentIntersection.dataUpdated = NO;
-    currentIntersection.intRotation = 0;
-    currentIntersection.doLater = NO;
-    currentIntersection.timeComplete = 0;
-    currentIntersection.name1 = @"NOTYETSET";
-    currentIntersection.signal23Exists = NO;
-    currentIntersection.signal45Exists = NO;
-    currentIntersection.signal67Exists = NO;
-    currentIntersection.signal81Exists = NO;
-    currentIntersection.xWalkAExists = NO;
-    currentIntersection.xWalkBExists = NO;
-    currentIntersection.xWalkCExists = NO;
-    currentIntersection.xWalkDExists = NO;
-    currentIntersection.corner23isComplete = NO;
-    currentIntersection.corner45isComplete = NO;
-    currentIntersection.corner67isComplete = NO;
-    currentIntersection.corner81isComplete = NO;
-    currentIntersection.quadDev0 = 0;
-    currentIntersection.quadDev90 = 90;
-    currentIntersection.quadDev180 = 180;
-    currentIntersection.quadDev270 = 270;
-   
-    for (int i = 1; i < 13; i++)
-    {
-        MPRamp *ramp = [currentIntersection.ramps objectAtIndex:i];
-        ramp.rampNum = i;
-        ramp.rampExists = NO;
-        ramp.timeComplete = 0;
-        ramp.isComplete = YES;
-        ramp.xWalkisComplete = YES;
-        ramp.signalisComplete = YES;
-        ramp.hasPEDButton = NO;
-        ramp.hasPEDSignal = NO;
-        ramp.SteepTopOfCurb = 0;
-        ramp.PedRampLip = 0;
-        
-        switch (i)
-        {
-            default:
-                if (i % 2)
-                    ramp.rampID = [NSString stringWithFormat:@"%i(Left)",i];
-                
-                else
-                    ramp.rampID = [NSString stringWithFormat:@"%i(Right)",i];
-                break;
-                
-            case 9:
-                ramp.rampID = @"23 (Middle)";
-                break;
-                
-            case 10:
-                ramp.rampID = @"45 (Middle)";
-                break;
-                
-            case 11:
-                ramp.rampID = @"67 (Middle)";
-                break;
-                
-            case 12:
-                ramp.rampID = @"81 (Middle)";
-                break;
-        }
-    }
 }
 
 - (void)facilityInit:(Facility *)currentFacility
@@ -577,8 +510,7 @@
 {
     NSFileManager *fileManager = NSFileManager.defaultManager;
     
-    NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:
-                                @"group.com.GSSi.SurveyApps"];
+    NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:APP_GROUP_ID];
     
     [groupContainerURL setResourceValue:[NSNumber numberWithBool:YES]
                                  forKey:NSURLIsExcludedFromBackupKey
@@ -617,6 +549,13 @@
     return YES;
 }
 
+- (NSMutableArray*) getPlacesArray
+{
+    NSMutableArray * array;
+    
+    return array;
+}
+
 - (NSInteger)adjustNextRefno:(NSInteger)refno
 {
     NSInteger nextRef = refno % _maxDevices;
@@ -627,17 +566,43 @@
         nextRef = refno - nextRef + _maxDevices +_deviceNumber;
     return nextRef;
 }
-
-- (BOOL)processPlacesFor:(NSString*)message
+- (BOOL)processPlaces
 {
+    NSString *message = [UserDefaults.defaults stringForKey:@"PlacesString"];
+    
+    if (strncmp(message.UTF8String,"PlacesFor", 9))
+        return FALSE;
+    
     _GSSiPadNumber = atoi(&message.UTF8String[9]);
     
-    _placesArray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
-    [_placesArray removeObjectAtIndex:0];
-    _GSSiPadNumber = atoi(&message.UTF8String[9]);
+    NSMutableArray *placearray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
+    [placearray removeObjectAtIndex:0];
+    _placesArray = NSMutableArray.new;
+    for (NSString *str in placearray)
+    {
+        CityOrOrganizationData *c = [[CityOrOrganizationData alloc]init];
+        c.fullDescription = str;
+        c.name = textInsideParentheses(str);
+        c.number = [textBeforeParentheses(str) integerValue];
+        NSString *manager = textAfterClosingParentheses(str);
+        c.managerNumber = [textBeforeHyphen(manager) integerValue];
+        c.withinManager = [textAfterHyphen(manager) integerValue];
+        c.totWithinManager = [textAfter(manager,@"of") integerValue];
+        c.GSSiPadNumber = _GSSiPadNumber;
+        [_placesArray addObject:c];
+    }
+
+    [_placesArray sortUsingSelector:@selector(compareName:)];
+
+
     return TRUE;
 }
 
+- (void)savePlacesString:(NSString*)placesString
+{
+    [UserDefaults.defaults saveString:placesString
+                                forKey:@"PlacesString"];
+}
 - (void)processPlacesArray:(NSUInteger) row
 {
     if (row >= CRAPI.sharedInstance.placesArray.count)
@@ -654,30 +619,25 @@
         row = 0;
     }
     
-    NSString *locationLabelText = textInsideParentheses(_placesArray[row]);
-    _currentCityNameAndState = addSpaceAfterComma(locationLabelText);
-    NSString *geoid = textBeforeParentheses(_placesArray[row]);
-    NSString *manager = textAfterClosingParentheses(_placesArray[row]);
-    NSString *managerNumber = textBeforeHyphen(manager);
-    NSString *withinManager = textAfterHyphen(manager);
-    NSString *numWithinManager = textBefore(withinManager, @"of");
-    NSString *totWithinManager = textAfter(withinManager, @"of");
+    CityOrOrganizationData *c = _placesArray[row];
+    _GSSiPadNumber = c.GSSiPadNumber;
+    _currentCityNameAndState = addSpaceAfterComma(c.name);
     
-    self.currentGeoid = geoid.intValue;
+    self.currentGeoid  = c.number;
     
     [UserDefaults.defaults saveInteger:self.currentGeoid
                                 forKey:@"CurrentGeoid"];
     
-    _currentManageriPad = managerNumber.intValue;
-    _currentiPadWithinManager = numWithinManager.intValue;
-    _totiPadWithinManager = totWithinManager.intValue;
-    NSString *key = [NSString stringWithFormat:@"ManagerForGeoid:%i",geoid.intValue];
+    _currentManageriPad = c.managerNumber;
+    _currentiPadWithinManager = c.withinManager;
+    _totiPadWithinManager = c.totWithinManager;
+    NSString *key = [NSString stringWithFormat:@"ManagerForGeoid:%i",self.currentGeoid ];
     [UserDefaults.defaults saveInteger:_currentManageriPad
                                 forKey:key];
-    key = [NSString stringWithFormat:@"iPadWithinManagerForGeoid:%i",geoid.intValue];
+    key = [NSString stringWithFormat:@"iPadWithinManagerForGeoid:%i",self.currentGeoid ];
     [UserDefaults.defaults saveInteger:_currentiPadWithinManager
                                 forKey:key];
-    key = [NSString stringWithFormat:@"totiPadWithinManagerForGeoid:%i",geoid.intValue];
+    key = [NSString stringWithFormat:@"totiPadWithinManagerForGeoid:%i",self.currentGeoid ];
     [UserDefaults.defaults saveInteger:_totiPadWithinManager
                                 forKey:key];
     

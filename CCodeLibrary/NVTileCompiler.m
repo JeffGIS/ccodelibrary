@@ -5,18 +5,20 @@
 #import "CRAPI.h"
 #import "TileGraphics.h"
 #import "GSSiDefs.h"
+#import "NVAlertView.h"
 
 @implementation NVTile
 
 @end
 
-@interface NVTileCompiler ()
+@interface NVTileCompiler () <NSURLSessionDataDelegate,NSURLSessionTaskDelegate>
 
 @property (nonatomic) int intersectionID, zoom, imageCount;
 @property (nonatomic) double lat, lon, size;
 @property (nonatomic, copy) NSString *imagePath, *cptPath;
 @property (nonatomic) NSMutableArray *tileDataArray;
 @property (nonatomic) UIView *currentView;
+@property (nonatomic) UIView *actIndView;
 
 @end
 
@@ -30,7 +32,7 @@
                                          delegate:(id)delegate
                                       currentView:(UIView *)currentView
 {
-    NVTileCompiler *nvtc = [[NVTileCompiler alloc] init];
+    NVTileCompiler *nvtc = NVTileCompiler.new;
     nvtc.intersectionID = intersectionID;
     nvtc.lat = lat;
     nvtc.lon = lon;
@@ -174,16 +176,9 @@
                                   _lat, _lon, _zoom, GOOGLE_API_KEY];
         
         NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        NSURLSessionDataTask *dataTask = [urlSession dataTaskWithURL:mapUrl
-                                                   completionHandler:^(NSData * _Nullable data,
-                                                                       NSURLResponse * _Nullable response,
-                                                                       NSError * _Nullable error) {
-                                                       UIImage *image = [UIImage imageWithData:data];
-                                                       [urlSession finishTasksAndInvalidate];
-                                                       [self saveImage:image];
-                                                   }];
-        
-        [dataTask resume];
+        UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
+        [urlSession finishTasksAndInvalidate];
+        [self saveImage:image];
     }
 }
 
@@ -219,8 +214,33 @@ didCompleteWithError:(NSError *)error
     NSUInteger index = task.taskDescription.integerValue;
     
     if (error)
+    {
         NSLog(@"URLSession ERROR (tile %lu):%@", (unsigned long)index,
               error.localizedDescription);
+    }
+}
+
+- (void)showActivityIndicator
+{
+    _actIndView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 240.0, 240.0)];
+    _actIndView.center = _currentView.center;
+    
+    _actIndView.backgroundColor = [UIColor colorWithWhite:0.0
+                                                    alpha:0.8];
+    
+    _actIndView.layer.cornerRadius = 20.0;
+    [_currentView addSubview:_actIndView];
+    
+    UIActivityIndicatorView *actInd = [[UIActivityIndicatorView alloc]
+                                       initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    
+    actInd.transform = CGAffineTransformMakeScale(2.0, 2.0);
+    
+    actInd.center = CGPointMake((_actIndView.frame.size.width / 2.0),
+                                (_actIndView.frame.size.height / 2.0));
+    
+    [_actIndView addSubview:actInd];
+    [actInd startAnimating];
 }
 
 - (void)compileImage
