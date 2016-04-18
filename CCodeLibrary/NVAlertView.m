@@ -19,8 +19,17 @@
                           buttonTextArray:(NSArray *)buttonTextArray
                          destructiveIndex:(NSUInteger)destructiveIndex
 {
-    if (!view || !delegate || !title || !buttonTextArray)
+    if (!delegate || !view || !title || !buttonTextArray)
+    {
+        NSLog(@"NVAlertView ERROR:Cannot set delegate, view, title or buttonTextArray to nil");
         return nil;
+    }
+    
+    if (![delegate respondsToSelector:@selector(alertView:didTapButtonAtIndex:)])
+    {
+        NSLog(@"NVAlertView ERROR:Delegate must respond to all selectors in protocol");
+        return nil;
+    }
     
     NVAlertView *alert = NVAlertView.new;
     alert.overlayView = UIView.new;
