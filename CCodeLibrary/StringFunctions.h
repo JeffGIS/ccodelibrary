@@ -3,6 +3,7 @@
 
 @import UIKit;
 
+BOOL hasNetwork();
 NSString *textBefore(NSString *string, NSString *before);
 NSString *textAfter(NSString *string, NSString *after);
 NSString *removeEndingReturn(NSString *string);

@@ -3,6 +3,19 @@
 
 #import "StringFunctions.h"
 #import "MathUtil.h"
+#import "Reachability.h"
+
+BOOL hasNetwork()
+{
+    Reachability *reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
+    NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
+    
+    if (!remoteHostStatus)
+        return NO;
+    
+    else
+        return YES;
+}
 
 NSString *textBefore(NSString *string, NSString *before)
 {
