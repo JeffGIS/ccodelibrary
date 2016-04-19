@@ -94,7 +94,8 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
     void *bmData = NULL;
     
     [self releaseMem];
-
+    if (!pPoints)
+        return FALSE;
     _bounds = getAreaBounds (nPoints,pPoints);
     _colorSpace = CGColorSpaceCreateDeviceGray();
     if (!_maxDimension)
