@@ -19,19 +19,19 @@
 @property (nonatomic) UIButton *cancelButton, *doneButton, *complexButton;
 @property (nonatomic) UIButton *addRampButton, *addSignalButton, *addXWalkButton;
 @property (nonatomic) UIButton *editItemButton, *rampTypeButton, *currentEditButton;
-@property (nonatomic, copy) NSString *pathToImageFile, *pathToBPWFile;
+@property (nonatomic) NSString *pathToImageFile, *pathToBPWFile;
 @property (nonatomic) LPTRANDATA pTranWToBMP, pTranBMPToW;
 @property (nonatomic) CGFloat xFactor, yFactor, xOffset, yOffset, latitude, longitude;
-@property int currentIntersectionID, currentZoom, initialZoom;
+@property (nonatomic) int currentIntersectionID, currentZoom, initialZoom;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) UISegmentedControl *zoomSC;
 @property (nonatomic) NVRampButton *ramp1, *ramp2, *ramp3, *ramp4, *ramp5, *ramp6, *ramp7, *ramp8;
 @property (nonatomic) NVRampButton *ramp23, *ramp45, *ramp67, *ramp81;
-@property BOOL firstTime, draggableTarget;
-@property NVUpdateOption updateOption;
+@property (nonatomic) BOOL firstTime, draggableTarget;
+@property (nonatomic) NVUpdateOption updateOption;
 @property (nonatomic) NVSignalButton *signal23, *signal45, *signal67, *signal81;
 @property (nonatomic) NVXWalkButton *xWalkA, *xWalkB, *xWalkC, *xWalkD;
-@property RampType currentRampType;
+@property (nonatomic) RampType currentRampType;
 @property (nonatomic) UILabel *headingLabel, *intersectionLabel;
 @property (nonatomic) CGPoint newTarget;
 @property (nonatomic) CGFloat targetSize;
@@ -146,10 +146,8 @@
     if (_draggableTarget)
         [self setupImageTarget];
     
-    _intersectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(_addXWalkButton.frame.origin.x,
-                                                                   _zoomSC.frame.origin.y,
-                                                                   752.0 - _addXWalkButton.frame.origin.x,
-                                                                   _zoomSC.frame.size.height)];
+    _intersectionLabel = [[UILabel alloc] initWithFrame:CGRectMake(_addXWalkButton.frame.origin.x, _zoomSC.frame.origin.y,
+                                                                   752.0 - _addXWalkButton.frame.origin.x, _zoomSC.frame.size.height)];
     
     _intersectionLabel.font = [UIFont boldSystemFontOfSize:32.0];
     _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
@@ -742,6 +740,25 @@
     [self setBKImage:NO];
 }
 
+- (void)setSegIndex:(int)zoom
+{
+    _currentZoom = zoom;
+    
+    switch (_currentZoom)
+    {
+        case 21:
+            _zoomSC.selectedSegmentIndex = 0;
+            break;
+            
+        case 20:
+            _zoomSC.selectedSegmentIndex = 1;
+            break;
+            
+        default:
+            break;
+    }
+}
+
 - (void)done:(UIButton *)button
 {
     if (_from == FROM_PRELIM)
@@ -754,10 +771,11 @@
             MPIntersection *nextIntersection = [_delegate inventoryViewController:self
                                                                   didSetInventory:_currentIntersection];
             
-            if (nextIntersection != nil)
+            if (nextIntersection)
             {
                 _currentIntersection = nextIntersection;
                 _currentIntersectionID = _currentIntersection.intID;
+                [self setSegIndex:21];
                 [self setBKImage:NO];
                 _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
                 return;
@@ -769,12 +787,7 @@
         [self dismissViewControllerAnimated:YES
                                  completion:nil];
     }
-    else if (_from == FROM_CORNER)
-    {
-        [_delegate inventoryViewController:self
-                           didSetInventory:_currentIntersection];
-
-    }
+    
     else if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didCompleteInventory:)])
     {
         [_delegate inventoryViewController:self
