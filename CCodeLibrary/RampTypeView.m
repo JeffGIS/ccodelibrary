@@ -378,11 +378,12 @@
 {
     _selectedIndex = _zoomedIndex;
     
-    [self performSelector:@selector(returnButtonTapped:)
-               withObject:nil
-               afterDelay:0.0];
-    
-    [self highlightSelectedButton];
+    if (_delegate)
+    {
+        [_delegate rampTypeView:self
+              didReturnRampType:_selectedIndex
+                     editOption:_editOption];
+    }
 }
 
 - (void)highlightSelectedButton
