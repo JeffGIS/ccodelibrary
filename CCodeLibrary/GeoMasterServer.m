@@ -3,8 +3,8 @@
 
 #define GM_PORT 8080
 //#define GM_SERVER @"gssidata.com"
-//#define GM_SERVER @"gssiserver1.com"
-#define GM_SERVER @"74.42.134.169"
+#define GM_SERVER @"gssiserver3.com"
+#//define GM_SERVER @"74.208.70.192"
 //#define GM_PORT 501
 
 #import "GeoMasterServer.h"
