@@ -601,9 +601,10 @@
 - (void)savePlacesString:(NSString*)placesString
 {
     [UserDefaults.defaults saveString:placesString
-                                forKey:@"PlacesString"];
+                               forKey:@"PlacesString"];
 }
-- (void)processPlacesArray:(NSUInteger) row
+
+- (void)processPlacesArray:(NSUInteger)row
 {
     if (row >= CRAPI.sharedInstance.placesArray.count)
     {
@@ -613,17 +614,14 @@
                                     forKey:@"SelectedRow"];
     }
     
-    if (_placesArray.count == 1 || row >= _placesArray.count ||
-        self.currentGeoid == 0)
-    {
+    if (_placesArray.count == 1 || row >= _placesArray.count)
         row = 0;
-    }
     
     CityOrOrganizationData *c = _placesArray[row];
     _GSSiPadNumber = c.GSSiPadNumber;
     _currentCityNameAndState = addSpaceAfterComma(c.name);
     
-    self.currentGeoid  = c.number;
+    self.currentGeoid = c.number;
     
     [UserDefaults.defaults saveInteger:self.currentGeoid
                                 forKey:@"CurrentGeoid"];
@@ -631,17 +629,22 @@
     _currentManageriPad = c.managerNumber;
     _currentiPadWithinManager = c.withinManager;
     _totiPadWithinManager = c.totWithinManager;
+    
     NSString *key = [NSString stringWithFormat:@"ManagerForGeoid:%i",self.currentGeoid ];
     [UserDefaults.defaults saveInteger:_currentManageriPad
                                 forKey:key];
+    
     key = [NSString stringWithFormat:@"iPadWithinManagerForGeoid:%i",self.currentGeoid ];
+    
     [UserDefaults.defaults saveInteger:_currentiPadWithinManager
                                 forKey:key];
+    
     key = [NSString stringWithFormat:@"totiPadWithinManagerForGeoid:%i",self.currentGeoid ];
+    
     [UserDefaults.defaults saveInteger:_totiPadWithinManager
                                 forKey:key];
-    
 }
+
 - (void)loadiPadParametersForGeoid:(int)geoid
 {
     _GSSiPadNumber = (int)[UserDefaults.defaults integerForKey:@"GSSiPadNumber"];
