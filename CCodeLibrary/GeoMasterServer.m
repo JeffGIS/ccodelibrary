@@ -1,7 +1,8 @@
 //  GeoMasterServer.m
 //  CCodeLibrary
 
-#define GM_PORT 8080
+//#define GM_PORT 8080
+#define GM_PORT 32349
 //#define GM_SERVER @"gssidata.com"
 #define GM_SERVER @"gssiserver3.com"
 #//define GM_SERVER @"74.208.70.192"
