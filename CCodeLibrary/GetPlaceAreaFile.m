@@ -19,7 +19,7 @@
     _pull.popover = popover;
     _pull.createDirectory = YES;
     [_pull getFile:fileName
-    fromDirectory:@"Bill/PlaceAreas"
+    fromDirectory:@"NVCRIS/PlaceAreas"
            toFile:fileName
       toDirectory:documentsDirectory
     refreshOption:FTPDataPullRefreshOptionUseFileIfExists];

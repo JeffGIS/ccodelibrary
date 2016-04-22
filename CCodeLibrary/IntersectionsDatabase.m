@@ -1454,7 +1454,7 @@ Exit:
     _pull.createDirectory = YES;
     
     [_pull getFile:fileName
-    fromDirectory:@"Bill/PlaceIntersections"
+    fromDirectory:@"NVCRIS/IntersectionFiles"
            toFile:fileName
       toDirectory:documentsDirectory
      refreshOption:FTPDataPullRefreshOptionUseFileIfExists];
