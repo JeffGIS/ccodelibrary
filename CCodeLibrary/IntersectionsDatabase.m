@@ -494,7 +494,6 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                      withStatus:(IntersectionStatus)status
 {
     BOOL rtn = NO;
-    NSString *cmd;
     double lat,lon;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     BOOL opened = [self.curbRampData open];
@@ -509,7 +508,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
         if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
         {
             strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
-            cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO Ramps VALUES(\
+            NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO Ramps VALUES(\
 %i,%i,'%s',0,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\
 %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\
 %i,%i,%i,%i,%i,%i,%i,%i,%i,'%@');",
@@ -570,7 +569,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
 
     PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
    
-    cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
 doLater=%i,\
 intX=%i,\
 intY=%i,\

@@ -13,6 +13,7 @@
 #import "RampTypeView.h"
 #import "HelpButton.h"
 
+int ii;
 @interface NVInventoryViewController ()
 
 @property (nonatomic) UIImageView *backgroundImage, *imageTargetView;
@@ -23,12 +24,12 @@
 @property (nonatomic) LPTRANDATA pTranWToBMP, pTranBMPToW;
 @property (nonatomic) CGFloat xFactor, yFactor, xOffset, yOffset, latitude, longitude;
 @property (nonatomic) int currentIntersectionID, currentZoom, initialZoom;
+@property (nonatomic) NVUpdateOption updateOption;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) UISegmentedControl *zoomSC;
 @property (nonatomic) NVRampButton *ramp1, *ramp2, *ramp3, *ramp4, *ramp5, *ramp6, *ramp7, *ramp8;
 @property (nonatomic) NVRampButton *ramp23, *ramp45, *ramp67, *ramp81;
 @property (nonatomic) BOOL firstTime, draggableTarget;
-@property (nonatomic) NVUpdateOption updateOption;
 @property (nonatomic) NVSignalButton *signal23, *signal45, *signal67, *signal81;
 @property (nonatomic) NVXWalkButton *xWalkA, *xWalkB, *xWalkC, *xWalkD;
 @property (nonatomic) RampType currentRampType;
@@ -39,7 +40,9 @@
 
 @end
 
+
 @implementation NVInventoryViewController
+@synthesize updateOption = _updateOption;
 
 + (NVInventoryViewController *)showInventoryViewControllerForIntersection:(MPIntersection *)intersection
                                                                  delegate:(id)delegate
@@ -78,7 +81,7 @@
     _initialZoom = _currentZoom;
     _firstTime = YES;
     _pTranWToBMP = _pTranBMPToW = 0;
-    _updateOption = NVUpdateOptionNone;
+    self.updateOption = NVUpdateOptionNone;
     _currentRampType = [UserDefaults.defaults integerForKey:@"CurrentRampType"];
     _targetSize = 160.0;
     
@@ -477,7 +480,7 @@
     
     if (resetOptions)
     {
-        _updateOption = NVUpdateOptionNone;
+        self.updateOption = NVUpdateOptionNone;
         [self deselectAll];
     }
     
@@ -836,78 +839,39 @@
 - (void)addRamp:(UIButton *)button
 {
     if (!_addRampButton.selected)
-    {
-        [self deselectAll];
-        _addRampButton.selected = YES;
-        _updateOption = NVUpdateOptionAddRamp;
-    }
-    
+        self.updateOption = NVUpdateOptionAddRamp;
     else
-    {
-        _addRampButton.selected = NO;
-        _updateOption = NVUpdateOptionNone;
-    }
+        self.updateOption = NVUpdateOptionNone;
     
-    [self updateBottomButtonAppearance];
 }
 
 - (void)addSignal:(UIButton *)button
 {
     if (!_addSignalButton.selected)
-    {
-        [self deselectAll];
-        _addSignalButton.selected = YES;
-        _updateOption = NVUpdateOptionAddSignal;
-    }
-    
+        self.updateOption = NVUpdateOptionAddSignal;
     else
-    {
-        _addSignalButton.selected = NO;
-        _updateOption = NVUpdateOptionNone;
-    }
-    
-    [self updateBottomButtonAppearance];
+        self.updateOption = NVUpdateOptionNone;
 }
 
 - (void)addXWalk:(UIButton *)button
 {
     if (!_addXWalkButton.selected)
-    {
-        [self deselectAll];
-        _addXWalkButton.selected = YES;
-        _updateOption = NVUpdateOptionAddXWalk;
-    }
-    
+        self.updateOption = NVUpdateOptionAddXWalk;
     else
-    {
-        _addXWalkButton.selected = NO;
-        _updateOption = NVUpdateOptionNone;
-    }
-    
-    [self updateBottomButtonAppearance];
+        self.updateOption = NVUpdateOptionNone;
 }
 
 - (void)editItem:(UIButton *)button
 {
     if (!_editItemButton.selected)
-    {
-        [self deselectAll];
-        _editItemButton.selected = YES;
-        _updateOption = NVUpdateOptionEdit;
-    }
-    
+        self.updateOption = NVUpdateOptionEdit;
     else
-    {
-        _editItemButton.selected = NO;
-        _updateOption = NVUpdateOptionNone;
-    }
-    
-    [self updateBottomButtonAppearance];
+        self.updateOption = NVUpdateOptionNone;
 }
 
 - (void)buttonTapped:(UIButton *)button
 {
-    if (_updateOption != NVUpdateOptionEdit)
+    if (self.updateOption != NVUpdateOptionEdit)
         return;
     
     [self performItemEdit:button];
@@ -1149,7 +1113,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     
     _editItemButton.selected = NO;
-    _updateOption = NVUpdateOptionNone;
+    self.updateOption = NVUpdateOptionNone;
     [self updateBottomButtonAppearance];
 }
 
@@ -1181,7 +1145,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                        action:@selector(finishedDragging:withEvent:)
              forControlEvents:UIControlEventTouchUpInside];
             
-            _updateOption = NVUpdateOptionMove;
+            self.updateOption = NVUpdateOptionMove;
             _firstTime = NO;
         }
         
@@ -1230,7 +1194,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                action:@selector(buttonTapped:)
      forControlEvents:UIControlEventTouchUpInside];
     
-    _updateOption = NVUpdateOptionNone;
+    self.updateOption = NVUpdateOptionNone;
 }
 
 - (void)pointPicked:(UIGestureRecognizer *)gesture
@@ -1262,14 +1226,14 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)updateButtons:(CGPoint)location
 {
-    CGFloat x = 0.0, y = 0.0;
+    double x = 0.0, y = 0.0;
     CGRect windowBounds = CGRectZero;
     CGSize imageSize = CGSizeZero;
     int xWalkID = 0, signalID = 0, rampID = 0;
     MPRamp *sideRamp;
 
-    if (_updateOption == NVUpdateOptionEdit ||
-        _updateOption == NVUpdateOptionNone)
+    if (self.updateOption == NVUpdateOptionEdit ||
+        self.updateOption == NVUpdateOptionNone)
     {
         return;
     }
@@ -1306,7 +1270,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     TRANS2(location.x, location.y, &x, &y, _pTranBMPToW);
     
-    switch (_updateOption)
+    switch (self.updateOption)
     {
         case NVUpdateOptionMove:
             if (_currentEditButton == _xWalkA)
@@ -1387,7 +1351,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 }
             }
             
-            _updateOption = NVUpdateOptionNone;
+            self.updateOption = NVUpdateOptionNone;
             break;
             
         case NVUpdateOptionAddRamp:
@@ -1563,9 +1527,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             break;
     }
     
-    if (_updateOption == NVUpdateOptionMove)
+    if (self.updateOption == NVUpdateOptionMove)
     {
-        _updateOption = NVUpdateOptionEdit;
+        self.updateOption = NVUpdateOptionEdit;
         [self setupButtons:NO];
     }
     
@@ -1575,7 +1539,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)addSideRamps:(MPRamp *)ramp
 {
-    _updateOption = NVUpdateOptionAddRamp;
+    self.updateOption = NVUpdateOptionAddRamp;
     
     MPRamp *sideRamp = _currentIntersection.ramps[[self getLeftRampIDFromRampID:ramp.rampNum]];
     
@@ -2059,6 +2023,30 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 - (UIStatusBarStyle) preferredStatusBarStyle
 {
     return UIStatusBarStyleLightContent;
+}
+- (void) setUpdateOption:(NVUpdateOption)updateOption
+{
+    _updateOption = updateOption;
+    if (updateOption == NVUpdateOptionMove)
+        return;
+    [self deselectAll];
+    switch (updateOption)
+    {
+        case NVUpdateOptionEdit:
+            _editItemButton.selected = YES;
+            break;
+        case NVUpdateOptionAddRamp:
+            _addRampButton.selected = YES;
+            break;
+        case NVUpdateOptionAddXWalk:
+            _addXWalkButton.selected = YES;
+            break;
+        case NVUpdateOptionAddSignal:
+            _addSignalButton.selected = YES;
+            break;
+    }
+    [self updateBottomButtonAppearance];
+
 }
 
 @end

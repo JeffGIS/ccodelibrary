@@ -383,10 +383,10 @@ enum {
 
 - (void)setUpFTP
 {
-    _ftpSite = @"gssidata.com";
-    _username = @"GSSiData";
+    _ftpSite = @"gssiserver3.com";
+    _username = @"GSSiProfessionalServer";
     _password = @"GSSi";
-    _port = @"14147";
+    _port = @"21";
     
     //_ftpSite = @"192.168.254.39";
     //_username = @"GSSiLocal";

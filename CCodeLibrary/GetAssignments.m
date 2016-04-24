@@ -23,7 +23,7 @@
     _pull.useOnlyPrimaryFTP = YES;
     
     [_pull getFile:fileName
-     fromDirectory:@"Bill/Assignments"
+     fromDirectory:@"NVCRIS/Assignments"
             toFile:fileName
        toDirectory:documentsDirectory
      refreshOption:FTPDataPullRefreshOptionCheckFileSize];
