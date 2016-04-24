@@ -42,7 +42,6 @@ int ii;
 
 
 @implementation NVInventoryViewController
-@synthesize updateOption = _updateOption;
 
 + (NVInventoryViewController *)showInventoryViewControllerForIntersection:(MPIntersection *)intersection
                                                                  delegate:(id)delegate
@@ -274,7 +273,7 @@ int ii;
     _xOffset = (windowBounds.origin.x * _xFactor);
     _yOffset = (windowBounds.origin.y * _yFactor);
     
-    [self setupButtons:NO];
+    [self setupButtons];
 }
 
 - (void)adjustXYtoBKImage:(int *)x
@@ -345,7 +344,7 @@ int ii;
         signalButton.hidden = YES;
 }
 
-- (void)setupButtons:(BOOL)resetOptions
+- (void)setupButtons
 {
     MPRamp *ramp = nil;
     
@@ -476,12 +475,6 @@ int ii;
             rampButton.type = ramp.rampType;
             rampButton.hidden = (rampButton.type > 8);
         }
-    }
-    
-    if (resetOptions)
-    {
-        self.updateOption = NVUpdateOptionNone;
-        [self deselectAll];
     }
     
     [self updateBottomButtonAppearance];
@@ -840,15 +833,16 @@ int ii;
 {
     if (!_addRampButton.selected)
         self.updateOption = NVUpdateOptionAddRamp;
+    
     else
         self.updateOption = NVUpdateOptionNone;
-    
 }
 
 - (void)addSignal:(UIButton *)button
 {
     if (!_addSignalButton.selected)
         self.updateOption = NVUpdateOptionAddSignal;
+    
     else
         self.updateOption = NVUpdateOptionNone;
 }
@@ -857,6 +851,7 @@ int ii;
 {
     if (!_addXWalkButton.selected)
         self.updateOption = NVUpdateOptionAddXWalk;
+    
     else
         self.updateOption = NVUpdateOptionNone;
 }
@@ -865,6 +860,7 @@ int ii;
 {
     if (!_editItemButton.selected)
         self.updateOption = NVUpdateOptionEdit;
+    
     else
         self.updateOption = NVUpdateOptionNone;
 }
@@ -881,7 +877,6 @@ int ii;
 {
     _currentEditButton = button;
     NVAlertView *alert = nil;
-#pragma unused(alert)
     
     if ([button isKindOfClass:NVXWalkButton.class])
     {
@@ -987,7 +982,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 }
             }
             
-            [self setupButtons:NO];
+            [self setupButtons];
             break;
             
         case 2://change ramp type
@@ -1034,7 +1029,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 }
             }
             
-            [self setupButtons:NO];
+            [self setupButtons];
             break;
             
         case 4://change to middle ramp
@@ -1075,7 +1070,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 }
             }
             
-            [self setupButtons:NO];
+            [self setupButtons];
             break;
             
         case 5://change to right ramp
@@ -1108,12 +1103,15 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 }
             }
             
-            [self setupButtons:NO];
+            [self setupButtons];
             break;
     }
     
     _editItemButton.selected = NO;
-    self.updateOption = NVUpdateOptionNone;
+    
+    if (_updateOption == NVUpdateOptionEdit)
+        self.updateOption = NVUpdateOptionNone;
+    
     [self updateBottomButtonAppearance];
 }
 
@@ -1230,13 +1228,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     CGRect windowBounds = CGRectZero;
     CGSize imageSize = CGSizeZero;
     int xWalkID = 0, signalID = 0, rampID = 0;
-    MPRamp *sideRamp;
+    MPRamp *sideRamp = nil;
 
-    if (self.updateOption == NVUpdateOptionEdit ||
-        self.updateOption == NVUpdateOptionNone)
-    {
+    if (_updateOption == NVUpdateOptionEdit || _updateOption == NVUpdateOptionNone)
         return;
-    }
     
     if (_pTranBMPToW)
         free(_pTranBMPToW);
@@ -1248,13 +1243,14 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     _pTranWToBMP = LoadTranFromCPT(_pathToBPWFile.UTF8String, 2);
     
     windowBounds = _backgroundImage.frame;
-    //imageSize = _backgroundImage.image.size;
     imageSize = _backgroundImage.intrinsicContentSize;
+    
     if (imageSize.width < 0 || imageSize.height < 0)
     {
         imageSize.width = 640;
         imageSize.height = 640;
     }
+    
     x = windowBounds.size.width;
     y = windowBounds.size.height;
     _xFactor = (CGFloat)imageSize.width / (CGFloat)windowBounds.size.width;
@@ -1527,14 +1523,14 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             break;
     }
     
-    if (self.updateOption == NVUpdateOptionMove)
+    if (_updateOption == NVUpdateOptionMove)
     {
         self.updateOption = NVUpdateOptionEdit;
-        [self setupButtons:NO];
+        [self setupButtons];
     }
     
     else
-        [self setupButtons:NO];
+        [self setupButtons];
 }
 
 - (void)addSideRamps:(MPRamp *)ramp
@@ -1931,7 +1927,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 sideRamp.isComplete = YES;
                 sideRamp.rampType = 0;
                 
-                [self setupButtons:NO];
+                [self setupButtons];
             }
             
             ramp.rampType = rampType;
@@ -1948,7 +1944,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             else if ([self isCombinedRampType:rampType])
             {
                 [self addSideRamps:ramp];
-                [self setupButtons:NO];
+                [self setupButtons];
             }
         }
             
@@ -2020,31 +2016,38 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
 }
 
-- (UIStatusBarStyle) preferredStatusBarStyle
+- (UIStatusBarStyle)preferredStatusBarStyle
 {
     return UIStatusBarStyleLightContent;
 }
-- (void) setUpdateOption:(NVUpdateOption)updateOption
+- (void)setUpdateOption:(NVUpdateOption)updateOption
 {
     _updateOption = updateOption;
-    if (updateOption == NVUpdateOptionMove)
+    
+    if (_updateOption == NVUpdateOptionMove)
         return;
+    
     [self deselectAll];
+    
     switch (updateOption)
     {
         case NVUpdateOptionEdit:
             _editItemButton.selected = YES;
             break;
+            
         case NVUpdateOptionAddRamp:
             _addRampButton.selected = YES;
             break;
+            
         case NVUpdateOptionAddXWalk:
             _addXWalkButton.selected = YES;
             break;
+            
         case NVUpdateOptionAddSignal:
             _addSignalButton.selected = YES;
             break;
     }
+    
     [self updateBottomButtonAppearance];
 
 }
