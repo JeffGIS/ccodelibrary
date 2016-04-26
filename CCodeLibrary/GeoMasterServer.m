@@ -1,10 +1,10 @@
 //  GeoMasterServer.m
 //  CCodeLibrary
 
-//#define GM_PORT 8080
-#define GM_PORT 32349
-//#define GM_SERVER @"gssidata.com"
-#define GM_SERVER @"gssiserver3.com"
+#define TEST_PORT 8080
+#define PRODUCTION_PORT 32349
+#define TEST_SERVER @"gssidata.com"
+#define PRODUCTION_SERVER @"gssiserver3.com"
 #//define GM_SERVER @"74.208.70.192"
 //#define GM_PORT 501
 
@@ -26,6 +26,7 @@ static GeoMasterServer *statServer = nil;
     if (!statServer)
         statServer = [[GeoMasterServer alloc] init];
     statServer.output = @"";
+    statServer.useTestServer = NO;
     return statServer;
 }
 
@@ -36,7 +37,6 @@ static GeoMasterServer *statServer = nil;
     if (self)
     {
         _output = @"";
-        _ipAddress = GM_SERVER;
     }
 
     return self;
@@ -82,7 +82,14 @@ static GeoMasterServer *statServer = nil;
 - (BOOL)initCommunication:(CGFloat)connectionTimeoutInSeconds
 {
     BOOL rtn = NO;
+    int port = PRODUCTION_PORT;
+    NSString * ipAddress = PRODUCTION_SERVER;
     
+    if (_useTestServer)
+    {
+        port = TEST_PORT;
+        ipAddress = TEST_SERVER;
+    }
     _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
     
@@ -104,8 +111,8 @@ static GeoMasterServer *statServer = nil;
 	CFReadStreamRef readStream = NULL;
 	CFWriteStreamRef writeStream = NULL;
     
-    CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)(_ipAddress),
-                                       GM_PORT, &readStream, &writeStream);
+    CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)(ipAddress),
+                                       port, &readStream, &writeStream);
 	
 	_inputStream = (__bridge NSInputStream *)readStream;
 	_outputStream = (__bridge NSOutputStream *)writeStream;

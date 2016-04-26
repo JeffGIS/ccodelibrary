@@ -53,6 +53,7 @@ typedef NS_ENUM(NSInteger, FTPDataType)
 @property (nonatomic, weak) id <FTPDataPullDelegate> delegate;
 @property (nonatomic, assign, readonly ) BOOL isReceiving;
 @property (nonatomic, assign, readwrite ) BOOL useOnlyPrimaryFTP;
+@property BOOL useTestServer;
 @property (nonatomic, strong, readwrite) NSURLConnection *connection;
 @property (nonatomic, copy, readwrite) NSString *filePath;
 @property (nonatomic, strong, readwrite) NSOutputStream *fileStream;

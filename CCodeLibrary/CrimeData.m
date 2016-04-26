@@ -242,6 +242,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
 {
     BOOL rtn = FALSE;
     _GMServer = GeoMasterServer.open;
+    _GMServer.useTestServer = YES;
     _GMServer.delegate = self;
     _GMServer.messageID = GMSMessageGetPoliceUpdate;
     [_GMServer initCommunication:5.0];
@@ -377,6 +378,7 @@ didReceiveMessage:(NSString *)message
     _pull.delegate = self;
     _pull.popover = _popoverView;
     _pull.useOnlyPrimaryFTP = YES;
+    _pull.useTestServer = YES;
     _pull.dataType = FTPDataCrimes;
     
     if ([_pull getFile:fileName

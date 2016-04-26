@@ -409,7 +409,13 @@ didReceiveResponse:(NSURLResponse *)response
         _password = _passwordOveride;
         _port = _portOveride;
     }
-    
+    else if (_useTestServer)
+    {
+        _ftpSite = @"gssidata.com";
+        _username = @"GSSiData";
+        _password = @"GSSi";
+        _port = @"14147";
+    }
     else
     {
         _ftpSite = @"gssiserver3.com";
