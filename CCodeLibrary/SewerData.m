@@ -195,6 +195,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
     pull.popover = popover;
     pull.useOnlyPrimaryFTP = YES;
     pull.dataType = FTPDataPlat;
+    pull.useTestServer = YES;
     NSString * fileName;
     
     if ([type isEqualToString:@"pdf"])

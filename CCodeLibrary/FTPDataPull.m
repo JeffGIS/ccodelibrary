@@ -23,6 +23,7 @@ static FTPDataPull * _statpull = nil;
         _statpull = [[FTPDataPull alloc] init];
     
     _statpull.haveCalledDelegate = NO;
+    _statpull.useTestServer = NO;
     return _statpull;
 }
 
