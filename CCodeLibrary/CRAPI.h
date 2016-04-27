@@ -57,6 +57,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic) NSString *currentPID;
 @property (nonatomic) NSString *currentAddress;
 @property (nonatomic) NSString *currentPropOwner;
+@property (nonatomic) NSString *selectedPID;
 @property (nonatomic) NSMutableArray *annotations;
 @property (nonatomic) CGFloat currentZoom;
 @property BOOL controlledInterface;
@@ -66,6 +67,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic) int showPlats;
 @property int parcelShadingOption;
 @property int parcelTextOption;
+@property int parcelColorOption;
 @property int showTileInfo;
 @property (nonatomic, copy) NSString *currentOverallBoundaryName;
 @property (nonatomic, copy) NSString *currentOverallBoundaryType;
