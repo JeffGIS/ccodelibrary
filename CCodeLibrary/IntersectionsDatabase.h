@@ -101,5 +101,8 @@
                          intY:(int *)plev21y;
 - (int) addNewIntersectionAt:(LLPOINT)pt
                     withName:(NSString*)name;
+- (void) setStreetNamesForIntersection:(int)intID
+                                   to:(NSString*)newNames;
+- (void) deleteIntersection:(int)intID;
 
 @end

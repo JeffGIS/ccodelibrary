@@ -1662,4 +1662,17 @@ Exit:
 
     return newInt.intID;
 }
+
+-(void) setStreetNamesForIntersection:(int)intID
+                                   to:(NSString*)newNames
+{
+    
+}
+
+- (void) deleteIntersection:(int)intID
+{
+    NSString *cmd = [NSString stringWithFormat:@"DELETE FROM Intersections WHERE intID = %i;DELETE FROM Intersections_index WHERE intID = %i",intID,intID];
+    [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:NO];
+    
+}
 @end
