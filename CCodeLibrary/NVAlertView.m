@@ -8,6 +8,7 @@
 
 @property (nonatomic) UILabel *titleLabel;
 @property (nonatomic) UITabBar *tabBar;
+@property (nonatomic) NSArray *buttonTextArray;
 
 @end
 
@@ -38,7 +39,7 @@
     alert.overlayView.alpha = 0.0;
     alert.delegate = delegate;
     alert.buttonBorderColor = UIColor.lightGrayColor;
-    alert.buttonTextArray = buttonTextArray.copy;
+    alert.buttonTextArray = buttonTextArray;
     
     [view addSubview:alert.overlayView];
     
@@ -160,11 +161,15 @@
 
 - (void)buttonTapped:(UIButton *)button
 {
+    NSInteger buttonIndex = (button.tag - 1);
+    
+    if (textAfterPipe(_buttonTextArray[buttonIndex]).integerValue > 0)
+        buttonIndex = textAfterPipe(_buttonTextArray[buttonIndex]).integerValue;
     
     if (_delegate)
     {
         [_delegate alertView:self
-         didTapButtonAtIndex:(button.tag - 1)];
+         didTapButtonAtIndex:buttonIndex];
     }
 }
 
