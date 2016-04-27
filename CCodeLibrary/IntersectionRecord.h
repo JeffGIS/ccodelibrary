@@ -34,6 +34,8 @@ typedef struct {
     int nStreets;
     char streetNames[512];
     char streetAzms[128];
+    double lat;
+    double lon;
     char comment[256];
     int  zoomLevel;
     int  doLater;
