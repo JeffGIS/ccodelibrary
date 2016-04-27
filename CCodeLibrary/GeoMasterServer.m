@@ -5,7 +5,7 @@
 #define PRODUCTION_PORT 32349
 #define TEST_SERVER @"gssidata.com"
 #define PRODUCTION_SERVER @"gssiserver3.com"
-#//define GM_SERVER @"74.208.70.192"
+//#define GM_SERVER @"74.208.70.192"
 //#define GM_PORT 501
 
 #import "GeoMasterServer.h"
