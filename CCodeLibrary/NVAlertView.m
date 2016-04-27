@@ -38,6 +38,7 @@
     alert.overlayView.alpha = 0.0;
     alert.delegate = delegate;
     alert.buttonBorderColor = UIColor.lightGrayColor;
+    alert.buttonTextArray = buttonTextArray.copy;
     
     [view addSubview:alert.overlayView];
     
@@ -78,7 +79,7 @@
     
     for (int i = 0; i < buttonTextArray.count; i++)
     {
-        NSString *title = buttonTextArray[i];
+        NSString *title = textBeforePipe (buttonTextArray[i]);
         
         CGFloat height = [alert getHeightForText:title
                                             font:font
