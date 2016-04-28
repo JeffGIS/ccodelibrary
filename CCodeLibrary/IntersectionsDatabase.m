@@ -1663,6 +1663,28 @@ Exit:
     return newInt.intID;
 }
 
+-(NSString*) getStreetNamesForIntersection:(int)intID
+{
+    NSString* names=@"";
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetNames FROM Intersections WHERE intID = %i",intID];
+    sqlite3_stmt *statement = NULL;
+    SQLOK(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL),self.curbRampData.database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int nNames = sqlite3_column_int (statement, 0);
+        LPSTR pnames = sqlite3_column_text (statement, 1);
+        names = [NSString stringWithUTF8String:pnames];
+        names = [names stringByReplacingOccurrencesOfString:@"|" withString:@"\n"];
+    }
+    SQLOK(sqlite3_finalize(statement), self.curbRampData.database);
+    [self close:opened];
+    
+   return names;
+
+}
+
 -(void) setStreetNamesForIntersection:(int)intID
                                    to:(NSString*)newNames
 {
