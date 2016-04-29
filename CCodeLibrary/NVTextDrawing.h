@@ -40,6 +40,8 @@
 + (BOOL)getRotation:(CGFloat *)rotation
     ofLongestStraightLine:(int)nPoints
              points:(DPOINT *)pPoints
+           numLoops:(int)numLoops
+            loopLen:(int*)polyPartLen
           maxOffset:(CGFloat)offset
           minLength:(CGFloat)minLength;
 

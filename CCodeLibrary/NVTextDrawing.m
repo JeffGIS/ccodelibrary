@@ -4,6 +4,18 @@
 @import CoreText;
 #import "NVTextDrawing.h"
 
+@interface TextAttempt: NSObject
+@property NSString * text;
+@property CGFloat mpX;
+@property CGFloat mpY;
+@property CGFloat textWidth;
+@property CGFloat textHeight;
+@property CGFloat rotation;
+@property CGFloat fontSize;
+@end
+@implementation TextAttempt
+@end
+
 @implementation NVTextDrawing
 
 + (BOOL)continue:(NSInteger) processingID
@@ -35,16 +47,132 @@
      andNumLoops:(NSInteger)numLoops
          loopLen:(int*)polyPartLen
     withinBounds:(LPMNMXCORD)pBounds
-        fontSize:(CGFloat)fontSize
+        fontSize:(CGFloat)desiredFontSize
      minFontSize:(CGFloat)minFontSize
        textColor:(UIColor *)textColor
     processingID:(NSInteger)processingID
+{
+    CGFloat rotation = 0;
+    TextAttempt* ta = [NVTextDrawing computeText:text
+                                       inContext:context
+                                   withinPolygon:pPoints
+                                   withNumPoints:numPoints
+                                     andNumLoops:numLoops
+                                         loopLen:polyPartLen
+                                    withinBounds:pBounds
+                                        fontSize:desiredFontSize
+                                     minFontSize:minFontSize
+                                        rotation:rotation
+                                       textColor:textColor
+                                    processingID:processingID];
+    CGFloat minTextWidth = ta.textWidth;
+    int ii;
+    if ([text isEqualToString:@"New Hope"])
+        ii=1;
+    //try it level
+    if (ta.fontSize >= desiredFontSize)
+    {
+        [NVTextDrawing drawText:ta.text
+          inRotatedRect:context
+               rectMidX:ta.mpX
+               rectMidY:ta.mpY
+                  width:ta.textWidth
+                 height:ta.textHeight
+               rotation:ta.rotation
+               fontSize:ta.fontSize
+              textColor:textColor];
+        return;
+    }
+    else
+    {
+    //try it rotated
+        if ([NVTextDrawing getRotation:&rotation
+                 ofLongestStraightLine:(int)numPoints
+                                points:pPoints
+                              numLoops:numLoops
+                               loopLen:polyPartLen
+                             maxOffset:2.0
+                            minLength:minTextWidth])
+        {
+            TextAttempt* ta2 = [NVTextDrawing computeText:text
+                                               inContext:context
+                                           withinPolygon:pPoints
+                                           withNumPoints:numPoints
+                                             andNumLoops:numLoops
+                                                 loopLen:polyPartLen
+                                            withinBounds:pBounds
+                                                fontSize:desiredFontSize
+                                             minFontSize:minFontSize
+                                                 rotation:rotation
+                                                textColor:textColor
+                                            processingID:processingID];
+            if (ta2.fontSize >= minFontSize && ta2.fontSize > ta.fontSize)
+            {
+                [NVTextDrawing drawText:ta2.text
+                          inRotatedRect:context
+                               rectMidX:ta2.mpX
+                               rectMidY:ta2.mpY
+                                  width:ta2.textWidth
+                                 height:ta2.textHeight
+                               rotation:ta2.rotation
+                               fontSize:ta2.fontSize
+                              textColor:textColor];
+                return;
+            }
+
+     
+        }
+    }
+    if (ta.fontSize >= minFontSize)
+    {
+        [NVTextDrawing drawText:ta.text
+                  inRotatedRect:context
+                       rectMidX:ta.mpX
+                       rectMidY:ta.mpY
+                          width:ta.textWidth
+                         height:ta.textHeight
+                       rotation:ta.rotation
+                       fontSize:ta.fontSize
+                      textColor:textColor];
+    }
+
+}
+
++ (TextAttempt*)computeText:(NSString *)text
+                  inContext:(CGContextRef)context
+              withinPolygon:(LPDPOINT)pPoints
+              withNumPoints:(NSInteger)numPoints
+                andNumLoops:(NSInteger)numLoops
+                    loopLen:(int*)polyPartLen
+               withinBounds:(LPMNMXCORD)pBounds
+                   fontSize:(CGFloat)fontSize
+                minFontSize:(CGFloat)minFontSize
+                   rotation:(CGFloat)rotation
+                  textColor:(UIColor *)textColor
+               processingID:(NSInteger)processingID
 
 {
+    TextAttempt * ta = [[TextAttempt alloc]init];
     NSInteger nLines = 0;
     CGFloat textArea = 0.0;
     CGFloat aveCharWidth = 0.0, aveCharHeight = 0.0;
-
+    BOOL isRotated = FALSE;
+    DPOINT midPt;
+    
+    if (rotation != 0)
+    {
+        isRotated = TRUE;
+        LPDPOINT pPointsRotated = malloc (numPoints * sizeof(DPOINT)+4);
+        MNMXCORD areaBounds = PolyBounds(pPoints, (int)numPoints);
+        midPt = DBoundsMid(&areaBounds);
+        for (int i = 0;i<numPoints;i++)
+        {
+            double az = getazd(&midPt, &pPoints[i]);
+            double d = ldistpp(&midPt,&pPoints[i]);
+            pPointsRotated[i] = dnewpt(&midPt, az-rotation, d);
+        }
+        pPoints = pPointsRotated;
+    }
     PointInArea *pia = [[PointInArea alloc] init];
     pia.maxDimension = 256;
     
@@ -105,18 +233,6 @@
         textPoints[i].x -= textMid.x;
         textPoints[i].y -= textMid.y;
     }
-    
-    CGFloat rotation = 0.0;
-/*
-    if ([NVTextDrawing getRotation:&rotation
-             ofLongestStraightLine:(int)numPoints
-                            points:pPoints
-                         maxOffset:1.0
-                         minLength:textWidth])
-    {
-        
-    }
-*/    
     
     //LPDPOINT testPoints = (LPDPOINT)malloc(nTextPoints * sizeof(DPOINT) + 4);
     DPOINT testPoints[256];
@@ -231,19 +347,28 @@
                     fitY[iFit] += fitY[iFit-1];
                     fitY[iFit] /= 2;
                 }
-                [NVTextDrawing drawText:text
-                          inRotatedRect:context
-                               rectMidX:fitX[iFit]
-                               rectMidY:fitY[iFit]
-                                  width:(textWidth * fontFactor)
-                                 height:(textHeight * fontFactor)
-                               rotation:rotation
-                               fontSize:fontSize
-                              textColor:textColor];
+                
+                DPOINT pt = {fitX[iFit],fitY[iFit]};
+                if (isRotated)
+                {
+                    double az = getazd(&midPt, &pt);
+                    double d = ldistpp(&midPt,&pt);
+                    pt = dnewpt(&midPt, az+rotation, d);
+                    
+                }
+                ta.text = text.copy;
+                ta.mpX = pt.x;
+                ta.mpY = pt.y;
+                ta.textWidth = (textWidth * fontFactor);
+                ta.textHeight = (textHeight * fontFactor);
+                ta.rotation = rotation;
+                ta.fontSize = fontSize;
             }
         }
     }
-    
+    if (isRotated)
+        free (pPoints);
+    return ta;
 }
 
 + (void)drawText:(NSString *)text
@@ -410,11 +535,16 @@
 + (BOOL)getRotation:(CGFloat *)rotation
 ofLongestStraightLine:(int)nPoints
              points:(DPOINT *)pPoints
+        numLoops:(int)numLoops
+            loopLen:(int*)polyPartLen
           maxOffset:(CGFloat)offset
           minLength:(CGFloat)minLength
 {
     BOOL rtn = NO;
     CGFloat longestLine = 0.0, currentRot = 0.0;
+    
+    if (numLoops > 1)
+        nPoints = polyPartLen[0];
     nPoints--;
     
     for (int i = 0; i < nPoints; i++)
@@ -455,7 +585,7 @@ ofLongestStraightLine:(int)nPoints
             
             CGFloat lineLength = GetPolyLengthD(&wrappedPoints[i], numPoints);
             
-            if ((lineLength > longestLine) && (maxDiff < offset))
+            if ((lineLength > longestLine/2) && (maxDiff < offset))
             {
                 currentRot = b;
                 longestLine = lineLength;

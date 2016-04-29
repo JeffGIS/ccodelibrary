@@ -17,6 +17,14 @@ bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol)
         return FALSE;
     return TRUE;
 }
+
+bool samePoint (LPPOINT p1, LPPOINT p2)
+{
+    if (p1->x == p2->x && p1->y == p2->y)
+        return TRUE;
+    return FALSE;
+}
+
 double LTWOPI (double AZ1)
 {
     if (AZ1<0)
@@ -1456,6 +1464,16 @@ DPOINT TranDPOINT (LPDPOINT pPoint,LPTRANDATA  hTran)
     TRANS2 (pPoint->x,pPoint->y, &Point.x,&Point.y,hTran);
     return Point;
 }
+
+POINT TranDPOINTtoPOINT (LPDPOINT pPoint,LPTRANDATA  hTran)
+{
+    DPOINT DPoint;
+    POINT Point;
+    
+    TRANS2 (pPoint->x,pPoint->y, &DPoint.x,&DPoint.y,hTran);
+    return DPointToPoint(&DPoint);
+}
+
 
 void TranPoints(LPDPOINT FromPt, LPDPOINT ToPt, int nPt, LPTRANDATA hTran)
 {
