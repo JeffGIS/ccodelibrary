@@ -175,16 +175,26 @@
 
 - (void)hideLargeAlertView:(BOOL)animated
 {
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         self.alpha = 0.0;
-                         _overlayView.alpha = 0.0;
-                         _tabBar.alpha = 1.0;
-                     } completion:^(BOOL finished) {
-                         [_overlayView removeFromSuperview];
-                         [self removeFromSuperview];
-                         _tabBar.userInteractionEnabled = YES;
-                     }];
+    if (animated)
+    {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             self.alpha = 0.0;
+                             _overlayView.alpha = 0.0;
+                             _tabBar.alpha = 1.0;
+                         } completion:^(BOOL finished) {
+                             [_overlayView removeFromSuperview];
+                             [self removeFromSuperview];
+                             _tabBar.userInteractionEnabled = YES;
+                         }];
+    }
+    
+    else
+    {
+        [_overlayView removeFromSuperview];
+        [self removeFromSuperview];
+        _tabBar.userInteractionEnabled = YES;
+    }
 }
 
 - (CGFloat)getHeightForText:(NSString *)text

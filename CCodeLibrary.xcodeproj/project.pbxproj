@@ -19,6 +19,8 @@
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
+		690746E51CD41DCB00B31D8F /* NVTextViewAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 690746E41CD41DCB00B31D8F /* NVTextViewAlert.m */; };
+		690746E61CD4206500B31D8F /* NVTextViewAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 690746E31CD41DCB00B31D8F /* NVTextViewAlert.h */; };
 		690E829F1C11055F00AB410E /* YTPlayerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698F987A1C10B96B009F2F01 /* YTPlayerView.h */; };
 		691636221C1FC790000C61B8 /* NVTileCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 691636211C1FC790000C61B8 /* NVTileCompiler.m */; };
 		691636231C1FDA11000C61B8 /* NVTileCompiler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 691636201C1FC790000C61B8 /* NVTileCompiler.h */; };
@@ -329,6 +331,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				690746E61CD4206500B31D8F /* NVTextViewAlert.h in CopyFiles */,
 				BBE299531CBD30BB0045B3DC /* CityOrOrganizationData.h in CopyFiles */,
 				69C3DFA71CB4118D00DC1779 /* NVWebView.h in CopyFiles */,
 				69C3DFA31CB3807200DC1779 /* PercentInArea.h in CopyFiles */,
@@ -478,6 +481,8 @@
 		1FB3605519AE7E8200592B1D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagePlacesDatabase.h; sourceTree = "<group>"; };
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
+		690746E31CD41DCB00B31D8F /* NVTextViewAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextViewAlert.h; sourceTree = "<group>"; };
+		690746E41CD41DCB00B31D8F /* NVTextViewAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextViewAlert.m; sourceTree = "<group>"; };
 		691636201C1FC790000C61B8 /* NVTileCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTileCompiler.h; sourceTree = "<group>"; };
 		691636211C1FC790000C61B8 /* NVTileCompiler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTileCompiler.m; sourceTree = "<group>"; };
 		6919EAF61C27AF1700A9D0F1 /* NVUnitPickerTextAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVUnitPickerTextAlert.h; sourceTree = "<group>"; };
@@ -960,6 +965,8 @@
 				694F00781C1B4BBA0074AF72 /* MapToolbar.m */,
 				A9BF33381B76FCED00A72E17 /* NVAlertView.h */,
 				A9BF33391B76FCED00A72E17 /* NVAlertView.m */,
+				690746E31CD41DCB00B31D8F /* NVTextViewAlert.h */,
+				690746E41CD41DCB00B31D8F /* NVTextViewAlert.m */,
 				A98A57A61B20ADE600906FBC /* NVCalibrationController.h */,
 				A98A57A71B20ADE600906FBC /* NVCalibrationController.m */,
 				6943041D1C3351E20077EC9F /* NVColor.h */,
@@ -1374,6 +1381,7 @@
 				EBC01D131BED1C8C0004C751 /* domoon.c in Sources */,
 				EBC01D221BED1C8C0004C751 /* nep404.c in Sources */,
 				A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */,
+				690746E51CD41DCB00B31D8F /* NVTextViewAlert.m in Sources */,
 				694F00791C1B4BBA0074AF72 /* MapToolbar.m in Sources */,
 				69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */,
 				A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */,
