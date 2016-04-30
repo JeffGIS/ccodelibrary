@@ -66,9 +66,24 @@
                                        textColor:textColor
                                     processingID:processingID];
     CGFloat minTextWidth = ta.textWidth;
+    /*
     int ii;
-    if ([text isEqualToString:@"New Hope"])
-        ii=1;
+     if (![text isEqualToString:@"New Hope"])
+     return;
+    for (int i = 0;i<polyPartLen[0]-1;i++)
+    {
+        [NVTextDrawing drawText:[NSString stringWithFormat:@"%i",i]
+                  inRotatedRect:context
+                       rectMidX:pPoints[i].x
+                       rectMidY:pPoints[i].y
+                          width:40
+                         height:40
+                       rotation:0
+                       fontSize:18
+                      textColor:textColor];
+        
+    }*/
+
     //try it level
     if (ta.fontSize >= desiredFontSize)
     {
@@ -540,14 +555,28 @@ ofLongestStraightLine:(int)nPoints
           maxOffset:(CGFloat)offset
           minLength:(CGFloat)minLength
 {
+    int ii;
     BOOL rtn = NO;
     CGFloat longestLine = 0.0, currentRot = 0.0;
+ 
+/*    {
+        DPOINT p[4];
+        double a,b, maxDiff;
+        int loc;
+        p[0].x =1;p[0].y=0;
+        p[1].x =1; p[1].y = 1;
+        p[2].x =1;p[2].y=2.1;
+        p[3].x =1;p[3].y=3;
+        
+        LINFIT(p, 4, &a, &b, &maxDiff, &loc);
+        ii=1;
+    }*/
     
     if (numLoops > 1)
         nPoints = polyPartLen[0];
     nPoints--;
-    
-    for (int i = 0; i < nPoints; i++)
+   
+/*    for (int i = 0; i < nPoints; i++)
     {
         CGFloat lineLength = GetPolyLengthD(&pPoints[i], 2);
         
@@ -557,6 +586,11 @@ ofLongestStraightLine:(int)nPoints
             longestLine = lineLength;
         }
     }
+    if (longestLine > minLength)
+    {
+        *rotation = currentRot;
+        return YES;
+    }*/
     
     if (nPoints > 4)
     {
@@ -576,25 +610,31 @@ ofLongestStraightLine:(int)nPoints
         {
             long numPoints = 2;
             
+            if (i > nPoints)
+                break;
             do
             {
                 numPoints++;
                 lastDiff = maxDiff;
                 lastRot = b;
+                maxDiff = -offset;
                 LINFIT(&wrappedPoints[i], numPoints, &a, &b, &maxDiff, &locOfMaxDiff);
             }
             
-            while ((maxDiff < offset) && (numPoints < nPoints));
+            while ((maxDiff < offset) && (i+numPoints < nPoints*2));
             
-            numPoints--;
-            if (numPoints > 2)
+            if (lastDiff < offset)
             {
-                CGFloat lineLength = GetPolyLengthD(&wrappedPoints[i], numPoints);
-                lastRot = getazd(&wrappedPoints[i], &wrappedPoints[i+numPoints-1]);
-                if ((lineLength > longestLine) && (lastDiff < offset))
+                numPoints--;
+                if (numPoints > 2)
                 {
-                    currentRot = lastRot;
-                    longestLine = lineLength;
+                    CGFloat lineLength = GetPolyLengthD(&wrappedPoints[i], numPoints);
+                    lastRot = getazd(&wrappedPoints[i], &wrappedPoints[i+numPoints-1]);
+                    if ((lineLength > longestLine) && (lastDiff < offset))
+                    {
+                        currentRot = lastRot;
+                        longestLine = lineLength;
+                    }
                 }
             }
         }

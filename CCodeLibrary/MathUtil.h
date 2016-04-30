@@ -161,5 +161,8 @@ long GSSifilelength(FILE *fid);
 long BigRead(FILE *fid, LPVOID pmem, long len);
 long BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc);
 long FileLength (FILE *fid);
+short LINSEC_TOL (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
+                  double A2,double *X3,double *Y3,double INTOL);
+
 
 #endif

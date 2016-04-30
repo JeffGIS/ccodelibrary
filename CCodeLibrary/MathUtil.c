@@ -1008,14 +1008,32 @@ float MULREG(double Y[], double X1[], double X2[], int N, double *A, double *B, 
     return(RSQ);
 }
 
+double slopeToAZ (double slope)
+{
+    double az = 0;
+    DPOINT pt1 = {0,0};
+    DPOINT pt2 = {1,slope};
+    az = getazd (&pt1,&pt2);
+    return az;
+}
 bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long *LOFMDF)
 {
 	double SUMX = 0, SUMY = 0, XAVE, YAVE, SMXDYD, SMXDSQ, SUMXY = 0, SUMXSQ = 0, DIFF;
 	double	SUMxy = 0, SUMx2 = 0;
 	long I;
+    double Xint;
+    double quitDiff = DBL_MAX;
 	LPDPOINT pPointIn = pPoint;
     
-	for (I = 0; I < N; I++, pPoint++)
+    if (MAXDIF)
+    {
+        *LOFMDF = 0;
+        if (*MAXDIF < 0)
+            quitDiff = -*MAXDIF;
+        *MAXDIF = 0;
+    }
+    
+    for (I = 0; I < N; I++, pPoint++)
 	{
         SUMX += pPoint->x;
         SUMY += pPoint->y;
@@ -1029,16 +1047,10 @@ bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long 
     SMXDYD = SUMXY  - (SUMX * SUMY) / N;
     
     if (!SMXDSQ)
-    	return false;
+    	goto Vertical;
     
     *B = SMXDYD / SMXDSQ;
     *A = YAVE - *B * XAVE;
-    
-	if (MAXDIF)
-	{
-		*LOFMDF = 0;
-		*MAXDIF = 0;
-	}
     
     pPoint = pPointIn;
     
@@ -1049,22 +1061,54 @@ bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long 
 	}
     
 	if (!SUMx2)
-		return false;
+        goto Vertical;
     
 	*B = SUMxy / SUMx2;
-    pPoint = pPointIn;
-    
-	for (I = 0; I < N; I++, pPoint++)
-	{
-    	DIFF = fabs(pPoint->y - (*A + *B * pPoint->x));
-        
-        if (MAXDIF && DIFF > *MAXDIF)
+    if (MAXDIF)
+    {
+        pPoint = pPointIn;
+        double A1=slopeToAZ(*B), A2=A1 + HALFPI;
+        double tol = 0.0001;
+        for (I = 0; I < N; I++, pPoint++)
         {
-         	*MAXDIF = DIFF;
-         	*LOFMDF = I;
+            DPOINT intPt;
+            DIFF = fabs(pPoint->y - (*A + *B * pPoint->x));
+            short rtn = LINSEC_TOL (pPoint->x,pPoint->y,A2,0,*A,
+                                    A1,&intPt.x,&intPt.y,tol);
+            DIFF = ldistpp(&intPt,pPoint);
+            if (DIFF > *MAXDIF)
+            {
+                *MAXDIF = DIFF;
+                *LOFMDF = I;
+                if (*MAXDIF > quitDiff)
+                    break;
+            }
         }
     }
     return true;
+Vertical:
+    if (MAXDIF)
+    {
+        pPoint = pPointIn;
+        Xint = pPoint->x;
+        for (int i = 1;i<N;i++)
+            Xint += pPoint->x;
+        Xint /= N;
+        pPoint = pPointIn;
+        for (I = 0; I < N; I++, pPoint++)
+        {
+            DPOINT intPt;
+            DIFF = fabs(pPoint->x - Xint);
+            if (DIFF > *MAXDIF)
+            {
+                *MAXDIF = DIFF;
+                *LOFMDF = I;
+                if (*MAXDIF > quitDiff)
+                    break;
+            }
+        }
+    }
+    return false;
 }
 
 void CloseTRANS2 (LPTRANDATA *phlpTran)
