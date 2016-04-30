@@ -573,3 +573,80 @@ uint occurrencesOfCharacter(unichar character, NSString *string)
     
     return count;
 }
+
+NSString * splitLine (NSString * line)
+{
+    NSString *splitLines = nil;
+    LPSTR tx = line.UTF8String;
+    int midp = line.length / 2;
+    int spliti = 0;
+    int mind = INT_MAX;
+    int d;
+    int i=0;
+    
+    while (tx[i])
+    {
+        if (tx[i] == ' ')
+        {
+            d = abs (i - midp);
+            if (d < mind)
+            {
+                mind = d;
+                spliti = i;
+            }
+        }
+        i++;
+    }
+    if (spliti)
+    {
+        tx[spliti] = 0;
+        splitLines = [NSString stringWithFormat:@"%s\n%s",tx,&tx[spliti+1]];
+        tx[spliti] = ' ';
+    }
+    return splitLines;
+}
+NSString * splitLongestLine (NSString * text)
+{
+    NSString * splitText = nil;
+    NSString * line;
+    NSArray *textLines = [text componentsSeparatedByString:@"\n"];
+    int nLines = textLines.count;
+    if (nLines)
+    {
+        int maxLen = 0;
+        int maxi = 0;
+        for (int i=0;i<nLines;i++)
+        {
+            line = textLines[i];
+            int len = line.length;
+            if (len > maxLen)
+            {
+                maxLen = max (len,maxLen);
+                maxi = i;
+            }
+        }
+        line = textLines[maxi];
+        NSString * newLine = splitLine (line);
+        if (newLine)
+        {
+            char delim[2] = {0};
+            splitText = @"";
+            for (int i = 0;i<maxi-1;i++)
+            {
+                line = textLines[i];
+                splitText = [NSString stringWithFormat:@"%@%s%@",splitText,delim,line];
+                delim[0] = '\n';
+            }
+            splitText = [NSString stringWithFormat:@"%@%s%@",splitText,delim,newLine];
+            delim[0] = '\n';
+            for (int i = maxi+1;i<nLines;i++)
+            {
+                line = textLines[i];
+                splitText = [NSString stringWithFormat:@"%@%s%@",splitText,delim,line];
+                delim[0] = '\n';
+            }
+        
+        }
+    }
+    return splitText;
+}

@@ -36,5 +36,6 @@ NSString *removeOpeningReturn(NSString *string);
 NSString *removePIDPrefix(NSString *string);
 NSMutableAttributedString *addLineBreakToLastSpace(NSString *string);
 NSString *reverseString(NSString *string);
+NSString * splitLongestLine (NSString * text);
 NSMutableArray *sortByContentsOfParentheses(NSMutableArray *array);
 uint occurrencesOfCharacter(unichar character, NSString *string);

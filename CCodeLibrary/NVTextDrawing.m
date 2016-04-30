@@ -14,6 +14,19 @@
 @property CGFloat fontSize;
 @end
 @implementation TextAttempt
+-(id) copyWithZone: (NSZone *) zone
+{
+    TextAttempt *another = [[TextAttempt allocWithZone: zone] init];
+    
+    another.text = [NSString stringWithString:self.text];
+    another.mpX = _mpX;
+    another.mpY = _mpY;
+    another.textWidth = _textWidth;
+    another.textHeight = _textHeight;
+    another.rotation = _rotation;
+    another.fontSize= _fontSize;
+    return another;
+}
 @end
 
 @implementation NVTextDrawing
@@ -53,7 +66,12 @@
     processingID:(NSInteger)processingID
 {
     CGFloat rotation = 0;
-    TextAttempt* ta = [NVTextDrawing computeText:text
+    TextAttempt* ta[4];
+    int nAttempts = 0;
+    
+Top:
+    //try it level
+    ta[nAttempts++] = [NVTextDrawing computeText:text
                                        inContext:context
                                    withinPolygon:pPoints
                                    withNumPoints:numPoints
@@ -65,51 +83,50 @@
                                         rotation:rotation
                                        textColor:textColor
                                     processingID:processingID];
-    CGFloat minTextWidth = ta.textWidth;
+    CGFloat minTextWidth = ta[nAttempts-1].textWidth;
     /*
-    int ii;
+     int ii;
      if (![text isEqualToString:@"New Hope"])
      return;
-    for (int i = 0;i<polyPartLen[0]-1;i++)
+     for (int i = 0;i<polyPartLen[0]-1;i++)
+     {
+     [NVTextDrawing drawText:[NSString stringWithFormat:@"%i",i]
+     inRotatedRect:context
+     rectMidX:pPoints[i].x
+     rectMidY:pPoints[i].y
+     width:40
+     height:40
+     rotation:0
+     fontSize:18
+     textColor:textColor];
+     
+     }*/
+    
+    if (ta[nAttempts-1].fontSize >= desiredFontSize)
     {
-        [NVTextDrawing drawText:[NSString stringWithFormat:@"%i",i]
+        [NVTextDrawing drawText:ta[nAttempts-1].text
                   inRotatedRect:context
-                       rectMidX:pPoints[i].x
-                       rectMidY:pPoints[i].y
-                          width:40
-                         height:40
-                       rotation:0
-                       fontSize:18
+                       rectMidX:ta[nAttempts-1].mpX
+                       rectMidY:ta[nAttempts-1].mpY
+                          width:ta[nAttempts-1].textWidth
+                         height:ta[nAttempts-1].textHeight
+                       rotation:ta[nAttempts-1].rotation
+                       fontSize:ta[nAttempts-1].fontSize
                       textColor:textColor];
-        
-    }*/
-
-    //try it level
-    if (ta.fontSize >= desiredFontSize)
-    {
-        [NVTextDrawing drawText:ta.text
-          inRotatedRect:context
-               rectMidX:ta.mpX
-               rectMidY:ta.mpY
-                  width:ta.textWidth
-                 height:ta.textHeight
-               rotation:ta.rotation
-               fontSize:ta.fontSize
-              textColor:textColor];
         return;
     }
     else
     {
-    //try it rotated
+        //try it rotated
         if ([NVTextDrawing getRotation:&rotation
                  ofLongestStraightLine:(int)numPoints
                                 points:pPoints
                               numLoops:numLoops
                                loopLen:polyPartLen
                              maxOffset:1.0
-                            minLength:minTextWidth])
+                             minLength:minTextWidth])
         {
-            TextAttempt* ta2 = [NVTextDrawing computeText:text
+            ta[nAttempts++] = [NVTextDrawing computeText:text
                                                inContext:context
                                            withinPolygon:pPoints
                                            withNumPoints:numPoints
@@ -118,39 +135,54 @@
                                             withinBounds:pBounds
                                                 fontSize:desiredFontSize
                                              minFontSize:minFontSize
-                                                 rotation:rotation
-                                                textColor:textColor
+                                                rotation:rotation
+                                               textColor:textColor
                                             processingID:processingID];
-            if (ta2.fontSize >= minFontSize && ta2.fontSize > ta.fontSize)
+            if (ta[nAttempts-1].fontSize >= desiredFontSize)
             {
-                [NVTextDrawing drawText:ta2.text
+                [NVTextDrawing drawText:ta[nAttempts-1].text
                           inRotatedRect:context
-                               rectMidX:ta2.mpX
-                               rectMidY:ta2.mpY
-                                  width:ta2.textWidth
-                                 height:ta2.textHeight
-                               rotation:ta2.rotation
-                               fontSize:ta2.fontSize
+                               rectMidX:ta[nAttempts-1].mpX
+                               rectMidY:ta[nAttempts-1].mpY
+                                  width:ta[nAttempts-1].textWidth
+                                 height:ta[nAttempts-1].textHeight
+                               rotation:ta[nAttempts-1].rotation
+                               fontSize:ta[nAttempts-1].fontSize
                               textColor:textColor];
                 return;
             }
-
-     
+            
+            
+        }
+        if (nAttempts < 3)
+        {
+            NSString * splitText = splitLongestLine (text);
+            if (splitText)
+            {
+                text = splitText;
+                goto Top;
+            }
         }
     }
-    if (ta.fontSize >= minFontSize)
+    int maxi = 0;
+    for (int i = 1;i < nAttempts; i++)
     {
-        [NVTextDrawing drawText:ta.text
+        if (ta[i].fontSize > ta[maxi].fontSize)
+            maxi = i;
+    }
+    if (ta[maxi].fontSize >= minFontSize)
+    {
+        [NVTextDrawing drawText:ta[maxi].text
                   inRotatedRect:context
-                       rectMidX:ta.mpX
-                       rectMidY:ta.mpY
-                          width:ta.textWidth
-                         height:ta.textHeight
-                       rotation:ta.rotation
-                       fontSize:ta.fontSize
+                       rectMidX:ta[maxi].mpX
+                       rectMidY:ta[maxi].mpY
+                          width:ta[maxi].textWidth
+                         height:ta[maxi].textHeight
+                       rotation:ta[maxi].rotation
+                       fontSize:ta[maxi].fontSize
                       textColor:textColor];
     }
-
+    
 }
 
 + (TextAttempt*)computeText:(NSString *)text
@@ -575,7 +607,9 @@ ofLongestStraightLine:(int)nPoints
     if (numLoops > 1)
         nPoints = polyPartLen[0];
     nPoints--;
-   
+  
+    
+    
 /*    for (int i = 0; i < nPoints; i++)
     {
         CGFloat lineLength = GetPolyLengthD(&pPoints[i], 2);
