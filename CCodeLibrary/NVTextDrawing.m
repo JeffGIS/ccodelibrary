@@ -91,7 +91,7 @@
                                 points:pPoints
                               numLoops:numLoops
                                loopLen:polyPartLen
-                             maxOffset:2.0
+                             maxOffset:1.0
                             minLength:minTextWidth])
         {
             TextAttempt* ta2 = [NVTextDrawing computeText:text
@@ -568,33 +568,41 @@ ofLongestStraightLine:(int)nPoints
             wrappedPoints[nPoints + i] = pPoints[i];
         }
         
-        double a = 0.0, b = 0.0, maxDiff = 0.0;
+        double a = 0.0, b = 0.0, maxDiff = offset * 2;
         long locOfMaxDiff = 0;
+        double lastDiff, lastRot;
         
-        for (int i = 0; i < nPoints; i++)
+        for (int i = 0; i < nPoints*2; i++)
         {
             long numPoints = 2;
             
             do
             {
                 numPoints++;
+                lastDiff = maxDiff;
+                lastRot = b;
                 LINFIT(&wrappedPoints[i], numPoints, &a, &b, &maxDiff, &locOfMaxDiff);
             }
             
             while ((maxDiff < offset) && (numPoints < nPoints));
             
-            CGFloat lineLength = GetPolyLengthD(&wrappedPoints[i], numPoints);
-            
-            if ((lineLength > longestLine/2) && (maxDiff < offset))
+            numPoints--;
+            if (numPoints > 2)
             {
-                currentRot = b;
-                longestLine = lineLength;
+                CGFloat lineLength = GetPolyLengthD(&wrappedPoints[i], numPoints);
+                lastRot = getazd(&wrappedPoints[i], &wrappedPoints[i+numPoints-1]);
+                if ((lineLength > longestLine) && (lastDiff < offset))
+                {
+                    currentRot = lastRot;
+                    longestLine = lineLength;
+                }
             }
         }
         
         free(wrappedPoints);
     }
     
+    currentRot = LTWOPI(currentRot);
     if ((currentRot > HALFPI) && (currentRot < (3.0 * HALFPI)))
         currentRot = LTWOPI(currentRot + M_PI);
     
