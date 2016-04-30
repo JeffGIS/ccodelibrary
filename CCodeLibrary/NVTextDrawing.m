@@ -68,6 +68,7 @@
     CGFloat rotation = 0;
     TextAttempt* ta[4];
     int nAttempts = 0;
+    int npass = 0;
     
 Top:
     //try it level
@@ -154,7 +155,7 @@ Top:
             
             
         }
-        if (nAttempts < 3)
+        if (npass++ < 1)
         {
             NSString * splitText = splitLongestLine (text);
             if (splitText)

@@ -631,7 +631,7 @@ NSString * splitLongestLine (NSString * text)
         {
             char delim[2] = {0};
             splitText = @"";
-            for (int i = 0;i<maxi-1;i++)
+            for (int i = 0;i<maxi;i++)
             {
                 line = textLines[i];
                 splitText = [NSString stringWithFormat:@"%@%s%@",splitText,delim,line];
