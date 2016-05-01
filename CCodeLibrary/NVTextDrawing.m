@@ -611,7 +611,7 @@ ofLongestStraightLine:(int)nPoints
   
     
     
-/*    for (int i = 0; i < nPoints; i++)
+    for (int i = 0; i < nPoints; i++)
     {
         CGFloat lineLength = GetPolyLengthD(&pPoints[i], 2);
         
@@ -621,11 +621,6 @@ ofLongestStraightLine:(int)nPoints
             longestLine = lineLength;
         }
     }
-    if (longestLine > minLength)
-    {
-        *rotation = currentRot;
-        return YES;
-    }*/
     
     if (nPoints > 4)
     {
