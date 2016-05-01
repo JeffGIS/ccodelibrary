@@ -69,9 +69,10 @@
     TextAttempt* ta[4];
     int nAttempts = 0;
     int npass = 0;
-    NSString *text = textIN;
+    NSString *text;
     
 Top:
+    text = textIN;
     //try it level
     ta[nAttempts++] = [NVTextDrawing computeText:text
                                        inContext:context
