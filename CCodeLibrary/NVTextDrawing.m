@@ -53,7 +53,7 @@
     return numLines;
 }
 
-+ (void)drawText:(NSString *)text
++ (void)drawText:(NSString *)textIN
        inContext:(CGContextRef)context
    withinPolygon:(LPDPOINT)pPoints
    withNumPoints:(NSInteger)numPoints
@@ -69,6 +69,7 @@
     TextAttempt* ta[4];
     int nAttempts = 0;
     int npass = 0;
+    NSString *text = textIN;
     
 Top:
     //try it level
@@ -116,7 +117,38 @@ Top:
                       textColor:textColor];
         return;
     }
-    else
+    NSString * splitText = splitLongestLine (textIN);
+    if (splitText)
+    {
+        text = splitText;
+        
+        ta[nAttempts++] = [NVTextDrawing computeText:text
+                                           inContext:context
+                                       withinPolygon:pPoints
+                                       withNumPoints:numPoints
+                                         andNumLoops:numLoops
+                                             loopLen:polyPartLen
+                                        withinBounds:pBounds
+                                            fontSize:desiredFontSize
+                                         minFontSize:minFontSize
+                                            rotation:rotation
+                                           textColor:textColor
+                                        processingID:processingID];
+        if (ta[nAttempts-1].fontSize >= desiredFontSize)
+        {
+            [NVTextDrawing drawText:ta[nAttempts-1].text
+                      inRotatedRect:context
+                           rectMidX:ta[nAttempts-1].mpX
+                           rectMidY:ta[nAttempts-1].mpY
+                              width:ta[nAttempts-1].textWidth
+                             height:ta[nAttempts-1].textHeight
+                           rotation:ta[nAttempts-1].rotation
+                           fontSize:ta[nAttempts-1].fontSize
+                          textColor:textColor];
+            return;
+        }
+    }
+    if (npass++ < 1)
     {
         //try it rotated
         if ([NVTextDrawing getRotation:&rotation
@@ -126,44 +158,8 @@ Top:
                                loopLen:polyPartLen
                              maxOffset:1.0
                              minLength:minTextWidth])
-        {
-            ta[nAttempts++] = [NVTextDrawing computeText:text
-                                               inContext:context
-                                           withinPolygon:pPoints
-                                           withNumPoints:numPoints
-                                             andNumLoops:numLoops
-                                                 loopLen:polyPartLen
-                                            withinBounds:pBounds
-                                                fontSize:desiredFontSize
-                                             minFontSize:minFontSize
-                                                rotation:rotation
-                                               textColor:textColor
-                                            processingID:processingID];
-            if (ta[nAttempts-1].fontSize >= desiredFontSize)
-            {
-                [NVTextDrawing drawText:ta[nAttempts-1].text
-                          inRotatedRect:context
-                               rectMidX:ta[nAttempts-1].mpX
-                               rectMidY:ta[nAttempts-1].mpY
-                                  width:ta[nAttempts-1].textWidth
-                                 height:ta[nAttempts-1].textHeight
-                               rotation:ta[nAttempts-1].rotation
-                               fontSize:ta[nAttempts-1].fontSize
-                              textColor:textColor];
-                return;
-            }
-            
-            
-        }
-        if (npass++ < 1)
-        {
-            NSString * splitText = splitLongestLine (text);
-            if (splitText)
-            {
-                text = splitText;
-                goto Top;
-            }
-        }
+            goto Top;
+        
     }
     int maxi = 0;
     for (int i = 1;i < nAttempts; i++)
