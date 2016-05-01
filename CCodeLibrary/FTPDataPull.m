@@ -10,6 +10,7 @@
 @property (nonatomic) unsigned long long existingFileSize;
 @property (nonatomic) NSInteger refreshOption;
 @property id <GSSiPopoverViewDelegate> savePopoverDelegate;
+@property (nonatomic) NSString *tempExtension;
 
 @end
 
@@ -24,6 +25,7 @@ static FTPDataPull * _statpull = nil;
     
     _statpull.haveCalledDelegate = NO;
     _statpull.useTestServer = NO;
+    _statpull.tempExtension = @".download";
     return _statpull;
 }
 
@@ -160,6 +162,7 @@ static FTPDataPull * _statpull = nil;
 {
     if (!_hasFailed)
     {
+        _filePath = [NSString stringWithFormat:@"%@%@", _filePath, _tempExtension];
         _fileName = fileName;
         [self setUpFTP];
     }
@@ -396,6 +399,22 @@ didReceiveResponse:(NSURLResponse *)response
 {
 #pragma unused(theConnection)
     assert(theConnection == _connection);
+    
+    if ([_filePath containsString:_tempExtension])
+    {
+        NSString *newFilePath = _filePath.stringByDeletingPathExtension;
+        NSError *error = nil;
+        
+        [NSFileManager.defaultManager moveItemAtPath:_filePath
+                                              toPath:newFilePath
+                                               error:&error];
+        
+        if (error)
+            NSLog(@"ERROR renaming file:%@", _fileName);
+        
+        else
+            _filePath = newFilePath;
+    }
     
     [self stopReceiveWithStatus:FTPStatusOK
                    statusString:@""];
