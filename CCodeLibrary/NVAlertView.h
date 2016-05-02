@@ -19,11 +19,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex;
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UIColor *buttonBorderColor;
 
-+ (NVAlertView *)showLargeAlertViewinView:(UIView *)view
-                                 delegate:(id)delegate
-                                    title:(NSString *)title
-                          buttonTextArray:(NSArray *)buttonTextArray
-                         destructiveIndex:(NSUInteger)destructiveIndex;//1-indexed (use '0' if none)
++ (instancetype)showLargeAlertViewinView:(UIView *)view
+                                delegate:(id)delegate
+                                   title:(NSString *)title
+                         buttonTextArray:(NSArray *)buttonTextArray
+                        destructiveIndex:(NSUInteger)destructiveIndex;//1-indexed (use '0' if none)
 
 - (void)hideLargeAlertView:(BOOL)animated;
 

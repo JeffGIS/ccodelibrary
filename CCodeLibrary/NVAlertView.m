@@ -14,11 +14,11 @@
 
 @implementation NVAlertView
 
-+ (NVAlertView *)showLargeAlertViewinView:(UIView *)view
-                                 delegate:(id)delegate
-                                    title:(NSString *)title
-                          buttonTextArray:(NSArray *)buttonTextArray
-                         destructiveIndex:(NSUInteger)destructiveIndex
++ (instancetype)showLargeAlertViewinView:(UIView *)view
+                                delegate:(id)delegate
+                                   title:(NSString *)title
+                         buttonTextArray:(NSArray *)buttonTextArray
+                        destructiveIndex:(NSUInteger)destructiveIndex
 {
     if (!delegate || !view || !title || !buttonTextArray)
     {

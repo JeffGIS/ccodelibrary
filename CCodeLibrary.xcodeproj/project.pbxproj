@@ -76,6 +76,8 @@
 		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
 		69DE24281C76311D00680B00 /* NVTextVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69DE24271C76311D00680B00 /* NVTextVC.m */; };
 		69DE24291C76319B00680B00 /* NVTextVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69DE24261C76311D00680B00 /* NVTextVC.h */; };
+		69DFB6A51CD71987001E1200 /* NVCRISSignupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69DFB6A41CD71987001E1200 /* NVCRISSignupView.m */; };
+		69DFB6A61CD719C3001E1200 /* NVCRISSignupView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69DFB6A31CD71987001E1200 /* NVCRISSignupView.h */; };
 		69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E8E6681C66802F00CB26CB /* NSData+CRC.m */; };
 		69E8E66A1C66809E00CB26CB /* NSData+CRC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E8E6671C66802F00CB26CB /* NSData+CRC.h */; };
 		69EB2C2A1C8755C100E1F21E /* UIDevice+Storage.m in Sources */ = {isa = PBXBuildFile; fileRef = 69EB2C291C8755C100E1F21E /* UIDevice+Storage.m */; };
@@ -331,6 +333,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69DFB6A61CD719C3001E1200 /* NVCRISSignupView.h in CopyFiles */,
 				690746E61CD4206500B31D8F /* NVTextViewAlert.h in CopyFiles */,
 				BBE299531CBD30BB0045B3DC /* CityOrOrganizationData.h in CopyFiles */,
 				69C3DFA71CB4118D00DC1779 /* NVWebView.h in CopyFiles */,
@@ -540,6 +543,8 @@
 		69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSecretAlertView.m; sourceTree = "<group>"; };
 		69DE24261C76311D00680B00 /* NVTextVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextVC.h; sourceTree = "<group>"; };
 		69DE24271C76311D00680B00 /* NVTextVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextVC.m; sourceTree = "<group>"; };
+		69DFB6A31CD71987001E1200 /* NVCRISSignupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCRISSignupView.h; sourceTree = "<group>"; };
+		69DFB6A41CD71987001E1200 /* NVCRISSignupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCRISSignupView.m; sourceTree = "<group>"; };
 		69E8E6671C66802F00CB26CB /* NSData+CRC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CRC.h"; sourceTree = "<group>"; };
 		69E8E6681C66802F00CB26CB /* NSData+CRC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CRC.m"; sourceTree = "<group>"; };
 		69EB2C281C8755C100E1F21E /* UIDevice+Storage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+Storage.h"; sourceTree = "<group>"; };
@@ -977,6 +982,8 @@
 				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
 				69450DAB1BD5F6120079F7EC /* NVContactPicker.h */,
 				69450DAC1BD5F6120079F7EC /* NVContactPicker.m */,
+				69DFB6A31CD71987001E1200 /* NVCRISSignupView.h */,
+				69DFB6A41CD71987001E1200 /* NVCRISSignupView.m */,
 				69B36F181BCB0F30004C4B69 /* NVDateRange.h */,
 				69B36F191BCB0F30004C4B69 /* NVDateRange.m */,
 				69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */,
@@ -1517,6 +1524,7 @@
 				A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */,
 				A9DDC08A1B613EF4000DEEA9 /* FTPDirectoryList.m in Sources */,
 				EBC01D141BED1C8C0004C751 /* ear404.c in Sources */,
+				69DFB6A51CD71987001E1200 /* NVCRISSignupView.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				EBC01D0F1BED1C8C0004C751 /* deltat.c in Sources */,
 				EBC01D1F1BED1C8C0004C751 /* mlat404.c in Sources */,

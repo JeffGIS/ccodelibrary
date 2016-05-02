@@ -16,10 +16,10 @@
 
 @implementation NVTextViewAlert
 
-+ (NVTextViewAlert *)showTextViewAlertinView:(UIView *)view
-                                    delegate:(id)delegate
-                                       title:(NSString *)title
-                                        text:(NSString *)text
++ (instancetype)showTextViewAlertinView:(UIView *)view
+                               delegate:(id)delegate
+                                  title:(NSString *)title
+                                   text:(NSString *)text
 {
     if (!delegate || !view || !title || !text)
     {
