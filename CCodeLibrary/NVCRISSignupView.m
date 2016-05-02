@@ -8,9 +8,9 @@
 
 @property (nonatomic, weak) id <NVCRISSignupViewDelegate> delegate;
 @property (nonatomic) UIView *overlayView;
-@property (nonatomic) UILabel *titleLabel, *promptLabel, *nameLabel, *orgLabel, *phoneLabel, *emailLabel, *userNumberLabel;
+@property (nonatomic) UILabel *titleLabel, *promptLabel, *nameLabel, *orgLabel, *phoneLabel, *emailLabel, *userNumberLabel, *termsLabel;
 @property (nonatomic) UITextField *nameTF, *orgTF, *phoneTF, *emailTF, *userNumberTF;
-@property (nonatomic) UIButton *sendButton;
+@property (nonatomic) UIButton *sendButton, *privacyButton, *termsButton, *checkmarkButton;
 
 @end
 
@@ -25,7 +25,8 @@
         return nil;
     }
     
-    if (![delegate respondsToSelector:@selector(signupView:didReturnUserNumber:)])
+    if (![delegate respondsToSelector:@selector(signupView:didReturnUserNumber:)] ||
+        ![delegate respondsToSelector:@selector(signupView:didReturnName:organization:phone:email:)])
     {
         NSLog(@"NVAlertView ERROR:Delegate must respond to all selectors in protocol");
         return nil;
@@ -39,8 +40,8 @@
     
     [view addSubview:signup.overlayView];
     
-    signup.frame = CGRectMake(0.0, 0.0, (view.frame.size.width * 0.95), (view.frame.size.height * 0.6));
-    signup.center = CGPointMake((view.frame.size.width / 2.0), (view.frame.size.height / 3.0));
+    signup.frame = CGRectMake(0.0, 0.0, (view.frame.size.width * 0.95), (view.frame.size.height * 0.65));
+    signup.center = CGPointMake((view.frame.size.width / 2.0), ((view.frame.size.height / 3.0) + 10.0));
     signup.backgroundColor = UserDefaults.defaults.appleGray;
     signup.alpha = 0.0;
     signup.layer.cornerRadius = 10.0;
@@ -48,9 +49,9 @@
     
     [view addSubview:signup];
     
-    CGFloat numElements = 8.0;
+    CGFloat numElements = 9.0;
     
-    signup.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, signup.frame.size.width,
+    signup.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(4.0, 0.0, (signup.frame.size.width - 8.0),
                                                                   (signup.frame.size.height / numElements))];
     
     signup.titleLabel.text = @"NVCRIS Signup Screen";
@@ -60,10 +61,11 @@
     
     [signup addSubview:signup.titleLabel];
     
-    signup.promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, (signup.frame.size.height / numElements),
-                                                                   signup.frame.size.width, (signup.frame.size.height / numElements))];
+    signup.promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(4.0, (signup.frame.size.height / numElements),
+                                                                   (signup.frame.size.width - 8.0),
+                                                                   (signup.frame.size.height / numElements))];
     
-    signup.promptLabel.text = @"Complete this form and tap on 'Send'\nto get a NVCRIS User Number";
+    signup.promptLabel.text = @"To continue, tap on box to agree with\nTerms of Service.";
     signup.promptLabel.font = [UIFont boldSystemFontOfSize:28.0];
     signup.promptLabel.textColor = UIColor.blackColor;
     signup.promptLabel.textAlignment = NSTextAlignmentCenter;
@@ -71,8 +73,78 @@
     
     [signup addSubview:signup.promptLabel];
     
+    signup.privacyButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    signup.privacyButton.frame = CGRectMake((signup.frame.size.width / 30.0),
+                                         (((signup.frame.size.height / numElements) * 2.0) + 8.0),
+                                         (signup.frame.size.width / 5.0),
+                                         ((signup.frame.size.height / numElements) - 16.0));
+    
+    [signup setupButton:signup.privacyButton];
+    signup.privacyButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0];
+    signup.privacyButton.titleLabel.numberOfLines = 2;
+    
+    [signup.privacyButton setTitle:@"Privacy\nPolicy"
+                          forState:UIControlStateNormal];
+    
+    [signup.privacyButton addTarget:signup
+                             action:@selector(privacyPolicyTapped:)
+                   forControlEvents:UIControlEventTouchUpInside];
+    
+    signup.termsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    signup.termsButton.frame = CGRectMake(((signup.frame.size.width / 30.0) * 8.0),
+                                            (((signup.frame.size.height / numElements) * 2.0) + 8.0),
+                                            (signup.frame.size.width / 5.0),
+                                            ((signup.frame.size.height / numElements) - 16.0));
+    
+    [signup setupButton:signup.termsButton];
+    signup.termsButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0];
+    signup.termsButton.titleLabel.numberOfLines = 2;
+    
+    [signup.termsButton setTitle:@"Terms of\nService"
+                          forState:UIControlStateNormal];
+    
+    [signup.termsButton addTarget:signup
+                           action:@selector(termsTapped:)
+                 forControlEvents:UIControlEventTouchUpInside];
+    
+    signup.checkmarkButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    signup.checkmarkButton.frame = CGRectMake(((signup.frame.size.width / 30.0) * 15.0),
+                                          (((signup.frame.size.height / numElements) * 2.0) + 8.0),
+                                          ((signup.frame.size.height / numElements) - 16.0),
+                                          ((signup.frame.size.height / numElements) - 16.0));
+    
+    [signup.checkmarkButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"uncheckedBox"
+                                                                                                    ofType:@"png"]]
+                            forState:UIControlStateNormal];
+    
+    [signup.checkmarkButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"checkedBox"
+                                                                                                    ofType:@"png"]]
+                            forState:UIControlStateSelected];
+    
+    [signup.checkmarkButton addTarget:signup
+                           action:@selector(checkmarkTapped:)
+                 forControlEvents:UIControlEventTouchUpInside];
+    
+    [signup addSubview:signup.checkmarkButton];
+    
+    CGFloat termsLabelOriginX = (CGRectGetMaxX(signup.checkmarkButton.frame) + 4.0);
+    
+    signup.termsLabel = [[UILabel alloc] initWithFrame:CGRectMake(termsLabelOriginX, ((signup.frame.size.height / numElements) * 2.0),
+                                                                  ((signup.frame.size.width - termsLabelOriginX) - 4.0),
+                                                                  (signup.frame.size.height / numElements))];
+    
+    signup.termsLabel.textColor = UIColor.blackColor;
+    signup.termsLabel.font = [UIFont systemFontOfSize:24.0];
+    signup.termsLabel.text = @"I agree with the\nTerms of Service.";
+    signup.termsLabel.numberOfLines = 2;
+    
+    [signup addSubview:signup.termsLabel];
+    
     signup.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.025),
-                                                                 ((signup.frame.size.height / numElements) * 2.0),
+                                                                 ((signup.frame.size.height / numElements) * 3.0),
                                                                  (signup.frame.size.width * 0.225),
                                                                  (signup.frame.size.height / numElements))];
     
@@ -80,15 +152,14 @@
     signup.nameLabel.text = @"Name:";
     
     signup.nameTF = [[UITextField alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.2625),
-                                                                  (((signup.frame.size.height / numElements) * 2.0) + 8.0),
+                                                                  (((signup.frame.size.height / numElements) * 3.0) + 8.0),
                                                                   (signup.frame.size.width * 0.725),
                                                                   ((signup.frame.size.height / numElements) - 16.0))];
     
     [signup setupTF:signup.nameTF];
-    [signup.nameTF becomeFirstResponder];
     
     signup.orgLabel = [[UILabel alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.025),
-                                                                ((signup.frame.size.height / numElements) * 3.0),
+                                                                ((signup.frame.size.height / numElements) * 4.0),
                                                                 (signup.frame.size.width * 0.225),
                                                                 (signup.frame.size.height / numElements))];
     
@@ -96,14 +167,14 @@
     signup.orgLabel.text = @"Organization:";
     
     signup.orgTF = [[UITextField alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.2625),
-                                                                 (((signup.frame.size.height / numElements) * 3.0) + 8.0),
+                                                                 (((signup.frame.size.height / numElements) * 4.0) + 8.0),
                                                                  (signup.frame.size.width * 0.725),
                                                                  ((signup.frame.size.height / numElements) - 16.0))];
     
     [signup setupTF:signup.orgTF];
     
     signup.phoneLabel = [[UILabel alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.025),
-                                                                  ((signup.frame.size.height / numElements) * 4.0),
+                                                                  ((signup.frame.size.height / numElements) * 5.0),
                                                                   (signup.frame.size.width * 0.225),
                                                                   (signup.frame.size.height / numElements))];
     
@@ -111,7 +182,7 @@
     signup.phoneLabel.text = @"Phone:";
     
     signup.phoneTF = [[UITextField alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.2625),
-                                                                   (((signup.frame.size.height / numElements) * 4.0) + 8.0),
+                                                                   (((signup.frame.size.height / numElements) * 5.0) + 8.0),
                                                                    (signup.frame.size.width * 0.725),
                                                                    ((signup.frame.size.height / numElements) - 16.0))];
     
@@ -119,7 +190,7 @@
     signup.phoneTF.keyboardType = UIKeyboardTypeNumberPad;
     
     signup.emailLabel = [[UILabel alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.025),
-                                                                  ((signup.frame.size.height / numElements) * 5.0),
+                                                                  ((signup.frame.size.height / numElements) * 6.0),
                                                                   (signup.frame.size.width * 0.225),
                                                                   (signup.frame.size.height / numElements))];
     
@@ -127,7 +198,7 @@
     signup.emailLabel.text = @"Email:";
     
     signup.emailTF = [[UITextField alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.2625),
-                                                                   (((signup.frame.size.height / numElements) * 5.0) + 8.0),
+                                                                   (((signup.frame.size.height / numElements) * 6.0) + 8.0),
                                                                    (signup.frame.size.width * 0.725),
                                                                    ((signup.frame.size.height / numElements) - 16.0))];
     
@@ -136,48 +207,37 @@
     signup.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     signup.sendButton.frame = CGRectMake((signup.frame.size.width / 4.0),
-                                         (((signup.frame.size.height / numElements) * 6.0) + 8.0),
+                                         (((signup.frame.size.height / numElements) * 7.0) + 8.0),
                                          (signup.frame.size.width / 2.0),
                                          (signup.frame.size.height / numElements) - 16.0);
     
-    signup.sendButton.backgroundColor = UIColor.blackColor;
-    signup.sendButton.layer.cornerRadius = 10.0;
-    signup.sendButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [signup setupButton:signup.sendButton];
     signup.sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
+    signup.sendButton.enabled = NO;
+    signup.sendButton.alpha = 0.3;
     
     [signup.sendButton setTitle:@"Send"
                        forState:UIControlStateNormal];
-    
-    [signup.sendButton setTitleColor:UIColor.whiteColor
-                            forState:UIControlStateNormal];
-    
-    [signup.sendButton setTitleColor:UIColor.lightGrayColor
-                            forState:UIControlStateHighlighted];
-    
+
     [signup.sendButton addTarget:signup
                           action:@selector(sendButtonTapped:)
                 forControlEvents:UIControlEventTouchUpInside];
     
-    [signup addSubview:signup.sendButton];
-    
     signup.userNumberLabel = [[UILabel alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.025),
-                                                                       ((signup.frame.size.height / numElements) * 7.0),
+                                                                       ((signup.frame.size.height / numElements) * 8.0),
                                                                        (signup.frame.size.width * 0.225),
                                                                        (signup.frame.size.height / numElements))];
     
     [signup setupLabel:signup.userNumberLabel];
     signup.userNumberLabel.text = @"NVCRIS\nUser Number:";
     signup.userNumberLabel.numberOfLines = 2;
-    signup.userNumberLabel.alpha = 0.3;
     
     signup.userNumberTF = [[UITextField alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.2625),
-                                                                        (((signup.frame.size.height / numElements) * 7.0) + 8.0),
+                                                                        (((signup.frame.size.height / numElements) * 8.0) + 8.0),
                                                                         (signup.frame.size.width * 0.725),
                                                                         ((signup.frame.size.height / numElements) - 16.0))];
     
     [signup setupTF:signup.userNumberTF];
-    signup.userNumberTF.alpha = 0.3;
-    signup.userNumberTF.enabled = NO;
     signup.userNumberTF.keyboardType = UIKeyboardTypeNumberPad;
     
     [UIView animateWithDuration:0.25
@@ -189,11 +249,27 @@
     return signup;
 }
 
+- (void)setupButton:(UIButton *)button
+{
+    button.backgroundColor = UIColor.blackColor;
+    button.layer.cornerRadius = 10.0;
+    button.titleLabel.textAlignment = NSTextAlignmentCenter;
+    
+    [button setTitleColor:UIColor.whiteColor
+                 forState:UIControlStateNormal];
+    
+    [button setTitleColor:UIColor.lightGrayColor
+                 forState:UIControlStateHighlighted];
+    
+    [self addSubview:button];
+}
+
 - (void)setupLabel:(UILabel *)label
 {
     label.font = [UIFont systemFontOfSize:24.0];
     label.textColor = UIColor.blackColor;
     label.textAlignment = NSTextAlignmentRight;
+    label.alpha = 0.3;
     
     [self addSubview:label];
 }
@@ -207,6 +283,8 @@
     tf.font = [UIFont boldSystemFontOfSize:28.0];
     tf.textAlignment = NSTextAlignmentCenter;
     tf.clearButtonMode = UITextFieldViewModeWhileEditing;
+    tf.enabled = NO;
+    tf.alpha = 0.3;
     
     [self addSubview:tf];
 }
@@ -257,6 +335,12 @@
         _userNumberTF.alpha = 1.0;
         _userNumberTF.enabled = YES;
         [_userNumberTF becomeFirstResponder];
+        
+        [_delegate signupView:self
+                didReturnName:_nameTF.text
+                 organization:_orgTF.text
+                        phone:_phoneTF.text
+                        email:_emailTF.text];
     }
 }
 
@@ -269,6 +353,78 @@
     tf.layer.borderWidth = 0.0;
     tf.userInteractionEnabled = NO;
     tf.textAlignment = NSTextAlignmentLeft;
+}
+
+- (void)privacyPolicyTapped:(UIButton *)button
+{
+    
+}
+
+- (void)termsTapped:(UIButton *)button
+{
+    
+}
+
+- (void)checkmarkTapped:(UIButton *)button
+{
+    button.selected = !button.selected;
+    
+    [self enableLabel:_nameLabel
+              enabled:button.selected];
+    
+    [self enableLabel:_orgLabel
+              enabled:button.selected];
+    
+    [self enableLabel:_phoneLabel
+              enabled:button.selected];
+    
+    [self enableLabel:_emailLabel
+              enabled:button.selected];
+    
+    [self enableControl:_nameTF
+                enabled:button.selected];
+    
+    [self enableControl:_orgTF
+                enabled:button.selected];
+    
+    [self enableControl:_phoneTF
+                enabled:button.selected];
+    
+    [self enableControl:_emailTF
+                enabled:button.selected];
+    
+    [self enableControl:_sendButton
+                enabled:button.selected];
+    
+    _promptLabel.text = @"Complete this form and tap on 'Send'\nto get a NVCRIS User Number";
+    [_nameTF becomeFirstResponder];
+}
+
+- (void)enableControl:(UIControl *)control
+              enabled:(BOOL)enabled
+{
+    control.enabled = enabled;
+    
+    if (enabled)
+        control.alpha = 1.0;
+    
+    else
+    {
+        control.alpha = 0.3;
+        
+        if (control.isFirstResponder)
+            [control resignFirstResponder];
+    }
+}
+
+- (void)enableLabel:(UILabel *)label
+            enabled:(BOOL)enabled
+{
+    if (enabled)
+        label.alpha = 1.0;
+    
+    else
+        label.alpha = 0.3;
 }
 
 @end

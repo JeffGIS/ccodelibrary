@@ -8,6 +8,12 @@
 @protocol NVCRISSignupViewDelegate <NSObject>
 
 - (void)signupView:(NVCRISSignupView *)signupView
+     didReturnName:(NSString *)name
+      organization:(NSString *)organization
+             phone:(NSString *)phone
+             email:(NSString *)email;
+
+- (void)signupView:(NVCRISSignupView *)signupView
 didReturnUserNumber:(NSString *)userNumber;
 
 @end
