@@ -348,6 +348,10 @@
         [_sendButton setTitle:@"Continue"
                      forState:UIControlStateNormal];
         
+        _checkmarkButton.userInteractionEnabled = NO;
+        _checkmarkButton.alpha = 0.3;
+        _termsLabel.alpha = 0.3;
+        
         _userNumberLabel.alpha = 1.0;
         _userNumberTF.alpha = 1.0;
         _userNumberTF.enabled = YES;
