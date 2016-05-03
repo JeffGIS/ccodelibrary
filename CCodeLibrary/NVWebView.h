@@ -3,7 +3,18 @@
 
 @import UIKit;
 
+@class NVWebView;
+
+@protocol NVWebViewDelegate <NSObject>
+
+@optional
+- (void)webViewDidReturn:(NVWebView *)webView;
+
+@end
+
 @interface NVWebView : UIView
+
+@property (nonatomic, weak) id <NVWebViewDelegate> delegate;
 
 + (instancetype)showWebViewInView:(UIView *)view
                         urlString:(NSString *)urlString;

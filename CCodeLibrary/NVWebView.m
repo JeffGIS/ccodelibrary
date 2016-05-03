@@ -174,7 +174,11 @@
 
 - (void)returnButtonTapped:(UIButton *)button
 {
-    [self hide:YES];
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidReturn:)])
+        [_delegate webViewDidReturn:self];
+    
+    else
+        [self hide:YES];
 }
 
 - (void)realtor:(UIButton *)button

@@ -5,7 +5,7 @@
 #import "UserDefaults.h"
 #import "NVWebView.h"
 
-@interface NVCRISSignupView () <UITextViewDelegate>
+@interface NVCRISSignupView () <UITextViewDelegate,NVWebViewDelegate>
 
 @property (nonatomic, weak) id <NVCRISSignupViewDelegate> delegate;
 @property (nonatomic) UIView *overlayView;
@@ -180,6 +180,7 @@
                                                                    ((signup.frame.size.height / numElements) - 16.0))];
     
     [signup setupTF:signup.emailTF];
+    signup.emailTF.keyboardType = UIKeyboardTypeEmailAddress;
     
     signup.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
@@ -377,6 +378,7 @@
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
                                          urlString:@"www.apple.com/legal/privacy/en-ww/"];
     
+    nvwv.delegate = self;
     [nvwv hideRealtorButton];
     [nvwv adjustForStatusBar];
 }
@@ -388,6 +390,7 @@
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
                                          urlString:@"www.apple.com/legal/internet-services/itunes/appstore/dev/stdeula/"];
     
+    nvwv.delegate = self;
     [nvwv hideRealtorButton];
     [nvwv adjustForStatusBar];
     
@@ -485,6 +488,18 @@
         if ([tfs isFirstResponder])
             [tfs resignFirstResponder];
     }
+}
+
+- (void)webViewDidReturn:(NVWebView *)webView
+{
+    if (_nameTF.enabled)
+    {
+        [webView hide:NO];
+        [_nameTF becomeFirstResponder];
+    }
+    
+    else
+        [webView hide:YES];
 }
 
 @end
