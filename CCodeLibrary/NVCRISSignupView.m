@@ -399,9 +399,12 @@
     [nvwv hideRealtorButton];
     [nvwv adjustForStatusBar];
     
-    [self performSelector:@selector(enableCheckmark)
-               withObject:nil
-               afterDelay:1.0];
+    if (_checkmarkButton.userInteractionEnabled)
+    {
+        [self performSelector:@selector(enableCheckmark)
+                   withObject:nil
+                   afterDelay:1.0];
+    }
 }
 
 - (void)enableCheckmark
@@ -497,7 +500,13 @@
 
 - (void)webViewDidReturn:(NVWebView *)webView
 {
-    if (_nameTF.enabled)
+    if (_userNumberTF.enabled)
+    {
+        [webView hide:NO];
+        [_userNumberTF becomeFirstResponder];
+    }
+    
+    else if (_nameTF.enabled)
     {
         [webView hide:NO];
         [_nameTF becomeFirstResponder];
