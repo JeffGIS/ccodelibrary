@@ -12,5 +12,7 @@
                    showFileAtPath:(NSString *)path;
 
 - (void)hide:(BOOL)animated;
+- (void)hideRealtorButton;
+- (void)adjustForStatusBar;
 
 @end
