@@ -76,18 +76,26 @@
     
     signup.privacyButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    signup.privacyButton.frame = CGRectMake(0.0, (((signup.frame.size.height / numElements) * 2.0) + 8.0),
+    signup.privacyButton.frame = CGRectMake((signup.frame.size.width * 0.0125),
+                                            (((signup.frame.size.height / numElements) * 7.0) + 8.0),
                                             (signup.frame.size.width * 0.3),
                                             ((signup.frame.size.height / numElements) - 16.0));
     
-    signup.privacyButton.center = CGPointMake(signup.frame.size.width / 3.0,
-                                              signup.privacyButton.center.y);
+    signup.privacyButton.titleLabel.font = [UIFont systemFontOfSize:20.0];
+    signup.privacyButton.backgroundColor = UIColor.clearColor;
+    signup.privacyButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    signup.privacyButton.enabled = NO;
+    signup.privacyButton.alpha = 0.3;
     
-    [signup setupButton:signup.privacyButton];
-    signup.privacyButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0];
-    signup.privacyButton.titleLabel.numberOfLines = 2;
+    [signup.privacyButton setTitleColor:UIColor.blackColor
+                 forState:UIControlStateNormal];
     
-    [signup.privacyButton setTitle:@"Privacy\nPolicy"
+    [signup.privacyButton setTitleColor:UIColor.lightGrayColor
+                 forState:UIControlStateHighlighted];
+    
+    [signup addSubview:signup.privacyButton];
+    
+    [signup.privacyButton setTitle:@"Privacy Policy"
                           forState:UIControlStateNormal];
     
     [signup.privacyButton addTarget:signup
@@ -96,12 +104,10 @@
     
     signup.termsButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    signup.termsButton.frame = CGRectMake(0.0, (((signup.frame.size.height / numElements) * 2.0) + 8.0),
+    signup.termsButton.frame = CGRectMake((signup.frame.size.width * 0.6875),
+                                          (((signup.frame.size.height / numElements) * 2.0) + 8.0),
                                           (signup.frame.size.width * 0.3),
-                                          ((signup.frame.size.height / numElements) - 16.0));
-    
-    signup.termsButton.center = CGPointMake(signup.frame.size.width / 1.5,
-                                            signup.termsButton.center.y);
+                                          (signup.frame.size.height / numElements) - 16.0);
     
     [signup setupButton:signup.termsButton];
     signup.termsButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.0];
@@ -177,10 +183,11 @@
     
     signup.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    signup.sendButton.frame = CGRectMake((signup.frame.size.width * 0.6875),
-                                         (((signup.frame.size.height / numElements) * 7.0) + 8.0),
-                                         (signup.frame.size.width * 0.3),
+    signup.sendButton.frame = CGRectMake(0.0, (((signup.frame.size.height / numElements) * 7.0) + 8.0),
+                                         (signup.frame.size.width * 0.4),
                                          (signup.frame.size.height / numElements) - 16.0);
+    
+    signup.sendButton.center = CGPointMake(signup.emailTF.center.x, signup.sendButton.center.y);
     
     [signup setupButton:signup.sendButton];
     signup.sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
@@ -199,7 +206,7 @@
     signup.checkmarkButton.alpha = 0.3;
     
     signup.checkmarkButton.frame = CGRectMake((signup.frame.size.width * 0.0125),
-                                              (((signup.frame.size.height / numElements) * 7.0) + 8.0),
+                                              (((signup.frame.size.height / numElements) * 2.0) + 8.0),
                                               ((signup.frame.size.height / numElements) - 16.0),
                                               ((signup.frame.size.height / numElements) - 16.0));
     
@@ -219,8 +226,8 @@
     
     CGFloat termsLabelOriginX = (CGRectGetMaxX(signup.checkmarkButton.frame) + 4.0);
     
-    signup.termsLabel = [[UILabel alloc] initWithFrame:CGRectMake(termsLabelOriginX, ((signup.frame.size.height / numElements) * 7.0),
-                                                                  ((signup.sendButton.frame.origin.x - termsLabelOriginX) - 4.0),
+    signup.termsLabel = [[UILabel alloc] initWithFrame:CGRectMake(termsLabelOriginX, ((signup.frame.size.height / numElements) * 2.0),
+                                                                  ((signup.termsButton.frame.origin.x - termsLabelOriginX) - 4.0),
                                                                   (signup.frame.size.height / numElements))];
     
     signup.termsLabel.textColor = UIColor.blackColor;
@@ -365,6 +372,8 @@
 
 - (void)privacyPolicyTapped:(UIButton *)button
 {
+    [self dismissKeyboard];
+    
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
                                          urlString:@"www.apple.com/legal/privacy/en-ww/"];
     
@@ -374,6 +383,8 @@
 
 - (void)termsTapped:(UIButton *)button
 {
+    [self dismissKeyboard];
+    
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
                                          urlString:@"www.apple.com/legal/internet-services/itunes/appstore/dev/stdeula/"];
     
@@ -424,8 +435,20 @@
     [self enableControl:_sendButton
                 enabled:button.selected];
     
-    _promptLabel.text = @"Complete this form and tap on 'Send'\nto get a NVCRIS User Number";
-    [_nameTF becomeFirstResponder];
+    [self enableControl:_privacyButton
+                enabled:button.selected];
+    
+    if (button.selected)
+    {
+        _promptLabel.text = @"Complete this form and tap on 'Send'\nto get a NVCRIS User Number";
+        [_nameTF becomeFirstResponder];
+    }
+    
+    else
+    {
+        [self dismissKeyboard];
+        _promptLabel.text = @"To continue, tap on box to acknowledge and\nagree to the NVCRIS Terms of Service.";
+    }
 }
 
 - (void)enableControl:(UIControl *)control
@@ -453,6 +476,15 @@
     
     else
         label.alpha = 0.3;
+}
+
+- (void)dismissKeyboard
+{
+    for (UITextField *tfs in self.subviews)
+    {
+        if ([tfs isFirstResponder])
+            [tfs resignFirstResponder];
+    }
 }
 
 @end
