@@ -5,7 +5,7 @@
 #import "UserDefaults.h"
 #import "NVWebView.h"
 
-@interface NVCRISSignupView () <UITextViewDelegate,NVWebViewDelegate>
+@interface NVCRISSignupView () <UITextFieldDelegate,NVWebViewDelegate>
 
 @property (nonatomic, weak) id <NVCRISSignupViewDelegate> delegate;
 @property (nonatomic) UIView *overlayView;
@@ -165,6 +165,7 @@
     
     [signup setupTF:signup.phoneTF];
     signup.phoneTF.keyboardType = UIKeyboardTypeNumberPad;
+    signup.phoneTF.delegate = signup;
     
     signup.emailLabel = [[UILabel alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.0125),
                                                                   ((signup.frame.size.height / numElements) * 6.0),
@@ -500,6 +501,69 @@
     
     else
         [webView hide:YES];
+}
+
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string
+{
+    NSString *totalString = [NSString stringWithFormat:@"%@%@", textField.text, string];
+    
+    if (range.length == 1)
+    {
+        textField.text = [self formatPhoneNumber:totalString
+                                  deleteLastChar:YES];
+    }
+   
+    else
+    {
+        textField.text = [self formatPhoneNumber:totalString
+                                  deleteLastChar:NO];
+    }
+    
+    return NO;
+}
+
+- (NSString *)formatPhoneNumber:(NSString *)simpleNumber
+                 deleteLastChar:(BOOL)deleteLastChar
+{
+    if (simpleNumber.length == 0)
+        return @"";
+    
+    NSError *error = nil;
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[\\s-\\(\\)]"
+                                                                           options:NSRegularExpressionCaseInsensitive
+                                                                             error:&error];
+    
+    simpleNumber = [regex stringByReplacingMatchesInString:simpleNumber
+                                                   options:0
+                                                     range:NSMakeRange(0, simpleNumber.length)
+                                              withTemplate:@""];
+    
+    if (simpleNumber.length > 10)
+        simpleNumber = [simpleNumber substringToIndex:10];
+    
+    if (deleteLastChar)
+        simpleNumber = [simpleNumber substringToIndex:(simpleNumber.length - 1)];
+    
+    if(simpleNumber.length < 7)
+    {
+        simpleNumber = [simpleNumber stringByReplacingOccurrencesOfString:@"(\\d{3})(\\d+)"
+                                                               withString:@"($1) $2"
+                                                                  options:NSRegularExpressionSearch
+                                                                    range:NSMakeRange(0, simpleNumber.length)];
+    }
+    
+    else
+    {
+        simpleNumber = [simpleNumber stringByReplacingOccurrencesOfString:@"(\\d{3})(\\d{3})(\\d+)"
+                                                               withString:@"($1) $2-$3"
+                                                                  options:NSRegularExpressionSearch
+                                                                    range:NSMakeRange(0, simpleNumber.length)];
+    }
+    
+    return simpleNumber;
 }
 
 @end
