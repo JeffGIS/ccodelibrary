@@ -12,6 +12,7 @@
 @property (nonatomic) UIButton *returnButton, *realtor;
 @property (nonatomic) CGFloat headerHeight, headerSideMargin;
 @property (nonatomic) UITabBar *tabBar;
+@property (nonatomic) UIActivityIndicatorView *indicator;
 
 @end
 
@@ -44,6 +45,17 @@
     [nvwv.realtor.topAnchor constraintEqualToAnchor:nvwv.topAnchor].active = YES;
     [nvwv.realtor.heightAnchor constraintEqualToConstant:nvwv.headerHeight].active = YES;
     [nvwv.realtor.widthAnchor constraintEqualToConstant:nvwv.headerHeight].active = YES;
+    
+    nvwv.indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    nvwv.indicator.translatesAutoresizingMaskIntoConstraints = NO;
+    nvwv.indicator.transform = CGAffineTransformMakeScale(2.0, 2.0);
+    [nvwv addSubview:nvwv.indicator];
+    [nvwv.indicator startAnimating];
+    
+    [nvwv.indicator.leadingAnchor constraintEqualToAnchor:nvwv.centerXAnchor constant:(-nvwv.indicator.frame.size.width / 2.0)].active = YES;
+    [nvwv.indicator.trailingAnchor constraintEqualToAnchor:nvwv.centerXAnchor constant:(nvwv.indicator.frame.size.width / 2.0)].active = YES;
+    [nvwv.indicator.topAnchor constraintEqualToAnchor:nvwv.centerYAnchor constant:(-nvwv.indicator.frame.size.height / 2.0)].active = YES;
+    [nvwv.indicator.bottomAnchor constraintEqualToAnchor:nvwv.centerYAnchor constant:(nvwv.indicator.frame.size.height / 2.0)].active = YES;
     
     urlString = [NSString stringWithFormat:@"http://%@", urlString];
     NSURL *url = [NSURL URLWithString:urlString];
@@ -206,6 +218,13 @@
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
 {
     [popoverTableView hide:YES];
+}
+
+- (void)webView:(WKWebView *)webView
+didFinishNavigation:(WKNavigation *)navigation
+{
+    [_indicator removeFromSuperview];
+    [_indicator stopAnimating];
 }
 
 - (void)webView:(WKWebView *)webView
