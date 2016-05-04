@@ -134,6 +134,7 @@
                                                                   ((signup.frame.size.height / numElements) - 16.0))];
     
     [signup setupTF:signup.nameTF];
+    signup.nameTF.text = [UserDefaults.defaults stringForKey:@"UserNameInfo"];
     
     signup.orgLabel = [[UILabel alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.0125),
                                                                 ((signup.frame.size.height / numElements) * 4.0),
@@ -149,6 +150,7 @@
                                                                  ((signup.frame.size.height / numElements) - 16.0))];
     
     [signup setupTF:signup.orgTF];
+    signup.orgTF.text = [UserDefaults.defaults stringForKey:@"UserOrgInfo"];
     
     signup.phoneLabel = [[UILabel alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.0125),
                                                                   ((signup.frame.size.height / numElements) * 5.0),
@@ -165,7 +167,7 @@
     
     [signup setupTF:signup.phoneTF];
     signup.phoneTF.keyboardType = UIKeyboardTypeNumberPad;
-    signup.phoneTF.delegate = signup;
+    signup.phoneTF.text = [UserDefaults.defaults stringForKey:@"UserPhoneInfo"];
     
     signup.emailLabel = [[UILabel alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.0125),
                                                                   ((signup.frame.size.height / numElements) * 6.0),
@@ -182,6 +184,7 @@
     
     [signup setupTF:signup.emailTF];
     signup.emailTF.keyboardType = UIKeyboardTypeEmailAddress;
+    signup.emailTF.text = [UserDefaults.defaults stringForKey:@"UserEmailInfo"];
     
     signup.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
@@ -300,6 +303,7 @@
     tf.font = [UIFont boldSystemFontOfSize:28.0];
     tf.textAlignment = NSTextAlignmentCenter;
     tf.clearButtonMode = UITextFieldViewModeWhileEditing;
+    tf.delegate = self;
     tf.enabled = NO;
     tf.alpha = 0.3;
     
@@ -444,7 +448,7 @@
                 enabled:button.selected];
     
     [self enableControl:_sendButton
-                enabled:button.selected];
+                enabled:button.selected && _nameTF.text.length && _orgTF.text.length && _phoneTF.text.length && _emailTF.text.length];
     
     [self enableControl:_privacyButton
                 enabled:button.selected];
@@ -522,17 +526,87 @@ replacementString:(NSString *)string
 {
     NSString *totalString = [NSString stringWithFormat:@"%@%@", textField.text, string];
     
-    if (range.length == 1)
+    if (textField == _phoneTF)
     {
-        textField.text = [self formatPhoneNumber:totalString
-                                  deleteLastChar:YES];
+        if (range.length == 1)
+        {
+            textField.text = [self formatPhoneNumber:totalString
+                                      deleteLastChar:YES];
+        }
+        
+        else
+        {
+            textField.text = [self formatPhoneNumber:totalString
+                                      deleteLastChar:NO];
+        }
+        
+        [UserDefaults.defaults saveString:textField.text
+                                   forKey:@"UserPhoneInfo"];
     }
-   
+    
     else
     {
-        textField.text = [self formatPhoneNumber:totalString
-                                  deleteLastChar:NO];
+        if (range.length == 1)
+            textField.text = [totalString substringToIndex:(totalString.length - 1)];
+        
+        else
+            textField.text = totalString;
+        
+        if (textField == _nameTF)
+        {
+            [UserDefaults.defaults saveString:textField.text
+                                       forKey:@"UserNameInfo"];
+        }
+        
+        else if (textField == _orgTF)
+        {
+            [UserDefaults.defaults saveString:textField.text
+                                       forKey:@"UserOrgInfo"];
+        }
+        
+        else if (textField == _emailTF)
+        {
+            [UserDefaults.defaults saveString:textField.text
+                                       forKey:@"UserEmailInfo"];
+        }
     }
+    
+    [self enableControl:_sendButton
+                enabled:_nameTF.text.length && _orgTF.text.length && _phoneTF.text.length && _emailTF.text.length];
+    
+    return NO;
+}
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    textField.text = @"";
+    
+    if (textField == _nameTF)
+    {
+        [UserDefaults.defaults saveString:textField.text
+                                   forKey:@"UserNameInfo"];
+    }
+    
+    else if (textField == _orgTF)
+    {
+        [UserDefaults.defaults saveString:textField.text
+                                   forKey:@"UserOrgInfo"];
+    }
+    
+    else if (textField == _phoneTF)
+    {
+        [UserDefaults.defaults saveString:textField.text
+                                   forKey:@"UserPhoneInfo"];
+    }
+    
+    else if (textField == _emailTF)
+    {
+        [UserDefaults.defaults saveString:textField.text
+                                   forKey:@"UserEmailInfo"];
+    }
+    
+    [self enableControl:_sendButton
+                enabled:_nameTF.text.length && _orgTF.text.length && _phoneTF.text.length && _emailTF.text.length];
     
     return NO;
 }
