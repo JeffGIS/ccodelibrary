@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger, GMSStatus)
     GMSStatusGetList,
     GMSStatusDelete,
     GMSStatusCreateNVOrgNumber,
+    GMSStatusActivateAccount,
 };
 
 typedef NS_ENUM(NSInteger, GMSMessage)
