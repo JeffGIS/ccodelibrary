@@ -11,7 +11,7 @@
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UILabel *titleLabel, *promptLabel, *nameLabel, *orgLabel, *phoneLabel, *emailLabel, *userNumberLabel, *termsLabel;
 @property (nonatomic) UITextField *nameTF, *orgTF, *phoneTF, *emailTF, *userNumberTF;
-@property (nonatomic) UIButton *sendButton, *privacyButton, *termsButton, *checkmarkButton;
+@property (nonatomic) UIButton *sendButton, *privacyButton, *termsButton, *checkmarkButton, *backButton;
 
 @end
 
@@ -78,10 +78,10 @@
     
     signup.privacyButton.frame = CGRectMake((signup.frame.size.width * 0.0125),
                                             (((signup.frame.size.height / numElements) * 7.0) + 8.0),
-                                            (signup.frame.size.width * 0.3),
+                                            (signup.frame.size.width * 0.225),
                                             ((signup.frame.size.height / numElements) - 16.0));
     
-    signup.privacyButton.titleLabel.font = [UIFont systemFontOfSize:20.0];
+    signup.privacyButton.titleLabel.font = [UIFont systemFontOfSize:22.0];
     signup.privacyButton.backgroundColor = UIColor.clearColor;
     signup.privacyButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     signup.privacyButton.enabled = NO;
@@ -196,7 +196,6 @@
                                          (signup.frame.size.height / numElements) - 16.0);
     
     signup.sendButton.center = CGPointMake(signup.emailTF.center.x, signup.sendButton.center.y);
-    
     [signup setupButton:signup.sendButton];
     signup.sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
     signup.sendButton.enabled = NO;
@@ -207,6 +206,33 @@
     
     [signup.sendButton addTarget:signup
                           action:@selector(sendButtonTapped:)
+                forControlEvents:UIControlEventTouchUpInside];
+    
+    signup.backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    signup.backButton.frame = CGRectMake((signup.frame.size.width * 0.25),
+                                         (((signup.frame.size.height / numElements) * 7.0) + 8.0),
+                                         CGRectGetMinX(signup.sendButton.frame) - (signup.frame.size.width * 0.2625),
+                                         ((signup.frame.size.height / numElements) - 16.0));
+    
+    signup.backButton.titleLabel.font = [UIFont systemFontOfSize:22.0];
+    signup.backButton.backgroundColor = UIColor.clearColor;
+    signup.backButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    signup.backButton.hidden = YES;
+    
+    [signup.backButton setTitleColor:UIColor.blackColor
+                            forState:UIControlStateNormal];
+    
+    [signup.backButton setTitleColor:UIColor.lightGrayColor
+                            forState:UIControlStateHighlighted];
+    
+    [signup addSubview:signup.backButton];
+    
+    [signup.backButton setTitle:@"Go Back"
+                       forState:UIControlStateNormal];
+    
+    [signup.backButton addTarget:signup
+                          action:@selector(backButtonTapped:)
                 forControlEvents:UIControlEventTouchUpInside];
     
     signup.checkmarkButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -395,6 +421,7 @@
         _checkmarkButton.userInteractionEnabled = NO;
         _checkmarkButton.alpha = 0.3;
         _termsLabel.alpha = 0.3;
+        _backButton.hidden = NO;
         
         [UserDefaults.defaults saveBool:YES
                                  forKey:@"AcceptedTermsOfService"];
@@ -410,6 +437,11 @@
                         phone:_phoneTF.text
                         email:_emailTF.text];
     }
+}
+
+- (void)backButtonTapped:(UIButton *)button
+{
+    
 }
 
 - (void)makeTFLikeLabel:(UITextField *)tf
