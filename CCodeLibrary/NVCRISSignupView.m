@@ -401,6 +401,8 @@
 {
     if ([button.currentTitle isEqualToString:@"Continue"])
     {
+        [_userNumberTF resignFirstResponder];
+        
         [_delegate signupView:self
           didReturnUserNumber:_userNumberTF.text];
     }
@@ -448,6 +450,8 @@
     
     [self enableControl:_userNumberTF
                 enabled:NO];
+    
+    _userNumberTF.text = @"";
     
     [_nameTF becomeFirstResponder];
     button.hidden = YES;
@@ -748,6 +752,11 @@ replacementString:(NSString *)string
     }
     
     return simpleNumber;
+}
+
+- (void)presentKeyboard
+{
+    [_userNumberTF becomeFirstResponder];
 }
 
 @end
