@@ -207,7 +207,6 @@
                 forControlEvents:UIControlEventTouchUpInside];
     
     signup.checkmarkButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    signup.checkmarkButton.enabled = NO;
     signup.checkmarkButton.alpha = 0.3;
     
     signup.checkmarkButton.frame = CGRectMake((signup.frame.size.width * 0.0125),
@@ -215,17 +214,54 @@
                                               ((signup.frame.size.height / numElements) - 16.0),
                                               ((signup.frame.size.height / numElements) - 16.0));
     
-    [signup.checkmarkButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"uncheckedBox"
-                                                                                                    ofType:@"png"]]
-                            forState:UIControlStateNormal];
+    if ([UserDefaults.defaults boolForKey:@"AcceptedTermsOfService"])
+    {
+        signup.checkmarkButton.userInteractionEnabled = NO;
+        
+        [signup.checkmarkButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"checkedBox"
+                                                                                                        ofType:@"png"]]
+                                forState:UIControlStateNormal];
+        
+        [signup enableLabels:YES];
+        
+        [signup enableControl:signup.nameTF
+                      enabled:YES];
+        
+        [signup enableControl:signup.orgTF
+                      enabled:YES];
+        
+        [signup enableControl:signup.phoneTF
+                      enabled:YES];
+        
+        [signup enableControl:signup.emailTF
+                      enabled:YES];
+        
+        [signup enableControl:signup.sendButton
+                      enabled:signup.nameTF.text.length && signup.orgTF.text.length && signup.phoneTF.text.length && signup.emailTF.text.length];
+        
+        [signup enableControl:signup.privacyButton
+                      enabled:YES];
+        
+        signup.promptLabel.text = @"Complete this form and tap on 'Send'\nto get a NVCRIS User Number";
+        [signup.nameTF becomeFirstResponder];
+    }
     
-    [signup.checkmarkButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"checkedBox"
-                                                                                                    ofType:@"png"]]
-                            forState:UIControlStateSelected];
-    
-    [signup.checkmarkButton addTarget:signup
-                               action:@selector(checkmarkTapped:)
-                     forControlEvents:UIControlEventTouchUpInside];
+    else
+    {
+        signup.checkmarkButton.enabled = NO;
+        
+        [signup.checkmarkButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"uncheckedBox"
+                                                                                                        ofType:@"png"]]
+                                forState:UIControlStateNormal];
+        
+        [signup.checkmarkButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"checkedBox"
+                                                                                                        ofType:@"png"]]
+                                forState:UIControlStateSelected];
+        
+        [signup.checkmarkButton addTarget:signup
+                                   action:@selector(checkmarkTapped:)
+                         forControlEvents:UIControlEventTouchUpInside];
+    }
     
     [signup addSubview:signup.checkmarkButton];
     
@@ -356,6 +392,9 @@
         _checkmarkButton.alpha = 0.3;
         _termsLabel.alpha = 0.3;
         
+        [UserDefaults.defaults saveBool:YES
+                                 forKey:@"AcceptedTermsOfService"];
+        
         _userNumberLabel.alpha = 1.0;
         _userNumberTF.alpha = 1.0;
         _userNumberTF.enabled = YES;
@@ -423,17 +462,7 @@
 {
     button.selected = !button.selected;
     
-    [self enableLabel:_nameLabel
-              enabled:button.selected];
-    
-    [self enableLabel:_orgLabel
-              enabled:button.selected];
-    
-    [self enableLabel:_phoneLabel
-              enabled:button.selected];
-    
-    [self enableLabel:_emailLabel
-              enabled:button.selected];
+    [self enableLabels:button.selected];
     
     [self enableControl:_nameTF
                 enabled:button.selected];
@@ -483,14 +512,23 @@
     }
 }
 
-- (void)enableLabel:(UILabel *)label
-            enabled:(BOOL)enabled
+- (void)enableLabels:(BOOL)enabled
 {
     if (enabled)
-        label.alpha = 1.0;
+    {
+        _nameLabel.alpha = 1.0;
+        _orgLabel.alpha = 1.0;
+        _phoneLabel.alpha = 1.0;
+        _emailLabel.alpha = 1.0;
+    }
     
     else
-        label.alpha = 0.3;
+    {
+        _nameLabel.alpha = 0.3;
+        _orgLabel.alpha = 0.3;
+        _phoneLabel.alpha = 0.3;
+        _emailLabel.alpha = 0.3;
+    }
 }
 
 - (void)dismissKeyboard
