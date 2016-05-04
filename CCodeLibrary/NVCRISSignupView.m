@@ -441,7 +441,22 @@
 
 - (void)backButtonTapped:(UIButton *)button
 {
+    [self makeTFLikeTF:_nameTF];
+    [self makeTFLikeTF:_orgTF];
+    [self makeTFLikeTF:_phoneTF];
+    [self makeTFLikeTF:_emailTF];
     
+    [self enableControl:_userNumberTF
+                enabled:NO];
+    
+    [_nameTF becomeFirstResponder];
+    button.hidden = YES;
+    
+    _promptLabel.text = @"Complete this form and tap on 'Send'\nto get a NVCRIS User Number";
+    _promptLabel.font = [UIFont systemFontOfSize:28.0];
+    
+    [_sendButton setTitle:@"Send"
+                 forState:UIControlStateNormal];
 }
 
 - (void)makeTFLikeLabel:(UITextField *)tf
@@ -453,6 +468,14 @@
     tf.layer.borderWidth = 0.0;
     tf.userInteractionEnabled = NO;
     tf.textAlignment = NSTextAlignmentLeft;
+}
+
+- (void)makeTFLikeTF:(UITextField *)tf
+{
+    tf.backgroundColor = UIColor.whiteColor;
+    tf.layer.borderWidth = 2.0;
+    tf.userInteractionEnabled = YES;
+    tf.textAlignment = NSTextAlignmentCenter;
 }
 
 - (void)privacyPolicyTapped:(UIButton *)button
