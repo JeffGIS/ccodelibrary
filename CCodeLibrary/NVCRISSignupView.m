@@ -135,6 +135,7 @@
     
     [signup setupTF:signup.nameTF];
     signup.nameTF.text = [UserDefaults.defaults stringForKey:@"UserNameInfo"];
+    signup.nameTF.autocapitalizationType = UITextAutocapitalizationTypeWords;
     
     signup.orgLabel = [[UILabel alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.0125),
                                                                 ((signup.frame.size.height / numElements) * 4.0),
@@ -151,6 +152,7 @@
     
     [signup setupTF:signup.orgTF];
     signup.orgTF.text = [UserDefaults.defaults stringForKey:@"UserOrgInfo"];
+    signup.orgTF.autocapitalizationType = UITextAutocapitalizationTypeWords;
     
     signup.phoneLabel = [[UILabel alloc] initWithFrame:CGRectMake((signup.frame.size.width * 0.0125),
                                                                   ((signup.frame.size.height / numElements) * 5.0),
@@ -184,6 +186,7 @@
     
     [signup setupTF:signup.emailTF];
     signup.emailTF.keyboardType = UIKeyboardTypeEmailAddress;
+    signup.emailTF.autocapitalizationType = UITextAutocapitalizationTypeNone;
     signup.emailTF.text = [UserDefaults.defaults stringForKey:@"UserEmailInfo"];
     
     signup.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -339,6 +342,7 @@
     tf.font = [UIFont boldSystemFontOfSize:28.0];
     tf.textAlignment = NSTextAlignmentCenter;
     tf.clearButtonMode = UITextFieldViewModeWhileEditing;
+    tf.autocorrectionType = UITextAutocorrectionTypeNo;
     tf.delegate = self;
     tf.enabled = NO;
     tf.alpha = 0.3;
