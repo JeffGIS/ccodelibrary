@@ -28,6 +28,9 @@
 		6919EAF91C27B3EE00A9D0F1 /* NVUnitPickerTextAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6919EAF61C27AF1700A9D0F1 /* NVUnitPickerTextAlert.h */; };
 		692ACC671B86309B00400B36 /* NVRoutes.m in Sources */ = {isa = PBXBuildFile; fileRef = 692ACC661B86309B00400B36 /* NVRoutes.m */; };
 		692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692ACC651B86309B00400B36 /* NVRoutes.h */; };
+		692F54A21CDB9B1B001600C9 /* NVRampTypePageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 692F54A11CDB9B1B001600C9 /* NVRampTypePageController.m */; };
+		692F54A51CDB9B8B001600C9 /* NVRampTypePageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 692F54A41CDB9B8B001600C9 /* NVRampTypePageView.m */; };
+		692F54A61CDBAA6B001600C9 /* NVRampTypePageController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692F54A01CDB9B1B001600C9 /* NVRampTypePageController.h */; };
 		693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */; };
 		693C9BA11BEC529600564F93 /* UIImage+ImageFromColor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */; };
 		694304161C334E5A0077EC9F /* NVColorSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 694304151C334E5A0077EC9F /* NVColorSet.m */; };
@@ -333,6 +336,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				692F54A61CDBAA6B001600C9 /* NVRampTypePageController.h in CopyFiles */,
 				69DFB6A61CD719C3001E1200 /* NVCRISSignupView.h in CopyFiles */,
 				690746E61CD4206500B31D8F /* NVTextViewAlert.h in CopyFiles */,
 				BBE299531CBD30BB0045B3DC /* CityOrOrganizationData.h in CopyFiles */,
@@ -492,6 +496,10 @@
 		6919EAF71C27AF1700A9D0F1 /* NVUnitPickerTextAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVUnitPickerTextAlert.m; sourceTree = "<group>"; };
 		692ACC651B86309B00400B36 /* NVRoutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRoutes.h; sourceTree = "<group>"; };
 		692ACC661B86309B00400B36 /* NVRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRoutes.m; sourceTree = "<group>"; };
+		692F54A01CDB9B1B001600C9 /* NVRampTypePageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRampTypePageController.h; sourceTree = "<group>"; };
+		692F54A11CDB9B1B001600C9 /* NVRampTypePageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRampTypePageController.m; sourceTree = "<group>"; };
+		692F54A31CDB9B8B001600C9 /* NVRampTypePageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRampTypePageView.h; sourceTree = "<group>"; };
+		692F54A41CDB9B8B001600C9 /* NVRampTypePageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRampTypePageView.m; sourceTree = "<group>"; };
 		693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageFromColor.h"; sourceTree = "<group>"; };
 		693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageFromColor.m"; sourceTree = "<group>"; };
 		694304141C334E5A0077EC9F /* NVColorSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVColorSet.h; sourceTree = "<group>"; };
@@ -1012,6 +1020,10 @@
 				A97407C51AF6A63900B2FF30 /* NVProgressView.m */,
 				A9A7E3621B75663500DC7F3D /* NVRampButton.h */,
 				A9A7E3631B75663500DC7F3D /* NVRampButton.m */,
+				692F54A01CDB9B1B001600C9 /* NVRampTypePageController.h */,
+				692F54A11CDB9B1B001600C9 /* NVRampTypePageController.m */,
+				692F54A31CDB9B8B001600C9 /* NVRampTypePageView.h */,
+				692F54A41CDB9B8B001600C9 /* NVRampTypePageView.m */,
 				69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */,
 				69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */,
 				A9A7E3651B75795300DC7F3D /* NVSignalButton.h */,
@@ -1382,6 +1394,7 @@
 				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,
 				697560BE1CB18D5A006EEA14 /* NVMarkerInfoButton.m in Sources */,
 				A94A771319F807570062906E /* Facility.m in Sources */,
+				692F54A21CDB9B1B001600C9 /* NVRampTypePageController.m in Sources */,
 				EBC01D301BED1C8C0004C751 /* ven404.c in Sources */,
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
 				A9A7E3671B75795300DC7F3D /* NVSignalButton.m in Sources */,
@@ -1527,6 +1540,7 @@
 				69DFB6A51CD71987001E1200 /* NVCRISSignupView.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				EBC01D0F1BED1C8C0004C751 /* deltat.c in Sources */,
+				692F54A51CDB9B8B001600C9 /* NVRampTypePageView.m in Sources */,
 				EBC01D1F1BED1C8C0004C751 /* mlat404.c in Sources */,
 				EBC01D1C1BED1C8C0004C751 /* lonlat.c in Sources */,
 				69D5EFB21C7237AB004CE1C0 /* NVCalendarVC.m in Sources */,

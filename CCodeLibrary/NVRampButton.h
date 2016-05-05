@@ -2,7 +2,7 @@
 //  CCodeLibrary
 
 #import <UIKit/UIKit.h>
-#import "RampTypeView.h"
+#import "NVRampTypePageController.h"
 
 @interface NVRampButton : UIButton
 

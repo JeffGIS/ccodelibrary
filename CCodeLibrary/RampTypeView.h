@@ -2,33 +2,7 @@
 //  CCodeLibrary
 
 #import <UIKit/UIKit.h>
-
-typedef NS_ENUM(NSInteger, RampType)
-{
-    RampTypePerp,
-    RampTypePerpNonWalk,
-    RampTypeCombPerpWalk,
-    RampTypeCombPerpNonWalk,
-    RampTypeOneWayDirCurbGutter,
-    RampTypeOneWayDirBlendTrans,
-    RampTypeParallel,
-    RampTypeDepressedCorner,
-    RampTypeFan,
-    RampTypeCombLeftWalk,//left side of RampTypeCombPerpWalk
-    RampTypeCombRightWalk,//right side of RampTypeCombPerpWalk
-    RampTypeCombLeftNonWalk,//left side of RampTypeCombPerpNonWalk
-    RampTypeCombRightNonWalk,//right side of RampTypeCombPerpNonWalk
-    rampTypeCount //always last item
-};
-
-#define lastSelectableRampType RampTypeFan
-
-typedef NS_ENUM(NSInteger, RampTypeEditOption)
-{
-    RampTypeEditOptionDefault,
-    RampTypeEditOptionGlobal,
-    RampTypeEditOptionIndividual,
-};
+#import "NVRampTypePageController.h"
 
 @class RampTypeView;
 

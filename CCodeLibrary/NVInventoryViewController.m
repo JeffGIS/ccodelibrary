@@ -10,11 +10,11 @@
 #import "NVRampButton.h"
 #import "NVSignalButton.h"
 #import "NVXWalkButton.h"
-#import "RampTypeView.h"
 #import "HelpButton.h"
+#import "NVRampTypePageController.h"
 
 int ii;
-@interface NVInventoryViewController ()
+@interface NVInventoryViewController () <NVRampTypePageControllerDelegate>
 
 @property (nonatomic) UIImageView *backgroundImage, *imageTargetView;
 @property (nonatomic) UIButton *cancelButton, *doneButton, *complexButton;
@@ -990,11 +990,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             {
                 MPRamp *ramp = _currentIntersection.ramps[rampID];
                 
-                RampTypeView *rtv = [RampTypeView showRampTypeViewWithView:self.view
-                                                                  delegate:self
-                                                              selectedType:ramp.rampType
-                                                                editOption:RampTypeEditOptionIndividual];
-#pragma unused(rtv)
+                NVRampTypePageController *nvrtpc = [NVRampTypePageController rampTypeControllerWithDelegate:self
+                                                                                               selectedType:ramp.rampType
+                                                                                                 editOption:RampTypeEditOptionIndividual];
+                
+                [self presentViewController:nvrtpc
+                                   animated:YES
+                                 completion:nil];
             }
             
             break;
@@ -1117,11 +1119,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)rampType:(UIButton *)button
 {
-    RampTypeView *rtv = [RampTypeView showRampTypeViewWithView:self.view
-                                                      delegate:self
-                                                  selectedType:_currentRampType
-                                                    editOption:RampTypeEditOptionGlobal];
-#pragma unused(rtv)
+    NVRampTypePageController *nvrtpc = [NVRampTypePageController rampTypeControllerWithDelegate:self
+                                                                                   selectedType:_currentRampType
+                                                                                     editOption:RampTypeEditOptionGlobal];
+    
+    [self presentViewController:nvrtpc
+                       animated:YES
+                     completion:nil];
 }
 
 //this method is called continuosly while the button is being dragged
@@ -1890,9 +1894,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     return rtn;
 }
 
-- (void)rampTypeView:(RampTypeView *)rampTypeView
-   didReturnRampType:(RampType)rampType
-          editOption:(RampTypeEditOption)editOption
+- (void)rampTypeController:(NVRampTypePageController *)rampTypeController
+         didReturnRampType:(RampType)rampType
+                editOption:(RampTypeEditOption)editOption
 {
     switch (editOption)
     {
@@ -1954,7 +1958,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             break;
     }
     
-    [rampTypeView hideRampTypeView:YES];
+    [rampTypeController dismissViewControllerAnimated:YES
+                                           completion:nil];
 }
 
 - (void)setupImageTarget

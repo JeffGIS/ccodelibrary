@@ -37,7 +37,6 @@
 #import "GSSiAlertController.h"
 #import "GSSiDatePicker.h"
 #import "GSSiNotesView.h"
-#import "RampTypeView.h"
 #import "PickedItem.h"
 #import "GSSiBumpDetector.h"
 #import "TableViewCellLabel.h"

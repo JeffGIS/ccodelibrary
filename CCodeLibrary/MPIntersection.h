@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "RampTypeView.h"
+#import "NVRampTypePageController.h"
 
 enum textures {
     smoothConcrete=1,
