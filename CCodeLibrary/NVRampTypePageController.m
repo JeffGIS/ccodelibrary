@@ -5,13 +5,6 @@
 #import "NVRampTypePageView.h"
 #import "UserDefaults.h"
 
-@interface NVRampType ()
-
-@property (nonatomic) NSString *displayText;
-@property RampType type;
-
-@end
-
 @implementation NVRampType
 
 + (instancetype)perpRamp
@@ -106,7 +99,7 @@
 
 @end
 
-@interface NVRampTypePageController () <UIPageViewControllerDataSource,UIPageViewControllerDelegate>
+@interface NVRampTypePageController () <UIPageViewControllerDataSource,UIPageViewControllerDelegate,NVRampTypePageViewDelegate>
 
 @property (nonatomic, weak) id <NVRampTypePageControllerDelegate> controllerDelegate;
 @property (nonatomic) NSMutableArray *pages;
@@ -143,6 +136,29 @@
     return nvrtpc;
 }
 
++ (void)setupReturnButton:(UIButton *)button
+{
+    button.frame = CGRectMake(20.0, 20.0, 160.0, 40.0);
+    button.backgroundColor = UIColor.clearColor;
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    
+    [button setTitle:@"< Return"
+            forState:UIControlStateNormal];
+    
+    [button setTitleColor:UIColor.whiteColor
+                 forState:UIControlStateNormal];
+    
+    [button setTitleColor:UIColor.lightGrayColor
+                 forState:UIControlStateHighlighted];
+}
+
++ (NSArray *)defaultRampTypes
+{
+    return @[NVRampType.perpRamp, NVRampType.perpNonWalkableRamp, NVRampType.comPerp, NVRampType.comPerpNW,
+             NVRampType.oneWayAdj, NVRampType.oneWayBlend, NVRampType.parallel, NVRampType.depCorner,
+             NVRampType.fan, NVRampType.builtUp];
+}
+
 - (id)init
 {
     self = [super initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
@@ -165,7 +181,15 @@
     [_rampTypes addObjectsFromArray:NVRampTypePageController.defaultRampTypes];
     [_rampTypes addObjectsFromArray:[UserDefaults.defaults arrayForKey:@"CustomRampTypes"]];
     
-    [self setupReturnButton];
+    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [NVRampTypePageController setupReturnButton:_returnButton];
+    
+    [_returnButton addTarget:self
+                      action:@selector(returnButtonTapped:)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:_returnButton];
+    
     [self setupPages];
     
     [self setViewControllers:@[_pages[0]]
@@ -184,29 +208,6 @@
     return UIStatusBarStyleLightContent;
 }
 
-- (void)setupReturnButton
-{
-    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _returnButton.frame = CGRectMake(20.0, 20.0, 160.0, 40.0);
-    _returnButton.backgroundColor = UIColor.clearColor;
-    _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
-    
-    [_returnButton setTitle:@"< Return"
-                   forState:UIControlStateNormal];
-    
-    [_returnButton setTitleColor:UIColor.whiteColor
-                        forState:UIControlStateNormal];
-    
-    [_returnButton setTitleColor:UIColor.lightGrayColor
-                        forState:UIControlStateHighlighted];
-    
-    [_returnButton addTarget:self
-                      action:@selector(returnButtonTapped:)
-            forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.view addSubview:_returnButton];
-}
-
 - (void)setupPages
 {
     NSMutableArray *pageArray = NSMutableArray.array;
@@ -218,8 +219,10 @@
         
         if (pageArray.count == 9)
         {
-            NVRampTypePageView *page = [NVRampTypePageView pageViewWithRampTypes:pageArray
-                                                                   startingIndex:index];
+            NVRampTypePageView *page = [NVRampTypePageView pageViewWithRampTypes:pageArray.copy
+                                                                   startingIndex:index
+                                                                    selectedType:_selectedType
+                                                                        delegate:self];
             
             [_pages addObject:page];
             
@@ -228,8 +231,10 @@
         }
     }
     
-    NVRampTypePageView *page = [NVRampTypePageView pageViewWithRampTypes:pageArray
-                                                           startingIndex:index];
+    NVRampTypePageView *page = [NVRampTypePageView pageViewWithRampTypes:pageArray.copy
+                                                           startingIndex:index
+                                                            selectedType:_selectedType
+                                                                delegate:self];
     
     [_pages addObject:page];
     
@@ -282,17 +287,25 @@
    previousViewControllers:(NSArray *)previousViewControllers
        transitionCompleted:(BOOL)completed
 {
+    NSInteger currentPage = [_pages indexOfObject:pvc.viewControllers[0]];
+    NVRampTypePageView *page = _pages[currentPage];
+    _returnButton.hidden = page.isZoomed;
+    
     if (finished && completed)
-    {
-        NSInteger currentPage = [_pages indexOfObject:pvc.viewControllers[0]];
         _pageControl.currentPage = currentPage;
-    }
 }
 
-+ (NSArray *)defaultRampTypes
+- (void)rampTypePageView:(NVRampTypePageView *)rampTypePageView
+       didReturnRampType:(RampType)rampType
 {
-    return @[NVRampType.perpRamp, NVRampType.perpNonWalkableRamp, NVRampType.comPerp, NVRampType.comPerpNW,
-             NVRampType.oneWayAdj, NVRampType.oneWayBlend, NVRampType.parallel, NVRampType.fan, NVRampType.builtUp];
+    [_controllerDelegate rampTypeController:self
+                          didReturnRampType:rampType
+                                 editOption:_editOption];
+}
+
+- (void)rampTypePageViewDidZoom:(BOOL)didZoom
+{
+    _returnButton.hidden = didZoom;
 }
 
 @end

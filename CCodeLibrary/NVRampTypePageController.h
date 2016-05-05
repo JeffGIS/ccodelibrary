@@ -33,7 +33,8 @@ typedef NS_ENUM(NSInteger, RampTypeEditOption)
 
 @interface NVRampType : NSObject
 
-@property (nonatomic) NSString *imageName;
+@property (nonatomic) NSString *imageName, *displayText;
+@property RampType type;
 
 @end
 
@@ -54,5 +55,6 @@ typedef NS_ENUM(NSInteger, RampTypeEditOption)
                                     editOption:(RampTypeEditOption)editOption;
 
 + (NSArray *)defaultRampTypes;
++ (void)setupReturnButton:(UIButton *)button;
 
 @end
