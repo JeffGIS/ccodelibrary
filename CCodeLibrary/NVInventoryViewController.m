@@ -1546,8 +1546,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     if (ramp.rampType == RampTypeCombPerpWalk)
         sideRamp.rampType = RampTypeCombLeftWalk;
     
-    else
+    else if (ramp.rampType == RampTypeCombPerpNonWalk)
         sideRamp.rampType = RampTypeCombLeftNonWalk;
+    
+    else
+        sideRamp.rampType = RampTypeCombBuiltUpLeft;
     
     sideRamp.rampExists = YES;
     sideRamp.isComplete = NO;
@@ -1564,8 +1567,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     if (ramp.rampType == RampTypeCombPerpWalk)
         sideRamp.rampType = RampTypeCombRightWalk;
-    else
+    
+    else if (ramp.rampType == RampTypeCombPerpNonWalk)
         sideRamp.rampType = RampTypeCombRightNonWalk;
+    
+    else
+        sideRamp.rampType = RampTypeCombBuiltUpRight;
     
     sideRamp.rampExists = YES;
     sideRamp.isComplete = NO;
@@ -1873,7 +1880,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     if (rampType == RampTypeCombPerpNonWalk ||
         rampType == RampTypeCombPerpWalk ||
         rampType == RampTypeDepressedCorner ||
-        rampType == RampTypeFan)
+        rampType == RampTypeFan ||
+        rampType == RampTypeCombBuiltUp)
     {
         rtn = YES;
     }
@@ -1886,7 +1894,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     BOOL rtn = NO;
     
     if (rampType == RampTypeCombPerpNonWalk ||
-        rampType == RampTypeCombPerpWalk)
+        rampType == RampTypeCombPerpWalk ||
+        rampType == RampTypeCombBuiltUp)
     {
         rtn = YES;
     }

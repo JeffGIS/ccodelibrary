@@ -15,14 +15,17 @@ typedef NS_ENUM(NSInteger, RampType)
     RampTypeDepressedCorner,
     RampTypeFan,
     RampTypeBuiltUp,
+    RampTypeCombBuiltUp,
     RampTypeCombLeftWalk,//left side of RampTypeCombPerpWalk
     RampTypeCombRightWalk,//right side of RampTypeCombPerpWalk
     RampTypeCombLeftNonWalk,//left side of RampTypeCombPerpNonWalk
     RampTypeCombRightNonWalk,//right side of RampTypeCombPerpNonWalk
+    RampTypeCombBuiltUpLeft,//left side of RampTypeCombBuiltUp
+    RampTypeCombBuiltUpRight,//right side of RampTypeCombBuiltUp
     rampTypeCount //always last item
 };
 
-#define lastSelectableRampType RampTypeBuiltUp
+#define lastSelectableRampType RampTypeCombBuiltUp
 
 typedef NS_ENUM(NSInteger, RampTypeEditOption)
 {

@@ -97,6 +97,15 @@
     return rt;
 }
 
++ (instancetype)comBuiltUp
+{
+    NVRampType *rt = NVRampType.new;
+    rt.displayText = @"Combined Built Up";
+    rt.imageName = @"ComBuiltUp";
+    rt.type = RampTypeCombBuiltUp;
+    return rt;
+}
+
 @end
 
 @interface NVRampTypePageController () <UIPageViewControllerDataSource,UIPageViewControllerDelegate,NVRampTypePageViewDelegate>
@@ -156,7 +165,7 @@
 {
     return @[NVRampType.perpRamp, NVRampType.perpNonWalkableRamp, NVRampType.comPerp, NVRampType.comPerpNW,
              NVRampType.oneWayAdj, NVRampType.oneWayBlend, NVRampType.parallel, NVRampType.depCorner,
-             NVRampType.fan, NVRampType.builtUp];
+             NVRampType.fan, NVRampType.builtUp, NVRampType.comBuiltUp];
 }
 
 - (id)init
