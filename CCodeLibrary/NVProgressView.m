@@ -61,6 +61,7 @@
 
 - (void)setProgress:(CGFloat)progress
 {
+    
     dispatch_async(dispatch_get_main_queue(),
                    ^{
                        _progressTrackView.frame = CGRectMake(0.0, 0.0,
