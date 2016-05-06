@@ -398,6 +398,9 @@ int ii;
         
         switch (i)
         {
+                rampButton = (NVRampButton *)[self.view viewWithTag:i];
+                rampButton.hidden = !ramp.rampExists;
+            
             case 1:
                 _ramp1.hidden = !ramp.rampExists;
                 rampButton = _ramp1;
@@ -465,15 +468,19 @@ int ii;
             x = bmpx;
             y = bmpy;
             
+            NSLog(@"x1:%d, y1:%d", x, y);
+            
             [self adjustXYtoBKImage:&x
                                   y:&y];
             
             x -= (rampButton.frame.size.width / 2.0);
             y -= (rampButton.frame.size.height / 2.0);
             
+            NSLog(@"x2:%d, y2:%d", x, y);
+            
             rampButton.frame = CGRectMake(x, y, rampButton.frame.size.width, rampButton.frame.size.height);
             rampButton.type = ramp.rampType;
-            rampButton.hidden = (rampButton.type > 8);
+            rampButton.hidden = (rampButton.type > lastSelectableRampType);
         }
     }
     
@@ -1112,7 +1119,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     _editItemButton.selected = NO;
     
     if (_updateOption == NVUpdateOptionEdit)
-        self.updateOption = NVUpdateOptionNone;
+        _updateOption = NVUpdateOptionNone;
     
     [self updateBottomButtonAppearance];
 }
@@ -1529,7 +1536,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     if (_updateOption == NVUpdateOptionMove)
     {
-        self.updateOption = NVUpdateOptionEdit;
+        _updateOption = NVUpdateOptionEdit;
         [self setupButtons];
     }
     
@@ -1539,7 +1546,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)addSideRamps:(MPRamp *)ramp
 {
-    self.updateOption = NVUpdateOptionAddRamp;
+    _updateOption = NVUpdateOptionAddRamp;
     
     MPRamp *sideRamp = _currentIntersection.ramps[[self getLeftRampIDFromRampID:ramp.rampNum]];
     
@@ -2034,6 +2041,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     return UIStatusBarStyleLightContent;
 }
+
 - (void)setUpdateOption:(NVUpdateOption)updateOption
 {
     _updateOption = updateOption;
@@ -2059,6 +2067,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             
         case NVUpdateOptionAddSignal:
             _addSignalButton.selected = YES;
+            break;
+            
+        default:
             break;
     }
     
