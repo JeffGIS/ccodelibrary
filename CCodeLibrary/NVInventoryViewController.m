@@ -346,6 +346,15 @@ int ii;
 
 - (void)setupButtons
 {
+    if (_pTranBMPToW)
+        free(_pTranBMPToW);
+    
+    if (_pTranWToBMP)
+        free(_pTranWToBMP);
+    
+    _pTranBMPToW = LoadTranFromCPT(_pathToBPWFile.UTF8String, 1);
+    _pTranWToBMP = LoadTranFromCPT(_pathToBPWFile.UTF8String, 2);
+    
     MPRamp *ramp = nil;
     
     [self setXWalkButton:_xWalkA
@@ -468,15 +477,11 @@ int ii;
             x = bmpx;
             y = bmpy;
             
-            NSLog(@"x1:%d, y1:%d", x, y);
-            
             [self adjustXYtoBKImage:&x
                                   y:&y];
             
             x -= (rampButton.frame.size.width / 2.0);
             y -= (rampButton.frame.size.height / 2.0);
-            
-            NSLog(@"x2:%d, y2:%d", x, y);
             
             rampButton.frame = CGRectMake(x, y, rampButton.frame.size.width, rampButton.frame.size.height);
             rampButton.type = ramp.rampType;

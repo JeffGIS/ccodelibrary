@@ -49,13 +49,13 @@ enum obstructions {
 
 @interface MPRamp : NSObject
 
-@property (nonatomic) int rampNum;
+@property int rampNum;
 @property (nonatomic, copy) NSString *rampID;
-@property (nonatomic) int timeComplete;
+@property int timeComplete;
 @property BOOL rampExists;
 @property BOOL isComplete;
 @property (nonatomic) CGFloat approximateHeading;
-@property (nonatomic) int adjustedRot;
+@property int adjustedRot;
 @property BOOL rampInXWalk;
 @property BOOL xWalkisComplete;
 @property BOOL signalisComplete;
@@ -89,10 +89,10 @@ enum obstructions {
 @property (nonatomic) CGFloat swkRightSlopeSide;
 @property (nonatomic) CGFloat swkRightSlopeHeading;
 @property BOOL hasPEDSignal, hasPEDButton;
-@property (nonatomic) int PEDButtonHeight, PEDButtonDist;
+@property int PEDButtonHeight, PEDButtonDist;
 @property (nonatomic) CGFloat SteepTopOfCurb;
 @property (nonatomic) CGFloat PedRampLip;
-@property (nonatomic) int lev21x, lev21y;
+@property int lev21x, lev21y;
 @property NSString * rampComment;
 @property RampType rampType;
 
