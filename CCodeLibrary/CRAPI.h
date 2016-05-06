@@ -151,7 +151,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (NSInteger)adjustNextRefno:(NSInteger)refno;
 - (void)savePlacesString:(NSString*)placesString;
 - (BOOL)processPlaces;
-- (void)processPlacesArray:(NSUInteger) row;
+- (BOOL)processPlacesArray:(NSUInteger) row;
 - (void)loadiPadParametersForGeoid:(int)geoid;
 - (void)setiPadParametersFromGeoid:(int)geoid;
 - (void)deleteImagesForAllZooms:(int)intersectionID;

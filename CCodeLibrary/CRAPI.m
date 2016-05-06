@@ -604,8 +604,10 @@
                                forKey:@"PlacesString"];
 }
 
-- (void)processPlacesArray:(NSUInteger)row
+- (BOOL)processPlacesArray:(NSUInteger)row
 {
+    if (_placesArray.count < 1)
+        return FALSE;
     if (row >= CRAPI.sharedInstance.placesArray.count)
     {
         row = (CRAPI.sharedInstance.placesArray.count - 1);
@@ -643,6 +645,7 @@
     
     [UserDefaults.defaults saveInteger:_totiPadWithinManager
                                 forKey:key];
+    return TRUE;
 }
 
 - (void)loadiPadParametersForGeoid:(int)geoid

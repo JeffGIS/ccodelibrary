@@ -249,7 +249,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     _popoverView = [[GSSiPopoverView alloc] initWithView:fromView];
     _popoverView.delegate = self;
 
-    _popoverView.progressView.hidden = NO;
+    _popoverView.progressView.hidden = YES;
     
     [_popoverView showAfter:2.0
                   withTitle:@"Waiting\nto Connect\nto Manager"];
