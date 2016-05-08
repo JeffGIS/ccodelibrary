@@ -5,7 +5,6 @@
 #import "MathUtil.h"
 #import "Reachability.h"
 #import <sys/utsname.h>
-#import "UIDevice+Storage.h"
 
 BOOL hasNetwork()
 {

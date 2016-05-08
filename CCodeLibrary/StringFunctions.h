@@ -3,6 +3,7 @@
 
 @import UIKit;
 @import CoreTelephony;
+#import "UIDevice+Storage.h"
 
 BOOL hasNetwork();
 NSString *deviceSystemInfo();
