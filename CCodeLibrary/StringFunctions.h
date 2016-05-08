@@ -2,8 +2,12 @@
 //  CCodeLibrary
 
 @import UIKit;
+@import CoreTelephony;
 
 BOOL hasNetwork();
+NSString *deviceSystemInfo();
+CTCarrier *deviceCarrier();
+NSString *deviceInfo();
 NSString *textBefore(NSString *string, NSString *before);
 NSString *textAfter(NSString *string, NSString *after);
 NSString *removeEndingReturn(NSString *string);

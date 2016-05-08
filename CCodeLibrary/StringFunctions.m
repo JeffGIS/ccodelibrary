@@ -4,6 +4,8 @@
 #import "StringFunctions.h"
 #import "MathUtil.h"
 #import "Reachability.h"
+#import <sys/utsname.h>
+#import "UIDevice+Storage.h"
 
 BOOL hasNetwork()
 {
@@ -15,6 +17,36 @@ BOOL hasNetwork()
     
     else
         return YES;
+}
+
+NSString *deviceSystemInfo()
+{
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    
+    NSString *deviceSystemInfo = [NSString stringWithCString:systemInfo.machine
+                                                    encoding:NSUTF8StringEncoding];
+    
+    deviceSystemInfo = [deviceSystemInfo stringByReplacingOccurrencesOfString:@","
+                                                                   withString:@"|"];
+    
+    return deviceSystemInfo;
+}
+
+CTCarrier *deviceCarrier()
+{
+    CTTelephonyNetworkInfo *networkInfo = CTTelephonyNetworkInfo.new;
+    return networkInfo.subscriberCellularProvider;
+}
+
+NSString *deviceInfo()
+{
+    UIDevice *device = UIDevice.currentDevice;
+    CTCarrier *carrier = deviceCarrier();
+    
+    return [NSString stringWithFormat:@"%@,%@,%@,%@,%llu,%llu,%@,%@",
+            device.identifierForVendor.UUIDString, device.name, device.systemVersion, deviceSystemInfo(),
+            UIDevice.availableStorageSpace, UIDevice.totalStorageSpace, carrier.carrierName, carrier.mobileNetworkCode];
 }
 
 NSString *textBefore(NSString *string, NSString *before)

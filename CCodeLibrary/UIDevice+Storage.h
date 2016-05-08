@@ -6,5 +6,7 @@
 @interface UIDevice (Storage)
 
 + (uint64_t)availableStorageSpace;
++ (uint64_t)totalStorageSpace;
++ (int)pctBatteryRemaining;
 
 @end
