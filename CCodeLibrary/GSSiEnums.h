@@ -13,6 +13,7 @@ typedef NS_ENUM(NSInteger, MMLMFrom)
     MMLMFromSelectCity,
     MMLMFromPriorityLocations,
     MMLMFromPriorityMap,
+    MMLMFromRetrieveData,
 };
 
 typedef NS_ENUM(NSInteger, MSCFrom)
