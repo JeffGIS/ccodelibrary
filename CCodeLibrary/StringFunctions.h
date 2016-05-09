@@ -7,7 +7,7 @@
 
 BOOL hasNetwork();
 NSString *deviceSystemInfo();
-CTCarrier *deviceCarrier();
+NSString *deviceCarrier();
 NSString *deviceInfo();
 NSString *textBefore(NSString *string, NSString *before);
 NSString *textAfter(NSString *string, NSString *after);
