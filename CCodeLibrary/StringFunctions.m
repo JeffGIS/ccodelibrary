@@ -35,14 +35,18 @@ NSString *deviceSystemInfo()
 NSString *deviceCarrier()
 {
     CTTelephonyNetworkInfo *networkInfo = CTTelephonyNetworkInfo.new;
-    CTCarrier * carrier = networkInfo.subscriberCellularProvider;
-    NSString * carrierName =  carrier.carrierName;
-    NSString * mobileNetworkCode = carrier.mobileNetworkCode;
+    CTCarrier *carrier = networkInfo.subscriberCellularProvider;
+    NSString *carrierName =  carrier.carrierName;
+    NSString *mobileNetworkCode = carrier.mobileNetworkCode;
+    
     if (!carrierName)
         carrierName = @"NONE";
+    
     if (!mobileNetworkCode)
         mobileNetworkCode = @"NONE";
-    NSString *rtn = [NSString stringWithFormat:@"%@|%@",carrierName,mobileNetworkCode];
+    
+    NSString *rtn = [NSString stringWithFormat:@"%@|%@", carrierName, mobileNetworkCode];
+    
     return rtn;
 }
 
@@ -50,11 +54,11 @@ NSString *deviceInfo()
 {
     UIDevice *device = UIDevice.currentDevice;
     NSString *carrier = deviceCarrier();
-    int floatSize = sizeof (CGFloat);
+    int floatSize = sizeof(CGFloat);
     
     return [NSString stringWithFormat:@"%@,%@,%@|%@|%llu|%llu|%@|%i",
             device.identifierForVendor.UUIDString, device.name, device.systemVersion, deviceSystemInfo(),
-            UIDevice.availableStorageSpace, UIDevice.totalStorageSpace, carrier,floatSize];
+            UIDevice.availableStorageSpace, UIDevice.totalStorageSpace, carrier, floatSize];
 }
 
 NSString *textBefore(NSString *string, NSString *before)
