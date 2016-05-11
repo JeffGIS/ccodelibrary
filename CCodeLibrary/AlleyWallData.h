@@ -47,4 +47,13 @@
 + (BOOL)moveAlleyWallPoint:(NSInteger)refno
                         to:(CLLocationCoordinate2D)point;
 
+-(NSString*)getLastInspDateForWall:(NSString*)wallID;
+
+- (NSString *)getCurrentWallData:(NSString *)wallID
+forDate:(NSString *)date
+                       fieldName:(NSString *)fieldName;
+- (BOOL)beginNewSurveyForWall:(NSString *)wallID
+fromDate:(NSString *)fromDate
+                      newDate:(NSString *)newDate;
+
 @end
