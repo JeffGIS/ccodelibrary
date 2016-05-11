@@ -67,6 +67,7 @@
 #import "DisplayCharacteristics.h"
 #import "FileLister.h"
 #import "TextOptions.h"
+#import "SQLiteLib.h"
 
 @interface CCodeLibrary : NSObject
 

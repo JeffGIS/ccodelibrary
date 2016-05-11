@@ -14,20 +14,6 @@ static int fileSequence = 0;
 
 @implementation AlleyWallData
 
-
-int SQLOKawd(int sqlReturn, sqlite3 *database)
-{
-    if (sqlReturn != SQLITE_OK)
-    {
-        //[self logError:sqlReturn
-        //             method:database];
-        NSLog(@"%@", [NSString stringWithFormat:@"SQLite Error %i = %i:%s",
-                      sqlReturn, sqlite3_errcode(database), sqlite3_errmsg(database)]);
-    }
-    
-    return sqlReturn;
-}
-
 - (void)logError:(int)sqlReturn
           method:(sqlite3*)database
 {
@@ -62,29 +48,35 @@ int SQLOKawd(int sqlReturn, sqlite3 *database)
     sqlite3_close(_database);
     NSLog(@"AlleyWall Database dealloc");
 }
-- (void)open
+- (BOOL)open
 {
+    BOOL rtn = FALSE;
     if (!_isOpen)
     {
         self.isOpen = YES;
-        self.isOpen = !SQLOKawd(sqlite3_open(self.path.UTF8String, &_database), _database);
+        self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"AlleyWall Database open");
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
                                                                    error:nil].fileSize;
+        rtn = TRUE;
     }
+    return rtn;
 }
 
-- (void)close
+- (void)close:(BOOL)opened
 {
-    SQLOKawd(sqlite3_close(_database),_database);
-    NSLog(@"AlleyWall Database close");
-    self.isOpen = NO;
+    if (opened)
+    {
+        SQLOK(sqlite3_close(_database),_database);
+        NSLog(@"AlleyWall Database close");
+        self.isOpen = NO;
+    }
 }
 
 - (void)clear
 {
-    [self close];
+    [self close:TRUE];
     
     //BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
     //error:nil];
@@ -93,7 +85,7 @@ int SQLOKawd(int sqlReturn, sqlite3 *database)
 - (int)datasetVersion
 {
     int rtn = -1;
-    [self open];
+    BOOL opened = [self open];
     
     if (_isOpen && _fileSize > 0)
     {
@@ -101,7 +93,7 @@ int SQLOKawd(int sqlReturn, sqlite3 *database)
         
         sqlite3_stmt *statement = NULL;
         
-        SQLOKawd(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
         
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -111,10 +103,10 @@ int SQLOKawd(int sqlReturn, sqlite3 *database)
                 rtn = atoi(version);
         }
         
-        SQLOKawd(sqlite3_finalize(statement), _database);
+        SQLOK(sqlite3_finalize(statement), _database);
     }
     
-    [self close];
+    [self close:opened];
     return rtn;
 }
 
@@ -122,7 +114,7 @@ int SQLOKawd(int sqlReturn, sqlite3 *database)
       sendToServer:(BOOL)sendToServer
      useUniqueFile:(BOOL)uniqueFile
 {
-    BOOL rtn = !SQLOKawd(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     if (rtn && sendToServer)
     {
         if (uniqueFile || !_sendToServerFile)
@@ -143,27 +135,28 @@ int SQLOKawd(int sqlReturn, sqlite3 *database)
     return rtn;
 }
 
-- (void)startTransaction
+- (BOOL)startTransaction
 {
-    [self open];
-    SQLOKawd(sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    BOOL opened = [self open];
+    SQLOK(sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    return opened;
 }
 
 - (void)commitTransaction
 {
-    SQLOKawd(sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
+    SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
 }
 
 - (int)getAlleyLineStatus:(NSInteger)refno
 {
     int status = 0;
-    [self open];
+    BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"SELECT ALLEY_LINE.CHECKED FROM ALLEY_LINE WHERE  ALLEY_LINE.id=%li",(long)refno];
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOKawd(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement,0), _database);
+    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement,0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -171,8 +164,8 @@ int SQLOKawd(int sqlReturn, sqlite3 *database)
         status = checked;
     }
     
-    SQLOKawd(sqlite3_finalize(statement), _database);
-    [self close];
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
     
     return status;
 }
@@ -180,21 +173,21 @@ int SQLOKawd(int sqlReturn, sqlite3 *database)
 - (int)getAlleyLineSeg:(NSInteger)refno
 {
     int segid = 0;
-    [self open];
+    BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"SELECT ALLEY_LINE.SEGID FROM ALLEY_LINE WHERE  ALLEY_LINE.id=%li",(long)refno];
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOKawd(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement,0), _database);
+    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement,0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         segid = sqlite3_column_int(statement, 0);
     }
     
-    SQLOKawd(sqlite3_finalize(statement), _database);
-    [self close];
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
     
     return segid;
 }
@@ -213,19 +206,19 @@ int SQLOKawd(int sqlReturn, sqlite3 *database)
                     atomically:YES
                       encoding:NSUTF8StringEncoding
                          error:nil];
-    [self open];
+    BOOL opened = [self open];
     NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEY_LINE SET CHECKED = %i, LastUpdate = %i WHERE id=%ld",status,iTime,(long)refno];
     [self executeCmd:(LPSTR)cmd.UTF8String
         sendToServer:YES
      useUniqueFile:YES];
-    [self close];
+    [self close:opened];
 }
 
 - (BOOL)deleteAlleyWallPoint:(NSInteger)refno;
 {
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     BOOL rtn = NO;
-    [self open];
+    BOOL opened = [self open];
     
     NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALLS_NEW SET Current = 0, Deleted = 1, LastUpdate = %i WHERE id=%ld",
                      iTime, (long)refno];
@@ -234,32 +227,32 @@ int SQLOKawd(int sqlReturn, sqlite3 *database)
               sendToServer:YES
              useUniqueFile:YES];
     
-    [self close];
+    [self close:opened];
     return rtn;
 }
 
-- (BOOL)moveAlleyWallPoint:(NSInteger)refno
++ (BOOL)moveAlleyWallPoint:(NSInteger)refno
                         to:(CLLocationCoordinate2D)point
 {
     BOOL rtn = FALSE;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
-    AlleyWallData *pd = [[AlleyWallData alloc] init];
-    [pd open];
+    AlleyWallData *awd = [[AlleyWallData alloc] init];
+    BOOL opened = [awd open];
     
     NSString *query = [NSString stringWithFormat:@"UPDATE ALLEYWALLS_NEW SET LATITUDE = %f,LONGITUDE = %f,LastUpdate = %i WHERE id=%ld",
                        point.latitude,point.longitude, iTime,(long)refno];
     
-    rtn = sqlite3_exec(pd.database, query.UTF8String, NULL, NULL, NULL);
+    rtn = sqlite3_exec(awd.database, query.UTF8String, NULL, NULL, NULL);
     
     if (!rtn)
     {
         query = [NSString stringWithFormat:@"UPDATE ALLEYWALLS_NEW_index SET minY=%f,minX=%f,maxY=%f,maxX=%f WHERE ALLEYWALLS_NEW_index.id=%ld",
                  point.latitude,point.longitude, point.latitude,point.longitude, (long)refno];
         
-        rtn = sqlite3_exec(pd.database, query.UTF8String, NULL, NULL, NULL);
+        rtn = sqlite3_exec(awd.database, query.UTF8String, NULL, NULL, NULL);
     }
     
-    [pd close];
+    [awd close:opened];
     return !rtn;
 }
 
@@ -275,18 +268,18 @@ SELECT max(_id) FROM MyTable*/
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     NSInteger refno=0;
     NSInteger iHouse = [house integerValue];
-    [self open];
+    BOOL opened = [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT max(id) FROM ALLEYWALLS_NEW"];
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOKawd(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         refno = sqlite3_column_int(statement, 0);
         refno = [CRAPI.sharedInstance adjustNextRefno:refno];
     }
-    SQLOKawd(sqlite3_finalize(statement), _database);
+    SQLOK(sqlite3_finalize(statement), _database);
    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.timeStyle = NSDateFormatterNoStyle;
@@ -302,7 +295,7 @@ SELECT max(_id) FROM MyTable*/
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
               sendToServer:YES
              useUniqueFile:NO];
-    [self close];
+    [self close:opened];
     return rtn;
 }
 
@@ -318,14 +311,14 @@ SELECT max(_id) FROM MyTable*/
     p1.y = pt->latitude;
     minpt = p1;
     dbounds bnds = [CRAPI.sharedInstance getBoundsAtPoint:pt andDist:20];
-    [self open];
+    BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"SELECT ALLEY_LINE.id, ALLEY_LINE.ALLEYSEG, BasePointX, BasePointY,NumPoints,NumLoops,PolyPartLen,Points  FROM ALLEY_LINE,ALLEY_LINE_index WHERE  ALLEY_LINE.id=ALLEY_LINE_index.id AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f",
                        bnds.xmn, bnds.xmx, bnds.ymn, bnds.ymx];
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOKawd(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -368,8 +361,8 @@ SELECT max(_id) FROM MyTable*/
         free (llpoints);
     }
     
-    SQLOKawd(sqlite3_finalize(statement),_database);
-    [self close];
+    SQLOK(sqlite3_finalize(statement),_database);
+    [self close:opened];
     pt->longitude = minpt.x;
     pt->latitude = minpt.y;
 
@@ -380,7 +373,7 @@ SELECT max(_id) FROM MyTable*/
 {
     NSString *nextWall = @"";
     CGFloat maxWall = 0;
-    [self open];
+    BOOL opened = [self open];
     
     if ([nearestAlley isEqualToString:@""])
         return @"";
@@ -391,7 +384,7 @@ SELECT max(_id) FROM MyTable*/
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOKawd(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -405,8 +398,8 @@ SELECT max(_id) FROM MyTable*/
         maxWall = max (fWall,maxWall);
     }
     
-    SQLOKawd(sqlite3_finalize(statement), _database);
-    [self close];
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
     
     if (maxWall < 1)
         nextWall = [[nearestAlley substringToIndex:4] stringByAppendingString:@".01"];
@@ -482,7 +475,7 @@ SELECT max(_id) FROM MyTable*/
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOKawd(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -584,11 +577,313 @@ SELECT max(_id) FROM MyTable*/
            useUniqueFile:NO];
 
     }
-    SQLOKawd(sqlite3_finalize(statement),_database);
+    SQLOK(sqlite3_finalize(statement),_database);
 /*    INSERT INTO ALLEYWALLS_index VALUES(14,-93.260717,-93.260717,44.910437,44.910437);
     CREATE TABLE ALLEYWALLS ('id' INT,'Wall ID' CHAR(8),'Hse No' INT,'STREET' CHAR(64),'City' CHAR(4),'Length' REAL,'Max Hght' REAL,'Offset' REAL,'Gar/Struc' CHAR(12),' COST' CHAR(12),'Type Const' CHAR(32),'InspDate' CHAR(12),'InspBy' CHAR(8),'Rating' CHAR(16),'Comments' CHAR(255),'LONGITUDE' REAL,'LATITUDE' REAL,'NUMSEGMENTS' INT,'LASTUPDATE' INT,PRIMARY KEY('id' ASC))
  */
     [self commitTransaction];
     return rtn;
 }
+
+- (BOOL)executeCmd:(char *)cmd
+      sendToServer:(BOOL)sendToServer
+{
+    BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    if (rtn && sendToServer)
+    {
+        int iTime = NSDate.timeIntervalSinceReferenceDate;
+        NSString *outputDataPath = [NSString stringWithFormat:@"%@/AlleyWallInventory_%i-%i.sql",
+                                    CRAPI.sharedInstance.outputDirectory,iTime,fileSequence++];
+        rtn = [[NSString stringWithUTF8String:cmd] writeToFile:outputDataPath
+                                                    atomically:YES
+                                                      encoding:NSUTF8StringEncoding
+                                                         error:nil];
+    }
+    return rtn;
+}
+
+-(NSString*)getLastInspDateForWall:(NSString*)wallID
+{
+    sqlite3_stmt *statement;
+    NSString * value = @"";
+    NSString * query = [NSString stringWithFormat:@"SELECT MAX([InspDate]) FROM ALLEYWALLS_NEW WHERE [Wall ID]=%@",wallID];
+    bool found=false;
+    
+    BOOL opened = [self open];
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        LPSTR val = (LPSTR)sqlite3_column_text(statement, 0);
+        if (val)
+        {
+            value = [NSString stringWithUTF8String:val];
+            found = true;
+        }
+    }
+    
+    SQLOK(sqlite3_finalize(statement), _database);
+    /*    if (!found)
+     {
+     
+     query = [NSString stringWithFormat:@"SELECT MAX([InspDate]) FROM ALLEYWALLS WHERE [Wall ID]=%@",wallID];
+     bool found=false;
+     
+     [self open];
+     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), "");
+     
+     if (sqlite3_step(statement) == SQLITE_ROW)
+     {
+     LPSTR val = (LPSTR)sqlite3_column_text(statement, 0);
+     if (val)
+     {
+     value = [NSString stringWithUTF8String:val];
+     found = true;
+     }
+     }
+     
+     SQLOK(sqlite3_finalize(statement), "");
+     }*/
+    [self close:opened];
+    return value;
+}
+
+- (NSString *)getCurrentWallData:(NSString *)wallID
+                         forDate:(NSString *)date
+                       fieldName:(NSString *)fieldName
+{
+    NSString *query = @"";
+    NSString *value = @"";
+    sqlite3_stmt *statement;
+    bool found=false;
+    //NSArray *dateParts = [date componentsSeparatedByString:@"-"];
+    //NSString *origDate = [NSString stringWithFormat:@"%li/%li/%@",(long)[dateParts[1] integerValue],(long)[dateParts[2] integerValue],dateParts[0]];
+    
+    BOOL opened = [self open];
+    //CREATE TABLE ALLEYWALLS ('id' INT,'Wall ID' CHAR(8),'Hse No' INT,'STREET' CHAR(64),'City' CHAR(4),'Length' REAL,'Max Hght' REAL,'Offset' REAL,'Gar/Struc' CHAR(12),' COST' CHAR(12),'Type Const' CHAR(32),'InspDate' CHAR(12),'InspBy' CHAR(8),'Rating' CHAR(16),'Comments' CHAR(255),'LONGITUDE' REAL,'LATITUDE' REAL,PRIMARY KEY('id' ASC))
+    NSRange segRange = [fieldName rangeOfString:@"("];
+    if (segRange.location == NSNotFound)
+    {
+        query = [NSString stringWithFormat:@"SELECT [%@] FROM ALLEYWALLS_NEW WHERE [Wall ID]=%@ AND Current = 1",fieldName,wallID];
+        
+        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        
+        if (sqlite3_step(statement) == SQLITE_ROW)
+        {
+            LPSTR val = (LPSTR)sqlite3_column_text(statement, 0);
+            if (val)
+            {
+                value = [NSString stringWithUTF8String:val];
+                found = true;
+            }
+        }
+        
+        SQLOK(sqlite3_finalize(statement), _database);
+        
+        /*       if (!found)
+         {
+         query = [NSString stringWithFormat:@"SELECT [%@] FROM ALLEYWALLS WHERE [Wall ID]=%@ AND [InspDate]='%@'",fieldName,wallID,origDate];
+         
+         SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), "");
+         
+         if (sqlite3_step(statement) == SQLITE_ROW)
+         {
+         LPSTR val = (LPSTR)sqlite3_column_text(statement, 0);
+         if (val)
+         value = [NSString stringWithUTF8String:val];
+         }
+         
+         SQLOK(sqlite3_finalize(statement), "");
+         }*/
+    }
+    else
+    {
+        NSString * fname = [fieldName substringToIndex:segRange.location];
+        int iseg = (int)[[fieldName substringFromIndex:segRange.location+1] integerValue];
+        query = [NSString stringWithFormat:@"SELECT [%@] FROM ALLEYWALL_SEGS WHERE [Wall ID]=%@ AND [InspDate]='%@' AND [SEGMENT]=%i",fname,wallID,date,iseg];
+        
+        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        
+        if (sqlite3_step(statement) == SQLITE_ROW)
+        {
+            LPSTR val = (LPSTR)sqlite3_column_text(statement, 0);
+            if (val)
+            {
+                value = [NSString stringWithUTF8String:val];
+                found = true;
+            }
+        }
+        
+        SQLOK(sqlite3_finalize(statement),_database);
+        /*        if (!found && iseg == 1)
+         {
+         if ([fname isEqualToString:@"SegmentLength"])
+         fname = @"Length";
+         else if ([fname isEqualToString:@"SegmentOffset"])
+         fname = @"Offset";
+         else if ([fname isEqualToString:@"TypeConst"])
+         fname = @"Type Const";
+         query = [NSString stringWithFormat:@"SELECT [%@] FROM ALLEYWALLS WHERE [Wall ID]=%@ AND [InspDate]='%@'",fname,wallID,origDate];
+         
+         SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), "");
+         
+         if (sqlite3_step(statement) == SQLITE_ROW)
+         {
+         LPSTR val = (LPSTR)sqlite3_column_text(statement, 0);
+         if (val)
+         value = [NSString stringWithUTF8String:val];
+         }
+         
+         SQLOK(sqlite3_finalize(statement), "");
+         
+         }*/
+        
+    }
+    [self close:opened];
+    return value;
+    
+}
+- (BOOL)beginNewSurveyForWall:(NSString *)wallID
+                     fromDate:(NSString *)fromDate
+                      newDate:(NSString *)newDate
+{
+    BOOL rtn = FALSE;
+    sqlite3_stmt *statement;
+    NSString * house;
+    NSString * street;
+    NSString * latitude;
+    NSString * longitude;
+    NSInteger refno = 0;
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
+    
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT max(id) FROM ALLEYWALLS_NEW"];
+    
+    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        refno = sqlite3_column_int(statement, 0);
+        refno = [CRAPI.sharedInstance adjustNextRefno:refno];
+    }
+    SQLOK(sqlite3_finalize(statement), _database);
+    
+    
+    query = [NSString stringWithFormat:@"SELECT [Hse No],[STREET],[LONGITUDE],[LATITUDE] FROM ALLEYWALLS_NEW WHERE [Wall ID]='%@' AND [Current]=1",wallID];
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        LPSTR val = (LPSTR)sqlite3_column_text(statement, 0);
+        house = [NSString stringWithUTF8String:val];
+        val = (LPSTR)sqlite3_column_text(statement, 1);
+        street = [NSString stringWithUTF8String:val];
+        val = (LPSTR)sqlite3_column_text(statement, 2);
+        longitude = [NSString stringWithUTF8String:val];
+        val = (LPSTR)sqlite3_column_text(statement, 3);
+        latitude = [NSString stringWithUTF8String:val];
+        rtn = TRUE;
+    }
+    SQLOK(sqlite3_finalize(statement),_database);
+    if (rtn)
+    {
+        query = [NSString stringWithFormat:@"UPDATE ALLEYWALLS_NEW SET Current = 0, [LastUpdate]=%i WHERE [Wall ID]='%@' AND [InspDate]='%@'",iTime,wallID,fromDate];
+        [self executeCmd:(LPSTR)query.UTF8String
+            sendToServer:YES];
+    }
+    if (rtn)
+    {
+        query = [NSString stringWithFormat:@"INSERT INTO ALLEYWALLS_NEW ([id],[Wall ID],[InspDate],[Current],[Hse No],[STREET],[LATITUDE],[LONGITUDE],[LastUpdate]) VALUES (%li,'%@','%@',1,'%@','%@','%@','%@',%i)",(long)refno,wallID,newDate,house,street,latitude,longitude,iTime];
+        [self executeCmd:(LPSTR)query.UTF8String
+            sendToServer:YES];
+        query = [NSString stringWithFormat:@"INSERT INTO ALLEYWALLS_NEW_index VALUES(%ld,%f,%f,%f,%f)",(long)refno,longitude.floatValue,longitude.floatValue,latitude.floatValue,latitude.floatValue];
+        [self executeCmd:(LPSTR)query.UTF8String
+            sendToServer:YES];
+        
+    }
+    [self close:opened];
+    return rtn;
+}
+
+- (BOOL)createNewTable
+{
+    BOOL rtn = TRUE;
+    BOOL opened = [self open];
+    NSString * cmd = @"\
+    DROP TABLE IF EXISTS ALLEYWALLS_VERSION;\
+    CREATE TABLE ALLEYWALLS_VERSION ('Version' CHAR(16));\
+    INSERT INTO ALLEYWALLS_VERSION ([VERSION]) VALUES ('1.0');\
+    DROP TABLE IF EXISTS ALLEYWALLS_NEW;\
+    DROP TABLE IF EXISTS ALLEYWALLS_NEW_index;\
+    CREATE VIRTUAL TABLE ALLEYWALLS_NEW_index USING rtree(id,minX, maxX, minY, maxY);\
+    DROP TABLE IF EXISTS ALLEYWALL_SEGS;\
+    CREATE TABLE IF NOT EXISTS ALLEYWALLS_NEW (\
+    'id' INT,\
+    'Wall ID' CHAR(8),\
+    'InspDate' CHAR(12),\
+    'InspBy' CHAR(16),\
+    'Current' INT,\
+    'LastUpdate' INT,\
+    'Deleted' INT,\
+    'Complete' INT,\
+    'Version' CHAR(16),\
+    'Hse No' INT,\
+    'STREET' CHAR(64),\
+    'CityStamp' CHAR(32),\
+    'Photos' INT,\
+    'BEARING' REAL,\
+    'GroundCoverBehindWall' CHAR(255),\
+    'VisibleWeepHoles' CHAR(4),\
+    'HistAndConstYear' CHAR(255),\
+    'StructuresInWall' CHAR(255),\
+    'ItemsBehindWall' CHAR(255),\
+    'SoilSurcharge' REAL,\
+    'Deficiency' CHAR(255),\
+    'Rating' INT,\
+    'NumSegments' INT,\
+    'Comments' CHAR(255),\
+    'LONGITUDE' REAL,\
+    'LATITUDE' REAL,\
+    PRIMARY KEY('Wall ID','InspDate'));\
+    CREATE TABLE IF NOT EXISTS ALLEYWALL_SEGS(\
+    'Wall ID' CHAR(8),\
+    'InspDate' CHAR(12),\
+    'SEGMENT' INT,\
+    'SegmentLength' REAL,\
+    'SegmentMaxHeight' REAL,\
+    'SegmentOffset' REAL,\
+    'TypeConst' CHAR(32),\
+    'SegmentPlumbness' REAL,\
+    'PlumbnessDistance' REAL,\
+    PRIMARY KEY('Wall ID','InspDate','SEGMENT'));";
+    //DROP TABLE IF EXISTS ALLEYWALL_SEGS;
+    [self executeCmd:(char *)cmd.UTF8String
+        sendToServer:NO];
+    [self close:opened];
+    return rtn;
+}
+/*
+ $GMDUPDATE([ALLEYWALLFILE],Wall ID=7397.3;InspDate=1987-03-13,InspBy=jes;
+ Hse No=3621;
+ Street=PORTLAND AVE;
+ CityStamp=;
+ Photos=;
+ Bearing=19.5;
+ GroundCoverBehindWall=Pervious;
+ VisibleWeepHoles=;
+ HistAndConstYear=;
+ StructuresInWall=;
+ ItemsBehindWall=;
+ SoilSurcharge=;
+ Deficiency=;
+ Rating=7;
+ NumSegments=1;
+ Comments=GOOD.  ;
+ );$GMDUPDATE([ALLEYWALLSEGFILE],Wall ID=7397.3;InspDate=1987-03-13;SEGMENT=1,SegmentLength=;
+ SegmentMaxHeight=;
+ SegmentOffset=;
+ TypeConst=;
+ SegmentPlumbness=;
+ PlumbnessDistance=;
+ );*/
 @end

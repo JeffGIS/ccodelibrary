@@ -14,6 +14,7 @@
 		1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544E19A449460029DBEA /* CustomAlert.m */; };
 		1F5150A31CE3959000BA4A5E /* AlleyWallData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5150A21CE3959000BA4A5E /* AlleyWallData.m */; };
 		1F5150A41CE396FE00BA4A5E /* AlleyWallData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F5150A11CE3959000BA4A5E /* AlleyWallData.h */; };
+		1F5150A51CE3A3B400BA4A5E /* SQLiteLib.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB42311B2B1A5E00C36FFC /* SQLiteLib.h */; };
 		1F829A9A1C342BDD00DD429C /* FileLister.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F829A991C342BDD00DD429C /* FileLister.m */; };
 		1F829A9B1C342F6200DD429C /* FileLister.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F829A981C342BDD00DD429C /* FileLister.h */; };
 		1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F838AE919B1021C00943A8C /* PlacesInfo.m */; };
@@ -336,6 +337,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				1F5150A51CE3A3B400BA4A5E /* SQLiteLib.h in CopyFiles */,
 				1F5150A41CE396FE00BA4A5E /* AlleyWallData.h in CopyFiles */,
 				692F54A61CDBAA6B001600C9 /* NVRampTypePageController.h in CopyFiles */,
 				69DFB6A61CD719C3001E1200 /* NVCRISSignupView.h in CopyFiles */,

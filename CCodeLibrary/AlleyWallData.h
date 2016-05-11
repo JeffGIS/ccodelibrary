@@ -3,7 +3,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
-#import <sqlite3.h>
+#import "CCodeLibrary/SQLiteLib.h"
 
 @interface AlleyWallData : NSObject
 
@@ -17,15 +17,15 @@
 @property unsigned long long fileSize;
 @property (nonatomic) int datasetVersion;
 
-- (void)open;
-- (void)close;
+- (BOOL)open;
+- (void)close:(BOOL)opened;
 - (void)clear;
 
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer
      useUniqueFile:(BOOL)uniqueFile;
 
-- (void)startTransaction;
+- (BOOL)startTransaction;
 - (void)commitTransaction;
 - (int)getAlleyLineStatus:(NSInteger)refno;
 
@@ -44,7 +44,7 @@
 - (BOOL)createNewTable:(BOOL)sendToServer;
 - (BOOL)transferExistingTableIntoNewTable:(BOOL)sendToServer;
 
-- (BOOL)moveAlleyWallPoint:(NSInteger)refno
++ (BOOL)moveAlleyWallPoint:(NSInteger)refno
                         to:(CLLocationCoordinate2D)point;
 
 @end
