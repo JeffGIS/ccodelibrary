@@ -3,7 +3,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
-#import "CCodeLibrary/SQLiteLib.h"
+#import "SQLiteLib.h"
 
 @interface AlleyWallData : NSObject
 
