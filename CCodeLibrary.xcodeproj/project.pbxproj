@@ -12,6 +12,8 @@
 		1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */; };
 		1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544519A412490029DBEA /* NetworkManager.m */; };
 		1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544E19A449460029DBEA /* CustomAlert.m */; };
+		1F5150A31CE3959000BA4A5E /* AlleyWallData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5150A21CE3959000BA4A5E /* AlleyWallData.m */; };
+		1F5150A41CE396FE00BA4A5E /* AlleyWallData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F5150A11CE3959000BA4A5E /* AlleyWallData.h */; };
 		1F829A9A1C342BDD00DD429C /* FileLister.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F829A991C342BDD00DD429C /* FileLister.m */; };
 		1F829A9B1C342F6200DD429C /* FileLister.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F829A981C342BDD00DD429C /* FileLister.h */; };
 		1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F838AE919B1021C00943A8C /* PlacesInfo.m */; };
@@ -334,6 +336,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				1F5150A41CE396FE00BA4A5E /* AlleyWallData.h in CopyFiles */,
 				692F54A61CDBAA6B001600C9 /* NVRampTypePageController.h in CopyFiles */,
 				69DFB6A61CD719C3001E1200 /* NVCRISSignupView.h in CopyFiles */,
 				690746E61CD4206500B31D8F /* NVTextViewAlert.h in CopyFiles */,
@@ -476,6 +479,8 @@
 		1F3A544519A412490029DBEA /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		1F3A544D19A449460029DBEA /* CustomAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlert.h; sourceTree = "<group>"; };
 		1F3A544E19A449460029DBEA /* CustomAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlert.m; sourceTree = "<group>"; };
+		1F5150A11CE3959000BA4A5E /* AlleyWallData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlleyWallData.h; sourceTree = "<group>"; };
+		1F5150A21CE3959000BA4A5E /* AlleyWallData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlleyWallData.m; sourceTree = "<group>"; };
 		1F829A981C342BDD00DD429C /* FileLister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileLister.h; sourceTree = "<group>"; };
 		1F829A991C342BDD00DD429C /* FileLister.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileLister.m; sourceTree = "<group>"; };
 		1F838AE819B1021C00943A8C /* PlacesInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesInfo.h; sourceTree = "<group>"; };
@@ -1224,6 +1229,8 @@
 		EBAB422C1B2B071700C36FFC /* Databases */ = {
 			isa = PBXGroup;
 			children = (
+				1F5150A11CE3959000BA4A5E /* AlleyWallData.h */,
+				1F5150A21CE3959000BA4A5E /* AlleyWallData.m */,
 				BB6777961C95C13200A2D508 /* CensusData.h */,
 				BB6777971C95C13200A2D508 /* CensusData.m */,
 				EBAB422D1B2B073A00C36FFC /* CurbRampData.h */,
@@ -1497,6 +1504,7 @@
 				BB6777981C95C13200A2D508 /* CensusData.m in Sources */,
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
 				693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */,
+				1F5150A31CE3959000BA4A5E /* AlleyWallData.m in Sources */,
 				A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */,
 				EBC01D231BED1C8C0004C751 /* nutate.c in Sources */,
 				EBC01D0B1BED1C8C0004C751 /* arcdot.c in Sources */,
