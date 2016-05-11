@@ -172,7 +172,6 @@
 		A99C89271AEDE0E700A0856F /* HelpWebView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A97C621D1AE0C59200DA7738 /* HelpWebView.h */; };
 		A99C89281AEDE0EF00A0856F /* LegendView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A96B07BD19FBF276005A73B0 /* LegendView.h */; };
 		A99C892A1AEDE0FA00A0856F /* NVSliderView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A91F36921AE9739400602BCE /* NVSliderView.h */; };
-		A99C892B1AEDE0FF00A0856F /* RampTypeView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */; };
 		A99C892D1AEDE10A00A0856F /* NVColorWheel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */; };
 		A99C892E1AEDE10F00A0856F /* NVVideoHeadingViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */; };
 		A99C892F1AEDE11400A0856F /* NVHeadingViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */; };
@@ -214,7 +213,6 @@
 		A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D952B11A96D484008B9156 /* GSSiAlertController.m */; };
 		A9DDC08A1B613EF4000DEEA9 /* FTPDirectoryList.m in Sources */ = {isa = PBXBuildFile; fileRef = A9DDC0891B613EF4000DEEA9 /* FTPDirectoryList.m */; };
 		A9DDC08B1B6153FD000DEEA9 /* FTPDirectoryList.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9DDC0881B613EF4000DEEA9 /* FTPDirectoryList.h */; };
-		A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */; };
 		A9E2130E1AFE4BFC005ECBBA /* NVImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E2130D1AFE4BFC005ECBBA /* NVImagePickerController.m */; };
 		A9E2130F1AFE4C2B005ECBBA /* NVImagePickerController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */; };
 		A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */; };
@@ -420,7 +418,6 @@
 				A99C892F1AEDE11400A0856F /* NVHeadingViewController.h in CopyFiles */,
 				A99C892E1AEDE10F00A0856F /* NVVideoHeadingViewController.h in CopyFiles */,
 				A99C892D1AEDE10A00A0856F /* NVColorWheel.h in CopyFiles */,
-				A99C892B1AEDE0FF00A0856F /* RampTypeView.h in CopyFiles */,
 				A99C892A1AEDE0FA00A0856F /* NVSliderView.h in CopyFiles */,
 				A99C89281AEDE0EF00A0856F /* LegendView.h in CopyFiles */,
 				A99C89271AEDE0E700A0856F /* HelpWebView.h in CopyFiles */,
@@ -654,8 +651,6 @@
 		A9D952B11A96D484008B9156 /* GSSiAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiAlertController.m; sourceTree = "<group>"; };
 		A9DDC0881B613EF4000DEEA9 /* FTPDirectoryList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDirectoryList.h; sourceTree = "<group>"; };
 		A9DDC0891B613EF4000DEEA9 /* FTPDirectoryList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPDirectoryList.m; sourceTree = "<group>"; };
-		A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RampTypeView.h; sourceTree = "<group>"; };
-		A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RampTypeView.m; sourceTree = "<group>"; };
 		A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVImagePickerController.h; sourceTree = "<group>"; };
 		A9E2130D1AFE4BFC005ECBBA /* NVImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVImagePickerController.m; sourceTree = "<group>"; };
 		A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVLargeAlertView.h; sourceTree = "<group>"; };
@@ -1054,8 +1049,6 @@
 				69C3DFA51CB4113A00DC1779 /* NVWebView.m */,
 				A9A7E3681B75796500DC7F3D /* NVXWalkButton.h */,
 				A9A7E3691B75796500DC7F3D /* NVXWalkButton.m */,
-				A9E09D381AD2E2F600AEBB3D /* RampTypeView.h */,
-				A9E09D391AD2E2F600AEBB3D /* RampTypeView.m */,
 				A990508B1ACB947000C6AAAF /* SpreadSheetViewCell.h */,
 				A990508C1ACB947000C6AAAF /* SpreadSheetViewCell.m */,
 				A90D1FAE1AE5F3A900CBFEE7 /* TableViewCellButton.h */,
@@ -1516,7 +1509,6 @@
 				69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */,
 				EB0E4FFD1C6288BF00849766 /* DispersePoint.m in Sources */,
 				EB568F391C8C9BAB00C45ACE /* CompressDecompress.m in Sources */,
-				A9E09D3A1AD2E2F600AEBB3D /* RampTypeView.m in Sources */,
 				EBC01D2D1BED1C8C0004C751 /* trnsit.c in Sources */,
 				EBC01D281BED1C8C0004C751 /* rstar.c in Sources */,
 				EBAB31C71AE6DC2D00C5CCEF /* NamedColors.m in Sources */,
