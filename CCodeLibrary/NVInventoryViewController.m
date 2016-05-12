@@ -107,10 +107,13 @@ int ii;
                 title:@"Cancel"
              fontSize:32.0];
     
-    if (_from == FROM_PRELIM)
+    if (_from == FROM_PRELIM || _from == FROM_PRELIM_MAP)
     {
-        [_doneButton setTitle:@"Next"
-                     forState:UIControlStateNormal];
+        if (_from == FROM_PRELIM)
+        {
+            [_doneButton setTitle:@"Next"
+                         forState:UIControlStateNormal];
+        }
         
         _complexButton = [[UIButton alloc] initWithFrame:CGRectMake(600.0, 20.0, 148.0, 70.0)];
         
@@ -160,7 +163,7 @@ int ii;
 {
     [super viewDidAppear:animated];
     
-    if (_from != FROM_PRELIM)
+    if (_from == FROM_HOME || _from == FROM_CORNER)
     {
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;

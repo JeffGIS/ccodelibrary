@@ -14,6 +14,7 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 #define FROM_HOME   1
 #define FROM_CORNER 2
 #define FROM_PRELIM 3
+#define FROM_PRELIM_MAP 4
 
 #import <UIKit/UIKit.h>
 #import "MPIntersection.h"
