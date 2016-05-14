@@ -91,6 +91,7 @@
         
         _uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, geoid];
     }
+    
     if (geoid == 2743000)//MPLS
         self.controlledInterface = NO;
 }
