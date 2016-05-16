@@ -66,6 +66,8 @@
 		69987CF81C946890000EC26F /* UIView+Constraints.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69987CF51C94683F000EC26F /* UIView+Constraints.h */; };
 		699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */ = {isa = PBXBuildFile; fileRef = 699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */; };
 		699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */; };
+		699DD7391CEA057600C7A651 /* NVSynchronizeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 699DD7381CEA057600C7A651 /* NVSynchronizeVC.m */; };
+		699DD73A1CEA091000C7A651 /* NVSynchronizeVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 699DD7371CEA057600C7A651 /* NVSynchronizeVC.h */; };
 		69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B36F191BCB0F30004C4B69 /* NVDateRange.m */; };
 		69B36F1B1BCB1C8F004C4B69 /* NVDateRange.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69B36F181BCB0F30004C4B69 /* NVDateRange.h */; };
 		69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */ = {isa = PBXBuildFile; fileRef = 69BB52761CA4689E00DA7BC2 /* ExitApp.c */; };
@@ -337,6 +339,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				699DD73A1CEA091000C7A651 /* NVSynchronizeVC.h in CopyFiles */,
 				1F5150A51CE3A3B400BA4A5E /* SQLiteLib.h in CopyFiles */,
 				1F5150A41CE396FE00BA4A5E /* AlleyWallData.h in CopyFiles */,
 				692F54A61CDBAA6B001600C9 /* NVRampTypePageController.h in CopyFiles */,
@@ -536,6 +539,8 @@
 		69987CF61C94683F000EC26F /* UIView+Constraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Constraints.m"; sourceTree = "<group>"; };
 		699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PolylineCompression.c; sourceTree = "<group>"; };
 		699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineCompression.h; sourceTree = "<group>"; };
+		699DD7371CEA057600C7A651 /* NVSynchronizeVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSynchronizeVC.h; sourceTree = "<group>"; };
+		699DD7381CEA057600C7A651 /* NVSynchronizeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSynchronizeVC.m; sourceTree = "<group>"; };
 		69B36F181BCB0F30004C4B69 /* NVDateRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDateRange.h; sourceTree = "<group>"; };
 		69B36F191BCB0F30004C4B69 /* NVDateRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDateRange.m; sourceTree = "<group>"; };
 		69BB52761CA4689E00DA7BC2 /* ExitApp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ExitApp.c; sourceTree = "<group>"; };
@@ -1038,6 +1043,8 @@
 				6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */,
 				6948D5D31BC780EE009CA04F /* NVStaticMapView.h */,
 				6948D5D41BC780EE009CA04F /* NVStaticMapView.m */,
+				699DD7371CEA057600C7A651 /* NVSynchronizeVC.h */,
+				699DD7381CEA057600C7A651 /* NVSynchronizeVC.m */,
 				69C441A81BB474B200D026A7 /* NVTabBarEdit.h */,
 				69C441A91BB474B200D026A7 /* NVTabBarEdit.m */,
 				A9BCBBEE1B175FB6007C5C48 /* NVTestSlopeController.h */,
@@ -1541,6 +1548,7 @@
 				EBC01D141BED1C8C0004C751 /* ear404.c in Sources */,
 				69DFB6A51CD71987001E1200 /* NVCRISSignupView.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
+				699DD7391CEA057600C7A651 /* NVSynchronizeVC.m in Sources */,
 				EBC01D0F1BED1C8C0004C751 /* deltat.c in Sources */,
 				692F54A51CDB9B8B001600C9 /* NVRampTypePageView.m in Sources */,
 				EBC01D1F1BED1C8C0004C751 /* mlat404.c in Sources */,
