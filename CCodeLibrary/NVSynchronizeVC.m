@@ -6,14 +6,18 @@
 #import "GeoMasterServer.h"
 #import "UserDefaults.h"
 #import "Colors.h"
+#import "CRAPI.h"
+#import "NVAlertView.h"
 
-@interface NVSynchronizeVC ()
+@interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate>
 
 @property (nonatomic) UILabel *titleLabel, *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel;
-@property (nonatomic) UIButton *syncButton, *cancelButton;
+@property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton;
 @property (nonatomic) UISwitch *pixUpSwitch, *pixDownSwitch, *dataDownSwitch;
 @property (nonatomic) NVProgressView *overallProgressView, *currentFileProgressView;
 @property (nonatomic) Colors *colors;
+@property int upFiles, upPix, downFiles, downPix;
+@property (nonatomic) GeoMasterServer *GMServer;
 
 @end
 
@@ -31,37 +35,36 @@
     
     _colors = UserDefaults.defaults.defaultColors;
     self.view.backgroundColor = _colors.backgroundColor;
+    _upFiles = _upPix = _downFiles = _downPix = 0;
     
     _titleLabel = UILabel.new;
     [self setupLabel:_titleLabel];
     _titleLabel.textAlignment = NSTextAlignmentCenter;
     _titleLabel.font = [UIFont boldSystemFontOfSize:44.0];
-    _titleLabel.text = @"Synchronize Devices";
+    _titleLabel.text = @"Synchronize";
     
     _dataUpLabel = UILabel.new;
     [self setupLabel:_dataUpLabel];
-    _dataUpLabel.text = @"Data Files to be Uploaded:";
     
     _pixUpLabel = UILabel.new;
     [self setupLabel:_pixUpLabel];
-    _pixUpLabel.text = @"Pictures to be Uploaded:";
     
     _pixUpSwitch = UISwitch.new;
     [self setupSwitch:_pixUpSwitch];
     
     _dataDownLabel = UILabel.new;
     [self setupLabel:_dataDownLabel];
-    _dataDownLabel.text = @"Data Files to be Downloaded:";
     
     _dataDownSwitch = UISwitch.new;
     [self setupSwitch:_dataDownSwitch];
     
     _pixDownLabel = UILabel.new;
     [self setupLabel:_pixDownLabel];
-    _pixDownLabel.text = @"Pictures to be Downloaded:";
     
     _pixDownSwitch = UISwitch.new;
     [self setupSwitch:_pixDownSwitch];
+    
+    [self updateLabels];
     
     _syncButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_syncButton];
@@ -75,12 +78,24 @@
     
     _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_cancelButton];
+    _cancelButton.enabled = NO;
+    [self updateButton:_cancelButton];
     
     [_cancelButton setTitle:@"Cancel"
                  forState:UIControlStateNormal];
     
     [_cancelButton addTarget:self
                       action:@selector(cancelButtonTapped:)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self setupButton:_returnButton];
+    
+    [_returnButton setTitle:@" < Return "
+                   forState:UIControlStateNormal];
+    
+    [_returnButton addTarget:self
+                      action:@selector(returnButtonTapped:)
             forControlEvents:UIControlEventTouchUpInside];
     
     _overallProgressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
@@ -92,12 +107,12 @@
     _overallLabel = UILabel.new;
     [self setupLabel:_overallLabel];
     _overallLabel.textAlignment = NSTextAlignmentCenter;
-    _overallLabel.text = @"Overall Progress:";
+    [self updateOverallProgress:0.0];
     
     _currentFileLabel = UILabel.new;
     [self setupLabel:_currentFileLabel];
     _currentFileLabel.textAlignment = NSTextAlignmentCenter;
-    _currentFileLabel.text = @"Current File Progress:";
+    [self updateCurrentFileProgress:0.0];
     
     int numSections = 9;
     CGFloat borderWidth = 1.0;
@@ -137,6 +152,11 @@
             case 0://title label
                 [sectionView addSubview:_titleLabel];
                 [_titleLabel constrainToView:sectionView leading:margin trailing:-margin top:0.0 bottom:0.0];
+                [_titleLabel.topAnchor constraintEqualToAnchor:sectionView.topAnchor].active = YES;
+                
+                [sectionView addSubview:_returnButton];
+                [_returnButton.centerYAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
+                [_returnButton.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:buttonMargin].active = YES;
                 break;
                 
             case 1://data files to be uploaded
@@ -222,11 +242,22 @@
                 break;
         }
     }
+    
+    _GMServer = GeoMasterServer.open;
+    _GMServer.delegate = self;
+    [_GMServer initCommunication:5.0];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self closeGMServer];
 }
 
 - (void)setupLabel:(UILabel *)label
@@ -259,6 +290,37 @@
                  forState:UIControlStateHighlighted];
 }
 
+- (void)updateButton:(UIButton *)button
+{
+    if (button.enabled)
+        button.backgroundColor = _colors.enabledColor;
+    
+    else
+        button.backgroundColor = _colors.disabledColor;
+}
+
+- (void)updateLabels
+{
+    _dataUpLabel.text = [NSString stringWithFormat:@"Data Files to be Uploaded:%i", _upFiles];
+    _pixUpLabel.text = [NSString stringWithFormat:@"Pictures to be Uploaded:%i", _upPix];
+    _dataDownLabel.text = [NSString stringWithFormat:@"Data Files to be Downloaded:%i", _downFiles];
+    _pixDownLabel.text = [NSString stringWithFormat:@"Pictures to be Downloaded:%i", _downPix];
+}
+
+- (void)updateOverallProgress:(CGFloat)progress
+{
+    _overallProgressView.progress = progress;
+    int progressInt = (int)roundf(progress * 100.0);
+    _overallLabel.text = [NSString stringWithFormat:@"Overall Progress:%i%%", progressInt];
+}
+
+- (void)updateCurrentFileProgress:(CGFloat)progress
+{
+    _currentFileProgressView.progress = progress;
+    int progressInt = (int)roundf(progress * 100.0);
+    _currentFileLabel.text = [NSString stringWithFormat:@"Current File Progress:%i%%", progressInt];
+}
+
 - (void)syncButtonTapped:(UIButton *)button
 {
     
@@ -266,8 +328,68 @@
 
 - (void)cancelButtonTapped:(UIButton *)button
 {
-    [self dismissViewControllerAnimated:YES
-                             completion:nil];
+    
+}
+
+- (void)returnButtonTapped:(UIButton *)button
+{
+    [_delegate synchronizeControllerDidReturn:self];
+}
+
+- (void)closeGMServer
+{
+    if (_GMServer)
+    {
+        [_GMServer closeServer];
+        _GMServer.delegate = nil;
+        _GMServer = nil;
+    }
+}
+
+- (void)GMServerDidOpen:(GeoMasterServer *)server
+{
+    NSString *msg = [NSString stringWithFormat:@"$M(GetUploadStatus,%i,%i)",
+                     CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
+    
+    if (msg)
+        [_GMServer sendMessage:msg];
+    
+    NSLog(@"GMServer Query:%@", msg);
+}
+
+- (void)GMServer:(GeoMasterServer *)server
+didReceiveMessage:(NSString *)message
+      withStatus:(long)status
+{
+    [self closeGMServer];
+    NSLog(@"GMServer Message(NVSynchronizeVC):%@", message);
+}
+
+- (void)GMServer:(GeoMasterServer *)server
+ didReceiveError:(NSString *)error
+      withStatus:(long)status
+{
+    [self closeGMServer];
+    
+    NSString *titleMessage = @"";
+    
+    if ([error isEqualToString:@"Internet Connection Not Available"])
+        titleMessage = @"Network Error";
+    
+    else
+        titleMessage = @"NVCRIS Server Error";
+    
+    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                      delegate:self
+                                                         title:titleMessage
+                                               buttonTextArray:@[@"OK"]
+                                              destructiveIndex:0];
+}
+
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView hideLargeAlertView:YES];
 }
 
 @end
