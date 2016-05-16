@@ -37,11 +37,11 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property int deviceNumber;
 @property int maxDevices;
 
-@property (nonatomic) int currentGeoid;
-@property (nonatomic) int currentManageriPad; //sequence number for manager iPad - created by GMServer
-@property (nonatomic) int currentiPadWithinManager;
-@property (nonatomic) int totiPadWithinManager;
-@property (nonatomic) int GSSiPadNumber; //sequence number for this iPad
+@property int currentGeoid;
+@property int currentManageriPad; //sequence number for manager iPad - created by GMServer
+@property int currentiPadWithinManager;
+@property int totiPadWithinManager;
+@property int GSSiPadNumber; //sequence number for this iPad
 @property (nonatomic, copy) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
 @property (nonatomic, copy) NSString *googleKey;
