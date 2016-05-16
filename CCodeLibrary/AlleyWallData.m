@@ -64,6 +64,11 @@ static int fileSequence = 0;
     return rtn;
 }
 
+- (void)fileSuccessfullyUploaded:(int)fileNum
+{
+    
+}
+
 - (void)close:(BOOL)opened
 {
     if (opened)
@@ -110,27 +115,21 @@ static int fileSequence = 0;
     return rtn;
 }
 
+- (void) setSendToServerFile
+{
+    int currentFileNum = 0;
+    _sendToServerFile = [NSString stringWithFormat:@"%@/%i.sql",
+                         [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],currentFileNum];
+
+}
 - (BOOL)executeCmd:(char *)cmd
-      sendToServer:(BOOL)sendToServer
-     useUniqueFile:(BOOL)uniqueFile
+      sendToServer:(BOOL)sendToServer;
 {
     BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     if (rtn && sendToServer)
     {
-        if (uniqueFile || !_sendToServerFile)
-        {
-            int iTime = NSDate.timeIntervalSinceReferenceDate;
-            _sendToServerFile = [NSString stringWithFormat:@"%@/AlleyWallInventory_%i-%i.sql",
-                                        CRAPI.sharedInstance.sharedOutputDirectory,iTime,fileSequence++];
-            rtn = [[NSString stringWithUTF8String:cmd] writeToFile:_sendToServerFile
-                                                        atomically:YES
-                                                          encoding:NSUTF8StringEncoding
-                                                             error:nil];
-        }
-        else
-        {
-            [CRAPI.sharedInstance appendString:[NSString stringWithUTF8String:cmd] toFile:_sendToServerFile];
-        }
+        [self setSendToServerFile];
+        appendStringToFile ([NSString stringWithUTF8String:cmd] ,_sendToServerFile);
     }
     return rtn;
 }
@@ -209,8 +208,7 @@ static int fileSequence = 0;
     BOOL opened = [self open];
     NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEY_LINE SET CHECKED = %i, LastUpdate = %i WHERE id=%ld",status,iTime,(long)refno];
     [self executeCmd:(LPSTR)cmd.UTF8String
-        sendToServer:YES
-     useUniqueFile:YES];
+        sendToServer:YES];
     [self close:opened];
 }
 
@@ -224,8 +222,7 @@ static int fileSequence = 0;
                      iTime, (long)refno];
     
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-              sendToServer:YES
-             useUniqueFile:YES];
+              sendToServer:YES];
     
     [self close:opened];
     return rtn;
@@ -289,12 +286,10 @@ SELECT max(_id) FROM MyTable*/
     
     NSString *cmd = [NSString stringWithFormat:@"INSERT INTO ALLEYWALLS_NEW([id],[Wall ID],[Hse No],[STREET],[InspDate],[Current],[LONGITUDE],[LATITUDE],[LastUpdate]) VALUES(%ld,'%@',%ld,'%@','%@',1,%f,%f,%i);",(long)refno,wallID,(long)iHouse,street,today,position.longitude,position.latitude,iTime];
     [self executeCmd:(LPSTR)cmd.UTF8String
-              sendToServer:YES
-             useUniqueFile:YES];
+              sendToServer:YES];
     cmd = [NSString stringWithFormat:@"INSERT INTO ALLEYWALLS_NEW_index VALUES(%ld,%f,%f,%f,%f)",(long)refno,position.longitude,position.longitude,position.latitude,position.latitude];
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-              sendToServer:YES
-             useUniqueFile:NO];
+              sendToServer:YES];
     [self close:opened];
     return rtn;
 }
@@ -462,8 +457,7 @@ SELECT max(_id) FROM MyTable*/
     if (sendToServer)
         [CRAPI.sharedInstance clearOutputDirectory];
     [self executeCmd:(char *)cmd.UTF8String
-        sendToServer:sendToServer
-       useUniqueFile:YES];
+        sendToServer:sendToServer];
     return rtn;
 }
 -(BOOL)transferExistingTableIntoNewTable:(BOOL)sendToServer
@@ -565,16 +559,13 @@ SELECT max(_id) FROM MyTable*/
         }
         NSString* cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO ALLEYWALLS_NEW([Current],%@) VALUES(1,%@)",newNames,newVals];
         [self executeCmd:(LPSTR)cmd.UTF8String
-            sendToServer:sendToServer
-           useUniqueFile:NO];
+            sendToServer:sendToServer];
         cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO ALLEYWALL_SEGS([SEGMENT],%@) VALUES(1,%@)",newSegNames,newSegVals];
         [self executeCmd:(LPSTR)cmd.UTF8String
-            sendToServer:sendToServer
-           useUniqueFile:NO];
+            sendToServer:sendToServer];
         cmd = [NSString stringWithFormat:@"INSERT INTO ALLEYWALLS_NEW_index VALUES(%i,%f,%f,%f,%f);",iref,longitude,longitude,latitude,latitude];
         [self executeCmd:(LPSTR)cmd.UTF8String
-            sendToServer:sendToServer
-           useUniqueFile:NO];
+            sendToServer:sendToServer];
 
     }
     SQLOK(sqlite3_finalize(statement),_database);
@@ -582,23 +573,6 @@ SELECT max(_id) FROM MyTable*/
     CREATE TABLE ALLEYWALLS ('id' INT,'Wall ID' CHAR(8),'Hse No' INT,'STREET' CHAR(64),'City' CHAR(4),'Length' REAL,'Max Hght' REAL,'Offset' REAL,'Gar/Struc' CHAR(12),' COST' CHAR(12),'Type Const' CHAR(32),'InspDate' CHAR(12),'InspBy' CHAR(8),'Rating' CHAR(16),'Comments' CHAR(255),'LONGITUDE' REAL,'LATITUDE' REAL,'NUMSEGMENTS' INT,'LASTUPDATE' INT,PRIMARY KEY('id' ASC))
  */
     [self commitTransaction];
-    return rtn;
-}
-
-- (BOOL)executeCmd:(char *)cmd
-      sendToServer:(BOOL)sendToServer
-{
-    BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
-    if (rtn && sendToServer)
-    {
-        int iTime = NSDate.timeIntervalSinceReferenceDate;
-        NSString *outputDataPath = [NSString stringWithFormat:@"%@/AlleyWallInventory_%i-%i.sql",
-                                    CRAPI.sharedInstance.outputDirectory,iTime,fileSequence++];
-        rtn = [[NSString stringWithUTF8String:cmd] writeToFile:outputDataPath
-                                                    atomically:YES
-                                                      encoding:NSUTF8StringEncoding
-                                                         error:nil];
-    }
     return rtn;
 }
 

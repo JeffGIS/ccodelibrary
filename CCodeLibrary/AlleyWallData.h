@@ -22,8 +22,7 @@
 - (void)clear;
 
 - (BOOL)executeCmd:(char *)cmd
-      sendToServer:(BOOL)sendToServer
-     useUniqueFile:(BOOL)uniqueFile;
+      sendToServer:(BOOL)sendToServer;
 
 - (BOOL)startTransaction;
 - (void)commitTransaction;

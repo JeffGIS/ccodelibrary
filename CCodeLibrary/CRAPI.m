@@ -60,6 +60,15 @@
                                                   error:nil];
     return outdir;
 }
+- (NSString *)sharedOutputDirectory:(NSString*)subDir
+{
+    NSString* outdir = [NSString stringWithFormat:@"%@/OutputFiles/%@",self.sharedFilePath,subDir];
+    [NSFileManager.defaultManager createDirectoryAtPath:outdir
+                            withIntermediateDirectories:YES
+                                             attributes:nil
+                                                  error:nil];
+    return outdir;
+}
 - (int)currentGeoid
 {
     return _currentGeoidValue;

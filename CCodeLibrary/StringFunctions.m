@@ -694,3 +694,26 @@ NSString * splitLongestLine (NSString * text)
     }
     return splitText;
 }
+
+BOOL appendStringToFile (NSString * str,NSString * filePath)
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    if(![fileManager fileExistsAtPath:filePath])
+    {
+        [str writeToFile:filePath
+              atomically:YES
+                encoding:NSUTF8StringEncoding
+                   error:nil];
+    }
+    
+    else
+    {
+        NSString *newLine = [NSString stringWithFormat:@"\r\n%@", str];
+        NSFileHandle *myHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
+        [myHandle seekToEndOfFile];
+        [myHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    return YES;
+}

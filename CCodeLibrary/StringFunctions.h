@@ -44,3 +44,4 @@ NSString *reverseString(NSString *string);
 NSString * splitLongestLine (NSString * text);
 NSMutableArray *sortByContentsOfParentheses(NSMutableArray *array);
 uint occurrencesOfCharacter(unichar character, NSString *string);
+BOOL appendStringToFile (NSString * str,NSString * filePath);

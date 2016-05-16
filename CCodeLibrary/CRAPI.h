@@ -101,6 +101,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 
 - (void)setCurrentGeoid:(int)currentGeoid;
 - (void)facilityInit:(Facility *)currentFacility;
+- (NSString *)sharedOutputDirectory:(NSString*)subDir;
 
 - (void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm
                                    forInt:(MPIntersection *)currentIntersection;
