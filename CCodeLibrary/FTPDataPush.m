@@ -174,6 +174,7 @@ enum {
     }
     
     _networkStream = (__bridge NSOutputStream *)ftpStream;
+    
     if (_username.length != 0)
     {
         BOOL success = [_networkStream setProperty:_username
@@ -289,10 +290,13 @@ enum {
                 {
                     _bufferOffset += bytesWritten;
                     _totBytesWritten += bytesWritten;
-                    _progress = ((CGFloat)_totBytesWritten / (CGFloat)_fileSize);
+                    _progress = (_totBytesWritten / (CGFloat)_fileSize);
                     
                     if (_popover)
                         [_popover updateProgress:_progress];
+                    
+                    if (_totBytesWritten == _fileSize)
+                        [self uploadDidComplete];
                 }
             }
             
@@ -306,7 +310,7 @@ enum {
                 [self stopSendWithStatus:FTPStatusConnectionFailed
                             statusString:aStream.streamError.localizedDescription];
                 
-                if (!self.useOnlyPrimaryFTP)
+                if (!_useOnlyPrimaryFTP)
                 {
                     if ([_currentFtp isEqualToString:_ftpSite])
                     {
@@ -352,10 +356,6 @@ enum {
             
             else
             {
-                //remove file to ensure partially transferred files are not used
-                [NSFileManager.defaultManager removeItemAtPath:_filePath
-                                                         error:nil];
-                
                 [self stopSendWithStatus:FTPStatusConnectionFailed
                             statusString:aStream.streamError.localizedDescription];
                 
@@ -379,6 +379,20 @@ enum {
             assert(NO);
             break;
     }
+}
+
+- (void)uploadDidComplete
+{
+    NSString *newFilePath = [NSString stringWithFormat:@"%@.uploaded", _filePath];
+    NSError *error = nil;
+    NSLog(@"%@", newFilePath);
+    
+    [NSFileManager.defaultManager moveItemAtPath:_filePath
+                                          toPath:newFilePath
+                                           error:&error];
+    
+    if (error)
+        NSLog(@"ERROR renaming file:%@", _fileName);
 }
 
 - (void)setUpFTP
