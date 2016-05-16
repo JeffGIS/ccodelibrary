@@ -54,5 +54,9 @@ forDate:(NSString *)date
 - (BOOL)beginNewSurveyForWall:(NSString *)wallID
 fromDate:(NSString *)fromDate
                       newDate:(NSString *)newDate;
++ (BOOL) setLastDataUpdateNum:(int)nextNum;
++ (int)  getLastDataUpdateNum;
++ (BOOL) setLastPictUpdateNum:(int)nextNum;
++ (int)  getLastPictUpdateNum;
 
 @end

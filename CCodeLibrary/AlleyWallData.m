@@ -117,7 +117,8 @@ static int fileSequence = 0;
 
 - (void) setSendToServerFile
 {
-    int currentFileNum = 0;
+    int currentFileNum = [self getLastDataUpdateNumber];
+    
     _sendToServerFile = [NSString stringWithFormat:@"%@/%i.sql",
                          [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],currentFileNum];
 
@@ -860,4 +861,135 @@ SELECT max(_id) FROM MyTable*/
  SegmentPlumbness=;
  PlumbnessDistance=;
  );*/
+
+- (NSString*) outputDataFile:(int)fileNum
+{
+    NSString* file = [NSString stringWithFormat:@"%@/%i.sql",
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],fileNum];
+    return file;
+}
+- (NSString*) outputPictFile:(int)fileNum
+{
+    NSString* file = [NSString stringWithFormat:@"%@/%i.jpg",
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],fileNum];
+    return file;
+}
+
+
+- (int) getLastDataUpdateNumber
+{
+    int lastNum  = 1;
+    [self createNextUpdateTable];
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate FROM ALLEYWALL_UPDATES WHERE id=1"];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        lastNum = sqlite3_column_int(statement, 0);
+    }
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
+    return lastNum;
+}
++ (int) getLastDataUpdateNum
+{
+    AlleyWallData *awd = AlleyWallData.new;
+    return [awd getLastDataUpdateNumber];
+}
+- (BOOL) setLastDataUpdateNum:(int)lastNum
+{
+    BOOL opened = [self open];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastDataUpdate = %i WHERE id=1",lastNum];
+    BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                  sendToServer:NO];
+    [self close:opened];
+    return rtn;
+}
+
+- (BOOL) setLastPictUpdateNum:(int)nextNum
+{
+    BOOL opened = [self open];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastDataUpdate = %i WHERE id=1",nextNum];
+    BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                   sendToServer:NO];
+    [self close:opened];
+    return rtn;
+}
+
+- (int) getLastPictUpdateNumber
+{
+    int LastNum  = 1;
+    [self createNextUpdateTable];
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM ALLEYWALL_UPDATES WHERE id=1"];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        LastNum = sqlite3_column_int(statement, 0);
+    }
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
+    return LastNum;
+}
+
++ (int) getLastPictUpdateNum
+{
+    AlleyWallData *awd = AlleyWallData.new;
+    return [awd getLastPictUpdateNumber];
+}
+
+- (BOOL)createNextUpdateTable
+{
+    BOOL rtn = TRUE;
+    NSString * cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_UPDATES ('id' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
+    rtn = [self executeCmd:(char *)cmd.UTF8String
+              sendToServer:NO];
+    return rtn;
+}
+
++ (int) incrementLastDataFileNumber
+{
+    AlleyWallData *awd = AlleyWallData.new;
+    int lastNum = [awd getLastDataUpdateNumber];
+    if ([NSFileManager.defaultManager fileExistsAtPath:[awd outputDataFile:lastNum]])
+    {
+        [awd setLastDataUpdateNum:++lastNum];
+    }
+    return lastNum;
+}
++ (int) incrementLastPictFileNumber
+{
+    AlleyWallData *awd = AlleyWallData.new;
+    int lastNum = [awd getLastPictUpdateNumber];
+    if ([NSFileManager.defaultManager fileExistsAtPath:[awd outputPictFile:lastNum]])
+    {
+        [awd setLastPictUpdateNum:++lastNum];
+    }
+    return lastNum;
+}
+- (BOOL)createPictureDatabase
+{
+    BOOL rtn = TRUE;
+    NSString * cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_UPDATES ('id' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
+    rtn = [self executeCmd:(char *)cmd.UTF8String
+              sendToServer:NO];
+    return rtn;
+}
+
++ (BOOL) setPictureData:(int)pictNum
+                 wallID:(int)wallID
+                 latLon:(LLPOINT)ll
+                heading:(int)heading
+{
+    AlleyWallData *awd = AlleyWallData.new;
+    [awd createPictureDatabase];
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
+    
+    return YES;
+    
+}
 @end
