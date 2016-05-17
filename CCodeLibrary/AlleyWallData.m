@@ -9,7 +9,6 @@ static int fileSequence = 0;
 #define COORDINATE_FACTOR 10000000.0
 
 #import "AlleyWallData.h"
-#import "MathUtil.h"
 #import "CRAPI.h"
 
 @implementation AlleyWallData
@@ -936,12 +935,6 @@ SELECT max(_id) FROM MyTable*/
     return LastNum;
 }
 
-+ (int) getLastPictUpdateNum
-{
-    AlleyWallData *awd = AlleyWallData.new;
-    return [awd getLastPictUpdateNumber];
-}
-
 - (BOOL)createNextUpdateTable
 {
     BOOL rtn = TRUE;
@@ -961,7 +954,7 @@ SELECT max(_id) FROM MyTable*/
     }
     return lastNum;
 }
-+ (int) incrementLastPictFileNumber
+- (int) incrementLastPictFileNumber
 {
     AlleyWallData *awd = AlleyWallData.new;
     int lastNum = [awd getLastPictUpdateNumber];
@@ -980,7 +973,7 @@ SELECT max(_id) FROM MyTable*/
     return rtn;
 }
 
-+ (BOOL) setPictureData:(int)pictNum
+- (BOOL) savePictureData:(int)pictNum
                  wallID:(int)wallID
                  latLon:(LLPOINT)ll
                 heading:(int)heading

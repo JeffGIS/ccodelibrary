@@ -4,6 +4,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import "SQLiteLib.h"
+#import "MathUtil.h"
 
 @interface AlleyWallData : NSObject
 
@@ -57,6 +58,13 @@ fromDate:(NSString *)fromDate
 + (BOOL) setLastDataUpdateNum:(int)nextNum;
 + (int)  getLastDataUpdateNum;
 + (BOOL) setLastPictUpdateNum:(int)nextNum;
-+ (int)  getLastPictUpdateNum;
+- (int) getLastPictUpdateNumber;
+- (NSString*) outputPictFile:(int)fileNum;
+- (int) incrementLastPictFileNumber;
+- (BOOL) savePictureData:(int)pictNum
+                 wallID:(int)wallID
+                 latLon:(LLPOINT)ll
+                heading:(int)heading;
+
 
 @end
