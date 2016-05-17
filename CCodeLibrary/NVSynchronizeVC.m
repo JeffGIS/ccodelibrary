@@ -115,6 +115,7 @@
     
     _connectButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_connectButton];
+    _connectButton.titleLabel.font = [UIFont boldSystemFontOfSize:24.0];
     
     [_connectButton setTitle:@" Connect "
                     forState:UIControlStateNormal];
@@ -138,20 +139,30 @@
     _overallLabel = UILabel.new;
     [self setupLabel:_overallLabel];
     _overallLabel.textAlignment = NSTextAlignmentCenter;
-    _overallLabel.font = [UIFont boldSystemFontOfSize:24.0];
+    _overallLabel.font = [UIFont boldSystemFontOfSize:22.0];
     [self updateOverallProgress:0.0];
     
     _currentFileLabel = UILabel.new;
     [self setupLabel:_currentFileLabel];
     _currentFileLabel.textAlignment = NSTextAlignmentCenter;
-    _currentFileLabel.font = [UIFont boldSystemFontOfSize:24.0];
+    _currentFileLabel.font = [UIFont boldSystemFontOfSize:22.0];
     [self updateCurrentFileProgress:0.0];
     
     int numSections = 9;
     CGFloat borderWidth = 1.0;
     CGFloat margin = (40.0 + borderWidth);
-    CGFloat buttonMargin = 16.0;
+    CGFloat buttonMargin = 14.0;
     CGFloat screenWidth = MIN(self.view.frame.size.width, self.view.frame.size.height);
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        _connectLabel.font = [UIFont boldSystemFontOfSize:16.0];
+        _overallLabel.font = [UIFont boldSystemFontOfSize:16.0];
+        _currentFileLabel.font = [UIFont boldSystemFontOfSize:16.0];
+        _connectButton.titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
+        margin = (10.0 + borderWidth);
+        buttonMargin = 12.0;
+    }
     
     for (int i = 0; i < numSections; i++)
     {
@@ -305,6 +316,33 @@
     return YES;
 }
 
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationMaskPortrait;
+    
+    else
+        return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)shouldAutorotate
+{
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        return NO;
+    
+    else
+        return YES;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationPortrait;
+    
+    else
+        return UIApplication.sharedApplication.statusBarOrientation;
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -317,7 +355,13 @@
     label.translatesAutoresizingMaskIntoConstraints = NO;
     label.backgroundColor = UIColor.clearColor;
     label.textColor = _colors.textColor;
-    label.font = [UIFont boldSystemFontOfSize:32.0];
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        label.font = [UIFont boldSystemFontOfSize:16.0];
+    
+    else
+        label.font = [UIFont boldSystemFontOfSize:32.0];
+    
     label.adjustsFontSizeToFitWidth = YES;
 }
 
@@ -332,7 +376,20 @@
     button.translatesAutoresizingMaskIntoConstraints = NO;
     button.backgroundColor = _colors.enabledColor;
     button.layer.cornerRadius = 10.0;
-    button.titleLabel.font = [UIFont boldSystemFontOfSize:40.0];
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:20.0];
+        button.layer.cornerRadius = 6.0;
+    }
+    
+    else
+    {
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:40.0];
+        button.layer.cornerRadius = 10.0;
+    }
+    
+    
     button.titleLabel.adjustsFontSizeToFitWidth = YES;
     
     [button setTitleColor:_colors.titleColor
