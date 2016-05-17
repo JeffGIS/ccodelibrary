@@ -9,7 +9,7 @@
 #import "CRAPI.h"
 #import "NVAlertView.h"
 
-@interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate>
+@interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate>
 
 @property (nonatomic) UILabel *titleLabel, *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
 @property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton, *connectButton;
@@ -18,11 +18,21 @@
 @property (nonatomic) Colors *colors;
 @property int upFiles, upPix, downFiles, downPix;
 @property (nonatomic) GeoMasterServer *GMServer;
+@property BOOL serverOpen;
+@property NSTimer *timer;
+@property int numConnectionAttempts;
+@property int totConnectionAttempts;
+@property NSString *iPad_id;
+@property NSString *iPad_name;
 
 @end
 
 @implementation NVSynchronizeVC
-
+{
+    GSSiPopoverView *_popoverView;
+    CLLocationManager *_locationManager;
+    NSInteger _selectedRow;
+}
 - (void)loadView
 {
     UIView *view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
@@ -32,7 +42,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    _iPad_id = UIDevice.currentDevice.identifierForVendor.UUIDString;
+    _iPad_name = UIDevice.currentDevice.name;
+   
+    _popoverView = [[GSSiPopoverView alloc] initWithView:self.view];
+    _popoverView.delegate = self;
     _colors = UserDefaults.defaults.defaultColors;
     self.view.backgroundColor = _colors.backgroundColor;
     _upFiles = _upPix = _downFiles = _downPix = 0;
@@ -292,6 +306,7 @@
     
     _GMServer = GeoMasterServer.open;
     _GMServer.delegate = self;
+    _GMServer.messageID = GMSMessageOpenConnect;
     [_GMServer initCommunication:5.0];
 }
 
@@ -392,8 +407,193 @@
 
 - (void)connectButtonTapped:(UIButton *)button
 {
+        _GMServer = [GeoMasterServer open];
+        _GMServer.delegate = self;
+        _GMServer.messageID = GMSMessageSetNearby;
+        [_GMServer initCommunication:7.5];
+        
+        _numConnectionAttempts = 0;
+        _totConnectionAttempts = 60;
+        [_popoverView showAfter:0.0
+                      withTitle:@"Waiting\nto Connect\nto Manager"
+                      andButton:@"Cancel"];
+    
     
 }
+
+- (void)closeGMServer
+{
+    if (_GMServer)
+    {
+        [_GMServer closeServer];
+        _GMServer.delegate = nil;
+    }
+    
+    _GMServer = nil;
+}
+
+- (void)GMServerDidOpen:(GeoMasterServer *)server
+{
+    _serverOpen = YES;
+    NSString *msg;
+    
+    switch (server.messageID)
+    {
+        case GMSMessageOpenConnect:
+            msg = [NSString stringWithFormat:@"$M(GetCitiesForiPad,%@)\r\n", deviceInfo()];
+            break;
+            
+        case GMSMessageGetUploadStatus:
+            msg = [NSString stringWithFormat:@"$M(GetUploadStatus,%i,%i)",
+                             CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
+            break;
+        case GMSMessageSetNearby:
+            msg = [NSString stringWithFormat:@"$M(SetNearbyiPad,%@,%@,%f %f)\r\n",
+                   _iPad_id, _iPad_name, _locationManager.location.coordinate.latitude,
+                   _locationManager.location.coordinate.longitude];
+            break;
+            
+        case GMSMessageCheckNearby:
+            msg = [NSString stringWithFormat:@"$M(CheckNearbyiPad,%@)\r\n",
+                   _iPad_id];
+            break;
+            
+        case GMSMessageCancelConnect:
+            msg = [NSString stringWithFormat:@"$M(RemoveNearbyiPad,%@)\r\n",
+                   _iPad_id];
+            break;
+    }
+    
+    if (msg)
+        [_GMServer sendMessage:msg];
+    
+    NSLog(@"GMServer Query: %@", msg);
+}
+
+
+- (void)GMServer:(GeoMasterServer *)server
+ didReceiveError:(NSString *)error
+      withStatus:(long)status
+{
+    [self closeGMServer];
+    
+    NSString *titleMessage;
+    
+    if ([error isEqualToString:@"Internet Connection Not Available"])
+        titleMessage = @"Network Error";
+    
+    else
+        titleMessage = @"NVCRIS Server Error";
+    
+    UIAlertView *serverError = [[UIAlertView alloc] initWithTitle:titleMessage
+                                                          message:error
+                                                         delegate:nil
+                                                cancelButtonTitle:@"OK"
+                                                otherButtonTitles:nil];
+    
+    [serverError show];
+}
+
+- (void)GMServer:(GeoMasterServer *)server
+didReceiveMessage:(NSString *)message
+      withStatus:(long)status
+{
+    [self closeGMServer];
+    NSLog(@"GMServer Message(ADASetupViewController): %@", message);
+    
+    if (status == GMServerStatusOK)
+    {
+        switch (server.messageID)
+        {
+            case GMSMessageOpenConnect:
+            {
+                [CRAPI.sharedInstance savePlacesString:message];
+                
+                [CRAPI.sharedInstance processPlaces];
+                
+                if (CRAPI.sharedInstance.placesArray.count == 0)
+                {
+                    UIAlertView *serverError = [[UIAlertView alloc] initWithTitle:@"No Cities"
+                                                                          message:@"Please use the\nCRiS Management Module\nto assign cities\nbefore starting\nthe Preliminary Survey."
+                                                                         delegate:nil
+                                                                cancelButtonTitle:@"OK"
+                                                                otherButtonTitles:nil];
+                    
+                    [serverError show];
+                }
+                
+                _selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
+                
+                if (CRAPI.sharedInstance.placesArray.count <= 1 || CRAPI.sharedInstance.placesArray.count <= _selectedRow ||CRAPI.sharedInstance.currentGeoid == 0)
+                {
+                    _selectedRow = 0;
+                    [UserDefaults.defaults saveInteger:(int)_selectedRow
+                                                forKey:@"SelectedRow"];
+                }
+                [CRAPI.sharedInstance processPlacesArray:_selectedRow];
+
+                _locationManager = [[CLLocationManager alloc] init];
+                _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+                _locationManager.distanceFilter = kCLDistanceFilterNone;
+                _locationManager.delegate = self;
+                [self updateConnectLabel];
+                [_locationManager startUpdatingLocation];
+            }
+                
+                break;
+                
+            case GMSMessageSetNearby:
+                self.timer = [NSTimer scheduledTimerWithTimeInterval:5.0
+                                                              target:self
+                                                            selector:@selector(checkNearby:)
+                                                            userInfo:nil
+                                                             repeats:NO];
+                break;
+                
+            case GMSMessageCheckNearby:
+                if ([message isEqualToString:@"YES"] && _numConnectionAttempts++ < _totConnectionAttempts)
+                {
+                    CGFloat progress = 1.0 - (_numConnectionAttempts / (CGFloat)_totConnectionAttempts);
+                    [_popoverView updateProgress:progress];
+                    
+                    self.timer = [NSTimer scheduledTimerWithTimeInterval:5.0
+                                                                  target:self
+                                                                selector:@selector(checkNearby:)
+                                                                userInfo:nil
+                                                                 repeats:NO];
+                }
+                
+                else
+                    [_popoverView hide];
+                
+                break;
+                
+            case GMSMessageCancelConnect:
+                [_popoverView hide];
+                break;
+        }
+    }
+}
+
+    - (void)checkNearby:(NSTimer *)timer
+    {
+        [self.timer invalidate];
+        _GMServer = [GeoMasterServer open];
+        _GMServer.delegate = self;
+        _GMServer.messageID = GMSMessageCheckNearby;
+        [_GMServer initCommunication:7.5];
+    }
+    
+    - (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
+    {
+        [self.timer invalidate];
+        [self closeGMServer];
+        _GMServer = [GeoMasterServer open];
+        _GMServer.delegate = self;
+        _GMServer.messageID = GMSMessageCancelConnect;
+        [_GMServer initCommunication:7.5];
+    }
+    
 
 - (void)returnButtonTapped:(UIButton *)button
 {
@@ -422,56 +622,6 @@
                              forKey:@"DownloadPix"];
     
     CRAPI.sharedInstance.downloadPix = aSwitch.on;
-}
-
-- (void)closeGMServer
-{
-    if (_GMServer)
-    {
-        [_GMServer closeServer];
-        _GMServer.delegate = nil;
-        _GMServer = nil;
-    }
-}
-
-- (void)GMServerDidOpen:(GeoMasterServer *)server
-{
-    NSString *msg = [NSString stringWithFormat:@"$M(GetUploadStatus,%i,%i)",
-                     CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
-    
-    if (msg)
-        [_GMServer sendMessage:msg];
-    
-    NSLog(@"GMServer Query:%@", msg);
-}
-
-- (void)GMServer:(GeoMasterServer *)server
-didReceiveMessage:(NSString *)message
-      withStatus:(long)status
-{
-    [self closeGMServer];
-    NSLog(@"GMServer Message(NVSynchronizeVC):%@", message);
-}
-
-- (void)GMServer:(GeoMasterServer *)server
- didReceiveError:(NSString *)error
-      withStatus:(long)status
-{
-    [self closeGMServer];
-    
-    NSString *titleMessage = @"";
-    
-    if ([error isEqualToString:@"Internet Connection Not Available"])
-        titleMessage = @"Network Error";
-    
-    else
-        titleMessage = @"NVCRIS Server Error";
-    
-    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                      delegate:self
-                                                         title:titleMessage
-                                               buttonTextArray:@[@"OK"]
-                                              destructiveIndex:0];
 }
 
 - (void)alertView:(NVAlertView *)alertView
