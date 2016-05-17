@@ -11,8 +11,8 @@
 
 @interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate>
 
-@property (nonatomic) UILabel *titleLabel, *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel;
-@property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton;
+@property (nonatomic) UILabel *titleLabel, *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
+@property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton, *connectButton;
 @property (nonatomic) UISwitch *pixUpSwitch, *pixDownSwitch, *dataDownSwitch;
 @property (nonatomic) NVProgressView *overallProgressView, *currentFileProgressView;
 @property (nonatomic) Colors *colors;
@@ -51,18 +51,33 @@
     
     _pixUpSwitch = UISwitch.new;
     [self setupSwitch:_pixUpSwitch];
+    _pixUpSwitch.on = CRAPI.sharedInstance.uploadPix;
+    
+    [_pixUpSwitch addTarget:self
+                     action:@selector(pixUpSwitchTapped:)
+           forControlEvents:UIControlEventValueChanged];
     
     _dataDownLabel = UILabel.new;
     [self setupLabel:_dataDownLabel];
     
     _dataDownSwitch = UISwitch.new;
     [self setupSwitch:_dataDownSwitch];
+    _dataDownSwitch.on = CRAPI.sharedInstance.downloadData;
+    
+    [_dataDownSwitch addTarget:self
+                        action:@selector(dataDownSwitchTapped:)
+              forControlEvents:UIControlEventValueChanged];
     
     _pixDownLabel = UILabel.new;
     [self setupLabel:_pixDownLabel];
     
     _pixDownSwitch = UISwitch.new;
     [self setupSwitch:_pixDownSwitch];
+    _pixDownSwitch.on = CRAPI.sharedInstance.downloadPix;
+    
+    [_pixDownSwitch addTarget:self
+                       action:@selector(pixDownSwitchTapped:)
+             forControlEvents:UIControlEventValueChanged];
     
     [self updateLabels];
     
@@ -98,6 +113,22 @@
                       action:@selector(returnButtonTapped:)
             forControlEvents:UIControlEventTouchUpInside];
     
+    _connectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self setupButton:_connectButton];
+    
+    [_connectButton setTitle:@" Connect "
+                    forState:UIControlStateNormal];
+    
+    [_connectButton addTarget:self
+                       action:@selector(connectButtonTapped:)
+             forControlEvents:UIControlEventTouchUpInside];
+    
+    _connectLabel = UILabel.new;
+    [self setupLabel:_connectLabel];
+    _connectLabel.textAlignment = NSTextAlignmentCenter;
+    _connectLabel.font = [UIFont boldSystemFontOfSize:24.0];
+    [self updateConnectLabel];
+    
     _overallProgressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
                                                         progressColor:UIColor.whiteColor];
     
@@ -107,11 +138,13 @@
     _overallLabel = UILabel.new;
     [self setupLabel:_overallLabel];
     _overallLabel.textAlignment = NSTextAlignmentCenter;
+    _overallLabel.font = [UIFont boldSystemFontOfSize:24.0];
     [self updateOverallProgress:0.0];
     
     _currentFileLabel = UILabel.new;
     [self setupLabel:_currentFileLabel];
     _currentFileLabel.textAlignment = NSTextAlignmentCenter;
+    _currentFileLabel.font = [UIFont boldSystemFontOfSize:24.0];
     [self updateCurrentFileProgress:0.0];
     
     int numSections = 9;
@@ -150,13 +183,27 @@
         switch (i)
         {
             case 0://title label
-                [sectionView addSubview:_titleLabel];
-                [_titleLabel constrainToView:sectionView leading:margin trailing:-margin top:0.0 bottom:0.0];
-                [_titleLabel.topAnchor constraintEqualToAnchor:sectionView.topAnchor].active = YES;
-                
                 [sectionView addSubview:_returnButton];
-                [_returnButton.centerYAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
+                [_returnButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
                 [_returnButton.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:buttonMargin].active = YES;
+                [_returnButton.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor constant:-buttonMargin].active = YES;
+                
+                [sectionView addSubview:_connectLabel];
+                [_connectLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
+                [_connectLabel.widthAnchor constraintEqualToAnchor:_returnButton.widthAnchor].active = YES;
+                [_connectLabel.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-buttonMargin].active = YES;
+                
+                [sectionView addSubview:_connectButton];
+                [_connectButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
+                [_connectButton.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-buttonMargin].active = YES;
+                [_connectButton.widthAnchor constraintEqualToAnchor:_returnButton.widthAnchor].active = YES;
+                [_connectButton.bottomAnchor constraintEqualToAnchor:_connectLabel.topAnchor].active = YES;
+                
+                [sectionView addSubview:_titleLabel];
+                [_titleLabel.leadingAnchor constraintEqualToAnchor:_returnButton.trailingAnchor constant:buttonMargin].active = YES;
+                [_titleLabel.trailingAnchor constraintEqualToAnchor:_connectButton.leadingAnchor constant:-buttonMargin].active = YES;
+                [_titleLabel.topAnchor constraintEqualToAnchor:sectionView.topAnchor].active = YES;
+                [_titleLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
                 break;
                 
             case 1://data files to be uploaded
@@ -253,6 +300,11 @@
     [super didReceiveMemoryWarning];
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -321,6 +373,13 @@
     _currentFileLabel.text = [NSString stringWithFormat:@"Current File Progress:%i%%", progressInt];
 }
 
+- (void)updateConnectLabel
+{
+    _connectLabel.text = [NSString stringWithFormat:@"%i-%i:%i of %i",
+                          CRAPI.sharedInstance.GSSiPadNumber, CRAPI.sharedInstance.currentManageriPad,
+                          CRAPI.sharedInstance.currentiPadWithinManager, CRAPI.sharedInstance.totiPadWithinManager];
+}
+
 - (void)syncButtonTapped:(UIButton *)button
 {
     
@@ -331,9 +390,38 @@
     
 }
 
+- (void)connectButtonTapped:(UIButton *)button
+{
+    
+}
+
 - (void)returnButtonTapped:(UIButton *)button
 {
     [_delegate synchronizeControllerDidReturn:self];
+}
+
+- (void)pixUpSwitchTapped:(UISwitch *)aSwitch
+{
+    [UserDefaults.defaults saveBool:aSwitch.on
+                             forKey:@"UploadPix"];
+    
+    CRAPI.sharedInstance.uploadPix = aSwitch.on;
+}
+
+- (void)dataDownSwitchTapped:(UISwitch *)aSwitch
+{
+    [UserDefaults.defaults saveBool:aSwitch.on
+                             forKey:@"DownloadData"];
+    
+    CRAPI.sharedInstance.downloadData = aSwitch.on;
+}
+
+- (void)pixDownSwitchTapped:(UISwitch *)aSwitch
+{
+    [UserDefaults.defaults saveBool:aSwitch.on
+                             forKey:@"DownloadPix"];
+    
+    CRAPI.sharedInstance.downloadPix = aSwitch.on;
 }
 
 - (void)closeGMServer
