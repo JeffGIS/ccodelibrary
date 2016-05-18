@@ -56,7 +56,7 @@
     _titleLabel.textAlignment = NSTextAlignmentCenter;
     _titleLabel.font = [UIFont boldSystemFontOfSize:44.0];
     _titleLabel.adjustsFontSizeToFitWidth = YES;
-    _titleLabel.numberOfLines = 2;25
+    _titleLabel.numberOfLines = 2;
     _titleLabel.text = @"Synchronize\nData";
     
     _dataUpLabel = UILabel.new;
