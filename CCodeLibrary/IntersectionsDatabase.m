@@ -1688,7 +1688,7 @@ Exit:
 -(void) setStreetNamesForIntersection:(int)intID
                                    to:(NSString*)newNames
 {
-    
+    return;
 }
 
 - (void) deleteIntersection:(int)intID

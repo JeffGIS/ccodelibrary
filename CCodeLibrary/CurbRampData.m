@@ -10,6 +10,7 @@
 #import "CurbRampData.h"
 #import "UserDefaults.h"
 #import "CRAPI.h"
+#import "UIApplication+VersionBuild.h"
 int SQLOK(int sqlReturn, sqlite3 *database);
 
 static int fileSequence = 0;
@@ -169,6 +170,7 @@ static CurbRampData *_statdatabase = nil;
         int nextFileNum = [self getNextUploadFileNum:iPad];
         if (!_sendToServerFile)
         {
+            NSString * softwareVersion = UIApplication.appVersionBuild;
             int iTime = NSDate.timeIntervalSinceReferenceDate;
             _sendToServerFile = [NSString stringWithFormat:@"%@/CurbRampInventory_%i-%i.sql",
                                  CRAPI.sharedInstance.sharedOutputDirectory,iTime,fileSequence++];
@@ -196,15 +198,30 @@ static CurbRampData *_statdatabase = nil;
 {
     SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
 }
+
 - (BOOL)isCurrentVersion
 {
     BOOL rtn = FALSE;
+    int dbVersion, currentVersion;
+    
+    NSString * version = [self dbVersion];
+    dbVersion = atoi(version.UTF8String);
+    currentVersion = atoi(CURRENT_INTERSECTION_VERSION);
+    if (dbVersion == currentVersion)
+        rtn = TRUE;
+    
+    return rtn;
+}
+
+- (NSString*)dbVersion
+{
+    NSString *rtn=@"";
     BOOL opened = [self open];
     int dbVersion, currentVersion;
     
     if (_isOpen && _fileSize > 0)
     {
-        NSString *query = [NSString stringWithFormat:@"SELECT VersionID FROM VERSION"];// WHERE vid=1"];
+        NSString *query = [NSString stringWithFormat:@"SELECT VersionID FROM VERSION WHERE vid=1"];
         
         sqlite3_stmt *statement = NULL;
         
@@ -216,10 +233,7 @@ static CurbRampData *_statdatabase = nil;
             
             if (version)
             {
-                dbVersion = atoi(version);
-                currentVersion = atoi(CURRENT_INTERSECTION_VERSION);
-                if (dbVersion == currentVersion)
-                    rtn = TRUE;
+                rtn = [NSString stringWithUTF8String:version];
             }
         }
         
