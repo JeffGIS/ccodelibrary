@@ -383,6 +383,7 @@ enum {
 
 - (void)uploadDidComplete
 {
+    return;
     NSString *newFilePath = [NSString stringWithFormat:@"%@.uploaded", _filePath];
     NSError *error = nil;
     NSLog(@"%@", newFilePath);

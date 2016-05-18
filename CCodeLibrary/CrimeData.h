@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
+#import "MathUtil.h"
 
 @interface CrimeData : NSObject
 @property sqlite3 *database;
@@ -26,6 +27,8 @@
 - (BOOL)clear;
 
 - (BOOL)executeCmd:(char *)cmd;
+-(void) getIdForUpdate:(LPSTR)str
+                remove:(BOOL)remove;
 
 - (void)startTransaction;
 - (void)commitTransaction;

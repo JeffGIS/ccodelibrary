@@ -17,7 +17,6 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 #import "GSSiPopoverView.h"
 #import "FTPDataPull.h"
 #import "Compress.h"
-#import "MathUtil.h"
 
 @interface CrimeData () <GeoMasterServerDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate>
 @property (nonatomic) UIColor *red;
@@ -62,9 +61,31 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     [self close];
     NSLog(@"Crime Database dealloc");
 }
+- (void) fixName
+{
+/*    NSString *newFilePath = [NSString stringWithFormat:@"%@.uploaded", _path];
+    NSError *error = nil;
+    NSLog(@"%@", newFilePath);
+    
+    int fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:newFilePath
+                                                               error:nil].fileSize;
+    if (fileSize > 0)
+    {
+        [self clear];
+        [NSFileManager.defaultManager moveItemAtPath:newFilePath
+                                          toPath:_path
+                                           error:&error];
+        _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
+                                                                   error:nil].fileSize;
+    
+        if (error)
+            NSLog(@"ERROR renaming file:%@", _fileName);
+    }*/
+}
 
 - (BOOL)open
 {
+    [self fixName];
     if (!_isOpen)
     {
         _isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
@@ -164,8 +185,6 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     }
     if (opened)
         [self close];
-    if (!rtn)
-        rtn = 576;
     return rtn;
 }
 
@@ -378,7 +397,7 @@ didReceiveMessage:(NSString *)message
     _pull.delegate = self;
     _pull.popover = _popoverView;
     _pull.useOnlyPrimaryFTP = YES;
-    _pull.useTestServer = YES;
+    _pull.useTestServer = NO;
     _pull.dataType = FTPDataCrimes;
     
     if ([_pull getFile:fileName
@@ -434,7 +453,9 @@ didReceiveMessage:(NSString *)message
     
     return rtn;
 }
+
 -(void) getIdForUpdate:(LPSTR)str
+                remove:(BOOL)remove
 {
     static char fromString[32], toString[32];
     
@@ -457,9 +478,11 @@ didReceiveMessage:(NSString *)message
             *(pEnd-1) = 0;
             sscanf (pLoc,"%i,%i",&cnum,&seq);
             *(pEnd-1) = ',';
-            int id = [self idForCnum:cnum
-                              andSeq:seq];
-            sprintf (toString,"%i",id);
+            int idnum = cnum;
+            if (!remove)
+                idnum = [self idForCnum:cnum
+                                 andSeq:seq];
+            sprintf (toString,"%i",idnum);
             REPLAC(str, fromString, toString, INPUTBUFSIZE);
         }
 
@@ -494,7 +517,8 @@ didReceiveMessage:(NSString *)message
         [self startTransaction];
         while (_keepGoing && fgetstring(str, (INPUTBUFSIZE - 2), fid))
         {
-            [self getIdForUpdate:str];
+            [self getIdForUpdate:str
+                          remove:NO];
             [self executeCmd:str];
             [_popoverView updateProgress:ftell(fid) / totLen];
         }

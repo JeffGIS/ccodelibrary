@@ -263,6 +263,11 @@ didReceiveResponse:(NSURLResponse *)response
     if (_fileSize == _existingFileSize &&
         _refreshOption == FTPDataPullRefreshOptionCheckFileSize)
     {
+        if ([_filePath containsString:_tempExtension])
+        {
+            _filePath = _filePath.stringByDeletingPathExtension;
+        }
+
         [self stopReceiveWithStatus:FTPStatusFileExists
                        statusString:@"File Already Exists"];
     }
@@ -405,6 +410,9 @@ didReceiveResponse:(NSURLResponse *)response
         NSString *newFilePath = _filePath.stringByDeletingPathExtension;
         NSError *error = nil;
         
+        BOOL st = [NSFileManager.defaultManager removeItemAtPath:newFilePath
+                                                           error:nil];
+       
         [NSFileManager.defaultManager moveItemAtPath:_filePath
                                               toPath:newFilePath
                                                error:&error];
