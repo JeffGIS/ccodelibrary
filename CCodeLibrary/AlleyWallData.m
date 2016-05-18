@@ -944,17 +944,26 @@ SELECT max(_id) FROM MyTable*/
     return rtn;
 }
 
-+ (int) incrementLastDataFileNumber
+- (int) incrementLastDataFileNum
 {
-    AlleyWallData *awd = AlleyWallData.new;
-    int lastNum = [awd getLastDataUpdateNumber];
-    if ([NSFileManager.defaultManager fileExistsAtPath:[awd outputDataFile:lastNum]])
+    int lastNum = [self getLastDataUpdateNumber];
+    if ([NSFileManager.defaultManager fileExistsAtPath:[self outputDataFile:lastNum]])
     {
-        [awd setLastDataUpdateNum:++lastNum];
+        [self setLastDataUpdateNum:++lastNum];
     }
     return lastNum;
 }
-- (int) incrementLastPictFileNumber
++ (int) incrementLastDataFileNumber
+{
+    AlleyWallData *awd = AlleyWallData.new;
+    return [awd incrementLastDataFileNum];
+}
++ (int) incrementLastPictFileNumber
+{
+    AlleyWallData *awd = AlleyWallData.new;
+    return [awd incrementLastPictFileNum];
+}
+- (int) incrementLastPictFileNum
 {
     AlleyWallData *awd = AlleyWallData.new;
     int lastNum = [awd getLastPictUpdateNumber];

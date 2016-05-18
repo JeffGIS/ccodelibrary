@@ -160,7 +160,6 @@ static CurbRampData *_statdatabase = nil;
 }
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer
-     useUniqueFile:(BOOL)uniqueFile
 {
 
     BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
@@ -168,7 +167,7 @@ static CurbRampData *_statdatabase = nil;
     {
         int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
         int nextFileNum = [self getNextUploadFileNum:iPad];
-        if (uniqueFile || !_sendToServerFile)
+        if (!_sendToServerFile)
         {
             int iTime = NSDate.timeIntervalSinceReferenceDate;
             _sendToServerFile = [NSString stringWithFormat:@"%@/CurbRampInventory_%i-%i.sql",
@@ -348,4 +347,142 @@ static CurbRampData *_statdatabase = nil;
     return rtn;
     
 }
+
+
+- (NSString*) outputDataFile:(int)fileNum
+{
+    NSString* file = [NSString stringWithFormat:@"%@/%i.sql",
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],fileNum];
+    return file;
+}
+- (NSString*) outputPictFile:(int)fileNum
+{
+    NSString* file = [NSString stringWithFormat:@"%@/%i.jpg",
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],fileNum];
+    return file;
+}
+
+
+- (int) getLastDataUpdateNumber
+{
+    int lastNum  = 1;
+    [self createNextUpdateTable];
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate FROM ALLEYWALL_UPDATES WHERE id=1"];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        lastNum = sqlite3_column_int(statement, 0);
+    }
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
+    return lastNum;
+}
++ (int) getLastDataUpdateNum
+{
+    CurbRampData *awd = CurbRampData.new;
+    return [awd getLastDataUpdateNumber];
+}
+- (BOOL) setLastDataUpdateNum:(int)lastNum
+{
+    BOOL opened = [self open];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastDataUpdate = %i WHERE id=1",lastNum];
+    BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                   sendToServer:NO];
+    [self close:opened];
+    return rtn;
+}
+
+- (BOOL) setLastPictUpdateNum:(int)nextNum
+{
+    BOOL opened = [self open];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastDataUpdate = %i WHERE id=1",nextNum];
+    BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                   sendToServer:NO];
+    [self close:opened];
+    return rtn;
+}
+
+- (int) getLastPictUpdateNumber
+{
+    int LastNum  = 1;
+    [self createNextUpdateTable];
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM ALLEYWALL_UPDATES WHERE id=1"];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        LastNum = sqlite3_column_int(statement, 0);
+    }
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
+    return LastNum;
+}
+
+- (BOOL)createNextUpdateTable
+{
+    BOOL rtn = TRUE;
+    NSString * cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_UPDATES ('id' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
+    rtn = [self executeCmd:(char *)cmd.UTF8String
+              sendToServer:NO];
+    return rtn;
+}
+
+- (int) incrementLastDataFileNum
+{
+    int lastNum = [self getLastDataUpdateNumber];
+    if ([NSFileManager.defaultManager fileExistsAtPath:[self outputDataFile:lastNum]])
+    {
+        [self setLastDataUpdateNum:++lastNum];
+    }
+    return lastNum;
+}
++ (int) incrementLastDataFileNumber
+{
+    CurbRampData *awd = CurbRampData.new;
+    return [awd incrementLastDataFileNum];
+}
++ (int) incrementLastPictFileNumber
+{
+    CurbRampData *awd = CurbRampData.new;
+    return [awd incrementLastPictFileNum];
+}
+- (int) incrementLastPictFileNum
+{
+    CurbRampData *awd = CurbRampData.new;
+    int lastNum = [awd getLastPictUpdateNumber];
+    if ([NSFileManager.defaultManager fileExistsAtPath:[awd outputPictFile:lastNum]])
+    {
+        [awd setLastPictUpdateNum:++lastNum];
+    }
+    return lastNum;
+}
+- (BOOL)createPictureDatabase
+{
+    BOOL rtn = TRUE;
+    NSString * cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_PICTURES ('id' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
+    rtn = [self executeCmd:(char *)cmd.UTF8String
+              sendToServer:NO];
+    return rtn;
+}
+
+- (BOOL) savePictureData:(int)pictNum
+                   intID:(int)wallID
+                 rampNum:(int)ramp
+                    type:(int)type
+                  latLon:(LLPOINT)ll
+                 heading:(int)heading
+{
+    CurbRampData *awd = CurbRampData.new;
+    [awd createPictureDatabase];
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
+    
+    return YES;
+    
+}
+
 @end

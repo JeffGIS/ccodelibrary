@@ -60,7 +60,10 @@ fromDate:(NSString *)fromDate
 + (BOOL) setLastPictUpdateNum:(int)nextNum;
 - (int) getLastPictUpdateNumber;
 - (NSString*) outputPictFile:(int)fileNum;
-- (int) incrementLastPictFileNumber;
+- (int) incrementLastDataFileNum;
++ (int) incrementLastDataFileNumber;
+- (int) incrementLastPictFileNum;
++ (int) incrementLastPictFileNumber;
 - (BOOL) savePictureData:(int)pictNum
                  wallID:(int)wallID
                  latLon:(LLPOINT)ll

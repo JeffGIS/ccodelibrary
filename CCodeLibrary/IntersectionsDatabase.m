@@ -563,7 +563,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                     ramp.lev21y,
                     ramp.rampType,
                     ramp.rampComment];
-            rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:newFile];
+            rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
         }
     }
 
@@ -627,10 +627,10 @@ WHERE intID=%i;",
                        mpint.intersectionComment.UTF8String,
                        mpint.intID];
     
-    rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:newFile];
+    rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
     cmd = [NSString stringWithFormat:@"UPDATE Intersections_index SET minY=%f,minX=%f,maxY=%f,maxX=%f WHERE Intersections_index.id=%ld",
              lat,lon,lat,lon, (long)mpint.intID];
-    rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:NO];
+    rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
 
     [self.curbRampData close:opened];
 
@@ -1694,7 +1694,7 @@ Exit:
 - (void) deleteIntersection:(int)intID
 {
     NSString *cmd = [NSString stringWithFormat:@"DELETE FROM Intersections WHERE intID = %i;DELETE FROM Intersections_index WHERE intID = %i",intID,intID];
-    [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES useUniqueFile:NO];
+    [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
     
 }
 @end

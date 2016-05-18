@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
-
+#import "MathUtil.h"
 
 @interface CurbRampData : NSObject
 @property sqlite3 *database;
@@ -31,12 +31,26 @@
 - (NSString *)databasePath:(int)geoid;
 
 - (BOOL)executeCmd:(char *)cmd
-      sendToServer:(BOOL)sendToServer
-     useUniqueFile:(BOOL)uniqueFile;
+      sendToServer:(BOOL)sendToServer;
 
 - (BOOL)startTransaction;
 - (void)commitTransaction;
 - (BOOL)isCurrentVersion;
 
++ (BOOL) setLastDataUpdateNum:(int)nextNum;
++ (int)  getLastDataUpdateNum;
++ (BOOL) setLastPictUpdateNum:(int)nextNum;
+- (int) getLastPictUpdateNumber;
+- (NSString*) outputPictFile:(int)fileNum;
+- (int) incrementLastDataFileNum;
++ (int) incrementLastDataFileNumber;
+- (int) incrementLastPictFileNum;
++ (int) incrementLastPictFileNumber;
+- (BOOL) savePictureData:(int)pictNum
+                  intID:(int)wallID
+                 rampNum:(int)ramp
+                    type:(int)type
+                  latLon:(LLPOINT)ll
+                 heading:(int)heading;
 
 @end
