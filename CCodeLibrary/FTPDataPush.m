@@ -294,9 +294,6 @@ enum {
                     
                     if (_popover)
                         [_popover updateProgress:_progress];
-                    
-                    if (_totBytesWritten == _fileSize)
-                        [self uploadDidComplete];
                 }
             }
             
@@ -379,21 +376,6 @@ enum {
             assert(NO);
             break;
     }
-}
-
-- (void)uploadDidComplete
-{
-    return;
-    NSString *newFilePath = [NSString stringWithFormat:@"%@.uploaded", _filePath];
-    NSError *error = nil;
-    NSLog(@"%@", newFilePath);
-    
-    [NSFileManager.defaultManager moveItemAtPath:_filePath
-                                          toPath:newFilePath
-                                           error:&error];
-    
-    if (error)
-        NSLog(@"ERROR renaming file:%@", _fileName);
 }
 
 - (void)setUpFTP

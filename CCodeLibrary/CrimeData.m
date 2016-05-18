@@ -267,8 +267,8 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     [_GMServer initCommunication:5.0];
     _popoverView = [[GSSiPopoverView alloc] initWithView:fromView];
     _popoverView.delegate = self;
-
     _popoverView.progressView.hidden = YES;
+    _popoverView.progressLabel.hidden = YES;
     
     [_popoverView showAfter:2.0
                   withTitle:@"Waiting\nto Connect\nto Manager"];
@@ -388,6 +388,9 @@ didReceiveMessage:(NSString *)message
     
     [_popoverView showAfter:0.0
                   withTitle:[NSString stringWithFormat:@"Get update %i",(int)_myLastUpdate+1]];
+    
+    _popoverView.progressView.hidden = NO;
+    _popoverView.progressLabel.hidden = NO;
     
     BOOL fileExists = NO;
     NSString *fileName = [NSString stringWithFormat:@"%i.gcf",(int)_myLastUpdate+1];
