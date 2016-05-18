@@ -37,6 +37,8 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property int deviceNumber;
 @property int maxDevices;
 
+@property (nonatomic) NSMutableDictionary *deviceLists;
+@property (nonatomic) NSString *deviceListsKey;
 @property int currentGeoid;
 @property int currentManageriPad; //sequence number for manager iPad - created by GMServer
 @property int currentiPadWithinManager;

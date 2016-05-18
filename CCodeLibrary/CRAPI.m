@@ -32,6 +32,7 @@
         _crimeMode = PINMAP;
         _crimeTarget = @"Minneapolis Neighborhoods";
         _docManager = NVDocumentManager.new;
+        _deviceLists = NSMutableDictionary.dictionary;
         
         _uploadPix = [UserDefaults.defaults boolForKey:@"UploadPix"];
         _downloadData = [UserDefaults.defaults boolForKey:@"DownloadData"];
@@ -91,6 +92,7 @@
         _currentGeoidValue = geoid;
         _outputDirectory = [NSString stringWithFormat:@"%@/%i/ADAFiles", _documentsDirectory, _currentGeoidValue];
         _imageDirectory = [NSString stringWithFormat:@"%@/%i/IntersectionImages", UserDefaults.defaults.sharedFilePath, _currentGeoidValue];
+        _deviceListsKey = [NSString stringWithFormat:@"iPads:%i", CRAPI.sharedInstance.currentGeoid];
         
         [NSFileManager.defaultManager createDirectoryAtPath:_outputDirectory
                                 withIntermediateDirectories:YES
