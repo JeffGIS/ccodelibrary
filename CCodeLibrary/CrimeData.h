@@ -21,7 +21,6 @@
 @property NSInteger myLastUpdate;
 @property NSInteger serversLastUpdate;
 
-
 - (BOOL)open;
 - (void)close;
 - (BOOL)clear;
@@ -34,4 +33,5 @@
 - (void)commitTransaction;
 + (NSString *)reportForControlNumber:(NSInteger)cnumber;
 - (BOOL)update:(UIView *)fromView;
+
 @end

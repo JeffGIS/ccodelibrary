@@ -17,14 +17,18 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 #import "GSSiPopoverView.h"
 #import "FTPDataPull.h"
 #import "Compress.h"
+#import "NVAlertView.h"
 
-@interface CrimeData () <GeoMasterServerDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate>
+@interface CrimeData () <GeoMasterServerDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,NVAlertViewDelegate>
+
 @property (nonatomic) UIColor *red;
 @property (nonatomic) GeoMasterServer *GMServer;
 @property (nonatomic) GSSiPopoverView *popoverView;
 @property (nonatomic) NSTimer *updateTimer;
 @property FTPDataPull *pull;
 @property BOOL keepGoing;
+@property (nonatomic) UIView *fromView;
+
 @end
 
 @implementation CrimeData
@@ -265,6 +269,8 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     _GMServer.delegate = self;
     _GMServer.messageID = GMSMessageGetPoliceUpdate;
     [_GMServer initCommunication:5.0];
+    
+    _fromView = fromView;
     _popoverView = [[GSSiPopoverView alloc] initWithView:fromView];
     _popoverView.delegate = self;
     _popoverView.progressView.hidden = YES;
@@ -340,8 +346,8 @@ didReceiveMessage:(NSString *)message
                 break;
         }
     }
-    [self closeGMServer];
     
+    [self closeGMServer];
 }
 
 
@@ -359,13 +365,18 @@ didReceiveMessage:(NSString *)message
     else
         titleMessage = @"NVServer Error";
     
-    UIAlertView *serverError = [[UIAlertView alloc] initWithTitle:titleMessage
-                                                          message:error
-                                                         delegate:nil
-                                                cancelButtonTitle:@"OK"
-                                                otherButtonTitles:nil];
-    
-    [serverError show];
+    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:_fromView
+                                                      delegate:self
+                                                         title:titleMessage
+                                               buttonTextArray:@[@"OK"]
+                                              destructiveIndex:0];
+#pragma unused(alert)
+}
+
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView hideLargeAlertView:YES];
 }
 
 - (void)updateFromServer:(NSTimer *)timer

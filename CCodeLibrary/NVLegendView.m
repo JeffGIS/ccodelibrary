@@ -293,48 +293,12 @@
         
     if (gesture.state == UIGestureRecognizerStateEnded)
     {
-        CGFloat filter = 50.0, duration = 0.6;
+        _viewCenter = gesture.view.center;
         
-        if ([gesture velocityInView:gesture.view].x < -filter ||
-            [gesture velocityInView:gesture.view].x > filter ||
-            [gesture velocityInView:gesture.view].y < -filter ||
-            [gesture velocityInView:gesture.view].y > filter)
-            {
-                CGFloat centerX = (gesture.view.center.x + ([gesture velocityInView:gesture.view].x * duration));
-                CGFloat centerY = (gesture.view.center.y + ([gesture velocityInView:gesture.view].y * duration));
-                
-                centerX = min(centerX, ((_containerFrame.origin.x + _containerFrame.size.width) - (self.frame.size.width / 2.0)));
-                centerX = max(centerX, (_containerFrame.origin.x + (self.frame.size.width / 2.0)));
-                
-                centerY = min(centerY, ((_containerFrame.origin.y + _containerFrame.size.height) - (self.frame.size.height / 2.0)));
-                centerY = max(centerY, (_containerFrame.origin.y + (self.frame.size.height / 2.0)));
-                
-                [UIView animateWithDuration:duration
-                                      delay:0.0
-                                    options:UIViewAnimationOptionCurveEaseOut
-                                 animations:^{
-                                     gesture.view.center = CGPointMake(centerX, centerY);
-                                 }
-                                 completion:^(BOOL finished) {
-                                     _viewCenter = gesture.view.center;
-                                     
-                                     if (_delegate && [_delegate respondsToSelector:@selector(legendView:wasDraggedToOrigin:)])
-                                     {
-                                         [_delegate legendView:self
-                                            wasDraggedToOrigin:gesture.view.frame.origin];
-                                     }
-                                 }];
-            }
-        
-        else
+        if (_delegate && [_delegate respondsToSelector:@selector(legendView:wasDraggedToOrigin:)])
         {
-             _viewCenter = gesture.view.center;
-            
-            if (_delegate && [_delegate respondsToSelector:@selector(legendView:wasDraggedToOrigin:)])
-            {
-                [_delegate legendView:self
-                   wasDraggedToOrigin:gesture.view.frame.origin];
-            }
+            [_delegate legendView:self
+               wasDraggedToOrigin:gesture.view.frame.origin];
         }
     }
     
