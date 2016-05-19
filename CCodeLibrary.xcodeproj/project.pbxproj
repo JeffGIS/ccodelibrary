@@ -11,7 +11,6 @@
 		1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F101D2619AE96EB0006E1D5 /* findIntersection.c */; };
 		1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */; };
 		1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544519A412490029DBEA /* NetworkManager.m */; };
-		1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544E19A449460029DBEA /* CustomAlert.m */; };
 		1F5150A31CE3959000BA4A5E /* AlleyWallData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5150A21CE3959000BA4A5E /* AlleyWallData.m */; };
 		1F5150A41CE396FE00BA4A5E /* AlleyWallData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F5150A11CE3959000BA4A5E /* AlleyWallData.h */; };
 		1F5150A51CE3A3B400BA4A5E /* SQLiteLib.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB42311B2B1A5E00C36FFC /* SQLiteLib.h */; };
@@ -164,7 +163,6 @@
 		A99C89181AEDE07800A0856F /* PriorityLocation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A97867351A5219FD000A9BB8 /* PriorityLocation.h */; };
 		A99C89191AEDE07F00A0856F /* PlacesInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F838AE819B1021C00943A8C /* PlacesInfo.h */; };
 		A99C891A1AEDE08700A0856F /* colorsByName.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */; };
-		A99C891D1AEDE09D00A0856F /* CustomAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F3A544D19A449460029DBEA /* CustomAlert.h */; };
 		A99C891E1AEDE0A300A0856F /* Colors.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9C525CE1A3B59880056711F /* Colors.h */; };
 		A99C891F1AEDE0AD00A0856F /* ElementOverlayView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB05C20E19EA999F00F0688B /* ElementOverlayView.h */; };
 		A99C89201AEDE0B400A0856F /* GSSiAlertController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D952B01A96D484008B9156 /* GSSiAlertController.h */; };
@@ -438,7 +436,6 @@
 				A99C89201AEDE0B400A0856F /* GSSiAlertController.h in CopyFiles */,
 				A99C891F1AEDE0AD00A0856F /* ElementOverlayView.h in CopyFiles */,
 				A99C891E1AEDE0A300A0856F /* Colors.h in CopyFiles */,
-				A99C891D1AEDE09D00A0856F /* CustomAlert.h in CopyFiles */,
 				A99C891A1AEDE08700A0856F /* colorsByName.h in CopyFiles */,
 				A99C89191AEDE07F00A0856F /* PlacesInfo.h in CopyFiles */,
 				A99C89181AEDE07800A0856F /* PriorityLocation.h in CopyFiles */,
@@ -482,8 +479,6 @@
 		1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerticalSegmentedControl.m; sourceTree = "<group>"; };
 		1F3A544419A412490029DBEA /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
 		1F3A544519A412490029DBEA /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
-		1F3A544D19A449460029DBEA /* CustomAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlert.h; sourceTree = "<group>"; };
-		1F3A544E19A449460029DBEA /* CustomAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlert.m; sourceTree = "<group>"; };
 		1F5150A11CE3959000BA4A5E /* AlleyWallData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlleyWallData.h; sourceTree = "<group>"; };
 		1F5150A21CE3959000BA4A5E /* AlleyWallData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlleyWallData.m; sourceTree = "<group>"; };
 		1F829A981C342BDD00DD429C /* FileLister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileLister.h; sourceTree = "<group>"; };
@@ -959,8 +954,6 @@
 				A9C525CE1A3B59880056711F /* Colors.h */,
 				A9C525CF1A3B59880056711F /* Colors.m */,
 				EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */,
-				1F3A544D19A449460029DBEA /* CustomAlert.h */,
-				1F3A544E19A449460029DBEA /* CustomAlert.m */,
 				EB05C20E19EA999F00F0688B /* ElementOverlayView.h */,
 				EB05C20F19EA999F00F0688B /* ElementOverlayView.m */,
 				A9D952B01A96D484008B9156 /* GSSiAlertController.h */,
@@ -1442,7 +1435,6 @@
 				EBC01D161BED1C8C0004C751 /* fk4fk5.c in Sources */,
 				A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */,
 				1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */,
-				1F3A544F19A449460029DBEA /* CustomAlert.m in Sources */,
 				EBAB42321B2B1A5E00C36FFC /* SQLiteLib.c in Sources */,
 				EBC01D251BED1C8C0004C751 /* precess.c in Sources */,
 				69450DAD1BD5F6120079F7EC /* NVContactPicker.m in Sources */,

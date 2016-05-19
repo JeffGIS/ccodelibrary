@@ -544,13 +544,12 @@
     else
         titleMessage = @"NVCRIS Server Error";
     
-    UIAlertView *serverError = [[UIAlertView alloc] initWithTitle:titleMessage
-                                                          message:error
-                                                         delegate:nil
-                                                cancelButtonTitle:@"OK"
-                                                otherButtonTitles:nil];
-    
-    [serverError show];
+    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                      delegate:self
+                                                         title:titleMessage
+                                               buttonTextArray:@[@"OK"]
+                                              destructiveIndex:0];
+#pragma unused(alert)
 }
 
 - (void)GMServer:(GeoMasterServer *)server
@@ -572,13 +571,14 @@ didReceiveMessage:(NSString *)message
                 
                 if (CRAPI.sharedInstance.placesArray.count == 0)
                 {
-                    UIAlertView *serverError = [[UIAlertView alloc] initWithTitle:@"No Cities"
-                                                                          message:@"Please use the\nCRiS Management Module\nto assign cities\nbefore starting\nthe Preliminary Survey."
-                                                                         delegate:nil
-                                                                cancelButtonTitle:@"OK"
-                                                                otherButtonTitles:nil];
+                    NSString *title = @"NO CITIES\nPlease use the NVCRIS Management Module to assign cities before starting the Preliminary Survey.";
                     
-                    [serverError show];
+                    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                                      delegate:self
+                                                                         title:title
+                                                               buttonTextArray:@[@"OK"]
+                                                              destructiveIndex:0];
+#pragma unused(alert)
                 }
                 
                 _selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
