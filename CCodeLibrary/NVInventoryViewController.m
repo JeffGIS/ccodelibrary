@@ -1895,8 +1895,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     if (rampType == RampTypeCombPerpNonWalk ||
         rampType == RampTypeCombPerpWalk ||
         rampType == RampTypeDepressedCorner ||
-        rampType == RampTypeFan ||
-        rampType == RampTypeCombBuiltUp)
+        rampType == RampTypeFan)
     {
         rtn = YES;
     }
@@ -1909,8 +1908,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     BOOL rtn = NO;
     
     if (rampType == RampTypeCombPerpNonWalk ||
-        rampType == RampTypeCombPerpWalk ||
-        rampType == RampTypeCombBuiltUp)
+        rampType == RampTypeCombPerpWalk)
     {
         rtn = YES;
     }
