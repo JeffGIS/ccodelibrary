@@ -33,6 +33,7 @@
         _crimeTarget = @"Minneapolis Neighborhoods";
         _docManager = NVDocumentManager.new;
         _deviceLists = NSMutableDictionary.dictionary;
+        _assignediPadsArray = NSMutableArray.array;
         
         _uploadPix = [UserDefaults.defaults boolForKey:@"UploadPix"];
         _downloadData = [UserDefaults.defaults boolForKey:@"DownloadData"];
