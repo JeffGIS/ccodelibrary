@@ -12,7 +12,7 @@
 - (id)initWithOrigin:(CGPoint)origin
       hasComplexView:(BOOL)hasComplexView;
 {
-    CGFloat margin = 4.0, width = 264.0, height = 140.0, markerMargin = 6.0;
+    CGFloat margin = 4.0, width = 280.0, height = 140.0, markerMargin = 6.0;
     UIColor *green = UserDefaults.defaults.darkGreen;
     UIColor *red = UIColor.redColor;
     UIColor *blue = UserDefaults.defaults.appleBlue;
