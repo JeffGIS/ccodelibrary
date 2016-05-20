@@ -32,8 +32,8 @@
         _crimeMode = PINMAP;
         _crimeTarget = @"Minneapolis Neighborhoods";
         _docManager = NVDocumentManager.new;
-        _deviceLists = NSMutableDictionary.dictionary;
-        _assignediPadsArray = NSMutableArray.array;
+        _deviceLists = NSMutableDictionary.new;
+        _assignediPadsArray = NSMutableArray.new;
         
         _uploadPix = [UserDefaults.defaults boolForKey:@"UploadPix"];
         _downloadData = [UserDefaults.defaults boolForKey:@"DownloadData"];
