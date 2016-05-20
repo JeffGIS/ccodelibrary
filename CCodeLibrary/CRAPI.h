@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @interface CRAPI : NSObject
 
 @property (nonatomic) int currentModule;
+@property (nonatomic) int currentSubModule;
 @property (nonatomic, copy) NSString *documentsDirectory;
 @property (nonatomic, copy) NSString *outputDirectory;
 @property (nonatomic, copy) NSString *imageDirectory;

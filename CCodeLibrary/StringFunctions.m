@@ -697,11 +697,12 @@ NSString * splitLongestLine (NSString * text)
 
 BOOL appendStringToFile (NSString * str,NSString * filePath)
 {
+    BOOL rtn;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     if(![fileManager fileExistsAtPath:filePath])
     {
-        [str writeToFile:filePath
+        rtn = [str writeToFile:filePath
               atomically:YES
                 encoding:NSUTF8StringEncoding
                    error:nil];
@@ -713,7 +714,9 @@ BOOL appendStringToFile (NSString * str,NSString * filePath)
         NSFileHandle *myHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
         [myHandle seekToEndOfFile];
         [myHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
+        [myHandle closeFile];
+        rtn = YES;
     }
     
-    return YES;
+    return rtn;
 }

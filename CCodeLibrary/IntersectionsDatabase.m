@@ -512,14 +512,14 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
 %i,%i,'%s',0,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\
 %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\
 %i,%i,%i,%i,%i,%i,%i,%i,%i,'%@');",
-                   (int)mpint.intID,
-                   (int)ramp.rampNum,
-                    rampID,
-                    ramp.timeComplete,
-                    ramp.rampExists,
-                    ramp.isComplete,
+                    (int)mpint.intID,
+                    (int)ramp.rampNum,
+                    (int)rampID,
+                    (int)ramp.timeComplete,
+                    (int)ramp.rampExists,
+                    (int)ramp.isComplete,
                     ramp.approximateHeading,
-                    ramp.adjustedRot,
+                    (int)ramp.adjustedRot,
                     (int)ramp.rampInXWalk,
                     (int)ramp.xWalkisComplete,
                     (int)ramp.signalisComplete,
@@ -555,13 +555,13 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                     ramp.swkRightSlopeHeading,
                     (int)ramp.hasPEDSignal,
                     (int)ramp.hasPEDButton,
-                    ramp.PEDButtonHeight,
-                    ramp.PEDButtonDist,
-                    ramp.SteepTopOfCurb,
-                    ramp.PedRampLip,
-                    ramp.lev21x,
-                    ramp.lev21y,
-                    ramp.rampType,
+                    (int)ramp.PEDButtonHeight,
+                    (int)ramp.PEDButtonDist,
+                    (int)ramp.SteepTopOfCurb,
+                    (int)ramp.PedRampLip,
+                    (int)ramp.lev21x,
+                    (int)ramp.lev21y,
+                    (int)ramp.rampType,
                     ramp.rampComment];
             rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
         }
@@ -723,7 +723,7 @@ WHERE intID=%i;",
     [self open];
 
     NSString *query = [NSString stringWithFormat:
-                       @"SELECT intID, assignedTo, status, intX, intY,\
+                       @"SELECT intID, assignedToPrelim, assignedToDetail, status, intX, intY,\
                        ramp1,ramp2,ramp3,ramp4,ramp5,ramp6,ramp7,ramp8,ramp81,ramp23,ramp45,ramp67 \
                        FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
                        (int)bounds.xmn, (int)bounds.xmx, (int)bounds.ymn, (int)bounds.ymx];
@@ -734,13 +734,14 @@ WHERE intID=%i;",
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
         int intID = sqlite3_column_int(statement, 0);
-        int assignedTo = sqlite3_column_int(statement, 1);
-        int status = sqlite3_column_int(statement, 2);
-        int intX = sqlite3_column_int(statement, 3);
-        int intY = sqlite3_column_int(statement, 4);
+        int assignedToPrelim = sqlite3_column_int(statement, 1);
+        int assignedToDetail = sqlite3_column_int(statement, 2);
+        int status = sqlite3_column_int(statement, 3);
+        int intX = sqlite3_column_int(statement, 4);
+        int intY = sqlite3_column_int(statement, 5);
         int nRamps = 0;
         
-        for (int i = 5; i < 17; i++)
+        for (int i = 6; i < 18; i++)
         {
             if (sqlite3_column_int(statement, i) != 0)
                 nRamps++;
@@ -752,8 +753,10 @@ WHERE intID=%i;",
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
         intpt.latitude = lat;
         intpt.longitude = lon;
-        if (assignedTo)
-            intpt.assignedTo = assignedTo;
+        if (assignedToPrelim)
+            intpt.assignedToPrelim = assignedToPrelim;
+        if (assignedToDetail)
+            intpt.assignedToDetail = assignedToDetail;
         intpt.status = status;
         intpt.nramps = nRamps;
         
@@ -872,7 +875,7 @@ WHERE intID=%i;",
     [self open];
     
     NSString *query = [NSString stringWithFormat:
-                       @"SELECT intID, assignedTo, intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
+                       @"SELECT intID, assignedToPrelim, assignedToDetail, intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
                        (int)bounds.xmn,(int)bounds.xmx,(int)bounds.ymn,(int)bounds.ymx];
     
     sqlite3_stmt *statement = NULL;
@@ -881,15 +884,17 @@ WHERE intID=%i;",
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
         int intID = sqlite3_column_int(statement, 0);
-        int assignedTo = sqlite3_column_int(statement, 1);
-        int intX = sqlite3_column_int(statement, 2);
-        int intY = sqlite3_column_int(statement, 3);
+        int assignedToPrelim = sqlite3_column_int(statement, 1);
+        int assignedToDetail = sqlite3_column_int(statement, 2);
+        int intX = sqlite3_column_int(statement, 3);
+        int intY = sqlite3_column_int(statement, 4);
         double lat = 0.0;
         double lon = 0.0;
         PixelXYToLatLong(intX, intY, 21, &lat, &lon);
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
         intpt.intID = intID;
-        intpt.assignedTo = assignedTo;
+        intpt.assignedToPrelim = assignedToPrelim;
+        intpt.assignedToDetail = assignedToDetail;
         intpt.latitude = lat;
         intpt.longitude = lon;
         intpt.dist = LDIST(intX, intY, pt.x, pt.y);
@@ -1241,7 +1246,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     NSMutableArray *assignments = [[NSMutableArray alloc] init];
     
     [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedTo FROM Intersections WHERE assignedTo != 0 ORDER BY assignedTo,intID ASC"];
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedToPrelim, assignedToDetail FROM Intersections WHERE assignedTo != 0 ORDER BY assignedTo,intID ASC"];
     sqlite3_stmt *statement = NULL;
     
     SQLOK(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), self.curbRampData.database);
@@ -1249,10 +1254,12 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
         int intID = sqlite3_column_int(statement, 0);
-        int assignedTo = sqlite3_column_int(statement, 1);
+        int assignedToPrelim = sqlite3_column_int(statement, 1);
+        int assignedToDetail = sqlite3_column_int(statement, 2);
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
         intpt.intID = intID;
-        intpt.assignedTo = assignedTo;
+        intpt.assignedToPrelim = assignedToPrelim;
+        intpt.assignedToDetail = assignedToDetail;
         [assignments addObject:intpt];
     }
     
@@ -1278,7 +1285,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
 - (void) prepareInsert
 {
-    char buffer1[] = "INSERT INTO Intersections VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+    char buffer1[] = "INSERT INTO Intersections VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
     char buffer2[] = "INSERT INTO Intersections_index VALUES (?,?,?,?,?);";
     SQLOK(sqlite3_prepare_v2(self.curbRampData.database, buffer1, -1, &_statement1, NULL), self.curbRampData.database);
     SQLOK(sqlite3_prepare_v2(self.curbRampData.database, buffer2, -1, &_statement2, NULL), self.curbRampData.database);
@@ -1289,16 +1296,16 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     int *pInt;
     int i;
     
-    for (i = 1, pInt = &intStruct->intID; i < 29; i++, pInt++)
+    for (i = 1, pInt = &intStruct->intID; i < 30; i++, pInt++)
         SQLOK(sqlite3_bind_int(_statement1, i, *pInt), self.curbRampData.database);
     
-    SQLOK(sqlite3_bind_text(_statement1, 29, intStruct->streetNames, -1, SQLITE_STATIC), self.curbRampData.database);
-    SQLOK(sqlite3_bind_text(_statement1, 30, intStruct->streetAzms, -1, SQLITE_STATIC),self.curbRampData.database);
-    SQLOK(sqlite3_bind_double(_statement1, 31,intStruct->lat), self.curbRampData.database);
-    SQLOK(sqlite3_bind_double(_statement1, 32,intStruct->lon), self.curbRampData.database);
-    SQLOK(sqlite3_bind_text(_statement1, 33, intStruct->comment, -1, SQLITE_STATIC), self.curbRampData.database);
-    SQLOK(sqlite3_bind_int(_statement1, 34, intStruct->doLater), self.curbRampData.database);
-    SQLOK(sqlite3_bind_int(_statement1, 35, intStruct->zoomLevel), self.curbRampData.database);
+    SQLOK(sqlite3_bind_text(_statement1, 30, intStruct->streetNames, -1, SQLITE_STATIC), self.curbRampData.database);
+    SQLOK(sqlite3_bind_text(_statement1, 31, intStruct->streetAzms, -1, SQLITE_STATIC),self.curbRampData.database);
+    SQLOK(sqlite3_bind_double(_statement1, 32,intStruct->lat), self.curbRampData.database);
+    SQLOK(sqlite3_bind_double(_statement1, 33,intStruct->lon), self.curbRampData.database);
+    SQLOK(sqlite3_bind_text(_statement1, 34, intStruct->comment, -1, SQLITE_STATIC), self.curbRampData.database);
+    SQLOK(sqlite3_bind_int(_statement1, 35, intStruct->doLater), self.curbRampData.database);
+    SQLOK(sqlite3_bind_int(_statement1, 36, intStruct->zoomLevel), self.curbRampData.database);
     
     SQLOK(sqlite3_bind_int(_statement2, 1, intStruct->intID), self.curbRampData.database);
     SQLOK(sqlite3_bind_double(_statement2, 2, intStruct->lon), self.curbRampData.database);
@@ -1359,7 +1366,8 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         intStruct.lev21X = atoi(pTabIndex);
         PixelXYToLatLong(intStruct.lev21X, intStruct.lev21Y, 21, &intStruct.lat, &intStruct.lon);
         intStruct.assignedTo = 0;
-        intStruct.status = 0;
+        intStruct.statusPrelim = 0;
+        intStruct.statusDetail = 0;
         intStruct.nStreets = atoi(pTab);
         pTab = strchr(pTab,'\t') + 1;
         pAzms = strchr(pTab,'\t');

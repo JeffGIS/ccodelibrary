@@ -6,7 +6,8 @@
 typedef struct {
     int intID;
     int lastUpdateTime;
-    int status;
+    int statusPrelim;
+    int statusDetail;
     int assignedTo;
     int lev21X;
     int lev21Y;

@@ -12,7 +12,6 @@
 
 @interface CurbRampData : NSObject
 @property sqlite3 *database;
-@property NSString *sendToServerFile;
 @property (atomic) BOOL isOpen;
 @property int geoid;
 @property (atomic) int processingID;

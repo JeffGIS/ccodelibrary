@@ -133,32 +133,15 @@ static CurbRampData *_statdatabase = nil;
     //return -1;
     return rtn;
 }
-- (int) getNextUploadFileNum:(int)iPad
+- (NSString*) getSendToServerFile
 {
-    int rtn = 1;
-    BOOL opened = [self open];
+    int currentFileNum = [self getLastDataUpdateNumber];
     
-    if (_isOpen && _fileSize > 0)
-    {
-        NSString *query = [NSString stringWithFormat:@"SELECT lastUpdateFileNum FROM Updates WHERE iPadID = %i",iPad];
-        
-        sqlite3_stmt *statement = NULL;
-        
-        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
-        
-        if (sqlite3_step(statement) == SQLITE_ROW)
-        {
-            rtn = sqlite3_column_int(statement, 0);
-        }
-        
-        SQLOK(sqlite3_finalize(statement), _database);
-        query = [NSString stringWithFormat:@"UPDATE Updates SET lastUpdateFileNum=%i  WHERE iPadID = %i",rtn+1,iPad];
-        SQLOK(sqlite3_exec(_database, query.UTF8String, 0, 0, 0), _database);
-    }
-    
-    [self close:opened];
-    return rtn;
+    NSString * file = [NSString stringWithFormat:@"%@/%i.sql",
+                         [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],currentFileNum];
+    return file;
 }
+
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer
 {
@@ -167,22 +150,18 @@ static CurbRampData *_statdatabase = nil;
     if (rtn && sendToServer)
     {
         int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
-        int nextFileNum = [self getNextUploadFileNum:iPad];
-        if (!_sendToServerFile)
+        NSString * sendToServerFile = [self getSendToServerFile];
+        int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:sendToServerFile
+                                                                              error:nil].fileSize;
+        if (!fileSize)
         {
-            NSString * softwareVersion = UIApplication.appVersionBuild;
             int iTime = NSDate.timeIntervalSinceReferenceDate;
-            _sendToServerFile = [NSString stringWithFormat:@"%@/CurbRampInventory_%i-%i.sql",
-                                 CRAPI.sharedInstance.sharedOutputDirectory,iTime,fileSequence++];
-            rtn = [[NSString stringWithUTF8String:cmd] writeToFile:_sendToServerFile
-                                                        atomically:YES
-                                                          encoding:NSUTF8StringEncoding
-                                                             error:nil];
+            NSString * versions = [NSString stringWithFormat:@"/*ApVer %@ DBVer %s Time %i*/",UIApplication.appVersionBuild,CURRENT_INTERSECTION_VERSION,iTime];
+           rtn = appendStringToFile (versions ,sendToServerFile);
+
         }
-        else
-        {
-            [CRAPI.sharedInstance appendString:[NSString stringWithUTF8String:cmd] toFile:_sendToServerFile];
-        }
+        rtn = appendStringToFile ([NSString stringWithUTF8String:cmd] ,sendToServerFile);
+
     }
     return rtn;
 }
@@ -249,19 +228,20 @@ static CurbRampData *_statdatabase = nil;
     BOOL rtn = NO;
     
     BOOL opened = [self startTransaction];
-    NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;DROP TABLE IF EXISTS Intersections_index;DROP TABLE IF EXISTS Ramps; DROP TABLE IF EXISTS VERSION;"];
+    NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;DROP TABLE IF EXISTS Intersections_index;DROP TABLE IF EXISTS Ramps; DROP TABLE IF EXISTS VERSION;DROP TABLE IF EXISTS CURBRAMP_UPDATES;DROP TABLE IF EXISTS CURBRAMP_PICTURES; DROP TABLE IF EXISTS CURBRAMP_NOTES"];
     
     if (dropExistingTables)
         SQLOK(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), _database);
 //create intersection table
-    NSString *query =
+    NSString *cmd =
     [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS VERSION (vid INTEGER PRIMARY KEY,VersionID CHAR(6));\
  INSERT INTO VERSION VALUES(1,'%s');\
  CREATE TABLE IF NOT EXISTS Intersections (\
  intID INTEGER PRIMARY KEY,\
  lastUpdateTime INTEGER,\
  status INTEGER,\
- assignedTo INTEGER,\
+ assignedToPrelim INTEGER,\
+ assignedToDetail INTEGER,\
  intX INTEGER,\
  intY INTEGER,\
  rotation INTEGER,\
@@ -295,9 +275,9 @@ static CurbRampData *_statdatabase = nil;
  zoomLevel INTEGER);\
  CREATE VIRTUAL TABLE IF NOT EXISTS Intersections_index USING rtree(id,minX, maxX, minY, maxY);",CURRENT_INTERSECTION_VERSION];
     
-    rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
+    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
 //create ramp table
-    query = [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Ramps (\
+    cmd = [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Ramps (\
  intID INT,\
  rampNum INT,\
  rampID CHAR(16),\
@@ -351,28 +331,32 @@ static CurbRampData *_statdatabase = nil;
  rampComment CHAR(256),\
  PRIMARY KEY (intID,rampNum ASC));"];
    
-    rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
-    query = [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Updates (\
-             iPadID INT,\
-             lastUpdateFileNum INT);"];
-    rtn = !SQLOK(sqlite3_exec(_database, query.UTF8String, NULL, NULL, NULL), _database);
+    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_UPDATES ('iPad' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
+    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'intID' INT,'rampNum' INT, 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL)";
+    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_NOTES ('intID' INTEGER PRIMARY KEY,'rampID' INT,'type' INT, 'note' CHAR(4096))";
+    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_STANDARD_NOTES ('noteID' INTEGER PRIMARY KEY,'type' INT,'note' CHAR(4096))";
+    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+
     [self commitTransaction];
     [self close:opened];
     return rtn;
     
 }
 
-
 - (NSString*) outputDataFile:(int)fileNum
 {
     NSString* file = [NSString stringWithFormat:@"%@/%i.sql",
-                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],fileNum];
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],fileNum];
     return file;
 }
 - (NSString*) outputPictFile:(int)fileNum
 {
-    NSString* file = [NSString stringWithFormat:@"%@/%i.jpg",
-                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],fileNum];
+    NSString* file = [NSString stringWithFormat:@"%@/%i_%i.jpg",
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],CRAPI.sharedInstance.currentiPadWithinManager,fileNum];
     return file;
 }
 
@@ -380,9 +364,8 @@ static CurbRampData *_statdatabase = nil;
 - (int) getLastDataUpdateNumber
 {
     int lastNum  = 1;
-    [self createNextUpdateTable];
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate FROM ALLEYWALL_UPDATES WHERE id=1"];
+    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate FROM CURBRAMP_UPDATES WHERE id=1"];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
@@ -402,7 +385,7 @@ static CurbRampData *_statdatabase = nil;
 - (BOOL) setLastDataUpdateNum:(int)lastNum
 {
     BOOL opened = [self open];
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastDataUpdate = %i WHERE id=1",lastNum];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastDataUpdate = %i WHERE id=1",lastNum];
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
                    sendToServer:NO];
     [self close:opened];
@@ -412,7 +395,7 @@ static CurbRampData *_statdatabase = nil;
 - (BOOL) setLastPictUpdateNum:(int)nextNum
 {
     BOOL opened = [self open];
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastDataUpdate = %i WHERE id=1",nextNum];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastDataUpdate = %i WHERE id=1",nextNum];
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
                    sendToServer:NO];
     [self close:opened];
@@ -422,9 +405,8 @@ static CurbRampData *_statdatabase = nil;
 - (int) getLastPictUpdateNumber
 {
     int LastNum  = 1;
-    [self createNextUpdateTable];
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM ALLEYWALL_UPDATES WHERE id=1"];
+    NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM CURBRAMP_UPDATES WHERE id=1"];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
@@ -435,15 +417,6 @@ static CurbRampData *_statdatabase = nil;
     SQLOK(sqlite3_finalize(statement), _database);
     [self close:opened];
     return LastNum;
-}
-
-- (BOOL)createNextUpdateTable
-{
-    BOOL rtn = TRUE;
-    NSString * cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_UPDATES ('id' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
-    rtn = [self executeCmd:(char *)cmd.UTF8String
-              sendToServer:NO];
-    return rtn;
 }
 
 - (int) incrementLastDataFileNum
@@ -475,28 +448,41 @@ static CurbRampData *_statdatabase = nil;
     }
     return lastNum;
 }
-- (BOOL)createPictureDatabase
-{
-    BOOL rtn = TRUE;
-    NSString * cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_PICTURES ('id' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
-    rtn = [self executeCmd:(char *)cmd.UTF8String
-              sendToServer:NO];
-    return rtn;
-}
-
 - (BOOL) savePictureData:(int)pictNum
-                   intID:(int)wallID
+                   intID:(int)intID
                  rampNum:(int)ramp
                     type:(int)type
                   latLon:(LLPOINT)ll
                  heading:(int)heading
 {
-    CurbRampData *awd = CurbRampData.new;
-    [awd createPictureDatabase];
+    BOOL opened = [self open];
     int iTime = NSDate.timeIntervalSinceReferenceDate;
+    uint pictID = [self getNextPictID];
     
-    return YES;
+    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_PICTURES VALUES(\
+                     %i,%i,%i,%i,%i,%i,%i,%f,%f);",pictID,CRAPI.sharedInstance.currentiPadWithinManager,pictNum,intID,ramp,type,heading,ll.lat,ll.lon];
+    BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                   sendToServer:YES];
+    [self close:opened];
+    return rtn;
     
 }
-
+- (uint) getNextPictID
+{
+    uint nextID = 1;
+    NSString *query = [NSString stringWithFormat:@"SELECT max(id) FROM CURBRAMP_PICTURES"];
+    BOOL opened = [self open];
+    
+    sqlite3_stmt *statement = NULL;
+    
+    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        nextID = sqlite3_column_int(statement, 0);
+    }
+    nextID = [CRAPI.sharedInstance adjustNextRefno:nextID];
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
+    return nextID;
+}
 @end

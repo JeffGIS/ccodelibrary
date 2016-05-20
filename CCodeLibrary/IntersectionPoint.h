@@ -17,7 +17,8 @@ typedef NS_ENUM(NSInteger, IntersectionStatus)
 @interface IntersectionPoint : NSObject
 
 @property int intID;
-@property short assignedTo;
+@property short assignedToPrelim;
+@property short assignedToDetail;
 @property IntersectionStatus status;
 @property int nramps;
 @property double latitude;

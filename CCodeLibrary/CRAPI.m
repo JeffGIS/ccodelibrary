@@ -25,7 +25,7 @@
         _allowedZooms[0] = 21;
         _allowedZooms[1] = 20;
         _allowedZooms[2] = 19;
-        _maxDevices = 32;
+        _maxDevices = 100;
         _controlledInterface = NO;
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.png", _documentsDirectory];
@@ -646,6 +646,7 @@
     
     _currentManageriPad = c.managerNumber;
     _currentiPadWithinManager = c.withinManager;
+    _deviceNumber = _currentiPadWithinManager;
     _totiPadWithinManager = c.totWithinManager;
     
     NSString *key = [NSString stringWithFormat:@"ManagerForGeoid:%i",self.currentGeoid ];

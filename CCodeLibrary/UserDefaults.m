@@ -813,7 +813,7 @@ static UserDefaults *_defaults;
 
 - (NSArray *)mapTypes
 {
-    return @[@"Completion Status", @"Ramp Issues", @"Data Quality"];
+    return @[@"Prelim Completion Status",@"Detail Completion Status", @"Ramp Issues", @"Data Quality"];
 }
 
 UIImage *grayscaleImage(UIImage *image)
