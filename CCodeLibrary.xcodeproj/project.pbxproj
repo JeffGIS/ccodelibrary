@@ -224,6 +224,7 @@
 		BB6777981C95C13200A2D508 /* CensusData.m in Sources */ = {isa = PBXBuildFile; fileRef = BB6777971C95C13200A2D508 /* CensusData.m */; };
 		BBE299521CBD1D6C0045B3DC /* CityOrOrganizationData.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */; };
 		BBE299531CBD30BB0045B3DC /* CityOrOrganizationData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */; };
+		BBF21A2D1CEFA36600F92186 /* NVPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = BBF21A2C1CEFA36600F92186 /* NVPhotoView.m */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
 		EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C21219ED378400F0688B /* FTPDataPush.m */; };
 		EB0E4FE71C60D21700849766 /* HotSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0E4FE61C60D21700849766 /* HotSpot.m */; };
@@ -665,6 +666,8 @@
 		BB6777971C95C13200A2D508 /* CensusData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CensusData.m; path = ../CensusData.m; sourceTree = "<group>"; };
 		BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityOrOrganizationData.h; sourceTree = "<group>"; };
 		BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityOrOrganizationData.m; sourceTree = "<group>"; };
+		BBF21A2B1CEFA36600F92186 /* NVPhotoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPhotoView.h; sourceTree = "<group>"; };
+		BBF21A2C1CEFA36600F92186 /* NVPhotoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPhotoView.m; sourceTree = "<group>"; };
 		EB05C20E19EA999F00F0688B /* ElementOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementOverlayView.h; sourceTree = "<group>"; };
 		EB05C20F19EA999F00F0688B /* ElementOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElementOverlayView.m; sourceTree = "<group>"; };
 		EB05C21119ED378400F0688B /* FTPDataPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDataPush.h; sourceTree = "<group>"; };
@@ -1059,6 +1062,8 @@
 				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 				698F987A1C10B96B009F2F01 /* YTPlayerView.h */,
 				698F987B1C10B96B009F2F01 /* YTPlayerView.m */,
+				BBF21A2B1CEFA36600F92186 /* NVPhotoView.h */,
+				BBF21A2C1CEFA36600F92186 /* NVPhotoView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1488,6 +1493,7 @@
 				699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBC01D0A1BED1C8C0004C751 /* annuab.c in Sources */,
+				BBF21A2D1CEFA36600F92186 /* NVPhotoView.m in Sources */,
 				697B37711B94B7D60066978B /* NVTextDrawing.m in Sources */,
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
 				EBC01D2C1BED1C8C0004C751 /* tdb.c in Sources */,
