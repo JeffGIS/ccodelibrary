@@ -1150,14 +1150,14 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
 - (BOOL)assignIntersection:(int)intID
                         to:(int)user
+                      type:(NSString *)type
 {
     BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
-    
     [self open];
     
-    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo=%i WHERE intID=%i",
-                       iTime, user, intID];
+    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo%@=%i WHERE intID=%i",
+                       iTime, type, user, intID];
     
     rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL);
     return !rtn;

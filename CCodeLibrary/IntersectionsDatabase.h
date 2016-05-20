@@ -67,14 +67,20 @@
                 forIntersection:(int)intID;
 
 - (BOOL)assignIntersection:(int)intID
-                        to:(int)user;
+                        to:(int)user
+                      type:(NSString *)type;
 
 - (BOOL)assignIntersectionsFrom:(int)intID
                              to:(int)endID
-                         toUser:(int)user;
+                         toUser:(int)user
+                           type:(NSString *)type;
 
-- (BOOL)assignAllIntersectionTo:(int)user;
-- (BOOL)assignRemainingIntersectionsTo:(int)user;
+
+- (BOOL)assignAllIntersectionTo:(int)user
+                           type:(NSString *)type;
+;
+- (BOOL)assignRemainingIntersectionsTo:(int)user
+                                  type:(NSString *)type;
 
 - (NSArray *)getAssignments;
 
