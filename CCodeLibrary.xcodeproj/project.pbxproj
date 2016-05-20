@@ -63,6 +63,8 @@
 		6998225F1C690A38003476DD /* NVDocumentManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6998225C1C6904E4003476DD /* NVDocumentManager.h */; };
 		69987CF71C94683F000EC26F /* UIView+Constraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 69987CF61C94683F000EC26F /* UIView+Constraints.m */; };
 		69987CF81C946890000EC26F /* UIView+Constraints.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69987CF51C94683F000EC26F /* UIView+Constraints.h */; };
+		699AE9001CEFB1A400A9EBF2 /* NVPhotoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 699AE8FF1CEFB1A400A9EBF2 /* NVPhotoController.m */; };
+		699AE9011CEFB46700A9EBF2 /* NVPhotoController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 699AE8FE1CEFB1A400A9EBF2 /* NVPhotoController.h */; };
 		699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */ = {isa = PBXBuildFile; fileRef = 699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */; };
 		699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */; };
 		699DD7391CEA057600C7A651 /* NVSynchronizeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 699DD7381CEA057600C7A651 /* NVSynchronizeVC.m */; };
@@ -224,7 +226,6 @@
 		BB6777981C95C13200A2D508 /* CensusData.m in Sources */ = {isa = PBXBuildFile; fileRef = BB6777971C95C13200A2D508 /* CensusData.m */; };
 		BBE299521CBD1D6C0045B3DC /* CityOrOrganizationData.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */; };
 		BBE299531CBD30BB0045B3DC /* CityOrOrganizationData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */; };
-		BBF21A2D1CEFA36600F92186 /* NVPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = BBF21A2C1CEFA36600F92186 /* NVPhotoView.m */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
 		EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C21219ED378400F0688B /* FTPDataPush.m */; };
 		EB0E4FE71C60D21700849766 /* HotSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0E4FE61C60D21700849766 /* HotSpot.m */; };
@@ -336,6 +337,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				699AE9011CEFB46700A9EBF2 /* NVPhotoController.h in CopyFiles */,
 				699DD73A1CEA091000C7A651 /* NVSynchronizeVC.h in CopyFiles */,
 				1F5150A51CE3A3B400BA4A5E /* SQLiteLib.h in CopyFiles */,
 				1F5150A41CE396FE00BA4A5E /* AlleyWallData.h in CopyFiles */,
@@ -530,6 +532,8 @@
 		6998225D1C6904E4003476DD /* NVDocumentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDocumentManager.m; sourceTree = "<group>"; };
 		69987CF51C94683F000EC26F /* UIView+Constraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Constraints.h"; sourceTree = "<group>"; };
 		69987CF61C94683F000EC26F /* UIView+Constraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Constraints.m"; sourceTree = "<group>"; };
+		699AE8FE1CEFB1A400A9EBF2 /* NVPhotoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPhotoController.h; sourceTree = "<group>"; };
+		699AE8FF1CEFB1A400A9EBF2 /* NVPhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPhotoController.m; sourceTree = "<group>"; };
 		699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PolylineCompression.c; sourceTree = "<group>"; };
 		699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineCompression.h; sourceTree = "<group>"; };
 		699DD7371CEA057600C7A651 /* NVSynchronizeVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSynchronizeVC.h; sourceTree = "<group>"; };
@@ -666,8 +670,6 @@
 		BB6777971C95C13200A2D508 /* CensusData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CensusData.m; path = ../CensusData.m; sourceTree = "<group>"; };
 		BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityOrOrganizationData.h; sourceTree = "<group>"; };
 		BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityOrOrganizationData.m; sourceTree = "<group>"; };
-		BBF21A2B1CEFA36600F92186 /* NVPhotoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPhotoView.h; sourceTree = "<group>"; };
-		BBF21A2C1CEFA36600F92186 /* NVPhotoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPhotoView.m; sourceTree = "<group>"; };
 		EB05C20E19EA999F00F0688B /* ElementOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementOverlayView.h; sourceTree = "<group>"; };
 		EB05C20F19EA999F00F0688B /* ElementOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElementOverlayView.m; sourceTree = "<group>"; };
 		EB05C21119ED378400F0688B /* FTPDataPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDataPush.h; sourceTree = "<group>"; };
@@ -1062,8 +1064,8 @@
 				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 				698F987A1C10B96B009F2F01 /* YTPlayerView.h */,
 				698F987B1C10B96B009F2F01 /* YTPlayerView.m */,
-				BBF21A2B1CEFA36600F92186 /* NVPhotoView.h */,
-				BBF21A2C1CEFA36600F92186 /* NVPhotoView.m */,
+				699AE8FE1CEFB1A400A9EBF2 /* NVPhotoController.h */,
+				699AE8FF1CEFB1A400A9EBF2 /* NVPhotoController.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1438,6 +1440,7 @@
 				EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */,
 				EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */,
 				A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */,
+				699AE9001CEFB1A400A9EBF2 /* NVPhotoController.m in Sources */,
 				A9E2130E1AFE4BFC005ECBBA /* NVImagePickerController.m in Sources */,
 				EBC01D2F1BED1C8C0004C751 /* vearth.c in Sources */,
 				EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */,
@@ -1493,7 +1496,6 @@
 				699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBC01D0A1BED1C8C0004C751 /* annuab.c in Sources */,
-				BBF21A2D1CEFA36600F92186 /* NVPhotoView.m in Sources */,
 				697B37711B94B7D60066978B /* NVTextDrawing.m in Sources */,
 				EBA2E48919952BCA0085B2E0 /* MathUtil.c in Sources */,
 				EBC01D2C1BED1C8C0004C751 /* tdb.c in Sources */,
