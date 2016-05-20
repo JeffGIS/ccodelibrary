@@ -811,9 +811,14 @@ static UserDefaults *_defaults;
     }
 }
 
-- (NSArray *)mapTypes
+- (NSArray *)mapStatusOptions
 {
-    return @[@"Prelim Completion Status",@"Detail Completion Status", @"Ramp Issues", @"Data Quality"];
+    return @[@"Prelim Completion Status", @"Detail Completion Status", @"Ramp Issues", @"Data Quality"];
+}
+
+- (NSArray *)mapAssignOptions
+{
+    return @[@"Assign Prelim Intersections", @"Assign Detail Intersections"];
 }
 
 UIImage *grayscaleImage(UIImage *image)

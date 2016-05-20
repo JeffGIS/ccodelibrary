@@ -108,7 +108,8 @@
 - (UIImage *)imageWithColor:(UIColor *)color
                    andFrame:(CGRect)frame;
 
-- (NSArray *)mapTypes;
+- (NSArray *)mapAssignOptions;
+- (NSArray *)mapStatusOptions;
 
 UIImage *grayscaleImage(UIImage *image);
 

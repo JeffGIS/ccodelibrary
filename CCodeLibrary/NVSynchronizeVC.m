@@ -656,6 +656,7 @@ didReceiveMessage:(NSString *)message
 
 - (void)returnButtonTapped:(UIButton *)button
 {
+    CRAPI.sharedInstance.refreshMap = YES;
     [_delegate synchronizeControllerDidReturn:self];
 }
 
