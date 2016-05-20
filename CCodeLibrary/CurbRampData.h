@@ -38,8 +38,9 @@
 
 + (BOOL) setLastDataUpdateNum:(int)nextNum;
 + (int)  getLastDataUpdateNum;
-+ (BOOL) setLastPictUpdateNum:(int)nextNum;
-- (int) getLastPictUpdateNumber;
+- (BOOL) setLastPictUpdateNum:(int)lastNum
+                      foriPad:(int)iPad;
+- (int) getLastPictUpdateNumber:(int)iPad;
 - (NSString*) outputPictFile:(int)fileNum;
 - (int) incrementLastDataFileNum;
 + (int) incrementLastDataFileNumber;
