@@ -149,7 +149,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
                  ramp:(int)r
                  from:(sqlite3_stmt *)statement
 {
-    int icol = (7 + (r - 1));
+    int icol = (8 + (r - 1));
     int icoord = sqlite3_column_int(statement, icol);
     
     short offsetx = LOWORD(icoord);
@@ -654,14 +654,14 @@ WHERE intID=%i;",
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         mpint.intID = intID;
-        mpint.lev21x = sqlite3_column_int(statement, 4);
-        mpint.lev21y = sqlite3_column_int(statement, 5);
-        mpint.intRotation = sqlite3_column_int(statement, 6);
+        mpint.lev21x = sqlite3_column_int(statement, 5);
+        mpint.lev21y = sqlite3_column_int(statement, 6);
+        mpint.intRotation = sqlite3_column_int(statement, 7);
         PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
         mpint.lat = lat;
         mpint.lon = lon;
         //int nStreets = sqlite3_column_int(statement, 27);
-        LPSTR streets = (LPSTR)sqlite3_column_text(statement, 28);
+        LPSTR streets = (LPSTR)sqlite3_column_text(statement, 29);
         NSString *streetString = [NSString stringWithUTF8String:streets];
         mpint.name1 = [streetString stringByReplacingOccurrencesOfString:@"|" withString:@"\n"];
         [self setRampCoord:mpint ramp:1 from:statement];

@@ -28,22 +28,27 @@ static CurbRampData *_statdatabase = nil;
     
     return _statdatabase;
 }
+- (void) setDBFile:(int)geoid
+            create:(BOOL)create
+{
+    _documentsDirectory = UserDefaults.defaults.sharedFilePath;
+    _fileName = @"CurbRamps.sqlite";
+    _path = [self databasePath:geoid];
+    if (!_fileSize || create)
+        [self createIntersectionsTable:YES];
+}
+
 - (id)init
 {
     self = [super init];
+    [self setDBFile:CRAPI.sharedInstance.currentGeoid create:NO];
     return self;
 }
 - (id)initWithGeoid:(int)geoid
              create:(BOOL)create
 {
     if ((self = [super init]))
-    {
-        _documentsDirectory = UserDefaults.defaults.sharedFilePath;
-        _fileName = @"CurbRamps.sqlite";
-        _path = [self databasePath:geoid];
-        if (!_fileSize || create)
-            [self createIntersectionsTable:YES];
-    }
+        [self setDBFile:geoid create:create];
     
     return self;
 }
@@ -133,12 +138,12 @@ static CurbRampData *_statdatabase = nil;
     //return -1;
     return rtn;
 }
-- (NSString*) getSendToServerFile
+- (NSString*) getSendToServerFile:(int)iPad
 {
-    int currentFileNum = [self getLastDataUpdateNumber];
+    int currentFileNum = [self getLastDataUpdateNumber:iPad];
     
-    NSString * file = [NSString stringWithFormat:@"%@/%i.sql",
-                         [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],currentFileNum];
+    NSString * file = [NSString stringWithFormat:@"%@/%i_%i.sql",
+                         [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],iPad,currentFileNum];
     return file;
 }
 
@@ -150,7 +155,7 @@ static CurbRampData *_statdatabase = nil;
     if (rtn && sendToServer)
     {
         int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
-        NSString * sendToServerFile = [self getSendToServerFile];
+        NSString * sendToServerFile = [self getSendToServerFile:iPad];
         int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:sendToServerFile
                                                                               error:nil].fileSize;
         if (!fileSize)
@@ -361,11 +366,11 @@ static CurbRampData *_statdatabase = nil;
 }
 
 
-- (int) getLastDataUpdateNumber
+- (int) getLastDataUpdateNumber:(int)iPad
 {
     int lastNum  = 1;
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate FROM CURBRAMP_UPDATES WHERE id=1"];
+    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
@@ -377,36 +382,33 @@ static CurbRampData *_statdatabase = nil;
     [self close:opened];
     return lastNum;
 }
-+ (int) getLastDataUpdateNum
-{
-    CurbRampData *awd = CurbRampData.new;
-    return [awd getLastDataUpdateNumber];
-}
 - (BOOL) setLastDataUpdateNum:(int)lastNum
+                      foriPad:(int)iPad
 {
     BOOL opened = [self open];
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastDataUpdate = %i WHERE id=1",lastNum];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastDataUpdate = %i WHERE iPad=%i",lastNum,iPad];
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
                    sendToServer:NO];
     [self close:opened];
     return rtn;
 }
 
-- (BOOL) setLastPictUpdateNum:(int)nextNum
+- (BOOL) setLastPictUpdateNum:(int)lastNum
+                      foriPad:(int)iPad
 {
     BOOL opened = [self open];
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastDataUpdate = %i WHERE id=1",nextNum];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastPictUpdate = %i WHERE iPad=%i",lastNum,iPad];
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
                    sendToServer:NO];
     [self close:opened];
     return rtn;
 }
 
-- (int) getLastPictUpdateNumber
+- (int) getLastPictUpdateNumber:(int)iPad
 {
-    int LastNum  = 1;
+    int LastNum  = 0;
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM CURBRAMP_UPDATES WHERE id=1"];
+    NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
@@ -421,10 +423,11 @@ static CurbRampData *_statdatabase = nil;
 
 - (int) incrementLastDataFileNum
 {
-    int lastNum = [self getLastDataUpdateNumber];
+    int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
+    int lastNum = [self getLastDataUpdateNumber:iPad];
     if ([NSFileManager.defaultManager fileExistsAtPath:[self outputDataFile:lastNum]])
     {
-        [self setLastDataUpdateNum:++lastNum];
+        [self setLastDataUpdateNum:++lastNum foriPad:iPad];
     }
     return lastNum;
 }
@@ -440,11 +443,11 @@ static CurbRampData *_statdatabase = nil;
 }
 - (int) incrementLastPictFileNum
 {
-    CurbRampData *awd = CurbRampData.new;
-    int lastNum = [awd getLastPictUpdateNumber];
-    if ([NSFileManager.defaultManager fileExistsAtPath:[awd outputPictFile:lastNum]])
+    int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
+    int lastNum = [self getLastPictUpdateNumber:iPad];
+    if ([NSFileManager.defaultManager fileExistsAtPath:[self outputPictFile:lastNum]])
     {
-        [awd setLastPictUpdateNum:++lastNum];
+        [self setLastPictUpdateNum:++lastNum foriPad:iPad];
     }
     return lastNum;
 }
@@ -459,8 +462,8 @@ static CurbRampData *_statdatabase = nil;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     uint pictID = [self getNextPictID];
     
-    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_PICTURES VALUES(\
-                     %i,%i,%i,%i,%i,%i,%i,%f,%f);",pictID,CRAPI.sharedInstance.currentiPadWithinManager,pictNum,intID,ramp,type,heading,ll.lat,ll.lon];
+    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_PICTURES VALUES(%i,%i,%i,%i,%i,%i,%i,%f,%f);",
+                     pictID,CRAPI.sharedInstance.currentiPadWithinManager,pictNum,intID,ramp,type,heading,ll.lat,ll.lon];
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
                    sendToServer:YES];
     [self close:opened];
