@@ -165,7 +165,6 @@
 		A99C891A1AEDE08700A0856F /* colorsByName.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */; };
 		A99C891E1AEDE0A300A0856F /* Colors.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9C525CE1A3B59880056711F /* Colors.h */; };
 		A99C891F1AEDE0AD00A0856F /* ElementOverlayView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB05C20E19EA999F00F0688B /* ElementOverlayView.h */; };
-		A99C89201AEDE0B400A0856F /* GSSiAlertController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D952B01A96D484008B9156 /* GSSiAlertController.h */; };
 		A99C89211AEDE0BC00A0856F /* GSSiBumpDetector.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A92382AB1AD986010027659B /* GSSiBumpDetector.h */; };
 		A99C89221AEDE0C500A0856F /* GSSiNotesView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9ADCB1C1ACD0870000E5C00 /* GSSiNotesView.h */; };
 		A99C89231AEDE0CC00A0856F /* GSSiDatePicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99050861ACB942F00C6AAAF /* GSSiDatePicker.h */; };
@@ -213,7 +212,6 @@
 		A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D3A06B1AF539E600E0D834 /* NVSliderController.m */; };
 		A9D3A06D1AF53A4700E0D834 /* NVSliderController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D3A06A1AF539E600E0D834 /* NVSliderController.h */; };
 		A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */; };
-		A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D952B11A96D484008B9156 /* GSSiAlertController.m */; };
 		A9DDC08A1B613EF4000DEEA9 /* FTPDirectoryList.m in Sources */ = {isa = PBXBuildFile; fileRef = A9DDC0891B613EF4000DEEA9 /* FTPDirectoryList.m */; };
 		A9DDC08B1B6153FD000DEEA9 /* FTPDirectoryList.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9DDC0881B613EF4000DEEA9 /* FTPDirectoryList.h */; };
 		A9E2130E1AFE4BFC005ECBBA /* NVImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E2130D1AFE4BFC005ECBBA /* NVImagePickerController.m */; };
@@ -433,7 +431,6 @@
 				A99C89231AEDE0CC00A0856F /* GSSiDatePicker.h in CopyFiles */,
 				A99C89221AEDE0C500A0856F /* GSSiNotesView.h in CopyFiles */,
 				A99C89211AEDE0BC00A0856F /* GSSiBumpDetector.h in CopyFiles */,
-				A99C89201AEDE0B400A0856F /* GSSiAlertController.h in CopyFiles */,
 				A99C891F1AEDE0AD00A0856F /* ElementOverlayView.h in CopyFiles */,
 				A99C891E1AEDE0A300A0856F /* Colors.h in CopyFiles */,
 				A99C891A1AEDE08700A0856F /* colorsByName.h in CopyFiles */,
@@ -654,8 +651,6 @@
 		A9D3A06B1AF539E600E0D834 /* NVSliderController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSliderController.m; sourceTree = "<group>"; };
 		A9D5A8AE1A0D0A7A00314E8B /* GSSiSlopeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiSlopeViewController.h; sourceTree = "<group>"; };
 		A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiSlopeViewController.m; sourceTree = "<group>"; };
-		A9D952B01A96D484008B9156 /* GSSiAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiAlertController.h; sourceTree = "<group>"; };
-		A9D952B11A96D484008B9156 /* GSSiAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiAlertController.m; sourceTree = "<group>"; };
 		A9DDC0881B613EF4000DEEA9 /* FTPDirectoryList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPDirectoryList.h; sourceTree = "<group>"; };
 		A9DDC0891B613EF4000DEEA9 /* FTPDirectoryList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPDirectoryList.m; sourceTree = "<group>"; };
 		A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVImagePickerController.h; sourceTree = "<group>"; };
@@ -956,8 +951,6 @@
 				EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */,
 				EB05C20E19EA999F00F0688B /* ElementOverlayView.h */,
 				EB05C20F19EA999F00F0688B /* ElementOverlayView.m */,
-				A9D952B01A96D484008B9156 /* GSSiAlertController.h */,
-				A9D952B11A96D484008B9156 /* GSSiAlertController.m */,
 				A92382AB1AD986010027659B /* GSSiBumpDetector.h */,
 				A92382AC1AD986010027659B /* GSSiBumpDetector.m */,
 				A99050861ACB942F00C6AAAF /* GSSiDatePicker.h */,
@@ -1427,7 +1420,6 @@
 				EBC01D1E1BED1C8C0004C751 /* mer404.c in Sources */,
 				6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */,
 				6943041F1C3351E20077EC9F /* NVColor.m in Sources */,
-				A9D952B21A96D484008B9156 /* GSSiAlertController.m in Sources */,
 				69987CF71C94683F000EC26F /* UIView+Constraints.m in Sources */,
 				EBC01D191BED1C8C0004C751 /* kepler.c in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,
