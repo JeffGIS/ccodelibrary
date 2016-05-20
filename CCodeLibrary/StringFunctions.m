@@ -344,6 +344,7 @@ NSString *textAfterClosingParentheses(NSString *string)
 
 NSString *textInsideParentheses(NSString *string)
 {
+    
     if (!string)
         return nil;
     
