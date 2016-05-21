@@ -5,6 +5,13 @@
 
 @interface GSSiEnums : NSObject
 
+typedef NS_ENUM(NSInteger, NVNoteType)
+{
+    NoteTypeNoType,
+    NoteTypeCurbRampIntersectionNote,
+    NoteTypeCurbRampCornerNote,
+};
+
 typedef NS_ENUM(NSInteger, MMLMFrom)
 {
     MMLMFromDefault,

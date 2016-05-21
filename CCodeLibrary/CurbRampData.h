@@ -53,4 +53,17 @@
                   latLon:(LLPOINT)ll
                  heading:(int)heading;
 
+- (NSString *) getNote:(int)intID
+                corner:(int)corner
+                  ramp:(int)ramp
+                  type:(int)type;
+- (BOOL) addNote:(NSString *)note
+    intersection:(int)intID
+          corner:(int)corner
+            ramp:(int)ramp
+            type:(int)type;
+- (NSMutableArray*) loadStandardText:(int)type;
+- (BOOL) addStandardText:(NSString*)text
+                    type:(int)type;
+
 @end

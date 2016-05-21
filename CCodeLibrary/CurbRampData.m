@@ -343,15 +343,119 @@ static int nInit=0;
     rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'intID' INT,'rampNum' INT, 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL)";
     rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
-    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_NOTES ('intID' INTEGER PRIMARY KEY,'rampID' INT,'type' INT, 'note' CHAR(4096))";
+    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_NOTES ('id' INTEGER PRIMARY KEY,'intID' INT,'corner' INT,'rampID' INT,'type' INT, 'note' CHAR(4096))";
     rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
-    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_STANDARD_NOTES ('noteID' INTEGER PRIMARY KEY,'type' INT,'note' CHAR(4096))";
+    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_STANDARD_TEXT ('textID' INTEGER PRIMARY KEY,'type' INT,'text' CHAR(4096))";
     rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
 
     [self commitTransaction];
     [self close:opened];
     return rtn;
     
+}
+
+- (NSString *) getNote:(int)intID
+                corner:(int)corner
+                  ramp:(int)ramp
+                  type:(int)type
+{
+    NSString * note = [NSString new];
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT text FROM CURBRAMP_NOTES WHERE intID = %i AND corner = %i AND rampID = %i AND type=%i",intID,corner,ramp,type];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        LPSTR text = (LPSTR)sqlite3_column_text(statement, 0);
+        note = [NSString stringWithUTF8String:text];
+    }
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
+    
+    return note;
+}
+- (BOOL) addNote:(NSString *)note
+    intersection:(int)intID
+          corner:(int)corner
+            ramp:(int)ramp
+            type:(int)type
+{
+    BOOL rtn;
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT id,text FROM CURBRAMP_NOTES WHERE intID = %i AND corner = %i AND rampID = %i AND type=%i",intID,corner,ramp,type];
+    sqlite3_stmt *statement;
+    int noteid = -1;
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        noteid = (LPSTR)sqlite3_column_int(statement, 0);
+        LPSTR text = (LPSTR)sqlite3_column_text(statement, 1);
+        if (!strcmp (text,note.UTF8String))
+            noteid = -2;
+    }
+    SQLOK(sqlite3_finalize(statement), _database);
+    if (noteid == -1)
+        noteid = [self getNextNoteID];
+    if (noteid > -1)
+    {
+        query = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_NOTES VALUES(%i,%i,%i,%i,%i,'%@');",noteid,intID,corner,ramp,type,note];
+        rtn = [self executeCmd:(LPSTR)query.UTF8String
+                       sendToServer:YES];
+
+    }
+    [self close:opened];
+    
+    return rtn;
+}
+
+- (NSMutableArray*) loadStandardText:(int)type
+{
+    NSMutableArray * standardTextArray = [[NSMutableArray alloc] init];
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT text FROM CURBRAMP_STANDARD_TEXT WHERE type=%i",type];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        LPSTR text = (LPSTR)sqlite3_column_text(statement, 0);
+        NSString * str = [NSString stringWithUTF8String:text];
+        [standardTextArray addObject:str];
+    }
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
+    return standardTextArray;
+}
+
+- (BOOL) addStandardText:(NSString*)newText
+                    type:(int)newType
+{
+    BOOL rtn = TRUE;
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM CURBRAMP_STANDARD_TEXT"];
+    sqlite3_stmt *statement;
+    int maxID = 0;
+    
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int textID = sqlite3_column_int(statement, 0);
+        int type = sqlite3_column_int(statement, 1);
+        LPSTR text = (LPSTR)sqlite3_column_text(statement, 2);
+        if (type == newType && !strcasecmp(text, newText.UTF8String))
+            rtn = FALSE;
+        maxID = max (maxID,textID);
+    }
+    SQLOK(sqlite3_finalize(statement), _database);
+    if (rtn)
+    {
+        query = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_STANDARD_TEXT VALUES(%i,%i,'%@');",maxID+1,newType,newText];
+        [self executeCmd:(LPSTR)query.UTF8String
+            sendToServer:YES];
+    }
+    [self close:opened];
+    return rtn;
 }
 
 - (NSString*) outputDataFile:(int)fileNum
@@ -476,6 +580,24 @@ static int nInit=0;
 {
     uint nextID = 1;
     NSString *query = [NSString stringWithFormat:@"SELECT max(id) FROM CURBRAMP_PICTURES"];
+    BOOL opened = [self open];
+    
+    sqlite3_stmt *statement = NULL;
+    
+    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        nextID = sqlite3_column_int(statement, 0);
+    }
+    nextID = [CRAPI.sharedInstance adjustNextRefno:nextID];
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
+    return nextID;
+}
+- (uint) getNextNoteID
+{
+    uint nextID = 1;
+    NSString *query = [NSString stringWithFormat:@"SELECT max(id) FROM CURBRAMP_NOTES"];
     BOOL opened = [self open];
     
     sqlite3_stmt *statement = NULL;
