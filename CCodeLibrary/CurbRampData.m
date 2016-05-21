@@ -17,16 +17,14 @@ static int fileSequence = 0;
 
 @implementation CurbRampData
 
-static CurbRampData *_statdatabase = nil;
+static int nInit=0;
 
 + (CurbRampData *)databaseForGeoid:(int)geoid
                             create:(BOOL)create
 {
-    if (!_statdatabase || _statdatabase.geoid != geoid)
-        _statdatabase = [[CurbRampData alloc] initWithGeoid:geoid
+    CurbRampData *crd = [[CurbRampData alloc] initWithGeoid:geoid
                                                      create:create];
-    
-    return _statdatabase;
+    return crd;
 }
 - (void) setDBFile:(int)geoid
             create:(BOOL)create
@@ -42,6 +40,7 @@ static CurbRampData *_statdatabase = nil;
 {
     self = [super init];
     [self setDBFile:CRAPI.sharedInstance.currentGeoid create:NO];
+    nInit++;
     return self;
 }
 - (id)initWithGeoid:(int)geoid
@@ -50,6 +49,7 @@ static CurbRampData *_statdatabase = nil;
     if ((self = [super init]))
         [self setDBFile:geoid create:create];
     
+    nInit++;
     return self;
 }
 - (NSString *)databasePath:(int)geoid
@@ -74,6 +74,8 @@ static CurbRampData *_statdatabase = nil;
 
 - (void)dealloc
 {
+    nInit--;
+
     sqlite3_close(_database);
     NSLog(@"CurbRamp Database dealloc");
 }
@@ -82,7 +84,7 @@ static CurbRampData *_statdatabase = nil;
     BOOL rtn = FALSE;
     if (!_isOpen)
     {
-        self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"CurbRamp Database open");
         
         _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:_path
@@ -98,7 +100,7 @@ static CurbRampData *_statdatabase = nil;
     {
         SQLOK(sqlite3_close(_database),_database);
         NSLog(@"CurbRamp Database close");
-        self.isOpen = NO;
+        _isOpen = NO;
     }
 }
 

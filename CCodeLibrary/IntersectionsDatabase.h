@@ -31,7 +31,7 @@
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
-- (void)startTransaction;
+- (BOOL)startTransaction;
 - (void)commitTransaction;
 - (void)getUploadedIntersectionDatabase:(GSSiPopoverView *)popover;
 - (void)getPlaceIntersectionDatabase:(GSSiPopoverView *)popover;
