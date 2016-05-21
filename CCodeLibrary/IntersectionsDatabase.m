@@ -1263,12 +1263,12 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     return intpt;
 }
 
-- (NSArray *)getAssignments
+- (NSArray *)getAssignments:(NSString*)type
 {
     NSMutableArray *assignments = [[NSMutableArray alloc] init];
     
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedToPrelim, assignedToDetail FROM Intersections WHERE assignedTo != 0 ORDER BY assignedTo,intID ASC"];
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedToPrelim, assignedToDetail FROM Intersections WHERE assignedTo%@ != 0 ORDER BY assignedTo%@,intID ASC",type,type];
     sqlite3_stmt *statement = NULL;
     
     SQLOK(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), self.curbRampData.database);

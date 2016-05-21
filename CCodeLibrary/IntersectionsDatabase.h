@@ -82,7 +82,7 @@
 - (BOOL)assignRemainingIntersectionsTo:(int)user
                                   type:(NSString *)type;
 
-- (NSArray *)getAssignments;
+- (NSArray *)getAssignments:(NSString*)type;
 
 - (NSString *)intersectionTextPath:(int)type;
 - (int)getCountOfIntersections;

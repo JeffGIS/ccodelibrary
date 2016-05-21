@@ -12,6 +12,12 @@ typedef NS_ENUM(NSInteger, NVNoteType)
     NoteTypeCurbRampCornerNote,
 };
 
+typedef NS_ENUM(NSInteger, MMMapType)
+{
+    MMMapTypePrelim,
+    MMMapTypeDetail,
+};
+
 typedef NS_ENUM(NSInteger, MMLMFrom)
 {
     MMLMFromDefault,
