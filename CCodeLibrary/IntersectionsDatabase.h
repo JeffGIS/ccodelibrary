@@ -61,6 +61,7 @@
                                   withRamps:(BOOL)wantRamps;
 
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
+                                                      type:(NSString *)type
                                                 withStatus:(IntersectionStatus)status;
 
 - (BOOL)setIntersectionStatusTo:(IntersectionStatus)status
@@ -114,5 +115,6 @@
 - (void) setStreetNamesForIntersection:(int)intID
                                    to:(NSString*)newNames;
 - (void) deleteIntersection:(int)intID;
+- (int) incrementLastDataFileNum;
 
 @end

@@ -142,7 +142,9 @@ static int nInit=0;
 }
 - (NSString*) getSendToServerFile:(int)iPad
 {
-    int currentFileNum = [self getLastDataUpdateNumber:iPad];
+    int pictNum;
+    int currentFileNum = [self getLastDataUpdateNumber:iPad
+                          lastPictNum:&pictNum];
     
     NSString * file = [NSString stringWithFormat:@"%@/%i_%i.sql",
                          [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],iPad,currentFileNum];
@@ -460,8 +462,8 @@ static int nInit=0;
 
 - (NSString*) outputDataFile:(int)fileNum
 {
-    NSString* file = [NSString stringWithFormat:@"%@/%i.sql",
-                      [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],fileNum];
+    NSString* file = [NSString stringWithFormat:@"%@/%i_%i.sql",
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],CRAPI.sharedInstance.currentiPadWithinManager,fileNum];
     return file;
 }
 - (NSString*) outputPictFile:(int)fileNum
@@ -473,26 +475,31 @@ static int nInit=0;
 
 
 - (int) getLastDataUpdateNumber:(int)iPad
+                    lastPictNum:(int*)pictNum
 {
     int lastNum  = 1;
+    int lastPictNum = 1;
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
+    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate,LastPictUpdate FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         lastNum = sqlite3_column_int(statement, 0);
+        lastPictNum = sqlite3_column_int(statement, 1);
     }
     SQLOK(sqlite3_finalize(statement), _database);
     [self close:opened];
+    *pictNum = lastPictNum;
     return lastNum;
 }
 - (BOOL) setLastDataUpdateNum:(int)lastNum
+                      pictNum:(int)pictNum
                       foriPad:(int)iPad
 {
     BOOL opened = [self open];
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastDataUpdate = %i WHERE iPad=%i",lastNum,iPad];
+    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_UPDATES VALUES(%i,%i,%i);",iPad,lastNum,pictNum];
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
                    sendToServer:NO];
     [self close:opened];
@@ -529,11 +536,13 @@ static int nInit=0;
 
 - (int) incrementLastDataFileNum
 {
+    int pictNum;
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
-    int lastNum = [self getLastDataUpdateNumber:iPad];
+    int lastNum = [self getLastDataUpdateNumber:iPad
+                                    lastPictNum:&pictNum];
     if ([NSFileManager.defaultManager fileExistsAtPath:[self outputDataFile:lastNum]])
     {
-        [self setLastDataUpdateNum:++lastNum foriPad:iPad];
+        [self setLastDataUpdateNum:++lastNum pictNum:pictNum foriPad:iPad];
     }
     return lastNum;
 }

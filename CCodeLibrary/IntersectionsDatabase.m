@@ -489,6 +489,13 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     
     return rtn;
 }
+- (int) incrementLastDataFileNum
+{
+    BOOL opened = [self.curbRampData open];
+    int rtn = [self.curbRampData incrementLastDataFileNum];
+    [self.curbRampData close:opened];
+    return rtn;
+}
 
 - (BOOL)storeMPIntersectionToDB:(MPIntersection*)mpint
                      withStatus:(IntersectionStatus)status
@@ -1231,14 +1238,15 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 }
 
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
+                                                      type:(NSString *)type
                                                 withStatus:(IntersectionStatus)status
 {
     IntersectionPoint *intpt = nil;
     
     BOOL opened = [self open];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%i AND assignedTo=%i ORDER BY intID ASC",
-                       status, user];
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%i AND assignedTo%@=%i ORDER BY intID ASC",
+                       status, type, user];
     
     sqlite3_stmt *statement = NULL;
     
