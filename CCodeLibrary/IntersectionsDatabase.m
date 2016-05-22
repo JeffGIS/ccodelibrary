@@ -521,7 +521,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
 %i,%i,%i,%i,%i,%i,%i,%i,%i,'%@');",
                     (int)mpint.intID,
                     (int)ramp.rampNum,
-                    (int)rampID,
+                    rampID,
                     (int)ramp.timeComplete,
                     (int)ramp.rampExists,
                     (int)ramp.isComplete,

@@ -540,7 +540,9 @@ static int nInit=0;
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
-    if ([NSFileManager.defaultManager fileExistsAtPath:[self outputDataFile:lastNum]])
+    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum]
+                                                                          error:nil].fileSize;
+    if (_fileSize > 0)
     {
         [self setLastDataUpdateNum:++lastNum pictNum:pictNum foriPad:iPad];
     }
@@ -560,7 +562,9 @@ static int nInit=0;
 {
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastPictUpdateNumber:iPad];
-    if ([NSFileManager.defaultManager fileExistsAtPath:[self outputPictFile:lastNum]])
+    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum]
+                                                                              error:nil].fileSize;
+    if (_fileSize > 0)
     {
         [self setLastPictUpdateNum:++lastNum foriPad:iPad];
     }
