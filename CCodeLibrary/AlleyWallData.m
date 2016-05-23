@@ -884,15 +884,17 @@ SELECT max(_id) FROM MyTable*/
  );*/
 
 - (NSString*) outputDataFile:(int)fileNum
+                        iPad:(int)iPad
 {
-    NSString* file = [NSString stringWithFormat:@"%@/%i.sql",
-                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],fileNum];
+    NSString* file = [NSString stringWithFormat:@"%@/%i_%i.sql",
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],iPad,fileNum];
     return file;
 }
 - (NSString*) outputPictFile:(int)fileNum
+                        iPad:(int)iPad
 {
-    NSString* file = [NSString stringWithFormat:@"%@/%i.jpg",
-                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],fileNum];
+    NSString* file = [NSString stringWithFormat:@"%@/%i_%i.jpg",
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],iPad,fileNum];
     return file;
 }
 
@@ -919,32 +921,34 @@ SELECT max(_id) FROM MyTable*/
     AlleyWallData *awd = AlleyWallData.new;
     return [awd getLastDataUpdateNumber];
 }
-- (BOOL) setLastDataUpdateNum:(int)lastNum
-{
-    BOOL opened = [self open];
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastDataUpdate = %i WHERE id=1",lastNum];
-    BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-                  sendToServer:NO];
-    [self close:opened];
-    return rtn;
-}
 
-- (BOOL) setLastPictUpdateNum:(int)nextNum
+- (BOOL) setLastDataUpdateNum:(int)lastNum
+                      pictNum:(int)pictNum
+                      foriPad:(int)iPad
 {
     BOOL opened = [self open];
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastDataUpdate = %i WHERE id=1",nextNum];
+    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO ALLEYWALL_UPDATES VALUES(%i,%i,%i);",iPad,lastNum,pictNum];
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
                    sendToServer:NO];
     [self close:opened];
     return rtn;
 }
 
-- (int) getLastPictUpdateNumber
+- (BOOL) setLastPictUpdateNum:(int)lastNum
+                      foriPad:(int)iPad
 {
-    int LastNum  = 1;
-    [self createNextUpdateTable];
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM ALLEYWALL_UPDATES WHERE id=1"];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastPictUpdate = %i WHERE iPad=%i",lastNum,iPad];
+    BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                   sendToServer:NO];
+    [self close:opened];
+    return rtn;
+}
+- (int) getLastPictUpdateNumber:(int)iPad
+{
+    int LastNum  = 0;
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
@@ -957,6 +961,7 @@ SELECT max(_id) FROM MyTable*/
     return LastNum;
 }
 
+
 - (BOOL)createNextUpdateTable
 {
     BOOL rtn = TRUE;
@@ -966,16 +971,21 @@ SELECT max(_id) FROM MyTable*/
               sendToServer:NO];
     return rtn;
 }
-
 - (int) incrementLastDataFileNum
 {
-    int lastNum = [self getLastDataUpdateNumber];
-    if ([NSFileManager.defaultManager fileExistsAtPath:[self outputDataFile:lastNum]])
+    int pictNum;
+    int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
+    int lastNum = [self getLastDataUpdateNumber:iPad
+                                    lastPictNum:&pictNum];
+    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager]
+                                                                              error:nil].fileSize;
+    if (_fileSize > 0)
     {
-        [self setLastDataUpdateNum:++lastNum];
+        [self setLastDataUpdateNum:++lastNum pictNum:pictNum foriPad:iPad];
     }
     return lastNum;
 }
+
 + (int) incrementLastDataFileNumber
 {
     AlleyWallData *awd = AlleyWallData.new;
@@ -988,11 +998,13 @@ SELECT max(_id) FROM MyTable*/
 }
 - (int) incrementLastPictFileNum
 {
-    AlleyWallData *awd = AlleyWallData.new;
-    int lastNum = [awd getLastPictUpdateNumber];
-    if ([NSFileManager.defaultManager fileExistsAtPath:[awd outputPictFile:lastNum]])
+    int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
+    int lastNum = [self getLastPictUpdateNumber:iPad];
+    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputPictFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager]
+                                                                              error:nil].fileSize;
+    if (_fileSize > 0)
     {
-        [awd setLastPictUpdateNum:++lastNum];
+        [self setLastPictUpdateNum:++lastNum foriPad:iPad];
     }
     return lastNum;
 }
