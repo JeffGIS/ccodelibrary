@@ -999,14 +999,14 @@ SELECT max(_id) FROM MyTable*/
 - (BOOL)createPictureDatabase
 {
     BOOL rtn = TRUE;
-    NSString *cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'wallID' INT, 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
+    NSString *cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'wallID' CHAR(8, 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
     rtn = [self executeCmd:(char *)cmd.UTF8String
               sendToServer:NO];
     return rtn;
 }
 
 - (BOOL) savePictureData:(int)pictNum
-                 wallID:(int)wallID
+                 wallID:(NSString*)wallID
                     type:(int)type
                  latLon:(LLPOINT)ll
                 heading:(int)heading
