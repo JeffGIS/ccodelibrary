@@ -4,6 +4,7 @@
 #import "NVHeadingViewController.h"
 #import "UserDefaults.h"
 #import "NVProgressView.h"
+#import "Colors.h"
 
 typedef NS_ENUM(NSInteger, NVHeadingStatus)
 {
@@ -24,6 +25,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 @property CGFloat referenceHeading, minHeading, maxHeading, sumHeading, avgHeading;
 @property NSInteger counter, numDesiredReadings;
 @property (nonatomic) CGFloat stabilityFactor;
+@property (nonatomic) Colors *colors;
 
 @end
 
@@ -51,7 +53,6 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 - (void)loadView
 {
     UIView *view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
-    view.backgroundColor = UserDefaults.defaults.appleBlue;
     self.view = view;
 }
 
@@ -59,12 +60,16 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 {
     [super viewDidLoad];
     
+    _colors = UserDefaults.defaults.defaultColors;
+    self.view.backgroundColor = _colors.backgroundColor;
+    
     _counter = 0;
     
     [self setupArrowView];
     [self setupHeadingLabel];
     
-    _returnButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 20.0, 160.0, 60.0)];
+    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _returnButton.frame = CGRectMake(20.0, 20.0, 160.0, 60.0);
     
     [self setupButton:_returnButton
                target:self
@@ -72,7 +77,8 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                 title:@"< Return"
              fontSize:32.0];
     
-    _startCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(220.0, 904.0, 328.0, 80.0)];
+    _startCancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _startCancelButton.frame = CGRectMake(220.0, 904.0, 328.0, 80.0);
     
     [self setupButton:_startCancelButton
                target:self
@@ -145,7 +151,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                                                _returnButton.frame.origin.y) / 2.0));
     
     _headingLabel.backgroundColor = UIColor.clearColor;
-    _headingLabel.textColor = UIColor.whiteColor;
+    _headingLabel.textColor = _colors.textColor;
     _headingLabel.textAlignment = NSTextAlignmentCenter;
     _headingLabel.font = [UIFont boldSystemFontOfSize:52.0];
     _headingLabel.adjustsFontSizeToFitWidth = YES;
@@ -160,27 +166,33 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
               title:(NSString *)title
            fontSize:(CGFloat)fontSize
 {
-    button.backgroundColor = UIColor.whiteColor;
+    button.backgroundColor = _colors.enabledColor;
     button.layer.cornerRadius = 10.0;
     button.titleLabel.font = [UIFont boldSystemFontOfSize:fontSize];
     
     [button setTitle:title
             forState:UIControlStateNormal];
     
-    [button setTitleColor:UIColor.blackColor
+    [button setTitleColor:_colors.titleColor
                  forState:UIControlStateNormal];
     
-    [button setTitleColor:UIColor.lightGrayColor
+    [button setTitleColor:_colors.highlightedColor
                  forState:UIControlStateHighlighted];
-    
-    [button setTitleColor:UIColor.grayColor
-                 forState:UIControlStateDisabled];
     
     [button addTarget:target
                action:selector
      forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:button];
+}
+
+- (void)updateButtonAppearance:(UIButton *)button
+{
+    if (button.enabled)
+        button.backgroundColor = _colors.enabledColor;
+    
+    else
+        button.backgroundColor = _colors.disabledColor;
 }
 
 - (void)setupProgressInfoLabel
@@ -191,7 +203,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                                                      _progressView.frame.origin.y) / 2.0));
     
     _progressInfoLabel.backgroundColor = UIColor.clearColor;
-    _progressInfoLabel.textColor = UIColor.whiteColor;
+    _progressInfoLabel.textColor = _colors.textColor;
     _progressInfoLabel.textAlignment = NSTextAlignmentCenter;
     _progressInfoLabel.font = [UIFont boldSystemFontOfSize:30.0];
     _progressInfoLabel.adjustsFontSizeToFitWidth = YES;
@@ -228,6 +240,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
         case NVHeadingStatusReady:
             _progressInfoLabel.text = @"Taking Measurement";
             _returnButton.enabled = NO;
+            [self updateButtonAppearance:_returnButton];
             
             [_startCancelButton setTitle:@"Cancel"
                                 forState:UIControlStateNormal];
@@ -239,6 +252,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
         case NVHeadingStatusGettingHeading:
             _progressInfoLabel.text = @"";
             _returnButton.enabled = YES;
+            [self updateButtonAppearance:_returnButton];
             
             [_startCancelButton setTitle:@"Start"
                                 forState:UIControlStateNormal];
@@ -302,6 +316,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                 {
                     _status = NVHeadingStatusComplete;
                     _returnButton.enabled = YES;
+                    [self updateButtonAppearance:_returnButton];
                     _progressView.progress = 1.0;
                     _progressInfoLabel.text = @"Heading Measurement Complete";
                     _avgHeading = (_sumHeading / _counter);

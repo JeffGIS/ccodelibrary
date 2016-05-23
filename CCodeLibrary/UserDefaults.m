@@ -178,6 +178,7 @@ static UserDefaults *_defaults;
     
     defaultColors.titleColor = UIColor.whiteColor;
     defaultColors.textColor = UIColor.blackColor;
+    defaultColors.highlightedColor = UIColor.lightGrayColor;
     
     return defaultColors;
 }
