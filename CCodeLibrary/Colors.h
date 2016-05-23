@@ -10,5 +10,6 @@
 @property (nonatomic) UIColor *disabledColor;
 @property (nonatomic) UIColor *textColor;
 @property (nonatomic) UIColor *titleColor;
+@property (nonatomic) UIColor *highlightedColor;
 
 @end
