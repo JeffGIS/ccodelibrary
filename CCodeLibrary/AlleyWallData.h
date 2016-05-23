@@ -73,15 +73,15 @@ fromDate:(NSString *)fromDate
 - (int) incrementLastPictFileNum;
 + (int) incrementLastPictFileNumber;
 - (BOOL) savePictureData:(int)pictNum
-                   wallID:(int)wallID
+                   wallID:(NSString *)wallID
                     type:(int)type
                   latLon:(LLPOINT)ll
                  heading:(int)heading;
 
-- (NSString *) getNote:(int)wallID
+- (NSString *) getNote:(NSString *)wallID
                   type:(int)type;
 - (BOOL) addNote:(NSString *)note
-    wallID:(int)wallID
+    wallID:(NSString *)wallID
             type:(int)type;
 - (NSMutableArray*) loadStandardText:(int)type;
 - (BOOL) addStandardText:(NSString*)text
