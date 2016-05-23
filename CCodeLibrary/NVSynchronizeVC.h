@@ -20,6 +20,7 @@
 @interface NVSynchronizeVC : UIViewController
 
 @property (nonatomic, weak) id <NVSynchronizeDelegate> delegate;
+@property id databaseID;
 @property CurbRampData * crd;
 @property NSTimer * sendTimer;
 @property NSTimer * doTimer;

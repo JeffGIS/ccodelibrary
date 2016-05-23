@@ -623,7 +623,7 @@
         if (iPad != _myiPad)
         {
             int lastPictIHave;
-            int lastDataIHave = [_crd getLastDataUpdateNumber:iPad
+            int lastDataIHave = [_databaseID getLastDataUpdateNumber:iPad
                                             lastPictNum:&lastPictIHave];
             int lastDataFileOnServer = [self getDataNumFromServerMsg:iPad
                                                          wantPictNum:NO];
@@ -701,16 +701,17 @@ didReceiveMessage:(NSString *)message
                 _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String);
                 [self closeGMServer];
                 _crd = [CurbRampData new];
+                _databaseID = _crd;
                 int pictNum;
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
-                int lastNum = [_crd getLastDataUpdateNumber:_myiPad
+                int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad
                                                 lastPictNum:&pictNum];
                 lastNum++;
                 int fileSize = 0;
                 while (lastNum && !fileSize)
                 {
                     lastNum--;
-                    NSString * filePath = [_crd outputDataFile:lastNum iPad:_myiPad];
+                    NSString * filePath = [_databaseID outputDataFile:lastNum iPad:_myiPad];
                     fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
                                                                                          error:nil].fileSize;
                 }
@@ -727,7 +728,7 @@ didReceiveMessage:(NSString *)message
                 while (lastNum && !fileSize)
                 {
                     lastNum--;
-                    NSString * filePath = [_crd outputPictFile:lastNum iPad:_myiPad];
+                    NSString * filePath = [_databaseID outputPictFile:lastNum iPad:_myiPad];
                     fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
                                                                                          error:nil].fileSize;
                 }
@@ -816,7 +817,7 @@ Top:
             if (CRAPI.sharedInstance.uploadPix)
             {
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
-                int lastNum = [_crd getLastDataUpdateNumber:_myiPad
+                int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad
                                                 lastPictNum:&pictNum];
                 lastNum = pictNum;
                 lastNum++;
@@ -824,7 +825,7 @@ Top:
                 while (lastNum && !fileSize)
                 {
                     lastNum--;
-                    NSString * filePath = [_crd outputPictFile:lastNum iPad:_myiPad];
+                    NSString * filePath = [_databaseID outputPictFile:lastNum iPad:_myiPad];
                     fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
                                                                                          error:nil].fileSize;
                 }
@@ -851,13 +852,13 @@ Top:
     }
     if (_process == UPLOAD_DATA_PROCESS)
     {
-        _filePath = [_crd outputDataFile:_nextFileNumToUpload iPad:_myiPad];
+        _filePath = [_databaseID outputDataFile:_nextFileNumToUpload iPad:_myiPad];
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Data"];
     }
     else
     {
-        _filePath = [_crd outputPictFile:_nextFileNumToUpload iPad:_myiPad];
+        _filePath = [_databaseID outputPictFile:_nextFileNumToUpload iPad:_myiPad];
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Picture"];
     }
@@ -867,7 +868,7 @@ Top:
     _push.popover = _popoverView;
     _push.useOnlyPrimaryFTP = YES;
     
-    NSString * toDir = [NSString stringWithFormat:@"NVCRISData/%i",CRAPI.sharedInstance.currentManageriPad];
+    NSString * toDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",CRAPI.sharedInstance.currentManageriPad,CRAPI.sharedInstance.currentGeoid];
     [_push sendFile:[_filePath lastPathComponent]
       fromDirectory:[_filePath stringByDeletingLastPathComponent]
              toFile:[_filePath lastPathComponent]
@@ -879,7 +880,7 @@ Top:
 - (void)setDownloadFilesFor:(int)iPad
 {
     int lastPictIHave;
-    int lastDataIHave = [_crd getLastDataUpdateNumber:iPad
+    int lastDataIHave = [_databaseID getLastDataUpdateNumber:iPad
                                           lastPictNum:&lastPictIHave];
     int lastDataFileOnServer = [self getDataNumFromServerMsg:iPad
                                                  wantPictNum:NO];
@@ -932,13 +933,13 @@ Top:
     }
     if (_process == DOWNLOAD_DATA_PROCESS)
     {
-        _filePath = [_crd outputDataFile:_nextFileNumToDownload iPad:_downloadiPad];
+        _filePath = [_databaseID outputDataFile:_nextFileNumToDownload iPad:_downloadiPad];
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Data"];
     }
     else
     {
-        _filePath = [_crd outputPictFile:_nextFileNumToDownload iPad:_downloadiPad];
+        _filePath = [_databaseID outputPictFile:_nextFileNumToDownload iPad:_downloadiPad];
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Picture"];
     }
@@ -948,7 +949,7 @@ Top:
     _push.popover = _popoverView;
     _push.useOnlyPrimaryFTP = YES;
     
-    NSString * toDir = [NSString stringWithFormat:@"NVCRISData/%i",CRAPI.sharedInstance.currentManageriPad];
+    NSString * toDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",CRAPI.sharedInstance.currentManageriPad,CRAPI.sharedInstance.currentGeoid];
     [_push sendFile:[_filePath lastPathComponent]
       fromDirectory:[_filePath stringByDeletingLastPathComponent]
              toFile:[_filePath lastPathComponent]
