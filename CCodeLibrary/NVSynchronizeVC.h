@@ -1,6 +1,7 @@
 //  NVSynchronizeVC.h
 //  CCodeLibrary
 #import "CurbRampData.h"
+#import "AlleyWallData.h"
 
 #define UPLOAD_DATA_PROCESS 1
 #define UPLOAD_PICT_PROCESS 2
@@ -22,6 +23,7 @@
 @property (nonatomic, weak) id <NVSynchronizeDelegate> delegate;
 @property id databaseID;
 @property CurbRampData * crd;
+@property CurbRampData * awd;
 @property NSTimer * sendTimer;
 @property NSTimer * doTimer;
 @property NSInteger currentServerMsgID;

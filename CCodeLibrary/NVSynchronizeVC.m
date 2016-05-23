@@ -700,8 +700,16 @@ didReceiveMessage:(NSString *)message
                 _uploadStatusMsg = message.copy;
                 _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String);
                 [self closeGMServer];
-                _crd = [CurbRampData new];
-                _databaseID = _crd;
+                if (CRAPI.sharedInstance.currentGeoid < 0)
+                {
+                    _awd = [AlleyWallData new];
+                    _databaseID = _awd;
+                }
+                else
+                {
+                    _crd = [CurbRampData new];
+                    _databaseID = _crd;
+                }
                 int pictNum;
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
                 int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad

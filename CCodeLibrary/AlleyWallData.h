@@ -6,6 +6,8 @@
 #import "SQLiteLib.h"
 #import "MathUtil.h"
 
+#define CURRENT_ALLEYWALL_VERSION "1.1"
+
 @interface AlleyWallData : NSObject
 
 @property sqlite3 *database;
@@ -55,19 +57,35 @@ forDate:(NSString *)date
 - (BOOL)beginNewSurveyForWall:(NSString *)wallID
 fromDate:(NSString *)fromDate
                       newDate:(NSString *)newDate;
+- (int) getLastDataUpdateNumber:(int)iPad
+                    lastPictNum:(int*)pictNum;
+- (NSString*) outputDataFile:(int)fileNum
+                        iPad:(int)iPad;
 + (BOOL) setLastDataUpdateNum:(int)nextNum;
 + (int)  getLastDataUpdateNum;
-+ (BOOL) setLastPictUpdateNum:(int)nextNum;
-- (int) getLastPictUpdateNumber;
-- (NSString*) outputPictFile:(int)fileNum;
+- (BOOL) setLastPictUpdateNum:(int)lastNum
+                      foriPad:(int)iPad;
+- (int) getLastPictUpdateNumber:(int)iPad;
+- (NSString*) outputPictFile:(int)fileNum
+                        iPad:(int)iPad;
 - (int) incrementLastDataFileNum;
 + (int) incrementLastDataFileNumber;
 - (int) incrementLastPictFileNum;
 + (int) incrementLastPictFileNumber;
 - (BOOL) savePictureData:(int)pictNum
-                 wallID:(int)wallID
-                 latLon:(LLPOINT)ll
-                heading:(int)heading;
+                   wallID:(int)wallID
+                    type:(int)type
+                  latLon:(LLPOINT)ll
+                 heading:(int)heading;
+
+- (NSString *) getNote:(int)wallID
+                  type:(int)type;
+- (BOOL) addNote:(NSString *)note
+    wallID:(int)wallID
+            type:(int)type;
+- (NSMutableArray*) loadStandardText:(int)type;
+- (BOOL) addStandardText:(NSString*)text
+                    type:(int)type;
 
 
 @end

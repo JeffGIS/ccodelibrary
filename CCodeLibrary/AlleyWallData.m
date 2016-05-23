@@ -10,6 +10,7 @@ static int fileSequence = 0;
 
 #import "AlleyWallData.h"
 #import "CRAPI.h"
+#import "UIApplication+VersionBuild.h"
 
 @implementation AlleyWallData
 
@@ -113,6 +114,17 @@ static int fileSequence = 0;
     [self close:opened];
     return rtn;
 }
+- (NSString*) getSendToServerFile:(int)iPad
+{
+    int pictNum;
+    int currentFileNum = [self getLastDataUpdateNumber:iPad
+                                           lastPictNum:&pictNum];
+    
+    NSString * file = [NSString stringWithFormat:@"%@/%i_%i.sql",
+                       [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWall"],iPad,currentFileNum];
+    return file;
+}
+
 
 - (void) setSendToServerFile
 {
@@ -128,8 +140,18 @@ static int fileSequence = 0;
     BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     if (rtn && sendToServer)
     {
-        [self setSendToServerFile];
-        appendStringToFile ([NSString stringWithUTF8String:cmd] ,_sendToServerFile);
+        int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
+        NSString * sendToServerFile = [self getSendToServerFile:iPad];
+        int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:sendToServerFile
+                                                                                 error:nil].fileSize;
+        if (!fileSize)
+        {
+            int iTime = NSDate.timeIntervalSinceReferenceDate;
+            NSString * versions = [NSString stringWithFormat:@"/*ApVer %@ DBVer %s Time %i*/",UIApplication.appVersionBuild,CURRENT_ALLEYWALL_VERSION,iTime];
+            rtn = appendStringToFile (versions ,sendToServerFile);
+            
+        }
+        rtn = appendStringToFile ([NSString stringWithUTF8String:cmd] ,sendToServerFile);
     }
     return rtn;
 }
@@ -938,7 +960,8 @@ SELECT max(_id) FROM MyTable*/
 - (BOOL)createNextUpdateTable
 {
     BOOL rtn = TRUE;
-    NSString * cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_UPDATES ('id' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
+    NSString * cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_UPDATES ('iPad' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
+
     rtn = [self executeCmd:(char *)cmd.UTF8String
               sendToServer:NO];
     return rtn;
@@ -976,7 +999,7 @@ SELECT max(_id) FROM MyTable*/
 - (BOOL)createPictureDatabase
 {
     BOOL rtn = TRUE;
-    NSString * cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_UPDATES ('id' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
+    NSString *cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'wallID' INT, 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
     rtn = [self executeCmd:(char *)cmd.UTF8String
               sendToServer:NO];
     return rtn;
@@ -984,6 +1007,7 @@ SELECT max(_id) FROM MyTable*/
 
 - (BOOL) savePictureData:(int)pictNum
                  wallID:(int)wallID
+                    type:(int)type
                  latLon:(LLPOINT)ll
                 heading:(int)heading
 {
