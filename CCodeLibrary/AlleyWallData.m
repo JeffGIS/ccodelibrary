@@ -126,14 +126,6 @@ static int fileSequence = 0;
 }
 
 
-- (void) setSendToServerFile
-{
-    int currentFileNum = [self getLastDataUpdateNumber];
-    
-    _sendToServerFile = [NSString stringWithFormat:@"%@/%i.sql",
-                         [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],currentFileNum];
-
-}
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer;
 {
@@ -899,29 +891,26 @@ SELECT max(_id) FROM MyTable*/
 }
 
 
-- (int) getLastDataUpdateNumber
+- (int) getLastDataUpdateNumber:(int)iPad
+                    lastPictNum:(int*)pictNum
 {
     int lastNum  = 1;
-    [self createNextUpdateTable];
+    int lastPictNum = 1;
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate FROM ALLEYWALL_UPDATES WHERE id=1"];
+    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate,LastPictUpdate FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         lastNum = sqlite3_column_int(statement, 0);
+        lastPictNum = sqlite3_column_int(statement, 1);
     }
     SQLOK(sqlite3_finalize(statement), _database);
     [self close:opened];
+    *pictNum = lastPictNum;
     return lastNum;
 }
-+ (int) getLastDataUpdateNum
-{
-    AlleyWallData *awd = AlleyWallData.new;
-    return [awd getLastDataUpdateNumber];
-}
-
 - (BOOL) setLastDataUpdateNum:(int)lastNum
                       pictNum:(int)pictNum
                       foriPad:(int)iPad
@@ -948,6 +937,8 @@ SELECT max(_id) FROM MyTable*/
 {
     int LastNum  = 0;
     BOOL opened = [self open];
+    [self createNextUpdateTable];
+    [self createPictureDatabase];
     NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
@@ -1011,10 +1002,28 @@ SELECT max(_id) FROM MyTable*/
 - (BOOL)createPictureDatabase
 {
     BOOL rtn = TRUE;
-    NSString *cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'wallID' CHAR(8, 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
+    NSString *cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'wallID' CHAR(8), 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
     rtn = [self executeCmd:(char *)cmd.UTF8String
               sendToServer:NO];
     return rtn;
+}
+- (uint) getNextPictID
+{
+    uint nextID = 1;
+    NSString *query = [NSString stringWithFormat:@"SELECT max(id) FROM ALLEYWALL_PICTURES"];
+    BOOL opened = [self open];
+    
+    sqlite3_stmt *statement = NULL;
+    
+    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        nextID = sqlite3_column_int(statement, 0);
+    }
+    nextID = [CRAPI.sharedInstance adjustNextRefno:nextID];
+    SQLOK(sqlite3_finalize(statement), _database);
+    [self close:opened];
+    return nextID;
 }
 
 - (BOOL) savePictureData:(int)pictNum
@@ -1023,11 +1032,16 @@ SELECT max(_id) FROM MyTable*/
                  latLon:(LLPOINT)ll
                 heading:(int)heading
 {
-    AlleyWallData *awd = AlleyWallData.new;
-    [awd createPictureDatabase];
+    BOOL opened = [self open];
     int iTime = NSDate.timeIntervalSinceReferenceDate;
+    uint pictID = [self getNextPictID];
     
-    return YES;
+    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO ALLEYWALL_PICTURES VALUES(%i,%i,%i,%@,%i,%i,%f,%f,%i);",
+                     pictID,CRAPI.sharedInstance.currentiPadWithinManager,pictNum,wallID,type,heading,ll.lat,ll.lon,iTime];
+    BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                   sendToServer:YES];
+    [self close:opened];
+    return rtn;
     
 }
 @end
