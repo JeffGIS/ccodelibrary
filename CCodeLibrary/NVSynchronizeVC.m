@@ -596,7 +596,7 @@
     while (pPipe)
     {
         pPipe++;
-        if (i == iPad)
+        if (i++ == iPad)
         {
             if (wantPict)
             {
@@ -625,10 +625,28 @@
             int lastPictIHave;
             int lastDataIHave = [_databaseID getLastDataUpdateNumber:iPad
                                             lastPictNum:&lastPictIHave];
+            lastDataIHave++;
+            int fileSize = 0;
+            while (lastDataIHave && !fileSize)
+            {
+                lastDataIHave--;
+                NSString * filePath = [_databaseID outputDataFile:lastDataIHave iPad:_myiPad];
+                fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
+                                                                                     error:nil].fileSize;
+            }
             int lastDataFileOnServer = [self getDataNumFromServerMsg:iPad
                                                          wantPictNum:NO];
             int lastPictFileOnServer = [self getDataNumFromServerMsg:iPad
                                                          wantPictNum:YES];
+            lastPictIHave++;
+            fileSize = 0;
+            while (lastPictIHave && !fileSize)
+            {
+                lastPictIHave--;
+                NSString * filePath = [_databaseID outputPictFile:lastPictIHave iPad:_myiPad];
+                fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
+                                                                                     error:nil].fileSize;
+            }
             _downFiles += lastDataFileOnServer - lastDataIHave;
             _downPix += lastPictFileOnServer - lastPictIHave;
         }
