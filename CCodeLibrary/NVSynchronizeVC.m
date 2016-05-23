@@ -4,12 +4,14 @@
 #import "NVSynchronizeVC.h"
 #import "NVProgressView.h"
 #import "GeoMasterServer.h"
+#import "FTPDataPull.h"
+#import "FTPDataPush.h"
 #import "UserDefaults.h"
 #import "Colors.h"
 #import "CRAPI.h"
 #import "NVAlertView.h"
 
-@interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate>
+@interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate>
 
 @property (nonatomic) UILabel *titleLabel, *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
 @property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton, *connectButton;
@@ -24,6 +26,7 @@
 @property int totConnectionAttempts;
 @property NSString *iPad_id;
 @property NSString *iPad_name;
+@property FTPDataPush *push;
 
 @end
 
@@ -56,7 +59,7 @@
     _titleLabel.textAlignment = NSTextAlignmentCenter;
     _titleLabel.font = [UIFont boldSystemFontOfSize:44.0];
     _titleLabel.adjustsFontSizeToFitWidth = YES;
-    _titleLabel.numberOfLines = 2;
+    _titleLabel.numberOfLines = 0;
     _titleLabel.text = @"Synchronize\nData";
     
     _dataUpLabel = UILabel.new;
@@ -317,10 +320,7 @@
         }
     }
     
-    _GMServer = GeoMasterServer.open;
-    _GMServer.delegate = self;
-    _GMServer.messageID = GMSMessageOpenConnect;
-    [_GMServer initCommunication:5.0];
+    [self sendGMServerMessage:GMSMessageOpenConnect];
 }
 
 - (void)didReceiveMemoryWarning
@@ -427,10 +427,10 @@
 
 - (void)updateLabels
 {
-    _dataUpLabel.text = [NSString stringWithFormat:@"Data Files to be Uploaded:%i", _upFiles];
-    _pixUpLabel.text = [NSString stringWithFormat:@"Pictures to be Uploaded:%i", _upPix];
-    _dataDownLabel.text = [NSString stringWithFormat:@"Data Files to be Downloaded:%i", _downFiles];
-    _pixDownLabel.text = [NSString stringWithFormat:@"Pictures to be Downloaded:%i", _downPix];
+    _dataUpLabel.text = [NSString stringWithFormat:@"Data Files to be Uploaded: %i", _upFiles];
+    _pixUpLabel.text = [NSString stringWithFormat:@"Pictures to be Uploaded: %i", _upPix];
+    _dataDownLabel.text = [NSString stringWithFormat:@"Data Files to be Downloaded: %i", _downFiles];
+    _pixDownLabel.text = [NSString stringWithFormat:@"Pictures to be Downloaded: %i", _downPix];
 }
 
 - (void)updateOverallProgress:(CGFloat)progress
@@ -456,6 +456,10 @@
 
 - (void)syncButtonTapped:(UIButton *)button
 {
+    _process = UPLOAD_DATA_PROCESS;
+    _uploadedFiles = 0;
+    _origUpFiles = _upFiles;
+    [self uploadNextFile];
     
 }
 
@@ -503,8 +507,16 @@
             break;
             
         case GMSMessageGetUploadStatus:
-            msg = [NSString stringWithFormat:@"$M(GetUploadStatus,%i,%i)",
-                             CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
+            msg = [NSString stringWithFormat:@"$M(GetUploadStatus,%i,%i,%i)",
+                   CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,CRAPI.sharedInstance.totiPadWithinManager];
+            break;
+        case GMSMessageFileUploaded:
+            if (_process == UPLOAD_DATA_PROCESS)
+                msg = [NSString stringWithFormat:@"$M(UploadCompleteData,%i,%i,%i,%i)",
+                       CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,CRAPI.sharedInstance.totiPadWithinManager,_nextFileNumToUpload];
+            else
+                msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i)",
+                       CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,CRAPI.sharedInstance.totiPadWithinManager,_nextFileNumToUpload];
             break;
         case GMSMessageSetNearby:
             msg = [NSString stringWithFormat:@"$M(SetNearbyiPad,%@,%@,%f %f)\r\n",
@@ -552,6 +564,77 @@
 #pragma unused(alert)
 }
 
+-(void) doSendGMServerMessage:(NSTimer*)timer
+{
+    _GMServer = [GeoMasterServer open];
+    _GMServer.delegate = self;
+    _GMServer.messageID = _currentServerMsgID;
+    [_GMServer initCommunication:7.5];
+}
+-(void) sendGMServerMessage:(NSInteger)msgID
+{
+    _currentServerMsgID = msgID;
+    _sendTimer = [NSTimer scheduledTimerWithTimeInterval:0.01
+                                              target:self
+                                            selector:@selector(doSendGMServerMessage:)
+                                            userInfo:nil
+                                             repeats:NO];
+}
+
+- (int)getDataNumFromServerMsg:(int)iPad
+                   wantPictNum:(BOOL)wantPict
+{
+    int dataNum = -4;
+    if (_uploadStatusMsg.length < 5)
+        return -3;
+    if (iPad > _numiPadsInMsg)
+        return -2;
+    LPSTR pMsg = malloc (_uploadStatusMsg.length+4);
+    strcpy (pMsg,_uploadStatusMsg.UTF8String);
+    LPSTR pPipe = strchr (pMsg,'|');
+    int i = 1;
+    while (pPipe)
+    {
+        pPipe++;
+        if (i == iPad)
+        {
+            if (wantPict)
+            {
+                pPipe = strchr (pPipe,'-');
+                if (!pPipe)
+                    break;
+                pPipe++;
+            }
+            dataNum = atoi (pPipe);
+            break;
+        }
+        pPipe = strchr (pPipe,'|');
+    }
+    free (pMsg);
+    return dataNum;
+}
+
+- (void) getDownloadCounts
+{
+    _downFiles = _downPix = 0;
+    
+    for (int iPad = 1;iPad <= _numiPadsInMsg;iPad++)
+    {
+        if (iPad != _myiPad)
+        {
+            int lastPictIHave;
+            int lastDataIHave = [_crd getLastDataUpdateNumber:iPad
+                                            lastPictNum:&lastPictIHave];
+            int lastDataFileOnServer = [self getDataNumFromServerMsg:iPad
+                                                         wantPictNum:NO];
+            int lastPictFileOnServer = [self getDataNumFromServerMsg:iPad
+                                                         wantPictNum:YES];
+            _downFiles += lastDataFileOnServer - lastDataIHave;
+            _downPix += lastPictFileOnServer - lastPictIHave;
+        }
+    }
+}
+
 - (void)GMServer:(GeoMasterServer *)server
 didReceiveMessage:(NSString *)message
       withStatus:(long)status
@@ -578,6 +661,7 @@ didReceiveMessage:(NSString *)message
                                                                          title:title
                                                                buttonTextArray:@[@"OK"]
                                                               destructiveIndex:0];
+                    break;
 #pragma unused(alert)
                 }
                 
@@ -590,15 +674,74 @@ didReceiveMessage:(NSString *)message
                                                 forKey:@"SelectedRow"];
                 }
                 [CRAPI.sharedInstance processPlacesArray:_selectedRow];
-
+                _titleLabel.text = [NSString stringWithFormat:@"Synchronize\nData for\n%@",CRAPI.sharedInstance.currentCityNameAndState];
                 _locationManager = [[CLLocationManager alloc] init];
                 _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
                 _locationManager.distanceFilter = kCLDistanceFilterNone;
                 _locationManager.delegate = self;
                 [self updateConnectLabel];
                 [_locationManager startUpdatingLocation];
+                [self closeGMServer];
+                [self sendGMServerMessage:GMSMessageGetUploadStatus];
             }
                 
+                break;
+            case GMSMessageFileUploaded:
+                _nextFileNumToUpload++;
+                _uploadedFiles++;
+                if (_origUpFiles)
+                    [self updateOverallProgress:(float)_uploadedFiles/_origUpFiles];
+                _upFiles--;
+                [self updateLabels];
+                [self uploadNextFile];
+                break;
+            case GMSMessageGetUploadStatus:
+            {
+                _uploadStatusMsg = message.copy;
+                _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String);
+                [self closeGMServer];
+                _crd = [CurbRampData new];
+                int pictNum;
+                _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
+                int lastNum = [_crd getLastDataUpdateNumber:_myiPad
+                                                lastPictNum:&pictNum];
+                lastNum++;
+                int fileSize = 0;
+                while (lastNum && !fileSize)
+                {
+                    lastNum--;
+                    NSString * filePath = [_crd outputDataFile:lastNum iPad:_myiPad];
+                    fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
+                                                                                         error:nil].fileSize;
+                }
+                _lastFileNumToUpload = lastNum;
+                _nextFileNumToUpload = [self getDataNumFromServerMsg:_myiPad
+                                                         wantPictNum:NO] + 1;
+                if (_nextFileNumToUpload > 0)
+                {
+                    _upFiles = _lastFileNumToUpload - _nextFileNumToUpload + 1;
+                }
+                lastNum = pictNum;
+                lastNum++;
+                fileSize = 0;
+                while (lastNum && !fileSize)
+                {
+                    lastNum--;
+                    NSString * filePath = [_crd outputPictFile:lastNum iPad:_myiPad];
+                    fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
+                                                                                         error:nil].fileSize;
+                }
+                _lastPictNumToUpload = lastNum;
+                _nextPictNumToUpload = [self getDataNumFromServerMsg:_myiPad
+                                                         wantPictNum:YES] + 1;
+                if (_nextPictNumToUpload > 0)
+                {
+                    _upPix = _lastPictNumToUpload - _nextPictNumToUpload + 1;
+                }
+                [self getDownloadCounts];
+                [self updateLabels];
+                [self updateOverallProgress:0];
+            }
                 break;
                 
             case GMSMessageSetNearby:
@@ -633,6 +776,204 @@ didReceiveMessage:(NSString *)message
         }
     }
 }
+
+- (void) uploadNextFile
+{
+    _doTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                target:self
+                                              selector:@selector(doUploadNextFile:)
+                                              userInfo:nil
+                                               repeats:NO];
+    
+}
+- (void) downloadNextFile
+{
+    if (_process == DOWNLOAD_DATA_PROCESS && !CRAPI.sharedInstance.downloadData)
+    {
+        _process == DOWNLOAD_PICT_PROCESS;
+        _downloadiPad = 1;
+    }
+    if (_process == DOWNLOAD_PICT_PROCESS && !CRAPI.sharedInstance.downloadPix)
+    {
+        return;
+    }
+    _doTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                target:self
+                                              selector:@selector(doDownloadNextFile:)
+                                              userInfo:nil
+                                               repeats:NO];
+    
+}
+- (void) doUploadNextFile:(NSTimer*)timer
+{
+Top:
+    if (_nextFileNumToUpload > _lastFileNumToUpload)
+    {
+        if (_process == UPLOAD_DATA_PROCESS)
+        {
+            int pictNum;
+            _process = UPLOAD_PICT_PROCESS;
+            if (CRAPI.sharedInstance.uploadPix)
+            {
+                _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
+                int lastNum = [_crd getLastDataUpdateNumber:_myiPad
+                                                lastPictNum:&pictNum];
+                lastNum = pictNum;
+                lastNum++;
+                int fileSize = 0;
+                while (lastNum && !fileSize)
+                {
+                    lastNum--;
+                    NSString * filePath = [_crd outputPictFile:lastNum iPad:_myiPad];
+                    fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
+                                                                                         error:nil].fileSize;
+                }
+                _lastFileNumToUpload = lastNum;
+                _nextFileNumToUpload = [self getDataNumFromServerMsg:_myiPad
+                                                         wantPictNum:NO] + 1;
+                if (_nextFileNumToUpload > 0)
+                {
+                    _upFiles = _lastFileNumToUpload - _nextFileNumToUpload + 1;
+                }
+                [self updateLabels];
+                [self updateOverallProgress:0];
+                goto Top;
+            }
+        }
+        _process = DOWNLOAD_DATA_PROCESS;
+        _downloadiPad = [self nextiPadToDownload:0];
+        if (_downloadiPad)
+        {
+            [self setDownloadFilesFor:_downloadiPad];
+            [self downloadNextFile];
+        }
+        return;
+    }
+    if (_process == UPLOAD_DATA_PROCESS)
+    {
+        _filePath = [_crd outputDataFile:_nextFileNumToUpload iPad:_myiPad];
+        [_popoverView showAfter:0.5
+                      withTitle:@"Upload Data"];
+    }
+    else
+    {
+        _filePath = [_crd outputPictFile:_nextFileNumToUpload iPad:_myiPad];
+        [_popoverView showAfter:0.5
+                      withTitle:@"Upload Picture"];
+    }
+    
+    _push = [FTPDataPush push];
+    _push.delegate = self;
+    _push.popover = _popoverView;
+    _push.useOnlyPrimaryFTP = YES;
+    
+    NSString * toDir = [NSString stringWithFormat:@"NVCRISData/%i",CRAPI.sharedInstance.currentManageriPad];
+    [_push sendFile:[_filePath lastPathComponent]
+      fromDirectory:[_filePath stringByDeletingLastPathComponent]
+             toFile:[_filePath lastPathComponent]
+        toDirectory:toDir
+     deleteWhenDone:NO];
+    
+}
+
+- (void)setDownloadFilesFor:(int)iPad
+{
+    int lastPictIHave;
+    int lastDataIHave = [_crd getLastDataUpdateNumber:iPad
+                                          lastPictNum:&lastPictIHave];
+    int lastDataFileOnServer = [self getDataNumFromServerMsg:iPad
+                                                 wantPictNum:NO];
+    int lastPictFileOnServer = [self getDataNumFromServerMsg:iPad
+                                                 wantPictNum:YES];
+    if (_process == DOWNLOAD_DATA_PROCESS)
+    {
+        _nextFileNumToDownload = lastDataIHave + 1;
+        _lastFileNumToDownload = lastDataFileOnServer;
+    }
+    else
+    {
+        _nextFileNumToDownload = lastPictIHave + 1;
+        _lastFileNumToDownload = lastPictFileOnServer;
+    }
+
+}
+
+-(int) nextiPadToDownload:(int)currentiPad
+{
+    currentiPad++;
+    if (currentiPad == _myiPad)
+        currentiPad++;
+    if (currentiPad > _numiPadsInMsg)
+        return 0;
+    return currentiPad;
+}
+
+- (void) doDownloadNextFile:(NSTimer*)timer
+{
+Top:
+    if (_nextFileNumToDownload > _lastFileNumToDownload)
+    {
+        _downloadiPad = [self nextiPadToDownload:_downloadiPad];
+        if (!_downloadiPad)
+        {
+            if (_process == DOWNLOAD_DATA_PROCESS)
+            {
+                _process = DOWNLOAD_PICT_PROCESS;
+                _downloadiPad = [self nextiPadToDownload:0];
+                if (_downloadiPad)
+                    [self downloadNextFile];
+            }
+        }
+        else
+        {
+            [self setDownloadFilesFor:_downloadiPad];
+            goto Top;
+        }
+    }
+    if (_process == DOWNLOAD_DATA_PROCESS)
+    {
+        _filePath = [_crd outputDataFile:_nextFileNumToDownload iPad:_downloadiPad];
+        [_popoverView showAfter:0.5
+                      withTitle:@"Upload Data"];
+    }
+    else
+    {
+        _filePath = [_crd outputPictFile:_nextFileNumToDownload iPad:_downloadiPad];
+        [_popoverView showAfter:0.5
+                      withTitle:@"Upload Picture"];
+    }
+    
+    _push = [FTPDataPush push];
+    _push.delegate = self;
+    _push.popover = _popoverView;
+    _push.useOnlyPrimaryFTP = YES;
+    
+    NSString * toDir = [NSString stringWithFormat:@"NVCRISData/%i",CRAPI.sharedInstance.currentManageriPad];
+    [_push sendFile:[_filePath lastPathComponent]
+      fromDirectory:[_filePath stringByDeletingLastPathComponent]
+             toFile:[_filePath lastPathComponent]
+        toDirectory:toDir
+     deleteWhenDone:NO];
+    
+}
+- (void)FTPPushDidComplete:(FTPDataType)dataType
+                withStatus:(int)status
+           andStatusString:(NSString *)statusString
+                  filePath:(NSString *)path
+{
+    if (status == FTPStatusOK)
+    {
+        [_popoverView hide];
+        [self sendGMServerMessage:GMSMessageFileUploaded];
+    }
+    else
+    {
+        _popoverView.title = @"Upload Error";
+        [_popoverView setCancelButtonTitle:@"OK"];
+    }
+    NSLog(@"FTP push completed:%@", statusString);
+}
+
 
     - (void)checkNearby:(NSTimer *)timer
     {

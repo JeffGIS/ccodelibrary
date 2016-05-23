@@ -461,15 +461,17 @@ static int nInit=0;
 }
 
 - (NSString*) outputDataFile:(int)fileNum
+                        iPad:(int)iPad
 {
     NSString* file = [NSString stringWithFormat:@"%@/%i_%i.sql",
-                      [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],CRAPI.sharedInstance.currentiPadWithinManager,fileNum];
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],iPad,fileNum];
     return file;
 }
 - (NSString*) outputPictFile:(int)fileNum
+                        iPad:(int)iPad
 {
     NSString* file = [NSString stringWithFormat:@"%@/%i_%i.jpg",
-                      [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],CRAPI.sharedInstance.currentiPadWithinManager,fileNum];
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],iPad,fileNum];
     return file;
 }
 
@@ -540,7 +542,7 @@ static int nInit=0;
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
-    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum]
+    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager]
                                                                           error:nil].fileSize;
     if (_fileSize > 0)
     {
@@ -562,7 +564,7 @@ static int nInit=0;
 {
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastPictUpdateNumber:iPad];
-    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum]
+    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager]
                                                                               error:nil].fileSize;
     if (_fileSize > 0)
     {

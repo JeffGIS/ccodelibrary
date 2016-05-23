@@ -36,12 +36,17 @@
 - (void)commitTransaction;
 - (BOOL)isCurrentVersion;
 
+- (int) getLastDataUpdateNumber:(int)iPad
+                    lastPictNum:(int*)pictNum;
+- (NSString*) outputDataFile:(int)fileNum
+                        iPad:(int)iPad;
 + (BOOL) setLastDataUpdateNum:(int)nextNum;
 + (int)  getLastDataUpdateNum;
 - (BOOL) setLastPictUpdateNum:(int)lastNum
                       foriPad:(int)iPad;
 - (int) getLastPictUpdateNumber:(int)iPad;
-- (NSString*) outputPictFile:(int)fileNum;
+- (NSString*) outputPictFile:(int)fileNum
+                        iPad:(int)iPad;
 - (int) incrementLastDataFileNum;
 + (int) incrementLastDataFileNumber;
 - (int) incrementLastPictFileNum;

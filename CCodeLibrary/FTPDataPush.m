@@ -263,7 +263,7 @@ enum {
                 else if (bytesRead == 0)
                 {
                     [self stopSendWithStatus:FTPStatusOK
-                                statusString:@"Network Write Error"];
+                                statusString:@"Transfer Complete"];
                 }
                 
                 else
@@ -418,8 +418,8 @@ enum {
 {
     NSLog(@"FTPDataPush dealloc");
     
-    [self stopSendWithStatus:FTPStatusStop
-                   statusString:@"Stopped"];
+   // [self stopSendWithStatus:FTPStatusStop
+   //                statusString:@"Stopped"];
 }
 
 - (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
