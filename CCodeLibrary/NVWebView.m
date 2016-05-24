@@ -28,6 +28,7 @@
     nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
     nvwv.realtor.backgroundColor = UIColor.clearColor;
     nvwv.realtor.imageEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 4.0, 4.0);
+    nvwv.realtor.hidden = YES;
     
     [nvwv.realtor setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteHouse"
                                                                                           ofType:@"png"]]
@@ -118,7 +119,7 @@
     [_returnButton setTitleColor:UIColor.whiteColor
                         forState:UIControlStateNormal];
     
-    [_returnButton setTitleColor:UserDefaults.defaults.appleGray
+    [_returnButton setTitleColor:UIColor.lightGrayColor
                         forState:UIControlStateHighlighted];
     
     [_returnButton addTarget:self
@@ -164,9 +165,9 @@
     }
 }
 
-- (void)hideRealtorButton
+- (void)showRealtorButton
 {
-    _realtor.hidden = YES;
+    _realtor.hidden = NO;
 }
 
 - (void)adjustForStatusBar

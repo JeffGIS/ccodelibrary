@@ -23,7 +23,7 @@
                    showFileAtPath:(NSString *)path;
 
 - (void)hide:(BOOL)animated;
-- (void)hideRealtorButton;
+- (void)showRealtorButton;
 - (void)adjustForStatusBar;
 
 @end

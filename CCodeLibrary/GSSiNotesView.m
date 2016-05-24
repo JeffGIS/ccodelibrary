@@ -3,6 +3,7 @@
 
 #import "GSSiNotesView.h"
 #import "UserDefaults.h"
+#import "Colors.h"
 
 typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
 {
@@ -21,7 +22,8 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
 @property (nonatomic) UITextView *textView;
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) NSMutableArray *notesArray;
-@property (nonatomic) BOOL listUpdated;
+@property BOOL listUpdated;
+@property (nonatomic) Colors *colors;
 
 @end
 
@@ -37,8 +39,8 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
                         allowAutoCorrect:(BOOL)autoCorrect;
 
 {
-    CGSize buttonSize;
-    CGFloat cornerRadius, buttonFontSize, viewMargin, margin;
+    CGSize buttonSize = CGSizeZero;
+    CGFloat cornerRadius = 0.0, buttonFontSize = 0.0, viewMargin = 0.0, margin = 0.0;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
@@ -88,15 +90,12 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     notesView.listUpdated = NO;
     notesView.cornerRadius = cornerRadius;
     notesView.buttonFontSize = buttonFontSize;
+    notesView.colors = UserDefaults.defaults.defaultColors;
     
     notesView.center = CGPointMake((view.frame.size.width / 2.0),
                                    (view.frame.size.height / 2.0));
     
-    notesView.backgroundColor = [UIColor colorWithRed:(240.0 / 255.0)
-                                                green:(255.0 / 255.0)
-                                                 blue:(200.0 / 255.0)
-                                                alpha:1.0];
-    
+    notesView.backgroundColor = notesView.colors.backgroundColor;
     notesView.layer.cornerRadius = notesView.cornerRadius;
     notesView.alpha = 0.0;
     
@@ -139,7 +138,7 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     }
     
     notesView.notesLabel.backgroundColor = UIColor.clearColor;
-    notesView.notesLabel.textColor = UIColor.blackColor;
+    notesView.notesLabel.textColor = notesView.colors.textColor;
     notesView.notesLabel.font = [UIFont boldSystemFontOfSize:notesView.buttonFontSize];
     notesView.notesLabel.text = title;
     notesView.notesLabel.textAlignment = NSTextAlignmentCenter;
@@ -166,12 +165,12 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     if (autoCorrect)
         notesView.textView.autocorrectionType = UITextAutocorrectionTypeYes;
     notesView.textView.layer.cornerRadius = notesView.cornerRadius;
-    notesView.textView.backgroundColor = UIColor.whiteColor;
-    notesView.textView.layer.borderColor = UIColor.blackColor.CGColor;
+    notesView.textView.backgroundColor = notesView.colors.titleColor;
+    notesView.textView.layer.borderColor = notesView.colors.enabledColor.CGColor;
     notesView.textView.layer.borderWidth = (buttonFontSize / 8.0);
     notesView.textView.delegate = notesView;
     notesView.textView.textAlignment = NSTextAlignmentCenter;
-    notesView.textView.textColor = UIColor.blackColor;
+    notesView.textView.textColor = notesView.colors.textColor;
     notesView.textView.font = [UIFont boldSystemFontOfSize:notesView.buttonFontSize];
     
     [notesView addSubview:notesView.textView];
@@ -196,8 +195,8 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
                                       frame.size.height - tableViewOriginY - margin)];
     
     notesView.tableView.layer.cornerRadius = notesView.cornerRadius;
-    notesView.tableView.backgroundColor = UIColor.whiteColor;
-    notesView.tableView.layer.borderColor = UIColor.blackColor.CGColor;
+    notesView.tableView.backgroundColor = notesView.colors.titleColor;
+    notesView.tableView.layer.borderColor = notesView.colors.enabledColor.CGColor;
     notesView.tableView.layer.borderWidth = (buttonFontSize / 8.0);
     notesView.tableView.delegate = notesView;
     notesView.tableView.dataSource = notesView;
@@ -259,17 +258,17 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
            selector:(SEL)selector
               title:(NSString *)title
 {
-    button.backgroundColor = UIColor.blackColor;
+    button.backgroundColor = _colors.enabledColor;
     button.layer.cornerRadius = _cornerRadius;
     button.titleLabel.font = [UIFont boldSystemFontOfSize:_buttonFontSize];
     
     [button setTitle:title
             forState:UIControlStateNormal];
     
-    [button setTitleColor:UIColor.whiteColor
+    [button setTitleColor:_colors.titleColor
                  forState:UIControlStateNormal];
     
-    [button setTitleColor:UserDefaults.defaults.appleBlue
+    [button setTitleColor:_colors.highlightedColor
                  forState:UIControlStateHighlighted];
     
     [button addTarget:target
@@ -574,7 +573,7 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
                                       reuseIdentifier:@"Cell"];
     }
     
-    cell.textLabel.textColor = UIColor.blackColor;
+    cell.textLabel.textColor = _colors.textColor;
     cell.textLabel.font = [UIFont boldSystemFontOfSize:_buttonFontSize];
     cell.textLabel.text = _notesArray[indexPath.row];
     cell.textLabel.textAlignment = NSTextAlignmentCenter;

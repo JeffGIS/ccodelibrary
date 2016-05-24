@@ -836,6 +836,8 @@
     {
         NVWebView *nvwv = [NVWebView showWebViewInView:self
                                              urlString:text];
+        
+        [nvwv showRealtorButton];
     }
 }
 

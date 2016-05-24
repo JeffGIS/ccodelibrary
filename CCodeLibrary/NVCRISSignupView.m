@@ -490,7 +490,6 @@
                                          urlString:@"www.apple.com/legal/privacy/en-ww/"];
     
     nvwv.delegate = self;
-    [nvwv hideRealtorButton];
     [nvwv adjustForStatusBar];
 }
 
@@ -502,7 +501,6 @@
                                          urlString:@"www.apple.com/legal/internet-services/itunes/appstore/dev/stdeula/"];
     
     nvwv.delegate = self;
-    [nvwv hideRealtorButton];
     [nvwv adjustForStatusBar];
     
     if (_checkmarkButton.userInteractionEnabled)
