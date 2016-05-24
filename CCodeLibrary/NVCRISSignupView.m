@@ -623,10 +623,10 @@
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string
 {
-    NSString *totalString = [NSString stringWithFormat:@"%@%@", textField.text, string];
-    
     if (textField == _phoneTF)
     {
+        NSString *totalString = [NSString stringWithFormat:@"%@%@", textField.text, string];
+        
         if (range.length == 1)
         {
             textField.text = [self formatPhoneNumber:totalString
@@ -645,11 +645,24 @@ replacementString:(NSString *)string
     
     else
     {
+        NSMutableString *tempString = [[NSMutableString alloc] initWithString:textField.text];
+        NSRange tempRange = {0};
+        
         if (range.length == 1)
-            textField.text = [totalString substringToIndex:(totalString.length - 1)];
+        {
+            [tempString deleteCharactersInRange:range];
+            tempRange = NSMakeRange(range.location, 0);
+        }
         
         else
-            textField.text = totalString;
+        {
+            [tempString insertString:string
+                             atIndex:range.location];
+            
+            tempRange = NSMakeRange((range.location + 1), range.length);
+        }
+        
+        textField.text = tempString.copy;
         
         if (textField == _nameTF)
         {
@@ -668,6 +681,15 @@ replacementString:(NSString *)string
             [UserDefaults.defaults saveString:textField.text
                                        forKey:@"UserEmailInfo"];
         }
+        
+        UITextPosition *start = [textField positionFromPosition:textField.beginningOfDocument
+                                                         offset:tempRange.location];
+        
+        UITextPosition *end = [textField positionFromPosition:start
+                                                       offset:tempRange.length];
+        
+        [textField setSelectedTextRange:[textField textRangeFromPosition:start
+                                                              toPosition:end]];
     }
     
     [self enableControl:_sendButton
@@ -675,6 +697,8 @@ replacementString:(NSString *)string
     
     return NO;
 }
+
+
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
@@ -733,7 +757,7 @@ replacementString:(NSString *)string
     if (deleteLastChar)
         simpleNumber = [simpleNumber substringToIndex:(simpleNumber.length - 1)];
     
-    if(simpleNumber.length < 7)
+    if (simpleNumber.length < 7)
     {
         simpleNumber = [simpleNumber stringByReplacingOccurrencesOfString:@"(\\d{3})(\\d+)"
                                                                withString:@"($1) $2"
