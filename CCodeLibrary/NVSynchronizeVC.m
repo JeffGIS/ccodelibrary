@@ -793,7 +793,11 @@ didReceiveMessage:(NSString *)message
                 }
                 
                 else
+                {
                     [_popoverView hide];
+                    [self closeGMServer];
+                    [self sendGMServerMessage:GMSMessageOpenConnect];
+                }
                 
                 break;
                 
