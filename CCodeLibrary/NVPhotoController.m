@@ -60,8 +60,14 @@
     
     self.view.backgroundColor = UIColor.blackColor;
     
+    CGFloat viewHeight = 60.0, margin = 20.0;
+    UIFont *font = [UIFont boldSystemFontOfSize:40.0];
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        viewHeight = 40.0, margin = 8.0;
+    
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _returnButton.frame = CGRectMake(20.0, 20.0, 180.0, 60.0);
+    _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
     _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
     
     [_returnButton setTitle:@"< Return"
@@ -79,24 +85,53 @@
     
     [self.view addSubview:_returnButton];
     
-    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, self.view.frame.size.height - 80.0,
-                                                            self.view.frame.size.width - 40.0, 60.0)];
+    [_returnButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:margin].active = YES;
+    [_returnButton.topAnchor constraintEqualToAnchor:self.view.topAnchor].active = YES;
+    [_returnButton.heightAnchor constraintEqualToConstant:viewHeight].active = YES;
     
+    _titleLabel = UILabel.new;
+    _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _titleLabel.backgroundColor = UIColor.clearColor;
     _titleLabel.textColor = UIColor.whiteColor;
     _titleLabel.textAlignment = NSTextAlignmentCenter;
-    _titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
+    _titleLabel.adjustsFontSizeToFitWidth = YES;
+    _titleLabel.font = font;
+    _titleLabel.text = _titleString;
     
     [self.view addSubview:_titleLabel];
     
-    _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 100.0, self.view.frame.size.width,
-                                                               (self.view.frame.size.height - 200.0))];
+    [_titleLabel.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:margin].active = YES;
+    [_titleLabel.topAnchor constraintEqualToAnchor:_returnButton.bottomAnchor].active = YES;
+    [_titleLabel.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-margin].active = YES;
+    [_titleLabel.heightAnchor constraintEqualToConstant:viewHeight].active = YES;
     
+    _photoLabel = UILabel.new;
+    _photoLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    _photoLabel.backgroundColor = UIColor.clearColor;
+    _photoLabel.textColor = UIColor.whiteColor;
+    _photoLabel.textAlignment = NSTextAlignmentCenter;
+    _photoLabel.adjustsFontSizeToFitWidth = YES;
+    _photoLabel.font = font;
+    
+    [self.view addSubview:_photoLabel];
+    
+    [_photoLabel.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:margin].active = YES;
+    [_photoLabel.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
+    [_photoLabel.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-margin].active = YES;
+    [_photoLabel.heightAnchor constraintEqualToConstant:viewHeight].active = YES;
+    
+    _photoView = UIImageView.new;
+    _photoView.translatesAutoresizingMaskIntoConstraints = NO;
     _photoView.contentMode = UIViewContentModeScaleAspectFit;
     _photoView.userInteractionEnabled = YES;
     _imageIndex = 0;
     
     [self.view addSubview:_photoView];
+    
+    [_photoView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active = YES;
+    [_photoView.topAnchor constraintEqualToAnchor:_titleLabel.bottomAnchor].active = YES;
+    [_photoView.bottomAnchor constraintEqualToAnchor:_photoLabel.topAnchor].active = YES;
+    [_photoView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
     
     if (_photosArray.count > 1)
     {
@@ -115,17 +150,12 @@
         [_photoView addGestureRecognizer:rightSwipe];
     }
     
-    _photoLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, self.view.frame.size.height - 80.0,
-                                                            self.view.frame.size.width - 40.0, 60.0)];
-    
-    _photoLabel.backgroundColor = UIColor.clearColor;
-    _photoLabel.textColor = UIColor.whiteColor;
-    _photoLabel.textAlignment = NSTextAlignmentCenter;
-    _photoLabel.font = [UIFont boldSystemFontOfSize:48.0];
-    
-    [self.view addSubview:_photoLabel];
-    
     [self updateImage];
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning
