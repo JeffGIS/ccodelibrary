@@ -1,5 +1,6 @@
 //  NVSynchronizeVC.h
 //  CCodeLibrary
+
 #import "CurbRampData.h"
 #import "AlleyWallData.h"
 
@@ -21,11 +22,10 @@
 @interface NVSynchronizeVC : UIViewController
 
 @property (nonatomic, weak) id <NVSynchronizeDelegate> delegate;
-@property id databaseID;
-@property CurbRampData * crd;
-@property CurbRampData * awd;
-@property NSTimer * sendTimer;
-@property NSTimer * doTimer;
+@property (nonatomic) id databaseID;
+@property (nonatomic) CurbRampData *crd, *awd;
+@property (nonatomic) NSString *uploadStatusMsg, *filePath;
+@property NSTimer *sendTimer, *doTimer;
 @property NSInteger currentServerMsgID;
 @property int lastFileNumToUpload;
 @property int lastFileNumOnServer;
@@ -38,9 +38,8 @@
 @property int uploadedFiles;
 @property int origUpFiles;
 @property int currentProcess;
-@property NSString* uploadStatusMsg;
 @property int numiPadsInMsg;
 @property int myiPad;
-@property NSString* filePath;
 @property int process;
+
 @end
