@@ -14,6 +14,7 @@
 #define PRELIM_MODULE       2
 #define DETAIL_MODULE       3
 #define FACILITIES_MODULE   4
+#define GMMOBILE_MODULE     5
 
 #define PROJECT_MPLS        1
 #define PROJECT_METROGIS    2
@@ -157,6 +158,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (void)savePlacesString:(NSString*)placesString;
 - (BOOL)processPlaces;
 - (BOOL)processPlacesArray:(NSUInteger) row;
+- (NSString*) getPlacesStringFromFile;
 - (void)loadiPadParametersForGeoid:(int)geoid;
 - (void)setiPadParametersFromGeoid:(int)geoid;
 - (void)deleteImagesForAllZooms:(int)intersectionID;
