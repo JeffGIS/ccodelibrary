@@ -31,7 +31,7 @@
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) UIImageView *photoView;
 @property (nonatomic) NSInteger imageIndex;
-@property (nonatomic) UILabel *photoLabel;
+@property (nonatomic) UILabel *photoLabel, *titleLabel;
 
 @end
 
@@ -78,6 +78,16 @@
             forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:_returnButton];
+    
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, self.view.frame.size.height - 80.0,
+                                                            self.view.frame.size.width - 40.0, 60.0)];
+    
+    _titleLabel.backgroundColor = UIColor.clearColor;
+    _titleLabel.textColor = UIColor.whiteColor;
+    _titleLabel.textAlignment = NSTextAlignmentCenter;
+    _titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
+    
+    [self.view addSubview:_titleLabel];
     
     _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 100.0, self.view.frame.size.width,
                                                                (self.view.frame.size.height - 200.0))];

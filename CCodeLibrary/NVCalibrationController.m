@@ -875,8 +875,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                        maxValue:100.0
                                                        delegate:self
                                                   configuration:NVSliderConfigurationCalibrationRunningSlope
-                                                           type:NVSliderMeasurementTypeDefault];
-            
+                                                           type:NVSliderMeasurementTypeDefault
+                                                           unit:@""];
         }
             break;
             
@@ -889,8 +889,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                        maxValue:180.0
                                                        delegate:self
                                                   configuration:NVSliderConfigurationCalibrationDegrees
-                                                           type:NVSliderMeasurementTypeDefault];
-            
+                                                           type:NVSliderMeasurementTypeDefault
+                                                           unit:@""];
         }
             break;
             
@@ -903,8 +903,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                        maxValue:48.0
                                                        delegate:self
                                                   configuration:NVSliderConfigurationCalibrationRiseRun
-                                                           type:NVSliderMeasurementTypeDefault];
-            
+                                                           type:NVSliderMeasurementTypeDefault
+                                                           unit:@""];
         }
             break;
             

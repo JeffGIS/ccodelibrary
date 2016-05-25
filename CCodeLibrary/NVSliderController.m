@@ -21,6 +21,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 @property (nonatomic) CGFloat minValue, maxValue;
 @property NVSliderControllerRange range;
 @property NVSliderConfiguration configuration;
+@property (nonatomic) NSString *unit;
 
 @end
 
@@ -34,6 +35,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             delegate:(id)delegate
        configuration:(NVSliderConfiguration)configuration
                 type:(NVSliderMeasurementType)type
+                unit:(NSString *)unit
 {
     CGFloat height = 260.0;
     
@@ -52,6 +54,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         _minValue = minValue;
         _maxValue = maxValue;
         _type = type;
+        _unit = unit;
         
         CGFloat ticMargin = ((UserDefaults.defaults.redSliderThumb.size.width / 2.0) - 10.0);
         
@@ -164,6 +167,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                 break;
         }
         
+        _sliderLabel.text = [NSString stringWithFormat:@"%@ %@", _sliderLabel.text, _unit];
         _sliderLabel.textColor = UIColor.blackColor;
         _sliderLabel.font = [UIFont boldSystemFontOfSize:56.0];
         _sliderLabel.textAlignment = NSTextAlignmentCenter;
@@ -214,7 +218,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     [button setTitleColor:UIColor.whiteColor
                  forState:UIControlStateNormal];
     
-    [button setTitleColor:UserDefaults.defaults.appleBlue
+    [button setTitleColor:UIColor.lightGrayColor
                  forState:UIControlStateHighlighted];
     
     [button addTarget:target
@@ -414,6 +418,8 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         default:
             break;
     }
+    
+    _sliderLabel.text = [NSString stringWithFormat:@"%@ %@", _sliderLabel.text, _unit];
 }
 
 - (void)saveButtonTapped:(UIButton *)button
@@ -541,6 +547,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             break;
     }
     
+    _sliderLabel.text = [NSString stringWithFormat:@"%@ %@", _sliderLabel.text, _unit];
     [self updateTicLabelText];
 }
 
