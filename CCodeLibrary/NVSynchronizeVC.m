@@ -13,8 +13,8 @@
 
 @interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate>
 
-@property (nonatomic) UILabel *titleLabel, *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
-@property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton, *connectButton;
+@property (nonatomic) UILabel *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
+@property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton, *connectButton, *titleButton;
 @property (nonatomic) UISwitch *pixUpSwitch, *pixDownSwitch, *dataDownSwitch;
 @property (nonatomic) NVProgressView *overallProgressView, *currentFileProgressView;
 @property (nonatomic) Colors *colors;
@@ -50,13 +50,18 @@
     self.view.backgroundColor = _colors.backgroundColor;
     _upFiles = _upPix = _downFiles = _downPix = 0;
     
-    _titleLabel = UILabel.new;
-    [self setupLabel:_titleLabel];
-    _titleLabel.textAlignment = NSTextAlignmentCenter;
-    _titleLabel.font = [UIFont boldSystemFontOfSize:44.0];
-    _titleLabel.adjustsFontSizeToFitWidth = YES;
-    _titleLabel.numberOfLines = 0;
-    _titleLabel.text = @"Synchronize\nData";
+    _titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self setupButton:_titleButton];
+    _titleButton.backgroundColor = UIColor.clearColor;
+    _titleButton.userInteractionEnabled = NO;
+    _titleButton.titleLabel.numberOfLines = 0;
+    
+    [_titleButton setTitleColor:_colors.textColor
+                       forState:UIControlStateNormal];
+    
+    [_titleButton addTarget:self
+                     action:@selector(titleButtonTapped:)
+           forControlEvents:UIControlEventTouchUpInside];
     
     _dataUpLabel = UILabel.new;
     [self setupLabel:_dataUpLabel];
@@ -121,7 +126,7 @@
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_returnButton];
     
-    [_returnButton setTitle:@" < Return "
+    [_returnButton setTitle:@"< Return"
                    forState:UIControlStateNormal];
     
     [_returnButton addTarget:self
@@ -130,9 +135,8 @@
     
     _connectButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_connectButton];
-    _connectButton.titleLabel.font = [UIFont boldSystemFontOfSize:24.0];
     
-    [_connectButton setTitle:@" Connect "
+    [_connectButton setTitle:@"Connect"
                     forState:UIControlStateNormal];
     
     [_connectButton addTarget:self
@@ -141,8 +145,6 @@
     
     _connectLabel = UILabel.new;
     [self setupLabel:_connectLabel];
-    _connectLabel.textAlignment = NSTextAlignmentCenter;
-    _connectLabel.font = [UIFont boldSystemFontOfSize:24.0];
     [self updateConnectLabel];
     
     _overallProgressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
@@ -174,7 +176,6 @@
         _connectLabel.font = [UIFont boldSystemFontOfSize:16.0];
         _overallLabel.font = [UIFont boldSystemFontOfSize:16.0];
         _currentFileLabel.font = [UIFont boldSystemFontOfSize:16.0];
-        _connectButton.titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
         margin = (10.0 + borderWidth);
         buttonMargin = 12.0;
     }
@@ -209,27 +210,27 @@
         switch (i)
         {
             case 0://title label
-                [sectionView addSubview:_returnButton];
-                [_returnButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
-                [_returnButton.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:buttonMargin].active = YES;
-                [_returnButton.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor constant:-buttonMargin].active = YES;
-                
                 [sectionView addSubview:_connectLabel];
                 [_connectLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
-                [_connectLabel.widthAnchor constraintEqualToAnchor:_returnButton.widthAnchor].active = YES;
                 [_connectLabel.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-buttonMargin].active = YES;
                 
                 [sectionView addSubview:_connectButton];
                 [_connectButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
                 [_connectButton.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-buttonMargin].active = YES;
-                [_connectButton.widthAnchor constraintEqualToAnchor:_returnButton.widthAnchor].active = YES;
                 [_connectButton.bottomAnchor constraintEqualToAnchor:_connectLabel.topAnchor].active = YES;
+                [_connectButton.widthAnchor constraintEqualToAnchor:_connectLabel.widthAnchor].active = YES;
                 
-                [sectionView addSubview:_titleLabel];
-                [_titleLabel.leadingAnchor constraintEqualToAnchor:_returnButton.trailingAnchor constant:buttonMargin].active = YES;
-                [_titleLabel.trailingAnchor constraintEqualToAnchor:_connectButton.leadingAnchor constant:-buttonMargin].active = YES;
-                [_titleLabel.topAnchor constraintEqualToAnchor:sectionView.topAnchor].active = YES;
-                [_titleLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
+                [sectionView addSubview:_returnButton];
+                [_returnButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
+                [_returnButton.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:buttonMargin].active = YES;
+                [_returnButton.bottomAnchor constraintEqualToAnchor:_connectButton.bottomAnchor].active = YES;
+                [_returnButton.widthAnchor constraintEqualToAnchor:_connectButton.widthAnchor].active = YES;
+                
+                [sectionView addSubview:_titleButton];
+                [_titleButton.leadingAnchor constraintEqualToAnchor:_returnButton.trailingAnchor constant:buttonMargin].active = YES;
+                [_titleButton.trailingAnchor constraintEqualToAnchor:_connectButton.leadingAnchor constant:-buttonMargin].active = YES;
+                [_titleButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
+                [_titleButton.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor constant:-buttonMargin].active = YES;
                 break;
                 
             case 1://data files to be uploaded
@@ -389,20 +390,25 @@
     button.translatesAutoresizingMaskIntoConstraints = NO;
     button.backgroundColor = _colors.enabledColor;
     button.layer.cornerRadius = 10.0;
+    button.contentEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 4.0, 4.0);
+    button.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
         button.titleLabel.font = [UIFont boldSystemFontOfSize:20.0];
+        button.contentEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 4.0, 4.0);
         button.layer.cornerRadius = 6.0;
     }
     
     else
     {
         button.titleLabel.font = [UIFont boldSystemFontOfSize:40.0];
+        button.contentEdgeInsets = UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0);
         button.layer.cornerRadius = 10.0;
     }
     
-    
+    button.titleLabel.textAlignment = NSTextAlignmentCenter;
     button.titleLabel.adjustsFontSizeToFitWidth = YES;
     
     [button setTitleColor:_colors.titleColor
@@ -459,6 +465,11 @@
 }
 
 - (void)cancelButtonTapped:(UIButton *)button
+{
+    
+}
+
+- (void)titleButtonTapped:(UIButton *)button
 {
     
 }
@@ -708,13 +719,19 @@ didReceiveMessage:(NSString *)message
                                                                          title:title
                                                                buttonTextArray:@[@"OK"]
                                                               destructiveIndex:0];
-                    break;
 #pragma unused(alert)
+                    
+                    [_titleButton setTitle:@"Synchronize Data\nNO CITIES IN LIST"
+                                  forState:UIControlStateNormal];
+                    
+                    _syncButton.enabled = NO;
+                    [self updateButton:_syncButton];
+                    break;
                 }
                 
                 _selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
                 
-                if (CRAPI.sharedInstance.placesArray.count <= 1 ||
+                if (CRAPI.sharedInstance.placesArray.count < 2 ||
                     CRAPI.sharedInstance.placesArray.count <= _selectedRow ||
                     CRAPI.sharedInstance.currentGeoid == 0)
                 {
@@ -726,8 +743,9 @@ didReceiveMessage:(NSString *)message
                 
                 [CRAPI.sharedInstance processPlacesArray:_selectedRow];
                 
-                _titleLabel.text = [NSString stringWithFormat:@"Synchronize\nData for\n%@",
-                                    CRAPI.sharedInstance.currentCityNameAndState];
+                [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",
+                                        CRAPI.sharedInstance.currentCityNameAndState]
+                              forState:UIControlStateNormal];
                 
                 _locationManager = [[CLLocationManager alloc] init];
                 _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
