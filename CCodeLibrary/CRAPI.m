@@ -619,6 +619,18 @@
 {
     [UserDefaults.defaults saveString:placesString
                                forKey:@"PlacesString"];
+    if (_currentModule == GMMOBILE_MODULE)
+    {
+        NSString * path = [NSString stringWithFormat:@"%@/%@", UserDefaults.defaults.sharedFilePath, @"PlacesString.txt"];
+        [placesString writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    }
+}
+
+- (NSString*) getPlacesStringFromFile
+{
+    NSString * path = [NSString stringWithFormat:@"%@/%@", UserDefaults.defaults.sharedFilePath, @"PlacesString.txt"];
+    NSString *places = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    return places;
 }
 
 - (BOOL)processPlacesArray:(NSUInteger)row
