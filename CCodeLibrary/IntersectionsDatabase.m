@@ -27,6 +27,12 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     return sqlReturn;
 }
 
+- (id) init
+{
+    self = [super init];
+    return self;
+}
+
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid
 {
     IntersectionsDatabase *db = [[IntersectionsDatabase alloc] initWithGeoid:geoid];
@@ -1577,7 +1583,7 @@ Exit:
     {
         _popover = popover;
         
-        [NSTimer scheduledTimerWithTimeInterval:1
+        [NSTimer scheduledTimerWithTimeInterval:0.1
                                          target:self
                                        selector:@selector(getInitialIntersectionFile:)
                                        userInfo:nil

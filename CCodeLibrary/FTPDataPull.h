@@ -50,7 +50,7 @@ typedef NS_ENUM(NSInteger, FTPDataType)
 
 @interface FTPDataPull : NSObject <NSURLConnectionDataDelegate,GSSiPopoverViewDelegate>
 
-@property (nonatomic, weak) id <FTPDataPullDelegate> delegate;
+@property (nonatomic, strong) id <FTPDataPullDelegate> delegate; //nonstandard strong pointer needed for intersection database init
 @property (nonatomic, assign, readonly ) BOOL isReceiving;
 @property (nonatomic, assign, readwrite ) BOOL useOnlyPrimaryFTP;
 @property BOOL useTestServer;
