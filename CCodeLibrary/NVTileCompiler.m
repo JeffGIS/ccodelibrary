@@ -153,7 +153,7 @@
                 NSString *url = [NSString stringWithFormat:@"http://gssidata.com/MPLSADA/%lu/%lu/%lu.jp2",
                                  (unsigned long)_zoom, (unsigned long)tiles.tiley, (unsigned long)tiles.tilex];
                 
-                NSURL *mapUrl = [NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+                NSURL *mapUrl = [NSURL URLWithString:[url stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.alphanumericCharacterSet]];
                 NSURLSessionDataTask *dataTask = [urlSession dataTaskWithURL:mapUrl];
                 
                 dataTask.taskDescription = [NSString stringWithFormat:@"%lu",
@@ -175,7 +175,7 @@
                                   @"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&key=%@",
                                   _lat, _lon, _zoom, GOOGLE_API_KEY];
         
-        NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.alphanumericCharacterSet]];
         UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
         [urlSession finishTasksAndInvalidate];
         [self saveImage:image];
