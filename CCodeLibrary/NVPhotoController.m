@@ -222,6 +222,7 @@
 @property (nonatomic) NSArray *photosArray;
 @property NSInteger imageIndex;
 @property (nonatomic) CGSize size;
+@property (nonatomic) UIButton *deleteButton;
 
 @end
 
@@ -268,12 +269,47 @@
     
     [view addSubview:nvpv];
     
+    nvpv.deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    nvpv.deleteButton.translatesAutoresizingMaskIntoConstraints = NO;
+    nvpv.deleteButton.imageEdgeInsets = UIEdgeInsetsMake(6.0, 6.0, 6.0, 6.0);
+    
+    [nvpv.deleteButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"transWhiteX"
+                                                                                               ofType:@"png"]]
+                       forState:UIControlStateNormal];
+    
+    [nvpv addSubview:nvpv.deleteButton];
+    
+    [nvpv.deleteButton.leadingAnchor constraintEqualToAnchor:nvpv.trailingAnchor constant:-40.0].active = YES;
+    [nvpv.deleteButton.trailingAnchor constraintEqualToAnchor:nvpv.trailingAnchor].active = YES;
+    [nvpv.deleteButton.topAnchor constraintEqualToAnchor:nvpv.topAnchor].active = YES;
+    [nvpv.deleteButton.bottomAnchor constraintEqualToAnchor:nvpv.topAnchor constant:40.0].active = YES;
+    
+    [nvpv.deleteButton addTarget:nvpv
+                          action:@selector(deleteButtonTapped:)
+                forControlEvents:UIControlEventTouchUpInside];
+    
     [UIView animateWithDuration:0.25
                      animations:^{
                          nvpv.alpha = 1.0;
                      }];
     
     return nvpv;
+}
+
+- (void)hidePhotoView:(BOOL)animated
+{
+    if (animated)
+    {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             self.alpha = 0.0;
+                         } completion:^(BOOL finished) {
+                             [self removeFromSuperview];
+                         }];
+    }
+    
+    else
+        [self removeFromSuperview];
 }
 
 - (void)updatePosition
@@ -312,6 +348,11 @@
     
     self.image = [UIImage imageWithContentsOfFile:[_delegate getImagePath:self
                                                                    forKey:nvp.key]];
+}
+
+- (void)deleteButtonTapped:(UIButton *)button
+{
+    [self hidePhotoView:YES];
 }
 
 @end
