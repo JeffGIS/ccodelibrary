@@ -40,5 +40,9 @@
                                     coordinate:(CLLocationCoordinate2D)coordinate;
 
 - (void)updatePosition;
+- (void)hidePhotoView:(BOOL)animated;
+
+- (void)updateVerticalOffset:(CGFloat)verticalOffset
+                    animated:(BOOL)animated;
 
 @end

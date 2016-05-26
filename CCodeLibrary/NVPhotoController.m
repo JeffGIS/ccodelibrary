@@ -220,9 +220,10 @@
 @property (nonatomic, weak) id <NVPhotoControllerDelegate> delegate;
 @property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic) NSArray *photosArray;
-@property NSInteger imageIndex;
-@property (nonatomic) CGSize size;
+@property (nonatomic) CGSize size, draggedOffset;
 @property (nonatomic) UIButton *deleteButton;
+@property NSInteger imageIndex;
+@property BOOL isDragged;
 
 @end
 
@@ -240,11 +241,15 @@
     nvpv.userInteractionEnabled = YES;
     nvpv.layer.cornerRadius = 10.0;
     nvpv.layer.masksToBounds = YES;
+    nvpv.layer.borderColor = UIColor.whiteColor.CGColor;
+    nvpv.layer.borderWidth = 1.0;
     nvpv.alpha = 0.0;
     nvpv.delegate = delegate;
     nvpv.coordinate = coordinate;
     nvpv.photosArray = photosArray;
     nvpv.imageIndex = 0;
+    nvpv.isDragged = NO;
+    nvpv.draggedOffset = CGSizeZero;
     
     UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:nvpv
                                                                                     action:@selector(imageLeftSwiped:)];
@@ -317,7 +322,28 @@
     self.frame = CGRectMake(0.0, 0.0, _size.width, _size.height);
     CGPoint center = [_delegate getPointForCoordinate:_coordinate];
     CGFloat offset = [_delegate getVerticalOffset];
-    self.center = CGPointMake(center.x, ((center.y - offset) - (_size.height / 2.0)));
+    
+    self.center = CGPointMake((center.x + _draggedOffset.width),
+                              (center.y - offset - (_size.height / 2.0) - _draggedOffset.height));
+}
+
+- (void)updateVerticalOffset:(CGFloat)verticalOffset
+                    animated:(BOOL)animated
+{
+    CGRect frame = self.frame;
+    frame.origin.y += verticalOffset;
+    _draggedOffset.height -= verticalOffset;
+    
+    if (animated)
+    {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             self.frame = frame;
+                         }];
+    }
+    
+    else
+        self.frame = frame;
 }
 
 - (void)imageLeftSwiped:(UISwipeGestureRecognizer *)gesture
