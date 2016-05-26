@@ -32,7 +32,7 @@
     
     assert(str);
     
-    trimmedStr = [str stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.alphanumericCharacterSet];
+    trimmedStr = [str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     if ((trimmedStr) && (trimmedStr.length != 0))
     {

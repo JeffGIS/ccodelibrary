@@ -23,7 +23,8 @@
 
 @property (nonatomic, weak) id <NVSynchronizeDelegate> delegate;
 @property (nonatomic) id databaseID;
-@property (nonatomic) CurbRampData *crd, *awd;
+@property (nonatomic) CurbRampData *crd;
+@property (nonatomic) AlleyWallData *awd;
 @property (nonatomic) NSString *uploadStatusMsg, *filePath;
 @property NSTimer *sendTimer, *doTimer;
 @property NSInteger currentServerMsgID;

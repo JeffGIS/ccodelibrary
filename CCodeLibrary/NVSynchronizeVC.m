@@ -13,7 +13,7 @@
 #import "NVPopoverTableView.h"
 #import "CityOrOrganizationData.h"
 
-@interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate,NVPopoverTableViewDelegate>
+@interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate,NVPopoverTableViewDelegate,CLLocationManagerDelegate>
 
 @property (nonatomic) UILabel *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
 @property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton, *connectButton, *titleButton;
@@ -483,7 +483,7 @@
                                                                          title:@"Select City to Synchronize Data"
                                                                      textArray:tempArray.copy
                                                                  includeCancel:YES];
-#pragma unsued(nvptv)
+#pragma unused(nvptv)
 }
 
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
@@ -499,7 +499,7 @@
     
     _selectedRow = index;
     
-    [UserDefaults.defaults saveInteger:_selectedRow
+    [UserDefaults.defaults saveInteger:(int)_selectedRow
                                 forKey:@"SelectedRow"];
 
     [CRAPI.sharedInstance processPlacesArray:_selectedRow];
@@ -699,8 +699,8 @@
                 NSString *filePath = [_databaseID outputDataFile:lastDataIHave
                                                             iPad:_myiPad];
                 
-                fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
-                                                                                     error:nil].fileSize;
+                fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
+                                                                               error:nil].fileSize;
             }
             
             int lastDataFileOnServer = [self getDataNumFromServerMsg:iPad
@@ -719,8 +719,8 @@
                 NSString *filePath = [_databaseID outputPictFile:lastPictIHave
                                                             iPad:_myiPad];
                 
-                fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
-                                                                                     error:nil].fileSize;
+                fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
+                                                                               error:nil].fileSize;
             }
             
             _downFiles += (lastDataFileOnServer - lastDataIHave);
@@ -823,13 +823,13 @@ didReceiveMessage:(NSString *)message
                 
                 if (CRAPI.sharedInstance.currentGeoid < 0)
                 {
-                    _awd = [AlleyWallData new];
+                    _awd = AlleyWallData.new;
                     _databaseID = _awd;
                 }
                 
                 else
                 {
-                    _crd = [CurbRampData new];
+                    _crd = CurbRampData.new;
                     _databaseID = _crd;
                 }
                 
@@ -849,8 +849,8 @@ didReceiveMessage:(NSString *)message
                     NSString *filePath = [_databaseID outputDataFile:lastNum
                                                                 iPad:_myiPad];
                     
-                    fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
-                                                                                         error:nil].fileSize;
+                    fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
+                                                                                   error:nil].fileSize;
                 }
                 
                 _lastFileNumToUpload = lastNum;
@@ -871,8 +871,8 @@ didReceiveMessage:(NSString *)message
                     NSString *filePath = [_databaseID outputPictFile:lastNum
                                                                 iPad:_myiPad];
                     
-                    fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
-                                                                                         error:nil].fileSize;
+                    fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
+                                                                                   error:nil].fileSize;
                 }
                 
                 _lastPictNumToUpload = lastNum;
@@ -938,10 +938,7 @@ didReceiveMessage:(NSString *)message
 - (void)downloadNextFile
 {
     if (_process == DOWNLOAD_DATA_PROCESS && !CRAPI.sharedInstance.downloadData)
-    {
-        _process == DOWNLOAD_PICT_PROCESS;
         _downloadiPad = 1;
-    }
     
     if (_process == DOWNLOAD_PICT_PROCESS && !CRAPI.sharedInstance.downloadPix)
         return;
@@ -981,8 +978,8 @@ Top:
                     NSString *filePath = [_databaseID outputPictFile:lastNum
                                                                 iPad:_myiPad];
                     
-                    fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
-                                                                                         error:nil].fileSize;
+                    fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
+                                                                                   error:nil].fileSize;
                 }
                 
                 _lastFileNumToUpload = lastNum;

@@ -647,7 +647,7 @@
     
     if (gesture.view == _contentView)
     {
-        selection = [NSString stringWithFormat:@"%@%i", _alphabet[xID], (yID + 1)];
+        selection = [NSString stringWithFormat:@"%@%lu", _alphabet[xID], (yID + 1)];
         
         for (SpreadSheetViewCell *cells in _contentView.subviews)
         {
@@ -662,7 +662,7 @@
     
     else if (gesture.view == _rowHeaderView)
     {
-        selection = [NSString stringWithFormat:@"%i", (yID + 1)];
+        selection = [NSString stringWithFormat:@"%lu", (yID + 1)];
         
         for (SpreadSheetViewCell *cells in _rowHeaderView.subviews)
         {

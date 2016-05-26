@@ -40,11 +40,11 @@
         return;
     
     if (status == FTPStatusOK || status == FTPStatusFileExists)
-        status = GetAssStatusOK;
+        status = (FTPStatus)GetAssStatusOK;
     
     else
     {
-        status = GetAssStatusFailed;
+        status = (FTPStatus)GetAssStatusFailed;
         path = @"";
     }
     
