@@ -30,7 +30,7 @@
         return nil;
     }
     
-    if (![delegate respondsToSelector:@selector(popoverTableView:didSelectRowWithText:)] ||
+    if (![delegate respondsToSelector:@selector(popoverTableView:didSelectRowWithText:atIndex:)] ||
         ![delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
     {
         NSLog(@"NVPopoverTableView ERROR:Delegate must respond to all selectors in protocol");
@@ -196,9 +196,17 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         else
         {
             NSString *text = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
+            NSInteger index = 0;
+            
+            if (_includeCancel)
+                index = (indexPath.row - 1);
+            
+            else
+                index = indexPath.row;
             
             [_delegate popoverTableView:self
-                   didSelectRowWithText:text];
+                   didSelectRowWithText:text
+                                atIndex:index];
         }
     }
 }

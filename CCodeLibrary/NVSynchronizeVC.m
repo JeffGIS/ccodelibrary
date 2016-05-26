@@ -10,8 +10,10 @@
 #import "Colors.h"
 #import "CRAPI.h"
 #import "NVAlertView.h"
+#import "NVPopoverTableView.h"
+#import "CityOrOrganizationData.h"
 
-@interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate>
+@interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate,NVPopoverTableViewDelegate>
 
 @property (nonatomic) UILabel *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
 @property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton, *connectButton, *titleButton;
@@ -54,7 +56,7 @@
     [self setupButton:_titleButton];
     _titleButton.backgroundColor = UIColor.clearColor;
     _titleButton.userInteractionEnabled = NO;
-    _titleButton.titleLabel.numberOfLines = 0;
+    _titleButton.titleLabel.numberOfLines = 2;
     
     [_titleButton setTitleColor:_colors.textColor
                        forState:UIControlStateNormal];
@@ -471,7 +473,40 @@
 
 - (void)titleButtonTapped:(UIButton *)button
 {
+    NSMutableArray *tempArray = NSMutableArray.array;
     
+    for (CityOrOrganizationData *cod in CRAPI.sharedInstance.placesArray.copy)
+        [tempArray addObject:cod.name];
+    
+    NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
+                                                                      delegate:self
+                                                                         title:@"Select City to Synchronize Data"
+                                                                     textArray:tempArray.copy
+                                                                 includeCancel:YES];
+#pragma unsued(nvptv)
+}
+
+- (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
+{
+    [popoverTableView hide:YES];
+}
+
+- (void)popoverTableView:(NVPopoverTableView *)popoverTableView
+    didSelectRowWithText:(NSString *)text
+                 atIndex:(NSInteger)index
+{
+    [popoverTableView hide:YES];
+    
+    _selectedRow = index;
+    
+    [UserDefaults.defaults saveInteger:_selectedRow
+                                forKey:@"SelectedRow"];
+
+    [CRAPI.sharedInstance processPlacesArray:_selectedRow];
+    
+    [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",
+                            CRAPI.sharedInstance.currentCityNameAndState]
+                  forState:UIControlStateNormal];
 }
 
 - (void)connectButtonTapped:(UIButton *)button
@@ -746,6 +781,15 @@ didReceiveMessage:(NSString *)message
                 [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",
                                         CRAPI.sharedInstance.currentCityNameAndState]
                               forState:UIControlStateNormal];
+                
+                if (CRAPI.sharedInstance.placesArray.count > 1)
+                {
+                    _titleButton.backgroundColor = _colors.enabledColor;
+                    _titleButton.userInteractionEnabled = YES;
+                    
+                    [_titleButton setTitleColor:_colors.titleColor
+                                       forState:UIControlStateNormal];
+                }
                 
                 _locationManager = [[CLLocationManager alloc] init];
                 _locationManager.desiredAccuracy = kCLLocationAccuracyBest;

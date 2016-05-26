@@ -8,7 +8,8 @@
 @protocol NVPopoverTableViewDelegate <NSObject>
 
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView
-    didSelectRowWithText:(NSString *)text;
+    didSelectRowWithText:(NSString *)text
+                 atIndex:(NSInteger)index;
 
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView;
 
