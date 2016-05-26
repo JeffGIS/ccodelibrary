@@ -402,7 +402,7 @@
     [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=%f&heading=%f&pitch=%f&key=%@",
      atLatLon.lat, atLatLon.lon, fov, heading, pitch, GOOGLE_API_KEY];
     
-    NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.alphanumericCharacterSet]];
     UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
     return image;
 }

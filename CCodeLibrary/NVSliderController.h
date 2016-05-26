@@ -42,7 +42,8 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
             maxValue:(CGFloat)maxValue
             delegate:(id)delegate
        configuration:(NVSliderConfiguration)configuration
-                type:(NVSliderMeasurementType)type;
+                type:(NVSliderMeasurementType)type
+                unit:(NSString *)unit;
 
 - (void)showSliderControllerInView:(UIView *)view
                           animated:(BOOL)animated

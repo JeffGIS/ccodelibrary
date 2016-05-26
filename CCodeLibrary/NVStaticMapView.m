@@ -66,7 +66,7 @@
      @"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%f&size=640x640&scale=2&maptype=roadmap&markers=color:red|%f,%f&key=%@",
      coordinate.lat, coordinate.lon, zoom, coordinate.lat, coordinate.lon, GOOGLE_API_KEY];
     
-    NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.alphanumericCharacterSet]];
     staticMap.image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
     
     [view addSubview:staticMap];

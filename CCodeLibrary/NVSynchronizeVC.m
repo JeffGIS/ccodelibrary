@@ -10,32 +10,30 @@
 #import "Colors.h"
 #import "CRAPI.h"
 #import "NVAlertView.h"
+#import "NVPopoverTableView.h"
+#import "CityOrOrganizationData.h"
 
-@interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate>
+@interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate,NVPopoverTableViewDelegate>
 
-@property (nonatomic) UILabel *titleLabel, *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
-@property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton, *connectButton;
+@property (nonatomic) UILabel *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
+@property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton, *connectButton, *titleButton;
 @property (nonatomic) UISwitch *pixUpSwitch, *pixDownSwitch, *dataDownSwitch;
 @property (nonatomic) NVProgressView *overallProgressView, *currentFileProgressView;
 @property (nonatomic) Colors *colors;
-@property int upFiles, upPix, downFiles, downPix;
 @property (nonatomic) GeoMasterServer *GMServer;
+@property (nonatomic) GSSiPopoverView *popoverView;
+@property (nonatomic) CLLocationManager *locationManager;
+@property int upFiles, upPix, downFiles, downPix, numConnectionAttempts, totConnectionAttempts;;
 @property BOOL serverOpen;
 @property NSTimer *timer;
-@property int numConnectionAttempts;
-@property int totConnectionAttempts;
-@property NSString *iPad_id;
-@property NSString *iPad_name;
+@property NSString *iPad_id, *iPad_name;
 @property FTPDataPush *push;
+@property NSInteger selectedRow;
 
 @end
 
 @implementation NVSynchronizeVC
-{
-    GSSiPopoverView *_popoverView;
-    CLLocationManager *_locationManager;
-    NSInteger _selectedRow;
-}
+
 - (void)loadView
 {
     UIView *view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
@@ -54,13 +52,18 @@
     self.view.backgroundColor = _colors.backgroundColor;
     _upFiles = _upPix = _downFiles = _downPix = 0;
     
-    _titleLabel = UILabel.new;
-    [self setupLabel:_titleLabel];
-    _titleLabel.textAlignment = NSTextAlignmentCenter;
-    _titleLabel.font = [UIFont boldSystemFontOfSize:44.0];
-    _titleLabel.adjustsFontSizeToFitWidth = YES;
-    _titleLabel.numberOfLines = 0;
-    _titleLabel.text = @"Synchronize\nData";
+    _titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self setupButton:_titleButton];
+    _titleButton.backgroundColor = UIColor.clearColor;
+    _titleButton.userInteractionEnabled = NO;
+    _titleButton.titleLabel.numberOfLines = 2;
+    
+    [_titleButton setTitleColor:_colors.textColor
+                       forState:UIControlStateNormal];
+    
+    [_titleButton addTarget:self
+                     action:@selector(titleButtonTapped:)
+           forControlEvents:UIControlEventTouchUpInside];
     
     _dataUpLabel = UILabel.new;
     [self setupLabel:_dataUpLabel];
@@ -125,7 +128,7 @@
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_returnButton];
     
-    [_returnButton setTitle:@" < Return "
+    [_returnButton setTitle:@"< Return"
                    forState:UIControlStateNormal];
     
     [_returnButton addTarget:self
@@ -134,9 +137,8 @@
     
     _connectButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_connectButton];
-    _connectButton.titleLabel.font = [UIFont boldSystemFontOfSize:24.0];
     
-    [_connectButton setTitle:@" Connect "
+    [_connectButton setTitle:@"Connect"
                     forState:UIControlStateNormal];
     
     [_connectButton addTarget:self
@@ -145,8 +147,6 @@
     
     _connectLabel = UILabel.new;
     [self setupLabel:_connectLabel];
-    _connectLabel.textAlignment = NSTextAlignmentCenter;
-    _connectLabel.font = [UIFont boldSystemFontOfSize:24.0];
     [self updateConnectLabel];
     
     _overallProgressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
@@ -178,7 +178,6 @@
         _connectLabel.font = [UIFont boldSystemFontOfSize:16.0];
         _overallLabel.font = [UIFont boldSystemFontOfSize:16.0];
         _currentFileLabel.font = [UIFont boldSystemFontOfSize:16.0];
-        _connectButton.titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
         margin = (10.0 + borderWidth);
         buttonMargin = 12.0;
     }
@@ -213,27 +212,27 @@
         switch (i)
         {
             case 0://title label
-                [sectionView addSubview:_returnButton];
-                [_returnButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
-                [_returnButton.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:buttonMargin].active = YES;
-                [_returnButton.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor constant:-buttonMargin].active = YES;
-                
                 [sectionView addSubview:_connectLabel];
                 [_connectLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
-                [_connectLabel.widthAnchor constraintEqualToAnchor:_returnButton.widthAnchor].active = YES;
                 [_connectLabel.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-buttonMargin].active = YES;
                 
                 [sectionView addSubview:_connectButton];
                 [_connectButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
                 [_connectButton.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-buttonMargin].active = YES;
-                [_connectButton.widthAnchor constraintEqualToAnchor:_returnButton.widthAnchor].active = YES;
                 [_connectButton.bottomAnchor constraintEqualToAnchor:_connectLabel.topAnchor].active = YES;
+                [_connectButton.widthAnchor constraintEqualToAnchor:_connectLabel.widthAnchor].active = YES;
                 
-                [sectionView addSubview:_titleLabel];
-                [_titleLabel.leadingAnchor constraintEqualToAnchor:_returnButton.trailingAnchor constant:buttonMargin].active = YES;
-                [_titleLabel.trailingAnchor constraintEqualToAnchor:_connectButton.leadingAnchor constant:-buttonMargin].active = YES;
-                [_titleLabel.topAnchor constraintEqualToAnchor:sectionView.topAnchor].active = YES;
-                [_titleLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
+                [sectionView addSubview:_returnButton];
+                [_returnButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
+                [_returnButton.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:buttonMargin].active = YES;
+                [_returnButton.bottomAnchor constraintEqualToAnchor:_connectButton.bottomAnchor].active = YES;
+                [_returnButton.widthAnchor constraintEqualToAnchor:_connectButton.widthAnchor].active = YES;
+                
+                [sectionView addSubview:_titleButton];
+                [_titleButton.leadingAnchor constraintEqualToAnchor:_returnButton.trailingAnchor constant:buttonMargin].active = YES;
+                [_titleButton.trailingAnchor constraintEqualToAnchor:_connectButton.leadingAnchor constant:-buttonMargin].active = YES;
+                [_titleButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
+                [_titleButton.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor constant:-buttonMargin].active = YES;
                 break;
                 
             case 1://data files to be uploaded
@@ -393,20 +392,25 @@
     button.translatesAutoresizingMaskIntoConstraints = NO;
     button.backgroundColor = _colors.enabledColor;
     button.layer.cornerRadius = 10.0;
+    button.contentEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 4.0, 4.0);
+    button.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
         button.titleLabel.font = [UIFont boldSystemFontOfSize:20.0];
+        button.contentEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 4.0, 4.0);
         button.layer.cornerRadius = 6.0;
     }
     
     else
     {
         button.titleLabel.font = [UIFont boldSystemFontOfSize:40.0];
+        button.contentEdgeInsets = UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0);
         button.layer.cornerRadius = 10.0;
     }
     
-    
+    button.titleLabel.textAlignment = NSTextAlignmentCenter;
     button.titleLabel.adjustsFontSizeToFitWidth = YES;
     
     [button setTitleColor:_colors.titleColor
@@ -460,12 +464,49 @@
     _uploadedFiles = 0;
     _origUpFiles = _upFiles;
     [self uploadNextFile];
-    
 }
 
 - (void)cancelButtonTapped:(UIButton *)button
 {
     
+}
+
+- (void)titleButtonTapped:(UIButton *)button
+{
+    NSMutableArray *tempArray = NSMutableArray.array;
+    
+    for (CityOrOrganizationData *cod in CRAPI.sharedInstance.placesArray.copy)
+        [tempArray addObject:cod.name];
+    
+    NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
+                                                                      delegate:self
+                                                                         title:@"Select City to Synchronize Data"
+                                                                     textArray:tempArray.copy
+                                                                 includeCancel:YES];
+#pragma unsued(nvptv)
+}
+
+- (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
+{
+    [popoverTableView hide:YES];
+}
+
+- (void)popoverTableView:(NVPopoverTableView *)popoverTableView
+    didSelectRowWithText:(NSString *)text
+                 atIndex:(NSInteger)index
+{
+    [popoverTableView hide:YES];
+    
+    _selectedRow = index;
+    
+    [UserDefaults.defaults saveInteger:_selectedRow
+                                forKey:@"SelectedRow"];
+
+    [CRAPI.sharedInstance processPlacesArray:_selectedRow];
+    
+    [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",
+                            CRAPI.sharedInstance.currentCityNameAndState]
+                  forState:UIControlStateNormal];
 }
 
 - (void)connectButtonTapped:(UIButton *)button
@@ -477,11 +518,10 @@
         
         _numConnectionAttempts = 0;
         _totConnectionAttempts = 60;
+    
         [_popoverView showAfter:0.0
                       withTitle:@"Waiting\nto Connect\nto Manager"
                       andButton:@"Cancel"];
-    
-    
 }
 
 - (void)closeGMServer
@@ -498,7 +538,7 @@
 - (void)GMServerDidOpen:(GeoMasterServer *)server
 {
     _serverOpen = YES;
-    NSString *msg;
+    NSString *msg = @"";
     
     switch (server.messageID)
     {
@@ -508,16 +548,27 @@
             
         case GMSMessageGetUploadStatus:
             msg = [NSString stringWithFormat:@"$M(GetUploadStatus,%i,%i,%i)",
-                   CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,CRAPI.sharedInstance.totiPadWithinManager];
+                   CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
+                   CRAPI.sharedInstance.totiPadWithinManager];
             break;
+            
         case GMSMessageFileUploaded:
             if (_process == UPLOAD_DATA_PROCESS)
+            {
                 msg = [NSString stringWithFormat:@"$M(UploadCompleteData,%i,%i,%i,%i)",
-                       CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,CRAPI.sharedInstance.totiPadWithinManager,_nextFileNumToUpload];
+                       CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
+                       CRAPI.sharedInstance.totiPadWithinManager, _nextFileNumToUpload];
+            }
+            
             else
+            {
                 msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i)",
-                       CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,CRAPI.sharedInstance.totiPadWithinManager,_nextFileNumToUpload];
+                       CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
+                       CRAPI.sharedInstance.totiPadWithinManager, _nextFileNumToUpload];
+            }
+            
             break;
+            
         case GMSMessageSetNearby:
             msg = [NSString stringWithFormat:@"$M(SetNearbyiPad,%@,%@,%f %f)\r\n",
                    _iPad_id, _iPad_name, _locationManager.location.coordinate.latitude,
@@ -538,9 +589,8 @@
     if (msg)
         [_GMServer sendMessage:msg];
     
-    NSLog(@"GMServer Query: %@", msg);
+    NSLog(@"GMServer Query:%@", msg);
 }
-
 
 - (void)GMServer:(GeoMasterServer *)server
  didReceiveError:(NSString *)error
@@ -548,7 +598,7 @@
 {
     [self closeGMServer];
     
-    NSString *titleMessage;
+    NSString *titleMessage = @"";
     
     if ([error isEqualToString:@"Internet Connection Not Available"])
         titleMessage = @"Network Error";
@@ -564,16 +614,18 @@
 #pragma unused(alert)
 }
 
--(void) doSendGMServerMessage:(NSTimer*)timer
+- (void)doSendGMServerMessage:(NSTimer *)timer
 {
     _GMServer = [GeoMasterServer open];
     _GMServer.delegate = self;
     _GMServer.messageID = _currentServerMsgID;
     [_GMServer initCommunication:7.5];
 }
--(void) sendGMServerMessage:(NSInteger)msgID
+
+- (void)sendGMServerMessage:(NSInteger)msgID
 {
     _currentServerMsgID = msgID;
+    
     _sendTimer = [NSTimer scheduledTimerWithTimeInterval:0.01
                                               target:self
                                             selector:@selector(doSendGMServerMessage:)
@@ -585,70 +637,94 @@
                    wantPictNum:(BOOL)wantPict
 {
     int dataNum = -4;
+    
     if (_uploadStatusMsg.length < 5)
         return -3;
+    
     if (iPad > _numiPadsInMsg)
         return -2;
-    LPSTR pMsg = malloc (_uploadStatusMsg.length+4);
-    strcpy (pMsg,_uploadStatusMsg.UTF8String);
-    LPSTR pPipe = strchr (pMsg,'|');
+    
+    LPSTR pMsg = malloc(_uploadStatusMsg.length + 4);
+    strcpy(pMsg,_uploadStatusMsg.UTF8String);
+    LPSTR pPipe = strchr(pMsg,'|');
     int i = 1;
+    
     while (pPipe)
     {
         pPipe++;
+        
         if (i++ == iPad)
         {
             if (wantPict)
             {
-                pPipe = strchr (pPipe,'-');
+                pPipe = strchr(pPipe,'-');
+                
                 if (!pPipe)
                     break;
+                
                 pPipe++;
             }
-            dataNum = atoi (pPipe);
+            
+            dataNum = atoi(pPipe);
             break;
         }
-        pPipe = strchr (pPipe,'|');
+        
+        pPipe = strchr(pPipe,'|');
     }
+    
     free (pMsg);
     return dataNum;
 }
 
-- (void) getDownloadCounts
+- (void)getDownloadCounts
 {
     _downFiles = _downPix = 0;
     
-    for (int iPad = 1;iPad <= _numiPadsInMsg;iPad++)
+    for (int iPad = 1; iPad <= _numiPadsInMsg; iPad++)
     {
         if (iPad != _myiPad)
         {
             int lastPictIHave;
+            
             int lastDataIHave = [_databaseID getLastDataUpdateNumber:iPad
-                                            lastPictNum:&lastPictIHave];
+                                                         lastPictNum:&lastPictIHave];
+            
             lastDataIHave++;
             int fileSize = 0;
+            
             while (lastDataIHave && !fileSize)
             {
                 lastDataIHave--;
-                NSString * filePath = [_databaseID outputDataFile:lastDataIHave iPad:_myiPad];
+                
+                NSString *filePath = [_databaseID outputDataFile:lastDataIHave
+                                                            iPad:_myiPad];
+                
                 fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
                                                                                      error:nil].fileSize;
             }
+            
             int lastDataFileOnServer = [self getDataNumFromServerMsg:iPad
                                                          wantPictNum:NO];
+            
             int lastPictFileOnServer = [self getDataNumFromServerMsg:iPad
                                                          wantPictNum:YES];
+            
             lastPictIHave++;
             fileSize = 0;
+            
             while (lastPictIHave && !fileSize)
             {
                 lastPictIHave--;
-                NSString * filePath = [_databaseID outputPictFile:lastPictIHave iPad:_myiPad];
+                
+                NSString *filePath = [_databaseID outputPictFile:lastPictIHave
+                                                            iPad:_myiPad];
+                
                 fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
                                                                                      error:nil].fileSize;
             }
-            _downFiles += lastDataFileOnServer - lastDataIHave;
-            _downPix += lastPictFileOnServer - lastPictIHave;
+            
+            _downFiles += (lastDataFileOnServer - lastDataIHave);
+            _downPix += (lastPictFileOnServer - lastPictIHave);
         }
     }
 }
@@ -667,7 +743,6 @@ didReceiveMessage:(NSString *)message
             case GMSMessageOpenConnect:
             {
                 [CRAPI.sharedInstance savePlacesString:message];
-                
                 [CRAPI.sharedInstance processPlaces];
                 
                 if (CRAPI.sharedInstance.placesArray.count == 0)
@@ -679,20 +754,43 @@ didReceiveMessage:(NSString *)message
                                                                          title:title
                                                                buttonTextArray:@[@"OK"]
                                                               destructiveIndex:0];
-                    break;
 #pragma unused(alert)
+                    
+                    [_titleButton setTitle:@"Synchronize Data\nNO CITIES IN LIST"
+                                  forState:UIControlStateNormal];
+                    
+                    _syncButton.enabled = NO;
+                    [self updateButton:_syncButton];
+                    break;
                 }
                 
                 _selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
                 
-                if (CRAPI.sharedInstance.placesArray.count <= 1 || CRAPI.sharedInstance.placesArray.count <= _selectedRow ||CRAPI.sharedInstance.currentGeoid == 0)
+                if (CRAPI.sharedInstance.placesArray.count < 2 ||
+                    CRAPI.sharedInstance.placesArray.count <= _selectedRow ||
+                    CRAPI.sharedInstance.currentGeoid == 0)
                 {
                     _selectedRow = 0;
+                    
                     [UserDefaults.defaults saveInteger:(int)_selectedRow
                                                 forKey:@"SelectedRow"];
                 }
+                
                 [CRAPI.sharedInstance processPlacesArray:_selectedRow];
-                _titleLabel.text = [NSString stringWithFormat:@"Synchronize\nData for\n%@",CRAPI.sharedInstance.currentCityNameAndState];
+                
+                [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",
+                                        CRAPI.sharedInstance.currentCityNameAndState]
+                              forState:UIControlStateNormal];
+                
+                if (CRAPI.sharedInstance.placesArray.count > 1)
+                {
+                    _titleButton.backgroundColor = _colors.enabledColor;
+                    _titleButton.userInteractionEnabled = YES;
+                    
+                    [_titleButton setTitleColor:_colors.titleColor
+                                       forState:UIControlStateNormal];
+                }
+                
                 _locationManager = [[CLLocationManager alloc] init];
                 _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
                 _locationManager.distanceFilter = kCLDistanceFilterNone;
@@ -704,67 +802,87 @@ didReceiveMessage:(NSString *)message
             }
                 
                 break;
+                
             case GMSMessageFileUploaded:
                 _nextFileNumToUpload++;
                 _uploadedFiles++;
+                
                 if (_origUpFiles)
                     [self updateOverallProgress:(float)_uploadedFiles/_origUpFiles];
+                
                 _upFiles--;
                 [self updateLabels];
                 [self uploadNextFile];
                 break;
+                
             case GMSMessageGetUploadStatus:
             {
                 _uploadStatusMsg = message.copy;
                 _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String);
                 [self closeGMServer];
+                
                 if (CRAPI.sharedInstance.currentGeoid < 0)
                 {
                     _awd = [AlleyWallData new];
                     _databaseID = _awd;
                 }
+                
                 else
                 {
                     _crd = [CurbRampData new];
                     _databaseID = _crd;
                 }
-                int pictNum;
+                
+                int pictNum = 0;
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
+                
                 int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad
                                                 lastPictNum:&pictNum];
+                
                 lastNum++;
                 int fileSize = 0;
+                
                 while (lastNum && !fileSize)
                 {
                     lastNum--;
-                    NSString * filePath = [_databaseID outputDataFile:lastNum iPad:_myiPad];
+                    
+                    NSString *filePath = [_databaseID outputDataFile:lastNum
+                                                                iPad:_myiPad];
+                    
                     fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
                                                                                          error:nil].fileSize;
                 }
+                
                 _lastFileNumToUpload = lastNum;
-                _nextFileNumToUpload = [self getDataNumFromServerMsg:_myiPad
-                                                         wantPictNum:NO] + 1;
+                
+                _nextFileNumToUpload = ([self getDataNumFromServerMsg:_myiPad
+                                                         wantPictNum:NO] + 1);
                 if (_nextFileNumToUpload > 0)
-                {
-                    _upFiles = _lastFileNumToUpload - _nextFileNumToUpload + 1;
-                }
+                    _upFiles = (_lastFileNumToUpload - _nextFileNumToUpload + 1);
+                
                 lastNum = pictNum;
                 lastNum++;
                 fileSize = 0;
+                
                 while (lastNum && !fileSize)
                 {
                     lastNum--;
-                    NSString * filePath = [_databaseID outputPictFile:lastNum iPad:_myiPad];
+                    
+                    NSString *filePath = [_databaseID outputPictFile:lastNum
+                                                                iPad:_myiPad];
+                    
                     fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
                                                                                          error:nil].fileSize;
                 }
+                
                 _lastPictNumToUpload = lastNum;
-                _nextPictNumToUpload = [self getDataNumFromServerMsg:_myiPad
-                                                         wantPictNum:YES] + 1;
+                
+                _nextPictNumToUpload = ([self getDataNumFromServerMsg:_myiPad
+                                                         wantPictNum:YES] + 1);
+                
                 if (_nextPictNumToUpload > 0)
-                {
-                    _upPix = _lastPictNumToUpload - _nextPictNumToUpload + 1;
-                }
+                    _upPix = (_lastPictNumToUpload - _nextPictNumToUpload + 1);
+                
                 [self getDownloadCounts];
                 [self updateLabels];
                 [self updateOverallProgress:0];
@@ -772,11 +890,11 @@ didReceiveMessage:(NSString *)message
                 break;
                 
             case GMSMessageSetNearby:
-                self.timer = [NSTimer scheduledTimerWithTimeInterval:5.0
-                                                              target:self
-                                                            selector:@selector(checkNearby:)
-                                                            userInfo:nil
-                                                             repeats:NO];
+                _timer = [NSTimer scheduledTimerWithTimeInterval:5.0
+                                                          target:self
+                                                        selector:@selector(checkNearby:)
+                                                        userInfo:nil
+                                                         repeats:NO];
                 break;
                 
             case GMSMessageCheckNearby:
@@ -785,11 +903,11 @@ didReceiveMessage:(NSString *)message
                     CGFloat progress = 1.0 - (_numConnectionAttempts / (CGFloat)_totConnectionAttempts);
                     [_popoverView updateProgress:progress];
                     
-                    self.timer = [NSTimer scheduledTimerWithTimeInterval:5.0
-                                                                  target:self
-                                                                selector:@selector(checkNearby:)
-                                                                userInfo:nil
-                                                                 repeats:NO];
+                    _timer = [NSTimer scheduledTimerWithTimeInterval:5.0
+                                                              target:self
+                                                            selector:@selector(checkNearby:)
+                                                            userInfo:nil
+                                                             repeats:NO];
                 }
                 
                 else
@@ -808,87 +926,106 @@ didReceiveMessage:(NSString *)message
     }
 }
 
-- (void) uploadNextFile
+- (void)uploadNextFile
 {
     _doTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                 target:self
                                               selector:@selector(doUploadNextFile:)
                                               userInfo:nil
                                                repeats:NO];
-    
 }
-- (void) downloadNextFile
+
+- (void)downloadNextFile
 {
     if (_process == DOWNLOAD_DATA_PROCESS && !CRAPI.sharedInstance.downloadData)
     {
         _process == DOWNLOAD_PICT_PROCESS;
         _downloadiPad = 1;
     }
+    
     if (_process == DOWNLOAD_PICT_PROCESS && !CRAPI.sharedInstance.downloadPix)
-    {
         return;
-    }
+    
     _doTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                 target:self
                                               selector:@selector(doDownloadNextFile:)
                                               userInfo:nil
                                                repeats:NO];
-    
 }
-- (void) doUploadNextFile:(NSTimer*)timer
+
+- (void)doUploadNextFile:(NSTimer *)timer
 {
 Top:
     if (_nextFileNumToUpload > _lastFileNumToUpload)
     {
         if (_process == UPLOAD_DATA_PROCESS)
         {
-            int pictNum;
+            int pictNum = 0;
             _process = UPLOAD_PICT_PROCESS;
+            
             if (CRAPI.sharedInstance.uploadPix)
             {
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
+                
                 int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad
-                                                lastPictNum:&pictNum];
+                                                       lastPictNum:&pictNum];
+                
                 lastNum = pictNum;
                 lastNum++;
                 int fileSize = 0;
+                
                 while (lastNum && !fileSize)
                 {
                     lastNum--;
-                    NSString * filePath = [_databaseID outputPictFile:lastNum iPad:_myiPad];
+                    
+                    NSString *filePath = [_databaseID outputPictFile:lastNum
+                                                                iPad:_myiPad];
+                    
                     fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
                                                                                          error:nil].fileSize;
                 }
+                
                 _lastFileNumToUpload = lastNum;
-                _nextFileNumToUpload = [self getDataNumFromServerMsg:_myiPad
-                                                         wantPictNum:NO] + 1;
+                
+                _nextFileNumToUpload = ([self getDataNumFromServerMsg:_myiPad
+                                                         wantPictNum:NO] + 1);
+                
                 if (_nextFileNumToUpload > 0)
-                {
-                    _upFiles = _lastFileNumToUpload - _nextFileNumToUpload + 1;
-                }
+                    _upFiles = (_lastFileNumToUpload - _nextFileNumToUpload + 1);
+                
                 [self updateLabels];
                 [self updateOverallProgress:0];
+                
                 goto Top;
             }
         }
+    
         _process = DOWNLOAD_DATA_PROCESS;
         _downloadiPad = [self nextiPadToDownload:0];
+        
         if (_downloadiPad)
         {
             [self setDownloadFilesFor:_downloadiPad];
             [self downloadNextFile];
         }
+        
         return;
     }
+    
     if (_process == UPLOAD_DATA_PROCESS)
     {
-        _filePath = [_databaseID outputDataFile:_nextFileNumToUpload iPad:_myiPad];
+        _filePath = [_databaseID outputDataFile:_nextFileNumToUpload
+                                           iPad:_myiPad];
+        
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Data"];
     }
+    
     else
     {
-        _filePath = [_databaseID outputPictFile:_nextFileNumToUpload iPad:_myiPad];
+        _filePath = [_databaseID outputPictFile:_nextFileNumToUpload
+                                           iPad:_myiPad];
+        
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Picture"];
     }
@@ -898,22 +1035,26 @@ Top:
     _push.popover = _popoverView;
     _push.useOnlyPrimaryFTP = YES;
     
-    NSString * toDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",CRAPI.sharedInstance.currentManageriPad,CRAPI.sharedInstance.currentGeoid];
+    NSString *toDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",
+                       CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
+    
     [_push sendFile:[_filePath lastPathComponent]
       fromDirectory:[_filePath stringByDeletingLastPathComponent]
              toFile:[_filePath lastPathComponent]
         toDirectory:toDir
      deleteWhenDone:NO];
-    
 }
 
 - (void)setDownloadFilesFor:(int)iPad
 {
     int lastPictIHave;
+    
     int lastDataIHave = [_databaseID getLastDataUpdateNumber:iPad
-                                          lastPictNum:&lastPictIHave];
+                                                 lastPictNum:&lastPictIHave];
+    
     int lastDataFileOnServer = [self getDataNumFromServerMsg:iPad
                                                  wantPictNum:NO];
+    
     int lastPictFileOnServer = [self getDataNumFromServerMsg:iPad
                                                  wantPictNum:YES];
     if (_process == DOWNLOAD_DATA_PROCESS)
@@ -926,50 +1067,61 @@ Top:
         _nextFileNumToDownload = lastPictIHave + 1;
         _lastFileNumToDownload = lastPictFileOnServer;
     }
-
 }
 
--(int) nextiPadToDownload:(int)currentiPad
+- (int)nextiPadToDownload:(int)currentiPad
 {
     currentiPad++;
+    
     if (currentiPad == _myiPad)
         currentiPad++;
+    
     if (currentiPad > _numiPadsInMsg)
         return 0;
+    
     return currentiPad;
 }
 
-- (void) doDownloadNextFile:(NSTimer*)timer
+- (void)doDownloadNextFile:(NSTimer *)timer
 {
 Top:
     if (_nextFileNumToDownload > _lastFileNumToDownload)
     {
         _downloadiPad = [self nextiPadToDownload:_downloadiPad];
+        
         if (!_downloadiPad)
         {
             if (_process == DOWNLOAD_DATA_PROCESS)
             {
                 _process = DOWNLOAD_PICT_PROCESS;
                 _downloadiPad = [self nextiPadToDownload:0];
+                
                 if (_downloadiPad)
                     [self downloadNextFile];
             }
         }
+        
         else
         {
             [self setDownloadFilesFor:_downloadiPad];
             goto Top;
         }
     }
+    
     if (_process == DOWNLOAD_DATA_PROCESS)
     {
-        _filePath = [_databaseID outputDataFile:_nextFileNumToDownload iPad:_downloadiPad];
+        _filePath = [_databaseID outputDataFile:_nextFileNumToDownload
+                                           iPad:_downloadiPad];
+        
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Data"];
     }
+    
     else
     {
-        _filePath = [_databaseID outputPictFile:_nextFileNumToDownload iPad:_downloadiPad];
+        _filePath = [_databaseID outputPictFile:_nextFileNumToDownload
+                                           iPad:_downloadiPad];
+        
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Picture"];
     }
@@ -979,14 +1131,16 @@ Top:
     _push.popover = _popoverView;
     _push.useOnlyPrimaryFTP = YES;
     
-    NSString * toDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",CRAPI.sharedInstance.currentManageriPad,CRAPI.sharedInstance.currentGeoid];
+    NSString *toDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",
+                       CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
+    
     [_push sendFile:[_filePath lastPathComponent]
       fromDirectory:[_filePath stringByDeletingLastPathComponent]
              toFile:[_filePath lastPathComponent]
         toDirectory:toDir
      deleteWhenDone:NO];
-    
 }
+
 - (void)FTPPushDidComplete:(FTPDataType)dataType
                 withStatus:(int)status
            andStatusString:(NSString *)statusString
@@ -997,34 +1151,34 @@ Top:
         [_popoverView hide];
         [self sendGMServerMessage:GMSMessageFileUploaded];
     }
+    
     else
     {
         _popoverView.title = @"Upload Error";
         [_popoverView setCancelButtonTitle:@"OK"];
     }
+    
     NSLog(@"FTP push completed:%@", statusString);
 }
 
+- (void)checkNearby:(NSTimer *)timer
+{
+    [self.timer invalidate];
+    _GMServer = [GeoMasterServer open];
+    _GMServer.delegate = self;
+    _GMServer.messageID = GMSMessageCheckNearby;
+    [_GMServer initCommunication:7.5];
+}
 
-    - (void)checkNearby:(NSTimer *)timer
-    {
-        [self.timer invalidate];
-        _GMServer = [GeoMasterServer open];
-        _GMServer.delegate = self;
-        _GMServer.messageID = GMSMessageCheckNearby;
-        [_GMServer initCommunication:7.5];
-    }
-    
-    - (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
-    {
-        [self.timer invalidate];
-        [self closeGMServer];
-        _GMServer = [GeoMasterServer open];
-        _GMServer.delegate = self;
-        _GMServer.messageID = GMSMessageCancelConnect;
-        [_GMServer initCommunication:7.5];
-    }
-    
+- (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
+{
+    [self.timer invalidate];
+    [self closeGMServer];
+    _GMServer = [GeoMasterServer open];
+    _GMServer.delegate = self;
+    _GMServer.messageID = GMSMessageCancelConnect;
+    [_GMServer initCommunication:7.5];
+}
 
 - (void)returnButtonTapped:(UIButton *)button
 {

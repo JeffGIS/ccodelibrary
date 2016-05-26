@@ -374,7 +374,8 @@ static int COUNT=100;
                                                    maxValue:(_data.frontSlopeDegrees + 2.0)
                                                    delegate:self
                                               configuration:NVSliderConfigurationManualSlope
-                                                       type:NVSliderMeasurementTypeDefault];
+                                                       type:NVSliderMeasurementTypeDefault
+                                                       unit:@""];
     }
     
     else
@@ -386,7 +387,8 @@ static int COUNT=100;
                                                    maxValue:(_data.frontSlopePct + 2.0)
                                                    delegate:self
                                               configuration:NVSliderConfigurationManualSlope
-                                                       type:NVSliderMeasurementTypeDefault];
+                                                       type:NVSliderMeasurementTypeDefault
+                                                       unit:@""];
     }
    
     [slider showSliderControllerInView:self.view
@@ -765,7 +767,8 @@ static int COUNT=100;
                                                        maxValue:(_data.frontSlopeDegrees + 2.0)
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
-                                                           type:NVSliderMeasurementTypeFrontSlope];
+                                                           type:NVSliderMeasurementTypeFrontSlope
+                                                           unit:@""];
         }
         
         else
@@ -777,7 +780,8 @@ static int COUNT=100;
                                                        maxValue:(_data.frontSlopePct + 2.0)
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
-                                                           type:NVSliderMeasurementTypeFrontSlope];
+                                                           type:NVSliderMeasurementTypeFrontSlope
+                                                           unit:@""];
         }
         
         [slider showSliderControllerInView:self.view
@@ -857,7 +861,8 @@ static int COUNT=100;
                                                        maxValue:(_data.sideSlopeDegrees + 2.0)
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
-                                                           type:NVSliderMeasurementTypeSideSlope];
+                                                           type:NVSliderMeasurementTypeSideSlope
+                                                           unit:@""];
         }
         
         else
@@ -869,7 +874,8 @@ static int COUNT=100;
                                                        maxValue:(_data.sideSlopePct + 2.0)
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
-                                                           type:NVSliderMeasurementTypeSideSlope];
+                                                           type:NVSliderMeasurementTypeSideSlope
+                                                           unit:@""];
         }
         
         [slider showSliderControllerInView:self.view

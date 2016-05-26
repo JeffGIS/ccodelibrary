@@ -819,6 +819,7 @@
 
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView
     didSelectRowWithText:(NSString *)text
+                 atIndex:(NSInteger)index
 {
     [popoverTableView hide:YES];
     

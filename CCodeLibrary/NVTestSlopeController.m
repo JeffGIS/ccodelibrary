@@ -331,7 +331,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
                                                                    maxValue:(value + radius)
                                                                    delegate:self
                                                               configuration:NVSliderConfigurationManualSlope
-                                                                       type:NVSliderMeasurementTypeFrontSlope];
+                                                                       type:NVSliderMeasurementTypeFrontSlope
+                                                                       unit:@""];
     
     slider.tag = button.tag;
     

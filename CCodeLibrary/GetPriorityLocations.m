@@ -296,7 +296,7 @@ static GetPriorityLocations *_getLocations;
     keyword = [keyword stringByAppendingString:[NSString stringWithFormat:@" %@",
                                                 CRAPI.sharedInstance.currentCityNameAndState]];
     
-    keyword = [keyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    keyword = [keyword stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.alphanumericCharacterSet];
     
     _query = [NSString stringWithFormat:
               @"https://maps.googleapis.com/maps/api/place/textsearch/json?location=%f,%f&radius=%f&query=%@&key=%@",
