@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 @import UIKit;
+@import CoreLocation;
 
 @interface NVPhoto : NSObject
 
@@ -17,6 +18,10 @@
 - (NSString *)getImagePath:(NVPhotoController *)controller
                     forKey:(NSString *)key;
 
+@optional
+- (CGPoint)getPointForCoordinate:(CLLocationCoordinate2D)coordinate;
+- (CGFloat)getVerticalOffset;
+
 @end
 
 @interface NVPhotoController : UIViewController
@@ -24,5 +29,16 @@
 + (instancetype)photoControllerWithNVPhotosArray:(NSArray *)photosArray
                                         delegate:(id)delegate
                                            title:(NSString *)title;
+
+@end
+
+@interface NVPhotoView : UIImageView
+
++ (instancetype)showPhotoViewWithNVPhotosArray:(NSArray *)photosArray
+                                        inView:(UIView *)view
+                                      delegate:(id)delegate
+                                    coordinate:(CLLocationCoordinate2D)coordinate;
+
+- (void)updatePosition;
 
 @end

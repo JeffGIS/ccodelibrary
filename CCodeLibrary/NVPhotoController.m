@@ -30,7 +30,7 @@
 @property (nonatomic) NSArray *photosArray;
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) UIImageView *photoView;
-@property (nonatomic) NSInteger imageIndex;
+@property NSInteger imageIndex;
 @property (nonatomic) UILabel *photoLabel, *titleLabel;
 
 @end
@@ -41,6 +41,9 @@
                                         delegate:(id)delegate
                                            title:(NSString *)title
 {
+    if (!photosArray.count || !delegate)
+        return nil;
+    
     NVPhotoController *nvpc = NVPhotoController.new;
     nvpc.delegate = delegate;
     nvpc.titleString = title;
@@ -208,6 +211,107 @@
     
     else
         _photoLabel.text = @"No photos exist for this item";
+}
+
+@end
+
+@interface NVPhotoView ()
+
+@property (nonatomic, weak) id <NVPhotoControllerDelegate> delegate;
+@property (nonatomic) CLLocationCoordinate2D coordinate;
+@property (nonatomic) NSArray *photosArray;
+@property NSInteger imageIndex;
+@property (nonatomic) CGSize size;
+
+@end
+
+@implementation NVPhotoView
+
++ (instancetype)showPhotoViewWithNVPhotosArray:(NSArray *)photosArray
+                                        inView:(UIView *)view
+                                      delegate:(id)delegate
+                                    coordinate:(CLLocationCoordinate2D)coordinate
+{
+    if (!photosArray.count || !delegate)
+        return nil;
+    
+    NVPhotoView *nvpv = NVPhotoView.new;
+    nvpv.userInteractionEnabled = YES;
+    nvpv.layer.cornerRadius = 10.0;
+    nvpv.layer.masksToBounds = YES;
+    nvpv.alpha = 0.0;
+    nvpv.delegate = delegate;
+    nvpv.coordinate = coordinate;
+    nvpv.photosArray = photosArray;
+    nvpv.imageIndex = 0;
+    
+    UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:nvpv
+                                                                                    action:@selector(imageLeftSwiped:)];
+    
+    leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
+    
+    [nvpv addGestureRecognizer:leftSwipe];
+    
+    UISwipeGestureRecognizer *rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:nvpv
+                                                                                     action:@selector(imageRightSwiped:)];
+    
+    rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
+    
+    [nvpv addGestureRecognizer:rightSwipe];
+    
+    [nvpv updateInsetImage];
+    
+    CGFloat aspectRatio = (nvpv.image.size.height / nvpv.image.size.width);
+    CGFloat width = 264.0;
+    nvpv.size = CGSizeMake(width, (aspectRatio * width));
+    [nvpv updatePosition];
+    
+    [view addSubview:nvpv];
+    
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         nvpv.alpha = 1.0;
+                     }];
+    
+    return nvpv;
+}
+
+- (void)updatePosition
+{
+    self.frame = CGRectMake(0.0, 0.0, _size.width, _size.height);
+    CGPoint center = [_delegate getPointForCoordinate:_coordinate];
+    CGFloat offset = [_delegate getVerticalOffset];
+    self.center = CGPointMake(center.x, ((center.y - offset) - (_size.height / 2.0)));
+}
+
+- (void)imageLeftSwiped:(UISwipeGestureRecognizer *)gesture
+{
+    if (_imageIndex == (_photosArray.count - 1))
+        _imageIndex = 0;
+    
+    else
+        _imageIndex++;
+    
+    [self updateInsetImage];
+}
+
+- (void)imageRightSwiped:(UISwipeGestureRecognizer *)gesture
+{
+    if (_imageIndex == 0)
+        _imageIndex = (_photosArray.count - 1);
+    
+    else
+        _imageIndex--;
+    
+    [self updateInsetImage];
+}
+
+- (void)updateInsetImage
+{
+    NVPhoto *nvp = (NVPhoto *)_photosArray[_imageIndex];
+    
+    self.image = [UIImage imageWithContentsOfFile:[_delegate getImagePath:self
+                                                                   forKey:nvp.key]];
 }
 
 @end
