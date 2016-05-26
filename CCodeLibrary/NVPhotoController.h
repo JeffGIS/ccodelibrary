@@ -18,10 +18,6 @@
 - (NSString *)getImagePath:(NVPhotoController *)controller
                     forKey:(NSString *)key;
 
-@optional
-- (CGPoint)getPointForCoordinate:(CLLocationCoordinate2D)coordinate;
-- (CGFloat)getVerticalOffset;
-
 @end
 
 @interface NVPhotoController : UIViewController
@@ -29,6 +25,18 @@
 + (instancetype)photoControllerWithNVPhotosArray:(NSArray *)photosArray
                                         delegate:(id)delegate
                                            title:(NSString *)title;
+
+@end
+
+@class NVPhotoView;
+
+@protocol NVPhotoViewDelegate <NSObject>
+
+- (NSString *)getInsetImagePath:(NVPhotoView *)photoView
+                         forKey:(NSString *)key;
+
+- (CGPoint)getPointForCoordinate:(CLLocationCoordinate2D)coordinate;
+- (CGFloat)getVerticalOffset;
 
 @end
 

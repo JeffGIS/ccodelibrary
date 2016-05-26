@@ -217,7 +217,7 @@
 
 @interface NVPhotoView ()
 
-@property (nonatomic, weak) id <NVPhotoControllerDelegate> delegate;
+@property (nonatomic, weak) id <NVPhotoViewDelegate> delegate;
 @property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic) NSArray *photosArray;
 @property (nonatomic) CGSize size, draggedOffset;
@@ -252,18 +252,24 @@
     nvpv.draggedOffset = CGSizeZero;
     
     UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:nvpv
-                                                                                    action:@selector(imageLeftSwiped:)];
+                                                                                    action:@selector(insetImageLeftSwiped:)];
     
     leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
     
     [nvpv addGestureRecognizer:leftSwipe];
     
     UISwipeGestureRecognizer *rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:nvpv
-                                                                                     action:@selector(imageRightSwiped:)];
+                                                                                     action:@selector(insetImageRightSwiped:)];
     
     rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
     
     [nvpv addGestureRecognizer:rightSwipe];
+    
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:nvpv action:@selector(insetImagePanned:)];
+    [pan requireGestureRecognizerToFail:rightSwipe];
+    [pan requireGestureRecognizerToFail:leftSwipe];
+    
+    [nvpv addGestureRecognizer:pan];
     
     [nvpv updateInsetImage];
     
@@ -330,23 +336,26 @@
 - (void)updateVerticalOffset:(CGFloat)verticalOffset
                     animated:(BOOL)animated
 {
-    CGRect frame = self.frame;
-    frame.origin.y += verticalOffset;
-    _draggedOffset.height -= verticalOffset;
-    
-    if (animated)
+    if (!_isDragged)
     {
-        [UIView animateWithDuration:0.25
-                         animations:^{
-                             self.frame = frame;
-                         }];
+        CGRect frame = self.frame;
+        frame.origin.y += verticalOffset;
+        _draggedOffset.height -= verticalOffset;
+        
+        if (animated)
+        {
+            [UIView animateWithDuration:0.25
+                             animations:^{
+                                 self.frame = frame;
+                             }];
+        }
+        
+        else
+            self.frame = frame;
     }
-    
-    else
-        self.frame = frame;
 }
 
-- (void)imageLeftSwiped:(UISwipeGestureRecognizer *)gesture
+- (void)insetImageLeftSwiped:(UISwipeGestureRecognizer *)gesture
 {
     if (_imageIndex == (_photosArray.count - 1))
         _imageIndex = 0;
@@ -357,7 +366,7 @@
     [self updateInsetImage];
 }
 
-- (void)imageRightSwiped:(UISwipeGestureRecognizer *)gesture
+- (void)insetImageRightSwiped:(UISwipeGestureRecognizer *)gesture
 {
     if (_imageIndex == 0)
         _imageIndex = (_photosArray.count - 1);
@@ -368,12 +377,34 @@
     [self updateInsetImage];
 }
 
+- (void)insetImagePanned:(UIPanGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateEnded)
+    {
+        if (CGRectContainsPoint(gesture.view.frame, [_delegate getPointForCoordinate:_coordinate]))
+        {
+            gesture.view.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
+            _isDragged = NO;
+        }
+        
+        else
+            _isDragged = YES;
+    }
+    
+    CGPoint point = [gesture translationInView:gesture.view];
+    CGAffineTransform translate = CGAffineTransformTranslate(gesture.view.transform, point.x, point.y);
+    gesture.view.transform = translate;
+    
+    [gesture setTranslation:CGPointZero
+                     inView:gesture.view];
+}
+
 - (void)updateInsetImage
 {
     NVPhoto *nvp = (NVPhoto *)_photosArray[_imageIndex];
     
-    self.image = [UIImage imageWithContentsOfFile:[_delegate getImagePath:self
-                                                                   forKey:nvp.key]];
+    self.image = [UIImage imageWithContentsOfFile:[_delegate getInsetImagePath:self
+                                                                        forKey:nvp.key]];
 }
 
 - (void)deleteButtonTapped:(UIButton *)button
