@@ -633,11 +633,11 @@
     return places;
 }
 
-- (BOOL)processPlacesArray:(NSUInteger)row
+- (BOOL)processPlacesArray:(NSInteger)row
 {
     if (_placesArray.count < 1)
         return FALSE;
-    if (row >= CRAPI.sharedInstance.placesArray.count)
+    if (row >= (int)_placesArray.count)
     {
         row = (CRAPI.sharedInstance.placesArray.count - 1);
         
@@ -645,7 +645,19 @@
                                     forKey:@"SelectedRow"];
     }
     
-    if (_placesArray.count == 1 || row >= _placesArray.count)
+    if (row == -1) // AlleyWalls
+    {
+        row = 0;
+        for (CityOrOrganizationData *c in _placesArray)
+        {
+            if (c.number == 100000001)
+            {
+                break;
+            }
+            row++;
+        }
+    }
+    else if (_placesArray.count == 1 || row >= _placesArray.count)
         row = 0;
     
     CityOrOrganizationData *c = _placesArray[row];
