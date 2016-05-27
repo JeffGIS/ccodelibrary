@@ -31,7 +31,6 @@
 @interface NVPhotoViewOverlay : UIView
 
 @property (nonatomic) CGPoint startPoint, endPoint;
-@property (nonatomic) CGColorRef strokeColor;
 
 @end
 
@@ -45,12 +44,15 @@
 - (CGPoint)getPointForCoordinate:(CLLocationCoordinate2D)coordinate;
 - (CGFloat)getVerticalOffset;
 - (void)didAddPhotoView;
+- (void)didDeletePhotoView:(NVPhotoView *)photoView;
 
 @end
 
 @interface NVPhotoView : UIImageView
 
 @property (nonatomic) NVPhotoViewOverlay *overlay;
+
+@property (nonatomic) CLLocationCoordinate2D coordinate;
 
 + (instancetype)showPhotoViewWithNVPhotosArray:(NSArray *)photosArray
                                         inView:(UIView *)view
@@ -59,8 +61,5 @@
 
 - (void)updatePosition;
 - (void)hidePhotoView:(BOOL)animated;
-
-- (void)updateVerticalOffset:(CGFloat)verticalOffset
-                    animated:(BOOL)animated;
 
 @end

@@ -3,6 +3,7 @@
 
 #import "NVPhotoController.h"
 #import "CRAPI.h"
+#import "NVColor.h"
 
 @interface NVPhoto ()
 
@@ -218,9 +219,8 @@
 @interface NVPhotoView ()
 
 @property (nonatomic, weak) id <NVPhotoViewDelegate> delegate;
-@property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic) NSArray *photosArray;
-@property (nonatomic) CGSize size, draggedOffset;
+@property (nonatomic) CGSize size;
 @property (nonatomic) UIButton *deleteButton;
 @property CGFloat currentScale;
 @property NSInteger imageIndex;
@@ -259,13 +259,12 @@
     nvpv.photosArray = photosArray;
     nvpv.imageIndex = 0;
     nvpv.isDragged = NO;
-    nvpv.draggedOffset = CGSizeZero;
     
     nvpv.overlay = NVPhotoViewOverlay.new;
     nvpv.overlay.translatesAutoresizingMaskIntoConstraints = NO;
     nvpv.overlay.backgroundColor = UIColor.clearColor;
     nvpv.overlay.userInteractionEnabled = NO;
-    nvpv.overlay.strokeColor = UIColor.clearColor.CGColor;
+    nvpv.overlay.alpha = 0.0;
     
     [view addSubview:nvpv.overlay];
     
@@ -324,11 +323,13 @@
                           action:@selector(deleteButtonTapped:)
                 forControlEvents:UIControlEventTouchUpInside];
     
+    [nvpv.delegate didAddPhotoView];
+    
     [UIView animateWithDuration:0.25
                      animations:^{
                          nvpv.alpha = 1.0;
                      } completion:^(BOOL finished) {
-                         [nvpv.delegate didAddPhotoView];
+                         nvpv.overlay.alpha = 0.6;
                      }];
     
     return nvpv;
@@ -353,6 +354,8 @@
         [self removeFromSuperview];
         [_overlay removeFromSuperview];
     }
+    
+    [_delegate didDeletePhotoView:self];
 }
 
 - (void)updateSize
@@ -370,41 +373,17 @@
     CGPoint coordPoint = [_delegate getPointForCoordinate:_coordinate];
     CGFloat offset = [_delegate getVerticalOffset];
     
-    self.center = CGPointMake((coordPoint.x + _draggedOffset.width),
-                              (coordPoint.y - offset - (scaledSize.height / 2.0) - _draggedOffset.height));
+    self.center = CGPointMake(coordPoint.x, (coordPoint.y - offset - (scaledSize.height / 2.0)));
     
-    if (_isDragged)
-        [self updateOverlayPosition:coordPoint];
+    [self updateOverlayPosition:coordPoint];
 }
 
 - (void)updateOverlayPosition:(CGPoint)coordPoint
 {
-    _overlay.startPoint = CGPointMake(coordPoint.x, (coordPoint.y - 24.0));
+    _overlay.startPoint = coordPoint;
     _overlay.endPoint = CGPointApplyAffineTransform(self.center, self.transform);
     
     [_overlay setNeedsDisplay];
-}
-
-- (void)updateVerticalOffset:(CGFloat)verticalOffset
-                    animated:(BOOL)animated
-{
-    if (!_isDragged)
-    {
-        CGRect frame = self.frame;
-        frame.origin.y += verticalOffset;
-        _draggedOffset.height -= verticalOffset;
-        
-        if (animated)
-        {
-            [UIView animateWithDuration:0.25
-                             animations:^{
-                                 self.frame = frame;
-                             }];
-        }
-        
-        else
-            self.frame = frame;
-    }
 }
 
 - (void)insetImageLeftSwiped:(UISwipeGestureRecognizer *)gesture
@@ -439,8 +418,7 @@
         {
             gesture.view.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
             _isDragged = NO;
-            _overlay.strokeColor = UIColor.clearColor.CGColor;
-            [_overlay setNeedsDisplay];
+            [self updatePosition];
         }
         
         else
@@ -456,7 +434,6 @@
         [gesture setTranslation:CGPointZero
                          inView:gesture.view];
         
-        _overlay.strokeColor = UIColor.redColor.CGColor;
         [self updateOverlayPosition:coordPoint];
     }
 }
@@ -495,12 +472,12 @@
 
 - (void)drawRect:(CGRect)rect
 {
-    CGFloat lineWidth = 2.0;
+    CGFloat lineWidth = 4.0;
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
     CGContextAddLineToPoint(context, _endPoint.x, _endPoint.y);
     
-    for (int i = 1; i < 5; i++)
+    for (int i = 1; i < 9; i++)
     {
         CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
         CGContextAddLineToPoint(context, (_endPoint.x - (i * lineWidth)), _endPoint.y);
@@ -512,7 +489,7 @@
         CGContextAddLineToPoint(context, _endPoint.x, (_endPoint.y + (i * lineWidth)));
     }
     
-    CGContextSetStrokeColorWithColor(context, _strokeColor);
+    CGContextSetStrokeColorWithColor(context, NVColor.goldenrodColor.CGColor);
     CGContextSetLineWidth(context, lineWidth);
     CGContextStrokePath(context);
 }
