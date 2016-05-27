@@ -237,6 +237,15 @@
     if (!photosArray.count || !delegate)
         return nil;
     
+    NVPhotoViewOverlay *nvpvo = NVPhotoViewOverlay.new;
+    nvpvo.translatesAutoresizingMaskIntoConstraints = NO;
+    nvpvo.backgroundColor = UIColor.clearColor;
+    nvpvo.userInteractionEnabled = NO;
+    
+    [view addSubview:nvpvo];
+    
+    [nvpvo constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    
     NVPhotoView *nvpv = NVPhotoView.new;
     nvpv.userInteractionEnabled = YES;
     nvpv.layer.cornerRadius = 10.0;
@@ -250,6 +259,16 @@
     nvpv.imageIndex = 0;
     nvpv.isDragged = NO;
     nvpv.draggedOffset = CGSizeZero;
+    
+    nvpv.overlay = NVPhotoViewOverlay.new;
+    nvpv.overlay.translatesAutoresizingMaskIntoConstraints = NO;
+    nvpv.overlay.backgroundColor = UIColor.clearColor;
+    nvpv.overlay.userInteractionEnabled = NO;
+    nvpv.overlay.strokeColor = UIColor.clearColor.CGColor;
+    
+    [view addSubview:nvpv.overlay];
+    
+    [nvpv.overlay constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:nvpv
                                                                                     action:@selector(insetImageLeftSwiped:)];
@@ -302,6 +321,8 @@
     [UIView animateWithDuration:0.25
                      animations:^{
                          nvpv.alpha = 1.0;
+                     } completion:^(BOOL finished) {
+                         [nvpv.delegate didAddPhotoView];
                      }];
     
     return nvpv;
@@ -314,23 +335,32 @@
         [UIView animateWithDuration:0.25
                          animations:^{
                              self.alpha = 0.0;
+                             _overlay.alpha = 0.0;
                          } completion:^(BOOL finished) {
                              [self removeFromSuperview];
+                             [_overlay removeFromSuperview];
                          }];
     }
     
     else
+    {
         [self removeFromSuperview];
+        [_overlay removeFromSuperview];
+    }
 }
 
 - (void)updatePosition
 {
     self.frame = CGRectMake(0.0, 0.0, _size.width, _size.height);
-    CGPoint center = [_delegate getPointForCoordinate:_coordinate];
+    CGPoint coordPoint = [_delegate getPointForCoordinate:_coordinate];
     CGFloat offset = [_delegate getVerticalOffset];
     
-    self.center = CGPointMake((center.x + _draggedOffset.width),
-                              (center.y - offset - (_size.height / 2.0) - _draggedOffset.height));
+    self.center = CGPointMake((coordPoint.x + _draggedOffset.width),
+                              (coordPoint.y - offset - (_size.height / 2.0) - _draggedOffset.height));
+    
+    _overlay.startPoint = CGPointApplyAffineTransform(self.center, self.transform);
+    _overlay.endPoint = coordPoint;
+    [_overlay setNeedsDisplay];
 }
 
 - (void)updateVerticalOffset:(CGFloat)verticalOffset
@@ -379,24 +409,36 @@
 
 - (void)insetImagePanned:(UIPanGestureRecognizer *)gesture
 {
+    CGPoint coordPoint = [_delegate getPointForCoordinate:_coordinate];
+    
     if (gesture.state == UIGestureRecognizerStateEnded)
     {
-        if (CGRectContainsPoint(gesture.view.frame, [_delegate getPointForCoordinate:_coordinate]))
+        if (CGRectContainsPoint(gesture.view.frame, coordPoint))
         {
             gesture.view.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
             _isDragged = NO;
+            _overlay.strokeColor = UIColor.clearColor.CGColor;
+            [_overlay setNeedsDisplay];
         }
         
         else
             _isDragged = YES;
     }
     
-    CGPoint point = [gesture translationInView:gesture.view];
-    CGAffineTransform translate = CGAffineTransformTranslate(gesture.view.transform, point.x, point.y);
-    gesture.view.transform = translate;
-    
-    [gesture setTranslation:CGPointZero
-                     inView:gesture.view];
+    else
+    {
+        CGPoint point = [gesture translationInView:gesture.view];
+        CGAffineTransform translate = CGAffineTransformTranslate(gesture.view.transform, point.x, point.y);
+        gesture.view.transform = translate;
+        
+        [gesture setTranslation:CGPointZero
+                         inView:gesture.view];
+        
+        _overlay.strokeColor = UIColor.redColor.CGColor;
+        _overlay.startPoint = CGPointApplyAffineTransform(gesture.view.center, gesture.view.transform);
+        _overlay.endPoint = coordPoint;
+        [_overlay setNeedsDisplay];
+    }
 }
 
 - (void)updateInsetImage
@@ -410,6 +452,20 @@
 - (void)deleteButtonTapped:(UIButton *)button
 {
     [self hidePhotoView:YES];
+}
+
+@end
+
+@implementation NVPhotoViewOverlay
+
+- (void)drawRect:(CGRect)rect
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
+    CGContextAddLineToPoint(context, _endPoint.x, _endPoint.y);
+    CGContextSetStrokeColorWithColor(context, _strokeColor);
+    CGContextSetLineWidth(context, 4.0);
+    CGContextStrokePath(context);
 }
 
 @end
