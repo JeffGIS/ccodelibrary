@@ -222,6 +222,7 @@
 @property (nonatomic) NSArray *photosArray;
 @property (nonatomic) CGSize size, draggedOffset;
 @property (nonatomic) UIButton *deleteButton;
+@property CGFloat currentScale;
 @property NSInteger imageIndex;
 @property BOOL isDragged;
 
@@ -284,11 +285,19 @@
     
     [nvpv addGestureRecognizer:rightSwipe];
     
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:nvpv action:@selector(insetImagePanned:)];
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:nvpv
+                                                                          action:@selector(insetImagePanned:)];
+    
     [pan requireGestureRecognizerToFail:rightSwipe];
     [pan requireGestureRecognizerToFail:leftSwipe];
     
     [nvpv addGestureRecognizer:pan];
+    
+    UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:nvpv
+                                                                                action:@selector(insetImagePinched:)];
+    
+    [nvpv addGestureRecognizer:pinch];
+    nvpv.currentScale = pinch.scale;
     
     [nvpv updateInsetImage];
     [nvpv updateSize];
@@ -355,19 +364,25 @@
 
 - (void)updatePosition
 {
-    self.frame = CGRectMake(0.0, 0.0, _size.width, _size.height);
+    CGSize scaledSize = CGSizeMake(_size.width * _currentScale, _size.height * _currentScale);
+    
+    self.frame = CGRectMake(0.0, 0.0, scaledSize.width, scaledSize.height);
     CGPoint coordPoint = [_delegate getPointForCoordinate:_coordinate];
     CGFloat offset = [_delegate getVerticalOffset];
     
     self.center = CGPointMake((coordPoint.x + _draggedOffset.width),
-                              (coordPoint.y - offset - (_size.height / 2.0) - _draggedOffset.height));
+                              (coordPoint.y - offset - (scaledSize.height / 2.0) - _draggedOffset.height));
     
     if (_isDragged)
-    {
-        _overlay.startPoint = CGPointApplyAffineTransform(self.center, self.transform);
-        _overlay.endPoint = coordPoint;
-        [_overlay setNeedsDisplay];
-    }
+        [self updateOverlayPosition:coordPoint];
+}
+
+- (void)updateOverlayPosition:(CGPoint)coordPoint
+{
+    _overlay.startPoint = CGPointMake(coordPoint.x, (coordPoint.y - 24.0));
+    _overlay.endPoint = CGPointApplyAffineTransform(self.center, self.transform);
+    
+    [_overlay setNeedsDisplay];
 }
 
 - (void)updateVerticalOffset:(CGFloat)verticalOffset
@@ -442,9 +457,19 @@
                          inView:gesture.view];
         
         _overlay.strokeColor = UIColor.redColor.CGColor;
-        _overlay.startPoint = CGPointApplyAffineTransform(gesture.view.center, gesture.view.transform);
-        _overlay.endPoint = CGPointMake(coordPoint.x, (coordPoint.y - 4.0));
-        [_overlay setNeedsDisplay];
+        [self updateOverlayPosition:coordPoint];
+    }
+}
+
+- (void)insetImagePinched:(UIPinchGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+        gesture.scale = _currentScale;
+    
+    else
+    {
+        _currentScale = gesture.scale;
+        [self updatePosition];
     }
 }
 
@@ -470,11 +495,25 @@
 
 - (void)drawRect:(CGRect)rect
 {
+    CGFloat lineWidth = 2.0;
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
     CGContextAddLineToPoint(context, _endPoint.x, _endPoint.y);
+    
+    for (int i = 1; i < 5; i++)
+    {
+        CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
+        CGContextAddLineToPoint(context, (_endPoint.x - (i * lineWidth)), _endPoint.y);
+        CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
+        CGContextAddLineToPoint(context, (_endPoint.x + (i * lineWidth)), _endPoint.y);
+        CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
+        CGContextAddLineToPoint(context, _endPoint.x, (_endPoint.y - (i * lineWidth)));
+        CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
+        CGContextAddLineToPoint(context, _endPoint.x, (_endPoint.y + (i * lineWidth)));
+    }
+    
     CGContextSetStrokeColorWithColor(context, _strokeColor);
-    CGContextSetLineWidth(context, 4.0);
+    CGContextSetLineWidth(context, lineWidth);
     CGContextStrokePath(context);
 }
 
