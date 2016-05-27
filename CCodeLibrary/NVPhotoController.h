@@ -43,6 +43,7 @@
 
 - (CGPoint)getPointForCoordinate:(CLLocationCoordinate2D)coordinate;
 - (CGFloat)getVerticalOffset;
+- (CGFloat)getStatusBarHeight;
 - (void)didAddPhotoView;
 - (void)didDeletePhotoView:(NVPhotoView *)photoView;
 
@@ -51,11 +52,12 @@
 @interface NVPhotoView : UIImageView
 
 @property (nonatomic) NVPhotoViewOverlay *overlay;
-
 @property (nonatomic) CLLocationCoordinate2D coordinate;
+@property (nonatomic) UIButton *deleteButton;
 
 + (instancetype)showPhotoViewWithNVPhotosArray:(NSArray *)photosArray
                                         inView:(UIView *)view
+                               constrainToView:(UIView *)constrainedView
                                       delegate:(id)delegate
                                     coordinate:(CLLocationCoordinate2D)coordinate;
 

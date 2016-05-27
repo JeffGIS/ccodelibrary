@@ -221,7 +221,6 @@
 @property (nonatomic, weak) id <NVPhotoViewDelegate> delegate;
 @property (nonatomic) NSArray *photosArray;
 @property (nonatomic) CGSize size;
-@property (nonatomic) UIButton *deleteButton;
 @property CGFloat currentScale;
 @property NSInteger imageIndex;
 @property BOOL isDragged;
@@ -232,20 +231,12 @@
 
 + (instancetype)showPhotoViewWithNVPhotosArray:(NSArray *)photosArray
                                         inView:(UIView *)view
+                               constrainToView:(UIView *)constrainedView
                                       delegate:(id)delegate
                                     coordinate:(CLLocationCoordinate2D)coordinate
 {
     if (!photosArray.count || !delegate)
         return nil;
-    
-    NVPhotoViewOverlay *nvpvo = NVPhotoViewOverlay.new;
-    nvpvo.translatesAutoresizingMaskIntoConstraints = NO;
-    nvpvo.backgroundColor = UIColor.clearColor;
-    nvpvo.userInteractionEnabled = NO;
-    
-    [view addSubview:nvpvo];
-    
-    [nvpvo constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     NVPhotoView *nvpv = NVPhotoView.new;
     nvpv.userInteractionEnabled = YES;
@@ -268,7 +259,7 @@
     
     [view addSubview:nvpv.overlay];
     
-    [nvpv.overlay constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    [nvpv.overlay constrainToView:constrainedView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:nvpv
                                                                                     action:@selector(insetImageLeftSwiped:)];
@@ -372,8 +363,9 @@
     self.frame = CGRectMake(0.0, 0.0, scaledSize.width, scaledSize.height);
     CGPoint coordPoint = [_delegate getPointForCoordinate:_coordinate];
     CGFloat offset = [_delegate getVerticalOffset];
+    CGFloat statusBarHeight = [_delegate getStatusBarHeight];
     
-    self.center = CGPointMake(coordPoint.x, (coordPoint.y - offset - (scaledSize.height / 2.0)));
+    self.center = CGPointMake(coordPoint.x, (coordPoint.y + statusBarHeight - offset - (scaledSize.height / 2.0)));
     
     [self updateOverlayPosition:coordPoint];
 }
