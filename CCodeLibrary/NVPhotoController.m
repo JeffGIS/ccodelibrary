@@ -291,10 +291,7 @@
     [nvpv addGestureRecognizer:pan];
     
     [nvpv updateInsetImage];
-    
-    CGFloat aspectRatio = (nvpv.image.size.height / nvpv.image.size.width);
-    CGFloat width = 264.0;
-    nvpv.size = CGSizeMake(width, (aspectRatio * width));
+    [nvpv updateSize];
     [nvpv updatePosition];
     
     [view addSubview:nvpv];
@@ -349,6 +346,13 @@
     }
 }
 
+- (void)updateSize
+{
+    CGFloat aspectRatio = (self.image.size.height / self.image.size.width);
+    CGFloat width = 264.0;
+    _size = CGSizeMake(width, (aspectRatio * width));
+}
+
 - (void)updatePosition
 {
     self.frame = CGRectMake(0.0, 0.0, _size.width, _size.height);
@@ -358,9 +362,12 @@
     self.center = CGPointMake((coordPoint.x + _draggedOffset.width),
                               (coordPoint.y - offset - (_size.height / 2.0) - _draggedOffset.height));
     
-    _overlay.startPoint = CGPointApplyAffineTransform(self.center, self.transform);
-    _overlay.endPoint = coordPoint;
-    [_overlay setNeedsDisplay];
+    if (_isDragged)
+    {
+        _overlay.startPoint = CGPointApplyAffineTransform(self.center, self.transform);
+        _overlay.endPoint = coordPoint;
+        [_overlay setNeedsDisplay];
+    }
 }
 
 - (void)updateVerticalOffset:(CGFloat)verticalOffset
@@ -436,7 +443,7 @@
         
         _overlay.strokeColor = UIColor.redColor.CGColor;
         _overlay.startPoint = CGPointApplyAffineTransform(gesture.view.center, gesture.view.transform);
-        _overlay.endPoint = coordPoint;
+        _overlay.endPoint = CGPointMake(coordPoint.x, (coordPoint.y - 4.0));
         [_overlay setNeedsDisplay];
     }
 }
@@ -447,6 +454,9 @@
     
     self.image = [UIImage imageWithContentsOfFile:[_delegate getInsetImagePath:self
                                                                         forKey:nvp.key]];
+    
+    [self updateSize];
+    [self updatePosition];
 }
 
 - (void)deleteButtonTapped:(UIButton *)button
