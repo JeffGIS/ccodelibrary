@@ -10,7 +10,7 @@ double e[], q[];	/* rectangular position vectors */
 struct orbit *elemnt;	/* orbital elements of object q */
 {
 double p[3], p0[3], ptemp[3];
-double P, Q, E, t, x, y;
+double P, Q, E, t = 0.0, x, y;
 int i, k;
 
 

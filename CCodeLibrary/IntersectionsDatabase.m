@@ -1251,8 +1251,8 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     BOOL opened = [self open];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%i AND assignedTo%@=%i ORDER BY intID ASC",
-                       status, type, user];
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, intX, intY FROM Intersections WHERE status=%li AND assignedTo%@=%i ORDER BY intID ASC",
+                       (long)status, type, user];
     
     sqlite3_stmt *statement = NULL;
     
@@ -1441,7 +1441,7 @@ Exit:
 }
 
 - (void)FTPdidComplete:(FTPDataType)dataType
-            withStatus:(int)status
+            withStatus:(FTPStatus)status
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path
 {
@@ -1462,7 +1462,7 @@ Exit:
             {
                 [NSFileManager.defaultManager removeItemAtPath:path
                                                          error:nil];
-                status = INTDBStatusFailedToUnzip;
+                status = (FTPStatus)INTDBStatusFailedToUnzip;
             }
         }
         if (self.delegate)

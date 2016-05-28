@@ -665,18 +665,17 @@
         row = 0;
     
     CityOrOrganizationData *c = _placesArray[row];
-    _GSSiPadNumber = c.GSSiPadNumber;
+    _GSSiPadNumber = (int)c.GSSiPadNumber;
     _currentCityNameAndState = addSpaceAfterComma(c.name);
-    
-    self.currentGeoid = c.number;
+    self.currentGeoid = (int)c.number;
     
     [UserDefaults.defaults saveInteger:self.currentGeoid
                                 forKey:@"CurrentGeoid"];
     
-    _currentManageriPad = c.managerNumber;
-    _currentiPadWithinManager = c.withinManager;
+    _currentManageriPad = (int)c.managerNumber;
+    _currentiPadWithinManager = (int)c.withinManager;
     _deviceNumber = _currentiPadWithinManager;
-    _totiPadWithinManager = c.totWithinManager;
+    _totiPadWithinManager = (int)c.totWithinManager;
     
     NSString *key = [NSString stringWithFormat:@"ManagerForGeoid:%i",self.currentGeoid ];
     [UserDefaults.defaults saveInteger:_currentManageriPad

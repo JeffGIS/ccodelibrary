@@ -494,7 +494,7 @@ search_halve (t1, y1, t2, y2, func)
      double y2;
      int (* func)();
 {
-  double e2, e1, em, tm, ym;
+  double e2, e1, em, tm = 0.0, ym;
 
   e2 = y2 - elevation_threshold;
   e1 = y1 - elevation_threshold;

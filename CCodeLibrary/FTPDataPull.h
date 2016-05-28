@@ -39,7 +39,6 @@ typedef NS_ENUM(NSInteger, FTPDataType)
 @protocol FTPDataPullDelegate <NSObject>
 
 @optional
-
 - (void)FTPdidComplete:(FTPDataType)dataType
             withStatus:(FTPStatus)status
        andStatusString:(NSString *)statusString
