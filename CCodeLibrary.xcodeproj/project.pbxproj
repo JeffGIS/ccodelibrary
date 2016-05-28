@@ -10,7 +10,6 @@
 		1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */; };
 		1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F101D2619AE96EB0006E1D5 /* findIntersection.c */; };
 		1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */; };
-		1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3A544519A412490029DBEA /* NetworkManager.m */; };
 		1F5150A31CE3959000BA4A5E /* AlleyWallData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5150A21CE3959000BA4A5E /* AlleyWallData.m */; };
 		1F5150A41CE396FE00BA4A5E /* AlleyWallData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F5150A11CE3959000BA4A5E /* AlleyWallData.h */; };
 		1F5150A51CE3A3B400BA4A5E /* SQLiteLib.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB42311B2B1A5E00C36FFC /* SQLiteLib.h */; };
@@ -157,7 +156,6 @@
 		A99C89101AEDE04000A0856F /* FTPDataPush.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB05C21119ED378400F0688B /* FTPDataPush.h */; };
 		A99C89111AEDE04600A0856F /* GeoMasterServer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */; };
 		A99C89121AEDE04C00A0856F /* GetAssignments.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBB9A61819FFC02900685716 /* GetAssignments.h */; };
-		A99C89131AEDE05300A0856F /* NetworkManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F3A544419A412490029DBEA /* NetworkManager.h */; };
 		A99C89141AEDE05800A0856F /* Reachability.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9735AF219E77B6800894359 /* Reachability.h */; };
 		A99C89151AEDE06300A0856F /* GetPlaceAreaFile.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */; };
 		A99C89161AEDE06B00A0856F /* GetPriorityLocations.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9C8ED3A1A5849F700DF9856 /* GetPriorityLocations.h */; };
@@ -443,7 +441,6 @@
 				A99C89161AEDE06B00A0856F /* GetPriorityLocations.h in CopyFiles */,
 				A99C89151AEDE06300A0856F /* GetPlaceAreaFile.h in CopyFiles */,
 				A99C89141AEDE05800A0856F /* Reachability.h in CopyFiles */,
-				A99C89131AEDE05300A0856F /* NetworkManager.h in CopyFiles */,
 				A99C89121AEDE04C00A0856F /* GetAssignments.h in CopyFiles */,
 				A99C89111AEDE04600A0856F /* GeoMasterServer.h in CopyFiles */,
 				A99C89101AEDE04000A0856F /* FTPDataPush.h in CopyFiles */,
@@ -477,8 +474,6 @@
 		1F101D2619AE96EB0006E1D5 /* findIntersection.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = findIntersection.c; sourceTree = "<group>"; };
 		1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerticalSegmentedControl.h; sourceTree = "<group>"; };
 		1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerticalSegmentedControl.m; sourceTree = "<group>"; };
-		1F3A544419A412490029DBEA /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
-		1F3A544519A412490029DBEA /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		1F5150A11CE3959000BA4A5E /* AlleyWallData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlleyWallData.h; sourceTree = "<group>"; };
 		1F5150A21CE3959000BA4A5E /* AlleyWallData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlleyWallData.m; sourceTree = "<group>"; };
 		1F829A981C342BDD00DD429C /* FileLister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileLister.h; sourceTree = "<group>"; };
@@ -1085,8 +1080,6 @@
 				EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */,
 				EBB9A61819FFC02900685716 /* GetAssignments.h */,
 				EBB9A61919FFC02900685716 /* GetAssignments.m */,
-				1F3A544419A412490029DBEA /* NetworkManager.h */,
-				1F3A544519A412490029DBEA /* NetworkManager.m */,
 				6998225C1C6904E4003476DD /* NVDocumentManager.h */,
 				6998225D1C6904E4003476DD /* NVDocumentManager.m */,
 				691636201C1FC790000C61B8 /* NVTileCompiler.h */,
@@ -1414,7 +1407,6 @@
 				EB23A7961CA04AF700F83E6C /* TextOptions.m in Sources */,
 				1F829A9A1C342BDD00DD429C /* FileLister.m in Sources */,
 				A933D9FD1B5D4FEF00D621CD /* NV3DMath.m in Sources */,
-				1F3A544619A4124A0029DBEA /* NetworkManager.m in Sources */,
 				A99F9B871B1E06E400CA8DA6 /* UIApplication+VersionBuild.m in Sources */,
 				A9A7E3641B75663500DC7F3D /* NVRampButton.m in Sources */,
 				A933D9F61B5D499500D621CD /* NVPipe.m in Sources */,

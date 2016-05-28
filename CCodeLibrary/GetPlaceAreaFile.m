@@ -28,16 +28,16 @@
 }
 
 - (void)FTPdidComplete:(FTPDataType)dataType
-            withStatus:(int)status
+            withStatus:(FTPStatus)status
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path
 {
     if (status == FTPStatusOK || status == FTPStatusFileExists)
-        status = AreaFileStatusOK;
+        status = (FTPStatus)AreaFileStatusOK;
     
     else if (status != FTPStatusConnectionFailedTryingSecondary)
     {
-        status = AreaFileStatusFailed;
+        status = (FTPStatus)AreaFileStatusFailed;
         path = @"";
     }
     

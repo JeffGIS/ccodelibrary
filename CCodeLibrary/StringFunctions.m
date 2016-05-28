@@ -623,7 +623,7 @@ NSString * splitLine (NSString * line)
 {
     NSString *splitLines = nil;
     LPSTR tx = line.UTF8String;
-    int midp = line.length / 2;
+    int midp = (int)line.length / 2;
     int spliti = 0;
     int mind = INT_MAX;
     int d;
@@ -655,7 +655,7 @@ NSString * splitLongestLine (NSString * text)
     NSString * splitText = nil;
     NSString * line;
     NSArray *textLines = [text componentsSeparatedByString:@"\n"];
-    int nLines = textLines.count;
+    int nLines = (int)textLines.count;
     if (nLines)
     {
         int maxLen = 0;
@@ -663,7 +663,7 @@ NSString * splitLongestLine (NSString * text)
         for (int i=0;i<nLines;i++)
         {
             line = textLines[i];
-            int len = line.length;
+            int len = (int)line.length;
             if (len > maxLen)
             {
                 maxLen = max (len,maxLen);

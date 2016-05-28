@@ -9,7 +9,7 @@ extern struct orbit earth;
 
 int dosun()
 {
-double r, x, y, t;
+double r, x, y, t = 0.0;
 double ecr[3], rec[3], pol[3];
 int i;
 double asin(), modtp(), sqrt(), cos(), sin();

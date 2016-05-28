@@ -134,8 +134,8 @@ static int fileSequence = 0;
     {
         int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
         NSString * sendToServerFile = [self getSendToServerFile:iPad];
-        int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:sendToServerFile
-                                                                                 error:nil].fileSize;
+        int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:sendToServerFile
+                                                                           error:nil].fileSize;
         if (!fileSize)
         {
             int iTime = NSDate.timeIntervalSinceReferenceDate;
@@ -968,9 +968,10 @@ SELECT max(_id) FROM MyTable*/
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
-    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager]
-                                                                              error:nil].fileSize;
-    if (_fileSize > 0)
+    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum
+                                                                                             iPad:CRAPI.sharedInstance.currentiPadWithinManager]
+                                                                       error:nil].fileSize;
+    if (fileSize > 0)
     {
         [self setLastDataUpdateNum:++lastNum pictNum:pictNum foriPad:iPad];
     }
@@ -991,9 +992,10 @@ SELECT max(_id) FROM MyTable*/
 {
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastPictUpdateNumber:iPad];
-    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputPictFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager]
-                                                                              error:nil].fileSize;
-    if (_fileSize > 0)
+    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputPictFile:lastNum
+                                                                                             iPad:CRAPI.sharedInstance.currentiPadWithinManager]
+                                                                       error:nil].fileSize;
+    if (fileSize > 0)
     {
         [self setLastPictUpdateNum:++lastNum foriPad:iPad];
     }
@@ -1020,7 +1022,7 @@ SELECT max(_id) FROM MyTable*/
     {
         nextID = sqlite3_column_int(statement, 0);
     }
-    nextID = [CRAPI.sharedInstance adjustNextRefno:nextID];
+    nextID = (int)[CRAPI.sharedInstance adjustNextRefno:nextID];
     SQLOK(sqlite3_finalize(statement), _database);
     [self close:opened];
     return nextID;

@@ -160,7 +160,7 @@ static int nInit=0;
     {
         int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
         NSString * sendToServerFile = [self getSendToServerFile:iPad];
-        int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:sendToServerFile
+        int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:sendToServerFile
                                                                               error:nil].fileSize;
         if (!fileSize)
         {
@@ -203,9 +203,9 @@ static int nInit=0;
 
 - (NSString*)dbVersion
 {
-    NSString *rtn=@"";
+    NSString *rtn = @"";
     BOOL opened = [self open];
-    int dbVersion, currentVersion;
+    int dbVersion = 0, currentVersion = 0;
     
     if (_isOpen && _fileSize > 0)
     {
@@ -542,9 +542,10 @@ static int nInit=0;
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
-    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager]
-                                                                          error:nil].fileSize;
-    if (_fileSize > 0)
+    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum
+                                                                                             iPad:CRAPI.sharedInstance.currentiPadWithinManager]
+                                                                       error:nil].fileSize;
+    if (fileSize > 0)
     {
         [self setLastDataUpdateNum:++lastNum pictNum:pictNum foriPad:iPad];
     }
@@ -564,9 +565,10 @@ static int nInit=0;
 {
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastPictUpdateNumber:iPad];
-    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager]
-                                                                              error:nil].fileSize;
-    if (_fileSize > 0)
+    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum
+                                                                                             iPad:CRAPI.sharedInstance.currentiPadWithinManager]
+                                                                       error:nil].fileSize;
+    if (fileSize > 0)
     {
         [self setLastPictUpdateNum:++lastNum foriPad:iPad];
     }

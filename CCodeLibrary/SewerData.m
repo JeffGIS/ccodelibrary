@@ -241,7 +241,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
 }
 
 - (void)FTPdidComplete:(FTPDataType)dataType
-            withStatus:(int)status
+            withStatus:(FTPStatus)status
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path
 {

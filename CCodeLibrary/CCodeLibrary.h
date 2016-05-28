@@ -7,7 +7,6 @@
 #import "FTPDataPush.h"
 #import "MathTypes.h"
 #import "MathUtil.h"
-#import "NetworkManager.h"
 #import "TileGraphics.h"
 #import "UserDefaults.h"
 #import "MPIntersection.h"

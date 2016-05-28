@@ -155,7 +155,7 @@ Top:
         if ([NVTextDrawing getRotation:&rotation
                  ofLongestStraightLine:(int)numPoints
                                 points:pPoints
-                              numLoops:numLoops
+                              numLoops:(int)numLoops
                                loopLen:polyPartLen
                              maxOffset:1.0
                              minLength:minTextWidth])

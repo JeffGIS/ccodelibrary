@@ -434,13 +434,13 @@ static BOOL LineInBoundsD (long NPNTS, HPDPOINT POINTS,double TotDist,LPDOUBLE P
 #if ENABLETRACE
 {GSSiEnterProg (1017);
 #endif
-{    HPDPOINT    BPOINT, EPOINT;
-     double     Dist, MinOffDist, MinPCT = 0.0, MinAZ = 0.0;
-     DPOINT     MinPickedPoint;
-     double     YMN, YMX, XMN, XMX, XDIFF;
-     double     SLOPE, YINT, X, Y;
-     long       i, MinFromPt = 0;
-     short		nfound;
+{   HPDPOINT    BPOINT, EPOINT;
+    double      Dist, MinOffDist, MinPCT = 0.0, MinAZ = 0.0;
+    DPOINT      MinPickedPoint = {};
+    double      YMN, YMX, XMN, XMX, XDIFF;
+    double      SLOPE, YINT, X, Y;
+    long        i, MinFromPt = 0;
+    short       nfound;
      
      if (IgnoreBounds || PickDeletes)
 {
@@ -573,7 +573,7 @@ bool PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUB
 {GSSiEnterProg (707);
 #endif
 {
-	DPOINT PickedPoint, WPoint, LastWPoint, NearPoint;
+    DPOINT PickedPoint, WPoint, LastWPoint, NearPoint = {0};
     //DPOINT BeginPoint, EndPoint, FromPoint, ToPoint;
 	HPDPOINT lpPoints = lpPointsIn;//lpPointsIn[1]
 	//POINT	BeginPointFile, EndPointFile, PickedPointFile;

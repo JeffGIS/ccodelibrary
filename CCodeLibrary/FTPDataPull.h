@@ -2,7 +2,6 @@
 //  PedRampInv_Prelim
 
 #import <Foundation/Foundation.h>
-#import "NetworkManager.h"
 #import "UserDefaults.h"
 #import "GSSiPopoverView.h"
 #import "GSSiEnums.h"
@@ -40,7 +39,6 @@ typedef NS_ENUM(NSInteger, FTPDataType)
 @protocol FTPDataPullDelegate <NSObject>
 
 @optional
-
 - (void)FTPdidComplete:(FTPDataType)dataType
             withStatus:(FTPStatus)status
        andStatusString:(NSString *)statusString
