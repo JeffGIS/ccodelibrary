@@ -3,8 +3,8 @@
 
 #import "FTPDataPush.h"
 #import "Reachability.h"
-#import "NetworkManager.h"
-#import <CFNetwork/CFNetwork.h>
+@import CFNetwork;
+#import "CRAPI.h"
 
 enum {
     kSendBufferSize = 32768
@@ -83,7 +83,6 @@ enum {
 - (void)sendDidStart
 {
     NSLog(@"Attempting to Push %@ to %@", _filePath, _urlText);
-    [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 
 - (void)sendDidStopWithStatus:(int)status
@@ -94,8 +93,6 @@ enum {
         assert(_filePath);
         status = FTPStatusStop;
     }
-    
-    [NetworkManager.sharedInstance didStopNetworkOperation];
     
     if (_delegate)
     {
@@ -132,7 +129,7 @@ enum {
     assert(!_connection);
     assert(!_fileStream);
     
-    NSURL *url = [NetworkManager.sharedInstance smartURLForString:_urlText];
+    NSURL *url = [CRAPI.sharedInstance smartURLForString:_urlText];
     
     if (!url)
     {
@@ -150,7 +147,7 @@ enum {
                 _currentFtp = _ftpSite;
             }
             
-            url = [NetworkManager.sharedInstance smartURLForString:_urlText];
+            url = [CRAPI.sharedInstance smartURLForString:_urlText];
         }
         
         if (!url)

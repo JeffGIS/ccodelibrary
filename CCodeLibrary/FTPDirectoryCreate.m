@@ -2,8 +2,8 @@
 //  CCodeLibrary
 
 #import "FTPDirectoryCreate.h"
-#import "NetworkManager.h"
 #import "Reachability.h"
+#import "CRAPI.h"
 
 @interface FTPDirectoryCreate ()
 
@@ -75,7 +75,7 @@
     else
         _urlText = [NSString stringWithFormat:@"%@:%@@%@/%@/%@/", _username, _password, _ftpDomain, _directory, currentDir];
     
-    NSURL *url = [NetworkManager.sharedInstance smartURLForString:_urlText];
+    NSURL *url = [CRAPI.sharedInstance smartURLForString:_urlText];
     
     assert(url);
     
@@ -122,7 +122,6 @@
 - (void)sendDidStartDirectory:(NSString *)currentDir
 {
     NSLog(@"Attempting to CREATE %@ in %@/%@", currentDir, _ftpDomain, _directory);
-    [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 
 - (void)stream:(NSStream *)aStream
@@ -185,8 +184,6 @@
     
     if (!statusString)
         status = FTPStatusStop;
-    
-    [NetworkManager.sharedInstance didStopNetworkOperation];
     
     _directoryCount++;
     

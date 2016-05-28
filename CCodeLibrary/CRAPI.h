@@ -168,4 +168,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
                  range:(int)iRange
              numRanges:(int)nRanges;
 
+- (NSURL *)smartURLForString:(NSString *)str;
+
 @end
