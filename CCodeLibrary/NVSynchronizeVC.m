@@ -486,6 +486,24 @@
 #pragma unused(nvptv)
 }
 
+- (void) setDatabaseIDToDB
+{
+    int geoid = CRAPI.sharedInstance.currentGeoid;
+    if (geoid > 100000000)
+    {
+        _awd = AlleyWallData.new;
+        _databaseID = _awd;
+        [_databaseID incrementLastDataFileNum];
+    }
+    
+    else
+    {
+        _crd = CurbRampData.new;
+        _databaseID = _crd;
+        [_databaseID incrementLastDataFileNum];
+    }
+    [self updateConnectLabel];
+}
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
 {
     [popoverTableView hide:YES];
@@ -503,7 +521,7 @@
                                 forKey:@"SelectedRow"];
 
     [CRAPI.sharedInstance processPlacesArray:_selectedRow];
-    
+    [self setDatabaseIDToDB];
     [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",
                             CRAPI.sharedInstance.currentCityNameAndState]
                   forState:UIControlStateNormal];
@@ -777,11 +795,11 @@ didReceiveMessage:(NSString *)message
                 }
                 
                 [CRAPI.sharedInstance processPlacesArray:_selectedRow];
+                [self setDatabaseIDToDB];
                 
                 [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",
                                         CRAPI.sharedInstance.currentCityNameAndState]
                               forState:UIControlStateNormal];
-                
                 if (CRAPI.sharedInstance.placesArray.count > 1)
                 {
                     _titleButton.backgroundColor = _colors.enabledColor;
@@ -820,18 +838,6 @@ didReceiveMessage:(NSString *)message
                 _uploadStatusMsg = message.copy;
                 _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String);
                 [self closeGMServer];
-                
-                if (CRAPI.sharedInstance.currentGeoid < 0)
-                {
-                    _awd = AlleyWallData.new;
-                    _databaseID = _awd;
-                }
-                
-                else
-                {
-                    _crd = CurbRampData.new;
-                    _databaseID = _crd;
-                }
                 
                 int pictNum = 0;
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
