@@ -4,6 +4,7 @@
 #import "NVRampTypePageController.h"
 #import "NVRampTypePageView.h"
 #import "UserDefaults.h"
+#import "Colors.h"
 
 @implementation NVRampType
 
@@ -106,6 +107,7 @@
 @property (nonatomic) UIPageControl *pageControl;
 @property (nonatomic) NSMutableArray *rampTypes;
 @property (nonatomic) UIButton *returnButton;
+@property (nonatomic) Colors *colors;
 @property RampTypeEditOption editOption;
 @property RampType selectedType;
 
@@ -133,23 +135,8 @@
     nvrtpc.controllerDelegate = delegate;
     nvrtpc.selectedType = selectedType;
     nvrtpc.editOption = editOption;
+    nvrtpc.colors = UserDefaults.defaults.defaultColors;
     return nvrtpc;
-}
-
-+ (void)setupReturnButton:(UIButton *)button
-{
-    button.frame = CGRectMake(20.0, 20.0, 160.0, 40.0);
-    button.backgroundColor = UIColor.clearColor;
-    button.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
-    
-    [button setTitle:@"< Return"
-            forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.whiteColor
-                 forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.lightGrayColor
-                 forState:UIControlStateHighlighted];
 }
 
 + (NSArray *)defaultRampTypes
@@ -174,22 +161,14 @@
     
     self.dataSource = self;
     self.delegate = self;
-    self.view.backgroundColor = UserDefaults.defaults.appleBlue;
+    self.view.backgroundColor = _colors.backgroundColor;
     _pages = NSMutableArray.array;
     
     _rampTypes = NSMutableArray.array;
     [_rampTypes addObjectsFromArray:NVRampTypePageController.defaultRampTypes];
     [_rampTypes addObjectsFromArray:[UserDefaults.defaults arrayForKey:@"CustomRampTypes"]];
     
-    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [NVRampTypePageController setupReturnButton:_returnButton];
-    
-    [_returnButton addTarget:self
-                      action:@selector(returnButtonTapped:)
-            forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.view addSubview:_returnButton];
-    
+    [self setupReturnButton];
     [self setupPages];
     
     [self setViewControllers:@[_pages[0]]
@@ -203,9 +182,33 @@
     [super didReceiveMemoryWarning];
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle
+- (BOOL)prefersStatusBarHidden
 {
-    return UIStatusBarStyleLightContent;
+   return YES;
+}
+
+- (void)setupReturnButton
+{
+    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _returnButton.frame = CGRectMake(20.0, 8.0, 160.0, 56.0);
+    _returnButton.backgroundColor = _colors.enabledColor;
+    _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    _returnButton.layer.cornerRadius = 10.0;
+    
+    [_returnButton setTitle:@"< Return"
+                   forState:UIControlStateNormal];
+    
+    [_returnButton setTitleColor:_colors.titleColor
+                    forState:UIControlStateNormal];
+    
+    [_returnButton setTitleColor:_colors.highlightedColor
+                        forState:UIControlStateHighlighted];
+    
+    [_returnButton addTarget:self
+                      action:@selector(returnButtonTapped:)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:_returnButton];
 }
 
 - (void)setupPages

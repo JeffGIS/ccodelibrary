@@ -5,6 +5,7 @@
 #import "UserDefaults.h"
 #import "TableViewCellLabel.h"
 #import "UIImage+ImageFromColor.h"
+#import "Colors.h"
 
 @interface NVRampTypePageView ()
 
@@ -14,6 +15,7 @@
 @property (nonatomic) UIView *buttonView;
 @property (nonatomic) UIButton *selectButton, *returnButton;
 @property (nonatomic) CGRect originalButtonFrame, originalLabelFrame, originalNumberLabelFrame;
+@property (nonatomic) Colors *colors;
 @property NSInteger zoomedIndex;
 @property RampType selectedType;
 
@@ -40,6 +42,7 @@
     }
     
     NVRampTypePageView *nvpv = NVRampTypePageView.new;
+    nvpv.colors = UserDefaults.defaults.defaultColors;
     nvpv.startingIndex = startingIndex;
     nvpv.rampTypes = rampTypes;
     nvpv.delegate = delegate;
@@ -65,15 +68,7 @@
     
     [self.view addSubview:_buttonView];
     
-    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [NVRampTypePageController setupReturnButton:_returnButton];
-    _returnButton.hidden = YES;
-    
-    [_returnButton addTarget:self
-                      action:@selector(returnButtonTapped:)
-            forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.view addSubview:_returnButton];
+    [self setupReturnButton];
     
     _selectButton = [[UIButton alloc] initWithFrame:CGRectMake(64.0, (self.view.frame.size.height - 118.0),
                                                                      (self.view.frame.size.width - 128.0), 60.0)];
@@ -169,6 +164,31 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (void)setupReturnButton
+{
+    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _returnButton.frame = CGRectMake(20.0, 8.0, 160.0, 56.0);
+    _returnButton.backgroundColor = _colors.enabledColor;
+    _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    _returnButton.layer.cornerRadius = 10.0;
+    
+    [_returnButton setTitle:@"< Return"
+                   forState:UIControlStateNormal];
+    
+    [_returnButton setTitleColor:_colors.titleColor
+                        forState:UIControlStateNormal];
+    
+    [_returnButton setTitleColor:_colors.highlightedColor
+                        forState:UIControlStateHighlighted];
+    
+    [_returnButton addTarget:self
+                      action:@selector(returnButtonTapped:)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    _returnButton.hidden = YES;
+    [self.view addSubview:_returnButton];
 }
 
 - (void)setupButton:(UIButton *)button

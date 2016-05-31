@@ -5,6 +5,7 @@
     @import UIKit;
     #import "StringFunctions.h"
     #import "UIView+Constraints.h"
+    #import "NVWebView.h"
 #endif
 
 #include "ExitApp.h"

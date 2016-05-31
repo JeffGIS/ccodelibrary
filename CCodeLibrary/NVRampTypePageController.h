@@ -57,6 +57,5 @@ typedef NS_ENUM(NSInteger, RampTypeEditOption)
                                     editOption:(RampTypeEditOption)editOption;
 
 + (NSArray *)defaultRampTypes;
-+ (void)setupReturnButton:(UIButton *)button;
 
 @end
