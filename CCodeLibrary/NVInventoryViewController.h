@@ -16,10 +16,10 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 #define FROM_PRELIM 3
 #define FROM_PRELIM_MAP 4
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+@import CoreLocation;
 #import "MPIntersection.h"
 #import "NVAlertView.h"
-#import <CoreLocation/CoreLocation.h>
 #import "NVTileCompiler.h"
 
 @class NVInventoryViewController;
