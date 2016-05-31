@@ -61,6 +61,7 @@ static int fileSequence = 0;
                                                                    error:nil].fileSize;
         rtn = TRUE;
     }
+    
     return rtn;
 }
 
