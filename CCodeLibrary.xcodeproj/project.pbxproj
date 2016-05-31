@@ -101,7 +101,6 @@
 		A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */ = {isa = PBXBuildFile; fileRef = A90EBDC81A48874B001E72CF /* GSSiEnums.m */; };
 		A91D34F31B1E27BE005A61E2 /* UIApplication+VersionBuild.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99F9B851B1E06E400CA8DA6 /* UIApplication+VersionBuild.h */; };
 		A91F36941AE9739400602BCE /* NVSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F36931AE9739400602BCE /* NVSliderView.m */; };
-		A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A91F6E8C1AE0A73B00822F42 /* HelpButton.m */; };
 		A9237F851AFA929200D10E96 /* NVTextAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = A9237F841AFA929200D10E96 /* NVTextAlert.m */; };
 		A9237F861AFA92BA00D10E96 /* NVTextAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9237F831AFA929200D10E96 /* NVTextAlert.h */; };
 		A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = A92382AC1AD986010027659B /* GSSiBumpDetector.m */; };
@@ -170,7 +169,6 @@
 		A99C89231AEDE0CC00A0856F /* GSSiDatePicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99050861ACB942F00C6AAAF /* GSSiDatePicker.h */; };
 		A99C89241AEDE0D100A0856F /* GSSiPopoverView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */; };
 		A99C89251AEDE0D900A0856F /* GSSiSlopeViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D5A8AE1A0D0A7A00314E8B /* GSSiSlopeViewController.h */; };
-		A99C89261AEDE0E200A0856F /* HelpButton.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A91F6E8B1AE0A73B00822F42 /* HelpButton.h */; };
 		A99C89271AEDE0E700A0856F /* HelpWebView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A97C621D1AE0C59200DA7738 /* HelpWebView.h */; };
 		A99C89281AEDE0EF00A0856F /* LegendView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A96B07BD19FBF276005A73B0 /* LegendView.h */; };
 		A99C892A1AEDE0FA00A0856F /* NVSliderView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A91F36921AE9739400602BCE /* NVSliderView.h */; };
@@ -426,7 +424,6 @@
 				A99C892A1AEDE0FA00A0856F /* NVSliderView.h in CopyFiles */,
 				A99C89281AEDE0EF00A0856F /* LegendView.h in CopyFiles */,
 				A99C89271AEDE0E700A0856F /* HelpWebView.h in CopyFiles */,
-				A99C89261AEDE0E200A0856F /* HelpButton.h in CopyFiles */,
 				A99C89251AEDE0D900A0856F /* GSSiSlopeViewController.h in CopyFiles */,
 				A99C89241AEDE0D100A0856F /* GSSiPopoverView.h in CopyFiles */,
 				A99C89231AEDE0CC00A0856F /* GSSiDatePicker.h in CopyFiles */,
@@ -574,8 +571,6 @@
 		A90EBDC81A48874B001E72CF /* GSSiEnums.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSSiEnums.m; sourceTree = "<group>"; };
 		A91F36921AE9739400602BCE /* NVSliderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSliderView.h; sourceTree = "<group>"; };
 		A91F36931AE9739400602BCE /* NVSliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSliderView.m; sourceTree = "<group>"; };
-		A91F6E8B1AE0A73B00822F42 /* HelpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpButton.h; sourceTree = "<group>"; };
-		A91F6E8C1AE0A73B00822F42 /* HelpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpButton.m; sourceTree = "<group>"; };
 		A9237F831AFA929200D10E96 /* NVTextAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextAlert.h; sourceTree = "<group>"; };
 		A9237F841AFA929200D10E96 /* NVTextAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextAlert.m; sourceTree = "<group>"; };
 		A92382AB1AD986010027659B /* GSSiBumpDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiBumpDetector.h; sourceTree = "<group>"; };
@@ -961,8 +956,6 @@
 				EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */,
 				A9D5A8AE1A0D0A7A00314E8B /* GSSiSlopeViewController.h */,
 				A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */,
-				A91F6E8B1AE0A73B00822F42 /* HelpButton.h */,
-				A91F6E8C1AE0A73B00822F42 /* HelpButton.m */,
 				A97C621D1AE0C59200DA7738 /* HelpWebView.h */,
 				A97C621E1AE0C59200DA7738 /* HelpWebView.m */,
 				A96B07BD19FBF276005A73B0 /* LegendView.h */,
@@ -1506,7 +1499,6 @@
 				EB95A1A71CB16EF500158B40 /* PercentInArea.m in Sources */,
 				EBFC2A301BE90A0F00E0C1B3 /* DisplayCharacteristics.m in Sources */,
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,
-				A91F6E8D1AE0A73B00822F42 /* HelpButton.m in Sources */,
 				69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */,
 				EB0E4FFD1C6288BF00849766 /* DispersePoint.m in Sources */,
 				EB568F391C8C9BAB00C45ACE /* CompressDecompress.m in Sources */,

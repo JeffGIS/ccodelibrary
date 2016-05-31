@@ -10,14 +10,14 @@
 #import "NVRampButton.h"
 #import "NVSignalButton.h"
 #import "NVXWalkButton.h"
-#import "HelpButton.h"
 #import "NVRampTypePageController.h"
+#import "NVWebView.h"
 
 int ii;
 @interface NVInventoryViewController () <NVRampTypePageControllerDelegate>
 
 @property (nonatomic) UIImageView *backgroundImage, *imageTargetView;
-@property (nonatomic) UIButton *cancelButton, *doneButton, *complexButton;
+@property (nonatomic) UIButton *cancelButton, *doneButton, *complexButton, *helpButton;
 @property (nonatomic) UIButton *addRampButton, *addSignalButton, *addXWalkButton;
 @property (nonatomic) UIButton *editItemButton, *rampTypeButton, *currentEditButton;
 @property (nonatomic) NSString *pathToImageFile, *pathToBPWFile;
@@ -36,7 +36,6 @@ int ii;
 @property (nonatomic) UILabel *headingLabel, *intersectionLabel;
 @property (nonatomic) CGPoint newTarget;
 @property (nonatomic) CGFloat targetSize;
-@property (nonatomic) HelpButton *helpButton;
 
 @end
 
@@ -80,11 +79,15 @@ int ii;
     _initialZoom = _currentZoom;
     _firstTime = YES;
     _pTranWToBMP = _pTranBMPToW = 0;
-    self.updateOption = NVUpdateOptionNone;
+    _updateOption = NVUpdateOptionNone;
     _currentRampType = [UserDefaults.defaults integerForKey:@"CurrentRampType"];
     _targetSize = 160.0;
     
-    _backgroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 98.0, 768.0, 768.0)];
+    CGFloat buttonHeight = 70.0, margin = 20.0;
+    
+    _backgroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 98.0, self.view.frame.size.width,
+                                                                     self.view.frame.size.width)];
+    
     _backgroundImage.clipsToBounds = YES;
     _backgroundImage.userInteractionEnabled = YES;
     
@@ -94,8 +97,8 @@ int ii;
     [_backgroundImage addGestureRecognizer:tapGesture];
     [self.view addSubview:_backgroundImage];
     
-    _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(224.0, 20.0, 320.0, 70.0)];
-    _cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, 20.0, 148.0, 70.0)];
+    _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(224.0, margin, 320.0, buttonHeight)];
+    _cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, margin, 148.0, buttonHeight)];
     
     [self setupButton:_doneButton
              selector:@selector(done:)
@@ -115,7 +118,7 @@ int ii;
                          forState:UIControlStateNormal];
         }
         
-        _complexButton = [[UIButton alloc] initWithFrame:CGRectMake(600.0, 20.0, 148.0, 70.0)];
+        _complexButton = [[UIButton alloc] initWithFrame:CGRectMake(600.0, margin, 148.0, buttonHeight)];
         
         [self setupButton:_complexButton
                  selector:@selector(complex:)
@@ -125,21 +128,32 @@ int ii;
         UILongPressGestureRecognizer *lp = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                          action:@selector(longPressed:)];
         
-        [self.backgroundImage addGestureRecognizer:lp];
+        [_backgroundImage addGestureRecognizer:lp];
     }
     
     else
     {
-        _helpButton = [HelpButton showHelpButtonWithOrigin:CGPointMake(690.0, 20.0)
-                                                      size:70.0
-                                                      view:self.view
-                                                       tag:HelpButtonPresenterCRISInventoryVC
-                                                    tabBar:nil];
-        
-        _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(544.0, 20.0, 146.0, 70.0)];
+        _headingLabel = [[UILabel alloc] initWithFrame:CGRectMake(544.0, margin, 144.0, buttonHeight)];
         _headingLabel.font = [UIFont boldSystemFontOfSize:60.0];
         [self setupLabel:_headingLabel];
     }
+    
+    _helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _helpButton.frame = CGRectMake(688.0, margin, buttonHeight, buttonHeight);
+    
+    [_helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"question-256x256"
+                                                                                         ofType:@"png"]]
+                 forState:UIControlStateNormal];
+    
+    [_helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"questionMarkHighlighted"
+                                                                                         ofType:@"png"]]
+                 forState:UIControlStateHighlighted];
+    
+    [_helpButton addTarget:self
+                    action:@selector(helpButtonTapped:)
+          forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:_helpButton];
     
     [self setupBottomButtons];
     [self setupZoomSC];
@@ -2081,6 +2095,17 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     [self updateBottomButtonAppearance];
 
+}
+
+- (void)helpButtonTapped:(UIButton *)button
+{
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_NoneAvailable"
+                                                       ofType:@"pdf"];
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                    showFileAtPath:filePath];
+    
+    [nvwv adjustForStatusBar];
 }
 
 @end
