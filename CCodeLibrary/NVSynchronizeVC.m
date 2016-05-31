@@ -1064,6 +1064,19 @@ Top:
     
     int lastDataIHave = [_databaseID getLastDataUpdateNumber:iPad
                                                  lastPictNum:&lastPictIHave];
+    lastDataIHave++;
+    int fileSize = 0;
+    
+    while (lastDataIHave && !fileSize)
+    {
+        lastDataIHave--;
+        
+        NSString *filePath = [_databaseID outputDataFile:lastDataIHave
+                                                    iPad:iPad];
+        
+        fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
+                                                                       error:nil].fileSize;
+    }
     
     int lastDataFileOnServer = [self getDataNumFromServerMsg:iPad
                                                  wantPictNum:NO];
@@ -1163,10 +1176,11 @@ Done:
     _pull.useOnlyPrimaryFTP = YES;
     _pull.useTestServer = NO;
     _pull.dataType = FTPDataCrimes;
+    _popoverView.title = [NSString stringWithFormat:@"Download Data\n%@",[_filePath lastPathComponent]];
     
     [_pull getFile:[_filePath lastPathComponent]
      fromDirectory:fromDir
-            toFile:_filePath
+            toFile:[_filePath lastPathComponent]
        toDirectory:[_filePath stringByDeletingLastPathComponent]
      refreshOption:FTPDataPullRefreshOptionOverwriteFile];
     
@@ -1202,7 +1216,10 @@ Done:
     if (status == FTPStatusOK || status == FTPStatusFileExists)
     {
         if ([self loadUpdate:path])
+        {
+            _nextFileNumToDownload++;
             [self downloadNextFile];
+        }
         else
             _popoverView.title = @"Data load failed";
     }
