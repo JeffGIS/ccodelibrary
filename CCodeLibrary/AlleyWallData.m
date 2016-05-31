@@ -59,6 +59,33 @@ static int fileSequence = 0;
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
                                                                    error:nil].fileSize;
+        if (_fileSize)
+        {
+            BOOL tableOK = NO;
+            sqlite3_stmt *stmt = NULL;
+            int rc = sqlite3_prepare_v2(_database, "pragma table_info ('ALLEYWALL_UPDATES')", -1, &stmt, NULL);
+            
+            if (rc==SQLITE_OK)
+            {
+                //will continue to go down the rows (columns in your table) till there are no more
+                while(sqlite3_step(stmt) == SQLITE_ROW)
+                {
+                    LPSTR colName = (LPSTR)sqlite3_column_text(stmt, 1);
+                    LPSTR colType = (LPSTR)sqlite3_column_text(stmt, 2);
+                    if (!strcmp (colName,"iPad"))
+                        tableOK = YES;
+                }
+            }
+            SQLOK(sqlite3_finalize(stmt), _database);
+            if (!tableOK)
+            {
+                NSString * cmd = @"DROP TABLE ALLEYWALL_UPDATES;";
+                
+                rtn = [self executeCmd:(char *)cmd.UTF8String
+                          sendToServer:NO];
+                [self createNextUpdateTable];
+            }
+        }
         rtn = TRUE;
     }
     
