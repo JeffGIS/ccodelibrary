@@ -650,7 +650,7 @@
         row = 0;
         for (CityOrOrganizationData *c in _placesArray)
         {
-            if (c.number == 100000001)
+            if (c.number >= 100000001)
             {
                 break;
             }

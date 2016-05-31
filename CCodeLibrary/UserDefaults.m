@@ -470,6 +470,7 @@ static UserDefaults *_defaults;
 - (void)addLocationToListWithName:(NSString *)name
                             state:(NSString *)state
                             geoid:(int)geoid
+                          dataset:(int)dataset
                          bounds_w:(CGFloat)bounds_w
                          bounds_s:(CGFloat)bounds_s
                          bounds_e:(CGFloat)bounds_e
@@ -483,6 +484,7 @@ static UserDefaults *_defaults;
     NSMutableArray *bounds_eArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_eArray"]];
     NSMutableArray *bounds_nArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"Bounds_nArray"]];
     
+    geoid += (dataset * 100000000);
     if (![geoidsArray containsObject:[NSNumber numberWithInt:geoid]])
     {
         int index = 0;

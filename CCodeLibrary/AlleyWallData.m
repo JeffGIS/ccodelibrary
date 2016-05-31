@@ -120,8 +120,8 @@ static int fileSequence = 0;
     int currentFileNum = [self getLastDataUpdateNumber:iPad
                                            lastPictNum:&pictNum];
     
-    NSString * file = [NSString stringWithFormat:@"%@/%i_%i.sql",
-                       [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWall"],iPad,currentFileNum];
+    NSString * file = [self outputDataFile:currentFileNum iPad:iPad];
+    
     return file;
 }
 
@@ -894,19 +894,26 @@ SELECT max(_id) FROM MyTable*/
 - (int) getLastDataUpdateNumber:(int)iPad
                     lastPictNum:(int*)pictNum
 {
-    int lastNum  = 1;
-    int lastPictNum = 1;
+    int lastNum  = 0;
+    int lastPictNum = 0;
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate,LastPictUpdate FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
+    NSString *cmd = [NSString stringWithFormat:@"SELECT LastDataUpdate,LastPictUpdate FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         lastNum = sqlite3_column_int(statement, 0);
         lastPictNum = sqlite3_column_int(statement, 1);
     }
     SQLOK(sqlite3_finalize(statement), _database);
+    if (!lastNum)
+    {
+        lastNum = 1;
+        cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO ALLEYWALL_UPDATES VALUES(%i,1,0);",iPad];
+        [self executeCmd:(LPSTR)cmd.UTF8String
+                  sendToServer:NO];
+    }
     [self close:opened];
     *pictNum = lastPictNum;
     return lastNum;
@@ -926,9 +933,23 @@ SELECT max(_id) FROM MyTable*/
 - (BOOL) setLastPictUpdateNum:(int)lastNum
                       foriPad:(int)iPad
 {
+    BOOL rtn= FALSE;
     BOOL opened = [self open];
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastPictUpdate = %i WHERE iPad=%i",lastNum,iPad];
-    BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+    NSString *cmd = [NSString stringWithFormat:@"SELECT * FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
+    BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
+    SQLOK(sqlite3_finalize(statement), _database);
+
+    if (!haveRecord)
+    {
+        cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO ALLEYWALL_UPDATES VALUES(%i,1,0);",iPad];
+        rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                       sendToServer:NO];
+    }
+    cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastPictUpdate = %i WHERE iPad=%i",lastNum,iPad];
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
                    sendToServer:NO];
     [self close:opened];
     return rtn;
@@ -968,7 +989,8 @@ SELECT max(_id) FROM MyTable*/
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
-    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager]
+    NSString* file = [self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager];
+    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:file
                                                                               error:nil].fileSize;
     if (_fileSize > 0)
     {
