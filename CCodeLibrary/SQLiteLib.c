@@ -14,7 +14,7 @@ int SQLOK(int sqlReturn, sqlite3 *database)
         /*NSLog(@"%@", [NSString stringWithFormat:@"SQLite Error %i = %i:%s",
          sqlReturn, sqlite3_errcode(database), sqlite3_errmsg(database)"SQLite Error %i = %i:%s",
          sqlReturn, sqlite3_errcode(database), sqlite3_errmsg(database)]);*/
-        printf("SQLite Error %i = %i:%s",
+        printf("SQLite Error %i = %i:%s\n",
                 sqlReturn, sqlite3_errcode(database), sqlite3_errmsg(database));
     }
     
