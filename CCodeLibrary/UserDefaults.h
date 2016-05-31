@@ -87,6 +87,7 @@
 - (void)addLocationToListWithName:(NSString *)name
                             state:(NSString *)state
                             geoid:(int)geoid
+                          dataset:(int)dataset
                          bounds_w:(CGFloat)bounds_w
                          bounds_s:(CGFloat)bounds_s
                          bounds_e:(CGFloat)bounds_e
