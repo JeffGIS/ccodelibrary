@@ -43,5 +43,7 @@
 @property int numiPadsInMsg;
 @property int myiPad;
 @property int process;
+@property int totFilesToProcess;
+@property int processedFiles;
 
 @end

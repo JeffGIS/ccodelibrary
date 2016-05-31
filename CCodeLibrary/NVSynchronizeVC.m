@@ -18,7 +18,7 @@
 @property (nonatomic) UILabel *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
 @property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton, *connectButton, *titleButton;
 @property (nonatomic) UISwitch *pixUpSwitch, *pixDownSwitch, *dataDownSwitch;
-@property (nonatomic) NVProgressView *overallProgressView, *currentFileProgressView;
+@property (nonatomic) NVProgressView *overallProgressView;
 @property (nonatomic) Colors *colors;
 @property (nonatomic) GeoMasterServer *GMServer;
 @property (nonatomic) GSSiPopoverView *popoverView;
@@ -153,8 +153,6 @@
     _overallProgressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
                                                         progressColor:UIColor.whiteColor];
     
-    _currentFileProgressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
-                                                            progressColor:UIColor.whiteColor];
     
     _overallLabel = UILabel.new;
     [self setupLabel:_overallLabel];
@@ -166,7 +164,6 @@
     [self setupLabel:_currentFileLabel];
     _currentFileLabel.textAlignment = NSTextAlignmentCenter;
     _currentFileLabel.font = [UIFont boldSystemFontOfSize:22.0];
-    [self updateCurrentFileProgress:0.0];
     
     int numSections = 9;
     CGFloat borderWidth = 1.0;
@@ -294,20 +291,6 @@
                 [_overallLabel.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-margin].active = YES;
                 [_overallLabel.topAnchor constraintEqualToAnchor:_overallProgressView.bottomAnchor].active = YES;
                 [_overallLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor constant:-buttonMargin].active = YES;
-                break;
-                
-            case 7://current file progress
-                [sectionView addSubview:_currentFileProgressView];
-                [_currentFileProgressView.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:margin].active = YES;
-                [_currentFileProgressView.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-margin].active = YES;
-                [_currentFileProgressView.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
-                [_currentFileProgressView.bottomAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
-                
-                [sectionView addSubview:_currentFileLabel];
-                [_currentFileLabel.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:margin].active = YES;
-                [_currentFileLabel.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-margin].active = YES;
-                [_currentFileLabel.topAnchor constraintEqualToAnchor:_currentFileProgressView.bottomAnchor].active = YES;
-                [_currentFileLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor constant:-buttonMargin].active = YES;
                 break;
                 
             case 8://cancel button
@@ -445,13 +428,6 @@
     _overallLabel.text = [NSString stringWithFormat:@"Overall Progress:%i%%", progressInt];
 }
 
-- (void)updateCurrentFileProgress:(CGFloat)progress
-{
-    _currentFileProgressView.progress = progress;
-    int progressInt = (int)roundf(progress * 100.0);
-    _currentFileLabel.text = [NSString stringWithFormat:@"Current File Progress:%i%%", progressInt];
-}
-
 - (void)updateConnectLabel
 {
     _connectLabel.text = [NSString stringWithFormat:@"%i-%i:%i of %i",
@@ -463,7 +439,9 @@
 {
     _process = UPLOAD_DATA_PROCESS;
     _uploadedFiles = 0;
-    _origUpFiles = _upFiles;
+    _origUpFiles = _upFiles + _upPix;
+    [self getDownloadCounts];
+    [self updateLabels];
     [self uploadNextFile];
 }
 
@@ -698,7 +676,7 @@
 - (void)getDownloadCounts
 {
     _downFiles = _downPix = 0;
-    
+    _totFilesToProcess =  _origUpFiles;
     for (int iPad = 1; iPad <= _numiPadsInMsg; iPad++)
     {
         if (iPad != _myiPad)
@@ -743,7 +721,10 @@
             }
             
             _downFiles += (lastDataFileOnServer - lastDataIHave);
-            _downPix += (lastPictFileOnServer - lastPictIHave);
+            if (CRAPI.sharedInstance.downloadData)
+                _totFilesToProcess += (lastDataFileOnServer - lastDataIHave);
+            if (CRAPI.sharedInstance.downloadPix)
+                _downPix += (lastPictFileOnServer - lastPictIHave);
         }
     }
 }
@@ -825,9 +806,9 @@ didReceiveMessage:(NSString *)message
             case GMSMessageFileUploaded:
                 _nextFileNumToUpload++;
                 _uploadedFiles++;
-                
-                if (_totUpFiles)
-                    [self updateOverallProgress:(float)_uploadedFiles/_totUpFiles];
+                _processedFiles++;
+                if (_totFilesToProcess)
+                    [self updateOverallProgress:(float)_processedFiles/_totFilesToProcess];
                 
                 if (_process == UPLOAD_DATA_PROCESS)
                     _upFiles--;
@@ -955,6 +936,7 @@ didReceiveMessage:(NSString *)message
         [_syncButton setTitle:@"Complete"
                      forState:UIControlStateNormal];
         _syncButton.enabled = NO;
+        [_popoverView hide];
         return;
 
     }
@@ -1007,7 +989,6 @@ Top:
                     _upFiles = (_lastFileNumToUpload - _nextFileNumToUpload + 1);
                 
                 [self updateLabels];
-                [self updateOverallProgress:0];
                 
                 goto Top;
             }
@@ -1136,6 +1117,7 @@ Done:
                 [_syncButton setTitle:@"Complete"
                              forState:UIControlStateNormal];
                 _syncButton.enabled = NO;
+                [_popoverView hide];
                 return;
             }
         }
@@ -1218,6 +1200,15 @@ Done:
         if ([self loadUpdate:path])
         {
             _nextFileNumToDownload++;
+            if (_process == DOWNLOAD_DATA_PROCESS)
+                _downFiles--;
+            else
+                _downPix--;
+            _processedFiles++;
+            if (_totFilesToProcess)
+                [self updateOverallProgress:(float)_processedFiles/_totFilesToProcess];
+
+            [self updateLabels];
             [self downloadNextFile];
         }
         else
