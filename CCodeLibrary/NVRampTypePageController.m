@@ -168,6 +168,32 @@
     [_rampTypes addObjectsFromArray:NVRampTypePageController.defaultRampTypes];
     [_rampTypes addObjectsFromArray:[UserDefaults.defaults arrayForKey:@"CustomRampTypes"]];
     
+    UILabel *header = [[UILabel alloc] initWithFrame:CGRectMake(200.0, 8.0, 368.0, 56.0)];
+    header.backgroundColor = UIColor.clearColor;
+    header.textColor = _colors.textColor;
+    header.textAlignment = NSTextAlignmentCenter;
+    header.font = [UIFont boldSystemFontOfSize:40.0];
+    header.text = @"NVCRIS Ramp Types";
+    header.adjustsFontSizeToFitWidth = YES;
+    [self.view addSubview:header];
+    
+    UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    helpButton.frame = CGRectMake(688.0, 0.0, 72.0, 72.0);
+    
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"question-256x256"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
+    
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"questionMarkHighlighted"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateHighlighted];
+    
+    [helpButton addTarget:self
+                   action:@selector(helpButtonTapped:)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:helpButton];
+    
     [self setupReturnButton];
     [self setupPages];
     
@@ -309,6 +335,17 @@
 - (void)rampTypePageViewDidZoom:(BOOL)didZoom
 {
     _returnButton.hidden = didZoom;
+}
+
+- (void)helpButtonTapped:(UIButton *)button
+{
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_NoneAvailable"
+                                                       ofType:@"pdf"];
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                    showFileAtPath:filePath];
+    
+    [nvwv adjustForStatusBar];
 }
 
 @end

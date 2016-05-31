@@ -16,6 +16,7 @@ int SQLOK(int sqlReturn, sqlite3 *database)
          sqlReturn, sqlite3_errcode(database), sqlite3_errmsg(database)]);*/
         printf("SQLite Error %i = %i:%s",
                 sqlReturn, sqlite3_errcode(database), sqlite3_errmsg(database));
+        
     }
     
     return sqlReturn;

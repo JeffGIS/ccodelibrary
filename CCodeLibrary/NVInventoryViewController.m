@@ -11,13 +11,11 @@
 #import "NVSignalButton.h"
 #import "NVXWalkButton.h"
 #import "NVRampTypePageController.h"
-#import "NVWebView.h"
 
-int ii;
 @interface NVInventoryViewController () <NVRampTypePageControllerDelegate>
 
 @property (nonatomic) UIImageView *backgroundImage, *imageTargetView;
-@property (nonatomic) UIButton *cancelButton, *doneButton, *complexButton, *helpButton;
+@property (nonatomic) UIButton *cancelButton, *doneButton, *complexButton;
 @property (nonatomic) UIButton *addRampButton, *addSignalButton, *addXWalkButton;
 @property (nonatomic) UIButton *editItemButton, *rampTypeButton, *currentEditButton;
 @property (nonatomic) NSString *pathToImageFile, *pathToBPWFile;
@@ -138,22 +136,22 @@ int ii;
         [self setupLabel:_headingLabel];
     }
     
-    _helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _helpButton.frame = CGRectMake(688.0, margin, buttonHeight, buttonHeight);
+    UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    helpButton.frame = CGRectMake(688.0, margin, buttonHeight, buttonHeight);
     
-    [_helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"question-256x256"
-                                                                                         ofType:@"png"]]
-                 forState:UIControlStateNormal];
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"question-256x256"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
     
-    [_helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"questionMarkHighlighted"
-                                                                                         ofType:@"png"]]
-                 forState:UIControlStateHighlighted];
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"questionMarkHighlighted"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateHighlighted];
     
-    [_helpButton addTarget:self
-                    action:@selector(helpButtonTapped:)
-          forControlEvents:UIControlEventTouchUpInside];
+    [helpButton addTarget:self
+                   action:@selector(helpButtonTapped:)
+         forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addSubview:_helpButton];
+    [self.view addSubview:helpButton];
     
     [self setupBottomButtons];
     [self setupZoomSC];
