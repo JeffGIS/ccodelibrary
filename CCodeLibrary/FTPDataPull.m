@@ -3,6 +3,7 @@
 
 #import "FTPDataPull.h"
 #import "Reachability.h"
+#import "CRAPI.h"
 
 @interface FTPDataPull ()
 
@@ -123,7 +124,6 @@ static FTPDataPull * _statpull = nil;
 - (void)receiveDidStart
 {
     NSLog(@"Attempting to PULL %@ from %@/%@", _fileName, _currentFtp, _directory);
-    [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 
 - (void)receiveDidStopWithStatus:(int)status
@@ -136,8 +136,6 @@ static FTPDataPull * _statpull = nil;
         status = 1;
     }
 
-    [NetworkManager.sharedInstance didStopNetworkOperation];
-    
     if (_delegate && !_haveCalledDelegate)
     {
         [_delegate FTPdidComplete:_dataType
@@ -170,7 +168,7 @@ static FTPDataPull * _statpull = nil;
     assert(!_connection);
     assert(!_fileStream);
     
-    NSURL *url = [NetworkManager.sharedInstance smartURLForString:_urlText];
+    NSURL *url = [CRAPI.sharedInstance smartURLForString:_urlText];
     
     if (!url)
     {
@@ -188,7 +186,7 @@ static FTPDataPull * _statpull = nil;
                 _currentFtp = _ftpSite;
             }
             
-            url = [NetworkManager.sharedInstance smartURLForString:_urlText];
+            url = [CRAPI.sharedInstance smartURLForString:_urlText];
         }
         
         if (!url)

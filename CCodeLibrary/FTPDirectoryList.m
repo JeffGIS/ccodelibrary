@@ -2,8 +2,8 @@
 //  CCodeLibrary
 
 #import "FTPDirectoryList.h"
-#import "NetworkManager.h"
 #import "Reachability.h"
+#import "CRAPI.h"
 
 @interface FTPDirectoryList ()
 
@@ -68,7 +68,7 @@
     else
         _urlText = [NSString stringWithFormat:@"%@:%@@%@/%@", _username, _password, _ftpDomain, _directory];
     
-    NSURL *url = [NetworkManager.sharedInstance smartURLForString:_urlText];
+    NSURL *url = [CRAPI.sharedInstance smartURLForString:_urlText];
     
     assert(url);
     
@@ -92,7 +92,6 @@
 - (void)receiveDidStart
 {
     NSLog(@"Attempting to GET DIR LIST from %@", _urlText);
-    [NetworkManager.sharedInstance didStartNetworkOperation];
 }
 
 - (void)connection:(NSURLConnection *)connection
@@ -173,8 +172,6 @@ didReceiveResponse:(NSURLResponse *)response
     
     if (!statusString)
         status = 1;
-    
-    [NetworkManager.sharedInstance didStopNetworkOperation];
     
     if (_delegate)
     {

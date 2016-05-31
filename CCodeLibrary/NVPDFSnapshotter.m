@@ -21,9 +21,9 @@
         [view.layer renderInContext:context];
     
     PickedItem *pi = NULL;
-    NSString *report = nil;
+    NSString *report = @"";
     CGSize textSize = CGSizeZero;
-    CGFloat linkWidth = 10.0, pageMargin = 10.0;;
+    CGFloat linkWidth = 10.0, pageMargin = 10.0;
     
     if (pickedItems.count)
     {
@@ -46,7 +46,7 @@
         }
     }
     
-    if (legendsView.subviews)
+    if (legendsView.subviews.count)
     {
         UIGraphicsBeginPDFPageWithInfo(legendsView.bounds, NULL);
         legendsView.hidden = NO;

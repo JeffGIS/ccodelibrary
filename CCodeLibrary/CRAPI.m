@@ -402,7 +402,7 @@
     [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/streetview?size=640x640&location=%f,%f&fov=%f&heading=%f&pitch=%f&key=%@",
      atLatLon.lat, atLatLon.lon, fov, heading, pitch, GOOGLE_API_KEY];
     
-    NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.alphanumericCharacterSet]];
+    NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:mapUrl]];
     return image;
 }
@@ -595,6 +595,7 @@
     NSMutableArray *placearray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
     [placearray removeObjectAtIndex:0];
     _placesArray = NSMutableArray.new;
+    
     for (NSString *str in placearray)
     {
         CityOrOrganizationData *c = [[CityOrOrganizationData alloc]init];
@@ -610,7 +611,6 @@
     }
 
     [_placesArray sortUsingSelector:@selector(compareName:)];
-
 
     return TRUE;
 }
@@ -637,6 +637,7 @@
 {
     if (_placesArray.count < 1)
         return FALSE;
+    
     if (row >= (int)_placesArray.count)
     {
         row = (CRAPI.sharedInstance.placesArray.count - 1);
@@ -647,32 +648,34 @@
     
     if (row == -1) // AlleyWalls
     {
-        row = 0;
+        //row = 0;
+        
         for (CityOrOrganizationData *c in _placesArray)
         {
             if (c.number >= 100000001)
             {
                 break;
             }
+            
             row++;
         }
     }
+    
     else if (_placesArray.count == 1 || row >= _placesArray.count)
         row = 0;
     
     CityOrOrganizationData *c = _placesArray[row];
-    _GSSiPadNumber = c.GSSiPadNumber;
+    _GSSiPadNumber = (int)c.GSSiPadNumber;
     _currentCityNameAndState = addSpaceAfterComma(c.name);
-    
-    self.currentGeoid = c.number;
+    self.currentGeoid = (int)c.number;
     
     [UserDefaults.defaults saveInteger:self.currentGeoid
                                 forKey:@"CurrentGeoid"];
     
-    _currentManageriPad = c.managerNumber;
-    _currentiPadWithinManager = c.withinManager;
+    _currentManageriPad = (int)c.managerNumber;
+    _currentiPadWithinManager = (int)c.withinManager;
     _deviceNumber = _currentiPadWithinManager;
-    _totiPadWithinManager = c.totWithinManager;
+    _totiPadWithinManager = (int)c.totWithinManager;
     
     NSString *key = [NSString stringWithFormat:@"ManagerForGeoid:%i",self.currentGeoid ];
     [UserDefaults.defaults saveInteger:_currentManageriPad
@@ -745,6 +748,41 @@
                            CRAPI.sharedInstance.mapToolbar.progress = (float)currentProgress/100.0;
                        });
     }
+}
+
+- (NSURL *)smartURLForString:(NSString *)str
+{
+    NSURL *result = nil;
+    NSString *trimmedStr = nil, *scheme = nil;
+    NSRange schemeMarkerRange = {0};
+    
+    assert(str);
+    
+    trimmedStr = [str stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
+    
+    if ((trimmedStr) && (trimmedStr.length != 0))
+    {
+        schemeMarkerRange = [trimmedStr rangeOfString:@"://"];
+        
+        if (schemeMarkerRange.location == NSNotFound)
+        {
+            result = [NSURL URLWithString:[NSString stringWithFormat:@"ftp://%@", trimmedStr]];
+        }
+        
+        else
+        {
+            scheme = [trimmedStr substringWithRange:NSMakeRange(0, schemeMarkerRange.location)];
+            assert(scheme);
+            
+            if (([scheme compare:@"ftp"
+                         options:NSCaseInsensitiveSearch] == NSOrderedSame))
+            {
+                result = [NSURL URLWithString:trimmedStr];
+            }
+        }
+    }
+    
+    return result;
 }
 
 @end

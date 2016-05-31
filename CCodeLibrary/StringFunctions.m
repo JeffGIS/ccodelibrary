@@ -623,7 +623,7 @@ NSString * splitLine (NSString * line)
 {
     NSString *splitLines = nil;
     LPSTR tx = line.UTF8String;
-    int midp = line.length / 2;
+    int midp = (int)line.length / 2;
     int spliti = 0;
     int mind = INT_MAX;
     int d;
@@ -655,7 +655,7 @@ NSString * splitLongestLine (NSString * text)
     NSString * splitText = nil;
     NSString * line;
     NSArray *textLines = [text componentsSeparatedByString:@"\n"];
-    int nLines = textLines.count;
+    int nLines = (int)textLines.count;
     if (nLines)
     {
         int maxLen = 0;
@@ -663,7 +663,7 @@ NSString * splitLongestLine (NSString * text)
         for (int i=0;i<nLines;i++)
         {
             line = textLines[i];
-            int len = line.length;
+            int len = (int)line.length;
             if (len > maxLen)
             {
                 maxLen = max (len,maxLen);
@@ -716,6 +716,83 @@ BOOL appendStringToFile (NSString * str,NSString * filePath)
         [myHandle seekToEndOfFile];
         [myHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
         [myHandle closeFile];
+        rtn = YES;
+    }
+    
+    return rtn;
+}
+
+NSString *urlSearchStringForPID(NSString *PID)
+{
+    if (!PID || !PID.length || ![PID containsString:@"-"])
+    {
+        NSLog(@"urlSearchStringForPID ERROR:invalid PID");
+        return nil;
+    }
+    
+    NSArray *pidArray = [PID componentsSeparatedByString:@"-"];
+    
+    if (!pidArray || pidArray.count != 2)
+    {
+        NSLog(@"urlSearchStringForPID ERROR:invalid PID");
+        return nil;
+    }
+    
+    NSString *url = @"NONE";
+    NSString *countyCode = pidArray[0];
+    NSMutableString *propCode = [NSMutableString stringWithString:pidArray[1]];
+    
+    if (!countyCode || countyCode.length != 3|| !propCode || !propCode.length)
+    {
+        NSLog(@"urlSearchStringForPID ERROR:invalid PID");
+        return nil;
+    }
+    
+    if ([countyCode isEqualToString:@"019"])//Carver County
+    {
+        [propCode insertString:@"." atIndex:2];
+        url = [NSString stringWithFormat:@"mn-carver.manatron.com/Tabs/TaxSearch/ParcelDetail.aspx?p=%@", propCode.copy];
+    }
+    
+    else if ([countyCode isEqualToString:@"053"])//Hennepin County
+        url = [NSString stringWithFormat:@"www16.co.hennepin.mn.us/pins/printdetails.jsp?pid=%@", propCode.copy];
+    
+    else if ([countyCode isEqualToString:@"123"])//Ramsey County
+        url = [NSString stringWithFormat:@"rrinfo.co.ramsey.mn.us/public/characteristic/Parcel.aspx?scrn=Quick&pin=%@", propCode.copy];
+    
+    else if ([countyCode isEqualToString:@"163"])//Washington County
+    {
+        [propCode insertString:@"." atIndex:9];
+        [propCode insertString:@"." atIndex:7];
+        [propCode insertString:@"." atIndex:5];
+        [propCode insertString:@"." atIndex:2];
+        url = [NSString stringWithFormat:@"mn-washington.manatron.com/Tabs/TaxSearch/AccountDetail.aspx?p=%@", propCode.copy];
+    }
+    
+    return url;
+}
+
+BOOL countySupportsLookupForPID(NSString *PID)
+{
+    if (!PID || !PID.length || ![PID containsString:@"-"])
+    {
+        NSLog(@"urlSearchStringForPID ERROR:invalid PID");
+        return NO;
+    }
+    
+    NSString *countyCode = textBeforeHyphen(PID);
+    
+    if (!countyCode || countyCode.length != 3)
+    {
+        NSLog(@"urlSearchStringForPID ERROR:invalid PID");
+        return NO;
+    }
+    
+    BOOL rtn = NO;
+    
+    if ([countyCode isEqualToString:@"019"] || [countyCode isEqualToString:@"053"] ||
+        [countyCode isEqualToString:@"123"] || [countyCode isEqualToString:@"163"])
+    {
         rtn = YES;
     }
     

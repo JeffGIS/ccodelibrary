@@ -28,6 +28,7 @@
 @property NSTimer *timer;
 @property NSString *iPad_id, *iPad_name;
 @property FTPDataPush *push;
+@property FTPDataPull *pull;
 @property NSInteger selectedRow;
 
 @end
@@ -57,7 +58,7 @@
     _titleButton.backgroundColor = UIColor.clearColor;
     _titleButton.userInteractionEnabled = NO;
     _titleButton.titleLabel.numberOfLines = 2;
-    
+    _titleButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     [_titleButton setTitleColor:_colors.textColor
                        forState:UIControlStateNormal];
     
@@ -405,7 +406,7 @@
     
     else
     {
-        button.titleLabel.font = [UIFont boldSystemFontOfSize:40.0];
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
         button.contentEdgeInsets = UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0);
         button.layer.cornerRadius = 10.0;
     }
@@ -486,6 +487,24 @@
 #pragma unused(nvptv)
 }
 
+- (void) setDatabaseIDToDB
+{
+    int geoid = CRAPI.sharedInstance.currentGeoid;
+    if (geoid > 100000000)
+    {
+        _awd = AlleyWallData.new;
+        _databaseID = _awd;
+        [_databaseID incrementLastDataFileNum];
+    }
+    
+    else
+    {
+        _crd = CurbRampData.new;
+        _databaseID = _crd;
+        [_databaseID incrementLastDataFileNum];
+    }
+    [self updateConnectLabel];
+}
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
 {
     [popoverTableView hide:YES];
@@ -503,7 +522,7 @@
                                 forKey:@"SelectedRow"];
 
     [CRAPI.sharedInstance processPlacesArray:_selectedRow];
-    
+    [self setDatabaseIDToDB];
     [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",
                             CRAPI.sharedInstance.currentCityNameAndState]
                   forState:UIControlStateNormal];
@@ -557,14 +576,14 @@
             {
                 msg = [NSString stringWithFormat:@"$M(UploadCompleteData,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
-                       CRAPI.sharedInstance.totiPadWithinManager, _nextFileNumToUpload];
+                       CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload];
             }
             
             else
             {
                 msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
-                       CRAPI.sharedInstance.totiPadWithinManager, _nextFileNumToUpload];
+                       CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload];
             }
             
             break;
@@ -697,7 +716,7 @@
                 lastDataIHave--;
                 
                 NSString *filePath = [_databaseID outputDataFile:lastDataIHave
-                                                            iPad:_myiPad];
+                                                            iPad:iPad];
                 
                 fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
                                                                                error:nil].fileSize;
@@ -717,7 +736,7 @@
                 lastPictIHave--;
                 
                 NSString *filePath = [_databaseID outputPictFile:lastPictIHave
-                                                            iPad:_myiPad];
+                                                            iPad:iPad];
                 
                 fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
                                                                                error:nil].fileSize;
@@ -777,11 +796,11 @@ didReceiveMessage:(NSString *)message
                 }
                 
                 [CRAPI.sharedInstance processPlacesArray:_selectedRow];
+                [self setDatabaseIDToDB];
                 
                 [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",
                                         CRAPI.sharedInstance.currentCityNameAndState]
                               forState:UIControlStateNormal];
-                
                 if (CRAPI.sharedInstance.placesArray.count > 1)
                 {
                     _titleButton.backgroundColor = _colors.enabledColor;
@@ -807,10 +826,13 @@ didReceiveMessage:(NSString *)message
                 _nextFileNumToUpload++;
                 _uploadedFiles++;
                 
-                if (_origUpFiles)
-                    [self updateOverallProgress:(float)_uploadedFiles/_origUpFiles];
+                if (_totUpFiles)
+                    [self updateOverallProgress:(float)_uploadedFiles/_totUpFiles];
                 
-                _upFiles--;
+                if (_process == UPLOAD_DATA_PROCESS)
+                    _upFiles--;
+                else
+                    _upPix--;
                 [self updateLabels];
                 [self uploadNextFile];
                 break;
@@ -820,18 +842,6 @@ didReceiveMessage:(NSString *)message
                 _uploadStatusMsg = message.copy;
                 _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String);
                 [self closeGMServer];
-                
-                if (CRAPI.sharedInstance.currentGeoid < 0)
-                {
-                    _awd = AlleyWallData.new;
-                    _databaseID = _awd;
-                }
-                
-                else
-                {
-                    _crd = CurbRampData.new;
-                    _databaseID = _crd;
-                }
                 
                 int pictNum = 0;
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
@@ -938,10 +948,16 @@ didReceiveMessage:(NSString *)message
 - (void)downloadNextFile
 {
     if (_process == DOWNLOAD_DATA_PROCESS && !CRAPI.sharedInstance.downloadData)
-        _downloadiPad = 1;
+        _process = DOWNLOAD_PICT_PROCESS;
     
     if (_process == DOWNLOAD_PICT_PROCESS && !CRAPI.sharedInstance.downloadPix)
+    {
+        [_syncButton setTitle:@"Complete"
+                     forState:UIControlStateNormal];
+        _syncButton.enabled = NO;
         return;
+
+    }
     
     _doTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                 target:self
@@ -985,7 +1001,7 @@ Top:
                 _lastFileNumToUpload = lastNum;
                 
                 _nextFileNumToUpload = ([self getDataNumFromServerMsg:_myiPad
-                                                         wantPictNum:NO] + 1);
+                                                         wantPictNum:YES] + 1);
                 
                 if (_nextFileNumToUpload > 0)
                     _upFiles = (_lastFileNumToUpload - _nextFileNumToUpload + 1);
@@ -1026,7 +1042,7 @@ Top:
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Picture"];
     }
-    
+
     _push = [FTPDataPush push];
     _push.delegate = self;
     _push.popover = _popoverView;
@@ -1094,7 +1110,20 @@ Top:
                 _downloadiPad = [self nextiPadToDownload:0];
                 
                 if (_downloadiPad)
-                    [self downloadNextFile];
+                {
+                    [self setDownloadFilesFor:_downloadiPad];
+                    goto Top;
+                }
+                else
+                    goto Done;
+            }
+            else
+            {
+Done:
+                [_syncButton setTitle:@"Complete"
+                             forState:UIControlStateNormal];
+                _syncButton.enabled = NO;
+                return;
             }
         }
         
@@ -1122,24 +1151,29 @@ Top:
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Picture"];
     }
+
     
-    _push = [FTPDataPush push];
-    _push.delegate = self;
-    _push.popover = _popoverView;
-    _push.useOnlyPrimaryFTP = YES;
     
-    NSString *toDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",
-                       CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
+    NSString *fromDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",
+                         CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
+    NSString *toDir = NSTemporaryDirectory ( );
+    _pull = FTPDataPull.pull;
+    _pull.delegate = self;
+    _pull.popover = _popoverView;
+    _pull.useOnlyPrimaryFTP = YES;
+    _pull.useTestServer = NO;
+    _pull.dataType = FTPDataCrimes;
     
-    [_push sendFile:[_filePath lastPathComponent]
-      fromDirectory:[_filePath stringByDeletingLastPathComponent]
-             toFile:[_filePath lastPathComponent]
-        toDirectory:toDir
-     deleteWhenDone:NO];
+    [_pull getFile:[_filePath lastPathComponent]
+     fromDirectory:fromDir
+            toFile:_filePath
+       toDirectory:[_filePath stringByDeletingLastPathComponent]
+     refreshOption:FTPDataPullRefreshOptionOverwriteFile];
+    
 }
 
 - (void)FTPPushDidComplete:(FTPDataType)dataType
-                withStatus:(int)status
+                withStatus:(FTPStatus)status
            andStatusString:(NSString *)statusString
                   filePath:(NSString *)path
 {
@@ -1151,13 +1185,39 @@ Top:
     
     else
     {
-        _popoverView.title = @"Upload Error";
+        _popoverView.title = [NSString stringWithFormat:@"Upload Error\n%@",statusString];
         [_popoverView setCancelButtonTitle:@"OK"];
     }
     
     NSLog(@"FTP push completed:%@", statusString);
 }
 
+
+- (void)FTPdidComplete:(FTPDataType)dataType
+            withStatus:(FTPStatus)status
+       andStatusString:(NSString *)statusString
+              filePath:(NSString *)path
+{
+    
+    if (status == FTPStatusOK || status == FTPStatusFileExists)
+    {
+        if ([self loadUpdate:path])
+            [self downloadNextFile];
+        else
+            _popoverView.title = @"Data load failed";
+    }
+    else
+    {
+        _popoverView.title = statusString;
+    }
+}
+
+- (BOOL)loadUpdate:(NSString*)path
+{
+    BOOL rtn = YES;
+    
+    return rtn;
+}
 - (void)checkNearby:(NSTimer *)timer
 {
     [self.timer invalidate];

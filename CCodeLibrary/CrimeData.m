@@ -265,7 +265,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
 {
     BOOL rtn = FALSE;
     _GMServer = GeoMasterServer.open;
-    _GMServer.useTestServer = YES;
+    _GMServer.useTestServer = NO;
     _GMServer.delegate = self;
     _GMServer.messageID = GMSMessageGetPoliceUpdate;
     [_GMServer initCommunication:5.0];
@@ -426,7 +426,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 }
 
 - (void)FTPdidComplete:(FTPDataType)dataType
-            withStatus:(int)status
+            withStatus:(FTPStatus)status
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path
 {

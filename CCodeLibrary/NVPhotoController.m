@@ -3,6 +3,7 @@
 
 #import "NVPhotoController.h"
 #import "CRAPI.h"
+#import "NVColor.h"
 
 @interface NVPhoto ()
 
@@ -218,10 +219,9 @@
 @interface NVPhotoView ()
 
 @property (nonatomic, weak) id <NVPhotoViewDelegate> delegate;
-@property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic) NSArray *photosArray;
-@property (nonatomic) CGSize size, draggedOffset;
-@property (nonatomic) UIButton *deleteButton;
+@property (nonatomic) CGSize size;
+@property CGFloat currentScale;
 @property NSInteger imageIndex;
 @property BOOL isDragged;
 
@@ -231,20 +231,12 @@
 
 + (instancetype)showPhotoViewWithNVPhotosArray:(NSArray *)photosArray
                                         inView:(UIView *)view
+                               constrainToView:(UIView *)constrainedView
                                       delegate:(id)delegate
                                     coordinate:(CLLocationCoordinate2D)coordinate
 {
     if (!photosArray.count || !delegate)
         return nil;
-    
-    NVPhotoViewOverlay *nvpvo = NVPhotoViewOverlay.new;
-    nvpvo.translatesAutoresizingMaskIntoConstraints = NO;
-    nvpvo.backgroundColor = UIColor.clearColor;
-    nvpvo.userInteractionEnabled = NO;
-    
-    [view addSubview:nvpvo];
-    
-    [nvpvo constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     NVPhotoView *nvpv = NVPhotoView.new;
     nvpv.userInteractionEnabled = YES;
@@ -258,17 +250,16 @@
     nvpv.photosArray = photosArray;
     nvpv.imageIndex = 0;
     nvpv.isDragged = NO;
-    nvpv.draggedOffset = CGSizeZero;
     
     nvpv.overlay = NVPhotoViewOverlay.new;
     nvpv.overlay.translatesAutoresizingMaskIntoConstraints = NO;
     nvpv.overlay.backgroundColor = UIColor.clearColor;
     nvpv.overlay.userInteractionEnabled = NO;
-    nvpv.overlay.strokeColor = UIColor.clearColor.CGColor;
+    nvpv.overlay.alpha = 0.0;
     
     [view addSubview:nvpv.overlay];
     
-    [nvpv.overlay constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    [nvpv.overlay constrainToView:constrainedView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:nvpv
                                                                                     action:@selector(insetImageLeftSwiped:)];
@@ -284,17 +275,22 @@
     
     [nvpv addGestureRecognizer:rightSwipe];
     
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:nvpv action:@selector(insetImagePanned:)];
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:nvpv
+                                                                          action:@selector(insetImagePanned:)];
+    
     [pan requireGestureRecognizerToFail:rightSwipe];
     [pan requireGestureRecognizerToFail:leftSwipe];
     
     [nvpv addGestureRecognizer:pan];
     
-    [nvpv updateInsetImage];
+    UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:nvpv
+                                                                                action:@selector(insetImagePinched:)];
     
-    CGFloat aspectRatio = (nvpv.image.size.height / nvpv.image.size.width);
-    CGFloat width = 264.0;
-    nvpv.size = CGSizeMake(width, (aspectRatio * width));
+    [nvpv addGestureRecognizer:pinch];
+    nvpv.currentScale = pinch.scale;
+    
+    [nvpv updateInsetImage];
+    [nvpv updateSize];
     [nvpv updatePosition];
     
     [view addSubview:nvpv];
@@ -318,11 +314,13 @@
                           action:@selector(deleteButtonTapped:)
                 forControlEvents:UIControlEventTouchUpInside];
     
+    [nvpv.delegate didAddPhotoView];
+    
     [UIView animateWithDuration:0.25
                      animations:^{
                          nvpv.alpha = 1.0;
                      } completion:^(BOOL finished) {
-                         [nvpv.delegate didAddPhotoView];
+                         nvpv.overlay.alpha = 0.6;
                      }];
     
     return nvpv;
@@ -347,42 +345,37 @@
         [self removeFromSuperview];
         [_overlay removeFromSuperview];
     }
+    
+    [_delegate didDeletePhotoView:self];
+}
+
+- (void)updateSize
+{
+    CGFloat aspectRatio = (self.image.size.height / self.image.size.width);
+    CGFloat width = 264.0;
+    _size = CGSizeMake(width, (aspectRatio * width));
 }
 
 - (void)updatePosition
 {
-    self.frame = CGRectMake(0.0, 0.0, _size.width, _size.height);
+    CGSize scaledSize = CGSizeMake(_size.width * _currentScale, _size.height * _currentScale);
+    
+    self.frame = CGRectMake(0.0, 0.0, scaledSize.width, scaledSize.height);
     CGPoint coordPoint = [_delegate getPointForCoordinate:_coordinate];
     CGFloat offset = [_delegate getVerticalOffset];
+    CGFloat statusBarHeight = [_delegate getStatusBarHeight];
     
-    self.center = CGPointMake((coordPoint.x + _draggedOffset.width),
-                              (coordPoint.y - offset - (_size.height / 2.0) - _draggedOffset.height));
+    self.center = CGPointMake(coordPoint.x, (coordPoint.y + statusBarHeight - offset - (scaledSize.height / 2.0)));
     
-    _overlay.startPoint = CGPointApplyAffineTransform(self.center, self.transform);
-    _overlay.endPoint = coordPoint;
-    [_overlay setNeedsDisplay];
+    [self updateOverlayPosition:coordPoint];
 }
 
-- (void)updateVerticalOffset:(CGFloat)verticalOffset
-                    animated:(BOOL)animated
+- (void)updateOverlayPosition:(CGPoint)coordPoint
 {
-    if (!_isDragged)
-    {
-        CGRect frame = self.frame;
-        frame.origin.y += verticalOffset;
-        _draggedOffset.height -= verticalOffset;
-        
-        if (animated)
-        {
-            [UIView animateWithDuration:0.25
-                             animations:^{
-                                 self.frame = frame;
-                             }];
-        }
-        
-        else
-            self.frame = frame;
-    }
+    _overlay.startPoint = coordPoint;
+    _overlay.endPoint = CGPointApplyAffineTransform(self.center, self.transform);
+    
+    [_overlay setNeedsDisplay];
 }
 
 - (void)insetImageLeftSwiped:(UISwipeGestureRecognizer *)gesture
@@ -417,8 +410,7 @@
         {
             gesture.view.transform = CGAffineTransformMakeTranslation(0.0, 0.0);
             _isDragged = NO;
-            _overlay.strokeColor = UIColor.clearColor.CGColor;
-            [_overlay setNeedsDisplay];
+            [self updatePosition];
         }
         
         else
@@ -434,10 +426,19 @@
         [gesture setTranslation:CGPointZero
                          inView:gesture.view];
         
-        _overlay.strokeColor = UIColor.redColor.CGColor;
-        _overlay.startPoint = CGPointApplyAffineTransform(gesture.view.center, gesture.view.transform);
-        _overlay.endPoint = coordPoint;
-        [_overlay setNeedsDisplay];
+        [self updateOverlayPosition:coordPoint];
+    }
+}
+
+- (void)insetImagePinched:(UIPinchGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+        gesture.scale = _currentScale;
+    
+    else
+    {
+        _currentScale = gesture.scale;
+        [self updatePosition];
     }
 }
 
@@ -447,6 +448,9 @@
     
     self.image = [UIImage imageWithContentsOfFile:[_delegate getInsetImagePath:self
                                                                         forKey:nvp.key]];
+    
+    [self updateSize];
+    [self updatePosition];
 }
 
 - (void)deleteButtonTapped:(UIButton *)button
@@ -460,11 +464,25 @@
 
 - (void)drawRect:(CGRect)rect
 {
+    CGFloat lineWidth = 4.0;
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
     CGContextAddLineToPoint(context, _endPoint.x, _endPoint.y);
-    CGContextSetStrokeColorWithColor(context, _strokeColor);
-    CGContextSetLineWidth(context, 4.0);
+    
+    for (int i = 1; i < 9; i++)
+    {
+        CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
+        CGContextAddLineToPoint(context, (_endPoint.x - (i * lineWidth)), _endPoint.y);
+        CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
+        CGContextAddLineToPoint(context, (_endPoint.x + (i * lineWidth)), _endPoint.y);
+        CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
+        CGContextAddLineToPoint(context, _endPoint.x, (_endPoint.y - (i * lineWidth)));
+        CGContextMoveToPoint(context, _startPoint.x , _startPoint.y);
+        CGContextAddLineToPoint(context, _endPoint.x, (_endPoint.y + (i * lineWidth)));
+    }
+    
+    CGContextSetStrokeColorWithColor(context, NVColor.goldenrodColor.CGColor);
+    CGContextSetLineWidth(context, lineWidth);
     CGContextStrokePath(context);
 }
 

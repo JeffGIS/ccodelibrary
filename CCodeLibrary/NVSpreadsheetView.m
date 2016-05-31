@@ -863,9 +863,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     
                     MFMailComposeViewController *composer = MFMailComposeViewController.new;
                     composer.mailComposeDelegate = self;
-                    composer.subject = [NSString stringWithFormat:@"%@ from GMMobile", fileName];
+                    composer.subject = [NSString stringWithFormat:@"%@ from NVMobile", fileName];
                     
-                    [composer setMessageBody:@"The tab-delimited text file attached to this email was created by GMMobile."
+                    [composer setMessageBody:@"The tab-delimited text file attached to this email was created by NVMobile."
                                       isHTML:NO];
                     
                     [composer setToRecipients:[NSArray arrayWithObjects:@"jeffgis@aol.com", @"wildbillmunson@gmail.com", nil]];
