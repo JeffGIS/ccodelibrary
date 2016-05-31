@@ -648,7 +648,7 @@
     
     if (row == -1) // AlleyWalls
     {
-        //row = 0;
+        row = 0;
         
         for (CityOrOrganizationData *c in _placesArray)
         {
