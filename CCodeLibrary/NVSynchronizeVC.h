@@ -38,6 +38,7 @@
 @property int lastFileNumToDownload;
 @property int uploadedFiles;
 @property int origUpFiles;
+@property int totUpFiles;
 @property int currentProcess;
 @property int numiPadsInMsg;
 @property int myiPad;
