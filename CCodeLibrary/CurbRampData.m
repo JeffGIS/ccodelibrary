@@ -93,6 +93,15 @@ static int nInit=0;
     }
     return rtn;
 }
+- (BOOL)createNextUpdateTable
+{
+    BOOL rtn = TRUE;
+    NSString * cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_UPDATES ('iPad' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
+    
+    rtn = [self executeCmd:(char *)cmd.UTF8String
+              sendToServer:NO];
+    return rtn;
+}
 
 - (void)close:(BOOL)opened
 {
