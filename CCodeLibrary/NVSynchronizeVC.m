@@ -720,11 +720,11 @@
                                                                                error:nil].fileSize;
             }
             
-            _downFiles += (lastDataFileOnServer - lastDataIHave);
+            _downFiles += max (0,lastDataFileOnServer - lastDataIHave);
             if (CRAPI.sharedInstance.downloadData)
-                _totFilesToProcess += (lastDataFileOnServer - lastDataIHave);
+                _totFilesToProcess += max (0,lastDataFileOnServer - lastDataIHave);
             if (CRAPI.sharedInstance.downloadPix)
-                _downPix += (lastPictFileOnServer - lastPictIHave);
+                _downPix += max(0,lastPictFileOnServer - lastPictIHave);
         }
     }
 }
@@ -1203,6 +1203,11 @@ Done:
     {
         if ([self loadUpdate:path])
         {
+            if (_process == DOWNLOAD_DATA_PROCESS)
+                [_databaseID setLastDataUpdateNum:_nextFileNumToDownload foriPad:_downloadiPad];
+            else
+                [_databaseID setLastPictUpdateNum:_nextFileNumToDownload foriPad:_downloadiPad];
+            
             _nextFileNumToDownload++;
             if (_process == DOWNLOAD_DATA_PROCESS)
                 _downFiles--;

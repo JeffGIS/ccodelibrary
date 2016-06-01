@@ -974,16 +974,40 @@ SELECT max(_id) FROM MyTable*/
     SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
     BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
     SQLOK(sqlite3_finalize(statement), _database);
-
+    
     if (!haveRecord)
     {
         cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO ALLEYWALL_UPDATES VALUES(%i,1,0);",iPad];
         rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-                       sendToServer:NO];
+                  sendToServer:NO];
     }
     cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastPictUpdate = %i WHERE iPad=%i",lastNum,iPad];
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-                   sendToServer:NO];
+              sendToServer:NO];
+    [self close:opened];
+    return rtn;
+}
+- (BOOL) setLastDataUpdateNum:(int)lastNum
+                      foriPad:(int)iPad
+{
+    BOOL rtn= FALSE;
+    BOOL opened = [self open];
+    NSString *cmd = [NSString stringWithFormat:@"SELECT * FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
+    BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
+    SQLOK(sqlite3_finalize(statement), _database);
+    
+    if (!haveRecord)
+    {
+        cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO ALLEYWALL_UPDATES VALUES(%i,1,0);",iPad];
+        rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                  sendToServer:NO];
+    }
+    cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastDataUpdate = %i WHERE iPad=%i",lastNum,iPad];
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:NO];
     [self close:opened];
     return rtn;
 }
