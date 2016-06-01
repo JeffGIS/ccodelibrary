@@ -73,6 +73,7 @@
 - (BOOL) updateFromFile:(NSString*)file;
 - (BOOL) setLastDataUpdateNum:(int)lastNum
                       foriPad:(int)iPad;
+- (BOOL) updateFromFile:(NSString*)file;
 
 
 @end
