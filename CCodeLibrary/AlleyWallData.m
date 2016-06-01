@@ -88,6 +88,7 @@ static int fileSequence = 0;
         }
         rtn = TRUE;
     }
+    
     return rtn;
 }
 
