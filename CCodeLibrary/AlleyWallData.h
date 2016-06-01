@@ -86,6 +86,7 @@ fromDate:(NSString *)fromDate
 - (NSMutableArray*) loadStandardText:(int)type;
 - (BOOL) addStandardText:(NSString*)text
                     type:(int)type;
+- (BOOL) updateFromFile:(NSString*)file;
 
 
 @end

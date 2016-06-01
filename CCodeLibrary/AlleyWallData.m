@@ -188,6 +188,11 @@ static int fileSequence = 0;
     SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
 }
 
+- (void)cancelTransaction
+{
+    SQLOK(sqlite3_exec(_database, "ROLLBACK", 0, 0, 0), _database);
+}
+
 - (int)getAlleyLineStatus:(NSInteger)refno
 {
     int status = 0;
@@ -944,6 +949,8 @@ SELECT max(_id) FROM MyTable*/
     }
     [self close:opened];
     *pictNum = lastPictNum;
+    if (iPad == 4)
+        lastNum = 1;
     return lastNum;
 }
 - (BOOL) setLastDataUpdateNum:(int)lastNum
@@ -1099,4 +1106,29 @@ SELECT max(_id) FROM MyTable*/
     return rtn;
     
 }
+
+- (BOOL) updateFromFile:(NSString*)file
+{
+    BOOL rtn = TRUE;
+    BOOL opened = [self open];
+    
+    FILE *fid = fopen(file.UTF8String, "rb");
+    int totLen = FileLength(fid);
+    int maxLineLen = totLen+2;
+    LPSTR str = malloc(totLen+4);
+    [self startTransaction];
+    while (rtn && fgetstring(str, maxLineLen, fid))
+    {
+        rtn = [self executeCmd:str
+                       sendToServer:NO];
+    }
+    fclose(fid);
+    free(str);
+    if (!rtn)
+        [self cancelTransaction];
+    [self close:opened];
+    return rtn;
+}
+
+
 @end
