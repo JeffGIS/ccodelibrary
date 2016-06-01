@@ -68,7 +68,7 @@
 }
 - (NSString *)sharedOutputDirectory:(NSString*)subDir
 {
-    NSString* outdir = [NSString stringWithFormat:@"%@/OutputFiles/%@",self.sharedFilePath,subDir];
+    NSString* outdir = [NSString stringWithFormat:@"%@/OutputFiles/%@/%i",self.sharedFilePath,subDir,self.currentManageriPad];
     [NSFileManager.defaultManager createDirectoryAtPath:outdir
                             withIntermediateDirectories:YES
                                              attributes:nil
