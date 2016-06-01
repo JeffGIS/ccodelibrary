@@ -440,7 +440,7 @@
     _process = UPLOAD_DATA_PROCESS;
     _uploadedFiles = 0;
     _origUpFiles = _upFiles + _upPix;
-    [self getDownloadCounts];
+    [self getDownloadCounts:YES];
     [self updateLabels];
     [self uploadNextFile];
 }
@@ -673,7 +673,7 @@
     return dataNum;
 }
 
-- (void)getDownloadCounts
+- (void)getDownloadCounts:(BOOL)loading
 {
     _downFiles = _downPix = 0;
     _totFilesToProcess =  _origUpFiles;
@@ -721,9 +721,9 @@
             }
             
             _downFiles += max (0,lastDataFileOnServer - lastDataIHave);
-            if (CRAPI.sharedInstance.downloadData)
+            if (!loading || CRAPI.sharedInstance.downloadData)
                 _totFilesToProcess += max (0,lastDataFileOnServer - lastDataIHave);
-            if (CRAPI.sharedInstance.downloadPix)
+            if (!loading || CRAPI.sharedInstance.downloadPix)
                 _downPix += max(0,lastPictFileOnServer - lastPictIHave);
         }
     }
@@ -876,7 +876,7 @@ didReceiveMessage:(NSString *)message
                 if (_nextPictNumToUpload > 0)
                     _upPix = (_lastPictNumToUpload - _nextPictNumToUpload + 1);
                 
-                [self getDownloadCounts];
+                [self getDownloadCounts:NO];
                 [self updateLabels];
                 [self updateOverallProgress:0];
             }
@@ -1161,9 +1161,16 @@ Done:
     _pull.popover = _popoverView;
     _pull.useOnlyPrimaryFTP = YES;
     _pull.useTestServer = NO;
-    _pull.dataType = FTPDataCrimes;
-    _popoverView.title = [NSString stringWithFormat:@"Download Data\n%@",[_filePath lastPathComponent]];
-    
+    if (_process == DOWNLOAD_DATA_PROCESS)
+    {
+        _pull.dataType = FTPData;
+        _popoverView.title = [NSString stringWithFormat:@"Download Data\n%@",[_filePath lastPathComponent]];
+    }
+    else
+    {
+        _pull.dataType = FTPDataPhoto;
+        _popoverView.title = [NSString stringWithFormat:@"Download Photo\n%@",[_filePath lastPathComponent]];
+    }
     [_pull getFile:[_filePath lastPathComponent]
      fromDirectory:fromDir
             toFile:[_filePath lastPathComponent]
@@ -1201,10 +1208,17 @@ Done:
     
     if (status == FTPStatusOK || status == FTPStatusFileExists)
     {
-        if ([self loadUpdate:path])
         {
             if (_process == DOWNLOAD_DATA_PROCESS)
-                [_databaseID setLastDataUpdateNum:_nextFileNumToDownload foriPad:_downloadiPad];
+            {
+               if ([self loadUpdate:path])
+                   [_databaseID setLastDataUpdateNum:_nextFileNumToDownload foriPad:_downloadiPad];
+               else
+               {
+                   _popoverView.title = [NSString stringWithFormat:@"Data load failed\n%@",[path lastPathComponent]];
+                   return;
+               }
+            }
             else
                 [_databaseID setLastPictUpdateNum:_nextFileNumToDownload foriPad:_downloadiPad];
             
@@ -1220,8 +1234,6 @@ Done:
             [self updateLabels];
             [self downloadNextFile];
         }
-        else
-            _popoverView.title = [NSString stringWithFormat:@"Data load failed\n%@",[path lastPathComponent]];
     }
     else
     {
