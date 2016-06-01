@@ -949,8 +949,6 @@ SELECT max(_id) FROM MyTable*/
     }
     [self close:opened];
     *pictNum = lastPictNum;
-    if (iPad == 4)
-        lastNum = 1;
     return lastNum;
 }
 - (BOOL) setLastDataUpdateNum:(int)lastNum
