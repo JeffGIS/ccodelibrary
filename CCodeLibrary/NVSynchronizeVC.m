@@ -720,11 +720,11 @@
                                                                                error:nil].fileSize;
             }
             
-            _downFiles += (lastDataFileOnServer - lastDataIHave);
+            _downFiles += max (0,lastDataFileOnServer - lastDataIHave);
             if (CRAPI.sharedInstance.downloadData)
-                _totFilesToProcess += (lastDataFileOnServer - lastDataIHave);
+                _totFilesToProcess += max (0,lastDataFileOnServer - lastDataIHave);
             if (CRAPI.sharedInstance.downloadPix)
-                _downPix += (lastPictFileOnServer - lastPictIHave);
+                _downPix += max(0,lastPictFileOnServer - lastPictIHave);
         }
     }
 }
@@ -821,6 +821,8 @@ didReceiveMessage:(NSString *)message
             case GMSMessageGetUploadStatus:
             {
                 _uploadStatusMsg = message.copy;
+               // NSString *edit = [_uploadStatusMsg stringByReplacingOccurrencesOfString:@"3-5" withString:@"1-5"];
+               // _uploadStatusMsg = edit;
                 _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String);
                 [self closeGMServer];
                 
@@ -1101,6 +1103,8 @@ Top:
             if (_process == DOWNLOAD_DATA_PROCESS)
             {
                 _process = DOWNLOAD_PICT_PROCESS;
+                if (!CRAPI.sharedInstance.downloadPix)
+                    goto Done;
                 _downloadiPad = [self nextiPadToDownload:0];
                 
                 if (_downloadiPad)
@@ -1199,6 +1203,11 @@ Done:
     {
         if ([self loadUpdate:path])
         {
+            if (_process == DOWNLOAD_DATA_PROCESS)
+                [_databaseID setLastDataUpdateNum:_nextFileNumToDownload foriPad:_downloadiPad];
+            else
+                [_databaseID setLastPictUpdateNum:_nextFileNumToDownload foriPad:_downloadiPad];
+            
             _nextFileNumToDownload++;
             if (_process == DOWNLOAD_DATA_PROCESS)
                 _downFiles--;
@@ -1212,7 +1221,7 @@ Done:
             [self downloadNextFile];
         }
         else
-            _popoverView.title = @"Data load failed";
+            _popoverView.title = [NSString stringWithFormat:@"Data load failed\n%@",[path lastPathComponent]];
     }
     else
     {
@@ -1222,7 +1231,7 @@ Done:
 
 - (BOOL)loadUpdate:(NSString*)path
 {
-    BOOL rtn = YES;
+    BOOL rtn = [_databaseID updateFromFile:path];
     
     return rtn;
 }

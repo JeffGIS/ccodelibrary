@@ -188,6 +188,11 @@ static int fileSequence = 0;
     SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
 }
 
+- (void)cancelTransaction
+{
+    SQLOK(sqlite3_exec(_database, "ROLLBACK", 0, 0, 0), _database);
+}
+
 - (int)getAlleyLineStatus:(NSInteger)refno
 {
     int status = 0;
@@ -957,6 +962,30 @@ SELECT max(_id) FROM MyTable*/
     [self close:opened];
     return rtn;
 }
+- (BOOL) setLastDataUpdateNum:(int)lastNum
+                      foriPad:(int)iPad
+{
+    BOOL rtn= FALSE;
+    BOOL opened = [self open];
+    NSString *cmd = [NSString stringWithFormat:@"SELECT * FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
+    BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
+    SQLOK(sqlite3_finalize(statement), _database);
+    
+    if (!haveRecord)
+    {
+        cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO ALLEYWALL_UPDATES VALUES(%i,1,0);",iPad];
+        rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                  sendToServer:NO];
+    }
+    cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastDataUpdate = %i WHERE iPad=%i",lastNum,iPad];
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:NO];
+    [self close:opened];
+    return rtn;
+}
 
 - (BOOL) setLastPictUpdateNum:(int)lastNum
                       foriPad:(int)iPad
@@ -969,16 +998,16 @@ SELECT max(_id) FROM MyTable*/
     SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
     BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
     SQLOK(sqlite3_finalize(statement), _database);
-
+    
     if (!haveRecord)
     {
         cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO ALLEYWALL_UPDATES VALUES(%i,1,0);",iPad];
         rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-                       sendToServer:NO];
+                  sendToServer:NO];
     }
     cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALL_UPDATES SET LastPictUpdate = %i WHERE iPad=%i",lastNum,iPad];
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-                   sendToServer:NO];
+              sendToServer:NO];
     [self close:opened];
     return rtn;
 }
@@ -1006,9 +1035,13 @@ SELECT max(_id) FROM MyTable*/
 {
     BOOL rtn = TRUE;
     NSString * cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_UPDATES ('iPad' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
-
-    rtn = [self executeCmd:(char *)cmd.UTF8String
-              sendToServer:NO];
+    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'intID' INT,'rampNum' INT, 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
+    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_NOTES ('id' INTEGER PRIMARY KEY,'intID' INT,'corner' INT,'rampID' INT,'type' INT, 'note' CHAR(4096))";
+    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_STANDARD_TEXT ('textID' INTEGER PRIMARY KEY,'type' INT,'text' CHAR(4096))";
+    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     return rtn;
 }
 - (int) incrementLastDataFileNum
@@ -1018,9 +1051,9 @@ SELECT max(_id) FROM MyTable*/
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
     NSString* file = [self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager];
-    int _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:file
+    int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:file
                                                                               error:nil].fileSize;
-    if (_fileSize > 0)
+    if (fileSize > 0)
     {
         [self setLastDataUpdateNum:++lastNum pictNum:pictNum foriPad:iPad];
     }
@@ -1095,4 +1128,29 @@ SELECT max(_id) FROM MyTable*/
     return rtn;
     
 }
+
+- (BOOL) updateFromFile:(NSString*)file
+{
+    BOOL rtn = TRUE;
+    BOOL opened = [self open];
+    
+    FILE *fid = fopen(file.UTF8String, "rb");
+    int totLen = FileLength(fid);
+    int maxLineLen = totLen+2;
+    LPSTR str = malloc(totLen+4);
+    [self startTransaction];
+    while (rtn && fgetstring(str, maxLineLen, fid))
+    {
+        rtn = [self executeCmd:str
+                       sendToServer:NO];
+    }
+    fclose(fid);
+    free(str);
+    if (!rtn)
+        [self cancelTransaction];
+    [self close:opened];
+    return rtn;
+}
+
+
 @end

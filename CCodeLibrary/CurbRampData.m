@@ -93,6 +93,15 @@ static int nInit=0;
     }
     return rtn;
 }
+- (BOOL)createNextUpdateTable
+{
+    BOOL rtn = TRUE;
+    NSString * cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_UPDATES ('iPad' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
+    
+    rtn = [self executeCmd:(char *)cmd.UTF8String
+              sendToServer:NO];
+    return rtn;
+}
 
 - (void)close:(BOOL)opened
 {
@@ -185,6 +194,11 @@ static int nInit=0;
 - (void)commitTransaction
 {
     SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
+}
+
+- (void)cancelTransaction
+{
+    SQLOK(sqlite3_exec(_database, "ROLLBACK", 0, 0, 0), _database);
 }
 
 - (BOOL)isCurrentVersion
@@ -479,19 +493,26 @@ static int nInit=0;
 - (int) getLastDataUpdateNumber:(int)iPad
                     lastPictNum:(int*)pictNum
 {
-    int lastNum  = 1;
-    int lastPictNum = 1;
+    int lastNum  = 0;
+    int lastPictNum = 0;
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT LastDataUpdate,LastPictUpdate FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
+    NSString *cmd = [NSString stringWithFormat:@"SELECT LastDataUpdate,LastPictUpdate FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         lastNum = sqlite3_column_int(statement, 0);
         lastPictNum = sqlite3_column_int(statement, 1);
     }
     SQLOK(sqlite3_finalize(statement), _database);
+    if (!lastNum)
+    {
+        lastNum = 1;
+        cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_UPDATES VALUES(%i,1,0);",iPad];
+        [self executeCmd:(LPSTR)cmd.UTF8String
+            sendToServer:NO];
+    }
     [self close:opened];
     *pictNum = lastPictNum;
     return lastNum;
@@ -507,14 +528,52 @@ static int nInit=0;
     [self close:opened];
     return rtn;
 }
+- (BOOL) setLastDataUpdateNum:(int)lastNum
+                      foriPad:(int)iPad
+{
+    BOOL rtn= FALSE;
+    BOOL opened = [self open];
+    NSString *cmd = [NSString stringWithFormat:@"SELECT * FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
+    BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
+    SQLOK(sqlite3_finalize(statement), _database);
+    
+    if (!haveRecord)
+    {
+        cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_UPDATES VALUES(%i,1,0);",iPad];
+        rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                  sendToServer:NO];
+    }
+    cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastDataUpdate = %i WHERE iPad=%i",lastNum,iPad];
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:NO];
+    [self close:opened];
+    return rtn;
+}
 
 - (BOOL) setLastPictUpdateNum:(int)lastNum
                       foriPad:(int)iPad
 {
+    BOOL rtn= FALSE;
     BOOL opened = [self open];
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastPictUpdate = %i WHERE iPad=%i",lastNum,iPad];
-    BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-                   sendToServer:NO];
+    NSString *cmd = [NSString stringWithFormat:@"SELECT * FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
+    sqlite3_stmt *statement;
+    
+    SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
+    BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
+    SQLOK(sqlite3_finalize(statement), _database);
+    
+    if (!haveRecord)
+    {
+        cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_UPDATES VALUES(%i,1,0);",iPad];
+        rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                  sendToServer:NO];
+    }
+    cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastPictUpdate = %i WHERE iPad=%i",lastNum,iPad];
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:NO];
     [self close:opened];
     return rtn;
 }
@@ -542,9 +601,9 @@ static int nInit=0;
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
-    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputDataFile:lastNum
-                                                                                             iPad:CRAPI.sharedInstance.currentiPadWithinManager]
-                                                                       error:nil].fileSize;
+    NSString* file = [self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager];
+    int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:file
+                                                                              error:nil].fileSize;
     if (fileSize > 0)
     {
         [self setLastDataUpdateNum:++lastNum pictNum:pictNum foriPad:iPad];
@@ -629,4 +688,29 @@ static int nInit=0;
     [self close:opened];
     return nextID;
 }
+
+- (BOOL) updateFromFile:(NSString*)file
+{
+    BOOL rtn = TRUE;
+    BOOL opened = [self open];
+    
+    FILE *fid = fopen(file.UTF8String, "rb");
+    int totLen = FileLength(fid);
+    int maxLineLen = totLen+2;
+    LPSTR str = malloc(totLen+4);
+    [self startTransaction];
+    while (rtn && fgetstring(str, maxLineLen, fid))
+    {
+        rtn = [self executeCmd:str
+                  sendToServer:NO];
+    }
+    fclose(fid);
+    free(str);
+    if (!rtn)
+        [self cancelTransaction];
+    [self close:opened];
+    return rtn;
+}
+
+
 @end
