@@ -44,7 +44,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
 {
     if ((self = [super init]))
     {
-        self.geoid = geoid;
+        self.geoid = geoid % 100000000;
         self.curbRampData = [CurbRampData databaseForGeoid:geoid
                                                     create:NO];
         NSLog(@"Intersections Database init");
@@ -121,6 +121,10 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     return rtn;
 }*/
 
+- (void) setGeoid:(int)geoid
+{
+    _geoid = geoid % 100000000;
+}
 - (int)getOffsetCoord:(MPIntersection *)mpint
                     x:(int)x
                     y:(int)y
@@ -1506,6 +1510,7 @@ Exit:
 - (void)getPlaceIntersectionFile:(GSSiPopoverView *)popover
                         forGeoid:(int)geoid
 {
+    geoid = geoid % 100000000;
     //NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
     NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
     
@@ -1528,6 +1533,7 @@ Exit:
 - (void)getUploadedIntersectionFile:(GSSiPopoverView *)popover
                            forGeoid:(int)geoid
 {
+    geoid = geoid % 100000000;
     //NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
     NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
     

@@ -12,6 +12,7 @@
               forGeoid:(int)geoid
           underManager:(int)manager
 {
+    geoid = geoid % 100000000;
     NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
     //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
     
