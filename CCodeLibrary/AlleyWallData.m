@@ -1149,6 +1149,8 @@ SELECT max(_id) FROM MyTable*/
     free(str);
     if (!rtn)
         [self cancelTransaction];
+    else
+        [self commitTransaction];
     [self close:opened];
     return rtn;
 }
