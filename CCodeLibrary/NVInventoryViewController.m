@@ -95,7 +95,7 @@
     [_backgroundImage addGestureRecognizer:tapGesture];
     [self.view addSubview:_backgroundImage];
     
-    _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(224.0, margin, 320.0, buttonHeight)];
+    _doneButton = [[UIButton alloc] initWithFrame:CGRectMake(244.0, margin, 280.0, buttonHeight)];
     _cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(margin, margin, 148.0, buttonHeight)];
     
     [self setupButton:_doneButton
@@ -116,12 +116,14 @@
                          forState:UIControlStateNormal];
         }
         
-        _complexButton = [[UIButton alloc] initWithFrame:CGRectMake(600.0, margin, 148.0, buttonHeight)];
+        _complexButton = [[UIButton alloc] initWithFrame:CGRectMake(556.0, margin, 110.0, buttonHeight)];
         
         [self setupButton:_complexButton
                  selector:@selector(complex:)
                     title:@"Complex"
                  fontSize:32.0];
+        
+        _complexButton.titleLabel.numberOfLines = 1;
         
         UILongPressGestureRecognizer *lp = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                          action:@selector(longPressed:)];
@@ -575,6 +577,7 @@
     button.layer.borderWidth = 2.0;
     button.titleLabel.font = [UIFont boldSystemFontOfSize:fontSize];
     button.titleLabel.numberOfLines = 2;
+    button.titleLabel.adjustsFontSizeToFitWidth = YES;
     
     [button setTitleColor:UserDefaults.defaults.appleBlue
                  forState:UIControlStateSelected];
