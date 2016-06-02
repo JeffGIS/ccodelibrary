@@ -708,6 +708,8 @@ static int nInit=0;
     free(str);
     if (!rtn)
         [self cancelTransaction];
+    else
+        [self commitTransaction];
     [self close:opened];
     return rtn;
 }
