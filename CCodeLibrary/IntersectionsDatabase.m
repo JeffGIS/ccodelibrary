@@ -1565,7 +1565,7 @@ Exit:
 
 - (void)getPlaceIntersectionDatabase:(GSSiPopoverView *)popover
 {
-    NSString *dbPath = [self.curbRampData databasePath:self.geoid];
+    NSString *dbPath = [_curbRampData databasePath:_geoid];
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:dbPath
                                                                                  error:nil].fileSize;
@@ -1576,11 +1576,11 @@ Exit:
     
     if (fileSize > 0 && !forceReload && nIntersections > 0 && [_curbRampData isCurrentVersion])
     {
-        if (self.delegate)
+        if (_delegate)
         {
-            [self.delegate intersectionsDatabase:dbPath
-                                         didLoad:@""
-                                      withStatus:INTDBStatusOK];
+            [_delegate intersectionsDatabase:dbPath
+                                     didLoad:@""
+                                  withStatus:INTDBStatusOK];
         }
     }
     
