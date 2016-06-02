@@ -101,6 +101,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic) NVDocumentManager *docManager;
 @property BOOL mapPropList, mapIndividualDest, mapGroupDest;
 @property BOOL uploadPix, downloadData, downloadPix;
+@property int dataset;
 
 + (CRAPI *)sharedInstance;
 

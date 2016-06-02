@@ -38,6 +38,7 @@
         _uploadPix = [UserDefaults.defaults boolForKey:@"UploadPix"];
         _downloadData = [UserDefaults.defaults boolForKey:@"DownloadData"];
         _downloadPix = [UserDefaults.defaults boolForKey:@"DownloadPix"];
+        _dataset = 0;
     }
     
     return self;

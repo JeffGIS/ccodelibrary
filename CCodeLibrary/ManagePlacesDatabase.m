@@ -5,6 +5,7 @@
 #import "UserDefaults.h"
 #import "PlacesInfo.h"
 #import "IntersectionsDatabase.h"
+#import "CRAPI.h"
 
 @implementation ManagePlacesDatabase
 
@@ -216,12 +217,11 @@ static ManagePlacesDatabase *_statdatabase = nil;
         NSString *name = [[NSString alloc] initWithUTF8String:nameChar];
         name = removeEndingReturn(name);
         name = removeTextInsideParentheses(name);
-        int dataset = 0;
         
         [UserDefaults.defaults addLocationToListWithName:name
                                                    state:[self getStateCodeForStatefp:statefp]
                                                    geoid:geoid
-                                                 dataset:dataset
+                                                 dataset:CRAPI.sharedInstance.dataset
                                                 bounds_w:bounds_w
                                                 bounds_s:bounds_s
                                                 bounds_e:bounds_e
