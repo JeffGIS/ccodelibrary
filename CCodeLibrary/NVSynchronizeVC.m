@@ -724,7 +724,10 @@
             if (!loading || CRAPI.sharedInstance.downloadData)
                 _totFilesToProcess += max (0,lastDataFileOnServer - lastDataIHave);
             if (!loading || CRAPI.sharedInstance.downloadPix)
+            {
                 _downPix += max(0,lastPictFileOnServer - lastPictIHave);
+                _totFilesToProcess += max(0,lastPictFileOnServer - lastPictIHave);
+            }
         }
     }
 }
