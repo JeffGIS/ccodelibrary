@@ -622,7 +622,7 @@ uint occurrencesOfCharacter(unichar character, NSString *string)
 NSString * splitLine (NSString * line)
 {
     NSString *splitLines = nil;
-    LPSTR tx = line.UTF8String;
+    LPSTR tx = (LPSTR)line.UTF8String;
     int midp = (int)line.length / 2;
     int spliti = 0;
     int mind = INT_MAX;

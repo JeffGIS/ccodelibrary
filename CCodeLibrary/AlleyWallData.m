@@ -1051,8 +1051,9 @@ SELECT max(_id) FROM MyTable*/
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
     NSString* file = [self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager];
-    int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:file
-                                                                              error:nil].fileSize;
+    
+    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:file
+                                                                       error:nil].fileSize;
     if (fileSize > 0)
     {
         [self setLastDataUpdateNum:++lastNum pictNum:pictNum foriPad:iPad];
@@ -1135,7 +1136,7 @@ SELECT max(_id) FROM MyTable*/
     BOOL opened = [self open];
     
     FILE *fid = fopen(file.UTF8String, "rb");
-    int totLen = FileLength(fid);
+    int totLen = (int)FileLength(fid);
     int maxLineLen = totLen+2;
     LPSTR str = malloc(totLen+4);
     [self startTransaction];

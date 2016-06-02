@@ -1043,12 +1043,11 @@ Top:
 
 - (void)setDownloadFilesFor:(int)iPad
 {
-    int lastPictIHave;
+    int lastPictIHave = 0, fileSize = 0;
     
     int lastDataIHave = [_databaseID getLastDataUpdateNumber:iPad
                                                  lastPictNum:&lastPictIHave];
     lastDataIHave++;
-    int fileSize = 0;
     
     while (lastDataIHave && !fileSize)
     {
