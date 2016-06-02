@@ -405,7 +405,7 @@ static int nInit=0;
     SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
-        noteid = (LPSTR)sqlite3_column_int(statement, 0);
+        noteid = (int)sqlite3_column_int(statement, 0);
         LPSTR text = (LPSTR)sqlite3_column_text(statement, 1);
         if (!strcmp (text,note.UTF8String))
             noteid = -2;
@@ -602,8 +602,9 @@ static int nInit=0;
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
     NSString* file = [self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager];
-    int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:file
-                                                                              error:nil].fileSize;
+    
+    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:file
+                                                                       error:nil].fileSize;
     if (fileSize > 0)
     {
         [self setLastDataUpdateNum:++lastNum pictNum:pictNum foriPad:iPad];
@@ -665,7 +666,7 @@ static int nInit=0;
     {
         nextID = sqlite3_column_int(statement, 0);
     }
-    nextID = [CRAPI.sharedInstance adjustNextRefno:nextID];
+    nextID = (int)[CRAPI.sharedInstance adjustNextRefno:nextID];
     SQLOK(sqlite3_finalize(statement), _database);
     [self close:opened];
     return nextID;
@@ -683,7 +684,7 @@ static int nInit=0;
     {
         nextID = sqlite3_column_int(statement, 0);
     }
-    nextID = [CRAPI.sharedInstance adjustNextRefno:nextID];
+    nextID = (int)[CRAPI.sharedInstance adjustNextRefno:nextID];
     SQLOK(sqlite3_finalize(statement), _database);
     [self close:opened];
     return nextID;
@@ -695,7 +696,7 @@ static int nInit=0;
     BOOL opened = [self open];
     
     FILE *fid = fopen(file.UTF8String, "rb");
-    int totLen = FileLength(fid);
+    int totLen = (int)FileLength(fid);
     int maxLineLen = totLen+2;
     LPSTR str = malloc(totLen+4);
     [self startTransaction];

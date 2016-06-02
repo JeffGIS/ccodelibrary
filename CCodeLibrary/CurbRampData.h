@@ -1,10 +1,5 @@
-//
 //  CurbRampData.h
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 6/12/15.
-//  Copyright (c) 2015 GSSi. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
@@ -36,44 +31,54 @@
 - (void)commitTransaction;
 - (BOOL)isCurrentVersion;
 
-- (int) getLastDataUpdateNumber:(int)iPad
-                    lastPictNum:(int*)pictNum;
-- (NSString*) outputDataFile:(int)fileNum
+- (int)getLastDataUpdateNumber:(int)iPad
+                   lastPictNum:(int *)pictNum;
+
+- (NSString *)outputDataFile:(int)fileNum
                         iPad:(int)iPad;
-+ (BOOL) setLastDataUpdateNum:(int)nextNum;
-+ (int)  getLastDataUpdateNum;
-- (BOOL) setLastPictUpdateNum:(int)lastNum
-                      foriPad:(int)iPad;
-- (int) getLastPictUpdateNumber:(int)iPad;
-- (NSString*) outputPictFile:(int)fileNum
+
++ (BOOL)setLastDataUpdateNum:(int)nextNum;
++ (int)getLastDataUpdateNum;
+
+- (BOOL)setLastPictUpdateNum:(int)lastNum
+                     foriPad:(int)iPad;
+
+- (int)getLastPictUpdateNumber:(int)iPad;
+
+- (NSString *)outputPictFile:(int)fileNum
                         iPad:(int)iPad;
-- (int) incrementLastDataFileNum;
-+ (int) incrementLastDataFileNumber;
-- (int) incrementLastPictFileNum;
-+ (int) incrementLastPictFileNumber;
-- (BOOL) savePictureData:(int)pictNum
+
+- (int)incrementLastDataFileNum;
++ (int)incrementLastDataFileNumber;
+- (int)incrementLastPictFileNum;
++ (int)incrementLastPictFileNumber;
+
+- (BOOL)savePictureData:(int)pictNum
                   intID:(int)wallID
-                 rampNum:(int)ramp
-                    type:(int)type
-                  latLon:(LLPOINT)ll
-                 heading:(int)heading;
+                rampNum:(int)ramp
+                   type:(int)type
+                 latLon:(LLPOINT)ll
+                heading:(int)heading;
 
-- (NSString *) getNote:(int)intID
-                corner:(int)corner
-                  ramp:(int)ramp
-                  type:(int)type;
-- (BOOL) addNote:(NSString *)note
-    intersection:(int)intID
-          corner:(int)corner
-            ramp:(int)ramp
-            type:(int)type;
-- (NSMutableArray*) loadStandardText:(int)type;
-- (BOOL) addStandardText:(NSString*)text
+- (NSString *)getNote:(int)intID
+               corner:(int)corner
+                 ramp:(int)ramp
+                 type:(int)type;
+
+- (BOOL)addNote:(NSString *)note
+   intersection:(int)intID
+         corner:(int)corner
+           ramp:(int)ramp
+           type:(int)type;
+
+- (NSMutableArray *)loadStandardText:(int)type;
+
+- (BOOL)addStandardText:(NSString *)text
                     type:(int)type;
-- (BOOL) updateFromFile:(NSString*)file;
-- (BOOL) setLastDataUpdateNum:(int)lastNum
-                      foriPad:(int)iPad;
-- (BOOL) updateFromFile:(NSString*)file;
 
+- (BOOL)updateFromFile:(NSString *)file;
+
+- (BOOL)setLastDataUpdateNum:(int)lastNum
+                     foriPad:(int)iPad;
 
 @end
