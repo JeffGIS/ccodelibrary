@@ -988,8 +988,7 @@ WHERE intID=%i;",
 void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 {
     double deg = pRot ? atof (pRot):0.0;
-    double az = LTWOPI(deg * DEGtoRAD * HALFPI);
-    double azms[4];
+    double az = LTWOPI(deg * DEGtoRAD * HALFPI);    double azms[4];
     for (int i=0;i<4;i++)
     {
         azms[i] = LTWOPI(az + HALFPI * i);
