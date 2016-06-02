@@ -587,34 +587,34 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
    
     NSString *cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%li,\
-                     doLater=%i,\
-                     intX=%i,\
-                     intY=%i,\
-                     ramp1=%i,\
-                     ramp2=%i,\
-                     ramp3=%i,\
-                     ramp4=%i,\
-                     ramp5=%i,\
-                     ramp6=%i,\
-                     ramp7=%i,\
-                     ramp8=%i,\
-                     ramp81=%i,\
-                     ramp23=%i,\
-                     ramp45=%i,\
-                     ramp67=%i,\
-                     xWalkA=%i,\
-                     xWalkB=%i,\
-                     xWalkC=%i,\
-                     xWalkD=%i,\
-                     signal81=%i,\
-                     signal23=%i,\
-                     signal45=%i,\
-                     signal67=%i,\
-                     latitude=%f,\
-                     longitude=%f,\
-                     zoomLevel=%i,\
-                     intersectionComment='%s' \
-                     WHERE intID=%i;",
+doLater=%i,\
+intX=%i,\
+intY=%i,\
+ramp1=%i,\
+ramp2=%i,\
+ramp3=%i,\
+ramp4=%i,\
+ramp5=%i,\
+ramp6=%i,\
+ramp7=%i,\
+ramp8=%i,\
+ramp81=%i,\
+ramp23=%i,\
+ramp45=%i,\
+ramp67=%i,\
+xWalkA=%i,\
+xWalkB=%i,\
+xWalkC=%i,\
+xWalkD=%i,\
+signal81=%i,\
+signal23=%i,\
+signal45=%i,\
+signal67=%i,\
+latitude=%f,\
+longitude=%f,\
+zoomLevel=%i,\
+intersectionComment='%s' \
+WHERE intID=%i;",
                      iTime, (long)status,
                        mpint.doLater,
                        mpint.lev21x,
@@ -988,8 +988,7 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
 void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 {
     double deg = pRot ? atof (pRot):0.0;
-    double az = LTWOPI(deg * DEGtoRAD * HALFPI);
-    double azms[4];
+    double az = LTWOPI(deg * DEGtoRAD * HALFPI);    double azms[4];
     for (int i=0;i<4;i++)
     {
         azms[i] = LTWOPI(az + HALFPI * i);
