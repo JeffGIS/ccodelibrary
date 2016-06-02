@@ -158,6 +158,8 @@ static ManagePlacesDatabase *_statdatabase = nil;
 
 - (NSArray *)getPlaceInfo:(int)geoid
 {
+    geoid = (geoid % 100000000);
+    
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
     [self open];
