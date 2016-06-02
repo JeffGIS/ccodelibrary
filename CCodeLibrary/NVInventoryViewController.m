@@ -2105,8 +2105,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
                                     showFileAtPath:filePath];
-    
-    [nvwv adjustForStatusBar];
 }
 
 @end

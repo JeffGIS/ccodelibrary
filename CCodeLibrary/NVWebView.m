@@ -87,7 +87,7 @@
 {
     self.translatesAutoresizingMaskIntoConstraints = NO;
     self.backgroundColor = UIColor.grayColor;
-    _headerHeight = 48.0;
+    _headerHeight = 60.0;
     _headerSideMargin = 8.0;
     self.alpha = 0.0;
     
@@ -131,7 +131,7 @@
     [_returnButton.leadingAnchor constraintEqualToAnchor:self.leadingAnchor
                                                 constant:_headerSideMargin].active = YES;
     
-    [_returnButton.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
+    [_returnButton.topAnchor constraintEqualToAnchor:self.topAnchor constant:20.0].active = YES;
     [_returnButton.bottomAnchor constraintEqualToAnchor:_webView.topAnchor].active = YES;
 }
 
@@ -168,21 +168,6 @@
 - (void)showRealtorButton
 {
     _realtor.hidden = NO;
-}
-
-- (void)adjustForStatusBar
-{
-    [_returnButton removeAllConstraints];
-    [_webView removeAllConstraints];
-    _headerHeight = 60.0;
-    
-    [_webView constrainToView:self leading:0.0 trailing:0.0 top:_headerHeight bottom:0.0];
-    
-    [_returnButton.leadingAnchor constraintEqualToAnchor:self.leadingAnchor
-                                                constant:_headerSideMargin].active = YES;
-    
-    [_returnButton.topAnchor constraintEqualToAnchor:self.topAnchor constant:20.0].active = YES;
-    [_returnButton.bottomAnchor constraintEqualToAnchor:_webView.topAnchor].active = YES;
 }
 
 - (void)returnButtonTapped:(UIButton *)button
