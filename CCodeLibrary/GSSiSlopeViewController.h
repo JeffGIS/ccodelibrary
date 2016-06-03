@@ -44,17 +44,15 @@ typedef struct NVSlopeData {
 @interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate,CLLocationManagerDelegate>
 
 @property (nonatomic, weak) id <GSSiSlopeViewControllerDelegate> delegate;
-@property (nonatomic, copy) NSString *which;
-@property NSInteger mode;
 @property BOOL displayDegrees;
 @property BOOL useCalibration;
 @property BOOL useHeadingCalibration;
-@property CGFloat steadyFactor;
-@property CGFloat countFactor;
-@property CGFloat criticalValue;
-@property CGFloat criticalSideValue;
-@property NSString *promptText;
-@property CGFloat errorValue;
+@property (nonatomic) CGFloat steadyFactor;
+@property (nonatomic) CGFloat countFactor;
+@property (nonatomic) CGFloat criticalValue;
+@property (nonatomic) CGFloat criticalSideValue;
+@property (nonatomic, copy) NSString *promptText;
+@property (nonatomic) CGFloat errorValue;
 @property BOOL selfTest;
 
 + (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(CGFloat)criticalVal

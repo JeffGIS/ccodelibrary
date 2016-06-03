@@ -2105,6 +2105,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
                                     showFileAtPath:filePath];
+#pragma unused(nvwv)
 }
 
 @end

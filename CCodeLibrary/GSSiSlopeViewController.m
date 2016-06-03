@@ -32,9 +32,9 @@ static int COUNT=100;
 @property (nonatomic) CGFloat maxX, minX, maxY, minY, maxZ, minZ;
 @property (nonatomic) CGFloat aSumX, aSumY, aSumZ;
 @property (nonatomic) NVSlopeData data;
-@property (nonatomic) NSInteger counter, headingCounter;
-@property CGFloat minHead, maxHead;
-@property CGFloat lastDegrees;
+@property NSInteger counter, headingCounter;
+@property (nonatomic) CGFloat minHead, maxHead;
+@property (nonatomic) CGFloat lastDegrees;
 @property (nonatomic) CGFloat sumHeading, baseHeading;
 @property (nonatomic) UILabel *headingLabel, *calDateLabel;
 @property (nonatomic) CLLocationManager *locationManager;
@@ -926,6 +926,12 @@ static int COUNT=100;
 - (BOOL)shouldAutorotate
 {
     return NO;
+}
+
+- (void)setPromptText:(NSString *)promptText
+{
+    _promptText = promptText;
+    _promptLabel.text = promptText;
 }
 
 @end

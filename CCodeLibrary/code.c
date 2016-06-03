@@ -167,6 +167,8 @@ GSSiExitProg (665);
 #endif
 }
 
+/* (these funcations are duplicated in MathUtil)
+
 double LTWOPI (double AZ1)
 #if ENABLETRACE
 {GSSiEnterProg (375);
@@ -212,9 +214,7 @@ GSSiExitProg (374);
 }
 #endif
 }
-
-
-
+ 
 double getazd (HPDPOINT Point1, HPDPOINT Point2)
 #if ENABLETRACE
 {GSSiEnterProg (373);
@@ -231,8 +231,7 @@ GSSiExitProg (373);
 }
 #endif
 }
-
-
+ 
 double LDIST(double X1,double Y1,double X2,double Y2)
 { 
 	double xdf = (X1-X2);
@@ -240,6 +239,8 @@ double LDIST(double X1,double Y1,double X2,double Y2)
   	
   	return sqrt(xdf * xdf + ydf * ydf);
 }
+*/
+
 static void AddDPointToMinMax (HPDPOINT Point,LPMNMXCORD pBounds)
 #if ENABLETRACE
 {GSSiEnterProg (253);

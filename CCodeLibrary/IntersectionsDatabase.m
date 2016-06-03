@@ -1725,7 +1725,7 @@ Exit:
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         int nNames = sqlite3_column_int (statement, 0);
-        LPSTR pnames = sqlite3_column_text (statement, 1);
+        LPSTR pnames = (LPSTR)sqlite3_column_text (statement, 1);
         names = [NSString stringWithUTF8String:pnames];
         names = [names stringByReplacingOccurrencesOfString:@"|" withString:@"\n"];
     }
