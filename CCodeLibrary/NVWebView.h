@@ -24,6 +24,5 @@
 
 - (void)hide:(BOOL)animated;
 - (void)showRealtorButton;
-- (void)adjustForStatusBar;
 
 @end

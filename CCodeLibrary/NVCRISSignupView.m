@@ -490,7 +490,6 @@
                                          urlString:@"www.apple.com/legal/privacy/en-ww/"];
     
     nvwv.delegate = self;
-    [nvwv adjustForStatusBar];
 }
 
 - (void)termsTapped:(UIButton *)button
@@ -501,7 +500,6 @@
                                          urlString:@"www.apple.com/legal/internet-services/itunes/appstore/dev/stdeula/"];
     
     nvwv.delegate = self;
-    [nvwv adjustForStatusBar];
     
     if (_checkmarkButton.userInteractionEnabled)
     {
