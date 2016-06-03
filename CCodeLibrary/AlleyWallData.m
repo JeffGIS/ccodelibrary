@@ -61,6 +61,9 @@ static int fileSequence = 0;
                                                                    error:nil].fileSize;
         if (_fileSize)
         {
+            [self createNextUpdateTable];
+            [self createPictureDatabase];
+
             BOOL tableOK = NO;
             sqlite3_stmt *stmt = NULL;
             int rc = sqlite3_prepare_v2(_database, "pragma table_info ('ALLEYWALL_UPDATES')", -1, &stmt, NULL);
@@ -107,12 +110,13 @@ static int fileSequence = 0;
     }
 }
 
-- (void)clear
+- (BOOL)clear
 {
     [self close:TRUE];
     
-    //BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
-    //error:nil];
+    BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
+                                                       error:nil];
+    return st;
 }
 
 - (int)datasetVersion
@@ -1015,8 +1019,6 @@ SELECT max(_id) FROM MyTable*/
 {
     int LastNum  = 0;
     BOOL opened = [self open];
-    [self createNextUpdateTable];
-    [self createPictureDatabase];
     NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
@@ -1035,8 +1037,6 @@ SELECT max(_id) FROM MyTable*/
 {
     BOOL rtn = TRUE;
     NSString * cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_UPDATES ('iPad' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
-    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
-    cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'intID' INT,'rampNum' INT, 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
     rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_NOTES ('id' INTEGER PRIMARY KEY,'intID' INT,'corner' INT,'rampID' INT,'type' INT, 'note' CHAR(4096))";
     rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
@@ -1146,11 +1146,14 @@ SELECT max(_id) FROM MyTable*/
                        sendToServer:NO];
     }
     fclose(fid);
-    free(str);
     if (!rtn)
+    {
         [self cancelTransaction];
+        rtn = YES;
+    }
     else
         [self commitTransaction];
+    free(str);
     [self close:opened];
     return rtn;
 }

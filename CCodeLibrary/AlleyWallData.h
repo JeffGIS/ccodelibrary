@@ -22,7 +22,7 @@
 
 - (BOOL)open;
 - (void)close:(BOOL)opened;
-- (void)clear;
+- (BOOL)clear;
 
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer;

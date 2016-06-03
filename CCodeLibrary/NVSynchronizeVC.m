@@ -3,7 +3,6 @@
 
 #import "NVSynchronizeVC.h"
 #import "NVProgressView.h"
-#import "GeoMasterServer.h"
 #import "FTPDataPull.h"
 #import "FTPDataPush.h"
 #import "UserDefaults.h"
@@ -1028,7 +1027,13 @@ Top:
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Picture"];
     }
-
+    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:_filePath
+                                                                   error:nil].fileSize;
+    if (!fileSize)
+    {
+        NSString * emptyFileMessage = @"/*This file is empty*/";
+        [emptyFileMessage writeToFile:_filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    }
     _push = [FTPDataPush push];
     _push.delegate = self;
     _push.popover = _popoverView;
@@ -1051,7 +1056,7 @@ Top:
     int lastDataIHave = [_databaseID getLastDataUpdateNumber:iPad
                                                  lastPictNum:&lastPictIHave];
     lastDataIHave++;
-    
+    //lastDataIHave = 0;
     while (lastDataIHave && !fileSize)
     {
         lastDataIHave--;

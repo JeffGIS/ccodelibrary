@@ -3,6 +3,7 @@
 
 #import "CurbRampData.h"
 #import "AlleyWallData.h"
+#import "GeoMasterServer.h"
 
 #define UPLOAD_DATA_PROCESS 1
 #define UPLOAD_PICT_PROCESS 2
@@ -27,7 +28,7 @@
 @property (nonatomic) AlleyWallData *awd;
 @property (nonatomic) NSString *uploadStatusMsg, *filePath;
 @property NSTimer *sendTimer, *doTimer;
-@property NSInteger currentServerMsgID;
+@property GMSMessage currentServerMsgID;
 @property int lastFileNumToUpload;
 @property int lastFileNumOnServer;
 @property int nextFileNumToUpload;
