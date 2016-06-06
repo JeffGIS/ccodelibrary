@@ -487,7 +487,7 @@
     [self dismissKeyboard];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
-                                         urlString:@"www.apple.com/legal/privacy/en-ww/"];
+                                         urlString:@"www.newvisiongis.com/gssi-privacy-policy.html"];
     
     nvwv.delegate = self;
 }
@@ -497,7 +497,7 @@
     [self dismissKeyboard];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
-                                         urlString:@"www.apple.com/legal/internet-services/itunes/appstore/dev/stdeula/"];
+                                         urlString:@"www.newvisiongis.com/nvcris-terms-of-service.html"];
     
     nvwv.delegate = self;
     
