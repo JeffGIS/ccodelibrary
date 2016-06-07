@@ -66,7 +66,7 @@
                                                                    (signup.frame.size.width - 8.0),
                                                                    (signup.frame.size.height / numElements))];
     
-    signup.promptLabel.text = @"To begin the signup process,\ntap on 'Terms of Use'.";
+    signup.promptLabel.text = @"To begin the signup process,\ntap on 'Terms of Service'.";
     signup.promptLabel.font = [UIFont boldSystemFontOfSize:28.0];
     signup.promptLabel.textColor = UIColor.blackColor;
     signup.promptLabel.textAlignment = NSTextAlignmentCenter;
@@ -302,7 +302,7 @@
     
     signup.termsLabel.textColor = UIColor.blackColor;
     signup.termsLabel.font = [UIFont systemFontOfSize:24.0];
-    signup.termsLabel.text = @"I have read and agree to be bound by the NVCRIS Terms of Use.";
+    signup.termsLabel.text = @"I have read and agree to be bound by the NVCRIS Terms of Service.";
     signup.termsLabel.numberOfLines = 2;
     signup.termsLabel.alpha = 0.3;
     
@@ -514,7 +514,7 @@
     _checkmarkButton.enabled = YES;
     _checkmarkButton.alpha = 1.0;
     _termsLabel.alpha = 1.0;
-    _promptLabel.text = @"To continue, tap on box to acknowledge and\nagree to the NVCRIS Terms of Use.";
+    _promptLabel.text = @"To continue, tap on box to acknowledge and\nagree to the NVCRIS Terms of Service.";
 }
 
 - (void)checkmarkTapped:(UIButton *)button
@@ -550,7 +550,7 @@
     else
     {
         [self dismissKeyboard];
-        _promptLabel.text = @"To continue, tap on box to acknowledge and\nagree to the NVCRIS Terms of Use.";
+        _promptLabel.text = @"To continue, tap on box to acknowledge and\nagree to the NVCRIS Terms of Service.";
     }
 }
 
