@@ -53,7 +53,7 @@
                                                                       (sliderView.frame.size.height * 0.1))];
     
     sliderView.titleLabel.backgroundColor = UIColor.clearColor;
-    sliderView.titleLabel.text = @"GMMobile Slider Manager";
+    sliderView.titleLabel.text = @"NVMobile Slider Manager";
     sliderView.titleLabel.textColor = UIColor.blackColor;
     sliderView.titleLabel.textAlignment = NSTextAlignmentCenter;
     sliderView.titleLabel.adjustsFontSizeToFitWidth = YES;

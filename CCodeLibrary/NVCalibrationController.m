@@ -73,6 +73,23 @@ static CGFloat _deviceValues[9][4];
                 text:@"Calibration Manager"
             fontSize:48.0];
     
+    UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    helpButton.frame = CGRectMake(688.0, 16.0, 68.0, 68.0);
+    
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"question-256x256"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
+    
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"questionMarkHighlighted"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateHighlighted];
+    
+    [helpButton addTarget:self
+                   action:@selector(helpButtonTapped:)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:helpButton];
+    
     _calibrationValues = [SharedDefaults.defaults calibrationValueArray];
     
     [self setupCalibrationButtons];
@@ -217,7 +234,7 @@ static CGFloat _deviceValues[9][4];
     [button setTitleColor:CRAPI.sharedInstance.defaultColors.titleColor
                  forState:UIControlStateNormal];
     
-    [button setTitleColor:UserDefaults.defaults.appleBlue
+    [button setTitleColor:UIColor.lightGrayColor
                  forState:UIControlStateHighlighted];
     
     [button addTarget:self
@@ -717,7 +734,7 @@ viewForHeaderInSection:(NSInteger)section
     [returnButton setTitleColor:UIColor.whiteColor
                        forState:UIControlStateNormal];
     
-    [returnButton setTitleColor:UserDefaults.defaults.appleBlue
+    [returnButton setTitleColor:UIColor.lightGrayColor
                        forState:UIControlStateHighlighted];
     
     [returnButton setTitle:@"< Return"
@@ -1015,6 +1032,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 - (BOOL)shouldAutorotate
 {
     return NO;
+}
+
+- (void)helpButtonTapped:(UIButton *)button
+{
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_NoneAvailable"
+                                                       ofType:@"pdf"];
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                    showFileAtPath:filePath];
+#pragma unused(nvwv)
 }
 
 @end

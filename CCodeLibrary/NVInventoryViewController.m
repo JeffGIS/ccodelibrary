@@ -787,29 +787,49 @@
 
 - (void)done:(UIButton *)button
 {
-    [_currentIntersection setRampsXWalkAndSignal];
-    _currentIntersection.zoomLevel = _currentZoom;
-    
-    if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didSetInventory:)])
+    switch (_from)
     {
-        MPIntersection *nextIntersection = [_delegate inventoryViewController:self
-                                                              didSetInventory:_currentIntersection];
-        
-        if (nextIntersection && _from != FROM_PRELIM_MAP)
-        {
-            _currentIntersection = nextIntersection;
-            _currentIntersectionID = _currentIntersection.intID;
-            [self setSegIndex:21];
-            [self setBKImage:NO];
-            _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
-            return;
-        }
+        case FROM_PRELIM:
+        case FROM_PRELIM_MAP:
+            [_currentIntersection setRampsXWalkAndSignal];
+            _currentIntersection.zoomLevel = _currentZoom;
+            
+            if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didSetInventory:)])
+            {
+                MPIntersection *nextIntersection = [_delegate inventoryViewController:self
+                                                                      didSetInventory:_currentIntersection];
+                
+                if (nextIntersection && _from == FROM_PRELIM)
+                {
+                    _currentIntersection = nextIntersection;
+                    _currentIntersectionID = _currentIntersection.intID;
+                    [self setSegIndex:21];
+                    [self setBKImage:NO];
+                    _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
+                    return;
+                }
+            }
+            
+            CRAPI.sharedInstance.refreshMap = YES;
+            
+            [self dismissViewControllerAnimated:YES
+                                     completion:nil];
+            
+            break;
+            
+        case FROM_HOME:
+        case FROM_CORNER:
+            if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didCompleteInventory:)])
+            {
+                [_delegate inventoryViewController:self
+                              didCompleteInventory:_currentIntersection];
+            }
+            
+            break;
+            
+        default:
+            break;
     }
-    
-    CRAPI.sharedInstance.refreshMap = YES;
-    
-    [self dismissViewControllerAnimated:YES
-                             completion:nil];
 }
 
 - (void)cancel:(UIButton *)button

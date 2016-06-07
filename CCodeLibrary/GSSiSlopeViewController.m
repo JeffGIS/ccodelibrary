@@ -161,6 +161,23 @@ static int COUNT=100;
     [self setupProgressView];
     [self setupManualButton];
     
+    UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    helpButton.frame = CGRectMake(676.0, 20.0, 72.0, 72.0);
+    
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"question-256x256"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
+    
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"questionMarkHighlighted"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateHighlighted];
+    
+    [helpButton addTarget:self
+                   action:@selector(helpButtonTapped:)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:helpButton];
+    
     _locationManager = [[CLLocationManager alloc] init];
     _locationManager.headingFilter = kCLHeadingFilterNone;
     _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
@@ -272,7 +289,7 @@ static int COUNT=100;
     [button setTitleColor:CRAPI.sharedInstance.defaultColors.titleColor
                  forState:UIControlStateNormal];
     
-    [button setTitleColor:UserDefaults.defaults.appleBlue
+    [button setTitleColor:UIColor.lightGrayColor
                  forState:UIControlStateHighlighted];
     
     button.titleLabel.font = [UIFont boldSystemFontOfSize:84.0];
@@ -932,6 +949,16 @@ static int COUNT=100;
 {
     _promptText = promptText;
     _promptLabel.text = promptText;
+}
+
+- (void)helpButtonTapped:(UIButton *)button
+{
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_NoneAvailable"
+                                                       ofType:@"pdf"];
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                    showFileAtPath:filePath];
+#pragma unused(nvwv)
 }
 
 @end
