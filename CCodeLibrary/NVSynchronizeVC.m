@@ -164,6 +164,21 @@
     _currentFileLabel.textAlignment = NSTextAlignmentCenter;
     _currentFileLabel.font = [UIFont boldSystemFontOfSize:22.0];
     
+    UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    helpButton.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"question-256x256"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
+    
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"questionMarkHighlighted"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateHighlighted];
+    
+    [helpButton addTarget:self
+                   action:@selector(helpButtonTapped:)
+         forControlEvents:UIControlEventTouchUpInside];
+    
     int numSections = 9;
     CGFloat borderWidth = 1.0;
     CGFloat margin = (40.0 + borderWidth);
@@ -276,6 +291,14 @@
             case 5://sync button
                 [sectionView addSubview:_syncButton];
                 [_syncButton constrainToView:sectionView leading:(screenWidth / 4.0) trailing:(-screenWidth / 4.0) top:buttonMargin bottom:-buttonMargin];
+                break;
+                
+            case 6://help button
+                [sectionView addSubview:helpButton];
+                [helpButton.heightAnchor constraintEqualToAnchor:sectionView.heightAnchor].active = YES;
+                [helpButton.widthAnchor constraintEqualToAnchor:sectionView.heightAnchor].active = YES;
+                [helpButton.centerXAnchor constraintEqualToAnchor:sectionView.centerXAnchor].active = YES;
+                [helpButton.centerYAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
                 break;
                 
             case 7://overall progress
@@ -1307,6 +1330,16 @@ Done:
 didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     [alertView hideLargeAlertView:YES];
+}
+
+- (void)helpButtonTapped:(UIButton *)button
+{
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_NoneAvailable"
+                                                       ofType:@"pdf"];
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                    showFileAtPath:filePath];
+#pragma unused(nvwv)
 }
 
 @end
