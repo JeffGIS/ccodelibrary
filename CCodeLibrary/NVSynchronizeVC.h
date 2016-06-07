@@ -26,7 +26,7 @@
 @property (nonatomic) id databaseID;
 @property (nonatomic) CurbRampData *crd;
 @property (nonatomic) AlleyWallData *awd;
-@property (nonatomic) NSString *uploadStatusMsg, *filePath;
+@property (nonatomic, copy) NSString *uploadStatusMsg, *filePath;
 @property NSTimer *sendTimer, *doTimer;
 @property GMSMessage currentServerMsgID;
 @property int lastFileNumToUpload;

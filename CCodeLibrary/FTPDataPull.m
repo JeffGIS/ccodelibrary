@@ -11,7 +11,7 @@
 @property (nonatomic) unsigned long long existingFileSize;
 @property (nonatomic) NSInteger refreshOption;
 @property id <GSSiPopoverViewDelegate> savePopoverDelegate;
-@property (nonatomic) NSString *tempExtension;
+@property (nonatomic, copy) NSString *tempExtension;
 
 @end
 

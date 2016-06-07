@@ -6,7 +6,7 @@
 
 @interface NVTextVC ()
 
-@property (nonatomic) NSString *text;
+@property (nonatomic, copy) NSString *text;
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) UITextView *textView;
 @property (nonatomic) CGFloat margin, fontSize;

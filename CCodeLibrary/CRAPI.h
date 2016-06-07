@@ -40,7 +40,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property int maxDevices;
 
 @property (nonatomic) NSMutableDictionary *deviceLists;
-@property (nonatomic) NSString *deviceListsKey;
+@property (nonatomic, copy) NSString *deviceListsKey;
 @property int currentGeoid;
 @property (nonatomic) int currentManageriPad; //sequence number for manager iPad - created by GMServer
 @property int currentiPadWithinManager;
@@ -51,17 +51,17 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic, copy) NSString *googleKey;
 @property BOOL refreshMap, doCompassCalibrate, showParcelBoundary;
 @property (nonatomic) NSMutableArray *placesArray;
-@property (nonatomic) NSArray *currentPlaceArray;
+@property (nonatomic, copy) NSArray *currentPlaceArray;
 @property (nonatomic, copy) NSString *placeAreaFile;
 @property (nonatomic, copy) NSString *calibrateLength;
 @property (nonatomic, copy) NSString *calibrateHeight;
 @property (nonatomic) NSMutableArray *assignediPadsArray;
 @property (nonatomic) Colors *defaultColors;
 @property (nonatomic) NSInteger GMMSetting;
-@property (nonatomic) NSString *currentPID;
-@property (nonatomic) NSString *currentAddress;
-@property (nonatomic) NSString *currentPropOwner;
-@property (nonatomic) NSString *selectedPID;
+@property (nonatomic, copy) NSString *currentPID;
+@property (nonatomic, copy) NSString *currentAddress;
+@property (nonatomic, copy) NSString *currentPropOwner;
+@property (nonatomic, copy) NSString *selectedPID;
 @property (nonatomic) NSMutableArray *annotations;
 @property (nonatomic) CGFloat currentZoom;
 @property BOOL controlledInterface;

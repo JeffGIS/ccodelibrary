@@ -15,7 +15,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex;
 @interface NVAlertView : UIView
 
 @property (nonatomic, weak) id <NVAlertViewDelegate> delegate;
-@property (nonatomic) NSString *identifier;
+@property (nonatomic, copy) NSString *identifier;
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UIColor *buttonBorderColor;
 

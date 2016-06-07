@@ -21,7 +21,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 @property (nonatomic) CGFloat minValue, maxValue;
 @property NVSliderControllerRange range;
 @property NVSliderConfiguration configuration;
-@property (nonatomic) NSString *unit;
+@property (nonatomic, copy) NSString *unit;
 
 @end
 

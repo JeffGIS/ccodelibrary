@@ -13,7 +13,7 @@
 
 @property (nonatomic) UIScrollView *contentView, *rowHeaderView, *columnHeaderView;
 @property (nonatomic) NSDate *touchDown, *touchUp;
-@property (nonatomic) NSArray *alphabet;
+@property (nonatomic, copy) NSArray *alphabet;
 @property (nonatomic) CGFloat fontSize, borderWidth;
 @property (nonatomic) UIView *rowHeaderOverlap, *columnHeaderOverlap;
 @property (nonatomic) UIButton *returnToOrigin, *delete, *export, *create, *select, *mapIt, *swap, *realtor;

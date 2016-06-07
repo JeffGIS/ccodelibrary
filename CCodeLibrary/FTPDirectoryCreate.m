@@ -11,7 +11,7 @@
 @property (nonatomic, copy) NSString *directory, *username, *password, *port, *ftpDomain, *urlText;
 @property (nonatomic) NSOutputStream *networkStream;
 @property (nonatomic) NSInputStream *fileStream;
-@property (nonatomic) NSArray *directories;
+@property (nonatomic, copy) NSArray *directories;
 @property NSInteger directoryCount;
 
 @end

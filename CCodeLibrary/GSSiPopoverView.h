@@ -22,7 +22,7 @@
 @property BOOL inShowAfter, hideAtCancel;
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic) int showTime;
-@property (nonatomic) NSString *title, *cancelButtonTitle;
+@property (nonatomic, copy) NSString *title, *cancelButtonTitle;
 
 - (id)initWithView:(UIView *)fromView;
 - (void)popoverCancel:(UIButton *)sender;

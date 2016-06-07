@@ -6,7 +6,7 @@
 @interface NVMarkerInfoButton ()
 
 @property (nonatomic, weak) id <NVMarkerInfoButtonDelegate> delegate;
-@property (nonatomic) NSString *title;
+@property (nonatomic, copy) NSString *title;
 @property (nonatomic) UILabel *label;
 
 @end

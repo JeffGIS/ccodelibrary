@@ -13,7 +13,7 @@
 @property int width, height;
 @property (nonatomic) CGColorSpaceRef colorSpace;
 @property (nonatomic) CGContextRef context;
-@property (nonatomic) NSString *areaFile;
+@property (nonatomic, copy) NSString *areaFile;
 @property (nonatomic) dbounds bounds;
 @property (nonatomic) LPBYTE bitmapData;
 @property BOOL areaLoaded;

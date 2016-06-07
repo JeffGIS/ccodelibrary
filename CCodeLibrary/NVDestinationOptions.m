@@ -12,7 +12,7 @@
 @property (nonatomic) UIPickerView *frequencyPicker;
 @property (nonatomic) UIDatePicker *departTimePicker, *returnTimePicker;
 @property (nonatomic) CGFloat cornerRadius;
-@property (nonatomic) NSArray *frequencyTitles;
+@property (nonatomic, copy) NSArray *frequencyTitles;
 
 @end
 

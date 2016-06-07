@@ -8,7 +8,7 @@
 
 @property (nonatomic, weak) id <NVPopoverTableViewDelegate> delegate;
 @property (nonatomic) UITableView *tableView;
-@property (nonatomic) NSArray *textArray;
+@property (nonatomic, copy) NSArray *textArray;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UIFont *font;

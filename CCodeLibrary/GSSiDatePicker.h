@@ -5,7 +5,7 @@
 
 @interface GSSiDatePicker : UIDatePicker
 
-@property (nonatomic) NSString *dateString;
+@property (nonatomic, copy) NSString *dateString;
 
 + (GSSiDatePicker *)showDatePickerWithView:(UIView *)view;
 

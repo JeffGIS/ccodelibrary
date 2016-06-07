@@ -11,7 +11,7 @@
 @property (nonatomic) UILabel *colorNameLabel;
 @property (nonatomic) UIButton *cancelButton, *saveButton;
 @property (nonatomic) UIColor *pickedColor;
-@property (nonatomic) NSString *pickedColorName;
+@property (nonatomic, copy) NSString *pickedColorName;
 @property (nonatomic) NamedColors *namedColors;
 @property (nonatomic) CGFloat displayViewTop;
 

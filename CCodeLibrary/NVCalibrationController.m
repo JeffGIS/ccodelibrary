@@ -22,7 +22,7 @@ static CGFloat _deviceValues[9][4];
 
 @property (nonatomic) UIButton *returnButton, *testButton, *editButton;
 @property (nonatomic) UILabel *titleLabel, *lastCalibrationlabel, *promptLabel;
-@property (nonatomic) NSArray *calibrationValues;
+@property (nonatomic, copy) NSArray *calibrationValues;
 @property NVCalibrationType currentType, newType;
 @property (nonatomic) CGFloat currentValue;
 @property NSInteger currentIndex, counter;

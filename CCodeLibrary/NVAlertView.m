@@ -8,7 +8,7 @@
 
 @property (nonatomic) UILabel *titleLabel;
 @property (nonatomic) UITabBar *tabBar;
-@property (nonatomic) NSArray *buttonTextArray;
+@property (nonatomic, copy) NSArray *buttonTextArray;
 
 @end
 

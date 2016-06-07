@@ -35,7 +35,7 @@ typedef NS_ENUM(NSInteger, RampTypeEditOption)
 
 @interface NVRampType : NSObject
 
-@property (nonatomic) NSString *imageName, *displayText;
+@property (nonatomic, copy) NSString *imageName, *displayText;
 @property RampType type;
 
 @end

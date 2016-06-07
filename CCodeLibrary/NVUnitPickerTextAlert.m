@@ -12,7 +12,7 @@
 @property (nonatomic) UITextField *textField;
 @property (nonatomic) UIWindow *window;
 @property (nonatomic) UIPickerView *picker;
-@property (nonatomic) NSArray *pickerArray;
+@property (nonatomic, copy) NSArray *pickerArray;
 
 @end
 

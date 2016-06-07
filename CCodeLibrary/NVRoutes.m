@@ -6,7 +6,7 @@
 @interface NVRoutes ()
 
 @property (nonatomic) NSMutableArray *distanceArray;
-@property (nonatomic) NSArray *fromCoords;
+@property (nonatomic, copy) NSArray *fromCoords;
 @property NSUInteger count;
 
 @end

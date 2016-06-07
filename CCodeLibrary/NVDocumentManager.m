@@ -6,7 +6,7 @@
 @interface NVDocumentManager () <UIDocumentPickerDelegate>
 
 @property (nonatomic) UIDocumentPickerViewController *documentPicker;
-@property (nonatomic) NSString *filepath;
+@property (nonatomic, copy) NSString *filepath;
 @property BOOL deleteWhenDone;
 
 @end

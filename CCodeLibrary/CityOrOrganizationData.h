@@ -5,8 +5,8 @@
 
 @interface CityOrOrganizationData : NSObject
 
-@property (nonatomic) NSString *fullDescription;
-@property (nonatomic) NSString *name;
+@property (nonatomic, copy) NSString *fullDescription;
+@property (nonatomic, copy) NSString *name;
 @property NSInteger number;
 @property NSInteger managerNumber;
 @property NSInteger withinManager;

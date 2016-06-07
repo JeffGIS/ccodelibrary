@@ -9,7 +9,7 @@
 
 @interface GetPriorityLocations ()
 
-@property (nonatomic) NSArray *keywords, *types;
+@property (nonatomic, copy) NSArray *keywords, *types;
 @property (nonatomic, copy) NSString *query, *keyword;
 @property (nonatomic) BOOL hasToken;
 @property (nonatomic) NSMutableArray *nearbySearchArray;

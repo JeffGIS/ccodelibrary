@@ -9,7 +9,7 @@
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) UIImageView *photoView;
 @property (nonatomic, copy) NSString *directory, *identifier;
-@property (nonatomic) NSArray *imageArray;
+@property (nonatomic, copy) NSArray *imageArray;
 @property (nonatomic) NSInteger imageIndex;
 @property (nonatomic) UILabel *photoLabel;
 

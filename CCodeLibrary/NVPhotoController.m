@@ -7,7 +7,7 @@
 
 @interface NVPhoto ()
 
-@property (nonatomic) NSString *identifier, *key;
+@property (nonatomic, copy) NSString *identifier, *key;
 
 @end
 
@@ -27,8 +27,8 @@
 @interface NVPhotoController ()
 
 @property (nonatomic, weak) id <NVPhotoControllerDelegate> delegate;
-@property (nonatomic) NSString *titleString;
-@property (nonatomic) NSArray *photosArray;
+@property (nonatomic, copy) NSString *titleString;
+@property (nonatomic, copy) NSArray *photosArray;
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) UIImageView *photoView;
 @property NSInteger imageIndex;
@@ -219,7 +219,7 @@
 @interface NVPhotoView ()
 
 @property (nonatomic, weak) id <NVPhotoViewDelegate> delegate;
-@property (nonatomic) NSArray *photosArray;
+@property (nonatomic, copy) NSArray *photosArray;
 @property (nonatomic) CGSize size;
 @property CGFloat currentScale;
 @property NSInteger imageIndex;

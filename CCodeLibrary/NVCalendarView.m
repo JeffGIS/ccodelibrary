@@ -7,7 +7,7 @@
 
 @interface NVCalendarView ()
 
-@property (nonatomic) NSString *title;
+@property (nonatomic, copy) NSString *title;
 @property (nonatomic) UIFont *font;
 @property (nonatomic) NVCalendarCell *titleLabel, *sun, *mon, *tues, *wed, *thurs, *fri, *sat;
 @property (nonatomic) NVCalendarCell *currentCell;

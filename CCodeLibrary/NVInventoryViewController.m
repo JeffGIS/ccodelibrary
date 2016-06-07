@@ -18,7 +18,7 @@
 @property (nonatomic) UIButton *cancelButton, *doneButton, *complexButton;
 @property (nonatomic) UIButton *addRampButton, *addSignalButton, *addXWalkButton;
 @property (nonatomic) UIButton *editItemButton, *rampTypeButton, *currentEditButton;
-@property (nonatomic) NSString *pathToImageFile, *pathToBPWFile;
+@property (nonatomic, copy) NSString *pathToImageFile, *pathToBPWFile;
 @property (nonatomic) LPTRANDATA pTranWToBMP, pTranBMPToW;
 @property (nonatomic) CGFloat xFactor, yFactor, xOffset, yOffset, latitude, longitude;
 @property (nonatomic) int currentIntersectionID, currentZoom, initialZoom;

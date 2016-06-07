@@ -10,7 +10,7 @@
 @interface NVRampTypePageView ()
 
 @property (nonatomic, weak) id <NVRampTypePageViewDelegate> delegate;
-@property (nonatomic) NSArray *rampTypes;
+@property (nonatomic, copy) NSArray *rampTypes;
 @property NSUInteger startingIndex;
 @property (nonatomic) UIView *buttonView;
 @property (nonatomic) UIButton *selectButton, *returnButton;

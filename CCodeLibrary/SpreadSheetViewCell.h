@@ -5,7 +5,7 @@
 
 @interface SpreadSheetViewCell : UILabel
 
-@property (nonatomic) NSString *identifier;
+@property (nonatomic, copy) NSString *identifier;
 @property (nonatomic) BOOL selected;
 @property (nonatomic) NSUInteger row, column;
 
