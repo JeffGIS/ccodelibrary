@@ -108,13 +108,16 @@
                      numRamps:(int *)pNumRamps
                          intX:(int *)plev21x
                          intY:(int *)plev21y;
-- (int) addNewIntersectionAt:(LLPOINT)pt
-                    withName:(NSString*)name;
--(NSString*) getStreetNamesForIntersection:(int)intID;
 
-- (void) setStreetNamesForIntersection:(int)intID
-                                   to:(NSString*)newNames;
-- (void) deleteIntersection:(int)intID;
-- (int) incrementLastDataFileNum;
+- (int)addNewIntersectionAt:(LLPOINT)pt
+                   withName:(NSString *)name;
+
+-(NSString *)getStreetNamesForIntersection:(int)intID;
+
+- (void)setStreetNamesForIntersection:(int)intID
+                                   to:(NSString *)newNames;
+
+- (void)deleteIntersection:(int)intID;
+- (int)incrementLastDataFileNum;
 
 @end

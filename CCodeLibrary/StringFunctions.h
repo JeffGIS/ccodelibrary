@@ -3,6 +3,7 @@
 
 @import UIKit;
 @import CoreTelephony;
+@import CoreLocation;
 #import "UIDevice+Storage.h"
 
 BOOL hasNetwork();
@@ -47,3 +48,4 @@ uint occurrencesOfCharacter(unichar character, NSString *string);
 BOOL appendStringToFile(NSString *str, NSString *filePath);
 NSString *urlSearchStringForPID(NSString *PID);
 BOOL countySupportsLookupForPID(NSString *PID);
+CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceMeters, CLLocationCoordinate2D origin);

@@ -1683,8 +1683,8 @@ Exit:
     return nextID;
 }
 
-- (int) addNewIntersectionAt:(LLPOINT)pt
-                    withName:(NSString*)name
+- (int)addNewIntersectionAt:(LLPOINT)pt
+                   withName:(NSString *)name
 {
     INTERSECTION_STRUCT newInt={0};
     
