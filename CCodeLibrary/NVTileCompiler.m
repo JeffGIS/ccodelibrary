@@ -58,11 +58,7 @@
     IntersectionPoint *intPoint = [intDB getCurrentIntersectionPoint:nvtc.intersectionID];
     
     if (intPoint.status == AddedInDetail)
-    {
         nvtc.maptype = @"roadmap";
-        [nvtc.imagePath stringByAppendingString:@".roadmap"];
-        [nvtc.cptPath stringByAppendingString:@".roadmap"];
-    }
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:nvtc.imagePath
                                                                                  error:nil].fileSize;
