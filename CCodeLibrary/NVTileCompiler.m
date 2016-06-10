@@ -6,6 +6,7 @@
 #import "TileGraphics.h"
 #import "GSSiDefs.h"
 #import "NVAlertView.h"
+#import "IntersectionsDatabase.h"
 
 @implementation NVTile
 
@@ -15,7 +16,7 @@
 
 @property (nonatomic) int intersectionID, zoom, imageCount;
 @property (nonatomic) double lat, lon, size;
-@property (nonatomic, copy) NSString *imagePath, *cptPath;
+@property (nonatomic, copy) NSString *imagePath, *cptPath, *maptype;
 @property (nonatomic) NSMutableArray *tileDataArray;
 @property (nonatomic) UIView *currentView;
 @property (nonatomic) UIView *actIndView;
@@ -42,6 +43,7 @@
     nvtc.size = 640;
     nvtc.imageCount = 0;
     nvtc.currentView = currentView;
+    nvtc.maptype = @"hybrid";
     
     if (forceRefresh)
         [CRAPI.sharedInstance deleteImagesForAllZooms:nvtc.intersectionID];
@@ -51,6 +53,16 @@
     
     nvtc.cptPath = [CRAPI.sharedInstance.imageDirectory stringByAppendingPathComponent:
                     [NSString stringWithFormat:@"/Int_%i_%i.cpt", nvtc.intersectionID, nvtc.zoom]];
+    
+    IntersectionsDatabase *intDB = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
+    IntersectionPoint *intPoint = [intDB getCurrentIntersectionPoint:nvtc.intersectionID];
+    
+    if (intPoint.status == AddedInDetail)
+    {
+        nvtc.maptype = @"roadmap";
+        [nvtc.imagePath stringByAppendingString:@".roadmap"];
+        [nvtc.cptPath stringByAppendingString:@".roadmap"];
+    }
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:nvtc.imagePath
                                                                                  error:nil].fileSize;
@@ -172,8 +184,8 @@
         NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:config];
         
         NSString *staticMapUrl = [NSString stringWithFormat:
-                                  @"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=hybrid&key=%@",
-                                  _lat, _lon, _zoom, GOOGLE_API_KEY];
+                                  @"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=%@&key=%@",
+                                  _lat, _lon, _zoom, _maptype, GOOGLE_API_KEY];
         
         NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
@@ -272,7 +284,6 @@ didCompleteWithError:(NSError *)error
 {
     int rtn = [UIImageJPEGRepresentation(image, 0.8) writeToFile:_imagePath
                                                       atomically:YES];
-    
     {
         char txt[1024] = {0};
         double pixelX = 0.0, pixelY = 0.0;

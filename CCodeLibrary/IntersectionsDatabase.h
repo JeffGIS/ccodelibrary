@@ -6,7 +6,6 @@
 #import "MPIntersection.h"
 #import "FTPDataPull.h"
 #import "UIApplication+VersionBuild.h"
-
 #import <sqlite3.h>
 #import "CurbRampData.h"
 
@@ -22,12 +21,12 @@
 @interface IntersectionsDatabase : NSObject <FTPDataPullDelegate>
 
 @property (nonatomic, weak) id <IntersectionsDatabaseDelegate> delegate;
-@property (nonatomic) int geoid;
+@property int geoid;
 @property BOOL gettingUploaded;
-@property CurbRampData *curbRampData;
-@property FTPDataPull *pull;
-@property sqlite3_stmt *statement1;
-@property sqlite3_stmt *statement2;
+@property (nonatomic) CurbRampData *curbRampData;
+@property (nonatomic) FTPDataPull *pull;
+@property (nonatomic) sqlite3_stmt *statement1;
+@property (nonatomic) sqlite3_stmt *statement2;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
@@ -51,13 +50,13 @@
 
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;
 
-- (BOOL)storeIntersection:(MPIntersection*)currentIntersection
+- (BOOL)storeIntersection:(MPIntersection *)currentIntersection
                withStatus:(IntersectionStatus)status;
 
 - (BOOL)storeMPIntersectionToDB:(MPIntersection *)mpint
                      withStatus:(IntersectionStatus)status;
 
-- (MPIntersection *) getMPIntersectionFromDB:(int)intID
+- (MPIntersection *)getMPIntersectionFromDB:(int)intID
                                   withRamps:(BOOL)wantRamps;
 
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
@@ -112,7 +111,7 @@
 - (int)addNewIntersectionAt:(LLPOINT)pt
                    withName:(NSString *)name;
 
--(NSString *)getStreetNamesForIntersection:(int)intID;
+- (NSString *)getStreetNamesForIntersection:(int)intID;
 
 - (void)setStreetNamesForIntersection:(int)intID
                                    to:(NSString *)newNames;
