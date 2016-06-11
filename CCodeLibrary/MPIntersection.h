@@ -106,6 +106,10 @@ enum obstructions {
 @property int zoomLevel;
 @property BOOL doLater;
 @property (nonatomic) int timeComplete;
+@property int status;
+@property int lastUpdate;
+@property int assignedPrelim;
+@property int assignedDetail;
 @property (nonatomic) int currentCorner;
 @property (nonatomic) int currentSignal;
 @property (nonatomic) int currentObstruction;

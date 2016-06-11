@@ -587,7 +587,8 @@ static int SQLOK(int sqlReturn,sqlite3 *database)
     PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
    
     NSString *cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%li,\
-doLater=%i,\
+assignedToPrelim=%i,\
+assignedToDetail=%i,\
 intX=%i,\
 intY=%i,\
 ramp1=%i,\
@@ -615,8 +616,10 @@ longitude=%f,\
 zoomLevel=%i,\
 intersectionComment='%s' \
 WHERE intID=%i;",
-                     iTime, (long)status,
+                       iTime, (long)status,
                        mpint.doLater,
+                       mpint.assignedPrelim,
+                       mpint.assignedDetail,
                        mpint.lev21x,
                        mpint.lev21y,
                        [self getRampCoord:mpint ramp:1],
@@ -671,6 +674,10 @@ WHERE intID=%i;",
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         mpint.intID = intID;
+        mpint.lastUpdate = sqlite3_column_int(statement, 1);
+        mpint.status = sqlite3_column_int(statement, 2);
+        mpint.assignedPrelim = sqlite3_column_int(statement, 3);
+        mpint.assignedDetail = sqlite3_column_int(statement, 4);
         mpint.lev21x = sqlite3_column_int(statement, 5);
         mpint.lev21y = sqlite3_column_int(statement, 6);
         mpint.intRotation = sqlite3_column_int(statement, 7);
@@ -1673,13 +1680,8 @@ Exit:
     SQLOK(sqlite3_finalize(statement), self.curbRampData.database);
     [self close:opened];
     
-    int inc = nextID % CRAPI.sharedInstance.totiPadWithinManager;
-    int base = nextID - inc;
-    int myNumber = CRAPI.sharedInstance.currentiPadWithinManager - 1;
-    if (base + myNumber > nextID)
-        nextID = base + myNumber;
-    else
-        nextID = base + CRAPI.sharedInstance.totiPadWithinManager + myNumber;
+    nextID = [CRAPI.sharedInstance adjustNextRefno:nextID];
+
     return nextID;
 }
 
@@ -1706,9 +1708,9 @@ Exit:
         NSLog(@"Error inserting intersection index. '%s'", sqlite3_errmsg(self.curbRampData.database));
     
 
-    SQLOK(sqlite3_exec(self.curbRampData.database, "COMMIT TRANSACTION", NULL, NULL, NULL), self.curbRampData.database);
     SQLOK(sqlite3_finalize(_statement1), self.curbRampData.database);
     SQLOK(sqlite3_finalize(_statement2), self.curbRampData.database);
+    SQLOK(sqlite3_exec(self.curbRampData.database, "COMMIT TRANSACTION", NULL, NULL, NULL), self.curbRampData.database);
     [self close:opened];
 
     return newInt.intID;
