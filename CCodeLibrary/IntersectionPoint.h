@@ -11,6 +11,7 @@ typedef NS_ENUM(NSInteger, IntersectionStatus)
     ScheduledForRebuild,
     IntersectionRebuilt,
     ResurveyedAfterRebuild,
+    AddedInDetail,
 };
 
 
