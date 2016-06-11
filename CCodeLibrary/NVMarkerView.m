@@ -82,14 +82,24 @@
                 
                 CGContextSetFillColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
                 
-                if ((module == PRELIM_MODULE && !info.status) ||
-                    (module == DETAIL_MODULE && info.status == PreliminarySurveyComplete))
+                if (module == PRELIM_MODULE && info.status == PreliminarySurveyComplete)
+                {
+                    numComplete++;
+                    CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
+                }
+                else if (module == PRELIM_MODULE && !info.status)
+                {
+                    CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
+                    if (info.assignedToPrelim  == CRAPI.sharedInstance.currentiPadWithinManager)
+                        CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+                    
+                }
+                else if (module == DETAIL_MODULE && info.status == PreliminarySurveyComplete)
                 {
                     CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
                 }
                 
-                else if ((module == PRELIM_MODULE && info.status == PreliminarySurveyComplete) ||
-                         (module == DETAIL_MODULE && info.status == OriginalSurveyComplete))
+                else if (module == DETAIL_MODULE && info.status == OriginalSurveyComplete)
                 {
                     numComplete++;
                     CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
