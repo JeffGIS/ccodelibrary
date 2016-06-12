@@ -614,10 +614,10 @@ signal67=%i,\
 latitude=%f,\
 longitude=%f,\
 zoomLevel=%i,\
+doLater=%i,\
 intersectionComment='%s' \
 WHERE intID=%i;",
                        iTime, (long)status,
-                       mpint.doLater,
                        mpint.assignedPrelim,
                        mpint.assignedDetail,
                        mpint.lev21x,
@@ -644,6 +644,7 @@ WHERE intID=%i;",
                        [self getSignalCoord:mpint signal:67],
                        lat,lon,
                        mpint.zoomLevel,
+                       mpint.doLater,
                        mpint.intersectionComment.UTF8String,
                        mpint.intID];
     
@@ -688,6 +689,10 @@ WHERE intID=%i;",
         LPSTR streets = (LPSTR)sqlite3_column_text(statement, 29);
         NSString *streetString = [NSString stringWithUTF8String:streets];
         mpint.name1 = [streetString stringByReplacingOccurrencesOfString:@"|" withString:@"\n"];
+        LPSTR comment = (LPSTR)sqlite3_column_text(statement, 33);
+        mpint.intersectionComment = [NSString stringWithUTF8String:comment];
+        mpint.doLater = sqlite3_column_int(statement, 34);
+        mpint.zoomLevel = sqlite3_column_int(statement, 35);
         [self setRampCoord:mpint ramp:1 from:statement];
         [self setRampCoord:mpint ramp:2 from:statement];
         [self setRampCoord:mpint ramp:3 from:statement];
