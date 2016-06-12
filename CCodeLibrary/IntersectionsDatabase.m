@@ -666,6 +666,7 @@ WHERE intID=%i;",
     double lat = 0.0;
     double lon = 0.0;
     BOOL opened = [self open];
+    BOOL haveIntersection = FALSE;
     
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement = NULL;
@@ -674,6 +675,7 @@ WHERE intID=%i;",
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
+        haveIntersection = TRUE;
         mpint.intID = intID;
         mpint.lastUpdate = sqlite3_column_int(statement, 1);
         mpint.status = sqlite3_column_int(statement, 2);
@@ -717,6 +719,70 @@ WHERE intID=%i;",
     }
     
     SQLOK(sqlite3_finalize(statement), self.curbRampData.database);
+    if (wantRamps && haveIntersection)
+    {
+        query = [NSString stringWithFormat:@"SELECT * FROM Ramps WHERE intID=%i", intID];
+        SQLOK(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), self.curbRampData.database);
+        while (sqlite3_step(statement) == SQLITE_ROW)
+        {
+            int i = 1;
+            int rampNum = sqlite3_column_int(statement, i++);
+            MPRamp *ramp = [mpint.ramps objectAtIndex:rampNum];
+
+            LPSTR rampID = (LPSTR)sqlite3_column_text(statement, i++);
+            ramp.yearRebuilt = sqlite3_column_int(statement, i++);
+            ramp.timeComplete  = sqlite3_column_int(statement, i++);
+            ramp.rampExists  = sqlite3_column_int(statement, i++);
+            ramp.isComplete  = sqlite3_column_int(statement, i++);
+            ramp.approximateHeading = sqlite3_column_double(statement, i++);
+            ramp.adjustedRot  = sqlite3_column_int(statement,i++);
+            ramp.rampInXWalk  = sqlite3_column_int(statement, i++);
+            ramp.xWalkisComplete  = sqlite3_column_int(statement,i++);
+            ramp.signalisComplete  = sqlite3_column_int(statement, i++);
+            ramp.texture  = sqlite3_column_int(statement, i++);
+            ramp.upperLandingObstruction  = sqlite3_column_int(statement, i++);
+            ramp.lowerLandingObstruction  = sqlite3_column_int(statement, i++);
+            ramp.rampObstruction  = sqlite3_column_int(statement, i++);
+            ramp.hasRampCracks  = sqlite3_column_int(statement, i++);
+            ramp.hasUpperLandingCracks  = sqlite3_column_int(statement,i++);
+            ramp.hasStreetLandingCracks  = sqlite3_column_int(statement,i++);
+            ramp.rampWidth  = sqlite3_column_int(statement,i++);
+            ramp.rampDepth  = sqlite3_column_int(statement,i++);
+            ramp.rampSlopeFront  = sqlite3_column_double(statement, i++);
+            ramp.rampSlopeSide  = sqlite3_column_double(statement, i++);
+            ramp.rampSlopeHeading  = sqlite3_column_double(statement, i++);
+            ramp.upperLandingSlopeFront  = sqlite3_column_double(statement, i++);
+            ramp.upperLandingSlopeSide  = sqlite3_column_double(statement, i++);
+            ramp.upperLandingSlopeHeading  = sqlite3_column_double(statement, i++);
+            ramp.streetLandingSlopeFront  = sqlite3_column_double(statement, i++);
+            ramp.streetLandingSlopeSide  = sqlite3_column_double(statement, i++);
+            ramp.streetLandingSlopeHeading  = sqlite3_column_double(statement, i++);
+            ramp.flareLeftSlopeFront  = sqlite3_column_double(statement, i++);
+            ramp.flareLeftSlopeSide  = sqlite3_column_double(statement, i++);
+            ramp.flareLeftSlopeHeading  = sqlite3_column_double(statement, i++);
+            ramp.flareRightSlopeFront  = sqlite3_column_double(statement, i++);
+            ramp.flareRightSlopeSide  = sqlite3_column_double(statement, i++);
+            ramp.flareRightSlopeHeading  = sqlite3_column_double(statement, i++);
+            ramp.swkLeftSlopeFront  = sqlite3_column_double(statement, i++);
+            ramp.swkLeftSlopeSide  = sqlite3_column_double(statement, i++);
+            ramp.swkLeftSlopeHeading  = sqlite3_column_double(statement, i++);
+            ramp.swkRightSlopeFront  = sqlite3_column_double(statement, i++);
+            ramp.swkRightSlopeSide  = sqlite3_column_double(statement, i++);
+            ramp.swkRightSlopeHeading  = sqlite3_column_double(statement, i++);
+            ramp.hasPEDSignal  = sqlite3_column_int(statement, i++);
+            ramp.hasPEDButton  = sqlite3_column_int(statement, i++);
+            ramp.PEDButtonHeight  = sqlite3_column_int(statement,i++);
+            ramp.PEDButtonDist  = sqlite3_column_int(statement, i++);
+            ramp.SteepTopOfCurb  = sqlite3_column_int(statement, i++);
+            ramp.PedRampLip  = sqlite3_column_int(statement, i++);
+            ramp.lev21x  = sqlite3_column_int(statement,i++);
+            ramp.lev21y  = sqlite3_column_int(statement,i++);
+            ramp.rampType  = sqlite3_column_int(statement,i++);
+            LPSTR comment = (LPSTR)sqlite3_column_text(statement,i++);
+            ramp.rampComment = [NSString stringWithCString:comment encoding:NSUTF8StringEncoding];
+        }
+        SQLOK(sqlite3_finalize(statement), self.curbRampData.database);
+   }
     [self close:opened];
 
     return mpint;

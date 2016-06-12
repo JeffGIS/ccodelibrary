@@ -95,6 +95,7 @@ enum obstructions {
 @property int lev21x, lev21y;
 @property NSString * rampComment;
 @property RampType rampType;
+@property int yearRebuilt;
 
 @end
 
@@ -159,5 +160,5 @@ enum obstructions {
 
 - (void)intersectionInit;
 - (void) setRampsXWalkAndSignal;
-
+- (int) numRamps;
 @end

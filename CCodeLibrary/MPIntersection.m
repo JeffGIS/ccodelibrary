@@ -187,7 +187,18 @@
         }
     }
 }
-
+- (int) numRamps
+{
+    int n = 0;
+    for (int i = 1; i < 13 ;i++)
+    {
+        MPRamp *ramp = [self.ramps objectAtIndex:i];
+        if (ramp.rampExists)
+            n++;
+    }
+    
+    return n;
+}
 - (void) setRampsXWalkAndSignal
 {
     MPIntersection *currentIntersection = self;
