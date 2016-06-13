@@ -38,6 +38,8 @@
     sliderView.overlayView.alpha = 0.0;
     sliderView.delegate = delegate;
     sliderView.tag = tag;
+    sliderView.units = @"";
+    sliderView.titleText = @"NVMobile Slider Manager";
     
     [view addSubview:sliderView.overlayView];
     
@@ -53,7 +55,7 @@
                                                                       (sliderView.frame.size.height * 0.1))];
     
     sliderView.titleLabel.backgroundColor = UIColor.clearColor;
-    sliderView.titleLabel.text = @"NVMobile Slider Manager";
+    sliderView.titleLabel.text = sliderView.titleText;
     sliderView.titleLabel.textColor = UIColor.blackColor;
     sliderView.titleLabel.textAlignment = NSTextAlignmentCenter;
     sliderView.titleLabel.adjustsFontSizeToFitWidth = YES;
@@ -102,7 +104,7 @@
                                          (sliderView.frame.size.height * 0.1))];
     
     sliderView.sliderLabel.backgroundColor = UIColor.clearColor;
-    sliderView.sliderLabel.text = [NSString stringWithFormat:@"%.0f", sliderView.slider.value];
+    sliderView.sliderLabel.text = [NSString stringWithFormat:@"%.0f %@", sliderView.slider.value, sliderView.units];
     sliderView.sliderLabel.textColor = UIColor.blackColor;
     sliderView.sliderLabel.font = [UIFont boldSystemFontOfSize:56.0];
     sliderView.sliderLabel.textAlignment = NSTextAlignmentCenter;
@@ -158,7 +160,7 @@
     [button setTitleColor:UIColor.whiteColor
                  forState:UIControlStateNormal];
     
-    [button setTitleColor:UserDefaults.defaults.appleBlue
+    [button setTitleColor:UIColor.lightGrayColor
                  forState:UIControlStateHighlighted];
     
     [button addTarget:target
@@ -169,7 +171,7 @@
 - (void)sliderValueChanged:(UISlider *)slider
 {
     CGFloat value = roundf(slider.value);
-    _sliderLabel.text = [NSString stringWithFormat:@"%.0f", value];
+    _sliderLabel.text = [NSString stringWithFormat:@"%.0f %@", value, _units];
 }
 
 - (void)cancelButtonTapped:(UIButton *)button
@@ -214,10 +216,17 @@
     }
 }
 
-- (void)willRotateWithDuration:(NSTimeInterval)duration
-        toInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+- (void)setTitleText:(NSString *)titleText
 {
-    
+    _titleLabel.text = titleText;
+    _titleText = titleText;
+}
+
+- (void)setUnits:(NSString *)units
+{
+    CGFloat value = roundf(_slider.value);
+    _sliderLabel.text = [NSString stringWithFormat:@"%.0f %@", value, units];
+    _units = units;
 }
 
 @end
