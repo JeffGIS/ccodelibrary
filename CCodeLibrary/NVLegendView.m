@@ -206,7 +206,6 @@
                                 (titleHeight + (height * numberOfRows) + (yMargin * 2.0)));
         
         _originalHeight = self.frame.size.height;
-        _selectedIndex = 0;
         
         if (_selectable)
             [self highlightAtIndex:_selectedIndex];
@@ -292,15 +291,7 @@
     gesture.view.center = CGPointMake(centerX, centerY);
         
     if (gesture.state == UIGestureRecognizerStateEnded)
-    {
         _viewCenter = gesture.view.center;
-        
-        if (_delegate && [_delegate respondsToSelector:@selector(legendView:wasDraggedToOrigin:)])
-        {
-            [_delegate legendView:self
-               wasDraggedToOrigin:gesture.view.frame.origin];
-        }
-    }
     
     [gesture setTranslation:CGPointMake(0.0, 0.0)
                      inView:gesture.view];
@@ -312,12 +303,6 @@
     {
         _zoomLevel = (gesture.view.frame.size.height / _originalHeight);
         _viewCenter = gesture.view.center;
-        
-        if (_delegate && [_delegate respondsToSelector:@selector(legendView:wasPinchedToScale:)])
-        {
-            [_delegate legendView:self
-                wasPinchedToScale:_zoomLevel];
-        }
         
         return;
     }

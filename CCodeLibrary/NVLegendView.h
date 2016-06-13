@@ -18,12 +18,6 @@
 - (void)legendView:(NVLegendView *)legendView
 didChangeSelectedIndex:(NSUInteger)index;
 
-- (void)legendView:(NVLegendView *)legendView
-wasDraggedToOrigin:(CGPoint)origin;
-
-- (void)legendView:(NVLegendView *)legendView
- wasPinchedToScale:(CGFloat)scale;
-
 @end
 
 @interface NVLegendView : UIView <UIGestureRecognizerDelegate>
