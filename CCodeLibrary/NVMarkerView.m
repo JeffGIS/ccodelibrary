@@ -80,19 +80,25 @@
                 CGContextSetFillColorWithColor(context, UIColor.blackColor.CGColor);
                 totRamps += info.nramps;
                 
-                CGContextSetFillColorWithColor(context, UserDefaults.defaults.appleBlue.CGColor);
                 
-                if (module == PRELIM_MODULE && info.status == PreliminarySurveyComplete)
+                if (module == PRELIM_MODULE && !info.status)
+                {
+                    if (!info.assignedToPrelim)
+                    {
+                        CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
+                        notAssigned++;
+                    }
+                    else if (info.assignedToPrelim  == CRAPI.sharedInstance.currentiPadWithinManager)
+                    {
+                        CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+                    }
+                    else
+                        CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
+                }
+                else if (module == PRELIM_MODULE && info.status == PreliminarySurveyComplete)
                 {
                     numComplete++;
                     CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
-                }
-                else if (module == PRELIM_MODULE && !info.status)
-                {
-                    CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
-                    if (info.assignedToPrelim  == CRAPI.sharedInstance.currentiPadWithinManager)
-                        CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
-                    
                 }
                 else if (module == DETAIL_MODULE && info.status == PreliminarySurveyComplete)
                 {
@@ -113,26 +119,29 @@
                 
                 else if ((module == MANAGEMENT_MODULE) && (_from == MMMapTypePrelim))
                 {
-                    if (info.assignedToPrelim > 0)
-                        if (_colorsArray && info.assignedToPrelim <= _colorsArray.count)
-                        {
-                            int i = (info.assignedToPrelim - 1);
-                            UIColor *color = _colorsArray[i];
-                            CGContextSetFillColorWithColor(context, color.CGColor);
-                            nPeriPad[i]++;
-                        }
+                    if (_colorsArray && info.assignedToPrelim <= _colorsArray.count)
+                    {
+                        int i = info.assignedToPrelim;
+                        UIColor *color = _colorsArray[i];
+                        CGContextSetFillColorWithColor(context, color.CGColor);
+                        nPeriPad[i]++;
+                        if (!i)
+                            notAssigned++;
+                    }
                     
                 }
                 else if ((module == MANAGEMENT_MODULE) && (_from == MMMapTypeDetail))
                 {
-                    if (info.assignedToDetail > 0)
-                        if (_colorsArray && info.assignedToDetail <= _colorsArray.count)
-                        {
-                            int i = (info.assignedToDetail - 1);
-                            UIColor *color = _colorsArray[i];
-                            CGContextSetFillColorWithColor(context, color.CGColor);
-                            nPeriPad[i]++;
-                        }
+                    if (_colorsArray && info.assignedToDetail <= _colorsArray.count)
+                    {
+                        int i = info.assignedToDetail;
+                        UIColor *color = _colorsArray[i];
+                        CGContextSetFillColorWithColor(context, color.CGColor);
+                        nPeriPad[i]++;
+                        if (!i)
+                            notAssigned++;
+                        
+                    }
                     
                 }
                 else if ((module == MANAGEMENT_MODULE) && (_from == MMLMFromStatusMap))
@@ -143,11 +152,10 @@
                         UIColor *color = _colorsArray[i];
                         CGContextSetFillColorWithColor(context, color.CGColor);
                         nPeriPad[i]++;
+                        if (!i)
+                            notAssigned++;
                     }
                 }
-                
-                if (!info.assignedToPrelim)
-                    notAssigned++;
                 
                 pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
                 CGContextSetLineWidth(context, (size / 12.0));
