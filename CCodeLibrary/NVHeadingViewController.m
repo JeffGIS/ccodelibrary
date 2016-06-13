@@ -62,7 +62,8 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     
     _colors = UserDefaults.defaults.defaultColors;
     self.view.backgroundColor = _colors.backgroundColor;
-    
+    _promptText = @"Tap on 'Start' when ready to begin measurement";
+    _autoReturn = NO;
     _counter = 0;
     
     [self setupArrowView];
@@ -121,7 +122,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     [super viewDidAppear:animated];
     
     _status = NVHeadingStatusReady;
-    _progressInfoLabel.text = @"Touch Start to when ready to begin measurement";
+    _progressInfoLabel.text = _promptText;
 }
 
 - (void)didReceiveMemoryWarning
@@ -138,7 +139,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     _arrowView.frame = CGRectMake(0.0, 0.0, _arrowView.image.size.width,
                                   (_arrowView.image.size.height * 1.3));
     
-    _arrowView.center = CGPointMake(384.0, 500.0);
+    _arrowView.center = CGPointMake(384.0, 460.0);
     
     [self.view addSubview:_arrowView];
 }
@@ -197,7 +198,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
 
 - (void)setupProgressInfoLabel
 {
-    _progressInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 640.0, 40.0)];
+    _progressInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 640.0, 80.0)];
     
     _progressInfoLabel.center = CGPointMake(384.0, (((_arrowView.frame.origin.y + _arrowView.frame.size.height) +
                                                      _progressView.frame.origin.y) / 2.0));
@@ -207,6 +208,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     _progressInfoLabel.textAlignment = NSTextAlignmentCenter;
     _progressInfoLabel.font = [UIFont boldSystemFontOfSize:30.0];
     _progressInfoLabel.adjustsFontSizeToFitWidth = YES;
+    _progressInfoLabel.numberOfLines = 2;
     
     [self.view addSubview:_progressInfoLabel];
 }
@@ -268,7 +270,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
     _progressView.progress = 0.0;
 }
 
--(CGFloat)correctedHeading:(CGFloat)heading
+- (CGFloat)correctedHeading:(CGFloat)heading
 {
     CGFloat corrected = heading;
     
@@ -334,6 +336,12 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                                         forState:UIControlStateNormal];
                     
                     [_locationManager stopUpdatingHeading];
+                    
+                    if (_autoReturn && _delegate)
+                    {
+                        [_delegate headingViewController:self
+                                        didReturnHeading:_avgHeading];
+                    }
                 }
             }
             

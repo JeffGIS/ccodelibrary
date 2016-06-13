@@ -19,6 +19,7 @@
 
 
 @property (nonatomic, weak) id <NVSliderViewDelegate> delegate;
+@property (nonatomic) NSString *units, *titleText;
 
 + (NVSliderView *)showSliderWithView:(UIView *)view
                           startValue:(CGFloat)startValue

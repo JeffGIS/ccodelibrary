@@ -110,6 +110,7 @@
                     numComplex++;
                     CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
                 }
+                
                 else if ((module == MANAGEMENT_MODULE) && (_from == MMMapTypePrelim))
                 {
                     if (info.assignedToPrelim > 0)

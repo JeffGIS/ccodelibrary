@@ -19,6 +19,8 @@
 
 @property (nonatomic, weak) id <NVHeadingViewControllerDelegate> delegate;
 @property (nonatomic) CLLocationManager *locationManager;
+@property (nonatomic) NSString *promptText;
+@property (nonatomic) BOOL autoReturn;
 
 + (NVHeadingViewController *)showHeadingViewControllerWithDelegate:(id)delegate
                                                    stabilityFactor:(CGFloat)stabilityFactor
