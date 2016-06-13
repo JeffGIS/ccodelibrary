@@ -67,7 +67,17 @@
         [nvtc.delegate tileCompilerReturnedImagePath:nvtc.imagePath];
     
     else
-        [nvtc getTileDataAndCount];
+    {
+        if (hasNetwork())
+            [nvtc getTileDataAndCount];
+        
+        else
+        {
+            [nvtc performSelectorOnMainThread:@selector(presentAlertInCurrentView:)
+                                   withObject:@"Network required to download Intersection Image."
+                                waitUntilDone:NO];
+        }
+    }
     
     return nvtc;
 }
@@ -311,8 +321,8 @@ didCompleteWithError:(NSError *)error
     
     if (!rtn && _currentView)
     {
-        [self performSelectorOnMainThread:@selector(presentAlertInCurrentView)
-                               withObject:nil
+        [self performSelectorOnMainThread:@selector(presentAlertInCurrentView:)
+                               withObject:@"Error getting intersection image. Unable to access server."
                             waitUntilDone:NO];
     }
     
@@ -320,13 +330,13 @@ didCompleteWithError:(NSError *)error
         [_delegate tileCompilerReturnedImagePath:_imagePath];
 }
 
-- (void)presentAlertInCurrentView
+- (void)presentAlertInCurrentView:(NSString *)message
 {
     if (![_currentView viewWithTag:77777])
     {
         NVAlertView *alert = [NVAlertView showLargeAlertViewinView:_currentView
                                                           delegate:_delegate
-                                                             title:@"Error getting intersection image. Unable to access server."
+                                                             title:message
                                                    buttonTextArray:@[@"OK"]
                                                   destructiveIndex:0];
         alert.tag = 77777;
