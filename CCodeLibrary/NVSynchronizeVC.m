@@ -25,7 +25,7 @@
 @property int upFiles, upPix, downFiles, downPix, numConnectionAttempts, totConnectionAttempts;;
 @property BOOL serverOpen;
 @property NSTimer *timer;
-@property NSString *iPad_id, *iPad_name;
+@property NSString *iPad_name;
 @property FTPDataPush *push;
 @property FTPDataPull *pull;
 @property NSInteger selectedRow;
@@ -43,7 +43,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _iPad_id = UIDevice.currentDevice.identifierForVendor.UUIDString;
     _iPad_name = UIDevice.currentDevice.name;
    
     _popoverView = [[GSSiPopoverView alloc] initWithView:self.view];
@@ -590,18 +589,18 @@
             
         case GMSMessageSetNearby:
             msg = [NSString stringWithFormat:@"$M(SetNearbyiPad,%@,%@,%f %f)\r\n",
-                   _iPad_id, _iPad_name, _locationManager.location.coordinate.latitude,
+                   vendorUUIDString(), _iPad_name, _locationManager.location.coordinate.latitude,
                    _locationManager.location.coordinate.longitude];
             break;
             
         case GMSMessageCheckNearby:
             msg = [NSString stringWithFormat:@"$M(CheckNearbyiPad,%@)\r\n",
-                   _iPad_id];
+                   vendorUUIDString()];
             break;
             
         case GMSMessageCancelConnect:
             msg = [NSString stringWithFormat:@"$M(RemoveNearbyiPad,%@)\r\n",
-                   _iPad_id];
+                   vendorUUIDString()];
             break;
     }
     

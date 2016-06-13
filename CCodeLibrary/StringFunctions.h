@@ -10,6 +10,7 @@ BOOL hasNetwork();
 NSString *deviceSystemInfo();
 NSString *deviceCarrier();
 NSString *deviceInfo();
+NSString *vendorUUIDString();
 NSString *textBefore(NSString *string, NSString *before);
 NSString *textAfter(NSString *string, NSString *after);
 NSString *removeEndingReturn(NSString *string);

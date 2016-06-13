@@ -557,7 +557,7 @@ static UserDefaults *_defaults;
         NSString *key = [NSString stringWithFormat:@"iPads:%i", geoid];
         
         NSString *managerDevice = [NSString stringWithFormat:@"%@(%@)",
-                                   UIDevice.currentDevice.identifierForVendor.UUIDString,
+                                   vendorUUIDString(),
                                    UIDevice.currentDevice.name];
         
         NSArray *iPadArray = [NSArray arrayWithObject:managerDevice];

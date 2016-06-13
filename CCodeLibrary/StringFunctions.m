@@ -57,8 +57,26 @@ NSString *deviceInfo()
     int floatSize = sizeof(CGFloat);
     
     return [NSString stringWithFormat:@"%@,%@,%@|%@|%llu|%llu|%@|%i",
-            device.identifierForVendor.UUIDString, device.name, device.systemVersion, deviceSystemInfo(),
+            vendorUUIDString(), device.name, device.systemVersion, deviceSystemInfo(),
             UIDevice.availableStorageSpace, UIDevice.totalStorageSpace, carrier, floatSize];
+}
+
+NSString *vendorUUIDString()
+{
+    BOOL alterUUID = NO;
+    
+    NSString *rtn = UIDevice.currentDevice.identifierForVendor.UUIDString;
+    
+    if (alterUUID)
+    {
+        NSString *replacement = @"TEST";
+        NSRange range = NSMakeRange((rtn.length - replacement.length), replacement.length);
+        NSMutableString *tempString = [NSMutableString stringWithString:rtn];
+        [tempString replaceCharactersInRange:range withString:replacement];
+        rtn = tempString.copy;
+    }
+    
+    return rtn;
 }
 
 NSString *textBefore(NSString *string, NSString *before)
