@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, IntersectionStatus)
 @property int nramps;
 @property double latitude;
 @property double longitude;
+@property int zoomLevel;
 @property double dist;
 
 @end

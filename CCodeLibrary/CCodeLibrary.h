@@ -52,6 +52,7 @@
 #import "NVImagePickerController.h"
 #import "NVTwoTextAlert.h"
 #import "NVTextDrawing.h"
+#import "NVTileCompiler.h"
 #import "UIApplication+VersionBuild.h"
 #import "NVCalibrationController.h"
 #import "CurbRampData.h"

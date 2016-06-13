@@ -1144,9 +1144,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, intX=%i, intY=%i WHERE intID=%i",
                        iTime, lev21x, lev21y, intpt.intID];
     
-    char *error = NULL;
-    rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, &error);
-    sqlite3_free(error);
+    rtn = [self.curbRampData executeCmd:query.UTF8String sendToServer:YES];
     [self close:opened];
 
     return !rtn;
@@ -1269,7 +1267,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i WHERE intID=%i",
                        iTime, (int)status, intID];
     
-    rtn = SQLOK(sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL), self.curbRampData.database);
+    rtn = [self.curbRampData executeCmd:query.UTF8String sendToServer:YES];
     [self close:opened];
     return !rtn;
 }
@@ -1392,6 +1390,35 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         int assignedToPrelim = sqlite3_column_int(statement, 1);
         int assignedToDetail = sqlite3_column_int(statement, 2);
         IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
+        intpt.intID = intID;
+        intpt.assignedToPrelim = assignedToPrelim;
+        intpt.assignedToDetail = assignedToDetail;
+        [assignments addObject:intpt];
+    }
+    
+    SQLOK(sqlite3_finalize(statement),self.curbRampData.database);
+    [self close:opened];
+    return assignments;
+}
+- (NSArray *)getIntersectionsAssignedTo:(int)iPad
+                                 ofType:(NSString*)type
+                              andStatus:(IntersectionStatus)status
+{
+    NSMutableArray *assignments = [[NSMutableArray alloc] init];
+    
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedToPrelim, assignedToDetail, zoomLevel FROM Intersections WHERE assignedTo%@ != 0 ORDER BY assignedTo%@,intID ASC",type,type];
+    sqlite3_stmt *statement = NULL;
+    
+    SQLOK(sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), self.curbRampData.database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        IntersectionPoint *intpt = [[IntersectionPoint alloc] init];
+        int intID = sqlite3_column_int(statement, 0);
+        int assignedToPrelim = sqlite3_column_int(statement, 1);
+        int assignedToDetail = sqlite3_column_int(statement, 2);
+        intpt.zoomLevel = sqlite3_column_int(statement, 3);
         intpt.intID = intID;
         intpt.assignedToPrelim = assignedToPrelim;
         intpt.assignedToDetail = assignedToDetail;
