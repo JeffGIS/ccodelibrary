@@ -20,6 +20,7 @@
 		1FB3605419AE7E7D00592B1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605319AE7E7D00592B1D /* Foundation.framework */; };
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
+		1FF293681D0F49FD00E580C5 /* NVTileCompiler.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 691636211C1FC790000C61B8 /* NVTileCompiler.m */; };
 		690746E51CD41DCB00B31D8F /* NVTextViewAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 690746E41CD41DCB00B31D8F /* NVTextViewAlert.m */; };
 		690746E61CD4206500B31D8F /* NVTextViewAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 690746E31CD41DCB00B31D8F /* NVTextViewAlert.h */; };
 		690E829F1C11055F00AB410E /* YTPlayerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698F987A1C10B96B009F2F01 /* YTPlayerView.h */; };
@@ -335,6 +336,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				1FF293681D0F49FD00E580C5 /* NVTileCompiler.m in CopyFiles */,
 				69F8E0D61D05CD60003E8655 /* NVMarkerView.h in CopyFiles */,
 				699AE9011CEFB46700A9EBF2 /* NVPhotoController.h in CopyFiles */,
 				699DD73A1CEA091000C7A651 /* NVSynchronizeVC.h in CopyFiles */,
