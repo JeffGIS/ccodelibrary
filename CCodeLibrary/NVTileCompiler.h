@@ -7,7 +7,8 @@
 
 @protocol NVTileCompilerDelegate <NSObject>
 
-- (void)tileCompilerReturnedImagePath:(NSString *)imagePath;
+- (void)tileCompilerReturnedImagePath:(NSString *)imagePath
+                           hideTarget:(BOOL)hideTarget;
 
 @end
 
