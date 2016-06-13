@@ -64,7 +64,10 @@
                                                                                  error:nil].fileSize;
     
     if (fileSize > 0 && !forceRefresh && nvtc.delegate)
-        [nvtc.delegate tileCompilerReturnedImagePath:nvtc.imagePath];
+    {
+        [nvtc.delegate tileCompilerReturnedImagePath:nvtc.imagePath
+                                          hideTarget:NO];
+    }
     
     else
     {
@@ -76,6 +79,13 @@
             [nvtc performSelectorOnMainThread:@selector(presentAlertInCurrentView:)
                                    withObject:@"Network required to download Intersection Image."
                                 waitUntilDone:NO];
+            
+            if (nvtc.delegate)
+            {
+                [nvtc.delegate tileCompilerReturnedImagePath:[NSBundle.mainBundle pathForResource:@"mapGrid"
+                                                                                           ofType:@"png"]
+                                                  hideTarget:YES];
+            }
         }
     }
     
@@ -327,7 +337,10 @@ didCompleteWithError:(NSError *)error
     }
     
     if (rtn && _delegate)
-        [_delegate tileCompilerReturnedImagePath:_imagePath];
+    {
+        [_delegate tileCompilerReturnedImagePath:_imagePath
+                                      hideTarget:NO];
+    }
 }
 
 - (void)presentAlertInCurrentView:(NSString *)message

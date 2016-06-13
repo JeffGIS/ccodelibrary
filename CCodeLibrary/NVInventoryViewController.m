@@ -245,8 +245,10 @@
 }
 
 - (void)tileCompilerReturnedImagePath:(NSString *)imagePath
+                           hideTarget:(BOOL)hideTarget
 {
     _pathToImageFile = imagePath;
+    _draggableTarget = !hideTarget;
     
     CGRect windowBounds = CGRectZero;
     CGSize imageSize = CGSizeZero;
@@ -2034,17 +2036,31 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     //only called after the target is done being dragged
     if (gesture.state == UIGestureRecognizerStateEnded)
     {
-        double x = 0.0, y = 0.0, lat = 0.0, lon = 0.0;
-        TRANS2((_newTarget.x * _xFactor) - _xOffset, (_newTarget.y * _yFactor) - _yOffset + (_targetSize / 2.0), &x, &y, _pTranBMPToW);
+        if (hasNetwork())
+        {
+            double x = 0.0, y = 0.0, lat = 0.0, lon = 0.0;
+            TRANS2((_newTarget.x * _xFactor) - _xOffset, (_newTarget.y * _yFactor) - _yOffset + (_targetSize / 2.0), &x, &y, _pTranBMPToW);
+            
+            IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
+            IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersectionID];
+            
+            PixelXYToLatLongd(x, y, _initialZoom, &lat, &lon);
+            info.latitude = lat;
+            info.longitude = lon;
+            [database setCurrentIntersectionPoint:info];
+            
+            [self setBKImage:YES];
+        }
         
-        IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
-        IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersectionID];
-        
-        PixelXYToLatLongd(x, y, _initialZoom, &lat, &lon);
-        info.latitude = lat;
-        info.longitude = lon;
-        [database setCurrentIntersectionPoint:info];
-        [self setBKImage:YES];
+        else
+        {
+            NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                              delegate:self
+                                                                 title:@"Network Required To Move Intersection Point"
+                                                       buttonTextArray:@[@"OK"]
+                                                      destructiveIndex:0];
+#pragma unused(alert)
+        }
         
         _imageTargetView.frame = CGRectMake ((_backgroundImage.frame.size.width / 2.0) - (_targetSize / 2.0),
                                              (_backgroundImage.frame.size.height / 2.0) - (_targetSize / 2.0), _targetSize, _targetSize);
