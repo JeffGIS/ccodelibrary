@@ -6,9 +6,9 @@
 typedef struct {
     int intID;
     int lastUpdateTime;
-    int statusPrelim;
-    int statusDetail;
-    int assignedTo;
+    int status;
+    int assignedToPrelim;
+    int assignedToDetail;
     int lev21X;
     int lev21Y;
     int rotation;
@@ -38,8 +38,8 @@ typedef struct {
     double lat;
     double lon;
     char comment[256];
-    int  zoomLevel;
     int  doLater;
+    int  zoomLevel;
 }INTERSECTION_STRUCT;
 
 @interface IntersectionRecord : NSObject
