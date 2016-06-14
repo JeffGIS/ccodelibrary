@@ -35,6 +35,7 @@
     legendView.origin = origin;
     legendView.containerFrame = containerFrame;
     legendView.selectable = selectable;
+    legendView.selectedIndex = 1;
     
     if (legendView.selectable)
     {
