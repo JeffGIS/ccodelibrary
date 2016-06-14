@@ -158,18 +158,18 @@
 
 - (void)getTilesFromServer
 {
-    if (CRAPI.sharedInstance.currentGeoid == -2743000)
+    if (CRAPI.sharedInstance.currentGeoid == 2743000)
     {
         for (NVTile *tiles in _tileDataArray)
         {
-            tiles.filepath = [NSString stringWithFormat:@"%@/%i_%lu_%lu_%lu.jp2",
+            /*tiles.filepath = [NSString stringWithFormat:@"%@/%i_%lu_%lu_%lu.jp2",
                               UserDefaults.defaults.sharedFilePath, CRAPI.sharedInstance.currentGeoid,
                               (unsigned long)_zoom, (unsigned long)tiles.tiley, (unsigned long)tiles.tilex];
             
             if ([NSFileManager.defaultManager fileExistsAtPath:tiles.filepath])
                 tiles.tileImage = [UIImage imageWithContentsOfFile:tiles.filepath];
             
-            else
+            else*/
             {
                 NSURLSessionConfiguration *config = NSURLSessionConfiguration.defaultSessionConfiguration;
                 config.timeoutIntervalForRequest = 5.0;
@@ -225,11 +225,11 @@
         [session finishTasksAndInvalidate];
         _imageCount++;
         
-        if (![UIImageJPEGRepresentation(tile.tileImage, 0.8) writeToFile:tile.filepath
+        /*if (![UIImageJPEGRepresentation(tile.tileImage, 0.8) writeToFile:tile.filepath
                                                               atomically:YES])
         {
             NSLog(@"Tile Image Write ERROR at filepath:%@", tile.filepath);
-        }
+        }*/
         
         if (_imageCount == _tileDataArray.count)
             [self compileImage];
