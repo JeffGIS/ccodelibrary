@@ -292,6 +292,55 @@
     _xOffset = (windowBounds.origin.x * _xFactor);
     _yOffset = (windowBounds.origin.y * _yFactor);
     
+    IBOUNDS bounds = {0};
+    int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+    
+    CGFloat x = imageSize.width, y = imageSize.height;
+    TRANS2(0.0, 0.0, &x, &y, _pTranBMPToW);
+    x1 = (int)x, y1 = (int)y;
+    
+    x = imageSize.width, y = imageSize.height;
+    TRANS2(imageSize.width, imageSize.height, &x, &y, _pTranBMPToW);
+    x2 = (int)x, y2 = (int)y;
+    
+    bounds.xmn = min(x1, x2), bounds.xmx = max(x1, x2);
+    bounds.ymn = min(y1, y2), bounds.ymx = max(y1, y2);
+    
+    for (UIView *views in _backgroundImage.subviews)
+    {
+        if (views.tag == 777)
+            [views removeFromSuperview];
+    }
+    
+    IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
+    NSArray *intersections = [NSArray arrayWithArray:[database getIntersectionPointsFromDatabaseinBounds:bounds]];
+    
+    for (IntersectionPoint *points in intersections)
+    {
+        int pixelx = 0, pixely = 0;
+        double bmpx = 0.0, bmpy = 0.0;
+        LatLongToPixelXY(points.latitude, points.longitude, 21, &pixelx, &pixely);
+        TRANS2(pixelx, pixely, &bmpx, &bmpy, _pTranWToBMP);
+        bmpx /= _xFactor, bmpy /= _yFactor;
+        CGFloat size = 18.0;
+        
+        UIView *intPointView = UIView.new;
+        intPointView.tag = 777;
+        
+        if (points.intID == _currentIntersectionID)
+            size *= 2.0;
+        
+        intPointView.backgroundColor = UserDefaults.defaults.green;
+        intPointView.frame = CGRectMake(bmpx - (size / 2.0), bmpy - (size / 2.0), size, size);
+        intPointView.layer.cornerRadius = (size / 2.0);
+        intPointView.layer.borderColor = UIColor.blackColor.CGColor;
+        intPointView.layer.borderWidth = (size / 16.0);
+        [_backgroundImage addSubview:intPointView];
+        
+        if ([_backgroundImage.subviews containsObject:_imageTargetView])
+            [_backgroundImage bringSubviewToFront:_imageTargetView];
+    }
+    
     [self setupButtons];
 }
 
