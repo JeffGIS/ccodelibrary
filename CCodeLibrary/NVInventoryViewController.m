@@ -245,19 +245,15 @@
 }
 
 - (void)tileCompilerReturnedImagePath:(NSString *)imagePath
+                              cptPath:(NSString *)cptPath
                            hideTarget:(BOOL)hideTarget
 {
     _pathToImageFile = imagePath;
+    _pathToBPWFile = cptPath;
     _draggableTarget = !hideTarget;
     
     CGRect windowBounds = CGRectZero;
     CGSize imageSize = CGSizeZero;
-    
-    if (_pathToImageFile)
-    {
-        NSString *dirAndName = [_pathToImageFile stringByDeletingPathExtension];
-        _pathToBPWFile = [dirAndName stringByAppendingPathExtension:@"cpt"];
-    }
     
     UIImage *backImage = [UIImage imageWithContentsOfFile:_pathToImageFile];
     
@@ -339,6 +335,12 @@
         
         if ([_backgroundImage.subviews containsObject:_imageTargetView])
             [_backgroundImage bringSubviewToFront:_imageTargetView];
+    }
+    
+    if ([imagePath isEqualToString:[NSBundle.mainBundle pathForResource:@"mapGrid"
+                                                                 ofType:@"png"]])
+    {
+        
     }
     
     [self setupButtons];
