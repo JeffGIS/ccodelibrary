@@ -252,7 +252,7 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
             break;
             
         case NVHeadingStatusGettingHeading:
-            _progressInfoLabel.text = @"";
+            _progressInfoLabel.text = _promptText;
             _returnButton.enabled = YES;
             [self updateButtonAppearance:_returnButton];
             
@@ -370,6 +370,9 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 
 - (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
 {
+    if (_status == NVHeadingStatusGettingHeading)
+        [self startCancelButtonTapped:nil];
+    
     return YES;
 }
 
