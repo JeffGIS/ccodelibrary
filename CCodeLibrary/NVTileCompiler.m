@@ -19,7 +19,6 @@
 @property (nonatomic, copy) NSString *imagePath, *cptPath, *maptype;
 @property (nonatomic) NSMutableArray *tileDataArray;
 @property (nonatomic) UIView *currentView;
-@property (nonatomic) UIView *actIndView;
 
 @end
 
@@ -33,6 +32,18 @@
                                          delegate:(id)delegate
                                       currentView:(UIView *)currentView
 {
+    if (!delegate || !currentView || !intersectionID || !zoom)
+    {
+        NSLog(@"NVTileCompiler ERROR:Cannot set delegate, currentView, intersectionID or zoom to nil");
+        return nil;
+    }
+    
+    if (![delegate respondsToSelector:@selector(tileCompilerReturnedImagePath:cptPath:hideTarget:)])
+    {
+        NSLog(@"NVTileCompiler ERROR:Delegate must respond to all selectors in protocol");
+        return nil;
+    }
+    
     NVTileCompiler *nvtc = NVTileCompiler.new;
     nvtc.intersectionID = intersectionID;
     nvtc.lat = lat;
@@ -49,7 +60,7 @@
         [CRAPI.sharedInstance deleteImagesForAllZooms:nvtc.intersectionID];
     
     nvtc.imagePath = [CRAPI.sharedInstance.imageDirectory stringByAppendingPathComponent:
-                          [NSString stringWithFormat:@"/Int_%i_%i.jpg", nvtc.intersectionID, nvtc.zoom]];
+                      [NSString stringWithFormat:@"/Int_%i_%i.jpg", nvtc.intersectionID, nvtc.zoom]];
     
     nvtc.cptPath = [CRAPI.sharedInstance.imageDirectory stringByAppendingPathComponent:
                     [NSString stringWithFormat:@"/Int_%i_%i.cpt", nvtc.intersectionID, nvtc.zoom]];
@@ -63,9 +74,10 @@
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:nvtc.imagePath
                                                                                  error:nil].fileSize;
     
-    if (fileSize > 0 && !forceRefresh && nvtc.delegate)
+    if (fileSize > 0 && !forceRefresh)
     {
         [nvtc.delegate tileCompilerReturnedImagePath:nvtc.imagePath
+                                             cptPath:nvtc.cptPath
                                           hideTarget:NO];
     }
     
@@ -80,12 +92,12 @@
                                    withObject:@"Network required to download Intersection Image."
                                 waitUntilDone:NO];
             
-            if (nvtc.delegate)
-            {
-                [nvtc.delegate tileCompilerReturnedImagePath:[NSBundle.mainBundle pathForResource:@"mapGrid"
-                                                                                           ofType:@"png"]
-                                                  hideTarget:YES];
-            }
+            [nvtc saveCptFile];
+            
+            [nvtc.delegate tileCompilerReturnedImagePath:[NSBundle.mainBundle pathForResource:@"mapGrid"
+                                                                                       ofType:@"png"]
+                                                 cptPath:nvtc.cptPath
+                                              hideTarget:YES];
         }
     }
     
@@ -158,18 +170,20 @@
 
 - (void)getTilesFromServer
 {
-    if (CRAPI.sharedInstance.currentGeoid == -2743000)
+    if (CRAPI.sharedInstance.currentGeoid == 2743000)
     {
         for (NVTile *tiles in _tileDataArray)
         {
-            tiles.filepath = [NSString stringWithFormat:@"%@/%i_%lu_%lu_%lu.jp2",
+            //we were setting the tile filepath and checking to see if the tiles are in storage here
+            
+            /*tiles.filepath = [NSString stringWithFormat:@"%@/%i_%lu_%lu_%lu.jp2",
                               UserDefaults.defaults.sharedFilePath, CRAPI.sharedInstance.currentGeoid,
                               (unsigned long)_zoom, (unsigned long)tiles.tiley, (unsigned long)tiles.tilex];
             
             if ([NSFileManager.defaultManager fileExistsAtPath:tiles.filepath])
                 tiles.tileImage = [UIImage imageWithContentsOfFile:tiles.filepath];
             
-            else
+            else*/
             {
                 NSURLSessionConfiguration *config = NSURLSessionConfiguration.defaultSessionConfiguration;
                 config.timeoutIntervalForRequest = 5.0;
@@ -225,11 +239,13 @@
         [session finishTasksAndInvalidate];
         _imageCount++;
         
-        if (![UIImageJPEGRepresentation(tile.tileImage, 0.8) writeToFile:tile.filepath
+        //we were writing the tile to file here
+        
+        /*if (![UIImageJPEGRepresentation(tile.tileImage, 0.8) writeToFile:tile.filepath
                                                               atomically:YES])
         {
             NSLog(@"Tile Image Write ERROR at filepath:%@", tile.filepath);
-        }
+        }*/
         
         if (_imageCount == _tileDataArray.count)
             [self compileImage];
@@ -247,29 +263,6 @@ didCompleteWithError:(NSError *)error
         NSLog(@"URLSession ERROR (tile %lu):%@", (unsigned long)index,
               error.localizedDescription);
     }
-}
-
-- (void)showActivityIndicator
-{
-    _actIndView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 240.0, 240.0)];
-    _actIndView.center = _currentView.center;
-    
-    _actIndView.backgroundColor = [UIColor colorWithWhite:0.0
-                                                    alpha:0.8];
-    
-    _actIndView.layer.cornerRadius = 20.0;
-    [_currentView addSubview:_actIndView];
-    
-    UIActivityIndicatorView *actInd = [[UIActivityIndicatorView alloc]
-                                       initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    
-    actInd.transform = CGAffineTransformMakeScale(2.0, 2.0);
-    
-    actInd.center = CGPointMake((_actIndView.frame.size.width / 2.0),
-                                (_actIndView.frame.size.height / 2.0));
-    
-    [_actIndView addSubview:actInd];
-    [actInd startAnimating];
 }
 
 - (void)compileImage
@@ -296,38 +289,42 @@ didCompleteWithError:(NSError *)error
     [self saveImage:compositeImage];
 }
 
+- (void)saveCptFile
+{
+    char txt[1024] = {0};
+    double pixelX = 0.0, pixelY = 0.0;
+    int factor = pow(2, (21 - _zoom));
+    NSError *error = nil;
+    
+    LatLongToPixelXYd(_lat, _lon, 21, &pixelX, &pixelY);
+    
+    sprintf(txt, "0 0 %f %f\r\n\
+            640 0 %f %f\r\n\
+            640 640 %f %f\r\n\
+            0 640 %f %f\r\n",
+            pixelX - 320 * factor, pixelY + 320 * factor,
+            pixelX + 320 * factor, pixelY + 320 * factor,
+            pixelX + 320 * factor, pixelY - 320 * factor,
+            pixelX - 320 * factor, pixelY - 320 * factor);
+    
+    NSString *outcontents = [NSString stringWithCString:txt
+                                               encoding:NSUTF8StringEncoding];
+    
+    if (![outcontents writeToFile:_cptPath
+                       atomically:NO
+                         encoding:NSUTF8StringEncoding
+                            error:&error])
+    {
+        NSLog(@"Cpt File Write ERROR:%@", error.localizedDescription);
+    }
+}
+
 - (void)saveImage:(UIImage *)image
 {
     int rtn = [UIImageJPEGRepresentation(image, 0.8) writeToFile:_imagePath
                                                       atomically:YES];
-    {
-        char txt[1024] = {0};
-        double pixelX = 0.0, pixelY = 0.0;
-        int factor = pow(2, (21 - _zoom));
-        NSError *error = nil;
-        
-        LatLongToPixelXYd(_lat, _lon, 21, &pixelX, &pixelY);
-        
-        sprintf(txt, "0 0 %f %f\r\n\
-                640 0 %f %f\r\n\
-                640 640 %f %f\r\n\
-                0 640 %f %f\r\n",
-                pixelX - 320 * factor, pixelY + 320 * factor,
-                pixelX + 320 * factor, pixelY + 320 * factor,
-                pixelX + 320 * factor, pixelY - 320 * factor,
-                pixelX - 320 * factor, pixelY - 320 * factor);
-        
-        NSString *outcontents = [NSString stringWithCString:txt
-                                                   encoding:NSUTF8StringEncoding];
-        
-        if (![outcontents writeToFile:_cptPath
-                           atomically:NO
-                             encoding:NSUTF8StringEncoding
-                                error:&error])
-        {
-            NSLog(@"Cpt File Write ERROR:%@", error.localizedDescription);
-        }
-    }
+    
+    [self saveCptFile];
     
     if (!rtn && _currentView)
     {
@@ -336,9 +333,10 @@ didCompleteWithError:(NSError *)error
                             waitUntilDone:NO];
     }
     
-    if (rtn && _delegate)
+    if (rtn)
     {
         [_delegate tileCompilerReturnedImagePath:_imagePath
+                                         cptPath:_cptPath
                                       hideTarget:NO];
     }
 }

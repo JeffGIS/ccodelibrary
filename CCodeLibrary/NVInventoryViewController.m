@@ -31,7 +31,7 @@
 @property (nonatomic) NVSignalButton *signal23, *signal45, *signal67, *signal81;
 @property (nonatomic) NVXWalkButton *xWalkA, *xWalkB, *xWalkC, *xWalkD;
 @property (nonatomic) RampType currentRampType;
-@property (nonatomic) UILabel *headingLabel, *intersectionLabel;
+@property (nonatomic) UILabel *headingLabel, *intersectionLabel, *gridScaleLabel;
 @property (nonatomic) CGPoint newTarget;
 @property (nonatomic) CGFloat targetSize;
 
@@ -245,19 +245,15 @@
 }
 
 - (void)tileCompilerReturnedImagePath:(NSString *)imagePath
+                              cptPath:(NSString *)cptPath
                            hideTarget:(BOOL)hideTarget
 {
     _pathToImageFile = imagePath;
+    _pathToBPWFile = cptPath;
     _draggableTarget = !hideTarget;
     
     CGRect windowBounds = CGRectZero;
     CGSize imageSize = CGSizeZero;
-    
-    if (_pathToImageFile)
-    {
-        NSString *dirAndName = [_pathToImageFile stringByDeletingPathExtension];
-        _pathToBPWFile = [dirAndName stringByAppendingPathExtension:@"cpt"];
-    }
     
     UIImage *backImage = [UIImage imageWithContentsOfFile:_pathToImageFile];
     
@@ -339,6 +335,35 @@
         
         if ([_backgroundImage.subviews containsObject:_imageTargetView])
             [_backgroundImage bringSubviewToFront:_imageTargetView];
+    }
+    
+    if ([imagePath isEqualToString:[NSBundle.mainBundle pathForResource:@"mapGrid"
+                                                                 ofType:@"png"]])
+    {
+        double bmpx = 0.0, bmpy = 0.0;
+        
+        PixelXYToLatLong(bounds.xmn, bounds.ymn, 21, &bmpx, &bmpy);
+        CLLocation *lowerLeft = [[CLLocation alloc] initWithLatitude:bmpx longitude:bmpy];
+        PixelXYToLatLong(bounds.xmx, bounds.ymx, 21, &bmpx, &bmpy);
+        CLLocation *upperRight = [[CLLocation alloc] initWithLatitude:bmpx longitude:bmpy];
+        
+        double distance = [lowerLeft distanceFromLocation:upperRight];
+        distance = sqrt(0.5 * pow(distance, 2.0));
+        distance *= (3.28084 / 16.0);
+        
+        if (!_gridScaleLabel)
+        {
+            _gridScaleLabel = [[UILabel alloc] initWithFrame:CGRectMake(200.0, 6.0, 368.0, 30.0)];
+            _gridScaleLabel.alpha = 0.8;
+            _gridScaleLabel.backgroundColor = UIColor.blackColor;
+            _gridScaleLabel.font = [UIFont systemFontOfSize:32.0];
+            _gridScaleLabel.adjustsFontSizeToFitWidth = YES;
+            _gridScaleLabel.textAlignment = NSTextAlignmentCenter;
+            _gridScaleLabel.textColor = UIColor.whiteColor;
+            [_backgroundImage addSubview:_gridScaleLabel];
+        }
+        
+        _gridScaleLabel.text = [NSString stringWithFormat:@"Each line represents %.02f feet", distance];
     }
     
     [self setupButtons];
