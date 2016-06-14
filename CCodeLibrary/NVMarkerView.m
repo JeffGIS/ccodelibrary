@@ -117,7 +117,7 @@
                     CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
                 }
                 
-                else if ((module == MANAGEMENT_MODULE) && (_from == MMMapTypePrelim))
+                else if ((module == MANAGEMENT_MODULE) && (_from == MMLMFromAssignInt) && _mapType == MMMapTypePrelim)
                 {
                     if (_colorsArray && info.assignedToPrelim <= _colorsArray.count)
                     {
@@ -130,7 +130,7 @@
                     }
                     
                 }
-                else if ((module == MANAGEMENT_MODULE) && (_from == MMMapTypeDetail))
+                else if ((module == MANAGEMENT_MODULE) && (_from == MMLMFromAssignInt) && _mapType == MMMapTypeDetail)
                 {
                     if (_colorsArray && info.assignedToDetail <= _colorsArray.count)
                     {
@@ -144,17 +144,21 @@
                     }
                     
                 }
-                else if ((module == MANAGEMENT_MODULE) && (_from == MMLMFromStatusMap))
+                else if ((module == MANAGEMENT_MODULE) && (_from == MMLMFromStatusMap) && _mapType == MMMapTypePrelim)
                 {
-                    if (_colorsArray && info.assignedToPrelim <= _colorsArray.count)
+                    if (info.status > ComplexStatus)
                     {
-                        int i = (info.assignedToPrelim - 1);
-                        UIColor *color = _colorsArray[i];
-                        CGContextSetFillColorWithColor(context, color.CGColor);
-                        nPeriPad[i]++;
-                        if (!i)
-                            notAssigned++;
+                        numComplete++;
+                        CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
                     }
+                    else if (!info.assignedToPrelim)
+                    {
+                        notAssigned++;
+                        CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
+                    }
+                    else
+                        CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+                    
                 }
                 
                 pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);

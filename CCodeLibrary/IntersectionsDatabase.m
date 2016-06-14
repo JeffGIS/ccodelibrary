@@ -1141,9 +1141,12 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     BOOL opened = [self open];
     
-    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, intX=%i, intY=%i WHERE intID=%i",
-                       iTime, lev21x, lev21y, intpt.intID];
+    NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, intX=%i, intY=%i, latitude=%f, longitude=%f WHERE intID=%i",
+                       iTime, lev21x, lev21y, intpt.latitude, intpt.longitude, intpt.intID];
     
+    rtn = [self.curbRampData executeCmd:query.UTF8String sendToServer:YES];
+    query = [NSString stringWithFormat:@"UPDATE Intersections_index SET minY=%f,minX=%f,maxY=%f,maxX=%f WHERE Intersections_index.id=%ld",
+             intpt.latitude, intpt.longitude,intpt.latitude, intpt.longitude, (long)intpt.intID];
     rtn = [self.curbRampData executeCmd:query.UTF8String sendToServer:YES];
     [self close:opened];
 

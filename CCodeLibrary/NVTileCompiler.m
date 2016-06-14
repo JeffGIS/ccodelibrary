@@ -158,7 +158,7 @@
 
 - (void)getTilesFromServer
 {
-    if (CRAPI.sharedInstance.currentGeoid == 2743000)
+    if (CRAPI.sharedInstance.currentGeoid == -2743000)
     {
         for (NVTile *tiles in _tileDataArray)
         {

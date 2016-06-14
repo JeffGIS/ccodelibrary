@@ -29,6 +29,7 @@
                               delegate:(id)delegate;
 
 @property MMLMFrom from;
+@property MMMapType mapType;
 @property BOOL showOnlyIntersectionsWithRamps;
 @property (nonatomic, copy) NSString *areaFile;
 @property (nonatomic) IntersectionsDatabase *database;

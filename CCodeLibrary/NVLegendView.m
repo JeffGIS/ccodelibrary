@@ -264,7 +264,7 @@
     if (_delegate)
     {
         if (_selectedIndex == [_delegate numberOfRowsInLegendView] - 1)
-            _selectedIndex = 0;
+            _selectedIndex = 1;
         
         else
             _selectedIndex++;
