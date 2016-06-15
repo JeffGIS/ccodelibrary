@@ -1572,6 +1572,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         strncpy(intStruct.streetAzms, pAzms, sizeof(intStruct.streetAzms) - 1);
         
         NSString *cmd = [self intStructToCmd:&intStruct];
+        [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:NO];
         
         nLoaded++;
     }
