@@ -87,10 +87,10 @@ static SharedDefaults *_defaults;
     
     if (defaultArray.count < 4)
     {
-        NSArray *valuesArray = @[@(0.0), @(8.3)];
+        NSArray *valuesArray = @[@(0.0), @(2.0), @(5.0), @(8.3)];
         
-        NSArray *typesArray = @[@(NVCalibrationTypeRunningSlope),
-                                @(NVCalibrationTypeRunningSlope)];
+        NSArray *typesArray = @[@(NVCalibrationTypeRunningSlope), @(NVCalibrationTypeRunningSlope),
+                                @(NVCalibrationTypeRunningSlope), @(NVCalibrationTypeRunningSlope)];
         
         NSArray *selectedArray = @[@YES];//this is just a placeholder
         
@@ -101,7 +101,7 @@ static SharedDefaults *_defaults;
         // value[8] is left side slope for calibration slope 2, value[9] is right side slope for calibration slope 2,
         // etc
         
-        NSArray *deviceValuesArray = @[@(0.0), @(4.745)];
+        NSArray *deviceValuesArray = @[@(0.0), @(1.15), @(2.86), @(4.74)];
         
         defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
         
