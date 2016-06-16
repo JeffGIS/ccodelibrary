@@ -250,7 +250,9 @@
 {
     _pathToImageFile = imagePath;
     _pathToBPWFile = cptPath;
-    _draggableTarget = !hideTarget;
+    
+    if (hideTarget)
+        _draggableTarget = NO;
     
     CGRect windowBounds = CGRectZero;
     CGSize imageSize = CGSizeZero;
