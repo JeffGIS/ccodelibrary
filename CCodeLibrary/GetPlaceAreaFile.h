@@ -12,7 +12,8 @@
 
 - (void)getPlaceAreaFile:(GetPlaceAreaFile *)server
               didGetFile:(NSString *)path
-              withStatus:(int)status;
+              withStatus:(AreaFileStatus)status
+         andStatusString:(NSString*)statusString;
 
 @end
 

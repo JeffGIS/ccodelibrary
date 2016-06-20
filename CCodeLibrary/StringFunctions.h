@@ -6,11 +6,12 @@
 @import CoreLocation;
 #import "UIDevice+Storage.h"
 
-BOOL hasNetwork();
-NSString *deviceSystemInfo();
-NSString *deviceCarrier();
+BOOL hasNetwork(void);
+NSString *deviceSystemInfo(void);
+NSString *deviceCarrier(void);
 NSString *deviceInfo();
-NSString *vendorUUIDString();
+void SetUseDemoID (BOOL set);
+NSString *vendorUUIDString(void);
 NSString *textBefore(NSString *string, NSString *before);
 NSString *textAfter(NSString *string, NSString *after);
 NSString *removeEndingReturn(NSString *string);

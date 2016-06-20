@@ -44,7 +44,8 @@
     
     [self.delegate getPlaceAreaFile:self
                          didGetFile:path
-                         withStatus:status];
+                         withStatus:status
+                    andStatusString:statusString];
 }
 -(void) dealloc
 {

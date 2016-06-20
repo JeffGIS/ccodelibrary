@@ -6,6 +6,8 @@
 #import "Reachability.h"
 #import <sys/utsname.h>
 
+static useDemoID = FALSE;
+
 BOOL hasNetwork()
 {
     Reachability *reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
@@ -18,7 +20,7 @@ BOOL hasNetwork()
         return YES;
 }
 
-NSString *deviceSystemInfo()
+NSString *deviceSystemInfo(void)
 {
     struct utsname systemInfo;
     uname(&systemInfo);
@@ -32,7 +34,7 @@ NSString *deviceSystemInfo()
     return deviceSystemInfo;
 }
 
-NSString *deviceCarrier()
+NSString *deviceCarrier(void)
 {
     CTTelephonyNetworkInfo *networkInfo = CTTelephonyNetworkInfo.new;
     CTCarrier *carrier = networkInfo.subscriberCellularProvider;
@@ -50,7 +52,7 @@ NSString *deviceCarrier()
     return rtn;
 }
 
-NSString *deviceInfo()
+NSString *deviceInfo(void)
 {
     UIDevice *device = UIDevice.currentDevice;
     NSString *carrier = deviceCarrier();
@@ -61,13 +63,23 @@ NSString *deviceInfo()
             UIDevice.availableStorageSpace, UIDevice.totalStorageSpace, carrier, floatSize];
 }
 
-NSString *vendorUUIDString()
+void SetUseDemoID (BOOL set)
+{
+    useDemoID = set;
+    return;
+}
+
+NSString *vendorUUIDString(void)
 {
     BOOL alterUUID = NO;
     
     NSString *rtn = UIDevice.currentDevice.identifierForVendor.UUIDString;
     
-    if (alterUUID)
+    if (useDemoID)
+    {
+        rtn = @"DEMODEMO-DEMO-DEMO-DEMO-VENDRIDSTRNG";
+    }
+    else if (alterUUID)
     {
         NSString *replacement = @"TEST";
         NSRange range = NSMakeRange((rtn.length - replacement.length), replacement.length);
