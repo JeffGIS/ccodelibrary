@@ -87,12 +87,14 @@ static SharedDefaults *_defaults;
     
     if (defaultArray.count < 4)
     {
-        NSArray *valuesArray = @[@(0.0), @(8.3)];
+        //these are the curb ramp critical values in running slope percentange
+        NSArray *valuesArray = @[@(0.0), @(100.0 / 48.0), @(5.0), @(100.0 / 12.0), @(10.0)];
         
-        NSArray *typesArray = @[@(NVCalibrationTypeRunningSlope),
-                                @(NVCalibrationTypeRunningSlope)];
+        NSArray *typesArray = @[@(NVCalibrationTypeRunningSlope), @(NVCalibrationTypeRunningSlope), @(NVCalibrationTypeRunningSlope),
+                                @(NVCalibrationTypeRunningSlope), @(NVCalibrationTypeRunningSlope)];
         
-        NSArray *selectedArray = @[@YES];//this is just a placeholder
+        //this is just a placeholder
+        NSArray *selectedArray = @[@YES];
         
         // device values always in degrees. value[0] is front/back flat slope average, value[1] is side slope flat average,
         // value[2] is front slope for calibration slope 1, value[3] is back slope for calibration slope 1,
@@ -101,7 +103,8 @@ static SharedDefaults *_defaults;
         // value[8] is left side slope for calibration slope 2, value[9] is right side slope for calibration slope 2,
         // etc
         
-        NSArray *deviceValuesArray = @[@(0.0), @(4.745)];
+        //these are the curb ramp critical values in degrees
+        NSArray *deviceValuesArray = @[@(0.00), @(1.19), @(2.86), @(4.76), @(5.71)];
         
         defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
         
@@ -368,6 +371,8 @@ static SharedDefaults *_defaults;
         }
     }
 }
+
+
 
 - (NSArray *)resetDeviceValuesArray:(NSArray *)calibrationArray
 {

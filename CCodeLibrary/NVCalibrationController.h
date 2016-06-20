@@ -1,11 +1,8 @@
 //  NVCalibrationController.h
 //  CCodeLibrary
 
-#import <UIKit/UIKit.h>
-#import "GSSiSlopeViewController.h"
-#import "NVSliderController.h"
-#import "NVAlertView.h"
+@import UIKit;
 
-@interface NVCalibrationController : UIViewController <GSSiSlopeViewControllerDelegate,UITableViewDataSource,UITableViewDelegate,NVSliderControllerDelegate,NVAlertViewDelegate>
+@interface NVCalibrationController : UIViewController
 
 @end
