@@ -25,5 +25,6 @@ didReturnUserNumber:(NSString *)userNumber;
 
 - (void)hideSignupView:(BOOL)animated;
 - (void)presentKeyboard;
+- (void)goBack;
 
 @end
