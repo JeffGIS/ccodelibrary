@@ -5,6 +5,9 @@
 #import "CRAPI.h"
 #import "SharedDefaults.h"
 #import "VerticalSegmentedControl.h"
+#import "GSSiSlopeViewController.h"
+#import "NVSliderController.h"
+#import "NVAlertView.h"
 
 static CGFloat _deviceValues[9][4];
 // [0][0] = level frontslope
@@ -18,7 +21,7 @@ static CGFloat _deviceValues[9][4];
 // [4][2] = second side right up
 // [4][3] = second side right down
 
-@interface NVCalibrationController ()
+@interface NVCalibrationController () <GSSiSlopeViewControllerDelegate,UITableViewDataSource,UITableViewDelegate,NVSliderControllerDelegate,NVAlertViewDelegate>
 
 @property (nonatomic) UIButton *returnButton, *testButton, *editButton;
 @property (nonatomic) UILabel *titleLabel, *lastCalibrationlabel, *promptLabel;
@@ -446,8 +449,9 @@ static CGFloat _deviceValues[9][4];
     tableView.delaysContentTouches = NO;
     tableView.tag = 222;
     
-    tableView.sectionHeaderHeight = tableView.rowHeight =
-    (tableView.frame.size.height / 6.0);
+    NSInteger divisor = (min(([_calibrationValues[NVCalibrationArrayIndexValue] count] + 1), 6) + 1);
+    
+    tableView.sectionHeaderHeight = tableView.rowHeight = (tableView.frame.size.height / divisor);
                                      
     [self.view addSubview:tableView];
     
@@ -599,7 +603,7 @@ static CGFloat _deviceValues[9][4];
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-    return min(([_calibrationValues[NVCalibrationArrayIndexValue] count] + 1), 5);
+    return min(([_calibrationValues[NVCalibrationArrayIndexValue] count] + 1), 6);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
@@ -746,54 +750,6 @@ viewForHeaderInSection:(NSInteger)section
     
     [headerView addSubview:returnButton];
     
-    UIButton *uploadButton = [[UIButton alloc] initWithFrame:
-                              CGRectMake((headerView.frame.size.width - ((returnButton.frame.size.height + 10.0) * 2.0)),
-                                         returnButton.frame.origin.y,
-                                         returnButton.frame.size.height,
-                                         returnButton.frame.size.height)];
-    
-    uploadButton.layer.cornerRadius = 10.0;
-    uploadButton.tag = 334;
-    uploadButton.backgroundColor = UIColor.whiteColor;
-    uploadButton.imageEdgeInsets = UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0);
-    uploadButton.layer.borderColor = UIColor.blackColor.CGColor;
-    uploadButton.layer.borderWidth = 2.0;
-    
-    [uploadButton setImage:[UIImage imageWithContentsOfFile:
-                            [NSBundle.mainBundle pathForResource:@"uploadCloud"
-                                                          ofType:@"png"]]
-                  forState:UIControlStateNormal];
-    
-    [uploadButton addTarget:self
-                     action:@selector(uploadValues:)
-           forControlEvents:UIControlEventTouchUpInside];
-    
-    [headerView addSubview:uploadButton];
-    
-    UIButton *downloadButton = [[UIButton alloc] initWithFrame:
-                                CGRectMake((headerView.frame.size.width - (returnButton.frame.size.height + 10.0)),
-                                           returnButton.frame.origin.y,
-                                           returnButton.frame.size.height,
-                                           returnButton.frame.size.height)];
-    
-    downloadButton.layer.cornerRadius = 10.0;
-    downloadButton.tag = 335;
-    downloadButton.backgroundColor = UIColor.whiteColor;
-    downloadButton.imageEdgeInsets = UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0);
-    downloadButton.layer.borderColor = UIColor.blackColor.CGColor;
-    downloadButton.layer.borderWidth = 2.0;
-    
-    [downloadButton setImage:[UIImage imageWithContentsOfFile:
-                              [NSBundle.mainBundle pathForResource:@"downloadCloud"
-                                                            ofType:@"png"]]
-                    forState:UIControlStateNormal];
-    
-    [downloadButton addTarget:self
-                       action:@selector(downloadValues:)
-             forControlEvents:UIControlEventTouchUpInside];
-    
-    [headerView addSubview:downloadButton];
-    
     return headerView;
 }
 
@@ -812,11 +768,11 @@ viewForHeaderInSection:(NSInteger)section
         alert.tag = 22222;
     }
     
-    else if (range < 1.0)
+    else if (range < 0.0)
     {
         NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                           delegate:self
-                                                             title:@"Calibration values must be at least 1\u00B0 apart and must be in ascending slope order. You will need to fix this by removing and/or adding values before calibrating."
+                                                             title:@"Calibration values must be in ascending slope order. You will need to fix this by removing and/or adding values before calibrating."
                                                    buttonTextArray:@[@"OK"]
                                                   destructiveIndex:0];
         alert.tag = 22222;
@@ -876,7 +832,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)addCalibrationValue:(UIButton *)button
 {
-    if ([_calibrationValues[0] count] > 3)
+    if ([_calibrationValues[0] count] > 4)
         return;
     
     NVSliderController *slider = nil;
@@ -971,16 +927,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)sliderViewDidCancel:(NVSliderController *)sliderView
 {
     [sliderView hideSliderController:YES];
-}
-
-- (void)uploadValues:(UIButton *)button
-{
-    //implement upload calibration values to server here
-}
-
-- (void)downloadValues:(UIButton *)button
-{
-    //implement download calibration values to server here
 }
 
 - (void)alertView:(NVAlertView *)alertView
