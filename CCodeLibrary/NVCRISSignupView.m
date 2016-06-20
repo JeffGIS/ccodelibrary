@@ -440,6 +440,11 @@
     }
 }
 
+- (void)goBack
+{
+    [self backButtonTapped:nil];
+}
+
 - (void)backButtonTapped:(UIButton *)button
 {
     [self makeTFLikeTF:_nameTF];
