@@ -746,6 +746,10 @@ replacementString:(NSString *)string
                      forState:UIControlStateNormal];
     }
     
+    [self enableControl:_sendButton
+                enabled:((_nameTF.text.length && _orgTF.text.length && _phoneTF.text.length
+                          && _emailTF.text.length) || testEmailEntered)];
+    
     return NO;
 }
 
