@@ -711,6 +711,7 @@ replacementString:(NSString *)string
     
     if (testEmailEntered)
     {
+        SetUseDemoID (TRUE);
         [_sendButton setTitle:@"Continue"
                      forState:UIControlStateNormal];
         
@@ -732,6 +733,9 @@ replacementString:(NSString *)string
         
         [UserDefaults.defaults saveString:@""
                                    forKey:@"UserEmailInfo"];
+        [UserDefaults.defaults saveInteger:-1
+                                    forKey:@"NVCRISUserNumber"];
+
     }
     
     else
