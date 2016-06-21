@@ -19,4 +19,6 @@
 - (id)initWithOrigin:(CGPoint)origin
       hasComplexView:(BOOL)hasComplexView;
 
+- (void)updateWidthForText;
+
 @end

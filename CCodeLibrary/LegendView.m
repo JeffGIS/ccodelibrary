@@ -6,7 +6,7 @@
 
 @interface LegendView ()
 
-@property (nonatomic) CGFloat size;
+@property (nonatomic) CGFloat size, nonLabelWidth;
 
 @end
 
@@ -18,6 +18,7 @@
     CGFloat margin = 4.0, width = 280.0, height = 140.0, markerMargin = 6.0;
     CGRect frame = CGRectZero;
     _size = 15.0;
+    _nonLabelWidth = (_size + (margin * 3.0));
     
     if (hasComplexView)
         frame = CGRectMake(origin.x, origin.y, width, height);
@@ -120,6 +121,31 @@
     view.layer.borderWidth = 1.5;
     view.clipsToBounds = NO;
     [self addSubview:view];
+}
+
+- (void)updateWidthForText
+{
+    CGFloat maxWidth = 0.0;
+    
+    for (UILabel *labels in self.subviews)
+    {
+        if ([labels isKindOfClass:UILabel.class])
+            maxWidth = MAX(labels.intrinsicContentSize.width, maxWidth);
+    }
+    
+    for (UILabel *labels in self.subviews)
+    {
+        if ([labels isKindOfClass:UILabel.class])
+        {
+            CGRect frame = labels.frame;
+            frame.size.width = maxWidth;
+            labels.frame = frame;
+        }
+    }
+    
+    CGRect frame = self.frame;
+    frame.size.width = (maxWidth + _nonLabelWidth);
+    self.frame = frame;
 }
 
 @end
