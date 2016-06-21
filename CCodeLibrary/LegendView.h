@@ -1,7 +1,7 @@
 //  LegendView.h
 //  CCodeLibrary
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 @interface LegendView : UIView
 
@@ -17,6 +17,6 @@
 @property (nonatomic) UIView *complexMarker;
 
 - (id)initWithOrigin:(CGPoint)origin
-     hasComplexView:(BOOL)hasComplexView;
+      hasComplexView:(BOOL)hasComplexView;
 
 @end

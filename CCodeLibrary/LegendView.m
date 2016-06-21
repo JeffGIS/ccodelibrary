@@ -4,20 +4,18 @@
 #import "LegendView.h"
 #import "UserDefaults.h"
 
+@interface LegendView ()
+
+@property (nonatomic) CGFloat size;
+
+@end
+
 @implementation LegendView
-{
-    CGFloat _size;
-}
 
 - (id)initWithOrigin:(CGPoint)origin
       hasComplexView:(BOOL)hasComplexView;
 {
     CGFloat margin = 4.0, width = 280.0, height = 140.0, markerMargin = 6.0;
-    UIColor *green = UserDefaults.defaults.darkGreen;
-    UIColor *red = UIColor.redColor;
-    UIColor *blue = UserDefaults.defaults.appleBlue;
-    UIColor *gray = UIColor.darkGrayColor;
-    UIColor *black = UIColor.blackColor;
     CGRect frame = CGRectZero;
     _size = 15.0;
     
@@ -43,60 +41,60 @@
         CGFloat labelWidth = (width - leftMargin);
         CGFloat labelHeight = ((height - buffer) / 6.0);
         
-        self.completed = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, margin, labelWidth, labelHeight)];
-        self.toBeDone = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, (labelHeight + margin), labelWidth, labelHeight)];
-        self.notAssigned = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 2.0) + margin), labelWidth, labelHeight)];
+        _completed = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, margin, labelWidth, labelHeight)];
+        _toBeDone = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, (labelHeight + margin), labelWidth, labelHeight)];
+        _notAssigned = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 2.0) + margin), labelWidth, labelHeight)];
         
-        [self setupLabel:self.completed
-               textColor:green];
+        [self setupLabel:_completed
+               textColor:UserDefaults.defaults.darkGreen];
         
-        [self setupLabel:self.toBeDone
-               textColor:red];
+        [self setupLabel:_toBeDone
+               textColor:UIColor.redColor];
         
-        [self setupLabel:self.notAssigned
-               textColor:blue];
+        [self setupLabel:_notAssigned
+               textColor:UIColor.blueColor];
         
         if (hasComplexView)
         {
-            self.complex = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 3.0) + margin), labelWidth, labelHeight)];
-            self.numInts = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 4.0) + margin), labelWidth, labelHeight)];
-            self.numRamps = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 5.0) + margin), labelWidth, labelHeight)];
+            _complex = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 3.0) + margin), labelWidth, labelHeight)];
+            _numInts = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 4.0) + margin), labelWidth, labelHeight)];
+            _numRamps = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 5.0) + margin), labelWidth, labelHeight)];
             
-            [self setupLabel:self.complex
-                   textColor:gray];
+            [self setupLabel:_complex
+                   textColor:UIColor.darkGrayColor];
         }
         
         else
         {
-            self.numInts = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 3.0) + margin), labelWidth, labelHeight)];
-            self.numRamps = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 4.0) + margin), labelWidth, labelHeight)];
+            _numInts = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 3.0) + margin), labelWidth, labelHeight)];
+            _numRamps = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 4.0) + margin), labelWidth, labelHeight)];
         }
         
-        [self setupLabel:self.numRamps
-               textColor:black];
+        [self setupLabel:_numRamps
+               textColor: UIColor.blackColor];
         
-        [self setupLabel:self.numInts
-               textColor:black];
+        [self setupLabel:_numInts
+               textColor: UIColor.blackColor];
         
-        self.completedMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, buffer, _size, _size)];
-        self.toBeDoneMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, (labelHeight + buffer), _size, _size)];
-        self.notAssignedMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, ((labelHeight * 2.0) + buffer), _size, _size)];
+        _completedMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, buffer, _size, _size)];
+        _toBeDoneMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, (labelHeight + buffer), _size, _size)];
+        _notAssignedMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, ((labelHeight * 2.0) + buffer), _size, _size)];
         
-        [self setupView:self.completedMarker
-        backgroundColor:green];
+        [self setupView:_completedMarker
+        backgroundColor:UserDefaults.defaults.darkGreen];
         
-        [self setupView:self.toBeDoneMarker
-        backgroundColor:red];
+        [self setupView:_toBeDoneMarker
+        backgroundColor:UIColor.redColor];
         
-        [self setupView:self.notAssignedMarker
-        backgroundColor:blue];
+        [self setupView:_notAssignedMarker
+        backgroundColor:UIColor.blueColor];
         
         if (hasComplexView)
         {
-            self.complexMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, ((labelHeight * 3.0) + buffer), _size, _size)];
+            _complexMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, ((labelHeight * 3.0) + buffer), _size, _size)];
             
-            [self setupView:self.complexMarker
-            backgroundColor:gray];
+            [self setupView:_complexMarker
+            backgroundColor:UIColor.darkGrayColor];
         }
     }
     
