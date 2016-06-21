@@ -625,6 +625,12 @@
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string
 {
+    NSString *testName = @"App Store Tester";
+    NSString *testOrg = @"App Store";
+    NSString *testPhone = @"(555) 555-5555";
+    NSString *testEmail = @"test@test.com";
+    NSString *testUserNumber = @"TESTER";
+    
     if (textField == _phoneTF)
     {
         NSString *totalString = [NSString stringWithFormat:@"%@%@", textField.text, string];
@@ -641,8 +647,11 @@ replacementString:(NSString *)string
                                       deleteLastChar:NO];
         }
         
-        [UserDefaults.defaults saveString:textField.text
-                                   forKey:@"UserPhoneInfo"];
+        if (![textField.text isEqualToString:testPhone])
+        {
+            [UserDefaults.defaults saveString:textField.text
+                                       forKey:@"UserPhoneInfo"];
+        }
     }
     
     else
@@ -694,8 +703,48 @@ replacementString:(NSString *)string
                                                               toPosition:end]];
     }
     
+    BOOL testEmailEntered = [_emailTF.text isEqualToString:testEmail];
+    
     [self enableControl:_sendButton
-                enabled:_nameTF.text.length && _orgTF.text.length && _phoneTF.text.length && _emailTF.text.length];
+                enabled:((_nameTF.text.length && _orgTF.text.length && _phoneTF.text.length
+                          && _emailTF.text.length) || testEmailEntered)];
+    
+    if (testEmailEntered)
+    {
+        [_sendButton setTitle:@"Continue"
+                     forState:UIControlStateNormal];
+        
+        
+        
+        _nameTF.text = testName;
+        _orgTF.text = testOrg;
+        _phoneTF.text = testPhone;
+        _userNumberTF.text = testUserNumber;
+        
+        [UserDefaults.defaults saveString:@""
+                                   forKey:@"UserPhoneInfo"];
+        
+        [UserDefaults.defaults saveString:@""
+                                   forKey:@"UserNameInfo"];
+        
+        [UserDefaults.defaults saveString:@""
+                                   forKey:@"UserOrgInfo"];
+        
+        [UserDefaults.defaults saveString:@""
+                                   forKey:@"UserEmailInfo"];
+    }
+    
+    else
+    {
+        _nameTF.text = [UserDefaults.defaults stringForKey:@"UserNameInfo"];
+        _orgTF.text = [UserDefaults.defaults stringForKey:@"UserOrgInfo"];
+        _phoneTF.text = [UserDefaults.defaults stringForKey:@"UserPhoneInfo"];
+        _emailTF.text = [UserDefaults.defaults stringForKey:@"UserEmailInfo"];
+        _userNumberTF.text = @"";
+        
+        [_sendButton setTitle:@"Send"
+                     forState:UIControlStateNormal];
+    }
     
     return NO;
 }

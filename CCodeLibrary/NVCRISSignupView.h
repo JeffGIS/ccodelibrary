@@ -1,7 +1,7 @@
 //  NVCRISSignupView.h
 //  CCodeLibrary
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 @class NVCRISSignupView;
 
