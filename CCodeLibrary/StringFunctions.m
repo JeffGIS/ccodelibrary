@@ -7,6 +7,7 @@
 #import <sys/utsname.h>
 
 static useDemoID = FALSE;
+static useIDInc = 0;
 
 BOOL hasNetwork()
 {
@@ -69,9 +70,13 @@ void SetUseDemoID (BOOL set)
     return;
 }
 
+void SetVendoIDInc (int inc)
+{
+    useIDInc = inc;
+}
 NSString *vendorUUIDString(void)
 {
-    BOOL alterUUID = NO;
+    NSString *replacement = [NSString stringWithFormat:@"%4.4i",useIDInc];
     
     NSString *rtn = UIDevice.currentDevice.identifierForVendor.UUIDString;
     
@@ -79,9 +84,8 @@ NSString *vendorUUIDString(void)
     {
         rtn = @"DEMODEMO-DEMO-DEMO-DEMO-VENDRIDSTRNG";
     }
-    else if (alterUUID)
+    else if (useIDInc)
     {
-        NSString *replacement = @"TEST";
         NSRange range = NSMakeRange((rtn.length - replacement.length), replacement.length);
         NSMutableString *tempString = [NSMutableString stringWithString:rtn];
         [tempString replaceCharactersInRange:range withString:replacement];

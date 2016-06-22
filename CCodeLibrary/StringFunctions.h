@@ -11,6 +11,7 @@ NSString *deviceSystemInfo(void);
 NSString *deviceCarrier(void);
 NSString *deviceInfo();
 void SetUseDemoID (BOOL set);
+void SetVendoIDInc (int inc);
 NSString *vendorUUIDString(void);
 NSString *textBefore(NSString *string, NSString *before);
 NSString *textAfter(NSString *string, NSString *after);
