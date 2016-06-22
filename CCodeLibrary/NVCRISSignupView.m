@@ -3,8 +3,9 @@
 
 #import "NVCRISSignupView.h"
 #import "UserDefaults.h"
+#import "NVAlertView.h"
 
-@interface NVCRISSignupView () <UITextFieldDelegate,NVWebViewDelegate>
+@interface NVCRISSignupView () <UITextFieldDelegate,NVWebViewDelegate,NVAlertViewDelegate>
 
 @property (nonatomic, weak) id <NVCRISSignupViewDelegate> delegate;
 @property (nonatomic) UIView *overlayView;
@@ -488,6 +489,17 @@
 
 - (void)privacyPolicyTapped:(UIButton *)button
 {
+    if (!hasNetwork())
+    {
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.superview
+                                                          delegate:self
+                                                             title:@"Network Required to View Privacy Policy"
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
+#pragma unused(alert)
+        return;
+    }
+    
     [self dismissKeyboard];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
@@ -498,6 +510,17 @@
 
 - (void)termsTapped:(UIButton *)button
 {
+    if (!hasNetwork())
+    {
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.superview
+                                                          delegate:self
+                                                             title:@"Network Required to View Terms of Service"
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
+#pragma unused(alert)
+        return;
+    }
+    
     [self dismissKeyboard];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
@@ -511,6 +534,12 @@
                    withObject:nil
                    afterDelay:1.0];
     }
+}
+
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView hideLargeAlertView:YES];
 }
 
 - (void)enableCheckmark
@@ -711,11 +740,10 @@ replacementString:(NSString *)string
     
     if (testEmailEntered)
     {
-        SetUseDemoID (TRUE);
+        //SetUseDemoID(TRUE);
+        
         [_sendButton setTitle:@"Continue"
                      forState:UIControlStateNormal];
-        
-        
         
         _nameTF.text = testName;
         _orgTF.text = testOrg;
@@ -733,9 +761,9 @@ replacementString:(NSString *)string
         
         [UserDefaults.defaults saveString:@""
                                    forKey:@"UserEmailInfo"];
+        
         [UserDefaults.defaults saveInteger:-1
                                     forKey:@"NVCRISUserNumber"];
-
     }
     
     else
@@ -744,10 +772,14 @@ replacementString:(NSString *)string
         _orgTF.text = [UserDefaults.defaults stringForKey:@"UserOrgInfo"];
         _phoneTF.text = [UserDefaults.defaults stringForKey:@"UserPhoneInfo"];
         _emailTF.text = [UserDefaults.defaults stringForKey:@"UserEmailInfo"];
-        _userNumberTF.text = @"";
         
-        [_sendButton setTitle:@"Send"
-                     forState:UIControlStateNormal];
+        if ([_userNumberTF.text isEqualToString:testUserNumber])
+        {
+            _userNumberTF.text = @"";
+            
+            [_sendButton setTitle:@"Send"
+                         forState:UIControlStateNormal];
+        }
     }
     
     [self enableControl:_sendButton
