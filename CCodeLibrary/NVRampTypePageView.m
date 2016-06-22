@@ -171,7 +171,7 @@
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _returnButton.frame = CGRectMake(20.0, 8.0, 160.0, 56.0);
     _returnButton.backgroundColor = _colors.enabledColor;
-    _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    _returnButton.titleLabel.font = [UIFont systemFontOfSize:32.0];
     _returnButton.layer.cornerRadius = 10.0;
     
     [_returnButton setTitle:@"< Return"

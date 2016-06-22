@@ -676,11 +676,8 @@ replacementString:(NSString *)string
                                       deleteLastChar:NO];
         }
         
-        if (![textField.text isEqualToString:testPhone])
-        {
-            [UserDefaults.defaults saveString:textField.text
-                                       forKey:@"UserPhoneInfo"];
-        }
+        [UserDefaults.defaults saveString:textField.text
+                                   forKey:@"UserPhoneInfo"];
     }
     
     else

@@ -1334,7 +1334,6 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
 - (BOOL)assignRemainingIntersectionsTo:(int)user
                                   type:(NSString *)type
-
 {
     BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
