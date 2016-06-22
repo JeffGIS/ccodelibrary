@@ -1454,37 +1454,6 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     return path;
 }
 
-- (void) prepareInsert
-{
-    char buffer1[] = "INSERT INTO Intersections VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-    char buffer2[] = "INSERT INTO Intersections_index VALUES (?,?,?,?,?);";
-    SQLOK(sqlite3_prepare_v2(self.curbRampData.database, buffer1, -1, &_statement1, NULL), self.curbRampData.database);
-    SQLOK(sqlite3_prepare_v2(self.curbRampData.database, buffer2, -1, &_statement2, NULL), self.curbRampData.database);
-
-}
-- (void) bindStatementsToStruct:(INTERSECTION_STRUCT*) intStruct
-{
-    int *pInt;
-    int i;
-    
-    for (i = 1, pInt = &intStruct->intID; i < 30; i++, pInt++)
-        SQLOK(sqlite3_bind_int(_statement1, i, *pInt), self.curbRampData.database);
-    
-    SQLOK(sqlite3_bind_text(_statement1, 30, intStruct->streetNames, -1, SQLITE_STATIC), self.curbRampData.database);
-    SQLOK(sqlite3_bind_text(_statement1, 31, intStruct->streetAzms, -1, SQLITE_STATIC),self.curbRampData.database);
-    SQLOK(sqlite3_bind_double(_statement1, 32,intStruct->lat), self.curbRampData.database);
-    SQLOK(sqlite3_bind_double(_statement1, 33,intStruct->lon), self.curbRampData.database);
-    SQLOK(sqlite3_bind_text(_statement1, 34, intStruct->comment, -1, SQLITE_STATIC), self.curbRampData.database);
-    SQLOK(sqlite3_bind_int(_statement1, 35, intStruct->doLater), self.curbRampData.database);
-    SQLOK(sqlite3_bind_int(_statement1, 36, intStruct->zoomLevel), self.curbRampData.database);
-    
-    SQLOK(sqlite3_bind_int(_statement2, 1, intStruct->intID), self.curbRampData.database);
-    SQLOK(sqlite3_bind_double(_statement2, 2, intStruct->lon), self.curbRampData.database);
-    SQLOK(sqlite3_bind_double(_statement2, 3, intStruct->lon), self.curbRampData.database);
-    SQLOK(sqlite3_bind_double(_statement2, 4, intStruct->lat), self.curbRampData.database);
-    SQLOK(sqlite3_bind_double(_statement2, 5, intStruct->lat), self.curbRampData.database);
-
-}
 
 -(NSString*) intStructToCmd:(INTERSECTION_STRUCT*)pInt
 {
@@ -1539,7 +1508,6 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     if (![self.curbRampData createIntersectionsTable:YES])
         goto Exit2;
     
-    [self prepareInsert];
     SQLOK(sqlite3_exec(self.curbRampData.database, "BEGIN TRANSACTION", NULL, NULL, NULL),self.curbRampData.database);
     
     fgetstring(index, maxIndex, fidIndex);
