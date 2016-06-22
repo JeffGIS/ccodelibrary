@@ -363,12 +363,19 @@
     else
         return UIApplication.sharedApplication.statusBarOrientation;
 }
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [UIApplication.sharedApplication setIdleTimerDisabled:YES];
+}
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
     [self closeGMServer];
+    [UIApplication.sharedApplication setIdleTimerDisabled:NO];
+
 }
 
 - (void)setupLabel:(UILabel *)label
@@ -468,7 +475,7 @@
 
 - (void)cancelButtonTapped:(UIButton *)button
 {
-    
+    NSLog (@"cancel button tapped");
 }
 
 - (void)titleButtonTapped:(UIButton *)button
