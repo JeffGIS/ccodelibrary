@@ -55,7 +55,7 @@ typedef NS_ENUM(NSInteger, FTPDataType)
 @property (nonatomic, assign, readwrite ) BOOL useOnlyPrimaryFTP;
 @property BOOL useTestServer;
 @property (nonatomic, strong, readwrite) NSURLConnection *connection;
-@property (nonatomic, copy, readwrite) NSString *filePath;
+@property NSString *filePath;
 @property (nonatomic, strong, readwrite) NSOutputStream *fileStream;
 @property (nonatomic, copy, readwrite) NSString *ftpSiteOveride;
 @property (nonatomic, copy, readwrite) NSString *usernameOveride;
