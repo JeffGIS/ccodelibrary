@@ -421,6 +421,8 @@ didReceiveResponse:(NSURLResponse *)response
         else
             _filePath = newFilePath;
     }
+    else
+        NSLog (@"No Extension");
     
     [self stopReceiveWithStatus:FTPStatusOK
                    statusString:@""];
