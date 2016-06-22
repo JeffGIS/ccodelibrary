@@ -25,8 +25,6 @@
 @property BOOL gettingUploaded;
 @property (nonatomic) CurbRampData *curbRampData;
 @property (nonatomic) FTPDataPull *pull;
-@property (nonatomic) sqlite3_stmt *statement1;
-@property (nonatomic) sqlite3_stmt *statement2;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid;
 
