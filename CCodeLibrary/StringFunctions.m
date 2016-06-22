@@ -74,6 +74,7 @@ void SetVendoIDInc (int inc)
 {
     useIDInc = inc;
 }
+
 NSString *vendorUUIDString(void)
 {
     NSString *replacement = [NSString stringWithFormat:@"%4.4i",useIDInc];
