@@ -6,10 +6,10 @@
 #import "Reachability.h"
 #import <sys/utsname.h>
 
-static useDemoID = FALSE;
-static useIDInc = 0;
+static BOOL useDemoID = FALSE;
+static int useIDInc = 0;
 
-BOOL hasNetwork()
+BOOL hasNetwork(void)
 {
     Reachability *reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
