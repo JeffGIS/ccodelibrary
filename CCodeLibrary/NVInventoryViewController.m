@@ -1665,11 +1665,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     if (ramp.rampType == RampTypeCombPerpWalk)
         sideRamp.rampType = RampTypeCombLeftWalk;
     
-    else if (ramp.rampType == RampTypeCombPerpNonWalk)
-        sideRamp.rampType = RampTypeCombLeftNonWalk;
-    
     else
-        sideRamp.rampType = RampTypeCombBuiltUpLeft;
+        sideRamp.rampType = RampTypeCombLeftNonWalk;
     
     sideRamp.rampExists = YES;
     sideRamp.isComplete = NO;
@@ -1687,11 +1684,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     if (ramp.rampType == RampTypeCombPerpWalk)
         sideRamp.rampType = RampTypeCombRightWalk;
     
-    else if (ramp.rampType == RampTypeCombPerpNonWalk)
-        sideRamp.rampType = RampTypeCombRightNonWalk;
-    
     else
-        sideRamp.rampType = RampTypeCombBuiltUpRight;
+        sideRamp.rampType = RampTypeCombRightNonWalk;
     
     sideRamp.rampExists = YES;
     sideRamp.isComplete = NO;

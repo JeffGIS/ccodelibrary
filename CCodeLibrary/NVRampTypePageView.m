@@ -258,7 +258,7 @@
                         [UIView animateWithDuration:0.25
                                          animations:^{
                                              labels.frame = _originalLabelFrame;
-                                             labels.font = [UIFont boldSystemFontOfSize:16.0];
+                                             labels.font = [UIFont systemFontOfSize:16.0];
                                          }];
                     }
                     
