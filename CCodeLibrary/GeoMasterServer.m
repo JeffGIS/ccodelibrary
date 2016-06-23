@@ -2,7 +2,7 @@
 //  CCodeLibrary
 
 #define TEST_PORT 8080
-#define PRODUCTION_PORT 8080
+#define PRODUCTION_PORT 443
 #define TEST_SERVER @"gssidata.com"
 #define PRODUCTION_SERVER @"gssiserver3.com"
 //#define GM_SERVER @"74.208.70.192"
