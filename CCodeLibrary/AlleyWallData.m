@@ -505,8 +505,8 @@ SELECT max(_id) FROM MyTable*/
         'SegmentPlumbness' REAL,\
         'PlumbnessDistance' REAL,\
         PRIMARY KEY('Wall ID','InspDate','SEGMENT'));";
-    if (sendToServer)
-        [CRAPI.sharedInstance clearOutputDirectory];
+//    if (sendToServer)
+//        [CRAPI.sharedInstance clearOutputDirectory];
     [self executeCmd:(char *)cmd.UTF8String
         sendToServer:sendToServer];
     return rtn;
