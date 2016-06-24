@@ -61,6 +61,8 @@ fromDate:(NSString *)fromDate
                     lastPictNum:(int*)pictNum;
 - (NSString*) outputDataFile:(int)fileNum
                         iPad:(int)iPad;
+- (NSString*) getSendToServerFile:(int)iPad;
+
 + (BOOL) setLastDataUpdateNum:(int)nextNum;
 + (int)  getLastDataUpdateNum;
 - (BOOL) setLastPictUpdateNum:(int)lastNum

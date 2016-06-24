@@ -161,10 +161,12 @@ static int fileSequence = 0;
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer;
 {
+    int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
+    if (!iPad)
+        sendToServer = YES;
     BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     if (rtn && sendToServer)
     {
-        int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
         NSString * sendToServerFile = [self getSendToServerFile:iPad];
         int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:sendToServerFile
                                                                            error:nil].fileSize;
@@ -931,6 +933,8 @@ SELECT max(_id) FROM MyTable*/
 - (int) getLastDataUpdateNumber:(int)iPad
                     lastPictNum:(int*)pictNum
 {
+    if (!iPad)
+        return 0;
     int lastNum  = 0;
     int lastPictNum = 0;
     BOOL opened = [self open];
