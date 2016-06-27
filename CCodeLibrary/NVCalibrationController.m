@@ -309,8 +309,8 @@ static CGFloat _deviceValues[9][4];
     _currentValue = [_calibrationValues[NVCalibrationArrayIndexValue][index] floatValue];
     _currentType = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][index] integerValue];
     
-    GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:0.0
-                                                                               criticalSideValue:0.0
+    GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
+                                                                               criticalSideValue:-9999.0
                                                                                       errorValue:0.0
                                                                                   useCalibration:NO
                                                                                         selfTest:NO
@@ -393,8 +393,8 @@ static CGFloat _deviceValues[9][4];
     
     if (_hasBeenCalibrated)
     {
-        slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:0
-                                                          criticalSideValue:0
+        slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
+                                                          criticalSideValue:-9999.0
                                                                  errorValue:0
                                                              useCalibration:YES
                                                                    selfTest:NO
@@ -406,8 +406,8 @@ static CGFloat _deviceValues[9][4];
     
     else
     {
-        slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:0
-                                                          criticalSideValue:0
+        slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
+                                                          criticalSideValue:-9999.0
                                                                  errorValue:0
                                                              useCalibration:NO
                                                                    selfTest:NO
@@ -938,8 +938,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     {
         if (alertView.tag == 11111)
         {
-            GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:0
-                                                                                       criticalSideValue:0
+            GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
+                                                                                       criticalSideValue:-9999.0
                                                                                               errorValue:0
                                                                                           useCalibration:NO
                                                                                                 selfTest:NO
