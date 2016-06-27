@@ -50,7 +50,6 @@ static int COUNT=100;
                                             criticalSideValue:(CGFloat)criticalSideVal
                                                    errorValue:(CGFloat)errVal
                                                useCalibration:(BOOL)useCalibration
-                                                     selfTest:(BOOL)selfTest
                                                  steadyFactor:(CGFloat)steadyFac
                                                   countFactor:(CGFloat)countFac
                                                displayDegrees:(BOOL)displayDegrees
@@ -71,7 +70,6 @@ static int COUNT=100;
     slopeController.criticalValue = criticalVal;
     slopeController.criticalSideValue = criticalSideVal;
     slopeController.errorValue = errVal;
-    slopeController.selfTest = selfTest;
     slopeController.promptText = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
     
     NVSlopeData data;
@@ -664,7 +662,7 @@ static int COUNT=100;
             [self slopesFromAccelerometer:1];
             
             if (_data.maxSlopePct < (_criticalValue - _errorValue) ||
-                (_data.maxSlopePct > (_criticalValue + _errorValue)) || !_selfTest)
+                (_data.maxSlopePct > (_criticalValue + _errorValue)))
             {
                 [self slopeMeasurementComplete];
             }

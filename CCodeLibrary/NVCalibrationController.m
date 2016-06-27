@@ -313,7 +313,6 @@ static CGFloat _deviceValues[9][4];
                                                                                criticalSideValue:-9999.0
                                                                                       errorValue:0.0
                                                                                   useCalibration:NO
-                                                                                        selfTest:NO
                                                                                     steadyFactor:0.0
                                                                                      countFactor:0.0
                                                                                   displayDegrees:(_currentType == NVCalibrationTypeDegrees)
@@ -388,18 +387,16 @@ static CGFloat _deviceValues[9][4];
 - (void)testButtonTapped:(UIButton *)button
 {
     _currentType = NVCalibrationTypeDefault;
-    
     GSSiSlopeViewController *slopeVC = nil;
     
     if (_hasBeenCalibrated)
     {
         slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
                                                           criticalSideValue:-9999.0
-                                                                 errorValue:0
+                                                                 errorValue:0.0
                                                              useCalibration:YES
-                                                                   selfTest:NO
-                                                               steadyFactor:0
-                                                                countFactor:0
+                                                               steadyFactor:0.0
+                                                                countFactor:0.0
                                                              displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                    delegate:self];
     }
@@ -408,11 +405,10 @@ static CGFloat _deviceValues[9][4];
     {
         slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
                                                           criticalSideValue:-9999.0
-                                                                 errorValue:0
+                                                                 errorValue:0.0
                                                              useCalibration:NO
-                                                                   selfTest:NO
-                                                               steadyFactor:0
-                                                                countFactor:0
+                                                               steadyFactor:0.0
+                                                                countFactor:0.0
                                                              displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                    delegate:self];
     }
@@ -940,11 +936,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         {
             GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
                                                                                        criticalSideValue:-9999.0
-                                                                                              errorValue:0
+                                                                                              errorValue:0.0
                                                                                           useCalibration:NO
-                                                                                                selfTest:NO
-                                                                                            steadyFactor:0
-                                                                                             countFactor:0
+                                                                                            steadyFactor:0.0
+                                                                                             countFactor:0.0
                                                                                           displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                                                 delegate:self];
             

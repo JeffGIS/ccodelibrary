@@ -53,13 +53,11 @@ typedef struct NVSlopeData {
 @property (nonatomic) CGFloat criticalSideValue;
 @property (nonatomic, copy) NSString *promptText;
 @property (nonatomic) CGFloat errorValue;
-@property BOOL selfTest;
 
 + (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(CGFloat)criticalVal
                                             criticalSideValue:(CGFloat)criticalSideVal
                                                    errorValue:(CGFloat)errVal
                                                useCalibration:(BOOL)useCalibration
-                                                     selfTest:(BOOL)selfTest
                                                  steadyFactor:(CGFloat)steadyFac
                                                   countFactor:(CGFloat)countFac
                                                displayDegrees:(BOOL)displayDegrees
