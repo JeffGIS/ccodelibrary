@@ -1066,7 +1066,6 @@ Top:
     _push = [FTPDataPush push];
     _push.delegate = self;
     _push.popover = _popoverView;
-    _push.useOnlyPrimaryFTP = YES;
     
     NSString *toDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
@@ -1195,7 +1194,6 @@ Done:
     _pull = FTPDataPull.pull;
     _pull.delegate = self;
     _pull.popover = _popoverView;
-    _pull.useOnlyPrimaryFTP = YES;
     _pull.useTestServer = NO;
     if (_process == DOWNLOAD_DATA_PROCESS)
     {

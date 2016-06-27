@@ -22,6 +22,7 @@ enum {
 @property (nonatomic) long fileSize, totBytesWritten;
 @property (nonatomic) int ii;
 @property id <GSSiPopoverViewDelegate> savePopoverDelegate;
+@property BOOL useOnlyPrimaryFTP;
 
 @end
 
@@ -32,7 +33,9 @@ enum {
 
 + (FTPDataPush *)push
 {
-    return [[FTPDataPush alloc] init];
+    FTPDataPush *dataPush = FTPDataPush.new;
+    dataPush.useOnlyPrimaryFTP = YES;
+    return dataPush;
 }
 
 - (uint8_t *)buffer
@@ -133,7 +136,7 @@ enum {
     
     if (!url)
     {
-        if (!_hasFailed)
+        if (!_hasFailed && !_useOnlyPrimaryFTP)
         {
             if (_currentFtp == _ftpSite)
             {

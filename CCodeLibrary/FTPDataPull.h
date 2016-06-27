@@ -52,7 +52,6 @@ typedef NS_ENUM(NSInteger, FTPDataType)
 
 @property (nonatomic, strong) id <FTPDataPullDelegate> delegate; //nonstandard strong pointer needed for intersection database init
 @property (nonatomic, assign, readonly ) BOOL isReceiving;
-@property (nonatomic, assign, readwrite ) BOOL useOnlyPrimaryFTP;
 @property BOOL useTestServer;
 @property (nonatomic, strong, readwrite) NSURLConnection *connection;
 @property NSString *filePath;

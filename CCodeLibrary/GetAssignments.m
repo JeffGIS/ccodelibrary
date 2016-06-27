@@ -21,7 +21,6 @@
     _pull = FTPDataPull.pull;
     _pull.delegate = self;
     _pull.popover = popover;
-    _pull.useOnlyPrimaryFTP = YES;
     
     [_pull getFile:fileName
      fromDirectory:@"NVCRIS/Assignments"

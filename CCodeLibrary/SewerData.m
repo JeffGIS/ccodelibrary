@@ -193,7 +193,6 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
     FTPDataPull *pull = FTPDataPull.pull;
     pull.delegate = delegate;
     pull.popover = popover;
-    pull.useOnlyPrimaryFTP = YES;
     pull.dataType = FTPDataPlat;
     pull.useTestServer = YES;
     NSString * fileName;

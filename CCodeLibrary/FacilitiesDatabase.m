@@ -111,7 +111,6 @@ static FacilitiesDatabase *_statdatabase = nil;
     FTPDataPull *pull = FTPDataPull.pull;
     pull.delegate = self;
     pull.popover = popover;
-    pull.useOnlyPrimaryFTP = NO;
     
     [pull getFile:fileName
     fromDirectory:@"Bill/PlaceFacilities"

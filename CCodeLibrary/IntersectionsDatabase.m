@@ -1632,7 +1632,6 @@ Exit:
     _pull = FTPDataPull.pull;
     _pull.delegate = self;
     _pull.popover = popover;
-    _pull.useOnlyPrimaryFTP = NO;
     _pull.createDirectory = YES;
     
     [_pull getFile:fileName
@@ -1661,7 +1660,6 @@ Exit:
     FTPDataPull *pull = FTPDataPull.pull;
     pull.delegate = self;
     pull.popover = popover;
-    pull.useOnlyPrimaryFTP = YES;
     
     [pull getFile:fileName
     fromDirectory:@"Bill/UploadedIntersections"

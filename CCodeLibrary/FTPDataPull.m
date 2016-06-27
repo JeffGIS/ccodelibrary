@@ -12,6 +12,7 @@
 @property (nonatomic) NSInteger refreshOption;
 @property id <GSSiPopoverViewDelegate> savePopoverDelegate;
 @property (nonatomic, copy) NSString *tempExtension;
+@property BOOL useOnlyPrimaryFTP;
 
 @end
 
@@ -27,14 +28,8 @@ static FTPDataPull * _statpull = nil;
     _statpull.haveCalledDelegate = NO;
     _statpull.useTestServer = NO;
     _statpull.tempExtension = @".download";
+    _statpull.useOnlyPrimaryFTP = YES;
     return _statpull;
-}
-
-- (id)init
-{
-    self = [super init];
-    
-    return self;
 }
 
 - (int)getFile:(NSString *)fileName
@@ -51,6 +46,7 @@ static FTPDataPull * _statpull = nil;
     
     if ([toDirectory characterAtIndex:toDirectory.length-1] == '/')
         _toDirectory = [toDirectory substringToIndex:toDirectory.length-1];
+    
     else
         _toDirectory = toDirectory;
     
@@ -172,7 +168,7 @@ static FTPDataPull * _statpull = nil;
     
     if (!url)
     {
-        if (!_hasFailed)
+        if (!_hasFailed && !_useOnlyPrimaryFTP)
         {
             if (_currentFtp == _ftpSite)
             {
