@@ -421,6 +421,7 @@ didReceiveResponse:(NSURLResponse *)response
         else
             _filePath = newFilePath;
     }
+    
     else
         NSLog (@"No Extension");
     
@@ -437,30 +438,36 @@ didReceiveResponse:(NSURLResponse *)response
         _password = _passwordOveride;
         _port = _portOveride;
     }
+    
     else if (_useTestServer)
     {
         _ftpSite = @"gssidata.com";
         _username = @"GSSiData";
         _password = @"GSSi";
-        _port = @"14147";
+        
+        _ftpSite2 = @"thmgis.com";
+        _username2 = @"waypoint";
+        _password2 = @"pointway4*";
+        
+        _port = @"21";
     }
+    
     else
     {
         _ftpSite = @"gssiserver3.com";
         _username = @"GSSiProfessionalServer";
         _password = @"GSSi";
-        _port = @"21";
         
-       /* _ftpSite = @"192.168.254.39";
-        _username = @"GSSiLocal";
-        _password = @"GSSi";
-        _port = @"21";*/
-
+        /*_ftpSite = @"192.168.254.39";
+         _username = @"GSSiLocal";
+         _password = @"GSSi";*/
+        
+        _ftpSite2 = @"gssidata.com";
+        _username2 = @"GSSiData";
+        _password2 = @"GSSi";
+        
+        _port = @"21";
     }
-    
-    _ftpSite2 = @"thmgis.com";
-    _username2 = @"waypoint";
-    _password2 = @"pointway4*";
     
     _currentFtp = [UserDefaults.defaults stringForKey:@"CurrentFtp"];
     
@@ -479,8 +486,8 @@ didReceiveResponse:(NSURLResponse *)response
 
 - (void)setToFtpSite2
 {
-    _urlText = [NSString stringWithFormat:@"%@:%@@%@/%@/%@",
-                _username2, _password2, _ftpSite2, _directory, _fileName];
+    _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@",
+                _username2, _password2, _ftpSite2, _port, _directory, _fileName];
 }
 
 - (void)dealloc

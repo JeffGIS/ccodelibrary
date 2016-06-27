@@ -380,16 +380,16 @@ enum {
     _ftpSite = @"gssiserver3.com";
     _username = @"GSSiProfessionalServer";
     _password = @"GSSi";
+    
+    /*_ftpSite = @"192.168.254.39";
+    _username = @"GSSiLocal";
+    _password = @"GSSi";*/
+    
+    _ftpSite2 = @"gssidata.com";
+    _username2 = @"GSSiData";
+    _password2 = @"GSSi";
+    
     _port = @"21";
-    
-    //_ftpSite = @"192.168.254.39";
-    //_username = @"GSSiLocal";
-    //_password = @"GSSi";
-    //_port = @"21";
-    
-    _ftpSite2 = @"thmgis.com";
-    _username2 = @"waypoint";
-    _password2 = @"pointway4*";
     
     _currentFtp = [UserDefaults.defaults stringForKey:@"CurrentFtp"];
     
