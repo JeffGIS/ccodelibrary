@@ -429,49 +429,50 @@ didReceiveResponse:(NSURLResponse *)response
 {
     if (_ftpSiteOveride)
     {
-        _ftpSite = _ftpSiteOveride;
+        _useOnlyPrimaryFTP = YES;
+        _ftpSite = _currentFtp = _ftpSiteOveride;
         _username = _usernameOveride;
         _password = _passwordOveride;
         _port = _portOveride;
     }
     
-    else if (_useTestServer)
-    {
-        _ftpSite = @"gssidata.com";
-        _username = @"GSSiData";
-        _password = @"GSSi";
-        
-        _ftpSite2 = @"thmgis.com";
-        _username2 = @"waypoint";
-        _password2 = @"pointway4*";
-        
-        _port = @"21";
-    }
-    
     else
     {
-        _ftpSite = @"gssiserver3.com";
-        _username = @"GSSiProfessionalServer";
-        _password = @"GSSi";
+        if (_useTestServer)
+        {
+            _ftpSite = @"gssidata.com";
+            _username = @"GSSiData";
+            _password = @"GSSi";
+            
+            _ftpSite2 = @"thmgis.com";
+            _username2 = @"waypoint";
+            _password2 = @"pointway4*";
+        }
         
-        /*_ftpSite = @"192.168.254.39";
-         _username = @"GSSiLocal";
-         _password = @"GSSi";*/
-        
-        _ftpSite2 = @"gssidata.com";
-        _username2 = @"GSSiData";
-        _password2 = @"GSSi";
+        else
+        {
+            _ftpSite = @"gssiserver3.com";
+            _username = @"GSSiProfessionalServer";
+            _password = @"GSSi";
+            
+            /*_ftpSite = @"192.168.254.39";
+             _username = @"GSSiLocal";
+             _password = @"GSSi";*/
+            
+            _ftpSite2 = @"gssidata.com";
+            _username2 = @"GSSiData";
+            _password2 = @"GSSi";
+        }
         
         _port = @"21";
+        _currentFtp = [UserDefaults.defaults stringForKey:@"CurrentFtp"];
+        
+        if (_currentFtp == _ftpSite2)
+            [self setToFtpSite2];
+        
+        else
+            [self setToFtpSite1];
     }
-    
-    _currentFtp = [UserDefaults.defaults stringForKey:@"CurrentFtp"];
-    
-    if (_currentFtp == _ftpSite2)
-        [self setToFtpSite2];
-    
-    else
-        [self setToFtpSite1];
 }
 
 - (void)setToFtpSite1
