@@ -117,8 +117,16 @@ static int nInit=0;
 {
     [self close:TRUE];
     
-    BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
-                                                       error:nil];
+    NSError *error = nil;
+    
+    BOOL success = [NSFileManager.defaultManager removeItemAtPath:_path
+                                                            error:&error];
+    
+    if (success)
+        NSLog(@"Deleted %@ from device", _path);
+    
+    else
+        NSLog(@"Could not delete %@:%@ ", _path, error.localizedDescription);
 }
 
 - (int)datasetVersion

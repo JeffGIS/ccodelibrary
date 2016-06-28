@@ -836,6 +836,8 @@ BOOL countySupportsLookupForPID(NSString *PID)
 
 CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceFeet, CLLocationCoordinate2D origin)
 {
+    bearing *= DEGtoRAD;
+    
     CLLocationCoordinate2D location = {0};
     CGFloat distRadians = (distanceFeet / 20908129.3);
     
