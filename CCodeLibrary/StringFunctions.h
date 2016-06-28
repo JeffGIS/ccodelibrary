@@ -51,4 +51,4 @@ uint occurrencesOfCharacter(unichar character, NSString *string);
 BOOL appendStringToFile(NSString *str, NSString *filePath);
 NSString *urlSearchStringForPID(NSString *PID);
 BOOL countySupportsLookupForPID(NSString *PID);
-CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceMeters, CLLocationCoordinate2D origin);
+CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceFeet, CLLocationCoordinate2D origin);

@@ -834,10 +834,10 @@ BOOL countySupportsLookupForPID(NSString *PID)
     return rtn;
 }
 
-CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceMeters, CLLocationCoordinate2D origin)
+CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceFeet, CLLocationCoordinate2D origin)
 {
     CLLocationCoordinate2D location = {0};
-    CGFloat distRadians = (distanceMeters / 6372797.6);
+    CGFloat distRadians = (distanceFeet / 20908129.3);
     
     CGFloat lat1 = ((origin.latitude * M_PI) / 180.0);
     CGFloat lon1 = ((origin.longitude * M_PI) / 180.0);
