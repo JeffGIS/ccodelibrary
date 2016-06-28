@@ -1846,16 +1846,60 @@ Exit:
 
 }
 
+-(NSString*) fixStreetNames:(LPSTR)name
+{
+    while (*name == '|')
+        name++;
+    LPSTR end = strrchr (name,0);
+    end--;
+    while (end != name)
+    {
+        if (*end != '|')
+            break;
+        *end-- = 0;
+    }
+    NSString * fixedName = [NSString stringWithUTF8String:name];
+    fixedName = [fixedName stringByReplacingOccurrencesOfString:@"||" withString:@"|"];
+    return fixedName;
+}
+
+-(int) nNamesIn:(LPSTR)names
+{
+    int n = 0;
+    while (*names)
+    {
+        if (*names == '|')
+        {
+            if (n)
+                n++;
+        }
+        else
+            if (!n)
+                n++;
+        names++;
+    }
+    return n;
+}
 -(void) setStreetNamesForIntersection:(int)intID
                                    to:(NSString*)newNames
 {
-    return;
+    BOOL opened = [self open];
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
+    newNames = [newNames stringByReplacingOccurrencesOfString:@"\n" withString:@"|"];
+    newNames = [self fixStreetNames:newNames.UTF8String];
+    int nStreets = [self nNamesIn:newNames.UTF8String];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, nStreets=%i, streetNames='%s' WHERE intID=%i",
+                       iTime, nStreets,newNames.UTF8String, intID];
+    [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
+    [self close:opened];
 }
 
 - (void) deleteIntersection:(int)intID
 {
-    NSString *cmd = [NSString stringWithFormat:@"DELETE FROM Intersections WHERE intID = %i;DELETE FROM Intersections_index WHERE intID = %i",intID,intID];
+    BOOL opened = [self open];
+    NSString *cmd = [NSString stringWithFormat:@"DELETE FROM Intersections WHERE intID = %i;DELETE FROM Intersections_index WHERE id = %i",intID,intID];
     [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
+    [self close:opened];
     
 }
 @end
