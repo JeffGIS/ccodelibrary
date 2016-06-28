@@ -117,8 +117,8 @@ static int nInit=0;
 {
     [self close:TRUE];
     
-    //BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
-                                                       //error:nil];
+    BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
+                                                       error:nil];
 }
 
 - (int)datasetVersion
@@ -175,7 +175,7 @@ static int nInit=0;
         {
             int iTime = NSDate.timeIntervalSinceReferenceDate;
             NSString * versions = [NSString stringWithFormat:@"/*ApVer %@ DBVer %s Time %i*/",UIApplication.appVersionBuild,CURRENT_INTERSECTION_VERSION,iTime];
-           rtn = appendStringToFile (versions ,sendToServerFile);
+            rtn = appendStringToFile (versions ,sendToServerFile);
 
         }
         rtn = appendStringToFile ([NSString stringWithUTF8String:cmd] ,sendToServerFile);
