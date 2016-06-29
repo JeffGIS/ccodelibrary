@@ -70,6 +70,11 @@ void SetUseDemoID (BOOL set)
     return;
 }
 
+BOOL getUseDemoID (void)
+{
+    return useDemoID;
+}
+
 void SetVendoIDInc (int inc)
 {
     useIDInc = inc;

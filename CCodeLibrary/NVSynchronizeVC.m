@@ -23,7 +23,7 @@
 @property (nonatomic) GSSiPopoverView *popoverView;
 @property (nonatomic) CLLocationManager *locationManager;
 @property int upFiles, upPix, downFiles, downPix, numConnectionAttempts, totConnectionAttempts;;
-@property BOOL serverOpen;
+@property BOOL serverOpen, useDemoID;
 @property NSTimer *timer;
 @property NSString *iPad_name;
 @property FTPDataPush *push;
@@ -44,6 +44,7 @@
 {
     [super viewDidLoad];
     _iPad_name = UIDevice.currentDevice.name;
+    _useDemoID = getUseDemoID();
    
     _popoverView = [[GSSiPopoverView alloc] initWithView:self.view];
     _popoverView.delegate = self;
@@ -375,7 +376,7 @@
     
     [self closeGMServer];
     [UIApplication.sharedApplication setIdleTimerDisabled:NO];
-
+    SetUseDemoID(_useDemoID);
 }
 
 - (void)setupLabel:(UILabel *)label
@@ -493,9 +494,10 @@
 #pragma unused(nvptv)
 }
 
-- (void) setDatabaseIDToDB
+- (void)setDatabaseIDToDB
 {
     int geoid = CRAPI.sharedInstance.currentGeoid;
+    
     if (geoid > 100000000)
     {
         _awd = AlleyWallData.new;
@@ -509,8 +511,10 @@
         _databaseID = _crd;
         [_databaseID incrementLastDataFileNum];
     }
+    
     [self updateConnectLabel];
 }
+
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
 {
     [popoverTableView hide:YES];
@@ -529,6 +533,7 @@
 
     [CRAPI.sharedInstance processPlacesArray:_selectedRow];
     [self setDatabaseIDToDB];
+    
     [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",
                             CRAPI.sharedInstance.currentCityNameAndState]
                   forState:UIControlStateNormal];
@@ -536,17 +541,17 @@
 
 - (void)connectButtonTapped:(UIButton *)button
 {
-        _GMServer = [GeoMasterServer open];
-        _GMServer.delegate = self;
-        _GMServer.messageID = GMSMessageSetNearby;
-        [_GMServer initCommunication:7.5];
+    _GMServer = [GeoMasterServer open];
+    _GMServer.delegate = self;
+    _GMServer.messageID = GMSMessageSetNearby;
+    [_GMServer initCommunication:7.5];
         
-        _numConnectionAttempts = 0;
-        _totConnectionAttempts = 60;
+    _numConnectionAttempts = 0;
+    _totConnectionAttempts = 60;
     
-        [_popoverView showAfter:0.0
-                      withTitle:@"Waiting\nto Connect\nto Manager"
-                      andButton:@"Cancel"];
+    [_popoverView showAfter:0.0
+                  withTitle:@"Waiting\nto Connect\nto Manager"
+                  andButton:@"Cancel"];
 }
 
 - (void)closeGMServer
@@ -568,6 +573,7 @@
     switch (server.messageID)
     {
         case GMSMessageOpenConnect:
+            SetUseDemoID(NO);
             msg = [NSString stringWithFormat:@"$M(GetCitiesForiPad,%@)\r\n", deviceInfo()];
             break;
             
@@ -765,7 +771,7 @@ didReceiveMessage:(NSString *)message
       withStatus:(long)status
 {
     [self closeGMServer];
-    NSLog(@"GMServer Message(ADASetupViewController): %@", message);
+    NSLog(@"GMServer Message(NVSynchronizeVC): %@", message);
     
     if (status == GMServerStatusOK)
     {
@@ -778,20 +784,15 @@ didReceiveMessage:(NSString *)message
                 
                 if (CRAPI.sharedInstance.placesArray.count == 0)
                 {
-                    NSString *title = @"NO CITIES\nPlease use the NVCRIS Management Module to assign cities before starting the Preliminary Survey.";
-                    
-                    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                                      delegate:self
-                                                                         title:title
-                                                               buttonTextArray:@[@"OK"]
-                                                              destructiveIndex:0];
-#pragma unused(alert)
-                    
                     [_titleButton setTitle:@"Synchronize Data\nNO CITIES IN LIST"
                                   forState:UIControlStateNormal];
                     
                     _syncButton.enabled = NO;
                     [self updateButton:_syncButton];
+                    
+                    _connectLabel.text = [NSString stringWithFormat:@"%i-NO MANAGER",
+                                          CRAPI.sharedInstance.GSSiPadNumber];
+                    
                     break;
                 }
                 
@@ -813,6 +814,7 @@ didReceiveMessage:(NSString *)message
                 [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",
                                         CRAPI.sharedInstance.currentCityNameAndState]
                               forState:UIControlStateNormal];
+                
                 if (CRAPI.sharedInstance.placesArray.count > 1)
                 {
                     _titleButton.backgroundColor = _colors.enabledColor;
@@ -1277,10 +1279,9 @@ Done:
 
 - (BOOL)loadUpdate:(NSString*)path
 {
-    BOOL rtn = [_databaseID updateFromFile:path];
-    
-    return rtn;
+    return [_databaseID updateFromFile:path];
 }
+
 - (void)checkNearby:(NSTimer *)timer
 {
     [self.timer invalidate];
