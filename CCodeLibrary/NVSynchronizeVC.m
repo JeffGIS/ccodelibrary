@@ -23,7 +23,7 @@
 @property (nonatomic) GSSiPopoverView *popoverView;
 @property (nonatomic) CLLocationManager *locationManager;
 @property int upFiles, upPix, downFiles, downPix, numConnectionAttempts, totConnectionAttempts;;
-@property BOOL serverOpen;
+@property BOOL serverOpen, setDemoID, didConnect;
 @property NSTimer *timer;
 @property NSString *iPad_name;
 @property FTPDataPush *push;
@@ -45,11 +45,13 @@
     [super viewDidLoad];
     
     _iPad_name = UIDevice.currentDevice.name;
+    _setDemoID = getUseDemoID();
     _popoverView = [[GSSiPopoverView alloc] initWithView:self.view];
     _popoverView.delegate = self;
     _colors = UserDefaults.defaults.defaultColors;
     self.view.backgroundColor = _colors.backgroundColor;
     _upFiles = _upPix = _downFiles = _downPix = 0;
+    _didConnect = NO;
     
     _titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_titleButton];
@@ -363,6 +365,7 @@
     else
         return UIApplication.sharedApplication.statusBarOrientation;
 }
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -375,7 +378,9 @@
     
     [self closeGMServer];
     [UIApplication.sharedApplication setIdleTimerDisabled:NO];
-    SetUseDemoID(CRAPI.sharedInstance.GSSiPadNumber != 1021);
+    
+    BOOL useDemo = (_setDemoID && !_didConnect);
+    SetUseDemoID(useDemo);
 }
 
 - (void)setupLabel:(UILabel *)label
@@ -816,6 +821,8 @@ didReceiveMessage:(NSString *)message
                                   forState:UIControlStateNormal];
                     
                     _syncButton.enabled = NO;
+                    _didConnect = NO;
+                    
                     [self updateButton:_syncButton];
                     
                     _connectLabel.text = [NSString stringWithFormat:@"%i-NO MANAGER",
@@ -825,6 +832,7 @@ didReceiveMessage:(NSString *)message
                 }
                 
                 _selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
+                _didConnect = YES;
                 
                 if (CRAPI.sharedInstance.placesArray.count < 2 ||
                     CRAPI.sharedInstance.placesArray.count <= _selectedRow ||
