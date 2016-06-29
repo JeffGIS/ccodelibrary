@@ -23,7 +23,7 @@
 @property (nonatomic) GSSiPopoverView *popoverView;
 @property (nonatomic) CLLocationManager *locationManager;
 @property int upFiles, upPix, downFiles, downPix, numConnectionAttempts, totConnectionAttempts;;
-@property BOOL serverOpen, useDemoID;
+@property BOOL serverOpen;
 @property NSTimer *timer;
 @property NSString *iPad_name;
 @property FTPDataPush *push;
@@ -43,9 +43,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     _iPad_name = UIDevice.currentDevice.name;
-    _useDemoID = getUseDemoID();
-   
     _popoverView = [[GSSiPopoverView alloc] initWithView:self.view];
     _popoverView.delegate = self;
     _colors = UserDefaults.defaults.defaultColors;
@@ -376,7 +375,7 @@
     
     [self closeGMServer];
     [UIApplication.sharedApplication setIdleTimerDisabled:NO];
-    SetUseDemoID(_useDemoID);
+    SetUseDemoID(CRAPI.sharedInstance.GSSiPadNumber != 1021);
 }
 
 - (void)setupLabel:(UILabel *)label
@@ -1248,22 +1247,34 @@ Done:
             if (_process == DOWNLOAD_DATA_PROCESS)
             {
                if ([self loadUpdate:path])
-                   [_databaseID setLastDataUpdateNum:_nextFileNumToDownload foriPad:_downloadiPad];
+               {
+                   [_databaseID setLastDataUpdateNum:_nextFileNumToDownload
+                                             foriPad:_downloadiPad];
+               }
+                
                else
                {
                    _popoverView.title = [NSString stringWithFormat:@"Data load failed\n%@",[path lastPathComponent]];
                    return;
                }
             }
+            
             else
-                [_databaseID setLastPictUpdateNum:_nextFileNumToDownload foriPad:_downloadiPad];
+            {
+                [_databaseID setLastPictUpdateNum:_nextFileNumToDownload
+                                          foriPad:_downloadiPad];
+            }
             
             _nextFileNumToDownload++;
+            
             if (_process == DOWNLOAD_DATA_PROCESS)
+                
                 _downFiles--;
             else
                 _downPix--;
+            
             _processedFiles++;
+            
             if (_totFilesToProcess)
                 [self updateOverallProgress:(float)_processedFiles/_totFilesToProcess];
 
@@ -1271,10 +1282,9 @@ Done:
             [self downloadNextFile];
         }
     }
+    
     else
-    {
         _popoverView.title = statusString;
-    }
 }
 
 - (BOOL)loadUpdate:(NSString*)path
