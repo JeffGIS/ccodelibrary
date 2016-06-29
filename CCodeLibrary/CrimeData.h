@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <sqlite3.h>
+#import "SQLiteLib.h"
 #import "MathUtil.h"
 
 @interface CrimeData : NSObject

@@ -222,6 +222,7 @@
 		A9E792851AEFEB89005DA4BB /* NVLegendView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E792821AEFE989005DA4BB /* NVLegendView.h */; };
 		A9E792861AEFEB91005DA4BB /* NVLargeAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */; };
 		A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */; };
+		BB0FD9391D2422A0007C1219 /* SQLiteLib.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0FD9381D2422A0007C1219 /* SQLiteLib.m */; };
 		BB6777981C95C13200A2D508 /* CensusData.m in Sources */ = {isa = PBXBuildFile; fileRef = BB6777971C95C13200A2D508 /* CensusData.m */; };
 		BBE299521CBD1D6C0045B3DC /* CityOrOrganizationData.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */; };
 		BBE299531CBD30BB0045B3DC /* CityOrOrganizationData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */; };
@@ -262,7 +263,6 @@
 		EBA517B81BCA1405005A9CA8 /* CrimeData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA517B51BCA1355005A9CA8 /* CrimeData.h */; };
 		EBAB31C71AE6DC2D00C5CCEF /* NamedColors.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */; };
 		EBAB422F1B2B073A00C36FFC /* CurbRampData.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAB422E1B2B073A00C36FFC /* CurbRampData.m */; };
-		EBAB42321B2B1A5E00C36FFC /* SQLiteLib.c in Sources */ = {isa = PBXBuildFile; fileRef = EBAB42301B2B1A5E00C36FFC /* SQLiteLib.c */; };
 		EBAB42331B2B3CEF00C36FFC /* CurbRampData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB422D1B2B073A00C36FFC /* CurbRampData.h */; };
 		EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */; };
 		EBAEED0919B605E20084A579 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = EBAEED0819B605E20084A579 /* compress.c */; };
@@ -663,6 +663,7 @@
 		A9E792831AEFE989005DA4BB /* NVLegendView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVLegendView.m; sourceTree = "<group>"; };
 		A9F937AD1AEB3D1E00D34921 /* NVVideoHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVVideoHeadingViewController.h; sourceTree = "<group>"; };
 		A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVVideoHeadingViewController.m; sourceTree = "<group>"; };
+		BB0FD9381D2422A0007C1219 /* SQLiteLib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteLib.m; sourceTree = "<group>"; };
 		BB6777961C95C13200A2D508 /* CensusData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CensusData.h; path = ../CensusData.h; sourceTree = "<group>"; };
 		BB6777971C95C13200A2D508 /* CensusData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CensusData.m; path = ../CensusData.m; sourceTree = "<group>"; };
 		BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityOrOrganizationData.h; sourceTree = "<group>"; };
@@ -728,7 +729,6 @@
 		EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NamedColors.m; sourceTree = "<group>"; };
 		EBAB422D1B2B073A00C36FFC /* CurbRampData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurbRampData.h; sourceTree = "<group>"; };
 		EBAB422E1B2B073A00C36FFC /* CurbRampData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurbRampData.m; sourceTree = "<group>"; };
-		EBAB42301B2B1A5E00C36FFC /* SQLiteLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SQLiteLib.c; sourceTree = "<group>"; };
 		EBAB42311B2B1A5E00C36FFC /* SQLiteLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteLib.h; sourceTree = "<group>"; };
 		EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoMasterServer.h; sourceTree = "<group>"; };
 		EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoMasterServer.m; sourceTree = "<group>"; };
@@ -936,8 +936,6 @@
 				699AEF841BAFA6B10084C2B4 /* PolylineCompression.c */,
 				699AEF851BAFA6B10084C2B4 /* PolylineCompression.h */,
 				EBA2E48619952BCA0085B2E0 /* rotate256.h */,
-				EBAB42301B2B1A5E00C36FFC /* SQLiteLib.c */,
-				EBAB42311B2B1A5E00C36FFC /* SQLiteLib.h */,
 				EBA2E48719952BCA0085B2E0 /* TileGraphics.h */,
 				EBA2E48819952BCA0085B2E0 /* TileIndex.c */,
 			);
@@ -1133,6 +1131,8 @@
 				EBB3C42B1C36F6E000054DB5 /* PointInAreas.m */,
 				A94A770B19F7F9F40062906E /* SharedDefaults.h */,
 				A94A770C19F7F9F40062906E /* SharedDefaults.m */,
+				EBAB42311B2B1A5E00C36FFC /* SQLiteLib.h */,
+				BB0FD9381D2422A0007C1219 /* SQLiteLib.m */,
 				EB7C6A141BD158D8006E985B /* StringFunctions.h */,
 				EB7C6A151BD158D8006E985B /* StringFunctions.m */,
 				EB0E4FF31C62785200849766 /* SymbolDictionary.h */,
@@ -1382,6 +1382,7 @@
 				1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */,
 				A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */,
 				EBC01D101BED1C8C0004C751 /* diurab.c in Sources */,
+				BB0FD9391D2422A0007C1219 /* SQLiteLib.m in Sources */,
 				A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */,
 				EBA517B71BCA1355005A9CA8 /* CrimeData.m in Sources */,
 				A98A57A81B20ADE600906FBC /* NVCalibrationController.m in Sources */,
@@ -1428,7 +1429,6 @@
 				EBC01D161BED1C8C0004C751 /* fk4fk5.c in Sources */,
 				A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */,
 				1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */,
-				EBAB42321B2B1A5E00C36FFC /* SQLiteLib.c in Sources */,
 				EBC01D251BED1C8C0004C751 /* precess.c in Sources */,
 				69450DAD1BD5F6120079F7EC /* NVContactPicker.m in Sources */,
 				EB1A69761999A6A9005A1CCB /* CRAPI.m in Sources */,

@@ -10,12 +10,9 @@
 #define TEXT_PASS 2
 #define TRACE_PASS 2
 
-#import <sqlite3.h>
 #import "FTPDataPull.h"
 #import <CoreText/CoreText.h>
-
-int SQLOKswr(int sqlReturn, sqlite3 *database);
-
+#import "SQLiteLib.h"
 
 @interface SewerData : NSObject<FTPDataPullDelegate>
 

@@ -37,17 +37,6 @@ static BOOL _createDirectory = YES;
                   sqlReturn, method, sqlite3_errcode(_database), sqlite3_errmsg(_database)]);
 }
 
-int SQLOKswr(int sqlReturn,sqlite3 *database)
-{
-    if (sqlReturn != SQLITE_OK)
-    {
-        NSLog(@"%@", [NSString stringWithFormat:@"SQLite Error %i = %i:%s",
-                      sqlReturn, sqlite3_errcode(database), sqlite3_errmsg(database)]);
-    }
-    
-    return sqlReturn;
-}
-
 + (NSString *)getActualPlatFileName:(NSString *)platID
 {
     NSString *outName;
@@ -116,7 +105,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
 {
     if (!_isOpen)
     {
-        _isOpen = !SQLOKswr(sqlite3_open(self.path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"Sewer Database open");
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
@@ -128,7 +117,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
 {
     if (_isOpen)
     {
-        SQLOKswr(sqlite3_close(_database),_database);
+        SQLOK(sqlite3_close(_database),_database);
         NSLog(@"Sewer Database close");
     }
     _isOpen = NO;
@@ -152,14 +141,14 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
         
         sqlite3_stmt *statement = NULL;
         
-        SQLOKswr(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
             int maxID = sqlite3_column_int(statement, 0);
             if (maxID > 0)
                 rtn = 0;
         }
-        SQLOKswr(sqlite3_finalize(statement), _database);
+        SQLOK(sqlite3_finalize(statement), _database);
     }
     [self close];
     return rtn;
@@ -167,19 +156,19 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
 
 - (BOOL)executeCmd:(char *)cmd
 {
-    BOOL rtn = !SQLOKswr(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     return rtn;
 }
 
 - (void)startTransaction
 {
     [self open];
-    SQLOKswr(sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    SQLOK(sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
 }
 
 - (void)commitTransaction
 {
-    SQLOKswr(sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
+    SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
 }
 
 - (BOOL)loadPlat:(NSString *)platID
@@ -277,7 +266,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
             break;
     }
     
-    SQLOKswr(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), "prepareGetBoundsForPID");
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), "prepareGetBoundsForPID");
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -287,7 +276,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
         bounds.ymx = sqlite3_column_double(statement, 4);
     }
     
-    SQLOKswr(sqlite3_finalize(statement), "getBoundsforPID");
+    SQLOK(sqlite3_finalize(statement), "getBoundsforPID");
     
     [self close];
     return bounds;
@@ -323,7 +312,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOKswr(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -378,7 +367,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
         free (llpoints);
       
     }
-    SQLOKswr(sqlite3_finalize(statement), _database);
+    SQLOK(sqlite3_finalize(statement), _database);
     [self close];
     pt->lon = minpt.x;
     pt->lat = minpt.y;
@@ -400,13 +389,13 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
              refno];
     
     [self open];
-    SQLOKswr(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         LPSTR pltID = (LPSTR)sqlite3_column_text(statement, 0);
         platID = [NSString stringWithUTF8String:pltID];
     }
-    SQLOKswr(sqlite3_finalize(statement), _database);
+    SQLOK(sqlite3_finalize(statement), _database);
     [self close];
     
     return platID;
@@ -430,7 +419,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
     query = [NSString stringWithFormat:@"SELECT STORM_PLAT.id, STORM_PLAT.PLAT_NAME, BasePointX, BasePointY,NumPoints,NumLoops,PolyPartLen,Points FROM STORM_PLAT,STORM_PLAT_index WHERE STORM_PLAT.id=STORM_PLAT_index.id AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f",
                        platlonBounds->xmn, platlonBounds->xmx, platlonBounds->ymn, platlonBounds->ymx];
     
-    SQLOKswr(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     while ([self continue] && sqlite3_step(statement) == SQLITE_ROW)
     {
         refno = sqlite3_column_int(statement,0);
@@ -496,7 +485,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
         free(llpoints);
     }
     
-    SQLOKswr(sqlite3_finalize(statement), _database);
+    SQLOK(sqlite3_finalize(statement), _database);
     [self close];
  
 }
@@ -609,7 +598,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOKswr(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -688,7 +677,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
         free (llpoints);
     }
     
-    SQLOKswr(sqlite3_finalize(statement), _database);
+    SQLOK(sqlite3_finalize(statement), _database);
     [self close];
     pt->lon = minpt.x;
     pt->lat = minpt.y;
@@ -717,7 +706,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOKswr(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -726,7 +715,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
         [list addObject:plat];
     }
     
-    SQLOKswr(sqlite3_finalize(statement), _database);
+    SQLOK(sqlite3_finalize(statement), _database);
     [self close];
     return list;
 }
@@ -740,7 +729,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOKswr(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -749,7 +738,7 @@ int SQLOKswr(int sqlReturn,sqlite3 *database)
         [list addObject:plat];
     }
     
-    SQLOKswr(sqlite3_finalize(statement), _database);
+    SQLOK(sqlite3_finalize(statement), _database);
     [self close];
     return list;
 }
@@ -858,7 +847,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
                 break;
         }
         
-        SQLOKswr(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+        SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
         
         while ([self continue] && sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -943,7 +932,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
             free(llpoints);
         }
         
-        SQLOKswr(sqlite3_finalize(statement), _database);
+        SQLOK(sqlite3_finalize(statement), _database);
     }
     
     if (pass == TEXT_PASS)
@@ -984,7 +973,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
         
     sqlite3_stmt *statement = NULL;
     
-    SQLOKswr(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
         
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -1049,7 +1038,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
         }
     }
     
-    SQLOKswr(sqlite3_finalize(statement), _database);
+    SQLOK(sqlite3_finalize(statement), _database);
     [self close];
 }
 
@@ -1398,7 +1387,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
                      platlonBounds->xmn, platlonBounds->xmx, platlonBounds->ymn, platlonBounds->ymx];
     }
     
-    SQLOKswr(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
     
     while ([self continue] && sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -1425,7 +1414,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
                     andSize:(size * sizeFactor)];
     }
     
-    SQLOKswr(sqlite3_finalize(statement), _database);
+    SQLOK(sqlite3_finalize(statement), _database);
     [self close];
 }
 

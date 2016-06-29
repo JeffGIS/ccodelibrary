@@ -9,6 +9,7 @@
 #define UPLOAD_PICT_PROCESS 2
 #define DOWNLOAD_DATA_PROCESS 3
 #define DOWNLOAD_PICT_PROCESS 4
+#define UPLOAD_ERROR_FILE 5
 
 @import UIKit;
 
@@ -46,5 +47,6 @@
 @property int process;
 @property int totFilesToProcess;
 @property int processedFiles;
+@property NSString* errorFileName;
 
 @end

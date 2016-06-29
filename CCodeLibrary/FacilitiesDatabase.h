@@ -4,7 +4,7 @@
 #import "Facility.h"
 #import "FacilityPoint.h"
 #import "FacilityRecord.h"
-#import <sqlite3.h>
+#import "SQLiteLib.h"
 #import "FTPDataPull.h"
 
 #define FACDB_OK 0

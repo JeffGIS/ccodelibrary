@@ -6,7 +6,7 @@
 #import "MPIntersection.h"
 #import "FTPDataPull.h"
 #import "UIApplication+VersionBuild.h"
-#import <sqlite3.h>
+#import "SQLiteLib.h"
 #import "CurbRampData.h"
 
 @class IntersectionsDatabase;

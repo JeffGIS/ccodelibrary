@@ -567,6 +567,52 @@
     return YES;
 }
 
+-(NSString*) timeStamp
+{
+    NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *rtn = [dateFormatter stringFromDate:[NSDate date]];
+    return rtn;
+}
+-(BOOL) haveErrorLog
+{
+    BOOL rtn = FALSE;
+    int fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:[self errorLogPath]
+                                                               error:nil].fileSize;
+    if (fileSize > 0)
+        rtn = TRUE;
+    return rtn;
+
+}
+-(NSString*) errorLogPath
+{
+    NSString * path = [self sharedFilePath];
+    NSString * file = [NSString stringWithFormat:@"%@/%@", path, @"NVErrorLog.txt"];
+    return file;
+}
+
+-(void) logToErrorFile:(NSString*) error
+{
+    NSString *errorFile = [self errorLogPath];
+    NSString *idString = [NSString stringWithFormat:@"%@ %i %i %i %i %i %i",[self timeStamp],_currentModule,_currentSubModule,_GSSiPadNumber,_currentManageriPad,_currentiPadWithinManager,self.currentGeoid];
+//#ifdef DEBUG
+    NSLog (error);
+//#else
+    [self appendString:idString
+                toFile:errorFile];
+    [self appendString:error
+                toFile:errorFile];
+//#endif
+}
+
+-(void) clearErrorFile
+{
+    NSString *errorFile = [self errorLogPath];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager removeItemAtPath:errorFile error:nil];
+  
+}
+
 - (NSMutableArray*) getPlacesArray
 {
     NSMutableArray * array;

@@ -34,17 +34,6 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 @implementation CrimeData
 
 
-static int SQLOK(int sqlReturn,sqlite3 *database)
-{
-    if (sqlReturn != SQLITE_OK)
-    {
-        NSLog(@"%@", [NSString stringWithFormat:@"SQLite Error %i = %i:%s",
-                      sqlReturn, sqlite3_errcode(database), sqlite3_errmsg(database)]);
-    }
-    
-    return sqlReturn;
-}
-
 
 - (id)init
 {

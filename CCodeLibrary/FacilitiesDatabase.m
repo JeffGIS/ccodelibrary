@@ -9,8 +9,6 @@
 #import "CRAPI.h"
 #import "compress.h"
 
-int SQLOK(int sqlReturn, sqlite3 *database);
-
 @implementation FacilitiesDatabase
 
 static FacilitiesDatabase *_statdatabase = nil;

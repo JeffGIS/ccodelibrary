@@ -2,7 +2,7 @@
 //  CCodeLibrary
 
 #import <Foundation/Foundation.h>
-#import <sqlite3.h>
+#import "SQLiteLib.h"
 #import "MathUtil.h"
 
 @interface CurbRampData : NSObject

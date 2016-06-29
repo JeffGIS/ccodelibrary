@@ -11,7 +11,7 @@
 #import "UserDefaults.h"
 #import "CRAPI.h"
 #import "UIApplication+VersionBuild.h"
-int SQLOK(int sqlReturn, sqlite3 *database);
+#import "SQLiteLib.h"
 
 static int fileSequence = 0;
 
@@ -105,7 +105,7 @@ static int nInit=0;
 
 - (void)close:(BOOL)opened
 {
-    if (opened)
+    if (opened && _isOpen)
     {
         SQLOK(sqlite3_close(_database),_database);
         NSLog(@"CurbRamp Database close");
@@ -609,16 +609,29 @@ static int nInit=0;
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
-    NSString* file = [self outputDataFile:lastNum iPad:CRAPI.sharedInstance.currentiPadWithinManager];
+    int nextNum = lastNum;
+    NSString* file = [self outputDataFile:nextNum iPad:CRAPI.sharedInstance.currentiPadWithinManager];
     
     int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:file
                                                                        error:nil].fileSize;
-    if (fileSize > 0)
+    while (fileSize > 0)
     {
-        [self setLastDataUpdateNum:++lastNum pictNum:pictNum foriPad:iPad];
+        nextNum++;
+        file = [self outputDataFile:nextNum iPad:CRAPI.sharedInstance.currentiPadWithinManager];
+        fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:file
+                                                                       error:nil].fileSize;
     }
-    return lastNum;
+    if (nextNum > lastNum)
+        [self setLastDataUpdateNum:nextNum pictNum:pictNum foriPad:iPad];
+    if (nextNum - lastNum > 1)
+    {
+        NSString * logmess = [NSString stringWithFormat:@"Curbramp data file num error",lastNum,nextNum];
+        [CRAPI.sharedInstance logToErrorFile:logmess];
+    }
+    return nextNum;
 }
+
+
 + (int) incrementLastDataFileNumber
 {
     CurbRampData *awd = CurbRampData.new;

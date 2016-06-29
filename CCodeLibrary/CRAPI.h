@@ -171,4 +171,10 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 
 - (NSURL *)smartURLForString:(NSString *)str;
 
+-(BOOL) haveErrorLog;
+-(NSString*) errorLogPath;
+-(void) logToErrorFile:(NSString*) error;
+-(void) clearErrorFile;
+
+
 @end

@@ -463,7 +463,7 @@
                           CRAPI.sharedInstance.currentiPadWithinManager, CRAPI.sharedInstance.totiPadWithinManager];
 }
 
-- (void)syncButtonTapped:(UIButton *)button
+- (void)startSync
 {
     _process = UPLOAD_DATA_PROCESS;
     _uploadedFiles = 0;
@@ -471,6 +471,32 @@
     [self getDownloadCounts:YES];
     [self updateLabels];
     [self uploadNextFile];
+    
+}
+- (void)syncButtonTapped:(UIButton *)button
+{
+    if ([CRAPI.sharedInstance haveErrorLog])
+    {
+        _process = UPLOAD_ERROR_FILE;
+        NSString * errorFile = [CRAPI.sharedInstance errorLogPath];
+        _push = [FTPDataPush push];
+        _push.delegate = self;
+        _push.popover = _popoverView;
+        int iTime = NSDate.timeIntervalSinceReferenceDate;
+        _errorFileName = [NSString stringWithFormat:@"%i_%i.txt",CRAPI.sharedInstance.GSSiPadNumber,iTime];
+        
+        [_popoverView showAfter:0.5
+                      withTitle:@"Upload Error File"];
+        NSString *toDir = [NSString stringWithFormat:@"NVCRISData/ErrorFiles"];
+        
+        [_push sendFile:[errorFile lastPathComponent]
+          fromDirectory:[errorFile stringByDeletingLastPathComponent]
+                 toFile:_errorFileName
+            toDirectory:toDir
+         deleteWhenDone:NO];
+    }
+    else
+        [self startSync];
 }
 
 - (void)cancelButtonTapped:(UIButton *)button
@@ -583,13 +609,16 @@
             break;
             
         case GMSMessageFileUploaded:
-            if (_process == UPLOAD_DATA_PROCESS)
+            if (_process == UPLOAD_ERROR_FILE)
+            {
+                msg = [NSString stringWithFormat:@"$M(UploadErrors,%@)",_errorFileName];
+            }
+            else if (_process == UPLOAD_DATA_PROCESS)
             {
                 msg = [NSString stringWithFormat:@"$M(UploadCompleteData,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
                        CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload];
             }
-            
             else
             {
                 msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i)",
@@ -836,18 +865,26 @@ didReceiveMessage:(NSString *)message
                 break;
                 
             case GMSMessageFileUploaded:
-                _nextFileNumToUpload++;
-                _uploadedFiles++;
-                _processedFiles++;
-                if (_totFilesToProcess)
-                    [self updateOverallProgress:(float)_processedFiles/_totFilesToProcess];
-                
-                if (_process == UPLOAD_DATA_PROCESS)
-                    _upFiles--;
+                if (_process == UPLOAD_ERROR_FILE)
+                {
+                    [CRAPI.sharedInstance clearErrorFile];
+                    [self startSync];
+                }
                 else
-                    _upPix--;
-                [self updateLabels];
-                [self uploadNextFile];
+                {
+                    _nextFileNumToUpload++;
+                    _uploadedFiles++;
+                    _processedFiles++;
+                    if (_totFilesToProcess)
+                        [self updateOverallProgress:(float)_processedFiles/_totFilesToProcess];
+                    
+                    if (_process == UPLOAD_DATA_PROCESS)
+                        _upFiles--;
+                    else
+                        _upPix--;
+                    [self updateLabels];
+                    [self uploadNextFile];
+                }
                 break;
                 
             case GMSMessageGetUploadStatus:
