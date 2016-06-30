@@ -697,22 +697,26 @@
     
     if (row == -1) // AlleyWalls
     {
+        BOOL haveCity = FALSE;
         row = 0;
         
         for (CityOrOrganizationData *c in _placesArray)
         {
             if (c.number >= 100000001)
             {
+                haveCity = TRUE;
                 break;
             }
             
             row++;
         }
+        if (!haveCity)
+            return FALSE;
     }
     
     else if (_placesArray.count == 1 || row >= _placesArray.count)
         row = 0;
-    
+
     CityOrOrganizationData *c = _placesArray[row];
     _GSSiPadNumber = (int)c.GSSiPadNumber;
     _currentCityNameAndState = addSpaceAfterComma(c.name);
