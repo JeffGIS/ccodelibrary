@@ -1272,7 +1272,8 @@ Done:
     
     else
     {
-        _popoverView.title = [NSString stringWithFormat:@"Upload Error\n%@",statusString];
+        _popoverView.title = [NSString stringWithFormat:@"%@\n%@",statusString,[path lastPathComponent]];
+        [CRAPI.sharedInstance logToErrorFile:_popoverView.title];
         [_popoverView setCancelButtonTitle:@"OK"];
     }
     
@@ -1329,7 +1330,10 @@ Done:
     }
     
     else
-        _popoverView.title = statusString;
+    {
+        _popoverView.title = [NSString stringWithFormat:@"%@\n%@",statusString,[path lastPathComponent]];
+        [CRAPI.sharedInstance logToErrorFile:_popoverView.title];
+    }
 }
 
 - (BOOL)loadUpdate:(NSString*)path
