@@ -41,6 +41,7 @@
     textAlert.minimumCharacters = 2;
     textAlert.keyboardType = UIKeyboardTypeAlphabet;
     textAlert.blockWhiteSpace = NO;
+    textAlert.capitalizationType = UITextAutocapitalizationTypeSentences;
     
     [view addSubview:textAlert.overlayView];
     
@@ -85,7 +86,7 @@
     textAlert.textField.backgroundColor = UserDefaults.defaults.appleGray;
     textAlert.textField.layer.cornerRadius = (sizeFactor / 2.0);
     textAlert.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textAlert.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+    textAlert.textField.autocapitalizationType = textAlert.capitalizationType;
     textAlert.textField.keyboardType = textAlert.keyboardType;
     textAlert.textField.adjustsFontSizeToFitWidth = YES;
     
@@ -189,6 +190,16 @@ replacementString:(NSString *)string
 - (UIKeyboardType)keyboardType
 {
     return _textField.keyboardType;
+}
+
+- (void)setCapitalizationType:(UITextAutocapitalizationType)capitalizationType
+{
+    _textField.autocapitalizationType = capitalizationType;
+}
+
+- (UITextAutocapitalizationType)capitalizationType
+{
+    return _textField.autocapitalizationType;
 }
 
 - (void)touchesEnded:(NSSet *)touches

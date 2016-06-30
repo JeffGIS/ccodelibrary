@@ -15,9 +15,9 @@
 @interface NVTextAlert : UIView <UITextFieldDelegate>
 
 @property (nonatomic, weak) id <NVTextAlertDelegate> delegate;
-@property (nonatomic) UIKeyboardType keyboardType;
-
-@property (nonatomic) NSInteger minimumCharacters;
+@property UIKeyboardType keyboardType;
+@property UITextAutocapitalizationType capitalizationType;
+@property NSInteger minimumCharacters;
 @property (nonatomic, copy) NSString *text;
 @property BOOL blockWhiteSpace;
 
