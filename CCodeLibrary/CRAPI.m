@@ -634,6 +634,8 @@
 {
     NSString *message = [UserDefaults.defaults stringForKey:@"PlacesString"];
     
+    if (!message)
+        return FALSE;
     if (strncmp(message.UTF8String,"PlacesFor", 9))
         return FALSE;
     
