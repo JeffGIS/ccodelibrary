@@ -40,6 +40,7 @@
     textAlert.delegate = delegate;
     textAlert.minimumCharacters = 2;
     textAlert.keyboardType = UIKeyboardTypeAlphabet;
+    textAlert.blockWhiteSpace = NO;
     
     [view addSubview:textAlert.overlayView];
     
@@ -153,6 +154,18 @@
         [_delegate textAlert:self
                didReturnText:textField.text];
     }
+}
+
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string
+{
+    if (_blockWhiteSpace && [string isEqualToString:@" "])
+    {
+        return NO;
+    }
+    
+    return YES;
 }
 
 - (void)shakeTextField:(UITextField *)textField
