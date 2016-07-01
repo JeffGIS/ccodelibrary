@@ -228,7 +228,7 @@
                 xWalk:(char)xw
                  from:(sqlite3_stmt *)statement
 {
-    int icol = (19 + (xw - 'A'));
+    int icol = (20 + (xw - 'A'));
     int icoord = sqlite3_column_int(statement, icol);
     
     short offsetx = LOWORD(icoord);
@@ -345,7 +345,7 @@
                 signal:(int)s
                   from:(sqlite3_stmt *)statement
 {
-    int icol = 23;
+    int icol = 24;
     
     switch (s)
     {
@@ -509,7 +509,6 @@
     {
         MPRamp *ramp = [mpint.ramps objectAtIndex:i];
         char rampID[32];
-        
         mpint.currentRamp = ramp;
         
         if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
