@@ -82,7 +82,7 @@ static FTPDataPull * _statpull = nil;
                 [_delegate FTPdidComplete:_dataType
                                withStatus:FTPStatusConnectionFailed
                           andStatusString:@"Cannot reach server"
-                                 filePath:nil];
+                                 filePath:_filePath];
                 
                 _haveCalledDelegate = YES;
             }
