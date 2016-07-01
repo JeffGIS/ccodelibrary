@@ -221,7 +221,23 @@
         UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
         
         [urlSession finishTasksAndInvalidate];
-        [self saveImage:image];
+        
+        if (image)
+            [self saveImage:image];
+        
+        else
+        {
+            [self performSelectorOnMainThread:@selector(presentAlertInCurrentView:)
+                                   withObject:@"Intersection Image Unavailable."
+                                waitUntilDone:NO];
+            
+            [self saveCptFile];
+            
+            [_delegate tileCompilerReturnedImagePath:[NSBundle.mainBundle pathForResource:@"mapGrid"
+                                                                                   ofType:@"png"]
+                                             cptPath:_cptPath
+                                          hideTarget:YES];
+        }
     }
 }
 
