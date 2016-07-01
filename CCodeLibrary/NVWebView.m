@@ -5,6 +5,8 @@
 @import WebKit;
 #import "UserDefaults.h"
 #import "NVPopoverTableView.h"
+#import "NVAlertView.h"
+#import "CRAPI.h"
 
 @interface NVWebView () <WKNavigationDelegate,NVPopoverTableViewDelegate>
 
@@ -71,6 +73,17 @@
 + (instancetype)showWebViewInView:(UIView *)view
                    showFileAtPath:(NSString *)path
 {
+    if (!path)
+    {
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:view
+                                                          delegate:CRAPI.sharedInstance
+                                                             title:@"This file does not currently exist."
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
+#pragma unused(alert)
+        return nil;
+    }
+    
     NVWebView *nvwv = NVWebView.new;
     [nvwv addWebViewToView:view];
     

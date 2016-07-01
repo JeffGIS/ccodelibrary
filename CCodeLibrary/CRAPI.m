@@ -6,6 +6,11 @@
 #import "MathUtil.h"
 #import "TileGraphics.h"
 #import "CityOrOrganizationData.h"
+#import "NVAlertView.h"
+
+@interface CRAPI () <NVAlertViewDelegate>
+
+@end
 
 @implementation CRAPI
 {
@@ -842,6 +847,12 @@
     }
     
     return result;
+}
+
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView hideLargeAlertView:YES];
 }
 
 @end

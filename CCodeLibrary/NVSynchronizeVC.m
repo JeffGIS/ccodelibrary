@@ -1400,7 +1400,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)helpButtonTapped:(UIButton *)button
 {
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_NoneAvailable"
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@""
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
