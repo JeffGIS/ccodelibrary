@@ -61,8 +61,8 @@ static int fileSequence = 0;
                                                                    error:nil].fileSize;
         if (_fileSize)
         {
-            [self createNextUpdateTable];
-            [self createPictureDatabase];
+            //[self createNextUpdateTable];
+            //[self createPictureDatabase];
 
             BOOL tableOK = NO;
             sqlite3_stmt *stmt = NULL;
@@ -1103,8 +1103,7 @@ SELECT max(_id) FROM MyTable*/
 {
     BOOL rtn = TRUE;
     NSString *cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'wallID' CHAR(8), 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
-    rtn = [self executeCmd:(char *)cmd.UTF8String
-              sendToServer:NO];
+     rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     return rtn;
 }
 - (uint) getNextPictID

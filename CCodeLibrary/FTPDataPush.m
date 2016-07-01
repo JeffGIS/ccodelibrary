@@ -68,7 +68,7 @@ enum {
             [_delegate FTPPushDidComplete:_dataType
                                withStatus:FTPStatusConnectionFailed
                           andStatusString:@"Host not reachable"
-                                 filePath:nil];
+                                 filePath:_filePath];
         }
         
         return NO;

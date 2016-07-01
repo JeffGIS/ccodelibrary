@@ -174,6 +174,8 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 -(BOOL) haveErrorLog;
 -(NSString*) errorLogPath;
 -(void) logToErrorFile:(NSString*) error;
+-(void) logToErrorFile:(NSString*) error
+            withHeader:(NSString*) header;
 -(void) clearErrorFile;
 
 

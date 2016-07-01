@@ -592,10 +592,16 @@
 }
 
 -(void) logToErrorFile:(NSString*) error
+            withHeader:(NSString*) header
+{
+    NSString *mess = [NSString stringWithFormat:@"%@:%@",header,error];
+    [self logToErrorFile:mess];
+}
+-(void) logToErrorFile:(NSString*) error
 {
     NSString *errorFile = [self errorLogPath];
     NSString *idString = [NSString stringWithFormat:@"%@ %i %i %i %i %i %i",[self timeStamp],_currentModule,_currentSubModule,_GSSiPadNumber,_currentManageriPad,_currentiPadWithinManager,self.currentGeoid];
-//#ifdef DEBUG
+    //#ifdef DEBUG
     NSLog (error);
 //#else
     [self appendString:idString
