@@ -1785,16 +1785,19 @@ Exit:
     INTERSECTION_STRUCT intRec;
     memset (&intRec,0,sizeof(INTERSECTION_STRUCT));
     intRec.intID = [self getNewIntID];
-    if (CRAPI.sharedInstance.currentModule = DETAIL_MODULE)
+    
+    if (CRAPI.sharedInstance.currentModule == DETAIL_MODULE)
     {
         intRec.status = AddedInDetail;
         intRec.assignedToDetail = CRAPI.sharedInstance.currentiPadWithinManager;
     }
+    
     else
     {
-        intRec.status = 0;
+        intRec.status = InitialStatus;
         intRec.assignedToPrelim = CRAPI.sharedInstance.currentiPadWithinManager;
     }
+    
     LatLongToPixelXY(pt.lat, pt.lon, 21, &intRec.lev21X, &intRec.lev21Y);
     intRec.lat = pt.lat;
     intRec.lon = pt.lon;

@@ -20,7 +20,7 @@
 @property (nonatomic) UIButton *editItemButton, *rampTypeButton, *currentEditButton;
 @property (nonatomic, copy) NSString *pathToImageFile, *pathToBPWFile;
 @property (nonatomic) LPTRANDATA pTranWToBMP, pTranBMPToW;
-@property (nonatomic) CGFloat xFactor, yFactor, xOffset, yOffset, latitude, longitude;
+@property (nonatomic) double xFactor, yFactor, xOffset, yOffset, latitude, longitude;
 @property (nonatomic) int currentIntersectionID, currentZoom, initialZoom;
 @property (nonatomic) NVUpdateOption updateOption;
 @property (nonatomic) CLLocationManager *locationManager;
@@ -285,15 +285,15 @@
         imageSize.height = 640;
     }
     
-    _xFactor = (CGFloat)imageSize.width / (CGFloat)windowBounds.size.width;
-    _yFactor = (CGFloat)imageSize.height / (CGFloat)windowBounds.size.height;
+    _xFactor = (imageSize.width / windowBounds.size.width);
+    _yFactor = (imageSize.height / windowBounds.size.height);
     _xOffset = (windowBounds.origin.x * _xFactor);
     _yOffset = (windowBounds.origin.y * _yFactor);
     
     IBOUNDS bounds = {0};
     int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+    double x = imageSize.width, y = imageSize.height;
     
-    CGFloat x = imageSize.width, y = imageSize.height;
     TRANS2(0.0, 0.0, &x, &y, _pTranBMPToW);
     x1 = (int)x, y1 = (int)y;
     

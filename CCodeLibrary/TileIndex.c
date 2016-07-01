@@ -120,6 +120,7 @@ void PixelXYToLatLong(int pixelX, int pixelY, int levelOfDetail, double *latitud
 
     *latitude = 90 - 360 * atan(exp(-y * 2 * PI)) / PI;
     *longitude = 360 * x;
+    
 }
 
 void PixelXYToLatLong_old(int pixelX, int pixelY, int levelOfDetail, double *latitude, double *longitude)
