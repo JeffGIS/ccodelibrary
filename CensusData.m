@@ -29,7 +29,7 @@
     if (!_isOpen)
     {
         self.isOpen = YES;
-        self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
+        self.isOpen = !SQLOK(145,sqlite3_open(self.path.UTF8String, &_database), _database);
         //NSLog(@"Property Database open");
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
@@ -44,7 +44,7 @@
 {
     if (opened)
     {
-        SQLOK(sqlite3_close(_database), _database);
+        SQLOK(146,sqlite3_close(_database), _database);
         //NSLog(@"Property Database close");
         _isOpen = NO;
     }
@@ -62,7 +62,7 @@
     BOOL opened = [self open];
     
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -71,7 +71,7 @@
     }
     
     
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(0,sqlite3_finalize(statement), _database);
     
     [self close:opened];
     return value;

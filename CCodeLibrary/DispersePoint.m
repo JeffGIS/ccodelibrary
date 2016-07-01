@@ -48,7 +48,7 @@
 {
     if (!_isOpen)
     {
-        _isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(197,sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"Dispersed Database open");
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
@@ -62,7 +62,7 @@
 {
     if (_isOpen)
     {
-        SQLOK(sqlite3_close(_database),_database);
+        SQLOK(198,sqlite3_close(_database),_database);
         NSLog(@"Dispersed Database close");
     }
     _isOpen = NO;
@@ -70,19 +70,19 @@
 
 - (BOOL)executeCmd:(char *)cmd
 {
-    BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    BOOL rtn = !SQLOK(199,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     return rtn;
 }
 
 - (void)startTransaction
 {
     [self open];
-    SQLOK(sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    SQLOK(200,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
 }
 
 - (void)commitTransaction
 {
-    SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
+    SQLOK(201,sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
 }
 
 + (DispersePoint *)initWithWidth:(int)width
@@ -133,7 +133,7 @@
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(202,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -155,7 +155,7 @@
         rtn = TRUE;
     }
     
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(203,sqlite3_finalize(statement), _database);
     return rtn;
 }
 - (BOOL) addPoint:(DPOINT *)pPoint
@@ -211,7 +211,7 @@
                        bnds.xmn, bnds.xmx, bnds.ymn, bnds.ymx];
     
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(204,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -235,7 +235,7 @@
         }
     }
     
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(2042,sqlite3_finalize(statement), _database);
     if (npicked)
     {
         PickedItem *pi = [[PickedItem alloc]init];
@@ -418,7 +418,7 @@ POINT AddjustPointLoc (POINT Point,float Size,int Sequence)
     NSString *query = [NSString stringWithFormat:@"SELECT ControlNbr, DispersedX, DispersedY,Time,Offense,Symbol FROM DISPERSE"];
     
     
-    SQLOK(sqlite3_prepare_v2(dp.database, query.UTF8String, -1, &statement, 0), dp.database);
+    SQLOK(205,sqlite3_prepare_v2(dp.database, query.UTF8String, -1, &statement, 0), dp.database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -441,7 +441,7 @@ POINT AddjustPointLoc (POINT Point,float Size,int Sequence)
        
     }
     
-    SQLOK(sqlite3_finalize(statement), dp.database);
+    SQLOK(206,sqlite3_finalize(statement), dp.database);
     
     if (opened)
         [dp close];

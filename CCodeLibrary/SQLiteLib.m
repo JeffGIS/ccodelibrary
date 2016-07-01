@@ -10,7 +10,7 @@
 #import "CRAPI.h"
 #import <string.h>
 
-int SQLOK(int sqlReturn, sqlite3 *database)
+int SQLOK(int from,int sqlReturn, sqlite3 *database)
 {
     if (sqlReturn != SQLITE_OK)
     {
@@ -26,8 +26,8 @@ int SQLOK(int sqlReturn, sqlite3 *database)
             if ([fullPath containsString:@"SHARED"])
                 shared = 1;
         }
-        NSString *errmess = [NSString stringWithFormat:@"SQLite Error %i = %i:%s db(%i):%@",
-                           sqlReturn, sqlite3_errcode(database), sqlite3_errmsg(database),shared,dbName];
+        NSString *errmess = [NSString stringWithFormat:@"SQLite Error %i = %i from %i:%s db(%i):%@",
+                           sqlReturn, sqlite3_errcode(database),from, sqlite3_errmsg(database),shared,dbName];
         [CRAPI.sharedInstance logToErrorFile:errmess];
     }
     

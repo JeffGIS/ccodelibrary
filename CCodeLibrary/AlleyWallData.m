@@ -54,7 +54,7 @@ static int fileSequence = 0;
     if (!_isOpen)
     {
         self.isOpen = YES;
-        self.isOpen = !SQLOK(sqlite3_open(self.path.UTF8String, &_database), _database);
+        self.isOpen = !SQLOK(101,sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"AlleyWall Database open");
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
@@ -79,7 +79,7 @@ static int fileSequence = 0;
                         tableOK = YES;
                 }
             }
-            SQLOK(sqlite3_finalize(stmt), _database);
+            SQLOK(102,sqlite3_finalize(stmt), _database);
             if (!tableOK)
             {
                 NSString * cmd = @"DROP TABLE ALLEYWALL_UPDATES;";
@@ -104,7 +104,7 @@ static int fileSequence = 0;
 {
     if (opened && _isOpen)
     {
-        SQLOK(sqlite3_close(_database),_database);
+        SQLOK(103,sqlite3_close(_database),_database);
         NSLog(@"AlleyWall Database close");
         self.isOpen = NO;
     }
@@ -130,7 +130,7 @@ static int fileSequence = 0;
         
         sqlite3_stmt *statement = NULL;
         
-        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        SQLOK(104,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
         
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -140,7 +140,7 @@ static int fileSequence = 0;
                 rtn = atoi(version);
         }
         
-        SQLOK(sqlite3_finalize(statement), _database);
+        SQLOK(105,sqlite3_finalize(statement), _database);
     }
     
     [self close:opened];
@@ -164,7 +164,7 @@ static int fileSequence = 0;
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     if (!iPad)
         sendToServer = YES;
-    BOOL rtn = !SQLOK(sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    BOOL rtn = !SQLOK(106,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     if (rtn && sendToServer)
     {
         NSString * sendToServerFile = [self getSendToServerFile:iPad];
@@ -185,18 +185,18 @@ static int fileSequence = 0;
 - (BOOL)startTransaction
 {
     BOOL opened = [self open];
-    SQLOK(sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    SQLOK(107,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
     return opened;
 }
 
 - (void)commitTransaction
 {
-    SQLOK(sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
+    SQLOK(108,sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
 }
 
 - (void)cancelTransaction
 {
-    SQLOK(sqlite3_exec(_database, "ROLLBACK", 0, 0, 0), _database);
+    SQLOK(109,sqlite3_exec(_database, "ROLLBACK", 0, 0, 0), _database);
 }
 
 - (int)getAlleyLineStatus:(NSInteger)refno
@@ -208,7 +208,7 @@ static int fileSequence = 0;
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement,0), _database);
+    SQLOK(110,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement,0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -216,7 +216,7 @@ static int fileSequence = 0;
         status = checked;
     }
     
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(111,sqlite3_finalize(statement), _database);
     [self close:opened];
     
     return status;
@@ -231,14 +231,14 @@ static int fileSequence = 0;
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement,0), _database);
+    SQLOK(112,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement,0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         segid = sqlite3_column_int(statement, 0);
     }
     
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(113,sqlite3_finalize(statement), _database);
     [self close:opened];
     
     return segid;
@@ -323,13 +323,13 @@ SELECT max(_id) FROM MyTable*/
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(114,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         refno = sqlite3_column_int(statement, 0);
         refno = [CRAPI.sharedInstance adjustNextRefno:refno];
     }
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(115,sqlite3_finalize(statement), _database);
    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.timeStyle = NSDateFormatterNoStyle;
@@ -366,7 +366,7 @@ SELECT max(_id) FROM MyTable*/
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(116,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -409,7 +409,7 @@ SELECT max(_id) FROM MyTable*/
         free (llpoints);
     }
     
-    SQLOK(sqlite3_finalize(statement),_database);
+    SQLOK(117,sqlite3_finalize(statement),_database);
     [self close:opened];
     pt->longitude = minpt.x;
     pt->latitude = minpt.y;
@@ -432,7 +432,7 @@ SELECT max(_id) FROM MyTable*/
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(118,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -446,7 +446,7 @@ SELECT max(_id) FROM MyTable*/
         maxWall = max (fWall,maxWall);
     }
     
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(119,sqlite3_finalize(statement), _database);
     [self close:opened];
     
     if (maxWall < 1)
@@ -522,7 +522,7 @@ SELECT max(_id) FROM MyTable*/
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(120,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -621,7 +621,7 @@ SELECT max(_id) FROM MyTable*/
             sendToServer:sendToServer];
 
     }
-    SQLOK(sqlite3_finalize(statement),_database);
+    SQLOK(121,sqlite3_finalize(statement),_database);
 /*    INSERT INTO ALLEYWALLS_index VALUES(14,-93.260717,-93.260717,44.910437,44.910437);
     CREATE TABLE ALLEYWALLS ('id' INT,'Wall ID' CHAR(8),'Hse No' INT,'STREET' CHAR(64),'City' CHAR(4),'Length' REAL,'Max Hght' REAL,'Offset' REAL,'Gar/Struc' CHAR(12),' COST' CHAR(12),'Type Const' CHAR(32),'InspDate' CHAR(12),'InspBy' CHAR(8),'Rating' CHAR(16),'Comments' CHAR(255),'LONGITUDE' REAL,'LATITUDE' REAL,'NUMSEGMENTS' INT,'LASTUPDATE' INT,PRIMARY KEY('id' ASC))
  */
@@ -637,7 +637,7 @@ SELECT max(_id) FROM MyTable*/
     bool found=false;
     
     BOOL opened = [self open];
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(121,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -649,7 +649,7 @@ SELECT max(_id) FROM MyTable*/
         }
     }
     
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(122,sqlite3_finalize(statement), _database);
     /*    if (!found)
      {
      
@@ -693,7 +693,7 @@ SELECT max(_id) FROM MyTable*/
     {
         query = [NSString stringWithFormat:@"SELECT [%@] FROM ALLEYWALLS_NEW WHERE [Wall ID]=%@ AND Current = 1",fieldName,wallID];
         
-        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        SQLOK(123,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
         
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -705,7 +705,7 @@ SELECT max(_id) FROM MyTable*/
             }
         }
         
-        SQLOK(sqlite3_finalize(statement), _database);
+        SQLOK(124,sqlite3_finalize(statement), _database);
         
         /*       if (!found)
          {
@@ -729,7 +729,7 @@ SELECT max(_id) FROM MyTable*/
         int iseg = (int)[[fieldName substringFromIndex:segRange.location+1] integerValue];
         query = [NSString stringWithFormat:@"SELECT [%@] FROM ALLEYWALL_SEGS WHERE [Wall ID]=%@ AND [InspDate]='%@' AND [SEGMENT]=%i",fname,wallID,date,iseg];
         
-        SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        SQLOK(125,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
         
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -741,7 +741,7 @@ SELECT max(_id) FROM MyTable*/
             }
         }
         
-        SQLOK(sqlite3_finalize(statement),_database);
+        SQLOK(126,sqlite3_finalize(statement),_database);
         /*        if (!found && iseg == 1)
          {
          if ([fname isEqualToString:@"SegmentLength"])
@@ -786,18 +786,18 @@ SELECT max(_id) FROM MyTable*/
     BOOL opened = [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT max(id) FROM ALLEYWALLS_NEW"];
     
-    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(127,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         refno = sqlite3_column_int(statement, 0);
         refno = [CRAPI.sharedInstance adjustNextRefno:refno];
     }
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(128,sqlite3_finalize(statement), _database);
     
     
     query = [NSString stringWithFormat:@"SELECT [Hse No],[STREET],[LONGITUDE],[LATITUDE] FROM ALLEYWALLS_NEW WHERE [Wall ID]='%@' AND [Current]=1",wallID];
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(129,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -811,7 +811,7 @@ SELECT max(_id) FROM MyTable*/
         latitude = [NSString stringWithUTF8String:val];
         rtn = TRUE;
     }
-    SQLOK(sqlite3_finalize(statement),_database);
+    SQLOK(130,sqlite3_finalize(statement),_database);
     if (rtn)
     {
         query = [NSString stringWithFormat:@"UPDATE ALLEYWALLS_NEW SET Current = 0, [LastUpdate]=%i WHERE [Wall ID]='%@' AND [InspDate]='%@'",iTime,wallID,fromDate];
@@ -941,13 +941,13 @@ SELECT max(_id) FROM MyTable*/
     NSString *cmd = [NSString stringWithFormat:@"SELECT LastDataUpdate,LastPictUpdate FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
-    SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
+    SQLOK(131,sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         lastNum = sqlite3_column_int(statement, 0);
         lastPictNum = sqlite3_column_int(statement, 1);
     }
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(132,sqlite3_finalize(statement), _database);
     if (!lastNum)
     {
         lastNum = 1;
@@ -978,9 +978,9 @@ SELECT max(_id) FROM MyTable*/
     NSString *cmd = [NSString stringWithFormat:@"SELECT * FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
-    SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
+    SQLOK(133,sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
     BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(134,sqlite3_finalize(statement), _database);
     
     if (!haveRecord)
     {
@@ -1003,9 +1003,9 @@ SELECT max(_id) FROM MyTable*/
     NSString *cmd = [NSString stringWithFormat:@"SELECT * FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
-    SQLOK(sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
+    SQLOK(135,sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
     BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(136,sqlite3_finalize(statement), _database);
     
     if (!haveRecord)
     {
@@ -1026,12 +1026,12 @@ SELECT max(_id) FROM MyTable*/
     NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM ALLEYWALL_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
-    SQLOK(sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(137,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         LastNum = sqlite3_column_int(statement, 0);
     }
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(138,sqlite3_finalize(statement), _database);
     [self close:opened];
     return LastNum;
 }
@@ -1041,11 +1041,11 @@ SELECT max(_id) FROM MyTable*/
 {
     BOOL rtn = TRUE;
     NSString * cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_UPDATES ('iPad' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
-    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = !SQLOK(139,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_NOTES ('id' INTEGER PRIMARY KEY,'intID' INT,'corner' INT,'rampID' INT,'type' INT, 'note' CHAR(4096))";
-    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = !SQLOK(140,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_STANDARD_TEXT ('textID' INTEGER PRIMARY KEY,'type' INT,'text' CHAR(4096))";
-    rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = !SQLOK(141,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     return rtn;
 }
 - (int) incrementLastDataFileNum
@@ -1103,7 +1103,7 @@ SELECT max(_id) FROM MyTable*/
 {
     BOOL rtn = TRUE;
     NSString *cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'wallID' CHAR(8), 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
-     rtn = !SQLOK(sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+     rtn = !SQLOK(142,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     return rtn;
 }
 - (uint) getNextPictID
@@ -1114,13 +1114,13 @@ SELECT max(_id) FROM MyTable*/
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(143,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         nextID = sqlite3_column_int(statement, 0);
     }
     nextID = (int)[CRAPI.sharedInstance adjustNextRefno:nextID];
-    SQLOK(sqlite3_finalize(statement), _database);
+    SQLOK(144,sqlite3_finalize(statement), _database);
     [self close:opened];
     return nextID;
 }

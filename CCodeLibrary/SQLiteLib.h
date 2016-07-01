@@ -11,6 +11,6 @@
 #define __CCodeLibrary__SQLiteLib__
 
 #include <stdio.h>
-int SQLOK(int sqlReturn, sqlite3 *database);
+int SQLOK(int from,int sqlReturn, sqlite3 *database);
 
 #endif /* defined(__CCodeLibrary__SQLiteLib__) */
