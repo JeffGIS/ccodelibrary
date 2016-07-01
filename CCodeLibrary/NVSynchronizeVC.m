@@ -1108,6 +1108,8 @@ Top:
     {
         NSString * emptyFileMessage = @"/*This file is empty*/";
         [emptyFileMessage writeToFile:_filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        [CRAPI.sharedInstance logToErrorFile:[_filePath lastPathComponent]
+                                  withHeader:@"Writing empty file"];
     }
     _push = [FTPDataPush push];
     _push.delegate = self;
