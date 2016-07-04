@@ -15,9 +15,9 @@
 @property (atomic) BOOL isOpen;
 @property (nonatomic, copy) NSString *documentsDirectory;
 @property (nonatomic, copy) NSString *fileName;
-@property (nonatomic, copy) NSString *path;
 @property NSInteger fileSize;
 
+- (NSString*) databasePath;
 - (BOOL)open;
 - (void)close:(BOOL)opened;
 

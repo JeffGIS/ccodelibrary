@@ -11,15 +11,19 @@
 
 @implementation CensusData
 
+- (NSString*) databasePath
+{
+    _documentsDirectory = UserDefaults.defaults.sharedFilePath;
+    _fileName = @"Property.sqlite";
+    NSString * path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
+    return path;
+}
 - (id)init
 {
     self = [super init];
     
     if (self)
     {
-        _documentsDirectory = UserDefaults.defaults.sharedFilePath;
-        _fileName = @"Property.sqlite";
-        _path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
         
     }
     return self;
@@ -29,10 +33,11 @@
     if (!_isOpen)
     {
         self.isOpen = YES;
-        self.isOpen = !SQLOK(145,sqlite3_open(self.path.UTF8String, &_database), _database);
+        NSString * path = [self databasePath];
+        self.isOpen = !SQLOK(145,sqlite3_open(path.UTF8String, &_database), _database);
         //NSLog(@"Property Database open");
         
-        _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
+        _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:path
                                                                    error:nil].fileSize;
         return TRUE;
     }

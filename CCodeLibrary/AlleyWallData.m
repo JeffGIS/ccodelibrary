@@ -28,17 +28,18 @@ static int fileSequence = 0;
     return NO;
 }
 
+-(NSString*) databasePath
+{
+    NSString * path =
+    _documentsDirectory = UserDefaults.defaults.sharedFilePath;
+    _fileName = @"AlleyWalls.sqlite";
+    path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
+    return path;
+}
+
 - (id)init
 {
     self = [super init];
-    
-    if (self)
-    {
-        _documentsDirectory = UserDefaults.defaults.sharedFilePath;
-        _fileName = @"AlleyWalls.sqlite";
-        _path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
-        
-    }
     
     return self;
 }
@@ -54,10 +55,11 @@ static int fileSequence = 0;
     if (!_isOpen)
     {
         self.isOpen = YES;
-        self.isOpen = !SQLOK(101,sqlite3_open(self.path.UTF8String, &_database), _database);
+        NSString * path = [self databasePath];
+        self.isOpen = !SQLOK(101,sqlite3_open(path.UTF8String, &_database), _database);
         NSLog(@"AlleyWall Database open");
         
-        _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
+        _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:path
                                                                    error:nil].fileSize;
         if (_fileSize)
         {
@@ -114,7 +116,7 @@ static int fileSequence = 0;
 {
     [self close:TRUE];
     
-    BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
+    BOOL st = [NSFileManager.defaultManager removeItemAtPath:[self databasePath]
                                                        error:nil];
     return st;
 }

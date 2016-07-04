@@ -35,7 +35,6 @@ static int nInit=0;
     if (!_fileSize || create)
         [self createIntersectionsTable:YES];
 }
-
 - (id)init
 {
     self = [super init];

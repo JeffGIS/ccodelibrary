@@ -16,7 +16,6 @@
 @property (atomic) int processingID;
 @property (nonatomic, copy) NSString *documentsDirectory;
 @property (nonatomic, copy) NSString *fileName;
-@property (nonatomic, copy) NSString *path;
 @property unsigned long long fileSize;
 @property (nonatomic) int datasetVersion;
 
@@ -91,6 +90,6 @@ fromDate:(NSString *)fromDate
 - (BOOL) updateFromFile:(NSString*)file;
 - (BOOL) setLastDataUpdateNum:(int)lastNum
                       foriPad:(int)iPad;
-
+-(NSString*) databasePath;
 
 @end

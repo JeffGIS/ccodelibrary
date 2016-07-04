@@ -65,6 +65,7 @@
 #import "FileLister.h"
 #import "TextOptions.h"
 #import "SQLiteLib.h"
+#import "FTPDirectoryCreate.h"
 
 @interface CCodeLibrary : NSObject
 
