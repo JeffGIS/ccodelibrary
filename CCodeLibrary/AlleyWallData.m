@@ -1052,12 +1052,13 @@ SELECT max(_id) FROM MyTable*/
 }
 - (int) incrementLastDataFileNum
 {
+    //increments to the first non existing file
     int pictNum;
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
-    int nextNum = lastNum;
-    NSString* file = [self outputDataFile:nextNum iPad:CRAPI.sharedInstance.currentiPadWithinManager];
+    int nextNum = max (1,lastNum);
+    NSString* file = [self outputDataFile:nextNum iPad:iPad];
     
     int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:file
                                                                        error:nil].fileSize;
@@ -1090,16 +1091,32 @@ SELECT max(_id) FROM MyTable*/
 }
 - (int) incrementLastPictFileNum
 {
+    //increments to the last existing file, return next unused num
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastPictUpdateNumber:iPad];
-    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[self outputPictFile:lastNum
-                                                                                             iPad:CRAPI.sharedInstance.currentiPadWithinManager]
+    int nextNum = lastNum-1;
+    int lastFile = 0;
+    NSString *file = [self outputPictFile:nextNum
+                                     iPad:iPad];
+    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:file
                                                                        error:nil].fileSize;
-    if (fileSize > 0)
+    while (fileSize > 0)
     {
-        [self setLastPictUpdateNum:++lastNum foriPad:iPad];
+        lastFile = nextNum++;
+        file = [self outputPictFile:nextNum
+                               iPad:iPad];
+        fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:file
+                                                                       error:nil].fileSize;
     }
-    return lastNum;
+    if (lastFile && lastFile != lastNum)
+    {
+        [self setLastPictUpdateNum:lastFile foriPad:iPad];
+        NSString * logmess = [NSString stringWithFormat:@"Alley pict file num error,%i - %i",lastNum,lastFile];
+        [CRAPI.sharedInstance logToErrorFile:logmess];
+    }
+    else
+        lastFile = lastNum;
+    return lastFile + 1;
 }
 - (BOOL)createPictureDatabase
 {

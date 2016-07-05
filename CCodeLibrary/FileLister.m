@@ -24,6 +24,10 @@
     BOOL rtn;
     BOOL first = TRUE;
     BOOL all = FALSE;
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    //[dateFormatter setDateFormat:@"yyyy-MM-dd"];
     
     // Create file manager
     NSFileManager *fileMgr = NSFileManager.defaultManager;
@@ -61,9 +65,12 @@ Next:
             totFiles++;
             fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:entry
                                                                                  error:nil].fileSize;
+            NSDate * modDate = (NSDate*)[NSFileManager.defaultManager attributesOfItemAtPath:entry
+                                                                                         error:nil].fileModificationDate;
+            NSString *mod = [dateFormatter stringFromDate:modDate];
             
             totSize += fileSize;
-            outLine = [NSString stringWithFormat:@"%s\t%ld", entry.UTF8String, (long)fileSize];
+            outLine = [NSString stringWithFormat:@"%s\t%ld\t%@", entry.UTF8String, (long)fileSize,mod];
             
             if (first)
                 rtn = [[NSString stringWithUTF8String:outLine.UTF8String] writeToFile:outFile
