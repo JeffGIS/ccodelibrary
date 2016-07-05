@@ -509,7 +509,7 @@
         char rampID[32];
         mpint.currentRamp = ramp;
         
-        if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
+        //if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
         {
             strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
             

@@ -1073,6 +1073,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             else if ((rampID = (int)_currentEditButton.tag))
             {
                 MPRamp *ramp = _currentIntersection.ramps[rampID];
+                
                 ramp.rampExists = NO;
                 ramp.isComplete = YES;
                 ramp.rampType = 0;
