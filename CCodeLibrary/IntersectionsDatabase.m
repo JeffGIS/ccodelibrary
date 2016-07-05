@@ -1127,6 +1127,8 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt
 {
+    NSLog(@"SET POINT IntID %i: LAT:%f, LON:%f", intpt.intID, intpt.latitude, intpt.longitude);
+    
     BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     int lev21x = 0;
@@ -1138,10 +1140,15 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, intX=%i, intY=%i, latitude=%f, longitude=%f WHERE intID=%i",
                        iTime, lev21x, lev21y, intpt.latitude, intpt.longitude, intpt.intID];
     
-    rtn = [self.curbRampData executeCmd:query.UTF8String sendToServer:YES];
+    rtn = [self.curbRampData executeCmd:query.UTF8String
+                           sendToServer:YES];
+    
     query = [NSString stringWithFormat:@"UPDATE Intersections_index SET minY=%f,minX=%f,maxY=%f,maxX=%f WHERE Intersections_index.id=%ld",
-             intpt.latitude, intpt.longitude,intpt.latitude, intpt.longitude, (long)intpt.intID];
-    rtn = [self.curbRampData executeCmd:query.UTF8String sendToServer:YES];
+             intpt.latitude, intpt.longitude, intpt.latitude, intpt.longitude, (long)intpt.intID];
+    
+    rtn = [self.curbRampData executeCmd:query.UTF8String
+                           sendToServer:YES];
+    
     [self close:opened];
 
     return !rtn;
@@ -1150,11 +1157,10 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 - (IntersectionPoint *)getCurrentIntersectionPoint:(int)intID
 {
     BOOL opened = [self open];
-    int  nRamps = -1;
+    int nRamps = -1;
     NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, status, assignedToPrelim, assignedToDetail FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement = NULL;
-    CGPoint intersectionPoint;
-    IntersectionPoint *intpt;
+    IntersectionPoint *intpt = nil;
     intpt.latitude = 0.0, intpt.longitude = 0.0;
     
     SQLOK(222,sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL),self.curbRampData.database);
@@ -1168,12 +1174,14 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         double lon = 0.0;
         intpt = [[IntersectionPoint alloc] init];
         PixelXYToLatLong(intX, intY, 21, &lat, &lon);
-        intpt.latitude = intersectionPoint.y = lat;
-        intpt.longitude = intersectionPoint.x = lon;
+        intpt.latitude = lat;
+        intpt.longitude = lon;
         intpt.status = sqlite3_column_int(statement, 2);
         intpt.assignedToPrelim = sqlite3_column_int(statement, 3);
         intpt.assignedToDetail = sqlite3_column_int(statement, 4);
         intpt.intID = intID;
+        
+        NSLog(@"GET POINT IntID %i: LAT:%f, LON:%f", intpt.intID, intpt.latitude, intpt.longitude);
     }
     
     SQLOK(223,sqlite3_finalize(statement),self.curbRampData.database);

@@ -2115,6 +2115,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersectionID];
             
             PixelXYToLatLongd(x, y, _initialZoom, &lat, &lon);
+            
             info.latitude = lat;
             info.longitude = lon;
             [database setCurrentIntersectionPoint:info];
