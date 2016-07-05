@@ -15,6 +15,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "NVRampTypePageController.h"
+#import "IntersectionPoint.h"
 
 enum textures {
     smoothConcrete=1,
@@ -107,7 +108,7 @@ enum obstructions {
 @property int zoomLevel;
 @property BOOL doLater;
 @property (nonatomic) int timeComplete;
-@property int status;
+@property IntersectionStatus status;
 @property int lastUpdate;
 @property int assignedPrelim;
 @property int assignedDetail;

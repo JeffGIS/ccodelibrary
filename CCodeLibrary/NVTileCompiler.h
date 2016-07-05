@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 @import UIKit;
+#import "IntersectionsDatabase.h"
 
 @class NVTileCompiler;
 
@@ -17,13 +18,11 @@
 
 @property (nonatomic, weak) id <NVTileCompilerDelegate> delegate;
 
-+ (NVTileCompiler *)compileImageForIntersectionID:(int)intersectionID
-                                              lat:(double)lat
-                                              lon:(double)lon
-                                             zoom:(int)zoom
-                                     forceRefresh:(BOOL)forceRefresh
-                                         delegate:(id)delegate
-                                      currentView:(UIView *)currentView;
++ (NVTileCompiler *)compileImageForIntersection:(MPIntersection *)intersection
+                                           zoom:(int)zoom
+                                   forceRefresh:(BOOL)forceRefresh
+                                       delegate:(id)delegate
+                                    currentView:(UIView *)currentView;
 
 @end
 

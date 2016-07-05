@@ -20,8 +20,8 @@
 @property (nonatomic) UIButton *editItemButton, *rampTypeButton, *currentEditButton;
 @property (nonatomic, copy) NSString *pathToImageFile, *pathToBPWFile;
 @property (nonatomic) LPTRANDATA pTranWToBMP, pTranBMPToW;
-@property (nonatomic) double xFactor, yFactor, xOffset, yOffset, latitude, longitude;
-@property (nonatomic) int currentIntersectionID, currentZoom, initialZoom;
+@property (nonatomic) double xFactor, yFactor, xOffset, yOffset;
+@property (nonatomic) int currentZoom, initialZoom;
 @property (nonatomic) NVUpdateOption updateOption;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) UISegmentedControl *zoomSC;
@@ -34,6 +34,7 @@
 @property (nonatomic) UILabel *headingLabel, *intersectionLabel, *gridScaleLabel;
 @property (nonatomic) CGPoint newTarget;
 @property (nonatomic) CGFloat targetSize;
+@property (nonatomic) MPIntersection *currentIntersection;
 
 @end
 
@@ -72,7 +73,6 @@
 {
     [super viewDidLoad];
     
-    _currentIntersectionID = _currentIntersection.intID;
     _currentZoom = 21;
     _initialZoom = _currentZoom;
     _firstTime = YES;
@@ -169,7 +169,7 @@
                                                                    752.0 - _addXWalkButton.frame.origin.x, _zoomSC.frame.size.height)];
     
     _intersectionLabel.font = [UIFont boldSystemFontOfSize:32.0];
-    _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
+    _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersection.intID];
     [self setupLabel:_intersectionLabel];
 }
 
@@ -226,21 +226,13 @@
 
 - (void)setBKImage:(BOOL)forceRefresh;
 {
-    IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
-    IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersectionID];
-    
-    _latitude = info.latitude;
-    _longitude = info.longitude;
-    
     CRAPI.sharedInstance.currentView = self.view;
     
-    NVTileCompiler *nvtc = [NVTileCompiler compileImageForIntersectionID:_currentIntersectionID
-                                                                     lat:_latitude
-                                                                     lon:_longitude
-                                                                    zoom:_currentZoom
-                                                            forceRefresh:forceRefresh
-                                                                delegate:self
-                                                             currentView:self.view];
+    NVTileCompiler *nvtc = [NVTileCompiler compileImageForIntersection:_currentIntersection
+                                                                  zoom:_currentZoom
+                                                          forceRefresh:forceRefresh
+                                                              delegate:self
+                                                           currentView:self.view];
 #pragma unused(nvtc)
 }
 
@@ -260,7 +252,7 @@
     UIImage *backImage = [UIImage imageWithContentsOfFile:_pathToImageFile];
     
     int pixelx = 0, pixely = 0;
-    LatLongToPixelXY(_latitude, _longitude, _currentZoom, &pixelx, &pixely);
+    LatLongToPixelXY(_currentIntersection.lat, _currentIntersection.lon, _currentZoom, &pixelx, &pixely);
     
     NSString *intAzms = @"";
     
@@ -325,7 +317,7 @@
         UIView *intPointView = UIView.new;
         intPointView.tag = 777;
         
-        if (points.intID == _currentIntersectionID)
+        if (points.intID == _currentIntersection.intID)
             size *= 2.0;
         
         intPointView.backgroundColor = UserDefaults.defaults.green;
@@ -880,10 +872,9 @@
                 if (nextIntersection && _from == FROM_PRELIM)
                 {
                     _currentIntersection = nextIntersection;
-                    _currentIntersectionID = _currentIntersection.intID;
                     [self setSegIndex:21];
                     [self setBKImage:NO];
-                    _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
+                    _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersection.intID];
                     return;
                 }
             }
@@ -935,9 +926,8 @@
         if (nextIntersection && _from != FROM_PRELIM_MAP)
         {
             _currentIntersection = nextIntersection;
-            _currentIntersectionID = _currentIntersection.intID;
             [self setBKImage:NO];
-            _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersectionID];
+            _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersection.intID];
             return;
         }
     }
@@ -2112,14 +2102,15 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             TRANS2((_newTarget.x * _xFactor) - _xOffset, (_newTarget.y * _yFactor) - _yOffset + (_targetSize / 2.0), &x, &y, _pTranBMPToW);
             
             IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
-            IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersectionID];
+            IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersection.intID];
             
+            _currentIntersection.lev21x = x;
+            _currentIntersection.lev21y = y;
             PixelXYToLatLongd(x, y, _initialZoom, &lat, &lon);
+            _currentIntersection.lat = info.latitude = lat;
+            _currentIntersection.lon = info.longitude = lon;
             
-            info.latitude = lat;
-            info.longitude = lon;
             [database setCurrentIntersectionPoint:info];
-            
             [self setBKImage:YES];
         }
         

@@ -6,7 +6,6 @@
 #import "TileGraphics.h"
 #import "GSSiDefs.h"
 #import "NVAlertView.h"
-#import "IntersectionsDatabase.h"
 
 @implementation NVTile
 
@@ -14,27 +13,26 @@
 
 @interface NVTileCompiler () <NSURLSessionDataDelegate,NSURLSessionTaskDelegate>
 
-@property (nonatomic) int intersectionID, zoom, imageCount;
-@property (nonatomic) double lat, lon, size;
+@property (nonatomic) int zoom, imageCount;
+@property (nonatomic) double size;
 @property (nonatomic, copy) NSString *imagePath, *cptPath, *maptype;
 @property (nonatomic) NSMutableArray *tileDataArray;
 @property (nonatomic) UIView *currentView;
+@property (nonatomic) MPIntersection *currentIntersection;
 
 @end
 
 @implementation NVTileCompiler
 
-+ (NVTileCompiler *)compileImageForIntersectionID:(int)intersectionID
-                                              lat:(double)lat
-                                              lon:(double)lon
-                                             zoom:(int)zoom
-                                     forceRefresh:(BOOL)forceRefresh
-                                         delegate:(id)delegate
-                                      currentView:(UIView *)currentView
++ (NVTileCompiler *)compileImageForIntersection:(MPIntersection *)intersection
+                                           zoom:(int)zoom
+                                   forceRefresh:(BOOL)forceRefresh
+                                       delegate:(id)delegate
+                                    currentView:(UIView *)currentView
 {
-    if (!delegate || !currentView || !intersectionID || !zoom)
+    if (!delegate || !currentView || !intersection || !zoom)
     {
-        NSLog(@"NVTileCompiler ERROR:Cannot set delegate, currentView, intersectionID or zoom to nil");
+        NSLog(@"NVTileCompiler ERROR:Cannot set delegate, currentView, intersection or zoom to nil");
         return nil;
     }
     
@@ -45,9 +43,7 @@
     }
     
     NVTileCompiler *nvtc = NVTileCompiler.new;
-    nvtc.intersectionID = intersectionID;
-    nvtc.lat = lat;
-    nvtc.lon = lon;
+    nvtc.currentIntersection = intersection;
     nvtc.zoom = zoom;
     nvtc.delegate = delegate;
     nvtc.tileDataArray = NSMutableArray.array;
@@ -57,18 +53,15 @@
     nvtc.maptype = @"hybrid";
     
     if (forceRefresh)
-        [CRAPI.sharedInstance deleteImagesForAllZooms:nvtc.intersectionID];
+        [CRAPI.sharedInstance deleteImagesForAllZooms:nvtc.currentIntersection.intID];
     
     nvtc.imagePath = [CRAPI.sharedInstance.imageDirectory stringByAppendingPathComponent:
-                      [NSString stringWithFormat:@"/Int_%i_%i.jpg", nvtc.intersectionID, nvtc.zoom]];
+                      [NSString stringWithFormat:@"/Int_%i_%i.jpg", nvtc.currentIntersection.intID, nvtc.zoom]];
     
     nvtc.cptPath = [CRAPI.sharedInstance.imageDirectory stringByAppendingPathComponent:
-                    [NSString stringWithFormat:@"/Int_%i_%i.cpt", nvtc.intersectionID, nvtc.zoom]];
+                    [NSString stringWithFormat:@"/Int_%i_%i.cpt", nvtc.currentIntersection.intID, nvtc.zoom]];
     
-    IntersectionsDatabase *intDB = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
-    IntersectionPoint *intPoint = [intDB getCurrentIntersectionPoint:nvtc.intersectionID];
-    
-    if (intPoint.status == AddedInDetail)
+    if (nvtc.currentIntersection.status == AddedInDetail)
         nvtc.maptype = @"roadmap";
     
     unsigned long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:nvtc.imagePath
@@ -112,7 +105,7 @@
     int xincomposite = 0, yincomposite = 0;
     int nxpixels = 0, nypixels = 0, x = 0, y = 0;
     
-    LatLongToPixelXY_old(_lat, _lon, _zoom, &worldx, &worldy);
+    LatLongToPixelXY_old(_currentIntersection.lat, _currentIntersection.lon, _zoom, &worldx, &worldy);
     
     worldx -= (_size / 2);
     worldy -= (_size / 2);
@@ -215,7 +208,7 @@
         
         NSString *staticMapUrl = [NSString stringWithFormat:
                                   @"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=%i&size=640x640&maptype=%@&key=%@",
-                                  _lat, _lon, _zoom, _maptype, GOOGLE_API_KEY];
+                                  _currentIntersection.lat, _currentIntersection.lon, _zoom, _maptype, GOOGLE_API_KEY];
         
         NSURL *mapUrl = [NSURL URLWithString:[staticMapUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL:mapUrl]];
@@ -312,7 +305,7 @@ didCompleteWithError:(NSError *)error
     int factor = pow(2, (21 - _zoom));
     NSError *error = nil;
     
-    LatLongToPixelXYd(_lat, _lon, 21, &pixelX, &pixelY);
+    LatLongToPixelXYd(_currentIntersection.lat, _currentIntersection.lon, 21, &pixelX, &pixelY);
     
     sprintf(txt, "0 0 %f %f\r\n\
             640 0 %f %f\r\n\

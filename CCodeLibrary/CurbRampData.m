@@ -170,24 +170,29 @@ static int nInit=0;
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer
 {
-
     BOOL rtn = !SQLOK(165,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    
     if (rtn && sendToServer)
     {
         int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
         NSString * sendToServerFile = [self getSendToServerFile:iPad];
+        
         int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:sendToServerFile
                                                                               error:nil].fileSize;
+        
         if (!fileSize)
         {
             int iTime = NSDate.timeIntervalSinceReferenceDate;
-            NSString * versions = [NSString stringWithFormat:@"/*ApVer %@ DBVer %s Time %i*/",UIApplication.appVersionBuild,CURRENT_INTERSECTION_VERSION,iTime];
-            rtn = appendStringToFile (versions ,sendToServerFile);
-
+            
+            NSString *versions = [NSString stringWithFormat:@"/*ApVer %@ DBVer %s Time %i*/",
+                                  UIApplication.appVersionBuild,CURRENT_INTERSECTION_VERSION,iTime];
+            
+            rtn = appendStringToFile (versions, sendToServerFile);
         }
-        rtn = appendStringToFile ([NSString stringWithUTF8String:cmd] ,sendToServerFile);
-
+        
+        rtn = appendStringToFile([NSString stringWithUTF8String:cmd], sendToServerFile);
     }
+    
     return rtn;
 }
 
