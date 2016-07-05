@@ -974,7 +974,7 @@ WHERE intID=%i;",
     BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:
-                       @"SELECT intID, assignedToPrelim, assignedToDetail, intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
+                       @"SELECT intID, assignedToPrelim, assignedToDetail, intX, intY, status FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
                        (int)bounds.xmn,(int)bounds.xmx,(int)bounds.ymn,(int)bounds.ymx];
     
     sqlite3_stmt *statement = NULL;
@@ -987,6 +987,7 @@ WHERE intID=%i;",
         int assignedToDetail = sqlite3_column_int(statement, 2);
         int intX = sqlite3_column_int(statement, 3);
         int intY = sqlite3_column_int(statement, 4);
+        int status = sqlite3_column_int(statement, 5);
         double lat = 0.0;
         double lon = 0.0;
         PixelXYToLatLong(intX, intY, 21, &lat, &lon);
@@ -997,6 +998,7 @@ WHERE intID=%i;",
         intpt.latitude = lat;
         intpt.longitude = lon;
         intpt.dist = LDIST(intX, intY, pt.x, pt.y);
+        intpt.status = status;
         [dataArray addObject:intpt];
     }
     
