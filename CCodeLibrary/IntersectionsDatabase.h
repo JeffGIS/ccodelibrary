@@ -47,12 +47,8 @@
                                 nStreets:(int *)pnStreets;
 
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt;
-
-- (BOOL)storeIntersection:(MPIntersection *)currentIntersection
-               withStatus:(IntersectionStatus)status;
-
-- (BOOL)storeMPIntersectionToDB:(MPIntersection *)mpint
-                     withStatus:(IntersectionStatus)status;
+- (BOOL)storeIntersection:(MPIntersection *)currentIntersection;
+- (BOOL)storeMPIntersectionToDB:(MPIntersection *)mpint;
 
 - (MPIntersection *)getMPIntersectionFromDB:(int)intID
                                   withRamps:(BOOL)wantRamps;

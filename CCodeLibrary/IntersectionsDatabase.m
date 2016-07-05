@@ -425,8 +425,7 @@
             break;
     }
 }
-- (BOOL)storeIntersection:(MPIntersection*)currentIntersection
-               withStatus:(IntersectionStatus)status
+- (BOOL)storeIntersection:(MPIntersection *)currentIntersection
 {
     BOOL rtn = FALSE;
     
@@ -483,12 +482,11 @@
         }
     }
     
-    
-    rtn = [self storeMPIntersectionToDB:currentIntersection
-                                 withStatus:status];
+    rtn = [self storeMPIntersectionToDB:currentIntersection];
     
     return rtn;
 }
+
 - (int) incrementLastDataFileNum
 {
     BOOL opened = [self.curbRampData open];
@@ -497,23 +495,24 @@
     return rtn;
 }
 
-- (BOOL)storeMPIntersectionToDB:(MPIntersection*)mpint
-                     withStatus:(IntersectionStatus)status
+- (BOOL)storeMPIntersectionToDB:(MPIntersection *)mpint
 {
     BOOL rtn = NO;
-    double lat,lon;
+    double lat = 0.0, lon = 0.0;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     BOOL opened = [self.curbRampData open];
     BOOL newFile = YES;
+    
     for (int i = 1; i < 13; i++)
     {
         MPRamp *ramp = [mpint.ramps objectAtIndex:i];
         char rampID[32];
         mpint.currentRamp = ramp;
         
-        if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
+        //if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
         {
             strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
+            
             NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO Ramps VALUES(\
 %i,%i,'%s',0,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\
 %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\
@@ -569,13 +568,15 @@
                     (int)ramp.lev21y,
                     (int)ramp.rampType,
                     ramp.rampComment];
-            rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
+            
+            rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
+                                   sendToServer:YES];
         }
     }
 
     PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
    
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%li,\
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
 assignedToPrelim=%i,\
 assignedToDetail=%i,\
 intX=%i,\
@@ -606,7 +607,7 @@ zoomLevel=%i,\
 doLater=%i,\
 intersectionComment='%s' \
 WHERE intID=%i;",
-                       iTime, (long)status,
+                       iTime, mpint.status,
                        mpint.assignedPrelim,
                        mpint.assignedDetail,
                        mpint.lev21x,
@@ -637,10 +638,14 @@ WHERE intID=%i;",
                        mpint.intersectionComment.UTF8String,
                        mpint.intID];
     
-    rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
+    rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
+                           sendToServer:YES];
+    
     cmd = [NSString stringWithFormat:@"UPDATE Intersections_index SET minY=%f,minX=%f,maxY=%f,maxX=%f WHERE Intersections_index.id=%ld",
-             lat,lon,lat,lon, (long)mpint.intID];
-    rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
+           lat, lon, lat, lon, (long)mpint.intID];
+    
+    rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
+                           sendToServer:YES];
 
     [self.curbRampData close:opened];
 
@@ -969,7 +974,7 @@ WHERE intID=%i;",
     BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:
-                       @"SELECT intID, assignedToPrelim, assignedToDetail, intX, intY FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
+                       @"SELECT intID, assignedToPrelim, assignedToDetail, intX, intY, status FROM Intersections WHERE intX >= %i AND intX <= %i AND intY >= %i AND intY <= %i",
                        (int)bounds.xmn,(int)bounds.xmx,(int)bounds.ymn,(int)bounds.ymx];
     
     sqlite3_stmt *statement = NULL;
@@ -982,6 +987,7 @@ WHERE intID=%i;",
         int assignedToDetail = sqlite3_column_int(statement, 2);
         int intX = sqlite3_column_int(statement, 3);
         int intY = sqlite3_column_int(statement, 4);
+        int status = sqlite3_column_int(statement, 5);
         double lat = 0.0;
         double lon = 0.0;
         PixelXYToLatLong(intX, intY, 21, &lat, &lon);
@@ -992,6 +998,7 @@ WHERE intID=%i;",
         intpt.latitude = lat;
         intpt.longitude = lon;
         intpt.dist = LDIST(intX, intY, pt.x, pt.y);
+        intpt.status = status;
         [dataArray addObject:intpt];
     }
     
@@ -1127,6 +1134,8 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
 - (BOOL)setCurrentIntersectionPoint:(IntersectionPoint *)intpt
 {
+    NSLog(@"\nSET POINT\nIntID %i LAT:%f, LON:%f", intpt.intID, intpt.latitude, intpt.longitude);
+    
     BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     int lev21x = 0;
@@ -1138,10 +1147,15 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, intX=%i, intY=%i, latitude=%f, longitude=%f WHERE intID=%i",
                        iTime, lev21x, lev21y, intpt.latitude, intpt.longitude, intpt.intID];
     
-    rtn = [self.curbRampData executeCmd:query.UTF8String sendToServer:YES];
+    rtn = [self.curbRampData executeCmd:query.UTF8String
+                           sendToServer:YES];
+    
     query = [NSString stringWithFormat:@"UPDATE Intersections_index SET minY=%f,minX=%f,maxY=%f,maxX=%f WHERE Intersections_index.id=%ld",
-             intpt.latitude, intpt.longitude,intpt.latitude, intpt.longitude, (long)intpt.intID];
-    rtn = [self.curbRampData executeCmd:query.UTF8String sendToServer:YES];
+             intpt.latitude, intpt.longitude, intpt.latitude, intpt.longitude, (long)intpt.intID];
+    
+    rtn = [self.curbRampData executeCmd:query.UTF8String
+                           sendToServer:YES];
+    
     [self close:opened];
 
     return !rtn;
@@ -1150,11 +1164,10 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 - (IntersectionPoint *)getCurrentIntersectionPoint:(int)intID
 {
     BOOL opened = [self open];
-    int  nRamps = -1;
+    int nRamps = -1;
     NSString *query = [NSString stringWithFormat:@"SELECT intX, intY, status, assignedToPrelim, assignedToDetail FROM Intersections WHERE intID=%i", intID];
     sqlite3_stmt *statement = NULL;
-    CGPoint intersectionPoint;
-    IntersectionPoint *intpt;
+    IntersectionPoint *intpt = nil;
     intpt.latitude = 0.0, intpt.longitude = 0.0;
     
     SQLOK(222,sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL),self.curbRampData.database);
@@ -1168,8 +1181,8 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         double lon = 0.0;
         intpt = [[IntersectionPoint alloc] init];
         PixelXYToLatLong(intX, intY, 21, &lat, &lon);
-        intpt.latitude = intersectionPoint.y = lat;
-        intpt.longitude = intersectionPoint.x = lon;
+        intpt.latitude = lat;
+        intpt.longitude = lon;
         intpt.status = sqlite3_column_int(statement, 2);
         intpt.assignedToPrelim = sqlite3_column_int(statement, 3);
         intpt.assignedToDetail = sqlite3_column_int(statement, 4);
@@ -1872,26 +1885,33 @@ Exit:
     }
     return n;
 }
--(void) setStreetNamesForIntersection:(int)intID
-                                   to:(NSString*)newNames
+- (void)setStreetNamesForIntersection:(int)intID
+                                   to:(NSString *)newNames
 {
     BOOL opened = [self open];
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     newNames = [newNames stringByReplacingOccurrencesOfString:@"\n" withString:@"|"];
     newNames = [self fixStreetNames:newNames.UTF8String];
     int nStreets = [self nNamesIn:newNames.UTF8String];
+    
     NSString *cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, nStreets=%i, streetNames='%s' WHERE intID=%i",
-                       iTime, nStreets,newNames.UTF8String, intID];
-    [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
+                     iTime, nStreets,newNames.UTF8String, intID];
+    
+    [self.curbRampData executeCmd:(char *)cmd.UTF8String
+                     sendToServer:YES];
+    
     [self close:opened];
 }
 
-- (void) deleteIntersection:(int)intID
+- (void)deleteIntersection:(int)intID
 {
     BOOL opened = [self open];
     NSString *cmd = [NSString stringWithFormat:@"DELETE FROM Intersections WHERE intID = %i;DELETE FROM Intersections_index WHERE id = %i",intID,intID];
-    [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES];
-    [self close:opened];
     
+    [self.curbRampData executeCmd:(char *)cmd.UTF8String
+                     sendToServer:YES];
+    
+    [self close:opened];
 }
+
 @end

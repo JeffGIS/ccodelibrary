@@ -44,7 +44,6 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 @interface NVInventoryViewController : UIViewController <NVAlertViewDelegate,CLLocationManagerDelegate,NVTileCompilerDelegate>
 
 @property (nonatomic, weak) id <NVInventoryViewControllerDelegate> delegate;
-@property (nonatomic) MPIntersection *currentIntersection;
 @property NSInteger from;
 
 + (NVInventoryViewController *)showInventoryViewControllerForIntersection:(MPIntersection *)intersection
