@@ -608,15 +608,15 @@ static int nInit=0;
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];
-    int nextNum = lastNum;
-    NSString* file = [self outputDataFile:nextNum iPad:CRAPI.sharedInstance.currentiPadWithinManager];
+    int nextNum = max(1,lastNum);
+    NSString* file = [self outputDataFile:nextNum iPad:iPad];
     
     int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:file
                                                                        error:nil].fileSize;
     while (fileSize > 0)
     {
         nextNum++;
-        file = [self outputDataFile:nextNum iPad:CRAPI.sharedInstance.currentiPadWithinManager];
+        file = [self outputDataFile:nextNum iPad:iPad];
         fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:file
                                                                        error:nil].fileSize;
     }
@@ -633,13 +633,13 @@ static int nInit=0;
 
 + (int) incrementLastDataFileNumber
 {
-    CurbRampData *awd = CurbRampData.new;
-    return [awd incrementLastDataFileNum];
+    CurbRampData *crd = CurbRampData.new;
+    return [crd incrementLastDataFileNum];
 }
 + (int) incrementLastPictFileNumber
 {
-    CurbRampData *awd = CurbRampData.new;
-    return [awd incrementLastPictFileNum];
+    CurbRampData *crd = CurbRampData.new;
+    return [crd incrementLastPictFileNum];
 }
 - (int) incrementLastPictFileNum
 {

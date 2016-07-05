@@ -533,6 +533,7 @@
         _awd = AlleyWallData.new;
         _databaseID = _awd;
         [_databaseID incrementLastDataFileNum];
+        [_databaseID incrementLastPictFileNum];
     }
     
     else
@@ -1065,7 +1066,7 @@ Top:
                                                          wantPictNum:YES] + 1);
                 
                 if (_nextFileNumToUpload > 0)
-                    _upFiles = (_lastFileNumToUpload - _nextFileNumToUpload + 1);
+                    _upPix = (_lastFileNumToUpload - _nextFileNumToUpload + 1);
                 
                 [self updateLabels];
                 
