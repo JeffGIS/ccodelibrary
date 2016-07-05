@@ -291,17 +291,19 @@ static int fileSequence = 0;
     AlleyWallData *awd = [[AlleyWallData alloc] init];
     BOOL opened = [awd open];
     
-    NSString *query = [NSString stringWithFormat:@"UPDATE ALLEYWALLS_NEW SET LATITUDE = %f,LONGITUDE = %f,LastUpdate = %i WHERE id=%ld",
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALLS_NEW SET LATITUDE = %f,LONGITUDE = %f,LastUpdate = %i WHERE id=%ld",
                        point.latitude,point.longitude, iTime,(long)refno];
     
-    rtn = sqlite3_exec(awd.database, query.UTF8String, NULL, NULL, NULL);
+    rtn = [awd executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES];
     
-    if (!rtn)
+    if (rtn)
     {
-        query = [NSString stringWithFormat:@"UPDATE ALLEYWALLS_NEW_index SET minY=%f,minX=%f,maxY=%f,maxX=%f WHERE ALLEYWALLS_NEW_index.id=%ld",
+        cmd = [NSString stringWithFormat:@"UPDATE ALLEYWALLS_NEW_index SET minY=%f,minX=%f,maxY=%f,maxX=%f WHERE ALLEYWALLS_NEW_index.id=%ld",
                  point.latitude,point.longitude, point.latitude,point.longitude, (long)refno];
         
-        rtn = sqlite3_exec(awd.database, query.UTF8String, NULL, NULL, NULL);
+        rtn = [awd executeCmd:(LPSTR)cmd.UTF8String
+                 sendToServer:YES];
     }
     
     [awd close:opened];
