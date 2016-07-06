@@ -144,7 +144,7 @@
             break;
             
         case NSStreamEventErrorOccurred:
-            [self stopSendWithStatus:FTPStatusConnectionFailed
+            [self stopSendWithStatus:FTPStatusOK
                         statusString:aStream.streamError.localizedDescription];
             break;
         
