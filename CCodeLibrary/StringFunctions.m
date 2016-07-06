@@ -117,6 +117,22 @@ NSString *textBefore(NSString *string, NSString *before)
     return string;
 }
 
+NSString *textUpTo(NSString *string, NSString *upto)
+{
+    if (!string)
+        return nil;
+    
+    if (upto)
+    {
+        NSRange range = [string rangeOfString:upto];
+        
+        if (range.location != NSNotFound)
+            string = [string substringToIndex:(range.location+upto.length)];
+    }
+    
+    return string;
+}
+
 NSString *textAfter(NSString *string, NSString *after)
 {
     if (!string)

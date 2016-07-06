@@ -16,6 +16,7 @@ BOOL getUseDemoID (void);
 NSString *vendorUUIDString(void);
 NSString *textBefore(NSString *string, NSString *before);
 NSString *textAfter(NSString *string, NSString *after);
+NSString *textUpTo(NSString *string, NSString *upto);
 NSString *removeEndingReturn(NSString *string);
 NSString *textAfterHyphen(NSString *string);
 NSString *textBeforeHyphen(NSString *string);
