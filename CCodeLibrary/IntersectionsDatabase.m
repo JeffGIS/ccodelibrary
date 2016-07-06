@@ -495,21 +495,56 @@
     return rtn;
 }
 
+- (NSArray*) setCurrentRamps:(int)intID
+{
+    NSMutableArray * array = [NSMutableArray new];
+    
+    for (int i = 1;i<13; i++)
+    {
+        NSNumber * num = [[NSNumber alloc]initWithBool:NO];
+        [array addObject:num];
+    }
+    
+    BOOL opened = [self.curbRampData open];
+    sqlite3_stmt *statement = NULL;
+    
+    NSString *cmd = [NSString stringWithFormat:@"SELECT rampNum FROM ramps WHERE intID = %i",intID];
+    SQLOK(2222,sqlite3_prepare_v2(self.curbRampData.database, cmd.UTF8String, -1, &statement, NULL),self.curbRampData.database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int rampNum = sqlite3_column_int(statement, 0);
+        if (rampNum && rampNum < 13)
+        {
+            NSNumber * num = array[rampNum];
+            [num initWithBool:YES];
+        }
+    }
+    
+    SQLOK(223,sqlite3_finalize(statement),self.curbRampData.database);
+    [self close:opened];
+    return array;
+}
+
 - (BOOL)storeMPIntersectionToDB:(MPIntersection *)mpint
 {
     BOOL rtn = NO;
     double lat = 0.0, lon = 0.0;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
+    NSArray * currentRamps = [self setCurrentRamps:mpint.intID];
     BOOL opened = [self.curbRampData open];
     BOOL newFile = YES;
+    
     
     for (int i = 1; i < 13; i++)
     {
         MPRamp *ramp = [mpint.ramps objectAtIndex:i];
+        NSNumber * boolVal = currentRamps[i];
+        BOOL haveCurrentRamp = boolVal.boolValue;
         char rampID[32];
         mpint.currentRamp = ramp;
         
-        //if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
+        if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
         {
             strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
             
@@ -571,6 +606,13 @@
             
             rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
                                    sendToServer:YES];
+        }
+        else if (haveCurrentRamp)
+        {
+            NSString * cmd = [NSString stringWithFormat:@"Delete FROM ramps WHERE WHERE intID=%i AND rampNum = %i",(int)mpint.intID,i];
+            rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
+                                   sendToServer:YES];
+            
         }
     }
 
@@ -1170,7 +1212,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     IntersectionPoint *intpt = nil;
     intpt.latitude = 0.0, intpt.longitude = 0.0;
     
-    SQLOK(222,sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL),self.curbRampData.database);
+    SQLOK(2221,sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL),self.curbRampData.database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {

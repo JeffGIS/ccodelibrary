@@ -532,6 +532,7 @@
     {
         _awd = AlleyWallData.new;
         _databaseID = _awd;
+        [self tempFix:_myiPad];
         [_databaseID incrementLastDataFileNum];
         [_databaseID incrementLastPictFileNum];
     }
@@ -906,7 +907,6 @@ didReceiveMessage:(NSString *)message
                 
                 int pictNum = 0;
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
-                
                 int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad
                                                 lastPictNum:&pictNum];
                 
@@ -1409,4 +1409,20 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 #pragma unused(nvwv)
 }
 
+- (void) tempFix:(int)iPad
+{
+    if (iPad == 1008)
+    {
+        [_databaseID setLastDataUpdateNum:360
+                                  foriPad:iPad];
+        [_databaseID setLastPictUpdateNum:360
+                                  foriPad:iPad];
+
+    }
+    if (iPad == 1009)
+    {
+        
+    }
+
+}
 @end
