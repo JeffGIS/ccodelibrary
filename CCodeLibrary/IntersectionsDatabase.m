@@ -489,9 +489,9 @@
 
 - (int) incrementLastDataFileNum
 {
-    BOOL opened = [self.curbRampData open];
+    BOOL opened = [self open];
     int rtn = [self.curbRampData incrementLastDataFileNum];
-    [self.curbRampData close:opened];
+    [self close:opened];
     return rtn;
 }
 
@@ -499,13 +499,13 @@
 {
     NSMutableArray * array = [NSMutableArray new];
     
-    for (int i = 1;i<13; i++)
+    for (int i = 0;i<13; i++)
     {
         NSNumber * num = [[NSNumber alloc]initWithBool:NO];
         [array addObject:num];
     }
     
-    BOOL opened = [self.curbRampData open];
+    BOOL opened = [self open];
     sqlite3_stmt *statement = NULL;
     
     NSString *cmd = [NSString stringWithFormat:@"SELECT rampNum FROM ramps WHERE intID = %i",intID];
@@ -516,8 +516,8 @@
         int rampNum = sqlite3_column_int(statement, 0);
         if (rampNum && rampNum < 13)
         {
-            NSNumber * num = array[rampNum];
-            [num initWithBool:YES];
+            NSNumber * num = [[NSNumber alloc]initWithBool:YES];
+            [array replaceObjectAtIndex:rampNum withObject:num];
         }
     }
     
@@ -532,7 +532,7 @@
     double lat = 0.0, lon = 0.0;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     NSArray * currentRamps = [self setCurrentRamps:mpint.intID];
-    BOOL opened = [self.curbRampData open];
+    BOOL opened = [self open];
     BOOL newFile = YES;
     
     
@@ -609,7 +609,7 @@
         }
         else if (haveCurrentRamp)
         {
-            NSString * cmd = [NSString stringWithFormat:@"Delete FROM ramps WHERE WHERE intID=%i AND rampNum = %i",(int)mpint.intID,i];
+            NSString * cmd = [NSString stringWithFormat:@"Delete FROM ramps WHERE intID=%i AND rampNum = %i",(int)mpint.intID,i];
             rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
                                    sendToServer:YES];
             
@@ -689,9 +689,9 @@ WHERE intID=%i;",
     rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
                            sendToServer:YES];
 
-    [self.curbRampData close:opened];
+    [self close:opened];
 
-    return !rtn;
+    return rtn;
 }
 
 - (MPIntersection *)getMPIntersectionFromDB:(int)intID
@@ -1612,7 +1612,7 @@ Exit:
                                                                  create:YES];
         
         if (self.gettingUploaded)
-            [self.curbRampData open];
+            [self open];
         else
         {
             if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0))
