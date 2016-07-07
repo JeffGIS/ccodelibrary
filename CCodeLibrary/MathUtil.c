@@ -1569,6 +1569,20 @@ int fgetstring(char *str, int maxlen, FILE *fid)
     ln = (int)strlen(str);
     return ln;
 }
+bool fputstring(LPSTR lpStr, FILE *Fid)
+{
+    unsigned int    len;
+    int		rtn=0;
+    
+    if (Fid)
+    {
+        len=strlen(lpStr);
+        if (len)
+            rtn = BigWrite (Fid,(char *)lpStr,len,-1);
+        rtn += BigWrite (Fid,"\r\n",2,-1);
+    }
+    return rtn;
+}
 
 //dir = 1 bitmap to world, 2 = world to bmp
 LPTRANDATA  LoadTranFromBPW(char *Name, int dir)

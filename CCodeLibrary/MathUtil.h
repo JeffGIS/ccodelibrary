@@ -134,6 +134,7 @@ void InflateMNMXCORL (LPMNMXCORL pBounds, int Value);
 int diffInDegrees (int angle1,int angle2);
 bool CreateMask (LPDPOINT *pPointsIN, int *pnPoints,LPMNMXCORD pbnds);
 int fgetstring (char * str,int maxlen,FILE * fid);
+bool fputstring(LPSTR lpStr, FILE *Fid);
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
 double ArcDistance(DPOINT p1, DPOINT p2);
 bool findClosestPoint (LPDPOINT pPoint,LPDPOINT pNearPt,double *mind,LPDPOINT p1);
