@@ -531,8 +531,9 @@
     if (geoid > 100000000)
     {
         _awd = AlleyWallData.new;
+        
         _databaseID = _awd;
-        [self tempFix:_myiPad];
+        [self tempFix:CRAPI.sharedInstance.GSSiPadNumber];
         [_databaseID incrementLastDataFileNum];
         [_databaseID incrementLastPictFileNum];
     }
@@ -1411,18 +1412,26 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void) tempFix:(int)iPad
 {
-    if (iPad == 1008)
+    if (iPad == 1008 || iPad == 1009)
     {
-        [_databaseID setLastDataUpdateNum:360
-                                  foriPad:iPad];
-        [_databaseID setLastPictUpdateNum:360
-                                  foriPad:iPad];
+        int lastPict;
+        int lastData = [_databaseID getLastDataUpdateNumber:1
+                                                lastPictNum:&lastPict];
+        if (lastData < 64)
+            [_databaseID setLastDataUpdateNum:64
+                                  foriPad:1];
+        if (lastPict < 480)
+            [_databaseID setLastPictUpdateNum:480
+                                  foriPad:1];
+        lastData = [_databaseID getLastDataUpdateNumber:2
+                                           lastPictNum:&lastPict];
+        if (lastData < 102)
+            [_databaseID setLastDataUpdateNum:102
+                                  foriPad:2];
+        if (lastPict < 728)
+            [_databaseID setLastPictUpdateNum:728
+                                  foriPad:2];
 
     }
-    if (iPad == 1009)
-    {
-        
-    }
-
 }
 @end
