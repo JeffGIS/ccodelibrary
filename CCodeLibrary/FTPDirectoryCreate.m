@@ -182,9 +182,6 @@
                  statusString:(NSString *)statusString
 {
     
-    if (!statusString)
-        status = FTPStatusStop;
-    
     _directoryCount++;
     
     if (_directoryCount >= _directories.count)
