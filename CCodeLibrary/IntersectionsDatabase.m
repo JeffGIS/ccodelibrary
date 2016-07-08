@@ -694,6 +694,19 @@ WHERE intID=%i;",
     return rtn;
 }
 
+- (int) fixRampNum:(int)rampNum
+{
+    if (rampNum == 23)
+        return 9;
+    if (rampNum == 45)
+        return 10;
+    if (rampNum == 67)
+        return 11;
+    if (rampNum == 81)
+        return 12;
+    return rampNum;
+}
+
 - (MPIntersection *)getMPIntersectionFromDB:(int)intID
                                   withRamps:(BOOL)wantRamps
 {
@@ -713,6 +726,7 @@ WHERE intID=%i;",
     {
         haveIntersection = TRUE;
         mpint.intID = intID;
+        int recID = sqlite3_column_int(statement, 0);
         mpint.lastUpdate = sqlite3_column_int(statement, 1);
         mpint.status = sqlite3_column_int(statement, 2);
         mpint.assignedPrelim = sqlite3_column_int(statement, 3);
@@ -768,6 +782,7 @@ WHERE intID=%i;",
         {
             int i = 1;
             int rampNum = sqlite3_column_int(statement, i++);
+            rampNum = [self fixRampNum:rampNum];
             MPRamp *ramp = [mpint.ramps objectAtIndex:rampNum];
 
             LPSTR rampID = (LPSTR)sqlite3_column_text(statement, i++);
@@ -820,7 +835,10 @@ WHERE intID=%i;",
             ramp.lev21y  = sqlite3_column_int(statement,i++);
             ramp.rampType  = sqlite3_column_int(statement,i++);
             LPSTR comment = (LPSTR)sqlite3_column_text(statement,i++);
-            ramp.rampComment = [NSString stringWithCString:comment encoding:NSUTF8StringEncoding];
+            if (comment)
+                ramp.rampComment = [NSString stringWithCString:comment encoding:NSUTF8StringEncoding];
+            else
+                ramp.rampComment = @"";
         }
         SQLOK(210,sqlite3_finalize(statement), self.curbRampData.database);
    }
