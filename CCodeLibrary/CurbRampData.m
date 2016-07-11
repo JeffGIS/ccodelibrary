@@ -669,9 +669,9 @@ static int nInit=0;
     BOOL opened = [self open];
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     uint pictID = [self getNextPictID];
-    
-    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_PICTURES VALUES(%i,%i,%i,%i,%i,%i,%i,%f,%f);",
-                     pictID,CRAPI.sharedInstance.currentiPadWithinManager,pictNum,intID,ramp,type,heading,ll.lat,ll.lon];
+ 
+    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_PICTURES VALUES(%i,%i,%i,%i,%i,%i,%i,%f,%f,%i);",
+                     pictID,CRAPI.sharedInstance.currentiPadWithinManager,pictNum,intID,ramp,type,heading,ll.lat,ll.lon,iTime];
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
                    sendToServer:YES];
     [self close:opened];
