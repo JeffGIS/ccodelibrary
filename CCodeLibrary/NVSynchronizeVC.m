@@ -1276,8 +1276,9 @@ Done:
     
     else
     {
-        _popoverView.title = [NSString stringWithFormat:@"%@\n%@",statusString,[path lastPathComponent]];
-        [CRAPI.sharedInstance logToErrorFile:_popoverView.title];
+        NSString * msg = [NSString stringWithFormat:@"%@\n%@",statusString,[path lastPathComponent]];
+        _popoverView.title = msg;
+        [CRAPI.sharedInstance logToErrorFile:msg];
         [_popoverView setCancelButtonTitle:@"OK"];
     }
     
@@ -1304,7 +1305,9 @@ Done:
                 
                else
                {
-                   _popoverView.title = [NSString stringWithFormat:@"Data load failed\n%@",[path lastPathComponent]];
+                   NSString *msg = [NSString stringWithFormat:@"Data load failed\n%@",[path lastPathComponent]];
+                   _popoverView.title = msg;
+                   [CRAPI.sharedInstance logToErrorFile:msg];
                    return;
                }
             }
@@ -1335,8 +1338,9 @@ Done:
     
     else
     {
-        _popoverView.title = [NSString stringWithFormat:@"%@\n%@",statusString,[path lastPathComponent]];
-        [CRAPI.sharedInstance logToErrorFile:_popoverView.title];
+        NSString * msg = [NSString stringWithFormat:@"%@\n%@",statusString,[path lastPathComponent]];
+        _popoverView.title = msg;
+        [CRAPI.sharedInstance logToErrorFile:msg];
     }
 }
 

@@ -405,6 +405,7 @@ static int nInit=0;
     
     SQLOK(179,sqlite3_finalize(statement), _database);
     [self close:opened];
+    note = [note stringByReplacingOccurrencesOfString:@"|" withString:@"\n"];
     
     return note;
 }
@@ -441,7 +442,8 @@ static int nInit=0;
     if (noteid > -1)
     {
         note = [note stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
-
+        note = [note stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+        note = [note stringByReplacingOccurrencesOfString:@"\n" withString:@"|"];
         query = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_NOTES VALUES(%i,%i,%i,%i,%i,'%@');",
                  noteid, intID, corner, ramp, type, note];
         
@@ -748,7 +750,7 @@ static int nInit=0;
 {
     BOOL rtn = TRUE;
     BOOL opened = [self open];
-    
+    int line = 0;
     FILE *fid = fopen(file.UTF8String, "rb");
     int totLen = (int)FileLength(fid);
     int maxLineLen = totLen+2;
@@ -759,13 +761,19 @@ static int nInit=0;
         rtn = [self executeCmd:str
                   sendToServer:NO
                           from:1672];
+        line++;
     }
     fclose(fid);
-    free(str);
-    if (!rtn)
+    if (!rtn) //file has to be edited on server (by GSSi) before more data can be loaded
+    {
         [self cancelTransaction];
+        NSString * cmd = [NSString stringWithUTF8String:str];
+        NSString * header = [NSString stringWithFormat:@"Data load failure in file %@ at line %i",[file lastPathComponent],line];
+        [CRAPI.sharedInstance logToErrorFile:cmd withHeader:header];
+    }
     else
         [self commitTransaction];
+    free(str);
     [self close:opened];
     return rtn;
 }

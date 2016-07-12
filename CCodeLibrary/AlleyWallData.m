@@ -1168,6 +1168,7 @@ SELECT max(_id) FROM MyTable*/
 - (BOOL) updateFromFile:(NSString*)file
 {
     BOOL rtn = TRUE;
+    int line = 0;
     BOOL opened = [self open];
     
     FILE *fid = fopen(file.UTF8String, "rb");
@@ -1179,12 +1180,15 @@ SELECT max(_id) FROM MyTable*/
     {
         rtn = [self executeCmd:str
                        sendToServer:NO];
+        line++;
     }
     fclose(fid);
-    if (!rtn)
+    if (!rtn) //file has to be edited on server (by GSSi) before more data can be loaded
     {
         [self cancelTransaction];
-        rtn = YES;
+        NSString * cmd = [NSString stringWithUTF8String:str];
+        NSString * header = [NSString stringWithFormat:@"Data load failure in file %@ at line %i",[file lastPathComponent],line];
+        [CRAPI.sharedInstance logToErrorFile:cmd withHeader:header];
     }
     else
         [self commitTransaction];
