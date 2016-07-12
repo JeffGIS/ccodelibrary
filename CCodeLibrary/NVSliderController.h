@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
 @protocol NVSliderControllerDelegate <NSObject>
 
 - (void)sliderView:(NVSliderController *)sliderView
-    didReturnValue:(CGFloat)value;
+    didReturnValue:(double)value;
 
 - (void)sliderViewDidCancel:(NVSliderController *)sliderView;
 
@@ -36,10 +36,10 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
 @property NVSliderMeasurementType type;
 
 - (id)initWithCenter:(CGPoint)center
-               width:(CGFloat)width
-          startValue:(CGFloat)startValue
-            minValue:(CGFloat)minValue
-            maxValue:(CGFloat)maxValue
+               width:(double)width
+          startValue:(double)startValue
+            minValue:(double)minValue
+            maxValue:(double)maxValue
             delegate:(id)delegate
        configuration:(NVSliderConfiguration)configuration
                 type:(NVSliderMeasurementType)type

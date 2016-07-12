@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 @property (nonatomic) UILabel *sliderLabel, *lowTic, *highTic, *midTic, *midLowTic, *midHighTic, *promptLabel;
 @property (nonatomic) UIButton *saveButton, *cancelButton, *rangeButton;
 @property (nonatomic) UIView *ticView, *overlayView;
-@property (nonatomic) CGFloat minValue, maxValue;
+@property (nonatomic) double minValue, maxValue;
 @property NVSliderControllerRange range;
 @property NVSliderConfiguration configuration;
 @property (nonatomic, copy) NSString *unit;
@@ -28,16 +28,16 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 @implementation NVSliderController
 
 - (id)initWithCenter:(CGPoint)center
-               width:(CGFloat)width
-          startValue:(CGFloat)startValue
-            minValue:(CGFloat)minValue
-            maxValue:(CGFloat)maxValue
+               width:(double)width
+          startValue:(double)startValue
+            minValue:(double)minValue
+            maxValue:(double)maxValue
             delegate:(id)delegate
        configuration:(NVSliderConfiguration)configuration
                 type:(NVSliderMeasurementType)type
                 unit:(NSString *)unit
 {
-    CGFloat height = 260.0;
+    double height = 260.0;
     
     self = [super initWithFrame:CGRectMake((center.x - (width / 2.0)),
                                            (center.y - (height / 2.0)), width, height)];
@@ -56,7 +56,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         _type = type;
         _unit = unit;
         
-        CGFloat ticMargin = ((UserDefaults.defaults.redSliderThumb.size.width / 2.0) - 10.0);
+        double ticMargin = ((UserDefaults.defaults.redSliderThumb.size.width / 2.0) - 10.0);
         
         UIView *ticView = [[UIView alloc] initWithFrame:CGRectMake(ticMargin, 58.0,
                                                                    (width - (ticMargin * 2.0)), 64.0)];
@@ -106,8 +106,8 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         
         [ticView addSubview:_midHighTic];
         
-        CGFloat capHeight = 29.0;
-        CGFloat capWidth = (capHeight / 2.0);
+        double capHeight = 29.0;
+        double capWidth = (capHeight / 2.0);
         
         _slider = [[UISlider alloc] initWithFrame:CGRectMake(10.0, ((height / 2.0) - (capHeight / 2.0)),
                                                              (width - 20.0), capHeight)];
@@ -229,7 +229,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 }
 
 - (void)setupLabel:(UILabel *)label
-             value:(CGFloat)value
+             value:(double)value
 {
     label.numberOfLines = 2;
     
@@ -426,7 +426,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
     if (_delegate)
     {
-        CGFloat value = [_sliderLabel.text floatValue];
+        double value = [_sliderLabel.text floatValue];
         [_delegate sliderView:self
                didReturnValue:value];
     }

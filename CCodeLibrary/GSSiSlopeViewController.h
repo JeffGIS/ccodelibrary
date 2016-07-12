@@ -13,20 +13,20 @@ typedef NS_ENUM(NSInteger, NVManualStatus)
 };
 
 typedef struct NVSlopeData {
-    CGFloat accelX;
-    CGFloat accelY;
-    CGFloat accelZ;
-    CGFloat frontSlopeDegrees;
-    CGFloat sideSlopeDegrees;
-    CGFloat frontSlopePct;
-    CGFloat sideSlopePct;
-    CGFloat manualFrontSlopeDegrees;
-    CGFloat manualSideSlopeDegrees;
-    CGFloat manualFrontSlopePct;
-    CGFloat manualSideSlopePct;
-    CGFloat maxSlopePct;
-    CGFloat maxSlopeDegrees;
-    CGFloat heading;
+    double accelX;
+    double accelY;
+    double accelZ;
+    double frontSlopeDegrees;
+    double sideSlopeDegrees;
+    double frontSlopePct;
+    double sideSlopePct;
+    double manualFrontSlopeDegrees;
+    double manualSideSlopeDegrees;
+    double manualFrontSlopePct;
+    double manualSideSlopePct;
+    double maxSlopePct;
+    double maxSlopeDegrees;
+    double heading;
     NVManualStatus frontManualStatus;
     NVManualStatus sideManualStatus;
 } NVSlopeData;
@@ -46,19 +46,19 @@ typedef struct NVSlopeData {
 @property BOOL displayDegrees;
 @property BOOL useCalibration;
 @property BOOL useHeadingCalibration;
-@property (nonatomic) CGFloat steadyFactor;
-@property (nonatomic) CGFloat countFactor;
-@property (nonatomic) CGFloat criticalValue;
-@property (nonatomic) CGFloat criticalSideValue;
+@property (nonatomic) double steadyFactor;
+@property (nonatomic) double countFactor;
+@property (nonatomic) double criticalValue;
+@property (nonatomic) double criticalSideValue;
 @property (nonatomic, copy) NSString *promptText;
-@property (nonatomic) CGFloat errorValue;
+@property (nonatomic) double errorValue;
 
-+ (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(CGFloat)criticalVal
-                                            criticalSideValue:(CGFloat)criticalSideVal
-                                                   errorValue:(CGFloat)errVal
++ (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(double)criticalVal
+                                            criticalSideValue:(double)criticalSideVal
+                                                   errorValue:(double)errVal
                                                useCalibration:(BOOL)useCalibration
-                                                 steadyFactor:(CGFloat)steadyFac
-                                                  countFactor:(CGFloat)countFac
+                                                 steadyFactor:(double)steadyFac
+                                                  countFactor:(double)countFac
                                                displayDegrees:(BOOL)displayDegrees
                                                      delegate:(id)delegate;
 

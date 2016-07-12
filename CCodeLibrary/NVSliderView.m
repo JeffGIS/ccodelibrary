@@ -17,9 +17,9 @@
 @implementation NVSliderView
 
 + (NVSliderView *)showSliderWithView:(UIView *)view
-                          startValue:(CGFloat)startValue
-                            minValue:(CGFloat)minValue
-                            maxValue:(CGFloat)maxValue
+                          startValue:(double)startValue
+                            minValue:(double)minValue
+                            maxValue:(double)maxValue
                             delegate:(id)delegate
                               tabBar:(UITabBar *)tabBar
                                  tag:(NSInteger)tag
@@ -63,8 +63,8 @@
     
     [sliderView addSubview:sliderView.titleLabel];
     
-    CGFloat capHeight = 29.0;
-    CGFloat capWidth = (capHeight / 2.0);
+    double capHeight = 29.0;
+    double capWidth = (capHeight / 2.0);
     
     sliderView.slider = [[UISlider alloc] init];
     
@@ -170,7 +170,7 @@
 
 - (void)sliderValueChanged:(UISlider *)slider
 {
-    CGFloat value = roundf(slider.value);
+    double value = roundf(slider.value);
     _sliderLabel.text = [NSString stringWithFormat:@"%.0f %@", value, _units];
 }
 
@@ -184,7 +184,7 @@
 {
     if (_delegate)
     {
-        CGFloat value = roundf(_slider.value);
+        double value = roundf(_slider.value);
         
         [_delegate sliderView:self
                didReturnValue:value
@@ -224,7 +224,7 @@
 
 - (void)setUnits:(NSString *)units
 {
-    CGFloat value = roundf(_slider.value);
+    double value = roundf(_slider.value);
     _sliderLabel.text = [NSString stringWithFormat:@"%.0f %@", value, units];
     _units = units;
 }

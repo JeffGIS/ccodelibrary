@@ -9,8 +9,8 @@
 #import "NVProgressView.h"
 #import "SharedDefaults.h"
 
-static CGFloat _deviceVals[5][4];
-static CGFloat _targetValues[5];
+static double _deviceVals[5][4];
+static double _targetValues[5];
 static NSInteger _nCalibrationPoints;
 
 typedef NS_ENUM(NSInteger, SCStatus)
@@ -27,15 +27,15 @@ static int COUNT=100;
 @property (nonatomic) UIImageView *arrowView;
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UILabel *frontSlopeLabel, *sideSlopeLabel, *maxSlopeLabel, *promptLabel;
-@property (nonatomic) CGFloat steadyDiff;
-@property (nonatomic) CGFloat xRange, yRange, zRange;
-@property (nonatomic) CGFloat maxX, minX, maxY, minY, maxZ, minZ;
-@property (nonatomic) CGFloat aSumX, aSumY, aSumZ;
+@property (nonatomic) double steadyDiff;
+@property (nonatomic) double xRange, yRange, zRange;
+@property (nonatomic) double maxX, minX, maxY, minY, maxZ, minZ;
+@property (nonatomic) double aSumX, aSumY, aSumZ;
 @property (nonatomic) NVSlopeData data;
 @property NSInteger counter, headingCounter;
-@property (nonatomic) CGFloat minHead, maxHead;
-@property (nonatomic) CGFloat lastDegrees;
-@property (nonatomic) CGFloat sumHeading, baseHeading;
+@property (nonatomic) double minHead, maxHead;
+@property (nonatomic) double lastDegrees;
+@property (nonatomic) double sumHeading, baseHeading;
 @property (nonatomic) UILabel *headingLabel, *calDateLabel;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) CMMotionManager *motionManager;
@@ -46,12 +46,12 @@ static int COUNT=100;
 
 @implementation GSSiSlopeViewController
 
-+ (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(CGFloat)criticalVal
-                                            criticalSideValue:(CGFloat)criticalSideVal
-                                                   errorValue:(CGFloat)errVal
++ (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(double)criticalVal
+                                            criticalSideValue:(double)criticalSideVal
+                                                   errorValue:(double)errVal
                                                useCalibration:(BOOL)useCalibration
-                                                 steadyFactor:(CGFloat)steadyFac
-                                                  countFactor:(CGFloat)countFac
+                                                 steadyFactor:(double)steadyFac
+                                                  countFactor:(double)countFac
                                                displayDegrees:(BOOL)displayDegrees
                                                      delegate:(id)delegate;
 {
@@ -489,12 +489,12 @@ static int COUNT=100;
     return rtn;
 }
 
-- (CGFloat)adjustSlope:(CGFloat)slope
+- (double)adjustSlope:(double)slope
            isSideSlope:(BOOL)isSideSlope
 {
-    CGFloat adjustedSlope = 0.0;
-    CGFloat priorValue = 0.0;
-    CGFloat trueDegreesPerDeviceDegree = 0.0;
+    double adjustedSlope = 0.0;
+    double priorValue = 0.0;
+    double trueDegreesPerDeviceDegree = 0.0;
     int index = 0, i = 0;
     
     if (!_useCalibration)
@@ -571,9 +571,9 @@ static int COUNT=100;
     NSLog(@"location ERROR:%@", error.localizedDescription);
 }
 
--(CGFloat)correctedHeading:(CGFloat)heading
+-(double)correctedHeading:(double)heading
 {
-    CGFloat corrected = heading;
+    double corrected = heading;
     
     _minHead = min(_minHead,heading);
     _maxHead = max(_maxHead,heading);
@@ -621,9 +621,9 @@ static int COUNT=100;
                 _headingCounter = 1;
             }
             
-            CGFloat denom = sqrt(square(_data.accelX) + square(_data.accelY) + square(_data.accelZ));
-            CGFloat angy = acos(_data.accelY / denom);
-            CGFloat angx = acos(_data.accelX / denom);
+            double denom = sqrt(square(_data.accelX) + square(_data.accelY) + square(_data.accelZ));
+            double angy = acos(_data.accelY / denom);
+            double angx = acos(_data.accelX / denom);
             angx *= RADtoDEG;
             angy *= RADtoDEG;
             angx = (angx - 90.0);
@@ -639,6 +639,7 @@ static int COUNT=100;
             _data.maxSlopeDegrees = (atan(_data.maxSlopePct / 100) * RADtoDEG);
             
             [self slopeMeasurementComplete];
+            
         }
         
         if (_headingCounter)
@@ -671,7 +672,7 @@ static int COUNT=100;
         _aSumZ += acceleration.z;
         _counter++;
         
-        _progressView.progress = (_counter / (CGFloat)COUNT);
+        _progressView.progress = (_counter / (double)COUNT);
     }
 }
 
@@ -764,7 +765,7 @@ static int COUNT=100;
 }
 
 - (void)sliderView:(NVSliderController *)sliderView
-    didReturnValue:(CGFloat)value
+    didReturnValue:(double)value
 {
     NVSliderMeasurementType type = sliderView.type;
     

@@ -904,7 +904,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (void)sliderView:(NVSliderController *)sliderView
-    didReturnValue:(CGFloat)value
+    didReturnValue:(double)value
 {
      [sliderView hideSliderController:YES];
     

@@ -542,7 +542,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 }
 
 - (void)sliderView:(NVSliderController *)sliderView
-    didReturnValue:(CGFloat)value
+    didReturnValue:(double)value
 {
     switch (sliderView.tag)
     {
