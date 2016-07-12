@@ -10,7 +10,7 @@
 #define FLARERIGHT 5
 #define SWKLEFT 6
 #define SWKRIGHT 7
-#define HEADINGERRORDIF 50
+#define HEADINGERRORDIF 75
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>

@@ -565,32 +565,6 @@ static int COUNT=100;
     return adjustedSlope;
 }
 
-- (void)slopesFromAccelerometer:(int)nReadings
-{
-    CGFloat denom = sqrt(square(_data.accelX[0]) + square(_data.accelY[0]) + square(_data.accelZ[0]));
-    //CGFloat angz = acos(_data.accelZ[0] / denom);
-    CGFloat angy = acos(_data.accelY[0] / denom);
-    CGFloat angx = acos(_data.accelX[0] / denom);
-    angx *= RADtoDEG;
-    angy *= RADtoDEG;
-    //angz *= RADtoDEG;
-    angx = (angx - 90.0);
-    angy = (angy - 90.0);
-    //angz = (180.0 - angz);
-    _lastDegrees = angy;
-    
-    _data.frontSlopeDegrees = [self adjustSlope:angy
-                                    isSideSlope:NO];
-    
-    _data.sideSlopeDegrees = [self adjustSlope:angx
-                                   isSideSlope:YES];
-    
-    _data.frontSlopePct = (tan(_data.frontSlopeDegrees * DEGtoRAD) * 100);
-    _data.sideSlopePct = (tan(_data.sideSlopeDegrees * DEGtoRAD) * 100);
-    _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
-    _data.maxSlopeDegrees = (atan(_data.maxSlopePct / 100) * RADtoDEG);
-}
-
 - (void)locationManager:(CLLocationManager *)manager
        didFailWithError:(NSError *)error
 {
@@ -627,57 +601,44 @@ static int COUNT=100;
 {
     if (_counter == COUNT)
     {
-        
-        if (_hasRun)
+        if (_headingCounter || !CLLocationManager.headingAvailable)
         {
             [self stopManagers];
             
-            _data.accelX[1] = (_aSumX / COUNT);
-            _data.accelY[1] = (_aSumY / COUNT);
-            _data.accelZ[1] = (_aSumZ / COUNT);
-            
-            [self slopesFromAccelerometer:2];
-            [self slopeMeasurementComplete];
-        }
-        
-        else if (_headingCounter || !CLLocationManager.headingAvailable)
-        {
-            [self stopManagers];
-            
-            _data.accelX[0] = (_aSumX / COUNT);
-            _data.accelY[0] = (_aSumY / COUNT);
-            _data.accelZ[0] = (_aSumZ / COUNT);
+            _data.accelX = (_aSumX / COUNT);
+            _data.accelY = (_aSumY / COUNT);
+            _data.accelZ = (_aSumZ / COUNT);
             
             if (_headingCounter)
             {
                 _data.heading = _sumHeading / _headingCounter;
                 _data.heading = Between0And360D(_data.heading);
             }
+            
             else
             {
                 _data.heading = 999;
                 _headingCounter = 1;
             }
             
-            [self slopesFromAccelerometer:1];
+            CGFloat denom = sqrt(square(_data.accelX) + square(_data.accelY) + square(_data.accelZ));
+            CGFloat angy = acos(_data.accelY / denom);
+            CGFloat angx = acos(_data.accelX / denom);
+            angx *= RADtoDEG;
+            angy *= RADtoDEG;
+            angx = (angx - 90.0);
+            angy = (angy - 90.0);
+            _lastDegrees = angy;
             
-            if (_data.maxSlopePct < (_criticalValue - _errorValue) ||
-                (_data.maxSlopePct > (_criticalValue + _errorValue)))
-            {
-                [self slopeMeasurementComplete];
-            }
+            _data.frontSlopeDegrees = [self adjustSlope:angy isSideSlope:NO];
+            _data.sideSlopeDegrees = [self adjustSlope:angx isSideSlope:YES];
             
-            else
-            {
-                _hasRun = YES;
-                _promptLabel.text = @"Flip the iPad in the opposite direction and tap 'Continue' to calibrate measurement.";
-                
-                [_startCancelButton setTitle:@"Continue"
-                                    forState:UIControlStateNormal];
-                
-                [self resetSumsAndCounter];
-                _status = SCStatusStart;
-            }
+            _data.frontSlopePct = (tan(_data.frontSlopeDegrees * DEGtoRAD) * 100);
+            _data.sideSlopePct = (tan(_data.sideSlopeDegrees * DEGtoRAD) * 100);
+            _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
+            _data.maxSlopeDegrees = (atan(_data.maxSlopePct / 100) * RADtoDEG);
+            
+            [self slopeMeasurementComplete];
         }
         
         if (_headingCounter)
@@ -705,11 +666,9 @@ static int COUNT=100;
             [self resetSumsAndCounter];
         }
         
-        
         _aSumX += acceleration.x;
         _aSumY += acceleration.y;
         _aSumZ += acceleration.z;
-        
         _counter++;
         
         _progressView.progress = (_counter / (CGFloat)COUNT);
@@ -736,9 +695,6 @@ static int COUNT=100;
         _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f\u00B0", _data.frontSlopeDegrees];
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f\u00B0", _data.sideSlopeDegrees];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f\u00B0", _data.maxSlopeDegrees];
-        
-        /*_maxSlopeLabel.text = [NSString stringWithFormat:@"%.5f %.5f %.5f",
-                               _data.accelX[0], _data.accelY[0], _data.accelZ[0]];*/
     }
     
     else
@@ -747,9 +703,6 @@ static int COUNT=100;
         _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f%%", _data.frontSlopePct];
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f%%", _data.sideSlopePct];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f%%", _data.maxSlopePct];
-        
-        /*_maxSlopeLabel.text = [NSString stringWithFormat:@"%.3f %ld %.1f %.1f",
-        _lastDegrees,(long)_headingCounter,_minHead,_maxHead];*/
     }
     
     _promptLabel.text = @"Press 'Done' to continue.";
@@ -771,7 +724,7 @@ static int COUNT=100;
     if ((fabs(_data.frontSlopePct) > (_criticalValue - _errorValue)) &&
         (fabs(_data.frontSlopePct) < (_criticalValue + _errorValue)))
     {
-        NVSliderController *slider;
+        NVSliderController *slider = nil;
         
         if (_displayDegrees)
         {

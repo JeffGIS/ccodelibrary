@@ -13,9 +13,9 @@ typedef NS_ENUM(NSInteger, NVManualStatus)
 };
 
 typedef struct NVSlopeData {
-    CGFloat accelX[2];
-    CGFloat accelY[2];
-    CGFloat accelZ[2];
+    CGFloat accelX;
+    CGFloat accelY;
+    CGFloat accelZ;
     CGFloat frontSlopeDegrees;
     CGFloat sideSlopeDegrees;
     CGFloat frontSlopePct;
@@ -26,7 +26,6 @@ typedef struct NVSlopeData {
     CGFloat manualSideSlopePct;
     CGFloat maxSlopePct;
     CGFloat maxSlopeDegrees;
-    CGFloat maxSlopeDeflection;
     CGFloat heading;
     NVManualStatus frontManualStatus;
     NVManualStatus sideManualStatus;
