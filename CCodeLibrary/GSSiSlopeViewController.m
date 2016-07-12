@@ -23,7 +23,7 @@ static int COUNT=100;
 
 @interface GSSiSlopeViewController ()
 
-@property (nonatomic) UIButton *unableButton, *startCancelButton, *manualButton;
+@property (nonatomic) UIButton *unableButton, *startCancelButton, *manualButton, *cancelButton, *doesNotExistButton;
 @property (nonatomic) UIImageView *arrowView;
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UILabel *frontSlopeLabel, *sideSlopeLabel, *maxSlopeLabel, *promptLabel;
@@ -158,6 +158,11 @@ static int COUNT=100;
     [self setupLabels];
     [self setupProgressView];
     [self setupManualButton];
+    [self setupCancelButton];
+    [self setupDoesNotExistButton];
+    
+    if (!CRAPI.sharedInstance.controlledInterface)
+        [self setupCancelButton];
     
     UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
     helpButton.frame = CGRectMake(676.0, 20.0, 72.0, 72.0);
@@ -193,7 +198,7 @@ static int COUNT=100;
 
 - (void)setupUnableButton
 {
-    _unableButton = [[UIButton alloc] initWithFrame:CGRectMake(184.0, 884.0, 400.0, 80.0)];
+    _unableButton = [[UIButton alloc] initWithFrame:CGRectMake(56.0, 884.0, 300.0, 80.0)];
     
     [_unableButton addTarget:self
                       action:@selector(goBack:)
@@ -201,6 +206,8 @@ static int COUNT=100;
     
     [self setupButton:_unableButton
                 title:@"Unable"];
+    
+    _unableButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
 }
 
 - (void)setupStartCancelButton
@@ -213,6 +220,40 @@ static int COUNT=100;
     
     [self setupButton:_startCancelButton
                 title:@"Start"];
+}
+
+- (void)setupCancelButton
+{
+    _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _cancelButton.frame = CGRectMake(20.0, 30.0, 60.0, 60.0);
+    
+    [_cancelButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"backButton"
+                                                                                           ofType:@"png"]]
+                   forState:UIControlStateNormal];
+    
+    [_cancelButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"backButtonHighlighted"
+                                                                                           ofType:@"png"]]
+                   forState:UIControlStateHighlighted];
+    
+    [_cancelButton addTarget:self
+                      action:@selector(cancelTapped:)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:_cancelButton];
+}
+
+- (void)setupDoesNotExistButton
+{
+    _doesNotExistButton = [[UIButton alloc] initWithFrame:CGRectMake(412.0, 884.0, 300.0, 80.0)];
+    
+    [_doesNotExistButton addTarget:self
+                            action:@selector(doesNotExistTapped:)
+                  forControlEvents:UIControlEventTouchUpInside];
+    
+    [self setupButton:_doesNotExistButton
+                title:@"Does Not Exist"];
+    
+    _doesNotExistButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
 }
 
 - (void)setupLabels
@@ -232,7 +273,6 @@ static int COUNT=100;
     [self setupLabel:_maxSlopeLabel];
     [self setupLabel:_promptLabel];
     _promptLabel.text = _promptText;
-    
 }
 
 - (void)setupArrowView
@@ -290,7 +330,7 @@ static int COUNT=100;
     [button setTitleColor:UIColor.lightGrayColor
                  forState:UIControlStateHighlighted];
     
-    button.titleLabel.font = [UIFont boldSystemFontOfSize:84.0];
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:72.0];
     button.layer.cornerRadius = 10.0;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     
@@ -346,6 +386,29 @@ static int COUNT=100;
     }
 }
 
+- (void)doesNotExistTapped:(UIButton *)button
+{
+    [self stopMotionManager];
+    
+    if (_unable)
+        _data.frontSlopePct = _data.sideSlopePct = _data.frontSlopeDegrees = _data.sideSlopeDegrees = _data.heading = -9998.0;
+    
+    if (_delegate)
+    {
+        [_delegate gssiSlopeViewController:self
+                        didReturnSlopeData:_data];
+    }
+}
+
+- (void)cancelTapped:(UIButton *)button
+{
+    [self stopMotionManager];
+    
+    [self dismissViewControllerAnimated:YES
+                             completion:nil];
+}
+
+
 - (void)startCancel:(UIButton *)button
 {
     if (_status == SCStatusStart)
@@ -354,7 +417,7 @@ static int COUNT=100;
         [self resetSumsAndCounter];
         
         _status = SCStatusCancel;
-        _unableButton.enabled = NO;
+        _unableButton.enabled = _doesNotExistButton.enabled = NO;
         _progressView.hidden = NO;
         
         [_startCancelButton setTitle:@"Cancel"
@@ -366,7 +429,7 @@ static int COUNT=100;
         [self stopManagers];
         
         _status = SCStatusStart;
-        _unableButton.enabled = YES;
+        _unableButton.enabled = _doesNotExistButton.enabled = YES;
         _progressView.hidden = YES;
         
         [_startCancelButton setTitle:@"Start"
@@ -374,6 +437,7 @@ static int COUNT=100;
     }
     
     [self updateButtonAppearance:_unableButton];
+    [self updateButtonAppearance:_doesNotExistButton];
 }
 
 - (void)manual:(UIButton *)button
@@ -711,16 +775,18 @@ static int COUNT=100;
     [_unableButton setTitle:@"Done"
                    forState:UIControlStateNormal];
     
-    _unable = NO;
-    
-    _startCancelButton.hidden = YES;
-    _unableButton.enabled = YES;
+    _doesNotExistButton.hidden = _startCancelButton.hidden = _progressView.hidden = YES;
+    _unable = _hasRun = NO;
+    _unableButton.enabled = _doesNotExistButton.enabled = YES;
     [self updateButtonAppearance:_unableButton];
-    
-    _progressView.hidden = YES;
-    _hasRun = NO;
-    
+    [self updateButtonAppearance:_doesNotExistButton];
     _manualButton.hidden = NO;
+    
+    CGRect frame = _unableButton.frame;
+    frame.origin.x = _manualButton.frame.origin.x;
+    frame.size.width = _manualButton.frame.size.width;
+    _unableButton.frame = frame;
+    _unableButton.titleLabel.font = [UIFont boldSystemFontOfSize:72.0];
     
     if ((fabs(_data.frontSlopePct) > (_criticalValue - _errorValue)) &&
         (fabs(_data.frontSlopePct) < (_criticalValue + _errorValue)))
