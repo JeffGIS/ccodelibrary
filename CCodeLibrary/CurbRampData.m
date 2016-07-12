@@ -466,7 +466,7 @@ static int nInit=0;
     
     SQLOK(181,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
-    if (sqlite3_step(statement) == SQLITE_ROW)
+    while (sqlite3_step(statement) == SQLITE_ROW)
     {
         LPSTR text = (LPSTR)sqlite3_column_text(statement, 0);
         NSString *str = [NSString stringWithUTF8String:text];
