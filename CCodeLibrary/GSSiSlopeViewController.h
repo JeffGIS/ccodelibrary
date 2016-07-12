@@ -45,7 +45,7 @@ typedef struct NVSlopeData {
 @property (nonatomic, weak) id <GSSiSlopeViewControllerDelegate> delegate;
 @property BOOL displayDegrees;
 @property BOOL useCalibration;
-@property BOOL useHeadingCalibration;
+@property BOOL useHeadingCalibration, hideDoesNotExistButton;
 @property (nonatomic) double steadyFactor;
 @property (nonatomic) double countFactor;
 @property (nonatomic) double criticalValue;

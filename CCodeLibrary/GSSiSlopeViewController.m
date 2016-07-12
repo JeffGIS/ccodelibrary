@@ -61,6 +61,7 @@ static int COUNT=100;
     slopeController.useHeadingCalibration = NO;
     slopeController.delegate = delegate;
     slopeController.steadyFactor = max (steadyFac,1.0);
+    slopeController.hideDoesNotExistButton = NO;
     
     if (countFac)
         slopeController.countFactor = countFac;
@@ -189,6 +190,8 @@ static int COUNT=100;
     _motionManager = [[CMMotionManager alloc] init];
     [self resetSumsAndCounter];
 
+    if (_hideDoesNotExistButton)
+        [self hideDoesNotExist];
 }
 
 - (void)didReceiveMemoryWarning
@@ -775,18 +778,14 @@ static int COUNT=100;
     [_unableButton setTitle:@"Done"
                    forState:UIControlStateNormal];
     
-    _doesNotExistButton.hidden = _startCancelButton.hidden = _progressView.hidden = YES;
+    _startCancelButton.hidden = _progressView.hidden = YES;
     _unable = _hasRun = NO;
     _unableButton.enabled = _doesNotExistButton.enabled = YES;
     [self updateButtonAppearance:_unableButton];
     [self updateButtonAppearance:_doesNotExistButton];
     _manualButton.hidden = NO;
     
-    CGRect frame = _unableButton.frame;
-    frame.origin.x = _manualButton.frame.origin.x;
-    frame.size.width = _manualButton.frame.size.width;
-    _unableButton.frame = frame;
-    _unableButton.titleLabel.font = [UIFont boldSystemFontOfSize:72.0];
+    [self hideDoesNotExist];
     
     if ((fabs(_data.frontSlopePct) > (_criticalValue - _errorValue)) &&
         (fabs(_data.frontSlopePct) < (_criticalValue + _errorValue)))
@@ -823,6 +822,16 @@ static int COUNT=100;
                                   animated:YES
                                    overlay:YES];
     }
+}
+
+- (void)hideDoesNotExist
+{
+    _doesNotExistButton.hidden = YES;
+    CGRect frame = _unableButton.frame;
+    frame.origin.x = _manualButton.frame.origin.x;
+    frame.size.width = _manualButton.frame.size.width;
+    _unableButton.frame = frame;
+    _unableButton.titleLabel.font = [UIFont boldSystemFontOfSize:72.0];
 }
 
 - (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
