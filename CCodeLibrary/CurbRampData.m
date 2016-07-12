@@ -136,7 +136,7 @@ static int nInit=0;
     
     if (_isOpen && _fileSize > 0)
     {
-        NSString *query = [NSString stringWithFormat:@"SELECT max(Version) FROM CURBRAMP_VERSION"];
+        NSString *query = [NSString stringWithFormat:@"SELECT max(VersionID) FROM VERSION"];
         
         sqlite3_stmt *statement = NULL;
         
@@ -466,7 +466,7 @@ static int nInit=0;
     
     SQLOK(181,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
-    if (sqlite3_step(statement) == SQLITE_ROW)
+    while (sqlite3_step(statement) == SQLITE_ROW)
     {
         LPSTR text = (LPSTR)sqlite3_column_text(statement, 0);
         NSString *str = [NSString stringWithUTF8String:text];
@@ -488,7 +488,7 @@ static int nInit=0;
     int maxID = 0;
     
     SQLOK(183,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
-    if (sqlite3_step(statement) == SQLITE_ROW)
+    while (sqlite3_step(statement) == SQLITE_ROW)
     {
         int textID = sqlite3_column_int(statement, 0);
         int type = sqlite3_column_int(statement, 1);
