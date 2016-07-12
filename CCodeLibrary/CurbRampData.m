@@ -98,7 +98,8 @@ static int nInit=0;
     NSString * cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_UPDATES ('iPad' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
     
     rtn = [self executeCmd:(char *)cmd.UTF8String
-              sendToServer:NO];
+              sendToServer:NO
+                      from:1662];
     return rtn;
 }
 
@@ -169,8 +170,9 @@ static int nInit=0;
 
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer
+              from:(int)from
 {
-    BOOL rtn = !SQLOK(165,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    BOOL rtn = !SQLOK(from,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     
     if (rtn && sendToServer)
     {
@@ -427,9 +429,12 @@ static int nInit=0;
         noteid = [self getNextNoteID];
     if (noteid > -1)
     {
+        note = [note stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
+
         query = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_NOTES VALUES(%i,%i,%i,%i,%i,'%@');",noteid,intID,corner,ramp,type,note];
         rtn = [self executeCmd:(LPSTR)query.UTF8String
-                       sendToServer:YES];
+                  sendToServer:YES
+                          from:1663];
 
     }
     [self close:opened];
@@ -478,9 +483,11 @@ static int nInit=0;
     SQLOK(184,sqlite3_finalize(statement), _database);
     if (rtn)
     {
+        newText = [newText stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
         query = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_STANDARD_TEXT VALUES(%i,%i,'%@');",maxID+1,newType,newText];
         [self executeCmd:(LPSTR)query.UTF8String
-            sendToServer:YES];
+            sendToServer:YES
+                    from:1665];
     }
     [self close:opened];
     return rtn;
@@ -523,7 +530,8 @@ static int nInit=0;
         lastNum = 1;
         cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_UPDATES VALUES(%i,1,0);",iPad];
         [self executeCmd:(LPSTR)cmd.UTF8String
-            sendToServer:NO];
+            sendToServer:NO
+                    from:1664];
     }
     [self close:opened];
     *pictNum = lastPictNum;
@@ -536,7 +544,8 @@ static int nInit=0;
     BOOL opened = [self open];
     NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_UPDATES VALUES(%i,%i,%i);",iPad,lastNum,pictNum];
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-                   sendToServer:NO];
+                   sendToServer:NO
+                           from:1666];
     [self close:opened];
     return rtn;
 }
@@ -556,11 +565,13 @@ static int nInit=0;
     {
         cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_UPDATES VALUES(%i,1,0);",iPad];
         rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-                  sendToServer:NO];
+                  sendToServer:NO
+                          from:1667];
     }
     cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastDataUpdate = %i WHERE iPad=%i",lastNum,iPad];
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-              sendToServer:NO];
+              sendToServer:NO
+                      from:1668];
     [self close:opened];
     return rtn;
 }
@@ -581,11 +592,13 @@ static int nInit=0;
     {
         cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_UPDATES VALUES(%i,1,0);",iPad];
         rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-                  sendToServer:NO];
+                  sendToServer:NO
+                          from:1669];
     }
     cmd = [NSString stringWithFormat:@"UPDATE CURBRAMP_UPDATES SET LastPictUpdate = %i WHERE iPad=%i",lastNum,iPad];
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-              sendToServer:NO];
+              sendToServer:NO
+                      from:1670];
     [self close:opened];
     return rtn;
 }
@@ -673,7 +686,8 @@ static int nInit=0;
     NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_PICTURES VALUES(%i,%i,%i,%i,%i,%i,%i,%f,%f,%i);",
                      pictID,CRAPI.sharedInstance.currentiPadWithinManager,pictNum,intID,ramp,type,heading,ll.lat,ll.lon,iTime];
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
-                   sendToServer:YES];
+                   sendToServer:YES
+                           from:1671];
     [self close:opened];
     return rtn;
     
@@ -728,7 +742,8 @@ static int nInit=0;
     while (rtn && fgetstring(str, maxLineLen, fid))
     {
         rtn = [self executeCmd:str
-                  sendToServer:NO];
+                  sendToServer:NO
+                          from:1672];
     }
     fclose(fid);
     free(str);

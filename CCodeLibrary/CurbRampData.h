@@ -25,7 +25,8 @@
 - (NSString *)databasePath:(int)geoid;
 
 - (BOOL)executeCmd:(char *)cmd
-      sendToServer:(BOOL)sendToServer;
+      sendToServer:(BOOL)sendToServer
+              from:(int)from;
 
 - (BOOL)startTransaction;
 - (void)commitTransaction;
