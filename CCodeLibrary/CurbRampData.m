@@ -405,57 +405,69 @@ static int nInit=0;
     
     return note;
 }
-- (BOOL) addNote:(NSString *)note
-    intersection:(int)intID
-          corner:(int)corner
-            ramp:(int)ramp
-            type:(int)type
+
+- (BOOL)addNote:(NSString *)note
+   intersection:(int)intID
+         corner:(int)corner
+           ramp:(int)ramp
+           type:(int)type
 {
     BOOL rtn;
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT id,text FROM CURBRAMP_NOTES WHERE intID = %i AND corner = %i AND rampID = %i AND type=%i",intID,corner,ramp,type];
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT id,text FROM CURBRAMP_NOTES WHERE intID = %i AND corner = %i AND rampID = %i AND type=%i",
+                       intID, corner, ramp, type];
+    
     sqlite3_stmt *statement;
     int noteid = -1;
     SQLOK(180,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         noteid = (int)sqlite3_column_int(statement, 0);
         LPSTR text = (LPSTR)sqlite3_column_text(statement, 1);
+        
         if (!strcmp (text,note.UTF8String))
             noteid = -2;
     }
+    
     SQLOK(181,sqlite3_finalize(statement), _database);
     if (noteid == -1)
         noteid = [self getNextNoteID];
+    
     if (noteid > -1)
     {
         note = [note stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
 
-        query = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_NOTES VALUES(%i,%i,%i,%i,%i,'%@');",noteid,intID,corner,ramp,type,note];
+        query = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_NOTES VALUES(%i,%i,%i,%i,%i,'%@');",
+                 noteid, intID, corner, ramp, type, note];
+        
         rtn = [self executeCmd:(LPSTR)query.UTF8String
                   sendToServer:YES
                           from:1663];
-
     }
+    
     [self close:opened];
     
     return rtn;
 }
 
-- (NSMutableArray*) loadStandardText:(int)type
+- (NSMutableArray *)loadStandardText:(int)type
 {
-    NSMutableArray * standardTextArray = [[NSMutableArray alloc] init];
+    NSMutableArray *standardTextArray = [[NSMutableArray alloc] init];
     BOOL opened = [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT text FROM CURBRAMP_STANDARD_TEXT WHERE type=%i",type];
     sqlite3_stmt *statement;
     
     SQLOK(181,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         LPSTR text = (LPSTR)sqlite3_column_text(statement, 0);
-        NSString * str = [NSString stringWithUTF8String:text];
+        NSString *str = [NSString stringWithUTF8String:text];
         [standardTextArray addObject:str];
     }
+    
     SQLOK(182,sqlite3_finalize(statement), _database);
     [self close:opened];
     return standardTextArray;
