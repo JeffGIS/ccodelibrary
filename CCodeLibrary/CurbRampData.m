@@ -373,7 +373,7 @@ static int nInit=0;
     rtn = !SQLOK(174,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'intID' INT,'rampNum' INT, 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
     rtn = !SQLOK(175,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
-    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_NOTES ('id' INTEGER PRIMARY KEY,'intID' INT,'corner' INT,'rampID' INT,'type' INT, 'text' CHAR(4096))";
+    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_NOTES ('id' INTEGER PRIMARY KEY,'intID' INT,'corner' INT,'rampID' INT,'type' INT, 'note' CHAR(4096))";
     rtn = !SQLOK(176,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_STANDARD_TEXT ('textID' INTEGER PRIMARY KEY,'type' INT,'text' CHAR(4096))";
     rtn = !SQLOK(177,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
@@ -383,22 +383,26 @@ static int nInit=0;
     return rtn;
 }
 
-- (NSString *) getNote:(int)intID
-                corner:(int)corner
-                  ramp:(int)ramp
-                  type:(int)type
+- (NSString *)getNote:(int)intID
+               corner:(int)corner
+                 ramp:(int)ramp
+                 type:(int)type
 {
-    NSString * note = [NSString new];
+    NSString *note = NSString.new;
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT text FROM CURBRAMP_NOTES WHERE intID = %i AND corner = %i AND rampID = %i AND type=%i",intID,corner,ramp,type];
-    sqlite3_stmt *statement;
+    NSString *query = [NSString stringWithFormat:@"SELECT note FROM CURBRAMP_NOTES WHERE intID = %i AND corner = %i AND rampID = %i AND type=%i",
+                       intID, corner, ramp, type];
+    
+    sqlite3_stmt *statement = nil;
     
     SQLOK(178,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         LPSTR text = (LPSTR)sqlite3_column_text(statement, 0);
         note = [NSString stringWithUTF8String:text];
     }
+    
     SQLOK(179,sqlite3_finalize(statement), _database);
     [self close:opened];
     
@@ -411,10 +415,10 @@ static int nInit=0;
            ramp:(int)ramp
            type:(int)type
 {
-    BOOL rtn;
+    BOOL rtn = NO;
     BOOL opened = [self open];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT id,text FROM CURBRAMP_NOTES WHERE intID = %i AND corner = %i AND rampID = %i AND type=%i",
+    NSString *query = [NSString stringWithFormat:@"SELECT id,note FROM CURBRAMP_NOTES WHERE intID = %i AND corner = %i AND rampID = %i AND type=%i",
                        intID, corner, ramp, type];
     
     sqlite3_stmt *statement;
