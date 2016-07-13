@@ -47,6 +47,7 @@
 @property int process;
 @property int totFilesToProcess;
 @property int processedFiles;
+@property BOOL first;
 @property NSString* errorFileName;
 
 @end
