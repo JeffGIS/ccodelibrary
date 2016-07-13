@@ -551,7 +551,8 @@
         _awd = AlleyWallData.new;
         
         _databaseID = _awd;
-        [self tempFix:CRAPI.sharedInstance.GSSiPadNumber];
+        [self tempFix:CRAPI.sharedInstance.GSSiPadNumber
+                geoid:geoid];
         [_databaseID incrementLastDataFileNum];
         [_databaseID incrementLastPictFileNum];
     }
@@ -560,6 +561,8 @@
     {
         _crd = CurbRampData.new;
         _databaseID = _crd;
+        [self tempFix:CRAPI.sharedInstance.GSSiPadNumber
+                geoid:geoid];
         [_databaseID incrementLastDataFileNum];
     }
     
@@ -1435,26 +1438,49 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 }
 
 - (void) tempFix:(int)iPad
+           geoid:(int)geoid
 {
-    if (iPad == 1008 || iPad == 1009)
+ /*   if (iPad == 1008 || iPad == 1009) // MP Alleywalls
     {
         int lastPict;
         int lastData = [_databaseID getLastDataUpdateNumber:1
                                                 lastPictNum:&lastPict];
         if (lastData < 64)
             [_databaseID setLastDataUpdateNum:64
-                                  foriPad:1];
+                                      foriPad:1];
         if (lastPict < 480)
             [_databaseID setLastPictUpdateNum:480
-                                  foriPad:1];
+                                      foriPad:1];
         lastData = [_databaseID getLastDataUpdateNumber:2
-                                           lastPictNum:&lastPict];
+                                            lastPictNum:&lastPict];
         if (lastData < 102)
             [_databaseID setLastDataUpdateNum:102
-                                  foriPad:2];
+                                      foriPad:2];
         if (lastPict < 728)
             [_databaseID setLastPictUpdateNum:728
-                                  foriPad:2];
+                                      foriPad:2];
+        
+    }*/
+    if (iPad == 1004 && geoid == 2730140)// Bill - Hopkins
+    {
+        int currentFix = 1;
+        int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
+        
+        if (lastFix < currentFix)
+        {
+            [UserDefaults.defaults saveInteger:currentFix
+                                        forKey:@"lastFix"];
+            int lastPict;
+            int lastData = [_databaseID getLastDataUpdateNumber:1
+                                                    lastPictNum:&lastPict];
+            
+            [_databaseID setLastDataUpdateNum:17
+                                      foriPad:1];
+            [_databaseID setLastPictUpdateNum:1
+                                      foriPad:1];
+            [CRAPI.sharedInstance logToErrorFile:@"Fix 1 applied to 1004"];
+        }
+        
     }
 }
 
