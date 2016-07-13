@@ -11,11 +11,12 @@
 #import "NVAlertView.h"
 #import "NVPopoverTableView.h"
 #import "CityOrOrganizationData.h"
+#import "NVEmailFileList.h"
 
 @interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate,NVPopoverTableViewDelegate,CLLocationManagerDelegate>
 
 @property (nonatomic) UILabel *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
-@property (nonatomic) UIButton *syncButton, *cancelButton, *returnButton, *connectButton, *titleButton;
+@property (nonatomic) UIButton *syncButton, *emailFileListButton, *returnButton, *connectButton, *titleButton;
 @property (nonatomic) UISwitch *pixUpSwitch, *pixDownSwitch, *dataDownSwitch;
 @property (nonatomic) NVProgressView *overallProgressView;
 @property (nonatomic) Colors *colors;
@@ -29,6 +30,7 @@
 @property FTPDataPush *push;
 @property FTPDataPull *pull;
 @property NSInteger selectedRow;
+@property (nonatomic) NVEmailFileList *nvefl;
 
 @end
 
@@ -117,17 +119,15 @@
                     action:@selector(syncButtonTapped:)
           forControlEvents:UIControlEventTouchUpInside];
     
-    _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self setupButton:_cancelButton];
-    _cancelButton.enabled = NO;
-    [self updateButton:_cancelButton];
+    _emailFileListButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self setupButton:_emailFileListButton];
     
-    [_cancelButton setTitle:@"Cancel"
-                 forState:UIControlStateNormal];
+    [_emailFileListButton setTitle:@"Email File List"
+                          forState:UIControlStateNormal];
     
-    [_cancelButton addTarget:self
-                      action:@selector(cancelButtonTapped:)
-            forControlEvents:UIControlEventTouchUpInside];
+    [_emailFileListButton addTarget:self
+                             action:@selector(emailFileListButtonTapped:)
+                   forControlEvents:UIControlEventTouchUpInside];
     
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_returnButton];
@@ -294,7 +294,9 @@
                 
             case 5://sync button
                 [sectionView addSubview:_syncButton];
-                [_syncButton constrainToView:sectionView leading:(screenWidth / 4.0) trailing:(-screenWidth / 4.0) top:buttonMargin bottom:-buttonMargin];
+                
+                [_syncButton constrainToView:sectionView leading:(screenWidth / 4.0) trailing:(-screenWidth / 4.0)
+                                         top:buttonMargin bottom:-buttonMargin];
                 break;
                 
             case 6://help button
@@ -319,9 +321,11 @@
                 [_overallLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor constant:-buttonMargin].active = YES;
                 break;
                 
-            case 8://cancel button
-                [sectionView addSubview:_cancelButton];
-                [_cancelButton constrainToView:sectionView leading:(screenWidth / 4.0) trailing:(-screenWidth / 4.0) top:buttonMargin bottom:-buttonMargin];
+            case 8://email file list button
+                [sectionView addSubview:_emailFileListButton];
+                
+                [_emailFileListButton constrainToView:sectionView leading:(screenWidth / 4.0)
+                                             trailing:(-screenWidth / 4.0) top:buttonMargin bottom:-buttonMargin];
                 break;
                 
             default:
@@ -518,9 +522,9 @@
         [self startSync];
 }
 
-- (void)cancelButtonTapped:(UIButton *)button
+- (void)emailFileListButtonTapped:(UIButton *)button
 {
-    NSLog (@"cancel button tapped");
+    _nvefl = [NVEmailFileList sendFileList:self];
 }
 
 - (void)titleButtonTapped:(UIButton *)button
@@ -1422,7 +1426,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)helpButtonTapped:(UIButton *)button
 {
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@""
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"DOES_NOT_EXIST"
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view

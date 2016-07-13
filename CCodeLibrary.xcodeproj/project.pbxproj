@@ -30,6 +30,8 @@
 		6919EAF91C27B3EE00A9D0F1 /* NVUnitPickerTextAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6919EAF61C27AF1700A9D0F1 /* NVUnitPickerTextAlert.h */; };
 		692ACC671B86309B00400B36 /* NVRoutes.m in Sources */ = {isa = PBXBuildFile; fileRef = 692ACC661B86309B00400B36 /* NVRoutes.m */; };
 		692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692ACC651B86309B00400B36 /* NVRoutes.h */; };
+		692EFA521D36A84B007B0D18 /* NVEmailFileList.m in Sources */ = {isa = PBXBuildFile; fileRef = 692EFA511D36A84B007B0D18 /* NVEmailFileList.m */; };
+		692EFA531D36AC6B007B0D18 /* NVEmailFileList.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692EFA501D36A84B007B0D18 /* NVEmailFileList.h */; };
 		692F54A21CDB9B1B001600C9 /* NVRampTypePageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 692F54A11CDB9B1B001600C9 /* NVRampTypePageController.m */; };
 		692F54A51CDB9B8B001600C9 /* NVRampTypePageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 692F54A41CDB9B8B001600C9 /* NVRampTypePageView.m */; };
 		692F54A61CDBAA6B001600C9 /* NVRampTypePageController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692F54A01CDB9B1B001600C9 /* NVRampTypePageController.h */; };
@@ -336,6 +338,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				692EFA531D36AC6B007B0D18 /* NVEmailFileList.h in CopyFiles */,
 				1FF293681D0F49FD00E580C5 /* NVTileCompiler.m in CopyFiles */,
 				69F8E0D61D05CD60003E8655 /* NVMarkerView.h in CopyFiles */,
 				699AE9011CEFB46700A9EBF2 /* NVPhotoController.h in CopyFiles */,
@@ -495,6 +498,8 @@
 		6919EAF71C27AF1700A9D0F1 /* NVUnitPickerTextAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVUnitPickerTextAlert.m; sourceTree = "<group>"; };
 		692ACC651B86309B00400B36 /* NVRoutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRoutes.h; sourceTree = "<group>"; };
 		692ACC661B86309B00400B36 /* NVRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRoutes.m; sourceTree = "<group>"; };
+		692EFA501D36A84B007B0D18 /* NVEmailFileList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVEmailFileList.h; sourceTree = "<group>"; };
+		692EFA511D36A84B007B0D18 /* NVEmailFileList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVEmailFileList.m; sourceTree = "<group>"; };
 		692F54A01CDB9B1B001600C9 /* NVRampTypePageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRampTypePageController.h; sourceTree = "<group>"; };
 		692F54A11CDB9B1B001600C9 /* NVRampTypePageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRampTypePageController.m; sourceTree = "<group>"; };
 		692F54A31CDB9B8B001600C9 /* NVRampTypePageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRampTypePageView.h; sourceTree = "<group>"; };
@@ -989,6 +994,8 @@
 				69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */,
 				6986AF821C7C119E0059DD1B /* NVDigitizerView.h */,
 				6986AF831C7C119E0059DD1B /* NVDigitizerView.m */,
+				692EFA501D36A84B007B0D18 /* NVEmailFileList.h */,
+				692EFA511D36A84B007B0D18 /* NVEmailFileList.m */,
 				A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */,
 				A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */,
 				A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */,
@@ -1393,6 +1400,7 @@
 				697560BE1CB18D5A006EEA14 /* NVMarkerInfoButton.m in Sources */,
 				A94A771319F807570062906E /* Facility.m in Sources */,
 				692F54A21CDB9B1B001600C9 /* NVRampTypePageController.m in Sources */,
+				692EFA521D36A84B007B0D18 /* NVEmailFileList.m in Sources */,
 				EBC01D301BED1C8C0004C751 /* ven404.c in Sources */,
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
 				A9A7E3671B75795300DC7F3D /* NVSignalButton.m in Sources */,
