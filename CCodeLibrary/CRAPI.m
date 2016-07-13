@@ -7,6 +7,7 @@
 #import "TileGraphics.h"
 #import "CityOrOrganizationData.h"
 #import "NVAlertView.h"
+#import "UIApplication+VersionBuild.h"
 
 @interface CRAPI () <NVAlertViewDelegate>
 
@@ -605,7 +606,7 @@
 -(void) logToErrorFile:(NSString*) error
 {
     NSString *errorFile = [self errorLogPath];
-    NSString *idString = [NSString stringWithFormat:@"%@ %i %i %i %i %i %i",[self timeStamp],_currentModule,_currentSubModule,_GSSiPadNumber,_currentManageriPad,_currentiPadWithinManager,self.currentGeoid];
+    NSString *idString = [NSString stringWithFormat:@"%@ %i %i %@ %i %i %i %i",[self timeStamp],_currentModule,_currentSubModule,UIApplication.appVersionBuild,_GSSiPadNumber,_currentManageriPad,_currentiPadWithinManager,self.currentGeoid];
     //#ifdef DEBUG
     NSLog (error);
 //#else

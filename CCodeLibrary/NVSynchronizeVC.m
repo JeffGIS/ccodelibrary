@@ -44,6 +44,7 @@
 {
     [super viewDidLoad];
     
+    _first = NO;
     _iPad_name = UIDevice.currentDevice.name;
     _setDemoID = getUseDemoID();
     _popoverView = [[GSSiPopoverView alloc] initWithView:self.view];
@@ -103,6 +104,7 @@
              forControlEvents:UIControlEventValueChanged];
     
     [self updateLabels];
+    _first = YES;
     
     _syncButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_syncButton];
@@ -452,6 +454,15 @@
     _pixUpLabel.text = [NSString stringWithFormat:@"Pictures to be Uploaded: %i", _upPix];
     _dataDownLabel.text = [NSString stringWithFormat:@"Data Files to be Downloaded: %i", _downFiles];
     _pixDownLabel.text = [NSString stringWithFormat:@"Pictures to be Downloaded: %i", _downPix];
+    if (_first)
+    {
+        _first = NO;
+        if (_upFiles < 0 || _upPix < 0 || _downFiles < 0 || _downPix < 0)
+        {
+            NSString * msg = [NSString stringWithFormat:@"Negative numbers in sync: %i %i %i %i",_upFiles,_upPix,_downFiles,_downPix];
+            [CRAPI.sharedInstance logToErrorFile:msg];
+        }
+    }
 }
 
 - (void)updateOverallProgress:(CGFloat)progress
