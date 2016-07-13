@@ -54,3 +54,4 @@ BOOL appendStringToFile(NSString *str, NSString *filePath);
 NSString *urlSearchStringForPID(NSString *PID);
 BOOL countySupportsLookupForPID(NSString *PID);
 CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceFeet, CLLocationCoordinate2D origin);
+BOOL isGSSiDevice(void);
