@@ -1981,10 +1981,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     BOOL rtn = NO;
     
-    if (rampType == RampTypeCombPerpNonWalk ||
-        rampType == RampTypeCombPerpWalk ||
-        rampType == RampTypeDepressedCorner ||
-        rampType == RampTypeFan)
+    if (rampType == RampTypeCombPerpNonWalk || rampType == RampTypeCombPerpWalk ||
+        rampType == RampTypeDepressedCorner || rampType == RampTypeFan || rampType == RampTypeDiagonal)
     {
         rtn = YES;
     }

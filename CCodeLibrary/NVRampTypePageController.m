@@ -98,6 +98,15 @@
     return rt;
 }
 
++ (instancetype)diagonal
+{
+    NVRampType *rt = NVRampType.new;
+    rt.displayText = @"Diagonal";
+    rt.imageName = @"Diagonal";
+    rt.type = RampTypeDiagonal;
+    return rt;
+}
+
 @end
 
 @interface NVRampTypePageController () <UIPageViewControllerDataSource,UIPageViewControllerDelegate,NVRampTypePageViewDelegate>
@@ -143,7 +152,7 @@
 {
     return @[NVRampType.perpRamp, NVRampType.perpNonWalkableRamp, NVRampType.comPerp, NVRampType.comPerpNW,
              NVRampType.oneWayAdj, NVRampType.oneWayBlend, NVRampType.parallel, NVRampType.depCorner,
-             NVRampType.fan, NVRampType.builtUp];
+             NVRampType.fan, NVRampType.builtUp, NVRampType.diagonal];
 }
 
 - (id)init
