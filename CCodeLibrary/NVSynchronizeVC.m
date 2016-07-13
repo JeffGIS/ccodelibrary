@@ -60,6 +60,7 @@
     _titleButton.userInteractionEnabled = NO;
     _titleButton.titleLabel.numberOfLines = 2;
     _titleButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    
     [_titleButton setTitleColor:_colors.textColor
                        forState:UIControlStateNormal];
     
@@ -477,6 +478,8 @@
     _connectLabel.text = [NSString stringWithFormat:@"%i-%i:%i of %i",
                           CRAPI.sharedInstance.GSSiPadNumber, CRAPI.sharedInstance.currentManageriPad,
                           CRAPI.sharedInstance.currentiPadWithinManager, CRAPI.sharedInstance.totiPadWithinManager];
+    
+    _connectButton.hidden = (CRAPI.sharedInstance.placesArray.count && !isGSSiDevice());
 }
 
 - (void)startSync
@@ -844,6 +847,8 @@ didReceiveMessage:(NSString *)message
                     
                     _connectLabel.text = [NSString stringWithFormat:@"%i-NO MANAGER",
                                           CRAPI.sharedInstance.GSSiPadNumber];
+                    
+                    _connectButton.hidden = NO;
                     
                     break;
                 }
@@ -1474,4 +1479,5 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         
     }
 }
+
 @end

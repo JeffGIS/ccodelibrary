@@ -875,3 +875,18 @@ CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceFeet
     
     return location;
 }
+
+BOOL isGSSiDevice(void)
+{
+    NSString *deviceName = UIDevice.currentDevice.name;
+    BOOL rtn = NO;
+    
+    if ([deviceName containsString:@"GSSi"] ||
+        [deviceName isEqualToString:@"Jeff's iPhone"] ||
+        [deviceName isEqualToString:@"BILLiPhone"])
+    {
+        rtn = YES;
+    }
+    
+    return rtn;
+}
