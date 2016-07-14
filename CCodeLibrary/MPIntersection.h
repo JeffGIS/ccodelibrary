@@ -16,6 +16,7 @@
 #import <UIKit/UIKit.h>
 #import "NVRampTypePageController.h"
 #import "IntersectionPoint.h"
+#import "GSSiEnums.h"
 
 enum textures {
     smoothConcrete=1,
@@ -89,7 +90,10 @@ enum obstructions {
 @property (nonatomic) float swkRightSlopeFront;
 @property (nonatomic) float swkRightSlopeSide;
 @property (nonatomic) float swkRightSlopeHeading;
-@property BOOL hasPEDSignal, hasPEDButton;
+@property NVSignalType PEDSignalType;
+@property NVButtonType PEDButtonType;
+@property AudibleWalkIndication awi;
+@property BOOL hasLocatorTone, hasInfoSign, hasBraille, hasTactileArrow;
 @property int PEDButtonHeight, PEDButtonDist;
 @property (nonatomic) float SteepTopOfCurb;
 @property (nonatomic) float PedRampLip;
