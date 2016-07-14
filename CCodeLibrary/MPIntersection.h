@@ -71,7 +71,8 @@ enum obstructions {
 @property BOOL hasLeftSidewalkCracks, hasRightSidewalkCracks;
 @property BOOL gradeBreaksArePerpendicular, detectableWarningIsFullWidth;
 @property int detectableWarningDepth;
-@property int streetLandingDepth, leftXWalkSideWidth, rightXWalkSideWidth;//these are specifically for diagonal ramp type
+@property float domeSpacing, spaceBetweenDomes, domeBaseWidth, domeCapWidth;//these are for detectable warnings
+@property int streetLandingDepth, leftXWalkSideWidth, rightXWalkSideWidth;//these are for diagonal ramp type
 @property (nonatomic) int rampWidth, rampDepth;
 @property (nonatomic) float rampSlopeFront;
 @property (nonatomic) float rampSlopeSide;
@@ -98,11 +99,12 @@ enum obstructions {
 @property NVButtonType PEDButtonType;
 @property AudibleWalkIndication awi;
 @property BOOL hasLocatorTone, hasInfoSign, hasBraille, hasTactileArrow;
+@property (nonatomic) float locatorToneVolume, audibleWalkIndicationVolume;//dB measured from 3 feet
 @property int PEDButtonHeight, PEDButtonDist;
 @property (nonatomic) float SteepTopOfCurb;
 @property (nonatomic) float PedRampLip;
 @property int lev21x, lev21y;
-@property NSString * rampComment;
+@property NSString *rampComment;
 @property RampType rampType;
 @property int yearRebuilt;
 
