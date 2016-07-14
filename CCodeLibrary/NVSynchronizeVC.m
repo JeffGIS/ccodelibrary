@@ -1463,7 +1463,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }*/
     if (iPad == 1004 && geoid == 2730140)// Bill - Hopkins
     {
-        int currentFix = 1;
+        int currentFix = 2;
         int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
         
         if (lastFix < currentFix)
@@ -1474,7 +1474,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             int lastData = [_databaseID getLastDataUpdateNumber:1
                                                     lastPictNum:&lastPict];
             
-            [_databaseID setLastDataUpdateNum:17
+            [_databaseID setLastDataUpdateNum:1
                                       foriPad:1];
             [_databaseID setLastPictUpdateNum:1
                                       foriPad:1];
