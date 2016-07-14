@@ -55,8 +55,6 @@
 @synthesize swkRightSlopeSide;
 @synthesize swkRightSlopeFront;
 @synthesize swkRightSlopeHeading;
-@synthesize hasPEDButton;
-@synthesize hasPEDSignal;
 @synthesize PEDButtonDist;
 @synthesize PEDButtonHeight;
 @synthesize SteepTopOfCurb;
@@ -154,8 +152,15 @@
         ramp.isComplete = YES;
         ramp.xWalkisComplete = YES;
         ramp.signalisComplete = YES;
-        ramp.hasPEDButton = NO;
-        ramp.hasPEDSignal = NO;
+        ramp.PEDSignalType = NVSignalTypeNone;
+        ramp.PEDButtonType = NVButtonTypeNone;
+        ramp.awi = AudibleWalkIndicationNone;
+        ramp.hasLocatorTone = NO;
+        ramp.hasInfoSign = NO;
+        ramp.hasBraille = NO;
+        ramp.hasTactileArrow = NO;
+        ramp.PEDButtonHeight = 0;
+        ramp.PEDButtonDist = 0;
         ramp.SteepTopOfCurb = 0;
         ramp.PedRampLip = 0;
         ramp.rampComment = @"";

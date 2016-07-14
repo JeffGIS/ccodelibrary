@@ -544,7 +544,7 @@
         char rampID[32];
         mpint.currentRamp = ramp;
         
-        if (mpint.currentRamp.rampExists || ramp.hasPEDButton || ramp.hasPEDSignal)
+        if (mpint.currentRamp.rampExists || ramp.PEDButtonType != NVButtonTypeNone || ramp.PEDSignalType != NVSignalTypeNone)
         {
             strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
             
@@ -593,8 +593,8 @@
                     ramp.swkRightSlopeFront,
                     ramp.swkRightSlopeSide,
                     ramp.swkRightSlopeHeading,
-                    (int)ramp.hasPEDSignal,
-                    (int)ramp.hasPEDButton,
+                    (int)ramp.PEDSignalType,
+                    (int)ramp.PEDButtonType,
                     (int)ramp.PEDButtonHeight,
                     (int)ramp.PEDButtonDist,
                     (int)ramp.SteepTopOfCurb,
@@ -829,8 +829,8 @@ WHERE intID=%i;",
             ramp.swkRightSlopeFront  = sqlite3_column_double(statement, i++);
             ramp.swkRightSlopeSide  = sqlite3_column_double(statement, i++);
             ramp.swkRightSlopeHeading  = sqlite3_column_double(statement, i++);
-            ramp.hasPEDSignal  = sqlite3_column_int(statement, i++);
-            ramp.hasPEDButton  = sqlite3_column_int(statement, i++);
+            ramp.PEDSignalType  = sqlite3_column_int(statement, i++);
+            ramp.PEDButtonType  = sqlite3_column_int(statement, i++);
             ramp.PEDButtonHeight  = sqlite3_column_int(statement,i++);
             ramp.PEDButtonDist  = sqlite3_column_int(statement, i++);
             ramp.SteepTopOfCurb  = sqlite3_column_int(statement, i++);

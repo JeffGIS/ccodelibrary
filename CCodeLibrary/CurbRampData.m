@@ -368,8 +368,8 @@ static int nInit=0;
  swkRightSlopeFront REAL,\
  swkRightSlopeSide REAL,\
  swkRightSlopeHeading REAL,\
- hasPEDSignal INT,\
- hasPEDButton INT,\
+ PEDSignalType INT,\
+ PEDButtonType INT,\
  PEDButtonHeight INT,\
  PEDButtonDist INT,\
  SteepTopOfCurb INT,\
