@@ -348,7 +348,7 @@
 
 - (void)helpButtonTapped:(UIButton *)button
 {
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@""
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"DOES_NOT_EXIST"
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
