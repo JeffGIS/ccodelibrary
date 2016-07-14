@@ -1343,7 +1343,8 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i WHERE intID=%i",
                        iTime, (int)status, intID];
     
-    rtn = [self.curbRampData executeCmd:query.UTF8String sendToServer:YES
+    rtn = [self.curbRampData executeCmd:query.UTF8String
+                           sendToServer:YES
                                    from:1659];
     [self close:opened];
     return !rtn;
@@ -1609,7 +1610,8 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         strncpy(intStruct.streetAzms, pAzms, sizeof(intStruct.streetAzms) - 1);
         
         NSString *cmd = [self intStructToCmd:&intStruct];
-        [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:NO
+        [self.curbRampData executeCmd:(char *)cmd.UTF8String
+                         sendToServer:YES
                                  from:1660];
         
         nLoaded++;
@@ -1835,13 +1837,6 @@ Exit:
     SQLOK(242,sqlite3_exec(self.curbRampData.database, "COMMIT", 0, 0, 0),self.curbRampData.database);
 }
 
-- (void)logError:(int)sqlReturn
-          method:(char *)method
-{
-    NSLog(@"%@", [NSString stringWithFormat:@"SQLite Error %i in %s = %i:%s",
-                  sqlReturn, method, sqlite3_errcode(self.curbRampData.database), sqlite3_errmsg(self.curbRampData.database)]);
-}
-
 - (int) getNewIntID
 {
     int nextID = 0;
@@ -1889,7 +1884,8 @@ Exit:
     
     SQLOK(245,sqlite3_exec(self.curbRampData.database, "BEGIN TRANSACTION", NULL, NULL, NULL),self.curbRampData.database);
     NSString *cmd = [self intStructToCmd:&intRec];
-    [self.curbRampData executeCmd:(char *)cmd.UTF8String sendToServer:YES
+    [self.curbRampData executeCmd:(char *)cmd.UTF8String
+                     sendToServer:YES
                              from:1661];
 
     SQLOK(246,sqlite3_exec(self.curbRampData.database, "COMMIT TRANSACTION", NULL, NULL, NULL), self.curbRampData.database);

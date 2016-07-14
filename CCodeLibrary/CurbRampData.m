@@ -33,7 +33,7 @@ static int nInit=0;
     _fileName = @"CurbRamps.sqlite";
     _path = [self databasePath:geoid];
     if (!_fileSize || create)
-        [self createIntersectionsTable:YES];
+        [self createIntersectionsTable:create];
 }
 - (id)init
 {
@@ -268,10 +268,19 @@ static int nInit=0;
     NSString *dropQuery = @"DROP TABLE IF EXISTS Intersections;DROP TABLE IF EXISTS Intersections_index;DROP TABLE IF EXISTS Ramps;DROP TABLE IF EXISTS VERSION;DROP TABLE IF EXISTS CURBRAMP_UPDATES;DROP TABLE IF EXISTS CURBRAMP_PICTURES;DROP TABLE IF EXISTS CURBRAMP_NOTES;DROP TABLE IF EXISTS CURBRAMP_STANDARD_TEXT";
     
     if (dropExistingTables)
-        SQLOK(171,sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), _database);
+    {
+        rtn = [self executeCmd:(LPSTR)dropQuery.UTF8String
+                  sendToServer:NO
+                          from:1675];
+
+    }
+    NSString *cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_UPDATES ('iPad' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                      from:1677];
     
 //create intersection table
-    NSString *cmd = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS VERSION (vid INTEGER PRIMARY KEY,VersionID CHAR(6));\
+ cmd = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS VERSION (vid INTEGER PRIMARY KEY,VersionID CHAR(6));\
  INSERT INTO VERSION VALUES(1,'%s');\
  CREATE TABLE IF NOT EXISTS Intersections (\
  intID INTEGER PRIMARY KEY,\
@@ -312,7 +321,9 @@ static int nInit=0;
  zoomLevel INTEGER);\
  CREATE VIRTUAL TABLE IF NOT EXISTS Intersections_index USING rtree(id,minX, maxX, minY, maxY);",CURRENT_INTERSECTION_VERSION];
     
-    rtn = !SQLOK(172,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                      from:1676];
 //create ramp table
     cmd = [NSString stringWithUTF8String:"CREATE TABLE IF NOT EXISTS Ramps (\
  intID INT,\
@@ -368,15 +379,21 @@ static int nInit=0;
  rampComment CHAR(256),\
  PRIMARY KEY (intID,rampNum ASC));"];
    
-    rtn = !SQLOK(173,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
-    cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_UPDATES ('iPad' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
-    rtn = !SQLOK(174,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                      from:1677];
     cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'intID' INT,'rampNum' INT, 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
-    rtn = !SQLOK(175,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                      from:1678];
     cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_NOTES ('id' INTEGER PRIMARY KEY,'intID' INT,'corner' INT,'rampID' INT,'type' INT, 'note' CHAR(4096))";
-    rtn = !SQLOK(176,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                      from:1679];
     cmd = @"CREATE TABLE IF NOT EXISTS CURBRAMP_STANDARD_TEXT ('textID' INTEGER PRIMARY KEY,'type' INT,'text' CHAR(4096))";
-    rtn = !SQLOK(177,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                      from:1680];
 
     [self commitTransaction];
     [self close:opened];

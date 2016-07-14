@@ -857,11 +857,14 @@ didReceiveMessage:(NSString *)message
                     break;
                 }
                 
-                _selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
+                if (CRAPI.sharedInstance.currentModule == MANAGEMENT_MODULE)
+                    _selectedRow = -2; //current geoid
+                else
+                    _selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
                 _didConnect = YES;
                 
                 if (CRAPI.sharedInstance.placesArray.count < 2 ||
-                    CRAPI.sharedInstance.placesArray.count <= _selectedRow ||
+                    (int)CRAPI.sharedInstance.placesArray.count <= _selectedRow ||
                     CRAPI.sharedInstance.currentGeoid == 0)
                 {
                     _selectedRow = 0;

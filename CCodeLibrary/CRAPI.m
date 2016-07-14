@@ -98,6 +98,14 @@
     if (geoid != _currentGeoidValue)
     {
         _currentGeoidValue = geoid;
+        [self loadiPadParametersForGeoid:geoid];
+        if (_currentManageriPad == 0)
+        {
+            _currentManageriPad = _GSSiPadNumber;
+            _currentiPadWithinManager = 1;
+            _totiPadWithinManager = 1;
+            [self saveiPadIDs];
+        }
         _outputDirectory = [NSString stringWithFormat:@"%@/%i/ADAFiles", _documentsDirectory, _currentGeoidValue];
         _imageDirectory = [NSString stringWithFormat:@"%@/%i/IntersectionImages", UserDefaults.defaults.sharedFilePath, _currentGeoidValue];
         _deviceListsKey = [NSString stringWithFormat:@"iPads:%i", CRAPI.sharedInstance.currentGeoid];
@@ -632,6 +640,16 @@
     return array;
 }
 
+- (void) setGSSiPadNumber:(int)num
+{
+    NSString *key = [NSString stringWithFormat:@"GSSiPadNumber"];
+    _GSSiPadNumber = num;
+    if (num > 0)
+        [UserDefaults.defaults saveInteger:num
+                                forKey:key];
+
+}
+
 - (NSInteger)adjustNextRefno:(NSInteger)refno
 {
     NSInteger nextRef = refno % _maxDevices;
@@ -651,7 +669,7 @@
     if (strncmp(message.UTF8String,"PlacesFor", 9))
         return FALSE;
     
-    _GSSiPadNumber = atoi(&message.UTF8String[9]);
+    self.GSSiPadNumber = atoi(&message.UTF8String[9]);
     
     NSMutableArray *placearray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
     [placearray removeObjectAtIndex:0];
@@ -726,6 +744,25 @@
             return FALSE;
     }
     
+    else if (row == -2) // CurrentGeoid
+    {
+        BOOL haveCity = FALSE;
+        row = 0;
+        
+        for (CityOrOrganizationData *c in _placesArray)
+        {
+            if (c.number == _currentGeoidValue)
+            {
+                haveCity = TRUE;
+                break;
+            }
+            
+            row++;
+        }
+        if (!haveCity)
+            return FALSE;
+    }
+    
     else if (_placesArray.count == 1 || row >= _placesArray.count)
         row = 0;
 
@@ -742,6 +779,12 @@
     _deviceNumber = _currentiPadWithinManager;
     _totiPadWithinManager = (int)c.totWithinManager;
     
+    [self saveiPadIDs];
+    return TRUE;
+}
+
+- (void) saveiPadIDs
+{
     NSString *key = [NSString stringWithFormat:@"ManagerForGeoid:%i",self.currentGeoid ];
     [UserDefaults.defaults saveInteger:_currentManageriPad
                                 forKey:key];
@@ -755,7 +798,7 @@
     
     [UserDefaults.defaults saveInteger:_totiPadWithinManager
                                 forKey:key];
-    return TRUE;
+
 }
 
 - (void)loadiPadParametersForGeoid:(int)geoid
