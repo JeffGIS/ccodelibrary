@@ -59,7 +59,7 @@ enum obstructions {
 @property (nonatomic) float approximateHeading;
 @property int adjustedRot;
 @property BOOL rampInXWalk;
-@property BOOL xWalkisComplete;
+@property BOOL xWalkisComplete, xWalkWidth;
 @property BOOL signalisComplete;
 @property (nonatomic) enum textures texture;
 @property (nonatomic) enum obstructions upperLandingObstruction;
@@ -68,6 +68,10 @@ enum obstructions {
 @property BOOL hasRampCracks;
 @property BOOL hasUpperLandingCracks;
 @property BOOL hasStreetLandingCracks;
+@property BOOL hasLeftSidewalkCracks, hasRightSidewalkCracks;
+@property BOOL gradeBreaksArePerpendicular, detectableWarningIsFullWidth;
+@property int detectableWarningDepth;
+@property int streetLandingDepth, leftXWalkSideWidth, rightXWalkSideWidth;//these are specifically for diagonal ramp type
 @property (nonatomic) int rampWidth, rampDepth;
 @property (nonatomic) float rampSlopeFront;
 @property (nonatomic) float rampSlopeSide;
