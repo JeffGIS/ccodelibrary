@@ -1474,7 +1474,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             int lastData = [_databaseID getLastDataUpdateNumber:1
                                                     lastPictNum:&lastPict];
             
-            [_databaseID setLastDataUpdateNum:1
+            [_databaseID setLastDataUpdateNum:51
                                       foriPad:1];
             [_databaseID setLastPictUpdateNum:1
                                       foriPad:1];
