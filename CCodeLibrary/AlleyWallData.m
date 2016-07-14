@@ -63,8 +63,8 @@ static int fileSequence = 0;
                                                                    error:nil].fileSize;
         if (_fileSize)
         {
-            //[self createNextUpdateTable];
-            //[self createPictureDatabase];
+            [self createNextUpdateTable];
+            [self createPictureDatabase];
 
             BOOL tableOK = NO;
             sqlite3_stmt *stmt = NULL;
@@ -229,7 +229,7 @@ static int fileSequence = 0;
     int segid = 0;
     BOOL opened = [self open];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT ALLEY_LINE.SEGID FROM ALLEY_LINE WHERE  ALLEY_LINE.id=%li",(long)refno];
+    NSString *query = [NSString stringWithFormat:@"SELECT ALLEY_LINE.ALLEYSEG FROM ALLEY_LINE WHERE  ALLEY_LINE.id=%li",(long)refno];
     
     sqlite3_stmt *statement = NULL;
     
@@ -251,15 +251,6 @@ static int fileSequence = 0;
 {
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     int segid = [self getAlleyLineSeg:refno];
-    NSString *outputDataPath = [NSString stringWithFormat:@"%@/AlleyWallInventory_Alley_%i_%i.txt",
-                                CRAPI.sharedInstance.outputDirectory, segid,iTime];
-    NSMutableString *outData = [[NSMutableString alloc]init];
-    [outData appendString:[NSString stringWithFormat:@"$GMDUPDATE([ALLEYSEGFILE],SEGID=%i,Status=%i;LastUpdate=%i,",segid,status,iTime]];
-    [outData appendString:@");"];
-    [outData writeToFile:outputDataPath
-                    atomically:YES
-                      encoding:NSUTF8StringEncoding
-                         error:nil];
     BOOL opened = [self open];
     NSString *cmd = [NSString stringWithFormat:@"UPDATE ALLEY_LINE SET CHECKED = %i, LastUpdate = %i WHERE id=%ld",status,iTime,(long)refno];
     [self executeCmd:(LPSTR)cmd.UTF8String
