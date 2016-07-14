@@ -1463,7 +1463,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }*/
     if (iPad == 1004 && geoid == 2730140)// Bill - Hopkins
     {
-        int currentFix = 2;
+        int currentFix = 3;
         int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
         
         if (lastFix < currentFix)
@@ -1478,7 +1478,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                       foriPad:1];
             [_databaseID setLastPictUpdateNum:1
                                       foriPad:1];
-            [CRAPI.sharedInstance logToErrorFile:@"Fix 1 applied to 1004"];
+            [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Fix %i applied to 1004",currentFix]];
         }
         
     }

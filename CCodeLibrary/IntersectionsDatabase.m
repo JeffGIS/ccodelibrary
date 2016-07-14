@@ -1605,6 +1605,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         pEnd = strchr(pAzms,'\t');
         *pEnd = 0;
         strncpy(intStruct.streetNames, pTab, sizeof(intStruct.streetNames) - 1);
+        REPLAC(intStruct.streetNames,"'","''",sizeof(intStruct.streetNames) - 1);
         strncpy(intStruct.streetAzms, pAzms, sizeof(intStruct.streetAzms) - 1);
         
         NSString *cmd = [self intStructToCmd:&intStruct];
