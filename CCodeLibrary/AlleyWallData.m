@@ -63,8 +63,8 @@ static int fileSequence = 0;
                                                                    error:nil].fileSize;
         if (_fileSize)
         {
-            //[self createNextUpdateTable];
-            //[self createPictureDatabase];
+            [self createNextUpdateTable];
+            [self createPictureDatabase];
 
             BOOL tableOK = NO;
             sqlite3_stmt *stmt = NULL;
