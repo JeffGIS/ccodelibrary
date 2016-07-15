@@ -22,5 +22,6 @@
                     deleteWhenDone:(BOOL)deleteWhenDone;
 
 - (void)importFileWithDelegate:(id)delegate;
+- (NSArray *)directoriesInDirectory:(NSString *)directory;
 
 @end
