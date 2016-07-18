@@ -55,7 +55,7 @@ enum {
     _toDirectory = toDirectory;
     _directory = fromDirectory;
     _fileName = fileName;
-    _toFileName = toFileName;
+    _toFileName = [NSString stringWithFormat:@"%@%@", toFileName, _tempExtension];
     _filePath = [NSString stringWithFormat:@"%@/%@", _directory, _fileName];
     
     assert(_filePath);
@@ -127,8 +127,6 @@ enum {
         if (!_fileSize)
             return NO;
         
-        _filePath = [NSString stringWithFormat:@"%@%@", _filePath, _tempExtension];
-        _fileName = fileName;
         [self setUpFTP];
     }
     
