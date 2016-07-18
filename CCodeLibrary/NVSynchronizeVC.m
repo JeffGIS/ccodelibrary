@@ -516,7 +516,8 @@
           fromDirectory:[errorFile stringByDeletingLastPathComponent]
                  toFile:_errorFileName
             toDirectory:toDir
-         deleteWhenDone:NO];
+         deleteWhenDone:NO
+         appendFileName:NO];
     }
     else
         [self startSync];
@@ -1147,7 +1148,8 @@ Top:
       fromDirectory:[_filePath stringByDeletingLastPathComponent]
              toFile:[_filePath lastPathComponent]
         toDirectory:toDir
-     deleteWhenDone:NO];
+     deleteWhenDone:NO
+     appendFileName:YES];
 }
 
 - (void)setDownloadFilesFor:(int)iPad
