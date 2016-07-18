@@ -23,6 +23,7 @@ enum {
 @property (nonatomic) int ii;
 @property id <GSSiPopoverViewDelegate> savePopoverDelegate;
 @property BOOL useOnlyPrimaryFTP;
+@property (nonatomic, copy) NSString *tempExtension;
 
 @end
 
@@ -35,6 +36,7 @@ enum {
 {
     FTPDataPush *dataPush = FTPDataPush.new;
     dataPush.useOnlyPrimaryFTP = YES;
+    dataPush.tempExtension = @".upload";
     return dataPush;
 }
 
@@ -54,7 +56,7 @@ enum {
     _directory = fromDirectory;
     _fileName = fileName;
     _toFileName = toFileName;
-    _filePath = [NSString stringWithFormat:@"%@/%@", _directory,_fileName];
+    _filePath = [NSString stringWithFormat:@"%@/%@", _directory, _fileName];
     
     assert(_filePath);
     
@@ -125,6 +127,7 @@ enum {
         if (!_fileSize)
             return NO;
         
+        _filePath = [NSString stringWithFormat:@"%@%@", _filePath, _tempExtension];
         _fileName = fileName;
         [self setUpFTP];
     }
