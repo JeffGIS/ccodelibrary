@@ -660,6 +660,27 @@
         nextRef = refno - nextRef + _maxDevices +_deviceNumber;
     return nextRef;
 }
+
+- (BOOL) setGeoIDForCurrentApp
+{
+    BOOL rtn = YES;
+    NSInteger selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
+    if (_currentModule == MANAGEMENT_MODULE)
+        selectedRow = -2; //current geoid
+    else if (_currentModule == GMMOBILE_MODULE && (_currentApp == HCConfigAlleyWalls || _currentApp == HCConfigAlleyWallStatus))
+        selectedRow = -1;
+    rtn = [CRAPI.sharedInstance processPlacesArray:selectedRow];
+    if (!rtn && selectedRow < 0)
+    {
+        [CRAPI.sharedInstance logToErrorFile:@"NVMobile-Alleywalls does not set place and manager"];
+    }
+    else if (!rtn)
+    {
+        [CRAPI.sharedInstance logToErrorFile:@"NVMobile-CurbRamps does not set place and manager"];
+    }
+    return rtn;
+}
+
 - (BOOL)processPlaces
 {
     NSString *message = [UserDefaults.defaults stringForKey:@"PlacesString"];
