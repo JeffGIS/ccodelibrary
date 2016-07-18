@@ -857,10 +857,6 @@ didReceiveMessage:(NSString *)message
                     break;
                 }
                 
-                if (CRAPI.sharedInstance.currentModule == MANAGEMENT_MODULE)
-                    _selectedRow = -2; //current geoid
-                else
-                    _selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
                 _didConnect = YES;
                 
                 if (CRAPI.sharedInstance.placesArray.count < 2 ||
@@ -874,6 +870,7 @@ didReceiveMessage:(NSString *)message
                 }
                 
                 [CRAPI.sharedInstance processPlacesArray:_selectedRow];
+                [CRAPI.sharedInstance setGeoIDForCurrentApp];
                 [self setDatabaseIDToDB];
                 
                 [_titleButton setTitle:[NSString stringWithFormat:@"Synchronize Data for\n%@",

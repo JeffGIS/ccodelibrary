@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 
 @property (nonatomic) int currentModule;
 @property (nonatomic) int currentSubModule;
+@property int currentApp;
 @property (nonatomic, copy) NSString *documentsDirectory;
 @property (nonatomic, copy) NSString *outputDirectory;
 @property (nonatomic, copy) NSString *imageDirectory;
@@ -45,7 +46,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic) int currentManageriPad; //sequence number for manager iPad - created by GMServer
 @property int currentiPadWithinManager;
 @property int totiPadWithinManager;
-@property int GSSiPadNumber; //sequence number for this iPad
+@property (nonatomic) int GSSiPadNumber; //sequence number for this iPad
 @property (nonatomic, copy) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
 @property (nonatomic, copy) NSString *googleKey;
@@ -159,6 +160,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (void)savePlacesString:(NSString*)placesString;
 - (BOOL)processPlaces;
 - (BOOL)processPlacesArray:(NSInteger) row;
+- (BOOL) setGeoIDForCurrentApp;
 - (NSString*) getPlacesStringFromFile;
 - (void)loadiPadParametersForGeoid:(int)geoid;
 - (void)setiPadParametersFromGeoid:(int)geoid;

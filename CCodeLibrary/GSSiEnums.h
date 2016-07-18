@@ -209,4 +209,16 @@ typedef NS_ENUM(NSInteger, NVSignalType)
     NVSignalTypeBelowTimer,
 };
 
+typedef NS_ENUM(NSInteger, HardCodedConfigs)
+{
+    HCConfigAlleyWalls,
+    HCConfigAlleyWallStatus,
+    HCConfigCurbRamps,
+    HCConfigSewers,
+    HCConfigMetroProp,
+    HCConfigCrimes,
+    HCConfigMapleGrove,
+    HCConfigFromSpreadsheet,
+};
+
 @end
