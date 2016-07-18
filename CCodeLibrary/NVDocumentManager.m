@@ -151,4 +151,30 @@
     }
 }
 
+- (NSArray *)directoriesInDirectory:(NSString *)directory
+{
+    NSFileManager *fm = NSFileManager.defaultManager;
+    NSArray *files = [fm directoryContentsAtPath:directory];
+    NSMutableArray *directoryList = NSMutableArray.new;
+    
+    for (NSString *file in files)
+    {
+        NSString *path = [directory stringByAppendingPathComponent:file];
+        BOOL isDir = NO;
+        
+        [fm fileExistsAtPath:path
+                 isDirectory:(&isDir)];
+        
+        if (isDir)
+        {
+            NSArray *dirContents = [fm directoryContentsAtPath:path];
+            
+            if (dirContents.count)
+                [directoryList addObject:file];
+        }
+    }
+    
+    return directoryList;
+}
+
 @end
