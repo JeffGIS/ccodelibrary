@@ -35,6 +35,7 @@
 @property int nextFileNumToUpload;
 @property int lastPictNumToUpload;
 @property int nextPictNumToUpload;
+@property int lastUploadFileSize;
 @property int downloadiPad;
 @property int nextFileNumToDownload;
 @property int lastFileNumToDownload;

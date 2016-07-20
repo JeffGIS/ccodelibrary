@@ -645,15 +645,15 @@
             }
             else if (_process == UPLOAD_DATA_PROCESS)
             {
-                msg = [NSString stringWithFormat:@"$M(UploadCompleteData,%i,%i,%i,%i)",
+                msg = [NSString stringWithFormat:@"$M(UploadCompleteData,%i,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
-                       CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload];
+                       CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload,_lastUploadFileSize];
             }
             else
             {
-                msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i)",
+                msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
-                       CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload];
+                       CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload,_lastUploadFileSize];
             }
             
             break;
@@ -905,7 +905,7 @@ didReceiveMessage:(NSString *)message
                     [CRAPI.sharedInstance clearErrorFile];
                     [self startSync];
                 }
-                else
+                else if ([message isEqualToString:@"OK"])
                 {
                     _nextFileNumToUpload++;
                     _uploadedFiles++;
@@ -919,6 +919,14 @@ didReceiveMessage:(NSString *)message
                         _upPix--;
                     [self updateLabels];
                     [self uploadNextFile];
+                }
+                else
+                {
+                    NSString * title = [NSString stringWithFormat:@"Upload Size/Rename Error:%@",message];
+                    [_popoverView showAfter:0.1
+                                  withTitle:title];
+                    [CRAPI.sharedInstance logToErrorFile:title];
+
                 }
                 break;
                 
@@ -1148,13 +1156,15 @@ Top:
     
     NSString *toDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
+    _lastUploadFileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:_filePath
+                                                                   error:nil].fileSize;
     
     [_push sendFile:[_filePath lastPathComponent]
       fromDirectory:[_filePath stringByDeletingLastPathComponent]
              toFile:[_filePath lastPathComponent]
         toDirectory:toDir
      deleteWhenDone:NO
-     appendFileName:NO];
+     appendFileName:YES];
 }
 
 - (void)setDownloadFilesFor:(int)iPad
