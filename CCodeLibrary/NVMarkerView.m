@@ -185,19 +185,22 @@
                                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
                             
                             else
-                                CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
+                            {
+                                CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
+                                notAssigned++;
+                            }
                             
                             break;
                             
                         case PreliminarySurveyComplete:
                         case OriginalSurveyComplete:
-                            numComplete++;
                             CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
+                            numComplete++;
                             break;
                             
                         case ComplexStatus:
+                            CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
                             numComplex++;
-                            CGContextSetFillColorWithColor(context, UIColor.lightGrayColor.CGColor);
                             break;
                     }
                         break;
@@ -218,7 +221,7 @@
                             
                             else
                             {
-                                CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
+                                CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
                                 notAssigned++;
                             }
                             
@@ -236,13 +239,13 @@
                             break;
                             
                         case OriginalSurveyComplete:
-                            numComplete++;
                             CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
+                            numComplete++;
                             break;
                             
                         case ComplexStatus:
+                            CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
                             numComplex++;
-                            CGContextSetFillColorWithColor(context, UIColor.lightGrayColor.CGColor);
                             break;
                     }
                         break;

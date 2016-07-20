@@ -61,7 +61,7 @@
             _numRamps = [[UILabel alloc] initWithFrame:CGRectMake(leftMargin, ((labelHeight * 5.0) + margin), 0.0, labelHeight)];
             
             [self setupLabel:_complex
-                   textColor:UIColor.lightGrayColor];
+                   textColor:UIColor.darkGrayColor];
         }
         
         else
@@ -94,7 +94,7 @@
             _complexMarker = [[UIView alloc] initWithFrame:CGRectMake(markerMargin, ((labelHeight * 3.0) + buffer), _size, _size)];
             
             [self setupView:_complexMarker
-            backgroundColor:UIColor.lightGrayColor];
+            backgroundColor:UIColor.darkGrayColor];
         }
         
         [self updateWidthForText];
