@@ -174,6 +174,7 @@
                         switch (info.status)
                     {
                         case InitialStatus:
+                        case AddedInDetail:
                             if (!info.assignedToPrelim)
                             {
                                 CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
@@ -205,6 +206,7 @@
                         switch (info.status)
                     {
                         case InitialStatus:
+                        case AddedInDetail:
                             if (!info.assignedToDetail)
                             {
                                 CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
