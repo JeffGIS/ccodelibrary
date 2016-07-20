@@ -49,7 +49,8 @@
    fromDirectory:(NSString *)fromDirectory
           toFile:(NSString *)toFileName
      toDirectory:(NSString *)toDirectory
-  deleteWhenDone:(BOOL)deleteWhenDone;
+  deleteWhenDone:(BOOL)deleteWhenDone
+  appendFileName:(BOOL)appendFileName;
 
 - (BOOL)startSend:(NSString *)fileName;
 

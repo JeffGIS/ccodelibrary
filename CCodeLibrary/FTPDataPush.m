@@ -50,12 +50,16 @@ enum {
           toFile:(NSString *)toFileName
      toDirectory:(NSString *)toDirectory
   deleteWhenDone:(BOOL)deleteWhenDone
+  appendFileName:(BOOL)appendFileName
 {
-    
     _toDirectory = toDirectory;
     _directory = fromDirectory;
     _fileName = fileName;
-    _toFileName = [NSString stringWithFormat:@"%@%@", toFileName, _tempExtension];
+    _toFileName = toFileName;
+    
+    if (appendFileName)
+        _toFileName = [NSString stringWithFormat:@"%@%@", _toFileName, _tempExtension];
+    
     _filePath = [NSString stringWithFormat:@"%@/%@", _directory, _fileName];
     
     assert(_filePath);
@@ -327,7 +331,8 @@ enum {
                          fromDirectory:_directory
                                 toFile:_fileName
                            toDirectory:_toDirectory
-                        deleteWhenDone:NO];
+                        deleteWhenDone:NO
+                        appendFileName:NO];
                     }
                     
                     else
@@ -347,7 +352,8 @@ enum {
                          fromDirectory:_directory
                                 toFile:_fileName
                            toDirectory:_toDirectory
-                        deleteWhenDone:NO];
+                        deleteWhenDone:NO
+                        appendFileName:NO];
                     }
                 }
             }
