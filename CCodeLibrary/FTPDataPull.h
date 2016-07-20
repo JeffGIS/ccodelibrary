@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, FTPDataType)
     GetDatabaseSettingPlan,
     GetDatabaseSettingCensus,
     GetDatabaseSettingAlleyWall,
+    GetDatabaseSettingAlleyWallNew,
     GetDatabaseSettingCurbRamp,
     GetDatabaseSettingCrimes,
     GetDatabaseSettingMapleGrove,
