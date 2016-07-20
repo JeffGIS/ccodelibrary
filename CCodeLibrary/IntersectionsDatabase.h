@@ -15,7 +15,7 @@
 
 - (void)intersectionsDatabase:(NSString *)databasePath
                       didLoad:(NSString *)message
-                   withStatus:(int)status;
+                   withStatus:(INTDBStatus)status;
 @end
 
 @interface IntersectionsDatabase : NSObject <FTPDataPullDelegate>

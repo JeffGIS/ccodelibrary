@@ -859,6 +859,7 @@ didReceiveMessage:(NSString *)message
                 
                 _didConnect = YES;
                 
+                _selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
                 if (CRAPI.sharedInstance.placesArray.count < 2 ||
                     (int)CRAPI.sharedInstance.placesArray.count <= _selectedRow ||
                     CRAPI.sharedInstance.currentGeoid == 0)
@@ -869,7 +870,6 @@ didReceiveMessage:(NSString *)message
                                                 forKey:@"SelectedRow"];
                 }
                 
-                [CRAPI.sharedInstance processPlacesArray:_selectedRow];
                 [CRAPI.sharedInstance setGeoIDForCurrentApp];
                 [self setDatabaseIDToDB];
                 
@@ -1119,13 +1119,18 @@ Top:
                       withTitle:@"Upload Data"];
     }
     
-    else
+    else if (_process == UPLOAD_PICT_PROCESS)
     {
         _filePath = [_databaseID outputPictFile:_nextFileNumToUpload
                                            iPad:_myiPad];
         
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Picture"];
+    }
+    else
+    {
+        [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Invalid process:%i in upload %i %i",_process,_nextFileNumToUpload,_myiPad]];
+        return;
     }
     int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:_filePath
                                                                    error:nil].fileSize;
@@ -1250,13 +1255,18 @@ Done:
                       withTitle:@"Upload Data"];
     }
     
-    else
+    else if (_process == DOWNLOAD_PICT_PROCESS)
     {
         _filePath = [_databaseID outputPictFile:_nextFileNumToDownload
                                            iPad:_downloadiPad];
         
         [_popoverView showAfter:0.5
                       withTitle:@"Upload Picture"];
+    }
+    else
+    {
+        [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Invalid process:%i in download %i %i",_process,_nextFileNumToDownload,_downloadiPad]];
+        return;
     }
 
     

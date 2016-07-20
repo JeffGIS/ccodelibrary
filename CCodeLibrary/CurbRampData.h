@@ -23,6 +23,7 @@
 - (void)clear;
 - (BOOL)createIntersectionsTable:(BOOL)dropExistingTables;
 - (NSString *)databasePath:(int)geoid;
+- (NSString *)databasePath;
 
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer

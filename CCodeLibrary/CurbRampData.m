@@ -71,6 +71,11 @@ static int nInit=0;
     return dbPath;
 }
 
+- (NSString *)databasePath
+{
+    return [self databasePath:CRAPI.sharedInstance.currentGeoid];
+}
+
 - (void)dealloc
 {
     nInit--;
