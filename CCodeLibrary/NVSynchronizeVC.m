@@ -1149,7 +1149,7 @@ Top:
              toFile:[_filePath lastPathComponent]
         toDirectory:toDir
      deleteWhenDone:NO
-     appendFileName:YES];
+     appendFileName:NO];
 }
 
 - (void)setDownloadFilesFor:(int)iPad
