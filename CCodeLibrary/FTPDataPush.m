@@ -424,9 +424,6 @@ enum {
 - (void)dealloc
 {
     NSLog(@"FTPDataPush dealloc");
-    
-    [self stopSendWithStatus:FTPStatusStop
-                   statusString:@"Stopped"];
 }
 
 - (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
