@@ -12,7 +12,7 @@
 
 - (void)getAssignments:(GetAssignments *)server
             didGetFile:(NSString *)path
-            withStatus:(int)status;
+            withStatus:(GetAssStatus)status;
 
 @end
 
