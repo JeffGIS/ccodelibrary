@@ -332,7 +332,8 @@
                 break;
         }
     }
-    
+    _syncButton.enabled = NO;
+
     [self sendGMServerMessage:GMSMessageOpenConnect];
 }
 
@@ -693,7 +694,7 @@
         titleMessage = @"Network Error";
     
     else
-        titleMessage = @"NVCRIS Server Error";
+        titleMessage = [NSString stringWithFormat:@"NVCRIS Server Error\n%@",error];
     
     NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                       delegate:self
@@ -942,7 +943,9 @@ didReceiveMessage:(NSString *)message
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
                 int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad
                                                 lastPictNum:&pictNum];
-                
+                if (_myiPad > 0)
+                    _syncButton.enabled = YES;
+
                 lastNum++;
                 int fileSize = 0;
                 
