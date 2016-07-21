@@ -108,6 +108,8 @@ enum obstructions {
 @property RampType rampType;
 @property int yearRebuilt;
 
+- (BOOL) isEqualTo:(MPRamp*)oldRamp;
+
 @end
 
 @interface MPIntersection : NSObject
@@ -172,4 +174,6 @@ enum obstructions {
 - (void)intersectionInit;
 - (void) setRampsXWalkAndSignal;
 - (int) numRamps;
+- (BOOL) isEqualTo:(MPIntersection*)oldInt;
+
 @end

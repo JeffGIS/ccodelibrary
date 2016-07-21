@@ -61,6 +61,68 @@
 @synthesize PedRampLip;
 @synthesize lev21x;
 @synthesize lev21y;
+-(id) copyWithZone: (NSZone *) zone
+{
+    MPRamp *another = [[MPRamp allocWithZone: zone] init];
+    
+    another.rampNum = self.rampNum;
+    another.rampID = self.rampID.copy;
+    another.timeComplete = self.timeComplete;
+    another.rampExists;
+    another.isComplete;
+    another.approximateHeading;
+    another.adjustedRot;
+    another.rampInXWalk;
+    another.xWalkisComplete;
+    another.signalisComplete;
+    another.hasRampCracks;
+    another.hasUpperLandingCracks;
+    another.hasStreetLandingCracks;
+    another.rampWidth;
+    another.rampDepth;
+    another.texture;
+    another.upperLandingObstruction;
+    another.lowerLandingObstruction;
+    another.rampObstruction;
+    another.rampSlopeSide;
+    another.rampSlopeFront;
+    another.rampSlopeHeading;
+    another.upperLandingSlopeSide;
+    another.upperLandingSlopeFront;
+    another.upperLandingSlopeHeading;
+    another.streetLandingSlopeSide;
+    another.streetLandingSlopeFront;
+    another.streetLandingSlopeHeading;
+    another.flareLeftSlopeSide;
+    another.flareLeftSlopeFront;
+    another.flareLeftSlopeHeading;
+    another.flareRightSlopeSide;
+    another.flareRightSlopeFront;
+    another.flareRightSlopeHeading;
+    another.swkLeftSlopeSide;
+    another.swkLeftSlopeFront;
+    another.swkLeftSlopeHeading;
+    another.swkRightSlopeSide;
+    another.swkRightSlopeFront;
+    another.swkRightSlopeHeading;
+    another.PEDButtonDist;
+    another.PEDButtonHeight;
+    another.SteepTopOfCurb;
+    another.PedRampLip;
+    another.lev21x;
+    another.lev21y;
+    
+    return another;
+}
+
+
+- (BOOL) isEqualTo:(MPRamp*)oldRamp
+{
+    BOOL rtn = TRUE;
+    
+    return rtn;
+}
+
 @end
 
 @implementation MPIntersection
@@ -261,6 +323,36 @@
                 break;
         }
     }
+}
+
+-(id) copyWithZone: (NSZone *) zone
+{
+    MPIntersection *another = [[MPIntersection allocWithZone: zone] init];
+    
+    another.ramps = [[NSMutableArray alloc]init];
+    for (MPRamp *ramp in self.ramps)
+    {
+        MPRamp *newRamp = [ramp copy];
+        [another.ramps addObject:newRamp];
+    }
+    
+    return another;
+}
+
+- (BOOL) isEqualTo:(MPIntersection*)oldInt
+{
+    BOOL rtn = TRUE;
+    for (int i = 1; i < 13 ;i++)
+    {
+        MPRamp *ramp = [self.ramps objectAtIndex:i];
+        MPRamp *oldRamp = [oldInt.ramps objectAtIndex:i];
+        if (![ramp isEqualTo:oldRamp])
+        {
+            rtn = FALSE;
+            break;
+        }
+    }
+    return rtn;
 }
 
 @end
