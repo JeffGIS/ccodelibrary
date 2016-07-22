@@ -61,6 +61,7 @@
 @synthesize PedRampLip;
 @synthesize lev21x;
 @synthesize lev21y;
+
 -(id) copyWithZone: (NSZone *) zone
 {
     MPRamp *another = [[MPRamp allocWithZone: zone] init];
@@ -68,49 +69,49 @@
     another.rampNum = self.rampNum;
     another.rampID = self.rampID.copy;
     another.timeComplete = self.timeComplete;
-    another.rampExists;
-    another.isComplete;
-    another.approximateHeading;
-    another.adjustedRot;
-    another.rampInXWalk;
-    another.xWalkisComplete;
-    another.signalisComplete;
-    another.hasRampCracks;
-    another.hasUpperLandingCracks;
-    another.hasStreetLandingCracks;
-    another.rampWidth;
-    another.rampDepth;
-    another.texture;
-    another.upperLandingObstruction;
-    another.lowerLandingObstruction;
-    another.rampObstruction;
-    another.rampSlopeSide;
-    another.rampSlopeFront;
-    another.rampSlopeHeading;
-    another.upperLandingSlopeSide;
-    another.upperLandingSlopeFront;
-    another.upperLandingSlopeHeading;
-    another.streetLandingSlopeSide;
-    another.streetLandingSlopeFront;
-    another.streetLandingSlopeHeading;
-    another.flareLeftSlopeSide;
-    another.flareLeftSlopeFront;
-    another.flareLeftSlopeHeading;
-    another.flareRightSlopeSide;
-    another.flareRightSlopeFront;
-    another.flareRightSlopeHeading;
-    another.swkLeftSlopeSide;
-    another.swkLeftSlopeFront;
-    another.swkLeftSlopeHeading;
-    another.swkRightSlopeSide;
-    another.swkRightSlopeFront;
-    another.swkRightSlopeHeading;
-    another.PEDButtonDist;
-    another.PEDButtonHeight;
-    another.SteepTopOfCurb;
-    another.PedRampLip;
-    another.lev21x;
-    another.lev21y;
+    another.rampExists = self.rampExists;
+    another.isComplete = self.isComplete;
+    another.approximateHeading = self.approximateHeading;
+    another.adjustedRot = self.adjustedRot;
+    another.rampInXWalk = self.rampInXWalk;
+    another.xWalkisComplete = self.xWalkisComplete;
+    another.signalisComplete = self.signalisComplete;
+    another.hasRampCracks = self.hasRampCracks;
+    another.hasUpperLandingCracks = self.hasUpperLandingCracks;
+    another.hasStreetLandingCracks = self.hasStreetLandingCracks;
+    another.rampWidth = self.rampWidth;
+    another.rampDepth = self.rampDepth;
+    another.texture = self.texture;
+    another.upperLandingObstruction = self.upperLandingObstruction;
+    another.lowerLandingObstruction = self.lowerLandingObstruction;
+    another.rampObstruction = self.rampObstruction;
+    another.rampSlopeSide = self.rampSlopeSide;
+    another.rampSlopeFront = self.rampSlopeFront;
+    another.rampSlopeHeading = self.rampSlopeHeading;
+    another.upperLandingSlopeSide = self.upperLandingSlopeSide;
+    another.upperLandingSlopeFront = self.upperLandingSlopeFront;
+    another.upperLandingSlopeHeading = self.upperLandingSlopeHeading;
+    another.streetLandingSlopeSide = self.streetLandingSlopeSide;
+    another.streetLandingSlopeFront = self.streetLandingSlopeFront;
+    another.streetLandingSlopeHeading = self.streetLandingSlopeHeading;
+    another.flareLeftSlopeSide = self.flareLeftSlopeSide;
+    another.flareLeftSlopeFront = self.flareLeftSlopeFront;
+    another.flareLeftSlopeHeading = self.flareLeftSlopeHeading;
+    another.flareRightSlopeSide = self.flareRightSlopeSide;
+    another.flareRightSlopeFront = self.flareRightSlopeFront;
+    another.flareRightSlopeHeading = self.flareRightSlopeHeading;
+    another.swkLeftSlopeSide = self.swkLeftSlopeSide;
+    another.swkLeftSlopeFront = self.swkLeftSlopeFront;
+    another.swkLeftSlopeHeading = self.swkLeftSlopeHeading;
+    another.swkRightSlopeSide = self.swkRightSlopeSide;
+    another.swkRightSlopeFront = self.swkRightSlopeFront;
+    another.swkRightSlopeHeading = self.swkRightSlopeHeading;
+    another.PEDButtonDist = self.PEDButtonDist;
+    another.PEDButtonHeight = self.PEDButtonHeight;
+    another.SteepTopOfCurb = self.SteepTopOfCurb;
+    another.PedRampLip = self.PedRampLip;
+    another.lev21x = self.lev21x;
+    another.lev21y = self.lev21y;
     
     return another;
 }
@@ -118,9 +119,57 @@
 
 - (BOOL) isEqualTo:(MPRamp*)oldRamp
 {
-    BOOL rtn = TRUE;
+    if (oldRamp.rampNum != self.rampNum) goto RtnFalse;
+    if (![oldRamp.rampID isEqualToString:self.rampID]) goto RtnFalse;
+    if (oldRamp.timeComplete != self.timeComplete) goto RtnFalse;
+    if (oldRamp.rampExists != self.rampExists) goto RtnFalse;
+    if (oldRamp.isComplete != self.isComplete) goto RtnFalse;
+    if (oldRamp.approximateHeading != self.approximateHeading) goto RtnFalse;
+    if (oldRamp.adjustedRot != self.adjustedRot) goto RtnFalse;
+    if (oldRamp.rampInXWalk != self.rampInXWalk) goto RtnFalse;
+    if (oldRamp.xWalkisComplete != self.xWalkisComplete) goto RtnFalse;
+    if (oldRamp.signalisComplete != self.signalisComplete) goto RtnFalse;
+    if (oldRamp.hasRampCracks != self.hasRampCracks) goto RtnFalse;
+    if (oldRamp.hasUpperLandingCracks != self.hasUpperLandingCracks) goto RtnFalse;
+    if (oldRamp.hasStreetLandingCracks != self.hasStreetLandingCracks) goto RtnFalse;
+    if (oldRamp.rampWidth != self.rampWidth) goto RtnFalse;
+    if (oldRamp.rampDepth != self.rampDepth) goto RtnFalse;
+    if (oldRamp.texture != self.texture) goto RtnFalse;
+    if (oldRamp.upperLandingObstruction != self.upperLandingObstruction) goto RtnFalse;
+    if (oldRamp.lowerLandingObstruction != self.lowerLandingObstruction) goto RtnFalse;
+    if (oldRamp.rampObstruction != self.rampObstruction) goto RtnFalse;
+    if (oldRamp.rampSlopeSide != self.rampSlopeSide) goto RtnFalse;
+    if (oldRamp.rampSlopeFront != self.rampSlopeFront) goto RtnFalse;
+    if (oldRamp.rampSlopeHeading != self.rampSlopeHeading) goto RtnFalse;
+    if (oldRamp.upperLandingSlopeSide != self.upperLandingSlopeSide) goto RtnFalse;
+    if (oldRamp.upperLandingSlopeFront != self.upperLandingSlopeFront) goto RtnFalse;
+    if (oldRamp.upperLandingSlopeHeading != self.upperLandingSlopeHeading) goto RtnFalse;
+    if (oldRamp.streetLandingSlopeSide != self.streetLandingSlopeSide) goto RtnFalse;
+    if (oldRamp.streetLandingSlopeFront != self.streetLandingSlopeFront) goto RtnFalse;
+    if (oldRamp.streetLandingSlopeHeading != self.streetLandingSlopeHeading) goto RtnFalse;
+    if (oldRamp.flareLeftSlopeSide != self.flareLeftSlopeSide) goto RtnFalse;
+    if (oldRamp.flareLeftSlopeFront != self.flareLeftSlopeFront) goto RtnFalse;
+    if (oldRamp.flareLeftSlopeHeading != self.flareLeftSlopeHeading) goto RtnFalse;
+    if (oldRamp.flareRightSlopeSide != self.flareRightSlopeSide) goto RtnFalse;
+    if (oldRamp.flareRightSlopeFront != self.flareRightSlopeFront) goto RtnFalse;
+    if (oldRamp.flareRightSlopeHeading != self.flareRightSlopeHeading) goto RtnFalse;
+    if (oldRamp.swkLeftSlopeSide != self.swkLeftSlopeSide) goto RtnFalse;
+    if (oldRamp.swkLeftSlopeFront != self.swkLeftSlopeFront) goto RtnFalse;
+    if (oldRamp.swkLeftSlopeHeading != self.swkLeftSlopeHeading) goto RtnFalse;
+    if (oldRamp.swkRightSlopeSide != self.swkRightSlopeSide) goto RtnFalse;
+    if (oldRamp.swkRightSlopeFront != self.swkRightSlopeFront) goto RtnFalse;
+    if (oldRamp.swkRightSlopeHeading != self.swkRightSlopeHeading) goto RtnFalse;
+    if (oldRamp.PEDButtonDist != self.PEDButtonDist) goto RtnFalse;
+    if (oldRamp.PEDButtonHeight != self.PEDButtonHeight) goto RtnFalse;
+    if (oldRamp.SteepTopOfCurb != self.SteepTopOfCurb) goto RtnFalse;
+    if (oldRamp.PedRampLip != self.PedRampLip) goto RtnFalse;
+    if (oldRamp.lev21x != self.lev21x) goto RtnFalse;
+    if (oldRamp.lev21y != self.lev21y) goto RtnFalse;
     
-    return rtn;
+    return TRUE;
+    
+RtnFalse:
+    return FALSE;
 }
 
 @end
@@ -133,10 +182,10 @@
 @synthesize doLater;
 @synthesize timeComplete;
 @synthesize currentCorner;
-@synthesize currentRamp;
 @synthesize currentSignal;
 @synthesize currentObstruction;
 @synthesize currentCornerHeading;
+@synthesize currentRamp;
 @synthesize name1;
 @synthesize name2;
 @synthesize name3;
@@ -145,12 +194,26 @@
 @synthesize signal45Exists;
 @synthesize signal67Exists;
 @synthesize signal81Exists;
-@synthesize signal23lev21x,signal23lev21y,signal45lev21x,signal45lev21y,signal67lev21x,signal67lev21y,signal81lev21x,signal81lev21y;
+@synthesize signal23lev21x;
+@synthesize signal23lev21y;
+@synthesize signal45lev21x;
+@synthesize signal45lev21y;
+@synthesize signal67lev21x;
+@synthesize signal67lev21y;
+@synthesize signal81lev21x;
+@synthesize signal81lev21y;
 @synthesize xWalkAExists;
 @synthesize xWalkBExists;
 @synthesize xWalkCExists;
 @synthesize xWalkDExists;
-@synthesize xWalkAlev21x,xWalkAlev21y,xWalkBlev21x,xWalkBlev21y,xWalkClev21x,xWalkClev21y,xWalkDlev21x,xWalkDlev21y;
+@synthesize xWalkAlev21x;
+@synthesize xWalkAlev21y;
+@synthesize xWalkBlev21x;
+@synthesize xWalkBlev21y;
+@synthesize xWalkClev21x;
+@synthesize xWalkClev21y;
+@synthesize xWalkDlev21x;
+@synthesize xWalkDlev21y;
 @synthesize corner23heading;
 @synthesize corner45heading;
 @synthesize corner67heading;
@@ -159,7 +222,10 @@
 @synthesize corner45isComplete;
 @synthesize corner67isComplete;
 @synthesize corner81isComplete;
-@synthesize quadDev0,quadDev180,quadDev270,quadDev90;
+@synthesize quadDev0;
+@synthesize quadDev180;
+@synthesize quadDev270;
+@synthesize quadDev90;
 @synthesize lev21x,lev21y;
 
 - (id)init
@@ -328,6 +394,60 @@
 -(id) copyWithZone: (NSZone *) zone
 {
     MPIntersection *another = [[MPIntersection allocWithZone: zone] init];
+    another.intID = self.intID;
+    another.dataUpdated = self.dataUpdated;
+    another.intRotation = self.intRotation;
+    another.doLater = self.doLater;
+    another.timeComplete = self.timeComplete;
+    another.currentCorner = self.currentCorner;
+    another.currentSignal = self.currentSignal;
+    another.currentObstruction = self.currentObstruction;
+    another.currentCornerHeading = self.currentCornerHeading;
+    another.currentRamp = self.currentRamp;
+    another.name1 = self.name1;
+    another.name2 = self.name2;
+    another.name3 = self.name3;
+    another.signal23Exists = self.signal23Exists;
+    another.signal45Exists = self.signal45Exists;
+    another.signal67Exists = self.signal67Exists;
+    another.signal81Exists = self.signal81Exists;
+    another.signal23lev21x = self.signal23lev21x;
+    another.signal23lev21y = self.signal23lev21y;
+    another.signal45lev21x = self.signal45lev21x;
+    another.signal45lev21y = self.signal45lev21y;
+    another.signal67lev21x = self.signal67lev21x;
+    another.signal67lev21y = self.signal67lev21y;
+    another.signal81lev21x = self.signal81lev21x;
+    another.signal81lev21y = self.signal81lev21y;
+    another.xWalkAExists = self.xWalkAExists;
+    another.xWalkBExists = self.xWalkBExists;
+    another.xWalkCExists = self.xWalkCExists;
+    another.xWalkDExists = self.xWalkDExists;
+    another.xWalkAlev21x = self.xWalkAlev21x;
+    another.xWalkAlev21y = self.xWalkAlev21y;
+    another.xWalkBlev21x = self.xWalkBlev21x;
+    another.xWalkBlev21y = self.xWalkBlev21y;
+    another.xWalkClev21x = self.xWalkClev21x;
+    another.xWalkClev21y = self.xWalkClev21y;
+    another.xWalkDlev21x = self.xWalkDlev21x;
+    another.xWalkDlev21y = self.xWalkDlev21y;
+    another.corner23heading = self.corner23heading;
+    another.corner45heading = self.corner45heading;
+    another.corner67heading = self.corner67heading;
+    another.corner81heading = self.corner81heading;
+    another.corner23isComplete = self.corner23isComplete;
+    another.corner45isComplete = self.corner45isComplete;
+    another.corner67isComplete = self.corner67isComplete;
+    another.corner81isComplete = self.corner81isComplete;
+    another.quadDev0 = self.quadDev0;
+    another.quadDev180 = self.quadDev180;
+    another.quadDev270 = self.quadDev270;
+    another.quadDev90 = self.quadDev90;
+    another.lev21x = self.lev21x;
+    another.lev21y = self.lev21y;
+    another.lat = self.lat;
+    another.lon = self.lon;
+    another.intersectionComment = self.intersectionComment.copy;
     
     another.ramps = [[NSMutableArray alloc]init];
     for (MPRamp *ramp in self.ramps)
@@ -341,18 +461,72 @@
 
 - (BOOL) isEqualTo:(MPIntersection*)oldInt
 {
-    BOOL rtn = TRUE;
+    if (oldInt.intID != self.intID) goto RtnFalse;
+    if (oldInt.dataUpdated != self.dataUpdated) goto RtnFalse;
+    if (oldInt.intRotation != self.intRotation) goto RtnFalse;
+    if (oldInt.doLater != self.doLater) goto RtnFalse;
+    if (oldInt.timeComplete != self.timeComplete) goto RtnFalse;
+    if (oldInt.currentCorner != self.currentCorner) goto RtnFalse;
+    if (oldInt.currentSignal != self.currentSignal) goto RtnFalse;
+    if (oldInt.currentObstruction != self.currentObstruction) goto RtnFalse;
+    if (oldInt.currentCornerHeading != self.currentCornerHeading) goto RtnFalse;
+    if (![oldInt.name1 isEqualToString:self.name1]) goto RtnFalse;
+    if (![oldInt.name2 isEqualToString:self.name2]) goto RtnFalse;
+    if (![oldInt.name3 isEqualToString:self.name3]) goto RtnFalse;
+    if (oldInt.signal23Exists != self.signal23Exists) goto RtnFalse;
+    if (oldInt.signal45Exists != self.signal45Exists) goto RtnFalse;
+    if (oldInt.signal67Exists != self.signal67Exists) goto RtnFalse;
+    if (oldInt.signal81Exists != self.signal81Exists) goto RtnFalse;
+    if (oldInt.signal23lev21x != self.signal23lev21x) goto RtnFalse;
+    if (oldInt.signal23lev21y != self.signal23lev21y) goto RtnFalse;
+    if (oldInt.signal45lev21x != self.signal45lev21x) goto RtnFalse;
+    if (oldInt.signal45lev21y != self.signal45lev21y) goto RtnFalse;
+    if (oldInt.signal67lev21x != self.signal67lev21x) goto RtnFalse;
+    if (oldInt.signal67lev21y != self.signal67lev21y) goto RtnFalse;
+    if (oldInt.signal81lev21x != self.signal81lev21x) goto RtnFalse;
+    if (oldInt.signal81lev21y != self.signal81lev21y) goto RtnFalse;
+    if (oldInt.xWalkAExists != self.xWalkAExists) goto RtnFalse;
+    if (oldInt.xWalkBExists != self.xWalkBExists) goto RtnFalse;
+    if (oldInt.xWalkCExists != self.xWalkCExists) goto RtnFalse;
+    if (oldInt.xWalkDExists != self.xWalkDExists) goto RtnFalse;
+    if (oldInt.xWalkAlev21x != self.xWalkAlev21x) goto RtnFalse;
+    if (oldInt.xWalkAlev21y != self.xWalkAlev21y) goto RtnFalse;
+    if (oldInt.xWalkBlev21x != self.xWalkBlev21x) goto RtnFalse;
+    if (oldInt.xWalkBlev21y != self.xWalkBlev21y) goto RtnFalse;
+    if (oldInt.xWalkClev21x != self.xWalkClev21x) goto RtnFalse;
+    if (oldInt.xWalkClev21y != self.xWalkClev21y) goto RtnFalse;
+    if (oldInt.xWalkDlev21x != self.xWalkDlev21x) goto RtnFalse;
+    if (oldInt.xWalkDlev21y != self.xWalkDlev21y) goto RtnFalse;
+    if (oldInt.corner23heading != self.corner23heading) goto RtnFalse;
+    if (oldInt.corner45heading != self.corner45heading) goto RtnFalse;
+    if (oldInt.corner67heading != self.corner67heading) goto RtnFalse;
+    if (oldInt.corner81heading != self.corner81heading) goto RtnFalse;
+    if (oldInt.corner23isComplete != self.corner23isComplete) goto RtnFalse;
+    if (oldInt.corner45isComplete != self.corner45isComplete) goto RtnFalse;
+    if (oldInt.corner67isComplete != self.corner67isComplete) goto RtnFalse;
+    if (oldInt.corner81isComplete != self.corner81isComplete) goto RtnFalse;
+    if (oldInt.quadDev0 != self.quadDev0) goto RtnFalse;
+    if (oldInt.quadDev180 != self.quadDev180) goto RtnFalse;
+    if (oldInt.quadDev270 != self.quadDev270) goto RtnFalse;
+    if (oldInt.quadDev90 != self.quadDev90) goto RtnFalse;
+    if (oldInt.lev21x != self.lev21x) goto RtnFalse;
+    if (oldInt.lev21y != self.lev21y) goto RtnFalse;
+    if (oldInt.lat != self.lat) goto RtnFalse;
+    if (oldInt.lon != self.lon) goto RtnFalse;
+    if (![oldInt.intersectionComment isEqualToString:self.intersectionComment]) goto RtnFalse;
     for (int i = 1; i < 13 ;i++)
     {
         MPRamp *ramp = [self.ramps objectAtIndex:i];
         MPRamp *oldRamp = [oldInt.ramps objectAtIndex:i];
         if (![ramp isEqualTo:oldRamp])
         {
-            rtn = FALSE;
+            goto RtnFalse;
             break;
         }
     }
-    return rtn;
+    return TRUE;
+RtnFalse:
+    return FALSE;
 }
 
 @end

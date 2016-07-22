@@ -128,7 +128,7 @@ enum obstructions {
 @property (nonatomic) int currentSignal;
 @property (nonatomic) int currentObstruction;
 @property (nonatomic) float currentCornerHeading;
-@property (nonatomic) MPRamp *currentRamp;
+@property int currentRamp;
 @property (nonatomic, copy) NSString *name1;
 @property (nonatomic, copy) NSString *name2;
 @property (nonatomic, copy) NSString *name3;
