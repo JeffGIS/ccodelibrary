@@ -187,8 +187,6 @@ RtnFalse:
 @synthesize currentCornerHeading;
 @synthesize currentRamp;
 @synthesize name1;
-@synthesize name2;
-@synthesize name3;
 @synthesize ramps;
 @synthesize signal23Exists;
 @synthesize signal45Exists;
@@ -405,8 +403,6 @@ RtnFalse:
     another.currentCornerHeading = self.currentCornerHeading;
     another.currentRamp = self.currentRamp;
     another.name1 = self.name1;
-    another.name2 = self.name2;
-    another.name3 = self.name3;
     another.signal23Exists = self.signal23Exists;
     another.signal45Exists = self.signal45Exists;
     another.signal67Exists = self.signal67Exists;
@@ -471,8 +467,6 @@ RtnFalse:
     if (oldInt.currentObstruction != self.currentObstruction) goto RtnFalse;
     if (oldInt.currentCornerHeading != self.currentCornerHeading) goto RtnFalse;
     if (![oldInt.name1 isEqualToString:self.name1]) goto RtnFalse;
-    if (![oldInt.name2 isEqualToString:self.name2]) goto RtnFalse;
-    if (![oldInt.name3 isEqualToString:self.name3]) goto RtnFalse;
     if (oldInt.signal23Exists != self.signal23Exists) goto RtnFalse;
     if (oldInt.signal45Exists != self.signal45Exists) goto RtnFalse;
     if (oldInt.signal67Exists != self.signal67Exists) goto RtnFalse;

@@ -130,8 +130,6 @@ enum obstructions {
 @property (nonatomic) float currentCornerHeading;
 @property int currentRamp;
 @property (nonatomic, copy) NSString *name1;
-@property (nonatomic, copy) NSString *name2;
-@property (nonatomic, copy) NSString *name3;
 @property BOOL signal23Exists;
 @property BOOL signal45Exists;
 @property BOOL signal67Exists;
