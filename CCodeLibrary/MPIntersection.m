@@ -177,7 +177,6 @@ RtnFalse:
 @implementation MPIntersection
 
 @synthesize intID;
-@synthesize dataUpdated;
 @synthesize intRotation;
 @synthesize doLater;
 @synthesize timeComplete;
@@ -246,7 +245,6 @@ RtnFalse:
 - (void)intersectionInit
 {
     self.intID = -1;
-    self.dataUpdated = NO;
     self.intRotation = 0;
     self.doLater = NO;
     self.timeComplete = 0;
@@ -393,7 +391,6 @@ RtnFalse:
 {
     MPIntersection *another = [[MPIntersection allocWithZone: zone] init];
     another.intID = self.intID;
-    another.dataUpdated = self.dataUpdated;
     another.intRotation = self.intRotation;
     another.doLater = self.doLater;
     another.timeComplete = self.timeComplete;
@@ -458,7 +455,6 @@ RtnFalse:
 - (BOOL) isEqualTo:(MPIntersection*)oldInt
 {
     if (oldInt.intID != self.intID) goto RtnFalse;
-    if (oldInt.dataUpdated != self.dataUpdated) goto RtnFalse;
     if (oldInt.intRotation != self.intRotation) goto RtnFalse;
     if (oldInt.doLater != self.doLater) goto RtnFalse;
     if (oldInt.timeComplete != self.timeComplete) goto RtnFalse;
@@ -508,6 +504,7 @@ RtnFalse:
     if (oldInt.lat != self.lat) goto RtnFalse;
     if (oldInt.lon != self.lon) goto RtnFalse;
     if (![oldInt.intersectionComment isEqualToString:self.intersectionComment]) goto RtnFalse;
+    
     for (int i = 1; i < 13 ;i++)
     {
         MPRamp *ramp = [self.ramps objectAtIndex:i];
@@ -518,8 +515,10 @@ RtnFalse:
             break;
         }
     }
+    
     return TRUE;
 RtnFalse:
+    
     return FALSE;
 }
 

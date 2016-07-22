@@ -161,7 +161,6 @@
 - (void)facilityInit:(Facility *)currentFacility
 {
     currentFacility.facID = -1;
-    currentFacility.dataUpdated = NO;
     currentFacility.intRotation = 0;
     currentFacility.doLater = NO;
     currentFacility.timeComplete = 0;

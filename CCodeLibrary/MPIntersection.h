@@ -115,7 +115,6 @@ enum obstructions {
 @interface MPIntersection : NSObject
 
 @property (nonatomic) int intID;
-@property BOOL dataUpdated;
 @property (nonatomic) int intRotation;
 @property int zoomLevel;
 @property BOOL doLater;
