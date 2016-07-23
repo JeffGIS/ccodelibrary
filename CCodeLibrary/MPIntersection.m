@@ -112,10 +112,10 @@
     another.PedRampLip = self.PedRampLip;
     another.lev21x = self.lev21x;
     another.lev21y = self.lev21y;
+    another.crackWidth = self.crackWidth;
     
     return another;
 }
-
 
 - (BOOL) isEqualTo:(MPRamp*)oldRamp
 {
@@ -165,6 +165,11 @@
     if (oldRamp.PedRampLip != self.PedRampLip) goto RtnFalse;
     if (oldRamp.lev21x != self.lev21x) goto RtnFalse;
     if (oldRamp.lev21y != self.lev21y) goto RtnFalse;
+    
+    CrackWidth oldCW = oldRamp.crackWidth;
+    CrackWidth newCW = self.crackWidth;
+    
+    if (memcmp(&oldCW, &newCW, sizeof(CrackWidth)) != 0) goto RtnFalse;
     
     return TRUE;
     
@@ -288,6 +293,12 @@ RtnFalse:
         ramp.SteepTopOfCurb = 0;
         ramp.PedRampLip = 0;
         ramp.rampComment = @"";
+        
+        //init all 5 crack values to zero
+        CrackWidth cw;
+        memset(&cw, 0, sizeof(CrackWidth));
+        ramp.crackWidth = cw;
+        
         switch (i)
         {
             default:
