@@ -499,6 +499,7 @@
 }
 - (void)syncButtonTapped:(UIButton *)button
 {
+    _syncButton.enabled = NO;
     if ([CRAPI.sharedInstance haveErrorLog])
     {
         _process = UPLOAD_ERROR_FILE;
