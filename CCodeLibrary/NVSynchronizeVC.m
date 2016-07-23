@@ -503,6 +503,7 @@
 - (void)syncButtonTapped:(UIButton *)button
 {
     _syncButton.enabled = NO;
+    [self updateButton:_syncButton];
     if ([CRAPI.sharedInstance haveErrorLog])
     {
         _process = UPLOAD_ERROR_FILE;
@@ -608,6 +609,7 @@
         
     _numConnectionAttempts = 0;
     _totConnectionAttempts = 60;
+    _process = CONNECT_PROCESS;
     
     [_popoverView showAfter:0.0
                   withTitle:@"Waiting\nto Connect\nto Manager"
@@ -951,6 +953,8 @@ didReceiveMessage:(NSString *)message
                 if (_myiPad > 0)
                 {
                     _syncButton.enabled = YES;
+                    [_syncButton setTitle:@"Synchronize"
+                                 forState:UIControlStateNormal];
                     [self updateButton:_syncButton];
                 }
 
@@ -1127,6 +1131,11 @@ Top:
             [self setDownloadFilesFor:_downloadiPad];
             [self downloadNextFile];
         }
+        [_syncButton setTitle:@"Complete"
+                     forState:UIControlStateNormal];
+        
+        _syncButton.enabled = NO;
+        [self updateButton:_syncButton];
         
         return;
     }
@@ -1421,10 +1430,16 @@ Done:
 {
     [self.timer invalidate];
     [self closeGMServer];
-    _GMServer = [GeoMasterServer open];
-    _GMServer.delegate = self;
-    _GMServer.messageID = GMSMessageCancelConnect;
-    [_GMServer initCommunication:7.5];
+    
+    if (_process == CONNECT_PROCESS)
+    {
+        _GMServer = [GeoMasterServer open];
+        _GMServer.delegate = self;
+        _GMServer.messageID = GMSMessageCancelConnect;
+        [_GMServer initCommunication:7.5];
+    }
+    else
+        [self sendGMServerMessage:GMSMessageOpenConnect];
 }
 
 - (void)returnButtonTapped:(UIButton *)button
@@ -1439,6 +1454,8 @@ Done:
                              forKey:@"UploadPix"];
     
     CRAPI.sharedInstance.uploadPix = aSwitch.on;
+    if (!_syncButton.enabled && CRAPI.sharedInstance.uploadPix)
+        [self sendGMServerMessage:GMSMessageOpenConnect];
 }
 
 - (void)dataDownSwitchTapped:(UISwitch *)aSwitch
@@ -1447,6 +1464,8 @@ Done:
                              forKey:@"DownloadData"];
     
     CRAPI.sharedInstance.downloadData = aSwitch.on;
+    if (!_syncButton.enabled && CRAPI.sharedInstance.downloadData)
+        [self sendGMServerMessage:GMSMessageOpenConnect];
 }
 
 - (void)pixDownSwitchTapped:(UISwitch *)aSwitch
@@ -1455,6 +1474,9 @@ Done:
                              forKey:@"DownloadPix"];
     
     CRAPI.sharedInstance.downloadPix = aSwitch.on;
+    if (!_syncButton.enabled && CRAPI.sharedInstance.downloadPix)
+        [self sendGMServerMessage:GMSMessageOpenConnect];
+
 }
 
 - (void)alertView:(NVAlertView *)alertView

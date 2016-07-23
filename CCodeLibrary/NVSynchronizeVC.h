@@ -10,6 +10,7 @@
 #define DOWNLOAD_DATA_PROCESS 3
 #define DOWNLOAD_PICT_PROCESS 4
 #define UPLOAD_ERROR_FILE 5
+#define CONNECT_PROCESS 6
 
 @import UIKit;
 
