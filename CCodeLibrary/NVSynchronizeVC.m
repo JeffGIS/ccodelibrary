@@ -13,6 +13,8 @@
 #import "CityOrOrganizationData.h"
 #import "NVEmailFileList.h"
 
+#define FTP_CATCHUP_DELAY 0.2
+
 @interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate,NVPopoverTableViewDelegate,CLLocationManagerDelegate>
 
 @property (nonatomic) UILabel *dataUpLabel, *pixUpLabel, *dataDownLabel, *pixDownLabel, *overallLabel, *currentFileLabel, *connectLabel;
@@ -332,8 +334,9 @@
                 break;
         }
     }
+    
     _syncButton.enabled = NO;
-
+    [self updateButton:_syncButton];
     [self sendGMServerMessage:GMSMessageOpenConnect];
 }
 
@@ -647,13 +650,15 @@
             }
             else if (_process == UPLOAD_DATA_PROCESS)
             {
+                [NSThread sleepForTimeInterval:FTP_CATCHUP_DELAY];
                 msg = [NSString stringWithFormat:@"$M(UploadCompleteData,%i,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
                        CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload,_lastUploadFileSize];
             }
             else
             {
-                msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i,%i)",
+               [NSThread sleepForTimeInterval:FTP_CATCHUP_DELAY];
+               msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
                        CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload,_lastUploadFileSize];
             }
@@ -848,9 +853,8 @@ didReceiveMessage:(NSString *)message
                                   forState:UIControlStateNormal];
                     
                     _syncButton.enabled = NO;
-                    _didConnect = NO;
-                    
                     [self updateButton:_syncButton];
+                    _didConnect = NO;
                     
                     _connectLabel.text = [NSString stringWithFormat:@"%i-NO MANAGER",
                                           CRAPI.sharedInstance.GSSiPadNumber];
@@ -945,7 +949,10 @@ didReceiveMessage:(NSString *)message
                 int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad
                                                 lastPictNum:&pictNum];
                 if (_myiPad > 0)
+                {
                     _syncButton.enabled = YES;
+                    [self updateButton:_syncButton];
+                }
 
                 lastNum++;
                 int fileSize = 0;
@@ -1052,10 +1059,11 @@ didReceiveMessage:(NSString *)message
     {
         [_syncButton setTitle:@"Complete"
                      forState:UIControlStateNormal];
+        
         _syncButton.enabled = NO;
+        [self updateButton:_syncButton];
         [_popoverView hide];
         return;
-
     }
     
     _doTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
@@ -1249,7 +1257,9 @@ Top:
 Done:
                 [_syncButton setTitle:@"Complete"
                              forState:UIControlStateNormal];
+                
                 _syncButton.enabled = NO;
+                [self updateButton:_syncButton];
                 [_popoverView hide];
                 return;
             }

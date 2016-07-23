@@ -542,11 +542,10 @@
         NSNumber * boolVal = currentRamps[i];
         BOOL haveCurrentRamp = boolVal.boolValue;
         char rampID[32];
-        mpint.currentRamp = ramp;
         
-        if (mpint.currentRamp.rampExists || ramp.PEDButtonType != NVButtonTypeNone || ramp.PEDSignalType != NVSignalTypeNone)
+        if (ramp.rampExists || ramp.PEDButtonType != NVButtonTypeNone || ramp.PEDSignalType != NVSignalTypeNone)
         {
-            strcpy(rampID, mpint.currentRamp.rampID.UTF8String);
+            strcpy(rampID, ramp.rampID.UTF8String);
             
             NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO Ramps VALUES(\
 %i,%i,'%s',0,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\

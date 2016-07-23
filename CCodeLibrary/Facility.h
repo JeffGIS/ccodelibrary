@@ -15,7 +15,6 @@
 @property int adjustedRot;
 @property int facID;
 
-@property bool dataUpdated;
 @property int intRotation;
 @property bool doLater;
 @property int timeComplete;

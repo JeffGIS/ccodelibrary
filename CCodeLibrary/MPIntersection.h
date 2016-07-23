@@ -39,6 +39,23 @@ enum obstructions {
     none=10
 };
 
+typedef NS_ENUM(NSInteger, CrackType)
+{
+    CrackTypeRamp,
+    CrackTypeUpperLanding,
+    CrackTypeStreetLanding,
+    CrackTypeLeftSidewalk,
+    CrackTypeRightSidewalk,
+};
+
+typedef struct CrackWidth {
+    float rampCrackWidth;
+    float upperLandingCrackWidth;
+    float streetLandingCrackWidth;
+    float leftSidewalkCrackWidth;
+    float rightSidewalkCrackWidth;
+} CrackWidth;
+
 @interface PSRamp : NSObject
 //Preliminary Survey Ramps
 @property (nonatomic) int lev21x, lev21y;
@@ -70,6 +87,8 @@ enum obstructions {
 @property BOOL hasStreetLandingCracks;
 @property BOOL hasLeftSidewalkCracks, hasRightSidewalkCracks;
 @property BOOL gradeBreaksArePerpendicular, detectableWarningIsFullWidth;
+@property CrackWidth crackWidth;
+@property CrackType currentCrackMeasurement;//this need not be in copy or comparision methods (internal value - not in database)
 @property int detectableWarningDepth;
 @property float domeSpacing, spaceBetweenDomes, domeBaseWidth, domeCapWidth;//these are for detectable warnings
 @property int streetLandingDepth, leftXWalkSideWidth, rightXWalkSideWidth;//these are for diagonal ramp type
@@ -115,7 +134,6 @@ enum obstructions {
 @interface MPIntersection : NSObject
 
 @property (nonatomic) int intID;
-@property BOOL dataUpdated;
 @property (nonatomic) int intRotation;
 @property int zoomLevel;
 @property BOOL doLater;
@@ -128,10 +146,8 @@ enum obstructions {
 @property (nonatomic) int currentSignal;
 @property (nonatomic) int currentObstruction;
 @property (nonatomic) float currentCornerHeading;
-@property (nonatomic) MPRamp *currentRamp;
+@property int currentRamp;
 @property (nonatomic, copy) NSString *name1;
-@property (nonatomic, copy) NSString *name2;
-@property (nonatomic, copy) NSString *name3;
 @property BOOL signal23Exists;
 @property BOOL signal45Exists;
 @property BOOL signal67Exists;
