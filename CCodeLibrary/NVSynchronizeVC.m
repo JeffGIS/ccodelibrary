@@ -334,8 +334,9 @@
                 break;
         }
     }
+    
     _syncButton.enabled = NO;
-
+    [self updateButton:_syncButton];
     [self sendGMServerMessage:GMSMessageOpenConnect];
 }
 
@@ -851,9 +852,8 @@ didReceiveMessage:(NSString *)message
                                   forState:UIControlStateNormal];
                     
                     _syncButton.enabled = NO;
-                    _didConnect = NO;
-                    
                     [self updateButton:_syncButton];
+                    _didConnect = NO;
                     
                     _connectLabel.text = [NSString stringWithFormat:@"%i-NO MANAGER",
                                           CRAPI.sharedInstance.GSSiPadNumber];
@@ -948,7 +948,10 @@ didReceiveMessage:(NSString *)message
                 int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad
                                                 lastPictNum:&pictNum];
                 if (_myiPad > 0)
+                {
                     _syncButton.enabled = YES;
+                    [self updateButton:_syncButton];
+                }
 
                 lastNum++;
                 int fileSize = 0;
@@ -1055,10 +1058,11 @@ didReceiveMessage:(NSString *)message
     {
         [_syncButton setTitle:@"Complete"
                      forState:UIControlStateNormal];
+        
         _syncButton.enabled = NO;
+        [self updateButton:_syncButton];
         [_popoverView hide];
         return;
-
     }
     
     _doTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
@@ -1252,7 +1256,9 @@ Top:
 Done:
                 [_syncButton setTitle:@"Complete"
                              forState:UIControlStateNormal];
+                
                 _syncButton.enabled = NO;
+                [self updateButton:_syncButton];
                 [_popoverView hide];
                 return;
             }
