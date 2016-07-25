@@ -1554,7 +1554,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         }
         
     }*/
-    if (iPad == 1055 && geoid == 2707966)// Hopkins
+    if (iPad == 1055 && geoid == 2707966)// Brooklyn Park
     {
         int currentFix = 4;
         int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
