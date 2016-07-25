@@ -1553,7 +1553,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Fix %i applied to 1004",currentFix]];
         }
         
-    }*/
+    }
     if (iPad == 1055 && geoid == 2707966)// Brooklyn Park
     {
         int currentFix = 4;
@@ -1567,6 +1567,80 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             
             [_databaseID setLastDataUpdateNum:227
                                       foriPad:2];
+            [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Fix %i applied to 1055",currentFix]];
+        }
+        
+    }*/
+    if (iPad == 1055 && geoid == 2707966)// Brooklyn Park
+    {
+        /*    All of these files are from device 1055:
+         
+         2_2.sql
+         2_92.sql
+         2_125.sql
+         2_127.sql
+         2_123.jpg*/
+        int iPad = 2;
+        int currentFix = 5;
+        int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
+        NSError *error = nil;
+       
+        if (lastFix < currentFix)
+        {
+            int filenums[]={2,92,125,127};
+            [UserDefaults.defaults saveInteger:currentFix
+                                        forKey:@"lastFix"];
+            int lastPict;
+            
+            for (int i = 0;i<4;i++)
+            {
+                int lastData = [_databaseID getLastDataUpdateNumber:iPad
+                                                        lastPictNum:&lastPict];
+                NSString *fromPath = [_databaseID outputDataFile:filenums[i]
+                                                            iPad:iPad];
+                NSString *toPath = [_databaseID outputDataFile:lastData
+                                                          iPad:iPad];
+                if ((int)[NSFileManager.defaultManager attributesOfItemAtPath:toPath
+                                                                               error:nil].fileSize > 0)
+                {
+                    lastData++;
+                    toPath = [_databaseID outputDataFile:lastData
+                                                   iPad:iPad];
+                }
+                
+                if ([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:&error])
+                {
+                    [_databaseID setLastDataUpdateNum:lastData
+                                              foriPad:iPad];
+                    [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"File %@ renamed to %@",fromPath,toPath]];
+                }
+                else
+                    [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Failed to rename file %@ to %@",fromPath,toPath]];
+            }
+            {
+                int lastData = [_databaseID getLastDataUpdateNumber:iPad
+                                                        lastPictNum:&lastPict];
+                NSString *fromPath = [_databaseID outputPictFile:123
+                                                            iPad:iPad];
+                NSString *toPath = [_databaseID outputPictFile:lastPict
+                                                          iPad:iPad];
+                
+                if ((int)[NSFileManager.defaultManager attributesOfItemAtPath:toPath
+                                                                        error:nil].fileSize > 0)
+                {
+                    lastPict++;
+                    toPath = [_databaseID outputDataFile:lastData
+                                                    iPad:iPad];
+                }
+                if ([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:&error])
+                {
+                    [_databaseID setLastPictUpdateNum:lastPict
+                                              foriPad:iPad];
+                    [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"File %@ renamed to %@",fromPath,toPath]];
+                }
+                else
+                    [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Failed to rename file %@ to %@",fromPath,toPath]];
+            }
             [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Fix %i applied to 1055",currentFix]];
         }
         
