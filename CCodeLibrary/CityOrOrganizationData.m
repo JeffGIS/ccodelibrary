@@ -10,5 +10,15 @@
 {
     return [self.name compare:c.name];
 }
+- (BOOL) inArray:(NSArray*)array
+{
+    if (array)
+    for (CityOrOrganizationData * c in array)
+    {
+        if (c.number == self.number)
+            return TRUE;
+    }
+    return FALSE;
+}
 
 @end

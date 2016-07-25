@@ -80,7 +80,7 @@ static int nInit=0;
 {
     nInit--;
 
-    sqlite3_close(_database);
+    [self close:YES];
     NSLog(@"CurbRamp Database dealloc");
 }
 - (BOOL)open
@@ -286,7 +286,7 @@ static int nInit=0;
     
 //create intersection table
  cmd = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS VERSION (vid INTEGER PRIMARY KEY,VersionID CHAR(6));\
- INSERT INTO VERSION VALUES(1,'%s');\
+ INSERT OR REPLACE INTO VERSION VALUES(1,'%s');\
  CREATE TABLE IF NOT EXISTS Intersections (\
  intID INTEGER PRIMARY KEY,\
  lastUpdateTime INTEGER,\

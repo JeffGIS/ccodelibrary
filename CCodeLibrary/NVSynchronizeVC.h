@@ -49,7 +49,9 @@
 @property int process;
 @property int totFilesToProcess;
 @property int processedFiles;
+@property NSArray *oldPlaces;
 @property BOOL first;
+@property BOOL autoSync;
 @property NSString* errorFileName;
 
 @end

@@ -680,10 +680,37 @@
     return rtn;
 }
 
+-(NSMutableArray *) copyPlaces
+{
+    NSMutableArray * oldPlaces = _placesArray;
+    
+    [self processPlaces];
+    
+    return oldPlaces;
+}
+
+- (int) newPlace:(NSArray *)oldPlaces
+{
+    if (!oldPlaces)
+        return -1;
+    if (oldPlaces.count == _placesArray.count)
+        return -1;
+    int row = 0;
+    for (CityOrOrganizationData *c in _placesArray)
+    {
+        if (![c inArray:oldPlaces])
+            return row;
+        row++;
+            
+    }
+    return -1;
+}
+
 - (BOOL)processPlaces
 {
     NSString *message = [UserDefaults.defaults stringForKey:@"PlacesString"];
     
+    _placesArray = NSMutableArray.new;
     if (!message)
         return FALSE;
     if (strncmp(message.UTF8String,"PlacesFor", 9))
@@ -693,7 +720,6 @@
     
     NSMutableArray *placearray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
     [placearray removeObjectAtIndex:0];
-    _placesArray = NSMutableArray.new;
     
     for (NSString *str in placearray)
     {

@@ -13,7 +13,7 @@
 #import "CityOrOrganizationData.h"
 #import "NVEmailFileList.h"
 
-#define FTP_CATCHUP_DELAY 0.2
+#define FTP_CATCHUP_DELAY 0.5
 
 @interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate,NVPopoverTableViewDelegate,CLLocationManagerDelegate>
 
@@ -492,6 +492,7 @@
 
 - (void)startSync
 {
+    _autoSync = FALSE;
     _process = UPLOAD_DATA_PROCESS;
     _uploadedFiles = 0;
     _origUpFiles = _upFiles + _upPix;
@@ -659,7 +660,7 @@
             }
             else
             {
-               [NSThread sleepForTimeInterval:FTP_CATCHUP_DELAY];
+               [NSThread sleepForTimeInterval:FTP_CATCHUP_DELAY*2];
                msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
                        CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload,_lastUploadFileSize];
@@ -778,6 +779,7 @@
 {
     _downFiles = _downPix = 0;
     _totFilesToProcess =  _origUpFiles;
+    _processedFiles = 0;
     for (int iPad = 1; iPad <= _numiPadsInMsg; iPad++)
     {
         if (iPad != _myiPad)
@@ -846,6 +848,7 @@ didReceiveMessage:(NSString *)message
         {
             case GMSMessageOpenConnect:
             {
+                NSMutableArray *oldPlaces = [CRAPI.sharedInstance copyPlaces];
                 [CRAPI.sharedInstance savePlacesString:message];
                 [CRAPI.sharedInstance processPlaces];
                 
@@ -868,7 +871,15 @@ didReceiveMessage:(NSString *)message
                 
                 _didConnect = YES;
                 
-                _selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
+                _selectedRow = [CRAPI.sharedInstance newPlace:_oldPlaces];
+                if (_selectedRow < 0)
+                    _selectedRow = [UserDefaults.defaults integerForKey:@"SelectedRow"];
+                else
+                {
+                    [UserDefaults.defaults saveInteger:(int)_selectedRow
+                                                forKey:@"SelectedRow"];
+                    _autoSync = TRUE;
+                }
                 if (CRAPI.sharedInstance.placesArray.count < 2 ||
                     (int)CRAPI.sharedInstance.placesArray.count <= _selectedRow ||
                     CRAPI.sharedInstance.currentGeoid == 0)
@@ -1005,6 +1016,8 @@ didReceiveMessage:(NSString *)message
                 [self getDownloadCounts:NO];
                 [self updateLabels];
                 [self updateOverallProgress:0];
+                if (_autoSync)
+                    [self startSync];
             }
                 break;
                 
@@ -1033,6 +1046,7 @@ didReceiveMessage:(NSString *)message
                 {
                     [_popoverView hide];
                     [self closeGMServer];
+                    _oldPlaces = [CRAPI.sharedInstance copyPlaces];
                     [self sendGMServerMessage:GMSMessageOpenConnect];
                 }
                 

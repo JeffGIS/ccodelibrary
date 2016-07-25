@@ -13,4 +13,6 @@
 @property NSInteger totWithinManager;
 @property NSInteger GSSiPadNumber;
 
+- (BOOL) inArray:(NSArray*)array;
+
 @end

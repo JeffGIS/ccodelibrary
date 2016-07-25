@@ -159,6 +159,8 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (NSInteger)adjustNextRefno:(NSInteger)refno;
 - (void)savePlacesString:(NSString*)placesString;
 - (BOOL)processPlaces;
+- (NSMutableArray *) copyPlaces;
+- (int) newPlace:(NSArray *)oldPlaces;
 - (BOOL)processPlacesArray:(NSInteger) row;
 - (BOOL) setGeoIDForCurrentApp;
 - (NSString*) getPlacesStringFromFile;
