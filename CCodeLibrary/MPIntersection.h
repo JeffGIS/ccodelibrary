@@ -126,6 +126,9 @@ typedef struct CrackWidth {
 @property NSString *rampComment;
 @property RampType rampType;
 @property int yearRebuilt;
+@property float curbCutDistance;
+@property float bumpWidth;
+@property float bumpHeight;
 
 - (BOOL) isEqualTo:(MPRamp*)oldRamp;
 

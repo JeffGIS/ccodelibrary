@@ -113,7 +113,9 @@
     another.lev21x = self.lev21x;
     another.lev21y = self.lev21y;
     another.crackWidth = self.crackWidth;
-    
+    another.curbCutDistance = self.curbCutDistance;
+    another.bumpWidth = self.bumpWidth;
+    another.bumpHeight = self.bumpHeight;
     return another;
 }
 
@@ -163,6 +165,9 @@
     if (oldRamp.PEDButtonHeight != self.PEDButtonHeight) goto RtnFalse;
     if (oldRamp.SteepTopOfCurb != self.SteepTopOfCurb) goto RtnFalse;
     if (oldRamp.PedRampLip != self.PedRampLip) goto RtnFalse;
+    if (oldRamp.curbCutDistance != self.curbCutDistance) goto RtnFalse;
+    if (oldRamp.bumpHeight != self.bumpHeight) goto RtnFalse;
+    if (oldRamp.bumpWidth != self.bumpWidth) goto RtnFalse;
     if (oldRamp.lev21x != self.lev21x) goto RtnFalse;
     if (oldRamp.lev21y != self.lev21y) goto RtnFalse;
     
