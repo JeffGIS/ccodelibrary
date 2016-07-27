@@ -5,7 +5,7 @@
 //  Created by JEFFREY E SMITH on 6/12/15.
 //  Copyright (c) 2015 GSSi. All rights reserved.
 //
-#define CURRENT_INTERSECTION_VERSION "1.1"
+#define CURRENT_INTERSECTION_VERSION "2.0"
 
 #import "CurbRampData.h"
 #import "UserDefaults.h"
@@ -93,6 +93,8 @@ static int nInit=0;
         
         _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:_path
                                                                    error:nil].fileSize;
+        
+        [self adjustToLatestVersion];
         rtn = TRUE;
     }
     return rtn;
@@ -199,6 +201,11 @@ static int nInit=0;
         
         rtn = appendStringToFile([NSString stringWithUTF8String:cmd], sendToServerFile);
     }
+    else if (sendToServer)
+    {
+        [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"COMMAND:%s",cmd]];
+    }
+
     
     return rtn;
 }
@@ -377,11 +384,29 @@ static int nInit=0;
  PEDButtonType INT,\
  PEDButtonHeight INT,\
  PEDButtonDist INT,\
- SteepTopOfCurb INT,\
- PedRampLip INT,\
+ SteepTopOfCurb REAL,\\changed from INT in version 2\
+ PedRampLip REAL,\\changed from INT in version 2\
  lev21x INT, lev21y INT,\
  rampType INT,\
  rampComment CHAR(256),\
+ //\
+ //added in version 2.0*\
+ //\
+ pedButtonAudibleWalkIndicationType INT,\
+ pedButtonHasLocatorTone INT,\
+ pedButtonHasInfoSign INT,\
+ pedButtonHasBraille INT,\
+ pedButtonHasTactileArrow INT,\
+ pedButtonLocatorToneVolume INT,\
+ pedButtonAudibleWalkIndicationVolume INT,\
+ rampCrackWidth REAL,\
+ upperLandingCrackWidth REAL,\
+ streetLandingCrackWidth REAL,\
+ leftSidewalkCrackWidth REAL,\
+ rightSidewalkCrackWidth REAL,\
+ curbCutDist REAL,\
+ bumpWidth REAL,\
+ bumpHeight REAL,\
  PRIMARY KEY (intID,rampNum ASC));"];
    
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
@@ -402,6 +427,68 @@ static int nInit=0;
 
     [self commitTransaction];
     [self close:opened];
+    return rtn;
+}
+
+- (BOOL) adjustToLatestVersion
+{
+    BOOL rtn = TRUE;
+    
+    int currentVersion = [self datasetVersion];
+    int latestVersion = atoi (CURRENT_INTERSECTION_VERSION);
+    
+    for (int version = currentVersion; version < latestVersion;version++)
+    {
+        switch (version)
+        {
+            case 1://convert version 1 to version 2
+            {
+                BOOL st = TRUE;
+                rtn = FALSE;
+                [self startTransaction];
+                NSString * cmd = @"ALTER TABLE Ramps ADD COLUMN pedButtonAudibleWalkIndicationType INT;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN pedButtonHasLocatorTone INT;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN pedButtonHasInfoSign INT;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN pedButtonHasBraille INT;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN pedButtonHasTactileArrow INT;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN pedButtonLocatorToneVolume INT;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN pedButtonAudibleWalkIndicationVolume INT;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN rampCrackWidth REAL;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN upperLandingCrackWidth REAL;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN streetLandingCrackWidth REAL;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN leftSidewalkCrackWidth REAL;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN rightSidewalkCrackWidth REAL;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN curbCutDist REAL;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN bumpWidth REAL;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN bumpHeight REAL;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = [NSString stringWithFormat:@"UPDATE Version SET VersionID = '%s' WHERE vid = 1;",CURRENT_INTERSECTION_VERSION];
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                if (st)
+                {
+                    [self commitTransaction];
+                    rtn = TRUE;
+                }
+                else
+                    [self cancelTransaction];
+            }
+                break;
+        }
+    }
     return rtn;
 }
 

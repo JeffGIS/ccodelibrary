@@ -55,6 +55,13 @@
 @synthesize swkRightSlopeSide;
 @synthesize swkRightSlopeFront;
 @synthesize swkRightSlopeHeading;
+
+@synthesize PEDSignalType;
+@synthesize PEDButtonType;
+@synthesize awi;
+@synthesize hasLocatorTone, hasInfoSign, hasBraille, hasTactileArrow;
+@synthesize locatorToneVolume, audibleWalkIndicationVolume;
+
 @synthesize PEDButtonDist;
 @synthesize PEDButtonHeight;
 @synthesize SteepTopOfCurb;
@@ -112,6 +119,15 @@
     another.PedRampLip = self.PedRampLip;
     another.lev21x = self.lev21x;
     another.lev21y = self.lev21y;
+    another.PEDSignalType = self.PEDSignalType;
+    another.PEDButtonType = self.PEDButtonType;
+    another.awi = self.awi;
+    another.hasLocatorTone = self.hasLocatorTone;
+    another.hasInfoSign = self.hasInfoSign;
+    another.hasBraille = self.hasBraille;
+    another.hasTactileArrow = self.hasTactileArrow;
+    another.locatorToneVolume = self.locatorToneVolume;
+    another.audibleWalkIndicationVolume = self.audibleWalkIndicationVolume;
     another.crackWidth = self.crackWidth;
     another.curbCutDistance = self.curbCutDistance;
     another.bumpWidth = self.bumpWidth;
@@ -165,6 +181,18 @@
     if (oldRamp.PEDButtonHeight != self.PEDButtonHeight) goto RtnFalse;
     if (oldRamp.SteepTopOfCurb != self.SteepTopOfCurb) goto RtnFalse;
     if (oldRamp.PedRampLip != self.PedRampLip) goto RtnFalse;
+
+    if (oldRamp.PEDSignalType !=  self.PEDSignalType) goto RtnFalse;
+    if (oldRamp.PEDButtonType != self.PEDButtonType) goto RtnFalse;
+    if (oldRamp.awi !=  self.awi) goto RtnFalse;
+    if (oldRamp.hasLocatorTone !=  self.hasLocatorTone) goto RtnFalse;
+    if (oldRamp.hasInfoSign !=  self.hasInfoSign) goto RtnFalse;
+    if (oldRamp.hasBraille !=  self.hasBraille) goto RtnFalse;
+    if (oldRamp.hasTactileArrow !=  self.hasTactileArrow) goto RtnFalse;
+    if (oldRamp.locatorToneVolume !=  self.locatorToneVolume) goto RtnFalse;
+    if (oldRamp.audibleWalkIndicationVolume = self.audibleWalkIndicationVolume) goto RtnFalse;
+
+    
     if (oldRamp.curbCutDistance != self.curbCutDistance) goto RtnFalse;
     if (oldRamp.bumpHeight != self.bumpHeight) goto RtnFalse;
     if (oldRamp.bumpWidth != self.bumpWidth) goto RtnFalse;
@@ -297,6 +325,8 @@ RtnFalse:
         ramp.PEDButtonDist = 0;
         ramp.SteepTopOfCurb = 0;
         ramp.PedRampLip = 0;
+        ramp.rampType = 0;
+        ramp.curbCutDistance = ramp.bumpWidth = ramp.bumpHeight = 0;
         ramp.rampComment = @"";
         
         //init all 5 crack values to zero

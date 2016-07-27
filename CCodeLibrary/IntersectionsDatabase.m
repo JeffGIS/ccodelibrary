@@ -550,7 +550,8 @@
             NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO Ramps VALUES(\
 %i,%i,'%s',0,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\
 %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\
-%i,%i,%i,%i,%i,%i,%i,%i,%i,'%@');",
+%i,%i,%f,%f,%i,%i,%i,%i,%i,'%@',\
+%i,%i,%i,%i,%i,%i,%i,%f,%f,%f,%f,%f,%f,%f,%f);",
                     (int)mpint.intID,
                     (int)ramp.rampNum,
                     rampID,
@@ -601,7 +602,23 @@
                     (int)ramp.lev21x,
                     (int)ramp.lev21y,
                     (int)ramp.rampType,
-                    ramp.rampComment];
+                    ramp.rampComment,
+                     ramp.awi,
+                     ramp.hasLocatorTone,
+                     ramp.hasInfoSign,
+                     ramp.hasBraille,
+                     ramp.hasTactileArrow,
+                     ramp.locatorToneVolume,
+                     ramp.audibleWalkIndicationVolume,
+                     ramp.crackWidth.rampCrackWidth,
+                     ramp.crackWidth.upperLandingCrackWidth,
+                     ramp.crackWidth.streetLandingCrackWidth,
+                     ramp.crackWidth.leftSidewalkCrackWidth,
+                     ramp.crackWidth.rightSidewalkCrackWidth,
+                     ramp.curbCutDistance,
+                     ramp.bumpWidth,
+                     ramp.bumpHeight
+                    ];
             
             rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
                                    sendToServer:YES
@@ -842,6 +859,23 @@ WHERE intID=%i;",
                 ramp.rampComment = [NSString stringWithCString:comment encoding:NSUTF8StringEncoding];
             else
                 ramp.rampComment = @"";
+            ramp.awi = sqlite3_column_int(statement,i++);
+            ramp.hasLocatorTone = sqlite3_column_int(statement,i++);
+            ramp.hasInfoSign = sqlite3_column_int(statement,i++);
+            ramp.hasBraille = sqlite3_column_int(statement,i++);
+            ramp.hasTactileArrow = sqlite3_column_int(statement,i++);
+            ramp.locatorToneVolume = sqlite3_column_int(statement,i++);
+            ramp.audibleWalkIndicationVolume = sqlite3_column_int(statement,i++);
+            CrackWidth cw;
+            cw.rampCrackWidth = sqlite3_column_double(statement, i++);
+            cw.upperLandingCrackWidth = sqlite3_column_double(statement, i++);
+            cw.streetLandingCrackWidth = sqlite3_column_double(statement, i++);
+            cw.leftSidewalkCrackWidth = sqlite3_column_double(statement, i++);
+            cw.rightSidewalkCrackWidth = sqlite3_column_double(statement, i++);
+            ramp.crackWidth = cw;
+            ramp.curbCutDistance = sqlite3_column_double(statement, i++);
+            ramp.bumpWidth = sqlite3_column_double(statement, i++);
+            ramp.bumpHeight = sqlite3_column_double(statement, i++);
         }
         SQLOK(210,sqlite3_finalize(statement), self.curbRampData.database);
    }
