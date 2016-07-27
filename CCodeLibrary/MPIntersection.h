@@ -79,6 +79,7 @@ typedef struct CrackWidth {
 @property int rampNum;
 @property (nonatomic, copy) NSString *rampID;
 @property int timeComplete;
+@property int yearRebuilt;
 @property BOOL rampExists;
 @property BOOL isComplete;
 @property (nonatomic) float approximateHeading;
@@ -134,7 +135,6 @@ typedef struct CrackWidth {
 @property int lev21x, lev21y;
 @property NSString *rampComment;
 @property RampType rampType;
-@property int yearRebuilt;
 @property float curbCutDistance;
 @property float bumpWidth;
 @property float bumpHeight;

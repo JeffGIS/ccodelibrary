@@ -8,6 +8,7 @@
 #import "MathUtil.h"
 #import "compress.h"
 
+static int ii;
 
 @interface IntersectionsDatabase ()
 
@@ -548,13 +549,14 @@
             strcpy(rampID, ramp.rampID.UTF8String);
             
             NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO Ramps VALUES(\
-%i,%i,'%s',0,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\
+%i,%i,'%s',%i,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\
 %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\
-%i,%i,%f,%f,%i,%i,%i,%i,%i,'%@',\
+%i,%i,%i,%i,%f,%f,%i,%i,%i,'%@',\
 %i,%i,%i,%i,%i,%i,%i,%f,%f,%f,%f,%f,%f,%f,%f);",
                     (int)mpint.intID,
                     (int)ramp.rampNum,
                     rampID,
+                    (int)ramp.yearRebuilt,
                     (int)ramp.timeComplete,
                     (int)ramp.rampExists,
                     (int)ramp.isComplete,
@@ -597,8 +599,8 @@
                     (int)ramp.PEDButtonType,
                     (int)ramp.PEDButtonHeight,
                     (int)ramp.PEDButtonDist,
-                    (int)ramp.SteepTopOfCurb,
-                    (int)ramp.PedRampLip,
+                    (float)ramp.SteepTopOfCurb,
+                    (float)ramp.PedRampLip,
                     (int)ramp.lev21x,
                     (int)ramp.lev21y,
                     (int)ramp.rampType,
@@ -849,8 +851,8 @@ WHERE intID=%i;",
             ramp.PEDButtonType  = sqlite3_column_int(statement, i++);
             ramp.PEDButtonHeight  = sqlite3_column_int(statement,i++);
             ramp.PEDButtonDist  = sqlite3_column_int(statement, i++);
-            ramp.SteepTopOfCurb  = sqlite3_column_int(statement, i++);
-            ramp.PedRampLip  = sqlite3_column_int(statement, i++);
+            ramp.SteepTopOfCurb  = sqlite3_column_double(statement, i++);
+            ramp.PedRampLip  = sqlite3_column_double(statement, i++);
             ramp.lev21x  = sqlite3_column_int(statement,i++);
             ramp.lev21y  = sqlite3_column_int(statement,i++);
             ramp.rampType  = sqlite3_column_int(statement,i++);
@@ -876,6 +878,8 @@ WHERE intID=%i;",
             ramp.curbCutDistance = sqlite3_column_double(statement, i++);
             ramp.bumpWidth = sqlite3_column_double(statement, i++);
             ramp.bumpHeight = sqlite3_column_double(statement, i++);
+            if (ramp.bumpWidth > 0 || ramp.bumpHeight > 0)
+                ii=1;
         }
         SQLOK(210,sqlite3_finalize(statement), self.curbRampData.database);
    }

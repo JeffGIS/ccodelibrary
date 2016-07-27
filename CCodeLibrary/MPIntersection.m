@@ -18,6 +18,7 @@
 @synthesize rampNum;
 @synthesize rampID;
 @synthesize timeComplete;
+@synthesize yearRebuilt;
 @synthesize rampExists;
 @synthesize isComplete;
 @synthesize approximateHeading;
@@ -76,6 +77,7 @@
     another.rampNum = self.rampNum;
     another.rampID = self.rampID.copy;
     another.timeComplete = self.timeComplete;
+    another.yearRebuilt = self.yearRebuilt;
     another.rampExists = self.rampExists;
     another.isComplete = self.isComplete;
     another.approximateHeading = self.approximateHeading;
@@ -140,6 +142,7 @@
     if (oldRamp.rampNum != self.rampNum) goto RtnFalse;
     if (![oldRamp.rampID isEqualToString:self.rampID]) goto RtnFalse;
     if (oldRamp.timeComplete != self.timeComplete) goto RtnFalse;
+    if (oldRamp.yearRebuilt != self.yearRebuilt) goto RtnFalse;
     if (oldRamp.rampExists != self.rampExists) goto RtnFalse;
     if (oldRamp.isComplete != self.isComplete) goto RtnFalse;
     if (oldRamp.approximateHeading != self.approximateHeading) goto RtnFalse;
