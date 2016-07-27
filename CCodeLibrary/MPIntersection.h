@@ -48,6 +48,14 @@ typedef NS_ENUM(NSInteger, CrackType)
     CrackTypeRightSidewalk,
 };
 
+typedef NS_ENUM(NSInteger, MiddleMeasurement)
+{
+    MiddleMeasurementNone,
+    MiddleMeasurementCurbCutDistance,
+    MiddleMeasurementBumpWidth,
+    MiddleMeasurementBumpHeight,
+};
+
 typedef struct CrackWidth {
     float rampCrackWidth;
     float upperLandingCrackWidth;
@@ -89,6 +97,7 @@ typedef struct CrackWidth {
 @property BOOL gradeBreaksArePerpendicular, detectableWarningIsFullWidth;
 @property CrackWidth crackWidth;
 @property CrackType currentCrackMeasurement;//this need not be in copy or comparision methods (internal value - not in database)
+@property MiddleMeasurement currentMiddleMeasurement;//this need not be in copy or comparision methods (internal value - not in database)
 @property int detectableWarningDepth;
 @property float domeSpacing, spaceBetweenDomes, domeBaseWidth, domeCapWidth;//these are for detectable warnings
 @property int streetLandingDepth, leftXWalkSideWidth, rightXWalkSideWidth;//these are for diagonal ramp type
