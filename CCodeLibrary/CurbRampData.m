@@ -384,14 +384,11 @@ static int nInit=0;
  PEDButtonType INT,\
  PEDButtonHeight INT,\
  PEDButtonDist INT,\
- SteepTopOfCurb REAL,\\changed from INT in version 2\
- PedRampLip REAL,\\changed from INT in version 2\
+ SteepTopOfCurb REAL,\
+ PedRampLip REAL,\
  lev21x INT, lev21y INT,\
  rampType INT,\
  rampComment CHAR(256),\
- //\
- //added in version 2.0*\
- //\
  pedButtonAudibleWalkIndicationType INT,\
  pedButtonHasLocatorTone INT,\
  pedButtonHasInfoSign INT,\
