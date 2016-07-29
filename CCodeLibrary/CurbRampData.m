@@ -47,6 +47,7 @@ static int nInit=0;
 {
     if ((self = [super init]))
         [self setDBFile:geoid create:create];
+    self.geoid = geoid;
     
     nInit++;
     return self;
