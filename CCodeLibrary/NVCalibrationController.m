@@ -647,22 +647,28 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
         
         [cell.contentView addSubview:segControl];
         
-        UIButton *addValueButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 80.0, 80.0)];
-        addValueButton.tag = 555;
+        if ([_calibrationValues[0] count] < 5)
+        {
+            UIButton *addValueButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 80.0, 80.0)];
+            addValueButton.tag = 555;
+            
+            [addValueButton setImage:[UIImage imageWithContentsOfFile:
+                                      [NSBundle.mainBundle pathForResource:@"greenPlusSign"
+                                                                    ofType:@"png"]]
+                            forState:UIControlStateNormal];
+            
+            addValueButton.center = CGPointMake(((576.0 + (segControl.frame.origin.x + segControl.frame.size.width)) / 2.0),
+                                                (tableView.rowHeight / 2.0));
+            
+            [addValueButton addTarget:self
+                               action:@selector(addCalibrationValue:)
+                     forControlEvents:UIControlEventTouchUpInside];
+            
+            [cell.contentView addSubview:addValueButton];
+        }
         
-        [addValueButton setImage:[UIImage imageWithContentsOfFile:
-                                  [NSBundle.mainBundle pathForResource:@"greenPlusSign"
-                                                                ofType:@"png"]]
-                        forState:UIControlStateNormal];
-        
-        addValueButton.center = CGPointMake(((576.0 + (segControl.frame.origin.x + segControl.frame.size.width)) / 2.0),
-                                            (tableView.rowHeight / 2.0));
-        
-        [addValueButton addTarget:self
-                           action:@selector(addCalibrationValue:)
-                 forControlEvents:UIControlEventTouchUpInside];
-        
-        [cell.contentView addSubview:addValueButton];
+        else
+            segControl.frame = CGRectMake(148.0, 10.0, 280.0, (tableView.rowHeight - 20.0));
     }
     
     else
