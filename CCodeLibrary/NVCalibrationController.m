@@ -983,7 +983,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)helpButtonTapped:(UIButton *)button
 {
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@"DOES_NOT_EXIST"
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_Calibration"
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
