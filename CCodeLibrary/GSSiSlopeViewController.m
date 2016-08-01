@@ -980,7 +980,7 @@ static int COUNT=100;
 
 - (void)helpButtonTapped:(UIButton *)button
 {
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@"DOES_NOT_EXIST"
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_SlopeVC"
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
