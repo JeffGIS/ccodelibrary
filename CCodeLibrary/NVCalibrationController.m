@@ -330,11 +330,8 @@ static CGFloat _deviceValues[9][4];
                        animated:YES
                      completion:nil];
     
-    [slopeVC removeManualMeasurementButton];
-    [slopeVC removeCalDateLabel];
-    
+    [slopeVC removeLabels];
     NSUInteger count = [_calibrationValues[0] count];
-    
     index = ((_currentIndex + 2) / 2);
     
     if ((index < count) && (count > 1))
@@ -417,8 +414,7 @@ static CGFloat _deviceValues[9][4];
                        animated:YES
                      completion:nil];
     
-    [slopeVC removeManualMeasurementButton];
-    [slopeVC removeCalDateLabel];
+    [slopeVC removeLabels];
 }
 
 - (void)editButtonTapped:(UIButton *)button
@@ -955,9 +951,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                animated:YES
                              completion:nil];
             
-            [slopeVC removeManualMeasurementButton];
-            [slopeVC removeCalDateLabel];
-            
+            [slopeVC removeLabels];
             _promptLabel.text = _nextPromptText;
         }
         

@@ -947,14 +947,12 @@ static int COUNT=100;
     [sliderView hideSliderController:YES];
 }
 
-- (void)removeManualMeasurementButton
-{
-    [_manualButton removeFromSuperview];
-}
-
-- (void)removeCalDateLabel
+- (void)removeLabels
 {
     [_calDateLabel removeFromSuperview];
+    [_manualButton removeFromSuperview];
+    [_unableButton removeFromSuperview];
+    [_doesNotExistButton removeFromSuperview];
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
