@@ -653,7 +653,7 @@
             }
             else if (_process == UPLOAD_DATA_PROCESS)
             {
-                [NSThread sleepForTimeInterval:FTP_CATCHUP_DELAY];
+                [NSThread sleepForTimeInterval:FTP_CATCHUP_DELAY * (1 + _lastUploadFileSize/500000)];
                 msg = [NSString stringWithFormat:@"$M(UploadCompleteData,%i,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
                        CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload,_lastUploadFileSize];

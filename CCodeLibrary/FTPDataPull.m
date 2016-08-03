@@ -122,7 +122,7 @@ static FTPDataPull * _statpull = nil;
     NSLog(@"Attempting to PULL %@ from %@/%@", _fileName, _currentFtp, _directory);
 }
 
-- (void)receiveDidStopWithStatus:(int)status
+- (void)receiveDidStopWithStatus:(FTPStatus)status
                     statusString:(NSString *)statusString
 {
     
