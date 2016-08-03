@@ -67,7 +67,8 @@
 - (BOOL)assignIntersectionsFrom:(int)intID
                              to:(int)endID
                          toUser:(int)user
-                           type:(NSString *)type;
+                           type:(NSString *)type
+                         status:(IntersectionStatus)status;
 
 
 - (BOOL)assignAllIntersectionTo:(int)user

@@ -243,6 +243,10 @@
                             numComplete++;
                             break;
                             
+                        case IntersectionRebuilt:
+                            CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+                            break;
+                            
                         case ComplexStatus:
                             CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
                             numComplex++;

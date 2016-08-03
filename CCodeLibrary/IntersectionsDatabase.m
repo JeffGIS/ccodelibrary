@@ -934,7 +934,7 @@ WHERE intID=%i;",
         int intID = sqlite3_column_int(statement, 0);
         int assignedToPrelim = sqlite3_column_int(statement, 1);
         int assignedToDetail = sqlite3_column_int(statement, 2);
-        int status = sqlite3_column_int(statement, 3);
+        IntersectionStatus status = sqlite3_column_int(statement, 3);
         int intX = sqlite3_column_int(statement, 4);
         int intY = sqlite3_column_int(statement, 5);
         int nRamps = 0;
@@ -1407,6 +1407,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
                              to:(int)endID
                          toUser:(int)user
                            type:(NSString *)type
+                         status:(IntersectionStatus)status
 {
     BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;
@@ -1415,6 +1416,9 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo%@=%i WHERE intID>=%i AND intID <=%i",
                        iTime, type, user, intID, endID];
+    if (status)
+        query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo%@=%i, status=%i WHERE intID>=%i AND intID <=%i",
+                       iTime, type, user, status, intID, endID];
     
     rtn = SQLOK(232,sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL), self.curbRampData.database);
 
