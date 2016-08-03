@@ -27,7 +27,8 @@ enum textures {
     castironTruncatedDomes=6,
     exposedAggregate=7,
     cutStone=8,
-    other=10};
+    other=10
+};
 
 enum obstructions {
     hydrant=1,
@@ -36,7 +37,8 @@ enum obstructions {
     pole=4,
     streetmanhole=5,
     otherob=6,
-    none=10
+    none=10,
+    masterNone=11
 };
 
 typedef NS_ENUM(NSInteger, CrackType)

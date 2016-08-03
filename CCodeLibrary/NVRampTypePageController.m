@@ -285,6 +285,8 @@
     _pageControl.currentPage = 0;
     _pageControl.userInteractionEnabled = NO;
     _pageControl.hidesForSinglePage = YES;
+    _pageControl.pageIndicatorTintColor = _colors.disabledColor;
+    _pageControl.currentPageIndicatorTintColor = _colors.enabledColor;
     [self.view addSubview:_pageControl];
 }
 
@@ -348,7 +350,7 @@
 
 - (void)helpButtonTapped:(UIButton *)button
 {
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@"DOES_NOT_EXIST"
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_RampType"
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view

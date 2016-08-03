@@ -303,8 +303,8 @@
                 
             case 6://help button
                 [sectionView addSubview:helpButton];
-                [helpButton.heightAnchor constraintEqualToAnchor:sectionView.heightAnchor].active = YES;
-                [helpButton.widthAnchor constraintEqualToAnchor:sectionView.heightAnchor].active = YES;
+                [helpButton.heightAnchor constraintEqualToAnchor:sectionView.heightAnchor multiplier:0.8].active = YES;
+                [helpButton.widthAnchor constraintEqualToAnchor:sectionView.heightAnchor multiplier:0.8].active = YES;
                 [helpButton.centerXAnchor constraintEqualToAnchor:sectionView.centerXAnchor].active = YES;
                 [helpButton.centerYAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
                 break;
@@ -1501,7 +1501,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)helpButtonTapped:(UIButton *)button
 {
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@"DOES_NOT_EXIST"
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_Synchronize"
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
@@ -1509,10 +1509,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 #pragma unused(nvwv)
 }
 
-- (void) tempFix:(int)iPad
-           geoid:(int)geoid
+- (void)tempFix:(int)iPad
+          geoid:(int)geoid
 {
- /*   if (iPad == 1008 || iPad == 1009) // MP Alleywalls
+    /*if (iPad == 1008 || iPad == 1009) // MP Alleywalls
     {
         int lastPict;
         int lastData = [_databaseID getLastDataUpdateNumber:1
@@ -1533,28 +1533,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                       foriPad:2];
         
     }*/
-    /*if (iPad == 1004 && geoid == 2730140)// Bill - Hopkins
-    {
-        int currentFix = 3;
-        int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
-        
-        if (lastFix < currentFix)
-        {
-            [UserDefaults.defaults saveInteger:currentFix
-                                        forKey:@"lastFix"];
-            int lastPict;
-            int lastData = [_databaseID getLastDataUpdateNumber:1
-                                                    lastPictNum:&lastPict];
-            
-            [_databaseID setLastDataUpdateNum:51
-                                      foriPad:1];
-            [_databaseID setLastPictUpdateNum:1
-                                      foriPad:1];
-            [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Fix %i applied to 1004",currentFix]];
-        }
-        
-    }
-    if (iPad == 1055 && geoid == 2707966)// Brooklyn Park
+    
+    /*if (iPad == 1055 && geoid == 2707966)// Brooklyn Park
     {
         int currentFix = 4;
         int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
@@ -1571,15 +1551,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         }
         
     }*/
-    if (iPad == 1055 && geoid == 2707966)// Brooklyn Park
+    
+    /*if (iPad == 1055 && geoid == 2707966)// Brooklyn Park
     {
-        /*    All of these files are from device 1055:
+        //All of these files are from device 1055:
          
          2_2.sql
          2_92.sql
          2_125.sql
          2_127.sql
-         2_123.jpg*/
+         2_123.jpg
         int iPad = 2;
         int currentFix = 5;
         int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
@@ -1644,7 +1625,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Fix %i applied to 1055",currentFix]];
         }
         
-    }
+    }*/
 }
 
 @end

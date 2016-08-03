@@ -185,7 +185,7 @@
                                                                          delegate:self
                                                                     delegateQueue:NSOperationQueue.currentQueue];
                 
-                NSString *url = [NSString stringWithFormat:@"http://gssidata.com/MPLSADA/%lu/%lu/%lu.jp2",
+                NSString *url = [NSString stringWithFormat:@"http://gssiserver3.com/MPLSADA/%lu/%lu/%lu.jp2",
                                  (unsigned long)_zoom, (unsigned long)tiles.tiley, (unsigned long)tiles.tilex];
                 
                 NSURL *mapUrl = [NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -269,8 +269,18 @@ didCompleteWithError:(NSError *)error
     
     if (error)
     {
-        NSLog(@"URLSession ERROR (tile %lu):%@", (unsigned long)index,
-              error.localizedDescription);
+        [session finishTasksAndInvalidate];
+        
+        [self performSelectorOnMainThread:@selector(presentAlertInCurrentView:)
+                               withObject:@"Intersection Image Unavailable."
+                            waitUntilDone:NO];
+        
+        [self saveCptFile];
+        
+        [_delegate tileCompilerReturnedImagePath:[NSBundle.mainBundle pathForResource:@"mapGrid"
+                                                                               ofType:@"png"]
+                                         cptPath:_cptPath
+                                      hideTarget:YES];
     }
 }
 

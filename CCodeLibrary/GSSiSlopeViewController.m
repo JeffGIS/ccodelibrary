@@ -947,14 +947,12 @@ static int COUNT=100;
     [sliderView hideSliderController:YES];
 }
 
-- (void)removeManualMeasurementButton
-{
-    [_manualButton removeFromSuperview];
-}
-
-- (void)removeCalDateLabel
+- (void)removeLabels
 {
     [_calDateLabel removeFromSuperview];
+    [_manualButton removeFromSuperview];
+    [_unableButton removeFromSuperview];
+    [_doesNotExistButton removeFromSuperview];
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
@@ -980,7 +978,7 @@ static int COUNT=100;
 
 - (void)helpButtonTapped:(UIButton *)button
 {
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@"DOES_NOT_EXIST"
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_SlopeVC"
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
