@@ -1116,6 +1116,9 @@ SELECT max(_id) FROM MyTable*/
     BOOL rtn = TRUE;
     NSString *cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'wallID' CHAR(8), 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
      rtn = !SQLOK(142,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    cmd = @"CREATE INDEX IF NOT EXISTS ALLEYWALL_PICTURES_index ON ALLEYWALL_PICTURES (wallID)";
+    rtn = !SQLOK(142,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+
     return rtn;
 }
 - (uint) getNextPictID
