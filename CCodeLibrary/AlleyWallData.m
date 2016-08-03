@@ -118,6 +118,10 @@ static int fileSequence = 0;
     
     BOOL st = [NSFileManager.defaultManager removeItemAtPath:[self databasePath]
                                                        error:nil];
+    BOOL opened = [self open];
+    [self createNextUpdateTable];
+    [self createPictureDatabase];
+    [self close:opened];
     return st;
 }
 

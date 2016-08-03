@@ -330,11 +330,8 @@ static CGFloat _deviceValues[9][4];
                        animated:YES
                      completion:nil];
     
-    [slopeVC removeManualMeasurementButton];
-    [slopeVC removeCalDateLabel];
-    
+    [slopeVC removeLabels];
     NSUInteger count = [_calibrationValues[0] count];
-    
     index = ((_currentIndex + 2) / 2);
     
     if ((index < count) && (count > 1))
@@ -417,8 +414,7 @@ static CGFloat _deviceValues[9][4];
                        animated:YES
                      completion:nil];
     
-    [slopeVC removeManualMeasurementButton];
-    [slopeVC removeCalDateLabel];
+    [slopeVC removeLabels];
 }
 
 - (void)editButtonTapped:(UIButton *)button
@@ -647,22 +643,28 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
         
         [cell.contentView addSubview:segControl];
         
-        UIButton *addValueButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 80.0, 80.0)];
-        addValueButton.tag = 555;
+        if ([_calibrationValues[0] count] < 5)
+        {
+            UIButton *addValueButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 80.0, 80.0)];
+            addValueButton.tag = 555;
+            
+            [addValueButton setImage:[UIImage imageWithContentsOfFile:
+                                      [NSBundle.mainBundle pathForResource:@"greenPlusSign"
+                                                                    ofType:@"png"]]
+                            forState:UIControlStateNormal];
+            
+            addValueButton.center = CGPointMake(((576.0 + (segControl.frame.origin.x + segControl.frame.size.width)) / 2.0),
+                                                (tableView.rowHeight / 2.0));
+            
+            [addValueButton addTarget:self
+                               action:@selector(addCalibrationValue:)
+                     forControlEvents:UIControlEventTouchUpInside];
+            
+            [cell.contentView addSubview:addValueButton];
+        }
         
-        [addValueButton setImage:[UIImage imageWithContentsOfFile:
-                                  [NSBundle.mainBundle pathForResource:@"greenPlusSign"
-                                                                ofType:@"png"]]
-                        forState:UIControlStateNormal];
-        
-        addValueButton.center = CGPointMake(((576.0 + (segControl.frame.origin.x + segControl.frame.size.width)) / 2.0),
-                                            (tableView.rowHeight / 2.0));
-        
-        [addValueButton addTarget:self
-                           action:@selector(addCalibrationValue:)
-                 forControlEvents:UIControlEventTouchUpInside];
-        
-        [cell.contentView addSubview:addValueButton];
+        else
+            segControl.frame = CGRectMake(148.0, 10.0, 280.0, (tableView.rowHeight - 20.0));
     }
     
     else
@@ -949,9 +951,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                animated:YES
                              completion:nil];
             
-            [slopeVC removeManualMeasurementButton];
-            [slopeVC removeCalDateLabel];
-            
+            [slopeVC removeLabels];
             _promptLabel.text = _nextPromptText;
         }
         
@@ -977,7 +977,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)helpButtonTapped:(UIButton *)button
 {
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@"DOES_NOT_EXIST"
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_Calibration"
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view

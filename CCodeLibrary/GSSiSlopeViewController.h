@@ -62,7 +62,6 @@ typedef struct NVSlopeData {
                                                displayDegrees:(BOOL)displayDegrees
                                                      delegate:(id)delegate;
 
-- (void)removeManualMeasurementButton;
-- (void)removeCalDateLabel;
+- (void)removeLabels;
 
 @end
