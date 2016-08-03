@@ -14,6 +14,7 @@
 #import "NVEmailFileList.h"
 
 #define FTP_CATCHUP_DELAY 0.5
+#define UPLOAD_STATUS_VERSION 1
 
 @interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate,NVPopoverTableViewDelegate,CLLocationManagerDelegate>
 
@@ -641,9 +642,9 @@
             break;
             
         case GMSMessageGetUploadStatus:
-            msg = [NSString stringWithFormat:@"$M(GetUploadStatus,%i,%i,%i)",
+            msg = [NSString stringWithFormat:@"$M(GetUploadStatus,%i,%i,%i,%i)",
                    CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
-                   CRAPI.sharedInstance.totiPadWithinManager];
+                   CRAPI.sharedInstance.totiPadWithinManager,UPLOAD_STATUS_VERSION];
             break;
             
         case GMSMessageFileUploaded:
@@ -746,7 +747,7 @@
     LPSTR pMsg = malloc(_uploadStatusMsg.length + 4);
     strcpy(pMsg,_uploadStatusMsg.UTF8String);
     LPSTR pPipe = strchr(pMsg,'|');
-    int i = 1;
+    int i = 0;
     
     while (pPipe)
     {
@@ -780,7 +781,7 @@
     _downFiles = _downPix = 0;
     _totFilesToProcess =  _origUpFiles;
     _processedFiles = 0;
-    for (int iPad = 1; iPad <= _numiPadsInMsg; iPad++)
+    for (int iPad = 0; iPad <= _numiPadsInMsg; iPad++)
     {
         if (iPad != _myiPad)
         {
@@ -954,7 +955,7 @@ didReceiveMessage:(NSString *)message
                 _uploadStatusMsg = message.copy;
                // NSString *edit = [_uploadStatusMsg stringByReplacingOccurrencesOfString:@"3-5" withString:@"1-5"];
                // _uploadStatusMsg = edit;
-                _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String);
+                _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String)+1;
                 [self closeGMServer];
                 
                 int pictNum = 0;
@@ -1138,9 +1139,9 @@ Top:
         }
     
         _process = DOWNLOAD_DATA_PROCESS;
-        _downloadiPad = [self nextiPadToDownload:0];
+        _downloadiPad = [self nextiPadToDownload:-1];
         
-        if (_downloadiPad)
+        if (_downloadiPad > -1)
         {
             [self setDownloadFilesFor:_downloadiPad];
             [self downloadNextFile];
@@ -1246,7 +1247,7 @@ Top:
         currentiPad++;
     
     if (currentiPad > _numiPadsInMsg)
-        return 0;
+        return -1;
     
     return currentiPad;
 }
@@ -1258,7 +1259,7 @@ Top:
     {
         _downloadiPad = [self nextiPadToDownload:_downloadiPad];
         
-        if (!_downloadiPad)
+        if (_downloadiPad < 0)
         {
             if (_process == DOWNLOAD_DATA_PROCESS)
             {
@@ -1267,7 +1268,7 @@ Top:
                     goto Done;
                 _downloadiPad = [self nextiPadToDownload:0];
                 
-                if (_downloadiPad)
+                if (_downloadiPad > -1)
                 {
                     [self setDownloadFilesFor:_downloadiPad];
                     goto Top;
