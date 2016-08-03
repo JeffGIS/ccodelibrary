@@ -560,6 +560,11 @@
         
         if (ramp.rampExists)
         {
+            if (ramp.lev21x < 520 && ramp.lev21y < 520) //fix for mpls ramps
+            {
+                ramp.lev21x += _currentIntersection.lev21x;
+                ramp.lev21y += _currentIntersection.lev21y;
+            }
             TRANS2(ramp.lev21x, ramp.lev21y, &bmpx, &bmpy, _pTranWToBMP);
             x = bmpx;
             y = bmpy;
