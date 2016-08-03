@@ -42,6 +42,9 @@
         return nil;
     }
     
+    if (CRAPI.sharedInstance.currentGeoid == 2743000)
+        forceRefresh = YES;
+    
     NVTileCompiler *nvtc = NVTileCompiler.new;
     nvtc.currentIntersection = intersection;
     nvtc.zoom = zoom;
