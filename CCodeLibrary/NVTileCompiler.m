@@ -115,6 +115,7 @@
     PixelXYToTileXY(worldx, worldy, &tilex, &tiley);
     
     tilexLeft = tilex;
+    xintileLeft = worldx % 256;
     yintile = (worldy % 256);
     yinc = (256 - yintile);
     y = worldy;
