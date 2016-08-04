@@ -220,7 +220,7 @@ static CGFloat _deviceValues[9][4];
                                                                  ((912.0 - yOrigin) + margin))];
         
         [self setupLabel:_promptLabel
-                    text:@"Place the iPad on the level surface\nand tap on'Calibrate 0.0%'\nto begin calibration routine."
+                    text:@"Place the iPad on a level surface and tap on'Calibrate 0.0%' to begin calibration routine."
                 fontSize:34.0];
     }
 }
@@ -317,8 +317,11 @@ static CGFloat _deviceValues[9][4];
                                                                                      countFactor:0.0
                                                                                   displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                                         delegate:self];
+    
+    slopeVC.fromCalibration = YES;
+    
     if (!_currentIndex)
-        slopeVC.promptText = @"Place the iPad on the level surface and tap 'Start' to begin measurement.";
+        slopeVC.promptText = @"Place the iPad on a level surface and tap 'Start' to begin measurement.";
     
     else if (_currentIndex % 2)
         slopeVC.promptText = @"Place the iPad with the arrow pointing upslope and tap 'Start' to begin measurement.";
@@ -330,7 +333,6 @@ static CGFloat _deviceValues[9][4];
                        animated:YES
                      completion:nil];
     
-    [slopeVC removeLabels];
     NSUInteger count = [_calibrationValues[0] count];
     index = ((_currentIndex + 2) / 2);
     
@@ -410,11 +412,11 @@ static CGFloat _deviceValues[9][4];
                                                                    delegate:self];
     }
     
+    slopeVC.fromCalibration = YES;
+    
     [self presentViewController:slopeVC
                        animated:YES
                      completion:nil];
-    
-    [slopeVC removeLabels];
 }
 
 - (void)editButtonTapped:(UIButton *)button
@@ -464,7 +466,7 @@ static CGFloat _deviceValues[9][4];
         _currentIndex = 0;
         [self setupCalibrationButtons];
         [self setTestEditButtonsEnabled:YES];
-        _promptLabel.text = @"Place the iPad on the level surface and tap on\n'Calibrate 0.0%' to begin calibration routine.";
+        _promptLabel.text = @"Place the iPad on a level surface and tap on 'Calibrate 0.0%' to begin calibration routine.";
         return;
     }
     
@@ -945,13 +947,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                                                           displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                                                 delegate:self];
             
+            slopeVC.fromCalibration = YES;
             slopeVC.promptText = @"";
             
             [self presentViewController:slopeVC
                                animated:YES
                              completion:nil];
             
-            [slopeVC removeLabels];
             _promptLabel.text = _nextPromptText;
         }
         

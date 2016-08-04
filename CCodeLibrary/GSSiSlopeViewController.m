@@ -62,6 +62,7 @@ static int COUNT=100;
     slopeController.delegate = delegate;
     slopeController.steadyFactor = max (steadyFac,1.0);
     slopeController.hideDoesNotExistButton = NO;
+    slopeController.fromCalibration = NO;
     slopeController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     
     if (countFac)
@@ -91,56 +92,59 @@ static int COUNT=100;
 {
     [super viewDidLoad];
     
-    _calDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 964.0, 728.0, 60.0)];
-    _calDateLabel.backgroundColor = UIColor.clearColor;
-    _calDateLabel.font = [UIFont boldSystemFontOfSize:28.0];
-    _calDateLabel.adjustsFontSizeToFitWidth = YES;
-    _calDateLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:_calDateLabel];
-    
-    NSDate *date = NSDate.date;
-    NSDate *lastCalDate = [SharedDefaults.defaults dateForKey:@"LastCalDate"];
-    
-    if (lastCalDate)
+    if (!_fromCalibration)
     {
-        NSDateFormatter *dayFormatter = [[NSDateFormatter alloc] init];
-        [dayFormatter setDateFormat:@"dd"];
-        NSString *currentDay = [dayFormatter stringFromDate:date];
-        NSString *lastCalDay = [dayFormatter stringFromDate:lastCalDate];
-        NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
-        [timeFormatter setDateFormat:@"HH:mm a"];
-        [timeFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-        NSString *lastCalTime = [timeFormatter stringFromDate:lastCalDate];
+        _calDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 964.0, 728.0, 60.0)];
+        _calDateLabel.backgroundColor = UIColor.clearColor;
+        _calDateLabel.font = [UIFont boldSystemFontOfSize:28.0];
+        _calDateLabel.adjustsFontSizeToFitWidth = YES;
+        _calDateLabel.textAlignment = NSTextAlignmentCenter;
+        [self.view addSubview:_calDateLabel];
         
-        NSTimeInterval timeSinceCal = [date timeIntervalSinceDate:lastCalDate];
-        timeSinceCal = floor(timeSinceCal / 86400);
+        NSDate *date = NSDate.date;
+        NSDate *lastCalDate = [SharedDefaults.defaults dateForKey:@"LastCalDate"];
         
-        if (timeSinceCal > 5.0)
+        if (lastCalDate)
         {
-            _calDateLabel.text = @"WARNING: Slope not calibrated.";
-            _calDateLabel.textColor = UIColor.redColor;
-        }
-        
-        else if (timeSinceCal > 1.0 || ![currentDay isEqualToString:lastCalDay])
-        {
-            timeSinceCal = max(timeSinceCal, 1.0);
+            NSDateFormatter *dayFormatter = [[NSDateFormatter alloc] init];
+            [dayFormatter setDateFormat:@"dd"];
+            NSString *currentDay = [dayFormatter stringFromDate:date];
+            NSString *lastCalDay = [dayFormatter stringFromDate:lastCalDate];
+            NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
+            [timeFormatter setDateFormat:@"HH:mm a"];
+            [timeFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+            NSString *lastCalTime = [timeFormatter stringFromDate:lastCalDate];
             
-            _calDateLabel.text = [NSString stringWithFormat:@"WARNING: Calibrated %.0f days ago.", timeSinceCal];
-            _calDateLabel.textColor = UIColor.redColor;
+            NSTimeInterval timeSinceCal = [date timeIntervalSinceDate:lastCalDate];
+            timeSinceCal = floor(timeSinceCal / 86400);
+            
+            if (timeSinceCal > 5.0)
+            {
+                _calDateLabel.text = @"WARNING: Slope not calibrated.";
+                _calDateLabel.textColor = UIColor.redColor;
+            }
+            
+            else if (timeSinceCal > 1.0 || ![currentDay isEqualToString:lastCalDay])
+            {
+                timeSinceCal = max(timeSinceCal, 1.0);
+                
+                _calDateLabel.text = [NSString stringWithFormat:@"WARNING: Calibrated %.0f days ago.", timeSinceCal];
+                _calDateLabel.textColor = UIColor.redColor;
+            }
+            
+            else
+            {
+                _calDateLabel.text = [NSString stringWithFormat:@"Calibrated today at %@", lastCalTime];
+                _calDateLabel.textColor = UIColor.blackColor;
+            }
         }
         
         else
         {
-            _calDateLabel.text = [NSString stringWithFormat:@"Calibrated today at %@", lastCalTime];
-            _calDateLabel.textColor = UIColor.blackColor;
+            _calDateLabel.text = @"WARNING: This device has NOT been calibrated.";
+            _calDateLabel.textColor = UIColor.redColor;
+            _useCalibration = NO;
         }
-    }
-    
-    else
-    {
-        _calDateLabel.text = @"WARNING: This device has NOT been calibrated.";
-        _calDateLabel.textColor = UIColor.redColor;
-        _useCalibration = NO;
     }
     
     if (_useCalibration)
@@ -159,9 +163,13 @@ static int COUNT=100;
     [self setupArrowView];
     [self setupLabels];
     [self setupProgressView];
-    [self setupManualButton];
     [self setupCancelButton];
-    [self setupDoesNotExistButton];
+    
+    if (!_fromCalibration)
+    {
+        [self setupManualButton];
+        [self setupDoesNotExistButton];
+    }
     
     if (!CRAPI.sharedInstance.controlledInterface)
         [self setupCancelButton];
@@ -191,7 +199,7 @@ static int COUNT=100;
     _motionManager = [[CMMotionManager alloc] init];
     [self resetSumsAndCounter];
 
-    if (_hideDoesNotExistButton)
+    if (_hideDoesNotExistButton || _fromCalibration)
         [self hideDoesNotExist];
 }
 
@@ -828,10 +836,7 @@ static int COUNT=100;
 - (void)hideDoesNotExist
 {
     _doesNotExistButton.hidden = YES;
-    CGRect frame = _unableButton.frame;
-    frame.origin.x = _manualButton.frame.origin.x;
-    frame.size.width = _manualButton.frame.size.width;
-    _unableButton.frame = frame;
+    _unableButton.frame = CGRectMake(184.0, _unableButton.frame.origin.y, 400.0, _unableButton.frame.size.height);
     _unableButton.titleLabel.font = [UIFont boldSystemFontOfSize:72.0];
 }
 
@@ -895,7 +900,9 @@ static int COUNT=100;
         (fabs(_data.sideSlopePct) > (_criticalSideValue - _errorValue)) &&
         (fabs(_data.sideSlopePct) < (_criticalSideValue + _errorValue)))
     {
-        NVSliderController *slider;
+        NSLog(@"sidePct=%d, critSV=%d, errorVal=%d", _data.sideSlopePct, _criticalSideValue, _errorValue);
+        
+        NVSliderController *slider = nil;
         
         if (_displayDegrees)
         {
@@ -946,14 +953,6 @@ static int COUNT=100;
     }
     
     [sliderView hideSliderController:YES];
-}
-
-- (void)removeLabels
-{
-    [_calDateLabel removeFromSuperview];
-    [_manualButton removeFromSuperview];
-    [_unableButton removeFromSuperview];
-    [_doesNotExistButton removeFromSuperview];
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
