@@ -51,6 +51,7 @@
     inventoryVC.delegate = delegate;
     inventoryVC.from = from;
     inventoryVC.draggableTarget = draggableTarget;
+    inventoryVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     
     if ([delegate isKindOfClass:UIViewController.class])
     {
@@ -1853,7 +1854,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 - (void)locationManager:(CLLocationManager *)manager
        didUpdateHeading:(CLHeading *)heading
 {
-    _headingLabel.text = [NSString stringWithFormat:@"%i", (int)heading.trueHeading];
+    _headingLabel.text = [NSString stringWithFormat:@"%i\u00B0", (int)heading.trueHeading];
 }
 
 - (int)getLeftRampIDFromRampID:(int)rampID

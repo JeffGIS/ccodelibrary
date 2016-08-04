@@ -62,6 +62,7 @@ static int COUNT=100;
     slopeController.delegate = delegate;
     slopeController.steadyFactor = max (steadyFac,1.0);
     slopeController.hideDoesNotExistButton = NO;
+    slopeController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     
     if (countFac)
         slopeController.countFactor = countFac;
@@ -166,7 +167,7 @@ static int COUNT=100;
         [self setupCancelButton];
     
     UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    helpButton.frame = CGRectMake(676.0, 20.0, 72.0, 72.0);
+    helpButton.frame = CGRectMake(668.0, 20.0, 80.0, 80.0);
     
     [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"question-256x256"
                                                                                         ofType:@"png"]]

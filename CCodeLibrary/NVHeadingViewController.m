@@ -35,10 +35,11 @@ typedef NS_ENUM(NSInteger, NVHeadingStatus)
                                                    stabilityFactor:(CGFloat)stabilityFactor
                                                        numReadings:(NSInteger)nRead
 {
-    NVHeadingViewController *headingVC = [[NVHeadingViewController alloc] init];
+    NVHeadingViewController *headingVC = NVHeadingViewController.new;
     headingVC.delegate = delegate;
     headingVC.stabilityFactor = stabilityFactor;
     headingVC.numDesiredReadings = nRead;
+    headingVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     
     if ([delegate isKindOfClass:UIViewController.class])
     {
