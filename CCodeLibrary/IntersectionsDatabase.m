@@ -26,8 +26,12 @@ static int ii;
 
 + (IntersectionsDatabase *)databaseForGeoid:(int)geoid
 {
+    static int lastGeoid = 0;
     IntersectionsDatabase *db = [[IntersectionsDatabase alloc] initWithGeoid:geoid];
     
+    if (geoid != lastGeoid)
+        [db incrementLastDataFileNum]; //prevents files of mixed versions
+    lastGeoid = geoid;
     return db;
 }
 
