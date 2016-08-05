@@ -59,6 +59,15 @@
     _upFiles = _upPix = _downFiles = _downPix = 0;
     _didConnect = NO;
     
+    if (CRAPI.sharedInstance.currentModule == PRELIM_MODULE ||
+        CRAPI.sharedInstance.currentModule == DETAIL_MODULE)
+    {
+        CRAPI.sharedInstance.downloadPix = NO;
+        
+        [UserDefaults.defaults saveBool:NO
+                                 forKey:@"DownloadPix"];
+    }
+    
     _titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_titleButton];
     _titleButton.backgroundColor = UIColor.clearColor;
@@ -284,15 +293,20 @@
                 break;
                 
             case 4://pictures to be downloaded
-                [sectionView addSubview:_pixDownSwitch];
-                [_pixDownSwitch.centerYAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
-                [_pixDownSwitch.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-margin].active = YES;
+                if (CRAPI.sharedInstance.currentModule != PRELIM_MODULE &&
+                    CRAPI.sharedInstance.currentModule != DETAIL_MODULE)
+                {
+                    [sectionView addSubview:_pixDownSwitch];
+                    [_pixDownSwitch.centerYAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
+                    [_pixDownSwitch.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-margin].active = YES;
+                    
+                    [sectionView addSubview:_pixDownLabel];
+                    [_pixDownLabel.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:margin].active = YES;
+                    [_pixDownLabel.trailingAnchor constraintEqualToAnchor:_pixUpSwitch.leadingAnchor].active = YES;
+                    [_pixDownLabel.topAnchor constraintEqualToAnchor:sectionView.topAnchor].active = YES;
+                    [_pixDownLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
+                }
                 
-                [sectionView addSubview:_pixDownLabel];
-                [_pixDownLabel.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:margin].active = YES;
-                [_pixDownLabel.trailingAnchor constraintEqualToAnchor:_pixUpSwitch.leadingAnchor].active = YES;
-                [_pixDownLabel.topAnchor constraintEqualToAnchor:sectionView.topAnchor].active = YES;
-                [_pixDownLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
                 break;
                 
             case 5://sync button
