@@ -183,7 +183,7 @@ static BOOL _createDirectory = YES;
     pull.delegate = delegate;
     pull.popover = popover;
     pull.dataType = FTPDataPlat;
-    pull.useTestServer = YES;
+    pull.useTestServer = NO;
     NSString * fileName;
     
     if ([type isEqualToString:@"pdf"])
