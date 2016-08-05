@@ -243,6 +243,7 @@
                             numComplete++;
                             break;
                             
+                          
                         case IntersectionRebuilt:
                             CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
                             break;
