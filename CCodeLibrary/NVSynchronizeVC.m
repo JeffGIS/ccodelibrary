@@ -1083,29 +1083,6 @@ didReceiveMessage:(NSString *)message
                                                repeats:NO];
 }
 
-- (void)downloadNextFile
-{
-    if (_process == DOWNLOAD_DATA_PROCESS && !CRAPI.sharedInstance.downloadData)
-        _process = DOWNLOAD_PICT_PROCESS;
-    
-    if (_process == DOWNLOAD_PICT_PROCESS && !CRAPI.sharedInstance.downloadPix)
-    {
-        [_syncButton setTitle:@"Complete"
-                     forState:UIControlStateNormal];
-        
-        _syncButton.enabled = NO;
-        [self updateButton:_syncButton];
-        [_popoverView hide];
-        return;
-    }
-    
-    _doTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
-                                                target:self
-                                              selector:@selector(doDownloadNextFile:)
-                                              userInfo:nil
-                                               repeats:NO];
-}
-
 - (void)doUploadNextFile:(NSTimer *)timer
 {
 Top:
@@ -1265,6 +1242,30 @@ Top:
     
     return currentiPad;
 }
+
+- (void)downloadNextFile
+{
+    if (_process == DOWNLOAD_DATA_PROCESS && !CRAPI.sharedInstance.downloadData)
+        _process = DOWNLOAD_PICT_PROCESS;
+    
+    if (_process == DOWNLOAD_PICT_PROCESS && !CRAPI.sharedInstance.downloadPix)
+    {
+        [_syncButton setTitle:@"Complete"
+                     forState:UIControlStateNormal];
+        
+        _syncButton.enabled = NO;
+        [self updateButton:_syncButton];
+        [_popoverView hide];
+        return;
+    }
+    
+    _doTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                target:self
+                                              selector:@selector(doDownloadNextFile:)
+                                              userInfo:nil
+                                               repeats:NO];
+}
+
 
 - (void)doDownloadNextFile:(NSTimer *)timer
 {
