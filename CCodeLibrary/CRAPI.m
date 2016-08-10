@@ -653,6 +653,8 @@
 {
     NSInteger nextRef = refno % _maxDevices;
     
+    if (!_deviceNumber)
+        [self logToErrorFile:@"Device number 0 in adjustNextRefno"];
     if (nextRef < _deviceNumber)
         nextRef = refno - nextRef + _deviceNumber;
     else
