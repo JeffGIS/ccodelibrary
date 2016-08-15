@@ -8,13 +8,14 @@
 #import "NVAlertView.h"
 #import "CRAPI.h"
 
-@interface NVWebView () <WKNavigationDelegate,NVPopoverTableViewDelegate>
+@interface NVWebView () <WKNavigationDelegate,NVPopoverTableViewDelegate,UIScrollViewDelegate>
 
 @property (nonatomic) WKWebView *webView;
 @property (nonatomic) UIButton *returnButton, *realtor;
-@property (nonatomic) CGFloat headerHeight, headerSideMargin;
+@property (nonatomic) CGFloat headerHeight, headerSideMargin, zoomScale;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIActivityIndicatorView *indicator;
+@property (nonatomic) CGPoint contentOffset;
 
 @end
 
@@ -25,6 +26,8 @@
 {
     NVWebView *nvwv = NVWebView.new;
     [nvwv addWebViewToView:view];
+    nvwv.contentOffset = CGPointZero;
+    nvwv.zoomScale = 0.0;
     
     nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -117,6 +120,7 @@
     _webView.translatesAutoresizingMaskIntoConstraints = NO;
     _webView.allowsBackForwardNavigationGestures = YES;
     _webView.navigationDelegate = self;
+    _webView.scrollView.delegate = self;
     
     [self addSubview:_webView];
     
@@ -203,6 +207,13 @@
         [self hide:YES];
 }
 
+- (void)setContentOffset:(CGPoint)contentOffset
+               zoomScale:(CGFloat)zoomScale
+{
+    _contentOffset = contentOffset;
+    _zoomScale = zoomScale;
+}
+
 - (void)realtor:(UIButton *)button
 {
     NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self
@@ -236,6 +247,12 @@ didFinishNavigation:(WKNavigation *)navigation
 {
     [_indicator removeFromSuperview];
     [_indicator stopAnimating];
+    
+    [_webView.scrollView setZoomScale:_zoomScale
+                             animated:NO];
+    
+    [_webView.scrollView setContentOffset:_contentOffset
+                                 animated:NO];
 }
 
 - (void)webView:(WKWebView *)webView
@@ -250,6 +267,19 @@ didFailProvisionalNavigation:(WKNavigation *)navigation
       withError:(NSError *)error
 {
     NSLog(@"WebView Failed Provisional Navigation ERROR:%@", error.localizedDescription);
+}
+
+- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView
+                          withView:(UIView *)view
+{
+    scrollView.minimumZoomScale = 1.0;
+    scrollView.maximumZoomScale = 100.0;
+    scrollView.bouncesZoom = NO;
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    scrollView.directionalLockEnabled = NO;
 }
 
 @end
