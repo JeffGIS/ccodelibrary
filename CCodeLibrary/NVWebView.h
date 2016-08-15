@@ -24,5 +24,6 @@
 
 - (void)hide:(BOOL)animated;
 - (void)showRealtorButton;
+- (void)hideReturnButton;
 
 @end

@@ -89,8 +89,9 @@
     [nvwv addWebViewToView:view];
     
     NSURL *url = [NSURL fileURLWithPath:path];
+    
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [nvwv.webView loadRequest:request];
+    [nvwv.webView loadFileURL:url allowingReadAccessToURL:url];
     
     [nvwv show];
     
@@ -184,6 +185,15 @@
     _realtor.hidden = NO;
 }
 
+- (void)hideReturnButton
+{
+    _tabBar.userInteractionEnabled = YES;
+    _tabBar.alpha = 1.0;
+    [_returnButton removeFromSuperview];
+    [self constrainToView:self.superview leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    [_webView constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+}
+
 - (void)returnButtonTapped:(UIButton *)button
 {
     if (_delegate && [_delegate respondsToSelector:@selector(webViewDidReturn:)])
@@ -232,7 +242,14 @@ didFinishNavigation:(WKNavigation *)navigation
 didFailNavigation:(WKNavigation *)navigation
       withError:(NSError *)error
 {
-    NSLog(@"WebView ERROR:%@", error.localizedDescription);
+    NSLog(@"WebView Failed Navigation ERROR:%@", error.localizedDescription);
+}
+
+- (void)webView:(WKWebView *)webView
+didFailProvisionalNavigation:(WKNavigation *)navigation
+      withError:(NSError *)error
+{
+    NSLog(@"WebView Failed Provisional Navigation ERROR:%@", error.localizedDescription);
 }
 
 @end
