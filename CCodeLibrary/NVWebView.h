@@ -27,6 +27,7 @@
 - (void)hideReturnButton;
 
 - (void)zoomToPoint:(CGPoint)point
+         withinPage:(int)page
           withScale:(CGFloat)scale
            rotation:(CGFloat)rotation;
 

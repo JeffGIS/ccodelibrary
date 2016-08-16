@@ -16,6 +16,7 @@
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIActivityIndicatorView *indicator;
 @property (nonatomic) CGPoint zoomPoint;
+@property int numPages, zoomPage;
 
 @end
 
@@ -28,6 +29,7 @@
     [nvwv addWebViewToView:view];
     nvwv.zoomPoint = CGPointZero;
     nvwv.zoomScale = nvwv.zoomRotation = 0.0;
+    nvwv.numPages = nvwv.zoomPage = 1;
     
     nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -90,8 +92,19 @@
     
     NVWebView *nvwv = NVWebView.new;
     [nvwv addWebViewToView:view];
+    nvwv.zoomPoint = CGPointZero;
+    nvwv.zoomScale = nvwv.zoomRotation = 0.0;
+    nvwv.numPages = nvwv.zoomPage = 1;
     
     NSURL *url = [NSURL fileURLWithPath:path];
+
+    if ([path.pathExtension isEqualToString:@"pdf"] || [path.pathExtension isEqualToString:@"PDF"])
+    {
+        CFURLRef urlRef = (__bridge CFURLRef)url;
+        CGPDFDocumentRef pdfRef = CGPDFDocumentCreateWithURL(urlRef);
+        nvwv.numPages = CGPDFDocumentGetNumberOfPages(pdfRef);
+        CGPDFDocumentRelease(pdfRef);
+    }
     
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [nvwv.webView loadFileURL:url allowingReadAccessToURL:url];
@@ -207,10 +220,12 @@
 }
 
 - (void)zoomToPoint:(CGPoint)point
+         withinPage:(int)page
           withScale:(CGFloat)scale
            rotation:(CGFloat)rotation
 {
     _zoomPoint = point;
+    _zoomPage = page;
     _zoomScale = scale;
     _zoomRotation = rotation;
 }
@@ -253,6 +268,14 @@ didFinishNavigation:(WKNavigation *)navigation
     _webView.scrollView.bouncesZoom = NO;
     _webView.scrollView.directionalLockEnabled = NO;
     _webView.scrollView.clipsToBounds = NO;
+    
+    if (_zoomPage > 1)
+    {
+        CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+        _zoomPoint.x *= _webView.scrollView.contentSize.width;
+        _zoomPoint.y *= pageHeight;
+        _zoomPoint.y += (pageHeight * (_zoomPage - 1));
+    }
     
     CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
                                  (_webView.scrollView.bounds.size.height / _zoomScale));
