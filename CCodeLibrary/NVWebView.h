@@ -26,7 +26,8 @@
 - (void)showRealtorButton;
 - (void)hideReturnButton;
 
-- (void)setContentOffset:(CGPoint)contentOffset
-               zoomScale:(CGFloat)zoomScale;
+- (void)zoomToPoint:(CGPoint)point
+          withScale:(CGFloat)scale
+           rotation:(CGFloat)rotation;
 
 @end

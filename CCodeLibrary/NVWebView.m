@@ -8,14 +8,14 @@
 #import "NVAlertView.h"
 #import "CRAPI.h"
 
-@interface NVWebView () <WKNavigationDelegate,NVPopoverTableViewDelegate,UIScrollViewDelegate>
+@interface NVWebView () <WKNavigationDelegate,NVPopoverTableViewDelegate>
 
 @property (nonatomic) WKWebView *webView;
 @property (nonatomic) UIButton *returnButton, *realtor;
-@property (nonatomic) CGFloat headerHeight, headerSideMargin, zoomScale;
+@property (nonatomic) CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIActivityIndicatorView *indicator;
-@property (nonatomic) CGPoint contentOffset;
+@property (nonatomic) CGPoint zoomPoint;
 
 @end
 
@@ -26,8 +26,8 @@
 {
     NVWebView *nvwv = NVWebView.new;
     [nvwv addWebViewToView:view];
-    nvwv.contentOffset = CGPointZero;
-    nvwv.zoomScale = 0.0;
+    nvwv.zoomPoint = CGPointZero;
+    nvwv.zoomScale = nvwv.zoomRotation = 0.0;
     
     nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -120,7 +120,6 @@
     _webView.translatesAutoresizingMaskIntoConstraints = NO;
     _webView.allowsBackForwardNavigationGestures = YES;
     _webView.navigationDelegate = self;
-    _webView.scrollView.delegate = self;
     
     [self addSubview:_webView];
     
@@ -207,11 +206,13 @@
         [self hide:YES];
 }
 
-- (void)setContentOffset:(CGPoint)contentOffset
-               zoomScale:(CGFloat)zoomScale
+- (void)zoomToPoint:(CGPoint)point
+          withScale:(CGFloat)scale
+           rotation:(CGFloat)rotation
 {
-    _contentOffset = contentOffset;
-    _zoomScale = zoomScale;
+    _zoomPoint = point;
+    _zoomScale = scale;
+    _zoomRotation = rotation;
 }
 
 - (void)realtor:(UIButton *)button
@@ -223,7 +224,6 @@
                                                                  includeCancel:YES];
 #pragma unused(nvptv)
 }
-
 
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView
     didSelectRowWithText:(NSString *)text
@@ -248,11 +248,23 @@ didFinishNavigation:(WKNavigation *)navigation
     [_indicator removeFromSuperview];
     [_indicator stopAnimating];
     
-    [_webView.scrollView setZoomScale:_zoomScale
-                             animated:NO];
+    _webView.scrollView.minimumZoomScale = 1.0;
+    _webView.scrollView.maximumZoomScale = 100.0;
+    _webView.scrollView.bouncesZoom = NO;
+    _webView.scrollView.directionalLockEnabled = NO;
+    _webView.scrollView.clipsToBounds = NO;
     
-    [_webView.scrollView setContentOffset:_contentOffset
-                                 animated:NO];
+    CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
+                                 (_webView.scrollView.bounds.size.height / _zoomScale));
+    
+    CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
+                                 (_zoomPoint.y - (zoomSize.height / 2.0)),
+                                 zoomSize.width, zoomSize.height);
+    
+    [_webView.scrollView zoomToRect:zoomRect
+                           animated:NO];
+    
+    _webView.scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
 }
 
 - (void)webView:(WKWebView *)webView
@@ -267,19 +279,6 @@ didFailProvisionalNavigation:(WKNavigation *)navigation
       withError:(NSError *)error
 {
     NSLog(@"WebView Failed Provisional Navigation ERROR:%@", error.localizedDescription);
-}
-
-- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView
-                          withView:(UIView *)view
-{
-    scrollView.minimumZoomScale = 1.0;
-    scrollView.maximumZoomScale = 100.0;
-    scrollView.bouncesZoom = NO;
-}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-{
-    scrollView.directionalLockEnabled = NO;
 }
 
 @end
