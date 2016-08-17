@@ -15,6 +15,7 @@
 
 #define FTP_CATCHUP_DELAY 0.5
 #define UPLOAD_STATUS_VERSION 1
+#define MAX_ATTEMPS 3
 
 @interface NVSynchronizeVC () <GeoMasterServerDelegate,NVAlertViewDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,FTPDataPushDelegate,NVPopoverTableViewDelegate,CLLocationManagerDelegate>
 
@@ -954,6 +955,12 @@ didReceiveMessage:(NSString *)message
                     [self updateLabels];
                     [self uploadNextFile];
                 }
+                else if ([[message substringToIndex:3] isEqualToString:@"ERR1"] &&
+                         _numAttemps++ < MAX_ATTEMPS)
+                {
+                    [NSThread sleepForTimeInterval:2.0*_numAttemps];
+                    [self sendGMServerMessage:GMSMessageFileUploaded];
+                }
                 else
                 {
                     NSString * title = [NSString stringWithFormat:@"Upload Size/Rename Error:%@",message];
@@ -1369,6 +1376,7 @@ Done:
     if (status == FTPStatusOK)
     {
         [_popoverView hide];
+        _numAttemps = 0;
         [self sendGMServerMessage:GMSMessageFileUploaded];
     }
     

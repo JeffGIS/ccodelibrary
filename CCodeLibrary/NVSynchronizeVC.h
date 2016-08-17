@@ -53,5 +53,6 @@
 @property BOOL first;
 @property BOOL autoSync;
 @property NSString* errorFileName;
+@property int numAttemps;
 
 @end
