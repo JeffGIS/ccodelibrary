@@ -808,7 +808,12 @@
             row++;
         }
         if (!haveCity)
-            return FALSE;
+        {
+            if (_placesArray.count == 1)
+                row = 0;
+            else
+                return FALSE;
+        }
     }
     
     else if (_placesArray.count == 1 || row >= _placesArray.count)
