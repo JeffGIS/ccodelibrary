@@ -603,6 +603,10 @@
     NSString * file = [NSString stringWithFormat:@"%@/%@", path, @"NVErrorLog.txt"];
     return file;
 }
+- (void) logToErrorFileIgnore:(BOOL)ignore
+{
+    _ignoreErrorLog = ignore;
+}
 
 -(void) logToErrorFile:(NSString*) error
             withHeader:(NSString*) header
@@ -612,6 +616,8 @@
 }
 -(void) logToErrorFile:(NSString*) error
 {
+    if (_ignoreErrorLog)
+        return;
     NSString *errorFile = [self errorLogPath];
     NSString *idString = [NSString stringWithFormat:@"%@ %i %i %@ %i %i %i %i",[self timeStamp],_currentModule,_currentSubModule,UIApplication.appVersionBuild,_GSSiPadNumber,_currentManageriPad,_currentiPadWithinManager,self.currentGeoid];
     //#ifdef DEBUG

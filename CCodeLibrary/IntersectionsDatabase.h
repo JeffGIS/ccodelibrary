@@ -86,7 +86,8 @@
 - (int)getCountOfIntersections;
 - (void)close:(BOOL)opened;
 
-- (int)loadIntersectionTextToDatabase:(NSString *)path;
+- (int)loadIntersectionTextToDatabase:(NSString *)path
+                         progressView:(GSSiPopoverView *)popover;
 
 - (int)findIntersection:(int)x
                       y:(int)y

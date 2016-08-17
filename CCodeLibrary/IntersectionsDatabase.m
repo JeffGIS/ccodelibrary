@@ -47,6 +47,21 @@ static int ii;
     
     return self;
 }
+- (BOOL)open
+{
+    BOOL rtn = [self.curbRampData open];
+    return rtn;
+}
+
+- (void)close:(BOOL)opened
+{
+    if (opened)
+    {
+        [self.curbRampData close:opened];
+        NSLog(@"Intersections Database close");
+    }
+}
+
 
 /*- (BOOL)createIntersectionsTable_old
 {
@@ -1592,21 +1607,18 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     return cmd;
 }
 - (int)loadIntersectionTextToDatabase:(NSString *)path
+                         progressView:(GSSiPopoverView *)popover
 {
     BOOL rtn = INTDBStatusFailed;
     char dataFile[PATH_MAX], indexFile[PATH_MAX];
     //LPSTR pUB;
     FILE *fidData = NULL;
     FILE *fidIndex = NULL;
-    char data[512], index[512];
     int maxData = 256;
     int maxIndex = 100;
-    int nLoaded = 0;
-    INTERSECTION_STRUCT intStruct = {0};
     int i = 0;
     
-    BOOL opened = [self open];
-
+    
     strcpy(indexFile, path.UTF8String);
     strcpy(dataFile, indexFile);
     strcat(indexFile, "/intersection_index.bin");
@@ -1616,61 +1628,97 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     NSLog (@"loadIntersectionTextToDatabase fopen file: %s", indexFile);
     
-    if (!fidData || !fidIndex)
-        goto Exit;
-    
-    if (![self.curbRampData createIntersectionsTable:YES])
-        goto Exit2;
-    
-    SQLOK(239,sqlite3_exec(self.curbRampData.database, "BEGIN TRANSACTION", NULL, NULL, NULL),self.curbRampData.database);
-    
-    fgetstring(index, maxIndex, fidIndex);
-    
-    while (fgetstring(data, maxData, fidData))
+    if (fidData)
     {
-        memset (&intStruct,0,sizeof(INTERSECTION_STRUCT));
-        LPSTR pTab = strchr(data,'\t');
-        LPSTR pTabIndex, pAzms, pEnd;
-        pTabIndex = pAzms = pEnd = NULL;
-        fgetstring(index, maxIndex, fidIndex);
-        pTabIndex = strchr(index,'\t');
-        *pTab++ = 0;
-        *pTabIndex = 0;
-        pTabIndex = strchr(index,' ');
-        *pTabIndex++ = 0;
-        intStruct.intID = atoi(data);
-        intStruct.lev21Y = atoi(index);
-        intStruct.lev21X = atoi(pTabIndex);
-        PixelXYToLatLong(intStruct.lev21X, intStruct.lev21Y, 21, &intStruct.lat, &intStruct.lon);
-        intStruct.assignedToPrelim = 0;
-        intStruct.assignedToDetail = 0;
-        intStruct.nStreets = atoi(pTab);
-        pTab = strchr(pTab,'\t') + 1;
-        pAzms = strchr(pTab,'\t');
-        *pAzms++ = 0;
-        pEnd = strchr(pAzms,'\t');
-        *pEnd = 0;
-        strncpy(intStruct.streetNames, pTab, sizeof(intStruct.streetNames) - 1);
-        REPLAC(intStruct.streetNames,"'","''",sizeof(intStruct.streetNames) - 1);
-        strncpy(intStruct.streetAzms, pAzms, sizeof(intStruct.streetAzms) - 1);
+        double fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:[NSString stringWithCString:dataFile encoding:NSUTF8StringEncoding]                                                                                         error:nil].fileSize;
+        rtn = INTDBStatusOK;
         
-        NSString *cmd = [self intStructToCmd:&intStruct];
-        [self.curbRampData executeCmd:(char *)cmd.UTF8String
-                         sendToServer:YES
-                                 from:1660];
-        
-        nLoaded++;
+        dispatch_queue_t overallQueue = dispatch_queue_create("overallQueue",NULL);
+        if (popover)
+            [popover show];
+        dispatch_async(overallQueue,
+                       ^{
+                           char data[512], index[512];
+                           double currentLoc;
+                           int nLoaded = 0;
+                           INTERSECTION_STRUCT intStruct = {0};
+                           BOOL opened = [self open];
+                           [self startTransaction];
+                           if ([self.curbRampData createIntersectionsTable:YES])
+                           {
+                               
+                               fgetstring(index, maxIndex, fidIndex);
+                               if (popover)
+                                   dispatch_async(dispatch_get_main_queue(),
+                                                  ^{
+                                                      [popover updateProgress:0];
+                                                      [popover setTitle:@"Loading Intersections"];
+                                                  });
+                               
+                               while (fgetstring(data, maxData, fidData))
+                               {
+                                   memset (&intStruct,0,sizeof(INTERSECTION_STRUCT));
+                                   LPSTR pTab = strchr(data,'\t');
+                                   LPSTR pTabIndex, pAzms, pEnd;
+                                   pTabIndex = pAzms = pEnd = NULL;
+                                   fgetstring(index, maxIndex, fidIndex);
+                                   pTabIndex = strchr(index,'\t');
+                                   *pTab++ = 0;
+                                   *pTabIndex = 0;
+                                   pTabIndex = strchr(index,' ');
+                                   *pTabIndex++ = 0;
+                                   intStruct.intID = atoi(data);
+                                   intStruct.lev21Y = atoi(index);
+                                   intStruct.lev21X = atoi(pTabIndex);
+                                   PixelXYToLatLong(intStruct.lev21X, intStruct.lev21Y, 21, &intStruct.lat, &intStruct.lon);
+                                   intStruct.assignedToPrelim = 0;
+                                   intStruct.assignedToDetail = 0;
+                                   intStruct.nStreets = atoi(pTab);
+                                   pTab = strchr(pTab,'\t') + 1;
+                                   pAzms = strchr(pTab,'\t');
+                                   *pAzms++ = 0;
+                                   pEnd = strchr(pAzms,'\t');
+                                   *pEnd = 0;
+                                   strncpy(intStruct.streetNames, pTab, sizeof(intStruct.streetNames) - 1);
+                                   REPLAC(intStruct.streetNames,"'","''",sizeof(intStruct.streetNames) - 1);
+                                   strncpy(intStruct.streetAzms, pAzms, sizeof(intStruct.streetAzms) - 1);
+                                   
+                                   NSString *cmd = [self intStructToCmd:&intStruct];
+                                   [self.curbRampData executeCmd:(char *)cmd.UTF8String
+                                                    sendToServer:YES
+                                                            from:1660];
+                                   
+                                   nLoaded++;
+                                   currentLoc = ftell(fidData);
+                                   
+                                   if (popover && !(nLoaded % 10))
+                                       dispatch_async(dispatch_get_main_queue(),
+                                                      ^{
+                                                          [popover updateProgress:currentLoc/fileSize];
+                                                      });
+                               }
+                               
+                               [self commitTransaction];
+                               if (popover)
+                                   dispatch_async(dispatch_get_main_queue(),
+                                                  ^{
+                                                      [popover updateProgress:1];
+                                                      [popover hide];
+                                                  });
+                               
+                           }
+                           [self close:opened];
+                           fclose(fidIndex);
+                           fclose(fidData);
+                           if (self.delegate)
+                           {
+                               [self.delegate intersectionsDatabase:[self.curbRampData databasePath:self.geoid]
+                                                            didLoad:@""
+                                                         withStatus:INTDBStatusOK];
+                           }
+                           
+                       });
     }
-    
-    SQLOK(240,sqlite3_exec(self.curbRampData.database, "COMMIT TRANSACTION", NULL, NULL, NULL), self.curbRampData.database);
-    rtn = INTDBStatusOK;
-    
-Exit2:
-    fclose(fidIndex);
-    fclose(fidData);
-
-Exit:
-    [self close:opened];
     return rtn;
 }
 
@@ -1690,20 +1738,22 @@ Exit:
         else
         {
             if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0))
-                status = [self loadIntersectionTextToDatabase:toDirectory];
-            
+            {
+                status = [self loadIntersectionTextToDatabase:toDirectory
+                                                 progressView:_popover];
+            }
             else
             {
                 [NSFileManager.defaultManager removeItemAtPath:path
                                                          error:nil];
                 status = (FTPStatus)INTDBStatusFailedToUnzip;
+                if (self.delegate)
+                {
+                    [self.delegate intersectionsDatabase:[self.curbRampData databasePath:self.geoid]
+                                                 didLoad:@"Failed to Unzip"
+                                              withStatus:status];
+                }
             }
-        }
-        if (self.delegate)
-        {
-            [self.delegate intersectionsDatabase:[self.curbRampData databasePath:self.geoid]
-                                         didLoad:@""
-                                      withStatus:INTDBStatusOK];
         }
     }
     
@@ -1740,6 +1790,7 @@ Exit:
 - (void)getPlaceIntersectionFile:(GSSiPopoverView *)popover
                         forGeoid:(int)geoid
 {
+    _popover = popover;
     geoid = geoid % 100000000;
     //NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
     NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
@@ -1807,6 +1858,7 @@ Exit:
     {
         if (_delegate)
         {
+            [popover hide];
             [_delegate intersectionsDatabase:dbPath
                                      didLoad:@""
                                   withStatus:INTDBStatusOK];
@@ -1849,21 +1901,6 @@ Exit:
                                  forGeoid:self.geoid];
     }
     
-}
-
-- (BOOL)open
-{
-    BOOL rtn = [self.curbRampData open];
-    return rtn;
-}
-
-- (void)close:(BOOL)opened
-{
-    if (opened)
-    {
-        [self.curbRampData close:opened];
-        NSLog(@"Intersections Database close");
-    }
 }
 
 - (void)dealloc

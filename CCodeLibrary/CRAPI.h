@@ -103,6 +103,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property BOOL mapPropList, mapIndividualDest, mapGroupDest;
 @property BOOL uploadPix, downloadData, downloadPix;
 @property int dataset;
+@property BOOL ignoreErrorLog;
 
 + (CRAPI *)sharedInstance;
 
@@ -181,6 +182,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 -(void) logToErrorFile:(NSString*) error
             withHeader:(NSString*) header;
 -(void) clearErrorFile;
+-(void) logToErrorFileIgnore:(BOOL)ignore;
 
 
 @end
