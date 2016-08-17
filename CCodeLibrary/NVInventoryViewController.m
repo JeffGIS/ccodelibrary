@@ -15,7 +15,7 @@
 @interface NVInventoryViewController () <NVRampTypePageControllerDelegate>
 
 @property (nonatomic) UIImageView *backgroundImage, *imageTargetView;
-@property (nonatomic) UIButton *cancelButton, *doneButton, *complexButton;
+@property (nonatomic) UIButton *cancelButton, *doneButton, *complexButton, *refreshButton;
 @property (nonatomic) UIButton *addRampButton, *addSignalButton, *addXWalkButton;
 @property (nonatomic) UIButton *editItemButton, *rampTypeButton, *currentEditButton;
 @property (nonatomic, copy) NSString *pathToImageFile, *pathToBPWFile;
@@ -172,6 +172,20 @@
     _intersectionLabel.font = [UIFont boldSystemFontOfSize:32.0];
     _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersection.intID];
     [self setupLabel:_intersectionLabel];
+    
+    CGFloat size = 52.0;
+    _refreshButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _refreshButton.frame = CGRectMake((CGRectGetMaxX(_backgroundImage.frame) - size), 0.0, size, size);
+    
+    [_refreshButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"refreshIcon"
+                                                                                            ofType:@"png"]]
+                    forState:UIControlStateNormal];
+    
+    [_refreshButton addTarget:self
+                       action:@selector(refreshButtonTapped:)
+             forControlEvents:UIControlEventTouchUpInside];
+    
+    [_backgroundImage addSubview:_refreshButton];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -228,6 +242,10 @@
 - (void)setBKImage:(BOOL)forceRefresh;
 {
     CRAPI.sharedInstance.currentView = self.view;
+    _backgroundImage.image = nil;
+    
+    if ([_backgroundImage.subviews containsObject:_gridScaleLabel])
+        [_gridScaleLabel removeFromSuperview];
     
     NVTileCompiler *nvtc = [NVTileCompiler compileImageForIntersection:_currentIntersection
                                                                   zoom:_currentZoom
@@ -2200,6 +2218,22 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
                                     showFileAtPath:filePath];
 #pragma unused(nvwv)
+}
+
+- (void)refreshButtonTapped:(UIButton *)button
+{
+    if (hasNetwork())
+        [self setBKImage:YES];
+    
+    else
+    {
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                          delegate:self
+                                                             title:@"Network Required To Refresh Intersection Image"
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
+#pragma unused(alert)
+    }
 }
 
 @end
