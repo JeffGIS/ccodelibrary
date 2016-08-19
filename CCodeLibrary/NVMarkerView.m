@@ -202,6 +202,9 @@
                             CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
                             numComplex++;
                             break;
+                            
+                        default:
+                            break;
                     }
                         break;
                         
@@ -251,6 +254,9 @@
                         case ComplexStatus:
                             CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
                             numComplex++;
+                            break;
+                            
+                        default:
                             break;
                     }
                         break;

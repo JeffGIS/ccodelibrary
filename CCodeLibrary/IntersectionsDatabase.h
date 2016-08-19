@@ -21,7 +21,7 @@
 @interface IntersectionsDatabase : NSObject <FTPDataPullDelegate>
 
 @property (nonatomic, weak) id <IntersectionsDatabaseDelegate> delegate;
-@property int geoid;
+@property (nonatomic) int geoid;
 @property BOOL gettingUploaded;
 @property (nonatomic) CurbRampData *curbRampData;
 @property (nonatomic) FTPDataPull *pull;

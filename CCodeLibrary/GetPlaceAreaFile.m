@@ -33,18 +33,20 @@
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path
 {
+    AreaFileStatus afStatus = AreaFileStatusDefault;
+    
     if (status == FTPStatusOK || status == FTPStatusFileExists)
-        status = (FTPStatus)AreaFileStatusOK;
+        afStatus = AreaFileStatusOK;
     
     else if (status != FTPStatusConnectionFailedTryingSecondary)
     {
-        status = (FTPStatus)AreaFileStatusFailed;
+        afStatus = AreaFileStatusFailed;
         path = @"";
     }
     
     [self.delegate getPlaceAreaFile:self
                          didGetFile:path
-                         withStatus:status
+                         withStatus:afStatus
                     andStatusString:statusString];
 }
 -(void) dealloc

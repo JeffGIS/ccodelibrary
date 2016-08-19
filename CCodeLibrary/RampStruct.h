@@ -1,10 +1,11 @@
-//
 //  RampStruct.h
 //  CCodeLibrary
-//
-//  Created by Bill Munson on 8/19/16.
-//  Copyright © 2016 GSSi. All rights reserved.
-//
+
+#ifndef RampStruct_h
+#define RampStruct_h
+
+#include "stdbool.h"
+
 enum textures {
     smoothConcrete=1,
     brushedConcrete=2,
@@ -28,22 +29,46 @@ enum obstructions {
     masterNone=11
 };
 
-typedef NS_ENUM(NSInteger, CrackType)
-{
-    CrackTypeRamp,
-    CrackTypeUpperLanding,
-    CrackTypeStreetLanding,
-    CrackTypeLeftSidewalk,
-    CrackTypeRightSidewalk,
-};
+typedef enum {
+    RampTypePerp,
+    RampTypePerpNonWalk,
+    RampTypeCombPerpWalk,
+    RampTypeCombPerpNonWalk,
+    RampTypeOneWayDirCurbGutter,
+    RampTypeOneWayDirBlendTrans,
+    RampTypeParallel,
+    RampTypeDepressedCorner,
+    RampTypeFan,
+    RampTypeBuiltUp,
+    RampTypeDiagonal,
+    RampTypeCombLeftWalk,//left side of RampTypeCombPerpWalk
+    RampTypeCombRightWalk,//right side of RampTypeCombPerpWalk
+    RampTypeCombLeftNonWalk,//left side of RampTypeCombPerpNonWalk
+    RampTypeCombRightNonWalk,//right side of RampTypeCombPerpNonWalk
+    rampTypeCount //always last item
+} RampType;
 
-typedef NS_ENUM(NSInteger, MiddleMeasurement)
-{
-    MiddleMeasurementNone,
-    MiddleMeasurementCurbCutDistance,
-    MiddleMeasurementBumpWidth,
-    MiddleMeasurementBumpHeight,
-};
+typedef enum {
+    NVSignalTypeNone,
+    NVSignalTypeText,
+    NVSignalTypeSymbol,
+    NVSignalTypeSideTimer,
+    NVSignalTypeBelowTimer
+} NVSignalType;
+
+typedef enum {
+    AudibleWalkIndicationNone,
+    AudibleWalkIndicationTones,
+    AudibleWalkIndicationSpeechMessage,
+} AudibleWalkIndication;
+
+typedef enum {
+    NVButtonTypeNone,
+    NVButtonTypeSmallPush,
+    NVButtonTypeLargePush,
+    NVButtonTypeTouch,
+    NVButtonTypeAPS,
+} NVButtonType;
 
 typedef struct CrackWidth {
     float rampCrackWidth;
@@ -53,34 +78,28 @@ typedef struct CrackWidth {
     float rightSidewalkCrackWidth;
 } CrackWidth;
 
-
-#ifndef RampStruct_h
-#define RampStruct_h
-
-struct {
+typedef struct RampStruct {
     int rampNum;
     char rampID[16];
     int timeComplete;
     int yearRebuilt;
-    BOOL rampExists;
-    BOOL isComplete;
+    bool rampExists;
+    bool isComplete;
     float approximateHeading;
     int adjustedRot;
-    BOOL rampInXWalk;
-    BOOL xWalkisComplete, xWalkWidth;
-    BOOL signalisComplete;
+    bool rampInXWalk;
+    bool xWalkisComplete, xWalkWidth;
+    bool signalisComplete;
     enum textures texture;
     enum obstructions upperLandingObstruction;
     enum obstructions lowerLandingObstruction;
     enum obstructions rampObstruction;
-    BOOL hasRampCracks;
-    BOOL hasUpperLandingCracks;
-    BOOL hasStreetLandingCracks;
-    BOOL hasLeftSidewalkCracks, hasRightSidewalkCracks;
-    BOOL gradeBreaksArePerpendicular, detectableWarningIsFullWidth;
+    bool hasRampCracks;
+    bool hasUpperLandingCracks;
+    bool hasStreetLandingCracks;
+    bool hasLeftSidewalkCracks, hasRightSidewalkCracks;
+    bool gradeBreaksArePerpendicular, detectableWarningIsFullWidth;
     CrackWidth crackWidth;
-    CrackType currentCrackMeasurement;//this need not be in copy or comparision methods (internal value - not in database)
-    MiddleMeasurement currentMiddleMeasurement;//this need not be in copy or comparision methods (internal value - not in database)
     int detectableWarningDepth;
     float domeSpacing, spaceBetweenDomes, domeBaseWidth, domeCapWidth;//these are for detectable warnings
     int streetLandingDepth, leftXWalkSideWidth, rightXWalkSideWidth;//these are for diagonal ramp type
@@ -109,7 +128,7 @@ struct {
     NVSignalType PEDSignalType;
     NVButtonType PEDButtonType;
     AudibleWalkIndication awi;
-    BOOL hasLocatorTone, hasInfoSign, hasBraille, hasTactileArrow;
+    bool hasLocatorTone, hasInfoSign, hasBraille, hasTactileArrow;
     float locatorToneVolume, audibleWalkIndicationVolume;//dB measured from 3 feet
     int PEDButtonHeight, PEDButtonDist;
     float SteepTopOfCurb;
@@ -120,7 +139,6 @@ struct {
     float curbCutDistance;
     float bumpWidth;
     float bumpHeight;
-} RAMPSTRUCT;
-
+} RampStruct;
 
 #endif /* RampStruct_h */

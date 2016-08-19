@@ -105,13 +105,11 @@
     {
         CFURLRef urlRef = (__bridge CFURLRef)url;
         CGPDFDocumentRef pdfRef = CGPDFDocumentCreateWithURL(urlRef);
-        nvwv.numPages = CGPDFDocumentGetNumberOfPages(pdfRef);
+        nvwv.numPages = (int)CGPDFDocumentGetNumberOfPages(pdfRef);
         CGPDFDocumentRelease(pdfRef);
     }
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [nvwv.webView loadFileURL:url allowingReadAccessToURL:url];
-    
     [nvwv show];
     
     return nvwv;

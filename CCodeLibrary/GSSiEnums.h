@@ -184,31 +184,6 @@ typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
     MarkerInfoWindowTypeCrime,
 };
 
-typedef NS_ENUM(NSInteger, AudibleWalkIndication)
-{
-    AudibleWalkIndicationNone,
-    AudibleWalkIndicationTones,
-    AudibleWalkIndicationSpeechMessage,
-};
-
-typedef NS_ENUM(NSInteger, NVButtonType)
-{
-    NVButtonTypeNone,
-    NVButtonTypeSmallPush,
-    NVButtonTypeLargePush,
-    NVButtonTypeTouch,
-    NVButtonTypeAPS,
-};
-
-typedef NS_ENUM(NSInteger, NVSignalType)
-{
-    NVSignalTypeNone,
-    NVSignalTypeText,
-    NVSignalTypeSymbol,
-    NVSignalTypeSideTimer,
-    NVSignalTypeBelowTimer,
-};
-
 typedef NS_ENUM(NSInteger, HardCodedConfigs)
 {
     HCConfigAlleyWalls,

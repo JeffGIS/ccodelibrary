@@ -1727,6 +1727,8 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path
 {
+    INTDBStatus intdbStatus = INTDBStatusDefault;
+    
     if (status == FTPStatusOK || status == FTPStatusFileExists)
     {
         NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
@@ -1735,23 +1737,26 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         
         if (self.gettingUploaded)
             [self open];
+        
         else
         {
             if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0))
             {
-                status = [self loadIntersectionTextToDatabase:toDirectory
-                                                 progressView:_popover];
+                intdbStatus = (INTDBStatus)[self loadIntersectionTextToDatabase:toDirectory
+                                                                   progressView:_popover];
             }
+            
             else
             {
                 [NSFileManager.defaultManager removeItemAtPath:path
                                                          error:nil];
-                status = (FTPStatus)INTDBStatusFailedToUnzip;
+                intdbStatus = INTDBStatusFailedToUnzip;
+                
                 if (self.delegate)
                 {
                     [self.delegate intersectionsDatabase:[self.curbRampData databasePath:self.geoid]
                                                  didLoad:@"Failed to Unzip"
-                                              withStatus:status];
+                                              withStatus:intdbStatus];
                 }
             }
         }

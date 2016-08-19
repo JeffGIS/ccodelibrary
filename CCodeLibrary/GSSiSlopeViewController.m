@@ -900,7 +900,7 @@ static int COUNT=100;
         (fabs(_data.sideSlopePct) > (_criticalSideValue - _errorValue)) &&
         (fabs(_data.sideSlopePct) < (_criticalSideValue + _errorValue)))
     {
-        NSLog(@"sidePct=%d, critSV=%d, errorVal=%d", _data.sideSlopePct, _criticalSideValue, _errorValue);
+        NSLog(@"sidePct=%f, critSV=%f, errorVal=%f", _data.sideSlopePct, _criticalSideValue, _errorValue);
         
         NVSliderController *slider = nil;
         

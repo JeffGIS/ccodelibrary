@@ -19,6 +19,23 @@
 #import "GSSiEnums.h"
 #import "RampStruct.h"
 
+typedef NS_ENUM(NSInteger, CrackType)
+{
+    CrackTypeRamp,
+    CrackTypeUpperLanding,
+    CrackTypeStreetLanding,
+    CrackTypeLeftSidewalk,
+    CrackTypeRightSidewalk,
+};
+
+typedef NS_ENUM(NSInteger, MiddleMeasurement)
+{
+    MiddleMeasurementNone,
+    MiddleMeasurementCurbCutDistance,
+    MiddleMeasurementBumpWidth,
+    MiddleMeasurementBumpHeight,
+};
+
 @interface PSRamp : NSObject
 //Preliminary Survey Ramps
 @property (nonatomic) int lev21x, lev21y;

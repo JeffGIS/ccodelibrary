@@ -36,21 +36,23 @@
        andStatusString:(NSString *)statusString
               filePath:(NSString *)path
 {
+    GetAssStatus gaStatus = GetAssStatusDefault;
+    
     if (status == FTPStatusConnectionFailedTryingSecondary)
         return;
     
     if (status == FTPStatusOK || status == FTPStatusFileExists)
-        status = (FTPStatus)GetAssStatusOK;
+        gaStatus = GetAssStatusOK;
     
     else
     {
-        status = (FTPStatus)GetAssStatusFailed;
+        gaStatus = GetAssStatusFailed;
         path = @"";
     }
     
     [self.delegate getAssignments:self
                        didGetFile:path
-                       withStatus:status];
+                       withStatus:gaStatus];
     
     return;
 }

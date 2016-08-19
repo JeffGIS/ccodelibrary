@@ -621,7 +621,7 @@
     NSString *errorFile = [self errorLogPath];
     NSString *idString = [NSString stringWithFormat:@"%@ %i %i %@ %i %i %i %i",[self timeStamp],_currentModule,_currentSubModule,UIApplication.appVersionBuild,_GSSiPadNumber,_currentManageriPad,_currentiPadWithinManager,self.currentGeoid];
     //#ifdef DEBUG
-    NSLog (error);
+    NSLog(@"%@", error);
 //#else
     [self appendString:idString
                 toFile:errorFile];
