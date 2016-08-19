@@ -21,6 +21,7 @@
 		1FB3605619AE7E8200592B1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB3605519AE7E8200592B1D /* UIKit.framework */; };
 		1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */; };
 		1FF293681D0F49FD00E580C5 /* NVTileCompiler.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 691636211C1FC790000C61B8 /* NVTileCompiler.m */; };
+		1FF82E491D677B29009523EC /* RampStruct.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1FF82E481D6778F1009523EC /* RampStruct.h */; };
 		690746E51CD41DCB00B31D8F /* NVTextViewAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 690746E41CD41DCB00B31D8F /* NVTextViewAlert.m */; };
 		690746E61CD4206500B31D8F /* NVTextViewAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 690746E31CD41DCB00B31D8F /* NVTextViewAlert.h */; };
 		690E829F1C11055F00AB410E /* YTPlayerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698F987A1C10B96B009F2F01 /* YTPlayerView.h */; };
@@ -338,6 +339,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				1FF82E491D677B29009523EC /* RampStruct.h in CopyFiles */,
 				692EFA531D36AC6B007B0D18 /* NVEmailFileList.h in CopyFiles */,
 				1FF293681D0F49FD00E580C5 /* NVTileCompiler.m in CopyFiles */,
 				69F8E0D61D05CD60003E8655 /* NVMarkerView.h in CopyFiles */,
@@ -490,6 +492,7 @@
 		1FB3605519AE7E8200592B1D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1FE2BC0019C2036A00FA5C4C /* ManagePlacesDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagePlacesDatabase.h; sourceTree = "<group>"; };
 		1FE2BC0119C2036A00FA5C4C /* ManagePlacesDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagePlacesDatabase.m; sourceTree = "<group>"; };
+		1FF82E481D6778F1009523EC /* RampStruct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RampStruct.h; sourceTree = "<group>"; };
 		690746E31CD41DCB00B31D8F /* NVTextViewAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextViewAlert.h; sourceTree = "<group>"; };
 		690746E41CD41DCB00B31D8F /* NVTextViewAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextViewAlert.m; sourceTree = "<group>"; };
 		691636201C1FC790000C61B8 /* NVTileCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTileCompiler.h; sourceTree = "<group>"; };
@@ -898,6 +901,7 @@
 				EB2C7DB919BCB9C400F6D9F0 /* IntersectionPoint.m */,
 				EB2C7DB219BA5A6F00F6D9F0 /* IntersectionRecord.h */,
 				EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */,
+				1FF82E481D6778F1009523EC /* RampStruct.h */,
 			);
 			name = Intersections;
 			sourceTree = "<group>";

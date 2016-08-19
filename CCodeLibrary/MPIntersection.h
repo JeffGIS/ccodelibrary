@@ -17,54 +17,7 @@
 #import "NVRampTypePageController.h"
 #import "IntersectionPoint.h"
 #import "GSSiEnums.h"
-
-enum textures {
-    smoothConcrete=1,
-    brushedConcrete=2,
-    tintedConcrete=3,
-    truncatedStoneDomes=4,
-    truncatedStampedConcrete=5,
-    castironTruncatedDomes=6,
-    exposedAggregate=7,
-    cutStone=8,
-    other=10
-};
-
-enum obstructions {
-    hydrant=1,
-    manhole=2,
-    polebox=3,
-    pole=4,
-    streetmanhole=5,
-    otherob=6,
-    none=10,
-    masterNone=11
-};
-
-typedef NS_ENUM(NSInteger, CrackType)
-{
-    CrackTypeRamp,
-    CrackTypeUpperLanding,
-    CrackTypeStreetLanding,
-    CrackTypeLeftSidewalk,
-    CrackTypeRightSidewalk,
-};
-
-typedef NS_ENUM(NSInteger, MiddleMeasurement)
-{
-    MiddleMeasurementNone,
-    MiddleMeasurementCurbCutDistance,
-    MiddleMeasurementBumpWidth,
-    MiddleMeasurementBumpHeight,
-};
-
-typedef struct CrackWidth {
-    float rampCrackWidth;
-    float upperLandingCrackWidth;
-    float streetLandingCrackWidth;
-    float leftSidewalkCrackWidth;
-    float rightSidewalkCrackWidth;
-} CrackWidth;
+#import "RampStruct.h"
 
 @interface PSRamp : NSObject
 //Preliminary Survey Ramps
