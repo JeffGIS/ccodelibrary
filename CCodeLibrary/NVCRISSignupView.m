@@ -52,7 +52,7 @@
     
     CGFloat numElements = 9.0;
     
-    signup.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(4.0, 0.0, (signup.frame.size.width - 8.0),
+    signup.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(84.0, 0.0, (signup.frame.size.width - 168.0),
                                                                   (signup.frame.size.height / numElements))];
     
     signup.titleLabel.text = @"NVCRIS Signup Screen";
@@ -61,6 +61,25 @@
     signup.titleLabel.textAlignment = NSTextAlignmentCenter;
     
     [signup addSubview:signup.titleLabel];
+    
+    UIButton *helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    helpButton.frame = CGRectMake((signup.frame.size.width - signup.titleLabel.frame.size.height),
+                                  0.0, signup.titleLabel.frame.size.height, signup.titleLabel.frame.size.height);
+    
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"question-256x256"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
+    
+    [helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"questionMarkHighlighted"
+                                                                                        ofType:@"png"]]
+                forState:UIControlStateHighlighted];
+    
+    [helpButton addTarget:signup
+                   action:@selector(helpButtonTapped:)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    [signup addSubview:helpButton];
     
     signup.promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(4.0, (signup.frame.size.height / numElements),
                                                                    (signup.frame.size.width - 8.0),
@@ -867,6 +886,19 @@ replacementString:(NSString *)string
 - (void)presentKeyboard
 {
     [_userNumberTF becomeFirstResponder];
+}
+
+- (void)helpButtonTapped:(UIButton *)button
+{
+    [self dismissKeyboard];
+    
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_NVCRISSignup"
+                                                       ofType:@"pdf"];
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
+                                    showFileAtPath:filePath];
+
+    nvwv.delegate = self;
 }
 
 @end

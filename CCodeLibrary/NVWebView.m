@@ -17,6 +17,7 @@
 @property (nonatomic) UIActivityIndicatorView *indicator;
 @property (nonatomic) CGPoint zoomPoint;
 @property int numPages, zoomPage;
+@property BOOL isFile;
 
 @end
 
@@ -30,6 +31,7 @@
     nvwv.zoomPoint = CGPointZero;
     nvwv.zoomScale = nvwv.zoomRotation = 0.0;
     nvwv.numPages = nvwv.zoomPage = 1;
+    nvwv.isFile = NO;
     
     nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -95,6 +97,7 @@
     nvwv.zoomPoint = CGPointZero;
     nvwv.zoomScale = nvwv.zoomRotation = 0.0;
     nvwv.numPages = nvwv.zoomPage = 1;
+    nvwv.isFile = YES;
     
     NSURL *url = [NSURL fileURLWithPath:path];
 
@@ -263,31 +266,34 @@ didFinishNavigation:(WKNavigation *)navigation
     [_indicator removeFromSuperview];
     [_indicator stopAnimating];
     
-    _webView.scrollView.minimumZoomScale = 1.0;
-    _webView.scrollView.maximumZoomScale = 100.0;
-    _webView.scrollView.bouncesZoom = NO;
-    _webView.scrollView.directionalLockEnabled = NO;
-    _webView.scrollView.clipsToBounds = NO;
-    
-    if (_zoomPage > 1)
+    if (_isFile)
     {
-        CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
-        _zoomPoint.x *= _webView.scrollView.contentSize.width;
-        _zoomPoint.y *= pageHeight;
-        _zoomPoint.y += (pageHeight * (_zoomPage - 1));
+        _webView.scrollView.minimumZoomScale = 1.0;
+        _webView.scrollView.maximumZoomScale = 100.0;
+        _webView.scrollView.bouncesZoom = NO;
+        _webView.scrollView.directionalLockEnabled = NO;
+        _webView.scrollView.clipsToBounds = NO;
+        
+        if (_zoomPage > 1)
+        {
+            CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+            _zoomPoint.x *= _webView.scrollView.contentSize.width;
+            _zoomPoint.y *= pageHeight;
+            _zoomPoint.y += (pageHeight * (_zoomPage - 1));
+        }
+        
+        CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
+                                     (_webView.scrollView.bounds.size.height / _zoomScale));
+        
+        CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
+                                     (_zoomPoint.y - (zoomSize.height / 2.0)),
+                                     zoomSize.width, zoomSize.height);
+        
+        [_webView.scrollView zoomToRect:zoomRect
+                               animated:NO];
+        
+        _webView.scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
     }
-    
-    CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
-                                 (_webView.scrollView.bounds.size.height / _zoomScale));
-    
-    CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
-                                 (_zoomPoint.y - (zoomSize.height / 2.0)),
-                                 zoomSize.width, zoomSize.height);
-    
-    [_webView.scrollView zoomToRect:zoomRect
-                           animated:NO];
-    
-    _webView.scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
 }
 
 - (void)webView:(WKWebView *)webView
