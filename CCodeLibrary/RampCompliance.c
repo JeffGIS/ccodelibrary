@@ -617,6 +617,13 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         }
     }
     
+    //mark as compliant if no flags have been added
+    if (strlen(basic) == 0)
+    {
+        basic = strcat(basic, Compliant);
+        detail = strcat(detail, Compliant);
+    }
+    
     *detailCode = detail;
     return basic;
 }
