@@ -861,14 +861,23 @@ static int nInit=0;
     FILE *fid = fopen(file.UTF8String, "rb");
     int totLen = (int)FileLength(fid);
     int maxLineLen = totLen+2;
-    LPSTR str = malloc(totLen+4);
+    LPSTR str = malloc(totLen+4096);
     [self startTransaction];
-    while (rtn && fgetstring(str, maxLineLen, fid))
+    if (fgetstring(str, maxLineLen, fid))
     {
-        rtn = [self executeCmd:str
-                  sendToServer:NO
-                          from:1672];
-        line++;
+        int fromVer = atoi (CURRENT_INTERSECTION_VERSION);
+        int toVer = atoi (CURRENT_INTERSECTION_VERSION);
+        LPSTR vloc = strstr (str,"DBVer ");
+        if (vloc)
+            fromVer = atoi (vloc+6);
+        while (rtn && fgetstring(str, maxLineLen, fid))
+        {
+            convertVersion (str,fromVer,toVer);
+            rtn = [self executeCmd:str
+                      sendToServer:NO
+                              from:1672];
+            line++;
+        }
     }
     fclose(fid);
     if (!rtn) //file has to be edited on server (by GSSi) before more data can be loaded
@@ -883,6 +892,31 @@ static int nInit=0;
     free(str);
     [self close:opened];
     return rtn;
+}
+
+void convertVersion (LPSTR str,int fromVer,int toVer)
+{
+    int version = fromVer;
+    
+    while (version < toVer)
+    {
+        switch (version++)
+        {
+            case 1:
+                convertVersion_1_to_2 (str);
+                break;
+        }
+    }
+    return;
+}
+void convertVersion_1_to_2 (LPSTR str)
+{
+    LPSTR ploc = strstr (str,"INSERT OR REPLACE INTO Ramps VALUES(");
+    if (ploc)
+    {
+        LPSTR pEnd = strrchr (ploc,')');
+        sprintf (pEnd,",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);");
+    }
 }
 
 
