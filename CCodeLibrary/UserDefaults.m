@@ -575,6 +575,45 @@ static UserDefaults *_defaults;
     }
 }
 
+- (void)resetPlacesLists
+{
+    NSMutableArray *namesArray = [[NSMutableArray alloc] init];
+    NSMutableArray *statesArray = [[NSMutableArray alloc] init];
+    NSMutableArray *geoidsArray = [[NSMutableArray alloc] init];
+    NSMutableArray *bounds_wArray = [[NSMutableArray alloc] init];
+    NSMutableArray *bounds_sArray = [[NSMutableArray alloc] init];
+    NSMutableArray *bounds_eArray = [[NSMutableArray alloc] init];
+    NSMutableArray *bounds_nArray = [[NSMutableArray alloc] init];
+    NSArray *locationList = [[NSArray alloc] init];
+    
+    [_defaults setObject:namesArray
+                  forKey:@"NamesArray"];
+    
+    [_defaults setObject:statesArray
+                  forKey:@"StatesArray"];
+    
+    [_defaults setObject:geoidsArray
+                  forKey:@"GeoidsArray"];
+    
+    [_defaults setObject:bounds_wArray
+                  forKey:@"Bounds_wArray"];
+    
+    [_defaults setObject:bounds_sArray
+                  forKey:@"Bounds_sArray"];
+    
+    [_defaults setObject:bounds_eArray
+                  forKey:@"Bounds_eArray"];
+    
+    [_defaults setObject:bounds_nArray
+                  forKey:@"Bounds_nArray"];
+    
+    [_defaults setObject:locationList
+                  forKey:@"LocationList"];
+    
+    [_defaults synchronize];
+    
+}
+
 - (void)removeLocationFromListAtIndex:(NSUInteger)index
 {
     NSMutableArray *namesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"NamesArray"]];

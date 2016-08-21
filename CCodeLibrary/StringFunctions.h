@@ -10,7 +10,7 @@ BOOL hasNetwork(void);
 NSString *deviceSystemInfo(void);
 NSString *deviceCarrier(void);
 NSString *deviceInfo();
-void SetUseMasterID (BOOL set);
+void SetUseMasterID (BOOL reset);
 void SetUseDemoID (BOOL set);
 void SetVendoIDInc (int inc);
 BOOL getUseMasterID (void);

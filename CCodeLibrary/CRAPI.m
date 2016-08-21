@@ -8,6 +8,7 @@
 #import "CityOrOrganizationData.h"
 #import "NVAlertView.h"
 #import "UIApplication+VersionBuild.h"
+#import "ManagePlacesDatabase.h"
 
 @interface CRAPI () <NVAlertViewDelegate>
 
@@ -738,6 +739,16 @@
     [_placesArray sortUsingSelector:@selector(compareName:)];
 
     return TRUE;
+}
+
+- (void) transferPlacesArrayToManagePlacesList
+{
+    [UserDefaults.defaults  resetPlacesLists];
+    for (CityOrOrganizationData *c in _placesArray)
+    {
+        [ManagePlacesDatabase.database addLocationToList:c.number];
+    }
+
 }
 
 - (void)savePlacesString:(NSString*)placesString

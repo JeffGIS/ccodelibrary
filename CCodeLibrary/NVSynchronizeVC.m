@@ -475,20 +475,25 @@
 
 - (void)updateLabels
 {
-    _dataUpLabel.text = [NSString stringWithFormat:@"Data Files to be Uploaded: %i", _upFiles];
-    _pixUpLabel.text = [NSString stringWithFormat:@"Pictures to be Uploaded: %i", _upPix];
-    _dataDownLabel.text = [NSString stringWithFormat:@"Data Files to be Downloaded: %i", _downFiles];
-    _pixDownLabel.text = [NSString stringWithFormat:@"Pictures to be Downloaded: %i", _downPix];
     if (_first)
     {
         _first = NO;
         if (_upFiles < 0 || _upPix < 0 || _downFiles < 0 || _downPix < 0)
         {
             NSString * msg = [NSString stringWithFormat:@"Negative numbers in sync: %i %i %i %i",_upFiles,_upPix,_downFiles,_downPix];
-            [CRAPI.sharedInstance logToErrorFile:msg];
+            if (getUseMasterID())
+            {
+                _upFiles = 0;
+            }
+            else
+                [CRAPI.sharedInstance logToErrorFile:msg];
         }
     }
-}
+    _dataUpLabel.text = [NSString stringWithFormat:@"Data Files to be Uploaded: %i", _upFiles];
+    _pixUpLabel.text = [NSString stringWithFormat:@"Pictures to be Uploaded: %i", _upPix];
+    _dataDownLabel.text = [NSString stringWithFormat:@"Data Files to be Downloaded: %i", _downFiles];
+    _pixDownLabel.text = [NSString stringWithFormat:@"Pictures to be Downloaded: %i", _downPix];
+ }
 
 - (void)updateOverallProgress:(CGFloat)progress
 {
@@ -983,7 +988,7 @@ didReceiveMessage:(NSString *)message
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
                 int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad
                                                 lastPictNum:&pictNum];
-                if (_myiPad > 0)
+                if (_myiPad > 0 || getUseMasterID())
                 {
                     _syncButton.enabled = YES;
                     [_syncButton setTitle:@"Synchronize"
@@ -1241,7 +1246,7 @@ Top:
 {
     currentiPad++;
     
-    if (currentiPad == _myiPad)
+    if (currentiPad == _myiPad && !getUseMasterID())
         currentiPad++;
     
     if (currentiPad > _numiPadsInMsg)

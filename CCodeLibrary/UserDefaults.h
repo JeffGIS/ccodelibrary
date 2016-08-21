@@ -84,6 +84,8 @@
 - (void)setStatus:(int)status
          forGeoid:(int)geoid;
 
+- (void)resetPlacesLists;
+
 - (void)addLocationToListWithName:(NSString *)name
                             state:(NSString *)state
                             geoid:(int)geoid

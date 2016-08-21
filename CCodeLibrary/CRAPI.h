@@ -163,6 +163,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (NSMutableArray *) copyPlaces;
 - (int) newPlace:(NSArray *)oldPlaces;
 - (BOOL)processPlacesArray:(NSInteger) row;
+- (void) transferPlacesArrayToManagePlacesList;
 - (BOOL) setGeoIDForCurrentApp;
 - (NSString*) getPlacesStringFromFile;
 - (void)loadiPadParametersForGeoid:(int)geoid;

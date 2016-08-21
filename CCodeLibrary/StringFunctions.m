@@ -1,6 +1,7 @@
 //  StringFunctions.m
 //  CCodeLibrary
 
+#import "UserDefaults.h"
 #import "StringFunctions.h"
 #import "MathUtil.h"
 #import "Reachability.h"
@@ -68,9 +69,18 @@ NSString *deviceInfo(void)
             UIDevice.availableStorageSpace, UIDevice.totalStorageSpace, carrier, floatSize];
 }
 
-void SetUseMasterID (BOOL set)
+void SetUseMasterID (BOOL reset)
 {
-    useMasterID = set;
+    useMasterID = TRUE;
+    if (reset)
+    {
+        NSString * path = UserDefaults.defaults.sharedFilePath;
+        BOOL success = [NSFileManager.defaultManager removeItemAtPath:path
+                                                                error:nil];
+        path = UserDefaults.defaults.localFilePath;
+        success = [NSFileManager.defaultManager removeItemAtPath:path
+                                                                error:nil];
+    }
     return;
 }
 
