@@ -24,6 +24,7 @@
 		1FF82E491D677B29009523EC /* RampStruct.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1FF82E481D6778F1009523EC /* RampStruct.h */; };
 		690746E51CD41DCB00B31D8F /* NVTextViewAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 690746E41CD41DCB00B31D8F /* NVTextViewAlert.m */; };
 		690746E61CD4206500B31D8F /* NVTextViewAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 690746E31CD41DCB00B31D8F /* NVTextViewAlert.h */; };
+		690B3FA91D6A69A600DAC87D /* RampCompliance.c in Sources */ = {isa = PBXBuildFile; fileRef = 696D037F1D679E66002E686A /* RampCompliance.c */; };
 		690E829F1C11055F00AB410E /* YTPlayerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698F987A1C10B96B009F2F01 /* YTPlayerView.h */; };
 		691636221C1FC790000C61B8 /* NVTileCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 691636211C1FC790000C61B8 /* NVTileCompiler.m */; };
 		691636231C1FDA11000C61B8 /* NVTileCompiler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 691636201C1FC790000C61B8 /* NVTileCompiler.h */; };
@@ -52,7 +53,6 @@
 		6956B9991CB235490070416B /* NVPopoverTableView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6956B9961CB230210070416B /* NVPopoverTableView.h */; };
 		6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */; };
 		6960F4D71BBCD25100A5681C /* NVSpreadsheetView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6960F4D41BBCC80800A5681C /* NVSpreadsheetView.h */; };
-		696D03811D679E66002E686A /* RampCompliance.c in Sources */ = {isa = PBXBuildFile; fileRef = 696D037F1D679E66002E686A /* RampCompliance.c */; };
 		696D03821D67A616002E686A /* RampCompliance.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 696D03801D679E66002E686A /* RampCompliance.h */; };
 		697560BE1CB18D5A006EEA14 /* NVMarkerInfoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 697560BD1CB18D5A006EEA14 /* NVMarkerInfoButton.m */; };
 		697560BF1CB19AF9006EEA14 /* NVMarkerInfoButton.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697560BC1CB18D5A006EEA14 /* NVMarkerInfoButton.h */; };
@@ -1441,7 +1441,7 @@
 				EBC01D1E1BED1C8C0004C751 /* mer404.c in Sources */,
 				6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */,
 				6943041F1C3351E20077EC9F /* NVColor.m in Sources */,
-				696D03811D679E66002E686A /* RampCompliance.c in Sources */,
+				690B3FA91D6A69A600DAC87D /* RampCompliance.c in Sources */,
 				69987CF71C94683F000EC26F /* UIView+Constraints.m in Sources */,
 				EBC01D191BED1C8C0004C751 /* kepler.c in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,

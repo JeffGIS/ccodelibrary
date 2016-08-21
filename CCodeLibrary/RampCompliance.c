@@ -52,21 +52,25 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
     flagged = 0;
     
     //ramp slopes (8,2)
-    if (ramp->rampSlopeFront > (CV8 + tolerance))
+    float value = fabsf(ramp->rampSlopeFront);
+    
+    if (value > (CV8 + tolerance) && value < 9990.0)
     {
         basic = strcat(basic, SlopeMajor);
         detail = strcat(detail, RampFrontMajor);
         flagged = 2;
     }
     
-    else if (ramp->rampSlopeFront > CV8)
+    else if (value > CV8 && value < 9990.0)
     {
         basic = strcat(basic, SlopeMinor);
         detail = strcat(detail, RampFrontMinor);
         flagged = 1;
     }
     
-    if (ramp->rampSlopeSide > (CV2 + tolerance))
+    value = fabsf(ramp->rampSlopeSide);
+    
+    if (value > (CV2 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -80,7 +84,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, RampSideMajor);
     }
     
-    else if (ramp->rampSlopeSide > CV2)
+    else if (value > CV2 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -92,7 +96,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
     }
     
     //upper landing slopes (2,2)
-    if (ramp->upperLandingSlopeFront > (CV2 + tolerance))
+    value = fabsf(ramp->upperLandingSlopeFront);
+    
+    if (value > (CV2 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -106,7 +112,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, UpperLandingFrontMajor);
     }
     
-    else if (ramp->upperLandingSlopeFront > CV2)
+    else if (value > CV2 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -117,7 +123,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, UpperLandingFrontMinor);
     }
     
-    if (ramp->upperLandingSlopeSide > (CV2 + tolerance))
+    value = fabsf(ramp->upperLandingSlopeSide);
+    
+    if (value > (CV2 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -131,7 +139,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, UpperLandingSideMajor);
     }
     
-    else if (ramp->upperLandingSlopeSide > CV2)
+    else if (value > CV2 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -143,7 +151,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
     }
     
     //street landing slopes (2,2)
-    if (ramp->streetLandingSlopeFront > (CV2 + tolerance))
+    value = fabsf(ramp->streetLandingSlopeFront);
+    
+    if (value > (CV2 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -157,7 +167,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, StreetLandingFrontMajor);
     }
     
-    else if (ramp->streetLandingSlopeFront > CV2)
+    else if (value > CV2 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -168,7 +178,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, StreetLandingFrontMinor);
     }
     
-    if (ramp->streetLandingSlopeSide > (CV2 + tolerance))
+    value = fabsf(ramp->streetLandingSlopeSide);
+    
+    if (value > (CV2 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -182,7 +194,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, StreetLandingSideMajor);
     }
     
-    else if (ramp->streetLandingSlopeSide > CV2)
+    else if (value > CV2 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -194,7 +206,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
     }
 
     //flare left slopes (10,2)
-    if (ramp->flareLeftSlopeFront > (CV10 + tolerance))
+    value = fabsf(ramp->flareLeftSlopeFront);
+    
+    if (value > (CV10 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -208,7 +222,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, FlareLeftFrontMajor);
     }
     
-    else if (ramp->flareLeftSlopeFront > CV10)
+    else if (value > CV10 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -219,7 +233,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, FlareLeftFrontMinor);
     }
     
-    if (ramp->flareLeftSlopeSide > (CV2 + tolerance))
+    value = fabsf(ramp->flareLeftSlopeSide);
+    
+    if (value > (CV2 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -233,7 +249,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, FlareLeftSideMajor);
     }
     
-    else if (ramp->flareLeftSlopeSide > CV2)
+    else if (value > CV2 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -245,7 +261,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
     }
 
     //flare right slopes (10,2)
-    if (ramp->flareRightSlopeFront > (CV10 + tolerance))
+    value = fabsf(ramp->flareRightSlopeFront);
+    
+    if (value > (CV10 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -259,7 +277,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, FlareRightFrontMajor);
     }
     
-    else if (ramp->flareRightSlopeFront > CV10)
+    else if (value > CV10 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -270,7 +288,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, FlareRightFrontMinor);
     }
     
-    if (ramp->flareRightSlopeSide > (CV2 + tolerance))
+    value = fabsf(ramp->flareRightSlopeSide);
+    
+    if (value > (CV2 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -284,7 +304,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, FlareRightSideMajor);
     }
     
-    else if (ramp->flareRightSlopeSide > CV2)
+    else if (value > CV2 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -296,7 +316,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
     }
     
     //sidewalk left slopes (5,2)
-    if (ramp->swkLeftSlopeFront > (CV5 + tolerance))
+    value = fabsf(ramp->swkLeftSlopeFront);
+    
+    if (value > (CV5 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -310,7 +332,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, SwkLeftFrontMajor);
     }
     
-    else if (ramp->swkLeftSlopeFront > CV5)
+    else if (value > CV5 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -321,7 +343,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, SwkLeftFrontMinor);
     }
     
-    if (ramp->swkLeftSlopeSide > (CV2 + tolerance))
+    value = fabsf(ramp->swkLeftSlopeSide);
+    
+    if (value > (CV2 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -335,7 +359,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, SwkLeftSideMajor);
     }
     
-    else if (ramp->swkLeftSlopeSide > CV2)
+    else if (value > CV2 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -347,7 +371,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
     }
     
     //sidewalk right slopes (5,2)
-    if (ramp->swkRightSlopeFront > (CV5 + tolerance))
+    value = fabsf(ramp->swkRightSlopeFront);
+    
+    if (value > (CV5 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -361,7 +387,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, SwkRightFrontMajor);
     }
     
-    else if (ramp->swkRightSlopeFront > CV5)
+    else if (value > CV5 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -372,7 +398,9 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, SwkRightFrontMinor);
     }
     
-    if (ramp->swkRightSlopeSide > (CV2 + tolerance))
+    value = fabsf(ramp->swkRightSlopeSide);
+    
+    if (value > (CV2 + tolerance) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -386,7 +414,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, SwkRightSideMajor);
     }
     
-    else if (ramp->swkRightSlopeSide > CV2)
+    else if (value > CV2 && value < 9990.0)
     {
         if (flagged < 1)
         {
@@ -624,6 +652,11 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         detail = strcat(detail, Compliant);
     }
     
+    //print to console list of issues
+    if (strstr(basic, SlopeMajor))
+        printf("\nIntersection %i (Ramp %i) : %s, %s", ramp->intID, ramp->rampNum, basic, detail);
+    
     *detailCode = detail;
+    
     return basic;
 }

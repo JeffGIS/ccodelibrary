@@ -59,7 +59,7 @@ static int ii;
     if (opened)
     {
         [self.curbRampData close:opened];
-        NSLog(@"Intersections Database close");
+        //NSLog(@"Intersections Database close");
     }
 }
 
@@ -760,8 +760,9 @@ WHERE intID=%i;",
         if (ramp.rampExists)
         {
             rampToRampStruct (ramp,&rstruct);
+            rstruct.intID = mpint.intID;
             LPSTR detailCode;
-            LPSTR ccode = rampComplianceCode(&rstruct, &detailCode,1.0);
+            LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, 6.0);
             if (strcmp (ccode,"A"))
                 numProblems++;
         }
