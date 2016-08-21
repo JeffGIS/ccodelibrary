@@ -39,13 +39,16 @@ typedef NS_ENUM(NSInteger, MSCFrom)
 
 typedef NS_ENUM(NSInteger, GMSStatus)
 {
-    GMSStatusDefault,
-    GMSStatusSetList,
-    GMSStatusGetList,
+    GMSStatusGetiPadNumber,
+    GMSStatusSetiPadList,
+    GMSStatusGetiPadList,
     GMSStatusDelete,
     GMSStatusCreateNVOrgNumber,
     GMSStatusActivateAccount,
-    GMSStatusRefreshList,
+    GMSStatusRefreshiPadList,
+    GMSStatusGetCityList,
+    GMSStatusSetCityList,
+    GMSStatusPickPlace,
 };
 
 typedef NS_ENUM(NSInteger, GMSMessage)

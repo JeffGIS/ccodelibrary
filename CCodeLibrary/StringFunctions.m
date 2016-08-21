@@ -6,6 +6,7 @@
 #import "Reachability.h"
 #import <sys/utsname.h>
 
+static BOOL useMasterID = FALSE;
 static BOOL useDemoID = FALSE;
 static int useIDInc = 0;
 
@@ -58,10 +59,24 @@ NSString *deviceInfo(void)
     UIDevice *device = UIDevice.currentDevice;
     NSString *carrier = deviceCarrier();
     int floatSize = sizeof(CGFloat);
+#ifdef DEBUG
+    floatSize = -floatSize;
+#endif
     
     return [NSString stringWithFormat:@"%@,%@,%@|%@|%llu|%llu|%@|%i",
             vendorUUIDString(), device.name, device.systemVersion, deviceSystemInfo(),
             UIDevice.availableStorageSpace, UIDevice.totalStorageSpace, carrier, floatSize];
+}
+
+void SetUseMasterID (BOOL set)
+{
+    useMasterID = set;
+    return;
+}
+
+BOOL getUseMasterID (void)
+{
+    return useMasterID;
 }
 
 void SetUseDemoID (BOOL set)
@@ -89,6 +104,10 @@ NSString *vendorUUIDString(void)
     if (useDemoID)
     {
         rtn = @"DEMODEMO-DEMO-DEMO-DEMO-VENDRIDSTRNG";
+    }
+    else if (useMasterID)
+    {
+        rtn = @"MSTRMSTR-MSTR-MSTR-MSTR-VENDRIDSTRNG";
     }
     else if (useIDInc)
     {

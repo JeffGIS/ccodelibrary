@@ -539,15 +539,7 @@
 
 - (NSString *)sharedFilePath
 {
-    NSFileManager *fileManager = NSFileManager.defaultManager;
-    
-    NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:APP_GROUP_ID];
-    
-    [groupContainerURL setResourceValue:[NSNumber numberWithBool:YES]
-                                 forKey:NSURLIsExcludedFromBackupKey
-                                  error:nil];
-    
-    return groupContainerURL.relativePath;
+    return UserDefaults.defaults.sharedFilePath;
 }
 
 -(void)clearOutputDirectory

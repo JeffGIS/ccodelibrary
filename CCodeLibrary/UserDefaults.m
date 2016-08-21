@@ -321,14 +321,19 @@ static UserDefaults *_defaults;
     [groupContainerURL setResourceValue:[NSNumber numberWithBool:YES]
                                  forKey:NSURLIsExcludedFromBackupKey
                                   error:nil];
+    NSString * path = groupContainerURL.relativePath;
+    if (getUseMasterID())
+        path = [path stringByAppendingString:@"/MASTER"];
     
-    return groupContainerURL.relativePath;
+    return path;
 }
 
 - (NSString *)localFilePath
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = paths.firstObject;
+    if (getUseMasterID())
+        documentsDirectory = [documentsDirectory stringByAppendingString:@"/MASTER"];
     return documentsDirectory;
 }
 
