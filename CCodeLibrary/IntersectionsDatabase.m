@@ -7,6 +7,7 @@
 #import "TileGraphics.h"
 #import "MathUtil.h"
 #import "compress.h"
+#import "RampCompliance.h"
 
 static int ii;
 
@@ -746,6 +747,92 @@ WHERE intID=%i;",
     if (rampNum == 81)
         return 12;
     return rampNum;
+}
+- (int)numProblemRamps:(int)intID
+{
+    int numProblems = 0;
+    MPIntersection * mpint = [self getMPIntersectionFromDB:intID withRamps:YES];
+    
+    for (MPRamp *ramp in mpint.ramps)
+    {
+        RampStruct rstruct;
+        
+        if (ramp.rampExists)
+        {
+            rampToRampStruct (ramp,&rstruct);
+            LPSTR detailCode;
+            LPSTR ccode = rampComplianceCode(&rstruct, &detailCode,1.0);
+            if (strcmp (ccode,"A"))
+                numProblems++;
+        }
+    }
+    return numProblems;
+}
+
+void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
+{
+    rstruct->rampNum = ramp.rampNum;
+    strncpy (rstruct->rampID,ramp.rampID.UTF8String,15);
+    rstruct->rampID[15] = 0;
+    rstruct->timeComplete = ramp.timeComplete;
+    rstruct->yearRebuilt = ramp.yearRebuilt;
+    rstruct->rampExists = ramp.rampExists;
+    rstruct->isComplete = ramp.isComplete;
+    rstruct->approximateHeading = ramp.approximateHeading;
+    rstruct->adjustedRot = ramp.adjustedRot;
+    rstruct->rampInXWalk = ramp.rampInXWalk;
+    rstruct->xWalkisComplete = ramp.xWalkisComplete;
+    rstruct->signalisComplete = ramp.signalisComplete;
+    rstruct->hasRampCracks = ramp.hasRampCracks;
+    rstruct->hasUpperLandingCracks = ramp.hasUpperLandingCracks;
+    rstruct->hasStreetLandingCracks = ramp.hasStreetLandingCracks;
+    rstruct->rampWidth = ramp.rampWidth;
+    rstruct->rampDepth = ramp.rampDepth;
+    rstruct->texture = ramp.texture;
+    rstruct->upperLandingObstruction = ramp.upperLandingObstruction;
+    rstruct->lowerLandingObstruction = ramp.lowerLandingObstruction;
+    rstruct->rampObstruction = ramp.rampObstruction;
+    rstruct->rampSlopeSide = ramp.rampSlopeSide;
+    rstruct->rampSlopeFront = ramp.rampSlopeFront;
+    rstruct->rampSlopeHeading = ramp.rampSlopeHeading;
+    rstruct->upperLandingSlopeSide = ramp.upperLandingSlopeSide;
+    rstruct->upperLandingSlopeFront = ramp.upperLandingSlopeFront;
+    rstruct->upperLandingSlopeHeading = ramp.upperLandingSlopeHeading;
+    rstruct->streetLandingSlopeSide = ramp.streetLandingSlopeSide;
+    rstruct->streetLandingSlopeFront = ramp.streetLandingSlopeFront;
+    rstruct->streetLandingSlopeHeading = ramp.streetLandingSlopeHeading;
+    rstruct->flareLeftSlopeSide = ramp.flareLeftSlopeSide;
+    rstruct->flareLeftSlopeFront = ramp.flareLeftSlopeFront;
+    rstruct->flareLeftSlopeHeading = ramp.flareLeftSlopeHeading;
+    rstruct->flareRightSlopeSide = ramp.flareRightSlopeSide;
+    rstruct->flareRightSlopeFront = ramp.flareRightSlopeFront;
+    rstruct->flareRightSlopeHeading = ramp.flareRightSlopeHeading;
+    rstruct->swkLeftSlopeSide = ramp.swkLeftSlopeSide;
+    rstruct->swkLeftSlopeFront = ramp.swkLeftSlopeFront;
+    rstruct->swkLeftSlopeHeading = ramp.swkLeftSlopeHeading;
+    rstruct->swkRightSlopeSide = ramp.swkRightSlopeSide;
+    rstruct->swkRightSlopeFront = ramp.swkRightSlopeFront;
+    rstruct->swkRightSlopeHeading = ramp.swkRightSlopeHeading;
+    rstruct->PEDButtonDist = ramp.PEDButtonDist;
+    rstruct->PEDButtonHeight = ramp.PEDButtonHeight;
+    rstruct->SteepTopOfCurb = ramp.SteepTopOfCurb;
+    rstruct->PedRampLip = ramp.PedRampLip;
+    rstruct->lev21x = ramp.lev21x;
+    rstruct->lev21y = ramp.lev21y;
+    rstruct->PEDSignalType = ramp.PEDSignalType;
+    rstruct->PEDButtonType = ramp.PEDButtonType;
+    rstruct->awi = ramp.awi;
+    rstruct->hasLocatorTone = ramp.hasLocatorTone;
+    rstruct->hasInfoSign = ramp.hasInfoSign;
+    rstruct->hasBraille = ramp.hasBraille;
+    rstruct->hasTactileArrow = ramp.hasTactileArrow;
+    rstruct->locatorToneVolume = ramp.locatorToneVolume;
+    rstruct->audibleWalkIndicationVolume = ramp.audibleWalkIndicationVolume;
+    rstruct->crackWidth = ramp.crackWidth;
+    rstruct->curbCutDistance = ramp.curbCutDistance;
+    rstruct->bumpWidth = ramp.bumpWidth;
+    rstruct->bumpHeight = ramp.bumpHeight;
+    
 }
 
 - (MPIntersection *)getMPIntersectionFromDB:(int)intID

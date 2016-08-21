@@ -71,6 +71,7 @@ NSString *deviceInfo(void)
 
 void SetUseMasterID (BOOL reset)
 {
+#ifdef DEBUG
     useMasterID = TRUE;
     if (reset)
     {
@@ -81,6 +82,7 @@ void SetUseMasterID (BOOL reset)
         success = [NSFileManager.defaultManager removeItemAtPath:path
                                                                 error:nil];
     }
+#endif
     return;
 }
 

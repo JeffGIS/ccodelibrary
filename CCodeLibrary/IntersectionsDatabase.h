@@ -52,7 +52,7 @@
 
 - (MPIntersection *)getMPIntersectionFromDB:(int)intID
                                   withRamps:(BOOL)wantRamps;
-
+- (int)numProblemRamps:(int)intID;
 - (IntersectionPoint *)getFirstIntersectionPointAssignedTo:(int)user
                                                       type:(NSString *)type
                                                 withStatus:(IntersectionStatus)status;

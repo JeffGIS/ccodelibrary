@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, MMMapType)
 {
     MMMapTypePrelim,
     MMMapTypeDetail,
+    MMMapTypeRampIssues,
 };
 
 typedef NS_ENUM(NSInteger, MMLMFrom)

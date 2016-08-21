@@ -160,6 +160,27 @@
                                 
                                 break;
                                 
+                            case MMMapTypeRampIssues:
+                            {
+                                if (info.status == OriginalSurveyComplete)
+                                {
+                                    numComplete++;
+                                    int numProblemRamps = [_database numProblemRamps:info.intID];
+                                    if (numProblemRamps)
+                                    {
+                                        notAssigned++;
+                                        CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+                                    }
+                                    else
+                                        CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
+                                }
+                                
+                                else
+                                    CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
+                                
+                                break;
+                            }
+                                
                             default:
                                 break;
                         }
