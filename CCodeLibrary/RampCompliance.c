@@ -232,33 +232,6 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         
         detail = strcat(detail, FlareLeftFrontMinor);
     }
-    
-    value = fabsf(ramp->flareLeftSlopeSide);
-    
-    if (value > (CV2 + tolerance) && value < 9990.0)
-    {
-        if (flagged < 2)
-        {
-            if (flagged == 1)
-                basic[strlen(basic) - 1] = '\0';
-            
-            basic = strcat(basic, SlopeMajor);
-            flagged = 2;
-        }
-        
-        detail = strcat(detail, FlareLeftSideMajor);
-    }
-    
-    else if (value > CV2 && value < 9990.0)
-    {
-        if (flagged < 1)
-        {
-            basic = strcat(basic, SlopeMinor);
-            flagged = 1;
-        }
-        
-        detail = strcat(detail, FlareLeftSideMinor);
-    }
 
     //flare right slopes (10,2)
     value = fabsf(ramp->flareRightSlopeFront);
@@ -286,33 +259,6 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         }
         
         detail = strcat(detail, FlareRightFrontMinor);
-    }
-    
-    value = fabsf(ramp->flareRightSlopeSide);
-    
-    if (value > (CV2 + tolerance) && value < 9990.0)
-    {
-        if (flagged < 2)
-        {
-            if (flagged == 1)
-                basic[strlen(basic) - 1] = '\0';
-            
-            basic = strcat(basic, SlopeMajor);
-            flagged = 2;
-        }
-        
-        detail = strcat(detail, FlareRightSideMajor);
-    }
-    
-    else if (value > CV2 && value < 9990.0)
-    {
-        if (flagged < 1)
-        {
-            basic = strcat(basic, SlopeMinor);
-            flagged = 1;
-        }
-        
-        detail = strcat(detail, FlareRightSideMinor);
     }
     
     //sidewalk left slopes (5,2)
@@ -653,8 +599,41 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
     }
     
     //print to console list of issues
-    if (strstr(basic, SlopeMajor))
-        printf("\nIntersection %i (Ramp %i) : %s, %s", ramp->intID, ramp->rampNum, basic, detail);
+    if (strstr(detail, RampFrontMajor))
+        printf("\nIntersection %i (Ramp %i)  RAMP FRONT : %f", ramp->intID, ramp->rampNum, ramp->rampSlopeFront);
+    
+    if (strstr(detail, RampSideMajor))
+        printf("\nIntersection %i (Ramp %i) RAMP SIDE : %f", ramp->intID, ramp->rampNum, ramp->rampSlopeSide);
+    
+    if (strstr(detail, UpperLandingFrontMajor))
+        printf("\nIntersection %i (Ramp %i)  UPPER LANDING FRONT : %f", ramp->intID, ramp->rampNum, ramp->upperLandingSlopeFront);
+    
+    if (strstr(detail, UpperLandingSideMajor))
+        printf("\nIntersection %i (Ramp %i) UPPER LANDING SIDE : %f", ramp->intID, ramp->rampNum, ramp->upperLandingSlopeSide);
+    
+    if (strstr(detail, StreetLandingFrontMajor))
+        printf("\nIntersection %i (Ramp %i)  STREET LANDING FRONT : %f", ramp->intID, ramp->rampNum, ramp->streetLandingSlopeFront);
+    
+    if (strstr(detail, StreetLandingSideMajor))
+        printf("\nIntersection %i (Ramp %i) STREET LANDING SIDE : %f", ramp->intID, ramp->rampNum, ramp->streetLandingSlopeSide);
+    
+    if (strstr(detail, FlareLeftFrontMajor))
+        printf("\nIntersection %i (Ramp %i)  FLARE LEFT FRONT : %f", ramp->intID, ramp->rampNum, ramp->flareLeftSlopeFront);
+    
+    if (strstr(detail, FlareRightFrontMajor))
+        printf("\nIntersection %i (Ramp %i)  FLARE RIGHT FRONT : %f", ramp->intID, ramp->rampNum, ramp->flareRightSlopeFront);
+    
+    if (strstr(detail, SwkLeftFrontMajor))
+        printf("\nIntersection %i (Ramp %i)  SIDEWALK LEFT FRONT : %f", ramp->intID, ramp->rampNum, ramp->swkLeftSlopeFront);
+    
+    if (strstr(detail, SwkLeftSideMajor))
+        printf("\nIntersection %i (Ramp %i) SIDEWALK LEFT SIDE : %f", ramp->intID, ramp->rampNum, ramp->swkLeftSlopeSide);
+    
+    if (strstr(detail, SwkRightFrontMajor))
+        printf("\nIntersection %i (Ramp %i)  SIDEWALK RIGHT FRONT : %f", ramp->intID, ramp->rampNum, ramp->swkRightSlopeFront);
+    
+    if (strstr(detail, SwkRightSideMajor))
+        printf("\nIntersection %i (Ramp %i) SIDEWALK RIGHT SIDE : %f", ramp->intID, ramp->rampNum, ramp->swkRightSlopeSide);
     
     *detailCode = detail;
     
