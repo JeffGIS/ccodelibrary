@@ -439,6 +439,9 @@
         [_sendButton setTitle:@"Continue"
                      forState:UIControlStateNormal];
         
+        [self enableControl:button
+                    enabled:NO];
+        
         _checkmarkButton.userInteractionEnabled = NO;
         _checkmarkButton.alpha = 0.3;
         _termsLabel.alpha = 0.3;
@@ -756,8 +759,6 @@ replacementString:(NSString *)string
     
     if (testEmailEntered)
     {
-        //SetUseDemoID(TRUE);
-        
         [_sendButton setTitle:@"Continue"
                      forState:UIControlStateNormal];
         
@@ -798,9 +799,18 @@ replacementString:(NSString *)string
         }
     }
     
-    [self enableControl:_sendButton
-                enabled:((_nameTF.text.length && _orgTF.text.length && _phoneTF.text.length
-                          && _emailTF.text.length) || testEmailEntered)];
+    if ([_sendButton.currentTitle isEqualToString:@"Continue"])
+    {
+        [self enableControl:_sendButton
+                    enabled:(_userNumberTF.text.length || testEmailEntered)];
+    }
+    
+    else
+    {
+        [self enableControl:_sendButton
+                    enabled:((_nameTF.text.length && _orgTF.text.length && _phoneTF.text.length
+                              && _emailTF.text.length) || testEmailEntered)];
+    }
     
     return NO;
 }
