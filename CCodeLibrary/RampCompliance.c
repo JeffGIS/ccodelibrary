@@ -599,7 +599,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
     }
     
     //print to console list of issues
-    if (strstr(detail, RampFrontMajor))
+    /*if (strstr(detail, RampFrontMajor))
         printf("\nIntersection %i (Ramp %i)  RAMP FRONT : %f", ramp->intID, ramp->rampNum, ramp->rampSlopeFront);
     
     if (strstr(detail, RampSideMajor))
@@ -633,7 +633,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance)
         printf("\nIntersection %i (Ramp %i)  SIDEWALK RIGHT FRONT : %f", ramp->intID, ramp->rampNum, ramp->swkRightSlopeFront);
     
     if (strstr(detail, SwkRightSideMajor))
-        printf("\nIntersection %i (Ramp %i) SIDEWALK RIGHT SIDE : %f", ramp->intID, ramp->rampNum, ramp->swkRightSlopeSide);
+        printf("\nIntersection %i (Ramp %i) SIDEWALK RIGHT SIDE : %f", ramp->intID, ramp->rampNum, ramp->swkRightSlopeSide);*/
     
     *detailCode = detail;
     
