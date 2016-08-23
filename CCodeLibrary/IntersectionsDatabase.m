@@ -771,6 +771,8 @@ WHERE intID=%i;",
             //show only intersections that are outside of the slope tolerance (major fails)
             if (strstr(ccode, "E"))
                 numProblems++;
+            free (ccode);
+            free (detailCode);
         }
     }
     
