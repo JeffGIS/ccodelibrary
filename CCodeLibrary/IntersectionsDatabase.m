@@ -785,12 +785,13 @@ WHERE intID=%i;",
             LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, 8.0);
             //[self saveComplianceCode:ccode forInt:intID ramp:ramp.rampNum];
             //show all non-compliant intersections
-            /*if (strcmp (ccode,"A"))
-                numProblems++;*/
+            if (strcmp (ccode,"A"))
+                numProblems++;
             
             //show only intersections that are outside of the slope tolerance (major fails)
-            if (strstr(ccode, "E"))
-                numProblems++;
+            /*if (strstr(ccode, "E"))
+                numProblems++;*/
+            
             free (ccode);
             free (detailCode);
         }

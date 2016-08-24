@@ -10,6 +10,8 @@
 #include "RampStruct.h"
 
 //definitions for critical values
+#define CVButtonHeight 42.0
+#define CVDimensions 48.0
 #define CV2 100 / 48.0
 #define CV5 5.0
 #define CV8 100.0 / 12.0
@@ -17,9 +19,10 @@
 
 //code definitions for Basic Code
 #define Compliant "A"
-#define Signal "B"//button height not within 40-44 inches
+#define Signal "B"//button height not within 40-44 inches (target is 42 inches)
 #define DetectableWarning "C"//no detectable warning
-#define Dimensions "D"//over maximum dimensions
+#define DimensionsMinor "d"//under critical value (36 inches) but over tolerance
+#define DimensionsMajor "D"//under tolerance
 #define SlopeMinor "e"//over critical value but within tolerance
 #define SlopeMajor "E"//over tolerance
 #define CracksMinor "f"//1/2 inch wide and under
@@ -29,8 +32,10 @@
 #define Obstructions "H"//obstruction(s) present
 
 //code definitions for Detail Code
-#define RampWidth "D01"
-#define RampDepth "D02"
+#define RampWidthMinor "d01"
+#define RampWidthMajor "D01"
+#define RampDepthMinor "d02"
+#define RampDepthMajor "D02"
 #define RampFrontMinor "e01"
 #define RampFrontMajor "E01"
 #define RampSideMinor "e02"
@@ -73,6 +78,6 @@
 #define UpperLandingObstruction "H02"
 #define StreetLandingObstruction "H03"
 
-char *rampComplianceCode(RampStruct *ramp, char **detailCode, float tolerance);
+char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeightTolerance, float dimensionsTolerance, float cv10Tolerance, float cv8Tolerance, float cv5Tolerance, float cv2Tolerance, float cracksTolerance, float levelChangeTolerance);
 
 #endif /* RampCompliance_h */
