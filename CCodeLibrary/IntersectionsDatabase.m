@@ -748,6 +748,19 @@ WHERE intID=%i;",
         return 12;
     return rampNum;
 }
+-(BOOL) saveComplianceCode:(LPSTR)ccode forInt:(int)intID ramp:(int)rampID
+{
+    BOOL rtn;
+    BOOL opened = [self open];
+    NSString * cmd = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Compliance (intID INT,rampNum INT,code CHAR(8), PRIMARY KEY (intID,rampNum ASC));INSERT OR REPLACE INTO Compliance VALUES(%i,%i,'%s');",intID,rampID,ccode];
+    rtn = [self.curbRampData executeCmd:cmd.UTF8String
+                           sendToServer:NO
+                                   from:1657];
+    [self close:opened];
+    return rtn;
+    
+}
+
 - (int)numProblemRamps:(int)intID
 {
     int numProblems = 0;
@@ -763,7 +776,7 @@ WHERE intID=%i;",
             rstruct.intID = mpint.intID;
             LPSTR detailCode;
             LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, 8.0);
-            
+            [self saveComplianceCode:ccode forInt:intID ramp:ramp.rampID];
             //show all non-compliant intersections
             /*if (strcmp (ccode,"A"))
                 numProblems++;*/
