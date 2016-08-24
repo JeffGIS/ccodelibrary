@@ -4,6 +4,7 @@
 #import "CurbRampData.h"
 #import "AlleyWallData.h"
 #import "GeoMasterServer.h"
+#import "FTPDirectoryCreate.h"
 
 #define UPLOAD_DATA_PROCESS 1
 #define UPLOAD_PICT_PROCESS 2
@@ -54,5 +55,6 @@
 @property BOOL autoSync;
 @property NSString* errorFileName;
 @property int numAttemps;
+@property FTPDirectoryCreate * ftpdc;
 
 @end

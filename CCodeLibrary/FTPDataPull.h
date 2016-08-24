@@ -35,6 +35,8 @@ typedef NS_ENUM(NSInteger, FTPDataType)
     GetDatabaseSettingNVMetro,
     FTPDataPhoto,
     FTPData,
+    FTPDatabase,
+    FTPErrorFile,
 };
 
 @class FTPDataPull;
