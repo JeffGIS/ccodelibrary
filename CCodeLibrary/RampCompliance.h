@@ -17,9 +17,9 @@
 
 //code definitions for Basic Code
 #define Compliant "A"
-#define Signal "B"//button height not within 40-44 inches
+#define Signal "B"//button height not within 40-44 inches (target is 42 inches)
 #define DetectableWarning "C"//no detectable warning
-#define Dimensions "D"//over maximum dimensions
+#define Dimensions "D"//under minimum dimensions (36 inches)
 #define SlopeMinor "e"//over critical value but within tolerance
 #define SlopeMajor "E"//over tolerance
 #define CracksMinor "f"//1/2 inch wide and under
