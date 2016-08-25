@@ -174,7 +174,7 @@ typedef NS_ENUM(NSInteger, MapViewScreenSetting)
     MapViewScreenSettingSplitScreen,
     MapViewScreenSettingTriScreen,
     MapViewScreenSettingPlatView,
-    MapViewScreenSettingSplitBottomScreen,
+    MapViewScreenSettingSplitPlatView,
 };
 
 typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
