@@ -6,6 +6,7 @@
 #import "CRAPI.h"
 #import "PointInAreaClass.h"
 #import "TileGraphics.h"
+#import "RampCompliance.h"
 
 #define COORDINATE_MULTIPLIER 10000000.0
 #define MAX_AREA_POINTS 85000
@@ -60,6 +61,9 @@
     if (_database)
     {
         NSArray *pointsArray = [_database getIntersectionPointsFromDatabaseinBounds:bounds21];
+        
+        ToleranceValues *tolerances = (ToleranceValues *)malloc(sizeof(ToleranceValues));
+        setStandardToleranceValues(tolerances);
         
         for (IntersectionPoint *info in pointsArray)
         {
@@ -165,7 +169,10 @@
                                 if (info.status == OriginalSurveyComplete)
                                 {
                                     numComplete++;
-                                    int numProblemRamps = [_database numProblemRamps:info.intID];
+                                    
+                                    int numProblemRamps = [_database numProblemRamps:info.intID
+                                                                          tolerances:tolerances];
+                                    
                                     if (numProblemRamps)
                                     {
                                         notAssigned++;
@@ -310,7 +317,10 @@
                                                    notAssigned:notAssigned
                                                     totPeriPad:totPeriPad];
         if (nPeriPad)
-            free (nPeriPad);
+            free(nPeriPad);
+        
+        if (tolerances)
+            free(tolerances);
     }
     
     return;

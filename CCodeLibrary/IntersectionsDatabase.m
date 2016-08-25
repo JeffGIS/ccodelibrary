@@ -769,6 +769,7 @@ WHERE intID=%i;",
 }
 
 - (int)numProblemRamps:(int)intID
+            tolerances:(ToleranceValues *)tolerances
 {
     int numProblems = 0;
     MPIntersection * mpint = [self getMPIntersectionFromDB:intID withRamps:YES];
@@ -784,6 +785,7 @@ WHERE intID=%i;",
             LPSTR detailCode;
             /*LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, 8.0);
             //[self saveComplianceCode:ccode forInt:intID ramp:ramp.rampNum];
+            
             //show all non-compliant intersections
             if (strcmp (ccode,"A"))
                 numProblems++;*/
@@ -817,6 +819,8 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
     rstruct->hasRampCracks = ramp.hasRampCracks;
     rstruct->hasUpperLandingCracks = ramp.hasUpperLandingCracks;
     rstruct->hasStreetLandingCracks = ramp.hasStreetLandingCracks;
+    rstruct->hasLeftSidewalkCracks = ramp.hasLeftSidewalkCracks;
+    rstruct->hasRightSidewalkCracks = ramp.hasRightSidewalkCracks;
     rstruct->rampWidth = ramp.rampWidth;
     rstruct->rampDepth = ramp.rampDepth;
     rstruct->texture = ramp.texture;

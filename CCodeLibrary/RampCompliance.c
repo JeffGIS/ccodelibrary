@@ -3,7 +3,7 @@
 
 #include "RampCompliance.h"
 
-char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeightTolerance, float dimensionsTolerance, float cv10Tolerance, float cv8Tolerance, float cv5Tolerance, float cv2Tolerance, float cracksTolerance, float levelChangeTolerance)
+char *rampComplianceCode(RampStruct *ramp, char **detailCode, ToleranceValues *tolerances)
 {
     char *basic = (char *)calloc(16, sizeof(char));
     char *detail = (char *)calloc(64, sizeof(char));
@@ -11,8 +11,8 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //signals
     if (ramp->PEDButtonHeight > 0)
     {
-        if (ramp->PEDButtonHeight < (CVButtonHeight - buttonHeightTolerance) ||
-            ramp->PEDButtonHeight > (CVButtonHeight + buttonHeightTolerance))
+        if (ramp->PEDButtonHeight < (CVButtonHeight - tolerances->buttonHeight) ||
+            ramp->PEDButtonHeight > (CVButtonHeight + tolerances->buttonHeight))
         {
             basic = strcat(basic, Signal);
             detail = strcat(detail, Signal);
@@ -20,10 +20,13 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     }
     
     //detectable warnings
-    if (ramp->texture < truncatedStoneDomes || ramp->texture > castironTruncatedDomes)
+    if (ramp->texture > 0)
     {
-        basic = strcat(basic, DetectableWarning);
-        detail = strcat(detail, DetectableWarning);
+        if (ramp->texture < truncatedStoneDomes || ramp->texture > castironTruncatedDomes)
+        {
+            basic = strcat(basic, DetectableWarning);
+            detail = strcat(detail, DetectableWarning);
+        }
     }
     
     int flagged = 0;
@@ -31,7 +34,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //dimensions
     if (ramp->rampWidth > 0)
     {
-        if (ramp->rampWidth < (CVDimensions - dimensionsTolerance))
+        if (ramp->rampWidth < (CVDimensions - tolerances->dimensions))
         {
             basic = strcat(basic, DimensionsMajor);
             detail = strcat(detail, RampWidthMajor);
@@ -48,7 +51,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     
     if (ramp->rampDepth > 0)
     {
-        if (ramp->rampDepth < (CVDimensions - dimensionsTolerance))
+        if (ramp->rampDepth < (CVDimensions - tolerances->dimensions))
         {
             if (flagged < 2)
             {
@@ -75,7 +78,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //ramp slopes (8,2)
     float value = fabsf(ramp->rampSlopeFront);
     
-    if (value > (CV8 + cv8Tolerance) && value < 9990.0)
+    if (value > (CV8 + tolerances->cv8) && value < 9990.0)
     {
         basic = strcat(basic, SlopeMajor);
         detail = strcat(detail, RampFrontMajor);
@@ -91,7 +94,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     
     value = fabsf(ramp->rampSlopeSide);
     
-    if (value > (CV2 + cv2Tolerance) && value < 9990.0)
+    if (value > (CV2 + tolerances->cv2) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -119,7 +122,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //upper landing slopes (2,2)
     value = fabsf(ramp->upperLandingSlopeFront);
     
-    if (value > (CV2 + cv2Tolerance) && value < 9990.0)
+    if (value > (CV2 + tolerances->cv2) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -146,7 +149,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     
     value = fabsf(ramp->upperLandingSlopeSide);
     
-    if (value > (CV2 + cv2Tolerance) && value < 9990.0)
+    if (value > (CV2 + tolerances->cv2) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -174,7 +177,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //street landing slopes (5,5)
     value = fabsf(ramp->streetLandingSlopeFront);
     
-    if (value > (CV5 + cv5Tolerance) && value < 9990.0)
+    if (value > (CV5 + tolerances->cv5) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -201,7 +204,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     
     value = fabsf(ramp->streetLandingSlopeSide);
     
-    if (value > (CV5 + cv5Tolerance) && value < 9990.0)
+    if (value > (CV5 + tolerances->cv5) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -229,7 +232,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //flare left slopes (10)
     value = fabsf(ramp->flareLeftSlopeFront);
     
-    if (value > (CV10 + cv10Tolerance) && value < 9990.0)
+    if (value > (CV10 + tolerances->cv10) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -257,7 +260,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //flare right slopes (10)
     value = fabsf(ramp->flareRightSlopeFront);
     
-    if (value > (CV10 + cv10Tolerance) && value < 9990.0)
+    if (value > (CV10 + tolerances->cv10) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -285,7 +288,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //sidewalk left slopes (5,2)
     value = fabsf(ramp->swkLeftSlopeFront);
     
-    if (value > (CV5 + cv5Tolerance) && value < 9990.0)
+    if (value > (CV5 + tolerances->cv5) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -312,7 +315,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     
     value = fabsf(ramp->swkLeftSlopeSide);
     
-    if (value > (CV2 + cv2Tolerance) && value < 9990.0)
+    if (value > (CV2 + tolerances->cv2) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -340,7 +343,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //sidewalk right slopes (5,2)
     value = fabsf(ramp->swkRightSlopeFront);
     
-    if (value > (CV5 + cv5Tolerance) && value < 9990.0)
+    if (value > (CV5 + tolerances->cv5) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -367,7 +370,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     
     value = fabsf(ramp->swkRightSlopeSide);
     
-    if (value > (CV2 + cv2Tolerance) && value < 9990.0)
+    if (value > (CV2 + tolerances->cv2) && value < 9990.0)
     {
         if (flagged < 2)
         {
@@ -393,7 +396,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //ramp cracks
     if (ramp->hasRampCracks == 1)
     {
-        if (ramp->crackWidth.rampCrackWidth > cracksTolerance)
+        if (ramp->crackWidth.rampCrackWidth > tolerances->cracks)
         {
             basic = strcat(basic, CracksMajor);
             detail = strcat(detail, RampCrackMajor);
@@ -411,7 +414,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //upper landing cracks
     if (ramp->hasUpperLandingCracks == 1)
     {
-        if (ramp->crackWidth.upperLandingCrackWidth > cracksTolerance)
+        if (ramp->crackWidth.upperLandingCrackWidth > tolerances->cracks)
         {
             if (flagged < 2)
             {
@@ -440,7 +443,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //street landing cracks
     if (ramp->hasStreetLandingCracks == 1)
     {
-        if (ramp->crackWidth.streetLandingCrackWidth > cracksTolerance)
+        if (ramp->crackWidth.streetLandingCrackWidth > tolerances->cracks)
         {
             if (flagged < 2)
             {
@@ -469,7 +472,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //left sidewalk cracks
     if (ramp->hasLeftSidewalkCracks == 1)
     {
-        if (ramp->crackWidth.leftSidewalkCrackWidth > cracksTolerance)
+        if (ramp->crackWidth.leftSidewalkCrackWidth > tolerances->cracks)
         {
             if (flagged < 2)
             {
@@ -498,7 +501,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //right sidewalk cracks
     if (ramp->hasRightSidewalkCracks == 1)
     {
-        if (ramp->crackWidth.rightSidewalkCrackWidth > cracksTolerance)
+        if (ramp->crackWidth.rightSidewalkCrackWidth > tolerances->cracks)
         {
             if (flagged < 2)
             {
@@ -529,7 +532,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //steep top of curb
     if (ramp->SteepTopOfCurb > 0.0)
     {
-        if (ramp->SteepTopOfCurb > levelChangeTolerance)
+        if (ramp->SteepTopOfCurb > tolerances->levelChange)
         {
             basic = strcat(basic, LevelChangeMajor);
             detail = strcat(detail, STOCMajor);
@@ -547,7 +550,7 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     //lip
     if (ramp->PedRampLip > 0.0)
     {
-        if (ramp->PedRampLip > levelChangeTolerance)
+        if (ramp->PedRampLip > tolerances->levelChange)
         {
             if (flagged < 2)
             {
@@ -618,4 +621,18 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeight
     *detailCode = detail;
     
     return basic;
+}
+
+void setStandardToleranceValues(ToleranceValues *tolerances)
+{
+    tolerances->buttonHeight = 4.0;
+    tolerances->dimensions = 4.0;
+    tolerances->cv10 = (CV10 / 2.0);
+    tolerances->cv8 = (CV8 / 2.0);
+    tolerances->cv5 = (CV5 / 2.0);
+    tolerances->cv2 = (CV2 / 2.0);
+    tolerances->cracks = 0.5;
+    tolerances->levelChange = 1.0;
+    
+    return;
 }
