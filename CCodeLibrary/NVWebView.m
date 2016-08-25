@@ -134,6 +134,7 @@
     _webView.translatesAutoresizingMaskIntoConstraints = NO;
     _webView.allowsBackForwardNavigationGestures = YES;
     _webView.navigationDelegate = self;
+    _webView.clipsToBounds = YES;
     
     [self addSubview:_webView];
     
@@ -239,6 +240,11 @@
                                                                      textArray:UserDefaults.defaults.realtorList
                                                                  includeCancel:YES];
 #pragma unused(nvptv)
+}
+
+- (void)makeRoomForReturnButton
+{
+    
 }
 
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView

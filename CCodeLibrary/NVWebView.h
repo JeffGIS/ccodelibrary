@@ -25,6 +25,7 @@
 - (void)hide:(BOOL)animated;
 - (void)showRealtorButton;
 - (void)hideReturnButton;
+- (void)makeRoomForReturnButton;
 
 - (void)zoomToPoint:(CGPoint)point
          withinPage:(int)page
