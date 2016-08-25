@@ -686,7 +686,7 @@ static BOOL _createDirectory = YES;
     {
         PickedItem *pi = [[PickedItem alloc] init];
         pi.refno = minref;
-        pi.itemType = PTStormSewerLine;
+        pi.itemType = StormMain;
         pi.distance = mind;
         pi.pickedPoint = minpt;
         pi.identifier = minFid;

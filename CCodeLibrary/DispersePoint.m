@@ -239,7 +239,7 @@
     if (npicked)
     {
         PickedItem *pi = [[PickedItem alloc]init];
-        pi.itemType = PTCrime;
+        pi.itemType = CrimePoint;
         pi.symbol = minsym;
         pi.distance = mind;
         pi.pickedPoint = TranDPOINT(&minpt, _pTranViewtoLL);
@@ -429,7 +429,7 @@ POINT AddjustPointLoc (POINT Point,float Size,int Sequence)
         LPSTR offense = (LPSTR)sqlite3_column_text(statement, 4);
         int symbol = sqlite3_column_int(statement, 5);
         PickedItem *pi = [[PickedItem alloc]init];
-        pi.itemType = PTCrime;
+        pi.itemType = CrimePoint;
         pi.symbol = minsym;
         pi.screenPoint = p2;
         pi.pickedPoint = TranDPOINT(&p2, dp.pTranViewtoLL);

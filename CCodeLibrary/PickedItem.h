@@ -3,8 +3,9 @@
 
 #import <Foundation/Foundation.h>
 #import "CCodeTypes.h"
+#import "DisplayCharacteristics.h"
 
-typedef NS_ENUM(NSInteger, PickItemTypes) {
+/*typedef NS_ENUM(NSInteger, PickItemTypes) {
     PTPid,
     PTStormSewerLine,
     PTStormSewerPoint,
@@ -13,10 +14,10 @@ typedef NS_ENUM(NSInteger, PickItemTypes) {
     PTAlleyLine,
     PTCRIntersectionPt,
     PTCrime,
-};
+};*/
 
 @interface PickedItem : NSObject
-@property int itemType;
+@property GraphicElementTypes itemType;
 @property int symbol;
 @property NSInteger refno;
 @property double distance;

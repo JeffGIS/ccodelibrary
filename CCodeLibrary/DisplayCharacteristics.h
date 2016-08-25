@@ -25,6 +25,9 @@ typedef NS_ENUM(NSInteger, GraphicElementTypes)
     SanitaryMain,
     SanitaryManhole,
     SanitaryPressurizedMain,
+    AlleyLine,
+    AlleyWallPoint,
+    ParcelBoundary,
 };
 
 typedef NS_ENUM(NSInteger, PointSymbols)
