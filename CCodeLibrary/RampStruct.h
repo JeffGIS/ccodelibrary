@@ -142,4 +142,15 @@ typedef struct RampStruct {
     float bumpHeight;
 } RampStruct;
 
+typedef struct ToleranceValues {
+    float buttonHeight;
+    float dimensions;
+    float cv10;
+    float cv8;
+    float cv5;
+    float cv2;
+    float cracks;;
+    float levelChange;
+} ToleranceValues;
+
 #endif /* RampStruct_h */

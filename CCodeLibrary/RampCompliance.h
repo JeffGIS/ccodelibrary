@@ -78,6 +78,7 @@
 #define UpperLandingObstruction "H02"
 #define StreetLandingObstruction "H03"
 
-char *rampComplianceCode(RampStruct *ramp, char **detailCode, float buttonHeightTolerance, float dimensionsTolerance, float cv10Tolerance, float cv8Tolerance, float cv5Tolerance, float cv2Tolerance, float cracksTolerance, float levelChangeTolerance);
+char *rampComplianceCode(RampStruct *ramp, char **detailCode, ToleranceValues *tolerances);
+void setStandardToleranceValues(ToleranceValues *tolerances);
 
 #endif /* RampCompliance_h */

@@ -782,8 +782,13 @@ WHERE intID=%i;",
             rampToRampStruct (ramp,&rstruct);
             rstruct.intID = mpint.intID;
             LPSTR detailCode;
-            LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, 8.0);
+            
+            ToleranceValues *tolerances = (ToleranceValues *)malloc(sizeof(ToleranceValues));
+            setStandardToleranceValues(tolerances);
+            
+            LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, tolerances);
             //[self saveComplianceCode:ccode forInt:intID ramp:ramp.rampNum];
+            
             //show all non-compliant intersections
             if (strcmp (ccode,"A"))
                 numProblems++;
@@ -794,6 +799,7 @@ WHERE intID=%i;",
             
             free (ccode);
             free (detailCode);
+            free (tolerances);
         }
     }
     
@@ -817,6 +823,8 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
     rstruct->hasRampCracks = ramp.hasRampCracks;
     rstruct->hasUpperLandingCracks = ramp.hasUpperLandingCracks;
     rstruct->hasStreetLandingCracks = ramp.hasStreetLandingCracks;
+    rstruct->hasLeftSidewalkCracks = ramp.hasLeftSidewalkCracks;
+    rstruct->hasRightSidewalkCracks = ramp.hasRightSidewalkCracks;
     rstruct->rampWidth = ramp.rampWidth;
     rstruct->rampDepth = ramp.rampDepth;
     rstruct->texture = ramp.texture;
