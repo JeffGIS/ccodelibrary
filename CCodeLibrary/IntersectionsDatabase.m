@@ -769,6 +769,7 @@ WHERE intID=%i;",
 }
 
 - (int)numProblemRamps:(int)intID
+            tolerances:(ToleranceValues *)tolerances
 {
     int numProblems = 0;
     MPIntersection * mpint = [self getMPIntersectionFromDB:intID withRamps:YES];
@@ -783,9 +784,6 @@ WHERE intID=%i;",
             rstruct.intID = mpint.intID;
             LPSTR detailCode;
             
-            ToleranceValues *tolerances = (ToleranceValues *)malloc(sizeof(ToleranceValues));
-            setStandardToleranceValues(tolerances);
-            
             LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, tolerances);
             //[self saveComplianceCode:ccode forInt:intID ramp:ramp.rampNum];
             
@@ -799,7 +797,6 @@ WHERE intID=%i;",
             
             free (ccode);
             free (detailCode);
-            free (tolerances);
         }
     }
     
