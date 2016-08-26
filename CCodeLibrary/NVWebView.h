@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 @import UIKit;
+#import "CCodeTypes.h"
 
 @class NVWebView;
 
@@ -30,7 +31,7 @@ wasTappedAtPoint:(CGPoint)point
 - (void)showRealtorButton;
 - (void)hideReturnButton;
 
-- (void)zoomToPoint:(CGPoint)point
+- (void)zoomToPoint:(DPOINT)point
          withinPage:(int)page
           withScale:(CGFloat)scale
            rotation:(CGFloat)rotation;

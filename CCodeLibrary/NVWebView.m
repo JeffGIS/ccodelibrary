@@ -228,12 +228,13 @@
         [self hide:YES];
 }
 
-- (void)zoomToPoint:(CGPoint)point
+- (void)zoomToPoint:(DPOINT)point
          withinPage:(int)page
           withScale:(CGFloat)scale
            rotation:(CGFloat)rotation
 {
-    _zoomPoint = point;
+    _zoomPoint.x = point.x;
+    _zoomPoint.y = point.y;
     _zoomPage = page;
     _zoomScale = scale;
     _zoomRotation = rotation;

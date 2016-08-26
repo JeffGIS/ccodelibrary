@@ -585,6 +585,12 @@ float getazmd(vec2 *Point1, vec2 *Point2)
 	return rtn;
 }
 
+double getaz (DPOINT Point1, DPOINT Point2)
+{
+    double rtn = DTWOPI(atan2((Point2.y - Point1.y), (Point2.x - Point1.x)));
+    return rtn;
+}
+
 double getazd(LPDPOINT Point1, LPDPOINT Point2)
 {
     double rtn = DTWOPI(atan2((Point2->y - Point1->y), (Point2->x - Point1->x)));
@@ -761,6 +767,13 @@ IPOINT IBoundsMid(IBOUNDS *bnds)
     return pt;
 }
 
+DPOINT MidPointD (DPOINT pt1,DPOINT pt2)
+{
+    DPOINT pt;
+    pt.x = (pt1.x + pt2.x) / 2;
+    pt.y = (pt1.y + pt2.y) / 2;
+    return pt;
+}
 DPOINT DBoundsMid(MNMXCORD *bnds)
 {
     DPOINT pt;
