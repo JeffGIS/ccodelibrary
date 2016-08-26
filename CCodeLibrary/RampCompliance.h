@@ -16,6 +16,7 @@
 #define CV5 5.0
 #define CV8 100.0 / 12.0
 #define CV10 10.0
+#define CVNone -9999.0
 
 //code definitions for Basic Code
 #define Compliant "A"
