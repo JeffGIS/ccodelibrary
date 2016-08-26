@@ -10,6 +10,10 @@
 @optional
 - (void)webViewDidReturn:(NVWebView *)webView;
 
+- (void)webView:(NVWebView *)webView
+wasTappedAtPoint:(CGPoint)point
+     withinPage:(int)page;
+
 @end
 
 @interface NVWebView : UIView
@@ -25,7 +29,6 @@
 - (void)hide:(BOOL)animated;
 - (void)showRealtorButton;
 - (void)hideReturnButton;
-- (void)makeRoomForReturnButton;
 
 - (void)zoomToPoint:(CGPoint)point
          withinPage:(int)page

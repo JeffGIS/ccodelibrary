@@ -17,7 +17,7 @@
 @property (nonatomic) UIActivityIndicatorView *indicator;
 @property (nonatomic) CGPoint zoomPoint;
 @property int numPages, zoomPage;
-@property BOOL isFile;
+@property BOOL isFile, navigationComplete;
 
 @end
 
@@ -32,6 +32,7 @@
     nvwv.zoomScale = nvwv.zoomRotation = 0.0;
     nvwv.numPages = nvwv.zoomPage = 1;
     nvwv.isFile = NO;
+    nvwv.navigationComplete = NO;
     
     nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -98,6 +99,7 @@
     nvwv.zoomScale = nvwv.zoomRotation = 0.0;
     nvwv.numPages = nvwv.zoomPage = 1;
     nvwv.isFile = YES;
+    nvwv.navigationComplete = NO;
     
     NSURL *url = [NSURL fileURLWithPath:path];
 
@@ -135,6 +137,11 @@
     _webView.allowsBackForwardNavigationGestures = YES;
     _webView.navigationDelegate = self;
     _webView.clipsToBounds = YES;
+    
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                 action:@selector(webViewWasTapped:)];
+    
+    [_webView addGestureRecognizer:tapGesture];
     
     [self addSubview:_webView];
     
@@ -230,6 +237,9 @@
     _zoomPage = page;
     _zoomScale = scale;
     _zoomRotation = rotation;
+    
+    if (_navigationComplete)
+        [self updatePosition];
 }
 
 - (void)realtor:(UIButton *)button
@@ -240,11 +250,6 @@
                                                                      textArray:UserDefaults.defaults.realtorList
                                                                  includeCancel:YES];
 #pragma unused(nvptv)
-}
-
-- (void)makeRoomForReturnButton
-{
-    
 }
 
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView
@@ -264,6 +269,29 @@
     [popoverTableView hide:YES];
 }
 
+- (void)updatePosition
+{
+    if (_zoomPage > 1)
+    {
+        CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+        _zoomPoint.x *= _webView.scrollView.contentSize.width;
+        _zoomPoint.y *= pageHeight;
+        _zoomPoint.y += (pageHeight * (_zoomPage - 1));
+    }
+    
+    CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
+                                 (_webView.scrollView.bounds.size.height / _zoomScale));
+    
+    CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
+                                 (_zoomPoint.y - (zoomSize.height / 2.0)),
+                                 zoomSize.width, zoomSize.height);
+    
+    [_webView.scrollView zoomToRect:zoomRect
+                           animated:NO];
+    
+    _webView.scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
+}
+
 - (void)webView:(WKWebView *)webView
 didFinishNavigation:(WKNavigation *)navigation
 {
@@ -278,25 +306,8 @@ didFinishNavigation:(WKNavigation *)navigation
         _webView.scrollView.directionalLockEnabled = NO;
         _webView.scrollView.clipsToBounds = NO;
         
-        if (_zoomPage > 1)
-        {
-            CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
-            _zoomPoint.x *= _webView.scrollView.contentSize.width;
-            _zoomPoint.y *= pageHeight;
-            _zoomPoint.y += (pageHeight * (_zoomPage - 1));
-        }
-        
-        CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
-                                     (_webView.scrollView.bounds.size.height / _zoomScale));
-        
-        CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
-                                     (_zoomPoint.y - (zoomSize.height / 2.0)),
-                                     zoomSize.width, zoomSize.height);
-        
-        [_webView.scrollView zoomToRect:zoomRect
-                               animated:NO];
-        
-        _webView.scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
+        [self updatePosition];
+        _navigationComplete = YES;
     }
 }
 
@@ -312,6 +323,25 @@ didFailProvisionalNavigation:(WKNavigation *)navigation
       withError:(NSError *)error
 {
     NSLog(@"WebView Failed Provisional Navigation ERROR:%@", error.localizedDescription);
+}
+
+- (void)webViewWasTapped:(UITapGestureRecognizer *)gesture
+{
+    CGPoint point = [gesture locationInView:_webView.scrollView];
+    CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+    int pageNum = (int)ceilf(point.y / pageHeight);
+    CGFloat offset = (CGFloat)(pageHeight * (pageNum - 1));
+    point.y -= offset;
+    
+    point.x = (point.x / _webView.scrollView.contentSize.width);
+    point.y = (point.y / pageHeight);
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(webView:wasTappedAtPoint:withinPage:)])
+    {
+        [_delegate webView:self
+          wasTappedAtPoint:point
+                withinPage:pageNum];
+    }
 }
 
 @end
