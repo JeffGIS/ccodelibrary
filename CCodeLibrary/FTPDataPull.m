@@ -24,12 +24,23 @@ static FTPDataPull * _statpull = nil;
 {
     if (!_statpull)
         _statpull = [[FTPDataPull alloc] init];
-    
-    _statpull.haveCalledDelegate = NO;
-    _statpull.useTestServer = NO;
-    _statpull.tempExtension = @".download";
-    _statpull.useOnlyPrimaryFTP = YES;
+
     return _statpull;
+}
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _haveCalledDelegate = NO;
+        _useTestServer = NO;
+        _tempExtension = @".download";
+        _useOnlyPrimaryFTP = YES;
+    }
+    
+    return self;
 }
 
 - (int)getFile:(NSString *)fileName
@@ -103,6 +114,7 @@ static FTPDataPull * _statpull = nil;
     {
         rtn = FTPStatusFileExists;
         [_popover hide];
+        
         if (_delegate && !_haveCalledDelegate)
         {
             [_delegate FTPdidComplete:_dataType
@@ -131,7 +143,7 @@ static FTPDataPull * _statpull = nil;
         assert(_filePath);
         status = 1;
     }
-
+    
     if (_delegate && !_haveCalledDelegate)
     {
         [_delegate FTPdidComplete:_dataType
