@@ -137,6 +137,9 @@ NSString *textBefore(NSString *string, NSString *before)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     if (before)
     {
         NSRange range = [string rangeOfString:before];
@@ -152,6 +155,9 @@ NSString *textUpTo(NSString *string, NSString *upto)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     if (upto)
     {
@@ -169,6 +175,9 @@ NSString *textAfter(NSString *string, NSString *after)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     if (after)
     {
         NSRange range = [string rangeOfString:after];
@@ -185,6 +194,9 @@ NSString *removeEndingReturn(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSString *end = [NSString stringWithFormat:@"%@", [string substringFromIndex:(string.length - 1)]];
     
     if ([end isEqualToString:@"\r"])
@@ -198,18 +210,24 @@ NSString *textAfterHyphen(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@"-"];
     
     if (range.location != NSNotFound)
         string = [string substringFromIndex:(range.location + 1)];
-        
-        return string;
+    
+    return string;
 }
 
 NSString *textBeforeHyphen(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     NSRange range = [string rangeOfString:@"-"];
     
@@ -224,6 +242,9 @@ NSString *textBeforeTab(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@"\t"];
     
     if (range.location != NSNotFound)
@@ -237,6 +258,9 @@ NSString *textAfterTab(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@"\t"];
     
     if (range.location != NSNotFound)
@@ -249,6 +273,9 @@ NSString *textAfterLastTab(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     NSRange range = [string rangeOfString:@"\t"
                                   options:NSBackwardsSearch];
@@ -264,6 +291,9 @@ NSString *textBeforeLastTab(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@"\t"
                                   options:NSBackwardsSearch];
     
@@ -273,10 +303,30 @@ NSString *textBeforeLastTab(NSString *string)
         return string;
 }
 
+NSString *textAfterLastSpace(NSString *string)
+{
+    if (!string)
+        return nil;
+    
+    else if (!string.length)
+        return string;
+    
+    NSRange range = [string rangeOfString:@" "
+                                  options:NSBackwardsSearch];
+    
+    if (range.location != NSNotFound)
+        string = [string substringFromIndex:(range.location + 1)];
+    
+    return string;
+}
+
 NSString *textBeforeSecondTabFromEnd(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     NSRange range = [string rangeOfString:@"\t"
                                   options:NSBackwardsSearch];
@@ -300,6 +350,9 @@ NSString *textAfterSecondTabFromEnd(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@"\t"
                                   options:NSBackwardsSearch];
     
@@ -322,6 +375,9 @@ NSString *textBeforePipe(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@"|"];
     
     if (range.location != NSNotFound)
@@ -335,6 +391,9 @@ NSString *textAfterPipe(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@"|"];
     
     if (range.location != NSNotFound)
@@ -347,6 +406,9 @@ NSString *removeTextInsideParentheses(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     NSMutableString *mutableString = [NSMutableString stringWithString:string];
     NSRange start = [mutableString rangeOfString:@"("];
@@ -366,6 +428,9 @@ NSString *removeTextInsideParenthesesWithoutSpaces(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSMutableString *mutableString = [NSMutableString stringWithString:string];
     NSRange start = [mutableString rangeOfString:@"("];
     NSRange end = [mutableString rangeOfString:@")"];
@@ -380,6 +445,9 @@ NSString *removeColonInsideParentheses(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     BOOL deleteMode = NO;
     
@@ -408,6 +476,9 @@ NSString *textBeforeParentheses(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@"("];
     
     if (range.location != NSNotFound)
@@ -420,6 +491,9 @@ NSString *textAfterClosingParentheses(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     NSRange range = [string rangeOfString:@")" options:NSBackwardsSearch];
     
@@ -434,6 +508,9 @@ NSString *textInsideParentheses(NSString *string)
     
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     NSRange start = [string rangeOfString:@"("];
     NSRange end = [string rangeOfString:@")"];
@@ -452,6 +529,9 @@ NSString *textAfterFirstColon(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@":"];
     
     if (range.location != NSNotFound)
@@ -464,6 +544,9 @@ NSString *textBeforeColon(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     NSRange range = [string rangeOfString:@":"];
     
@@ -478,6 +561,9 @@ NSString *textBeforeComma(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@","];
     
     if (range.location != NSNotFound)
@@ -490,6 +576,9 @@ NSString *textBeforeSlash(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     NSRange range = [string rangeOfString:@"/"];
     
@@ -504,6 +593,9 @@ NSString *textAfterSlash(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@"/"];
     
     if (range.location != NSNotFound)
@@ -516,6 +608,9 @@ NSString *includeTextBeforeLastSlash(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     NSRange range = [string rangeOfString:@"/"
                                   options:NSBackwardsSearch];
@@ -530,6 +625,9 @@ NSString *addSpaceAfterComma(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     NSMutableString *mutableString = [NSMutableString stringWithString:string];
     NSRange range = [mutableString rangeOfString:@","];
@@ -548,6 +646,9 @@ NSString *addSpaceAfterColon(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSMutableString *mutableString = [NSMutableString stringWithString:string];
     NSRange range = [mutableString rangeOfString:@":"];
     
@@ -565,6 +666,9 @@ NSString *removeOpeningSpaces(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     LPSTR pstring = (LPSTR)string.UTF8String;
     
     while (*pstring && *pstring == ' ')
@@ -579,6 +683,9 @@ NSString *removeOpeningReturn(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     LPSTR pstring = (LPSTR)string.UTF8String;
     
@@ -595,6 +702,9 @@ NSString *removePIDPrefix(NSString *string)
     if (!string)
         return nil;
     
+    else if (!string.length)
+        return string;
+    
     NSRange range = [string rangeOfString:@"-"];
     
     if (range.location != NSNotFound)
@@ -607,6 +717,9 @@ NSMutableAttributedString *addLineBreakToLastSpace(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
     
@@ -640,6 +753,9 @@ NSString *reverseString(NSString *string)
 {
     if (!string)
         return nil;
+    
+    else if (!string.length)
+        return string;
     
     else if ([string isEqualToString:@""])
         return @"";

@@ -936,7 +936,8 @@
         
         if (schemeMarkerRange.location == NSNotFound)
         {
-            result = [NSURL URLWithString:[NSString stringWithFormat:@"ftp://%@", trimmedStr]];
+            result = [NSURL URLWithString:[[NSString stringWithFormat:@"ftp://%@", trimmedStr]
+                                           stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         }
         
         else

@@ -26,6 +26,7 @@ NSString *textBeforeTab(NSString *string);
 NSString *textAfterTab(NSString *string);
 NSString *textAfterLastTab(NSString *string);
 NSString *textBeforeLastTab(NSString *string);
+NSString *textAfterLastSpace(NSString *string);
 NSString *textBeforeSecondTabFromEnd(NSString *string);
 NSString *textAfterSecondTabFromEnd(NSString *string);
 NSString *textBeforePipe(NSString *string);
