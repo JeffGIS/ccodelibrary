@@ -785,7 +785,7 @@ WHERE intID=%i;",
             LPSTR detailCode;
             
             LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, tolerances);
-            //[self saveComplianceCode:ccode forInt:intID ramp:ramp.rampNum];
+           // [self saveComplianceCode:ccode forInt:intID ramp:ramp.rampNum];
             
             //show all non-compliant intersections
             if (strcmp (ccode,"A"))

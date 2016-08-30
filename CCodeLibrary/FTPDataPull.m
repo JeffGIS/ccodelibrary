@@ -9,7 +9,7 @@
 
 @property (nonatomic) Reachability *reachability;
 @property (nonatomic) unsigned long long existingFileSize;
-@property (nonatomic) NSInteger refreshOption;
+@property (nonatomic) FTPDataPullRefreshOption refreshOption;
 @property id <GSSiPopoverViewDelegate> savePopoverDelegate;
 @property (nonatomic, copy) NSString *tempExtension;
 @property BOOL useOnlyPrimaryFTP;
@@ -75,6 +75,7 @@ static FTPDataPull * _statpull = nil;
     _fileName = fileName;
     _toFileName = toFileName;
     _filePath = [NSString stringWithFormat:@"%@/%@", _toDirectory, _toFileName];
+    _haveCalledDelegate = NO;
     assert(_filePath);
     
     _existingFileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_filePath
