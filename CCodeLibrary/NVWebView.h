@@ -12,7 +12,7 @@
 - (void)webViewDidReturn:(NVWebView *)webView;
 
 - (void)webView:(NVWebView *)webView
-wasTappedAtPoint:(CGPoint)point
+wasTappedAtPoint:(DPOINT)point
      withinPage:(int)page;
 
 @end

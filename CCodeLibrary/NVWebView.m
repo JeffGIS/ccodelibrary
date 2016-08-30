@@ -334,13 +334,14 @@ didFailProvisionalNavigation:(WKNavigation *)navigation
     CGFloat offset = (CGFloat)(pageHeight * (pageNum - 1));
     point.y -= offset;
     
-    point.x = (point.x / _webView.scrollView.contentSize.width);
-    point.y = (point.y / pageHeight);
+    DPOINT dPoint;
+    dPoint.x = (point.x / _webView.scrollView.contentSize.width);
+    dPoint.y = (point.y / pageHeight);
     
     if (_delegate && [_delegate respondsToSelector:@selector(webView:wasTappedAtPoint:withinPage:)])
     {
         [_delegate webView:self
-          wasTappedAtPoint:point
+          wasTappedAtPoint:dPoint
                 withinPage:pageNum];
     }
 }
