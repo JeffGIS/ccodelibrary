@@ -636,3 +636,18 @@ void setStandardToleranceValues(ToleranceValues *tolerances)
     
     return;
 }
+
+char *rampToText(RampStruct *ramp)
+{
+    char *textures[] = {"None", "SmoothedConcrete", "BrushedConcrete", "TintedConcrete", "TruncatedStoneDomes", "TruncatedStampedConrete", "CastironTruncatedDomes", "ExposedAggregate", "CutStone", "None", "Other"};
+    
+    char *obstructions[] = {"None", "Hydrant", "Manhole", "Polebox", "Pole", "StreetManhole", "Other", "None", "None", "None", "None", "MasterNone"};
+    
+    char *rampTypes[] = {"Perp", "PerpNonWalk", "CombPerpWalk", "CombPerpNonWalk", "OneWayDirCurbGutter", "OneWayDirBlendTrans", "Parallel", "DepressedCorner", "Fan", "BuiltUp", "Diagonal", "CombLeftWalk", "CombRightWalk", "CombLeftNonWalk", "CombRightNonWalk"};
+    
+    char *rampText = (char *)calloc(4480, sizeof(char));
+    
+    sprintf(rampText, "%i\t'%s'\t%i\t%i\t'%s'\t'%s'\t'%s'\t'%s'\t%i\t%i\t%i\t%i\t%i\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%i\t%i\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%i\t%i\t%.2f\t%.2f\t'%s'\t%s'\t%.2f\t%.2f\t%.2f", ramp->rampNum, ramp->rampID, ramp->timeComplete, ramp->rampInXWalk, textures[ramp->texture], obstructions[ramp->upperLandingObstruction], obstructions[ramp->lowerLandingObstruction], obstructions[ramp->rampObstruction], ramp->hasRampCracks, ramp->hasUpperLandingCracks, ramp->hasStreetLandingCracks, ramp->hasLeftSidewalkCracks, ramp->hasRightSidewalkCracks, ramp->crackWidth.rampCrackWidth, ramp->crackWidth.upperLandingCrackWidth, ramp->crackWidth.streetLandingCrackWidth, ramp->crackWidth.leftSidewalkCrackWidth, ramp->crackWidth.rightSidewalkCrackWidth, ramp->rampWidth, ramp->rampDepth, ramp->rampSlopeFront, ramp->rampSlopeSide, ramp->upperLandingSlopeFront, ramp->upperLandingSlopeSide, ramp->streetLandingSlopeFront, ramp->streetLandingSlopeSide, ramp->flareLeftSlopeFront, ramp->flareLeftSlopeSide, ramp->flareRightSlopeFront, ramp->flareRightSlopeSide, ramp->swkLeftSlopeFront, ramp->swkLeftSlopeSide, ramp->swkRightSlopeFront, ramp->swkRightSlopeSide, ramp->PEDButtonHeight, ramp->PEDButtonDist, ramp->SteepTopOfCurb, ramp->PedRampLip, ramp->rampComment, rampTypes[ramp->rampType], ramp->curbCutDistance, ramp->bumpWidth, ramp->bumpHeight);
+    
+    return rampText;
+}

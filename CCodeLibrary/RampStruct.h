@@ -79,7 +79,6 @@ typedef struct CrackWidth {
 } CrackWidth;
 
 typedef struct RampStruct {
-    int intID;
     int rampNum;
     char rampID[16];
     int timeComplete;

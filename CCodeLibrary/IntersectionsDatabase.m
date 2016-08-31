@@ -781,7 +781,6 @@ WHERE intID=%i;",
         if (ramp.rampExists)
         {
             rampToRampStruct (ramp,&rstruct);
-            rstruct.intID = mpint.intID;
             LPSTR detailCode;
             
             LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, tolerances);
