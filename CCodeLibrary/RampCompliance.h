@@ -82,5 +82,6 @@
 char *rampComplianceCode(RampStruct *ramp, char **detailCode, ToleranceValues *tolerances);
 void setStandardToleranceValues(ToleranceValues *tolerances);
 char *rampToText(RampStruct *ramp);
+const char *rampToTextHeader(void);
 
 #endif /* RampCompliance_h */
