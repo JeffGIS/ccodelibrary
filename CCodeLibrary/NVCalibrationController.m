@@ -31,6 +31,7 @@ static CGFloat _deviceValues[9][4];
 @property NSInteger currentIndex, counter;
 @property (nonatomic, copy) NSString *previousPromptText, *nextPromptText;
 @property BOOL hasBeenFlipped, hasBeenCalibrated;
+@property int initialHeading;
 
 @end
 
@@ -485,6 +486,19 @@ static CGFloat _deviceValues[9][4];
             count *= 2;
             count += 1;
             
+            int headingDiff = 0;
+            
+            if (_currentIndex > 2 && _currentIndex % 2)//side flipped
+                headingDiff = abs(((_initialHeading + 90) - (int)round(slopeData.heading) + 180) % 360 - 180);
+            
+            else//front flipped
+                headingDiff = abs(((_initialHeading + 180) - (int)round(slopeData.heading) + 180) % 360 - 180);
+            
+            if (headingDiff > 30)
+            {
+                NSLog(@"Heading OFF by %i", headingDiff);
+            }
+            
             if (_currentIndex >= count || count == 1)
             {
                 [self saveCalibrationValues];
@@ -532,6 +546,25 @@ static CGFloat _deviceValues[9][4];
             _deviceValues[_currentIndex][0] = slopeData.frontSlopeDegrees;
             _deviceValues[_currentIndex][2] = slopeData.sideSlopeDegrees;
             _promptLabel.text = _previousPromptText;
+            
+            if (_currentIndex == 0)
+                _initialHeading = (int)round(slopeData.heading);
+            
+            else
+            {
+                int headingDiff = 0;
+                
+                if (_currentIndex % 2)//front
+                    headingDiff = abs((_initialHeading - (int)round(slopeData.heading) + 180) % 360 - 180);
+                
+                else//side
+                    headingDiff = abs(((_initialHeading - 90) - (int)round(slopeData.heading) + 180) % 360 - 180);
+                
+                if (headingDiff > 30)
+                {
+                    NSLog(@"Heading OFF by %i", headingDiff);
+                }
+            }
             
             if (slopeData.frontSlopePct != -9999.0)
             {
