@@ -1168,6 +1168,8 @@
 			children = (
 				69C183421C87A4B1000833FC /* .gitignore */,
 				EBA2E45F199527660085B2E0 /* CCodeLibrary */,
+				EBA2E460199527660085B2E0 /* Supporting Files */,
+				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E473199527660085B2E0 /* CCodeLibraryTests */,
 				EBA2E45B199527660085B2E0 /* Products */,
 			);
@@ -1193,7 +1195,6 @@
 				1FB3605319AE7E7D00592B1D /* Foundation.framework */,
 			);
 			name = Frameworks;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
@@ -1210,8 +1211,6 @@
 				A94A771C19F812DE0062906E /* Places */,
 				A94A771E19F813810062906E /* Views */,
 				EB95A1A41CB16EAF00158B40 /* Other */,
-				EBA2E45C199527660085B2E0 /* Frameworks */,
-				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";
@@ -1222,6 +1221,7 @@
 				EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			path = CCodeLibrary;
 			sourceTree = "<group>";
 		};
 		EBA2E473199527660085B2E0 /* CCodeLibraryTests */ = {
