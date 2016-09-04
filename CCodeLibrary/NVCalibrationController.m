@@ -473,6 +473,8 @@ static CGFloat _deviceValues[9][4];
     
     if (_currentType != NVCalibrationTypeDefault)
     {
+        BOOL headingError = NO;
+        
         if (_hasBeenFlipped)
         {
             _deviceValues[_currentIndex][1] = slopeData.frontSlopeDegrees;
@@ -495,48 +497,60 @@ static CGFloat _deviceValues[9][4];
                 headingDiff = abs(((_initialHeading + 180) - (int)round(slopeData.heading) + 180) % 360 - 180);
             
             if (headingDiff > 30)
+                headingError = YES;
+            
+            if (headingError)
             {
-                NSLog(@"Heading OFF by %i", headingDiff);
+                NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                                  delegate:self
+                                                                     title:@"The device appears to be pointed in the wrong direction. Calibration process will restart."
+                                                           buttonTextArray:@[@"OK"]
+                                                          destructiveIndex:0];
+                
+                alert.tag = 33333;
             }
             
-            if (_currentIndex >= count || count == 1)
+            else
             {
-                [self saveCalibrationValues];
-                
-                _promptLabel.text = @"Calibration Routine is Complete.";
-                
-                [self setTestEditButtonsEnabled:YES];
-                
-                NSDate *date = NSDate.date;
-                
-                [SharedDefaults.defaults saveDate:date
-                                           forKey:@"LastCalDate"];
-                
-                NSString *dateString = [NSDateFormatter localizedStringFromDate:date
-                                                                      dateStyle:NSDateFormatterLongStyle
-                                                                      timeStyle:NSDateFormatterLongStyle];
-                
-                NSString *lastCalString = [NSString stringWithFormat:@"Calibrated on %@", dateString];
-                _lastCalibrationlabel.text = lastCalString;
-                
-                [SharedDefaults.defaults saveString:lastCalString
-                                             forKey:@"LastCalString"];
-                
-                _currentIndex = 0;
-            }
-
-            for (UIButton *buttons in self.view.subviews)
-            {
-                if (buttons.tag == _currentIndex + 1)
+                if (_currentIndex >= count || count == 1)
                 {
-                    buttons.enabled = YES;
-                    buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.enabledColor;
+                    [self saveCalibrationValues];
+                    
+                    _promptLabel.text = @"Calibration Routine is Complete.";
+                    
+                    [self setTestEditButtonsEnabled:YES];
+                    
+                    NSDate *date = NSDate.date;
+                    
+                    [SharedDefaults.defaults saveDate:date
+                                               forKey:@"LastCalDate"];
+                    
+                    NSString *dateString = [NSDateFormatter localizedStringFromDate:date
+                                                                          dateStyle:NSDateFormatterLongStyle
+                                                                          timeStyle:NSDateFormatterLongStyle];
+                    
+                    NSString *lastCalString = [NSString stringWithFormat:@"Calibrated on %@", dateString];
+                    _lastCalibrationlabel.text = lastCalString;
+                    
+                    [SharedDefaults.defaults saveString:lastCalString
+                                                 forKey:@"LastCalString"];
+                    
+                    _currentIndex = 0;
                 }
                 
-                else if (buttons.tag > 0)
+                for (UIButton *buttons in self.view.subviews)
                 {
-                    buttons.enabled = NO;
-                    buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.disabledColor;
+                    if (buttons.tag == _currentIndex + 1)
+                    {
+                        buttons.enabled = YES;
+                        buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.enabledColor;
+                    }
+                    
+                    else if (buttons.tag > 0)
+                    {
+                        buttons.enabled = NO;
+                        buttons.backgroundColor = CRAPI.sharedInstance.defaultColors.disabledColor;
+                    }
                 }
             }
         }
@@ -561,12 +575,21 @@ static CGFloat _deviceValues[9][4];
                     headingDiff = abs(((_initialHeading - 90) - (int)round(slopeData.heading) + 180) % 360 - 180);
                 
                 if (headingDiff > 30)
-                {
-                    NSLog(@"Heading OFF by %i", headingDiff);
-                }
+                    headingError = YES;
             }
             
-            if (slopeData.frontSlopePct != -9999.0)
+            if (headingError)
+            {
+                NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                                  delegate:self
+                                                                     title:@"The device appears to be pointed in the wrong direction. Calibration process will restart."
+                                                           buttonTextArray:@[@"OK"]
+                                                          destructiveIndex:0];
+                
+                alert.tag = 33333;
+            }
+            
+            else if (slopeData.frontSlopePct != -9999.0)
             {
                 _hasBeenFlipped = YES;
                 
@@ -969,29 +992,43 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     if (buttonIndex == 0)
     {
-        if (alertView.tag == 11111)
+        switch (alertView.tag)
         {
-            GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
-                                                                                       criticalSideValue:-9999.0
-                                                                                              errorValue:0.0
-                                                                                          useCalibration:NO
-                                                                                            steadyFactor:0.0
-                                                                                             countFactor:0.0
-                                                                                          displayDegrees:(_currentType == NVCalibrationTypeDegrees)
-                                                                                                delegate:self];
-            
-            slopeVC.fromCalibration = YES;
-            slopeVC.promptText = @"";
-            
-            [self presentViewController:slopeVC
-                               animated:YES
-                             completion:nil];
-            
-            _promptLabel.text = _nextPromptText;
+            case 11111:
+            {
+                GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
+                                                                                           criticalSideValue:-9999.0
+                                                                                                  errorValue:0.0
+                                                                                              useCalibration:NO
+                                                                                                steadyFactor:0.0
+                                                                                                 countFactor:0.0
+                                                                                              displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                                                                    delegate:self];
+                
+                slopeVC.fromCalibration = YES;
+                slopeVC.promptText = @"";
+                
+                [self presentViewController:slopeVC
+                                   animated:YES
+                                 completion:nil];
+                
+                _promptLabel.text = _nextPromptText;
+            }
+                break;
+                
+            case 22222:
+                [self handleTableViewDismissal];
+                break;
+                
+            case 33333:
+                if (_delegate)
+                    [_delegate calibrationControllerNeedsRefresh:self];
+                
+                break;
+                
+            default:
+                break;
         }
-        
-        else if (alertView.tag == 22222)
-            [self handleTableViewDismissal];
     }
 }
 
