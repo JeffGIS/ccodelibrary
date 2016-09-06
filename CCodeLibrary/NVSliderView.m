@@ -31,7 +31,8 @@
     
     CGRect bounds = UIScreen.mainScreen.bounds;
     
-    sliderView.overlayView = [[UIView alloc] initWithFrame:bounds];
+    sliderView.overlayView = UIView.new;
+    sliderView.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
     sliderView.overlayView.backgroundColor = UIColor.blackColor;
     sliderView.tabBar = tabBar;
     sliderView.tabBar.userInteractionEnabled = NO;
@@ -42,6 +43,8 @@
     sliderView.titleText = @"NVMobile Slider Manager";
     
     [view addSubview:sliderView.overlayView];
+    
+    [sliderView.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     sliderView.backgroundColor = UIColor.whiteColor;
     sliderView.layer.cornerRadius = 10.0;
@@ -227,6 +230,19 @@
     double value = roundf(_slider.value);
     _sliderLabel.text = [NSString stringWithFormat:@"%.0f %@", value, units];
     _units = units;
+}
+
+- (void)willRotateWithDuration:(NSTimeInterval)duration
+        toInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    CGRect frame = self.frame;
+    
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         self.frame = CGRectMake(frame.origin.y, frame.origin.x,
+                                                 ((frame.size.height + _tabBar.frame.size.height)),
+                                                 ((frame.size.width - _tabBar.frame.size.height)));
+                     }];
 }
 
 @end
