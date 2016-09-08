@@ -40,16 +40,11 @@
     alert.delegate = delegate;
     alert.buttonBorderColor = UIColor.lightGrayColor;
     alert.buttonTextArray = buttonTextArray;
-    
-    [view addSubview:alert.overlayView];
-    
     alert.tabBar = view.parentViewController.tabBarController.tabBar;
     alert.tabBar.userInteractionEnabled = NO;
     
-    [alert.overlayView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor].active = YES;
-    [alert.overlayView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor].active = YES;
-    [alert.overlayView.topAnchor constraintEqualToAnchor:view.topAnchor].active = YES;
-    [alert.overlayView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor].active = YES;
+    [view addSubview:alert.overlayView];
+    [alert.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     CGFloat width = 340.0, heightSpacer = 10.0;
     UIFont *font = [UIFont boldSystemFontOfSize:28.0];

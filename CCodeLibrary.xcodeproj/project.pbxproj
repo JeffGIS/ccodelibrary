@@ -92,6 +92,8 @@
 		69DE24291C76319B00680B00 /* NVTextVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69DE24261C76311D00680B00 /* NVTextVC.h */; };
 		69DFB6A51CD71987001E1200 /* NVCRISSignupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69DFB6A41CD71987001E1200 /* NVCRISSignupView.m */; };
 		69DFB6A61CD719C3001E1200 /* NVCRISSignupView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69DFB6A31CD71987001E1200 /* NVCRISSignupView.h */; };
+		69E7FCA61D81249500171E44 /* NVPopoverSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E7FCA51D81249500171E44 /* NVPopoverSlider.m */; };
+		69E7FCA71D8129CD00171E44 /* NVPopoverSlider.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E7FCA41D81249500171E44 /* NVPopoverSlider.h */; };
 		69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E8E6681C66802F00CB26CB /* NSData+CRC.m */; };
 		69E8E66A1C66809E00CB26CB /* NSData+CRC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E8E6671C66802F00CB26CB /* NSData+CRC.h */; };
 		69EB2C2A1C8755C100E1F21E /* UIDevice+Storage.m in Sources */ = {isa = PBXBuildFile; fileRef = 69EB2C291C8755C100E1F21E /* UIDevice+Storage.m */; };
@@ -341,6 +343,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69E7FCA71D8129CD00171E44 /* NVPopoverSlider.h in CopyFiles */,
 				696D03821D67A616002E686A /* RampCompliance.h in CopyFiles */,
 				1FF82E491D677B29009523EC /* RampStruct.h in CopyFiles */,
 				692EFA531D36AC6B007B0D18 /* NVEmailFileList.h in CopyFiles */,
@@ -569,6 +572,8 @@
 		69DE24271C76311D00680B00 /* NVTextVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextVC.m; sourceTree = "<group>"; };
 		69DFB6A31CD71987001E1200 /* NVCRISSignupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCRISSignupView.h; sourceTree = "<group>"; };
 		69DFB6A41CD71987001E1200 /* NVCRISSignupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCRISSignupView.m; sourceTree = "<group>"; };
+		69E7FCA41D81249500171E44 /* NVPopoverSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPopoverSlider.h; sourceTree = "<group>"; };
+		69E7FCA51D81249500171E44 /* NVPopoverSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPopoverSlider.m; sourceTree = "<group>"; };
 		69E8E6671C66802F00CB26CB /* NSData+CRC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CRC.h"; sourceTree = "<group>"; };
 		69E8E6681C66802F00CB26CB /* NSData+CRC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CRC.m"; sourceTree = "<group>"; };
 		69EB2C281C8755C100E1F21E /* UIDevice+Storage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+Storage.h"; sourceTree = "<group>"; };
@@ -1025,6 +1030,8 @@
 				A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */,
 				A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */,
 				A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */,
+				69E7FCA41D81249500171E44 /* NVPopoverSlider.h */,
+				69E7FCA51D81249500171E44 /* NVPopoverSlider.m */,
 				6956B9961CB230210070416B /* NVPopoverTableView.h */,
 				6956B9971CB230210070416B /* NVPopoverTableView.m */,
 				A97407C41AF6A63900B2FF30 /* NVProgressView.h */,
@@ -1474,6 +1481,7 @@
 				69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */,
 				EBC01D1A1BED1C8C0004C751 /* kfiles.c in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
+				69E7FCA61D81249500171E44 /* NVPopoverSlider.m in Sources */,
 				EBC01D071BED1C8C0004C751 /* aa.c in Sources */,
 				EBC01D201BED1C8C0004C751 /* mlr404.c in Sources */,
 				EB0E4FF51C62785200849766 /* SymbolDictionary.m in Sources */,

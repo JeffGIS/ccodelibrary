@@ -76,7 +76,7 @@
                                (sliderView.frame.size.width * 0.9), capHeight);
     
     [sliderView.slider setThumbImage:UserDefaults.defaults.redSliderThumb
-                        forState:UIControlStateNormal];
+                            forState:UIControlStateNormal];
     
     UIImage *sliderLeft = [UserDefaults.defaults.metalSliderLeft stretchableImageWithLeftCapWidth:capWidth
                                                                                      topCapHeight:capHeight];
