@@ -7,11 +7,11 @@
 
 @protocol NVPopoverSliderDelegate <NSObject>
 
-- (void)popoverSlider:(NVPopoverSlider *)sliderView
+- (void)popoverSlider:(NVPopoverSlider *)popoverSlider
        didReturnValue:(double)value
                   tag:(NSInteger)tag;
 
-- (void)popoverSliderDidCancel:(NVPopoverSlider *)sliderView;
+- (void)popoverSliderDidCancel:(NVPopoverSlider *)popoverSlider;
 
 @end
 
@@ -22,7 +22,8 @@
                                maxValue:(double)maxValue
                              startValue:(double)startValue
                                delegate:(id)delegate
-                                    tag:(NSInteger)tag;
+                                    tag:(NSInteger)tag
+                                  title:(NSString *)title;
 
 - (void)hidePopoverSliderView:(BOOL)animated;
 

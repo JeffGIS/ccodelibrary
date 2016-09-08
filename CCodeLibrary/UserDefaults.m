@@ -281,6 +281,30 @@ static UserDefaults *_defaults;
     return metalSliderLeft;
 }
 
+- (UIImage *)redSliderThumbPhone
+{
+    UIImage *redSliderThumbPhone = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"redSliderThumbPhone"
+                                                                                                  ofType:@"png"]];
+    
+    return redSliderThumbPhone;
+}
+
+- (UIImage *)metalSliderRightPhone
+{
+    UIImage *metalSliderRightPhone = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"metalSliderRightPhone"
+                                                                                                    ofType:@"png"]];
+    
+    return metalSliderRightPhone;
+}
+
+- (UIImage *)metalSliderLeftPhone
+{
+    UIImage *metalSliderLeftPhone = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"metalSliderLeftPhone"
+                                                                                                   ofType:@"png"]];
+    
+    return metalSliderLeftPhone;
+}
+
 - (NSString *)googleKey
 {
     NSString *googleKey = @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q";

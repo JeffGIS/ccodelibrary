@@ -45,6 +45,9 @@
 - (UIImage *)redSliderThumb;
 - (UIImage *)metalSliderRight;
 - (UIImage *)metalSliderLeft;
+- (UIImage *)redSliderThumbPhone;
+- (UIImage *)metalSliderRightPhone;
+- (UIImage *)metalSliderLeftPhone;
 - (NSString *)googleKey;
 - (UIImage *)invertImage:(UIImage *)image;
 - (void)disableWebKitDiskImageCache;
