@@ -12,8 +12,8 @@
 @property (nonatomic) UISegmentedControl *mapTypeSC, *platSC;
 @property (nonatomic) CGSize size;
 @property BOOL configChanged, myLocationEnabled, platOverride;
-@property (nonatomic) CGFloat buttonSize, switchHeight, switchWidth, SCHeight, mapTypeSCWidth;
-@property (nonatomic) CGFloat buttonMargin, switchMargin, SCMargin, platSCWidth, platSCVertWidth;
+@property (nonatomic) CGFloat buttonSize, switchHeight, switchWidth, SCHeight, mapTypeSCWidth, cornerRad, bordWidth;
+@property (nonatomic) CGFloat buttonMargin, switchMargin, SCMargin, platSCWidth, platSCVertWidth, progressMargin;
 @property (nonatomic) UIProgressView *progressView;
 @property (nonatomic) NSTimer *helpBackgroundToggleTimer;
 
@@ -73,23 +73,23 @@
     //set internal sizes for all devices
     mt.buttonSize = 47.0, mt.SCHeight = 29.0, mt.mapTypeSCWidth = 76.0;
     mt.buttonMargin = 8.0, mt.switchMargin = 16.0, mt.SCMargin = 17.0, mt.platSCWidth = 196.0;
-    mt.platSCVertWidth = 112.0;
+    mt.platSCVertWidth = 112.0, mt.cornerRad = 10.0, mt.progressMargin = 10.0, mt.bordWidth = 2.0;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
         //reset internal sizes for iPhone
-        mt.buttonSize = 39.0, mt.buttonMargin = 5.0, mt.SCMargin = 10.0;
-        mt.mapTypeSCWidth = 78.0, mt.platSCWidth = 166.0;
+        mt.buttonSize = 38.0, mt.buttonMargin = 2.0, mt.SCMargin = 8.5, mt.progressMargin = 4.0;
+        mt.mapTypeSCWidth = 60.0, mt.platSCWidth = 166.0, mt.cornerRad = 4.0, mt.bordWidth = 1.0;
     }
     
     //set default size for all devices
     mt.size = CGSizeMake(((mt.buttonSize * 5.0) + (mt.buttonMargin * 6.0)),
-                         (mt.buttonSize + (mt.buttonMargin * 2.0) + 10.0));
+                         ((mt.buttonSize + (mt.buttonMargin * 2.0) + mt.progressMargin)));
     
     mt.backgroundColor = UserDefaults.defaults.appleBlue;
     mt.frame = CGRectMake(0.0, 0.0, mt.size.width, mt.size.height);
     mt.center = center;
-    mt.layer.borderWidth = 2.0;
+    mt.layer.borderWidth = mt.bordWidth;
     mt.layer.borderColor = UIColor.blackColor.CGColor;
     mt.delegate = delegate;
     mt.orientation = MapToolbarOrientationTop;
@@ -186,8 +186,8 @@
     //email PDF button added by default
     [mt addSubview:mt.helpButton];
     
-    mt.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(mt.buttonMargin, mt.size.height - 10.0,
-                                                                       mt.size.width - (mt.buttonMargin * 2.0), 4.0)];
+    mt.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(mt.buttonMargin, (mt.size.height - mt.progressMargin),
+                                                                       (mt.size.width - (mt.buttonMargin * 2.0)), 4.0)];
     
     mt.progressView.trackTintColor = UIColor.darkGrayColor;
     mt.progressView.progressTintColor = UIColor.whiteColor;
@@ -195,7 +195,11 @@
     //progress view added by default
     [mt addSubview:mt.progressView];
     
-    mt.mapTypeSC = [[UISegmentedControl alloc] initWithItems:@[@"Stnd", @"Hybd"]];
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        mt.mapTypeSC = [[UISegmentedControl alloc] initWithItems:@[@"St", @"Hy"]];
+    
+    else
+        mt.mapTypeSC = [[UISegmentedControl alloc] initWithItems:@[@"Stnd", @"Hybd"]];
     
     [mt setupSegControl:mt.mapTypeSC
    selectedSegmentIndex:0
@@ -258,9 +262,9 @@
 {
     button.imageEdgeInsets = edgeInsets;
     button.backgroundColor = UIColor.whiteColor;
-    button.layer.cornerRadius = 10.0;
+    button.layer.cornerRadius = _cornerRad;
     button.layer.borderColor = UIColor.blackColor.CGColor;
-    button.layer.borderWidth = 2.0;
+    button.layer.borderWidth = _bordWidth;
     button.layer.masksToBounds = YES;
     
     if (imageTitle && imageTitle.length)
@@ -282,7 +286,7 @@
 - (void)buttonPressedDown:(UIButton *)button
 {
     button.layer.borderColor = UIColor.darkGrayColor.CGColor;
-    button.layer.borderWidth = 6.0;
+    button.layer.borderWidth = (_bordWidth * 3.0);
 }
 
 - (void)setupSegControl:(UISegmentedControl *)segControl
@@ -293,7 +297,7 @@
     segControl.tintColor = UIColor.whiteColor;
     segControl.layer.cornerRadius = 4.0;
     segControl.layer.borderColor = UIColor.blackColor.CGColor;
-    segControl.layer.borderWidth = 2.0;
+    segControl.layer.borderWidth = _bordWidth;
     segControl.layer.masksToBounds = YES;
     segControl.selectedSegmentIndex = MapViewScreenSettingFullscreen;
     
@@ -305,7 +309,7 @@
 - (void)userLocationSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
-    button.layer.borderWidth = 2.0;
+    button.layer.borderWidth = _bordWidth;
     
     _myLocationEnabled = !_myLocationEnabled;
     
@@ -328,7 +332,7 @@
 - (void)extentsSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
-    button.layer.borderWidth = 2.0;
+    button.layer.borderWidth = _bordWidth;
     
     if (_delegate)
         [_delegate mapToolbarDidSelectZoomExtent];
@@ -339,20 +343,20 @@
     if (gesture.state == UIGestureRecognizerStateBegan)
     {
         _extentsButton.layer.borderColor = UIColor.greenColor.CGColor;
-        _extentsButton.layer.borderWidth = 6.0;
+        _extentsButton.layer.borderWidth = (_bordWidth * 3.0);
     }
     
     else if (gesture.state == UIGestureRecognizerStateEnded)
     {
         _extentsButton.layer.borderColor = UIColor.blackColor.CGColor;
-        _extentsButton.layer.borderWidth = 2.0;
+        _extentsButton.layer.borderWidth = _bordWidth;
     }
 }
 
 - (void)grayscaleSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
-    button.layer.borderWidth = 2.0;
+    button.layer.borderWidth = _bordWidth;
     
     if (_delegate)
         [_delegate mapToolbarDidSelectGrayscale];
@@ -361,7 +365,7 @@
 - (void)clearMarkersSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
-    button.layer.borderWidth = 2.0;
+    button.layer.borderWidth = _bordWidth;
     
     if (_delegate)
         [_delegate mapToolbarDidSelectClearMarkers];
@@ -370,7 +374,7 @@
 - (void)emailPDFSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
-    button.layer.borderWidth = 2.0;
+    button.layer.borderWidth = _bordWidth;
     
     if (_delegate)
         [_delegate mapToolbarDidSelectEmailPDF];
@@ -379,7 +383,7 @@
 - (void)helpButtonSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
-    button.layer.borderWidth = 2.0;
+    button.layer.borderWidth = _bordWidth;
     
     if (_helpLongPressed)
         [self endHBLongPressMode];
@@ -391,7 +395,7 @@
 - (void)returnButtonSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
-    button.layer.borderWidth = 2.0;
+    button.layer.borderWidth = _bordWidth;
     
     if (_delegate)
         [_delegate mapToolbarDidSelectReturnButton];
@@ -402,13 +406,13 @@
     if (gesture.state == UIGestureRecognizerStateBegan && !_helpLongPressed)
     {
         _helpButton.layer.borderColor = UIColor.greenColor.CGColor;
-        _helpButton.layer.borderWidth = 6.0;
+        _helpButton.layer.borderWidth = (_bordWidth * 3.0);
     }
     
     else if (gesture.state == UIGestureRecognizerStateEnded)
     {
         _helpButton.layer.borderColor = UIColor.blackColor.CGColor;
-        _helpButton.layer.borderWidth = 2.0;
+        _helpButton.layer.borderWidth = _bordWidth;
         
         if (_helpLongPressed)
             [self endHBLongPressMode];
@@ -454,7 +458,7 @@
 - (void)digitizeSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
-    button.layer.borderWidth = 2.0;
+    button.layer.borderWidth = _bordWidth;
     
     if (_delegate)
         [_delegate mapToolbarDidSelectDigitize];
@@ -463,7 +467,7 @@
 - (void)legendsSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
-    button.layer.borderWidth = 2.0;
+    button.layer.borderWidth = _bordWidth;
     
     if (_delegate)
         [_delegate mapToolbarDidSelectLegends];
@@ -494,7 +498,7 @@
                 if ([buttons isKindOfClass:UIButton.class])
                 {
                     buttons.layer.borderColor = UIColor.blackColor.CGColor;
-                    buttons.layer.borderWidth = 2.0;
+                    buttons.layer.borderWidth = _bordWidth;
                 }
             }
         }
@@ -607,10 +611,10 @@
     
     if (_wantProgressBar)
     {
-        self.frame = CGRectMake(0.0, 0.0, xCount, (yCount + 10.0));
+        self.frame = CGRectMake(0.0, 0.0, xCount, (yCount + _progressMargin));
         
-        _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
-                                         self.frame.size.width - (_buttonMargin * 2.0),
+        _progressView.frame = CGRectMake(_buttonMargin, (self.frame.size.height - _progressMargin),
+                                         (self.frame.size.width - (_buttonMargin * 2.0)),
                                          _progressView.frame.size.height);
     }
     
@@ -713,8 +717,8 @@
     
     if (_wantProgressBar)
     {
-        _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
-                                         self.frame.size.width - (_buttonMargin * 2.0),
+        _progressView.frame = CGRectMake(_buttonMargin, (self.frame.size.height - _progressMargin),
+                                         (self.frame.size.width - (_buttonMargin * 2.0)),
                                          _progressView.frame.size.height);
     }
     
@@ -1193,8 +1197,8 @@
         
         if (_wantProgressBar)
         {
-            _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
-                                             self.frame.size.width - (_buttonMargin * 2.0),
+            _progressView.frame = CGRectMake(_buttonMargin, (self.frame.size.height - _progressMargin),
+                                             (self.frame.size.width - (_buttonMargin * 2.0)),
                                              _progressView.frame.size.height);
         }
         
@@ -1419,9 +1423,9 @@
         if (_wantProgressBar)
         {
             self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y,
-                                    self.frame.size.width, (self.frame.size.height + 10.0));
+                                    self.frame.size.width, (self.frame.size.height + _progressMargin));
             
-            _progressView.frame = CGRectMake(_buttonMargin, self.frame.size.height - 10.0,
+            _progressView.frame = CGRectMake(_buttonMargin, (self.frame.size.height - _progressMargin),
                                              self.frame.size.width - (_buttonMargin * 2.0),
                                              _progressView.frame.size.height);
         }

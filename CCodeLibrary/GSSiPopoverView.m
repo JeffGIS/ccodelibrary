@@ -26,7 +26,11 @@
         _fromView = fromView;
         _hideAtCancel = YES;
         
-        _font = [UIFont boldSystemFontOfSize:40.0];
+        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+            _font = [UIFont boldSystemFontOfSize:24.0];
+        
+        else
+            _font = [UIFont boldSystemFontOfSize:40.0];
         
         _popover = [[UIView alloc] init];
         _popover.translatesAutoresizingMaskIntoConstraints = NO;
