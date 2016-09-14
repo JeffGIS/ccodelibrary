@@ -800,11 +800,9 @@
     }
 }
 
-- (void)didRotateWithDuration:(NSTimeInterval)duration
-                 tabBarHeight:(CGFloat)tabBarHeight
-              statusBarHeight:(CGFloat)statusBarHeight
+- (void)didRotateWithTabBarHeight:(CGFloat)tabBarHeight
+                  statusBarHeight:(CGFloat)statusBarHeight
 {
-    CGRect superviewFrame = self.superview.frame;
     CGFloat offset = 0.0;
     
     if (_isOffset)
@@ -813,45 +811,23 @@
     switch (_orientation)
     {
         case MapToolbarOrientationTop:
-        {
-            [UIView animateWithDuration:duration
-                             animations:^{
-                                 self.center = CGPointMake(((superviewFrame.size.width - offset) / 2.0),
-                                                           (statusBarHeight + (self.frame.size.height / 2.0)));
-                                 
-                             }];
-        }
+            self.center = CGPointMake(((self.superview.frame.size.width - offset) / 2.0),
+                                      (statusBarHeight + (self.frame.size.height / 2.0)));
             break;
             
         case MapToolbarOrientationBottom:
-        {
-            [UIView animateWithDuration:duration
-                             animations:^{
-                                 self.center = CGPointMake(((superviewFrame.size.width - offset) / 2.0),
-                                                           ((superviewFrame.size.height) -
-                                                            (self.frame.size.height / 2.0)));
-                             }];
-        }
+            self.center = CGPointMake(((self.superview.frame.size.width - offset) / 2.0),
+                                      ((self.superview.frame.size.height) - (self.frame.size.height / 2.0)));
             break;
             
         case MapToolbarOrientationLeft:
-        {
-            [UIView animateWithDuration:duration
-                             animations:^{
-                                 self.center = CGPointMake((self.frame.size.width / 2.0),
-                                                           (superviewFrame.size.height / 2.0));
-                             }];
-        }
+            self.center = CGPointMake((self.frame.size.width / 2.0),
+                                      (self.superview.frame.size.height / 2.0));
             break;
             
         case MapToolbarOrientationRight:
-        {
-            [UIView animateWithDuration:duration
-                             animations:^{
-                                 self.center = CGPointMake(((superviewFrame.size.width - offset) - (self.frame.size.width / 2.0)),
-                                                           (superviewFrame.size.width / 2.0));
-                             }];
-        }
+            self.center = CGPointMake(((self.superview.frame.size.width - offset) - (self.frame.size.width / 2.0)),
+                                      (self.superview.frame.size.height / 2.0));
             break;
             
         default:

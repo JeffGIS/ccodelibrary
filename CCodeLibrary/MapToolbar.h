@@ -84,9 +84,8 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
                   tabBarHeight:(CGFloat)tabBarHeight
                statusBarHeight:(CGFloat)statusBarHeight;
 
-- (void)didRotateWithDuration:(NSTimeInterval)duration
-                 tabBarHeight:(CGFloat)tabBarHeight
-              statusBarHeight:(CGFloat)statusBarHeight;
+- (void)didRotateWithTabBarHeight:(CGFloat)tabBarHeight
+                  statusBarHeight:(CGFloat)statusBarHeight;
 
 - (void)adjustFrameToScrollView;
 - (void)addExpandButton;

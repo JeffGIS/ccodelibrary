@@ -12,10 +12,11 @@
 
 bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol)
 {
-    if (fabs(p1->x - p2->x) >tol ||
-        fabs(p1->y - p2->y) >tol)
+    if (fabs(p1->x - p2->x) >tol || fabs(p1->y - p2->y) >tol)
         return FALSE;
-    return TRUE;
+    
+    else
+        return TRUE;
 }
 
 bool samePoint (LPPOINT p1, LPPOINT p2)
