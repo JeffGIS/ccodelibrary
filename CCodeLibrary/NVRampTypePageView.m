@@ -391,7 +391,7 @@
 
 - (void)selectButtonTapped:(UIButton *)button
 {
-    _selectedType = _zoomedIndex;
+    _selectedType = (RampType)_zoomedIndex;
     
     [_delegate rampTypePageView:self
               didReturnRampType:_selectedType];

@@ -3,8 +3,8 @@
 
 #import "GSSiBumpDetector.h"
 #import "UserDefaults.h"
-#import <AVFoundation/AVAudioPlayer.h>
-#import <CoreMotion/CoreMotion.h>
+@import AVFoundation;
+@import CoreMotion;
 
 @interface GSSiBumpDetector ()
 

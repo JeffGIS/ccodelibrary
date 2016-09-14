@@ -2059,7 +2059,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     SQLOK(244,sqlite3_finalize(statement), self.curbRampData.database);
     [self close:opened];
     
-    nextID = [CRAPI.sharedInstance adjustNextRefno:nextID];
+    nextID = (int)[CRAPI.sharedInstance adjustNextRefno:nextID];
 
     return nextID;
 }

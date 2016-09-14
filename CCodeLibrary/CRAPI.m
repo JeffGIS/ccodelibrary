@@ -583,8 +583,8 @@
 -(BOOL) haveErrorLog
 {
     BOOL rtn = FALSE;
-    int fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:[self errorLogPath]
-                                                               error:nil].fileSize;
+    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[self errorLogPath]
+                                                                       error:nil].fileSize;
     if (fileSize > 0)
         rtn = TRUE;
     return rtn;
@@ -743,12 +743,10 @@
 
 - (void) transferPlacesArrayToManagePlacesList
 {
-    [UserDefaults.defaults  resetPlacesLists];
+    [UserDefaults.defaults resetPlacesLists];
+    
     for (CityOrOrganizationData *c in _placesArray)
-    {
-        [ManagePlacesDatabase.database addLocationToList:c.number];
-    }
-
+        [ManagePlacesDatabase.database addLocationToList:(int)c.number];
 }
 
 - (void)savePlacesString:(NSString*)placesString
