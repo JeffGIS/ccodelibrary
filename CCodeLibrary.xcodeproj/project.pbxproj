@@ -134,7 +134,6 @@
 		A97867341A521934000A9BB8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A97867331A521934000A9BB8 /* MapKit.framework */; };
 		A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = A97867361A5219FD000A9BB8 /* PriorityLocation.m */; };
 		A97B72781ADB4912001ACFAE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A97B72771ADB4912001ACFAE /* AVFoundation.framework */; };
-		A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97C621E1AE0C59200DA7738 /* HelpWebView.m */; };
 		A98A57A81B20ADE600906FBC /* NVCalibrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A98A57A71B20ADE600906FBC /* NVCalibrationController.m */; };
 		A98A57A91B20AEC800906FBC /* lzoconf.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB86BFA81B0B62A30074728E /* lzoconf.h */; };
 		A98A57AA1B20AECD00906FBC /* lzodefs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB86BFA91B0B62A30074728E /* lzodefs.h */; };
@@ -179,7 +178,6 @@
 		A99C89231AEDE0CC00A0856F /* GSSiDatePicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A99050861ACB942F00C6AAAF /* GSSiDatePicker.h */; };
 		A99C89241AEDE0D100A0856F /* GSSiPopoverView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */; };
 		A99C89251AEDE0D900A0856F /* GSSiSlopeViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9D5A8AE1A0D0A7A00314E8B /* GSSiSlopeViewController.h */; };
-		A99C89271AEDE0E700A0856F /* HelpWebView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A97C621D1AE0C59200DA7738 /* HelpWebView.h */; };
 		A99C89281AEDE0EF00A0856F /* LegendView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A96B07BD19FBF276005A73B0 /* LegendView.h */; };
 		A99C892A1AEDE0FA00A0856F /* NVSliderView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A91F36921AE9739400602BCE /* NVSliderView.h */; };
 		A99C892D1AEDE10A00A0856F /* NVColorWheel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90D1FB31AE60FDF00CBFEE7 /* NVColorWheel.h */; };
@@ -439,7 +437,6 @@
 				A99C892D1AEDE10A00A0856F /* NVColorWheel.h in CopyFiles */,
 				A99C892A1AEDE0FA00A0856F /* NVSliderView.h in CopyFiles */,
 				A99C89281AEDE0EF00A0856F /* LegendView.h in CopyFiles */,
-				A99C89271AEDE0E700A0856F /* HelpWebView.h in CopyFiles */,
 				A99C89251AEDE0D900A0856F /* GSSiSlopeViewController.h in CopyFiles */,
 				A99C89241AEDE0D100A0856F /* GSSiPopoverView.h in CopyFiles */,
 				A99C89231AEDE0CC00A0856F /* GSSiDatePicker.h in CopyFiles */,
@@ -629,8 +626,6 @@
 		A97867351A5219FD000A9BB8 /* PriorityLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PriorityLocation.h; sourceTree = "<group>"; };
 		A97867361A5219FD000A9BB8 /* PriorityLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PriorityLocation.m; sourceTree = "<group>"; };
 		A97B72771ADB4912001ACFAE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		A97C621D1AE0C59200DA7738 /* HelpWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpWebView.h; sourceTree = "<group>"; };
-		A97C621E1AE0C59200DA7738 /* HelpWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpWebView.m; sourceTree = "<group>"; };
 		A98A57A61B20ADE600906FBC /* NVCalibrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalibrationController.h; sourceTree = "<group>"; };
 		A98A57A71B20ADE600906FBC /* NVCalibrationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCalibrationController.m; sourceTree = "<group>"; };
 		A99050861ACB942F00C6AAAF /* GSSiDatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiDatePicker.h; sourceTree = "<group>"; };
@@ -982,8 +977,6 @@
 				EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */,
 				A9D5A8AE1A0D0A7A00314E8B /* GSSiSlopeViewController.h */,
 				A9D5A8AF1A0D0A7A00314E8B /* GSSiSlopeViewController.m */,
-				A97C621D1AE0C59200DA7738 /* HelpWebView.h */,
-				A97C621E1AE0C59200DA7738 /* HelpWebView.m */,
 				A96B07BD19FBF276005A73B0 /* LegendView.h */,
 				A96B07BE19FBF276005A73B0 /* LegendView.m */,
 				694F00771C1B4BBA0074AF72 /* MapToolbar.h */,
@@ -1529,7 +1522,6 @@
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
 				693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */,
 				1F5150A31CE3959000BA4A5E /* AlleyWallData.m in Sources */,
-				A97C621F1AE0C59200DA7738 /* HelpWebView.m in Sources */,
 				EBC01D231BED1C8C0004C751 /* nutate.c in Sources */,
 				EBC01D0B1BED1C8C0004C751 /* arcdot.c in Sources */,
 				EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */,

@@ -251,6 +251,7 @@
     
     mt.returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
     mt.returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    mt.returnButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     
     return mt;
 }
