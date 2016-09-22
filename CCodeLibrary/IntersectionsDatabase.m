@@ -1820,7 +1820,8 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
                                                       });
                                }
                                
-                               [self commitTransaction];
+                               if (opened)
+                                   [self commitTransaction];
                                if (popover)
                                    dispatch_async(dispatch_get_main_queue(),
                                                   ^{
@@ -2037,13 +2038,12 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
 - (BOOL)startTransaction
 {
-    BOOL opened = [self open];
-    SQLOK(241,sqlite3_exec(self.curbRampData.database, "BEGIN", 0, 0, 0),self.curbRampData.database);
-    return opened;
+    return [self.curbRampData startTransaction];
+
 }
 - (void)commitTransaction
 {
-    SQLOK(242,sqlite3_exec(self.curbRampData.database, "COMMIT", 0, 0, 0),self.curbRampData.database);
+    [self.curbRampData commitTransaction];
 }
 
 - (int) getNewIntID

@@ -15,6 +15,7 @@
 @property (nonatomic, copy) NSString *path;
 @property NSInteger fileSize;
 @property (nonatomic) int datasetVersion;
+@property BOOL transactionActive;
 
 + (CurbRampData *)databaseForGeoid:(int)geoid
                             create:(BOOL)create;

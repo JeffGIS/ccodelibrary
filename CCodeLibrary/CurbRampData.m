@@ -89,13 +89,15 @@ static int nInit=0;
     BOOL rtn = FALSE;
     if (!_isOpen)
     {
+        _transactionActive = NO;
         _isOpen = !SQLOK(161,sqlite3_open(self.path.UTF8String, &_database), _database);
         //NSLog(@"CurbRamp Database open");
         
         _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:_path
                                                                    error:nil].fileSize;
         
-        [self adjustToLatestVersion];
+        if (_fileSize)
+            [self adjustToLatestVersion];
         rtn = TRUE;
     }
     return rtn;
@@ -214,18 +216,22 @@ static int nInit=0;
 - (BOOL)startTransaction
 {
     BOOL opened = [self open];
-    SQLOK(166,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    if (!_transactionActive)
+        SQLOK(166,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    _transactionActive = YES;
     return opened;
 }
 
 - (void)commitTransaction
 {
     SQLOK(167,sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
+    _transactionActive = NO;
 }
 
 - (void)cancelTransaction
 {
     SQLOK(168,sqlite3_exec(_database, "ROLLBACK", 0, 0, 0), _database);
+    _transactionActive = NO;
 }
 
 - (BOOL)isCurrentVersion
@@ -423,7 +429,8 @@ static int nInit=0;
               sendToServer:YES
                       from:1680];
 
-    [self commitTransaction];
+    if (opened)
+        [self commitTransaction];
     [self close:opened];
     return rtn;
 }
