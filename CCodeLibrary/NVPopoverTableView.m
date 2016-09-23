@@ -93,6 +93,8 @@
     nvptv.tableView.sectionHeaderHeight = rowHeight;
     nvptv.tableView.backgroundColor = UIColor.whiteColor;
     nvptv.tableView.delaysContentTouches = NO;
+    nvptv.tableView.bounces = NO;
+    nvptv.tableView.bouncesZoom = NO;
     
     [nvptv addSubview:nvptv.tableView];
     
