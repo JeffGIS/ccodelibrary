@@ -106,49 +106,34 @@
         nvdr.tabBar = vc.tabBarController.tabBar;
     }
     
-    nvdr.overlayView = [[UIView alloc] init];
+    nvdr.overlayView = UIView.new;
     nvdr.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
     nvdr.overlayView.backgroundColor = UIColor.blackColor;
     nvdr.overlayView.alpha = 0.0;
     
     [view addSubview:nvdr.overlayView];
-    
-    [nvdr.overlayView.leadingAnchor constraintEqualToAnchor:view.leadingAnchor].active = YES;
-    [nvdr.overlayView.trailingAnchor constraintEqualToAnchor:view.trailingAnchor].active = YES;
-    [nvdr.overlayView.topAnchor constraintEqualToAnchor:view.topAnchor].active = YES;
-    
-    [nvdr.overlayView.bottomAnchor constraintEqualToAnchor:view.bottomAnchor
-                                                  constant:nvdr.tabBar.frame.size.height].active = YES;
+    [nvdr.overlayView constrainLeadingToAnchor:view.leadingAnchor];
+    [nvdr.overlayView constrainTrailingToAnchor:view.trailingAnchor];
+    [nvdr.overlayView constrainTopToAnchor:view.topAnchor];
+    [nvdr.overlayView constrainBottomToAnchor:view.bottomAnchor constant:nvdr.tabBar.frame.size.height];
     
     [view addSubview:nvdr];
+    [nvdr constrainLeadingToAnchor:view.leadingAnchor constant:outerMargin];
+    [nvdr constrainTrailingToAnchor:view.trailingAnchor constant:-outerMargin];
+    [nvdr constrainTopToAnchor:view.topAnchor constant:outerMargin];
+    [nvdr constrainBottomToAnchor:view.bottomAnchor constant:(nvdr.tabBar.frame.size.height - outerMargin)];
     
-    [nvdr.leadingAnchor constraintEqualToAnchor:view.leadingAnchor
-                                       constant:outerMargin].active = YES;
-    
-    [nvdr.trailingAnchor constraintEqualToAnchor:view.trailingAnchor
-                                        constant:-outerMargin].active = YES;
-    
-    [nvdr.topAnchor constraintEqualToAnchor:view.topAnchor
-                                   constant:outerMargin].active = YES;
-    
-    [nvdr.bottomAnchor constraintEqualToAnchor:view.bottomAnchor
-                                      constant:(nvdr.tabBar.frame.size.height - outerMargin)].active = YES;
-    
-    UIButton *returnButton = [[UIButton alloc] init];
+    UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [nvdr setupButton:returnButton
                 title:@"< Return"
              selector:@selector(returnButtonTapped:)];
     
     [nvdr addSubview:returnButton];
+    [returnButton constrainLeadingToAnchor:nvdr.leadingAnchor constant:innerMargin];
+    [returnButton constrainTopToAnchor:nvdr.topAnchor constant:innerMargin];
     
-    [returnButton.leadingAnchor constraintEqualToAnchor:nvdr.leadingAnchor
-                                               constant:innerMargin].active = YES;
-    
-    [returnButton.topAnchor constraintEqualToAnchor:nvdr.topAnchor
-                                           constant:innerMargin].active = YES;
-    
-    UILabel *titleLabel = [[UILabel alloc] init];
+    UILabel *titleLabel = UILabel.new;
     
     [nvdr setupLabel:titleLabel
             fontSize:36.0];
@@ -156,15 +141,12 @@
     titleLabel.text = @"Date Range";
     
     [nvdr addSubview:titleLabel];
+    [titleLabel constrainLeadingToAnchor:returnButton.trailingAnchor constant:innerMargin];
+    [titleLabel constrainTopToAnchor:returnButton.topAnchor];
+    [titleLabel constrainBottomToAnchor:returnButton.bottomAnchor];
+    [titleLabel constrainCenterXToAnchor:view.centerXAnchor];
     
-    [titleLabel.leadingAnchor constraintEqualToAnchor:returnButton.trailingAnchor
-                                             constant:innerMargin].active = YES;
-    
-    [titleLabel.topAnchor constraintEqualToAnchor:returnButton.topAnchor].active = YES;
-    [titleLabel.bottomAnchor constraintEqualToAnchor:returnButton.bottomAnchor].active = YES;
-    [titleLabel.centerXAnchor constraintEqualToAnchor:view.centerXAnchor].active = YES;
-    
-    UILabel *fdpLabel = [[UILabel alloc] init];
+    UILabel *fdpLabel = UILabel.new;
     
     [nvdr setupLabel:fdpLabel
             fontSize:24.0];
@@ -172,16 +154,11 @@
     fdpLabel.text = @"Select From Date";
     
     [nvdr addSubview:fdpLabel];
+    [fdpLabel constrainLeadingToAnchor:returnButton.leadingAnchor];
+    [fdpLabel constrainTopToAnchor:returnButton.bottomAnchor constant:innerMargin];
+    [fdpLabel constrainTrailingToAnchor:nvdr.centerXAnchor constant:(-innerMargin / 2.0)];
     
-    [fdpLabel.leadingAnchor constraintEqualToAnchor:returnButton.leadingAnchor].active = YES;
-    
-    [fdpLabel.topAnchor constraintEqualToAnchor:returnButton.bottomAnchor
-                                       constant:innerMargin].active = YES;
-    
-    [fdpLabel.trailingAnchor constraintEqualToAnchor:nvdr.centerXAnchor
-                                            constant:(-innerMargin / 2.0)].active = YES;
-    
-    UILabel *tdpLabel = [[UILabel alloc] init];
+    UILabel *tdpLabel = UILabel.new;
     
     [nvdr setupLabel:tdpLabel
             fontSize:24.0];
@@ -189,17 +166,11 @@
     tdpLabel.text = @"Select To Date";
     
     [nvdr addSubview:tdpLabel];
+    [tdpLabel constrainLeadingToAnchor:nvdr.centerXAnchor constant:(innerMargin / 2.0)];
+    [tdpLabel constrainTopToAnchor:returnButton.bottomAnchor constant:innerMargin];
+    [tdpLabel constrainTrailingToAnchor:nvdr.trailingAnchor constant:-innerMargin];
     
-    [tdpLabel.leadingAnchor constraintEqualToAnchor:nvdr.centerXAnchor
-                                           constant:(innerMargin / 2.0)].active = YES;
-    
-    [tdpLabel.topAnchor constraintEqualToAnchor:returnButton.bottomAnchor
-                                       constant:innerMargin].active = YES;
-    
-    [tdpLabel.trailingAnchor constraintEqualToAnchor:nvdr.trailingAnchor
-                                            constant:-innerMargin].active = YES;
-    
-    nvdr.fromDatePicker = [[UIDatePicker alloc] init];
+    nvdr.fromDatePicker = UIDatePicker.new;
     
     if (nvdr.toDate && nvdr.fromDate)
     {
@@ -224,11 +195,10 @@
                   forControlEvents:UIControlEventValueChanged];
     
     [nvdr addSubview:nvdr.fromDatePicker];
+    [nvdr.fromDatePicker constrainTopToAnchor:fdpLabel.bottomAnchor];
+    [nvdr.fromDatePicker constrainCenterXToAnchor:fdpLabel.centerXAnchor];
     
-    [nvdr.fromDatePicker.topAnchor constraintEqualToAnchor:fdpLabel.bottomAnchor].active = YES;
-    [nvdr.fromDatePicker.centerXAnchor constraintEqualToAnchor:fdpLabel.centerXAnchor].active = YES;
-    
-    nvdr.toDatePicker = [[UIDatePicker alloc] init];
+    nvdr.toDatePicker = UIDatePicker.new;
     
     if (nvdr.toDate && nvdr.fromDate)
     {
@@ -246,11 +216,10 @@
                 forControlEvents:UIControlEventValueChanged];
     
     [nvdr addSubview:nvdr.toDatePicker];
+    [nvdr.toDatePicker constrainTopToAnchor:tdpLabel.bottomAnchor];
+    [nvdr.toDatePicker constrainCenterXToAnchor:tdpLabel.centerXAnchor];
     
-    [nvdr.toDatePicker.topAnchor constraintEqualToAnchor:tdpLabel.bottomAnchor].active = YES;
-    [nvdr.toDatePicker.centerXAnchor constraintEqualToAnchor:tdpLabel.centerXAnchor].active = YES;
-    
-    nvdr.fromDateLabel = [[UILabel alloc] init];
+    nvdr.fromDateLabel = UILabel.new;
     
     [nvdr setupLabel:nvdr.fromDateLabel
             fontSize:24.0];
@@ -258,12 +227,11 @@
     nvdr.fromDateLabel.text = [nvdr formattedDate:nvdr.fromDatePicker.date];
     
     [nvdr addSubview:nvdr.fromDateLabel];
+    [nvdr.fromDateLabel constrainLeadingToAnchor:fdpLabel.leadingAnchor];
+    [nvdr.fromDateLabel constrainTrailingToAnchor:fdpLabel.trailingAnchor];
+    [nvdr.fromDateLabel constrainTopToAnchor:nvdr.fromDatePicker.bottomAnchor];
     
-    [nvdr.fromDateLabel.leadingAnchor constraintEqualToAnchor:fdpLabel.leadingAnchor].active = YES;
-    [nvdr.fromDateLabel.trailingAnchor constraintEqualToAnchor:fdpLabel.trailingAnchor].active = YES;
-    [nvdr.fromDateLabel.topAnchor constraintEqualToAnchor:nvdr.fromDatePicker.bottomAnchor].active = YES;
-    
-    nvdr.toDateLabel = [[UILabel alloc] init];
+    nvdr.toDateLabel = UILabel.new;
     
     [nvdr setupLabel:nvdr.toDateLabel
             fontSize:24.0];
@@ -271,12 +239,11 @@
     nvdr.toDateLabel.text = [nvdr formattedDate:nvdr.toDatePicker.date];
     
     [nvdr addSubview:nvdr.toDateLabel];
+    [nvdr.toDateLabel constrainLeadingToAnchor:tdpLabel.leadingAnchor];
+    [nvdr.toDateLabel constrainTrailingToAnchor:tdpLabel.trailingAnchor];
+    [nvdr.toDateLabel constrainTopToAnchor:nvdr.toDatePicker.bottomAnchor];
     
-    [nvdr.toDateLabel.leadingAnchor constraintEqualToAnchor:tdpLabel.leadingAnchor].active = YES;
-    [nvdr.toDateLabel.trailingAnchor constraintEqualToAnchor:tdpLabel.trailingAnchor].active = YES;
-    [nvdr.toDateLabel.topAnchor constraintEqualToAnchor:nvdr.toDatePicker.bottomAnchor].active = YES;
-    
-    UIButton *today = [[UIButton alloc] init];
+    UIButton *today = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [nvdr setupButton:today
                 title:@"Today"
@@ -285,14 +252,11 @@
     today.tag = 1;
     
     [nvdr addSubview:today];
+    [today constrainLeadingToAnchor:nvdr.fromDateLabel.leadingAnchor];
+    [today constrainTrailingToAnchor:nvdr.fromDateLabel.trailingAnchor];
+    [today constrainTopToAnchor:nvdr.fromDateLabel.bottomAnchor constant:innerMargin];
     
-    [today.leadingAnchor constraintEqualToAnchor:nvdr.fromDateLabel.leadingAnchor].active = YES;
-    [today.trailingAnchor constraintEqualToAnchor:nvdr.fromDateLabel.trailingAnchor].active = YES;
-    
-    [today.topAnchor constraintEqualToAnchor:nvdr.fromDateLabel.bottomAnchor
-                                    constant:innerMargin].active = YES;
-    
-    UIButton *yesterday = [[UIButton alloc] init];
+    UIButton *yesterday = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [nvdr setupButton:yesterday
                 title:@"Yesterday"
@@ -301,14 +265,11 @@
     yesterday.tag = 2;
     
     [nvdr addSubview:yesterday];
+    [yesterday constrainLeadingToAnchor:nvdr.toDateLabel.leadingAnchor];
+    [yesterday constrainTrailingToAnchor:nvdr.toDateLabel.trailingAnchor];
+    [yesterday constrainTopToAnchor:nvdr.toDateLabel.bottomAnchor constant:innerMargin];
     
-    [yesterday.leadingAnchor constraintEqualToAnchor:nvdr.toDateLabel.leadingAnchor].active = YES;
-    [yesterday.trailingAnchor constraintEqualToAnchor:nvdr.toDateLabel.trailingAnchor].active = YES;
-    
-    [yesterday.topAnchor constraintEqualToAnchor:nvdr.toDateLabel.bottomAnchor
-                                        constant:innerMargin].active = YES;
-    
-    UIButton *thisWeek = [[UIButton alloc] init];
+    UIButton *thisWeek = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [nvdr setupButton:thisWeek
                 title:@"This Week"
@@ -317,14 +278,11 @@
     thisWeek.tag = 3;
     
     [nvdr addSubview:thisWeek];
+    [thisWeek constrainLeadingToAnchor:today.leadingAnchor];
+    [thisWeek constrainTrailingToAnchor:today.trailingAnchor];
+    [thisWeek constrainTopToAnchor:today.bottomAnchor constant:innerMargin];
     
-    [thisWeek.leadingAnchor constraintEqualToAnchor:today.leadingAnchor].active = YES;
-    [thisWeek.trailingAnchor constraintEqualToAnchor:today.trailingAnchor].active = YES;
-    
-    [thisWeek.topAnchor constraintEqualToAnchor:today.bottomAnchor
-                                       constant:innerMargin].active = YES;
-    
-    UIButton *lastWeek = [[UIButton alloc] init];
+    UIButton *lastWeek = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [nvdr setupButton:lastWeek
                 title:@"Last Week"
@@ -333,14 +291,11 @@
     lastWeek.tag = 4;
     
     [nvdr addSubview:lastWeek];
+    [lastWeek constrainLeadingToAnchor:yesterday.leadingAnchor];
+    [lastWeek constrainTrailingToAnchor:yesterday.trailingAnchor];
+    [lastWeek constrainTopToAnchor:yesterday.bottomAnchor constant:innerMargin];
     
-    [lastWeek.leadingAnchor constraintEqualToAnchor:yesterday.leadingAnchor].active = YES;
-    [lastWeek.trailingAnchor constraintEqualToAnchor:yesterday.trailingAnchor].active = YES;
-    
-    [lastWeek.topAnchor constraintEqualToAnchor:yesterday.bottomAnchor
-                                       constant:innerMargin].active = YES;
-    
-    UIButton *pastWeek = [[UIButton alloc] init];
+    UIButton *pastWeek = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [nvdr setupButton:pastWeek
                 title:@"Past Week"
@@ -349,14 +304,11 @@
     pastWeek.tag = 5;
     
     [nvdr addSubview:pastWeek];
+    [pastWeek constrainLeadingToAnchor:thisWeek.leadingAnchor];
+    [pastWeek constrainTrailingToAnchor:thisWeek.trailingAnchor];
+    [pastWeek constrainTopToAnchor:thisWeek.bottomAnchor constant:innerMargin];
     
-    [pastWeek.leadingAnchor constraintEqualToAnchor:thisWeek.leadingAnchor].active = YES;
-    [pastWeek.trailingAnchor constraintEqualToAnchor:thisWeek.trailingAnchor].active = YES;
-    
-    [pastWeek.topAnchor constraintEqualToAnchor:thisWeek.bottomAnchor
-                                       constant:innerMargin].active = YES;
-    
-    UIButton *thisMonth = [[UIButton alloc] init];
+    UIButton *thisMonth = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [nvdr setupButton:thisMonth
                 title:@"This Month"
@@ -365,14 +317,11 @@
     thisMonth.tag = 6;
     
     [nvdr addSubview:thisMonth];
+    [thisMonth constrainLeadingToAnchor:lastWeek.leadingAnchor];
+    [thisMonth constrainTrailingToAnchor:lastWeek.trailingAnchor];
+    [thisMonth constrainTopToAnchor:lastWeek.bottomAnchor constant:innerMargin];
     
-    [thisMonth.leadingAnchor constraintEqualToAnchor:lastWeek.leadingAnchor].active = YES;
-    [thisMonth.trailingAnchor constraintEqualToAnchor:lastWeek.trailingAnchor].active = YES;
-    
-    [thisMonth.topAnchor constraintEqualToAnchor:lastWeek.bottomAnchor
-                                        constant:innerMargin].active = YES;
-    
-    UIButton *lastMonth = [[UIButton alloc] init];
+    UIButton *lastMonth = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [nvdr setupButton:lastMonth
                 title:@"Last Month"
@@ -381,14 +330,11 @@
     lastMonth.tag = 7;
     
     [nvdr addSubview:lastMonth];
+    [lastMonth constrainLeadingToAnchor:pastWeek.leadingAnchor];
+    [lastMonth constrainTrailingToAnchor:pastWeek.trailingAnchor];
+    [lastMonth constrainTopToAnchor:pastWeek.bottomAnchor constant:innerMargin];
     
-    [lastMonth.leadingAnchor constraintEqualToAnchor:pastWeek.leadingAnchor].active = YES;
-    [lastMonth.trailingAnchor constraintEqualToAnchor:pastWeek.trailingAnchor].active = YES;
-    
-    [lastMonth.topAnchor constraintEqualToAnchor:pastWeek.bottomAnchor
-                                        constant:innerMargin].active = YES;
-    
-    UIButton *thisYear = [[UIButton alloc] init];
+    UIButton *thisYear = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [nvdr setupButton:thisYear
                 title:@"This Year"
@@ -397,14 +343,11 @@
     thisYear.tag = 8;
     
     [nvdr addSubview:thisYear];
+    [thisYear constrainLeadingToAnchor:thisMonth.leadingAnchor];
+    [thisYear constrainTrailingToAnchor:thisMonth.trailingAnchor];
+    [thisYear constrainTopToAnchor:thisMonth.bottomAnchor constant:innerMargin];
     
-    [thisYear.leadingAnchor constraintEqualToAnchor:thisMonth.leadingAnchor].active = YES;
-    [thisYear.trailingAnchor constraintEqualToAnchor:thisMonth.trailingAnchor].active = YES;
-    
-    [thisYear.topAnchor constraintEqualToAnchor:thisMonth.bottomAnchor
-                                       constant:innerMargin].active = YES;
-    
-    UIButton *lastYear = [[UIButton alloc] init];
+    UIButton *lastYear = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [nvdr setupButton:lastYear
                 title:@"Last Year"
@@ -414,16 +357,12 @@
     
     [nvdr addSubview:lastYear];
     
-    [lastYear.leadingAnchor constraintEqualToAnchor:lastMonth.leadingAnchor].active = YES;
-    [lastYear.trailingAnchor constraintEqualToAnchor:lastMonth.trailingAnchor].active = YES;
+    [lastYear constrainLeadingToAnchor:lastMonth.leadingAnchor];
+    [lastYear constrainTrailingToAnchor:lastMonth.trailingAnchor];
+    [lastYear constrainTopToAnchor:lastMonth.bottomAnchor constant:innerMargin];
+    [lastYear constrainBottomToAnchor:nvdr.bottomAnchor constant:-innerMargin];
     
-    [lastYear.topAnchor constraintEqualToAnchor:lastMonth.bottomAnchor
-                                       constant:innerMargin].active = YES;
-    
-    [lastYear.bottomAnchor constraintEqualToAnchor:nvdr.bottomAnchor
-                                          constant:-innerMargin].active = YES;
-    
-    UIButton *pastYear = [[UIButton alloc] init];
+    UIButton *pastYear = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [nvdr setupButton:pastYear
                 title:@"Past Year"
@@ -432,54 +371,39 @@
     pastYear.tag = 10;
     
     [nvdr addSubview:pastYear];
+    [pastYear constrainLeadingToAnchor:thisYear.leadingAnchor];
+    [pastYear constrainTrailingToAnchor:thisYear.trailingAnchor];
+    [pastYear constrainTopToAnchor:thisYear.bottomAnchor constant:innerMargin];
+    [pastYear constrainBottomToAnchor:nvdr.bottomAnchor constant:-innerMargin];
     
-    [pastYear.leadingAnchor constraintEqualToAnchor:thisYear.leadingAnchor].active = YES;
-    [pastYear.trailingAnchor constraintEqualToAnchor:thisYear.trailingAnchor].active = YES;
+    [lastYear constrainHeightToAnchor:lastMonth.heightAnchor];
+    [lastMonth constrainHeightToAnchor:pastWeek.heightAnchor];
+    [pastWeek constrainHeightToAnchor:thisWeek.heightAnchor];
+    [thisWeek constrainHeightToAnchor:today.heightAnchor];
     
-    [pastYear.topAnchor constraintEqualToAnchor:thisYear.bottomAnchor
-                                       constant:innerMargin].active = YES;
+    [pastYear constrainHeightToAnchor:thisYear.heightAnchor];
+    [thisYear constrainHeightToAnchor:thisMonth.heightAnchor];
+    [thisMonth constrainHeightToAnchor:lastWeek.heightAnchor];
+    [lastWeek constrainHeightToAnchor:yesterday.heightAnchor];
     
-    [pastYear.bottomAnchor constraintEqualToAnchor:nvdr.bottomAnchor
-                                          constant:-innerMargin].active = YES;
-    
-    [lastYear.heightAnchor constraintEqualToAnchor:lastMonth.heightAnchor].active = YES;
-    [lastMonth.heightAnchor constraintEqualToAnchor:pastWeek.heightAnchor].active = YES;
-    [pastWeek.heightAnchor constraintEqualToAnchor:thisWeek.heightAnchor].active = YES;
-    [thisWeek.heightAnchor constraintEqualToAnchor:today.heightAnchor].active = YES;
-    
-    [pastYear.heightAnchor constraintEqualToAnchor:thisYear.heightAnchor].active = YES;
-    [thisYear.heightAnchor constraintEqualToAnchor:thisMonth.heightAnchor].active = YES;
-    [thisMonth.heightAnchor constraintEqualToAnchor:lastWeek.heightAnchor].active = YES;
-    [lastWeek.heightAnchor constraintEqualToAnchor:yesterday.heightAnchor].active = YES;
-    
-    [nvdr.fromDatePicker.heightAnchor constraintEqualToAnchor:today.heightAnchor
-                                                   multiplier:3.0].active = YES;
-    
-    [nvdr.toDatePicker.heightAnchor constraintEqualToAnchor:yesterday.heightAnchor
-                                                 multiplier:3.0].active = YES;
-    
-    [returnButton.heightAnchor constraintEqualToAnchor:today.heightAnchor].active = YES;
-    
-    [fdpLabel.heightAnchor constraintEqualToAnchor:returnButton.heightAnchor
-                                        multiplier:0.4].active = YES;
-    
-    [tdpLabel.heightAnchor constraintEqualToAnchor:fdpLabel.heightAnchor].active = YES;
-    [nvdr.fromDateLabel.heightAnchor constraintEqualToAnchor:fdpLabel.heightAnchor].active = YES;
-    [nvdr.toDateLabel.heightAnchor constraintEqualToAnchor:tdpLabel.heightAnchor].active = YES;
+    [nvdr.fromDatePicker constrainHeightToAnchor:today.heightAnchor multiplier:3.0];
+    [nvdr.toDatePicker constrainHeightToAnchor:yesterday.heightAnchor multiplier:3.0];
+    [returnButton constrainHeightToAnchor:today.heightAnchor];
+    [fdpLabel constrainHeightToAnchor:returnButton.heightAnchor multiplier:0.4];
+    [tdpLabel constrainHeightToAnchor:fdpLabel.heightAnchor];
+    [nvdr.fromDateLabel constrainHeightToAnchor:fdpLabel.heightAnchor];
+    [nvdr.toDateLabel constrainHeightToAnchor:tdpLabel.heightAnchor];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
-        [nvdr.fromDatePicker.widthAnchor constraintEqualToAnchor:today.widthAnchor
-                                                      multiplier:2.0].active = YES;
-        
-        [nvdr.toDatePicker.widthAnchor constraintEqualToAnchor:yesterday.widthAnchor
-                                                    multiplier:2.0].active = YES;
+        [nvdr.fromDatePicker constrainWidthToAnchor:today.widthAnchor multiplier:2.0];
+        [nvdr.toDatePicker constrainWidthToAnchor:yesterday.widthAnchor multiplier:2.0];
     }
     
     else
     {
-        [nvdr.fromDatePicker.widthAnchor constraintEqualToAnchor:today.widthAnchor].active = YES;
-        [nvdr.toDatePicker.widthAnchor constraintEqualToAnchor:yesterday.widthAnchor].active = YES;
+        [nvdr.fromDatePicker constrainWidthToAnchor:today.widthAnchor];
+        [nvdr.toDatePicker constrainWidthToAnchor:yesterday.widthAnchor];
     }
     
     [UIView animateWithDuration:0.25

@@ -43,7 +43,6 @@
     sliderView.titleText = @"NVMobile Slider Manager";
     
     [view addSubview:sliderView.overlayView];
-    
     [sliderView.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     sliderView.backgroundColor = UIColor.whiteColor;

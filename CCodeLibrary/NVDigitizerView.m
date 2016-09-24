@@ -47,11 +47,10 @@
     nvdv.path = CGPathCreateMutable();
     
     [view addSubview:nvdv];
-    
-    [nvdv.leadingAnchor constraintEqualToAnchor:constrainedView.leadingAnchor].active = YES;
-    [nvdv.trailingAnchor constraintEqualToAnchor:constrainedView.trailingAnchor].active = YES;
-    [nvdv.bottomAnchor constraintEqualToAnchor:constrainedView.bottomAnchor].active = YES;
-    [nvdv.topAnchor constraintEqualToAnchor:constrainedView.topAnchor].active = YES;
+    [nvdv constrainLeadingToAnchor:constrainedView.leadingAnchor];
+    [nvdv constrainTrailingToAnchor:constrainedView.trailingAnchor];
+    [nvdv constrainBottomToAnchor:constrainedView.bottomAnchor];
+    [nvdv constrainTopToAnchor:constrainedView.topAnchor];
     
     nvdv.targetView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:
                                                           [NSBundle.mainBundle pathForResource:@"newCrosshairs"

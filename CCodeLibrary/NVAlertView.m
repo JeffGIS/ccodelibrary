@@ -131,18 +131,10 @@
     alert.clipsToBounds = YES;
     
     [view addSubview:alert];
-    
-    [alert.leadingAnchor constraintEqualToAnchor:view.centerXAnchor
-                                        constant:(-width / 2.0)].active = YES;
-    
-    [alert.trailingAnchor constraintEqualToAnchor:view.centerXAnchor
-                                        constant:(width / 2.0)].active = YES;
-    
-    [alert.topAnchor constraintEqualToAnchor:view.centerYAnchor
-                                    constant:(-yPosition / 2.0)].active = YES;
-    
-    [alert.bottomAnchor constraintEqualToAnchor:view.centerYAnchor
-                                       constant:(yPosition / 2.0)].active = YES;
+    [alert constrainLeadingToAnchor:view.centerXAnchor constant:(-width / 2.0)];
+    [alert constrainTrailingToAnchor:view.centerXAnchor constant:(width / 2.0)];
+    [alert constrainTopToAnchor:view.centerYAnchor constant:(-yPosition / 2.0)];
+    [alert constrainBottomToAnchor:view.centerYAnchor constant:(yPosition / 2.0)];
     
     [UIView animateWithDuration:0.25
                      animations:^{

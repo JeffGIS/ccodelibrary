@@ -49,13 +49,10 @@
            forControlEvents:UIControlEventTouchUpInside];
     
     [nvwv addSubview:nvwv.realtor];
-    
-    [nvwv.realtor.trailingAnchor constraintEqualToAnchor:nvwv.trailingAnchor
-                                            constant:-nvwv.headerSideMargin].active = YES;
-    
-    [nvwv.realtor.topAnchor constraintEqualToAnchor:nvwv.topAnchor].active = YES;
-    [nvwv.realtor.heightAnchor constraintEqualToConstant:nvwv.headerHeight].active = YES;
-    [nvwv.realtor.widthAnchor constraintEqualToConstant:nvwv.headerHeight].active = YES;
+    [nvwv.realtor constrainTrailingToAnchor:nvwv.trailingAnchor constant:-nvwv.headerSideMargin];
+    [nvwv.realtor constrainTopToAnchor:nvwv.topAnchor];
+    [nvwv.realtor constrainHeightToConstant:nvwv.headerHeight];
+    [nvwv.realtor constrainWidthToConstant:nvwv.headerHeight];
     
     nvwv.indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     nvwv.indicator.translatesAutoresizingMaskIntoConstraints = NO;
@@ -63,10 +60,10 @@
     [nvwv addSubview:nvwv.indicator];
     [nvwv.indicator startAnimating];
     
-    [nvwv.indicator.leadingAnchor constraintEqualToAnchor:nvwv.centerXAnchor constant:(-nvwv.indicator.frame.size.width / 2.0)].active = YES;
-    [nvwv.indicator.trailingAnchor constraintEqualToAnchor:nvwv.centerXAnchor constant:(nvwv.indicator.frame.size.width / 2.0)].active = YES;
-    [nvwv.indicator.topAnchor constraintEqualToAnchor:nvwv.centerYAnchor constant:(-nvwv.indicator.frame.size.height / 2.0)].active = YES;
-    [nvwv.indicator.bottomAnchor constraintEqualToAnchor:nvwv.centerYAnchor constant:(nvwv.indicator.frame.size.height / 2.0)].active = YES;
+    [nvwv.indicator constrainLeadingToAnchor:nvwv.centerXAnchor constant:(-nvwv.indicator.frame.size.width / 2.0)];
+    [nvwv.indicator constrainTrailingToAnchor:nvwv.centerXAnchor constant:(nvwv.indicator.frame.size.width / 2.0)];
+    [nvwv.indicator constrainTopToAnchor:nvwv.centerYAnchor constant:(-nvwv.indicator.frame.size.height / 2.0)];
+    [nvwv.indicator constrainBottomToAnchor:nvwv.centerYAnchor constant:(nvwv.indicator.frame.size.height / 2.0)];
     
     urlString = [NSString stringWithFormat:@"http://%@", urlString];
     NSURL *url = [NSURL URLWithString:urlString];
@@ -129,7 +126,6 @@
     _tabBar.userInteractionEnabled = NO;
     
     [view addSubview:self];
-    
     [self constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:_tabBar.frame.size.height];
     
     _webView = WKWebView.new;
@@ -144,7 +140,6 @@
     [_webView addGestureRecognizer:tapGesture];
     
     [self addSubview:_webView];
-    
     [_webView constrainToView:self leading:0.0 trailing:0.0 top:_headerHeight bottom:0.0];
     
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -167,12 +162,9 @@
             forControlEvents:UIControlEventTouchUpInside];
     
     [self addSubview:_returnButton];
-    
-    [_returnButton.leadingAnchor constraintEqualToAnchor:self.leadingAnchor
-                                                constant:_headerSideMargin].active = YES;
-    
-    [_returnButton.topAnchor constraintEqualToAnchor:self.topAnchor constant:20.0].active = YES;
-    [_returnButton.bottomAnchor constraintEqualToAnchor:_webView.topAnchor].active = YES;
+    [_returnButton constrainLeadingToAnchor:self.leadingAnchor constant:_headerSideMargin];
+    [_returnButton constrainTopToAnchor:self.topAnchor constant:20.0];
+    [_returnButton constrainBottomToAnchor:_webView.topAnchor];
 }
 
 - (void)show

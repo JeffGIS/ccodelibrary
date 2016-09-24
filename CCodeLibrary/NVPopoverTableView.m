@@ -62,7 +62,6 @@
     nvptv.overlayView.alpha = 0.0;
     
     [view addSubview:nvptv.overlayView];
-    
     [nvptv.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     nvptv.tabBar = view.parentViewController.tabBarController.tabBar;
@@ -97,7 +96,6 @@
     nvptv.tableView.bouncesZoom = NO;
     
     [nvptv addSubview:nvptv.tableView];
-    
     [nvptv.tableView constrainToView:nvptv leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     [UIView animateWithDuration:0.25

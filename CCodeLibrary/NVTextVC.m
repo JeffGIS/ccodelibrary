@@ -97,19 +97,14 @@
             forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:_returnButton];
-    
-    [_returnButton.topAnchor constraintEqualToAnchor:self.view.topAnchor
-                                            constant:(_margin / 2.0)].active = YES;
-    
-    [_returnButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
-                                                constant:_margin].active = YES;
-    
-    [_returnButton.heightAnchor constraintEqualToConstant:40.0].active = YES;
+    [_returnButton constrainTopToAnchor:self.view.topAnchor constant:(_margin / 2.0)];
+    [_returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:_margin];
+    [_returnButton constrainHeightToConstant:40.0];
 }
 
 - (void)setupTextView
 {
-    _scrollView = [[UIScrollView alloc] init];
+    _scrollView = UIScrollView.new;
     _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
     _scrollView.layer.borderColor = UIColor.blackColor.CGColor;
     _scrollView.layer.borderWidth = 2.0;
@@ -117,18 +112,10 @@
     _scrollView.backgroundColor = UIColor.darkGrayColor;
     
     [self.view addSubview:_scrollView];
-    
-    [_scrollView.topAnchor constraintEqualToAnchor:_returnButton.bottomAnchor
-                                          constant:(_margin / 2.0)].active = YES;
-    
-    [_scrollView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
-                                              constant:_margin].active = YES;
-    
-    [_scrollView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor
-                                               constant:-_margin].active = YES;
-    
-    [_scrollView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor
-                                             constant:-_margin].active = YES;
+    [_scrollView constrainTopToAnchor:_returnButton.bottomAnchor constant:(_margin / 2.0)];
+    [_scrollView constrainLeadingToAnchor:self.view.leadingAnchor constant:_margin];
+    [_scrollView constrainTrailingToAnchor:self.view.trailingAnchor constant:-_margin];
+    [_scrollView constrainBottomToAnchor:self.view.bottomAnchor constant:-_margin];
     
     [self.view layoutSubviews];
     

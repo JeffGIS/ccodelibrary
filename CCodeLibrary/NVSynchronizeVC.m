@@ -221,47 +221,46 @@
         sectionView.layer.borderWidth = borderWidth;
         
         [self.view addSubview:sectionView];
-        
-        [sectionView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:-borderWidth].active = YES;
-        [sectionView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:borderWidth].active = YES;
+        [sectionView constrainLeadingToAnchor:self.view.leadingAnchor constant:-borderWidth];
+        [sectionView constrainTrailingToAnchor:self.view.trailingAnchor constant:borderWidth];
         
         if (i == 0)
-            [sectionView.topAnchor constraintEqualToAnchor:self.view.topAnchor].active = YES;
+            [sectionView constrainTopToAnchor:self.view.topAnchor];
         
         else
         {
             if (i == (numSections - 1))
-                [sectionView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
+                [sectionView constrainBottomToAnchor:self.view.bottomAnchor];
             
             UIView *viewOnTop = [self.view viewWithTag:(i * 100)];
-            [sectionView.topAnchor constraintEqualToAnchor:viewOnTop.bottomAnchor].active = YES;
-            [sectionView.heightAnchor constraintEqualToAnchor:viewOnTop.heightAnchor].active = YES;
+            [sectionView constrainTopToAnchor:viewOnTop.bottomAnchor];
+            [sectionView constrainHeightToAnchor:viewOnTop.heightAnchor];
         }
         
         switch (i)
         {
             case 0://title label
                 [sectionView addSubview:_connectLabel];
-                [_connectLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
-                [_connectLabel.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-buttonMargin].active = YES;
+                [_connectLabel constrainBottomToAnchor:sectionView.bottomAnchor];
+                [_connectLabel constrainTrailingToAnchor:sectionView.trailingAnchor constant:-buttonMargin];
                 
                 [sectionView addSubview:_connectButton];
-                [_connectButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
-                [_connectButton.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-buttonMargin].active = YES;
-                [_connectButton.bottomAnchor constraintEqualToAnchor:_connectLabel.topAnchor].active = YES;
-                [_connectButton.widthAnchor constraintEqualToAnchor:_connectLabel.widthAnchor].active = YES;
+                [_connectButton constrainTopToAnchor:sectionView.topAnchor constant:buttonMargin];
+                [_connectButton constrainTrailingToAnchor:sectionView.trailingAnchor constant:-buttonMargin];
+                [_connectButton constrainBottomToAnchor:_connectLabel.topAnchor];
+                [_connectButton constrainWidthToAnchor:_connectLabel.widthAnchor];
                 
                 [sectionView addSubview:_returnButton];
-                [_returnButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
-                [_returnButton.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:buttonMargin].active = YES;
-                [_returnButton.bottomAnchor constraintEqualToAnchor:_connectButton.bottomAnchor].active = YES;
-                [_returnButton.widthAnchor constraintEqualToAnchor:_connectButton.widthAnchor].active = YES;
+                [_returnButton constrainTopToAnchor:sectionView.topAnchor constant:buttonMargin];
+                [_returnButton constrainLeadingToAnchor:sectionView.leadingAnchor constant:buttonMargin];
+                [_returnButton constrainBottomToAnchor:_connectButton.bottomAnchor];
+                [_returnButton constrainWidthToAnchor:_connectButton.widthAnchor];
                 
                 [sectionView addSubview:_titleButton];
-                [_titleButton.leadingAnchor constraintEqualToAnchor:_returnButton.trailingAnchor constant:buttonMargin].active = YES;
-                [_titleButton.trailingAnchor constraintEqualToAnchor:_connectButton.leadingAnchor constant:-buttonMargin].active = YES;
-                [_titleButton.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
-                [_titleButton.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor constant:-buttonMargin].active = YES;
+                [_titleButton constrainLeadingToAnchor:_returnButton.trailingAnchor constant:buttonMargin];
+                [_titleButton constrainTrailingToAnchor:_connectButton.leadingAnchor constant:-buttonMargin];
+                [_titleButton constrainTopToAnchor:sectionView.topAnchor constant:buttonMargin];
+                [_titleButton constrainBottomToAnchor:sectionView.bottomAnchor constant:-buttonMargin];
                 break;
                 
             case 1://data files to be uploaded
@@ -271,26 +270,26 @@
                 
             case 2://pictures to be uploaded
                 [sectionView addSubview:_pixUpSwitch];
-                [_pixUpSwitch.centerYAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
-                [_pixUpSwitch.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-margin].active = YES;
+                [_pixUpSwitch constrainCenterYToAnchor:sectionView.centerYAnchor];
+                [_pixUpSwitch constrainTrailingToAnchor:sectionView.trailingAnchor constant:-margin];
                 
                 [sectionView addSubview:_pixUpLabel];
-                [_pixUpLabel.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:margin].active = YES;
-                [_pixUpLabel.trailingAnchor constraintEqualToAnchor:_pixUpSwitch.leadingAnchor].active = YES;
-                [_pixUpLabel.topAnchor constraintEqualToAnchor:sectionView.topAnchor].active = YES;
-                [_pixUpLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
+                [_pixUpLabel constrainLeadingToAnchor:sectionView.leadingAnchor constant:margin];
+                [_pixUpLabel constrainTrailingToAnchor:_pixUpSwitch.leadingAnchor];
+                [_pixUpLabel constrainTopToAnchor:sectionView.topAnchor];
+                [_pixUpLabel constrainBottomToAnchor:sectionView.bottomAnchor];
                 break;
                 
             case 3://data files to be downloaded
                 [sectionView addSubview:_dataDownSwitch];
-                [_dataDownSwitch.centerYAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
-                [_dataDownSwitch.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-margin].active = YES;
+                [_dataDownSwitch constrainCenterYToAnchor:sectionView.centerYAnchor];
+                [_dataDownSwitch constrainTrailingToAnchor:sectionView.trailingAnchor constant:-margin];
                 
                 [sectionView addSubview:_dataDownLabel];
-                [_dataDownLabel.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:margin].active = YES;
-                [_dataDownLabel.trailingAnchor constraintEqualToAnchor:_pixUpSwitch.leadingAnchor].active = YES;
-                [_dataDownLabel.topAnchor constraintEqualToAnchor:sectionView.topAnchor].active = YES;
-                [_dataDownLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
+                [_dataDownLabel constrainLeadingToAnchor:sectionView.leadingAnchor constant:margin];
+                [_dataDownLabel constrainTrailingToAnchor:_pixUpSwitch.leadingAnchor];
+                [_dataDownLabel constrainTopToAnchor:sectionView.topAnchor];
+                [_dataDownLabel constrainBottomToAnchor:sectionView.bottomAnchor];
                 break;
                 
             case 4://pictures to be downloaded
@@ -298,14 +297,14 @@
                     CRAPI.sharedInstance.currentModule != DETAIL_MODULE)
                 {
                     [sectionView addSubview:_pixDownSwitch];
-                    [_pixDownSwitch.centerYAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
-                    [_pixDownSwitch.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-margin].active = YES;
+                    [_pixDownSwitch constrainCenterYToAnchor:sectionView.centerYAnchor];
+                    [_pixDownSwitch constrainTrailingToAnchor:sectionView.trailingAnchor constant:-margin];
                     
                     [sectionView addSubview:_pixDownLabel];
-                    [_pixDownLabel.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:margin].active = YES;
-                    [_pixDownLabel.trailingAnchor constraintEqualToAnchor:_pixUpSwitch.leadingAnchor].active = YES;
-                    [_pixDownLabel.topAnchor constraintEqualToAnchor:sectionView.topAnchor].active = YES;
-                    [_pixDownLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor].active = YES;
+                    [_pixDownLabel constrainLeadingToAnchor:sectionView.leadingAnchor constant:margin];
+                    [_pixDownLabel constrainTrailingToAnchor:_pixUpSwitch.leadingAnchor];
+                    [_pixDownLabel constrainTopToAnchor:sectionView.topAnchor];
+                    [_pixDownLabel constrainBottomToAnchor:sectionView.bottomAnchor];
                 }
                 
                 break;
@@ -313,30 +312,30 @@
             case 5://sync button
                 [sectionView addSubview:_syncButton];
                 
-                [_syncButton constrainToView:sectionView leading:(screenWidth / 4.0) trailing:(-screenWidth / 4.0)
-                                         top:buttonMargin bottom:-buttonMargin];
+                [_syncButton constrainToView:sectionView leading:(screenWidth / 4.0)
+                                    trailing:(-screenWidth / 4.0) top:buttonMargin bottom:-buttonMargin];
                 break;
                 
             case 6://help button
                 [sectionView addSubview:helpButton];
-                [helpButton.heightAnchor constraintEqualToAnchor:sectionView.heightAnchor multiplier:0.8].active = YES;
-                [helpButton.widthAnchor constraintEqualToAnchor:sectionView.heightAnchor multiplier:0.8].active = YES;
-                [helpButton.centerXAnchor constraintEqualToAnchor:sectionView.centerXAnchor].active = YES;
-                [helpButton.centerYAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
+                [helpButton constrainHeightToAnchor:sectionView.heightAnchor multiplier:0.8];
+                [helpButton constrainWidthToAnchor:sectionView.heightAnchor multiplier:0.8];
+                [helpButton constrainCenterXToAnchor:sectionView.centerXAnchor];
+                [helpButton constrainCenterYToAnchor:sectionView.centerYAnchor];
                 break;
                 
             case 7://overall progress
                 [sectionView addSubview:_overallProgressView];
-                [_overallProgressView.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:margin].active = YES;
-                [_overallProgressView.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-margin].active = YES;
-                [_overallProgressView.topAnchor constraintEqualToAnchor:sectionView.topAnchor constant:buttonMargin].active = YES;
-                [_overallProgressView.bottomAnchor constraintEqualToAnchor:sectionView.centerYAnchor].active = YES;
+                [_overallProgressView constrainLeadingToAnchor:sectionView.leadingAnchor constant:margin];
+                [_overallProgressView constrainTrailingToAnchor:sectionView.trailingAnchor constant:-margin];
+                [_overallProgressView constrainTopToAnchor:sectionView.topAnchor constant:buttonMargin];
+                [_overallProgressView constrainBottomToAnchor:sectionView.centerYAnchor];
                 
                 [sectionView addSubview:_overallLabel];
-                [_overallLabel.leadingAnchor constraintEqualToAnchor:sectionView.leadingAnchor constant:margin].active = YES;
-                [_overallLabel.trailingAnchor constraintEqualToAnchor:sectionView.trailingAnchor constant:-margin].active = YES;
-                [_overallLabel.topAnchor constraintEqualToAnchor:_overallProgressView.bottomAnchor].active = YES;
-                [_overallLabel.bottomAnchor constraintEqualToAnchor:sectionView.bottomAnchor constant:-buttonMargin].active = YES;
+                [_overallLabel constrainLeadingToAnchor:sectionView.leadingAnchor constant:margin];
+                [_overallLabel constrainTrailingToAnchor:sectionView.trailingAnchor constant:-margin];
+                [_overallLabel constrainTopToAnchor:_overallProgressView.bottomAnchor];
+                [_overallLabel constrainBottomToAnchor:sectionView.bottomAnchor constant:-buttonMargin];
                 break;
                 
             case 8://email file list button

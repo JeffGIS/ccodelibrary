@@ -68,7 +68,6 @@
                                            (ssv.rowHeight * 0.1), (ssv.rowHeight * 0.1));
     
     [view addSubview:ssv];
-    
     [ssv constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     ssv.export = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -85,11 +84,10 @@
          forControlEvents:UIControlEventTouchUpInside];
     
     [ssv addSubview:ssv.export];
-    
-    [ssv.export.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor].active = YES;
-    [ssv.export.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
-    [ssv.export.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
-    [ssv.export.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.export constrainLeadingToAnchor:ssv.leadingAnchor];
+    [ssv.export constrainTopToAnchor:ssv.topAnchor];
+    [ssv.export constrainHeightToConstant:ssv.rowHeight];
+    [ssv.export constrainWidthToConstant:ssv.rowHeight];
     
     ssv.delete = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.delete.translatesAutoresizingMaskIntoConstraints = NO;
@@ -105,11 +103,10 @@
          forControlEvents:UIControlEventTouchUpInside];
     
     [ssv addSubview:ssv.delete];
-    
-    [ssv.delete.leadingAnchor constraintEqualToAnchor:ssv.export.trailingAnchor].active = YES;
-    [ssv.delete.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
-    [ssv.delete.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
-    [ssv.delete.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.delete constrainLeadingToAnchor:ssv.export.trailingAnchor];
+    [ssv.delete constrainTopToAnchor:ssv.topAnchor];
+    [ssv.delete constrainHeightToConstant:ssv.rowHeight];
+    [ssv.delete constrainWidthToConstant:ssv.rowHeight];
     
     ssv.mapIt = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.mapIt.translatesAutoresizingMaskIntoConstraints = NO;
@@ -138,11 +135,10 @@
         forControlEvents:UIControlEventTouchUpInside];
     
     [ssv addSubview:ssv.mapIt];
-    
-    [ssv.mapIt.leadingAnchor constraintEqualToAnchor:ssv.delete.trailingAnchor].active = YES;
-    [ssv.mapIt.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
-    [ssv.mapIt.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
-    [ssv.mapIt.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.mapIt constrainLeadingToAnchor:ssv.delete.trailingAnchor];
+    [ssv.mapIt constrainTopToAnchor:ssv.topAnchor];
+    [ssv.mapIt constrainHeightToConstant:ssv.rowHeight];
+    [ssv.mapIt constrainWidthToConstant:ssv.rowHeight];
     
     ssv.create = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.create.translatesAutoresizingMaskIntoConstraints = NO;
@@ -158,11 +154,10 @@
          forControlEvents:UIControlEventTouchUpInside];
     
     [ssv addSubview:ssv.create];
-    
-    [ssv.create.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor].active = YES;
-    [ssv.create.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
-    [ssv.create.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
-    [ssv.create.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.create constrainTrailingToAnchor:ssv.trailingAnchor];
+    [ssv.create constrainTopToAnchor:ssv.topAnchor];
+    [ssv.create constrainHeightToConstant:ssv.rowHeight];
+    [ssv.create constrainWidthToConstant:ssv.rowHeight];
     
     ssv.select = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.select.translatesAutoresizingMaskIntoConstraints = NO;
@@ -178,11 +173,10 @@
          forControlEvents:UIControlEventTouchUpInside];
     
     [ssv addSubview:ssv.select];
-    
-    [ssv.select.trailingAnchor constraintEqualToAnchor:ssv.create.leadingAnchor].active = YES;
-    [ssv.select.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
-    [ssv.select.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
-    [ssv.select.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.select constrainTrailingToAnchor:ssv.create.leadingAnchor];
+    [ssv.select constrainTopToAnchor:ssv.topAnchor];
+    [ssv.select constrainHeightToConstant:ssv.rowHeight];
+    [ssv.select constrainWidthToConstant:ssv.rowHeight];
     
     ssv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -198,11 +192,10 @@
           forControlEvents:UIControlEventTouchUpInside];
     
     [ssv addSubview:ssv.realtor];
-    
-    [ssv.realtor.trailingAnchor constraintEqualToAnchor:ssv.select.leadingAnchor].active = YES;
-    [ssv.realtor.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
-    [ssv.realtor.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
-    [ssv.realtor.widthAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.realtor constrainTrailingToAnchor:ssv.select.leadingAnchor];
+    [ssv.realtor constrainTopToAnchor:ssv.topAnchor];
+    [ssv.realtor constrainHeightToConstant:ssv.rowHeight];
+    [ssv.realtor constrainWidthToConstant:ssv.rowHeight];
     
     ssv.titleTextField = UITextField.new;
     ssv.titleTextField.translatesAutoresizingMaskIntoConstraints = NO;
@@ -215,11 +208,10 @@
     ssv.titleTextField.text = [delegate ssvGetTitleText];
     
     [ssv addSubview:ssv.titleTextField];
-    
-    [ssv.titleTextField.leadingAnchor constraintEqualToAnchor:ssv.mapIt.trailingAnchor].active = YES;
-    [ssv.titleTextField.trailingAnchor constraintEqualToAnchor:ssv.realtor.leadingAnchor].active = YES;
-    [ssv.titleTextField.topAnchor constraintEqualToAnchor:ssv.topAnchor].active = YES;
-    [ssv.titleTextField.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
+    [ssv.titleTextField constrainLeadingToAnchor:ssv.mapIt.trailingAnchor];
+    [ssv.titleTextField constrainTrailingToAnchor:ssv.realtor.leadingAnchor];
+    [ssv.titleTextField constrainTopToAnchor:ssv.topAnchor];
+    [ssv.titleTextField constrainHeightToConstant:ssv.rowHeight];
     
     SpreadSheetViewCell *cell = SpreadSheetViewCell.new;
     cell.translatesAutoresizingMaskIntoConstraints = NO;
@@ -229,11 +221,10 @@
     cell.layer.borderWidth = borderWidth;
     
     [ssv addSubview:cell];
-    
-    [cell.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor constant:-borderWidth].active = YES;
-    [cell.topAnchor constraintEqualToAnchor:ssv.topAnchor constant:ssv.rowHeight].active = YES;
-    [cell.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
-    [cell.widthAnchor constraintEqualToConstant:(ssv.columnWidth + borderWidth)].active = YES;
+    [cell constrainLeadingToAnchor:ssv.leadingAnchor constant:-borderWidth];
+    [cell constrainTopToAnchor:ssv.topAnchor constant:ssv.rowHeight];
+    [cell constrainHeightToConstant:ssv.rowHeight];
+    [cell constrainWidthToConstant:(ssv.columnWidth + borderWidth)];
     
     ssv.returnToOrigin = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.returnToOrigin.translatesAutoresizingMaskIntoConstraints = NO;
@@ -253,11 +244,10 @@
                  forControlEvents:UIControlEventTouchUpInside];
     
     [ssv addSubview:ssv.returnToOrigin];
-    
-    [ssv.returnToOrigin.centerXAnchor constraintEqualToAnchor:cell.centerXAnchor constant:(ssv.columnWidth * 0.25)].active = YES;
-    [ssv.returnToOrigin.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor].active = YES;
-    [ssv.returnToOrigin.widthAnchor constraintEqualToConstant:(ssv.columnWidth * 0.4)].active = YES;
-    [ssv.returnToOrigin.heightAnchor constraintEqualToConstant:(ssv.rowHeight * 0.8)].active = YES;
+    [ssv.returnToOrigin constrainCenterXToAnchor:cell.centerXAnchor constant:(ssv.columnWidth * 0.25)];
+    [ssv.returnToOrigin constrainCenterYToAnchor:cell.centerYAnchor];
+    [ssv.returnToOrigin constrainWidthToConstant:(ssv.columnWidth * 0.4)];
+    [ssv.returnToOrigin constrainHeightToConstant:(ssv.rowHeight * 0.8)];
     
     ssv.swap = [UIButton buttonWithType:UIButtonTypeCustom];
     ssv.swap.translatesAutoresizingMaskIntoConstraints = NO;
@@ -283,11 +273,10 @@
        forControlEvents:UIControlEventTouchUpInside];
     
     [ssv addSubview:ssv.swap];
-    
-    [ssv.swap.centerXAnchor constraintEqualToAnchor:cell.centerXAnchor constant:(-ssv.columnWidth * 0.25)].active = YES;
-    [ssv.swap.centerYAnchor constraintEqualToAnchor:cell.centerYAnchor].active = YES;
-    [ssv.swap.widthAnchor constraintEqualToConstant:(ssv.columnWidth * 0.4)].active = YES;
-    [ssv.swap.heightAnchor constraintEqualToConstant:(ssv.rowHeight * 0.8)].active = YES;
+    [ssv.swap constrainCenterXToAnchor:cell.centerXAnchor constant:(-ssv.columnWidth * 0.25)];
+    [ssv.swap constrainCenterYToAnchor:cell.centerYAnchor];
+    [ssv.swap constrainWidthToConstant:(ssv.columnWidth * 0.4)];
+    [ssv.swap constrainHeightToConstant:(ssv.rowHeight * 0.8)];
     
     ssv.rowHeaderView = UIScrollView.new;
     ssv.rowHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -301,19 +290,19 @@
     if (ssv.flipped)
     {
         ssv.rowHeaderView.contentSize = CGSizeMake((ssv.columnWidth * ssv.rows), ssv.rowHeight);
-        [ssv.rowHeaderView.leadingAnchor constraintEqualToAnchor:cell.trailingAnchor].active = YES;
-        [ssv.rowHeaderView.topAnchor constraintEqualToAnchor:ssv.titleTextField.bottomAnchor].active = YES;
-        [ssv.rowHeaderView.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
-        [ssv.rowHeaderView.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor constant:borderWidth].active = YES;
+        [ssv.rowHeaderView constrainLeadingToAnchor:cell.trailingAnchor];
+        [ssv.rowHeaderView constrainTopToAnchor:ssv.titleTextField.bottomAnchor];
+        [ssv.rowHeaderView constrainHeightToConstant:ssv.rowHeight];
+        [ssv.rowHeaderView constrainTrailingToAnchor:ssv.trailingAnchor constant:borderWidth];
     }
     
     else
     {
         ssv.rowHeaderView.contentSize = CGSizeMake(ssv.columnWidth, (ssv.rowHeight * ssv.rows));
-        [ssv.rowHeaderView.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor constant:-borderWidth].active = YES;
-        [ssv.rowHeaderView.topAnchor constraintEqualToAnchor:cell.bottomAnchor].active = YES;
-        [ssv.rowHeaderView.widthAnchor constraintEqualToConstant:(ssv.columnWidth + borderWidth)].active = YES;
-        [ssv.rowHeaderView.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
+        [ssv.rowHeaderView constrainLeadingToAnchor:ssv.leadingAnchor constant:-borderWidth];
+        [ssv.rowHeaderView constrainTopToAnchor:cell.bottomAnchor];
+        [ssv.rowHeaderView constrainWidthToConstant:(ssv.columnWidth + borderWidth)];
+        [ssv.rowHeaderView constrainBottomToAnchor:ssv.bottomAnchor];
     }
     
     UITapGestureRecognizer *rowHeaderTap = [[UITapGestureRecognizer alloc] initWithTarget:ssv
@@ -358,19 +347,19 @@
     if (ssv.flipped)
     {
         ssv.columnHeaderView.contentSize = CGSizeMake(ssv.columnWidth, (ssv.rowHeight * ssv.columns));
-        [ssv.columnHeaderView.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor constant:-borderWidth].active = YES;
-        [ssv.columnHeaderView.topAnchor constraintEqualToAnchor:cell.bottomAnchor].active = YES;
-        [ssv.columnHeaderView.widthAnchor constraintEqualToConstant:(ssv.columnWidth + borderWidth)].active = YES;
-        [ssv.columnHeaderView.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
+        [ssv.columnHeaderView constrainLeadingToAnchor:ssv.leadingAnchor constant:-borderWidth];
+        [ssv.columnHeaderView constrainTopToAnchor:cell.bottomAnchor];
+        [ssv.columnHeaderView constrainWidthToConstant:(ssv.columnWidth + borderWidth)];
+        [ssv.columnHeaderView constrainBottomToAnchor:ssv.bottomAnchor];
     }
     
     else
     {
         ssv.columnHeaderView.contentSize = CGSizeMake((ssv.columnWidth * ssv.columns), ssv.rowHeight);
-        [ssv.columnHeaderView.leadingAnchor constraintEqualToAnchor:cell.trailingAnchor].active = YES;
-        [ssv.columnHeaderView.topAnchor constraintEqualToAnchor:ssv.titleTextField.bottomAnchor].active = YES;
-        [ssv.columnHeaderView.heightAnchor constraintEqualToConstant:ssv.rowHeight].active = YES;
-        [ssv.columnHeaderView.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor constant:borderWidth].active = YES;
+        [ssv.columnHeaderView constrainLeadingToAnchor:cell.trailingAnchor];
+        [ssv.columnHeaderView constrainTopToAnchor:ssv.titleTextField.bottomAnchor];
+        [ssv.columnHeaderView constrainHeightToConstant:ssv.rowHeight];
+        [ssv.columnHeaderView constrainTrailingToAnchor:ssv.trailingAnchor constant:borderWidth];
     }
     
     UITapGestureRecognizer *columnHeaderTap = [[UITapGestureRecognizer alloc] initWithTarget:ssv
@@ -412,19 +401,19 @@
     if (ssv.flipped)
     {
         ssv.contentView.contentSize = CGSizeMake((ssv.columnWidth * ssv.rows), (ssv.rowHeight * ssv.columns));
-        [ssv.contentView.leadingAnchor constraintEqualToAnchor:ssv.columnHeaderView.trailingAnchor].active = YES;
-        [ssv.contentView.topAnchor constraintEqualToAnchor:ssv.rowHeaderView.bottomAnchor].active = YES;
+        [ssv.contentView constrainLeadingToAnchor:ssv.columnHeaderView.trailingAnchor];
+        [ssv.contentView constrainTopToAnchor:ssv.rowHeaderView.bottomAnchor];
     }
     
     else
     {
         ssv.contentView.contentSize = CGSizeMake((ssv.columnWidth * ssv.columns), (ssv.rowHeight * ssv.rows));
-        [ssv.contentView.leadingAnchor constraintEqualToAnchor:ssv.rowHeaderView.trailingAnchor].active = YES;
-        [ssv.contentView.topAnchor constraintEqualToAnchor:ssv.columnHeaderView.bottomAnchor].active = YES;
+        [ssv.contentView constrainLeadingToAnchor:ssv.rowHeaderView.trailingAnchor];
+        [ssv.contentView constrainTopToAnchor:ssv.columnHeaderView.bottomAnchor];
     }
     
-    [ssv.contentView.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
-    [ssv.contentView.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor constant:borderWidth].active = YES;
+    [ssv.contentView constrainBottomToAnchor:ssv.bottomAnchor];
+    [ssv.contentView constrainTrailingToAnchor:ssv.trailingAnchor constant:borderWidth];
     
     UITapGestureRecognizer *contentTap = [[UITapGestureRecognizer alloc] initWithTarget:ssv
                                                                                  action:@selector(ssvTapped:)];
@@ -468,16 +457,15 @@
     ssv.rowHeaderOverlap.hidden = YES;
     
     [ssv addSubview:ssv.rowHeaderOverlap];
-    
-    [ssv.rowHeaderOverlap.leadingAnchor constraintEqualToAnchor:ssv.contentView.leadingAnchor constant:borderWidth].active = YES;
-    [ssv.rowHeaderOverlap.bottomAnchor constraintEqualToAnchor:ssv.bottomAnchor].active = YES;
-    [ssv.rowHeaderOverlap.widthAnchor constraintEqualToConstant:headerOverlapWidth].active = YES;
+    [ssv.rowHeaderOverlap constrainLeadingToAnchor:ssv.contentView.leadingAnchor constant:borderWidth];
+    [ssv.rowHeaderOverlap constrainBottomToAnchor:ssv.bottomAnchor];
+    [ssv.rowHeaderOverlap constrainWidthToConstant:headerOverlapWidth];
     
     if (ssv.flipped)
-        [ssv.rowHeaderOverlap.topAnchor constraintEqualToAnchor:ssv.rowHeaderView.topAnchor].active = YES;
+        [ssv.rowHeaderOverlap constrainTopToAnchor:ssv.rowHeaderView.topAnchor];
     
     else
-        [ssv.rowHeaderOverlap.topAnchor constraintEqualToAnchor:ssv.columnHeaderView.topAnchor].active = YES;
+        [ssv.rowHeaderOverlap constrainTopToAnchor:ssv.columnHeaderView.topAnchor];
     
     ssv.columnHeaderOverlap = UIView.new;
     ssv.columnHeaderOverlap.translatesAutoresizingMaskIntoConstraints = NO;
@@ -486,11 +474,10 @@
     ssv.columnHeaderOverlap.hidden = YES;
     
     [ssv addSubview:ssv.columnHeaderOverlap];
-    
-    [ssv.columnHeaderOverlap.leadingAnchor constraintEqualToAnchor:ssv.leadingAnchor].active = YES;
-    [ssv.columnHeaderOverlap.trailingAnchor constraintEqualToAnchor:ssv.trailingAnchor].active = YES;
-    [ssv.columnHeaderOverlap.topAnchor constraintEqualToAnchor:ssv.contentView.topAnchor constant:borderWidth].active = YES;
-    [ssv.columnHeaderOverlap.heightAnchor constraintEqualToConstant:headerOverlapWidth].active = YES;
+    [ssv.columnHeaderOverlap constrainLeadingToAnchor:ssv.leadingAnchor];
+    [ssv.columnHeaderOverlap constrainTrailingToAnchor:ssv.trailingAnchor];
+    [ssv.columnHeaderOverlap constrainTopToAnchor:ssv.contentView.topAnchor constant:borderWidth];
+    [ssv.columnHeaderOverlap constrainHeightToConstant:headerOverlapWidth];
     
     return ssv;
 }

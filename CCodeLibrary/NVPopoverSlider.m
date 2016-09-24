@@ -62,10 +62,10 @@
     [nvps.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     [view addSubview:nvps];
-    [nvps.leadingAnchor constraintEqualToAnchor:view.leadingAnchor constant:(height * 0.1)].active = YES;
-    [nvps.trailingAnchor constraintEqualToAnchor:view.trailingAnchor constant:-(height * 0.1)].active = YES;
-    [nvps.heightAnchor constraintEqualToConstant:height].active = YES;
-    [nvps.centerYAnchor constraintEqualToAnchor:view.centerYAnchor constant:(nvps.tabBar.frame.size.height * 0.5)].active = YES;
+    [nvps constrainLeadingToAnchor:view.leadingAnchor constant:(height * 0.1)];
+    [nvps constrainTrailingToAnchor:view.trailingAnchor constant:-(height * 0.1)];
+    [nvps constrainHeightToConstant:height];
+    [nvps constrainCenterYToAnchor:view.centerYAnchor constant:(nvps.tabBar.frame.size.height * 0.5)];
     
     UIImage *sliderLeft = nil, *sliderRight = nil;
     double capHeight = 0.0, capWidth = 0.0, offset = 0.0;
@@ -116,9 +116,9 @@
           forControlEvents:UIControlEventValueChanged];
     
     [nvps addSubview:nvps.slider];
-    [nvps.slider.leadingAnchor constraintEqualToAnchor:nvps.leadingAnchor constant:(height * 0.05)].active = YES;
-    [nvps.slider.trailingAnchor constraintEqualToAnchor:nvps.trailingAnchor constant:-(height * 0.05)].active = YES;
-    [nvps.slider.topAnchor constraintEqualToAnchor:nvps.centerYAnchor].active = YES;
+    [nvps.slider constrainLeadingToAnchor:nvps.leadingAnchor constant:(height * 0.05)];
+    [nvps.slider constrainTrailingToAnchor:nvps.trailingAnchor constant:-(height * 0.05)];
+    [nvps.slider constrainTopToAnchor:nvps.centerYAnchor];
     
     nvps.tap = [[UITapGestureRecognizer alloc] initWithTarget:nvps
                                                        action:@selector(sliderTapped:)];
@@ -130,35 +130,35 @@
     ticView.backgroundColor = UIColor.clearColor;
     
     [nvps addSubview:ticView];
-    [ticView.leadingAnchor constraintEqualToAnchor:nvps.slider.leadingAnchor constant:offset].active = YES;
-    [ticView.trailingAnchor constraintEqualToAnchor:nvps.slider.trailingAnchor constant:-offset].active = YES;
-    [ticView.bottomAnchor constraintEqualToAnchor:nvps.slider.centerYAnchor].active = YES;
+    [ticView constrainLeadingToAnchor:nvps.slider.leadingAnchor constant:offset];
+    [ticView constrainTrailingToAnchor:nvps.slider.trailingAnchor constant:-offset];
+    [ticView constrainBottomToAnchor:nvps.slider.centerYAnchor];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        [ticView.heightAnchor constraintEqualToConstant:(capHeight * 1.5)].active = YES;
+        [ticView constrainHeightToConstant:(capHeight * 1.5)];
     
     else
-        [ticView.heightAnchor constraintEqualToConstant:(capHeight * 1.75)].active = YES;
+        [ticView constrainHeightToConstant:(capHeight * 1.75)];
     
     UIView *midTic = UIView.new;
     midTic.translatesAutoresizingMaskIntoConstraints = NO;
     midTic.backgroundColor = UIColor.blackColor;
     
     [ticView addSubview:midTic];
-    [midTic.topAnchor constraintEqualToAnchor:ticView.topAnchor].active = YES;
-    [midTic.bottomAnchor constraintEqualToAnchor:ticView.bottomAnchor].active = YES;
-    [midTic.centerXAnchor constraintEqualToAnchor:ticView.centerXAnchor].active = YES;
-    [midTic.widthAnchor constraintEqualToConstant:2.0].active = YES;
+    [midTic constrainTopToAnchor:ticView.topAnchor];
+    [midTic constrainBottomToAnchor:ticView.bottomAnchor];
+    [midTic constrainCenterXToAnchor:ticView.centerXAnchor];
+    [midTic constrainWidthToConstant:2.0];
     
     UIView *leftTic = UIView.new;
     leftTic.translatesAutoresizingMaskIntoConstraints = NO;
     leftTic.backgroundColor = UIColor.blackColor;
     
     [ticView addSubview:leftTic];
-    [leftTic.topAnchor constraintEqualToAnchor:ticView.topAnchor].active = YES;
-    [leftTic.bottomAnchor constraintEqualToAnchor:ticView.bottomAnchor].active = YES;
-    [leftTic.leadingAnchor constraintEqualToAnchor:ticView.leadingAnchor].active = YES;
-    [leftTic.widthAnchor constraintEqualToConstant:2.0].active = YES;
+    [leftTic constrainTopToAnchor:ticView.topAnchor];
+    [leftTic constrainBottomToAnchor:ticView.bottomAnchor];
+    [leftTic constrainLeadingToAnchor:ticView.leadingAnchor];
+    [leftTic constrainWidthToConstant:2.0];
     
     [nvps bringSubviewToFront:nvps.slider];
     
@@ -167,50 +167,50 @@
     rightTic.backgroundColor = UIColor.blackColor;
     
     [ticView addSubview:rightTic];
-    [rightTic.topAnchor constraintEqualToAnchor:ticView.topAnchor].active = YES;
-    [rightTic.bottomAnchor constraintEqualToAnchor:ticView.bottomAnchor].active = YES;
-    [rightTic.trailingAnchor constraintEqualToAnchor:ticView.trailingAnchor].active = YES;
-    [rightTic.widthAnchor constraintEqualToConstant:2.0].active = YES;
+    [rightTic constrainTopToAnchor:ticView.topAnchor];
+    [rightTic constrainBottomToAnchor:ticView.bottomAnchor];
+    [rightTic constrainTrailingToAnchor:ticView.trailingAnchor];
+    [rightTic constrainWidthToConstant:2.0];
     
     UIView *leftFill = UIView.new;
     leftFill.translatesAutoresizingMaskIntoConstraints = NO;
     leftFill.backgroundColor = UIColor.clearColor;
     
     [ticView addSubview:leftFill];
-    [leftFill.topAnchor constraintEqualToAnchor:ticView.topAnchor].active = YES;
-    [leftFill.bottomAnchor constraintEqualToAnchor:ticView.bottomAnchor].active = YES;
-    [leftFill.leadingAnchor constraintEqualToAnchor:leftTic.trailingAnchor].active = YES;
-    [leftFill.trailingAnchor constraintEqualToAnchor:midTic.leadingAnchor].active = YES;
+    [leftFill constrainTopToAnchor:ticView.topAnchor];
+    [leftFill constrainBottomToAnchor:ticView.bottomAnchor];
+    [leftFill constrainLeadingToAnchor:leftTic.trailingAnchor];
+    [leftFill constrainTrailingToAnchor:midTic.leadingAnchor];
     
     UIView *leftMidTic = UIView.new;
     leftMidTic.translatesAutoresizingMaskIntoConstraints = NO;
     leftMidTic.backgroundColor = UIColor.blackColor;
     
     [leftFill addSubview:leftMidTic];
-    [leftMidTic.topAnchor constraintEqualToAnchor:leftFill.topAnchor].active = YES;
-    [leftMidTic.bottomAnchor constraintEqualToAnchor:leftFill.bottomAnchor].active = YES;
-    [leftMidTic.centerXAnchor constraintEqualToAnchor:leftFill.centerXAnchor].active = YES;
-    [leftMidTic.widthAnchor constraintEqualToConstant:2.0].active = YES;
+    [leftMidTic constrainTopToAnchor:leftFill.topAnchor];
+    [leftMidTic constrainBottomToAnchor:leftFill.bottomAnchor];
+    [leftMidTic constrainCenterXToAnchor:leftFill.centerXAnchor];
+    [leftMidTic constrainWidthToConstant:2.0];
     
     UIView *rightFill = UIView.new;
     rightFill.translatesAutoresizingMaskIntoConstraints = NO;
     rightFill.backgroundColor = UIColor.clearColor;
     
     [ticView addSubview:rightFill];
-    [rightFill.topAnchor constraintEqualToAnchor:ticView.topAnchor].active = YES;
-    [rightFill.bottomAnchor constraintEqualToAnchor:ticView.bottomAnchor].active = YES;
-    [rightFill.leadingAnchor constraintEqualToAnchor:midTic.trailingAnchor].active = YES;
-    [rightFill.trailingAnchor constraintEqualToAnchor:rightTic.leadingAnchor].active = YES;
+    [rightFill constrainTopToAnchor:ticView.topAnchor];
+    [rightFill constrainBottomToAnchor:ticView.bottomAnchor];
+    [rightFill constrainLeadingToAnchor:midTic.trailingAnchor];
+    [rightFill constrainTrailingToAnchor:rightTic.leadingAnchor];
     
     UIView *rightMidTic = UIView.new;
     rightMidTic.translatesAutoresizingMaskIntoConstraints = NO;
     rightMidTic.backgroundColor = UIColor.blackColor;
     
     [rightFill addSubview:rightMidTic];
-    [rightMidTic.topAnchor constraintEqualToAnchor:rightFill.topAnchor].active = YES;
-    [rightMidTic.bottomAnchor constraintEqualToAnchor:rightFill.bottomAnchor].active = YES;
-    [rightMidTic.centerXAnchor constraintEqualToAnchor:rightFill.centerXAnchor].active = YES;
-    [rightMidTic.widthAnchor constraintEqualToConstant:2.0].active = YES;
+    [rightMidTic constrainTopToAnchor:rightFill.topAnchor];
+    [rightMidTic constrainBottomToAnchor:rightFill.bottomAnchor];
+    [rightMidTic constrainCenterXToAnchor:rightFill.centerXAnchor];
+    [rightMidTic constrainWidthToConstant:2.0];
     
     UIView *ticValuesView = UIView.new;
     ticValuesView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -218,10 +218,10 @@
     ticValuesView.clipsToBounds = NO;
     
     [nvps addSubview:ticValuesView];
-    [ticValuesView.leadingAnchor constraintEqualToAnchor:ticView.leadingAnchor].active = YES;
-    [ticValuesView.trailingAnchor constraintEqualToAnchor:ticView.trailingAnchor].active = YES;
-    [ticValuesView.bottomAnchor constraintEqualToAnchor:ticView.topAnchor].active = YES;
-    [ticValuesView.heightAnchor constraintEqualToConstant:capHeight].active = YES;
+    [ticValuesView constrainLeadingToAnchor:ticView.leadingAnchor];
+    [ticValuesView constrainTrailingToAnchor:ticView.trailingAnchor];
+    [ticValuesView constrainBottomToAnchor:ticView.topAnchor];
+    [ticValuesView constrainHeightToConstant:capHeight];
     
     UIFont *ticFont = nil;
     
@@ -243,10 +243,10 @@
     leftTicValue.font = ticFont;
     
     [ticValuesView addSubview:leftTicValue];
-    [leftTicValue.topAnchor constraintEqualToAnchor:ticValuesView.topAnchor].active = YES;
-    [leftTicValue.bottomAnchor constraintEqualToAnchor:ticValuesView.bottomAnchor].active = YES;
-    [leftTicValue.centerXAnchor constraintEqualToAnchor:ticValuesView.leadingAnchor].active = YES;
-    [leftTicValue.widthAnchor constraintEqualToConstant:60.0].active = YES;
+    [leftTicValue constrainTopToAnchor:ticValuesView.topAnchor];
+    [leftTicValue constrainBottomToAnchor:ticValuesView.bottomAnchor];
+    [leftTicValue constrainCenterXToAnchor:ticValuesView.leadingAnchor];
+    [leftTicValue constrainWidthToConstant:60.0];
     
     UILabel *rightTicValue = UILabel.new;
     [nvps setupLabel:rightTicValue];
@@ -254,10 +254,10 @@
     rightTicValue.font = ticFont;
     
     [ticValuesView addSubview:rightTicValue];
-    [rightTicValue.topAnchor constraintEqualToAnchor:ticValuesView.topAnchor].active = YES;
-    [rightTicValue.bottomAnchor constraintEqualToAnchor:ticValuesView.bottomAnchor].active = YES;
-    [rightTicValue.centerXAnchor constraintEqualToAnchor:ticValuesView.trailingAnchor].active = YES;
-    [rightTicValue.widthAnchor constraintEqualToConstant:60.0].active = YES;
+    [rightTicValue constrainTopToAnchor:ticValuesView.topAnchor];
+    [rightTicValue constrainBottomToAnchor:ticValuesView.bottomAnchor];
+    [rightTicValue constrainCenterXToAnchor:ticValuesView.trailingAnchor];
+    [rightTicValue constrainWidthToConstant:60.0];
     
     UILabel *midTicValue = UILabel.new;
     [nvps setupLabel:midTicValue];
@@ -265,20 +265,20 @@
     midTicValue.font = ticFont;
     
     [ticValuesView addSubview:midTicValue];
-    [midTicValue.topAnchor constraintEqualToAnchor:ticValuesView.topAnchor].active = YES;
-    [midTicValue.bottomAnchor constraintEqualToAnchor:ticValuesView.bottomAnchor].active = YES;
-    [midTicValue.centerXAnchor constraintEqualToAnchor:ticValuesView.centerXAnchor].active = YES;
-    [midTicValue.widthAnchor constraintEqualToConstant:60.0].active = YES;
+    [midTicValue constrainTopToAnchor:ticValuesView.topAnchor];
+    [midTicValue constrainBottomToAnchor:ticValuesView.bottomAnchor];
+    [midTicValue constrainCenterXToAnchor:ticValuesView.centerXAnchor];
+    [midTicValue constrainWidthToConstant:60.0];
     
     UIView *leftValueFill = UIView.new;
     leftValueFill.translatesAutoresizingMaskIntoConstraints = NO;
     leftValueFill.backgroundColor = UIColor.clearColor;
     
     [ticValuesView addSubview:leftValueFill];
-    [leftValueFill.topAnchor constraintEqualToAnchor:ticValuesView.topAnchor].active = YES;
-    [leftValueFill.bottomAnchor constraintEqualToAnchor:ticValuesView.bottomAnchor].active = YES;
-    [leftValueFill.leadingAnchor constraintEqualToAnchor:leftTicValue.trailingAnchor].active = YES;
-    [leftValueFill.trailingAnchor constraintEqualToAnchor:midTicValue.leadingAnchor].active = YES;
+    [leftValueFill constrainTopToAnchor:ticValuesView.topAnchor];
+    [leftValueFill constrainBottomToAnchor:ticValuesView.bottomAnchor];
+    [leftValueFill constrainLeadingToAnchor:leftTicValue.trailingAnchor];
+    [leftValueFill constrainTrailingToAnchor:midTicValue.leadingAnchor];
     
     UILabel *leftMidTicValue = UILabel.new;
     [nvps setupLabel:leftMidTicValue];
@@ -286,20 +286,20 @@
     leftMidTicValue.font = ticFont;
     
     [leftValueFill addSubview:leftMidTicValue];
-    [leftMidTicValue.topAnchor constraintEqualToAnchor:leftValueFill.topAnchor].active = YES;
-    [leftMidTicValue.bottomAnchor constraintEqualToAnchor:leftValueFill.bottomAnchor].active = YES;
-    [leftMidTicValue.centerXAnchor constraintEqualToAnchor:leftValueFill.centerXAnchor].active = YES;
-    [leftMidTicValue.widthAnchor constraintEqualToConstant:60.0].active = YES;
+    [leftMidTicValue constrainTopToAnchor:leftValueFill.topAnchor];
+    [leftMidTicValue constrainBottomToAnchor:leftValueFill.bottomAnchor];
+    [leftMidTicValue constrainCenterXToAnchor:leftValueFill.centerXAnchor];
+    [leftMidTicValue constrainWidthToConstant:60.0];
     
     UIView *rightValueFill = UIView.new;
     rightValueFill.translatesAutoresizingMaskIntoConstraints = NO;
     rightValueFill.backgroundColor = UIColor.clearColor;
     
     [ticValuesView addSubview:rightValueFill];
-    [rightValueFill.topAnchor constraintEqualToAnchor:ticValuesView.topAnchor].active = YES;
-    [rightValueFill.bottomAnchor constraintEqualToAnchor:ticValuesView.bottomAnchor].active = YES;
-    [rightValueFill.leadingAnchor constraintEqualToAnchor:midTicValue.trailingAnchor].active = YES;
-    [rightValueFill.trailingAnchor constraintEqualToAnchor:rightTicValue.leadingAnchor].active = YES;
+    [rightValueFill constrainTopToAnchor:ticValuesView.topAnchor];
+    [rightValueFill constrainBottomToAnchor:ticValuesView.bottomAnchor];
+    [rightValueFill constrainLeadingToAnchor:midTicValue.trailingAnchor];
+    [rightValueFill constrainTrailingToAnchor:rightTicValue.leadingAnchor];
     
     UILabel *rightMidTicValue = UILabel.new;
     [nvps setupLabel:rightMidTicValue];
@@ -307,10 +307,10 @@
     rightMidTicValue.font = ticFont;
     
     [rightValueFill addSubview:rightMidTicValue];
-    [rightMidTicValue.topAnchor constraintEqualToAnchor:rightValueFill.topAnchor].active = YES;
-    [rightMidTicValue.bottomAnchor constraintEqualToAnchor:rightValueFill.bottomAnchor].active = YES;
-    [rightMidTicValue.centerXAnchor constraintEqualToAnchor:rightValueFill.centerXAnchor].active = YES;
-    [rightMidTicValue.widthAnchor constraintEqualToConstant:60.0].active = YES;
+    [rightMidTicValue constrainTopToAnchor:rightValueFill.topAnchor];
+    [rightMidTicValue constrainBottomToAnchor:rightValueFill.bottomAnchor];
+    [rightMidTicValue constrainCenterXToAnchor:rightValueFill.centerXAnchor];
+    [rightMidTicValue constrainWidthToConstant:60.0];
     
     nvps.titleLabel = UILabel.new;
     [nvps setupLabel:nvps.titleLabel];
@@ -333,26 +333,26 @@
     }
     
     [nvps addSubview:nvps.titleLabel];
-    [nvps.titleLabel.leadingAnchor constraintEqualToAnchor:nvps.leadingAnchor constant:(height * 0.05)].active = YES;
-    [nvps.titleLabel.trailingAnchor constraintEqualToAnchor:nvps.trailingAnchor constant:-(height * 0.05)].active = YES;
-    [nvps.titleLabel.topAnchor constraintEqualToAnchor:nvps.topAnchor].active = YES;
+    [nvps.titleLabel constrainLeadingToAnchor:nvps.leadingAnchor constant:(height * 0.05)];
+    [nvps.titleLabel constrainTrailingToAnchor:nvps.trailingAnchor constant:-(height * 0.05)];
+    [nvps.titleLabel constrainTopToAnchor:nvps.topAnchor];
     
     [nvps addSubview:nvps.valueLabel];
-    [nvps.valueLabel.leadingAnchor constraintEqualToAnchor:nvps.leadingAnchor constant:(height * 0.05)].active = YES;
-    [nvps.valueLabel.trailingAnchor constraintEqualToAnchor:nvps.trailingAnchor constant:-(height * 0.05)].active = YES;
-    [nvps.valueLabel.bottomAnchor constraintEqualToAnchor:ticValuesView.topAnchor].active = YES;
-    [nvps.valueLabel.topAnchor constraintEqualToAnchor:nvps.titleLabel.bottomAnchor].active = YES;
-    [nvps.valueLabel.heightAnchor constraintEqualToAnchor:nvps.titleLabel.heightAnchor multiplier:1.5].active = YES;
+    [nvps.valueLabel constrainLeadingToAnchor:nvps.leadingAnchor constant:(height * 0.05)];
+    [nvps.valueLabel constrainTrailingToAnchor:nvps.trailingAnchor constant:-(height * 0.05)];
+    [nvps.valueLabel constrainBottomToAnchor:ticValuesView.topAnchor];
+    [nvps.valueLabel constrainTopToAnchor:nvps.titleLabel.bottomAnchor];
+    [nvps.valueLabel constrainHeightToAnchor:nvps.titleLabel.heightAnchor multiplier:1.5];
     
     UIView *leftButtonSpace = UIView.new;
     leftButtonSpace.translatesAutoresizingMaskIntoConstraints = NO;
     leftButtonSpace.backgroundColor = UIColor.clearColor;
     
     [nvps addSubview:leftButtonSpace];
-    [leftButtonSpace.leadingAnchor constraintEqualToAnchor:nvps.leadingAnchor].active = YES;
-    [leftButtonSpace.trailingAnchor constraintEqualToAnchor:nvps.centerXAnchor].active = YES;
-    [leftButtonSpace.bottomAnchor constraintEqualToAnchor:nvps.bottomAnchor].active = YES;
-    [leftButtonSpace.topAnchor constraintEqualToAnchor:nvps.slider.bottomAnchor].active = YES;
+    [leftButtonSpace constrainLeadingToAnchor:nvps.leadingAnchor];
+    [leftButtonSpace constrainTrailingToAnchor:nvps.centerXAnchor];
+    [leftButtonSpace constrainBottomToAnchor:nvps.bottomAnchor];
+    [leftButtonSpace constrainTopToAnchor:nvps.slider.bottomAnchor];
     
     nvps.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [nvps setupButton:nvps.cancelButton];
@@ -361,19 +361,19 @@
                        forState:UIControlStateNormal];
     
     [leftButtonSpace addSubview:nvps.cancelButton];
-    [nvps.cancelButton.centerXAnchor constraintEqualToAnchor:leftButtonSpace.centerXAnchor].active = YES;
-    [nvps.cancelButton.centerYAnchor constraintEqualToAnchor:leftButtonSpace.centerYAnchor].active = YES;
+    [nvps.cancelButton constrainCenterXToAnchor:leftButtonSpace.centerXAnchor];
+    [nvps.cancelButton constrainCenterYToAnchor:leftButtonSpace.centerYAnchor];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
-        [nvps.cancelButton.widthAnchor constraintEqualToAnchor:leftButtonSpace.widthAnchor multiplier:0.8].active = YES;
-        [nvps.cancelButton.heightAnchor constraintEqualToAnchor:leftButtonSpace.heightAnchor multiplier:0.7].active = YES;
+        [nvps.cancelButton constrainWidthToAnchor:leftButtonSpace.widthAnchor multiplier:0.8];
+        [nvps.cancelButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.7];
     }
     
     else
     {
-        [nvps.cancelButton.widthAnchor constraintEqualToAnchor:leftButtonSpace.widthAnchor multiplier:0.7].active = YES;
-        [nvps.cancelButton.heightAnchor constraintEqualToAnchor:leftButtonSpace.heightAnchor multiplier:0.4].active = YES;
+        [nvps.cancelButton constrainWidthToAnchor:leftButtonSpace.widthAnchor multiplier:0.7];
+        [nvps.cancelButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.4];
     }
     
     [nvps.cancelButton addTarget:nvps
@@ -385,10 +385,10 @@
     rightButtonSpace.backgroundColor = UIColor.clearColor;
     
     [nvps addSubview:rightButtonSpace];
-    [rightButtonSpace.leadingAnchor constraintEqualToAnchor:nvps.centerXAnchor].active = YES;
-    [rightButtonSpace.trailingAnchor constraintEqualToAnchor:nvps.trailingAnchor].active = YES;
-    [rightButtonSpace.bottomAnchor constraintEqualToAnchor:nvps.bottomAnchor].active = YES;
-    [rightButtonSpace.topAnchor constraintEqualToAnchor:nvps.slider.bottomAnchor].active = YES;
+    [rightButtonSpace constrainLeadingToAnchor:nvps.centerXAnchor];
+    [rightButtonSpace constrainTrailingToAnchor:nvps.trailingAnchor];
+    [rightButtonSpace constrainBottomToAnchor:nvps.bottomAnchor];
+    [rightButtonSpace constrainTopToAnchor:nvps.slider.bottomAnchor];
     
     nvps.saveButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [nvps setupButton:nvps.saveButton];
@@ -397,19 +397,19 @@
                      forState:UIControlStateNormal];
     
     [rightButtonSpace addSubview:nvps.saveButton];
-    [nvps.saveButton.centerXAnchor constraintEqualToAnchor:rightButtonSpace.centerXAnchor].active = YES;
-    [nvps.saveButton.centerYAnchor constraintEqualToAnchor:rightButtonSpace.centerYAnchor].active = YES;
+    [nvps.saveButton constrainCenterXToAnchor:rightButtonSpace.centerXAnchor];
+    [nvps.saveButton constrainCenterYToAnchor:rightButtonSpace.centerYAnchor];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
-        [nvps.saveButton.widthAnchor constraintEqualToAnchor:rightButtonSpace.widthAnchor multiplier:0.9].active = YES;
-        [nvps.saveButton.heightAnchor constraintEqualToAnchor:rightButtonSpace.heightAnchor multiplier:0.7].active = YES;
+        [nvps.saveButton constrainWidthToAnchor:rightButtonSpace.widthAnchor multiplier:0.9];
+        [nvps.saveButton constrainHeightToAnchor:rightButtonSpace.heightAnchor multiplier:0.7];
     }
     
     else
     {
-        [nvps.saveButton.widthAnchor constraintEqualToAnchor:rightButtonSpace.widthAnchor multiplier:0.7].active = YES;
-        [nvps.saveButton.heightAnchor constraintEqualToAnchor:rightButtonSpace.heightAnchor multiplier:0.4].active = YES;
+        [nvps.saveButton constrainWidthToAnchor:rightButtonSpace.widthAnchor multiplier:0.7];
+        [nvps.saveButton constrainHeightToAnchor:rightButtonSpace.heightAnchor multiplier:0.4];
     }
     
     [nvps.saveButton addTarget:nvps

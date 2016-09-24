@@ -32,7 +32,7 @@
         else
             _font = [UIFont boldSystemFontOfSize:40.0];
         
-        _popover = [[UIView alloc] init];
+        _popover = UIView.new;
         _popover.translatesAutoresizingMaskIntoConstraints = NO;
         
         _popover.backgroundColor = [UIColor colorWithRed:0.0
@@ -42,8 +42,6 @@
         
         _popover.layer.cornerRadius = 20.0;
         
-        [self addSubview:_popover];
-        
         CGFloat tabBarAdj = 0.0;
         
         if ([[NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleDisplayName"] isEqualToString:@"NVMobile"])
@@ -52,36 +50,22 @@
         CGFloat width = MIN(fromView.frame.size.height, fromView.frame.size.width);
         CGFloat height = MAX(fromView.frame.size.height, fromView.frame.size.width);
         
-        [_popover.leadingAnchor constraintEqualToAnchor:self.centerXAnchor
-                                               constant:(-width / 2.5)].active = YES;
-        
-        [_popover.trailingAnchor constraintEqualToAnchor:self.centerXAnchor
-                                                constant:(width / 2.5)].active = YES;
-        
-        [_popover.topAnchor constraintEqualToAnchor:self.centerYAnchor
-                                           constant:(-height / 5.0) + tabBarAdj].active = YES;
-        
-        [_popover.bottomAnchor constraintEqualToAnchor:self.centerYAnchor
-                                              constant:(height / 5.0) + tabBarAdj].active = YES;
+        [self addSubview:_popover];
+        [_popover constrainLeadingToAnchor:self.centerXAnchor constant:(-width / 2.5)];
+        [_popover constrainTrailingToAnchor:self.centerXAnchor constant:(width / 2.5)];
+        [_popover constrainTopToAnchor:self.centerYAnchor constant:(-height / 5.0) + tabBarAdj];
+        [_popover constrainBottomToAnchor:self.centerYAnchor constant:(height / 5.0) + tabBarAdj];
         
         _progressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
                                                      progressColor:UIColor.whiteColor];
         
         [_popover addSubview:_progressView];
+        [_progressView constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 2.75)];
+        [_progressView constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 2.75)];
+        [_progressView constrainTopToAnchor:_popover.centerYAnchor constant:(-height / 64.0)];
+        [_progressView constrainBottomToAnchor:_popover.centerYAnchor constant:(height / 64.0)];
         
-        [_progressView.leadingAnchor constraintEqualToAnchor:_popover.centerXAnchor
-                                                    constant:(-width / 2.75)].active = YES;
-        
-        [_progressView.trailingAnchor constraintEqualToAnchor:_popover.centerXAnchor
-                                                     constant:(width / 2.75)].active = YES;
-        
-        [_progressView.topAnchor constraintEqualToAnchor:_popover.centerYAnchor
-                                                constant:(-height / 64.0)].active = YES;
-        
-        [_progressView.bottomAnchor constraintEqualToAnchor:_popover.centerYAnchor
-                                                   constant:(height / 64.0)].active = YES;
-        
-        _popoverCancel = [[UIButton alloc] init];
+        _popoverCancel = UIButton.new;
         _popoverCancel.translatesAutoresizingMaskIntoConstraints = NO;
         _popoverCancel.layer.cornerRadius = 10.0;
         _popoverCancel.backgroundColor = UIColor.whiteColor;
@@ -102,20 +86,12 @@
                  forControlEvents:UIControlEventTouchUpInside];
         
         [_popover addSubview:_popoverCancel];
+        [_popoverCancel constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 5.0)];
+        [_popoverCancel constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 5.0)];
+        [_popoverCancel constrainTopToAnchor:_popover.centerYAnchor constant:(height / 10.0)];
+        [_popoverCancel constrainBottomToAnchor:_popover.centerYAnchor constant:(height / 6.0)];
         
-        [_popoverCancel.leadingAnchor constraintEqualToAnchor:_popover.centerXAnchor
-                                                     constant:(-width / 5.0)].active = YES;
-        
-        [_popoverCancel.trailingAnchor constraintEqualToAnchor:_popover.centerXAnchor
-                                                      constant:(width / 5.0)].active = YES;
-        
-        [_popoverCancel.topAnchor constraintEqualToAnchor:_popover.centerYAnchor
-                                                 constant:(height / 10.0)].active = YES;
-        
-        [_popoverCancel.bottomAnchor constraintEqualToAnchor:_popover.centerYAnchor
-                                                    constant:(height / 6.0)].active = YES;
-        
-        _popoverLabel = [[UILabel alloc] init];
+        _popoverLabel = UILabel.new;
         _popoverLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _popoverLabel.backgroundColor = UIColor.clearColor;
         _popoverLabel.textColor = UIColor.whiteColor;
@@ -126,20 +102,12 @@
         _popoverLabel.adjustsFontSizeToFitWidth = YES;
         
         [_popover addSubview:_popoverLabel];
+        [_popoverLabel constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 2.75)];
+        [_popoverLabel constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 2.75)];
+        [_popoverLabel constrainTopToAnchor:_popover.centerYAnchor constant:(-height / 5.3)];
+        [_popoverLabel constrainBottomToAnchor:_popover.centerYAnchor constant:(-height / 36.0)];
         
-        [_popoverLabel.leadingAnchor constraintEqualToAnchor:_popover.centerXAnchor
-                                                    constant:(-width / 2.75)].active = YES;
-        
-        [_popoverLabel.trailingAnchor constraintEqualToAnchor:_popover.centerXAnchor
-                                                     constant:(width / 2.75)].active = YES;
-        
-        [_popoverLabel.topAnchor constraintEqualToAnchor:_popover.centerYAnchor
-                                                constant:(-height / 5.3)].active = YES;
-        
-        [_popoverLabel.bottomAnchor constraintEqualToAnchor:_popover.centerYAnchor
-                                                   constant:(-height / 36.0)].active = YES;
-        
-        _progressLabel = [[UILabel alloc] init];
+        _progressLabel = UILabel.new;
         _progressLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _progressLabel.backgroundColor = UIColor.clearColor;
         _progressLabel.textColor = UIColor.whiteColor;
@@ -149,18 +117,10 @@
         _progressLabel.text = @"0% complete";
         
         [_popover addSubview:_progressLabel];
-        
-        [_progressLabel.leadingAnchor constraintEqualToAnchor:_popover.centerXAnchor
-                                                     constant:(-width / 2.75)].active = YES;
-        
-        [_progressLabel.trailingAnchor constraintEqualToAnchor:_popover.centerXAnchor
-                                                      constant:(width / 2.75)].active = YES;
-        
-        [_progressLabel.topAnchor constraintEqualToAnchor:_popover.centerYAnchor
-                                                 constant:(height / 44.0)].active = YES;
-        
-        [_progressLabel.bottomAnchor constraintEqualToAnchor:_popover.centerYAnchor
-                                                    constant:(height / 12.0)].active = YES;
+        [_progressLabel constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 2.75)];
+        [_progressLabel constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 2.75)];
+        [_progressLabel constrainTopToAnchor:_popover.centerYAnchor constant:(height / 44.0)];
+        [_progressLabel constrainBottomToAnchor:_popover.centerYAnchor constant:(height / 12.0)];
     }
     
     return self;
@@ -185,11 +145,10 @@
 - (void)show
 {
     [_fromView addSubview:self];
-    
-    [self.leadingAnchor constraintEqualToAnchor:_fromView.leadingAnchor].active = YES;
-    [self.trailingAnchor constraintEqualToAnchor:_fromView.trailingAnchor].active = YES;
-    [self.topAnchor constraintEqualToAnchor:_fromView.topAnchor].active = YES;
-    [self.bottomAnchor constraintEqualToAnchor:_fromView.bottomAnchor].active = YES;
+    [self constrainLeadingToAnchor:_fromView.leadingAnchor];
+    [self constrainTrailingToAnchor:_fromView.trailingAnchor];
+    [self constrainTopToAnchor:_fromView.topAnchor];
+    [self constrainBottomToAnchor:_fromView.bottomAnchor];
 }
 
 - (void)hideFromTimer:(NSTimer *)timer

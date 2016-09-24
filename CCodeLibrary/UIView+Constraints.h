@@ -22,6 +22,8 @@
 - (void)constrainWidthToConstant:(CGFloat)constant;
 - (void)constrainCenterXToAnchor:(NSLayoutXAxisAnchor *)anchor;
 - (void)constrainCenterYToAnchor:(NSLayoutYAxisAnchor *)anchor;
+- (void)constrainHeightToAnchor:(NSLayoutDimension *)anchor;
+- (void)constrainWidthToAnchor:(NSLayoutDimension *)anchor;
 
 - (void)constrainLeadingToAnchor:(NSLayoutXAxisAnchor *)anchor
                         constant:(CGFloat)constant;
@@ -34,5 +36,17 @@
 
 - (void)constrainBottomToAnchor:(NSLayoutYAxisAnchor *)anchor
                        constant:(CGFloat)constant;
+
+- (void)constrainWidthToAnchor:(NSLayoutDimension *)anchor
+                    multiplier:(CGFloat)multipler;
+
+- (void)constrainHeightToAnchor:(NSLayoutDimension *)anchor
+                     multiplier:(CGFloat)multipler;
+
+- (void)constrainCenterXToAnchor:(NSLayoutXAxisAnchor *)anchor
+                        constant:(CGFloat)constant;
+
+- (void)constrainCenterYToAnchor:(NSLayoutYAxisAnchor *)anchor
+                        constant:(CGFloat)constant;
 
 @end

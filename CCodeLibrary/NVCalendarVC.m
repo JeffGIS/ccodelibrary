@@ -89,14 +89,9 @@
             forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:_returnButton];
-    
-    [_returnButton.topAnchor constraintEqualToAnchor:self.view.topAnchor
-                                            constant:(_margin / 2.0)].active = YES;
-    
-    [_returnButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
-                                                constant:_margin].active = YES;
-    
-    [_returnButton.heightAnchor constraintEqualToConstant:40.0].active = YES;
+    [_returnButton constrainTopToAnchor:self.view.topAnchor constant:(_margin / 2.0)];
+    [_returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:_margin];
+    [_returnButton constrainHeightToConstant:40.0];
 }
 
 - (void)setupTopButtons
@@ -115,14 +110,9 @@
        forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:nextYear];
-    
-    [nextYear.topAnchor constraintEqualToAnchor:self.view.topAnchor
-                                       constant:(_margin / 2.0)].active = YES;
-    
-    [nextYear.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor
-                                            constant:-_margin].active = YES;
-    
-    [nextYear.heightAnchor constraintEqualToAnchor:_returnButton.heightAnchor].active = YES;
+    [nextYear constrainTopToAnchor:self.view.topAnchor constant:(_margin / 2.0)];
+    [nextYear constrainTrailingToAnchor:self.view.trailingAnchor constant:-_margin];
+    [nextYear constrainHeightToAnchor:_returnButton.heightAnchor];
     
     UIButton *nextMonth = [UIButton buttonWithType:UIButtonTypeCustom];
     nextMonth.translatesAutoresizingMaskIntoConstraints = NO;
@@ -138,13 +128,10 @@
         forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:nextMonth];
-    
-    [nextMonth.topAnchor constraintEqualToAnchor:self.view.topAnchor
-                                        constant:(_margin / 2.0)].active = YES;
-    
-    [nextMonth.trailingAnchor constraintEqualToAnchor:nextYear.leadingAnchor].active = YES;
-    [nextMonth.heightAnchor constraintEqualToAnchor:_returnButton.heightAnchor].active = YES;
-    [nextMonth.widthAnchor constraintEqualToAnchor:nextYear.widthAnchor].active = YES;
+    [nextMonth constrainTopToAnchor:self.view.topAnchor constant:(_margin / 2.0)];
+    [nextMonth constrainTrailingToAnchor:nextYear.leadingAnchor];
+    [nextMonth constrainHeightToAnchor:_returnButton.heightAnchor];
+    [nextMonth constrainWidthToAnchor:nextYear.widthAnchor];
     
     UIButton *lastMonth = [UIButton buttonWithType:UIButtonTypeCustom];
     lastMonth.translatesAutoresizingMaskIntoConstraints = NO;
@@ -160,13 +147,10 @@
         forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:lastMonth];
-    
-    [lastMonth.topAnchor constraintEqualToAnchor:self.view.topAnchor
-                                        constant:(_margin / 2.0)].active = YES;
-    
-    [lastMonth.trailingAnchor constraintEqualToAnchor:nextMonth.leadingAnchor].active = YES;
-    [lastMonth.heightAnchor constraintEqualToAnchor:_returnButton.heightAnchor].active = YES;
-    [lastMonth.widthAnchor constraintEqualToAnchor:nextMonth.widthAnchor].active = YES;
+    [lastMonth constrainTopToAnchor:self.view.topAnchor constant:(_margin / 2.0)];
+    [lastMonth constrainTrailingToAnchor:nextMonth.leadingAnchor];
+    [lastMonth constrainHeightToAnchor:_returnButton.heightAnchor];
+    [lastMonth constrainWidthToAnchor:nextMonth.widthAnchor];
     
     UIButton *lastYear = [UIButton buttonWithType:UIButtonTypeCustom];
     lastYear.translatesAutoresizingMaskIntoConstraints = NO;
@@ -183,18 +167,12 @@
     
     [self.view addSubview:lastYear];
     
-    [lastYear.topAnchor constraintEqualToAnchor:self.view.topAnchor
-                                       constant:(_margin / 2.0)].active = YES;
-    
-    [lastYear.leadingAnchor constraintEqualToAnchor:_returnButton.trailingAnchor
-                                           constant:_margin].active = YES;
-    
-    [lastYear.trailingAnchor constraintEqualToAnchor:lastMonth.leadingAnchor].active = YES;
-    [lastYear.heightAnchor constraintEqualToAnchor:_returnButton.heightAnchor].active = YES;
-    [lastYear.widthAnchor constraintEqualToAnchor:lastMonth.widthAnchor].active = YES;
-    
-    [_returnButton.widthAnchor constraintEqualToAnchor:lastYear.widthAnchor
-                                            multiplier:2.0].active = YES;
+    [lastYear constrainTopToAnchor:self.view.topAnchor constant:(_margin / 2.0)];
+    [lastYear constrainLeadingToAnchor:_returnButton.trailingAnchor constant:_margin];
+    [lastYear constrainTrailingToAnchor:lastMonth.leadingAnchor];
+    [lastYear constrainHeightToAnchor:_returnButton.heightAnchor];
+    [lastYear constrainWidthToAnchor:lastMonth.widthAnchor];
+    [_returnButton constrainWidthToAnchor:lastYear.widthAnchor multiplier:2.0];
 }
 
 - (void)nextYear:(UIButton *)button
@@ -236,18 +214,10 @@
     _calendarView.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self.view addSubview:_calendarView];
-    
-    [_calendarView.topAnchor constraintEqualToAnchor:_returnButton.bottomAnchor
-                                            constant:(_margin / 2.0)].active = YES;
-    
-    [_calendarView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor
-                                                constant:_margin].active = YES;
-    
-    [_calendarView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor
-                                                constant:-_margin].active = YES;
-    
-    [_calendarView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor
-                                                constant:-_margin].active = YES;
+    [_calendarView constrainTopToAnchor:_returnButton.bottomAnchor constant:(_margin / 2.0)];
+    [_calendarView constrainLeadingToAnchor:self.view.leadingAnchor constant:_margin];
+    [_calendarView constrainTrailingToAnchor:self.view.trailingAnchor constant:-_margin];
+    [_calendarView constrainBottomToAnchor:self.view.bottomAnchor constant:-_margin];
 }
 
 - (void)computeCalendarExtents

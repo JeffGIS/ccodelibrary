@@ -88,10 +88,9 @@
             forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:_returnButton];
-    
-    [_returnButton.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:margin].active = YES;
-    [_returnButton.topAnchor constraintEqualToAnchor:self.view.topAnchor].active = YES;
-    [_returnButton.heightAnchor constraintEqualToConstant:viewHeight].active = YES;
+    [_returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
+    [_returnButton constrainTopToAnchor:self.view.topAnchor];
+    [_returnButton constrainHeightToConstant:viewHeight];
     
     _titleLabel = UILabel.new;
     _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -103,11 +102,10 @@
     _titleLabel.text = _titleString;
     
     [self.view addSubview:_titleLabel];
-    
-    [_titleLabel.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:margin].active = YES;
-    [_titleLabel.topAnchor constraintEqualToAnchor:_returnButton.bottomAnchor].active = YES;
-    [_titleLabel.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-margin].active = YES;
-    [_titleLabel.heightAnchor constraintEqualToConstant:viewHeight].active = YES;
+    [_titleLabel constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
+    [_titleLabel constrainTopToAnchor:_returnButton.bottomAnchor];
+    [_titleLabel constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_titleLabel constrainHeightToConstant:viewHeight];
     
     _photoLabel = UILabel.new;
     _photoLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -118,11 +116,10 @@
     _photoLabel.font = font;
     
     [self.view addSubview:_photoLabel];
-    
-    [_photoLabel.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:margin].active = YES;
-    [_photoLabel.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor].active = YES;
-    [_photoLabel.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-margin].active = YES;
-    [_photoLabel.heightAnchor constraintEqualToConstant:viewHeight].active = YES;
+    [_photoLabel constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
+    [_photoLabel constrainBottomToAnchor:self.view.bottomAnchor];
+    [_photoLabel constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_photoLabel constrainHeightToConstant:viewHeight];
     
     _photoView = UIImageView.new;
     _photoView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -131,11 +128,10 @@
     _imageIndex = 0;
     
     [self.view addSubview:_photoView];
-    
-    [_photoView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor].active = YES;
-    [_photoView.topAnchor constraintEqualToAnchor:_titleLabel.bottomAnchor].active = YES;
-    [_photoView.bottomAnchor constraintEqualToAnchor:_photoLabel.topAnchor].active = YES;
-    [_photoView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor].active = YES;
+    [_photoView constrainLeadingToAnchor:self.view.leadingAnchor];
+    [_photoView constrainTopToAnchor:_titleLabel.bottomAnchor];
+    [_photoView constrainBottomToAnchor:_photoLabel.topAnchor];
+    [_photoView constrainTrailingToAnchor:self.view.trailingAnchor];
     
     if (_photosArray.count > 1)
     {
@@ -258,7 +254,6 @@
     nvpv.overlay.alpha = 0.0;
     
     [view addSubview:nvpv.overlay];
-    
     [nvpv.overlay constrainToView:constrainedView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:nvpv
@@ -304,11 +299,10 @@
                        forState:UIControlStateNormal];
     
     [nvpv addSubview:nvpv.deleteButton];
-    
-    [nvpv.deleteButton.leadingAnchor constraintEqualToAnchor:nvpv.trailingAnchor constant:-40.0].active = YES;
-    [nvpv.deleteButton.trailingAnchor constraintEqualToAnchor:nvpv.trailingAnchor].active = YES;
-    [nvpv.deleteButton.topAnchor constraintEqualToAnchor:nvpv.topAnchor].active = YES;
-    [nvpv.deleteButton.bottomAnchor constraintEqualToAnchor:nvpv.topAnchor constant:40.0].active = YES;
+    [nvpv.deleteButton constrainLeadingToAnchor:nvpv.trailingAnchor constant:-40.0];
+    [nvpv.deleteButton constrainTrailingToAnchor:nvpv.trailingAnchor];
+    [nvpv.deleteButton constrainTopToAnchor:nvpv.topAnchor];
+    [nvpv.deleteButton constrainBottomToAnchor:nvpv.topAnchor constant:40.0];
     
     [nvpv.deleteButton addTarget:nvpv
                           action:@selector(deleteButtonTapped:)
