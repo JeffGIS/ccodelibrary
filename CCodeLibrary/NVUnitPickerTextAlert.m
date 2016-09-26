@@ -10,7 +10,6 @@
 @property (nonatomic) UILabel *titleLabel;
 @property (nonatomic) UIFont *font;
 @property (nonatomic) UITextField *textField;
-@property (nonatomic) UIWindow *window;
 @property (nonatomic) UIPickerView *picker;
 @property (nonatomic, copy) NSArray *pickerArray;
 
@@ -18,24 +17,25 @@
 
 @implementation NVUnitPickerTextAlert
 
-+ (NVUnitPickerTextAlert *)showUnitPickerTextAlertWithTitle:(NSString *)title
-                                                pickerArray:(NSArray *)pickerArray
-                                                   delegate:(id)delegate
++ (NVUnitPickerTextAlert *)showUnitPickerTextAlertInView:(UIView *) view
+                                               withTitle:(NSString *)title
+                                             pickerArray:(NSArray *)pickerArray
+                                                delegate:(id)delegate
 {
-    NVUnitPickerTextAlert *nvupta = [[NVUnitPickerTextAlert alloc] init];
-    nvupta.window = UIApplication.sharedApplication.keyWindow;
+    NVUnitPickerTextAlert *nvupta = NVUnitPickerTextAlert.new;
+    nvupta.translatesAutoresizingMaskIntoConstraints = NO;
     nvupta.delegate = delegate;
     nvupta.pickerArray = pickerArray;
     
-    CGRect bounds = nvupta.window.bounds;
-    CGFloat longestSide = MAX(bounds.size.height, bounds.size.width);
+    CGRect bounds = UIScreen.mainScreen.bounds;
     CGFloat shortestSide = MIN(bounds.size.height, bounds.size.width);
-    CGFloat sizeFactor = 20.0;
+    CGFloat sizeFactor = 20.0, fontSize = 44.0;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        sizeFactor = 12.0;
+        sizeFactor = 8.0, fontSize = 22.0;
     
-    nvupta.overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, longestSide, longestSide)];
+    nvupta.overlayView = UIView.new;
+    nvupta.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
     nvupta.overlayView.backgroundColor = UIColor.blackColor;
     nvupta.overlayView.alpha = 0.0;
     
@@ -43,10 +43,12 @@
                                                                                  action:@selector(overlayTapped:)];
     
     [nvupta.overlayView addGestureRecognizer:overlayTap];
-    [nvupta.window addSubview:nvupta.overlayView];
+    
+    [view addSubview:nvupta.overlayView];
+    [nvupta.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     CGFloat titleWidth = (shortestSide * 0.75);
-    nvupta.font = [UIFont boldSystemFontOfSize:(sizeFactor * 1.6)];
+    nvupta.font = [UIFont boldSystemFontOfSize:fontSize];
     
     CGFloat titleHeight = [nvupta getHeightForText:title
                                               font:nvupta.font
@@ -61,22 +63,25 @@
     nvupta.titleLabel.textColor = UIColor.blackColor;
     nvupta.titleLabel.textAlignment = NSTextAlignmentCenter;
     
-    CGFloat alertHeight = (titleHeight + (sizeFactor * 9.0));
+    CGFloat alertHeight = (titleHeight + (sizeFactor * 12.0));
     CGFloat alertWidth = (titleWidth + (sizeFactor * 2.0));
     
-    nvupta.frame = CGRectMake(0.0, 0.0, alertWidth, alertHeight);
-    nvupta.center = CGPointMake((bounds.size.width / 2.0), (bounds.size.height / 4.0));
     nvupta.backgroundColor = UIColor.whiteColor;
     nvupta.alpha = 0.0;
     nvupta.layer.cornerRadius = (sizeFactor / 2.0);
     nvupta.clipsToBounds = YES;
     
-    [nvupta.window addSubview:nvupta];
+    [view addSubview:nvupta];
+    [nvupta constrainCenterXToAnchor:view.centerXAnchor];
+    [nvupta constrainCenterYToAnchor:view.centerYAnchor constant:-(shortestSide / 4.0)];
+    [nvupta constrainWidthToConstant:alertWidth];
+    [nvupta constrainHeightToConstant:alertHeight];
+    
     [nvupta addSubview:nvupta.titleLabel];
     
     nvupta.containerView = [[UIView alloc] initWithFrame:
-                            CGRectMake(sizeFactor, (alertHeight - (sizeFactor * 7.0)),
-                                       (alertWidth - (sizeFactor * 2.0)), (sizeFactor * 6.0))];
+                            CGRectMake(sizeFactor, (alertHeight - (sizeFactor * 10.0)),
+                                       (alertWidth - (sizeFactor * 2.0)), (sizeFactor * 9.0))];
     
     nvupta.containerView.layer.borderColor = UIColor.darkGrayColor.CGColor;
     nvupta.containerView.layer.borderWidth = (sizeFactor / 5.0);
@@ -109,6 +114,7 @@
     nvupta.picker.dataSource = nvupta;
     nvupta.picker.backgroundColor = UIColor.clearColor;
     nvupta.picker.layer.cornerRadius = nvupta.containerView.layer.cornerRadius;
+    nvupta.picker.clipsToBounds = NO;
     
     [nvupta.containerView addSubview:nvupta.picker];
     
@@ -246,8 +252,8 @@ replacementString:(NSString *)string
 - (void)willRotateWithDuration:(NSTimeInterval)duration
 {
     [UIView animateWithDuration:duration animations:^{
-        self.center = CGPointMake((_window.frame.size.height / 2.0),
-                                  (_window.frame.size.width / 4.0));
+        self.center = CGPointMake((self.superview.frame.size.height / 2.0),
+                                  (self.superview.frame.size.width / 4.0));
     }];
 }
 

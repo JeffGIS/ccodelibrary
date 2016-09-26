@@ -18,9 +18,10 @@
 @property (nonatomic, weak) id <NVUnitPickerTextAlertDelegate> delegate;
 @property (nonatomic, copy) NSString *text;
 
-+ (NVUnitPickerTextAlert *)showUnitPickerTextAlertWithTitle:(NSString *)title
-                                                pickerArray:(NSArray *)pickerArray
-                                                   delegate:(id)delegate;
++ (NVUnitPickerTextAlert *)showUnitPickerTextAlertInView:(UIView *) view
+                                               withTitle:(NSString *)title
+                                             pickerArray:(NSArray *)pickerArray
+                                                delegate:(id)delegate;
 
 - (void)hideTextAlert:(BOOL)animated;
 - (void)willRotateWithDuration:(NSTimeInterval)duration;
