@@ -488,18 +488,21 @@ static CGFloat _deviceValues[9][4];
             count *= 2;
             count += 1;
             
-            int headingDiff = 0;
+            if (CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
+            {
+                int headingDiff = 0;
+                
+                if (_currentIndex > 2 && _currentIndex % 2)//side flipped
+                    headingDiff = abs(((_initialHeading + 90) - (int)round(slopeData.heading) + 180) % 360 - 180);
+                
+                else//front flipped
+                    headingDiff = abs(((_initialHeading + 180) - (int)round(slopeData.heading) + 180) % 360 - 180);
+                
+                if (headingDiff > 30)
+                    headingError = YES;
+            }
             
-            if (_currentIndex > 2 && _currentIndex % 2)//side flipped
-                headingDiff = abs(((_initialHeading + 90) - (int)round(slopeData.heading) + 180) % 360 - 180);
-            
-            else//front flipped
-                headingDiff = abs(((_initialHeading + 180) - (int)round(slopeData.heading) + 180) % 360 - 180);
-            
-            if (headingDiff > 30)
-                headingError = YES;
-            
-            if (headingError)
+            if (headingError && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
             {
                 NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                                   delegate:self
@@ -564,7 +567,7 @@ static CGFloat _deviceValues[9][4];
             if (_currentIndex == 0)
                 _initialHeading = (int)round(slopeData.heading);
             
-            else
+            else if (CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
             {
                 int headingDiff = 0;
                 
@@ -578,7 +581,7 @@ static CGFloat _deviceValues[9][4];
                     headingError = YES;
             }
             
-            if (headingError)
+            if (headingError && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
             {
                 NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                                   delegate:self
