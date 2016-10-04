@@ -3,6 +3,30 @@
 
 @import UIKit;
 
+@interface NVConstrainedView : UIView
+
+@end
+
+@interface NVConstrainedButton : UIButton
+
+@end
+
+@interface NVConstrainedLabel : UILabel
+
+@end
+
+@interface NVConstrainedSwitch : UISwitch
+
+@end
+
+@interface NVConstrainedTextField : UITextField
+
+@end
+
+@interface NVConstrainedTableView : UITableView
+
+@end
+
 @interface UIView (Constraints)
 
 - (void)constrainToView:(UIView *)view

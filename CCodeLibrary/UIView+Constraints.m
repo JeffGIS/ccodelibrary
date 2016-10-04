@@ -2,6 +2,129 @@
 //  CCodeLibrary
 
 #import "UIView+Constraints.h"
+#import "UserDefaults.h"
+
+@implementation NVConstrainedView
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+        self.backgroundColor = UserDefaults.defaults.appleGray;
+        self.layer.borderColor = UIColor.blackColor.CGColor;
+    }
+    
+    return self;
+}
+
+@end
+
+@implementation NVConstrainedButton
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+        self.backgroundColor = UIColor.blackColor;
+        self.titleLabel.adjustsFontSizeToFitWidth = YES;
+        self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+        self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        self.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [self setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        [self setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    }
+    
+    return self;
+}
+
+@end
+
+@implementation NVConstrainedLabel
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+        self.adjustsFontSizeToFitWidth = YES;
+        self.textAlignment = NSTextAlignmentCenter;
+        self.backgroundColor = UIColor.clearColor;
+        self.textColor = UIColor.blackColor;
+        self.adjustsFontSizeToFitWidth = YES;
+        self.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+    }
+    
+    return self;
+}
+
+@end
+
+@implementation NVConstrainedSwitch
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+        self.tintColor = UIColor.redColor;
+    }
+    
+    return self;
+}
+
+@end
+
+@implementation NVConstrainedTextField
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+        self.layer.borderColor = UIColor.blackColor.CGColor;
+        self.adjustsFontSizeToFitWidth = YES;
+        self.textColor = UIColor.blackColor;
+        self.backgroundColor = UIColor.whiteColor;
+        self.tintColor = UIColor.grayColor;
+        self.clearButtonMode = UITextFieldViewModeWhileEditing;
+    }
+    
+    return self;
+}
+
+@end
+
+@implementation NVConstrainedTableView
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+        self.separatorInset = UIEdgeInsetsZero;
+        self.separatorColor = UIColor.blackColor;
+        self.backgroundColor = UserDefaults.defaults.green;
+        self.layer.borderColor = UIColor.blackColor.CGColor;
+    }
+    
+    return self;
+}
+
+@end
 
 @implementation UIView (Constraints)
 
