@@ -132,6 +132,10 @@
 {
     _currentOverallBoundaryName = currentOverallBoundaryName;
 }
+-(void)setSelectBoundaryFromMapType:(NSString *)selectBoundaryFromMapType
+{
+    _selectBoundaryFromMapType = selectBoundaryFromMapType;
+}
 
 -(void)setCurrentZoom:(CGFloat)zoom
 {
