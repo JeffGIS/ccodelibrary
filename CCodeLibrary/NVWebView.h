@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 @import UIKit;
+@import WebKit;
 #import "CCodeTypes.h"
 
 @class NVWebView;

@@ -2,7 +2,6 @@
 //  CCodeLibrary
 
 #import "NVWebView.h"
-@import WebKit;
 #import "UserDefaults.h"
 #import "NVPopoverTableView.h"
 #import "NVAlertView.h"
