@@ -83,6 +83,8 @@
 		69C3DFA71CB4118D00DC1779 /* NVWebView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C3DFA41CB4113A00DC1779 /* NVWebView.h */; };
 		69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C441A91BB474B200D026A7 /* NVTabBarEdit.m */; };
 		69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C441A81BB474B200D026A7 /* NVTabBarEdit.h */; };
+		69D277D21DA6DEC1002B1447 /* NVStreetSideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D277D11DA6DEC1002B1447 /* NVStreetSideController.m */; };
+		69D277D31DA6E369002B1447 /* NVStreetSideController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D277D01DA6DEC1002B1447 /* NVStreetSideController.h */; };
 		69D5EFB21C7237AB004CE1C0 /* NVCalendarVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFB11C7237AB004CE1C0 /* NVCalendarVC.m */; };
 		69D5EFB51C7237FD004CE1C0 /* NVCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFB41C7237FD004CE1C0 /* NVCalendarView.m */; };
 		69D5EFB61C7239EC004CE1C0 /* NVCalendarVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D5EFB01C7237AB004CE1C0 /* NVCalendarVC.h */; };
@@ -341,6 +343,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69D277D31DA6E369002B1447 /* NVStreetSideController.h in CopyFiles */,
 				69E7FCA71D8129CD00171E44 /* NVPopoverSlider.h in CopyFiles */,
 				696D03821D67A616002E686A /* RampCompliance.h in CopyFiles */,
 				1FF82E491D677B29009523EC /* RampStruct.h in CopyFiles */,
@@ -557,6 +560,8 @@
 		69C3DFA51CB4113A00DC1779 /* NVWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVWebView.m; sourceTree = "<group>"; };
 		69C441A81BB474B200D026A7 /* NVTabBarEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTabBarEdit.h; sourceTree = "<group>"; };
 		69C441A91BB474B200D026A7 /* NVTabBarEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTabBarEdit.m; sourceTree = "<group>"; };
+		69D277D01DA6DEC1002B1447 /* NVStreetSideController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVStreetSideController.h; sourceTree = "<group>"; };
+		69D277D11DA6DEC1002B1447 /* NVStreetSideController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVStreetSideController.m; sourceTree = "<group>"; };
 		69D5EFB01C7237AB004CE1C0 /* NVCalendarVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalendarVC.h; sourceTree = "<group>"; };
 		69D5EFB11C7237AB004CE1C0 /* NVCalendarVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCalendarVC.m; sourceTree = "<group>"; };
 		69D5EFB31C7237FD004CE1C0 /* NVCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalendarView.h; sourceTree = "<group>"; };
@@ -1047,6 +1052,8 @@
 				6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */,
 				6948D5D31BC780EE009CA04F /* NVStaticMapView.h */,
 				6948D5D41BC780EE009CA04F /* NVStaticMapView.m */,
+				69D277D01DA6DEC1002B1447 /* NVStreetSideController.h */,
+				69D277D11DA6DEC1002B1447 /* NVStreetSideController.m */,
 				699DD7371CEA057600C7A651 /* NVSynchronizeVC.h */,
 				699DD7381CEA057600C7A651 /* NVSynchronizeVC.m */,
 				69C441A81BB474B200D026A7 /* NVTabBarEdit.h */,
@@ -1480,6 +1487,7 @@
 				EB0E4FF51C62785200849766 /* SymbolDictionary.m in Sources */,
 				69F8E0D51D05C194003E8655 /* NVMarkerView.m in Sources */,
 				A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */,
+				69D277D21DA6DEC1002B1447 /* NVStreetSideController.m in Sources */,
 				A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */,
 				EBC01D151BED1C8C0004C751 /* epsiln.c in Sources */,
 				EBC01D0C1BED1C8C0004C751 /* conjunct.c in Sources */,
