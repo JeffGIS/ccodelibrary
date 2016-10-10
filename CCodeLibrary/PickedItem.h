@@ -24,6 +24,7 @@
 @property NSString *identifier;
 @property NSString *symbolName;
 @property NSInteger time;
+@property NSInteger nLinks;
 @property DPOINT pickedPoint;
 @property DPOINT screenPoint;
 

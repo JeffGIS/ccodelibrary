@@ -468,7 +468,7 @@ didReceiveResponse:(NSURLResponse *)response
             _username = @"GSSiProfessionalServer";
             _password = @"GSSi";
             
-            /*_ftpSite = @"192.168.254.39";
+           /* _ftpSite = @"192.168.254.39";
              _username = @"GSSiLocal";
              _password = @"GSSi";*/
             
