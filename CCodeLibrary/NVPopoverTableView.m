@@ -10,7 +10,6 @@
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic, copy) NSArray *textArray;
 @property (nonatomic) UITabBar *tabBar;
-@property (nonatomic) UIView *overlayView;
 @property (nonatomic) UIFont *font;
 @property BOOL includeCancel;
 
@@ -60,6 +59,11 @@
     nvptv.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
     nvptv.overlayView.backgroundColor = UIColor.blackColor;
     nvptv.overlayView.alpha = 0.0;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:nvptv
+                                                                          action:@selector(overlayTapped:)];
+    
+    [nvptv.overlayView addGestureRecognizer:tap];
     
     [view addSubview:nvptv.overlayView];
     [nvptv.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
@@ -209,6 +213,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                                 atIndex:index];
         }
     }
+}
+
+- (void)overlayTapped:(UITapGestureRecognizer *)gesture
+{
+    [_delegate popoverTableViewDidCancel:self];
 }
 
 @end

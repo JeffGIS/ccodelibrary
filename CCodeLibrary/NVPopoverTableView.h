@@ -18,6 +18,7 @@
 @interface NVPopoverTableView : UIView
 
 @property (nonatomic, copy) NSString *title;
+@property (nonatomic) UIView *overlayView;
 
 + (instancetype)showPopoverTableViewInView:(UIView *)view
                                   delegate:(id)delegate
