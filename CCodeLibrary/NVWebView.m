@@ -7,7 +7,7 @@
 #import "NVAlertView.h"
 #import "CRAPI.h"
 
-@interface NVWebView () <WKNavigationDelegate,NVPopoverTableViewDelegate>
+@interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate>
 
 @property (nonatomic) WKWebView *webView;
 @property (nonatomic) UIButton *returnButton, *realtor;
@@ -64,7 +64,9 @@
     [nvwv.indicator constrainTopToAnchor:nvwv.centerYAnchor constant:(-nvwv.indicator.frame.size.height / 2.0)];
     [nvwv.indicator constrainBottomToAnchor:nvwv.centerYAnchor constant:(nvwv.indicator.frame.size.height / 2.0)];
     
-    urlString = [NSString stringWithFormat:@"http://%@", urlString];
+    if (![urlString containsString:@"http://"] && ![urlString containsString:@"https://"])
+        urlString = [NSString stringWithFormat:@"http://%@", urlString];
+    
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
     [nvwv.webView loadRequest:urlRequest];
@@ -131,6 +133,7 @@
     _webView.translatesAutoresizingMaskIntoConstraints = NO;
     _webView.allowsBackForwardNavigationGestures = YES;
     _webView.navigationDelegate = self;
+    _webView.UIDelegate = self;
     _webView.clipsToBounds = YES;
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self
@@ -315,6 +318,20 @@ didFailProvisionalNavigation:(WKNavigation *)navigation
       withError:(NSError *)error
 {
     NSLog(@"WebView Failed Provisional Navigation ERROR:%@", error.localizedDescription);
+}
+
+- (WKWebView *)webView:(WKWebView *)webView
+createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
+   forNavigationAction:(WKNavigationAction *)navigationAction
+        windowFeatures:(WKWindowFeatures *)windowFeatures
+{
+    NSLog(@"popupURL:%@", navigationAction.request.URL.absoluteString);
+    
+    NVWebView *popupWindow = [NVWebView showWebViewInView:self.superview
+                                                urlString:navigationAction.request.URL.absoluteString];
+    
+    popupWindow.delegate = self.superview;
+    return nil;
 }
 
 - (void)webViewWasTapped:(UITapGestureRecognizer *)gesture
