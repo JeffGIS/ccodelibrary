@@ -363,7 +363,7 @@ static UserDefaults *_defaults;
 
 - (NSArray *)realtorList
 {
-    return @[@"www.edinarealty.com", @"www.remax.com", @"www.trulia.com", @"www.zillow.com/homes"];
+    return @[@"http://www.edinarealty.com", @"http://www.remax.com", @"http://www.trulia.com", @"http://www.zillow.com/homes"];
 }
 
 - (void)saveColorWithRed:(CGFloat)red
