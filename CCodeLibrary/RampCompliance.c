@@ -639,7 +639,7 @@ void setStandardToleranceValues(ToleranceValues *tolerances)
 
 char *rampToText(RampStruct *ramp)
 {
-    char *textures[] = {"None", "SmoothedConcrete", "BrushedConcrete", "TintedConcrete", "TruncatedStoneDomes", "TruncatedStampedConrete", "CastironTruncatedDomes", "ExposedAggregate", "CutStone", "None", "Other"};
+    char *textures[] = {"None", "SmoothedConcrete", "BrushedConcrete", "TintedConcrete", "TruncatedStoneDomes", "TruncatedStampedConcrete", "CastironTruncatedDomes", "ExposedAggregate", "CutStone", "None", "Other"};
     
     char *obstructions[] = {"None", "Hydrant", "Manhole", "Polebox", "Pole", "StreetManhole", "Other", "None", "None", "None", "None", "MasterNone"};
     
