@@ -18,6 +18,23 @@
 
 @implementation NVSpreadsheetVC
 
++ (instancetype)presentSpreadsheetInViewController:(UIViewController *)viewController
+                                           numRows:(NSUInteger)numRows
+                                        numColumns:(NSUInteger)numColumns
+                                          delegate:(id)delegate
+{
+    NVSpreadsheetVC *nvsvc = NVSpreadsheetVC.new;
+    nvsvc.rows = numRows;
+    nvsvc.columns = numColumns;
+    nvsvc.delegate = delegate;
+    
+    [viewController presentViewController:nvsvc
+                                 animated:YES
+                               completion:nil];
+    
+    return nvsvc;
+}
+
 - (void)loadView
 {
     UIView *view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
@@ -64,15 +81,13 @@
     [_returnButton constrainTopToAnchor:topSpace.topAnchor];
     [_returnButton constrainBottomToAnchor:topSpace.bottomAnchor];
     
-    NSUInteger rows = 50, cols = 50;
-    
     _tableData = NSMutableArray.array;
     
-    for (NSUInteger rowNumber = 0; rowNumber < (rows + 1); rowNumber++)
+    for (NSUInteger rowNumber = 0; rowNumber < (_rows + 1); rowNumber++)
     {
         NSMutableArray *row = NSMutableArray.array;
         
-        for (NSUInteger columnNumber = 0; columnNumber < (cols + 1); columnNumber++)
+        for (NSUInteger columnNumber = 0; columnNumber < (_columns + 1); columnNumber++)
             [row addObject:[NSString stringWithFormat:@"R%i:C%i", rowNumber, columnNumber]];
         
         [_tableData addObject:row];
@@ -150,7 +165,6 @@
 {
     NSArray *rowData = _tableData.lastObject;
     NSInteger cols = rowData.count;
-    
     return cols;
 }
 
@@ -184,9 +198,8 @@
                                                           forIndexPath:indexPath];
         NVLeftColumnCell *lc = (NVLeftColumnCell *)cell;
         lc.textLabel.text = [NSString stringWithFormat:@"Col %i", indexPath.nvSpreadsheetRow];
-        BOOL isDarker = (indexPath.nvSpreadsheetRow % 2 == 0);
         
-        if (isDarker)
+        if (indexPath.nvSpreadsheetRow % 2 == 0)
         {
             cell.backgroundColor = [UIColor colorWithRed:(222.0 / 255.0)
                                                    green:(243.0 / 255.0)
@@ -211,9 +224,8 @@
         NSArray *colData = [_tableData objectAtIndex:indexPath.nvSpreadsheetRow];
         NSString *rowData = [colData objectAtIndex:indexPath.nvSpreadsheetColumn];
         gc.textLabel.text = rowData;
-        BOOL isDarker = (indexPath.nvSpreadsheetRow % 2 == 0);
         
-        if (isDarker)
+        if (indexPath.nvSpreadsheetRow % 2 == 0)
         {
             cell.backgroundColor = [UIColor colorWithRed:(242.0 / 255.0)
                                                    green:(242.0 / 255.0)

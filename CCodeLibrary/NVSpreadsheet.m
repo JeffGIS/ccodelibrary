@@ -152,7 +152,7 @@ forCellWithReuseIdentifier:(NSString *)identifier
 
 - (void)setupSubviews
 {
-    switch (self.spreadsheetHeaderConfiguration)
+    switch (_spreadsheetHeaderConfiguration)
     {
         case NVSpreadsheetHeaderConfigurationNone:
             [self setupLowerRightView];
@@ -216,7 +216,7 @@ forCellWithReuseIdentifier:(NSString *)identifier
     _upperLeftCollectionView = [self setupCollectionViewWithGridLayout];
     
     [self setupContainerSubview:_upperLeftContainerView
-                 collectionView:self.upperLeftCollectionView
+                 collectionView:_upperLeftCollectionView
                             tag:NVSpreadsheetCollectionUpperLeft];
     
     _upperLeftCollectionView.scrollEnabled = NO;
@@ -340,7 +340,7 @@ forCellWithReuseIdentifier:(NSString *)identifier
     
     _horizontalScrollIndicator.frame = CGRectMake((_scrollIndicatorInsets.left + NVSpreadsheetScrollIndicatorSpace),
                                                   (self.frame.size.height - NVSpreadsheetScrollIndicatorWidth -
-                                                   self.scrollIndicatorInsets.bottom - NVScrollIndicatorDefaultInsetSpace),
+                                                   _scrollIndicatorInsets.bottom - NVScrollIndicatorDefaultInsetSpace),
                                                   (self.frame.size.width - 4.0 * NVSpreadsheetScrollIndicatorSpace),
                                                   NVSpreadsheetScrollIndicatorWidth);
     
@@ -868,7 +868,7 @@ withSender:(id)sender
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (scrollView == self.controllingScrollView)
+    if (scrollView == _controllingScrollView)
     {
         switch (scrollView.tag)
         {
@@ -1017,7 +1017,7 @@ withSender:(id)sender
     [self setScrollEnabledValue:NO
                      scrollView:scrollView];
     
-    if (self.controllingScrollView != scrollView)
+    if (_controllingScrollView != scrollView)
     {
         
         [_lowerLeftCollectionView setContentOffset:_lowerLeftCollectionView.contentOffset
@@ -1038,85 +1038,8 @@ withSender:(id)sender
                      scrollView:scrollView];
 }
 
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView
-                     withVelocity:(CGPoint)velocity
-              targetContentOffset:(inout CGPoint *)targetContentOffset
-{
-    CGPoint toffset = *targetContentOffset;
-    
-    switch (scrollView.tag)
-    {
-        case NVSpreadsheetCollectionLowerLeft:
-        {
-            BOOL willBouncePastZeroY = (velocity.y < 0.0 && !(toffset.y > 0.0));
-            
-            BOOL willBouncePastMaxY = (toffset.y > _lowerLeftCollectionView.contentSize.height -
-                                       _lowerLeftCollectionView.frame.size.height - 0.1 && velocity.y > 0.0);
-            
-            if (willBouncePastZeroY || willBouncePastMaxY)
-            {
-                _upperRightContainerView.userInteractionEnabled = NO;
-                _lowerRightContainerView.userInteractionEnabled = NO;
-                _isLowerLeftBouncing = YES;
-            }
-            
-            break;
-        }
-            
-        case NVSpreadsheetCollectionUpperRight:
-        {
-            BOOL willBouncePastZeroX = (velocity.x < 0.0 && !(toffset.x > 0.0));
-            
-            BOOL willBouncePastMaxX = (toffset.x > _upperRightCollectionView.contentSize.width -
-                                       _upperRightCollectionView.frame.size.width - 0.1 && velocity.x > 0.0);
-            
-            if (willBouncePastZeroX || willBouncePastMaxX)
-            {
-                _lowerRightContainerView.userInteractionEnabled = NO;
-                _lowerLeftContainerView.userInteractionEnabled = NO;
-                _isUpperRightBouncing = YES;
-            }
-            
-            break;
-        }
-            
-        case NVSpreadsheetCollectionLowerRight:
-        {
-            BOOL willBouncePastZeroX = (velocity.x < 0.0 && !(toffset.x > 0.0));
-            BOOL willBouncePastMaxX = (toffset.x > _upperRightCollectionView.contentSize.width -
-                                       _upperRightCollectionView.frame.size.width - 0.1 && velocity.x > 0.0);
-            
-            BOOL willBouncePastZeroY = (velocity.y < 0.0 && !(toffset.y > 0.0));
-            
-            BOOL willBouncePastMaxY = (toffset.y > _lowerLeftCollectionView.contentSize.height -
-                                       _lowerLeftCollectionView.frame.size.height - 0.1 && velocity.y > 0.0);
-            
-            if (willBouncePastZeroX || willBouncePastMaxX || willBouncePastZeroY || willBouncePastMaxY)
-            {
-                _upperRightContainerView.userInteractionEnabled = NO;
-                _lowerLeftContainerView.userInteractionEnabled = NO;
-                _isLowerRightBouncing = YES;
-            }
-            
-            break;
-        }
-    }
-}
-
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    [self scrollViewDidStop:scrollView];
-}
-
-- (void)scrollViewDidStop:(UIScrollView *)scrollView
-{
-    _upperRightContainerView.userInteractionEnabled = YES;
-    _lowerRightContainerView.userInteractionEnabled = YES;
-    _lowerLeftContainerView.userInteractionEnabled = YES;
-    _isUpperRightBouncing = NO;
-    _isLowerLeftBouncing = NO;
-    _isLowerRightBouncing = NO;
-    
     if (!scrollView.isDecelerating && !scrollView.isDragging && !scrollView.isTracking)
     {
         [self setNeedsLayout];
