@@ -8,26 +8,11 @@
 
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource, NVSpreadsheetDelegate>
 
+@property (nonatomic) NVSpreadsheet *nvss;
+
 @end
 
 @implementation NVSpreadsheetVC
-
-+ (instancetype)presentSpreadsheetInViewController:(UIViewController *)viewController
-                                           numRows:(NSUInteger)numRows
-                                        numColumns:(NSUInteger)numColumns
-                                          delegate:(id)delegate
-{
-    NVSpreadsheetVC *nvsvc = NVSpreadsheetVC.new;
-    nvsvc.rows = numRows;
-    nvsvc.columns = numColumns;
-    nvsvc.delegate = delegate;
-    
-    [viewController presentViewController:nvsvc
-                                 animated:YES
-                               completion:nil];
-    
-    return nvsvc;
-}
 
 - (void)loadView
 {
@@ -49,56 +34,39 @@
     [topSpace constrainTopToAnchor:self.view.topAnchor];
     [topSpace constrainLeadingToAnchor:self.view.leadingAnchor];
     [topSpace constrainTrailingToAnchor:self.view.trailingAnchor];
-    [topSpace constrainHeightToConstant:50.0];
+    [topSpace constrainHeightToConstant:60.0];
     
-    UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    returnButton.translatesAutoresizingMaskIntoConstraints = NO;
-    returnButton.backgroundColor = UIColor.clearColor;
-    returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
-    returnButton.contentEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, 10.0);
+    _nvss = [[NVSpreadsheet alloc] initWithNumberOfHeaderRows:1
+                                        numberOfHeaderColumns:1
+                                                        frame:CGRectZero];
     
-    [returnButton setTitle:@"< Return"
-                  forState:UIControlStateNormal];
+    _nvss.translatesAutoresizingMaskIntoConstraints = NO;
+    _nvss.bounces = NO;
     
-    [returnButton setTitleColor:UIColor.whiteColor
-                       forState:UIControlStateNormal];
+    [_nvss registerCellClass:NVGridCell.class
+  forCellWithReuseIdentifier:@"GridCell"];
     
-    [returnButton setTitleColor:UIColor.lightGrayColor
-                       forState:UIControlStateHighlighted];
+    [_nvss registerCellClass:NVTopRowCell.class
+  forCellWithReuseIdentifier:@"TopRowCell"];
     
-    [returnButton addTarget:self
-                     action:@selector(returnButtonTapped:)
-           forControlEvents:UIControlEventTouchUpInside];
+    [_nvss registerCellClass:NVLeftColumnCell.class
+  forCellWithReuseIdentifier:@"LeftColumnCell"];
     
-    [topSpace addSubview:returnButton];
-    [returnButton constrainLeadingToAnchor:topSpace.leadingAnchor];
-    [returnButton constrainTopToAnchor:topSpace.topAnchor];
-    [returnButton constrainBottomToAnchor:topSpace.bottomAnchor];
+    _nvss.delegate = self;
+    _nvss.dataSource = self;
     
-    NVSpreadsheet *nvss = [[NVSpreadsheet alloc] initWithNumberOfHeaderRows:1
-                                                      numberOfHeaderColumns:1
-                                                                      frame:CGRectZero];
+    [self.view addSubview:_nvss];
+    [_nvss constrainLeadingToAnchor:self.view.leadingAnchor];
+    [_nvss constrainTrailingToAnchor:self.view.trailingAnchor];
+    [_nvss constrainTopToAnchor:topSpace.bottomAnchor];
+    [_nvss constrainBottomToAnchor:self.view.bottomAnchor];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
     
-    nvss.translatesAutoresizingMaskIntoConstraints = NO;
-    nvss.bounces = NO;
-    
-    [nvss registerCellClass:NVGridCell.class
- forCellWithReuseIdentifier:@"GridCell"];
-    
-    [nvss registerCellClass:NVTopRowCell.class
- forCellWithReuseIdentifier:@"TopRowCell"];
-    
-    [nvss registerCellClass:NVLeftColumnCell.class
- forCellWithReuseIdentifier:@"LeftColumnCell"];
-    
-    nvss.delegate = self;
-    nvss.dataSource = self;
-    
-    [self.view addSubview:nvss];
-    [nvss constrainLeadingToAnchor:self.view.leadingAnchor];
-    [nvss constrainTrailingToAnchor:self.view.trailingAnchor];
-    [nvss constrainTopToAnchor:topSpace.bottomAnchor];
-    [nvss constrainBottomToAnchor:self.view.bottomAnchor];
+    [_nvss reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -111,12 +79,6 @@
     return YES;
 }
 
-- (void)returnButtonTapped:(UIButton *)button
-{
-    [self dismissViewControllerAnimated:YES
-                             completion:nil];
-}
-
 - (CGSize)spreadsheetView:(NVSpreadsheet *)spreadsheetView
    sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -125,12 +87,12 @@
 
 - (NSInteger)numberOfRowsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
-    return (_rows + 1);
+    return ([_delegate numRowsInSpreadsheet] + 1);
 }
 
 - (NSInteger)numberOfColumnsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
-    return (_columns + 1);
+    return ([_delegate numColumnsInSpreadsheet] + 1);
 }
 
 - (UICollectionViewCell *)spreadsheetView:(NVSpreadsheet *)spreadsheetView

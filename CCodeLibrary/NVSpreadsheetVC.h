@@ -13,16 +13,14 @@
 - (NSString *)textForColumn:(NSUInteger)column
                         row:(NSUInteger)row;
 
+- (NSInteger)numRowsInSpreadsheet;
+- (NSInteger)numColumnsInSpreadsheet;
+
 @end
 
 @interface NVSpreadsheetVC : UIViewController
 
 @property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
 @property NSUInteger rows, columns;
-
-+ (instancetype)presentSpreadsheetInViewController:(UIViewController *)viewController
-                                           numRows:(NSUInteger)numRows
-                                        numColumns:(NSUInteger)numColumns
-                                          delegate:(id)delegate;
 
 @end

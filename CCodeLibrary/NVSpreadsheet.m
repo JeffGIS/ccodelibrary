@@ -971,6 +971,16 @@ didUnhighlightItemAtIndexPath:(nonnull NSIndexPath *)indexPath
                      scrollView:scrollView];
 }
 
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
+                  willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate)
+    {
+        [self setNeedsLayout];
+        [self hideScrollIndicators];
+    }
+}
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     if (!scrollView.isDecelerating && !scrollView.isDragging && !scrollView.isTracking)
