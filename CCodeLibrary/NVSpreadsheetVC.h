@@ -22,5 +22,6 @@
 
 @property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
 @property NSUInteger rows, columns;
+@property BOOL flipped;
 
 @end

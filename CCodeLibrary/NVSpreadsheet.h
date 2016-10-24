@@ -45,6 +45,7 @@ forCellWithReuseIdentifier:(NSString *)identifier;
                        animated:(BOOL)animated;
 
 - (void)reloadData;
+- (void)returnToOrigin;
 
 @property UIEdgeInsets scrollIndicatorInsets;
 @property BOOL showsHorizontalScrollIndicator, showsVerticalScrollIndicator, bounces;

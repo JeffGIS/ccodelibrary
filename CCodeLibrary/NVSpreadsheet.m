@@ -773,30 +773,37 @@ forCellWithReuseIdentifier:(NSString *)identifier
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
-                                                                         indexPath:indexPath];
-        
-    if ([_delegate respondsToSelector:@selector(spreadsheetView:didSelectItemAtIndexPath:)])
+    if (indexPath.nvSpreadsheetRow > 0 || indexPath.nvSpreadsheetColumn > 0)
     {
-        [_delegate spreadsheetView:self
-          didSelectItemAtIndexPath:dataSourceIndexPath];
+        NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
+                                                                             indexPath:indexPath];
+        
+        if ([_delegate respondsToSelector:@selector(spreadsheetView:didSelectItemAtIndexPath:)])
+        {
+            [_delegate spreadsheetView:self
+              didSelectItemAtIndexPath:dataSourceIndexPath];
+        }
+        
+        [collectionView deselectItemAtIndexPath:indexPath
+                                       animated:YES];
     }
-    
-    [collectionView deselectItemAtIndexPath:indexPath
-                                   animated:YES];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
 didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    cell.backgroundColor = UIColor.grayColor;
+    if (indexPath.nvSpreadsheetRow > 0 || indexPath.nvSpreadsheetColumn > 0)
+    {
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        cell.backgroundColor = UIColor.grayColor;
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
 didUnhighlightItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    [collectionView reloadItemsAtIndexPaths:@[(indexPath)]];
+    if (indexPath.nvSpreadsheetRow > 0 || indexPath.nvSpreadsheetColumn > 0)
+        [collectionView reloadItemsAtIndexPaths:@[(indexPath)]];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -988,6 +995,12 @@ didUnhighlightItemAtIndexPath:(nonnull NSIndexPath *)indexPath
         [self setNeedsLayout];
         [self hideScrollIndicators];
     }
+}
+
+- (void)returnToOrigin
+{
+    [_controllingScrollView setContentOffset:CGPointMake(0.0, 0.0)
+                                    animated:YES];
 }
 
 @end
