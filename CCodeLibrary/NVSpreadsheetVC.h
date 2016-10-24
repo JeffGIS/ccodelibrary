@@ -7,6 +7,12 @@
 
 @protocol NVSpreadsheetVCDelegate <NSObject>
 
+- (NSString *)headerTextForColumn:(NSUInteger)column;
+- (NSString *)headerTextForRow:(NSUInteger)row;
+
+- (NSString *)textForColumn:(NSUInteger)column
+                        row:(NSUInteger)row;
+
 @end
 
 @interface NVSpreadsheetVC : UIViewController

@@ -8,12 +8,6 @@
 
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource, NVSpreadsheetDelegate>
 
-@property (nonatomic) UIButton *returnButton;
-@property (nonatomic) NSMutableSet *selectedGridCells;
-@property (nonatomic) NSMutableArray *tableData;
-@property (nonatomic) NSString *cellDataBuffer;
-@property (nonatomic) NVSpreadsheet *nvss;
-
 @end
 
 @implementation NVSpreadsheetVC
@@ -57,68 +51,54 @@
     [topSpace constrainTrailingToAnchor:self.view.trailingAnchor];
     [topSpace constrainHeightToConstant:50.0];
     
-    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
-    _returnButton.backgroundColor = UIColor.clearColor;
-    _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
-    _returnButton.contentEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, 10.0);
+    UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    returnButton.translatesAutoresizingMaskIntoConstraints = NO;
+    returnButton.backgroundColor = UIColor.clearColor;
+    returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    returnButton.contentEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, 10.0);
     
-    [_returnButton setTitle:@"< Return"
-                   forState:UIControlStateNormal];
+    [returnButton setTitle:@"< Return"
+                  forState:UIControlStateNormal];
     
-    [_returnButton setTitleColor:UIColor.whiteColor
-                        forState:UIControlStateNormal];
+    [returnButton setTitleColor:UIColor.whiteColor
+                       forState:UIControlStateNormal];
     
-    [_returnButton setTitleColor:UIColor.lightGrayColor
-                        forState:UIControlStateHighlighted];
+    [returnButton setTitleColor:UIColor.lightGrayColor
+                       forState:UIControlStateHighlighted];
     
-    [_returnButton addTarget:self
-                      action:@selector(returnButtonTapped:)
-            forControlEvents:UIControlEventTouchUpInside];
+    [returnButton addTarget:self
+                     action:@selector(returnButtonTapped:)
+           forControlEvents:UIControlEventTouchUpInside];
     
-    [topSpace addSubview:_returnButton];
-    [_returnButton constrainLeadingToAnchor:topSpace.leadingAnchor];
-    [_returnButton constrainTopToAnchor:topSpace.topAnchor];
-    [_returnButton constrainBottomToAnchor:topSpace.bottomAnchor];
+    [topSpace addSubview:returnButton];
+    [returnButton constrainLeadingToAnchor:topSpace.leadingAnchor];
+    [returnButton constrainTopToAnchor:topSpace.topAnchor];
+    [returnButton constrainBottomToAnchor:topSpace.bottomAnchor];
     
-    _tableData = NSMutableArray.array;
+    NVSpreadsheet *nvss = [[NVSpreadsheet alloc] initWithNumberOfHeaderRows:1
+                                                      numberOfHeaderColumns:1
+                                                                      frame:CGRectZero];
     
-    for (NSUInteger rowNumber = 0; rowNumber < (_rows + 1); rowNumber++)
-    {
-        NSMutableArray *row = NSMutableArray.array;
-        
-        for (NSUInteger columnNumber = 0; columnNumber < (_columns + 1); columnNumber++)
-            [row addObject:[NSString stringWithFormat:@"R%i:C%i", rowNumber, columnNumber]];
-        
-        [_tableData addObject:row];
-    }
+    nvss.translatesAutoresizingMaskIntoConstraints = NO;
+    nvss.bounces = NO;
     
-    _selectedGridCells = NSMutableSet.set;
+    [nvss registerCellClass:NVGridCell.class
+ forCellWithReuseIdentifier:@"GridCell"];
     
-    _nvss = [[NVSpreadsheet alloc] initWithNumberOfHeaderRows:1
-                                        numberOfHeaderColumns:1
-                                                        frame:CGRectZero];
+    [nvss registerCellClass:NVTopRowCell.class
+ forCellWithReuseIdentifier:@"TopRowCell"];
     
-    _nvss.translatesAutoresizingMaskIntoConstraints = NO;
-    _nvss.bounces = NO;
+    [nvss registerCellClass:NVLeftColumnCell.class
+ forCellWithReuseIdentifier:@"LeftColumnCell"];
     
-    [_nvss registerCellClass:NVGridCell.class
-  forCellWithReuseIdentifier:@"GridCell"];
+    nvss.delegate = self;
+    nvss.dataSource = self;
     
-    [_nvss registerCellClass:NVTopRowCell.class
-  forCellWithReuseIdentifier:@"TopRowCell"];
-    
-    [_nvss registerCellClass:NVLeftColumnCell.class
-  forCellWithReuseIdentifier:@"LeftColumnCell"];
-    
-    _nvss.delegate = self;
-    _nvss.dataSource = self;
-    
-    [self.view addSubview:_nvss];
-    [_nvss constrainLeadingToAnchor:self.view.leadingAnchor];
-    [_nvss constrainTrailingToAnchor:self.view.trailingAnchor];
-    [_nvss constrainTopToAnchor:topSpace.bottomAnchor];
-    [_nvss constrainBottomToAnchor:self.view.bottomAnchor];
+    [self.view addSubview:nvss];
+    [nvss constrainLeadingToAnchor:self.view.leadingAnchor];
+    [nvss constrainTrailingToAnchor:self.view.trailingAnchor];
+    [nvss constrainTopToAnchor:topSpace.bottomAnchor];
+    [nvss constrainBottomToAnchor:self.view.bottomAnchor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -140,32 +120,17 @@
 - (CGSize)spreadsheetView:(NVSpreadsheet *)spreadsheetView
    sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat leftColumnWidth = 150.0, topRowHeight = 50.0;
-    CGFloat gridCellWidth = 150.0, gridCellHeight = 50.0;
-    
-    if (indexPath.nvSpreadsheetRow == 0 && indexPath.nvSpreadsheetColumn == 0)
-        return CGSizeMake(leftColumnWidth, topRowHeight);
-    
-    if (indexPath.nvSpreadsheetRow == 0 && indexPath.nvSpreadsheetColumn > 0)
-        return CGSizeMake(gridCellWidth, topRowHeight);
-
-    if (indexPath.nvSpreadsheetRow > 0 && indexPath.nvSpreadsheetColumn == 0)
-        return CGSizeMake(leftColumnWidth, gridCellHeight);
-    
-    return CGSizeMake(gridCellWidth, gridCellHeight);
+    return CGSizeMake(216.0, 56.0);
 }
 
 - (NSInteger)numberOfRowsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
-    NSInteger rows = _tableData.count;
-    return rows;
+    return (_rows + 1);
 }
 
 - (NSInteger)numberOfColumnsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
-    NSArray *rowData = _tableData.lastObject;
-    NSInteger cols = rowData.count;
-    return cols;
+    return (_columns + 1);
 }
 
 - (UICollectionViewCell *)spreadsheetView:(NVSpreadsheet *)spreadsheetView
@@ -181,6 +146,7 @@
         NVGridCell *gc = (NVGridCell *)cell;
         gc.textLabel.numberOfLines = 0;
         cell.backgroundColor = UIColor.lightGrayColor;
+        cell.userInteractionEnabled = NO;
     }
     
     else if (indexPath.nvSpreadsheetRow == 0 && indexPath.nvSpreadsheetColumn > 0)
@@ -188,7 +154,7 @@
         cell = [spreadsheetView dequeueReusableCellWithReuseIdentifier:@"TopRowCell"
                                                           forIndexPath:indexPath];
         NVTopRowCell *tr = (NVTopRowCell *)cell;
-        tr.textLabel.text = [NSString stringWithFormat:@"Row %i", indexPath.nvSpreadsheetColumn];
+        tr.textLabel.text = [_delegate headerTextForColumn:indexPath.nvSpreadsheetColumn];
         cell.backgroundColor = UIColor.whiteColor;
     }
     
@@ -197,7 +163,9 @@
         cell = [spreadsheetView dequeueReusableCellWithReuseIdentifier:@"LeftColumnCell"
                                                           forIndexPath:indexPath];
         NVLeftColumnCell *lc = (NVLeftColumnCell *)cell;
-        lc.textLabel.text = [NSString stringWithFormat:@"Col %i", indexPath.nvSpreadsheetRow];
+        lc.textLabel.text = [_delegate headerTextForRow:indexPath.nvSpreadsheetRow];
+        lc.textLabel.numberOfLines = 2;
+        lc.textLabel.adjustsFontSizeToFitWidth = YES;
         
         if (indexPath.nvSpreadsheetRow % 2 == 0)
         {
@@ -220,10 +188,11 @@
     {
         cell = [spreadsheetView dequeueReusableCellWithReuseIdentifier:@"GridCell"
                                                           forIndexPath:indexPath];
+        
         NVGridCell *gc = (NVGridCell *)cell;
-        NSArray *colData = [_tableData objectAtIndex:indexPath.nvSpreadsheetRow];
-        NSString *rowData = [colData objectAtIndex:indexPath.nvSpreadsheetColumn];
-        gc.textLabel.text = rowData;
+
+        gc.textLabel.text = [_delegate textForColumn:indexPath.nvSpreadsheetColumn
+                                                 row:indexPath.nvSpreadsheetRow];
         
         if (indexPath.nvSpreadsheetRow % 2 == 0)
         {
@@ -248,69 +217,7 @@
 - (void)spreadsheetView:(NVSpreadsheet *)spreadsheetView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([_selectedGridCells containsObject:indexPath])
-    {
-        [_selectedGridCells removeObject:indexPath];
-        
-        [spreadsheetView deselectItemAtIndexPath:indexPath
-                                        animated:YES];
-    }
     
-    else
-    {
-        [_selectedGridCells removeAllObjects];
-        [_selectedGridCells addObject:indexPath];
-    }
-}
-
-- (BOOL)spreadsheetView:(NVSpreadsheet *)spreadsheetView
-shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return YES;
-}
-
-- (BOOL)spreadsheetView:(NVSpreadsheet *)spreadsheetView
-       canPerformAction:(SEL)action
-     forItemAtIndexPath:(NSIndexPath *)indexPath
-             withSender:(id)sender
-{
-    if (action == @selector(cut:) || action == @selector(copy:) || action == @selector(paste:))
-        return YES;
-    
-    return NO;
-}
-
-- (void)spreadsheetView:(NVSpreadsheet *)spreadsheetView
-          performAction:(SEL)action
-     forItemAtIndexPath:(NSIndexPath *)indexPath
-             withSender:(id)sender
-{
-    NSMutableArray *rowData = [_tableData objectAtIndex:indexPath.nvSpreadsheetRow];
-    
-    if (action == @selector(cut:))
-    {
-        _cellDataBuffer = [rowData objectAtIndex:indexPath.row];
-        
-        [rowData replaceObjectAtIndex:indexPath.row
-                           withObject:@""];
-        
-        [spreadsheetView reloadData];
-        
-    }
-    
-    else if (action == @selector(copy:))
-        _cellDataBuffer = [rowData objectAtIndex:indexPath.row];
-    
-    else if (action == @selector(paste:))
-    {
-        if (_cellDataBuffer)
-        {
-            [rowData replaceObjectAtIndex:indexPath.row
-                               withObject:_cellDataBuffer];
-            
-            [spreadsheetView reloadData];
-        }
-    }
 }
 
 @end

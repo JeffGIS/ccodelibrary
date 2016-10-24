@@ -41,8 +41,6 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
 
 @property BOOL isUpperRightBouncing, isLowerLeftBouncing, isLowerRightBouncing;
 @property (nonatomic) UIView *verticalScrollIndicator, *horizontalScrollIndicator;
-@property (nonatomic) UICollectionView *selectedItemCollectionView;
-@property (nonatomic) NSIndexPath *selectedItemIndexPath;
 
 @end
 
@@ -121,16 +119,6 @@ forCellWithReuseIdentifier:(NSString *)identifier
     
     [_lowerRightCollectionView registerClass:cellClass
                   forCellWithReuseIdentifier:identifier];
-}
-
-- (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath
-                       animated:(BOOL)animated
-{
-    NSIndexPath *collectionViewIndexPath = [self collectionViewIndexPathFromDataSourceIndexPath:indexPath];
-    UICollectionView *collectionView = [self collectionViewForDataSourceIndexPath:indexPath];
-    
-    [collectionView deselectItemAtIndexPath:collectionViewIndexPath
-                                   animated:animated];
 }
 
 - (void)reloadData
@@ -785,27 +773,6 @@ forCellWithReuseIdentifier:(NSString *)identifier
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_selectedItemCollectionView)
-    {
-        if (collectionView == _selectedItemCollectionView)
-            _selectedItemIndexPath = indexPath;
-        
-        else
-        {
-            [_selectedItemCollectionView deselectItemAtIndexPath:_selectedItemIndexPath
-                                                        animated:NO];
-            
-            _selectedItemCollectionView = collectionView;
-            _selectedItemIndexPath = indexPath;
-        }
-    }
-    
-    else
-    {
-        _selectedItemCollectionView = collectionView;
-        _selectedItemIndexPath = indexPath;
-    }
-    
     NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
                                                                          indexPath:indexPath];
         
@@ -814,56 +781,22 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [_delegate spreadsheetView:self
           didSelectItemAtIndexPath:dataSourceIndexPath];
     }
-}
-
-- (BOOL)collectionView:(UICollectionView *)collectionView
-shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
-                                                                         indexPath:indexPath];
-        
-    if ([_delegate respondsToSelector:@selector(spreadsheetView:shouldShowMenuForItemAtIndexPath:)])
-    {
-        return [_delegate spreadsheetView:self
-         shouldShowMenuForItemAtIndexPath:dataSourceIndexPath];
-    }
-        
-    return NO;
-}
-
-- (BOOL)collectionView:(UICollectionView *)collectionView
-canPerformAction:(SEL)action
-forItemAtIndexPath:(NSIndexPath *)indexPath
-withSender:(id)sender
-{
-    NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
-                                                                         indexPath:indexPath];
     
-    if ([_delegate respondsToSelector:@selector(spreadsheetView:canPerformAction:forItemAtIndexPath:withSender:)])
-    {
-        return [_delegate spreadsheetView:self
-                         canPerformAction:action
-                       forItemAtIndexPath:dataSourceIndexPath
-                               withSender:sender];
-    }
-    
-    return NO;
+    [collectionView deselectItemAtIndexPath:indexPath
+                                   animated:YES];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-performAction:(SEL)action
-forItemAtIndexPath:(NSIndexPath *)indexPath
-withSender:(id)sender
+didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
-                                                                         indexPath:indexPath];
-    
-    if ([_delegate respondsToSelector:@selector(spreadsheetView:performAction:forItemAtIndexPath:withSender:)])
-    {
-        return [_delegate spreadsheetView:self performAction:action
-                       forItemAtIndexPath:dataSourceIndexPath
-                               withSender:sender];
-    }
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    cell.backgroundColor = UIColor.grayColor;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView
+didUnhighlightItemAtIndexPath:(nonnull NSIndexPath *)indexPath
+{
+    [collectionView reloadItemsAtIndexPaths:@[(indexPath)]];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView

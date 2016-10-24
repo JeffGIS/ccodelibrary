@@ -11,7 +11,6 @@
 - (CGSize)spreadsheetView:(NVSpreadsheet *)spreadsheetView
    sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
 
-@required
 - (NSInteger)numberOfRowsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView;
 - (NSInteger)numberOfColumnsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView;
 
@@ -22,22 +21,8 @@
 
 @protocol NVSpreadsheetDelegate <NSObject>
 
-@optional
 - (void)spreadsheetView:(NVSpreadsheet *)spreadsheetView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
-
-- (BOOL)spreadsheetView:(NVSpreadsheet *)spreadsheetView
-shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath;
-
-- (BOOL)spreadsheetView:(NVSpreadsheet *)spreadsheetView
-       canPerformAction:(SEL)action
-     forItemAtIndexPath:(NSIndexPath *)indexPath
-             withSender:(id)sender;
-
-- (void)spreadsheetView:(NVSpreadsheet *)spreadsheetView
-          performAction:(SEL)action
-     forItemAtIndexPath:(NSIndexPath *)indexPath
-             withSender:(id)sender;
 
 @end
 
