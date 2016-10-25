@@ -8,6 +8,7 @@
 #import "CRAPI.h"
 #import "NVAlertView.h"
 #import "NVPopoverTableView.h"
+#import "NVTabBarEdit.h"
 @import MessageUI;
 
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate>
@@ -31,6 +32,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(pasteboardChanged:)
+                                               name:UIPasteboardChangedNotification
+                                             object:UIPasteboard.generalPasteboard];
     
     self.view.backgroundColor = UIColor.darkGrayColor;
     _flipped = NO;
@@ -239,6 +245,21 @@
 {
     [super viewDidAppear:animated];
     
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main"
+                                                         bundle:NSBundle.mainBundle];
+    
+    UIViewController *fovc = [storyboard instantiateViewControllerWithIdentifier:@"FieldOptionsVC"];
+    
+    [NVTabBarEdit tabBarController:self.tabBarController
+       replaceViewControllerWithID:@"FindVC"
+                withViewController:fovc];
+    
+    UIViewController *dvc = [storyboard instantiateViewControllerWithIdentifier:@"DestinationsVC"];
+    
+    [NVTabBarEdit tabBarController:self.tabBarController
+       replaceViewControllerWithID:@"ApplicationsVC"
+                withViewController:dvc];
+    
     [_nvss reloadData];
 }
 
@@ -250,6 +271,11 @@
 - (BOOL)prefersStatusBarHidden
 {
     return YES;
+}
+
+- (void)pasteboardChanged:(id)selector
+{
+    NSLog(@"Pasteboard Item:%@", UIPasteboard.generalPasteboard.strings.lastObject);
 }
 
 - (CGSize)spreadsheetView:(NVSpreadsheet *)spreadsheetView
@@ -679,9 +705,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     else if ([alertView.identifier isEqualToString:@"MapIt"])
     {
-        [_delegate spreadsheetDidMapItForRow:_selectedRow
-                                      column:_selectedColumn
-                            tabBarController:self.tabBarController];
+        if (buttonIndex == 0)
+        {
+            [_delegate spreadsheetDidMapItForRow:_selectedRow
+                                          column:_selectedColumn
+                                tabBarController:self.tabBarController];
+        }
     }
 }
 
