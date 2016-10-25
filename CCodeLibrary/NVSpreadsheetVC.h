@@ -22,6 +22,10 @@
 - (void)spreadsheetDidDeleteCurrentList;
 - (void)spreadsheetDidCreateList;
 
+- (void)spreadsheetDidMapItForRow:(NSInteger)row
+                           column:(NSInteger)column
+                 tabBarController:(UITabBarController *)tabBarController;
+
 - (void)spreadsheetDidEditColumnHeaderText:(NSString *)text
                                    atIndex:(NSInteger)index;
 

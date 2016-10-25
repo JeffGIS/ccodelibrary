@@ -51,8 +51,6 @@
 		694F007A1C1B4C4B0074AF72 /* MapToolbar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 694F00771C1B4BBA0074AF72 /* MapToolbar.h */; };
 		6956B9981CB230210070416B /* NVPopoverTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6956B9971CB230210070416B /* NVPopoverTableView.m */; };
 		6956B9991CB235490070416B /* NVPopoverTableView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6956B9961CB230210070416B /* NVPopoverTableView.h */; };
-		6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */; };
-		6960F4D71BBCD25100A5681C /* NVSpreadsheetView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6960F4D41BBCC80800A5681C /* NVSpreadsheetView.h */; };
 		696D03821D67A616002E686A /* RampCompliance.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 696D03801D679E66002E686A /* RampCompliance.h */; };
 		697560BE1CB18D5A006EEA14 /* NVMarkerInfoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 697560BD1CB18D5A006EEA14 /* NVMarkerInfoButton.m */; };
 		697560BF1CB19AF9006EEA14 /* NVMarkerInfoButton.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697560BC1CB18D5A006EEA14 /* NVMarkerInfoButton.h */; };
@@ -399,7 +397,6 @@
 				EBA517B81BCA1405005A9CA8 /* CrimeData.h in CopyFiles */,
 				6948D5D61BC7845F009CA04F /* NVStaticMapView.h in CopyFiles */,
 				69F5B2301BC5F6CD00119212 /* NVDestinationOptions.h in CopyFiles */,
-				6960F4D71BBCD25100A5681C /* NVSpreadsheetView.h in CopyFiles */,
 				69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */,
 				699AEF871BAFAFD70084C2B4 /* PolylineCompression.h in CopyFiles */,
 				EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */,
@@ -534,8 +531,6 @@
 		694F00781C1B4BBA0074AF72 /* MapToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapToolbar.m; sourceTree = "<group>"; };
 		6956B9961CB230210070416B /* NVPopoverTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPopoverTableView.h; sourceTree = "<group>"; };
 		6956B9971CB230210070416B /* NVPopoverTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPopoverTableView.m; sourceTree = "<group>"; };
-		6960F4D41BBCC80800A5681C /* NVSpreadsheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSpreadsheetView.h; sourceTree = "<group>"; };
-		6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSpreadsheetView.m; sourceTree = "<group>"; };
 		696D037F1D679E66002E686A /* RampCompliance.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RampCompliance.c; sourceTree = "<group>"; };
 		696D03801D679E66002E686A /* RampCompliance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RampCompliance.h; sourceTree = "<group>"; };
 		697560BC1CB18D5A006EEA14 /* NVMarkerInfoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVMarkerInfoButton.h; sourceTree = "<group>"; };
@@ -1083,8 +1078,6 @@
 				A91F36921AE9739400602BCE /* NVSliderView.h */,
 				A91F36931AE9739400602BCE /* NVSliderView.m */,
 				69F482341DB7C70900E4BDB5 /* NVSpreadsheet */,
-				6960F4D41BBCC80800A5681C /* NVSpreadsheetView.h */,
-				6960F4D51BBCC80800A5681C /* NVSpreadsheetView.m */,
 				6948D5D31BC780EE009CA04F /* NVStaticMapView.h */,
 				6948D5D41BC780EE009CA04F /* NVStaticMapView.m */,
 				69D277D01DA6DEC1002B1447 /* NVStreetSideController.h */,
@@ -1483,7 +1476,6 @@
 				A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */,
 				EBC01D2E1BED1C8C0004C751 /* ura404.c in Sources */,
 				EBC01D1E1BED1C8C0004C751 /* mer404.c in Sources */,
-				6960F4D61BBCC80800A5681C /* NVSpreadsheetView.m in Sources */,
 				6943041F1C3351E20077EC9F /* NVColor.m in Sources */,
 				690B3FA91D6A69A600DAC87D /* RampCompliance.c in Sources */,
 				69987CF71C94683F000EC26F /* UIView+Constraints.m in Sources */,

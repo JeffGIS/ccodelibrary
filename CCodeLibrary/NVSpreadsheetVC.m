@@ -16,6 +16,7 @@
 @property (nonatomic) UIButton *swap, *returnToOrigin;
 @property (nonatomic) CGFloat columnWidth, rowHeight;
 @property (nonatomic) UITextField *titleTextField;
+@property (nonatomic) NSInteger selectedRow, selectedColumn;
 
 @end
 
@@ -449,7 +450,23 @@
 - (void)spreadsheetView:(NVSpreadsheet *)spreadsheetView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.nvSpreadsheetColumn == 0)
+    {
+        
+    }
     
+    else
+    {
+        _selectedRow = indexPath.nvSpreadsheetRow;
+        _selectedColumn = indexPath.nvSpreadsheetColumn;
+        
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                          delegate:self
+                                                             title:@"Spreadsheet Options"
+                                                   buttonTextArray:@[@"Map It", @"Cancel"]
+                                                  destructiveIndex:0];
+        alert.identifier = @"MapIt";
+    }
 }
 
 - (void)swap:(UIButton *)button
@@ -574,10 +591,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [popoverTableView hide:YES];
 }
 
-
 - (void)alertView:(NVAlertView *)alertView
 didTapButtonAtIndex:(NSInteger)buttonIndex
 {
+    [alertView hideLargeAlertView:YES];
+    
     if ([alertView.identifier isEqualToString:@"ExportPrompt"])
     {
         switch (buttonIndex)
@@ -649,7 +667,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         }
     }
     
-    if ([alertView.identifier isEqualToString:@"DeletePrompt"])
+    else if ([alertView.identifier isEqualToString:@"DeletePrompt"])
     {
         if (buttonIndex == 0)
         {
@@ -659,7 +677,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         }
     }
     
-    [alertView hideLargeAlertView:YES];
+    else if ([alertView.identifier isEqualToString:@"MapIt"])
+    {
+        [_delegate spreadsheetDidMapItForRow:_selectedRow
+                                      column:_selectedColumn
+                            tabBarController:self.tabBarController];
+    }
 }
 
 - (NSString *)fileName
