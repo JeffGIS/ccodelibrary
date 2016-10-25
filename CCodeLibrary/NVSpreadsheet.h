@@ -7,7 +7,6 @@
 
 @protocol NVSpreadsheetDataSource <NSObject>
 
-@optional
 - (CGSize)spreadsheetView:(NVSpreadsheet *)spreadsheetView
    sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
 
@@ -17,6 +16,8 @@
 - (UICollectionViewCell *)spreadsheetView:(NVSpreadsheet *)spreadsheetView
                    cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 
+- (BOOL)spreadsheetIsFlipped;
+
 @end
 
 @protocol NVSpreadsheetDelegate <NSObject>
@@ -24,12 +25,17 @@
 - (void)spreadsheetView:(NVSpreadsheet *)spreadsheetView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 
+- (void)spreadsheetViewDidEditTopRowText:(NSString *)text
+                                 atIndex:(NSInteger)index;
+
 @end
 
 @interface NVSpreadsheet : UIView
 
 @property (nonatomic, weak) id<NVSpreadsheetDelegate> delegate;
 @property (nonatomic, weak) id<NVSpreadsheetDataSource> dataSource;
+@property UIEdgeInsets scrollIndicatorInsets;
+@property BOOL showsHorizontalScrollIndicator, showsVerticalScrollIndicator, bounces;
 
 - (id)initWithNumberOfHeaderRows:(NSUInteger)headerRowCount
            numberOfHeaderColumns:(NSUInteger)headerColumnCount
@@ -46,10 +52,7 @@ forCellWithReuseIdentifier:(NSString *)identifier;
 
 - (void)reloadData;
 - (void)returnToOrigin;
-
-@property UIEdgeInsets scrollIndicatorInsets;
-@property BOOL showsHorizontalScrollIndicator, showsVerticalScrollIndicator, bounces;
-
+- (void)flipLongPressGesture:(BOOL)flipped;
 - (void)flashScrollIndicators;
 
 @end

@@ -4,6 +4,7 @@
 #import "NVSpreadsheet.h"
 #import "NVGridLayout.h"
 #import "NSIndexPath+NVSpreadsheet.h"
+#import "NVSpreadsheetCell.h"
 
 typedef NS_ENUM(NSUInteger, NVSpreadsheetCollection)
 {
@@ -33,32 +34,18 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
 @property (nonatomic) NSUInteger headerRowCount, headerColumnCount;
 @property (nonatomic) NVSpreadsheetHeaderConfiguration spreadsheetHeaderConfiguration;
 @property (nonatomic) UIScrollView *controllingScrollView;
-
 @property (nonatomic) UIView *upperLeftContainerView, *upperRightContainerView;
 @property (nonatomic) UIView *lowerLeftContainerView, *lowerRightContainerView;
 @property (nonatomic) UICollectionView *upperLeftCollectionView, *upperRightCollectionView;
 @property (nonatomic) UICollectionView *lowerLeftCollectionView, *lowerRightCollectionView;
-
 @property BOOL isUpperRightBouncing, isLowerLeftBouncing, isLowerRightBouncing;
 @property (nonatomic) UIView *verticalScrollIndicator, *horizontalScrollIndicator;
+@property (nonatomic) UITextField *textField;
+@property (nonatomic) UILongPressGestureRecognizer *longPress;
 
 @end
 
 @implementation NVSpreadsheet
-
-- (id)init
-{
-    return [self initWithNumberOfHeaderRows:0
-                      numberOfHeaderColumns:0
-                                      frame:CGRectZero];
-}
-
-- (id)initWithFrame:(CGRect)frame
-{
-    return [self initWithNumberOfHeaderRows:0
-                      numberOfHeaderColumns:0
-                                      frame:frame];
-}
 
 - (id)initWithNumberOfHeaderRows:(NSUInteger)headerRowCount
            numberOfHeaderColumns:(NSUInteger)headerColumnCount
@@ -73,6 +60,19 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
         _showsHorizontalScrollIndicator = YES;
         _headerRowCount = headerRowCount;
         _headerColumnCount = headerColumnCount;
+        
+        _textField = UITextField.new;
+        _textField.translatesAutoresizingMaskIntoConstraints = NO;
+        _textField.delegate = self;
+        _textField.layer.borderColor = UIColor.redColor.CGColor;
+        _textField.layer.borderWidth = 4.0;
+        _textField.textAlignment = NSTextAlignmentCenter;
+        _textField.clearButtonMode = UITextFieldViewModeAlways;
+        _textField.adjustsFontSizeToFitWidth = YES;
+        
+        _longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                   action:@selector(columnHeaderLongPressed:)];
+        _longPress.delegate = self;
         
         if (headerColumnCount == 0 && headerRowCount == 0)
             _spreadsheetHeaderConfiguration = NVSpreadsheetHeaderConfigurationNone;
@@ -221,6 +221,8 @@ forCellWithReuseIdentifier:(NSString *)identifier
     [self setupContainerSubview:_upperRightContainerView
                  collectionView:_upperRightCollectionView
                             tag:NVSpreadsheetCollectionUpperRight];
+    
+    [_upperRightCollectionView addGestureRecognizer:_longPress];
 }
 
 - (void)setupLowerLeftView
@@ -273,7 +275,8 @@ forCellWithReuseIdentifier:(NSString *)identifier
             _lowerLeftContainerView.frame = CGRectMake(0.0, 0.0, size.width, self.bounds.size.height);
             
             _lowerRightContainerView.frame = CGRectMake((size.width + NVSpreadsheetGridSpace), 0.0,
-                                                        (self.bounds.size.width - size.width - NVSpreadsheetGridSpace), self.bounds.size.height);
+                                                        (self.bounds.size.width - size.width - NVSpreadsheetGridSpace),
+                                                        self.bounds.size.height);
             break;
         }
             
@@ -773,37 +776,21 @@ forCellWithReuseIdentifier:(NSString *)identifier
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.nvSpreadsheetRow > 0 || indexPath.nvSpreadsheetColumn > 0)
+    if (collectionView.tag == NVSpreadsheetCollectionLowerLeft ||
+        collectionView.tag == NVSpreadsheetCollectionLowerRight)
     {
         NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
                                                                              indexPath:indexPath];
         
-        if ([_delegate respondsToSelector:@selector(spreadsheetView:didSelectItemAtIndexPath:)])
-        {
-            [_delegate spreadsheetView:self
-              didSelectItemAtIndexPath:dataSourceIndexPath];
-        }
+        UICollectionViewCell *cell = [_dataSource spreadsheetView:self
+                                           cellForItemAtIndexPath:dataSourceIndexPath];
+        
+        [_delegate spreadsheetView:self
+          didSelectItemAtIndexPath:dataSourceIndexPath];
         
         [collectionView deselectItemAtIndexPath:indexPath
                                        animated:YES];
     }
-}
-
-- (void)collectionView:(UICollectionView *)collectionView
-didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.nvSpreadsheetRow > 0 || indexPath.nvSpreadsheetColumn > 0)
-    {
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-        cell.backgroundColor = UIColor.grayColor;
-    }
-}
-
-- (void)collectionView:(UICollectionView *)collectionView
-didUnhighlightItemAtIndexPath:(nonnull NSIndexPath *)indexPath
-{
-    if (indexPath.nvSpreadsheetRow > 0 || indexPath.nvSpreadsheetColumn > 0)
-        [collectionView reloadItemsAtIndexPaths:@[(indexPath)]];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -835,7 +822,8 @@ didUnhighlightItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 
 - (void)lowerLeftCollectionViewDidScrollForScrollView:(UIScrollView *)scrollView
 {
-    [_lowerRightCollectionView setContentOffset:CGPointMake(_lowerRightCollectionView.contentOffset.x, scrollView.contentOffset.y)
+    [_lowerRightCollectionView setContentOffset:CGPointMake(_lowerRightCollectionView.contentOffset.x,
+                                                            scrollView.contentOffset.y)
                                        animated:NO];
     
     [self updateVerticalScrollIndicator];
@@ -865,7 +853,8 @@ didUnhighlightItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 
 - (void)upperRightCollectionViewDidScrollForScrollView:(UIScrollView *)scrollView
 {
-    [_lowerRightCollectionView setContentOffset:CGPointMake(scrollView.contentOffset.x, _lowerRightCollectionView.contentOffset.y)
+    [_lowerRightCollectionView setContentOffset:CGPointMake(scrollView.contentOffset.x,
+                                                            _lowerRightCollectionView.contentOffset.y)
                                        animated:NO];
     [self updateHorizontalScrollIndicator];
     
@@ -1001,6 +990,79 @@ didUnhighlightItemAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
     [_controllingScrollView setContentOffset:CGPointMake(0.0, 0.0)
                                     animated:YES];
+}
+
+- (void)columnHeaderLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        if (_dataSource.spreadsheetIsFlipped)
+        {
+            CGPoint point = [gesture locationInView:_lowerLeftCollectionView];
+            NSIndexPath *indexPath = [_lowerLeftCollectionView indexPathForItemAtPoint:point];
+            
+            if (indexPath)
+            {
+                NVLeftColumnCell *cell = (NVLeftColumnCell *)[_lowerLeftCollectionView cellForItemAtIndexPath:indexPath];
+                _textField.backgroundColor = cell.backgroundColor;
+                _textField.tag = indexPath.nvSpreadsheetRow;
+                _textField.text = cell.textLabel.text;
+                _textField.font = cell.textLabel.font;
+                [cell.contentView addSubview:_textField];
+                [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+                [_textField becomeFirstResponder];
+            }
+        }
+        
+        else
+        {
+            CGPoint point = [gesture locationInView:_upperRightCollectionView];
+            NSIndexPath *indexPath = [_upperRightCollectionView indexPathForItemAtPoint:point];
+            
+            if (indexPath)
+            {
+                NVTopRowCell *cell = (NVTopRowCell *)[_upperRightCollectionView cellForItemAtIndexPath:indexPath];
+                _textField.backgroundColor = cell.backgroundColor;
+                _textField.tag = indexPath.nvSpreadsheetColumn;
+                _textField.text = cell.textLabel.text;
+                _textField.font = cell.textLabel.font;
+                [cell.contentView addSubview:_textField];
+                [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+                [_textField becomeFirstResponder];
+            }
+        }
+    }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return NO;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [textField removeFromSuperview];
+    
+    [_delegate spreadsheetViewDidEditTopRowText:textField.text
+                                        atIndex:textField.tag];
+    
+    [_upperRightCollectionView reloadData];
+}
+
+- (void)flipLongPressGesture:(BOOL)flipped
+{
+    if (flipped)
+    {
+        [_upperRightCollectionView removeGestureRecognizer:_longPress];
+        [_lowerLeftCollectionView addGestureRecognizer:_longPress];
+    }
+    
+    else
+    {
+        [_lowerLeftCollectionView removeGestureRecognizer:_longPress];
+        [_upperRightCollectionView addGestureRecognizer:_longPress];
+    }
 }
 
 @end

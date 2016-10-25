@@ -6,6 +6,7 @@
 @interface NVGridCell : UICollectionViewCell
 
 @property (nonatomic) UILabel *textLabel;
+@property NSUInteger row, column;
 
 @end
 
@@ -18,5 +19,6 @@
 @interface NVLeftColumnCell : UICollectionViewCell
 
 @property (nonatomic) UILabel *textLabel;
+@property NSUInteger row, column;
 
 @end
