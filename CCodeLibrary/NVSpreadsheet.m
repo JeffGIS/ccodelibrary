@@ -776,8 +776,7 @@ forCellWithReuseIdentifier:(NSString *)identifier
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView.tag == NVSpreadsheetCollectionLowerLeft ||
-        collectionView.tag == NVSpreadsheetCollectionLowerRight)
+    if (collectionView.tag != NVSpreadsheetCollectionUpperLeft)
     {
         NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
                                                                              indexPath:indexPath];

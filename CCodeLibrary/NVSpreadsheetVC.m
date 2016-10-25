@@ -485,18 +485,43 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.nvSpreadsheetColumn == 0)
     {
-        NSString *filePath = [_delegate propFieldDescriptionFilePathAtRow:indexPath.nvSpreadsheetRow];
-        
-        NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                        showFileAtPath:filePath];
-        
-        [nvwv showRealtorButton];
+        if (!_flipped)
+        {
+            NSString *filePath = [_delegate propFieldDescriptionFilePathAtRow:indexPath.nvSpreadsheetRow];
+            
+            NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                            showFileAtPath:filePath];
+            
+            [nvwv showRealtorButton];
+        }
+    }
+    
+    else if (indexPath.nvSpreadsheetRow == 0)
+    {
+        if (_flipped)
+        {
+            NSString *filePath = [_delegate propFieldDescriptionFilePathAtRow:indexPath.nvSpreadsheetColumn];
+            
+            NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                            showFileAtPath:filePath];
+            
+            [nvwv showRealtorButton];
+        }
     }
     
     else
     {
-        _selectedRow = indexPath.nvSpreadsheetRow;
-        _selectedColumn = indexPath.nvSpreadsheetColumn;
+        if (_flipped)
+        {
+            _selectedRow = indexPath.nvSpreadsheetColumn;
+            _selectedColumn = indexPath.nvSpreadsheetRow;
+        }
+        
+        else
+        {
+            _selectedRow = indexPath.nvSpreadsheetRow;
+            _selectedColumn = indexPath.nvSpreadsheetColumn;
+        }
         
         NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                           delegate:self
