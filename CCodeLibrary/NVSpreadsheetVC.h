@@ -21,6 +21,7 @@
 - (void)spreadsheetDidSetCurrentList:(NSString *)file;
 - (void)spreadsheetDidDeleteCurrentList;
 - (void)spreadsheetDidCreateList;
+- (NSString *)propFieldDescriptionFilePathAtRow:(NSInteger)row;
 
 - (void)spreadsheetDidMapItForRow:(NSInteger)row
                            column:(NSInteger)column

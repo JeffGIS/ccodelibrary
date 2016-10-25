@@ -478,7 +478,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.nvSpreadsheetColumn == 0)
     {
+        NSString *filePath = [_delegate propFieldDescriptionFilePathAtRow:indexPath.nvSpreadsheetRow];
         
+        NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                        showFileAtPath:filePath];
+        
+        [nvwv showRealtorButton];
     }
     
     else
