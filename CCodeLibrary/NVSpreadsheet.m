@@ -1001,7 +1001,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             CGPoint point = [gesture locationInView:_lowerLeftCollectionView];
             NSIndexPath *indexPath = [_lowerLeftCollectionView indexPathForItemAtPoint:point];
             
-            if (indexPath)
+            if (indexPath && (indexPath.nvSpreadsheetRow < _dataSource.numActiveColumns))
             {
                 NVLeftColumnCell *cell = (NVLeftColumnCell *)[_lowerLeftCollectionView cellForItemAtIndexPath:indexPath];
                 _textField.backgroundColor = cell.backgroundColor;
@@ -1019,7 +1019,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             CGPoint point = [gesture locationInView:_upperRightCollectionView];
             NSIndexPath *indexPath = [_upperRightCollectionView indexPathForItemAtPoint:point];
             
-            if (indexPath)
+            if (indexPath && (indexPath.nvSpreadsheetColumn < _dataSource.numActiveColumns))
             {
                 NVTopRowCell *cell = (NVTopRowCell *)[_upperRightCollectionView cellForItemAtIndexPath:indexPath];
                 _textField.backgroundColor = cell.backgroundColor;

@@ -287,19 +287,24 @@
 - (NSInteger)numberOfRowsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
     if (_flipped)
-        return MAX(([_delegate numColumnsInSpreadsheet] + 1), 17);
+        return MAX((_delegate.numColumnsInSpreadsheet + 1), 17);
     
     else
-        return MAX(([_delegate numRowsInSpreadsheet] + 1), 17);
+        return MAX((_delegate.numRowsInSpreadsheet + 1), 17);
 }
 
 - (NSInteger)numberOfColumnsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
     if (_flipped)
-        return MAX(([_delegate numRowsInSpreadsheet] + 1), 17);
+        return MAX((_delegate.numRowsInSpreadsheet + 1), 17);
     
     else
-        return MAX(([_delegate numColumnsInSpreadsheet] + 1), 17);
+        return MAX((_delegate.numColumnsInSpreadsheet + 1), 17);
+}
+
+- (NSInteger)numActiveColumns
+{
+    return _delegate.numColumnsInSpreadsheet;
 }
 
 - (UICollectionViewCell *)spreadsheetView:(NVSpreadsheet *)spreadsheetView
@@ -468,6 +473,8 @@
                                                   blue:(250.0 / 255.0)
                                                  alpha:1.0];
         }
+        
+        gc.userInteractionEnabled = gc.textLabel.text.length;
     }
     
     return cell;
