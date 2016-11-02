@@ -73,6 +73,7 @@
                            type:(NSString *)type
                          status:(IntersectionStatus)status;
 
+- (int)getCountOfRamps:(int)type;
 
 - (BOOL)assignAllIntersectionTo:(int)user
                            type:(NSString *)type;

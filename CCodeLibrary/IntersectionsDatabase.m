@@ -1493,7 +1493,24 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     return count;
 }
 
-- (int)getCountOfRamps
+- (int)getCountOfRamps:(int)type
+{
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Ramps WHERE rampExists != 0 AND isComplete = %i",type];
+    sqlite3_stmt *statement = NULL;
+    int count = 0;
+    SQLOK(229,sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL),self.curbRampData.database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+        count = sqlite3_column_int(statement, 0);
+    
+    SQLOK(230,sqlite3_finalize(statement), self.curbRampData.database);
+    
+    [self close:opened];
+    return count;
+}
+
+- (int)getRampCounts
 {
     BOOL opened = [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Ramps"];
