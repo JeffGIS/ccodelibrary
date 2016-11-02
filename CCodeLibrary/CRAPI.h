@@ -37,6 +37,10 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic, copy) NSString *uploadDirectory;
 @property (nonatomic, copy) NSString *sharedOutputDirectory;
 @property (nonatomic, copy) NSString *organizationName;
+@property (nonatomic, copy) NSString *mailAddress;
+@property (nonatomic, copy) NSString *userName;
+@property (nonatomic, copy) NSString *eMail;
+@property int rampCredits;
 @property int deviceNumber;
 @property int maxDevices;
 
