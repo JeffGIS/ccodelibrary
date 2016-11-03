@@ -1997,7 +1997,6 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     BOOL forceReload = NO;
     int nIntersections = [self getCountOfIntersections];
-    int nRamps = [self getCountOfRamps];
     
     if (fileSize > 0 && !forceReload && nIntersections > 0 && [_curbRampData isCurrentVersion])
     {
