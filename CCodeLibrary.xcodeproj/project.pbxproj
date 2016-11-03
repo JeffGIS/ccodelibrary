@@ -59,6 +59,8 @@
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
 		6986AF841C7C119E0059DD1B /* NVDigitizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6986AF831C7C119E0059DD1B /* NVDigitizerView.m */; };
 		6986AF851C7CBD820059DD1B /* NVDigitizerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6986AF821C7C119E0059DD1B /* NVDigitizerView.h */; };
+		698C20C81DCB030B00F800C3 /* NVKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C20C71DCB030B00F800C3 /* NVKeyboard.m */; };
+		698C20C91DCB84DC00F800C3 /* NVKeyboard.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698C20C61DCB030B00F800C3 /* NVKeyboard.h */; };
 		698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698F987B1C10B96B009F2F01 /* YTPlayerView.m */; };
 		6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */ = {isa = PBXBuildFile; fileRef = 6992A8871BE0040C00FB53F0 /* NSData+Compression.m */; };
 		6992A8891BE00AB100FB53F0 /* NSData+Compression.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6992A8861BE0040C00FB53F0 /* NSData+Compression.h */; };
@@ -347,6 +349,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				698C20C91DCB84DC00F800C3 /* NVKeyboard.h in CopyFiles */,
 				69F482331DB7368E00E4BDB5 /* NVSpreadsheetVC.h in CopyFiles */,
 				69D277D31DA6E369002B1447 /* NVStreetSideController.h in CopyFiles */,
 				69E7FCA71D8129CD00171E44 /* NVPopoverSlider.h in CopyFiles */,
@@ -539,6 +542,8 @@
 		697B37701B94B7D60066978B /* NVTextDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextDrawing.m; sourceTree = "<group>"; };
 		6986AF821C7C119E0059DD1B /* NVDigitizerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDigitizerView.h; sourceTree = "<group>"; };
 		6986AF831C7C119E0059DD1B /* NVDigitizerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDigitizerView.m; sourceTree = "<group>"; };
+		698C20C61DCB030B00F800C3 /* NVKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVKeyboard.h; sourceTree = "<group>"; };
+		698C20C71DCB030B00F800C3 /* NVKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVKeyboard.m; sourceTree = "<group>"; };
 		698F987A1C10B96B009F2F01 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTPlayerView.h; path = ../YTPlayerView.h; sourceTree = "<group>"; };
 		698F987B1C10B96B009F2F01 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTPlayerView.m; path = ../YTPlayerView.m; sourceTree = "<group>"; };
 		6992A8861BE0040C00FB53F0 /* NSData+Compression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Compression.h"; sourceTree = "<group>"; };
@@ -1045,6 +1050,8 @@
 				A9E2130D1AFE4BFC005ECBBA /* NVImagePickerController.m */,
 				A9A7E35E1B75361800DC7F3D /* NVInventoryViewController.h */,
 				A9A7E35F1B75361800DC7F3D /* NVInventoryViewController.m */,
+				698C20C61DCB030B00F800C3 /* NVKeyboard.h */,
+				698C20C71DCB030B00F800C3 /* NVKeyboard.m */,
 				A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */,
 				A9E792801AEFA880005DA4BB /* NVLargeAlertView.m */,
 				A9E792821AEFE989005DA4BB /* NVLegendView.h */,
@@ -1592,6 +1599,7 @@
 				EBC01D141BED1C8C0004C751 /* ear404.c in Sources */,
 				69DFB6A51CD71987001E1200 /* NVCRISSignupView.m in Sources */,
 				69F482321DB7314200E4BDB5 /* NVSpreadsheetVC.m in Sources */,
+				698C20C81DCB030B00F800C3 /* NVKeyboard.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				699DD7391CEA057600C7A651 /* NVSynchronizeVC.m in Sources */,
 				EBC01D0F1BED1C8C0004C751 /* deltat.c in Sources */,
