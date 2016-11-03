@@ -902,7 +902,7 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
         mpint.lon = lon;
         //int nStreets = sqlite3_column_int(statement, 27);
         LPSTR streets = (LPSTR)sqlite3_column_text(statement, 29);
-        NSString *streetString = @"";
+        NSString *streetString = @"";
         if (streets)
             streetString = [NSString stringWithUTF8String:streets];
         mpint.name1 = [streetString stringByReplacingOccurrencesOfString:@"|" withString:@"\n"];
@@ -1997,7 +1997,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     BOOL forceReload = NO;
     int nIntersections = [self getCountOfIntersections];
-    int nRamps = [self getCountOfRamps];
+    int nRamps = [self getCountOfRamps:0];
     
     if (fileSize > 0 && !forceReload && nIntersections > 0 && [_curbRampData isCurrentVersion])
     {
