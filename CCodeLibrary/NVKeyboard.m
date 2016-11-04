@@ -4,6 +4,11 @@
 #import "NVKeyboard.h"
 #import "UserDefaults.h"
 
+#define BACKSPACE 21
+#define UPPERCASE_LEFT 32
+#define UPPERCASE_RIGHT 42
+#define DISMISS_KEYBOARD 51
+
 typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
 {
     NVKeyboardButtonTypeText,
@@ -36,6 +41,7 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
     button.backgroundColor = UIColor.lightGrayColor;
     button.imageView.contentMode = UIViewContentModeScaleAspectFit;
     button.titleLabel.font = [UIFont systemFontOfSize:24.0];
+    button.imageEdgeInsets = UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0);
     
     return button;
 }
@@ -59,6 +65,25 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
 {
     self.backgroundColor = UIColor.blackColor;
     [self setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    
+    switch (self.tag)
+    {
+        case BACKSPACE:
+            [self setImage:[(NVKeyboard *)self.superview whiteBackspace] forState:UIControlStateNormal];
+            break;
+        
+        case UPPERCASE_LEFT:
+        case UPPERCASE_RIGHT:
+            [self setImage:[(NVKeyboard *)self.superview whiteUpArrow] forState:UIControlStateNormal];
+            break;
+        
+        case DISMISS_KEYBOARD:
+            [self setImage:[(NVKeyboard *)self.superview whiteKeyboard] forState:UIControlStateNormal];
+            break;
+            
+        default:
+            break;
+    }
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches
@@ -70,7 +95,27 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
         self.backgroundColor = UIColor.whiteColor;
     
     else
+    {
         self.backgroundColor = UIColor.lightGrayColor;
+        
+        switch (self.tag)
+        {
+            case BACKSPACE:
+                [self setImage:[(NVKeyboard *)self.superview blackBackspace] forState:UIControlStateNormal];
+                break;
+            
+            case UPPERCASE_LEFT:
+            case UPPERCASE_RIGHT:
+                [self setImage:[(NVKeyboard *)self.superview blackUpArrow] forState:UIControlStateNormal];
+                break;
+            
+            case DISMISS_KEYBOARD:
+                [self setImage:[(NVKeyboard *)self.superview blackKeyboard] forState:UIControlStateNormal];
+                
+            default:
+                break;
+        }
+    }
     
     UITouch *touch = event.allTouches.anyObject;
     CGPoint loc = [touch locationInView:self.superview];
@@ -79,7 +124,7 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
     {
         switch (self.tag)
         {
-            case 51:
+            case DISMISS_KEYBOARD:
                 [(NVKeyboard *)self.superview hide];
                 break;
                 
@@ -99,6 +144,24 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
     {
         self.backgroundColor = UIColor.blackColor;
         [self setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        
+        switch (self.tag)
+        {
+            case BACKSPACE:
+                [self setImage:[(NVKeyboard *)self.superview whiteBackspace] forState:UIControlStateNormal];
+                break;
+            
+            case UPPERCASE_LEFT:
+            case UPPERCASE_RIGHT:
+                [self setImage:[(NVKeyboard *)self.superview whiteUpArrow] forState:UIControlStateNormal];
+                break;
+            
+            case DISMISS_KEYBOARD:
+                [self setImage:[(NVKeyboard *)self.superview whiteKeyboard] forState:UIControlStateNormal];
+                
+            default:
+                break;
+        }
     }
     
     else
@@ -109,7 +172,27 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
             self.backgroundColor = UIColor.whiteColor;
         
         else
+        {
             self.backgroundColor = UIColor.lightGrayColor;
+            
+            switch (self.tag)
+            {
+                case BACKSPACE:
+                    [self setImage:[(NVKeyboard *)self.superview blackBackspace] forState:UIControlStateNormal];
+                    break;
+                
+                case UPPERCASE_LEFT:
+                case UPPERCASE_RIGHT:
+                    [self setImage:[(NVKeyboard *)self.superview blackUpArrow] forState:UIControlStateNormal];
+                    break;
+                
+                case DISMISS_KEYBOARD:
+                    [self setImage:[(NVKeyboard *)self.superview blackKeyboard] forState:UIControlStateNormal];
+                    
+                default:
+                    break;
+            }
+        }
     }
 }
 
@@ -136,6 +219,24 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
     keyboard.translatesAutoresizingMaskIntoConstraints = NO;
     keyboard.backgroundColor = UserDefaults.defaults.appleBlue;
     keyboard.alpha = 0.0;
+    
+    keyboard.blackKeyboard = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"dismissKeyboard"
+                                                                                            ofType:@"png"]];
+    
+    keyboard.whiteKeyboard = [UserDefaults.defaults invertImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"dismissKeyboard"
+                                                                                                                               ofType:@"png"]]];
+    
+    keyboard.blackUpArrow = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"upArrow"
+                                                                                           ofType:@"png"]];
+    
+    keyboard.whiteUpArrow = [UserDefaults.defaults invertImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"upArrow"
+                                                                                                                              ofType:@"png"]]];
+    
+    keyboard.blackBackspace = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"backspace"
+                                                                                             ofType:@"png"]];
+    
+    keyboard.whiteBackspace = [UserDefaults.defaults invertImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"backspace"
+                                                                                                                                ofType:@"png"]]];
     
     [view addSubview:keyboard];
     [keyboard constrainHeightToConstant:348.0];
@@ -191,6 +292,8 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
     
     button = NVKeyboardButton.functionButton;
     button.tag = counter++;
+    [button setImage:keyboard.blackBackspace forState:UIControlStateNormal];
+    
     [keyboard addSubview:button];
     [button constrainHeightToConstant:height];
     [button constrainTopToAnchor:[keyboard viewWithTag:firstOfLastRow].bottomAnchor constant:spacing];
@@ -222,6 +325,7 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
     button = NVKeyboardButton.functionButton;
     button.tag = counter++;
     [button setTitle:@"return" forState:UIControlStateNormal];
+    
     [keyboard addSubview:button];
     [button constrainHeightToConstant:height];
     [button constrainTopToAnchor:[keyboard viewWithTag:firstOfLastRow].bottomAnchor constant:spacing];
@@ -234,6 +338,8 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
     
     button = NVKeyboardButton.functionButton;
     button.tag = counter++;
+    [button setImage:keyboard.blackUpArrow forState:UIControlStateNormal];
+    
     [keyboard addSubview:button];
     [button constrainHeightToConstant:height];
     [button constrainTopToAnchor:[keyboard viewWithTag:firstOfLastRow].bottomAnchor constant:spacing];
@@ -252,6 +358,8 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
     
     button = NVKeyboardButton.functionButton;
     button.tag = counter++;
+    [button setImage:keyboard.blackUpArrow forState:UIControlStateNormal];
+    
     [keyboard addSubview:button];
     [button constrainHeightToConstant:height];
     [button constrainTopToAnchor:[keyboard viewWithTag:firstOfLastRow].bottomAnchor constant:spacing];
@@ -290,11 +398,7 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
     
     button = NVKeyboardButton.functionButton;
     button.tag = counter++;
-    button.imageEdgeInsets = UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0);
-    
-    [button setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"dismissKeyboard"
-                                                                                    ofType:@"png"]]
-            forState:UIControlStateNormal];
+    [button setImage:keyboard.blackKeyboard forState:UIControlStateNormal];
     
     [keyboard addSubview:button];
     [button constrainHeightToConstant:height];

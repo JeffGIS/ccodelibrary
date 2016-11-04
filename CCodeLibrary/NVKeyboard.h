@@ -15,6 +15,10 @@
 
 @interface NVKeyboard : UIView
 
+@property (nonatomic) UIImage *blackKeyboard, *whiteKeyboard;
+@property (nonatomic) UIImage *blackUpArrow, *whiteUpArrow;
+@property (nonatomic) UIImage *blackBackspace, *whiteBackspace;
+
 + (instancetype)showKeyboardInView:(UIView *)view
                           delegate:(id)delegate;
 
