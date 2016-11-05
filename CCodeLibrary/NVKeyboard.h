@@ -23,5 +23,6 @@
                           delegate:(id)delegate;
 
 - (void)hide;
+- (void)switchCase;
 
 @end

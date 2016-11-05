@@ -124,6 +124,11 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
     {
         switch (self.tag)
         {
+            case UPPERCASE_LEFT:
+            case UPPERCASE_RIGHT:
+                [(NVKeyboard *)self.superview switchCase];
+                break;
+            
             case DISMISS_KEYBOARD:
                 [(NVKeyboard *)self.superview hide];
                 break;
@@ -201,6 +206,7 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
 @interface NVKeyboard ()
 
 @property (nonatomic, weak) id <NVKeyboardDelegate> delegate;
+@property BOOL isUpperCase;
 
 @end
 
@@ -218,6 +224,8 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
     NVKeyboard *keyboard = NVKeyboard.new;
     keyboard.translatesAutoresizingMaskIntoConstraints = NO;
     keyboard.backgroundColor = UserDefaults.defaults.appleBlue;
+    keyboard.delegate = delegate;
+    keyboard.isUpperCase = NO;
     keyboard.alpha = 0.0;
     
     keyboard.blackKeyboard = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"dismissKeyboard"
@@ -423,6 +431,26 @@ typedef NS_ENUM(NSInteger, NVKeyboardButtonType)
                      } completion:^(BOOL finished) {
                          [self removeFromSuperview];
                      }];
+}
+
+- (void)switchCase
+{
+    for (NVKeyboardButton *buttons in self.subviews)
+    {
+        if ([buttons isKindOfClass:NVKeyboardButton.class])
+        {
+            if (buttons.type == NVKeyboardButtonTypeText)
+            {
+                if (_isUpperCase)
+                    [buttons setTitle:buttons.currentTitle.lowercaseString forState:UIControlStateNormal];
+                
+                else
+                    [buttons setTitle:buttons.currentTitle.uppercaseString forState:UIControlStateNormal];
+            }
+        }
+    }
+    
+    _isUpperCase = !_isUpperCase;
 }
 
 @end
