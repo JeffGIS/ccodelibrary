@@ -1475,6 +1475,50 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
     return rtn;
 }
+- (int) autoMarkRampsPaid:(int) maxToPay
+{
+    int numMarked = 0;
+    if (maxToPay > 0)
+    {
+        struct {int intID, rampNum;}rampKey;
+        BOOL opened = [self open];
+        NSString *query = [NSString stringWithFormat:@"SELECT intID,rampNum FROM Ramps WHERE rampExists != 0 AND isComplete = 1 ORDER BY timeComplete"];
+        sqlite3_stmt *statement = NULL;
+        int count = 0;
+        SQLOK(227,sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL),self.curbRampData.database);
+        NSString *tempPath = NSTemporaryDirectory();
+        NSString *tempFile = [tempPath stringByAppendingPathComponent:@"tempRampFile.bin"];
+        
+        FILE *Fid = fopen(tempFile.UTF8String,"wb");
+        
+        if (Fid != NULL)
+        {
+            while (sqlite3_step(statement) == SQLITE_ROW && maxToPay--)
+            {
+                rampKey.intID = sqlite3_column_int(statement, 0);
+                rampKey.rampNum = sqlite3_column_int(statement, 1);
+                BigWrite(Fid, &rampKey,sizeof(rampKey), -1);
+            }
+            SQLOK(230,sqlite3_finalize(statement), self.curbRampData.database);
+            fclose(Fid);
+            Fid = fopen(tempFile.UTF8String,"rb");
+
+            while (BigRead (Fid,&rampKey,sizeof(rampKey)) == sizeof(rampKey))
+            {
+                query = [NSString stringWithFormat:@"UPDATE ramps SET isComplete = 2 WHERE intID = %i AND rampNum = %i",rampKey.intID,rampKey.rampNum];
+                int rtn = [self.curbRampData executeCmd:query.UTF8String
+                                       sendToServer:YES
+                                               from:1659];
+                numMarked++;
+            }
+            fclose(Fid);
+            [NSFileManager.defaultManager removeItemAtPath:tempFile
+                                                     error:nil];
+        }
+        [self close:opened];
+    }
+    return numMarked;
+}
 
 - (int)getCountOfIntersections
 {
