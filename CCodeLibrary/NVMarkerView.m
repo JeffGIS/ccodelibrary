@@ -36,6 +36,17 @@
     
     return nvmv;
 }
+- (id)init
+{
+    self = [super init];
+    
+    return self;
+}
+
+- (void)dealloc
+{
+    return;
+}
 
 - (void)drawRect:(CGRect)rect
 {
@@ -93,7 +104,7 @@
                             switch (_mapType)
                         {
                             case MMMapTypePrelim:
-                                if (_colorsArray && info.assignedToPrelim <= _colorsArray.count)
+                                if (_colorsArray && info.assignedToPrelim < _colorsArray.count)
                                 {
                                     int i = info.assignedToPrelim;
                                     UIColor *color = _colorsArray[i];
@@ -107,7 +118,7 @@
                                 break;
                                 
                             case MMMapTypeDetail:
-                                if (_colorsArray && info.assignedToDetail <= _colorsArray.count)
+                                if (_colorsArray && info.assignedToDetail < _colorsArray.count)
                                 {
                                     int i = info.assignedToDetail;
                                     UIColor *color = _colorsArray[i];

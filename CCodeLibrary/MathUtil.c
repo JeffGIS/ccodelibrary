@@ -10,6 +10,19 @@
 #include <stdio.h>
 #include <limits.h>
 
+double AZMToHeading (double azm)
+{
+    double deg = azm * RADtoDEG;
+    
+    deg = 360 - deg;
+    deg += 90;
+    if (deg < 0)
+        deg += 360;
+    if (deg > 360)
+        deg -= 360;
+    return deg;
+}
+
 bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol)
 {
     if (fabs(p1->x - p2->x) >tol || fabs(p1->y - p2->y) >tol)
@@ -90,6 +103,15 @@ DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction)
     {
         return LatLong;
     }
+}
+double AZMLatLon (LLPOINT pt1,LLPOINT pt2)
+{
+    double azm;
+    DPOINT pixPt1, pixPt2;
+    LatLongToPixelXYd (pt1.lat,pt1.lon,21,&pixPt1.x,&pixPt1.y);
+    LatLongToPixelXYd (pt2.lat,pt2.lon,21,&pixPt2.x,&pixPt2.y);
+    azm = getazd(&pixPt1, &pixPt2);
+    return azm;
 }
 
 bool findClosestPoint (LPDPOINT pPoint,LPDPOINT pNearPt,double *mind,LPDPOINT p1)

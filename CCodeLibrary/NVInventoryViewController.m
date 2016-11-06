@@ -1352,10 +1352,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         TRANS2(location.x, location.y, &x, &y, _pTranBMPToW);
         PixelXYToLatLongd(x, y, 21, &target.lat, &target.lon);
         
-        if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:showStreetViewAtCoordinate:)])
+        if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:showStreetViewAtCoordinate:toCoordinate:)])
         {
             [_delegate inventoryViewController:self
-                    showStreetViewAtCoordinate:CLLocationCoordinate2DMake(target.lat, target.lon)];
+                    showStreetViewAtCoordinate:CLLocationCoordinate2DMake(_currentIntersection.lat, _currentIntersection.lon) toCoordinate:CLLocationCoordinate2DMake(target.lat, target.lon)];
         }
     }
 }

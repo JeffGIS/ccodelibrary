@@ -39,6 +39,9 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 - (void)inventoryViewController:(NVInventoryViewController *)controller
      showStreetViewAtCoordinate:(CLLocationCoordinate2D)coordinate;
 
+- (void)inventoryViewController:(NVInventoryViewController *)controller
+     showStreetViewAtCoordinate:(CLLocationCoordinate2D)coordinate toCoordinate:(CLLocationCoordinate2D)toCoordinate;
+
 @end
 
 @interface NVInventoryViewController : UIViewController <NVAlertViewDelegate,CLLocationManagerDelegate,NVTileCompilerDelegate>
