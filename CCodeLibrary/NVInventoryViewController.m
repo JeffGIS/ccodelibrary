@@ -202,6 +202,7 @@
         if (CLLocationManager.headingAvailable)
             [_locationManager startUpdatingHeading];
     }
+    [self setTran];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -224,7 +225,18 @@
         _locationManager = nil;
     }
 }
+- (void) setTran
+{
+    if (_pTranBMPToW)
+        free(_pTranBMPToW);
+    
+    if (_pTranWToBMP)
+        free(_pTranWToBMP);
+    
+    _pTranBMPToW = LoadTranFromCPT(_pathToBPWFile.UTF8String, 1);
+    _pTranWToBMP = LoadTranFromCPT(_pathToBPWFile.UTF8String, 2);
 
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -255,6 +267,9 @@
 #pragma unused(nvtc)
 }
 
+- (void) setTransitioningDelegate:(id<UIViewControllerTransitioningDelegate>)transitioningDelegate{
+    [self setTran];
+}
 - (void)tileCompilerReturnedImagePath:(NSString *)imagePath
                               cptPath:(NSString *)cptPath
                            hideTarget:(BOOL)hideTarget
@@ -278,14 +293,6 @@
     [CRAPI.sharedInstance setIntersectionRotAndQuadDeviders:intAzms
                                                      forInt:_currentIntersection];
     
-    if (_pTranBMPToW)
-        free(_pTranBMPToW);
-    
-    if (_pTranWToBMP)
-        free(_pTranWToBMP);
-    
-    _pTranBMPToW = LoadTranFromCPT(_pathToBPWFile.UTF8String, 1);
-    _pTranWToBMP = LoadTranFromCPT(_pathToBPWFile.UTF8String, 2);
     _backgroundImage.image = backImage;
     windowBounds = _backgroundImage.frame;
     imageSize = _backgroundImage.intrinsicContentSize;
@@ -304,7 +311,7 @@
     IBOUNDS bounds = {0};
     int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     double x = imageSize.width, y = imageSize.height;
-    
+    [self setTran];
     TRANS2(0.0, 0.0, &x, &y, _pTranBMPToW);
     x1 = (int)x, y1 = (int)y;
     
@@ -452,15 +459,7 @@
 
 - (void)setupButtons
 {
-    if (_pTranBMPToW)
-        free(_pTranBMPToW);
-    
-    if (_pTranWToBMP)
-        free(_pTranWToBMP);
-    
-    _pTranBMPToW = LoadTranFromCPT(_pathToBPWFile.UTF8String, 1);
-    _pTranWToBMP = LoadTranFromCPT(_pathToBPWFile.UTF8String, 2);
-    
+    [self setTran];
     MPRamp *ramp = nil;
     
     [self setXWalkButton:_xWalkA
@@ -1371,15 +1370,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     if (_updateOption == NVUpdateOptionEdit || _updateOption == NVUpdateOptionNone)
         return;
     
-    if (_pTranBMPToW)
-        free(_pTranBMPToW);
-    
-    if (_pTranWToBMP)
-        free(_pTranWToBMP);
-    
-    _pTranBMPToW = LoadTranFromCPT(_pathToBPWFile.UTF8String, 1);
-    _pTranWToBMP = LoadTranFromCPT(_pathToBPWFile.UTF8String, 2);
-    
+    [self setTran];
     windowBounds = _backgroundImage.frame;
     imageSize = _backgroundImage.intrinsicContentSize;
     
