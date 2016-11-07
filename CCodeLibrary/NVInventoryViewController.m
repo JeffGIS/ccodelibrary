@@ -33,7 +33,7 @@
 @property (nonatomic) RampType currentRampType;
 @property (nonatomic) UILabel *headingLabel, *intersectionLabel, *gridScaleLabel;
 @property (nonatomic) CGPoint newTarget;
-@property (nonatomic) CGFloat targetSize;
+@property (nonatomic) double targetSize;
 @property (nonatomic) MPIntersection *currentIntersection;
 
 @end
@@ -82,7 +82,7 @@
     _currentRampType = [UserDefaults.defaults integerForKey:@"CurrentRampType"];
     _targetSize = 160.0;
     
-    CGFloat buttonHeight = 70.0, margin = 20.0;
+    double buttonHeight = 70.0, margin = 20.0;
     
     _backgroundImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 98.0, self.view.frame.size.width,
                                                                      self.view.frame.size.width)];
@@ -173,7 +173,7 @@
     _intersectionLabel.text = [NSString stringWithFormat:@"Intersection %i", _currentIntersection.intID];
     [self setupLabel:_intersectionLabel];
     
-    CGFloat size = 52.0;
+    double size = 52.0;
     _refreshButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _refreshButton.frame = CGRectMake((CGRectGetMaxX(_backgroundImage.frame) - size), 0.0, size, size);
     
@@ -331,7 +331,7 @@
         LatLongToPixelXY(points.latitude, points.longitude, 21, &pixelx, &pixely);
         TRANS2(pixelx, pixely, &bmpx, &bmpy, _pTranWToBMP);
         bmpx /= _xFactor, bmpy /= _yFactor;
-        CGFloat size = 18.0;
+        double size = 18.0;
         
         UIView *intPointView = UIView.new;
         intPointView.tag = 777;
@@ -386,8 +386,8 @@
                         y:(int *)y
 {
     CGRect rect = _backgroundImage.frame;
-    CGFloat xfactor = (rect.size.width / 640.0);
-    CGFloat yfactor = (rect.size.height / 640.0);
+    double xfactor = (rect.size.width / 640.0);
+    double yfactor = (rect.size.height / 640.0);
     *x = rect.origin.x + (*x * xfactor);
     *y = rect.origin.y + (*y * yfactor);
 }
@@ -613,9 +613,9 @@
 
 - (void)setupBottomButtons
 {
-    CGFloat height = 84.0, width = 132.0, top = 874.0;
-    CGFloat outBorder = 16.0;
-    CGFloat inBorder = ((768.0 - ((width * 5.0) + (outBorder * 2.0))) / 4.0);
+    double height = 84.0, width = 132.0, top = 874.0;
+    double outBorder = 16.0;
+    double inBorder = ((768.0 - ((width * 5.0) + (outBorder * 2.0))) / 4.0);
     
     _addRampButton = [[UIButton alloc] initWithFrame:
                       CGRectMake(outBorder, top, width, height)];
@@ -661,7 +661,7 @@
 - (void)setupButton:(UIButton *)button
            selector:(SEL)selector
               title:(NSString *)title
-           fontSize:(CGFloat)fontSize
+           fontSize:(double)fontSize
 {
     button.backgroundColor = UserDefaults.defaults.appleBlue;
     button.layer.cornerRadius = 10.0;
@@ -1147,7 +1147,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     int savex = ramp.lev21x;
                     int savey = ramp.lev21y;
                     int savear = ramp.adjustedRot;
-                    CGFloat saveah = ramp.approximateHeading;
+                    double saveah = ramp.approximateHeading;
                     ramp.lev21x = switchRamp.lev21x;
                     ramp.lev21y = switchRamp.lev21y;
                     ramp.adjustedRot = switchRamp.adjustedRot;
@@ -1182,7 +1182,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     int savex = ramp.lev21x;
                     int savey = ramp.lev21y;
                     int savear = ramp.adjustedRot;
-                    CGFloat saveah = ramp.approximateHeading;
+                    double saveah = ramp.approximateHeading;
                     ramp.lev21x = switchRamp.lev21x;
                     ramp.lev21y = switchRamp.lev21y;
                     ramp.adjustedRot = switchRamp.adjustedRot;
@@ -1221,7 +1221,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     int savex = ramp.lev21x;
                     int savey = ramp.lev21y;
                     int savear = ramp.adjustedRot;
-                    CGFloat saveah = ramp.approximateHeading;
+                    double saveah = ramp.approximateHeading;
                     ramp.lev21x = switchRamp.lev21x;
                     ramp.lev21y = switchRamp.lev21y;
                     ramp.adjustedRot = switchRamp.adjustedRot;
@@ -1288,8 +1288,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         UITouch *touch = [[event touchesForView:button] anyObject];
         CGPoint previousLocation = [touch previousLocationInView:button];
         CGPoint location = [touch locationInView:button];
-        CGFloat deltaX = (location.x - previousLocation.x);
-        CGFloat deltaY = (location.y - previousLocation.y);
+        double deltaX = (location.x - previousLocation.x);
+        double deltaY = (location.y - previousLocation.y);
         
         CGPoint newCenter = CGPointMake(button.center.x + deltaX,
                                         button.center.y + deltaY);
@@ -1345,8 +1345,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     if (gesture.state == UIGestureRecognizerStateBegan)
     {
-        CGFloat x = gesture.view.frame.size.width;
-        CGFloat y = gesture.view.frame.size.height;
+        double x = gesture.view.frame.size.width;
+        double y = gesture.view.frame.size.height;
         
         LLPOINT target = {0};
         TRANS2(location.x, location.y, &x, &y, _pTranBMPToW);
@@ -1391,8 +1391,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     x = windowBounds.size.width;
     y = windowBounds.size.height;
-    _xFactor = (CGFloat)imageSize.width / (CGFloat)windowBounds.size.width;
-    _yFactor = (CGFloat)imageSize.height / (CGFloat)windowBounds.size.height;
+    _xFactor = (double)imageSize.width / (double)windowBounds.size.width;
+    _yFactor = (double)imageSize.height / (double)windowBounds.size.height;
     _xOffset = (windowBounds.origin.x * _xFactor);
     _yOffset = (windowBounds.origin.y * _yFactor);
     
@@ -1471,8 +1471,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                         MPRamp *leftRamp = _currentIntersection.ramps[[self getLeftRampIDFromRampID:rampID]];
                         MPRamp *rightRamp = _currentIntersection.ramps[[self getRightRampIDFromRampID:rampID]];
                         
-                        CGFloat d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y, ramp.lev21x, ramp.lev21y);
-                        CGFloat az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y, ramp.lev21x, ramp.lev21y);
+                        double d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y, ramp.lev21x, ramp.lev21y);
+                        double az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y, ramp.lev21x, ramp.lev21y);
                         dvec2 pt = {_currentIntersection.lev21x, _currentIntersection.lev21y};
                         dvec2 np = dnewpt(&pt, (az - (HALFPI / 6)), d);
                         leftRamp.lev21x = np.x;
@@ -1506,7 +1506,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             {
                 MPRamp *ramp = _currentIntersection.ramps[rampID];
                 DPOINT pt = {0.0,0.0}, midPt = {0.0, 0.0};
-                CGFloat az = 0.0;
+                double az = 0.0;
                 ramp.rampType = _currentRampType;
                 ramp.rampExists = YES;
                 ramp.isComplete = NO;
@@ -1530,7 +1530,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     int savex = ramp.lev21x;
                     int savey = ramp.lev21y;
                     int savear = ramp.adjustedRot;
-                    CGFloat saveah = ramp.approximateHeading;
+                    double saveah = ramp.approximateHeading;
                     RampType savert = ramp.rampType;
                     ramp.lev21x = switchRamp.lev21x;
                     ramp.lev21y = switchRamp.lev21y;
@@ -1685,8 +1685,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     sideRamp.rampExists = YES;
     sideRamp.isComplete = NO;
-    CGFloat d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
-    CGFloat az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
+    double d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
+    double az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
     dvec2 pt = {_currentIntersection.lev21x, _currentIntersection.lev21y};
     dvec2 np = dnewpt(&pt, (az - (HALFPI / 6)), d);
     sideRamp.lev21x = np.x;
