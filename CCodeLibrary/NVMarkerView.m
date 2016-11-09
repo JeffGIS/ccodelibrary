@@ -211,8 +211,14 @@
                         {
                             if (info.status == OriginalSurveyComplete)
                             {
-                                numComplete++;
-                                CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+                                numComplete += info.nramps;
+                                if (info.nramps > info.nPaid)
+                                {
+                                    CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+                                    notAssigned += info.nramps - info.nPaid;
+                                }
+                                else
+                                    CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
                             }
                             else
                             {
