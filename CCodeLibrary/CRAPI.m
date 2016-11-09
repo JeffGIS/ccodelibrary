@@ -33,7 +33,7 @@
         _allowedZooms[1] = 20;
         _allowedZooms[2] = 19;
         _maxDevices = 100;
-        _controlledInterface = NO;
+        _controlledInterface = YES;
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.png", _documentsDirectory];
         _crimeMode = PINMAP;

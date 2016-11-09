@@ -1056,6 +1056,31 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
     return dataArray;
 }
 
+- (int) getNumRampsForInt:(int)intID
+                  numPaid:(int*) pnPaid
+{
+    int nRamps = 0;
+    int numPaid = 0;
+    NSString *query = [NSString stringWithFormat:
+                       @"SELECT isComplete, rampType FROM ramps WHERE intID = %i and rampExists != 0",intID];
+    sqlite3_stmt *statement = NULL;
+    SQLOK(213,sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), self.curbRampData.database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int isComplete = sqlite3_column_int(statement, 0);
+        int rampType = sqlite3_column_int(statement, 1);
+        nRamps++;
+        if (isComplete == 2)
+            numPaid++;
+    }
+    
+    SQLOK(214,sqlite3_finalize(statement), self.curbRampData.database);
+    
+    *pnPaid = numPaid;
+    return nRamps;
+}
+
 - (NSMutableArray *)getIntersectionPointsFromDatabaseinBounds:(IBOUNDS)bounds
 {
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
@@ -1078,7 +1103,8 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
         IntersectionStatus status = sqlite3_column_int(statement, 3);
         int intX = sqlite3_column_int(statement, 4);
         int intY = sqlite3_column_int(statement, 5);
-        int nRamps = 0;
+        int nPaid;
+        int nRamps = [self getNumRampsForInt:intID numPaid:&nPaid];
         
         for (int i = 6; i < 18; i++)
         {
@@ -1098,6 +1124,7 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
             intpt.assignedToDetail = assignedToDetail;
         intpt.status = status;
         intpt.nramps = nRamps;
+        intpt.nPaid = nPaid;
         
         if (status)
             status++;

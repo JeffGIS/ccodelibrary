@@ -50,6 +50,9 @@
 
 - (void)drawRect:(CGRect)rect
 {
+#define TYPECIRCLE  1
+#define TYPERECTANGLE 2
+#define TYPETRIANGLE 3
     CGRect pointRect = CGRectZero;
     int numComplete = 0, numComplex = 0, totRamps = 0, totIntersections = 0, notAssigned = 0;
     int module = CRAPI.sharedInstance.currentModule;
@@ -78,6 +81,7 @@
         
         for (IntersectionPoint *info in pointsArray)
         {
+            int type = TYPECIRCLE;
             CLLocationCoordinate2D latlon = {0};
             latlon.latitude = info.latitude;
             latlon.longitude = info.longitude;
@@ -203,8 +207,26 @@
                                 break;
                         }
                             break;
+                        case MMLMFromRetrieveData:
+                        {
+                            if (info.status == OriginalSurveyComplete)
+                            {
+                                numComplete++;
+                                CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+                            }
+                            else
+                            {
+                                CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
+                            }
+                            if (info.status == PreliminarySurveyComplete)
+                            {
+                                type = TYPERECTANGLE;
+                                if (!info.nramps)
+                                    type = TYPETRIANGLE;
+                            }
+
+                        }
                             
-                        default:
                             break;
                     }
                         break;
@@ -270,6 +292,9 @@
                             break;
                             
                         case PreliminarySurveyComplete:
+                            type = TYPERECTANGLE;
+                            if (!info.nramps)
+                                type = TYPETRIANGLE;
                             if (info.assignedToPrelim == CRAPI.sharedInstance.currentiPadWithinManager)
                                 CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
                             else
@@ -306,8 +331,31 @@
                 
                 pointRect = CGRectMake(pt.x - (size / 2.0), pt.y - (size / 2.0), size, size);
                 CGContextSetLineWidth(context, (size / 12.0));
-                CGContextFillEllipseInRect(context, pointRect);
-                CGContextStrokeEllipseInRect(context, pointRect);
+                if (type == TYPERECTANGLE)
+                {
+                    CGContextFillRect(context, pointRect);
+                    CGContextStrokeRect(context, pointRect);
+                }
+                else if (type == TYPETRIANGLE)
+                {
+                    CGPoint points[3];
+                    points[0].x = pointRect.origin.x;
+                    points[0].y = pointRect.origin.y + pointRect.size.height;
+                    points[1].x = pointRect.origin.x + pointRect.size.width/2;
+                    points[1].y = pointRect.origin.y;
+                    points[2].x = pointRect.origin.x + pointRect.size.width;
+                    points[2].y = pointRect.origin.y + pointRect.size.height;
+                    CGContextBeginPath(context);
+                    CGContextAddLines(context, points, 3);
+                    CGContextClosePath(context);
+                    CGContextFillPath(context);
+                    CGContextStrokePath(context);
+                }
+                else
+                {
+                    CGContextFillEllipseInRect(context, pointRect);
+                    CGContextStrokeEllipseInRect(context, pointRect);
+                }
                 CGContextFillPath(context);
             }
         }

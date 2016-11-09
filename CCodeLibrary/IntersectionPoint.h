@@ -23,6 +23,7 @@ typedef NS_ENUM(NSInteger, IntersectionStatus)
 @property short assignedToDetail;
 @property IntersectionStatus status;
 @property int nramps;
+@property int nPaid;
 @property double latitude;
 @property double longitude;
 @property int zoomLevel;
