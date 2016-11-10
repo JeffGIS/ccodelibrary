@@ -1062,7 +1062,7 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
     int nRamps = 0;
     int numPaid = 0;
     NSString *query = [NSString stringWithFormat:
-                       @"SELECT isComplete, rampType FROM ramps WHERE intID = %i and rampExists != 0",intID];
+                       @"SELECT isComplete, rampType, rampNum FROM ramps WHERE intID = %i and rampExists != 0",intID];
     sqlite3_stmt *statement = NULL;
     SQLOK(213,sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), self.curbRampData.database);
     
@@ -1070,7 +1070,9 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
     {
         int isComplete = sqlite3_column_int(statement, 0);
         int rampType = sqlite3_column_int(statement, 1);
-        nRamps++;
+        int rampNum = sqlite3_column_int(statement, 2);
+        if (rampType != RampTypeCombPerpWalk && rampType != RampTypeCombPerpNonWalk)
+            nRamps++;
         if (isComplete == 2)
             numPaid++;
     }
@@ -1105,12 +1107,6 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
         int intY = sqlite3_column_int(statement, 5);
         int nPaid;
         int nRamps = [self getNumRampsForInt:intID numPaid:&nPaid];
-        
-        for (int i = 6; i < 18; i++)
-        {
-            if (sqlite3_column_int(statement, i) != 0)
-                nRamps++;
-        }
         
         double lat = 0.0;
         double lon = 0.0;
@@ -1268,6 +1264,9 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
         intpt.longitude = lon;
         intpt.dist = LDIST(intX, intY, pt.x, pt.y);
         intpt.status = status;
+        int nPaid;
+        intpt.nramps = [self getNumRampsForInt:intID numPaid:&nPaid];
+        intpt.nPaid = nPaid;
         [dataArray addObject:intpt];
     }
     
@@ -1502,6 +1501,44 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
     return rtn;
 }
+
+- (int) markRampsAtIntersectionPaid:(int) intID maxToPay:(int) maxPay
+{
+    int nPaid = 0;
+    BOOL opened = [self open];
+    NSMutableString * updateQuery = [NSMutableString stringWithFormat:@"UPDATE ramps SET isComplete = 2 WHERE intID = %i AND rampNum IN (",intID];
+    
+    NSString *query = [NSString stringWithFormat:
+                       @"SELECT isComplete, rampType, rampNum FROM ramps WHERE intID = %i and rampExists != 0",intID];
+    sqlite3_stmt *statement = NULL;
+    SQLOK(213,sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), self.curbRampData.database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int isComplete = sqlite3_column_int(statement, 0);
+        int rampType = sqlite3_column_int(statement, 1);
+        int rampNum = sqlite3_column_int(statement, 2);
+        if (maxPay && rampType != RampTypeCombPerpWalk && rampType != RampTypeCombPerpNonWalk && isComplete == 1)
+        {
+            if (nPaid)
+                [updateQuery appendString:@","];
+            [updateQuery appendFormat:@"%i",rampNum];
+            nPaid++;
+            maxPay--;
+        }
+    }
+    [updateQuery appendString:@")"];
+    
+    SQLOK(214,sqlite3_finalize(statement), self.curbRampData.database);
+    
+    int rtn = [self.curbRampData executeCmd:updateQuery.UTF8String
+                               sendToServer:YES
+                                       from:1659];
+    [self close:opened];
+    
+    return nPaid;
+}
+
 - (int) autoMarkRampsPaid:(int) maxToPay
 {
     int numMarked = 0;

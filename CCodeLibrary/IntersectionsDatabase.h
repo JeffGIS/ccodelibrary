@@ -122,5 +122,6 @@
 - (void)deleteIntersection:(int)intID;
 - (int)incrementLastDataFileNum;
 - (int) autoMarkRampsPaid:(int) maxToPay;
+- (int) markRampsAtIntersectionPaid:(int) intID maxToPay:(int) maxPay;
 
 @end

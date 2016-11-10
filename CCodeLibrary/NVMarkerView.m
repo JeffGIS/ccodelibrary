@@ -54,7 +54,7 @@
 #define TYPERECTANGLE 2
 #define TYPETRIANGLE 3
     CGRect pointRect = CGRectZero;
-    int numComplete = 0, numComplex = 0, totRamps = 0, totIntersections = 0, notAssigned = 0;
+    int numComplete = 0, numComplex = 0, totRamps = 0, totIntersections = 0, notAssigned = 0, noRamps = 0;
     int module = CRAPI.sharedInstance.currentModule;
     NSMutableArray *totPeriPad = NSMutableArray.new;
     CGFloat zoom = [_delegate currentZoom];
@@ -211,11 +211,11 @@
                         {
                             if (info.status == OriginalSurveyComplete)
                             {
-                                numComplete += info.nramps;
+                                numComplete += info.nPaid;
                                 if (info.nramps > info.nPaid)
                                 {
                                     CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
-                                    notAssigned += info.nramps - info.nPaid;
+                                    numComplex += info.nramps - info.nPaid;
                                 }
                                 else
                                     CGContextSetFillColorWithColor(context, UserDefaults.defaults.darkGreen.CGColor);
@@ -223,12 +223,16 @@
                             else
                             {
                                 CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
+                                notAssigned += info.nramps;
                             }
                             if (info.status == PreliminarySurveyComplete)
                             {
                                 type = TYPERECTANGLE;
                                 if (!info.nramps)
-                                    type = TYPETRIANGLE;
+                                {
+                                    CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
+                                    noRamps++;
+                                }
                             }
 
                         }
@@ -378,6 +382,7 @@
         [_delegate setupProgressLabelTextForTotalIntersections:(int)totIntersections
                                                      completed:(int)numComplete
                                                        complex:numComplex
+                                                intWithNoRamps:(int)noRamps
                                                       numRamps:totRamps
                                                    notAssigned:notAssigned
                                                     totPeriPad:totPeriPad];

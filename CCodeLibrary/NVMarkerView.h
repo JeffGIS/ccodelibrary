@@ -11,6 +11,7 @@
 - (void)setupProgressLabelTextForTotalIntersections:(int)totalIntersections
                                           completed:(int)completed
                                             complex:(int)numComplex
+                                     intWithNoRamps:(int)noRamps
                                            numRamps:(int)numRamps
                                         notAssigned:(int)notAssigned
                                          totPeriPad:(NSArray *)totPeriPad;
