@@ -153,11 +153,8 @@
     if (textAfterPipe(_buttonTextArray[buttonIndex]).integerValue > 0)
         buttonIndex = textAfterPipe(_buttonTextArray[buttonIndex]).integerValue;
     
-    if (_delegate)
-    {
-        [_delegate alertView:self
-         didTapButtonAtIndex:buttonIndex];
-    }
+    [_delegate alertView:self
+     didTapButtonAtIndex:buttonIndex];
 }
 
 - (void)hideLargeAlertView:(BOOL)animated
