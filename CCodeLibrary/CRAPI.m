@@ -9,6 +9,7 @@
 #import "NVAlertView.h"
 #import "UIApplication+VersionBuild.h"
 #import "ManagePlacesDatabase.h"
+#import "SharedDefaults.h"
 
 @interface CRAPI () <NVAlertViewDelegate>
 
@@ -42,9 +43,9 @@
         _deviceLists = NSMutableDictionary.new;
         _assignediPadsArray = NSMutableArray.new;
         
-        _uploadPix = [UserDefaults.defaults boolForKey:@"UploadPix"];
-        _downloadData = [UserDefaults.defaults boolForKey:@"DownloadData"];
-        _downloadPix = [UserDefaults.defaults boolForKey:@"DownloadPix"];
+        _uploadPix = [SharedDefaults.defaults boolForKey:@"UploadPix"];
+        _downloadData = [SharedDefaults.defaults boolForKey:@"DownloadData"];
+        _downloadPix = [SharedDefaults.defaults boolForKey:@"DownloadPix"];
         _dataset = 0;
     }
     

@@ -12,6 +12,7 @@
 #import "NVPopoverTableView.h"
 #import "CityOrOrganizationData.h"
 #import "NVEmailFileList.h"
+#import "SharedDefaults.h"
 
 #define FTP_CATCHUP_DELAY 0.5
 #define UPLOAD_STATUS_VERSION 1
@@ -64,9 +65,6 @@
         CRAPI.sharedInstance.currentModule == DETAIL_MODULE)
     {
         CRAPI.sharedInstance.downloadPix = NO;
-        
-        [UserDefaults.defaults saveBool:NO
-                                 forKey:@"DownloadPix"];
     }
     
     _titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -1501,8 +1499,8 @@ Done:
 
 - (void)pixUpSwitchTapped:(UISwitch *)aSwitch
 {
-    [UserDefaults.defaults saveBool:aSwitch.on
-                             forKey:@"UploadPix"];
+    [SharedDefaults.defaults saveBool:aSwitch.on
+                               forKey:@"UploadPix"];
     
     CRAPI.sharedInstance.uploadPix = aSwitch.on;
     if (!_syncButton.enabled && CRAPI.sharedInstance.uploadPix)
@@ -1511,8 +1509,8 @@ Done:
 
 - (void)dataDownSwitchTapped:(UISwitch *)aSwitch
 {
-    [UserDefaults.defaults saveBool:aSwitch.on
-                             forKey:@"DownloadData"];
+    [SharedDefaults.defaults saveBool:aSwitch.on
+                               forKey:@"DownloadData"];
     
     CRAPI.sharedInstance.downloadData = aSwitch.on;
     if (!_syncButton.enabled && CRAPI.sharedInstance.downloadData)
@@ -1521,8 +1519,8 @@ Done:
 
 - (void)pixDownSwitchTapped:(UISwitch *)aSwitch
 {
-    [UserDefaults.defaults saveBool:aSwitch.on
-                             forKey:@"DownloadPix"];
+    [SharedDefaults.defaults saveBool:aSwitch.on
+                               forKey:@"DownloadPix"];
     
     CRAPI.sharedInstance.downloadPix = aSwitch.on;
     if (!_syncButton.enabled && CRAPI.sharedInstance.downloadPix)
