@@ -70,6 +70,11 @@ typedef enum {
     NVButtonTypeAPS,
 } NVButtonType;
 
+typedef enum {
+    DetectableWarningShapeRectangular=1,
+    DetectableWarningShapeRadial=2,
+} DetectableWarningShape;
+
 typedef struct CrackWidth {
     float rampCrackWidth;
     float upperLandingCrackWidth;
@@ -102,6 +107,8 @@ typedef struct RampStruct {
     CrackWidth crackWidth;
     int detectableWarningDepth;
     float domeSpacing, spaceBetweenDomes, domeBaseWidth, domeCapWidth;//these are for detectable warnings
+    DetectableWarningShape dwShape;//these are for detectable warnings
+    int dwMinOffset, dwMaxOffset;//these are for detectable warnings
     int streetLandingDepth, leftXWalkSideWidth, rightXWalkSideWidth;//these are for diagonal ramp type
     int rampWidth, rampDepth;
     float rampSlopeFront;

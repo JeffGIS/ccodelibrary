@@ -134,6 +134,9 @@
     another.curbCutDistance = self.curbCutDistance;
     another.bumpWidth = self.bumpWidth;
     another.bumpHeight = self.bumpHeight;
+    another.dwShape = self.dwShape;
+    another.dwMaxOffset = self.dwMaxOffset;
+    another.dwMinOffset = self.dwMinOffset;
     return another;
 }
 
@@ -184,7 +187,6 @@
     if (oldRamp.PEDButtonHeight != self.PEDButtonHeight) goto RtnFalse;
     if (oldRamp.SteepTopOfCurb != self.SteepTopOfCurb) goto RtnFalse;
     if (oldRamp.PedRampLip != self.PedRampLip) goto RtnFalse;
-
     if (oldRamp.PEDSignalType !=  self.PEDSignalType) goto RtnFalse;
     if (oldRamp.PEDButtonType != self.PEDButtonType) goto RtnFalse;
     if (oldRamp.awi !=  self.awi) goto RtnFalse;
@@ -194,13 +196,14 @@
     if (oldRamp.hasTactileArrow !=  self.hasTactileArrow) goto RtnFalse;
     if (oldRamp.locatorToneVolume !=  self.locatorToneVolume) goto RtnFalse;
     if (oldRamp.audibleWalkIndicationVolume = self.audibleWalkIndicationVolume) goto RtnFalse;
-
-    
     if (oldRamp.curbCutDistance != self.curbCutDistance) goto RtnFalse;
     if (oldRamp.bumpHeight != self.bumpHeight) goto RtnFalse;
     if (oldRamp.bumpWidth != self.bumpWidth) goto RtnFalse;
     if (oldRamp.lev21x != self.lev21x) goto RtnFalse;
     if (oldRamp.lev21y != self.lev21y) goto RtnFalse;
+    if (oldRamp.dwShape != self.dwShape) goto RtnFalse;
+    if (oldRamp.dwMaxOffset != self.dwMaxOffset) goto RtnFalse;
+    if (oldRamp.dwMinOffset != self.dwMinOffset) goto RtnFalse;
     
     CrackWidth oldCW = oldRamp.crackWidth;
     CrackWidth newCW = self.crackWidth;

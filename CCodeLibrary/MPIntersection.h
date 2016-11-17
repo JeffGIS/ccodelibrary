@@ -73,6 +73,8 @@ typedef NS_ENUM(NSInteger, MiddleMeasurement)
 @property MiddleMeasurement currentMiddleMeasurement;//this need not be in copy or comparision methods (internal value - not in database)
 @property int detectableWarningDepth;
 @property float domeSpacing, spaceBetweenDomes, domeBaseWidth, domeCapWidth;//these are for detectable warnings
+@property DetectableWarningShape dwShape;//these are for detectable warnings
+@property int dwMinOffset, dwMaxOffset;//these are for detectable warnings
 @property int streetLandingDepth, leftXWalkSideWidth, rightXWalkSideWidth;//these are for diagonal ramp type
 @property (nonatomic) int rampWidth, rampDepth;
 @property (nonatomic) float rampSlopeFront;
