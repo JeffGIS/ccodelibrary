@@ -11,6 +11,7 @@
     didSelectRowWithText:(NSString *)text
                  atIndex:(NSInteger)index;
 
+@optional
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView;
 
 @end
@@ -19,6 +20,7 @@
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic) UIView *overlayView;
+@property (nonatomic, copy) NSArray<UIImage *> *imageArray;
 
 + (instancetype)showPopoverTableViewInView:(UIView *)view
                                   delegate:(id)delegate

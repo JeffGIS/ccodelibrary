@@ -29,10 +29,9 @@
         return nil;
     }
     
-    if (![delegate respondsToSelector:@selector(popoverTableView:didSelectRowWithText:atIndex:)] ||
-        ![delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
+    if (![delegate respondsToSelector:@selector(popoverTableView:didSelectRowWithText:atIndex:)])
     {
-        NSLog(@"NVPopoverTableView ERROR:Delegate must respond to all selectors in protocol");
+        NSLog(@"NVPopoverTableView ERROR:Delegate must respond to [popoverTableView:didSelectRowWithText:atIndex:]");
         return nil;
     }
     
@@ -186,6 +185,9 @@ viewForHeaderInSection:(NSInteger)section
     else
         cell.textLabel.textColor = UserDefaults.defaults.appleBlue;
     
+    if (_imageArray.count)
+        cell.imageView.image = (UIImage *)_imageArray[indexPath.row];
+    
     return cell;
 }
 
@@ -194,7 +196,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (_delegate)
     {
-        if (_includeCancel && indexPath.row == 0)
+        if (_includeCancel && indexPath.row == 0 && [_delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
             [_delegate popoverTableViewDidCancel:self];
         
         else
@@ -217,7 +219,20 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)overlayTapped:(UITapGestureRecognizer *)gesture
 {
-    [_delegate popoverTableViewDidCancel:self];
+    if (_includeCancel && [_delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
+        [_delegate popoverTableViewDidCancel:self];
+}
+
+- (void)setImageArray:(NSArray *)imageArray
+{
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        _tableView.rowHeight = 132.0;
+    
+    else
+        _tableView.rowHeight = 156.0;
+    
+    _imageArray = imageArray;
+    [_tableView reloadData];
 }
 
 @end
