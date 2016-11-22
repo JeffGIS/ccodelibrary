@@ -1016,9 +1016,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     [alertView hideLargeAlertView:YES];
 }
 
--(void) gotoAppStore
+- (void)gotoAppStore
 {
-    
+    [UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://itunes.apple.com/us/app/facebook/id284882215"]];
 }
 
 @end
