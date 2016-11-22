@@ -108,6 +108,11 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property BOOL uploadPix, downloadData, downloadPix;
 @property int dataset;
 @property BOOL ignoreErrorLog;
+@property NSString *minManageVersion;
+@property NSString *minPrelimVersion;
+@property NSString *minDetailVersion;
+@property NSString *minAlleyVersion;
+@property int currentMessageNum;
 
 + (CRAPI *)sharedInstance;
 
@@ -188,6 +193,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
             withHeader:(NSString*) header;
 -(void) clearErrorFile;
 -(void) logToErrorFileIgnore:(BOOL)ignore;
+- (BOOL) checkVersion:(NSString**)minVersion;
 
 
 @end

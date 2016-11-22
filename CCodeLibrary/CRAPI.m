@@ -47,6 +47,10 @@
         _downloadData = [SharedDefaults.defaults boolForKey:@"DownloadData"];
         _downloadPix = [SharedDefaults.defaults boolForKey:@"DownloadPix"];
         _dataset = 0;
+        _minManageVersion  = @"";
+        _minPrelimVersion = @"";
+        _minDetailVersion = @"";
+        _minAlleyVersion  = @"";
     }
     
     return self;
@@ -643,6 +647,35 @@
     return array;
 }
 
+- (BOOL) checkVersion:(NSString**)minVersion
+{
+    BOOL rtn = YES;
+    int icmp=0;
+    
+    //_currentModule,_currentSubModule,
+    switch (_currentModule)
+    {
+        case MANAGEMENT_MODULE:
+            icmp = [UIApplication.appVersionBuild compare:_minManageVersion];
+            *minVersion = _minManageVersion;
+            break;
+        case PRELIM_MODULE:
+            icmp = [UIApplication.appVersionBuild compare:_minPrelimVersion];
+            *minVersion = _minPrelimVersion;
+            break;
+        case DETAIL_MODULE:
+            icmp = [UIApplication.appVersionBuild compare:_minDetailVersion];
+            *minVersion = _minDetailVersion;
+            break;
+
+    }
+    
+    if (icmp < 0)
+    {
+        rtn = FALSE;
+    }
+    return rtn;
+}
 - (void) setGSSiPadNumber:(int)num
 {
     NSString *key = [NSString stringWithFormat:@"GSSiPadNumber"];
@@ -719,6 +752,7 @@
     _placesArray = NSMutableArray.new;
     if (!message)
         return FALSE;
+    
     if (strncmp(message.UTF8String,"PlacesFor", 9))
         return FALSE;
     
@@ -754,8 +788,25 @@
         [ManagePlacesDatabase.database addLocationToList:(int)c.number];
 }
 
-- (void)savePlacesString:(NSString*)placesString
+- (void)savePlacesString:(NSString*)placesStringIN
 {
+    NSArray *arr = [placesStringIN componentsSeparatedByString:@"|"];
+    if (arr.count > 2)
+    {
+        NSString* messNum = arr[0];
+        _currentMessageNum = messNum.integerValue;
+        NSString* version = arr[1];
+        NSArray *versions = [version componentsSeparatedByString:@":"];
+        _minManageVersion  = versions[0];
+        if (versions.count > 1)
+            _minPrelimVersion = versions[1];
+        if (versions.count > 2)
+            _minDetailVersion = versions[2];
+        if (versions.count > 3)
+            _minAlleyVersion  = versions[3];
+    }
+    NSRange placesStart = [placesStringIN rangeOfString:@"PlacesFor"];
+    NSString *placesString = [placesStringIN substringFromIndex:placesStart.location];
     [UserDefaults.defaults saveString:placesString
                                forKey:@"PlacesString"];
     if (_currentModule == GMMOBILE_MODULE)
