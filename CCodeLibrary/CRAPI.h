@@ -195,5 +195,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 -(void) logToErrorFileIgnore:(BOOL)ignore;
 - (BOOL) checkVersion:(NSString**)minVersion;
 
+-(void) gotoAppStore;
 
 @end

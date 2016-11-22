@@ -1016,4 +1016,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     [alertView hideLargeAlertView:YES];
 }
 
+-(void) gotoAppStore
+{
+    
+}
+
 @end
