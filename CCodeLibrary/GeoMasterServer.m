@@ -4,12 +4,13 @@
 #define TEST_PORT 8080
 #define PRODUCTION_PORT 443
 #define TEST_SERVER @"gssidata.com"
-#define PRODUCTION_SERVER @"gssiserver3.com"
+//#define PRODUCTION_SERVER @"gssiserver 3.com"
 //#define GM_SERVER @"74.208.70.192"
 //#define GM_PORT 501
 
 #import "GeoMasterServer.h"
 #import "Reachability.h"
+#import "CRAPI.h"
 
 @interface GeoMasterServer ()
 
@@ -83,7 +84,7 @@ static GeoMasterServer *statServer = nil;
 {
     BOOL rtn = NO;
     int port = PRODUCTION_PORT;
-    NSString * ipAddress = PRODUCTION_SERVER;
+    NSString * ipAddress = [CRAPI.sharedInstance getNVCRISServer];
     
     if (_useTestServer)
     {

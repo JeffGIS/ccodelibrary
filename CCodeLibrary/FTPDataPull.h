@@ -63,7 +63,6 @@ typedef NS_ENUM(NSInteger, FTPDataType)
 @property (nonatomic, copy, readwrite) NSString *usernameOveride;
 @property (nonatomic, copy, readwrite) NSString *passwordOveride;
 @property (nonatomic, copy, readwrite) NSString *portOveride;
-@property (nonatomic, copy, readwrite) NSString *ftpSite;
 @property (nonatomic, copy, readwrite) NSString *username;
 @property (nonatomic, copy, readwrite) NSString *password;
 @property (nonatomic, copy, readwrite) NSString *port;
@@ -72,10 +71,8 @@ typedef NS_ENUM(NSInteger, FTPDataType)
 @property BOOL createDirectory;
 @property (nonatomic, copy, readwrite) NSString *fileName;
 @property (nonatomic, copy, readwrite) NSString *toFileName;
-@property (nonatomic, copy, readwrite) NSString *ftpSite2;
 @property (nonatomic, copy, readwrite) NSString *username2;
 @property (nonatomic, copy, readwrite) NSString *password2;
-@property (nonatomic, copy, readwrite) NSString *currentFtp;
 @property (nonatomic, copy, readwrite) NSString *urlText;
 @property (nonatomic, assign, readwrite) BOOL hasFailed;
 @property (nonatomic) BOOL haveCalledDelegate;

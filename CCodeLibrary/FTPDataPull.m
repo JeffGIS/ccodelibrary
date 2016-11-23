@@ -132,7 +132,7 @@ static FTPDataPull * _statpull = nil;
 
 - (void)receiveDidStart
 {
-    NSLog(@"Attempting to PULL %@ from %@/%@", _fileName, _currentFtp, _directory);
+    NSLog(@"Attempting to PULL %@ from %@/%@", _fileName, [CRAPI.sharedInstance getNVCRISServer], _directory);
 }
 
 - (void)receiveDidStopWithStatus:(FTPStatus)status
@@ -181,31 +181,11 @@ static FTPDataPull * _statpull = nil;
     
     if (!url)
     {
-        if (!_hasFailed && !_useOnlyPrimaryFTP)
-        {
-            if (_currentFtp == _ftpSite)
-            {
-                [self setToFtpSite2];
-                _currentFtp = _ftpSite2;
-            }
-            
-            else
-            {
-                [self setToFtpSite1];
-                _currentFtp = _ftpSite;
-            }
-            
-            url = [CRAPI.sharedInstance smartURLForString:_urlText];
-        }
-        
-        if (!url)
-        {
             [self stopReceiveWithStatus:FTPStatusCancel
                            statusString:[NSString stringWithFormat:@"%@ is not a valid URL", url]];
             
             return;
-        }
-    }
+     }
     
     _fileStream = [NSOutputStream outputStreamToFileAtPath:_filePath
                                                     append:NO];
@@ -344,53 +324,6 @@ didReceiveResponse:(NSURLResponse *)response
     
     NSLog(@"NSURLConnection Error %li:%@", (long)error.code, error.localizedDescription);
     
-    if (!_hasFailed && !_useOnlyPrimaryFTP)
-    {
-        if ([_currentFtp isEqualToString:_ftpSite])
-        {
-            [self setToFtpSite2];
-            _currentFtp = _ftpSite2;
-            
-            [UserDefaults.defaults saveString:_currentFtp
-                                       forKey:@"CurrentFtp"];
-            
-            _hasFailed = YES;
-            
-            [self stopReceiveWithStatus:FTPStatusConnectionFailedTryingSecondary
-                           statusString:error.localizedDescription];
-            
-            _haveCalledDelegate = NO;
-            
-            [self getFile:_fileName
-            fromDirectory:_directory
-                   toFile:_fileName
-              toDirectory:_toDirectory
-            refreshOption:FTPDataPullRefreshOptionCheckFileSize];
-        }
-        
-        else
-        {
-            [self setToFtpSite1];
-            _currentFtp = _ftpSite;
-            
-            [UserDefaults.defaults saveString:_currentFtp
-                                       forKey:@"CurrentFtp"];
-            
-            _hasFailed = YES;
-            
-            [self stopReceiveWithStatus:FTPStatusConnectionFailed
-                           statusString:error.localizedDescription];
-            
-            [self getFile:_fileName
-            fromDirectory:_directory
-                   toFile:_fileName
-              toDirectory:_toDirectory
-            refreshOption:FTPDataPullRefreshOptionCheckFileSize];
-        }
-    }
-    
-    else
-    {
         //remove file to ensure partially transferred files are not used
         [NSFileManager.defaultManager removeItemAtPath:_filePath
                                                  error:nil];
@@ -398,13 +331,8 @@ didReceiveResponse:(NSURLResponse *)response
         [self stopReceiveWithStatus:FTPStatusConnectionFailed
                        statusString:error.localizedDescription];
         
-        _currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
-        
-        [UserDefaults.defaults saveString:_currentFtp
-                                   forKey:@"CurrentFtp"];
-        
+    
         _hasFailed = NO;
-    }
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)theConnection
@@ -443,7 +371,7 @@ didReceiveResponse:(NSURLResponse *)response
     if (_ftpSiteOveride)
     {
         _useOnlyPrimaryFTP = YES;
-        _ftpSite = _currentFtp = _ftpSiteOveride;
+        //_ftpSite = _currentFtp = _ftpSiteOveride;
         _username = _usernameOveride;
         _password = _passwordOveride;
         _port = _portOveride;
@@ -453,18 +381,10 @@ didReceiveResponse:(NSURLResponse *)response
     {
         if (_useTestServer)
         {
-            _ftpSite = @"gssidata.com";
-            _username = @"GSSiData";
-            _password = @"GSSi";
-            
-            _ftpSite2 = @"thmgis.com";
-            _username2 = @"waypoint";
-            _password2 = @"pointway4*";
         }
         
         else
         {
-            _ftpSite = @"gssiserver3.com";
             _username = @"GSSiProfessionalServer";
             _password = @"GSSi";
             
@@ -472,32 +392,23 @@ didReceiveResponse:(NSURLResponse *)response
              _username = @"GSSiLocal";
              _password = @"GSSi";*/
             
-            _ftpSite2 = @"gssidata.com";
-            _username2 = @"GSSiData";
-            _password2 = @"GSSi";
-        }
+         }
         
         _port = @"21";
-        _currentFtp = [UserDefaults.defaults stringForKey:@"CurrentFtp"];
-        
-        if (_currentFtp == _ftpSite2)
-            [self setToFtpSite2];
-        
-        else
-            [self setToFtpSite1];
+        [self setToFtpSite1];
     }
 }
 
 - (void)setToFtpSite1
 {
     _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@",
-                _username, _password, _ftpSite, _port, _directory, _fileName];
+                _username, _password, [CRAPI.sharedInstance getNVCRISServer], _port, _directory, _fileName];
 }
 
 - (void)setToFtpSite2
 {
     _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@",
-                _username2, _password2, _ftpSite2, _port, _directory, _fileName];
+                _username2, _password2, [CRAPI.sharedInstance getNVCRISServer], _port, _directory, _fileName];
 }
 
 - (void)dealloc

@@ -974,6 +974,12 @@
     }
 }
 
+- (NSString*) getNVCRISServer
+{
+    NSString * server = @"gssiserver3.com";
+    return server;
+}
+
 - (NSURL *)smartURLForString:(NSString *)str
 {
     NSURL *result = nil;

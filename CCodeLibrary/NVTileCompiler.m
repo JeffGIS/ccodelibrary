@@ -189,7 +189,7 @@
                                                                          delegate:self
                                                                     delegateQueue:NSOperationQueue.currentQueue];
                 
-                NSString *url = [NSString stringWithFormat:@"http://gssiserver3.com/MPLSADA/%lu/%lu/%lu.jp2",
+                NSString *url = [NSString stringWithFormat:@"http://%@/MPLSADA/%lu/%lu/%lu.jp2",[CRAPI.sharedInstance getNVCRISServer],
                                  (unsigned long)_zoom, (unsigned long)tiles.tiley, (unsigned long)tiles.tilex];
                 
                 NSURL *mapUrl = [NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];

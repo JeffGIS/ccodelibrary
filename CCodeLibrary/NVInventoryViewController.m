@@ -74,7 +74,9 @@
 {
     [super viewDidLoad];
     
-    _currentZoom = 21;
+    _currentZoom = _currentIntersection.zoomLevel;
+    if (_currentZoom < 20 || _currentZoom > 21)
+        _currentZoom = 21;
     _initialZoom = _currentZoom;
     _firstTime = YES;
     _pTranWToBMP = _pTranBMPToW = 0;

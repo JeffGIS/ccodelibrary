@@ -196,5 +196,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (BOOL) checkVersion:(NSString**)minVersion;
 
 -(void) gotoAppStore;
+- (NSString*) getNVCRISServer;
 
 @end

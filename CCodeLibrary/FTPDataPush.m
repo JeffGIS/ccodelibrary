@@ -141,28 +141,9 @@ enum {
     
     if (!url)
     {
-        if (!_hasFailed && !_useOnlyPrimaryFTP)
-        {
-            if (_currentFtp == _ftpSite)
-            {
-                [self setToFtpSite2];
-                _currentFtp = _ftpSite2;
-            }
-            
-            else
-            {
-                [self setToFtpSite1];
-                _currentFtp = _ftpSite;
-            }
-            
-            url = [CRAPI.sharedInstance smartURLForString:_urlText];
-        }
+        NSAssert(0, @"ERROR: Invalid URL");
+        return NO;
         
-        if (!url)
-        {
-            NSAssert(0, @"ERROR: Invalid URL");
-            return NO;
-        }
     }
     
     _fileStream = [NSInputStream inputStreamWithFileAtPath:_filePath];
@@ -312,50 +293,6 @@ enum {
                 [self stopSendWithStatus:FTPStatusConnectionFailed
                             statusString:aStream.streamError.localizedDescription];
                 
-                if (!_useOnlyPrimaryFTP)
-                {
-                    if ([_currentFtp isEqualToString:_ftpSite])
-                    {
-                        [self setToFtpSite2];
-                        _currentFtp = _ftpSite2;
-                        
-                        [UserDefaults.defaults saveString:_currentFtp
-                                                   forKey:@"CurrentFtp"];
-                        
-                        _hasFailed = YES;
-                        
-                        [self stopSendWithStatus:FTPStatusConnectionFailed
-                                    statusString:aStream.streamError.localizedDescription];
-                        
-                        [self sendFile:_fileName
-                         fromDirectory:_directory
-                                toFile:_fileName
-                           toDirectory:_toDirectory
-                        deleteWhenDone:NO
-                        appendFileName:NO];
-                    }
-                    
-                    else
-                    {
-                        [self setToFtpSite1];
-                        _currentFtp = _ftpSite;
-                        
-                        [UserDefaults.defaults saveString:_currentFtp
-                                                   forKey:@"CurrentFtp"];
-                        
-                        _hasFailed = YES;
-                        
-                        [self stopSendWithStatus:FTPStatusConnectionFailed
-                                    statusString:aStream.streamError.localizedDescription];
-                        
-                        [self sendFile:_fileName
-                         fromDirectory:_directory
-                                toFile:_fileName
-                           toDirectory:_toDirectory
-                        deleteWhenDone:NO
-                        appendFileName:NO];
-                    }
-                }
             }
             
             else
@@ -364,11 +301,6 @@ enum {
                             statusString:aStream.streamError.localizedDescription];
                 
                 NSLog(@"ERROR %li:%@", (long)FTPStatusConnectionFailed, aStream.streamError.localizedDescription);
-                
-                _currentFtp = [UserDefaults.defaults stringForKey:@"DefaultFtp"];
-                
-                [UserDefaults.defaults saveString:_currentFtp
-                                           forKey:@"CurrentFtp"];
                 
                 _hasFailed = NO;
             }
@@ -387,7 +319,7 @@ enum {
 
 - (void)setUpFTP
 {
-    _ftpSite = @"gssiserver3.com";
+
     _username = @"GSSiProfessionalServer";
     _password = @"GSSi";
     
@@ -395,30 +327,21 @@ enum {
     _username = @"GSSiLocal";
     _password = @"GSSi";*/
     
-    _ftpSite2 = @"gssidata.com";
+    //_ftpSite2 = @"gssidata.com";
     _username2 = @"GSSiData";
     _password2 = @"GSSi";
     
     _port = @"21";
     
-    _currentFtp = [UserDefaults.defaults stringForKey:@"CurrentFtp"];
+
     
-    if (_currentFtp == _ftpSite2)
-        [self setToFtpSite2];
-    
-    else
-        [self setToFtpSite1];
+    [self setToFtpSite1];
 }
 
 - (void)setToFtpSite1
 {
-    _urlText = [NSString stringWithFormat:@"%@:%@/%@/%@",_ftpSite, self.port, _toDirectory, _toFileName];
+    _urlText = [NSString stringWithFormat:@"%@:%@/%@/%@",[CRAPI.sharedInstance getNVCRISServer], self.port, _toDirectory, _toFileName];
 
-}
-
-- (void)setToFtpSite2
-{
-    _urlText = [NSString stringWithFormat:@"%@/%@/%@",_ftpSite2, _toDirectory, _toFileName];
 }
 
 - (void)dealloc
