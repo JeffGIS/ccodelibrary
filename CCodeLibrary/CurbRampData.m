@@ -482,7 +482,7 @@ static int nInit=0;
                 cmd = @"ALTER TABLE Ramps ADD COLUMN bumpHeight REAL;";
                 if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
                 cmd = [NSString stringWithFormat:@"UPDATE Version SET VersionID = '%s' WHERE vid = 1;",CURRENT_INTERSECTION_VERSION];
-                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
                 if (st)
                 {
                     [self commitTransaction];
