@@ -14,6 +14,8 @@
 
 @interface CRAPI () <NVAlertViewDelegate>
 
+@property (nonatomic) NVAlertView *alert;
+
 @end
 
 @implementation CRAPI
@@ -1034,6 +1036,29 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 - (void)gotoAppStore
 {
     [UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://itunes.apple.com/us/app/facebook/id284882215"]];
+}
+
+- (void)checkStorageForMinStorage:(NSNumber *)minStorage
+{
+    int minValue = 0;
+    
+    if (minStorage)
+        minValue = minStorage.intValue;
+    
+    else
+        minValue = 10000000;
+    
+    if (UIDevice.availableStorageSpace < minValue)
+    {
+        if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
+        {
+            _alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
+                                                  delegate:CRAPI.sharedInstance
+                                                     title:@"Warning: Storage Space is very low."
+                                           buttonTextArray:@[@"OK"]
+                                          destructiveIndex:0];
+        }
+    }
 }
 
 @end

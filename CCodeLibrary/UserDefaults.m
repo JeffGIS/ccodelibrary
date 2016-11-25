@@ -33,21 +33,21 @@ static UserDefaults *_defaults;
     return self;
 }
 
--(void) doSync
+- (void)doSync
 {
     if (![_defaults synchronize])
     {
-        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Write Error"
-                                                                       message:@"Failed to write.\nCheck free space"
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-                                                              handler:^(UIAlertAction * action) {}];
-        
-        [alert addAction:defaultAction];
-        //[self presentViewController:alert animated:YES completion:nil];
+        if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
+        {
+            _alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
+                                                  delegate:CRAPI.sharedInstance
+                                                     title:@"Failed to write.\nCheck free space"
+                                           buttonTextArray:@[@"OK"]
+                                          destructiveIndex:0];
+        }
     }
 }
+
 - (UIColor *)colorForKey:(NSString *)key
 {
     CGFloat red = [_defaults floatForKey:[NSString stringWithFormat:@"%@Red", key]];
