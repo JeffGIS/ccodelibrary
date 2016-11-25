@@ -1,3 +1,4 @@
+
 //  CRAPI.m
 //  CCodeLibrary
 
@@ -51,6 +52,7 @@
         _minPrelimVersion = @"";
         _minDetailVersion = @"";
         _minAlleyVersion  = @"";
+        _serverToUse = 3;
     }
     
     return self;
@@ -788,14 +790,20 @@
         [ManagePlacesDatabase.database addLocationToList:(int)c.number];
 }
 
-- (void)savePlacesString:(NSString*)placesStringIN
+- (BOOL)savePlacesString:(NSString*)placesStringIN //returns FALSE if need to switch server
 {
+    BOOL rtn = TRUE;
     NSArray *arr = [placesStringIN componentsSeparatedByString:@"|"];
-    if (arr.count > 2)
+    if (arr.count > 3)
     {
         NSString* messNum = arr[0];
         _currentMessageNum = messNum.integerValue;
-        NSString* version = arr[1];
+        messNum = arr[1];
+        int server = messNum.integerValue;
+        if (server != _serverToUse)
+            rtn = FALSE;
+        _serverToUse = server;
+        NSString* version = arr[2];
         NSArray *versions = [version componentsSeparatedByString:@":"];
         _minManageVersion  = versions[0];
         if (versions.count > 1)
@@ -814,6 +822,7 @@
         NSString * path = [NSString stringWithFormat:@"%@/%@", UserDefaults.defaults.sharedFilePath, @"PlacesString.txt"];
         [placesString writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
     }
+    return rtn;
 }
 
 - (NSString*) getPlacesStringFromFile
@@ -976,7 +985,7 @@
 
 - (NSString*) getNVCRISServer
 {
-    NSString * server = @"gssiserver3.com";
+    NSString * server = [NSString stringWithFormat:@"gssiserver%i.com",_serverToUse];
     return server;
 }
 

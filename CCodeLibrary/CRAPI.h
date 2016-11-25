@@ -113,6 +113,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property NSString *minDetailVersion;
 @property NSString *minAlleyVersion;
 @property int currentMessageNum;
+@property int serverToUse;
 
 + (CRAPI *)sharedInstance;
 
@@ -167,7 +168,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
               toFile:(NSString *)file;
 
 - (NSInteger)adjustNextRefno:(NSInteger)refno;
-- (void)savePlacesString:(NSString*)placesString;
+- (BOOL)savePlacesString:(NSString*)placesString;
 - (BOOL)processPlaces;
 - (NSMutableArray *) copyPlaces;
 - (int) newPlace:(NSArray *)oldPlaces;
