@@ -33,6 +33,21 @@ static UserDefaults *_defaults;
     return self;
 }
 
+-(void) doSync
+{
+    if (![_defaults synchronize])
+    {
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Write Error"
+                                                                       message:@"Failed to write.\nCheck free space"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {}];
+        
+        [alert addAction:defaultAction];
+        //[self presentViewController:alert animated:YES completion:nil];
+    }
+}
 - (UIColor *)colorForKey:(NSString *)key
 {
     CGFloat red = [_defaults floatForKey:[NSString stringWithFormat:@"%@Red", key]];
@@ -334,7 +349,7 @@ static UserDefaults *_defaults;
     [_defaults setBool:NO
                 forKey:@"WebKitDiskImageCacheEnabled"];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (NSString *)sharedFilePath
@@ -380,7 +395,7 @@ static UserDefaults *_defaults;
     [_defaults setFloat:blue
                  forKey:[NSString stringWithFormat:@"%@Blue", key]];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveColor:(UIColor *)color
@@ -402,7 +417,7 @@ static UserDefaults *_defaults;
     [_defaults setFloat:(blue * 255.0)
                  forKey:[NSString stringWithFormat:@"%@Blue", key]];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveInteger:(int)integer
@@ -411,7 +426,7 @@ static UserDefaults *_defaults;
     [_defaults setInteger:integer
                    forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveNSInteger:(NSInteger)integer
@@ -420,7 +435,7 @@ static UserDefaults *_defaults;
     [_defaults setInteger:integer
                    forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveBool:(BOOL)boolean
@@ -429,7 +444,7 @@ static UserDefaults *_defaults;
     [_defaults setBool:boolean
                 forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveString:(NSString *)string
@@ -438,7 +453,7 @@ static UserDefaults *_defaults;
     [_defaults setObject:string
                   forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveArray:(NSArray *)array
@@ -447,7 +462,7 @@ static UserDefaults *_defaults;
     [_defaults setObject:array
                   forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveCGFloat:(CGFloat)CGFloat
@@ -456,7 +471,7 @@ static UserDefaults *_defaults;
     [_defaults setFloat:CGFloat
                  forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveNSData:(NSData *)data
@@ -465,7 +480,7 @@ static UserDefaults *_defaults;
     [_defaults setObject:data
                   forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)setStatus:(int)status
@@ -494,7 +509,7 @@ static UserDefaults *_defaults;
     [_defaults setObject:locationList
                   forKey:@"LocationList"];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)addLocationToListWithName:(NSString *)name
@@ -595,7 +610,7 @@ static UserDefaults *_defaults;
         [_defaults setObject:iPadArray
                       forKey:key];
     
-        [_defaults synchronize];
+        [self doSync];
     }
 }
 
@@ -634,7 +649,7 @@ static UserDefaults *_defaults;
     [_defaults setObject:locationList
                   forKey:@"LocationList"];
     
-    [_defaults synchronize];
+    [self doSync];
     
 }
 
@@ -696,7 +711,7 @@ static UserDefaults *_defaults;
     [_defaults setObject:locationList
                   forKey:@"LocationList"];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (UIColor *)lightColorForColor:(UIColor *)color
