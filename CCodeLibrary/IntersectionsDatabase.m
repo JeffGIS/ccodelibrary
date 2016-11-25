@@ -1664,7 +1664,9 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo%@=%i WHERE intID=%i",
                        iTime, type, user, intID];
     
-    rtn = SQLOK(231,sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL), self.curbRampData.database);
+    rtn = [self.curbRampData executeCmd:query.UTF8String
+                           sendToServer:YES
+                                   from:1659];
     [self close:opened];
     return !rtn;
 }
@@ -1686,7 +1688,9 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo%@=%i, status=%i WHERE intID>=%i AND intID <=%i",
                        iTime, type, user, status, intID, endID];
     
-    rtn = SQLOK(232,sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL), self.curbRampData.database);
+    rtn = [self.curbRampData executeCmd:query.UTF8String
+                           sendToServer:YES
+                                   from:1659];
 
     [self close:opened];
     return !rtn;
@@ -1704,7 +1708,9 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo%@=%i",
                        iTime, type, user];
     
-    rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL);
+    rtn = [self.curbRampData executeCmd:query.UTF8String
+                           sendToServer:YES
+                                   from:1659];
     [self close:opened];
     return !rtn;
 }
@@ -1719,7 +1725,9 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo%@=%i WHERE assignedTo=0",
                        iTime, type, user];
     
-    rtn = sqlite3_exec(self.curbRampData.database, query.UTF8String, NULL, NULL, NULL);
+    rtn = [self.curbRampData executeCmd:query.UTF8String
+                           sendToServer:YES
+                                   from:1659];
     [self close:opened];
     return !rtn;
 }
