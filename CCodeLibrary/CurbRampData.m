@@ -278,7 +278,25 @@ static int nInit=0;
     [self close:opened];
     return rtn;
 }
+- (BOOL)createPriorityLocationsTable:(BOOL)dropExistingTable
+{
+    BOOL rtn = NO;
+    NSString *dropQuery = @"DROP TABLE IF EXISTS PriorityLocations;DROP TABLE IF EXISTS PriorityLocations_index;";
+    
+    if (dropExistingTable)
+    {
+        rtn = [self executeCmd:(LPSTR)dropQuery.UTF8String
+                  sendToServer:YES
+                          from:1675];
+        
+    }
 
+    NSString *cmd = @"CREATE TABLE IF NOT EXISTS PriorityLocations ('locationID' INTEGER PRIMARY KEY,'Name' CHAR(256),'Type' INT, 'Category' CHAR(32),'Latitude' DOUBLE, 'Longitude' DOUBLE, 'Radius' DOUBLE, 'Offset' INT)";
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                      from:1677];
+    return rtn;
+}
 - (BOOL)createIntersectionsTable:(BOOL)dropExistingTables
 {
     BOOL rtn = NO;

@@ -22,6 +22,7 @@
 - (BOOL)open;
 - (void)close:(BOOL)opened;
 - (void)clear;
+- (BOOL)createPriorityLocationsTable:(BOOL)dropExistingTable;
 - (BOOL)createIntersectionsTable:(BOOL)dropExistingTables;
 - (NSString *)databasePath:(int)geoid;
 - (NSString *)databasePath;

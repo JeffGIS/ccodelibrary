@@ -11,6 +11,7 @@
 #import "GSSiPopoverView.h"
 #import "UserDefaults.h"
 #import "MathUtil.h"
+#import "CurbRampData.h"
 
 #define DEFAULT_OFFSET 150 //150 feet -> this is the default value
 

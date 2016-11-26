@@ -33,6 +33,23 @@ static GetPriorityLocations *_getLocations;
 
 + (void)savePriorityLocations:(NSMutableArray *)contents
 {
+    
+    CurbRampData *crd = [CurbRampData databaseForGeoid:CRAPI.sharedInstance.currentGeoid
+                                                create:NO];
+    BOOL opened = [crd startTransaction];
+    [crd createPriorityLocationsTable:YES];
+    int iRef = 1;
+    NSArray *catname = [self categoryNames];
+    for (PriorityLocation *pl in contents)
+    {
+        NSString *cat = catname[pl.type.integerValue];
+        NSString *cmd = [NSString stringWithFormat:@"INSERT INTO PriorityLocations VALUES (%i,'%@',%i, '%@', %f, %f, %f,%i);",iRef++,pl.name,pl.type,cat,pl.coordinate.latitude,pl.coordinate.longitude,pl.radius,pl.offset];
+        [crd executeCmd:(LPSTR)cmd.UTF8String sendToServer:YES from:1];
+    }
+    if (opened)
+        [crd commitTransaction];
+    [crd close:opened];
+    
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:contents];
     
     [UserDefaults.defaults saveNSData:data
@@ -60,6 +77,12 @@ static GetPriorityLocations *_getLocations;
     
     return self;
 }
++ (NSArray *)categoryNames
+{
+    return @[@"Default", @"Schools", @"Medical Facilities", @"Libraries", @"Employment Centers",
+             @"Post Offices", @"Government Buildings", @"Hotels", @"Senior Residential", @"Custom"];
+}
+
 
 - (void)drawAccessoryImageForType:(NSInteger)type
                              cell:(UITableViewCell *)cell
@@ -164,12 +187,6 @@ static GetPriorityLocations *_getLocations;
     }
     
     return type;
-}
-
-- (NSArray *)categoryNames
-{
-    return @[@"Default", @"Schools", @"Medical Facilities", @"Libraries", @"Employment Centers",
-             @"Post Offices", @"Government Buildings", @"Hotels", @"Senior Residential", @"Custom"];
 }
 
 - (void)priorityLocationArrayForBounds:(dbounds)bounds
