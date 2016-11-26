@@ -1047,8 +1047,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     else
         minValue = 10000000;
-    
-    if (UIDevice.availableStorageSpace < minValue)
+    NSInteger avail = UIDevice.availableStorageSpace;
+    if (avail < minValue)
     {
         if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
         {
