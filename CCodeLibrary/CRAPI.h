@@ -198,5 +198,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 
 -(void) gotoAppStore;
 - (NSString*) getNVCRISServer;
+- (void)checkStorageForMinStorage:(nullable NSNumber *)minStorage;
 
 @end

@@ -4,6 +4,7 @@
 #import "SharedDefaults.h"
 #import "MathUtil.h"
 #import "GSSiDefs.h"
+#import "CRAPI.h"
 
 @implementation SharedDefaults
 
@@ -23,6 +24,21 @@ static SharedDefaults *_defaults;
         _defaults = [[NSUserDefaults alloc] initWithSuiteName:APP_GROUP_ID];
     
     return self;
+}
+
+- (void)doSync
+{
+    if (![_defaults synchronize])
+    {
+        if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
+        {
+            _alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
+                                                  delegate:CRAPI.sharedInstance
+                                                     title:@"Failed to write.\nCheck free space"
+                                           buttonTextArray:@[@"OK"]
+                                          destructiveIndex:0];
+        }
+    }
 }
 
 - (NSArray *)arrayForKey:(NSString *)key
@@ -128,7 +144,7 @@ static SharedDefaults *_defaults;
     [_defaults setObject:array
                   forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveColorWithRed:(CGFloat)red
@@ -145,7 +161,7 @@ static SharedDefaults *_defaults;
     [_defaults setFloat:blue
                  forKey:[NSString stringWithFormat:@"%@Blue", key]];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveColor:(UIColor *)color
@@ -167,7 +183,7 @@ static SharedDefaults *_defaults;
     [_defaults setFloat:(blue * 255.0)
                  forKey:[NSString stringWithFormat:@"%@Blue", key]];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveInteger:(int)integer
@@ -176,7 +192,7 @@ static SharedDefaults *_defaults;
     [_defaults setInteger:integer
                    forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveNSInteger:(NSInteger)integer
@@ -185,7 +201,7 @@ static SharedDefaults *_defaults;
     [_defaults setInteger:integer
                    forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveBool:(BOOL)boolean
@@ -194,7 +210,7 @@ static SharedDefaults *_defaults;
     [_defaults setBool:boolean
                 forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveString:(NSString *)string
@@ -203,7 +219,7 @@ static SharedDefaults *_defaults;
     [_defaults setObject:string
                   forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveCGFloat:(CGFloat)CGFloat
@@ -212,7 +228,7 @@ static SharedDefaults *_defaults;
     [_defaults setFloat:CGFloat
                  forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveNSData:(NSData *)data
@@ -221,7 +237,7 @@ static SharedDefaults *_defaults;
     [_defaults setObject:data
                   forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveDate:(NSDate *)date
@@ -230,7 +246,7 @@ static SharedDefaults *_defaults;
     [_defaults setObject:date
                   forKey:key];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveCoordinate:(CLLocationCoordinate2D)coordinate
@@ -242,7 +258,7 @@ static SharedDefaults *_defaults;
     [_defaults setFloat:coordinate.longitude
                  forKey:[NSString stringWithFormat:@"%@Longitude", key]];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)saveCalibrationValueArray:(NSArray *)array
@@ -250,7 +266,7 @@ static SharedDefaults *_defaults;
     [_defaults setObject:array
                   forKey:@"CalibrationValueArray"];
     
-    [_defaults synchronize];
+    [self doSync];
 }
 
 - (void)addCalibrationValue:(CGFloat)value

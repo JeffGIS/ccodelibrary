@@ -4,6 +4,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "NVAlertView.h"
 
 typedef NS_ENUM(NSInteger, NVCalibrationType) {
     NVCalibrationTypeDefault,
@@ -22,6 +23,7 @@ typedef NS_ENUM(NSInteger, NVCalibrationArrayIndex) {
 @interface SharedDefaults : NSObject
 {
     NSUserDefaults *_defaults;
+    NVAlertView *_alert;
 }
 
 + (SharedDefaults *)defaults;

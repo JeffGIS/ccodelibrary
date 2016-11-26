@@ -8,10 +8,12 @@
 #import "GSSiPopoverView.h"
 #import "Colors.h"
 #import "CCodeTypes.h"
+#import "NVAlertView.h"
 
 @interface UserDefaults : NSObject
 {
     NSUserDefaults *_defaults;
+    NVAlertView *_alert;
 }
 
 + (UserDefaults *)defaults;
