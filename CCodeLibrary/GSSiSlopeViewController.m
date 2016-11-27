@@ -20,6 +20,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 };
 
 static int COUNT=100;
+#define MIN_HEADING_COUNTER 5
 
 @interface GSSiSlopeViewController ()
 
@@ -58,7 +59,7 @@ static int COUNT=100;
     GSSiSlopeViewController *slopeController = [[GSSiSlopeViewController alloc] init];
     slopeController.displayDegrees = displayDegrees;
     slopeController.useCalibration = useCalibration;
-    slopeController.useHeadingCalibration = NO;
+    slopeController.useHeadingCalibration = YES;
     slopeController.delegate = delegate;
     slopeController.steadyFactor = max (steadyFac,1.0);
     slopeController.hideDoesNotExistButton = NO;
@@ -492,9 +493,6 @@ static int COUNT=100;
     typedef void (^CMAccelerometerHandler)(CMAccelerometerData *accelerometerData, NSError *error);
     _motionManager.accelerometerUpdateInterval = 0.04;
     
-    if (CLLocationManager.headingAvailable && !_hasRun)
-        [_locationManager startUpdatingHeading];
-    
     if ([_motionManager isAccelerometerAvailable])
     {
         [_motionManager startAccelerometerUpdatesToQueue:NSOperationQueue.currentQueue
@@ -505,6 +503,9 @@ static int COUNT=100;
                                                      NSLog(@"DeviceMotionError:%@", error.localizedDescription);
                                              }];
     }
+    if (CLLocationManager.headingAvailable && !_hasRun)
+        [_locationManager startUpdatingHeading];
+    
 
     _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
 }
@@ -666,10 +667,11 @@ static int COUNT=100;
 - (void)locationManager:(CLLocationManager *)manager
        didUpdateHeading:(CLHeading *)newHeading
 {
-    if (!_headingCounter)
+    if (_headingCounter == MIN_HEADING_COUNTER)
         _baseHeading = newHeading.trueHeading;
     
-    _sumHeading += [self correctedHeading:newHeading.trueHeading];
+    if (_headingCounter >= MIN_HEADING_COUNTER)
+        _sumHeading += [self correctedHeading:newHeading.trueHeading];
     _headingCounter++;
 }
 
@@ -677,7 +679,7 @@ static int COUNT=100;
 {
     if (_counter == COUNT)
     {
-        if (_headingCounter || !CLLocationManager.headingAvailable)
+        if (_headingCounter  > MIN_HEADING_COUNTER + 10 || !CLLocationManager.headingAvailable)
         {
             [self stopManagers];
             
@@ -687,7 +689,7 @@ static int COUNT=100;
             
             if (_headingCounter)
             {
-                _data.heading = _sumHeading / _headingCounter;
+                _data.heading = _sumHeading / (_headingCounter - MIN_HEADING_COUNTER);
                 _data.heading = Between0And360D(_data.heading);
             }
             
@@ -718,7 +720,7 @@ static int COUNT=100;
             
         }
         
-        if (_headingCounter)
+        if (_headingCounter  > MIN_HEADING_COUNTER + 10)
             _counter++;
     }
     
@@ -954,7 +956,6 @@ static int COUNT=100;
     
     [sliderView hideSliderController:YES];
 }
-
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
     return UIInterfaceOrientationPortrait;

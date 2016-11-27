@@ -55,6 +55,7 @@
         _minDetailVersion = @"";
         _minAlleyVersion  = @"";
         _serverToUse = 3;
+        _doCompassCalibrate = YES;
     }
     
     return self;
@@ -1047,7 +1048,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     else
         minValue = 10000000;
-    NSInteger avail = UIDevice.availableStorageSpace;
+    long long avail = UIDevice.availableStorageSpace;
     if (avail < minValue)
     {
         if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])

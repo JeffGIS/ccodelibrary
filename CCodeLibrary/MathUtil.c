@@ -634,6 +634,19 @@ float DeltaAZ(float *AZ1, float *AZ2)
 	return daz;
 }
 
+double DeltaAZD (double AZ1, double AZ2)
+{
+    double daz;
+    
+    daz =  AZ2 - AZ1;
+    if (daz < -PY)
+        daz += TWOPI;
+    else if (daz > PY)
+        daz -= TWOPI;
+    return daz;
+}   
+
+
 void InitBounds(bounds *bnds)
 {
 	bnds->xmn = FLT_MAX;

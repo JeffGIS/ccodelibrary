@@ -8,6 +8,7 @@
 #import "GSSiSlopeViewController.h"
 #import "NVSliderController.h"
 #import "NVAlertView.h"
+#import "MathUtil.h"
 
 static double _deviceValues[9][4];
 // [0][0] = level frontslope
@@ -490,7 +491,8 @@ static double _deviceValues[9][4];
             
             if (CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
             {
-                int headingDiff = 0;
+                double headingDiff = 0;
+                double MAXHEADING_ERROR = 90;
                 
                 if (_currentIndex > 2 && _currentIndex % 2)//side flipped
                     headingDiff = abs(((_initialHeading + 90) - (int)round(slopeData.heading) + 180) % 360 - 180);
@@ -498,7 +500,11 @@ static double _deviceValues[9][4];
                 else//front flipped
                     headingDiff = abs(((_initialHeading + 180) - (int)round(slopeData.heading) + 180) % 360 - 180);
                 
-                if (headingDiff > 30)
+                headingDiff = DeltaAZD (LTWOPI(_initialHeading*DEGtoRAD),LTWOPI(slopeData.heading*DEGtoRAD));
+                headingDiff = fabs (headingDiff);
+                //headingDiff = LTWOPI (headingDiff);
+                headingDiff *= RADtoDEG;
+                if (headingDiff > 180 + MAXHEADING_ERROR || headingDiff < 180 - MAXHEADING_ERROR)
                     headingError = YES;
             }
             

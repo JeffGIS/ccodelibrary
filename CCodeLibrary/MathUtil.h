@@ -79,6 +79,7 @@ vec2  newpt (vec2 *OldPoint, float AZM, float DIS);
 dvec2 dnewpt (dvec2 *OldPoint, double AZM, double DIS);
 DPOINT dnewpoint (DPOINT *OldPoint, double AZM, double DIS);
 float DeltaAZ (float *AZ1, float *AZ2);
+double DeltaAZD (double AZ1, double AZ2);
 float BTWNTWOPI (float AZ1);
 void InitBounds (bounds* bnds);
 void AddPointToBounds (bounds* bnds,vec2 *pt);

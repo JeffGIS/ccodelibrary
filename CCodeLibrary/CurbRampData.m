@@ -9,6 +9,7 @@
 
 #import "CurbRampData.h"
 #import "UserDefaults.h"
+#import "SharedDefaults.h"
 #import "CRAPI.h"
 #import "UIApplication+VersionBuild.h"
 #import "SQLiteLib.h"
@@ -942,6 +943,50 @@ void convertVersion_1_to_2 (LPSTR str)
         LPSTR pEnd = strrchr (ploc,')');
         sprintf (pEnd,",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);");
     }
+}
+
+- (BOOL)saveCalibration
+{
+    double _deviceVals[9][4];
+    double _targetValues[5];
+    BOOL rtn = NO;
+    
+    NSArray *calibrationValues = SharedDefaults.defaults.calibrationValueArray;
+    NSArray *targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
+    int nCalibrationPoints = targetValues.count;
+    int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][0] intValue];
+    BOOL displayDegrees = (currentType == NVCalibrationTypeDegrees);
+    
+    if (nCalibrationPoints > 1 && nCalibrationPoints < 6)
+    {
+        _targetValues[0] = 0.0;
+        NSArray *deviceValuesArray = [calibrationValues[NVCalibrationArrayDeviceValues] copy];
+        NSNumber *num = deviceValuesArray[0];
+        _deviceVals[0][0] = num.doubleValue;
+        //num = deviceValuesArray[1];
+        _deviceVals[0][1] = [(NSNumber *)deviceValuesArray[1] doubleValue];
+        int dvIndex = 2;
+        
+        for (int i = 1; i < nCalibrationPoints; i++)
+        {
+            NSNumber *num = targetValues[i];
+            _targetValues[i] = num.doubleValue;
+            int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] intValue];
+            
+            if (currentType == NVCalibrationTypeRunningSlope)
+                _targetValues[i] = (atan(_targetValues[i] / 100) * RADtoDEG);
+            
+            for (int j = 0; j < 4; j++)
+            {
+                if ((dvIndex + 1) < deviceValuesArray.count)
+                    _deviceVals[i][j] = [(NSNumber *)deviceValuesArray[dvIndex++] doubleValue];
+            }
+        }
+        
+        rtn = YES;
+    }
+    
+    return rtn;
 }
 
 
