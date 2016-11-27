@@ -26,7 +26,7 @@
 {
     int lRec, rtn = FALSE;
     int	CompressedLength, LenRead = 0;
-    CGFloat curLoc;
+    double curLoc;
     FILE *Fid = fopen(FileToGet,"wb");
     
     if (Fid == NULL)

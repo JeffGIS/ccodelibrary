@@ -506,7 +506,7 @@
 }
 
 - (dbounds)getBoundsAtPoint:(CLLocationCoordinate2D *)pt
-                    andDist:(CGFloat)meters
+                    andDist:(double)meters
 {
     dbounds bnds;
     

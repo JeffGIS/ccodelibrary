@@ -9,7 +9,7 @@
 #import "NVSliderController.h"
 #import "NVAlertView.h"
 
-static CGFloat _deviceValues[9][4];
+static double _deviceValues[9][4];
 // [0][0] = level frontslope
 // [0][1] = level sideslope
 // [1][0] = first upslope
@@ -27,7 +27,7 @@ static CGFloat _deviceValues[9][4];
 @property (nonatomic) UILabel *titleLabel, *lastCalibrationlabel, *promptLabel;
 @property (nonatomic, copy) NSArray *calibrationValues;
 @property NVCalibrationType currentType, newType;
-@property (nonatomic) CGFloat currentValue;
+@property (nonatomic) double currentValue;
 @property NSInteger currentIndex, counter;
 @property (nonatomic, copy) NSString *previousPromptText, *nextPromptText;
 @property BOOL hasBeenFlipped, hasBeenCalibrated;
@@ -136,8 +136,8 @@ static CGFloat _deviceValues[9][4];
 - (void)setupCalibrationButtons
 {
     NSUInteger yOrigin = 96.0;
-    CGFloat buttonWidth = 728.0, margin = 14.0;
-    CGFloat buttonHeight = 62.0, fontSize = 48.0;
+    double buttonWidth = 728.0, margin = 14.0;
+    double buttonHeight = 62.0, fontSize = 48.0;
     _counter = 1;
     
     for (int i = 0; i < [_calibrationValues[NVCalibrationArrayIndexValue] count]; i++)
@@ -150,21 +150,21 @@ static CGFloat _deviceValues[9][4];
         
         frontButton.tag = _counter;
         
-        CGFloat floatValue = [_calibrationValues[NVCalibrationArrayIndexValue][i] floatValue];
+        double doubleValue = [_calibrationValues[NVCalibrationArrayIndexValue][i] doubleValue];
         NVCalibrationType type = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][i] integerValue];
         
         switch (type)
         {
             case NVCalibrationTypeRunningSlope:
-                valueString = [NSString stringWithFormat:@"%.1f%%", floatValue];
+                valueString = [NSString stringWithFormat:@"%.1f%%", doubleValue];
                 break;
                 
             case NVCalibrationTypeDegrees:
-                valueString = [NSString stringWithFormat:@"%.1f\u00B0", floatValue];
+                valueString = [NSString stringWithFormat:@"%.1f\u00B0", doubleValue];
                 break;
                 
             case NVCalibrationTypeRiseRun:
-                valueString = [NSString stringWithFormat:@"1:%i", (int)floatValue];
+                valueString = [NSString stringWithFormat:@"1:%i", (int)doubleValue];
                 break;
                 
             default:
@@ -230,7 +230,7 @@ static CGFloat _deviceValues[9][4];
            selector:(SEL)selector
               title:(NSString *)title
             enabled:(BOOL)enabled
-           fontSize:(CGFloat)fontSize
+           fontSize:(double)fontSize
 {
     [button setTitle:title
             forState:UIControlStateNormal];
@@ -262,7 +262,7 @@ static CGFloat _deviceValues[9][4];
 
 - (void)setupLabel:(UILabel *)label
               text:(NSString *)text
-          fontSize:(CGFloat)fontSize
+          fontSize:(double)fontSize
 {
     label.backgroundColor = UIColor.clearColor;
     label.text = text;
@@ -307,7 +307,7 @@ static CGFloat _deviceValues[9][4];
     NSString *valueString = @"", *buttonString = @"";
     _previousPromptText = _promptLabel.text;
     
-    _currentValue = [_calibrationValues[NVCalibrationArrayIndexValue][index] floatValue];
+    _currentValue = [_calibrationValues[NVCalibrationArrayIndexValue][index] doubleValue];
     _currentType = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][index] integerValue];
     
     GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
@@ -339,7 +339,7 @@ static CGFloat _deviceValues[9][4];
     
     if ((index < count) && (count > 1))
     {
-        CGFloat nextValue = [_calibrationValues[NVCalibrationArrayIndexValue][index] floatValue];
+        double nextValue = [_calibrationValues[NVCalibrationArrayIndexValue][index] doubleValue];
         NVCalibrationType nextType = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][index] integerValue];
         
         switch (nextType)
@@ -730,21 +730,21 @@ cellForRowAtIndexPath:(NSIndexPath *)indexPath
     
     else
     {
-        CGFloat floatValue = [_calibrationValues[NVCalibrationArrayIndexValue][indexPath.row] floatValue];
+        double doubleValue = [_calibrationValues[NVCalibrationArrayIndexValue][indexPath.row] doubleValue];
         NVCalibrationType type = (NVCalibrationType)[_calibrationValues[NVCalibrationArrayIndexType][indexPath.row] integerValue];
         
         switch (type)
         {
             case NVCalibrationTypeRunningSlope:
-                cell.textLabel.text = [NSString stringWithFormat:@"%.1f%%", floatValue];
+                cell.textLabel.text = [NSString stringWithFormat:@"%.1f%%", doubleValue];
                 break;
                 
             case NVCalibrationTypeDegrees:
-                cell.textLabel.text = [NSString stringWithFormat:@"%.1f\u00B0", floatValue];
+                cell.textLabel.text = [NSString stringWithFormat:@"%.1f\u00B0", doubleValue];
                 break;
                 
             case NVCalibrationTypeRiseRun:
-                cell.textLabel.text = [NSString stringWithFormat:@"1:%i", (int)floatValue];
+                cell.textLabel.text = [NSString stringWithFormat:@"1:%i", (int)doubleValue];
                 break;
                 
             default:
@@ -815,7 +815,7 @@ viewForHeaderInSection:(NSInteger)section
 - (void)dismissTableView:(UIButton *)button
 {
     NSUInteger count = [_calibrationValues[0] count];
-    CGFloat range = SharedDefaults.defaults.calibrationValueMinRange;
+    double range = SharedDefaults.defaults.calibrationValueMinRange;
     
     if (count == 1)
     {

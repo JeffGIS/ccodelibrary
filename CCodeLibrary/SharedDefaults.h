@@ -25,6 +25,7 @@ typedef NS_ENUM(NSInteger, NVCalibrationArrayIndex) {
     NSUserDefaults *_defaults;
     NVAlertView *_alert;
 }
+@property int failedWrites;
 
 + (SharedDefaults *)defaults;
 

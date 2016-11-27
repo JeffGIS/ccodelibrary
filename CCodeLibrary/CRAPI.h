@@ -160,7 +160,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (dbounds)getPixelPickApBoundsAtPoint:(DPOINT *)pt;
 
 - (dbounds)getBoundsAtPoint:(CLLocationCoordinate2D *)pt
-                    andDist:(CGFloat)meters;
+                    andDist:(double)meters;
 
 - (void)clearOutputDirectory;
 

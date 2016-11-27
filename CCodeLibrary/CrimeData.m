@@ -497,7 +497,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 -(BOOL) loadUpdate:(NSString *)path
 {
     BOOL rtn = FALSE;
-    CGFloat totLen;
+    double totLen;
     NSString *toDirectory = [NSString stringWithFormat:@"%@/Reports", _documentsDirectory];
     [NSFileManager.defaultManager createDirectoryAtPath:toDirectory
                             withIntermediateDirectories:YES
