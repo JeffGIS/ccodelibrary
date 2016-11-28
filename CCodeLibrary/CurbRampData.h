@@ -17,6 +17,8 @@
 @property (nonatomic) int datasetVersion;
 @property BOOL transactionActive;
 
++ (BOOL)saveCalibration;
+
 + (CurbRampData *)databaseForGeoid:(int)geoid
                             create:(BOOL)create;
 - (BOOL)open;

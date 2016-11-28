@@ -292,6 +292,26 @@ static SharedDefaults *_defaults;
     }
 }
 
+- (void)replaceCalibrationValue:(CGFloat)value
+                        atIndex:(NSUInteger)index
+{
+    NSArray *defaultArray = [_defaults arrayForKey:@"CalibrationValueArray"];
+    
+    if (defaultArray.count)
+    {
+        NSMutableArray *valuesArray = [defaultArray[NVCalibrationArrayIndexValue] mutableCopy];
+        NSMutableArray *typesArray = [defaultArray[NVCalibrationArrayIndexType] mutableCopy];
+        NSArray *selectedArray = @[@YES];//this is just a placeholder
+        NSArray *deviceValuesArray = defaultArray[NVCalibrationArrayDeviceValues];
+        
+        [valuesArray replaceObjectAtIndex:index withObject:@(value)];
+        
+        defaultArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
+        defaultArray = [self resetDeviceValuesArray:defaultArray];
+        [self saveCalibrationValueArray:defaultArray];
+    }
+}
+
 - (void)deleteCalibrationValueAtIndex:(NSUInteger)index
 {
     NSArray *defaultArray = [_defaults arrayForKey:@"CalibrationValueArray"];

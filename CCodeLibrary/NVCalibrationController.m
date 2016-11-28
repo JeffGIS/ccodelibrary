@@ -9,6 +9,7 @@
 #import "NVSliderController.h"
 #import "NVAlertView.h"
 #import "MathUtil.h"
+#import "CurbRampData.h"
 
 static double _deviceValues[9][4];
 // [0][0] = level frontslope
@@ -33,6 +34,8 @@ static double _deviceValues[9][4];
 @property (nonatomic, copy) NSString *previousPromptText, *nextPromptText;
 @property BOOL hasBeenFlipped, hasBeenCalibrated;
 @property int initialHeading;
+@property double startValue;
+@property int addAtIndex;
 
 @end
 
@@ -645,7 +648,8 @@ static double _deviceValues[9][4];
     NSArray *newArray = [NSArray arrayWithObjects:valuesArray, typesArray, selectedArray, deviceValuesArray, nil];
     
     [SharedDefaults.defaults saveCalibrationValueArray:newArray];
-
+    if (CRAPI.sharedInstance.currentModule == DETAIL_MODULE)
+        [CurbRampData saveCalibration];
     return rtn;
 }
 
@@ -885,6 +889,17 @@ canEditRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath
+{
+    if (indexPath.row == 0)
+        return;
+    _startValue = [_calibrationValues[NVCalibrationArrayIndexValue][indexPath.row] doubleValue];
+    _addAtIndex = indexPath.row;
+    [self addCalibrationValue:nil];
+    
+}
+
+- (void)tableView:(UITableView *)tableView
 commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -897,7 +912,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)addCalibrationValue:(UIButton *)button
 {
-    if ([_calibrationValues[0] count] > 4)
+    if (button)
+    {
+        _addAtIndex = -1;
+        _startValue = 0.0;
+    }
+    if ([_calibrationValues[0] count] > 4 && button)
         return;
     
     NVSliderController *slider = nil;
@@ -908,7 +928,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         {
             slider = [[NVSliderController alloc] initWithCenter:self.view.center
                                                           width:(self.view.frame.size.width - 40.0)
-                                                     startValue:0.0
+                                                     startValue:_startValue
                                                        minValue:0.0
                                                        maxValue:100.0
                                                        delegate:self
@@ -922,7 +942,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         {
             slider = [[NVSliderController alloc] initWithCenter:self.view.center
                                                           width:(self.view.frame.size.width - 40.0)
-                                                     startValue:0.0
+                                                     startValue:_startValue
                                                        minValue:0.0
                                                        maxValue:180.0
                                                        delegate:self
@@ -936,7 +956,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
         {
             slider = [[NVSliderController alloc] initWithCenter:self.view.center
                                                           width:(self.view.frame.size.width - 40.0)
-                                                     startValue:1.0
+                                                     startValue:max(1.0,_startValue)
                                                        minValue:1.0
                                                        maxValue:48.0
                                                        delegate:self
@@ -975,10 +995,14 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)sliderView:(NVSliderController *)sliderView
     didReturnValue:(double)value
 {
-     [sliderView hideSliderController:YES];
+    [sliderView hideSliderController:YES];
     
-    [SharedDefaults.defaults addCalibrationValue:value
-                                          ofType:_newType];
+    if (_addAtIndex < 0)
+        [SharedDefaults.defaults addCalibrationValue:value
+                                              ofType:_newType];
+    else
+        [SharedDefaults.defaults replaceCalibrationValue:value
+                                                 atIndex:_addAtIndex];
     
     _calibrationValues = SharedDefaults.defaults.calibrationValueArray;
     

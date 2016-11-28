@@ -945,7 +945,7 @@ void convertVersion_1_to_2 (LPSTR str)
     }
 }
 
-- (BOOL)saveCalibration
++ (BOOL)saveCalibration
 {
     double _deviceVals[9][4];
     double _targetValues[5];
