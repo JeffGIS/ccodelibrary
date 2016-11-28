@@ -37,14 +37,8 @@ static UserDefaults *_defaults;
 {
     if (![_defaults synchronize])
     {
-        if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
-        {
-            _alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
-                                                  delegate:CRAPI.sharedInstance
-                                                     title:@"Failed to write.\nCheck free space"
-                                           buttonTextArray:@[@"OK"]
-                                          destructiveIndex:0];
-        }
+        [CRAPI.sharedInstance checkStorageForMinStorage:nil];
+        NSLog(@"UserDefaults Failed to Synchronize!");
     }
 }
 

@@ -30,14 +30,8 @@ static SharedDefaults *_defaults;
 {
     if (![_defaults synchronize])
     {
-        if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
-        {
-            _alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
-                                                  delegate:CRAPI.sharedInstance
-                                                     title:@"Failed to write.\nCheck free space"
-                                           buttonTextArray:@[@"OK"]
-                                          destructiveIndex:0];
-        }
+        [CRAPI.sharedInstance checkStorageForMinStorage:nil];
+        NSLog(@"SharedDefaults Failed to Synchronize!");
     }
 }
 
@@ -418,11 +412,8 @@ static SharedDefaults *_defaults;
         }
     }
     
-    [SharedDefaults.defaults saveDate:nil
-                               forKey:@"LastCalDate"];
-    
-    [SharedDefaults.defaults saveString:nil
-                                 forKey:@"LastCalString"];
+    [SharedDefaults.defaults saveDate:[NSDate dateWithTimeIntervalSince1970:0] forKey:@"LastCalDate"];
+    [SharedDefaults.defaults saveString:@"" forKey:@"LastCalString"];
     
     return defaultArray;
 }
