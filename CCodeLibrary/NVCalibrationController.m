@@ -34,6 +34,7 @@ static double _deviceValues[9][4];
 @property (nonatomic, copy) NSString *previousPromptText, *nextPromptText;
 @property BOOL hasBeenFlipped, hasBeenCalibrated;
 @property int initialHeading;
+@property double initialSlope;
 @property double startValue;
 @property int addAtIndex;
 
@@ -281,6 +282,8 @@ static double _deviceValues[9][4];
 
 - (void)returnButtonTapped:(UIButton *)button
 {
+ //   if (CRAPI.sharedInstance.currentModule == DETAIL_MODULE)
+ //       [CurbRampData saveCalibration];
     [self dismissViewControllerAnimated:YES
                              completion:nil];
 }
@@ -483,7 +486,6 @@ static double _deviceValues[9][4];
         {
             _deviceValues[_currentIndex][1] = slopeData.frontSlopeDegrees;
             _deviceValues[_currentIndex][3] = slopeData.sideSlopeDegrees;
-            _currentIndex++;
             _hasBeenFlipped = NO;
             
             NSUInteger count = [_calibrationValues[0] count];
@@ -494,23 +496,30 @@ static double _deviceValues[9][4];
             
             if (CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
             {
-                double headingDiff = 0;
-                double MAXHEADING_ERROR = 90;
-                
-                if (_currentIndex > 2 && _currentIndex % 2)//side flipped
-                    headingDiff = abs(((_initialHeading + 90) - (int)round(slopeData.heading) + 180) % 360 - 180);
-                
-                else//front flipped
-                    headingDiff = abs(((_initialHeading + 180) - (int)round(slopeData.heading) + 180) % 360 - 180);
-                
-                headingDiff = DeltaAZD (LTWOPI(_initialHeading*DEGtoRAD),LTWOPI(slopeData.heading*DEGtoRAD));
-                headingDiff = fabs (headingDiff);
-                //headingDiff = LTWOPI (headingDiff);
-                headingDiff *= RADtoDEG;
-                if (headingDiff > 180 + MAXHEADING_ERROR || headingDiff < 180 - MAXHEADING_ERROR)
-                    headingError = YES;
+                if (!_currentIndex)
+                {
+                    double headingDiff = 0;
+                    double MAXHEADING_ERROR = 90;
+                    
+                    headingDiff = DeltaAZD (LTWOPI(_initialHeading*DEGtoRAD),LTWOPI(slopeData.heading*DEGtoRAD));
+                    headingDiff = fabs (headingDiff);
+                    headingDiff *= RADtoDEG;
+                    if (headingDiff > 180 + MAXHEADING_ERROR || headingDiff < 180 - MAXHEADING_ERROR)
+                        headingError = YES;
+                }
+                else
+                {
+                    if (_currentIndex % 2)//front
+                    {
+                        if (slopeData.frontSlopeDegrees > 0)
+                            headingError = YES;
+                    }
+                    else if (slopeData.sideSlopeDegrees > 0)
+                            headingError = YES;
+                }
             }
-            
+            _currentIndex++;
+
             if (headingError && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
             {
                 NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
@@ -569,6 +578,7 @@ static double _deviceValues[9][4];
         
         else
         {
+            _initialSlope = slopeData.frontSlopeDegrees;
             _deviceValues[_currentIndex][0] = slopeData.frontSlopeDegrees;
             _deviceValues[_currentIndex][2] = slopeData.sideSlopeDegrees;
             _promptLabel.text = _previousPromptText;
@@ -578,16 +588,14 @@ static double _deviceValues[9][4];
             
             else if (CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
             {
-                int headingDiff = 0;
-                
                 if (_currentIndex % 2)//front
-                    headingDiff = abs((_initialHeading - (int)round(slopeData.heading) + 180) % 360 - 180);
-                
-                else//side
-                    headingDiff = abs(((_initialHeading - 90) - (int)round(slopeData.heading) + 180) % 360 - 180);
-                
-                if (headingDiff > 30)
+                {
+                    if (_initialSlope < 0)
+                        headingError = YES;
+                }
+                 else if (slopeData.sideSlopeDegrees < 0)
                     headingError = YES;
+
             }
             
             if (headingError && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)

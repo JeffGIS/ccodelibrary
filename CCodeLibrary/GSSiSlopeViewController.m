@@ -540,13 +540,13 @@ static int COUNT=100;
         NSArray *deviceValuesArray = [calibrationValues[NVCalibrationArrayDeviceValues] copy];
         NSNumber *num = deviceValuesArray[0];
         _deviceVals[0][0] = num.doubleValue;
-        //num = deviceValuesArray[1];
+        num = deviceValuesArray[1];
         _deviceVals[0][1] = [(NSNumber *)deviceValuesArray[1] doubleValue];
         int dvIndex = 2;
         
         for (int i = 1; i < _nCalibrationPoints; i++)
         {
-            NSNumber *num = targetValues[i];
+            num = targetValues[i];
             _targetValues[i] = num.doubleValue;
             int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] intValue];
             
@@ -555,8 +555,11 @@ static int COUNT=100;
             
             for (int j = 0; j < 4; j++)
             {
-                if ((dvIndex + 1) < deviceValuesArray.count)
-                    _deviceVals[i][j] = [(NSNumber *)deviceValuesArray[dvIndex++] doubleValue];
+                if ((dvIndex) < deviceValuesArray.count)
+                {
+                    num = deviceValuesArray[dvIndex++];
+                    _deviceVals[i][j] = num.doubleValue;
+                }
             }
         }
         

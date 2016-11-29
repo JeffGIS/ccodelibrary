@@ -34,7 +34,9 @@ static int nInit=0;
     _fileName = @"CurbRamps.sqlite";
     _path = [self databasePath:geoid];
     if (!_fileSize || create)
+    {
         [self createIntersectionsTable:create];
+    }
 }
 - (id)init
 {
@@ -947,9 +949,10 @@ void convertVersion_1_to_2 (LPSTR str)
 
 + (BOOL)saveCalibration
 {
-    double _deviceVals[9][4];
-    double _targetValues[5];
+    double _deviceVals[9][4]={0};
+    double _targetValues[5]={0};
     BOOL rtn = NO;
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
     
     NSArray *calibrationValues = SharedDefaults.defaults.calibrationValueArray;
     NSArray *targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
@@ -963,31 +966,47 @@ void convertVersion_1_to_2 (LPSTR str)
         NSArray *deviceValuesArray = [calibrationValues[NVCalibrationArrayDeviceValues] copy];
         NSNumber *num = deviceValuesArray[0];
         _deviceVals[0][0] = num.doubleValue;
-        //num = deviceValuesArray[1];
         _deviceVals[0][1] = [(NSNumber *)deviceValuesArray[1] doubleValue];
         int dvIndex = 2;
         
         for (int i = 1; i < nCalibrationPoints; i++)
         {
-            NSNumber *num = targetValues[i];
+            num = targetValues[i];
             _targetValues[i] = num.doubleValue;
             int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] intValue];
             
-            if (currentType == NVCalibrationTypeRunningSlope)
-                _targetValues[i] = (atan(_targetValues[i] / 100) * RADtoDEG);
-            
             for (int j = 0; j < 4; j++)
             {
-                if ((dvIndex + 1) < deviceValuesArray.count)
-                    _deviceVals[i][j] = [(NSNumber *)deviceValuesArray[dvIndex++] doubleValue];
+                if ((dvIndex) < deviceValuesArray.count)
+                {
+                    num = deviceValuesArray[dvIndex++];
+                    _deviceVals[i][j] = num.doubleValue;
+                }
             }
         }
         
         rtn = YES;
     }
-    
+    if (rtn)
+    {
+        int iPadNumber = CRAPI.sharedInstance.GSSiPadNumber;
+        LPSTR targetValsC=malloc(4096);
+        LPSTR deviceValsC=malloc(4096);
+        sprintf (targetValsC,"%f",_targetValues[0]);
+        sprintf (deviceValsC,"%f %f",_deviceVals[0][0],_deviceVals[0][1]);
+        for (int i=1;i<nCalibrationPoints;i++)
+        {
+            sprintf (strchr(targetValsC,0)," %f",_targetValues[i]);
+            sprintf (strchr(deviceValsC,0)," %f %f %f %f",_deviceVals[i][0],_deviceVals[i][1],_deviceVals[i][2],_deviceVals[i][3]);
+        }
+        NSString * cmd = [NSString stringWithFormat:@"$GMDUPDATE([CALIBRATIONDB],iPad=%i;Time=%i,Type=%i;NumPoints=%i;TargetVals='%s';DeviceVals='%s';);",
+                          iPadNumber,iTime,currentType,nCalibrationPoints,targetValsC,deviceValsC];
+        NSString * header = [NSString stringWithFormat:@"Calibration Data"];
+        [CRAPI.sharedInstance logToErrorFile:cmd withHeader:header];
+        free (targetValsC);
+        free (deviceValsC);
+    }
     return rtn;
 }
-
 
 @end
