@@ -130,15 +130,18 @@
                     action:@selector(syncButtonTapped:)
           forControlEvents:UIControlEventTouchUpInside];
     
-    _emailFileListButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self setupButton:_emailFileListButton];
-    
-    [_emailFileListButton setTitle:@"Email File List"
-                          forState:UIControlStateNormal];
-    
-    [_emailFileListButton addTarget:self
-                             action:@selector(emailFileListButtonTapped:)
-                   forControlEvents:UIControlEventTouchUpInside];
+    if (CRAPI.sharedInstance.showDeveloperFunctions)
+    {
+        _emailFileListButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self setupButton:_emailFileListButton];
+        
+        [_emailFileListButton setTitle:@"Email File List"
+                              forState:UIControlStateNormal];
+        
+        [_emailFileListButton addTarget:self
+                                 action:@selector(emailFileListButtonTapped:)
+                       forControlEvents:UIControlEventTouchUpInside];
+    }
     
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_returnButton];
@@ -337,10 +340,14 @@
                 break;
                 
             case 8://email file list button
-                [sectionView addSubview:_emailFileListButton];
+                if (CRAPI.sharedInstance.showDeveloperFunctions)
+                {
+                    [sectionView addSubview:_emailFileListButton];
+                    
+                    [_emailFileListButton constrainToView:sectionView leading:(screenWidth / 4.0)
+                                                 trailing:(-screenWidth / 4.0) top:buttonMargin bottom:-buttonMargin];
+                }
                 
-                [_emailFileListButton constrainToView:sectionView leading:(screenWidth / 4.0)
-                                             trailing:(-screenWidth / 4.0) top:buttonMargin bottom:-buttonMargin];
                 break;
                 
             default:
@@ -505,7 +512,7 @@
                           CRAPI.sharedInstance.GSSiPadNumber, CRAPI.sharedInstance.currentManageriPad,
                           CRAPI.sharedInstance.currentiPadWithinManager, CRAPI.sharedInstance.totiPadWithinManager];
     
-    _connectButton.hidden = (CRAPI.sharedInstance.placesArray.count && !isGSSiDevice());
+    _connectButton.hidden = (CRAPI.sharedInstance.placesArray.count && !CRAPI.sharedInstance.showDeveloperFunctions);
 }
 
 - (void)startSync

@@ -107,7 +107,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property BOOL mapPropList, mapIndividualDest, mapGroupDest;
 @property BOOL uploadPix, downloadData, downloadPix;
 @property int dataset;
-@property BOOL ignoreErrorLog;
+@property BOOL ignoreErrorLog, showDeveloperFunctions;
 @property NSString *minManageVersion;
 @property NSString *minPrelimVersion;
 @property NSString *minDetailVersion;
