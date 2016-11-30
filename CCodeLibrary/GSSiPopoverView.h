@@ -23,6 +23,7 @@
 @property (nonatomic) NSTimer *timer;
 @property (nonatomic) int showTime;
 @property (nonatomic, copy) NSString *title, *cancelButtonTitle;
+@property (nonatomic, copy) NSString *identifier;
 
 - (id)initWithView:(UIView *)fromView;
 - (void)popoverCancel:(UIButton *)sender;
