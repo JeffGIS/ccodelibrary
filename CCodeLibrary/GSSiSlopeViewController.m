@@ -555,7 +555,7 @@ static int COUNT=100;
             
             for (int j = 0; j < 4; j++)
             {
-                if ((dvIndex) < deviceValuesArray.count)
+                if (dvIndex < deviceValuesArray.count)
                 {
                     num = deviceValuesArray[dvIndex++];
                     _deviceVals[i][j] = num.doubleValue;

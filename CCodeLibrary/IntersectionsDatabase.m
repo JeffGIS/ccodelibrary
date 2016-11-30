@@ -1766,14 +1766,14 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     return intpt;
 }
 
-- (NSArray *)getAssignments:(NSString*)type
+- (NSArray <IntersectionPoint *> *)getAssignments:(NSString *)type
 {
-    NSMutableArray *assignments = [[NSMutableArray alloc] init];
-    
+    NSMutableArray <IntersectionPoint *> *assignments = NSMutableArray.array;
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedToPrelim, assignedToDetail FROM Intersections WHERE assignedTo%@ != 0 ORDER BY assignedTo%@,intID ASC",type,type];
-    sqlite3_stmt *statement = NULL;
     
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedToPrelim, assignedToDetail FROM Intersections WHERE assignedTo%@ != 0 ORDER BY assignedTo%@,intID ASC",type,type];
+    
+    sqlite3_stmt *statement = NULL;
     SQLOK(235,sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), self.curbRampData.database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
@@ -1788,20 +1788,20 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         [assignments addObject:intpt];
     }
     
-    SQLOK(236,sqlite3_finalize(statement),self.curbRampData.database);
+    SQLOK(236,sqlite3_finalize(statement), self.curbRampData.database);
     [self close:opened];
-    return assignments;
+    return assignments.copy;
 }
-- (NSArray *)getIntersectionsAssignedTo:(int)iPad
-                                 ofType:(NSString*)type
-                              andStatus:(IntersectionStatus)status
+
+- (NSArray <IntersectionPoint *> *)getIntersectionsAssignedTo:(int)iPad
+                                 ofType:(NSString *)type
 {
-    NSMutableArray *assignments = [[NSMutableArray alloc] init];
-    
+    NSMutableArray <IntersectionPoint *> *assignments = NSMutableArray.array;
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedToPrelim, assignedToDetail, zoomLevel FROM Intersections WHERE assignedTo%@ != 0 ORDER BY assignedTo%@,intID ASC",type,type];
-    sqlite3_stmt *statement = NULL;
     
+    NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedToPrelim, assignedToDetail, zoomLevel FROM Intersections WHERE assignedTo%@ != 0 ORDER BY assignedTo%@,intID ASC",type,type];
+    
+    sqlite3_stmt *statement = NULL;
     SQLOK(237,sqlite3_prepare_v2(self.curbRampData.database, query.UTF8String, -1, &statement, NULL), self.curbRampData.database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
@@ -1817,7 +1817,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         [assignments addObject:intpt];
     }
     
-    SQLOK(238,sqlite3_finalize(statement),self.curbRampData.database);
+    SQLOK(238,sqlite3_finalize(statement), self.curbRampData.database);
     [self close:opened];
     return assignments;
 }

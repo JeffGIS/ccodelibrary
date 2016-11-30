@@ -102,64 +102,67 @@
 
 - (void)getTileDataAndCount
 {
-    int worldx = 0, worldy = 0, worldxEnd = 0, worldyEnd = 0;
-    int tilex = 0, tiley = 0, tilexLeft, xinc = 0, yinc = 0;
-    int xintile = 0, yintile = 0, xintileLeft = 0;
-    int xincomposite = 0, yincomposite = 0;
-    int nxpixels = 0, nypixels = 0, x = 0, y = 0;
-    
-    LatLongToPixelXY_old(_currentIntersection.lat, _currentIntersection.lon, _zoom, &worldx, &worldy);
-    
-    worldx -= (_size / 2);
-    worldy -= (_size / 2);
-    worldxEnd = (worldx + _size);
-    worldyEnd = (worldy + _size);
-    
-    PixelXYToTileXY(worldx, worldy, &tilex, &tiley);
-    
-    tilexLeft = tilex;
-    xintileLeft = worldx % 256;
-    yintile = (worldy % 256);
-    yinc = (256 - yintile);
-    y = worldy;
-    
-    while (y < worldyEnd)
+    if (CRAPI.sharedInstance.currentGeoid == 2743000)
     {
-        xincomposite = 0;
-        x = worldx;
-        tilex = tilexLeft;
-        xintile = xintileLeft;
-        xinc = (256 - xintile);
+        int worldx = 0, worldy = 0, worldxEnd = 0, worldyEnd = 0;
+        int tilex = 0, tiley = 0, tilexLeft, xinc = 0, yinc = 0;
+        int xintile = 0, yintile = 0, xintileLeft = 0;
+        int xincomposite = 0, yincomposite = 0;
+        int nxpixels = 0, nypixels = 0, x = 0, y = 0;
         
-        while (x < worldxEnd)
+        LatLongToPixelXY_old(_currentIntersection.lat, _currentIntersection.lon, _zoom, &worldx, &worldy);
+        
+        worldx -= (_size / 2);
+        worldy -= (_size / 2);
+        worldxEnd = (worldx + _size);
+        worldyEnd = (worldy + _size);
+        
+        PixelXYToTileXY(worldx, worldy, &tilex, &tiley);
+        
+        tilexLeft = tilex;
+        xintileLeft = worldx % 256;
+        yintile = (worldy % 256);
+        yinc = (256 - yintile);
+        y = worldy;
+        
+        while (y < worldyEnd)
         {
-            nxpixels = min(xinc, (_size - xincomposite));
-            nypixels = min(yinc, (_size - yincomposite));
+            xincomposite = 0;
+            x = worldx;
+            tilex = tilexLeft;
+            xintile = xintileLeft;
+            xinc = (256 - xintile);
             
-            NVTile *tile = [[NVTile alloc] init];
-            tile.tilex = tilex;
-            tile.tiley = tiley;
-            tile.nxpixels = nxpixels;
-            tile.nypixels = nypixels;
-            tile.xintile = xintile;
-            tile.yintile = yintile;
-            tile.xincomposite = xincomposite;
-            tile.yincomposite = yincomposite;
-            tile.mutableData = NSMutableData.data;
-            [_tileDataArray addObject:tile];
+            while (x < worldxEnd)
+            {
+                nxpixels = min(xinc, (_size - xincomposite));
+                nypixels = min(yinc, (_size - yincomposite));
+                
+                NVTile *tile = [[NVTile alloc] init];
+                tile.tilex = tilex;
+                tile.tiley = tiley;
+                tile.nxpixels = nxpixels;
+                tile.nypixels = nypixels;
+                tile.xintile = xintile;
+                tile.yintile = yintile;
+                tile.xincomposite = xincomposite;
+                tile.yincomposite = yincomposite;
+                tile.mutableData = NSMutableData.data;
+                [_tileDataArray addObject:tile];
+                
+                tilex++;
+                x += xinc;
+                xinc = 256;
+                xincomposite += nxpixels;
+                xintile = 0;
+            }
             
-            tilex++;
-            x += xinc;
-            xinc = 256;
-            xincomposite += nxpixels;
-            xintile = 0;
+            tiley++;
+            y += yinc;
+            yinc = 256;
+            yincomposite += nypixels;
+            yintile = 0;
         }
-        
-        tiley++;
-        y += yinc;
-        yinc = 256;
-        yincomposite += nypixels;
-        yintile = 0;
     }
     
     [self getTilesFromServer];

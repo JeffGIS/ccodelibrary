@@ -82,9 +82,9 @@
                                   type:(NSString *)type;
 
 - (NSArray *)getAssignments:(NSString*)type;
+
 - (NSArray *)getIntersectionsAssignedTo:(int)iPad
-                                 ofType:(NSString*)type
-                              andStatus:(IntersectionStatus)status;
+                                 ofType:(NSString *)type;
 
 - (NSString *)intersectionTextPath:(int)type;
 - (int)getCountOfIntersections;

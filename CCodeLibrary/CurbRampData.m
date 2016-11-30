@@ -977,7 +977,7 @@ void convertVersion_1_to_2 (LPSTR str)
             
             for (int j = 0; j < 4; j++)
             {
-                if ((dvIndex) < deviceValuesArray.count)
+                if (dvIndex < deviceValuesArray.count)
                 {
                     num = deviceValuesArray[dvIndex++];
                     _deviceVals[i][j] = num.doubleValue;
