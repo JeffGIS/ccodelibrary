@@ -37,7 +37,6 @@
         _allowedZooms[1] = 20;
         _allowedZooms[2] = 19;
         _maxDevices = 100;
-        _controlledInterface = YES;
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.png", _documentsDirectory];
         _crimeMode = PINMAP;
@@ -45,7 +44,7 @@
         _docManager = NVDocumentManager.new;
         _deviceLists = NSMutableDictionary.new;
         _assignediPadsArray = NSMutableArray.new;
-        
+        _controlledInterface = [SharedDefaults.defaults boolForKey:@"ControlledInterface"];
         _uploadPix = [SharedDefaults.defaults boolForKey:@"UploadPix"];
         _downloadData = [SharedDefaults.defaults boolForKey:@"DownloadData"];
         _downloadPix = [SharedDefaults.defaults boolForKey:@"DownloadPix"];
@@ -56,6 +55,7 @@
         _minAlleyVersion  = @"";
         _serverToUse = 3;
         _doCompassCalibrate = YES;
+        _showDeveloperFunctions = isGSSiDevice();
     }
     
     return self;
@@ -133,9 +133,6 @@
         
         _uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, geoid];
     }
-    
-    if (geoid == 2743000)//MPLS
-        self.controlledInterface = NO;
 }
 
 -(void)setCurrentOverallBoundaryName:(NSString *)currentOverallBoundaryName
