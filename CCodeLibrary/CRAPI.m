@@ -44,7 +44,7 @@
         _docManager = NVDocumentManager.new;
         _deviceLists = NSMutableDictionary.new;
         _assignediPadsArray = NSMutableArray.new;
-        _controlledInterface = [SharedDefaults.defaults boolForKey:@"ControlledInterface"];
+        _controlledInterface = ![SharedDefaults.defaults boolForKey:@"UncontrolledInterface"];
         _uploadPix = [SharedDefaults.defaults boolForKey:@"UploadPix"];
         _downloadData = [SharedDefaults.defaults boolForKey:@"DownloadData"];
         _downloadPix = [SharedDefaults.defaults boolForKey:@"DownloadPix"];
