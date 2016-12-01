@@ -37,6 +37,7 @@ static GetPriorityLocations *_getLocations;
     NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
     CurbRampData *crd = [CurbRampData databaseForGeoid:CRAPI.sharedInstance.currentGeoid
                                                 create:NO];
+    [crd incrementLastDataFileNum];
     BOOL opened = [crd startTransaction];
     [crd createPriorityLocationsTable:YES];
     int iRef = 1;
