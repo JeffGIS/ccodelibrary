@@ -31,9 +31,10 @@ static GetPriorityLocations *_getLocations;
     return _getLocations;
 }
 
-+ (void)savePriorityLocations:(NSMutableArray *)contents
++ (BOOL) writePriorityLocationsToDatabase
 {
-    
+    BOOL rtn = TRUE;
+    NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
     CurbRampData *crd = [CurbRampData databaseForGeoid:CRAPI.sharedInstance.currentGeoid
                                                 create:NO];
     BOOL opened = [crd startTransaction];
@@ -52,6 +53,11 @@ static GetPriorityLocations *_getLocations;
         [crd commitTransaction];
     [crd close:opened];
     
+    return rtn;
+}
+
++ (void)savePriorityLocations:(NSMutableArray *)contents
+{
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:contents];
     
     [UserDefaults.defaults saveNSData:data

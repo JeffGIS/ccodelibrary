@@ -32,6 +32,7 @@
 
 + (GetPriorityLocations *)getLocations;
 + (void)savePriorityLocations:(NSMutableArray *)contents;
++ (BOOL) writePriorityLocationsToDatabase;
 + (NSMutableArray *)getPriorityLocations;
 
 - (void)drawAccessoryImageForType:(NSInteger)type
@@ -51,7 +52,7 @@
                   region:(MKCoordinateRegion)region
                  popover:(GSSiPopoverView *)popover;
 
-- (NSArray *)categoryNames;
++ (NSArray *)categoryNames;
 
 - (void)changePriorityLocationOffset:(NSInteger)offset
                       forPLocAtIndex:(NSInteger)index;
