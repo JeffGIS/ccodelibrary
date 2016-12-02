@@ -661,11 +661,6 @@ static double _deviceValues[9][4];
     return rtn;
 }
 
-- (BOOL)shouldUseCalibration:(GSSiSlopeViewController *)controller
-{
-    return YES;
-}
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
