@@ -4,7 +4,7 @@
 @import UIKit;
 #import "RampStruct.h"
 
-#define lastSelectableRampType RampTypeDiagonal
+#define lastSelectableRampType RampTypeOneWayDirCurbGutter
 
 typedef NS_ENUM(NSInteger, RampTypeEditOption)
 {

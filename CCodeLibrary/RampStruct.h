@@ -34,17 +34,18 @@ typedef enum {
     RampTypePerpNonWalk,
     RampTypeCombPerpWalk,
     RampTypeCombPerpNonWalk,
-    RampTypeOneWayDirCurbGutter,
+    RampTypeOneWayPerp,
     RampTypeOneWayDirBlendTrans,
     RampTypeParallel,
     RampTypeDepressedCorner,
     RampTypeFan,
     RampTypeBuiltUp,
     RampTypeDiagonal,
-    RampTypeCombLeftWalk,//left side of RampTypeCombPerpWalk
-    RampTypeCombRightWalk,//right side of RampTypeCombPerpWalk
-    RampTypeCombLeftNonWalk,//left side of RampTypeCombPerpNonWalk
-    RampTypeCombRightNonWalk,//right side of RampTypeCombPerpNonWalk
+    RampTypeOneWayDirCurbGutter,
+    RampTypeCombLeftWalk=101,//left side of RampTypeCombPerpWalk
+    RampTypeCombRightWalk=102,//right side of RampTypeCombPerpWalk
+    RampTypeCombLeftNonWalk=103,//left side of RampTypeCombPerpNonWalk
+    RampTypeCombRightNonWalk=104,//right side of RampTypeCombPerpNonWalk
     rampTypeCount //always last item
 } RampType;
 

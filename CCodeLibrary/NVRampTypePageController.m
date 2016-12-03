@@ -8,7 +8,7 @@
 
 @implementation NVRampType
 
-+ (instancetype)perpRamp
++ (instancetype)perp
 {
     NVRampType *rt = NVRampType.new;
     rt.displayText = @"Perpendicular";
@@ -17,7 +17,7 @@
     return rt;
 }
 
-+ (instancetype)perpNonWalkableRamp
++ (instancetype)perpNonWalkable
 {
     NVRampType *rt = NVRampType.new;
     rt.displayText = @"Perpendicular With\nNon-Walkable Surface";
@@ -107,6 +107,15 @@
     return rt;
 }
 
++ (instancetype)oneWayPerp
+{
+    NVRampType *rt = NVRampType.new;
+    rt.displayText = @"One Way Perpendicular";
+    rt.imageName = @"OneWayPerp";
+    rt.type = RampTypeOneWayPerp;
+    return rt;
+}
+
 @end
 
 @interface NVRampTypePageController () <UIPageViewControllerDataSource,UIPageViewControllerDelegate,NVRampTypePageViewDelegate>
@@ -150,9 +159,9 @@
 
 + (NSArray *)defaultRampTypes
 {
-    return @[NVRampType.perpRamp, NVRampType.perpNonWalkableRamp, NVRampType.comPerp, NVRampType.comPerpNW,
-             NVRampType.oneWayAdj, NVRampType.oneWayBlend, NVRampType.parallel, NVRampType.depCorner,
-             NVRampType.fan, NVRampType.builtUp, NVRampType.diagonal];
+    return @[NVRampType.perp, NVRampType.perpNonWalkable, NVRampType.comPerp, NVRampType.comPerpNW,
+             NVRampType.oneWayPerp, NVRampType.oneWayBlend, NVRampType.parallel, NVRampType.depCorner,
+             NVRampType.fan, NVRampType.builtUp, NVRampType.diagonal, NVRampType.oneWayAdj];
 }
 
 - (id)init
