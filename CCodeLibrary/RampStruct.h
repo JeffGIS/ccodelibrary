@@ -49,6 +49,8 @@ typedef enum {
     rampTypeCount //always last item
 } RampType;
 
+#define lastSelectableRampType RampTypeOneWayDirCurbGutter
+
 typedef enum {
     NVSignalTypeNone,
     NVSignalTypeText,

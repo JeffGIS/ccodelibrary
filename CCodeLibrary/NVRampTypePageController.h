@@ -4,8 +4,6 @@
 @import UIKit;
 #import "RampStruct.h"
 
-#define lastSelectableRampType RampTypeOneWayDirCurbGutter
-
 typedef NS_ENUM(NSInteger, RampTypeEditOption)
 {
     RampTypeEditOptionDefault,

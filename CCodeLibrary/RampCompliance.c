@@ -643,14 +643,20 @@ char *rampToText(RampStruct *ramp)
     
     char *obstructions[] = {"None", "Hydrant", "Manhole", "Polebox", "Pole", "StreetManhole", "Other", "None", "None", "None", "None", "MasterNone"};
     
-    char *rampTypes[] = {"Perp", "PerpNonWalk", "CombPerpWalk", "CombPerpNonWalk", "OneWayDirCurbGutter", "OneWayDirBlendTrans", "Parallel", "DepressedCorner", "Fan", "BuiltUp", "Diagonal", "CombLeftWalk", "CombRightWalk", "CombLeftNonWalk", "CombRightNonWalk"};
+    char *rampTypes[] = {"Perp", "PerpNonWalk", "CombPerpWalk", "CombPerpNonWalk", "OneWayPerp", "OneWayDirBlendTrans", "Parallel", "DepressedCorner", "Fan", "BuiltUp", "Diagonal", "OneWayDirCurbGutter", "CombLeftWalk", "CombRightWalk", "CombLeftNonWalk", "CombRightNonWalk"};
     
     char *awiTypes[] = {"None", "Tones", "SpeechMessage"};
     char *signalTypes[] = {"None", "Text", "Symbol", "SideTimer", "BelowTimer"};
     char *buttonTypes[] = {"None", "SmallPush", "LargePush", "Touch", "APS"};
     char *rampText = (char *)calloc(4480, sizeof(char));
+    int type = ramp->rampType;
+    int typeAdj = (RampTypeCombLeftWalk - lastSelectableRampType);
     
-    sprintf(rampText, "%i\t'%s'\t%i\t%i\t'%s'\t'%s'\t'%s'\t'%s'\t%i\t%i\t%i\t%i\t%i\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%i\t%i\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t'%s'\t%s'\t%.2f\t%.2f\t%.2f\t%i\t%i\t'%s'\t'%s'\t'%s'\t%i\t%i\t%i\t%i\t%i", ramp->rampNum, ramp->rampID, ramp->timeComplete, ramp->rampInXWalk, textures[ramp->texture], obstructions[ramp->upperLandingObstruction], obstructions[ramp->lowerLandingObstruction], obstructions[ramp->rampObstruction], ramp->hasRampCracks, ramp->hasUpperLandingCracks, ramp->hasStreetLandingCracks, ramp->hasLeftSidewalkCracks, ramp->hasRightSidewalkCracks, ramp->crackWidth.rampCrackWidth, ramp->crackWidth.upperLandingCrackWidth, ramp->crackWidth.streetLandingCrackWidth, ramp->crackWidth.leftSidewalkCrackWidth, ramp->crackWidth.rightSidewalkCrackWidth, ramp->rampWidth, ramp->rampDepth, ramp->rampSlopeFront, ramp->rampSlopeSide, ramp->upperLandingSlopeFront, ramp->upperLandingSlopeSide, ramp->streetLandingSlopeFront, ramp->streetLandingSlopeSide, ramp->flareLeftSlopeFront, ramp->flareRightSlopeFront, ramp->swkLeftSlopeFront, ramp->swkLeftSlopeSide, ramp->swkRightSlopeFront, ramp->swkRightSlopeSide, ramp->SteepTopOfCurb, ramp->PedRampLip, ramp->rampComment, rampTypes[ramp->rampType], ramp->curbCutDistance, ramp->bumpWidth, ramp->bumpHeight, ramp->PEDButtonHeight, ramp->PEDButtonDist, buttonTypes[ramp->PEDButtonType], signalTypes[ramp->PEDSignalType], awiTypes[ramp->awi], ramp->hasLocatorTone, ramp->hasInfoSign, ramp->hasBraille, ramp->hasTactileArrow);
+    if (type > lastSelectableRampType)
+        type -= typeAdj;
+    
+    
+    sprintf(rampText, "%i\t'%s'\t%i\t%i\t'%s'\t'%s'\t'%s'\t'%s'\t%i\t%i\t%i\t%i\t%i\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%i\t%i\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t'%s'\t%s'\t%.2f\t%.2f\t%.2f\t%i\t%i\t'%s'\t'%s'\t'%s'\t%i\t%i\t%i\t%i\t%i", ramp->rampNum, ramp->rampID, ramp->timeComplete, ramp->rampInXWalk, textures[ramp->texture], obstructions[ramp->upperLandingObstruction], obstructions[ramp->lowerLandingObstruction], obstructions[ramp->rampObstruction], ramp->hasRampCracks, ramp->hasUpperLandingCracks, ramp->hasStreetLandingCracks, ramp->hasLeftSidewalkCracks, ramp->hasRightSidewalkCracks, ramp->crackWidth.rampCrackWidth, ramp->crackWidth.upperLandingCrackWidth, ramp->crackWidth.streetLandingCrackWidth, ramp->crackWidth.leftSidewalkCrackWidth, ramp->crackWidth.rightSidewalkCrackWidth, ramp->rampWidth, ramp->rampDepth, ramp->rampSlopeFront, ramp->rampSlopeSide, ramp->upperLandingSlopeFront, ramp->upperLandingSlopeSide, ramp->streetLandingSlopeFront, ramp->streetLandingSlopeSide, ramp->flareLeftSlopeFront, ramp->flareRightSlopeFront, ramp->swkLeftSlopeFront, ramp->swkLeftSlopeSide, ramp->swkRightSlopeFront, ramp->swkRightSlopeSide, ramp->SteepTopOfCurb, ramp->PedRampLip, ramp->rampComment, rampTypes[type], ramp->curbCutDistance, ramp->bumpWidth, ramp->bumpHeight, ramp->PEDButtonHeight, ramp->PEDButtonDist, buttonTypes[ramp->PEDButtonType], signalTypes[ramp->PEDSignalType], awiTypes[ramp->awi], ramp->hasLocatorTone, ramp->hasInfoSign, ramp->hasBraille, ramp->hasTactileArrow);
     
     return rampText;
 }
