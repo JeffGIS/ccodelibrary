@@ -790,6 +790,29 @@
         [ManagePlacesDatabase.database addLocationToList:(int)c.number];
 }
 
+-(BOOL)processServerString:(NSString*)instr
+{
+    BOOL rtn = TRUE;
+    NSArray *arr = [instr componentsSeparatedByString:@" "];
+    NSString * str = arr[0];
+    int server = str.integerValue;
+    if (server != _serverToUse)
+        rtn = FALSE;
+    _serverToUse = server;
+    if (arr.count > 1)
+    {
+        str = arr[1];
+        _hideConnectButton = str.integerValue;
+    }
+    if (arr.count > 2)
+    {
+        str = arr[2];
+        if (!isGSSiDevice())
+            _showDeveloperFunctions = str.integerValue;
+    }
+
+    return rtn;
+}
 - (BOOL)savePlacesString:(NSString*)placesStringIN //returns FALSE if need to switch server
 {
     BOOL rtn = TRUE;
@@ -799,10 +822,7 @@
         NSString* messNum = arr[0];
         _currentMessageNum = messNum.integerValue;
         messNum = arr[1];
-        int server = messNum.integerValue;
-        if (server != _serverToUse)
-            rtn = FALSE;
-        _serverToUse = server;
+        rtn = [self processServerString:messNum];
         NSString* version = arr[2];
         NSArray *versions = [version componentsSeparatedByString:@":"];
         _minManageVersion  = versions[0];

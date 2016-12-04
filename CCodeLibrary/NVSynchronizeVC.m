@@ -162,7 +162,6 @@
     [_connectButton addTarget:self
                        action:@selector(connectButtonTapped:)
              forControlEvents:UIControlEventTouchUpInside];
-    
     _connectLabel = UILabel.new;
     [self setupLabel:_connectLabel];
     [self updateConnectLabel];
@@ -354,6 +353,7 @@
                 break;
         }
     }
+    [_connectButton setHidden:YES];
     
     _syncButton.enabled = NO;
     [self updateButton:_syncButton];
@@ -512,7 +512,6 @@
                           CRAPI.sharedInstance.GSSiPadNumber, CRAPI.sharedInstance.currentManageriPad,
                           CRAPI.sharedInstance.currentiPadWithinManager, CRAPI.sharedInstance.totiPadWithinManager];
     
-    _connectButton.hidden = (CRAPI.sharedInstance.placesArray.count && !CRAPI.sharedInstance.showDeveloperFunctions);
 }
 
 - (void)startSync
@@ -640,6 +639,7 @@
     _numConnectionAttempts = 0;
     _totConnectionAttempts = 60;
     _process = CONNECT_PROCESS;
+    _popoverView.progressLabel.hidden = YES;
     
     [_popoverView showAfter:0.0
                   withTitle:@"Waiting\nto Connect\nto Manager"
@@ -893,7 +893,6 @@ didReceiveMessage:(NSString *)message
                     _connectLabel.text = [NSString stringWithFormat:@"%i-NO MANAGER",
                                           CRAPI.sharedInstance.GSSiPadNumber];
                     
-                    _connectButton.hidden = NO;
                     
                     break;
                 }
@@ -942,6 +941,7 @@ didReceiveMessage:(NSString *)message
                 [self updateConnectLabel];
                 [_locationManager startUpdatingLocation];
                 [self closeGMServer];
+                [_connectButton setHidden:CRAPI.sharedInstance.hideConnectButton];
                 [self sendGMServerMessage:GMSMessageGetUploadStatus];
             }
                 

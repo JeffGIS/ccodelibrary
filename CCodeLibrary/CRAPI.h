@@ -114,6 +114,8 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property NSString *minAlleyVersion;
 @property int currentMessageNum;
 @property int serverToUse;
+@property CLLocation *lastLocation;
+@property BOOL hideConnectButton;
 
 + (CRAPI *)sharedInstance;
 
