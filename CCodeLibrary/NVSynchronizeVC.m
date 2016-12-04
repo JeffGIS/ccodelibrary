@@ -637,7 +637,7 @@
     [_GMServer initCommunication:7.5];
         
     _numConnectionAttempts = 0;
-    _totConnectionAttempts = 60;
+    _totConnectionAttempts = 50;
     _process = CONNECT_PROCESS;
     _popoverView.progressLabel.hidden = YES;
     
@@ -1081,14 +1081,18 @@ didReceiveMessage:(NSString *)message
                 {
                     [_popoverView hide];
                     [self closeGMServer];
-                    _oldPlaces = [CRAPI.sharedInstance copyPlaces];
-                    [self sendGMServerMessage:GMSMessageOpenConnect];
+                    _GMServer = [GeoMasterServer open];
+                    _GMServer.delegate = self;
+                    _GMServer.messageID = GMSMessageCancelConnect;
+                    [_GMServer initCommunication:7.5];
                 }
                 
                 break;
                 
             case GMSMessageCancelConnect:
                 [_popoverView hide];
+                _oldPlaces = [CRAPI.sharedInstance copyPlaces];
+                [self sendGMServerMessage:GMSMessageOpenConnect];
                 break;
         }
     }

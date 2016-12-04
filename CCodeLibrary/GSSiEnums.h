@@ -52,6 +52,7 @@ typedef NS_ENUM(NSInteger, GMSStatus)
     GMSStatusSetCityList,
     GMSStatusPickPlace,
     GMSStatusGetMessage,
+    GMSStatusGetNearbyiPads,
 };
 
 typedef NS_ENUM(NSInteger, GMSMessage)
