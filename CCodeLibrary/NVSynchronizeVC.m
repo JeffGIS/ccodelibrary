@@ -893,6 +893,7 @@ didReceiveMessage:(NSString *)message
                     _connectLabel.text = [NSString stringWithFormat:@"%i-NO MANAGER",
                                           CRAPI.sharedInstance.GSSiPadNumber];
                     
+                    [_connectButton setHidden:CRAPI.sharedInstance.hideConnectButton];
                     
                     break;
                 }

@@ -33,7 +33,7 @@
         goto Exit;
     
     BigRead(FidTF, (HPSTR)&CompressedLength, 4);
-    
+    rtn = TRUE;
     while (CompressedLength > 0)
     {
         LPBYTE	pCompressedRec = (LPBYTE)malloc(CompressedLength +32);
@@ -41,7 +41,8 @@
         LenRead += CompressedLength + 4;
         BigRead(FidTF,pCompressedRec,CompressedLength);
         lRec = DecompressBinaryRecordUnsafe(pRec, pCompressedRec, CompressedLength);
-        BigWrite(Fid ,pRec ,lRec, -1);
+        if (BigWrite(Fid ,pRec ,lRec, -1) != lRec)
+            rtn = FALSE;
         BigRead(FidTF, (HPSTR)&CompressedLength, 4);
         free (pCompressedRec);
         free(pRec);
@@ -58,7 +59,6 @@
     }
     
     fclose(Fid);
-    rtn = TRUE;
     
 Exit:
     return rtn;

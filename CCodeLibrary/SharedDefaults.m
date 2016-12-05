@@ -31,7 +31,7 @@ static SharedDefaults *_defaults;
     if (![_defaults synchronize])
     {
         _failedWrites++;
-        if (!CRAPI.sharedInstance.showDeveloperFunctions)
+//        if (!CRAPI.sharedInstance.showDeveloperFunctions)
             return;
         if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
         {
