@@ -927,6 +927,7 @@
     _deviceNumber = _currentiPadWithinManager;
     _totiPadWithinManager = (int)c.totWithinManager;
     _controlledInterface = c.controlledInterface;
+    _controllControlledInterface = !c.controlledInterface;
     [self saveiPadIDs];
     return TRUE;
 }

@@ -70,6 +70,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic) NSMutableArray *annotations;
 @property (nonatomic) CGFloat currentZoom;
 @property BOOL controlledInterface;
+@property BOOL controllControlledInterface;
 @property int pickApInPixels;
 @property int project;
 @property (nonatomic, copy) NSString *sharedFilePath;
