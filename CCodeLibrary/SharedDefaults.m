@@ -31,7 +31,8 @@ static SharedDefaults *_defaults;
     if (![_defaults synchronize])
     {
         _failedWrites++;
-        return;
+        if (!CRAPI.sharedInstance.showDeveloperFunctions)
+            return;
         if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
         {
             _alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
