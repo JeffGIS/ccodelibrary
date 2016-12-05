@@ -282,8 +282,8 @@ NSString *textAfterLastTab(NSString *string)
     
     if (range.location != NSNotFound)
         string = [string substringFromIndex:(range.location + 1)];
-        
-        return string;
+    
+    return string;
 }
 
 NSString *textBeforeLastTab(NSString *string)
@@ -299,8 +299,42 @@ NSString *textBeforeLastTab(NSString *string)
     
     if (range.location != NSNotFound)
         string = [string substringToIndex:range.location];
-        
+    
+    return string;
+}
+
+NSString *textAfterLastChar(NSString *string,NSString* c)
+{
+    if (!string)
+        return nil;
+    
+    else if (!string.length)
         return string;
+    
+    NSRange range = [string rangeOfString:c
+                                  options:NSBackwardsSearch];
+    
+    if (range.location != NSNotFound)
+        string = [string substringFromIndex:(range.location + 1)];
+    
+    return string;
+}
+
+NSString *textBeforeLastChar(NSString *string,NSString* c)
+{
+    if (!string)
+        return nil;
+    
+    else if (!string.length)
+        return string;
+    
+    NSRange range = [string rangeOfString:c
+                                  options:NSBackwardsSearch];
+    
+    if (range.location != NSNotFound)
+        string = [string substringToIndex:range.location];
+    
+    return string;
 }
 
 NSString *textAfterLastSpace(NSString *string)

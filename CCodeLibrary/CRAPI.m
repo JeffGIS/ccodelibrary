@@ -763,9 +763,12 @@
     NSMutableArray *placearray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
     [placearray removeObjectAtIndex:0];
     
-    for (NSString *str in placearray)
+    for (NSString *instr in placearray)
     {
+        NSString *str = textBeforeLastChar(instr,@"*");
+        NSString *controlStr = textAfterLastChar(instr,@"*");
         CityOrOrganizationData *c = [[CityOrOrganizationData alloc]init];
+        c.controlledInterface = controlStr.integerValue;
         c.fullDescription = str;
         c.name = textInsideParentheses(str);
         c.number = [textBeforeParentheses(str) integerValue];
@@ -923,7 +926,7 @@
     _currentiPadWithinManager = (int)c.withinManager;
     _deviceNumber = _currentiPadWithinManager;
     _totiPadWithinManager = (int)c.totWithinManager;
-    
+    _controlledInterface = c.controlledInterface;
     [self saveiPadIDs];
     return TRUE;
 }

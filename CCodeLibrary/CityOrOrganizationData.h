@@ -12,6 +12,7 @@
 @property NSInteger withinManager;
 @property NSInteger totWithinManager;
 @property NSInteger GSSiPadNumber;
+@property BOOL controlledInterface;
 
 - (BOOL) inArray:(NSArray*)array;
 
