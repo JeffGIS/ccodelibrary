@@ -16,6 +16,8 @@
     NVAlertView *_alert;
 }
 
+@property int failedWrites;
+
 + (UserDefaults *)defaults;
 
 - (UIColor *)colorForKey:(NSString *)key;

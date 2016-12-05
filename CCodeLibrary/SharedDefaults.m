@@ -28,11 +28,15 @@ static SharedDefaults *_defaults;
 
 - (void)doSync
 {
-    if (![_defaults synchronize])
+    [_defaults synchronize];
+    
+    /*if (![_defaults synchronize])
     {
         _failedWrites++;
-//        if (!CRAPI.sharedInstance.showDeveloperFunctions)
+        
+        if (!CRAPI.sharedInstance.showDeveloperFunctions)
             return;
+        
         if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
         {
             _alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
@@ -41,7 +45,7 @@ static SharedDefaults *_defaults;
                                            buttonTextArray:@[@"OK"]
                                           destructiveIndex:0];
         }
-    }
+    }*/
 }
 
 - (NSArray *)arrayForKey:(NSString *)key

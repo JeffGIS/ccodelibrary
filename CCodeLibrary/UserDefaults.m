@@ -35,11 +35,24 @@ static UserDefaults *_defaults;
 
 - (void)doSync
 {
-    if (![_defaults synchronize])
-    {
-        [CRAPI.sharedInstance checkStorageForMinStorage:nil];
-        NSLog(@"UserDefaults Failed to Synchronize!");
-    }
+    [_defaults synchronize];
+    
+    /*if (![_defaults synchronize])
+     {
+         _failedWrites++;
+     
+         if (!CRAPI.sharedInstance.showDeveloperFunctions)
+             return;
+     
+         if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
+         {
+             _alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
+                                                   delegate:CRAPI.sharedInstance
+                                                      title:@"Failed to write.\nCheck free space"
+                                            buttonTextArray:@[@"OK"]
+                                           destructiveIndex:0];
+         }
+     }*/
 }
 
 - (UIColor *)colorForKey:(NSString *)key
