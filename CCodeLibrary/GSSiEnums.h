@@ -65,7 +65,9 @@ typedef NS_ENUM(NSInteger, GMSMessage)
     GMSMessageGetPoliceUpdate,
     GMSMessageGetUploadStatus,
     GMSMessageFileUploaded,
+    GMSMessageGetiPadNumber,
 };
+
 
 typedef NS_ENUM(NSInteger, FTPStatus)
 {
