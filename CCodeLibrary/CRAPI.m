@@ -1057,7 +1057,28 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)gotoAppStore
 {
-    [UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://itunes.apple.com/us/app/facebook/id284882215"]];
+    NSString *urlString = @"";
+    
+    switch (CRAPI.sharedInstance.currentModule)
+    {
+        case MANAGEMENT_MODULE:
+            urlString = @"https://itunes.apple.com/us/app/gssi/id1104782524";
+            break;
+            
+        case PRELIM_MODULE:
+            urlString = @"https://itunes.apple.com/us/app/gssi/id1104781807";
+            break;
+            
+        case DETAIL_MODULE:
+            urlString = @"https://itunes.apple.com/us/app/gssi/id1104782168";
+            break;
+            
+        default:
+            urlString = @"https://itunes.apple.com/us/developer/geographic-software-specialists/id1104523427";
+            break;
+    }
+    
+    [UIApplication.sharedApplication openURL:[NSURL URLWithString:urlString]];
 }
 
 - (void)checkStorageForMinStorage:(NSNumber *)minStorage
