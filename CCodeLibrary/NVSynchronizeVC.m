@@ -529,6 +529,8 @@
 {
     _syncButton.enabled = NO;
     [self updateButton:_syncButton];
+    CRAPI.sharedInstance.refreshMap = YES;
+    
     if ([CRAPI.sharedInstance haveErrorLog])
     {
         _process = UPLOAD_ERROR_FILE;
