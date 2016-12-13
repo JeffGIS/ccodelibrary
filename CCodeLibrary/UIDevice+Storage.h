@@ -8,5 +8,6 @@
 + (uint64_t)availableStorageSpace;
 + (uint64_t)totalStorageSpace;
 + (int)pctBatteryRemaining;
++ (void)reportMemoryWarning;
 
 @end

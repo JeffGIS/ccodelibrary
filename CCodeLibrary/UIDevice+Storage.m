@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "UIDevice+Storage.h"
+@import MachO;
 
 @implementation UIDevice (Storage)
 
@@ -47,6 +48,19 @@
     device.batteryMonitoringEnabled = YES;
     
     return (int)roundf(device.batteryLevel * 100);
+}
+
++ (void)reportMemoryWarning
+{
+    struct task_basic_info info;
+    mach_msg_type_number_t size = TASK_BASIC_INFO_COUNT;
+    kern_return_t kerr = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
+    
+    if(kerr == KERN_SUCCESS)
+        NSLog(@"Memory Warning Received! %u bytes used.", info.resident_size);
+    
+    else
+        NSLog(@"Memory Warning Received! Error getting bytes used (%s).", mach_error_string(kerr));
 }
 
 @end
