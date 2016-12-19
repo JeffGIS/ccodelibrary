@@ -128,6 +128,27 @@ bool findClosestPoint (LPDPOINT pPoint,LPDPOINT pNearPt,double *mind,LPDPOINT p1
     return FALSE;
 }
 
+bool findClosestLLPoint (LLPOINT *pPoint,LLPOINT *pNearPt,double *mind,LLPOINT *p1LL)
+{
+    DPOINT pt;
+    DPOINT p1;
+    p1.x = p1LL->lon;
+    p1.y = p1LL->lat;
+    pt.x = pPoint->lon;
+    pt.y = pPoint->lat;
+    
+    double d = ArcDistance(p1,pt);
+    
+    if (d < *mind)
+    {
+        *mind = d;
+        *pNearPt = *pPoint;
+        return TRUE;
+    }
+    
+    return FALSE;
+}
+
 bool pointInDBounds (DPOINT *pt,dbounds *pBounds)
 {
     bool rtn = true;
