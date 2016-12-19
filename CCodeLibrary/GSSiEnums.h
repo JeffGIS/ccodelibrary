@@ -192,6 +192,8 @@ typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
     MarkerInfoWindowTypeCRInt,
     MarkerInfoWindowTypeCrime,
     MarkerInfoWindowTypeMGVSanPoint,
+    MarkerInfoWindowTypeMGVSanMain,
+
 };
 
 typedef NS_ENUM(NSInteger, HardCodedConfigs)
