@@ -354,4 +354,10 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
     }
 }
 
+- (UIView *)hitTest:(CGPoint)point
+          withEvent:(UIEvent *)event
+{
+    return _webView.scrollView;
+}
+
 @end
