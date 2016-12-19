@@ -7,7 +7,7 @@
 #import "NVAlertView.h"
 #import "CRAPI.h"
 
-@interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate>
+@interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic) WKWebView *webView;
 @property (nonatomic) UIButton *returnButton, *realtor;
@@ -107,6 +107,12 @@
         CGPDFDocumentRef pdfRef = CGPDFDocumentCreateWithURL(urlRef);
         nvwv.numPages = (int)CGPDFDocumentGetNumberOfPages(pdfRef);
         CGPDFDocumentRelease(pdfRef);
+        
+        UIRotationGestureRecognizer *rotGR = [[UIRotationGestureRecognizer alloc] initWithTarget:nvwv
+                                                                                          action:@selector(rotateScrollView:)];
+        
+        rotGR.delegate = nvwv;
+        [nvwv.webView.scrollView addGestureRecognizer:rotGR];
     }
     
     [nvwv.webView loadFileURL:url allowingReadAccessToURL:url];
@@ -358,6 +364,18 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
           withEvent:(UIEvent *)event
 {
     return _webView.scrollView;
+}
+
+- (void)rotateScrollView:(UIRotationGestureRecognizer *)gesture
+{
+    _webView.scrollView.transform = CGAffineTransformRotate(gesture.view.transform, gesture.rotation);
+    gesture.rotation = 0.0;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
 }
 
 @end
