@@ -11,11 +11,11 @@
 
 @property (nonatomic) WKWebView *webView;
 @property (nonatomic) UIButton *returnButton, *realtor;
-@property (nonatomic) CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation;
+@property (nonatomic) CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation, origScale, origRotation;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIActivityIndicatorView *indicator;
-@property (nonatomic) CGPoint zoomPoint;
-@property int numPages, zoomPage;
+@property (nonatomic) CGPoint zoomPoint, origPoint;
+@property int numPages, zoomPage, origPage;
 @property BOOL isFile, navigationComplete;
 
 @end
@@ -233,11 +233,11 @@
           withScale:(CGFloat)scale
            rotation:(CGFloat)rotation
 {
-    _zoomPoint.x = point.x;
-    _zoomPoint.y = point.y;
-    _zoomPage = page;
-    _zoomScale = scale;
-    _zoomRotation = rotation;
+    _zoomPoint.x = _origPoint.x = point.x;
+    _zoomPoint.y = _origPoint.y = point.y;
+    _zoomPage = _origPage = page;
+    _zoomScale = _origScale = scale;
+    _zoomRotation = _origRotation = rotation;
     
     if (_navigationComplete)
         [self updatePosition];
@@ -363,7 +363,11 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 - (UIView *)hitTest:(CGPoint)point
           withEvent:(UIEvent *)event
 {
-    return _webView.scrollView;
+    if (CGRectContainsPoint(_returnButton.frame, point))
+        return _returnButton;
+        
+    else
+        return _webView.scrollView;
 }
 
 - (void)rotateScrollView:(UIRotationGestureRecognizer *)gesture
@@ -376,6 +380,22 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
+}
+
+- (void)gotoOriginalPosition
+{
+    DPOINT point = {0};
+    point.x = _origPoint.x;
+    point.y = _origPoint.y;
+    
+    _webView.scrollView.transform = CGAffineTransformMakeRotation(0.0);
+    [_webView.scrollView setZoomScale:1.0 animated:NO];
+    [_webView.scrollView setContentOffset:CGPointZero animated:NO];
+    
+    [self zoomToPoint:point
+           withinPage:_origPage
+            withScale:_origScale
+             rotation:_origRotation];
 }
 
 @end

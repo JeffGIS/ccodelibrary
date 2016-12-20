@@ -31,6 +31,7 @@ wasTappedAtPoint:(DPOINT)point
 - (void)hide:(BOOL)animated;
 - (void)showRealtorButton;
 - (void)hideReturnButton;
+- (void)gotoOriginalPosition;
 
 - (void)zoomToPoint:(DPOINT)point
          withinPage:(int)page
