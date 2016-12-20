@@ -222,7 +222,7 @@
            selector:@selector(legendsSelected:)];
     
     //legends button is NOT added by default
-    mt.platSC = [[UISegmentedControl alloc] initWithItems:@[@"Full", @"Split", @"Tri", @"Plat"]];
+    mt.platSC = [[UISegmentedControl alloc] initWithItems:@[@"Map", @"Split", @"Tri", @"Plat"]];
     
     [mt setupSegControl:mt.platSC
    selectedSegmentIndex:MapViewScreenSettingFullscreen
@@ -622,7 +622,7 @@
     for (UIView *views in self.subviews)
         views.center = CGPointMake(self.center.x, views.center.y);
     
-    [_platSC setTitle:@"F"
+    [_platSC setTitle:@"M"
     forSegmentAtIndex:0];
     
     [_platSC setTitle:@"S"
@@ -723,7 +723,7 @@
                                          _progressView.frame.size.height);
     }
     
-    [_platSC setTitle:@"Full"
+    [_platSC setTitle:@"Map"
            forSegmentAtIndex:0];
     
     [_platSC setTitle:@"Split"

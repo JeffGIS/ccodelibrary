@@ -3,8 +3,6 @@
 
 #import "GSSiEnums.h"
 
-#define NUMMapToolbarProperty 12
-
 typedef NS_ENUM(NSInteger, MapToolbarProperty)
 {
     MapToolbarPropertyWantPlat,
@@ -19,7 +17,7 @@ typedef NS_ENUM(NSInteger, MapToolbarProperty)
     MapToolbarPropertyWantProgressBar,
     MapToolbarPropertyWantHelpButton,
     MapToolbarPropertyWantReturnButton,
-};
+NUMMapToolbarProperty};
 
 typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 {

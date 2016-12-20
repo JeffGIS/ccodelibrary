@@ -193,7 +193,6 @@ typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
     MarkerInfoWindowTypeCrime,
     MarkerInfoWindowTypeMGVSanPoint,
     MarkerInfoWindowTypeMGVSanMain,
-
 };
 
 typedef NS_ENUM(NSInteger, HardCodedConfigs)
@@ -206,6 +205,7 @@ typedef NS_ENUM(NSInteger, HardCodedConfigs)
     HCConfigCrimes,
     HCConfigMapleGrove,
     HCConfigFromSpreadsheet,
-};
+    HCConfigMapleGrovePDF,
+NUMHardCodedConfigs};
 
 @end
