@@ -36,6 +36,9 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
 {
     BOOL dispersed = FALSE;
     static int ii=1;
+    CGFloat screenScale = [[UIScreen mainScreen] scale];
+    
+    size *= screenScale;
     CGFloat origSize = size;
     if (lwidth < 0)
     {
