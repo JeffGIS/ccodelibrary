@@ -23,6 +23,7 @@
 @property double distance;
 @property NSString *identifier;
 @property NSString *symbolName;
+@property NSString *data;
 @property NSInteger time;
 @property NSInteger nLinks;
 @property DPOINT pickedPoint;
