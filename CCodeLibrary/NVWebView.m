@@ -363,11 +363,31 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 - (UIView *)hitTest:(CGPoint)point
           withEvent:(UIEvent *)event
 {
-    if (CGRectContainsPoint(_returnButton.frame, point))
-        return _returnButton;
+    if (_isFile)
+    {
+        if (CGRectContainsPoint(_returnButton.frame, point))
+            return _returnButton;
         
+        else
+            return _webView.scrollView;
+    }
+    
     else
-        return _webView.scrollView;
+    {
+        for(UIView *subviews in self.subviews)
+        {
+            if ([subviews pointInside:[self convertPoint:point
+                                                  toView:subviews]
+                            withEvent:event])
+            {
+                return [subviews hitTest:[self convertPoint:point
+                                                     toView:subviews]
+                               withEvent:event];
+            }
+        }
+        
+        return self;
+    }
 }
 
 - (void)rotateScrollView:(UIRotationGestureRecognizer *)gesture
