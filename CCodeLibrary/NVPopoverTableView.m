@@ -174,7 +174,7 @@ viewForHeaderInSection:(NSInteger)section
                                       reuseIdentifier:cellIdentifier];
     }
     
-    cell.textLabel.text = _textArray[indexPath.row];
+    cell.textLabel.text = textBefore (_textArray[indexPath.row],@"\x03");
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.font = _font;
     cell.textLabel.adjustsFontSizeToFitWidth = YES;

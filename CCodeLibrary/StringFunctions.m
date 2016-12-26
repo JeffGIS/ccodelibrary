@@ -1071,3 +1071,16 @@ BOOL isGSSiDevice(void)
     
     return rtn;
 }
+NSString *stringWithID(char * string,int ID)
+{
+    NSString * rtn = [NSString stringWithFormat:@"%s\x03%i",string,ID];
+    return rtn;
+}
+NSString *stringWithoutID(NSString *string)
+{
+    return textBefore(string, @"\x03");
+}
+NSString * paddedString (NSString* str)
+{
+    return [NSString stringWithFormat:@" %@ ",str];
+}
