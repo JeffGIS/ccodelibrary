@@ -24,6 +24,7 @@ didReturnWithSelectedRows:(NSArray *)selectedRows;
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic, copy) NSArray<UIImage *> *imageArray;
+@property BOOL allowsMultipleSelection;
 
 + (instancetype)showPopoverTableViewInView:(UIView *)view
                                   delegate:(id)delegate

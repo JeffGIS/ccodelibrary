@@ -55,6 +55,7 @@
     nvptv.title = title;
     nvptv.textArray = textArray;
     nvptv.includeCancel = includeCancel;
+    nvptv.allowsMultipleSelection = NO;
     
     nvptv.overlayView = UIView.new;
     nvptv.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -238,10 +239,13 @@ viewForHeaderInSection:(NSInteger)section
     {
         cell.textLabel.textColor = UserDefaults.defaults.appleBlue;
         
-        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self
-                                                                                                action:@selector(cellLongPressed:)];
-        
-        [cell addGestureRecognizer:longPress];
+        if (_allowsMultipleSelection)
+        {
+            UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                                    action:@selector(cellLongPressed:)];
+            
+            [cell addGestureRecognizer:longPress];
+        }
     }
     
     if (_imageArray.count)
@@ -334,13 +338,32 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableArray *selectedRows = NSMutableArray.array;
     
-    if (!selectedRows.count)
+    if (!_tableView.indexPathsForSelectedRows.count)
     {
         if ([_delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
         {
             [_delegate popoverTableViewDidCancel:self];
             return;
         }
+    }
+    
+    else if (_tableView.indexPathsForSelectedRows.count == 1)
+    {
+        NSIndexPath *indexPath = _tableView.indexPathsForSelectedRows[0];
+        NSString *text = [_tableView cellForRowAtIndexPath:indexPath].textLabel.text;
+        NSInteger index = 0;
+        
+        if (_includeCancel)
+            index = (indexPath.row - 1);
+        
+        else
+            index = indexPath.row;
+        
+        [_delegate popoverTableView:self
+               didSelectRowWithText:text
+                            atIndex:index];
+        
+        return;
     }
     
     for (NSIndexPath *paths in _tableView.indexPathsForSelectedRows)
