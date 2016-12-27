@@ -334,6 +334,15 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableArray *selectedRows = NSMutableArray.array;
     
+    if (!selectedRows.count)
+    {
+        if ([_delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
+        {
+            [_delegate popoverTableViewDidCancel:self];
+            return;
+        }
+    }
+    
     for (NSIndexPath *paths in _tableView.indexPathsForSelectedRows)
     {
         if (_includeCancel)
