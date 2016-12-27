@@ -14,6 +14,9 @@
 @optional
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView;
 
+- (void)popoverTableView:(NVPopoverTableView *)popoverTableView
+didReturnWithSelectedRows:(NSArray *)selectedRows;
+
 @end
 
 @interface NVPopoverTableView : UIView

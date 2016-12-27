@@ -12,6 +12,8 @@
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIFont *font;
 @property BOOL includeCancel;
+@property CGFloat cellWidth;
+@property (nonatomic) UIButton *returnButton;
 
 @end
 
@@ -70,19 +72,52 @@
     nvptv.tabBar = view.parentViewController.tabBarController.tabBar;
     nvptv.tabBar.userInteractionEnabled = NO;
     
-    CGFloat margin = 100.0, cornerRadius = 16.0, rowHeight = 52.0;
+    CGRect bounds = UIScreen.mainScreen.bounds;
+    CGFloat shortestSide = MIN(bounds.size.height, bounds.size.width);
+    CGFloat margin = 80.0, cornerRadius = 16.0;
     nvptv.font = [UIFont boldSystemFontOfSize:28.0];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
-        margin = 40.0, cornerRadius = 8.0, rowHeight = 44.0;
+        margin = 40.0, cornerRadius = 8.0;
         nvptv.font = [UIFont boldSystemFontOfSize:20.0];
     }
     
+    nvptv.returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    nvptv.returnButton.translatesAutoresizingMaskIntoConstraints = NO;
+    nvptv.returnButton.backgroundColor = UIColor.whiteColor;
+    nvptv.returnButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    nvptv.returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
+    nvptv.returnButton.layer.borderColor = UserDefaults.defaults.appleBlue.CGColor;
+    nvptv.returnButton.layer.borderWidth = 4.0;
+    nvptv.returnButton.alpha = 0.0;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        nvptv.returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:26.0];
+    
+    [nvptv.returnButton setTitle:@" < Return "
+                        forState:UIControlStateNormal];
+    
+    [nvptv.returnButton setTitleColor:UIColor.blackColor
+                             forState:UIControlStateNormal];
+    
+    [nvptv.returnButton setTitleColor:UIColor.lightGrayColor
+                             forState:UIControlStateHighlighted];
+    
+    [view addSubview:nvptv.returnButton];
+    [nvptv.returnButton constrainLeadingToAnchor:view.leadingAnchor constant:20.0];
+    [nvptv.returnButton constrainTopToAnchor:view.topAnchor constant:(margin / 4.0)];
+    
+    [nvptv.returnButton addTarget:nvptv
+                           action:@selector(rtnButtonTapped:)
+                 forControlEvents:UIControlEventTouchUpInside];
+    
+    nvptv.cellWidth = (shortestSide - (margin * 2.0) - 30.0);
+    
     [view addSubview:nvptv];
     
-    [nvptv constrainToView:view leading:margin trailing:-margin top:margin
-                    bottom:(-margin + (nvptv.tabBar.frame.size.height / 2.0))];
+    [nvptv constrainToView:view leading:margin trailing:-margin top:(margin * 1.5)
+                    bottom:(nvptv.tabBar.frame.size.height - (margin * 1.5))];
     
     nvptv.tableView = [[UITableView alloc] initWithFrame:CGRectZero
                                                    style:UITableViewStylePlain];
@@ -91,8 +126,6 @@
     nvptv.tableView.layer.cornerRadius = 10.0;
     nvptv.tableView.dataSource = nvptv;
     nvptv.tableView.delegate = nvptv;
-    nvptv.tableView.rowHeight = rowHeight;
-    nvptv.tableView.sectionHeaderHeight = rowHeight;
     nvptv.tableView.backgroundColor = UIColor.whiteColor;
     nvptv.tableView.delaysContentTouches = NO;
     nvptv.tableView.bounces = NO;
@@ -119,9 +152,11 @@
                          animations:^{
                              self.alpha = 0.0;
                              _overlayView.alpha = 0.0;
+                             _returnButton.alpha = 0.0;
                              _tabBar.alpha = 1.0;
                          } completion:^(BOOL finished) {
                              [_overlayView removeFromSuperview];
+                             [_returnButton removeFromSuperview];
                              [self removeFromSuperview];
                              _tabBar.userInteractionEnabled = YES;
                          }];
@@ -147,6 +182,22 @@
     return MAX(_textArray.count, 1);
 }
 
+- (CGFloat)tableView:(UITableView *)tableView
+heightForHeaderInSection:(NSInteger)section
+{
+    return [self getHeightForText:_title
+                             font:_font
+                            width:_cellWidth];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView
+heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [self getHeightForText:textBefore(_textArray[indexPath.row], @"\x03")
+                             font:_font
+                            width:_cellWidth];
+}
+
 -(UIView *)tableView:(UITableView *)tableView
 viewForHeaderInSection:(NSInteger)section
 {
@@ -155,8 +206,8 @@ viewForHeaderInSection:(NSInteger)section
     label.backgroundColor = UserDefaults.defaults.appleGray;
     label.textAlignment = NSTextAlignmentCenter;
     label.font = _font;
-    label.adjustsFontSizeToFitWidth = YES;
     label.textColor = UIColor.blackColor;
+    label.numberOfLines = 0;
     
     return label;
 }
@@ -174,16 +225,24 @@ viewForHeaderInSection:(NSInteger)section
                                       reuseIdentifier:cellIdentifier];
     }
     
-    cell.textLabel.text = textBefore (_textArray[indexPath.row],@"\x03");
+    cell.textLabel.text = textBefore(_textArray[indexPath.row], @"\x03");
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.font = _font;
-    cell.textLabel.adjustsFontSizeToFitWidth = YES;
+    cell.textLabel.numberOfLines = 0;
+    cell.tag = indexPath.row;
     
     if (_includeCancel && indexPath.row == 0)
         cell.textLabel.textColor = UIColor.redColor;
     
     else
+    {
         cell.textLabel.textColor = UserDefaults.defaults.appleBlue;
+        
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                                action:@selector(cellLongPressed:)];
+        
+        [cell addGestureRecognizer:longPress];
+    }
     
     if (_imageArray.count)
         cell.imageView.image = (UIImage *)_imageArray[indexPath.row];
@@ -194,32 +253,29 @@ viewForHeaderInSection:(NSInteger)section
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_delegate)
+    if (_includeCancel && indexPath.row == 0 && [_delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
+        [_delegate popoverTableViewDidCancel:self];
+    
+    else if (!_tableView.allowsMultipleSelection)
     {
-        if (_includeCancel && indexPath.row == 0 && [_delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
-            [_delegate popoverTableViewDidCancel:self];
+        NSString *text = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
+        NSInteger index = 0;
+        
+        if (_includeCancel)
+            index = (indexPath.row - 1);
         
         else
-        {
-            NSString *text = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
-            NSInteger index = 0;
-            
-            if (_includeCancel)
-                index = (indexPath.row - 1);
-            
-            else
-                index = indexPath.row;
-            
-            [_delegate popoverTableView:self
-                   didSelectRowWithText:text
-                                atIndex:index];
-        }
+            index = indexPath.row;
+        
+        [_delegate popoverTableView:self
+               didSelectRowWithText:text
+                            atIndex:index];
     }
 }
 
 - (void)overlayTapped:(UITapGestureRecognizer *)gesture
 {
-    if (_includeCancel && [_delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
+    if (_includeCancel)
         [_delegate popoverTableViewDidCancel:self];
 }
 
@@ -233,6 +289,65 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     
     _imageArray = imageArray;
     [_tableView reloadData];
+}
+
+- (CGFloat)getHeightForText:(NSString *)text
+                       font:(UIFont *)font
+                      width:(CGFloat)width
+{
+    CGSize titleSize = [text boundingRectWithSize:CGSizeMake(width , 20000.0)
+                                          options:NSStringDrawingUsesLineFragmentOrigin
+                                       attributes:@{NSFontAttributeName:font}
+                                          context:nil].size;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        return (ceil(titleSize.height) + 16.0);
+    
+    else
+        return (ceil(titleSize.height) + 20.0);
+}
+
+- (void)cellLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        UITableViewCell *cell = (UITableViewCell *)gesture.view;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:cell.tag inSection:0];
+        
+        [_tableView selectRowAtIndexPath:indexPath
+                                animated:YES
+                          scrollPosition:UITableViewScrollPositionNone];
+        
+        _tableView.allowsMultipleSelection = YES;
+        self.layer.cornerRadius = 0.0;
+        self.layer.borderColor = UserDefaults.defaults.appleBlue.CGColor;
+        self.layer.borderWidth = 4.0;
+        
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             _returnButton.alpha = 1.0;
+                         }];
+    }
+}
+
+- (void)rtnButtonTapped:(UIButton *)button
+{
+    NSMutableArray *selectedRows = NSMutableArray.array;
+    
+    for (NSIndexPath *paths in _tableView.indexPathsForSelectedRows)
+    {
+        if (_includeCancel)
+            [selectedRows addObject:[NSNumber numberWithInt:(paths.row - 1)]];
+        
+        else
+            [selectedRows addObject:[NSNumber numberWithInt:paths.row]];
+    }
+    
+    if ([_delegate respondsToSelector:@selector(popoverTableView:didReturnWithSelectedRows:)])
+    {
+        [_delegate popoverTableView:self
+          didReturnWithSelectedRows:selectedRows.copy];
+    }
 }
 
 @end
