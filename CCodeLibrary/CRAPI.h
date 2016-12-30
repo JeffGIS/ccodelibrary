@@ -116,7 +116,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property int currentMessageNum;
 @property int serverToUse;
 @property CLLocation *lastLocation;
-@property BOOL hideConnectButton;
+@property BOOL hideConnectButton, appChanged;
 
 + (CRAPI *)sharedInstance;
 

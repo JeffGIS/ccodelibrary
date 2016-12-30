@@ -56,6 +56,7 @@
         _serverToUse = 3;
         _doCompassCalibrate = YES;
         _showDeveloperFunctions = isGSSiDevice();
+        _appChanged = NO;
     }
     
     return self;
