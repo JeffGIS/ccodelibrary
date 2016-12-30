@@ -1080,7 +1080,7 @@ NSString *stringWithoutID(NSString *string)
 {
     return textBefore(string, @"\x03");
 }
-NSString * paddedString (NSString* str)
+NSString *paddedString(NSString *str)
 {
-    return [NSString stringWithFormat:@" %@ ",str];
+    return [NSString stringWithFormat:@"%@ ",str];
 }

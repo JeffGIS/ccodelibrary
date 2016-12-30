@@ -163,6 +163,7 @@ typedef NS_ENUM(NSInteger, GMMSetting)
     GMMSettingPropOwner,
     GMMSettingIntersection,
     GMMSettingBoundaries,
+    GMMSettingMultipleProps,
 };
 
 typedef NS_ENUM(NSInteger, GMLayerSetting)

@@ -18,7 +18,7 @@ BOOL getUseDemoID (void);
 NSString *vendorUUIDString(void);
 NSString *stringWithID(char * string,int ID);
 NSString *stringWithoutID(NSString *string);
-NSString * paddedString (NSString* str);
+NSString *paddedString(NSString * str);
 NSString *textBefore(NSString *string, NSString *before);
 NSString *textAfter(NSString *string, NSString *after);
 NSString *textUpTo(NSString *string, NSString *upto);
