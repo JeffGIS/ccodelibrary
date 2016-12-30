@@ -113,6 +113,28 @@ replaceViewControllerWithID:(NSString *)ID
 
 + (UIViewController *)viewControllerWithID:(NSString *)ID
                         inTabBarController:(UITabBarController *)tabBarController
+{
+    UIViewController *viewController = nil;
+    
+    if (!tabBarController || !ID)
+        return nil;
+    
+    NSArray *tabBarVCs = tabBarController.viewControllers;
+    
+    for (UIViewController *vcs in tabBarVCs)
+    {
+        if ([vcs.restorationIdentifier isEqualToString:ID])
+        {
+            viewController = vcs;
+            break;
+        }
+    }
+    
+    return viewController;
+}
+
++ (UIViewController *)viewControllerWithID:(NSString *)ID
+                        inTabBarController:(UITabBarController *)tabBarController
                                      index:(NSUInteger *)index
 {
     UIViewController *viewController = nil;

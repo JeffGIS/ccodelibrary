@@ -25,6 +25,9 @@ replaceViewControllerWithID:(NSString *)ID
  forViewControllerWithID:(NSString *)ID;
 
 + (UIViewController *)viewControllerWithID:(NSString *)ID
+                        inTabBarController:(UITabBarController *)tabBarController;
+
++ (UIViewController *)viewControllerWithID:(NSString *)ID
                         inTabBarController:(UITabBarController *)tabBarController
                                      index:(NSUInteger *)index;
 
