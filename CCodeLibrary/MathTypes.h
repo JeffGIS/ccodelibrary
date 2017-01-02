@@ -16,6 +16,8 @@
 #define MFT 3.280833333333333e0
 #define FTM 3.04800609601219e-1
 #define ACRES_PER_SQMETER   0.000247105
+#define SQMETERS_PER_SQMILE 2589988.11e1
+#define SQMILES_PER_SQMETER 3.86102e-7
 
 #ifndef max
 #define max(a,b)(((a) > (b)) ? (a) : (b))
