@@ -119,8 +119,8 @@ static BOOL _createDirectory = YES;
     {
         SQLOK(0,sqlite3_close(_database),_database);
         NSLog(@"Sewer Database close");
+        _isOpen = NO;
     }
-    _isOpen = NO;
 }
 
 - (void)clear

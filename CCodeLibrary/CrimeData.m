@@ -104,8 +104,8 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     {
         SQLOK(148,sqlite3_close(_database),_database);
         NSLog(@"Crime Database close");
+        _isOpen = NO;
     }
-    _isOpen = NO;
 }
 
 - (BOOL)clear

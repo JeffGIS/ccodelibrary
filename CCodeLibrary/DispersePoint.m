@@ -64,8 +64,8 @@
     {
         SQLOK(198,sqlite3_close(_database),_database);
         NSLog(@"Dispersed Database close");
+        _isOpen = NO;
     }
-    _isOpen = NO;
 }
 
 - (BOOL)executeCmd:(char *)cmd
