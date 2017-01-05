@@ -32,6 +32,15 @@ wasTappedAtPoint:(DPOINT)point
 - (void)showRealtorButton;
 - (void)hideReturnButton;
 - (void)gotoOriginalPosition;
+- (void)disableUserInteraction;
+- (void)enableUserInteraction;
+- (void)clearPosition;
+- (void)updatePosition;
+
+- (void)setConstraintsToLeading:(CGFloat)leading
+                       trailing:(CGFloat)trailing
+                            top:(CGFloat)top
+                         bottom:(CGFloat)bottom;
 
 - (void)zoomToPoint:(DPOINT)point
          withinPage:(int)page

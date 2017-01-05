@@ -404,18 +404,50 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 - (void)gotoOriginalPosition
 {
+    [self clearPosition];
+    
     DPOINT point = {0};
     point.x = _origPoint.x;
     point.y = _origPoint.y;
-    
-    _webView.scrollView.transform = CGAffineTransformMakeRotation(0.0);
-    [_webView.scrollView setZoomScale:1.0 animated:NO];
-    [_webView.scrollView setContentOffset:CGPointZero animated:NO];
     
     [self zoomToPoint:point
            withinPage:_origPage
             withScale:_origScale
              rotation:_origRotation];
+}
+
+- (void)disableUserInteraction
+{
+    UIView *overlay = UIView.new;
+    overlay.tag = 777;
+    overlay.translatesAutoresizingMaskIntoConstraints = NO;
+    overlay.backgroundColor = UIColor.clearColor;
+    [self.superview addSubview:overlay];
+    [overlay constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+}
+
+- (void)enableUserInteraction
+{
+    [[self.superview viewWithTag:777] removeFromSuperview];
+}
+
+- (void)clearPosition
+{
+    _webView.scrollView.transform = CGAffineTransformMakeRotation(0.0);
+    [_webView.scrollView setZoomScale:1.0 animated:NO];
+    [_webView.scrollView setContentOffset:CGPointZero animated:NO];
+}
+
+- (void)setConstraintsToLeading:(CGFloat)leading
+                       trailing:(CGFloat)trailing
+                            top:(CGFloat)top
+                         bottom:(CGFloat)bottom
+{
+    [self constrainToView:self.superview leading:leading trailing:trailing top:top bottom:bottom];
+    [_webView constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    
+    if ([self.superview viewWithTag:777])
+        [[self.superview viewWithTag:777] constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
 }
 
 @end
