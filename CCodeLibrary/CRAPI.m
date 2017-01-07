@@ -20,7 +20,7 @@
 
 @implementation CRAPI
 {
-    int _currentGeoidValue, _numAllowedZooms, _allowedZooms[3];
+    int _kp,_currentGeoidValue, _numAllowedZooms, _allowedZooms[3];
 }
 
 - (id)init
@@ -29,7 +29,7 @@
     
     if (self)
     {
-        _keepProcessing = 0;
+        _kp = 0;
         _currentGeoidValue = 0;
         _pickApInPixels = 50;
         _numAllowedZooms = 3;
@@ -57,6 +57,7 @@
         _doCompassCalibrate = YES;
         _showDeveloperFunctions = isGSSiDevice();
         _appChanged = NO;
+        _currentBAR = 0;
     }
     
     return self;
@@ -136,6 +137,22 @@
     }
 }
 
+-(void) setCurrentOverallBoundaryRefno:(int)i
+{
+    _currentBAR = i;
+}
+-(int) currentOverallBoundaryRefno
+{
+    return _currentBAR;
+}
+-(BOOL)showPolylineForBounds
+{
+    return _showPolylineForBounds;
+}
+-(BOOL) maskBoundsForBounds
+{
+    return _maskBoundsForBounds;
+}
 -(void)setCurrentOverallBoundaryName:(NSString *)currentOverallBoundaryName
 {
     _currentOverallBoundaryName = currentOverallBoundaryName;
@@ -150,10 +167,15 @@
     _currentZoom = zoom;
 }
 
+- (int) keepProcessing
+{
+    return _kp;
+}
 -(void)setKeepProcessing:(int)kp
 {
-    _keepProcessing = kp;
+    _kp = kp;
 }
+
 
 -(void)setShowPlats:(int)showPlats
 {

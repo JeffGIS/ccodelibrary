@@ -81,7 +81,9 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property int showTileInfo;
 @property (nonatomic, copy) NSString *currentOverallBoundaryName;
 @property (nonatomic, copy) NSString *currentOverallBoundaryType;
-@property int currentOverallBoundaryRefno;
+@property (nonatomic) int currentOverallBoundaryRefno;
+@property (nonatomic) BOOL showPolylineForBounds, maskBoundsForBounds;
+@property int currentBAR;
 @property BOOL setToAlleyWalls, isFromGMMobile;
 @property (nonatomic, copy) NSString *sourceApp;
 @property (nonatomic) UIView *currentView;
@@ -99,7 +101,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (strong, nonatomic) MapToolbar *mapToolbar;
 @property (strong, nonatomic) UIViewController *mapVC;
 @property (nonatomic) CGFloat mapToolbarProgress;
-@property BOOL showPolylineForBounds, maskBoundsForBounds, becameActive;
+@property BOOL becameActive;
 @property (nonatomic, copy) NSString *offsetForBounds;
 @property (nonatomic) int offsetForBoundsInMeters;
 @property (nonatomic, copy) NSString *selectBoundaryFromMapType;
