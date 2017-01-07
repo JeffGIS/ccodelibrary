@@ -243,6 +243,51 @@
         [self updatePosition];
 }
 
+- (void)updatePosition
+{
+    if (_zoomPage > 1)
+    {
+        CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+        _zoomPoint.x *= _webView.scrollView.contentSize.width;
+        _zoomPoint.y *= pageHeight;
+        _zoomPoint.y += (pageHeight * (_zoomPage - 1));
+    }
+    
+    CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
+                                 (_webView.scrollView.bounds.size.height / _zoomScale));
+    
+    CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
+                                 (_zoomPoint.y - (zoomSize.height / 2.0)),
+                                 zoomSize.width, zoomSize.height);
+    
+    [_webView.scrollView zoomToRect:zoomRect
+                           animated:NO];
+    
+    _webView.scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
+}
+
+- (void)zoomToPage:(int)page
+         upperLeft:(DPOINT)upperLeft
+        lowerRight:(DPOINT)lowerRight
+{
+    if (page > 1)
+    {
+        CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+        upperLeft.x *= _webView.scrollView.contentSize.width;
+        upperLeft.y *= pageHeight;
+        lowerRight.x *= _webView.scrollView.contentSize.width;
+        lowerRight.y *= pageHeight;
+        upperLeft.y += (pageHeight * (page - 1));
+        lowerRight.y += (pageHeight * (page - 1));
+    }
+    
+    CGSize size = CGSizeMake(lowerRight.x - upperLeft.x, lowerRight.y - upperLeft.y);
+    CGRect rect = CGRectMake(upperLeft.x, upperLeft.y, size.width, size.height);
+    
+    [_webView.scrollView zoomToRect:rect
+                           animated:NO];
+}
+
 - (void)realtor:(UIButton *)button
 {
     NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self
@@ -268,29 +313,6 @@
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
 {
     [popoverTableView hide:YES];
-}
-
-- (void)updatePosition
-{
-    if (_zoomPage > 1)
-    {
-        CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
-        _zoomPoint.x *= _webView.scrollView.contentSize.width;
-        _zoomPoint.y *= pageHeight;
-        _zoomPoint.y += (pageHeight * (_zoomPage - 1));
-    }
-    
-    CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
-                                 (_webView.scrollView.bounds.size.height / _zoomScale));
-    
-    CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
-                                 (_zoomPoint.y - (zoomSize.height / 2.0)),
-                                 zoomSize.width, zoomSize.height);
-    
-    [_webView.scrollView zoomToRect:zoomRect
-                           animated:NO];
-    
-    _webView.scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
 }
 
 - (void)webView:(WKWebView *)webView

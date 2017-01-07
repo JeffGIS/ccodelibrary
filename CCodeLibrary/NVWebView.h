@@ -37,6 +37,10 @@ wasTappedAtPoint:(DPOINT)point
 - (void)clearPosition;
 - (void)updatePosition;
 
+- (void)zoomToPage:(int)page
+         upperLeft:(DPOINT)upperLeft
+        lowerRight:(DPOINT)lowerRight;
+
 - (void)setConstraintsToLeading:(CGFloat)leading
                        trailing:(CGFloat)trailing
                             top:(CGFloat)top
