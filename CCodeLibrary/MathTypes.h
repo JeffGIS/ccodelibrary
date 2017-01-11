@@ -28,6 +28,8 @@
 #endif
 
 #define IDNINT(r)(int)(r < 0 ? r - 0.5f : r + 0.5f)
+#define IDNINT64(r)(int)(r < 0 ? r - 0.5f : r + 0.5f)
+
 typedef struct
 {
     int NSETPT;
