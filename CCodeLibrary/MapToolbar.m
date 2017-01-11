@@ -16,6 +16,8 @@
 @property (nonatomic) CGFloat buttonMargin, switchMargin, SCMargin, platSCWidth, platSCVertWidth, progressMargin;
 @property (nonatomic) UIProgressView *progressView;
 @property (nonatomic) NSTimer *helpBackgroundToggleTimer;
+@property (nonatomic) UIActivityIndicatorView *indicatorView;
+@property (nonatomic) CGFloat indicatorSize;
 
 @end
 
@@ -31,7 +33,8 @@
     MapToolbar *mt = [[MapToolbar alloc] init];
     mt.configChanged = mt.myLocationEnabled = mt.platOverride = mt.helpLongPressed = NO;
     mt.legendOffset = 0.0;
-    mt.isOffset = NO;
+    mt.isOffset = NO, mt.showIndicator = NO;
+    mt.indicatorSize = 60.0;
     
     //set default configuration
     [mt setConfigurationProperty:MapToolbarPropertyWantUserLocation
@@ -252,6 +255,13 @@
     mt.returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
     mt.returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     mt.returnButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    
+    mt.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    mt.indicatorView.backgroundColor = UIColor.darkGrayColor;
+    mt.indicatorView.translatesAutoresizingMaskIntoConstraints = NO;
+    mt.indicatorView.userInteractionEnabled = NO;
+    mt.indicatorView.layer.cornerRadius = (mt.indicatorSize / 2.0);
+    [view addSubview:mt.indicatorView];
     
     return mt;
 }
@@ -804,31 +814,49 @@
 - (void)didRotateWithTabBarHeight:(CGFloat)tabBarHeight
                   statusBarHeight:(CGFloat)statusBarHeight
 {
-    CGFloat offset = 0.0;
+    CGFloat offset = 0.0, margin = 10.0;
     
     if (_isOffset)
         offset = _legendOffset;
+    
+    [_indicatorView removeAllConstraints];
     
     switch (_orientation)
     {
         case MapToolbarOrientationTop:
             self.center = CGPointMake(((self.superview.frame.size.width - offset) / 2.0),
                                       (statusBarHeight + (self.frame.size.height / 2.0)));
+            
+            [_indicatorView constrainTopToAnchor:self.bottomAnchor constant:margin];
+            [_indicatorView constrainCenterXToAnchor:self.centerXAnchor];
+            [self resetIndicatorSize];
             break;
             
         case MapToolbarOrientationBottom:
             self.center = CGPointMake(((self.superview.frame.size.width - offset) / 2.0),
                                       ((self.superview.frame.size.height) - (self.frame.size.height / 2.0)));
+            
+            [_indicatorView constrainBottomToAnchor:self.topAnchor constant:-margin];
+            [_indicatorView constrainCenterXToAnchor:self.centerXAnchor];
+            [self resetIndicatorSize];
             break;
             
         case MapToolbarOrientationLeft:
             self.center = CGPointMake((self.frame.size.width / 2.0),
                                       (self.superview.frame.size.height / 2.0));
+            
+            [_indicatorView constrainLeadingToAnchor:self.trailingAnchor constant:margin];
+            [_indicatorView constrainCenterYToAnchor:self.centerYAnchor];
+            [self resetIndicatorSize];
             break;
             
         case MapToolbarOrientationRight:
             self.center = CGPointMake(((self.superview.frame.size.width - offset) - (self.frame.size.width / 2.0)),
                                       (self.superview.frame.size.height / 2.0));
+            
+            [_indicatorView constrainTrailingToAnchor:self.leadingAnchor constant:-margin];
+            [_indicatorView constrainCenterYToAnchor:self.centerYAnchor];
+            [self resetIndicatorSize];
             break;
             
         default:
@@ -1483,6 +1511,66 @@
         case MapToolbarOrientationRight:
             self.center = CGPointMake(((superviewFrame.size.width - offset) -
                                        (self.frame.size.width / 2.0)), self.center.y);
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)resetIndicatorSize
+{
+    [_indicatorView constrainWidthToConstant:_indicatorSize];
+    [_indicatorView constrainHeightToConstant:_indicatorSize];
+}
+
+- (void)setShowIndicator:(BOOL)showIndicator
+{
+    _showIndicator = showIndicator;
+    
+    if (showIndicator)
+        [_indicatorView startAnimating];
+    
+    else
+        [_indicatorView stopAnimating];
+}
+
+- (void)bringToFrontOfView
+{
+    [self.superview bringSubviewToFront:self];
+    [self.superview bringSubviewToFront:_indicatorView];
+}
+
+- (void)setOrientation:(MapToolbarOrientation)orientation
+{
+    _orientation = orientation;
+    CGFloat margin = 10.0;
+    [_indicatorView removeAllConstraints];
+    
+    switch (orientation)
+    {
+        case MapToolbarOrientationTop:
+            [_indicatorView constrainTopToAnchor:self.bottomAnchor constant:margin];
+            [_indicatorView constrainCenterXToAnchor:self.centerXAnchor];
+            [self resetIndicatorSize];
+            break;
+            
+        case MapToolbarOrientationBottom:
+            [_indicatorView constrainBottomToAnchor:self.topAnchor constant:-margin];
+            [_indicatorView constrainCenterXToAnchor:self.centerXAnchor];
+            [self resetIndicatorSize];
+            break;
+            
+        case MapToolbarOrientationLeft:
+            [_indicatorView constrainLeadingToAnchor:self.trailingAnchor constant:margin];
+            [_indicatorView constrainCenterYToAnchor:self.centerYAnchor];
+            [self resetIndicatorSize];
+            break;
+            
+        case MapToolbarOrientationRight:
+            [_indicatorView constrainTrailingToAnchor:self.leadingAnchor constant:-margin];
+            [_indicatorView constrainCenterYToAnchor:self.centerYAnchor];
+            [self resetIndicatorSize];
             break;
             
         default:
