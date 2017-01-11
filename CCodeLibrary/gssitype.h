@@ -1,8 +1,12 @@
+#ifndef __GSSITYPE_H_INCLUDED
+#define __GSSITYPE_H_INCLUDED 1
 #include "gmlimits.h"
 #include <stdlib.h>  
 #include <time.h>    
 //#include <commdlg.h>
 #include <ctype.h>  
+
+#define INT64 long long
 
 #define HUGE
 #define FAR
@@ -3966,5 +3970,5 @@ typedef struct {
 typedef GWDHEADER16 FAR  *LPGWDHEADER16;   
 #pragma pack()
 int checkvp(int i);
-
+#endif
 //#include "TileGraphics.h"

@@ -1,6 +1,5 @@
 //  CCodeLibrary.h
 //  CCodeLibrary
-
 #import "CCodeTypes.h"
 #import "IntersectionPoint.h"
 #import "FTPDataPull.h"
@@ -66,6 +65,8 @@
 #import "TextOptions.h"
 #import "SQLiteLib.h"
 #import "FTPDirectoryCreate.h"
+
+#define INT64 long long
 
 @interface CCodeLibrary : NSObject
 
