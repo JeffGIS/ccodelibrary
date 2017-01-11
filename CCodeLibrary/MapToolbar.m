@@ -34,7 +34,7 @@
     mt.configChanged = mt.myLocationEnabled = mt.platOverride = mt.helpLongPressed = NO;
     mt.legendOffset = 0.0;
     mt.isOffset = NO, mt.showIndicator = NO;
-    mt.indicatorSize = 40.0;
+    mt.indicatorSize = 44.0;
     
     //set default configuration
     [mt setConfigurationProperty:MapToolbarPropertyWantUserLocation
@@ -257,7 +257,7 @@
     mt.returnButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     
     mt.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    mt.indicatorView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.2];
+    mt.indicatorView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.4];
     mt.indicatorView.translatesAutoresizingMaskIntoConstraints = NO;
     mt.indicatorView.userInteractionEnabled = NO;
     mt.indicatorView.layer.cornerRadius = (mt.indicatorSize / 2.0);
