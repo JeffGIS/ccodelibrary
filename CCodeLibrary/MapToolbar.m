@@ -34,7 +34,7 @@
     mt.configChanged = mt.myLocationEnabled = mt.platOverride = mt.helpLongPressed = NO;
     mt.legendOffset = 0.0;
     mt.isOffset = NO, mt.showIndicator = NO;
-    mt.indicatorSize = 60.0;
+    mt.indicatorSize = 40.0;
     
     //set default configuration
     [mt setConfigurationProperty:MapToolbarPropertyWantUserLocation
@@ -257,7 +257,7 @@
     mt.returnButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     
     mt.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    mt.indicatorView.backgroundColor = UIColor.darkGrayColor;
+    mt.indicatorView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.2];
     mt.indicatorView.translatesAutoresizingMaskIntoConstraints = NO;
     mt.indicatorView.userInteractionEnabled = NO;
     mt.indicatorView.layer.cornerRadius = (mt.indicatorSize / 2.0);
@@ -823,6 +823,12 @@
     
     switch (_orientation)
     {
+        case MapToolbarOrientationMinimized:
+            [_indicatorView constrainTopToAnchor:self.bottomAnchor constant:margin];
+            [_indicatorView constrainCenterXToAnchor:self.centerXAnchor];
+            [self resetIndicatorSize];
+            break;
+        
         case MapToolbarOrientationTop:
             self.center = CGPointMake(((self.superview.frame.size.width - offset) / 2.0),
                                       (statusBarHeight + (self.frame.size.height / 2.0)));
@@ -1528,11 +1534,14 @@
 {
     _showIndicator = showIndicator;
     
-    if (showIndicator)
-        [_indicatorView startAnimating];
-    
-    else
-        [_indicatorView stopAnimating];
+    dispatch_async(dispatch_get_main_queue(),
+                   ^{
+                       if (showIndicator)
+                           [_indicatorView startAnimating];
+                       
+                       else
+                           [_indicatorView stopAnimating];
+                   });
 }
 
 - (void)bringToFrontOfView
@@ -1549,6 +1558,12 @@
     
     switch (orientation)
     {
+        case MapToolbarOrientationMinimized:
+            [_indicatorView constrainTopToAnchor:self.bottomAnchor constant:margin];
+            [_indicatorView constrainCenterXToAnchor:self.centerXAnchor];
+            [self resetIndicatorSize];
+            break;
+        
         case MapToolbarOrientationTop:
             [_indicatorView constrainTopToAnchor:self.bottomAnchor constant:margin];
             [_indicatorView constrainCenterXToAnchor:self.centerXAnchor];
