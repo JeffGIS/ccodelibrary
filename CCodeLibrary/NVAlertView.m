@@ -14,6 +14,18 @@
 
 @implementation NVAlertView
 
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.buttonIdentifiers = NSArray.new;
+    }
+    
+    return self;
+}
+
 + (instancetype)showLargeAlertViewinView:(UIView *)view
                                 delegate:(id)delegate
                                    title:(NSString *)title
