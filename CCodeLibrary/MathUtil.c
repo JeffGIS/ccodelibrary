@@ -2081,3 +2081,24 @@ CGRect largestRect(float aspectRatio, int precision, CGRect bounds, int nRects, 
         largeRect.origin = origins[nRect/2];
     return largeRect;
 }
+void BoundsToPoints (LPMNMXCORD pBounds, LPDPOINT Points,LPDOUBLE pAZ)
+{
+    Points[0].x = pBounds->xmn;
+    Points[0].y = pBounds->ymn;
+    Points[1].x = pBounds->xmn;
+    Points[1].y = pBounds->ymx;
+    Points[2].x = pBounds->xmx;
+    Points[2].y = pBounds->ymx;
+    Points[3].x = pBounds->xmx;
+    Points[3].y = pBounds->ymn;
+    if (pAZ)
+    {
+        pAZ[0] = HALFPI;
+        pAZ[1] = 0;
+        pAZ[2] = HALFPI*3;
+        pAZ[3] = PY;
+    }
+    return;
+}
+
+
