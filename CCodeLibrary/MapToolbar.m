@@ -524,7 +524,7 @@
     else if (gesture.state == UIGestureRecognizerStateEnded)
     {
         if (_delegate)
-            [_delegate mapToolbarDidFinishDrag];
+            [_delegate mapToolbarDidFinishDrag:[gesture locationInView:self.superview]];
     }
 }
 

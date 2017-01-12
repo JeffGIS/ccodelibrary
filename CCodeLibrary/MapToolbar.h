@@ -44,7 +44,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 - (void)mapToolbarDidSelectDigitize;
 - (void)mapToolbarDidSelectLegends;
 - (void)mapToolbarDidSelectReturnButton;
-- (void)mapToolbarDidFinishDrag;
+- (void)mapToolbarDidFinishDrag:(CGPoint)locationInSuperview;
 - (void)mapToolbarDidWantExpand;
 
 @end
