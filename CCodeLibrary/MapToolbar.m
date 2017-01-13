@@ -1208,6 +1208,9 @@
         
         if (_wantProgressBar)
         {
+            if (![self.subviews containsObject:_progressView])
+                [self addSubview:_progressView];
+            
             _progressView.frame = CGRectMake(_buttonMargin, (self.frame.size.height - _progressMargin),
                                              (self.frame.size.width - (_buttonMargin * 2.0)),
                                              _progressView.frame.size.height);
@@ -1436,6 +1439,9 @@
             self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y,
                                     self.frame.size.width, (self.frame.size.height + _progressMargin));
             
+            if (![self.subviews containsObject:_progressView])
+                [self addSubview:_progressView];
+            
             _progressView.frame = CGRectMake(_buttonMargin, (self.frame.size.height - _progressMargin),
                                              self.frame.size.width - (_buttonMargin * 2.0),
                                              _progressView.frame.size.height);
@@ -1489,6 +1495,14 @@
            forControlEvents:UIControlEventTouchUpInside];
     
     [self addSubview:expandButton];
+    
+    if (_wantProgressBar)
+    {
+        _progressView.frame = CGRectMake((_buttonMargin * 0.5), (self.frame.size.height - _progressMargin),
+                                         (self.frame.size.width - _buttonMargin), _progressView.frame.size.height);
+        
+        _progressView.alpha = 1.0;
+    }
 }
 
 - (void)expandToolbar:(UIButton *)button
