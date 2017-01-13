@@ -104,7 +104,8 @@ Top:
      textColor:textColor];
      
      }*/
-    
+    if (!context)
+        return;
     if (ta[nAttempts-1].fontSize >= desiredFontSize)
     {
         [NVTextDrawing drawText:ta[nAttempts-1].text

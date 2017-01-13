@@ -111,6 +111,9 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
         _width *= wb / hb;
     _height += _height % 4;
     _width += _width % 4;
+    _height = max (1,_height);
+    _width = max (1,_width);
+    
     _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
     _bitmapData = bmData;
     const CGFloat white[2] = {1, 1};
