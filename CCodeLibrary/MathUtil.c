@@ -1735,13 +1735,13 @@ LPTRANDATA  LoadTranFromCPT(const char *Name, int dir)
 	return TranPtr;
 }
 
-bool CreateMask(LPDPOINT *pPointsIN, int *pnPoints, LPMNMXCORD pbnds)
+int CreateMask(LPDPOINT *pPointsIN, int *pnPoints, LPMNMXCORD pbnds)
 {
     LPDPOINT pPoints = *pPointsIN;
     int nNewPoints = 5;
     
     if (!pnPoints || !pPoints || *pnPoints < 3)
-        return false;
+        return 0;
     
     LPDPOINT pNewPoints = (LPDPOINT)malloc(sizeof(DPOINT) * (*pnPoints + 5));
     
@@ -1765,7 +1765,7 @@ bool CreateMask(LPDPOINT *pPointsIN, int *pnPoints, LPMNMXCORD pbnds)
     *pnPoints = nNewPoints;
     free(pPoints);
     *pPointsIN = pNewPoints;
-    return true;
+    return nNewPoints;
 }
 double DeltaAngle (double AZ1, double AZ2)
 {
