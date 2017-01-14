@@ -136,7 +136,7 @@ void MNMXCORDtoMNMXCORL (MNMXCORD *in,MNMXCORL *out);
 CGRect MNMXCORDtoCGRect (LPMNMXCORD pBounds);
 void InflateMNMXCORL (LPMNMXCORL pBounds, int Value);
 int diffInDegrees (int angle1,int angle2);
-int CreateMask (LPDPOINT *pPointsIN, int *pnPoints,LPMNMXCORD pbnds);
+int CreateMask (LPDPOINT *pPointsIN, int *pnPoints,LPMNMXCORD pbnds,bool freeExistingPoints);
 int fgetstring (char * str,int maxlen,FILE * fid);
 bool fputstring(LPSTR lpStr, FILE *Fid);
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);

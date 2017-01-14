@@ -564,7 +564,7 @@
                 pPoints[i].x = ((CGFloat)(ix) / COORDINATE_MULTIPLIER);
             }
             
-            CreateMask(&pPoints, &nPoints, &bnds);
+            CreateMask(&pPoints, &nPoints, &bnds,TRUE);
             CLLocationCoordinate2D llPoint;
             
             for (int i = 0; i < nPoints; i++)
