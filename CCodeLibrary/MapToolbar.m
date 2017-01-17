@@ -37,41 +37,18 @@
     mt.indicatorSize = 44.0;
     
     //set default configuration
-    [mt setConfigurationProperty:MapToolbarPropertyWantUserLocation
-                           value:YES];
-    
-    [mt setConfigurationProperty:MapToolbarPropertyWantExtents
-                           value:YES];
-    
-    [mt setConfigurationProperty:MapToolbarPropertyWantGrayscale
-                           value:YES];
-    
-    [mt setConfigurationProperty:MapToolbarPropertyWantClearMarkers
-                           value:YES];
-    
-    [mt setConfigurationProperty:MapToolbarPropertyWantEmailPDF
-                           value:YES];
-    
-    [mt setConfigurationProperty:MapToolbarPropertyWantProgressBar
-                           value:YES];
-    
-    [mt setConfigurationProperty:MapToolbarPropertyWantHelpButton
-                           value:YES];
-    
-    [mt setConfigurationProperty:MapToolbarPropertyWantPlat
-                           value:NO];
-    
-    [mt setConfigurationProperty:MapToolbarPropertyWantDigitize
-                           value:NO];
-    
-    [mt setConfigurationProperty:MapToolbarPropertyWantMapType
-                           value:NO];
-    
-    [mt setConfigurationProperty:MapToolbarPropertyWantLegends
-                           value:NO];
-    
-    [mt setConfigurationProperty:MapToolbarPropertyWantReturnButton
-                           value:NO];
+    [mt setConfigurationProperty:MapToolbarPropertyWantUserLocation value:YES];
+    [mt setConfigurationProperty:MapToolbarPropertyWantExtents value:YES];
+    [mt setConfigurationProperty:MapToolbarPropertyWantGrayscale value:YES];
+    [mt setConfigurationProperty:MapToolbarPropertyWantClearMarkers value:YES];
+    [mt setConfigurationProperty:MapToolbarPropertyWantEmailPDF value:YES];
+    [mt setConfigurationProperty:MapToolbarPropertyWantProgressBar value:YES];
+    [mt setConfigurationProperty:MapToolbarPropertyWantHelpButton value:YES];
+    [mt setConfigurationProperty:MapToolbarPropertyWantPlat value:NO];
+    [mt setConfigurationProperty:MapToolbarPropertyWantDigitize value:NO];
+    [mt setConfigurationProperty:MapToolbarPropertyWantMapType value:NO];
+    [mt setConfigurationProperty:MapToolbarPropertyWantLegends value:NO];
+    [mt setConfigurationProperty:MapToolbarPropertyWantReturnButton value:NO];
     
     //set internal sizes for all devices
     mt.buttonSize = 47.0, mt.SCHeight = 29.0, mt.mapTypeSCWidth = 76.0;
@@ -101,6 +78,7 @@
     
     [view addSubview:mt];
     
+    //add user location button added by default
     mt.userLocationButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     mt.userLocationButton.frame = CGRectMake(mt.buttonMargin, mt.buttonMargin,
@@ -111,9 +89,9 @@
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
            selector:@selector(userLocationSelected:)];
 
-    //add user location button added by default
     [mt addSubview:mt.userLocationButton];
     
+    //add extents button added by default
     mt.extentsButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     mt.extentsButton.frame = CGRectMake((mt.buttonSize + (mt.buttonMargin * 2.0)),
@@ -128,10 +106,9 @@
                                                                                             action:@selector(extentsLongPressed:)];
     
     [mt.extentsButton addGestureRecognizer:lpGesture];
-  
-    //add extents button added by default
     [mt addSubview:mt.extentsButton];
     
+    //grayscale button added by default
     mt.grayscaleButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     mt.grayscaleButton.frame = CGRectMake(((mt.buttonSize * 2.0) + (mt.buttonMargin * 3.0)),
@@ -142,9 +119,9 @@
          edgeInsets:UIEdgeInsetsZero
            selector:@selector(grayscaleSelected:)];
     
-    //grayscale button added by default
     [mt addSubview:mt.grayscaleButton];
     
+    //clear marker button added by default
     mt.clearMarkerButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     mt.clearMarkerButton.frame = CGRectMake(((mt.buttonSize * 3.0) + (mt.buttonMargin * 4.0)),
@@ -155,9 +132,9 @@
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
            selector:@selector(clearMarkersSelected:)];
     
-    //clear marker button added by default
     [mt addSubview:mt.clearMarkerButton];
     
+    //email PDF button added by default
     mt.emailPDFButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     mt.emailPDFButton.frame = CGRectMake(((mt.buttonSize * 4.0) + (mt.buttonMargin * 5.0)),
@@ -168,9 +145,9 @@
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
            selector:@selector(emailPDFSelected:)];
     
-    //email PDF button added by default
     [mt addSubview:mt.emailPDFButton];
     
+    //help button added by default
     mt.helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     mt.helpButton.frame = CGRectMake(((mt.buttonSize * 5.0) + (mt.buttonMargin * 5.0)),
@@ -185,19 +162,17 @@
                                                                                                 action:@selector(helpLongPressed:)];
     
     [mt.helpButton addGestureRecognizer:helpLpGesture];
-    
-    //email PDF button added by default
     [mt addSubview:mt.helpButton];
     
+    //progress view added by default
     mt.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(mt.buttonMargin, (mt.size.height - mt.progressMargin),
                                                                        (mt.size.width - (mt.buttonMargin * 2.0)), 4.0)];
     
     mt.progressView.trackTintColor = UIColor.darkGrayColor;
     mt.progressView.progressTintColor = UIColor.whiteColor;
-    
-    //progress view added by default
     [mt addSubview:mt.progressView];
     
+    //map type SC is NOT added by default
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
         mt.mapTypeSC = [[UISegmentedControl alloc] initWithItems:@[@"St", @"Hy"]];
     
@@ -208,7 +183,7 @@
    selectedSegmentIndex:0
                selector:@selector(mapTypeSelected:)];
     
-    //map type SC is NOT added by default
+    //digitize button is NOT added by default
     mt.digitizeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [mt setupButton:mt.digitizeButton
@@ -216,7 +191,7 @@
          edgeInsets:UIEdgeInsetsMake(3.0, 3.0, 3.0, 3.0)
            selector:@selector(digitizeSelected:)];
     
-    //digitize button is NOT added by default
+    //legends button is NOT added by default
     mt.legendsButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [mt setupButton:mt.legendsButton
@@ -224,14 +199,13 @@
          edgeInsets:UIEdgeInsetsZero
            selector:@selector(legendsSelected:)];
     
-    //legends button is NOT added by default
+    //plat SC is NOT added by default
     mt.platSC = [[UISegmentedControl alloc] initWithItems:@[@"Map", @"Split", @"Tri", @"Plat"]];
     
     [mt setupSegControl:mt.platSC
    selectedSegmentIndex:MapViewScreenSettingFullscreen
                selector:@selector(splitScreenSettingSelected:)];
     
-    //plat SC is NOT added by default
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:mt
                                                                                  action:@selector(mapToolbarDragged:)];
     
