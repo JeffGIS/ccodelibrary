@@ -59,7 +59,7 @@ typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
 @property DPOINT dPoint;
 @property int itemBeginTime, itemEndTime;
 @property int UCR;
-@property int iValue;
+@property long long iValue;
 @property int sunAngle;
 @property PointSymbols pointSymbol;
 @property UIColor *penColor;
