@@ -310,7 +310,7 @@
     segControl.layer.borderColor = UIColor.blackColor.CGColor;
     segControl.layer.borderWidth = _bordWidth;
     segControl.layer.masksToBounds = YES;
-    segControl.selectedSegmentIndex = MapViewScreenSettingFullscreen;
+    segControl.selectedSegmentIndex = selectedSegmentIndex;
     
     [segControl addTarget:self
                    action:selector
