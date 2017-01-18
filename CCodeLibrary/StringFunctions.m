@@ -178,15 +178,15 @@ NSString *textAfter(NSString *string, NSString *after)
     else if (!string.length)
         return string;
     
+    NSString * rtn = @"";
     if (after)
     {
         NSRange range = [string rangeOfString:after];
         
         if (range.location != NSNotFound)
-            string = [string substringFromIndex:(range.location + after.length)];
+            rtn = [string substringFromIndex:(range.location + after.length)];
     }
-    
-    return string;
+    return rtn;
 }
 
 NSString *removeEndingReturn(NSString *string)

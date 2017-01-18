@@ -161,7 +161,10 @@
 {
     _selectBoundaryFromMapType = selectBoundaryFromMapType;
 }
-
+ -(void)setCurrentPID:(NSString *)currentPID
+{
+    _currentPID = currentPID;
+}
 -(void)setCurrentZoom:(CGFloat)zoom
 {
     _currentZoom = zoom;
