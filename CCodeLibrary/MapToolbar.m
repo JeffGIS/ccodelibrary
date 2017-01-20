@@ -30,11 +30,16 @@
                                     view:(UIView *)view
                                 delegate:(id)delegate;
 {
+    if (!delegate || !view)
+    {
+        NSLog(@"NVRampTypePageView ERROR:Cannot set delegate or view to nil");
+        return nil;
+    }
+    
     MapToolbar *mt = [[MapToolbar alloc] init];
     mt.configChanged = mt.myLocationEnabled = mt.platOverride = mt.helpLongPressed = NO;
-    mt.legendOffset = 0.0;
-    mt.isOffset = NO, mt.showIndicator = NO;
-    mt.indicatorSize = 44.0;
+    mt.isOffset = mt.showIndicator = mt.applyRotation = NO;
+    mt.indicatorSize = 44.0, mt.legendOffset = 0.0;
     
     //set default configuration
     [mt setConfigurationProperty:MapToolbarPropertyWantUserLocation value:YES];
@@ -88,7 +93,11 @@
          imageTitle:@"userLocation"
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
            selector:@selector(userLocationSelected:)];
-
+    
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:mt
+                                                                                            action:@selector(userLocationLongPressed:)];
+    
+    [mt.userLocationButton addGestureRecognizer:longPress];
     [mt addSubview:mt.userLocationButton];
     
     //add extents button added by default
@@ -220,16 +229,11 @@
          edgeInsets:UIEdgeInsetsZero
            selector:@selector(returnButtonSelected:)];
     
-    [mt.returnButton setTitle:@"< Return"
-                     forState:UIControlStateNormal];
-    
-    [mt.returnButton setTitleColor:UIColor.blackColor
-                          forState:UIControlStateNormal];
-    
+    [mt.returnButton setTitle:@"< Return" forState:UIControlStateNormal];
+    [mt.returnButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
     mt.returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
     mt.returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     mt.returnButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    
     mt.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     mt.indicatorView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.4];
     mt.indicatorView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -295,8 +299,8 @@
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = _bordWidth;
-    
     _myLocationEnabled = !_myLocationEnabled;
+    _applyRotation = NO;
     
     if (_myLocationEnabled)
         _userLocationButton.backgroundColor = UIColor.greenColor;
@@ -304,8 +308,7 @@
     else
         _userLocationButton.backgroundColor = UIColor.whiteColor;
     
-    if (_delegate)
-        [_delegate mapToolbarDidSelectUserLocation:_myLocationEnabled];
+    [_delegate mapToolbarDidSelectUserLocation:_myLocationEnabled];
 }
 
 - (void)deselectMyLocationButton
@@ -318,9 +321,7 @@
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = _bordWidth;
-    
-    if (_delegate)
-        [_delegate mapToolbarDidSelectZoomExtent];
+    [_delegate mapToolbarDidSelectZoomExtent];
 }
 
 - (void)extentsLongPressed:(UILongPressGestureRecognizer *)gesture
@@ -342,27 +343,21 @@
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = _bordWidth;
-    
-    if (_delegate)
-        [_delegate mapToolbarDidSelectGrayscale];
+    [_delegate mapToolbarDidSelectGrayscale];
 }
 
 - (void)clearMarkersSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = _bordWidth;
-    
-    if (_delegate)
-        [_delegate mapToolbarDidSelectClearMarkers];
+    [_delegate mapToolbarDidSelectClearMarkers];
 }
 
 - (void)emailPDFSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = _bordWidth;
-    
-    if (_delegate)
-        [_delegate mapToolbarDidSelectEmailPDF];
+    [_delegate mapToolbarDidSelectEmailPDF];
 }
 
 - (void)helpButtonSelected:(UIButton *)button
@@ -373,7 +368,7 @@
     if (_helpLongPressed)
         [self endHBLongPressMode];
     
-    else if (_delegate)
+    else
         [_delegate mapToolbarDidSelectHelpButton];
 }
 
@@ -381,9 +376,7 @@
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = _bordWidth;
-    
-    if (_delegate)
-        [_delegate mapToolbarDidSelectReturnButton];
+    [_delegate mapToolbarDidSelectReturnButton];
 }
 
 - (void)helpLongPressed:(UILongPressGestureRecognizer *)gesture
@@ -436,32 +429,26 @@
 
 - (void)mapTypeSelected:(UISegmentedControl *)segControl
 {
-    if (_delegate)
-        [_delegate mapToolbarDidSelectMapType:segControl.selectedSegmentIndex];
+    [_delegate mapToolbarDidSelectMapType:segControl.selectedSegmentIndex];
 }
 
 - (void)digitizeSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = _bordWidth;
-    
-    if (_delegate)
-        [_delegate mapToolbarDidSelectDigitize];
+    [_delegate mapToolbarDidSelectDigitize];
 }
 
 - (void)legendsSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = _bordWidth;
-    
-    if (_delegate)
-        [_delegate mapToolbarDidSelectLegends];
+    [_delegate mapToolbarDidSelectLegends];
 }
 
 - (void)splitScreenSettingSelected:(UISegmentedControl *)segControl
 {
-    if (_delegate)
-        [_delegate mapToolbarDidSelectSplitScreenSetting:segControl.selectedSegmentIndex];
+    [_delegate mapToolbarDidSelectSplitScreenSetting:segControl.selectedSegmentIndex];
 }
 
 - (void)mapToolbarDragged:(UIPanGestureRecognizer *)gesture
@@ -496,25 +483,18 @@
     }
     
     else if (gesture.state == UIGestureRecognizerStateEnded)
-    {
-        if (_delegate)
-            [_delegate mapToolbarDidFinishDrag:[gesture locationInView:self.superview]];
-    }
+        [_delegate mapToolbarDidFinishDrag:[gesture locationInView:self.superview]];
 }
 
 - (void)animateToVerticalOrientation
 {
-    CGFloat yCount = _buttonMargin;
-    CGFloat xCount = 0.0;
+    CGFloat yCount = _buttonMargin, xCount = 0.0;
     
     if (_wantReturnButton)
     {
         _returnButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, (_buttonSize * 2.0));
         _returnButton.titleLabel.numberOfLines = 2;
-        
-        [_returnButton setTitle:@"<\nR"
-                       forState:UIControlStateNormal];
-        
+        [_returnButton setTitle:@"<\nR"forState:UIControlStateNormal];
         yCount += (_buttonMargin + (_buttonSize * 2.0));
         xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
     }
@@ -606,17 +586,10 @@
     for (UIView *views in self.subviews)
         views.center = CGPointMake(self.center.x, views.center.y);
     
-    [_platSC setTitle:@"M"
-    forSegmentAtIndex:0];
-    
-    [_platSC setTitle:@"S"
-    forSegmentAtIndex:1];
-    
-    [_platSC setTitle:@"T"
-    forSegmentAtIndex:2];
-    
-    [_platSC setTitle:@"P"
-    forSegmentAtIndex:3];
+    [_platSC setTitle:@"M" forSegmentAtIndex:0];
+    [_platSC setTitle:@"S" forSegmentAtIndex:1];
+    [_platSC setTitle:@"T" forSegmentAtIndex:2];
+    [_platSC setTitle:@"P" forSegmentAtIndex:3];
 }
 
 - (void)animateToHorizontalOrientation
@@ -627,10 +600,7 @@
     {
         _returnButton.frame = CGRectMake(xCount, _buttonMargin, (_buttonSize * 3.0), _buttonSize);
         _returnButton.titleLabel.numberOfLines = 1;
-        
-        [_returnButton setTitle:@"< Return"
-                       forState:UIControlStateNormal];
-        
+        [_returnButton setTitle:@"< Return" forState:UIControlStateNormal];
         xCount += (_buttonMargin + (_buttonSize * 3.0));
     }
     
@@ -707,17 +677,10 @@
                                          _progressView.frame.size.height);
     }
     
-    [_platSC setTitle:@"Map"
-           forSegmentAtIndex:0];
-    
-    [_platSC setTitle:@"Split"
-           forSegmentAtIndex:1];
-    
-    [_platSC setTitle:@"Tri"
-           forSegmentAtIndex:2];
-    
-    [_platSC setTitle:@"Plat"
-           forSegmentAtIndex:3];
+    [_platSC setTitle:@"Map" forSegmentAtIndex:0];
+    [_platSC setTitle:@"Split" forSegmentAtIndex:1];
+    [_platSC setTitle:@"Tri" forSegmentAtIndex:2];
+    [_platSC setTitle:@"Plat" forSegmentAtIndex:3];
 }
 
 - (void)splitScreenSelectedSegmentIndex:(NSInteger)index
@@ -867,7 +830,6 @@
     _wantDigitize = _wantExtents = _wantLegends = _wantMapType =
     _wantGrayscale = _wantUserLocation = _wantHelpButton =
     _wantEmailPDF = _wantProgressBar = _wantClearMarkers = _wantReturnButton = NO;
-    
     _wantPlat = _configChanged = YES;
     
     [UIView animateWithDuration:0.25
@@ -998,9 +960,7 @@
         {
             _returnButton.frame = CGRectMake(xCount, _buttonMargin, (_buttonSize * 3.0), _buttonSize);
             _returnButton.titleLabel.numberOfLines = 1;
-            
-            [_returnButton setTitle:@"< Return"
-                           forState:UIControlStateNormal];
+            [_returnButton setTitle:@"< Return" forState:UIControlStateNormal];
             
             if (![self.subviews containsObject:_returnButton])
                 [self addSubview:_returnButton];
@@ -1206,9 +1166,7 @@
         {
             _returnButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, (_buttonSize * 2.0));
             _returnButton.titleLabel.numberOfLines = 2;
-            
-            [_returnButton setTitle:@"<\nR"
-                           forState:UIControlStateNormal];
+            [_returnButton setTitle:@"<\nR" forState:UIControlStateNormal];
             
             if (![self.subviews containsObject:_returnButton])
                 [self addSubview:_returnButton];
@@ -1442,9 +1400,7 @@
 - (void)setProgress:(CGFloat)progress
 {
     _progress = progress;
-    
-    [_progressView setProgress:_progress
-                      animated:NO];
+    [_progressView setProgress:_progress animated:NO];
 }
 
 - (void)addExpandButton
@@ -1454,15 +1410,9 @@
     expandButton.backgroundColor = UIColor.clearColor;
     expandButton.titleLabel.font = [UIFont boldSystemFontOfSize:24.0];
     expandButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-    
-    [expandButton setTitle:@"MT"
-                  forState:UIControlStateNormal];
-    
-    [expandButton setTitleColor:UIColor.whiteColor
-                       forState:UIControlStateNormal];
-    
-    [expandButton setTitleColor:UIColor.darkGrayColor
-                       forState:UIControlStateHighlighted];
+    [expandButton setTitle:@"MT" forState:UIControlStateNormal];
+    [expandButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [expandButton setTitleColor:UIColor.darkGrayColor forState:UIControlStateHighlighted];
     
     [expandButton addTarget:self
                      action:@selector(expandToolbar:)
@@ -1482,9 +1432,7 @@
 - (void)expandToolbar:(UIButton *)button
 {
     [button removeFromSuperview];
-    
-    if (_delegate)
-        [_delegate mapToolbarDidWantExpand];
+    [_delegate mapToolbarDidWantExpand];
 }
 
 - (void)adjustFrameToScrollView
@@ -1579,6 +1527,25 @@
         default:
             break;
     }
+}
+
+- (void)userLocationLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        _userLocationButton.layer.borderColor = UIColor.blackColor.CGColor;
+        _userLocationButton.layer.borderWidth = _bordWidth;
+        _applyRotation = _myLocationEnabled = !_myLocationEnabled;
+        
+        if (_myLocationEnabled)
+            _userLocationButton.backgroundColor = UIColor.redColor;
+        
+        else
+            _userLocationButton.backgroundColor = UIColor.whiteColor;
+    }
+    
+    else if (gesture.state == UIGestureRecognizerStateEnded)
+        [_delegate mapToolbarDidSelectUserLocation:_myLocationEnabled];
 }
 
 @end
