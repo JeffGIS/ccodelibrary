@@ -220,9 +220,9 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
         col = (pt.x + 0.5);
         bitmapValue = (unsigned int)_bitmapData[row * _width + col];
         
-        if (bitmapValue == 255)
+        if (bitmapValue == 255) //inside
             return 1;
-        if (bitmapValue == 128)
+        if (bitmapValue == 128) //on boundary
             return 2;
         if (bitmapValue)
             return 4;
