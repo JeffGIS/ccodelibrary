@@ -57,7 +57,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 @property (readonly) BOOL wantExtents, wantLegends, wantGrayscale, wantClearMarkers;
 @property (readonly) BOOL wantEmailPDF, wantProgressBar, wantHelpButton, wantReturnButton;
 @property (nonatomic) CGFloat progress, legendOffset;
-@property BOOL helpLongPressed, isOffset, showIndicator;
+@property BOOL helpLongPressed, isOffset, showIndicator, applyRotation;
 @property (nonatomic) CGRect previousFrame;
 
 + (MapToolbar *)showMapToolbarWithCenter:(CGPoint)center
