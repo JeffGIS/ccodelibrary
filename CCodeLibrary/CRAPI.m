@@ -58,6 +58,7 @@
         _showDeveloperFunctions = isGSSiDevice();
         _appChanged = NO;
         _currentBAR = 0;
+        _currentCounty = @"053";
     }
     
     return self;
@@ -549,7 +550,13 @@
 {
     dbounds bnds;
     
-    CGFloat pickApMeters = (_pickApInPixels * GroundResolution(pt->lat, (int)_currentZoom));
+    CGFloat pickApMeters;
+    if (_pickApInPixels < 0)
+        pickApMeters = -_pickApInPixels;
+    else
+        pickApMeters = (_pickApInPixels * GroundResolution(pt->lat, (int)_currentZoom));
+
+        
     
     DPOINT pt1 = NewLatLong(pt->lat, pt->lon, pickApMeters, 0);
     double pickapY = pt1.y - pt->lat;
@@ -1130,4 +1137,47 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
 }
 
+-(NSString*)countyNameFromCountyID:(NSString*)countyID
+{
+    if ([countyID isEqualToString:@"003"])
+        return @"Anoka";
+    if ([countyID isEqualToString:@"019"])
+        return @"Carver";
+    if ([countyID isEqualToString:@"037"])
+        return @"Dakota";
+    if ([countyID isEqualToString:@"053"])
+        return @"Hennepin";
+    if ([countyID isEqualToString:@"123"])
+        return @"Ramsey";
+    if ([countyID isEqualToString:@"139"])
+        return @"Scott";
+    if ([countyID isEqualToString:@"163"])
+        return @"Washington";
+    return @"";
+}
+
+- (NSString *)currentCountyName
+{
+    return [self countyNameFromCountyID:_currentCounty];
+}
+- (void) setCurrentCountyName:(NSString *)inName
+{
+    NSString *name = [inName uppercaseString];
+    
+    if ([name isEqualToString:@"ANOKA"])
+        _currentCounty = @"003";
+    if ([name isEqualToString:@"CARVER"])
+        _currentCounty = @"019";
+    if ([name isEqualToString:@"DAKOTA"])
+        _currentCounty = @"037";
+    if ([name isEqualToString:@"HENNEPIN"])
+        _currentCounty = @"053";
+    if ([name isEqualToString:@"RAMSEY"])
+        _currentCounty = @"123";
+    if ([name isEqualToString:@"SCOTT"])
+        _currentCounty = @"139";
+    if ([name isEqualToString:@"WASHINGTON"])
+        _currentCounty = @"163";
+    
+}
 @end

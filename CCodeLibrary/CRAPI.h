@@ -87,7 +87,10 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property BOOL setToAlleyWalls, isFromGMMobile;
 @property (nonatomic, copy) NSString *sourceApp;
 @property (nonatomic) UIView *currentView;
-
+@property MNMXCORD lastDisplayBounds;
+@property NSString * currentCounty;
+@property (nonatomic) NSString * currentCountyName;
+@property (nonatomic) NSString * currentCity;
 @property (nonatomic, copy) NSString *currentPlatImagePath;
 @property (nonatomic, copy) NSString *currentPlatType;
 @property (nonatomic, copy) NSString *selectedPDFID;
@@ -204,5 +207,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 -(void) gotoAppStore;
 - (NSString*) getNVCRISServer;
 - (void)checkStorageForMinStorage:(nullable NSNumber *)minStorage;
+-(NSString*)countyNameFromCountyID:(NSString*)countyID;
 
 @end
