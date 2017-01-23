@@ -15,6 +15,7 @@
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.backgroundColor = UserDefaults.defaults.appleGray;
         self.layer.borderColor = UIColor.blackColor.CGColor;
+        self.layer.borderWidth = 2.0;
     }
     
     return self;
