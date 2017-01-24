@@ -1275,4 +1275,56 @@ long __attribute__ ((noinline)) BigWrite(FILE *fid, LPBYTE pbuf, long len, long 
     return bytesWritten;
 }
 
+LPSTR AddCommas (LPSTR InBuff)
+#if ENABLETRACE
+{GSSiEnterProg (225);
+#endif
+    {
+        char	Buff[64],VCBuff[64];
+        LPSTR   p1, p2, bp, pDot;
+        short	n;
+        
+        if (strlen (InBuff) > 63)
+        {
+#if ENABLETRACE
+            GSSiExitProg (225);
+#endif
+            return InBuff;
+        }
+        strcpy (Buff,InBuff);
+        bp = Buff;
+        p2=&VCBuff[63];
+        pDot = strchr (Buff,'.');
+        if (pDot)
+        {
+            p1 = pDot-1;
+            pDot = strchr(Buff,0);
+            while (pDot > p1)
+                *p2-- = *pDot--;
+        }
+        else
+        {
+            p1 = strchr(Buff,0)-1;
+            *p2-- = 0;
+        }
+        for (n=0;p1>=bp;p1--,n++)
+        {   if (n == 3 && *p1 != '-' && *p1 != '$' && *p1 != ' ')
+        {   *p2--=',';
+            n=0;
+        }
+            *p2--=*p1;
+        }
+        ++p2;
+        strcpy (InBuff,p2);
+        {
+#if ENABLETRACE
+            GSSiExitProg (225);
+#endif
+            return InBuff;
+        }
+#if ENABLETRACE
+    }
+#endif
+}
+
 

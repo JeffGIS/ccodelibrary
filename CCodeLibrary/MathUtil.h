@@ -172,6 +172,7 @@ short LINSEC_TOL (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
 double AZMLatLon (LLPOINT pt1,LLPOINT pt2);
 double AZMToHeading (double azm);
 void BoundsToPoints (LPMNMXCORD pBounds, LPDPOINT Points,LPDOUBLE pAZ);
+LPSTR AddCommas (LPSTR InBuff);
 
 
 #endif
