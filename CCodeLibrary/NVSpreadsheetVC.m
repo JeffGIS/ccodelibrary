@@ -287,24 +287,19 @@
 - (NSInteger)numberOfRowsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
     if (_flipped)
-        return MAX((_delegate.numColumnsInSpreadsheet + 1), 17);
+        return (_delegate.numColumnsInSpreadsheet + 5);
     
     else
-        return MAX((_delegate.numRowsInSpreadsheet + 1), 17);
+        return (_delegate.numRowsInSpreadsheet + 5);
 }
 
 - (NSInteger)numberOfColumnsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
     if (_flipped)
-        return MAX((_delegate.numRowsInSpreadsheet + 1), 17);
+        return (_delegate.numRowsInSpreadsheet + 5);
     
     else
-        return MAX((_delegate.numColumnsInSpreadsheet + 1), 17);
-}
-
-- (NSInteger)numActiveColumns
-{
-    return _delegate.numColumnsInSpreadsheet;
+        return (_delegate.numColumnsInSpreadsheet + 5);
 }
 
 - (UICollectionViewCell *)spreadsheetView:(NVSpreadsheet *)spreadsheetView

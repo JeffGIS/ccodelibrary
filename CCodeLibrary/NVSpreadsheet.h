@@ -12,7 +12,6 @@
 
 - (NSInteger)numberOfRowsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView;
 - (NSInteger)numberOfColumnsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView;
-- (NSInteger)numActiveColumns;
 
 - (UICollectionViewCell *)spreadsheetView:(NVSpreadsheet *)spreadsheetView
                    cellForItemAtIndexPath:(NSIndexPath *)indexPath;
