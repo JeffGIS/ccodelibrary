@@ -15,12 +15,11 @@
 @interface GSSiPopoverView : UIView
 
 @property (nonatomic, weak) id <GSSiPopoverViewDelegate> delegate;
-@property (nonatomic) UIView *popover, *fromView;
+@property (nonatomic) UIView *popover;
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UIButton *popoverCancel;
 @property (nonatomic) UILabel *popoverLabel, *progressLabel;
 @property BOOL inShowAfter, hideAtCancel;
-@property (nonatomic) NSTimer *timer;
 @property (nonatomic) int showTime;
 @property (nonatomic, copy) NSString *title, *cancelButtonTitle;
 @property (nonatomic, copy) NSString *identifier;

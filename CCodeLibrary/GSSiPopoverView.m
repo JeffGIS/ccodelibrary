@@ -10,6 +10,7 @@
 @interface GSSiPopoverView ()
 
 @property (nonatomic) UIFont *font;
+@property (nonatomic) NSTimer *timer;
 
 @end
 
@@ -23,8 +24,11 @@
     {
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.backgroundColor = UIColor.clearColor;
-        _fromView = fromView;
         _hideAtCancel = YES;
+        
+        [fromView addSubview:self];
+        [self constrainToView:fromView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+        self.hidden = YES;
         
         if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
             _font = [UIFont boldSystemFontOfSize:24.0];
@@ -139,27 +143,23 @@
 
 - (void)showFromTimer:(NSTimer *)timer
 {
+    [timer invalidate];
     [self show];
 }
 
 - (void)show
 {
-    [_fromView addSubview:self];
-    [self constrainLeadingToAnchor:_fromView.leadingAnchor];
-    [self constrainTrailingToAnchor:_fromView.trailingAnchor];
-    [self constrainTopToAnchor:_fromView.topAnchor];
-    [self constrainBottomToAnchor:_fromView.bottomAnchor];
+    self.hidden = NO;
 }
 
 - (void)hideFromTimer:(NSTimer *)timer
 {
+    [timer invalidate];
     [self hide];
 }
 
 - (void)hide
 {
-    [_timer invalidate];
-    
     if (self.superview)
     {
         int seconds = (NSDate.timeIntervalSinceReferenceDate - _showTime);
@@ -176,7 +176,7 @@
         }
         
         else
-            [self removeFromSuperview];
+            self.hidden = YES;
     }
 }
 
@@ -186,9 +186,8 @@
 {
     if (button)
     {
-        [_popoverCancel setTitle:button
-                        forState:UIControlStateNormal];
-        
+        [_popoverCancel setTitle:button forState:UIControlStateNormal];
+        _cancelButtonTitle = button;
         _popoverCancel.hidden = NO;
     }
     

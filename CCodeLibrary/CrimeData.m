@@ -372,7 +372,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     if (_myLastUpdate >= _serversLastUpdate)
     {
-        if ([_popoverView.fromView.subviews containsObject:_popoverView])
+        if ([_popoverView.superview.subviews containsObject:_popoverView])
         {
             _popoverView.title = @"Data up-to-date";
             

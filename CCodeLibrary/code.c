@@ -1280,6 +1280,8 @@ LPSTR AddCommas (LPSTR InBuff)
 {GSSiEnterProg (225);
 #endif
     {
+        return InBuff;
+        
         char	Buff[64],VCBuff[64];
         LPSTR   p1, p2, bp, pDot;
         short	n;
