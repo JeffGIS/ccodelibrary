@@ -1284,6 +1284,9 @@ LPSTR AddCommas (LPSTR InBuff)
         LPSTR   p1, p2, bp, pDot;
         short	n;
         
+        if (strlen(InBuff) < 4)
+            return InBuff;
+        
         if (strlen (InBuff) > 63)
         {
 #if ENABLETRACE
