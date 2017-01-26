@@ -67,6 +67,12 @@
         
         _textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.contentView addSubview:_textLabel];
+        
+        _idLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 16.0, 16.0)];
+        _idLabel.backgroundColor = UIColor.clearColor;
+        _idLabel.adjustsFontSizeToFitWidth = YES;
+        _idLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.contentView addSubview:_idLabel];
     }
     
     return self;
@@ -82,7 +88,7 @@
     
     if (self)
     {
-        CGRect rect = CGRectMake(10.0, 0.0, (frame.size.width - 15.0), frame.size.height);
+        CGRect rect = CGRectMake(16.0, 0.0, (frame.size.width - 20.0), frame.size.height);
         _textLabel = [[UILabel alloc] initWithFrame:rect];
         _textLabel.backgroundColor = UIColor.clearColor;
         
@@ -95,6 +101,12 @@
         _textLabel.adjustsFontSizeToFitWidth = YES;
         _textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.contentView addSubview:_textLabel];
+        
+        _idLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 16.0, 16.0)];
+        _idLabel.backgroundColor = UIColor.clearColor;
+        _idLabel.adjustsFontSizeToFitWidth = YES;
+        _idLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.contentView addSubview:_idLabel];
     }
     
     return self;

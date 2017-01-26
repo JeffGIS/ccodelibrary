@@ -305,13 +305,13 @@
         return (_delegate.numColumnsInSpreadsheet + 5);
     
     else
-        return (_delegate.numRowsInSpreadsheet + 5);
+        return (_delegate.numRowsInSpreadsheet + 1);
 }
 
 - (NSInteger)numberOfColumnsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
     if (_flipped)
-        return (_delegate.numRowsInSpreadsheet + 5);
+        return (_delegate.numRowsInSpreadsheet + 1);
     
     else
         return (_delegate.numColumnsInSpreadsheet + 5);
@@ -397,6 +397,7 @@
                                                           forIndexPath:indexPath];
         
         NVTopRowCell *tr = (NVTopRowCell *)cell;
+        tr.idLabel.text = [NSString stringWithFormat:@"%i", indexPath.nvSpreadsheetColumn];
         
         if (_flipped)
         {
@@ -419,6 +420,7 @@
                                                           forIndexPath:indexPath];
         
         NVLeftColumnCell *lc = (NVLeftColumnCell *)cell;
+        lc.idLabel.text = [NSString stringWithFormat:@"%i", indexPath.nvSpreadsheetRow];
         
         if (_flipped)
         {

@@ -12,13 +12,13 @@
 
 @interface NVTopRowCell : UICollectionViewCell
 
-@property (nonatomic) UILabel *textLabel;
+@property (nonatomic) UILabel *textLabel, *idLabel;
 
 @end
 
 @interface NVLeftColumnCell : UICollectionViewCell
 
-@property (nonatomic) UILabel *textLabel;
+@property (nonatomic) UILabel *textLabel, *idLabel;
 @property NSUInteger row, column;
 
 @end
