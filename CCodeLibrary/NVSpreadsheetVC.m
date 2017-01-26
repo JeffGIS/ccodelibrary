@@ -18,6 +18,7 @@
 @property (nonatomic) CGFloat columnWidth, rowHeight;
 @property (nonatomic) UITextField *titleTextField;
 @property (nonatomic) NSInteger selectedRow, selectedColumn;
+@property (nonatomic) UILabel *numRowsLabel, *numColsLabel;
 
 @end
 
@@ -43,7 +44,7 @@
                                              object:UIPasteboard.generalPasteboard];
     
     self.view.backgroundColor = UIColor.darkGrayColor;
-    _flipped = NO;
+    _flipped = YES;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
@@ -352,9 +353,9 @@
                       forControlEvents:UIControlEventTouchUpInside];
             
             [gc.contentView addSubview:_returnToOrigin];
-            [_returnToOrigin constrainCenterXToAnchor:gc.centerXAnchor constant:(_columnWidth * 0.25)];
+            [_returnToOrigin constrainCenterXToAnchor:gc.centerXAnchor constant:(_columnWidth * 0.2)];
             [_returnToOrigin constrainCenterYToAnchor:gc.centerYAnchor];
-            [_returnToOrigin constrainWidthToConstant:(_columnWidth * 0.4)];
+            [_returnToOrigin constrainWidthToConstant:(_columnWidth * 0.36)];
             [_returnToOrigin constrainHeightToConstant:(_rowHeight * 0.8)];
         }
         
@@ -384,10 +385,40 @@
             forControlEvents:UIControlEventTouchUpInside];
             
             [gc.contentView addSubview:_swap];
-            [_swap constrainCenterXToAnchor:gc.centerXAnchor constant:(-_columnWidth * 0.25)];
+            [_swap constrainCenterXToAnchor:gc.centerXAnchor constant:(-_columnWidth * 0.2)];
             [_swap constrainCenterYToAnchor:gc.centerYAnchor];
-            [_swap constrainWidthToConstant:(_columnWidth * 0.4)];
+            [_swap constrainWidthToConstant:(_columnWidth * 0.36)];
             [_swap constrainHeightToConstant:(_rowHeight * 0.8)];
+        }
+        
+        if (![gc.contentView.subviews containsObject:_numColsLabel])
+        {
+            _numColsLabel = UILabel.new;
+            _numColsLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            _numColsLabel.text = [NSString stringWithFormat:@"%i", ([self numberOfColumnsInSpreadsheetView:nil] - 1)];
+            _numColsLabel.textColor = UIColor.whiteColor;
+            _numColsLabel.adjustsFontSizeToFitWidth = YES;
+            _numColsLabel.textAlignment = NSTextAlignmentCenter;
+            [gc.contentView addSubview:_numColsLabel];
+            [_numColsLabel constrainTrailingToAnchor:gc.trailingAnchor constant:-1.0];
+            [_numColsLabel constrainTopToAnchor:gc.topAnchor constant:1.0];
+            [_numColsLabel constrainWidthToConstant:gc.idSize];
+            [_numColsLabel constrainHeightToConstant:gc.idSize];
+        }
+        
+        if (![gc.contentView.subviews containsObject:_numRowsLabel])
+        {
+            _numRowsLabel = UILabel.new;
+            _numRowsLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            _numRowsLabel.text = [NSString stringWithFormat:@"%i", ([self numberOfRowsInSpreadsheetView:nil] - 1)];
+            _numRowsLabel.textColor = UIColor.whiteColor;
+            _numRowsLabel.adjustsFontSizeToFitWidth = YES;
+            _numRowsLabel.textAlignment = NSTextAlignmentCenter;
+            [gc.contentView addSubview:_numRowsLabel];
+            [_numRowsLabel constrainLeadingToAnchor:gc.leadingAnchor constant:1.0];
+            [_numRowsLabel constrainBottomToAnchor:gc.bottomAnchor constant:-1.0];
+            [_numRowsLabel constrainWidthToConstant:gc.idSize];
+            [_numRowsLabel constrainHeightToConstant:gc.idSize];
         }
     }
     
