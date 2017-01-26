@@ -357,6 +357,11 @@
             [_returnToOrigin constrainCenterYToAnchor:gc.centerYAnchor];
             [_returnToOrigin constrainWidthToConstant:(_columnWidth * 0.36)];
             [_returnToOrigin constrainHeightToConstant:(_rowHeight * 0.8)];
+            
+            UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                                    action:@selector(originLongPressed:)];
+            
+            [_returnToOrigin addGestureRecognizer:longPress];
         }
         
         if (![gc.contentView.subviews containsObject:_swap])
@@ -700,8 +705,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)alertView:(NVAlertView *)alertView
 didTapButtonAtIndex:(NSInteger)buttonIndex
 {
-    [alertView hideLargeAlertView:YES];
-    
     if ([alertView.identifier isEqualToString:@"ExportPrompt"])
     {
         switch (buttonIndex)
@@ -742,7 +745,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 }
             }
                 break;
-                
             case 1://Export to Cloud
             {
                 NSString *tabbedOutput = [self tabbedOutput];
@@ -767,7 +769,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 }
             }
                 break;
-                
             default:
                 break;
         }
@@ -792,6 +793,32 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                 tabBarController:self.tabBarController];
         }
     }
+    
+    else if ([alertView.identifier isEqualToString:@"SpreadsheetNavigation"])
+    {
+        switch (buttonIndex)
+        {
+            case 0://cancel
+                break;
+            case 1://top
+                break;
+            case 2://bottom
+                break;
+            case 3://left
+                break;
+            case 4://right
+                break;
+            case 5://top left
+                [_nvss returnToOrigin];
+                break;
+            case 6://bottom right
+                break;
+            default:
+                break;
+        }
+    }
+    
+    [alertView hideLargeAlertView:YES];
 }
 
 - (NSString *)fileName
@@ -893,6 +920,20 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                buttonTextArray:@[@"OK"]
                                               destructiveIndex:0];
 #pragma unused(alert)
+}
+
+- (void)originLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                          delegate:self
+                                                             title:@"Spreadsheet Navigation Options"
+                                                   buttonTextArray:@[@"Cancel", @"Go to Top", @"Go to Bottom", @"Go to Left Side",
+                                                                     @"Go to Right Side", @"Go to Upper Left Corner", @"Go to Bottom Right Corner"]
+                                                  destructiveIndex:0];
+        alert.identifier = @"SpreadsheetNavigation";
+    }
 }
 
 @end
