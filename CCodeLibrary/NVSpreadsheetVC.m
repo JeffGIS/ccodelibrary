@@ -23,6 +23,10 @@
 
 @implementation NVSpreadsheetVC
 
+- (void)setDelegate:(id<NVSpreadsheetVCDelegate>)delegate
+{
+    _delegate = delegate;
+}
 - (void)loadView
 {
     UIView *view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
@@ -241,6 +245,17 @@
     [_nvss constrainBottomToAnchor:self.view.bottomAnchor];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    if (_delegate)
+        [_delegate openPropertyList];
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    if (_delegate)
+        [_delegate closePropertyList];
+    
+}
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
