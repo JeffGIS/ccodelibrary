@@ -122,6 +122,8 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property int serverToUse;
 @property CLLocation *lastLocation;
 @property BOOL hideConnectButton, appChanged;
+@property NSNumberFormatter *dollarFmt;
+@property NSNumberFormatter *acreFmt;
 
 + (CRAPI *)sharedInstance;
 
@@ -208,5 +210,8 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (NSString*) getNVCRISServer;
 - (void)checkStorageForMinStorage:(nullable NSNumber *)minStorage;
 -(NSString*)countyNameFromCountyID:(NSString*)countyID;
+-(NSString*) acreFormat:(double)acres;
+-(NSString*) dollarsFormat:(double)dollars;
+
 
 @end

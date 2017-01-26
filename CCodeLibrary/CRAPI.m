@@ -59,6 +59,22 @@
         _appChanged = NO;
         _currentBAR = 0;
         _currentCounty = @"053";
+        _dollarFmt = [[NSNumberFormatter alloc] init];
+        _dollarFmt.numberStyle = NSNumberFormatterCurrencyStyle;
+        _dollarFmt.groupingSeparator = @"'";
+        _dollarFmt.groupingSize = 3;
+        _dollarFmt.alwaysShowsDecimalSeparator = NO;
+        _dollarFmt.usesGroupingSeparator = YES;
+        _dollarFmt.maximumFractionDigits = 0;
+        _acreFmt = [[NSNumberFormatter alloc] init];
+        _acreFmt.numberStyle = NSNumberFormatterNoStyle;
+        _acreFmt.roundingMode = NSNumberFormatterRoundHalfUp;
+        _acreFmt.groupingSeparator = @"'";
+        _acreFmt.groupingSize = 3;
+        _acreFmt.alwaysShowsDecimalSeparator = NO;
+        _acreFmt.usesGroupingSeparator = YES;
+        _acreFmt.maximumFractionDigits = 2;
+
     }
     
     return self;
@@ -1180,4 +1196,18 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         _currentCounty = @"163";
     
 }
+
+-(NSString*) acreFormat:(double)acres
+{
+    NSNumber * num = [[NSNumber alloc] initWithDouble:acres];
+    NSString *value = [self.acreFmt stringFromNumber:num];
+    return value;
+}
+-(NSString*) dollarsFormat:(double)dollars
+{
+    NSNumber * num = [[NSNumber alloc] initWithDouble:dollars];
+    NSString *value = [self.dollarFmt stringFromNumber:num];
+    return value;
+}
+
 @end
