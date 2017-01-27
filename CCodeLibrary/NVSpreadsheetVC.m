@@ -400,7 +400,6 @@
         {
             _numColsLabel = UILabel.new;
             _numColsLabel.translatesAutoresizingMaskIntoConstraints = NO;
-            _numColsLabel.text = [NSString stringWithFormat:@"%i", ([self numberOfColumnsInSpreadsheetView:nil] - 1)];
             _numColsLabel.textColor = UIColor.whiteColor;
             _numColsLabel.adjustsFontSizeToFitWidth = YES;
             _numColsLabel.textAlignment = NSTextAlignmentCenter;
@@ -425,6 +424,9 @@
             [_numRowsLabel constrainWidthToConstant:gc.idSize];
             [_numRowsLabel constrainHeightToConstant:gc.idSize];
         }
+        
+        _numColsLabel.text = [NSString stringWithFormat:@"%i", ([self numberOfColumnsInSpreadsheetView:nil] - 1)];
+        _numRowsLabel.text = [NSString stringWithFormat:@"%i", ([self numberOfRowsInSpreadsheetView:nil] - 1)];
     }
     
     else if (indexPath.nvSpreadsheetRow == 0 && indexPath.nvSpreadsheetColumn > 0)
