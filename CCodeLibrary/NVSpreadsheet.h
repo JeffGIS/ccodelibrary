@@ -17,6 +17,7 @@
                    cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 
 - (BOOL)spreadsheetIsFlipped;
+- (CGSize)gridContainerSize;
 
 @end
 
@@ -51,8 +52,15 @@ forCellWithReuseIdentifier:(NSString *)identifier;
                        animated:(BOOL)animated;
 
 - (void)reloadData;
-- (void)returnToOrigin;
 - (void)flipLongPressGesture:(BOOL)flipped;
 - (void)flashScrollIndicators;
+- (void)goToTop;
+- (void)goToBottom;
+- (void)goToLeftSide;
+- (void)goToRightSide;
+- (void)goToUpperLeft;
+- (void)goToUpperRight;
+- (void)goToLowerLeft;
+- (void)goToLowerRight;
 
 @end

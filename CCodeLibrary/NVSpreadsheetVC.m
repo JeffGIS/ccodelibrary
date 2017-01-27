@@ -294,6 +294,11 @@
     NSLog(@"Pasteboard Item:%@", UIPasteboard.generalPasteboard.strings.lastObject);
 }
 
+- (CGSize)gridContainerSize
+{
+    return CGSizeMake((self.view.frame.size.width - _columnWidth), (self.view.frame.size.height - (_rowHeight * 2.0)));
+}
+
 - (CGSize)spreadsheetView:(NVSpreadsheet *)spreadsheetView
    sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -591,7 +596,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)returnToOrigin:(UIButton *)button
 {
-    [_nvss returnToOrigin];
+    [_nvss goToUpperLeft];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -802,18 +807,29 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         {
             case 0://cancel
                 break;
-            case 1://top
+            case 1:
+                [_nvss goToTop];
                 break;
-            case 2://bottom
+            case 2:
+                [_nvss goToBottom];
                 break;
-            case 3://left
+            case 3:
+                [_nvss goToLeftSide];
                 break;
-            case 4://right
+            case 4:
+                [_nvss goToRightSide];
                 break;
-            case 5://top left
-                [_nvss returnToOrigin];
+            case 5:
+                [_nvss goToUpperLeft];
                 break;
-            case 6://bottom right
+            case 6:
+                [_nvss goToUpperRight];
+                break;
+            case 7:
+                [_nvss goToLowerLeft];
+                break;
+            case 8:
+                [_nvss goToLowerRight];
                 break;
             default:
                 break;
@@ -931,8 +947,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                           delegate:self
                                                              title:@"Spreadsheet Navigation Options"
-                                                   buttonTextArray:@[@"Cancel", @"Go to Top", @"Go to Bottom", @"Go to Left Side",
-                                                                     @"Go to Right Side", @"Go to Upper Left Corner", @"Go to Bottom Right Corner"]
+                                                   buttonTextArray:@[@"Cancel", @"Go to Top", @"Go to Bottom", @"Go to Left Side", @"Go to Right Side",
+                                                                     @"Go to Upper Left", @"Go to Upper Right", @"Go to Lower Left", @"Go to Lower Right"]
                                                   destructiveIndex:0];
         alert.identifier = @"SpreadsheetNavigation";
     }

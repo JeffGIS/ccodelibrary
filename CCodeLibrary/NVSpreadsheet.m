@@ -169,6 +169,7 @@ forCellWithReuseIdentifier:(NSString *)identifier
     
     _verticalScrollIndicator = [self setupScrollIndicator];
     _horizontalScrollIndicator = [self setupScrollIndicator];
+    _controllingScrollView = _lowerRightCollectionView;
 }
 
 - (void)setupContainerSubview:(UIView *)container
@@ -985,10 +986,83 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-- (void)returnToOrigin
+- (void)goToTop
 {
-    [_controllingScrollView setContentOffset:CGPointMake(0.0, 0.0)
+    [_lowerRightCollectionView setContentOffset:CGPointMake(_controllingScrollView.contentOffset.x, 0.0)
+                                       animated:YES];
+}
+
+- (void)goToBottom
+{
+    if (_lowerRightCollectionView.contentSize.height > _dataSource.gridContainerSize.height)
+    {
+        [_lowerRightCollectionView setContentOffset:CGPointMake(_lowerRightCollectionView.contentOffset.x,
+                                                             (_lowerRightCollectionView.contentSize.height - _dataSource.gridContainerSize.height))
+                                        animated:YES];
+    }
+}
+
+- (void)goToLeftSide
+{
+    [_lowerRightCollectionView setContentOffset:CGPointMake(0.0,  _controllingScrollView.contentOffset.y)
                                     animated:YES];
+}
+
+- (void)goToRightSide
+{
+    if (_lowerRightCollectionView.contentSize.width > _dataSource.gridContainerSize.width)
+    {
+        [_lowerRightCollectionView setContentOffset:CGPointMake((_lowerRightCollectionView.contentSize.width - _dataSource.gridContainerSize.width),
+                                                             _lowerRightCollectionView.contentOffset.y)
+                                        animated:YES];
+    }
+}
+
+- (void)goToUpperLeft
+{
+    [_lowerRightCollectionView setContentOffset:CGPointMake(0.0, 0.0)
+                                    animated:YES];
+}
+
+- (void)goToUpperRight
+{
+    if (_lowerRightCollectionView.contentSize.width > _dataSource.gridContainerSize.width)
+    {
+        [_lowerRightCollectionView setContentOffset:CGPointMake((_lowerRightCollectionView.contentSize.width - _dataSource.gridContainerSize.width), 0.0)
+                                        animated:YES];
+    }
+    
+    else
+        [self goToTop];
+}
+
+- (void)goToLowerLeft
+{
+    if (_lowerRightCollectionView.contentSize.height > _dataSource.gridContainerSize.height)
+    {
+        [_lowerRightCollectionView setContentOffset:CGPointMake(0.0, (_lowerRightCollectionView.contentSize.height - _dataSource.gridContainerSize.height))
+                                        animated:YES];
+    }
+    
+    else
+        [self goToLeftSide];
+}
+
+- (void)goToLowerRight
+{
+    if ((_lowerRightCollectionView.contentSize.height > _dataSource.gridContainerSize.height) &&
+        (_lowerRightCollectionView.contentSize.width > _dataSource.gridContainerSize.width))
+    {
+        [_lowerRightCollectionView setContentOffset:CGPointMake((_lowerRightCollectionView.contentSize.width - _dataSource.gridContainerSize.width),
+                                                             (_lowerRightCollectionView.contentSize.height - _dataSource.gridContainerSize.height))
+                                        animated:YES];
+    }
+    
+    else
+    {
+        [self goToBottom];
+        [self goToRightSide];
+    }
 }
 
 - (void)columnHeaderLongPressed:(UILongPressGestureRecognizer *)gesture
