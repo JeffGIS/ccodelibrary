@@ -94,6 +94,7 @@ double MNMXCORDHeight(MNMXCORD* bnds);
 void AddMinMaxD (LPMNMXCORD mm1, LPMNMXCORD mm2);
 void AddMinMaxL (LPMNMXCORL mm1, LPMNMXCORL mm2);
 LPDPOINT PointsFromCorners (CORNERPOINTS* pCornerPoints);
+CORNERPOINTS CornerPointsFromPointAndDist (LLPOINT llpt,double dist); //dist in meters
 MNMXCORD CornerPointBounds (CORNERPOINTS* cornerPoints);
 IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist);
 MNMXCORD BoundsFromPointAndDist(DPOINT pt, double dist);
@@ -140,6 +141,7 @@ int CreateMask (LPDPOINT *pPointsIN, int *pnPoints,LPMNMXCORD pbnds,bool freeExi
 int fgetstring (char * str,int maxlen,FILE * fid);
 bool fputstring(LPSTR lpStr, FILE *Fid);
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
+LLPOINT NewLLPoint(LLPOINT pt,double dist,double az);
 double ArcDistance(DPOINT p1, DPOINT p2);
 bool findClosestPoint (LPDPOINT pPoint,LPDPOINT pNearPt,double *mind,LPDPOINT p1);
 bool findClosestLLPoint (LLPOINT *pPoint,LLPOINT *pNearPt,double *mind,LLPOINT *p1LL);
