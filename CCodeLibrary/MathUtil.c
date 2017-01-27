@@ -70,7 +70,14 @@ double ArcDistance(DPOINT p1, DPOINT p2)
         return GreatCircle;
     }
 }
-
+LLPOINT NewLLPoint(LLPOINT pt,double dist,double az)
+{
+    LLPOINT llpt;
+    DPOINT dpt = NewLatLong(pt.lat, pt.lon, dist, az);
+    llpt.lat = dpt.y;
+    llpt.lon = dpt.x;
+    return llpt;
+}
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction)
 {
     DPOINT LatLong;
@@ -758,6 +765,28 @@ MNMXCORD PolyBounds (LPDPOINT points,int npoints)
     return bounds;
 }
 
+CORNERPOINTS CornerPointsFromPointAndDist (LLPOINT llpt,double dist) //dist in meters
+{
+    CORNERPOINTS cp;
+    double az=HALFPI/2;
+    
+    LLPOINT newpt = NewLLPoint(llpt,dist,az);
+    cp.farLeft.x = newpt.lon;
+    cp.farLeft.y = newpt.lat;
+    az += HALFPI;
+    newpt = NewLLPoint(llpt,dist,az);
+    cp.nearLeft.x = newpt.lon;
+    cp.nearLeft.y = newpt.lat;
+    az += HALFPI;
+    newpt = NewLLPoint(llpt,dist,az);
+    cp.nearRight.x = newpt.lon;
+    cp.nearRight.y = newpt.lat;
+    az += HALFPI;
+    newpt = NewLLPoint(llpt,dist,az);
+    cp.farRight.x = newpt.lon;
+    cp.farRight.y = newpt.lat;
+    return cp;
+}
 MNMXCORD CornerPointBounds (CORNERPOINTS* pCornerPoints)
 {
     MNMXCORD bounds;
