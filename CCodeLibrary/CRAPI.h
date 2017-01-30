@@ -124,6 +124,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property BOOL hideConnectButton, appChanged;
 @property NSNumberFormatter *dollarFmt;
 @property NSNumberFormatter *acreFmt;
+@property MNMXCORD lastViewBounds;
 
 + (CRAPI *)sharedInstance;
 

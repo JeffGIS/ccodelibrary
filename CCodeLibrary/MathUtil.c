@@ -787,6 +787,8 @@ CORNERPOINTS CornerPointsFromPointAndDist (LLPOINT llpt,double dist) //dist in m
     cp.farRight.y = newpt.lat;
     return cp;
 }
+
+
 MNMXCORD CornerPointBounds (CORNERPOINTS* pCornerPoints)
 {
     MNMXCORD bounds;
