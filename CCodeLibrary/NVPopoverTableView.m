@@ -12,7 +12,7 @@
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIFont *font;
 @property BOOL includeCancel;
-@property CGFloat cellWidth;
+@property CGFloat cellWidth, cornerRadius;
 @property (nonatomic) UIButton *returnButton, *clearButton;
 @property int lastRowTapped;
 @property NSMutableArray *groupArray;
@@ -52,6 +52,8 @@
     NVPopoverTableView *nvptv = NVPopoverTableView.new;
     nvptv.translatesAutoresizingMaskIntoConstraints = NO;
     nvptv.backgroundColor = UIColor.clearColor;
+    nvptv.layer.borderColor = UserDefaults.defaults.appleBlue.CGColor;
+    nvptv.layer.borderWidth = 0.0;
     nvptv.alpha = 0.0;
     nvptv.delegate = delegate;
     nvptv.title = title;
@@ -78,12 +80,13 @@
     
     CGRect bounds = UIScreen.mainScreen.bounds;
     CGFloat shortestSide = MIN(bounds.size.height, bounds.size.width);
-    CGFloat margin = 80.0, cornerRadius = 16.0;
+    CGFloat margin = 80.0;
+    nvptv.cornerRadius = 16.0;
     nvptv.font = [UIFont boldSystemFontOfSize:28.0];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
-        margin = 40.0, cornerRadius = 8.0;
+        margin = 40.0, nvptv.cornerRadius = 8.0;
         nvptv.font = [UIFont boldSystemFontOfSize:20.0];
     }
     
@@ -504,6 +507,21 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     for (NSIndexPath *paths in _tableView.indexPathsForSelectedRows)
         [_tableView deselectRowAtIndexPath:paths animated:NO];
+    
+    _tableView.allowsMultipleSelection = NO;
+    self.layer.borderWidth = 0.0;
+    self.layer.cornerRadius = _cornerRadius;
+    [_tableView reloadData];
+    
+    [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
+                      atScrollPosition:UITableViewScrollPositionNone
+                              animated:YES];
+    
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         _returnButton.alpha = 0.0;
+                         _clearButton.alpha = 0.0;
+                     }];
 }
 
 @end
