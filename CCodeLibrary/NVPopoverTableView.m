@@ -13,7 +13,7 @@
 @property (nonatomic) UIFont *font;
 @property BOOL includeCancel;
 @property CGFloat cellWidth;
-@property (nonatomic) UIButton *returnButton;
+@property (nonatomic) UIButton *returnButton, *clearButton;
 
 @end
 
@@ -96,15 +96,9 @@
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
         nvptv.returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:26.0];
     
-    [nvptv.returnButton setTitle:@" < Return "
-                        forState:UIControlStateNormal];
-    
-    [nvptv.returnButton setTitleColor:UIColor.blackColor
-                             forState:UIControlStateNormal];
-    
-    [nvptv.returnButton setTitleColor:UIColor.lightGrayColor
-                             forState:UIControlStateHighlighted];
-    
+    [nvptv.returnButton setTitle:@" < Return  " forState:UIControlStateNormal];
+    [nvptv.returnButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [nvptv.returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
     [view addSubview:nvptv.returnButton];
     [nvptv.returnButton constrainLeadingToAnchor:view.leadingAnchor constant:20.0];
     [nvptv.returnButton constrainTopToAnchor:view.topAnchor constant:(margin / 4.0)];
@@ -112,6 +106,29 @@
     [nvptv.returnButton addTarget:nvptv
                            action:@selector(rtnButtonTapped:)
                  forControlEvents:UIControlEventTouchUpInside];
+    
+    nvptv.clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    nvptv.clearButton.translatesAutoresizingMaskIntoConstraints = NO;
+    nvptv.clearButton.backgroundColor = UIColor.whiteColor;
+    nvptv.clearButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    nvptv.clearButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
+    nvptv.clearButton.layer.borderColor = UserDefaults.defaults.appleBlue.CGColor;
+    nvptv.clearButton.layer.borderWidth = 4.0;
+    nvptv.clearButton.alpha = 0.0;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        nvptv.clearButton.titleLabel.font = [UIFont boldSystemFontOfSize:26.0];
+    
+    [nvptv.clearButton setTitle:@" Clear  " forState:UIControlStateNormal];
+    [nvptv.clearButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [nvptv.clearButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    [view addSubview:nvptv.clearButton];
+    [nvptv.clearButton constrainTrailingToAnchor:view.trailingAnchor constant:-20.0];
+    [nvptv.clearButton constrainTopToAnchor:view.topAnchor constant:(margin / 4.0)];
+    
+    [nvptv.clearButton addTarget:nvptv
+                          action:@selector(clearButtonTapped:)
+                forControlEvents:UIControlEventTouchUpInside];
     
     nvptv.cellWidth = (shortestSide - (margin * 2.0) - 30.0);
     
@@ -330,6 +347,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         [UIView animateWithDuration:0.25
                          animations:^{
                              _returnButton.alpha = 1.0;
+                             _clearButton.alpha = 1.0;
                          }];
     }
 }
@@ -380,6 +398,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         [_delegate popoverTableView:self
           didReturnWithSelectedRows:selectedRows.copy];
     }
+}
+
+- (void)clearButtonTapped:(UIButton *)button
+{
+    for (NSIndexPath *paths in _tableView.indexPathsForSelectedRows)
+        [_tableView deselectRowAtIndexPath:paths animated:NO];
 }
 
 @end
