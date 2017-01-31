@@ -38,7 +38,7 @@
         _allowedZooms[2] = 19;
         _maxDevices = 100;
         _documentsDirectory = UserDefaults.defaults.localFilePath;
-        _extractFile = [NSString stringWithFormat:@"%@/extract.png", _documentsDirectory];
+        _extractFile = [NSString stringWithFormat:@"%@/extract.bmp", _documentsDirectory];
         _crimeMode = PINMAP;
         _crimeTarget = @"Minneapolis Neighborhoods";
         _docManager = NVDocumentManager.new;

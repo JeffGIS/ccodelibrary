@@ -55,4 +55,42 @@ typedef CPOINT *LPCPOINT;
 #define LOWORD(l)((WORD)(((DWORD_PTR)(l)) & 0xffff))
 #define HIWORD(l)((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
 
+#define BI_RGB 0
+
+typedef unsigned int UINT;
+typedef unsigned long DWORD;
+typedef long int LONG;
+typedef unsigned short WORD;
+typedef unsigned char BYTE;
+
+typedef struct tagBITMAPFILEHEADER {
+    UINT bfType;
+    DWORD bfSize;
+    UINT bfReserved1;
+    UINT bfReserved2;
+    DWORD bfOffBits;
+} BITMAPFILEHEADER;
+
+typedef struct tagBITMAPINFOHEADER {
+    DWORD biSize;
+    LONG biWidth;
+    LONG biHeight;
+    WORD biPlanes;
+    WORD biBitCount;
+    DWORD biCompression;
+    DWORD biSizeImage;
+    LONG biXPelsPerMeter;
+    LONG biYPelsPerMeter;
+    DWORD biClrUsed;
+    DWORD biClrImportant;
+} BITMAPINFOHEADER;
+
+typedef struct COLORREF_RGB
+{
+    BYTE cRed;
+    BYTE cGreen;
+    BYTE cBlue;
+}COLORREF_RGB;
+
+
 #endif
