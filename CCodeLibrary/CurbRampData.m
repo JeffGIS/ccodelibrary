@@ -794,7 +794,7 @@ static int nInit=0;
         [self setLastDataUpdateNum:nextNum pictNum:pictNum foriPad:iPad];
     if (nextNum - lastNum > 1)
     {
-        NSString * logmess = [NSString stringWithFormat:@"Curbramp data file num error",lastNum,nextNum];
+        NSString *logmess = @"Curbramp data file num error";
         [CRAPI.sharedInstance logToErrorFile:logmess];
     }
     return nextNum;

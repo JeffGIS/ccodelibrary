@@ -1070,7 +1070,7 @@ SELECT max(_id) FROM MyTable*/
         [self setLastDataUpdateNum:nextNum pictNum:pictNum foriPad:iPad];
     if (nextNum - lastNum > 1)
     {
-        NSString * logmess = [NSString stringWithFormat:@"Alley data file num error",lastNum,nextNum];
+        NSString *logmess = @"Alley data file num error";
         [CRAPI.sharedInstance logToErrorFile:logmess];
     }
     return nextNum;

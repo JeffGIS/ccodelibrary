@@ -195,7 +195,7 @@
     if (oldRamp.hasBraille !=  self.hasBraille) goto RtnFalse;
     if (oldRamp.hasTactileArrow !=  self.hasTactileArrow) goto RtnFalse;
     if (oldRamp.locatorToneVolume !=  self.locatorToneVolume) goto RtnFalse;
-    if (oldRamp.audibleWalkIndicationVolume = self.audibleWalkIndicationVolume) goto RtnFalse;
+    if (oldRamp.audibleWalkIndicationVolume != self.audibleWalkIndicationVolume) goto RtnFalse;
     if (oldRamp.curbCutDistance != self.curbCutDistance) goto RtnFalse;
     if (oldRamp.bumpHeight != self.bumpHeight) goto RtnFalse;
     if (oldRamp.bumpWidth != self.bumpWidth) goto RtnFalse;

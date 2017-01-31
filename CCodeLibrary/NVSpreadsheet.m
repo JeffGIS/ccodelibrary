@@ -29,7 +29,7 @@ const static CGFloat NVSpreadsheetScrollIndicatorMinimum = 25.0;
 const static CGFloat NVScrollIndicatorDefaultInsetSpace = 2.0;
 const static NSUInteger NVScrollIndicatorTag = 12345;
 
-@interface NVSpreadsheet () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface NVSpreadsheet () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate,UITextFieldDelegate>
 
 @property (nonatomic) NSUInteger headerRowCount, headerColumnCount;
 @property (nonatomic) NVSpreadsheetHeaderConfiguration spreadsheetHeaderConfiguration;
@@ -256,9 +256,6 @@ forCellWithReuseIdentifier:(NSString *)identifier
 {
     [super layoutSubviews];
     
-    NSIndexPath *indexPathZero = [NSIndexPath indexPathForItem:0
-                                                     inSection:0];
-    
     switch (_spreadsheetHeaderConfiguration)
     {
         case NVSpreadsheetHeaderConfigurationNone:
@@ -268,10 +265,6 @@ forCellWithReuseIdentifier:(NSString *)identifier
         case NVSpreadsheetHeaderConfigurationColumnOnly:
         {
             CGSize size = _lowerLeftCollectionView.collectionViewLayout.collectionViewContentSize;
-            
-            CGSize cellSize = [self collectionView:_lowerRightCollectionView
-                                            layout:_lowerRightCollectionView.collectionViewLayout
-                            sizeForItemAtIndexPath:indexPathZero];
             
             _lowerLeftContainerView.frame = CGRectMake(0.0, 0.0, size.width, self.bounds.size.height);
             
@@ -285,10 +278,6 @@ forCellWithReuseIdentifier:(NSString *)identifier
         {
             CGSize size = _upperRightCollectionView.collectionViewLayout.collectionViewContentSize;
             
-            CGSize cellSize = [self collectionView:_lowerRightCollectionView
-                                            layout:_lowerRightCollectionView.collectionViewLayout
-                            sizeForItemAtIndexPath:indexPathZero];
-            
             _upperRightContainerView.frame = CGRectMake(0.0 ,0.0, self.bounds.size.width, size.height);
             
             _lowerRightContainerView.frame = CGRectMake(0.0, (size.height + NVSpreadsheetGridSpace), self.bounds.size.width,
@@ -299,10 +288,6 @@ forCellWithReuseIdentifier:(NSString *)identifier
         case NVSpreadsheetHeaderConfigurationBoth:
         {
             CGSize size = _upperLeftCollectionView.collectionViewLayout.collectionViewContentSize;
-            
-            CGSize cellSize = [self collectionView:_lowerRightCollectionView
-                                            layout:_lowerRightCollectionView.collectionViewLayout
-                            sizeForItemAtIndexPath:indexPathZero];
             
             _upperLeftContainerView.frame = CGRectMake(0.0, 0.0, size.width, size.height);
             
@@ -782,14 +767,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
                                                                              indexPath:indexPath];
         
-        UICollectionViewCell *cell = [_dataSource spreadsheetView:self
-                                           cellForItemAtIndexPath:dataSourceIndexPath];
-        
-        [_delegate spreadsheetView:self
-          didSelectItemAtIndexPath:dataSourceIndexPath];
-        
-        [collectionView deselectItemAtIndexPath:indexPath
-                                       animated:YES];
+        [_delegate spreadsheetView:self didSelectItemAtIndexPath:dataSourceIndexPath];
+        [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     }
 }
 

@@ -202,7 +202,7 @@
         _photoView.image = [UIImage imageWithContentsOfFile:[_delegate getImagePath:self
                                                                              forKey:nvp.key]];
         
-        _photoLabel.text = [NSString stringWithFormat:@"%@ (%li of %lu)",
+        _photoLabel.text = [NSString stringWithFormat:@"%@ (%i of %lu)",
                             nvp.identifier, (_imageIndex + 1), (unsigned long)_photosArray.count];
     }
     

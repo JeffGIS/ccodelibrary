@@ -11,7 +11,7 @@
 #import "NVTabBarEdit.h"
 @import MessageUI;
 
-@interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate>
+@interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
 @property (nonatomic) UIButton *swap, *returnToOrigin;

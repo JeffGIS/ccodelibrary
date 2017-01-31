@@ -463,6 +463,7 @@
 {
     [self setTran];
     MPRamp *ramp = nil;
+    NVRampButton *rampButton = nil;
     
     [self setXWalkButton:_xWalkA
                doesExist:_currentIntersection.xWalkAExists
@@ -508,15 +509,12 @@
     {
         int x = 0, y = 0;
         double bmpx = 0.0, bmpy = 0.0;
-        NVRampButton *rampButton = nil;
-        
+        rampButton = (NVRampButton *)[self.view viewWithTag:i];
+        rampButton.hidden = !ramp.rampExists;
         ramp = _currentIntersection.ramps[i];
         
         switch (i)
         {
-                rampButton = (NVRampButton *)[self.view viewWithTag:i];
-                rampButton.hidden = !ramp.rampExists;
-            
             case 1:
                 _ramp1.hidden = !ramp.rampExists;
                 rampButton = _ramp1;

@@ -47,7 +47,7 @@ static GetPriorityLocations *_getLocations;
         NSString *cat = catname[pl.type.integerValue];
         NSString *name = [pl.name stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
         
-        NSString *cmd = [NSString stringWithFormat:@"INSERT INTO PriorityLocations VALUES (%i,'%@',%i, '%@', %f, %f, %f,%i);",iRef++,name,pl.type,cat,pl.coordinate.latitude,pl.coordinate.longitude,pl.radius,pl.offset];
+        NSString *cmd = [NSString stringWithFormat:@"INSERT INTO PriorityLocations VALUES (%i,'%@',%@, '%@', %f, %f, %f,%i);",iRef++,name,pl.type,cat,pl.coordinate.latitude,pl.coordinate.longitude,pl.radius,pl.offset];
         [crd executeCmd:(LPSTR)cmd.UTF8String sendToServer:YES from:1];
     }
     if (opened)

@@ -174,7 +174,7 @@
     POINT point = DPointToPoint (pPoint);
     POINT dispersedPoint = AddjustPointLoc (point,size,seq+1);
 
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO DISPERSE VALUES(%i,%i,%i,%i,%i,%i,%i,%i,%f,%lli,%li,'%s');INSERT INTO DISPERSE_index VALUES(%i,%f,%f,%f,%f);",_nextID,cnbr,seq,point.x,point.y,dispersedPoint.x,dispersedPoint.y,(int)sym,size,(long long)color,time,offense.UTF8String, _nextID,(float)dispersedPoint.x-1,(float)dispersedPoint.x+1,(float)dispersedPoint.y-1,(float)dispersedPoint.y+1];
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO DISPERSE VALUES(%i,%i,%i,%i,%i,%i,%i,%i,%f,%lli,%li,'%s');INSERT INTO DISPERSE_index VALUES(%i,%f,%f,%f,%f);",_nextID,cnbr,seq,point.x,point.y,dispersedPoint.x,dispersedPoint.y,(int)sym,size,(long long)color,(long)time,offense.UTF8String, _nextID,(float)dispersedPoint.x-1,(float)dispersedPoint.x+1,(float)dispersedPoint.y-1,(float)dispersedPoint.y+1];
     [self executeCmd:(LPSTR)cmd.UTF8String];
     _nextID++;
     return TRUE;

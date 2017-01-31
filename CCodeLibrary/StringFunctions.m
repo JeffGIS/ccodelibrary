@@ -753,7 +753,7 @@ NSMutableAttributedString *addLineBreakToLastSpace(NSString *string)
         return nil;
     
     else if (!string.length)
-        return string;
+        return string.copy;
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:string];
     

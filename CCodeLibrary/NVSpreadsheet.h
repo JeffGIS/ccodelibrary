@@ -36,7 +36,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 @property (nonatomic, weak) id<NVSpreadsheetDelegate> delegate;
 @property (nonatomic, weak) id<NVSpreadsheetDataSource> dataSource;
 @property UIEdgeInsets scrollIndicatorInsets;
-@property BOOL showsHorizontalScrollIndicator, showsVerticalScrollIndicator, bounces;
+@property BOOL showsHorizontalScrollIndicator, showsVerticalScrollIndicator;
+@property (nonatomic) BOOL bounces;
 
 - (id)initWithNumberOfHeaderRows:(NSUInteger)headerRowCount
            numberOfHeaderColumns:(NSUInteger)headerColumnCount
@@ -47,9 +48,6 @@ forCellWithReuseIdentifier:(NSString *)identifier;
 
 - (UICollectionViewCell *)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier
                                                     forIndexPath:(NSIndexPath *)indexPath;
-
-- (void)deselectItemAtIndexPath:(NSIndexPath *)indexPath
-                       animated:(BOOL)animated;
 
 - (void)reloadData;
 - (void)flipLongPressGesture:(BOOL)flipped;

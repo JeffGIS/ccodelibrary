@@ -574,7 +574,7 @@ bool PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUB
 {GSSiEnterProg (707);
 #endif
 {
-    DPOINT PickedPoint, WPoint, LastWPoint, NearPoint = {0};
+    DPOINT PickedPoint, WPoint, LastWPoint = {0}, NearPoint = {0};
     //DPOINT BeginPoint, EndPoint, FromPoint, ToPoint;
 	HPDPOINT lpPoints = lpPointsIn;//lpPointsIn[1]
 	//POINT	BeginPointFile, EndPointFile, PickedPointFile;
@@ -774,7 +774,7 @@ GSSiExitProg (707);
 double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim)
 {
 	int	i; 
-	DPOINT	BeginPoint, LastPoint;
+    DPOINT	BeginPoint={0}, LastPoint={0};
 	double	Area=0,Perim=0;    
 
 	for (i=0;i<nPnts;i++,lpDpoints++)
@@ -1281,8 +1281,7 @@ LPSTR AddCommas (LPSTR InBuff)
 #endif
     {
         return InBuff;
-        
-        char	Buff[64],VCBuff[64];
+        /*char	Buff[64],VCBuff[64];
         LPSTR   p1, p2, bp, pDot;
         short	n;
         
@@ -1329,7 +1328,5 @@ LPSTR AddCommas (LPSTR InBuff)
         }
 #if ENABLETRACE
     }
-#endif
+#endif*/
 }
-
-

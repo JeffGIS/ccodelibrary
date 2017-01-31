@@ -14,6 +14,8 @@
 @property BOOL includeCancel;
 @property CGFloat cellWidth;
 @property (nonatomic) UIButton *returnButton, *clearButton;
+@property int lastRowTapped;
+@property NSMutableArray *groupArray;
 
 @end
 
@@ -56,6 +58,7 @@
     nvptv.textArray = textArray;
     nvptv.includeCancel = includeCancel;
     nvptv.allowsMultipleSelection = NO;
+    nvptv.lastRowTapped = 0;
     
     nvptv.overlayView = UIView.new;
     nvptv.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -171,10 +174,12 @@
                              self.alpha = 0.0;
                              _overlayView.alpha = 0.0;
                              _returnButton.alpha = 0.0;
+                             _clearButton.alpha = 0.0;
                              _tabBar.alpha = 1.0;
                          } completion:^(BOOL finished) {
                              [_overlayView removeFromSuperview];
                              [_returnButton removeFromSuperview];
+                             [_clearButton removeFromSuperview];
                              [self removeFromSuperview];
                              _tabBar.userInteractionEnabled = YES;
                          }];
@@ -197,7 +202,11 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-    return MAX(_textArray.count, 1);
+    if (_tableView.allowsMultipleSelection)
+        return MAX(_groupArray.count, 1);
+    
+    else
+        return MAX(_textArray.count, 1);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView
@@ -211,9 +220,19 @@ heightForHeaderInSection:(NSInteger)section
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [self getHeightForText:textBefore(_textArray[indexPath.row], @"\x03")
-                             font:_font
-                            width:_cellWidth];
+    if (_tableView.allowsMultipleSelection)
+    {
+        return [self getHeightForText:textBefore(_groupArray[indexPath.row], @"\x03")
+                                 font:_font
+                                width:_cellWidth];
+    }
+    
+    else
+    {
+        return [self getHeightForText:textBefore(_textArray[indexPath.row], @"\x03")
+                                 font:_font
+                                width:_cellWidth];
+    }
 }
 
 -(UIView *)tableView:(UITableView *)tableView
@@ -243,7 +262,12 @@ viewForHeaderInSection:(NSInteger)section
                                       reuseIdentifier:cellIdentifier];
     }
     
-    cell.textLabel.text = textBefore(_textArray[indexPath.row], @"\x03");
+    if (_tableView.allowsMultipleSelection)
+        cell.textLabel.text = textBefore(_groupArray[indexPath.row], @"\x03");
+    
+    else
+        cell.textLabel.text = textBefore(_textArray[indexPath.row], @"\x03");
+    
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.font = _font;
     cell.textLabel.numberOfLines = 0;
@@ -277,7 +301,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     if (_includeCancel && indexPath.row == 0 && [_delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
         [_delegate popoverTableViewDidCancel:self];
     
-    else if (!_tableView.allowsMultipleSelection)
+    else if (_tableView.allowsMultipleSelection)
+        _lastRowTapped = (int)indexPath.row;
+    
+    else
     {
         NSString *text = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
         NSInteger index = 0;
@@ -292,6 +319,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                didSelectRowWithText:text
                             atIndex:index];
     }
+}
+
+- (void)tableView:(UITableView *)tableView
+didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    _lastRowTapped = (int)indexPath.row;
 }
 
 - (void)overlayTapped:(UITapGestureRecognizer *)gesture
@@ -335,26 +368,87 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         UITableViewCell *cell = (UITableViewCell *)gesture.view;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:cell.tag inSection:0];
         
-        [_tableView selectRowAtIndexPath:indexPath
-                                animated:YES
-                          scrollPosition:UITableViewScrollPositionNone];
+        if (_tableView.allowsMultipleSelection)
+        {
+            int start = MIN(indexPath.row, _lastRowTapped);
+            int stop  = MAX(indexPath.row, _lastRowTapped);
+            NSArray<NSIndexPath *> *selectedRows = _tableView.indexPathsForSelectedRows;
+            
+            for (int i = start; i <= stop; i++)
+            {
+                if (i == _lastRowTapped)
+                    continue;
+                
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                
+                if ([selectedRows containsObject:indexPath])
+                    [_tableView deselectRowAtIndexPath:indexPath animated:NO];
+                
+                else
+                    [_tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+            }
+            
+            _lastRowTapped = 0;
+        }
         
-        _tableView.allowsMultipleSelection = YES;
-        self.layer.cornerRadius = 0.0;
-        self.layer.borderColor = UserDefaults.defaults.appleBlue.CGColor;
-        self.layer.borderWidth = 4.0;
-        
-        [UIView animateWithDuration:0.25
-                         animations:^{
-                             _returnButton.alpha = 1.0;
-                             _clearButton.alpha = 1.0;
-                         }];
+        else
+        {
+            _tableView.allowsMultipleSelection = YES;
+            self.layer.cornerRadius = 0.0;
+            self.layer.borderColor = UserDefaults.defaults.appleBlue.CGColor;
+            self.layer.borderWidth = 4.0;
+            _groupArray = NSMutableArray.array;
+            NSString *groupID = textBefore(textAfter(_textArray[indexPath.row], @"\x05"), @"\x04");
+            NSString *cellText = cell.textLabel.text;
+            NSInteger cellToSelect = -1;
+            
+            if (!groupID)
+                groupID = @"0";
+            
+            for (NSString *text in _textArray)
+            {
+                if (_includeCancel && [_textArray indexOfObject:text] == 0)
+                {
+                    [_groupArray addObject:text];
+                    continue;
+                }
+                
+                NSString *group = textBefore(textAfter(text, @"\x05"), @"\x04");
+                
+                if (!group)
+                    group = @"0";
+                
+                if ([group isEqualToString:groupID])
+                {
+                    [_groupArray addObject:text];
+                    
+                    if ([textBefore(text, @"\x03") isEqualToString:cellText])
+                        _lastRowTapped = cellToSelect = [_groupArray indexOfObject:text];
+                }
+            }
+            
+            [_tableView reloadData];
+            
+            if (cellToSelect >= 0)
+            {
+                [_tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:cellToSelect inSection:0]
+                                        animated:YES
+                                  scrollPosition:UITableViewScrollPositionMiddle];
+            }
+            
+            [UIView animateWithDuration:0.25
+                             animations:^{
+                                 _returnButton.alpha = 1.0;
+                                 _clearButton.alpha = 1.0;
+                             }];
+        }
     }
 }
 
 - (void)rtnButtonTapped:(UIButton *)button
 {
-    NSMutableArray *selectedRows = NSMutableArray.array;
+    NSMutableArray <NSNumber *> *selectedRows = NSMutableArray.array;
+    NSMutableArray *selectedTextArray = NSMutableArray.array;
     
     if (!_tableView.indexPathsForSelectedRows.count)
     {
@@ -368,14 +462,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     else if (_tableView.indexPathsForSelectedRows.count == 1)
     {
         NSIndexPath *indexPath = _tableView.indexPathsForSelectedRows[0];
-        NSString *text = [_tableView cellForRowAtIndexPath:indexPath].textLabel.text;
-        NSInteger index = 0;
+        NSString *text = textBefore(_groupArray[indexPath.row], @"\x03");
+        NSInteger index = [_textArray indexOfObject:_groupArray[indexPath.row]];
         
         if (_includeCancel)
-            index = (indexPath.row - 1);
-        
-        else
-            index = indexPath.row;
+            index -= 1;
         
         [_delegate popoverTableView:self
                didSelectRowWithText:text
@@ -384,19 +475,28 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         return;
     }
     
-    for (NSIndexPath *paths in _tableView.indexPathsForSelectedRows)
+    else for (NSIndexPath *paths in _tableView.indexPathsForSelectedRows)
     {
         if (_includeCancel)
-            [selectedRows addObject:[NSNumber numberWithInt:(paths.row - 1)]];
+        {
+            NSInteger index = [_textArray indexOfObject:_groupArray[paths.row - 1]];
+            [selectedRows addObject:[NSNumber numberWithInt:index]];
+            [selectedTextArray addObject:textBefore(_groupArray[paths.row - 1], @"\x03")];
+        }
         
         else
-            [selectedRows addObject:[NSNumber numberWithInt:paths.row]];
+        {
+            NSInteger index = [_textArray indexOfObject:_groupArray[paths.row]];
+            [selectedRows addObject:[NSNumber numberWithInt:index]];
+            [selectedTextArray addObject:textBefore(_groupArray[paths.row], @"\x03")];
+        }
     }
     
-    if ([_delegate respondsToSelector:@selector(popoverTableView:didReturnWithSelectedRows:)])
+    if ([_delegate respondsToSelector:@selector(popoverTableView:didReturnWithSelectedRows:textArray:)])
     {
         [_delegate popoverTableView:self
-          didReturnWithSelectedRows:selectedRows.copy];
+          didReturnWithSelectedRows:selectedRows.copy
+                          textArray:selectedTextArray.copy];
     }
 }
 

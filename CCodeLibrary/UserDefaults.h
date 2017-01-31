@@ -10,7 +10,7 @@
 #import "CCodeTypes.h"
 #import "NVAlertView.h"
 
-@interface UserDefaults : NSObject
+@interface UserDefaults : NSObject <CAAnimationDelegate>
 {
     NSUserDefaults *_defaults;
     NVAlertView *_alert;

@@ -37,8 +37,8 @@
         self.isOpen = !SQLOK(145,sqlite3_open(path.UTF8String, &_database), _database);
         //NSLog(@"Property Database open");
         
-        _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:path
-                                                                   error:nil].fileSize;
+        _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:path
+                                                                              error:nil].fileSize;
         return TRUE;
     }
     else

@@ -358,7 +358,7 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
     NVWebView *popupWindow = [NVWebView showWebViewInView:self.superview
                                                 urlString:navigationAction.request.URL.absoluteString];
     
-    popupWindow.delegate = self.superview;
+    popupWindow.delegate = (id)self.superview;
     return nil;
 }
 
