@@ -94,6 +94,8 @@
 		69DE24291C76319B00680B00 /* NVTextVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69DE24261C76311D00680B00 /* NVTextVC.h */; };
 		69DFB6A51CD71987001E1200 /* NVCRISSignupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69DFB6A41CD71987001E1200 /* NVCRISSignupView.m */; };
 		69DFB6A61CD719C3001E1200 /* NVCRISSignupView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69DFB6A31CD71987001E1200 /* NVCRISSignupView.h */; };
+		69E666021E412CEB006A2055 /* WMS.c in Sources */ = {isa = PBXBuildFile; fileRef = 69E666001E412CEB006A2055 /* WMS.c */; };
+		69E666031E413D90006A2055 /* WMS.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E666011E412CEB006A2055 /* WMS.h */; };
 		69E7FCA61D81249500171E44 /* NVPopoverSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E7FCA51D81249500171E44 /* NVPopoverSlider.m */; };
 		69E7FCA71D8129CD00171E44 /* NVPopoverSlider.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E7FCA41D81249500171E44 /* NVPopoverSlider.h */; };
 		69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E8E6681C66802F00CB26CB /* NSData+CRC.m */; };
@@ -349,6 +351,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69E666031E413D90006A2055 /* WMS.h in CopyFiles */,
 				698C20C91DCB84DC00F800C3 /* NVKeyboard.h in CopyFiles */,
 				69F482331DB7368E00E4BDB5 /* NVSpreadsheetVC.h in CopyFiles */,
 				69D277D31DA6E369002B1447 /* NVStreetSideController.h in CopyFiles */,
@@ -581,6 +584,8 @@
 		69DE24271C76311D00680B00 /* NVTextVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextVC.m; sourceTree = "<group>"; };
 		69DFB6A31CD71987001E1200 /* NVCRISSignupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCRISSignupView.h; sourceTree = "<group>"; };
 		69DFB6A41CD71987001E1200 /* NVCRISSignupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCRISSignupView.m; sourceTree = "<group>"; };
+		69E666001E412CEB006A2055 /* WMS.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = WMS.c; sourceTree = "<group>"; };
+		69E666011E412CEB006A2055 /* WMS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMS.h; sourceTree = "<group>"; };
 		69E7FCA41D81249500171E44 /* NVPopoverSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPopoverSlider.h; sourceTree = "<group>"; };
 		69E7FCA51D81249500171E44 /* NVPopoverSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPopoverSlider.m; sourceTree = "<group>"; };
 		69E8E6671C66802F00CB26CB /* NSData+CRC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CRC.h"; sourceTree = "<group>"; };
@@ -993,6 +998,8 @@
 				EBA2E48619952BCA0085B2E0 /* rotate256.h */,
 				EBA2E48719952BCA0085B2E0 /* TileGraphics.h */,
 				EBA2E48819952BCA0085B2E0 /* TileIndex.c */,
+				69E666011E412CEB006A2055 /* WMS.h */,
+				69E666001E412CEB006A2055 /* WMS.c */,
 			);
 			name = CCode;
 			sourceTree = "<group>";
@@ -1587,6 +1594,7 @@
 				6986AF841C7C119E0059DD1B /* NVDigitizerView.m in Sources */,
 				EB7C6A161BD158D8006E985B /* StringFunctions.m in Sources */,
 				69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */,
+				69E666021E412CEB006A2055 /* WMS.c in Sources */,
 				698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */,
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
 				EBC01D261BED1C8C0004C751 /* refrac.c in Sources */,
