@@ -27,15 +27,16 @@ void wmsRequest(const char *filepath, const char *tmpFilePath, dbounds bounds, u
             "GET /cgi-bin/mncomp?"
             "LAYERS=mncomp"
             "&FORMAT=image/jpeg"
-            "&TRANSPARENT=TRUE&SERVICE=WMS"
+            "&TRANSPARENT=TRUE"
+            "&SERVICE=WMS"
             "&VERSION=1.1.1"
             "&REQUEST=GetMap"
             "&STYLES="
             "&SRS=EPSG:4326"
             "&BBOX=%.4f,%.4f,%.4f,%.4f"
             "&WIDTH=%hu"
-            "&HEIGHT=%hu "
-            "HTTP/1.1\nHost: geoint.lmic.state.mn.us\n\n",
+            "&HEIGHT=%hu"
+            " HTTP/1.1\nHost: geoint.lmic.state.mn.us\n\n",
             bounds.xmn, bounds.ymn, bounds.xmx, bounds.ymx, width, height);
     
     send(sockfd, request, strlen(request), 0);
