@@ -47,7 +47,7 @@ void wmsRequest(const char *filepath)
     
     do {
         byteCount = recv(sockfd, buf, sizeof(buf), 0);
-        fwrite(buf, 1, strlen(buf), image);
+        fwrite(buf, 1, byteCount, image);
         totalBytes += byteCount;
         printf("received %d bytes of data in buf (%d total bytes)\n", byteCount, totalBytes);
         printf("%.*s\n\n", byteCount, buf);
