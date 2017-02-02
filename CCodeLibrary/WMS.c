@@ -14,7 +14,7 @@
 #define BUFFER_SIZE 24576
 #define QUERY_SIZE 320
 
-bool wmsRequest(const char *filepath, dbounds bounds, unsigned short width, unsigned short height)
+bool wmsRequest(const char *filepath, const char *layer, dbounds bounds, unsigned short width, unsigned short height)
 {
     FILE *imgFile;
     struct addrinfo hints, *res;
@@ -32,10 +32,9 @@ bool wmsRequest(const char *filepath, dbounds bounds, unsigned short width, unsi
     printf("Connected!\n\n");
     
     sprintf(request,
-            "GET /cgi-bin/mncomp?"
-            "LAYERS=mncomp"
+            "GET /cgi-bin/wms?"
+            "LAYERS=%s"
             "&FORMAT=image/jpeg"
-            "&TRANSPARENT=TRUE"
             "&SERVICE=WMS"
             "&VERSION=1.1.1"
             "&REQUEST=GetMap"
@@ -46,7 +45,7 @@ bool wmsRequest(const char *filepath, dbounds bounds, unsigned short width, unsi
             "&HEIGHT=%hu"
             " HTTP/1.1\n"
             "Host: geoint.lmic.state.mn.us\n\n",
-            bounds.xmn, bounds.ymn, bounds.xmx, bounds.ymx, width, height);
+            layer, bounds.xmn, bounds.ymn, bounds.xmx, bounds.ymx, width, height);
     
     printf("WMS Query: %s", request);
     send(sockfd, request, strlen(request), 0);
