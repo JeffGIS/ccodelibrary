@@ -15,6 +15,7 @@ typedef HANDLE *LPHANDLE;
 //typedef bool    BOOL;
 typedef int    *LPBOOL;
 typedef int * LPINT;
+typedef short * LPSHORT;
 typedef char *LPSTR;
 typedef LPSTR HPSTR;
 #define TRUE 1
