@@ -7,21 +7,25 @@
 #include <unistd.h>
 #include <string.h>
 
-void wmsRequest(const char *filepath, const char *tmpFilePath, dbounds bounds, unsigned short width, unsigned short height)
+#define HEADER_LENGTH 194
+#define BUFFER_SIZE 24576
+
+void wmsRequest(const char *filepath, dbounds bounds, unsigned short width, unsigned short height)
 {
-    FILE *tmpFile, *imgFile;
+    FILE *imgFile;
     struct addrinfo hints, *res;
-    int sockfd = 0, byteCount = 0, totalBytes = 0;
-    char buffer[10240], ch;
+    int sockfd = 0, totalBytes = 0;
+    long byteCount = 0;
+    char buffer[BUFFER_SIZE], ch;
     char *request = (char *)calloc(320, sizeof(char));
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     getaddrinfo("geoint.lmic.state.mn.us", "80", &hints, &res);
     sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
-    printf("Connecting...\n");
+    printf("\nConnecting...\n\n");
     connect(sockfd, res->ai_addr, res->ai_addrlen);
-    printf("Connected!\n");
+    printf("Connected!\n\n");
     
     sprintf(request,
             "GET /cgi-bin/mncomp?"
@@ -36,50 +40,49 @@ void wmsRequest(const char *filepath, const char *tmpFilePath, dbounds bounds, u
             "&BBOX=%.4f,%.4f,%.4f,%.4f"
             "&WIDTH=%hu"
             "&HEIGHT=%hu"
-            " HTTP/1.1\nHost: geoint.lmic.state.mn.us\n\n",
+            " HTTP/1.1\n"
+            "Host: geoint.lmic.state.mn.us\n\n",
             bounds.xmn, bounds.ymn, bounds.xmx, bounds.ymx, width, height);
     
+    printf("WMS Query: %s", request);
     send(sockfd, request, strlen(request), 0);
     printf("HTTP Request Sent...\n\n");
+    free(request);
+    imgFile = fopen(filepath, "w");
     
-    tmpFile = fopen(tmpFilePath, "w");
-    
-    if (!tmpFile)
+    if (!imgFile)
     {
-        printf("Error reading/writing file\n");
+        printf("Error writing file\n");
         return;
     }
     
     do
     {
-        memset(&buffer, 0, sizeof(buffer));
         byteCount = recv(sockfd, buffer, sizeof(buffer), 0);
+        
+        if (totalBytes < 1)
+        {
+            for (int i = 0; i < byteCount; i++)
+            {
+                ch = buffer[i];
+                
+                if (totalBytes < 1)
+                {
+                    if (i < HEADER_LENGTH)
+                        printf("%c", ch);
+                    
+                    else
+                        fputc(ch, imgFile);
+                }
+            }
+        }
+        
+        else
+            fwrite(buffer, sizeof(char), byteCount, imgFile);
+        
         totalBytes += byteCount;
-        fwrite(buffer, sizeof(char), byteCount, tmpFile);
         
     } while (byteCount > 0);
     
-    fclose(tmpFile);
-    tmpFile = fopen(tmpFilePath, "r");
-    imgFile = fopen(filepath, "w");
-    
-    if (!imgFile || !tmpFile)
-    {
-        printf("Error reading/writing file\n");
-        return;
-    }
-    
-    for (int i = 0; i < totalBytes; i++)
-    {
-        ch = fgetc(tmpFile);
-        
-        if (i < 194)
-            printf("%c", ch);
-        
-        else if (i < (totalBytes - 8))
-            fputc(ch, imgFile);
-    }
-    
-    fclose(tmpFile);
     fclose(imgFile);
 }
