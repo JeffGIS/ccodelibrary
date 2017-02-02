@@ -7,18 +7,19 @@
 #include <unistd.h>
 #include <string.h>
 
-#define HEADER_LENGTH 185
 #define BUFFER_SIZE 24576
 #define QUERY_SIZE 320
+#define CHUNK_SIZE 16
 
 void wmsRequest(const char *filepath, dbounds bounds, unsigned short width, unsigned short height)
 {
     FILE *imgFile;
     struct addrinfo hints, *res;
-    int sockfd = 0, totalBytes = 0;
-    long byteCount = 0;
-    bool skip = FALSE;
+    int sockfd = 0;
+    long byteCount = 0, chunkLength = 0;
+    unsigned char state = 1;
     char buffer[BUFFER_SIZE], ch;
+    char *chunkHeader = (char *)calloc(CHUNK_SIZE, sizeof(char));
     char *request = (char *)calloc(QUERY_SIZE, sizeof(char));
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
@@ -62,61 +63,57 @@ void wmsRequest(const char *filepath, dbounds bounds, unsigned short width, unsi
     {
         byteCount = recv(sockfd, buffer, sizeof(buffer), 0);
         
-        if (byteCount < 1)
-            break;
-        
         for (int i = 0; i < byteCount; i++)
         {
             ch = buffer[i];
             
-            if (totalBytes < 1)
+            switch (state)
             {
-                if (i < HEADER_LENGTH)
-                    printf("%c", ch);
-                
-                else if (i == HEADER_LENGTH)
-                    skip = TRUE;
-                
-                else if (skip)
-                {
-                    if (ch == '\xff')
+                case 1:
+                    if (ch == '\r' && buffer[i+1] == '\n' && buffer[i+2] == '\r' && buffer[i+3] == '\n')
+                    {
+                        i += 3;
+                        state++;
+                        printf("\n");
+                    }
+                    
+                    else
+                        printf("%c", ch);
+                    break;
+                case 2:
+                    if (ch == '\r' && buffer[i+1] == '\n')
+                    {
+                        i++;
+                        state++;
+                        chunkLength = strtol(chunkHeader, NULL, 16);
+                        printf("New chunk (length %li)\n", chunkLength);
+                    }
+                    
+                    else
+                        sprintf(chunkHeader, "%s%c", chunkHeader, ch);
+                    break;
+                case 3:
+                    if (chunkLength == 0)
+                    {
+                        i++;
+                        state--;
+                        memset(chunkHeader,0,strlen(chunkHeader));
+                    }
+                    
+                    else
                     {
                         fputc(ch, imgFile);
-                        //printf("%02hhX ", ch);
-                        skip = FALSE;
+                        chunkLength--;
                     }
-                }
-                
-                else if (ch == '\x30' && buffer[i+1] == '\r' && buffer[i+2] == '\n')
+                    
                     break;
-                
-                else if (ch == '\r' && buffer[i+1] == '\n')
-                    i++;
-                
-                else
-                {
-                    fputc(ch, imgFile);
-                    //printf("%02hhX ", ch);
-                }
-            }
-            
-            else if (ch == '\x30' && buffer[i+1] == '\r' && buffer[i+2] == '\n')
-                break;
-            
-            else if (ch == '\r' && buffer[i+1] == '\n')
-                i++;
-            
-            else
-            {
-                fputc(ch, imgFile);
-                //printf("%02hhX ", ch);
+                default:
+                    break;
             }
         }
         
-        totalBytes += byteCount;
-        
     } while (byteCount > 0);
     
-    printf("\n\n");
+    free(chunkHeader);
     fclose(imgFile);
 }
