@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#define HEADER_LENGTH 194
+#define HEADER_LENGTH 185
 #define BUFFER_SIZE 24576
 #define QUERY_SIZE 320
 
@@ -17,6 +17,7 @@ void wmsRequest(const char *filepath, dbounds bounds, unsigned short width, unsi
     struct addrinfo hints, *res;
     int sockfd = 0, totalBytes = 0;
     long byteCount = 0;
+    bool skip = FALSE;
     char buffer[BUFFER_SIZE], ch;
     char *request = (char *)calloc(QUERY_SIZE, sizeof(char));
     memset(&hints, 0, sizeof(hints));
@@ -61,29 +62,61 @@ void wmsRequest(const char *filepath, dbounds bounds, unsigned short width, unsi
     {
         byteCount = recv(sockfd, buffer, sizeof(buffer), 0);
         
-        if (totalBytes < 1)
+        if (byteCount < 1)
+            break;
+        
+        for (int i = 0; i < byteCount; i++)
         {
-            for (int i = 0; i < byteCount; i++)
+            ch = buffer[i];
+            
+            if (totalBytes < 1)
             {
-                ch = buffer[i];
+                if (i < HEADER_LENGTH)
+                    printf("%c", ch);
                 
-                if (totalBytes < 1)
+                else if (i == HEADER_LENGTH)
+                    skip = TRUE;
+                
+                else if (skip)
                 {
-                    if (i < HEADER_LENGTH)
-                        printf("%c", ch);
-                    
-                    else
+                    if (ch == '\xff')
+                    {
                         fputc(ch, imgFile);
+                        //printf("%02hhX ", ch);
+                        skip = FALSE;
+                    }
+                }
+                
+                else if (ch == '\x30' && buffer[i+1] == '\r' && buffer[i+2] == '\n')
+                    break;
+                
+                else if (ch == '\r' && buffer[i+1] == '\n')
+                    i++;
+                
+                else
+                {
+                    fputc(ch, imgFile);
+                    //printf("%02hhX ", ch);
                 }
             }
+            
+            else if (ch == '\x30' && buffer[i+1] == '\r' && buffer[i+2] == '\n')
+                break;
+            
+            else if (ch == '\r' && buffer[i+1] == '\n')
+                i++;
+            
+            else
+            {
+                fputc(ch, imgFile);
+                //printf("%02hhX ", ch);
+            }
         }
-        
-        else
-            fwrite(buffer, sizeof(char), byteCount, imgFile);
         
         totalBytes += byteCount;
         
     } while (byteCount > 0);
     
+    printf("\n\n");
     fclose(imgFile);
 }
