@@ -9,6 +9,7 @@
 
 #define HEADER_LENGTH 194
 #define BUFFER_SIZE 24576
+#define QUERY_SIZE 320
 
 void wmsRequest(const char *filepath, dbounds bounds, unsigned short width, unsigned short height)
 {
@@ -17,7 +18,7 @@ void wmsRequest(const char *filepath, dbounds bounds, unsigned short width, unsi
     int sockfd = 0, totalBytes = 0;
     long byteCount = 0;
     char buffer[BUFFER_SIZE], ch;
-    char *request = (char *)calloc(320, sizeof(char));
+    char *request = (char *)calloc(QUERY_SIZE, sizeof(char));
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
