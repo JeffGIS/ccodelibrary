@@ -484,14 +484,14 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
         {
             NSInteger index = [_textArray indexOfObject:_groupArray[paths.row - 1]];
             [selectedRows addObject:[NSNumber numberWithInt:index]];
-            [selectedTextArray addObject:textBefore(_groupArray[paths.row - 1], @"\x03")];
+            [selectedTextArray addObject:_groupArray[paths.row - 1]];
         }
         
         else
         {
             NSInteger index = [_textArray indexOfObject:_groupArray[paths.row]];
             [selectedRows addObject:[NSNumber numberWithInt:index]];
-            [selectedTextArray addObject:textBefore(_groupArray[paths.row], @"\x03")];
+            [selectedTextArray addObject:_groupArray[paths.row]];
         }
     }
     
