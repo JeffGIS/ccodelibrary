@@ -261,21 +261,6 @@
 {
     [super viewDidAppear:animated];
     
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main"
-                                                         bundle:NSBundle.mainBundle];
-    
-    UIViewController *fovc = [storyboard instantiateViewControllerWithIdentifier:@"FieldOptionsVC"];
-    
-    [NVTabBarEdit tabBarController:self.tabBarController
-       replaceViewControllerWithID:@"FindVC"
-                withViewController:fovc];
-    
-    UIViewController *dvc = [storyboard instantiateViewControllerWithIdentifier:@"DestinationsVC"];
-    
-    [NVTabBarEdit tabBarController:self.tabBarController
-       replaceViewControllerWithID:@"ApplicationsVC"
-                withViewController:dvc];
-    
     [_nvss reloadData];
 }
 
