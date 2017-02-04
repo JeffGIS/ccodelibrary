@@ -484,7 +484,7 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
         {
             NSInteger index = [_textArray indexOfObject:_groupArray[paths.row - 1]];
             [selectedRows addObject:[NSNumber numberWithInt:index]];
-            [selectedTextArray addObject:_groupArray[paths.row - 1]];
+            [selectedTextArray addObject:_groupArray[paths.row]];
         }
         
         else
