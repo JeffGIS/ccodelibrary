@@ -1275,58 +1275,63 @@ long __attribute__ ((noinline)) BigWrite(FILE *fid, LPBYTE pbuf, long len, long 
     return bytesWritten;
 }
 
-LPSTR AddCommas (LPSTR InBuff)
-#if ENABLETRACE
-{GSSiEnterProg (225);
-#endif
+BOOL WriteBitmapDataToFile (LPSTR file,int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void *bmData)
+{
+    BOOL rtn = TRUE;
+    BITMAPINFOHEADER bih;
+    
+    int bitmapByteCount = 0, bitmapBytesPerRow = 0;
+    int nc = (int)CGColorSpaceGetNumberOfComponents(colorSpace);
+    uint32_t flags = 0;
+    if (nc > 1)
     {
-        return InBuff;
-        /*char	Buff[64],VCBuff[64];
-        LPSTR   p1, p2, bp, pDot;
-        short	n;
-        
-        if (strlen(InBuff) < 4)
-            return InBuff;
-        
-        if (strlen (InBuff) > 63)
-        {
-#if ENABLETRACE
-            GSSiExitProg (225);
-#endif
-            return InBuff;
-        }
-        strcpy (Buff,InBuff);
-        bp = Buff;
-        p2=&VCBuff[63];
-        pDot = strchr (Buff,'.');
-        if (pDot)
-        {
-            p1 = pDot-1;
-            pDot = strchr(Buff,0);
-            while (pDot > p1)
-                *p2-- = *pDot--;
-        }
-        else
-        {
-            p1 = strchr(Buff,0)-1;
-            *p2-- = 0;
-        }
-        for (n=0;p1>=bp;p1--,n++)
-        {   if (n == 3 && *p1 != '-' && *p1 != '$' && *p1 != ' ')
-        {   *p2--=',';
-            n=0;
-        }
-            *p2--=*p1;
-        }
-        ++p2;
-        strcpy (InBuff,p2);
-        {
-#if ENABLETRACE
-            GSSiExitProg (225);
-#endif
-            return InBuff;
-        }
-#if ENABLETRACE
+        nc++;
+        flags = kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big;
+        flags = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little;
+        flags = kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Big;
     }
-#endif*/
+    bitmapBytesPerRow = nc * pixelsWide;
+    bitmapByteCount = (bitmapBytesPerRow *pixelsHigh);
+    
+    bih.biHeight = pixelsHigh;
+    bih.biWidth = pixelsWide;
+    bih.biBitCount = nc*8;
+    bih.biSizeImage = bitmapByteCount;
+    bih.biSize = sizeof(BITMAPINFOHEADER);
+    int ii = sizeof(BITMAPINFOHEADER);
+    ii = sizeof(DWORD);
+    ii = sizeof(WORD);
+    ii = sizeof(LONG);
+    bih.biPlanes = 1;
+    bih.biCompression = BI_RGB;
+    bih.biXPelsPerMeter = 0;
+    bih.biYPelsPerMeter = 0;
+    bih.biClrUsed = 0;
+    bih.biClrImportant = 0;
+    
+    COLORREF_RGB rgb;
+    rgb.cRed = 0;
+    rgb.cGreen = 0;
+    rgb.cBlue = 0;
+    
+    BITMAPFILEHEADER bfh;
+    
+    bfh.bfType = 0x4D42;
+    bfh.bfReserved1 = 0;
+    bfh.bfReserved2 = 0;
+    bfh.bfOffBits = sizeof(BITMAPFILEHEADER) + bih.biSize;
+    bfh.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + bitmapByteCount;
+    
+    FILE *Fid = fopen(file,"wb");
+    if (BigWrite(Fid ,(LPBYTE)&bfh ,sizeof(BITMAPFILEHEADER), -1) != sizeof(BITMAPFILEHEADER))
+        rtn = FALSE;
+    if (BigWrite(Fid ,(LPBYTE)&bih ,sizeof(BITMAPINFOHEADER), -1) != sizeof(BITMAPINFOHEADER))
+        rtn = FALSE;
+    if (BigWrite(Fid ,(LPBYTE)bmData ,bitmapByteCount, -1) != bitmapByteCount)
+        rtn = FALSE;
+    
+    fclose (Fid);
+    
+    return rtn;
 }
+

@@ -22,12 +22,16 @@ typedef LPSTR HPSTR;
 #define FALSE 0
 typedef void *LPVOID;
 typedef int HWND;
-typedef long LONG;
-typedef long *LPLONG;
-typedef unsigned long ULONG_PTR, *PULONG_PTR;
+typedef unsigned int UINT;
+typedef unsigned int DWORD;
+typedef int LONG;
+typedef unsigned short WORD;
+typedef unsigned char BYTE;
+typedef int *LPLONG;
+typedef unsigned int ULONG_PTR, *PULONG_PTR;
 typedef ULONG_PTR DWORD_PTR;
 typedef unsigned short WORD;
-typedef unsigned long DWORD;
+typedef unsigned int DWORD;
 typedef unsigned char BYTE;
 typedef unsigned char *LPBYTE;
 typedef struct {double x,y;}DPOINT;
@@ -58,17 +62,13 @@ typedef CPOINT *LPCPOINT;
 
 #define BI_RGB 0
 
-typedef unsigned int UINT;
-typedef unsigned long DWORD;
-typedef long int LONG;
-typedef unsigned short WORD;
-typedef unsigned char BYTE;
+#pragma pack(1)
 
 typedef struct tagBITMAPFILEHEADER {
-    UINT bfType;
+    WORD bfType;
     DWORD bfSize;
-    UINT bfReserved1;
-    UINT bfReserved2;
+    WORD bfReserved1;
+    WORD bfReserved2;
     DWORD bfOffBits;
 } BITMAPFILEHEADER;
 
@@ -92,6 +92,7 @@ typedef struct COLORREF_RGB
     BYTE cGreen;
     BYTE cBlue;
 }COLORREF_RGB;
+#pragma pack()
 
 
 #endif

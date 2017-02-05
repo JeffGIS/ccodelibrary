@@ -175,6 +175,7 @@ double AZMLatLon (LLPOINT pt1,LLPOINT pt2);
 double AZMToHeading (double azm);
 void BoundsToPoints (LPMNMXCORD pBounds, LPDPOINT Points,LPDOUBLE pAZ);
 LPSTR AddCommas (LPSTR InBuff);
+bool WriteBitmapDataToFile (LPSTR file,int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void *bmData);
 
 
 #endif
