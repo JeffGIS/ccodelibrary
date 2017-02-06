@@ -1784,8 +1784,7 @@ int CreateMask(LPDPOINT *pPointsIN, int *pnPoints, LPMNMXCORD pbnds,bool freeExi
     
     for (int i = *pnPoints -1; i >= 0; i--)
     {
-        pNewPoints[nNewPoints].x = pPoints[i].x;
-        pNewPoints[nNewPoints++].y = pPoints[i].y;
+        pNewPoints[nNewPoints++] = pPoints[i];
     }
     pNewPoints[nNewPoints++] = pNewPoints[0];
     *pnPoints = nNewPoints;
