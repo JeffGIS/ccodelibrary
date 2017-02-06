@@ -87,7 +87,8 @@ DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction)
     //  Length of two sides of a triangle and the angle it forms
     
     double  cosc,cosb,cosa,sinb,sinc,sina,cosC,cosA;
-    
+
+    Direction = LTWOPI (Direction);
     cosc = cos(Dist/6371100);
     sinc = sin(Dist/6371100);
     cosb = cos((90e0-Lat)/DEGRAD);
@@ -765,26 +766,20 @@ MNMXCORD PolyBounds (LPDPOINT points,int npoints)
     return bounds;
 }
 
-CORNERPOINTS CornerPointsFromPointAndDist (LLPOINT llpt,double dist) //dist in meters
+CORNERPOINTS CornerPointsFromLatLonAndDist (LLPOINT llpt,double dist) //dist in meters
 {
     CORNERPOINTS cp;
     double az=HALFPI/2;
-    
-    LLPOINT newpt = NewLLPoint(llpt,dist,az);
-    cp.farLeft.x = newpt.lon;
-    cp.farLeft.y = newpt.lat;
-    az += HALFPI;
-    newpt = NewLLPoint(llpt,dist,az);
-    cp.nearLeft.x = newpt.lon;
-    cp.nearLeft.y = newpt.lat;
-    az += HALFPI;
-    newpt = NewLLPoint(llpt,dist,az);
-    cp.nearRight.x = newpt.lon;
-    cp.nearRight.y = newpt.lat;
-    az += HALFPI;
-    newpt = NewLLPoint(llpt,dist,az);
-    cp.farRight.x = newpt.lon;
-    cp.farRight.y = newpt.lat;
+    MNMXCORD bounds = BoundsFromLLPointAndDist (llpt,dist);
+
+    cp.farLeft.x = bounds.xmn;
+    cp.farLeft.y = bounds.ymx;
+    cp.nearLeft.x = bounds.xmn;
+    cp.nearLeft.y = bounds.ymn;
+    cp.nearRight.x = bounds.xmx;
+    cp.nearRight.y = bounds.ymn;
+    cp.farRight.x = bounds.xmx;
+    cp.farRight.y = bounds.ymx;
     return cp;
 }
 
@@ -1774,7 +1769,7 @@ int CreateMask(LPDPOINT *pPointsIN, int *pnPoints, LPMNMXCORD pbnds,bool freeExi
     if (!pnPoints || !pPoints || *pnPoints < 3)
         return 0;
     
-    LPDPOINT pNewPoints = (LPDPOINT)malloc(sizeof(DPOINT) * (*pnPoints + 5));
+    LPDPOINT pNewPoints = (LPDPOINT)malloc(sizeof(DPOINT) * (*pnPoints + 6));
     
     pNewPoints[0].x = pbnds->xmn;
     pNewPoints[0].y = pbnds->ymn;
@@ -1784,8 +1779,7 @@ int CreateMask(LPDPOINT *pPointsIN, int *pnPoints, LPMNMXCORD pbnds,bool freeExi
     pNewPoints[2].y = pbnds->ymx;
     pNewPoints[3].x = pbnds->xmx;
     pNewPoints[3].y = pbnds->ymn;
-    pNewPoints[4].x = pbnds->xmn;
-    pNewPoints[4].y = pbnds->ymn;
+    pNewPoints[4] = pNewPoints[0];
     int nNewPoints = numPointsAdded;
     
     for (int i = *pnPoints -1; i >= 0; i--)
@@ -1793,7 +1787,7 @@ int CreateMask(LPDPOINT *pPointsIN, int *pnPoints, LPMNMXCORD pbnds,bool freeExi
         pNewPoints[nNewPoints].x = pPoints[i].x;
         pNewPoints[nNewPoints++].y = pPoints[i].y;
     }
-    
+    pNewPoints[nNewPoints++] = pNewPoints[0];
     *pnPoints = nNewPoints;
     if (freeExistingPoints)
         free(pPoints);
