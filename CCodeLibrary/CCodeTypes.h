@@ -92,6 +92,13 @@ typedef struct COLORREF_RGB
     BYTE cGreen;
     BYTE cBlue;
 }COLORREF_RGB;
+typedef struct COLORREF_RGB4
+{
+    BYTE cRed;
+    BYTE cGreen;
+    BYTE cBlue;
+    BYTE cIntensity;
+}COLORREF_RGB4;
 #pragma pack()
 
 
