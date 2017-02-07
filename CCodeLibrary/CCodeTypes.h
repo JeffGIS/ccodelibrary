@@ -86,18 +86,18 @@ typedef struct tagBITMAPINFOHEADER {
     DWORD biClrImportant;
 } BITMAPINFOHEADER;
 
-typedef struct COLORREF_RGB
+typedef struct
 {
-    BYTE cRed;
-    BYTE cGreen;
-    BYTE cBlue;
+    unsigned char cRed;
+    unsigned char cGreen;
+    unsigned char cBlue;
 }COLORREF_RGB;
-typedef struct COLORREF_RGB4
+typedef struct
 {
-    BYTE cRed;
-    BYTE cGreen;
-    BYTE cBlue;
-    BYTE cIntensity;
+    unsigned char cRed;
+    unsigned char cGreen;
+    unsigned char cBlue;
+    unsigned char cIntensity;
 }COLORREF_RGB4;
 #pragma pack()
 
