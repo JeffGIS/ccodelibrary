@@ -207,6 +207,7 @@ typedef NS_ENUM(NSInteger, HardCodedConfigs)
     HCConfigMapleGrove,
     HCConfigFromSpreadsheet,
     HCConfigMapleGrovePDF,
+    HCConfigFromSlowValues,
 NUMHardCodedConfigs};
 
 @end
