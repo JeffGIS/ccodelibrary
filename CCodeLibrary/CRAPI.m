@@ -1039,6 +1039,10 @@
     if (tot < 0)
     {
         currentProgress = -1;
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{
+                           CRAPI.sharedInstance.mapToolbar.progress = 0;
+                       });
         return;
     }
     if (!tot)
@@ -1046,6 +1050,8 @@
     CGFloat baseProgress = (CGFloat)iRange / nRanges;
     CGFloat thisProgress = baseProgress + current / (CGFloat)(tot * nRanges);
     progress = thisProgress * 100;
+    if (currentProgress > 140)
+        currentProgress = currentProgress + 0;
     if (progress > currentProgress)
     {
         currentProgress = progress;
