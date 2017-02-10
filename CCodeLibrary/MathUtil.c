@@ -52,6 +52,41 @@ double LTWOPI (double AZ1)
     return (fmod(AZ1,TWOPI));
 }
 
+LLCORNERPOINTS LLCornerPointsFromCornerPoints (CORNERPOINTS * cp)
+{
+    LLCORNERPOINTS llcp;
+    
+    llcp.farLeft.lat = cp->farLeft.y;
+    llcp.farLeft.lon = cp->farLeft.x;
+    llcp.farRight.lat = cp->farRight.y;
+    llcp.farRight.lon = cp->farRight.x;
+    llcp.nearLeft.lat = cp->nearLeft.y;
+    llcp.nearLeft.lon = cp->nearLeft.x;
+    llcp.nearRight.lat = cp->nearRight.y;
+    llcp.nearRight.lon = cp->nearRight.x;
+    return llcp;
+}
+
+double LLRectInSQMeters (LLCORNERPOINTS latlonCornerPoints)
+{
+    double area = 0;
+    LLPOINT p1, p2;
+    double d1, d2;
+    
+    p1.lat = (latlonCornerPoints.farLeft.lat + latlonCornerPoints.nearLeft.lat) / 2;
+    p2.lat = (latlonCornerPoints.farRight.lat + latlonCornerPoints.nearRight.lat) / 2;
+    p1.lon = (latlonCornerPoints.farLeft.lon + latlonCornerPoints.nearLeft.lon) / 2;
+    p2.lon = (latlonCornerPoints.farRight.lon + latlonCornerPoints.nearRight.lon) / 2;
+    d1 = ArcDistanceLL(p1, p2);
+    p1.lat = (latlonCornerPoints.farLeft.lat + latlonCornerPoints.farRight.lat) / 2;
+    p2.lat = (latlonCornerPoints.nearLeft.lat + latlonCornerPoints.nearRight.lat) / 2;
+    p1.lon = (latlonCornerPoints.farLeft.lon + latlonCornerPoints.farRight.lon) / 2;
+    p2.lon = (latlonCornerPoints.nearRight.lon + latlonCornerPoints.nearLeft.lon) / 2;
+    d2 = ArcDistanceLL(p1, p2);
+    area = d1 * d2;
+    return area;
+}
+
 double ArcDistance(DPOINT p1, DPOINT p2)
 // returns distance in meters between two lat-longs
 {
@@ -70,6 +105,17 @@ double ArcDistance(DPOINT p1, DPOINT p2)
         return GreatCircle;
     }
 }
+double ArcDistanceLL(LLPOINT p1, LLPOINT p2)
+{
+    DPOINT dp1, dp2;
+    
+    dp1.x = p1.lon;
+    dp1.y = p1.lat;
+    dp2.x = p2.lon;
+    dp2.y = p2.lat;
+    return ArcDistance(dp1,dp2);
+}
+
 LLPOINT NewLLPoint(LLPOINT pt,double dist,double az)
 {
     LLPOINT llpt;
