@@ -261,6 +261,28 @@
 {
     [super viewDidAppear:animated];
     
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:NSBundle.mainBundle];
+    UIViewController *fovc = [storyboard instantiateViewControllerWithIdentifier:@"FieldOptionsVC"];
+    UIViewController *dvc = [storyboard instantiateViewControllerWithIdentifier:@"DestinationsVC"];
+    
+    [NVTabBarEdit tabBarController:self.tabBarController
+       replaceViewControllerWithID:@"FindVC"
+                withViewController:fovc];
+    
+    if ([NSBundle.mainBundle.bundleIdentifier isEqualToString:@"com.gssi.newvisionmetro"])
+    {
+        [NVTabBarEdit tabBarController:self.tabBarController
+           replaceViewControllerWithID:@"NVMetroSettingsVC"
+                    withViewController:dvc];
+    }
+    
+    else
+    {
+        [NVTabBarEdit tabBarController:self.tabBarController
+           replaceViewControllerWithID:@"ApplicationsVC"
+                    withViewController:dvc];
+    }
+    
     [_nvss reloadData];
 }
 
