@@ -53,7 +53,7 @@
     return numLines;
 }
 
-+ (void)drawText:(NSString *)textIN
++ (BOOL)drawText:(NSString *)textIN
        inContext:(CGContextRef)context
    withinPolygon:(LPDPOINT)pPoints
    withNumPoints:(NSInteger)numPoints
@@ -66,7 +66,7 @@
     processingID:(NSInteger)processingID
 {
     if (!textIN.length)
-        return;
+        return FALSE;
     CGFloat rotation = 0;
     TextAttempt* ta[4];
     int nAttempts = 0;
@@ -107,10 +107,10 @@ Top:
      
      }*/
     if (!context)
-        return;
+        return TRUE;
     if (ta[nAttempts-1].fontSize >= desiredFontSize)
     {
-        [NVTextDrawing drawText:ta[nAttempts-1].text
+        BOOL st = [NVTextDrawing drawText:ta[nAttempts-1].text
                   inRotatedRect:context
                        rectMidX:ta[nAttempts-1].mpX
                        rectMidY:ta[nAttempts-1].mpY
@@ -119,7 +119,7 @@ Top:
                        rotation:ta[nAttempts-1].rotation
                        fontSize:ta[nAttempts-1].fontSize
                       textColor:textColor];
-        return;
+        return st;
     }
     NSString * splitText = splitLongestLine (textIN);
     if (splitText)
@@ -140,7 +140,7 @@ Top:
                                         processingID:processingID];
         if (ta[nAttempts-1].fontSize >= desiredFontSize)
         {
-            [NVTextDrawing drawText:ta[nAttempts-1].text
+            BOOL st = [NVTextDrawing drawText:ta[nAttempts-1].text
                       inRotatedRect:context
                            rectMidX:ta[nAttempts-1].mpX
                            rectMidY:ta[nAttempts-1].mpY
@@ -149,7 +149,7 @@ Top:
                            rotation:ta[nAttempts-1].rotation
                            fontSize:ta[nAttempts-1].fontSize
                           textColor:textColor];
-            return;
+            return st;
         }
     }
     if (npass++ < 1)
@@ -173,7 +173,7 @@ Top:
     }
     if (ta[maxi].fontSize >= minFontSize)
     {
-        [NVTextDrawing drawText:ta[maxi].text
+        BOOL st = [NVTextDrawing drawText:ta[maxi].text
                   inRotatedRect:context
                        rectMidX:ta[maxi].mpX
                        rectMidY:ta[maxi].mpY
@@ -182,8 +182,9 @@ Top:
                        rotation:ta[maxi].rotation
                        fontSize:ta[maxi].fontSize
                       textColor:textColor];
+        return st;
     }
-    
+    return FALSE;
 }
 
 + (TextAttempt*)computeText:(NSString *)text
@@ -422,7 +423,7 @@ Top:
     return ta;
 }
 
-+ (void)drawText:(NSString *)text
++ (BOOL)drawText:(NSString *)text
    inRotatedRect:(CGContextRef)context
         rectMidX:(CGFloat)mpX
         rectMidY:(CGFloat)mpY
@@ -431,7 +432,8 @@ Top:
         rotation:(CGFloat)rotateRadians
         fontSize:(CGFloat)fontSize
        textColor:(UIColor *)textColor
-    {
+{
+    BOOL rtn = TRUE;
     CGRect rect = CGRectZero;
     NSAttributedString *attString = nil;
     
@@ -445,13 +447,13 @@ Top:
     CGContextRotateCTM(context,rotateRadians);
     
     /*if (dbug)
-    {
-        CGRect rectmp = CGRectMake(fitX[iFit]-8, fitY[iFit],16, 2);
-        CGContextSetGrayFillColor(context, 0.5, 0.5);
-        CGContextFillRect(context, rect);
-        CGContextSetGrayFillColor(context, 0, 0.8);
-        CGContextFillRect(context, rectmp);
-    }*/
+     {
+     CGRect rectmp = CGRectMake(fitX[iFit]-8, fitY[iFit],16, 2);
+     CGContextSetGrayFillColor(context, 0.5, 0.5);
+     CGContextFillRect(context, rect);
+     CGContextSetGrayFillColor(context, 0, 0.8);
+     CGContextFillRect(context, rectmp);
+     }*/
     
     CTFontRef fontRef = CTFontCreateWithName((CFStringRef)NULL,
                                              fontSize, NULL);
@@ -473,25 +475,25 @@ Top:
     
     CFRelease(fontRef);
     
-/*   if (ConfigurationControl.sharedInstance.GMTilesVisible)
-    {
-        CGRect shadowRect = rect;
-        shadowRect.origin.x += 1;
-        shadowRect.origin.y += 1;
-        CGPathRef path = CGPathCreateWithRect(shadowRect, NULL);
-        attString = [[NSAttributedString alloc] initWithString:text
-                                                    attributes:shadowAttributes];
-        
-        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
-        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, attString.length), path, NULL);
-        CTFrameDraw(frame, context);
-    }*/
+    /*   if (ConfigurationControl.sharedInstance.GMTilesVisible)
+     {
+     CGRect shadowRect = rect;
+     shadowRect.origin.x += 1;
+     shadowRect.origin.y += 1;
+     CGPathRef path = CGPathCreateWithRect(shadowRect, NULL);
+     attString = [[NSAttributedString alloc] initWithString:text
+     attributes:shadowAttributes];
+     
+     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString);
+     CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, attString.length), path, NULL);
+     CTFrameDraw(frame, context);
+     }*/
     
     attString = [[NSAttributedString alloc] initWithString:text
                                                 attributes:shadowAttributes];
     [self drawTextShadowForRect:rect
-         attString:attString
-         context:context];
+                      attString:attString
+                        context:context];
     CGPathRef path = CGPathCreateWithRect(rect, NULL);
     
     attString = [[NSAttributedString alloc] initWithString:text
@@ -505,6 +507,7 @@ Top:
     CFRelease(framesetter);
     CGPathRelease(path);
     CGContextRestoreGState(context);
+    return rtn;
 }
 
 + (NSUInteger)getTextContainerPoints:(LPDPOINT)textPoints

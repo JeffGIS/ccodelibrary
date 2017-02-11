@@ -8,7 +8,7 @@
 
 @property NSInteger processingID;
 
-+ (void)drawText:(NSString *)text
++ (BOOL)drawText:(NSString *)text
        inContext:(CGContextRef)context
    withinPolygon:(LPDPOINT)pPoints
    withNumPoints:(NSInteger)numPoints
@@ -20,7 +20,7 @@
        textColor:(UIColor *)textColor
     processingID:(NSInteger)processingID;
 
-+ (void)drawText:(NSString *)text
++ (BOOL)drawText:(NSString *)text
    inRotatedRect:(CGContextRef)context
         rectMidX:(CGFloat)mpX
         rectMidY:(CGFloat)mpY
