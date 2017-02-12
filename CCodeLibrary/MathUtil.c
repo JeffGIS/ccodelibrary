@@ -2098,7 +2098,8 @@ static bool rectIntersectsRects (CGRect * testRect,int nRects,CGRect * rects)
     
     for (int i=0; i< nRects; i++)
     {
-        if (CGRectIntersectsRect(*testRect,rects[i]))
+        CGRect r = rects[i];
+        if (CGRectIntersectsRect(*testRect,r))
             return TRUE;
     }
     return FALSE;
