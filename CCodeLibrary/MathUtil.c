@@ -67,6 +67,15 @@ LLCORNERPOINTS LLCornerPointsFromCornerPoints (CORNERPOINTS * cp)
     return llcp;
 }
 
+DPOINT LLPointToDPoint (LLPOINT llpt)
+{
+    DPOINT dpt;
+    
+    dpt.x = llpt.lon;
+    dpt.y = llpt.lat;
+    return dpt;
+}
+
 double LLRectInSQMeters (LLCORNERPOINTS latlonCornerPoints)
 {
     double area = 0;

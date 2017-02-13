@@ -28,6 +28,10 @@ typedef NS_ENUM(NSInteger, GraphicElementTypes)
     AlleyLine,
     AlleyWallPoint,
     ParcelBoundary,
+    CensusTractBoundary,
+    CensusBlockGroupBoundary,
+    CensusBlockBoundary,
+    BoundaryArea,
 };
 
 typedef NS_ENUM(NSInteger, PointSymbols)
