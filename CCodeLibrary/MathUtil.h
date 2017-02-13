@@ -142,6 +142,7 @@ int fgetstring (char * str,int maxlen,FILE * fid);
 bool fputstring(LPSTR lpStr, FILE *Fid);
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
 LLPOINT NewLLPoint(LLPOINT pt,double dist,double az);
+DPOINT LLPointToDPoint (LLPOINT llpt);
 LLCORNERPOINTS LLCornerPointsFromCornerPoints (CORNERPOINTS * cp);
 double ArcDistance(DPOINT p1, DPOINT p2);
 double ArcDistanceLL(LLPOINT p1, LLPOINT p2);
