@@ -75,7 +75,6 @@
         _acreFmt.usesGroupingSeparator = YES;
         _acreFmt.maximumFractionDigits = 2;
         _resourcesAvailable = NO;
-
     }
     
     return self;

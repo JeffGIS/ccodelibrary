@@ -108,7 +108,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic, copy) NSString *offsetForBounds;
 @property (nonatomic) int offsetForBoundsInMeters;
 @property (nonatomic, copy) NSString *selectBoundaryFromMapType;
-@property (nonatomic) int keepProcessing;
+@property int keepProcessing;
 @property (nonatomic) NVDocumentManager *docManager;
 @property BOOL mapPropList, mapIndividualDest, mapGroupDest;
 @property BOOL uploadPix, downloadData, downloadPix;
@@ -121,10 +121,11 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property int currentMessageNum;
 @property int serverToUse;
 @property CLLocation *lastLocation;
-@property BOOL hideConnectButton, appChanged, resourcesAvailable;
+@property BOOL hideConnectButton, appChanged;
 @property NSNumberFormatter *dollarFmt;
 @property NSNumberFormatter *acreFmt;
 @property MNMXCORD lastViewBounds;
+@property BOOL resourcesAvailable;
 
 + (CRAPI *)sharedInstance;
 
