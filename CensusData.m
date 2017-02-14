@@ -18,16 +18,7 @@
     NSString * path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
     return path;
 }
-- (id)init
-{
-    self = [super init];
-    
-    if (self)
-    {
-        
-    }
-    return self;
-}
+
 - (BOOL)open
 {
     if (!_isOpen)
