@@ -125,7 +125,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property NSNumberFormatter *dollarFmt;
 @property NSNumberFormatter *acreFmt;
 @property MNMXCORD lastViewBounds;
-@property BOOL resourcesAvailable;
 
 + (CRAPI *)sharedInstance;
 
