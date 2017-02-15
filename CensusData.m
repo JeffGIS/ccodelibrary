@@ -14,7 +14,7 @@
 - (NSString*) databasePath
 {
     _documentsDirectory = UserDefaults.defaults.sharedFilePath;
-    _fileName = @"Property.sqlite";
+    _fileName = @"censusdata.slt";
     NSString * path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
     return path;
 }
@@ -74,5 +74,64 @@
     
 }
 
+-(NSArray *) getCensusChartFields:(CensusAreaTypes)areaType
+{
+    NSMutableArray * rtn = NSMutableArray.new;
+    
+    switch (areaType)
+    {
+        case CATBlocks:
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i","Females by Age",CAVMalesByAge]];
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i","Females by Age",CAVFemalesByAge]];
+        break;
+        case CATTracts:
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i","Females by Age",CAVMalesByAge]];
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i","Females by Age",CAVFemalesByAge]];
+        break;
+    }
+    return rtn;
+}
 
+-(NSString*) getValue:(char *)xVal
+                field:(char *)fld
+             areaType:(NSString*)areaType
+                geoID:(NSString*)geoID
+{
+    NSString * value = [self value:[NSString stringWithUTF8String:xVal]
+                       forAreaType:areaType withKey:geoID];
+    NSString * rtn = [NSString stringWithFormat:@"%s\x03%@",xVal,value];
+    return rtn;
+}
+-(NSArray *) getCensusChartFieldValues:(CensusAreaValue)valueType
+                              areaType:(NSString*)areaType
+                                 geoID:(NSString*)geoID
+{
+    NSMutableArray * rtn = NSMutableArray.new;
+    
+    switch (valueType)
+    {
+        case     CAVMalesByAge:
+        [rtn addObject:[self getValue:"0 to 4" field:"M_0_4" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"5 to 9" field:"M_5_9" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"10 to 14" field:"M_10_14" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"15 to 19" field:"M_15_19" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"20 to 24" field:"M_20_24" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"25 to 29" field:"M_25_29" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"30 to 34" field:"M_30_34" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"35 to 39" field:"M_35_39" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"40 to 44" field:"M_40_44" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"45 to 49" field:"M_45_49" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"50 to 54" field:"M_50_54" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"55 to 59" field:"M_55_59" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"60 to 64" field:"M_60_64" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"65 to 69" field:"M_65_69" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"70 to 74" field:"M_70_74" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"75 to 79" field:"M_75_79" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"80 to 84" field:"M_80_84" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"over age 85" field:"M_OVER85" areaType:areaType geoID:geoID]];
+        break;
+    }
+    
+    return rtn;
+}
 @end

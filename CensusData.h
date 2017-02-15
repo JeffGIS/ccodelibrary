@@ -9,6 +9,19 @@
 #import <Foundation/Foundation.h>
 #import "SQLiteLib.h"
 
+typedef NS_ENUM(NSInteger, CensusAreaTypes)
+{
+    CATBlocks,
+    CATBlockGroups,
+    CATBlockGroups_ACS,
+    CATTracts,
+};
+typedef NS_ENUM(NSInteger, CensusAreaValue)
+{
+    CAVMalesByAge,
+    CAVFemalesByAge,
+};
+
 @interface CensusData : NSObject
 
 @property sqlite3 *database;
@@ -24,5 +37,8 @@
 -(NSString*) value:(NSString*)valueName
        forAreaType:(NSString*) areaType
            withKey:(NSString*)areaID;
-
+-(NSArray *) getCensusChartFields:(CensusAreaTypes)areaType;
+-(NSArray *) getCensusChartFieldValues:(CensusAreaValue)valueType
+                              areaType:(NSString*)areaType
+                                 geoID:(NSString*)geoID;
 @end
