@@ -1132,7 +1132,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             break;
     }
     
-    [UIApplication.sharedApplication openURL:[NSURL URLWithString:urlString]];
+    if ([UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:urlString]])
+        [UIApplication.sharedApplication openURL:[NSURL URLWithString:urlString]];
 }
 
 - (void)checkStorageForMinStorage:(NSNumber *)minStorage
