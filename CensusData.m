@@ -14,8 +14,9 @@
 - (NSString*) databasePath
 {
     _documentsDirectory = UserDefaults.defaults.sharedFilePath;
+    NSString * path = [NSBundle.mainBundle pathForResource:@"censusdata"
+                                             ofType:@"slt"];
     _fileName = @"censusdata.slt";
-    NSString * path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
     return path;
 }
 
@@ -94,7 +95,7 @@
               areaType:(NSString *)areaType
                  geoID:(NSString *)geoID
 {
-    NSString *value = [self value:[NSString stringWithUTF8String:xVal]
+    NSString *value = [self value:[NSString stringWithUTF8String:fld]
                       forAreaType:areaType
                           withKey:geoID];
     
