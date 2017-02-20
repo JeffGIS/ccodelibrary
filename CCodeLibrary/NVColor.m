@@ -67,7 +67,6 @@ NVColor *colorFromRGB(int r, int g, int b)
     uint32_t crc = data.crc32;
     NSUInteger randomIndex = crc % NVColorArray.count;
     NVColor *randomColor = (NVColor *)NVColorArray[randomIndex];
-    
     return randomColor;
 }
 
