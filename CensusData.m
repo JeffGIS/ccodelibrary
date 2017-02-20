@@ -46,18 +46,15 @@
     }
 }
 
--(NSString*) value:(NSString*)valueName
-       forAreaType:(NSString*) areaType
-           withKey:(NSString*)areaID
+- (NSString *)value:(NSString *)valueName
+        forAreaType:(NSString *)areaType
+            withKey:(NSString *)areaID
 
 {
     sqlite3_stmt *statement = NULL;
-    
-    NSString * value=@"";
+    NSString *value = @"";
     NSString *query = [NSString stringWithFormat:@"SELECT [%@] FROM CENSUS%@DATA WHERE GEOG_UNIT ='%@'",valueName,areaType,areaID];
     BOOL opened = [self open];
-    
-    
     SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
@@ -66,51 +63,54 @@
         value = [NSString stringWithUTF8String:cvalue];
     }
     
-    
     SQLOK(0,sqlite3_finalize(statement), _database);
-    
     [self close:opened];
     return value;
-    
 }
 
--(NSArray *) getCensusChartFields:(CensusAreaTypes)areaType
+- (NSArray *)getCensusChartFields:(CensusAreaTypes)areaType
 {
-    NSMutableArray * rtn = NSMutableArray.new;
+    NSMutableArray *rtn = NSMutableArray.array;
     
     switch (areaType)
     {
         case CATBlocks:
-        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i","Females by Age",CAVMalesByAge]];
-        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i","Females by Age",CAVFemalesByAge]];
-        break;
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i", "Males by Age", CAVMalesByAge]];
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i", "Females by Age", CAVFemalesByAge]];
+            break;
         case CATTracts:
-        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i","Females by Age",CAVMalesByAge]];
-        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i","Females by Age",CAVFemalesByAge]];
-        break;
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i", "Males by Age", CAVMalesByAge]];
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i", "Females by Age", CAVFemalesByAge]];
+            break;
+        default:
+            break;
     }
+    
+    return rtn.copy;
+}
+
+- (NSString *)getValue:(char *)xVal
+                 field:(char *)fld
+              areaType:(NSString *)areaType
+                 geoID:(NSString *)geoID
+{
+    NSString *value = [self value:[NSString stringWithUTF8String:xVal]
+                      forAreaType:areaType
+                          withKey:geoID];
+    
+    NSString *rtn = [NSString stringWithFormat:@"%s\x03%@",xVal,value];
     return rtn;
 }
 
--(NSString*) getValue:(char *)xVal
-                field:(char *)fld
-             areaType:(NSString*)areaType
-                geoID:(NSString*)geoID
+- (NSArray *)getCensusChartFieldValues:(CensusAreaValue)valueType
+                              areaType:(NSString *)areaType
+                                 geoID:(NSString *)geoID
 {
-    NSString * value = [self value:[NSString stringWithUTF8String:xVal]
-                       forAreaType:areaType withKey:geoID];
-    NSString * rtn = [NSString stringWithFormat:@"%s\x03%@",xVal,value];
-    return rtn;
-}
--(NSArray *) getCensusChartFieldValues:(CensusAreaValue)valueType
-                              areaType:(NSString*)areaType
-                                 geoID:(NSString*)geoID
-{
-    NSMutableArray * rtn = NSMutableArray.new;
+    NSMutableArray *rtn = NSMutableArray.array;
     
     switch (valueType)
     {
-        case     CAVMalesByAge:
+        case CAVMalesByAge:
         [rtn addObject:[self getValue:"0 to 4" field:"M_0_4" areaType:areaType geoID:geoID]];
         [rtn addObject:[self getValue:"5 to 9" field:"M_5_9" areaType:areaType geoID:geoID]];
         [rtn addObject:[self getValue:"10 to 14" field:"M_10_14" areaType:areaType geoID:geoID]];
@@ -129,9 +129,12 @@
         [rtn addObject:[self getValue:"75 to 79" field:"M_75_79" areaType:areaType geoID:geoID]];
         [rtn addObject:[self getValue:"80 to 84" field:"M_80_84" areaType:areaType geoID:geoID]];
         [rtn addObject:[self getValue:"over age 85" field:"M_OVER85" areaType:areaType geoID:geoID]];
-        break;
+            break;
+        default:
+            break;
     }
     
-    return rtn;
+    return rtn.copy;
 }
+
 @end

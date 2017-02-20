@@ -30,15 +30,18 @@ typedef NS_ENUM(NSInteger, CensusAreaValue)
 @property (nonatomic, copy) NSString *fileName;
 @property NSInteger fileSize;
 
-- (NSString*) databasePath;
+- (NSString *)databasePath;
 - (BOOL)open;
 - (void)close:(BOOL)opened;
 
--(NSString*) value:(NSString*)valueName
-       forAreaType:(NSString*) areaType
-           withKey:(NSString*)areaID;
--(NSArray *) getCensusChartFields:(CensusAreaTypes)areaType;
--(NSArray *) getCensusChartFieldValues:(CensusAreaValue)valueType
-                              areaType:(NSString*)areaType
-                                 geoID:(NSString*)geoID;
+- (NSString *)value:(NSString *)valueName
+        forAreaType:(NSString *) areaType
+            withKey:(NSString *)areaID;
+
+- (NSArray *)getCensusChartFields:(CensusAreaTypes)areaType;
+
+- (NSArray *)getCensusChartFieldValues:(CensusAreaValue)valueType
+                              areaType:(NSString *)areaType
+                                 geoID:(NSString *)geoID;
+
 @end

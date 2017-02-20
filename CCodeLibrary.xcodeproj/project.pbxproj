@@ -28,6 +28,7 @@
 		690E829F1C11055F00AB410E /* YTPlayerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698F987A1C10B96B009F2F01 /* YTPlayerView.h */; };
 		691636221C1FC790000C61B8 /* NVTileCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 691636211C1FC790000C61B8 /* NVTileCompiler.m */; };
 		691636231C1FDA11000C61B8 /* NVTileCompiler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 691636201C1FC790000C61B8 /* NVTileCompiler.h */; };
+		6917A7721E5B423C0012BDE4 /* CensusData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB6777961C95C13200A2D508 /* CensusData.h */; };
 		6919EAF81C27AF1700A9D0F1 /* NVUnitPickerTextAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 6919EAF71C27AF1700A9D0F1 /* NVUnitPickerTextAlert.m */; };
 		6919EAF91C27B3EE00A9D0F1 /* NVUnitPickerTextAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6919EAF61C27AF1700A9D0F1 /* NVUnitPickerTextAlert.h */; };
 		691B5DD11E52668600C90383 /* NVGetODR.m in Sources */ = {isa = PBXBuildFile; fileRef = 691B5DD01E52668600C90383 /* NVGetODR.m */; };
@@ -353,6 +354,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				6917A7721E5B423C0012BDE4 /* CensusData.h in CopyFiles */,
 				691B5DD21E527E1C00C90383 /* NVGetODR.h in CopyFiles */,
 				69E666031E413D90006A2055 /* WMS.h in CopyFiles */,
 				698C20C91DCB84DC00F800C3 /* NVKeyboard.h in CopyFiles */,
