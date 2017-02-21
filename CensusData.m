@@ -108,6 +108,7 @@
                                  geoID:(NSString *)geoID
 {
     NSMutableArray *rtn = NSMutableArray.array;
+    BOOL opened = [self open];
     
     switch (valueType)
     {
@@ -154,6 +155,7 @@
         default:
             break;
     }
+    [self close:opened];
     
     return rtn.copy;
 }
