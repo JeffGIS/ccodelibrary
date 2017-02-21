@@ -130,7 +130,27 @@
         [rtn addObject:[self getValue:"75 to 79" field:"M_75_79" areaType:areaType geoID:geoID]];
         [rtn addObject:[self getValue:"80 to 84" field:"M_80_84" areaType:areaType geoID:geoID]];
         [rtn addObject:[self getValue:"over age 85" field:"M_OVER85" areaType:areaType geoID:geoID]];
-            break;
+        break;
+        case CAVFemalesByAge:
+        [rtn addObject:[self getValue:"0 to 4" field:"F_0_4" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"5 to 9" field:"F_5_9" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"10 to 14" field:"F_10_14" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"15 to 19" field:"F_15_19" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"20 to 24" field:"F_20_24" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"25 to 29" field:"F_25_29" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"30 to 34" field:"F_30_34" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"35 to 39" field:"F_35_39" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"40 to 44" field:"F_40_44" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"45 to 49" field:"F_45_49" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"50 to 54" field:"F_50_54" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"55 to 59" field:"F_55_59" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"60 to 64" field:"F_60_64" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"65 to 69" field:"F_65_69" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"70 to 74" field:"F_70_74" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"75 to 79" field:"F_75_79" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"80 to 84" field:"F_80_84" areaType:areaType geoID:geoID]];
+        [rtn addObject:[self getValue:"over age 85" field:"F_OVER85" areaType:areaType geoID:geoID]];
+        break;
         default:
             break;
     }
