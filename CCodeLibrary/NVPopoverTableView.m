@@ -8,7 +8,7 @@
 
 @property (nonatomic, weak) id <NVPopoverTableViewDelegate> delegate;
 @property (nonatomic) UITableView *tableView;
-@property (nonatomic, copy) NSArray *textArray;
+@property (nonatomic, copy) NSArray *textArray, *groupColors;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIFont *font;
 @property BOOL includeCancel;
@@ -62,6 +62,17 @@
     nvptv.allowsMultipleSelection = NO;
     nvptv.lastRowTapped = 0;
     
+    nvptv.groupColors = @[([UIColor colorWithRed:1.0 green:0.8 blue:0.8 alpha:1.0]),//red
+                          ([UIColor colorWithRed:0.8 green:1.0 blue:0.8 alpha:1.0]),//green
+                          ([UIColor colorWithRed:0.8 green:0.9 blue:1.0 alpha:1.0]),//blue
+                          ([UIColor colorWithRed:1.0 green:0.9 blue:0.8 alpha:1.0]),//orange
+                          ([UIColor colorWithRed:0.9 green:0.8 blue:1.0 alpha:1.0]),//purple
+                          ([UIColor colorWithRed:1.0 green:1.0 blue:0.8 alpha:1.0]),//yellow
+                          ([UIColor colorWithRed:0.8 green:1.0 blue:1.0 alpha:1.0]),//cyan
+                          ([UIColor colorWithRed:1.0 green:0.85 blue:0.95 alpha:1.0]),//pink
+                          ([UIColor colorWithRed:0.8 green:1.0 blue:0.8 alpha:1.0]),//lime
+                          ([UIColor colorWithRed:0.95 green:0.95 blue:0.85 alpha:1.0])];//khaki
+
     nvptv.overlayView = UIView.new;
     nvptv.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
     nvptv.overlayView.backgroundColor = UIColor.blackColor;
@@ -265,11 +276,34 @@ viewForHeaderInSection:(NSInteger)section
                                       reuseIdentifier:cellIdentifier];
     }
     
+    NSString *group = @"";
+    
     if (_tableView.allowsMultipleSelection)
+    {
         cell.textLabel.text = textBefore(_groupArray[indexPath.row], @"\x03");
+        group = textBefore(textAfter(_groupArray[indexPath.row], @"\x05"), @"\x04");
+    }
     
     else
+    {
         cell.textLabel.text = textBefore(_textArray[indexPath.row], @"\x03");
+        group = textBefore(textAfter(_textArray[indexPath.row], @"\x05"), @"\x04");
+    }
+    
+    if (!group)
+        group = @"0";
+    
+    NSInteger groupIndex = group.integerValue;
+    
+    if (groupIndex > 0)
+    {
+        groupIndex--;
+        groupIndex %= _groupColors.count;
+        cell.backgroundColor = _groupColors[groupIndex];
+    }
+    
+    else
+        cell.backgroundColor = UIColor.whiteColor;
     
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.font = _font;
