@@ -65,6 +65,7 @@
 #import "TextOptions.h"
 #import "SQLiteLib.h"
 #import "FTPDirectoryCreate.h"
+#import "ArrayOfNumbers.h"
 
 #define INT64 long long
 

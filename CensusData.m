@@ -27,10 +27,12 @@
         self.isOpen = YES;
         NSString * path = [self databasePath];
         self.isOpen = !SQLOK(145,sqlite3_open(path.UTF8String, &_database), _database);
-        //NSLog(@"Property Database open");
+    
         
         _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:path
                                                                               error:nil].fileSize;
+        if (_fileSize > 0)
+            [self addSTDVFields];
         return TRUE;
     }
     else
@@ -47,6 +49,120 @@
     }
 }
 
+- (void) addSTDVAge:(char*)tableName
+{
+    return;
+    sqlite3_stmt *statement = NULL;
+    NSString * query = [NSString stringWithFormat:@"ALTER TABLE %s ADD COLUMN STDV_AGE REAL",tableName];
+    [self startTransaction];
+    [self executeCmd:query.UTF8String];
+    int nVals = 0;
+    
+    query = @"SELECT GEOG_UNIT";
+    for (int iage = 0;iage < 81;iage+=5)
+    {
+        query = [query stringByAppendingString:[NSString stringWithFormat:@",M_%i_%i",iage,iage+4]];
+        nVals++;
+    }
+    query = [query stringByAppendingString:@",M_OVER85"];
+    nVals++;
+    for (int iage = 0;iage < 81;iage+=5)
+    {
+        query = [query stringByAppendingString:[NSString stringWithFormat:@",F_%i_%i",iage,iage+4]];
+        nVals++;
+    }
+    query = [query stringByAppendingString:[NSString stringWithFormat:@",F_OVER85 FROM %s",tableName]];
+    nVals++;
+    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        double value;
+        NSNumber * age;
+        NSNumber * count;
+        int i = 0;
+        LPSTR key = (LPSTR)sqlite3_column_text(statement,i++);
+        NSMutableArray *ageArray = NSMutableArray.new;
+        NSMutableArray *countArray = NSMutableArray.new;
+        for (int iage = 0;iage < 81;iage+=5)
+        {
+            age = [NSNumber numberWithDouble:iage+2.5];
+            [ageArray addObject:age];
+            value = sqlite3_column_double(statement,i++);
+            count = [NSNumber numberWithDouble:value];
+            [countArray addObject:count];
+        }
+        age = [NSNumber numberWithDouble:87.5];
+        [ageArray addObject:age];
+        value = sqlite3_column_double(statement,i++);
+        count = [NSNumber numberWithDouble:value];
+        [countArray addObject:count];
+        
+        for (int iage = 0;iage < 81;iage+=5)
+        {
+            age = [NSNumber numberWithDouble:iage+2.5];
+            [ageArray addObject:age];
+            value = sqlite3_column_double(statement,i++);
+            count = [NSNumber numberWithDouble:value];
+            [countArray addObject:count];
+        }
+        age = [NSNumber numberWithDouble:87.5];
+        [ageArray addObject:age];
+        value = sqlite3_column_double(statement,i++);
+        count = [NSNumber numberWithDouble:value];
+        [countArray addObject:count];
+        ArrayOfNumbers * aon = [ArrayOfNumbers initWithArray:ageArray andMultipliers:countArray];
+        double stdv = [aon standardDeviationOf].doubleValue;
+        double mean = [aon meanOf].doubleValue;
+        NSString * updateQuery =[NSString stringWithFormat:@"UPDATE %s SET STDV_AGE = %f WHERE GEOG_UNIT=%s",tableName,stdv,key];
+        [self executeCmd:updateQuery.UTF8String];
+    }
+    
+    SQLOK(0,sqlite3_finalize(statement), _database);
+    /*    M_0_4= males in this age range (P12);
+    M_5_9= males in this age range (P12);
+    M_10_14= males in this age range (P12);
+    M_15_19= males in this age range (P12);
+    M_20_24= males in this age range (P12);
+    M_25_29= males in this age range (P12);
+    M_30_34= males in this age range (P12);
+    M_35_39= males in this age range (P12);
+    M_40_44= males in this age range (P12);
+    M_45_49= males in this age range (P12);
+    M_50_54= males in this age range (P12);
+    M_55_59= males in this age range (P12);
+    M_60_64= males in this age range (P12);
+    M_65_69= males in this age range (P12);
+    M_70_74= males in this age range (P12);
+    M_75_79= males in this age range (P12);
+    M_80_84= males in this age range (P12);
+    M_OVER85= males in this age range (P12);
+    F_0_4= females in this age range (P12);
+    F_5_9= females in this age range (P12);
+    F_10_14= females in this age range (P12);
+    F_15_19= females in this age range (P12);
+    F_20_24= females in this age range (P12);
+    F_25_29= females in this age range (P12);
+    F_30_34= females in this age range (P12);
+    F_35_39= females in this age range (P12);
+    F_40_44= females in this age range (P12);
+    F_45_49= females in this age range (P12);
+    F_50_54= females in this age range (P12);
+    F_55_59= females in this age range (P12);
+    F_60_64= females in this age range (P12);
+    F_65_69= females in this age range (P12);
+    F_70_74= females in this age range (P12);
+    F_75_79= females in this age range (P12);
+    F_80_84= females in this age range (P12);
+    F_OVER85= females in this age range (P12);*/
+    return;
+
+}
+- (void) addSTDVFields
+{
+    if (!doesSQLiteFieldExist("CENSUSTRACTDATA", "STDV_AGE", _database))
+        [self addSTDVAge:"CENSUSTRACTDATA"];
+}
 - (NSString *)value:(NSString *)valueName
         forAreaType:(NSString *)areaType
             withKey:(NSString *)areaID
@@ -158,6 +274,23 @@
     [self close:opened];
     
     return rtn.copy;
+}
+
+- (BOOL)executeCmd:(char *)cmd
+{
+    BOOL rtn = !SQLOK(155,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    return rtn;
+}
+
+- (void)startTransaction
+{
+    [self open];
+    SQLOK(156,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+}
+
+- (void)commitTransaction
+{
+    SQLOK(157,sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
 }
 
 @end

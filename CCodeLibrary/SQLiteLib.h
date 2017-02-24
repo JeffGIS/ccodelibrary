@@ -12,5 +12,6 @@
 
 #include <stdio.h>
 int SQLOK(int from,int sqlReturn, sqlite3 *database);
+BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,sqlite3 *database);
 
 #endif /* defined(__CCodeLibrary__SQLiteLib__) */

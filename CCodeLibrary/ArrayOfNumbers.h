@@ -11,6 +11,10 @@
 @interface ArrayOfNumbers : NSObject
 
 @property NSArray * array;
+@property NSArray * multArray;
+
++ (ArrayOfNumbers*)initWithArray:(NSArray *)array;
++ (ArrayOfNumbers*)initWithArray:(NSArray *)array andMultipliers:(NSArray*)multArray;
 
 - (NSNumber *)meanOf;
 - (NSNumber *)standardDeviationOf;

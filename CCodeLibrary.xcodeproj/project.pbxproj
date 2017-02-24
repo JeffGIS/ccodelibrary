@@ -243,6 +243,7 @@
 		A9E792861AEFEB91005DA4BB /* NVLargeAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */; };
 		A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */; };
 		BB0FD9391D2422A0007C1219 /* SQLiteLib.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0FD9381D2422A0007C1219 /* SQLiteLib.m */; };
+		BB235EFB1E5F552700E97495 /* ArrayOfNumbers.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */; };
 		BB3CF30B1E5CE1410064EC9C /* ArrayOfNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */; };
 		BB6777981C95C13200A2D508 /* CensusData.m in Sources */ = {isa = PBXBuildFile; fileRef = BB6777971C95C13200A2D508 /* CensusData.m */; };
 		BBE299521CBD1D6C0045B3DC /* CityOrOrganizationData.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */; };
@@ -357,6 +358,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				BB235EFB1E5F552700E97495 /* ArrayOfNumbers.h in CopyFiles */,
 				697486451E5C89450051B5BC /* NVPager.h in CopyFiles */,
 				6917A7721E5B423C0012BDE4 /* CensusData.h in CopyFiles */,
 				691B5DD21E527E1C00C90383 /* NVGetODR.h in CopyFiles */,
@@ -1179,6 +1181,8 @@
 		EB95A1A41CB16EAF00158B40 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */,
+				BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */,
 				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
 				EBA2E464199527660085B2E0 /* CCodeLibrary.m */,
 				BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */,
@@ -1227,8 +1231,6 @@
 				EB23A7951CA04AF700F83E6C /* TextOptions.m */,
 				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
-				BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */,
-				BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
