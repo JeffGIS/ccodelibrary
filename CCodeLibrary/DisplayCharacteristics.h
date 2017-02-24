@@ -58,7 +58,7 @@ typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
 
 @interface DisplayCharacteristics : NSObject
 
-@property NSInteger refno;
+@property long long refno;
 @property GraphicElementTypes elementType;
 @property DPOINT dPoint;
 @property int itemBeginTime, itemEndTime;

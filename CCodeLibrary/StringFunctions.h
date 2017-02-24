@@ -6,6 +6,7 @@
 @import CoreLocation;
 #import "UIDevice+Storage.h"
 
+UIColor *UIColorFromInt (unsigned int ival);
 BOOL hasNetwork(void);
 NSString *deviceSystemInfo(void);
 NSString *deviceCarrier(void);
