@@ -211,4 +211,13 @@ typedef NS_ENUM(NSInteger, HardCodedConfigs)
     HCConfigFromSlowValues,
 NUMHardCodedConfigs};
 
+typedef NS_ENUM(NSInteger, MapitBaseLayer)
+{
+    MBL_LandUse,
+    MBL_Parcels,
+    MBL_CensusBlocks,
+    MBL_CensusBlockGroups,
+    MBL_CensusTracts,
+};
+
 @end
