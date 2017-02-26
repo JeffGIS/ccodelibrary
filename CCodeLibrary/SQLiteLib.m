@@ -34,11 +34,9 @@ int SQLOK(int from,int sqlReturn, sqlite3 *database)
     return sqlReturn;
 }
 
-// This method will return if your table exist a field or not
 BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,sqlite3 *database)
 {
     BOOL doesExist = FALSE;
-    
     
     sqlite3_stmt *stmt = NULL;
     char * query = malloc (1024);
@@ -53,6 +51,42 @@ BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,sqlite3 *database)
             LPSTR colName = (LPSTR)sqlite3_column_text(stmt, 1);
             LPSTR colType = (LPSTR)sqlite3_column_text(stmt, 2);
             if (!strcmp (colName,fieldName))
+                doesExist = YES;
+        }
+    }
+    SQLOK(102,sqlite3_finalize(stmt), database);
+    free (query);
+    return doesExist;
+}
+
+BOOL doesSQLiteTableExist(char* tableNameIN, sqlite3 *database)
+{
+    BOOL doesExist = FALSE;
+    char tableName[256];
+    strncpy (tableName,tableNameIN,254);
+    
+    sqlite3_stmt *stmt = NULL;
+    char * query = malloc (1024);
+    LPSTR pDot = strrchr (tableName,'.');
+    if (pDot)
+    {
+        *pDot = 0;
+        sprintf (query,"SELECT name FROM %s.sqlite_master WHERE type='table';",tableName);
+        *pDot++ = '.';
+    }
+    else
+    {
+        pDot = tableName;
+        sprintf (query,"SELECT name FROM sqlite_master WHERE type='table' AND name='table_name';",tableName);
+    }
+    BOOL rc = !SQLOK(0,sqlite3_prepare_v2(database, query, -1, &stmt, NULL),database);
+    
+    if (rc)
+    {
+        while(sqlite3_step(stmt) == SQLITE_ROW)
+        {
+            LPSTR tName = (LPSTR)sqlite3_column_text(stmt, 0);
+            if (!strcmp (tName,pDot))
                 doesExist = YES;
         }
     }

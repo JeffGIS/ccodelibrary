@@ -9,34 +9,54 @@
 #import "CensusData.h"
 #import "CCodeLibrary.h"
 
+@interface CensusData ()
+@property sqlite3 *tempdatabase;
+@end
+
 @implementation CensusData
 
-- (NSString*) databasePath
++ (NSString*) databasePath
 {
-    _documentsDirectory = UserDefaults.defaults.sharedFilePath;
+    NSString * documentsDirectory = UserDefaults.defaults.localFilePath;
     NSString * path = [NSBundle.mainBundle pathForResource:@"censusdata"
-                                             ofType:@"slt"];
-    _fileName = @"censusdata.slt";
+                                                    ofType:@"slt"];
+    return path;
+}
+
++ (NSString*) computedFieldsPath
+{
+    NSString * documentsDirectory = UserDefaults.defaults.localFilePath;
+    NSString * path = [NSString stringWithFormat:@"%@/ComputedCensusData.slt",documentsDirectory];
     return path;
 }
 
 - (BOOL)open
 {
-    if (!_isOpen)
-    {
-        self.isOpen = YES;
-        NSString * path = [self databasePath];
-        self.isOpen = !SQLOK(145,sqlite3_open(path.UTF8String, &_database), _database);
-    
-        
-        _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:path
-                                                                              error:nil].fileSize;
-        if (_fileSize > 0)
-            [self addSTDVFields];
-        return TRUE;
-    }
-    else
+    if (_isOpen)
         return FALSE;
+    
+    int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[CensusData computedFieldsPath]
+                                                                             error:nil].fileSize;
+    if (fileSize <= 0)
+    {
+        SQLOK(145,sqlite3_open([CensusData computedFieldsPath].UTF8String, &_tempdatabase), _tempdatabase);
+        SQLOK(146,sqlite3_close(_tempdatabase), _tempdatabase);
+    }
+    
+    fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[CensusData databasePath]
+                                                                         error:nil].fileSize;
+    if (fileSize > 0)
+    {
+        _isOpen = !SQLOK(145,sqlite3_open([CensusData databasePath].UTF8String, &_database), _database);
+        if (_isOpen)
+        {
+            NSString *attachCmd = [NSString stringWithFormat:@"ATTACH DATABASE '%@' AS COMPUTEDCENSUSFIELDS",[CensusData computedFieldsPath]];
+            [self executeCmd:(LPSTR)attachCmd.UTF8String];
+            [self addSTDVFields];
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 - (void)close:(BOOL)opened
@@ -51,10 +71,8 @@
 
 - (void) addSTDVAge:(char*)tableName
 {
-    return;
     sqlite3_stmt *statement = NULL;
-    NSString * query = [NSString stringWithFormat:@"ALTER TABLE %s ADD COLUMN STDV_AGE REAL",tableName];
-    [self startTransaction];
+    NSString * query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS COMPUTEDCENSUSFIELDS.ADDEDFIELDS (GEOG_UNIT CHAR(17),STDV_AGE REAL,MEAN_AGE REAL)"];
     [self executeCmd:query.UTF8String];
     int nVals = 0;
     
@@ -114,7 +132,7 @@
         ArrayOfNumbers * aon = [ArrayOfNumbers initWithArray:ageArray andMultipliers:countArray];
         double stdv = [aon standardDeviationOf].doubleValue;
         double mean = [aon meanOf].doubleValue;
-        NSString * updateQuery =[NSString stringWithFormat:@"UPDATE %s SET STDV_AGE = %f WHERE GEOG_UNIT=%s",tableName,stdv,key];
+        NSString * updateQuery =[NSString stringWithFormat:@"INSERT INTO COMPUTEDCENSUSFIELDS.ADDEDFIELDS VALUES('%s',%f,%f)",key,stdv,mean];
         [self executeCmd:updateQuery.UTF8String];
     }
     
@@ -160,8 +178,14 @@
 }
 - (void) addSTDVFields
 {
-    if (!doesSQLiteFieldExist("CENSUSTRACTDATA", "STDV_AGE", _database))
+    if (!doesSQLiteTableExist("COMPUTEDCENSUSFIELDS.ADDEDFIELDS", _database))
+    {
+        [self startTransaction];
         [self addSTDVAge:"CENSUSTRACTDATA"];
+        [self addSTDVAge:"CENSUSBLOCKGROUPDATA"];
+        [self addSTDVAge:"CENSUSBLOCKDATA"];
+        [self commitTransaction];
+    }
 }
 - (NSString *)value:(NSString *)valueName
         forAreaType:(NSString *)areaType

@@ -26,11 +26,9 @@ typedef NS_ENUM(NSInteger, CensusAreaValue)
 
 @property sqlite3 *database;
 @property (atomic) BOOL isOpen;
-@property (nonatomic, copy) NSString *documentsDirectory;
-@property (nonatomic, copy) NSString *fileName;
-@property NSInteger fileSize;
 
-- (NSString *)databasePath;
++ (NSString *)databasePath;
++ (NSString *)computedFieldsPath;
 - (BOOL)open;
 - (void)close:(BOOL)opened;
 
