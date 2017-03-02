@@ -75,9 +75,9 @@
                   
                   else
                   {
+                      [self copyFilesToSharedDirectory];
                       [_resourceRequest endAccessingResources];
                       NSLog(@"on demand resources downloaded successfully");
-                      [self copyFilesToSharedDirectory];
                   }
               }];
          }
