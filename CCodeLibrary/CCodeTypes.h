@@ -15,6 +15,8 @@ typedef HANDLE *LPHANDLE;
 //typedef bool    BOOL;
 typedef int    *LPBOOL;
 typedef int * LPINT;
+typedef unsigned int UINT;
+typedef UINT * LPUINT;
 typedef short * LPSHORT;
 typedef char *LPSTR;
 typedef LPSTR HPSTR;

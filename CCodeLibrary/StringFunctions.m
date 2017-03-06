@@ -18,7 +18,7 @@ UIColor *UIColorFromInt (unsigned int ival)
     typedef struct {unsigned char r,g,b,a;} RGBC;
 #pragma pack()
     RGBC *rgbc = (RGBC*)&ival;
-    double r=rgbc->r/255.0,g=rgbc->g/255.0,b=rgbc->b/255.0,a=rgbc->a/255.0;
+    double r=rgbc->r/255.0,g=rgbc->g/255.0,b=rgbc->b/255.0,a=1;
     uiColor = [UIColor colorWithRed:r green:g blue:b alpha:a];
     return uiColor;
 }
