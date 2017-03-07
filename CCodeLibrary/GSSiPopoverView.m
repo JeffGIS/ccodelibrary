@@ -144,6 +144,7 @@
 - (void)showFromTimer:(NSTimer *)timer
 {
     [timer invalidate];
+    _timer = nil;
     [self show];
 }
 
@@ -155,12 +156,19 @@
 - (void)hideFromTimer:(NSTimer *)timer
 {
     [timer invalidate];
+    _timer = nil;
     [self hide];
 }
 
 - (void)hide
 {
-    if (self.superview)
+    if (_timer)
+    {
+        [_timer invalidate];
+        _timer = nil;
+        self.hidden = YES;
+    }
+    else if (self.superview)
     {
         int seconds = (NSDate.timeIntervalSinceReferenceDate - _showTime);
         

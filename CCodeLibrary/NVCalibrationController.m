@@ -179,12 +179,12 @@ static double _deviceValues[9][4];
         if (frontButton.tag < 2)
         {
             enabled = YES;
-            title = [NSString stringWithFormat:@"Calibrate %@", valueString];
+            title = [NSString stringWithFormat:@"Flat             Calibrate %@", valueString];
         }
         
         else
-            title = [NSString stringWithFormat:@"Calibrate %@ Front", valueString];
-        
+            title = [NSString stringWithFormat:@"%i F               Calibrate %@ Front", i,valueString];
+        frontButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         [self setupButton:frontButton
                  selector:@selector(calibrateButtonTapped:)
                     title:title
@@ -202,8 +202,9 @@ static double _deviceValues[9][4];
                                                                               buttonWidth, buttonHeight)];
             
             sideButton.tag = _counter;
+            sideButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
             
-            title = [NSString stringWithFormat:@"Calibrate %@ Side", valueString];
+            title = [NSString stringWithFormat:@"%i S               Calibrate %@ Side", i,valueString];
             
             [self setupButton:sideButton
                      selector:@selector(calibrateButtonTapped:)
