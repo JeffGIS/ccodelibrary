@@ -51,7 +51,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 
 - (void)dealloc
 {
-    [self close];
+    [self close:YES];
     NSLog(@"Crime Database dealloc");
 }
 - (void) fixName
@@ -98,9 +98,9 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     return FALSE;
 }
 
-- (void)close
+- (void)close:(BOOL)opened
 {
-    if (_isOpen)
+    if (opened && _isOpen)
     {
         SQLOK(148,sqlite3_close(_database),_database);
         NSLog(@"Crime Database close");
@@ -110,7 +110,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 
 - (BOOL)clear
 {
-    [self close];
+    [self close:YES];
     
     BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
     error:nil];
@@ -137,8 +137,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
         SQLOK(150,sqlite3_finalize(statement), _database);
     }
 
-    if (opened)
-        [self close];
+    [self close:opened];
     return rtn;
 }
 - (int) maxID
@@ -159,7 +158,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 
 - (NSInteger) lastUpdate
 {
-    NSInteger rtn = 0;
+    NSInteger rtn = 1;
     BOOL opened = [self open];
     if (_isOpen && _fileSize > 0)
     {
@@ -176,8 +175,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
         if (!rtn)
             [self executeCmd:"CREATE TABLE IF NOT EXISTS UPDATES (id INTEGER PRIMARY KEY,LastUpdate INT)"];
     }
-    if (opened)
-        [self close];
+    [self close:opened];
     return rtn;
 }
 
@@ -187,10 +185,11 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     return rtn;
 }
 
-- (void)startTransaction
+- (BOOL)startTransaction
 {
-    [self open];
+    BOOL rtn = [self open];
     SQLOK(156,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    return rtn;
 }
 
 - (void)commitTransaction
@@ -217,8 +216,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
         rtn = TRUE;
     }
     SQLOK(159,sqlite3_finalize(statement),_database);
-    if (opened)
-        [self close];
+    [self close:opened];
     return rtn;
 }
 
@@ -385,7 +383,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             
             _popoverView.progressView.hidden = YES;
             _popoverView.progressLabel.hidden = YES;
-            if (!_autoUpdate)
+            if (_autoUpdate)
+                [_popoverView hide];
+            else
                 [_popoverView show];
         }
         
@@ -522,7 +522,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         totLen = FileLength(fid);
         LPSTR str = malloc(INPUTBUFSIZE);
         _keepGoing = TRUE;
-        [self startTransaction];
+        BOOL opened = [self startTransaction];
         while (_keepGoing && fgetstring(str, (INPUTBUFSIZE - 2), fid))
         {
             [self getIdForUpdate:str
@@ -537,7 +537,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO UPDATES VALUES (1,%li)",(long)(long)_myLastUpdate+1];
         [self executeCmd:(LPSTR)cmd.UTF8String];
         [self commitTransaction];
-        
+        [self close:opened];
         rtn = TRUE;
     }
 

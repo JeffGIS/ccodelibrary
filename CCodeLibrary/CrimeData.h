@@ -23,14 +23,14 @@
 @property BOOL autoUpdate;
 
 - (BOOL)open;
-- (void)close;
+- (void)close:(BOOL)opened;
 - (BOOL)clear;
 
 - (BOOL)executeCmd:(char *)cmd;
 -(void) getIdForUpdate:(LPSTR)str
                 remove:(BOOL)remove;
 
-- (void)startTransaction;
+- (BOOL)startTransaction;
 - (void)commitTransaction;
 + (NSString *)reportForControlNumber:(NSInteger)cnumber;
 - (BOOL)update:(UIView *)fromView
