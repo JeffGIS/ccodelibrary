@@ -20,6 +20,7 @@
 @property long long fileSize;
 @property NSInteger myLastUpdate;
 @property NSInteger serversLastUpdate;
+@property BOOL autoUpdate;
 
 - (BOOL)open;
 - (void)close;
@@ -32,6 +33,7 @@
 - (void)startTransaction;
 - (void)commitTransaction;
 + (NSString *)reportForControlNumber:(NSInteger)cnumber;
-- (BOOL)update:(UIView *)fromView;
+- (BOOL)update:(UIView *)fromView
+          auto:(BOOL)autoUpdate;
 
 @end

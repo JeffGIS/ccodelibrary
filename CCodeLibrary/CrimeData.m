@@ -42,7 +42,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     if (self)
     {
         _documentsDirectory = UserDefaults.defaults.sharedFilePath;
-        _fileName = @"Crimes.sqlite";
+        _fileName = @"CrimeData.slt";
         _path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
     }
     
@@ -88,9 +88,9 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
                                                                    error:nil].fileSize;
         if (_fileSize > 0)
         {
-            [self startTransaction];
+/*            [self startTransaction];
             [self executeCmd:"CREATE INDEX IF NOT EXISTS OFFENSEXY_KEY ON OFFENSEXY (ControlNbr, OffenseOrder)"];
-            [self commitTransaction];
+            [self commitTransaction];*/
         }
 
         return TRUE;
@@ -251,6 +251,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 }
 
 - (BOOL)update:(UIView *)fromView
+          auto:(BOOL)autoUpdate
 {
     BOOL rtn = FALSE;
     _GMServer = GeoMasterServer.open;
@@ -264,8 +265,11 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     _popoverView.delegate = self;
     _popoverView.progressView.hidden = YES;
     _popoverView.progressLabel.hidden = YES;
-    
-    [_popoverView showAfter:2.0
+    _autoUpdate = autoUpdate;
+    float waitTime = 2.0;
+    if (!autoUpdate)
+        waitTime = 0;
+    [_popoverView showAfter:waitTime
                   withTitle:@"Waiting\nto Connect\nto Manager"];
     
     return rtn;
@@ -320,7 +324,7 @@ didReceiveMessage:(NSString *)message
             case GMSMessageGetPoliceUpdate:
             {
                 _myLastUpdate = [self lastUpdate];
-                _serversLastUpdate = message.integerValue;
+                _serversLastUpdate = message.integerValue-1;
                 //_serversLastUpdate =570;
                 if (_updateTimer)
                     [_updateTimer invalidate];
@@ -381,6 +385,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             
             _popoverView.progressView.hidden = YES;
             _popoverView.progressLabel.hidden = YES;
+            if (!_autoUpdate)
+                [_popoverView show];
         }
         
         return;
