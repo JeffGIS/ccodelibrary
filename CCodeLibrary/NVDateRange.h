@@ -15,6 +15,7 @@ typedef NS_ENUM(NSInteger, DateRangeType)
     DateRangeTypeThisYear,
     DateRangeTypeLastYear,
     DateRangeTypePastYear,
+    DateRangeTypeManual,
 };
 
 typedef NS_ENUM(NSInteger, DateRangeInverval)

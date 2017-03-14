@@ -94,6 +94,9 @@
             from = [nvdr startOfDayDateForDate:[nvdr.calendar dateFromComponents:dateComponents]];
             to = [nvdr endOfDayDateForDate:NSDate.date];
             break;
+        case DateRangeTypeManual:
+            from = [NSDate dateWithTimeIntervalSince1970:[UserDefaults.defaults integerForKey:@"ManualFromDate"]];
+            to = [NSDate dateWithTimeIntervalSince1970:[UserDefaults.defaults integerForKey:@"ManualToDate"]];
         default:
             break;
     }
@@ -673,21 +676,17 @@
             {
                 case DateRangeInvervalDay:
                     break;
-                    
                 case DateRangeInvervalWeek:
                     dateComponents.day += 6;
                     break;
-                    
                 case DateRangeInvervalMonth:
                     dateComponents.month += 1;
                     dateComponents.day -= 1;
                     break;
-                    
                 case DateRangeInvervalYear:
                     dateComponents.year += 1;
                     dateComponents.day -= 1;
                     break;
-                    
                 default:
                     break;
             }
@@ -705,28 +704,22 @@
             {
                 case DateRangeInvervalDay:
                     break;
-                    
                 case DateRangeInvervalWeek:
                     dateComponents.day -= 6;
                     break;
-                    
                 case DateRangeInvervalMonth:
                     dateComponents.month -= 1;
                     dateComponents.day += 1;
                     break;
-                    
                 case DateRangeInvervalYear:
                     dateComponents.year -= 1;
                     dateComponents.day += 1;
                     break;
-                    
                 default:
                     break;
             }
             
-            [_toDatePicker setDate:newDate
-                          animated:YES];
-            
+            [_toDatePicker setDate:newDate animated:YES];
             _toDateLabel.text = [self formattedDate:_toDatePicker.date];
             
             [_fromDatePicker setDate:[self startOfDayDateForDate:[_calendar dateFromComponents:dateComponents]]
@@ -771,16 +764,18 @@
         _toDateLabel.text = [self formattedDate:_toDatePicker.date];
         _interval = DateRangeInvervalNone;
     }
+    
+    [UserDefaults.defaults saveNSInteger:_toDatePicker.date.timeIntervalSince1970 forKey:@"ManualToDate"];
+    [UserDefaults.defaults saveNSInteger:_fromDatePicker.date.timeIntervalSince1970 forKey:@"ManualFromDate"];
+    [UserDefaults.defaults saveNSInteger:DateRangeTypeManual forKey:@"SelectedDateRange"];
 }
 
 - (NSString *)formattedDate:(NSDate *)date
 {
     NSString *formattedDate = @"";
-    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.dateFormat = @"EEE MMM dd HH:mm:ss yyyy";
     formattedDate = [dateFormatter stringFromDate:date];
-    
     return formattedDate;
 }
 
@@ -791,9 +786,7 @@
                                             second:0
                                             ofDate:date
                                            options:NSCalendarMatchStrictly];
-    
     return newDate;
-    
 }
 
 
@@ -804,7 +797,6 @@
                                             second:59
                                             ofDate:date
                                            options:NSCalendarMatchStrictly];
-    
     return newDate;
 }
 
