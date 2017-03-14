@@ -3,19 +3,18 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSInteger, DateRangeButton)
+typedef NS_ENUM(NSInteger, DateRangeType)
 {
-    DateRangeButtonNone,
-    DateRangeButtonToday,
-    DateRangeButtonYesterday,
-    DateRangeButtonThisWeek,
-    DateRangeButtonLastWeek,
-    DateRangeButtonPastWeek,
-    DateRangeButtonThisMonth,
-    DateRangeButtonLastMonth,
-    DateRangeButtonThisYear,
-    DateRangeButtonLastYear,
-    DateRangeButtonPastYear,
+    DateRangeTypePastWeek,
+    DateRangeTypeToday,
+    DateRangeTypeYesterday,
+    DateRangeTypeThisWeek,
+    DateRangeTypeLastWeek,
+    DateRangeTypeThisMonth,
+    DateRangeTypeLastMonth,
+    DateRangeTypeThisYear,
+    DateRangeTypeLastYear,
+    DateRangeTypePastYear,
 };
 
 typedef NS_ENUM(NSInteger, DateRangeInverval)
@@ -42,11 +41,8 @@ didReturnFromDate:(NSInteger)fromDate
 @property (nonatomic, weak) id <NVDateRangeDelegate> delegate;
 @property (nonatomic) NSInteger minDate;
 
-+ (void)getPastWeekFromDate:(NSInteger *)fromDate
-                     toDate:(NSInteger *)toDate;
-
-+ (void)getLastYearFromDate:(NSInteger *)fromDate
-                     toDate:(NSInteger *)toDate;
++ (void)getCurrentFromDate:(NSInteger *)fromDate
+                    toDate:(NSInteger *)toDate;
 
 + (NVDateRange *)showDateRangeInView:(UIView *)view
                             delegate:(id)delegate
