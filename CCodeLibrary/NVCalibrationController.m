@@ -42,6 +42,19 @@ static double _deviceValues[9][4];
 
 @implementation NVCalibrationController
 
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _useHeadingCalibration = YES;
+        _headingErrorShown = NO;
+    }
+    
+    return self;
+}
+
 - (void)loadView
 {
     UIView *view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
@@ -118,11 +131,22 @@ static double _deviceValues[9][4];
                 title:@"Edit"
               enabled:YES
              fontSize:56.0];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(resignedActive:)
+                                               name:@"didResignActive"
+                                             object:nil];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (void)resignedActive:(id)selector
+{
+    _useHeadingCalibration = NO;
+    [NSNotificationCenter.defaultCenter removeObserver:self name:@"didResignActive" object:nil];
 }
 
 - (NSString *)refreshCalDateLabel
@@ -328,6 +352,7 @@ static double _deviceValues[9][4];
                                                                                         delegate:self];
     
     slopeVC.fromCalibration = YES;
+    slopeVC.useHeadingCalibration = _useHeadingCalibration;
     
     if (!_currentIndex)
         slopeVC.promptText = @"Place the iPad on a level surface and tap 'Start' to begin measurement.";
@@ -422,6 +447,7 @@ static double _deviceValues[9][4];
     }
     
     slopeVC.fromCalibration = YES;
+    slopeVC.useHeadingCalibration = NO;
     
     [self presentViewController:slopeVC
                        animated:YES
@@ -490,12 +516,11 @@ static double _deviceValues[9][4];
             _hasBeenFlipped = NO;
             
             NSUInteger count = [_calibrationValues[0] count];
-            
             count -= 1;
             count *= 2;
             count += 1;
             
-            if (CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
+            if (CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE && !_headingErrorShown)
             {
                 if (!_currentIndex)
                 {
@@ -519,15 +544,17 @@ static double _deviceValues[9][4];
                             headingError = YES;
                 }
             }
+            
             _currentIndex++;
 
-            if (headingError && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
+            if (headingError && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE && !_headingErrorShown)
             {
-                NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                                  delegate:self
-                                                                     title:@"The device appears to be pointed in the wrong direction. Calibration process will restart."
-                                                           buttonTextArray:@[@"OK"]
-                                                          destructiveIndex:0];
+                NVAlertView *alert =
+                [NVAlertView showLargeAlertViewinView:self.view
+                                             delegate:self
+                                                title:@"The device appears to be pointed in the wrong direction. Calibration process will restart."
+                                      buttonTextArray:@[@"OK"]
+                                     destructiveIndex:0];
                 
                 alert.tag = 33333;
             }
@@ -537,15 +564,11 @@ static double _deviceValues[9][4];
                 if (_currentIndex >= count || count == 1)
                 {
                     [self saveCalibrationValues];
-                    
                     _promptLabel.text = @"Calibration Routine is Complete.";
-                    
                     [self setTestEditButtonsEnabled:YES];
                     
                     NSDate *date = NSDate.date;
-                    
-                    [SharedDefaults.defaults saveDate:date
-                                               forKey:@"LastCalDate"];
+                    [SharedDefaults.defaults saveDate:date forKey:@"LastCalDate"];
                     
                     NSString *dateString = [NSDateFormatter localizedStringFromDate:date
                                                                           dateStyle:NSDateFormatterLongStyle
@@ -553,10 +576,7 @@ static double _deviceValues[9][4];
                     
                     NSString *lastCalString = [NSString stringWithFormat:@"Calibrated on %@", dateString];
                     _lastCalibrationlabel.text = lastCalString;
-                    
-                    [SharedDefaults.defaults saveString:lastCalString
-                                                 forKey:@"LastCalString"];
-                    
+                    [SharedDefaults.defaults saveString:lastCalString forKey:@"LastCalString"];
                     _currentIndex = 0;
                 }
                 
@@ -587,7 +607,7 @@ static double _deviceValues[9][4];
             if (_currentIndex == 0)
                 _initialHeading = (int)round(slopeData.heading);
             
-            else if (CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
+            else if (CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE && !_headingErrorShown)
             {
                 if (_currentIndex % 2)//front
                 {
@@ -599,7 +619,7 @@ static double _deviceValues[9][4];
 
             }
             
-            if (headingError && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE)
+            if (headingError && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE && !_headingErrorShown)
             {
                 NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                                   delegate:self
@@ -1043,26 +1063,19 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                                                                     delegate:self];
                 
                 slopeVC.fromCalibration = YES;
+                slopeVC.useHeadingCalibration = _useHeadingCalibration;
                 slopeVC.promptText = @"";
-                
-                [self presentViewController:slopeVC
-                                   animated:YES
-                                 completion:nil];
-                
+                [self presentViewController:slopeVC animated:YES completion:nil];
                 _promptLabel.text = _nextPromptText;
             }
                 break;
-                
             case 22222:
                 [self handleTableViewDismissal];
                 break;
-                
             case 33333:
                 if (_delegate)
                     [_delegate calibrationControllerNeedsRefresh:self];
-                
                 break;
-                
             default:
                 break;
         }

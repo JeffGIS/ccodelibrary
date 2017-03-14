@@ -33,8 +33,6 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 
 @implementation CrimeData
 
-
-
 - (id)init
 {
     self = [super init];

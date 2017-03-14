@@ -14,5 +14,6 @@
 @interface NVCalibrationController : UIViewController
 
 @property (nonatomic, weak) id <NVCalibrationControllerDelegate> delegate;
+@property BOOL useHeadingCalibration, headingErrorShown;
 
 @end
