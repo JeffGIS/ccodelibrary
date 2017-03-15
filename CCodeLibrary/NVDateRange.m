@@ -21,13 +21,24 @@
 
 @implementation NVDateRange
 
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        _calendar.locale = NSLocale.currentLocale;
+        _calendar.timeZone = NSTimeZone.localTimeZone;
+    }
+    
+    return self;
+}
+
 + (void)getCurrentFromDate:(NSInteger *)fromDate
                     toDate:(NSInteger *)toDate
 {
     NVDateRange *nvdr = NVDateRange.new;
-    nvdr.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    nvdr.calendar.locale = NSLocale.currentLocale;
-    nvdr.calendar.timeZone = NSTimeZone.localTimeZone;
     
     NSDateComponents *dateComponents = [nvdr.calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
                                         NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
@@ -119,10 +130,6 @@
     
     NVDateRange *nvdr = [[NVDateRange alloc] init];
     nvdr.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    nvdr.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    nvdr.calendar.locale = NSLocale.currentLocale;
-    nvdr.calendar.timeZone = NSTimeZone.localTimeZone;
     
     nvdr.delegate = delegate;
     nvdr.cornerRadius = (minBounds / 60.0);

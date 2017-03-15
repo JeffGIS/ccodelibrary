@@ -2,6 +2,8 @@
 //  CCodeLibrary
 
 #import <UIKit/UIKit.h>
+#define SECONDS_PER_DAY 86400
+#define SECONDS_PER_HOUR 3600
 
 typedef NS_ENUM(NSInteger, DateRangeType)
 {
@@ -51,5 +53,6 @@ didReturnFromDate:(NSInteger)fromDate
                               toDate:(NSInteger)toDate;
 
 - (void)hideDateRange:(BOOL)animated;
+- (NSDate *)startOfDayDateForDate:(NSDate *)date;
 
 @end
