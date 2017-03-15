@@ -39,8 +39,29 @@
         _maxDevices = 100;
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.bmp", _documentsDirectory];
-        _crimeMode = PINMAP;
-        _crimeTarget = @"Minneapolis Neighborhoods";
+        _crimeMode = (CrimeMapMode)[UserDefaults.defaults integerForKey:@"CrimeMode"];
+        
+        NSString *defaultCrimeTarget = [UserDefaults.defaults stringForKey:@"CrimeTarget"];
+        
+        if (defaultCrimeTarget && defaultCrimeTarget.length)
+            _crimeTarget = defaultCrimeTarget;
+        
+        else
+        {
+            _crimeTarget = @"Minneapolis Neighborhoods";
+            [UserDefaults.defaults saveString:_crimeTarget forKey:@"CrimeTarget"];
+        }
+        
+        NSString *defaultCrimeAdjustValue = [UserDefaults.defaults stringForKey:@"CrimeAdjustValue"];
+        
+        if (defaultCrimeAdjustValue && defaultCrimeAdjustValue.length)
+            _crimeAdjustValue = defaultCrimeAdjustValue;
+        
+        NSString *defaultCrimeAdjustValueArea = [UserDefaults.defaults stringForKey:@"CrimeAdjustValueArea"];
+        
+        if (defaultCrimeAdjustValueArea && defaultCrimeAdjustValueArea.length)
+            _crimeAdjustValueArea = defaultCrimeAdjustValueArea;
+        
         _docManager = NVDocumentManager.new;
         _deviceLists = NSMutableDictionary.new;
         _assignediPadsArray = NSMutableArray.new;
