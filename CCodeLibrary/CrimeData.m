@@ -248,26 +248,34 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 
 - (BOOL)update:(UIView *)fromView
           auto:(BOOL)autoUpdate
+      delegate:(id)delegate
 {
     BOOL rtn = FALSE;
-    _GMServer = GeoMasterServer.open;
-    _GMServer.useTestServer = NO;
-    _GMServer.delegate = self;
-    _GMServer.messageID = GMSMessageGetPoliceUpdate;
-    [_GMServer initCommunication:5.0];
+    static time_t lastUpdateTime = 0;
     
-    _fromView = fromView;
-    _popoverView = [[GSSiPopoverView alloc] initWithView:fromView];
-    _popoverView.delegate = self;
-    _popoverView.progressView.hidden = YES;
-    _popoverView.progressLabel.hidden = YES;
-    _autoUpdate = autoUpdate;
-    float waitTime = 2.0;
-    if (!autoUpdate)
-        waitTime = 0;
-    [_popoverView showAfter:waitTime
-                  withTitle:@"Waiting\nto Connect\nto Manager"];
-    
+    if (!lastUpdateTime)
+    {
+        lastUpdateTime = NSTimeIntervalSince1970;
+        rtn = TRUE;
+        _delegate = delegate;
+        _GMServer = GeoMasterServer.open;
+        _GMServer.useTestServer = NO;
+        _GMServer.delegate = self;
+        _GMServer.messageID = GMSMessageGetPoliceUpdate;
+        [_GMServer initCommunication:5.0];
+        
+        _fromView = fromView;
+        _popoverView = [[GSSiPopoverView alloc] initWithView:fromView];
+        _popoverView.delegate = self;
+        _popoverView.progressView.hidden = YES;
+        _popoverView.progressLabel.hidden = YES;
+        _autoUpdate = autoUpdate;
+        float waitTime = 2.0;
+        if (!autoUpdate)
+            waitTime = 0;
+        [_popoverView showAfter:waitTime
+                      withTitle:@"Waiting\nto Connect\nto Manager"];
+    }
     return rtn;
 }
 
@@ -385,6 +393,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 [_popoverView hide];
             else
                 [_popoverView show];
+            if (_delegate)
+                [_delegate CrimeDataUpdateDidComplete:0];
         }
         
         return;

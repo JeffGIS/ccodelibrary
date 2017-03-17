@@ -9,8 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "SQLiteLib.h"
 #import "MathUtil.h"
+@class CrimeData;
+
+@protocol CrimeDataDelegate <NSObject>
+
+- (void) CrimeDataUpdateDidComplete:(long)status;
+
+@end
 
 @interface CrimeData : NSObject
+@property (nonatomic, weak) id <CrimeDataDelegate> delegate;
 @property sqlite3 *database;
 @property (nonatomic) int datasetVersion;
 @property (nonatomic) BOOL isOpen;
@@ -34,6 +42,7 @@
 - (void)commitTransaction;
 + (NSString *)reportForControlNumber:(NSInteger)cnumber;
 - (BOOL)update:(UIView *)fromView
-          auto:(BOOL)autoUpdate;
+          auto:(BOOL)autoUpdate
+      delegate:(id)delegate;
 
 @end
