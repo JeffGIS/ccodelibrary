@@ -248,26 +248,44 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 
 - (BOOL)update:(UIView *)fromView
           auto:(BOOL)autoUpdate
+      delegate:(id)delegate
 {
     BOOL rtn = FALSE;
-    _GMServer = GeoMasterServer.open;
-    _GMServer.useTestServer = NO;
-    _GMServer.delegate = self;
-    _GMServer.messageID = GMSMessageGetPoliceUpdate;
-    [_GMServer initCommunication:5.0];
-    
-    _fromView = fromView;
-    _popoverView = [[GSSiPopoverView alloc] initWithView:fromView];
-    _popoverView.delegate = self;
-    _popoverView.progressView.hidden = YES;
-    _popoverView.progressLabel.hidden = YES;
-    _autoUpdate = autoUpdate;
-    float waitTime = 2.0;
-    if (!autoUpdate)
-        waitTime = 0;
-    [_popoverView showAfter:waitTime
-                  withTitle:@"Waiting\nto Connect\nto Manager"];
-    
+    static int nextTime = -1;
+    static int lastTime = 0;
+    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDate * now = [NSDate date];
+    int timeInSeconds = [now timeIntervalSinceReferenceDate];
+    if (timeInSeconds - lastTime > nextTime * 60)
+    {
+        rtn = TRUE;
+        _delegate = delegate;
+        _GMServer = GeoMasterServer.open;
+        _GMServer.useTestServer = NO;
+        _GMServer.delegate = self;
+        _GMServer.messageID = GMSMessageGetPoliceUpdate;
+        [_GMServer initCommunication:5.0];
+        
+        _fromView = fromView;
+        _popoverView = [[GSSiPopoverView alloc] initWithView:fromView];
+        _popoverView.delegate = self;
+        _popoverView.progressView.hidden = YES;
+        _popoverView.progressLabel.hidden = YES;
+        _autoUpdate = autoUpdate;
+        float waitTime = 2.0;
+        if (!autoUpdate)
+            waitTime = 0;
+        [_popoverView showAfter:waitTime
+                      withTitle:@"Waiting\nto Connect\nto Manager"];
+    }
+    int minutes = [cal component:NSCalendarUnitMinute fromDate:now];
+    if (minutes < 15)
+        nextTime = 15 - minutes;
+    else if (minutes < 45)
+        nextTime = 45 - minutes;
+    else
+        nextTime = 60 - minutes + 15;
+    lastTime = timeInSeconds;
     return rtn;
 }
 
@@ -275,6 +293,8 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 {
     _keepGoing = FALSE;
     [popoverView hide];
+    if (_delegate)
+        [_delegate CrimeDataUpdateDidComplete:0];
 }
 
 - (void)closeGMServer
@@ -385,6 +405,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 [_popoverView hide];
             else
                 [_popoverView show];
+            if (_delegate)
+                [_delegate CrimeDataUpdateDidComplete:0];
         }
         
         return;
