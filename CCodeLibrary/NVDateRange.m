@@ -35,15 +35,88 @@
     return self;
 }
 
++ (NSArray<NSNumber *> *)getArrayOfTimesWithStartTime:(int)startTime
+                                              endTime:(int)endTime
+                                                 span:(TimeArraySpan)span
+                                             interval:(int)interval
+{
+    if (endTime <= (startTime + interval))
+    {
+        NSLog(@"NVDateRange ERROR: endTime must be greater than startTime plus interval");
+        return nil;
+    }
+    
+    NVDateRange *nvdr = NVDateRange.new;
+    NSDateComponents *dateComponents = [nvdr componentsFromDate:NSDate.date];
+    NSDate *startOfToday = [nvdr startOfDayDateForDate:NSDate.date];
+    int startOfTomorrow = (startOfToday.timeIntervalSince1970 + SECONDS_PER_DAY);
+    NSInteger daysToNextMonday = ((9 - dateComponents.weekday) % 7);
+    int startOfNextMonday = (startOfToday.timeIntervalSince1970 + (SECONDS_PER_DAY * daysToNextMonday));
+    
+    startTime = (((startTime / 100) * 60) + (startTime % 100));
+    endTime = (((endTime / 100) * 60) + (endTime % 100));
+    int numQueriesPerDay = (((endTime - startTime) / interval) + 1);
+    startTime *= 60;
+    interval *= 60;
+    NSMutableArray<NSNumber *> *timeArray = NSMutableArray.array;
+    int currentTime = 0;
+    
+    switch (span)
+    {
+        case TimeArraySpanNextDay:
+            currentTime = (startOfTomorrow + startTime);
+            
+            for (int i = 0; i < numQueriesPerDay; i++)
+            {
+                [timeArray addObject:[NSNumber numberWithInt:currentTime]];
+                currentTime += interval;
+            }
+            break;
+        case TimeArraySpanNextWorkWeekDay:
+            currentTime = (startOfNextMonday + startTime);
+            
+            for (int i = 0; i < numQueriesPerDay; i++)
+            {
+                [timeArray addObject:[NSNumber numberWithInt:currentTime]];
+                currentTime += interval;
+            }
+            break;
+        case TimeArraySpanNextWorkWeek:
+            for (int i = 0; i < 5; i++)
+            {
+                currentTime = (startOfNextMonday + (i * SECONDS_PER_DAY) + startTime);
+                
+                for (int j = 0; j < numQueriesPerDay; j++)
+                {
+                    [timeArray addObject:[NSNumber numberWithInt:currentTime]];
+                    currentTime += interval;
+                }
+            }
+            break;
+        case TimeArraySpanNextWeek:
+            for (int i = 0; i < 7; i++)
+            {
+                currentTime = (startOfTomorrow + (i * SECONDS_PER_DAY) + startTime);
+                
+                for (int j = 0; j < numQueriesPerDay; j++)
+                {
+                    [timeArray addObject:[NSNumber numberWithInt:currentTime]];
+                    currentTime += interval;
+                }
+            }
+            break;
+        default:
+            break;
+    }
+    
+    return timeArray.copy;
+}
+
 + (void)getCurrentFromDate:(NSInteger *)fromDate
                     toDate:(NSInteger *)toDate
 {
     NVDateRange *nvdr = NVDateRange.new;
-    
-    NSDateComponents *dateComponents = [nvdr.calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
-                                        NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
-                                                        fromDate:NSDate.date];
-    
+    NSDateComponents *dateComponents = [nvdr componentsFromDate:NSDate.date];
     NSDate *from = nil, *to = nil;
     
     switch ([UserDefaults.defaults integerForKey:@"SelectedDateRange"])
@@ -223,10 +296,7 @@
     
     else
     {
-        NSDateComponents *dateComponents = [nvdr.calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
-                                            NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
-                                                            fromDate:NSDate.date];
-        
+        NSDateComponents *dateComponents = [nvdr componentsFromDate:NSDate.date];
         dateComponents.day -= 6;
         nvdr.fromDatePicker.date = [nvdr startOfDayDateForDate:[nvdr.calendar dateFromComponents:dateComponents]];
     }
@@ -572,10 +642,7 @@
 {
     NSDate *fromDate = nil;
     NSDate *toDate = nil;
-    
-    NSDateComponents *dateComponents = [_calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
-                                        NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
-                                                    fromDate:NSDate.date];
+    NSDateComponents *dateComponents = [self componentsFromDate:NSDate.date];
     
     switch ((DateRangeType)button.tag)
     {
@@ -675,9 +742,7 @@
         
         if (_interval != DateRangeInvervalNone)
         {
-            NSDateComponents *dateComponents = [_calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
-                                                NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
-                                                            fromDate:_fromDatePicker.date];
+            NSDateComponents *dateComponents = [self componentsFromDate:_fromDatePicker.date];
             
             switch (_interval)
             {
@@ -703,9 +768,7 @@
             if (newDate.timeIntervalSince1970 > _maxDate)
                 newDate = [NSDate dateWithTimeIntervalSince1970:_maxDate];
             
-            dateComponents = [_calendar components:NSCalendarUnitYear|NSCalendarUnitWeekday|NSCalendarUnitMonth|
-                              NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
-                                          fromDate:newDate];
+            dateComponents = [self componentsFromDate:newDate];
             
             switch (_interval)
             {
@@ -805,6 +868,13 @@
                                             ofDate:date
                                            options:NSCalendarMatchStrictly];
     return newDate;
+}
+
+- (NSDateComponents *)componentsFromDate:(NSDate *)date
+{
+   return [_calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|
+           NSCalendarUnitWeekday|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
+                       fromDate:date];
 }
 
 @end

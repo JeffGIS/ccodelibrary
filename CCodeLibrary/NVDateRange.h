@@ -29,6 +29,15 @@ typedef NS_ENUM(NSInteger, DateRangeInverval)
     DateRangeInvervalYear,
 };
 
+typedef NS_ENUM(NSInteger, TimeArraySpan)
+{
+    TimeArraySpanNone,
+    TimeArraySpanNextDay,
+    TimeArraySpanNextWorkWeekDay,
+    TimeArraySpanNextWorkWeek,
+    TimeArraySpanNextWeek,
+};
+
 @class NVDateRange;
 
 @protocol NVDateRangeDelegate <NSObject>
@@ -43,6 +52,16 @@ didReturnFromDate:(NSInteger)fromDate
 
 @property (nonatomic, weak) id <NVDateRangeDelegate> delegate;
 @property (nonatomic) NSInteger minDate;
+
+/*
+ * startTime & endTime are 24 hour format (hhmm)
+ * endTime must be greater than startTime at least by interval
+ * interval is in minutes
+ */
++ (NSArray<NSNumber *> *)getArrayOfTimesWithStartTime:(int)startTime
+                                              endTime:(int)endTime
+                                                 span:(TimeArraySpan)span
+                                             interval:(int)interval;
 
 + (void)getCurrentFromDate:(NSInteger *)fromDate
                     toDate:(NSInteger *)toDate;
