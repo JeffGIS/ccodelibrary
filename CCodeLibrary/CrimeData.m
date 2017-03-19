@@ -413,7 +413,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     
     [_popoverView showAfter:0.0
-                  withTitle:[NSString stringWithFormat:@"Get update %i",(int)_myLastUpdate+1]];
+                  withTitle:[NSString stringWithFormat:@"Update %i of %i",(int)_myLastUpdate+1,_serversLastUpdate]];
     
     _popoverView.progressView.hidden = NO;
     _popoverView.progressLabel.hidden = NO;
@@ -524,6 +524,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     BOOL rtn = FALSE;
     double totLen;
+    int line = 0;
+    int nerr = 0;
     NSString *toDirectory = [NSString stringWithFormat:@"%@/Reports", _documentsDirectory];
     [NSFileManager.defaultManager createDirectoryAtPath:toDirectory
                             withIntermediateDirectories:YES
@@ -541,17 +543,22 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         FILE *fid = fopen(file.UTF8String, "rb");
         totLen = FileLength(fid);
         LPSTR str = malloc(INPUTBUFSIZE);
+        LPSTR laststr = malloc(INPUTBUFSIZE);
         _keepGoing = TRUE;
         BOOL opened = [self startTransaction];
         while (_keepGoing && fgetstring(str, (INPUTBUFSIZE - 2), fid))
         {
+            line++;
+            strcpy (laststr,str);
             [self getIdForUpdate:str
                           remove:NO];
-            [self executeCmd:str];
+            if (![self executeCmd:str])
+                nerr++;
             [_popoverView updateProgress:ftell(fid) / totLen];
         }
         fclose(fid);
         free(str);
+        free (laststr);
         [NSFileManager.defaultManager removeItemAtPath:file error:nil];
         [NSFileManager.defaultManager removeItemAtPath:path error:nil];
         NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO UPDATES VALUES (1,%li)",(long)(long)_myLastUpdate+1];
