@@ -1693,6 +1693,8 @@ IPOINT TranIPOINT (IPOINT InPoint,LPTRANDATA  hTran)
 
 long FileLength (FILE *fid)
 {
+    if (!fid)
+        return 0;
     fseek(fid, 0, SEEK_END);
     long totLen = ftell(fid);
     fseek(fid, 0, SEEK_SET);

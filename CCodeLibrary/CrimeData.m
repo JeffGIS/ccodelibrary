@@ -256,7 +256,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDate * now = [NSDate date];
     int timeInSeconds = [now timeIntervalSinceReferenceDate];
-    if (timeInSeconds - lastTime > nextTime * 60)
+    if (!autoUpdate || timeInSeconds - lastTime > nextTime * 60)
     {
         rtn = TRUE;
         _delegate = delegate;
@@ -539,26 +539,29 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     _popoverView.title = [NSString stringWithFormat:@"Loading update %li",(long)_myLastUpdate+1];
     if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0))
     {
+        BOOL opened = [self startTransaction];
         NSString * file = [NSString stringWithFormat:@"%@/cmdfile.txt",toDirectory];
         FILE *fid = fopen(file.UTF8String, "rb");
-        totLen = FileLength(fid);
-        LPSTR str = malloc(INPUTBUFSIZE);
-        LPSTR laststr = malloc(INPUTBUFSIZE);
-        _keepGoing = TRUE;
-        BOOL opened = [self startTransaction];
-        while (_keepGoing && fgetstring(str, (INPUTBUFSIZE - 2), fid))
+        if (fid)
         {
-            line++;
-            strcpy (laststr,str);
-            [self getIdForUpdate:str
-                          remove:NO];
-            if (![self executeCmd:str])
-                nerr++;
-            [_popoverView updateProgress:ftell(fid) / totLen];
+            totLen = FileLength(fid);
+            LPSTR str = malloc(INPUTBUFSIZE);
+            LPSTR laststr = malloc(INPUTBUFSIZE);
+            _keepGoing = TRUE;
+            while (_keepGoing && fgetstring(str, (INPUTBUFSIZE - 2), fid))
+            {
+                line++;
+                strcpy (laststr,str);
+                [self getIdForUpdate:str
+                              remove:NO];
+                if (![self executeCmd:str])
+                    nerr++;
+                [_popoverView updateProgress:ftell(fid) / totLen];
+            }
+            fclose(fid);
+            free(str);
+            free (laststr);
         }
-        fclose(fid);
-        free(str);
-        free (laststr);
         [NSFileManager.defaultManager removeItemAtPath:file error:nil];
         [NSFileManager.defaultManager removeItemAtPath:path error:nil];
         NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO UPDATES VALUES (1,%li)",(long)(long)_myLastUpdate+1];
