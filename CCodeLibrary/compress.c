@@ -85,7 +85,7 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
     char File[PATH_MAX], OutFile[PATH_MAX];
     short Version, endMarker;
     FILE *FidTF;
-    BOOL rtn = TRUE;
+    BOOL rtn = FALSE;
     LPSTR pBS;
     FidTF = fopen(TransferFileName,"rb");
     long fileLen;
@@ -113,28 +113,31 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
     fseek(FidTF, 0, SEEK_SET);
     fread(&Version, sizeof(short), 1, FidTF);
     fread(&MaxLength, sizeof(int), 1, FidTF);
-    if (offset)
-        fseek(FidTF, offset, SEEK_SET);
-    BigRead(FidTF, &len, 4);
-    
-    while (rtn && len > 0)
+    if (offset >= 0 && offset < fileLen)
     {
-        BigRead (FidTF, File, len);
-        
-        if (!(pBS = strrchr(File,'\\')))
-        {
-            pBS = File;
-        }
-        else
-        {
-            pBS++;
-        }
-        sprintf(OutFile, "%s/%s", toDirectory, pBS);
-        rtn = GetFileFromTransferFile(0, FidTF, OutFile,  MaxLength);
-        nFilesRead++;
-        if (!rtn || (nfilestodecompress && nFilesRead >= nfilestodecompress))
-            goto Exit;
+        fseek(FidTF, offset, SEEK_SET);
         BigRead(FidTF, &len, 4);
+        rtn = TRUE;
+        while (rtn && len > 0 && len + offset < fileLen)
+        {
+            BigRead (FidTF, File, len);
+            
+            if (!(pBS = strrchr(File,'\\')))
+            {
+                pBS = File;
+            }
+            else
+            {
+                pBS++;
+            }
+            sprintf(OutFile, "%s/%s", toDirectory, pBS);
+            rtn = GetFileFromTransferFile(0, FidTF, OutFile,  MaxLength);
+            nFilesRead++;
+            if (!rtn || (nfilestodecompress && nFilesRead >= nfilestodecompress))
+                goto Exit;
+            offset = ftell(FidTF);
+            BigRead(FidTF, &len, 4);
+        }
     }
     
 Exit:
