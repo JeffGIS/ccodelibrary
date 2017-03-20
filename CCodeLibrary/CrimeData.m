@@ -285,6 +285,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
         nextTime = 45 - minutes;
     else
         nextTime = 60 - minutes + 15;
+    nextTime += 7;
     lastTime = timeInSeconds;
     return rtn;
 }

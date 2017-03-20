@@ -1067,6 +1067,7 @@
     }
     if (!tot)
         return;
+    nRanges = max (1,nRanges);
     CGFloat baseProgress = (CGFloat)iRange / nRanges;
     CGFloat thisProgress = baseProgress + current / (CGFloat)(tot * nRanges);
     progress = thisProgress * 100;
