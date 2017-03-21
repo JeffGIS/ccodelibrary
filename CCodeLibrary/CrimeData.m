@@ -40,8 +40,15 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     if (self)
     {
         _documentsDirectory = UserDefaults.defaults.sharedFilePath;
+        _documentsDirectory = [_documentsDirectory stringByAppendingString:@"/MplsPolice"];
         _fileName = @"CrimeData.slt";
         _path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
+        _reportsDirectory = [NSString stringWithFormat:@"%@/Reports", _documentsDirectory];
+        [NSFileManager.defaultManager createDirectoryAtPath:_reportsDirectory
+                                withIntermediateDirectories:YES
+                                                 attributes:nil
+                                                      error:nil];
+        
     }
     
     return self;
@@ -111,7 +118,9 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     [self close:YES];
     
     BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
-    error:nil];
+                                                       error:nil];
+         st = [NSFileManager.defaultManager removeItemAtPath:_reportsDirectory
+                                                       error:nil];
     return st;
 }
 
@@ -121,16 +130,15 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     BOOL opened = [self open];
     if (_isOpen && _fileSize > 0)
     {
-        NSString *query = [NSString stringWithFormat:@"SELECT max(id) FROM OFFENSEXY"];
+        NSString *query = [NSString stringWithFormat:@"SELECT VersionNum FROM VERSION"];
         
         sqlite3_stmt *statement = NULL;
         
         SQLOK(149,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
-            int maxID = sqlite3_column_int(statement, 0);
-            if (maxID > 0)
-                rtn = 0;
+            LPSTR version = sqlite3_column_text(statement, 0);
+            rtn = atoi (version);
         }
         SQLOK(150,sqlite3_finalize(statement), _database);
     }
@@ -156,7 +164,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 
 - (NSInteger) lastUpdate
 {
-    NSInteger rtn = 1;
+    NSInteger rtn = 0;
     BOOL opened = [self open];
     if (_isOpen && _fileSize > 0)
     {
@@ -230,7 +238,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     {
         //    NSString *file = [NSBundle.mainBundle pathForResource:@"3496486"
         //                                                   ofType:@"TXT"];
-        NSString *toDirectory = [NSString stringWithFormat:@"%@/Reports", cd.documentsDirectory];
+        NSString *toDirectory = cd.reportsDirectory;
         NSString *file = [NSString stringWithFormat:@"%@/%i.gcf",toDirectory,ifile];
         NSString *reportFile = [NSString stringWithFormat:@"%@/%i.TXT",toDirectory,(int)cnumber];
 //        int fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:file
@@ -527,13 +535,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     double totLen;
     int line = 0;
     int nerr = 0;
-    NSString *toDirectory = [NSString stringWithFormat:@"%@/Reports", _documentsDirectory];
-    [NSFileManager.defaultManager createDirectoryAtPath:toDirectory
-                            withIntermediateDirectories:YES
-                                             attributes:nil
-                                                  error:nil];
-    
-
+    NSString *toDirectory = _reportsDirectory;
     int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:path
                                                                        error:nil].fileSize;
 

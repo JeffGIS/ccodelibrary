@@ -68,8 +68,8 @@ Exit:
 -(bool) DecompressGMZipFile:(char *)TransferFileName
                 toDirectory:(char *)toDirectory
 {
-    return DecompressGMZipFile(TransferFileName,toDirectory,0,0);
-/*    int	len, MaxLength;
+//    return DecompressGMZipFile(TransferFileName,toDirectory,0,0);
+    int	len, MaxLength;
     char File[PATH_MAX], OutFile[PATH_MAX];
     short Version, endMarker;
     FILE *FidTF;
@@ -128,6 +128,6 @@ Exit:
     
 Exit:
     fclose(FidTF);
-    return rtn;*/
+    return rtn;
 }
 @end
