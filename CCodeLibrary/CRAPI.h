@@ -9,6 +9,7 @@
 #import "Colors.h"
 #import "MapToolbar.h"
 #import "NVDocumentManager.h"
+#import "NVSendEmail.h"
 
 #define MANAGEMENT_MODULE   1
 #define PRELIM_MODULE       2
@@ -125,6 +126,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property NSNumberFormatter *dollarFmt;
 @property NSNumberFormatter *acreFmt;
 @property MNMXCORD lastViewBounds;
+@property (nonatomic) NVSendEmail *currentEmail;
 
 + (CRAPI *)sharedInstance;
 

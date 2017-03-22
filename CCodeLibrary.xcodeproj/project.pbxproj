@@ -62,6 +62,8 @@
 		697B37711B94B7D60066978B /* NVTextDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 697B37701B94B7D60066978B /* NVTextDrawing.m */; };
 		697B37721B94C0E00066978B /* NVTextDrawing.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697B376F1B94B7D60066978B /* NVTextDrawing.h */; };
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
+		698037531E82D58A00C3E49D /* NVSendEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 698037521E82D58A00C3E49D /* NVSendEmail.m */; };
+		698037541E82DC6400C3E49D /* NVSendEmail.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698037511E82D58A00C3E49D /* NVSendEmail.h */; };
 		6986AF841C7C119E0059DD1B /* NVDigitizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6986AF831C7C119E0059DD1B /* NVDigitizerView.m */; };
 		6986AF851C7CBD820059DD1B /* NVDigitizerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6986AF821C7C119E0059DD1B /* NVDigitizerView.h */; };
 		698C20C81DCB030B00F800C3 /* NVKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C20C71DCB030B00F800C3 /* NVKeyboard.m */; };
@@ -358,6 +360,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				698037541E82DC6400C3E49D /* NVSendEmail.h in CopyFiles */,
 				BB235EFB1E5F552700E97495 /* ArrayOfNumbers.h in CopyFiles */,
 				697486451E5C89450051B5BC /* NVPager.h in CopyFiles */,
 				6917A7721E5B423C0012BDE4 /* CensusData.h in CopyFiles */,
@@ -558,6 +561,8 @@
 		697560BD1CB18D5A006EEA14 /* NVMarkerInfoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVMarkerInfoButton.m; sourceTree = "<group>"; };
 		697B376F1B94B7D60066978B /* NVTextDrawing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextDrawing.h; sourceTree = "<group>"; };
 		697B37701B94B7D60066978B /* NVTextDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextDrawing.m; sourceTree = "<group>"; };
+		698037511E82D58A00C3E49D /* NVSendEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSendEmail.h; sourceTree = "<group>"; };
+		698037521E82D58A00C3E49D /* NVSendEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSendEmail.m; sourceTree = "<group>"; };
 		6986AF821C7C119E0059DD1B /* NVDigitizerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDigitizerView.h; sourceTree = "<group>"; };
 		6986AF831C7C119E0059DD1B /* NVDigitizerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDigitizerView.m; sourceTree = "<group>"; };
 		698C20C61DCB030B00F800C3 /* NVKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVKeyboard.h; sourceTree = "<group>"; };
@@ -1170,6 +1175,8 @@
 				6998225D1C6904E4003476DD /* NVDocumentManager.m */,
 				691B5DCF1E52668600C90383 /* NVGetODR.h */,
 				691B5DD01E52668600C90383 /* NVGetODR.m */,
+				698037511E82D58A00C3E49D /* NVSendEmail.h */,
+				698037521E82D58A00C3E49D /* NVSendEmail.m */,
 				691636201C1FC790000C61B8 /* NVTileCompiler.h */,
 				691636211C1FC790000C61B8 /* NVTileCompiler.m */,
 				A9735AF219E77B6800894359 /* Reachability.h */,
@@ -1607,6 +1614,7 @@
 				EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */,
 				69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */,
 				EB0E4FFD1C6288BF00849766 /* DispersePoint.m in Sources */,
+				698037531E82D58A00C3E49D /* NVSendEmail.m in Sources */,
 				EB568F391C8C9BAB00C45ACE /* CompressDecompress.m in Sources */,
 				EBC01D2D1BED1C8C0004C751 /* trnsit.c in Sources */,
 				EBC01D281BED1C8C0004C751 /* rstar.c in Sources */,
