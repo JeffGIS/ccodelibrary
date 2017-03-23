@@ -550,8 +550,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0))
     {
         BOOL opened = [self startTransaction];
-        NSString * file = [NSString stringWithFormat:@"%@/cmdfile.txt",toDirectory];
+        NSString * file = [NSString stringWithFormat:@"%@/cmdfile%i.txt",toDirectory,_nextUpdate];
         FILE *fid = fopen(file.UTF8String, "rb");
+        if (!fid)
+        {
+            file = [NSString stringWithFormat:@"%@/cmdfile.txt",toDirectory];
+            fid = fopen(file.UTF8String, "rb");
+        }
         if (fid)
         {
             totLen = FileLength(fid);
