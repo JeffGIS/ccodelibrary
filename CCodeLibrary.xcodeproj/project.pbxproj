@@ -1327,12 +1327,12 @@
 				1F5150A21CE3959000BA4A5E /* AlleyWallData.m */,
 				BB6777961C95C13200A2D508 /* CensusData.h */,
 				BB6777971C95C13200A2D508 /* CensusData.m */,
+				EBA517B51BCA1355005A9CA8 /* CrimeData.h */,
+				EBA517B61BCA1355005A9CA8 /* CrimeData.m */,
 				EBAB422D1B2B073A00C36FFC /* CurbRampData.h */,
 				EBAB422E1B2B073A00C36FFC /* CurbRampData.m */,
 				A99873231B59ACC100200CA9 /* SewerData.h */,
 				A99873241B59ACC100200CA9 /* SewerData.m */,
-				EBA517B51BCA1355005A9CA8 /* CrimeData.h */,
-				EBA517B61BCA1355005A9CA8 /* CrimeData.m */,
 			);
 			name = Databases;
 			sourceTree = "<group>";

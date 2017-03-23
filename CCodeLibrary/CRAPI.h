@@ -123,6 +123,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property int serverToUse;
 @property CLLocation *lastLocation;
 @property BOOL hideConnectButton, appChanged;
+@property BOOL inDataUpdate;
 @property NSNumberFormatter *dollarFmt;
 @property NSNumberFormatter *acreFmt;
 @property MNMXCORD lastViewBounds;

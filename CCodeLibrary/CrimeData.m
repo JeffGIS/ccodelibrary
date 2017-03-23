@@ -349,6 +349,10 @@ didReceiveMessage:(NSString *)message
             case GMSMessageGetPoliceUpdate:
             {
                 _myLastUpdate = [self lastUpdate];
+                if (_myLastUpdate != 131)
+                    _nextUpdate = _myLastUpdate + 1;
+                else
+                    _nextUpdate = 1101;
                 _serversLastUpdate = message.integerValue-1;
                 //_serversLastUpdate =570;
                 if (_updateTimer)
@@ -399,7 +403,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)updateFromServer:(NSTimer *)timer
 {
-    if (_myLastUpdate >= _serversLastUpdate)
+    if (_nextUpdate >= _serversLastUpdate)
     {
         if ([_popoverView.superview.subviews containsObject:_popoverView])
         {
@@ -422,13 +426,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     
     [_popoverView showAfter:0.0
-                  withTitle:[NSString stringWithFormat:@"Update %i of %i",(int)_myLastUpdate+1,_serversLastUpdate]];
+                  withTitle:[NSString stringWithFormat:@"Update %i of %i",(int)_nextUpdate,_serversLastUpdate]];
     
     _popoverView.progressView.hidden = NO;
     _popoverView.progressLabel.hidden = NO;
     
     BOOL fileExists = NO;
-    NSString *fileName = [NSString stringWithFormat:@"%i.gcf",(int)_myLastUpdate+1];
+    NSString *fileName = [NSString stringWithFormat:@"%i.gcf",(int)_nextUpdate];
     NSString *fromDir = @"GMMobile/MplsPolice";
     NSString *toDir = NSTemporaryDirectory ( );
     _pull = FTPDataPull.pull;
@@ -457,7 +461,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     if (status == FTPStatusOK || status == FTPStatusFileExists)
     {
         [self loadUpdate:path];
-        _myLastUpdate++;
+        if (_nextUpdate == 131)
+            _nextUpdate = 1101;
+        else
+            _nextUpdate++;
         _updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.05
                                                         target:self
                                                       selector:@selector(updateFromServer:)
@@ -539,7 +546,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:path
                                                                        error:nil].fileSize;
 
-    _popoverView.title = [NSString stringWithFormat:@"Loading update %li",(long)_myLastUpdate+1];
+    _popoverView.title = [NSString stringWithFormat:@"Loading update %li",(long)_nextUpdate];
     if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0))
     {
         BOOL opened = [self startTransaction];
@@ -567,7 +574,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         }
         [NSFileManager.defaultManager removeItemAtPath:file error:nil];
         [NSFileManager.defaultManager removeItemAtPath:path error:nil];
-        NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO UPDATES VALUES (1,%li)",(long)(long)_myLastUpdate+1];
+        NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO UPDATES VALUES (1,%li)",(long)(long)_nextUpdate];
         [self executeCmd:(LPSTR)cmd.UTF8String];
         [self commitTransaction];
         [self close:opened];
