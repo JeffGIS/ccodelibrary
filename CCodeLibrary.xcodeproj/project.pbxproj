@@ -107,6 +107,7 @@
 		69E7FCA71D8129CD00171E44 /* NVPopoverSlider.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E7FCA41D81249500171E44 /* NVPopoverSlider.h */; };
 		69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E8E6681C66802F00CB26CB /* NSData+CRC.m */; };
 		69E8E66A1C66809E00CB26CB /* NSData+CRC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E8E6671C66802F00CB26CB /* NSData+CRC.h */; };
+		69E9E3CA1E895BCF002157D9 /* NVContactGroupData.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E9E3C91E895BCF002157D9 /* NVContactGroupData.m */; };
 		69EB2C2A1C8755C100E1F21E /* UIDevice+Storage.m in Sources */ = {isa = PBXBuildFile; fileRef = 69EB2C291C8755C100E1F21E /* UIDevice+Storage.m */; };
 		69EB2C2B1C87579E00E1F21E /* UIDevice+Storage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69EB2C281C8755C100E1F21E /* UIDevice+Storage.h */; };
 		69F482321DB7314200E4BDB5 /* NVSpreadsheetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F482311DB7314200E4BDB5 /* NVSpreadsheetVC.m */; };
@@ -610,6 +611,8 @@
 		69E7FCA51D81249500171E44 /* NVPopoverSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPopoverSlider.m; sourceTree = "<group>"; };
 		69E8E6671C66802F00CB26CB /* NSData+CRC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+CRC.h"; sourceTree = "<group>"; };
 		69E8E6681C66802F00CB26CB /* NSData+CRC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+CRC.m"; sourceTree = "<group>"; };
+		69E9E3C81E895BCF002157D9 /* NVContactGroupData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVContactGroupData.h; sourceTree = "<group>"; };
+		69E9E3C91E895BCF002157D9 /* NVContactGroupData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVContactGroupData.m; sourceTree = "<group>"; };
 		69EB2C281C8755C100E1F21E /* UIDevice+Storage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+Storage.h"; sourceTree = "<group>"; };
 		69EB2C291C8755C100E1F21E /* UIDevice+Storage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+Storage.m"; sourceTree = "<group>"; };
 		69F482301DB7314200E4BDB5 /* NVSpreadsheetVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSpreadsheetVC.h; sourceTree = "<group>"; };
@@ -1331,6 +1334,8 @@
 				EBA517B61BCA1355005A9CA8 /* CrimeData.m */,
 				EBAB422D1B2B073A00C36FFC /* CurbRampData.h */,
 				EBAB422E1B2B073A00C36FFC /* CurbRampData.m */,
+				69E9E3C81E895BCF002157D9 /* NVContactGroupData.h */,
+				69E9E3C91E895BCF002157D9 /* NVContactGroupData.m */,
 				A99873231B59ACC100200CA9 /* SewerData.h */,
 				A99873241B59ACC100200CA9 /* SewerData.m */,
 			);
@@ -1540,6 +1545,7 @@
 				A9E2130E1AFE4BFC005ECBBA /* NVImagePickerController.m in Sources */,
 				EBC01D2F1BED1C8C0004C751 /* vearth.c in Sources */,
 				EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */,
+				69E9E3CA1E895BCF002157D9 /* NVContactGroupData.m in Sources */,
 				EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */,
 				69EB2C2A1C8755C100E1F21E /* UIDevice+Storage.m in Sources */,
 				EBC01D181BED1C8C0004C751 /* jup404.c in Sources */,
