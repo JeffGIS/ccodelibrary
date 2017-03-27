@@ -23,15 +23,9 @@
     {
         _path = [NSString stringWithFormat:@"%@/ContactGroupDatabase.sqlite3", UserDefaults.defaults.sharedFilePath];
         BOOL opened = [self open];
-        
-        NSString *cmd =  @"CREATE TABLE IF NOT EXISTS ContactGroups (ID INT PRIMARY KEY,Name TEXT);\
-        CREATE TABLE IF NOT EXISTS Routes (RouteNum INT,PropertyNum INT,DestinationNum INT,Direction INT,Distance REAL,Time REAL);\
-        CREATE INDEX IF NOT EXISTS PropNum_index ON Routes (PropertyNum ASC);";
-        
+        NSString *cmd =  @"CREATE TABLE IF NOT EXISTS ContactGroups (ID INT PRIMARY KEY,Name TEXT,EmailList TEXT);";
         BOOL rtn = !SQLOK(0,sqlite3_exec(_database, cmd.UTF8String, 0, 0, 0), _database);
-        
         [self close:opened];
-            
     }
     
     return self;
