@@ -27,6 +27,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 @property (nonatomic) NSTimer *updateTimer;
 @property FTPDataPull *pull;
 @property BOOL keepGoing;
+@property BOOL firstFail;
 @property (nonatomic) UIView *fromView;
 
 @end
@@ -259,6 +260,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
       delegate:(id)delegate
 {
     BOOL rtn = FALSE;
+    _firstFail = TRUE;
     static int nextTime = -1;
     static int lastTime = 0;
     NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
@@ -267,6 +269,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     if (!autoUpdate || timeInSeconds - lastTime > nextTime * 60)
     {
         rtn = TRUE;
+        
         _delegate = delegate;
         _GMServer = GeoMasterServer.open;
         _GMServer.useTestServer = NO;
@@ -465,6 +468,15 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             _nextUpdate = 1101;
         else
             _nextUpdate++;
+        _updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.05
+                                                        target:self
+                                                      selector:@selector(updateFromServer:)
+                                                      userInfo:nil
+                                                       repeats:NO];
+    }
+    else if (_firstFail)
+    {
+        _firstFail = FALSE;
         _updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.05
                                                         target:self
                                                       selector:@selector(updateFromServer:)
