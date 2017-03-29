@@ -13,8 +13,7 @@
 @property int width;
 @property int height;
 @property int nGrids;
-@property int * grid1;
-@property int * grid2;
+@property int ** grids;
 @property int pointGridSize;
 @property int * pointGrid;
 @property int pointSize;

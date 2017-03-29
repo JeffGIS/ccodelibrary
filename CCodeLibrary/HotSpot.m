@@ -12,10 +12,11 @@
 @implementation HotSpot
 - (void) releaseMem
 {
-    if (_grid1)
-        free (_grid1);
-    if (_grid2)
-        free (_grid2);
+    for (int igrid = 0;igrid < _nGrids;igrid++)
+    {
+        int * grid = _grids[igrid];
+        free (grid);
+    }
     if (_pointGrid)
         free (_pointGrid);
 }
@@ -52,9 +53,11 @@
     hs.nGrids = nGrids;
     hs.width = width;
     hs.height = height;
-    hs.grid1 = calloc (width*height,sizeof(int));
-    if (nGrids == 2)
-        hs.grid2 = calloc (width*height,sizeof(int));
+    hs.grids = malloc (nGrids * sizeof (int *));
+    for (int igrid = 0; igrid < nGrids;igrid++)
+    {
+        hs.grids[igrid] = calloc (width*height,sizeof(int));
+    }
     hs.pointGridSize = pointSize + 1;
     hs.pointGrid = calloc (hs.pointGridSize*hs.pointGridSize,sizeof(int));
     hs.pointSize = pointSize;
@@ -74,6 +77,8 @@
 
 - (void) addPointAtX:(int)x andY:(int)y
 {
+    int igrid = 0;
+    int * grid = _grids[igrid];
     x -= _pointSize/2 + 1;
     y -= _pointSize/2 + 1;
     for (int row = 0;row < _pointGridSize; row++)
@@ -84,8 +89,8 @@
             if (indx >= 0)
             {
                 int pindex = [self pointIndex:row column:col];
-                _grid1[indx] += _pointGrid[pindex];
-                _maxGridVal = max (_maxGridVal,_grid1[indx]);
+                grid[indx] += _pointGrid[pindex];
+                _maxGridVal = max (_maxGridVal,grid[indx]);
             }
         }
        
@@ -97,6 +102,8 @@
     CGRect rect;
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
     CGFloat colors[4] = {1,1,1,1};
+    int igrid = 0;
+    int * grid = _grids[igrid];
     
     colors[3] = 0.75;
     rect.size.width = 1;
@@ -108,9 +115,9 @@
         {
             rect.origin.x = col;
             int indx = [self gridIndex:row column:col];
-            if (_grid1[indx])
+            if (grid[indx])
             {
-                colors[3] = pow((CGFloat)_grid1[indx],0.5) / pow(_maxGridVal,0.5);
+                colors[3] = pow((CGFloat)grid[indx],0.5) / pow(_maxGridVal,0.5);
 //                colors[3] = log10((CGFloat)_grid1[indx]) / log10(_maxGridVal);
 //                colors[3] = log((CGFloat)_grid1[indx]) / log(_maxGridVal);
                 colors[1] = colors[2] = 1.0 - colors[3];
@@ -125,6 +132,8 @@
 
 - (BOOL)dump:(NSString *)outFile
 {
+    int igrid = 0;
+    int * grid = _grids[igrid];
     if (!_maxGridVal)
         return FALSE;
     
@@ -145,7 +154,7 @@
             int indx = [self gridIndex:row
                                 column:col];
             
-            pgrid[indx] = (32 * _grid1[indx] / _maxGridVal);
+            pgrid[indx] = (32 * grid[indx] / _maxGridVal);
         }
     }
     
