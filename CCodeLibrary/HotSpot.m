@@ -74,8 +74,8 @@
 
 - (void) addPointAtX:(int)x andY:(int)y
 {
-    x -= _pointSize + 1;
-    y -= _pointSize + 1;
+    x -= _pointSize/2 + 1;
+    y -= _pointSize/2 + 1;
     for (int row = 0;row < _pointGridSize; row++)
     {
         for (int col = 0;col < _pointGridSize; col++)
