@@ -62,6 +62,11 @@
         if (defaultCrimeAdjustValueArea && defaultCrimeAdjustValueArea.length)
             _crimeAdjustValueArea = defaultCrimeAdjustValueArea;
         
+        NSString *defaultCrimeCompare = [UserDefaults.defaults stringForKey:@"CrimeCompareValue"];
+        
+        if (defaultCrimeCompare && defaultCrimeCompare.length)
+            _crimeCompare = defaultCrimeCompare;
+        
         _docManager = NVDocumentManager.new;
         _deviceLists = NSMutableDictionary.new;
         _assignediPadsArray = NSMutableArray.new;

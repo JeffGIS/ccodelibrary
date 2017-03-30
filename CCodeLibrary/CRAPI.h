@@ -100,6 +100,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property NSInteger fromDate, toDate;
 @property NSInteger crimeMode;
 @property (nonatomic, copy) NSString *crimeTarget;
+@property (nonatomic, copy) NSString *crimeCompare;
 @property (nonatomic, copy) NSString *crimeAdjustValue;
 @property (nonatomic, copy) NSString *crimeAdjustValueArea;
 @property (strong, nonatomic) MapToolbar *mapToolbar;
