@@ -31,6 +31,7 @@
 #import "HotSpot.h"
 #import "PointInAreaClass.h"
 #import "GetPriorityLocations.h"
+#import "NVDateRange.h"
 #import "GSSiDatePicker.h"
 #import "GSSiNotesView.h"
 #import "PickedItem.h"

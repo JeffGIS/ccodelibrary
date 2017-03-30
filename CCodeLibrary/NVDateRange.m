@@ -120,14 +120,16 @@
     dateComponents.year -= 1;
     NSMutableArray<NSNumber *> *monthArray = NSMutableArray.array;
     NSDate *currentDate = nil;
+    NSInteger now = [NSDate date].timeIntervalSince1970;
     
     for (int i = 0; i < 14; i++)
     {
         currentDate = [nvdr startOfDayDateForDate:[nvdr.calendar dateFromComponents:dateComponents]];
-        [monthArray addObject:[NSNumber numberWithInteger:currentDate.timeIntervalSince1970]];
+        NSInteger iTime = currentDate.timeIntervalSince1970;
+        [monthArray addObject:[NSNumber numberWithInteger:min(now,iTime)]];
         dateComponents.month++;
     }
-    
+ 
     return monthArray.copy;
 }
 

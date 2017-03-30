@@ -19,6 +19,8 @@
     }
     if (_pointGrid)
         free (_pointGrid);
+    if (_times)
+        free (_times);
 }
 - (void)dealloc
 {
@@ -44,6 +46,7 @@
 + (HotSpot *)initWithWidth:(int)width
                     Height:(int)height
                   NumGrids:(int)nGrids
+                 timeArray:(NSArray<NSNumber *>* )times
                  PointSize:(int)pointSize
                       tran:(LPTRANDATA)pTranLLtoView
 {
@@ -57,6 +60,13 @@
     for (int igrid = 0; igrid < nGrids;igrid++)
     {
         hs.grids[igrid] = calloc (width*height,sizeof(int));
+    }
+    if (times)
+    {
+        hs.nTimes = times.count;
+        hs.times = malloc (hs.nTimes * sizeof(int));
+        for (int i = 0;i<hs.nTimes;i++)
+            hs.times[i] = times[i].integerValue;
     }
     hs.pointGridSize = pointSize + 1;
     hs.pointGrid = calloc (hs.pointGridSize*hs.pointGridSize,sizeof(int));
@@ -75,9 +85,23 @@
     return hs;
 }
 
-- (void) addPointAtX:(int)x andY:(int)y
+-(int) selectGridFromTime:(int)time
 {
-    int igrid = 0;
+    if (_nGrids < 2)
+        return 0;
+    for (int iGrid = 0; iGrid<_nGrids;iGrid++)
+    {
+        if (time >= _times[iGrid] && time < _times[iGrid+1])
+            return iGrid;
+    }
+    return -1;
+}
+
+- (void) addPointAtX:(int)x andY:(int)y andTime:(int)time
+{
+    int igrid = [self selectGridFromTime:time];
+    if (igrid < 0 || igrid >= _nGrids)
+        return;
     int * grid = _grids[igrid];
     x -= _pointSize/2 + 1;
     y -= _pointSize/2 + 1;

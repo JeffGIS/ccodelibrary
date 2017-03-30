@@ -14,6 +14,8 @@
 @property int height;
 @property int nGrids;
 @property int ** grids;
+@property int * times;
+@property int nTimes;
 @property int pointGridSize;
 @property int * pointGrid;
 @property int pointSize;
@@ -22,9 +24,10 @@
 + (HotSpot *)initWithWidth:(int)width
                     Height:(int)height
                   NumGrids:(int)nGrids
+                 timeArray:(NSArray*)times
                  PointSize:(int)pointSize
                       tran:(LPTRANDATA)pTranLLtoView;
-- (void) addPointAtX:(int)x andY:(int)y;
+- (void) addPointAtX:(int)x andY:(int)y andTime:(int)time;
 - (void) display:(CGContextRef)context;
 - (BOOL) dump:(NSString*)outFile;
 
