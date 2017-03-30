@@ -112,6 +112,25 @@
     return timeArray.copy;
 }
 
++ (NSArray<NSNumber *> *)getArrayOfMonthsSpanningTime:(NSInteger)time
+{
+    NVDateRange *nvdr = NVDateRange.new;
+    NSDateComponents *dateComponents = [nvdr componentsFromDate:NSDate.date];
+    dateComponents.day = 1;
+    dateComponents.year -= 1;
+    NSMutableArray<NSNumber *> *monthArray = NSMutableArray.array;
+    NSDate *currentDate = nil;
+    
+    for (int i = 0; i < 14; i++)
+    {
+        currentDate = [nvdr startOfDayDateForDate:[nvdr.calendar dateFromComponents:dateComponents]];
+        [monthArray addObject:[NSNumber numberWithInteger:currentDate.timeIntervalSince1970]];
+        dateComponents.month++;
+    }
+    
+    return monthArray.copy;
+}
+
 + (void)getCurrentFromDate:(NSInteger *)fromDate
                     toDate:(NSInteger *)toDate
 {

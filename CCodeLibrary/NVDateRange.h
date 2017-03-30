@@ -63,6 +63,8 @@ didReturnFromDate:(NSInteger)fromDate
                                                  span:(TimeArraySpan)span
                                              interval:(int)interval;
 
++ (NSArray<NSNumber *> *)getArrayOfMonthsSpanningTime:(NSInteger)time;
+
 + (void)getCurrentFromDate:(NSInteger *)fromDate
                     toDate:(NSInteger *)toDate;
 
