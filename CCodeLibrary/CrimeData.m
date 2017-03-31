@@ -304,6 +304,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 - (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView
 {
     _keepGoing = FALSE;
+    [_updateTimer invalidate];
     [popoverView hide];
     if (_delegate)
         [_delegate CrimeDataUpdateDidComplete:0];
@@ -474,7 +475,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                       userInfo:nil
                                                        repeats:NO];
     }
-    else if (_firstFail)
+    else if (_firstFail && status != FTPStatusUserCancel)
     {
         _firstFail = FALSE;
         _updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.05
