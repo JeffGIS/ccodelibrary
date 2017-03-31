@@ -24,6 +24,8 @@ static BOOL _createDirectory = YES;
 
 - (BOOL)continue
 {
+    if (self.processingID < 0)
+        return YES;
     if (self.processingID == CRAPI.sharedInstance.keepProcessing)
         return YES;
     

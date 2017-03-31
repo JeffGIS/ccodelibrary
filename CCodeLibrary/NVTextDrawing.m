@@ -33,7 +33,7 @@
 
 + (BOOL)continue:(NSInteger) processingID
 {
-    if (!processingID)
+    if (processingID <= 0)
         return YES;
     if (processingID == CRAPI.sharedInstance.keepProcessing)
         return YES;
