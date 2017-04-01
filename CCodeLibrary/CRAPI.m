@@ -872,7 +872,7 @@
     BOOL rtn = TRUE;
     NSArray *arr = [instr componentsSeparatedByString:@" "];
     NSString * str = arr[0];
-    int server = str.integerValue;
+    int server = (int)str.integerValue;
     if (server != _serverToUse)
         rtn = FALSE;
     _serverToUse = server;
@@ -897,7 +897,7 @@
     if (arr.count > 3)
     {
         NSString* messNum = arr[0];
-        _currentMessageNum = messNum.integerValue;
+        _currentMessageNum = (int)messNum.integerValue;
         messNum = arr[1];
         rtn = [self processServerString:messNum];
         NSString* version = arr[2];

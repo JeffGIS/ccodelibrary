@@ -407,8 +407,8 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
         
         if (_tableView.allowsMultipleSelection)
         {
-            int start = MIN(indexPath.row, _lastRowTapped);
-            int stop  = MAX(indexPath.row, _lastRowTapped);
+            int start = (int)MIN(indexPath.row, _lastRowTapped);
+            int stop  = (int)MAX(indexPath.row, _lastRowTapped);
             NSArray<NSIndexPath *> *selectedRows = _tableView.indexPathsForSelectedRows;
             
             for (int i = start; i <= stop; i++)
@@ -460,7 +460,7 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
                     [_groupArray addObject:text];
                     
                     if ([textBefore(text, @"\x03") isEqualToString:cellText])
-                        _lastRowTapped = cellToSelect = [_groupArray indexOfObject:text];
+                        _lastRowTapped = cellToSelect = (int)[_groupArray indexOfObject:text];
                 }
             }
             
@@ -517,14 +517,14 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
         if (_includeCancel)
         {
             NSInteger index = [_textArray indexOfObject:_groupArray[paths.row - 1]];
-            [selectedRows addObject:[NSNumber numberWithInt:index]];
+            [selectedRows addObject:[NSNumber numberWithInt:(int)index]];
             [selectedTextArray addObject:_groupArray[paths.row]];
         }
         
         else
         {
             NSInteger index = [_textArray indexOfObject:_groupArray[paths.row]];
-            [selectedRows addObject:[NSNumber numberWithInt:index]];
+            [selectedRows addObject:[NSNumber numberWithInt:(int)index]];
             [selectedTextArray addObject:_groupArray[paths.row]];
         }
     }

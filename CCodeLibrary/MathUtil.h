@@ -7,7 +7,7 @@
 #include <stdio.h>
 #import <CoreGraphics/CoreGraphics.h>
 #include "CCodeTypes.h"
-#include "tilegraphics.h"
+#include "TileGraphics.h"
 
 double LTWOPI (double AZ1);
 void setP_TOL (double val);

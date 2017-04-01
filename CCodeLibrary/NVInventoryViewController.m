@@ -81,7 +81,7 @@
     _firstTime = YES;
     _pTranWToBMP = _pTranBMPToW = 0;
     _updateOption = NVUpdateOptionNone;
-    _currentRampType = [UserDefaults.defaults integerForKey:@"CurrentRampType"];
+    _currentRampType = (RampType)[UserDefaults.defaults integerForKey:@"CurrentRampType"];
     _targetSize = 160.0;
     
     double buttonHeight = 70.0, margin = 20.0;

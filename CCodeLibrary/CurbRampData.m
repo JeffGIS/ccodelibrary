@@ -956,7 +956,7 @@ void convertVersion_1_to_2 (LPSTR str)
     
     NSArray *calibrationValues = SharedDefaults.defaults.calibrationValueArray;
     NSArray *targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
-    int nCalibrationPoints = targetValues.count;
+    int nCalibrationPoints = (int)targetValues.count;
     int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][0] intValue];
     BOOL displayDegrees = (currentType == NVCalibrationTypeDegrees);
     

@@ -35,16 +35,16 @@
     if (_isOpen)
         return FALSE;
     
-    int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[CensusData computedFieldsPath]
-                                                                             error:nil].fileSize;
+    int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[CensusData computedFieldsPath]
+                                                                       error:nil].fileSize;
     if (fileSize <= 0)
     {
         SQLOK(145,sqlite3_open([CensusData computedFieldsPath].UTF8String, &_tempdatabase), _tempdatabase);
         SQLOK(146,sqlite3_close(_tempdatabase), _tempdatabase);
     }
     
-    fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:[CensusData databasePath]
-                                                                         error:nil].fileSize;
+    fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[CensusData databasePath]
+                                                                   error:nil].fileSize;
     if (fileSize > 0)
     {
         _isOpen = !SQLOK(145,sqlite3_open([CensusData databasePath].UTF8String, &_database), _database);

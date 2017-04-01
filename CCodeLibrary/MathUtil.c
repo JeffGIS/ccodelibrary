@@ -1729,7 +1729,7 @@ bool fputstring(LPSTR lpStr, FILE *Fid)
     
     if (Fid)
     {
-        len=strlen(lpStr);
+        len=(int)strlen(lpStr);
         if (len)
             rtn = BigWrite (Fid,(char *)lpStr,len,-1);
         rtn += BigWrite (Fid,"\r\n",2,-1);

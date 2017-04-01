@@ -63,10 +63,10 @@
     }
     if (times)
     {
-        hs.nTimes = times.count;
+        hs.nTimes = (int)times.count;
         hs.times = malloc (hs.nTimes * sizeof(int));
         for (int i = 0;i<hs.nTimes;i++)
-            hs.times[i] = times[i].integerValue;
+            hs.times[i] = (int)times[i].integerValue;
     }
     hs.pointGridSize = pointSize + 1;
     hs.pointGrid = calloc (hs.pointGridSize*hs.pointGridSize,sizeof(int));

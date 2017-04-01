@@ -71,7 +71,7 @@ bool wmsRequest(const char *filepath, const char *layer, dbounds bounds, unsigne
     
     memmove(last4bytes, buffer, 4);
     memmove(header ,buffer, 4);
-    hlen = byteCount;
+    hlen = (int)byteCount;
     
     // read the WMS header
     while (*(LPINT)last4bytes != *pHeaderTerminate)
@@ -126,7 +126,7 @@ GetNextChunk:
             goto ErrOut;
     }
     chunkHeader[chlen - 2] = 0;
-    int chunkLen = strtol(chunkHeader, 0, 16);
+    int chunkLen = (int)strtol(chunkHeader, 0, 16);
     
     if (chunkLen <= 0)
     {

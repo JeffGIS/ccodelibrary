@@ -154,7 +154,8 @@
 - (NSArray *)directoriesInDirectory:(NSString *)directory
 {
     NSFileManager *fm = NSFileManager.defaultManager;
-    NSArray *files = [fm directoryContentsAtPath:directory];
+    NSError *error = nil;
+    NSArray *files = [fm contentsOfDirectoryAtPath:directory error:&error];
     NSMutableArray *directoryList = NSMutableArray.new;
     
     for (NSString *file in files)
@@ -167,7 +168,7 @@
         
         if (isDir)
         {
-            NSArray *dirContents = [fm directoryContentsAtPath:path];
+            NSArray *dirContents = [fm contentsOfDirectoryAtPath:path error:&error];
             
             if (dirContents.count)
                 [directoryList addObject:file];

@@ -138,7 +138,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
         SQLOK(149,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
-            LPSTR version = sqlite3_column_text(statement, 0);
+            LPSTR version = (LPSTR)sqlite3_column_text(statement, 0);
             rtn = atoi (version);
         }
         SQLOK(150,sqlite3_finalize(statement), _database);
@@ -289,7 +289,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
         [_popoverView showAfter:waitTime
                       withTitle:@"Waiting\nto Connect\nto Manager"];
     }
-    int minutes = [cal component:NSCalendarUnitMinute fromDate:now];
+    int minutes = (int)[cal component:NSCalendarUnitMinute fromDate:now];
     if (minutes < 15)
         nextTime = 15 - minutes;
     else if (minutes < 45)

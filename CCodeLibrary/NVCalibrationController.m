@@ -918,7 +918,7 @@ didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath
     if (indexPath.row == 0)
         return;
     _startValue = [_calibrationValues[NVCalibrationArrayIndexValue][indexPath.row] doubleValue];
-    _addAtIndex = indexPath.row;
+    _addAtIndex = (int)indexPath.row;
     [self addCalibrationValue:nil];
     
 }

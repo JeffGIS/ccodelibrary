@@ -17,7 +17,7 @@ int SQLOK(int from,int sqlReturn, sqlite3 *database)
         NSString * dbName = @"";
         int shared = 0;
         
-        char *name = sqlite3_db_filename(database, "main");
+        char *name = (char *)sqlite3_db_filename(database, "main");
         if (name)
         {
             NSString *fullPath = [NSString stringWithUTF8String:name];

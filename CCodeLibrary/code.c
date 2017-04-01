@@ -541,7 +541,7 @@ GSSiExitProg (1017);
         *OffDist = MinOffDist;
         *AZ = MinAZ;
         *PickedPoint = MinPickedPoint; 
-        *pFromPtID = MinFromPt;
+        *pFromPtID = (int)MinFromPt;
 {
 #if ENABLETRACE
 GSSiExitProg (1017);

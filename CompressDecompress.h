@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Compress.h"
+#import "compress.h"
 #import "GSSiPopoverView.h"
 
 @interface CompressDecompress : NSObject
