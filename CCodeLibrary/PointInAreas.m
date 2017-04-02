@@ -21,7 +21,8 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 @property NSString * areaID;
 @property COLORDEF colordef;
 @property int icolor;
-@property double count;
+@property double count1, count2;
+@property int nCounts;
 @property double areaInPixels;
 @property int pixelsInMask;
 @property float pctInMask;
@@ -31,6 +32,13 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 @end
 
 @implementation AreaData
+- (id)init
+{
+    self = [super init];
+    
+    return self;
+}
+
 @end
 
 @implementation PointInAreas
@@ -323,14 +331,18 @@ static int ii;
     }
     for (AreaData *ad in _areaInfo)
     {
+        if (ad.nCounts)
+            ad.count1 = ad.count2 - ad.count1;
         if (ad.value)
-            ad.count /= ad.value;
+        {
+            ad.count1 /= ad.value;
+        }
         else
             ii=1;
         ad.pctInMask = 100.0 * ad.pixelsInMask / ad.areaInPixels;
         if (ad.pctInMask >= MINAREAPCT)
         {
-            maxCount = max (maxCount,ad.count);
+            maxCount = max (maxCount,fabs(ad.count1));
             maxValue = max (maxValue,ad.value);
         }
     }
@@ -341,12 +353,16 @@ static int ii;
         if (ad.pctInMask >= MINAREAPCT)
         {
             if (maxCount)
-                clr = 1.0 - ad.count/maxCount;
+                clr = 1.0 - fabs(ad.count1)/maxCount;
         }
         else
             alpha = 0;
-        CGFloat color[4] = {clr,clr,clr, alpha};
-        ad.displayColor = CGColorCreate(_colorSpace, color);
+        CGFloat redColor[4] =  {1.0,clr,clr, alpha};
+        CGFloat blueColor[4] = {clr,clr,1.0, alpha};
+        if (ad.count1 < 0)
+            ad.displayColor = CGColorCreate(_colorSpace, blueColor);
+        else
+            ad.displayColor = CGColorCreate(_colorSpace, redColor);
     }
 
 }
@@ -356,6 +372,7 @@ static int ii;
          numLoops:(int)nLoops
       polyPartLen:(int*)pnPointsInLoop
            points:(LPDPOINT)pPoints
+          nCounts:(int)nCount
 {
     BOOL rtn = NO;
 
@@ -368,6 +385,7 @@ static int ii;
             dbounds bounds = getAreaBounds (nPoints,pPoints);
             AddMinMaxD (&_fullBounds,&bounds);
             AreaData *ad = [[AreaData alloc]init];
+            ad.nCounts = nCount;
             ad.areaID = areaID;
             [_areaInfo addObject:ad];
             _numAreas++;
@@ -445,6 +463,7 @@ static int ii;
 
 
 - (int)DPointInArea:(DPOINT *)dPoint
+        whichCount:(int) icount
 {
     int numAreasIn = 0;
     int row=-999;
@@ -463,7 +482,11 @@ static int ii;
         AreaData *ad = [self getAreaAtLoc:row * _width + col];
         if (ad)
         {
-            ad.count++;
+            if (icount)
+                ad.count2++;
+            else
+                ad.count1++;
+            
             numAreasIn++;
         }
     }
@@ -474,13 +497,17 @@ static int ii;
 }
 
 - (double)countForArea:(NSString*)areaID
+            whichCount:(int) icount
 {
     double rtn = -1;
     for (AreaData *ad in _areaInfo)
     {
         if ([ad.areaID isEqualToString:areaID])
         {
-            rtn = ad.count;
+            if (icount)
+                rtn = ad.count2;
+            else
+                rtn = ad.count1;
             break;
         }
     }

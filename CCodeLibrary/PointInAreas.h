@@ -17,14 +17,18 @@
         numPoints:(int)nPoints
          numLoops:(int)nLoops
       polyPartLen:(int*)polyPartLen
-           points:(LPDPOINT)points;
+           points:(LPDPOINT)points
+          nCounts:(int)nCount;
+
 - (void) areasLoaded:(PointInAreas*)boundsPias
          convertToLL:(LPTRANDATA)pTran;
 - (void)createDisplayColors:(PointInAreas*)piasAdjust
                        mask:(PointInArea*)piaMask;
-- (int)DPointInArea:(DPOINT *)dPoint;
+- (int)DPointInArea:(DPOINT *)dPoint
+         whichCount:(int) icount;
 - (CGColorRef)colorForArea:(NSString*)areaID;
-- (double)countForArea:(NSString*)areaID;
+- (double)countForArea:(NSString*)areaID
+            whichCount:(int) icount;
 
 @property NSString * areaType;
 @property NSString * adjustValue;
