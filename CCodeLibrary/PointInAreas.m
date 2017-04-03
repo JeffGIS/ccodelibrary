@@ -21,7 +21,7 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 @property NSString * areaID;
 @property COLORDEF colordef;
 @property int icolor;
-@property double count1, count2;
+@property double count, count1, count2;
 @property int nCounts;
 @property double areaInPixels;
 @property int pixelsInMask;
@@ -332,17 +332,19 @@ static int ii;
     for (AreaData *ad in _areaInfo)
     {
         if (ad.nCounts)
-            ad.count1 = ad.count2 - ad.count1;
+            ad.count = ad.count2 - ad.count1;
+        else
+            ad.count = ad.count1;
         if (ad.value)
         {
-            ad.count1 /= ad.value;
+            ad.count /= ad.value;
         }
         else
             ii=1;
         ad.pctInMask = 100.0 * ad.pixelsInMask / ad.areaInPixels;
         if (ad.pctInMask >= MINAREAPCT)
         {
-            maxCount = max (maxCount,fabs(ad.count1));
+            maxCount = max (maxCount,fabs(ad.count));
             maxValue = max (maxValue,ad.value);
         }
     }
@@ -353,13 +355,13 @@ static int ii;
         if (ad.pctInMask >= MINAREAPCT)
         {
             if (maxCount)
-                clr = 1.0 - fabs(ad.count1)/maxCount;
+                clr = 1.0 - fabs(ad.count)/maxCount;
         }
         else
             alpha = 0;
         CGFloat redColor[4] =  {1.0,clr,clr, alpha};
         CGFloat blueColor[4] = {clr,clr,1.0, alpha};
-        if (ad.count1 < 0)
+        if (ad.count < 0)
             ad.displayColor = CGColorCreate(_colorSpace, blueColor);
         else
             ad.displayColor = CGColorCreate(_colorSpace, redColor);
@@ -376,6 +378,7 @@ static int ii;
 {
     BOOL rtn = NO;
 
+    _nCounts = nCount;
     switch (_loadPass)
     {
         case 0:
@@ -504,10 +507,18 @@ static int ii;
     {
         if ([ad.areaID isEqualToString:areaID])
         {
-            if (icount)
-                rtn = ad.count2;
-            else
-                rtn = ad.count1;
+            switch (icount)
+            {
+                case 0:
+                    rtn = ad.count;
+                    break;
+                case 1:
+                    rtn = ad.count1;
+                    break;
+                case 2:
+                    rtn = ad.count2;
+                    break;
+            }
             break;
         }
     }

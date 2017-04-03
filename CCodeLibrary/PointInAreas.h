@@ -34,6 +34,7 @@
 @property NSString * adjustValue;
 @property int loadPass;
 @property int numAreas;
+@property int nCounts;
 @property NSMutableArray* areaInfo;
 @property int maxDimension;
 @property int width;
