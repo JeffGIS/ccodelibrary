@@ -131,11 +131,6 @@ static double _deviceValues[9][4];
                 title:@"Edit"
               enabled:YES
              fontSize:56.0];
-    
-    [NSNotificationCenter.defaultCenter addObserver:self
-                                           selector:@selector(resignedActive:)
-                                               name:@"didResignActive"
-                                             object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -143,10 +138,19 @@ static double _deviceValues[9][4];
     [super didReceiveMemoryWarning];
 }
 
-- (void)resignedActive:(id)selector
+- (void)gssiSlopeViewControllerDidCancelForSystemCalibration:(GSSiSlopeViewController *)controller
 {
     _useHeadingCalibration = NO;
-    [NSNotificationCenter.defaultCenter removeObserver:self name:@"didResignActive" object:nil];
+    [controller dismissViewControllerAnimated:YES completion:nil];
+    
+    NVAlertView *alert =
+    [NVAlertView showLargeAlertViewinView:self.view
+                                 delegate:self
+                                    title:@"The app became inactive. Please place iPad in previous position to repeat measurement."
+                          buttonTextArray:@[@"OK"]
+                         destructiveIndex:0];
+    
+    alert.tag = 44444;
 }
 
 - (NSString *)refreshCalDateLabel
@@ -187,15 +191,12 @@ static double _deviceValues[9][4];
             case NVCalibrationTypeRunningSlope:
                 valueString = [NSString stringWithFormat:@"%.1f%%", doubleValue];
                 break;
-                
             case NVCalibrationTypeDegrees:
                 valueString = [NSString stringWithFormat:@"%.1f\u00B0", doubleValue];
                 break;
-                
             case NVCalibrationTypeRiseRun:
                 valueString = [NSString stringWithFormat:@"1:%i", (int)doubleValue];
                 break;
-                
             default:
                 break;
         }
@@ -208,7 +209,9 @@ static double _deviceValues[9][4];
         
         else
             title = [NSString stringWithFormat:@"%i F               Calibrate %@ Front", i,valueString];
+        
         frontButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        
         [self setupButton:frontButton
                  selector:@selector(calibrateButtonTapped:)
                     title:title
@@ -222,12 +225,9 @@ static double _deviceValues[9][4];
             yOrigin += (buttonHeight + margin);
             _counter++;
             
-            UIButton *sideButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, yOrigin,
-                                                                              buttonWidth, buttonHeight)];
-            
+            UIButton *sideButton = [[UIButton alloc] initWithFrame:CGRectMake(20.0, yOrigin, buttonWidth, buttonHeight)];
             sideButton.tag = _counter;
             sideButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-            
             title = [NSString stringWithFormat:@"%i S               Calibrate %@ Side", i,valueString];
             
             [self setupButton:sideButton
@@ -363,10 +363,7 @@ static double _deviceValues[9][4];
     else
         slopeVC.promptText = @"Place the iPad with the arrow pointing to the left of the upslope and tap 'Start' to begin measurement.";
     
-    [self presentViewController:slopeVC
-                       animated:YES
-                     completion:nil];
-    
+    [self presentViewController:slopeVC animated:YES completion:nil];
     NSUInteger count = [_calibrationValues[0] count];
     index = ((_currentIndex + 2) / 2);
     
@@ -420,38 +417,19 @@ static double _deviceValues[9][4];
 - (void)testButtonTapped:(UIButton *)button
 {
     _currentType = NVCalibrationTypeDefault;
-    GSSiSlopeViewController *slopeVC = nil;
     
-    if (_hasBeenCalibrated)
-    {
-        slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
-                                                          criticalSideValue:-9999.0
-                                                                 errorValue:0.0
-                                                             useCalibration:YES
-                                                               steadyFactor:0.0
-                                                                countFactor:0.0
-                                                             displayDegrees:(_currentType == NVCalibrationTypeDegrees)
-                                                                   delegate:self];
-    }
-    
-    else
-    {
-        slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
-                                                          criticalSideValue:-9999.0
-                                                                 errorValue:0.0
-                                                             useCalibration:NO
-                                                               steadyFactor:0.0
-                                                                countFactor:0.0
-                                                             displayDegrees:(_currentType == NVCalibrationTypeDegrees)
-                                                                   delegate:self];
-    }
+    GSSiSlopeViewController *slopeVC = [GSSiSlopeViewController slopeControllerWithCriticalValue:-9999.0
+                                                      criticalSideValue:-9999.0
+                                                             errorValue:0.0
+                                                         useCalibration:_hasBeenCalibrated
+                                                           steadyFactor:0.0
+                                                            countFactor:0.0
+                                                         displayDegrees:(_currentType == NVCalibrationTypeDegrees)
+                                                               delegate:self];
     
     slopeVC.fromCalibration = YES;
     slopeVC.useHeadingCalibration = NO;
-    
-    [self presentViewController:slopeVC
-                       animated:YES
-                     completion:nil];
+    [self presentViewController:slopeVC animated:YES completion:nil];
 }
 
 - (void)editButtonTapped:(UIButton *)button
@@ -1075,6 +1053,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             case 33333:
                 if (_delegate)
                     [_delegate calibrationControllerNeedsRefresh:self];
+                break;
+            case 44444:
+                [self calibrateButtonTapped:nil];
                 break;
             default:
                 break;

@@ -202,11 +202,35 @@ static int COUNT=100;
 
     if (_hideDoesNotExistButton || _fromCalibration)
         [self hideDoesNotExist];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(resignedActive:)
+                                               name:@"didResignActive"
+                                             object:nil];
+    
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(becameActive:)
+                                               name:@"didBecomeActive"
+                                             object:nil];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (void)resignedActive:(id)selector
+{
+    [NSNotificationCenter.defaultCenter removeObserver:self name:@"didResignActive" object:nil];
+    [self stopMotionManager];
+}
+
+- (void)becameActive:(id)selector
+{
+    [NSNotificationCenter.defaultCenter removeObserver:self name:@"didBecomeActive" object:nil];
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(gssiSlopeViewControllerDidCancelForSystemCalibration:)])
+        [_delegate gssiSlopeViewControllerDidCancelForSystemCalibration:self];
 }
 
 - (void)setupUnableButton
