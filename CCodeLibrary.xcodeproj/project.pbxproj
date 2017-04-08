@@ -1074,8 +1074,6 @@
 				69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */,
 				6986AF821C7C119E0059DD1B /* NVDigitizerView.h */,
 				6986AF831C7C119E0059DD1B /* NVDigitizerView.m */,
-				692EFA501D36A84B007B0D18 /* NVEmailFileList.h */,
-				692EFA511D36A84B007B0D18 /* NVEmailFileList.m */,
 				A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */,
 				A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */,
 				A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */,
@@ -1180,6 +1178,8 @@
 				691B5DD01E52668600C90383 /* NVGetODR.m */,
 				698037511E82D58A00C3E49D /* NVSendEmail.h */,
 				698037521E82D58A00C3E49D /* NVSendEmail.m */,
+				692EFA501D36A84B007B0D18 /* NVEmailFileList.h */,
+				692EFA511D36A84B007B0D18 /* NVEmailFileList.m */,
 				691636201C1FC790000C61B8 /* NVTileCompiler.h */,
 				691636211C1FC790000C61B8 /* NVTileCompiler.m */,
 				A9735AF219E77B6800894359 /* Reachability.h */,
@@ -1282,7 +1282,6 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
-				EBC01D331BED1CE20004C751 /* SolarCalculator */,
 				A933D9F31B5D494600D621CD /* 3D Views */,
 				A90D1FB61AE6174700CBFEE7 /* Categories */,
 				A94A771D19F813040062906E /* CCode */,
@@ -1290,9 +1289,10 @@
 				A94A771A19F812940062906E /* Facilities */,
 				A94A771B19F812AA0062906E /* Intersections */,
 				A94A771F19F813EB0062906E /* Network */,
-				A94A771C19F812DE0062906E /* Places */,
-				A94A771E19F813810062906E /* Views */,
 				EB95A1A41CB16EAF00158B40 /* Other */,
+				A94A771C19F812DE0062906E /* Places */,
+				EBC01D331BED1CE20004C751 /* SolarCalculator */,
+				A94A771E19F813810062906E /* Views */,
 			);
 			path = CCodeLibrary;
 			sourceTree = "<group>";

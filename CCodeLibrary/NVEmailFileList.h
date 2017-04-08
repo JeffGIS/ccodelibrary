@@ -5,6 +5,6 @@
 
 @interface NVEmailFileList : NSObject
 
-+ (instancetype)sendFileList:(UIViewController *)viewController;
++ (void)sendFileList:(UIViewController *)viewController;
 
 @end

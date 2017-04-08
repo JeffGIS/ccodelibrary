@@ -562,7 +562,7 @@
     if (getUseMasterID())
         [self uploadDatabases:button];
     else
-        _nvefl = [NVEmailFileList sendFileList:self];
+        [NVEmailFileList sendFileList:self];
 }
 
 - (void)titleButtonTapped:(UIButton *)button

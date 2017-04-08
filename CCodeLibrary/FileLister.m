@@ -1,19 +1,14 @@
-//
 //  FileLister.m
 //  CCodeLibrary
-//
-//  Created by Bill Munson on 12/30/15.
-//  Copyright © 2015 GSSi. All rights reserved.
-//
 
 #import "FileLister.h"
 #import "CRAPI.h"
 
 @implementation FileLister
 
-+ (NSInteger) listFilesInDirectory:(NSString *)inPath
-                    outputTo:(NSString *)outFile
-                         totalSize:(NSInteger*)pTotSize
++ (NSInteger)listFilesInDirectory:(NSString *)inPath
+                         outputTo:(NSString *)outFile
+                        totalSize:(NSInteger*)pTotSize
 {
     NSString *entry = @"";
     NSString *documentsDir = @"";
@@ -27,48 +22,33 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.timeStyle = NSDateFormatterShortStyle;
     dateFormatter.dateStyle = NSDateFormatterShortStyle;
-    //[dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    
-    // Create file manager
     NSFileManager *fileMgr = NSFileManager.defaultManager;
-    
-    // Path to documents directory
     documentsDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
 
     if (inPath == nil)
         inPath = documentsDir;
-    if ([inPath isEqualToString:@"HOME"])
+    else if ([inPath isEqualToString:@"HOME"])
         inPath = NSHomeDirectory();
-    if ([inPath isEqualToString:@"ALL"])
+    else if ([inPath isEqualToString:@"ALL"])
     {
         inPath = NSHomeDirectory();
         all = TRUE;
     }
-    if ([inPath isEqualToString:@"SHARED"])
+    else if ([inPath isEqualToString:@"SHARED"])
         inPath = CRAPI.sharedInstance.sharedFilePath;
-    // Change to Documents directory
     
-    
-    // Get each entry (file or folder)
-    NSString * outLine = @"";
+    NSString *outLine = @"";
 Next:
     [fileMgr changeCurrentDirectoryPath:inPath];
-    // Enumerator for docs directory
     enumerator = [fileMgr enumeratorAtPath:inPath];
     while ((entry = [enumerator nextObject]) != nil)
     {
-        // File or directory
-        if ([fileMgr fileExistsAtPath:entry isDirectory:&isDirectory] && isDirectory)
-            ;//NSLog (@"Directory - %@", entry);
-        else
+        if (![fileMgr fileExistsAtPath:entry isDirectory:&isDirectory] || !isDirectory)
         {
             totFiles++;
-            fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:entry
-                                                                                 error:nil].fileSize;
-            NSDate * modDate = (NSDate*)[NSFileManager.defaultManager attributesOfItemAtPath:entry
-                                                                                         error:nil].fileModificationDate;
+            fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:entry error:nil].fileSize;
+            NSDate *modDate = (NSDate *)[fileMgr attributesOfItemAtPath:entry error:nil].fileModificationDate;
             NSString *mod = [dateFormatter stringFromDate:modDate];
-            
             totSize += fileSize;
             outLine = [NSString stringWithFormat:@"%s\t%ld\t%@", entry.UTF8String, (long)fileSize,mod];
             
@@ -78,10 +58,7 @@ Next:
                                                                            encoding:NSUTF8StringEncoding
                                                                               error:nil];
             else
-            {
-                [CRAPI.sharedInstance appendString:outLine
-                                            toFile:outFile];
-            }
+                [CRAPI.sharedInstance appendString:outLine toFile:outFile];
             
             first = FALSE;
         }
@@ -94,9 +71,7 @@ Next:
         [CRAPI.sharedInstance appendString:@"Shared Directory:" toFile:outFile];
         goto Next;
     }
-
-    int outFileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:outFile
-                                                                          error:nil].fileSize;
+    
     *pTotSize = totSize;
     return totFiles;
 }
