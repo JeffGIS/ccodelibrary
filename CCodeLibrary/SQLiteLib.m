@@ -77,7 +77,7 @@ BOOL doesSQLiteTableExist(char* tableNameIN, sqlite3 *database)
     else
     {
         pDot = tableName;
-        sprintf (query,"SELECT name FROM sqlite_master WHERE type='table' AND name='table_name';",tableName);
+        sprintf (query,"SELECT name FROM sqlite_master WHERE type='table' AND name='%s';",tableName);
     }
     BOOL rc = !SQLOK(0,sqlite3_prepare_v2(database, query, -1, &stmt, NULL),database);
     

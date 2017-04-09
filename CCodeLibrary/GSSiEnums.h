@@ -5,6 +5,14 @@
 
 @interface GSSiEnums : NSObject
 
+typedef NS_ENUM(NSInteger, ValueTypes)
+{
+    VTInteger,
+    VTDouble,
+    VTLLPoint,
+    VTString,
+};
+
 typedef NS_ENUM(NSInteger, NVNoteType)
 {
     NoteTypeNoType,
