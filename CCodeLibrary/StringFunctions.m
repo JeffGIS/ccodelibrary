@@ -3,7 +3,6 @@
 
 #import "UserDefaults.h"
 #import "StringFunctions.h"
-#import "MathUtil.h"
 #import "Reachability.h"
 #import <sys/utsname.h>
 
@@ -1095,4 +1094,33 @@ NSString *stringWithoutID(NSString *string)
 NSString *paddedString(NSString *str)
 {
     return [NSString stringWithFormat:@"%@ ",str];
+}
+
+BOOL nameInList (NSString* name,NSArray* list)
+{
+    for (NSString * curName in list)
+    {
+        if ([name isEqualToString:[curName lastPathComponent]])
+            return TRUE;
+    }
+    return FALSE;
+}
+
+LLPOINT LLPOINTFromString (NSString* string)
+{
+    if (!string)
+        string = @"";
+    
+    LLPOINT pt;
+    LPSTR str = malloc (string.length+4);
+    strcpy (str,string.UTF8String);
+    LPSTR space = strchr (str,' ');
+    if (space)
+        *space++ = 0;
+    else
+        space = str;
+    pt.lat = atof (str);
+    pt.lon = atof (space);
+    free (str);
+    return pt;
 }

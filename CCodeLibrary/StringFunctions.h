@@ -5,6 +5,7 @@
 @import CoreTelephony;
 @import CoreLocation;
 #import "UIDevice+Storage.h"
+#import "MathUtil.h"
 
 UIColor *UIColorFromInt (unsigned int ival);
 BOOL hasNetwork(void);
@@ -64,3 +65,5 @@ NSString *urlSearchStringForPID(NSString *PID);
 BOOL countySupportsLookupForPID(NSString *PID);
 CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceFeet, CLLocationCoordinate2D origin);
 BOOL isGSSiDevice(void);
+BOOL nameInList (NSString* name,NSArray* list);
+LLPOINT LLPOINTFromString (NSString* string);
