@@ -7,8 +7,8 @@
 
 @protocol NVSpreadsheetVCDelegate <NSObject>
 
-- (BOOL) openPropertyList;
-- (void) closePropertyList;
+- (BOOL) openList;
+- (void) closeList;
 - (NSString *)headerTextForColumn:(NSUInteger)column;
 - (NSString *)headerTextForRow:(NSUInteger)row;
 

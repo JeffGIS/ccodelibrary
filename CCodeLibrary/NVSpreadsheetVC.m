@@ -249,12 +249,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     if (_delegate)
-        [_delegate openPropertyList];
+        [_delegate openList];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
     if (_delegate)
-        [_delegate closePropertyList];
+        [_delegate closeList];
     
 }
 - (void)viewDidAppear:(BOOL)animated
