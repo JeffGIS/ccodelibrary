@@ -31,6 +31,7 @@
 
 @optional
 - (BOOL)spreadsheetCanEditRowHeaderTextAtIndex:(NSInteger)index;
+- (NSString *)spreadsheetRowHeaderTextPrefix:(NSInteger)index;
 - (BOOL)spreadsheetCanEditColumnHeaderTextAtIndex:(NSInteger)index;
 
 - (void)spreadsheetDidEditRowHeaderText:(NSString *)text
