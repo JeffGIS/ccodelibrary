@@ -372,7 +372,15 @@ didReceiveMessage:(NSString *)message
                 break;
         }
     }
-    
+    else
+    {
+        _keepGoing = FALSE;
+        [_updateTimer invalidate];
+        [_popoverView hide];
+        if (_delegate)
+            [_delegate CrimeDataUpdateDidComplete:0];
+
+    }
     [self closeGMServer];
 }
 

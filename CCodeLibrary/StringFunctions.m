@@ -1227,8 +1227,29 @@ NSString * intToBlob(int val)
 BOOL stringContainsCaseInsenitiveString (NSString * str, NSString * substr)
 {
     BOOL rtn = TRUE;
-    if ([str rangeOfString:substr options:NSCaseInsensitiveSearch].location == NSNotFound)
+    if (!str || !substr ||
+        [str rangeOfString:substr options:NSCaseInsensitiveSearch].location == NSNotFound)
         rtn = FALSE;
     return rtn;
 }
+
+int numberOfOccurencesOfStringInString (NSString *str,NSString *substr)
+{
+    if (!str || !substr)
+        return 0;
+    int count = 0;
+    NSInteger length = [str length];
+    NSRange range = NSMakeRange(0, length);
+    while(range.location != NSNotFound)
+    {
+        range = [str rangeOfString: substr options:0 range:range];
+        if(range.location != NSNotFound)
+        {
+            range = NSMakeRange(range.location + range.length, length - (range.location + range.length));
+            count++;
+        }
+    }
+    return count;
+}
+
     

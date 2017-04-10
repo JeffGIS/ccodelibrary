@@ -73,3 +73,5 @@ NSString * doubleToBlob(double val);
 NSString * floatToBlob(float val);
 NSString * intToBlob(int val);
 BOOL stringContainsCaseInsenitiveString (NSString * str, NSString * substr);
+int numberOfOccurencesOfStringInString (NSString *str,NSString *substr);
+
