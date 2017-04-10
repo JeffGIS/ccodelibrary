@@ -14,7 +14,7 @@
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
-@property (nonatomic) UIButton *swap, *returnToOrigin;
+@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor;
 @property (nonatomic) CGFloat columnWidth, rowHeight;
 @property (nonatomic) UITextField *titleTextField;
 @property (nonatomic) NSInteger selectedRow, selectedColumn;
@@ -24,10 +24,6 @@
 
 @implementation NVSpreadsheetVC
 
-- (void)setDelegate:(id<NVSpreadsheetVCDelegate>)delegate
-{
-    _delegate = delegate;
-}
 - (void)loadView
 {
     UIView *view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
@@ -179,24 +175,21 @@
     [select constrainHeightToConstant:_rowHeight];
     [select constrainWidthToConstant:_rowHeight];
     
-    UIButton *realtor = [UIButton buttonWithType:UIButtonTypeCustom];
-    realtor.translatesAutoresizingMaskIntoConstraints = NO;
-    realtor.backgroundColor = UIColor.clearColor;
-    realtor.imageEdgeInsets = insets;
+    _realtor = [UIButton buttonWithType:UIButtonTypeCustom];
+    _realtor.translatesAutoresizingMaskIntoConstraints = NO;
+    _realtor.backgroundColor = UIColor.clearColor;
+    _realtor.imageEdgeInsets = insets;
     
-    [realtor setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteHouse"
-                                                                                     ofType:@"png"]]
-             forState:UIControlStateNormal];
+    [_realtor setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteHouse"
+                                                                                      ofType:@"png"]]
+              forState:UIControlStateNormal];
     
-    [realtor addTarget:self
-                action:@selector(realtor:)
-      forControlEvents:UIControlEventTouchUpInside];
-    
-    [topSpace addSubview:realtor];
-    [realtor constrainTrailingToAnchor:select.leadingAnchor];
-    [realtor constrainTopToAnchor:topSpace.topAnchor];
-    [realtor constrainHeightToConstant:_rowHeight];
-    [realtor constrainWidthToConstant:_rowHeight];
+    [_realtor addTarget:self action:@selector(realtor:) forControlEvents:UIControlEventTouchUpInside];
+    [topSpace addSubview:_realtor];
+    [_realtor constrainTrailingToAnchor:select.leadingAnchor];
+    [_realtor constrainTopToAnchor:topSpace.topAnchor];
+    [_realtor constrainHeightToConstant:_rowHeight];
+    [_realtor constrainWidthToConstant:_rowHeight];
     
     _titleTextField = UITextField.new;
     _titleTextField.translatesAutoresizingMaskIntoConstraints = NO;
@@ -216,7 +209,7 @@
     
     [topSpace addSubview:_titleTextField];
     [_titleTextField constrainLeadingToAnchor:mapIt.trailingAnchor];
-    [_titleTextField constrainTrailingToAnchor:realtor.leadingAnchor];
+    [_titleTextField constrainTrailingToAnchor:_realtor.leadingAnchor];
     [_titleTextField constrainTopToAnchor:topSpace.topAnchor];
     [_titleTextField constrainHeightToConstant:_rowHeight];
     
@@ -226,16 +219,9 @@
     
     _nvss.translatesAutoresizingMaskIntoConstraints = NO;
     _nvss.bounces = NO;
-    
-    [_nvss registerCellClass:NVGridCell.class
-  forCellWithReuseIdentifier:@"GridCell"];
-    
-    [_nvss registerCellClass:NVTopRowCell.class
-  forCellWithReuseIdentifier:@"TopRowCell"];
-    
-    [_nvss registerCellClass:NVLeftColumnCell.class
-  forCellWithReuseIdentifier:@"LeftColumnCell"];
-    
+    [_nvss registerCellClass:NVGridCell.class forCellWithReuseIdentifier:@"GridCell"];
+    [_nvss registerCellClass:NVTopRowCell.class forCellWithReuseIdentifier:@"TopRowCell"];
+    [_nvss registerCellClass:NVLeftColumnCell.class forCellWithReuseIdentifier:@"LeftColumnCell"];
     _nvss.delegate = self;
     _nvss.dataSource = self;
     
@@ -250,6 +236,12 @@
 {
     if (_delegate)
         [_delegate openList];
+    
+    if (CRAPI.sharedInstance.currentApp == HCConfigMetroProp)
+        _realtor.hidden = NO;
+    
+    else
+        _realtor.hidden = YES;
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -429,7 +421,7 @@
         {
             _numRowsLabel = UILabel.new;
             _numRowsLabel.translatesAutoresizingMaskIntoConstraints = NO;
-            _numRowsLabel.text = [NSString stringWithFormat:@"%i", ([self numberOfRowsInSpreadsheetView:nil] - 1)];
+            _numRowsLabel.text = [NSString stringWithFormat:@"%li", ([self numberOfRowsInSpreadsheetView:nil] - 1)];
             _numRowsLabel.textColor = UIColor.whiteColor;
             _numRowsLabel.adjustsFontSizeToFitWidth = YES;
             _numRowsLabel.textAlignment = NSTextAlignmentCenter;
@@ -440,8 +432,8 @@
             [_numRowsLabel constrainHeightToConstant:gc.idSize];
         }
         
-        _numColsLabel.text = [NSString stringWithFormat:@"%i", ([self numberOfColumnsInSpreadsheetView:nil] - 1)];
-        _numRowsLabel.text = [NSString stringWithFormat:@"%i", ([self numberOfRowsInSpreadsheetView:nil] - 1)];
+        _numColsLabel.text = [NSString stringWithFormat:@"%li", ([self numberOfColumnsInSpreadsheetView:nil] - 1)];
+        _numRowsLabel.text = [NSString stringWithFormat:@"%li", ([self numberOfRowsInSpreadsheetView:nil] - 1)];
     }
     
     else if (indexPath.nvSpreadsheetRow == 0 && indexPath.nvSpreadsheetColumn > 0)
@@ -450,7 +442,7 @@
                                                           forIndexPath:indexPath];
         
         NVTopRowCell *tr = (NVTopRowCell *)cell;
-        tr.idLabel.text = [NSString stringWithFormat:@"%i", indexPath.nvSpreadsheetColumn];
+        tr.idLabel.text = [NSString stringWithFormat:@"%li", indexPath.nvSpreadsheetColumn];
         
         if (_flipped)
         {
@@ -473,7 +465,7 @@
                                                           forIndexPath:indexPath];
         
         NVLeftColumnCell *lc = (NVLeftColumnCell *)cell;
-        lc.idLabel.text = [NSString stringWithFormat:@"%i", indexPath.nvSpreadsheetRow];
+        lc.idLabel.text = [NSString stringWithFormat:@"%li", indexPath.nvSpreadsheetRow];
         
         if (_flipped)
         {
@@ -600,7 +592,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)swap:(UIButton *)button
 {
     _flipped = !_flipped;
-    [_nvss flipLongPressGesture:_flipped];
     [_nvss reloadData];
 }
 
@@ -621,11 +612,59 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     _titleTextField.text = [_delegate titleTextForSpreadsheet];
 }
 
-- (void)spreadsheetViewDidEditTopRowText:(NSString *)text
-                                 atIndex:(NSInteger)index
+- (void)spreadsheetViewDidEditColumnHeaderText:(NSString *)text
+                                       atIndex:(NSInteger)index
 {
-    [_delegate spreadsheetDidEditColumnHeaderText:text
-                                          atIndex:index];
+    if ([_delegate spreadsheetCanEditColumnHeaderTextAtIndex:index])
+    {
+        if ([_delegate respondsToSelector:@selector(spreadsheetDidEditColumnHeaderText:atIndex:)])
+            [_delegate spreadsheetDidEditColumnHeaderText:text atIndex:index];
+    }
+    
+    else
+        NSLog(@"ERROR:spreadsheetDidEditColumnHeaderText not implemented.");
+}
+
+- (void)spreadsheetViewDidEditRowHeaderText:(NSString *)text
+                                    atIndex:(NSInteger)index
+{
+    if ([_delegate spreadsheetCanEditRowHeaderTextAtIndex:index])
+    {
+        if ([_delegate respondsToSelector:@selector(spreadsheetDidEditRowHeaderText:atIndex:)])
+            [_delegate spreadsheetDidEditRowHeaderText:text atIndex:index];
+    }
+    
+    else
+        NSLog(@"ERROR:spreadsheetDidEditRowHeaderText not implemented.");
+}
+
+- (BOOL)spreadsheetViewCanEditHeaderOfType:(int)type
+                                   atIndex:(NSInteger)index
+{
+    switch (type)
+    {
+        case ROW_HEADER:
+            if ([_delegate respondsToSelector:@selector(spreadsheetCanEditRowHeaderTextAtIndex:)])
+                return [_delegate spreadsheetCanEditRowHeaderTextAtIndex:index];
+            
+            else
+            {
+                NSLog(@"ERROR:spreadsheetCanEditRowHeaderTextAtIndex not implemented.");
+                return NO;
+            }
+        case COLUMN_HEADER:
+            if ([_delegate respondsToSelector:@selector(spreadsheetCanEditColumnHeaderTextAtIndex:)])
+                return [_delegate spreadsheetCanEditColumnHeaderTextAtIndex:index];
+            
+            else
+            {
+                NSLog(@"ERROR:spreadsheetCanEditColumnHeaderTextAtIndex not implemented.");
+                return NO;
+            }
+        default:
+            return NO;
+            break;
+    }
 }
 
 - (BOOL)spreadsheetIsFlipped
@@ -668,7 +707,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)select:(UIButton *)button
 {
-    int selectedFile = 0;
     NSArray *fileList = _delegate.spreadsheetDidGetLists;
     
     if (fileList.count > 0)

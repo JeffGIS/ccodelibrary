@@ -29,14 +29,16 @@
                            column:(NSInteger)column
                  tabBarController:(UITabBarController *)tabBarController;
 
+@optional
+- (BOOL)spreadsheetCanEditRowHeaderTextAtIndex:(NSInteger)index;
+- (BOOL)spreadsheetCanEditColumnHeaderTextAtIndex:(NSInteger)index;
+
+- (void)spreadsheetDidEditRowHeaderText:(NSString *)text
+                                atIndex:(NSInteger)index;
+
 - (void)spreadsheetDidEditColumnHeaderText:(NSString *)text
                                    atIndex:(NSInteger)index;
 
-@optional
-
-- (BOOL)spreadsheetCanEditRowHeaderText:(NSInteger)row;
-- (void)spreadsheetDidEditRowHeaderText:(NSString *)text
-                                atIndex:(NSInteger)row;
 - (BOOL)spreadsheetSortOnRow:(NSInteger)row;
 
 @end
