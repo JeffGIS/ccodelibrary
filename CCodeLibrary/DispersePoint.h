@@ -40,5 +40,6 @@
 - (int)pickDispersedPoint:(LLPOINT *)pt
             highlightList:(NSMutableArray*)hlist;
 + (NSArray *)getDispersedPoints;
++ (NSArray *)getDispersedControlNum;
 
 @end

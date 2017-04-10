@@ -1124,3 +1124,111 @@ LLPOINT LLPOINTFromString (NSString* string)
     free (str);
     return pt;
 }
+
+NSString * stringToBlob(NSString* str)
+{
+    if (!str)
+        str = @"";
+        NSString * blob=@"";
+        NSInteger sln = str.length;
+        NSInteger lblb = 0;
+        if (sln)
+        {
+            LPSTR blb = malloc (sln*2+4);
+            LPSTR cstr = (LPSTR)str.UTF8String;
+            for (NSInteger i = 0;i<sln;i++)
+            {
+                sprintf (&blb[lblb],"%2.2x",cstr[i]);
+                lblb += 2;
+            }
+            blb[lblb] = 0;
+            blob = [NSString stringWithUTF8String:blb];
+            free (blb);
+        }
+    return blob;
+}
+
+NSString * llpointsToBlob(LLPOINT* pPoints,int nPnts)
+{
+    NSString * blob=@"";
+    NSInteger lBlob = 0;
+    LPSTR pBlob = malloc(nPnts * sizeof(DPOINT)*2 +4);
+    for (NSInteger i = 0; i < nPnts; i++)
+    {
+        NSInteger  j;
+        LPBYTE pInts = (LPBYTE)&pPoints[i];
+        //unsigned char c;
+        for (j = 0; j < sizeof(DPOINT); j++, pInts++, lBlob += 2)
+        {
+            //c = *pInts;
+            sprintf(&pBlob[lBlob], "%2.2x", *pInts);
+        }
+    }
+    pBlob[lBlob] = 0;
+    blob = [NSString stringWithUTF8String:pBlob];
+    free (pBlob);
+    return blob;
+}
+NSString * doubleToBlob(double val)
+{
+    NSString * blob=@"";
+    NSInteger lBlob = 0;
+    LPSTR pBlob = malloc(sizeof(double)*2+4);
+    NSInteger  j;
+    LPBYTE pInts = (LPBYTE)&val;
+    //unsigned char c;
+    for (j = 0; j < sizeof(double); j++, pInts++, lBlob += 2)
+    {
+        //c = *pInts;
+        sprintf(&pBlob[lBlob], "%2.2x", *pInts);
+    }
+    pBlob[lBlob] = 0;
+    blob = [NSString stringWithUTF8String:pBlob];
+    free (pBlob);
+    return blob;
+}
+NSString * floatToBlob(float val)
+{
+    NSString * blob=@"";
+    NSInteger lBlob = 0;
+    LPSTR pBlob = malloc(sizeof(float)*2+4);
+    NSInteger  j;
+    LPBYTE pInts = (LPBYTE)&val;
+    //unsigned char c;
+    for (j = 0; j < sizeof(float); j++, pInts++, lBlob += 2)
+    {
+        //c = *pInts;
+        sprintf(&pBlob[lBlob], "%2.2x", *pInts);
+    }
+    pBlob[lBlob] = 0;
+    blob = [NSString stringWithUTF8String:pBlob];
+    free (pBlob);
+    return blob;
+}
+NSString * intToBlob(int val)
+{
+    NSString * blob=@"";
+    NSInteger lBlob = 0;
+    LPSTR pBlob = malloc(sizeof(int)*2+4);
+    NSInteger  j;
+    LPBYTE pInts = (LPBYTE)&val;
+    //unsigned char c;
+    for (j = 0; j < sizeof(int); j++, pInts++, lBlob += 2)
+    {
+        //c = *pInts;
+        sprintf(&pBlob[lBlob], "%2.2x", *pInts);
+    }
+    pBlob[lBlob] = 0;
+    blob = [NSString stringWithUTF8String:pBlob];
+    free (pBlob);
+    return blob;
+}
+
+BOOL stringContainsCaseInsenitiveString (NSString * str, NSString * substr)
+{
+    BOOL rtn = TRUE;
+    if ([str rangeOfString:substr options:NSCaseInsensitiveSearch].location == NSNotFound)
+        rtn = FALSE;
+    return rtn;
+}
+    

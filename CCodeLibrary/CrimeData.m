@@ -13,10 +13,10 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 #import "CrimeData.h"
 #import "UserDefaults.h"
 #import "CRAPI.h"
-#import "GeomasterServer.h"
+#import "GeoMasterServer.h"
 #import "GSSiPopoverView.h"
 #import "FTPDataPull.h"
-#import "Compress.h"
+#import "compress.h"
 #import "NVAlertView.h"
 
 @interface CrimeData () <GeoMasterServerDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,NVAlertViewDelegate>

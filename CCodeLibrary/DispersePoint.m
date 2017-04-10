@@ -438,7 +438,34 @@ POINT AddjustPointLoc (POINT Point,float Size,int Sequence)
         pi.time  = time;
         pi.identifier = [NSString stringWithUTF8String:offense];
         [array addObject:pi];
-       
+        
+    }
+    
+    SQLOK(206,sqlite3_finalize(statement), dp.database);
+    
+    if (opened)
+        [dp close];
+    return array;
+}
+
++ (NSArray *)getDispersedControlNum
+{
+    NSMutableArray *array=[[NSMutableArray alloc]init];
+    sqlite3_stmt *statement = NULL;
+    DispersePoint *dp=[[DispersePoint alloc]init];
+    
+    BOOL opened = [dp open];
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT DISTINCT ControlNbr FROM DISPERSE"];
+    
+    
+    SQLOK(205,sqlite3_prepare_v2(dp.database, query.UTF8String, -1, &statement, 0), dp.database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int refno = sqlite3_column_int(statement, 0);
+        NSNumber *num = [NSNumber numberWithInteger:refno];
+        [array addObject:num];
     }
     
     SQLOK(206,sqlite3_finalize(statement), dp.database);

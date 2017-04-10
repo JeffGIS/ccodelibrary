@@ -67,3 +67,9 @@ CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceFeet
 BOOL isGSSiDevice(void);
 BOOL nameInList (NSString* name,NSArray* list);
 LLPOINT LLPOINTFromString (NSString* string);
+NSString * stringToBlob(NSString* str);
+NSString * llpointsToBlob(LLPOINT* pPoints,int nPnts);
+NSString * doubleToBlob(double val);
+NSString * floatToBlob(float val);
+NSString * intToBlob(int val);
+BOOL stringContainsCaseInsenitiveString (NSString * str, NSString * substr);
