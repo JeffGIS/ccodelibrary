@@ -3,6 +3,9 @@
 
 @import UIKit;
 
+#define COLUMN_HEADER 1
+#define ROW_HEADER 2
+
 @class NVSpreadsheet;
 
 @protocol NVSpreadsheetDataSource <NSObject>
@@ -16,18 +19,24 @@
 - (UICollectionViewCell *)spreadsheetView:(NVSpreadsheet *)spreadsheetView
                    cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 
-- (BOOL)spreadsheetIsFlipped;
 - (CGSize)gridContainerSize;
+- (BOOL)spreadsheetIsFlipped;
 
 @end
 
 @protocol NVSpreadsheetDelegate <NSObject>
 
+- (BOOL)spreadsheetViewCanEditHeaderOfType:(int)type
+                                   atIndex:(NSInteger)index;
+
 - (void)spreadsheetView:(NVSpreadsheet *)spreadsheetView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 
-- (void)spreadsheetViewDidEditTopRowText:(NSString *)text
-                                 atIndex:(NSInteger)index;
+- (void)spreadsheetViewDidEditColumnHeaderText:(NSString *)text
+                                       atIndex:(NSInteger)index;
+
+- (void)spreadsheetViewDidEditRowHeaderText:(NSString *)text
+                                    atIndex:(NSInteger)index;
 
 @end
 
@@ -50,7 +59,6 @@ forCellWithReuseIdentifier:(NSString *)identifier;
                                                     forIndexPath:(NSIndexPath *)indexPath;
 
 - (void)reloadData;
-- (void)flipLongPressGesture:(BOOL)flipped;
 - (void)flashScrollIndicators;
 - (void)goToTop;
 - (void)goToBottom;
