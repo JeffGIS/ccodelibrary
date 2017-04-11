@@ -666,17 +666,14 @@ forCellWithReuseIdentifier:(NSString *)identifier
     {
         case NVSpreadsheetCollectionUpperLeft:
             break;
-            
         case NVSpreadsheetCollectionUpperRight:
             _lowerLeftCollectionView.scrollEnabled = scrollEnabled;
             _lowerRightCollectionView.scrollEnabled = scrollEnabled;
             break;
-            
         case NVSpreadsheetCollectionLowerLeft:
             _upperRightCollectionView.scrollEnabled = scrollEnabled;
             _lowerRightCollectionView.scrollEnabled = scrollEnabled;
             break;
-            
         case NVSpreadsheetCollectionLowerRight:
             _upperRightCollectionView.scrollEnabled = scrollEnabled;
             _lowerLeftCollectionView.scrollEnabled = scrollEnabled;
@@ -701,30 +698,39 @@ forCellWithReuseIdentifier:(NSString *)identifier
 {
     NSInteger rowCount = [_dataSource numberOfRowsInSpreadsheetView:self];
     NSInteger adjustedRows = 1;
+    BOOL flipped = [_dataSource spreadsheetIsFlipped];
     
     switch (collectionView.tag)
     {
         case NVSpreadsheetCollectionUpperLeft:
             adjustedRows = _headerRowCount;
             break;
-            
         case NVSpreadsheetCollectionUpperRight:
             adjustedRows = _headerRowCount;
-            break;
             
+            if (!flipped)
+            {
+                _lowerLeftContainerView.hidden = !adjustedRows;
+                _lowerRightContainerView.hidden = !adjustedRows;
+            }
+            break;
         case NVSpreadsheetCollectionLowerLeft:
             adjustedRows = (rowCount - _headerRowCount);
-            break;
             
+            if (flipped)
+            {
+                _lowerLeftContainerView.hidden = !adjustedRows;
+                _lowerRightContainerView.hidden = !adjustedRows;
+            }
+            break;
         case NVSpreadsheetCollectionLowerRight:
             adjustedRows = (rowCount - _headerRowCount);
             break;
-            
         default:
             break;
     }
     
-    return adjustedRows;
+    return MAX(adjustedRows, 1);
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
