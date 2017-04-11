@@ -312,7 +312,7 @@
 - (NSInteger)numberOfRowsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
     if (_flipped)
-        return (_delegate.numColumnsInSpreadsheet + 5);
+        return (_delegate.numColumnsInSpreadsheet + 1);
     
     else
         return (_delegate.numRowsInSpreadsheet + 1);
@@ -324,7 +324,7 @@
         return (_delegate.numRowsInSpreadsheet + 1);
     
     else
-        return (_delegate.numColumnsInSpreadsheet + 5);
+        return (_delegate.numColumnsInSpreadsheet + 1);
 }
 
 - (UICollectionViewCell *)spreadsheetView:(NVSpreadsheet *)spreadsheetView
@@ -621,8 +621,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([_delegate spreadsheetCanEditColumnHeaderTextAtIndex:index])
     {
-        if ([_delegate respondsToSelector:@selector(spreadsheetDidEditColumnHeaderText:atIndex:)])
-            [_delegate spreadsheetDidEditColumnHeaderText:text atIndex:index];
+        if ([_delegate respondsToSelector:@selector(spreadsheetDidEditRowHeaderText:atIndex:)])
+            [_delegate spreadsheetDidEditRowHeaderText:text atIndex:index];
     }
     
     else
@@ -634,8 +634,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([_delegate spreadsheetCanEditRowHeaderTextAtIndex:index])
     {
-        if ([_delegate respondsToSelector:@selector(spreadsheetDidEditRowHeaderText:atIndex:)])
-            [_delegate spreadsheetDidEditRowHeaderText:text atIndex:index];
+        if ([_delegate respondsToSelector:@selector(spreadsheetDidEditColumnHeaderText:atIndex:)])
+            [_delegate spreadsheetDidEditColumnHeaderText:text atIndex:index];
     }
     
     else
