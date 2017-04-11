@@ -1135,14 +1135,6 @@ replacementString:(NSString *)string
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [textField resignFirstResponder];
-    return NO;
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    [textField removeFromSuperview];
-    
     switch (_currentHeader)
     {
         case ROW_HEADER:
@@ -1155,6 +1147,13 @@ replacementString:(NSString *)string
             break;
     }
     
+    [textField resignFirstResponder];
+    return NO;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [textField removeFromSuperview];
     [_upperRightCollectionView reloadData];
     [_lowerLeftCollectionView reloadData];
     [_delegate spreadsheetViewInEditingMode:NO];
