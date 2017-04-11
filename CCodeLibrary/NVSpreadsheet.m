@@ -5,6 +5,7 @@
 #import "NVGridLayout.h"
 #import "NSIndexPath+NVSpreadsheet.h"
 #import "NVSpreadsheetCell.h"
+#import "UserDefaults.h"
 
 typedef NS_ENUM(NSUInteger, NVSpreadsheetCollection)
 {
@@ -41,7 +42,7 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
 @property BOOL isUpperRightBouncing, isLowerLeftBouncing, isLowerRightBouncing;
 @property (nonatomic) UIView *verticalScrollIndicator, *horizontalScrollIndicator;
 @property (nonatomic) UITextField *textField;
-@property (nonatomic) UILongPressGestureRecognizer *lp1, *lp2;
+@property (nonatomic) UILongPressGestureRecognizer *lp1, *lp2, *lp3, *lp4;
 @property int currentHeader;
 @property (nonatomic) BOOL scrollEnabled;
 
@@ -69,7 +70,7 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
         _textField = UITextField.new;
         _textField.translatesAutoresizingMaskIntoConstraints = NO;
         _textField.delegate = self;
-        _textField.layer.borderColor = UIColor.redColor.CGColor;
+        _textField.layer.borderColor = UserDefaults.defaults.darkGreen.CGColor;
         _textField.layer.borderWidth = 4.0;
         _textField.textAlignment = NSTextAlignmentCenter;
         _textField.clearButtonMode = UITextFieldViewModeAlways;
@@ -77,6 +78,13 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
         
         _lp1 = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(headerLongPressed:)];
         _lp2 = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(headerLongPressed:)];
+        _lp3 = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(headerLongPressed:)];
+        _lp4 = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(headerLongPressed:)];
+        _lp1.numberOfTouchesRequired = 1;
+        _lp2.numberOfTouchesRequired  = 1;
+        _lp3.numberOfTouchesRequired = 2;
+        _lp4.numberOfTouchesRequired  = 2;
+        
         
         if (headerColumnCount == 0 && headerRowCount == 0)
             _spreadsheetHeaderConfiguration = NVSpreadsheetHeaderConfigurationNone;
@@ -223,6 +231,7 @@ forCellWithReuseIdentifier:(NSString *)identifier
                             tag:NVSpreadsheetCollectionUpperRight];
     
     [_upperRightCollectionView addGestureRecognizer:_lp1];
+    [_upperRightCollectionView addGestureRecognizer:_lp3];
 }
 
 - (void)setupLowerLeftView
@@ -238,6 +247,7 @@ forCellWithReuseIdentifier:(NSString *)identifier
                             tag:NVSpreadsheetCollectionLowerLeft];
     
     [_lowerLeftCollectionView addGestureRecognizer:_lp2];
+    [_lowerLeftCollectionView addGestureRecognizer:_lp4];
 }
 
 - (void)setupLowerRightView
@@ -1053,28 +1063,49 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         {
             CGPoint point = [gesture locationInView:_lowerLeftCollectionView];
             NSIndexPath *indexPath = [_lowerLeftCollectionView indexPathForItemAtPoint:point];
-            NSInteger row = indexPath.nvSpreadsheetRow;
             
             if (indexPath)
             {
+                NVLeftColumnCell *cell = (NVLeftColumnCell *)[_lowerLeftCollectionView cellForItemAtIndexPath:indexPath];
+                NSInteger row = (indexPath.nvSpreadsheetRow + 1);
+                
                 if (_dataSource.spreadsheetIsFlipped)
                     _currentHeader = ROW_HEADER;
                 
                 else
                     _currentHeader = COLUMN_HEADER;
                 
-                if ([_delegate spreadsheetViewCanEditHeaderOfType:_currentHeader atIndex:row])
+                if (gesture.numberOfTouches == 1)
                 {
-                    NVLeftColumnCell *cell = (NVLeftColumnCell *)[_lowerLeftCollectionView cellForItemAtIndexPath:indexPath];
-                    _textField.backgroundColor = cell.backgroundColor;
-                    _textField.tag = row;
-                    _textField.text = cell.textLabel.text;
-                    _textField.font = cell.textLabel.font;
-                    [cell.contentView addSubview:_textField];
-                    [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
-                    [_textField becomeFirstResponder];
-                    [_delegate spreadsheetViewInEditingMode:YES];
-                    [self setScrollEnabled:NO];
+                    if ([_delegate spreadsheetViewCanEditHeaderOfType:_currentHeader atIndex:row])
+                    {
+                        _textField.backgroundColor = cell.backgroundColor;
+                        _textField.tag = row;
+                        _textField.text = cell.textLabel.text;
+                        _textField.font = cell.textLabel.font;
+                        [cell.contentView addSubview:_textField];
+                        [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+                        [_textField becomeFirstResponder];
+                        [_delegate spreadsheetViewInEditingMode:YES];
+                        [self setScrollEnabled:NO];
+                    }
+                    
+                    else
+                    {
+                        cell.layer.borderColor = UIColor.redColor.CGColor;
+                        cell.layer.borderWidth = 4.0;
+                    }
+                }
+                
+                else if (gesture.numberOfTouches == 2)
+                {
+                    if (_currentHeader == COLUMN_HEADER)
+                        cell.layer.borderColor = UserDefaults.defaults.darkGreen.CGColor;
+                    
+                    else
+                        cell.layer.borderColor = UIColor.redColor.CGColor;
+                    
+                    cell.layer.borderWidth = 4.0;
                 }
             }
         }
@@ -1083,29 +1114,107 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         {
             CGPoint point = [gesture locationInView:_upperRightCollectionView];
             NSIndexPath *indexPath = [_upperRightCollectionView indexPathForItemAtPoint:point];
-            NSInteger column = indexPath.nvSpreadsheetColumn;
             
             if (indexPath)
             {
+                NVTopRowCell *cell = (NVTopRowCell *)[_upperRightCollectionView cellForItemAtIndexPath:indexPath];
+                NSInteger column = (indexPath.nvSpreadsheetColumn + 1);
+                
                 if (_dataSource.spreadsheetIsFlipped)
                     _currentHeader = COLUMN_HEADER;
                 
                 else
                     _currentHeader = ROW_HEADER;
                 
-                if ([_delegate spreadsheetViewCanEditHeaderOfType:_currentHeader atIndex:column])
+                if (gesture.numberOfTouches == 1)
                 {
-                    NVTopRowCell *cell = (NVTopRowCell *)[_upperRightCollectionView cellForItemAtIndexPath:indexPath];
-                    _textField.backgroundColor = cell.backgroundColor;
-                    _textField.tag = column;
-                    _textField.text = cell.textLabel.text;
-                    _textField.font = cell.textLabel.font;
-                    [cell.contentView addSubview:_textField];
-                    [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
-                    [_textField becomeFirstResponder];
-                    [_delegate spreadsheetViewInEditingMode:YES];
-                    [self setScrollEnabled:NO];
+                    if ([_delegate spreadsheetViewCanEditHeaderOfType:_currentHeader atIndex:column])
+                    {
+                        _textField.backgroundColor = cell.backgroundColor;
+                        _textField.tag = column;
+                        _textField.text = cell.textLabel.text;
+                        _textField.font = cell.textLabel.font;
+                        [cell.contentView addSubview:_textField];
+                        [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+                        [_textField becomeFirstResponder];
+                        [_delegate spreadsheetViewInEditingMode:YES];
+                        [self setScrollEnabled:NO];
+                    }
+                    
+                    else
+                    {
+                        cell.layer.borderColor = UIColor.redColor.CGColor;
+                        cell.layer.borderWidth = 4.0;
+                    }
                 }
+                
+                else if (gesture.numberOfTouches == 2)
+                {
+                    if (_currentHeader == COLUMN_HEADER)
+                        cell.layer.borderColor = UserDefaults.defaults.darkGreen.CGColor;
+                    
+                    else
+                        cell.layer.borderColor = UIColor.redColor.CGColor;
+                    
+                    cell.layer.borderWidth = 4.0;
+                }
+            }
+        }
+    }
+    
+    else if (gesture.state == UIGestureRecognizerStateEnded ||
+             gesture.state == UIGestureRecognizerStateCancelled ||
+             gesture.state ==  UIGestureRecognizerStateFailed)
+    {
+        if (gesture.view == _lowerLeftCollectionView)
+        {
+            CGPoint point = [gesture locationInView:_lowerLeftCollectionView];
+            NSIndexPath *indexPath = [_lowerLeftCollectionView indexPathForItemAtPoint:point];
+            
+            if (indexPath)
+            {
+                NVLeftColumnCell *cell = (NVLeftColumnCell *)[_lowerLeftCollectionView cellForItemAtIndexPath:indexPath];
+                NSInteger row = (indexPath.nvSpreadsheetRow + 1);
+                
+                if (_dataSource.spreadsheetIsFlipped)
+                    _currentHeader = ROW_HEADER;
+                
+                else
+                    _currentHeader = COLUMN_HEADER;
+                
+                if (gesture.numberOfTouches == 2 && _currentHeader == COLUMN_HEADER)
+                {
+                    if ([_delegate spreadsheetViewSortOnRow:row])
+                        [self reloadData];
+                }
+                
+                cell.layer.borderWidth = 0.0;
+            }
+        }
+        
+        else if (gesture.view == _upperRightCollectionView)
+        {
+            CGPoint point = [gesture locationInView:_upperRightCollectionView];
+            NSIndexPath *indexPath = [_upperRightCollectionView indexPathForItemAtPoint:point];
+            
+            if (indexPath)
+            {
+                NVTopRowCell *cell = (NVTopRowCell *)[_upperRightCollectionView cellForItemAtIndexPath:indexPath];
+                NSInteger column = (indexPath.nvSpreadsheetColumn + 1);
+                
+                if (_dataSource.spreadsheetIsFlipped)
+                    _currentHeader = COLUMN_HEADER;
+                
+                else
+                    _currentHeader = ROW_HEADER;
+                
+                if (gesture.numberOfTouches == 2 && _currentHeader == COLUMN_HEADER)
+                {
+                    if ([_delegate spreadsheetViewSortOnRow:column])
+                        [self reloadData];
+                }
+                
+                cell.layer.borderWidth = 0.0;
             }
         }
     }
