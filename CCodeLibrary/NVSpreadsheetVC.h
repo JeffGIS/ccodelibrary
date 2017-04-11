@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, SpreadsheetTypes)
 - (SpreadsheetTypes) getSpreadSheetType;
 - (BOOL) openList;
 - (void) closeList;
+- (NSString *)currentListName;
 - (NSString *)headerTextForColumn:(NSUInteger)column;
 - (NSString *)headerTextForRow:(NSUInteger)row;
 

@@ -113,6 +113,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property int keepProcessing;
 @property (nonatomic) NVDocumentManager *docManager;
 @property BOOL mapPropList, mapIndividualDest, mapGroupDest;
+@property NSString * mapCrimeList;
 @property BOOL uploadPix, downloadData, downloadPix;
 @property int dataset;
 @property BOOL ignoreErrorLog, showDeveloperFunctions;

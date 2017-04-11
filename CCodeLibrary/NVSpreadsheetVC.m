@@ -110,7 +110,15 @@
     UIButton *mapIt = [UIButton buttonWithType:UIButtonTypeCustom];
     mapIt.translatesAutoresizingMaskIntoConstraints = NO;
     mapIt.backgroundColor = UIColor.clearColor;
-    mapIt.selected = CRAPI.sharedInstance.mapPropList;
+    switch ([_delegate getSpreadSheetType])
+    {
+        case SST_PropertyList:
+            mapIt.selected = CRAPI.sharedInstance.mapPropList;
+            break;
+        case SST_CrimeList:
+            mapIt.selected = CRAPI.sharedInstance.mapCrimeList != nil;
+            break;
+    }
     mapIt.imageEdgeInsets = insets;
     
     [mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapItWithX"
@@ -699,8 +707,21 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)toggleMapIt:(UIButton *)button
 {
     button.selected = !button.selected;
-    CRAPI.sharedInstance.mapPropList = button.selected;
-}
+    switch ([_delegate getSpreadSheetType])
+    {
+        case SST_PropertyList:
+            CRAPI.sharedInstance.mapPropList = button.selected;
+            break;
+        case SST_CrimeList:
+        {
+            if (!button.selected)
+                CRAPI.sharedInstance.mapCrimeList = nil;
+            else
+                CRAPI.sharedInstance.mapCrimeList = [_delegate currentListName];
+       }
+            break;
+    }
+ }
 
 - (void)create:(UIButton *)button
 {
