@@ -3,10 +3,17 @@
 
 @import UIKit;
 
+typedef NS_ENUM(NSInteger, SpreadsheetTypes)
+{
+    SST_PropertyList,
+    SST_CrimeList,
+};
+
 @class NVSpreadsheetVC;
 
 @protocol NVSpreadsheetVCDelegate <NSObject>
 
+- (SpreadsheetTypes) getSpreadSheetType;
 - (BOOL) openList;
 - (void) closeList;
 - (NSString *)headerTextForColumn:(NSUInteger)column;
@@ -41,6 +48,8 @@
                                    atIndex:(NSInteger)index;
 
 - (BOOL)spreadsheetSortOnRow:(NSInteger)row;
+- (NSString *)spreadsheetGetReportForRow:(NSInteger)row
+                                  column:(NSInteger)column;
 
 @end
 

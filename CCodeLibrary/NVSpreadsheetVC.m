@@ -9,6 +9,7 @@
 #import "NVAlertView.h"
 #import "NVPopoverTableView.h"
 #import "NVTabBarEdit.h"
+#import "CCodeLibrary/NVTextVC.h"
 @import MessageUI;
 
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
@@ -580,11 +581,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             _selectedRow = indexPath.nvSpreadsheetRow;
             _selectedColumn = indexPath.nvSpreadsheetColumn;
         }
-        
+        NSArray * optionsArray = @[@"Map It", @"Cancel"];
+        if ([_delegate getSpreadSheetType] == SST_CrimeList)
+            optionsArray = @[@"Display Report", @"Cancel"];
         NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                           delegate:self
                                                              title:@"Spreadsheet Options"
-                                                   buttonTextArray:@[@"Map It", @"Cancel"]
+                                                   buttonTextArray:optionsArray
                                                   destructiveIndex:0];
         alert.identifier = @"MapIt";
     }
@@ -844,9 +847,23 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     {
         if (buttonIndex == 0)
         {
-            [_delegate spreadsheetDidMapItForRow:_selectedRow
+            switch ([_delegate getSpreadSheetType])
+            {
+                case SST_PropertyList:
+                    [_delegate spreadsheetDidMapItForRow:_selectedRow
                                           column:_selectedColumn
                                 tabBarController:self.tabBarController];
+                    break;
+                case SST_CrimeList:
+                {
+                    NSString *reportText =
+                    [_delegate spreadsheetGetReportForRow:_selectedRow
+                                                   column:_selectedColumn];
+                    NVTextVC *textVC = [[NVTextVC alloc] initWithText:reportText fontSize:16.0];
+                    [self presentViewController:textVC animated:YES completion:nil];
+                }
+                    break;
+            }
         }
     }
     
