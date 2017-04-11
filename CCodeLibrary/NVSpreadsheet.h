@@ -40,6 +40,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
                                     atIndex:(NSInteger)index;
 
 - (void)spreadsheetViewInEditingMode:(BOOL)editingMode;
+- (BOOL)spreadsheetViewSortOnRow:(NSInteger)row;
 
 @end
 

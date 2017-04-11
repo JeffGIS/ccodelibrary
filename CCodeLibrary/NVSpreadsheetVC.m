@@ -647,7 +647,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     switch (type)
     {
-        case ROW_HEADER:
+        case COLUMN_HEADER:
             if ([_delegate respondsToSelector:@selector(spreadsheetCanEditRowHeaderTextAtIndex:)])
                 return [_delegate spreadsheetCanEditRowHeaderTextAtIndex:index];
             
@@ -656,7 +656,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 NSLog(@"ERROR:spreadsheetCanEditRowHeaderTextAtIndex not implemented.");
                 return NO;
             }
-        case COLUMN_HEADER:
+        case ROW_HEADER:
             if ([_delegate respondsToSelector:@selector(spreadsheetCanEditColumnHeaderTextAtIndex:)])
                 return [_delegate spreadsheetCanEditColumnHeaderTextAtIndex:index];
             
@@ -1052,6 +1052,18 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         _swap.alpha = 1.0;
         _returnToOrigin.userInteractionEnabled = YES;
         _returnToOrigin.alpha = 1.0;
+    }
+}
+
+- (BOOL)spreadsheetViewSortOnRow:(NSInteger)row
+{
+    if ([_delegate respondsToSelector:@selector(spreadsheetSortOnRow:)])
+        return [_delegate spreadsheetSortOnRow:row];
+    
+    else
+    {
+        NSLog(@"ERROR:spreadsheetSortOnRow not implemented.");
+        return NO;
     }
 }
 
