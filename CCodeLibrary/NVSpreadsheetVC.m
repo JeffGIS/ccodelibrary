@@ -19,6 +19,7 @@
 @property (nonatomic) UITextField *titleTextField;
 @property (nonatomic) NSInteger selectedRow, selectedColumn;
 @property (nonatomic) UILabel *numRowsLabel, *numColsLabel;
+@property (nonatomic) UIView *topSpace;
 
 @end
 
@@ -54,15 +55,15 @@
         _columnWidth = 220.0;
     }
     
-    UIView *topSpace = UIView.new;
-    topSpace.translatesAutoresizingMaskIntoConstraints = NO;
-    topSpace.backgroundColor = UIColor.clearColor;
+    _topSpace = UIView.new;
+    _topSpace.translatesAutoresizingMaskIntoConstraints = NO;
+    _topSpace.backgroundColor = UIColor.clearColor;
     
-    [self.view addSubview:topSpace];
-    [topSpace constrainTopToAnchor:self.view.topAnchor];
-    [topSpace constrainLeadingToAnchor:self.view.leadingAnchor];
-    [topSpace constrainTrailingToAnchor:self.view.trailingAnchor];
-    [topSpace constrainHeightToConstant:_rowHeight];
+    [self.view addSubview:_topSpace];
+    [_topSpace constrainTopToAnchor:self.view.topAnchor];
+    [_topSpace constrainLeadingToAnchor:self.view.leadingAnchor];
+    [_topSpace constrainTrailingToAnchor:self.view.trailingAnchor];
+    [_topSpace constrainHeightToConstant:_rowHeight];
     
     UIEdgeInsets insets = UIEdgeInsetsMake((_rowHeight * 0.1), (_rowHeight * 0.1),
                                            (_rowHeight * 0.1), (_rowHeight * 0.1));
@@ -80,9 +81,9 @@
                action:@selector(export:)
      forControlEvents:UIControlEventTouchUpInside];
     
-    [topSpace addSubview:export];
-    [export constrainLeadingToAnchor:topSpace.leadingAnchor];
-    [export constrainTopToAnchor:topSpace.topAnchor];
+    [_topSpace addSubview:export];
+    [export constrainLeadingToAnchor:_topSpace.leadingAnchor];
+    [export constrainTopToAnchor:_topSpace.topAnchor];
     [export constrainHeightToConstant:_rowHeight];
     [export constrainWidthToConstant:_rowHeight];
     
@@ -99,9 +100,9 @@
                action:@selector(delete:)
      forControlEvents:UIControlEventTouchUpInside];
     
-    [topSpace addSubview:delete];
+    [_topSpace addSubview:delete];
     [delete constrainLeadingToAnchor:export.trailingAnchor];
-    [delete constrainTopToAnchor:topSpace.topAnchor];
+    [delete constrainTopToAnchor:_topSpace.topAnchor];
     [delete constrainHeightToConstant:_rowHeight];
     [delete constrainWidthToConstant:_rowHeight];
     
@@ -131,9 +132,9 @@
               action:@selector(toggleMapIt:)
     forControlEvents:UIControlEventTouchUpInside];
     
-    [topSpace addSubview:mapIt];
+    [_topSpace addSubview:mapIt];
     [mapIt constrainLeadingToAnchor:delete.trailingAnchor];
-    [mapIt constrainTopToAnchor:topSpace.topAnchor];
+    [mapIt constrainTopToAnchor:_topSpace.topAnchor];
     [mapIt constrainHeightToConstant:_rowHeight];
     [mapIt constrainWidthToConstant:_rowHeight];
     
@@ -150,9 +151,9 @@
                action:@selector(create:)
      forControlEvents:UIControlEventTouchUpInside];
     
-    [topSpace addSubview:create];
-    [create constrainTrailingToAnchor:topSpace.trailingAnchor];
-    [create constrainTopToAnchor:topSpace.topAnchor];
+    [_topSpace addSubview:create];
+    [create constrainTrailingToAnchor:_topSpace.trailingAnchor];
+    [create constrainTopToAnchor:_topSpace.topAnchor];
     [create constrainHeightToConstant:_rowHeight];
     [create constrainWidthToConstant:_rowHeight];
     
@@ -169,9 +170,9 @@
                action:@selector(select:)
      forControlEvents:UIControlEventTouchUpInside];
     
-    [topSpace addSubview:select];
+    [_topSpace addSubview:select];
     [select constrainTrailingToAnchor:create.leadingAnchor];
-    [select constrainTopToAnchor:topSpace.topAnchor];
+    [select constrainTopToAnchor:_topSpace.topAnchor];
     [select constrainHeightToConstant:_rowHeight];
     [select constrainWidthToConstant:_rowHeight];
     
@@ -185,9 +186,9 @@
               forState:UIControlStateNormal];
     
     [_realtor addTarget:self action:@selector(realtor:) forControlEvents:UIControlEventTouchUpInside];
-    [topSpace addSubview:_realtor];
+    [_topSpace addSubview:_realtor];
     [_realtor constrainTrailingToAnchor:select.leadingAnchor];
-    [_realtor constrainTopToAnchor:topSpace.topAnchor];
+    [_realtor constrainTopToAnchor:_topSpace.topAnchor];
     [_realtor constrainHeightToConstant:_rowHeight];
     [_realtor constrainWidthToConstant:_rowHeight];
     
@@ -207,10 +208,10 @@
     else
         _titleTextField.font = [UIFont boldSystemFontOfSize:30];
     
-    [topSpace addSubview:_titleTextField];
+    [_topSpace addSubview:_titleTextField];
     [_titleTextField constrainLeadingToAnchor:mapIt.trailingAnchor];
     [_titleTextField constrainTrailingToAnchor:_realtor.leadingAnchor];
-    [_titleTextField constrainTopToAnchor:topSpace.topAnchor];
+    [_titleTextField constrainTopToAnchor:_topSpace.topAnchor];
     [_titleTextField constrainHeightToConstant:_rowHeight];
     
     _nvss = [[NVSpreadsheet alloc] initWithNumberOfHeaderRows:1
@@ -228,7 +229,7 @@
     [self.view addSubview:_nvss];
     [_nvss constrainLeadingToAnchor:self.view.leadingAnchor];
     [_nvss constrainTrailingToAnchor:self.view.trailingAnchor];
-    [_nvss constrainTopToAnchor:topSpace.bottomAnchor];
+    [_nvss constrainTopToAnchor:_topSpace.bottomAnchor];
     [_nvss constrainBottomToAnchor:self.view.bottomAnchor];
 }
 
@@ -999,6 +1000,41 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                                      @"Go to Upper Left", @"Go to Upper Right", @"Go to Lower Left", @"Go to Lower Right"]
                                                   destructiveIndex:0];
         alert.identifier = @"SpreadsheetNavigation";
+    }
+}
+
+- (NSString *)spreadsheetViewRowHeaderPrefixAtIndex:(NSInteger)index
+{
+    if ([_delegate respondsToSelector:@selector(spreadsheetRowHeaderTextPrefixAtIndex:)])
+        return [_delegate spreadsheetRowHeaderTextPrefixAtIndex:index];
+    
+    else
+    {
+        NSLog(@"ERROR:spreadsheetRowHeaderTextPrefixAtIndex not implemented.");
+        return nil;
+    }
+}
+
+- (void)spreadsheetViewInEditingMode:(BOOL)editingMode
+{
+    if (editingMode)
+    {
+        _topSpace.userInteractionEnabled = NO;
+        _topSpace.alpha = 0.5;
+        _swap.userInteractionEnabled = NO;
+        _swap.alpha = 0.5;
+        _returnToOrigin.userInteractionEnabled = NO;
+        _returnToOrigin.alpha = 0.5;
+    }
+    
+    else
+    {
+        _topSpace.userInteractionEnabled = YES;
+        _topSpace.alpha = 1.0;
+        _swap.userInteractionEnabled = YES;
+        _swap.alpha = 1.0;
+        _returnToOrigin.userInteractionEnabled = YES;
+        _returnToOrigin.alpha = 1.0;
     }
 }
 

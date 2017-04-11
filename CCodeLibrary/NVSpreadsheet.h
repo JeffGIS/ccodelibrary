@@ -21,6 +21,7 @@
 
 - (CGSize)gridContainerSize;
 - (BOOL)spreadsheetIsFlipped;
+- (NSString *)spreadsheetViewRowHeaderPrefixAtIndex:(NSInteger)index;
 
 @end
 
@@ -37,6 +38,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)spreadsheetViewDidEditRowHeaderText:(NSString *)text
                                     atIndex:(NSInteger)index;
+
+- (void)spreadsheetViewInEditingMode:(BOOL)editingMode;
 
 @end
 

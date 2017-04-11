@@ -43,6 +43,7 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
 @property (nonatomic) UITextField *textField;
 @property (nonatomic) UILongPressGestureRecognizer *lp1, *lp2;
 @property int currentHeader;
+@property (nonatomic) BOOL scrollEnabled;
 
 
 @end
@@ -63,6 +64,7 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
         _headerRowCount = headerRowCount;
         _headerColumnCount = headerColumnCount;
         _currentHeader = 0;
+        _scrollEnabled = YES;
         
         _textField = UITextField.new;
         _textField.translatesAutoresizingMaskIntoConstraints = NO;
@@ -122,6 +124,15 @@ forCellWithReuseIdentifier:(NSString *)identifier
     [_upperRightCollectionView reloadData];
     [_lowerLeftCollectionView reloadData];
     [_lowerRightCollectionView reloadData];
+}
+
+- (void)setScrollEnabled:(BOOL)scrollEnabled
+{
+    _scrollEnabled = scrollEnabled;
+    _upperLeftCollectionView.scrollEnabled = scrollEnabled;
+    _upperRightCollectionView.scrollEnabled = scrollEnabled;
+    _lowerLeftCollectionView.scrollEnabled = scrollEnabled;
+    _lowerRightCollectionView.scrollEnabled = scrollEnabled;
 }
 
 - (void)flashScrollIndicators
@@ -752,7 +763,7 @@ forCellWithReuseIdentifier:(NSString *)identifier
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView.tag != NVSpreadsheetCollectionUpperLeft)
+    if (collectionView.tag != NVSpreadsheetCollectionUpperLeft && _scrollEnabled)
     {
         NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
                                                                              indexPath:indexPath];
@@ -1062,6 +1073,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     [cell.contentView addSubview:_textField];
                     [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
                     [_textField becomeFirstResponder];
+                    [_delegate spreadsheetViewInEditingMode:YES];
+                    [self setScrollEnabled:NO];
                 }
             }
         }
@@ -1090,9 +1103,33 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     [cell.contentView addSubview:_textField];
                     [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
                     [_textField becomeFirstResponder];
+                    [_delegate spreadsheetViewInEditingMode:YES];
+                    [self setScrollEnabled:NO];
                 }
             }
         }
+    }
+}
+
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string
+{
+    NSString *resultString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    NSString *prefixString = [_dataSource spreadsheetViewRowHeaderPrefixAtIndex:textField.tag];
+    
+    if (!prefixString || !prefixString.length)
+        return YES;
+    
+    else
+    {
+        NSRange prefixStringRange = [resultString rangeOfString:prefixString options:NSCaseInsensitiveSearch];
+        
+        if (prefixStringRange.location == 0)
+            return YES;
+        
+        else
+            return NO;
     }
 }
 
@@ -1120,6 +1157,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     [_upperRightCollectionView reloadData];
     [_lowerLeftCollectionView reloadData];
+    [_delegate spreadsheetViewInEditingMode:NO];
+    [self setScrollEnabled:YES];
 }
 
 @end
