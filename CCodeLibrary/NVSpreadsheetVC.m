@@ -21,6 +21,8 @@
 @property (nonatomic) NSInteger selectedRow, selectedColumn;
 @property (nonatomic) UILabel *numRowsLabel, *numColsLabel;
 @property (nonatomic) UIView *topSpace;
+@property (nonatomic) NSMutableArray <NSNumber *> *selectedRows;
+@property (nonatomic) UIColor *selectedRowColor;
 
 @end
 
@@ -42,7 +44,13 @@
                                              object:UIPasteboard.generalPasteboard];
     
     self.view.backgroundColor = UIColor.darkGrayColor;
+    _selectedRows = NSMutableArray.array;
     _flipped = YES;
+    
+    _selectedRowColor = [UIColor colorWithRed:(127.0 / 255.0)
+                                        green:(255.0 / 255.0)
+                                         blue:(127.0 / 255.0)
+                                        alpha:0.2];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
@@ -453,6 +461,7 @@
         
         NVTopRowCell *tr = (NVTopRowCell *)cell;
         tr.idLabel.text = [NSString stringWithFormat:@"%li", indexPath.nvSpreadsheetColumn];
+        tr.contentView.backgroundColor = UIColor.clearColor;
         
         if (_flipped)
         {
@@ -464,6 +473,15 @@
         {
             tr.textLabel.text = [_delegate headerTextForColumn:indexPath.nvSpreadsheetColumn];
             tr.textLabel.numberOfLines = 1;
+            
+            for (NSNumber *row in _selectedRows)
+            {
+                if (indexPath.nvSpreadsheetColumn == row.integerValue)
+                {
+                    tr.contentView.backgroundColor = _selectedRowColor;
+                    break;
+                }
+            }
         }
         
         tr.backgroundColor = UIColor.whiteColor;
@@ -476,11 +494,21 @@
         
         NVLeftColumnCell *lc = (NVLeftColumnCell *)cell;
         lc.idLabel.text = [NSString stringWithFormat:@"%li", indexPath.nvSpreadsheetRow];
+        lc.contentView.backgroundColor = UIColor.clearColor;
         
         if (_flipped)
         {
             lc.textLabel.text = [_delegate headerTextForColumn:indexPath.nvSpreadsheetRow];
             lc.textLabel.numberOfLines = 1;
+            
+            for (NSNumber *row in _selectedRows)
+            {
+                if (indexPath.nvSpreadsheetRow == row.integerValue)
+                {
+                    lc.contentView.backgroundColor = _selectedRowColor;
+                    break;
+                }
+            }
         }
         
         else
@@ -491,17 +519,17 @@
     
         if (indexPath.nvSpreadsheetRow % 2 == 0)
         {
-            lc.backgroundColor = [UIColor colorWithRed:(222.0 / 255.0)
-                                                 green:(243.0 / 255.0)
-                                                  blue:(250.0 / 255.0)
+            lc.backgroundColor = [UIColor colorWithRed:(210.0 / 255.0)
+                                                 green:(230.0 / 255.0)
+                                                  blue:(240.0 / 255.0)
                                                  alpha:1.0];
         }
         
         else
         {
-            lc.backgroundColor = [UIColor colorWithRed:(233.0 / 255.0)
-                                                 green:(247.0 / 255.0)
-                                                  blue:(252.0 / 255.0)
+            lc.backgroundColor = [UIColor colorWithRed:(235.0 / 255.0)
+                                                 green:(245.0 / 255.0)
+                                                  blue:(250.0 / 255.0)
                                                  alpha:1.0];
         }
     }
@@ -517,19 +545,37 @@
         {
             gc.textLabel.text = [_delegate textForColumn:indexPath.nvSpreadsheetRow
                                                      row:indexPath.nvSpreadsheetColumn];
+            
+            for (NSNumber *row in _selectedRows)
+            {
+                if (indexPath.nvSpreadsheetRow == row.integerValue)
+                {
+                    gc.contentView.backgroundColor = _selectedRowColor;
+                    break;
+                }
+            }
         }
         
         else
         {
             gc.textLabel.text = [_delegate textForColumn:indexPath.nvSpreadsheetColumn
                                                      row:indexPath.nvSpreadsheetRow];
+            
+            for (NSNumber *row in _selectedRows)
+            {
+                if (indexPath.nvSpreadsheetColumn == row.integerValue)
+                {
+                    gc.contentView.backgroundColor = _selectedRowColor;
+                    break;
+                }
+            }
         }
         
         if (indexPath.nvSpreadsheetRow % 2 == 0)
         {
-            gc.backgroundColor = [UIColor colorWithRed:(242.0 / 255.0)
-                                                 green:(242.0 / 255.0)
-                                                  blue:(242.0 / 255.0)
+            gc.backgroundColor = [UIColor colorWithRed:(230.0 / 255.0)
+                                                 green:(230.0 / 255.0)
+                                                  blue:(230.0 / 255.0)
                                                  alpha:1.0];
         }
         
@@ -561,6 +607,22 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             
             [nvwv showRealtorButton];
         }
+        
+        else
+        {
+            for (NSNumber *row in _selectedRows)
+            {
+                if (row.integerValue == indexPath.nvSpreadsheetRow)
+                {
+                    [_selectedRows removeObject:row];
+                    [_nvss reloadData];
+                    return;
+                }
+            }
+            
+            [_selectedRows addObject:[NSNumber numberWithInteger:indexPath.nvSpreadsheetRow]];
+            [_nvss reloadData];
+        }
     }
     
     else if (indexPath.nvSpreadsheetRow == 0)
@@ -574,10 +636,28 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             
             [nvwv showRealtorButton];
         }
+        
+        else
+        {
+            for (NSNumber *row in _selectedRows)
+            {
+                if (row.integerValue == indexPath.nvSpreadsheetColumn)
+                {
+                    [_selectedRows removeObject:row];
+                    [_nvss reloadData];
+                    return;
+                }
+            }
+            
+            [_selectedRows addObject:[NSNumber numberWithInteger:indexPath.nvSpreadsheetColumn]];
+            [_nvss reloadData];
+        }
     }
     
     else
     {
+        [_nvss reloadData];
+        
         if (_flipped)
         {
             _selectedRow = indexPath.nvSpreadsheetColumn;
@@ -589,9 +669,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             _selectedRow = indexPath.nvSpreadsheetRow;
             _selectedColumn = indexPath.nvSpreadsheetColumn;
         }
-        NSArray * optionsArray = @[@"Map It", @"Cancel"];
+        
+        NSArray *optionsArray = @[@"Map It", @"Cancel"];
+        
         if ([_delegate getSpreadSheetType] == SST_CrimeList)
             optionsArray = @[@"Display Report", @"Cancel"];
+        
         NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                           delegate:self
                                                              title:@"Spreadsheet Options"

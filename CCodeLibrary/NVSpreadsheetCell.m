@@ -47,6 +47,17 @@
         [self.contentView setBackgroundColor:UIColor.clearColor];
 }
 
+- (void)setHighlighted:(BOOL)highlighted
+{
+    [super setHighlighted:highlighted];
+    
+    if (highlighted)
+        [self.contentView setBackgroundColor:UIColor.lightGrayColor];
+    
+    else
+        [self.contentView setBackgroundColor:UIColor.clearColor];
+}
+
 @end
 
 @implementation NVTopRowCell
@@ -86,6 +97,28 @@
     }
     
     return self;
+}
+
+- (void)setSelected:(BOOL)selected
+{
+    [super setSelected:selected];
+    
+    if (selected)
+        [self.contentView setBackgroundColor:UIColor.lightGrayColor];
+    
+    else
+        [self.contentView setBackgroundColor:UIColor.clearColor];
+}
+
+- (void)setHighlighted:(BOOL)highlighted
+{
+    [super setHighlighted:highlighted];
+    
+    if (highlighted)
+        [self.contentView setBackgroundColor:UIColor.lightGrayColor];
+    
+    else
+        [self.contentView setBackgroundColor:UIColor.clearColor];
 }
 
 @end
@@ -132,6 +165,28 @@
     }
     
     return self;
+}
+
+- (void)setSelected:(BOOL)selected
+{
+    [super setSelected:selected];
+    
+    if (selected)
+        [self.contentView setBackgroundColor:UIColor.lightGrayColor];
+    
+    else
+        [self.contentView setBackgroundColor:UIColor.clearColor];
+}
+
+- (void)setHighlighted:(BOOL)highlighted
+{
+    [super setHighlighted:highlighted];
+    
+    if (highlighted)
+        [self.contentView setBackgroundColor:UIColor.lightGrayColor];
+    
+    else
+        [self.contentView setBackgroundColor:UIColor.clearColor];
 }
 
 @end

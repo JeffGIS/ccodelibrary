@@ -46,7 +46,6 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
 @property int currentHeader;
 @property (nonatomic) BOOL scrollEnabled;
 
-
 @end
 
 @implementation NVSpreadsheet
@@ -193,6 +192,7 @@ forCellWithReuseIdentifier:(NSString *)identifier
     collectionView.dataSource = self;
     collectionView.showsHorizontalScrollIndicator = NO;
     collectionView.showsVerticalScrollIndicator = NO;
+    collectionView.delaysContentTouches = NO;
     [container addSubview:collectionView];
 }
 
@@ -784,8 +784,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         NSIndexPath *dataSourceIndexPath = [self dataSourceIndexPathFromCollectionView:collectionView
                                                                              indexPath:indexPath];
         
-        [_delegate spreadsheetView:self didSelectItemAtIndexPath:dataSourceIndexPath];
         [collectionView deselectItemAtIndexPath:indexPath animated:YES];
+        [_delegate spreadsheetView:self didSelectItemAtIndexPath:dataSourceIndexPath];
     }
 }
 
