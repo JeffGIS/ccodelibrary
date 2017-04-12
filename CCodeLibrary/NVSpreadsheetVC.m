@@ -21,11 +21,11 @@
 @property (nonatomic) UIButton *swap, *returnToOrigin, *realtor;
 @property (nonatomic) CGFloat columnWidth, rowHeight;
 @property (nonatomic) UITextField *titleTextField;
-@property (nonatomic) NSInteger selectedRow, selectedColumn;
 @property (nonatomic) UILabel *numRowsLabel, *numColsLabel;
 @property (nonatomic) UIView *topSpace;
 @property (nonatomic) NSMutableArray <NSNumber *> *selectedRows;
 @property (nonatomic) UIColor *selectedRowColor;
+@property NSInteger selectedRow, selectedColumn;
 
 @end
 
@@ -1172,6 +1172,25 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         NSLog(@"ERROR:spreadsheetSortOnRow not implemented.");
         return NO;
     }
+}
+
+- (BOOL)multiSelectRequestedAtIndex:(NSInteger)index
+{
+    BOOL rtn = NO;
+    
+    if (_selectedRows.count)
+    {
+        NSInteger lastSelectedRow = _selectedRows.lastObject.integerValue;
+        NSInteger start = MIN(index, lastSelectedRow);
+        NSInteger end = MAX(index, lastSelectedRow);
+        
+        for (NSInteger i = start; i <= end; i++)
+            [_selectedRows addObject:[NSNumber numberWithInteger:i]];
+        
+        rtn = YES;
+    }
+    
+    return rtn;
 }
 
 @end

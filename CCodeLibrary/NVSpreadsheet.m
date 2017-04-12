@@ -773,6 +773,8 @@ forCellWithReuseIdentifier:(NSString *)identifier
     UICollectionViewCell *cell = [_dataSource spreadsheetView:self
                                        cellForItemAtIndexPath:dataSourceIndexPath];
     
+    cell.layer.borderWidth = 4.0;
+    cell.layer.borderColor = UIColor.clearColor.CGColor;
     return cell;
 }
 
@@ -1097,10 +1099,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     }
                     
                     else
-                    {
                         cell.layer.borderColor = UIColor.redColor.CGColor;
-                        cell.layer.borderWidth = 4.0;
-                    }
                 }
                 
                 else if (gesture.numberOfTouches == 2)
@@ -1109,9 +1108,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         cell.layer.borderColor = UserDefaults.defaults.darkGreen.CGColor;
                     
                     else
-                        cell.layer.borderColor = UIColor.redColor.CGColor;
-                    
-                    cell.layer.borderWidth = 4.0;
+                    {
+                        if ([_delegate multiSelectRequestedAtIndex:row])
+                           [self reloadData];
+                        
+                        else
+                           cell.layer.borderColor = UIColor.redColor.CGColor;
+                    }
                 }
             }
         }
@@ -1148,10 +1151,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     }
                     
                     else
-                    {
                         cell.layer.borderColor = UIColor.redColor.CGColor;
-                        cell.layer.borderWidth = 4.0;
-                    }
                 }
                 
                 else if (gesture.numberOfTouches == 2)
@@ -1160,17 +1160,19 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         cell.layer.borderColor = UserDefaults.defaults.darkGreen.CGColor;
                     
                     else
-                        cell.layer.borderColor = UIColor.redColor.CGColor;
-                    
-                    cell.layer.borderWidth = 4.0;
+                    {
+                        if ([_delegate multiSelectRequestedAtIndex:column])
+                            [self reloadData];
+                        
+                        else
+                            cell.layer.borderColor = UIColor.redColor.CGColor;
+                    }
                 }
             }
         }
     }
     
-    else if (gesture.state == UIGestureRecognizerStateEnded ||
-             gesture.state == UIGestureRecognizerStateCancelled ||
-             gesture.state ==  UIGestureRecognizerStateFailed)
+    else if (gesture.state == UIGestureRecognizerStateEnded)
     {
         if (gesture.view == _lowerLeftCollectionView)
         {
@@ -1194,7 +1196,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         [self reloadData];
                 }
                 
-                cell.layer.borderWidth = 0.0;
+                cell.layer.borderColor = UIColor.clearColor.CGColor;
             }
         }
         
@@ -1220,7 +1222,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         [self reloadData];
                 }
                 
-                cell.layer.borderWidth = 0.0;
+                cell.layer.borderColor = UIColor.clearColor.CGColor;
             }
         }
     }
