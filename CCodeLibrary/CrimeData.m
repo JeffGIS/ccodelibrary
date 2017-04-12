@@ -270,6 +270,8 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     {
         rtn = TRUE;
         
+        _myLastUpdate = [self lastUpdate];
+       
         _delegate = delegate;
         _GMServer = GeoMasterServer.open;
         _GMServer.useTestServer = NO;
@@ -329,7 +331,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     switch (server.messageID)
     {
         case GMSMessageGetPoliceUpdate:
-            msg = [NSString stringWithFormat:@"$M(LastPoliceUpdate)\r\n"];
+            msg = [NSString stringWithFormat:@"$M(LastPoliceUpdate,(%@),%i)\r\n",UIDevice.currentDevice.name,_myLastUpdate];
             break;
             
     }
@@ -352,7 +354,6 @@ didReceiveMessage:(NSString *)message
         {
             case GMSMessageGetPoliceUpdate:
             {
-                _myLastUpdate = [self lastUpdate];
                 if (_myLastUpdate != 131)
                     _nextUpdate = _myLastUpdate + 1;
                 else

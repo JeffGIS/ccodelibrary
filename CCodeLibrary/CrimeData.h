@@ -27,8 +27,8 @@
 @property (nonatomic, copy) NSString *path;
 @property (nonatomic, copy) NSString *reportsDirectory;
 @property long long fileSize;
-@property NSInteger myLastUpdate, nextUpdate;
-@property NSInteger serversLastUpdate;
+@property int myLastUpdate, nextUpdate;
+@property int serversLastUpdate;
 @property BOOL autoUpdate;
 
 - (BOOL)open;
