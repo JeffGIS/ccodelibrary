@@ -44,7 +44,7 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
 @property (nonatomic) UITextField *textField;
 @property (nonatomic) UILongPressGestureRecognizer *lp1, *lp2, *lp3, *lp4;
 @property int currentHeader;
-@property (nonatomic) BOOL scrollEnabled;
+@property (nonatomic) BOOL scrollEnabled, selectable;
 
 @end
 
@@ -142,6 +142,15 @@ forCellWithReuseIdentifier:(NSString *)identifier
     _lowerRightCollectionView.scrollEnabled = scrollEnabled;
 }
 
+- (void)setSelectable:(BOOL)selectable
+{
+    _selectable = selectable;
+    _upperLeftCollectionView.allowsSelection = selectable;
+    _upperRightCollectionView.allowsSelection = selectable;
+    _lowerLeftCollectionView.allowsSelection = selectable;
+    _lowerRightCollectionView.allowsSelection = selectable;
+}
+
 - (void)flashScrollIndicators
 {
     [self showScrollIndicators];
@@ -192,7 +201,6 @@ forCellWithReuseIdentifier:(NSString *)identifier
     collectionView.dataSource = self;
     collectionView.showsHorizontalScrollIndicator = NO;
     collectionView.showsVerticalScrollIndicator = NO;
-    collectionView.delaysContentTouches = NO;
     [container addSubview:collectionView];
 }
 
@@ -1095,6 +1103,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
                         [_textField becomeFirstResponder];
                         [_delegate spreadsheetViewInEditingMode:YES];
+                        [self setSelectable:NO];
                         [self setScrollEnabled:NO];
                     }
                     
@@ -1147,6 +1156,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
                         [_textField becomeFirstResponder];
                         [_delegate spreadsheetViewInEditingMode:YES];
+                        [self setSelectable:NO];
                         [self setScrollEnabled:NO];
                     }
                     
@@ -1274,6 +1284,7 @@ replacementString:(NSString *)string
     [_upperRightCollectionView reloadData];
     [_lowerLeftCollectionView reloadData];
     [_delegate spreadsheetViewInEditingMode:NO];
+    [self setSelectable:YES];
     [self setScrollEnabled:YES];
 }
 

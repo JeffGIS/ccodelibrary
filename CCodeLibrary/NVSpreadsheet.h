@@ -63,7 +63,6 @@ forCellWithReuseIdentifier:(NSString *)identifier;
 - (UICollectionViewCell *)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier
                                                     forIndexPath:(NSIndexPath *)indexPath;
 
-- (void)selectRow:(NSInteger)row;
 - (void)reloadData;
 - (void)flashScrollIndicators;
 - (void)goToTop;

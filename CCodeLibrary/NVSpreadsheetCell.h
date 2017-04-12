@@ -3,25 +3,22 @@
 
 @import UIKit;
 
-@interface NVGridCell : UICollectionViewCell
+@interface NVCell : UICollectionViewCell
 
-@property (nonatomic) UILabel *textLabel;
-@property NSUInteger row, column;
-@property CGFloat idSize;
+@property (nonatomic) UILabel *textLabel, *idLabel;
+@property (nonatomic) CGFloat idSize;
+@property (nonatomic) UIColor *previousColor;
 
 @end
 
-@interface NVTopRowCell : UICollectionViewCell
-
-@property (nonatomic) UILabel *textLabel, *idLabel;
-@property CGFloat idSize;
+@interface NVGridCell : NVCell
 
 @end
 
-@interface NVLeftColumnCell : UICollectionViewCell
+@interface NVTopRowCell : NVCell
 
-@property (nonatomic) UILabel *textLabel, *idLabel;
-@property NSUInteger row, column;
-@property CGFloat idSize;
+@end
+
+@interface NVLeftColumnCell : NVCell
 
 @end
