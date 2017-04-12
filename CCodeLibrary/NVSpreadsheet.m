@@ -44,7 +44,7 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
 @property (nonatomic) UITextField *textField;
 @property (nonatomic) UILongPressGestureRecognizer *lp1, *lp2, *lp3, *lp4;
 @property int currentHeader;
-@property (nonatomic) BOOL scrollEnabled;
+@property (nonatomic) BOOL scrollEnabled, selectable;
 
 @end
 
@@ -142,6 +142,15 @@ forCellWithReuseIdentifier:(NSString *)identifier
     _lowerRightCollectionView.scrollEnabled = scrollEnabled;
 }
 
+- (void)setSelectable:(BOOL)selectable
+{
+    _selectable = selectable;
+    _upperLeftCollectionView.allowsSelection = selectable;
+    _upperRightCollectionView.allowsSelection = selectable;
+    _lowerLeftCollectionView.allowsSelection = selectable;
+    _lowerRightCollectionView.allowsSelection = selectable;
+}
+
 - (void)flashScrollIndicators
 {
     [self showScrollIndicators];
@@ -192,7 +201,6 @@ forCellWithReuseIdentifier:(NSString *)identifier
     collectionView.dataSource = self;
     collectionView.showsHorizontalScrollIndicator = NO;
     collectionView.showsVerticalScrollIndicator = NO;
-    collectionView.delaysContentTouches = NO;
     [container addSubview:collectionView];
 }
 
@@ -773,6 +781,8 @@ forCellWithReuseIdentifier:(NSString *)identifier
     UICollectionViewCell *cell = [_dataSource spreadsheetView:self
                                        cellForItemAtIndexPath:dataSourceIndexPath];
     
+    cell.layer.borderWidth = 4.0;
+    cell.layer.borderColor = UIColor.clearColor.CGColor;
     return cell;
 }
 
@@ -1093,14 +1103,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
                         [_textField becomeFirstResponder];
                         [_delegate spreadsheetViewInEditingMode:YES];
+                        [self setSelectable:NO];
                         [self setScrollEnabled:NO];
                     }
                     
                     else
-                    {
                         cell.layer.borderColor = UIColor.redColor.CGColor;
-                        cell.layer.borderWidth = 4.0;
-                    }
                 }
                 
                 else if (gesture.numberOfTouches == 2)
@@ -1109,9 +1117,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         cell.layer.borderColor = UserDefaults.defaults.darkGreen.CGColor;
                     
                     else
-                        cell.layer.borderColor = UIColor.redColor.CGColor;
-                    
-                    cell.layer.borderWidth = 4.0;
+                    {
+                        if ([_delegate multiSelectRequestedAtIndex:row])
+                           [self reloadData];
+                        
+                        else
+                           cell.layer.borderColor = UIColor.redColor.CGColor;
+                    }
                 }
             }
         }
@@ -1144,14 +1156,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         [_textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
                         [_textField becomeFirstResponder];
                         [_delegate spreadsheetViewInEditingMode:YES];
+                        [self setSelectable:NO];
                         [self setScrollEnabled:NO];
                     }
                     
                     else
-                    {
                         cell.layer.borderColor = UIColor.redColor.CGColor;
-                        cell.layer.borderWidth = 4.0;
-                    }
                 }
                 
                 else if (gesture.numberOfTouches == 2)
@@ -1160,17 +1170,19 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         cell.layer.borderColor = UserDefaults.defaults.darkGreen.CGColor;
                     
                     else
-                        cell.layer.borderColor = UIColor.redColor.CGColor;
-                    
-                    cell.layer.borderWidth = 4.0;
+                    {
+                        if ([_delegate multiSelectRequestedAtIndex:column])
+                            [self reloadData];
+                        
+                        else
+                            cell.layer.borderColor = UIColor.redColor.CGColor;
+                    }
                 }
             }
         }
     }
     
-    else if (gesture.state == UIGestureRecognizerStateEnded ||
-             gesture.state == UIGestureRecognizerStateCancelled ||
-             gesture.state ==  UIGestureRecognizerStateFailed)
+    else if (gesture.state == UIGestureRecognizerStateEnded)
     {
         if (gesture.view == _lowerLeftCollectionView)
         {
@@ -1194,7 +1206,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         [self reloadData];
                 }
                 
-                cell.layer.borderWidth = 0.0;
+                cell.layer.borderColor = UIColor.clearColor.CGColor;
             }
         }
         
@@ -1220,7 +1232,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         [self reloadData];
                 }
                 
-                cell.layer.borderWidth = 0.0;
+                cell.layer.borderColor = UIColor.clearColor.CGColor;
             }
         }
     }
@@ -1272,6 +1284,7 @@ replacementString:(NSString *)string
     [_upperRightCollectionView reloadData];
     [_lowerLeftCollectionView reloadData];
     [_delegate spreadsheetViewInEditingMode:NO];
+    [self setSelectable:YES];
     [self setScrollEnabled:YES];
 }
 

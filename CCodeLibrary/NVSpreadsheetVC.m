@@ -21,11 +21,11 @@
 @property (nonatomic) UIButton *swap, *returnToOrigin, *realtor;
 @property (nonatomic) CGFloat columnWidth, rowHeight;
 @property (nonatomic) UITextField *titleTextField;
-@property (nonatomic) NSInteger selectedRow, selectedColumn;
 @property (nonatomic) UILabel *numRowsLabel, *numColsLabel;
 @property (nonatomic) UIView *topSpace;
 @property (nonatomic) NSMutableArray <NSNumber *> *selectedRows;
 @property (nonatomic) UIColor *selectedRowColor;
+@property NSInteger selectedRow, selectedColumn, lastTapSelectedRow;
 
 @end
 
@@ -89,9 +89,7 @@
                                                                                     ofType:@"png"]]
             forState:UIControlStateNormal];
     
-    [export addTarget:self
-               action:@selector(export:)
-     forControlEvents:UIControlEventTouchUpInside];
+    [export addTarget:self action:@selector(export:) forControlEvents:UIControlEventTouchUpInside];
     
     [_topSpace addSubview:export];
     [export constrainLeadingToAnchor:_topSpace.leadingAnchor];
@@ -108,9 +106,7 @@
                                                                                     ofType:@"png"]]
             forState:UIControlStateNormal];
     
-    [delete addTarget:self
-               action:@selector(delete:)
-     forControlEvents:UIControlEventTouchUpInside];
+    [delete addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchUpInside];
     
     [_topSpace addSubview:delete];
     [delete constrainLeadingToAnchor:export.trailingAnchor];
@@ -148,9 +144,7 @@
                                                                                    ofType:@"png"]]
            forState:UIControlStateSelected|UIControlStateHighlighted];
     
-    [mapIt addTarget:self
-              action:@selector(toggleMapIt:)
-    forControlEvents:UIControlEventTouchUpInside];
+    [mapIt addTarget:self action:@selector(toggleMapIt:) forControlEvents:UIControlEventTouchUpInside];
     
     [_topSpace addSubview:mapIt];
     [mapIt constrainLeadingToAnchor:delete.trailingAnchor];
@@ -167,9 +161,7 @@
                                                                                     ofType:@"png"]]
             forState:UIControlStateNormal];
     
-    [create addTarget:self
-               action:@selector(create:)
-     forControlEvents:UIControlEventTouchUpInside];
+    [create addTarget:self action:@selector(create:) forControlEvents:UIControlEventTouchUpInside];
     
     [_topSpace addSubview:create];
     [create constrainTrailingToAnchor:_topSpace.trailingAnchor];
@@ -186,9 +178,7 @@
                                                                                     ofType:@"png"]]
             forState:UIControlStateNormal];
     
-    [select addTarget:self
-               action:@selector(select:)
-     forControlEvents:UIControlEventTouchUpInside];
+    [select addTarget:self action:@selector(select:) forControlEvents:UIControlEventTouchUpInside];
     
     [_topSpace addSubview:select];
     [select constrainTrailingToAnchor:create.leadingAnchor];
@@ -543,6 +533,8 @@
                                                           forIndexPath:indexPath];
         
         NVGridCell *gc = (NVGridCell *)cell;
+        gc.contentView.backgroundColor = UIColor.clearColor;
+        
         
         if (_flipped)
         {
@@ -611,21 +603,19 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             [nvwv showRealtorButton];
         }
         
-        else
+        else for (NSNumber *row in _selectedRows)
         {
-            for (NSNumber *row in _selectedRows)
+            if (row.integerValue == indexPath.nvSpreadsheetRow)
             {
-                if (row.integerValue == indexPath.nvSpreadsheetRow)
-                {
-                    [_selectedRows removeObject:row];
-                    [_nvss reloadData];
-                    return;
-                }
+                [_selectedRows removeObject:row];
+                [_nvss reloadData];
+                return;
             }
-            
-            [_selectedRows addObject:[NSNumber numberWithInteger:indexPath.nvSpreadsheetRow]];
-            [_nvss reloadData];
         }
+        
+        [_selectedRows addObject:[NSNumber numberWithInteger:indexPath.nvSpreadsheetRow]];
+        _lastTapSelectedRow = indexPath.nvSpreadsheetRow;
+        [_nvss reloadData];
     }
     
     else if (indexPath.nvSpreadsheetRow == 0)
@@ -782,12 +772,26 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)delete:(UIButton *)button
 {
+    NSString *title = @"", *identifier = @"";
+    
+    if (_selectedRows.count)
+    {
+        title = @"Are you sure you want to delete selected rows?";
+        identifier = @"RowDeletePrompt";
+    }
+    
+    else
+    {
+        title = [NSString stringWithFormat:@"Are you sure you want to delete %@?", _titleTextField.text];
+        identifier = @"SpreadsheetDeletePrompt";
+    }
+    
     NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                       delegate:self
-                                                         title:[NSString stringWithFormat:@"Are you sure you want to delete %@?", _titleTextField.text]
+                                                         title:title
                                                buttonTextArray:@[@"YES", @"NO"]
                                               destructiveIndex:1];
-    alert.identifier = @"DeletePrompt";
+    alert.identifier = identifier;
 }
 
 - (void)toggleMapIt:(UIButton *)button
@@ -940,12 +944,27 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         }
     }
     
-    else if ([alertView.identifier isEqualToString:@"DeletePrompt"])
+    else if ([alertView.identifier isEqualToString:@"SpreadsheetDeletePrompt"])
     {
         if (buttonIndex == 0)
         {
             [_delegate spreadsheetDidDeleteCurrentList];
             _titleTextField.text = _delegate.titleTextForSpreadsheet;
+            [_nvss reloadData];
+        }
+    }
+    
+    else if ([alertView.identifier isEqualToString:@"RowDeletePrompt"])
+    {
+        if (buttonIndex == 0)
+        {
+            NSMutableArray *tempArray = NSMutableArray.array;
+            
+            for (NSNumber *row in _selectedRows)
+                [tempArray addObject:[NSNumber numberWithInteger:(row.integerValue - 1)]];
+            
+            [_delegate deleteRows:tempArray.copy];
+            [_selectedRows removeAllObjects];
             [_nvss reloadData];
         }
     }
@@ -1172,6 +1191,65 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         NSLog(@"ERROR:spreadsheetSortOnRow not implemented.");
         return NO;
     }
+}
+
+- (BOOL)multiSelectRequestedAtIndex:(NSInteger)index
+{
+    BOOL rtn = NO;
+    
+    if (_selectedRows.count)
+    {
+        NSInteger lastSelectedRow = _selectedRows.lastObject.integerValue;
+        
+        if (lastSelectedRow == _lastTapSelectedRow)
+            [_selectedRows removeLastObject];
+        
+        if (index >= lastSelectedRow)
+        {
+            for (NSInteger i = lastSelectedRow; i <= index; i++)
+            {
+                BOOL addRow = YES;
+                
+                for (NSNumber *row in _selectedRows)
+                {
+                    if (i == row.integerValue)
+                    {
+                        [_selectedRows removeObject:row];
+                        addRow = NO;
+                        break;
+                    }
+                }
+                
+                if (addRow)
+                    [_selectedRows addObject:[NSNumber numberWithInteger:i]];
+            }
+        }
+        
+        else
+        {
+            for (NSInteger i = lastSelectedRow; i >= index; i--)
+            {
+                BOOL addRow = YES;
+                
+                for (NSNumber *row in _selectedRows)
+                {
+                    if (i == row.integerValue)
+                    {
+                        [_selectedRows removeObject:row];
+                        addRow = NO;
+                        break;
+                    }
+                }
+                
+                if (addRow)
+                    [_selectedRows addObject:[NSNumber numberWithInteger:i]];
+            }
+        }
+        
+        rtn = YES;
+    }
+    
+    return rtn;
 }
 
 @end

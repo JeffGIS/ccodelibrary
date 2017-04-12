@@ -41,6 +41,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)spreadsheetViewInEditingMode:(BOOL)editingMode;
 - (BOOL)spreadsheetViewSortOnRow:(NSInteger)row;
+- (BOOL)multiSelectRequestedAtIndex:(NSInteger)index;
 
 @end
 
@@ -62,7 +63,6 @@ forCellWithReuseIdentifier:(NSString *)identifier;
 - (UICollectionViewCell *)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier
                                                     forIndexPath:(NSIndexPath *)indexPath;
 
-- (void)selectRow:(NSInteger)row;
 - (void)reloadData;
 - (void)flashScrollIndicators;
 - (void)goToTop;

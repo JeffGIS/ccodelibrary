@@ -3,7 +3,7 @@
 
 #import "NVSpreadsheetCell.h"
 
-@implementation NVGridCell
+@implementation NVCell
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -22,15 +22,6 @@
             _textLabel.font = [UIFont boldSystemFontOfSize:18.0];
             _idSize = 16.0;
         }
-        
-        CGRect rect = CGRectMake(0.0, 0.0, frame.size.width, frame.size.height);
-        _textLabel = [[UILabel alloc] initWithFrame:rect];
-        _textLabel.backgroundColor = UIColor.clearColor;
-        _textLabel.textAlignment = NSTextAlignmentCenter;
-        _textLabel.adjustsFontSizeToFitWidth = YES;
-        _textLabel.numberOfLines = 0;
-        _textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.contentView addSubview:_textLabel];
     }
     
     return self;
@@ -60,6 +51,29 @@
 
 @end
 
+@implementation NVGridCell
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    
+    if (self)
+    {
+        CGRect rect = CGRectMake(0.0, 0.0, frame.size.width, frame.size.height);
+        self.textLabel = [[UILabel alloc] initWithFrame:rect];
+        self.textLabel.backgroundColor = UIColor.clearColor;
+        self.textLabel.textAlignment = NSTextAlignmentCenter;
+        self.textLabel.adjustsFontSizeToFitWidth = YES;
+        self.textLabel.numberOfLines = 0;
+        self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.contentView addSubview:self.textLabel];
+    }
+    
+    return self;
+}
+
+@end
+
 @implementation NVTopRowCell
 
 - (id)initWithFrame:(CGRect)frame
@@ -68,57 +82,23 @@
     
     if (self)
     {
-        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        {
-            _textLabel.font = [UIFont boldSystemFontOfSize:12.0];
-            _idSize = 12.0;
-        }
+        CGRect rect = CGRectMake((self.idSize + 2.0), 0.0, (frame.size.width - (self.idSize + 6.0)), frame.size.height);
+        self.textLabel = [[UILabel alloc] initWithFrame:rect];
+        self.textLabel.backgroundColor = UIColor.clearColor;
+        self.textLabel.textAlignment = NSTextAlignmentCenter;
+        self.textLabel.adjustsFontSizeToFitWidth = YES;
+        self.textLabel.font = [UIFont boldSystemFontOfSize:18.0];
+        self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.contentView addSubview:self.textLabel];
         
-        else
-        {
-            _textLabel.font = [UIFont boldSystemFontOfSize:18.0];
-            _idSize = 16.0;
-        }
-        
-        CGRect rect = CGRectMake((_idSize + 2.0), 0.0, (frame.size.width - (_idSize + 6.0)), frame.size.height);
-        _textLabel = [[UILabel alloc] initWithFrame:rect];
-        _textLabel.backgroundColor = UIColor.clearColor;
-        _textLabel.textAlignment = NSTextAlignmentCenter;
-        _textLabel.adjustsFontSizeToFitWidth = YES;
-        _textLabel.font = [UIFont boldSystemFontOfSize:18.0];
-        _textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.contentView addSubview:_textLabel];
-        
-        _idLabel = [[UILabel alloc] initWithFrame:CGRectMake(1.0, 1.0, _idSize, _idSize)];
-        _idLabel.backgroundColor = UIColor.clearColor;
-        _idLabel.adjustsFontSizeToFitWidth = YES;
-        _idLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.contentView addSubview:_idLabel];
+        self.idLabel = [[UILabel alloc] initWithFrame:CGRectMake(1.0, 1.0, self.idSize, self.idSize)];
+        self.idLabel.backgroundColor = UIColor.clearColor;
+        self.idLabel.adjustsFontSizeToFitWidth = YES;
+        self.idLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.contentView addSubview:self.idLabel];
     }
     
     return self;
-}
-
-- (void)setSelected:(BOOL)selected
-{
-    [super setSelected:selected];
-    
-    if (selected)
-        [self.contentView setBackgroundColor:UIColor.lightGrayColor];
-    
-    else
-        [self.contentView setBackgroundColor:UIColor.clearColor];
-}
-
-- (void)setHighlighted:(BOOL)highlighted
-{
-    [super setHighlighted:highlighted];
-    
-    if (highlighted)
-        [self.contentView setBackgroundColor:UIColor.lightGrayColor];
-    
-    else
-        [self.contentView setBackgroundColor:UIColor.clearColor];
 }
 
 @end
@@ -133,60 +113,38 @@
     {
         if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
         {
-             _textLabel.font = [UIFont boldSystemFontOfSize:14.0];
-            _idSize = 12.0;
+            self.textLabel.font = [UIFont boldSystemFontOfSize:14.0];
+            self.idSize = 12.0;
         }
         
         else
         {
-            _textLabel.font = [UIFont boldSystemFontOfSize:20.0];
-            _idSize = 16.0;
+            self.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
+            self.idSize = 16.0;
         }
         
-        CGRect rect = CGRectMake((_idSize + 2.0), 0.0, (frame.size.width - (_idSize + 6.0)), frame.size.height);
-        _textLabel = [[UILabel alloc] initWithFrame:rect];
-        _textLabel.backgroundColor = UIColor.clearColor;
+        CGRect rect = CGRectMake((self.idSize + 2.0), 0.0, (frame.size.width - (self.idSize + 6.0)), frame.size.height);
+        self.textLabel = [[UILabel alloc] initWithFrame:rect];
+        self.textLabel.backgroundColor = UIColor.clearColor;
         
         if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-            _textLabel.font = [UIFont boldSystemFontOfSize:14.0];
+            self.textLabel.font = [UIFont boldSystemFontOfSize:14.0];
         
         else
-            _textLabel.font = [UIFont boldSystemFontOfSize:20.0];
+            self.textLabel.font = [UIFont boldSystemFontOfSize:20.0];
         
-        _textLabel.adjustsFontSizeToFitWidth = YES;
-        _textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.contentView addSubview:_textLabel];
+        self.textLabel.adjustsFontSizeToFitWidth = YES;
+        self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.contentView addSubview:self.textLabel];
         
-        _idLabel = [[UILabel alloc] initWithFrame:CGRectMake(1.0, 1.0, _idSize, _idSize)];
-        _idLabel.backgroundColor = UIColor.clearColor;
-        _idLabel.adjustsFontSizeToFitWidth = YES;
-        _idLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [self.contentView addSubview:_idLabel];
+        self.idLabel = [[UILabel alloc] initWithFrame:CGRectMake(1.0, 1.0, self.idSize, self.idSize)];
+        self.idLabel.backgroundColor = UIColor.clearColor;
+        self.idLabel.adjustsFontSizeToFitWidth = YES;
+        self.idLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self.contentView addSubview:self.idLabel];
     }
     
     return self;
-}
-
-- (void)setSelected:(BOOL)selected
-{
-    [super setSelected:selected];
-    
-    if (selected)
-        [self.contentView setBackgroundColor:UIColor.lightGrayColor];
-    
-    else
-        [self.contentView setBackgroundColor:UIColor.clearColor];
-}
-
-- (void)setHighlighted:(BOOL)highlighted
-{
-    [super setHighlighted:highlighted];
-    
-    if (highlighted)
-        [self.contentView setBackgroundColor:UIColor.lightGrayColor];
-    
-    else
-        [self.contentView setBackgroundColor:UIColor.clearColor];
 }
 
 @end
