@@ -9,6 +9,11 @@ typedef NS_ENUM(NSInteger, SpreadsheetTypes)
     SST_CrimeList,
 };
 
+@interface TimeLine : NSObject
+@property int time;
+@property double value;
+@end
+
 @class NVSpreadsheetVC;
 
 @protocol NVSpreadsheetVCDelegate <NSObject>
@@ -52,7 +57,7 @@ typedef NS_ENUM(NSInteger, SpreadsheetTypes)
 - (BOOL)spreadsheetSortOnRow:(NSInteger)row;
 - (NSString *)spreadsheetGetReportForRow:(NSInteger)row
                                   column:(NSInteger)column;
-
+- (NSArray *) getTimeLine;
 @end
 
 @interface NVSpreadsheetVC : UIViewController
