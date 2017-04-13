@@ -41,6 +41,7 @@
 
 - (BOOL)startTransaction;
 - (void)commitTransaction;
+- (NSString *)reportForControlNum:(NSInteger)cnumber;
 + (NSString *)reportForControlNumber:(NSInteger)cnumber;
 - (BOOL)update:(UIView *)fromView
           auto:(BOOL)autoUpdate
