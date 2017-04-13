@@ -1766,7 +1766,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     return intpt;
 }
 
-- (NSArray <IntersectionPoint *> *)getAssignments:(NSString *)type
+- (NSArray<IntersectionPoint *> *)getAssignments:(NSString *)type
 {
     NSMutableArray <IntersectionPoint *> *assignments = NSMutableArray.array;
     BOOL opened = [self open];
@@ -1793,7 +1793,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     return assignments.copy;
 }
 
-- (NSArray <IntersectionPoint *> *)getIntersectionsAssignedTo:(int)iPad
+- (NSArray<IntersectionPoint *> *)getIntersectionsAssignedTo:(int)iPad
                                  ofType:(NSString *)type
 {
     NSMutableArray <IntersectionPoint *> *assignments = NSMutableArray.array;
