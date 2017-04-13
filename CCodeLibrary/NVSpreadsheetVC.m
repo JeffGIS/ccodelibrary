@@ -18,7 +18,7 @@
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
-@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor;
+@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine;
 @property (nonatomic) CGFloat columnWidth, rowHeight;
 @property (nonatomic) UITextField *titleTextField;
 @property (nonatomic) UILabel *numRowsLabel, *numColsLabel;
@@ -117,7 +117,8 @@
     UIButton *mapIt = [UIButton buttonWithType:UIButtonTypeCustom];
     mapIt.translatesAutoresizingMaskIntoConstraints = NO;
     mapIt.backgroundColor = UIColor.clearColor;
-    switch ([_delegate getSpreadSheetType])
+    
+    switch (_delegate.getSpreadSheetType)
     {
         case SST_PropertyList:
             mapIt.selected = CRAPI.sharedInstance.mapPropList;
@@ -125,7 +126,10 @@
         case SST_CrimeList:
             mapIt.selected = CRAPI.sharedInstance.mapCrimeList != nil;
             break;
+        default:
+            break;
     }
+    
     mapIt.imageEdgeInsets = insets;
     
     [mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapItWithX"
@@ -202,6 +206,22 @@
     [_realtor constrainHeightToConstant:_rowHeight];
     [_realtor constrainWidthToConstant:_rowHeight];
     
+    _timeLine = [UIButton buttonWithType:UIButtonTypeCustom];
+    _timeLine.translatesAutoresizingMaskIntoConstraints = NO;
+    _timeLine.backgroundColor = UIColor.clearColor;
+    _timeLine.imageEdgeInsets = insets;
+    
+    [_timeLine setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"clockIcon"
+                                                                                       ofType:@"png"]]
+               forState:UIControlStateNormal];
+    
+    [_timeLine addTarget:self action:@selector(timeLine:) forControlEvents:UIControlEventTouchUpInside];
+    [_topSpace addSubview:_timeLine];
+    [_timeLine constrainTrailingToAnchor:select.leadingAnchor];
+    [_timeLine constrainTopToAnchor:_topSpace.topAnchor];
+    [_timeLine constrainHeightToConstant:_rowHeight];
+    [_timeLine constrainWidthToConstant:_rowHeight];
+    
     _titleTextField = UITextField.new;
     _titleTextField.translatesAutoresizingMaskIntoConstraints = NO;
     _titleTextField.delegate = self;
@@ -249,17 +269,24 @@
         [_delegate openList];
     
     if (CRAPI.sharedInstance.currentApp == HCConfigMetroProp)
+    {
         _realtor.hidden = NO;
+        _timeLine.hidden = YES;
+    }
     
     else
+    {
         _realtor.hidden = YES;
+        _timeLine.hidden = NO;
+    }
 }
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     if (_delegate)
         [_delegate closeList];
-    
 }
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -309,7 +336,8 @@
 
 - (CGSize)gridContainerSize
 {
-    return CGSizeMake((self.view.frame.size.width - _columnWidth), (self.view.frame.size.height - (_rowHeight * 2.0)));
+    return CGSizeMake((self.view.frame.size.width - _columnWidth),
+                      (self.view.frame.size.height - (_rowHeight * 2.0)));
 }
 
 - (CGSize)spreadsheetView:(NVSpreadsheet *)spreadsheetView
@@ -716,11 +744,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)spreadsheetViewDidEditRowHeaderText:(NSString *)text
                                     atIndex:(NSInteger)index
 {
-    if ([_delegate spreadsheetCanEditRowHeaderTextAtIndex:index])
-    {
-        if ([_delegate respondsToSelector:@selector(spreadsheetDidEditColumnHeaderText:atIndex:)])
-            [_delegate spreadsheetDidEditColumnHeaderText:text atIndex:index];
-    }
+    if ([_delegate respondsToSelector:@selector(spreadsheetDidEditColumnHeaderText:atIndex:)])
+        [_delegate spreadsheetDidEditColumnHeaderText:text atIndex:index];
     
     else
         NSLog(@"ERROR:spreadsheetDidEditRowHeaderText not implemented.");
@@ -845,6 +870,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma unused(nvptv)
 }
 
+- (void)timeLine:(UIButton *)button
+{
+    if ([_delegate respondsToSelector:@selector(getTimeLine:)])
+        [_delegate getTimeLine:self];
+}
+
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView
     didSelectRowWithText:(NSString *)text
                  atIndex:(NSInteger)index
@@ -965,6 +996,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             
             [_delegate deleteRows:tempArray.copy];
             [_selectedRows removeAllObjects];
+            
+            if (!_flipped && _delegate.numColumnsInSpreadsheet == 0)
+                _flipped = YES;
+            
             [_nvss reloadData];
         }
     }
@@ -1250,6 +1285,21 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     
     return rtn;
+}
+
+- (void)spreadsheetSwapEnabled:(BOOL)enabled
+{
+    if (enabled)
+    {
+        _swap.alpha = 1.0;
+        _swap.userInteractionEnabled = YES;
+    }
+    
+    else
+    {
+        _swap.alpha = 0.5;
+        _swap.userInteractionEnabled = NO;
+    }
 }
 
 @end

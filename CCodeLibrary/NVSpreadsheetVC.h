@@ -19,8 +19,8 @@ typedef NS_ENUM(NSInteger, SpreadsheetTypes)
 @protocol NVSpreadsheetVCDelegate <NSObject>
 
 - (SpreadsheetTypes) getSpreadSheetType;
-- (BOOL) openList;
-- (void) closeList;
+- (BOOL)openList;
+- (void)closeList;
 - (NSString *)currentListName;
 - (NSString *)headerTextForColumn:(NSUInteger)column;
 - (NSString *)headerTextForRow:(NSUInteger)row;
@@ -55,9 +55,10 @@ typedef NS_ENUM(NSInteger, SpreadsheetTypes)
                                    atIndex:(NSInteger)index;
 
 - (BOOL)spreadsheetSortOnRow:(NSInteger)row;
+- (void)getTimeLine:(UIViewController *)parentController;
+
 - (NSString *)spreadsheetGetReportForRow:(NSInteger)row
                                   column:(NSInteger)column;
-- (NSArray *) getTimeLine;
 @end
 
 @interface NVSpreadsheetVC : UIViewController
