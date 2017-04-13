@@ -1,7 +1,7 @@
 //  NVDestinationOptions.h
 //  CCodeLibrary
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 typedef NS_ENUM(NSInteger, WeekDay)
 {
