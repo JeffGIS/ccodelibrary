@@ -704,9 +704,8 @@ forCellWithReuseIdentifier:(NSString *)identifier
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    NSInteger rowCount = [_dataSource numberOfRowsInSpreadsheetView:self];
+    NSInteger rowCount = ([_dataSource numberOfRowsInSpreadsheetView:self] - 1);
     NSInteger adjustedRows = 1;
-    BOOL flipped = [_dataSource spreadsheetIsFlipped];
     
     switch (collectionView.tag)
     {
@@ -715,24 +714,15 @@ forCellWithReuseIdentifier:(NSString *)identifier
             break;
         case NVSpreadsheetCollectionUpperRight:
             adjustedRows = _headerRowCount;
-            
-            if (!flipped)
-            {
-                _lowerLeftContainerView.hidden = !adjustedRows;
-                _lowerRightContainerView.hidden = !adjustedRows;
-            }
             break;
         case NVSpreadsheetCollectionLowerLeft:
-            adjustedRows = (rowCount - _headerRowCount);
-            
-            if (flipped)
-            {
-                _lowerLeftContainerView.hidden = !adjustedRows;
-                _lowerRightContainerView.hidden = !adjustedRows;
-            }
+            adjustedRows = rowCount;
+            _lowerLeftContainerView.hidden = !adjustedRows;
+            _lowerRightContainerView.hidden = !adjustedRows;
+            [_delegate spreadsheetSwapEnabled:adjustedRows];
             break;
         case NVSpreadsheetCollectionLowerRight:
-            adjustedRows = (rowCount - _headerRowCount);
+            adjustedRows = rowCount;
             break;
         default:
             break;
@@ -745,26 +735,22 @@ forCellWithReuseIdentifier:(NSString *)identifier
      numberOfItemsInSection:(NSInteger)section
 {
     NSInteger items = 0;
-    NSInteger columnCount = [_dataSource numberOfColumnsInSpreadsheetView:self];
+    NSInteger columnCount = ([_dataSource numberOfColumnsInSpreadsheetView:self] - 1);
     
     switch (collectionView.tag)
     {
         case NVSpreadsheetCollectionUpperLeft:
             items = _headerColumnCount;
             break;
-            
         case NVSpreadsheetCollectionUpperRight:
-            items = (columnCount - _headerColumnCount);
+            items = columnCount;
             break;
-            
         case NVSpreadsheetCollectionLowerLeft:
             items = _headerColumnCount;
             break;
-            
         case NVSpreadsheetCollectionLowerRight:
-            items = (columnCount - _headerColumnCount);
+            items = columnCount;
             break;
-            
         default:
             break;
     }

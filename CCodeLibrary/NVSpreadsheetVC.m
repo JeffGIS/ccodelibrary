@@ -965,6 +965,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             
             [_delegate deleteRows:tempArray.copy];
             [_selectedRows removeAllObjects];
+            
+            if (!_flipped && _delegate.numColumnsInSpreadsheet == 0)
+                _flipped = YES;
+            
             [_nvss reloadData];
         }
     }
@@ -1250,6 +1254,21 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     
     return rtn;
+}
+
+- (void)spreadsheetSwapEnabled:(BOOL)enabled
+{
+    if (enabled)
+    {
+        _swap.alpha = 1.0;
+        _swap.userInteractionEnabled = YES;
+    }
+    
+    else
+    {
+        _swap.alpha = 0.5;
+        _swap.userInteractionEnabled = NO;
+    }
 }
 
 @end

@@ -42,6 +42,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 - (void)spreadsheetViewInEditingMode:(BOOL)editingMode;
 - (BOOL)spreadsheetViewSortOnRow:(NSInteger)row;
 - (BOOL)multiSelectRequestedAtIndex:(NSInteger)index;
+- (void)spreadsheetSwapEnabled:(BOOL)enabled;
 
 @end
 
