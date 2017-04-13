@@ -1275,13 +1275,13 @@ replacementString:(NSString *)string
     }
     
     [textField resignFirstResponder];
+    [self reloadData];
     return NO;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [textField removeFromSuperview];
-    [self reloadData];
     [_delegate spreadsheetViewInEditingMode:NO];
     [self setSelectable:YES];
     [self setScrollEnabled:YES];
