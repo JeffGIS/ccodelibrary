@@ -1224,6 +1224,20 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    NSString *prefixString = [_dataSource spreadsheetViewRowHeaderPrefixAtIndex:textField.tag];
+    
+    if (!prefixString || !prefixString.length)
+        return YES;
+    
+    else
+    {
+        textField.text = prefixString;
+        return NO;
+    }
+}
+
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string
@@ -1267,8 +1281,7 @@ replacementString:(NSString *)string
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [textField removeFromSuperview];
-    [_upperRightCollectionView reloadData];
-    [_lowerLeftCollectionView reloadData];
+    [self reloadData];
     [_delegate spreadsheetViewInEditingMode:NO];
     [self setSelectable:YES];
     [self setScrollEnabled:YES];
