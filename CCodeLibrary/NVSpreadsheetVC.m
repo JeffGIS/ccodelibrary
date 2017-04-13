@@ -694,7 +694,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         NSArray *optionsArray = @[@"Map It", @"Cancel"];
         
         if ([_delegate getSpreadSheetType] == SST_CrimeList)
-            optionsArray = @[@"Display Report", @"Cancel"];
+            optionsArray = @[@"Display Report"];
         
         NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                           delegate:self
@@ -702,6 +702,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                                                    buttonTextArray:optionsArray
                                                   destructiveIndex:0];
         alert.identifier = @"MapIt";
+        if (optionsArray.count == 1)
+        {
+            [alert setHidden:YES];
+            [self alertView:alert didTapButtonAtIndex:0];
+        }
     }
 }
 

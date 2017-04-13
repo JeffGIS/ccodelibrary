@@ -42,6 +42,8 @@ typedef NS_ENUM(NSInteger, SpreadsheetTypes)
                            column:(NSInteger)column
                  tabBarController:(UITabBarController *)tabBarController;
 - (void)deleteRows:(NSArray *)arrayOfRows;
+- (void)copyRows:(NSArray *)arrayOfRows
+          toList:(NSString *)listName;
 
 @optional
 - (BOOL)spreadsheetCanEditRowHeaderTextAtIndex:(NSInteger)index;
