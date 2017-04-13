@@ -229,17 +229,23 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 
 + (NSString *)reportForControlNumber:(NSInteger)cnumber
 {
+    CrimeData *cd = [[CrimeData alloc]init];
+    return [cd reportForControlNum:cnumber];
+}
+
+- (NSString *)reportForControlNum:(NSInteger)cnumber
+{
     NSString * report = @"";
     int ifile, offset;
-    CrimeData *cd = [[CrimeData alloc]init];
+    BOOL opened = [self open];
     
-    if ([cd fileAndOffsetForControlNumber:cnumber
+    if ([self fileAndOffsetForControlNumber:cnumber
                                      file:&ifile
                                    offset:&offset])
     {
         //    NSString *file = [NSBundle.mainBundle pathForResource:@"3496486"
         //                                                   ofType:@"TXT"];
-        NSString *toDirectory = cd.reportsDirectory;
+        NSString *toDirectory = self.reportsDirectory;
         NSString *file = [NSString stringWithFormat:@"%@/%i.gcf",toDirectory,ifile];
         NSString *reportFile = [NSString stringWithFormat:@"%@/%i.TXT",toDirectory,(int)cnumber];
 //        int fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:file
@@ -252,6 +258,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
             [NSFileManager.defaultManager removeItemAtPath:reportFile error:nil];
         }
     }
+    [self close:opened];
     return report;
 }
 
@@ -270,6 +277,8 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     {
         rtn = TRUE;
         
+        _myLastUpdate = [self lastUpdate];
+       
         _delegate = delegate;
         _GMServer = GeoMasterServer.open;
         _GMServer.useTestServer = NO;
@@ -329,7 +338,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     switch (server.messageID)
     {
         case GMSMessageGetPoliceUpdate:
-            msg = [NSString stringWithFormat:@"$M(LastPoliceUpdate)\r\n"];
+            msg = [NSString stringWithFormat:@"$M(LastPoliceUpdate,(%@),%i)\r\n",UIDevice.currentDevice.name,_myLastUpdate];
             break;
             
     }
@@ -352,7 +361,6 @@ didReceiveMessage:(NSString *)message
         {
             case GMSMessageGetPoliceUpdate:
             {
-                _myLastUpdate = [self lastUpdate];
                 if (_myLastUpdate != 131)
                     _nextUpdate = _myLastUpdate + 1;
                 else
