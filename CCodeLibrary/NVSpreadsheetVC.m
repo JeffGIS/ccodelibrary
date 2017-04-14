@@ -18,7 +18,7 @@
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
-@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine;
+@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine, *cpyButton;
 @property (nonatomic) CGFloat columnWidth, rowHeight;
 @property (nonatomic) UITextField *titleTextField;
 @property (nonatomic) UILabel *numRowsLabel, *numColsLabel;
@@ -217,10 +217,29 @@
     
     [_timeLine addTarget:self action:@selector(timeLine:) forControlEvents:UIControlEventTouchUpInside];
     [_topSpace addSubview:_timeLine];
-    [_timeLine constrainTrailingToAnchor:select.leadingAnchor];
+    [_timeLine constrainTrailingToAnchor:_realtor.trailingAnchor];
     [_timeLine constrainTopToAnchor:_topSpace.topAnchor];
     [_timeLine constrainHeightToConstant:_rowHeight];
     [_timeLine constrainWidthToConstant:_rowHeight];
+    
+    _cpyButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _cpyButton.translatesAutoresizingMaskIntoConstraints = NO;
+    _cpyButton.backgroundColor = UIColor.clearColor;
+    _cpyButton.imageEdgeInsets = insets;
+    _cpyButton.userInteractionEnabled = NO;
+    _cpyButton.alpha = 0.5;
+    
+    [_cpyButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"copyIcon"
+                                                                                    ofType:@"png"]]
+            forState:UIControlStateNormal];
+
+    [_cpyButton addTarget:self action:@selector(performCopy:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [_topSpace addSubview:_cpyButton];
+    [_cpyButton constrainTrailingToAnchor:_timeLine.leadingAnchor];
+    [_cpyButton constrainTopToAnchor:_topSpace.topAnchor];
+    [_cpyButton constrainHeightToConstant:_rowHeight];
+    [_cpyButton constrainWidthToConstant:_rowHeight];
     
     _titleTextField = UITextField.new;
     _titleTextField.translatesAutoresizingMaskIntoConstraints = NO;
@@ -230,7 +249,7 @@
     _titleTextField.textColor = UIColor.whiteColor;
     _titleTextField.adjustsFontSizeToFitWidth = YES;
     _titleTextField.tintColor = UIColor.lightGrayColor;
-    _titleTextField.text = _delegate.titleTextForSpreadsheet;
+    _titleTextField.text = _delegate.currentListName;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
         _titleTextField.font = [UIFont boldSystemFontOfSize:20];
@@ -240,7 +259,7 @@
     
     [_topSpace addSubview:_titleTextField];
     [_titleTextField constrainLeadingToAnchor:mapIt.trailingAnchor];
-    [_titleTextField constrainTrailingToAnchor:_realtor.leadingAnchor];
+    [_titleTextField constrainTrailingToAnchor:_cpyButton.leadingAnchor];
     [_titleTextField constrainTopToAnchor:_topSpace.topAnchor];
     [_titleTextField constrainHeightToConstant:_rowHeight];
     
@@ -637,6 +656,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             {
                 [_selectedRows removeObject:row];
                 [_nvss reloadData];
+                [self resetCopyButton];
                 return;
             }
         }
@@ -644,6 +664,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [_selectedRows addObject:[NSNumber numberWithInteger:indexPath.nvSpreadsheetRow]];
         _lastTapSelectedRow = indexPath.nvSpreadsheetRow;
         [_nvss reloadData];
+        [self resetCopyButton];
     }
     
     else if (indexPath.nvSpreadsheetRow == 0)
@@ -666,12 +687,14 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 {
                     [_selectedRows removeObject:row];
                     [_nvss reloadData];
+                    [self resetCopyButton];
                     return;
                 }
             }
             
             [_selectedRows addObject:[NSNumber numberWithInteger:indexPath.nvSpreadsheetColumn]];
             [_nvss reloadData];
+            [self resetCopyButton];
         }
     }
     
@@ -702,11 +725,27 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                                                    buttonTextArray:optionsArray
                                                   destructiveIndex:0];
         alert.identifier = @"MapIt";
+        
         if (optionsArray.count == 1)
         {
-            [alert setHidden:YES];
+            alert.hidden = YES;
             [self alertView:alert didTapButtonAtIndex:0];
         }
+    }
+}
+
+- (void)resetCopyButton
+{
+    if (_selectedRows.count)
+    {
+        _cpyButton.userInteractionEnabled = YES;
+        _cpyButton.alpha = 1.0;
+    }
+    
+    else
+    {
+        _cpyButton.userInteractionEnabled = NO;
+        _cpyButton.alpha = 0.5;
     }
 }
 
@@ -730,7 +769,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [_delegate spreadsheetDidEditTitleText:textField.text];
-    _titleTextField.text = [_delegate titleTextForSpreadsheet];
+    _titleTextField.text = _delegate.currentListName;
 }
 
 - (void)spreadsheetViewDidEditColumnHeaderText:(NSString *)text
@@ -846,7 +885,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)create:(UIButton *)button
 {
     [_delegate spreadsheetDidCreateList];
-    _titleTextField.text = [_delegate titleTextForSpreadsheet];
+    _titleTextField.text = _delegate.currentListName;
     [_nvss reloadData];
 }
 
@@ -861,7 +900,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                                                                              title:@"Select Spreadsheet"
                                                                          textArray:fileList
                                                                      includeCancel:YES];
-#pragma unused(nvptv)
+        nvptv.identifier = @"Select";
     }
 }
 
@@ -872,7 +911,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                                                                          title:@"Select Realtor Website"
                                                                      textArray:UserDefaults.defaults.realtorList
                                                                  includeCancel:YES];
-#pragma unused(nvptv)
+    nvptv.identifier = @"Realtor";
 }
 
 - (void)timeLine:(UIButton *)button
@@ -881,26 +920,58 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [_delegate getTimeLine:self];
 }
 
+- (void)performCopy:(UIButton *)button
+{
+    NSMutableArray *fileList = _delegate.spreadsheetDidGetLists.mutableCopy;
+
+    for (NSString *file in fileList)
+    {
+        if ([file isEqualToString:_delegate.currentListName])
+        {
+            [fileList removeObject:file];
+            break;
+        }
+    }
+    
+    [fileList insertObject:@"New Spreadsheet" atIndex:0];
+    
+    NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
+                                                                      delegate:self
+                                                                         title:@"Select Spreadsheet to Copy Selected Rows"
+                                                                     textArray:fileList.copy
+                                                                 includeCancel:YES];
+    nvptv.identifier = @"CopyRows";
+}
+
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView
     didSelectRowWithText:(NSString *)text
                  atIndex:(NSInteger)index
 {
-    [popoverTableView hide:YES];
-    
-    if ([popoverTableView.title isEqualToString:@"Select Spreadsheet"])
+    if ([popoverTableView.identifier isEqualToString:@"Select"])
     {
         [_delegate spreadsheetDidSetCurrentList:text];
-        _titleTextField.text = [_delegate titleTextForSpreadsheet];
+        _titleTextField.text = _delegate.currentListName;
+        [_selectedRows removeAllObjects];
         [_nvss reloadData];
     }
     
-    else if ([popoverTableView.title isEqualToString:@"Select Realtor Website"])
+    else if ([popoverTableView.identifier isEqualToString:@"Realtor"])
     {
         NVWebView *nvwv = [NVWebView showWebViewInView:self.view
                                              urlString:text];
         
         [nvwv showRealtorButton];
     }
+    
+    else if ([popoverTableView.identifier isEqualToString:@"CopyRows"])
+    {
+        if ([text isEqualToString:@"New Spreadsheet"])
+            text = nil;
+        
+        [_delegate copyRows:_selectedRows toList:text];
+    }
+    
+    [popoverTableView hide:YES];
 }
 
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
@@ -985,7 +1056,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         if (buttonIndex == 0)
         {
             [_delegate spreadsheetDidDeleteCurrentList];
-            _titleTextField.text = _delegate.titleTextForSpreadsheet;
+            _titleTextField.text = _delegate.currentListName;
             [_nvss reloadData];
         }
     }

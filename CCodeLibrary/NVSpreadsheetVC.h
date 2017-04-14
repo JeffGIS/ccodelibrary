@@ -30,7 +30,6 @@ typedef NS_ENUM(NSInteger, SpreadsheetTypes)
 
 - (NSInteger)numRowsInSpreadsheet;
 - (NSInteger)numColumnsInSpreadsheet;
-- (NSString *)titleTextForSpreadsheet;
 - (NSArray *)spreadsheetDidGetLists;
 - (void)spreadsheetDidEditTitleText:(NSString *)titleText;
 - (void)spreadsheetDidSetCurrentList:(NSString *)file;
@@ -41,7 +40,9 @@ typedef NS_ENUM(NSInteger, SpreadsheetTypes)
 - (void)spreadsheetDidMapItForRow:(NSInteger)row
                            column:(NSInteger)column
                  tabBarController:(UITabBarController *)tabBarController;
+
 - (void)deleteRows:(NSArray *)arrayOfRows;
+
 - (void)copyRows:(NSArray *)arrayOfRows
           toList:(NSString *)listName;
 
