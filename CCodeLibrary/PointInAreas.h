@@ -10,6 +10,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "CCodeTypes.h"
 #import "PointInArea.h"
+#import "SQLiteLib.h"
 
 @interface PointInAreas : NSObject
 
@@ -23,12 +24,16 @@
 - (void) areasLoaded:(PointInAreas*)boundsPias
          convertToLL:(LPTRANDATA)pTran;
 - (void)createDisplayColors:(PointInAreas*)piasAdjust
-                       mask:(PointInArea*)piaMask;
+                       mask:(PointInArea*)piaMask
+                wantOverdue:(int)wantOverdue;
+
 - (int)DPointInArea:(DPOINT *)dPoint
+             atTime:(int)itime
          whichCount:(int) icount;
 - (CGColorRef)colorForArea:(NSString*)areaID;
 - (double)countForArea:(NSString*)areaID
             whichCount:(int) icount;
+- (void) initTimeLine:(sqlite3 *) db;
 
 @property NSString * areaType;
 @property NSString * adjustValue;
@@ -50,5 +55,9 @@
 @property int iArea;
 @property NSInteger numOutside;
 @property LPTRANDATA pTranContextToWorld;
+@property BOOL haveTimeLineDB;
+@property int timeLineID;
+@property sqlite3 *database;
+@property int minTime;
 
 @end

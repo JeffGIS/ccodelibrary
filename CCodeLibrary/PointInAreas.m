@@ -18,6 +18,7 @@
 typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 
 @interface AreaData : NSObject
+@property int areaNumber;
 @property NSString * areaID;
 @property COLORDEF colordef;
 @property int icolor;
@@ -28,6 +29,7 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 @property float pctInMask;
 @property double value;
 @property double valuePerPixel;
+@property int maxTime;
 @property CGColorRef displayColor;
 @end
 
@@ -68,6 +70,7 @@ static int ii;
     if (self)
     {
         InitDBounds (&_fullBounds);
+        self.minTime = INT_MAX;
     }
     
     return self;
@@ -304,6 +307,7 @@ static int ii;
 
 - (void)createDisplayColors:(PointInAreas*)piasAdjust
                        mask:(PointInArea*)piaMask
+                wantOverdue:(int)wantOverdue
 {
     
     CGFloat maxCount = 0;
@@ -329,18 +333,35 @@ static int ii;
             }
         }
     }
+    
+    int currentTime = NSDate.date.timeIntervalSince1970;
+    int timeRange = currentTime - _minTime;
+    
     for (AreaData *ad in _areaInfo)
     {
-        if (ad.nCounts)
-            ad.count = ad.count2 - ad.count1;
-        else
-            ad.count = ad.count1;
-        if (ad.value)
+        if (wantOverdue)
         {
-            ad.count /= ad.value;
+            ad.count = ad.count1;
+            if (ad.count)
+            {
+                double secondsPerIncident = timeRange / ad.count;
+                ad.count = (100 * (currentTime - ad.maxTime) / secondsPerIncident) - 100;
+            }
+            
         }
         else
-            ii=1;
+        {
+            if (ad.nCounts)
+                ad.count = ad.count2 - ad.count1;
+            else
+                ad.count = ad.count1;
+            if (ad.value)
+            {
+                ad.count /= ad.value;
+            }
+            else
+                ii=1;
+        }
         ad.pctInMask = 100.0 * ad.pixelsInMask / ad.areaInPixels;
         if (ad.pctInMask >= MINAREAPCT)
         {
@@ -388,6 +409,7 @@ static int ii;
             dbounds bounds = getAreaBounds (nPoints,pPoints);
             AddMinMaxD (&_fullBounds,&bounds);
             AreaData *ad = [[AreaData alloc]init];
+            ad.areaNumber = _numAreas;
             ad.nCounts = nCount;
             ad.areaID = areaID;
             [_areaInfo addObject:ad];
@@ -466,6 +488,7 @@ static int ii;
 
 
 - (int)DPointInArea:(DPOINT *)dPoint
+             atTime:(int)itime
         whichCount:(int) icount
 {
     int numAreasIn = 0;
@@ -489,16 +512,36 @@ static int ii;
                 ad.count2++;
             else
                 ad.count1++;
-            
+            ad.maxTime = max (ad.maxTime,itime);
+            [self addToTimeLine:ad.areaNumber
+                         atTime:itime
+                       forCount:icount];
             numAreasIn++;
         }
     }
     else
         _numOutside++;
-
+    _minTime = min (_minTime,itime);
     return numAreasIn;
 }
+- (void) initTimeLine:(sqlite3 *) db
+{
+    _database = db;
+}
 
+- (void) createTimeLineTable
+{
+    NSString * cmd = @"DROP TABLE IF EXISTS TimeLine;CREATE TABLE TimeLine (id INTEGER PRIMARY KEY, AreaNumber INT, Time INT, WhichCount INT);CREATE INDEX TimeLine_index ON TimeLine (AreaNumber,Time)";
+}
+- (void) addToTimeLine:(int)areaNum
+                atTime:(int)itime
+              forCount:(int)iCount
+{
+    if (_haveTimeLineDB)
+    {
+        NSString *cmd = [NSString stringWithFormat:@"INSERT INTO TimeLine VALUES (%i,%i,%i,%i);",_timeLineID++,areaNum,itime,iCount];
+    }
+}
 - (double)countForArea:(NSString*)areaID
             whichCount:(int) icount
 {
