@@ -11,6 +11,7 @@
 #import "CCodeTypes.h"
 #import "PointInArea.h"
 #import "SQLiteLib.h"
+#import "GSSiEnums.h"
 
 @interface PointInAreas : NSObject
 
@@ -25,7 +26,7 @@
          convertToLL:(LPTRANDATA)pTran;
 - (void)createDisplayColors:(PointInAreas*)piasAdjust
                        mask:(PointInArea*)piaMask
-                wantOverdue:(int)wantOverdue;
+                wantOverdue:(AdjustCrimeOptions)wantOverdue;
 
 - (int)DPointInArea:(DPOINT *)dPoint
              atTime:(int)itime
@@ -33,6 +34,7 @@
 - (CGColorRef)colorForArea:(NSString*)areaID;
 - (double)countForArea:(NSString*)areaID
             whichCount:(int) icount;
+- (NSString *) overdueTextForArea:(NSString *)areaID;
 - (void) initTimeLine:(sqlite3 *) db;
 
 @property NSString * areaType;
@@ -59,5 +61,7 @@
 @property int timeLineID;
 @property sqlite3 *database;
 @property int minTime;
+@property AdjustCrimeOptions overdueOption;
+@property int currentTime, timeRange;
 
 @end

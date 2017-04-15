@@ -30,6 +30,7 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 @property double value;
 @property double valuePerPixel;
 @property int maxTime;
+@property double aveHoursBetweenIncident;
 @property CGColorRef displayColor;
 @end
 
@@ -71,6 +72,8 @@ static int ii;
     {
         InitDBounds (&_fullBounds);
         self.minTime = INT_MAX;
+        self.currentTime = NSDate.date.timeIntervalSince1970;
+
     }
     
     return self;
@@ -307,12 +310,14 @@ static int ii;
 
 - (void)createDisplayColors:(PointInAreas*)piasAdjust
                        mask:(PointInArea*)piaMask
-                wantOverdue:(int)wantOverdue
+                wantOverdue:(AdjustCrimeOptions)wantOverdue
 {
     
     CGFloat maxCount = 0;
     CGFloat maxValue = 0;
-    
+
+    _overdueOption = wantOverdue;
+    _timeRange = _currentTime - _minTime;
     if (piasAdjust)
         [piasAdjust adjustCounts:self];
     for (int irow = 0;irow < _height;irow++)
@@ -334,9 +339,6 @@ static int ii;
         }
     }
     
-    int currentTime = NSDate.date.timeIntervalSince1970;
-    int timeRange = currentTime - _minTime;
-    
     for (AreaData *ad in _areaInfo)
     {
         if (wantOverdue)
@@ -344,8 +346,9 @@ static int ii;
             ad.count = ad.count1;
             if (ad.count)
             {
-                double secondsPerIncident = timeRange / ad.count;
-                ad.count = (100 * (currentTime - ad.maxTime) / secondsPerIncident) - 100;
+                double secondsPerIncident = _timeRange / ad.count;
+                ad.aveHoursBetweenIncident = secondsPerIncident / 3600;
+                ad.count = (100 * (_currentTime - ad.maxTime) / secondsPerIncident) - 100;
             }
             
         }
@@ -542,31 +545,52 @@ static int ii;
         NSString *cmd = [NSString stringWithFormat:@"INSERT INTO TimeLine VALUES (%i,%i,%i,%i);",_timeLineID++,areaNum,itime,iCount];
     }
 }
+
+- (AreaData *) getAreaDataFromID:(NSString *)areaID
+{
+    for (AreaData *ad in _areaInfo)
+    {
+        if ([ad.areaID isEqualToString:areaID])
+            return ad;
+        
+    }
+    return nil;
+}
 - (double)countForArea:(NSString*)areaID
             whichCount:(int) icount
 {
     double rtn = -1;
-    for (AreaData *ad in _areaInfo)
+    AreaData *ad = [self getAreaDataFromID:areaID];
+    if (ad)
     {
-        if ([ad.areaID isEqualToString:areaID])
+        switch (icount)
         {
-            switch (icount)
-            {
-                case 0:
-                    rtn = ad.count;
-                    break;
-                case 1:
-                    rtn = ad.count1;
-                    break;
-                case 2:
-                    rtn = ad.count2;
-                    break;
-            }
-            break;
+            case 0:
+                rtn = ad.count;
+                break;
+            case 1:
+                rtn = ad.count1;
+                break;
+            case 2:
+                rtn = ad.count2;
+                break;
         }
     }
     return rtn;
 }
+
+- (NSString *) overdueTextForArea:(NSString *)areaID
+{
+    NSString * text = @"";
+    AreaData *ad = [self getAreaDataFromID:areaID];
+    if (ad && ad.count)
+    {
+        double hoursSinceLast = (_currentTime - ad.maxTime) / 3600.0;
+        text = [NSString stringWithFormat:@"%.0f\n%.1f\n%.1f\n%.0f",ad.count,ad.aveHoursBetweenIncident, hoursSinceLast,ad.count1];
+    }
+    return text;
+}
+
 - (CGColorRef)colorForArea:(NSString*)areaID
 {
     CGColorRef cref = 0;

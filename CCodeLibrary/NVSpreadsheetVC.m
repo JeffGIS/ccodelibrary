@@ -9,7 +9,7 @@
 #import "NVAlertView.h"
 #import "NVPopoverTableView.h"
 #import "NVTabBarEdit.h"
-#import "CCodeLibrary/NVTextVC.h"
+#import "NVTextVC.h"
 @import MessageUI;
 
 @implementation TimeLine
@@ -1097,9 +1097,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                                           column:_selectedColumn];
                     
                     NVTextVC *textVC = [[NVTextVC alloc] initWithText:reportText fontSize:16.0];
-                    textVC.redSubstring = @"Owner:";
-                    textVC.greenSubstring = @"Quan:";
-                    textVC.blueSubstring = @"Value:";
+                    NSArray * searchStrings = [_delegate getSearchStrings];
+                    textVC.redSubstring = @"";
+                    if (searchStrings.count > 0)
+                        textVC.redSubstring = searchStrings[0];
+                    textVC.greenSubstring = @"";
+                    if (searchStrings.count > 1)
+                        textVC.greenSubstring = searchStrings[1];
+                    textVC.blueSubstring = @"";
+                    if (searchStrings.count > 2)
+                        textVC.blueSubstring = searchStrings[2];
                     [self presentViewController:textVC animated:YES completion:nil];
                 }
                     break;

@@ -1054,8 +1054,6 @@
 				694F00781C1B4BBA0074AF72 /* MapToolbar.m */,
 				A9BF33381B76FCED00A72E17 /* NVAlertView.h */,
 				A9BF33391B76FCED00A72E17 /* NVAlertView.m */,
-				690746E31CD41DCB00B31D8F /* NVTextViewAlert.h */,
-				690746E41CD41DCB00B31D8F /* NVTextViewAlert.m */,
 				A98A57A61B20ADE600906FBC /* NVCalibrationController.h */,
 				A98A57A71B20ADE600906FBC /* NVCalibrationController.m */,
 				6943041D1C3351E20077EC9F /* NVColor.h */,
@@ -1094,6 +1092,8 @@
 				697486431E5C85BD0051B5BC /* NVPager.m */,
 				A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */,
 				A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */,
+				699AE8FE1CEFB1A400A9EBF2 /* NVPhotoController.h */,
+				699AE8FF1CEFB1A400A9EBF2 /* NVPhotoController.m */,
 				A92E0BA51AF7A38D008A44AC /* NVPhotoViewController.h */,
 				A92E0BA61AF7A38D008A44AC /* NVPhotoViewController.m */,
 				69E7FCA41D81249500171E44 /* NVPopoverSlider.h */,
@@ -1131,6 +1131,8 @@
 				A9237F841AFA929200D10E96 /* NVTextAlert.m */,
 				69DE24261C76311D00680B00 /* NVTextVC.h */,
 				69DE24271C76311D00680B00 /* NVTextVC.m */,
+				690746E31CD41DCB00B31D8F /* NVTextViewAlert.h */,
+				690746E41CD41DCB00B31D8F /* NVTextViewAlert.m */,
 				A951CD1D1B18E070009C13E2 /* NVTwoTextAlert.h */,
 				A951CD1E1B18E070009C13E2 /* NVTwoTextAlert.m */,
 				6919EAF61C27AF1700A9D0F1 /* NVUnitPickerTextAlert.h */,
@@ -1151,8 +1153,6 @@
 				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 				698F987A1C10B96B009F2F01 /* YTPlayerView.h */,
 				698F987B1C10B96B009F2F01 /* YTPlayerView.m */,
-				699AE8FE1CEFB1A400A9EBF2 /* NVPhotoController.h */,
-				699AE8FF1CEFB1A400A9EBF2 /* NVPhotoController.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";

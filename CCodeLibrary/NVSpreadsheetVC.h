@@ -62,6 +62,7 @@ typedef NS_ENUM(NSInteger, SpreadsheetTypes)
 
 - (NSString *)spreadsheetGetReportForRow:(NSInteger)row
                                   column:(NSInteger)column;
+- (NSArray *) getSearchStrings;
 @end
 
 @interface NVSpreadsheetVC : UIViewController

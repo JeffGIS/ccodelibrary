@@ -228,4 +228,14 @@ typedef NS_ENUM(NSInteger, MapitBaseLayer)
     MBL_CensusTracts,
 };
 
+typedef NS_ENUM(NSInteger, AdjustCrimeOptions)
+{
+    ACO_None,
+    ACO_Population,
+    ACO_HousingUnits,
+    ACO_OverDueAverage,
+    ACO_OverDueSTDV,
+};
+
+
 @end
