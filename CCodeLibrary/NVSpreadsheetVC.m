@@ -1093,10 +1093,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     break;
                 case SST_CrimeList:
                 {
-                    NSString *reportText =
-                    [_delegate spreadsheetGetReportForRow:_selectedRow
-                                                   column:_selectedColumn];
+                    NSString *reportText = [_delegate spreadsheetGetReportForRow:_selectedRow
+                                                                          column:_selectedColumn];
+                    
                     NVTextVC *textVC = [[NVTextVC alloc] initWithText:reportText fontSize:16.0];
+                    textVC.redSubstring = @"Owner:";
+                    textVC.greenSubstring = @"Quan:";
+                    textVC.blueSubstring = @"Value:";
                     [self presentViewController:textVC animated:YES completion:nil];
                 }
                     break;

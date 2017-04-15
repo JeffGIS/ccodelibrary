@@ -7,6 +7,7 @@
 
 @property (nonatomic) CGFloat minFontSize, maxFontSize;
 @property BOOL zoomingEnabled, clampTextViewToText;
+@property (nonatomic, copy) NSString *redSubstring, *greenSubstring, *blueSubstring;
 
 - (id)initWithText:(NSString *)text
           fontSize:(CGFloat)fontSize;

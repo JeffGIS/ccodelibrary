@@ -119,12 +119,20 @@
     
     [self.view layoutSubviews];
     
-    UIFont *font = [UIFont fontWithName:@"CourierNewPS-BoldMT"
-                                   size:_fontSize];
+    UIFont *font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:_fontSize];
+    _text = [_text stringByReplacingOccurrencesOfString:@"\t" withString:@"    "];
     
-    _text = [_text stringByReplacingOccurrencesOfString:@"\t"
-                                             withString:@"    "];
+    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:_text];
     
+    if (_redSubstring && _redSubstring.length)
+        attributedText = [self setColor:UIColor.redColor forSubstring:_redSubstring inText:attributedText];
+    
+    if (_greenSubstring && _greenSubstring.length)
+        attributedText = [self setColor:UserDefaults.defaults.darkGreen forSubstring:_greenSubstring inText:attributedText];
+    
+    if (_blueSubstring && _blueSubstring.length)
+        attributedText = [self setColor:UIColor.blueColor forSubstring:_blueSubstring inText:attributedText];
+
     CGSize textSize = sizeOfString(_text, font);
     
     if (!_clampTextViewToText)
@@ -136,7 +144,7 @@
     _scrollView.contentSize = textSize;
     
     _textView = [[UITextView alloc] initWithFrame:CGRectMake(0.0, 0.0, textSize.width, textSize.height)];
-    _textView.text = _text;
+    _textView.attributedText = attributedText.copy;
     _textView.font = font;
     _textView.editable = NO;
     _textView.scrollEnabled = NO;
@@ -201,6 +209,30 @@ CGSize sizeOfString(NSString *string, UIFont *font)
     CGFloat stringWidth = (longestLine * (font.pointSize * 0.6));
     
     return CGSizeMake(stringWidth, stringHeight);
+}
+
+- (NSMutableAttributedString *)setColor:(UIColor *)color
+                           forSubstring:(NSString *)substring
+                                 inText:(NSMutableAttributedString *)text
+{
+    NSUInteger count = 0, length = text.length;
+    NSRange range = NSMakeRange(0, length);
+    
+    while(range.location != NSNotFound)
+    {
+        range = [text.string rangeOfString:substring options:0 range:range];
+        
+        if(range.location != NSNotFound)
+        {
+            [text setAttributes:@{NSForegroundColorAttributeName:color}
+                          range:NSMakeRange(range.location, substring.length)];
+            
+            range = NSMakeRange((range.location + range.length), (length - (range.location + range.length)));
+            count++;
+        }
+    }
+    
+    return text;
 }
 
 @end
