@@ -215,7 +215,7 @@ CGSize sizeOfString(NSString *string, UIFont *font)
                            forSubstring:(NSString *)substring
                                  inText:(NSMutableAttributedString *)text
 {
-    NSUInteger count = 0, length = text.length;
+    NSUInteger length = text.length;
     NSRange range = NSMakeRange(0, length);
     
     while(range.location != NSNotFound)
@@ -228,7 +228,6 @@ CGSize sizeOfString(NSString *string, UIFont *font)
                           range:NSMakeRange(range.location, substring.length)];
             
             range = NSMakeRange((range.location + range.length), (length - (range.location + range.length)));
-            count++;
         }
     }
     
