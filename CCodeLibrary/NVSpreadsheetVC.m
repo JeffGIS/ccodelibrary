@@ -638,64 +638,25 @@
 - (void)spreadsheetView:(NVSpreadsheet *)spreadsheetView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.nvSpreadsheetColumn == 0)
-    {
-        if (!_flipped)
-        {
-            NSString *filePath = [_delegate propFieldDescriptionFilePathAtRow:indexPath.nvSpreadsheetRow];
-            
-            NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                            showFileAtPath:filePath];
-            
-            [nvwv showRealtorButton];
-        }
-        
-        else for (NSNumber *row in _selectedRows)
-        {
-            if (row.integerValue == indexPath.nvSpreadsheetRow)
-            {
-                [_selectedRows removeObject:row];
-                [_nvss reloadData];
-                [self resetCopyButton];
-                return;
-            }
-        }
-        
-        [_selectedRows addObject:[NSNumber numberWithInteger:indexPath.nvSpreadsheetRow]];
-        _lastTapSelectedRow = indexPath.nvSpreadsheetRow;
-        [_nvss reloadData];
-        [self resetCopyButton];
-    }
+    NSInteger row = indexPath.nvSpreadsheetRow;
+    NSInteger column = indexPath.nvSpreadsheetColumn;
     
-    else if (indexPath.nvSpreadsheetRow == 0)
+    if (column == 0)
     {
         if (_flipped)
-        {
-            NSString *filePath = [_delegate propFieldDescriptionFilePathAtRow:indexPath.nvSpreadsheetColumn];
-            
-            NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                            showFileAtPath:filePath];
-            
-            [nvwv showRealtorButton];
-        }
+            [self updateSelectedRowsAtIndex:row];
         
         else
-        {
-            for (NSNumber *row in _selectedRows)
-            {
-                if (row.integerValue == indexPath.nvSpreadsheetColumn)
-                {
-                    [_selectedRows removeObject:row];
-                    [_nvss reloadData];
-                    [self resetCopyButton];
-                    return;
-                }
-            }
-            
-            [_selectedRows addObject:[NSNumber numberWithInteger:indexPath.nvSpreadsheetColumn]];
-            [_nvss reloadData];
-            [self resetCopyButton];
-        }
+            [self showPropFieldDescriptionAtIndex:row];
+    }
+    
+    else if (row == 0)
+    {
+        if (_flipped)
+            [self showPropFieldDescriptionAtIndex:column];
+        
+        else
+            [self updateSelectedRowsAtIndex:column];
     }
     
     else
@@ -704,34 +665,74 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         
         if (_flipped)
         {
-            _selectedRow = indexPath.nvSpreadsheetColumn;
-            _selectedColumn = indexPath.nvSpreadsheetRow;
+            _selectedRow = column;
+            _selectedColumn = row;
         }
         
         else
         {
-            _selectedRow = indexPath.nvSpreadsheetRow;
-            _selectedColumn = indexPath.nvSpreadsheetColumn;
+            _selectedRow = row;
+            _selectedColumn = column;
         }
         
-        NSArray *optionsArray = @[@"Map It", @"Cancel"];
+        NSArray *optionsArray = NSArray.array;
         
-        if ([_delegate getSpreadSheetType] == SST_CrimeList)
-            optionsArray = @[@"Display Report"];
-        
-        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                          delegate:self
-                                                             title:@"Spreadsheet Options"
-                                                   buttonTextArray:optionsArray
-                                                  destructiveIndex:0];
-        alert.identifier = @"MapIt";
-        
-        if (optionsArray.count == 1)
+        switch (_delegate.getSpreadSheetType)
         {
-            alert.hidden = YES;
-            [self alertView:alert didTapButtonAtIndex:0];
+            case SST_CrimeList:
+                optionsArray = @[@"Display Report"];
+                break;
+            case SST_PropertyList:
+                optionsArray = @[@"Map It", @"Cancel"];
+                break;
+            default:
+                break;
+        }
+        
+        if (optionsArray.count)
+        {
+            NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                              delegate:self
+                                                                 title:@"Spreadsheet Options"
+                                                       buttonTextArray:optionsArray
+                                                      destructiveIndex:0];
+            alert.identifier = @"MapIt";
+            
+            if (optionsArray.count == 1)
+            {
+                alert.hidden = YES;
+                [self alertView:alert didTapButtonAtIndex:0];
+            }
         }
     }
+}
+
+- (void)showPropFieldDescriptionAtIndex:(NSInteger)index
+{
+    NSString *filePath = [_delegate propFieldDescriptionFilePathAtRow:index];
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                    showFileAtPath:filePath];
+    
+    [nvwv showRealtorButton];
+}
+
+- (void)updateSelectedRowsAtIndex:(NSInteger)index
+{
+    for (NSNumber *row in _selectedRows)
+    {
+        if (row.integerValue == index)
+        {
+            [_selectedRows removeObject:row];
+            [_nvss reloadData];
+            [self resetCopyButton];
+            return;
+        }
+    }
+    
+    [_selectedRows addObject:[NSNumber numberWithInteger:index]];
+    [_nvss reloadData];
+    [self resetCopyButton];
 }
 
 - (void)resetCopyButton
@@ -1084,12 +1085,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     {
         if (buttonIndex == 0)
         {
-            switch ([_delegate getSpreadSheetType])
+            switch (_delegate.getSpreadSheetType)
             {
                 case SST_PropertyList:
                     [_delegate spreadsheetDidMapItForRow:_selectedRow
-                                          column:_selectedColumn
-                                tabBarController:self.tabBarController];
+                                                  column:_selectedColumn
+                                        tabBarController:self.tabBarController];
                     break;
                 case SST_CrimeList:
                 {
@@ -1108,8 +1109,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     if (searchStrings.count > 2)
                         textVC.blueSubstring = searchStrings[2];
                     [self presentViewController:textVC animated:YES completion:nil];
-                }
                     break;
+                }
             }
         }
     }
