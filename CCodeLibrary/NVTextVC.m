@@ -177,20 +177,29 @@
     [_searchButton setTitle:[NSString stringWithFormat:@"Search: %li matches", _rangeArray.count]
                    forState:UIControlStateNormal];
     
-    NSArray *sortedRangeArray = [_rangeArray sortedArrayUsingComparator:^NSComparisonResult(NSValue *value1, NSValue *value2)
+    if (_rangeArray.count)
     {
-        NSComparisonResult result = NSOrderedSame;
+        NSArray *sortedRangeArray = [_rangeArray sortedArrayUsingComparator:^NSComparisonResult(NSValue *value1, NSValue *value2)
+                                     {
+                                         NSComparisonResult result = NSOrderedSame;
+                                         
+                                         if (value1.rangeValue.location > value2.rangeValue.location)
+                                             result = NSOrderedDescending;
+                                         
+                                         else if (value1.rangeValue.location < value2.rangeValue.location)
+                                             result = NSOrderedAscending;
+                                         
+                                         return result;
+                                     }];
         
-        if (value1.rangeValue.location > value2.rangeValue.location)
-            result = NSOrderedDescending;
-        
-        else if (value1.rangeValue.location < value2.rangeValue.location)
-            result = NSOrderedAscending;
-        
-        return result;
-    }];
+        _rangeArray = sortedRangeArray.mutableCopy;
+    }
     
-    _rangeArray = sortedRangeArray.mutableCopy;
+    else
+    {
+        _searchButton.alpha = 0.5;
+        _searchButton.userInteractionEnabled = NO;
+    }
 }
 
 - (void)textWasPinched:(UIPinchGestureRecognizer *)gesture
@@ -211,7 +220,6 @@
         }
         
         _scrollView.contentSize = textSize;
-        
         _textView.frame = CGRectMake(0.0, 0.0, textSize.width, textSize.height);
         _textView.font = font;
         
@@ -221,8 +229,7 @@
 
 - (void)dismiss:(UIButton *)button
 {
-    [self dismissViewControllerAnimated:YES
-                             completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 CGSize sizeOfString(NSString *string, UIFont *font)
@@ -276,8 +283,8 @@ CGSize sizeOfString(NSString *string, UIFont *font)
     CGRect rect = [_textView.layoutManager boundingRectForGlyphRange:range
                                                      inTextContainer:_textView.textContainer];
     
-    [_textView setContentOffset:CGPointMake(0.0, (_textView.textContainerInset.top + rect.origin.y))
-                       animated:YES];
+    CGFloat yOffset = (_textView.textContainerInset.top + rect.origin.y);
+    [_scrollView setContentOffset:CGPointMake(0.0, yOffset) animated:YES];
     
     [_searchButton setTitle:[NSString stringWithFormat:@"Search: %i of %li matches", _currentRange, _rangeArray.count]
                    forState:UIControlStateNormal];
