@@ -7,11 +7,13 @@
 @interface NVTextVC ()
 
 @property (nonatomic, copy) NSString *text;
-@property (nonatomic) UIButton *returnButton;
+@property (nonatomic) UIButton *returnButton, *searchButton;
 @property (nonatomic) UITextView *textView;
 @property (nonatomic) CGFloat margin, fontSize;
 @property (nonatomic) UIFont *font;
 @property (nonatomic) UIScrollView *scrollView;
+@property (nonatomic) NSMutableArray<NSValue *> *rangeArray;
+@property int currentRange;
 
 @end
 
@@ -30,6 +32,8 @@
         _minFontSize = (_fontSize / 2.0);
         _maxFontSize = (_fontSize * 2.0);
         _clampTextViewToText = YES;
+        _rangeArray = NSMutableArray.array;
+        _currentRange = 0;
     }
     
     return self;
@@ -60,6 +64,7 @@
     }
     
     [self setupReturnButton];
+    [self setupSearchButton];
     [self setupTextView];
 }
 
@@ -82,24 +87,34 @@
     _returnButton.titleLabel.textAlignment = NSTextAlignmentLeft;
     _returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     _returnButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    
-    [_returnButton setTitle:@"< Return"
-                   forState:UIControlStateNormal];
-    
-    [_returnButton setTitleColor:UIColor.whiteColor
-                        forState:UIControlStateNormal];
-    
-    [_returnButton setTitleColor:UIColor.lightGrayColor
-                        forState:UIControlStateHighlighted];
-    
-    [_returnButton addTarget:self
-                      action:@selector(dismiss:)
-            forControlEvents:UIControlEventTouchUpInside];
+    [_returnButton setTitle:@"< Return" forState:UIControlStateNormal];
+    [_returnButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [_returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    [_returnButton addTarget:self action:@selector(dismiss:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:_returnButton];
     [_returnButton constrainTopToAnchor:self.view.topAnchor constant:(_margin / 2.0)];
     [_returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:_margin];
     [_returnButton constrainHeightToConstant:40.0];
+}
+
+- (void)setupSearchButton
+{
+    _searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _searchButton.translatesAutoresizingMaskIntoConstraints = NO;
+    _searchButton.backgroundColor = UIColor.clearColor;
+    _searchButton.titleLabel.font = _font;
+    _searchButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+    _searchButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    _searchButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [_searchButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [_searchButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    [_searchButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:_searchButton];
+    [_searchButton constrainTopToAnchor:_returnButton.topAnchor];
+    [_searchButton constrainTrailingToAnchor:self.view.trailingAnchor constant:-_margin];
+    [_searchButton constrainHeightToAnchor:_returnButton.heightAnchor];
 }
 
 - (void)setupTextView
@@ -158,6 +173,24 @@
         
         [_textView addGestureRecognizer:pinch];
     }
+    
+    [_searchButton setTitle:[NSString stringWithFormat:@"Search: %li matches", _rangeArray.count]
+                   forState:UIControlStateNormal];
+    
+    NSArray *sortedRangeArray = [_rangeArray sortedArrayUsingComparator:^NSComparisonResult(NSValue *value1, NSValue *value2)
+    {
+        NSComparisonResult result = NSOrderedSame;
+        
+        if (value1.rangeValue.location > value2.rangeValue.location)
+            result = NSOrderedDescending;
+        
+        else if (value1.rangeValue.location < value2.rangeValue.location)
+            result = NSOrderedAscending;
+        
+        return result;
+    }];
+    
+    _rangeArray = sortedRangeArray.mutableCopy;
 }
 
 - (void)textWasPinched:(UIPinchGestureRecognizer *)gesture
@@ -165,9 +198,7 @@
     _fontSize = floorf(((_fontSize * gesture.scale) * 10.0) + 0.5) / 10.0;
     _fontSize = MIN(_fontSize, _maxFontSize);
     _fontSize = MAX(_fontSize, _minFontSize);
-    
-    UIFont *font = [UIFont fontWithName:@"CourierNewPS-BoldMT"
-                                   size:_fontSize];
+    UIFont *font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:_fontSize];
     
     if (font != _textView.font)
     {
@@ -220,18 +251,39 @@ CGSize sizeOfString(NSString *string, UIFont *font)
     
     while(range.location != NSNotFound)
     {
-        range = [text.string rangeOfString:substring options:0 range:range];
+        range = [text.string rangeOfString:substring options:NSCaseInsensitiveSearch range:range];
         
         if(range.location != NSNotFound)
         {
             [text setAttributes:@{NSForegroundColorAttributeName:color}
                           range:NSMakeRange(range.location, substring.length)];
             
+            [_rangeArray addObject:[NSValue valueWithRange:range]];
             range = NSMakeRange((range.location + range.length), (length - (range.location + range.length)));
         }
     }
     
     return text;
+}
+
+- (void)search:(UIButton *)button
+{
+    NSRange range = [_rangeArray[_currentRange++] rangeValue];
+    
+    range = [_textView.layoutManager glyphRangeForCharacterRange:range
+                                            actualCharacterRange:nil];
+    
+    CGRect rect = [_textView.layoutManager boundingRectForGlyphRange:range
+                                                     inTextContainer:_textView.textContainer];
+    
+    [_textView setContentOffset:CGPointMake(0.0, (_textView.textContainerInset.top + rect.origin.y))
+                       animated:YES];
+    
+    [_searchButton setTitle:[NSString stringWithFormat:@"Search: %i of %li matches", _currentRange, _rangeArray.count]
+                   forState:UIControlStateNormal];
+    
+    if (_currentRange >= _rangeArray.count)
+        _currentRange = 0;
 }
 
 @end
