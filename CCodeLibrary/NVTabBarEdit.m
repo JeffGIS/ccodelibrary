@@ -163,7 +163,7 @@ replaceViewControllerWithID:(NSString *)ID
     NSInteger index = -1;
     
     if (!tabBarController || !ID)
-        return -1;
+        return index;
     
     NSArray *tabBarVCs = tabBarController.viewControllers;
     

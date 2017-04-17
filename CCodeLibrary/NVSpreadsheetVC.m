@@ -18,7 +18,7 @@
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
-@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine, *cpyButton;
+@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine, *cpyButton, *export, *delete, *mapIt, *create, *select;
 @property (nonatomic) CGFloat columnWidth, rowHeight;
 @property (nonatomic) UITextField *titleTextField;
 @property (nonatomic) UILabel *numRowsLabel, *numColsLabel;
@@ -70,125 +70,95 @@
     _topSpace = UIView.new;
     _topSpace.translatesAutoresizingMaskIntoConstraints = NO;
     _topSpace.backgroundColor = UIColor.clearColor;
-    
     [self.view addSubview:_topSpace];
-    [_topSpace constrainTopToAnchor:self.view.topAnchor];
-    [_topSpace constrainLeadingToAnchor:self.view.leadingAnchor];
-    [_topSpace constrainTrailingToAnchor:self.view.trailingAnchor];
-    [_topSpace constrainHeightToConstant:_rowHeight];
     
     UIEdgeInsets insets = UIEdgeInsetsMake((_rowHeight * 0.1), (_rowHeight * 0.1),
                                            (_rowHeight * 0.1), (_rowHeight * 0.1));
     
-    UIButton *export = [UIButton buttonWithType:UIButtonTypeCustom];
-    export.translatesAutoresizingMaskIntoConstraints = NO;
-    export.backgroundColor = UIColor.clearColor;
-    export.imageEdgeInsets = insets;
+    _export = [UIButton buttonWithType:UIButtonTypeCustom];
+    _export.translatesAutoresizingMaskIntoConstraints = NO;
+    _export.backgroundColor = UIColor.clearColor;
+    _export.imageEdgeInsets = insets;
     
-    [export setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteUpload"
-                                                                                    ofType:@"png"]]
-            forState:UIControlStateNormal];
+    [_export setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteUpload"
+                                                                                     ofType:@"png"]]
+             forState:UIControlStateNormal];
     
-    [export addTarget:self action:@selector(export:) forControlEvents:UIControlEventTouchUpInside];
+    [_export addTarget:self action:@selector(export:) forControlEvents:UIControlEventTouchUpInside];
+    [_topSpace addSubview:_export];
     
-    [_topSpace addSubview:export];
-    [export constrainLeadingToAnchor:_topSpace.leadingAnchor];
-    [export constrainTopToAnchor:_topSpace.topAnchor];
-    [export constrainHeightToConstant:_rowHeight];
-    [export constrainWidthToConstant:_rowHeight];
+    _delete = [UIButton buttonWithType:UIButtonTypeCustom];
+    _delete.translatesAutoresizingMaskIntoConstraints = NO;
+    _delete.backgroundColor = UIColor.clearColor;
+    _delete.imageEdgeInsets = insets;
     
-    UIButton *delete = [UIButton buttonWithType:UIButtonTypeCustom];
-    delete.translatesAutoresizingMaskIntoConstraints = NO;
-    delete.backgroundColor = UIColor.clearColor;
-    delete.imageEdgeInsets = insets;
+    [_delete setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteTrashCan"
+                                                                                     ofType:@"png"]]
+             forState:UIControlStateNormal];
     
-    [delete setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteTrashCan"
-                                                                                    ofType:@"png"]]
-            forState:UIControlStateNormal];
+    [_delete addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchUpInside];
+    [_topSpace addSubview:_delete];
     
-    [delete addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [_topSpace addSubview:delete];
-    [delete constrainLeadingToAnchor:export.trailingAnchor];
-    [delete constrainTopToAnchor:_topSpace.topAnchor];
-    [delete constrainHeightToConstant:_rowHeight];
-    [delete constrainWidthToConstant:_rowHeight];
-    
-    UIButton *mapIt = [UIButton buttonWithType:UIButtonTypeCustom];
-    mapIt.translatesAutoresizingMaskIntoConstraints = NO;
-    mapIt.backgroundColor = UIColor.clearColor;
+    _mapIt = [UIButton buttonWithType:UIButtonTypeCustom];
+    _mapIt.translatesAutoresizingMaskIntoConstraints = NO;
+    _mapIt.backgroundColor = UIColor.clearColor;
     
     switch (_delegate.getSpreadSheetType)
     {
         case SST_PropertyList:
-            mapIt.selected = CRAPI.sharedInstance.mapPropList;
+            _mapIt.selected = CRAPI.sharedInstance.mapPropList;
             break;
         case SST_CrimeList:
-            mapIt.selected = CRAPI.sharedInstance.mapCrimeList != nil;
+            _mapIt.selected = CRAPI.sharedInstance.mapCrimeList != nil;
             break;
         default:
             break;
     }
     
-    mapIt.imageEdgeInsets = insets;
+    _mapIt.imageEdgeInsets = insets;
     
-    [mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapItWithX"
-                                                                                   ofType:@"png"]]
-           forState:UIControlStateNormal];
-    
-    [mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapItWithX"
-                                                                                   ofType:@"png"]]
-           forState:UIControlStateNormal|UIControlStateHighlighted];
-    
-    [mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapIt"
-                                                                                   ofType:@"png"]]
-           forState:UIControlStateSelected];
-    
-    [mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapIt"
-                                                                                   ofType:@"png"]]
-           forState:UIControlStateSelected|UIControlStateHighlighted];
-    
-    [mapIt addTarget:self action:@selector(toggleMapIt:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [_topSpace addSubview:mapIt];
-    [mapIt constrainLeadingToAnchor:delete.trailingAnchor];
-    [mapIt constrainTopToAnchor:_topSpace.topAnchor];
-    [mapIt constrainHeightToConstant:_rowHeight];
-    [mapIt constrainWidthToConstant:_rowHeight];
-    
-    UIButton *create = [UIButton buttonWithType:UIButtonTypeCustom];
-    create.translatesAutoresizingMaskIntoConstraints = NO;
-    create.backgroundColor = UIColor.clearColor;
-    create.imageEdgeInsets = insets;
-    
-    [create setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whitePlus"
+    [_mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapItWithX"
                                                                                     ofType:@"png"]]
             forState:UIControlStateNormal];
     
-    [create addTarget:self action:@selector(create:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [_topSpace addSubview:create];
-    [create constrainTrailingToAnchor:_topSpace.trailingAnchor];
-    [create constrainTopToAnchor:_topSpace.topAnchor];
-    [create constrainHeightToConstant:_rowHeight];
-    [create constrainWidthToConstant:_rowHeight];
-    
-    UIButton *select = [UIButton buttonWithType:UIButtonTypeCustom];
-    select.translatesAutoresizingMaskIntoConstraints = NO;
-    select.backgroundColor = UIColor.clearColor;
-    select.imageEdgeInsets = insets;
-    
-    [select setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteList"
+    [_mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapItWithX"
                                                                                     ofType:@"png"]]
-            forState:UIControlStateNormal];
+            forState:UIControlStateNormal|UIControlStateHighlighted];
     
-    [select addTarget:self action:@selector(select:) forControlEvents:UIControlEventTouchUpInside];
+    [_mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapIt"
+                                                                                    ofType:@"png"]]
+            forState:UIControlStateSelected];
     
-    [_topSpace addSubview:select];
-    [select constrainTrailingToAnchor:create.leadingAnchor];
-    [select constrainTopToAnchor:_topSpace.topAnchor];
-    [select constrainHeightToConstant:_rowHeight];
-    [select constrainWidthToConstant:_rowHeight];
+    [_mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapIt"
+                                                                                    ofType:@"png"]]
+            forState:UIControlStateSelected|UIControlStateHighlighted];
+    
+    [_mapIt addTarget:self action:@selector(toggleMapIt:) forControlEvents:UIControlEventTouchUpInside];
+    [_topSpace addSubview:_mapIt];
+    
+    _create = [UIButton buttonWithType:UIButtonTypeCustom];
+    _create.translatesAutoresizingMaskIntoConstraints = NO;
+    _create.backgroundColor = UIColor.clearColor;
+    _create.imageEdgeInsets = insets;
+    
+    [_create setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whitePlus"
+                                                                                     ofType:@"png"]]
+             forState:UIControlStateNormal];
+    
+    [_create addTarget:self action:@selector(create:) forControlEvents:UIControlEventTouchUpInside];
+    [_topSpace addSubview:_create];
+    
+    _select = [UIButton buttonWithType:UIButtonTypeCustom];
+    _select.translatesAutoresizingMaskIntoConstraints = NO;
+    _select.backgroundColor = UIColor.clearColor;
+    _select.imageEdgeInsets = insets;
+    
+    [_select setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteList"
+                                                                                     ofType:@"png"]]
+             forState:UIControlStateNormal];
+    
+    [_select addTarget:self action:@selector(select:) forControlEvents:UIControlEventTouchUpInside];
+    [_topSpace addSubview:_select];
     
     _realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     _realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -201,10 +171,6 @@
     
     [_realtor addTarget:self action:@selector(realtor:) forControlEvents:UIControlEventTouchUpInside];
     [_topSpace addSubview:_realtor];
-    [_realtor constrainTrailingToAnchor:select.leadingAnchor];
-    [_realtor constrainTopToAnchor:_topSpace.topAnchor];
-    [_realtor constrainHeightToConstant:_rowHeight];
-    [_realtor constrainWidthToConstant:_rowHeight];
     
     _timeLine = [UIButton buttonWithType:UIButtonTypeCustom];
     _timeLine.translatesAutoresizingMaskIntoConstraints = NO;
@@ -217,10 +183,6 @@
     
     [_timeLine addTarget:self action:@selector(timeLine:) forControlEvents:UIControlEventTouchUpInside];
     [_topSpace addSubview:_timeLine];
-    [_timeLine constrainTrailingToAnchor:_realtor.trailingAnchor];
-    [_timeLine constrainTopToAnchor:_topSpace.topAnchor];
-    [_timeLine constrainHeightToConstant:_rowHeight];
-    [_timeLine constrainWidthToConstant:_rowHeight];
     
     _cpyButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _cpyButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -234,12 +196,7 @@
             forState:UIControlStateNormal];
 
     [_cpyButton addTarget:self action:@selector(performCopy:) forControlEvents:UIControlEventTouchUpInside];
-    
     [_topSpace addSubview:_cpyButton];
-    [_cpyButton constrainTrailingToAnchor:_timeLine.leadingAnchor];
-    [_cpyButton constrainTopToAnchor:_topSpace.topAnchor];
-    [_cpyButton constrainHeightToConstant:_rowHeight];
-    [_cpyButton constrainWidthToConstant:_rowHeight];
     
     _titleTextField = UITextField.new;
     _titleTextField.translatesAutoresizingMaskIntoConstraints = NO;
@@ -258,10 +215,6 @@
         _titleTextField.font = [UIFont boldSystemFontOfSize:30];
     
     [_topSpace addSubview:_titleTextField];
-    [_titleTextField constrainLeadingToAnchor:mapIt.trailingAnchor];
-    [_titleTextField constrainTrailingToAnchor:_cpyButton.leadingAnchor];
-    [_titleTextField constrainTopToAnchor:_topSpace.topAnchor];
-    [_titleTextField constrainHeightToConstant:_rowHeight];
     
     _nvss = [[NVSpreadsheet alloc] initWithNumberOfHeaderRows:1
                                         numberOfHeaderColumns:1
@@ -276,14 +229,17 @@
     _nvss.dataSource = self;
     
     [self.view addSubview:_nvss];
-    [_nvss constrainLeadingToAnchor:self.view.leadingAnchor];
-    [_nvss constrainTrailingToAnchor:self.view.trailingAnchor];
-    [_nvss constrainTopToAnchor:_topSpace.bottomAnchor];
-    [_nvss constrainBottomToAnchor:self.view.bottomAnchor];
+    [self resetConstraints];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone &&
+        CRAPI.sharedInstance.currentApp == HCConfigCrimes)
+    {
+        [self resetConstraints];
+    }
+    
     if (_delegate)
         [_delegate openList];
     
@@ -298,6 +254,84 @@
         _realtor.hidden = YES;
         _timeLine.hidden = NO;
     }
+}
+
+- (void)resetConstraints
+{
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone &&
+        CRAPI.sharedInstance.currentApp == HCConfigCrimes)
+    {
+        [_topSpace removeAllConstraints];
+        
+        for (UIView *subview in _topSpace.subviews)
+            [subview removeAllConstraints];
+        
+        if (UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeLeft ||
+            UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeRight)
+        {
+            [_topSpace constrainTopToAnchor:self.view.topAnchor constant:32.0];
+        }
+        
+        else
+            [_topSpace constrainTopToAnchor:self.view.topAnchor constant:44.0];
+    }
+    
+    else
+        [_topSpace constrainTopToAnchor:self.view.topAnchor];
+    
+    [_topSpace constrainLeadingToAnchor:self.view.leadingAnchor];
+    [_topSpace constrainTrailingToAnchor:self.view.trailingAnchor];
+    [_topSpace constrainHeightToConstant:_rowHeight];
+    
+    [_export constrainLeadingToAnchor:_topSpace.leadingAnchor];
+    [_export constrainTopToAnchor:_topSpace.topAnchor];
+    [_export constrainHeightToConstant:_rowHeight];
+    [_export constrainWidthToConstant:_rowHeight];
+    
+    [_delete constrainLeadingToAnchor:_export.trailingAnchor];
+    [_delete constrainTopToAnchor:_topSpace.topAnchor];
+    [_delete constrainHeightToConstant:_rowHeight];
+    [_delete constrainWidthToConstant:_rowHeight];
+    
+    [_mapIt constrainLeadingToAnchor:_delete.trailingAnchor];
+    [_mapIt constrainTopToAnchor:_topSpace.topAnchor];
+    [_mapIt constrainHeightToConstant:_rowHeight];
+    [_mapIt constrainWidthToConstant:_rowHeight];
+    
+    [_create constrainTrailingToAnchor:_topSpace.trailingAnchor];
+    [_create constrainTopToAnchor:_topSpace.topAnchor];
+    [_create constrainHeightToConstant:_rowHeight];
+    [_create constrainWidthToConstant:_rowHeight];
+    
+    [_select constrainTrailingToAnchor:_create.leadingAnchor];
+    [_select constrainTopToAnchor:_topSpace.topAnchor];
+    [_select constrainHeightToConstant:_rowHeight];
+    [_select constrainWidthToConstant:_rowHeight];
+    
+    [_realtor constrainTrailingToAnchor:_select.leadingAnchor];
+    [_realtor constrainTopToAnchor:_topSpace.topAnchor];
+    [_realtor constrainHeightToConstant:_rowHeight];
+    [_realtor constrainWidthToConstant:_rowHeight];
+    
+    [_timeLine constrainTrailingToAnchor:_realtor.trailingAnchor];
+    [_timeLine constrainTopToAnchor:_topSpace.topAnchor];
+    [_timeLine constrainHeightToConstant:_rowHeight];
+    [_timeLine constrainWidthToConstant:_rowHeight];
+    
+    [_cpyButton constrainTrailingToAnchor:_timeLine.leadingAnchor];
+    [_cpyButton constrainTopToAnchor:_topSpace.topAnchor];
+    [_cpyButton constrainHeightToConstant:_rowHeight];
+    [_cpyButton constrainWidthToConstant:_rowHeight];
+    
+    [_titleTextField constrainLeadingToAnchor:_mapIt.trailingAnchor];
+    [_titleTextField constrainTrailingToAnchor:_cpyButton.leadingAnchor];
+    [_titleTextField constrainTopToAnchor:_topSpace.topAnchor];
+    [_titleTextField constrainHeightToConstant:_rowHeight];
+    
+    [_nvss constrainLeadingToAnchor:self.view.leadingAnchor];
+    [_nvss constrainTrailingToAnchor:self.view.trailingAnchor];
+    [_nvss constrainTopToAnchor:_topSpace.bottomAnchor];
+    [_nvss constrainBottomToAnchor:self.view.bottomAnchor];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -1387,6 +1421,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         _swap.alpha = 0.5;
         _swap.userInteractionEnabled = NO;
     }
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        [self resetConstraints];
 }
 
 @end
