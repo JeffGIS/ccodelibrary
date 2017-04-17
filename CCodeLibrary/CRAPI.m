@@ -74,6 +74,7 @@
         _uploadPix = [SharedDefaults.defaults boolForKey:@"UploadPix"];
         _downloadData = [SharedDefaults.defaults boolForKey:@"DownloadData"];
         _downloadPix = [SharedDefaults.defaults boolForKey:@"DownloadPix"];
+        _forAllYears = [UserDefaults.defaults boolForKey:@"ForAllYears"];
         _dataset = 0;
         _minManageVersion  = @"";
         _minPrelimVersion = @"";
@@ -1243,5 +1244,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     return value;
 }
 
+- (void)setForAllYears:(BOOL)forAllYears
+{
+    _forAllYears = forAllYears;
+    [UserDefaults.defaults saveBool:forAllYears forKey:@"ForAllYears"];
+}
 
 @end

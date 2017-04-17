@@ -44,7 +44,8 @@ typedef NS_ENUM(NSInteger, TimeArraySpan)
 
 - (void)dateRange:(NVDateRange *)dateRange
 didReturnFromDate:(NSInteger)fromDate
-           toDate:(NSInteger)toDate;
+           toDate:(NSInteger)toDate
+      forAllYears:(BOOL)forAllYears;
 
 @end
 
@@ -72,7 +73,8 @@ didReturnFromDate:(NSInteger)fromDate
                             delegate:(id)delegate
                             fromDate:(NSInteger)fromDate
                               toDate:(NSInteger)toDate
-                           lockRange:(BOOL)lockRange;
+                           lockRange:(BOOL)lockRange
+                         forAllYears:(BOOL)forAllYears;
 
 - (void)hideDateRange:(BOOL)animated;
 - (NSDate *)startOfDayDateForDate:(NSDate *)date;

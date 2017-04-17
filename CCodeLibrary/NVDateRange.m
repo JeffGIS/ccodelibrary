@@ -16,6 +16,7 @@
 @property (nonatomic) NSCalendar *calendar;
 @property NSInteger fromDate, toDate, maxDate;
 @property BOOL lockRange;
+@property (nonatomic) UISwitch *forAllYearsSwitch;
 
 @end
 
@@ -215,7 +216,14 @@
                             fromDate:(NSInteger)fromDate
                               toDate:(NSInteger)toDate
                            lockRange:(BOOL)lockRange
+                         forAllYears:(BOOL)forAllYears
 {
+    if (!view || !delegate)
+    {
+        NSLog(@"NVDateRange ERROR:Cannot set delegate or view to nil");
+        return nil;
+    }
+    
     CGRect bounds = UIScreen.mainScreen.bounds;
     CGFloat minBounds = (MIN(bounds.size.width, bounds.size.height) * 0.95);
     CGFloat outerMargin = 40.0, innerMargin = 16.0;
@@ -278,7 +286,25 @@
     [titleLabel constrainLeadingToAnchor:returnButton.trailingAnchor constant:innerMargin];
     [titleLabel constrainTopToAnchor:returnButton.topAnchor];
     [titleLabel constrainBottomToAnchor:returnButton.bottomAnchor];
-    [titleLabel constrainCenterXToAnchor:view.centerXAnchor];
+    [titleLabel constrainCenterXToAnchor:nvdr.centerXAnchor];
+    
+    UILabel *forAllYearsLabel = UILabel.new;
+    [nvdr setupLabel:forAllYearsLabel fontSize:18.0];
+    forAllYearsLabel.text = @"For All Years";
+    
+    [nvdr addSubview:forAllYearsLabel];
+    [forAllYearsLabel constrainTopToAnchor:nvdr.topAnchor constant:innerMargin];
+    [forAllYearsLabel constrainTrailingToAnchor:nvdr.trailingAnchor constant:-innerMargin];
+    
+    nvdr.forAllYearsSwitch = UISwitch.new;
+    nvdr.forAllYearsSwitch.translatesAutoresizingMaskIntoConstraints = NO;
+    nvdr.forAllYearsSwitch.tintColor = UIColor.redColor;
+    nvdr.forAllYearsSwitch.onTintColor = UIColor.greenColor;
+    nvdr.forAllYearsSwitch.on = forAllYears;
+    
+    [nvdr addSubview:nvdr.forAllYearsSwitch];
+    [nvdr.forAllYearsSwitch constrainTopToAnchor:forAllYearsLabel.bottomAnchor];
+    [nvdr.forAllYearsSwitch constrainCenterXToAnchor:forAllYearsLabel.centerXAnchor];
     
     UILabel *fdpLabel = UILabel.new;
     [nvdr setupLabel:fdpLabel fontSize:24.0];
@@ -636,12 +662,10 @@
 
 - (void)returnButtonTapped:(UIButton *)button
 {
-    if (_delegate)
-    {
-        [_delegate dateRange:self
-           didReturnFromDate:_fromDatePicker.date.timeIntervalSince1970
-                      toDate:_toDatePicker.date.timeIntervalSince1970];
-    }
+    [_delegate dateRange:self
+       didReturnFromDate:_fromDatePicker.date.timeIntervalSince1970
+                  toDate:_toDatePicker.date.timeIntervalSince1970
+             forAllYears:_forAllYearsSwitch.on];
 }
 
 - (void)bottomButtonTapped:(UIButton *)button
