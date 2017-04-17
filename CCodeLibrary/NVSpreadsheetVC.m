@@ -1023,38 +1023,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         {
             case 0://Export as Email Attachment
             {
-                if (MFMailComposeViewController.canSendMail)
-                {
-                    NSString *tabbedOutput = [self tabbedOutput];
-                    NSString *fileName = [self fileName];
-                    
-                    MFMailComposeViewController *composer = MFMailComposeViewController.new;
-                    composer.mailComposeDelegate = self;
-                    composer.subject = [NSString stringWithFormat:@"%@ from NVMobile", fileName];
-                    
-                    [composer setMessageBody:@"The tab-delimited text file attached to this email was created by NVMobile."
-                                      isHTML:NO];
-                    
-                    [composer setToRecipients:[NSArray arrayWithObjects:@"jeffgis@aol.com", @"wildbillmunson@gmail.com", nil]];
-                    
-                    [composer addAttachmentData:[tabbedOutput dataUsingEncoding:NSUTF8StringEncoding]
-                                       mimeType:@"text/plain"
-                                       fileName:fileName];
-                    
-                    [self presentViewController:composer
-                                       animated:YES
-                                     completion:nil];
-                }
-                
-                else
-                {
-                    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                                      delegate:self
-                                                                         title:@"ERROR: No mail account setup on device."
-                                                               buttonTextArray:@[@"OK"]
-                                                              destructiveIndex:0];
-#pragma unused(alert)
-                }
+                [NVSendEmail sendEmailWithSubject:[NSString stringWithFormat:@"%@ from NVMobile", self.fileName]
+                                          message:@"The tab-delimited text file attached to this email was created by NVMobile."
+                                   attachmentData:[self.tabbedOutput dataUsingEncoding:NSUTF8StringEncoding]
+                                         mimeType:@"text/plain"
+                                         fileName:self.fileName
+                                       controller:self];
             }
                 break;
             case 1://Export to Cloud
