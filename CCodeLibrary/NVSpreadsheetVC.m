@@ -18,7 +18,7 @@
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
-@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine, *cpyButton, *export, *delete, *mapIt, *create, *select;
+@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine, *cpyButton, *export, *delete, *mapIt, *create, *select, *help;
 @property (nonatomic) CGFloat columnWidth, rowHeight;
 @property (nonatomic) UITextField *titleTextField;
 @property (nonatomic) UILabel *numRowsLabel, *numColsLabel;
@@ -198,6 +198,18 @@
     [_cpyButton addTarget:self action:@selector(performCopy:) forControlEvents:UIControlEventTouchUpInside];
     [_topSpace addSubview:_cpyButton];
     
+    _help = [UIButton buttonWithType:UIButtonTypeCustom];
+    _help.translatesAutoresizingMaskIntoConstraints = NO;
+    _help.backgroundColor = UIColor.clearColor;
+    _help.imageEdgeInsets = insets;
+    
+    [_help setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteQuestionMark"
+                                                                                   ofType:@"png"]]
+           forState:UIControlStateNormal];
+    
+    [_help addTarget:self action:@selector(help:) forControlEvents:UIControlEventTouchUpInside];
+    [_topSpace addSubview:_help];
+    
     _titleTextField = UITextField.new;
     _titleTextField.translatesAutoresizingMaskIntoConstraints = NO;
     _titleTextField.delegate = self;
@@ -298,6 +310,11 @@
     [_mapIt constrainHeightToConstant:_rowHeight];
     [_mapIt constrainWidthToConstant:_rowHeight];
     
+    [_help constrainLeadingToAnchor:_mapIt.trailingAnchor];
+    [_help constrainTopToAnchor:_topSpace.topAnchor];
+    [_help constrainHeightToConstant:_rowHeight];
+    [_help constrainWidthToConstant:_rowHeight];
+    
     [_create constrainTrailingToAnchor:_topSpace.trailingAnchor];
     [_create constrainTopToAnchor:_topSpace.topAnchor];
     [_create constrainHeightToConstant:_rowHeight];
@@ -323,7 +340,7 @@
     [_cpyButton constrainHeightToConstant:_rowHeight];
     [_cpyButton constrainWidthToConstant:_rowHeight];
     
-    [_titleTextField constrainLeadingToAnchor:_mapIt.trailingAnchor];
+    [_titleTextField constrainLeadingToAnchor:_help.trailingAnchor];
     [_titleTextField constrainTrailingToAnchor:_cpyButton.leadingAnchor];
     [_titleTextField constrainTopToAnchor:_topSpace.topAnchor];
     [_titleTextField constrainHeightToConstant:_rowHeight];
@@ -1431,6 +1448,15 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
         [self resetConstraints];
+}
+
+- (void)help:(UIButton *)button
+{
+    NSString *filePath = _delegate.filePathForHelpFile;
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                    showFileAtPath:filePath];
+#pragma unused(nvwv)
 }
 
 @end

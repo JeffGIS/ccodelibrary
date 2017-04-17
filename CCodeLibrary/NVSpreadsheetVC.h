@@ -37,6 +37,7 @@
                  tabBarController:(UITabBarController *)tabBarController;
 
 - (void)deleteRows:(NSArray *)arrayOfRows;
+- (NSString *)filePathForHelpFile;
 
 - (void)copyRows:(NSArray *)arrayOfRows
           toList:(NSString *)listName;
