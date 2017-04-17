@@ -1104,7 +1104,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             else if (gesture.numberOfTouches == 2)
             {
                 if (_currentHeader == COLUMN_HEADER)
-                    _currentLongPressCell.layer.borderColor = UserDefaults.defaults.darkGreen.CGColor;
+                {
+                    if (_delegate.spreadsheetActionForTwoTouchLongPressOnRowHeader == SSA_SortRows)
+                        _currentLongPressCell.layer.borderColor = UserDefaults.defaults.darkGreen.CGColor;
+                    
+                    else
+                        _currentLongPressCell.layer.borderColor = UIColor.redColor.CGColor;
+                }
                 
                 else
                     [self multiSelectRequested];
@@ -1114,7 +1120,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     else if (gesture.state == UIGestureRecognizerStateEnded)
     {
-        if (gesture.numberOfTouches == 2 && _currentHeader == COLUMN_HEADER)
+        if (gesture.numberOfTouches == 2 && _currentHeader == COLUMN_HEADER &&
+            _delegate.spreadsheetActionForTwoTouchLongPressOnRowHeader == SSA_SortRows)
         {
             if ([_delegate spreadsheetViewSortOnRow:_currentLongPressIndex])
                 [self reloadData];

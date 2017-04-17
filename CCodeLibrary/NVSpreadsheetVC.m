@@ -681,13 +681,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             [self updateSelectedRowsAtIndex:row];
         
         else
-            [self showPropFieldDescriptionAtIndex:row];
+            [self performRowHeaderActionAtIndex:row];
     }
     
     else if (row == 0)
     {
         if (_flipped)
-            [self showPropFieldDescriptionAtIndex:column];
+            [self performRowHeaderActionAtIndex:column];
         
         else
             [self updateSelectedRowsAtIndex:column];
@@ -739,6 +739,36 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             }
         }
     }
+}
+
+- (void)performRowHeaderActionAtIndex:(NSInteger)index
+{
+    if ([_delegate respondsToSelector:@selector(actionForTapOnRowHeader)])
+    {
+        switch (_delegate.actionForTapOnRowHeader)
+        {
+            case SSA_SortRows:
+                if ([self spreadsheetViewSortOnRow:index])
+                    [_nvss reloadData];
+                break;
+            case SSA_ShowDescription:
+            default:
+                [self showPropFieldDescriptionAtIndex:index];
+                break;
+        }
+    }
+    
+    else
+        [self showPropFieldDescriptionAtIndex:index];
+}
+
+- (SpreadsheetAction)spreadsheetActionForTwoTouchLongPressOnRowHeader
+{
+    if ([_delegate respondsToSelector:@selector(actionForTwoTouchLongPressOnRowHeader)])
+        return _delegate.actionForTwoTouchLongPressOnRowHeader;
+    
+    else
+        return SSA_SortRows;
 }
 
 - (void)showPropFieldDescriptionAtIndex:(NSInteger)index

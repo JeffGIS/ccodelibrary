@@ -2,12 +2,7 @@
 //  CCodeLibrary
 
 @import UIKit;
-
-typedef NS_ENUM(NSInteger, SpreadsheetTypes)
-{
-    SST_PropertyList,
-    SST_CrimeList,
-};
+#import "GSSiEnums.h"
 
 @interface TimeLine : NSObject
 @property int time;
@@ -63,6 +58,9 @@ typedef NS_ENUM(NSInteger, SpreadsheetTypes)
 - (NSString *)spreadsheetGetReportForRow:(NSInteger)row
                                   column:(NSInteger)column;
 - (NSArray *) getSearchStrings;
+- (SpreadsheetAction)actionForTapOnRowHeader;
+- (SpreadsheetAction)actionForTwoTouchLongPressOnRowHeader;
+
 @end
 
 @interface NVSpreadsheetVC : UIViewController

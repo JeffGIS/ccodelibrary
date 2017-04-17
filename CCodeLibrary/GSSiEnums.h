@@ -237,5 +237,18 @@ typedef NS_ENUM(NSInteger, AdjustCrimeOptions)
     ACO_OverDueSTDV,
 };
 
+typedef NS_ENUM(NSInteger, SpreadsheetTypes)
+{
+    SST_PropertyList,
+    SST_CrimeList,
+};
+
+typedef NS_ENUM(NSInteger, SpreadsheetAction)
+{
+    SSA_None,
+    SSA_SortRows,
+    SSA_ShowDescription,
+    SSA_SelectRow,
+};
 
 @end

@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 @import UIKit;
+#import "GSSiEnums.h"
 
 #define COLUMN_HEADER 1
 #define ROW_HEADER 2
@@ -43,6 +44,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)spreadsheetViewSortOnRow:(NSInteger)row;
 - (BOOL)multiSelectRequestedAtIndex:(NSInteger)index;
 - (void)spreadsheetSwapEnabled:(BOOL)enabled;
+- (SpreadsheetAction)spreadsheetActionForTwoTouchLongPressOnRowHeader;
 
 @end
 
