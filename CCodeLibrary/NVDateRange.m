@@ -11,11 +11,11 @@
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIDatePicker *fromDatePicker, *toDatePicker;
 @property (nonatomic) CGFloat cornerRadius;
-@property (nonatomic) NSInteger fromDate, toDate;
 @property (nonatomic) UILabel *fromDateLabel, *toDateLabel;
 @property (nonatomic) DateRangeInverval interval;
 @property (nonatomic) NSCalendar *calendar;
-@property (nonatomic) NSInteger maxDate;
+@property NSInteger fromDate, toDate, maxDate;
+@property BOOL lockRange;
 
 @end
 
@@ -214,6 +214,7 @@
                             delegate:(id)delegate
                             fromDate:(NSInteger)fromDate
                               toDate:(NSInteger)toDate
+                           lockRange:(BOOL)lockRange
 {
     CGRect bounds = UIScreen.mainScreen.bounds;
     CGFloat minBounds = (MIN(bounds.size.width, bounds.size.height) * 0.95);
@@ -224,7 +225,6 @@
     
     NVDateRange *nvdr = [[NVDateRange alloc] init];
     nvdr.translatesAutoresizingMaskIntoConstraints = NO;
-    
     nvdr.delegate = delegate;
     nvdr.cornerRadius = (minBounds / 60.0);
     nvdr.fromDate = fromDate;
@@ -232,7 +232,7 @@
     nvdr.interval = DateRangeInvervalNone;
     nvdr.minDate = 631173600;
     nvdr.maxDate = [nvdr endOfDayDateForDate:NSDate.date].timeIntervalSince1970;
-    
+    nvdr.lockRange = lockRange;
     nvdr.alpha = 0.0;
     nvdr.backgroundColor = UserDefaults.defaults.defaultColors.backgroundColor;
     nvdr.layer.cornerRadius = nvdr.cornerRadius;
@@ -271,10 +271,7 @@
     [returnButton constrainTopToAnchor:nvdr.topAnchor constant:innerMargin];
     
     UILabel *titleLabel = UILabel.new;
-    
-    [nvdr setupLabel:titleLabel
-            fontSize:36.0];
-    
+    [nvdr setupLabel:titleLabel fontSize:36.0];
     titleLabel.text = @"Date Range";
     
     [nvdr addSubview:titleLabel];
@@ -284,10 +281,7 @@
     [titleLabel constrainCenterXToAnchor:view.centerXAnchor];
     
     UILabel *fdpLabel = UILabel.new;
-    
-    [nvdr setupLabel:fdpLabel
-            fontSize:24.0];
-    
+    [nvdr setupLabel:fdpLabel fontSize:24.0];
     fdpLabel.text = @"Select From Date";
     
     [nvdr addSubview:fdpLabel];
@@ -296,10 +290,7 @@
     [fdpLabel constrainTrailingToAnchor:nvdr.centerXAnchor constant:(-innerMargin / 2.0)];
     
     UILabel *tdpLabel = UILabel.new;
-    
-    [nvdr setupLabel:tdpLabel
-            fontSize:24.0];
-    
+    [nvdr setupLabel:tdpLabel fontSize:24.0];
     tdpLabel.text = @"Select To Date";
     
     [nvdr addSubview:tdpLabel];
@@ -354,10 +345,7 @@
     [nvdr.toDatePicker constrainCenterXToAnchor:tdpLabel.centerXAnchor];
     
     nvdr.fromDateLabel = UILabel.new;
-    
-    [nvdr setupLabel:nvdr.fromDateLabel
-            fontSize:24.0];
-    
+    [nvdr setupLabel:nvdr.fromDateLabel fontSize:24.0];
     nvdr.fromDateLabel.text = [nvdr formattedDate:nvdr.fromDatePicker.date];
     
     [nvdr addSubview:nvdr.fromDateLabel];
@@ -366,10 +354,7 @@
     [nvdr.fromDateLabel constrainTopToAnchor:nvdr.fromDatePicker.bottomAnchor];
     
     nvdr.toDateLabel = UILabel.new;
-    
-    [nvdr setupLabel:nvdr.toDateLabel
-            fontSize:24.0];
-    
+    [nvdr setupLabel:nvdr.toDateLabel fontSize:24.0];
     nvdr.toDateLabel.text = [nvdr formattedDate:nvdr.toDatePicker.date];
     
     [nvdr addSubview:nvdr.toDateLabel];
@@ -761,7 +746,7 @@
                             animated:YES];
         }
         
-        if (_interval != DateRangeInvervalNone)
+        if (_interval != DateRangeInvervalNone && _lockRange)
         {
             NSDateComponents *dateComponents = [self componentsFromDate:_fromDatePicker.date];
             

@@ -71,7 +71,8 @@ didReturnFromDate:(NSInteger)fromDate
 + (NVDateRange *)showDateRangeInView:(UIView *)view
                             delegate:(id)delegate
                             fromDate:(NSInteger)fromDate
-                              toDate:(NSInteger)toDate;
+                              toDate:(NSInteger)toDate
+                           lockRange:(BOOL)lockRange;
 
 - (void)hideDateRange:(BOOL)animated;
 - (NSDate *)startOfDayDateForDate:(NSDate *)date;
