@@ -1231,18 +1231,18 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         _currentCounty = @"139";
     if ([name isEqualToString:@"WASHINGTON"])
         _currentCounty = @"163";
-    
 }
 
--(NSString*) acreFormat:(double)acres
+- (NSString *)acreFormat:(double)acres
 {
-    NSNumber * num = [[NSNumber alloc] initWithDouble:acres];
+    NSNumber *num = [[NSNumber alloc] initWithDouble:acres];
     NSString *value = [self.acreFmt stringFromNumber:num];
     return value;
 }
--(NSString*) dollarsFormat:(double)dollars
+
+- (NSString *)dollarsFormat:(double)dollars
 {
-    NSNumber * num = [[NSNumber alloc] initWithDouble:dollars];
+    NSNumber *num = [[NSNumber alloc] initWithDouble:dollars];
     NSString *value = [self.dollarFmt stringFromNumber:num];
     return value;
 }
@@ -1253,14 +1253,47 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     [UserDefaults.defaults saveBool:forAllYears forKey:@"ForAllYears"];
 }
 
-- (NSArray *) getTimeRanges
+- (NSArray<TimeRange *> *)getTimeRanges
 {
-    NSMutableArray * array = NSMutableArray.new;
+    NSMutableArray<TimeRange *> *array = NSMutableArray.array;
     
     if (_forAllYears)
     {
+        NSDate *beginDate = [NSDate dateWithTimeIntervalSince1970:_fromDate];
+        NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:_toDate];
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        calendar.locale = NSLocale.currentLocale;
+        calendar.timeZone = NSTimeZone.localTimeZone;
         
+        NSDateComponents *beginComps = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|
+                                        NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
+                                                   fromDate:beginDate];
+        
+        NSDateComponents *endComps = [calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|
+                                      NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond
+                                                 fromDate:endDate];
+        
+        NSInteger endYear = endComps.year;
+        endComps.year = beginComps.year;
+        
+        if ((beginComps.month > endComps.month) ||
+            ((beginComps.month == endComps.month) && (beginComps.day > endComps.day)))
+        {
+            endComps.year++;
+            endYear--;
+        }
+        
+        while (beginComps.year <= endYear)
+        {
+            TimeRange *tr = TimeRange.new;
+            tr.beginTime = (int)[calendar dateFromComponents:beginComps].timeIntervalSince1970;
+            tr.endTime = (int)[calendar dateFromComponents:endComps].timeIntervalSince1970;
+            [array addObject:tr];
+            beginComps.year++;
+            endComps.year++;
+        }
     }
+    
     else
     {
         TimeRange *tr = TimeRange.new;
@@ -1268,6 +1301,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         tr.endTime = (int)_toDate;
         [array addObject:tr];
     }
-    return array;
+    
+    return array.copy;
 }
+
 @end

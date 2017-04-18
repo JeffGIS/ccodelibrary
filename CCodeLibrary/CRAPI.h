@@ -219,10 +219,9 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 -(void) gotoAppStore;
 - (NSString*) getNVCRISServer;
 - (void)checkStorageForMinStorage:(nullable NSNumber *)minStorage;
-- (nullable NSString *)countyNameFromCountyID:( nullable NSString*)countyID;
+- (nullable NSString *)countyNameFromCountyID:(nullable NSString*)countyID;
 - (nullable NSString *)acreFormat:(double)acres;
 - (nullable NSString *)dollarsFormat:(double)dollars;
-- ( NSArray * _Nonnull ) getTimeRanges;
-
+- (nonnull NSArray<TimeRange *> *)getTimeRanges;
 
 @end
