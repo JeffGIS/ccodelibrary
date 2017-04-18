@@ -15,7 +15,7 @@
 @implementation TimeLine
 @end
 
-@interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,MFMailComposeViewControllerDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
+@interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
 @property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine, *cpyButton, *export, *delete, *mapIt, *create, *select, *help;
@@ -1241,46 +1241,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     
     return output.copy;
-}
-
-- (void)mailComposeController:(MFMailComposeViewController *)controller
-          didFinishWithResult:(MFMailComposeResult)result
-                        error:(NSError *)error
-{
-    NSString *resultString = @"";
-    
-    switch (result)
-    {
-        case MFMailComposeResultCancelled:
-            resultString = @"Mail Cancelled";
-            break;
-            
-        case MFMailComposeResultSaved:
-            resultString = @"Mail Saved";
-            break;
-            
-        case MFMailComposeResultSent:
-            resultString = @"Mail Sent";
-            break;
-            
-        case MFMailComposeResultFailed:
-            resultString = [NSString stringWithFormat:@"Mail Send failure:%@",
-                            error.localizedDescription];
-            break;
-            
-        default:
-            break;
-    }
-    
-    [self dismissViewControllerAnimated:YES
-                             completion:nil];
-    
-    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                      delegate:self
-                                                         title:resultString
-                                               buttonTextArray:@[@"OK"]
-                                              destructiveIndex:0];
-#pragma unused(alert)
 }
 
 - (void)documentManagerDidCompleteWithMessage:(NSString *)message

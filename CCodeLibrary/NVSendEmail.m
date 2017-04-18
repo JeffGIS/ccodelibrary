@@ -54,7 +54,7 @@
     composer.mailComposeDelegate = self;
     composer.subject = _subject;
     [composer setMessageBody:_message isHTML:NO];
-    [composer setToRecipients:[NSArray arrayWithObjects:@"wildbillmunson@gmail.com", @"jeffgis@aol.com", nil]];
+    [composer setToRecipients:[UserDefaults.defaults arrayForKey:@"DefaultRecipients"]];
     [composer addAttachmentData:_attachmentData mimeType:_mimeType fileName:_fileName];
     [_controller presentViewController:composer animated:YES completion:nil];
 }
