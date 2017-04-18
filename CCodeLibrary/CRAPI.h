@@ -27,6 +27,10 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
     CHOROPLETH,
 };
 
+@interface TimeRange : NSObject
+@property int beginTime, endTime;
+@end
+
 @interface CRAPI : NSObject
 
 @property (nonatomic) int currentModule;
@@ -218,6 +222,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (nullable NSString *)countyNameFromCountyID:( nullable NSString*)countyID;
 - (nullable NSString *)acreFormat:(double)acres;
 - (nullable NSString *)dollarsFormat:(double)dollars;
+- ( NSArray * _Nonnull ) getTimeRanges;
 
 
 @end

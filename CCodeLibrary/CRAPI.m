@@ -18,6 +18,9 @@
 
 @end
 
+@implementation TimeRange
+@end
+
 @implementation CRAPI
 {
     int _kp,_currentGeoidValue, _numAllowedZooms, _allowedZooms[3];
@@ -1250,4 +1253,21 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     [UserDefaults.defaults saveBool:forAllYears forKey:@"ForAllYears"];
 }
 
+- (NSArray *) getTimeRanges
+{
+    NSMutableArray * array = NSMutableArray.new;
+    
+    if (_forAllYears)
+    {
+        
+    }
+    else
+    {
+        TimeRange *tr = TimeRange.new;
+        tr.beginTime = (int)_fromDate;
+        tr.endTime = (int)_toDate;
+        [array addObject:tr];
+    }
+    return array;
+}
 @end
