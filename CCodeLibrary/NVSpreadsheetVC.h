@@ -61,6 +61,8 @@
 - (NSArray *) getSearchStrings;
 - (SpreadsheetAction)actionForTapOnRowHeader;
 - (SpreadsheetAction)actionForTwoTouchLongPressOnRowHeader;
+- (SpreadsheetAction)actionForOneTouchLongPressOnColumnHeader;
+- (SpreadsheetAction)actionForTwoTouchLongPressOnColumnHeader;
 
 @end
 

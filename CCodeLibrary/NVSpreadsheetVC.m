@@ -773,6 +773,24 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         return SSA_SortRows;
 }
 
+- (SpreadsheetAction)spreadsheetActionForOneTouchLongPressOnColumnHeader
+{
+    if ([_delegate respondsToSelector:@selector(actionForOneTouchLongPressOnColumnHeader)])
+        return _delegate.actionForOneTouchLongPressOnColumnHeader;
+    
+    else
+        return SSA_EditText;
+}
+
+- (SpreadsheetAction)spreadsheetActionForTwoTouchLongPressOnColumnHeader
+{
+    if ([_delegate respondsToSelector:@selector(actionForTwoTouchLongPressOnColumnHeader)])
+        return _delegate.actionForTwoTouchLongPressOnColumnHeader;
+    
+    else
+        return SSA_MultiSelect;
+}
+
 - (void)showPropFieldDescriptionAtIndex:(NSInteger)index
 {
     NSString *filePath = [_delegate propFieldDescriptionFilePathAtRow:index];
@@ -797,6 +815,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }
     
     [_selectedRows addObject:[NSNumber numberWithInteger:index]];
+    _lastTapSelectedRow = index;
     [_nvss reloadData];
     [self resetCopyButton];
 }
@@ -1337,6 +1356,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     if (i == row.integerValue)
                     {
                         [_selectedRows removeObject:row];
+                        NSLog(@"Remove Row:%li", i);
                         addRow = NO;
                         break;
                     }

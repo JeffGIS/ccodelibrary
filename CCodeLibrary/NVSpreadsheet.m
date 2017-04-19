@@ -1099,7 +1099,19 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             }
             
             if (gesture.numberOfTouches == 1)
-                [self enterEditingMode];
+            {
+                if (_currentHeader == COLUMN_HEADER)
+                    [self enterEditingMode];
+                
+                else
+                {
+                    if (_delegate.spreadsheetActionForOneTouchLongPressOnColumnHeader == SSA_MultiSelect)
+                        [self multiSelectRequested];
+                    
+                    else
+                        [self enterEditingMode];
+                }
+            }
             
             else if (gesture.numberOfTouches == 2)
             {
@@ -1113,7 +1125,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 }
                 
                 else
-                    [self multiSelectRequested];
+                {
+                    if (_delegate.spreadsheetActionForTwoTouchLongPressOnColumnHeader == SSA_MultiSelect)
+                        [self multiSelectRequested];
+                    
+                    else
+                        _currentLongPressCell.layer.borderColor = UIColor.redColor.CGColor;
+                }
             }
         }
     }

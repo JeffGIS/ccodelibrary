@@ -45,6 +45,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)multiSelectRequestedAtIndex:(NSInteger)index;
 - (void)spreadsheetSwapEnabled:(BOOL)enabled;
 - (SpreadsheetAction)spreadsheetActionForTwoTouchLongPressOnRowHeader;
+- (SpreadsheetAction)spreadsheetActionForOneTouchLongPressOnColumnHeader;
+- (SpreadsheetAction)spreadsheetActionForTwoTouchLongPressOnColumnHeader;
 
 @end
 

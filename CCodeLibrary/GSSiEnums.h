@@ -248,7 +248,9 @@ typedef NS_ENUM(NSInteger, SpreadsheetAction)
     SSA_None,
     SSA_SortRows,
     SSA_ShowDescription,
+    SSA_EditText,
     SSA_SelectRow,
+    SSA_MultiSelect,
 };
 
 @end
