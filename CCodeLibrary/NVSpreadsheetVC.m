@@ -296,6 +296,7 @@
         [_mapIt constrainTopToAnchor:_titleTextField.bottomAnchor];
         [_help constrainTopToAnchor:_titleTextField.bottomAnchor];
         [_cpyButton constrainTopToAnchor:_titleTextField.bottomAnchor];
+        [_realtor constrainTopToAnchor:_titleTextField.bottomAnchor];
         [_timeLine constrainTopToAnchor:_titleTextField.bottomAnchor];
         [_select constrainTopToAnchor:_titleTextField.bottomAnchor];
         [_create constrainTopToAnchor:_titleTextField.bottomAnchor];
@@ -309,6 +310,7 @@
     [_help constrainWidthToAnchor:_mapIt.widthAnchor];
     [_cpyButton constrainWidthToAnchor:_help.widthAnchor];
     [_timeLine constrainWidthToAnchor:_cpyButton.widthAnchor];
+    [_realtor constrainWidthToAnchor:_cpyButton.widthAnchor];
     [_select constrainWidthToAnchor:_timeLine.widthAnchor];
     [_create constrainWidthToAnchor:_select.widthAnchor];
     [_export constrainHeightToConstant:_rowHeight];
@@ -317,6 +319,7 @@
     [_help constrainHeightToAnchor:_mapIt.heightAnchor];
     [_cpyButton constrainHeightToAnchor:_help.heightAnchor];
     [_timeLine constrainHeightToAnchor:_cpyButton.heightAnchor];
+    [_realtor constrainHeightToAnchor:_cpyButton.heightAnchor];
     [_select constrainHeightToAnchor:_timeLine.heightAnchor];
     [_create constrainHeightToAnchor:_select.heightAnchor];
     [_titleTextField constrainHeightToAnchor:_create.heightAnchor];
@@ -326,8 +329,8 @@
     [_help constrainLeadingToAnchor:_mapIt.trailingAnchor];
     [_create constrainTrailingToAnchor:_topSpace.trailingAnchor];
     [_select constrainTrailingToAnchor:_create.leadingAnchor];
+    [_timeLine constrainTrailingToAnchor:_select.leadingAnchor];
     [_realtor constrainTrailingToAnchor:_select.leadingAnchor];
-    [_timeLine constrainTrailingToAnchor:_realtor.trailingAnchor];
     [_cpyButton constrainTrailingToAnchor:_timeLine.leadingAnchor];
     [_titleTextField constrainTopToAnchor:_topSpace.topAnchor];
     [_nvss constrainLeadingToAnchor:self.view.leadingAnchor];
