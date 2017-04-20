@@ -67,13 +67,8 @@
     nvmib.center = CGPointMake(target.x, ((target.y + statusBarHeight) - (nvmib.frame.size.height / 2.0)));
     
     [view addSubview:nvmib];
-    
-    [nvmib setImage:image
-           forState:UIControlStateNormal];
-    
-    [nvmib addTarget:nvmib
-              action:@selector(markerInfoButtonTapped:)
-        forControlEvents:UIControlEventTouchUpInside];
+    [nvmib setImage:image forState:UIControlStateNormal];
+    [nvmib addTarget:nvmib action:@selector(markerInfoButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     nvmib.label = UILabel.new;
     nvmib.label.translatesAutoresizingMaskIntoConstraints = NO;
@@ -83,7 +78,6 @@
     nvmib.label.numberOfLines = 2;
     nvmib.label.text = nvmib.title;
     nvmib.label.textColor = UIColor.blackColor;
-    
     [nvmib addSubview:nvmib.label];
     
     [nvmib.label constrainToView:nvmib leading:(size.width * 0.05) trailing:(-size.width * 0.05)

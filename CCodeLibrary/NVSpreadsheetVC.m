@@ -255,7 +255,7 @@
         for (UIView *subview in _topSpace.subviews)
             [subview removeAllConstraints];
         
-        if (CRAPI.sharedInstance.currentApp == HCConfigCrimes)
+        if (CRAPI.sharedInstance.currentApp == HCConfigCrimes && !self.tabBarController.moreNavigationController.navigationBar.hidden)
         {
             if (orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight)
                 [_topSpace constrainTopToAnchor:self.view.topAnchor constant:32.0];
@@ -263,6 +263,9 @@
             else
                 [_topSpace constrainTopToAnchor:self.view.topAnchor constant:44.0];
         }
+        
+        else
+            [_topSpace constrainTopToAnchor:self.view.topAnchor];
     }
     
     else
