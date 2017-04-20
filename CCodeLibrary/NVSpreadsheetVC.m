@@ -1157,16 +1157,22 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                                           column:_selectedColumn];
                     
                     NVTextVC *textVC = [[NVTextVC alloc] initWithText:reportText fontSize:16.0];
-                    NSArray * searchStrings = [_delegate getSearchStrings];
+                    NSArray *searchStrings = [_delegate getSearchStrings];
                     textVC.redSubstring = @"";
+                    
                     if (searchStrings.count > 0)
                         textVC.redSubstring = searchStrings[0];
+                    
                     textVC.greenSubstring = @"";
+                    
                     if (searchStrings.count > 1)
                         textVC.greenSubstring = searchStrings[1];
+                    
                     textVC.blueSubstring = @"";
+                    
                     if (searchStrings.count > 2)
                         textVC.blueSubstring = searchStrings[2];
+                    
                     [self presentViewController:textVC animated:YES completion:nil];
                     break;
                 }
