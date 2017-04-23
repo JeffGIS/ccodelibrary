@@ -21,11 +21,7 @@
     NVStreetSideController *nvssc = NVStreetSideController.new;
     nvssc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     nvssc.location = coordinate;
-    
-    [controller presentViewController:nvssc
-                             animated:YES
-                           completion:nil];
-    
+    [controller presentViewController:nvssc animated:YES completion:nil];
     return nvssc;
 }
 
@@ -39,39 +35,36 @@
 {
     [super viewDidLoad];
     
-    NSString *html = [NSString stringWithFormat:@"\
-<!DOCTYPE html><html>\
-<head><style>\
-body{width:100vw;height:100vh;border:0px;margin:0px;padding:0px}\
-</style></head>\
-<body>\
-<div id='printoutPanel' style='display:none';></div>\
-<div id='myMap'></div>\
-<script type='text/javascript'>\
-window.amd = function(){};\
-window.amd.define = function(){};\
-function loadMapScenario(){\
-var pidCoords=new Microsoft.Maps.Location(%f, %f);\
-var map=new Microsoft.Maps.Map(document.getElementById('myMap'),{\
-credentials:'%@',\
-enableHighDpi:true,\
-zoom:18,\
-pitch:0,\
-streetsideOptions:{\
-onErrorLoading:onErrorLoading,\
-overviewMapMode:Microsoft.Maps.OverviewMapMode.hidden,\
-showCurrentAddress:false,\
-showExitButton:false,\
-locationToLookAt:pidCoords},\
-mapTypeId:Microsoft.Maps.MapTypeId.streetside,\
-center:pidCoords});\
-Microsoft.Maps.Events.addHandler(map,'viewchangeend',function(){document.getElementById('printoutPanel').innerHTML='Load Complete';});\
-function onErrorLoading(){\
-document.getElementById('printoutPanel').innerHTML='No Streetview';}}\
-</script>\
-<script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?branch=release&callback=loadMapScenario' async defer>\
-</script>\
-</body></html>", _location.latitude, _location.longitude, BING_API_KEY];
+    NSString *html = [NSString stringWithFormat:@"<!DOCTYPE html><html><head><style>"
+                      "body{width:100vw;height:100vh;border:0px;margin:0px;padding:0px}"
+                      "</style></head><body>"
+                      "<div id='printoutPanel' style='display:none';></div>"
+                      "<div id='myMap'></div>"
+                      "<script type='text/javascript'>"
+                      "window.amd = function(){};"
+                      "window.amd.define = function(){};"
+                      "function loadMapScenario(){"
+                      "var pidCoords=new Microsoft.Maps.Location(%f, %f);"
+                      "var map=new Microsoft.Maps.Map(document.getElementById('myMap'),{"
+                      "credentials:'%@',"
+                      "enableHighDpi:true,"
+                      "zoom:18,"
+                      "pitch:0,"
+                      "streetsideOptions:{"
+                      "onErrorLoading:onErrorLoading,"
+                      "overviewMapMode:Microsoft.Maps.OverviewMapMode.hidden,"
+                      "showCurrentAddress:false,"
+                      "showExitButton:false,"
+                      "locationToLookAt:pidCoords},"
+                      "mapTypeId:Microsoft.Maps.MapTypeId.streetside,"
+                      "center:pidCoords});"
+                      "Microsoft.Maps.Events.addHandler(map,'viewchangeend',function()"
+                      "{document.getElementById('printoutPanel').innerHTML='Load Complete';});"
+                      "function onErrorLoading(){"
+                      "document.getElementById('printoutPanel').innerHTML='No Streetview';}}</script>"
+                      "<script type='text/javascript' src="
+                      "'https://www.bing.com/api/maps/mapcontrol?branch=release&callback=loadMapScenario' async defer>"
+                      "</script></body></html>", _location.latitude, _location.longitude, BING_API_KEY];
     
     _webView = UIWebView.new;
     _webView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -83,12 +76,17 @@ document.getElementById('printoutPanel').innerHTML='No Streetview';}}\
     dismissPan.translatesAutoresizingMaskIntoConstraints = NO;
     dismissPan.backgroundColor = UIColor.clearColor;
     dismissPan.titleLabel.textAlignment = NSTextAlignmentCenter;
-    dismissPan.titleLabel.font = [UIFont boldSystemFontOfSize:40.0];
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        dismissPan.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
+    
+    else
+        dismissPan.titleLabel.font = [UIFont boldSystemFontOfSize:40.0];
+    
     dismissPan.titleLabel.layer.shadowColor = UIColor.blackColor.CGColor;
     dismissPan.titleLabel.layer.shadowOpacity = 1.0;
     dismissPan.titleLabel.layer.shadowRadius = 4.0;
     dismissPan.titleLabel.layer.shadowOffset = CGSizeZero;
-    
     [dismissPan setTitle:@"< Return" forState:UIControlStateNormal];
     [dismissPan setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [dismissPan setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];

@@ -255,7 +255,7 @@
         for (UIView *subview in _topSpace.subviews)
             [subview removeAllConstraints];
         
-        if (CRAPI.sharedInstance.currentApp == HCConfigCrimes)
+        if (CRAPI.sharedInstance.currentApp == HCConfigCrimes && !self.tabBarController.moreNavigationController.navigationBar.hidden)
         {
             if (orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight)
                 [_topSpace constrainTopToAnchor:self.view.topAnchor constant:32.0];
@@ -263,6 +263,9 @@
             else
                 [_topSpace constrainTopToAnchor:self.view.topAnchor constant:44.0];
         }
+        
+        else
+            [_topSpace constrainTopToAnchor:self.view.topAnchor];
     }
     
     else
@@ -296,6 +299,7 @@
         [_mapIt constrainTopToAnchor:_titleTextField.bottomAnchor];
         [_help constrainTopToAnchor:_titleTextField.bottomAnchor];
         [_cpyButton constrainTopToAnchor:_titleTextField.bottomAnchor];
+        [_realtor constrainTopToAnchor:_titleTextField.bottomAnchor];
         [_timeLine constrainTopToAnchor:_titleTextField.bottomAnchor];
         [_select constrainTopToAnchor:_titleTextField.bottomAnchor];
         [_create constrainTopToAnchor:_titleTextField.bottomAnchor];
@@ -309,6 +313,7 @@
     [_help constrainWidthToAnchor:_mapIt.widthAnchor];
     [_cpyButton constrainWidthToAnchor:_help.widthAnchor];
     [_timeLine constrainWidthToAnchor:_cpyButton.widthAnchor];
+    [_realtor constrainWidthToAnchor:_cpyButton.widthAnchor];
     [_select constrainWidthToAnchor:_timeLine.widthAnchor];
     [_create constrainWidthToAnchor:_select.widthAnchor];
     [_export constrainHeightToConstant:_rowHeight];
@@ -317,6 +322,7 @@
     [_help constrainHeightToAnchor:_mapIt.heightAnchor];
     [_cpyButton constrainHeightToAnchor:_help.heightAnchor];
     [_timeLine constrainHeightToAnchor:_cpyButton.heightAnchor];
+    [_realtor constrainHeightToAnchor:_cpyButton.heightAnchor];
     [_select constrainHeightToAnchor:_timeLine.heightAnchor];
     [_create constrainHeightToAnchor:_select.heightAnchor];
     [_titleTextField constrainHeightToAnchor:_create.heightAnchor];
@@ -326,8 +332,8 @@
     [_help constrainLeadingToAnchor:_mapIt.trailingAnchor];
     [_create constrainTrailingToAnchor:_topSpace.trailingAnchor];
     [_select constrainTrailingToAnchor:_create.leadingAnchor];
+    [_timeLine constrainTrailingToAnchor:_select.leadingAnchor];
     [_realtor constrainTrailingToAnchor:_select.leadingAnchor];
-    [_timeLine constrainTrailingToAnchor:_realtor.trailingAnchor];
     [_cpyButton constrainTrailingToAnchor:_timeLine.leadingAnchor];
     [_titleTextField constrainTopToAnchor:_topSpace.topAnchor];
     [_nvss constrainLeadingToAnchor:self.view.leadingAnchor];
@@ -1157,16 +1163,22 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                                           column:_selectedColumn];
                     
                     NVTextVC *textVC = [[NVTextVC alloc] initWithText:reportText fontSize:16.0];
-                    NSArray * searchStrings = [_delegate getSearchStrings];
+                    NSArray *searchStrings = [_delegate getSearchStrings];
                     textVC.redSubstring = @"";
+                    
                     if (searchStrings.count > 0)
                         textVC.redSubstring = searchStrings[0];
+                    
                     textVC.greenSubstring = @"";
+                    
                     if (searchStrings.count > 1)
                         textVC.greenSubstring = searchStrings[1];
+                    
                     textVC.blueSubstring = @"";
+                    
                     if (searchStrings.count > 2)
                         textVC.blueSubstring = searchStrings[2];
+                    
                     [self presentViewController:textVC animated:YES completion:nil];
                     break;
                 }

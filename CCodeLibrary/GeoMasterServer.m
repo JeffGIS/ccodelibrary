@@ -1,12 +1,7 @@
 //  GeoMasterServer.m
 //  CCodeLibrary
 
-#define TEST_PORT 8080
 #define PRODUCTION_PORT 443
-#define TEST_SERVER @"gssidata.com"
-//#define PRODUCTION_SERVER @"gssiserver 3.com"
-//#define GM_SERVER @"74.208.70.192"
-//#define GM_PORT 501
 
 #import "GeoMasterServer.h"
 #import "Reachability.h"
@@ -86,11 +81,6 @@ static GeoMasterServer *statServer = nil;
     int port = PRODUCTION_PORT;
     NSString * ipAddress = [CRAPI.sharedInstance getNVCRISServer];
     
-    if (_useTestServer)
-    {
-        port = TEST_PORT;
-        ipAddress = TEST_SERVER;
-    }
     _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
     

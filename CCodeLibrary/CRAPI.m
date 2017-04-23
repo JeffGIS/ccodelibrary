@@ -43,7 +43,8 @@
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.bmp", _documentsDirectory];
         _crimeMode = (CrimeMapMode)[UserDefaults.defaults integerForKey:@"CrimeMode"];
-        
+        _mapPropList = [UserDefaults.defaults boolForKey:@"MapPropList"];
+        _mapCrimeList = [UserDefaults.defaults stringForKey:@"MapCrimeList"];
         NSString *defaultCrimeTarget = [UserDefaults.defaults stringForKey:@"CrimeTarget"];
         
         if (defaultCrimeTarget && defaultCrimeTarget.length)
@@ -1303,6 +1304,18 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     
     return array.copy;
+}
+
+- (void)setMapCrimeList:(NSString *)mapCrimeList
+{
+    _mapCrimeList = mapCrimeList;
+    [UserDefaults.defaults saveString:mapCrimeList forKey:@"MapCrimeList"];
+}
+
+- (void)setMapPropList:(BOOL)mapPropList
+{
+    _mapPropList = mapPropList;
+    [UserDefaults.defaults saveBool:mapPropList forKey:@"MapPropList"];
 }
 
 @end
