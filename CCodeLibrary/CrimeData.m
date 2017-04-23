@@ -419,6 +419,8 @@ didReceiveMessage:(NSString *)message
 didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     [alertView hideLargeAlertView:YES];
+    if (_delegate)
+        [_delegate CrimeDataUpdateDidComplete:0];
 }
 
 - (void)updateFromServer:(NSTimer *)timer
