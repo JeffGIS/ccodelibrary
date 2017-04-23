@@ -15,6 +15,7 @@
 @property int nGrids;
 @property int ** grids;
 @property int * times;
+@property int * counts;
 @property int nTimes;
 @property int pointGridSize;
 @property int * pointGrid;
@@ -27,7 +28,10 @@
                  timeArray:(NSArray*)times
                  PointSize:(int)pointSize
                       tran:(LPTRANDATA)pTranLLtoView;
-- (void) addPointAtX:(int)x andY:(int)y andTime:(int)time;
+- (void) addPointAtX:(int)x andY:(int)y
+             andTime:(int)time
+           whichGrid:(int)igrid;
+
 - (void) display:(CGContextRef)context;
 - (BOOL) dump:(NSString*)outFile;
 

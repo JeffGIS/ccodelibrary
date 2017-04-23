@@ -21,6 +21,8 @@
         free (_pointGrid);
     if (_times)
         free (_times);
+    if (_counts)
+        free (_counts);
 }
 - (void)dealloc
 {
@@ -56,6 +58,7 @@
     hs.nGrids = nGrids;
     hs.width = width;
     hs.height = height;
+    hs.counts = calloc (nGrids,sizeof (int));
     hs.grids = malloc (nGrids * sizeof (int *));
     for (int igrid = 0; igrid < nGrids;igrid++)
     {
@@ -97,12 +100,16 @@
     return -1;
 }
 
-- (void) addPointAtX:(int)x andY:(int)y andTime:(int)time
+- (void) addPointAtX:(int)x andY:(int)y
+             andTime:(int)time
+          whichGrid:(int)igrid
+
 {
-    int igrid = [self selectGridFromTime:time];
+//    int igrid = [self selectGridFromTime:time];
     if (igrid < 0 || igrid >= _nGrids)
         return;
     int * grid = _grids[igrid];
+    _counts[igrid]++;
     x -= _pointSize/2 + 1;
     y -= _pointSize/2 + 1;
     for (int row = 0;row < _pointGridSize; row++)
@@ -126,31 +133,80 @@
     CGRect rect;
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
     CGFloat colors[4] = {1,1,1,1};
-    int igrid = 0;
-    int * grid = _grids[igrid];
     
     colors[3] = 0.75;
     rect.size.width = 1;
     rect.size.height = 1;
-    for (int row = 0;row < _height; row++)
+    if (_nGrids == 1 || !_counts[1])
     {
-        rect.origin.y = row;
-        for (int col = 0; col < _width; col++)
+        int * grid = _grids[0];
+        for (int row = 0;row < _height; row++)
         {
-            rect.origin.x = col;
-            int indx = [self gridIndex:row column:col];
-            if (grid[indx])
+            rect.origin.y = row;
+            for (int col = 0; col < _width; col++)
             {
-                colors[3] = pow((CGFloat)grid[indx],0.5) / pow(_maxGridVal,0.5);
-//                colors[3] = log10((CGFloat)_grid1[indx]) / log10(_maxGridVal);
-//                colors[3] = log((CGFloat)_grid1[indx]) / log(_maxGridVal);
-                colors[1] = colors[2] = 1.0 - colors[3];
-                CGColorRef color = CGColorCreate(colorspace,colors);
-                CGContextSetFillColorWithColor(context,color);
-                CGContextFillRect (context,rect);
-                CGColorRelease (color);
+                rect.origin.x = col;
+                int indx = [self gridIndex:row column:col];
+                if (grid[indx])
+                {
+                    colors[3] = pow((CGFloat)grid[indx],0.5) / pow(_maxGridVal,0.5);
+                    //                colors[3] = log10((CGFloat)_grid1[indx]) / log10(_maxGridVal);
+                    //                colors[3] = log((CGFloat)_grid1[indx]) / log(_maxGridVal);
+                    colors[1] = colors[2] = 1.0 - colors[3];
+                    CGColorRef color = CGColorCreate(colorspace,colors);
+                    CGContextSetFillColorWithColor(context,color);
+                    CGContextFillRect (context,rect);
+                    CGColorRelease (color);
+                }
             }
         }
+    }
+    else
+    {
+        double maxValue = 0;
+        double factor = (double)_counts[0]/(double)_counts[1];
+        int * grid1 = _grids[0];
+        int * grid2 = _grids[1];
+        for (int row = 0;row < _height; row++)
+        {
+            for (int col = 0; col < _width; col++)
+            {
+                int indx = [self gridIndex:row column:col];
+                double value = grid1[indx] - grid2[indx] * factor;
+                maxValue = max (maxValue,fabs(value));
+            }
+        }
+        for (int row = 0;row < _height; row++)
+        {
+            rect.origin.y = row;
+            for (int col = 0; col < _width; col++)
+            {
+                rect.origin.x = col;
+                int indx = [self gridIndex:row column:col];
+                double value = grid1[indx] - grid2[indx] * factor;
+                if (value > 0)
+                {
+                    colors[0] = 1;
+                    colors[3] = pow(value,0.5) / pow(maxValue,0.5);
+                    colors[1] = colors[2] = 1.0 - colors[3];
+                    CGColorRef color = CGColorCreate(colorspace,colors);
+                    CGContextSetFillColorWithColor(context,color);
+                    CGContextFillRect (context,rect);
+                    CGColorRelease (color);
+                }
+                else if (value < 0)
+                {
+                    colors[2] = 1;
+                    colors[3] = pow(-value,0.5) / pow(maxValue,0.5);
+                    colors[0] = colors[1] = 1.0 - colors[3];
+                    CGColorRef color = CGColorCreate(colorspace,colors);
+                    CGContextSetFillColorWithColor(context,color);
+                    CGContextFillRect (context,rect);
+                    CGColorRelease (color);
+                }
+            }
+        }
+        
     }
 }
 
