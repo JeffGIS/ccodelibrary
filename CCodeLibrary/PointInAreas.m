@@ -82,7 +82,82 @@ static int ii;
 - (void)dealloc
 {
     [self releaseMem];
+    [self close:YES];
 }
+- (BOOL)open
+{
+    if (!_isOpen)
+    {
+        _isOpen = !SQLOK(147,sqlite3_open(self.path.UTF8String, &_database), _database);
+        NSLog(@"PointInAreas Database open");
+        
+        
+        return TRUE;
+    }
+    return FALSE;
+}
+
+- (void)close:(BOOL)opened
+{
+    if (opened && _isOpen)
+    {
+        if (_haveTimeLineDB)
+            [self commitTransaction];
+        SQLOK(148,sqlite3_close(_database),_database);
+        NSLog(@"PointInAreas Database close");
+        _isOpen = NO;
+    }
+}
+
+
+- (BOOL)executeCmd:(char *)cmd
+{
+    BOOL rtn = !SQLOK(155,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    return rtn;
+}
+
+- (BOOL)startTransaction
+{
+    BOOL rtn = [self open];
+    SQLOK(156,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    return rtn;
+}
+
+- (void)commitTransaction
+{
+    SQLOK(157,sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
+}
+
+- (void) createTimeLineTable
+{
+    NSString * cmd = @"DROP TABLE IF EXISTS TimeLine;CREATE TABLE TimeLine (id INTEGER PRIMARY KEY, AreaNumber INT, Time INT, WhichCount INT);CREATE INDEX TimeLine_index ON TimeLine (AreaNumber,Time)";
+    [self executeCmd:(LPSTR)cmd.UTF8String];
+}
+- (BOOL) initTimeLine:(sqlite3 *) db
+{
+    //_database = db;
+    NSString * documentsDirectory = UserDefaults.defaults.localFilePath;
+    NSString * fileName = @"PointInAreaData.slt";
+    _path = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
+    BOOL rtn = [self open];
+    [self createTimeLineTable];
+    _haveTimeLineDB = YES;
+    _timeLineID = 1;
+    [self startTransaction];
+    return rtn;
+}
+
+- (void) addToTimeLine:(int)areaNum
+                atTime:(int)itime
+              forCount:(int)iCount
+{
+    if (_haveTimeLineDB)
+    {
+        NSString *cmd = [NSString stringWithFormat:@"INSERT INTO TimeLine VALUES (%i,%i,%i,%i);",_timeLineID++,areaNum,itime,iCount];
+        [self executeCmd:(LPSTR)cmd.UTF8String];
+    }
+}
+
 
 - (void) setColor:(int)iColor
          areaData:(AreaData*)ad
@@ -527,25 +602,6 @@ static int ii;
     _minTime = min (_minTime,itime);
     return numAreasIn;
 }
-- (void) initTimeLine:(sqlite3 *) db
-{
-    _database = db;
-}
-
-- (void) createTimeLineTable
-{
-    NSString * cmd = @"DROP TABLE IF EXISTS TimeLine;CREATE TABLE TimeLine (id INTEGER PRIMARY KEY, AreaNumber INT, Time INT, WhichCount INT);CREATE INDEX TimeLine_index ON TimeLine (AreaNumber,Time)";
-}
-- (void) addToTimeLine:(int)areaNum
-                atTime:(int)itime
-              forCount:(int)iCount
-{
-    if (_haveTimeLineDB)
-    {
-        NSString *cmd = [NSString stringWithFormat:@"INSERT INTO TimeLine VALUES (%i,%i,%i,%i);",_timeLineID++,areaNum,itime,iCount];
-    }
-}
-
 - (AreaData *) getAreaDataFromID:(NSString *)areaID
 {
     for (AreaData *ad in _areaInfo)
