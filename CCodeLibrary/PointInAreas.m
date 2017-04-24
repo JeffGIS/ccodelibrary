@@ -73,7 +73,7 @@ static int ii;
         InitDBounds (&_fullBounds);
         self.minTime = INT_MAX;
         self.currentTime = NSDate.date.timeIntervalSince1970;
-
+        self.compareFactor = 1;
     }
     
     return self;
@@ -512,7 +512,7 @@ static int ii;
         if (ad)
         {
             if (icount)
-                ad.count2++;
+                ad.count2 = ad.count2 + _compareFactor;
             else
                 ad.count1++;
             ad.maxTime = max (ad.maxTime,itime);

@@ -63,5 +63,5 @@
 @property int minTime;
 @property AdjustCrimeOptions overdueOption;
 @property int currentTime, timeRange;
-
+@property double compareFactor;
 @end
