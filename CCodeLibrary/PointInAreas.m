@@ -9,6 +9,7 @@
 #define MINAREAPCT 2.0
 
 #import "PointInAreas.h"
+#import "TimeLine.h"
 
 #import "CRAPI.h"
 #import "MathUtil.h"
@@ -91,7 +92,6 @@ static int ii;
         _isOpen = !SQLOK(147,sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"PointInAreas Database open");
         
-        
         return TRUE;
     }
     return FALSE;
@@ -130,20 +130,31 @@ static int ii;
 
 - (void) createTimeLineTable
 {
-    NSString * cmd = @"DROP TABLE IF EXISTS TimeLine;CREATE TABLE TimeLine (id INTEGER PRIMARY KEY, AreaNumber INT, Time INT, WhichCount INT);CREATE INDEX TimeLine_index ON TimeLine (AreaNumber,Time)";
+    NSString * cmd = @"DROP TABLE IF EXISTS TimeLine;CREATE TABLE TimeLine (id INTEGER PRIMARY KEY, AreaNumber INT, Time INT, WhichCount INT);CREATE INDEX TimeLine_index ON TimeLine (AreaNumber,Time);DROP TABLE IF EXISTS AreaNames;CREATE TABLE AreaNames (AreaName CHAR(128), AreaNumber INT);";
     [self executeCmd:(LPSTR)cmd.UTF8String];
 }
+
+- (NSString*) getPath
+{
+    NSString * documentsDirectory = UserDefaults.defaults.localFilePath;
+    NSString * fileName = @"PointInAreaData.slt";
+    NSString * path = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
+    return path;
+}
+
 - (BOOL) initTimeLine:(sqlite3 *) db
 {
     //_database = db;
-    NSString * documentsDirectory = UserDefaults.defaults.localFilePath;
-    NSString * fileName = @"PointInAreaData.slt";
-    _path = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
     BOOL rtn = [self open];
     [self createTimeLineTable];
     _haveTimeLineDB = YES;
     _timeLineID = 1;
     [self startTransaction];
+    for (AreaData *ad in _areaInfo)
+    {
+        NSString * cmd = [NSString stringWithFormat:@"INSERT INTO AreaNames VALUES ('%@',%i);",ad.areaID,ad.areaNumber];
+        [self executeCmd:(LPSTR)cmd.UTF8String];
+    }
     return rtn;
 }
 
@@ -158,6 +169,43 @@ static int ii;
     }
 }
 
+- (NSArray *) getAreaTimeline:(NSString*) areaName
+{
+    NSMutableArray * array = NSMutableArray.new;
+    BOOL opened = [self open];
+    sqlite3_stmt *statement = NULL;
+
+    NSString * query = [NSString stringWithFormat:@"SELECT AreaNumber FROM AreaNames WHERE AreaName = %@",areaName];
+    int areaNum = -1;
+    
+    SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        areaNum = sqlite3_column_int(statement,0);
+    }
+    
+    SQLOK(0,sqlite3_finalize(statement), self.database);
+    
+    query = [NSString stringWithFormat:@"SELECT Time FROM TimeLine WHERE AreaNumber = %i",areaNum];
+    SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        TimeLine *tl = TimeLine.new;
+        int itime = sqlite3_column_int(statement,0);
+        tl.time = itime;
+        tl.value = 1+[NSCalendar.currentCalendar component:NSCalendarUnitHour fromDate:[NSDate dateWithTimeIntervalSince1970:itime]];
+        [array addObject:tl];
+    }
+    SQLOK(0,sqlite3_finalize(statement), self.database);
+    TimeLine *tl = TimeLine.new;
+    tl.time = NSDate.date.timeIntervalSince1970;
+    tl.value = 0.1;
+    [array addObject:tl];
+    [self close:opened];
+    return array;
+}
 
 - (void) setColor:(int)iColor
          areaData:(AreaData*)ad

@@ -4,11 +4,6 @@
 @import UIKit;
 #import "GSSiEnums.h"
 
-@interface TimeLine : NSObject
-@property int time;
-@property double value;
-@end
-
 @class NVSpreadsheetVC;
 
 @protocol NVSpreadsheetVCDelegate <NSObject>

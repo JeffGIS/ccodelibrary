@@ -12,9 +12,6 @@
 #import "NVTextVC.h"
 @import MessageUI;
 
-@implementation TimeLine
-@end
-
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;

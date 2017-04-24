@@ -249,6 +249,8 @@
 		BB235EFB1E5F552700E97495 /* ArrayOfNumbers.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */; };
 		BB3CF30B1E5CE1410064EC9C /* ArrayOfNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */; };
 		BB6777981C95C13200A2D508 /* CensusData.m in Sources */ = {isa = PBXBuildFile; fileRef = BB6777971C95C13200A2D508 /* CensusData.m */; };
+		BB9B8FAB1EAE8A6600AFB3CA /* TimeLine.m in Sources */ = {isa = PBXBuildFile; fileRef = BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */; };
+		BB9B8FAC1EAE8B7500AFB3CA /* TimeLine.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB9B8FA91EAE8A6600AFB3CA /* TimeLine.h */; };
 		BBE299521CBD1D6C0045B3DC /* CityOrOrganizationData.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */; };
 		BBE299531CBD30BB0045B3DC /* CityOrOrganizationData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
@@ -361,6 +363,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				BB9B8FAC1EAE8B7500AFB3CA /* TimeLine.h in CopyFiles */,
 				698037541E82DC6400C3E49D /* NVSendEmail.h in CopyFiles */,
 				BB235EFB1E5F552700E97495 /* ArrayOfNumbers.h in CopyFiles */,
 				697486451E5C89450051B5BC /* NVPager.h in CopyFiles */,
@@ -731,6 +734,8 @@
 		BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayOfNumbers.m; sourceTree = "<group>"; };
 		BB6777961C95C13200A2D508 /* CensusData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CensusData.h; path = ../CensusData.h; sourceTree = "<group>"; };
 		BB6777971C95C13200A2D508 /* CensusData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CensusData.m; path = ../CensusData.m; sourceTree = "<group>"; };
+		BB9B8FA91EAE8A6600AFB3CA /* TimeLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeLine.h; sourceTree = "<group>"; };
+		BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeLine.m; sourceTree = "<group>"; };
 		BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityOrOrganizationData.h; sourceTree = "<group>"; };
 		BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityOrOrganizationData.m; sourceTree = "<group>"; };
 		EB05C20E19EA999F00F0688B /* ElementOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementOverlayView.h; sourceTree = "<group>"; };
@@ -1241,6 +1246,8 @@
 				EB23A7951CA04AF700F83E6C /* TextOptions.m */,
 				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
+				BB9B8FA91EAE8A6600AFB3CA /* TimeLine.h */,
+				BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1574,6 +1581,7 @@
 				EBC01D0C1BED1C8C0004C751 /* conjunct.c in Sources */,
 				EBC01D2B1BED1C8C0004C751 /* sun.c in Sources */,
 				EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */,
+				BB9B8FAB1EAE8A6600AFB3CA /* TimeLine.m in Sources */,
 				69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */,
 				1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */,
 				A91F36941AE9739400602BCE /* NVSliderView.m in Sources */,

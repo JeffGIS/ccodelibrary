@@ -36,6 +36,7 @@
             whichCount:(int) icount;
 - (NSString *) overdueTextForArea:(NSString *)areaID;
 - (BOOL) initTimeLine:(sqlite3 *) db;
+- (NSArray *) getAreaTimeline:(NSString*) areaName;
 
 @property NSString * areaType;
 @property NSString * adjustValue;
@@ -60,7 +61,7 @@
 @property BOOL haveTimeLineDB;
 @property int timeLineID;
 @property sqlite3 *database;
-@property NSString * path;
+@property (nonatomic) NSString * path;
 @property BOOL isOpen;
 @property int minTime;
 @property AdjustCrimeOptions overdueOption;
