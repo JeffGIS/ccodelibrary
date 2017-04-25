@@ -2,7 +2,7 @@
 //  CCodeLibrary
 
 #include "MathUtil.h"
-#include "Rotate256.h"
+#include "rotate256.h"
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>

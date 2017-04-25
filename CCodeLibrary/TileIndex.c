@@ -3,7 +3,7 @@
 
 #include <math.h>
 #include <string.h>
-#include "tilegraphics.h"
+#include "TileGraphics.h"
 #define max(a,b)(((a) > (b)) ? (a) : (b))
 #define min(a,b)(((a) < (b)) ? (a) : (b))
 

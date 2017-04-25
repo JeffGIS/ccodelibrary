@@ -8,7 +8,7 @@
 #include <string.h>
 #include "compress.h"
 #include "minilzo.h"
-#include "mathutil.h"
+#include "MathUtil.h"
 #define BOOL int
 
 void ExpandText(LPSTR txt)
