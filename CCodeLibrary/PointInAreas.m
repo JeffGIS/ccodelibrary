@@ -152,7 +152,9 @@ static int ii;
     [self startTransaction];
     for (AreaData *ad in _areaInfo)
     {
-        NSString * cmd = [NSString stringWithFormat:@"INSERT INTO AreaNames VALUES ('%@',%i);",ad.areaID,ad.areaNumber];
+        NSString * areaID = [ad.areaID stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
+        
+        NSString * cmd = [NSString stringWithFormat:@"INSERT INTO AreaNames VALUES ('%@',%i);",areaID,ad.areaNumber];
         [self executeCmd:(LPSTR)cmd.UTF8String];
     }
     return rtn;
@@ -175,7 +177,9 @@ static int ii;
     BOOL opened = [self open];
     sqlite3_stmt *statement = NULL;
 
-    NSString * query = [NSString stringWithFormat:@"SELECT AreaNumber FROM AreaNames WHERE AreaName = %@",areaName];
+    NSString * areaID = [areaName stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
+    
+    NSString * query = [NSString stringWithFormat:@"SELECT AreaNumber FROM AreaNames WHERE AreaName = %@",areaID];
     int areaNum = -1;
     
     SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
