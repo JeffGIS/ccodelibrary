@@ -89,9 +89,9 @@ static int ii;
 {
     if (!_isOpen)
     {
-        int fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:[self getPath]
-                                                                      error:nil].fileSize;
-        _isOpen = !SQLOK(147,sqlite3_open([self getPath].UTF8String, &_database), _database);
+        //int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:self.path error:nil].fileSize;
+        
+        _isOpen = !SQLOK(147,sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"PointInAreas Database open");
         
         return TRUE;
@@ -105,13 +105,14 @@ static int ii;
     {
         if (_haveTimeLineDB)
             [self commitTransaction];
+        
         SQLOK(148,sqlite3_close(_database),_database);
         NSLog(@"PointInAreas Database close");
         _isOpen = NO;
-        int fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:[self getPath]
-                                                                      error:nil].fileSize;
+        
+        /*int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:self.path error:nil].fileSize;
         if (fileSize)
-            fileSize = 1;
+            fileSize = 1;*/
     }
 }
 
@@ -144,7 +145,7 @@ static int ii;
     [self executeCmd:(LPSTR)cmd.UTF8String];
 }
 
-- (NSString*) getPath
+- (NSString *)path
 {
     NSString * documentsDirectory = UserDefaults.defaults.localFilePath;
     NSString * fileName = @"PointInAreaData.slt";
