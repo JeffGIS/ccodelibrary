@@ -183,7 +183,7 @@ static int ii;
     sqlite3_stmt *statement = NULL;
 
     NSString *areaID = [areaName stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
-    NSString *query = [NSString stringWithFormat:@"SELECT AreaNumber FROM AreaNames WHERE AreaName = %@",areaID];
+    NSString *query = [NSString stringWithFormat:@"SELECT AreaNumber FROM AreaNames WHERE AreaName = '%@'",areaID];
     int areaNum = -1;
     
     SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
