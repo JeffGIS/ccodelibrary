@@ -58,7 +58,6 @@
 - (SpreadsheetAction)actionForTwoTouchLongPressOnRowHeader;
 - (SpreadsheetAction)actionForOneTouchLongPressOnColumnHeader;
 - (SpreadsheetAction)actionForTwoTouchLongPressOnColumnHeader;
-- (void)deleteForControlNumber:(int)controlNumber;
 
 @end
 
@@ -68,6 +67,5 @@
 @property BOOL flipped;
 
 - (NSArray *)retrieveSearchStrings;
-- (void)performDeleteForControlNumber:(int)controlNumber;
 
 @end

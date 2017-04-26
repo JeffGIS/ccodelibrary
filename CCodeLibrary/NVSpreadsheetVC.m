@@ -1445,10 +1445,4 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     else return @[];
 }
 
-- (void)performDeleteForControlNumber:(int)controlNumber
-{
-    if ([_delegate respondsToSelector:@selector(deleteForControlNumber:)])
-        [_delegate deleteForControlNumber:controlNumber];
-}
-
 @end
