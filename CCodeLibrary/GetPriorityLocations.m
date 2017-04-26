@@ -47,11 +47,15 @@ static GetPriorityLocations *_getLocations;
         NSString *cat = catname[pl.type.integerValue];
         NSString *name = [pl.name stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
         
-        NSString *cmd = [NSString stringWithFormat:@"INSERT INTO PriorityLocations VALUES (%i,'%@',%@, '%@', %f, %f, %f,%i);",iRef++,name,pl.type,cat,pl.coordinate.latitude,pl.coordinate.longitude,pl.radius,pl.offset];
+        NSString *cmd = [NSString stringWithFormat:@"INSERT INTO PriorityLocations VALUES (%i,'%@',%@, '%@', %f, %f, %f, %i);",
+                         iRef++,name, pl.type,cat, pl.coordinate.latitude, pl.coordinate.longitude, pl.radius, (int)pl.offset];
+        
         [crd executeCmd:(LPSTR)cmd.UTF8String sendToServer:YES from:1];
     }
+    
     if (opened)
         [crd commitTransaction];
+    
     [crd close:opened];
     
     return rtn;
@@ -71,9 +75,11 @@ static GetPriorityLocations *_getLocations;
     NSData *data = [UserDefaults.defaults NSDataForKey:[NSString stringWithFormat:@"PriorityLocationsFor%i",
                                                         CRAPI.sharedInstance.currentGeoid]];
     
+    if (data)
+        return [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:data]];
     
-    NSMutableArray *contents = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:data]];
-    return contents;
+    else
+        return NSMutableArray.array;
 }
 
 - (id)init
@@ -430,33 +436,37 @@ static GetPriorityLocations *_getLocations;
 - (void)addCustomPriorityLocationToList:(PriorityLocation *)pLoc
 {
     NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
-    NSInteger index = 0;
-    PriorityLocation *pLocs = contents[index];
     
-    NSComparisonResult result = [pLoc.name compare:pLocs.name
-                                           options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
-        
-    while (result == NSOrderedDescending)
+    if (contents.count)
     {
-        index++;
-        
-        if (index == contents.count)
-            break;
-        
+        NSInteger index = 0;
         PriorityLocation *pLocs = contents[index];
         
-        result = [pLoc.name compare:pLocs.name
-                            options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+        NSComparisonResult result = [pLoc.name compare:pLocs.name
+                                               options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+        
+        while (result == NSOrderedDescending)
+        {
+            index++;
+            
+            if (index == contents.count)
+                break;
+            
+            PriorityLocation *pLocs = contents[index];
+            
+            result = [pLoc.name compare:pLocs.name
+                                options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch)];
+        }
+        
+        if (index == contents.count)
+            [contents addObject:pLoc];
+        
+        else
+            [contents insertObject:pLoc atIndex:index];
     }
-    
-    if (index == contents.count)
-        [contents addObject:pLoc];
     
     else
-    {
-        [contents insertObject:pLoc
-                       atIndex:index];
-    }
+        [contents addObject:pLoc];
     
     [GetPriorityLocations savePriorityLocations:contents];
 }
