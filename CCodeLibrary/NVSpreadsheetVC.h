@@ -49,15 +49,16 @@
                                    atIndex:(NSInteger)index;
 
 - (BOOL)spreadsheetSortOnRow:(NSInteger)row;
-- (void)getTimeLine:(UIViewController *)parentController;
+- (void)getTimeLine:(NVSpreadsheetVC *)parentController;
 
 - (NSString *)spreadsheetGetReportForRow:(NSInteger)row
                                   column:(NSInteger)column;
-- (NSArray *) getSearchStrings;
+- (NSArray *)getSearchStrings;
 - (SpreadsheetAction)actionForTapOnRowHeader;
 - (SpreadsheetAction)actionForTwoTouchLongPressOnRowHeader;
 - (SpreadsheetAction)actionForOneTouchLongPressOnColumnHeader;
 - (SpreadsheetAction)actionForTwoTouchLongPressOnColumnHeader;
+- (void)deleteForControlNumber:(int)controlNumber;
 
 @end
 
@@ -65,5 +66,8 @@
 
 @property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
 @property BOOL flipped;
+
+- (NSArray *)retrieveSearchStrings;
+- (void)performDeleteForControlNumber:(int)controlNumber;
 
 @end
