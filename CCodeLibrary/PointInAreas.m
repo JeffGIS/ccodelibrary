@@ -89,6 +89,8 @@ static int ii;
 {
     if (!_isOpen)
     {
+        //int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:self.path error:nil].fileSize;
+        
         _isOpen = !SQLOK(147,sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"PointInAreas Database open");
         
@@ -103,12 +105,16 @@ static int ii;
     {
         if (_haveTimeLineDB)
             [self commitTransaction];
+        
         SQLOK(148,sqlite3_close(_database),_database);
         NSLog(@"PointInAreas Database close");
         _isOpen = NO;
+        
+        /*int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:self.path error:nil].fileSize;
+        if (fileSize)
+            fileSize = 1;*/
     }
 }
-
 
 - (BOOL)executeCmd:(char *)cmd
 {
@@ -128,13 +134,18 @@ static int ii;
     SQLOK(157,sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
 }
 
-- (void) createTimeLineTable
+- (void)createTimeLineTable
 {
-    NSString * cmd = @"DROP TABLE IF EXISTS TimeLine;CREATE TABLE TimeLine (id INTEGER PRIMARY KEY, AreaNumber INT, Time INT, WhichCount INT);CREATE INDEX TimeLine_index ON TimeLine (AreaNumber,Time);DROP TABLE IF EXISTS AreaNames;CREATE TABLE AreaNames (AreaName CHAR(128), AreaNumber INT);";
+    NSString *cmd = @"DROP TABLE IF EXISTS TimeLine;"
+                    "CREATE TABLE TimeLine (id INTEGER PRIMARY KEY, AreaNumber INT, Time INT, WhichCount INT);"
+                    "CREATE INDEX TimeLine_index ON TimeLine (AreaNumber,Time);"
+                    "DROP TABLE IF EXISTS AreaNames;"
+                    "CREATE TABLE AreaNames (AreaName CHAR(128), AreaNumber INT);";
+    
     [self executeCmd:(LPSTR)cmd.UTF8String];
 }
 
-- (NSString*) getPath
+- (NSString *)path
 {
     NSString * documentsDirectory = UserDefaults.defaults.localFilePath;
     NSString * fileName = @"PointInAreaData.slt";
@@ -142,7 +153,7 @@ static int ii;
     return path;
 }
 
-- (BOOL) initTimeLine:(sqlite3 *) db
+- (BOOL)initTimeLine:(sqlite3 *)db
 {
     //_database = db;
     BOOL rtn = [self open];
@@ -150,19 +161,20 @@ static int ii;
     _haveTimeLineDB = YES;
     _timeLineID = 1;
     [self startTransaction];
+    
     for (AreaData *ad in _areaInfo)
     {
-        NSString * areaID = [ad.areaID stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
-        
-        NSString * cmd = [NSString stringWithFormat:@"INSERT INTO AreaNames VALUES ('%@',%i);",areaID,ad.areaNumber];
+        NSString *areaID = [ad.areaID stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
+        NSString *cmd = [NSString stringWithFormat:@"INSERT INTO AreaNames VALUES ('%@',%i);",areaID,ad.areaNumber];
         [self executeCmd:(LPSTR)cmd.UTF8String];
     }
+    
     return rtn;
 }
 
-- (void) addToTimeLine:(int)areaNum
-                atTime:(int)itime
-              forCount:(int)iCount
+- (void)addToTimeLine:(int)areaNum
+               atTime:(int)itime
+             forCount:(int)iCount
 {
     if (_haveTimeLineDB)
     {
@@ -171,23 +183,20 @@ static int ii;
     }
 }
 
-- (NSArray *) getAreaTimeline:(NSString*) areaName
+- (NSArray<TimeLine *> *)getAreaTimeline:(NSString *)areaName
 {
-    NSMutableArray * array = NSMutableArray.new;
+    NSMutableArray<TimeLine *> *array = NSMutableArray.array;
     BOOL opened = [self open];
     sqlite3_stmt *statement = NULL;
 
-    NSString * areaID = [areaName stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
-    
-    NSString * query = [NSString stringWithFormat:@"SELECT AreaNumber FROM AreaNames WHERE AreaName = %@",areaID];
+    NSString *areaID = [areaName stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
+    NSString *query = [NSString stringWithFormat:@"SELECT AreaNumber FROM AreaNames WHERE AreaName = '%@'",areaID];
     int areaNum = -1;
     
     SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
-    {
         areaNum = sqlite3_column_int(statement,0);
-    }
     
     SQLOK(0,sqlite3_finalize(statement), self.database);
     
@@ -202,13 +211,14 @@ static int ii;
         tl.value = 1+[NSCalendar.currentCalendar component:NSCalendarUnitHour fromDate:[NSDate dateWithTimeIntervalSince1970:itime]];
         [array addObject:tl];
     }
+    
     SQLOK(0,sqlite3_finalize(statement), self.database);
     TimeLine *tl = TimeLine.new;
     tl.time = NSDate.date.timeIntervalSince1970;
     tl.value = 0.1;
     [array addObject:tl];
     [self close:opened];
-    return array;
+    return array.copy;
 }
 
 - (void) setColor:(int)iColor
