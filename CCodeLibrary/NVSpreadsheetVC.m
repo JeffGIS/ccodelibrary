@@ -1154,31 +1154,34 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                   column:_selectedColumn
                                         tabBarController:self.tabBarController];
                     break;
-                case SST_CrimeList:
-                {
+                case SST_CrimeList:{
                     NSString *reportText = [_delegate spreadsheetGetReportForRow:_selectedRow
                                                                           column:_selectedColumn];
                     
                     NVTextVC *textVC = [[NVTextVC alloc] initWithText:reportText fontSize:16.0];
-                    NSArray *searchStrings = [_delegate getSearchStrings];
-                    textVC.redSubstring = @"";
                     
-                    if (searchStrings.count > 0)
-                        textVC.redSubstring = searchStrings[0];
+                    if ([_delegate respondsToSelector:@selector(getSearchStrings)])
+                    {
+                        NSArray *searchStrings = [_delegate getSearchStrings];
+                        textVC.redSubstring = @"";
+                        
+                        if (searchStrings.count > 0)
+                            textVC.redSubstring = searchStrings[0];
+                        
+                        textVC.greenSubstring = @"";
+                        
+                        if (searchStrings.count > 1)
+                            textVC.greenSubstring = searchStrings[1];
+                        
+                        textVC.blueSubstring = @"";
+                        
+                        if (searchStrings.count > 2)
+                            textVC.blueSubstring = searchStrings[2];
+                        
+                        [self presentViewController:textVC animated:YES completion:nil];
+                    }
                     
-                    textVC.greenSubstring = @"";
-                    
-                    if (searchStrings.count > 1)
-                        textVC.greenSubstring = searchStrings[1];
-                    
-                    textVC.blueSubstring = @"";
-                    
-                    if (searchStrings.count > 2)
-                        textVC.blueSubstring = searchStrings[2];
-                    
-                    [self presentViewController:textVC animated:YES completion:nil];
-                    break;
-                }
+                    break;}
             }
         }
     }
@@ -1432,6 +1435,20 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
                                     showFileAtPath:filePath];
 #pragma unused(nvwv)
+}
+
+- (NSArray *)retrieveSearchStrings
+{
+    if ([_delegate respondsToSelector:@selector(getSearchStrings)])
+        return _delegate.getSearchStrings;
+    
+    else return @[];
+}
+
+- (void)performDeleteForControlNumber:(int)controlNumber
+{
+    if ([_delegate respondsToSelector:@selector(deleteForControlNumber:)])
+        [_delegate deleteForControlNumber:controlNumber];
 }
 
 @end
