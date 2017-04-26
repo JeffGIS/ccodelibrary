@@ -137,7 +137,7 @@ static int ii;
 - (void)createTimeLineTable
 {
     NSString *cmd = @"DROP TABLE IF EXISTS TimeLine;"
-                    "CREATE TABLE TimeLine (id INTEGER PRIMARY KEY, AreaNumber INT, Time INT, WhichCount INT);"
+                    "CREATE TABLE TimeLine (id INTEGER PRIMARY KEY, AreaNumber INT, Time INT, WhichCount INT, Refno INT);"
                     "CREATE INDEX TimeLine_index ON TimeLine (AreaNumber,Time);"
                     "DROP TABLE IF EXISTS AreaNames;"
                     "CREATE TABLE AreaNames (AreaName CHAR(128), AreaNumber INT);";
@@ -174,11 +174,12 @@ static int ii;
 
 - (void)addToTimeLine:(int)areaNum
                atTime:(int)itime
+             andRefno:(int)refno
              forCount:(int)iCount
 {
     if (_haveTimeLineDB)
     {
-        NSString *cmd = [NSString stringWithFormat:@"INSERT INTO TimeLine VALUES (%i,%i,%i,%i);",_timeLineID++,areaNum,itime,iCount];
+        NSString *cmd = [NSString stringWithFormat:@"INSERT INTO TimeLine VALUES (%i,%i,%i,%i,%i);",_timeLineID++,areaNum,itime,iCount,refno];
         [self executeCmd:(LPSTR)cmd.UTF8String];
     }
 }
@@ -200,14 +201,16 @@ static int ii;
     
     SQLOK(0,sqlite3_finalize(statement), self.database);
     
-    query = [NSString stringWithFormat:@"SELECT Time FROM TimeLine WHERE AreaNumber = %i",areaNum];
+    query = [NSString stringWithFormat:@"SELECT Time, Refno FROM TimeLine WHERE AreaNumber = %i",areaNum];
     SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
         TimeLine *tl = TimeLine.new;
         int itime = sqlite3_column_int(statement,0);
+        int refno = sqlite3_column_int(statement,1);
         tl.time = itime;
+        tl.refno = refno;
         tl.value = 1+[NSCalendar.currentCalendar component:NSCalendarUnitHour fromDate:[NSDate dateWithTimeIntervalSince1970:itime]];
         [array addObject:tl];
     }
@@ -629,12 +632,12 @@ static int ii;
 
 - (int)DPointInArea:(DPOINT *)dPoint
              atTime:(int)itime
+           andRefno:(int)refno
         whichCount:(int) icount
 {
     int numAreasIn = 0;
     int row=-999;
     int col;
-    int bitmapValue;
     static int ii=1;
     DPOINT pt = [self projectPointToContext:dPoint
                                         from:ii];
@@ -655,6 +658,7 @@ static int ii;
             ad.maxTime = max (ad.maxTime,itime);
             [self addToTimeLine:ad.areaNumber
                          atTime:itime
+                       andRefno:refno
                        forCount:icount];
             numAreasIn++;
         }

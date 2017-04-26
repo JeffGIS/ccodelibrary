@@ -30,6 +30,7 @@
 
 - (int)DPointInArea:(DPOINT *)dPoint
              atTime:(int)itime
+           andRefno:(int)refno
          whichCount:(int) icount;
 - (CGColorRef)colorForArea:(NSString*)areaID;
 - (double)countForArea:(NSString*)areaID
