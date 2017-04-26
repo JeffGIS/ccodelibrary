@@ -216,6 +216,7 @@ static int ii;
     TimeLine *tl = TimeLine.new;
     tl.time = NSDate.date.timeIntervalSince1970;
     tl.value = 0.1;
+    tl.refno = -1;
     [array addObject:tl];
     [self close:opened];
     return array.copy;
