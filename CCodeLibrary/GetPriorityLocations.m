@@ -84,10 +84,20 @@ static GetPriorityLocations *_getLocations;
 
 - (id)init
 {
-    if ((self = [super init]))
+    self = [super init];
+    
+    if (self)
     {
-        _keywords = @[@"Schools", @"Hospitals", @"Medical", @"Libraries", @"Employment",
-                      @"Post Offices", @"Government", @"Hotels", @"Nursing Homes", @"Assisted Living"];
+        if (CRAPI.sharedInstance.currentModule == MANAGEMENT_MODULE)
+        {
+            _keywords = @[@"Schools", @"Hospitals", @"Medical", @"Libraries", @"Employment",
+                          @"Post Offices", @"Government", @"Hotels", @"Nursing Homes", @"Assisted Living"];
+        }
+        
+        else
+        {
+            _keywords = @[@"Schools", @"Libraries", @"Post Offices", @"Government", @"Parks", @"Recreation"];
+        }
     }
     
     return self;
@@ -112,45 +122,43 @@ static GetPriorityLocations *_getLocations;
             imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"school"
                                                                                              ofType:@"png"]];
             break;
-            
         case PriorityLocationTypeMedical:
             imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"medical"
                                                                                              ofType:@"png"]];
             break;
-            
         case PriorityLocationTypeLibrary:
             imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"library"
                                                                                              ofType:@"png"]];
             break;
-            
         case PriorityLocationTypeEmployment:
             imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"employment"
                                                                                              ofType:@"png"]];
             break;
-            
         case PriorityLocationTypePostOffice:
             imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"postOffice"
                                                                                              ofType:@"png"]];
             break;
-            
         case PriorityLocationTypeGovernment:
             imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"government"
                                                                                              ofType:@"png"]];
             break;
-            
         case PriorityLocationTypeHotel:
             imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"hotel"
                                                                                              ofType:@"png"]];
             break;
-            
         case PriorityLocationTypeSeniorResidential:
             imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"seniorResidential"
                                                                                              ofType:@"png"]];
             break;
-            
+        case PriorityLocationTypeParksRec:
+            imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"parksRec"
+                                                                                             ofType:@"png"]];
+            break;
         case PriorityLocationTypeCustom:
             imageView.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"custom"
                                                                                              ofType:@"png"]];
+            break;
+        default:break;
     }
     
     if (imageView.image)
@@ -162,43 +170,64 @@ static GetPriorityLocations *_getLocations;
 
 - (NSNumber *)assignTypeForPtc:(NSInteger)ptc
 {
-    NSNumber *type;
+    NSNumber *type = [NSNumber numberWithInteger:PriorityLocationTypeSchool];
     
-    switch (ptc)
+    if (CRAPI.sharedInstance.currentModule == MANAGEMENT_MODULE)
     {
-        case 0:
-            type = [NSNumber numberWithInteger:PriorityLocationTypeSchool];
-            break;
-            
-        case 1:
-        case 2:
-            type = [NSNumber numberWithInteger:PriorityLocationTypeMedical];
-            break;
-            
-        case 3:
-            type = [NSNumber numberWithInteger:PriorityLocationTypeLibrary];
-            break;
-            
-        case 4:
-            type = [NSNumber numberWithInteger:PriorityLocationTypeEmployment];
-            break;
-            
-        case 5:
-            type = [NSNumber numberWithInteger:PriorityLocationTypePostOffice];
-            break;
-            
-        case 6:
-            type = [NSNumber numberWithInteger:PriorityLocationTypeGovernment];
-            break;
-            
-        case 7:
-            type = [NSNumber numberWithInteger:PriorityLocationTypeHotel];
-            break;
-            
-        case 8:
-        case 9:
-            type = [NSNumber numberWithInteger:PriorityLocationTypeSeniorResidential];
-            break;
+        switch (ptc)
+        {
+            case 0:
+                type = [NSNumber numberWithInteger:PriorityLocationTypeSchool];
+                break;
+            case 1:
+            case 2:
+                type = [NSNumber numberWithInteger:PriorityLocationTypeMedical];
+                break;
+            case 3:
+                type = [NSNumber numberWithInteger:PriorityLocationTypeLibrary];
+                break;
+            case 4:
+                type = [NSNumber numberWithInteger:PriorityLocationTypeEmployment];
+                break;
+            case 5:
+                type = [NSNumber numberWithInteger:PriorityLocationTypePostOffice];
+                break;
+            case 6:
+                type = [NSNumber numberWithInteger:PriorityLocationTypeGovernment];
+                break;
+            case 7:
+                type = [NSNumber numberWithInteger:PriorityLocationTypeHotel];
+                break;
+            case 8:
+            case 9:
+                type = [NSNumber numberWithInteger:PriorityLocationTypeSeniorResidential];
+                break;
+            default:break;
+        }
+    }
+    
+    else
+    {
+        switch (ptc)
+        {
+            case 0:
+                type = [NSNumber numberWithInteger:PriorityLocationTypeSchool];
+                break;
+            case 1:
+                type = [NSNumber numberWithInteger:PriorityLocationTypeLibrary];
+                break;
+            case 2:
+                type = [NSNumber numberWithInteger:PriorityLocationTypePostOffice];
+                break;
+            case 3:
+                type = [NSNumber numberWithInteger:PriorityLocationTypeGovernment];
+                break;
+            case 4:
+            case 5:
+                type = [NSNumber numberWithInteger:PriorityLocationTypeParksRec];
+                break;
+            default:break;
+        }
     }
     
     return type;

@@ -11,14 +11,16 @@
 #import "NVDocumentManager.h"
 #import "NVSendEmail.h"
 
-#define MANAGEMENT_MODULE   1
-#define PRELIM_MODULE       2
-#define DETAIL_MODULE       3
-#define FACILITIES_MODULE   4
-#define GMMOBILE_MODULE     5
+#define MANAGEMENT_MODULE       1
+#define PRELIM_MODULE           2
+#define DETAIL_MODULE           3
+#define GMMOBILE_MODULE         4
+#define FAC_MANAGEMENT_MODULE   5
+#define FAC_PRELIM_MODULE       6
+#define FAC_DETAIL_MODULE       7
 
-#define PROJECT_MPLS        1
-#define PROJECT_METROGIS    2
+#define PROJECT_MPLS            1
+#define PROJECT_METROGIS        2
 
 typedef NS_ENUM(NSInteger, CrimeMapMode)
 {
