@@ -65,9 +65,12 @@ static GetPriorityLocations *_getLocations;
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:contents];
     
-    [UserDefaults.defaults saveNSData:data
-                               forKey:[NSString stringWithFormat:@"PriorityLocationsFor%i",
-                                       CRAPI.sharedInstance.currentGeoid]];
+    if (data)
+    {
+        [UserDefaults.defaults saveNSData:data
+                                   forKey:[NSString stringWithFormat:@"PriorityLocationsFor%i",
+                                           CRAPI.sharedInstance.currentGeoid]];
+    }
 }
 
 + (NSMutableArray *)getPriorityLocations
@@ -104,10 +107,9 @@ static GetPriorityLocations *_getLocations;
 }
 + (NSArray *)categoryNames
 {
-    return @[@"Default", @"Schools", @"Medical Facilities", @"Libraries", @"Employment Centers",
-             @"Post Offices", @"Government Buildings", @"Hotels", @"Senior Residential", @"Custom"];
+    return @[@"Default", @"Schools", @"Medical Facilities", @"Libraries", @"Employment Centers", @"Post Offices",
+             @"Government Buildings", @"Hotels", @"Senior Residential", @"Parks and Recreation", @"Custom"];
 }
-
 
 - (void)drawAccessoryImageForType:(NSInteger)type
                              cell:(UITableViewCell *)cell
