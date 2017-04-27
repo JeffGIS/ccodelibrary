@@ -82,7 +82,7 @@
     BOOL opened = self.open;
     sqlite3_stmt *statement = NULL;
     
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Contacts ORDER BY last_name ASC, first_name ASC;"];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Contacts ORDER BY last_name ASC, first_name ASC, email ASC;"];
     SQLOK(5, sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
