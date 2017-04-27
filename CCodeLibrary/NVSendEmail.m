@@ -46,6 +46,16 @@
         CRAPI.sharedInstance.currentEmail = email;
         [email createEmail];
     }
+    
+    NVContactGroupData *nvcgd = NVContactGroupData.new;
+    [nvcgd addContactEmail:@"jeffgis@aol.com" firstName:@"Jeff" lastName:@"Smith"];
+    [nvcgd addContactEmail:@"mtsmithnp@gmail.com" firstName:@"MaryEllen" lastName:@"Smith"];
+    [nvcgd addContactEmail:@"wildbillmunson@gmail.com" firstName:@"Bill" lastName:@"Munson"];
+    
+    NSArray <NVContact *> *contacts = nvcgd.getContactsArray;
+    
+    for (NVContact *contact in contacts)
+        NSLog(@"\n%@ (%@ %@)", contact.email, contact.firstName, contact.lastName);
 }
 
 - (void)createEmail

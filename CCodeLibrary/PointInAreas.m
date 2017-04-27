@@ -1,19 +1,12 @@
-//
 //  PointInAreas.m
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 1/1/16.
-//  Copyright © 2016 GSSi. All rights reserved.
-//
 
 #define MINAREAPCT 2.0
 
 #import "PointInAreas.h"
 #import "TimeLine.h"
-
 #import "CRAPI.h"
 #import "MathUtil.h"
-
 #import "CensusData.h"
 
 typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
@@ -36,12 +29,6 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 @end
 
 @implementation AreaData
-- (id)init
-{
-    self = [super init];
-    
-    return self;
-}
 
 @end
 
@@ -49,22 +36,22 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 
 static int ii;
 
-- (void) releaseMem
+- (void)releaseMem
 {
     for (AreaData *ad in _areaInfo)
-    {
         CGColorRelease(ad.displayColor);
-    }
+    
     if (_bitmapData)
         free (_bitmapData);
     
     if (_context)
         CGContextRelease(_context);
-    CloseTRANS2(&_pTranContextToWorld);
     
+    CloseTRANS2(&_pTranContextToWorld);
     CGColorSpaceRelease(_colorSpace);
     
 }
+
 - (id)init
 {
     self = [super init];
