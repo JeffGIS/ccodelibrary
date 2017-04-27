@@ -51,11 +51,27 @@
     [nvcgd addContactEmail:@"jeffgis@aol.com" firstName:@"Jeff" lastName:@"Smith"];
     [nvcgd addContactEmail:@"mtsmithnp@gmail.com" firstName:@"MaryEllen" lastName:@"Smith"];
     [nvcgd addContactEmail:@"wildbillmunson@gmail.com" firstName:@"Bill" lastName:@"Munson"];
+    [nvcgd addContactEmail:@"lisamunson76@gmail.com" firstName:@"Lisa" lastName:@"Munson"];
     
     NSArray <NVContact *> *contacts = nvcgd.getContactsArray;
     
     for (NVContact *contact in contacts)
         NSLog(@"\n%@ (%@ %@)", contact.email, contact.firstName, contact.lastName);
+    
+    [nvcgd addEmail:@"jeffgis@aol.com" toContactGroup:@"The Smiths"];
+    [nvcgd addEmail:@"mtsmithnp@gmail.com" toContactGroup:@"The Smiths"];
+    [nvcgd addEmail:@"wildbillmunson@gmail.com" toContactGroup:@"The Munsons"];
+    [nvcgd addEmail:@"lisamunson76@gmail.com" toContactGroup:@"The Munsons"];
+    
+    NSArray *contactGroups = nvcgd.getContactGroupsArray;
+    
+    for (NSString *contactGroup in contactGroups)
+    {
+        contacts = [nvcgd getContactsArrayInContactGroup:contactGroup];
+        
+        for (NVContact *contact in contacts)
+            NSLog(@"\n%@: %@ (%@ %@)", contactGroup, contact.email, contact.firstName, contact.lastName);
+    }
 }
 
 - (void)createEmail
