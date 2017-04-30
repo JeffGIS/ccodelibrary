@@ -13,6 +13,11 @@
               firstName:(NSString *)firstName
                lastName:(NSString *)lastName;
 
+- (void)addEmail:(NSString *)email
+  toContactGroup:(NSString *)contactGroup;
+
+- (NSArray *)getContactGroupsArray;
 - (NSArray<NVContact *> *)getContactsArray;
+- (NSArray<NVContact *> *)getContactsArrayInContactGroup:(NSString *)contactGroup;
 
 @end
