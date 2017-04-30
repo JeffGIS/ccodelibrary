@@ -51,7 +51,16 @@ double LTWOPI (double AZ1)
     }
     return (fmod(AZ1,TWOPI));
 }
-
+CORNERPOINTS * CORNERPOINTS_view (CORNERPOINTS * pcp)
+{
+    CORNERPOINTS cp = *pcp;
+    return pcp;
+}
+LPMNMXCORD MNMXCORD_view (LPMNMXCORD pmm)
+{
+    MNMXCORD mmc = *pmm;
+    return pmm;
+}
 LLCORNERPOINTS LLCornerPointsFromCornerPoints (CORNERPOINTS * cp)
 {
     LLCORNERPOINTS llcp;

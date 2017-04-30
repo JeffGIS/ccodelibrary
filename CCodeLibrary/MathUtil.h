@@ -180,6 +180,8 @@ double AZMToHeading (double azm);
 void BoundsToPoints (LPMNMXCORD pBounds, LPDPOINT Points,LPDOUBLE pAZ);
 LPSTR AddCommas (LPSTR InBuff);
 bool WriteBitmapDataToFile (LPSTR file,int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void *bmData);
+CORNERPOINTS * CORNERPOINTS_view (CORNERPOINTS * pcp);
+LPMNMXCORD MNMXCORD_view (LPMNMXCORD pmm);
 
 
 #endif
