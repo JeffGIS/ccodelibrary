@@ -5,10 +5,10 @@
 
 @implementation PlacesInfo
 
-- (id)initWithBounds_w:(CGFloat)bounds_w
-              bounds_s:(CGFloat)bounds_s
-              bounds_e:(CGFloat)bounds_e
-              bounds_n:(CGFloat)bounds_n;
+- (id)initWithBounds_w:(CLLocationDegrees)bounds_w
+              bounds_s:(CLLocationDegrees)bounds_s
+              bounds_e:(CLLocationDegrees)bounds_e
+              bounds_n:(CLLocationDegrees)bounds_n;
 {
     if ((self = super.init))
     {
@@ -23,10 +23,10 @@
 
 - (id)initWithName:(NSString *)name
          stateCode:(NSString *)stateCode
-          bounds_w:(CGFloat)bounds_w
-          bounds_s:(CGFloat)bounds_s
-          bounds_e:(CGFloat)bounds_e
-          bounds_n:(CGFloat)bounds_n
+          bounds_w:(CLLocationDegrees)bounds_w
+          bounds_s:(CLLocationDegrees)bounds_s
+          bounds_e:(CLLocationDegrees)bounds_e
+          bounds_n:(CLLocationDegrees)bounds_n
 {
     if ((self = super.init))
     {

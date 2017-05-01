@@ -63,4 +63,8 @@
 - (void)changeGlobalPriorityLocationOffset:(NSInteger)offset;
 - (void)removePLocFromListAtIndex:(NSInteger)index;
 
+- (void)changePriorityLocationBoundsUpperLeft:(CLLocationCoordinate2D)upperLeft
+                                   lowerRight:(CLLocationCoordinate2D)lowerRight
+                                      atIndex:(NSUInteger)index;
+
 @end

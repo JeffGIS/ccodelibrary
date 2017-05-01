@@ -523,10 +523,10 @@ static UserDefaults *_defaults;
                             state:(NSString *)state
                             geoid:(int)geoid
                           dataset:(int)dataset
-                         bounds_w:(CGFloat)bounds_w
-                         bounds_s:(CGFloat)bounds_s
-                         bounds_e:(CGFloat)bounds_e
-                         bounds_n:(CGFloat)bounds_n
+                         bounds_w:(CLLocationDegrees)bounds_w
+                         bounds_s:(CLLocationDegrees)bounds_s
+                         bounds_e:(CLLocationDegrees)bounds_e
+                         bounds_n:(CLLocationDegrees)bounds_n
 {
     NSMutableArray *namesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"NamesArray"]];
     NSMutableArray *statesArray = [[NSMutableArray alloc] initWithArray:[_defaults arrayForKey:@"StatesArray"]];

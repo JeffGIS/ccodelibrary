@@ -37,6 +37,7 @@ typedef NS_ENUM(NSInteger, MMLMFrom)
     MMLMFromPriorityLocations,
     MMLMFromPriorityMap,
     MMLMFromRetrieveData,
+    MMLMFromPriorityBounds,
 };
 
 typedef NS_ENUM(NSInteger, MSCFrom)

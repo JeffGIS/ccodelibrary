@@ -26,22 +26,24 @@ static GetPriorityLocations *_getLocations;
 + (GetPriorityLocations *)getLocations
 {
     if (!_getLocations)
-        _getLocations = [[GetPriorityLocations alloc] init];
+        _getLocations = GetPriorityLocations.new;
     
     return _getLocations;
 }
 
-+ (BOOL) writePriorityLocationsToDatabase
++ (BOOL)writePriorityLocationsToDatabase
 {
     BOOL rtn = TRUE;
     NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
+    
     CurbRampData *crd = [CurbRampData databaseForGeoid:CRAPI.sharedInstance.currentGeoid
                                                 create:NO];
     [crd incrementLastDataFileNum];
     BOOL opened = [crd startTransaction];
     [crd createPriorityLocationsTable:YES];
     int iRef = 1;
-    NSArray *catname = [self categoryNames];
+    NSArray *catname = self.categoryNames;
+    
     for (PriorityLocation *pl in contents)
     {
         NSString *cat = catname[pl.type.integerValue];
@@ -99,7 +101,7 @@ static GetPriorityLocations *_getLocations;
         
         else
         {
-            _keywords = @[@"Schools", @"Libraries", @"Post Offices", @"Government", @"Parks", @"Recreation"];
+            _keywords = @[@"Schools", @"Libraries", @"Post Offices", @"Government", @"Fire Stations", @"Parks", @"Recreation"];
         }
     }
     
@@ -222,10 +224,11 @@ static GetPriorityLocations *_getLocations;
                 type = [NSNumber numberWithInteger:PriorityLocationTypePostOffice];
                 break;
             case 3:
+            case 4:
                 type = [NSNumber numberWithInteger:PriorityLocationTypeGovernment];
                 break;
-            case 4:
             case 5:
+            case 6:
                 type = [NSNumber numberWithInteger:PriorityLocationTypeParksRec];
                 break;
             default:break;
@@ -239,10 +242,10 @@ static GetPriorityLocations *_getLocations;
                                popover:(GSSiPopoverView *)popover
 {
     _popoverView = popover;
-    PointInAreaClass *pia = [[PointInAreaClass alloc] init];
+    PointInAreaClass *pia = PointInAreaClass.new;
     
-    CGFloat longSpan = fabs(bounds.xmn - bounds.xmx);
-    CGFloat latSpan = fabs(bounds.ymx - bounds.ymn);
+    CLLocationDegrees longSpan = fabs(bounds.xmn - bounds.xmx);
+    CLLocationDegrees latSpan = fabs(bounds.ymx - bounds.ymn);
     
     NSMutableArray *locationArray = NSMutableArray.array;
     NSMutableArray *namesArray = NSMutableArray.array;
@@ -319,12 +322,8 @@ static GetPriorityLocations *_getLocations;
                                 }
                                 
                                 [latitudesArray addObject:latitude];
-                                
-                                [namesArray insertObject:pLoc.name
-                                                 atIndex:index];
-                                
-                                [locationArray insertObject:pLoc
-                                                    atIndex:index];
+                                [namesArray insertObject:pLoc.name atIndex:index];
+                                [locationArray insertObject:pLoc atIndex:index];
                             }
                         }
                     }
@@ -332,13 +331,10 @@ static GetPriorityLocations *_getLocations;
                     count++;
                     [_popoverView updateProgress:((CGFloat)count / (CGFloat)totalQueries)];
                     
-                    if (count == totalQueries)
+                    if (count == totalQueries && _delegate)
                     {
-                        if (self.delegate)
-                        {
-                            [GetPriorityLocations savePriorityLocations:locationArray];
-                            [self.delegate didFinishPriorityLocationArray:locationArray];
-                        }
+                        [GetPriorityLocations savePriorityLocations:locationArray];
+                        [_delegate didFinishPriorityLocationArray:locationArray];
                     }
                 }];
             }
@@ -374,18 +370,14 @@ static GetPriorityLocations *_getLocations;
     
     dispatch_async(kBgQueue, ^{
         NSData *data = [NSData dataWithContentsOfURL:queryURL];
-        
-        [self performSelectorOnMainThread:@selector(nearbySearchResults:)
-                               withObject:data
-                            waitUntilDone:YES];
+        [self performSelectorOnMainThread:@selector(nearbySearchResults:) withObject:data waitUntilDone:YES];
     });
 }
 
 - (void)nearbySearchResults:(NSData *)responseData
 {
-    PointInAreaClass *pia = [[PointInAreaClass alloc] init];
-    NSError *error;
-    CGFloat lat, lon;
+    NSError *error = nil;
+    CLLocationDegrees lat = 0.0, lon = 0.0;
     
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:responseData
                                                          options:kNilOptions
@@ -402,23 +394,20 @@ static GetPriorityLocations *_getLocations;
     {
         for (int i = 0; i < results.count; i++)
         {
-            lat = [[[[[results objectAtIndex:i] objectForKey:@"geometry"] objectForKey:@"location"] valueForKey:@"lat"] floatValue];
-            lon = [[[[[results objectAtIndex:i] objectForKey:@"geometry"] objectForKey:@"location"] valueForKey:@"lng"] floatValue];
+            lat = [[[[[results objectAtIndex:i] objectForKey:@"geometry"] objectForKey:@"location"] valueForKey:@"lat"] doubleValue];
+            lon = [[[[[results objectAtIndex:i] objectForKey:@"geometry"] objectForKey:@"location"] valueForKey:@"lng"] doubleValue];
             
-            DPOINT dp;
+            DPOINT dp = {0};
             dp.x = lon;
             dp.y = lat;
             
-            //if ([pia DPointInArea:&dp])
-            {
-                PriorityLocation *pLoc = [[PriorityLocation alloc] init];
-                pLoc.coordinate = CLLocationCoordinate2DMake(lat, lon);
-                pLoc.name = [[results objectAtIndex:i] objectForKey:@"name"];
-                [_nearbySearchArray addObject:pLoc];
-                
-                _popoverView.popoverLabel.text = [NSString stringWithFormat:@"Searching for\n%@\n(%lu results so far)",
-                                                  _keyword, (unsigned long)_nearbySearchArray.count];
-            }
+            PriorityLocation *pLoc = PriorityLocation.new;
+            pLoc.coordinate = CLLocationCoordinate2DMake(lat, lon);
+            pLoc.name = [[results objectAtIndex:i] objectForKey:@"name"];
+            [_nearbySearchArray addObject:pLoc];
+            
+            _popoverView.popoverLabel.text = [NSString stringWithFormat:@"Searching for\n%@\n(%lu results so far)",
+                                              _keyword, (unsigned long)_nearbySearchArray.count];
         }
 
         if (nextPageToken)
@@ -428,32 +417,23 @@ static GetPriorityLocations *_getLocations;
                       @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=%@&key=%@",
                       nextPageToken, GOOGLE_SERVER_KEY];
             
-            [self performSelector:@selector(performNextPageSearch)
-                       withObject:self
-                       afterDelay:2.0];
+            [self performSelector:@selector(performNextPageSearch) withObject:self afterDelay:2.0];
         }
         
         else
         {
             _popoverView.progressLabel.hidden = NO;
             
-            if (self.delegate)
-                [self.delegate didFinishCustomNearbySearchArray:_nearbySearchArray];
+            if (_delegate)
+                [_delegate didFinishCustomNearbySearchArray:_nearbySearchArray];
         }
     }
     
     else if ([status isEqualToString:@"INVALID_REQUEST"] && _hasToken)
-    {
-        [self performSelector:@selector(performNextPageSearch)
-                   withObject:self
-                   afterDelay:1.0];
-    }
+        [self performSelector:@selector(performNextPageSearch) withObject:self afterDelay:1.0];
     
-    else if ([status isEqualToString:@"ZERO_RESULTS"])
-    {
-        if (self.delegate)
-            [self.delegate didFinishWithZeroResults];
-    }
+    else if ([status isEqualToString:@"ZERO_RESULTS"] && _delegate)
+        [_delegate didFinishWithZeroResults];
     
     else
         NSLog(@"Google Nearby Search Error: %@", status);
@@ -536,10 +516,10 @@ static GetPriorityLocations *_getLocations;
             }
         }
         
-        if (self.delegate)
+        if (_delegate)
         {
             [GetPriorityLocations savePriorityLocations:contents];
-            [self.delegate didFinishCustomNearbySearchArray:contents];
+            [_delegate didFinishCustomNearbySearchArray:contents];
         }
     }];
 }
@@ -550,14 +530,29 @@ static GetPriorityLocations *_getLocations;
     NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
     PriorityLocation *pLoc = contents[index];
     pLoc.offset = offset;
+    [contents replaceObjectAtIndex:index withObject:pLoc];
     
-    [contents replaceObjectAtIndex:index
-                        withObject:pLoc];
-    
-    if (self.delegate)
+    if (_delegate)
     {
         [GetPriorityLocations savePriorityLocations:contents];
-        [self.delegate didFinishPriorityLocationArray:contents];
+        [_delegate didFinishPriorityLocationArray:contents];
+    }
+}
+
+- (void)changePriorityLocationBoundsUpperLeft:(CLLocationCoordinate2D)upperLeft
+                                   lowerRight:(CLLocationCoordinate2D)lowerRight
+                                      atIndex:(NSUInteger)index
+{
+    NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
+    PriorityLocation *pLoc = contents[index];
+    pLoc.upperLeft = upperLeft;
+    pLoc.lowerRight = lowerRight;
+    [contents replaceObjectAtIndex:index withObject:pLoc];
+    
+    if (_delegate)
+    {
+        [GetPriorityLocations savePriorityLocations:contents];
+        [_delegate didFinishPriorityLocationArray:contents];
     }
 }
 
@@ -574,16 +569,14 @@ static GetPriorityLocations *_getLocations;
         if (pLoc.type == pLocType)
         {
             pLoc.offset = offset;
-            
-            [contents replaceObjectAtIndex:i
-                                withObject:pLoc];
+            [contents replaceObjectAtIndex:i withObject:pLoc];
         }
     }
     
-    if (self.delegate)
+    if (_delegate)
     {
         [GetPriorityLocations savePriorityLocations:contents];
-        [self.delegate didFinishPriorityLocationArray:contents];
+        [_delegate didFinishPriorityLocationArray:contents];
     }
 }
 
@@ -595,15 +588,13 @@ static GetPriorityLocations *_getLocations;
     {
         PriorityLocation *pLoc = contents[i];
         pLoc.offset = offset;
-        
-        [contents replaceObjectAtIndex:i
-                            withObject:pLoc];
+        [contents replaceObjectAtIndex:i withObject:pLoc];
     }
     
-    if (self.delegate)
+    if (_delegate)
     {
         [GetPriorityLocations savePriorityLocations:contents];
-        [self.delegate didFinishPriorityLocationArray:contents];
+        [_delegate didFinishPriorityLocationArray:contents];
     }
 }
 
@@ -612,10 +603,10 @@ static GetPriorityLocations *_getLocations;
     NSMutableArray *contents = GetPriorityLocations.getPriorityLocations;
     [contents removeObjectAtIndex:index];
     
-    if (self.delegate)
+    if (_delegate)
     {
         [GetPriorityLocations savePriorityLocations:contents];
-        [self.delegate didFinishPriorityLocationArray:contents];
+        [_delegate didFinishPriorityLocationArray:contents];
     }
 }
 
