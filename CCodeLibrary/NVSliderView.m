@@ -29,8 +29,6 @@
                                                                               (view.frame.size.width * 0.8),
                                                                               (view.frame.size.height * 0.5))];
     
-    CGRect bounds = UIScreen.mainScreen.bounds;
-    
     sliderView.overlayView = UIView.new;
     sliderView.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
     sliderView.overlayView.backgroundColor = UIColor.blackColor;
