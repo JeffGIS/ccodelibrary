@@ -277,7 +277,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     {
         rtn = TRUE;
         
-        _myLastUpdate = [self lastUpdate];
+        _myLastUpdate = (int)[self lastUpdate];
        
         _delegate = delegate;
         _GMServer = GeoMasterServer.open;
@@ -365,7 +365,7 @@ didReceiveMessage:(NSString *)message
                     _nextUpdate = _myLastUpdate + 1;
                 else
                     _nextUpdate = 1101;
-                _serversLastUpdate = message.integerValue-1;
+                _serversLastUpdate = (int)(message.integerValue - 1);
                 //_serversLastUpdate =570;
                 if (_updateTimer)
                     [_updateTimer invalidate];
