@@ -7,7 +7,7 @@
 #import "NVAlertView.h"
 #import "CRAPI.h"
 
-@interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate,UIGestureRecognizerDelegate>
+@interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate>
 
 @property (nonatomic) WKWebView *webView;
 @property (nonatomic) UIButton *returnButton, *realtor;
@@ -15,9 +15,11 @@
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIActivityIndicatorView *indicator;
 @property (nonatomic) CGPoint zoomPoint, origPoint;
-@property int numPages, zoomPage, origPage;
+@property int numPages, zoomPage, origPage, markerPage;
 @property BOOL isFile, navigationComplete, zoomToPDFDrawing;
 @property (nonatomic) NVPDFDrawing *drawing;
+@property (nonatomic) UIView *marker;
+@property DPOINT markerPosition;
 
 @end
 
@@ -34,6 +36,8 @@
     nvwv.isFile = NO;
     nvwv.navigationComplete = NO;
     nvwv.zoomToPDFDrawing = NO;
+    nvwv.drawsMarkers = NO;
+    nvwv.rotationEnabled = NO;
     
     nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -99,6 +103,8 @@
     nvwv.isFile = YES;
     nvwv.navigationComplete = NO;
     nvwv.zoomToPDFDrawing = NO;
+    nvwv.drawsMarkers = NO;
+    nvwv.rotationEnabled = YES;
     
     NSURL *url = [NSURL fileURLWithPath:path];
 
@@ -198,6 +204,7 @@
     _webView.navigationDelegate = self;
     _webView.UIDelegate = self;
     _webView.clipsToBounds = YES;
+    _webView.scrollView.delegate = self;
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                  action:@selector(webViewWasTapped:)];
@@ -427,14 +434,36 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 - (void)webViewWasTapped:(UITapGestureRecognizer *)gesture
 {
     CGPoint point = [gesture locationInView:_webView.scrollView];
+    
+    if (_drawsMarkers)
+    {
+        if (!_marker)
+        {
+            _marker = UIView.new;
+            _marker.backgroundColor = UIColor.redColor;
+            _marker.layer.cornerRadius = 20.0;
+            _marker.layer.borderColor = UIColor.blackColor.CGColor;
+            _marker.layer.borderWidth = 4.0;
+            _marker.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
+        }
+        
+        if (![_webView.scrollView.subviews containsObject:_marker])
+            [_webView.scrollView addSubview:_marker];
+        
+        _marker.center = point;
+    }
+    
+    
     CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
     int pageNum = (int)ceilf(point.y / pageHeight);
     CGFloat offset = (CGFloat)(pageHeight * (pageNum - 1));
     point.y -= offset;
     
-    DPOINT dPoint;
+    DPOINT dPoint = {0};
     dPoint.x = (point.x / _webView.scrollView.contentSize.width);
     dPoint.y = (point.y / pageHeight);
+    _markerPosition = dPoint;
+    _markerPage = pageNum;
     
     if (_delegate && [_delegate respondsToSelector:@selector(webView:wasTappedAtPoint:withinPage:)])
     {
@@ -476,8 +505,14 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 
 - (void)rotateScrollView:(UIRotationGestureRecognizer *)gesture
 {
-    _webView.scrollView.transform = CGAffineTransformRotate(gesture.view.transform, gesture.rotation);
-    gesture.rotation = 0.0;
+    if (_rotationEnabled)
+    {
+        _webView.scrollView.transform = CGAffineTransformRotate(gesture.view.transform, gesture.rotation);
+        gesture.rotation = 0.0;
+    }
+    
+    else
+        gesture.delegate = nil;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
@@ -532,6 +567,17 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     
     if ([self.superview viewWithTag:777])
         [[self.superview viewWithTag:777] constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+}
+
+-(void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
+    if ([scrollView.subviews containsObject:_marker])
+    {
+        CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+        
+        _marker.center = CGPointMake((_markerPosition.x * _webView.scrollView.contentSize.width),
+                                    ((_markerPosition.y * pageHeight) * _markerPage));
+    }
 }
 
 @end

@@ -29,6 +29,7 @@ wasTappedAtPoint:(DPOINT)point
 @interface NVWebView : UIView
 
 @property (nonatomic, weak) id <NVWebViewDelegate> delegate;
+@property BOOL drawsMarkers, rotationEnabled;
 
 + (instancetype)showWebViewInView:(UIView *)view
                         urlString:(NSString *)urlString;
