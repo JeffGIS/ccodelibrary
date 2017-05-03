@@ -119,11 +119,32 @@
     return nvwv;
 }
 
-+ (instancetype)showMNFacilitiesPDFDrawing:(NVPDFDrawing *)drawing
-                                    inView:(UIView *)view
++ (instancetype)showPDFDrawing:(NVPDFDrawing *)drawing
+                  fromDocument:(NVPDFDocument)document
+                        inView:(UIView *)view
 {
+    NSString *resourcePath = @"";
+    CGFloat aspectRatio = 0.0;
+    
+    switch (document)
+    {
+        case NVPDFDocumentMNAccessbility:
+            resourcePath = @"2015_mn_accessibility_code";
+            aspectRatio = 0.772727;
+            break;
+        case NVPDFDocumentFederalADA:
+            resourcePath = @"2010ADAStandards";
+            aspectRatio = 0.772727;
+            break;
+        case NVPDFDocumentADAChecklist:
+            resourcePath = @"ada-checklist";
+            aspectRatio = 1.294118;
+            break;
+        default:break;
+    }
+    
     NVWebView *nvwv = [NVWebView showWebViewInView:view
-                                    showFileAtPath:[NSBundle.mainBundle pathForResource:@"2015_mn_accessibility_code"
+                                    showFileAtPath:[NSBundle.mainBundle pathForResource:resourcePath
                                                                                  ofType:@"pdf"]];
     
     [nvwv hideReturnButton];
@@ -131,7 +152,7 @@
     nvwv.drawing = drawing;
     
     CGFloat xMargin = 0.0, yMargin = 0.0;
-    CGFloat width = ((drawing.lowerRight.x - drawing.upperLeft.x) * ASPECT_RATIO);
+    CGFloat width = ((drawing.lowerRight.x - drawing.upperLeft.x) * aspectRatio);
     CGFloat height = (drawing.lowerRight.y - drawing.upperLeft.y);
     CGSize svSize = view.frame.size;
     CGFloat drawingAR = (width / height);

@@ -65,15 +65,17 @@
     [bumpDetector addSubview:bumpDetector.countdownLabel];
     
     DPOINT ul = {0}, lr = {0};
-    ul.x = 0.1175, ul.y = 0.585, lr.x = 0.425, lr.y = 0.7925;
+    ul.x = 0.4175, ul.y = 0.295, lr.x = 0.625, lr.y = 0.465;
     
-    NVPDFDrawing *drawing = [NVPDFDrawing drawingWithID:@"308.2.1"
-                                                   name:@"UNOBSTRUCTED FORWARD REACH"
+    NVPDFDrawing *drawing = [NVPDFDrawing drawingWithID:@"1.46"
+                                                   name:@"MINIMUM TIME FOR DOOR CLOSER"
                                                    type:@"FIGURE"
-                                                   page:58
+                                                   page:26
                                               upperLeft:ul lowerRight:lr];
     
-    bumpDetector.webView = [NVWebView showMNFacilitiesPDFDrawing:drawing inView:bumpDetector.countdownLabel];
+    bumpDetector.webView = [NVWebView showPDFDrawing:drawing
+                                        fromDocument:NVPDFDocumentADAChecklist
+                                              inView:bumpDetector.countdownLabel];
     
     bumpDetector.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 20.0, (size.width - 40.0),
                                                                         ((size.height * 0.2) - 40.0))];
@@ -182,7 +184,7 @@
 {
     _countdownTime--;
     
-    if (_countdownTime < 4 && _countdownTime > 0)
+    if (_countdownTime > 0)
     {
         _beep.volume = (1.0 / _countdownTime);
         [_beep play];
@@ -264,6 +266,9 @@
             
             [_startButton setTitle:@"Stop"
                           forState:UIControlStateNormal];
+            
+            _beep.volume = 0.0;
+            [_beep play];
         }
     }
 }

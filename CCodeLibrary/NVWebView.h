@@ -6,6 +6,13 @@
 #import "CCodeTypes.h"
 #import "NVPDFDrawing.h"
 
+typedef NS_ENUM(NSInteger, NVPDFDocument)
+{
+    NVPDFDocumentMNAccessbility,
+    NVPDFDocumentFederalADA,
+    NVPDFDocumentADAChecklist,
+};
+
 @class NVWebView;
 
 @protocol NVWebViewDelegate <NSObject>
@@ -29,8 +36,9 @@ wasTappedAtPoint:(DPOINT)point
 + (instancetype)showWebViewInView:(UIView *)view
                    showFileAtPath:(NSString *)path;
 
-+ (instancetype)showMNFacilitiesPDFDrawing:(NVPDFDrawing *)drawing
-                                    inView:(UIView *)view;
++ (instancetype)showPDFDrawing:(NVPDFDrawing *)drawing
+                  fromDocument:(NVPDFDocument)document
+                        inView:(UIView *)view;
 
 - (void)hide:(BOOL)animated;
 - (void)showRealtorButton;

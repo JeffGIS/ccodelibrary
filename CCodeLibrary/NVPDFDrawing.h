@@ -3,7 +3,6 @@
 
 @import Foundation;
 
-#define ASPECT_RATIO 0.783
 #define LEFT_COL_LEFT 0.1025
 #define LEFT_COL_RIGHT 0.505
 
