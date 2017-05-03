@@ -19,6 +19,7 @@
 @property (nonatomic) CMAcceleration userAcceleration, gravity;
 @property (nonatomic) NSDate *startTime;
 @property (nonatomic) NSTimeInterval elapsedTime;
+@property (nonatomic) NVWebView *webView;
 
 @end
 
@@ -61,8 +62,18 @@
     bumpDetector.countdownLabel.layer.masksToBounds = YES;
     bumpDetector.countdownLabel.layer.backgroundColor = UIColor.blackColor.CGColor;
     [bumpDetector updateCountdownLabelText];
-    
     [bumpDetector addSubview:bumpDetector.countdownLabel];
+    
+    DPOINT ul = {0}, lr = {0};
+    ul.x = 0.1175, ul.y = 0.585, lr.x = 0.425, lr.y = 0.7925;
+    
+    NVPDFDrawing *drawing = [NVPDFDrawing drawingWithID:@"308.2.1"
+                                                   name:@"UNOBSTRUCTED FORWARD REACH"
+                                                   type:@"FIGURE"
+                                                   page:58
+                                              upperLeft:ul lowerRight:lr];
+    
+    bumpDetector.webView = [NVWebView showMNFacilitiesPDFDrawing:drawing inView:bumpDetector.countdownLabel];
     
     bumpDetector.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 20.0, (size.width - 40.0),
                                                                         ((size.height * 0.2) - 40.0))];
@@ -77,7 +88,6 @@
     bumpDetector.titleLabel.layer.shadowOffset = CGSizeMake(2.0, 2.0);
     bumpDetector.titleLabel.layer.shadowOpacity = 1.0;
     bumpDetector.titleLabel.text = [NSString stringWithFormat:@"Collision Detection Manager\n%@", title];
-    
     [bumpDetector addSubview:bumpDetector.titleLabel];
     
     bumpDetector.startButton = [[UIButton alloc] initWithFrame:CGRectMake((size.width * 0.05), (size.height * 0.85),
@@ -186,6 +196,9 @@
 
 - (void)startBumpDetection:(UIButton *)button
 {
+    if ([_countdownLabel.subviews containsObject:_webView])
+        [_webView removeFromSuperview];
+    
     if (_isComplete)
     {
         if (_delegate)

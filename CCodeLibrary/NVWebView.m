@@ -17,6 +17,7 @@
 @property (nonatomic) CGPoint zoomPoint, origPoint;
 @property int numPages, zoomPage, origPage;
 @property BOOL isFile, navigationComplete;
+@property (nonatomic) NVPDFDrawing *drawing;
 
 @end
 
@@ -70,9 +71,7 @@
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
     [nvwv.webView loadRequest:urlRequest];
-    
     [nvwv show];
-    
     return nvwv;
 }
 
@@ -117,8 +116,49 @@
     
     [nvwv.webView loadFileURL:url allowingReadAccessToURL:url];
     [nvwv show];
-    
     return nvwv;
+}
+
++ (instancetype)showMNFacilitiesPDFDrawing:(NVPDFDrawing *)drawing
+                                    inView:(UIView *)view
+{
+    NVWebView *nvwv = [NVWebView showWebViewInView:view
+                                    showFileAtPath:[NSBundle.mainBundle pathForResource:@"2015_mn_accessibility_code"
+                                                                                 ofType:@"pdf"]];
+    
+    [nvwv hideReturnButton];
+    [nvwv disableUserInteraction];
+    nvwv.drawing = drawing;
+    
+    CGFloat xMargin = 0.0, yMargin = 0.0;
+    CGFloat width = ((drawing.lowerRight.x - drawing.upperLeft.x) * ASPECT_RATIO);
+    CGFloat height = (drawing.lowerRight.y - drawing.upperLeft.y);
+    CGSize svSize = view.frame.size;
+    CGFloat drawingAR = (width / height);
+    CGFloat superviewAR = (svSize.width / svSize.height);
+    CGFloat arRatio = 0.0;
+    
+    if (superviewAR > drawingAR)
+    {
+        arRatio = (drawingAR / superviewAR);
+        xMargin = ((svSize.width - (arRatio * svSize.width)) / 2.0);
+    }
+    
+    else
+    {
+        arRatio = (superviewAR / drawingAR);
+        yMargin = ((svSize.height - (arRatio * svSize.height)) / 2.0);
+    }
+    
+    [nvwv setConstraintsToLeading:xMargin trailing:-xMargin top:yMargin bottom:-yMargin];
+    [nvwv performSelector:@selector(updateWebViewPosition) withObject:nil afterDelay:0.5];
+    return nvwv;
+}
+
+- (void)updateWebViewPosition
+{
+    [self clearPosition];
+    [self zoomToPage:_drawing.page upperLeft:_drawing.upperLeft lowerRight:_drawing.lowerRight];
 }
 
 - (void)addWebViewToView:(UIView *)view

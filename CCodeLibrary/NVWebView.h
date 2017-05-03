@@ -4,6 +4,7 @@
 @import UIKit;
 @import WebKit;
 #import "CCodeTypes.h"
+#import "NVPDFDrawing.h"
 
 @class NVWebView;
 
@@ -27,6 +28,9 @@ wasTappedAtPoint:(DPOINT)point
 
 + (instancetype)showWebViewInView:(UIView *)view
                    showFileAtPath:(NSString *)path;
+
++ (instancetype)showMNFacilitiesPDFDrawing:(NVPDFDrawing *)drawing
+                                    inView:(UIView *)view;
 
 - (void)hide:(BOOL)animated;
 - (void)showRealtorButton;
