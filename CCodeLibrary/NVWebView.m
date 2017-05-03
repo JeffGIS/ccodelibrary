@@ -16,7 +16,7 @@
 @property (nonatomic) UIActivityIndicatorView *indicator;
 @property (nonatomic) CGPoint zoomPoint, origPoint;
 @property int numPages, zoomPage, origPage;
-@property BOOL isFile, navigationComplete;
+@property BOOL isFile, navigationComplete, zoomToPDFDrawing;
 @property (nonatomic) NVPDFDrawing *drawing;
 
 @end
@@ -33,6 +33,7 @@
     nvwv.numPages = nvwv.zoomPage = 1;
     nvwv.isFile = NO;
     nvwv.navigationComplete = NO;
+    nvwv.zoomToPDFDrawing = NO;
     
     nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -97,6 +98,7 @@
     nvwv.numPages = nvwv.zoomPage = 1;
     nvwv.isFile = YES;
     nvwv.navigationComplete = NO;
+    nvwv.zoomToPDFDrawing = NO;
     
     NSURL *url = [NSURL fileURLWithPath:path];
 
@@ -147,6 +149,7 @@
                                     showFileAtPath:[NSBundle.mainBundle pathForResource:resourcePath
                                                                                  ofType:@"pdf"]];
     
+    nvwv.zoomToPDFDrawing = YES;
     [nvwv hideReturnButton];
     [nvwv disableUserInteraction];
     nvwv.drawing = drawing;
@@ -172,14 +175,7 @@
     }
     
     [nvwv setConstraintsToLeading:xMargin trailing:-xMargin top:yMargin bottom:-yMargin];
-    [nvwv performSelector:@selector(updateWebViewPosition) withObject:nil afterDelay:0.5];
     return nvwv;
-}
-
-- (void)updateWebViewPosition
-{
-    [self clearPosition];
-    [self zoomToPage:_drawing.page upperLeft:_drawing.upperLeft lowerRight:_drawing.lowerRight];
 }
 
 - (void)addWebViewToView:(UIView *)view
@@ -300,31 +296,37 @@
     _zoomScale = _origScale = scale;
     _zoomRotation = _origRotation = rotation;
     
-    if (_navigationComplete)
-        [self updatePosition];
+    [self updatePosition];
 }
 
 - (void)updatePosition
 {
-    if (_zoomPage > 0)
+    if (_zoomToPDFDrawing)
+         [self zoomToPage:_drawing.page upperLeft:_drawing.upperLeft lowerRight:_drawing.lowerRight];
+    
+    else
     {
-        CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
-        _zoomPoint.x *= _webView.scrollView.contentSize.width;
-        _zoomPoint.y *= pageHeight;
-        _zoomPoint.y += (pageHeight * (_zoomPage - 1));
+        if (_zoomPage > 0)
+        {
+            CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+            _zoomPoint.x *= _webView.scrollView.contentSize.width;
+            _zoomPoint.y *= pageHeight;
+            _zoomPoint.y += (pageHeight * (_zoomPage - 1));
+            
+        }
+        
+        CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
+                                     (_webView.scrollView.bounds.size.height / _zoomScale));
+        
+        CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
+                                     (_zoomPoint.y - (zoomSize.height / 2.0)),
+                                     zoomSize.width, zoomSize.height);
+        
+        [_webView.scrollView zoomToRect:zoomRect
+                               animated:NO];
+        
+        _webView.scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
     }
-    
-    CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
-                                 (_webView.scrollView.bounds.size.height / _zoomScale));
-    
-    CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
-                                 (_zoomPoint.y - (zoomSize.height / 2.0)),
-                                 zoomSize.width, zoomSize.height);
-    
-    [_webView.scrollView zoomToRect:zoomRect
-                           animated:NO];
-    
-    _webView.scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
 }
 
 - (void)zoomToPage:(int)page
@@ -345,8 +347,7 @@
     CGSize size = CGSizeMake(lowerRight.x - upperLeft.x, lowerRight.y - upperLeft.y);
     CGRect rect = CGRectMake(upperLeft.x, upperLeft.y, size.width, size.height);
     
-    [_webView.scrollView zoomToRect:rect
-                           animated:NO];
+    [_webView.scrollView zoomToRect:rect animated:NO];
 }
 
 - (void)realtor:(UIButton *)button
