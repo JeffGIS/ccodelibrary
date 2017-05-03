@@ -245,7 +245,7 @@
 
 - (void)updatePosition
 {
-    if (_zoomPage > 1)
+    if (_zoomPage > 0)
     {
         CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
         _zoomPoint.x *= _webView.scrollView.contentSize.width;
