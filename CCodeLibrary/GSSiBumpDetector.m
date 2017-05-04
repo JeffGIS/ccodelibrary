@@ -125,17 +125,14 @@
                                 [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
                                                         NSBundle.mainBundle.resourcePath]] error:nil];
     
-    [bumpDetector.beep prepareToPlay];
-    
     bumpDetector.finalBeep = [[AVAudioPlayer alloc] initWithContentsOfURL:
                               [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/finalBeep.mp3",
                                                       NSBundle.mainBundle.resourcePath]] error:nil];
     
+    [bumpDetector.beep prepareToPlay];
     [bumpDetector.finalBeep prepareToPlay];
     bumpDetector.finalBeep.volume = 1.0;
-    
-    bumpDetector.motionManager = [[CMMotionManager alloc] init];
-    
+    bumpDetector.motionManager = CMMotionManager.new;
     return bumpDetector;
 }
 
@@ -149,15 +146,9 @@
     button.layer.borderWidth = 4.0;
     button.layer.borderColor = UIColor.whiteColor.CGColor;
     button.titleLabel.adjustsFontSizeToFitWidth = YES;
-    
-    [button setTitle:title
-            forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.whiteColor
-                 forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.lightGrayColor
-                 forState:UIControlStateHighlighted];
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
     
     [button addTarget:target
                action:selector
@@ -203,17 +194,14 @@
     
     if (_isComplete)
     {
-        if (_delegate)
+        if (_delegate && [_delegate respondsToSelector:@selector(bumpDetector:didReturnTimeInterval:)])
         {
             NSDecimal dIn = [NSNumber numberWithDouble:_elapsedTime].decimalValue;
             NSDecimal dOut;
             NSDecimalRound(&dOut, &dIn, 1, NSRoundPlain);
-            
             NSDecimalNumber *result = [NSDecimalNumber decimalNumberWithDecimal:dOut];
             NSString *resultString = result.stringValue;
-            
-            [_delegate bumpDetector:self
-              didReturnTimeInterval:resultString];
+            [_delegate bumpDetector:self didReturnTimeInterval:resultString];
         }
     }
     
@@ -221,13 +209,9 @@
     {
         [_motionManager stopDeviceMotionUpdates];
         _isFirstTime = YES;
-        
         [self updateCountdownLabelText];
-        
         _startButton.backgroundColor = _green;
-        
-        [_startButton setTitle:@"Start"
-                      forState:UIControlStateNormal];
+        [_startButton setTitle:@"Start" forState:UIControlStateNormal];
     }
     
     else if (_timerIsFiring)
@@ -241,11 +225,8 @@
                 _timerIsFiring = NO;
                 _countdownTime = _countdownStart;
                 [self updateCountdownLabelText];
-                
                 _startButton.backgroundColor = _green;
-                
-                [_startButton setTitle:@"Start"
-                              forState:UIControlStateNormal];
+                [_startButton setTitle:@"Start" forState:UIControlStateNormal];
             }
         }
     }
@@ -261,12 +242,8 @@
         if (_timer.valid)
         {
             _timerIsFiring = YES;
-            
             _startButton.backgroundColor = UIColor.redColor;
-            
-            [_startButton setTitle:@"Stop"
-                          forState:UIControlStateNormal];
-            
+            [_startButton setTitle:@"Stop" forState:UIControlStateNormal];
             _beep.volume = 0.0;
             [_beep play];
         }
@@ -300,29 +277,19 @@
     if (_isComplete)
     {
         [self updateCountdownLabelText];
-        
         _startButton.backgroundColor = _green;
-        
-        [_startButton setTitle:@"Start"
-                      forState:UIControlStateNormal];
-        
-        [_startButton setTitleColor:UIColor.whiteColor
-                           forState:UIControlStateNormal];
-        
+        [_startButton setTitle:@"Start" forState:UIControlStateNormal];
+        [_startButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
         _startButton.layer.borderColor = UIColor.whiteColor.CGColor;
-        
-        [_cancelButton setTitle:@"Cancel"
-                       forState:UIControlStateNormal];
-        
+        [_cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
         _isComplete = NO;
-        
         return;
     }
     
     if (_timer.valid)
         [_timer invalidate];
     
-    if (_delegate)
+    if (_delegate && [_delegate respondsToSelector:@selector(bumpDetectorDidCancel:)])
         [_delegate bumpDetectorDidCancel:self];
     
     else
@@ -331,10 +298,9 @@
 
 - (void)startMotionManager
 {
-    _motionManager.deviceMotionUpdateInterval = 0.02;
-    
-    if ([_motionManager isDeviceMotionAvailable])
+    if (_motionManager.isDeviceMotionAvailable)
     {
+        _motionManager.deviceMotionUpdateInterval = 0.1;
         _startTime = NSDate.date;
         
         [_motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical
@@ -361,7 +327,6 @@
         CGFloat sumXb = (deviceMotion.userAcceleration.x + deviceMotion.gravity.x);
         CGFloat sumYb = (deviceMotion.userAcceleration.y + deviceMotion.gravity.y);
         CGFloat sumZb= (deviceMotion.userAcceleration.z + deviceMotion.gravity.z);
-        
         CGFloat diffX = fabs(sumXa - sumXb);
         CGFloat diffY = fabs(sumYa - sumYb);
         CGFloat diffZ = fabs(sumZa - sumZb);
@@ -372,18 +337,10 @@
             [self.motionManager stopDeviceMotionUpdates];
             _isFirstTime = _isComplete = YES;
             _startButton.backgroundColor = UIColor.whiteColor;
-            
-            [_startButton setTitleColor:UIColor.blackColor
-                               forState:UIControlStateNormal];
-            
+            [_startButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
             _startButton.layer.borderColor = UIColor.blackColor.CGColor;
-            
-            [_startButton setTitle:@"Use It"
-                          forState:UIControlStateNormal];
-            
-            [_cancelButton setTitle:@"Do Over"
-                           forState:UIControlStateNormal];
-            
+            [_startButton setTitle:@"Use It" forState:UIControlStateNormal];
+            [_cancelButton setTitle:@"Do Over" forState:UIControlStateNormal];
             return;
         }
     }
