@@ -346,13 +346,13 @@ static double _deviceValues[9][4];
                                                                                criticalSideValue:-9999.0
                                                                                       errorValue:0.0
                                                                                   useCalibration:NO
+                                                                           useHeadingCalibration:_useHeadingCalibration
                                                                                     steadyFactor:0.0
                                                                                      countFactor:0.0
                                                                                   displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                                         delegate:self];
     
     slopeVC.fromCalibration = YES;
-    slopeVC.useHeadingCalibration = _useHeadingCalibration;
     
     if (!_currentIndex)
         slopeVC.promptText = @"Place the iPad on a level surface and tap 'Start' to begin measurement.";
@@ -422,13 +422,13 @@ static double _deviceValues[9][4];
                                                       criticalSideValue:-9999.0
                                                              errorValue:0.0
                                                          useCalibration:_hasBeenCalibrated
+                                                                           useHeadingCalibration:NO
                                                            steadyFactor:0.0
                                                             countFactor:0.0
                                                          displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                delegate:self];
     
     slopeVC.fromCalibration = YES;
-    slopeVC.useHeadingCalibration = NO;
     [self presentViewController:slopeVC animated:YES completion:nil];
 }
 
@@ -1035,13 +1035,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                                                            criticalSideValue:-9999.0
                                                                                                   errorValue:0.0
                                                                                               useCalibration:NO
+                                                                                       useHeadingCalibration:_useHeadingCalibration
                                                                                                 steadyFactor:0.0
                                                                                                  countFactor:0.0
                                                                                               displayDegrees:(_currentType == NVCalibrationTypeDegrees)
                                                                                                     delegate:self];
                 
                 slopeVC.fromCalibration = YES;
-                slopeVC.useHeadingCalibration = _useHeadingCalibration;
                 slopeVC.promptText = @"";
                 [self presentViewController:slopeVC animated:YES completion:nil];
                 _promptLabel.text = _nextPromptText;

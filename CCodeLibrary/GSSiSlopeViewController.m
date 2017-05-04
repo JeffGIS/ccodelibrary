@@ -51,6 +51,7 @@ static int COUNT=100;
                                             criticalSideValue:(double)criticalSideVal
                                                    errorValue:(double)errVal
                                                useCalibration:(BOOL)useCalibration
+                                        useHeadingCalibration:(BOOL)useHeadingCalibration
                                                  steadyFactor:(double)steadyFac
                                                   countFactor:(double)countFac
                                                displayDegrees:(BOOL)displayDegrees
@@ -59,7 +60,7 @@ static int COUNT=100;
     GSSiSlopeViewController *slopeController = [[GSSiSlopeViewController alloc] init];
     slopeController.displayDegrees = displayDegrees;
     slopeController.useCalibration = useCalibration;
-    slopeController.useHeadingCalibration = YES;
+    slopeController.useHeadingCalibration = useHeadingCalibration;
     slopeController.delegate = delegate;
     slopeController.steadyFactor = max (steadyFac,1.0);
     slopeController.hideDoesNotExistButton = NO;

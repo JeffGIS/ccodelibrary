@@ -60,6 +60,7 @@ typedef struct NVSlopeData {
                                             criticalSideValue:(double)criticalSideVal
                                                    errorValue:(double)errVal
                                                useCalibration:(BOOL)useCalibration
+                                        useHeadingCalibration:(BOOL)useHeadingCalibration
                                                  steadyFactor:(double)steadyFac
                                                   countFactor:(double)countFac
                                                displayDegrees:(BOOL)displayDegrees
