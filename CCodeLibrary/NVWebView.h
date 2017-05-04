@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, NVPDFDocument)
 wasTappedAtPoint:(DPOINT)point
      withinPage:(int)page;
 
-- (void)windowWasTappedWithIdentifierTag:(int)identifierTag;
+- (void)windowWasSelectedWithIdentifierTag:(int)identifierTag;
 
 @end
 

@@ -608,27 +608,37 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     button.tag = identifierTag;
     button.backgroundColor = UIColor.clearColor;
     [button addTarget:self action:@selector(windowTouchedDown:) forControlEvents:UIControlEventTouchDown];
-    [button addTarget:self action:@selector(windowTouchedDraggedExit:) forControlEvents:UIControlEventTouchDragExit];
-    [button addTarget:self action:@selector(windowTapped:) forControlEvents:UIControlEventTouchUpInside];
     [[self.superview viewWithTag:777] addSubview:button];
-}
-
-- (void)windowTapped:(UIButton *)button
-{
-    button.backgroundColor = UIColor.clearColor;
-    
-    if (_delegate && [_delegate respondsToSelector:@selector(windowWasTappedWithIdentifierTag:)])
-        [_delegate windowWasTappedWithIdentifierTag:(int)button.tag];
 }
 
 - (void)windowTouchedDown:(UIButton *)button
 {
-    button.backgroundColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.3];
-}
-
-- (void)windowTouchedDraggedExit:(UIButton *)button
-{
-    button.backgroundColor = UIColor.clearColor;
+    if (!button.selected)
+    {
+        for (UIButton *buttons in (button.superview.subviews))
+        {
+            buttons.backgroundColor = UIColor.clearColor;
+            buttons.selected = NO;
+        }
+        
+        button.backgroundColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.3];
+        button.selected = YES;
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(windowWasSelectedWithIdentifierTag:)])
+            [_delegate windowWasSelectedWithIdentifierTag:(int)button.tag];
+    }
+    
+    else
+    {
+        for (UIButton *buttons in (button.superview.subviews))
+        {
+            buttons.backgroundColor = UIColor.clearColor;
+            buttons.selected = NO;
+        }
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(windowWasSelectedWithIdentifierTag:)])
+            [_delegate windowWasSelectedWithIdentifierTag:-1];
+    }
 }
 
 @end
