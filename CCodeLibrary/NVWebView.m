@@ -19,7 +19,7 @@
 @property BOOL isFile, navigationComplete, zoomToPDFDrawing;
 @property (nonatomic) NVPDFDrawing *drawing;
 @property (nonatomic) UIView *marker;
-@property DPOINT markerPosition;
+@property DPOINT markerPosition, ul, lr;
 
 @end
 
@@ -342,6 +342,11 @@
          upperLeft:(DPOINT)upperLeft
         lowerRight:(DPOINT)lowerRight
 {
+    _ul.x = upperLeft.x;
+    _ul.y = upperLeft.y;
+    _lr.x = lowerRight.x;
+    _lr.y = lowerRight.y;
+    
     if (page > 1)
     {
         CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
@@ -357,6 +362,9 @@
     CGRect rect = CGRectMake(upperLeft.x, upperLeft.y, size.width, size.height);
     
     [_webView.scrollView zoomToRect:rect animated:NO];
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidZoom)])
+        [_delegate webViewDidZoom];
 }
 
 - (void)realtor:(UIButton *)button
@@ -581,6 +589,46 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         _marker.center = CGPointMake((_markerPosition.x * _webView.scrollView.contentSize.width),
                                     ((_markerPosition.y * pageHeight) * _markerPage));
     }
+}
+
+- (void)addTapWindowToFrameWithUpperLeft:(DPOINT)upperLeft
+                              lowerRight:(DPOINT)lowerRight
+                           identifierTag:(int)identifierTag
+{
+    CGFloat xFactor = (_webView.frame.size.width / (_lr.x - _ul.x));
+    CGFloat yFactor = (_webView.frame.size.height / (_lr.y - _ul.y));
+    CGPoint origin = CGPointMake(((upperLeft.x - _ul.x) * xFactor), ((upperLeft.y - _ul.y) * yFactor));
+    CGFloat xSize = (lowerRight.x - upperLeft.x);
+    CGFloat ySize = (lowerRight.y - upperLeft.y);
+    CGSize size = CGSizeMake((xSize * xFactor), (ySize * yFactor));
+    CGRect frame = CGRectMake(origin.x, origin.y, size.width, size.height);
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = frame;
+    button.tag = identifierTag;
+    button.backgroundColor = UIColor.clearColor;
+    [button addTarget:self action:@selector(windowTouchedDown:) forControlEvents:UIControlEventTouchDown];
+    [button addTarget:self action:@selector(windowTouchedDraggedExit:) forControlEvents:UIControlEventTouchDragExit];
+    [button addTarget:self action:@selector(windowTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [[self.superview viewWithTag:777] addSubview:button];
+}
+
+- (void)windowTapped:(UIButton *)button
+{
+    button.backgroundColor = UIColor.clearColor;
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(windowWasTappedWithIdentifierTag:)])
+        [_delegate windowWasTappedWithIdentifierTag:(int)button.tag];
+}
+
+- (void)windowTouchedDown:(UIButton *)button
+{
+    button.backgroundColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.3];
+}
+
+- (void)windowTouchedDraggedExit:(UIButton *)button
+{
+    button.backgroundColor = UIColor.clearColor;
 }
 
 @end

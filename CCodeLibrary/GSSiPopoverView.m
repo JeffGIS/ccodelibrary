@@ -68,7 +68,7 @@
         [_progressView constrainTopToAnchor:_popover.centerYAnchor constant:(-height / 64.0)];
         [_progressView constrainBottomToAnchor:_popover.centerYAnchor constant:(height / 64.0)];
         
-        _popoverCancel = UIButton.new;
+        _popoverCancel = [UIButton buttonWithType:UIButtonTypeCustom];
         _popoverCancel.translatesAutoresizingMaskIntoConstraints = NO;
         _popoverCancel.layer.cornerRadius = 10.0;
         _popoverCancel.backgroundColor = UIColor.whiteColor;

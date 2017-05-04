@@ -19,10 +19,13 @@ typedef NS_ENUM(NSInteger, NVPDFDocument)
 
 @optional
 - (void)webViewDidReturn:(NVWebView *)webView;
+- (void)webViewDidZoom;
 
 - (void)webView:(NVWebView *)webView
 wasTappedAtPoint:(DPOINT)point
      withinPage:(int)page;
+
+- (void)windowWasTappedWithIdentifierTag:(int)identifierTag;
 
 @end
 
@@ -63,5 +66,9 @@ wasTappedAtPoint:(DPOINT)point
          withinPage:(int)page
           withScale:(CGFloat)scale
            rotation:(CGFloat)rotation;
+
+- (void)addTapWindowToFrameWithUpperLeft:(DPOINT)upperLeft
+                              lowerRight:(DPOINT)lowerRight
+                           identifierTag:(int)identifierTag;
 
 @end
