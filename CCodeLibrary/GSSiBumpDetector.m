@@ -47,8 +47,9 @@
     
     CGSize size = view.frame.size;
     
-    bumpDetector.countdownLabel = [[UILabel alloc] initWithFrame:CGRectMake((size.width * 0.1), (size.height * 0.2),
-                                                                            (size.width * 0.8), (size.height * 0.6))];
+    bumpDetector.countdownLabel = [[UILabel alloc] initWithFrame:
+                                   CGRectMake((size.width * 0.1), (size.height * 0.2),
+                                              (size.width * 0.8), (size.height * 0.6))];
     
     bumpDetector.countdownLabel.backgroundColor = UIColor.blackColor;
     bumpDetector.countdownLabel.textColor = UIColor.whiteColor;
@@ -77,8 +78,9 @@
                                         fromDocument:NVPDFDocumentADAChecklist
                                               inView:bumpDetector.countdownLabel];
     
-    bumpDetector.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 20.0, (size.width - 40.0),
-                                                                        ((size.height * 0.2) - 40.0))];
+    bumpDetector.titleLabel = [[UILabel alloc] initWithFrame:
+                               CGRectMake(20.0, 20.0, (size.width - 40.0),
+                                          ((size.height * 0.2) - 40.0))];
     
     bumpDetector.titleLabel.backgroundColor = UIColor.clearColor;
     bumpDetector.titleLabel.textColor = UIColor.whiteColor;
@@ -92,8 +94,9 @@
     bumpDetector.titleLabel.text = [NSString stringWithFormat:@"Collision Detection Manager\n%@", title];
     [bumpDetector addSubview:bumpDetector.titleLabel];
     
-    bumpDetector.startButton = [[UIButton alloc] initWithFrame:CGRectMake((size.width * 0.05), (size.height * 0.85),
-                                                                          (size.width * 0.4), (size.height * 0.1))];
+    bumpDetector.startButton = [[UIButton alloc] initWithFrame:
+                                CGRectMake((size.width * 0.05), (size.height * 0.85),
+                                           (size.width * 0.4), (size.height * 0.1))];
     
     [bumpDetector setupButton:bumpDetector.startButton
                        target:bumpDetector
@@ -104,8 +107,9 @@
     
     [bumpDetector addSubview:bumpDetector.startButton];
     
-    bumpDetector.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake((size.width * 0.55), (size.height * 0.85),
-                                                                           (size.width * 0.4), (size.height * 0.1))];
+    bumpDetector.cancelButton = [[UIButton alloc] initWithFrame:
+                                 CGRectMake((size.width * 0.55), (size.height * 0.85),
+                                            (size.width * 0.4), (size.height * 0.1))];
     
     [bumpDetector setupButton:bumpDetector.cancelButton
                        target:bumpDetector
@@ -190,7 +194,7 @@
 - (void)startBumpDetection:(UIButton *)button
 {
     if ([_countdownLabel.subviews containsObject:_webView])
-        [_webView removeFromSuperview];
+        [_webView hide:NO];
     
     if (_isComplete)
     {
