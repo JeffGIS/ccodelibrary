@@ -204,7 +204,6 @@
     _webView.navigationDelegate = self;
     _webView.UIDelegate = self;
     _webView.clipsToBounds = YES;
-    _webView.scrollView.delegate = self;
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                  action:@selector(webViewWasTapped:)];
@@ -264,6 +263,9 @@
     
     else
     {
+        _webView.scrollView.delegate = nil;
+        _webView.UIDelegate = nil;
+        _webView.navigationDelegate = nil;
         [self removeFromSuperview];
         _tabBar.userInteractionEnabled = YES;
     }
@@ -397,6 +399,7 @@ didFinishNavigation:(WKNavigation *)navigation
         _webView.scrollView.bouncesZoom = NO;
         _webView.scrollView.directionalLockEnabled = NO;
         _webView.scrollView.clipsToBounds = NO;
+        _webView.scrollView.delegate = self;
         
         [self updatePosition];
         _navigationComplete = YES;
