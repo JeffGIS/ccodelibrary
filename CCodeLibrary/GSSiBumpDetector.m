@@ -120,10 +120,11 @@
     
     [bumpDetector addSubview:bumpDetector.cancelButton];
     
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         bumpDetector.alpha = 1.0;
-                     }];
+    NSError *error = nil;
+    [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:&error];
+    
+    if (error)
+        NSLog(@"AVAudioSession set category ERROR");
     
     bumpDetector.beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
                                 [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
@@ -137,6 +138,12 @@
     [bumpDetector.finalBeep prepareToPlay];
     bumpDetector.finalBeep.volume = 1.0;
     bumpDetector.motionManager = CMMotionManager.new;
+    
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         bumpDetector.alpha = 1.0;
+                     }];
+    
     return bumpDetector;
 }
 
