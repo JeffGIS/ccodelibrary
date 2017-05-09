@@ -1903,6 +1903,10 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
                            {
                                
                                fgetstring(index, maxIndex, fidIndex);
+                               if (!strncmp (index,"*EMPTY*",7))
+                               {
+                                   goto Exit;
+                               }
                                if (popover)
                                    dispatch_async(dispatch_get_main_queue(),
                                                   ^{
@@ -1952,7 +1956,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
                                                           [popover updateProgress:currentLoc/fileSize];
                                                       });
                                }
-                               
+                           Exit:
                                if (opened)
                                    [self commitTransaction];
                                if (popover)
