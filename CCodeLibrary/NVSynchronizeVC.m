@@ -31,9 +31,9 @@
 @property int upFiles, upPix, downFiles, downPix, numConnectionAttempts, totConnectionAttempts;;
 @property BOOL serverOpen, setDemoID, didConnect;
 @property NSTimer *timer;
-@property NSString *iPad_name;
-@property FTPDataPush *push;
-@property FTPDataPull *pull;
+@property (nonatomic, copy) NSString *iPad_name;
+@property (nonatomic) FTPDataPush *push;
+@property (nonatomic) FTPDataPull *pull;
 @property NSInteger selectedRow;
 @property (nonatomic) NVEmailFileList *nvefl;
 @property int sendDataStartTime;
@@ -55,8 +55,6 @@
     _first = NO;
     _iPad_name = UIDevice.currentDevice.name;
     _setDemoID = getUseDemoID();
-    _popoverView = [[GSSiPopoverView alloc] initWithView:self.view];
-    _popoverView.delegate = self;
     _colors = UserDefaults.defaults.defaultColors;
     self.view.backgroundColor = _colors.backgroundColor;
     _upFiles = _upPix = _downFiles = _downPix = 0;
@@ -170,7 +168,6 @@
     _overallProgressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
                                                         progressColor:UIColor.whiteColor];
     
-    
     _overallLabel = UILabel.new;
     [self setupLabel:_overallLabel];
     _overallLabel.textAlignment = NSTextAlignmentCenter;
@@ -263,12 +260,10 @@
                 [_titleButton constrainTopToAnchor:sectionView.topAnchor constant:buttonMargin];
                 [_titleButton constrainBottomToAnchor:sectionView.bottomAnchor constant:-buttonMargin];
                 break;
-                
             case 1://data files to be uploaded
                 [sectionView addSubview:_dataUpLabel];
                 [_dataUpLabel constrainToView:sectionView leading:margin trailing:-margin top:0.0 bottom:0.0];
                 break;
-                
             case 2://pictures to be uploaded
                 [sectionView addSubview:_pixUpSwitch];
                 [_pixUpSwitch constrainCenterYToAnchor:sectionView.centerYAnchor];
@@ -280,7 +275,6 @@
                 [_pixUpLabel constrainTopToAnchor:sectionView.topAnchor];
                 [_pixUpLabel constrainBottomToAnchor:sectionView.bottomAnchor];
                 break;
-                
             case 3://data files to be downloaded
                 [sectionView addSubview:_dataDownSwitch];
                 [_dataDownSwitch constrainCenterYToAnchor:sectionView.centerYAnchor];
@@ -292,7 +286,6 @@
                 [_dataDownLabel constrainTopToAnchor:sectionView.topAnchor];
                 [_dataDownLabel constrainBottomToAnchor:sectionView.bottomAnchor];
                 break;
-                
             case 4://pictures to be downloaded
                 if (CRAPI.sharedInstance.currentModule != PRELIM_MODULE &&
                     CRAPI.sharedInstance.currentModule != DETAIL_MODULE)
@@ -307,16 +300,13 @@
                     [_pixDownLabel constrainTopToAnchor:sectionView.topAnchor];
                     [_pixDownLabel constrainBottomToAnchor:sectionView.bottomAnchor];
                 }
-                
                 break;
-                
             case 5://sync button
                 [sectionView addSubview:_syncButton];
                 
                 [_syncButton constrainToView:sectionView leading:(screenWidth / 4.0)
                                     trailing:(-screenWidth / 4.0) top:buttonMargin bottom:-buttonMargin];
                 break;
-                
             case 6://help button
                 [sectionView addSubview:helpButton];
                 [helpButton constrainHeightToAnchor:sectionView.heightAnchor multiplier:0.8];
@@ -324,7 +314,6 @@
                 [helpButton constrainCenterXToAnchor:sectionView.centerXAnchor];
                 [helpButton constrainCenterYToAnchor:sectionView.centerYAnchor];
                 break;
-                
             case 7://overall progress
                 [sectionView addSubview:_overallProgressView];
                 [_overallProgressView constrainLeadingToAnchor:sectionView.leadingAnchor constant:margin];
@@ -338,7 +327,6 @@
                 [_overallLabel constrainTopToAnchor:_overallProgressView.bottomAnchor];
                 [_overallLabel constrainBottomToAnchor:sectionView.bottomAnchor constant:-buttonMargin];
                 break;
-                
             case 8://email file list button
                 if (CRAPI.sharedInstance.showDeveloperFunctions)
                 {
@@ -347,15 +335,14 @@
                     [_emailFileListButton constrainToView:sectionView leading:(screenWidth / 4.0)
                                                  trailing:(-screenWidth / 4.0) top:buttonMargin bottom:-buttonMargin];
                 }
-                
                 break;
-                
-            default:
-                break;
+            default:break;
         }
     }
-    [_connectButton setHidden:YES];
     
+    _popoverView = [[GSSiPopoverView alloc] initWithView:self.view];
+    _popoverView.delegate = self;
+    _connectButton.hidden = YES;
     _syncButton.enabled = NO;
     [self updateButton:_syncButton];
     [self sendGMServerMessage:GMSMessageOpenConnect];
