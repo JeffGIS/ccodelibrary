@@ -156,7 +156,7 @@
 {
     [timer invalidate];
     _timer = nil;
-    [self hide];
+    self.hidden = YES;
 }
 
 - (void)hide

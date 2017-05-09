@@ -36,6 +36,7 @@
 @property (nonatomic) FTPDataPull *pull;
 @property NSInteger selectedRow;
 @property (nonatomic) NVEmailFileList *nvefl;
+@property int sendDataStartTime;
 
 @end
 
@@ -671,7 +672,10 @@
             }
             else if (_process == UPLOAD_DATA_PROCESS)
             {
-                [NSThread sleepForTimeInterval:FTP_CATCHUP_DELAY * (1 + _lastUploadFileSize/500000)];
+#define AVERAGE_UPLOAD_SPEED 25000.0
+                double uploadSpeed = _lastUploadFileSize / (1.0 + NSDate.timeIntervalSinceReferenceDate - _sendDataStartTime);
+                double speedFactor = max (1.0,AVERAGE_UPLOAD_SPEED/uploadSpeed);
+                [NSThread sleepForTimeInterval:speedFactor * (FTP_CATCHUP_DELAY * (1 + _lastUploadFileSize/500000.0))];
                 msg = [NSString stringWithFormat:@"$M(UploadCompleteData,%i,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
                        CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload,_lastUploadFileSize];
@@ -1195,7 +1199,10 @@ Top:
     _push.delegate = self;
     _push.popover = _popoverView;
     if (_process == UPLOAD_DATA_PROCESS)
+    {
         _push.dataType = FTPData;
+        _sendDataStartTime = NSDate.timeIntervalSinceReferenceDate;
+    }
     else
         _push.dataType = FTPDataPhoto;
     
@@ -1489,7 +1496,7 @@ Done:
         [_GMServer initCommunication:7.5];
     }
     else
-        [self sendGMServerMessage:GMSMessageOpenConnect];
+        [popoverView hide];
 }
 
 - (void)returnButtonTapped:(UIButton *)button
