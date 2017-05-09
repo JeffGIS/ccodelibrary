@@ -1496,7 +1496,7 @@ Done:
         [_GMServer initCommunication:7.5];
     }
     else
-        [self sendGMServerMessage:GMSMessageOpenConnect];
+        [popoverView hide];
 }
 
 - (void)returnButtonTapped:(UIButton *)button
