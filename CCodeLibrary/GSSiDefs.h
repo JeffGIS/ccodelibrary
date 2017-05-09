@@ -3,7 +3,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define GOOGLE_API_KEY @"AIzaSyCJr0EZZTS4wJFKFiiWJQQ5EAa_2YsGeOM"
+#define GOOGLE_API_KEY @"AIzaSyB7XIgauC5W-veOVKKdTvkYTO5zQxquw9Q"
 #define GOOGLE_SERVER_KEY @"AIzaSyBQvw3ROLNlUtuSlVdnk0zLvnbonh3I3vw"
 #define BING_API_KEY @"AhGA_PqXHM1e8opz8VEBHts-yzpUJVjxTIUdyA9m6x7o-TRAwYupMcn6JWEQf9V3"
 #define iPAD_HEIGHT 1024.0
