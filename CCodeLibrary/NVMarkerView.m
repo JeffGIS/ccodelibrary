@@ -286,6 +286,7 @@
                     {
                         case InitialStatus:
                         case AddedInDetail:
+                        case ComplexStatus:
                             if (!info.assignedToDetail)
                             {
                                 CGContextSetFillColorWithColor(context, UIColor.blueColor.CGColor);
@@ -326,12 +327,7 @@
                         case IntersectionRebuilt:
                             CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
                             break;
-                            
-                        case ComplexStatus:
-                            CGContextSetFillColorWithColor(context, UIColor.darkGrayColor.CGColor);
-                            numComplex++;
-                            break;
-                            
+                                                        
                         default:
                             break;
                     }
