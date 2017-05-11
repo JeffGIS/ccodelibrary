@@ -38,6 +38,7 @@
 - (NSString *) overdueTextForArea:(NSString *)areaID;
 - (BOOL) initTimeLine:(sqlite3 *) db;
 - (NSArray *) getAreaTimeline:(NSString*) areaName;
+- (NSArray *) getAreaPointRefs:(NSString *)areaName;
 
 @property NSString * areaType;
 @property NSString * adjustValue;

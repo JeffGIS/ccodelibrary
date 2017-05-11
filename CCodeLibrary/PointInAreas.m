@@ -171,6 +171,39 @@ static int ii;
     }
 }
 
+- (NSArray *) getAreaPointRefs:(NSString *)areaName
+{
+    NSMutableArray<NSNumber *> *array = NSMutableArray.array;
+    BOOL opened = [self open];
+    sqlite3_stmt *statement = NULL;
+    
+    NSString *areaID = [areaName stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
+    NSString *query = [NSString stringWithFormat:@"SELECT AreaNumber FROM AreaNames WHERE AreaName = '%@'",areaID];
+    int areaNum = -1;
+    
+    SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+        areaNum = sqlite3_column_int(statement,0);
+    
+    SQLOK(0,sqlite3_finalize(statement), self.database);
+    
+    query = [NSString stringWithFormat:@"SELECT Time, Refno FROM TimeLine WHERE AreaNumber = %i",areaNum];
+    SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int itime = sqlite3_column_int(statement,0);
+        int refno = sqlite3_column_int(statement,1);
+        NSNumber *num = [NSNumber numberWithInt:refno];
+        [array addObject:num];
+    }
+    
+    SQLOK(0,sqlite3_finalize(statement), self.database);
+    [self close:opened];
+    return array.copy;
+}
+
 - (NSArray<TimeLine *> *)getAreaTimeline:(NSString *)areaName
 {
     NSMutableArray<TimeLine *> *array = NSMutableArray.array;
