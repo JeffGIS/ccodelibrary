@@ -263,12 +263,13 @@
     
     else
     {
-        _webView.scrollView.delegate = nil;
-        _webView.UIDelegate = nil;
-        _webView.navigationDelegate = nil;
         [self removeFromSuperview];
         _tabBar.userInteractionEnabled = YES;
     }
+    
+    _webView.scrollView.delegate = nil;
+    _webView.UIDelegate = nil;
+    _webView.navigationDelegate = nil;
 }
 
 - (void)showRealtorButton
