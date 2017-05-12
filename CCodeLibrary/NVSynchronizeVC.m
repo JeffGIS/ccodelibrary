@@ -36,7 +36,7 @@
 @property (nonatomic) FTPDataPull *pull;
 @property NSInteger selectedRow;
 @property (nonatomic) NVEmailFileList *nvefl;
-@property int sendDataStartTime;
+@property NSDate * sendDataStartTime;
 
 @end
 
@@ -673,8 +673,9 @@
             else if (_process == UPLOAD_DATA_PROCESS)
             {
 #define AVERAGE_UPLOAD_SPEED 25000.0
-                double uploadSpeed = _lastUploadFileSize / (1.0 + NSDate.timeIntervalSinceReferenceDate - _sendDataStartTime);
-                double speedFactor = max (1.0,AVERAGE_UPLOAD_SPEED/uploadSpeed);
+                double timePassed = max (0.01,-[_sendDataStartTime timeIntervalSinceNow] - 1);
+                double uploadSpeed = _lastUploadFileSize / timePassed;
+                double speedFactor = min (5,max (1.0,AVERAGE_UPLOAD_SPEED/uploadSpeed));
                 NSTimeInterval interval = speedFactor * (FTP_CATCHUP_DELAY * (1 + _lastUploadFileSize/500000.0));
                 [NSThread sleepForTimeInterval:interval];
                 msg = [NSString stringWithFormat:@"$M(UploadCompleteData,%i,%i,%i,%i,%i)",
@@ -1202,7 +1203,7 @@ Top:
     if (_process == UPLOAD_DATA_PROCESS)
     {
         _push.dataType = FTPData;
-        _sendDataStartTime = NSDate.timeIntervalSinceReferenceDate;
+        _sendDataStartTime = NSDate.date;
     }
     else
         _push.dataType = FTPDataPhoto;
