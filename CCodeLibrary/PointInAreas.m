@@ -310,6 +310,50 @@ static int ii;
     _pTranContextToWorld = STRANBoundsToBounds(&outb, &llBounds);
 }
 
+- (int) pointIndex:(int)row column:(int)col
+{
+    int indx = row * _pointGridSize + col;
+    
+    return indx;
+}
+
+- (void) setPointSize:(double)pointSize
+{
+    int numGridsSet = 0;
+    _pointGridSize = ceil (pointSize) * 2;
+    if (!(_pointGridSize % 2))
+        _pointGridSize++;
+    _pointGrid = calloc (_pointGridSize*_pointGridSize,sizeof(float));
+    _pointSize = pointSize;
+    _midxy = _pointGridSize / 2;
+    for (int row = 0;row < _pointGridSize; row++)
+    {
+        for (int col = 0; col < _pointGridSize; col++)
+        {
+            int indx = [self pointIndex:row column:col];
+            float val = _midxy - LDIST(col,row,_midxy,_midxy);
+            if (val > 0)
+            {
+                numGridsSet++;
+                _pointGrid[indx] = val;
+            }
+        }
+    }
+    if (numGridsSet)
+    {
+        float setVal = 1.0 / numGridsSet;
+        for (int row = 0;row < _pointGridSize; row++)
+        {
+            for (int col = 0; col < _pointGridSize; col++)
+            {
+                int indx = [self pointIndex:row column:col];
+                if (_pointGrid[indx])
+                    _pointGrid[indx] = setVal;
+            }
+        }
+    }
+}
+
 - (void) areasLoaded:(PointInAreas*)boundsPias
          convertToLL:(LPTRANDATA)pTranViewToLL
 {
@@ -654,7 +698,53 @@ static int ii;
 - (int)DPointInArea:(DPOINT *)dPoint
              atTime:(int)itime
            andRefno:(int)refno
-        whichCount:(int) icount
+         whichCount:(int) icount
+{
+    int rtn = 0;
+    
+    if (!_pointGridSize)
+    {
+        rtn = [self DPointInArea2:dPoint
+                          atTime:itime
+                        andRefno:refno
+                      whichCount:icount
+                           value:1];
+    }
+    else
+    {
+        dPoint->x -= _midxy;
+        dPoint->y -= _midxy;
+        for (int row = 0;row < _pointGridSize; row++)
+        {
+            for (int col = 0;col < _pointGridSize; col++)
+            {
+                int indx = [self pointIndex:row column:col];
+                if (_pointGrid[indx])
+                {
+                    DPOINT dPoint2 = *dPoint;
+                    dPoint2.x += col;
+                    dPoint2.y += row;
+                    rtn = [self DPointInArea2:&dPoint2
+                                      atTime:itime
+                                    andRefno:refno
+                                  whichCount:icount
+                                        value:_pointGrid[indx]];
+                    
+                }
+                
+            }
+            
+        }
+
+    }
+    return rtn;
+}
+
+- (int)DPointInArea2:(DPOINT *)dPoint
+              atTime:(int)itime
+            andRefno:(int)refno
+          whichCount:(int) icount
+               value:(float)val
 {
     int numAreasIn = 0;
     int row=-999;
@@ -673,9 +763,9 @@ static int ii;
         if (ad)
         {
             if (icount)
-                ad.count2 = ad.count2 + _compareFactor;
+                ad.count2 = ad.count2 + _compareFactor * val;
             else
-                ad.count1++;
+                ad.count1 += val;
             ad.maxTime = max (ad.maxTime,itime);
             [self addToTimeLine:ad.areaNumber
                          atTime:itime
@@ -729,7 +819,7 @@ static int ii;
     if (ad && ad.count)
     {
         double hoursSinceLast = (_currentTime - ad.maxTime) / 3600.0;
-        text = [NSString stringWithFormat:@"%.0f\n%.1f\n%.1f\n%.0f",ad.count,ad.aveHoursBetweenIncident, hoursSinceLast,ad.count1];
+        text = [NSString stringWithFormat:@"%.0f\n%.1f\n%.1f\n%.1f",ad.count,ad.aveHoursBetweenIncident, hoursSinceLast,ad.count1];
     }
     return text;
 }

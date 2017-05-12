@@ -69,4 +69,9 @@
 @property AdjustCrimeOptions overdueOption;
 @property int currentTime, timeRange;
 @property double compareFactor;
+@property int pointGridSize;
+@property float * pointGrid;
+@property double midxy;
+@property (nonatomic) double pointSize;
+
 @end
