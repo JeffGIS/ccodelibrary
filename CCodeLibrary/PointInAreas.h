@@ -39,6 +39,7 @@
 - (BOOL) initTimeLine:(sqlite3 *) db;
 - (NSArray *) getAreaTimeline:(NSString*) areaName;
 - (NSArray *) getAreaPointRefs:(NSString *)areaName;
+- (MNMXCORD) bitmapBounds:(MNMXCORD*) viewBounds;
 
 @property NSString * areaType;
 @property NSString * adjustValue;
@@ -59,7 +60,7 @@
 @property int borderColor;
 @property int iArea;
 @property NSInteger numOutside;
-@property LPTRANDATA pTranContextToWorld;
+@property LPTRANDATA pTranContextToWorld, pTranWorldToContext;
 @property BOOL haveTimeLineDB;
 @property int timeLineID;
 @property sqlite3 *database;
@@ -72,6 +73,7 @@
 @property int pointGridSize;
 @property float * pointGrid;
 @property double midxy;
+@property double imageFactor;
 @property (nonatomic) double pointSize;
 
 @end

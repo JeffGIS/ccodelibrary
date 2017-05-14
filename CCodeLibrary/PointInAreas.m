@@ -1,6 +1,7 @@
 //  PointInAreas.m
 //  CCodeLibrary
-
+static int MAXDIM=4096;
+static int COLORFAC=1;
 #define MINAREAPCT 2.0
 
 #import "PointInAreas.h"
@@ -36,11 +37,27 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 
 static int ii;
 
+- (void) writeImageToPhotos
+{
+    if (COLORFAC <= 1)
+        return;
+    NSString * file = CRAPI.sharedInstance.extractFile;
+    
+    BOOL rtn = WriteBitmapDataToFile ((LPSTR)file.UTF8String,_width, _height, _colorSpace, _bitmapData);
+    if (rtn)
+        NSLog(@"Image written");
+    UIImage *image = [UIImage imageWithContentsOfFile:file];
+    UIImageWriteToSavedPhotosAlbum(image,
+                                   nil,
+                                   nil,
+                                   nil);
+    
+}
 - (void)releaseMem
 {
     for (AreaData *ad in _areaInfo)
         CGColorRelease(ad.displayColor);
-    
+ 
     if (_bitmapData)
         free (_bitmapData);
     
@@ -48,6 +65,7 @@ static int ii;
         CGContextRelease(_context);
     
     CloseTRANS2(&_pTranContextToWorld);
+    CloseTRANS2(&_pTranWorldToContext);
     CGColorSpaceRelease(_colorSpace);
     
 }
@@ -69,6 +87,7 @@ static int ii;
 
 - (void)dealloc
 {
+    [self writeImageToPhotos];
     [self releaseMem];
     [self close:YES];
 }
@@ -260,7 +279,7 @@ static int ii;
         BYTE bcolor[4];
         
         LPLONG pInt = (LPLONG)&bcolor;
-        *pInt = iColor;
+        *pInt = iColor * COLORFAC;
         cd.c1 = bcolor[0] / 255.0;
         cd.c2 = bcolor[1] / 255.0;
         cd.c3 = bcolor[2] / 255.0;
@@ -272,6 +291,7 @@ static int ii;
 -(void) setContextTran:(LPTRANDATA)pTranViewToLL
 {
     CloseTRANS2(&_pTranContextToWorld);
+    CloseTRANS2(&_pTranWorldToContext);
     
     LPMNMXCORD in = &_fullBounds;
     MNMXCORD llBounds;
@@ -307,7 +327,11 @@ static int ii;
     ptw = TranDPOINT(&ptv, pTranViewToLL);
     AddPointToDBounds(&llBounds, &ptw);
    
-    _pTranContextToWorld = STRANBoundsToBounds(&outb, &llBounds);
+    dbounds flipBounds = outb;
+    //flipBounds.ymn = outb.ymx;
+    //flipBounds.ymx = outb.ymn;
+    _pTranContextToWorld = STRANBoundsToBounds(&flipBounds, &llBounds);
+    _pTranWorldToContext = STRANBoundsToBounds(&llBounds, &flipBounds);
 }
 
 - (int) pointIndex:(int)row column:(int)col
@@ -320,7 +344,7 @@ static int ii;
 - (void) setPointSize:(double)pointSize
 {
     int numGridsSet = 0;
-    _pointGridSize = ceil (pointSize) * 2;
+    _pointGridSize = ceil (pointSize * _imageFactor) * 2;
     if (!(_pointGridSize % 2))
         _pointGridSize++;
     _pointGrid = calloc (_pointGridSize*_pointGridSize,sizeof(float));
@@ -354,6 +378,37 @@ static int ii;
     }
 }
 
+- (MNMXCORD) bitmapBounds:(MNMXCORD*) viewBounds
+{
+    MNMXCORD bounds=*viewBounds;
+    double wb = BoundsWidth (viewBounds);
+    double hb = BoundsHeight (viewBounds);
+    _width = wb;
+    _height = hb;
+    _fullBounds = bounds;
+    
+ //   return bounds;
+   
+    if (!_maxDimension)
+        _maxDimension = MAXDIM;
+    _width = _maxDimension;
+    _height = _maxDimension;
+    
+    if (wb > 0 && wb > hb)
+        _height *= hb / wb;
+    else if (hb > 0)
+        _width *= wb / hb;
+    _height += _height % 4;
+    _width += _width % 4;
+    
+    bounds.xmn = bounds.ymn = 0;
+    bounds.xmx = _width;
+    bounds.ymx = _height;
+    _fullBounds = bounds;
+    _imageFactor = _width / wb;
+    
+    return bounds;
+}
 - (void) areasLoaded:(PointInAreas*)boundsPias
          convertToLL:(LPTRANDATA)pTranViewToLL
 {
@@ -368,21 +423,8 @@ static int ii;
             _iArea = 0;
             [self releaseMem];
             _colorSpace = CGColorSpaceCreateDeviceRGB();
-            if (!_maxDimension)
-                _maxDimension = 2048;
-            _width = _maxDimension;
-            _height = _maxDimension;
-            if (boundsPias)
-                _fullBounds = boundsPias.fullBounds;
-            CGFloat wb = BoundsWidth (&_fullBounds);
-            CGFloat hb = BoundsHeight (&_fullBounds);
-            
-            if (wb > 0 && wb > hb)
-                _height *= hb / wb;
-            else if (hb > 0)
-                _width *= wb / hb;
-            _height += _height % 4;
-            _width += _width % 4;
+            if (!_width)
+                [self bitmapBounds:&_fullBounds];
             [self setContextTran:pTranViewToLL];
             _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
             _bytesPerRow = (int)CGBitmapContextGetBytesPerRow(_context);
@@ -394,6 +436,8 @@ static int ii;
             _bitmapData = bmData;
             CGContextSetAllowsAntialiasing(_context, NO);
             CGContextSetShouldAntialias(_context, NO);
+            CGContextTranslateCTM(_context, 0, _height);
+            CGContextScaleCTM(_context, 1,-1);
             rect = CGRectMake(0, 0,  _width,_height);
             for (AreaData *ad in _areaInfo)
             {
@@ -466,10 +510,10 @@ static int ii;
         loc *= 4;
         _bitmapData[loc+3] = 0;
         iArea = *(unsigned int*)&_bitmapData[loc];
-        unsigned int bitmapValue1 = (unsigned int)_bitmapData[loc];
-        unsigned int bitmapValue2 = (unsigned int)_bitmapData[loc+1];
-        unsigned int bitmapValue3 = (unsigned int)_bitmapData[loc+2];
-        unsigned int bitmapValue4 = (unsigned int)_bitmapData[loc+3];
+//        unsigned int bitmapValue1 = (unsigned int)_bitmapData[loc];
+//        unsigned int bitmapValue2 = (unsigned int)_bitmapData[loc+1];
+//        unsigned int bitmapValue3 = (unsigned int)_bitmapData[loc+2];
+//        unsigned int bitmapValue4 = (unsigned int)_bitmapData[loc+3];
         ii=1;
     }
     else
@@ -677,7 +721,8 @@ static int ii;
 - (DPOINT)projectPointToContext:(LPDPOINT)Point
                             from:(int)from
 {
-    DPOINT pt;
+    DPOINT pt=*Point;
+    return pt;
     
     pt.x = Point->x - _fullBounds.xmn;
     pt.x /= (_fullBounds.xmx - _fullBounds.xmn);
@@ -695,16 +740,19 @@ static int ii;
 }
 
 
-- (int)DPointInArea:(DPOINT *)dPoint
+- (int)DPointInArea:(DPOINT *)dPointLL
              atTime:(int)itime
            andRefno:(int)refno
          whichCount:(int) icount
 {
     int rtn = 0;
     
+    
+    DPOINT dPoint = TranDPOINT(dPointLL, _pTranWorldToContext);
+
     if (!_pointGridSize)
     {
-        rtn = [self DPointInArea2:dPoint
+        rtn = [self DPointInArea2:&dPoint
                           atTime:itime
                         andRefno:refno
                       whichCount:icount
@@ -712,8 +760,8 @@ static int ii;
     }
     else
     {
-        dPoint->x -= _midxy;
-        dPoint->y -= _midxy;
+        dPoint.x -= _midxy;
+        dPoint.y -= _midxy;
         for (int row = 0;row < _pointGridSize; row++)
         {
             for (int col = 0;col < _pointGridSize; col++)
@@ -721,7 +769,7 @@ static int ii;
                 int indx = [self pointIndex:row column:col];
                 if (_pointGrid[indx])
                 {
-                    DPOINT dPoint2 = *dPoint;
+                    DPOINT dPoint2 = dPoint;
                     dPoint2.x += col;
                     dPoint2.y += row;
                     rtn = [self DPointInArea2:&dPoint2
@@ -750,8 +798,7 @@ static int ii;
     int row=-999;
     int col;
     static int ii=1;
-    DPOINT pt = [self projectPointToContext:dPoint
-                                        from:ii];
+    DPOINT pt = *dPoint;
     
     if (pt.x > -0.5 && pt.x < _width - 0.5 &&
         pt.y > -0.5 && pt.y < _height - 0.5)
