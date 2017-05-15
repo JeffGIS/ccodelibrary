@@ -33,6 +33,12 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property int beginTime, endTime;
 @end
 
+@interface AreaText : NSObject
+@property int refno;
+@property NSString * _Nonnull areaID;
+@property NSString * _Nullable text;
+@end
+
 @interface CRAPI : NSObject
 
 @property (nonatomic) int currentModule;
@@ -135,6 +141,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property NSNumberFormatter *acreFmt;
 @property MNMXCORD lastViewBounds;
 @property (nonatomic) NVSendEmail *currentEmail;
+@property NSMutableArray * lastAreaText;
 
 + (CRAPI *)sharedInstance;
 
@@ -224,5 +231,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (nullable NSString *)acreFormat:(double)acres;
 - (nullable NSString *)dollarsFormat:(double)dollars;
 - (nonnull NSArray<TimeRange *> *)getTimeRanges;
+- (BOOL) refnoInAreaText:(int) refno;
+- (AreaText*) areaTextForRefno:(int) refno;
 
 @end

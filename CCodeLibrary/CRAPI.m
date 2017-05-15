@@ -21,6 +21,9 @@
 @implementation TimeRange
 @end
 
+@implementation AreaText
+@end
+
 @implementation CRAPI
 {
     int _kp,_currentGeoidValue, _numAllowedZooms, _allowedZooms[3];
@@ -1316,6 +1319,29 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     _mapPropList = mapPropList;
     [UserDefaults.defaults saveBool:mapPropList forKey:@"MapPropList"];
+}
+
+- (BOOL) refnoInAreaText:(int) refno
+{
+    BOOL rtn = FALSE;
+    
+    for (AreaText *at in _lastAreaText)
+    {
+        if (at.refno == refno)
+            rtn = TRUE;
+    }
+    return rtn;
+}
+- (AreaText*) areaTextForRefno:(int) refno
+{
+    AreaText * rtn = nil;
+    
+    for (AreaText *at in _lastAreaText)
+    {
+        if (at.refno == refno)
+            rtn = at;
+    }
+    return rtn;
 }
 
 @end
