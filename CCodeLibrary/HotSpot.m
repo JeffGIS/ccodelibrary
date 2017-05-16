@@ -177,7 +177,7 @@
             for (int col = 0; col < _width; col++)
             {
                 int indx = [self gridIndex:row column:col];
-                double value = grid2[indx] * factor - grid1[indx];
+                double value = (double)(grid2[indx] * factor) - (double)grid1[indx];
                 maxValue = max (maxValue,fabs(value));
             }
         }
@@ -188,7 +188,7 @@
             {
                 rect.origin.x = col;
                 int indx = [self gridIndex:row column:col];
-                double value = grid1[indx] - grid2[indx] * factor;
+                double value = (double)(grid2[indx] * factor) - (double)grid1[indx];
                 if (value > 0)
                 {
                     colors[0] = 1;

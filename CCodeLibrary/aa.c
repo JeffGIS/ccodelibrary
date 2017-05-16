@@ -444,10 +444,10 @@ extern double azimuth, elevation, refracted_elevation;
 	elobject = 0;
 
 	update();
-	//kepler( TDT, &earth, rearth, eapolar );
+	kepler( TDT, &earth, rearth, eapolar );
 
-	//dosun();
-//	iter_trnsit( dosun );
+	dosun();
+	//iter_trnsit( dosun );
 
 	*pAltitude = refracted_elevation;//elevation;
 	*pAz = azimuth;

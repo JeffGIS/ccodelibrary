@@ -308,7 +308,7 @@ int (* func)();
 
 prtrnsit:
   prtflg = 1;
-  printf( "local meridian transit " );
+  //printf( "local meridian transit " );
   UT = t_trnsit;
   jtocal (t_trnsit);
   if (t_rise != -1.0)
@@ -319,14 +319,14 @@ prtrnsit:
     }
   if (t_set != -1.0)
     {
-      printf( "sets " );
+      //printf( "sets " );
       UT = t_set;
       jtocal (t_set);
       if (t_rise != -1.0)
 	{
 	  t0 = t_set - t_rise;
-	  if ((t0 > 0.0) && (t0 < 1.0))
-	    printf("Visible hours %.4f\n", 24.0 * t0);
+	  //if ((t0 > 0.0) && (t0 < 1.0))
+	  //  printf("Visible hours %.4f\n", 24.0 * t0);
 	}
     }
 
