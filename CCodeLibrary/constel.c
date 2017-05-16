@@ -253,7 +253,7 @@ else
 
 
 
-static int isnumber(char *p)
+static int isnumbr(char *p)
 {
 if( (*p >= '0') && (*p <= '9') )
 	return(1);

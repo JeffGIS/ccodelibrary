@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MathUtil.h"
+#import "GSSiEnums.h"
 
 @interface HotSpot : NSObject
 @property int width;
@@ -32,7 +33,8 @@
              andTime:(int)time
            whichGrid:(int)igrid;
 
-- (void) display:(CGContextRef)context;
+- (void) display:(CGContextRef)context
+   compareOption:(DataCompareOptions)compareOption;
 - (BOOL) dump:(NSString*)outFile;
 
 @end

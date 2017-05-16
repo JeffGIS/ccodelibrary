@@ -256,4 +256,12 @@ typedef NS_ENUM(NSInteger, SpreadsheetAction)
     SSA_MultiSelect,
 };
 
+typedef NS_ENUM(NSInteger, DataCompareOptions)
+{
+    DCOptionRaw,
+    DCOptionCount,
+    DCOptionTime,
+};
+
+
 @end
