@@ -172,7 +172,7 @@
             for (int col = 0; col < _width; col++)
             {
                 int indx = [self gridIndex:row column:col];
-                double value = grid1[indx] - grid2[indx] * factor;
+                double value = grid2[indx] * factor - grid1[indx];
                 maxValue = max (maxValue,fabs(value));
             }
         }
