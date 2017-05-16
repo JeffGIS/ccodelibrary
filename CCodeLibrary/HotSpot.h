@@ -34,7 +34,7 @@
            whichGrid:(int)igrid;
 
 - (void) display:(CGContextRef)context
-   compareOption:(DataCompareOptions)compareOption;
+   compareFactor:(double*)compareFactor;
 - (BOOL) dump:(NSString*)outFile;
 
 @end

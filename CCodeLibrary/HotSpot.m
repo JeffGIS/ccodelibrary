@@ -129,7 +129,7 @@
 }
 
 - (void) display:(CGContextRef)context
-   compareOption:(DataCompareOptions)compareOption
+   compareFactor:(double*)compareFactor
 {
     CGRect rect;
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
@@ -166,9 +166,9 @@
     {
         double maxValue = 0;
         double factor = (double)_counts[0]/(double)_counts[1];
-        if (compareOption == DCOptionTime)
+        if (compareFactor)
         {
-            
+            factor = *compareFactor;
         }
         int * grid1 = _grids[0];
         int * grid2 = _grids[1];
