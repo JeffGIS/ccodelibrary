@@ -62,14 +62,14 @@
 - (void)contactsViewer:(NVContactsViewer *)contactsViewer
        didReturnEmails:(NSArray *)emails
 {
+    [contactsViewer dismissViewControllerAnimated:YES completion:nil];
     MFMailComposeViewController *composer = MFMailComposeViewController.new;
     composer.mailComposeDelegate = self;
     composer.subject = _subject;
     [composer setMessageBody:_message isHTML:NO];
-    [composer setToRecipients:emails];
+    composer.toRecipients = emails;
     [composer addAttachmentData:_attachmentData mimeType:_mimeType fileName:_fileName];
     [_controller presentViewController:composer animated:YES completion:nil];
-    [contactsViewer dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller
