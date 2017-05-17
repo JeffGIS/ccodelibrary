@@ -248,7 +248,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)sendButtonTapped:(UIButton *)button
 {
-    
+    [_delegate contactsViewer:self
+              didReturnEmails:[UserDefaults.defaults arrayForKey:@"DefaultRecipients"]];
 }
 
 @end
