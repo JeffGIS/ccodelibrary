@@ -2,11 +2,9 @@
 //  CCodeLibrary
 
 #import "NVEmailFileList.h"
-#import "NVAlertView.h"
 #import "FileLister.h"
 #import "CRAPI.h"
 #import "NVSendEmail.h"
-@import MessageUI;
 
 @interface NVEmailFileList ()
 
@@ -29,7 +27,7 @@
                                               totalSize:&totSize];
     
     NSString *message = [NSString stringWithFormat:@"%li files (%li bytes) included in list from %@(%i)",
-                         (long)nFiles, (long)totSize, UIDevice.currentDevice.name,CRAPI.sharedInstance.GSSiPadNumber];
+                         (long)nFiles, (long)totSize, UIDevice.currentDevice.name, CRAPI.sharedInstance.GSSiPadNumber];
     
     [NVSendEmail sendEmailWithSubject:@"File list from GMMobile"
                               message:message

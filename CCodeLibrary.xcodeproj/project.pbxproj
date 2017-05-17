@@ -122,6 +122,7 @@
 		69F5B2301BC5F6CD00119212 /* NVDestinationOptions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */; };
 		69F8E0D51D05C194003E8655 /* NVMarkerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F8E0D41D05C194003E8655 /* NVMarkerView.m */; };
 		69F8E0D61D05CD60003E8655 /* NVMarkerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F8E0D31D05C194003E8655 /* NVMarkerView.h */; };
+		69F975971ECCB8200044CCED /* NVContactsViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F975961ECCB8200044CCED /* NVContactsViewer.m */; };
 		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
 		A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */ = {isa = PBXBuildFile; fileRef = A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */; };
 		A90C6E971B4A237600D87DB8 /* NVPDFSnapshotter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */; };
@@ -637,6 +638,8 @@
 		69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDestinationOptions.m; sourceTree = "<group>"; };
 		69F8E0D31D05C194003E8655 /* NVMarkerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVMarkerView.h; sourceTree = "<group>"; };
 		69F8E0D41D05C194003E8655 /* NVMarkerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVMarkerView.m; sourceTree = "<group>"; };
+		69F975951ECCB8200044CCED /* NVContactsViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVContactsViewer.h; sourceTree = "<group>"; };
+		69F975961ECCB8200044CCED /* NVContactsViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVContactsViewer.m; sourceTree = "<group>"; };
 		A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVHeadingViewController.h; sourceTree = "<group>"; };
 		A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVHeadingViewController.m; sourceTree = "<group>"; };
 		A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPDFSnapshotter.h; sourceTree = "<group>"; };
@@ -1076,6 +1079,8 @@
 				A90D1FB41AE60FDF00CBFEE7 /* NVColorWheel.m */,
 				69450DAB1BD5F6120079F7EC /* NVContactPicker.h */,
 				69450DAC1BD5F6120079F7EC /* NVContactPicker.m */,
+				69F975951ECCB8200044CCED /* NVContactsViewer.h */,
+				69F975961ECCB8200044CCED /* NVContactsViewer.m */,
 				69DFB6A31CD71987001E1200 /* NVCRISSignupView.h */,
 				69DFB6A41CD71987001E1200 /* NVCRISSignupView.m */,
 				69B36F181BCB0F30004C4B69 /* NVDateRange.h */,
@@ -1573,6 +1578,7 @@
 				EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */,
 				69DE24281C76311D00680B00 /* NVTextVC.m in Sources */,
 				EBC01D211BED1C8C0004C751 /* moonrise.c in Sources */,
+				69F975971ECCB8200044CCED /* NVContactsViewer.m in Sources */,
 				69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */,
 				EBC01D1A1BED1C8C0004C751 /* kfiles.c in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,

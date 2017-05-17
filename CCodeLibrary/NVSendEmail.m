@@ -5,9 +5,9 @@
 @import MessageUI;
 #import "NVAlertView.h"
 #import "CRAPI.h"
-#import "NVContactGroupData.h"
+#import "NVContactsViewer.h"
 
-@interface NVSendEmail () <MFMailComposeViewControllerDelegate>
+@interface NVSendEmail () <MFMailComposeViewControllerDelegate,NVContactsViewerDelegate>
 
 @property (nonatomic) NSString *subject, *message, *mimeType, *fileName;
 @property (nonatomic) UIViewController *controller;
@@ -46,43 +46,30 @@
         CRAPI.sharedInstance.currentEmail = email;
         [email createEmail];
     }
-    
-    NVContactGroupData *nvcgd = NVContactGroupData.new;
-    [nvcgd addContactEmail:@"jeffgis@aol.com" firstName:@"Jeff" lastName:@"Smith"];
-    [nvcgd addContactEmail:@"mtsmithnp@gmail.com" firstName:@"MaryEllen" lastName:@"Smith"];
-    [nvcgd addContactEmail:@"wildbillmunson@gmail.com" firstName:@"Bill" lastName:@"Munson"];
-    [nvcgd addContactEmail:@"lisamunson76@gmail.com" firstName:@"Lisa" lastName:@"Munson"];
-    
-    NSArray <NVContact *> *contacts = nvcgd.getContactsArray;
-    
-    for (NVContact *contact in contacts)
-        NSLog(@"\n%@ (%@ %@)", contact.email, contact.firstName, contact.lastName);
-    
-    [nvcgd addEmail:@"jeffgis@aol.com" toContactGroup:@"The Smiths"];
-    [nvcgd addEmail:@"mtsmithnp@gmail.com" toContactGroup:@"The Smiths"];
-    [nvcgd addEmail:@"wildbillmunson@gmail.com" toContactGroup:@"The Munsons"];
-    [nvcgd addEmail:@"lisamunson76@gmail.com" toContactGroup:@"The Munsons"];
-    
-    NSArray *contactGroups = nvcgd.getContactGroupsArray;
-    
-    for (NSString *contactGroup in contactGroups)
-    {
-        contacts = [nvcgd getContactsArrayInContactGroup:contactGroup];
-        
-        for (NVContact *contact in contacts)
-            NSLog(@"\n%@: %@ (%@ %@)", contactGroup, contact.email, contact.firstName, contact.lastName);
-    }
 }
 
 - (void)createEmail
+{
+    NVContactsViewer *contacts = [NVContactsViewer contactsViewerWithDelegate:self];
+    [_controller presentViewController:contacts animated:YES completion:nil];
+}
+
+- (void)contactsViewerDidReturn:(NVContactsViewer *)contactsViewer
+{
+    [contactsViewer dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)contactsViewer:(NVContactsViewer *)contactsViewer
+       didReturnEmails:(NSArray *)emails
 {
     MFMailComposeViewController *composer = MFMailComposeViewController.new;
     composer.mailComposeDelegate = self;
     composer.subject = _subject;
     [composer setMessageBody:_message isHTML:NO];
-    [composer setToRecipients:[UserDefaults.defaults arrayForKey:@"DefaultRecipients"]];
+    [composer setToRecipients:emails];
     [composer addAttachmentData:_attachmentData mimeType:_mimeType fileName:_fileName];
     [_controller presentViewController:composer animated:YES completion:nil];
+    [contactsViewer dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller
