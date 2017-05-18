@@ -224,6 +224,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
         [self resetConstraints:UIApplication.sharedApplication.statusBarOrientation];
     
@@ -341,6 +343,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+    
     if (_delegate)
         [_delegate closeList];
 }

@@ -267,17 +267,17 @@ static int ii;
 - (void) setColor:(int)iColor
          areaData:(AreaData*)ad
 {
-    COLORDEF cd;
+    COLORDEF cd = {0};
     
     if (_nColorComponents == 1)
     {
         cd.c1 = iColor / 255.0;
         cd.c2 = 1.0;
     }
+    
     else
     {
-        BYTE bcolor[4];
-        
+        BYTE bcolor[4] = {0};
         LPLONG pInt = (LPLONG)&bcolor;
         *pInt = iColor * COLORFAC;
         cd.c1 = bcolor[0] / 255.0;
@@ -285,6 +285,7 @@ static int ii;
         cd.c3 = bcolor[2] / 255.0;
         cd.c4 = 1.0;
     }
+    
     ad.colordef = cd;
 }
 
@@ -380,24 +381,25 @@ static int ii;
 
 - (MNMXCORD) bitmapBounds:(MNMXCORD*) viewBounds
 {
-    MNMXCORD bounds=*viewBounds;
-    double wb = BoundsWidth (viewBounds);
-    double hb = BoundsHeight (viewBounds);
+    MNMXCORD bounds = *viewBounds;
+    double wb = BoundsWidth(viewBounds);
+    double hb = BoundsHeight(viewBounds);
     _width = wb;
     _height = hb;
     _fullBounds = bounds;
     
- //   return bounds;
-   
     if (!_maxDimension)
         _maxDimension = MAXDIM;
+    
     _width = _maxDimension;
     _height = _maxDimension;
     
     if (wb > 0 && wb > hb)
         _height *= hb / wb;
+    
     else if (hb > 0)
         _width *= wb / hb;
+    
     _height += _height % 4;
     _width += _width % 4;
     
@@ -409,63 +411,71 @@ static int ii;
     
     return bounds;
 }
-- (void) areasLoaded:(PointInAreas*)boundsPias
-         convertToLL:(LPTRANDATA)pTranViewToLL
+
+- (void)areasLoaded:(PointInAreas *)boundsPias
+        convertToLL:(LPTRANDATA)pTranViewToLL
 {
     void *bmData = NULL;
-    COLORDEF cd;
+    COLORDEF cd = {0};
 
     switch (_loadPass)
     {
-        case 0:
-        {
+        case 0:{
             CGRect rect;
             _iArea = 0;
             [self releaseMem];
             _colorSpace = CGColorSpaceCreateDeviceRGB();
+            
             if (!_width)
                 [self bitmapBounds:&_fullBounds];
+            
             [self setContextTran:pTranViewToLL];
             _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
             _bytesPerRow = (int)CGBitmapContextGetBytesPerRow(_context);
             _nColorComponents = (int)CGColorSpaceGetNumberOfComponents(_colorSpace);
+            
             if (_nColorComponents == 3)
                 _nColorBytes = 4;
             else
                 _nColorBytes = 1;
+            
             _bitmapData = bmData;
             CGContextSetAllowsAntialiasing(_context, NO);
             CGContextSetShouldAntialias(_context, NO);
             CGContextTranslateCTM(_context, 0, _height);
             CGContextScaleCTM(_context, 1,-1);
             rect = CGRectMake(0, 0,  _width,_height);
+            
             for (AreaData *ad in _areaInfo)
             {
-                [self setColor:++_iArea
-                      areaData:ad];
+                [self setColor:++_iArea areaData:ad];
                 cd = ad.colordef;
                 CGColorRef colorRef = CGColorCreate(_colorSpace, (CGFloat*)&cd);
                 CGContextSetFillColorWithColor(_context, colorRef);
                 CGContextFillRect(_context,rect);
                 CGColorRelease(colorRef);
-                unsigned int bitmapValue;
+                unsigned int bitmapValue = 0;
+                
                 if (_nColorBytes > 1)
                 {
                     _bitmapData[(4 * _width + 4)*_nColorBytes+3] = 0;
-                    bitmapValue = *(unsigned int*)&_bitmapData[(4 * _width + 4)*_nColorBytes];
-                    unsigned int bitmapValue1 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes];
-                    unsigned int bitmapValue2 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+1];
-                    unsigned int bitmapValue3 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+2];
-                    unsigned int bitmapValue4 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+3];
+                    bitmapValue = *(unsigned int *)&_bitmapData[(4 * _width + 4)*_nColorBytes];
+                    //unsigned int bitmapValue1 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes];
+                    //unsigned int bitmapValue2 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+1];
+                    //unsigned int bitmapValue3 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+2];
+                    //unsigned int bitmapValue4 = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes+3];
                     ii=1;
                 }
+                
                 else
                     bitmapValue = (unsigned int)_bitmapData[(4 * _width + 4)*_nColorBytes];
 
                 ad.icolor = bitmapValue;
+                
                 if (bitmapValue != _iArea)
                     ii=1;
             }
+            
             CGFloat border[4] = {1, 1, 1, 1};
             CGColorRef borderRef = CGColorCreate(_colorSpace, border);
             CGContextSetFillColorWithColor(_context, borderRef);
@@ -474,48 +484,52 @@ static int ii;
             CGColorRelease(borderRef);
             _borderColor = (unsigned int)_bitmapData[4 * _width + 4];
             CGColorRef blackRef;
+            
             if (_nColorBytes > 1)
             {
                 CGFloat black[4] = {0, 0, 0, 1};
                 blackRef = CGColorCreate(_colorSpace, black);
             }
+            
             else
             {
                 CGFloat black[2] = {0, 1};
                 blackRef = CGColorCreate(_colorSpace, black);
             }
+            
             CGContextSetFillColorWithColor(_context, blackRef);
             rect = CGRectMake(0, 0, _width,_height);
             CGContextFillRect(_context,rect);
             CGColorRelease(blackRef);
             _iArea = 0;
-        }
-            break;
+            break;}
         case 1:
-        {
-        }
             break;
         case 2:
             break;
+        default:break;
     }
+    
     _loadPass++;
 }
 
--(AreaData *) getAreaAtLoc:(int)loc
+- (AreaData *)getAreaAtLoc:(int)loc
 {
-    AreaData * ad = nil;
-    int iArea;
+    AreaData *ad = nil;
+    int iArea = 0;
+    
     if (_nColorBytes > 1)
     {
         loc *= 4;
         _bitmapData[loc+3] = 0;
         iArea = *(unsigned int*)&_bitmapData[loc];
-//        unsigned int bitmapValue1 = (unsigned int)_bitmapData[loc];
-//        unsigned int bitmapValue2 = (unsigned int)_bitmapData[loc+1];
-//        unsigned int bitmapValue3 = (unsigned int)_bitmapData[loc+2];
-//        unsigned int bitmapValue4 = (unsigned int)_bitmapData[loc+3];
+        //unsigned int bitmapValue1 = (unsigned int)_bitmapData[loc];
+        //unsigned int bitmapValue2 = (unsigned int)_bitmapData[loc+1];
+        //unsigned int bitmapValue3 = (unsigned int)_bitmapData[loc+2];
+        //unsigned int bitmapValue4 = (unsigned int)_bitmapData[loc+3];
         ii=1;
     }
+    
     else
         iArea = (unsigned int)_bitmapData[loc];
     if (iArea && iArea <= [_areaInfo count])
@@ -523,7 +537,7 @@ static int ii;
     return ad;
 }
 
--(void) adjustCounts:(PointInAreas *)piaTarget
+- (void)adjustCounts:(PointInAreas *)piaTarget
 {
     if (_adjustValue)
     {
@@ -639,7 +653,6 @@ static int ii;
         else
             ad.displayColor = CGColorCreate(_colorSpace, redColor);
     }
-
 }
 
 - (BOOL) loadArea:(NSString*)areaID

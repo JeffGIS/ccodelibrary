@@ -21,7 +21,7 @@ static int fileSequence = 0;
                   sqlReturn, sqlite3_errcode(database), sqlite3_errmsg(database)]);
 }
 
-- (BOOL) continue
+- (BOOL)continueProcessing
 {
     if (self.processingID == CRAPI.sharedInstance.keepProcessing)
         return YES;
@@ -1050,7 +1050,7 @@ SELECT max(_id) FROM MyTable*/
 - (int) incrementLastDataFileNum
 {
     //increments to the first non existing file
-    int pictNum;
+    int pictNum = 0;
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     int lastNum = [self getLastDataUpdateNumber:iPad
                                     lastPictNum:&pictNum];

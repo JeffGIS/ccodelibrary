@@ -22,7 +22,7 @@ static BOOL _createDirectory = YES;
 
 @implementation SewerData
 
-- (BOOL)continue
+- (BOOL)continueProcessing
 {
     if (self.processingID < 0)
         return YES;
@@ -422,7 +422,7 @@ static BOOL _createDirectory = YES;
                        platlonBounds->xmn, platlonBounds->xmx, platlonBounds->ymn, platlonBounds->ymx];
     
     SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
-    while ([self continue] && sqlite3_step(statement) == SQLITE_ROW)
+    while ([self continueProcessing] && sqlite3_step(statement) == SQLITE_ROW)
     {
         refno = sqlite3_column_int(statement,0);
         //platID = (LPSTR)sqlite3_column_text(statement, 1);
@@ -787,7 +787,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
               viewBounds:(MNMXCORD *)pvbounds
 {
     
-    if (![self continue])
+    if (![self continueProcessing])
         return;
     
     NSString *query = @"";
@@ -851,7 +851,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
         
         SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
         
-        while ([self continue] && sqlite3_step(statement) == SQLITE_ROW)
+        while ([self continueProcessing] && sqlite3_step(statement) == SQLITE_ROW)
         {
             BasePt.x = sqlite3_column_double(statement,0);
             BasePt.y = sqlite3_column_double(statement,1);
@@ -1375,7 +1375,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
     else if (_zoom < 18)
         sizeFactor /= (2.0 * (18.0 - _zoom));
     
-    if (![self continue])
+    if (![self continueProcessing])
         return;
     
     [self setTrans:latlonCornerPoints viewBounds:pvbounds];
@@ -1391,7 +1391,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
     
     SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
     
-    while ([self continue] && sqlite3_step(statement) == SQLITE_ROW)
+    while ([self continueProcessing] && sqlite3_step(statement) == SQLITE_ROW)
     {
         BasePt.x = sqlite3_column_double(statement,0);
         BasePt.y = sqlite3_column_double(statement,1);

@@ -22,7 +22,7 @@ double J;
 double e[3], p[3], t;
 int i;
 #if DEBUG
-double x[3], A, q;
+double x[3], A = 0.0, q = 0.0;
 #endif
 
 if( J == jvearth )

@@ -289,7 +289,7 @@ int apparent( p, q )
 double p[], q[];
 {
 double polar[3];
-int i;
+int i = 0;
 static double TDTearth = -1.0e38;
 
 
