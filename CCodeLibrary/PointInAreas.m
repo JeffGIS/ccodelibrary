@@ -866,7 +866,7 @@ static int ii;
     if (ad && ad.count)
     {
         double hoursSinceLast = (_currentTime - ad.maxTime) / 3600.0;
-        text = [NSString stringWithFormat:@"%.0f\n%.1f\n%.1f\n%.1f",ad.count,ad.aveHoursBetweenIncident, hoursSinceLast,ad.count1];
+        text = [NSString stringWithFormat:@"%.0f\n%.1f ave days\n%.1f days since last\n%.1f incidents",ad.count,ad.aveHoursBetweenIncident/24, hoursSinceLast/24,ad.count1];
     }
     return text;
 }
