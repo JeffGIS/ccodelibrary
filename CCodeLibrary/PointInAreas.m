@@ -581,8 +581,10 @@ static int ii;
 
     _overdueOption = wantOverdue;
     _timeRange = _currentTime - _minTime;
-    if (piasAdjust)
+    if (piasAdjust && _totPoints)
+    {
         [piasAdjust adjustCounts:self];
+    }
     for (int irow = 0;irow < _height;irow++)
     {
         for (int icol = 0;icol < _width;icol++)
@@ -664,67 +666,70 @@ static int ii;
 {
     BOOL rtn = NO;
 
-    _nCounts = nCount;
-    switch (_loadPass)
+    if (nPoints > 0)
     {
-        case 0:
+        _nCounts = nCount;
+        switch (_loadPass)
         {
-            if (!_numAreas)
-                _areaInfo = [[NSMutableArray alloc]init];
-            dbounds bounds = getAreaBounds (nPoints,pPoints);
-            AddMinMaxD (&_fullBounds,&bounds);
-            AreaData *ad = [[AreaData alloc]init];
-            ad.areaNumber = _numAreas;
-            ad.nCounts = nCount;
-            ad.areaID = areaID;
-            [_areaInfo addObject:ad];
-            _numAreas++;
-        }
-            break;
-            
-        case 1:
-        {
-            DPOINT	BeginPoint, LastPoint;
-            double	Area=0,Perim=0;
-            AreaData *ad = [self findByAreaID:areaID];
-            if (!ad)
-                break;
-            CGContextBeginPath(_context);
-            for (int i = 0; i < nPoints; i++)
+            case 0:
             {
-                DPOINT pt = [self projectPointToContext:&pPoints[i] from:0];
-                
-                if (i == 0)
-                {
-                    BeginPoint = pt;
-                    CGContextMoveToPoint(_context, pt.x, pt.y);
-                }
-                else
-                {
-                    CGContextAddLineToPoint(_context, pt.x, pt.y);
-                    //Perim += ldistp(LastPoint,*lpDpoints);
-                    Area += ( LastPoint.y - pt.y) * (pt.x + LastPoint.x) / 2;
-                }
-                LastPoint = pt;
-           }
-            //Perim += ldistp(LastPoint,BeginPoint);
-            Area += (LastPoint.y - BeginPoint.y) * (BeginPoint.x + LastPoint.x) / 2;  
-            ad.areaInPixels = fabs (Area);
-            
-            if (!CGContextIsPathEmpty(_context))
-            {
-                COLORDEF cd = ad.colordef;
-                CGColorRef colorRef = CGColorCreate(_colorSpace, (CGFloat*)&cd);
-                CGContextSetFillColorWithColor(_context, colorRef);
-                CGContextDrawPath(_context, kCGPathFill);
-                CGColorRelease(colorRef);
-                rtn = YES;
+                if (!_numAreas)
+                    _areaInfo = [[NSMutableArray alloc]init];
+                dbounds bounds = getAreaBounds (nPoints,pPoints);
+                AddMinMaxD (&_fullBounds,&bounds);
+                AreaData *ad = [[AreaData alloc]init];
+                ad.areaNumber = _numAreas;
+                ad.nCounts = nCount;
+                ad.areaID = areaID;
+                [_areaInfo addObject:ad];
+                _numAreas++;
             }
-            _iArea++;
-        }
-        case 2:
-        {
-            
+                break;
+                
+            case 1:
+            {
+                DPOINT	BeginPoint, LastPoint;
+                double	Area=0,Perim=0;
+                AreaData *ad = [self findByAreaID:areaID];
+                if (!ad)
+                    break;
+                CGContextBeginPath(_context);
+                for (int i = 0; i < nPoints; i++)
+                {
+                    DPOINT pt = [self projectPointToContext:&pPoints[i] from:0];
+                    
+                    if (i == 0)
+                    {
+                        BeginPoint = pt;
+                        CGContextMoveToPoint(_context, pt.x, pt.y);
+                    }
+                    else
+                    {
+                        CGContextAddLineToPoint(_context, pt.x, pt.y);
+                        //Perim += ldistp(LastPoint,*lpDpoints);
+                        Area += ( LastPoint.y - pt.y) * (pt.x + LastPoint.x) / 2;
+                    }
+                    LastPoint = pt;
+                }
+                //Perim += ldistp(LastPoint,BeginPoint);
+                Area += (LastPoint.y - BeginPoint.y) * (BeginPoint.x + LastPoint.x) / 2;
+                ad.areaInPixels = fabs (Area);
+                
+                if (!CGContextIsPathEmpty(_context))
+                {
+                    COLORDEF cd = ad.colordef;
+                    CGColorRef colorRef = CGColorCreate(_colorSpace, (CGFloat*)&cd);
+                    CGContextSetFillColorWithColor(_context, colorRef);
+                    CGContextDrawPath(_context, kCGPathFill);
+                    CGColorRelease(colorRef);
+                    rtn = YES;
+                }
+                _iArea++;
+            }
+            case 2:
+            {
+                
+            }
         }
     }
     return rtn;
@@ -760,7 +765,7 @@ static int ii;
 {
     int rtn = 0;
     
-    
+    _totPoints++;
     DPOINT dPoint = TranDPOINT(dPointLL, _pTranWorldToContext);
 
     if (!_pointGridSize)

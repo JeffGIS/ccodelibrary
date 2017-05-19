@@ -75,5 +75,6 @@
 @property double midxy;
 @property double imageFactor;
 @property (nonatomic) double pointSize;
+@property int totPoints;
 
 @end
