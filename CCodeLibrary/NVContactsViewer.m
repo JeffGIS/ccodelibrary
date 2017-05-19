@@ -68,10 +68,13 @@
     [self setupTableView:_groupsTV];
     _contactsTV = UITableView.new;
     [self setupTableView:_contactsTV];
-    
     [self setupConstraints];
     
-    _groups = @[@"Smart People", @"Interesting People", @"Funny People", @"Boring People", @"Stupid People", @"People Who Like Trump"];
+    NVContactGroupData *nvcgd = NVContactGroupData.new;
+    NSMutableArray *tempGroups = nvcgd.getContactGroupsArray.mutableCopy;
+    [tempGroups insertObject:@"All Contacts" atIndex:0];
+    _groups = tempGroups.copy;
+    _contacts = nvcgd.getContactsArray;
 }
 
 - (void)didReceiveMemoryWarning
@@ -147,7 +150,7 @@
         return _groups.count;
     
     else
-        return 10;
+        return _contacts.count;
 }
 
 - (UIView *)tableView:(UITableView *)tableView
