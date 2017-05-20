@@ -11,7 +11,8 @@
 @property (nonatomic) UIButton *returnButton, *sendButton;
 @property (nonatomic) CGFloat rowHeight, borderWidth, margin;
 @property (nonatomic) UIFont *font, *headerFont, *titleFont, *subtitleFont;
-@property (nonatomic) NSArray *groups, *contacts;
+@property (nonatomic) NSArray *groups;
+@property (nonatomic) NSArray<NVContact *> *contacts;
 
 @end
 
@@ -190,14 +191,13 @@ viewForHeaderInSection:(NSInteger)section
     }
     
     if (tableView == _groupsTV)
-    {
         cell.textLabel.text = _groups[indexPath.row];
-    }
     
     else
     {
-        cell.textLabel.text = [NSString stringWithFormat:@"Test Person %li", (indexPath.row + 1)];
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"test%li@test.com", (indexPath.row + 1)];
+        NVContact *contact = _contacts[indexPath.row];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", contact.firstName, contact.lastName];
+        cell.detailTextLabel.text = contact.email;
     }
     
     cell.textLabel.font = _titleFont;
