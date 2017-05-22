@@ -4,6 +4,7 @@
 #import "NVContactsViewer.h"
 #import "UserDefaults.h"
 #import "NVContactGroupData.h"
+@import Contacts;
 
 @interface NVContactsViewer () <UITableViewDelegate,UITableViewDataSource>
 
@@ -61,9 +62,14 @@
     }
     
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self setupButton:_returnButton action:@selector(returnButtonTapped:) title:@"< Return"];
+    
+    [self setupButton:_returnButton action:@selector(returnButtonTapped:)
+                title:@"< Return"];
+    
     _sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self setupButton:_sendButton action:@selector(sendButtonTapped:) title:@"Send to Selected Contacts"];
+    
+    [self setupButton:_sendButton action:@selector(sendButtonTapped:)
+                title:@"Send to Selected Contacts"];
     
     _groupsTV = UITableView.new;
     [self setupTableView:_groupsTV];
@@ -76,6 +82,47 @@
     [tempGroups insertObject:@"All Contacts" atIndex:0];
     _groups = tempGroups.copy;
     _contacts = nvcgd.getContactsArray;
+    
+    CNContactStore *store = CNContactStore.new;
+    
+    [store requestAccessForEntityType:CNEntityTypeContacts
+                    completionHandler:^(BOOL granted, NSError * _Nullable error)
+    {
+        if (granted == YES)
+        {
+            NSArray *keys = @[CNContactFamilyNameKey, CNContactGivenNameKey, CNContactEmailAddressesKey];
+            NSString *containerId = store.defaultContainerIdentifier;
+            NSPredicate *predicate = [CNContact predicateForContactsInContainerWithIdentifier:containerId];
+            NSError *error = nil;
+            
+            NSArray *contacts = [store unifiedContactsMatchingPredicate:predicate
+                                                            keysToFetch:keys
+                                                                  error:&error];
+            
+            if (error)
+                NSLog(@"ERROR fetching contacts: %@", error);
+            
+            else
+            {
+                NSMutableArray *tempGroups = _contacts.mutableCopy;
+                
+                for (CNContact *contact in contacts)
+                {
+                    NVContact *newContact = NVContact.new;
+                    newContact.firstName = contact.givenName;
+                    newContact.lastName = contact.familyName;
+                    
+                    for (CNLabeledValue *label in contact.emailAddresses)
+                    {
+                        newContact.email = label.value;
+                        [tempGroups addObject:newContact];
+                    }
+                }
+                
+                _contacts = tempGroups.copy;
+            }
+        }        
+    }];
 }
 
 - (void)didReceiveMemoryWarning
