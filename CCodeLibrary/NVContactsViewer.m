@@ -298,8 +298,15 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)sendButtonTapped:(UIButton *)button
 {
-    [_delegate contactsViewer:self
-              didReturnEmails:[UserDefaults.defaults arrayForKey:@"DefaultRecipients"]];
+    NSMutableArray *emails = NSMutableArray.array;
+    
+    for (NSIndexPath *path in _contactsTV.indexPathsForSelectedRows)
+    {
+        UITableViewCell *cell = [_contactsTV cellForRowAtIndexPath:path];
+        [emails addObject:cell.detailTextLabel.text];
+    }
+    
+    [_delegate contactsViewer:self didReturnEmails:emails.copy];
 }
 
 @end
