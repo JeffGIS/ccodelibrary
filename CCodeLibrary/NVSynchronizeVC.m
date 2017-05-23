@@ -547,10 +547,10 @@
 
 - (void)emailFileListButtonTapped:(UIButton *)button
 {
-    //if (getUseMasterID())
+    if (getUseMasterID())
         [self uploadDatabases:button];
-    //else
-        //[NVEmailFileList sendFileList:self];
+    else
+        [NVEmailFileList sendFileList:self];
 }
 
 - (void)titleButtonTapped:(UIButton *)button
