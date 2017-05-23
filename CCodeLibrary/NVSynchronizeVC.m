@@ -547,10 +547,15 @@
 
 - (void)emailFileListButtonTapped:(UIButton *)button
 {
-    if (getUseMasterID())
+    switch (CRAPI.sharedInstance.showDeveloperFunctions)
+    {
+        case 1:
         [self uploadDatabases:button];
-    else
+            break;
+        case 2:
         [NVEmailFileList sendFileList:self];
+            break;
+    }
 }
 
 - (void)titleButtonTapped:(UIButton *)button
