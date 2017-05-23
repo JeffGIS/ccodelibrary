@@ -3,6 +3,8 @@
 
 #import "CurbRampData.h"
 #import "AlleyWallData.h"
+#import "CrimeData.h"
+#import "SewerData.h"
 #import "GeoMasterServer.h"
 #import "FTPDirectoryCreate.h"
 

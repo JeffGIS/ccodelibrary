@@ -28,12 +28,11 @@ static int fileSequence = 0;
     return NO;
 }
 
--(NSString*) databasePath
+- (NSString *)databasePath
 {
-    NSString * path =
     _documentsDirectory = UserDefaults.defaults.sharedFilePath;
     _fileName = @"AlleyWalls.sqlite";
-    path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
+    NSString *path = [NSString stringWithFormat:@"%@/%@", _documentsDirectory, _fileName];
     return path;
 }
 

@@ -547,10 +547,10 @@
 
 - (void)emailFileListButtonTapped:(UIButton *)button
 {
-    if (getUseMasterID())
+    //if (getUseMasterID())
         [self uploadDatabases:button];
-    else
-        [NVEmailFileList sendFileList:self];
+    //else
+        //[NVEmailFileList sendFileList:self];
 }
 
 - (void)titleButtonTapped:(UIButton *)button
@@ -1674,8 +1674,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (IBAction)uploadDatabases:(id)sender
 {
-    NSString * dir1 = [NSString stringWithFormat:@"%i",CRAPI.sharedInstance.currentManageriPad];
-    NSString * dir2 =[NSString stringWithFormat:@"%i/%i",CRAPI.sharedInstance.currentManageriPad,CRAPI.sharedInstance.currentiPadWithinManager];
+    NSString *dir1 = [NSString stringWithFormat:@"%i",CRAPI.sharedInstance.currentManageriPad];
+    
+    NSString *dir2 =[NSString stringWithFormat:@"%i/%i",
+                     CRAPI.sharedInstance.currentManageriPad,CRAPI.sharedInstance.currentiPadWithinManager];
+    
     NSArray *directories = @[dir1,dir2];
     
     _ftpdc = [FTPDirectoryCreate createDirectories:directories
@@ -1711,28 +1714,38 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 - (void)uploadDatabases2:(NSTimer *)timer
 {
     [timer invalidate];
-    _push = [FTPDataPush push];
+    _push = FTPDataPush.push;
     _push.delegate = self;
     _push.popover = _popoverView;
     _push.dataType = FTPDatabase;
     
-    //AlleyWallData *awd = [AlleyWallData new];
-    CurbRampData *awd = [CurbRampData new];
-    // NSString * sendToServerFile = [awd getSendToServerFile:0];
+    NSString *sendToServerFile = @"";
     
-    NSString *toDir = [NSString stringWithFormat:@"NVMobile/UploadedDatabases/%i/%i",CRAPI.sharedInstance.currentManageriPad,CRAPI.sharedInstance.currentiPadWithinManager];
-    NSString * sendToServerFile = [awd databasePath];
-    NSString *file = [sendToServerFile lastPathComponent];
-    NSString *fromDir = [sendToServerFile stringByDeletingLastPathComponent];
-    //NSString *file = @"Crimes.sqlite";
-    //NSString *fromDir = CRAPI.sharedInstance.sharedFilePath;
-    //NSString *toDir = @"";
-    //NSString *file = @"Property.sqlite";
-    //NSString *fromDir = UserDefaults.defaults.localFilePath;
-    //NSString *toDir = @"NVMobile/UploadedDatabases";
+    switch (CRAPI.sharedInstance.currentApp)
+    {
+        case HCConfigCrimes:
+            sendToServerFile = CrimeData.new.path;
+            break;
+        case HCConfigSewers:
+            sendToServerFile = SewerData.new.path;
+            break;
+        case HCConfigCurbRamps:
+            sendToServerFile = CurbRampData.new.databasePath;
+            break;
+        case HCConfigAlleyWalls:
+        case HCConfigAlleyWallStatus:
+            sendToServerFile = AlleyWallData.new.databasePath;
+            break;
+        default:break;
+    }
     
-    [_popoverView showAfter:0.1
-              withTitle:@"Upload Database"];
+    NSString *toDir = [NSString stringWithFormat:@"NVMobile/UploadedDatabases/%i/%i",
+                       CRAPI.sharedInstance.currentManageriPad,
+                       CRAPI.sharedInstance.currentiPadWithinManager];
+    
+    NSString *file = sendToServerFile.lastPathComponent;
+    NSString *fromDir = sendToServerFile.stringByDeletingLastPathComponent;
+    [_popoverView showAfter:0.1 withTitle:@"Upload Database"];
     
     [_push sendFile:file
       fromDirectory:fromDir
@@ -1741,6 +1754,5 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
      deleteWhenDone:NO
      appendFileName:NO];
 }
-
 
 @end

@@ -39,6 +39,7 @@
 -(void) getIdForUpdate:(LPSTR)str
                 remove:(BOOL)remove;
 
+- (NSString *)databasePath;
 - (BOOL)startTransaction;
 - (void)commitTransaction;
 - (NSString *)reportForControlNum:(NSInteger)cnumber;

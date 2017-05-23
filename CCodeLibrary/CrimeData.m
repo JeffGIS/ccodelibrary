@@ -617,7 +617,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         rtn = TRUE;
     }
 
-    
     return rtn;
 }
 

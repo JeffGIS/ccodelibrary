@@ -90,6 +90,6 @@ fromDate:(NSString *)fromDate
 - (BOOL) updateFromFile:(NSString*)file;
 - (BOOL) setLastDataUpdateNum:(int)lastNum
                       foriPad:(int)iPad;
--(NSString*) databasePath;
+- (NSString *)databasePath;
 
 @end
