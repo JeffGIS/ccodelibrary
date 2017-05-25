@@ -43,8 +43,8 @@
     {
         _rowHeight = 36.0;
         _borderWidth = 1.5;
-        _margin = 12.0;
-        _font = [UIFont boldSystemFontOfSize:28.0];
+        _margin = 8.0;
+        _font = [UIFont boldSystemFontOfSize:24.0];
         _headerFont = [UIFont boldSystemFontOfSize:22.0];
         _titleFont = [UIFont boldSystemFontOfSize:18.0];
         _subtitleFont = [UIFont systemFontOfSize:14.0];
@@ -108,12 +108,11 @@
                 
                 for (CNContact *contact in contacts)
                 {
-                    NVContact *newContact = NVContact.new;
-                    newContact.firstName = contact.givenName;
-                    newContact.lastName = contact.familyName;
-                    
                     for (CNLabeledValue *label in contact.emailAddresses)
                     {
+                        NVContact *newContact = NVContact.new;
+                        newContact.firstName = contact.givenName;
+                        newContact.lastName = contact.familyName;
                         newContact.email = label.value;
                         [tempGroups addObject:newContact];
                     }
@@ -248,7 +247,9 @@ viewForHeaderInSection:(NSInteger)section
     }
     
     cell.textLabel.font = _titleFont;
+    cell.textLabel.adjustsFontSizeToFitWidth = YES;
     cell.detailTextLabel.font = _subtitleFont;
+    cell.detailTextLabel.adjustsFontSizeToFitWidth = YES;
     UIView *selectedView = UIView.new;
     selectedView.backgroundColor = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.2];
     cell.multipleSelectionBackgroundView = selectedView;
