@@ -54,7 +54,7 @@
     {
         _rowHeight = 52.0;
         _borderWidth = 3.0;
-        _margin = 20.0;
+        _margin = 16.0;
         _font = [UIFont boldSystemFontOfSize:40.0];
         _headerFont = [UIFont boldSystemFontOfSize:32.0];
         _titleFont = [UIFont boldSystemFontOfSize:24.0];
@@ -63,12 +63,14 @@
     
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    [self setupButton:_returnButton action:@selector(returnButtonTapped:)
+    [self setupButton:_returnButton
+               action:@selector(returnButtonTapped:)
                 title:@"< Return"];
     
     _sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    [self setupButton:_sendButton action:@selector(sendButtonTapped:)
+    [self setupButton:_sendButton
+               action:@selector(sendButtonTapped:)
                 title:@"Send to Selected Contacts"];
     
     _groupsTV = UITableView.new;
@@ -163,7 +165,6 @@
     tableView.sectionHeaderHeight = _rowHeight;
     tableView.delaysContentTouches = NO;
     tableView.separatorColor = UIColor.clearColor;
-    tableView.separatorInset = UIEdgeInsetsZero;
     tableView.allowsSelection = YES;
     tableView.allowsMultipleSelection = (tableView == _contactsTV);
     [self.view addSubview:tableView];
@@ -172,17 +173,17 @@
 - (void)setupConstraints
 {
     [_returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:_margin];
-    [_returnButton constrainTopToAnchor:self.view.topAnchor];
-    [_sendButton constrainCenterXToAnchor:self.view.centerXAnchor];
-    [_sendButton constrainBottomToAnchor:self.view.bottomAnchor constant:-_margin];
-    [_groupsTV constrainLeadingToAnchor:self.view.leadingAnchor constant:_margin];
-    [_groupsTV constrainTopToAnchor:_returnButton.bottomAnchor constant:_margin];
-    [_groupsTV constrainBottomToAnchor:_sendButton.topAnchor constant:-_margin];
-    [_contactsTV constrainTopToAnchor:_returnButton.bottomAnchor constant:_margin];
+    [_returnButton constrainTopToAnchor:self.view.topAnchor constant:(_margin * 0.375)];
+    [_groupsTV constrainLeadingToAnchor:_returnButton.leadingAnchor];
+    [_groupsTV constrainTopToAnchor:_returnButton.bottomAnchor constant:(_margin * 0.375)];
+    [_contactsTV constrainTopToAnchor:_groupsTV.topAnchor];
     [_contactsTV constrainLeadingToAnchor:_groupsTV.trailingAnchor constant:_margin];
     [_contactsTV constrainTrailingToAnchor:self.view.trailingAnchor constant:-_margin];
-    [_contactsTV constrainBottomToAnchor:_sendButton.topAnchor constant:-_margin];
     [_contactsTV constrainWidthToAnchor:_groupsTV.widthAnchor];
+    [_sendButton constrainTopToAnchor:_contactsTV.bottomAnchor constant:(_margin * 0.375)];
+    [_sendButton constrainCenterXToAnchor:self.view.centerXAnchor];
+    [_sendButton constrainBottomToAnchor:self.view.bottomAnchor constant:(-_margin * 0.375)];
+    [_groupsTV constrainBottomToAnchor:_contactsTV.bottomAnchor];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
