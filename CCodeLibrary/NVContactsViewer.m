@@ -9,11 +9,12 @@
 @interface NVContactsViewer () <UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic) UITableView *groupsTV, *contactsTV;
-@property (nonatomic) UIButton *returnButton, *sendButton;
+@property (nonatomic) UIButton *returnButton, *sendButton, *helpButton, *plusButton;
 @property (nonatomic) CGFloat rowHeight, borderWidth, margin;
 @property (nonatomic) UIFont *font, *headerFont, *titleFont, *subtitleFont;
 @property (nonatomic) NSArray *groups;
 @property (nonatomic) NSArray<NVContact *> *contacts;
+@property (nonatomic) UIView *topContainer;
 
 @end
 
@@ -61,13 +62,47 @@
         _subtitleFont = [UIFont systemFontOfSize:18.0];
     }
     
+    _topContainer = UIView.new;
+    _topContainer.translatesAutoresizingMaskIntoConstraints = NO;
+    _topContainer.backgroundColor = UIColor.clearColor;
+    [self.view addSubview:_topContainer];
+    _helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _helpButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [_topContainer addSubview:_helpButton];
+    _helpButton.imageEdgeInsets = UIEdgeInsetsMake((_rowHeight / 12.0), 0.0, (_rowHeight / 12.0), 0.0);
+    
+    [_helpButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteQuestionMark"
+                                                                                         ofType:@"png"]]
+                 forState:UIControlStateNormal];
+    
+    [_helpButton addTarget:self
+                    action:@selector(helpButtonTapped:)
+          forControlEvents:UIControlEventTouchUpInside];
+    
+    _plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _plusButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [_topContainer addSubview:_plusButton];
+    
+    _plusButton.imageEdgeInsets = UIEdgeInsetsMake((_rowHeight / 6.0), (_rowHeight / 6.0),
+                                                   (_rowHeight / 6.0), (_rowHeight / 6.0));
+    
+    [_plusButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whitePlus"
+                                                                                         ofType:@"png"]]
+                 forState:UIControlStateNormal];
+    
+    [_plusButton addTarget:self
+                    action:@selector(plusButtonTapped:)
+          forControlEvents:UIControlEventTouchUpInside];
+    
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_topContainer addSubview:_returnButton];
     
     [self setupButton:_returnButton
                action:@selector(returnButtonTapped:)
                 title:@"< Return"];
     
     _sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.view addSubview:_sendButton];
     
     [self setupButton:_sendButton
                action:@selector(sendButtonTapped:)
@@ -82,6 +117,7 @@
     NVContactGroupData *nvcgd = NVContactGroupData.new;
     NSMutableArray *tempGroups = nvcgd.getContactGroupsArray.mutableCopy;
     [tempGroups insertObject:@"All Contacts" atIndex:0];
+    [tempGroups addObject:@"Create New Group"];
     _groups = tempGroups.copy;
     _contacts = nvcgd.getContactsArray;
     
@@ -149,7 +185,6 @@
     [button setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [button setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
     [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:button];
 }
 
 - (void)setupTableView:(UITableView *)tableView
@@ -172,10 +207,14 @@
 
 - (void)setupConstraints
 {
-    [_returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:_margin];
-    [_returnButton constrainTopToAnchor:self.view.topAnchor constant:(_margin * 0.375)];
-    [_groupsTV constrainLeadingToAnchor:_returnButton.leadingAnchor];
-    [_groupsTV constrainTopToAnchor:_returnButton.bottomAnchor constant:(_margin * 0.375)];
+    [_topContainer constrainLeadingToAnchor:self.view.leadingAnchor];
+    [_topContainer constrainTopToAnchor:self.view.topAnchor];
+    [_topContainer constrainTrailingToAnchor:self.view.trailingAnchor];
+    [_topContainer constrainHeightToConstant:(_rowHeight * 1.25)];
+    [_returnButton constrainLeadingToAnchor:_topContainer.leadingAnchor constant:_margin];
+    [_returnButton constrainTopToAnchor:_topContainer.topAnchor constant:(_margin * 0.375)];
+    [_groupsTV constrainLeadingToAnchor:self.view.leadingAnchor constant:_margin];
+    [_groupsTV constrainTopToAnchor:_topContainer.bottomAnchor constant:(_margin * 0.375)];
     [_contactsTV constrainTopToAnchor:_groupsTV.topAnchor];
     [_contactsTV constrainLeadingToAnchor:_groupsTV.trailingAnchor constant:_margin];
     [_contactsTV constrainTrailingToAnchor:self.view.trailingAnchor constant:-_margin];
@@ -183,7 +222,16 @@
     [_sendButton constrainTopToAnchor:_contactsTV.bottomAnchor constant:(_margin * 0.375)];
     [_sendButton constrainCenterXToAnchor:self.view.centerXAnchor];
     [_sendButton constrainBottomToAnchor:self.view.bottomAnchor constant:(-_margin * 0.375)];
+    [_sendButton constrainHeightToConstant:(_rowHeight * 1.25)];
     [_groupsTV constrainBottomToAnchor:_contactsTV.bottomAnchor];
+    [_helpButton constrainTrailingToAnchor:_topContainer.trailingAnchor constant:(-_margin * 0.375)];
+    [_helpButton constrainTopToAnchor:_topContainer.topAnchor];
+    [_helpButton constrainBottomToAnchor:_topContainer.bottomAnchor];
+    [_helpButton constrainWidthToConstant:(_rowHeight * 1.25)];
+    [_plusButton constrainTrailingToAnchor:_helpButton.leadingAnchor constant:(-_margin * 0.375)];
+    [_plusButton constrainTopToAnchor:_topContainer.topAnchor];
+    [_plusButton constrainBottomToAnchor:_topContainer.bottomAnchor];
+    [_plusButton constrainWidthToConstant:(_rowHeight * 1.25)];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -251,12 +299,25 @@ viewForHeaderInSection:(NSInteger)section
     cell.textLabel.adjustsFontSizeToFitWidth = YES;
     cell.detailTextLabel.font = _subtitleFont;
     cell.detailTextLabel.adjustsFontSizeToFitWidth = YES;
-    UIView *selectedView = UIView.new;
-    selectedView.backgroundColor = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.2];
-    cell.multipleSelectionBackgroundView = selectedView;
-    cell.selectedBackgroundView = selectedView;
-    cell.layer.borderColor = UIColor.blackColor.CGColor;
-    cell.layer.borderWidth = (_borderWidth * 0.4);
+    
+    if ([cell.textLabel.text isEqualToString:@"Create New Group"])
+    {
+        cell.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1.0];
+        cell.textLabel.textColor = UIColor.darkGrayColor;
+        cell.layer.borderWidth = 0.0;
+        cell.selectedBackgroundView = nil;
+        cell.multipleSelectionBackgroundView = nil;
+    }
+    
+    else
+    {
+        UIView *selectedView = UIView.new;
+        selectedView.backgroundColor = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.2];
+        cell.multipleSelectionBackgroundView = selectedView;
+        cell.selectedBackgroundView = selectedView;
+        cell.layer.borderColor = UIColor.blackColor.CGColor;
+        cell.layer.borderWidth = (_borderWidth * 0.4);
+    }
     
     return cell;
 }
@@ -285,7 +346,14 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == _groupsTV)
     {
-        for (int i = 0; i < [_contactsTV numberOfRowsInSection:0]; i++)
+        UITableViewCell *cell = [_groupsTV cellForRowAtIndexPath:indexPath];
+        
+        if ([cell.textLabel.text isEqualToString:@"Create New Group"])
+        {
+            
+        }
+        
+        else for (int i = 0; i < [_contactsTV numberOfRowsInSection:0]; i++)
         {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
             [_contactsTV selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -309,6 +377,21 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     }
     
     [_delegate contactsViewer:self didReturnEmails:emails.copy];
+}
+
+- (void)helpButtonTapped:(UIButton *)button
+{
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"Contacts"
+                                                       ofType:@"pdf"];
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                    showFileAtPath:filePath];
+#pragma unused(nvwv)
+}
+
+- (void)plusButtonTapped:(UIButton *)button
+{
+    
 }
 
 @end
