@@ -24,7 +24,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     if ((self = [super init]))
     {
         self.path = [NSBundle.mainBundle pathForResource:@"places"
-                                                  ofType:@"sqlite3"];
+                                                  ofType:@"slt"];
         
         self.isOpen = SQLOK(0,sqlite3_open(self.path.UTF8String, &_database),_database);
         NSLog(@"Places Database init");
@@ -67,14 +67,17 @@ static ManagePlacesDatabase *_statdatabase = nil;
     NSMutableArray *dataArray = [[NSMutableArray alloc] init];
     
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT name, geoid FROM places WHERE statefp=%i", code];
+    NSString *query = [NSString stringWithFormat:@"SELECT name, geoid FROM places WHERE statefp=%i ORDER BY name", code];
     sqlite3_stmt *statement = NULL;
     
     SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
     
         while (sqlite3_step(statement) == SQLITE_ROW)
         {
+            int ii;
             char *nameChar = (char *)sqlite3_column_text(statement, 0);
+            if (*nameChar == 'M')
+                ii=1;
             NSString *geoid = [NSString stringWithFormat:@"%i", sqlite3_column_int(statement, 1)];
             NSString *name = [[NSString alloc] initWithUTF8String:nameChar];
             name = removeEndingReturn(name);
