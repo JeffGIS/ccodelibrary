@@ -932,7 +932,11 @@ SELECT max(_id) FROM MyTable*/
                     lastPictNum:(int*)pictNum
 {
     if (!iPad)
+    {
+        *pictNum = 0;
         return 0;
+    }
+    
     int lastNum  = 0;
     int lastPictNum = 0;
     BOOL opened = [self open];
