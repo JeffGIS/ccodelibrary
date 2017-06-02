@@ -138,8 +138,6 @@
 }
 - (NSString *)sharedOutputDirectory:(NSString*)subDir
 {
-    NSLog(@"%@, %@, %i, %i", self.sharedFilePath,subDir,self.currentManageriPad,self.currentGeoid);
-    
     NSString* outdir = [NSString stringWithFormat:@"%@/OutputFiles/%@/%i/%i",
                         self.sharedFilePath,subDir,self.currentManageriPad,self.currentGeoid];
     
