@@ -6,7 +6,7 @@
 #import "NVContactGroupData.h"
 @import Contacts;
 
-@interface NVContactsViewer () <UITableViewDelegate,UITableViewDataSource>
+@interface NVContactsViewer () <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
 
 @property (nonatomic) UITableView *groupsTV, *contactsTV;
 @property (nonatomic) UIButton *returnButton, *sendButton, *helpButton, *plusButton;
@@ -15,6 +15,8 @@
 @property (nonatomic) NSArray *groups;
 @property (nonatomic) NSArray<NVContact *> *contacts;
 @property (nonatomic) UIView *topContainer;
+@property (nonatomic) NVContactGroupData *contactsDB;
+@property BOOL inAddMode;
 
 @end
 
@@ -39,6 +41,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = UserDefaults.defaults.appleBlue;
+    _inAddMode = NO;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
@@ -114,12 +117,9 @@
     [self setupTableView:_contactsTV];
     [self setupConstraints];
     
-    NVContactGroupData *nvcgd = NVContactGroupData.new;
-    NSMutableArray *tempGroups = nvcgd.getContactGroupsArray.mutableCopy;
-    [tempGroups insertObject:@"All Contacts" atIndex:0];
-    [tempGroups addObject:@"Create New Group"];
-    _groups = tempGroups.copy;
-    _contacts = nvcgd.getContactsArray;
+    _contactsDB = NVContactGroupData.new;
+    [self setGroupListFromDB];
+    _contacts = _contactsDB.getContactsArray;
     
     CNContactStore *store = CNContactStore.new;
     
@@ -299,24 +299,26 @@ viewForHeaderInSection:(NSInteger)section
     cell.textLabel.adjustsFontSizeToFitWidth = YES;
     cell.detailTextLabel.font = _subtitleFont;
     cell.detailTextLabel.adjustsFontSizeToFitWidth = YES;
+    UIView *selectedView = UIView.new;
+    selectedView.backgroundColor = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.2];
+    cell.multipleSelectionBackgroundView = selectedView;
+    cell.selectedBackgroundView = selectedView;
     
     if ([cell.textLabel.text isEqualToString:@"Create New Group"])
     {
         cell.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1.0];
         cell.textLabel.textColor = UIColor.darkGrayColor;
         cell.layer.borderWidth = 0.0;
-        cell.selectedBackgroundView = nil;
-        cell.multipleSelectionBackgroundView = nil;
+        cell.textLabel.textAlignment = NSTextAlignmentCenter;
     }
     
     else
     {
-        UIView *selectedView = UIView.new;
-        selectedView.backgroundColor = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.2];
-        cell.multipleSelectionBackgroundView = selectedView;
-        cell.selectedBackgroundView = selectedView;
+        cell.backgroundColor = UIColor.whiteColor;
+        cell.textLabel.textColor = UIColor.blackColor;
         cell.layer.borderColor = UIColor.blackColor.CGColor;
         cell.layer.borderWidth = (_borderWidth * 0.4);
+        cell.textLabel.textAlignment = NSTextAlignmentLeft;
     }
     
     return cell;
@@ -325,17 +327,20 @@ viewForHeaderInSection:(NSInteger)section
 - (NSIndexPath *)tableView:(UITableView *)tableView
   willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (tableView == _groupsTV && [tableView.indexPathForSelectedRow isEqual:indexPath])
+    if (tableView == _groupsTV)
     {
-        [tableView deselectRowAtIndexPath:indexPath animated:NO];
-        
-        for (int i = 0; i < [_contactsTV numberOfRowsInSection:0]; i++)
+        if ([tableView.indexPathForSelectedRow isEqual:indexPath])
         {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-            [_contactsTV deselectRowAtIndexPath:indexPath animated:NO];
+            [tableView deselectRowAtIndexPath:indexPath animated:NO];
+            
+            if (!_inAddMode)
+                [self deselectAllContacts];
+            
+            return nil;
         }
         
-        return nil;
+        else if (indexPath.row == 0 && _inAddMode)
+            return nil;
     }
 
     return indexPath;
@@ -344,19 +349,17 @@ viewForHeaderInSection:(NSInteger)section
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (tableView == _groupsTV)
+    if (tableView == _groupsTV && !_inAddMode)
     {
         UITableViewCell *cell = [_groupsTV cellForRowAtIndexPath:indexPath];
         
-        if ([cell.textLabel.text isEqualToString:@"Create New Group"])
+        if (![cell.textLabel.text isEqualToString:@"Create New Group"])
         {
-            
-        }
-        
-        else for (int i = 0; i < [_contactsTV numberOfRowsInSection:0]; i++)
-        {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-            [_contactsTV selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+            for (int i = 0; i < [_contactsTV numberOfRowsInSection:0]; i++)
+            {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                [_contactsTV selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+            }
         }
     }
 }
@@ -391,7 +394,118 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)plusButtonTapped:(UIButton *)button
 {
+    _inAddMode = !_inAddMode;
     
+    if (_inAddMode)
+    {
+        _plusButton.backgroundColor = UIColor.greenColor;
+        _groupsTV.layer.borderColor = UIColor.greenColor.CGColor;
+        _contactsTV.layer.borderColor = UIColor.greenColor.CGColor;
+        [_groupsTV deselectRowAtIndexPath:_groupsTV.indexPathForSelectedRow animated:NO];
+        [self deselectAllContacts];
+        [self setGroupListFromDB];
+        [_groupsTV reloadData];
+    }
+    
+    else
+    {
+        _plusButton.backgroundColor = UIColor.clearColor;
+        _groupsTV.layer.borderColor = UIColor.blackColor.CGColor;
+        _contactsTV.layer.borderColor = UIColor.blackColor.CGColor;
+        
+        if (_groupsTV.indexPathForSelectedRow && _contactsTV.indexPathsForSelectedRows.count)
+        {
+            UITableViewCell *cell = [_groupsTV cellForRowAtIndexPath:_groupsTV.indexPathForSelectedRow];
+            NSString *group = cell.textLabel.text.copy;
+            
+            if ([group isEqualToString:@"Create New Group"])
+            {
+                UITextField *textField = UITextField.new;
+                textField.translatesAutoresizingMaskIntoConstraints = NO;
+                textField.delegate = self;
+                cell.textLabel.text = @"";
+                cell.textLabel.textColor = UIColor.blackColor;
+                cell.backgroundColor = UIColor.whiteColor;
+                textField.font = cell.textLabel.font;
+                textField.textColor = UIColor.blackColor;
+                textField.textAlignment = NSTextAlignmentCenter;
+                textField.backgroundColor = UIColor.clearColor;
+                textField.placeholder = @"Enter Group Name";
+                [cell.contentView addSubview:textField];
+                [textField constrainToView:cell.contentView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+                [textField becomeFirstResponder];
+            }
+            
+            else for (NSIndexPath *indexPath in _contactsTV.indexPathsForSelectedRows)
+            {
+                NVContact *contact = _contacts[indexPath.row];
+                
+                [_contactsDB addEmail:contact.email
+                            firstName:contact.firstName
+                             lastName:contact.lastName
+                       toContactGroup:group];
+            }
+        }
+        
+        else
+        {
+            [_groupsTV deselectRowAtIndexPath:_groupsTV.indexPathForSelectedRow animated:NO];
+            [self deselectAllContacts];
+            [self setGroupListFromDB];
+            [_groupsTV reloadData];
+        }
+    }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (textField.text.length)
+    {
+        for (NSIndexPath *indexPath in _contactsTV.indexPathsForSelectedRows)
+        {
+            NVContact *contact = _contacts[indexPath.row];
+            
+            [_contactsDB addEmail:contact.email
+                        firstName:contact.firstName
+                         lastName:contact.lastName
+                   toContactGroup:textField.text];
+        }
+    }
+    
+    [textField resignFirstResponder];
+    return NO;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [textField removeFromSuperview];
+    [_groupsTV deselectRowAtIndexPath:_groupsTV.indexPathForSelectedRow animated:NO];
+    [self setGroupListFromDB];
+    [_groupsTV reloadData];
+    [self deselectAllContacts];
+}
+
+- (void)deselectAllContacts
+{
+    for (int i = 0; i < [_contactsTV numberOfRowsInSection:0]; i++)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        [_contactsTV deselectRowAtIndexPath:indexPath animated:NO];
+    }
+}
+
+- (void)setGroupListFromDB
+{
+    NSMutableArray *tempGroups = _contactsDB.getContactGroupsArray.mutableCopy;
+    [tempGroups insertObject:@"All Contacts" atIndex:0];
+    
+    if (_inAddMode)
+        [tempGroups addObject:@"Create New Group"];
+    
+    else
+        [tempGroups removeObject:@"Create New Group"];
+    
+    _groups = tempGroups.copy;
 }
 
 @end

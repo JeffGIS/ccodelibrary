@@ -4,6 +4,7 @@
 #import "NVContactGroupData.h"
 #import "UserDefaults.h"
 #import "SQLiteLib.h"
+#import "SharedDefaults.h"
 
 @implementation NVContact
 
@@ -28,7 +29,8 @@
         _path = [NSString stringWithFormat:@"%@/ContactGroupDatabase.sqlite3", UserDefaults.defaults.sharedFilePath];
         BOOL opened = self.open;
         
-        NSString *cmd = @"CREATE TABLE IF NOT EXISTS Contacts (id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        NSString *cmd = //@"DROP TABLE IF EXISTS Contacts; DROP TABLE IF EXISTS ContactGroups;"
+        @"CREATE TABLE IF NOT EXISTS Contacts (id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "email CHAR(64), first_name CHAR(64), last_name CHAR(64), UNIQUE(first_name, last_name, email));"
         "CREATE TABLE IF NOT EXISTS ContactGroups (id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "group_name CHAR(64), contact_id INT, UNIQUE(group_name, contact_id))";
@@ -75,19 +77,26 @@
                lastName:(NSString *)lastName
 {
     BOOL opened = self.open;
-    NSString *cmd = [NSString stringWithFormat:@"INSERT OR IGNORE INTO Contacts VALUES (null,'%@','%@','%@');", email, firstName, lastName];
+    
+    NSString *cmd = [NSString stringWithFormat:@"INSERT OR IGNORE INTO Contacts VALUES (null,'%@','%@','%@');",
+                     email, firstName, lastName];
+    
     SQLOK(4, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     [self close:opened];
 }
 
 - (void)addEmail:(NSString *)email
+       firstName:(NSString *)firstName
+        lastName:(NSString *)lastName
   toContactGroup:(NSString *)contactGroup
 {
     BOOL opened = self.open;
     sqlite3_stmt *statement = NULL;
     int emailID = -1;
     
-    NSString *query = [NSString stringWithFormat:@"SELECT id FROM Contacts WHERE email='%@'", email];
+    NSString *query = [NSString stringWithFormat:@"SELECT id FROM Contacts WHERE email='%@' AND first_name='%@' AND last_name='%@'",
+                       email, firstName, lastName];
+    
     SQLOK(5, sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
@@ -95,7 +104,9 @@
     
     SQLOK(6, sqlite3_finalize(statement), _database);
     
-    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO ContactGroups VALUES (null,'%@',%i);", contactGroup, emailID];
+    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO ContactGroups VALUES (null,'%@',%i);",
+                     contactGroup, emailID];
+    
     SQLOK(7, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     [self close:opened];
 }
@@ -156,7 +167,8 @@
     
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Contacts, ContactGroups "
                        "WHERE ContactGroups.contact_id=Contacts.id AND group_name='%@' "
-                       "ORDER BY last_name ASC, first_name ASC, email ASC;", contactGroup];
+                       "ORDER BY last_name ASC, first_name ASC, email ASC;",
+                       contactGroup];
     
     SQLOK(12, sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     

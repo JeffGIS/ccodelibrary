@@ -14,6 +14,8 @@
                lastName:(NSString *)lastName;
 
 - (void)addEmail:(NSString *)email
+       firstName:(NSString *)firstName
+        lastName:(NSString *)lastName
   toContactGroup:(NSString *)contactGroup;
 
 - (NSArray *)getContactGroupsArray;
