@@ -12,8 +12,8 @@
 @property (nonatomic) UIButton *returnButton, *sendButton, *helpButton, *plusButton;
 @property (nonatomic) CGFloat rowHeight, borderWidth, margin;
 @property (nonatomic) UIFont *font, *headerFont, *titleFont, *subtitleFont;
-@property (nonatomic) NSArray *groups;
-@property (nonatomic) NSArray<NVContact *> *contacts;
+@property (nonatomic, copy) NSArray *groups, *systemContacts;
+@property (nonatomic, copy) NSArray<NVContact *> *contacts;
 @property (nonatomic) UIView *topContainer;
 @property (nonatomic) NVContactGroupData *contactsDB;
 @property BOOL inAddMode;
@@ -113,13 +113,17 @@
     
     _groupsTV = UITableView.new;
     [self setupTableView:_groupsTV];
+    
+    [_groupsTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
+                           animated:NO
+                     scrollPosition:UITableViewScrollPositionNone];
+    
     _contactsTV = UITableView.new;
     [self setupTableView:_contactsTV];
     [self setupConstraints];
     
     _contactsDB = NVContactGroupData.new;
     [self setGroupListFromDB];
-    _contacts = _contactsDB.getContactsArray;
     
     CNContactStore *store = CNContactStore.new;
     
@@ -142,7 +146,7 @@
             
             else
             {
-                NSMutableArray *tempGroups = _contacts.mutableCopy;
+                NSMutableArray *tempContacts = NSMutableArray.array;
                 
                 for (CNContact *contact in contacts)
                 {
@@ -152,11 +156,12 @@
                         newContact.firstName = contact.givenName;
                         newContact.lastName = contact.familyName;
                         newContact.email = label.value;
-                        [tempGroups addObject:newContact];
+                        [tempContacts addObject:newContact];
                     }
                 }
                 
-                _contacts = tempGroups.copy;
+                _systemContacts = tempContacts.copy;
+                _contacts = _systemContacts.copy;
             }
         }        
     }];
@@ -264,7 +269,10 @@ viewForHeaderInSection:(NSInteger)section
         headerLabel.text = @"Groups";
     
     else
-        headerLabel.text = @"Contacts";
+    {
+        UITableViewCell *cell = [_groupsTV cellForRowAtIndexPath:_groupsTV.indexPathForSelectedRow];
+        headerLabel.text = cell.textLabel.text;
+    }
     
     [headerView addSubview:headerLabel];
     [headerLabel constrainToView:headerView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
@@ -331,10 +339,22 @@ viewForHeaderInSection:(NSInteger)section
     {
         if ([tableView.indexPathForSelectedRow isEqual:indexPath])
         {
-            [tableView deselectRowAtIndexPath:indexPath animated:NO];
+            if (_inAddMode)
+                [self deselectGroup];
             
-            if (!_inAddMode)
-                [self deselectAllContacts];
+            else
+            {
+                UITableViewCell *cell = [_groupsTV cellForRowAtIndexPath:indexPath];
+                
+                if (![cell.textLabel.text isEqualToString:@"Create New Group"])
+                {
+                    if (_contactsTV.indexPathsForSelectedRows.count < _contacts.count)
+                        [self selectAllContacts];
+                    
+                    else
+                        [self deselectAllContacts];
+                }
+            }
             
             return nil;
         }
@@ -351,16 +371,17 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == _groupsTV && !_inAddMode)
     {
+        [self deselectAllContacts];
         UITableViewCell *cell = [_groupsTV cellForRowAtIndexPath:indexPath];
+        NSString *group = cell.textLabel.text;
         
-        if (![cell.textLabel.text isEqualToString:@"Create New Group"])
-        {
-            for (int i = 0; i < [_contactsTV numberOfRowsInSection:0]; i++)
-            {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                [_contactsTV selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-            }
-        }
+        if ([group isEqualToString:@"System Contacts"])
+            _contacts = _systemContacts.copy;
+        
+        else
+            _contacts = [_contactsDB getContactsArrayInContactGroup:group];
+        
+        [_contactsTV reloadData];
     }
 }
 
@@ -382,16 +403,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     [_delegate contactsViewer:self didReturnEmails:emails.copy];
 }
 
-- (void)helpButtonTapped:(UIButton *)button
-{
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@"Contacts"
-                                                       ofType:@"pdf"];
-    
-    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                    showFileAtPath:filePath];
-#pragma unused(nvwv)
-}
-
 - (void)plusButtonTapped:(UIButton *)button
 {
     _inAddMode = !_inAddMode;
@@ -401,7 +412,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         _plusButton.backgroundColor = UIColor.greenColor;
         _groupsTV.layer.borderColor = UIColor.greenColor.CGColor;
         _contactsTV.layer.borderColor = UIColor.greenColor.CGColor;
-        [_groupsTV deselectRowAtIndexPath:_groupsTV.indexPathForSelectedRow animated:NO];
         [self deselectAllContacts];
         [self setGroupListFromDB];
         [_groupsTV reloadData];
@@ -444,12 +454,23 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                             firstName:contact.firstName
                              lastName:contact.lastName
                        toContactGroup:group];
+                
+                [self setGroupListFromDB];
+                [_groupsTV reloadData];
+                _contacts = [_contactsDB getContactsArrayInContactGroup:group];
+                [_contactsTV reloadData];
+                [self deselectAllContacts];
+                NSInteger row = [_groups indexOfObject:group];
+                
+                [_groupsTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]
+                                       animated:NO
+                                 scrollPosition:UITableViewScrollPositionNone];
             }
         }
         
         else
         {
-            [_groupsTV deselectRowAtIndexPath:_groupsTV.indexPathForSelectedRow animated:NO];
+            [self deselectGroup];
             [self deselectAllContacts];
             [self setGroupListFromDB];
             [_groupsTV reloadData];
@@ -479,10 +500,16 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [textField removeFromSuperview];
-    [_groupsTV deselectRowAtIndexPath:_groupsTV.indexPathForSelectedRow animated:NO];
     [self setGroupListFromDB];
     [_groupsTV reloadData];
+    _contacts = [_contactsDB getContactsArrayInContactGroup:textField.text];
+    [_contactsTV reloadData];
     [self deselectAllContacts];
+    NSInteger row = [_groups indexOfObject:textField.text];
+    
+    [_groupsTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]
+                           animated:NO
+                     scrollPosition:UITableViewScrollPositionNone];
 }
 
 - (void)deselectAllContacts
@@ -494,10 +521,24 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
+- (void)selectAllContacts
+{
+    for (int i = 0; i < [_contactsTV numberOfRowsInSection:0]; i++)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        [_contactsTV selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
+}
+
+- (void)deselectGroup
+{
+    [_groupsTV deselectRowAtIndexPath:_groupsTV.indexPathForSelectedRow animated:NO];
+}
+
 - (void)setGroupListFromDB
 {
     NSMutableArray *tempGroups = _contactsDB.getContactGroupsArray.mutableCopy;
-    [tempGroups insertObject:@"All Contacts" atIndex:0];
+    [tempGroups insertObject:@"System Contacts" atIndex:0];
     
     if (_inAddMode)
         [tempGroups addObject:@"Create New Group"];
@@ -506,6 +547,16 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         [tempGroups removeObject:@"Create New Group"];
     
     _groups = tempGroups.copy;
+}
+
+- (void)helpButtonTapped:(UIButton *)button
+{
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"Contacts"
+                                                       ofType:@"pdf"];
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                    showFileAtPath:filePath];
+#pragma unused(nvwv)
 }
 
 @end

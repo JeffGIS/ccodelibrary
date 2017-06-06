@@ -9,10 +9,6 @@
 
 @interface NVContactGroupData : NSObject
 
-- (void)addContactEmail:(NSString *)email
-              firstName:(NSString *)firstName
-               lastName:(NSString *)lastName;
-
 - (void)addEmail:(NSString *)email
        firstName:(NSString *)firstName
         lastName:(NSString *)lastName

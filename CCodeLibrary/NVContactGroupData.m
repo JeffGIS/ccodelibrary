@@ -72,9 +72,10 @@
     [self close:_isOpen];
 }
 
-- (void)addContactEmail:(NSString *)email
-              firstName:(NSString *)firstName
-               lastName:(NSString *)lastName
+- (void)addEmail:(NSString *)email
+       firstName:(NSString *)firstName
+        lastName:(NSString *)lastName
+  toContactGroup:(NSString *)contactGroup
 {
     BOOL opened = self.open;
     
@@ -82,15 +83,7 @@
                      email, firstName, lastName];
     
     SQLOK(4, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
-    [self close:opened];
-}
-
-- (void)addEmail:(NSString *)email
-       firstName:(NSString *)firstName
-        lastName:(NSString *)lastName
-  toContactGroup:(NSString *)contactGroup
-{
-    BOOL opened = self.open;
+    
     sqlite3_stmt *statement = NULL;
     int emailID = -1;
     
@@ -104,8 +97,8 @@
     
     SQLOK(6, sqlite3_finalize(statement), _database);
     
-    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO ContactGroups VALUES (null,'%@',%i);",
-                     contactGroup, emailID];
+    cmd = [NSString stringWithFormat:@"INSERT INTO ContactGroups VALUES (null,'%@',%i);",
+           contactGroup, emailID];
     
     SQLOK(7, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     [self close:opened];
