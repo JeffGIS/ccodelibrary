@@ -108,6 +108,7 @@
         _acreFmt.alwaysShowsDecimalSeparator = NO;
         _acreFmt.usesGroupingSeparator = YES;
         _acreFmt.maximumFractionDigits = 2;
+        _inCompareMode = NO;
     }
     
     return self;

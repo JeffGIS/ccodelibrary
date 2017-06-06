@@ -124,7 +124,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic, copy) NSString *selectBoundaryFromMapType;
 @property int keepProcessing;
 @property (nonatomic) NVDocumentManager *docManager;
-@property BOOL mapIndividualDest, mapGroupDest;
+@property BOOL mapIndividualDest, mapGroupDest, inCompareMode;
 @property (nonatomic) BOOL mapPropList;
 @property (nonatomic, copy) NSString *mapCrimeList;
 @property BOOL uploadPix, downloadData, downloadPix;
