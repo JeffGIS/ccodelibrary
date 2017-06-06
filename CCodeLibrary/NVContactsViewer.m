@@ -17,6 +17,7 @@
 @property (nonatomic) UIView *topContainer;
 @property (nonatomic) NVContactGroupData *contactsDB;
 @property BOOL inAddMode;
+@property (nonatomic, copy) NSString *groupHeader;
 
 @end
 
@@ -272,6 +273,7 @@ viewForHeaderInSection:(NSInteger)section
     {
         UITableViewCell *cell = [_groupsTV cellForRowAtIndexPath:_groupsTV.indexPathForSelectedRow];
         headerLabel.text = cell.textLabel.text;
+        _groupHeader = headerLabel.text.copy;
     }
     
     [headerView addSubview:headerLabel];
@@ -474,6 +476,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
             [self deselectAllContacts];
             [self setGroupListFromDB];
             [_groupsTV reloadData];
+            
+            NSInteger row = [_groups indexOfObject:_groupHeader];
+            
+            [_groupsTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]
+                                   animated:NO
+                             scrollPosition:UITableViewScrollPositionNone];
         }
     }
 }
@@ -499,17 +507,31 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    [textField removeFromSuperview];
     [self setGroupListFromDB];
     [_groupsTV reloadData];
-    _contacts = [_contactsDB getContactsArrayInContactGroup:textField.text];
-    [_contactsTV reloadData];
     [self deselectAllContacts];
-    NSInteger row = [_groups indexOfObject:textField.text];
     
-    [_groupsTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]
-                           animated:NO
-                     scrollPosition:UITableViewScrollPositionNone];
+    if (textField.text.length)
+    {
+        _contacts = [_contactsDB getContactsArrayInContactGroup:textField.text];
+        [_contactsTV reloadData];
+        NSInteger row = [_groups indexOfObject:textField.text];
+        
+        [_groupsTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]
+                               animated:NO
+                         scrollPosition:UITableViewScrollPositionNone];
+    }
+    
+    else
+    {
+        NSInteger row = [_groups indexOfObject:_groupHeader];
+        
+        [_groupsTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]
+                               animated:NO
+                         scrollPosition:UITableViewScrollPositionNone];
+    }
+    
+    [textField removeFromSuperview];
 }
 
 - (void)deselectAllContacts

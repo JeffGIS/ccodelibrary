@@ -29,8 +29,7 @@
         _path = [NSString stringWithFormat:@"%@/ContactGroupDatabase.sqlite3", UserDefaults.defaults.sharedFilePath];
         BOOL opened = self.open;
         
-        NSString *cmd = //@"DROP TABLE IF EXISTS Contacts; DROP TABLE IF EXISTS ContactGroups;"
-        @"CREATE TABLE IF NOT EXISTS Contacts (id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        NSString *cmd = @"CREATE TABLE IF NOT EXISTS Contacts (id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "email CHAR(64), first_name CHAR(64), last_name CHAR(64), UNIQUE(first_name, last_name, email));"
         "CREATE TABLE IF NOT EXISTS ContactGroups (id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "group_name CHAR(64), contact_id INT, UNIQUE(group_name, contact_id))";
