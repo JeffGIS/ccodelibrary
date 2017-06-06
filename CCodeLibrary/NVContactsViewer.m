@@ -114,6 +114,7 @@
     
     _groupsTV = UITableView.new;
     [self setupTableView:_groupsTV];
+    _groupHeader = @"System Contacts";
     
     [_groupsTV selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
                            animated:NO
@@ -160,6 +161,10 @@
                         [tempContacts addObject:newContact];
                     }
                 }
+                
+                [tempContacts sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES],
+                                                     [NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES],
+                                                     [NSSortDescriptor sortDescriptorWithKey:@"email" ascending:YES]]];
                 
                 _systemContacts = tempContacts.copy;
                 _contacts = _systemContacts.copy;
@@ -208,6 +213,7 @@
     tableView.separatorColor = UIColor.clearColor;
     tableView.allowsSelection = YES;
     tableView.allowsMultipleSelection = (tableView == _contactsTV);
+    tableView.allowsSelectionDuringEditing = YES;
     [self.view addSubview:tableView];
 }
 
@@ -272,8 +278,7 @@ viewForHeaderInSection:(NSInteger)section
     else
     {
         UITableViewCell *cell = [_groupsTV cellForRowAtIndexPath:_groupsTV.indexPathForSelectedRow];
-        headerLabel.text = cell.textLabel.text;
-        _groupHeader = headerLabel.text.copy;
+        headerLabel.text = _groupHeader;
     }
     
     [headerView addSubview:headerLabel];
@@ -375,16 +380,84 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     {
         [self deselectAllContacts];
         UITableViewCell *cell = [_groupsTV cellForRowAtIndexPath:indexPath];
-        NSString *group = cell.textLabel.text;
+        [cell setHighlighted:YES animated:NO];
+        _groupHeader = cell.textLabel.text;
         
-        if ([group isEqualToString:@"System Contacts"])
+        if ([_groupHeader isEqualToString:@"System Contacts"])
             _contacts = _systemContacts.copy;
         
         else
-            _contacts = [_contactsDB getContactsArrayInContactGroup:group];
+            _contacts = [_contactsDB getContactsArrayInContactGroup:_groupHeader];
         
         [_contactsTV reloadData];
     }
+}
+
+- (void)tableView:(UITableView *)tableView
+didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [_groupsTV cellForRowAtIndexPath:indexPath];
+    [cell setHighlighted:NO animated:NO];
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
+           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == _contactsTV)
+    {
+        if ([_groupHeader isEqualToString:@"System Contacts"])
+            return UITableViewCellEditingStyleNone;
+        
+        else
+            return UITableViewCellEditingStyleDelete;
+    }
+    
+    else if (indexPath.row > 0)
+        return UITableViewCellEditingStyleDelete;
+    
+    
+    else
+        return UITableViewCellEditingStyleNone;
+}
+
+- (void)tableView:(UITableView *)tableView
+commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == _contactsTV)
+    {
+        NVContact *contact = _contacts[indexPath.row];
+        
+        [_contactsDB removeEmail:contact.email
+                       firstName:contact.firstName
+                        lastName:contact.lastName
+                fromContactGroup:_groupHeader];
+        
+        _contacts = [_contactsDB getContactsArrayInContactGroup:_groupHeader];
+        [_contactsTV reloadData];
+        
+        if (!_contacts.count)
+        {
+            [_contactsDB removeContactGroup:_groupHeader];
+            [self setGroupListFromDB];
+            [_groupsTV reloadData];
+            [self resetSelectedGroup];
+        }
+    }
+    
+    else
+    {
+        [_contactsDB removeContactGroup:_groups[indexPath.row]];
+        [self setGroupListFromDB];
+        [_groupsTV reloadData];
+        [self resetSelectedGroup];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView
+didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self resetSelectedGroup];
 }
 
 - (void)returnButtonTapped:(UIButton *)button
@@ -555,6 +628,22 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)deselectGroup
 {
     [_groupsTV deselectRowAtIndexPath:_groupsTV.indexPathForSelectedRow animated:NO];
+}
+
+- (void)resetSelectedGroup
+{
+    [self deselectGroup];
+    
+    NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
+    
+    [_groupsTV selectRowAtIndexPath:index
+                           animated:NO
+                     scrollPosition:UITableViewScrollPositionNone];
+    
+    [self tableView:_groupsTV didSelectRowAtIndexPath:index];
+    _groupHeader = @"System Contacts";
+    _contacts = _systemContacts.copy;
+    [_contactsTV reloadData];
 }
 
 - (void)setGroupListFromDB

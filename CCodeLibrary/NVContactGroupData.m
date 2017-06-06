@@ -103,6 +103,43 @@
     [self close:opened];
 }
 
+- (void)removeEmail:(NSString *)email
+          firstName:(NSString *)firstName
+           lastName:(NSString *)lastName
+   fromContactGroup:(NSString *)contactGroup
+{
+    BOOL opened = self.open;
+    sqlite3_stmt *statement = NULL;
+    int emailID = -1;
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT id FROM Contacts WHERE email='%@' AND first_name='%@' AND last_name='%@'",
+                       email, firstName, lastName];
+    
+    SQLOK(5, sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+        emailID = sqlite3_column_int(statement, 0);
+    
+    SQLOK(6, sqlite3_finalize(statement), _database);
+    
+    NSString *cmd = [NSString stringWithFormat:@"DELETE FROM ContactGroups WHERE group_name='%@' AND contact_id='%i'",
+                     contactGroup, emailID];
+    
+    SQLOK(4, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    [self close:opened];
+}
+
+- (void)removeContactGroup:(NSString *)contactGroup
+{
+    BOOL opened = self.open;
+    
+    NSString *cmd = [NSString stringWithFormat:@"DELETE FROM ContactGroups WHERE group_name='%@'",
+                     contactGroup];
+    
+    SQLOK(4, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    [self close:opened];
+}
+
 - (NSArray *)getContactGroupsArray
 {
     NSMutableArray *contactGroupsArray = NSMutableArray.array;
@@ -130,7 +167,7 @@
     BOOL opened = self.open;
     sqlite3_stmt *statement = NULL;
     
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Contacts ORDER BY last_name ASC, first_name ASC, email ASC;"];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM Contacts ORDER BY first_name ASC, last_name ASC, email ASC;"];
     SQLOK(10, sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
@@ -159,7 +196,7 @@
     
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Contacts, ContactGroups "
                        "WHERE ContactGroups.contact_id=Contacts.id AND group_name='%@' "
-                       "ORDER BY last_name ASC, first_name ASC, email ASC;",
+                       "ORDER BY first_name ASC, last_name ASC, email ASC;",
                        contactGroup];
     
     SQLOK(12, sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
