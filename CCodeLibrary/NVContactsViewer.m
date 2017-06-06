@@ -457,7 +457,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)tableView:(UITableView *)tableView
 didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self resetSelectedGroup];
+    if (tableView == _groupsTV)
+        [self resetSelectedGroup];
 }
 
 - (void)returnButtonTapped:(UIButton *)button
