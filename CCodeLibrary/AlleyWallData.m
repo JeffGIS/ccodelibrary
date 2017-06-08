@@ -418,14 +418,17 @@ SELECT max(_id) FROM MyTable*/
 - (NSString *)getNextWallForAlley:(NSString *)nearestAlley
 {
     NSString *nextWall = @"";
-    CGFloat maxWall = 0;
+    double maxWall = 0;
     BOOL opened = [self open];
+    int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     
     if ([nearestAlley isEqualToString:@""])
         return @"";
     
-    NSString *minID = [[nearestAlley substringToIndex:4] stringByAppendingString:@".0"];
-    NSString *maxID = [[nearestAlley substringToIndex:4] stringByAppendingString:@".99"];
+    NSString *minNum = [[NSString stringWithFormat:@"%0.2f",iPad/10.0 + 0.01]substringFromIndex:1];
+    NSString *maxNum = [[NSString stringWithFormat:@"%0.2f",iPad/10.0 + 0.09]substringFromIndex:1];
+    NSString *minID = [[nearestAlley substringToIndex:4] stringByAppendingString:minNum];
+    NSString *maxID = [[nearestAlley substringToIndex:4] stringByAppendingString:maxNum];
     NSString *query = [NSString stringWithFormat:@"SELECT [Wall ID] FROM ALLEYWALLS_NEW WHERE  [Wall ID] >= %@ AND [Wall ID] <= %@",minID,maxID];
     
     sqlite3_stmt *statement = NULL;
@@ -435,7 +438,7 @@ SELECT max(_id) FROM MyTable*/
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
         LPSTR wallID = (LPSTR)sqlite3_column_text(statement, 0);
-        CGFloat fWall = atof (wallID);
+        double fWall = atof (wallID);
         NSInteger iWall = fWall;
         
         if (strlen (wallID)<7)
@@ -448,7 +451,7 @@ SELECT max(_id) FROM MyTable*/
     [self close:opened];
     
     if (maxWall < 1)
-        nextWall = [[nearestAlley substringToIndex:4] stringByAppendingString:@".01"];
+        nextWall = [[nearestAlley substringToIndex:4] stringByAppendingString:minNum];
     
     else
         nextWall = [NSString stringWithFormat:@"%.2f",maxWall + 0.01];
