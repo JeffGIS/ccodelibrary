@@ -8,6 +8,9 @@
 /*
 CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'Offense' CHAR(6),'CityCode' CHAR(2),'CaseYear' INT,'CaseNbr' CHAR(6),'ControlType' CHAR(1),'Attempt' CHAR(1),'BeginDate2' CHAR(19),'Precinct' CHAR(2),'UCRCode' CHAR(2),'NIBRSCode' CHAR(3),'CrimeCategory' CHAR(1),'CrimeClass' CHAR(1),'LastChangedID2' CHAR(11),'LastChanged2' CHAR(19),'OriginalCaseYear' INT,'OriginalCaseNbr' CHAR(6),'HouseNbr' CHAR(6),'HouseModifier' CHAR(1),'StreetName' CHAR(22),'StreetType' CHAR(2),'StreetDirection' CHAR(2),'IntersectionStreetName' CHAR(22),'IntersectionStreetType' CHAR(2),'IntersectionStreetDirection' CHAR(2),'Apartment' CHAR(5),'City2' CHAR(30),'State' CHAR(2),'VictimBusiness' CHAR(1),'Zipcode2' CHAR(9),'EndDate' CHAR(19),'ReportedDate' CHAR(19),'BeginDate' CHAR(19),'DispatchedTime' CHAR(4),'ArrivedTime' CHAR(4),'Location' CHAR(30),'ClearedTime' CHAR(4),'PrimaryOffense' CHAR(6),'SupervisorID' CHAR(11),'AssistingOfficerID' CHAR(11),'NotPublicInformation' CHAR(1),'UnitNbr' CHAR(4),'ReportingID' CHAR(11),'CallNbr' CHAR(11),'EnteredID' CHAR(11),'EnteredDate' CHAR(19),'LastChanged' CHAR(19),'AdultStatus' INT,'JuvenileStatus' INT,'Solvable' INT,'NotPublicAddressInformation' CHAR(1),'LastChangedID' CHAR(11),'ForceSupervisorReviewRequired' INT,'ForceSupervisorReviewCompeted' INT,'ForceIAUReviewCompleted' INT,'MatchCode' INT,'LocationCode' INT,'StreetNum' INT,'HouseNum' INT,'IntID' INT,'StreetNum1' INT,'StreetNum2' INT,'Street1MP' REAL,'Street2MP' REAL,'MunicNum' INT,'ZIP' INT,'X' REAL,'Y' REAL,'NumPartsRemoved' INT,'AddressTAGPrefix' CHAR(8),'AddressTAGUDI' CHAR(64),'Street' CHAR(80),'House' CHAR(12),'City' CHAR(32),'ZIPCODE' CHAR(12),'Symbol' CHAR(64),'FromDate' INT,'ToDate' INT,'Note' CHAR(100),'UCR' INT)
 */
+
+#define LOAD_PEOPLE_UPDATE 4715
+
 #define INPUTBUFSIZE USHRT_MAX * 32
 
 #import "CrimeData.h"
@@ -251,7 +254,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 //        int fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:file
 //                                                                      error:nil].fileSize;
         
-        if (DecompressGMZipFile((LPSTR)file.UTF8String, (LPSTR)toDirectory.UTF8String,offset,1))
+        if (DecompressGMZipFile((LPSTR)file.UTF8String, (LPSTR)toDirectory.UTF8String,offset,1,0))
         {
             NSError *error = nil;
             report = [NSString stringWithContentsOfFile:reportFile encoding:NSUTF8StringEncoding error:&error];
@@ -425,6 +428,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)updateFromServer:(NSTimer *)timer
 {
+    NSString *devID = UIDevice.currentDevice.name;
+    
     if (_nextUpdate >= _serversLastUpdate)
     {
         if ([_popoverView.superview.subviews containsObject:_popoverView])
@@ -457,6 +462,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     NSString *fileName = [NSString stringWithFormat:@"%i.gcf",(int)_nextUpdate];
     NSString *fromDir = @"GMMobile/MplsPolice";
     NSString *toDir = NSTemporaryDirectory ( );
+    if ([devID containsString:@"Jeff"] && _nextUpdate == LOAD_PEOPLE_UPDATE)
+    {
+        fileName = @"people.gcf";
+    }
+
     _pull = FTPDataPull.pull;
     _pull.delegate = self;
     _pull.popover = _popoverView;
@@ -482,16 +492,26 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     if (status == FTPStatusOK || status == FTPStatusFileExists)
     {
+        dispatch_queue_t overallQueue = dispatch_queue_create("overallQueue",NULL);
+        
+        dispatch_async(overallQueue,
+                       ^{
+
         [self loadUpdate:path];
         if (_nextUpdate == 131)
             _nextUpdate = 1101;
         else
             _nextUpdate++;
+                           dispatch_async(dispatch_get_main_queue(),
+                                          ^{
+
         _updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.05
                                                         target:self
                                                       selector:@selector(updateFromServer:)
                                                       userInfo:nil
                                                        repeats:NO];
+                                          });
+                       });
     }
     else if (_firstFail && status != FTPStatusUserCancel)
     {
@@ -570,18 +590,20 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 -(BOOL) loadUpdate:(NSString *)path
 {
     BOOL rtn = FALSE;
+    char outFilePath[512];
     double totLen;
-    int line = 0;
     int nerr = 0;
     NSString *toDirectory = _reportsDirectory;
     int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:path
                                                                        error:nil].fileSize;
 
     _popoverView.title = [NSString stringWithFormat:@"Loading update %li",(long)_nextUpdate];
-    if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0))
+    if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0,outFilePath))
     {
         BOOL opened = [self startTransaction];
         NSString * file = [NSString stringWithFormat:@"%@/cmdfile%i.txt",toDirectory,_nextUpdate];
+        if (_nextUpdate == LOAD_PEOPLE_UPDATE)
+            file = [NSString stringWithUTF8String:outFilePath];
         FILE *fid = fopen(file.UTF8String, "rb");
         if (!fid)
         {
@@ -590,19 +612,26 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         }
         if (fid)
         {
+            int line = 0;
             totLen = FileLength(fid);
             LPSTR str = malloc(INPUTBUFSIZE);
             LPSTR laststr = malloc(INPUTBUFSIZE);
             _keepGoing = TRUE;
             while (_keepGoing && fgetstring(str, (INPUTBUFSIZE - 2), fid))
             {
-                line++;
                 strcpy (laststr,str);
-                [self getIdForUpdate:str
+                if (_nextUpdate != LOAD_PEOPLE_UPDATE)
+                    [self getIdForUpdate:str
                               remove:NO];
                 if (![self executeCmd:str])
                     nerr++;
+                if ((line % 10) == 0)
+                    dispatch_async(dispatch_get_main_queue(),
+                               ^{
+
                 [_popoverView updateProgress:ftell(fid) / totLen];
+                               });
+                line++;
             }
             fclose(fid);
             free(str);

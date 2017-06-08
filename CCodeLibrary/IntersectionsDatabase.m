@@ -2000,7 +2000,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         
         else
         {
-            if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0))
+            if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0,0))
             {
                 intdbStatus = (INTDBStatus)[self loadIntersectionTextToDatabase:toDirectory
                                                                    progressView:_popover];

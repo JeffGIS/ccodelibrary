@@ -9,6 +9,6 @@ int InitLZO (void);
 int DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec, LPBYTE pCompressedRec, DWORD CompressedLen);
 
 int GetFileFromTransferFile(HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long MaxLength);
-int DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,int nfilestodecompress);
+int DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,int nfilestodecompress,LPSTR outFilePath);
 
 #endif

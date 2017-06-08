@@ -79,7 +79,7 @@ Exit:
     return rtn;
 }
 
-BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,int nfilestodecompress)
+BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,int nfilestodecompress,LPSTR outFilePath)
 {
     int	len, MaxLength;
     char File[PATH_MAX], OutFile[PATH_MAX];
@@ -132,6 +132,8 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
                 pBS++;
             }
             sprintf(OutFile, "%s/%s", toDirectory, pBS);
+            if (outFilePath)
+                strcpy (outFilePath,OutFile);
             rtn = GetFileFromTransferFile(0, FidTF, OutFile,  MaxLength);
             nFilesRead++;
             if (!rtn || (nfilestodecompress && nFilesRead >= nfilestodecompress))
