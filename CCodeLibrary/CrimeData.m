@@ -642,7 +642,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         [NSFileManager.defaultManager removeItemAtPath:path error:nil];
         NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO UPDATES VALUES (1,%li)",(long)(long)_nextUpdate];
         [self executeCmd:(LPSTR)cmd.UTF8String];
-        [self commitTransaction];
+        if (_keepGoing)
+            [self commitTransaction];
         [self close:opened];
         rtn = TRUE;
     }
