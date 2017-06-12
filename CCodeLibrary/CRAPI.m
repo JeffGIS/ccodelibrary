@@ -902,7 +902,7 @@
         str = arr[3];
             _isRentaliPad = str.integerValue;
     }
-    _isRentaliPad = YES;
+    
     return rtn;
 }
 - (BOOL)savePlacesString:(NSString*)placesStringIN //returns FALSE if need to switch server
