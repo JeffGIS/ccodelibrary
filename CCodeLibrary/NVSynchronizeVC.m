@@ -25,6 +25,7 @@
 @property (nonatomic) UISwitch *pixUpSwitch, *pixDownSwitch, *dataDownSwitch;
 @property (nonatomic) NVProgressView *overallProgressView;
 @property (nonatomic) Colors *colors;
+@property (nonatomic) UIColor *titleBackgroundColor;
 @property (nonatomic) GeoMasterServer *GMServer;
 @property (nonatomic) GSSiPopoverView *popoverView;
 @property (nonatomic) CLLocationManager *locationManager;
@@ -66,6 +67,9 @@
         CRAPI.sharedInstance.downloadPix = NO;
     }
     
+    _titleBackgroundColor = _colors.textColor;
+    if (CRAPI.sharedInstance.isRentaliPad)
+        _titleBackgroundColor = UIColor.blueColor;
     _titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_titleButton];
     _titleButton.backgroundColor = UIColor.clearColor;
@@ -73,7 +77,7 @@
     _titleButton.titleLabel.numberOfLines = 2;
     _titleButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     
-    [_titleButton setTitleColor:_colors.textColor
+    [_titleButton setTitleColor:_titleBackgroundColor
                        forState:UIControlStateNormal];
     
     [_titleButton addTarget:self
@@ -427,6 +431,8 @@
 {
     button.translatesAutoresizingMaskIntoConstraints = NO;
     button.backgroundColor = _colors.enabledColor;
+    if (button == _titleButton)
+        button.backgroundColor = _titleBackgroundColor;
     button.layer.cornerRadius = 10.0;
     button.contentEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 4.0, 4.0);
     button.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
@@ -459,8 +465,13 @@
 - (void)updateButton:(UIButton *)button
 {
     if (button.enabled)
+    {
+        if (CRAPI.sharedInstance.isRentaliPad)
+            _titleBackgroundColor = UIColor.blueColor;
         button.backgroundColor = _colors.enabledColor;
-    
+        if (button == _titleButton)
+            button.backgroundColor = _titleBackgroundColor;
+    }
     else
         button.backgroundColor = _colors.disabledColor;
 }
@@ -888,6 +899,7 @@ didReceiveMessage:(NSString *)message
                     
                     _syncButton.enabled = NO;
                     [self updateButton:_syncButton];
+                    [self updateButton:_titleButton];
                     _didConnect = NO;
                     
                     _connectLabel.text = [NSString stringWithFormat:@"%i-NO MANAGER",

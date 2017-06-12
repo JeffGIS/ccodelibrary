@@ -143,6 +143,7 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property MNMXCORD lastViewBounds;
 @property (nonatomic) NVSendEmail *currentEmail;
 @property NSMutableArray * lastAreaText;
+@property BOOL isRentaliPad;
 
 + (CRAPI *)sharedInstance;
 

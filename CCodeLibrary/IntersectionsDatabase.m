@@ -568,6 +568,8 @@ static int ii;
         {
             strcpy(rampID, ramp.rampID.UTF8String);
             
+            if (ramp.isComplete == 1 && CRAPI.sharedInstance.isRentaliPad)
+                ramp.isComplete = 2;
             NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO Ramps VALUES(\
 %i,%i,'%s',%i,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\
 %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\
