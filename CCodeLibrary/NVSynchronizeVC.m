@@ -76,6 +76,9 @@
     if (CRAPI.sharedInstance.isRentaliPad)
         [_titleButton setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
     
+    else
+        [_titleButton setTitleColor:_colors.enabledColor forState:UIControlStateNormal];
+    
     [_titleButton addTarget:self
                      action:@selector(titleButtonTapped:)
            forControlEvents:UIControlEventTouchUpInside];
@@ -448,12 +451,8 @@
     
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     button.titleLabel.adjustsFontSizeToFitWidth = YES;
-    
-    [button setTitleColor:_colors.titleColor
-                 forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.lightGrayColor
-                 forState:UIControlStateHighlighted];
+    [button setTitleColor:_colors.titleColor forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
 }
 
 - (void)updateButton:(UIButton *)button
