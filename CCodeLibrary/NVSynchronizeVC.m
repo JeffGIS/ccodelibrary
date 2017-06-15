@@ -36,7 +36,7 @@
 @property (nonatomic) FTPDataPull *pull;
 @property NSInteger selectedRow;
 @property (nonatomic) NVEmailFileList *nvefl;
-@property NSDate * sendDataStartTime;
+@property NSDate *sendDataStartTime;
 
 @end
 
@@ -73,8 +73,11 @@
     _titleButton.titleLabel.numberOfLines = 2;
     _titleButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     
-    [_titleButton setTitleColor:_colors.textColor
-                       forState:UIControlStateNormal];
+    if (CRAPI.sharedInstance.isRentaliPad)
+        [_titleButton setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
+    
+    else
+        [_titleButton setTitleColor:_colors.enabledColor forState:UIControlStateNormal];
     
     [_titleButton addTarget:self
                      action:@selector(titleButtonTapped:)
@@ -448,12 +451,8 @@
     
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     button.titleLabel.adjustsFontSizeToFitWidth = YES;
-    
-    [button setTitleColor:_colors.titleColor
-                 forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.lightGrayColor
-                 forState:UIControlStateHighlighted];
+    [button setTitleColor:_colors.titleColor forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
 }
 
 - (void)updateButton:(UIButton *)button
@@ -485,7 +484,7 @@
     _pixUpLabel.text = [NSString stringWithFormat:@"Pictures to be Uploaded: %i", _upPix];
     _dataDownLabel.text = [NSString stringWithFormat:@"Data Files to be Downloaded: %i", _downFiles];
     _pixDownLabel.text = [NSString stringWithFormat:@"Pictures to be Downloaded: %i", _downPix];
- }
+}
 
 - (void)updateOverallProgress:(CGFloat)progress
 {
@@ -550,10 +549,10 @@
     switch (CRAPI.sharedInstance.showDeveloperFunctions)
     {
         case 1:
-        [self uploadDatabases:button];
+            [self uploadDatabases:button];
             break;
         case 2:
-        [NVEmailFileList sendFileList:self];
+            [NVEmailFileList sendFileList:self];
             break;
     }
 }
@@ -615,7 +614,7 @@
     
     [UserDefaults.defaults saveInteger:(int)_selectedRow
                                 forKey:@"SelectedRow"];
-
+    
     [CRAPI.sharedInstance processPlacesArray:_selectedRow];
     [self setDatabaseIDToDB];
     
@@ -630,7 +629,7 @@
     _GMServer.delegate = self;
     _GMServer.messageID = GMSMessageSetNearby;
     [_GMServer initCommunication:7.5];
-        
+    
     _numConnectionAttempts = 0;
     _totConnectionAttempts = 50;
     _process = CONNECT_PROCESS;
@@ -689,8 +688,8 @@
             }
             else
             {
-               [NSThread sleepForTimeInterval:FTP_CATCHUP_DELAY*2];
-               msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i,%i)",
+                [NSThread sleepForTimeInterval:FTP_CATCHUP_DELAY*2];
+                msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
                        CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload,_lastUploadFileSize];
             }
@@ -755,10 +754,10 @@
     _currentServerMsgID = msgID;
     
     _sendTimer = [NSTimer scheduledTimerWithTimeInterval:0.01
-                                              target:self
-                                            selector:@selector(doSendGMServerMessage:)
-                                            userInfo:nil
-                                             repeats:NO];
+                                                  target:self
+                                                selector:@selector(doSendGMServerMessage:)
+                                                userInfo:nil
+                                                 repeats:NO];
 }
 
 - (int)getDataNumFromServerMsg:(int)iPad
@@ -928,11 +927,19 @@ didReceiveMessage:(NSString *)message
                 
                 if (CRAPI.sharedInstance.placesArray.count > 1)
                 {
-                    _titleButton.backgroundColor = _colors.enabledColor;
                     _titleButton.userInteractionEnabled = YES;
                     
-                    [_titleButton setTitleColor:_colors.titleColor
-                                       forState:UIControlStateNormal];
+                    if (CRAPI.sharedInstance.isRentaliPad)
+                    {
+                        _titleButton.backgroundColor = UIColor.blueColor;
+                        [_titleButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+                    }
+                    
+                    else
+                    {
+                        _titleButton.backgroundColor = _colors.enabledColor;
+                        [_titleButton setTitleColor:_colors.titleColor forState:UIControlStateNormal];
+                    }
                 }
                 
                 _locationManager = [[CLLocationManager alloc] init];
@@ -981,22 +988,22 @@ didReceiveMessage:(NSString *)message
                     [_popoverView showAfter:0.1
                                   withTitle:title];
                     [CRAPI.sharedInstance logToErrorFile:title];
-
+                    
                 }
                 break;
                 
             case GMSMessageGetUploadStatus:
             {
                 _uploadStatusMsg = message.copy;
-               // NSString *edit = [_uploadStatusMsg stringByReplacingOccurrencesOfString:@"3-5" withString:@"1-5"];
-               // _uploadStatusMsg = edit;
+                // NSString *edit = [_uploadStatusMsg stringByReplacingOccurrencesOfString:@"3-5" withString:@"1-5"];
+                // _uploadStatusMsg = edit;
                 _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String)+1;
                 [self closeGMServer];
                 
                 int pictNum = 0;
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
                 int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad
-                                                lastPictNum:&pictNum];
+                                                       lastPictNum:&pictNum];
                 if (_myiPad > 0 || getUseMasterID())
                 {
                     _syncButton.enabled = YES;
@@ -1004,7 +1011,7 @@ didReceiveMessage:(NSString *)message
                                  forState:UIControlStateNormal];
                     [self updateButton:_syncButton];
                 }
-
+                
                 lastNum++;
                 int fileSize = 0;
                 
@@ -1022,7 +1029,7 @@ didReceiveMessage:(NSString *)message
                 _lastFileNumToUpload = lastNum;
                 
                 _nextFileNumToUpload = ([self getDataNumFromServerMsg:_myiPad
-                                                         wantPictNum:NO] + 1);
+                                                          wantPictNum:NO] + 1);
                 if (_nextFileNumToUpload > 0)
                     _upFiles = (_lastFileNumToUpload - _nextFileNumToUpload + 1);
                 
@@ -1044,7 +1051,7 @@ didReceiveMessage:(NSString *)message
                 _lastPictNumToUpload = lastNum;
                 
                 _nextPictNumToUpload = ([self getDataNumFromServerMsg:_myiPad
-                                                         wantPictNum:YES] + 1);
+                                                          wantPictNum:YES] + 1);
                 
                 if (_nextPictNumToUpload > 0)
                     _upPix = (_lastPictNumToUpload - _nextPictNumToUpload + 1);
@@ -1143,7 +1150,7 @@ Top:
                 _lastFileNumToUpload = lastNum;
                 
                 _nextFileNumToUpload = ([self getDataNumFromServerMsg:_myiPad
-                                                         wantPictNum:YES] + 1);
+                                                          wantPictNum:YES] + 1);
                 
                 if (_nextFileNumToUpload > 0)
                     _upPix = (_lastFileNumToUpload - _nextFileNumToUpload + 1);
@@ -1153,7 +1160,7 @@ Top:
                 goto Top;
             }
         }
-    
+        
         _process = DOWNLOAD_DATA_PROCESS;
         _downloadiPad = [self nextiPadToDownload:-1];
         
@@ -1194,7 +1201,7 @@ Top:
         return;
     }
     int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:_filePath
-                                                                   error:nil].fileSize;
+                                                                       error:nil].fileSize;
     if (!fileSize)
     {
         NSString * emptyFileMessage = @"/*This file is empty*/";
@@ -1216,7 +1223,7 @@ Top:
     NSString *toDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
     _lastUploadFileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:_filePath
-                                                                   error:nil].fileSize;
+                                                                              error:nil].fileSize;
     
     [_push sendFile:[_filePath lastPathComponent]
       fromDirectory:[_filePath stringByDeletingLastPathComponent]
@@ -1325,7 +1332,7 @@ Top:
             }
             else
             {
-Done:
+            Done:
                 [_syncButton setTitle:@"Complete"
                              forState:UIControlStateNormal];
                 
@@ -1365,7 +1372,7 @@ Done:
         [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Invalid process:%i in download %i %i",_process,_nextFileNumToDownload,_downloadiPad]];
         return;
     }
-
+    
     
     
     NSString *fromDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",
@@ -1429,19 +1436,19 @@ Done:
         {
             if (_process == DOWNLOAD_DATA_PROCESS)
             {
-               if ([self loadUpdate:path])
-               {
-                   [_databaseID setLastDataUpdateNum:_nextFileNumToDownload
-                                             foriPad:_downloadiPad];
-               }
+                if ([self loadUpdate:path])
+                {
+                    [_databaseID setLastDataUpdateNum:_nextFileNumToDownload
+                                              foriPad:_downloadiPad];
+                }
                 
-               else
-               {
-                   NSString *msg = [NSString stringWithFormat:@"Data load failed\n%@",[path lastPathComponent]];
-                   _popoverView.title = msg;
-                   [CRAPI.sharedInstance logToErrorFile:msg];
-                   return;
-               }
+                else
+                {
+                    NSString *msg = [NSString stringWithFormat:@"Data load failed\n%@",[path lastPathComponent]];
+                    _popoverView.title = msg;
+                    [CRAPI.sharedInstance logToErrorFile:msg];
+                    return;
+                }
             }
             
             else
@@ -1462,7 +1469,7 @@ Done:
             
             if (_totFilesToProcess)
                 [self updateOverallProgress:(float)_processedFiles/_totFilesToProcess];
-
+            
             [self updateLabels];
             [self downloadNextFile];
         }
@@ -1539,7 +1546,7 @@ Done:
     CRAPI.sharedInstance.downloadPix = aSwitch.on;
     if (!_syncButton.enabled && CRAPI.sharedInstance.downloadPix)
         [self sendGMServerMessage:GMSMessageOpenConnect];
-
+    
 }
 
 - (void)alertView:(NVAlertView *)alertView
@@ -1562,119 +1569,119 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
           geoid:(int)geoid
 {
     /*if (iPad == 1008 || iPad == 1009) // MP Alleywalls
-    {
-        int lastPict;
-        int lastData = [_databaseID getLastDataUpdateNumber:1
-                                                lastPictNum:&lastPict];
-        if (lastData < 64)
-            [_databaseID setLastDataUpdateNum:64
-                                      foriPad:1];
-        if (lastPict < 480)
-            [_databaseID setLastPictUpdateNum:480
-                                      foriPad:1];
-        lastData = [_databaseID getLastDataUpdateNumber:2
-                                            lastPictNum:&lastPict];
-        if (lastData < 102)
-            [_databaseID setLastDataUpdateNum:102
-                                      foriPad:2];
-        if (lastPict < 728)
-            [_databaseID setLastPictUpdateNum:728
-                                      foriPad:2];
-        
-    }*/
+     {
+     int lastPict;
+     int lastData = [_databaseID getLastDataUpdateNumber:1
+     lastPictNum:&lastPict];
+     if (lastData < 64)
+     [_databaseID setLastDataUpdateNum:64
+     foriPad:1];
+     if (lastPict < 480)
+     [_databaseID setLastPictUpdateNum:480
+     foriPad:1];
+     lastData = [_databaseID getLastDataUpdateNumber:2
+     lastPictNum:&lastPict];
+     if (lastData < 102)
+     [_databaseID setLastDataUpdateNum:102
+     foriPad:2];
+     if (lastPict < 728)
+     [_databaseID setLastPictUpdateNum:728
+     foriPad:2];
+     
+     }*/
     
     /*if (iPad == 1055 && geoid == 2707966)// Brooklyn Park
-    {
-        int currentFix = 4;
-        int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
-        
-        if (lastFix < currentFix)
-        {
-            [UserDefaults.defaults saveInteger:currentFix
-                                        forKey:@"lastFix"];
-            int lastPict;
-            
-            [_databaseID setLastDataUpdateNum:227
-                                      foriPad:2];
-            [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Fix %i applied to 1055",currentFix]];
-        }
-        
-    }*/
+     {
+     int currentFix = 4;
+     int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
+     
+     if (lastFix < currentFix)
+     {
+     [UserDefaults.defaults saveInteger:currentFix
+     forKey:@"lastFix"];
+     int lastPict;
+     
+     [_databaseID setLastDataUpdateNum:227
+     foriPad:2];
+     [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Fix %i applied to 1055",currentFix]];
+     }
+     
+     }*/
     
     /*if (iPad == 1055 && geoid == 2707966)// Brooklyn Park
-    {
-        //All of these files are from device 1055:
-         
-         2_2.sql
-         2_92.sql
-         2_125.sql
-         2_127.sql
-         2_123.jpg
-        int iPad = 2;
-        int currentFix = 5;
-        int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
-        NSError *error = nil;
-       
-        if (lastFix < currentFix)
-        {
-            int filenums[]={2,92,125,127};
-            [UserDefaults.defaults saveInteger:currentFix
-                                        forKey:@"lastFix"];
-            int lastPict;
-            
-            for (int i = 0;i<4;i++)
-            {
-                int lastData = [_databaseID getLastDataUpdateNumber:iPad
-                                                        lastPictNum:&lastPict];
-                NSString *fromPath = [_databaseID outputDataFile:filenums[i]
-                                                            iPad:iPad];
-                NSString *toPath = [_databaseID outputDataFile:lastData
-                                                          iPad:iPad];
-                if ((int)[NSFileManager.defaultManager attributesOfItemAtPath:toPath
-                                                                               error:nil].fileSize > 0)
-                {
-                    lastData++;
-                    toPath = [_databaseID outputDataFile:lastData
-                                                   iPad:iPad];
-                }
-                
-                if ([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:&error])
-                {
-                    [_databaseID setLastDataUpdateNum:lastData
-                                              foriPad:iPad];
-                    [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"File %@ renamed to %@",fromPath,toPath]];
-                }
-                else
-                    [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Failed to rename file %@ to %@",fromPath,toPath]];
-            }
-            {
-                int lastData = [_databaseID getLastDataUpdateNumber:iPad
-                                                        lastPictNum:&lastPict];
-                NSString *fromPath = [_databaseID outputPictFile:123
-                                                            iPad:iPad];
-                NSString *toPath = [_databaseID outputPictFile:lastPict
-                                                          iPad:iPad];
-                
-                if ((int)[NSFileManager.defaultManager attributesOfItemAtPath:toPath
-                                                                        error:nil].fileSize > 0)
-                {
-                    lastPict++;
-                    toPath = [_databaseID outputDataFile:lastData
-                                                    iPad:iPad];
-                }
-                if ([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:&error])
-                {
-                    [_databaseID setLastPictUpdateNum:lastPict
-                                              foriPad:iPad];
-                    [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"File %@ renamed to %@",fromPath,toPath]];
-                }
-                else
-                    [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Failed to rename file %@ to %@",fromPath,toPath]];
-            }
-            [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Fix %i applied to 1055",currentFix]];
-        }
-        
-    }*/
+     {
+     //All of these files are from device 1055:
+     
+     2_2.sql
+     2_92.sql
+     2_125.sql
+     2_127.sql
+     2_123.jpg
+     int iPad = 2;
+     int currentFix = 5;
+     int lastFix = (int)[UserDefaults.defaults integerForKey:@"lastFix"];
+     NSError *error = nil;
+     
+     if (lastFix < currentFix)
+     {
+     int filenums[]={2,92,125,127};
+     [UserDefaults.defaults saveInteger:currentFix
+     forKey:@"lastFix"];
+     int lastPict;
+     
+     for (int i = 0;i<4;i++)
+     {
+     int lastData = [_databaseID getLastDataUpdateNumber:iPad
+     lastPictNum:&lastPict];
+     NSString *fromPath = [_databaseID outputDataFile:filenums[i]
+     iPad:iPad];
+     NSString *toPath = [_databaseID outputDataFile:lastData
+     iPad:iPad];
+     if ((int)[NSFileManager.defaultManager attributesOfItemAtPath:toPath
+     error:nil].fileSize > 0)
+     {
+     lastData++;
+     toPath = [_databaseID outputDataFile:lastData
+     iPad:iPad];
+     }
+     
+     if ([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:&error])
+     {
+     [_databaseID setLastDataUpdateNum:lastData
+     foriPad:iPad];
+     [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"File %@ renamed to %@",fromPath,toPath]];
+     }
+     else
+     [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Failed to rename file %@ to %@",fromPath,toPath]];
+     }
+     {
+     int lastData = [_databaseID getLastDataUpdateNumber:iPad
+     lastPictNum:&lastPict];
+     NSString *fromPath = [_databaseID outputPictFile:123
+     iPad:iPad];
+     NSString *toPath = [_databaseID outputPictFile:lastPict
+     iPad:iPad];
+     
+     if ((int)[NSFileManager.defaultManager attributesOfItemAtPath:toPath
+     error:nil].fileSize > 0)
+     {
+     lastPict++;
+     toPath = [_databaseID outputDataFile:lastData
+     iPad:iPad];
+     }
+     if ([[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:&error])
+     {
+     [_databaseID setLastPictUpdateNum:lastPict
+     foriPad:iPad];
+     [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"File %@ renamed to %@",fromPath,toPath]];
+     }
+     else
+     [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Failed to rename file %@ to %@",fromPath,toPath]];
+     }
+     [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Fix %i applied to 1055",currentFix]];
+     }
+     
+     }*/
 }
 
 - (IBAction)uploadDatabases:(id)sender

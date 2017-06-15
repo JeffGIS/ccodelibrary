@@ -895,9 +895,14 @@
     {
         str = arr[2];
         if (!isGSSiDevice())
-            _showDeveloperFunctions = str.integerValue;
+            _showDeveloperFunctions = (int)str.integerValue;
     }
-
+    if (arr.count > 3)
+    {
+        str = arr[3];
+            _isRentaliPad = str.integerValue;
+    }
+    
     return rtn;
 }
 - (BOOL)savePlacesString:(NSString*)placesStringIN //returns FALSE if need to switch server
