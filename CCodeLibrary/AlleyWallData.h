@@ -24,7 +24,9 @@
 - (BOOL)clear;
 
 - (BOOL)executeCmd:(char *)cmd
-      sendToServer:(BOOL)sendToServer;
+      sendToServer:(BOOL)sendToServer
+          fromFile:(LPSTR)fromFile
+          fromLine:(int)fromLine;
 
 - (BOOL)startTransaction;
 - (void)commitTransaction;

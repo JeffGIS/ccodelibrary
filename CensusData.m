@@ -39,15 +39,15 @@
                                                                        error:nil].fileSize;
     if (fileSize <= 0)
     {
-        SQLOK(145,sqlite3_open([CensusData computedFieldsPath].UTF8String, &_tempdatabase), _tempdatabase);
-        SQLOK(146,sqlite3_close(_tempdatabase), _tempdatabase);
+        SQLOK(__FILE__,__LINE__,sqlite3_open([CensusData computedFieldsPath].UTF8String, &_tempdatabase), _tempdatabase);
+        SQLOK(__FILE__,__LINE__,sqlite3_close(_tempdatabase), _tempdatabase);
     }
     
     fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[CensusData databasePath]
                                                                    error:nil].fileSize;
     if (fileSize > 0)
     {
-        _isOpen = !SQLOK(145,sqlite3_open([CensusData databasePath].UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open([CensusData databasePath].UTF8String, &_database), _database);
         if (_isOpen)
         {
             NSString *attachCmd = [NSString stringWithFormat:@"ATTACH DATABASE '%@' AS COMPUTEDCENSUSFIELDS",[CensusData computedFieldsPath]];
@@ -63,7 +63,7 @@
 {
     if (opened)
     {
-        SQLOK(146,sqlite3_close(_database), _database);
+        SQLOK(__FILE__,__LINE__,sqlite3_close(_database), _database);
         //NSLog(@"Property Database close");
         _isOpen = NO;
     }
@@ -91,7 +91,7 @@
     }
     query = [query stringByAppendingString:[NSString stringWithFormat:@",F_OVER85 FROM %s",tableName]];
     nVals++;
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -136,7 +136,7 @@
         [self executeCmd:updateQuery.UTF8String];
     }
     
-    SQLOK(0,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     /*    M_0_4= males in this age range (P12);
     M_5_9= males in this age range (P12);
     M_10_14= males in this age range (P12);
@@ -196,7 +196,7 @@
     NSString *value = @"";
     NSString *query = [NSString stringWithFormat:@"SELECT [%@] FROM CENSUS%@DATA WHERE GEOG_UNIT ='%@'",valueName,areaType,areaID];
     BOOL opened = [self open];
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -204,7 +204,7 @@
         value = [NSString stringWithUTF8String:cvalue];
     }
     
-    SQLOK(0,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     [self close:opened];
     return value;
 }
@@ -302,19 +302,19 @@
 
 - (BOOL)executeCmd:(char *)cmd
 {
-    BOOL rtn = !SQLOK(155,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    BOOL rtn = !SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     return rtn;
 }
 
 - (void)startTransaction
 {
     [self open];
-    SQLOK(156,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
 }
 
 - (void)commitTransaction
 {
-    SQLOK(157,sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
 }
 
 @end
