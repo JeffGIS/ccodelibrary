@@ -520,7 +520,7 @@
 		1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerticalSegmentedControl.h; sourceTree = "<group>"; };
 		1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerticalSegmentedControl.m; sourceTree = "<group>"; };
 		1F5150A11CE3959000BA4A5E /* AlleyWallData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlleyWallData.h; sourceTree = "<group>"; };
-		1F5150A21CE3959000BA4A5E /* AlleyWallData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlleyWallData.m; sourceTree = "<group>"; };
+		1F5150A21CE3959000BA4A5E /* AlleyWallData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AlleyWallData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1F829A981C342BDD00DD429C /* FileLister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileLister.h; sourceTree = "<group>"; };
 		1F829A991C342BDD00DD429C /* FileLister.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileLister.m; sourceTree = "<group>"; };
 		1F838AE819B1021C00943A8C /* PlacesInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesInfo.h; sourceTree = "<group>"; };
@@ -741,7 +741,7 @@
 		BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayOfNumbers.h; sourceTree = "<group>"; };
 		BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayOfNumbers.m; sourceTree = "<group>"; };
 		BB6777961C95C13200A2D508 /* CensusData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CensusData.h; path = ../CensusData.h; sourceTree = "<group>"; };
-		BB6777971C95C13200A2D508 /* CensusData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CensusData.m; path = ../CensusData.m; sourceTree = "<group>"; };
+		BB6777971C95C13200A2D508 /* CensusData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = CensusData.m; path = ../CensusData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BB9B8FA91EAE8A6600AFB3CA /* TimeLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeLine.h; sourceTree = "<group>"; };
 		BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeLine.m; sourceTree = "<group>"; };
 		BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityOrOrganizationData.h; sourceTree = "<group>"; };
@@ -755,7 +755,7 @@
 		EB0E4FF31C62785200849766 /* SymbolDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SymbolDictionary.h; sourceTree = "<group>"; };
 		EB0E4FF41C62785200849766 /* SymbolDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SymbolDictionary.m; sourceTree = "<group>"; };
 		EB0E4FFB1C6288BF00849766 /* DispersePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispersePoint.h; sourceTree = "<group>"; };
-		EB0E4FFC1C6288BF00849766 /* DispersePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispersePoint.m; sourceTree = "<group>"; };
+		EB0E4FFC1C6288BF00849766 /* DispersePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DispersePoint.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		EB1A69741999A6A9005A1CCB /* CRAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRAPI.h; sourceTree = "<group>"; };
 		EB1A69751999A6A9005A1CCB /* CRAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRAPI.m; sourceTree = "<group>"; };
 		EB23A7941CA04AF700F83E6C /* TextOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextOptions.h; sourceTree = "<group>"; };
@@ -801,12 +801,12 @@
 		EBA2E48719952BCA0085B2E0 /* TileGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileGraphics.h; sourceTree = "<group>"; };
 		EBA2E48819952BCA0085B2E0 /* TileIndex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TileIndex.c; sourceTree = "<group>"; };
 		EBA517B51BCA1355005A9CA8 /* CrimeData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrimeData.h; sourceTree = "<group>"; };
-		EBA517B61BCA1355005A9CA8 /* CrimeData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrimeData.m; sourceTree = "<group>"; };
+		EBA517B61BCA1355005A9CA8 /* CrimeData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CrimeData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = colorsByName.h; sourceTree = "<group>"; };
 		EBAB31C51AE6DC2D00C5CCEF /* NamedColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NamedColors.h; sourceTree = "<group>"; };
 		EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NamedColors.m; sourceTree = "<group>"; };
 		EBAB422D1B2B073A00C36FFC /* CurbRampData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurbRampData.h; sourceTree = "<group>"; };
-		EBAB422E1B2B073A00C36FFC /* CurbRampData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurbRampData.m; sourceTree = "<group>"; };
+		EBAB422E1B2B073A00C36FFC /* CurbRampData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CurbRampData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		EBAB42311B2B1A5E00C36FFC /* SQLiteLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteLib.h; sourceTree = "<group>"; };
 		EBAEECFF19B0E7BA0084A579 /* GeoMasterServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoMasterServer.h; sourceTree = "<group>"; };
 		EBAEED0019B0E7BA0084A579 /* GeoMasterServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoMasterServer.m; sourceTree = "<group>"; };

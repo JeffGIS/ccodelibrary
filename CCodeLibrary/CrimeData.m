@@ -90,7 +90,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     [self fixName];
     if (!_isOpen)
     {
-        _isOpen = !SQLOK(147,sqlite3_open(self.path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"Crime Database open");
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
@@ -111,7 +111,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 {
     if (opened && _isOpen)
     {
-        SQLOK(148,sqlite3_close(_database),_database);
+        SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);
         NSLog(@"Crime Database close");
         _isOpen = NO;
     }
@@ -138,13 +138,13 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
         
         sqlite3_stmt *statement = NULL;
         
-        SQLOK(149,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
             LPSTR version = (LPSTR)sqlite3_column_text(statement, 0);
             rtn = atoi (version);
         }
-        SQLOK(150,sqlite3_finalize(statement), _database);
+        SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     }
 
     [self close:opened];
@@ -157,12 +157,12 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(151,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         rtn = sqlite3_column_int(statement, 0);
     }
-    SQLOK(152,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     return rtn;
 }
 
@@ -176,12 +176,12 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
         
         sqlite3_stmt *statement = NULL;
         
-        SQLOK(153,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
             rtn = sqlite3_column_int(statement, 0);
         }
-        SQLOK(154,sqlite3_finalize(statement), _database);
+        SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
         if (!rtn)
             [self executeCmd:"CREATE TABLE IF NOT EXISTS UPDATES (id INTEGER PRIMARY KEY,LastUpdate INT)"];
     }
@@ -191,20 +191,20 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 
 - (BOOL)executeCmd:(char *)cmd
 {
-    BOOL rtn = !SQLOK(155,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    BOOL rtn = !SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     return rtn;
 }
 
 - (BOOL)startTransaction
 {
     BOOL rtn = [self open];
-    SQLOK(156,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
     return rtn;
 }
 
 - (void)commitTransaction
 {
-    SQLOK(157,sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
 }
 
 - (BOOL) fileAndOffsetForControlNumber:(NSInteger)cnumber
@@ -218,14 +218,14 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(158,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         *pFile = sqlite3_column_int(statement, 0);
         *pOffset = sqlite3_column_int(statement, 1);
         rtn = TRUE;
     }
-    SQLOK(159,sqlite3_finalize(statement),_database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement),_database);
     [self close:opened];
     return rtn;
 }
@@ -536,12 +536,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     NSString *query = [NSString stringWithFormat:@"SELECT id FROM OFFENSEXY WHERE ControlNbr = %li AND OffenseOrder = %i",(long)cnum, seq ];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(159,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         rtn = sqlite3_column_int(statement, 0);
     }
-    SQLOK(160,sqlite3_finalize(statement),_database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement),_database);
     if (rtn < 0)
     {
         rtn = [self maxID] + 1;

@@ -26,7 +26,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
         self.path = [NSBundle.mainBundle pathForResource:@"places"
                                                   ofType:@"slt"];
         
-        self.isOpen = SQLOK(0,sqlite3_open(self.path.UTF8String, &_database),_database);
+        self.isOpen = SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database),_database);
         NSLog(@"Places Database init");
     }
     
@@ -45,7 +45,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     BOOL rtn = FALSE;
     if (!self.isOpen)
     {
-        self.isOpen = !SQLOK(0,sqlite3_open(self.path.UTF8String, &_database),_database);
+        self.isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database),_database);
         rtn = TRUE;
         NSLog(@"Places Database open");
     }
@@ -70,7 +70,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT name, geoid FROM places WHERE statefp=%i ORDER BY name", code];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
         while (sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -89,7 +89,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
             [dataArray addObject:info];
         }
     
-    sqlite3_finalize(statement);
+    SQLiteFinalize(statement);
     [self close:opened];
     return dataArray;
 }
@@ -102,7 +102,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT bounds_w, bounds_s, bounds_e, bounds_n FROM places WHERE geoid=%i", geoid];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -119,7 +119,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
         [dataArray addObject:info];
     }
         
-    sqlite3_finalize(statement);
+    SQLiteFinalize(statement);
     [self close:opened];
     return dataArray;
 }
@@ -131,7 +131,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     NSString *placeName = @"";
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -141,7 +141,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
         placeName = removeTextInsideParentheses(placeName);
     }
         
-    sqlite3_finalize(statement);
+    SQLiteFinalize(statement);
     [self close:opened];
     return placeName;
 }
@@ -153,12 +153,12 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     int statefp = -1;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
         statefp = (int)sqlite3_column_int(statement, 0);
     
-    sqlite3_finalize(statement);
+    SQLiteFinalize(statement);
     [self close:opened];
     return statefp;
 }
@@ -173,7 +173,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT name, statefp, bounds_w, bounds_s, bounds_e, bounds_n FROM places WHERE geoid=%i", geoid];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -199,7 +199,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
         [dataArray addObject:info];
     }
     
-    sqlite3_finalize(statement);
+    SQLiteFinalize(statement);
     [self close:opened];
     return dataArray;
 }
@@ -210,7 +210,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT name, statefp, bounds_w, bounds_s, bounds_e, bounds_n FROM places WHERE geoid=%i", geoid];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -234,7 +234,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
                                                 bounds_n:bounds_n];
     }
         
-    sqlite3_finalize(statement);
+    SQLiteFinalize(statement);
     [self close:opened];
 }
 
@@ -245,7 +245,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     NSString *stateCode = @"";
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -254,7 +254,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
         stateCode = removeEndingReturn(stateCode);
     }
         
-    sqlite3_finalize(statement);
+    SQLiteFinalize(statement);
     [self close:opened];
     return stateCode;
 }
@@ -266,7 +266,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     NSString *stateName = @"";
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -275,7 +275,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
         stateName = removeEndingReturn(stateName);
     }
 
-    sqlite3_finalize(statement);
+    SQLiteFinalize(statement);
     [self close:opened];
     return stateName;
 }
@@ -287,12 +287,12 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     int statefp = -1;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
         statefp = (int)sqlite3_column_int(statement, 0);
         
-    sqlite3_finalize(statement);
+    SQLiteFinalize(statement);
     [self close:opened];
     return statefp;
 }
@@ -304,12 +304,12 @@ static ManagePlacesDatabase *_statdatabase = nil;
     sqlite3_stmt *statement = NULL;
     int statefp = -1;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
         statefp = (int)sqlite3_column_int(statement, 0);
         
-    sqlite3_finalize(statement);
+    SQLiteFinalize(statement);
     [self close:opened];
     return statefp;
 }
@@ -322,7 +322,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT statename FROM states"];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -332,7 +332,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
         [dataArray addObject:stateName];
     }
         
-    sqlite3_finalize(statement);
+    SQLiteFinalize(statement);
     [self close:opened];
     return dataArray;
 }

@@ -97,7 +97,7 @@ static int ii;
     {
         //int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:self.path error:nil].fileSize;
         
-        _isOpen = !SQLOK(147,sqlite3_open(self.path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database), _database);
         NSLog(@"PointInAreas Database open");
         
         return TRUE;
@@ -112,7 +112,7 @@ static int ii;
         if (_haveTimeLineDB)
             [self commitTransaction];
         
-        SQLOK(148,sqlite3_close(_database),_database);
+        SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);
         NSLog(@"PointInAreas Database close");
         _isOpen = NO;
         
@@ -124,20 +124,20 @@ static int ii;
 
 - (BOOL)executeCmd:(char *)cmd
 {
-    BOOL rtn = !SQLOK(155,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    BOOL rtn = !SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     return rtn;
 }
 
 - (BOOL)startTransaction
 {
     BOOL rtn = [self open];
-    SQLOK(156,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
     return rtn;
 }
 
 - (void)commitTransaction
 {
-    SQLOK(157,sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "COMMIT", 0, 0, 0),_database);
 }
 
 - (void)createTimeLineTable
@@ -200,15 +200,15 @@ static int ii;
     NSString *query = [NSString stringWithFormat:@"SELECT AreaNumber FROM AreaNames WHERE AreaName = '%@'",areaID];
     int areaNum = -1;
     
-    SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(self.database, query.UTF8String, -1, &statement, 0), self.database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
         areaNum = sqlite3_column_int(statement,0);
     
-    SQLOK(0,sqlite3_finalize(statement), self.database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), self.database);
     
     query = [NSString stringWithFormat:@"SELECT Time, Refno FROM TimeLine WHERE AreaNumber = %i",areaNum];
-    SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(self.database, query.UTF8String, -1, &statement, 0), self.database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -218,7 +218,7 @@ static int ii;
         [array addObject:num];
     }
     
-    SQLOK(0,sqlite3_finalize(statement), self.database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), self.database);
     [self close:opened];
     return array.copy;
 }
@@ -233,15 +233,15 @@ static int ii;
     NSString *query = [NSString stringWithFormat:@"SELECT AreaNumber FROM AreaNames WHERE AreaName = '%@'",areaID];
     int areaNum = -1;
     
-    SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(self.database, query.UTF8String, -1, &statement, 0), self.database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
         areaNum = sqlite3_column_int(statement,0);
     
-    SQLOK(0,sqlite3_finalize(statement), self.database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), self.database);
     
     query = [NSString stringWithFormat:@"SELECT Time, Refno FROM TimeLine WHERE AreaNumber = %i",areaNum];
-    SQLOK(0,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), self.database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(self.database, query.UTF8String, -1, &statement, 0), self.database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -254,7 +254,7 @@ static int ii;
         [array addObject:tl];
     }
     
-    SQLOK(0,sqlite3_finalize(statement), self.database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), self.database);
     TimeLine *tl = TimeLine.new;
     tl.time = NSDate.date.timeIntervalSince1970;
     tl.value = 0.1;

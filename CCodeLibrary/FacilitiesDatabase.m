@@ -27,7 +27,7 @@ static FacilitiesDatabase *_statdatabase = nil;
     {
         self.geoid = geoid;
         self.path = [self databasePath:geoid];
-        SQLOK(0,sqlite3_open(self.path.UTF8String, &_database), _database);
+        SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database), _database);
     }
     
     return self;
@@ -56,7 +56,7 @@ static FacilitiesDatabase *_statdatabase = nil;
     
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Facilities;"];
     
-    SQLOK(0,sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
     
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Facilities (\
@@ -71,15 +71,15 @@ static FacilitiesDatabase *_statdatabase = nil;
                        streetNames CHAR(512),\
                        streetAZMs CHAR(128));"];
     
-    SQLOK(0,sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
     
     query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Facilities (facX);"];
-    SQLOK(0,sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
     
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Facilities (facY);"];
-    SQLOK(0,sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
 }
 
@@ -149,7 +149,7 @@ static FacilitiesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT facX, facY FROM Facilities"];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -163,7 +163,7 @@ static FacilitiesDatabase *_statdatabase = nil;
         [dataArray addObject:facpt];
     }
     
-    SQLOK(0,sqlite3_finalize(statement),_database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement),_database);
     return dataArray;
 }
 
@@ -177,7 +177,7 @@ static FacilitiesDatabase *_statdatabase = nil;
                        (int)bounds.xmn, (int)bounds.xmx, (int)bounds.ymn, (int)bounds.ymx];
     
     sqlite3_stmt *statement = NULL;
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -210,7 +210,7 @@ static FacilitiesDatabase *_statdatabase = nil;
         [dataArray addObject:facpt];
     }
     
-    SQLOK(0,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     return dataArray;
 }
 
@@ -228,7 +228,7 @@ static FacilitiesDatabase *_statdatabase = nil;
                        (int)bounds.xmn,(int)bounds.xmx,(int)bounds.ymn,(int)bounds.ymx];
     
     sqlite3_stmt *statement = NULL;
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -247,7 +247,7 @@ static FacilitiesDatabase *_statdatabase = nil;
         [dataArray addObject:facpt];
     }
     
-    SQLOK(0,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     [self sortFacilitiesByDistance:dataArray];
     return dataArray;
 }
@@ -276,7 +276,7 @@ static FacilitiesDatabase *_statdatabase = nil;
     CGPoint facilityPoint;
     FacilityPoint *facpt;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -290,7 +290,7 @@ static FacilitiesDatabase *_statdatabase = nil;
         facpt.facID = facID;
     }
     
-    SQLOK(0,sqlite3_finalize(statement),_database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement),_database);
     return facpt;
 }
 
@@ -301,7 +301,7 @@ static FacilitiesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT nStreets, streetAZMs FROM Facilities WHERE facID=%i", facID];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -311,7 +311,7 @@ static FacilitiesDatabase *_statdatabase = nil;
         rtn = [NSString stringWithUTF8String:pAZMs];
     }
     
-    SQLOK(0,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     return rtn;
 }
 
@@ -359,7 +359,7 @@ static FacilitiesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Facilities WHERE facID=%i", facID];
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -370,7 +370,7 @@ static FacilitiesDatabase *_statdatabase = nil;
         fac.lev21y = sqlite3_column_int(statement, 5);
     }
     
-    SQLOK(0,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     return fac;
 }
 
@@ -382,7 +382,7 @@ static FacilitiesDatabase *_statdatabase = nil;
         NSString *query = [NSString stringWithFormat:@"SELECT facID, facX, facY FROM Facilities WHERE status=0 ORDER BY facID ASC"];
         sqlite3_stmt *statement = NULL;
         
-        SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL),_database);
+        SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL),_database);
         
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -397,7 +397,7 @@ static FacilitiesDatabase *_statdatabase = nil;
             facpt.facID = facID;
         }
         
-        SQLOK(0,sqlite3_finalize(statement), _database);
+        SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
         return facpt;
     }
 }
@@ -484,8 +484,8 @@ static FacilitiesDatabase *_statdatabase = nil;
     
     [self createFacilitiesTable];
     
-    SQLOK(0,sqlite3_prepare_v2(_database, buffer, -1, &statement, NULL),_database);
-    SQLOK(0,sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, buffer, -1, &statement, NULL),_database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &error), _database);
     sqlite3_free(error);
     
     fgetstring(index, maxIndex, fidIndex);
@@ -515,21 +515,21 @@ static FacilitiesDatabase *_statdatabase = nil;
         strncpy(facStruct.streetAzms, pAzms, sizeof(facStruct.streetAzms) - 1);
         
         for (i = 1, pInt = &facStruct.facID; i < 29; i++, pInt++)
-            SQLOK(0,sqlite3_bind_int(statement, i, *pInt), _database);
+            SQLOK(__FILE__,__LINE__,sqlite3_bind_int(statement, i, *pInt), _database);
         
-        SQLOK(0,sqlite3_bind_text(statement, 29, facStruct.streetNames, -1, SQLITE_STATIC), _database);
-        SQLOK(0,sqlite3_bind_text(statement, 30, facStruct.streetAzms, -1, SQLITE_STATIC),_database);
+        SQLOK(__FILE__,__LINE__,sqlite3_bind_text(statement, 29, facStruct.streetNames, -1, SQLITE_STATIC), _database);
+        SQLOK(__FILE__,__LINE__,sqlite3_bind_text(statement, 30, facStruct.streetAzms, -1, SQLITE_STATIC),_database);
         
         if (sqlite3_step(statement) != SQLITE_DONE)
             NSLog(@"Error inserting facility. '%s'", sqlite3_errmsg(_database));
         
         nLoaded++;
-        SQLOK(0,sqlite3_reset(statement), _database);
+        SQLOK(__FILE__,__LINE__,sqlite3_reset(statement), _database);
     }
     
-    SQLOK(0,sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, &error), _database);
     sqlite3_free(error);
-    SQLOK(0,sqlite3_finalize(self.statement),_database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(self.statement),_database);
     
     fclose(fidIndex);
     fclose(fidData);
@@ -549,7 +549,7 @@ Exit:
         NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
                                                                 andName:[NSString stringWithFormat:@"/%i",self.geoid] create:YES];
         if (self.gettingUploaded)
-            SQLOK(0,sqlite3_open(self.path.UTF8String, &_database), _database);
+            SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database), _database);
         
         else
         {
@@ -590,12 +590,12 @@ Exit:
     NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM Facilities"];
     sqlite3_stmt *statement = NULL;
     int count = 0;
-    SQLOK(0,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, NULL), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
         count = sqlite3_column_int(statement, 0);
     
-    SQLOK(0,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     return count;
 }
 

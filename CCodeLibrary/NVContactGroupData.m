@@ -34,7 +34,7 @@
         "CREATE TABLE IF NOT EXISTS ContactGroups (id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "group_name CHAR(64), contact_id INT, UNIQUE(group_name, contact_id))";
         
-        SQLOK(1, sqlite3_exec(_database, cmd.UTF8String, 0, 0, 0), _database);
+        SQLOK(__FILE__,__LINE__, sqlite3_exec(_database, cmd.UTF8String, 0, 0, 0), _database);
         [self close:opened];
     }
     
@@ -48,7 +48,7 @@
     
     if (!_isOpen)
     {
-        _isOpen = !SQLOK(2, sqlite3_open(_path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__, sqlite3_open(_path.UTF8String, &_database), _database);
         //NSLog(@"NVContactGroupData Database open");
         rtn = YES;
     }
@@ -60,7 +60,7 @@
 {
     if (opened)
     {
-        SQLOK(3, sqlite3_close(_database), _database);
+        SQLOK(__FILE__,__LINE__, sqlite3_close(_database), _database);
         //NSLog(@"NVContactGroupData Database close");
         _isOpen = NO;
     }
@@ -81,7 +81,7 @@
     NSString *cmd = [NSString stringWithFormat:@"INSERT OR IGNORE INTO Contacts VALUES (null,'%@','%@','%@');",
                      email, firstName, lastName];
     
-    SQLOK(4, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     
     sqlite3_stmt *statement = NULL;
     int emailID = -1;
@@ -89,17 +89,17 @@
     NSString *query = [NSString stringWithFormat:@"SELECT id FROM Contacts WHERE email='%@' AND first_name='%@' AND last_name='%@'",
                        email, firstName, lastName];
     
-    SQLOK(5, sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
         emailID = sqlite3_column_int(statement, 0);
     
-    SQLOK(6, sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     
     cmd = [NSString stringWithFormat:@"INSERT INTO ContactGroups VALUES (null,'%@',%i);",
            contactGroup, emailID];
     
-    SQLOK(7, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     [self close:opened];
 }
 
@@ -115,17 +115,17 @@
     NSString *query = [NSString stringWithFormat:@"SELECT id FROM Contacts WHERE email='%@' AND first_name='%@' AND last_name='%@'",
                        email, firstName, lastName];
     
-    SQLOK(5, sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
         emailID = sqlite3_column_int(statement, 0);
     
-    SQLOK(6, sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     
     NSString *cmd = [NSString stringWithFormat:@"DELETE FROM ContactGroups WHERE group_name='%@' AND contact_id='%i'",
                      contactGroup, emailID];
     
-    SQLOK(4, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     [self close:opened];
 }
 
@@ -136,7 +136,7 @@
     NSString *cmd = [NSString stringWithFormat:@"DELETE FROM ContactGroups WHERE group_name='%@'",
                      contactGroup];
     
-    SQLOK(4, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     [self close:opened];
 }
 
@@ -147,7 +147,7 @@
     sqlite3_stmt *statement = NULL;
     
     NSString *query = [NSString stringWithFormat:@"SELECT DISTINCT group_name FROM ContactGroups ORDER BY group_name ASC;"];
-    SQLOK(8, sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -155,7 +155,7 @@
         [contactGroupsArray addObject:[NSString stringWithUTF8String:groupName]];
     }
     
-    SQLOK(9, sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     [self close:opened];
     
     return contactGroupsArray.copy;
@@ -168,7 +168,7 @@
     sqlite3_stmt *statement = NULL;
     
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Contacts ORDER BY first_name ASC, last_name ASC, email ASC;"];
-    SQLOK(10, sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -182,7 +182,7 @@
         [contactsArray addObject:contact];
     }
     
-    SQLOK(11, sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     [self close:opened];
     
     return contactsArray.copy;
@@ -199,7 +199,7 @@
                        "ORDER BY first_name ASC, last_name ASC, email ASC;",
                        contactGroup];
     
-    SQLOK(12, sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -213,7 +213,7 @@
         [contactsArray addObject:contact];
     }
     
-    SQLOK(13, sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     [self close:opened];
     
     return contactsArray.copy;

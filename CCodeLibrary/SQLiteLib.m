@@ -10,11 +10,16 @@
 #import "CRAPI.h"
 #import <string.h>
 
-int SQLOK(int from,int sqlReturn, sqlite3 *database)
+static LPSTR lastQuery = 0;
+
+int SQLOK(char * fromFile, int fromLine,int sqlReturn, sqlite3 *database)
 {
     if (sqlReturn != SQLITE_OK)
     {
         NSString * dbName = @"";
+        NSString * query = @"";
+        if (lastQuery)
+            query = [NSString stringWithUTF8String:lastQuery];
         int shared = 0;
         
         char *name = (char *)sqlite3_db_filename(database, "main");
@@ -26,8 +31,13 @@ int SQLOK(int from,int sqlReturn, sqlite3 *database)
             if ([fullPath containsString:@"SHARED"])
                 shared = 1;
         }
-        NSString *errmess = [NSString stringWithFormat:@"SQLite Error %i = %i from %i:%s db(%i):%@",
-                           sqlReturn, sqlite3_errcode(database),from, sqlite3_errmsg(database),shared,dbName];
+        LPSTR ffile = strrchr (fromFile,'/');
+        if (ffile)
+            ffile++;
+        else
+            ffile = fromFile;
+        NSString *errmess = [NSString stringWithFormat:@"SQLite Error %i = %i:%s db(%i):%@\nFrom:%s line%i\n%@",
+                           sqlReturn, sqlite3_errcode(database),sqlite3_errmsg(database),shared,dbName,ffile,fromLine,query];
         [CRAPI.sharedInstance logToErrorFile:errmess];
     }
     
@@ -41,7 +51,7 @@ BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,sqlite3 *database)
     sqlite3_stmt *stmt = NULL;
     char * query = malloc (1024);
     sprintf (query,"pragma table_info ('%s')",tableName);
-    int rc = sqlite3_prepare_v2(database, query, -1, &stmt, NULL);
+    int rc = SQLitePrepare(database, query, -1, &stmt, NULL);
     
     if (rc==SQLITE_OK)
     {
@@ -54,9 +64,33 @@ BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,sqlite3 *database)
                 doesExist = YES;
         }
     }
-    SQLOK(102,sqlite3_finalize(stmt), database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(stmt), database);
     free (query);
     return doesExist;
+}
+
+int SQLitePrepare (sqlite3 *db,            /* Database handle */
+                   const char *zSql,       /* SQL statement, UTF-8 encoded */
+                   int nByte,              /* Maximum length of zSql in bytes. */
+                   sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
+                   const char **pzTail     /* OUT: Pointer to unused portion of zSql */)
+
+{
+    int rtn = sqlite3_prepare_v2(db, zSql,nByte,ppStmt,pzTail);
+    int qlen = strlen (zSql);
+    if (lastQuery)
+        free (lastQuery);
+    lastQuery = malloc (qlen+4);
+    strcpy (lastQuery,zSql);
+    return rtn;
+}
+int SQLiteFinalize(sqlite3_stmt *pStmt)
+{
+    int rtn = sqlite3_finalize(pStmt);
+    if (lastQuery)
+        free (lastQuery);
+    lastQuery = 0;
+    return rtn;
 }
 
 BOOL doesSQLiteTableExist(char* tableNameIN, sqlite3 *database)
@@ -79,7 +113,7 @@ BOOL doesSQLiteTableExist(char* tableNameIN, sqlite3 *database)
         pDot = tableName;
         sprintf (query,"SELECT name FROM sqlite_master WHERE type='table' AND name='%s';",tableName);
     }
-    BOOL rc = !SQLOK(0,sqlite3_prepare_v2(database, query, -1, &stmt, NULL),database);
+    BOOL rc = !SQLOK(__FILE__,__LINE__,SQLitePrepare(database, query, -1, &stmt, NULL),database);
     
     if (rc)
     {
@@ -90,7 +124,7 @@ BOOL doesSQLiteTableExist(char* tableNameIN, sqlite3 *database)
                 doesExist = YES;
         }
     }
-    SQLOK(102,sqlite3_finalize(stmt), database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(stmt), database);//,query);
     free (query);
     return doesExist;
 }

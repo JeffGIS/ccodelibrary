@@ -93,7 +93,7 @@ static int nInit=0;
     if (!_isOpen)
     {
         _transactionActive = NO;
-        _isOpen = !SQLOK(161,sqlite3_open(self.path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database), _database);
         //NSLog(@"CurbRamp Database open");
         
         _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:_path
@@ -120,7 +120,7 @@ static int nInit=0;
 {
     if (opened && _isOpen)
     {
-        SQLOK(162,sqlite3_close(_database),_database);
+        SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);
         //NSLog(@"CurbRamp Database close");
         _isOpen = NO;
     }
@@ -153,7 +153,7 @@ static int nInit=0;
         
         sqlite3_stmt *statement = NULL;
         
-        SQLOK(163,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
         
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -163,7 +163,7 @@ static int nInit=0;
                 rtn = atoi(version);
         }
         
-        SQLOK(164,sqlite3_finalize(statement), _database);
+        SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     }
     
     [self close:opened];
@@ -185,7 +185,7 @@ static int nInit=0;
       sendToServer:(BOOL)sendToServer
               from:(int)from
 {
-    BOOL rtn = !SQLOK(from,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    BOOL rtn = !SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
     
     if (rtn && sendToServer)
     {
@@ -220,20 +220,20 @@ static int nInit=0;
 {
     BOOL opened = [self open];
     if (!_transactionActive)
-        SQLOK(166,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+        SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
     _transactionActive = YES;
     return opened;
 }
 
 - (void)commitTransaction
 {
-    SQLOK(167,sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
     _transactionActive = NO;
 }
 
 - (void)cancelTransaction
 {
-    SQLOK(168,sqlite3_exec(_database, "ROLLBACK", 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "ROLLBACK", 0, 0, 0), _database);
     _transactionActive = NO;
 }
 
@@ -263,7 +263,7 @@ static int nInit=0;
         
         sqlite3_stmt *statement = NULL;
         
-        SQLOK(169,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+        SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
         
         if (sqlite3_step(statement) == SQLITE_ROW)
         {
@@ -275,7 +275,7 @@ static int nInit=0;
             }
         }
         
-        SQLOK(170,sqlite3_finalize(statement), _database);
+        SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     }
     
     [self close:opened];
@@ -530,7 +530,7 @@ static int nInit=0;
     
     sqlite3_stmt *statement = nil;
     
-    SQLOK(178,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -538,7 +538,7 @@ static int nInit=0;
         note = [NSString stringWithUTF8String:text];
     }
     
-    SQLOK(179,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     [self close:opened];
     note = [note stringByReplacingOccurrencesOfString:@"|" withString:@"\n"];
     
@@ -559,7 +559,7 @@ static int nInit=0;
     
     sqlite3_stmt *statement;
     int noteid = -1;
-    SQLOK(180,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -570,7 +570,7 @@ static int nInit=0;
             noteid = -2;
     }
     
-    SQLOK(181,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     if (noteid == -1)
         noteid = [self getNextNoteID];
     
@@ -599,7 +599,7 @@ static int nInit=0;
     NSString *query = [NSString stringWithFormat:@"SELECT text FROM CURBRAMP_STANDARD_TEXT WHERE type=%i",type];
     sqlite3_stmt *statement;
     
-    SQLOK(181,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -608,7 +608,7 @@ static int nInit=0;
         [standardTextArray addObject:str];
     }
     
-    SQLOK(182,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     [self close:opened];
     return standardTextArray;
 }
@@ -622,7 +622,7 @@ static int nInit=0;
     sqlite3_stmt *statement;
     int maxID = 0;
     
-    SQLOK(183,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
         int textID = sqlite3_column_int(statement, 0);
@@ -632,7 +632,7 @@ static int nInit=0;
             rtn = FALSE;
         maxID = max (maxID,textID);
     }
-    SQLOK(184,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     if (rtn)
     {
         newText = [newText stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
@@ -670,13 +670,13 @@ static int nInit=0;
     NSString *cmd = [NSString stringWithFormat:@"SELECT LastDataUpdate,LastPictUpdate FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
-    SQLOK(185,sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, cmd.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         lastNum = sqlite3_column_int(statement, 0);
         lastPictNum = sqlite3_column_int(statement, 1);
     }
-    SQLOK(186,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     if (!lastNum)
     {
         lastNum = 1;
@@ -709,9 +709,9 @@ static int nInit=0;
     NSString *cmd = [NSString stringWithFormat:@"SELECT * FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
-    SQLOK(187,sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, cmd.UTF8String, -1, &statement, 0), _database);
     BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
-    SQLOK(188,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     
     if (!haveRecord)
     {
@@ -736,9 +736,9 @@ static int nInit=0;
     NSString *cmd = [NSString stringWithFormat:@"SELECT * FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
-    SQLOK(189,sqlite3_prepare_v2(_database, cmd.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, cmd.UTF8String, -1, &statement, 0), _database);
     BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
-    SQLOK(190,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     
     if (!haveRecord)
     {
@@ -762,12 +762,12 @@ static int nInit=0;
     NSString *query = [NSString stringWithFormat:@"SELECT LastPictUpdate FROM CURBRAMP_UPDATES WHERE iPad=%i",iPad];
     sqlite3_stmt *statement;
     
-    SQLOK(191,sqlite3_prepare_v2(_database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         LastNum = sqlite3_column_int(statement, 0);
     }
-    SQLOK(192,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     [self close:opened];
     return LastNum;
 }
@@ -852,13 +852,13 @@ static int nInit=0;
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(193,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(self.database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         nextID = sqlite3_column_int(statement, 0);
     }
     nextID = (int)[CRAPI.sharedInstance adjustNextRefno:nextID];
-    SQLOK(194,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     [self close:opened];
     return nextID;
 }
@@ -870,13 +870,13 @@ static int nInit=0;
     
     sqlite3_stmt *statement = NULL;
     
-    SQLOK(195,sqlite3_prepare_v2(self.database, query.UTF8String, -1, &statement, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(self.database, query.UTF8String, -1, &statement, 0), _database);
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         nextID = sqlite3_column_int(statement, 0);
     }
     nextID = (int)[CRAPI.sharedInstance adjustNextRefno:nextID];
-    SQLOK(196,sqlite3_finalize(statement), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     [self close:opened];
     return nextID;
 }
