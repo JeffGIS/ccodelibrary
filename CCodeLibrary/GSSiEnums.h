@@ -5,6 +5,13 @@
 
 @interface GSSiEnums : NSObject
 
+typedef NS_ENUM(NSInteger, DataSetTypes)
+{
+    CURBRAMPS,
+    ALLEYWALLS,
+    NumDataSetTypes
+};
+
 typedef NS_ENUM(NSInteger, ValueTypes)
 {
     VTInteger,

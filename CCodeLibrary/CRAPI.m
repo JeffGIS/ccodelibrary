@@ -35,6 +35,7 @@
     
     if (self)
     {
+        _newDataset = CURBRAMPS;
         _kp = 0;
         _currentGeoidValue = 0;
         _pickApInPixels = 50;
@@ -82,7 +83,6 @@
         _downloadData = [SharedDefaults.defaults boolForKey:@"DownloadData"];
         _downloadPix = [SharedDefaults.defaults boolForKey:@"DownloadPix"];
         _forAllYears = [UserDefaults.defaults boolForKey:@"ForAllYears"];
-        _dataset = 0;
         _minManageVersion  = @"";
         _minPrelimVersion = @"";
         _minDetailVersion = @"";
@@ -127,6 +127,10 @@
     return sharedInstance;
 }
 
+- (void) setNewDataset:(DataSetTypes)newDataset
+{
+    _newDataset = newDataset;
+}
 - (NSString *)sharedOutputDirectory
 {
     NSString* outdir = [NSString stringWithFormat:@"%@/OutputFiles",self.sharedFilePath];

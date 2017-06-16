@@ -522,7 +522,7 @@ static UserDefaults *_defaults;
 - (void)addLocationToListWithName:(NSString *)name
                             state:(NSString *)state
                             geoid:(int)geoid
-                          dataset:(int)dataset
+                          dataset:(DataSetTypes)dataset
                          bounds_w:(CLLocationDegrees)bounds_w
                          bounds_s:(CLLocationDegrees)bounds_s
                          bounds_e:(CLLocationDegrees)bounds_e

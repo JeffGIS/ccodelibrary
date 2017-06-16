@@ -9,6 +9,7 @@
 #import "Colors.h"
 #import "CCodeTypes.h"
 #import "NVAlertView.h"
+#import "GSSiEnums.h"
 
 @interface UserDefaults : NSObject <CAAnimationDelegate>
 {
@@ -96,7 +97,7 @@
 - (void)addLocationToListWithName:(NSString *)name
                             state:(NSString *)state
                             geoid:(int)geoid
-                          dataset:(int)dataset
+                          dataset:(DataSetTypes)dataset
                          bounds_w:(CGFloat)bounds_w
                          bounds_s:(CGFloat)bounds_s
                          bounds_e:(CGFloat)bounds_e

@@ -223,11 +223,12 @@ static ManagePlacesDatabase *_statdatabase = nil;
         NSString *name = [[NSString alloc] initWithUTF8String:nameChar];
         name = removeEndingReturn(name);
         name = removeTextInsideParentheses(name);
-        
+        DataSetTypes dataSet = geoid / 100000000;
+        geoid = geoid % 100000000;
         [UserDefaults.defaults addLocationToListWithName:name
                                                    state:[self getStateCodeForStatefp:statefp]
                                                    geoid:geoid
-                                                 dataset:CRAPI.sharedInstance.dataset
+                                                 dataset:dataSet
                                                 bounds_w:bounds_w
                                                 bounds_s:bounds_s
                                                 bounds_e:bounds_e
