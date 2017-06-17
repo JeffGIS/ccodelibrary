@@ -951,12 +951,6 @@ SELECT max(_id) FROM MyTable*/
 - (int) getLastDataUpdateNumber:(int)iPad
                     lastPictNum:(int*)pictNum
 {
-    if (!iPad)
-    {
-        *pictNum = 0;
-        return 0;
-    }
-    
     int lastNum  = 0;
     int lastPictNum = 0;
     BOOL opened = [self open];
@@ -982,6 +976,8 @@ SELECT max(_id) FROM MyTable*/
     *pictNum = lastPictNum;
     return lastNum;
 }
+
+
 - (BOOL) setLastDataUpdateNum:(int)lastNum
                       pictNum:(int)pictNum
                       foriPad:(int)iPad
