@@ -34,7 +34,7 @@
         "CREATE TABLE IF NOT EXISTS ContactGroups (id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "group_name CHAR(64), contact_id INT, UNIQUE(group_name, contact_id))";
         
-        SQLOK(__FILE__,__LINE__, sqlite3_exec(_database, cmd.UTF8String, 0, 0, 0), _database);
+        SQLOK(__FILE__,__LINE__, SQLiteExec(_database, cmd.UTF8String, 0, 0, 0), _database);
         [self close:opened];
     }
     
@@ -81,7 +81,7 @@
     NSString *cmd = [NSString stringWithFormat:@"INSERT OR IGNORE INTO Contacts VALUES (null,'%@','%@','%@');",
                      email, firstName, lastName];
     
-    SQLOK(__FILE__,__LINE__, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     
     sqlite3_stmt *statement = NULL;
     int emailID = -1;
@@ -99,7 +99,7 @@
     cmd = [NSString stringWithFormat:@"INSERT INTO ContactGroups VALUES (null,'%@',%i);",
            contactGroup, emailID];
     
-    SQLOK(__FILE__,__LINE__, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     [self close:opened];
 }
 
@@ -125,7 +125,7 @@
     NSString *cmd = [NSString stringWithFormat:@"DELETE FROM ContactGroups WHERE group_name='%@' AND contact_id='%i'",
                      contactGroup, emailID];
     
-    SQLOK(__FILE__,__LINE__, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     [self close:opened];
 }
 
@@ -136,7 +136,7 @@
     NSString *cmd = [NSString stringWithFormat:@"DELETE FROM ContactGroups WHERE group_name='%@'",
                      contactGroup];
     
-    SQLOK(__FILE__,__LINE__, sqlite3_exec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     [self close:opened];
 }
 

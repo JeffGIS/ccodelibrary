@@ -52,7 +52,9 @@ static GetPriorityLocations *_getLocations;
         NSString *cmd = [NSString stringWithFormat:@"INSERT INTO PriorityLocations VALUES (%i,'%@',%@, '%@', %f, %f, %f, %i);",
                          iRef++,name, pl.type,cat, pl.coordinate.latitude, pl.coordinate.longitude, pl.radius, (int)pl.offset];
         
-        [crd executeCmd:(LPSTR)cmd.UTF8String sendToServer:YES from:1];
+        [crd executeCmd:(LPSTR)cmd.UTF8String sendToServer:YES
+               fromFile:__FILE__ fromLine:__LINE__];
+
     }
     
     if (opened)

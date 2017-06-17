@@ -72,7 +72,7 @@ static int ii;
     [self open];
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Intersections;DROP TABLE IF EXISTS Intersections_index;"];
     
-    SQLOKint(sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, NULL), "createIntersectionsTable1");
+    SQLOKint(SQLiteExec(_database, dropQuery.UTF8String, NULL, NULL, NULL), "createIntersectionsTable1");
     
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Intersections (\
                        intID INTEGER PRIMARY KEY,\
@@ -109,21 +109,21 @@ static int ii;
                        streetAZMs CHAR(128));\
                        CREATE VIRTUAL TABLE Intersections_index IF NOT EXISTS USING rtree(id,minX, maxX, minY, maxY);"];
     
-    rtn = SQLOKint(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), "createIntersectionsTable2");
+    rtn = SQLOKint(SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), "createIntersectionsTable2");
     sqlite3_free(error);
     
     if (rtn != SQLITE_OK)
         return rtn;
     
     query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Intersections (intX);"];
-    rtn = SQLOKint(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), "createIntersectionsTable3");
+    rtn = SQLOKint(SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), "createIntersectionsTable3");
     sqlite3_free(error);
     
     if (rtn != SQLITE_OK)
         return rtn;
     
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Intersections (intY);"];
-    rtn = SQLOKint(sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), "createIntersectionsTable4");
+    rtn = SQLOKint(SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), "createIntersectionsTable4");
     sqlite3_free(error);
     
     if (rtn == SQLITE_OK)
@@ -646,14 +646,14 @@ static int ii;
             
             rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
                                    sendToServer:YES
-                                           from:165];
+                                       fromFile:__FILE__ fromLine:__LINE__];
         }
         else if (haveCurrentRamp)
         {
             NSString * cmd = [NSString stringWithFormat:@"Delete FROM ramps WHERE intID=%i AND rampNum = %i",(int)mpint.intID,i];
             rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
                                    sendToServer:YES
-                                           from:1652];
+                                       fromFile:__FILE__ fromLine:__LINE__];
             
         }
     }
@@ -724,14 +724,14 @@ WHERE intID=%i;",
     
     rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
                            sendToServer:YES
-                                   from:1655];
+                               fromFile:__FILE__ fromLine:__LINE__];
     
     cmd = [NSString stringWithFormat:@"UPDATE Intersections_index SET minY=%f,minX=%f,maxY=%f,maxX=%f WHERE Intersections_index.id=%ld",
            lat, lon, lat, lon, (long)mpint.intID];
     
     rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
                            sendToServer:YES
-                                   from:1654];;
+                               fromFile:__FILE__ fromLine:__LINE__];
 
     [self close:opened];
 
@@ -759,12 +759,12 @@ WHERE intID=%i;",
     if (first)
     rtn = [self.curbRampData executeCmd:cmd.UTF8String
                            sendToServer:NO
-                                   from:1657];
+                               fromFile:__FILE__ fromLine:__LINE__];
     first = FALSE;
     cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO Compliance VALUES(%i,%i,'%s');",intID,rampID,ccode];
     rtn = [self.curbRampData executeCmd:cmd.UTF8String
                            sendToServer:NO
-                                   from:1657];
+                               fromFile:__FILE__ fromLine:__LINE__];
     [self close:opened];
     return rtn;
     
@@ -1419,14 +1419,14 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     rtn = [self.curbRampData executeCmd:query.UTF8String
                            sendToServer:YES
-                                   from:1657];
+                               fromFile:__FILE__ fromLine:__LINE__];
     
     query = [NSString stringWithFormat:@"UPDATE Intersections_index SET minY=%f,minX=%f,maxY=%f,maxX=%f WHERE Intersections_index.id=%ld",
              intpt.latitude, intpt.longitude, intpt.latitude, intpt.longitude, (long)intpt.intID];
     
     rtn = [self.curbRampData executeCmd:query.UTF8String
                            sendToServer:YES
-                                   from:1658];
+                               fromFile:__FILE__ fromLine:__LINE__];
     
     [self close:opened];
 
@@ -1535,7 +1535,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     int rtn = [self.curbRampData executeCmd:updateQuery.UTF8String
                                sendToServer:YES
-                                       from:1659];
+                                   fromFile:__FILE__ fromLine:__LINE__];
     [self close:opened];
     
     return nPaid;
@@ -1574,7 +1574,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
                 query = [NSString stringWithFormat:@"UPDATE ramps SET isComplete = 2 WHERE intID = %i AND rampNum = %i",rampKey.intID,rampKey.rampNum];
                 int rtn = [self.curbRampData executeCmd:query.UTF8String
                                        sendToServer:YES
-                                               from:1659];
+                                               fromFile:__FILE__ fromLine:__LINE__];
                 numMarked++;
             }
             fclose(Fid);
@@ -1650,7 +1650,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     rtn = [self.curbRampData executeCmd:query.UTF8String
                            sendToServer:YES
-                                   from:1659];
+                               fromFile:__FILE__ fromLine:__LINE__];
     [self close:opened];
     return !rtn;
 }
@@ -1668,7 +1668,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     rtn = [self.curbRampData executeCmd:query.UTF8String
                            sendToServer:YES
-                                   from:1659];
+                               fromFile:__FILE__ fromLine:__LINE__];
     [self close:opened];
     return !rtn;
 }
@@ -1692,7 +1692,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     rtn = [self.curbRampData executeCmd:query.UTF8String
                            sendToServer:YES
-                                   from:1659];
+                               fromFile:__FILE__ fromLine:__LINE__];
 
     [self close:opened];
     return !rtn;
@@ -1712,7 +1712,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     rtn = [self.curbRampData executeCmd:query.UTF8String
                            sendToServer:YES
-                                   from:1659];
+                               fromFile:__FILE__ fromLine:__LINE__];
     [self close:opened];
     return !rtn;
 }
@@ -1729,7 +1729,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     rtn = [self.curbRampData executeCmd:query.UTF8String
                            sendToServer:YES
-                                   from:1659];
+                               fromFile:__FILE__ fromLine:__LINE__];
     [self close:opened];
     return !rtn;
 }
@@ -1947,7 +1947,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
                                    NSString *cmd = [self intStructToCmd:&intStruct];
                                    [self.curbRampData executeCmd:(char *)cmd.UTF8String
                                                     sendToServer:YES
-                                                            from:1660];
+                                                        fromFile:__FILE__ fromLine:__LINE__];
                                    
                                    nLoaded++;
                                    currentLoc = ftell(fidData);
@@ -2230,13 +2230,13 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     BOOL opened = [self open];
     
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(self.curbRampData.database, "BEGIN TRANSACTION", NULL, NULL, NULL),self.curbRampData.database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(self.curbRampData.database, "BEGIN TRANSACTION", NULL, NULL, NULL),self.curbRampData.database);
     NSString *cmd = [self intStructToCmd:&intRec];
     [self.curbRampData executeCmd:(char *)cmd.UTF8String
                      sendToServer:YES
-                             from:1661];
+                         fromFile:__FILE__ fromLine:__LINE__];
 
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(self.curbRampData.database, "COMMIT TRANSACTION", NULL, NULL, NULL), self.curbRampData.database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(self.curbRampData.database, "COMMIT TRANSACTION", NULL, NULL, NULL), self.curbRampData.database);
     [self close:opened];
 
     return intRec.intID;
@@ -2313,7 +2313,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     [self.curbRampData executeCmd:(char *)cmd.UTF8String
                      sendToServer:YES
-                             from:1656];
+                         fromFile:__FILE__ fromLine:__LINE__];
     
     [self close:opened];
 }
@@ -2325,7 +2325,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     
     [self.curbRampData executeCmd:(char *)cmd.UTF8String
                      sendToServer:YES
-                             from:1653];
+                         fromFile:__FILE__ fromLine:__LINE__];
     
     [self close:opened];
 }

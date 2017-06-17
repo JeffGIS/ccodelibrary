@@ -77,7 +77,7 @@ int SQLitePrepare (sqlite3 *db,            /* Database handle */
 
 {
     int rtn = sqlite3_prepare_v2(db, zSql,nByte,ppStmt,pzTail);
-    int qlen = strlen (zSql);
+    int qlen =  (int)strlen (zSql);
     if (lastQuery)
         free (lastQuery);
     lastQuery = malloc (qlen+4);
@@ -91,6 +91,20 @@ int SQLiteFinalize(sqlite3_stmt *pStmt)
         free (lastQuery);
     lastQuery = 0;
     return rtn;
+}
+int SQLiteExec(
+                            sqlite3* db,                                  /* An open database */
+                            const char *sql,                           /* SQL to be evaluated */
+                            int (*callback)(void*,int,char**,char**),  /* Callback function */
+                            void * arg,                                    /* 1st argument to callback */
+                            char **errmsg                              /* Error msg written here */)
+{
+    int qlen =  (int)strlen (sql);
+    if (lastQuery)
+        free (lastQuery);
+    lastQuery = malloc (qlen+4);
+    strcpy (lastQuery,sql);
+    return sqlite3_exec(db, sql, callback, arg, errmsg);
 }
 
 BOOL doesSQLiteTableExist(char* tableNameIN, sqlite3 *database)

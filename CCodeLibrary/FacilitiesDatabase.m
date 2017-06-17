@@ -56,7 +56,7 @@ static FacilitiesDatabase *_statdatabase = nil;
     
     NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Facilities;"];
     
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, dropQuery.UTF8String, NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, dropQuery.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
     
     NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Facilities (\
@@ -71,15 +71,15 @@ static FacilitiesDatabase *_statdatabase = nil;
                        streetNames CHAR(512),\
                        streetAZMs CHAR(128));"];
     
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
     
     query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Facilities (facX);"];
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
     
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Facilities (facY);"];
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
 }
 
@@ -325,7 +325,7 @@ static FacilitiesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"UPDATE Facilities SET lastUpdateTime=%i, facX=%i, facY=%i WHERE facID=%i",
                        iTime, lev21x, lev21y, facpt.facID];
     char *error = NULL;
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
+    rtn = SQLiteExec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
     return !rtn;
 }
@@ -346,7 +346,7 @@ static FacilitiesDatabase *_statdatabase = nil;
                        fac.facID];
     
     char *error = NULL;
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
+    rtn = SQLiteExec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
     return !rtn;
 }
@@ -412,7 +412,7 @@ static FacilitiesDatabase *_statdatabase = nil;
                        iTime, status, facID];
     
     char *error = NULL;
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
+    rtn = SQLiteExec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
     return !rtn;
 }
@@ -426,7 +426,7 @@ static FacilitiesDatabase *_statdatabase = nil;
     NSString *query = [NSString stringWithFormat:@"UPDATE Facilities SET lastUpdateTime=%i, assignedTo=%i WHERE facID=%i",
                        iTime, user, facID];
     char *error = NULL;
-    rtn = sqlite3_exec(_database, query.UTF8String, NULL, NULL, &error);
+    rtn = SQLiteExec(_database, query.UTF8String, NULL, NULL, &error);
     sqlite3_free(error);
     return !rtn;
 }
@@ -485,7 +485,7 @@ static FacilitiesDatabase *_statdatabase = nil;
     [self createFacilitiesTable];
     
     SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, buffer, -1, &statement, NULL),_database);
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "BEGIN TRANSACTION", NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "BEGIN TRANSACTION", NULL, NULL, &error), _database);
     sqlite3_free(error);
     
     fgetstring(index, maxIndex, fidIndex);
@@ -527,7 +527,7 @@ static FacilitiesDatabase *_statdatabase = nil;
         SQLOK(__FILE__,__LINE__,sqlite3_reset(statement), _database);
     }
     
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "COMMIT TRANSACTION", NULL, NULL, &error), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "COMMIT TRANSACTION", NULL, NULL, &error), _database);
     sqlite3_free(error);
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(self.statement),_database);
     

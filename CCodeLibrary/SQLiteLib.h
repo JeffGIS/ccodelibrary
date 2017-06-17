@@ -20,5 +20,12 @@ int SQLitePrepare (sqlite3 *db,            /* Database handle */
                    sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
                    const char **pzTail     /* OUT: Pointer to unused portion of zSql */);
 int SQLiteFinalize(sqlite3_stmt *pStmt);
+int SQLiteExec(
+               sqlite3* db,                                  /* An open database */
+               const char *sql,                           /* SQL to be evaluated */
+               int (*callback)(void*,int,char**,char**),  /* Callback function */
+               void *arg,                                    /* 1st argument to callback */
+               char **errmsg                              /* Error msg written here */
+);
 
 #endif /* defined(__CCodeLibrary__SQLiteLib__) */

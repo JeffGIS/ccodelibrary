@@ -31,7 +31,8 @@
 
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer
-              from:(int)from;
+          fromFile:(LPSTR)fromFile
+          fromLine:(int)fromLine;
 
 - (BOOL)startTransaction;
 - (void)commitTransaction;

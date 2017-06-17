@@ -172,7 +172,7 @@ static int fileSequence = 0;
     int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     if (!iPad)
         sendToServer = YES;
-    BOOL rtn = !SQLOK(fromFile,fromLine,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    BOOL rtn = !SQLOK(fromFile,fromLine,SQLiteExec(_database, cmd, 0, 0, 0), _database);
     if (rtn && sendToServer)
     {
         NSString * sendToServerFile = [self getSendToServerFile:iPad];
@@ -193,18 +193,18 @@ static int fileSequence = 0;
 - (BOOL)startTransaction
 {
     BOOL opened = [self open];
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "BEGIN", 0, 0, 0), _database);
     return opened;
 }
 
 - (void)commitTransaction
 {
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "COMMIT", 0, 0, 0), _database);
 }
 
 - (void)cancelTransaction
 {
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "ROLLBACK", 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "ROLLBACK", 0, 0, 0), _database);
 }
 
 - (int)getAlleyLineStatus:(NSInteger)refno
@@ -1065,11 +1065,11 @@ SELECT max(_id) FROM MyTable*/
 {
     BOOL rtn = TRUE;
     NSString * cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_UPDATES ('iPad' INTEGER PRIMARY KEY,'LastDataUpdate' INT,'LastPictUpdate' INT)";
-    rtn = !SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_NOTES ('id' INTEGER PRIMARY KEY,'intID' INT,'corner' INT,'rampID' INT,'type' INT, 'note' CHAR(4096))";
-    rtn = !SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_STANDARD_TEXT ('textID' INTEGER PRIMARY KEY,'type' INT,'text' CHAR(4096))";
-    rtn = !SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     return rtn;
 }
 - (int) incrementLastDataFileNum
@@ -1144,9 +1144,9 @@ SELECT max(_id) FROM MyTable*/
 {
     BOOL rtn = TRUE;
     NSString *cmd = @"CREATE TABLE IF NOT EXISTS ALLEYWALL_PICTURES ('id' INTEGER PRIMARY KEY,'iPadNum' INT,'pictNum' INT,'wallID' CHAR(8), 'type' INT, 'heading' INT, 'latitude' REAL, 'longitude' REAL, 'time' INT)";
-     rtn = !SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+     rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     cmd = @"CREATE INDEX IF NOT EXISTS ALLEYWALL_PICTURES_index ON ALLEYWALL_PICTURES (wallID)";
-    rtn = !SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
+    rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
 
     return rtn;
 }

@@ -185,7 +185,7 @@ static int nInit=0;
       sendToServer:(BOOL)sendToServer
               from:(int)from
 {
-    BOOL rtn = !SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, cmd, 0, 0, 0), _database);
+    BOOL rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd, 0, 0, 0), _database);
     
     if (rtn && sendToServer)
     {
@@ -215,25 +215,49 @@ static int nInit=0;
     
     return rtn;
 }
+- (BOOL)executeCmd:(char *)cmd
+      sendToServer:(BOOL)sendToServer
+          fromFile:(LPSTR)fromFile
+          fromLine:(int)fromLine
+{
+    int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
+    BOOL rtn = !SQLOK(fromFile,fromLine,SQLiteExec(_database, cmd, 0, 0, 0), _database);
+    if (rtn && sendToServer)
+    {
+        NSString * sendToServerFile = [self getSendToServerFile:iPad];
+        int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:sendToServerFile
+                                                                           error:nil].fileSize;
+        if (!fileSize)
+        {
+            int iTime = NSDate.timeIntervalSinceReferenceDate;
+            NSString * versions = [NSString stringWithFormat:@"/*ApVer %@ DBVer %s Time %i*/",
+                                   UIApplication.appVersionBuild,CURRENT_INTERSECTION_VERSION,iTime];
+            rtn = appendStringToFile (versions ,sendToServerFile);
+        }
+        rtn = appendStringToFile ([NSString stringWithUTF8String:cmd] ,sendToServerFile);
+    }
+    return rtn;
+}
+
 
 - (BOOL)startTransaction
 {
     BOOL opened = [self open];
     if (!_transactionActive)
-        SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "BEGIN", 0, 0, 0), _database);
+        SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "BEGIN", 0, 0, 0), _database);
     _transactionActive = YES;
     return opened;
 }
 
 - (void)commitTransaction
 {
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "COMMIT", 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "COMMIT", 0, 0, 0), _database);
     _transactionActive = NO;
 }
 
 - (void)cancelTransaction
 {
-    SQLOK(__FILE__,__LINE__,sqlite3_exec(_database, "ROLLBACK", 0, 0, 0), _database);
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "ROLLBACK", 0, 0, 0), _database);
     _transactionActive = NO;
 }
 
