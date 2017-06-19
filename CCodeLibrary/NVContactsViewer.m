@@ -276,10 +276,7 @@ viewForHeaderInSection:(NSInteger)section
         headerLabel.text = @"Groups";
     
     else
-    {
-        UITableViewCell *cell = [_groupsTV cellForRowAtIndexPath:_groupsTV.indexPathForSelectedRow];
-        headerLabel.text = _groupHeader;
-    }
+         headerLabel.text = _groupHeader;
     
     [headerView addSubview:headerLabel];
     [headerLabel constrainToView:headerView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
