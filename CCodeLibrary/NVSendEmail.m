@@ -17,6 +17,28 @@
 
 @implementation NVSendEmail
 
++ (void)sendEmailToRecipient:(NSString *)recipient
+                  controller:(UIViewController *)controller;
+{
+    if (!MFMailComposeViewController.canSendMail)
+    {
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:controller.view
+                                                          delegate:CRAPI.sharedInstance
+                                                             title:@"ERROR: No mail account setup on device."
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
+#pragma unused(alert)
+    }
+    
+    else
+    {
+        MFMailComposeViewController *composer = MFMailComposeViewController.new;
+        composer.mailComposeDelegate = (id)controller;
+        composer.toRecipients = @[(recipient)];
+        [controller presentViewController:composer animated:YES completion:nil];
+    }
+}
+
 + (void)sendEmailWithSubject:(NSString *)subject
                      message:(NSString *)message
               attachmentData:(NSData *)attachmentData

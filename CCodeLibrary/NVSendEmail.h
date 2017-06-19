@@ -12,4 +12,7 @@
                     fileName:(NSString *)fileName
                   controller:(UIViewController *)controller;
 
++ (void)sendEmailToRecipient:(NSString *)recipient
+                  controller:(UIViewController *)controller;
+
 @end
