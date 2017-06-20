@@ -42,11 +42,11 @@
     
     [view addSubview:alert.overlayView];
     
-    CGFloat width = 340.0, heightSpacer = 10.0;
+    CGFloat width = 400.0, heightSpacer = 10.0;
     UIFont *font = [UIFont boldSystemFontOfSize:28.0];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        width = 240.0, heightSpacer = 6.0, font = [UIFont boldSystemFontOfSize:20.0];
+        width = 300.0, heightSpacer = 6.0, font = [UIFont boldSystemFontOfSize:20.0];
     
     CGFloat yPosition = heightSpacer;
     
@@ -76,7 +76,7 @@
     height += heightSpacer;
     
     alert.textView = [[UITextView alloc] initWithFrame:CGRectMake(-1.0 , yPosition,
-                                                                 (width + 2.0), height)];
+                                                                 (width + 2.0), (height * 2.0))];
     
     alert.textView.backgroundColor = UIColor.clearColor;
     alert.textView.text = text;
@@ -90,7 +90,7 @@
     
     [alert addSubview:alert.textView];
     
-    yPosition += (height - 1.0);
+    yPosition += ((height * 2.0) - 1.0);
     NSString *buttonTitle = @"Save";
     
     height = [alert getHeightForText:buttonTitle
@@ -135,7 +135,16 @@
     yPosition += (height - 1.0);
     
     alert.frame = CGRectMake(0.0, 0.0, width, yPosition);
-    alert.center = view.center;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+    {
+        CGPoint center = CGPointMake(view.center.x, (view.center.y * 0.5));
+        alert.center = center;
+    }
+    
+    else
+        alert.center = view.center;
+    
     alert.backgroundColor = UIColor.whiteColor;
     alert.alpha = 0.0;
     alert.layer.cornerRadius = heightSpacer;
