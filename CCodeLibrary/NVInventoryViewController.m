@@ -2201,16 +2201,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 }
 
-- (void)helpButtonTapped:(UIButton *)button
-{
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_Inventory"
-                                                       ofType:@"pdf"];
-    
-    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                    showFileAtPath:filePath];
-#pragma unused(nvwv)
-}
-
 - (void)refreshButtonTapped:(UIButton *)button
 {
     if (hasNetwork())
@@ -2225,6 +2215,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                   destructiveIndex:0];
 #pragma unused(alert)
     }
+}
+
+- (void)helpButtonTapped:(UIButton *)button
+{
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_Inventory"
+                                                       ofType:@"pdf"];
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                    showFileAtPath:filePath];
+#pragma unused(nvwv)
 }
 
 @end

@@ -1555,16 +1555,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     [alertView hideLargeAlertView:YES];
 }
 
-- (void)helpButtonTapped:(UIButton *)button
-{
-    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_Synchronize"
-                                                       ofType:@"pdf"];
-    
-    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                    showFileAtPath:filePath];
-#pragma unused(nvwv)
-}
-
 - (void)tempFix:(int)iPad
           geoid:(int)geoid
 {
@@ -1765,6 +1755,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         toDirectory:toDir
      deleteWhenDone:NO
      appendFileName:NO];
+}
+
+- (void)helpButtonTapped:(UIButton *)button
+{
+    NSString *filePath = [NSBundle.mainBundle pathForResource:@"NVCRISHelp_Synchronize"
+                                                       ofType:@"pdf"];
+    
+    NVWebView *nvwv = [NVWebView showWebViewInView:self.view
+                                    showFileAtPath:filePath];
+#pragma unused(nvwv)
 }
 
 @end
