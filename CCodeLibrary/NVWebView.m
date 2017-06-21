@@ -104,22 +104,29 @@
     nvwv.navigationComplete = NO;
     nvwv.zoomToPDFDrawing = NO;
     nvwv.drawsMarkers = NO;
-    nvwv.rotationEnabled = YES;
+    nvwv.rotationEnabled = NO;
     
     NSURL *url = [NSURL fileURLWithPath:path];
 
     if ([path.pathExtension isEqualToString:@"pdf"] || [path.pathExtension isEqualToString:@"PDF"])
     {
-        CFURLRef urlRef = (__bridge CFURLRef)url;
-        CGPDFDocumentRef pdfRef = CGPDFDocumentCreateWithURL(urlRef);
-        nvwv.numPages = (int)CGPDFDocumentGetNumberOfPages(pdfRef);
-        CGPDFDocumentRelease(pdfRef);
+        if ([path containsString:@"NVCRISHelp"])
+            nvwv.isFile = NO;
         
-        UIRotationGestureRecognizer *rotGR = [[UIRotationGestureRecognizer alloc] initWithTarget:nvwv
-                                                                                          action:@selector(rotateScrollView:)];
-        
-        rotGR.delegate = nvwv;
-        [nvwv.webView.scrollView addGestureRecognizer:rotGR];
+        else
+        {
+            CFURLRef urlRef = (__bridge CFURLRef)url;
+            CGPDFDocumentRef pdfRef = CGPDFDocumentCreateWithURL(urlRef);
+            nvwv.numPages = (int)CGPDFDocumentGetNumberOfPages(pdfRef);
+            CGPDFDocumentRelease(pdfRef);
+            
+            UIRotationGestureRecognizer *rotGR = [[UIRotationGestureRecognizer alloc] initWithTarget:nvwv
+                                                                                              action:@selector(rotateScrollView:)];
+            
+            rotGR.delegate = nvwv;
+            [nvwv.webView.scrollView addGestureRecognizer:rotGR];
+            nvwv.rotationEnabled = YES;
+        }
     }
     
     [nvwv.webView loadFileURL:url allowingReadAccessToURL:url];
