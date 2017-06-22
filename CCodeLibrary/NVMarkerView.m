@@ -36,17 +36,6 @@
     
     return nvmv;
 }
-- (id)init
-{
-    self = [super init];
-    
-    return self;
-}
-
-- (void)dealloc
-{
-    return;
-}
 
 - (void)drawRect:(CGRect)rect
 {
