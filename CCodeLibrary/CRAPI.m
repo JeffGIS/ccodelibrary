@@ -730,69 +730,49 @@
   
 }
 
--(NSString *) appAndVersion
+- (NSString *)appAndVersion
 {
-    NSString * rtn = [NSString stringWithFormat:@"%i.%i-%@",_currentModule,_currentSubModule,UIApplication.appVersionBuild];
+    NSString *rtn = [NSString stringWithFormat:@"%i.%i-%@",
+                     _currentModule, _currentSubModule, UIApplication.appVersionBuild];
     return rtn;
 }
 
--(BOOL) isValidVersion:(NSString*)message
+- (BOOL)isValidVersion:(NSString *)message
 {
+    NVAlertView *alert = nil;
+    
     if ([message isEqualToString:@"InvalidVersion1"])
     {
-        must update test flight
+        alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
+                                             delegate:CRAPI.sharedInstance
+                                                title:@"This app must be updated to the current version to function correctly. Tap on 'OK' to go to TestFlight and update this app."
+                                      buttonTextArray:@[@"OK"]
+                                     destructiveIndex:0];
+        
+        alert.identifier = @"LaunchTestFlight";
     }
+    
     if ([message isEqualToString:@"InvalidVersion2"])
     {
-        must update production
+        alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
+                                             delegate:CRAPI.sharedInstance
+                                                title:@"This app must be updated to the current version to function correctly. Tap on 'OK' to go to the App Store and update this app."
+                                      buttonTextArray:@[@"OK"]
+                                     destructiveIndex:0];
+        
+        alert.identifier = @"LaunchAppStore";
     }
+    
     return YES;
 }
 
-- (NSMutableArray*) getPlacesArray
-{
-    NSMutableArray * array;
-    
-    return array;
-}
-
-- (BOOL) checkVersion:(NSString**)minVersion
-{
-    BOOL rtn = YES;
-    int icmp=0;
-    
-    //_currentModule,_currentSubModule,
-    switch (_currentModule)
-    {
-        case MANAGEMENT_MODULE:
-            icmp = [UIApplication.appVersionBuild compare:_minManageVersion];
-            *minVersion = _minManageVersion;
-            break;
-        case PRELIM_MODULE:
-            icmp = [UIApplication.appVersionBuild compare:_minPrelimVersion];
-            *minVersion = _minPrelimVersion;
-            break;
-        case DETAIL_MODULE:
-            icmp = [UIApplication.appVersionBuild compare:_minDetailVersion];
-            *minVersion = _minDetailVersion;
-            break;
-
-    }
-    
-    if (icmp < 0)
-    {
-        rtn = FALSE;
-    }
-    return rtn;
-}
-- (void) setGSSiPadNumber:(int)num
+- (void)setGSSiPadNumber:(int)num
 {
     NSString *key = [NSString stringWithFormat:@"GSSiPadNumber"];
     _GSSiPadNumber = num;
+    
     if (num > 0)
-        [UserDefaults.defaults saveInteger:num
-                                forKey:key];
-
+        [UserDefaults.defaults saveInteger:num forKey:key];
 }
 
 - (NSInteger)adjustNextRefno:(NSInteger)refno
@@ -1171,7 +1151,14 @@
 - (void)alertView:(NVAlertView *)alertView
 didTapButtonAtIndex:(NSInteger)buttonIndex
 {
-    [alertView hideLargeAlertView:YES];
+    if ([alertView.identifier isEqualToString:@"LaunchTestFlight"])
+        [self gotoTestFlight];
+    
+    else if ([alertView.identifier isEqualToString:@"LaunchAppStore"])
+        [self gotoAppStore];
+    
+    else
+        [alertView hideLargeAlertView:YES];
 }
 
 - (void)gotoAppStore
@@ -1183,19 +1170,24 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         case MANAGEMENT_MODULE:
             urlString = @"https://itunes.apple.com/us/app/gssi/id1104782524";
             break;
-            
         case PRELIM_MODULE:
             urlString = @"https://itunes.apple.com/us/app/gssi/id1104781807";
             break;
-            
         case DETAIL_MODULE:
             urlString = @"https://itunes.apple.com/us/app/gssi/id1104782168";
             break;
-            
         default:
             urlString = @"https://itunes.apple.com/us/developer/geographic-software-specialists/id1104523427";
             break;
     }
+    
+    if ([UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:urlString]])
+        [UIApplication.sharedApplication openURL:[NSURL URLWithString:urlString]];
+}
+
+- (void)gotoTestFlight
+{
+    NSString *urlString = @"https://beta.itunes.apple.com";
     
     if ([UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:urlString]])
         [UIApplication.sharedApplication openURL:[NSURL URLWithString:urlString]];

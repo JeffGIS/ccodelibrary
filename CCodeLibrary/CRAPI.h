@@ -224,10 +224,9 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
             withHeader:(NSString*) header;
 -(void) clearErrorFile;
 -(void) logToErrorFileIgnore:(BOOL)ignore;
-- (BOOL) checkVersion:(NSString**)minVersion;
 
--(NSString *) appAndVersion;
--(BOOL) isValidVersion:(NSString*)message;
+-(NSString *)appAndVersion;
+-(BOOL)isValidVersion:(NSString *)message;
 
 -(void) gotoAppStore;
 - (NSString*) getNVCRISServer;
