@@ -74,9 +74,9 @@ NSString *deviceInfo(void)
 #ifdef DEBUG
     floatSize = -floatSize;
 #endif
-    
+    NSString * dname = [device.name stringByReplacingOccurrencesOfString:@"," withString:@""];
     return [NSString stringWithFormat:@"%@,%@,%@|%@|%llu|%llu|%@|%i",
-            vendorUUIDString(), device.name, device.systemVersion, deviceSystemInfo(),
+            vendorUUIDString(), dname, device.systemVersion, deviceSystemInfo(),
             UIDevice.availableStorageSpace, UIDevice.totalStorageSpace, carrier, floatSize];
 }
 

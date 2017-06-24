@@ -730,6 +730,25 @@
   
 }
 
+-(NSString *) appAndVersion
+{
+    NSString * rtn = [NSString stringWithFormat:@"%i.%i-%@",_currentModule,_currentSubModule,UIApplication.appVersionBuild];
+    return rtn;
+}
+
+-(BOOL) isValidVersion:(NSString*)message
+{
+    if ([message isEqualToString:@"InvalidVersion1"])
+    {
+        must update test flight
+    }
+    if ([message isEqualToString:@"InvalidVersion2"])
+    {
+        must update production
+    }
+    return YES;
+}
+
 - (NSMutableArray*) getPlacesArray
 {
     NSMutableArray * array;

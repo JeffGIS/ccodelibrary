@@ -660,7 +660,7 @@
     {
         case GMSMessageOpenConnect:
             SetUseDemoID(NO);
-            msg = [NSString stringWithFormat:@"$M(GetCitiesForiPad,%@)\r\n", deviceInfo()];
+            msg = [NSString stringWithFormat:@"$M(GetCitiesForiPad,%@,,%@)\r\n", deviceInfo(),CRAPI.sharedInstance.appAndVersion];
             break;
             
         case GMSMessageGetUploadStatus:
@@ -876,6 +876,7 @@ didReceiveMessage:(NSString *)message
         {
             case GMSMessageOpenConnect:
             {
+                [CRAPI.sharedInstance isValidVersion:message];
                 NSMutableArray *oldPlaces = [CRAPI.sharedInstance copyPlaces];
                 [CRAPI.sharedInstance savePlacesString:message];
                 [CRAPI.sharedInstance processPlaces];
