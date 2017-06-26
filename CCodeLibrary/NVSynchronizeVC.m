@@ -724,7 +724,6 @@
       withStatus:(long)status
 {
     [self closeGMServer];
-    
     NSString *titleMessage = @"";
     
     if ([error isEqualToString:@"Internet Connection Not Available"])
@@ -876,8 +875,10 @@ didReceiveMessage:(NSString *)message
         {
             case GMSMessageOpenConnect:
             {
-                [CRAPI.sharedInstance isValidVersion:message];
-                NSMutableArray *oldPlaces = [CRAPI.sharedInstance copyPlaces];
+                if (![CRAPI.sharedInstance isValidVersion:message])
+                    return;
+                
+                //NSMutableArray *oldPlaces = [CRAPI.sharedInstance copyPlaces];
                 [CRAPI.sharedInstance savePlacesString:message];
                 [CRAPI.sharedInstance processPlaces];
                 
@@ -949,7 +950,6 @@ didReceiveMessage:(NSString *)message
                 _locationManager.delegate = self;
                 [self updateConnectLabel];
                 [_locationManager startUpdatingLocation];
-                [self closeGMServer];
                 [_connectButton setHidden:CRAPI.sharedInstance.hideConnectButton];
                 [self sendGMServerMessage:GMSMessageGetUploadStatus];
             }
@@ -999,7 +999,6 @@ didReceiveMessage:(NSString *)message
                 // NSString *edit = [_uploadStatusMsg stringByReplacingOccurrencesOfString:@"3-5" withString:@"1-5"];
                 // _uploadStatusMsg = edit;
                 _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String)+1;
-                [self closeGMServer];
                 
                 int pictNum = 0;
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
@@ -1089,7 +1088,6 @@ didReceiveMessage:(NSString *)message
                 else
                 {
                     [_popoverView hide];
-                    [self closeGMServer];
                     _GMServer = [GeoMasterServer open];
                     _GMServer.delegate = self;
                     _GMServer.messageID = GMSMessageCancelConnect;

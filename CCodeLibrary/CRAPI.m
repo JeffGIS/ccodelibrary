@@ -740,6 +740,7 @@
 - (BOOL)isValidVersion:(NSString *)message
 {
     NVAlertView *alert = nil;
+    BOOL rtn = YES;
     
     if ([message isEqualToString:@"InvalidVersion1"])
     {
@@ -750,6 +751,7 @@
                                      destructiveIndex:0];
         
         alert.identifier = @"LaunchTestFlight";
+        rtn = NO;
     }
     
     if ([message isEqualToString:@"InvalidVersion2"])
@@ -761,9 +763,10 @@
                                      destructiveIndex:0];
         
         alert.identifier = @"LaunchAppStore";
+        rtn = NO;
     }
     
-    return YES;
+    return rtn;
 }
 
 - (void)setGSSiPadNumber:(int)num
