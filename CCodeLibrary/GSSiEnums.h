@@ -220,6 +220,7 @@ typedef NS_ENUM(NSInteger, HardCodedConfigs)
     HCConfigAlleyWalls,
     HCConfigAlleyWallStatus,
     HCConfigCurbRamps,
+    HCConfigSidewalk,
     HCConfigSewers,
     HCConfigMetroProp,
     HCConfigCrimes,
