@@ -10,6 +10,11 @@
 - (void)textAlert:(NVTextAlert *)textAlert
     didReturnText:(NSString *)text;
 
+@optional
+- (void)textField:(UITextField *)textField
+changeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string;
+
 @end
 
 @interface NVTextAlert : UIView <UITextFieldDelegate>
@@ -19,7 +24,7 @@
 @property UITextAutocapitalizationType capitalizationType;
 @property NSInteger minimumCharacters;
 @property (nonatomic, copy) NSString *text;
-@property BOOL blockWhiteSpace;
+@property BOOL blockWhiteSpace, useCustomFormat;
 
 + (NVTextAlert *)showTextAlertinView:(UIView *)view
                             delegate:(id)delegate

@@ -161,12 +161,17 @@
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string
 {
-    if (_blockWhiteSpace && [string isEqualToString:@" "])
+    if (_useCustomFormat && [_delegate respondsToSelector:@selector(textField:changeCharactersInRange:replacementString:)])
     {
+        [_delegate textField:textField changeCharactersInRange:range replacementString:string];
         return NO;
     }
     
-    return YES;
+    else if (_blockWhiteSpace && [string isEqualToString:@" "])
+        return NO;
+
+    else
+        return YES;
 }
 
 - (void)shakeTextField:(UITextField *)textField
