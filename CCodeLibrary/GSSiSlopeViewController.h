@@ -1,9 +1,8 @@
 //  GSSiSlopeViewController.h
 //  CCodeLibrary
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 #import "NVSliderController.h"
-#import <CoreLocation/CoreLocation.h>
 
 typedef NS_ENUM(NSInteger, NVManualStatus)
 {

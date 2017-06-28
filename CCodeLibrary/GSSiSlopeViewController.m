@@ -1,8 +1,8 @@
 //  SlopeViewController.m
 //  CCodeLibrary
 
-#import <CoreMotion/CoreMotion.h>
-#import <CoreLocation/CoreLocation.h>
+@import CoreLocation;
+@import CoreMotion;
 #import "GSSiSlopeViewController.h"
 #import "CRAPI.h"
 #import "MathUtil.h"
@@ -152,7 +152,8 @@ static int COUNT=100;
     if (_useCalibration)
         [self loadCalibration];
     
-    self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
+    self.view.backgroundColor = UserDefaults.defaults.defaultColors.backgroundColor;
+    
     _steadyDiff = 0.02 * _steadyFactor;
     COUNT = 100 * _countFactor;
     _maxX = _maxY = _maxZ = -10.0;
@@ -242,9 +243,7 @@ static int COUNT=100;
                       action:@selector(goBack:)
             forControlEvents:UIControlEventTouchUpInside];
     
-    [self setupButton:_unableButton
-                title:@"Unable"];
-    
+    [self setupButton:_unableButton title:@"Unable"];
     _unableButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
 }
 
@@ -359,15 +358,9 @@ static int COUNT=100;
 - (void)setupButton:(UIButton *)button
               title:(NSString *)title
 {
-    [button setTitle:title
-            forState:UIControlStateNormal];
-    
-    [button setTitleColor:CRAPI.sharedInstance.defaultColors.titleColor
-                 forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.lightGrayColor
-                 forState:UIControlStateHighlighted];
-    
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:UserDefaults.defaults.defaultColors.titleColor forState:UIControlStateNormal];
+    [button setTitleColor:UserDefaults.defaults.defaultColors.highlightedColor forState:UIControlStateHighlighted];
     button.titleLabel.font = [UIFont boldSystemFontOfSize:72.0];
     button.layer.cornerRadius = 10.0;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -379,29 +372,15 @@ static int COUNT=100;
 - (void)updateButtonAppearance:(UIButton *)button
 {
     if (button.enabled)
-        button.backgroundColor = CRAPI.sharedInstance.defaultColors.enabledColor;
+        button.backgroundColor = UserDefaults.defaults.defaultColors.enabledColor;
     
     else
-        button.backgroundColor = CRAPI.sharedInstance.defaultColors.disabledColor;
+        button.backgroundColor = UserDefaults.defaults.defaultColors.disabledColor;
 }
 
 - (void)setupLabel:(UILabel *)label
 {
-    if (CRAPI.sharedInstance.currentModule == DETAIL_MODULE)
-    {
-        if ([UserDefaults.defaults pickAdjustedTextColorForColor1:CRAPI.sharedInstance.defaultColors.backgroundColor
-                                                           color2:CRAPI.sharedInstance.defaultColors.disabledColor])
-        {
-            label.textColor = [UserDefaults.defaults lightColorForColor:CRAPI.sharedInstance.defaultColors.disabledColor];
-        }
-        
-        else
-            label.textColor = [UserDefaults.defaults darkColorForColor:CRAPI.sharedInstance.defaultColors.disabledColor];
-    }
-    
-    else
-        label.textColor = CRAPI.sharedInstance.defaultColors.textColor;
-    
+    label.textColor = UserDefaults.defaults.defaultColors.textColor;
     label.font = [UIFont boldSystemFontOfSize:44.0];
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 0;
