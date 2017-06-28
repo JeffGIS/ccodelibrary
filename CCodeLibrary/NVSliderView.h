@@ -20,6 +20,7 @@
 
 @property (nonatomic, weak) id <NVSliderViewDelegate> delegate;
 @property (nonatomic) NSString *units, *titleText;
+@property (nonatomic) BOOL roundToTenths;
 
 + (NVSliderView *)showSliderWithView:(UIView *)view
                           startValue:(double)startValue

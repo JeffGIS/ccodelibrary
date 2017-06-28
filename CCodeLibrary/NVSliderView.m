@@ -39,6 +39,7 @@
     sliderView.tag = tag;
     sliderView.units = @"";
     sliderView.titleText = @"NVMobile Slider Manager";
+    sliderView.roundToTenths = NO;
     
     [view addSubview:sliderView.overlayView];
     [sliderView.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
@@ -153,15 +154,9 @@
     button.backgroundColor = UIColor.blackColor;
     button.layer.cornerRadius = 10.0;
     button.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
-    
-    [button setTitle:title
-            forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.whiteColor
-                 forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.lightGrayColor
-                 forState:UIControlStateHighlighted];
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
     
     [button addTarget:target
                action:selector
@@ -170,8 +165,24 @@
 
 - (void)sliderValueChanged:(UISlider *)slider
 {
-    double value = roundf(slider.value);
-    _sliderLabel.text = [NSString stringWithFormat:@"%.0f %@", value, _units];
+    [self updateSliderLabel];
+}
+
+- (void)updateSliderLabel
+{
+    double value = 0.0;
+    
+    if (_roundToTenths)
+    {
+        value = ((roundf(_slider.value * 10.0)) / 10.0);
+        _sliderLabel.text = [NSString stringWithFormat:@"%.1f %@", value, _units];
+    }
+    
+    else
+    {
+        value = roundf(_slider.value);
+        _sliderLabel.text = [NSString stringWithFormat:@"%.0f %@", value, _units];
+    }
 }
 
 - (void)cancelButtonTapped:(UIButton *)button
@@ -184,7 +195,13 @@
 {
     if (_delegate)
     {
-        double value = roundf(_slider.value);
+        double value = 0.0;
+        
+        if (_roundToTenths)
+            value = ((roundf(_slider.value * 10.0)) / 10.0);
+        
+        else
+            value = roundf(_slider.value);
         
         [_delegate sliderView:self
                didReturnValue:value
@@ -224,9 +241,14 @@
 
 - (void)setUnits:(NSString *)units
 {
-    double value = roundf(_slider.value);
-    _sliderLabel.text = [NSString stringWithFormat:@"%.0f %@", value, units];
     _units = units;
+    [self updateSliderLabel];
+}
+
+- (void)setRoundToTenths:(BOOL)roundToTenths
+{
+    _roundToTenths = roundToTenths;
+    [self updateSliderLabel];
 }
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration
