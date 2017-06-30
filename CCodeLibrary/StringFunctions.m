@@ -1047,19 +1047,19 @@ BOOL countySupportsLookupForPID(NSString *PID)
     return rtn;
 }
 
-CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceFeet, CLLocationCoordinate2D origin)
+CLLocationCoordinate2D locationWithBearing(double bearing, double distanceFeet, CLLocationCoordinate2D origin)
 {
     bearing *= DEGtoRAD;
     
     CLLocationCoordinate2D location = {0};
-    CGFloat distRadians = (distanceFeet / 20908129.3);
+    double distRadians = (distanceFeet / 20908129.3);
     
-    CGFloat lat1 = ((origin.latitude * M_PI) / 180.0);
-    CGFloat lon1 = ((origin.longitude * M_PI) / 180.0);
+    double lat1 = ((origin.latitude * M_PI) / 180.0);
+    double lon1 = ((origin.longitude * M_PI) / 180.0);
     
-    CGFloat lat2 = asin( sin(lat1) * cos(distRadians) + cos(lat1) * sin(distRadians) * cos(bearing));
+    double lat2 = asin(sin(lat1) * cos(distRadians) + cos(lat1) * sin(distRadians) * cos(bearing));
     
-    CGFloat lon2 = (lon1 + atan2(sin(bearing) * sin(distRadians) * cos(lat1),
+    double lon2 = (lon1 + atan2(sin(bearing) * sin(distRadians) * cos(lat1),
                                  cos(distRadians) - sin(lat1) * sin(lat2)));
     
     location.latitude = (lat2 * 180 / M_PI);
