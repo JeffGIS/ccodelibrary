@@ -4,8 +4,9 @@
 #import "NVStreetSideController.h"
 #import "GSSiDefs.h"
 #import "NVAlertView.h"
+#import "CRAPI.h"
 
-@interface NVStreetSideController () <UIWebViewDelegate,NVAlertViewDelegate>
+@interface NVStreetSideController () <UIWebViewDelegate>
 
 @property (nonatomic) CLLocationCoordinate2D location;
 @property (nonatomic) UIWebView *webView;
@@ -132,11 +133,12 @@ didFailLoadWithError:(NSError *)error
     [_timer invalidate];
     
     NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                      delegate:self
+                                                      delegate:CRAPI.sharedInstance
                                                          title:[NSString stringWithFormat:@"Bing Streetside Load ERROR: %@",
                                                                 error.localizedDescription]
                                                buttonTextArray:@[@"OK"]
                                               destructiveIndex:0];
+#pragma unused(alert)
 }
 
 - (void)checkForCompletion
@@ -149,21 +151,15 @@ didFailLoadWithError:(NSError *)error
         [_timer invalidate];
         
         NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                          delegate:self
+                                                          delegate:CRAPI.sharedInstance
                                                              title:@"Bing Streetside is not available for this location."
                                                    buttonTextArray:@[@"OK"]
                                                   destructiveIndex:0];
+#pragma unused(alert)
     }
     
     else if ([printoutPanelHtml isEqualToString:@"Load Complete"])
         [_timer invalidate];
-}
-
-- (void)alertView:(NVAlertView *)alertView
-didTapButtonAtIndex:(NSInteger)buttonIndex
-{
-    [self dismissViewControllerAnimated:YES
-                             completion:nil];
 }
 
 @end
