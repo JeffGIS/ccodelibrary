@@ -1075,6 +1075,14 @@
     }
 }
 
+- (void) showMapToolbarIndicator:(BOOL)show
+{
+dispatch_async(dispatch_get_main_queue(),
+               ^{
+                   self.mapToolbar.showIndicator = show;
+               });
+}
+
 -(void) updateProgress:(NSInteger)tot
                current:(NSInteger)current
                  range:(int)iRange

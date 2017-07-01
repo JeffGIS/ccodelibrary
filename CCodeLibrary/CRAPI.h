@@ -237,5 +237,6 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 - (nonnull NSArray<TimeRange *> *)getTimeRanges;
 - (BOOL) refnoInAreaText:(int) refno;
 - (AreaText*) areaTextForRefno:(int) refno;
+- (void) showMapToolbarIndicator:(BOOL)show;
 
 @end
