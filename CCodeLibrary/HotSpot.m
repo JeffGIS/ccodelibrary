@@ -62,7 +62,8 @@
     hs.grids = malloc (nGrids * sizeof (int *));
     for (int igrid = 0; igrid < nGrids;igrid++)
     {
-        hs.grids[igrid] = calloc (width*height,sizeof(int));
+        long long len = (long long)width * (long long)height;
+        hs.grids[igrid] = calloc (len,sizeof(int));
     }
     if (times)
     {
