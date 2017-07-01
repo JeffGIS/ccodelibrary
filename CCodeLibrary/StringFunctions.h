@@ -63,7 +63,7 @@ uint occurrencesOfCharacter(unichar character, NSString *string);
 BOOL appendStringToFile(NSString *str, NSString *filePath);
 NSString *urlSearchStringForPID(NSString *PID);
 BOOL countySupportsLookupForPID(NSString *PID);
-CLLocationCoordinate2D locationWithBearing(CGFloat bearing, CGFloat distanceFeet, CLLocationCoordinate2D origin);
+CLLocationCoordinate2D locationWithBearing(double bearing, double distanceFeet, CLLocationCoordinate2D origin);
 BOOL isGSSiDevice(void);
 BOOL nameInList (NSString* name,NSArray* list);
 LLPOINT LLPOINTFromString (NSString* string);
