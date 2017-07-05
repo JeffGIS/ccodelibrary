@@ -13,6 +13,9 @@
 
 - (void)sliderViewDidCancel:(NVSliderView *)sliderView;
 
+@optional
+- (void)sliderViewDidWantPhoto:(NVSliderView *)sliderView;
+
 @end
 
 @interface NVSliderView : UIView
@@ -31,6 +34,7 @@
                                  tag:(NSInteger)tag;
 
 - (void)hideSliderView:(BOOL)animated;
+- (void)showPhotoButton;
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration
         toInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation;

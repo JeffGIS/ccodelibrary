@@ -9,7 +9,7 @@
 @property (nonatomic) UISlider *slider;
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UILabel *sliderLabel, *titleLabel;
-@property (nonatomic) UIButton *cancelButton, *saveButton;
+@property (nonatomic) UIButton *cancelButton, *saveButton, *photoButton;
 @property (nonatomic) UITabBar *tabBar;
 
 @end
@@ -24,6 +24,12 @@
                               tabBar:(UITabBar *)tabBar
                                  tag:(NSInteger)tag
 {
+    if (!view || !delegate)
+    {
+        NSLog(@"NVSliderView ERROR:Cannot set delegate or view to nil");
+        return nil;
+    }
+    
     NVSliderView *sliderView = [[NVSliderView alloc] initWithFrame:CGRectMake((view.frame.size.width * 0.1),
                                                                               (view.frame.size.height * 0.25),
                                                                               (view.frame.size.width * 0.8),
@@ -32,22 +38,20 @@
     sliderView.overlayView = UIView.new;
     sliderView.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
     sliderView.overlayView.backgroundColor = UIColor.blackColor;
+    sliderView.overlayView.alpha = 0.0;
+    [view addSubview:sliderView.overlayView];
+    [sliderView.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    
     sliderView.tabBar = tabBar;
     sliderView.tabBar.userInteractionEnabled = NO;
-    sliderView.overlayView.alpha = 0.0;
     sliderView.delegate = delegate;
     sliderView.tag = tag;
     sliderView.units = @"";
     sliderView.titleText = @"NVMobile Slider Manager";
     sliderView.roundToTenths = NO;
-    
-    [view addSubview:sliderView.overlayView];
-    [sliderView.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
-    
     sliderView.backgroundColor = UIColor.whiteColor;
     sliderView.layer.cornerRadius = 10.0;
     sliderView.alpha = 0.0;
-    
     [view addSubview:sliderView];
     
     sliderView.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((sliderView.frame.size.width * 0.05),
@@ -82,12 +86,8 @@
     UIImage *sliderRight = [UserDefaults.defaults.metalSliderRight stretchableImageWithLeftCapWidth:capWidth
                                                                                        topCapHeight:capHeight];
     
-    [sliderView.slider setMinimumTrackImage:sliderLeft
-                                   forState:UIControlStateNormal];
-    
-    [sliderView.slider setMaximumTrackImage:sliderRight
-                                   forState:UIControlStateNormal];
-    
+    [sliderView.slider setMinimumTrackImage:sliderLeft forState:UIControlStateNormal];
+    [sliderView.slider setMaximumTrackImage:sliderRight forState:UIControlStateNormal];
     sliderView.slider.minimumValue = minValue;
     sliderView.slider.maximumValue = maxValue;
     sliderView.slider.value = roundf(startValue);
@@ -135,6 +135,25 @@
                       title:@"Save"];
     
     [sliderView addSubview:sliderView.saveButton];
+    
+    CGFloat size = sliderView.cancelButton.frame.size.height;
+    sliderView.photoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    sliderView.photoButton.hidden = YES;
+    sliderView.photoButton.frame = CGRectMake(0.0, 0.0, size, size);
+    sliderView.photoButton.center = CGPointMake((sliderView.frame.size.width * 0.5), sliderView.cancelButton.center.y);
+    [sliderView addSubview:sliderView.photoButton];
+    
+    [sliderView.photoButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"cameraIcon"
+                                                                                                    ofType:@"png"]]
+                  forState:UIControlStateNormal];
+    
+    [sliderView.photoButton setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"cameraIconHighlighted"
+                                                                                                    ofType:@"png"]]
+                            forState:UIControlStateHighlighted];
+    
+    [sliderView.photoButton addTarget:sliderView
+                               action:@selector(photoButtonTapped:)
+                     forControlEvents:UIControlEventTouchUpInside];
     
     [UIView animateWithDuration:0.25
                      animations:^{
@@ -187,26 +206,22 @@
 
 - (void)cancelButtonTapped:(UIButton *)button
 {
-    if (_delegate)
-        [_delegate sliderViewDidCancel:self];
+    [_delegate sliderViewDidCancel:self];
 }
 
 - (void)saveButtonTapped:(UIButton *)button
 {
-    if (_delegate)
-    {
-        double value = 0.0;
-        
-        if (_roundToTenths)
-            value = ((roundf(_slider.value * 10.0)) / 10.0);
-        
-        else
-            value = roundf(_slider.value);
-        
-        [_delegate sliderView:self
-               didReturnValue:value
-               forViewWithTag:self.tag];
-    }
+    double value = 0.0;
+    
+    if (_roundToTenths)
+        value = ((roundf(_slider.value * 10.0)) / 10.0);
+    
+    else
+        value = roundf(_slider.value);
+    
+    [_delegate sliderView:self
+           didReturnValue:value
+           forViewWithTag:self.tag];
 }
 
 - (void)hideSliderView:(BOOL)animated
@@ -249,6 +264,16 @@
 {
     _roundToTenths = roundToTenths;
     [self updateSliderLabel];
+}
+
+- (void)showPhotoButton
+{
+    _photoButton.hidden = NO;
+}
+
+- (void)photoButtonTapped:(UIButton *)button
+{
+    [_delegate sliderViewDidWantPhoto:self];
 }
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration
