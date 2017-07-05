@@ -41,7 +41,6 @@
     return self;
 }
 
-
 - (BOOL)open
 {
     BOOL rtn = NO;

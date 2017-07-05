@@ -40,6 +40,8 @@
 		692F54A21CDB9B1B001600C9 /* NVRampTypePageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 692F54A11CDB9B1B001600C9 /* NVRampTypePageController.m */; };
 		692F54A51CDB9B8B001600C9 /* NVRampTypePageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 692F54A41CDB9B8B001600C9 /* NVRampTypePageView.m */; };
 		692F54A61CDBAA6B001600C9 /* NVRampTypePageController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692F54A01CDB9B1B001600C9 /* NVRampTypePageController.h */; };
+		6936A3571F0D765C000CDCC3 /* SidewalkData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6936A3561F0D765C000CDCC3 /* SidewalkData.m */; };
+		6936A3581F0D7DB2000CDCC3 /* SidewalkData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6936A3551F0D765C000CDCC3 /* SidewalkData.h */; };
 		693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */; };
 		693C9BA11BEC529600564F93 /* UIImage+ImageFromColor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */; };
 		694304161C334E5A0077EC9F /* NVColorSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 694304151C334E5A0077EC9F /* NVColorSet.m */; };
@@ -366,6 +368,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				6936A3581F0D7DB2000CDCC3 /* SidewalkData.h in CopyFiles */,
 				69848C781EB9416E00EC1EB3 /* NVPDFDrawing.h in CopyFiles */,
 				BB9B8FAC1EAE8B7500AFB3CA /* TimeLine.h in CopyFiles */,
 				698037541E82DC6400C3E49D /* NVSendEmail.h in CopyFiles */,
@@ -547,6 +550,8 @@
 		692F54A11CDB9B1B001600C9 /* NVRampTypePageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRampTypePageController.m; sourceTree = "<group>"; };
 		692F54A31CDB9B8B001600C9 /* NVRampTypePageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRampTypePageView.h; sourceTree = "<group>"; };
 		692F54A41CDB9B8B001600C9 /* NVRampTypePageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRampTypePageView.m; sourceTree = "<group>"; };
+		6936A3551F0D765C000CDCC3 /* SidewalkData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidewalkData.h; sourceTree = "<group>"; };
+		6936A3561F0D765C000CDCC3 /* SidewalkData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidewalkData.m; sourceTree = "<group>"; };
 		693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageFromColor.h"; sourceTree = "<group>"; };
 		693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageFromColor.m"; sourceTree = "<group>"; };
 		694304141C334E5A0077EC9F /* NVColorSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVColorSet.h; sourceTree = "<group>"; };
@@ -1357,6 +1362,8 @@
 				69E9E3C91E895BCF002157D9 /* NVContactGroupData.m */,
 				A99873231B59ACC100200CA9 /* SewerData.h */,
 				A99873241B59ACC100200CA9 /* SewerData.m */,
+				6936A3551F0D765C000CDCC3 /* SidewalkData.h */,
+				6936A3561F0D765C000CDCC3 /* SidewalkData.m */,
 			);
 			name = Databases;
 			sourceTree = "<group>";
@@ -1577,6 +1584,7 @@
 				6956B9981CB230210070416B /* NVPopoverTableView.m in Sources */,
 				EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */,
 				69DE24281C76311D00680B00 /* NVTextVC.m in Sources */,
+				6936A3571F0D765C000CDCC3 /* SidewalkData.m in Sources */,
 				EBC01D211BED1C8C0004C751 /* moonrise.c in Sources */,
 				69F975971ECCB8200044CCED /* NVContactsViewer.m in Sources */,
 				69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */,
