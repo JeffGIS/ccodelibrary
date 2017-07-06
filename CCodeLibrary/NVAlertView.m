@@ -19,9 +19,7 @@
     self = [super init];
     
     if (self)
-    {
-        self.buttonIdentifiers = NSArray.new;
-    }
+        _buttonIdentifiers = NSArray.array;
     
     return self;
 }
@@ -87,7 +85,7 @@
     
     for (int i = 0; i < buttonTextArray.count; i++)
     {
-        NSString *title = textBeforePipe (buttonTextArray[i]);
+        NSString *title = textBeforePipe(buttonTextArray[i]);
         
         CGFloat height = [alert getHeightForText:title
                                             font:font
@@ -109,23 +107,15 @@
         button.titleLabel.adjustsFontSizeToFitWidth = YES;
         button.titleLabel.textAlignment = NSTextAlignmentCenter;
         
-        [button setTitle:title
-                forState:UIControlStateNormal];
+        [button setTitle:title forState:UIControlStateNormal];
         
         if (destructiveIndex == (i + 1))
-        {
-            [button setTitleColor:UIColor.redColor
-                         forState:UIControlStateNormal];
-        }
+            [button setTitleColor:UIColor.redColor forState:UIControlStateNormal];
         
         else
-        {
-            [button setTitleColor:UserDefaults.defaults.appleBlue
-                         forState:UIControlStateNormal];
-        }
+            [button setTitleColor:UserDefaults.defaults.appleBlue forState:UIControlStateNormal];
         
-        [button setTitleColor:UIColor.lightGrayColor
-                     forState:UIControlStateHighlighted];
+        [button setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
         
         [button addTarget:alert
                    action:@selector(buttonTapped:)
@@ -165,8 +155,7 @@
     if (textAfterPipe(_buttonTextArray[buttonIndex]).integerValue > 0)
         buttonIndex = textAfterPipe(_buttonTextArray[buttonIndex]).integerValue;
     
-    [_delegate alertView:self
-     didTapButtonAtIndex:buttonIndex];
+    [_delegate alertView:self didTapButtonAtIndex:buttonIndex];
 }
 
 - (void)hideLargeAlertView:(BOOL)animated

@@ -19,7 +19,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex;
 @property int ident;
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UIColor *buttonBorderColor;
-@property NSArray* buttonIdentifiers;
+@property (nonatomic, copy) NSArray *buttonIdentifiers;
 
 + (instancetype)showLargeAlertViewinView:(UIView *)view
                                 delegate:(id)delegate
