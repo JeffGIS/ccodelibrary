@@ -552,7 +552,7 @@ static int nInit=0;
     NSString *query = [NSString stringWithFormat:@"SELECT note FROM CURBRAMP_NOTES WHERE intID = %i AND corner = %i AND rampID = %i AND type=%i",
                        intID, corner, ramp, type];
     
-    sqlite3_stmt *statement = nil;
+    sqlite3_stmt *statement = NULL;
     
     SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
