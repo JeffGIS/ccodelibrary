@@ -69,6 +69,8 @@
                  withHouse:(NSString *)house
                  andStreet:(NSString *)street;
 
+- (BOOL)deleteSdwkPoint:(NSInteger)refno;
+
 + (BOOL)moveSdwkPoint:(NSInteger)refno
            toLocation:(CLLocationCoordinate2D)location;
 

@@ -48,7 +48,7 @@
         
         NSString *cmd = @"CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), "
         "latitude REAL, longitude REAL, slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, "
-        "width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT); "
+        "width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, deleted INT); "
         "CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
         
         [self executeCmd:(char *)cmd.UTF8String
@@ -522,6 +522,23 @@
     
     cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints_index VALUES (%ld,%f,%f,%f,%f)",
            (long)refno, location.latitude, location.latitude, location.longitude, location.longitude];
+    
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                  fromFile:__FILE__ fromLine:__LINE__];
+    
+    [self close:opened];
+    return rtn;
+}
+
+- (BOOL)deleteSdwkPoint:(NSInteger)refno;
+{
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
+    BOOL rtn = NO;
+    BOOL opened = [self open];
+    
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET deleted=1, last_update=%i WHERE id=%ld",
+                     iTime, (long)refno];
     
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
               sendToServer:YES
