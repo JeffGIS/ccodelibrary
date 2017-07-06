@@ -32,7 +32,7 @@
         NSString *cmd = @"CREATE TABLE IF NOT EXISTS Contacts (id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "email CHAR(64), first_name CHAR(64), last_name CHAR(64), UNIQUE(first_name, last_name, email));"
         "CREATE TABLE IF NOT EXISTS ContactGroups (id INTEGER PRIMARY KEY AUTOINCREMENT,"
-        "group_name CHAR(64), contact_id INT, UNIQUE(group_name, contact_id))";
+        "group_name CHAR(64), contact_id INT, UNIQUE(group_name, contact_id));";
         
         SQLOK(__FILE__,__LINE__, SQLiteExec(_database, cmd.UTF8String, 0, 0, 0), _database);
         [self close:opened];
