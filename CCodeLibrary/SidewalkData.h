@@ -64,10 +64,9 @@
 - (uint)getNextPictID;
 - (BOOL)updateFromFile:(NSString *)file;
 
-- (BOOL)createNewSdwkPoint:(NSString *)wallID
-                atLocation:(CLLocationCoordinate2D)location
-                 withHouse:(NSString *)house
-                 andStreet:(NSString *)street;
+- (BOOL)createNewSdwkPointAtLocation:(CLLocationCoordinate2D)location
+                           withHouse:(NSString *)house
+                           andStreet:(NSString *)street;
 
 - (BOOL)deleteSdwkPoint:(NSInteger)refno;
 

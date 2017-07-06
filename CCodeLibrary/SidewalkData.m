@@ -489,10 +489,9 @@
     return rtn;
 }
 
-- (BOOL)createNewSdwkPoint:(NSString *)wallID
-                atLocation:(CLLocationCoordinate2D)location
-                 withHouse:(NSString *)house
-                 andStreet:(NSString *)street
+- (BOOL)createNewSdwkPointAtLocation:(CLLocationCoordinate2D)location
+                           withHouse:(NSString *)house
+                           andStreet:(NSString *)street
 {
     BOOL rtn = NO;
     int iTime = NSDate.timeIntervalSinceReferenceDate;

@@ -213,6 +213,7 @@ typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
     MarkerInfoWindowTypeMGVSanMain,
     MarkerInfoWindowTypeCensusBoundary,
     MarkerInfoWindowTypeBA,
+    MarkerInfoWindowTypeSdwk,
 };
 
 typedef NS_ENUM(NSInteger, HardCodedConfigs)

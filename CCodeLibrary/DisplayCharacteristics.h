@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, GraphicElementTypes)
     CensusBlockGroupBoundary,
     CensusBlockBoundary,
     BoundaryArea,
+    Sidewalk,
 };
 
 typedef NS_ENUM(NSInteger, PointSymbols)
