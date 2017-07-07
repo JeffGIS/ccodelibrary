@@ -73,8 +73,10 @@
 
 - (BOOL)deleteSdwkPoint:(NSInteger)refno;
 
-+ (BOOL)moveSdwkPoint:(NSInteger)refno
-           toLocation:(CLLocationCoordinate2D)location;
+- (BOOL)moveSdwkPoint:(NSInteger)refno
+           toLocation:(CLLocationCoordinate2D)location
+            withHouse:(NSString *)house
+            andStreet:(NSString *)street;
 
 - (void)updateSdwkPoint:(NVSidewalkPoint *)sdwkPoint;
 - (NVSidewalkPoint *)getSdwkPointForRefno:(uint)refno;

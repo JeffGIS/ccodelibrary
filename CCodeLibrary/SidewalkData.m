@@ -550,19 +550,22 @@
     return rtn;
 }
 
-+ (BOOL)moveSdwkPoint:(NSInteger)refno
+- (BOOL)moveSdwkPoint:(NSInteger)refno
            toLocation:(CLLocationCoordinate2D)location
+            withHouse:(NSString *)house
+            andStreet:(NSString *)street
 {
     BOOL rtn = NO;
-    SidewalkData *sdwkd = SidewalkData.new;
-    BOOL opened = [sdwkd open];
+    NSInteger iHouse = house.integerValue;
+    BOOL opened = [self open];
     
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET latitude=%f, longitude=%f WHERE id=%ld",
-                     location.latitude, location.longitude, (long)refno];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET house_num=%ld, street='%@', "
+                     "latitude=%f, longitude=%f WHERE id=%ld",
+                     (long)iHouse, street, location.latitude, location.longitude, (long)refno];
     
-    rtn = [sdwkd executeCmd:(LPSTR)cmd.UTF8String
-               sendToServer:YES
-                   fromFile:__FILE__ fromLine:__LINE__];
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                  fromFile:__FILE__ fromLine:__LINE__];
     
     if (rtn)
     {
@@ -570,12 +573,12 @@
                "maxX=%f WHERE SidewalkPoints_index.id=%ld",
                location.latitude, location.longitude, location.latitude, location.longitude, (long)refno];
         
-        rtn = [sdwkd executeCmd:(LPSTR)cmd.UTF8String
-                   sendToServer:YES
-                       fromFile:__FILE__ fromLine:__LINE__];
+        rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                  sendToServer:YES
+                      fromFile:__FILE__ fromLine:__LINE__];
     }
     
-    [sdwkd close:opened];
+    [self close:opened];
     return rtn;
 }
 
