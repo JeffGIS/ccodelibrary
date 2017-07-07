@@ -59,7 +59,7 @@
 - (int)incrementLastPictFileNum;
 
 - (BOOL)savePictureData:(int)pictNum
-               sdwkPtID:(NSString *)sdwkPtID
+               sdwkPtID:(int)sdwkPtID
                    type:(int)type
                  latLon:(LLPOINT)ll
                 heading:(int)heading;

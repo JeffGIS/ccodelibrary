@@ -332,7 +332,7 @@
                         iPad:(int)iPad
 {
     NSString *file = [NSString stringWithFormat:@"%@/%i_%i.jpg",
-                      [CRAPI.sharedInstance sharedOutputDirectory:@"SidewalkPoints"],iPad,fileNum];
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"SidewalkPoints"], iPad, fileNum];
     
     return file;
 }
@@ -412,7 +412,7 @@
 }
 
 - (BOOL)savePictureData:(int)pictNum
-               sdwkPtID:(NSString *)sdwkPtID
+               sdwkPtID:(int)sdwkPtID
                    type:(int)type
                  latLon:(LLPOINT)ll
                 heading:(int)heading
@@ -421,7 +421,7 @@
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     uint pictID = [self getNextPictID];
     
-    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO SidewalkPointsPictures VALUES (%i,%i,%i,%@,%i,%i,%f,%f,%i);",
+    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO SidewalkPointsPictures VALUES (%i,%i,%i,%i,%i,%i,%f,%f,%i);",
                      pictID, CRAPI.sharedInstance.currentiPadWithinManager, pictNum, sdwkPtID, type, heading, ll.lat, ll.lon, iTime];
     
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
