@@ -601,7 +601,7 @@
 {
     BOOL opened = [self open];
     sqlite3_stmt *statement = NULL;
-    NSString *query = @"SELECT * FROM SidewalkPoints;";
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM SidewalkPoints WHERE id=%u;", refno];
     NVSidewalkPoint *sdwkPoint = NVSidewalkPoint.new;
     int iCol = 1;
     
@@ -756,7 +756,7 @@
     BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"SELECT SidewalkPoints.id, latitude, longitude, house_num, street "
-                       "FROM SidewalkPoints, SidewalkPoints_index WHERE SidewalkPoints.id=SidewalkPoints_index.id "
+                       "FROM SidewalkPoints, SidewalkPoints_index WHERE deleted=0 AND SidewalkPoints.id=SidewalkPoints_index.id "
                        "AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f",
                        bnds.xmn, bnds.xmx, bnds.ymn, bnds.ymx];
     
