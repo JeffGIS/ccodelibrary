@@ -31,6 +31,8 @@
 @property sqlite3 *database;
 @property BOOL isOpen, sendToServer;
 @property unsigned long long fileSize;
+@property float wallPtSize;
+@property (nonatomic) LPTRANDATA pTranLLtoView, pTranViewtoLL;
 
 @end
 
@@ -79,21 +81,21 @@
             [self createPictureDatabase];
             
             BOOL tableOK = NO;
-            sqlite3_stmt *stmt = NULL;
-            int rc = SQLitePrepare(_database, "pragma table_info ('SidewalkPointsUpdates')", -1, &stmt, NULL);
+            sqlite3_stmt *statement = NULL;
+            int rc = SQLitePrepare(_database, "pragma table_info ('SidewalkPointsUpdates')", -1, &statement, NULL);
             
             if (rc == SQLITE_OK)
             {
-                while (sqlite3_step(stmt) == SQLITE_ROW)
+                while (sqlite3_step(statement) == SQLITE_ROW)
                 {
-                    LPSTR colName = (LPSTR)sqlite3_column_text(stmt, 1);
+                    LPSTR colName = (LPSTR)sqlite3_column_text(statement, 1);
                     
                     if (!strcmp (colName,"iPad"))
                         tableOK = YES;
                 }
             }
             
-            SQLOK(__FILE__,__LINE__,SQLiteFinalize(stmt), _database);
+            SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
             
             if (!tableOK)
             {
@@ -230,7 +232,7 @@
         lastPictNum = sqlite3_column_int(statement, 1);
     }
     
-    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     
     if (!lastNum)
     {
@@ -276,7 +278,7 @@
     if (sqlite3_step(statement) == SQLITE_ROW)
         lastNum = sqlite3_column_int(statement, 0);
     
-    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     
     [self close:opened];
     return lastNum;
@@ -294,7 +296,7 @@
     
     BOOL haveRecord = (sqlite3_step(statement) == SQLITE_ROW);
     
-    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     
     if (!haveRecord)
     {
@@ -442,7 +444,7 @@
         nextID = sqlite3_column_int(statement, 0);
     
     nextID = (int)[CRAPI.sharedInstance adjustNextRefno:nextID];
-    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     [self close:opened];
     return nextID;
 }
@@ -494,7 +496,6 @@
                            andStreet:(NSString *)street
 {
     BOOL rtn = NO;
-    int iTime = NSDate.timeIntervalSinceReferenceDate;
     NSInteger refno = 0;
     NSInteger iHouse = house.integerValue;
     BOOL opened = [self open];
@@ -509,18 +510,18 @@
         refno = [CRAPI.sharedInstance adjustNextRefno:refno];
     }
     
-    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     
     NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, house_num, street, latitude, "
-                     "longitude, last_update) VALUES (%ld,%ld,'%@',%f,%f,%i);",
-                     (long)refno, (long)iHouse, street, location.latitude, location.longitude, iTime];
+                     "longitude) VALUES (%ld,%ld,'%@',%f,%f);",
+                     (long)refno, (long)iHouse, street, location.latitude, location.longitude];
     
     [self executeCmd:(LPSTR)cmd.UTF8String
         sendToServer:YES
             fromFile:__FILE__ fromLine:__LINE__];
     
     cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints_index VALUES (%ld,%f,%f,%f,%f)",
-           (long)refno, location.latitude, location.latitude, location.longitude, location.longitude];
+           (long)refno, location.longitude, location.longitude, location.latitude, location.latitude];
     
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
               sendToServer:YES
@@ -639,6 +640,97 @@
     
     [self close:opened];
     return sdwkPoint;
+}
+
+- (BOOL)continueProcessing
+{
+    if (!_processingID)
+        return YES;
+    
+    if (_processingID == CRAPI.sharedInstance.keepProcessing)
+        return YES;
+    
+    else
+        return NO;
+}
+
+- (void)displaySdwkPoint:(CGContextRef)context
+               llCorners:(CORNERPOINTS *)latlonCornerPoints
+                llBounds:(MNMXCORD *)platlonBounds
+              viewBounds:(MNMXCORD *)pvbounds
+{
+    DPOINT basePt = {0};
+    CGColorRef sdwkPointColor = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.8].CGColor;
+    CGColorRef red = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8].CGColor;
+    CGColorRef color = NULL;
+    int today = NSDate.timeIntervalSinceReferenceDate;
+    int oneYear = 31536000;
+    
+    if (![self continueProcessing])
+        return;
+    
+    CGFloat sizeFactor = (1.0 / (2.0 * (22.0 - _zoom)));
+    CGFloat size = (150.0 * sizeFactor);
+    CGFloat metersPerPixel = GroundResolution(platlonBounds->ymn, _zoom);
+    _wallPtSize = (size * metersPerPixel);
+    
+    CloseTRANS2(&_pTranLLtoView);
+    CloseTRANS2(&_pTranViewtoLL);
+    
+    _pTranLLtoView = STRANCornersToBounds(latlonCornerPoints, pvbounds);
+    
+    BOOL opened = [self open];
+    sqlite3_stmt *statement = NULL;
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT longitude, latitude, last_update FROM SidewalkPoints, "
+                       "SidewalkPoints_index WHERE SidewalkPoints.id=SidewalkPoints_index.id AND maxX>=%f AND "
+                       "minX<=%f AND maxY>=%f AND minY<=%f",
+                       platlonBounds->xmn, platlonBounds->xmx, platlonBounds->ymn, platlonBounds->ymx];
+    
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    while ([self continueProcessing] && sqlite3_step(statement) == SQLITE_ROW)
+    {
+        basePt.x = sqlite3_column_double(statement,0);
+        basePt.y = sqlite3_column_double(statement,1);
+        int lastUpdate = sqlite3_column_int(statement,2);
+        
+        if (today - lastUpdate < oneYear)
+            color = red;
+        
+        else
+            color = sdwkPointColor;
+        
+        DPOINT llpoint = TranDPOINT(&basePt, _pTranLLtoView);
+        
+        [self drawSdwkPoint:context
+                    atPoint:&llpoint
+                  withColor:color
+                    andSize:size];
+    }
+    
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
+    [self close:opened];
+    
+}
+
+- (void)drawSdwkPoint:(CGContextRef)context
+              atPoint:(DPOINT *)pPoint
+            withColor:(CGColorRef)color
+              andSize:(CGFloat)size
+{
+    CGRect pointRect = CGRectMake((pPoint->x - size / 2.0), (pPoint->y - size / 2.0), size, size);
+    CGContextSetFillColorWithColor(context,color);
+    CGContextFillEllipseInRect(context, pointRect);
+    CGContextSetLineWidth(context, 2);
+    
+    if (CRAPI.sharedInstance.GMTilesVisible)
+        CGContextSetRGBStrokeColor(context, 1, 1, 0, 1);
+    
+    else
+        CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+    
+    CGContextStrokeEllipseInRect(context, pointRect);
 }
 
 @end

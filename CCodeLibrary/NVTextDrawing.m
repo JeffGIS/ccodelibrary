@@ -475,7 +475,7 @@ Top:
     
     CFRelease(fontRef);
     
-    /*   if (ConfigurationControl.sharedInstance.GMTilesVisible)
+    /*   if (CRAPI.sharedInstance.GMTilesVisible)
      {
      CGRect shadowRect = rect;
      shadowRect.origin.x += 1;

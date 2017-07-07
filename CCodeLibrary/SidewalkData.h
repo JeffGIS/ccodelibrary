@@ -17,6 +17,9 @@
 
 @interface SidewalkData : NSObject
 
+@property CGFloat zoom;
+@property int processingID;
+
 - (BOOL)open;
 - (void)close:(BOOL)opened;
 - (BOOL)createNextUpdateTable;
@@ -75,5 +78,10 @@
 
 - (void)updateSdwkPoint:(NVSidewalkPoint *)sdwkPoint;
 - (NVSidewalkPoint *)getSdwkPointForRefno:(uint)refno;
+
+- (void)displaySdwkPoint:(CGContextRef)context
+               llCorners:(CORNERPOINTS *)latlonCornerPoints
+                llBounds:(MNMXCORD *)platlonBounds
+              viewBounds:(MNMXCORD *)pvbounds;
 
 @end
