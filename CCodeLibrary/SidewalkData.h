@@ -84,4 +84,7 @@
                 llBounds:(MNMXCORD *)platlonBounds
               viewBounds:(MNMXCORD *)pvbounds;
 
+- (int)pickSdwkPoint:(LLPOINT)point
+       highlightList:(NSMutableArray *)hlist;
+
 @end

@@ -308,7 +308,7 @@ static int fileSequence = 0;
     }
     
     [awd close:opened];
-    return !rtn;
+    return rtn;
 }
 
 - (BOOL)createNewWall:(NSString *)wallID

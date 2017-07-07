@@ -6,6 +6,7 @@
 #import "SQLiteLib.h"
 #import "CRAPI.h"
 #import "UIApplication+VersionBuild.h"
+#import "PickedItem.h"
 
 #define CURRENT_SIDEWALK_VERSION "1.2"
 
@@ -18,6 +19,7 @@
     if (self)
     {
         _note = @"";
+        _street = @"";
     }
     
     return self;
@@ -513,7 +515,7 @@
     SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     
     NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, house_num, street, latitude, "
-                     "longitude) VALUES (%ld,%ld,'%@',%f,%f);",
+                     "longitude, deleted) VALUES (%ld,%ld,'%@',%f,%f,0);",
                      (long)refno, (long)iHouse, street, location.latitude, location.longitude];
     
     [self executeCmd:(LPSTR)cmd.UTF8String
@@ -552,12 +554,11 @@
            toLocation:(CLLocationCoordinate2D)location
 {
     BOOL rtn = NO;
-    int iTime = NSDate.timeIntervalSinceReferenceDate;
     SidewalkData *sdwkd = SidewalkData.new;
     BOOL opened = [sdwkd open];
     
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET latitude=%f, longitude=%f, last_update=%i WHERE id=%ld",
-                     location.latitude, location.longitude, iTime, (long)refno];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET latitude=%f, longitude=%f WHERE id=%ld",
+                     location.latitude, location.longitude, (long)refno];
     
     rtn = [sdwkd executeCmd:(LPSTR)cmd.UTF8String
                sendToServer:YES
@@ -575,19 +576,19 @@
     }
     
     [sdwkd close:opened];
-    return !rtn;
+    return rtn;
 }
 
 - (void)updateSdwkPoint:(NVSidewalkPoint *)sdwkPoint
 {
     BOOL opened = [self open];
     
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET note='%@', latitude=%f, longitude=%f, "
-                     "slope_front=%f, slope_side=%f, slope_heading=%f, crack_width=%f, width=%f, level_change=%f, "
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET note='%@', slope_front=%f, "
+                     "slope_side=%f, slope_heading=%f, crack_width=%f, width=%f, level_change=%f, "
                      "last_update=%i, condition=%i, obstruction=%i WHERE id=%u",
-                     sdwkPoint.note, sdwkPoint.location.latitude, sdwkPoint.location.longitude, sdwkPoint.slopeFront,
-                     sdwkPoint.slopeSide, sdwkPoint.slopeHeading, sdwkPoint.crackWidth, sdwkPoint.width, sdwkPoint.levelChange,
-                     sdwkPoint.lastUpdate, sdwkPoint.condition, sdwkPoint.obstruction, sdwkPoint.pointID];
+                     sdwkPoint.note, sdwkPoint.slopeFront, sdwkPoint.slopeSide, sdwkPoint.slopeHeading,
+                     sdwkPoint.crackWidth, sdwkPoint.width, sdwkPoint.levelChange,sdwkPoint.lastUpdate,
+                     sdwkPoint.condition, sdwkPoint.obstruction, sdwkPoint.pointID];
     
     [self executeCmd:(LPSTR)cmd.UTF8String
         sendToServer:YES
@@ -623,8 +624,13 @@
         int obstruction = sqlite3_column_int(statement, iCol++);
         int houseNum = sqlite3_column_int(statement, iCol);
         sdwkPoint.pointID = refno;
-        sdwkPoint.note = [NSString stringWithUTF8String:note];
-        sdwkPoint.street = [NSString stringWithUTF8String:street];
+        
+        if (note)
+            sdwkPoint.note = [NSString stringWithUTF8String:note];
+        
+        if (street)
+            sdwkPoint.street = [NSString stringWithUTF8String:street];
+        
         sdwkPoint.location = CLLocationCoordinate2DMake(latitude, longitude);
         sdwkPoint.slopeFront = slopeFront;
         sdwkPoint.slopeSide = slopeSide;
@@ -638,7 +644,9 @@
         sdwkPoint.houseNum = houseNum;
     }
     
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     [self close:opened];
+    
     return sdwkPoint;
 }
 
@@ -683,8 +691,8 @@
     sqlite3_stmt *statement = NULL;
     
     NSString *query = [NSString stringWithFormat:@"SELECT longitude, latitude, last_update FROM SidewalkPoints, "
-                       "SidewalkPoints_index WHERE SidewalkPoints.id=SidewalkPoints_index.id AND maxX>=%f AND "
-                       "minX<=%f AND maxY>=%f AND minY<=%f",
+                       "SidewalkPoints_index WHERE deleted=0 AND SidewalkPoints.id=SidewalkPoints_index.id "
+                       "AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f",
                        platlonBounds->xmn, platlonBounds->xmx, platlonBounds->ymn, platlonBounds->ymx];
     
     SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
@@ -711,7 +719,6 @@
     
     SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     [self close:opened];
-    
 }
 
 - (void)drawSdwkPoint:(CGContextRef)context
@@ -731,6 +738,76 @@
         CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
     
     CGContextStrokeEllipseInRect(context, pointRect);
+}
+
+- (int)pickSdwkPoint:(LLPOINT)point
+       highlightList:(NSMutableArray *)hlist
+{
+    CGFloat d = 0.0, mind = DBL_MAX;
+    DPOINT p1 = {0}, p2 = {0}, minpt = {0};
+    LPLLPOINT pt = &point;
+    int minref = 0, npicked = 0, houseNum = 0;
+    NSString *street = @"";
+    
+    p1.x = pt->lon;
+    p1.y = pt->lat;
+    minpt = p1;
+    dbounds bnds = [CRAPI.sharedInstance getPickApBoundsAtPoint:pt];
+    BOOL opened = [self open];
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT SidewalkPoints.id, latitude, longitude, house_num, street "
+                       "FROM SidewalkPoints, SidewalkPoints_index WHERE SidewalkPoints.id=SidewalkPoints_index.id "
+                       "AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f",
+                       bnds.xmn, bnds.xmx, bnds.ymn, bnds.ymx];
+    
+    sqlite3_stmt *statement = NULL;
+    int iCol = 0;
+    
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int refno = sqlite3_column_int(statement, iCol++);
+        double lat = sqlite3_column_double(statement, iCol++);
+        double lon = sqlite3_column_double(statement, iCol++);
+        houseNum = sqlite3_column_int(statement, iCol++);
+        LPSTR lpstrStreet = (LPSTR)sqlite3_column_text(statement, iCol);
+        
+        if (lpstrStreet)
+            street = [NSString stringWithUTF8String:lpstrStreet];
+        
+        p2.x = lon;
+        p2.y = lat;
+        d = ArcDistance(p1, p2);
+        
+        if (d < mind)
+        {
+            npicked++;
+            minref = refno;
+            mind = d;
+            minpt = p2;
+        }
+    }
+    
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
+    [self close:opened];
+    
+    pt->lon = minpt.x;
+    pt->lat = minpt.y;
+    
+    if (npicked)
+    {
+        PickedItem *pi = PickedItem.new;
+        pi.itemType = SidewalkPoint;
+        pi.distance = max(0, mind - (_wallPtSize / 2.0));
+        pi.pickedPoint = minpt;
+        pi.identifier = [NSString stringWithFormat:@"%i %@", houseNum, street];
+        pi.symbolName = [NSString stringWithFormat:@"SDWKPT %i", minref];
+        pi.refno = minref;
+        [hlist addObject:pi];
+    }
+    
+    return npicked;
 }
 
 @end
