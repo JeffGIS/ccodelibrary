@@ -203,7 +203,7 @@
                                                                              forKey:nvp.key]];
         
         _photoLabel.text = [NSString stringWithFormat:@"%@ (%li of %lu)",
-                            nvp.identifier, (_imageIndex + 1), (unsigned long)_photosArray.count];
+                            nvp.identifier, ((long)_imageIndex + 1), (unsigned long)_photosArray.count];
     }
     
     else

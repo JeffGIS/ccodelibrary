@@ -57,7 +57,7 @@
     kern_return_t kerr = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
     
     if(kerr == KERN_SUCCESS)
-        NSLog(@"Memory Warning Received! %u bytes used.", info.resident_size);
+        NSLog(@"Memory Warning Received! %u bytes used.", (uint)info.resident_size);
     
     else
         NSLog(@"Memory Warning Received! Error getting bytes used (%s).", mach_error_string(kerr));

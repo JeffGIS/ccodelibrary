@@ -53,12 +53,12 @@ double LTWOPI (double AZ1)
 }
 CORNERPOINTS * CORNERPOINTS_view (CORNERPOINTS * pcp)
 {
-    CORNERPOINTS cp = *pcp;
+    //CORNERPOINTS cp = *pcp;
     return pcp;
 }
 LPMNMXCORD MNMXCORD_view (LPMNMXCORD pmm)
 {
-    MNMXCORD mmc = *pmm;
+    //MNMXCORD mmc = *pmm;
     return pmm;
 }
 LLCORNERPOINTS LLCornerPointsFromCornerPoints (CORNERPOINTS * cp)
@@ -833,7 +833,7 @@ MNMXCORD PolyBounds (LPDPOINT points,int npoints)
 CORNERPOINTS CornerPointsFromLatLonAndDist (LLPOINT llpt,double dist) //dist in meters
 {
     CORNERPOINTS cp;
-    double az=HALFPI/2;
+    //double az=HALFPI/2;
     MNMXCORD bounds = BoundsFromLLPointAndDist (llpt,dist);
 
     cp.farLeft.x = bounds.xmn;
@@ -1227,14 +1227,13 @@ bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long 
     if (MAXDIF)
     {
         pPoint = pPointIn;
-        double A1=slopeToAZ(*B), A2=A1 + HALFPI;
-        double tol = 0.0001;
+        //double A1=slopeToAZ(*B), A2=A1 + HALFPI;
+        //double tol = 0.0001;
         for (I = 0; I < N; I++, pPoint++)
         {
             DPOINT intPt;
             DIFF = fabs(pPoint->y - (*A + *B * pPoint->x));
-            short rtn = LINSEC_TOL (pPoint->x,pPoint->y,A2,0,*A,
-                                    A1,&intPt.x,&intPt.y,tol);
+            //short rtn = LINSEC_TOL (pPoint->x,pPoint->y,A2,0,*A,A1,&intPt.x,&intPt.y,tol);
             DIFF = ldistpp(&intPt,pPoint);
             if (DIFF > *MAXDIF)
             {
@@ -1257,7 +1256,7 @@ Vertical:
         pPoint = pPointIn;
         for (I = 0; I < N; I++, pPoint++)
         {
-            DPOINT intPt;
+            //DPOINT intPt;
             DIFF = fabs(pPoint->x - Xint);
             if (DIFF > *MAXDIF)
             {
@@ -1672,7 +1671,7 @@ DPOINT TranDPOINT (LPDPOINT pPoint,LPTRANDATA  hTran)
 POINT TranDPOINTtoPOINT (LPDPOINT pPoint,LPTRANDATA  hTran)
 {
     DPOINT DPoint;
-    POINT Point;
+    //POINT Point;
     
     TRANS2 (pPoint->x,pPoint->y, &DPoint.x,&DPoint.y,hTran);
     return DPointToPoint(&DPoint);

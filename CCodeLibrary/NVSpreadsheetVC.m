@@ -522,7 +522,7 @@
         {
             _numRowsLabel = UILabel.new;
             _numRowsLabel.translatesAutoresizingMaskIntoConstraints = NO;
-            _numRowsLabel.text = [NSString stringWithFormat:@"%li", ([self numberOfRowsInSpreadsheetView:nil] - 1)];
+            _numRowsLabel.text = [NSString stringWithFormat:@"%li", (long)([self numberOfRowsInSpreadsheetView:nil] - 1)];
             _numRowsLabel.textColor = UIColor.whiteColor;
             _numRowsLabel.adjustsFontSizeToFitWidth = YES;
             _numRowsLabel.textAlignment = NSTextAlignmentCenter;
@@ -533,8 +533,8 @@
             [_numRowsLabel constrainHeightToConstant:gc.idSize];
         }
         
-        _numColsLabel.text = [NSString stringWithFormat:@"%li", ([self numberOfColumnsInSpreadsheetView:nil] - 1)];
-        _numRowsLabel.text = [NSString stringWithFormat:@"%li", ([self numberOfRowsInSpreadsheetView:nil] - 1)];
+        _numColsLabel.text = [NSString stringWithFormat:@"%li", (long)([self numberOfColumnsInSpreadsheetView:nil] - 1)];
+        _numRowsLabel.text = [NSString stringWithFormat:@"%li", (long)([self numberOfRowsInSpreadsheetView:nil] - 1)];
     }
     
     else if (indexPath.nvSpreadsheetRow == 0 && indexPath.nvSpreadsheetColumn > 0)
@@ -543,7 +543,7 @@
                                                           forIndexPath:indexPath];
         
         NVTopRowCell *tr = (NVTopRowCell *)cell;
-        tr.idLabel.text = [NSString stringWithFormat:@"%li", indexPath.nvSpreadsheetColumn];
+        tr.idLabel.text = [NSString stringWithFormat:@"%li", (long)indexPath.nvSpreadsheetColumn];
         tr.contentView.backgroundColor = UIColor.clearColor;
         
         if (_flipped)
@@ -576,7 +576,7 @@
                                                           forIndexPath:indexPath];
         
         NVLeftColumnCell *lc = (NVLeftColumnCell *)cell;
-        lc.idLabel.text = [NSString stringWithFormat:@"%li", indexPath.nvSpreadsheetRow];
+        lc.idLabel.text = [NSString stringWithFormat:@"%li", (long)indexPath.nvSpreadsheetRow];
         lc.contentView.backgroundColor = UIColor.clearColor;
         
         if (_flipped)
@@ -1372,7 +1372,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     if (i == row.integerValue)
                     {
                         [_selectedRows removeObject:row];
-                        NSLog(@"Remove Row:%li", i);
+                        NSLog(@"Remove Row:%li", (long)i);
                         addRow = NO;
                         break;
                     }

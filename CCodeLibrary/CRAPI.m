@@ -12,21 +12,24 @@
 #import "ManagePlacesDatabase.h"
 #import "SharedDefaults.h"
 
-@interface CRAPI () <NVAlertViewDelegate>
-
-@property (nonatomic) NVAlertView *alert;
-
-@end
-
 @implementation TimeRange
+
 @end
 
 @implementation AreaText
+
+@end
+
+@interface CRAPI () <NVAlertViewDelegate>
+
+@property (nonatomic) NVAlertView *alert;
+@property int kp, currentGeoidValue, numAllowedZooms;
+
 @end
 
 @implementation CRAPI
 {
-    int _kp,_currentGeoidValue, _numAllowedZooms, _allowedZooms[3];
+    int _allowedZooms[3];
 }
 
 - (id)init
@@ -127,10 +130,11 @@
     return sharedInstance;
 }
 
-- (void) setNewDataset:(DataSetTypes)newDataset
+- (void)setNewDataset:(DataSetTypes)newDataset
 {
     _newDataset = newDataset;
 }
+
 - (NSString *)sharedOutputDirectory
 {
     NSString* outdir = [NSString stringWithFormat:@"%@/OutputFiles",self.sharedFilePath];
@@ -140,6 +144,7 @@
                                                   error:nil];
     return outdir;
 }
+
 - (NSString *)sharedOutputDirectory:(NSString*)subDir
 {
     NSString* outdir = [NSString stringWithFormat:@"%@/OutputFiles/%@/%i/%i",
@@ -151,6 +156,7 @@
                                                   error:nil];
     return outdir;
 }
+
 - (int)currentGeoid
 {
     return _currentGeoidValue;
@@ -197,30 +203,37 @@
 {
     _currentBAR = i;
 }
+
 -(int) currentOverallBoundaryRefno
 {
     return _currentBAR;
 }
+
 -(BOOL)showPolylineForBounds
 {
     return _showPolylineForBounds;
 }
--(BOOL) maskBoundsForBounds
+
+-(BOOL)maskBoundsForBounds
 {
     return _maskBoundsForBounds;
 }
+
 -(void)setCurrentOverallBoundaryName:(NSString *)currentOverallBoundaryName
 {
     _currentOverallBoundaryName = currentOverallBoundaryName;
 }
+
 -(void)setSelectBoundaryFromMapType:(NSString *)selectBoundaryFromMapType
 {
     _selectBoundaryFromMapType = selectBoundaryFromMapType;
 }
+
  -(void)setCurrentPID:(NSString *)currentPID
 {
     _currentPID = currentPID;
 }
+
 -(void)setCurrentZoom:(CGFloat)zoom
 {
     _currentZoom = zoom;
@@ -230,11 +243,11 @@
 {
     return _kp;
 }
+
 -(void)setKeepProcessing:(int)kp
 {
     _kp = kp;
 }
-
 
 -(void)setShowPlats:(int)showPlats
 {
@@ -843,12 +856,12 @@
     
     _placesArray = NSMutableArray.new;
     if (!message)
-        return FALSE;
+        return NO;
     
     if (strncmp(message.UTF8String,"PlacesFor", 9))
-        return FALSE;
+        return NO;
     
-    self.GSSiPadNumber = atoi(&message.UTF8String[9]);
+    _GSSiPadNumber = atoi(&message.UTF8String[9]);
     
     NSMutableArray *placearray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
     [placearray removeObjectAtIndex:0];
@@ -870,9 +883,9 @@
         [_placesArray addObject:c];
     }
 
-    [_placesArray sortUsingSelector:@selector(compareName:)];
+    [_placesArray sortUsingSelector:@selector(caseInsensitiveCompare:)];
 
-    return TRUE;
+    return YES;
 }
 
 - (void) transferPlacesArrayToManagePlacesList

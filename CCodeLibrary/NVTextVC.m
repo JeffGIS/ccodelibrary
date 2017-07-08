@@ -174,7 +174,7 @@
         [_textView addGestureRecognizer:pinch];
     }
     
-    [_searchButton setTitle:[NSString stringWithFormat:@"Search: %li matches", _rangeArray.count]
+    [_searchButton setTitle:[NSString stringWithFormat:@"Search: %li matches", (unsigned long)_rangeArray.count]
                    forState:UIControlStateNormal];
     
     if (_rangeArray.count)
@@ -286,7 +286,7 @@ CGSize sizeOfString(NSString *string, UIFont *font)
     CGFloat yOffset = (_textView.textContainerInset.top + rect.origin.y);
     [_scrollView setContentOffset:CGPointMake(0.0, yOffset) animated:YES];
     
-    [_searchButton setTitle:[NSString stringWithFormat:@"Search: %i of %li matches", _currentRange, _rangeArray.count]
+    [_searchButton setTitle:[NSString stringWithFormat:@"Search: %i of %li matches", _currentRange, (unsigned long)_rangeArray.count]
                    forState:UIControlStateNormal];
     
     if (_currentRange >= _rangeArray.count)

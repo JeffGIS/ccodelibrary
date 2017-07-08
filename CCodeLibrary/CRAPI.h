@@ -30,182 +30,164 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 };
 
 @interface TimeRange : NSObject
+
 @property int beginTime, endTime;
+
 @end
 
 @interface AreaText : NSObject
+
 @property int refno;
-@property NSString * _Nonnull areaID;
-@property NSString * _Nullable text;
+@property (nonatomic, copy, nonnull) NSString *areaID, *text;
+
 @end
 
 @interface CRAPI : NSObject
 
-@property (nonatomic) int currentModule;
-@property (nonatomic) int currentSubModule;
-@property int currentApp;
-@property (nonatomic, copy) NSString *documentsDirectory;
-@property (nonatomic, copy) NSString *outputDirectory;
-@property (nonatomic, copy) NSString *imageDirectory;
-@property (nonatomic, copy) NSString *uploadDirectory;
-@property (nonatomic, copy) NSString *sharedOutputDirectory;
-@property (nonatomic, copy) NSString *organizationName;
-@property (nonatomic, copy) NSString *mailAddress;
-@property (nonatomic, copy) NSString *userName;
-@property (nonatomic, copy) NSString *eMail;
-@property int rampCredits;
-@property int deviceNumber;
-@property int maxDevices;
-
-@property (nonatomic) NSMutableDictionary *deviceLists;
-@property (nonatomic, copy) NSString *deviceListsKey;
-@property (nonatomic) int currentGeoid;
-@property (nonatomic) int currentManageriPad; //sequence number for manager iPad - created by GMServer
-@property int currentiPadWithinManager;
-@property int totiPadWithinManager;
-@property (nonatomic) int GSSiPadNumber; //sequence number for this iPad
-@property (nonatomic, copy) NSString *currentCityNameAndState;
+@property (nonatomic) int currentModule, currentSubModule, currentApp;
+@property (nonatomic, copy, nullable) NSString *documentsDirectory;
+@property (nonatomic, copy, nullable) NSString *outputDirectory;
+@property (nonatomic, copy, nullable) NSString *imageDirectory;
+@property (nonatomic, copy, nullable) NSString *uploadDirectory;
+@property (nonatomic, copy, nullable) NSString *sharedOutputDirectory;
+@property (nonatomic, copy, nullable) NSString *organizationName;
+@property (nonatomic, copy, nullable) NSString *mailAddress;
+@property (nonatomic, copy, nullable) NSString *userName;
+@property (nonatomic, copy, nullable) NSString *eMail;
+@property (nonatomic) int rampCredits, deviceNumber, maxDevices;
+@property (nonatomic, nullable) NSMutableDictionary *deviceLists;
+@property (nonatomic, copy, nullable) NSString *deviceListsKey;
+@property (nonatomic) int currentGeoid, currentManageriPad, GSSiPadNumber;
+@property (nonatomic) int currentiPadWithinManager, totiPadWithinManager;
+@property (nonatomic, copy, nullable) NSString *currentCityNameAndState;
 @property (nonatomic) int currentIntersection;
-@property (nonatomic, copy) NSString *googleKey;
-@property BOOL refreshMap, doCompassCalibrate, showParcelBoundary;
-@property (nonatomic) NSMutableArray *placesArray;
-@property (nonatomic, copy) NSArray *currentPlaceArray;
-@property (nonatomic, copy) NSString *placeAreaFile;
-@property (nonatomic, copy) NSString *calibrateLength;
-@property (nonatomic, copy) NSString *calibrateHeight;
-@property (nonatomic) NSMutableArray *assignediPadsArray;
-@property (nonatomic) Colors *defaultColors;
+@property (nonatomic, copy, nullable) NSString *googleKey;
+@property (nonatomic) BOOL refreshMap, doCompassCalibrate, showParcelBoundary;
+@property (nonatomic, nullable) NSMutableArray *placesArray;
+@property (nonatomic, copy, nullable) NSArray *currentPlaceArray;
+@property (nonatomic, copy, nullable) NSString *placeAreaFile;
+@property (nonatomic, copy, nullable) NSString *calibrateLength;
+@property (nonatomic, copy, nullable) NSString *calibrateHeight;
+@property (nonatomic, nullable) NSMutableArray *assignediPadsArray;
+@property (nonatomic, nullable) Colors *defaultColors;
 @property (nonatomic) NSInteger GMMSetting;
-@property (nonatomic, copy) NSString *currentPID;
-@property (nonatomic, copy) NSString *currentAddress;
-@property (nonatomic, copy) NSString *currentPropOwner;
-@property (nonatomic, copy) NSString *selectedPID;
-@property (nonatomic) NSMutableArray *annotations;
+@property (nonatomic, copy, nullable) NSString *currentPID;
+@property (nonatomic, copy, nullable) NSString *currentAddress;
+@property (nonatomic, copy, nullable) NSString *currentPropOwner;
+@property (nonatomic, copy, nullable) NSString *selectedPID;
+@property (nonatomic, nullable) NSMutableArray *annotations;
 @property (nonatomic) CGFloat currentZoom;
-@property BOOL controlledInterface;
-@property BOOL controllControlledInterface;
-@property int pickApInPixels;
-@property int project;
-@property (nonatomic, copy) NSString *sharedFilePath;
-@property (nonatomic) int showPlats;
-@property int parcelShadingOption;
-@property int parcelTextOption;
-@property int parcelColorOption;
-@property int showTileInfo;
-@property (nonatomic, copy) NSString *currentOverallBoundaryName;
-@property (nonatomic, copy) NSString *currentOverallBoundaryType;
-@property (nonatomic) int currentOverallBoundaryRefno;
-@property (nonatomic) BOOL showPolylineForBounds, maskBoundsForBounds;
-@property int currentBAR;
-@property BOOL setToAlleyWalls, isFromGMMobile;
-@property (nonatomic, copy) NSString *sourceApp;
-@property (nonatomic) UIView *currentView;
-@property MNMXCORD lastDisplayBounds;
-@property NSString * currentCounty;
-@property (nonatomic) NSString * currentCountyName;
-@property (nonatomic) NSString * currentCity;
-@property (nonatomic, copy) NSString *currentPlatImagePath;
-@property (nonatomic, copy) NSString *currentPlatType;
-@property (nonatomic, copy) NSString *selectedPDFID;
-@property (nonatomic, copy) NSString *extractFile;
-@property BOOL resetPropList, resetDestinations, resetCrimeList;
-@property (nonatomic) BOOL forAllYears;
-@property NSInteger fromDate, toDate, crimeMode;
-@property (nonatomic, copy) NSString *crimeTarget;
-@property (nonatomic, copy) NSString *crimeCompare;
-@property (nonatomic, copy) NSString *crimeAdjustValue;
-@property (nonatomic, copy) NSString *crimeAdjustValueArea;
-@property (strong, nonatomic) MapToolbar *mapToolbar;
-@property (strong, nonatomic) UIViewController *mapVC;
+@property (nonatomic) BOOL controlledInterface, controllControlledInterface;
+@property (nonatomic) int pickApInPixels, project;
+@property (nonatomic, copy, nullable) NSString *sharedFilePath;
+@property (nonatomic) int showPlats, parcelShadingOption, parcelTextOption;
+@property (nonatomic) int parcelColorOption, showTileInfo;
+@property (nonatomic, copy, nullable) NSString *currentOverallBoundaryName;
+@property (nonatomic, copy, nullable) NSString *currentOverallBoundaryType;
+@property (nonatomic) int currentOverallBoundaryRefno, currentBAR;
+@property (nonatomic) BOOL showPolylineForBounds, maskBoundsForBounds, setToAlleyWalls, isFromGMMobile;
+@property (nonatomic, copy, nullable) NSString *sourceApp;
+@property (nonatomic, nullable) UIView *currentView;
+@property (nonatomic) MNMXCORD lastDisplayBounds, lastViewBounds;
+@property (nonatomic, copy, nullable) NSString *currentCounty;
+@property (nonatomic, copy, nullable) NSString *currentCountyName;
+@property (nonatomic, copy, nullable) NSString *currentCity;
+@property (nonatomic, copy, nullable) NSString *currentPlatImagePath;
+@property (nonatomic, copy, nullable) NSString *currentPlatType;
+@property (nonatomic, copy, nullable) NSString *selectedPDFID;
+@property (nonatomic, copy, nullable) NSString *extractFile;
+@property (nonatomic) BOOL resetPropList, resetDestinations, resetCrimeList, forAllYears;
+@property (nonatomic) NSInteger fromDate, toDate, crimeMode;
+@property (nonatomic, copy, nullable) NSString *crimeTarget;
+@property (nonatomic, copy, nullable) NSString *crimeCompare;
+@property (nonatomic, copy, nullable) NSString *crimeAdjustValue;
+@property (nonatomic, copy, nullable) NSString *crimeAdjustValueArea;
+@property (nonatomic, nullable) MapToolbar *mapToolbar;
+@property (nonatomic, nullable) UIViewController *mapVC;
 @property (nonatomic) CGFloat mapToolbarProgress;
-@property BOOL becameActive;
-@property (nonatomic, copy) NSString *offsetForBounds;
-@property (nonatomic) int offsetForBoundsInMeters;
-@property (nonatomic, copy) NSString *selectBoundaryFromMapType;
-@property int keepProcessing;
-@property (nonatomic) NVDocumentManager *docManager;
-@property BOOL mapIndividualDest, mapGroupDest;
-@property (nonatomic) BOOL mapPropList;
-@property (nonatomic, copy) NSString *mapCrimeList;
-@property BOOL uploadPix, downloadData, downloadPix;
+@property (nonatomic) BOOL becameActive, ignoreErrorLog;
+@property (nonatomic, copy, nullable) NSString *offsetForBounds;
+@property (nonatomic) int offsetForBoundsInMeters, keepProcessing;
+@property (nonatomic, copy, nullable) NSString *selectBoundaryFromMapType;
+@property (nonatomic, nullable) NVDocumentManager *docManager;
+@property (nonatomic) BOOL mapIndividualDest, mapGroupDest, mapPropList;
+@property (nonatomic, copy, nullable) NSString *mapCrimeList;
+@property (nonatomic) BOOL uploadPix, downloadData, downloadPix;
 @property (nonatomic) DataSetTypes newDataset;
-@property BOOL ignoreErrorLog;
-@property int showDeveloperFunctions;
-@property (nonatomic, copy) NSString *minManageVersion;
-@property (nonatomic, copy) NSString *minPrelimVersion;
-@property (nonatomic, copy) NSString *minDetailVersion;
-@property (nonatomic, copy) NSString *minAlleyVersion;
-@property int currentMessageNum, serverToUse;
-@property CLLocation *lastLocation;
-@property BOOL hideConnectButton, appChanged, inDataUpdate;
-@property NSNumberFormatter *dollarFmt;
-@property NSNumberFormatter *acreFmt;
-@property MNMXCORD lastViewBounds;
-@property (nonatomic) NVSendEmail *currentEmail;
-@property NSMutableArray * lastAreaText;
-@property BOOL isRentaliPad, canUseSdwk, inSdwkMode, GMTilesVisible;
+@property (nonatomic, copy, nullable) NSString *minManageVersion;
+@property (nonatomic, copy, nullable) NSString *minPrelimVersion;
+@property (nonatomic, copy, nullable) NSString *minDetailVersion;
+@property (nonatomic, copy, nullable) NSString *minAlleyVersion;
+@property (nonatomic) int currentMessageNum, serverToUse, showDeveloperFunctions;
+@property (nonatomic , nullable) CLLocation *lastLocation;
+@property (nonatomic) BOOL hideConnectButton, appChanged, inDataUpdate;
+@property (nonatomic, nullable) NSNumberFormatter *dollarFmt;
+@property (nonatomic, nullable) NSNumberFormatter *acreFmt;
+@property (nonatomic, nullable) NVSendEmail *currentEmail;
+@property (nonatomic, nullable) NSMutableArray *lastAreaText;
+@property (nonatomic) BOOL isRentaliPad, canUseSdwk, inSdwkMode, GMTilesVisible;
 
-+ (CRAPI *)sharedInstance;
++ (nullable CRAPI *)sharedInstance;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
-- (void)facilityInit:(Facility *)currentFacility;
-- (NSString *)sharedOutputDirectory:(NSString*)subDir;
+- (void)facilityInit:(nullable Facility *)currentFacility;
+- (nullable NSString *)sharedOutputDirectory:(nullable NSString *)subDir;
 
-- (void)setIntersectionRotAndQuadDeviders:(NSString *)intAzm
-                                   forInt:(MPIntersection *)currentIntersection;
+- (void)setIntersectionRotAndQuadDeviders:(nullable NSString *)intAzm
+                                   forInt:(nullable MPIntersection *)currentIntersection;
 
 - (int)getCornerFromAdjustedRot:(int)adjustedRot
-                 atIntersection:(MPIntersection *)intersection;
+                 atIntersection:(nullable MPIntersection *)intersection;
 
 - (int)getCornerFromX:(int)x
                  andY:(int)y
-       atIntersection:(MPIntersection *)intersection;
+       atIntersection:(nullable MPIntersection *)intersection;
 
 - (int)getQuadDeviderFromX:(int)x
                       andY:(int)y
-            atIntersection:(MPIntersection *)intersection;
+            atIntersection:(nullable MPIntersection *)intersection;
 
 - (BOOL)intersectionAlreadyCompleted:(int)intID;
-- (NSString *)getOutputDirectory;
+- (nullable NSString *)getOutputDirectory;
 
-- (UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
+- (nullable UIImage *)getStreetViewImageAtLatlon:(LLPOINT)atLatLon
                                 heading:(CGFloat)heading
                                   pitch:(CGFloat)pitch
                                     fov:(CGFloat)fov;
 
-- (BOOL)getPlaceIntersectionFile:(id)intFile
+- (BOOL)getPlaceIntersectionFile:(nullable id)intFile
                         forGeoid:(int)geoid;
 
-- (NSString *)directoryFromPath:(NSString *)path
-                       andName:(NSString *)name
+- (nullable NSString *)directoryFromPath:(nullable NSString *)path
+                       andName:(nullable NSString *)name
                         create:(BOOL)create;
 
 - (CGPoint)pointForLev21Coordinate:(IPOINT)lev21pt
-               usingTransformation:(LPTRANDATA)pTranWToBMP;
+               usingTransformation:(nullable LPTRANDATA)pTranWToBMP;
 
 - (IBOUNDS)boundsFromRect:(CGRect)rect
-      usingTransformation:(LPTRANDATA)pTranBMPToW;
+      usingTransformation:(nullable LPTRANDATA)pTranBMPToW;
 
-- (dbounds)getPickApBoundsAtPoint:(LLPOINT *)pt;
-- (dbounds)getPixelPickApBoundsAtPoint:(DPOINT *)pt;
+- (dbounds)getPickApBoundsAtPoint:(nullable LLPOINT *)pt;
+- (dbounds)getPixelPickApBoundsAtPoint:(nullable DPOINT *)pt;
 
-- (dbounds)getBoundsAtPoint:(CLLocationCoordinate2D *)pt
+- (dbounds)getBoundsAtPoint:(nullable CLLocationCoordinate2D *)pt
                     andDist:(double)meters;
 
 - (void)clearOutputDirectory;
 
-- (BOOL)appendString:(NSString *)str
-              toFile:(NSString *)file;
+- (BOOL)appendString:(nullable NSString *)str
+              toFile:(nullable NSString *)file;
 
 - (NSInteger)adjustNextRefno:(NSInteger)refno;
-- (BOOL)savePlacesString:(NSString*)placesString;
+- (BOOL)savePlacesString:(nullable NSString *)placesString;
 - (BOOL)processPlaces;
-- (NSMutableArray *) copyPlaces;
-- (int) newPlace:(NSArray *)oldPlaces;
+- (nullable NSMutableArray *) copyPlaces;
+- (int) newPlace:(nullable NSArray *)oldPlaces;
 - (BOOL)processPlacesArray:(NSInteger) row;
 - (void) transferPlacesArrayToManagePlacesList;
 - (BOOL) setGeoIDForCurrentApp;
-- (NSString*) getPlacesStringFromFile;
+- (nullable NSString *)getPlacesStringFromFile;
 - (void)loadiPadParametersForGeoid:(int)geoid;
 - (void)setiPadParametersFromGeoid:(int)geoid;
 - (void)deleteImagesForAllZooms:(int)intersectionID;
@@ -215,28 +197,30 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
                  range:(int)iRange
              numRanges:(int)nRanges;
 
-- (NSURL *)smartURLForString:(NSString *)str;
+- (nullable NSURL *)smartURLForString:(nullable NSString *)str;
 
 -(BOOL) haveErrorLog;
--(NSString*) errorLogPath;
--(void) logToErrorFile:(NSString*) error;
--(void) logToErrorFile:(NSString*) error
-            withHeader:(NSString*) header;
+-(nullable NSString *)errorLogPath;
+-(void) logToErrorFile:(nullable NSString *)error;
+
+-(void) logToErrorFile:(nullable NSString *)error
+            withHeader:(nullable NSString *)header;
+
 -(void) clearErrorFile;
 -(void) logToErrorFileIgnore:(BOOL)ignore;
 
--(NSString *)appAndVersion;
--(BOOL)isValidVersion:(NSString *)message;
+-(nullable NSString *)appAndVersion;
+-(BOOL)isValidVersion:(nullable NSString *)message;
 
--(void) gotoAppStore;
-- (NSString*) getNVCRISServer;
+- (void)gotoAppStore;
+- (nullable NSString *) getNVCRISServer;
 - (void)checkStorageForMinStorage:(nullable NSNumber *)minStorage;
-- (nullable NSString *)countyNameFromCountyID:(nullable NSString*)countyID;
+- (nullable NSString *)countyNameFromCountyID:(nullable NSString *)countyID;
 - (nullable NSString *)acreFormat:(double)acres;
 - (nullable NSString *)dollarsFormat:(double)dollars;
 - (nonnull NSArray<TimeRange *> *)getTimeRanges;
 - (BOOL) refnoInAreaText:(int) refno;
-- (AreaText*) areaTextForRefno:(int) refno;
+- (nullable AreaText *) areaTextForRefno:(int) refno;
 - (void) showMapToolbarIndicator:(BOOL)show;
 
 @end

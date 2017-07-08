@@ -660,38 +660,38 @@ static int ii;
 
     PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
    
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%i,\
-assignedToPrelim=%i,\
-assignedToDetail=%i,\
-intX=%i,\
-intY=%i,\
-ramp1=%i,\
-ramp2=%i,\
-ramp3=%i,\
-ramp4=%i,\
-ramp5=%i,\
-ramp6=%i,\
-ramp7=%i,\
-ramp8=%i,\
-ramp81=%i,\
-ramp23=%i,\
-ramp45=%i,\
-ramp67=%i,\
-xWalkA=%i,\
-xWalkB=%i,\
-xWalkC=%i,\
-xWalkD=%i,\
-signal81=%i,\
-signal23=%i,\
-signal45=%i,\
-signal67=%i,\
-latitude=%f,\
-longitude=%f,\
-zoomLevel=%i,\
-doLater=%i,\
-intersectionComment='%s' \
-WHERE intID=%i;",
-                       iTime, mpint.status,
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%li,\
+                     assignedToPrelim=%i,\
+                     assignedToDetail=%i,\
+                     intX=%i,\
+                     intY=%i,\
+                     ramp1=%i,\
+                     ramp2=%i,\
+                     ramp3=%i,\
+                     ramp4=%i,\
+                     ramp5=%i,\
+                     ramp6=%i,\
+                     ramp7=%i,\
+                     ramp8=%i,\
+                     ramp81=%i,\
+                     ramp23=%i,\
+                     ramp45=%i,\
+                     ramp67=%i,\
+                     xWalkA=%i,\
+                     xWalkB=%i,\
+                     xWalkC=%i,\
+                     xWalkD=%i,\
+                     signal81=%i,\
+                     signal23=%i,\
+                     signal45=%i,\
+                     signal67=%i,\
+                     latitude=%f,\
+                     longitude=%f,\
+                     zoomLevel=%i,\
+                     doLater=%i,\
+                     intersectionComment='%s' \
+                     WHERE intID=%i;",
+                     iTime, (long)mpint.status,
                        mpint.assignedPrelim,
                        mpint.assignedDetail,
                        mpint.lev21x,
@@ -1687,8 +1687,8 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     NSString *query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo%@=%i WHERE intID>=%i AND intID <=%i",
                        iTime, type, user, intID, endID];
     if (status)
-        query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo%@=%i, status=%i WHERE intID>=%i AND intID <=%i",
-                       iTime, type, user, status, intID, endID];
+        query = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, assignedTo%@=%i, status=%li WHERE intID>=%i AND intID <=%i",
+                 iTime, type, user, (long)status, intID, endID];
     
     rtn = [self.curbRampData executeCmd:query.UTF8String
                            sendToServer:YES

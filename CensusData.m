@@ -216,12 +216,12 @@
     switch (areaType)
     {
         case CATBlocks:
-        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i", "Males by Age", CAVMalesByAge]];
-        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i", "Females by Age", CAVFemalesByAge]];
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%li", "Males by Age", (long)CAVMalesByAge]];
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%li", "Females by Age", (long)CAVFemalesByAge]];
             break;
         case CATTracts:
-        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i", "Males by Age", CAVMalesByAge]];
-        [rtn addObject:[NSString stringWithFormat:@"%s\x03%i", "Females by Age", CAVFemalesByAge]];
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%li", "Males by Age", (long)CAVMalesByAge]];
+        [rtn addObject:[NSString stringWithFormat:@"%s\x03%li", "Females by Age", (long)CAVFemalesByAge]];
             break;
         default:
             break;
