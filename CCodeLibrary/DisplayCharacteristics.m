@@ -18,6 +18,7 @@
     {
         self.size = 1;
         self.width = 1;
+        self.incValue = 1;
         self.penColor = UIColor.blackColor;
         self.fillColor = UIColor.grayColor;
     }
@@ -34,6 +35,7 @@
     another.itemEndTime = self.itemEndTime;
     another.UCR = self.UCR;
     another.iValue = self.iValue;
+    another.incValue = self.incValue;
     another.sunAngle = self.sunAngle;
     another.pointSymbol = self.pointSymbol;
     another.fillColor = self.fillColor;

@@ -31,7 +31,8 @@
 - (int)DPointInArea:(DPOINT *)dPoint
              atTime:(int)itime
            andRefno:(int)refno
-         whichCount:(int) icount;
+         whichCount:(int) icount
+              value:(double)val;
 - (CGColorRef)colorForArea:(NSString*)areaID;
 - (double)countForArea:(NSString*)areaID
             whichCount:(int) icount;

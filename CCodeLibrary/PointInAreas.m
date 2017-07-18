@@ -762,6 +762,7 @@ static int ii;
              atTime:(int)itime
            andRefno:(int)refno
          whichCount:(int) icount
+              value:(double)val
 {
     int rtn = 0;
     
@@ -794,7 +795,7 @@ static int ii;
                                       atTime:itime
                                     andRefno:refno
                                   whichCount:icount
-                                        value:_pointGrid[indx]];
+                                        value:_pointGrid[indx]*val];
                     
                 }
                 
