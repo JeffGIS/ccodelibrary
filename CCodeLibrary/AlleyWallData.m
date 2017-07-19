@@ -365,7 +365,7 @@ SELECT max(_id) FROM MyTable*/
     p1.x = pt->longitude;
     p1.y = pt->latitude;
     minpt = p1;
-    dbounds bnds = [CRAPI.sharedInstance getBoundsAtPoint:pt andDist:20];
+    dbounds bnds = [CRAPI.sharedInstance getBoundsAtPoint:pt andDist:50];
     BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"SELECT ALLEY_LINE.id, ALLEY_LINE.ALLEYSEG, BasePointX, BasePointY,NumPoints,NumLoops,PolyPartLen,Points  FROM ALLEY_LINE,ALLEY_LINE_index WHERE  ALLEY_LINE.id=ALLEY_LINE_index.id AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f",
