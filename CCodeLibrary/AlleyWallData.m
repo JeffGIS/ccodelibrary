@@ -365,7 +365,7 @@ SELECT max(_id) FROM MyTable*/
     p1.x = pt->longitude;
     p1.y = pt->latitude;
     minpt = p1;
-    dbounds bnds = [CRAPI.sharedInstance getBoundsAtPoint:pt andDist:20];
+    dbounds bnds = [CRAPI.sharedInstance getBoundsAtPoint:pt andDist:50];
     BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"SELECT ALLEY_LINE.id, ALLEY_LINE.ALLEYSEG, BasePointX, BasePointY,NumPoints,NumLoops,PolyPartLen,Points  FROM ALLEY_LINE,ALLEY_LINE_index WHERE  ALLEY_LINE.id=ALLEY_LINE_index.id AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f",
@@ -427,15 +427,13 @@ SELECT max(_id) FROM MyTable*/
 - (NSString *)getNextWallForAlley:(NSString *)nearestAlley
 {
     NSString *nextWall = @"";
-    double maxWall = 0;
     BOOL opened = [self open];
-    int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
     
     if ([nearestAlley isEqualToString:@""])
         return @"";
     
-    NSString *minNum = [[NSString stringWithFormat:@"%0.2f",iPad/10.0 + 0.01]substringFromIndex:1];
-    NSString *maxNum = [[NSString stringWithFormat:@"%0.2f",iPad/10.0 + 0.09]substringFromIndex:1];
+    NSString *minNum = @".00";
+    NSString *maxNum = @".99";
     NSString *minID = [[nearestAlley substringToIndex:4] stringByAppendingString:minNum];
     NSString *maxID = [[nearestAlley substringToIndex:4] stringByAppendingString:maxNum];
     NSString *query = [NSString stringWithFormat:@"SELECT [Wall ID] FROM ALLEYWALLS_NEW WHERE  [Wall ID] >= %@ AND [Wall ID] <= %@",minID,maxID];
@@ -443,27 +441,24 @@ SELECT max(_id) FROM MyTable*/
     sqlite3_stmt *statement = NULL;
     
     SQLOK(__FILE__,__LINE__,SQLitePrepare(self.database, query.UTF8String, -1, &statement, 0), _database);
-    
+    double lastWall = minID.doubleValue;
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
         LPSTR wallID = (LPSTR)sqlite3_column_text(statement, 0);
         double fWall = atof (wallID);
-        NSInteger iWall = fWall;
         
-        if (strlen (wallID)<7)
-            fWall = iWall + (fWall - iWall)/10.0;
-        
-        maxWall = max (fWall,maxWall);
+        if (fWall - lastWall > 0.015)
+            break;
+        lastWall = fWall;
     }
     
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     [self close:opened];
     
-    if (maxWall < 1)
-        nextWall = [[nearestAlley substringToIndex:4] stringByAppendingString:minNum];
-    
+    if (lastWall - minID.doubleValue > 0.99)
+        nextWall = @"";
     else
-        nextWall = [NSString stringWithFormat:@"%.2f",maxWall + 0.01];
+        nextWall = [NSString stringWithFormat:@"%.2f",lastWall + 0.01];
     
     return nextWall;
 }
