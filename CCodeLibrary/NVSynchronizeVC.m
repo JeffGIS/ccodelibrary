@@ -137,8 +137,17 @@
         _emailFileListButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self setupButton:_emailFileListButton];
         
-        [_emailFileListButton setTitle:@"Email File List"
+        switch (CRAPI.sharedInstance.showDeveloperFunctions)
+        {
+            case 1:
+                [_emailFileListButton setTitle:@"Upload Database"
                               forState:UIControlStateNormal];
+                break;
+            case 2:
+                [_emailFileListButton setTitle:@"Email File List"
+                                      forState:UIControlStateNormal];
+                break;
+        }
         
         [_emailFileListButton addTarget:self
                                  action:@selector(emailFileListButtonTapped:)

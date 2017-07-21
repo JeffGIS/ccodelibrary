@@ -36,7 +36,7 @@ int SQLOK(char * fromFile, int fromLine,int sqlReturn, sqlite3 *database)
             ffile++;
         else
             ffile = fromFile;
-        NSString *errmess = [NSString stringWithFormat:@"SQLite Error %i = %i:%s db(%i):%@\nFrom:%s line%i\n%@",
+        NSString *errmess = [NSString stringWithFormat:@"SQLite Error %i = %i:%s db(%i):%@\r\nFrom:%s line%i\r\n%@",
                            sqlReturn, sqlite3_errcode(database),sqlite3_errmsg(database),shared,dbName,ffile,fromLine,query];
         [CRAPI.sharedInstance logToErrorFile:errmess];
     }
