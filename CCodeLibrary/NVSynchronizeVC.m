@@ -1087,20 +1087,6 @@ Top:
                                                        lastPictNum:&pictNum];
                 
                 lastNum = pictNum;
-                lastNum++;
-                int fileSize = 0;
-                
-                while (lastNum && !fileSize)
-                {
-                    lastNum--;
-                    
-                    NSString *filePath = [_databaseID outputPictFile:lastNum
-                                                                iPad:_myiPad];
-                    
-                    fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
-                                                                                   error:nil].fileSize;
-                }
-                
                 _lastFileNumToUpload = lastNum;
                 
                 _nextFileNumToUpload = ([self getDataNumFromServerMsg:_myiPad
