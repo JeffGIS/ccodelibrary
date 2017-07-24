@@ -123,7 +123,7 @@ NSString *vendorUUIDString(void)
     NSString *replacement = [NSString stringWithFormat:@"%4.4i",useIDInc];
     
     NSString *rtn = UIDevice.currentDevice.identifierForVendor.UUIDString;
-    
+   // rtn = @"5478594B-6562-4020-BF60-435AE1102289";
     if (useDemoID)
     {
         rtn = @"DEMODEMO-DEMO-DEMO-DEMO-VENDRIDSTRNG";

@@ -825,39 +825,12 @@
             int lastDataIHave = [_databaseID getLastDataUpdateNumber:iPad
                                                          lastPictNum:&lastPictIHave];
             
-            lastDataIHave++;
-            int fileSize = 0;
-            
-            while (lastDataIHave && !fileSize)
-            {
-                lastDataIHave--;
-                
-                NSString *filePath = [_databaseID outputDataFile:lastDataIHave
-                                                            iPad:iPad];
-                
-                fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
-                                                                               error:nil].fileSize;
-            }
             
             int lastDataFileOnServer = [self getDataNumFromServerMsg:iPad
                                                          wantPictNum:NO];
             
             int lastPictFileOnServer = [self getDataNumFromServerMsg:iPad
                                                          wantPictNum:YES];
-            
-            lastPictIHave++;
-            fileSize = 0;
-            
-            while (lastPictIHave && !fileSize)
-            {
-                lastPictIHave--;
-                
-                NSString *filePath = [_databaseID outputPictFile:lastPictIHave
-                                                            iPad:iPad];
-                
-                fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
-                                                                               error:nil].fileSize;
-            }
             
             _downFiles += max (0,lastDataFileOnServer - lastDataIHave);
             if (!loading || CRAPI.sharedInstance.downloadData)
@@ -1021,19 +994,6 @@ didReceiveMessage:(NSString *)message
                     [self updateButton:_syncButton];
                 }
                 
-                lastNum++;
-                int fileSize = 0;
-                
-                while (lastNum && !fileSize)
-                {
-                    lastNum--;
-                    
-                    NSString *filePath = [_databaseID outputDataFile:lastNum
-                                                                iPad:_myiPad];
-                    
-                    fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
-                                                                                   error:nil].fileSize;
-                }
                 
                 _lastFileNumToUpload = lastNum;
                 
@@ -1043,20 +1003,6 @@ didReceiveMessage:(NSString *)message
                     _upFiles = (_lastFileNumToUpload - _nextFileNumToUpload + 1);
                 
                 lastNum = pictNum;
-                lastNum++;
-                fileSize = 0;
-                
-                while (lastNum && !fileSize)
-                {
-                    lastNum--;
-                    
-                    NSString *filePath = [_databaseID outputPictFile:lastNum
-                                                                iPad:_myiPad];
-                    
-                    fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
-                                                                                   error:nil].fileSize;
-                }
-                
                 _lastPictNumToUpload = lastNum;
                 
                 _nextPictNumToUpload = ([self getDataNumFromServerMsg:_myiPad
@@ -1247,19 +1193,6 @@ Top:
     
     int lastDataIHave = [_databaseID getLastDataUpdateNumber:iPad
                                                  lastPictNum:&lastPictIHave];
-    lastDataIHave++;
-    //lastDataIHave = 0;
-    while (lastDataIHave && !fileSize)
-    {
-        lastDataIHave--;
-        
-        NSString *filePath = [_databaseID outputDataFile:lastDataIHave
-                                                    iPad:iPad];
-        
-        fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:filePath
-                                                                       error:nil].fileSize;
-    }
-    
     int lastDataFileOnServer = [self getDataNumFromServerMsg:iPad
                                                  wantPictNum:NO];
     
