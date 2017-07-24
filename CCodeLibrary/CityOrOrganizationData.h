@@ -15,5 +15,6 @@
 @property BOOL controlledInterface;
 
 - (BOOL) inArray:(NSArray*)array;
+- (NSComparisonResult)compareName:(CityOrOrganizationData *)c;
 
 @end

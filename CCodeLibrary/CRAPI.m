@@ -883,7 +883,7 @@
         [_placesArray addObject:c];
     }
 
-    [_placesArray sortUsingSelector:@selector(caseInsensitiveCompare:)];
+    [_placesArray sortUsingSelector:@selector(compareName:)];
 
     return YES;
 }
