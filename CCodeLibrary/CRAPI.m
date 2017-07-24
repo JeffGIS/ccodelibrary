@@ -39,6 +39,7 @@
     if (self)
     {
         _newDataset = CURBRAMPS;
+        _newDataset = ALLEYWALLS;
         _kp = 0;
         _currentGeoidValue = 0;
         _pickApInPixels = 50;
@@ -861,7 +862,7 @@
     if (strncmp(message.UTF8String,"PlacesFor", 9))
         return NO;
     
-    _GSSiPadNumber = atoi(&message.UTF8String[9]);
+    self.GSSiPadNumber = atoi(&message.UTF8String[9]);
     
     NSMutableArray *placearray = [[NSMutableArray alloc] initWithArray:[message componentsSeparatedByString:@":"]];
     [placearray removeObjectAtIndex:0];

@@ -1072,7 +1072,7 @@ didReceiveMessage:(NSString *)message
 - (void)doUploadNextFile:(NSTimer *)timer
 {
 Top:
-    if (_nextFileNumToUpload > _lastFileNumToUpload)
+    if (_nextFileNumToUpload >= _lastFileNumToUpload)
     {
         if (_process == UPLOAD_DATA_PROCESS)
         {
