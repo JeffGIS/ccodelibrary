@@ -22,6 +22,7 @@
 - (BOOL)open;
 - (void)close:(BOOL)opened;
 - (BOOL)clear;
+- (BOOL) clearFiles;
 
 - (BOOL)executeCmd:(char *)cmd
       sendToServer:(BOOL)sendToServer

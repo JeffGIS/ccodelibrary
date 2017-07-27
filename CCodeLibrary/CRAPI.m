@@ -914,8 +914,9 @@
     if (arr.count > 2)
     {
         str = arr[2];
-        if (!isGSSiDevice())
-            _showDeveloperFunctions = (int)str.integerValue;
+        _showDeveloperFunctions = (int)str.integerValue;
+        if (isGSSiDevice())
+            _showDeveloperFunctions = max (1,_showDeveloperFunctions);
     }
     if (arr.count > 3)
     {

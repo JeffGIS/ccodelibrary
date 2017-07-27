@@ -131,29 +131,14 @@
     [_syncButton addTarget:self
                     action:@selector(syncButtonTapped:)
           forControlEvents:UIControlEventTouchUpInside];
+    _emailFileListButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self setupButton:_emailFileListButton];
     
-    if (CRAPI.sharedInstance.showDeveloperFunctions)
-    {
-        _emailFileListButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self setupButton:_emailFileListButton];
-        
-        switch (CRAPI.sharedInstance.showDeveloperFunctions)
-        {
-            case 1:
-                [_emailFileListButton setTitle:@"Upload Database"
-                              forState:UIControlStateNormal];
-                break;
-            case 2:
-                [_emailFileListButton setTitle:@"Email File List"
-                                      forState:UIControlStateNormal];
-                break;
-        }
-        
-        [_emailFileListButton addTarget:self
-                                 action:@selector(emailFileListButtonTapped:)
-                       forControlEvents:UIControlEventTouchUpInside];
-    }
-    
+    [_emailFileListButton addTarget:self
+                             action:@selector(emailFileListButtonTapped:)
+                   forControlEvents:UIControlEventTouchUpInside];
+
+    [self setupEmailFileListButton];
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_returnButton];
     
@@ -552,6 +537,23 @@
     else
         [self startSync];
 }
+- (void)setupEmailFileListButton
+{
+    if (CRAPI.sharedInstance.showDeveloperFunctions)
+    {
+        switch (CRAPI.sharedInstance.showDeveloperFunctions)
+        {
+            case 1:
+                [_emailFileListButton setTitle:@"Upload Database"
+                                      forState:UIControlStateNormal];
+                break;
+            case 2:
+                [_emailFileListButton setTitle:@"Email File List"
+                                      forState:UIControlStateNormal];
+                break;
+        }
+    }
+}
 
 - (void)emailFileListButtonTapped:(UIButton *)button
 {
@@ -863,7 +865,8 @@ didReceiveMessage:(NSString *)message
                 //NSMutableArray *oldPlaces = [CRAPI.sharedInstance copyPlaces];
                 [CRAPI.sharedInstance savePlacesString:message];
                 [CRAPI.sharedInstance processPlaces];
-                
+                [self setupEmailFileListButton];
+
                 if (CRAPI.sharedInstance.placesArray.count == 0)
                 {
                     [_titleButton setTitle:@"Synchronize Data\nNO CITIES IN LIST"
@@ -1072,7 +1075,7 @@ didReceiveMessage:(NSString *)message
 - (void)doUploadNextFile:(NSTimer *)timer
 {
 Top:
-    if (_nextFileNumToUpload >= _lastFileNumToUpload)
+    if (_nextFileNumToUpload > _lastFileNumToUpload)
     {
         if (_process == UPLOAD_DATA_PROCESS)
         {

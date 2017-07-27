@@ -125,6 +125,13 @@ static int fileSequence = 0;
     return st;
 }
 
+- (BOOL) clearFiles
+{
+    BOOL st = [NSFileManager.defaultManager removeItemAtPath:[self databasePath]
+                                                       error:nil];
+    return  st;
+}
+
 - (int)datasetVersion
 {
     int rtn = -1;
@@ -927,18 +934,27 @@ SELECT max(_id) FROM MyTable*/
  PlumbnessDistance=;
  );*/
 
+
+- (NSString*) outputFileDirectory
+{
+    NSString* file = [NSString stringWithFormat:@"%@",
+                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"]];
+    return file;
+}
+
 - (NSString*) outputDataFile:(int)fileNum
                         iPad:(int)iPad
 {
     NSString* file = [NSString stringWithFormat:@"%@/%i_%i.sql",
-                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],iPad,fileNum];
+                      [self outputFileDirectory],iPad,fileNum];
     return file;
 }
+
 - (NSString*) outputPictFile:(int)fileNum
                         iPad:(int)iPad
 {
     NSString* file = [NSString stringWithFormat:@"%@/%i_%i.jpg",
-                      [CRAPI.sharedInstance sharedOutputDirectory:@"AlleyWalls"],iPad,fileNum];
+                      [self outputFileDirectory],iPad,fileNum];
     return file;
 }
 
