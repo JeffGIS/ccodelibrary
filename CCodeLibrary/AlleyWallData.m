@@ -127,7 +127,8 @@ static int fileSequence = 0;
 
 - (BOOL) clearFiles
 {
-    BOOL st = [NSFileManager.defaultManager removeItemAtPath:[self databasePath]
+    NSString *dir = [self outputFileDirectory];
+    BOOL st = [NSFileManager.defaultManager removeItemAtPath:dir
                                                        error:nil];
     return  st;
 }
@@ -1106,7 +1107,7 @@ SELECT max(_id) FROM MyTable*/
         [self setLastDataUpdateNum:nextNum pictNum:pictNum foriPad:iPad];
     if (nextNum - lastNum > 1)
     {
-        NSString *logmess = @"Alley data file num error";
+        NSString *logmess = [NSString stringWithFormat:@"Alley data file num error: %i %i",nextNum,lastNum];
         [CRAPI.sharedInstance logToErrorFile:logmess];
     }
     return nextNum;

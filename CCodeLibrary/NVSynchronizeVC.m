@@ -998,7 +998,7 @@ didReceiveMessage:(NSString *)message
                 }
                 
                 
-                _lastFileNumToUpload = lastNum;
+                _lastFileNumToUpload = lastNum - 1; //last num will always be non-existent file since incrementLastDataFileNum called at start of sync
                 
                 _nextFileNumToUpload = ([self getDataNumFromServerMsg:_myiPad
                                                           wantPictNum:NO] + 1);
