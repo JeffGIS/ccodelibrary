@@ -525,7 +525,7 @@
     [self dismissKeyboard];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
-                                         urlString:@"www.newvisiongis.com/gssi-privacy-policy.html"];
+                                         urlString:@"www.newvisiongis.com/privacy"];
     
     nvwv.delegate = self;
 }
@@ -546,7 +546,7 @@
     [self dismissKeyboard];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
-                                         urlString:@"www.newvisiongis.com/nvcris-terms-of-service.html"];
+                                         urlString:@"www.newvisiongis.com/terms"];
     
     nvwv.delegate = self;
     
