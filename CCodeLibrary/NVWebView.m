@@ -110,7 +110,7 @@
 
     if ([path.pathExtension isEqualToString:@"pdf"] || [path.pathExtension isEqualToString:@"PDF"])
     {
-        if ([path containsString:@"NVCRISHelp"])
+        if ([path containsString:@"NVCRISHelp"] || [path containsString:@"VersionHistory"])
             nvwv.isFile = NO;
         
         else
