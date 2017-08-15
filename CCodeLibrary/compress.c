@@ -11,11 +11,6 @@
 #include "MathUtil.h"
 #define BOOL int
 
-void ExpandText(LPSTR txt)
-{
-    return;
-}
-
 int InitLZO (void)
 {
 	static int HaveLZOInit = FALSE;
