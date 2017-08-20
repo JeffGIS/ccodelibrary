@@ -30,16 +30,9 @@
 #define IDNINT(r)(int)(r < 0 ? r - 0.5f : r + 0.5f)
 #define IDNINT64(r)(int)(r < 0 ? r - 0.5f : r + 0.5f)
 
-typedef struct
-{
-    int NSETPT;
-    double  A1, A2, B1, B2, C1, C2, BASX, BASY;
-    double	FitPointAZFrom, FitPointAZTo;
-} TRANDATA;
-typedef TRANDATA    *LPTRANDATA;
-#define MAXTRANPOINTS	32
 
-typedef struct
+
+/*typedef struct
 {	int	xmn;
     int	ymn;
     int	xmx;
@@ -48,16 +41,7 @@ typedef struct
 
 typedef MNMXCORL *LPMNMXCORL;
 typedef MNMXCORL IBOUNDS;
-typedef IBOUNDS LPIBOUNDS;
-
-typedef struct
-{	double	xmn;
-    double	ymn;
-    double	xmx;
-    double	ymx;
-} MNMXCORD;
-
-typedef MNMXCORD *LPMNMXCORD;
+typedef IBOUNDS LPIBOUNDS;*/
 
 
 typedef float f32;
@@ -85,6 +69,7 @@ typedef struct
 }  bvec4x;
 #pragma pack()			
 
+
 typedef struct
 {
 	short x;
@@ -111,11 +96,7 @@ typedef struct
 	int z;
 }  ivec3;
 
-typedef struct
-{
-	float x;
-	float y;
-}  vec2;
+typedef POINT vec2;
 
 typedef DPOINT  dvec2;
 
@@ -143,13 +124,20 @@ typedef struct
 
 typedef struct
 {
-	float xmn;
-	float ymn;
-	float xmx;
-	float ymx;
+    float xmn;
+    float ymn;
+    float xmx;
+    float ymx;
 }  bounds;
 
 typedef MNMXCORD dbounds;
+typedef struct
+{
+    int xmn;
+    int ymn;
+    int xmx;
+    int ymx;
+}  IBOUNDS;
 
 vec4 MakeVec4(float singleValue);
 

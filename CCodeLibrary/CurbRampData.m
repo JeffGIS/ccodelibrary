@@ -13,6 +13,7 @@
 #import "CRAPI.h"
 #import "UIApplication+VersionBuild.h"
 #import "SQLiteLib.h"
+#include "shr.h"
 
 static int fileSequence = 0;
 
@@ -911,11 +912,11 @@ static int nInit=0;
     BOOL opened = [self open];
     int line = 0;
     FILE *fid = fopen(file.UTF8String, "rb");
-    int totLen = (int)FileLength(fid);
+    int totLen = (int)FileLengthF(fid);
     int maxLineLen = totLen+2;
     LPSTR str = malloc(totLen+4096);
     [self startTransaction];
-    if (fgetstring(str, maxLineLen, fid))
+    if (fgetstringF(str, maxLineLen, fid))
     {
         int fromVer = atoi (CURRENT_INTERSECTION_VERSION);
         int toVer = atoi (CURRENT_INTERSECTION_VERSION);

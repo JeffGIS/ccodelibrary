@@ -8,6 +8,7 @@
 #include <string.h>
 #include "compress.h"
 #include "minilzo.h"
+#include "shr.h"
 #include "MathUtil.h"
 #define BOOL int
 
@@ -52,7 +53,7 @@ int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long
 	if (Fid == NULL)
 		goto Exit;
     
-    BigRead(FidTF, (HPSTR)&CompressedLength, 4);
+    BigReadF(FidTF, (HPSTR)&CompressedLength, 4);
     
 	while (CompressedLength > 0)
 	{
@@ -61,8 +62,8 @@ int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long
 		LenRead += CompressedLength + 4;
 		BigRead(FidTF,pCompressedRec,CompressedLength);
 		lRec = DecompressBinaryRecordUnsafe(pRec, pCompressedRec, CompressedLength);
-    	BigWrite(Fid ,pRec ,lRec, -1);
-        BigRead(FidTF, (HPSTR)&CompressedLength, 4);
+    	BigWriteF(Fid ,pRec ,lRec, -1);
+        BigReadF(FidTF, (HPSTR)&CompressedLength, 4);
         free (pCompressedRec);
         free(pRec);
     }

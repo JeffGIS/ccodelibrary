@@ -7,6 +7,7 @@
 #import "CRAPI.h"
 #import "UIApplication+VersionBuild.h"
 #import "PickedItem.h"
+#include "shr.h"
 
 #define CURRENT_SIDEWALK_VERSION "1.2"
 

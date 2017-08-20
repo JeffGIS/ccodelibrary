@@ -10,7 +10,7 @@
 {
     return [self.name compare:c.name];
 }
-- (BOOL) inArray:(NSArray*)array
+- (bool) inArray:(NSArray*)array
 {
     if (array)
     for (CityOrOrganizationData * c in array)

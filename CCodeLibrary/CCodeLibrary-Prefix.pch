@@ -2,8 +2,8 @@
 //  CCodeLibrary
 
 #ifdef __OBJC__
+#import "StringFunctions.h"
     @import UIKit;
-    #import "StringFunctions.h"
     #import "UIView+Constraints.h"
     #import "NVWebView.h"
 #endif

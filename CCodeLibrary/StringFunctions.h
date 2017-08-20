@@ -1,22 +1,19 @@
 //  StringFunctions.h
 //  CCodeLibrary
+#ifndef StringFunctions_h
+#define StringFunctions_h
 
-@import UIKit;
-@import CoreTelephony;
-@import CoreLocation;
-#import "UIDevice+Storage.h"
+#import "CCodeTypes.h"
 #import "MathUtil.h"
 
-UIColor *UIColorFromInt (unsigned int ival);
-BOOL hasNetwork(void);
 NSString *deviceSystemInfo(void);
 NSString *deviceCarrier(void);
 NSString *deviceInfo();
-void SetUseMasterID (BOOL reset);
-void SetUseDemoID (BOOL set);
+void SetUseMasterID (Bool reset);
+void SetUseDemoID (Bool set);
 void SetVendoIDInc (int inc);
-BOOL getUseMasterID (void);
-BOOL getUseDemoID (void);
+Bool getUseMasterID (void);
+Bool getUseDemoID (void);
 NSString *vendorUUIDString(void);
 NSString *stringWithID(char * string,int ID);
 NSString *stringWithoutID(NSString *string);
@@ -55,23 +52,35 @@ NSString *addSpaceAfterColon(NSString *string);
 NSString *removeOpeningSpaces(NSString *string);
 NSString *removeOpeningReturn(NSString *string);
 NSString *removePIDPrefix(NSString *string);
+
+@import UIKit;
+@import CoreTelephony;
+@import CoreLocation;
+
+#import "UIDevice+Storage.h"
+
+UIColor *UIColorFromInt (unsigned int ival);
+
+Bool hasNetwork(void);
+
 NSMutableAttributedString *addLineBreakToLastSpace(NSString *string);
 NSString *reverseString(NSString *string);
 NSString *splitLongestLine(NSString * text);
 NSMutableArray *sortByContentsOfParentheses(NSMutableArray *array);
 uint occurrencesOfCharacter(unichar character, NSString *string);
-BOOL appendStringToFile(NSString *str, NSString *filePath);
+Bool appendStringToFile(NSString *str, NSString *filePath);
 NSString *urlSearchStringForPID(NSString *PID);
-BOOL countySupportsLookupForPID(NSString *PID);
+Bool countySupportsLookupForPID(NSString *PID);
 CLLocationCoordinate2D locationWithBearing(double bearing, double distanceFeet, CLLocationCoordinate2D origin);
-BOOL isGSSiDevice(void);
-BOOL nameInList (NSString* name,NSArray* list);
+Bool isGSSiDevice(void);
+Bool nameInList (NSString* name,NSArray* list);
 LLPOINT LLPOINTFromString (NSString* string);
 NSString * stringToBlob(NSString* str);
 NSString * llpointsToBlob(LLPOINT* pPoints,int nPnts);
 NSString * doubleToBlob(double val);
 NSString * floatToBlob(float val);
 NSString * intToBlob(int val);
-BOOL stringContainsCaseInsenitiveString (NSString * str, NSString * substr);
+Bool stringContainsCaseInsenitiveString (NSString * str, NSString * substr);
 int numberOfOccurencesOfStringInString (NSString *str,NSString *substr);
 
+#endif

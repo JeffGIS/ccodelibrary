@@ -1,6 +1,7 @@
 //  MathUtil.c
 //  CCodeLibrary
 
+#include "shr.h"
 #include "MathUtil.h"
 #include "rotate256.h"
 #include <stdlib.h>
@@ -23,7 +24,7 @@ double AZMToHeading (double azm)
     return deg;
 }
 
-bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol)
+Bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol)
 {
     if (fabs(p1->x - p2->x) >tol || fabs(p1->y - p2->y) >tol)
         return FALSE;
@@ -32,7 +33,7 @@ bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol)
         return TRUE;
 }
 
-bool samePoint (LPPOINT p1, LPPOINT p2)
+Bool samePoint (LPPOINT p1, LPPOINT p2)
 {
     if (p1->x == p2->x && p1->y == p2->y)
         return TRUE;
@@ -182,11 +183,11 @@ double AZMLatLon (LLPOINT pt1,LLPOINT pt2)
     DPOINT pixPt1, pixPt2;
     LatLongToPixelXYd (pt1.lat,pt1.lon,21,&pixPt1.x,&pixPt1.y);
     LatLongToPixelXYd (pt2.lat,pt2.lon,21,&pixPt2.x,&pixPt2.y);
-    azm = getazd(&pixPt1, &pixPt2);
+    azm = getazdp(&pixPt1, &pixPt2);
     return azm;
 }
 
-bool findClosestPoint (LPDPOINT pPoint,LPDPOINT pNearPt,double *mind,LPDPOINT p1)
+Bool findClosestPoint (LPDPOINT pPoint,LPDPOINT pNearPt,double *mind,LPDPOINT p1)
 {
     double d = ArcDistance(*p1,*pPoint);
     
@@ -200,7 +201,7 @@ bool findClosestPoint (LPDPOINT pPoint,LPDPOINT pNearPt,double *mind,LPDPOINT p1
     return FALSE;
 }
 
-bool findClosestLLPoint (LLPOINT *pPoint,LLPOINT *pNearPt,double *mind,LLPOINT *p1LL)
+Bool findClosestLLPoint (LLPOINT *pPoint,LLPOINT *pNearPt,double *mind,LLPOINT *p1LL)
 {
     DPOINT pt;
     DPOINT p1;
@@ -221,9 +222,9 @@ bool findClosestLLPoint (LLPOINT *pPoint,LLPOINT *pNearPt,double *mind,LLPOINT *
     return FALSE;
 }
 
-bool pointInDBounds (DPOINT *pt,dbounds *pBounds)
+Bool pointInDBounds (DPOINT *pt,dbounds *pBounds)
 {
-    bool rtn = true;
+    Bool rtn = true;
     
     if (pt->x < pBounds->xmn || pt->x > pBounds->xmx ||
         pt->y < pBounds->ymn || pt->y > pBounds->ymx)
@@ -335,7 +336,7 @@ float DistSqVec3(const vec3 *vec0, const vec3 *vec1)
 	return MagnitudeSqVec3(&distVec);
 }
 
-bool PosIsBehind(const vec3 *frontPos, const vec3 *frontAt, const vec3 *behindPos)
+Bool PosIsBehind(const vec3 *frontPos, const vec3 *frontAt, const vec3 *behindPos)
 {
 	vec3 dirVec;
 	SubVec3(&dirVec, behindPos, frontPos);
@@ -479,7 +480,7 @@ void CreatePlaneFromPointsVec2(struct PlaneVec2 *out_resultPlane, vec2 *p0, vec2
 	out_resultPlane->normal.y = -tempX;
 }
 
-bool PointInsidePlaneVec2(vec2 *point, struct PlaneVec2 *plane)
+Bool PointInsidePlaneVec2(vec2 *point, struct PlaneVec2 *plane)
 {
 	vec2 dirVec;
 	SubVec2(&dirVec,point, &plane->point);
@@ -677,7 +678,16 @@ vec2 newpt(vec2 *OldPoint, float AZM, float DIS)
     return NewPoint;
 }
 
-dvec2 dnewpt(dvec2 *OldPoint, double AZM, double DIS)
+dvec2 dnewpt(dvec2 OldPoint, double AZM, double DIS)
+{
+    dvec2 NewPoint;
+    
+    NewPoint.x = OldPoint.x + DIS * cos(AZM);
+    NewPoint.y = OldPoint.y + DIS * sin(AZM);
+    return NewPoint;
+}
+
+dvec2 dnewptp(dvec2 *OldPoint, double AZM, double DIS)
 {
     dvec2 NewPoint;
     
@@ -701,13 +711,19 @@ float getazmd(vec2 *Point1, vec2 *Point2)
 	return rtn;
 }
 
-double getaz (DPOINT Point1, DPOINT Point2)
+double getaz (POINT Point1, POINT Point2)
 {
     double rtn = DTWOPI(atan2((Point2.y - Point1.y), (Point2.x - Point1.x)));
     return rtn;
 }
 
-double getazd(LPDPOINT Point1, LPDPOINT Point2)
+double getazd (DPOINT Point1, DPOINT Point2)
+{
+    double rtn = DTWOPI(atan2((Point2.y - Point1.y), (Point2.x - Point1.x)));
+    return rtn;
+}
+
+double getazdp(LPDPOINT Point1, LPDPOINT Point2)
 {
     double rtn = DTWOPI(atan2((Point2->y - Point1->y), (Point2->x - Point1->x)));
 	return rtn;
@@ -1173,10 +1189,10 @@ double slopeToAZ (double slope)
     double az = 0;
     DPOINT pt1 = {0,0};
     DPOINT pt2 = {1,slope};
-    az = getazd (&pt1,&pt2);
+    az = getazdp (&pt1,&pt2);
     return az;
 }
-bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long *LOFMDF)
+Bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long *LOFMDF)
 {
 	double SUMX = 0, SUMY = 0, XAVE, YAVE, SMXDYD, SMXDSQ, SUMXY = 0, SUMXSQ = 0, DIFF;
 	double	SUMxy = 0, SUMx2 = 0;
@@ -1270,7 +1286,7 @@ Vertical:
     return false;
 }
 
-void CloseTRANS2 (LPTRANDATA *phlpTran)
+void CloseTRANS2P (LPTRANDATA *phlpTran)
 {
     LPTRANDATA  TranPtr = *phlpTran;
     
@@ -1291,7 +1307,7 @@ LPTRANDATA STRANCopy (LPTRANDATA pTran)
     return pTranCopy;
 }
 
-LPTRANDATA STRAN2(int ID, double X1[], double Y1[], double X2[], double Y2[], int N, int Type,float *RSQMIN)
+LPTRANDATA STRAN2P(int ID, double X1[], double Y1[], double X2[], double Y2[], int N, int Type,float *RSQMIN)
 {
 	double ANGLE1, ANGLE2, ANGLE, DEN, SINANG, COSANG, DX1, DX2, DY1, DY2, SCLRAT,
     ANGLED, BASX1, BASX2, BASY1, BASY2, D,TOTD, *XT1, *YT1, *XT2, *YT2;
@@ -1418,7 +1434,7 @@ S10: NUM = 0;
         pPoints[0].y = A + pPoints[0].x * B;
         pPoints[1].x = xmax;
         pPoints[1].y = A + pPoints[1].x * B;
-        TranPtr->FitPointAZFrom = getazd(&pPoints[0], &pPoints[1]);
+        TranPtr->FitPointAZFrom = getazdp(&pPoints[0], &pPoints[1]);
     }
     
     xmin = DBL_MAX;
@@ -1438,7 +1454,7 @@ S10: NUM = 0;
         pPoints[0].y = A + pPoints[0].x * B;
         pPoints[1].x = xmax;
         pPoints[1].y = A + pPoints[1].x * B;
-        TranPtr->FitPointAZTo = getazd(&pPoints[0], &pPoints[1]);
+        TranPtr->FitPointAZTo = getazdp(&pPoints[0], &pPoints[1]);
     }
     
     free(pPoints);
@@ -1458,7 +1474,7 @@ Exit:
     return TranPtr;
 }
 
-LPTRANDATA STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN)//,LPMNMXCORD pBounds)
+LPTRANDATA STRANPointsP (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN)//,LPMNMXCORD pBounds)
 {
     LPTRANDATA hTran;
     LPDOUBLE XFROM = (LPDOUBLE)malloc (nPt * 4 * sizeof(double)+4);
@@ -1476,7 +1492,7 @@ LPTRANDATA STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT p
         YTO[i] = ToPt[i].y;
     }
     
-    hTran = STRAN2 (0,XFROM,YFROM,XTO,YTO,nPt,Type,(LPFLOAT)&RSQMIN);//,pBounds);
+    hTran = STRAN2P (0,XFROM,YFROM,XTO,YTO,nPt,Type,(LPFLOAT)&RSQMIN);//,pBounds);
     if (pRSQMIN)
         *pRSQMIN = RSQMIN;
     free (XFROM);
@@ -1484,7 +1500,7 @@ LPTRANDATA STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT p
 }
 
 
-LPTRANDATA  STRANBoundsToBounds (LPMNMXCORD FromRect,LPMNMXCORD ToRect)
+LPTRANDATA  STRANBoundsToBoundsP (LPMNMXCORD FromRect,LPMNMXCORD ToRect)
 {
     LPTRANDATA  hTran;
     double	XFROM[4],YFROM[4],XTO[4],YTO[4];
@@ -1507,11 +1523,21 @@ LPTRANDATA  STRANBoundsToBounds (LPMNMXCORD FromRect,LPMNMXCORD ToRect)
     YTO[2] = ToRect->ymn;
     YTO[3] = ToRect->ymx;
     
-    hTran = STRAN2 (1665,XFROM,YFROM,XTO,YTO,4,1,(LPFLOAT)&RSQMIN);
+    hTran = STRAN2P (1665,XFROM,YFROM,XTO,YTO,4,1,(LPFLOAT)&RSQMIN);
     return hTran;
 }
 
-LPTRANDATA  STRANCornersToBounds (CORNERPOINTS *corners,LPMNMXCORD ToRect)
+HANDLE  STRANCornersToBounds (CORNERPOINTS *corners,LPMNMXCORD ToRect)
+{
+    HANDLE hTran = GSSiGlobAlloc (0,GMEM_MOVEABLE,sizeof (TRANDATA));
+    LPTRANDATA  pTran = GlobalLock (hTran);
+    LPTRANDATA  pTran2 = STRANCornersToBoundsP (corners,ToRect);
+    *pTran = *pTran2;
+    free (pTran2);
+    GlobalUnlock (hTran);
+    return hTran;
+}
+LPTRANDATA  STRANCornersToBoundsP (CORNERPOINTS *corners,LPMNMXCORD ToRect)
 {
     LPTRANDATA  hTran;
     double	XFROM[4],YFROM[4],XTO[4],YTO[4];
@@ -1534,11 +1560,21 @@ LPTRANDATA  STRANCornersToBounds (CORNERPOINTS *corners,LPMNMXCORD ToRect)
     YTO[2] = ToRect->ymx;
     YTO[3] = ToRect->ymn;
     
-    hTran = STRAN2 (1665,XFROM,YFROM,XTO,YTO,4,1,(LPFLOAT)&RSQMIN);
+    hTran = STRAN2P (1665,XFROM,YFROM,XTO,YTO,4,1,(LPFLOAT)&RSQMIN);
     return hTran;
 }
 
-LPTRANDATA  STRANBoundsToCorners (CORNERPOINTS *corners,LPMNMXCORD ToRect)
+HANDLE  STRANBoundsToCorners (CORNERPOINTS *corners,LPMNMXCORD ToRect)
+{
+    HANDLE hTran = GSSiGlobAlloc (0,GMEM_MOVEABLE,sizeof (TRANDATA));
+    LPTRANDATA  pTran = GlobalLock (hTran);
+    LPTRANDATA pTran2 = STRANBoundsToCornersP (corners,ToRect);
+    *pTran = *pTran2;
+    free (pTran2);
+    GlobalUnlock (hTran);
+    return hTran;
+};
+LPTRANDATA  STRANBoundsToCornersP (CORNERPOINTS *corners,LPMNMXCORD ToRect)
 {
     LPTRANDATA  hTran;
     double	XFROM[4],YFROM[4],XTO[4],YTO[4];
@@ -1561,11 +1597,11 @@ LPTRANDATA  STRANBoundsToCorners (CORNERPOINTS *corners,LPMNMXCORD ToRect)
     YTO[2] = ToRect->ymx;
     YTO[3] = ToRect->ymn;
     
-    hTran = STRAN2 (1665,XTO,YTO,XFROM,YFROM,4,1,(LPFLOAT)&RSQMIN);
+    hTran = STRAN2P (1665,XTO,YTO,XFROM,YFROM,4,1,(LPFLOAT)&RSQMIN);
     return hTran;
 }
 
-void TRANS2(double XIN, double YIN, double *XOUT,double *YOUT, LPTRANDATA TranPtr)
+void TRANS2P(double XIN, double YIN, double *XOUT,double *YOUT, LPTRANDATA TranPtr)
 {
 	double XI, YI;
 	DPOINT Point;
@@ -1634,72 +1670,104 @@ void InflateMNMXCORL(LPMNMXCORL pBounds, int Value)
 	return;
 }
 
-void TranMNMXCORD(MNMXCORD *in, MNMXCORD *out, LPTRANDATA TranPtr)
+
+void TranMNMXCORD(MNMXCORD *in, MNMXCORD *out, HANDLE  hTranPtr)
+{
+    LPTRANDATA TranPtr = GlobalLock (hTranPtr);
+    TranMNMXCORDP(in, out, TranPtr);
+    GlobalUnlock (hTranPtr);
+}
+void TranMNMXCORDP(MNMXCORD *in, MNMXCORD *out, LPTRANDATA TranPtr)
 {
 	dvec2 outpt;
 	dbounds outb;
 	InitDBounds(&outb);
     
-	TRANS2(in->xmn, in->ymn, &outpt.x, &outpt.y, TranPtr);
+	TRANS2P(in->xmn, in->ymn, &outpt.x, &outpt.y, TranPtr);
 	AddPointToDBounds(&outb, &outpt);
-	TRANS2(in->xmn, in->ymx, &outpt.x, &outpt.y, TranPtr);
+	TRANS2P(in->xmn, in->ymx, &outpt.x, &outpt.y, TranPtr);
 	AddPointToDBounds(&outb, &outpt);
-	TRANS2(in->xmx, in->ymn, &outpt.x, &outpt.y, TranPtr);
+	TRANS2P(in->xmx, in->ymn, &outpt.x, &outpt.y, TranPtr);
 	AddPointToDBounds(&outb, &outpt);
-	TRANS2(in->xmx, in->ymx, &outpt.x, &outpt.y, TranPtr);
+	TRANS2P(in->xmx, in->ymx, &outpt.x, &outpt.y, TranPtr);
 	AddPointToDBounds(&outb, &outpt);
 	memcpy(out, &outb, sizeof(MNMXCORD));
 	return;
 }
 
-void TranMNMXCORL(MNMXCORL *in, MNMXCORL *out, LPTRANDATA TranPtr)
+void TranMNMXCORL(MNMXCORL *in, MNMXCORL *out, HANDLE hTranPtr)
+{
+    LPTRANDATA TranPtr = GlobalLock (hTranPtr);
+    TranMNMXCORLP(in, out,TranPtr);
+    GlobalUnlock (hTranPtr);
+}
+void TranMNMXCORLP(MNMXCORL *in, MNMXCORL *out, LPTRANDATA TranPtr)
 {
 	MNMXCORD ind, outd;
 	MNMXCORLtoMNMXCORD(in, &ind);
-	TranMNMXCORD(&ind, &outd, TranPtr);
+	TranMNMXCORDP(&ind, &outd, TranPtr);
 	MNMXCORDtoMNMXCORL(&outd, out);
 	return;
 }
-DPOINT TranDPOINT (LPDPOINT pPoint,LPTRANDATA  hTran)
+DPOINT TranDPOINT (LPDPOINT pPoint,HANDLE hTranPtr)
+{
+    LPTRANDATA TranPtr = GlobalLock (hTranPtr);
+    DPOINT pt = TranDPOINTP (pPoint,TranPtr);
+    GlobalUnlock (hTranPtr);
+    return pt;
+}
+
+DPOINT TranDPOINTP (LPDPOINT pPoint,LPTRANDATA  hTran)
 {
     DPOINT Point;
     
-    TRANS2 (pPoint->x,pPoint->y, &Point.x,&Point.y,hTran);
+    TRANS2P (pPoint->x,pPoint->y, &Point.x,&Point.y,hTran);
     return Point;
 }
 
-POINT TranDPOINTtoPOINT (LPDPOINT pPoint,LPTRANDATA  hTran)
+POINT TranDPOINTtoPOINT (LPDPOINT pPoint,HANDLE  hTranPtr)
+{
+    LPTRANDATA TranPtr = GlobalLock (hTranPtr);
+    POINT pt = TranDPOINTtoPOINTP (pPoint,TranPtr);
+    GlobalUnlock (hTranPtr);
+    return pt;
+}
+
+POINT TranDPOINTtoPOINTP (LPDPOINT pPoint,LPTRANDATA  hTran)
 {
     DPOINT DPoint;
-    //POINT Point;
     
-    TRANS2 (pPoint->x,pPoint->y, &DPoint.x,&DPoint.y,hTran);
+    TRANS2P (pPoint->x,pPoint->y, &DPoint.x,&DPoint.y,hTran);
     return DPointToPoint(&DPoint);
 }
 
 
-void TranPoints(LPDPOINT FromPt, LPDPOINT ToPt, int nPt, LPTRANDATA hTran)
+void TranPointsP(LPDPOINT FromPt, LPDPOINT ToPt, int nPt, LPTRANDATA hTran)
 {
     for (int i = 0; i < nPt; i++)
     {
-        ToPt[i] = TranDPOINT(&FromPt[i], hTran);
+        ToPt[i] = TranDPOINTP(&FromPt[i], hTran);
     }
 }
 
-IPOINT TranIPOINT (IPOINT InPoint,LPTRANDATA  hTran)
+IPOINT TranIPOINTP (IPOINT InPoint,LPTRANDATA  hTran)
 {
     DPOINT	Point,OutPoint;
     IPOINT	RtnPoint;
     
     Point.x = InPoint.x;
     Point.y = InPoint.y;
-    TRANS2 (Point.x,Point.y, &OutPoint.x,&OutPoint.y,hTran);
+    TRANS2P (Point.x,Point.y, &OutPoint.x,&OutPoint.y,hTran);
     RtnPoint.x = IDNINT(OutPoint.x);
     RtnPoint.y = IDNINT(OutPoint.y);
     return RtnPoint;
 }
 
-long FileLength (FILE *fid)
+long FileLength (HFILE fid)
+{
+    return 0;
+}
+long FileLengthF (FILE *fid)
 {
     if (!fid)
         return 0;
@@ -1709,7 +1777,7 @@ long FileLength (FILE *fid)
     return totLen;
 }
 
-int fgetstring(char *str, int maxlen, FILE *fid)
+int fgetstringF(char *str, int maxlen, FILE *fid)
 {
     int ln;
     char * pEnd;
@@ -1730,7 +1798,7 @@ int fgetstring(char *str, int maxlen, FILE *fid)
     ln = (int)strlen(str);
     return ln;
 }
-bool fputstring(LPSTR lpStr, FILE *Fid)
+Bool fputstringF(LPSTR lpStr, FILE *Fid)
 {
     unsigned int    len;
     int		rtn=0;
@@ -1739,14 +1807,14 @@ bool fputstring(LPSTR lpStr, FILE *Fid)
     {
         len=(int)strlen(lpStr);
         if (len)
-            rtn = BigWrite (Fid,(char *)lpStr,len,-1);
-        rtn += BigWrite (Fid,"\r\n",2,-1);
+            rtn = BigWriteF (Fid,(char *)lpStr,len,-1);
+        rtn += BigWriteF (Fid,"\r\n",2,-1);
     }
     return rtn;
 }
 
 //dir = 1 bitmap to world, 2 = world to bmp
-LPTRANDATA  LoadTranFromBPW(char *Name, int dir)
+LPTRANDATA  LoadTranFromBPWP(char *Name, int dir)
 {
 	FILE *Fid = fopen(Name,"rb");
     LPTRANDATA TranPtr = 0;
@@ -1757,17 +1825,17 @@ LPTRANDATA  LoadTranFromBPW(char *Name, int dir)
     
     if (Fid)
     {
-		fgetstring(str, 64, Fid);
+		fgetstringF(str, 64, Fid);
 		xres = atof(str);
-		fgetstring(str, 64, Fid);
+		fgetstringF(str, 64, Fid);
 		bpx = atof(str);
-		fgetstring(str, 64, Fid);
+		fgetstringF(str, 64, Fid);
 		bpy = atof(str);
-		fgetstring(str, 64, Fid);
+		fgetstringF(str, 64, Fid);
 		yres = atof(str);
-		fgetstring(str, 64, Fid);
+		fgetstringF(str, 64, Fid);
 		wx = atof(str);
-		fgetstring(str, 64, Fid);
+		fgetstringF(str, 64, Fid);
 		wy = atof(str);
 		XFROM[0] = bpx;
 		YFROM[0] = bpy;
@@ -1787,10 +1855,10 @@ LPTRANDATA  LoadTranFromBPW(char *Name, int dir)
 		YTO[3] = wy + 100 * yres;
         
         if (dir == 2)
-            TranPtr = STRAN2(1660, XTO, YTO, XFROM, YFROM, 4, 1,&RSQMIN);
+            TranPtr = STRAN2P(1660, XTO, YTO, XFROM, YFROM, 4, 1,&RSQMIN);
         
         else
-            TranPtr = STRAN2(1660, XFROM, YFROM, XTO, YTO, 4, 1,&RSQMIN);
+            TranPtr = STRAN2P(1660, XFROM, YFROM, XTO, YTO, 4, 1,&RSQMIN);
         
 		fclose(Fid);
 	}
@@ -1799,7 +1867,7 @@ LPTRANDATA  LoadTranFromBPW(char *Name, int dir)
 }
 
 //dir = 1 bitmap to world, 2 = world to bmp
-LPTRANDATA  LoadTranFromCPT(const char *Name, int dir)
+LPTRANDATA  LoadTranFromCPTP(const char *Name, int dir)
 {
 	FILE *Fid = fopen(Name,"rb");
     LPTRANDATA TranPtr = 0;
@@ -1811,22 +1879,22 @@ LPTRANDATA  LoadTranFromCPT(const char *Name, int dir)
     {
         for (int i = 0; i < 4; i++)
         {
-            fgetstring (str, 128, Fid);
+            fgetstringF (str, 128, Fid);
             sscanf(str, "%lf %lf %lf %lf", &XFROM[i], &YFROM[i], &XTO[i], &YTO[i]);
         }
         
         if (dir == 2)
-            TranPtr = STRAN2 (1660 ,XTO, YTO, XFROM, YFROM, 4, 1,&RSQMIN);
+            TranPtr = STRAN2P (1660 ,XTO, YTO, XFROM, YFROM, 4, 1,&RSQMIN);
         
         else
-            TranPtr = STRAN2 (1660, XFROM, YFROM, XTO, YTO, 4, 1,&RSQMIN);
+            TranPtr = STRAN2P (1660, XFROM, YFROM, XTO, YTO, 4, 1,&RSQMIN);
         
 		fclose(Fid);
 	}
 	return TranPtr;
 }
 
-int CreateMask(LPDPOINT *pPointsIN, int *pnPoints, LPMNMXCORD pbnds,bool freeExistingPoints)
+int CreateMask(LPDPOINT *pPointsIN, int *pnPoints, LPMNMXCORD pbnds,Bool freeExistingPoints)
 {
     LPDPOINT pPoints = *pPointsIN;
     int numPointsAdded = 5;
@@ -1876,12 +1944,12 @@ double DeltaAngle (double AZ1, double AZ2)
     
     return (daz * RADtoDEG);
 }
-bool BoundsInBounds (LPMNMXCORD pBounds1,LPMNMXCORD pBounds2,short Opt)
+Bool BoundsInBounds (LPMNMXCORD pBounds1,LPMNMXCORD pBounds2,short Opt)
 #if ENABLETRACE
 {GSSiEnterProg (259);
 #endif
     {
-        bool InBounds=TRUE;
+        Bool InBounds=TRUE;
         
         switch (Opt)
         {
@@ -1912,7 +1980,7 @@ bool BoundsInBounds (LPMNMXCORD pBounds1,LPMNMXCORD pBounds2,short Opt)
 #endif
 }
 
-bool DPointInBounds (LPDPOINT pt,LPMNMXCORD pbounds)
+Bool DPointInBounds (LPDPOINT pt,LPMNMXCORD pbounds)
 {
     if (pbounds &&
         (pt->x < pbounds->xmn ||
@@ -2112,7 +2180,7 @@ LPDPOINT PointsFromCGRect (CGRect *pRect)
     return pPoints;
 }
 
-static bool rectIntersectsRects (CGRect * testRect,int nRects,CGRect * rects)
+static Bool rectIntersectsRects (CGRect * testRect,int nRects,CGRect * rects)
 {
     
     for (int i=0; i< nRects; i++)

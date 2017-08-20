@@ -1,22 +1,23 @@
 #ifndef __GSSITYPE_H_INCLUDED
 #define __GSSITYPE_H_INCLUDED 1
-#include "gmlimits.h"
-#include <stdlib.h>  
+
+#include "CCodeTypes.h"
+
+#include <stdlib.h>
 #include <time.h>    
 //#include <commdlg.h>
-#include <ctype.h>  
+#include <ctype.h>
 
 #define INT64 long long
+#define LONGLONG    long long
 
-#define HUGE
-#define FAR
-#define NEAR
 #define HANDLE16	HANDLE
 #define HFILE16		HFILE
 #define HPEN16		HPEN
 #define HBRUSH16	HBRUSH      
 #define POINT16		POINT
 #define RECT16		RECT
+#include "gmlimits.h"
 
 #define WM_F1DOWN	    0x0500  
 #define	INDCOD	31100 
@@ -187,6 +188,16 @@ typedef OFSTRUCT *LPOFSTRUCT;
 #define		FGDB_DATAFILE		20
 #define		POLY_DATAFILE		21
 #define		PN_DATAFILE			22
+#define		SLT_DATAFILE		23
+
+#define HFILE_DGN	-2
+#define HFILE_GMD	-3
+#define HFILE_GPX	-4
+#define HFILE_FGDB	-5
+#define HFILE_KML	-6
+#define HFILE_SQLITE	-7
+#define HFILE_DGN8	-8
+
 
 #define	FT_POLYGON	1
 #define FT_CIRCLE	2
@@ -201,51 +212,48 @@ typedef OFSTRUCT *LPOFSTRUCT;
 /* Handle to a DIB */
 #define HDIB HANDLE
 
-typedef signed long 		SLONG;
-typedef signed short		SSHORT;
-typedef unsigned long		ULONG;
-typedef HFILE				FAR *LPHFILE;    
-typedef ULONG				FAR *LPULONG;
-typedef ULONG				HUGE *HPULONG;
-typedef unsigned short		USHORT; 
-typedef USHORT				FAR	*LPUSHORT;
-typedef USHORT				HUGE *HPUSHORT;
-typedef char				HUGE *HPSTR;
-typedef short				HUGE *HPSHORT;
-typedef long				HUGE *HPLONG; 
-typedef WORD				HUGE *HPWORD;  
-typedef unsigned char		HUGE *HPBYTE; 
-typedef int					HBRUSH;
-typedef int					HPEN;
-typedef HBRUSH				FAR	*LPHBRUSH;
-typedef HPEN				FAR	*LPHPEN;
-typedef short				FAR *LPSHORT;
-typedef float			 	FAR *LPFLOAT;
-typedef float   			HUGE *HPFLOAT;
-typedef double  			FAR *LPDOUBLE;
-typedef double  			HUGE *HPDOUBLE;
-//typedef struct{double x,y;} DPOINT;
-typedef DPOINT  			FAR *LPDPOINT;
-typedef DPOINT  			HUGE *HPDPOINT;
-typedef POINTS				*HPPOINTS;
-//typedef struct{double x,y,z;} DPOINT3D;
-typedef DPOINT3D  			FAR *LPDPOINT3D;
-typedef DPOINT3D  			HUGE *HPDPOINT3D;
-typedef DPOINT				FPOINT;
-typedef FPOINT  			FAR *LPFPOINT;
-typedef FPOINT  			HUGE *HPFPOINT;
-//typedef struct{float x,y;}  FLTPOINT;
-typedef FLTPOINT			*LPFLTPOINT;
-typedef POINT				HUGE *HPPOINT;
-typedef void				HUGE* LPHUGE;
-//typedef struct{long x,y;} LPOINT;
-//typedef LPOINT  			FAR *LPLPOINT;         
-//typedef LPOINT  			HUGE *HPLPOINT;         
-typedef HANDLE				HDIB32; 
-typedef HDIB32				FAR *LPHDIB32; 
-typedef RECT				HUGE *HPRECT;
 
 #pragma pack(2)
+typedef struct tagLOGBRUSH
+{
+    UINT        lbStyle;
+    COLORREF    lbColor;
+    ULONG_PTR   lbHatch;
+} LOGBRUSH, *PLOGBRUSH, NEAR *NPLOGBRUSH, FAR *LPLOGBRUSH;
+
+typedef struct  tagXFORM
+{
+    FLOAT   eM11;
+    FLOAT   eM12;
+    FLOAT   eM21;
+    FLOAT   eM22;
+    FLOAT   eDx;
+    FLOAT   eDy;
+} XFORM, *PXFORM, FAR *LPXFORM;
+
+typedef struct tagRGBTRIPLE {
+    BYTE    rgbtBlue;
+    BYTE    rgbtGreen;
+    BYTE    rgbtRed;
+} RGBTRIPLE, *PRGBTRIPLE, NEAR *NPRGBTRIPLE, FAR *LPRGBTRIPLE;
+typedef struct tagLOGFONTA
+{
+    LONG      lfHeight;
+    LONG      lfWidth;
+    LONG      lfEscapement;
+    LONG      lfOrientation;
+    LONG      lfWeight;
+    BYTE      lfItalic;
+    BYTE      lfUnderline;
+    BYTE      lfStrikeOut;
+    BYTE      lfCharSet;
+    BYTE      lfOutPrecision;
+    BYTE      lfClipPrecision;
+    BYTE      lfQuality;
+    BYTE      lfPitchAndFamily;
+    CHAR      lfFaceName[LF_FACESIZE];
+} LOGFONT, *PLOGFONT, NEAR *NPLOGFONT, FAR *LPLOGFONT;
+
 typedef struct 
 {
     short      lfHeight;
@@ -265,6 +273,7 @@ typedef struct
 } LOGFONT16,  FAR *LPLOGFONT16;
 #pragma pack()
 
+/*
 typedef struct
 {
 	short x;
@@ -330,7 +339,7 @@ struct PlaneVec3 {
 	vec3 point;
 	vec3 normal;
 };
-
+*/
 typedef	struct	{RECT	Rect;
 				 long	Refno;   
 				 USHORT	AZ;
@@ -339,28 +348,6 @@ typedef	struct	{RECT	Rect;
 			 	 short AddID;} EDITRECTINFO; 
 typedef EDITRECTINFO	FAR	*LPEDITRECTINFO;
 
-typedef struct
-   {    double  xmn;
-        double  ymn;
-        double  xmx;
-        double  ymx;
-    } MNMXCORD;
-typedef MNMXCORD    FAR *LPMNMXCORD; 
-typedef MNMXCORD	HUGE *HPMNMXCORD;
-typedef struct
-   {	short	xmn;
-   		short	ymn;
-   		short	xmx;
-   		short	ymx;
-   	} mnmxCor;
-typedef mnmxCor FAR	*LPMINMAX;
-typedef struct
-   {	LONG	xmn;
-   		LONG	ymn;
-   		LONG	xmx;
-   		LONG	ymx;
-   	} MNMXCORL;
-typedef MNMXCORL FAR  *LPMNMXCORL;
 
 typedef struct
      {  
@@ -380,7 +367,7 @@ typedef struct
        short	NumPoints;
        LIDARPNT	LidarPnt[MAXLIDARPERREC];
      } LIDARREC;
-typedef LIDARREC    HUGE *LPLIDARREC;
+typedef LIDARREC    *LPLIDARREC;
 
 typedef struct
      {
@@ -388,7 +375,7 @@ typedef struct
        DPOINT	XY[MAXLIDARPERREC];
        double	Z[MAXLIDARPERREC];
      } LIDARCELL;
-typedef LIDARCELL    HUGE *LPLIDARCELL;
+typedef LIDARCELL    *LPLIDARCELL;
 
 typedef struct
 	{
@@ -436,7 +423,7 @@ typedef struct {
 				 int		arraylen;
 				 BYTE		barray[];
 				} PIAAStruct;
-typedef PIAAStruct	HUGE	*LPPIAAStruct;
+typedef PIAAStruct		*LPPIAAStruct;
 
 typedef struct {
 				 MNMXCORD	Bounds;
@@ -465,7 +452,7 @@ typedef struct
         MNMXCORD	Bounds, TriBounds; 
         double  A1, A2, B1, B2, C1, C2, BASX, BASY;
         HANDLE  TriHandle;
-        BOOL    FIXEDP, ONE_SCALE;
+        Bool    FIXEDP, ONE_SCALE;
         short   NSETPT; 
         short	LastTri;
 		double	FitPointAZFrom, FitPointAZTo;
@@ -490,9 +477,9 @@ typedef struct	{
 				 DPOINT	ToPT[4];
 				 HANDLE	hFromTran, hToTran;
 				 short	NumTri;
-				 char	spacer[58];//aligns on 256 for huge ptr
+				 char	spacer[58];//aligns on 256 for ptr
 				}TRANTRI; 
-typedef	TRANTRI	HUGE	*HPTRANTRI;
+typedef	TRANTRI		*HPTRANTRI;
     
 typedef struct	{char Word[8];
 				 short Seq;
@@ -647,7 +634,7 @@ typedef struct
         short   st;
         long    Offset,
         		MacroID;
-        LPVOID  hstmt;
+        HANDLE  hstmt;
         char    IDName[34];
 		char	myhandleC[16];
         char    SQL[4096]; 
@@ -700,8 +687,8 @@ typedef struct
         BYTE	ValueIsHandle;
         short	NumLinkedVars;  
         DWORD   changetime; 
-        BOOL	ContainsGorF;
-        BOOL	Save;
+        Bool	ContainsGorF;
+        Bool	Save;
         char    Name[34];
         char    Value[MAXVARLEN]; 
         HANDLE	LinkedVar[1];
@@ -790,7 +777,7 @@ typedef struct
 	{
 		char	Name[MAX_PATH];
 		char	OrigName[68];
-		BOOL	DIBColorsArePalleteEntries;
+		Bool	DIBColorsArePalleteEntries;
 		long	Frame;
 		HDIB32	hDib;
 		short	DeleteBM;
@@ -799,7 +786,7 @@ typedef struct
 		short	Width, Height,BitCount;
 		long	LastUsed;
 	}	ORTHO;
-typedef ORTHO	HUGE	*LPORTHO;
+typedef ORTHO		*LPORTHO;
 typedef struct	{   
 					long	SecondsRepresented;
 					float	Radius;
@@ -923,16 +910,67 @@ typedef struct {
 				} SUBCELLINFO;
 typedef SUBCELLINFO	FAR	*LPSUBCELLINFO;  
 
+typedef	struct
+{	LONG	Segment;
+    WORD	Offset, Element;
+    LONG	Refno;
+    short	ViewID,
+				ConfigID;
+    short	FileNum;
+    unsigned short	FileInIndex;
+    short	SubFile;
+    unsigned	short	Type:8,
+HasText:1,
+HasTextPointer:1,
+HiPrecis:1,
+Blocked:1,
+IsDispersed:1,
+IsDeleted:1,
+filler2:2;
+    short	Desc,
+    PolyID;
+    unsigned int	NearPoint;
+    short	NearSeg,
+    UDILen;
+    unsigned int	NumPoints;
+    double	Length,
+    PCT,
+    OffDist,
+    BPAZ,PPAZ,EPAZ,
+    Area;
+    DPOINT	BeginPoint, EndPoint, PickedPoint, NodePoint, FromPoint, ToPoint; //for curves NodePoint = POC
+    POINT	BeginPointFile, EndPointFile, PickedPointFile;
+    MNMXCORD Rect;
+    float	Elev;
+    char	Prefix[33], UDI[65];
+    unsigned long	MSLink;
+} PICKDATA;
+typedef	PICKDATA	*LPPICKDATA;
+
+typedef	struct
+{	LONG	Segment;
+    WORD	Offset, Element;
+    LONG	Refno;
+    LPVOID	View;
+    short	FileNum;
+    unsigned short	FileInIndex;
+    short	SubFile,
+    Type;
+    short	Desc,
+    PolyID;
+} PICKDATAHEADER;
+typedef	PICKDATAHEADER	*LPPICKDATAHEADER;
+
 typedef struct {
 					long	FromSeg;
 					double	AtDist, FromDist, Length;
-					BOOL	Reverse;
+					Bool	Reverse;
 					long	FirstPointID;
 					MNMXCORD Bounds; 
 					PICKDATAHEADER   PD;  
 					char	Filler[38];
 				} SEGMENTDATA;
-typedef SEGMENTDATA	HUGE	*HPSEGMENTDATA;
+typedef SEGMENTDATA		*HPSEGMENTDATA;
 
 typedef struct {long	Segno;
 				double	AtDist, TurnAZ;
@@ -1074,7 +1112,7 @@ typedef struct {char	ID[32],
 						Driver[64],
 						Macro[32];
 				COLORREF	Color,TrackColor;     
-				BOOL	ComputeAZ, ComputeSpeed;
+				Bool	ComputeAZ, ComputeSpeed;
 				long	ComputeTimeSpan;
 				short	nLoc,
 						Size[2],
@@ -1091,7 +1129,7 @@ typedef struct {char	ID[32],
 				short	FenceStatus;
 				long	NumHist;
 				HANDLE	hHist;
-				BOOL	Display;
+				Bool	Display;
 				RECT	Rect, MenuRect,LastDrawRect,LastFlagRect;
 				int		index;
 				} VEHLOCATION;
@@ -1175,7 +1213,7 @@ typedef struct	{
 				long	Mnx,Mxx;
 				long	filler;
 				} LINEINT;  
-typedef LINEINT	HUGE	*LPLINEINT; 
+typedef LINEINT		*LPLINEINT; 
 typedef struct	{
 				double	Size;
 				long	LoopID;
@@ -1224,7 +1262,7 @@ typedef struct {
 				DPOINT	Point1;
 				int		NumLinks,
 						NumSides; 
-				BOOL	Reverse; 
+				Bool	Reverse; 
 				long	StoredAsInclusionRef;
 				}	LOOPDATA;
 
@@ -1364,7 +1402,7 @@ typedef POLYID	FAR	*LPPOLYID;
  
 typedef struct {char Name[32];
                 MNMXCORD    Bounds;
-                BOOL    HaveBounds;
+                Bool    HaveBounds;
                 HANDLE	hMask; 
                 HANDLE	hMaskAccelerator[3];
                 long	NumMaskPoints;
@@ -1381,7 +1419,7 @@ typedef struct {HANDLE	MyHandle,
 								CurFun,
 								CommandLimit,
 								CommandSuccessCount; 
-				BOOL	AddLBUTTON;  
+				Bool	AddLBUTTON;  
 				HCURSOR	hCursor; 
 				HANDLE	hWhile; 
 				HANDLE	hError;
@@ -1523,7 +1561,7 @@ typedef struct	{short	Type;
 				 } SPECIALDATA;
 				 
 typedef struct {char Name[256+32];MNMXCORD MinMax;long StartRefno;} FILELISTENTRY;
-typedef FILELISTENTRY	HUGE	*LPFILELISTENTRY;  
+typedef FILELISTENTRY		*LPFILELISTENTRY;  
 
 typedef	struct {long ref;
 				short Layer, State, width, height, symnum;
@@ -1532,13 +1570,13 @@ typedef	struct {long ref;
 				float AZ,Length;
 				long Refno;
 				COLORREF TextColor, ShadowColor;} MIDPOINT;
-typedef	MIDPOINT	HUGE	*LPMIDPOINT;
+typedef	MIDPOINT		*LPMIDPOINT;
 
 #pragma pack(2)
 typedef struct {short	Desc; long Num;} REORG;
 typedef REORG	FAR	*LPREORG;
 typedef struct {short	Desc; long Offset;} DESCBLOCK;
-typedef DESCBLOCK	HUGE	*LPDESCBLOCK;
+typedef DESCBLOCK		*LPDESCBLOCK;
 #pragma pack()
 
 typedef	struct	{
@@ -1635,7 +1673,7 @@ typedef struct
 	USHORT Next[2];
 	long TypeOffset[10];
 }	QUAD;
-typedef QUAD HUGE *LPQUAD;
+typedef QUAD *LPQUAD;
 
 typedef	struct
 	{	short		Parent;
@@ -2117,24 +2155,24 @@ typedef struct
 		HANDLE	handle;
 		short	TargetViewport;
 		short	DisplayViewport;
-		BOOL	DisplayLine[4];
+		Bool	DisplayLine[4];
 		char	AltCVTFile[14],
 				LineID[4][34];
 		short	Units[4],
 				Precision[4];
-		BOOL	Commas[4];
+		Bool	Commas[4];
        	LOGFONT	Font;  
        	COLORREF	FontColor;  
-       	BOOL	Refresh; 
+       	Bool	Refresh; 
        	char	PrintText[100]; 
        	char	ElevSurface[128]; 
        	HANDLE	hSurf; 
        	short	ElevUnits,
        			ElevPrecision;
-       	BOOL	ElevCommas;
-       	BOOL	DisplayElevation;
+       	Bool	ElevCommas;
+       	Bool	DisplayElevation;
        	char	ElevationID[34];
-		BOOL	MultiLine;
+		Bool	MultiLine;
        	char	Space[466];
     }	COORDINATEDISPLAY;
 typedef	COORDINATEDISPLAY	FAR	*LPCOORDINATEDISPLAY; 
@@ -2147,7 +2185,7 @@ typedef struct
 		HANDLE	handle;
 		short	TargetViewport,
 				DisplayViewport;
-		BOOL	IsActive,
+		Bool	IsActive,
 				WantDataPass,
 				ComputeClassBoundaries,
 				DisplayScatterDiagram,
@@ -2197,7 +2235,7 @@ typedef struct
        			ClassFont1,
        			ClassFont2;
        	short	Xmove, Ymove;  	// Xmove also used to hold NetworkID, DisplayOpt
-       	BOOL	ZeroIsMissing,
+       	Bool	ZeroIsMissing,
        			AddCommas,
        			ShowValue,
        			VPDisplayed,
@@ -2223,14 +2261,14 @@ typedef struct
        	float	AccumPointBaseSize;  
        	BYTE	AccumPointLink; 
        	BYTE	AccumPointText;
-       	BOOL	ZeroBased;
-       	BOOL	PCTByArea;
+       	Bool	ZeroBased;
+       	Bool	PCTByArea;
        	long	NumNonMask;
        	long	PCTDisplayCycle; 
        	short	LayerID;
-       	BOOL	InvertLegend;
+       	Bool	InvertLegend;
        	short	NumCols;
-       	BOOL	HiPrecis;
+       	Bool	HiPrecis;
        	short	NumMidpointnotused;  
        	short	AllValueClass; 
 		unsigned	short	ClearIfNoCount:1,
@@ -2350,24 +2388,24 @@ typedef struct
 		short	LayerID;
 		float	MinTextSize,MaxTextSize;
 		char	Macro[256];
-		BOOL	ShowCities;
+		Bool	ShowCities;
 		short	NameLength; 
 		HANDLE	hNameFile1, hNameFile2;
 		char	NameFile1[MAX_PATH];
 		char	NameFile2[MAX_PATH]; 
-		BOOL	Italic, Shadow;
+		Bool	Italic, Shadow;
 		short	BackgroundOpt; //0=transparent,1=opaque,2=opaque if ortho on
 		COLORREF	TextColor, ShadowColor;
-		BOOL	ShowAllElements; 
-		BOOL	SavePAE;  
+		Bool	ShowAllElements; 
+		Bool	SavePAE;  
 		short	VJust; 
-		BOOL	HorizontalText;
-		BOOL	PrimeNameOnly;
+		Bool	HorizontalText;
+		Bool	PrimeNameOnly;
 		char	Expression[256]; 
 		char	ListFile[MAX_PATH]; 
 		char	ListData[MAX_PATH]; 
 		short	ListLen;   
-		BOOL	SortOnData;
+		Bool	SortOnData;
 		HANDLE	hListDB; 
 		short	MinSize;
        	LOGFONT	StreetTextFont;
@@ -2420,7 +2458,7 @@ typedef struct
 				EndOffset,
 				CurrentEntryOffset; 
 		USHORT	FileInIndex; 
-		BOOL	FirstFoundFile;
+		Bool	FirstFoundFile;
 		char	FileName[MAX_PATH];
 		char	FirstIndex;
 	}	FILEINDEX;
@@ -2440,7 +2478,7 @@ typedef	struct
 		POINT	BoxPoints[7];  
 		long	CurAreaRef;
 		char	CurAreaRefGlobal[34];  
-		BOOL	IgnoreClear; 
+		Bool	IgnoreClear; 
 		short	VPBoundsOpt; //1=keepcurrentbounds,other=usevislim
 		char	BoundsGlobal[34];  
 	} BOUNDSDISPLAY;
@@ -2561,7 +2599,7 @@ typedef struct
 	HBITMAP		before, after;
 	double		bmWidthD,bmHeightD;
 	short		bmWidth, bmHeight; 
-	BOOL		Shadow;
+	Bool		Shadow;
 	LOGFONT		LogFont;
 	short		DataFileType; 
 	HANDLE		hTAGDB;
@@ -2643,16 +2681,16 @@ typedef struct
 					ZoomTarget;     /* For type 7 only. Indicates which viewport is
 									   zoomed/panned when zoom/pan commands entered in this
 									   viewport.											 */  
-		BOOL		Active;
+		Bool		Active;
 		HWND		hWnd;
 		HDC			hDC;
-		BOOL		Display;
+		Bool		Display;
 		char		Name[32];		/* Name of window to appear on Viewports menu. If NULL  
 									   this viewport will not appear on Viewports menu		 */
 		USHORT 		ActivateMenuID; //no longer used
 		COLORREF	BackGroundColor,
 					BorderColor;
-		BOOL		Shadow;
+		Bool		Shadow;
 		float		BorderPct;      /* Width of vp border line                               */
 		float		DesiredHeight,	/* Establishes aspect ratio and plot					 */
 					DesiredWidth;	/* size. On screen or plotters smaller
@@ -2684,7 +2722,7 @@ typedef struct
 	 	float		Width,
 	 				Height;
 	 	float		Margin;			/* inner margin as a percent of the max dimension		 */
-	 	BOOL		MarginPan;		/* if true picking in the margin pans map				 */
+	 	Bool		MarginPan;		/* if true picking in the margin pans map				 */
 	 	RECT		Rect;			/* The current screen rect for this viewport 			 */
 	 	RECT		DrawRect;
 	 	RECT		ZBRect;			/* The relative dimensions of the zoom box - diff from
@@ -2707,10 +2745,10 @@ typedef struct
 		double		BaseUnitsPerPixel,
 					VisScale;
 		short		FileFactor;
-		BOOL		HaveBounds;
+		Bool		HaveBounds;
 		short		BoundsDisplayID;/* The Viewport ID in which this vps bounds are displayed*/
 		LPBOUNDSDISPLAY		lpBoundsDisplay;
-		BOOL        WindowIsZoomed,
+		Bool        WindowIsZoomed,
 					WindowZoomedToOrtho;
 		int		wOrigX, wOrigY, wExtX, wExtY, vExtX, vExtY;
 		LPTHEME		pTheme;
@@ -2719,14 +2757,14 @@ typedef struct
 													 is a target of */
 		short		BoundsDisplayVP;			  /* If this VP is used as a bounds display
 													 VP for another VP this is the others VP id.*/
-		BOOL		BoundsDisplayed;			  /* TRUE if bounds currently displayed in BoundsDisplayVP */
+		Bool		BoundsDisplayed;			  /* TRUE if bounds currently displayed in BoundsDisplayVP */
 		short		PassID;			/* Current pass - 0 = Theme pass, 1 = Display pass; */
-		BOOL		WantPass[2];
+		Bool		WantPass[2];
 		short		NumFiles;
 		short		CurFile; 
 		short		SubFile;
 		char		OrigFile[MAX_PATH];
-		BOOL		FirstFile;
+		Bool		FirstFile;
 		short		FileType[MAX_VIEWPORT_FILES];  /* 1 = Format (Viewport Coord),
 													  2 = Standard (World Coord),
 													  3 = TXT, BMP, JPG, TIF, PCX or SBM file
@@ -2789,18 +2827,18 @@ typedef struct
 		short		NewObjectMap[3202];
 		NEWOBJECT	NewObject[MAX_NEW_OBJECTS];    /* redefines display characteristics for this view*/
 		char		PickMacroFile[MAX_PATH];
-		BOOL		DisplayFunStack; 
+		Bool		DisplayFunStack; 
 		DPOINT		FunStackLoc;
-		FARPROC lpfnFUNSTACKMsgProc; 
+		//FARPROC lpfnFUNSTACKMsgProc;
 		HWND	FunStackWnd; 
 		short		LinkedTo; 
 		double		OrthoRes;  
        	HANDLE	hBinFileList;
        	HCURSOR hCursor, LastCursor;  
        	short	UpdateFile;  
-       	BOOL	HaveOrthos; 
+       	Bool	HaveOrthos; 
        	HANDLE	hEditRect;
-       	BOOL	HaveEditRect;
+       	Bool	HaveEditRect;
 		int		EditRectInfoSize;
 		int		EditRectSize;  
 		UINT	MaxEditRect;
@@ -2814,7 +2852,7 @@ typedef struct
 		short	hFileTransInStatusx;
 		long	BoundsDisplayCycle; 
 		long	BitmapID;
-		BOOL	Transparent;   
+		Bool	Transparent;   
 		HANDLE	ToolbarHandle; 
 		HANDLE	CurrentIcon;
 		RECT	CurrentIconRect; 
@@ -3034,7 +3072,7 @@ typedef struct
 				Width,
 				Just; 
 		char	JustC[2];
-		BOOL	FilesAreOpen, First;
+		Bool	FilesAreOpen, First;
 		HDC		hDC;
 		short	x,y;
 		float	Margin;
@@ -3054,7 +3092,7 @@ typedef struct
 				FontUnderline[MAXREPORTFONTS],
 				FontShadow[MAXREPORTFONTS];
 		char	FontName[MAXREPORTFONTS][LF_FACESIZE]; 
-		BOOL	WantSize;
+		Bool	WantSize;
 		RECT	SizeRect;
 		int		curLineHeight;
 	} REPORT;
@@ -3202,7 +3240,7 @@ typedef struct {
 				int		FileLength;
 				int		OrigFileLength;
 				int		BlockIndexLoc;
-				BOOL	HasBeenDeleted;
+				Bool	HasBeenDeleted;
 				}	JOURNALHEADER;
 typedef JOURNALHEADER	*LPJOURNALHEADER;
 
@@ -3641,13 +3679,13 @@ typedef struct {int		nMenus;
 				HWND	hWndDisplay;
 				HWND	hWndTab;
 				HANDLE	hSaveScreen;
-				BOOL	Float;
-				BOOL	Verticle;
-				BOOL	Flat;
+				Bool	Float;
+				Bool	Verticle;
+				Bool	Flat;
 				short	xpad,ypad;
 				POINT	ScreenStartPoint;
 				RECT	FixedRect;
-				BOOL	HaveTrackMouseEvent;
+				Bool	HaveTrackMouseEvent;
 				COLORREF	BackgroundColor;
 				COLORREF	FontColorTab;
 				int		AlphaBlendFactor;
@@ -3787,33 +3825,6 @@ HPALETTE WINAPI GSSiCREATEPALETTE(const LOGPALETTE FAR*);
 HBITMAP WINAPI GSSiCREATEDIBSECTION (HDC hDC,BITMAPINFO *lpbmi,UINT usage, VOID **ppvBits,HANDLE hSection,DWORD offset);
 */
  
-#define HUGE
-#define FAR
-#define NEAR
-#define CONST	const
-typedef int HFILE;
-typedef float FLOAT;
-typedef char *LPSTR;
-typedef char const *LPCSTR;
-typedef long LONG;
-typedef short SHORT;
-typedef short *LPSHORT;
-typedef long *LPLONG;
-typedef	unsigned char BYTE;
-typedef char CHAR;
-typedef void *LPVOID;
-typedef int	COLORREF;
-
-typedef int BOOL;
-typedef short BOOL16;
-typedef unsigned int HANDLE;
-typedef HANDLE	HFONT;
-typedef HANDLE	HDC;
-typedef HANDLE	HRGN;
-typedef HANDLE  HBITMAP;
-typedef HANDLE *LPHANDLE;
-typedef HANDLE	HGDIOBJ;
-typedef unsigned long DWORD ;
 
 #define WINAPI      __stdcall
 typedef int (FAR *FARPROC)();
@@ -3824,7 +3835,7 @@ typedef struct tagSIZE
     LONG        cy;
 } SIZE, *PSIZE, *LPSIZE;
 
-typedef struct
+/*typedef struct
 {
     short   y;
     short   x;
@@ -3840,79 +3851,40 @@ typedef struct
     LONG    top;
     LONG    right;
     LONG    bottom;
-} RECT, *PRECT, NEAR *NPRECT, FAR *LPRECT;
+} RECT, *PRECT, NEAR *NPRECT, FAR *LPRECT;*/
 
 typedef HANDLE				HCURSOR;
 typedef short				FAR *LPSHORT;
 typedef float			 	FAR *LPFLOAT;
-typedef float   			HUGE *HPFLOAT;
+typedef float   			*HPFLOAT;
 typedef double  			FAR *LPDOUBLE;
-typedef double  			HUGE *HPDOUBLE;
+typedef double  			*HPDOUBLE;
 typedef DPOINT  			FAR *LPDPOINT;
-typedef DPOINT  			HUGE *HPDPOINT;
+typedef DPOINT  			*HPDPOINT;
 typedef POINTS				*HPPOINTS;
-typedef struct{double x,y,z;} DPOINT3D;
+//typedef struct{double x,y,z;} DPOINT3D;
 typedef DPOINT3D  			FAR *LPDPOINT3D;
-typedef DPOINT3D  			HUGE *HPDPOINT3D;
+typedef DPOINT3D  			*HPDPOINT3D;
 typedef DPOINT				FPOINT;
 typedef FPOINT  			FAR *LPFPOINT;
-typedef FPOINT  			HUGE *HPFPOINT;
-typedef struct{float x,y;}  FLTPOINT;
+typedef FPOINT  			*HPFPOINT;
+//typedef struct{float x,y;}  FLTPOINT;
 typedef FLTPOINT			*LPFLTPOINT;
-typedef POINT				HUGE *HPPOINT;
-typedef void				HUGE* LPHUGE;
-typedef struct{long x,y;} LPOINT;
+typedef POINT				*HPPOINT;
+typedef void				* LP;
+//typedef struct{long x,y;} LPOINT;
 typedef LPOINT  			FAR *LPLPOINT;
-typedef LPOINT  			HUGE *HPLPOINT;
+typedef LPOINT  			*HPLPOINT;
 typedef HANDLE				HDIB32;
 typedef HDIB32				FAR *LPHDIB32;
-typedef RECT				HUGE *HPRECT;
+typedef RECT				*HPRECT;
 typedef unsigned short		WORD;
 typedef unsigned short		USHORT;
 typedef unsigned int		UINT;
 typedef unsigned long		ULONG;
 
-typedef unsigned long ULONG_PTR, *PULONG_PTR;
+//typedef unsigned long ULONG_PTR, *PULONG_PTR;
 
-typedef struct tagLOGBRUSH
-{
-    UINT        lbStyle;
-    COLORREF    lbColor;
-    ULONG_PTR   lbHatch;
-} LOGBRUSH, *PLOGBRUSH, NEAR *NPLOGBRUSH, FAR *LPLOGBRUSH;
-
-typedef struct  tagXFORM
-{
-    FLOAT   eM11;
-    FLOAT   eM12;
-    FLOAT   eM21;
-    FLOAT   eM22;
-    FLOAT   eDx;
-    FLOAT   eDy;
-} XFORM, *PXFORM, FAR *LPXFORM;
-
-typedef struct tagRGBTRIPLE {
-    BYTE    rgbtBlue;
-    BYTE    rgbtGreen;
-    BYTE    rgbtRed;
-} RGBTRIPLE, *PRGBTRIPLE, NEAR *NPRGBTRIPLE, FAR *LPRGBTRIPLE;
-typedef struct tagLOGFONTA
-{
-    LONG      lfHeight;
-    LONG      lfWidth;
-    LONG      lfEscapement;
-    LONG      lfOrientation;
-    LONG      lfWeight;
-    BYTE      lfItalic;
-    BYTE      lfUnderline;
-    BYTE      lfStrikeOut;
-    BYTE      lfCharSet;
-    BYTE      lfOutPrecision;
-    BYTE      lfClipPrecision;
-    BYTE      lfQuality;
-    BYTE      lfPitchAndFamily;
-    CHAR      lfFaceName[LF_FACESIZE];
-} LOGFONT, *PLOGFONT, NEAR *NPLOGFONT, FAR *LPLOGFONT;
 
 #define TRUE	1
 #define FALSE	0
@@ -3967,7 +3939,9 @@ typedef struct {
                 LPGWFLDINFO pFldInfo;
                 char    GWDData[2];
                 }   GWDHEADER16;
-typedef GWDHEADER16 FAR  *LPGWDHEADER16;   
+typedef GWDHEADER16 FAR  *LPGWDHEADER16;
+
+
 #pragma pack()
 int checkvp(int i);
 #endif

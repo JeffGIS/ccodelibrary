@@ -12,9 +12,9 @@
 @property NSInteger withinManager;
 @property NSInteger totWithinManager;
 @property NSInteger GSSiPadNumber;
-@property BOOL controlledInterface;
+@property bool controlledInterface;
 
-- (BOOL) inArray:(NSArray*)array;
+- (bool) inArray:(NSArray*)array;
 - (NSComparisonResult)compareName:(CityOrOrganizationData *)c;
 
 @end

@@ -8,6 +8,7 @@
 #import "MathUtil.h"
 #import "compress.h"
 #import "RampCompliance.h"
+#include "shr.h"
 
 static int ii;
 
@@ -1563,13 +1564,13 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
             {
                 rampKey.intID = sqlite3_column_int(statement, 0);
                 rampKey.rampNum = sqlite3_column_int(statement, 1);
-                BigWrite(Fid, &rampKey,sizeof(rampKey), -1);
+                BigWriteF(Fid, &rampKey,sizeof(rampKey), -1);
             }
             SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), self.curbRampData.database);
             fclose(Fid);
             Fid = fopen(tempFile.UTF8String,"rb");
 
-            while (BigRead (Fid,&rampKey,sizeof(rampKey)) == sizeof(rampKey))
+            while (BigReadF (Fid,&rampKey,sizeof(rampKey)) == sizeof(rampKey))
             {
                 query = [NSString stringWithFormat:@"UPDATE ramps SET isComplete = 2 WHERE intID = %i AND rampNum = %i",rampKey.intID,rampKey.rampNum];
                 int rtn = [self.curbRampData executeCmd:query.UTF8String
@@ -1904,7 +1905,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
                            if ([self.curbRampData createIntersectionsTable:YES])
                            {
                                
-                               fgetstring(index, maxIndex, fidIndex);
+                               fgetstringF(index, maxIndex, fidIndex);
                                if (!strncmp (index,"*EMPTY*",7))
                                {
                                    goto Exit;
@@ -1916,7 +1917,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
                                                       [popover setTitle:@"Loading Intersections"];
                                                   });
                                
-                               while (fgetstring(data, maxData, fidData))
+                               while (fgetstringF(data, maxData, fidData))
                                {
                                    memset (&intStruct,0,sizeof(INTERSECTION_STRUCT));
                                    LPSTR pTab = strchr(data,'\t');

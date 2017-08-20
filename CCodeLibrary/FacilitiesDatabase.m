@@ -8,6 +8,7 @@
 #import "MathUtil.h"
 #import "CRAPI.h"
 #import "compress.h"
+#import "shr.h"
 
 @implementation FacilitiesDatabase
 
@@ -488,13 +489,13 @@ static FacilitiesDatabase *_statdatabase = nil;
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "BEGIN TRANSACTION", NULL, NULL, &error), _database);
     sqlite3_free(error);
     
-    fgetstring(index, maxIndex, fidIndex);
+    fgetstringF(index, maxIndex, fidIndex);
     
-    while (fgetstring(data, maxData, fidData))
+    while (fgetstringF(data, maxData, fidData))
     {
         LPSTR pTab = strchr(data,'\t');
         LPSTR pTabIndex, pAzms, pEnd;
-        fgetstring(index, maxIndex, fidIndex);
+        fgetstringF(index, maxIndex, fidIndex);
         pTabIndex = strchr(index,'\t');
         *pTab++ = 0;
         *pTabIndex = 0;

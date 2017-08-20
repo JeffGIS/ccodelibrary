@@ -21,6 +21,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 #import "FTPDataPull.h"
 #import "compress.h"
 #import "NVAlertView.h"
+#include "shr.h"
 
 @interface CrimeData () <GeoMasterServerDelegate,GSSiPopoverViewDelegate,FTPDataPullDelegate,NVAlertViewDelegate>
 
@@ -614,11 +615,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         if (fid)
         {
             int line = 0;
-            totLen = FileLength(fid);
+            totLen = FileLengthF(fid);
             LPSTR str = malloc(INPUTBUFSIZE);
             LPSTR laststr = malloc(INPUTBUFSIZE);
             _keepGoing = TRUE;
-            while (_keepGoing && fgetstring(str, (INPUTBUFSIZE - 2), fid))
+            while (_keepGoing && fgetstringF(str, (INPUTBUFSIZE - 2), fid))
             {
                 strcpy (laststr,str);
                 if (_nextUpdate != LOAD_PEOPLE_UPDATE)

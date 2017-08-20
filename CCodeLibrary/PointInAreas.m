@@ -7,6 +7,7 @@ static int COLORFAC=1;
 #import "PointInAreas.h"
 #import "TimeLine.h"
 #import "CRAPI.h"
+#import "shr.h"
 #import "MathUtil.h"
 #import "CensusData.h"
 
@@ -64,8 +65,8 @@ static int ii;
     if (_context)
         CGContextRelease(_context);
     
-    CloseTRANS2(&_pTranContextToWorld);
-    CloseTRANS2(&_pTranWorldToContext);
+    CloseTRANS2P(&_pTranContextToWorld);
+    CloseTRANS2P(&_pTranWorldToContext);
     CGColorSpaceRelease(_colorSpace);
     
 }
@@ -381,7 +382,7 @@ static int ii;
 
 - (MNMXCORD) bitmapBounds:(MNMXCORD*) viewBounds
 {
-    MNMXCORD bounds = *viewBounds;
+    dbounds bounds = *viewBounds;
     double wb = BoundsWidth(viewBounds);
     double hb = BoundsHeight(viewBounds);
     _width = wb;

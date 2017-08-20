@@ -69,8 +69,7 @@
 #import "ArrayOfNumbers.h"
 #import "StringFunctions.h"
 
-#define INT64 long long
-
 @interface CCodeLibrary : NSObject
 
+int testVars (int i);
 @end

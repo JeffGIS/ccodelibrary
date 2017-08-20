@@ -7,6 +7,7 @@
 //
 
 #import "SymbolDictionary.h"
+#import "shr.h"
 #import "mathutil.h"
 
 static double Adjust (double sym,double loc, double size)
@@ -152,7 +153,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
         size = origSize * 0.25;
         CGRect pointRect = CGRectMake((pt->x - size),
                                       (pt->y - size), size*2, size*2);
-        CGFloat az = getazd(pt, &pt[1]);
+        CGFloat az = getazdp(pt, &pt[1]);
         DPOINT ptOnCircle = dnewpoint(pt,az,size);
         CGPoint points[2];
         points[0].x = pt->x;

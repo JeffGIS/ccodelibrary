@@ -10,6 +10,7 @@
 
 #import "PercentInArea.h"
 #import "CRAPI.h"
+#import "shr.h"
 #import "MathUtil.h"
 
 #import "CensusData.h"
@@ -47,7 +48,7 @@ static int ii;
     
     if (_context)
         CGContextRelease(_context);
-    CloseTRANS2(&_pTranContextToWorld);
+    CloseTRANS2P(&_pTranContextToWorld);
     
     CGColorSpaceRelease(_colorSpace);
     
@@ -109,7 +110,7 @@ static int ii;
     DPOINT pt = [self projectPointToContext:&ptv
                                        from:0];
     AddPointToDBounds(&outb, &pt);
-    DPOINT ptw = TranDPOINT(&ptv, pTranViewToLL);
+    DPOINT ptw = TranDPOINTP(&ptv, pTranViewToLL);
     AddPointToDBounds(&llBounds, &ptw);
     
     ptv.x = in->xmn; ptv.y = in->ymx;
@@ -133,7 +134,7 @@ static int ii;
     ptw = TranDPOINT(&ptv, pTranViewToLL);
     AddPointToDBounds(&llBounds, &ptw);
     
-    _pTranContextToWorld = STRANBoundsToBounds(&outb, &llBounds);
+    _pTranContextToWorld = STRANBoundsToBoundsP(&outb, &llBounds);
 }
 
 - (void) areasLoaded:(PercentInArea*)boundsPias
@@ -311,7 +312,7 @@ static int ii;
             DPOINT pt = {icol,irow};
             if (piaMask)
             {
-                pt = TranDPOINT(&pt, _pTranContextToWorld);
+                pt = TranDPOINTP(&pt, _pTranContextToWorld);
             }
             if (!piaMask || [piaMask DPointInArea:&pt])
             {

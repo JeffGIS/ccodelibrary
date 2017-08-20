@@ -3,6 +3,7 @@
 
 @import CoreText;
 #import "NVTextDrawing.h"
+#import "shr.h"
 
 @interface TextAttempt: NSObject
 @property NSString * text;
@@ -216,9 +217,9 @@ Top:
         midPt = DBoundsMid(&areaBounds);
         for (int i = 0;i<numPoints;i++)
         {
-            double az = getazd(&midPt, &pPoints[i]);
+            double az = getazdp(&midPt, &pPoints[i]);
             double d = ldistpp(&midPt,&pPoints[i]);
-            pPointsRotated[i] = dnewpt(&midPt, az-rotation, d);
+            pPointsRotated[i] = dnewptp(&midPt, az-rotation, d);
         }
         pPoints = pPointsRotated;
     }
@@ -402,9 +403,9 @@ Top:
                     DPOINT pt = {fitX[iFit],fitY[iFit]};
                     if (isRotated)
                     {
-                        double az = getazd(&midPt, &pt);
+                        double az = getazdp(&midPt, &pt);
                         double d = ldistpp(&midPt,&pt);
-                        pt = dnewpt(&midPt, az+rotation, d);
+                        pt = dnewptp(&midPt, az+rotation, d);
                         
                     }
                     ta.text = text.copy;
@@ -623,7 +624,7 @@ ofLongestStraightLine:(int)nPoints
         
         if (lineLength > longestLine)
         {
-            currentRot = getazd(&pPoints[i], &pPoints[i + 1]);
+            currentRot = getazdp(&pPoints[i], &pPoints[i + 1]);
             longestLine = lineLength;
         }
     }
@@ -665,7 +666,7 @@ ofLongestStraightLine:(int)nPoints
                 if (numPoints > 2)
                 {
                     CGFloat lineLength = GetPolyLengthD(&wrappedPoints[i], numPoints);
-                    lastRot = getazd(&wrappedPoints[i], &wrappedPoints[i+numPoints-1]);
+                    lastRot = getazdp(&wrappedPoints[i], &wrappedPoints[i+numPoints-1]);
                     if ((lineLength > longestLine) && (lastDiff < offset))
                     {
                         currentRot = lastRot;

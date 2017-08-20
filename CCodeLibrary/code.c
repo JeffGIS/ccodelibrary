@@ -1,82 +1,24 @@
+#include "shr.h"
 #include "MathUtil.h"
-#define BOOL bool
-//#undef HUGE
+
 #define		MAXPICKITEMS		32
 
-static BOOL PickNET=FALSE;
+static Bool PickNET=FALSE;
 static HANDLE hProfileSymbols = 0;
 static int CurrentRefno=0;
 static HANDLE hHighlightArea=0;
-static BOOL PickOnlyEndPoints=FALSE;
+static Bool PickOnlyEndPoints=FALSE;
 static DPOINT PickPointBase;
-static BOOL PickingByRefno=FALSE;
+static Bool PickingByRefno=FALSE;
 static double PickApW;
-static BOOL IgnoreBounds=FALSE;
-static BOOL PickDeletes=FALSE;
-static BOOL WantOnlyShapePoints=FALSE;
-static BOOL InSnapNode=FALSE;
+static Bool IgnoreBounds=FALSE;
+static Bool PickDeletes=FALSE;
+static Bool WantOnlyShapePoints=FALSE;
+static Bool InSnapNode=FALSE;
 static int NumPicked;
-typedef	struct
-{	LONG	Segment;
-    WORD	Offset, Element;
-    LONG	Refno;
-    short	ViewID,
-				ConfigID;
-    short	FileNum;
-    unsigned short	FileInIndex;
-    short	SubFile;
-    unsigned	short	Type:8,
-        HasText:1,
-        HasTextPointer:1,
-        HiPrecis:1,
-        Blocked:1,
-        IsDispersed:1,
-        IsDeleted:1,
-        filler2:2;
-    short	Desc,
-    PolyID;
-    unsigned int	NearPoint;
-    short	NearSeg,
-    UDILen;
-    unsigned int	NumPoints;
-    double	Length,
-    PCT,
-    OffDist,
-    BPAZ,PPAZ,EPAZ,
-    Area;
-    DPOINT	BeginPoint, EndPoint, PickedPoint, NodePoint, FromPoint, ToPoint; //for curves NodePoint = POC
-    POINT	BeginPointFile, EndPointFile, PickedPointFile;
-    MNMXCORD Rect;
-    float	Elev;
-    char	Prefix[33], UDI[65];
-    unsigned long	MSLink;
-} PICKDATA;
-typedef	PICKDATA	*LPPICKDATA;
-
-typedef	struct
-{	LONG	Segment;
-    WORD	Offset, Element;
-    LONG	Refno;
-    LPVOID	View;
-    short	FileNum;
-    unsigned short	FileInIndex;
-    short	SubFile,
-    Type;
-    short	Desc,
-    PolyID;
-} PICKDATAHEADER;
-typedef	PICKDATAHEADER	*LPPICKDATAHEADER;
 static PICKDATA	PickList[MAXPICKITEMS+3];
 //static long counts[3] = {0,0,0};
 
-static short LINSEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
-            double A2,double *X3,double *Y3);
-short LINSEC_TOL (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
-      double A2,double *X3,double *Y3,double INTOL);
-static short LIN_SEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
-             double A2,double *X3,double *Y3);
-//static double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
-bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator);
 
 static double	P_TOL = 1e-7;
 
@@ -84,28 +26,13 @@ void setP_TOL (double val)
 {
     P_TOL = val;
 }
-LPVOID GlobalLock (HANDLE hmem)
-{
-	return (LPVOID)hmem;
-}
-
-void GlobalUnlock (HANDLE hmem)
-{
-	return;
-}
-
 /*static void GSSiEnterProg (int id)
 {
 	return;
 }
 */
 
-static BOOL RefInNet (int ref)
-{
-	return FALSE;
-}
-
-static BOOL GetGlobalBVal2 (LPSTR Global,BOOL Default)
+static Bool RefInNet (int ref)
 {
 	return FALSE;
 }
@@ -115,7 +42,7 @@ static int PickListDelete (int i)
 	return i;
 }
 
-static void ExpandBounds (LPMNMXCORD Bounds, double Adjust)
+void ExpandBounds (LPMNMXCORD Bounds, double Adjust)
 #if ENABLETRACE
 {GSSiEnterProg (261);
 #endif
@@ -241,7 +168,7 @@ double LDIST(double X1,double Y1,double X2,double Y2)
 }
 */
 
-static void AddDPointToMinMax (HPDPOINT Point,LPMNMXCORD pBounds)
+void AddDPointToMinMax (HPDPOINT Point,LPMNMXCORD pBounds)
 #if ENABLETRACE
 {GSSiEnterProg (253);
 #endif
@@ -260,7 +187,7 @@ GSSiExitProg (253);
 }
 #endif
 }
-static void ComputePickPointD (HPDPOINT BPOINT, HPDPOINT EPOINT,double Dist,
+void ComputePickPointD (HPDPOINT BPOINT, HPDPOINT EPOINT,double Dist,
 					   double TotDist,LPDOUBLE PCT, LPDOUBLE OffDist,LPDOUBLE AZ,
 				  	   LPMNMXCORD BOUNDS,LPDPOINT PickedPoint)
 #if ENABLETRACE
@@ -287,7 +214,7 @@ GSSiExitProg (664);
 }
 	}
     	
-	AZ1 = getazd (BPOINT,EPOINT); 
+	AZ1 = getazdp (BPOINT,EPOINT);
 	*AZ = AZ1;
 	AZ2 = LTWOPI (AZ1 + HALFPI);
 	LINSEC ((double)BPOINT->x,(double)BPOINT->y,AZ1, PickX,PickY,AZ2,&INTX,&INTY);
@@ -326,7 +253,7 @@ GSSiExitProg (664);
 }
 #endif
 }
-static short LINSEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
+short LINSEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
             double A2,double *X3,double *Y3)
 #if ENABLETRACE
 {GSSiEnterProg (362);
@@ -430,7 +357,7 @@ GSSiExitProg (363);
 #endif
  } 
  
-static BOOL LineInBoundsD (long NPNTS, HPDPOINT POINTS,double TotDist,LPDOUBLE PCT,
+static Bool LineInBoundsD (long NPNTS, HPDPOINT POINTS,double TotDist,LPDOUBLE PCT,
                    LPDOUBLE OffDist,LPDOUBLE AZ,LPMNMXCORD BOUNDS, LPDPOINT PickedPoint,LPLONG	pFromPtID)
 #if ENABLETRACE
 {GSSiEnterProg (1017);
@@ -554,9 +481,9 @@ GSSiExitProg (1017);
 #endif
 }
 
-bool PICK_POINT_ON_LINE(DPOINT pickPoint, MNMXCORD pickBounds, LPDPOINT pPickedPoint, long nPnts, HPDPOINT lpPointsIn)
+Bool PICK_POINT_ON_LINE(DPOINT pickPoint, MNMXCORD pickBounds, LPDPOINT pPickedPoint, long nPnts, HPDPOINT lpPointsIn)
 {
-    BOOL rtn = FALSE;
+    Bool rtn = FALSE;
     double offDist, totDist=0;
     double az, pct;
     long fromPt;
@@ -569,7 +496,7 @@ bool PICK_POINT_ON_LINE(DPOINT pickPoint, MNMXCORD pickBounds, LPDPOINT pPickedP
     return rtn;
 }
 
-bool PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUBLE pAZ,LPDOUBLE pSize, long PinA)
+Bool PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUBLE pAZ,LPDOUBLE pSize, long PinA)
 #if ENABLETRACE
 {GSSiEnterProg (707);
 #endif
@@ -581,7 +508,7 @@ bool PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUB
 	int	i, mini = 0;
     double	PCT, OffDist, TotDistW, AZ[3], MinDist, Dist;
     //double Area = 0;
-	BOOL	First=TRUE, rtn=FALSE;   
+	Bool	First=TRUE, rtn=FALSE;   
 	MNMXCORD	Rect;       
 	long	FromPtID=-1;
    	double	PickDist;   
@@ -620,8 +547,8 @@ GSSiExitProg (707);
 	DBoundsInit (&Rect); 
 	if (nPnts > 1)
 	{
-		AZ[0] = getazd (&lpPoints[0],&lpPoints[1]);
-		AZ[2] = getazd (&lpPoints[nPnts-2],&lpPoints[nPnts-1]);
+		AZ[0] = getazdp (&lpPoints[0],&lpPoints[1]);
+		AZ[2] = getazdp (&lpPoints[nPnts-2],&lpPoints[nPnts-1]);
 	} 
 	else if (pAZ)
 		AZ[0]=AZ[1]=AZ[2]=*pAZ; 
@@ -731,7 +658,7 @@ Add:
 	if (pSize)
 		TotDistW = *pSize;*/
     
-	if (GetGlobalBVal2("[%PICKPOINTFIRST]",FALSE))
+//	if (GetGlobalBVal2("[%PICKPOINTFIRST]",FALSE))
 	{
 		if (Type == 1)
 			OffDist = 0;
@@ -796,7 +723,7 @@ double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim)
 }
 
 
-bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator)
+Bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int nPoly,HANDLE hPolyPartLen,LPDOUBLE pNextXIntersect,LPHANDLE pAccelerator)
 #if ENABLETRACE
 {GSSiEnterProg (359);
 #endif
@@ -821,7 +748,7 @@ C*/
              PAX1, PAY1, PAX2, PAY2, MXX, MNY, MXY,
              XMIDMN, XMIDMX, YMIDMN, YMIDMX, XMID2_NEED = 0.0, YMID2_NEED = 0.0;
 
-    BOOL HAVE_MID1, NEED_MID1, p_in_a;
+    Bool HAVE_MID1, NEED_MID1, p_in_a;
 
     long  IRC ;
     DWORD	ip;
@@ -983,14 +910,14 @@ GSSiExitProg (359);
 }
 
 /*
-static BOOL LININT (double L1X1, double L1Y1, double L1X2, double L1Y2,
+static Bool LININT (double L1X1, double L1Y1, double L1X2, double L1Y2,
 			 double L2X1, double L2Y1, double L2X2, double L2Y2)
 #if ENABLETRACE
 {GSSiEnterProg (360);
 #endif
 {
       double SLOPE1 = 0.0, SLOPE2 = 0.0, YINT1, YINT2, X, Y, XDIFF, YDIFF;
-      BOOL INF1, INF2;
+      Bool INF1, INF2;
       
       if ( (L1X1 ==L2X1 && L1Y1 ==L2Y1) ||
            (L1X1 ==L2X2 && L1Y1 ==L2Y2) ||
@@ -1062,7 +989,7 @@ GSSiExitProg (360);
 }
 */
 
-static short LIN_SEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
+short LIN_SEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
              double A2,double *X3,double *Y3)
 #if ENABLETRACE
 {GSSiEnterProg (361);
@@ -1190,7 +1117,7 @@ LPSTR ReplaceChar(LPSTR str, char from, char to)
 
 LPSTR OneSpace(LPSTR Arg1)
 {
-    BOOL LastWasBlank, HaveNonBlank = FALSE;
+    Bool LastWasBlank, HaveNonBlank = FALSE;
     LPSTR OutLoc, SaveArg1, SaveOutLoc;
     long l;
     
@@ -1253,7 +1180,7 @@ Exit:
     return (rtn);
 }
 
-long GSSifilelength(FILE *fid)
+long GSSifilelengthF(FILE *fid)
 {
     long fileLen;
     long curloc = ftell(fid);
@@ -1263,21 +1190,21 @@ long GSSifilelength(FILE *fid)
     return fileLen;
 }
 
-long __attribute__ ((noinline)) BigRead(FILE *fid, LPVOID pmem, long len)
+long __attribute__ ((noinline)) BigReadF(FILE *fid, LPVOID pmem, long len)
 {
     long didRead = fread(pmem, 1, len, fid);
     return didRead;
 }
 
-long __attribute__ ((noinline)) BigWrite(FILE *fid, LPBYTE pbuf, long len, long loc)
+long __attribute__ ((noinline)) BigWriteF(FILE *fid, LPBYTE pbuf, long len, long loc)
 {
     long bytesWritten = fwrite(pbuf, 1, len, fid);
     return bytesWritten;
 }
 
-BOOL WriteBitmapDataToFile (LPSTR file,int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void *bmData)
+Bool WriteBitmapDataToFile (LPSTR file,int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void *bmData)
 {
-    BOOL rtn = TRUE;
+    Bool rtn = TRUE;
     BITMAPINFOHEADER bih;
     
     int bitmapByteCount = 0, bitmapBytesPerRow = 0;

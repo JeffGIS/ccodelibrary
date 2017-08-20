@@ -2,7 +2,9 @@
 //  CCodeLibrary
 
 #import <Foundation/Foundation.h>
-#import "CCodeTypes.h"
+#import "shr.h"
+#import "MathUtil.h"
+#import "TileGraphics.h"
 #import "MPIntersection.h"
 #import "Facility.h"
 #import "UserDefaults.h"

@@ -250,12 +250,29 @@
 		A9E792851AEFEB89005DA4BB /* NVLegendView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E792821AEFE989005DA4BB /* NVLegendView.h */; };
 		A9E792861AEFEB91005DA4BB /* NVLargeAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9E7927F1AEFA880005DA4BB /* NVLargeAlertView.h */; };
 		A9F937AF1AEB3D1E00D34921 /* NVVideoHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9F937AE1AEB3D1E00D34921 /* NVVideoHeadingViewController.m */; };
+		BB0631301F461A2500BDCA8F /* shr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBC361B51F429C0200B51DF3 /* shr.h */; };
+		BB0631311F461A4700BDCA8F /* bigmem.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBC361951F429C0200B51DF3 /* bigmem.h */; };
+		BB0631321F461E9A00BDCA8F /* bigmemln.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBC361961F429C0200B51DF3 /* bigmemln.h */; };
+		BB0631331F461ED800BDCA8F /* COMPUTE.H in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBC361991F429C0200B51DF3 /* COMPUTE.H */; };
+		BB0631341F461ED800BDCA8F /* DIBAPI.H in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBC3619B1F429C0200B51DF3 /* DIBAPI.H */; };
 		BB0FD9391D2422A0007C1219 /* SQLiteLib.m in Sources */ = {isa = PBXBuildFile; fileRef = BB0FD9381D2422A0007C1219 /* SQLiteLib.m */; };
 		BB235EFB1E5F552700E97495 /* ArrayOfNumbers.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */; };
 		BB3CF30B1E5CE1410064EC9C /* ArrayOfNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */; };
 		BB6777981C95C13200A2D508 /* CensusData.m in Sources */ = {isa = PBXBuildFile; fileRef = BB6777971C95C13200A2D508 /* CensusData.m */; };
 		BB9B8FAB1EAE8A6600AFB3CA /* TimeLine.m in Sources */ = {isa = PBXBuildFile; fileRef = BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */; };
 		BB9B8FAC1EAE8B7500AFB3CA /* TimeLine.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB9B8FA91EAE8A6600AFB3CA /* TimeLine.h */; };
+		BBC361C01F429C0200B51DF3 /* bigmem.c in Sources */ = {isa = PBXBuildFile; fileRef = BBC361941F429C0200B51DF3 /* bigmem.c */; };
+		BBC361C11F429C0200B51DF3 /* CVTCOORD.C in Sources */ = {isa = PBXBuildFile; fileRef = BBC3619A1F429C0200B51DF3 /* CVTCOORD.C */; };
+		BBC361C21F429C0200B51DF3 /* floatap.c in Sources */ = {isa = PBXBuildFile; fileRef = BBC3619E1F429C0200B51DF3 /* floatap.c */; };
+		BBC361C31F429C0200B51DF3 /* function.c in Sources */ = {isa = PBXBuildFile; fileRef = BBC361A01F429C0200B51DF3 /* function.c */; };
+		BBC361C41F429C0200B51DF3 /* FUNCTN1.C in Sources */ = {isa = PBXBuildFile; fileRef = BBC361A11F429C0200B51DF3 /* FUNCTN1.C */; };
+		BBC361C51F429C0200B51DF3 /* functn2.c in Sources */ = {isa = PBXBuildFile; fileRef = BBC361A21F429C0200B51DF3 /* functn2.c */; };
+		BBC361C61F429C0200B51DF3 /* functn3.c in Sources */ = {isa = PBXBuildFile; fileRef = BBC361A31F429C0200B51DF3 /* functn3.c */; };
+		BBC361C71F429C0200B51DF3 /* fundefs.c in Sources */ = {isa = PBXBuildFile; fileRef = BBC361A41F429C0200B51DF3 /* fundefs.c */; };
+		BBC361C81F429C0200B51DF3 /* Stubs.c in Sources */ = {isa = PBXBuildFile; fileRef = BBC361B91F429C0200B51DF3 /* Stubs.c */; };
+		BBC361C91F429C0200B51DF3 /* VARDEF.C in Sources */ = {isa = PBXBuildFile; fileRef = BBC361BD1F429C0200B51DF3 /* VARDEF.C */; };
+		BBC361CA1F429C0200B51DF3 /* VARSTUF2.C in Sources */ = {isa = PBXBuildFile; fileRef = BBC361BE1F429C0200B51DF3 /* VARSTUF2.C */; };
+		BBC361CB1F429C0200B51DF3 /* VARSTUFF.C in Sources */ = {isa = PBXBuildFile; fileRef = BBC361BF1F429C0200B51DF3 /* VARSTUFF.C */; };
 		BBE299521CBD1D6C0045B3DC /* CityOrOrganizationData.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */; };
 		BBE299531CBD30BB0045B3DC /* CityOrOrganizationData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
@@ -368,6 +385,11 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				BB0631331F461ED800BDCA8F /* COMPUTE.H in CopyFiles */,
+				BB0631341F461ED800BDCA8F /* DIBAPI.H in CopyFiles */,
+				BB0631321F461E9A00BDCA8F /* bigmemln.h in CopyFiles */,
+				BB0631311F461A4700BDCA8F /* bigmem.h in CopyFiles */,
+				BB0631301F461A2500BDCA8F /* shr.h in CopyFiles */,
 				6936A3581F0D7DB2000CDCC3 /* SidewalkData.h in CopyFiles */,
 				69848C781EB9416E00EC1EB3 /* NVPDFDrawing.h in CopyFiles */,
 				BB9B8FAC1EAE8B7500AFB3CA /* TimeLine.h in CopyFiles */,
@@ -749,6 +771,43 @@
 		BB6777971C95C13200A2D508 /* CensusData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = CensusData.m; path = ../CensusData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		BB9B8FA91EAE8A6600AFB3CA /* TimeLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeLine.h; sourceTree = "<group>"; };
 		BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeLine.m; sourceTree = "<group>"; };
+		BBC361931F429C0200B51DF3 /* Address.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Address.h; sourceTree = "<group>"; };
+		BBC361941F429C0200B51DF3 /* bigmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bigmem.c; sourceTree = "<group>"; };
+		BBC361951F429C0200B51DF3 /* bigmem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bigmem.h; sourceTree = "<group>"; };
+		BBC361961F429C0200B51DF3 /* bigmemln.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bigmemln.h; sourceTree = "<group>"; };
+		BBC361971F429C0200B51DF3 /* Bt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bt.h; sourceTree = "<group>"; };
+		BBC361981F429C0200B51DF3 /* CLIENT.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CLIENT.H; sourceTree = "<group>"; };
+		BBC361991F429C0200B51DF3 /* COMPUTE.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = COMPUTE.H; sourceTree = "<group>"; };
+		BBC3619A1F429C0200B51DF3 /* CVTCOORD.C */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CVTCOORD.C; sourceTree = "<group>"; };
+		BBC3619B1F429C0200B51DF3 /* DIBAPI.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DIBAPI.H; sourceTree = "<group>"; };
+		BBC3619C1F429C0200B51DF3 /* dict.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dict.h; sourceTree = "<group>"; };
+		BBC3619D1F429C0200B51DF3 /* Extrndb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Extrndb.h; sourceTree = "<group>"; };
+		BBC3619E1F429C0200B51DF3 /* floatap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = floatap.c; sourceTree = "<group>"; };
+		BBC361A01F429C0200B51DF3 /* function.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = function.c; sourceTree = "<group>"; };
+		BBC361A11F429C0200B51DF3 /* FUNCTN1.C */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FUNCTN1.C; sourceTree = "<group>"; };
+		BBC361A21F429C0200B51DF3 /* functn2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = functn2.c; sourceTree = "<group>"; };
+		BBC361A31F429C0200B51DF3 /* functn3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = functn3.c; sourceTree = "<group>"; };
+		BBC361A41F429C0200B51DF3 /* fundefs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fundefs.c; sourceTree = "<group>"; };
+		BBC361A51F429C0200B51DF3 /* gmextern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gmextern.h; sourceTree = "<group>"; };
+		BBC361A71F429C0200B51DF3 /* gmvardef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gmvardef.h; sourceTree = "<group>"; };
+		BBC361A81F429C0200B51DF3 /* GRAPHICS.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GRAPHICS.H; sourceTree = "<group>"; };
+		BBC361A91F429C0200B51DF3 /* graphint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphint.h; sourceTree = "<group>"; };
+		BBC361AB1F429C0200B51DF3 /* gwd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gwd.h; sourceTree = "<group>"; };
+		BBC361AD1F429C0200B51DF3 /* P_TOL.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = P_TOL.H; sourceTree = "<group>"; };
+		BBC361AE1F429C0200B51DF3 /* pnet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnet.h; sourceTree = "<group>"; };
+		BBC361AF1F429C0200B51DF3 /* PROJ.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PROJ.H; sourceTree = "<group>"; };
+		BBC361B01F429C0200B51DF3 /* proj_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proj_api.h; sourceTree = "<group>"; };
+		BBC361B31F429C0200B51DF3 /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resource.h; sourceTree = "<group>"; };
+		BBC361B41F429C0200B51DF3 /* shapefil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shapefil.h; sourceTree = "<group>"; };
+		BBC361B51F429C0200B51DF3 /* shr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shr.h; sourceTree = "<group>"; };
+		BBC361B81F429C0200B51DF3 /* STD.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = STD.H; sourceTree = "<group>"; };
+		BBC361B91F429C0200B51DF3 /* Stubs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Stubs.c; sourceTree = "<group>"; };
+		BBC361BB1F429C0200B51DF3 /* TRANSLAT.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TRANSLAT.H; sourceTree = "<group>"; };
+		BBC361BC1F429C0200B51DF3 /* UMIO.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UMIO.H; sourceTree = "<group>"; };
+		BBC361BD1F429C0200B51DF3 /* VARDEF.C */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VARDEF.C; sourceTree = "<group>"; };
+		BBC361BE1F429C0200B51DF3 /* VARSTUF2.C */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VARSTUF2.C; sourceTree = "<group>"; };
+		BBC361BF1F429C0200B51DF3 /* VARSTUFF.C */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VARSTUFF.C; sourceTree = "<group>"; };
+		BBCA58FC1F434EF50021E218 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityOrOrganizationData.h; sourceTree = "<group>"; };
 		BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityOrOrganizationData.m; sourceTree = "<group>"; };
 		EB05C20E19EA999F00F0688B /* ElementOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementOverlayView.h; sourceTree = "<group>"; };
@@ -1210,6 +1269,50 @@
 			name = Network;
 			sourceTree = "<group>";
 		};
+		BBC361921F429C0200B51DF3 /* NVMacro */ = {
+			isa = PBXGroup;
+			children = (
+				BBC361931F429C0200B51DF3 /* Address.h */,
+				BBC361941F429C0200B51DF3 /* bigmem.c */,
+				BBC361951F429C0200B51DF3 /* bigmem.h */,
+				BBC361961F429C0200B51DF3 /* bigmemln.h */,
+				BBC361971F429C0200B51DF3 /* Bt.h */,
+				BBC361981F429C0200B51DF3 /* CLIENT.H */,
+				BBC361991F429C0200B51DF3 /* COMPUTE.H */,
+				BBC3619A1F429C0200B51DF3 /* CVTCOORD.C */,
+				BBC3619B1F429C0200B51DF3 /* DIBAPI.H */,
+				BBC3619C1F429C0200B51DF3 /* dict.h */,
+				BBC3619D1F429C0200B51DF3 /* Extrndb.h */,
+				BBC3619E1F429C0200B51DF3 /* floatap.c */,
+				BBC361A01F429C0200B51DF3 /* function.c */,
+				BBC361A11F429C0200B51DF3 /* FUNCTN1.C */,
+				BBC361A21F429C0200B51DF3 /* functn2.c */,
+				BBC361A31F429C0200B51DF3 /* functn3.c */,
+				BBC361A41F429C0200B51DF3 /* fundefs.c */,
+				BBC361A51F429C0200B51DF3 /* gmextern.h */,
+				BBC361A71F429C0200B51DF3 /* gmvardef.h */,
+				BBC361A81F429C0200B51DF3 /* GRAPHICS.H */,
+				BBC361A91F429C0200B51DF3 /* graphint.h */,
+				BBC361AB1F429C0200B51DF3 /* gwd.h */,
+				BBC361AD1F429C0200B51DF3 /* P_TOL.H */,
+				BBC361AE1F429C0200B51DF3 /* pnet.h */,
+				BBC361AF1F429C0200B51DF3 /* PROJ.H */,
+				BBC361B01F429C0200B51DF3 /* proj_api.h */,
+				BBC361B31F429C0200B51DF3 /* resource.h */,
+				BBC361B41F429C0200B51DF3 /* shapefil.h */,
+				BBC361B51F429C0200B51DF3 /* shr.h */,
+				BBC361B81F429C0200B51DF3 /* STD.H */,
+				BBC361B91F429C0200B51DF3 /* Stubs.c */,
+				BBC361BB1F429C0200B51DF3 /* TRANSLAT.H */,
+				BBC361BC1F429C0200B51DF3 /* UMIO.H */,
+				BBC361BD1F429C0200B51DF3 /* VARDEF.C */,
+				BBC361BE1F429C0200B51DF3 /* VARSTUF2.C */,
+				BBC361BF1F429C0200B51DF3 /* VARSTUFF.C */,
+				BBCA58FC1F434EF50021E218 /* Header.h */,
+			);
+			path = NVMacro;
+			sourceTree = "<group>";
+		};
 		EB95A1A41CB16EAF00158B40 /* Other */ = {
 			isa = PBXGroup;
 			children = (
@@ -1306,6 +1409,7 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				BBC361921F429C0200B51DF3 /* NVMacro */,
 				A933D9F31B5D494600D621CD /* 3D Views */,
 				A90D1FB61AE6174700CBFEE7 /* Categories */,
 				A94A771D19F813040062906E /* CCode */,
@@ -1531,6 +1635,7 @@
 				EBC01D221BED1C8C0004C751 /* nep404.c in Sources */,
 				A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */,
 				BB3CF30B1E5CE1410064EC9C /* ArrayOfNumbers.m in Sources */,
+				BBC361CB1F429C0200B51DF3 /* VARSTUFF.C in Sources */,
 				690746E51CD41DCB00B31D8F /* NVTextViewAlert.m in Sources */,
 				694F00791C1B4BBA0074AF72 /* MapToolbar.m in Sources */,
 				69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */,
@@ -1561,6 +1666,7 @@
 				69D5EFB51C7237FD004CE1C0 /* NVCalendarView.m in Sources */,
 				EBC01D161BED1C8C0004C751 /* fk4fk5.c in Sources */,
 				A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */,
+				BBC361CA1F429C0200B51DF3 /* VARSTUF2.C in Sources */,
 				1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */,
 				EBC01D251BED1C8C0004C751 /* precess.c in Sources */,
 				69450DAD1BD5F6120079F7EC /* NVContactPicker.m in Sources */,
@@ -1573,12 +1679,14 @@
 				EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */,
 				69E9E3CA1E895BCF002157D9 /* NVContactGroupData.m in Sources */,
 				EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */,
+				BBC361C41F429C0200B51DF3 /* FUNCTN1.C in Sources */,
 				69EB2C2A1C8755C100E1F21E /* UIDevice+Storage.m in Sources */,
 				EBC01D181BED1C8C0004C751 /* jup404.c in Sources */,
 				EBC01D111BED1C8C0004C751 /* diurpx.c in Sources */,
 				EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */,
 				694304161C334E5A0077EC9F /* NVColorSet.m in Sources */,
 				EBC01D1B1BED1C8C0004C751 /* lightt.c in Sources */,
+				BBC361C71F429C0200B51DF3 /* fundefs.c in Sources */,
 				EBC01D311BED1C8C0004C751 /* zatan2.c in Sources */,
 				EBC01D121BED1C8C0004C751 /* dms.c in Sources */,
 				6956B9981CB230210070416B /* NVPopoverTableView.m in Sources */,
@@ -1587,7 +1695,10 @@
 				6936A3571F0D765C000CDCC3 /* SidewalkData.m in Sources */,
 				EBC01D211BED1C8C0004C751 /* moonrise.c in Sources */,
 				69F975971ECCB8200044CCED /* NVContactsViewer.m in Sources */,
+				BBC361C01F429C0200B51DF3 /* bigmem.c in Sources */,
+				BBC361C21F429C0200B51DF3 /* floatap.c in Sources */,
 				69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */,
+				BBC361C81F429C0200B51DF3 /* Stubs.c in Sources */,
 				EBC01D1A1BED1C8C0004C751 /* kfiles.c in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
 				69E7FCA61D81249500171E44 /* NVPopoverSlider.m in Sources */,
@@ -1597,6 +1708,7 @@
 				69F8E0D51D05C194003E8655 /* NVMarkerView.m in Sources */,
 				A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */,
 				69D277D21DA6DEC1002B1447 /* NVStreetSideController.m in Sources */,
+				BBC361C11F429C0200B51DF3 /* CVTCOORD.C in Sources */,
 				A99050881ACB942F00C6AAAF /* GSSiDatePicker.m in Sources */,
 				EBC01D151BED1C8C0004C751 /* epsiln.c in Sources */,
 				EBC01D0C1BED1C8C0004C751 /* conjunct.c in Sources */,
@@ -1617,6 +1729,7 @@
 				A9C1835F1B6674A600780BF6 /* NVMesh.m in Sources */,
 				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
 				EBC01D2A1BED1C8C0004C751 /* sidrlt.c in Sources */,
+				BBC361C31F429C0200B51DF3 /* function.c in Sources */,
 				A90EBDC91A48874B001E72CF /* GSSiEnums.m in Sources */,
 				A99873251B59ACC100200CA9 /* SewerData.m in Sources */,
 				EBC01D0E1BED1C8C0004C751 /* deflec.c in Sources */,
@@ -1624,6 +1737,7 @@
 				EBC01D271BED1C8C0004C751 /* rplanet.c in Sources */,
 				A9D269E61AE562E100A5C38E /* TableViewCellLabel.m in Sources */,
 				EBC01D091BED1C8C0004C751 /* angles.c in Sources */,
+				BBC361C51F429C0200B51DF3 /* functn2.c in Sources */,
 				A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */,
 				6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
@@ -1656,10 +1770,12 @@
 				EBC01D281BED1C8C0004C751 /* rstar.c in Sources */,
 				EBAB31C71AE6DC2D00C5CCEF /* NamedColors.m in Sources */,
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,
+				BBC361C91F429C0200B51DF3 /* VARDEF.C in Sources */,
 				A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */,
 				69F482371DB7C75B00E4BDB5 /* NVSpreadsheet.m in Sources */,
 				6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */,
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,
+				BBC361C61F429C0200B51DF3 /* functn3.c in Sources */,
 				6986AF841C7C119E0059DD1B /* NVDigitizerView.m in Sources */,
 				EB7C6A161BD158D8006E985B /* StringFunctions.m in Sources */,
 				69E8E6691C66802F00CB26CB /* NSData+CRC.m in Sources */,

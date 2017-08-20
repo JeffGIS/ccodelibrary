@@ -4,13 +4,12 @@
 
 #import "CRAPI.h"
 #import "GSSiDefs.h"
-#import "MathUtil.h"
-#import "TileGraphics.h"
 #import "CityOrOrganizationData.h"
 #import "NVAlertView.h"
 #import "UIApplication+VersionBuild.h"
 #import "ManagePlacesDatabase.h"
 #import "SharedDefaults.h"
+#include "shr.h"
 
 @implementation TimeRange
 
@@ -424,7 +423,7 @@
     DPOINT midPt = {lev21x,lev21y};
     DPOINT pt = {x,y};
     
-    float az = getazd(&midPt, &pt);
+    float az = getazdp(&midPt, &pt);
     int adjustedRot = ClockwiseDegFromNorth((az * RADtoDEG) + intersection.intRotation);
     
     corner = [CRAPI.sharedInstance getCornerFromAdjustedRot:adjustedRot
@@ -443,7 +442,7 @@
     
     DPOINT midPt = {intersection.lev21x, intersection.lev21y}, pt = {x, y};
     
-    float az = getazd(&midPt, &pt);
+    float az = getazdp(&midPt, &pt);
     int adjustedRot = ClockwiseDegFromNorth((az * RADtoDEG) + intersection.intRotation);
     diff = abs(diffInDegrees(adjustedRot, intersection.quadDev90));
     devider = 1;
@@ -586,7 +585,7 @@
                usingTransformation:(LPTRANDATA)pTranWToBMP
 {
     CGPoint pt = CGPointZero;
-    TRANS2(lev21pt.x, lev21pt.y, (LPDOUBLE)&pt.x, (LPDOUBLE)&pt.y, pTranWToBMP);
+    TRANS2P(lev21pt.x, lev21pt.y, (LPDOUBLE)&pt.x, (LPDOUBLE)&pt.y, pTranWToBMP);
     return pt;
 }
 
@@ -595,7 +594,7 @@
 {
     IBOUNDS iBounds, outBounds;
     iBounds = [self CGRectToIBounds:rect];
-    TranMNMXCORL(&iBounds, &outBounds, pTranBMPToW);
+    TranMNMXCORLP(&iBounds, &outBounds, pTranBMPToW);
     return outBounds;
 }
 

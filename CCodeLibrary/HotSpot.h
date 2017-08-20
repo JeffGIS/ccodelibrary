@@ -35,6 +35,6 @@
 
 - (void) display:(CGContextRef)context
    compareFactor:(double*)compareFactor;
-- (BOOL) dump:(NSString*)outFile;
+- (Bool) dump:(NSString*)outFile;
 
 @end

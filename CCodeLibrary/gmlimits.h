@@ -23,7 +23,7 @@
 #define		MAXVARLEN			4095*4
 #define		MAXDLTVAR			256
 #define 	MAXSQLPERFILE   	32   
-#define 	MAXTRANPOINTS		4096
+//#define 	MAXTRANPOINTS		4096
 #define		MAXORTHOBUFS		2 
 #define		MAXCFGTAGS			32
 #define		MAXOPENSURF			16   
@@ -43,6 +43,8 @@
 #define		MAX_WAYPOINT_NAME_LENGTH	10
 #define		MAX_VEHICLE_TRACK_POINTS	4096
 #define		MAXPROFILEROUTES	8
+#define     MAXTRANPOINTS	32
+#define     MAXFILEHANDLES  32
 
                                      
 
@@ -100,6 +102,6 @@
 #define MAXMODSLEN	SHRT_MAX
 #define MAX_AUTOVIS_FILES	64
 #define MAX_CMDMENU_COMMANDS 64
-
+#define MAX_CMDMESSAGE  USHRT_MAX
 #define MAX_PREFIX_LEN	8
 #define MAX_UDI_LEN	64

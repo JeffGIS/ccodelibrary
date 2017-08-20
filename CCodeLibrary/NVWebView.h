@@ -32,7 +32,7 @@ wasTappedAtPoint:(DPOINT)point
 @interface NVWebView : UIView
 
 @property (nonatomic, weak) id <NVWebViewDelegate> delegate;
-@property BOOL drawsMarkers, rotationEnabled;
+@property bool drawsMarkers, rotationEnabled;
 
 + (instancetype)showWebViewInView:(UIView *)view
                         urlString:(NSString *)urlString;
@@ -44,7 +44,7 @@ wasTappedAtPoint:(DPOINT)point
                   fromDocument:(NVPDFDocument)document
                         inView:(UIView *)view;
 
-- (void)hide:(BOOL)animated;
+- (void)hide:(bool)animated;
 - (void)showRealtorButton;
 - (void)hideReturnButton;
 - (void)gotoOriginalPosition;

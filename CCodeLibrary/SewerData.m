@@ -4,6 +4,7 @@
 
 #import "SewerData.h"
 #import "CRAPI.h"
+#import "shr.h"
 #import "MathUtil.h"
 #import "PickedItem.h"
 #import "NVTextDrawing.h"
@@ -98,8 +99,8 @@ static BOOL _createDirectory = YES;
 - (void)dealloc
 {
     [self close];
-    CloseTRANS2 (&_pTranLLtoView);
-    CloseTRANS2 (&_pTranViewtoLL);
+    CloseTRANS2P (&_pTranLLtoView);
+    CloseTRANS2P (&_pTranViewtoLL);
     NSLog(@"Sewer Database dealloc");
 }
 
@@ -1134,7 +1135,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
     while (startPointIndex < np-1)
     {
         CGFloat dist = ddistp(&pPoints[startPointIndex], &pPoints[startPointIndex + 1]);
-        CGFloat az = getazd (&pPoints[startPointIndex], &pPoints[startPointIndex + 1]);
+        CGFloat az = getazdp (&pPoints[startPointIndex], &pPoints[startPointIndex + 1]);
         DPOINT startPoint, pointerPoint, offsetPoint;
         
         startPoint = pPoints[startPointIndex];
@@ -1167,7 +1168,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
                 points:(LPDPOINT)points
 {
     CGFloat fontSize = 24.0;
-    CGFloat az = getazd(&points[0], &points[1]);
+    CGFloat az = getazdp(&points[0], &points[1]);
     BOOL flip = NO, rectFits = NO;
     NSAttributedString *attString;
     

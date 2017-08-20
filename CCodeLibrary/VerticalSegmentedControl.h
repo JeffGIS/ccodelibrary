@@ -50,6 +50,6 @@ extern int const kVerticalSegmentedControlNoSegment;
 - (id)initWithSectionTitles:(NSArray *)sectiontitles;
 
 - (void)setSelectedSegmentIndex:(NSUInteger)index
-                       animated:(BOOL)animated;
+                       animated:(bool)animated;
 
 @end

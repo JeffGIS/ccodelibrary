@@ -1,5 +1,7 @@
 //  TileGraphics.h
 //  CCodeLibrary
+#ifndef TileGraphics_h
+#define TileGraphics_h
 
 #define TGPOLYGON 0
 #define TGPOLYLINE 1
@@ -63,3 +65,5 @@ int QuadKeyToTileXY(char *quadKey, int *tileX, int *tileY, int *levelOfDetail);
 int FindIntersection (const char *indexPath, const char *dataPath, int x, int y, char *intText, char *intAZMS, int *pnumStreets, int *pnRamps, int iWant, int *plev21x, int *plev21y);
 int FindIntersectionFromID (const char *indexPath,const char *dataPath, int intID, char *intText,char *intAZMS,int *pnumStreets,int *pnRamps,int *plev21x, int *plev21y);
 int GetCornerIDFromHeading (int heading,int IntersectionCorrection);
+
+#endif

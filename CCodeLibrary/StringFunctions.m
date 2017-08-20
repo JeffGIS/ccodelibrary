@@ -6,8 +6,8 @@
 #import "Reachability.h"
 #import <sys/utsname.h>
 
-static BOOL useMasterID = FALSE;
-static BOOL useDemoID = FALSE;
+static Bool useMasterID = FALSE;
+static Bool useDemoID = FALSE;
 static int useIDInc = 0;
 
 UIColor *UIColorFromInt (unsigned int ival)
@@ -22,7 +22,7 @@ UIColor *UIColorFromInt (unsigned int ival)
     return uiColor;
 }
 
-BOOL hasNetwork(void)
+Bool hasNetwork(void)
 {
     Reachability *reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
@@ -80,14 +80,14 @@ NSString *deviceInfo(void)
             UIDevice.availableStorageSpace, UIDevice.totalStorageSpace, carrier, floatSize];
 }
 
-void SetUseMasterID (BOOL reset)
+void SetUseMasterID (Bool reset)
 {
 #ifdef DEBUG
     useMasterID = TRUE;
     if (reset)
     {
         NSString * path = UserDefaults.defaults.sharedFilePath;
-        BOOL success = [NSFileManager.defaultManager removeItemAtPath:path
+        Bool success = [NSFileManager.defaultManager removeItemAtPath:path
                                                                 error:nil];
         path = UserDefaults.defaults.localFilePath;
         success = [NSFileManager.defaultManager removeItemAtPath:path
@@ -97,18 +97,18 @@ void SetUseMasterID (BOOL reset)
     return;
 }
 
-BOOL getUseMasterID (void)
+Bool getUseMasterID (void)
 {
     return useMasterID;
 }
 
-void SetUseDemoID (BOOL set)
+void SetUseDemoID (Bool set)
 {
     useDemoID = set;
     return;
 }
 
-BOOL getUseDemoID (void)
+Bool getUseDemoID (void)
 {
     return useDemoID;
 }
@@ -494,7 +494,7 @@ NSString *removeColonInsideParentheses(NSString *string)
     else if (!string.length)
         return string;
     
-    BOOL deleteMode = NO;
+    Bool deleteMode = NO;
     
     for (int i = 0; i < string.length; i++)
     {
@@ -804,15 +804,24 @@ NSString *reverseString(NSString *string)
     
     else if ([string isEqualToString:@""])
         return @"";
-    
-    NSMutableString *reverseString = [[NSMutableString alloc] init];
+    int len = string.length;
+    LPSTR newStr = malloc (len);
+    newStr += len;
+    *newStr-- = 0;
+    LPCSTR oldStr = string.UTF8String;
+    while (len--)
+    {
+        *newStr-- = *oldStr++;
+    }
+    NSString *reverseString = [NSString stringWithUTF8String:newStr];
+/*    NSMutableString *reverseString = [[NSMutableString alloc] init];
     
     [string enumerateSubstringsInRange:NSMakeRange(0, string.length)
                                options:NSStringEnumerationReverse|NSStringEnumerationByComposedCharacterSequences
-                            usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                            usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, Bool *stop) {
                                 [reverseString appendString:substring];
                             }];
-    
+*/
     return reverseString;
 }
 
@@ -944,9 +953,9 @@ NSString * splitLongestLine (NSString * text)
     return splitText;
 }
 
-BOOL appendStringToFile (NSString * str,NSString * filePath)
+Bool appendStringToFile (NSString * str,NSString * filePath)
 {
-    BOOL rtn;
+    Bool rtn;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     if(![fileManager fileExistsAtPath:filePath])
@@ -1020,7 +1029,7 @@ NSString *urlSearchStringForPID(NSString *PID)
     return url;
 }
 
-BOOL countySupportsLookupForPID(NSString *PID)
+Bool countySupportsLookupForPID(NSString *PID)
 {
     if (!PID || !PID.length || ![PID containsString:@"-"])
     {
@@ -1036,7 +1045,7 @@ BOOL countySupportsLookupForPID(NSString *PID)
         return NO;
     }
     
-    BOOL rtn = NO;
+    Bool rtn = NO;
     
     if ([countyCode isEqualToString:@"019"] || [countyCode isEqualToString:@"053"] ||
         [countyCode isEqualToString:@"123"] || [countyCode isEqualToString:@"163"])
@@ -1068,10 +1077,10 @@ CLLocationCoordinate2D locationWithBearing(double bearing, double distanceFeet, 
     return location;
 }
 
-BOOL isGSSiDevice(void)
+Bool isGSSiDevice(void)
 {
     NSString *deviceName = UIDevice.currentDevice.name;
-    BOOL rtn = NO;
+    Bool rtn = NO;
     
     if ([deviceName containsString:@"GSSi"] ||
         [deviceName isEqualToString:@"Jeff's iPhone"] ||
@@ -1096,7 +1105,7 @@ NSString *paddedString(NSString *str)
     return [NSString stringWithFormat:@"%@ ",str];
 }
 
-BOOL nameInList (NSString* name,NSArray* list)
+Bool nameInList (NSString* name,NSArray* list)
 {
     for (NSString * curName in list)
     {
@@ -1224,9 +1233,9 @@ NSString * intToBlob(int val)
     return blob;
 }
 
-BOOL stringContainsCaseInsenitiveString (NSString * str, NSString * substr)
+Bool stringContainsCaseInsenitiveString (NSString * str, NSString * substr)
 {
-    BOOL rtn = TRUE;
+    Bool rtn = TRUE;
     if (!str || !substr ||
         [str rangeOfString:substr options:NSCaseInsensitiveSearch].location == NSNotFound)
         rtn = FALSE;

@@ -10,6 +10,7 @@ static int fileSequence = 0;
 
 #import "AlleyWallData.h"
 #import "CRAPI.h"
+#import "shr.h"
 #import "UIApplication+VersionBuild.h"
 
 @implementation AlleyWallData
@@ -1208,11 +1209,11 @@ SELECT max(_id) FROM MyTable*/
     BOOL opened = [self open];
     
     FILE *fid = fopen(file.UTF8String, "rb");
-    int totLen = (int)FileLength(fid);
+    int totLen = (int)FileLengthF(fid);
     int maxLineLen = totLen+2;
     LPSTR str = malloc(totLen+4);
     [self startTransaction];
-    while (rtn && fgetstring(str, maxLineLen, fid))
+    while (rtn && fgetstringF(str, maxLineLen, fid))
     {
         rtn = [self executeCmd:str
                        sendToServer:NO

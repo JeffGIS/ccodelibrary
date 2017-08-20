@@ -1,6 +1,6 @@
 //  VerticalSegmentedControl.m
 //  CCodeLibrary
-
+#define __OBJC_BOOL_IS_BOOL   1
 #import "VerticalSegmentedControl.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -265,7 +265,7 @@ int const kSMVerticalSegmentedControlNoSegment = -1;
 }
 
 - (void)setSelectedSegmentIndex:(NSUInteger)index
-                       animated:(BOOL)animated
+                       animated:(bool)animated
 {
     [self setSelectedSegmentIndex:index
                          animated:animated
@@ -273,8 +273,8 @@ int const kSMVerticalSegmentedControlNoSegment = -1;
 }
 
 - (void)setSelectedSegmentIndex:(NSUInteger)index
-                       animated:(BOOL)animated
-                         notify:(BOOL)notify
+                       animated:(bool)animated
+                         notify:(bool)notify
 {
     _selectedSegmentIndex = index;
     self.visibleSelectedSegmentIndex = kSMVerticalSegmentedControlNoSegment;

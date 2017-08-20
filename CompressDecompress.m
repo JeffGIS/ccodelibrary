@@ -16,6 +16,7 @@
 #include "compress.h"
 #include "minilzo.h"
 #include "mathutil.h"
+#include "shr.h"
 #define BOOL int
 
 @implementation CompressDecompress
@@ -33,7 +34,7 @@
     if (Fid == NULL)
         goto Exit;
     
-    BigRead(FidTF, (HPSTR)&CompressedLength, 4);
+    BigReadF(FidTF, (HPSTR)&CompressedLength, 4);
     rtn = TRUE;
     while (CompressedLength > 0)
     {
@@ -42,7 +43,7 @@
         LenRead += CompressedLength + 4;
         BigRead(FidTF,pCompressedRec,CompressedLength);
         lRec = DecompressBinaryRecordUnsafe(pRec, pCompressedRec, CompressedLength);
-        if (BigWrite(Fid ,pRec ,lRec, -1) != lRec)
+        if (BigWriteF(Fid ,pRec ,lRec, -1) != lRec)
             rtn = FALSE;
         BigRead(FidTF, (HPSTR)&CompressedLength, 4);
         free (pCompressedRec);
@@ -82,7 +83,7 @@ Exit:
     if (FidTF == NULL)
         return FALSE;
     
-    fileLen = GSSifilelength(FidTF);
+    fileLen = GSSifilelengthF(FidTF);
     if (fileLen < 14)
     {
         rtn = FALSE;
@@ -102,11 +103,11 @@ Exit:
     fseek(FidTF, 0, SEEK_SET);
     fread(&Version, sizeof(short), 1, FidTF);
     fread(&MaxLength, sizeof(int), 1, FidTF);
-    BigRead(FidTF, &len, 4);
+    BigReadF(FidTF, &len, 4);
     
     while (rtn && len > 0)
     {
-        BigRead (FidTF, File, len);
+        BigReadF (FidTF, File, len);
         
         if (!(pBS = strrchr(File,'\\')))
         {
@@ -123,7 +124,7 @@ Exit:
         nFilesRead++;
         if (!rtn)
             goto Exit;
-        BigRead(FidTF, &len, 4);
+        BigReadF(FidTF, &len, 4);
     }
     
 Exit:

@@ -5,6 +5,7 @@
 #import "UserDefaults.h"
 #import "IntersectionsDatabase.h"
 #import "CRAPI.h"
+#import "shr.h"
 #import "TileGraphics.h"
 #import "MathUtil.h"
 #import "NVRampButton.h"
@@ -235,8 +236,8 @@
     if (_pTranWToBMP)
         free(_pTranWToBMP);
     
-    _pTranBMPToW = LoadTranFromCPT(_pathToBPWFile.UTF8String, 1);
-    _pTranWToBMP = LoadTranFromCPT(_pathToBPWFile.UTF8String, 2);
+    _pTranBMPToW = LoadTranFromCPTP(_pathToBPWFile.UTF8String, 1);
+    _pTranWToBMP = LoadTranFromCPTP(_pathToBPWFile.UTF8String, 2);
 
 }
 - (void)didReceiveMemoryWarning
@@ -314,11 +315,11 @@
     int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
     double x = imageSize.width, y = imageSize.height;
     [self setTran];
-    TRANS2(0.0, 0.0, &x, &y, _pTranBMPToW);
+    TRANS2P(0.0, 0.0, &x, &y, _pTranBMPToW);
     x1 = (int)x, y1 = (int)y;
     
     x = imageSize.width, y = imageSize.height;
-    TRANS2(imageSize.width, imageSize.height, &x, &y, _pTranBMPToW);
+    TRANS2P(imageSize.width, imageSize.height, &x, &y, _pTranBMPToW);
     x2 = (int)x, y2 = (int)y;
     
     bounds.xmn = min(x1, x2), bounds.xmx = max(x1, x2);
@@ -1465,11 +1466,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                         double d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y, ramp.lev21x, ramp.lev21y);
                         double az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y, ramp.lev21x, ramp.lev21y);
                         dvec2 pt = {_currentIntersection.lev21x, _currentIntersection.lev21y};
-                        dvec2 np = dnewpt(&pt, (az - (HALFPI / 6)), d);
+                        dvec2 np = dnewptp(&pt, (az - (HALFPI / 6)), d);
                         leftRamp.lev21x = np.x;
                         leftRamp.lev21y = np.y;
                         
-                        np = dnewpt(&pt, (az + (HALFPI / 6)), d);
+                        np = dnewptp(&pt, (az + (HALFPI / 6)), d);
                         rightRamp.lev21x = np.x;
                         rightRamp.lev21y = np.y;
                     }
@@ -1507,7 +1508,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 pt.y = y;
                 midPt.x = _currentIntersection.lev21x;
                 midPt.y = _currentIntersection.lev21y;
-                az = getazd(&midPt, &pt);
+                az = getazdp(&midPt, &pt);
                 ramp.adjustedRot = Between0And360(ClockwiseDegFromNorth ((az * RADtoDEG) + _currentIntersection.intRotation));
                 ramp.approximateHeading = Between0And360(az*RADtoDEG);
                 
@@ -1679,7 +1680,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     double d = LDIST(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
     double az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
     dvec2 pt = {_currentIntersection.lev21x, _currentIntersection.lev21y};
-    dvec2 np = dnewpt(&pt, (az - (HALFPI / 6)), d);
+    dvec2 np = dnewptp(&pt, (az - (HALFPI / 6)), d);
     sideRamp.lev21x = np.x;
     sideRamp.lev21y = np.y;
     ramp.adjustedRot = Between0And360(ClockwiseDegFromNorth ((az * RADtoDEG) + _currentIntersection.intRotation));
@@ -1699,7 +1700,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     az = LGETAZ(_currentIntersection.lev21x, _currentIntersection.lev21y,ramp.lev21x, ramp.lev21y);
     pt.x = _currentIntersection.lev21x;
     pt.y = _currentIntersection.lev21y;
-    np = dnewpt(&pt, (az + (HALFPI / 6)), d);
+    np = dnewptp(&pt, (az + (HALFPI / 6)), d);
     sideRamp.lev21x = np.x;
     sideRamp.lev21y = np.y;
     ramp.adjustedRot = Between0And360(ClockwiseDegFromNorth ((az * RADtoDEG) + _currentIntersection.intRotation));

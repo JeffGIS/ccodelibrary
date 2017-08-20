@@ -8,6 +8,7 @@
 
 #import "HotSpot.h"
 #import "CRAPI.h"
+#import "shr.h"
 
 @implementation HotSpot
 - (void) releaseMem
@@ -216,7 +217,7 @@
     }
 }
 
-- (BOOL)dump:(NSString *)outFile
+- (Bool)dump:(NSString *)outFile
 {
     int igrid = 0;
     int * grid = _grids[igrid];
@@ -244,9 +245,9 @@
         }
     }
     
-    BigWrite(Fid, (LPBYTE)&_height, sizeof(int), -1);
-    BigWrite(Fid, (LPBYTE)&_width, sizeof(int), -1);
-    BigWrite(Fid, pgrid, (_width * _height) * sizeof(BYTE), -1);
+    BigWriteF(Fid, (LPBYTE)&_height, sizeof(int), -1);
+    BigWriteF(Fid, (LPBYTE)&_width, sizeof(int), -1);
+    BigWriteF(Fid, pgrid, (_width * _height) * sizeof(BYTE), -1);
     fclose(Fid);
     
     /*[CRAPI.sharedInstance.docManager exportDocumentFromFilepath:filepath

@@ -9,6 +9,7 @@
 #import "UserDefaults.h"
 #import "PickedItem.h"
 #import "CRAPI.h"
+#import "shr.h"
 
 @implementation DispersePoint
 
@@ -203,7 +204,7 @@
     }
     p1.x = llpt->lon;
     p1.y = llpt->lat;
-    DPOINT screenPoint = TranDPOINT(&p1, _pTranLLtoView);
+    DPOINT screenPoint = TranDPOINTP(&p1, _pTranLLtoView);
     minpt = p1;
     dbounds bnds = [CRAPI.sharedInstance getPixelPickApBoundsAtPoint:&screenPoint];
     
@@ -242,7 +243,7 @@
         pi.itemType = CrimePoint;
         pi.symbol = minsym;
         pi.distance = mind;
-        pi.pickedPoint = TranDPOINT(&minpt, _pTranViewtoLL);
+        pi.pickedPoint = TranDPOINTP(&minpt, _pTranViewtoLL);
         pi.symbolName = @"CRIME";
         pi.refno = minref;
         pi.time  = minTime;
@@ -432,7 +433,7 @@ POINT AddjustPointLoc (POINT Point,float Size,int Sequence)
         pi.itemType = CrimePoint;
         pi.symbol = minsym;
         pi.screenPoint = p2;
-        pi.pickedPoint = TranDPOINT(&p2, dp.pTranViewtoLL);
+        pi.pickedPoint = TranDPOINTP(&p2, dp.pTranViewtoLL);
         pi.symbolName = @"CRIME";
         pi.refno = refno;
         pi.time  = time;
