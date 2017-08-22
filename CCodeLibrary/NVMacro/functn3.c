@@ -225,7 +225,7 @@ GSSiExitProg (1348);
 	if (TraceOn)
 	{
 		hMem=GSSiGlobAlloc ( 785,GMEM_MOVEABLE,4096);
-		lpstr = GlobalLock (hMem);
+		lpstr = (LPSTR)GlobalLock (hMem);
 		sprintf (lpstr,"GFV:%s(%s)",LastFunctionName,Args);
 		GSSiTraceLev (lpstr,1,2);
 		GSSiGlobUlFree (&hMem);
@@ -2644,7 +2644,7 @@ GotCloseFilehSQL:
 				  //                  nRc = DialogBox(hInst, (LPSTR)"ADDLOC_FROMADD", hWnd, lpfnADDLOC_FROMADDMsgProc);
 				  nRc = 1;
 				  //nRc = DialogBox(hInst, (LPSTR)"ADDLOC_FROMADD", hWndMain, (DLGPROC)ADDLOC_FROMADDMsgProc);
-                  //*AutoExportName=0;
+                  // *AutoExportName=0;
                   if (nRc)
                   	goto RtnTrue;
                   else

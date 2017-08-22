@@ -71,5 +71,4 @@
 
 @interface CCodeLibrary : NSObject
 
-int testVars (int i);
 @end

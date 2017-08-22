@@ -4,7 +4,8 @@
 #include "graphint.h"
 #include "proj_api.h"
 #include "shapefil.h"
-#include "GMextern.h"
+#include "gmextern.h"
+
 
 LPSTR Truncate(LPSTR str)
 {
@@ -342,10 +343,6 @@ Bool RunUserFunction(LPSTR FunctionName, LPSTR ReturnValue, short NumArgs, LPSTR
 {
 	return FALSE;
 }
-LPSTR REPLAC(LPSTR STRING, LPSTR OLD, LPSTR NEW, int MAXLEN)
-{
-	return STRING;
-}
 LPSTR RemoveQuotes(LPSTR str)
 {
 	return str;
@@ -471,7 +468,7 @@ LPSTR MatchLev(LPSTR InStr, char MatchChar)
 	{
 		short lev = 0;
 		Bool    Literal = FALSE;
-		char	BegLev, EndLev;
+		char	BegLev=0, EndLev=0;
 
 		while (*InStr)
 		{
@@ -1348,7 +1345,7 @@ Bool rread(LPSTR str, LPDOUBLE lpRval, LPINT lpNdp)
 		}
 		lpDp = _fstrchr(str, '.');
 		if (lpDp)
-			*lpNdp = lpEnd - lpDp;
+			*lpNdp = (int)(lpEnd - lpDp);
 		else
 			*lpNdp = 0;
 		{

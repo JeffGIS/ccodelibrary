@@ -216,7 +216,7 @@ static int nInit=0;
     
     return rtn;
 }
-- (BOOL)executeCmd:(char *)cmd
+- (BOOL)executeCmd:(LPCSTR)cmd
       sendToServer:(BOOL)sendToServer
           fromFile:(LPSTR)fromFile
           fromLine:(int)fromLine

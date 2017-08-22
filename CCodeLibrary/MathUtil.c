@@ -1530,7 +1530,7 @@ LPTRANDATA  STRANBoundsToBoundsP (LPMNMXCORD FromRect,LPMNMXCORD ToRect)
 HANDLE  STRANCornersToBounds (CORNERPOINTS *corners,LPMNMXCORD ToRect)
 {
     HANDLE hTran = GSSiGlobAlloc (0,GMEM_MOVEABLE,sizeof (TRANDATA));
-    LPTRANDATA  pTran = GlobalLock (hTran);
+    LPTRANDATA  pTran = (LPTRANDATA)GlobalLock (hTran);
     LPTRANDATA  pTran2 = STRANCornersToBoundsP (corners,ToRect);
     *pTran = *pTran2;
     free (pTran2);
@@ -1567,7 +1567,7 @@ LPTRANDATA  STRANCornersToBoundsP (CORNERPOINTS *corners,LPMNMXCORD ToRect)
 HANDLE  STRANBoundsToCorners (CORNERPOINTS *corners,LPMNMXCORD ToRect)
 {
     HANDLE hTran = GSSiGlobAlloc (0,GMEM_MOVEABLE,sizeof (TRANDATA));
-    LPTRANDATA  pTran = GlobalLock (hTran);
+    LPTRANDATA  pTran = (LPTRANDATA)GlobalLock (hTran);
     LPTRANDATA pTran2 = STRANBoundsToCornersP (corners,ToRect);
     *pTran = *pTran2;
     free (pTran2);
@@ -1673,7 +1673,7 @@ void InflateMNMXCORL(LPMNMXCORL pBounds, int Value)
 
 void TranMNMXCORD(MNMXCORD *in, MNMXCORD *out, HANDLE  hTranPtr)
 {
-    LPTRANDATA TranPtr = GlobalLock (hTranPtr);
+    LPTRANDATA TranPtr = (LPTRANDATA)GlobalLock (hTranPtr);
     TranMNMXCORDP(in, out, TranPtr);
     GlobalUnlock (hTranPtr);
 }
@@ -1697,7 +1697,7 @@ void TranMNMXCORDP(MNMXCORD *in, MNMXCORD *out, LPTRANDATA TranPtr)
 
 void TranMNMXCORL(MNMXCORL *in, MNMXCORL *out, HANDLE hTranPtr)
 {
-    LPTRANDATA TranPtr = GlobalLock (hTranPtr);
+    LPTRANDATA TranPtr = (LPTRANDATA)GlobalLock (hTranPtr);
     TranMNMXCORLP(in, out,TranPtr);
     GlobalUnlock (hTranPtr);
 }
@@ -1711,7 +1711,7 @@ void TranMNMXCORLP(MNMXCORL *in, MNMXCORL *out, LPTRANDATA TranPtr)
 }
 DPOINT TranDPOINT (LPDPOINT pPoint,HANDLE hTranPtr)
 {
-    LPTRANDATA TranPtr = GlobalLock (hTranPtr);
+    LPTRANDATA TranPtr = (LPTRANDATA)GlobalLock (hTranPtr);
     DPOINT pt = TranDPOINTP (pPoint,TranPtr);
     GlobalUnlock (hTranPtr);
     return pt;

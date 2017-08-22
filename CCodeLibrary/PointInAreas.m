@@ -292,8 +292,8 @@ static int ii;
 
 -(void) setContextTran:(LPTRANDATA)pTranViewToLL
 {
-    CloseTRANS2(&_pTranContextToWorld);
-    CloseTRANS2(&_pTranWorldToContext);
+    CloseTRANS2P(&_pTranContextToWorld);
+    CloseTRANS2P(&_pTranWorldToContext);
     
     LPMNMXCORD in = &_fullBounds;
     MNMXCORD llBounds;
@@ -305,35 +305,35 @@ static int ii;
     DPOINT pt = [self projectPointToContext:&ptv
                                           from:0];
     AddPointToDBounds(&outb, &pt);
-    DPOINT ptw = TranDPOINT(&ptv, pTranViewToLL);
+    DPOINT ptw = TranDPOINTP(&ptv, pTranViewToLL);
     AddPointToDBounds(&llBounds, &ptw);
 
     ptv.x = in->xmn; ptv.y = in->ymx;
     pt = [self projectPointToContext:&ptv
                                        from:0];
     AddPointToDBounds(&outb, &pt);
-    ptw = TranDPOINT(&ptv, pTranViewToLL);
+    ptw = TranDPOINTP(&ptv, pTranViewToLL);
     AddPointToDBounds(&llBounds, &ptw);
     
     ptv.x = in->xmx; ptv.y = in->ymx;
     pt = [self projectPointToContext:&ptv
                                 from:0];
     AddPointToDBounds(&outb, &pt);
-    ptw = TranDPOINT(&ptv, pTranViewToLL);
+    ptw = TranDPOINTP(&ptv, pTranViewToLL);
     AddPointToDBounds(&llBounds, &ptw);
     
     ptv.x = in->xmx; ptv.y = in->ymn;
     pt = [self projectPointToContext:&ptv
                                 from:0];
     AddPointToDBounds(&outb, &pt);
-    ptw = TranDPOINT(&ptv, pTranViewToLL);
+    ptw = TranDPOINTP(&ptv, pTranViewToLL);
     AddPointToDBounds(&llBounds, &ptw);
    
     dbounds flipBounds = outb;
     //flipBounds.ymn = outb.ymx;
     //flipBounds.ymx = outb.ymn;
-    _pTranContextToWorld = STRANBoundsToBounds(&flipBounds, &llBounds);
-    _pTranWorldToContext = STRANBoundsToBounds(&llBounds, &flipBounds);
+    _pTranContextToWorld = STRANBoundsToBoundsP(&flipBounds, &llBounds);
+    _pTranWorldToContext = STRANBoundsToBoundsP(&llBounds, &flipBounds);
 }
 
 - (int) pointIndex:(int)row column:(int)col
@@ -593,7 +593,7 @@ static int ii;
             DPOINT pt = {icol,irow};
             if (piaMask)
             {
-                pt = TranDPOINT(&pt, _pTranContextToWorld);
+                pt = TranDPOINTP(&pt, _pTranContextToWorld);
             }
             if (!piaMask || [piaMask DPointInArea:&pt])
             {
@@ -768,7 +768,7 @@ static int ii;
     int rtn = 0;
     
     _totPoints++;
-    DPOINT dPoint = TranDPOINT(dPointLL, _pTranWorldToContext);
+    DPOINT dPoint = TranDPOINTP(dPointLL, _pTranWorldToContext);
 
     if (!_pointGridSize)
     {

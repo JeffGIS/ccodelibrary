@@ -1028,7 +1028,7 @@ void TRAN (void *source, void *dest, size_t count)
     return;
 }
 
-LPSTR REPLAC(LPSTR STRING, LPSTR OLD, LPSTR NEW, int MAXLEN)
+LPSTR REPLAC(LPSTR STRING, LPCSTR OLD, LPCSTR NEW, int MAXLEN)
 {
     LPSTR IBEG, loc, new;
     
@@ -1051,7 +1051,7 @@ LPSTR REPLAC(LPSTR STRING, LPSTR OLD, LPSTR NEW, int MAXLEN)
         
         if (!IDIFF)
         {
-            new = NEW;
+            new = (LPSTR)NEW;
             
             while (*new)
                 *IBEG++ = *new++;
@@ -1060,7 +1060,7 @@ LPSTR REPLAC(LPSTR STRING, LPSTR OLD, LPSTR NEW, int MAXLEN)
         else if (IDIFF < 0)
         {
             loc = IBEG + OLDLEN;
-            new = NEW;
+            new = (LPSTR)NEW;
             
             while (*new)
                 *IBEG++ = *new++;
@@ -1087,7 +1087,7 @@ LPSTR REPLAC(LPSTR STRING, LPSTR OLD, LPSTR NEW, int MAXLEN)
             }
             
             TRAN (IBEG + OLDLEN, IBEG + NEWLEN, (size_t)MOVELEN);
-            new = NEW;
+            new = (LPSTR)NEW;
             
             while (*new)
                 *IBEG++ = *new++;
@@ -1193,10 +1193,10 @@ long GSSifilelengthF(FILE *fid)
 long __attribute__ ((noinline)) BigReadF(FILE *fid, LPVOID pmem, long len)
 {
     long didRead = fread(pmem, 1, len, fid);
-    return didRead;
+     return didRead;
 }
 
-long __attribute__ ((noinline)) BigWriteF(FILE *fid, LPBYTE pbuf, long len, long loc)
+long __attribute__ ((noinline)) BigWriteF(FILE *fid, LPCSTR pbuf, long len, long loc)
 {
     long bytesWritten = fwrite(pbuf, 1, len, fid);
     return bytesWritten;
@@ -1250,11 +1250,11 @@ Bool WriteBitmapDataToFile (LPSTR file,int pixelsWide, int pixelsHigh, CGColorSp
     bfh.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + bitmapByteCount;
     
     FILE *Fid = fopen(file,"wb");
-    if (BigWrite(Fid ,(LPBYTE)&bfh ,sizeof(BITMAPFILEHEADER), -1) != sizeof(BITMAPFILEHEADER))
+    if (BigWriteF(Fid ,(LPCSTR)&bfh ,sizeof(BITMAPFILEHEADER), -1) != sizeof(BITMAPFILEHEADER))
         rtn = FALSE;
-    if (BigWrite(Fid ,(LPBYTE)&bih ,sizeof(BITMAPINFOHEADER), -1) != sizeof(BITMAPINFOHEADER))
+    if (BigWriteF(Fid ,(LPCSTR)&bih ,sizeof(BITMAPINFOHEADER), -1) != sizeof(BITMAPINFOHEADER))
         rtn = FALSE;
-    if (BigWrite(Fid ,(LPBYTE)bmData ,bitmapByteCount, -1) != bitmapByteCount)
+    if (BigWriteF(Fid ,(LPCSTR)bmData ,bitmapByteCount, -1) != bitmapByteCount)
         rtn = FALSE;
     
     fclose (Fid);

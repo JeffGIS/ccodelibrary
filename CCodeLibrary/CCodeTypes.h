@@ -2,7 +2,6 @@
 //  CCodeLibrary
 #ifndef CCodeLibrary_CCodeTypes_h
 #define CCodeLibrary_CCodeTypes_h
-#define __OBJC_BOOL_IS_BOOL   1
 #include <stdbool.h>
 
 #define FAR
@@ -171,10 +170,10 @@ typedef struct
 } mnmxCor;
 typedef mnmxCor FAR	*LPMINMAX;
 typedef struct
-{	LONG	xmn;
-    LONG	ymn;
-    LONG	xmx;
-    LONG	ymx;
+{	int	xmn;
+    int	ymn;
+    int	xmx;
+    int	ymx;
 } MNMXCORL;
 typedef MNMXCORL FAR  *LPMNMXCORL;
 

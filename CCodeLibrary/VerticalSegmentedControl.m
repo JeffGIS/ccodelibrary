@@ -1,6 +1,5 @@
 //  VerticalSegmentedControl.m
 //  CCodeLibrary
-#define __OBJC_BOOL_IS_BOOL   1
 #import "VerticalSegmentedControl.h"
 #import <QuartzCore/QuartzCore.h>
 

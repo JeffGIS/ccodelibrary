@@ -30,13 +30,18 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 @property (nonatomic) GSSiPopoverView *popoverView;
 @property (nonatomic) NSTimer *updateTimer;
 @property FTPDataPull *pull;
-@property BOOL keepGoing;
-@property BOOL firstFail;
+@property Bool keepGoing;
+@property Bool firstFail;
 @property (nonatomic) UIView *fromView;
 
 @end
 
 @implementation CrimeData
+
+- (NSString *)databasePath
+{
+    return self.path;
+}
 
 - (id)init
 {
@@ -86,7 +91,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     }*/
 }
 
-- (BOOL)open
+- (Bool)open
 {
     [self fixName];
     if (!_isOpen)
@@ -108,7 +113,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     return FALSE;
 }
 
-- (void)close:(BOOL)opened
+- (void)close:(Bool)opened
 {
     if (opened && _isOpen)
     {
@@ -118,11 +123,11 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     }
 }
 
-- (BOOL)clear
+- (Bool)clear
 {
     [self close:YES];
     
-    BOOL st = [NSFileManager.defaultManager removeItemAtPath:_path
+    Bool st = [NSFileManager.defaultManager removeItemAtPath:_path
                                                        error:nil];
          st = [NSFileManager.defaultManager removeItemAtPath:_reportsDirectory
                                                        error:nil];
@@ -132,7 +137,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 - (int) datasetVersion
 {
     int rtn = -1;
-    BOOL opened = [self open];
+    Bool opened = [self open];
     if (_isOpen && _fileSize > 0)
     {
         NSString *query = [NSString stringWithFormat:@"SELECT VersionNum FROM VERSION"];
@@ -170,7 +175,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 - (NSInteger) lastUpdate
 {
     NSInteger rtn = 0;
-    BOOL opened = [self open];
+    Bool opened = [self open];
     if (_isOpen && _fileSize > 0)
     {
         NSString *query = [NSString stringWithFormat:@"SELECT LastUpdate FROM UPDATES"];
@@ -190,15 +195,15 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     return rtn;
 }
 
-- (BOOL)executeCmd:(char *)cmd
+- (Bool)executeCmd:(char *)cmd
 {
-    BOOL rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd, 0, 0, 0), _database);
+    Bool rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd, 0, 0, 0), _database);
     return rtn;
 }
 
-- (BOOL)startTransaction
+- (Bool)startTransaction
 {
-    BOOL rtn = [self open];
+    Bool rtn = [self open];
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "BEGIN", 0, 0, 0), _database);
     return rtn;
 }
@@ -208,13 +213,13 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "COMMIT", 0, 0, 0),_database);
 }
 
-- (BOOL) fileAndOffsetForControlNumber:(NSInteger)cnumber
+- (Bool) fileAndOffsetForControlNumber:(NSInteger)cnumber
                                   file:(int *)pFile
                                 offset:(int *)pOffset
 {
-    BOOL rtn = FALSE;
+    Bool rtn = FALSE;
     
-    BOOL opened = [self open];
+    Bool opened = [self open];
     NSString *query = [NSString stringWithFormat:@"SELECT File, Offset FROM REPORTLOC WHERE ControlNbr = %li",(long)cnumber];
     
     sqlite3_stmt *statement = NULL;
@@ -241,7 +246,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
 {
     NSString * report = @"";
     int ifile, offset;
-    BOOL opened = [self open];
+    Bool opened = [self open];
     
     if ([self fileAndOffsetForControlNumber:cnumber
                                      file:&ifile
@@ -266,11 +271,11 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     return report;
 }
 
-- (BOOL)update:(UIView *)fromView
-          auto:(BOOL)autoUpdate
+- (Bool)update:(UIView *)fromView
+          auto:(Bool)autoUpdate
       delegate:(id)delegate
 {
-    BOOL rtn = FALSE;
+    Bool rtn = FALSE;
     _firstFail = TRUE;
     static int nextTime = -1;
     static int lastTime = 0;
@@ -459,7 +464,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     _popoverView.progressView.hidden = NO;
     _popoverView.progressLabel.hidden = NO;
     
-    BOOL fileExists = NO;
+    Bool fileExists = NO;
     NSString *fileName = [NSString stringWithFormat:@"%i.gcf",(int)_nextUpdate];
     NSString *fromDir = @"GMMobile/MplsPolice";
     NSString *toDir = NSTemporaryDirectory ( );
@@ -552,7 +557,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 }
 
 -(void) getIdForUpdate:(LPSTR)str
-                remove:(BOOL)remove
+                remove:(Bool)remove
 {
     static char fromString[32], toString[32];
     
@@ -589,9 +594,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         REPLAC(str, fromString, toString, INPUTBUFSIZE);
     }
 }
--(BOOL) loadUpdate:(NSString *)path
+-(Bool) loadUpdate:(NSString *)path
 {
-    BOOL rtn = FALSE;
+    Bool rtn = FALSE;
     char outFilePath[512];
     double totLen;
     int nerr = 0;
@@ -602,7 +607,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     _popoverView.title = [NSString stringWithFormat:@"Loading update %li",(long)_nextUpdate];
     if (DecompressGMZipFile((LPSTR)path.UTF8String, (LPSTR)toDirectory.UTF8String,0,0,outFilePath))
     {
-        BOOL opened = [self startTransaction];
+        Bool opened = [self startTransaction];
         NSString * file = [NSString stringWithFormat:@"%@/cmdfile%i.txt",toDirectory,_nextUpdate];
         if (_nextUpdate == LOAD_PEOPLE_UPDATE)
             file = [NSString stringWithUTF8String:outFilePath];

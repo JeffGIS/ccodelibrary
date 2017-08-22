@@ -98,10 +98,10 @@
                             state:(NSString *)state
                             geoid:(int)geoid
                           dataset:(DataSetTypes)dataset
-                         bounds_w:(CGFloat)bounds_w
-                         bounds_s:(CGFloat)bounds_s
-                         bounds_e:(CGFloat)bounds_e
-                         bounds_n:(CGFloat)bounds_n;
+                         bounds_w:(double)bounds_w
+                         bounds_s:(double)bounds_s
+                         bounds_e:(double)bounds_e
+                         bounds_n:(double)bounds_n;
 
 - (void)removeLocationFromListAtIndex:(NSUInteger)index;
 

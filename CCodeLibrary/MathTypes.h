@@ -4,6 +4,7 @@
 #ifndef __MATH_TYPES
 #define __MATH_TYPES
 
+/*
 #define PI 3.14159265358979323846e0
 #define PI_DIV_2 PI * 0.5
 #define PY 3.14159265358979323846e0
@@ -18,7 +19,7 @@
 #define ACRES_PER_SQMETER   0.000247105
 #define SQMETERS_PER_SQMILE 2589988.11e1
 #define SQMILES_PER_SQMETER 3.86102e-7
-
+*/
 #ifndef max
 #define max(a,b)(((a) > (b)) ? (a) : (b))
 #endif
@@ -131,13 +132,7 @@ typedef struct
 }  bounds;
 
 typedef MNMXCORD dbounds;
-typedef struct
-{
-    int xmn;
-    int ymn;
-    int xmx;
-    int ymx;
-}  IBOUNDS;
+typedef MNMXCORL IBOUNDS;
 
 vec4 MakeVec4(float singleValue);
 

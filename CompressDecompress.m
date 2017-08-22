@@ -41,11 +41,11 @@
         LPBYTE	pCompressedRec = (LPBYTE)malloc(CompressedLength +32);
         LPBYTE	pRec = (LPBYTE)malloc(MaxLength * 2);
         LenRead += CompressedLength + 4;
-        BigRead(FidTF,pCompressedRec,CompressedLength);
+        BigReadF(FidTF,pCompressedRec,CompressedLength);
         lRec = DecompressBinaryRecordUnsafe(pRec, pCompressedRec, CompressedLength);
-        if (BigWriteF(Fid ,pRec ,lRec, -1) != lRec)
+        if (BigWriteF(Fid ,(LPCSTR)pRec ,lRec, -1) != lRec)
             rtn = FALSE;
-        BigRead(FidTF, (HPSTR)&CompressedLength, 4);
+        BigReadF(FidTF, (HPSTR)&CompressedLength, 4);
         free (pCompressedRec);
         free(pRec);
         curLoc = ftell (FidTF);

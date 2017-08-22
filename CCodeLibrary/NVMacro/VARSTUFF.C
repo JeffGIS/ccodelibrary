@@ -292,7 +292,7 @@ GSSiExitProg (515);
 	
 	while (fgetstring (str,1024,Fid)) 
 	{
-		if (lpEq = _fstrchr(str,'='))
+		if ((lpEq = _fstrchr(str,'=')))
 		{
 			*lpEq=0;
 			if (!_stricmp(VarName,str))
@@ -358,7 +358,7 @@ GSSiExitProg (516);
 	
 	while (fgetstring (str,256,Fid)) 
 	{
-		if (lpComma = _fstrchr(str,','))
+		if ((lpComma = _fstrchr(str,',')))
 		{
 			*lpComma++=0;
 			if (!_fstricmp(RunID,str))
@@ -5101,7 +5101,7 @@ GSSiExitProg (534);
 #endif
 }
 
-void SetGlobalValueReal (LPSTR Name, double val)
+void SetGlobalValueReal (LPCSTR Name, double val)
 #if ENABLETRACE
 {GSSiEnterProg (535);
 #endif
@@ -5120,7 +5120,7 @@ GSSiExitProg (535);
 #endif
 } 
 
-void SetGlobalValueDPoint (LPSTR Name, DPOINT Point)
+void SetGlobalValueDPoint (LPCSTR Name, DPOINT Point)
 #if ENABLETRACE
 {GSSiEnterProg (536);
 #endif
@@ -5139,7 +5139,7 @@ GSSiExitProg (536);
 #endif
 } 
 
-void SetGlobalValueBounds(LPSTR Name, LPMNMXCORD pBounds)
+void SetGlobalValueBounds(LPCSTR Name, LPMNMXCORD pBounds)
 #if ENABLETRACE
 {GSSiEnterProg (536);
 #endif
@@ -5157,7 +5157,7 @@ SetGlobalValue(Name, txt);
 }
 #endif
 }
-void SetGlobalValueBounds3D(LPSTR Name, LPMNMXCORD3D pBounds)
+void SetGlobalValueBounds3D(LPCSTR Name, LPMNMXCORD3D pBounds)
 #if ENABLETRACE
 {GSSiEnterProg (536);
 #endif
@@ -5176,7 +5176,7 @@ SetGlobalValue(Name, txt);
 #endif
 }
 
-void SetGlobalValueHandle (LPSTR Name, HANDLE val)
+void SetGlobalValueHandle (LPCSTR Name, HANDLE val)
 #if ENABLETRACE
 {GSSiEnterProg (537);
 #endif
@@ -5204,7 +5204,7 @@ GSSiExitProg (537);
 #endif
 }
 
-void SetGlobalValueLong (LPSTR Name, long val)
+void SetGlobalValueLong (LPCSTR Name, long val)
 #if ENABLETRACE
 {GSSiEnterProg (537);
 #endif
@@ -5224,7 +5224,7 @@ GSSiExitProg (537);
 #endif
 }
 
-void SetGlobalValueBool (LPSTR Name, Bool val)
+void SetGlobalValueBool (LPCSTR Name, Bool val)
 #if ENABLETRACE
 {GSSiEnterProg (538);
 #endif
@@ -5245,7 +5245,7 @@ GSSiExitProg (538);
 #endif
 }
 
-void SetGlobalValueRect (LPSTR Name, RECT Rect)
+void SetGlobalValueRect (LPCSTR Name, RECT Rect)
 #if ENABLETRACE
 {GSSiEnterProg (539);
 #endif

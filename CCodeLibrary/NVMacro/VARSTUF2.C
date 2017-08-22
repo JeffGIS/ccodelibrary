@@ -1,5 +1,5 @@
 #include "graphint.h"   
-#include "extrndb.h"
+#include "Extrndb.h"
 #include "dict.h"
 
 #include "gmextern.h"     
@@ -78,7 +78,7 @@ Bool LoadInternalGMD (LPGWDHEADER lpGWDHead,long iref)
 		if (InGraphicsProcessor)
 			ScanItemForDBVals ();
 		GetGlobalVal (hTEXT,Type1.text,0); 
-		REPLAC (Type1.text,"\r\n","$CHR(13)",256);
+		REPLAC (Type1.text,(LPSTR)"\r\n",(LPSTR)"$CHR(13)",256);
 		if (*Type1.text)
 			Type1.hastext = 'Y';
 		else
@@ -713,7 +713,7 @@ Bool ProcessMacroFile (LPSTR Name,LPSTR RtnVal,LPHANDLE phArgs,short NumArgs)
    	Bool	SaveIGFC =InGRFCmd;
 	HANDLE	hCmd=0;
 	LPSTR	pCmd;
-	int	i, OldestID; 
+	int	i, OldestID=0;
 	Bool	DeleteMacro=TRUE;   
 	ULONG	Oldest; 
 	LPSTR	Args[MAX_MACRO_ARGS];
@@ -983,7 +983,7 @@ long ConvertPoint (LPSTR CvtFile,LPDPOINT Point,int Direction)
 #endif
 {
 	 LPSTR	lpDot, lpEnd;
-	 short	SaveUnits;
+	 short	SaveUnits=0;
 	 long	rtn=0;
 	 HANDLE hMem = GSSiGlobAlloc (0,GMEM_MOVEABLE,1024);
 	 LPSTR	SaveProj=(LPSTR)GlobalLock (hMem);
@@ -1161,7 +1161,7 @@ GSSiExitProg (599);
 return FALSE;
 } 
 
-void SetCurVal (LPSTR Val,UINT StringID)
+void SetCurVal (LPCSTR Val,UINT StringID)
 {
 /*
 #if ENABLETRACE

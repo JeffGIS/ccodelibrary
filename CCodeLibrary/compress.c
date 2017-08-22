@@ -60,9 +60,9 @@ int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long
         LPBYTE	pCompressedRec = (LPBYTE)malloc(CompressedLength +32);
         LPBYTE	pRec = (LPBYTE)malloc(MaxLength * 2);
 		LenRead += CompressedLength + 4;
-		BigRead(FidTF,pCompressedRec,CompressedLength);
+		BigReadF(FidTF,pCompressedRec,CompressedLength);
 		lRec = DecompressBinaryRecordUnsafe(pRec, pCompressedRec, CompressedLength);
-    	BigWriteF(Fid ,pRec ,lRec, -1);
+    	BigWriteF(Fid ,(LPCSTR)pRec ,lRec, -1);
         BigReadF(FidTF, (HPSTR)&CompressedLength, 4);
         free (pCompressedRec);
         free(pRec);
@@ -90,7 +90,7 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
     if (FidTF == NULL)
         return FALSE;
     
-    fileLen = GSSifilelength(FidTF);
+    fileLen = GSSifilelengthF(FidTF);
     if (fileLen < 14 || fileLen < offset)
     {
         rtn = FALSE;
@@ -113,11 +113,11 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
     {
         if (offset > 0)
             fseek(FidTF, offset, SEEK_SET);
-        BigRead(FidTF, &len, 4);
+        BigReadF(FidTF, &len, 4);
         rtn = TRUE;
         while (rtn && len > 0 && len + offset < fileLen)
         {
-            BigRead (FidTF, File, len);
+            BigReadF (FidTF, File, len);
             
             if (!(pBS = strrchr(File,'\\')))
             {
@@ -135,7 +135,7 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
             if (!rtn || (nfilestodecompress && nFilesRead >= nfilestodecompress))
                 goto Exit;
             offset = ftell(FidTF);
-            BigRead(FidTF, &len, 4);
+            BigReadF(FidTF, &len, 4);
         }
     }
     

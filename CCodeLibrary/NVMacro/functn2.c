@@ -1,8 +1,8 @@
 #include "graphint.h"     
-#include "extrndb.h"
-#include "umio.h"  
-#include "dibapi.h"
-#include "std.h"  
+#include "Extrndb.h"
+#include "UMIO.H"  
+#include "DIBAPI.H"
+#include "STD.H"  
 
 #include "gmextern.h"
 
@@ -61,7 +61,7 @@ short GetFunArgs(LPSTR	Args, LPSTR *Arg, short MaxArgs, LPHANDLE phMem, LPBREAKP
 	                 
 	*phMem = GSSiGlobAlloc (1141,GMEM_MOVEABLE,abs(MaxArgs) * MAXARGLENGTH); 
 	pArg++;
-	LastArg = begArgs = *pArg = GlobalLock (*phMem);   
+	LastArg = begArgs = *pArg = (LPSTR)GlobalLock (*phMem);
 	pArg++;  
 	_fstrcpy (LastArg,Args);
 	if (*Args) 
@@ -198,7 +198,7 @@ GSSiExitProg (1350);
 	if (TraceOn)
 	{
 		hMem=GSSiGlobAlloc (1142,GMEM_MOVEABLE,4096);
-		lpstr = GlobalLock (hMem);
+		lpstr = (LPSTR)GlobalLock (hMem);
 		sprintf (lpstr,"GFV:%s(%s)",LastFunctionName,Args);
 		GSSiTraceLev (lpstr,1,2);
 		GSSiGlobUlFree (&hMem);
@@ -5896,7 +5896,7 @@ Exit:
 	if (TraceOn)
 	{
 		hMem=GSSiGlobAlloc (1233,GMEM_MOVEABLE,4096);
-		lpstr = GlobalLock (hMem);
+		lpstr = (LPSTR)GlobalLock (hMem);
 		sprintf (lpstr,"GFV:%s",Args);
 		GSSiTraceLev (lpstr,-1,2);
 		GSSiGlobUlFree (&hMem);

@@ -98,7 +98,7 @@ static int ii;
 
 -(void) setContextTran:(LPTRANDATA)pTranViewToLL
 {
-    CloseTRANS2(&_pTranContextToWorld);
+    CloseTRANS2P(&_pTranContextToWorld);
     
     LPMNMXCORD in = &_fullBounds;
     MNMXCORD llBounds;
@@ -117,21 +117,21 @@ static int ii;
     pt = [self projectPointToContext:&ptv
                                 from:0];
     AddPointToDBounds(&outb, &pt);
-    ptw = TranDPOINT(&ptv, pTranViewToLL);
+    ptw = TranDPOINTP(&ptv, pTranViewToLL);
     AddPointToDBounds(&llBounds, &ptw);
     
     ptv.x = in->xmx; ptv.y = in->ymx;
     pt = [self projectPointToContext:&ptv
                                 from:0];
     AddPointToDBounds(&outb, &pt);
-    ptw = TranDPOINT(&ptv, pTranViewToLL);
+    ptw = TranDPOINTP(&ptv, pTranViewToLL);
     AddPointToDBounds(&llBounds, &ptw);
     
     ptv.x = in->xmx; ptv.y = in->ymn;
     pt = [self projectPointToContext:&ptv
                                 from:0];
     AddPointToDBounds(&outb, &pt);
-    ptw = TranDPOINT(&ptv, pTranViewToLL);
+    ptw = TranDPOINTP(&ptv, pTranViewToLL);
     AddPointToDBounds(&llBounds, &ptw);
     
     _pTranContextToWorld = STRANBoundsToBoundsP(&outb, &llBounds);

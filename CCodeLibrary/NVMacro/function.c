@@ -34,6 +34,26 @@ static HIGHLIGHTDATA	HighlightData;
 		struct tm      * sunrise (double lat, double lon, int year, int month, int day);
 void DrawAlphaBlend (HWND hWnd, HDC hdcwnd);
 void testGDIP(HDC hdc);
+
+int testVars(int in)
+{
+    char str[256] = "[VAR]=1;";
+    // TODO: Place code here.
+    
+    CreateVarSpace(VARSPACE_GLOBAL);
+    
+    ExpandText(str);
+    strcpy(str, "IF([VAR]>2){[VALUE]=5;}ELSE{[VALUE]=$FLT([VAR]+10);};");
+    ExpandText(str);
+    strcpy(str, "[VALUE]");
+    ExpandText(str);
+    DestroyVarSpace((HANDLE)-1);
+    //_CrtDumpMemoryLeaks();
+    return 0;
+    
+}
+
+
 LPSTR priorchr(LPSTR pstr, char c)
 {
 	while (*pstr != c)
@@ -41,42 +61,6 @@ LPSTR priorchr(LPSTR pstr, char c)
 
 	return pstr;
 }
-void GetMassShapeFiles(void)
-{
-	char file[] = "c:\\temp\\maparcels2.txt";
-	int lfile = GSSiLength(file), i, i2;
-	HANDLE hFile = GSSiGlobAlloc(0, GMEM_MOVEABLE, lfile + 1);
-	LPSTR pFile = GlobalLock(hFile);
-	//HANDLE hFile2 = GSSiGlobAlloc(0, GMEM_MOVEABLE, lfile + 1);
-	//LPSTR pFile2 = GlobalLock(hFile2);
-	LPSTR pEnd, pBeg;
-	char outfile[] = "c:\\temp\\ma_shape_files.txt";
-	HFILE fid = GSSiOpenFile(file, 0, OF_READ);
-
-	BigRead(fid, pFile, lfile);
-	//lfile /= 2;
-	pEnd = pFile;
-	//for (i = 0, i2 = 0; i < lfile; i++, i2 += 2)
-	//	pFile[i] = pFile2[i2];
-	pFile[lfile] = 0;
-	lfile = strlen(pFile);
-	pBeg = strstr(pEnd, "/L3_SHP_");
-	while (pBeg)
-	{
-		LPSTR pStart;
-		pStart = priorchr(pBeg, '"');
-		pEnd = strchr(pBeg, '"');
-		pStart++;
-		*pEnd++ = 0;
-		AppendFile(outfile, pStart);
-		pBeg = strstr(pEnd, "/L3_SHP_");
-	}
-	GSSiGlobUlFree(&hFile);
-	//GSSiGlobUlFree(&hFile2);
-	GSSiClose(fid);
-	return;
-}
-
 void ReopenFTP (LPFTPSTRUCT pFTPStruct)
 {
 /*	FTPClose (pFTPStruct->hFTP);
@@ -146,7 +130,7 @@ GSSiExitProg (1348);
 	if (TraceOn)
 	{
 		hMem=GSSiGlobAlloc ( 785,GMEM_MOVEABLE,4096);
-		lpstr = GlobalLock (hMem);
+		lpstr = (LPSTR)GlobalLock (hMem);
 		sprintf (lpstr,"GFV:%s(%s)",LastFunctionName,Args);
 		GSSiTraceLev (lpstr,1,2);
 		GSSiGlobUlFree (&hMem);
@@ -208,7 +192,7 @@ GSSiExitProg (1348);
 			char	Format[16];
 			
 			hMem = GSSiGlobAlloc ( 795,GMEM_MOVEABLE,4096);
-			Arg1 = GlobalLock(hMem);
+			Arg1 = (LPSTR)GlobalLock(hMem);
 			
 			_fstrcpy (Arg1,Args);
 			ExpandText (Arg1);
@@ -1078,7 +1062,7 @@ GSSiExitProg (1348);
 						case 1:
 							{
 								HANDLE	hstr=GSSiGlobAlloc (0,GMEM_MOVEABLE,4096*2);
-								LPSTR	str = GlobalLock (hstr);
+								LPSTR	str = (LPSTR)GlobalLock (hstr);
 								LPSTR	ExpArgs = str + 4096;
 								char	err[64]="[%LASTERR]";
 
@@ -1100,7 +1084,7 @@ GSSiExitProg (1348);
 						case 4:
 							{
 								HANDLE	hstr=GSSiGlobAlloc (0,GMEM_MOVEABLE,4096*2+256);
-								LPSTR	str = GlobalLock (hstr);
+								LPSTR	str = (LPSTR)GlobalLock (hstr);
 								LPSTR	ExpArgs = str + 4096;
 								LPSTR	pMacro = ExpArgs + 4096;
 
@@ -3842,7 +3826,7 @@ Exit:
 	if (TraceOn)
 	{
 		hMem=GSSiGlobAlloc ( 914,GMEM_MOVEABLE,4096);
-		lpstr = GlobalLock (hMem);
+		lpstr = (LPSTR)GlobalLock (hMem);
 		sprintf (lpstr,"GFV:%s",Args);
 		GSSiTraceLev (lpstr,-1,2);
 		GSSiGlobUlFree (&hMem);

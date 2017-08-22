@@ -29,7 +29,7 @@
 - (NSString *)databasePath:(int)geoid;
 - (NSString *)databasePath;
 
-- (BOOL)executeCmd:(char *)cmd
+- (BOOL)executeCmd:(LPCSTR)cmd
       sendToServer:(BOOL)sendToServer
           fromFile:(LPSTR)fromFile
           fromLine:(int)fromLine;

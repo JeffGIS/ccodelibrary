@@ -300,7 +300,7 @@
     return rtn.copy;
 }
 
-- (BOOL)executeCmd:(char *)cmd
+- (BOOL)executeCmd:(LPCSTR)cmd
 {
     BOOL rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd, 0, 0, 0), _database);
     return rtn;

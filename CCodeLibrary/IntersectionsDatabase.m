@@ -1564,7 +1564,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
             {
                 rampKey.intID = sqlite3_column_int(statement, 0);
                 rampKey.rampNum = sqlite3_column_int(statement, 1);
-                BigWriteF(Fid, &rampKey,sizeof(rampKey), -1);
+                BigWriteF(Fid, (LPCSTR)&rampKey,sizeof(rampKey), -1);
             }
             SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), self.curbRampData.database);
             fclose(Fid);
@@ -1923,7 +1923,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
                                    LPSTR pTab = strchr(data,'\t');
                                    LPSTR pTabIndex, pAzms, pEnd;
                                    pTabIndex = pAzms = pEnd = NULL;
-                                   fgetstring(index, maxIndex, fidIndex);
+                                   fgetstringF(index, maxIndex, fidIndex);
                                    pTabIndex = strchr(index,'\t');
                                    *pTab++ = 0;
                                    *pTabIndex = 0;
@@ -2266,7 +2266,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
 }
 
--(NSString*) fixStreetNames:(LPSTR)name
+-(NSString*) fixStreetNames:(LPCSTR)name
 {
     while (*name == '|')
         name++;
@@ -2283,7 +2283,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
     return fixedName;
 }
 
--(int) nNamesIn:(LPSTR)names
+-(int) nNamesIn:(LPCSTR)names
 {
     int n = 0;
     while (*names)

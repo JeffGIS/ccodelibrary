@@ -157,7 +157,7 @@ Bool samePoint (LPPOINT p1, LPPOINT p2);
 double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
 LPSTR Truncate(LPSTR Text);
 LPSTR OneSpace(LPSTR Arg1);
-LPSTR REPLAC(LPSTR STRING, LPSTR OLD, LPSTR NEW, int MAXLEN);
+LPSTR REPLAC(LPSTR STRING, LPCSTR OLD, LPCSTR NEW, int MAXLEN);
 LPSTR ReplaceChar(LPSTR str, char from, char to);
 Bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long *LOFMDF);
 double ldistpp(LPDPOINT Point1, LPDPOINT Point2);

@@ -114,7 +114,7 @@ dbounds getAreaFileBounds(const char *areaFile)
     FILE *fid = fopen(_areaFile.UTF8String, "rb");
     int nLoops = 0, nPoints = 0, ix = 0, iy = 0;
     int *pnPointsInLoop = 0;
-    bounds bnds = {0};
+    MNMXCORD bnds = {0};
     LPDPOINT pPoints = NULL;
     
     bnds.xmn = -180.0;

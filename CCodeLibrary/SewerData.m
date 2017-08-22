@@ -341,7 +341,7 @@ static BOOL _createDirectory = YES;
             {
                 llpoints[i].x = (BasePt.x + offsetPoints16[i].x / COORDINATE_FACTOR);
                 llpoints[i].y = (BasePt.y + offsetPoints16[i].y / COORDINATE_FACTOR);
-                llpoints[i] = TranDPOINT(&llpoints[i], _pTranLLtoView);
+                llpoints[i] = TranDPOINTP(&llpoints[i], _pTranLLtoView);
             }
         }
         
@@ -349,7 +349,7 @@ static BOOL _createDirectory = YES;
         {
             llpoints[i].x = (BasePt.x + offsetPoints[i].x / COORDINATE_FACTOR);
             llpoints[i].y = (BasePt.y + offsetPoints[i].y / COORDINATE_FACTOR);
-            llpoints[i] = TranDPOINT(&llpoints[i], _pTranLLtoView);
+            llpoints[i] = TranDPOINTP(&llpoints[i], _pTranLLtoView);
         }
         if (POINT_IN_AREAD(p1, numPoints, llpoints, 1, 0, 0, 0))
         {
@@ -446,7 +446,7 @@ static BOOL _createDirectory = YES;
             {
                 llpoints[i].x = (BasePt.x + offsetPoints16[i].x / COORDINATE_FACTOR);
                 llpoints[i].y = (BasePt.y + offsetPoints16[i].y / COORDINATE_FACTOR);
-                llpoints[i] = TranDPOINT(&llpoints[i], _pTranLLtoView);
+                llpoints[i] = TranDPOINTP(&llpoints[i], _pTranLLtoView);
             }
         }
         
@@ -454,7 +454,7 @@ static BOOL _createDirectory = YES;
         {
             llpoints[i].x = (BasePt.x + offsetPoints[i].x / COORDINATE_FACTOR);
             llpoints[i].y = (BasePt.y + offsetPoints[i].y / COORDINATE_FACTOR);
-            llpoints[i] = TranDPOINT(&llpoints[i], _pTranLLtoView);
+            llpoints[i] = TranDPOINTP(&llpoints[i], _pTranLLtoView);
         }
         
         UIColor *color;
@@ -657,7 +657,7 @@ static BOOL _createDirectory = YES;
             {
                 llpoints[i].x = (BasePt.x + offsetPoints16[i].x / COORDINATE_FACTOR);
                 llpoints[i].y = (BasePt.y + offsetPoints16[i].y / COORDINATE_FACTOR);
-                llpoints[i] = TranDPOINT(&llpoints[i], _pTranLLtoView);
+                llpoints[i] = TranDPOINTP(&llpoints[i], _pTranLLtoView);
             }
         }
         
@@ -665,7 +665,7 @@ static BOOL _createDirectory = YES;
         {
             llpoints[i].x = (BasePt.x + offsetPoints[i].x / COORDINATE_FACTOR);
             llpoints[i].y = (BasePt.y + offsetPoints[i].y / COORDINATE_FACTOR);
-            llpoints[i] = TranDPOINT(&llpoints[i], _pTranLLtoView);
+            llpoints[i] = TranDPOINTP(&llpoints[i], _pTranLLtoView);
         }
 
         if (PICK_POINT_ON_LINE(p1, bnds, &pickedPoint, numPoints, llpoints))
@@ -775,9 +775,9 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
       viewBounds:(MNMXCORD *)pvbounds
 {
 
-    CloseTRANS2(&_pTranLLtoView);
-    CloseTRANS2(&_pTranViewtoLL);
-    _pTranLLtoView = STRANCornersToBounds(corners, pvbounds);
+    CloseTRANS2P(&_pTranLLtoView);
+    CloseTRANS2P(&_pTranViewtoLL);
+    _pTranLLtoView = STRANCornersToBoundsP(corners, pvbounds);
 }
 
 
@@ -881,7 +881,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
                 {
                     llpoints[i].x = (BasePt.x + offsetPoints16[i].x / COORDINATE_FACTOR);
                     llpoints[i].y = (BasePt.y + offsetPoints16[i].y / COORDINATE_FACTOR);
-                    llpoints[i] = TranDPOINT(&llpoints[i], _pTranLLtoView);
+                    llpoints[i] = TranDPOINTP(&llpoints[i], _pTranLLtoView);
                 }
             }
             
@@ -889,7 +889,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
             {
                 llpoints[i].x = (BasePt.x + offsetPoints[i].x / COORDINATE_FACTOR);
                 llpoints[i].y = (BasePt.y + offsetPoints[i].y / COORDINATE_FACTOR);
-                llpoints[i] = TranDPOINT(&llpoints[i], _pTranLLtoView);
+                llpoints[i] = TranDPOINTP(&llpoints[i], _pTranLLtoView);
             }
             
             if (!strcasecmp(symName, "STRM_PIPE"))
@@ -999,7 +999,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
                 {
                     llpoints[i].x = (BasePt.x + offsetPoints16[i].x / COORDINATE_FACTOR);
                     llpoints[i].y = (BasePt.y + offsetPoints16[i].y / COORDINATE_FACTOR);
-                    llpoints[i] = TranDPOINT(&llpoints[i], _pTranLLtoView);
+                    llpoints[i] = TranDPOINTP(&llpoints[i], _pTranLLtoView);
                 }
             }
             
@@ -1007,7 +1007,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
             {
                 llpoints[i].x = (BasePt.x + offsetPoints[i].x / COORDINATE_FACTOR);
                 llpoints[i].y = (BasePt.y + offsetPoints[i].y / COORDINATE_FACTOR);
-                llpoints[i] = TranDPOINT(&llpoints[i], _pTranLLtoView);
+                llpoints[i] = TranDPOINTP(&llpoints[i], _pTranLLtoView);
             }
             
             if (!strcasecmp(symName, "STRM_PIPE"))
@@ -1398,7 +1398,7 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
         BasePt.y = sqlite3_column_double(statement,1);
         symName = (LPSTR)sqlite3_column_text(statement,2);
         
-        DPOINT llpoint = TranDPOINT(&BasePt, _pTranLLtoView);
+        DPOINT llpoint = TranDPOINTP(&BasePt, _pTranLLtoView);
         
         if (!strcasecmp(symName, "STRM_MHOL"))
         {

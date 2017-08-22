@@ -21,7 +21,7 @@
 @property (nonatomic, weak) id <CrimeDataDelegate> delegate;
 @property sqlite3 *database;
 @property (nonatomic) int datasetVersion;
-@property (nonatomic) BOOL isOpen;
+@property (nonatomic) Bool isOpen;
 @property (nonatomic, copy) NSString *documentsDirectory;
 @property (nonatomic, copy) NSString *fileName;
 @property (nonatomic, copy) NSString *path;
@@ -29,23 +29,23 @@
 @property long long fileSize;
 @property int myLastUpdate, nextUpdate;
 @property int serversLastUpdate;
-@property BOOL autoUpdate;
+@property Bool autoUpdate;
 
-- (BOOL)open;
-- (void)close:(BOOL)opened;
-- (BOOL)clear;
+- (Bool)open;
+- (void)close:(Bool)opened;
+- (Bool)clear;
 
-- (BOOL)executeCmd:(char *)cmd;
+- (Bool)executeCmd:(char *)cmd;
 -(void) getIdForUpdate:(LPSTR)str
-                remove:(BOOL)remove;
+                remove:(Bool)remove;
 
 - (NSString *)databasePath;
-- (BOOL)startTransaction;
+- (Bool)startTransaction;
 - (void)commitTransaction;
 - (NSString *)reportForControlNum:(NSInteger)cnumber;
 + (NSString *)reportForControlNumber:(NSInteger)cnumber;
-- (BOOL)update:(UIView *)fromView
-          auto:(BOOL)autoUpdate
+- (Bool)update:(UIView *)fromView
+          auto:(Bool)autoUpdate
       delegate:(id)delegate;
 
 @end
