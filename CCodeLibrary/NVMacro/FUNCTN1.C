@@ -1,6 +1,6 @@
 #include "graphint.h"   
-#include "extrndb.h"
-#include "client.h"
+#include "Extrndb.h"
+#include "CLIENT.H"
 
 #include "gmextern.h"
 
