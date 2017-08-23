@@ -339,12 +339,12 @@ void FreeBigMem (void)
 HGLOBAL GSSiGlobAlloc(int From, UINT fuAlloc, long cbAlloc)
 {
 	HANDLE mem;
-	unsigned int *pmemLen;
+	long *pmemLen;
 	if (fuAlloc | GMEM_ZEROINIT)
-		mem = calloc(1, cbAlloc + 4);
+		mem = (HANDLE)calloc(1, cbAlloc + sizeof(long));
 	else
-		mem = malloc(cbAlloc + 4);
-	pmemLen = (unsigned int*)mem;
+		mem = (HANDLE)malloc(cbAlloc + sizeof(long));
+	pmemLen = (long*)mem;
 	*pmemLen = cbAlloc;
 	return mem;
 }
@@ -354,37 +354,37 @@ HGLOBAL GSSiGlobalReAlloc(USHORT From, HGLOBAL oldmem, long cbAlloc, UINT fuAllo
 	HGLOBAL newmem = GSSiGlobAlloc(From,fuAlloc,cbAlloc);
 	unsigned int * pOldLen = (unsigned int*)oldmem;
 	unsigned int minLen = min(fuAlloc, *pOldLen);
-	LPVOID oldMem = GSSiGLOBALLOCK(oldmem);
-	LPVOID newMem = GSSiGLOBALLOCK(newmem);
+	LPVOID oldMem = (LPVOID)GSSiGLOBALLOCK(oldmem);
+	LPVOID newMem = (LPVOID)GSSiGLOBALLOCK(newmem);
 	if (minLen)
 		memcpy(newMem, oldMem, minLen);
 	GSSiGLOBALUNLOCK(oldmem);
 	GSSiGLOBALUNLOCK(newmem);
-	free(oldmem);
+	free((LPVOID)oldmem);
 	return newmem;
 }
 
-DWORD GSSiGLOBALSIZE(HANDLE hglb)
+long GSSiGLOBALSIZE(HANDLE hglb)
 {
-	unsigned int * pLen = (unsigned int*)hglb;
+	long * pLen = (long*)hglb;
 	return *pLen;
 }
 
 void GSSiGlobFree(LPHANDLE pHandle)
 {
 	HGLOBAL mem = *pHandle;
-	free(mem);
+	free((LPVOID)mem);
 }
 void GSSiGlobUlFree(LPHANDLE pHandle)
 {
 	HGLOBAL mem = *pHandle;
-	free(mem);
+	free((LPVOID)mem);
 }
 HGLOBAL GSSiGLOBALLOCK(HANDLE hglb)
 {
-	unsigned int pMem = (unsigned int)hglb;
-	pMem += 4;
-	return (LPVOID)pMem;
+	HGLOBAL pMem = hglb;
+	pMem += sizeof(long);
+	return (HGLOBAL)pMem;
 }
 Bool GSSiGLOBALUNLOCK(HANDLE hglb)
 {

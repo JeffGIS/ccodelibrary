@@ -64,7 +64,7 @@ typedef HANDLE  HBITMAP;
 typedef HANDLE *LPHANDLE;
 typedef HANDLE  HACCEL;
 typedef HANDLE	HGDIOBJ;
-typedef unsigned long DWORD ;
+typedef unsigned int DWORD ;
 typedef DWORD   *LPDWORD;
 typedef int     COLORREF;
 typedef COLORREF *LPCOLORREF;
@@ -474,5 +474,18 @@ typedef void				* LPHUGE;
 typedef HANDLE				HDIB32;
 typedef HDIB32				FAR *LPHDIB32;
 typedef RECT				*HPRECT;
+
+
+#define MAKEWORD(a, b)      ((WORD)(((BYTE)(((DWORD_PTR)(a)) & 0xff)) | ((WORD)((BYTE)(((DWORD_PTR)(b)) & 0xff))) << 8))
+#define MAKELONG(a, b)      ((LONG)(((WORD)(((DWORD_PTR)(a)) & 0xffff)) | ((DWORD)((WORD)(((DWORD_PTR)(b)) & 0xffff))) << 16))
+#define LOWORD(l)           ((WORD)(((DWORD_PTR)(l)) & 0xffff))
+#define HIWORD(l)           ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
+#define LOBYTE(w)           ((BYTE)(((DWORD_PTR)(w)) & 0xff))
+#define HIBYTE(w)           ((BYTE)((((DWORD_PTR)(w)) >> 8) & 0xff))
+#define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
+
+#define GetRValue(rgb)      (LOBYTE(rgb))
+#define GetGValue(rgb)      (LOBYTE(((WORD)(rgb)) >> 8))
+#define GetBValue(rgb)      (LOBYTE((rgb)>>16))
 
 #endif

@@ -1260,5 +1260,46 @@ int numberOfOccurencesOfStringInString (NSString *str,NSString *substr)
     }
     return count;
 }
+LPSTR _fullpath (LPSTR fullpath,LPSTR path,int maxpath)
+{
+    return fullpath;
+}
+void _splitpath (LPSTR PathName,LPSTR drive,LPSTR dir,LPSTR fname,LPSTR ext)
+{
+    NSString * str = [NSString stringWithUTF8String:PathName];
+    
+    NSArray *array = [str pathComponents];
+    *drive = 0;
+    *dir = 0;
+    fname = 0;
+    ext = 0;
+    
+    int i = (int)array.count;
+    NSString *element;
+    if (i-- > 0)
+    {
+        element = array[i];
+        strcpy (ext,element.UTF8String);
+    }
+    if (i-- > 0)
+    {
+        element = array[i];
+        strcpy (fname,element.UTF8String);
+    }
+    if (i-- > 0)
+    {
+        element = array[i];
+        strcpy (dir,element.UTF8String);
+    }
+    return;
+}
+DWORD GetTempPath (int len,LPSTR OutStr)
+{
+    NSURL * path = [NSFileManager.defaultManager temporaryDirectory];
+    NSString * cpath = [path absoluteString];
+    strncpy (OutStr,cpath.UTF8String,len);
+    return 0;
+}
+
 
     

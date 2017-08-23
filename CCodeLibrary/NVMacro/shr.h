@@ -228,7 +228,7 @@ void ShowHideWindows(LPSTR WindowName, UINT fun);
 void ShowHideChildren(HWND hWndPar, UINT fun);
 
 void SetWindowText(HWND hWnd,LPSTR txt);
-int GetWindowText (HWND,LPSTR txt,int maxchar);
+int GetWindowText (HWND hWnd,LPSTR txt,int maxchar);
 void SetSQLiteErrFile(LPSTR errFile);
 
 HBITMAP GetToolBitmap (LPSTR BMPath);
@@ -1554,11 +1554,9 @@ LPSTR _itoa (int i,LPSTR str, int radix);
 LPSTR _ltoa (long i,LPSTR str, int radix);
 LPSTR _ultoa (unsigned long i,LPSTR str, int radix);
 
-LPSTR GetTempPath (int len,LPSTR OutStr);
+DWORD GetTempPath (int len,LPSTR OutStr);
 
-SQLRETURN  SQLCancel(SQLHSTMT StatementHandle);
-
-
+SQLRETURN   SQLCancel(SQLHSTMT StatementHandle);
 SQLRETURN   SQLCancelHandle(SQLSMALLINT HandleType, SQLHANDLE InputHandle);
 SQLRETURN   SQLCloseCursor(SQLHSTMT StatementHandle);
 SQLRETURN   SQLFreeConnect(SQLHDBC ConnectionHandle);

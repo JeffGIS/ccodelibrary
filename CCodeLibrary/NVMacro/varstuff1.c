@@ -4232,7 +4232,7 @@ short GetGlobalVal (HANDLE hGlobal,LPSTR OutStr,long Index)
                 break;
                 
             case 85:
-                _ltoa (StretchMode,OutStr,10);
+                //_ltoa (StretchMode,OutStr,10);
                 break;
                 
             case 87:
@@ -4600,7 +4600,7 @@ short GetGlobalVal (HANDLE hGlobal,LPSTR OutStr,long Index)
                 btoa (UndoEnabled,OutStr);
                 break;
             case 196:
-                _itoa (DisplayRasterOpt,OutStr,10);
+                //_itoa (DisplayRasterOpt,OutStr,10);
                 break;
             case 197:
                 btoa (ShowDeletedOpt,OutStr);

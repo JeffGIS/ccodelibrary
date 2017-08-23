@@ -6,6 +6,190 @@
 #include "shapefil.h"
 #include "gmextern.h"
 
+LPSTR strupr (LPSTR txt)
+{
+    LPSTR c = txt;
+    
+    while (*c)
+    {
+        *c = toupper(*c);
+    }
+    return txt;
+}
+LPSTR strlwr (LPSTR txt)
+{
+    LPSTR c = txt;
+    
+    while (*c)
+    {
+        *c = tolower(*c);
+    }
+    return txt;
+}
+LPSTR _itoa (int i,LPSTR str, int radix)
+{
+    switch (radix)
+    {
+        case 10:
+            sprintf(str,"%d",i); // converts to decimal base.
+            break;
+        case 16:
+            sprintf(str,"%x",i); // converts to hexadecimal base.
+            break;
+        case 8:
+            sprintf(str,"%o",i); // converts to octal base.
+            break;
+    }
+    
+    return str;
+}
+LPSTR _ltoa (long i,LPSTR str, int radix)
+{
+    switch (radix)
+    {
+        case 10:
+            sprintf(str,"%ld",i); // converts to decimal base.
+            break;
+        case 16:
+            sprintf(str,"%lx",i); // converts to hexadecimal base.
+            break;
+        case 8:
+            sprintf(str,"%lo",i); // converts to octal base.
+            break;
+    }
+    
+    return str;
+}
+
+LPSTR _ultoa (unsigned long i,LPSTR str, int radix)
+{
+    switch (radix)
+    {
+        case 10:
+            sprintf(str,"%ld",i); // converts to decimal base.
+            break;
+        case 16:
+            sprintf(str,"%lx",i); // converts to hexadecimal base.
+            break;
+        case 8:
+            sprintf(str,"%lo",i); // converts to octal base.
+            break;
+    }
+    
+    return str;
+}
+
+SQLRETURN   SQLCancel(SQLHSTMT StatementHandle)
+{
+    return 0;
+}
+SQLRETURN   SQLCancelHandle(SQLSMALLINT HandleType, SQLHANDLE InputHandle)
+{
+    return 0;
+}
+SQLRETURN   SQLCloseCursor(SQLHSTMT StatementHandle)
+{
+    return 0;
+}
+SQLRETURN   SQLFreeConnect(SQLHDBC ConnectionHandle)
+{
+    return 0;
+}
+SQLRETURN   SQLFreeEnv(SQLHENV EnvironmentHandle)
+{
+    return 0;
+}
+SQLRETURN   SQLFreeHandle(SQLSMALLINT HandleType, SQLHANDLE Handle)
+{
+    return 0;
+}
+
+SQLRETURN   SQLFreeStmt(SQLHSTMT StatementHandle,
+                        SQLUSMALLINT Option)
+{
+    return 0;
+}
+
+
+Bool LoadInternalGMD (LPGWDHEADER lpGWDHead,long iref)
+{
+    return FALSE;
+}
+
+int GetDlgItem (HWND hWndDlg,UINT Control)
+{
+    return 0;
+}
+LRESULT SendDlgItemMessage(HWND hDlg,int nIDDlgItem, UINT Msg,WPARAM wParam,LPSTR lParam)
+{
+    return 0;
+}
+void DeleteObject (HGDIOBJ handle)
+{
+    return;
+}
+unsigned int MessageBox(
+                        HWND hWnd,
+                        LPCSTR lpText,
+                        LPCSTR lpCaption,
+                        UINT uType)
+{
+    return 0;
+}
+
+HMENU CreateMenu(void)
+{
+    return 0;
+}
+HMENU CreatePopupMenu (void)
+{
+    return 0;
+}
+Bool  AppendMenu(HMENU hMenu,UINT uFlags,UINT_PTR uIDNewItem,LPCSTR lpNewItem)
+{
+    return FALSE;
+}
+
+HWND GetFocus (void)
+{
+    return 0;
+}
+
+
+Bool ConvertCoordClose (void)
+{
+    return FALSE;
+}
+Bool NeedToConvertCoord (int from, int to)
+{
+    return FALSE;
+}
+long ConvertCoord (LPDPOINT DPoint,int from, int to)
+{
+    return 0;
+}
+long ConvertCoordInit (void)
+{
+    return 0;
+}
+long ConvertAndTranCoord (LPDPOINT pPoint,HANDLE hTranFile)
+{
+    return 0;
+}
+void ConvertCoordError(long ErrNum)
+{
+    return;
+}
+
+void SetWindowText(HWND hWnd,LPSTR txt)
+{
+    return;
+}
+int GetWindowText (HWND hWnd,LPSTR txt,int maxchar)
+{
+    *txt = 0;
+    return 0;
+}
 
 LPSTR Truncate(LPSTR str)
 {

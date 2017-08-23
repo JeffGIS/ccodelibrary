@@ -11,7 +11,7 @@ HGLOBAL GSSiGLOBALLOCK(HANDLE hglb);
 #define	GlobalUnlock	GSSiGLOBALUNLOCK
 Bool GSSiGLOBALUNLOCK(HANDLE hglb);
 #define GlobalSize GSSiGLOBALSIZE
-DWORD GSSiGLOBALSIZE (HANDLE hglb);
+long GSSiGLOBALSIZE (HANDLE hglb);
 HGLOBAL GSSiGlobAlloc(int From, UINT fuAlloc, long cbAlloc);
 void GSSiGlobUlFree(LPHANDLE pHandle);
 
