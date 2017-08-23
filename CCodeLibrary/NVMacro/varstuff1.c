@@ -6704,9 +6704,14 @@ LPSTR ExpandTextDB (LPSTR InText,LPBREAKPOINT pBrkPt,int bpOffset,int bpLen)
                         l = pEndIF - InLoc;
                         if (l)
                         {
-                            
                             int lELSEBP = 0;
                             
+                            if (*pELSE == '{')
+                            {
+                                LPSTR pEnd = MatchLev((pELSE+1), '}');
+                                if (pEnd)
+                                    l = pEnd - ++pELSE;
+                            }
                             _fstrncpy (OutLoc,pELSE,(size_t)l);
                             OutLoc[l]=0;
                             if (pBrkPt)
