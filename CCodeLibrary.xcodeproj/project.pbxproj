@@ -33,7 +33,6 @@
 		6919EAF91C27B3EE00A9D0F1 /* NVUnitPickerTextAlert.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6919EAF61C27AF1700A9D0F1 /* NVUnitPickerTextAlert.h */; };
 		691B5DD11E52668600C90383 /* NVGetODR.m in Sources */ = {isa = PBXBuildFile; fileRef = 691B5DD01E52668600C90383 /* NVGetODR.m */; };
 		691B5DD21E527E1C00C90383 /* NVGetODR.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 691B5DCF1E52668600C90383 /* NVGetODR.h */; };
-		691E244D1F4CB712008A1B9F /* VARSTUFF.C in Sources */ = {isa = PBXBuildFile; fileRef = 691E244C1F4CB712008A1B9F /* VARSTUFF.C */; };
 		692ACC671B86309B00400B36 /* NVRoutes.m in Sources */ = {isa = PBXBuildFile; fileRef = 692ACC661B86309B00400B36 /* NVRoutes.m */; };
 		692ACC681B86384C00400B36 /* NVRoutes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692ACC651B86309B00400B36 /* NVRoutes.h */; };
 		692EFA521D36A84B007B0D18 /* NVEmailFileList.m in Sources */ = {isa = PBXBuildFile; fileRef = 692EFA511D36A84B007B0D18 /* NVEmailFileList.m */; };
@@ -101,6 +100,7 @@
 		69D5EFB51C7237FD004CE1C0 /* NVCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFB41C7237FD004CE1C0 /* NVCalendarView.m */; };
 		69D5EFB61C7239EC004CE1C0 /* NVCalendarVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D5EFB01C7237AB004CE1C0 /* NVCalendarVC.h */; };
 		69D5EFBC1C7248DB004CE1C0 /* NVCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFBB1C7248DB004CE1C0 /* NVCalendarCell.m */; };
+		69D5F6C01F4D209500721F82 /* varstuff.c in Sources */ = {isa = PBXBuildFile; fileRef = 69D5F6BF1F4D209500721F82 /* varstuff.c */; };
 		69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */; };
 		69DE24281C76311D00680B00 /* NVTextVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69DE24271C76311D00680B00 /* NVTextVC.m */; };
 		69DE24291C76319B00680B00 /* NVTextVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69DE24261C76311D00680B00 /* NVTextVC.h */; };
@@ -564,7 +564,6 @@
 		6919EAF71C27AF1700A9D0F1 /* NVUnitPickerTextAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVUnitPickerTextAlert.m; sourceTree = "<group>"; };
 		691B5DCF1E52668600C90383 /* NVGetODR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVGetODR.h; sourceTree = "<group>"; };
 		691B5DD01E52668600C90383 /* NVGetODR.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVGetODR.m; sourceTree = "<group>"; };
-		691E244C1F4CB712008A1B9F /* VARSTUFF.C */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VARSTUFF.C; sourceTree = "<group>"; };
 		692ACC651B86309B00400B36 /* NVRoutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRoutes.h; sourceTree = "<group>"; };
 		692ACC661B86309B00400B36 /* NVRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRoutes.m; sourceTree = "<group>"; };
 		692EFA501D36A84B007B0D18 /* NVEmailFileList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVEmailFileList.h; sourceTree = "<group>"; };
@@ -636,6 +635,7 @@
 		69D5EFB41C7237FD004CE1C0 /* NVCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCalendarView.m; sourceTree = "<group>"; };
 		69D5EFBA1C7248DB004CE1C0 /* NVCalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalendarCell.h; sourceTree = "<group>"; };
 		69D5EFBB1C7248DB004CE1C0 /* NVCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVCalendarCell.m; sourceTree = "<group>"; };
+		69D5F6BF1F4D209500721F82 /* varstuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = varstuff.c; sourceTree = "<group>"; };
 		69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSecretAlertView.h; sourceTree = "<group>"; };
 		69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSecretAlertView.m; sourceTree = "<group>"; };
 		69DE24261C76311D00680B00 /* NVTextVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTextVC.h; sourceTree = "<group>"; };
@@ -1272,7 +1272,6 @@
 		BBC361921F429C0200B51DF3 /* NVMacro */ = {
 			isa = PBXGroup;
 			children = (
-				691E244C1F4CB712008A1B9F /* VARSTUFF.C */,
 				BBC361931F429C0200B51DF3 /* Address.h */,
 				BBC361941F429C0200B51DF3 /* bigmem.c */,
 				BBC361951F429C0200B51DF3 /* bigmem.h */,
@@ -1307,6 +1306,7 @@
 				BBC361BB1F429C0200B51DF3 /* TRANSLAT.H */,
 				BBC361BC1F429C0200B51DF3 /* UMIO.H */,
 				BBC361BD1F429C0200B51DF3 /* VARDEF.C */,
+				69D5F6BF1F4D209500721F82 /* varstuff.c */,
 				BBC361BE1F429C0200B51DF3 /* VARSTUF2.C */,
 				BBCA58FC1F434EF50021E218 /* Header.h */,
 			);
@@ -1635,7 +1635,6 @@
 				EBC01D221BED1C8C0004C751 /* nep404.c in Sources */,
 				A92E0BA71AF7A38D008A44AC /* NVPhotoViewController.m in Sources */,
 				BB3CF30B1E5CE1410064EC9C /* ArrayOfNumbers.m in Sources */,
-				691E244D1F4CB712008A1B9F /* VARSTUFF.C in Sources */,
 				690746E51CD41DCB00B31D8F /* NVTextViewAlert.m in Sources */,
 				694F00791C1B4BBA0074AF72 /* MapToolbar.m in Sources */,
 				69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */,
@@ -1792,6 +1791,7 @@
 				EBC01D141BED1C8C0004C751 /* ear404.c in Sources */,
 				69DFB6A51CD71987001E1200 /* NVCRISSignupView.m in Sources */,
 				69F482321DB7314200E4BDB5 /* NVSpreadsheetVC.m in Sources */,
+				69D5F6C01F4D209500721F82 /* varstuff.c in Sources */,
 				698C20C81DCB030B00F800C3 /* NVKeyboard.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				699DD7391CEA057600C7A651 /* NVSynchronizeVC.m in Sources */,
