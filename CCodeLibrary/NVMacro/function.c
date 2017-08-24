@@ -43,7 +43,7 @@ int testVars(int in)
     CreateVarSpace(VARSPACE_GLOBAL);
     
     ExpandText(str);
-    strcpy(str, "IF([VAR]>2){[VALUE]=5;}ELSE{[VALUE]=$FLT([VAR]+10);};");
+    strcpy(str, "IF([VAR]>2){[VALUE]=5;}ELSEIF([VAR]==1){[VALUE]=3;}ELSE{[VALUE]=$FLT([VAR]+10);};");
     ExpandText(str);
     strcpy(str, "[VALUE]");
     ExpandText(str);
