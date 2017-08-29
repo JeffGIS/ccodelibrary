@@ -261,6 +261,8 @@
 		BB235EFB1E5F552700E97495 /* ArrayOfNumbers.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */; };
 		BB3CF30B1E5CE1410064EC9C /* ArrayOfNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */; };
 		BB6777981C95C13200A2D508 /* CensusData.m in Sources */ = {isa = PBXBuildFile; fileRef = BB6777971C95C13200A2D508 /* CensusData.m */; };
+		BB8BA0D51F5596D90024B8C2 /* FacilityStepDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = BB8BA0D41F5596D90024B8C2 /* FacilityStepDefinition.m */; };
+		BB8BA0D81F5597250024B8C2 /* FacilitiesStepValue.m in Sources */ = {isa = PBXBuildFile; fileRef = BB8BA0D71F5597250024B8C2 /* FacilitiesStepValue.m */; };
 		BB9B8FAB1EAE8A6600AFB3CA /* TimeLine.m in Sources */ = {isa = PBXBuildFile; fileRef = BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */; };
 		BB9B8FAC1EAE8B7500AFB3CA /* TimeLine.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB9B8FA91EAE8A6600AFB3CA /* TimeLine.h */; };
 		BBC361C01F429C0200B51DF3 /* bigmem.c in Sources */ = {isa = PBXBuildFile; fileRef = BBC361941F429C0200B51DF3 /* bigmem.c */; };
@@ -771,6 +773,10 @@
 		BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArrayOfNumbers.m; sourceTree = "<group>"; };
 		BB6777961C95C13200A2D508 /* CensusData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CensusData.h; path = ../CensusData.h; sourceTree = "<group>"; };
 		BB6777971C95C13200A2D508 /* CensusData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = CensusData.m; path = ../CensusData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		BB8BA0D31F5596D90024B8C2 /* FacilityStepDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacilityStepDefinition.h; sourceTree = "<group>"; };
+		BB8BA0D41F5596D90024B8C2 /* FacilityStepDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacilityStepDefinition.m; sourceTree = "<group>"; };
+		BB8BA0D61F5597250024B8C2 /* FacilitiesStepValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacilitiesStepValue.h; sourceTree = "<group>"; };
+		BB8BA0D71F5597250024B8C2 /* FacilitiesStepValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacilitiesStepValue.m; sourceTree = "<group>"; };
 		BB9B8FA91EAE8A6600AFB3CA /* TimeLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeLine.h; sourceTree = "<group>"; };
 		BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeLine.m; sourceTree = "<group>"; };
 		BBC361931F429C0200B51DF3 /* Address.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Address.h; sourceTree = "<group>"; };
@@ -1039,6 +1045,10 @@
 				A94A771519F8079E0062906E /* FacilityPoint.m */,
 				A94A771719F807CE0062906E /* FacilityRecord.h */,
 				A94A771819F807CE0062906E /* FacilityRecord.m */,
+				BB8BA0D31F5596D90024B8C2 /* FacilityStepDefinition.h */,
+				BB8BA0D41F5596D90024B8C2 /* FacilityStepDefinition.m */,
+				BB8BA0D61F5597250024B8C2 /* FacilitiesStepValue.h */,
+				BB8BA0D71F5597250024B8C2 /* FacilitiesStepValue.m */,
 			);
 			name = Facilities;
 			sourceTree = "<group>";
@@ -1738,6 +1748,7 @@
 				EBC01D091BED1C8C0004C751 /* angles.c in Sources */,
 				BBC361C51F429C0200B51DF3 /* functn2.c in Sources */,
 				A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */,
+				BB8BA0D51F5596D90024B8C2 /* FacilityStepDefinition.m in Sources */,
 				6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */,
@@ -1792,6 +1803,7 @@
 				69DFB6A51CD71987001E1200 /* NVCRISSignupView.m in Sources */,
 				69F482321DB7314200E4BDB5 /* NVSpreadsheetVC.m in Sources */,
 				69D5F6C01F4D209500721F82 /* varstuff1.c in Sources */,
+				BB8BA0D81F5597250024B8C2 /* FacilitiesStepValue.m in Sources */,
 				698C20C81DCB030B00F800C3 /* NVKeyboard.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				699DD7391CEA057600C7A651 /* NVSynchronizeVC.m in Sources */,
