@@ -16,7 +16,7 @@
 @property (nonatomic) UIActivityIndicatorView *indicator;
 @property (nonatomic) CGPoint zoomPoint, origPoint;
 @property int numPages, zoomPage, origPage, markerPage;
-@property BOOL isFile, navigationComplete, zoomToPDFDrawing;
+@property BOOL isFile, navigationComplete, zoomToPDFDrawing, enableSwipe;
 @property (nonatomic) NVPDFDrawing *drawing;
 @property (nonatomic) UIView *marker;
 @property (nonatomic) NSMutableArray<UIView *> *markers;
@@ -41,6 +41,7 @@
         _drawsMarkers = NO;
         _rotationEnabled = NO;
         _drawsMultipleMarkers = NO;
+        _enableSwipe = NO;
         _markerSize = 20.0;
     }
     
@@ -144,6 +145,7 @@
 + (instancetype)showPDFDrawing:(NVPDFDrawing *)drawing
                   fromDocument:(NVPDFDocument)document
                         inView:(UIView *)view
+                   enableSwipe:(BOOL)enableSwipe
 {
     NSString *resourcePath = @"";
     CGFloat aspectRatio = 0.0;
@@ -169,6 +171,7 @@
                                     showFileAtPath:[NSBundle.mainBundle pathForResource:resourcePath
                                                                                  ofType:@"pdf"]];
     
+    nvwv.enableSwipe = enableSwipe;
     nvwv.zoomToPDFDrawing = YES;
     [nvwv hideReturnButton];
     [nvwv disableUserInteraction];
@@ -603,6 +606,23 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     overlay.backgroundColor = UIColor.clearColor;
     [self.superview addSubview:overlay];
     [overlay constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    
+    if (_enableSwipe)
+    {
+        UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                                        action:@selector(webViewLeftSwiped:)];
+        
+        leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
+        
+        [overlay addGestureRecognizer:leftSwipe];
+        
+        UISwipeGestureRecognizer *rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                                         action:@selector(webViewRightSwiped:)];
+        
+        rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
+        
+        [overlay addGestureRecognizer:rightSwipe];
+    }
 }
 
 - (void)enableUserInteraction
@@ -735,6 +755,18 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     
     if (_delegate && [_delegate respondsToSelector:@selector(webViewDidRemoveLastMarker)])
         [_delegate webViewDidRemoveLastMarker];
+}
+
+- (void)webViewLeftSwiped:(UISwipeGestureRecognizer *)gesture
+{
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewWasLeftSwiped)])
+        [_delegate webViewWasLeftSwiped];
+}
+
+- (void)webViewRightSwiped:(UISwipeGestureRecognizer *)gesture
+{
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewWasRightSwiped)])
+        [_delegate webViewWasRightSwiped];
 }
 
 @end

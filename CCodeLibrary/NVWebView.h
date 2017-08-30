@@ -27,6 +27,8 @@ wasTappedAtPoint:(DPOINT)point
 
 - (void)windowWasSelectedWithIdentifierTag:(int)identifierTag;
 - (void)webViewDidRemoveLastMarker;
+- (void)webViewWasLeftSwiped;
+- (void)webViewWasRightSwiped;
 
 @end
 
@@ -43,7 +45,8 @@ wasTappedAtPoint:(DPOINT)point
 
 + (instancetype)showPDFDrawing:(NVPDFDrawing *)drawing
                   fromDocument:(NVPDFDocument)document
-                        inView:(UIView *)view;
+                        inView:(UIView *)view
+                   enableSwipe:(BOOL)enableSwipe;
 
 - (void)hide:(BOOL)animated;
 - (void)showRealtorButton;

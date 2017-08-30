@@ -76,7 +76,8 @@
     
     bumpDetector.webView = [NVWebView showPDFDrawing:drawing
                                         fromDocument:NVPDFDocumentADAChecklist
-                                              inView:bumpDetector.countdownLabel];
+                                              inView:bumpDetector.countdownLabel
+                                         enableSwipe:NO];
     
     bumpDetector.titleLabel = [[UILabel alloc] initWithFrame:
                                CGRectMake(20.0, 20.0, (size.width - 40.0),
