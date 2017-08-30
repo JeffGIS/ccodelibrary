@@ -461,7 +461,10 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
     _markerPage = (int)ceilf(point.y / pageHeight);
     CGFloat offset = (CGFloat)(pageHeight * (_markerPage - 1));
     point.y -= offset;
+    
     DPOINT dPoint = {0};
+    dPoint.x = (point.x / _webView.scrollView.contentSize.width);
+    dPoint.y = (point.y / pageHeight);
     
     if (_drawsMarkers)
     {
@@ -499,8 +502,6 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
             [_markers addObject:marker];
             marker.center = point;
             [_webView.scrollView addSubview:marker];
-            dPoint.x = (point.x / _webView.scrollView.contentSize.width);
-            dPoint.y = (point.y / pageHeight);
             int tagX = (dPoint.x * pow(10, 6));
             int tagY = (dPoint.y * pow(10, 6));
             marker.tag = ((tagX * pow(10, 6)) + tagY);
@@ -522,8 +523,6 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
                 [_webView.scrollView addSubview:_marker];
             
             _marker.center = point;
-            dPoint.x = (point.x / _webView.scrollView.contentSize.width);
-            dPoint.y = (point.y / pageHeight);
             _markerPosition = dPoint;
         }
     }
