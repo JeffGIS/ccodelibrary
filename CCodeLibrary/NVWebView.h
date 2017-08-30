@@ -26,6 +26,7 @@ wasTappedAtPoint:(DPOINT)point
      withinPage:(int)page;
 
 - (void)windowWasSelectedWithIdentifierTag:(int)identifierTag;
+- (void)webViewDidRemoveLastMarker;
 
 @end
 
@@ -44,7 +45,7 @@ wasTappedAtPoint:(DPOINT)point
                   fromDocument:(NVPDFDocument)document
                         inView:(UIView *)view;
 
-- (void)hide:(bool)animated;
+- (void)hide:(BOOL)animated;
 - (void)showRealtorButton;
 - (void)hideReturnButton;
 - (void)gotoOriginalPosition;
@@ -52,6 +53,7 @@ wasTappedAtPoint:(DPOINT)point
 - (void)enableUserInteraction;
 - (void)clearPosition;
 - (void)updatePosition;
+- (void)removeLastMarker;
 
 - (void)zoomToPage:(int)page
          upperLeft:(DPOINT)upperLeft

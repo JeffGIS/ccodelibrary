@@ -11,7 +11,7 @@
 
 @property (nonatomic) WKWebView *webView;
 @property (nonatomic) UIButton *returnButton, *realtor;
-@property (nonatomic) CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation, origScale, origRotation;
+@property (nonatomic) CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation, origScale, origRotation, markerSize;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIActivityIndicatorView *indicator;
 @property (nonatomic) CGPoint zoomPoint, origPoint;
@@ -27,20 +27,32 @@
 
 @implementation NVWebView
 
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _zoomPoint = CGPointZero;
+        _zoomScale = _zoomRotation = 0.0;
+        _numPages = _zoomPage = 1;
+        _navigationComplete = NO;
+        _zoomToPDFDrawing = NO;
+        _drawsMarkers = NO;
+        _rotationEnabled = NO;
+        _drawsMultipleMarkers = NO;
+        _markerSize = 20.0;
+    }
+    
+    return self;
+}
+
 + (instancetype)showWebViewInView:(UIView *)view
                         urlString:(NSString *)urlString
 {
     NVWebView *nvwv = NVWebView.new;
     [nvwv addWebViewToView:view];
-    nvwv.zoomPoint = CGPointZero;
-    nvwv.zoomScale = nvwv.zoomRotation = 0.0;
-    nvwv.numPages = nvwv.zoomPage = 1;
     nvwv.isFile = NO;
-    nvwv.navigationComplete = NO;
-    nvwv.zoomToPDFDrawing = NO;
-    nvwv.drawsMarkers = NO;
-    nvwv.rotationEnabled = NO;
-    nvwv.drawsMultipleMarkers = NO;
     
     nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -86,7 +98,6 @@
 + (instancetype)showWebViewInView:(UIView *)view
                    showFileAtPath:(NSString *)path
 {
-    
     if (!path)
     {
         NVAlertView *alert = [NVAlertView showLargeAlertViewinView:view
@@ -100,15 +111,7 @@
     
     NVWebView *nvwv = NVWebView.new;
     [nvwv addWebViewToView:view];
-    nvwv.zoomPoint = CGPointZero;
-    nvwv.zoomScale = nvwv.zoomRotation = 0.0;
-    nvwv.numPages = nvwv.zoomPage = 1;
     nvwv.isFile = YES;
-    nvwv.navigationComplete = NO;
-    nvwv.zoomToPDFDrawing = NO;
-    nvwv.drawsMarkers = NO;
-    nvwv.rotationEnabled = NO;
-    nvwv.drawsMultipleMarkers = NO;
     
     NSURL *url = [NSURL fileURLWithPath:path];
 
@@ -229,15 +232,9 @@
     _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
     _returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     _returnButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    
-    [_returnButton setTitle:@"< Return"
-                   forState:UIControlStateNormal];
-    
-    [_returnButton setTitleColor:UIColor.whiteColor
-                        forState:UIControlStateNormal];
-    
-    [_returnButton setTitleColor:UIColor.lightGrayColor
-                        forState:UIControlStateHighlighted];
+    [_returnButton setTitle:@"< Return" forState:UIControlStateNormal];
+    [_returnButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [_returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
     
     [_returnButton addTarget:self
                       action:@selector(returnButtonTapped:)
@@ -492,10 +489,10 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
             
             UIView *marker = UIView.new;
             marker.backgroundColor = UIColor.redColor;
-            marker.layer.cornerRadius = 20.0;
+            marker.layer.cornerRadius = (_markerSize * 0.5);
             marker.layer.borderColor = UIColor.blackColor.CGColor;
-            marker.layer.borderWidth = 4.0;
-            marker.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
+            marker.layer.borderWidth = (_markerSize * 0.1);
+            marker.frame = CGRectMake(0.0, 0.0, _markerSize, _markerSize);
             [_markers addObject:marker];
             marker.center = point;
             [_webView.scrollView addSubview:marker];
@@ -512,10 +509,10 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
             {
                 _marker = UIView.new;
                 _marker.backgroundColor = UIColor.redColor;
-                _marker.layer.cornerRadius = 20.0;
+                _marker.layer.cornerRadius = (_markerSize * 0.5);
                 _marker.layer.borderColor = UIColor.blackColor.CGColor;
-                _marker.layer.borderWidth = 4.0;
-                _marker.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
+                _marker.layer.borderWidth = (_markerSize * 0.1);
+                _marker.frame = CGRectMake(0.0, 0.0, _markerSize, _markerSize);
             }
             
             if (![_webView.scrollView.subviews containsObject:_marker])
@@ -718,6 +715,26 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         if (_delegate && [_delegate respondsToSelector:@selector(windowWasSelectedWithIdentifierTag:)])
             [_delegate windowWasSelectedWithIdentifierTag:-1];
     }
+}
+
+- (void)removeLastMarker
+{
+    if (_markers.count)
+    {
+        UIView *marker = _markers.lastObject;
+        [marker removeFromSuperview];
+        [_markers removeLastObject];
+        
+        if (_lines.count)
+        {
+            CAShapeLayer *line = _lines.lastObject;
+            [line removeFromSuperlayer];
+            [_lines removeLastObject];
+        }
+    }
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidRemoveLastMarker)])
+        [_delegate webViewDidRemoveLastMarker];
 }
 
 @end
