@@ -10,10 +10,12 @@
 
 typedef NS_ENUM(NSInteger, FacilityMeasurementType)
 {
-    FMYesNo,
-    FMImageList,
-    FMSlope,
-    FMCount,
+    FMTYesNo,
+    FMTImageList,
+    FMTSlope,
+    FMTInches,
+    FMTFeet,
+    FMTCount,
 };
 
 @interface FacilityStepDefinition : NSObject
