@@ -26,6 +26,7 @@ wasTappedAtPoint:(DPOINT)point
      withinPage:(int)page;
 
 - (void)windowWasSelectedWithIdentifierTag:(int)identifierTag;
+- (void)webViewDidRemoveLastMarker;
 
 @end
 
@@ -52,6 +53,7 @@ wasTappedAtPoint:(DPOINT)point
 - (void)enableUserInteraction;
 - (void)clearPosition;
 - (void)updatePosition;
+- (void)removeLastMarker;
 
 - (void)zoomToPage:(int)page
          upperLeft:(DPOINT)upperLeft

@@ -717,4 +717,24 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     }
 }
 
+- (void)removeLastMarker
+{
+    if (_markers.count)
+    {
+        UIView *marker = _markers.lastObject;
+        [marker removeFromSuperview];
+        [_markers removeLastObject];
+        
+        if (_lines.count)
+        {
+            CAShapeLayer *line = _lines.lastObject;
+            [line removeFromSuperlayer];
+            [_lines removeLastObject];
+        }
+    }
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidRemoveLastMarker)])
+        [_delegate webViewDidRemoveLastMarker];
+}
+
 @end
