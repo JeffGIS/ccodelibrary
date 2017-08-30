@@ -44,7 +44,7 @@ wasTappedAtPoint:(DPOINT)point
                   fromDocument:(NVPDFDocument)document
                         inView:(UIView *)view;
 
-- (void)hide:(bool)animated;
+- (void)hide:(BOOL)animated;
 - (void)showRealtorButton;
 - (void)hideReturnButton;
 - (void)gotoOriginalPosition;
