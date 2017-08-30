@@ -19,6 +19,8 @@
 @property BOOL isFile, navigationComplete, zoomToPDFDrawing;
 @property (nonatomic) NVPDFDrawing *drawing;
 @property (nonatomic) UIView *marker;
+@property (nonatomic) NSMutableArray<UIView *> *markers;
+@property (nonatomic) NSMutableArray<CAShapeLayer *> *lines;
 @property DPOINT markerPosition, ul, lr;
 
 @end
@@ -38,6 +40,7 @@
     nvwv.zoomToPDFDrawing = NO;
     nvwv.drawsMarkers = NO;
     nvwv.rotationEnabled = NO;
+    nvwv.drawsMultipleMarkers = NO;
     
     nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
     nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
@@ -105,6 +108,7 @@
     nvwv.zoomToPDFDrawing = NO;
     nvwv.drawsMarkers = NO;
     nvwv.rotationEnabled = NO;
+    nvwv.drawsMultipleMarkers = NO;
     
     NSURL *url = [NSURL fileURLWithPath:path];
 
@@ -453,42 +457,82 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 - (void)webViewWasTapped:(UITapGestureRecognizer *)gesture
 {
     CGPoint point = [gesture locationInView:_webView.scrollView];
+    CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+    _markerPage = (int)ceilf(point.y / pageHeight);
+    CGFloat offset = (CGFloat)(pageHeight * (_markerPage - 1));
+    point.y -= offset;
+    DPOINT dPoint = {0};
     
     if (_drawsMarkers)
     {
-        if (!_marker)
+        if (!_markers)
+            _markers = NSMutableArray.array;
+        
+        if (_drawsMultipleMarkers)
         {
-            _marker = UIView.new;
-            _marker.backgroundColor = UIColor.redColor;
-            _marker.layer.cornerRadius = 20.0;
-            _marker.layer.borderColor = UIColor.blackColor.CGColor;
-            _marker.layer.borderWidth = 4.0;
-            _marker.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
+            if (!_lines)
+                _lines = NSMutableArray.array;
+            
+            if (_markers.count)
+            {
+                UIBezierPath *path = UIBezierPath.bezierPath;
+                [path moveToPoint:point];
+                [path addLineToPoint:_markers.lastObject.center];
+                CAShapeLayer *line = CAShapeLayer.layer;
+                line.lineWidth = 4.0;
+                line.strokeColor = UIColor.redColor.CGColor;
+                line.path = path.CGPath;
+                line.position = CGPointZero;
+                [_webView.scrollView.layer addSublayer:line];
+                [_lines addObject:line];
+            }
+            
+            for (UIView *allMarkers in _markers)
+                [allMarkers.superview bringSubviewToFront:allMarkers];
+            
+            UIView *marker = UIView.new;
+            marker.backgroundColor = UIColor.redColor;
+            marker.layer.cornerRadius = 20.0;
+            marker.layer.borderColor = UIColor.blackColor.CGColor;
+            marker.layer.borderWidth = 4.0;
+            marker.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
+            [_markers addObject:marker];
+            marker.center = point;
+            [_webView.scrollView addSubview:marker];
+            dPoint.x = (point.x / _webView.scrollView.contentSize.width);
+            dPoint.y = (point.y / pageHeight);
+            int tagX = (dPoint.x * pow(10, 6));
+            int tagY = (dPoint.y * pow(10, 6));
+            marker.tag = ((tagX * pow(10, 6)) + tagY);
         }
         
-        if (![_webView.scrollView.subviews containsObject:_marker])
-            [_webView.scrollView addSubview:_marker];
-        
-        _marker.center = point;
+        else
+        {
+            if (!_marker)
+            {
+                _marker = UIView.new;
+                _marker.backgroundColor = UIColor.redColor;
+                _marker.layer.cornerRadius = 20.0;
+                _marker.layer.borderColor = UIColor.blackColor.CGColor;
+                _marker.layer.borderWidth = 4.0;
+                _marker.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
+            }
+            
+            if (![_webView.scrollView.subviews containsObject:_marker])
+                [_webView.scrollView addSubview:_marker];
+            
+            _marker.center = point;
+            dPoint.x = (point.x / _webView.scrollView.contentSize.width);
+            dPoint.y = (point.y / pageHeight);
+            _markerPosition = dPoint;
+        }
     }
-    
-    
-    CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
-    int pageNum = (int)ceilf(point.y / pageHeight);
-    CGFloat offset = (CGFloat)(pageHeight * (pageNum - 1));
-    point.y -= offset;
-    
-    DPOINT dPoint = {0};
-    dPoint.x = (point.x / _webView.scrollView.contentSize.width);
-    dPoint.y = (point.y / pageHeight);
-    _markerPosition = dPoint;
-    _markerPage = pageNum;
     
     if (_delegate && [_delegate respondsToSelector:@selector(webView:wasTappedAtPoint:withinPage:)])
     {
         [_delegate webView:self
           wasTappedAtPoint:dPoint
-                withinPage:pageNum];
+                withinPage:_markerPage];
     }
 }
 
@@ -590,10 +634,37 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 -(void)scrollViewDidZoom:(UIScrollView *)scrollView
 {
-    if ([scrollView.subviews containsObject:_marker])
+    CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+    
+    if (_markers.count)
     {
-        CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+        for (int i  = 0; i < _markers.count; i++)
+        {
+            UIView *marker = _markers[i];
+            
+            if ([scrollView.subviews containsObject:marker])
+            {
+                double tagXY = marker.tag / pow(10, 6);
+                int tagX = (int)tagXY;
+                double tagXD = tagX / pow(10, 6);
+                
+                marker.center = CGPointMake((tagXD * _webView.scrollView.contentSize.width),
+                                            (((tagXY - tagX) * pageHeight) * _markerPage));
+            }
+        }
         
+        for (int i = 0; i < _lines.count; i++)
+        {
+            UIBezierPath *path = UIBezierPath.bezierPath;
+            [path moveToPoint:_markers[i+1].center];
+            [path addLineToPoint:_markers[i].center];
+            CAShapeLayer *line = _lines[i];
+            line.path = path.CGPath;
+        }
+    }
+    
+    else if ([scrollView.subviews containsObject:_marker])
+    {
         _marker.center = CGPointMake((_markerPosition.x * _webView.scrollView.contentSize.width),
                                     ((_markerPosition.y * pageHeight) * _markerPage));
     }
