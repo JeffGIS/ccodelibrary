@@ -333,7 +333,6 @@
             _zoomPoint.x *= _webView.scrollView.contentSize.width;
             _zoomPoint.y *= pageHeight;
             _zoomPoint.y += (pageHeight * (_zoomPage - 1));
-            
         }
         
         CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
@@ -343,9 +342,7 @@
                                      (_zoomPoint.y - (zoomSize.height / 2.0)),
                                      zoomSize.width, zoomSize.height);
         
-        [_webView.scrollView zoomToRect:zoomRect
-                               animated:NO];
-        
+        [_webView.scrollView zoomToRect:zoomRect animated:NO];
         _webView.scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
     }
 }

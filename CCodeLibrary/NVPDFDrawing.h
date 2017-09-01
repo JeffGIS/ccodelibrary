@@ -3,12 +3,18 @@
 
 @import Foundation;
 
-#define LEFT_COL_LEFT 0.1025
-#define LEFT_COL_RIGHT 0.505
-#define LEFT_COL_LEFT_2 0.105
-#define LEFT_COL_RIGHT_2 0.475
-#define RIGHT_COL_LEFT 0.525
-#define RIGHT_COL_RIGHT 0.9325
+#define LCL0700 0.07
+#define LCL1025 0.1025
+#define LCL1075 0.1075
+
+#define LCR4750 0.475
+#define LCR5050 0.505
+
+#define RCL4925 0.4925
+#define RCL5250 0.525
+
+#define RCR9025 0.9025
+#define RCR9325 0.9325
 
 @interface NVPDFDrawing : NSObject
 
