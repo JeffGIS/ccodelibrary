@@ -4,6 +4,7 @@
 @import Foundation;
 
 #define LCL0700 0.07
+#define LCL0875 0.0875
 #define LCL1025 0.1025
 #define LCL1075 0.1075
 
