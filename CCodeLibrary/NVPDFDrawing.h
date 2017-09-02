@@ -13,6 +13,7 @@
 #define LCR5050 0.505
 
 #define RCL4925 0.4925
+#define RCL5100 0.51
 #define RCL5250 0.525
 #define RCL5450 0.545
 
