@@ -16,6 +16,7 @@
 #define RCL5100 0.51
 #define RCL5250 0.525
 #define RCL5450 0.545
+#define RCL6000 0.6
 
 #define RCR9025 0.9025
 #define RCR9325 0.9325
