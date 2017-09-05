@@ -7,26 +7,46 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CCodeLibrary/SQLiteLib.h"
+#import "CCodeLibrary/UserDefaults.h"
 
 typedef NS_ENUM(NSInteger, FacilityMeasurementType)
 {
+    FMTInvalidType,
     FMTYesNo,
     FMTImageList,
+    FMTChoiceList,
     FMTSlope,
     FMTInches,
     FMTFeet,
     FMTCount,
+    FMTDoorCloseSeconds,
 };
 
 @interface FacilityStepDefinition : NSObject
 
 @property NSString * stepID;
 @property NSString * sectionID;
+@property NSString * title;
 @property NSString * link;
+@property NSArray * reference;
 @property Bool photoRequired;
 @property FacilityMeasurementType measurementType;
 @property NSString * prompt;
 @property NSString * test;
+@property NSString * variables;
 @property NSString * command;
 @property NSArray * choiceList;
+
+@property sqlite3 *database;
+
+@property (atomic) BOOL isOpen;
+@property (atomic) BOOL allowUpdates;
+
+- (BOOL)open;
+- (void)close:(BOOL)opened;
+- (NSString *)databasePath;
+- (Bool) load;
+- (Bool) getStepDefinition:(NSString *)stepID;
+
 @end

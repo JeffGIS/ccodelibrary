@@ -47,7 +47,7 @@ static FacilitiesDatabase *_statdatabase = nil;
                             attributes:nil
                                  error:nil];
     
-    NSString *dbPath = [NSString stringWithFormat:@"%@/%i/Facilities.sqlite3", documentsDirectory, geoid];
+    NSString *dbPath = [NSString stringWithFormat:@"%@/%i/Facilities.slt", documentsDirectory, geoid];
     return dbPath;
 }
 
