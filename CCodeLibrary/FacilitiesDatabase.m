@@ -28,7 +28,6 @@ static FacilitiesDatabase *_statdatabase = nil;
     {
         self.geoid = geoid;
         self.path = [self databasePath:geoid];
-        SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database), _database);
     }
     
     return self;
@@ -55,22 +54,19 @@ static FacilitiesDatabase *_statdatabase = nil;
 {
     char *error = NULL;
     
-    NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS Facilities;"];
+    Bool opened = [self open];
+    NSString *dropQuery = [NSString stringWithFormat:@"DROP TABLE IF EXISTS FacilityValues;"];
     
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, dropQuery.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
     
-    NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS Facilities (\
-                       facID INTEGER PRIMARY KEY,\
+    NSString *query = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS FacilityValues (\
+                       facilityNumber INT,\
+                       stepValueID CHAR(64),\
                        lastUpdateTime INTEGER,\
-                       status INTEGER,\
-                       assignedTo INTEGER,\
-                       facX INTEGER,\
-                       facY INTEGER,\
-                       rotation INTEGER,\
-                       nStreets INTEGER,\
-                       streetNames CHAR(512),\
-                       streetAZMs CHAR(128));"];
+                       stepDefinitionID CHAR(64),\
+                       value CHAR(256),\
+                       comment CHAR(1024), PRIMARY KEY (facilityNumber ASC, stepValueID ASC));"];
     
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
@@ -82,6 +78,7 @@ static FacilitiesDatabase *_statdatabase = nil;
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Facilities (facY);"];
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
+    [self close:opened];
 }
 
 - (int)getOffsetCoord:(Facility *)fac
@@ -599,10 +596,57 @@ Exit:
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     return count;
 }
-
-- (void)close
+- (NSArray *) getValuesForFacility:(int) faciltyNumber
 {
-    sqlite3_close(_database);
+    NSMutableArray * array = NSMutableArray.new;
+    NSString *query = [NSString stringWithFormat:@"SELECT stepValueID, stepDefinitionID,value FROM FacilityValues WHERE facilityNumber = %i",faciltyNumber];
+    sqlite3_stmt *statement = NULL;
+    Bool opened = [self open];
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int i = 0;
+        FacilitiesStepValue *fsv = FacilitiesStepValue.new;
+        
+        LPSTR value = (LPSTR)sqlite3_column_text(statement, i++);
+        fsv.stepValueID = [NSString stringWithUTF8String:value];
+        value = (LPSTR)sqlite3_column_text(statement, i++);
+        fsv.stepDefinitionID = [NSString stringWithUTF8String:value];
+        value = (LPSTR)sqlite3_column_text(statement, i++);
+        fsv.value = [NSString stringWithUTF8String:value];
+        
+        [array addObject:fsv];
+    }
+    
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    [self close:opened];
+    
+    return array;
+}
+
+- (BOOL)open
+{
+    BOOL rtn = FALSE;
+    if (!_isOpen)
+    {
+        self.isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(_path.UTF8String, &_database), _database);
+        NSLog(@"Facilities Database open");
+        
+        rtn = TRUE;
+    }
+    
+    return rtn;
+}
+
+- (void)close:(BOOL)opened
+{
+    if (opened && _isOpen)
+    {
+        SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);
+        NSLog(@"Facilities Database close");
+        self.isOpen = NO;
+    }
 }
 
 - (void)dealloc

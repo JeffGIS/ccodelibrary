@@ -264,6 +264,7 @@
 		BB8BA0D51F5596D90024B8C2 /* FacilityStepDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = BB8BA0D41F5596D90024B8C2 /* FacilityStepDefinition.m */; };
 		BB8BA0D81F5597250024B8C2 /* FacilitiesStepValue.m in Sources */ = {isa = PBXBuildFile; fileRef = BB8BA0D71F5597250024B8C2 /* FacilitiesStepValue.m */; };
 		BB8BA0E81F5D8B110024B8C2 /* FacilityStepDefinition.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB8BA0D31F5596D90024B8C2 /* FacilityStepDefinition.h */; };
+		BB8BA0EB1F5E3A1B0024B8C2 /* FacilitiesStepValue.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB8BA0D61F5597250024B8C2 /* FacilitiesStepValue.h */; };
 		BB9B8FAB1EAE8A6600AFB3CA /* TimeLine.m in Sources */ = {isa = PBXBuildFile; fileRef = BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */; };
 		BB9B8FAC1EAE8B7500AFB3CA /* TimeLine.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB9B8FA91EAE8A6600AFB3CA /* TimeLine.h */; };
 		BBC361C01F429C0200B51DF3 /* bigmem.c in Sources */ = {isa = PBXBuildFile; fileRef = BBC361941F429C0200B51DF3 /* bigmem.c */; };
@@ -388,6 +389,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				BB8BA0EB1F5E3A1B0024B8C2 /* FacilitiesStepValue.h in CopyFiles */,
 				BB8BA0E81F5D8B110024B8C2 /* FacilityStepDefinition.h in CopyFiles */,
 				BB0631331F461ED800BDCA8F /* COMPUTE.H in CopyFiles */,
 				BB0631341F461ED800BDCA8F /* DIBAPI.H in CopyFiles */,

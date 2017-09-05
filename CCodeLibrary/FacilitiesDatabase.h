@@ -4,6 +4,7 @@
 #import "Facility.h"
 #import "FacilityPoint.h"
 #import "FacilityRecord.h"
+#import "FacilitiesStepValue.h"
 #import "SQLiteLib.h"
 #import "FTPDataPull.h"
 
@@ -37,6 +38,7 @@
 @property (nonatomic, weak) id <FacilitiesDatabaseDelegate> delegate;
 @property int geoid;
 @property BOOL gettingUploaded;
+@property BOOL isOpen;
 @property NSString *path;
 @property sqlite3_stmt *statement;
 
@@ -45,6 +47,7 @@
 - (void)getFacilitiesDatabase:(GSSiPopoverView *)popover;
 - (NSMutableArray *)getFacilityPointsFromDatabase;
 - (NSMutableArray *)getFacilityPointsFromDatabaseinBounds:(IBOUNDS)bounds;
+- (void)createFacilitiesTable;
 
 - (NSMutableArray *)getFacilityPointsWithinDistance:(int)meters
                                             ofPoint:(LLPOINT)latlon;
@@ -74,7 +77,10 @@
 - (int)loadFacilityTextToDatabase:(NSString *)path;
 - (int)getCountOfFacilities;
 
-- (void)close;
+- (NSArray *) getValuesForFacility:(int) faciltyNumber;
+
+- (BOOL)open;
+- (void)close:(BOOL)opened;
 
 - (void)logError:(int)sqlReturn
           method:(char *)method;
