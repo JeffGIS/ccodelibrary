@@ -51,49 +51,59 @@
 + (instancetype)showWebViewInView:(UIView *)view
                         urlString:(NSString *)urlString
 {
-    NVWebView *nvwv = NVWebView.new;
-    [nvwv addWebViewToView:view];
-    nvwv.isFile = NO;
-    
-    nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
-    nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
-    nvwv.realtor.backgroundColor = UIColor.clearColor;
-    nvwv.realtor.imageEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 4.0, 4.0);
-    nvwv.realtor.hidden = YES;
-    
-    [nvwv.realtor setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteHouse"
-                                                                                          ofType:@"png"]]
-                  forState:UIControlStateNormal];
-    
-    [nvwv.realtor addTarget:nvwv
-                     action:@selector(realtor:)
-           forControlEvents:UIControlEventTouchUpInside];
-    
-    [nvwv addSubview:nvwv.realtor];
-    [nvwv.realtor constrainTrailingToAnchor:nvwv.trailingAnchor constant:-nvwv.headerSideMargin];
-    [nvwv.realtor constrainTopToAnchor:nvwv.topAnchor];
-    [nvwv.realtor constrainHeightToConstant:nvwv.headerHeight];
-    [nvwv.realtor constrainWidthToConstant:nvwv.headerHeight];
-    
-    nvwv.indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    nvwv.indicator.translatesAutoresizingMaskIntoConstraints = NO;
-    nvwv.indicator.transform = CGAffineTransformMakeScale(2.0, 2.0);
-    [nvwv addSubview:nvwv.indicator];
-    [nvwv.indicator startAnimating];
-    
-    [nvwv.indicator constrainLeadingToAnchor:nvwv.centerXAnchor constant:(-nvwv.indicator.frame.size.width / 2.0)];
-    [nvwv.indicator constrainTrailingToAnchor:nvwv.centerXAnchor constant:(nvwv.indicator.frame.size.width / 2.0)];
-    [nvwv.indicator constrainTopToAnchor:nvwv.centerYAnchor constant:(-nvwv.indicator.frame.size.height / 2.0)];
-    [nvwv.indicator constrainBottomToAnchor:nvwv.centerYAnchor constant:(nvwv.indicator.frame.size.height / 2.0)];
-    
-    if (![urlString containsString:@"http://"] && ![urlString containsString:@"https://"])
-        urlString = [NSString stringWithFormat:@"http://%@", urlString];
-    
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
-    [nvwv.webView loadRequest:urlRequest];
-    [nvwv show];
-    return nvwv;
+    if (urlString && urlString.length)
+    {
+        NVWebView *nvwv = NVWebView.new;
+        [nvwv addWebViewToView:view];
+        nvwv.isFile = NO;
+        
+        nvwv.realtor = [UIButton buttonWithType:UIButtonTypeCustom];
+        nvwv.realtor.translatesAutoresizingMaskIntoConstraints = NO;
+        nvwv.realtor.backgroundColor = UIColor.clearColor;
+        nvwv.realtor.imageEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 4.0, 4.0);
+        nvwv.realtor.hidden = YES;
+        
+        [nvwv.realtor setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteHouse"
+                                                                                              ofType:@"png"]]
+                      forState:UIControlStateNormal];
+        
+        [nvwv.realtor addTarget:nvwv
+                         action:@selector(realtor:)
+               forControlEvents:UIControlEventTouchUpInside];
+        
+        [nvwv addSubview:nvwv.realtor];
+        [nvwv.realtor constrainTrailingToAnchor:nvwv.trailingAnchor constant:-nvwv.headerSideMargin];
+        [nvwv.realtor constrainTopToAnchor:nvwv.topAnchor];
+        [nvwv.realtor constrainHeightToConstant:nvwv.headerHeight];
+        [nvwv.realtor constrainWidthToConstant:nvwv.headerHeight];
+        
+        nvwv.indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        nvwv.indicator.translatesAutoresizingMaskIntoConstraints = NO;
+        nvwv.indicator.transform = CGAffineTransformMakeScale(2.0, 2.0);
+        [nvwv addSubview:nvwv.indicator];
+        [nvwv.indicator startAnimating];
+        
+        [nvwv.indicator constrainLeadingToAnchor:nvwv.centerXAnchor constant:(-nvwv.indicator.frame.size.width / 2.0)];
+        [nvwv.indicator constrainTrailingToAnchor:nvwv.centerXAnchor constant:(nvwv.indicator.frame.size.width / 2.0)];
+        [nvwv.indicator constrainTopToAnchor:nvwv.centerYAnchor constant:(-nvwv.indicator.frame.size.height / 2.0)];
+        [nvwv.indicator constrainBottomToAnchor:nvwv.centerYAnchor constant:(nvwv.indicator.frame.size.height / 2.0)];
+        
+        if (![urlString containsString:@"http://"] && ![urlString containsString:@"https://"])
+            urlString = [NSString stringWithFormat:@"http://%@", urlString];
+        
+        NSURL *url = [NSURL URLWithString:urlString];
+        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
+        [nvwv.webView loadRequest:urlRequest];
+        [nvwv show];
+        
+        return nvwv;
+    }
+
+    else
+    {
+        NSLog(@"NVWebview ERROR:cannot set URL to nil.");
+        return nil;
+    }
 }
 
 + (instancetype)showWebViewInView:(UIView *)view
