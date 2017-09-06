@@ -20,6 +20,8 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
     FMTInches,
     FMTFeet,
     FMTDoorCloseSeconds,
+    FMTFieldCount,
+    FMTHeaderOnly,
     FMTCount,
 };
 
@@ -28,6 +30,7 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
 @property NSString * stepID;
 @property NSString * sectionID;
 @property NSString * title;
+@property NSString * header;
 @property NSString * link;
 @property NSArray * reference;
 @property Bool photoRequired;

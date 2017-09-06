@@ -65,19 +65,20 @@ static FacilitiesDatabase *_statdatabase = nil;
                        stepValueID CHAR(64),\
                        lastUpdateTime INTEGER,\
                        stepDefinitionID CHAR(64),\
+                       header CHAR(256),\
                        value CHAR(256),\
                        comment CHAR(1024), PRIMARY KEY (facilityNumber ASC, stepValueID ASC));"];
     
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
     
-    query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Facilities (facX);"];
+/*    query =[NSString stringWithFormat:@"CREATE INDEX xindex ON Facilities (facX);"];
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), _database);
     sqlite3_free(error);
     
     query =[NSString stringWithFormat:@"CREATE INDEX yindex ON Facilities (facY);"];
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), _database);
-    sqlite3_free(error);
+    sqlite3_free(error);*/
     [self close:opened];
 }
 
@@ -673,11 +674,12 @@ Exit:
 {
     Bool opened = [self open];
     NSString * stepValueID = @"1";
-    NSString * stepDefID = @"2005";
+    NSString * stepDefID = @"NumFloors";
     NSString * value = @"";
+    NSString * header = @"";
     NSString * comment = @"";
     int lastUpdate = 0;
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@')",facID,stepValueID,lastUpdate,stepDefID,value,comment];
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@','%@')",facID,stepValueID,lastUpdate,stepDefID,header,value,comment];
     [self executeCmd:cmd.UTF8String];
     [self close:opened];
 }

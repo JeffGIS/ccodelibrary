@@ -92,6 +92,10 @@
         ft = FMTInches;
     if ([type isEqualToString:@"Feet"])
         ft = FMTFeet;
+    if ([type isEqualToString:@"HeaderOnly"])
+        ft = FMTHeaderOnly;
+    if ([type isEqualToString:@"FieldCount"])
+        ft = FMTCount;
     if ([type isEqualToString:@"Count"])
         ft = FMTCount;
     if ([type isEqualToString:@"DoorCloseSeconds"])
@@ -117,7 +121,7 @@
     Bool rtn = FALSE;
     BOOL opened = [self open];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT Title,Prompt,Type,PhotoRequired,Reference,Link,Test,Variables,Command,ChoiceList,MinValue,MaxValue FROM STEPDEF WHERE SectionID = '%@'",stepID];
+    NSString *query = [NSString stringWithFormat:@"SELECT Title,Prompt,Header,Type,PhotoRequired,Reference,Link,Test,Variables,Command,ChoiceList,MinValue,MaxValue FROM STEPDEF WHERE SectionID = '%@'",stepID];
     
     sqlite3_stmt *statement = NULL;
     _sectionID = stepID;
@@ -132,6 +136,8 @@
         _title = [NSString stringWithUTF8String:value];
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _prompt = [NSString stringWithUTF8String:value];
+        value = (LPSTR)sqlite3_column_text(statement, i++);
+        _header = [NSString stringWithUTF8String:value];
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _measurementType = [self measurementTypeFromText:[NSString stringWithUTF8String:value]];
         _photoRequired = sqlite3_column_int(statement, i++);
