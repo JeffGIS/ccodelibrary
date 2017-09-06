@@ -70,7 +70,7 @@
     }
 }
 
-- (BOOL)executeCmd:(char *)cmd
+- (BOOL)executeCmd:(LPCSTR)cmd
 {
     BOOL rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd, 0, 0, 0), _database);
     return rtn;
@@ -117,15 +117,17 @@
     Bool rtn = FALSE;
     BOOL opened = [self open];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT Title,Prompt,Type,PhotoRequired,Reference,Link,Test,Variables,Command,ChoiceList FROM STEPDEF WHERE SectionID = '%@'",stepID];
+    NSString *query = [NSString stringWithFormat:@"SELECT Title,Prompt,Type,PhotoRequired,Reference,Link,Test,Variables,Command,ChoiceList,MinValue,MaxValue FROM STEPDEF WHERE SectionID = '%@'",stepID];
     
     sqlite3_stmt *statement = NULL;
+    _sectionID = stepID;
     
     SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         int i = 0;
+        rtn = TRUE;
         LPSTR value = (LPSTR)sqlite3_column_text(statement, i++);
         _title = [NSString stringWithUTF8String:value];
         value = (LPSTR)sqlite3_column_text(statement, i++);
@@ -142,7 +144,12 @@
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _variables = [NSString stringWithUTF8String:value];
         value = (LPSTR)sqlite3_column_text(statement, i++);
+        _command = [NSString stringWithUTF8String:value];
+        value = (LPSTR)sqlite3_column_text(statement, i++);
         _choiceList = [[NSString stringWithUTF8String:value]componentsSeparatedByString:@";"];
+        _minValue = sqlite3_column_double(statement, i++);
+        _maxValue = sqlite3_column_double(statement, i++);
+
     }
     
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);

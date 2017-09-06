@@ -128,11 +128,11 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic, nullable) NVSendEmail *currentEmail;
 @property (nonatomic, nullable) NSMutableArray *lastAreaText;
 @property (nonatomic) BOOL isRentaliPad, canUseSdwk, inSdwkMode, GMTilesVisible;
-
+@property (nonnull)Facility * currentFacility;
 + (nullable CRAPI *)sharedInstance;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
-- (void)facilityInit:(nullable Facility *)currentFacility;
+- (Facility *)facilityInit;
 - (nullable NSString *)sharedOutputDirectory:(nullable NSString *)subDir;
 
 - (void)setIntersectionRotAndQuadDeviders:(nullable NSString *)intAzm

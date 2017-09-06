@@ -19,8 +19,8 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
     FMTSlope,
     FMTInches,
     FMTFeet,
-    FMTCount,
     FMTDoorCloseSeconds,
+    FMTCount,
 };
 
 @interface FacilityStepDefinition : NSObject
@@ -37,6 +37,7 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
 @property NSString * variables;
 @property NSString * command;
 @property NSArray * choiceList;
+@property double minValue, maxValue;
 
 @property sqlite3 *database;
 

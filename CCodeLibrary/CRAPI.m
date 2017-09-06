@@ -111,6 +111,8 @@
         _acreFmt.alwaysShowsDecimalSeparator = NO;
         _acreFmt.usesGroupingSeparator = YES;
         _acreFmt.maximumFractionDigits = 2;
+        
+        _currentFacility = [self facilityInit];
     }
     
     return self;
@@ -265,17 +267,12 @@
     return uploadDirectory;
 }
 
-- (void)facilityInit:(Facility *)currentFacility
+- (Facility *)facilityInit
 {
-    currentFacility.facID = -1;
-    currentFacility.intRotation = 0;
-    currentFacility.doLater = NO;
-    currentFacility.timeComplete = 0;
-    currentFacility.name1 = @"NOTYETSET";
-    currentFacility.quadDev90 = 0;
-    currentFacility.quadDev90 = 90;
-    currentFacility.quadDev180 = 180;
-    currentFacility.quadDev270 = 270;
+    Facility * currentFacility = Facility.new;
+    currentFacility.facID = 1;
+    currentFacility.name = @"Eagan City Hall";
+    return currentFacility;
 }
 
 - (int)adjustQuadDev:(int)normalRot

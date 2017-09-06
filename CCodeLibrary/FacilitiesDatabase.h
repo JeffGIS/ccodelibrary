@@ -81,6 +81,9 @@
 
 - (BOOL)open;
 - (void)close:(BOOL)opened;
+- (BOOL)executeCmd:(char *)cmd;
+
+- (void) loadTestData:(int)facID;
 
 - (void)logError:(int)sqlReturn
           method:(char *)method;

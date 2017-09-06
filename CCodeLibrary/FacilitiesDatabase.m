@@ -86,10 +86,10 @@ static FacilitiesDatabase *_statdatabase = nil;
                     y:(int)y
 {
     int offCoord = 0;
-    short offx, offy;
+    short offx=0, offy=0;
     
-    offx = (x - fac.lev21x);
-    offy = (y - fac.lev21y);
+    //offx = (x - fac.lev21x);
+    //offy = (y - fac.lev21y);
     
     offCoord = (int)MAKELONG(offx, offy);
     return offCoord;
@@ -332,7 +332,7 @@ static FacilitiesDatabase *_statdatabase = nil;
                withStatus:(int)status
 {
     BOOL rtn = NO;
-    int iTime = NSDate.timeIntervalSinceReferenceDate;
+/*    int iTime = NSDate.timeIntervalSinceReferenceDate;
     
     NSString *query = [NSString stringWithFormat:@"UPDATE Facilities SET lastUpdateTime=%i, status=%i,\
                        facX=%i,\
@@ -345,14 +345,14 @@ static FacilitiesDatabase *_statdatabase = nil;
     
     char *error = NULL;
     rtn = SQLiteExec(_database, query.UTF8String, NULL, NULL, &error);
-    sqlite3_free(error);
+    sqlite3_free(error);*/
     return !rtn;
 }
 
 - (Facility *)getFacilityFromDB:(int)facID
                       withRamps:(BOOL)wantRamps
 {
-    Facility *fac;
+    Facility *fac=0;
     
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM Facilities WHERE facID=%i", facID];
     sqlite3_stmt *statement = NULL;
@@ -362,10 +362,10 @@ static FacilitiesDatabase *_statdatabase = nil;
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
         fac = [[Facility alloc] init];
-        [CRAPI.sharedInstance facilityInit:fac];
+//        [CRAPI.sharedInstance facilityInit:fac];
         fac.facID = facID;
-        fac.lev21x = sqlite3_column_int(statement, 4);
-        fac.lev21y = sqlite3_column_int(statement, 5);
+//        fac.lev21x = sqlite3_column_int(statement, 4);
+//        fac.lev21y = sqlite3_column_int(statement, 5);
     }
     
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
@@ -649,6 +649,13 @@ Exit:
     }
 }
 
+- (BOOL)executeCmd:(char *)cmd
+{
+    BOOL rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd, 0, 0, 0), _database);
+    return rtn;
+}
+
+
 - (void)dealloc
 {
     sqlite3_close(_database);
@@ -662,4 +669,16 @@ Exit:
                   sqlReturn, method, sqlite3_errcode(_database), sqlite3_errmsg(_database)]);
 }
 
+- (void) loadTestData:(int)facID
+{
+    Bool opened = [self open];
+    NSString * stepValueID = @"1";
+    NSString * stepDefID = @"2005";
+    NSString * value = @"";
+    NSString * comment = @"";
+    int lastUpdate = 0;
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@')",facID,stepValueID,lastUpdate,stepDefID,value,comment];
+    [self executeCmd:cmd.UTF8String];
+    [self close:opened];
+}
 @end
