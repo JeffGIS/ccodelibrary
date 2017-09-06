@@ -29,6 +29,7 @@ wasTappedAtPoint:(DPOINT)point
 - (void)webViewDidRemoveLastMarker;
 - (void)webViewWasLeftSwiped;
 - (void)webViewWasRightSwiped;
+- (void)webViewDidRemovePolygon;
 
 @end
 
@@ -57,6 +58,7 @@ wasTappedAtPoint:(DPOINT)point
 - (void)clearPosition;
 - (void)updatePosition;
 - (void)removeLastMarker;
+- (void)maskPolygon;
 
 - (void)zoomToPage:(int)page
          upperLeft:(DPOINT)upperLeft

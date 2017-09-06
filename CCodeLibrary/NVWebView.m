@@ -22,6 +22,7 @@
 @property (nonatomic) NSMutableArray<UIView *> *markers;
 @property (nonatomic) NSMutableArray<CAShapeLayer *> *lines;
 @property DPOINT markerPosition, ul, lr;
+@property (nonatomic) CAShapeLayer *polygon;
 
 @end
 
@@ -43,6 +44,9 @@
         _drawsMultipleMarkers = NO;
         _enableSwipe = NO;
         _markerSize = 20.0;
+        _polygon = CAShapeLayer.layer;
+        _polygon.fillColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5].CGColor;
+        _polygon.position = CGPointZero;
     }
     
     return self;
@@ -655,7 +659,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         [[self.superview viewWithTag:777] constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
 }
 
--(void)scrollViewDidZoom:(UIScrollView *)scrollView
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
 {
     CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
     
@@ -683,6 +687,22 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             [path addLineToPoint:_markers[i].center];
             CAShapeLayer *line = _lines[i];
             line.path = path.CGPath;
+        }
+        
+        if ([_webView.scrollView.layer.sublayers containsObject:_polygon])
+        {
+            UIBezierPath *path = UIBezierPath.bezierPath;
+            CGPoint start = _markers[0].center;
+            [path moveToPoint:start];
+            
+            for (int i = 1; i < _markers.count; i++)
+            {
+                CGPoint point = _markers[i].center;
+                [path addLineToPoint:point];
+            }
+            
+            _polygon.path = path.CGPath;
+            [_webView.scrollView.layer addSublayer:_polygon];
         }
     }
     
@@ -745,22 +765,39 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 - (void)removeLastMarker
 {
-    if (_markers.count)
+    if ([_webView.scrollView.layer.sublayers containsObject:_polygon])
     {
-        UIView *marker = _markers.lastObject;
-        [marker removeFromSuperview];
-        [_markers removeLastObject];
+        [_polygon removeFromSuperlayer];
         
-        if (_lines.count)
-        {
-            CAShapeLayer *line = _lines.lastObject;
-            [line removeFromSuperlayer];
-            [_lines removeLastObject];
-        }
+        for (CAShapeLayer *line in _lines)
+            line.hidden = NO;
+        
+        for (UIView *marker in _markers)
+            marker.hidden = NO;
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(webViewDidRemovePolygon)])
+            [_delegate webViewDidRemovePolygon];
     }
     
-    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidRemoveLastMarker)])
-        [_delegate webViewDidRemoveLastMarker];
+    else
+    {
+        if (_markers.count)
+        {
+            UIView *marker = _markers.lastObject;
+            [marker removeFromSuperview];
+            [_markers removeLastObject];
+            
+            if (_lines.count)
+            {
+                CAShapeLayer *line = _lines.lastObject;
+                [line removeFromSuperlayer];
+                [_lines removeLastObject];
+            }
+        }
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(webViewDidRemoveLastMarker)])
+            [_delegate webViewDidRemoveLastMarker];
+    }
 }
 
 - (void)webViewLeftSwiped:(UISwipeGestureRecognizer *)gesture
@@ -773,6 +810,28 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 {
     if (_delegate && [_delegate respondsToSelector:@selector(webViewWasRightSwiped)])
         [_delegate webViewWasRightSwiped];
+}
+
+- (void)maskPolygon
+{
+    for (CAShapeLayer *line in _lines)
+        line.hidden = YES;
+    
+    for (UIView *marker in _markers)
+        marker.hidden = YES;
+    
+    UIBezierPath *path = UIBezierPath.bezierPath;
+    CGPoint start = _markers[0].center;
+    [path moveToPoint:start];
+    
+    for (int i = 1; i < _markers.count; i++)
+    {
+        CGPoint point = _markers[i].center;
+        [path addLineToPoint:point];
+    }
+    
+    _polygon.path = path.CGPath;
+    [_webView.scrollView.layer addSublayer:_polygon];
 }
 
 @end
