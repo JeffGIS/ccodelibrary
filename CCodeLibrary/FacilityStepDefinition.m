@@ -95,9 +95,15 @@
     if ([type isEqualToString:@"HeaderOnly"])
         ft = FMTHeaderOnly;
     if ([type isEqualToString:@"FieldCount"])
-        ft = FMTCount;
+        ft = FMTFieldCount;
     if ([type isEqualToString:@"Count"])
         ft = FMTCount;
+    if ([type isEqualToString:@"LocatePoint"])
+        ft = FMTLocatePoint;
+    if ([type isEqualToString:@"LocatePolyline"])
+        ft = FMTLocatePolyline;
+    if ([type isEqualToString:@"LocatePolygon"])
+        ft = FMTLocatePolygon;
     if ([type isEqualToString:@"DoorCloseSeconds"])
         ft = FMTDoorCloseSeconds;
     return ft;
@@ -163,5 +169,16 @@
     
     return rtn;
 }
-
++ (NSString *) getStepCommand:(NSString *)stepID
+{
+    NSString * rtn = @"";
+    FacilityStepDefinition *fsd = FacilityStepDefinition.new;
+    Bool opened = [fsd open];
+    if ([fsd getStepDefinition:stepID])
+    {
+        rtn = fsd.command;
+    }
+    [fsd close:opened];
+    return rtn;
+}
 @end

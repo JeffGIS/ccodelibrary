@@ -23,6 +23,8 @@ static HWND	hWndFound;
 static HWND wantWnd;
 static LPSTR	pFindWindowText=0;
 
+Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCSTR header,int needPhoto);
+
 typedef struct {
 	DWORD process, thread;
 }WINPROCESSANDTHREAD;
@@ -6792,6 +6794,37 @@ HaveVP:;
 		}
 			break;
 			*/
+        case 787: //$ADASTEP(ADD,SECTION,NumPublicAreas)
+                  //$ADASTEP(ADD,HEADER,Prompt,Value)
+        {
+            nArgs = GetFunArgs(Args, Arg, 5, &hMem, pBrkPt, bpOffset, bpLen);
+            *OutLoc = 0;
+            if (nArgs > 1)
+            {
+                if (!_stricmp(Arg[1], "ADD"))
+                {
+                    if (!_stricmp(Arg[2], "HEADER"))
+                    {
+                        char stepID[64], stepDefID[64], prompt[256];
+                        
+                       // AddStep (stepID,prompt);
+                       // Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCSTR header,int needPhoto)
+
+                    }
+                    else if (!_stricmp(Arg[2], "SECTION"))
+                    {
+                        
+                    }
+                 }
+                else
+                {
+                }
+            }
+            goto Rtnl;
+        }
+            break;
+            
+
 		default:
 			goto Rtn0;
 	}

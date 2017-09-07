@@ -81,11 +81,11 @@
 
 - (BOOL)open;
 - (void)close:(BOOL)opened;
-- (BOOL)executeCmd:(char *)cmd;
+- (BOOL)executeCmd:(LPCSTR)cmd;
 
 - (void) loadTestData:(int)facID;
 
 - (void)logError:(int)sqlReturn
           method:(char *)method;
-
+Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCSTR header,int needPhoto);
 @end

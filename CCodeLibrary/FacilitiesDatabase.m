@@ -13,6 +13,7 @@
 @implementation FacilitiesDatabase
 
 static FacilitiesDatabase *_statdatabase = nil;
+static char lastDBPath[PATH_MAX]={0};
 
 + (FacilitiesDatabase *)databaseForGeoid:(int)geoid
 {
@@ -47,6 +48,7 @@ static FacilitiesDatabase *_statdatabase = nil;
                                  error:nil];
     
     NSString *dbPath = [NSString stringWithFormat:@"%@/%i/Facilities.slt", documentsDirectory, geoid];
+    strcpy (lastDBPath,dbPath.UTF8String);
     return dbPath;
 }
 
@@ -66,7 +68,10 @@ static FacilitiesDatabase *_statdatabase = nil;
                        lastUpdateTime INTEGER,\
                        stepDefinitionID CHAR(64),\
                        header CHAR(256),\
+                       prompt CHAR(256),\
                        value CHAR(256),\
+                       needPhoto INT, numPhotos INT,\
+                       complete INT,\
                        comment CHAR(1024), PRIMARY KEY (facilityNumber ASC, stepValueID ASC));"];
     
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), _database);
@@ -640,6 +645,20 @@ Exit:
     return rtn;
 }
 
+- (BOOL)open:(LPCSTR)path
+{
+    BOOL rtn = FALSE;
+    if (!_isOpen)
+    {
+        self.isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(path, &_database), _database);
+        NSLog(@"Facilities Database open");
+        
+        rtn = TRUE;
+    }
+    
+    return rtn;
+}
+
 - (void)close:(BOOL)opened
 {
     if (opened && _isOpen)
@@ -650,7 +669,7 @@ Exit:
     }
 }
 
-- (BOOL)executeCmd:(char *)cmd
+- (BOOL)executeCmd:(LPCSTR)cmd
 {
     BOOL rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd, 0, 0, 0), _database);
     return rtn;
@@ -675,12 +694,33 @@ Exit:
     Bool opened = [self open];
     NSString * stepValueID = @"1";
     NSString * stepDefID = @"NumFloors";
+    NSString * prompt = @"";
     NSString * value = @"";
     NSString * header = @"";
     NSString * comment = @"";
     int lastUpdate = 0;
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@','%@')",facID,stepValueID,lastUpdate,stepDefID,header,value,comment];
+    int needPhoto = 0, numPhotos = 0;
+    int completionStatus = 0;
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@','%@',%i,%i,%i,'%@')",facID,stepValueID,lastUpdate,stepDefID,header,prompt,value,needPhoto,numPhotos,completionStatus,comment];
     [self executeCmd:cmd.UTF8String];
     [self close:opened];
 }
+
+Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCSTR header,int needPhoto)
+{
+    Bool rtn = FALSE;
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    char comment[2] = {0};
+    int lastUpdate = 0;
+    int numPhotos = 0;
+    int completionStatus = 0;
+    int facID = CRAPI.sharedInstance.currentFacility.facID;
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s'%i,%i,%i,'%s')",facID,stepValueID,lastUpdate,stepDefID,header,prompt,value,needPhoto,numPhotos,completionStatus,comment];
+    [fd executeCmd:cmd.UTF8String];
+    
+    [fd close:opened];
+    return rtn;
+}
+
 @end

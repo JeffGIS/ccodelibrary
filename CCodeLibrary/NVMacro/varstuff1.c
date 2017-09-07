@@ -60,6 +60,8 @@ HANDLE CreateVarSpace(int type)
     switch (type)
     {
         case VARSPACE_GLOBAL:
+            if (hGlobalVarSpace)
+                GSSiGlobFree (&hGlobalVarSpace);
             hSpace = GSSiGlobAlloc(2000, GHND, sizeof(VARSPACE) + MAXGLOBALS*sizeof(HANDLE));
             pVarSpace = (LPVARSPACE)GlobalLock(hSpace);
             pVarSpace->MaxVars = MAXGLOBALS;
@@ -6184,7 +6186,7 @@ void ProcessTextDB(LPSTR InText, LPBREAKPOINT pBrkPt, int bpOffset, int bpLen)
 #endif
 }
 
-void ProcessText (LPSTR InText)
+void ProcessText (LPCSTR InText)
 #if ENABLETRACE
 {GSSiEnterProg (556);
 #endif

@@ -19,6 +19,9 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
     FMTSlope,
     FMTInches,
     FMTFeet,
+    FMTLocatePoint,
+    FMTLocatePolyline,
+    FMTLocatePolygon,
     FMTDoorCloseSeconds,
     FMTFieldCount,
     FMTHeaderOnly,
@@ -52,5 +55,6 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
 - (NSString *)databasePath;
 - (Bool) load;
 - (Bool) getStepDefinition:(NSString *)stepID;
++ (NSString *) getStepCommand:(NSString *)stepID;
 
 @end

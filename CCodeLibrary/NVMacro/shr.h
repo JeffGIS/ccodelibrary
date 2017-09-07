@@ -458,7 +458,7 @@ LPOPENFILEDATA InOpenFileList (LPSTR Name,int Type,int Access);
 LPSTR ExpandText (LPSTR InText);
 LPSTR ExpandTextDB(LPSTR InText, LPBREAKPOINT pBrkPt, int bpOffset, int bpLen);
 LPSTR ExpandText2 (LPSTR InText);
-void ProcessText (LPSTR InText);
+void ProcessText (LPCSTR InText);
 void ProcessTextDB(LPSTR InText, LPBREAKPOINT pBrkPt, int bpOffset, int bpLen);
 void ProcessGlobal(LPSTR Global);
 HANDLE ProcessIF (LPSTR InLoc,LPBool pErr);
