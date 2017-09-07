@@ -10,6 +10,7 @@
 #define LCL1200 0.12
 #define LCL1400 0.14
 
+#define LCR4325 0.4325
 #define LCR4750 0.475
 #define LCR5050 0.505
 
