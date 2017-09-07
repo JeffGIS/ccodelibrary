@@ -272,6 +272,33 @@
     Facility * currentFacility = Facility.new;
     currentFacility.facID = 1;
     currentFacility.name = @"Eagan City Hall";
+    currentFacility.imagePaths = NSMutableArray.new;
+    currentFacility.imageTypes = NSMutableArray.new;
+    currentFacility.imageDescriptions = NSMutableArray.new;
+    NSString * path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A03"
+                                                    ofType:@"pdf"];
+    path = [path stringByDeletingPathExtension];
+    [currentFacility.imagePaths addObject:path];
+    [currentFacility.imageTypes addObject:@"pdf"];
+    [currentFacility.imageDescriptions addObject:@"Lower Level"];
+    path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A04"
+                                         ofType:@"pdf"];
+    path = [path stringByDeletingPathExtension];
+    [currentFacility.imagePaths addObject:path];
+    [currentFacility.imageTypes addObject:@"pdf"];
+    [currentFacility.imageDescriptions addObject:@"Entry Level"];
+    path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A05"
+                                         ofType:@"pdf"];
+    path = [path stringByDeletingPathExtension];
+    [currentFacility.imagePaths addObject:path];
+    [currentFacility.imageTypes addObject:@"pdf"];
+    [currentFacility.imageDescriptions addObject:@"Upper Level"];
+    path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A06"
+                                         ofType:@"pdf"];
+    path = [path stringByDeletingPathExtension];
+    [currentFacility.imagePaths addObject:path];
+    [currentFacility.imageTypes addObject:@"pdf"];
+    [currentFacility.imageDescriptions addObject:@"Council Chambers"];
     return currentFacility;
 }
 
