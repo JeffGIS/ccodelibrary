@@ -183,4 +183,16 @@
     [fsd close:opened];
     return rtn;
 }
++ (NSString *) getStepHeader:(NSString *)stepID
+{
+    NSString * rtn = @"";
+    FacilityStepDefinition *fsd = FacilityStepDefinition.new;
+    Bool opened = [fsd open];
+    if ([fsd getStepDefinition:stepID])
+    {
+        rtn = fsd.header;
+    }
+    [fsd close:opened];
+    return rtn;
+}
 @end

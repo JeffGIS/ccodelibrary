@@ -58,5 +58,6 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
 - (Bool) load;
 - (Bool) getStepDefinition:(NSString *)stepID;
 + (NSString *) getStepCommand:(NSString *)stepID;
++ (NSString *) getStepHeader:(NSString *)stepID;
 
 @end

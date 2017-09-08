@@ -813,7 +813,12 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     int numPhotos = 0;
     int completionStatus = 0;
     int facID = CRAPI.sharedInstance.currentFacility.facID;
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s',%i,%i,%i,'%s')",facID,stepValueID,lastUpdate,stepDefID,header,prompt,value,needPhoto,numPhotos,completionStatus,comment];
+    NSString * headerValue;
+    if (header && *header)
+        headerValue = [NSString stringWithUTF8String:header];
+    else
+        headerValue = [FacilityStepDefinition getStepHeader:[NSString stringWithUTF8String:stepDefID]];
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s',%i,%i,%i,'%s')",facID,stepValueID,lastUpdate,stepDefID,headerValue.UTF8String,prompt,value,needPhoto,numPhotos,completionStatus,comment];
     rtn = [fd executeCmd:cmd.UTF8String];
     
     [fd close:opened];

@@ -5,6 +5,7 @@
 #import "FacilityPoint.h"
 #import "FacilityRecord.h"
 #import "FacilitiesStepValue.h"
+#import "FacilityStepDefinition.h"
 #import "SQLiteLib.h"
 #import "FTPDataPull.h"
 

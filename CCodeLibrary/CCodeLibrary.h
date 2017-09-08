@@ -22,7 +22,6 @@
 #import "GSSiPopoverView.h"
 #import "CRAPI.h"
 #import "SharedDefaults.h"
-#import "FacilitiesDatabase.h"
 #import "LegendView.h"
 #import "GSSiEnums.h"
 #import "PriorityLocation.h"
