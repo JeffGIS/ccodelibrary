@@ -90,7 +90,7 @@ int	GetFunctionValue1(int FunID, LPSTR Args, LPSTR OutLoc, LPBREAKPOINT pBrkPt, 
 	RECT	Rect; 
 	MNMXCORD	Bounds,Bounds2; 
 	MNMXCORL	GridBounds;
-	long	hNum, Refno,ii, nlong;
+	long	hNum, Refno,ii, nlong=0;
 	LPSTR	lpColon;
 	time_t	systime; 
 	Bool	TORF, rtn, Err, PickVis;  
@@ -1758,7 +1758,7 @@ SetVis:
 			nlong = (long)RVal;
 			_ltoa (nlong,OutLoc,10);
 			goto Rtnl;  
-			
+*/
 		case 335:  //$INC(returns value + 1 (or arg2)) 
 		{
 			static	long	NextNum=1;
@@ -1816,7 +1816,7 @@ SetVis:
 			goto Rtnl;  
 		}
 			
-			
+/*
 		case 337: // $PAD(val,len,fillchar) right fills val with fillchar to length len  
 		{	double	rval;
 			int		l, len; 

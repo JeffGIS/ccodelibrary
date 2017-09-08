@@ -605,7 +605,7 @@ Exit:
 - (NSArray *) getValuesForFacility:(int) faciltyNumber
 {
     NSMutableArray * array = NSMutableArray.new;
-    NSString *query = [NSString stringWithFormat:@"SELECT stepValueID, stepDefinitionID,value FROM FacilityValues WHERE facilityNumber = %i",faciltyNumber];
+    NSString *query = [NSString stringWithFormat:@"SELECT stepValueID, stepDefinitionID, header, prompt, value, needPhoto, complete FROM FacilityValues WHERE facilityNumber = %i",faciltyNumber];
     sqlite3_stmt *statement = NULL;
     Bool opened = [self open];
     SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
@@ -620,7 +620,13 @@ Exit:
         value = (LPSTR)sqlite3_column_text(statement, i++);
         fsv.stepDefinitionID = [NSString stringWithUTF8String:value];
         value = (LPSTR)sqlite3_column_text(statement, i++);
+        fsv.header = [NSString stringWithUTF8String:value];
+        value = (LPSTR)sqlite3_column_text(statement, i++);
+        fsv.prompt = [NSString stringWithUTF8String:value];
+        value = (LPSTR)sqlite3_column_text(statement, i++);
         fsv.value = [NSString stringWithUTF8String:value];
+        fsv.needPhoto = sqlite3_column_int(statement, i++);
+        fsv.completionStatus = sqlite3_column_int(statement, i++);
         
         [array addObject:fsv];
     }
@@ -706,6 +712,18 @@ Exit:
     [self close:opened];
 }
 
++ (Bool) setValueForStep:(NSString *)stepID to:(NSString *)value
+{
+    Bool rtn = FALSE;
+    int facID = CRAPI.sharedInstance.currentFacility.facID;
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET Value = '%@', Complete=1 WHERE facilityNumber=%i AND stepValueID='%@'",value, facID, stepID];
+    rtn = [fd executeCmd:cmd.UTF8String];
+    [fd close:opened];
+    return rtn;
+}
+
 Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCSTR header,int needPhoto)
 {
     Bool rtn = FALSE;
@@ -716,8 +734,8 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     int numPhotos = 0;
     int completionStatus = 0;
     int facID = CRAPI.sharedInstance.currentFacility.facID;
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s'%i,%i,%i,'%s')",facID,stepValueID,lastUpdate,stepDefID,header,prompt,value,needPhoto,numPhotos,completionStatus,comment];
-    [fd executeCmd:cmd.UTF8String];
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s',%i,%i,%i,'%s')",facID,stepValueID,lastUpdate,stepDefID,header,prompt,value,needPhoto,numPhotos,completionStatus,comment];
+    rtn = [fd executeCmd:cmd.UTF8String];
     
     [fd close:opened];
     return rtn;

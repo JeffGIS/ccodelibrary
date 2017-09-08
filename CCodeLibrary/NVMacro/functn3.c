@@ -6794,7 +6794,7 @@ HaveVP:;
 		}
 			break;
 			*/
-        case 787: //$ADASTEP(ADD,SECTION,NumPublicAreas)
+        case 787: //$ADASTEP(ADD,SECTION,NumPublicAreas,Value)
                   //$ADASTEP(ADD,HEADER,Prompt,Value)
         {
             nArgs = GetFunArgs(Args, Arg, 5, &hMem, pBrkPt, bpOffset, bpLen);
@@ -6803,18 +6803,24 @@ HaveVP:;
             {
                 if (!_stricmp(Arg[1], "ADD"))
                 {
+                    char stepID[64]="[%STEPID]";
+                    char newStepID[64];
+                    char sequence[32]="[%SEQUENCE]";
+                    char stepDefID[64], prompt[256];
+                    ExpandText (stepID);
+                    ExpandText (sequence);
+                    int iSequence = atoi (sequence);
+                    sprintf (newStepID,"%s.%2.2i",stepID,iSequence);
+                    
                     if (!_stricmp(Arg[2], "HEADER"))
                     {
-                        char stepID[64], stepDefID[64], prompt[256];
-                        
-                       // AddStep (stepID,prompt);
-                       // Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCSTR header,int needPhoto)
-
+                       AddStep (newStepID,Arg[2],Arg[3],Arg[4],"",0);
                     }
                     else if (!_stricmp(Arg[2], "SECTION"))
                     {
-                        
+                        AddStep (newStepID,Arg[3],"",Arg[4],"",0);
                     }
+                    ProcessText ("$INC(%SEQUENCE)");
                  }
                 else
                 {

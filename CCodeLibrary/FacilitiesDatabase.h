@@ -88,4 +88,6 @@
 - (void)logError:(int)sqlReturn
           method:(char *)method;
 Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCSTR header,int needPhoto);
++ (Bool) setValueForStep:(NSString *)stepID to:(NSString *)value;
+
 @end
