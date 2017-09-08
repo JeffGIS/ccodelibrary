@@ -3,11 +3,9 @@
 
 #import "Facility.h"
 #import "FacilityPoint.h"
-#import "FacilityRecord.h"
-#import "FacilitiesStepValue.h"
-#import "FacilityStepDefinition.h"
 #import "SQLiteLib.h"
 #import "FTPDataPull.h"
+@import Foundation;
 
 #define FACDB_OK 0
 #define FACDB_FAILED 1

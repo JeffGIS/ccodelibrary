@@ -1,7 +1,7 @@
 //  FacilityPoint.h
 //  CCodeLibrary
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 @interface FacilityPoint : NSObject
 

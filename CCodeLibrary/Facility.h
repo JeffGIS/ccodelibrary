@@ -1,8 +1,7 @@
 //  Facility.h
 //  CCodeLibrary
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+@import Foundation;
 
 @interface Facility : NSObject
 

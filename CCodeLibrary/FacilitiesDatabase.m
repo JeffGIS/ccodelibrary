@@ -9,6 +9,9 @@
 #import "CRAPI.h"
 #import "compress.h"
 #import "shr.h"
+#import "FacilityRecord.h"
+#import "FacilitiesStepValue.h"
+#import "FacilityStepDefinition.h"
 
 @implementation FacilitiesDatabase
 
