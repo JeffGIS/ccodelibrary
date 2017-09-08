@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
     FMTLocatePolygon,
     FMTDoorCloseSeconds,
     FMTFieldCount,
+    FMTText,
     FMTHeader,
     FMTHeaderOnly,
     FMTCount,

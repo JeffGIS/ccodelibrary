@@ -87,7 +87,12 @@
 
 - (void)logError:(int)sqlReturn
           method:(char *)method;
+- (NSString *) getHeaderForStep:(NSString *)stepID;
+
 Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCSTR header,int needPhoto);
 + (Bool) setValueForStep:(NSString *)stepID to:(NSString *)value;
++ (Bool) setHeaderForStep:(NSString *)stepID to:(NSString *)value;
++ (Bool) setPriorHeaderForStep:(NSString *)stepID to:(NSString *)value;
++ (NSString *) getCompositeHeaderForStep:(NSString *)stepID;
 
 @end

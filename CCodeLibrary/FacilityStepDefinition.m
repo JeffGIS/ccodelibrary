@@ -92,6 +92,8 @@
         ft = FMTInches;
     if ([type isEqualToString:@"Feet"])
         ft = FMTFeet;
+    if ([type isEqualToString:@"Text"])
+        ft = FMTText;
     if ([type isEqualToString:@"HeaderOnly"])
         ft = FMTHeaderOnly;
     if ([type isEqualToString:@"FieldCount"])

@@ -702,7 +702,7 @@ Exit:
     NSString * stepDefID = @"NumFloors";
     NSString * prompt = @"";
     NSString * value = @"";
-    NSString * header = @"";
+    NSString * header = @"Eagan City Hall";
     NSString * comment = @"";
     int lastUpdate = 0;
     int needPhoto = 0, numPhotos = 0;
@@ -724,6 +724,85 @@ Exit:
     return rtn;
 }
 
++ (Bool) setHeaderForStep:(NSString *)stepID to:(NSString *)value
+{
+    Bool rtn = FALSE;
+    if (![stepID isEqualToString:@""])
+    {
+        int facID = CRAPI.sharedInstance.currentFacility.facID;
+        FacilitiesDatabase * fd = FacilitiesDatabase.new;
+        Bool opened = [fd open:lastDBPath];
+        NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET Header = '%@' WHERE facilityNumber=%i AND stepValueID='%@'",value, facID, stepID];
+        rtn = [fd executeCmd:cmd.UTF8String];
+        [fd close:opened];
+    }
+    return rtn;
+}
+
++ (Bool) setPriorHeaderForStep:(NSString *)stepID to:(NSString *)value
+{
+    Bool rtn = FALSE;
+    if ([stepID containsString:@"."])
+    {
+        int facID = CRAPI.sharedInstance.currentFacility.facID;
+        FacilitiesDatabase * fd = FacilitiesDatabase.new;
+        Bool opened = [fd open:lastDBPath];
+        NSString * priorStepID = [stepID stringByDeletingPathExtension];
+        NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET Header = '%@' WHERE facilityNumber=%i AND stepValueID='%@'",value, facID, priorStepID];
+        rtn = [fd executeCmd:cmd.UTF8String];
+        [fd close:opened];
+    }
+    return rtn;
+}
+
+- (NSString *) getHeaderForStep:(NSString *)stepID
+{
+    NSString * header = @"";
+    int facID = CRAPI.sharedInstance.currentFacility.facID;
+    NSString *query = [NSString stringWithFormat:@"SELECT header FROM FacilityValues WHERE facilityNumber = %i AND stepValueID = '%@'",facID,stepID];
+    sqlite3_stmt *statement = NULL;
+    Bool opened = [self open];
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        
+        LPSTR value = (LPSTR)sqlite3_column_text(statement, 0);
+        header = [NSString stringWithUTF8String:value];
+    }
+    
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    [self close:opened];
+    return header;
+}
++ (NSString *) removeLastStep:(NSString *)stepID
+{
+    NSString * newStepID = stepID;
+    if ([newStepID containsString:@"."])
+        newStepID = [newStepID stringByDeletingPathExtension];
+    else
+        newStepID = @"";
+    return newStepID;
+}
++ (NSString *) getCompositeHeaderForStep:(NSString *)stepID
+{
+    int nLines = 0;
+    NSString * compHeader = @"";
+    NSString * newStepID = stepID;
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    do{
+        NSString * header = [fd getHeaderForStep:newStepID];
+        if (![header isEqualToString:@""])
+        {
+            compHeader = [NSString stringWithFormat:@"%@\n%@",header,compHeader];
+            nLines++;
+        }
+        newStepID = [FacilitiesDatabase removeLastStep:newStepID];
+    }while (![newStepID isEqualToString:@""] && nLines < 5);
+    [fd close:opened];
+    return compHeader;
+}
 Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCSTR header,int needPhoto)
 {
     Bool rtn = FALSE;
