@@ -21,6 +21,7 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
     FMTHeader,
     FMTHeaderOnly,
     FMTCount,
+    FMTPriorHeader,
 };
 
 @interface FacilityStepDefinition : NSObject
