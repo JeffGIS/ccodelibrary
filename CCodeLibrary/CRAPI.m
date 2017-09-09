@@ -111,8 +111,6 @@
         _acreFmt.alwaysShowsDecimalSeparator = NO;
         _acreFmt.usesGroupingSeparator = YES;
         _acreFmt.maximumFractionDigits = 2;
-        if (_currentModule == FAC_DETAIL_MODULE)
-            _currentFacility = [self facilityInit];
     }
     
     return self;
@@ -1306,6 +1304,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         _currentCounty = @"139";
     if ([name isEqualToString:@"WASHINGTON"])
         _currentCounty = @"163";
+}
+
+- (void) setCurrentModule:(int)currentModule
+{
+    _currentModule = currentModule;
+    if (_currentModule == FAC_DETAIL_MODULE)
+        _currentFacility = [self facilityInit];
 }
 
 - (NSString *)acreFormat:(double)acres

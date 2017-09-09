@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "UserDefaults.h"
+#import "shr.h"
 #import "StringFunctions.h"
 #import "Reachability.h"
 #import <sys/utsname.h>
@@ -1231,6 +1232,17 @@ NSString * intToBlob(int val)
     blob = [NSString stringWithUTF8String:pBlob];
     free (pBlob);
     return blob;
+}
+
+NSString * ExpandString (NSString * string)
+{
+    NSString * rtn;
+    LPSTR str = malloc (USHRT_MAX);
+    strcpy (str,string.UTF8String);
+    ExpandText (str);
+    rtn = [NSString stringWithUTF8String:str];
+    free (str);
+    return rtn;
 }
 
 Bool stringContainsCaseInsenitiveString (NSString * str, NSString * substr)

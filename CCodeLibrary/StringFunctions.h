@@ -52,6 +52,7 @@ NSString *addSpaceAfterColon(NSString *string);
 NSString *removeOpeningSpaces(NSString *string);
 NSString *removeOpeningReturn(NSString *string);
 NSString *removePIDPrefix(NSString *string);
+NSString * ExpandString (NSString * string);
 
 @import UIKit;
 @import CoreTelephony;

@@ -374,11 +374,13 @@ void GSSiGlobFree(LPHANDLE pHandle)
 {
 	HGLOBAL mem = *pHandle;
 	free((LPVOID)mem);
+    *pHandle = 0;
 }
 void GSSiGlobUlFree(LPHANDLE pHandle)
 {
 	HGLOBAL mem = *pHandle;
 	free((LPVOID)mem);
+    *pHandle = 0;
 }
 HGLOBAL GSSiGLOBALLOCK(HANDLE hglb)
 {

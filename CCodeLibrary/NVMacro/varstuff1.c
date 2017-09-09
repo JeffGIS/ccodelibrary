@@ -52,6 +52,33 @@ static	LPVARSPACE pVarSpace = 0;
 static	HANDLE hGlobalVarSpace = 0;
 static	HANDLE hLocalVarSpace = 0;
 
+HANDLE SaveValue (void)
+{
+    HANDLE hValue = GSSiGlobAlloc (0,GMEM_MOVEABLE,USHRT_MAX);
+    LPSTR pValue = (LPSTR)GlobalLock (hValue);
+    strcpy (pValue,"[%VALUE]");
+    ExpandText (pValue);
+    GlobalUnlock (hValue);
+    return hValue;
+}
+
+void SetValue (LPSTR value)
+{
+    int len = (int)strlen (value);
+    LPSTR pMem = malloc (len + 64);
+    sprintf (pMem,"[%%VALUE]=%s",value);
+    ExpandText (pMem);
+    free (pMem);
+    return;
+}
+void RestoreValue (HANDLE hSaveValue)
+{
+    LPSTR pVal = (LPSTR)GlobalLock (hSaveValue);
+    SetValue (pVal);
+    GSSiGlobUlFree (&hSaveValue);
+    return;
+}
+
 HANDLE CreateVarSpace(int type)
 {
     HANDLE hSpace=0;
