@@ -106,13 +106,15 @@ Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCS
 +(Bool) addPointElementToStep:(NSString *)stepID
                   usingSymbol:(PointSymbols)symbol
                       atPoint:(DPOINT) point
-           usingReferenceFile:(NSString *)refFile;
+                       onPage:(int)page
+              inReferenceFile:(NSString *)refFile;
 
 +(Bool) addPolygonElementToStep:(NSString *)stepID
                     usingSymbol:(PolygonSymbols)symbol
                   withNumPoints:(int)nPoints
                          points:(DPOINT*) points
-             usingReferenceFile:(NSString *)refFile;
+                         onPage:(int)page
+                inReferenceFile:(NSString *)refFile;
 
 
 @end

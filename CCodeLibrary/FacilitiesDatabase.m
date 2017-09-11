@@ -76,7 +76,7 @@ static char lastDBPath[PATH_MAX]={0};
                        needPhoto INT, numPhotos INT,\
                        complete INT,\
                        comment CHAR(1024),\
-                       graphicElementType INT, graphicElementSymbol INT, graphicElementNumCoord INT, graphicElementCoordinates BLOB(4096), graphicElementReferenceFile CHAR(256),\
+                       graphicElementType INT, graphicElementSymbol INT, graphicElementNumCoord INT, graphicElementCoordinates BLOB(4096), graphicElementReferenceFile CHAR(256),graphicElementReferenceFilePage INT,\
                        PRIMARY KEY (facilityNumber ASC, stepValueID ASC));"];
     
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), _database);
@@ -715,7 +715,8 @@ Exit:
     int graphType=0, graphDesc=0, graphNumPoints=0;
     NSString *graphPoints = @"";
     NSString *graphRefFile = @"";
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@','%@',%i,%i,%i,'%@',%i,%i,%i,'%@',%@')",facID,stepValueID,lastUpdate,stepDefID,header,prompt,value,needPhoto,numPhotos,completionStatus,comment,graphType,graphDesc,graphNumPoints,graphPoints,graphRefFile];
+    int graphRefFilePage = 0;
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@','%@',%i,%i,%i,'%@',%i,%i,%i,'%@',%@',%i)",facID,stepValueID,lastUpdate,stepDefID,header,prompt,value,needPhoto,numPhotos,completionStatus,comment,graphType,graphDesc,graphNumPoints,graphPoints,graphRefFile,graphRefFilePage];
     [self executeCmd:cmd.UTF8String];
     [self close:opened];
 }
@@ -831,7 +832,7 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
         headerValue = [NSString stringWithUTF8String:header];
     else
         headerValue = [FacilityStepDefinition getStepHeader:[NSString stringWithUTF8String:stepDefID]];
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s',%i,%i,%i,'%s',0,0,0,'','')",facID,stepValueID,lastUpdate,stepDefID,headerValue.UTF8String,prompt,value,needPhoto,numPhotos,completionStatus,comment];
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s',%i,%i,%i,'%s',0,0,0,'','',0)",facID,stepValueID,lastUpdate,stepDefID,headerValue.UTF8String,prompt,value,needPhoto,numPhotos,completionStatus,comment];
     rtn = [fd executeCmd:cmd.UTF8String];
     
     [fd close:opened];
@@ -840,14 +841,15 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
 +(Bool) addPointElementToStep:(NSString *)stepID
                   usingSymbol:(PointSymbols)symbol
                       atPoint:(DPOINT) point
-           usingReferenceFile:(NSString *)refFile
+                       onPage:(int)page
+              inReferenceFile:(NSString *)refFile
 {
     Bool rtn = FALSE;
     int facID = CRAPI.sharedInstance.currentFacility.facID;
     FacilitiesDatabase * fd = FacilitiesDatabase.new;
     Bool opened = [fd open:lastDBPath];
     NSString * coordinates = DPOINTSToBlob(&point,1);
-    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=1, graphicElementCoordinates='%@', graphicElementReferenceFile='%@' WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPoint, (int)symbol, coordinates, refFile, facID, stepID];
+    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=1, graphicElementCoordinates='%@', graphicElementReferenceFile='%@',graphicElementReferenceFilePage=%i WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPoint, (int)symbol, coordinates, refFile, page, facID, stepID];
     rtn = [fd executeCmd:cmd.UTF8String];
     [fd close:opened];
     return rtn;
@@ -857,14 +859,15 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
                     usingSymbol:(PolygonSymbols)symbol
                   withNumPoints:(int)nPoints
                          points:(DPOINT*) points
-             usingReferenceFile:(NSString *)refFile
+                         onPage:(int)page
+                inReferenceFile:(NSString *)refFile
 {
     Bool rtn = FALSE;
     int facID = CRAPI.sharedInstance.currentFacility.facID;
     FacilitiesDatabase * fd = FacilitiesDatabase.new;
     Bool opened = [fd open:lastDBPath];
     NSString * coordinates = DPOINTSToBlob(points,nPoints);
-    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=%i, graphicElementCoordinates='%@', graphicElementReferenceFile='%@' WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPoint, (int)symbol, nPoints, coordinates, refFile, facID, stepID];
+    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=%i, graphicElementCoordinates='%@', graphicElementReferenceFile='%@',graphicElementReferenceFilePage=%i  WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPoint, (int)symbol, nPoints, coordinates, refFile, page, facID, stepID];
     rtn = [fd executeCmd:cmd.UTF8String];
     [fd close:opened];
     return rtn;
