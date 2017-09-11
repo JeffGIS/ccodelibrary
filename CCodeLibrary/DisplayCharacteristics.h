@@ -47,6 +47,18 @@ typedef NS_ENUM(NSInteger, PointSymbols)
     Star2Sym,
     CircleSym,
     ArsonSym,
+    PointSymbolCount
+};
+
+typedef NS_ENUM(NSInteger, PolygonSymbols)
+{
+    NoPolygonSym,
+    Blue50PCTPolygon,
+    Red50PCTPolygon,
+    Green50PCTPolygon,
+    Yellow50PCTPolygon,
+    Grey50PCTPolygon,
+    PolygonSymbolCount
 };
 
 typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {

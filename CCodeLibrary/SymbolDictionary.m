@@ -8,7 +8,7 @@
 
 #import "SymbolDictionary.h"
 #import "shr.h"
-#import "mathutil.h"
+#import "MathUtil.h"
 
 static double Adjust (double sym,double loc, double size)
 {
@@ -262,6 +262,40 @@ UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor)
     
     UIGraphicsEndImageContext();
     return image;
+}
+
++ (UIColor*) polygonSymbolFillColor:(PolygonSymbols)symbol
+{
+    UIColor * rtn = UIColor.whiteColor;
+    switch (symbol)
+    {
+        case Red50PCTPolygon:
+            rtn = [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.5];
+            break;
+        case Green50PCTPolygon:
+            rtn = [UIColor colorWithRed:0 green:1.0 blue:0 alpha:0.5];
+            break;
+        case Blue50PCTPolygon:
+            rtn = [UIColor colorWithRed:0 green:0 blue:1.0 alpha:0.5];
+            break;
+        case Yellow50PCTPolygon:
+            rtn = [UIColor colorWithRed:1.0 green:1.0 blue:0 alpha:0.5];
+            break;
+        case Grey50PCTPolygon:
+            rtn = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5];
+            break;
+        default:
+            break;
+    }
+    return rtn;
+}
++ (UIColor*) polygonSymbolBorderColor:(PolygonSymbols)symbol
+{
+    return [SymbolDictionary polygonSymbolFillColor:symbol];
+}
++ (int) polygonSymbolBorderWidth:(PolygonSymbols)symbol
+{
+    return 0;
 }
 
 @end

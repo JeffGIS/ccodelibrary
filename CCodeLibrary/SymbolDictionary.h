@@ -21,5 +21,8 @@
                   lineWidth:(CGFloat)lwidth;
 
 UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor);
++ (UIColor*) polygonSymbolFillColor:(PolygonSymbols)symbol;
++ (UIColor*) polygonSymbolBorderColor:(PolygonSymbols)symbol;
++ (int) polygonSymbolBorderWidth:(PolygonSymbols)symbol;
 
 @end

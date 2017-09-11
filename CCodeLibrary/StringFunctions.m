@@ -1162,15 +1162,34 @@ NSString * llpointsToBlob(LLPOINT* pPoints,int nPnts)
 {
     NSString * blob=@"";
     NSInteger lBlob = 0;
-    LPSTR pBlob = malloc(nPnts * sizeof(DPOINT)*2 +4);
+    LPSTR pBlob = malloc(nPnts * sizeof(LLPOINT)*2 +4);
     for (NSInteger i = 0; i < nPnts; i++)
     {
         NSInteger  j;
         LPBYTE pInts = (LPBYTE)&pPoints[i];
         //unsigned char c;
-        for (j = 0; j < sizeof(DPOINT); j++, pInts++, lBlob += 2)
+        for (j = 0; j < sizeof(LLPOINT); j++, pInts++, lBlob += 2)
         {
             //c = *pInts;
+            sprintf(&pBlob[lBlob], "%2.2x", *pInts);
+        }
+    }
+    pBlob[lBlob] = 0;
+    blob = [NSString stringWithUTF8String:pBlob];
+    free (pBlob);
+    return blob;
+}
+NSString * DPOINTSToBlob(DPOINT* pPoints,int nPnts)
+{
+    NSString * blob=@"";
+    NSInteger lBlob = 0;
+    LPSTR pBlob = malloc(nPnts * sizeof(DPOINT)*2 +4);
+    for (NSInteger i = 0; i < nPnts; i++)
+    {
+        NSInteger  j;
+        LPBYTE pInts = (LPBYTE)&pPoints[i];
+        for (j = 0; j < sizeof(DPOINT); j++, pInts++, lBlob += 2)
+        {
             sprintf(&pBlob[lBlob], "%2.2x", *pInts);
         }
     }

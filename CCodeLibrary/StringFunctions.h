@@ -78,6 +78,7 @@ Bool nameInList (NSString* name,NSArray* list);
 LLPOINT LLPOINTFromString (NSString* string);
 NSString * stringToBlob(NSString* str);
 NSString * llpointsToBlob(LLPOINT* pPoints,int nPnts);
+NSString * DPOINTSToBlob(DPOINT* pPoints,int nPnts);
 NSString * doubleToBlob(double val);
 NSString * floatToBlob(float val);
 NSString * intToBlob(int val);
