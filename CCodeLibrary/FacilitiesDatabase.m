@@ -716,7 +716,7 @@ Exit:
     NSString *graphPoints = @"";
     NSString *graphRefFile = @"";
     int graphRefFilePage = 0;
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@','%@',%i,%i,%i,'%@',%i,%i,%i,'%@',%@',%i)",facID,stepValueID,lastUpdate,stepDefID,header,prompt,value,needPhoto,numPhotos,completionStatus,comment,graphType,graphDesc,graphNumPoints,graphPoints,graphRefFile,graphRefFilePage];
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@','%@',%i,%i,%i,'%@',%i,%i,%i,'%@','%@',%i)",facID,stepValueID,lastUpdate,stepDefID,header,prompt,value,needPhoto,numPhotos,completionStatus,comment,graphType,graphDesc,graphNumPoints,graphPoints,graphRefFile,graphRefFilePage];
     [self executeCmd:cmd.UTF8String];
     [self close:opened];
 }
