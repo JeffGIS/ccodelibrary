@@ -23,14 +23,14 @@
 {
     if (!delegate || !view || !title || !text)
     {
-        NSLog(@"NVAlertView ERROR:Cannot set delegate, view, title or text to nil");
+        NSLog(@"NVTextViewAlert ERROR:Cannot set delegate, view, title or text to nil");
         return nil;
     }
     
     if (![delegate respondsToSelector:@selector(textViewAlert:didReturnText:)] ||
         ![delegate respondsToSelector:@selector(textViewAlertDidCancel:)])
     {
-        NSLog(@"NVAlertView ERROR:Delegate must respond to all selectors in protocol");
+        NSLog(@"NVTextViewAlert ERROR:Delegate must respond to all selectors in protocol");
         return nil;
     }
     
@@ -42,7 +42,7 @@
     
     [view addSubview:alert.overlayView];
     
-    CGFloat width = 400.0, heightSpacer = 10.0;
+    CGFloat width = 600.0, heightSpacer = 16.0;
     UIFont *font = [UIFont boldSystemFontOfSize:28.0];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)

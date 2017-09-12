@@ -22,14 +22,14 @@
 {
     if (!delegate || !view)
     {
-        NSLog(@"NVAlertView ERROR:Cannot set delegate or view to nil");
+        NSLog(@"NVCRISSignupView ERROR:Cannot set delegate or view to nil");
         return nil;
     }
     
     if (![delegate respondsToSelector:@selector(signupView:didReturnUserNumber:)] ||
         ![delegate respondsToSelector:@selector(signupView:didReturnName:organization:phone:email:)])
     {
-        NSLog(@"NVAlertView ERROR:Delegate must respond to all selectors in protocol");
+        NSLog(@"NVCRISSignupView ERROR:Delegate must respond to all selectors in protocol");
         return nil;
     }
     
