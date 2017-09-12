@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CCodeLibrary/GSSiEnums.h"
+#import "GSSiEnums.h"
 #import "CCodeTypes.h"
 typedef NS_ENUM(NSInteger, GraphicElementTypes)
 {
