@@ -272,5 +272,40 @@ typedef NS_ENUM(NSInteger, DataCompareOptions)
     DCOptionTime,
 };
 
+typedef NS_ENUM(NSInteger, PointSymbols)
+{
+    NoSym,
+    CrossSym,
+    PlusSym,
+    DiamondSym,
+    TriangleSym,
+    SquareSym,
+    Star1Sym,
+    Star2Sym,
+    CircleSym,
+    ArsonSym,
+    PointSymbolCount
+};
+
+typedef NS_ENUM(NSInteger, PolylineSymbols)
+{
+    NoPolylineSym,
+    BlueWidth3Polyline,
+    RedWidth3Polyline,
+    GreenWidth3Polyline,
+    PolylineSymbolCount
+};
+
+typedef NS_ENUM(NSInteger, PolygonSymbols)
+{
+    NoPolygonSym,
+    Blue50PCTPolygon,
+    Red50PCTPolygon,
+    Green50PCTPolygon,
+    Yellow50PCTPolygon,
+    Grey50PCTPolygon,
+    PolygonSymbolCount
+};
+
 
 @end

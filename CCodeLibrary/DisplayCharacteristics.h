@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CCodeLibrary/GSSiEnums.h"
 #import "CCodeTypes.h"
 typedef NS_ENUM(NSInteger, GraphicElementTypes)
 {
@@ -33,32 +34,6 @@ typedef NS_ENUM(NSInteger, GraphicElementTypes)
     CensusBlockBoundary,
     BoundaryArea,
     SidewalkPoint,
-};
-
-typedef NS_ENUM(NSInteger, PointSymbols)
-{
-    NoSym,
-    CrossSym,
-    PlusSym,
-    DiamondSym,
-    TriangleSym,
-    SquareSym,
-    Star1Sym,
-    Star2Sym,
-    CircleSym,
-    ArsonSym,
-    PointSymbolCount
-};
-
-typedef NS_ENUM(NSInteger, PolygonSymbols)
-{
-    NoPolygonSym,
-    Blue50PCTPolygon,
-    Red50PCTPolygon,
-    Green50PCTPolygon,
-    Yellow50PCTPolygon,
-    Grey50PCTPolygon,
-    PolygonSymbolCount
 };
 
 typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
