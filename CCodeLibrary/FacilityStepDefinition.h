@@ -2,27 +2,7 @@
 //  CCodeLibrary
 
 #import "CCodeLibrary/SQLiteLib.h"
-
-typedef NS_ENUM(NSInteger, FacilityMeasurementType)
-{
-    FMTInvalidType,
-    FMTYesNo,
-    FMTImageList,
-    FMTChoiceList,
-    FMTSlope,
-    FMTInches,
-    FMTFeet,
-    FMTLocatePoint,
-    FMTLocatePolyline,
-    FMTLocatePolygon,
-    FMTDoorCloseSeconds,
-    FMTFieldCount,
-    FMTText,
-    FMTHeader,
-    FMTHeaderOnly,
-    FMTCount,
-    FMTPriorHeader,
-};
+#import "GSSiEnums.h"
 
 @interface FacilityStepDefinition : NSObject
 
@@ -34,6 +14,7 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
 @property NSArray * reference;
 @property Bool photoRequired;
 @property FacilityMeasurementType measurementType;
+@property int symbol;
 @property NSString * prompt;
 @property NSString * test;
 @property NSString * variables;

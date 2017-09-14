@@ -106,6 +106,60 @@
         ft = FMTDoorCloseSeconds;
     return ft;
 }
+- (FacPointSymbols) pointSymbolFromText:(NSString *)type
+{
+    FacPointSymbols ft = 0;
+    
+    if ([type isEqualToString:@"WaterCooler"])
+        ft = FPSWaterCooler;
+    if ([type isEqualToString:@"ToiletRoom"])
+        ft = FPSToiletRoom;
+    if ([type isEqualToString:@"Elevator"])
+        ft = FPSElevator;
+    return ft;
+}
+
+- (FacPolylineSymbols) polylineSymbolFromText:(NSString *)type
+{
+    FacPolylineSymbols ft = 0;
+    
+    if ([type isEqualToString:@"CirculationPath"])
+        ft = FPSCirculationPath;
+    if ([type isEqualToString:@"AccessibleRoute"])
+        ft = FPSAccessibleRoute;
+    return ft;
+}
+
+- (FacPolygonSymbols) polygonSymbolFromText:(NSString *)type
+{
+    FacPolygonSymbols ft = 0;
+    
+    if ([type isEqualToString:@"PublicArea"])
+        ft = FPSPublicArea;
+    if ([type isEqualToString:@"WorkArea"])
+        ft = FPSWorkArea;
+    return ft;
+}
+
+- (int) symbolFromType:(FacilityMeasurementType)type
+               andText:(NSString*)text
+{
+    int rtn = 0;
+    
+    if (type == FMTLocatePoint)
+    {
+        rtn = (int)[self pointSymbolFromText:text];
+    }
+    if (type == FMTLocatePolyline)
+    {
+        rtn = (int)[self polylineSymbolFromText:text];
+    }
+    if (type == FMTLocatePolygon)
+    {
+        rtn = (int)[self polygonSymbolFromText:text];
+    }
+    return rtn;
+}
  - (Bool) load
 {
     Bool rtn = FALSE;
@@ -125,7 +179,7 @@
     Bool rtn = FALSE;
     BOOL opened = [self open];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT Title,Prompt,Header,Type,PhotoRequired,Reference,Link,Test,Variables,Command,ChoiceList,MinValue,MaxValue FROM STEPDEF WHERE SectionID = '%@'",stepID];
+    NSString *query = [NSString stringWithFormat:@"SELECT Title,Prompt,Header,Type,PhotoRequired,Reference,Link,Test,Variables,Command,ChoiceList,MinValue,MaxValue,Symbol FROM STEPDEF WHERE SectionID = '%@'",stepID];
     
     sqlite3_stmt *statement = NULL;
     _sectionID = stepID;
@@ -159,6 +213,9 @@
         _choiceList = [[NSString stringWithUTF8String:value]componentsSeparatedByString:@";"];
         _minValue = sqlite3_column_double(statement, i++);
         _maxValue = sqlite3_column_double(statement, i++);
+        value = (LPSTR)sqlite3_column_text(statement, i++);
+        _symbol = [self symbolFromType:_measurementType
+                               andText:[NSString stringWithUTF8String:value]];
 
     }
     

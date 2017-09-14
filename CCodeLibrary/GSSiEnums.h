@@ -1,9 +1,12 @@
 //  GSSiEnums.h
 //  CCodeLibrary
+#ifndef GSSiEnums_h
+#define GSSiEnums_h
+
 
 #import <Foundation/Foundation.h>
 
-@interface GSSiEnums : NSObject
+//@interface GSSiEnums : NSObject
 
 typedef NS_ENUM(NSInteger, DataSetTypes)
 {
@@ -306,6 +309,55 @@ typedef NS_ENUM(NSInteger, PolygonSymbols)
     Grey50PCTPolygon,
     PolygonSymbolCount
 };
+typedef NS_ENUM(NSInteger, FacGraphicsTypes)
+{
+    FGTPoint,
+    FGTPolyline,
+    FGTPolygon,
+};
+
+typedef NS_ENUM(NSInteger, FacilityMeasurementType)
+{
+    FMTInvalidType,
+    FMTYesNo,
+    FMTImageList,
+    FMTChoiceList,
+    FMTSlope,
+    FMTInches,
+    FMTFeet,
+    FMTLocatePoint,
+    FMTLocatePolyline,
+    FMTLocatePolygon,
+    FMTDoorCloseSeconds,
+    FMTFieldCount,
+    FMTText,
+    FMTHeader,
+    FMTHeaderOnly,
+    FMTCount,
+    FMTPriorHeader,
+};
+
+typedef NS_ENUM(NSInteger, FacPointSymbols)
+{
+    FPSWaterCooler=CrossSym,
+    FPSToiletRoom=DiamondSym,
+    FPSElevator=TriangleSym,
+};
+
+typedef NS_ENUM(NSInteger, FacPolylineSymbols)
+{
+    FPSCirculationPath=RedWidth3Polyline,
+    FPSAccessibleRoute=GreenWidth3Polyline,
+};
+
+typedef NS_ENUM(NSInteger, FacPolygonSymbols)
+{
+    FPSPublicArea=Red50PCTPolygon,
+    FPSWorkArea=Green50PCTPolygon,
+};
 
 
-@end
+
+//@end
+
+#endif

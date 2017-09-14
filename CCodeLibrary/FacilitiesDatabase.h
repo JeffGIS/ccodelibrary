@@ -5,7 +5,6 @@
 #import "FacilityPoint.h"
 #import "SQLiteLib.h"
 #import "FTPDataPull.h"
-#import "SymbolDictionary.h"
 
 @import Foundation;
 
@@ -20,13 +19,6 @@
 
 #define FAC_NO_NETWORK_CONNECTION 3
 #define FAC_NO_UPLOADED_FILE 4
-
-typedef NS_ENUM(NSInteger, FacGraphicsTypes)
-{
-    FGTPoint,
-    FGTPolyline,
-    FGTPolygon,
-};
 
 @class FacilitiesDatabase;
 
@@ -107,14 +99,16 @@ Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCS
                   usingSymbol:(PointSymbols)symbol
                       atPoint:(DPOINT) point
                        onPage:(int)page
-              inReferenceFile:(NSString *)refFile;
+              inReferenceFile:(NSString *)refFile
+                       ofType:(NSString *)type;
 
 +(Bool) addPolygonElementToStep:(NSString *)stepID
                     usingSymbol:(PolygonSymbols)symbol
                   withNumPoints:(int)nPoints
                          points:(DPOINT*) points
                          onPage:(int)page
-                inReferenceFile:(NSString *)refFile;
+                inReferenceFile:(NSString *)refFile
+                         ofType:(NSString *)type;
 
 
 @end

@@ -1,8 +1,8 @@
 //  GSSiEnums.m
 //  CCodeLibrary
 
-#import "GSSiEnums.h"
+//#import "GSSiEnums.h"
 
-@implementation GSSiEnums
+//@implementation GSSiEnums
 
-@end
+//@end
