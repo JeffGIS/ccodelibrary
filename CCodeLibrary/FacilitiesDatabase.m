@@ -73,6 +73,7 @@ static char lastDBPath[PATH_MAX]={0};
                        stepDefinitionID CHAR(64),\
                        header CHAR(256),\
                        prompt CHAR(256),\
+                       variables CHAR(4096),\
                        value CHAR(256),\
                        needPhoto INT, numPhotos INT,\
                        complete INT,\
@@ -716,8 +717,10 @@ Exit:
     int graphType=0, graphDesc=0, graphNumPoints=0;
     NSString *graphPoints = @"";
     NSString *graphRefFile = @"";
+    NSString *graphRefFileType = @"";
+    NSString *variables = @"";
     int graphRefFilePage = 0;
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@','%@',%i,%i,%i,'%@',%i,%i,%i,'%@','%@','%@',%i)",facID,stepValueID,lastUpdate,stepDefID,header,prompt,value,needPhoto,numPhotos,completionStatus,comment,graphType,graphDesc,graphNumPoints,graphPoints,graphRefFile,graphRefFilePage];
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@','%@','%@',%i,%i,%i,'%@',%i,%i,%i,'%@','%@','%@',%i)",facID,stepValueID,lastUpdate,stepDefID,header,prompt,variables,value,needPhoto,numPhotos,completionStatus,comment,graphType,graphDesc,graphNumPoints,graphPoints,graphRefFile,graphRefFileType,graphRefFilePage];
     [self executeCmd:cmd.UTF8String];
     [self close:opened];
 }
@@ -828,12 +831,23 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     int numPhotos = 0;
     int completionStatus = 0;
     int facID = CRAPI.sharedInstance.currentFacility.facID;
+    NSString * promptValue = @"";
+    if (prompt && *prompt)
+    {
+        promptValue = [NSString stringWithUTF8String:prompt];
+    }
+    else
+    {
+        promptValue = [FacilityStepDefinition getStepPrompt:[NSString stringWithUTF8String:stepDefID]];
+    }
+    promptValue = ExpandString(promptValue);
     NSString * headerValue;
     if (header && *header)
         headerValue = [NSString stringWithUTF8String:header];
     else
         headerValue = [FacilityStepDefinition getStepHeader:[NSString stringWithUTF8String:stepDefID]];
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s',%i,%i,%i,'%s',0,0,0,'','','',0)",facID,stepValueID,lastUpdate,stepDefID,headerValue.UTF8String,prompt,value,needPhoto,numPhotos,completionStatus,comment];
+    NSString * variablesValue = [FacilityStepDefinition getStepVariables:[NSString stringWithUTF8String:stepDefID]];
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s','%s',%i,%i,%i,'%s',0,0,0,'','','',0)",facID,stepValueID,lastUpdate,stepDefID,headerValue.UTF8String,promptValue.UTF8String,variablesValue.UTF8String,value,needPhoto,numPhotos,completionStatus,comment];
     rtn = [fd executeCmd:cmd.UTF8String];
     
     [fd close:opened];
@@ -850,8 +864,9 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     int facID = CRAPI.sharedInstance.currentFacility.facID;
     FacilitiesDatabase * fd = FacilitiesDatabase.new;
     Bool opened = [fd open:lastDBPath];
+    NSString * refFileName = [refFile lastPathComponent];
     NSString * coordinates = DPOINTSToBlob(&point,1);
-    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=1, graphicElementCoordinates='%@', graphicElementReferenceFile='%@',graphicElementReferenceFileType='%@',graphicElementReferenceFilePage=%i WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPoint, (int)symbol, coordinates, refFile, type, page, facID, stepID];
+    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=1, graphicElementCoordinates='%@', graphicElementReferenceFile='%@',graphicElementReferenceFileType='%@',graphicElementReferenceFilePage=%i, Complete=1 WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPoint, (int)symbol, coordinates, refFileName, type, page, facID, stepID];
     rtn = [fd executeCmd:cmd.UTF8String];
     [fd close:opened];
     return rtn;
@@ -871,7 +886,7 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     Bool opened = [fd open:lastDBPath];
     NSString * refFileName = [refFile lastPathComponent];
     NSString * coordinates = DPOINTSToBlob(points,nPoints);
-    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=%i, graphicElementCoordinates='%@', graphicElementReferenceFile='%@',graphicElementReferenceFileType='%@',graphicElementReferenceFilePage=%i  WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPolygon, (int)symbol, nPoints, coordinates, refFileName, type, page, facID, stepID];
+    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=%i, graphicElementCoordinates='%@', graphicElementReferenceFile='%@',graphicElementReferenceFileType='%@',graphicElementReferenceFilePage=%i, Complete=1  WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPolygon, (int)symbol, nPoints, coordinates, refFileName, type, page, facID, stepID];
     rtn = [fd executeCmd:cmd.UTF8String];
     [fd close:opened];
     return rtn;
@@ -893,7 +908,21 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     
     while (sqlite3_step(statement) == SQLITE_ROW)
     {
+        int i = 0;
+        int type = (int)sqlite3_column_int(statement, i++);
+        int symbol = (int)sqlite3_column_int(statement, i++);
+        int numPoints = (int)sqlite3_column_int(statement, i++);
+        NSNumber *typ = [NSNumber numberWithInt:type];
+        [types addObject:typ];
+        NSNumber *sym = [NSNumber numberWithInt:symbol];
+        [symbols addObject:sym];
         
+        LPDPOINT points = (LPDPOINT)sqlite3_column_blob(statement,i++);
+        for (int ip = 0;ip<numPoints;ip++)
+        {
+           // DPoint * dp = [DPoint fromDPOINT:points++];
+        }
+
     }
     
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), fd.database);

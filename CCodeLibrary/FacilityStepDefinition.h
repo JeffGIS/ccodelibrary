@@ -34,5 +34,7 @@
 - (Bool) getStepDefinition:(NSString *)stepID;
 + (NSString *) getStepCommand:(NSString *)stepID;
 + (NSString *) getStepHeader:(NSString *)stepID;
++ (NSString *) getStepVariables:(NSString *)stepID;
++ (NSString *) getStepPrompt:(NSString *)stepID;
 
 @end

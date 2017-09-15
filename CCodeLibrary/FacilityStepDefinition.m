@@ -248,4 +248,28 @@
     [fsd close:opened];
     return rtn;
 }
++ (NSString *) getStepVariables:(NSString *)stepID
+{
+    NSString * rtn = @"";
+    FacilityStepDefinition *fsd = FacilityStepDefinition.new;
+    Bool opened = [fsd open];
+    if ([fsd getStepDefinition:stepID])
+    {
+        rtn = fsd.variables;
+    }
+    [fsd close:opened];
+    return rtn;
+}
++ (NSString *) getStepPrompt:(NSString *)stepID
+{
+    NSString * rtn = @"";
+    FacilityStepDefinition *fsd = FacilityStepDefinition.new;
+    Bool opened = [fsd open];
+    if ([fsd getStepDefinition:stepID])
+    {
+        rtn = fsd.prompt;
+    }
+    [fsd close:opened];
+    return rtn;
+}
 @end
