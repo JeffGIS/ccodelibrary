@@ -1,10 +1,5 @@
-//
 //  SymbolDictionary.m
 //  GMMobile
-//
-//  Created by Bill Munson on 11/5/15.
-//  Copyright © 2015 GSSi. All rights reserved.
-//
 
 #import "SymbolDictionary.h"
 #import "shr.h"
@@ -26,6 +21,76 @@ static DPOINT Star1[]={-5,0,-1.5,1.5,0,5,1.5,1.5,5,0,1.5,-1.5,0,-5,-1.5,-1.5,-5,
 static DPOINT Star2[]={0,5,1.1,1.3,5,1.3,1.9,-1.1,3,-5,0,-2.6,-3,-5,-2,-1.1,-5,1.3,-1.1,1.3,0,5};
 static DPOINT Square[]={-5,5,5,5,5,-5,-5,-5,-5,5};
 static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,.7,-.7,1.2,-4.0,-.4,-1.5,-2.0,-3.4,-1.6,-.9,-4.4,-1.6};
+
++ (NSArray<DPoint *> *)symbolDefForType:(PointSymbols)type
+{
+    NSMutableArray<DPoint *> *symbolDef = NSMutableArray.array;
+    
+    switch (type)
+    {
+        case CrossSym:
+            for (int i = 0; i < (sizeof(Cross) / sizeof(DPOINT)); i++)
+            {
+                DPoint *point = [DPoint fromDPOINT:&Cross[i]];
+                [symbolDef addObject:point];
+            }
+            break;
+        case PlusSym:
+            for (int i = 0; i < (sizeof(Plus) / sizeof(DPOINT)); i++)
+            {
+                DPoint *point = [DPoint fromDPOINT:&Plus[i]];
+                [symbolDef addObject:point];
+            }
+            break;
+        case DiamondSym:
+            for (int i = 0; i < (sizeof(Diamond) / sizeof(DPOINT)); i++)
+            {
+                DPoint *point = [DPoint fromDPOINT:&Diamond[i]];
+                [symbolDef addObject:point];
+            }
+            break;
+        case TriangleSym:
+            for (int i = 0; i < (sizeof(Triangle) / sizeof(DPOINT)); i++)
+            {
+                DPoint *point = [DPoint fromDPOINT:&Triangle[i]];
+                [symbolDef addObject:point];
+            }
+            break;
+        case SquareSym:
+            for (int i = 0; i < (sizeof(Square) / sizeof(DPOINT)); i++)
+            {
+                DPoint *point = [DPoint fromDPOINT:&Square[i]];
+                [symbolDef addObject:point];
+            }
+            break;
+        case Star1Sym:
+            for (int i = 0; i < (sizeof(Star1) / sizeof(DPOINT)); i++)
+            {
+                DPoint *point = [DPoint fromDPOINT:&Star1[i]];;
+                [symbolDef addObject:point];
+            }
+            break;
+        case Star2Sym:
+            for (int i = 0; i < (sizeof(Star2) / sizeof(DPOINT)); i++)
+            {
+                DPoint *point = [DPoint fromDPOINT:&Star2[i]];
+                [symbolDef addObject:point];
+            }
+            break;
+        case ArsonSym:
+            for (int i = 0; i < (sizeof(Splash) / sizeof(DPOINT)); i++)
+            {
+                DPoint *point = [DPoint fromDPOINT:&Splash[i]];
+                [symbolDef addObject:point];
+            }
+            break;
+        default:break;
+    }
+    
+    NSLog(@"%@", symbolDef);
+    
+    return symbolDef.copy;
+}
 
 + (void)drawPointWithSymbol:(CGContextRef)context
                          at:(LPDPOINT)pt

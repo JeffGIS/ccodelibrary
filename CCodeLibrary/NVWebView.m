@@ -834,4 +834,30 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [_webView.scrollView.layer addSublayer:_polygon];
 }
 
+- (void)drawShapeWithPoints:(NSArray<DPoint *> *)points
+{
+    CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+    DPoint *firstPoint = points[0];
+    CGPoint point = CGPointZero;
+    point.x = (firstPoint.x * _webView.scrollView.contentSize.width);
+    point.y = (firstPoint.y * pageHeight);
+    UIBezierPath *path = UIBezierPath.bezierPath;
+    [path moveToPoint:point];
+    
+    for (int i = 1; i < points.count; i++)
+    {
+        DPoint *currentPoint = points[i];
+        CGPoint point = CGPointZero;
+        point.x = (currentPoint.x * _webView.scrollView.contentSize.width);
+        point.y = (currentPoint.y * pageHeight);
+        [path addLineToPoint:point];
+    }
+    
+    CAShapeLayer *shape = CAShapeLayer.layer;
+    shape.fillColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5].CGColor;
+    shape.position = CGPointZero;
+    shape.path = path.CGPath;
+    [_webView.scrollView.layer addSublayer:shape];
+}
+
 @end

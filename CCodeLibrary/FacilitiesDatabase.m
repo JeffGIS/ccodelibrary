@@ -892,16 +892,16 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     return rtn;
 }
 
-+ (void) getExistingGraphicDataTypes:(NSMutableArray *)types
-                        usingSymbols:(NSMutableArray *)symbols
-                   havingCoordinates:(NSMutableArray *)coordinates
-                             forPage:(int)page
-                              inFile:(NSString *)refFile
++ (void)getExistingGraphicDataTypes:(NSMutableArray<NSNumber *> *)types
+                       usingSymbols:(NSMutableArray<NSNumber *> *)symbols
+                  havingCoordinates:(NSMutableArray<NSMutableArray<DPoint *> *> *)coordinates
+                            forPage:(int)page
+                             inFile:(NSString *)refFile
 {
     int facID = CRAPI.sharedInstance.currentFacility.facID;
-    FacilitiesDatabase * fd = FacilitiesDatabase.new;
-    Bool opened = [fd open:lastDBPath];
-    NSString * refFileName = [refFile lastPathComponent];
+    FacilitiesDatabase *fd = FacilitiesDatabase.new;
+    BOOL opened = [fd open:lastDBPath];
+    NSString *refFileName = [refFile lastPathComponent];
     NSString *query = [NSString stringWithFormat:@"SELECT graphicElementType, graphicElementSymbol, graphicElementNumCoord, graphicElementCoordinates FROM FacilityValues WHERE facilityNumber=%i AND graphicElementReferenceFile='%@' AND graphicElementReferenceFilePage=%i",facID,refFileName,page];
     sqlite3_stmt *statement = NULL;
     SQLOK(__FILE__,__LINE__,SQLitePrepare(fd.database, query.UTF8String, -1, &statement, NULL), fd.database);
@@ -917,16 +917,16 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
         NSNumber *sym = [NSNumber numberWithInt:symbol];
         [symbols addObject:sym];
         
-        int nBlobBytes = sqlite3_column_bytes(statement,i);
-        
+        //int nBlobBytes = sqlite3_column_bytes(statement,i);
         LPDPOINT points = (LPDPOINT)sqlite3_column_blob(statement,i++);
-        NSMutableArray *pointArray = NSMutableArray.new;
+        NSMutableArray  <DPoint *> *pointArray = NSMutableArray.array;
         
-        for (int ip = 0;ip<numPoints;ip++)
+        for (int ip = 0; ip < numPoints; ip++)
         {
-            DPoint * dp = [DPoint fromDPOINT:points++];
+            DPoint *dp = [DPoint fromDPOINT:points++];
             [pointArray addObject:dp];
         }
+        
         [coordinates addObject:pointArray];
     }
     
@@ -935,4 +935,5 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     
     return;
 }
+
 @end

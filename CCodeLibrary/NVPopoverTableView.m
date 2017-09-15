@@ -484,7 +484,7 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)rtnButtonTapped:(UIButton *)button
 {
-    NSMutableArray <NSNumber *> *selectedRows = NSMutableArray.array;
+    NSMutableArray<NSNumber *> *selectedRows = NSMutableArray.array;
     NSMutableArray *selectedTextArray = NSMutableArray.array;
     
     if (!_tableView.indexPathsForSelectedRows.count)

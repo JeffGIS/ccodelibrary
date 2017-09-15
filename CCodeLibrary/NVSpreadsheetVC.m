@@ -20,7 +20,7 @@
 @property (nonatomic) UITextField *titleTextField;
 @property (nonatomic) UILabel *numRowsLabel, *numColsLabel;
 @property (nonatomic) UIView *topSpace;
-@property (nonatomic) NSMutableArray <NSNumber *> *selectedRows;
+@property (nonatomic) NSMutableArray<NSNumber *> *selectedRows;
 @property (nonatomic) UIColor *selectedRowColor;
 @property NSInteger selectedRow, selectedColumn, lastTapSelectedRow;
 
