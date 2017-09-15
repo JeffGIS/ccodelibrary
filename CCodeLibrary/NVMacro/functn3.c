@@ -6794,7 +6794,7 @@ HaveVP:;
 		}
 			break;
 			*/
-        case 787: //$ADASTEP(ADD,SECTION,NumPublicAreas,Value)
+        case 787: //$ADASTEP(ADD,SECTION,NumPublicAreas,Prompt,Value)
                   //$ADASTEP(ADD,HEADER,Prompt,Value)
         {
             nArgs = GetFunArgs(Args, Arg, 5, &hMem, pBrkPt, bpOffset, bpLen);
@@ -6818,7 +6818,7 @@ HaveVP:;
                     }
                     else if (!_stricmp(Arg[2], "SECTION"))
                     {
-                        AddStep (newStepID,Arg[3],"",Arg[4],"",0);
+                        AddStep (newStepID,Arg[3],Arg[4],Arg[5],"",0);
                     }
                     ProcessText ("$INC(%SEQUENCE)");
                  }

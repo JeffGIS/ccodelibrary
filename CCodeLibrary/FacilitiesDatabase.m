@@ -877,4 +877,28 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     return rtn;
 }
 
++ (void) getExistingGraphicDataTypes:(NSMutableArray *)types
+                        usingSymbols:(NSMutableArray *)symbols
+                   havingCoordinates:(NSMutableArray *)coordinates
+                             forPage:(int)page
+                              inFile:(NSString *)refFile
+{
+    int facID = CRAPI.sharedInstance.currentFacility.facID;
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    NSString * refFileName = [refFile lastPathComponent];
+    NSString *query = [NSString stringWithFormat:@"SELECT graphicElementType, graphicElementSymbol, graphicElementNumCoord, graphicElementCoordinates FROM FacilityValues WHERE facilityNumber=%i AND graphicElementReferenceFile='%@' AND graphicElementReferenceFilePage=%i",facID,refFileName,page];
+    sqlite3_stmt *statement = NULL;
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(fd.database, query.UTF8String, -1, &statement, NULL), fd.database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        
+    }
+    
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), fd.database);
+    [fd close:opened];
+    
+    return;
+}
 @end

@@ -31,9 +31,6 @@
 @end
 
 @interface FacilitiesDatabase : NSObject<FTPDataPullDelegate>
-{
-    sqlite3 *_database;
-}
 
 @property (nonatomic, weak) id <FacilitiesDatabaseDelegate> delegate;
 @property int geoid;
@@ -41,6 +38,7 @@
 @property BOOL isOpen;
 @property NSString *path;
 @property sqlite3_stmt *statement;
+@property sqlite3 * database;
 
 + (FacilitiesDatabase *)databaseForGeoid:(int)geoid;
 
@@ -109,6 +107,11 @@ Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCS
                          onPage:(int)page
                 inReferenceFile:(NSString *)refFile
                          ofType:(NSString *)type;
++ (void) getExistingGraphicDataTypes:(NSMutableArray *)types
+                        usingSymbols:(NSMutableArray *)symbols
+                   havingCoordinates:(NSMutableArray *)coordinates
+                             forPage:(int)page
+                              inFile:(NSString *)file;
 
 
 @end
