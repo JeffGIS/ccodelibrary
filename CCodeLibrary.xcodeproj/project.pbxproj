@@ -10,6 +10,8 @@
 		1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F0B41FA19AEAE0A00981F57 /* FTPDataPull.m */; };
 		1F101D2719AE96EB0006E1D5 /* findIntersection.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F101D2619AE96EB0006E1D5 /* findIntersection.c */; };
 		1F2F471E19B80020004186EF /* VerticalSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */; };
+		1F4972A21F6C513600A60B63 /* DPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4972A11F6C513600A60B63 /* DPoint.m */; };
+		1F4972A31F6C538200A60B63 /* DPoint.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F4972A01F6C513600A60B63 /* DPoint.h */; };
 		1F5150A31CE3959000BA4A5E /* AlleyWallData.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F5150A21CE3959000BA4A5E /* AlleyWallData.m */; };
 		1F5150A41CE396FE00BA4A5E /* AlleyWallData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1F5150A11CE3959000BA4A5E /* AlleyWallData.h */; };
 		1F5150A51CE3A3B400BA4A5E /* SQLiteLib.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB42311B2B1A5E00C36FFC /* SQLiteLib.h */; };
@@ -389,6 +391,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				1F4972A31F6C538200A60B63 /* DPoint.h in CopyFiles */,
 				BB8BA0EB1F5E3A1B0024B8C2 /* FacilitiesStepValue.h in CopyFiles */,
 				BB8BA0E81F5D8B110024B8C2 /* FacilityStepDefinition.h in CopyFiles */,
 				BB0631331F461ED800BDCA8F /* COMPUTE.H in CopyFiles */,
@@ -550,6 +553,8 @@
 		1F101D2619AE96EB0006E1D5 /* findIntersection.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = findIntersection.c; sourceTree = "<group>"; };
 		1F2F471C19B80020004186EF /* VerticalSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerticalSegmentedControl.h; sourceTree = "<group>"; };
 		1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerticalSegmentedControl.m; sourceTree = "<group>"; };
+		1F4972A01F6C513600A60B63 /* DPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DPoint.h; sourceTree = "<group>"; };
+		1F4972A11F6C513600A60B63 /* DPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DPoint.m; sourceTree = "<group>"; };
 		1F5150A11CE3959000BA4A5E /* AlleyWallData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlleyWallData.h; sourceTree = "<group>"; };
 		1F5150A21CE3959000BA4A5E /* AlleyWallData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AlleyWallData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1F829A981C342BDD00DD429C /* FileLister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileLister.h; sourceTree = "<group>"; };
@@ -1382,6 +1387,8 @@
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
 				BB9B8FA91EAE8A6600AFB3CA /* TimeLine.h */,
 				BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */,
+				1F4972A01F6C513600A60B63 /* DPoint.h */,
+				1F4972A11F6C513600A60B63 /* DPoint.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1710,6 +1717,7 @@
 				69F975971ECCB8200044CCED /* NVContactsViewer.m in Sources */,
 				BBC361C01F429C0200B51DF3 /* bigmem.c in Sources */,
 				BBC361C21F429C0200B51DF3 /* floatap.c in Sources */,
+				1F4972A21F6C513600A60B63 /* DPoint.m in Sources */,
 				69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */,
 				BBC361C81F429C0200B51DF3 /* Stubs.c in Sources */,
 				EBC01D1A1BED1C8C0004C751 /* kfiles.c in Sources */,

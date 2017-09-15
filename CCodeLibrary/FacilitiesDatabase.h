@@ -5,6 +5,7 @@
 #import "FacilityPoint.h"
 #import "SQLiteLib.h"
 #import "FTPDataPull.h"
+#import "DPoint.h"
 
 @import Foundation;
 

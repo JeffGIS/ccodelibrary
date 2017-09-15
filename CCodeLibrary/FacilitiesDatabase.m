@@ -866,7 +866,7 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     Bool opened = [fd open:lastDBPath];
     NSString * refFileName = [refFile lastPathComponent];
     NSString * coordinates = DPOINTSToBlob(&point,1);
-    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=1, graphicElementCoordinates='%@', graphicElementReferenceFile='%@',graphicElementReferenceFileType='%@',graphicElementReferenceFilePage=%i, Complete=1 WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPoint, (int)symbol, coordinates, refFileName, type, page, facID, stepID];
+    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=1, graphicElementCoordinates=X'%@', graphicElementReferenceFile='%@',graphicElementReferenceFileType='%@',graphicElementReferenceFilePage=%i, Complete=1 WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPoint, (int)symbol, coordinates, refFileName, type, page, facID, stepID];
     rtn = [fd executeCmd:cmd.UTF8String];
     [fd close:opened];
     return rtn;
@@ -886,7 +886,7 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     Bool opened = [fd open:lastDBPath];
     NSString * refFileName = [refFile lastPathComponent];
     NSString * coordinates = DPOINTSToBlob(points,nPoints);
-    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=%i, graphicElementCoordinates='%@', graphicElementReferenceFile='%@',graphicElementReferenceFileType='%@',graphicElementReferenceFilePage=%i, Complete=1  WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPolygon, (int)symbol, nPoints, coordinates, refFileName, type, page, facID, stepID];
+    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=%i, graphicElementCoordinates=X'%@', graphicElementReferenceFile='%@',graphicElementReferenceFileType='%@',graphicElementReferenceFilePage=%i, Complete=1  WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPolygon, (int)symbol, nPoints, coordinates, refFileName, type, page, facID, stepID];
     rtn = [fd executeCmd:cmd.UTF8String];
     [fd close:opened];
     return rtn;
@@ -917,12 +917,17 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
         NSNumber *sym = [NSNumber numberWithInt:symbol];
         [symbols addObject:sym];
         
+        int nBlobBytes = sqlite3_column_bytes(statement,i);
+        
         LPDPOINT points = (LPDPOINT)sqlite3_column_blob(statement,i++);
+        NSMutableArray *pointArray = NSMutableArray.new;
+        
         for (int ip = 0;ip<numPoints;ip++)
         {
-           // DPoint * dp = [DPoint fromDPOINT:points++];
+            DPoint * dp = [DPoint fromDPOINT:points++];
+            [pointArray addObject:dp];
         }
-
+        [coordinates addObject:pointArray];
     }
     
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), fd.database);
