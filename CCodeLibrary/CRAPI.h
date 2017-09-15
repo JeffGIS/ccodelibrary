@@ -31,6 +31,13 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
     CHOROPLETH,
 };
 
+typedef NS_ENUM(NSInteger, FieldDisplayOption)
+{
+    FDOAll,
+    FDOInComplete,
+    FDONonConforming,
+};
+
 @interface TimeRange : NSObject
 
 @property int beginTime, endTime;
@@ -129,6 +136,8 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
 @property (nonatomic, nullable) NSMutableArray *lastAreaText;
 @property (nonatomic) BOOL isRentaliPad, canUseSdwk, inSdwkMode, GMTilesVisible;
 @property (nonnull)Facility * currentFacility;
+@property (nonatomic) int facilityFieldDisplayOpt;
+
 + (nullable CRAPI *)sharedInstance;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
