@@ -925,29 +925,30 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 {
     CGFloat lineWidth = 0.0;
     UIBezierPath *path = [self pathFromPoints:points];
-    CAShapeLayer *shape = CAShapeLayer.layer;
-    shape.position = CGPointZero;
-    shape.path = path.CGPath;
-    shape.strokeColor = [SymbolDictionary polylineStrokeColor:type lineWidth:&lineWidth].CGColor;
-    shape.lineWidth = lineWidth;
-    [_webView.scrollView.layer addSublayer:shape];
+    CAShapeLayer *polyline = CAShapeLayer.layer;
+    polyline.position = CGPointZero;
+    polyline.path = path.CGPath;
+    polyline.strokeColor = [SymbolDictionary polylineStrokeColor:type lineWidth:&lineWidth].CGColor;
+    polyline.lineWidth = lineWidth;
+    polyline.fillColor = UIColor.clearColor.CGColor;
+    [_webView.scrollView.layer addSublayer:polyline];
     [_polylinePoints addObject:points];
-    [_polylines addObject:shape];
+    [_polylines addObject:polyline];
 }
 
 - (void)drawPolygonWithPoints:(NSArray<DPoint *> *)points
                          type:(PolygonSymbols)type
 {
     UIBezierPath *path = [self pathFromPoints:points];
-    CAShapeLayer *shape = CAShapeLayer.layer;
-    shape.fillColor = [SymbolDictionary polygonSymbolFillColor:type].CGColor;
-    shape.position = CGPointZero;
-    shape.path = path.CGPath;
-    shape.strokeColor = [UIColor colorWithWhite:0.0 alpha:0.5].CGColor;
-    shape.lineWidth = 1.0;
-    [_webView.scrollView.layer addSublayer:shape];
-    [_polylinePoints addObject:points];
-    [_polylines addObject:shape];
+    CAShapeLayer *polygon = CAShapeLayer.layer;
+    polygon.position = CGPointZero;
+    polygon.path = path.CGPath;
+    polygon.strokeColor = [UIColor colorWithWhite:0.0 alpha:0.5].CGColor;
+    polygon.lineWidth = 1.0;
+    polygon.fillColor = [SymbolDictionary polygonSymbolFillColor:type].CGColor;
+    [_webView.scrollView.layer addSublayer:polygon];
+    [_polygonPoints addObject:points];
+    [_polygons addObject:polygon];
 }
 
 @end
