@@ -17,9 +17,12 @@
 
 UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor);
 + (UIColor *)polygonSymbolFillColor:(PolygonSymbols)symbol;
+
++ (UIColor *)polylineStrokeColor:(PolylineSymbols)symbol
+                       lineWidth:(CGFloat *)lineWidth;
+
 + (UIColor *)polygonSymbolBorderColor:(PolygonSymbols)symbol;
 + (int)polygonSymbolBorderWidth:(PolygonSymbols)symbol;
-
 + (NSArray <DPoint *> *)symbolDefForType:(PointSymbols)type;
 
 @end

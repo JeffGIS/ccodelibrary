@@ -5,10 +5,10 @@
 #import "MathUtil.h"
 #import "PriorityLocation.h"
 #import "PointInAreaClass.h"
-#import "GSSiEnums.h"
 #import "CRAPI.h"
 #import "GSSiDefs.h"
 #import "CurbRampData.h"
+#import "GSSiEnums.h"
 
 #define degreesToRadians(x) (M_PI * x / 180.0)
 #define radiansToDegrees(x) (x * 180.0 / M_PI)

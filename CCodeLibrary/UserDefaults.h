@@ -1,15 +1,13 @@
 //  UserDefaults.h
 //  CCodeLibrary
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-#import <MapKit/MapKit.h>
-#import <CoreLocation/CoreLocation.h>
+@import UIKit;
+@import MapKit;
+@import CoreLocation;
 #import "GSSiPopoverView.h"
 #import "Colors.h"
 #import "CCodeTypes.h"
 #import "NVAlertView.h"
-#import "GSSiEnums.h"
 
 @interface UserDefaults : NSObject <CAAnimationDelegate>
 {

@@ -56,6 +56,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                 [symbolDef addObject:point];
             }
             break;
+        default:
         case SquareSym:
             for (int i = 0; i < (sizeof(Square) / sizeof(DPOINT)); i++)
             {
@@ -84,10 +85,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                 [symbolDef addObject:point];
             }
             break;
-        default:break;
     }
-    
-    NSLog(@"%@", symbolDef);
     
     return symbolDef.copy;
 }
@@ -271,38 +269,31 @@ UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor)
                 pPoints = Cross;
                 nPt = (sizeof(Cross) / sizeof(DPOINT));
                 break;
-                
             case PlusSym:
                 pPoints = Plus;
                 nPt = (sizeof(Plus) / sizeof(DPOINT));
                 break;
-                
             case DiamondSym:
                 pPoints = Diamond;
                 nPt = (sizeof(Diamond) / sizeof(DPOINT));
                 break;
-                
             case TriangleSym:
                 pPoints = Triangle;
                 nPt = (sizeof(Triangle) / sizeof(DPOINT));
                 break;
-                
             default:
             case SquareSym:
                 pPoints = Square;
                 nPt = (sizeof(Square) / sizeof(DPOINT));
                 break;
-                
             case Star1Sym:
                 pPoints = Star1;
                 nPt = (sizeof(Star1) / sizeof(DPOINT));
                 break;
-                
             case Star2Sym:
                 pPoints = Star2;
                 nPt = (sizeof(Star2) / sizeof(DPOINT));
                 break;
-                
             case ArsonSym:
                 pPoints = Splash;
                 nPt = (sizeof(Splash) / sizeof(DPOINT));
@@ -329,36 +320,68 @@ UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor)
     return image;
 }
 
-+ (UIColor*) polygonSymbolFillColor:(PolygonSymbols)symbol
++ (UIColor *)polygonSymbolFillColor:(PolygonSymbols)symbol
 {
-    UIColor * rtn = UIColor.whiteColor;
+    UIColor *rtn = UIColor.whiteColor;
+    
     switch (symbol)
     {
         case Red50PCTPolygon:
-            rtn = [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.5];
+            rtn = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5];
             break;
         case Green50PCTPolygon:
-            rtn = [UIColor colorWithRed:0 green:1.0 blue:0 alpha:0.5];
+            rtn = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.5];
             break;
         case Blue50PCTPolygon:
-            rtn = [UIColor colorWithRed:0 green:0 blue:1.0 alpha:0.5];
+            rtn = [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.5];
             break;
         case Yellow50PCTPolygon:
-            rtn = [UIColor colorWithRed:1.0 green:1.0 blue:0 alpha:0.5];
+            rtn = [UIColor colorWithRed:1.0 green:1.0 blue:0.0 alpha:0.5];
             break;
         case Grey50PCTPolygon:
             rtn = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5];
             break;
-        default:
-            break;
+        default:break;
     }
+    
     return rtn;
 }
-+ (UIColor*) polygonSymbolBorderColor:(PolygonSymbols)symbol
+
++ (UIColor *)polylineStrokeColor:(PolylineSymbols)symbol
+                       lineWidth:(CGFloat *)lineWidth
+{
+    UIColor *rtn = UIColor.whiteColor;
+    
+    switch (symbol)
+    {
+        case NoPolylineSym:
+            rtn = [UIColor colorWithWhite:0.0 alpha:0.5];
+            *lineWidth = 3.0;
+            break;
+        case BlueWidth3Polyline:
+            rtn = [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.5];
+            *lineWidth = 3.0;
+            break;
+        case RedWidth3Polyline:
+            rtn = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5];
+            *lineWidth = 3.0;
+            break;
+        case GreenWidth3Polyline:
+            rtn = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.5];
+            *lineWidth = 3.0;
+            break;
+        default:break;
+    }
+    
+    return rtn;
+}
+
++ (UIColor *)polygonSymbolBorderColor:(PolygonSymbols)symbol
 {
     return [SymbolDictionary polygonSymbolFillColor:symbol];
 }
-+ (int) polygonSymbolBorderWidth:(PolygonSymbols)symbol
+
++ (int)polygonSymbolBorderWidth:(PolygonSymbols)symbol
 {
     return 0;
 }

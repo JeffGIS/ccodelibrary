@@ -6,6 +6,7 @@
 #import "CCodeTypes.h"
 #import "NVPDFDrawing.h"
 #import "DPoint.h"
+#import "GSSiEnums.h"
 
 typedef NS_ENUM(NSInteger, NVPDFDocument)
 {
@@ -60,7 +61,15 @@ wasTappedAtPoint:(DPOINT)point
 - (void)updatePosition;
 - (void)removeLastMarker;
 - (void)maskPolygon;
-- (void)drawShapeWithPoints:(NSArray<DPoint *> *)points;
+
+- (void)drawShapeWithPoint:(DPoint *)point
+                      type:(PointSymbols)type;
+
+- (void)drawPolylineWithPoints:(NSArray<DPoint *> *)points
+                          type:(PolylineSymbols)type;
+
+- (void)drawPolygonWithPoints:(NSArray<DPoint *> *)points
+                         type:(PolygonSymbols)type;
 
 - (void)zoomToPage:(int)page
          upperLeft:(DPOINT)upperLeft

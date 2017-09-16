@@ -2,10 +2,10 @@
 //  CCodeLibrary
 
 #import "NVWebView.h"
-#import "UserDefaults.h"
 #import "NVPopoverTableView.h"
 #import "NVAlertView.h"
 #import "CRAPI.h"
+#import "SymbolDictionary.h"
 
 @interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate>
 
@@ -20,7 +20,8 @@
 @property (nonatomic) NVPDFDrawing *drawing;
 @property (nonatomic) UIView *marker;
 @property (nonatomic) NSMutableArray<UIView *> *markers;
-@property (nonatomic) NSMutableArray<CAShapeLayer *> *lines;
+@property (nonatomic) NSMutableArray<CAShapeLayer *> *lines, *symbols, *polylines, *polygons;
+@property (nonatomic) NSMutableArray<NSArray<DPoint *> *> *symbolPoints, *polylinePoints, *polygonPoints;
 @property DPOINT markerPosition, ul, lr;
 @property (nonatomic) CAShapeLayer *polygon;
 
@@ -261,6 +262,13 @@
     [_returnButton constrainLeadingToAnchor:self.leadingAnchor constant:_headerSideMargin];
     [_returnButton constrainTopToAnchor:self.topAnchor constant:20.0];
     [_returnButton constrainBottomToAnchor:_webView.topAnchor];
+    
+    _symbols = NSMutableArray.array;
+    _symbolPoints = NSMutableArray.array;
+    _polylines = NSMutableArray.array;
+    _polylinePoints = NSMutableArray.array;
+    _polygons = NSMutableArray.array;
+    _polygonPoints = NSMutableArray.array;
 }
 
 - (void)show
@@ -663,9 +671,36 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 {
     CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
     
+    if (_symbols.count)
+    {
+        for (int i = 0; i < _symbols.count; i++)
+        {
+            UIBezierPath *path = [self pathFromPoints:_symbolPoints[i]];
+            _symbols[i].path = path.CGPath;
+        }
+    }
+    
+    if (_polylines.count)
+    {
+        for (int i = 0; i < _polylines.count; i++)
+        {
+            UIBezierPath *path = [self pathFromPoints:_polylinePoints[i]];
+            _polylines[i].path = path.CGPath;
+        }
+    }
+    
+    if (_polygons.count)
+    {
+        for (int i = 0; i < _polygons.count; i++)
+        {
+            UIBezierPath *path = [self pathFromPoints:_polygonPoints[i]];
+            _polygons[i].path = path.CGPath;
+        }
+    }
+    
     if (_markers.count)
     {
-        for (int i  = 0; i < _markers.count; i++)
+        for (int i = 0; i < _markers.count; i++)
         {
             UIView *marker = _markers[i];
             
@@ -834,14 +869,14 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [_webView.scrollView.layer addSublayer:_polygon];
 }
 
-- (void)drawShapeWithPoints:(NSArray<DPoint *> *)points
+- (UIBezierPath *)pathFromPoints:(NSArray<DPoint *> *)points
 {
+    UIBezierPath *path = UIBezierPath.bezierPath;
     CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
     DPoint *firstPoint = points[0];
     CGPoint point = CGPointZero;
     point.x = (firstPoint.x * _webView.scrollView.contentSize.width);
     point.y = (firstPoint.y * pageHeight);
-    UIBezierPath *path = UIBezierPath.bezierPath;
     [path moveToPoint:point];
     
     for (int i = 1; i < points.count; i++)
@@ -853,11 +888,66 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         [path addLineToPoint:point];
     }
     
+    return path;
+}
+
+- (void)drawShapeWithPoint:(DPoint *)point
+                      type:(PointSymbols)type
+{
+    NSArray<DPoint *> *symbolDef = [SymbolDictionary symbolDefForType:type];
+    NSMutableArray<DPoint *> *symbolPoints = NSMutableArray.array;
+    
+    for (DPoint *points in symbolDef)
+    {
+        DPoint *newPoint = points;
+        newPoint.x *= 0.0025;
+        newPoint.y *= 0.0025;
+        newPoint.x += point.x;
+        newPoint.y += point.y;
+        [symbolPoints addObject:newPoint];
+    }
+    
+    NSArray<DPoint *> *points = symbolPoints.copy;
+    UIBezierPath *path = [self pathFromPoints:points];
     CAShapeLayer *shape = CAShapeLayer.layer;
-    shape.fillColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5].CGColor;
+    shape.fillColor = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.5].CGColor;
     shape.position = CGPointZero;
     shape.path = path.CGPath;
+    shape.strokeColor = [UIColor colorWithWhite:0.0 alpha:0.5].CGColor;
+    shape.lineWidth = 1.0;
     [_webView.scrollView.layer addSublayer:shape];
+    [_symbolPoints addObject:points];
+    [_symbols addObject:shape];
+}
+
+- (void)drawPolylineWithPoints:(NSArray<DPoint *> *)points
+                          type:(PolylineSymbols)type
+{
+    CGFloat lineWidth = 0.0;
+    UIBezierPath *path = [self pathFromPoints:points];
+    CAShapeLayer *shape = CAShapeLayer.layer;
+    shape.position = CGPointZero;
+    shape.path = path.CGPath;
+    shape.strokeColor = [SymbolDictionary polylineStrokeColor:type lineWidth:&lineWidth].CGColor;
+    shape.lineWidth = lineWidth;
+    [_webView.scrollView.layer addSublayer:shape];
+    [_polylinePoints addObject:points];
+    [_polylines addObject:shape];
+}
+
+- (void)drawPolygonWithPoints:(NSArray<DPoint *> *)points
+                         type:(PolygonSymbols)type
+{
+    UIBezierPath *path = [self pathFromPoints:points];
+    CAShapeLayer *shape = CAShapeLayer.layer;
+    shape.fillColor = [SymbolDictionary polygonSymbolFillColor:type].CGColor;
+    shape.position = CGPointZero;
+    shape.path = path.CGPath;
+    shape.strokeColor = [UIColor colorWithWhite:0.0 alpha:0.5].CGColor;
+    shape.lineWidth = 1.0;
+    [_webView.scrollView.layer addSublayer:shape];
+    [_polylinePoints addObject:points];
+    [_polylines addObject:shape];
 }
 
 @end
