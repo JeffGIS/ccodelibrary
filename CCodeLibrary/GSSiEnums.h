@@ -339,7 +339,7 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
 
 typedef NS_ENUM(NSInteger, FacPointSymbols)
 {
-    FPSWaterCooler=CrossSym,
+    FPSDrinkingFountain=CrossSym,
     FPSToiletRoom=DiamondSym,
     FPSElevator=TriangleSym,
 };

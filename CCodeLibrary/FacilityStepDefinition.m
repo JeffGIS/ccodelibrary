@@ -110,8 +110,8 @@
 {
     FacPointSymbols ft = 0;
     
-    if ([type isEqualToString:@"WaterCooler"])
-        ft = FPSWaterCooler;
+    if ([type isEqualToString:@"DrinkingFountain"])
+        ft = FPSDrinkingFountain;
     if ([type isEqualToString:@"ToiletRoom"])
         ft = FPSToiletRoom;
     if ([type isEqualToString:@"Elevator"])
