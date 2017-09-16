@@ -89,9 +89,11 @@
 - (NSString *) getHeaderForStep:(NSString *)stepID;
 
 Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCSTR header,int needPhoto);
-+ (Bool) setValueForStep:(NSString *)stepID to:(NSString *)value;
++ (Bool) setValueForStep:(NSString *)stepID to:(NSString *)value
+              withStatus:(int)istat;
 + (Bool) setHeaderForStep:(NSString *)stepID to:(NSString *)value;
 + (Bool) setPriorHeaderForStep:(NSString *)stepID to:(NSString *)value;
++ (void) setVariablesForStep:(NSString *)stepID;
 + (NSString *) getCompositeHeaderForStep:(NSString *)stepID;
 
 +(Bool) addPointElementToStep:(NSString *)stepID

@@ -49,13 +49,13 @@ void ConvertSQLToLogicP (LPSTR pLogicP,LPSTR pSQL)
 	return;
 }
 
-Bool LogicP(LPSTR INEXPR, LPBool IRC)
+Bool LogicP(LPCSTR INEXPR, LPBool IRC)
 {
 	Bool rtn = LogicPBP(INEXPR, IRC,0,0,0);
 	return rtn;
 }
 
-Bool LogicPBP(LPSTR INEXPR, LPBool IRC, LPBREAKPOINT pBrkPt, int bpOffset, int bpLen)
+Bool LogicPBP(LPCSTR INEXPR, LPBool IRC, LPBREAKPOINT pBrkPt, int bpOffset, int bpLen)
 #if ENABLETRACE
 {GSSiEnterProg (1190);
 #endif
@@ -699,7 +699,7 @@ Bool ComputeLogValue (LPSTR Inval1, LPSTR Inval2, UINT OpCode,LPBool IRC)
 	Bool	rc;
 	double	dval1=0, dval2=0; 
 	HANDLE	hVals=GSSiGlobAlloc ( 746,GMEM_MOVEABLE,USHRT_MAX); 
-	LPSTR	val1=GlobalLock (hVals), val2=val1+4096;
+	LPSTR	val1=(LPSTR)GlobalLock (hVals), val2=val1+4096;
 	
 	*val1 = 0;
 	*val2 = 0; 

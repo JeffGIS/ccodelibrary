@@ -726,12 +726,13 @@ Exit:
 }
 
 + (Bool) setValueForStep:(NSString *)stepID to:(NSString *)value
+              withStatus:(int)istat
 {
     Bool rtn = FALSE;
     int facID = CRAPI.sharedInstance.currentFacility.facID;
     FacilitiesDatabase * fd = FacilitiesDatabase.new;
     Bool opened = [fd open:lastDBPath];
-    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET Value = '%@', Complete=1 WHERE facilityNumber=%i AND stepValueID='%@'",value, facID, stepID];
+    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET Value = '%@', Complete=%i WHERE facilityNumber=%i AND stepValueID='%@'",value, istat,facID, stepID];
     rtn = [fd executeCmd:cmd.UTF8String];
     [fd close:opened];
     return rtn;
@@ -793,6 +794,36 @@ Exit:
     [self close:opened];
     return header;
 }
+- (void) getVariablesForStep:(NSString *)stepID
+{
+    NSString * variables = @"";
+    int facID = CRAPI.sharedInstance.currentFacility.facID;
+    NSString *query = [NSString stringWithFormat:@"SELECT variables, value FROM FacilityValues WHERE facilityNumber = %i AND stepValueID = '%@'",facID,stepID];
+    sqlite3_stmt *statement = NULL;
+    Bool opened = [self open];
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        
+        LPSTR value = (LPSTR)sqlite3_column_text(statement, 0);
+        if (*value)
+        {
+            variables = [NSString stringWithUTF8String:value];
+            value = (LPSTR)sqlite3_column_text(statement, 1);
+            HANDLE hSaveValue = SaveValue ();
+            SetValue (value);
+            variables = ExpandString (variables);
+            if (![variables isEqualToString:@""])
+                variables = ExpandString (variables);
+            
+            RestoreValue (hSaveValue);
+        }
+    }
+    
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    [self close:opened];
+}
 + (NSString *) removeLastStep:(NSString *)stepID
 {
     NSString * newStepID = stepID;
@@ -821,6 +852,18 @@ Exit:
     [fd close:opened];
     return compHeader;
 }
++ (void) setVariablesForStep:(NSString *)stepID
+{
+    NSString * newStepID = stepID;
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    do{
+        [fd getVariablesForStep:newStepID];
+        newStepID = [FacilitiesDatabase removeLastStep:newStepID];
+    }while (![newStepID isEqualToString:@""]);
+    [fd close:opened];
+}
+
 Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCSTR header,int needPhoto)
 {
     Bool rtn = FALSE;
