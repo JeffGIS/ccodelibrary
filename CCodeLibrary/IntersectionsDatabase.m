@@ -1771,7 +1771,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 
 - (NSArray<IntersectionPoint *> *)getAssignments:(NSString *)type
 {
-    NSMutableArray <IntersectionPoint *> *assignments = NSMutableArray.array;
+    NSMutableArray<IntersectionPoint *> *assignments = NSMutableArray.array;
     BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedToPrelim, assignedToDetail FROM Intersections WHERE assignedTo%@ != 0 ORDER BY assignedTo%@,intID ASC",type,type];
@@ -1799,7 +1799,7 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
 - (NSArray<IntersectionPoint *> *)getIntersectionsAssignedTo:(int)iPad
                                  ofType:(NSString *)type
 {
-    NSMutableArray <IntersectionPoint *> *assignments = NSMutableArray.array;
+    NSMutableArray<IntersectionPoint *> *assignments = NSMutableArray.array;
     BOOL opened = [self open];
     
     NSString *query = [NSString stringWithFormat:@"SELECT intID, assignedToPrelim, assignedToDetail, zoomLevel FROM Intersections WHERE assignedTo%@ != 0 ORDER BY assignedTo%@,intID ASC",type,type];

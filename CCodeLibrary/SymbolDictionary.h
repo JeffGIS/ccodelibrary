@@ -1,14 +1,9 @@
-//
 //  SymbolDictionary.h
 //  GMMobile
-//
-//  Created by Bill Munson on 11/5/15.
-//  Copyright © 2015 GSSi. All rights reserved.
-//
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 #import "DisplayCharacteristics.h"
-
+#import "DPoint.h"
 
 @interface SymbolDictionary : NSObject
 
@@ -21,8 +16,10 @@
                   lineWidth:(CGFloat)lwidth;
 
 UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor);
-+ (UIColor*) polygonSymbolFillColor:(PolygonSymbols)symbol;
-+ (UIColor*) polygonSymbolBorderColor:(PolygonSymbols)symbol;
-+ (int) polygonSymbolBorderWidth:(PolygonSymbols)symbol;
++ (UIColor *)polygonSymbolFillColor:(PolygonSymbols)symbol;
++ (UIColor *)polygonSymbolBorderColor:(PolygonSymbols)symbol;
++ (int)polygonSymbolBorderWidth:(PolygonSymbols)symbol;
+
++ (NSArray <DPoint *> *)symbolDefForType:(PointSymbols)type;
 
 @end

@@ -5,6 +5,7 @@
 @import WebKit;
 #import "CCodeTypes.h"
 #import "NVPDFDrawing.h"
+#import "DPoint.h"
 
 typedef NS_ENUM(NSInteger, NVPDFDocument)
 {
@@ -59,6 +60,7 @@ wasTappedAtPoint:(DPOINT)point
 - (void)updatePosition;
 - (void)removeLastMarker;
 - (void)maskPolygon;
+- (void)drawShapeWithPoints:(NSArray<DPoint *> *)points;
 
 - (void)zoomToPage:(int)page
          upperLeft:(DPOINT)upperLeft
