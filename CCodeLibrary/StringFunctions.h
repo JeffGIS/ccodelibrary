@@ -3,17 +3,21 @@
 #ifndef StringFunctions_h
 #define StringFunctions_h
 
+@import UIKit;
+@import CoreTelephony;
+@import CoreLocation;
 #import "CCodeTypes.h"
 #import "MathUtil.h"
+#import "UIDevice+Storage.h"
 
 NSString *deviceSystemInfo(void);
 NSString *deviceCarrier(void);
 NSString *deviceInfo();
-void SetUseMasterID (Bool reset);
-void SetUseDemoID (Bool set);
-void SetVendoIDInc (int inc);
-Bool getUseMasterID (void);
-Bool getUseDemoID (void);
+void SetUseMasterID(BOOL reset);
+void SetUseDemoID(BOOL set);
+void SetVendoIDInc(int inc);
+BOOL getUseMasterID(void);
+BOOL getUseDemoID(void);
 NSString *vendorUUIDString(void);
 NSString *stringWithID(char * string,int ID);
 NSString *stringWithoutID(NSString *string);
@@ -53,36 +57,28 @@ NSString *removeOpeningSpaces(NSString *string);
 NSString *removeOpeningReturn(NSString *string);
 NSString *removePIDPrefix(NSString *string);
 NSString * ExpandString (NSString * string);
-
-@import UIKit;
-@import CoreTelephony;
-@import CoreLocation;
-
-#import "UIDevice+Storage.h"
-
-UIColor *UIColorFromInt (unsigned int ival);
-
-Bool hasNetwork(void);
-
 NSMutableAttributedString *addLineBreakToLastSpace(NSString *string);
 NSString *reverseString(NSString *string);
 NSString *splitLongestLine(NSString * text);
 NSMutableArray *sortByContentsOfParentheses(NSMutableArray *array);
 uint occurrencesOfCharacter(unichar character, NSString *string);
-Bool appendStringToFile(NSString *str, NSString *filePath);
+BOOL appendStringToFile(NSString *str, NSString *filePath);
 NSString *urlSearchStringForPID(NSString *PID);
-Bool countySupportsLookupForPID(NSString *PID);
+BOOL countySupportsLookupForPID(NSString *PID);
 CLLocationCoordinate2D locationWithBearing(double bearing, double distanceFeet, CLLocationCoordinate2D origin);
-Bool isGSSiDevice(void);
-Bool nameInList (NSString* name,NSArray* list);
-LLPOINT LLPOINTFromString (NSString* string);
-NSString * stringToBlob(NSString* str);
-NSString * llpointsToBlob(LLPOINT* pPoints,int nPnts);
-NSString * DPOINTSToBlob(DPOINT* pPoints,int nPnts);
-NSString * doubleToBlob(double val);
-NSString * floatToBlob(float val);
-NSString * intToBlob(int val);
-Bool stringContainsCaseInsenitiveString (NSString * str, NSString * substr);
-int numberOfOccurencesOfStringInString (NSString *str,NSString *substr);
+BOOL isGSSiDevice(void);
+BOOL nameInList(NSString *name, NSArray *list);
+LLPOINT LLPOINTFromString(NSString* string);
+NSString *stringToBlob(NSString *str);
+NSString *llpointsToBlob(LLPOINT *pPoints, int nPnts);
+NSString *DPOINTSToBlob(DPOINT *pPoints, int nPnts);
+NSString *doubleToBlob(double val);
+NSString *floatToBlob(float val);
+NSString *intToBlob(int val);
+BOOL stringContainsCaseInsenitiveString(NSString * str, NSString *substr);
+int numberOfOccurencesOfStringInString(NSString *str, NSString *substr);
+UIColor *UIColorFromInt (unsigned int ival);
+BOOL hasNetwork(void);
+void showAlert(NSString *text);
 
 #endif
