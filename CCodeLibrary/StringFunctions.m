@@ -6,9 +6,11 @@
 #import "StringFunctions.h"
 #import "Reachability.h"
 #import <sys/utsname.h>
+#import "NVAlertView.h"
+#import "CRAPI.h"
 
-static Bool useMasterID = FALSE;
-static Bool useDemoID = FALSE;
+static BOOL useMasterID = FALSE;
+static BOOL useDemoID = FALSE;
 static int useIDInc = 0;
 
 UIColor *UIColorFromInt (unsigned int ival)
@@ -23,7 +25,7 @@ UIColor *UIColorFromInt (unsigned int ival)
     return uiColor;
 }
 
-Bool hasNetwork(void)
+BOOL hasNetwork(void)
 {
     Reachability *reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     NetworkStatus remoteHostStatus = reachability.currentReachabilityStatus;
@@ -81,14 +83,14 @@ NSString *deviceInfo(void)
             UIDevice.availableStorageSpace, UIDevice.totalStorageSpace, carrier, floatSize];
 }
 
-void SetUseMasterID (Bool reset)
+void SetUseMasterID(BOOL reset)
 {
 #ifdef DEBUG
-    useMasterID = TRUE;
+    useMasterID = YES;
     if (reset)
     {
         NSString * path = UserDefaults.defaults.sharedFilePath;
-        Bool success = [NSFileManager.defaultManager removeItemAtPath:path
+        BOOL success = [NSFileManager.defaultManager removeItemAtPath:path
                                                                 error:nil];
         path = UserDefaults.defaults.localFilePath;
         success = [NSFileManager.defaultManager removeItemAtPath:path
@@ -98,18 +100,18 @@ void SetUseMasterID (Bool reset)
     return;
 }
 
-Bool getUseMasterID (void)
+BOOL getUseMasterID (void)
 {
     return useMasterID;
 }
 
-void SetUseDemoID (Bool set)
+void SetUseDemoID (BOOL set)
 {
     useDemoID = set;
     return;
 }
 
-Bool getUseDemoID (void)
+BOOL getUseDemoID (void)
 {
     return useDemoID;
 }
@@ -495,7 +497,7 @@ NSString *removeColonInsideParentheses(NSString *string)
     else if (!string.length)
         return string;
     
-    Bool deleteMode = NO;
+    BOOL deleteMode = NO;
     
     for (int i = 0; i < string.length; i++)
     {
@@ -805,7 +807,7 @@ NSString *reverseString(NSString *string)
     
     else if ([string isEqualToString:@""])
         return @"";
-    int len = string.length;
+    int len = (int)string.length;
     LPSTR newStr = malloc (len);
     newStr += len;
     *newStr-- = 0;
@@ -819,7 +821,7 @@ NSString *reverseString(NSString *string)
     
     [string enumerateSubstringsInRange:NSMakeRange(0, string.length)
                                options:NSStringEnumerationReverse|NSStringEnumerationByComposedCharacterSequences
-                            usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, Bool *stop) {
+                            usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
                                 [reverseString appendString:substring];
                             }];
 */
@@ -954,9 +956,9 @@ NSString * splitLongestLine (NSString * text)
     return splitText;
 }
 
-Bool appendStringToFile (NSString * str,NSString * filePath)
+BOOL appendStringToFile (NSString * str,NSString * filePath)
 {
-    Bool rtn;
+    BOOL rtn;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     if(![fileManager fileExistsAtPath:filePath])
@@ -1030,7 +1032,7 @@ NSString *urlSearchStringForPID(NSString *PID)
     return url;
 }
 
-Bool countySupportsLookupForPID(NSString *PID)
+BOOL countySupportsLookupForPID(NSString *PID)
 {
     if (!PID || !PID.length || ![PID containsString:@"-"])
     {
@@ -1046,7 +1048,7 @@ Bool countySupportsLookupForPID(NSString *PID)
         return NO;
     }
     
-    Bool rtn = NO;
+    BOOL rtn = NO;
     
     if ([countyCode isEqualToString:@"019"] || [countyCode isEqualToString:@"053"] ||
         [countyCode isEqualToString:@"123"] || [countyCode isEqualToString:@"163"])
@@ -1078,10 +1080,10 @@ CLLocationCoordinate2D locationWithBearing(double bearing, double distanceFeet, 
     return location;
 }
 
-Bool isGSSiDevice(void)
+BOOL isGSSiDevice(void)
 {
     NSString *deviceName = UIDevice.currentDevice.name;
-    Bool rtn = NO;
+    BOOL rtn = NO;
     
     if ([deviceName containsString:@"GSSi"] ||
         [deviceName isEqualToString:@"Jeff's iPhone"] ||
@@ -1106,14 +1108,14 @@ NSString *paddedString(NSString *str)
     return [NSString stringWithFormat:@"%@ ",str];
 }
 
-Bool nameInList (NSString* name,NSArray* list)
+BOOL nameInList(NSString *name,NSArray *list)
 {
-    for (NSString * curName in list)
+    for (NSString *curName in list)
     {
         if ([name isEqualToString:[curName lastPathComponent]])
-            return TRUE;
+            return YES;
     }
-    return FALSE;
+    return NO;
 }
 
 LLPOINT LLPOINTFromString (NSString* string)
@@ -1264,12 +1266,12 @@ NSString * ExpandString (NSString * string)
     return rtn;
 }
 
-Bool stringContainsCaseInsenitiveString (NSString * str, NSString * substr)
+BOOL stringContainsCaseInsenitiveString (NSString * str, NSString * substr)
 {
-    Bool rtn = TRUE;
+    BOOL rtn = YES;
     if (!str || !substr ||
         [str rangeOfString:substr options:NSCaseInsensitiveSearch].location == NSNotFound)
-        rtn = FALSE;
+        rtn = NO;
     return rtn;
 }
 
@@ -1332,5 +1334,11 @@ DWORD GetTempPath (int len,LPSTR OutStr)
     return 0;
 }
 
-
-    
+void showAlert(NSString *text)
+{
+    [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
+                                 delegate:CRAPI.sharedInstance
+                                    title:text
+                          buttonTextArray:@[@"OK"]
+                         destructiveIndex:0];
+}
