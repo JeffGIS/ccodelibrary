@@ -110,6 +110,14 @@ Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCS
                          onPage:(int)page
                 inReferenceFile:(NSString *)refFile
                          ofType:(NSString *)type;
++(Bool) addPolylineElementToStep:(NSString *)stepID
+                     usingSymbol:(PolylineSymbols)symbol
+                   withNumPoints:(int)nPoints
+                          points:(DPOINT*) points
+                          onPage:(int)page
+                 inReferenceFile:(NSString *)refFile
+                          ofType:(NSString *)type;
+
 + (void) getExistingGraphicDataTypes:(NSMutableArray *)types
                         usingSymbols:(NSMutableArray *)symbols
                    havingCoordinates:(NSMutableArray *)coordinates

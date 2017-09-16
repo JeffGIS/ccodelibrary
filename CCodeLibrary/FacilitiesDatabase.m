@@ -915,6 +915,26 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     return rtn;
 }
 
++(Bool) addPolylineElementToStep:(NSString *)stepID
+                    usingSymbol:(PolylineSymbols)symbol
+                  withNumPoints:(int)nPoints
+                         points:(DPOINT*) points
+                         onPage:(int)page
+                inReferenceFile:(NSString *)refFile
+                         ofType:(NSString *)type
+{
+    Bool rtn = FALSE;
+    int facID = CRAPI.sharedInstance.currentFacility.facID;
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    NSString * refFileName = [refFile lastPathComponent];
+    NSString * coordinates = DPOINTSToBlob(points,nPoints);
+    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET graphicElementType = %i, graphicElementSymbol=%i, graphicElementNumCoord=%i, graphicElementCoordinates=X'%@', graphicElementReferenceFile='%@',graphicElementReferenceFileType='%@',graphicElementReferenceFilePage=%i, Complete=1  WHERE facilityNumber=%i AND stepValueID='%@'",(int)FGTPolyline, (int)symbol, nPoints, coordinates, refFileName, type, page, facID, stepID];
+    rtn = [fd executeCmd:cmd.UTF8String];
+    [fd close:opened];
+    return rtn;
+}
+
 +(Bool) addPolygonElementToStep:(NSString *)stepID
                     usingSymbol:(PolygonSymbols)symbol
                   withNumPoints:(int)nPoints
