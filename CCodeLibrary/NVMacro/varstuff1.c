@@ -62,7 +62,7 @@ HANDLE SaveValue (void)
     return hValue;
 }
 
-void SetValue (LPSTR value)
+void SetValue (LPCSTR value)
 {
     int len = (int)strlen (value);
     LPSTR pMem = malloc (len + 64);
@@ -9778,7 +9778,8 @@ HANDLE FindVar (LPSTR Name)
         if (EndID < BegID)
             goto Exit;
         MidID = (BegID + EndID)/2;
-        i = _fstricmp (Name,lpVN[MidID].Name);
+        LPSTR pnam = lpVN[MidID].Name;
+        i = _fstricmp (Name,pnam);
         if (i < 0)
         { 
             EndID = MidID - 1; 

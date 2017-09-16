@@ -342,6 +342,24 @@ int	GetFunctionValue(int FunID, LPSTR Args, LPSTR OutLoc, LPBREAKPOINT pBrkPt, i
                  goto Rtnl;
                  }
                  break;
+                 */
+            case 109://$U(C) returns just uppper case letters
+            {
+                int i = 0;
+                nArgs = GetFunArgs(Args, Arg, 2, &hMem,pBrkPt, bpOffset,bpLen);
+                LPSTR pArg = Arg[1];
+                while (*pArg)
+                {
+                    if (isupper(*pArg))
+                        OutLoc[i++] = *pArg;
+                    pArg++;
+                }
+                OutLoc[i] = 0;
+                goto Rtnl;
+            }
+                break;
+                
+                /*
                  case 201: // $OS(string)
                  {
                  Bool LastWasBlank, HaveNonBlank=FALSE;

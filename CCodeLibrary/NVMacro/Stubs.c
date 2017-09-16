@@ -740,7 +740,10 @@ double ldistpp(LPDPOINT Point1, LPDPOINT Point2)
 }
 LPSTR LastChr(LPSTR str)
 {
-	return str;
+    LPSTR lastC = strchr (str,0);
+    if (lastC != str)
+        lastC--;
+	return lastC;
 }
 void  InFunction(int funid, LPSTR inString)
 {

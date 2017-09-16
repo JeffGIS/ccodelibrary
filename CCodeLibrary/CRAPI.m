@@ -267,7 +267,7 @@
 
 - (Facility *)facilityInit
 {
-    self.currentGeoid = 18;
+    self.currentGeoid = 19;
     Facility * currentFacility = Facility.new;
     currentFacility.facID = 1;
     currentFacility.name = @"Eagan City Hall";
