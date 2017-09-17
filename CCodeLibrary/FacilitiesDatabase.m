@@ -40,18 +40,19 @@ static char lastDBPath[PATH_MAX]={0};
 
 - (NSString *)databasePath:(int)geoid
 {
-    NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
-    //NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
+    //NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
+    NSString *documentsDirectory = UserDefaults.defaults.sharedFilePath;
     
     NSString *subDir = [NSString stringWithFormat:@"%@/%i", documentsDirectory, geoid];
+    _photoDir = [NSString stringWithFormat:@"%@/Photos", subDir];
     NSFileManager *fileManager = NSFileManager.defaultManager;
     
-    [fileManager createDirectoryAtPath:subDir
+    [fileManager createDirectoryAtPath:_photoDir
            withIntermediateDirectories:YES
                             attributes:nil
                                  error:nil];
     
-    NSString *dbPath = [NSString stringWithFormat:@"%@/%i/Facilities.slt", documentsDirectory, geoid];
+    NSString *dbPath = [NSString stringWithFormat:@"%@/Facilities.slt", subDir];
     strcpy (lastDBPath,dbPath.UTF8String);
     return dbPath;
 }
@@ -612,7 +613,7 @@ Exit:
 - (NSArray *) getValuesForFacility:(int) faciltyNumber
 {
     NSMutableArray * array = NSMutableArray.new;
-    NSString *query = [NSString stringWithFormat:@"SELECT stepValueID, stepDefinitionID, header, prompt, value, needPhoto, complete FROM FacilityValues WHERE facilityNumber = %i",faciltyNumber];
+    NSString *query = [NSString stringWithFormat:@"SELECT stepValueID, stepDefinitionID, header, prompt, value, needPhoto, numPhotos, complete FROM FacilityValues WHERE facilityNumber = %i",faciltyNumber];
     sqlite3_stmt *statement = NULL;
     Bool opened = [self open];
     SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
@@ -633,6 +634,7 @@ Exit:
         value = (LPSTR)sqlite3_column_text(statement, i++);
         fsv.value = [NSString stringWithUTF8String:value];
         fsv.needPhoto = sqlite3_column_int(statement, i++);
+        fsv.numPhotos = sqlite3_column_int(statement, i++);
         fsv.completionStatus = sqlite3_column_int(statement, i++);
         
         [array addObject:fsv];
@@ -733,6 +735,18 @@ Exit:
     FacilitiesDatabase * fd = FacilitiesDatabase.new;
     Bool opened = [fd open:lastDBPath];
     NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET Value = '%@', Complete=%i WHERE facilityNumber=%i AND stepValueID='%@'",value, istat,facID, stepID];
+    rtn = [fd executeCmd:cmd.UTF8String];
+    [fd close:opened];
+    return rtn;
+}
+
++ (Bool) setNumPhotosForStep:(NSString *)stepID to:(int) num
+{
+    Bool rtn = FALSE;
+    int facID = CRAPI.sharedInstance.currentFacility.facID;
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    NSString * cmd = [NSString stringWithFormat:@"UPDATE FacilityValues SET NumPhotos = %i WHERE facilityNumber=%i AND stepValueID='%@'",num, facID, stepID];
     rtn = [fd executeCmd:cmd.UTF8String];
     [fd close:opened];
     return rtn;

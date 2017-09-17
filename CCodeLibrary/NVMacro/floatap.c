@@ -10,6 +10,7 @@ static char		LogVals[2][2]={"0","1"};
 static char		SQLCodes[11][6]={" AND "," OR "," = "," NOT "," >= "," <= "," <> "," < "," !< "," > "," !> "}; 
 static char		GSSCodes[11][4]={"&&"   ,"||"  ,"==" ,"!"    ,">="  ,"<="  ,"!="  ,"<"  ,"!<"  ,">"  ,"!>"  };
     
+void ShowAlert(LPCSTR text);
 
 void ConvertSQLToLogicP (LPSTR pLogicP,LPSTR pSQL)
 {   
@@ -51,7 +52,15 @@ void ConvertSQLToLogicP (LPSTR pLogicP,LPSTR pSQL)
 
 Bool LogicP(LPCSTR INEXPR, LPBool IRC)
 {
+    static int numCalls = 0;
+    if (numCalls > 50)
+    {
+        ShowAlert ("Num calls to LogicP exceeds 50");
+        return FALSE;
+    }
+    numCalls++;
 	Bool rtn = LogicPBP(INEXPR, IRC,0,0,0);
+    numCalls--;
 	return rtn;
 }
 

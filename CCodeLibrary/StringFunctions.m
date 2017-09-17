@@ -1333,6 +1333,11 @@ DWORD GetTempPath (int len,LPSTR OutStr)
     strncpy (OutStr,cpath.UTF8String,len);
     return 0;
 }
+void ShowAlert(LPCSTR text)
+{
+    NSString * txt = [NSString stringWithUTF8String:text];
+    showAlert(txt);
+}
 
 void showAlert(NSString *text)
 {

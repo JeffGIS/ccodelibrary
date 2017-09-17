@@ -38,6 +38,7 @@
 @property BOOL gettingUploaded;
 @property BOOL isOpen;
 @property NSString *path;
+@property NSString *photoDir;
 @property sqlite3_stmt *statement;
 @property sqlite3 * database;
 
@@ -91,6 +92,7 @@
 Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCSTR header,int needPhoto);
 + (Bool) setValueForStep:(NSString *)stepID to:(NSString *)value
               withStatus:(int)istat;
++ (Bool) setNumPhotosForStep:(NSString *)stepID to:(int) num;
 + (Bool) setHeaderForStep:(NSString *)stepID to:(NSString *)value;
 + (Bool) setPriorHeaderForStep:(NSString *)stepID to:(NSString *)value;
 + (void) setVariablesForStep:(NSString *)stepID;
