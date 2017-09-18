@@ -1421,4 +1421,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     return rtn;
 }
 
+- (void)showAlert:(NSString *)text
+{
+    [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
+                                 delegate:self
+                                    title:text
+                          buttonTextArray:@[@"OK"]
+                         destructiveIndex:0];
+}
+
 @end

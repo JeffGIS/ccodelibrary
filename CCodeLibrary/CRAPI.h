@@ -141,7 +141,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 + (nullable CRAPI *)sharedInstance;
 
 - (void)setCurrentGeoid:(int)currentGeoid;
-- (Facility *)facilityInit;
+- (nullable Facility *)facilityInit;
 - (nullable NSString *)sharedOutputDirectory:(nullable NSString *)subDir;
 
 - (void)setIntersectionRotAndQuadDeviders:(nullable NSString *)intAzm
@@ -233,5 +233,6 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (BOOL) refnoInAreaText:(int) refno;
 - (nullable AreaText *) areaTextForRefno:(int) refno;
 - (void) showMapToolbarIndicator:(BOOL)show;
+- (void)showAlert:(nonnull NSString *)text;
 
 @end

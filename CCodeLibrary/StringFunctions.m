@@ -1335,15 +1335,13 @@ DWORD GetTempPath (int len,LPSTR OutStr)
 }
 void ShowAlert(LPCSTR text)
 {
-    NSString * txt = [NSString stringWithUTF8String:text];
+    NSString *txt = [NSString stringWithUTF8String:text];
     showAlert(txt);
 }
 
 void showAlert(NSString *text)
 {
-    [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
-                                 delegate:CRAPI.sharedInstance
-                                    title:text
-                          buttonTextArray:@[@"OK"]
-                         destructiveIndex:0];
+    [CRAPI.sharedInstance performSelector:@selector(showAlert:)
+                               withObject:text
+                               afterDelay:1.0];
 }
