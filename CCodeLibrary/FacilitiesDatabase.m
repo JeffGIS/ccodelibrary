@@ -708,7 +708,7 @@ Exit:
 {
     Bool opened = [self open];
     NSString * stepValueID = @"1";
-    NSString * stepDefID = @"NumFloors";
+    NSString * stepDefID = @"PublicAccess";
     NSString * prompt = @"";
     NSString * value = @"";
     NSString * header = @"Eagan City Hall";
@@ -903,6 +903,8 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
         headerValue = [NSString stringWithUTF8String:header];
     else
         headerValue = [FacilityStepDefinition getStepHeader:[NSString stringWithUTF8String:stepDefID]];
+    promptValue = ExpandString (promptValue);
+    headerValue = ExpandString (headerValue);
     NSString * variablesValue = [FacilityStepDefinition getStepVariables:[NSString stringWithUTF8String:stepDefID]];
     NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s','%s',%i,%i,%i,'%s',0,0,0,'','','',0)",facID,stepValueID,lastUpdate,stepDefID,headerValue.UTF8String,promptValue.UTF8String,variablesValue.UTF8String,value,needPhoto,numPhotos,completionStatus,comment];
     rtn = [fd executeCmd:cmd.UTF8String];

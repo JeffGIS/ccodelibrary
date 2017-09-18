@@ -6,6 +6,7 @@
 typedef NS_ENUM(NSInteger, NVSliderConfiguration)
 {
     NVSliderConfigurationDefault,
+    NVSliderConfigurationDefaultNoRange,
     NVSliderConfigurationManualSlope,
     NVSliderConfigurationCalibrationRunningSlope,
     NVSliderConfigurationCalibrationDegrees,

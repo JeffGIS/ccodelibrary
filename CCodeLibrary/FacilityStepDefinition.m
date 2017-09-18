@@ -116,6 +116,10 @@
         ft = FPSToiletRoom;
     if ([type isEqualToString:@"Elevator"])
         ft = FPSElevator;
+    if ([type isEqualToString:@"Entrance"])
+        ft = FPSEntrance;
+    if (!ft)
+        showAlert ([NSString stringWithFormat:@"Point symbol %@ not found",type]);
     return ft;
 }
 

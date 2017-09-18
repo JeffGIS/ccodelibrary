@@ -148,6 +148,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                 break;
                 
             case NVSliderConfigurationDefault:
+            case NVSliderConfigurationDefaultNoRange:
                 _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
                 break;
                 
@@ -189,14 +190,16 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                    target:self
                  selector:@selector(cancelButtonTapped:)
                     title:@"Cancel"];
-        
-        _rangeButton = [[UIButton alloc] initWithFrame:CGRectMake((width * 0.4), (height - 72.0),
-                                                                  (width * 0.2), 56.0)];
-        
-        [self setupButton:_rangeButton
-                   target:self
-                 selector:@selector(rangeButtonTapped:)
-                    title:@"Range"];
+        if (_configuration == NVSliderConfigurationDefault)
+        {
+            _rangeButton = [[UIButton alloc] initWithFrame:CGRectMake((width * 0.4), (height - 72.0),
+                                                                      (width * 0.2), 56.0)];
+            
+            [self setupButton:_rangeButton
+                       target:self
+                     selector:@selector(rangeButtonTapped:)
+                        title:@"Range"];
+        }
     }
     
     return self;
@@ -300,6 +303,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             break;
             
         case NVSliderConfigurationDefault:
+        case NVSliderConfigurationDefaultNoRange:
         case NVSliderConfigurationCalibrationRunningSlope:
         case NVSliderConfigurationCalibrationDegrees:
         case NVSliderConfigurationCalibrationRiseRun:
@@ -373,6 +377,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             break;
             
         case NVSliderConfigurationDefault:
+        case NVSliderConfigurationDefaultNoRange:
         {
             if (_range == NVSliderControllerRangeTwo)
                 _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
@@ -475,6 +480,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             break;
             
         case NVSliderConfigurationDefault:
+        case NVSliderConfigurationDefaultNoRange:
         case NVSliderConfigurationCalibrationRunningSlope:
         case NVSliderConfigurationCalibrationDegrees:
         case NVSliderConfigurationCalibrationRiseRun:

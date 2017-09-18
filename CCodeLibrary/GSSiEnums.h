@@ -342,6 +342,7 @@ typedef NS_ENUM(NSInteger, FacPointSymbols)
     FPSDrinkingFountain=CrossSym,
     FPSToiletRoom=DiamondSym,
     FPSElevator=TriangleSym,
+    FPSEntrance=SquareSym,
 };
 
 typedef NS_ENUM(NSInteger, FacPolylineSymbols)
