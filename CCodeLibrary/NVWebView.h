@@ -90,3 +90,9 @@ wasTappedAtPoint:(DPOINT)point
                            identifierTag:(int)identifierTag;
 
 @end
+
+@interface NVWebViewMarker : UIView
+
+@property CGPoint position;
+
+@end
