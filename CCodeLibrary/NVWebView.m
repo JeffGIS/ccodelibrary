@@ -7,6 +7,10 @@
 #import "CRAPI.h"
 #import "SymbolDictionary.h"
 
+@implementation NVWebViewMarker
+
+@end
+
 @interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate>
 
 @property (nonatomic) WKWebView *webView;
@@ -18,8 +22,8 @@
 @property int numPages, zoomPage, origPage, markerPage;
 @property BOOL isFile, navigationComplete, zoomToPDFDrawing, enableSwipe;
 @property (nonatomic) NVPDFDrawing *drawing;
-@property (nonatomic) UIView *marker;
-@property (nonatomic) NSMutableArray<UIView *> *markers;
+@property (nonatomic) NVWebViewMarker *marker;
+@property (nonatomic) NSMutableArray<NVWebViewMarker *> *markers;
 @property (nonatomic) NSMutableArray<CAShapeLayer *> *lines, *symbols, *polylines, *polygons;
 @property (nonatomic) NSMutableArray<NSArray<DPoint *> *> *symbolPoints, *polylinePoints, *polygonPoints;
 @property DPOINT markerPosition, ul, lr;
@@ -512,7 +516,7 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
             for (UIView *allMarkers in _markers)
                 [allMarkers.superview bringSubviewToFront:allMarkers];
             
-            UIView *marker = UIView.new;
+            NVWebViewMarker *marker = NVWebViewMarker.new;
             marker.backgroundColor = UIColor.redColor;
             marker.layer.cornerRadius = (_markerSize * 0.5);
             marker.layer.borderColor = UIColor.blackColor.CGColor;
@@ -521,16 +525,14 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
             [_markers addObject:marker];
             marker.center = point;
             [_webView.scrollView addSubview:marker];
-            int tagX = (dPoint.x * pow(10, 6));
-            int tagY = (dPoint.y * pow(10, 6));
-            marker.tag = ((tagX * pow(10, 6)) + tagY);
+            marker.position = CGPointMake(dPoint.x, dPoint.y);
         }
         
         else
         {
             if (!_marker)
             {
-                _marker = UIView.new;
+                _marker = NVWebViewMarker.new;
                 _marker.backgroundColor = UIColor.redColor;
                 _marker.layer.cornerRadius = (_markerSize * 0.5);
                 _marker.layer.borderColor = UIColor.blackColor.CGColor;
@@ -702,16 +704,12 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     {
         for (int i = 0; i < _markers.count; i++)
         {
-            UIView *marker = _markers[i];
+            NVWebViewMarker *marker = _markers[i];
             
             if ([scrollView.subviews containsObject:marker])
             {
-                double tagXY = marker.tag / pow(10, 6);
-                int tagX = (int)tagXY;
-                double tagXD = tagX / pow(10, 6);
-                
-                marker.center = CGPointMake((tagXD * _webView.scrollView.contentSize.width),
-                                            (((tagXY - tagX) * pageHeight) * _markerPage));
+                marker.center = CGPointMake((marker.position.x * _webView.scrollView.contentSize.width),
+                                            ((marker.position.y * pageHeight) * _markerPage));
             }
         }
         
@@ -818,7 +816,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     {
         if (_markers.count)
         {
-            UIView *marker = _markers.lastObject;
+            NVWebViewMarker *marker = _markers.lastObject;
             [marker removeFromSuperview];
             [_markers removeLastObject];
             
