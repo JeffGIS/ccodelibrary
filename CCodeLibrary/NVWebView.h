@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, NVPDFDocument)
 @optional
 - (void)webViewDidReturn:(NVWebView *)webView;
 - (void)webViewDidZoom;
+- (void)webViewDidFinishNavigation;
 
 - (void)webView:(NVWebView *)webView
 wasTappedAtPoint:(DPOINT)point

@@ -447,6 +447,9 @@ didFinishNavigation:(WKNavigation *)navigation
         [self updatePosition];
         _navigationComplete = YES;
     }
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidFinishNavigation)])
+        [_delegate webViewDidFinishNavigation];
 }
 
 - (void)webView:(WKWebView *)webView
