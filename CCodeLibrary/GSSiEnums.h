@@ -323,6 +323,7 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
     FMTImageList,
     FMTChoiceList,
     FMTSlope,
+    FMTPounds,
     FMTInches,
     FMTFeet,
     FMTLocatePoint,
@@ -343,12 +344,14 @@ typedef NS_ENUM(NSInteger, FacPointSymbols)
     FPSToiletRoom=DiamondSym,
     FPSElevator=TriangleSym,
     FPSEntrance=SquareSym,
+    FPSDoor=Star1Sym,
 };
 
 typedef NS_ENUM(NSInteger, FacPolylineSymbols)
 {
     FPSCirculationPath=RedWidth3Polyline,
     FPSAccessibleRoute=GreenWidth3Polyline,
+    FPSRamp=BlueWidth3Polyline,
 };
 
 typedef NS_ENUM(NSInteger, FacPolygonSymbols)

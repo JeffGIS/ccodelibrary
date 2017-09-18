@@ -11,6 +11,7 @@
 @property NSString * prompt;
 @property NSString * header;
 @property NSArray  * photoIDs;
+@property int fieldIndex;
 @property NSString * comment;
 @property int needPhoto;
 @property int numPhotos;

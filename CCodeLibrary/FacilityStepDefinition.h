@@ -19,6 +19,7 @@
 @property NSString * test;
 @property NSString * variables;
 @property NSString * command;
+@property NSString * fieldIndex;
 @property NSArray * choiceList;
 @property double minValue, maxValue;
 
