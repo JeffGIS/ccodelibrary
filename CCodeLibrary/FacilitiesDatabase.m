@@ -80,6 +80,7 @@ static char lastDBPath[PATH_MAX]={0};
                        complete INT,\
                        comment CHAR(1024),\
                        graphicElementType INT, graphicElementSymbol INT, graphicElementNumCoord INT, graphicElementCoordinates BLOB(4096), graphicElementReferenceFile CHAR(256),graphicElementReferenceFileType CHAR(16),graphicElementReferenceFilePage INT,\
+                       fieldIndex INT,\
                        PRIMARY KEY (facilityNumber ASC, stepValueID ASC));"];
     
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, query.UTF8String, NULL, NULL, &error), _database);
@@ -613,7 +614,7 @@ Exit:
 - (NSArray *) getValuesForFacility:(int) faciltyNumber
 {
     NSMutableArray * array = NSMutableArray.new;
-    NSString *query = [NSString stringWithFormat:@"SELECT stepValueID, stepDefinitionID, header, prompt, value, needPhoto, numPhotos, complete FROM FacilityValues WHERE facilityNumber = %i",faciltyNumber];
+    NSString *query = [NSString stringWithFormat:@"SELECT stepValueID, stepDefinitionID, header, prompt, value, needPhoto, numPhotos, complete,fieldIndex FROM FacilityValues WHERE facilityNumber = %i",faciltyNumber];
     sqlite3_stmt *statement = NULL;
     Bool opened = [self open];
     SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
@@ -636,6 +637,7 @@ Exit:
         fsv.needPhoto = sqlite3_column_int(statement, i++);
         fsv.numPhotos = sqlite3_column_int(statement, i++);
         fsv.completionStatus = sqlite3_column_int(statement, i++);
+        fsv.fieldIndex = sqlite3_column_int(statement, i++);
         
         [array addObject:fsv];
     }
@@ -722,7 +724,8 @@ Exit:
     NSString *graphRefFileType = @"";
     NSString *variables = @"";
     int graphRefFilePage = 0;
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@','%@','%@',%i,%i,%i,'%@',%i,%i,%i,'%@','%@','%@',%i)",facID,stepValueID,lastUpdate,stepDefID,header,prompt,variables,value,needPhoto,numPhotos,completionStatus,comment,graphType,graphDesc,graphNumPoints,graphPoints,graphRefFile,graphRefFileType,graphRefFilePage];
+    int fieldIndex = 0;
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%@',%i,'%@','%@','%@','%@','%@',%i,%i,%i,'%@',%i,%i,%i,'%@','%@','%@',%i,%i)",facID,stepValueID,lastUpdate,stepDefID,header,prompt,variables,value,needPhoto,numPhotos,completionStatus,comment,graphType,graphDesc,graphNumPoints,graphPoints,graphRefFile,graphRefFileType,graphRefFilePage,fieldIndex];
     [self executeCmd:cmd.UTF8String];
     [self close:opened];
 }
@@ -905,8 +908,9 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
         headerValue = [FacilityStepDefinition getStepHeader:[NSString stringWithUTF8String:stepDefID]];
     promptValue = ExpandString (promptValue);
     headerValue = ExpandString (headerValue);
+    NSString * fieldIndex = ExpandString (@"[%FIELDINDEX]");
     NSString * variablesValue = [FacilityStepDefinition getStepVariables:[NSString stringWithUTF8String:stepDefID]];
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s','%s',%i,%i,%i,'%s',0,0,0,'','','',0)",facID,stepValueID,lastUpdate,stepDefID,headerValue.UTF8String,promptValue.UTF8String,variablesValue.UTF8String,value,needPhoto,numPhotos,completionStatus,comment];
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s','%s',%i,%i,%i,'%s',0,0,0,'','','',0,%i)",facID,stepValueID,lastUpdate,stepDefID,headerValue.UTF8String,promptValue.UTF8String,variablesValue.UTF8String,value,needPhoto,numPhotos,completionStatus,comment,(int)fieldIndex.integerValue];
     rtn = [fd executeCmd:cmd.UTF8String];
     
     [fd close:opened];

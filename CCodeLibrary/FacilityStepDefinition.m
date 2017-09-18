@@ -84,6 +84,8 @@
         ft = FMTChoiceList;
     if ([type isEqualToString:@"Slope"])
         ft = FMTSlope;
+    if ([type isEqualToString:@"Pounds"])
+        ft = FMTPounds;
     if ([type isEqualToString:@"Inches"])
         ft = FMTInches;
     if ([type isEqualToString:@"Feet"])
@@ -118,6 +120,8 @@
         ft = FPSElevator;
     if ([type isEqualToString:@"Entrance"])
         ft = FPSEntrance;
+    if ([type isEqualToString:@"Door"])
+        ft = FPSDoor;
     if (!ft)
         showAlert ([NSString stringWithFormat:@"Point symbol %@ not found",type]);
     return ft;
@@ -131,6 +135,8 @@
         ft = FPSCirculationPath;
     if ([type isEqualToString:@"AccessibleRoute"])
         ft = FPSAccessibleRoute;
+    if ([type isEqualToString:@"Ramp"])
+        ft = FPSRamp;
     return ft;
 }
 
