@@ -262,14 +262,9 @@ static double _deviceValues[9][4];
             enabled:(BOOL)enabled
            fontSize:(double)fontSize
 {
-    [button setTitle:title
-            forState:UIControlStateNormal];
-    
-    [button setTitleColor:CRAPI.sharedInstance.defaultColors.titleColor
-                 forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.lightGrayColor
-                 forState:UIControlStateHighlighted];
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:CRAPI.sharedInstance.defaultColors.titleColor forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
     
     [button addTarget:self
                action:selector
