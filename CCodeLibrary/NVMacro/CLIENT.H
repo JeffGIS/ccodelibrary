@@ -18,7 +18,7 @@
 
 /* Typdef's shared across modules */
 
-typedef enum PENDINGACK
+enum PENDINGACK
 {
     NONE,
     ADVISE,
