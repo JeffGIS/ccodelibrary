@@ -8,6 +8,7 @@
 #import "Colors.h"
 #import "CCodeTypes.h"
 #import "NVAlertView.h"
+#import "GSSiEnums.h"
 
 @interface UserDefaults : NSObject <CAAnimationDelegate>
 {

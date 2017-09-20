@@ -380,7 +380,7 @@ Bool GetDBUniqueFieldValues (HANDLE hDB, LPSTR SQL,LPSTR FldName, LPHANDLE phDBL
 	lpFieldInfo = &FilePtr->FldInfo;
 	if ((j=GetFieldIDFromName(SQLPtr->IDName,FilePtr,FldName))>=0) 
 	{
-		fLen = min (lpFieldInfo[j].length,255);    
+		fLen = fmin(lpFieldInfo[j].length,255);
 		*phDBList = CreateUniqueList (fLen,NULL);  
 		switch (FilePtr->Type)
 		{   

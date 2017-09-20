@@ -237,7 +237,9 @@
 
 - (void)setTitle:(NSString *)title
 {
-    _popoverLabel.text = title;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _popoverLabel.text = title;
+    });
 }
 
 - (void)setCancelButtonTitle:(NSString *)title
