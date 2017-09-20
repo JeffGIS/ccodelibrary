@@ -1,7 +1,7 @@
 //  FacilityStepDefinition.h
 //  CCodeLibrary
 
-#import "CCodeLibrary/SQLiteLib.h"
+#import "SQLiteLib.h"
 #import "GSSiEnums.h"
 
 @interface FacilityStepDefinition : NSObject
