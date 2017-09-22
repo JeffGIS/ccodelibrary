@@ -374,7 +374,7 @@ didReceiveMessage:(NSString *)message
                     _nextUpdate = _myLastUpdate + 1;
                 else
                     _nextUpdate = 1101;
-                _serversLastUpdate = (int)(message.integerValue - 1);
+                _serversLastUpdate = (int)(message.integerValue);
                 //_serversLastUpdate =570;
                 if (_updateTimer)
                     [_updateTimer invalidate];
