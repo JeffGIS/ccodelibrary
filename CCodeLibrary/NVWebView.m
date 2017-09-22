@@ -18,7 +18,7 @@
 @property (nonatomic) CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation, origScale, origRotation, markerSize;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIActivityIndicatorView *indicator;
-@property (nonatomic) CGPoint zoomPoint, origPoint;
+@property CGPoint zoomPoint, origPoint;
 @property int numPages, zoomPage, origPage, markerPage;
 @property BOOL isFile, navigationComplete, zoomToPDFDrawing, enableSwipe;
 @property (nonatomic) NVPDFDrawing *drawing;
@@ -28,6 +28,8 @@
 @property (nonatomic) NSMutableArray<NSArray<DPoint *> *> *symbolPoints, *polylinePoints, *polygonPoints;
 @property DPOINT markerPosition, ul, lr;
 @property (nonatomic) CAShapeLayer *polygon;
+@property (nonatomic) UIScrollView *scrollView;
+@property (nonatomic) UIImageView *imageView;
 
 @end
 
@@ -117,6 +119,7 @@
 
 + (instancetype)showWebViewInView:(UIView *)view
                    showFileAtPath:(NSString *)path
+                         delegate:(id)delegate
 {
     if (!path)
     {
@@ -130,14 +133,26 @@
     }
     
     NVWebView *nvwv = NVWebView.new;
-    [nvwv addWebViewToView:view];
-    nvwv.isFile = YES;
+    [nvwv setupViewComponents:view];
+    NSString *type = path.pathExtension.lowercaseString;
+    NSString *name = path.stringByDeletingPathExtension;
+    name = name.lastPathComponent;
     
+    if (delegate)
+        nvwv.delegate = delegate;
+    
+    if ([type isEqualToString:@"jpg"] || [type isEqualToString:@"png"])
+        [nvwv addImageToView:view name:name type:type];
+    
+    else
+        [nvwv addWebViewToView:view];
+    
+    nvwv.isFile = YES;
     NSURL *url = [NSURL fileURLWithPath:path];
 
-    if ([path.pathExtension isEqualToString:@"pdf"] || [path.pathExtension isEqualToString:@"PDF"])
+    if ([type isEqualToString:@"pdf"])
     {
-        if ([path containsString:@"NVCRISHelp"] || [path containsString:@"VersionHistory"])
+        if ([name containsString:@"NVCRISHelp"] || [name containsString:@"VersionHistory"])
             nvwv.isFile = NO;
         
         else
@@ -151,7 +166,7 @@
                                                                                               action:@selector(rotateScrollView:)];
             
             rotGR.delegate = nvwv;
-            [nvwv.webView.scrollView addGestureRecognizer:rotGR];
+            [nvwv.scrollView addGestureRecognizer:rotGR];
             nvwv.rotationEnabled = YES;
         }
     }
@@ -188,7 +203,8 @@
     
     NVWebView *nvwv = [NVWebView showWebViewInView:view
                                     showFileAtPath:[NSBundle.mainBundle pathForResource:resourcePath
-                                                                                 ofType:@"pdf"]];
+                                                                                 ofType:@"pdf"]
+                                          delegate:nil];
     
     nvwv.enableSwipe = enableSwipe;
     nvwv.zoomToPDFDrawing = YES;
@@ -220,7 +236,7 @@
     return nvwv;
 }
 
-- (void)addWebViewToView:(UIView *)view
+- (void)setupViewComponents:(UIView *)view
 {
     self.translatesAutoresizingMaskIntoConstraints = NO;
     self.backgroundColor = UIColor.grayColor;
@@ -233,21 +249,6 @@
     
     [view addSubview:self];
     [self constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:_tabBar.frame.size.height];
-    
-    _webView = WKWebView.new;
-    _webView.translatesAutoresizingMaskIntoConstraints = NO;
-    _webView.allowsBackForwardNavigationGestures = YES;
-    _webView.navigationDelegate = self;
-    _webView.UIDelegate = self;
-    _webView.clipsToBounds = YES;
-    
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                 action:@selector(webViewWasTapped:)];
-    
-    [_webView addGestureRecognizer:tapGesture];
-    
-    [self addSubview:_webView];
-    [_webView constrainToView:self leading:0.0 trailing:0.0 top:_headerHeight bottom:0.0];
     
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -265,7 +266,6 @@
     [self addSubview:_returnButton];
     [_returnButton constrainLeadingToAnchor:self.leadingAnchor constant:_headerSideMargin];
     [_returnButton constrainTopToAnchor:self.topAnchor constant:20.0];
-    [_returnButton constrainBottomToAnchor:_webView.topAnchor];
     
     _symbols = NSMutableArray.array;
     _symbolPoints = NSMutableArray.array;
@@ -273,6 +273,73 @@
     _polylinePoints = NSMutableArray.array;
     _polygons = NSMutableArray.array;
     _polygonPoints = NSMutableArray.array;
+}
+
+- (void)addImageToView:(UIView *)view
+                  name:(NSString *)name
+                  type:(NSString *)type
+{
+    UIImage *image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:name
+                                                                                    ofType:type]];
+    
+    _imageView = [[UIImageView alloc] initWithImage:image];
+    
+    _scrollView = UIScrollView.new;
+    _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    _scrollView.bouncesZoom = YES;
+    _scrollView.bounces = YES;
+    _scrollView.clipsToBounds = YES;
+    _scrollView.delegate = self;
+    _scrollView.contentSize = _imageView.frame.size;
+    _scrollView.alpha = 0.0;
+    _scrollView.userInteractionEnabled = NO;
+    
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                 action:@selector(webViewWasTapped:)];
+    
+    [_scrollView addGestureRecognizer:tapGesture];
+    
+    [self addSubview:_scrollView];
+    [_scrollView constrainToView:self leading:0.0 trailing:0.0 top:_headerHeight bottom:0.0];
+    [_returnButton constrainBottomToAnchor:_scrollView.topAnchor];
+    [_scrollView addSubview:_imageView];
+    
+    [self performSelector:@selector(fitImage) withObject:nil afterDelay:0.1];
+}
+
+- (void)fitImage
+{
+    CGFloat maxImageSize = max(_imageView.frame.size.width, _imageView.frame.size.height);
+    CGFloat minContainerSize = min(self.frame.size.width, self.frame.size.height);
+    CGFloat minScale = (minContainerSize / maxImageSize);
+    _scrollView.minimumZoomScale = minScale;
+    _scrollView.maximumZoomScale = (minScale * 100.0);
+    [_scrollView setZoomScale:minScale animated:NO];
+    _scrollView.alpha = 1.0;
+    _scrollView.userInteractionEnabled = YES;
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidFinishNavigation)])
+        [_delegate webViewDidFinishNavigation];
+}
+
+- (void)addWebViewToView:(UIView *)view
+{
+    _webView = WKWebView.new;
+    _webView.translatesAutoresizingMaskIntoConstraints = NO;
+    _webView.allowsBackForwardNavigationGestures = YES;
+    _webView.navigationDelegate = self;
+    _webView.UIDelegate = self;
+    _webView.clipsToBounds = YES;
+    _scrollView = _webView.scrollView;
+    
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                 action:@selector(webViewWasTapped:)];
+    
+    [_webView addGestureRecognizer:tapGesture];
+    
+    [self addSubview:_webView];
+    [_webView constrainToView:self leading:0.0 trailing:0.0 top:_headerHeight bottom:0.0];
+    [_returnButton constrainBottomToAnchor:_webView.topAnchor];
 }
 
 - (void)show
@@ -304,7 +371,7 @@
         _tabBar.userInteractionEnabled = YES;
     }
     
-    _webView.scrollView.delegate = nil;
+    _scrollView.delegate = nil;
     _webView.UIDelegate = nil;
     _webView.navigationDelegate = nil;
 }
@@ -320,7 +387,12 @@
     _tabBar.alpha = 1.0;
     [_returnButton removeFromSuperview];
     [self constrainToView:self.superview leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
-    [_webView constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    
+    if ([self.subviews containsObject:_webView])
+        [_webView constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    
+    else
+        [_scrollView constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
 }
 
 - (void)returnButtonTapped:(UIButton *)button
@@ -355,21 +427,21 @@
     {
         if (_zoomPage > 0)
         {
-            CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
-            _zoomPoint.x *= _webView.scrollView.contentSize.width;
+            CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
+            _zoomPoint.x *= _scrollView.contentSize.width;
             _zoomPoint.y *= pageHeight;
             _zoomPoint.y += (pageHeight * (_zoomPage - 1));
         }
         
-        CGSize zoomSize = CGSizeMake((_webView.scrollView.bounds.size.width / _zoomScale),
-                                     (_webView.scrollView.bounds.size.height / _zoomScale));
+        CGSize zoomSize = CGSizeMake((_scrollView.bounds.size.width / _zoomScale),
+                                     (_scrollView.bounds.size.height / _zoomScale));
         
         CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
                                      (_zoomPoint.y - (zoomSize.height / 2.0)),
                                      zoomSize.width, zoomSize.height);
         
-        [_webView.scrollView zoomToRect:zoomRect animated:NO];
-        _webView.scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
+        [_scrollView zoomToRect:zoomRect animated:NO];
+        _scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
     }
 }
 
@@ -384,10 +456,10 @@
     
     if (page > 1)
     {
-        CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
-        upperLeft.x *= _webView.scrollView.contentSize.width;
+        CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
+        upperLeft.x *= _scrollView.contentSize.width;
         upperLeft.y *= pageHeight;
-        lowerRight.x *= _webView.scrollView.contentSize.width;
+        lowerRight.x *= _scrollView.contentSize.width;
         lowerRight.y *= pageHeight;
         upperLeft.y += (pageHeight * (page - 1));
         lowerRight.y += (pageHeight * (page - 1));
@@ -396,7 +468,7 @@
     CGSize size = CGSizeMake(lowerRight.x - upperLeft.x, lowerRight.y - upperLeft.y);
     CGRect rect = CGRectMake(upperLeft.x, upperLeft.y, size.width, size.height);
     
-    [_webView.scrollView zoomToRect:rect animated:NO];
+    [_scrollView zoomToRect:rect animated:NO];
     
     if (_delegate && [_delegate respondsToSelector:@selector(webViewDidZoom)])
         [_delegate webViewDidZoom];
@@ -437,12 +509,12 @@ didFinishNavigation:(WKNavigation *)navigation
     
     if (_isFile)
     {
-        _webView.scrollView.minimumZoomScale = 1.0;
-        _webView.scrollView.maximumZoomScale = 100.0;
-        _webView.scrollView.bouncesZoom = NO;
-        _webView.scrollView.directionalLockEnabled = NO;
-        _webView.scrollView.clipsToBounds = NO;
-        _webView.scrollView.delegate = self;
+        webView.scrollView.minimumZoomScale = 1.0;
+        webView.scrollView.maximumZoomScale = 100.0;
+        webView.scrollView.bouncesZoom = NO;
+        webView.scrollView.directionalLockEnabled = NO;
+        webView.scrollView.clipsToBounds = NO;
+        webView.scrollView.delegate = self;
         
         [self updatePosition];
         _navigationComplete = YES;
@@ -482,14 +554,14 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 
 - (void)webViewWasTapped:(UITapGestureRecognizer *)gesture
 {
-    CGPoint point = [gesture locationInView:_webView.scrollView];
-    CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+    CGPoint point = [gesture locationInView:_scrollView];
+    CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
     _markerPage = (int)ceilf(point.y / pageHeight);
     CGFloat offset = (CGFloat)(pageHeight * (_markerPage - 1));
     point.y -= offset;
     
     DPOINT dPoint = {0};
-    dPoint.x = (point.x / _webView.scrollView.contentSize.width);
+    dPoint.x = (point.x / _scrollView.contentSize.width);
     dPoint.y = (point.y / pageHeight);
     
     if (_drawsMarkers)
@@ -512,7 +584,7 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
                 line.strokeColor = UIColor.redColor.CGColor;
                 line.path = path.CGPath;
                 line.position = CGPointZero;
-                [_webView.scrollView.layer addSublayer:line];
+                [_scrollView.layer addSublayer:line];
                 [_lines addObject:line];
             }
             
@@ -527,7 +599,7 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
             marker.frame = CGRectMake(0.0, 0.0, _markerSize, _markerSize);
             [_markers addObject:marker];
             marker.center = point;
-            [_webView.scrollView addSubview:marker];
+            [_scrollView addSubview:marker];
             marker.position = CGPointMake(dPoint.x, dPoint.y);
         }
         
@@ -543,8 +615,8 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
                 _marker.frame = CGRectMake(0.0, 0.0, _markerSize, _markerSize);
             }
             
-            if (![_webView.scrollView.subviews containsObject:_marker])
-                [_webView.scrollView addSubview:_marker];
+            if (![_scrollView.subviews containsObject:_marker])
+                [_scrollView addSubview:_marker];
             
             _marker.center = point;
             _markerPosition = dPoint;
@@ -568,7 +640,7 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
             return _returnButton;
         
         else
-            return _webView.scrollView;
+            return _scrollView;
     }
     
     else
@@ -593,7 +665,7 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 {
     if (_rotationEnabled)
     {
-        _webView.scrollView.transform = CGAffineTransformRotate(gesture.view.transform, gesture.rotation);
+        _scrollView.transform = CGAffineTransformRotate(gesture.view.transform, gesture.rotation);
         gesture.rotation = 0.0;
     }
     
@@ -655,9 +727,9 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 - (void)clearPosition
 {
-    _webView.scrollView.transform = CGAffineTransformMakeRotation(0.0);
-    [_webView.scrollView setZoomScale:1.0 animated:NO];
-    [_webView.scrollView setContentOffset:CGPointZero animated:NO];
+    _scrollView.transform = CGAffineTransformMakeRotation(0.0);
+    [_scrollView setZoomScale:1.0 animated:NO];
+    [_scrollView setContentOffset:CGPointZero animated:NO];
 }
 
 - (void)setConstraintsToLeading:(CGFloat)leading
@@ -666,15 +738,29 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
                          bottom:(CGFloat)bottom
 {
     [self constrainToView:self.superview leading:leading trailing:trailing top:top bottom:bottom];
-    [_webView constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    
+    if ([self.subviews containsObject:_webView])
+        [_webView constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    
+    else
+        [_scrollView constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     if ([self.superview viewWithTag:777])
         [[self.superview viewWithTag:777] constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
 }
 
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    if ([scrollView.subviews containsObject:_imageView])
+        return _imageView;
+    
+    else
+        return scrollView.subviews.firstObject;
+}
+
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView
 {
-    CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+    CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
     
     if (_symbols.count)
     {
@@ -711,7 +797,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             
             if ([scrollView.subviews containsObject:marker])
             {
-                marker.center = CGPointMake((marker.position.x * _webView.scrollView.contentSize.width),
+                marker.center = CGPointMake((marker.position.x * scrollView.contentSize.width),
                                             ((marker.position.y * pageHeight) * _markerPage));
             }
         }
@@ -725,7 +811,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             line.path = path.CGPath;
         }
         
-        if ([_webView.scrollView.layer.sublayers containsObject:_polygon])
+        if ([scrollView.layer.sublayers containsObject:_polygon])
         {
             UIBezierPath *path = UIBezierPath.bezierPath;
             CGPoint start = _markers[0].center;
@@ -738,13 +824,13 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             }
             
             _polygon.path = path.CGPath;
-            [_webView.scrollView.layer addSublayer:_polygon];
+            [scrollView.layer addSublayer:_polygon];
         }
     }
     
     else if ([scrollView.subviews containsObject:_marker])
     {
-        _marker.center = CGPointMake((_markerPosition.x * _webView.scrollView.contentSize.width),
+        _marker.center = CGPointMake((_markerPosition.x * scrollView.contentSize.width),
                                     ((_markerPosition.y * pageHeight) * _markerPage));
     }
 }
@@ -801,7 +887,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 - (void)removeLastMarker
 {
-    if ([_webView.scrollView.layer.sublayers containsObject:_polygon])
+    if ([_scrollView.layer.sublayers containsObject:_polygon])
     {
         [_polygon removeFromSuperlayer];
         
@@ -867,16 +953,16 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     }
     
     _polygon.path = path.CGPath;
-    [_webView.scrollView.layer addSublayer:_polygon];
+    [_scrollView.layer addSublayer:_polygon];
 }
 
 - (UIBezierPath *)pathFromPoints:(NSArray<DPoint *> *)points
 {
     UIBezierPath *path = UIBezierPath.bezierPath;
-    CGFloat pageHeight = (_webView.scrollView.contentSize.height / _numPages);
+    CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
     DPoint *firstPoint = points[0];
     CGPoint point = CGPointZero;
-    point.x = (firstPoint.x * _webView.scrollView.contentSize.width);
+    point.x = (firstPoint.x * _scrollView.contentSize.width);
     point.y = (firstPoint.y * pageHeight);
     [path moveToPoint:point];
     
@@ -884,7 +970,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     {
         DPoint *currentPoint = points[i];
         CGPoint point = CGPointZero;
-        point.x = (currentPoint.x * _webView.scrollView.contentSize.width);
+        point.x = (currentPoint.x * _scrollView.contentSize.width);
         point.y = (currentPoint.y * pageHeight);
         [path addLineToPoint:point];
     }
@@ -916,7 +1002,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     shape.path = path.CGPath;
     shape.strokeColor = [UIColor colorWithWhite:0.0 alpha:0.5].CGColor;
     shape.lineWidth = 1.0;
-    [_webView.scrollView.layer addSublayer:shape];
+    [_scrollView.layer addSublayer:shape];
     [_symbolPoints addObject:points];
     [_symbols addObject:shape];
 }
@@ -932,7 +1018,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     polyline.strokeColor = [SymbolDictionary polylineStrokeColor:type lineWidth:&lineWidth].CGColor;
     polyline.lineWidth = lineWidth;
     polyline.fillColor = UIColor.clearColor.CGColor;
-    [_webView.scrollView.layer addSublayer:polyline];
+    [_scrollView.layer addSublayer:polyline];
     [_polylinePoints addObject:points];
     [_polylines addObject:polyline];
 }
@@ -947,7 +1033,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     polygon.strokeColor = [UIColor colorWithWhite:0.0 alpha:0.5].CGColor;
     polygon.lineWidth = 1.0;
     polygon.fillColor = [SymbolDictionary polygonSymbolFillColor:type].CGColor;
-    [_webView.scrollView.layer addSublayer:polygon];
+    [_scrollView.layer addSublayer:polygon];
     [_polygonPoints addObject:points];
     [_polygons addObject:polygon];
 }

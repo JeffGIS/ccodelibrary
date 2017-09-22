@@ -906,9 +906,8 @@ replacementString:(NSString *)string
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
-                                    showFileAtPath:filePath];
-
-    nvwv.delegate = self;
+                                    showFileAtPath:filePath
+                                          delegate:self];
 }
 
 @end

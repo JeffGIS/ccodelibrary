@@ -45,7 +45,8 @@ wasTappedAtPoint:(DPOINT)point
                         urlString:(NSString *)urlString;
 
 + (instancetype)showWebViewInView:(UIView *)view
-                   showFileAtPath:(NSString *)path;
+                   showFileAtPath:(NSString *)path
+                         delegate:(id)delegate;
 
 + (instancetype)showPDFDrawing:(NVPDFDrawing *)drawing
                   fromDocument:(NVPDFDocument)document
