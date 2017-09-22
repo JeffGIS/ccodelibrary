@@ -91,7 +91,6 @@
 		69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B36F191BCB0F30004C4B69 /* NVDateRange.m */; };
 		69B36F1B1BCB1C8F004C4B69 /* NVDateRange.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69B36F181BCB0F30004C4B69 /* NVDateRange.h */; };
 		69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */ = {isa = PBXBuildFile; fileRef = 69BB52761CA4689E00DA7BC2 /* ExitApp.c */; };
-		69C183431C87A4B1000833FC /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 69C183421C87A4B1000833FC /* .gitignore */; };
 		69C3DFA31CB3807200DC1779 /* PercentInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB95A1A51CB16EF500158B40 /* PercentInArea.h */; };
 		69C3DFA61CB4113A00DC1779 /* NVWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C3DFA51CB4113A00DC1779 /* NVWebView.m */; };
 		69C3DFA71CB4118D00DC1779 /* NVWebView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C3DFA41CB4113A00DC1779 /* NVWebView.h */; };
@@ -575,6 +574,7 @@
 		6919EAF71C27AF1700A9D0F1 /* NVUnitPickerTextAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVUnitPickerTextAlert.m; sourceTree = "<group>"; };
 		691B5DCF1E52668600C90383 /* NVGetODR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVGetODR.h; sourceTree = "<group>"; };
 		691B5DD01E52668600C90383 /* NVGetODR.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVGetODR.m; sourceTree = "<group>"; };
+		691BC0E91F755173007E0423 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		692ACC651B86309B00400B36 /* NVRoutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRoutes.h; sourceTree = "<group>"; };
 		692ACC661B86309B00400B36 /* NVRoutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRoutes.m; sourceTree = "<group>"; };
 		692EFA501D36A84B007B0D18 /* NVEmailFileList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVEmailFileList.h; sourceTree = "<group>"; };
@@ -634,7 +634,6 @@
 		69B36F191BCB0F30004C4B69 /* NVDateRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDateRange.m; sourceTree = "<group>"; };
 		69BB52761CA4689E00DA7BC2 /* ExitApp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ExitApp.c; sourceTree = "<group>"; };
 		69BB52771CA4689E00DA7BC2 /* ExitApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExitApp.h; sourceTree = "<group>"; };
-		69C183421C87A4B1000833FC /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		69C3DFA41CB4113A00DC1779 /* NVWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVWebView.h; sourceTree = "<group>"; };
 		69C3DFA51CB4113A00DC1779 /* NVWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVWebView.m; sourceTree = "<group>"; };
 		69C441A81BB474B200D026A7 /* NVTabBarEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTabBarEdit.h; sourceTree = "<group>"; };
@@ -1396,7 +1395,7 @@
 		EBA2E451199527660085B2E0 = {
 			isa = PBXGroup;
 			children = (
-				69C183421C87A4B1000833FC /* .gitignore */,
+				691BC0E91F755173007E0423 /* .gitignore */,
 				EBA2E45F199527660085B2E0 /* CCodeLibrary */,
 				EBA2E460199527660085B2E0 /* Supporting Files */,
 				EBA2E45C199527660085B2E0 /* Frameworks */,
@@ -1617,7 +1616,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				69C183431C87A4B1000833FC /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
