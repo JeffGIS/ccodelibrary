@@ -664,7 +664,8 @@ didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                    showFileAtPath:filePath];
+                                    showFileAtPath:filePath
+                                          delegate:nil];
 #pragma unused(nvwv)
 }
 

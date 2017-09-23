@@ -1079,7 +1079,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                    showFileAtPath:filePath];
+                                    showFileAtPath:filePath
+                                          delegate:nil];
 #pragma unused(nvwv)
 }
 

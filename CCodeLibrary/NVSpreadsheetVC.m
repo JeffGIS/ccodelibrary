@@ -803,7 +803,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     NSString *filePath = [_delegate propFieldDescriptionFilePathAtRow:index];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                    showFileAtPath:filePath];
+                                    showFileAtPath:filePath
+                                          delegate:nil];
     
     [nvwv showRealtorButton];
 }
@@ -1437,7 +1438,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     NSString *filePath = _delegate.filePathForHelpFile;
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                    showFileAtPath:filePath];
+                                    showFileAtPath:filePath
+                                          delegate:nil];
 #pragma unused(nvwv)
 }
 

@@ -990,7 +990,8 @@ static int COUNT=100;
                                                        ofType:@"pdf"];
     
     NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                    showFileAtPath:filePath];
+                                    showFileAtPath:filePath
+                                          delegate:nil];
 #pragma unused(nvwv)
 }
 
