@@ -182,7 +182,7 @@ static int nInit=0;
     return file;
 }
 
-- (BOOL)executeCmd:(char *)cmd
+- (BOOL)executeCmd:(LPCSTR)cmd
       sendToServer:(BOOL)sendToServer
               from:(int)from
 {

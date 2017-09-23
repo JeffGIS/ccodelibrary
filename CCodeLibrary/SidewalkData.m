@@ -686,10 +686,10 @@
     CGFloat metersPerPixel = GroundResolution(platlonBounds->ymn, _zoom);
     _wallPtSize = (size * metersPerPixel);
     
-    CloseTRANS2(&_pTranLLtoView);
-    CloseTRANS2(&_pTranViewtoLL);
+    CloseTRANS2P(&_pTranLLtoView);
+    CloseTRANS2P(&_pTranViewtoLL);
     
-    _pTranLLtoView = STRANCornersToBounds(latlonCornerPoints, pvbounds);
+    _pTranLLtoView = STRANCornersToBoundsP(latlonCornerPoints, pvbounds);
     
     BOOL opened = [self open];
     sqlite3_stmt *statement = NULL;

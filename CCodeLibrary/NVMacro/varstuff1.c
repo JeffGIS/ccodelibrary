@@ -744,7 +744,7 @@ Bool SetSQLDatabaseFields (LPSTR Name)
         pFieldInfo = &FilePtr->FldInfo;
         for (i=0;i<FilePtr->NumFields;i++,pFieldInfo++)
         {
-            sprintf (str,"%i,%i,%i,%i,%i,%i,%s",
+            sprintf (str,"%i,%i,%i,%i,%li,%li,%s",
                      pFieldInfo->type,pFieldInfo->index,pFieldInfo->radix,
                      pFieldInfo->scale,pFieldInfo->length,pFieldInfo->precision,pFieldInfo->name);
             fputstring (str,Fid);
@@ -781,7 +781,7 @@ HANDLE	OpenSQLDatabase (LPSTR Name,LPSTR SQL)
     fgetstring (str,32,Fid);
     while (fgetstring (str,128,Fid))
     {
-        int ii=sscanf (str,"%i,%i,%i,%i,%i,%i,%s",
+        int ii=sscanf (str,"%hi,%hi,%hi,%hi,%li,%li,%s",
                        &pDB->FldInfo[pDB->NumFields].type,
                        &pDB->FldInfo[pDB->NumFields].index,
                        &pDB->FldInfo[pDB->NumFields].radix,
@@ -9732,16 +9732,15 @@ void dumpvars (LPSTR Name)
 #endif
 }
 
-HANDLE FindVar (LPSTR Name)
+HANDLE FindVar (LPCSTR Name)
 #if ENABLETRACE
 {GSSiEnterProg (587);
 #endif
     {   
         short	BegID,MidID,EndID;
         short	i; 
-        VARPNT	VarPtr;
-        LPVARNAMEINDEXITEM	lpVN; 
-        HANDLE	rtn=NULL; 
+        LPVARNAMEINDEXITEM	lpVN;
+        HANDLE	rtn=0;
         HANDLE	hVarSpace=SetVarSpaceFromName(Name);
         
         if (!hVarSpace)
@@ -9749,7 +9748,7 @@ HANDLE FindVar (LPSTR Name)
 #if ENABLETRACE
             GSSiExitProg(587);
 #endif
-            return (NULL);
+            return (0);
         }
         pVarSpace = (LPVARSPACE)GlobalLock(hVarSpace);
         if (!pVarSpace)
@@ -9757,7 +9756,7 @@ HANDLE FindVar (LPSTR Name)
 #if ENABLETRACE
             GSSiExitProg(587);
 #endif
-            return (NULL);
+            return (0);
         }
         if (!pVarSpace->hVarNameTable)
         {
@@ -9766,7 +9765,7 @@ HANDLE FindVar (LPSTR Name)
 #if ENABLETRACE
                 GSSiExitProg (587);
 #endif
-                return (NULL);
+                return (0);
             }
         }
         if (!_fstrnicmp (Name,"G.",2))
@@ -10399,7 +10398,7 @@ long FilePos (LPSTR Cmd,LPSTR FileID,LPSTR Pos,int index)
     if (!_stricmp (Cmd,"SET") && FilePtr->Type == UMIFS_DATAFILE)
     {
         LPGWDHEADER lpGWDHead = (LPGWDHEADER)GlobalLock (FilePtr->FileHandle); 
-        int	pos;
+        int	pos=BT_FIRST;
         
         if (!_stricmp (Pos,"PRIOR"))
             pos = BT_PRIOR;

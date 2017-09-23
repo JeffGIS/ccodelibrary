@@ -536,7 +536,7 @@ Bool GetFieldIDsFromNames(LPSTR DBName, LPHANDLE phFieldIDs, LPHANDLE phFieldTyp
 							pHandle++;
 						}
 						pFieldTypes->ValueID = id;
-						ln = strlen(pEq);
+						ln = (int)strlen(pEq);
 						*pHandle = (HANDLE)GSSiGlobAlloc(1792, GMEM_MOVEABLE, ln + 1);
 						pValue = (LPSTR)GlobalLock(*pHandle);
 						strcpy(pValue, pEq);
@@ -621,7 +621,7 @@ void SetStartupGlobalValues (void)
 {GSSiEnterProg (605);
 #endif
 {   
-	char	str[256];
+/*	char	str[256];
 	
 	
 	SetCurVal ("@[%DL]gpsfiles\\default.gps",IDS_FILEGPS);
@@ -669,7 +669,7 @@ void SetStartupGlobalValues (void)
 	SetGlobalValue("%TIGERFILE1EXT",".rt1");   
 	SetGlobalValue("%ConStatFile","constat");
 	SetGlobalValue("%PICKAP","4");   
-	
+*/	
 
 {
 #if ENABLETRACE
@@ -810,7 +810,7 @@ Bool ProcessMacroFile (LPSTR Name,LPSTR RtnVal,LPHANDLE phArgs,short NumArgs)
 	    		rtn = FALSE;
 	    		goto Exit; 
 	    	}
-			lm = GSSifilelength(Fid);
+			lm = (int)GSSifilelength(Fid);
 			if (NumBufferedMacros == MAX_BUFFERED_MACROS)
 			{
 				i = OldestID;

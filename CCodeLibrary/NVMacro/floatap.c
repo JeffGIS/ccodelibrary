@@ -415,9 +415,9 @@ double fltread (LPSTR Instr, LPBool IRC)
 #endif
 {
     LPSTR lpEnd, lpComma;
-    double	rtn=0, val, val1, val2;  
+    double	rtn=0, val, val1, val2=0;
     HANDLE	hInput=GSSiGlobAlloc ( 745,GMEM_MOVEABLE,USHRT_MAX);
-    LPSTR	str = GlobalLock (hInput); 
+    LPSTR	str = (LPSTR)GlobalLock (hInput);
     
     _fstrcpy (str,Instr);
 //    if (AllowFltExpand)

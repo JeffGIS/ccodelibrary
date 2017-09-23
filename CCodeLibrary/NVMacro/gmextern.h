@@ -715,7 +715,7 @@ extern Bool			ShortestRoute;
 extern int			nDynamicCoord;
 extern LPSTR			pMacroReturnValue;
 extern double			CurPointAZ;
-extern long			CurrentMacro;
+extern int              CurrentMacro;
 extern short			ShowInvisiblePointsSymbol;
 extern short			TrackingStatus;
 extern short			SubFile;

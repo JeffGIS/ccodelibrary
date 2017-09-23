@@ -416,7 +416,7 @@ Bool GetDelimTextData(LPSTR str,HANDLE hDLT,int maxline);
 Bool GetDLTVarName (int ivar,HANDLE hDLT, LPSTR Name);
 HANDLE	GetDLTVarHandle (int ivar,HANDLE hDLT);
 Bool UpdateGlobalFile (LPSTR RptFile,LPSTR VarName,LPSTR str);
-HANDLE FindVar (LPSTR Name);
+HANDLE FindVar (LPCSTR Name);
 void AddToVarNameTable (LPCSTR Name);
 int	GetParmLoc (int MaxParm,char delim,LPSTR str,LPSTR *pLoc);
 void CreateInternalGlobals (void);

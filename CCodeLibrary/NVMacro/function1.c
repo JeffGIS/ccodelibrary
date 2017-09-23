@@ -1233,7 +1233,7 @@ int	GetFunctionValue(int FunID, LPSTR Args, LPSTR OutLoc, LPBREAKPOINT pBrkPt, i
         l = 0;
         goto Exit;
     Rtnl:
-        l = _fstrlen(OutLoc); 
+        l = (int)_fstrlen(OutLoc);
     Exit: 
         if (SaveCfg != CurrentConfig)
         {
