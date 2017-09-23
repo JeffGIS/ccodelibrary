@@ -59,6 +59,13 @@
     return self;
 }
 
+- (void)dealloc
+{
+    _scrollView.delegate = nil;
+    _webView.UIDelegate = nil;
+    _webView.navigationDelegate = nil;
+}
+
 + (instancetype)showWebViewInView:(UIView *)view
                         urlString:(NSString *)urlString
 {
@@ -370,10 +377,6 @@
         [self removeFromSuperview];
         _tabBar.userInteractionEnabled = YES;
     }
-    
-    _scrollView.delegate = nil;
-    _webView.UIDelegate = nil;
-    _webView.navigationDelegate = nil;
 }
 
 - (void)showRealtorButton
