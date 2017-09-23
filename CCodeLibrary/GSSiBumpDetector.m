@@ -169,6 +169,8 @@
 
 - (void)hideBumpDetector:(BOOL)animated
 {
+    [_webView hide:NO];
+    
     if (animated)
     {
         [UIView animateWithDuration:0.25
