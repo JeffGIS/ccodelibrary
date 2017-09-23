@@ -3827,7 +3827,7 @@ HBITMAP WINAPI GSSiCREATEDIBSECTION (HDC hDC,BITMAPINFO *lpbmi,UINT usage, VOID 
  
 
 #define WINAPI      __stdcall
-typedef int (FAR *FARPROC)();
+typedef int FAR *FARPROC;
 
 typedef struct tagSIZE
 {

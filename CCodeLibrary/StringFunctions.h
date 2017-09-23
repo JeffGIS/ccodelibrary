@@ -12,7 +12,7 @@
 
 NSString *deviceSystemInfo(void);
 NSString *deviceCarrier(void);
-NSString *deviceInfo();
+NSString *deviceInfo(void);
 void SetUseMasterID(BOOL reset);
 void SetUseDemoID(BOOL set);
 void SetVendoIDInc(int inc);
