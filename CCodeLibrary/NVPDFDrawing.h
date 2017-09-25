@@ -23,11 +23,15 @@
 #define RCL5450 0.545
 #define RCL5525 0.5525
 #define RCL5625 0.5625
+#define RCL5725 0.5725
 #define RCL5825 0.5825
 #define RCL6000 0.6
 
 #define RCR9025 0.9025
 #define RCR9325 0.9325
+
+#define AR077 0.772727
+#define AR129 1.294118
 
 @interface NVPDFDrawing : NSObject
 

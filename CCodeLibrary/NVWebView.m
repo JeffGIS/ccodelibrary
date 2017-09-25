@@ -195,15 +195,15 @@
     {
         case NVPDFDocumentMNAccessbility:
             resourcePath = @"2015_mn_accessibility_code";
-            aspectRatio = 0.772727;
+            aspectRatio = AR077;
             break;
         case NVPDFDocumentFederalADA:
             resourcePath = @"2010ADAStandards";
-            aspectRatio = 0.772727;
+            aspectRatio = AR077;
             break;
         case NVPDFDocumentADAChecklist:
             resourcePath = @"ada-checklist";
-            aspectRatio = 1.294118;
+            aspectRatio = AR129;
             break;
         default:break;
     }
