@@ -1355,42 +1355,6 @@ Bool GSSiKillTimer(HWND hWnd,UINT_PTR uIDEvent)
 {
 	return FALSE;
 }
-long 	
-DBFReadIntegerAttribute(DBFHandle hDBF, long iShape, int iField)
-{
-	return 0;
-}
-double 	
-DBFReadDoubleAttribute(DBFHandle hDBF, long iShape, int iField)
-{
-	return 0;
-}
-const char SHPAPI_CALL1(*)
-DBFReadStringAttribute(DBFHandle hDBF, long iShape, int iField)
-{
-	return 0;
-}
-const char SHPAPI_CALL1(*)
-DBFReadLogicalAttribute(DBFHandle hDBF, long iShape, int iField)
-{
-	return 0;
-}
-int     SHPAPI_CALL
-DBFIsAttributeNULL(DBFHandle hDBF, long iShape, int iField)
-{
-	return 0;
-}
-
-DBFHandle SHPAPI_CALL
-DBFOpen(const char * pszDBFFile, const char * pszAccess)
-{
-	return 0;
-}
-void	SHPAPI_CALL
-DBFClose(DBFHandle hDBF)
-{
-	return;
-}
 Bool GSSiDELETEOBJCT(HGDIOBJ hobj)
 {
 	return FALSE;
