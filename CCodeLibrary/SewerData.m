@@ -180,32 +180,37 @@ static BOOL _createDirectory = YES;
      andDelegate:(id)delegate
 {
     BOOL fileExists = NO;
-    NSString *fromDir;
+    NSString *fromDir = @"";
     NSString *toDir = [NSString stringWithFormat:@"%@/%@Plats", _documentsDirectory, type];
     FTPDataPull *pull = FTPDataPull.pull;
     pull.delegate = delegate;
     pull.popover = popover;
     pull.dataType = FTPDataPlat;
     pull.useTestServer = NO;
-    NSString * fileName;
+    NSString *fileName = @"";
     
     if ([type isEqualToString:@"pdf"])
     {
-        fileName = [NSString stringWithFormat:@"%@", platID];
+        fileName = [NSString stringWithFormat:@"%@", platID.stringByDeletingPathExtension];
         fromDir = @"MapleGrove/As-built/PDF";
         pull.dataType = FTPDataPDF;
-        [popover showAfter:1.5
-                 withTitle:[NSString stringWithFormat:@"Get PDF %@",
-                            platID]];
+        [popover showAfter:1.5 withTitle:[NSString stringWithFormat:@"Get PDF %@", platID]];
     }
+    
+    else if ([type isEqualToString:@"pdfToJpg"])
+    {
+        fileName = platID;
+        fromDir = [NSString stringWithFormat:@"MapleGrove/As-built/JPG/%@", textBefore(platID, @"_page_")];
+        pull.dataType = FTPDataPDF;
+        [popover showAfter:1.5 withTitle:[NSString stringWithFormat:@"Get JPG %@", platID]];
+    }
+    
     else
     {
         NSString *actualPlatID = [SewerData getActualPlatFileName:platID];
         fileName = [NSString stringWithFormat:@"%@.jpg", actualPlatID];
         fromDir = [NSString stringWithFormat:@"GMMobile/sewerplats/%@", type];
-        [popover showAfter:1.5
-                 withTitle:[NSString stringWithFormat:@"Get %@ Plat %@",
-                            type, actualPlatID]];
+        [popover showAfter:1.5 withTitle:[NSString stringWithFormat:@"Get %@ Plat %@", type, actualPlatID]];
     }
 
     pull.createDirectory = _createDirectory;

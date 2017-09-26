@@ -149,7 +149,7 @@
         nvwv.delegate = delegate;
     
     if ([type isEqualToString:@"jpg"] || [type isEqualToString:@"png"])
-        [nvwv addImageToView:view name:name type:type];
+        [nvwv addImageToView:view path:path];
     
     else
         [nvwv addWebViewToView:view];
@@ -283,19 +283,16 @@
 }
 
 - (void)addImageToView:(UIView *)view
-                  name:(NSString *)name
-                  type:(NSString *)type
+                  path:(NSString *)path
 {
-    UIImage *image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:name
-                                                                                    ofType:type]];
-    
+    UIImage *image = [UIImage imageWithContentsOfFile:path];
     _imageView = [[UIImageView alloc] initWithImage:image];
     
     _scrollView = UIScrollView.new;
     _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
     _scrollView.bouncesZoom = YES;
     _scrollView.bounces = YES;
-    _scrollView.clipsToBounds = YES;
+    _scrollView.clipsToBounds = NO;
     _scrollView.delegate = self;
     _scrollView.contentSize = _imageView.frame.size;
     _scrollView.alpha = 0.0;
@@ -305,6 +302,13 @@
                                                                                  action:@selector(webViewWasTapped:)];
     
     [_scrollView addGestureRecognizer:tapGesture];
+    
+    UIRotationGestureRecognizer *rotGR = [[UIRotationGestureRecognizer alloc] initWithTarget:self
+                                                                                      action:@selector(rotateScrollView:)];
+    
+    rotGR.delegate = self;
+    [_scrollView addGestureRecognizer:rotGR];
+    _rotationEnabled = YES;
     
     [self addSubview:_scrollView];
     [_scrollView constrainToView:self leading:0.0 trailing:0.0 top:_headerHeight bottom:0.0];
