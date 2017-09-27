@@ -1,9 +1,8 @@
 //  SharedDefaults.h
 //  CCodeLibrary
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-#import <MapKit/MapKit.h>
+@import UIKit;
+@import MapKit;
 #import "NVAlertView.h"
 
 typedef NS_ENUM(NSInteger, NVCalibrationType) {

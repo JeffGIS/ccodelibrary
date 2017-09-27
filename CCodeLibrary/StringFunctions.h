@@ -80,6 +80,6 @@ int numberOfOccurencesOfStringInString(NSString *str, NSString *substr);
 UIColor *UIColorFromInt (unsigned int ival);
 BOOL hasNetwork(void);
 void showAlert(NSString *text);
-void ShowAlert(LPCSTR text);
+void ShowTheAlert(LPCSTR text);
 
 #endif

@@ -1,10 +1,5 @@
-//
 //  PointInAreas.h
 //  CCodeLibrary
-//
-//  Created by JEFFREY E SMITH on 1/1/16.
-//  Copyright © 2016 GSSi. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>

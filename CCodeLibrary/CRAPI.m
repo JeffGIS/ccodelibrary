@@ -1256,7 +1256,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
         {
             _alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
-                                                  delegate:CRAPI.sharedInstance
+                                                  delegate:self
                                                      title:@"Warning: Storage Space is very low."
                                            buttonTextArray:@[@"OK"]
                                           destructiveIndex:0];
@@ -1423,11 +1423,21 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)showAlert:(NSString *)text
 {
-    [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
-                                 delegate:self
-                                    title:text
-                          buttonTextArray:@[@"OK"]
-                         destructiveIndex:0];
+    [self performSelectorOnMainThread:@selector(presentAlert:)
+                           withObject:text
+                        waitUntilDone:YES];
+}
+
+- (void)presentAlert:(NSString *)text
+{
+    if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
+    {
+        _alert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
+                                              delegate:self
+                                                 title:text
+                                       buttonTextArray:@[@"OK"]
+                                      destructiveIndex:0];
+    }
 }
 
 @end

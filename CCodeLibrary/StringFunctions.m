@@ -1333,7 +1333,8 @@ DWORD GetTempPath (int len,LPSTR OutStr)
     strncpy (OutStr,cpath.UTF8String,len);
     return 0;
 }
-void ShowAlert(LPCSTR text)
+
+void ShowTheAlert(LPCSTR text)
 {
     NSString *txt = [NSString stringWithUTF8String:text];
     showAlert(txt);
@@ -1343,5 +1344,5 @@ void showAlert(NSString *text)
 {
     [CRAPI.sharedInstance performSelector:@selector(showAlert:)
                                withObject:text
-                               afterDelay:1.0];
+                               afterDelay:0.5];
 }

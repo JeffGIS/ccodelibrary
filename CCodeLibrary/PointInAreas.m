@@ -846,16 +846,18 @@ static int ii;
     _minTime = min (_minTime,itime);
     return numAreasIn;
 }
-- (AreaData *) getAreaDataFromID:(NSString *)areaID
+
+- (AreaData *)getAreaDataFromID:(NSString *)areaID
 {
     for (AreaData *ad in _areaInfo)
     {
         if ([ad.areaID isEqualToString:areaID])
             return ad;
-        
     }
+    
     return nil;
 }
+
 - (double)countForArea:(NSString*)areaID
             whichCount:(int) icount
 {
@@ -876,6 +878,7 @@ static int ii;
                 break;
         }
     }
+
     return rtn;
 }
 
