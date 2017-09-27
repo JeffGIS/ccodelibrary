@@ -722,7 +722,7 @@ static int ii;
                 {
                     COLORDEF cd = ad.colordef;
                     CGColorRef colorRef = CGColorCreate(_colorSpace, (CGFloat*)&cd);
-                    debugMessage ([NSString stringWithFormat:@"colors for %@:%f %f %f %f",ad.areaID,cd.c1,cd.c2,cd.c3,cd.c4].UTF8String);
+                    //debugMessage ([NSString stringWithFormat:@"colors for %@:%f %f %f %f",ad.areaID,cd.c1,cd.c2,cd.c3,cd.c4].UTF8String);
                     CGContextSetFillColorWithColor(_context, colorRef);
                     CGContextDrawPath(_context, kCGPathFill);
                     CGColorRelease(colorRef);
@@ -853,11 +853,11 @@ static int ii;
 - (AreaData *)getAreaDataFromID:(NSString *)areaID
 {
     NSString * mes = [NSString stringWithFormat:@"Area Info count:%lu search for %@",(unsigned long)_areaInfo.count,areaID];
-    debugMessage (mes.UTF8String);
+    //debugMessage (mes.UTF8String);
     for (AreaData *ad in _areaInfo)
     {
         mes = [NSString stringWithFormat:@"%@ count:%f %f %f",ad.areaID,ad.count,ad.count1,ad.count2];
-        debugMessage (mes.UTF8String);
+        //debugMessage (mes.UTF8String);
         if ([ad.areaID isEqualToString:areaID])
             return ad;
     }
@@ -885,8 +885,8 @@ static int ii;
                 break;
         }
     }
-    else
-        debugMessage (areaID.UTF8String);
+    //else
+        //debugMessage (areaID.UTF8String);
     return rtn;
 }
 
