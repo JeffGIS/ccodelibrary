@@ -10,6 +10,8 @@
 #import "MathUtil.h"
 #import "UIDevice+Storage.h"
 
+int __attribute__ ((noinline)) debugMessage (LPCSTR mess);
+
 NSString *deviceSystemInfo(void);
 NSString *deviceCarrier(void);
 NSString *deviceInfo(void);

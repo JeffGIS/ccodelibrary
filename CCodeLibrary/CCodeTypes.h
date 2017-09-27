@@ -105,11 +105,11 @@ typedef LPSTR HPSTR;
 typedef void *LPVOID;
 typedef int HWND;
 typedef unsigned int UINT;
-typedef long LONG;
+typedef int LONG;//do not change to long - must match old PC code
 typedef unsigned short WORD;
 typedef WORD    SWORD;
 typedef unsigned char BYTE;
-typedef long *LPLONG;
+typedef int *LPLONG;//do not change to long - must match old PC code
 typedef unsigned long ULONG_PTR, *PULONG_PTR;
 typedef ULONG_PTR DWORD_PTR;
 typedef unsigned short WORD;
