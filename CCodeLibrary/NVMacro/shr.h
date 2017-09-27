@@ -1057,7 +1057,6 @@ HANDLE ReadSavedScreen (LPSTR File,LPLONG pUpdateTime,LPMNMXCORD pBounds);
 Bool WriteSavedScreen (LPSTR File,HANDLE hSavedScreen,LPMNMXCORD pBounds); 
 void Draw3DBorder(HDC hDC, LPRECT pRect,int iStyle, Bool DoubleWidth);
 Bool FAR PASCAL EDITDYNDIALOGMsgProc(HWND hWndDlg, WORD Message, WORD wParam, LONG lParam);
-Bool LINFIT (HPDPOINT pPoint,LONG N,LPDOUBLE A,LPDOUBLE B,LPDOUBLE MAXDIF,LPLONG LOFMDF);
 Bool GetCDDriveForVol (LPSTR VolID,LPSTR Drive);
 Bool ConvertNameToCDName (LPSTR Name);     
 Bool CDIsInstalled (LPSTR CDName);

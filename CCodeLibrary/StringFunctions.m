@@ -13,6 +13,14 @@ static BOOL useMasterID = FALSE;
 static BOOL useDemoID = FALSE;
 static int useIDInc = 0;
 
+int __attribute__ ((noinline)) debugMessage (LPCSTR mess)
+{
+    int l = (int)strlen (mess);
+    l++;
+    printf("%s\n",mess);
+    return l;
+}
+
 UIColor *UIColorFromInt (unsigned int ival)
 {
     UIColor *uiColor;
