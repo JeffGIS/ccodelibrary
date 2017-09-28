@@ -363,6 +363,8 @@
            replaceViewControllerWithID:@"FindVC"
                     withViewController:fovc];
         
+        [NVTabBarEdit tabBarController:self.tabBarController removeViewControllerWithID:@"ConfigVC"];
+        
         if ([NSBundle.mainBundle.bundleIdentifier isEqualToString:@"com.gssi.newvisionmetro"])
         {
             [NVTabBarEdit tabBarController:self.tabBarController
