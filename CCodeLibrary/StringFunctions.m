@@ -816,7 +816,7 @@ NSString *reverseString(NSString *string)
     else if ([string isEqualToString:@""])
         return @"";
     int len = (int)string.length;
-    LPSTR newStr = malloc (len);
+    LPSTR newStr = malloc (len+1);
     newStr += len;
     *newStr-- = 0;
     LPCSTR oldStr = string.UTF8String;
@@ -824,6 +824,7 @@ NSString *reverseString(NSString *string)
     {
         *newStr-- = *oldStr++;
     }
+    newStr++;
     NSString *reverseString = [NSString stringWithUTF8String:newStr];
 /*    NSMutableString *reverseString = [[NSMutableString alloc] init];
     

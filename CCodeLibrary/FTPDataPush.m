@@ -333,6 +333,8 @@ enum {
     
     _port = @"21";
     
+    //_username = @"GSSiLocalUser";
+    //_password = @"gssi";
 
     
     [self setToFtpSite1];
@@ -340,7 +342,9 @@ enum {
 
 - (void)setToFtpSite1
 {
-    _urlText = [NSString stringWithFormat:@"%@:%@/%@/%@",[CRAPI.sharedInstance getNVCRISServer], self.port, _toDirectory, _toFileName];
+    NSString * server = [CRAPI.sharedInstance getNVCRISServer];
+    //server = @"74.39.73.122";
+    _urlText = [NSString stringWithFormat:@"%@:%@/%@/%@",server, self.port, _toDirectory, _toFileName];
 
 }
 
