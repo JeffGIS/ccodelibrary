@@ -42,14 +42,11 @@
     if (self)
     {
         _zoomPoint = CGPointZero;
-        _zoomScale = _zoomRotation = 0.0;
+        _zoomScale = 1.0;
+        _zoomRotation = 0.0;
         _numPages = _zoomPage = 1;
-        _navigationComplete = NO;
-        _zoomToPDFDrawing = NO;
-        _drawsMarkers = NO;
-        _rotationEnabled = NO;
-        _drawsMultipleMarkers = NO;
-        _enableSwipe = NO;
+        _navigationComplete = _zoomToPDFDrawing = _drawsMarkers = NO;
+        _rotationEnabled = _drawsMultipleMarkers = _enableSwipe = NO;
         _markerSize = 20.0;
         _polygon = CAShapeLayer.layer;
         _polygon.fillColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5].CGColor;
@@ -422,13 +419,34 @@
     _zoomScale = _origScale = scale;
     _zoomRotation = _origRotation = rotation;
     
-    [self updatePosition];
+    if ([_scrollView.subviews containsObject:_imageView])
+        [self performSelector:@selector(updateImageViewPosition) withObject:nil afterDelay:0.25];
+    
+    else
+        [self updatePosition];
+}
+
+- (void)updateImageViewPosition
+{
+    _zoomPoint.x *= _imageView.image.size.width;
+    _zoomPoint.y *= _imageView.image.size.height;
+    _zoomPoint.y += (_imageView.image.size.height * (_zoomPage - 1));
+    
+    CGSize zoomSize = CGSizeMake((_imageView.image.size.width / _zoomScale),
+                                 (_imageView.image.size.height / _zoomScale));
+    
+    CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
+                                 (_zoomPoint.y - (zoomSize.height / 2.0)),
+                                 zoomSize.width, zoomSize.height);
+    
+    [_scrollView zoomToRect:zoomRect animated:NO];
+    _scrollView.transform = CGAffineTransformMakeRotation(_zoomRotation * DEGtoRAD);
 }
 
 - (void)updatePosition
 {
     if (_zoomToPDFDrawing)
-         [self zoomToPage:_drawing.page upperLeft:_drawing.upperLeft lowerRight:_drawing.lowerRight];
+        [self zoomToPage:_drawing.page upperLeft:_drawing.upperLeft lowerRight:_drawing.lowerRight];
     
     else
     {

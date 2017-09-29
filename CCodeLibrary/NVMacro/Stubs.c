@@ -602,6 +602,7 @@ DPOINT PointAtDistOnPoly(HPDPOINT pPoly, long nPoly, double Dist, LPDOUBLE pAZ, 
 	DPOINT pt = { 0 };
 	return pt;
 }
+/*
 int pj_transform(projPJ src, projPJ dst, long point_count, int point_offset,
 	double *x, double *y, double *z)
 {
@@ -619,7 +620,7 @@ projPJ pj_init_plus(const char * str)
 void pj_free(projPJ p)
 {
 	return;
-}
+}*/
 void OutFunction(int funid, LPSTR outString)
 {
 	return;
