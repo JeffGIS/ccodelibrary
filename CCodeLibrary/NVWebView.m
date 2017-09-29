@@ -419,7 +419,7 @@
     _zoomPoint.x = _origPoint.x = point.x;
     _zoomPoint.y = _origPoint.y = point.y;
     _zoomPage = _origPage = page;
-    _zoomScale = _origScale = 1.0;
+    _zoomScale = _origScale = scale;
     _zoomRotation = _origRotation = rotation;
     
     if ([_scrollView.subviews containsObject:_imageView])
@@ -435,8 +435,8 @@
     _zoomPoint.y *= _imageView.image.size.height;
     _zoomPoint.y += (_imageView.image.size.height * (_zoomPage - 1));
     
-    CGSize zoomSize = CGSizeMake((_scrollView.bounds.size.width / _zoomScale),
-                                 (_scrollView.bounds.size.height / _zoomScale));
+    CGSize zoomSize = CGSizeMake((_imageView.image.size.width / _zoomScale),
+                                 (_imageView.image.size.height / _zoomScale));
     
     CGRect zoomRect = CGRectMake((_zoomPoint.x - (zoomSize.width / 2.0)),
                                  (_zoomPoint.y - (zoomSize.height / 2.0)),
