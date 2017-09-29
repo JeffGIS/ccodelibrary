@@ -42,14 +42,11 @@
     if (self)
     {
         _zoomPoint = CGPointZero;
-        _zoomScale = _zoomRotation = 0.0;
+        _zoomScale = 1.0;
+        _zoomRotation = 0.0;
         _numPages = _zoomPage = 1;
-        _navigationComplete = NO;
-        _zoomToPDFDrawing = NO;
-        _drawsMarkers = NO;
-        _rotationEnabled = NO;
-        _drawsMultipleMarkers = NO;
-        _enableSwipe = NO;
+        _navigationComplete = _zoomToPDFDrawing = _drawsMarkers = NO;
+        _rotationEnabled = _drawsMultipleMarkers = _enableSwipe = NO;
         _markerSize = 20.0;
         _polygon = CAShapeLayer.layer;
         _polygon.fillColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5].CGColor;
