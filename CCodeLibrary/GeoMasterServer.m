@@ -22,7 +22,7 @@ static GeoMasterServer *statServer = nil;
     if (!statServer)
         statServer = [[GeoMasterServer alloc] init];
     statServer.output = @"";
-    statServer.useTestServer = NO;
+    //statServer.useTestServer = NO;
     return statServer;
 }
 

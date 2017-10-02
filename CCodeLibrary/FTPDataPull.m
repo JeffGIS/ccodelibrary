@@ -8,11 +8,11 @@
 @interface FTPDataPull ()
 
 @property (nonatomic) Reachability *reachability;
-@property (nonatomic) unsigned long long existingFileSize;
-@property (nonatomic) FTPDataPullRefreshOption refreshOption;
-@property id <GSSiPopoverViewDelegate> savePopoverDelegate;
+@property unsigned long long existingFileSize;
+@property FTPDataPullRefreshOption refreshOption;
+@property (nonatomic, weak) id <GSSiPopoverViewDelegate> savePopoverDelegate;
 @property (nonatomic, copy) NSString *tempExtension;
-@property BOOL useOnlyPrimaryFTP;
+//@property BOOL useOnlyPrimaryFTP;
 
 @end
 
@@ -34,10 +34,10 @@ static FTPDataPull * _statpull = nil;
     
     if (self)
     {
-        _haveCalledDelegate = NO;
-        _useTestServer = NO;
+        //_haveCalledDelegate = NO;
+        //_useTestServer = NO;
         _tempExtension = @".download";
-        _useOnlyPrimaryFTP = YES;
+        //_useOnlyPrimaryFTP = YES;
     }
     
     return self;
@@ -75,7 +75,7 @@ static FTPDataPull * _statpull = nil;
     _fileName = fileName;
     _toFileName = toFileName;
     _filePath = [NSString stringWithFormat:@"%@/%@", _toDirectory, _toFileName];
-    _haveCalledDelegate = NO;
+    //_haveCalledDelegate = NO;
     assert(_filePath);
     
     _existingFileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_filePath
@@ -87,16 +87,16 @@ static FTPDataPull * _statpull = nil;
         _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
         NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
         
-        if(remoteHostStatus == NotReachable)
+        if (remoteHostStatus == NotReachable)
         {
-            if (_delegate && !_haveCalledDelegate)
+            if (_delegate /*&& !_haveCalledDelegate*/)
             {
                 [_delegate FTPdidComplete:_dataType
                                withStatus:FTPStatusConnectionFailed
                           andStatusString:@"Cannot reach server"
                                  filePath:_filePath];
                 
-                _haveCalledDelegate = YES;
+                //_haveCalledDelegate = YES;
             }
             
             return FTPStatusConnectionFailed;
@@ -116,14 +116,14 @@ static FTPDataPull * _statpull = nil;
         rtn = FTPStatusFileExists;
         [_popover hide];
         
-        if (_delegate && !_haveCalledDelegate)
+        if (_delegate /*&& !_haveCalledDelegate*/)
         {
             [_delegate FTPdidComplete:_dataType
                            withStatus:FTPStatusOK
                       andStatusString:@"File exists"
                              filePath:_filePath];
             
-            _haveCalledDelegate = YES;
+            //_haveCalledDelegate = YES;
         }
     }
     
@@ -145,14 +145,14 @@ static FTPDataPull * _statpull = nil;
         status = 1;
     }
     
-    if (_delegate && !_haveCalledDelegate)
+    if (_delegate /*&& !_haveCalledDelegate*/)
     {
         [_delegate FTPdidComplete:_dataType
                        withStatus:status
                   andStatusString:statusString
                          filePath:_filePath];
         
-        _haveCalledDelegate = YES;
+        //_haveCalledDelegate = YES;
     }
 }
 
@@ -370,7 +370,7 @@ didReceiveResponse:(NSURLResponse *)response
 {
     if (_ftpSiteOveride)
     {
-        _useOnlyPrimaryFTP = YES;
+        //_useOnlyPrimaryFTP = YES;
         //_ftpSite = _currentFtp = _ftpSiteOveride;
         _username = _usernameOveride;
         _password = _passwordOveride;
@@ -379,11 +379,11 @@ didReceiveResponse:(NSURLResponse *)response
     
     else
     {
-        if (_useTestServer)
+        /*if (_useTestServer)
         {
         }
         
-        else
+        else*/
         {
             _username = @"GSSiProfessionalServer";
             _password = @"GSSi";
@@ -391,7 +391,6 @@ didReceiveResponse:(NSURLResponse *)response
             /*_ftpSite = @"192.168.254.39";
              _username = @"GSSiLocal";
              _password = @"GSSi";*/
-            
          }
         
         _port = @"21";

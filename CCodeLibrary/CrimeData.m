@@ -290,7 +290,7 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
        
         _delegate = delegate;
         _GMServer = GeoMasterServer.open;
-        _GMServer.useTestServer = NO;
+        //_GMServer.useTestServer = NO;
         _GMServer.delegate = self;
         _GMServer.messageID = GMSMessageGetPoliceUpdate;
         [_GMServer initCommunication:5.0];
@@ -477,7 +477,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     _pull = FTPDataPull.pull;
     _pull.delegate = self;
     _pull.popover = _popoverView;
-    _pull.useTestServer = NO;
+    //_pull.useTestServer = NO;
     _pull.dataType = FTPDataCrimes;
     
     if ([_pull getFile:fileName
