@@ -126,7 +126,7 @@ didReceiveResponse:(NSURLResponse *)response
     assert(connection == _connection);
     assert(response);
     
-    _mutableData = [[NSMutableData alloc] init];
+    _mutableData = NSMutableData.data;
     
     [_fileStream open];
     

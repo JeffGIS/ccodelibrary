@@ -175,6 +175,7 @@
         }
     }
     
+    [nvwv bringSubviewToFront:nvwv.returnButton];
     [nvwv.webView loadFileURL:url allowingReadAccessToURL:url];
     [nvwv show];
     return nvwv;
@@ -259,6 +260,7 @@
     _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
     _returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     _returnButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    _returnButton.titleLabel.backgroundColor = UIColor.blackColor;
     [_returnButton setTitle:@"< Return" forState:UIControlStateNormal];
     [_returnButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [_returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
@@ -1061,6 +1063,53 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [_scrollView.layer addSublayer:polygon];
     [_polygonPoints addObject:points];
     [_polygons addObject:polygon];
+}
+
+- (void)showNextButton
+{
+    UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    nextButton.translatesAutoresizingMaskIntoConstraints = NO;
+    nextButton.titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
+    nextButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    nextButton.titleLabel.backgroundColor = UIColor.blackColor;
+    [nextButton setTitle:@">>" forState:UIControlStateNormal];
+    [nextButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [nextButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    
+    [nextButton addTarget:self
+                   action:@selector(nextButtonTapped:)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    [self addSubview:nextButton];
+    [nextButton constrainTrailingToAnchor:self.trailingAnchor constant:-20.0];
+    [nextButton constrainBottomToAnchor:self.bottomAnchor constant:-20.0];
+    
+    UIButton *previousButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    previousButton.translatesAutoresizingMaskIntoConstraints = NO;
+    previousButton.titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
+    previousButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    previousButton.titleLabel.backgroundColor = UIColor.blackColor;
+    [previousButton setTitle:@"<<" forState:UIControlStateNormal];
+    [previousButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [previousButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    
+    [previousButton addTarget:self
+                       action:@selector(previousButtonTapped:)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    [self addSubview:previousButton];
+    [previousButton constrainLeadingToAnchor:self.leadingAnchor constant:20.0];
+    [previousButton constrainBottomToAnchor:self.bottomAnchor constant:-20.0];
+}
+
+- (void)nextButtonTapped:(UIButton *)button
+{
+    
+}
+
+- (void)previousButtonTapped:(UIButton *)button
+{
+    
 }
 
 @end

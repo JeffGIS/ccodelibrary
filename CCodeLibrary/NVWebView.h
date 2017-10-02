@@ -63,6 +63,7 @@ wasTappedAtPoint:(DPOINT)point
 - (void)updatePosition;
 - (void)removeLastMarker;
 - (void)maskPolygon;
+- (void)showNextButton;
 
 - (void)drawShapeWithPoint:(DPoint *)point
                       type:(PointSymbols)type;

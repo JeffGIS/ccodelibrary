@@ -12,17 +12,17 @@ enum {
 
 @interface FTPDataPush ()
 
-@property (nonatomic, readonly) BOOL isSending;
+@property (readonly) BOOL isSending;
 @property (nonatomic) NSOutputStream *networkStream;
 @property (nonatomic) NSInputStream *fileStream;
 @property (nonatomic, readonly) uint8_t *buffer;
-@property (nonatomic, assign) size_t bufferOffset;
-@property (nonatomic, assign) size_t bufferLimit;
+@property size_t bufferOffset;
+@property size_t bufferLimit;
 @property (nonatomic) Reachability *reachability;
-@property (nonatomic) long fileSize, totBytesWritten;
-@property (nonatomic) int ii;
-@property id <GSSiPopoverViewDelegate> savePopoverDelegate;
-@property BOOL useOnlyPrimaryFTP;
+@property long fileSize, totBytesWritten;
+@property int ii;
+@property (nonatomic, weak) id <GSSiPopoverViewDelegate> savePopoverDelegate;
+//@property BOOL useOnlyPrimaryFTP;
 @property (nonatomic, copy) NSString *tempExtension;
 
 @end
@@ -35,7 +35,7 @@ enum {
 + (FTPDataPush *)push
 {
     FTPDataPush *dataPush = FTPDataPush.new;
-    dataPush.useOnlyPrimaryFTP = YES;
+    //dataPush.useOnlyPrimaryFTP = YES;
     dataPush.tempExtension = @".upload";
     return dataPush;
 }

@@ -31,7 +31,7 @@ didReceiveMessage:(NSString *)message
 @property (nonatomic) NSOutputStream *outputStream;
 @property (nonatomic, copy) NSString *output;
 @property BOOL didOpen;
-@property BOOL useTestServer;
+//@property BOOL useTestServer;
 @property (nonatomic) NSInteger messageID;
 @property (nonatomic) NSTimer *openTimer, *sendTimer, *responseTimer;
 @property (nonatomic) CGFloat responseTimeoutInSeconds;
