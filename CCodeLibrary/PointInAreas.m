@@ -69,7 +69,8 @@ static int ii;
     
     CloseTRANS2P(&_pTranContextToWorld);
     CloseTRANS2P(&_pTranWorldToContext);
-    CGColorSpaceRelease(_colorSpace);
+    if (_colorSpace)
+        CGColorSpaceRelease(_colorSpace);
     
 }
 
