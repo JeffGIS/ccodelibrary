@@ -35,7 +35,7 @@ static FTPDataPull * _statpull = nil;
     if (self)
     {
         //_haveCalledDelegate = NO;
-        //_useTestServer = NO;
+        _useTestServer = NO;
         _tempExtension = @".download";
         //_useOnlyPrimaryFTP = YES;
     }
@@ -381,6 +381,8 @@ didReceiveResponse:(NSURLResponse *)response
     {
         /*if (_useTestServer)
         {
+            _username = @"GSSiLocalUser";
+            _password = @"gssi";
         }
         
         else*/
@@ -398,10 +400,15 @@ didReceiveResponse:(NSURLResponse *)response
     }
 }
 
+
+
 - (void)setToFtpSite1
 {
+    NSString * server = [CRAPI.sharedInstance getNVCRISServer];
+    if (_useTestServer)
+        server = @"74.39.73.193";
     _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@",
-                _username, _password, [CRAPI.sharedInstance getNVCRISServer], _port, _directory, _fileName];
+                _username, _password, server, _port, _directory, _fileName];
 }
 
 - (void)setToFtpSite2

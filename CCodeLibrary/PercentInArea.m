@@ -50,7 +50,8 @@ static int ii;
         CGContextRelease(_context);
     CloseTRANS2P(&_pTranContextToWorld);
     
-    CGColorSpaceRelease(_colorSpace);
+    if (_colorSpace)
+        CGColorSpaceRelease(_colorSpace);
     
 }
 - (id)init

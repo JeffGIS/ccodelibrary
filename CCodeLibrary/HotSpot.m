@@ -137,7 +137,7 @@
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
     CGFloat colors[4] = {1,1,1,1};
     
-    colors[3] = 0.75;
+    colors[0] = 1;
     rect.size.width = 1;
     rect.size.height = 1;
     if (_nGrids == 1 || !_counts[1])
@@ -215,6 +215,7 @@
         }
         
     }
+    CGColorSpaceRelease(colorspace);
 }
 
 - (Bool)dump:(NSString *)outFile
