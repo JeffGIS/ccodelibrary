@@ -14,8 +14,9 @@
 @interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate>
 
 @property (nonatomic) WKWebView *webView;
-@property (nonatomic) UIButton *returnButton, *realtor;
-@property (nonatomic) CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation, origScale, origRotation, markerSize;
+@property (nonatomic) UIButton *returnButton, *realtor, *nextButton, *previousButton;
+@property (nonatomic) CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation;
+@property (nonatomic) CGFloat origScale, origRotation, markerSize, fontSize;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIActivityIndicatorView *indicator;
 @property CGPoint zoomPoint, origPoint;
@@ -48,6 +49,7 @@
         _navigationComplete = _zoomToPDFDrawing = _drawsMarkers = NO;
         _rotationEnabled = _drawsMultipleMarkers = _enableSwipe = NO;
         _markerSize = 20.0;
+        _fontSize = 32.0;
         _polygon = CAShapeLayer.layer;
         _polygon.fillColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5].CGColor;
         _polygon.position = CGPointZero;
@@ -257,7 +259,7 @@
     
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
-    _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:_fontSize];
     _returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     _returnButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     _returnButton.titleLabel.backgroundColor = UIColor.blackColor;
@@ -666,6 +668,12 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
         if (CGRectContainsPoint(_returnButton.frame, point))
             return _returnButton;
         
+        else if (CGRectContainsPoint(_nextButton.frame, point))
+            return _nextButton;
+        
+        else if (CGRectContainsPoint(_previousButton.frame, point))
+            return _previousButton;
+        
         else
             return _scrollView;
     }
@@ -1065,51 +1073,59 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [_polygons addObject:polygon];
 }
 
-- (void)showNextButton
+- (void)showNextAndPrevious
 {
-    UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    nextButton.translatesAutoresizingMaskIntoConstraints = NO;
-    nextButton.titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
-    nextButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    nextButton.titleLabel.backgroundColor = UIColor.blackColor;
-    [nextButton setTitle:@">>" forState:UIControlStateNormal];
-    [nextButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [nextButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    _nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _nextButton.translatesAutoresizingMaskIntoConstraints = NO;
+    _nextButton.titleLabel.font = [UIFont boldSystemFontOfSize:(_fontSize * 1.5)];
+    _nextButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    _nextButton.titleLabel.backgroundColor = UIColor.blackColor;
+    [_nextButton setTitle:@">>" forState:UIControlStateNormal];
+    [_nextButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [_nextButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
     
-    [nextButton addTarget:self
-                   action:@selector(nextButtonTapped:)
-         forControlEvents:UIControlEventTouchUpInside];
+    [_nextButton addTarget:self
+                    action:@selector(nextButtonTapped:)
+          forControlEvents:UIControlEventTouchUpInside];
     
-    [self addSubview:nextButton];
-    [nextButton constrainTrailingToAnchor:self.trailingAnchor constant:-20.0];
-    [nextButton constrainBottomToAnchor:self.bottomAnchor constant:-20.0];
+    [self addSubview:_nextButton];
+    [_nextButton constrainTrailingToAnchor:self.trailingAnchor constant:-20.0];
+    [_nextButton constrainBottomToAnchor:self.bottomAnchor constant:-_tabBar.frame.size.height];
     
-    UIButton *previousButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    previousButton.translatesAutoresizingMaskIntoConstraints = NO;
-    previousButton.titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
-    previousButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    previousButton.titleLabel.backgroundColor = UIColor.blackColor;
-    [previousButton setTitle:@"<<" forState:UIControlStateNormal];
-    [previousButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [previousButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    _previousButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _previousButton.translatesAutoresizingMaskIntoConstraints = NO;
+    _previousButton.titleLabel.font = [UIFont boldSystemFontOfSize:(_fontSize * 1.5)];
+    _previousButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    _previousButton.titleLabel.backgroundColor = UIColor.blackColor;
+    [_previousButton setTitle:@"<<" forState:UIControlStateNormal];
+    [_previousButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [_previousButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
     
-    [previousButton addTarget:self
-                       action:@selector(previousButtonTapped:)
-            forControlEvents:UIControlEventTouchUpInside];
+    [_previousButton addTarget:self
+                 action:@selector(previousButtonTapped:)
+       forControlEvents:UIControlEventTouchUpInside];
     
-    [self addSubview:previousButton];
-    [previousButton constrainLeadingToAnchor:self.leadingAnchor constant:20.0];
-    [previousButton constrainBottomToAnchor:self.bottomAnchor constant:-20.0];
+    [self addSubview:_previousButton];
+    [_previousButton constrainLeadingToAnchor:self.leadingAnchor constant:20.0];
+    [_previousButton constrainBottomToAnchor:self.bottomAnchor constant:-_tabBar.frame.size.height];
 }
 
 - (void)nextButtonTapped:(UIButton *)button
 {
-    
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidRequestNextImage:)])
+        [_delegate webViewDidRequestNextImage:self];
 }
 
 - (void)previousButtonTapped:(UIButton *)button
 {
-    
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidRequestPreviousImage:)])
+        [_delegate webViewDidRequestPreviousImage:self];
+}
+
+- (void)updateImageViewToImageAtPath:(NSString *)path
+{
+     UIImage *image = [UIImage imageWithContentsOfFile:path];
+    _imageView.image = image;
 }
 
 @end

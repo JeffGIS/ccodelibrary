@@ -23,6 +23,8 @@ typedef NS_ENUM(NSInteger, NVPDFDocument)
 - (void)webViewDidReturn:(NVWebView *)webView;
 - (void)webViewDidZoom;
 - (void)webViewDidFinishNavigation;
+- (void)webViewDidRequestNextImage:(NVWebView *)webView;
+- (void)webViewDidRequestPreviousImage:(NVWebView *)webView;
 
 - (void)webView:(NVWebView *)webView
 wasTappedAtPoint:(DPOINT)point
@@ -63,7 +65,8 @@ wasTappedAtPoint:(DPOINT)point
 - (void)updatePosition;
 - (void)removeLastMarker;
 - (void)maskPolygon;
-- (void)showNextButton;
+- (void)showNextAndPrevious;
+- (void)updateImageViewToImageAtPath:(NSString *)path;
 
 - (void)drawShapeWithPoint:(DPoint *)point
                       type:(PointSymbols)type;
