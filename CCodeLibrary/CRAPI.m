@@ -1156,7 +1156,7 @@ dispatch_async(dispatch_get_main_queue(),
 
 - (NSString*) getNVCRISServer
 {
-    NSString * server = [NSString stringWithFormat:@"gssiserver%i.com",_serverToUse];
+    NSString *server = [NSString stringWithFormat:@"gssiserver%i.com", _serverToUse];
     return server;
 }
 

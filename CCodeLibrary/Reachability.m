@@ -5,7 +5,7 @@
 #import <ifaddrs.h>
 #import <netdb.h>
 #import <sys/socket.h>
-#import <CoreFoundation/CoreFoundation.h>
+@import CoreFoundation;
 #import "Reachability.h"
 
 NSString *kReachabilityChangedNotification = @"kNetworkReachabilityChangedNotification";

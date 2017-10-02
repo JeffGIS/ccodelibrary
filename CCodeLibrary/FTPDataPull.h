@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, FTPDataType)
 {
     FTPDataPlat,
     FTPDataPDF,
+    FTPDataJPG,
     FTPDataCrimes,
     FTPDataOther,
     GetDatabaseSettingProperty,
