@@ -130,9 +130,13 @@ forCellWithReuseIdentifier:(NSString *)identifier
 - (void)reloadData
 {
     [_upperLeftCollectionView reloadData];
+    [_upperLeftCollectionView.collectionViewLayout invalidateLayout];
     [_upperRightCollectionView reloadData];
+    [_upperRightCollectionView.collectionViewLayout invalidateLayout];
     [_lowerLeftCollectionView reloadData];
+    [_lowerLeftCollectionView.collectionViewLayout invalidateLayout];
     [_lowerRightCollectionView reloadData];
+    [_lowerRightCollectionView.collectionViewLayout invalidateLayout];
 }
 
 - (void)setScrollEnabled:(BOOL)scrollEnabled
