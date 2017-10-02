@@ -249,18 +249,15 @@ Top:
         
         //int numTextLines = [NVTextDrawing numLinesInText:text.UTF8String];
         
-        CTFontRef textPointFontRef = CTFontCreateWithName((CFStringRef)NULL,
-                                                          fontSize, NULL);
-        
+        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"AppleSDGothicNeo-Medium", fontSize, NULL);
         NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
         style.alignment = NSTextAlignmentCenter;
         
         NSDictionary *textPointAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                             (__bridge id)textPointFontRef, kCTFontAttributeName,
-                                             style, kCTParagraphStyleAttributeName,
-                                             nil];
+                                             (__bridge id)fontRef, kCTFontAttributeName,
+                                             style, kCTParagraphStyleAttributeName, nil];
         
-        CFRelease(textPointFontRef);
+        CFRelease(fontRef);
         
         NSAttributedString *textPointString = [[NSAttributedString alloc] initWithString:text
                                                                               attributes:textPointAttributes];
@@ -456,23 +453,19 @@ Top:
      CGContextFillRect(context, rectmp);
      }*/
     
-    CTFontRef fontRef = CTFontCreateWithName((CFStringRef)NULL,
-                                             fontSize, NULL);
-    
+    CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"AppleSDGothicNeo-Medium", fontSize, NULL);
     NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
     style.alignment = NSTextAlignmentCenter;
     
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                 (__bridge id)fontRef, kCTFontAttributeName,
                                 style, kCTParagraphStyleAttributeName,
-                                textColor.CGColor, kCTForegroundColorAttributeName,
-                                nil];
+                                textColor.CGColor, kCTForegroundColorAttributeName, nil];
     
     NSDictionary *shadowAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                       (__bridge id)fontRef, kCTFontAttributeName,
                                       style, kCTParagraphStyleAttributeName,
-                                      UIColor.whiteColor.CGColor, kCTForegroundColorAttributeName,
-                                      nil];
+                                      UIColor.whiteColor.CGColor, kCTForegroundColorAttributeName, nil];
     
     CFRelease(fontRef);
     

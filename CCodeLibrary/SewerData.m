@@ -1220,26 +1220,22 @@ LPSTR $RND(int i,double val,int ndec,BOOL addCommas,BOOL removeZ)
     NSDictionary *pipeAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                     (__bridge id)fontRef, kCTFontAttributeName,
                                     style, kCTParagraphStyleAttributeName,
-                                    green.CGColor, kCTForegroundColorAttributeName,
-                                    nil];
+                                    green.CGColor, kCTForegroundColorAttributeName, nil];
     
     NSDictionary *invertInAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                         (__bridge id)fontRef, kCTFontAttributeName,
                                         style, kCTParagraphStyleAttributeName,
-                                        UIColor.redColor.CGColor, kCTForegroundColorAttributeName,
-                                        nil];
+                                        UIColor.redColor.CGColor, kCTForegroundColorAttributeName, nil];
     
     NSDictionary *invertOutAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                          (__bridge id)fontRef, kCTFontAttributeName,
                                          style, kCTParagraphStyleAttributeName,
-                                         UIColor.blueColor.CGColor, kCTForegroundColorAttributeName,
-                                         nil];
+                                         UIColor.blueColor.CGColor, kCTForegroundColorAttributeName, nil];
     
     NSDictionary *shadowAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                       (__bridge id)fontRef, kCTFontAttributeName,
                                       style, kCTParagraphStyleAttributeName,
-                                      UIColor.whiteColor.CGColor, kCTForegroundColorAttributeName,
-                                      nil];
+                                      UIColor.whiteColor.CGColor, kCTForegroundColorAttributeName, nil];
     
     CFRelease(fontRef);
     

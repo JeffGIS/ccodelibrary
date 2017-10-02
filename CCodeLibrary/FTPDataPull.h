@@ -55,32 +55,32 @@ typedef NS_ENUM(NSInteger, FTPDataType)
 @interface FTPDataPull : NSObject <NSURLConnectionDataDelegate,GSSiPopoverViewDelegate>
 
 @property (nonatomic, strong) id <FTPDataPullDelegate> delegate; //nonstandard strong pointer needed for intersection database init
-@property (nonatomic, readonly) BOOL isReceiving;
-//@property BOOL useTestServer;
-@property (nonatomic, strong) NSURLConnection *connection;
-@property (nonatomic, copy) NSString *filePath;
-@property (nonatomic, strong) NSOutputStream *fileStream;
-@property (nonatomic, copy) NSString *ftpSiteOveride;
-@property (nonatomic, copy) NSString *usernameOveride;
-@property (nonatomic, copy) NSString *passwordOveride;
-@property (nonatomic, copy) NSString *portOveride;
-@property (nonatomic, copy) NSString *username;
-@property (nonatomic, copy) NSString *password;
-@property (nonatomic, copy) NSString *port;
-@property (nonatomic, copy) NSString *directory;
-@property (nonatomic, copy) NSString *toDirectory;
+@property (nonatomic, assign, readonly ) BOOL isReceiving;
+@property BOOL useTestServer;
+@property (nonatomic, strong, readwrite) NSURLConnection *connection;
+@property NSString *filePath;
+@property (nonatomic, strong, readwrite) NSOutputStream *fileStream;
+@property (nonatomic, copy, readwrite) NSString *ftpSiteOveride;
+@property (nonatomic, copy, readwrite) NSString *usernameOveride;
+@property (nonatomic, copy, readwrite) NSString *passwordOveride;
+@property (nonatomic, copy, readwrite) NSString *portOveride;
+@property (nonatomic, copy, readwrite) NSString *username;
+@property (nonatomic, copy, readwrite) NSString *password;
+@property (nonatomic, copy, readwrite) NSString *port;
+@property (nonatomic, copy, readwrite) NSString *directory;
+@property (nonatomic, copy, readwrite) NSString *toDirectory;
 @property BOOL createDirectory;
-@property (nonatomic, copy) NSString *fileName;
-@property (nonatomic, copy) NSString *toFileName;
-@property (nonatomic, copy) NSString *username2;
-@property (nonatomic, copy) NSString *password2;
-@property (nonatomic, copy) NSString *urlText;
-@property BOOL hasFailed;
+@property (nonatomic, copy, readwrite) NSString *fileName;
+@property (nonatomic, copy, readwrite) NSString *toFileName;
+@property (nonatomic, copy, readwrite) NSString *username2;
+@property (nonatomic, copy, readwrite) NSString *password2;
+@property (nonatomic, copy, readwrite) NSString *urlText;
+@property (nonatomic, assign, readwrite) BOOL hasFailed;
 //@property (nonatomic) BOOL haveCalledDelegate;
-@property int geoid;
-@property NSUInteger totalDataReceived;
-@property unsigned long long fileSize;
-@property CGFloat progress;
+@property (nonatomic) int geoid;
+@property (nonatomic) NSUInteger totalDataReceived;
+@property (nonatomic) unsigned long long fileSize;
+@property (nonatomic) CGFloat progress;
 @property (nonatomic) GSSiPopoverView *popover;
 @property FTPDataType dataType;
 

@@ -8,9 +8,9 @@
 @interface FTPDataPull ()
 
 @property (nonatomic) Reachability *reachability;
-@property unsigned long long existingFileSize;
-@property FTPDataPullRefreshOption refreshOption;
-@property (nonatomic, weak) id <GSSiPopoverViewDelegate> savePopoverDelegate;
+@property (nonatomic) unsigned long long existingFileSize;
+@property (nonatomic) FTPDataPullRefreshOption refreshOption;
+@property id <GSSiPopoverViewDelegate> savePopoverDelegate;
 @property (nonatomic, copy) NSString *tempExtension;
 //@property BOOL useOnlyPrimaryFTP;
 

@@ -16,12 +16,12 @@ enum {
 @property (nonatomic) NSOutputStream *networkStream;
 @property (nonatomic) NSInputStream *fileStream;
 @property (nonatomic, readonly) uint8_t *buffer;
-@property size_t bufferOffset;
-@property size_t bufferLimit;
+@property (nonatomic, assign) size_t bufferOffset;
+@property (nonatomic, assign) size_t bufferLimit;
 @property (nonatomic) Reachability *reachability;
-@property long fileSize, totBytesWritten;
-@property int ii;
-@property (nonatomic, weak) id <GSSiPopoverViewDelegate> savePopoverDelegate;
+@property (nonatomic) long fileSize, totBytesWritten;
+@property (nonatomic) int ii;
+@property id <GSSiPopoverViewDelegate> savePopoverDelegate;
 //@property BOOL useOnlyPrimaryFTP;
 @property (nonatomic, copy) NSString *tempExtension;
 
