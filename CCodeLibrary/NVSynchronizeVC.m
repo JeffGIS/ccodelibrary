@@ -1311,7 +1311,7 @@ Top:
     _pull = FTPDataPull.pull;
     _pull.delegate = self;
     _pull.popover = _popoverView;
-    //_pull.useTestServer = NO;
+    _pull.useTestServer = NO;
     if (_process == DOWNLOAD_DATA_PROCESS)
     {
         _pull.dataType = FTPData;

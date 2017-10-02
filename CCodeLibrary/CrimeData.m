@@ -477,7 +477,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     _pull = FTPDataPull.pull;
     _pull.delegate = self;
     _pull.popover = _popoverView;
-    //_pull.useTestServer = NO;
+    _pull.useTestServer = NO;
     _pull.dataType = FTPDataCrimes;
     
     if ([_pull getFile:fileName

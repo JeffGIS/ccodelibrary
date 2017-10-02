@@ -35,7 +35,7 @@ static FTPDataPull * _statpull = nil;
     if (self)
     {
         //_haveCalledDelegate = NO;
-        //_useTestServer = NO;
+        _useTestServer = NO;
         _tempExtension = @".download";
         //_useOnlyPrimaryFTP = YES;
     }
