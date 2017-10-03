@@ -28,12 +28,6 @@
 
 @implementation NVSpreadsheetVC
 
-- (void)loadView
-{
-    UIView *view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
-    self.view = view;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -89,18 +83,6 @@
     
     _mapIt = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_mapIt];
-    
-    switch (_delegate.getSpreadSheetType)
-    {
-        case SST_PropertyList:
-            _mapIt.selected = CRAPI.sharedInstance.mapPropList;
-            break;
-        case SST_CrimeList:
-            _mapIt.selected = CRAPI.sharedInstance.mapCrimeList != nil;
-            break;
-        default:
-            break;
-    }
     
     [_mapIt setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"whiteMapItWithX"
                                                                                     ofType:@"png"]]
@@ -184,7 +166,6 @@
     _titleTextField.textColor = UIColor.whiteColor;
     _titleTextField.adjustsFontSizeToFitWidth = YES;
     _titleTextField.tintColor = UIColor.lightGrayColor;
-    _titleTextField.text = _delegate.currentListName;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
         _titleTextField.font = [UIFont boldSystemFontOfSize:20];
@@ -230,7 +211,25 @@
         [self resetConstraints:UIApplication.sharedApplication.statusBarOrientation];
     
     if (_delegate)
+    {
+        _titleTextField.text = _delegate.currentListName;
         [_delegate openList];
+        
+        switch (_delegate.getSpreadSheetType)
+        {
+            case SST_PropertyList:
+                _mapIt.selected = CRAPI.sharedInstance.mapPropList;
+                break;
+            case SST_CrimeList:
+                _mapIt.selected = CRAPI.sharedInstance.mapCrimeList != nil;
+                break;
+            default:
+                break;
+        }
+    }
+    
+    else
+        NSLog(@"ERROR:NVSpreadsheetVC requires a delegate");
     
     if (CRAPI.sharedInstance.currentApp == HCConfigMetroProp)
     {
@@ -972,7 +971,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             if (!button.selected)
                 CRAPI.sharedInstance.mapCrimeList = nil;
             else
-                CRAPI.sharedInstance.mapCrimeList = [_delegate currentListName];
+                CRAPI.sharedInstance.mapCrimeList = _delegate.currentListName;
        }
             break;
     }
