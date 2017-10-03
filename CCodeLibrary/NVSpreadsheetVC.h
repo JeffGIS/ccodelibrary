@@ -31,6 +31,10 @@
                            column:(NSInteger)column
                  tabBarController:(UITabBarController *)tabBarController;
 
+- (void)spreadsheetDidZoomForRow:(NSInteger)row
+                           column:(NSInteger)column
+                 tabBarController:(UITabBarController *)tabBarController;
+
 - (void)deleteRows:(NSArray *)arrayOfRows;
 - (NSString *)filePathForHelpFile;
 

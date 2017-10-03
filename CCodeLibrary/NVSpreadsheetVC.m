@@ -720,14 +720,22 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         }
         
         NSArray *optionsArray = NSArray.array;
-        
+        NSString * alertID = @"MapIt";
         switch (_delegate.getSpreadSheetType)
         {
             case SST_CrimeList:
                 optionsArray = @[@"Display Report"];
                 break;
             case SST_PropertyList:
-                optionsArray = @[@"Map It", @"Cancel"];
+                if (column == 1)
+                {
+                    optionsArray = @[@"Zoom to This Parcel",@"Zoom to All Parcels in List", @"Cancel"];
+                    alertID = @"ZOOM";
+                }
+                else
+                {
+                    optionsArray = @[@"Map It", @"Cancel"];
+                }
                 break;
             default:
                 break;
@@ -740,7 +748,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                                                                  title:@"Spreadsheet Options"
                                                        buttonTextArray:optionsArray
                                                       destructiveIndex:0];
-            alert.identifier = @"MapIt";
+            alert.identifier = alertID;
             
             if (optionsArray.count == 1)
             {
@@ -1188,6 +1196,26 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     }
                     
                     break;}
+            }
+        }
+    }
+    else if ([alertView.identifier isEqualToString:@"ZOOM"])
+    {
+        if (buttonIndex < 2)
+        {
+            switch (_delegate.getSpreadSheetType)
+            {
+                case SST_PropertyList:
+                {
+                    int option = (int)_selectedColumn;
+                    if (buttonIndex == 1)
+                        option = -1;
+                    [_delegate spreadsheetDidZoomForRow:_selectedRow
+                                                  column:option
+                                        tabBarController:self.tabBarController];
+                }
+                    break;
+
             }
         }
     }
