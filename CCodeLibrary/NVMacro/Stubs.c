@@ -1273,7 +1273,16 @@ MNMXCORD atobounds(LPSTR Value, LPBool pErr)
 
 Bool atob(LPSTR Value)
 {
-	return FALSE;
+    Bool rtn = FALSE;
+    if (strlen (Value) > 1)
+        rtn = TRUE;
+    else if (*Value == 'Y')
+        rtn = TRUE;
+    else if (*Value == 'T')
+        rtn = TRUE;
+    else if (*Value == '1')
+        rtn = TRUE;
+	return rtn;
 }
 double atobasedist(LPSTR Dist, LPBool perr)
 {
