@@ -1210,12 +1210,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     int option = (int)_selectedColumn;
                     if (buttonIndex == 1)
                         option = -1;
+                    
                     [_delegate spreadsheetDidZoomForRow:_selectedRow
                                                   column:option
                                         tabBarController:self.tabBarController];
                 }
                     break;
-
+                default:break;
             }
         }
     }

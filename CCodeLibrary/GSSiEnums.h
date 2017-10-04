@@ -236,6 +236,7 @@ NUMHardCodedConfigs};
 
 typedef NS_ENUM(NSInteger, MapitBaseLayer)
 {
+    MBL_None,
     MBL_LandUse,
     MBL_Parcels,
     MBL_CensusBlocks,
