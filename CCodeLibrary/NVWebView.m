@@ -1128,4 +1128,10 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     _imageView.image = image;
 }
 
+- (void)setRotationEnabled:(BOOL)rotationEnabled
+{
+    _rotationEnabled = rotationEnabled;
+    _scrollView.clipsToBounds = !rotationEnabled;
+}
+
 @end
