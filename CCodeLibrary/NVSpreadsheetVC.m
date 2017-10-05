@@ -1208,6 +1208,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 case SST_PropertyList:
                 {
                     int option = (int)_selectedColumn;
+                    
                     if (buttonIndex == 1)
                         option = -1;
                     

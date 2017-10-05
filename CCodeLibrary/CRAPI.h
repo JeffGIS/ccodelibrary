@@ -134,7 +134,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) NSNumberFormatter *acreFmt;
 @property (nonatomic, nullable) NVSendEmail *currentEmail;
 @property (nonatomic, nullable) NSMutableArray *lastAreaText;
-@property (nonatomic) BOOL isRentaliPad, canUseSdwk, inSdwkMode, GMTilesVisible;
+@property (nonatomic) BOOL isRentaliPad, canUseSdwk, inSdwkMode, GMTilesVisible, justZoom;
 @property (nonnull)Facility * currentFacility;
 @property (nonatomic) int facilityFieldDisplayOpt;
 
