@@ -339,7 +339,7 @@
         int pixelx = 0, pixely = 0;
         double bmpx = 0.0, bmpy = 0.0;
         LatLongToPixelXY(points.latitude, points.longitude, 21, &pixelx, &pixely);
-        TRANS2(pixelx, pixely, &bmpx, &bmpy, _pTranWToBMP);
+        TRANS2P(pixelx, pixely, &bmpx, &bmpy, _pTranWToBMP);
         bmpx /= _xFactor, bmpy /= _yFactor;
         double size = 18.0;
         
@@ -410,7 +410,7 @@
     if (doesExist)
     {
         double bmpx = 0.0, bmpy = 0.0;
-        TRANS2(x, y, &bmpx, &bmpy, _pTranWToBMP);
+        TRANS2P(x, y, &bmpx, &bmpy, _pTranWToBMP);
         x = bmpx;
         y = bmpy;
         
@@ -439,7 +439,7 @@
     if (doesExist)
     {
         double bmpx = 0.0, bmpy = 0.0;
-        TRANS2(x, y, &bmpx, &bmpy, _pTranWToBMP);
+        TRANS2P(x, y, &bmpx, &bmpy, _pTranWToBMP);
         x = bmpx;
         y = bmpy;
         
@@ -584,7 +584,7 @@
                 ramp.lev21x += _currentIntersection.lev21x;
                 ramp.lev21y += _currentIntersection.lev21y;
             }
-            TRANS2(ramp.lev21x, ramp.lev21y, &bmpx, &bmpy, _pTranWToBMP);
+            TRANS2P(ramp.lev21x, ramp.lev21y, &bmpx, &bmpy, _pTranWToBMP);
             x = bmpx;
             y = bmpy;
             
@@ -1349,7 +1349,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         double y = gesture.view.frame.size.height;
         
         LLPOINT target = {0};
-        TRANS2(location.x, location.y, &x, &y, _pTranBMPToW);
+        TRANS2P(location.x, location.y, &x, &y, _pTranBMPToW);
         PixelXYToLatLongd(x, y, 21, &target.lat, &target.lon);
         
         if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:showStreetViewAtCoordinate:toCoordinate:)])
@@ -1394,7 +1394,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     location.y -= _yOffset;
     location.x -= _xOffset;
     
-    TRANS2(location.x, location.y, &x, &y, _pTranBMPToW);
+    TRANS2P(location.x, location.y, &x, &y, _pTranBMPToW);
     
     switch (self.updateOption)
     {
@@ -2114,7 +2114,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         if (hasNetwork())
         {
             double x = 0.0, y = 0.0, lat = 0.0, lon = 0.0;
-            TRANS2((_newTarget.x * _xFactor) - _xOffset, (_newTarget.y * _yFactor) - _yOffset + (_targetSize / 2.0), &x, &y, _pTranBMPToW);
+            TRANS2P((_newTarget.x * _xFactor) - _xOffset, (_newTarget.y * _yFactor) - _yOffset + (_targetSize / 2.0), &x, &y, _pTranBMPToW);
             
             IntersectionsDatabase *database = [IntersectionsDatabase databaseForGeoid:CRAPI.sharedInstance.currentGeoid];
             IntersectionPoint *info = (IntersectionPoint *)[database getCurrentIntersectionPoint:_currentIntersection.intID];

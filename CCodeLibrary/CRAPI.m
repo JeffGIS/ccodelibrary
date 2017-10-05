@@ -38,7 +38,7 @@
     if (self)
     {
         _newDataset = CURBRAMPS;
-        _newDataset = ALLEYWALLS;
+        //_newDataset = ALLEYWALLS;
         _kp = 0;
         _currentGeoidValue = 0;
         _pickApInPixels = 50;
