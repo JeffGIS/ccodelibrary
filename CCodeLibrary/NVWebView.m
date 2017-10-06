@@ -71,6 +71,7 @@
     if (urlString && urlString.length)
     {
         NVWebView *nvwv = NVWebView.new;
+        [nvwv setupViewComponents:view];
         [nvwv addWebViewToView:view];
         nvwv.isFile = NO;
         
