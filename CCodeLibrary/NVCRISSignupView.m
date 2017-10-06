@@ -908,6 +908,7 @@ replacementString:(NSString *)string
     NVWebView *nvwv = [NVWebView showWebViewInView:self.superview
                                     showFileAtPath:filePath
                                           delegate:self];
+#pragma unused(nvwv)
 }
 
 @end

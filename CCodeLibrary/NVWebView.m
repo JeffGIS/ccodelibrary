@@ -108,6 +108,8 @@
         if (![urlString containsString:@"http://"] && ![urlString containsString:@"https://"])
             urlString = [NSString stringWithFormat:@"http://%@", urlString];
         
+        NSLog(@"WebView Request to URL: %@", urlString);
+        
         NSURL *url = [NSURL URLWithString:urlString];
         NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
         [nvwv.webView loadRequest:urlRequest];
@@ -565,6 +567,11 @@ didFailProvisionalNavigation:(WKNavigation *)navigation
       withError:(NSError *)error
 {
     NSLog(@"WebView Failed Provisional Navigation ERROR:%@", error.localizedDescription);
+}
+
+- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
+{
+    NSLog(@"WebView Process Did Terminate");
 }
 
 - (WKWebView *)webView:(WKWebView *)webView
