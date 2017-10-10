@@ -130,7 +130,7 @@
                    showFileAtPath:(NSString *)path
                          delegate:(id)delegate
 {
-    if (!path)
+    if (!path || !path.length)
     {
         NVAlertView *alert = [NVAlertView showLargeAlertViewinView:view
                                                           delegate:CRAPI.sharedInstance
@@ -157,9 +157,13 @@
         [nvwv addWebViewToView:view];
     
     nvwv.isFile = YES;
-    NSURL *url = [NSURL fileURLWithPath:path];
+    NSURL *url = [NSURL fileURLWithPath:path isDirectory:NO];
+    NSError *error = nil;
+    
+    if (![url checkResourceIsReachableAndReturnError:&error])
+        showAlert([NSString stringWithFormat:@"PDF resource not available at %@", path]);
 
-    if ([type isEqualToString:@"pdf"])
+    else if ([type isEqualToString:@"pdf"])
     {
         if ([name containsString:@"NVCRISHelp"] || [name containsString:@"VersionHistory"])
             nvwv.isFile = NO;
@@ -197,7 +201,7 @@
     switch (document)
     {
         case NVPDFDocumentMNAccessbility:
-            resourcePath = @"2015_mn_accessibility_code";
+            resourcePath = [NSString stringWithFormat:@"2015_mn_accessibility_code_part%i", drawing.page];
             aspectRatio = AR077;
             break;
         case NVPDFDocumentFederalADA:
@@ -210,6 +214,8 @@
             break;
         default:break;
     }
+    
+    NSLog(@"PDF drawing path: %@", resourcePath);
     
     NVWebView *nvwv = [NVWebView showWebViewInView:view
                                     showFileAtPath:[NSBundle.mainBundle pathForResource:resourcePath
@@ -453,7 +459,11 @@
 - (void)updatePosition
 {
     if (_zoomToPDFDrawing)
-        [self zoomToPage:_drawing.page upperLeft:_drawing.upperLeft lowerRight:_drawing.lowerRight];
+    {
+        [self zoomToPage:min(_drawing.page, _numPages)
+               upperLeft:_drawing.upperLeft
+              lowerRight:_drawing.lowerRight];
+    }
     
     else
     {
@@ -486,7 +496,7 @@
     _lr.x = lowerRight.x;
     _lr.y = lowerRight.y;
     
-    if (page > 1)
+    if (page)
     {
         CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
         upperLeft.x *= _scrollView.contentSize.width;
