@@ -1,7 +1,7 @@
 //  IntersectionRecord.h
 //  CCodeLibrary
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 typedef struct {
     int intID;
