@@ -496,7 +496,7 @@
     _lr.x = lowerRight.x;
     _lr.y = lowerRight.y;
     
-    if (page)
+    if (page > 0)
     {
         CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
         upperLeft.x *= _scrollView.contentSize.width;
