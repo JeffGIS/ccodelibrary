@@ -23,6 +23,7 @@
 @property (nonatomic) NSMutableArray<NSNumber *> *selectedRows;
 @property (nonatomic) UIColor *selectedRowColor;
 @property NSInteger selectedRow, selectedColumn, lastTapSelectedRow;
+@property int zoomCancel;
 
 @end
 
@@ -730,6 +731,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 if (column == 1)
                 {
                     optionsArray = @[@"Zoom to This Parcel",@"Zoom to All Parcels in List", @"Cancel"];
+                    _zoomCancel = 2;
+                    optionsArray = @[@"Zoom to This Parcel",@"Zoom to All Parcels in List", @"Show Areas",@"Cancel"];
+                    _zoomCancel = 3;
                     alertID = @"ZOOM";
                 }
                 else
@@ -1201,7 +1205,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     else if ([alertView.identifier isEqualToString:@"ZOOM"])
     {
-        if (buttonIndex < 2)
+        if (buttonIndex < _zoomCancel)
         {
             switch (_delegate.getSpreadSheetType)
             {
@@ -1211,10 +1215,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     
                     if (buttonIndex == 1)
                         option = -1;
-                    
+                    if (buttonIndex == 2)
+                        _selectedRow = -1;
                     [_delegate spreadsheetDidZoomForRow:_selectedRow
-                                                  column:option
-                                        tabBarController:self.tabBarController];
+                                                 column:option
+                                                   from:self
+                                       tabBarController:self.tabBarController];
                 }
                     break;
                 default:break;

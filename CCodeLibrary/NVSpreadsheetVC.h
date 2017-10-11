@@ -33,6 +33,7 @@
 
 - (void)spreadsheetDidZoomForRow:(NSInteger)row
                            column:(NSInteger)column
+                            from:(NVSpreadsheetVC *)fromVC
                  tabBarController:(UITabBarController *)tabBarController;
 
 - (void)deleteRows:(NSArray *)arrayOfRows;
