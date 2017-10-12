@@ -1108,10 +1108,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 NSString *tabbedOutput = [self tabbedOutput];
                 NSString *fileName = [self fileName];
                 NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
-                NSString *filepath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
+                NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
                 NSError *error = nil;
                 
-                [tabbedOutput writeToFile:filepath
+                [tabbedOutput writeToFile:filePath
                                atomically:YES
                                  encoding:NSUTF8StringEncoding
                                     error:&error];
@@ -1121,7 +1121,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 
                 else
                 {
-                    [CRAPI.sharedInstance.docManager exportDocumentFromFilepath:filepath
+                    [CRAPI.sharedInstance.docManager exportDocumentFromFilePath:filePath
                                                                        delegate:self
                                                                  deleteWhenDone:YES];
                 }

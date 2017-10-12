@@ -225,10 +225,10 @@
     if (!_maxGridVal)
         return FALSE;
     
-    NSString *filepath = [NSString stringWithFormat:@"%@/%@.bin",
-                          CRAPI.sharedInstance.sharedFilePath,outFile];
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@.bin",
+                          CRAPI.sharedInstance.sharedFilePath, outFile];
     
-    FILE *Fid = fopen(filepath.UTF8String,"wb");
+    FILE *Fid = fopen(filePath.UTF8String,"wb");
     
     if (Fid == NULL)
         return FALSE;
@@ -251,7 +251,7 @@
     BigWriteF(Fid, pgrid, (_width * _height) * sizeof(BYTE), -1);
     fclose(Fid);
     
-    /*[CRAPI.sharedInstance.docManager exportDocumentFromFilepath:filepath
+    /*[CRAPI.sharedInstance.docManager exportDocumentFromFilePath:filePath
                                                        delegate:nil
                                                  deleteWhenDone:NO];*/
     

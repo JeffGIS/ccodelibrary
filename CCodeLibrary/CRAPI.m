@@ -10,6 +10,7 @@
 #import "ManagePlacesDatabase.h"
 #import "SharedDefaults.h"
 #include "shr.h"
+#import "NVDocumentManager.h"
 
 @implementation TimeRange
 
@@ -19,7 +20,7 @@
 
 @end
 
-@interface CRAPI () <NVAlertViewDelegate>
+@interface CRAPI () <NVAlertViewDelegate,NVDocumentManagerDelegate>
 
 @property (nonatomic) NVAlertView *alert;
 @property int kp, currentGeoidValue, numAllowedZooms;
@@ -1438,6 +1439,26 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                        buttonTextArray:@[@"OK"]
                                       destructiveIndex:0];
     }
+}
+
+- (void)documentManagerDidCompleteWithMessage:(NSString *)message
+                                     filepath:(NSString *)filepath
+{
+    [self showAlert:message];
+}
+
+- (void)uploadToCloud
+{
+    [self performSelectorOnMainThread:@selector(performUploadToCloud)
+                           withObject:nil
+                        waitUntilDone:YES];
+}
+
+- (void)performUploadToCloud
+{
+    [_docManager exportDocumentFromFilePath:_docManager.filePath
+                                   delegate:self
+                             deleteWhenDone:_docManager.deleteWhenDone];
 }
 
 @end

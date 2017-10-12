@@ -81,7 +81,9 @@ BOOL stringContainsCaseInsenitiveString(NSString * str, NSString *substr);
 int numberOfOccurencesOfStringInString(NSString *str, NSString *substr);
 UIColor *UIColorFromInt (unsigned int ival);
 BOOL hasNetwork(void);
-void showAlert(NSString *text);
 void ShowTheAlert(LPCSTR text);
+void showAlert(NSString *text);
+void UploadToTheCloud (LPCSTR filePath, BOOL deleteWhenDone);
+void uploadToCloud(NSString *filePath, BOOL deleteWhenDone);
 
 #endif

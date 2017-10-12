@@ -16,8 +16,10 @@
 @interface NVDocumentManager : NSObject
 
 @property (nonatomic, weak) id <NVDocumentManagerDelegate> delegate;
+@property (nonatomic, copy) NSString *filePath;
+@property BOOL deleteWhenDone;
 
-- (void)exportDocumentFromFilepath:(NSString *)filepath
+- (void)exportDocumentFromFilePath:(NSString *)filePath
                           delegate:(id)delegate
                     deleteWhenDone:(BOOL)deleteWhenDone;
 

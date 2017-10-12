@@ -2,33 +2,35 @@
 //  CCodeLibrary
 
 #import "NVDocumentManager.h"
+#import "CRAPI.h"
 
 @interface NVDocumentManager () <UIDocumentPickerDelegate>
 
 @property (nonatomic) UIDocumentPickerViewController *documentPicker;
-@property (nonatomic, copy) NSString *filepath;
-@property BOOL deleteWhenDone;
 
 @end
 
 @implementation NVDocumentManager
 
-- (void)exportDocumentFromFilepath:(NSString *)filepath
+- (void)exportDocumentFromFilePath:(NSString *)filePath
                           delegate:(id)delegate
                     deleteWhenDone:(BOOL)deleteWhenDone
 {
-    if (!filepath || !([delegate isKindOfClass:UIViewController.class] ||
-                       [delegate isKindOfClass:UIView.class]))
+    if (!filePath || !delegate)
     {
+        NSLog(@"NVDocumentManager ERROR: cannot set filePath or delegate to nil.");
         return;
     }
     
     _delegate = delegate;
-    _filepath = filepath;
+    _filePath = filePath;
     _deleteWhenDone = deleteWhenDone;
     UIViewController *vc = nil;
     
-    if ([_delegate isKindOfClass:UIViewController.class])
+    if ([_delegate isKindOfClass:CRAPI.class])
+        vc = UIApplication.sharedApplication.keyWindow.rootViewController;
+    
+    else if ([_delegate isKindOfClass:UIViewController.class])
         vc = (UIViewController *)_delegate;
     
     else
@@ -37,7 +39,7 @@
         vc = view.parentViewController;
     }
     
-    _documentPicker = [[UIDocumentPickerViewController alloc] initWithURL:[NSURL fileURLWithPath:_filepath]
+    _documentPicker = [[UIDocumentPickerViewController alloc] initWithURL:[NSURL fileURLWithPath:_filePath]
                                                                    inMode:UIDocumentPickerModeExportToService];
     
     _documentPicker.delegate = self;
@@ -89,26 +91,22 @@
         case UIDocumentPickerModeImport:
             message = @"Import Document Completed";
             break;
-            
         case UIDocumentPickerModeExportToService:
             message = @"Export Document Completed";
             break;
-            
         case UIDocumentPickerModeMoveToService:
             message = @"Move Document Completed";
             break;
-            
         case UIDocumentPickerModeOpen:
             message = @"Open Document Completed";
             break;
+        default:break;
     }
     
     if (_deleteWhenDone)
     {
         NSError *error = nil;
-        
-        [NSFileManager.defaultManager removeItemAtPath:_filepath
-                                                 error:&error];
+        [NSFileManager.defaultManager removeItemAtPath:_filePath error:&error];
         
         if (error)
             NSLog(@"Export to Cloud Delete Local File When Done ERROR:%@", error);
@@ -130,18 +128,16 @@
         case UIDocumentPickerModeImport:
             message = @"Import Document Cancelled";
             break;
-            
         case UIDocumentPickerModeExportToService:
             message = @"Export Document Cancelled";
             break;
-            
         case UIDocumentPickerModeMoveToService:
             message = @"Move Document Cancelled";
             break;
-            
         case UIDocumentPickerModeOpen:
             message = @"Open Document Cancelled";
             break;
+        default:break;
     }
     
     if ([_delegate respondsToSelector:@selector(documentManagerDidCompleteWithMessage:filepath:)])

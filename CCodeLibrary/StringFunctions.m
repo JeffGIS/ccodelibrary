@@ -8,6 +8,7 @@
 #import <sys/utsname.h>
 #import "NVAlertView.h"
 #import "CRAPI.h"
+#import "NVDocumentManager.h"
 
 static BOOL useMasterID = FALSE;
 static BOOL useDemoID = FALSE;
@@ -1353,5 +1354,21 @@ void showAlert(NSString *text)
 {
     [CRAPI.sharedInstance performSelector:@selector(showAlert:)
                                withObject:text
+                               afterDelay:0.5];
+}
+
+void UploadToTheCloud (LPCSTR filePath, BOOL deleteWhenDone)
+{
+    NSString *txt = [NSString stringWithUTF8String:filePath];
+    uploadToCloud(txt, deleteWhenDone);
+}
+
+void uploadToCloud(NSString *filePath, BOOL deleteWhenDone)
+{
+    CRAPI.sharedInstance.docManager.deleteWhenDone = deleteWhenDone;
+    CRAPI.sharedInstance.docManager.filePath = filePath;
+    
+    [CRAPI.sharedInstance performSelector:@selector(uploadToCloud)
+                               withObject:nil
                                afterDelay:0.5];
 }
