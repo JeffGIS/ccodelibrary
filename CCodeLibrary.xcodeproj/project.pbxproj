@@ -307,6 +307,7 @@
 		EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB7C6A141BD158D8006E985B /* StringFunctions.h */; };
 		EB86BFA71B0B62520074728E /* minilzo.c in Sources */ = {isa = PBXBuildFile; fileRef = EB86BFA51B0B62520074728E /* minilzo.c */; };
 		EB95A1A71CB16EF500158B40 /* PercentInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB95A1A61CB16EF500158B40 /* PercentInArea.m */; };
+		EB9C3C2C1F914C8600E95644 /* PDFCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9C3C2B1F914C8600E95644 /* PDFCreator.m */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
 		EBA2E472199527660085B2E0 /* libCCodeLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */; };
@@ -865,6 +866,8 @@
 		EB86BFA91B0B62A30074728E /* lzodefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzodefs.h; sourceTree = "<group>"; };
 		EB95A1A51CB16EF500158B40 /* PercentInArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PercentInArea.h; sourceTree = "<group>"; };
 		EB95A1A61CB16EF500158B40 /* PercentInArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PercentInArea.m; sourceTree = "<group>"; };
+		EB9C3C2A1F914C8600E95644 /* PDFCreator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFCreator.h; sourceTree = "<group>"; };
+		EB9C3C2B1F914C8600E95644 /* PDFCreator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDFCreator.m; sourceTree = "<group>"; };
 		EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCCodeLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBA2E461199527660085B2E0 /* CCodeLibrary-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CCodeLibrary-Prefix.pch"; sourceTree = "<group>"; };
 		EBA2E462199527660085B2E0 /* CCodeLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCodeLibrary.h; sourceTree = "<group>"; };
@@ -1252,6 +1255,8 @@
 				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 				698F987A1C10B96B009F2F01 /* YTPlayerView.h */,
 				698F987B1C10B96B009F2F01 /* YTPlayerView.m */,
+				EB9C3C2A1F914C8600E95644 /* PDFCreator.h */,
+				EB9C3C2B1F914C8600E95644 /* PDFCreator.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1683,6 +1688,7 @@
 				EBC01D191BED1C8C0004C751 /* kepler.c in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,
 				69D5EFB51C7237FD004CE1C0 /* NVCalendarView.m in Sources */,
+				EB9C3C2C1F914C8600E95644 /* PDFCreator.m in Sources */,
 				EBC01D161BED1C8C0004C751 /* fk4fk5.c in Sources */,
 				A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */,
 				BBC361CA1F429C0200B51DF3 /* VARSTUF2.C in Sources */,
