@@ -9,7 +9,7 @@ extern int angles ( double p[], double q[], double e[] );
 extern int annuab ( double p[] );
 extern double arcdot ( double p[], double q[] );
 extern int domoon ( void );
-extern int iter_trnsit ( int (*func)() );
+extern int iter_trnsit ( int (*func)(void) );
 extern int moonll ( double J, double moonpp[], double moonpol[] );
 extern int gmoon ( double J, double rect[], double pol[] );
 extern double mods3600 ( double x );

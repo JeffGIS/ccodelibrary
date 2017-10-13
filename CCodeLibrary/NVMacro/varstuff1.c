@@ -6393,7 +6393,7 @@ LPSTR ExpandTextDB (LPSTR InText,LPBREAKPOINT pBrkPt,int bpOffset,int bpLen)
 #endif
     {
         HANDLE	hMem=0, hMemTrace;
-        LPSTR	InLoc, OutLoc=0, NewText, BegBrack, EndBrack, loc, EqLoc, pLchr;
+        LPSTR	InLoc, OutLoc=0, NewText=0, BegBrack, EndBrack, loc, EqLoc, pLchr;
         LPSTR	pEnd, pStr, startLoc = InText;
         long	l,ii;
         Bool	FoundLit=FALSE, SaveIE=InExpand, ExpandTrace=FALSE;
@@ -10205,7 +10205,7 @@ double GetViewportScale (HDC hDC)
 #endif
     {                
         double scale, WDist, IDist, BaseScale;
-        int	iLogPixsX;   
+        int	iLogPixsX=0;   
         DPOINT	p1,p2; 
         long	OrthRes[10]={1,4,16,16,16,16,16,16,16,16}; 
         int		numOrthoLevs=3;
