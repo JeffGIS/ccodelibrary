@@ -95,6 +95,7 @@ void AddMinMaxD (LPMNMXCORD mm1, LPMNMXCORD mm2);
 void AddMinMaxL (LPMNMXCORL mm1, LPMNMXCORL mm2);
 LPDPOINT PointsFromCorners (CORNERPOINTS* pCornerPoints);
 CORNERPOINTS CornerPointsFromLatLonAndDist (LLPOINT llpt,double dist); //dist in meters
+CORNERPOINTS CornerPointsFromLLBoundsAndView (LPMNMXCORD pareaBounds,LPMNMXCORD pviewBounds);
 MNMXCORD CornerPointBounds (CORNERPOINTS* cornerPoints);
 IBOUNDS IBoundsFromPointAndDist (IPOINT pt,int dist);
 MNMXCORD BoundsFromPointAndDist(DPOINT pt, double dist);

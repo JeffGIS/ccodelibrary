@@ -123,6 +123,17 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     }
 }
 
+- (long long) compress
+{
+    Bool opened = [self open];
+    [self executeCmd:"VACUUM"];
+    [self close:opened];
+    [self open];
+    long long newSize = _fileSize;
+    [self close:YES];
+    return newSize;
+}
+
 - (Bool)clear
 {
     [self close:YES];

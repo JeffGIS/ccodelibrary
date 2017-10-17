@@ -77,6 +77,51 @@ LLCORNERPOINTS LLCornerPointsFromCornerPoints (CORNERPOINTS * cp)
     return llcp;
 }
 
+MNMXCORD LLBoundsToMetricBounds (LPMNMXCORD pLLBounds)
+{
+    MNMXCORD bounds;
+    DPOINT corners[4];
+    DBoundsInit(&bounds);
+    BoundsToPoints (pLLBounds, corners,0);
+    for (int i=0;i<4;i++)
+    {
+        DPOINT pt;
+        AddDPointToBounds(&bounds, &pt);
+    }
+    return bounds;
+}
+
+
+CORNERPOINTS CornerPointsFromLLBoundsAndView (LPMNMXCORD pareaBoundsLL,LPMNMXCORD pviewBounds)
+{
+    CORNERPOINTS cp;
+    MNMXCORD groundBounds;
+    DPOINT p1 = {pareaBoundsLL->xmn,pareaBoundsLL->ymn};
+    DPOINT p2 = {pareaBoundsLL->xmx,pareaBoundsLL->ymx};
+    LatLongToPixelXYd (p1.y,p1.x,21,&groundBounds.xmn,&groundBounds.ymn);
+    LatLongToPixelXYd (p2.y,p2.x,21,&groundBounds.xmx,&groundBounds.ymx);
+    
+    double groundWidth=groundBounds.xmx - groundBounds.xmn, groundHeight=groundBounds.ymx - groundBounds.ymn;
+    double viewWidth=pviewBounds->xmx - pviewBounds->xmn, viewHeight=pviewBounds->ymx - pviewBounds->ymn;
+    double groundToViewHorz = groundWidth / viewWidth;
+    double groundToViewVert = groundHeight / viewHeight;
+    double factor = groundToViewHorz;
+    
+    if (groundToViewHorz * viewHeight > groundHeight)
+    {
+        factor = groundToViewVert;
+    }
+    DPOINT groundMidPoint = {(groundBounds.xmx + groundBounds.xmn)/2,(groundBounds.ymx + groundBounds.ymn)/2};
+    DPOINT pt = {groundMidPoint.x - factor * viewWidth/2,groundMidPoint.y - factor * viewHeight/2};
+    PixelXYToLatLongd(pt.x, pt.y, 21, &cp.nearLeft.y, &cp.nearLeft.x);
+    pt = (DPOINT){groundMidPoint.x - factor * viewWidth/2,groundMidPoint.y + factor * viewHeight/2};
+    PixelXYToLatLongd(pt.x, pt.y, 21, &cp.farLeft.y, &cp.farLeft.x);
+    pt = (DPOINT){groundMidPoint.x + factor * viewWidth/2,groundMidPoint.y + factor * viewHeight/2};
+    PixelXYToLatLongd(pt.x, pt.y, 21, &cp.farRight.y, &cp.farRight.x);
+    pt = (DPOINT){groundMidPoint.x + factor * viewWidth/2,groundMidPoint.y - factor * viewHeight/2};
+    PixelXYToLatLongd(pt.x, pt.y, 21, &cp.nearRight.y, &cp.nearRight.x);
+    return cp;
+}
 DPOINT LLPointToDPoint (LLPOINT llpt)
 {
     DPOINT dpt;

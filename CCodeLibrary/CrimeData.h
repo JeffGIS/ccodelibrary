@@ -34,6 +34,7 @@
 - (Bool)open;
 - (void)close:(Bool)opened;
 - (Bool)clear;
+- (long long) compress;
 
 - (Bool)executeCmd:(char *)cmd;
 -(void) getIdForUpdate:(LPSTR)str
