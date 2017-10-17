@@ -1368,7 +1368,7 @@ void uploadToCloud(NSString *filePath, BOOL deleteWhenDone)
     CRAPI.sharedInstance.docManager.deleteWhenDone = deleteWhenDone;
     CRAPI.sharedInstance.docManager.filePath = filePath;
     
-    [CRAPI.sharedInstance performSelector:@selector(uploadToCloud)
-                               withObject:nil
-                               afterDelay:0.5];
+    [CRAPI.sharedInstance performSelectorOnMainThread:@selector(uploadToCloud)
+                                           withObject:nil
+                                        waitUntilDone:YES];
 }

@@ -1449,9 +1449,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)uploadToCloud
 {
-    [self performSelectorOnMainThread:@selector(performUploadToCloud)
-                           withObject:nil
-                        waitUntilDone:YES];
+    [self performSelector:@selector(performUploadToCloud)
+               withObject:nil
+               afterDelay:0.5];
 }
 
 - (void)performUploadToCloud
