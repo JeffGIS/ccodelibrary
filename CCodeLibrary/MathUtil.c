@@ -105,12 +105,8 @@ CORNERPOINTS CornerPointsFromLLBoundsAndView (LPMNMXCORD pareaBoundsLL,LPMNMXCOR
     double viewWidth=pviewBounds->xmx - pviewBounds->xmn, viewHeight=pviewBounds->ymx - pviewBounds->ymn;
     double groundToViewHorz = groundWidth / viewWidth;
     double groundToViewVert = groundHeight / viewHeight;
-    double factor = groundToViewHorz;
+    double factor = max (groundToViewHorz,groundToViewVert);
     
-    if (groundToViewHorz * viewHeight > groundHeight)
-    {
-        factor = groundToViewVert;
-    }
     DPOINT groundMidPoint = {(groundBounds.xmx + groundBounds.xmn)/2,(groundBounds.ymx + groundBounds.ymn)/2};
     DPOINT pt = {groundMidPoint.x - factor * viewWidth/2,groundMidPoint.y - factor * viewHeight/2};
     PixelXYToLatLongd(pt.x, pt.y, 21, &cp.nearLeft.y, &cp.nearLeft.x);
