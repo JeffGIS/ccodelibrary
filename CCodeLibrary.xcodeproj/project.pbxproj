@@ -371,6 +371,7 @@
 		EBC01D2F1BED1C8C0004C751 /* vearth.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D041BED1C8C0004C751 /* vearth.c */; };
 		EBC01D301BED1C8C0004C751 /* ven404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D051BED1C8C0004C751 /* ven404.c */; };
 		EBC01D311BED1C8C0004C751 /* zatan2.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D061BED1C8C0004C751 /* zatan2.c */; };
+		EBC1F6401F97DB0900BBEC69 /* PDFCreator.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB9C3C2A1F914C8600E95644 /* PDFCreator.h */; };
 		EBFC2A301BE90A0F00E0C1B3 /* DisplayCharacteristics.m in Sources */ = {isa = PBXBuildFile; fileRef = EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */; };
 		EBFC2A311BE90AE900E0C1B3 /* DisplayCharacteristics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */; };
 /* End PBXBuildFile section */
@@ -392,6 +393,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EBC1F6401F97DB0900BBEC69 /* PDFCreator.h in CopyFiles */,
 				1F4972A31F6C538200A60B63 /* DPoint.h in CopyFiles */,
 				BB8BA0EB1F5E3A1B0024B8C2 /* FacilitiesStepValue.h in CopyFiles */,
 				BB8BA0E81F5D8B110024B8C2 /* FacilityStepDefinition.h in CopyFiles */,

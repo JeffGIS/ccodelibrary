@@ -16,7 +16,7 @@
 @interface PDFPageTextBlock : NSObject
 
 @property (nonatomic, copy) NSString *text;
-@property (nonatomic) NSFont *font;
+@property (nonatomic) UIFont *font;
 @property CGRect textLocation;
 
 @end
@@ -24,8 +24,8 @@
 @interface PDFPage : NSObject
 
 @property int pageWidth, pageHeight;
-@property (nonatomic, copy) NSArray <PDFPageImage *> *PDFPageImages;
-@property (nonatomic, copy) NSArray <PDFPageTextBlock *> *PDFPageTextBlocks;
+@property NSMutableArray <PDFPageImage *> *PDFPageImages;
+@property NSMutableArray <PDFPageTextBlock *> *PDFPageTextBlocks;
 
 @end
 
