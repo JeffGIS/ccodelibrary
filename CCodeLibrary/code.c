@@ -1209,13 +1209,10 @@ Bool WriteBitmapDataToFile (LPSTR file,int pixelsWide, int pixelsHigh, CGColorSp
     
     int bitmapByteCount = 0, bitmapBytesPerRow = 0;
     int nc = (int)CGColorSpaceGetNumberOfComponents(colorSpace);
-    uint32_t flags = 0;
+
     if (nc > 1)
     {
         nc++;
-        flags = kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big;
-        flags = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little;
-        flags = kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Big;
     }
     bitmapBytesPerRow = nc * pixelsWide;
     bitmapByteCount = (bitmapBytesPerRow *pixelsHigh);
