@@ -138,6 +138,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
         int nPt;
         size *= 0.1;
         CGFloat yinc = 0;
+        
         switch (sym)
         {
             case CrossSym:
@@ -154,7 +155,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                 size *= 0.8;
                 break;
             case TriangleSym:
-                yinc = 14;
+                //yinc = 14;
                 pPoints = Triangle;
                 nPt = sizeof (Triangle)/sizeof(DPOINT);
                 size *= 0.8;
@@ -170,7 +171,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                 nPt = sizeof (Star1)/sizeof(DPOINT);
                 break;
             case Star2Sym:
-                yinc = 7;
+                //yinc = 7;
                 pPoints = Star2;
                 nPt = sizeof (Star2)/sizeof(DPOINT);
                 break;
@@ -179,12 +180,14 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                 pPoints = Splash;
                 nPt = sizeof (Splash)/sizeof(DPOINT);
                 break;
-                
         }
+        
         CGContextMoveToPoint(context, Adjust(pPoints[0].x,pt->x,size), Adjust(pPoints[0].y,pt->y+yinc*ii,size));
+        
         for (int i = 1; i < nPt; i++)
         {
             CGContextAddLineToPoint(context, Adjust(pPoints[i].x,pt->x,size),Adjust(pPoints[i].y,pt->y+yinc*ii,size));
+            
         }
         
         if (!CGContextIsPathEmpty(context))
@@ -208,7 +211,6 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                 CGContextSetStrokeColorWithColor(context,lcolor);
                 CGContextDrawPath(context, kCGPathEOFillStroke);
             }
-
         }
     }
     if (dispersed)
@@ -233,7 +235,6 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
         CGContextStrokeEllipseInRect(context, pointRect);
         CGContextStrokeLineSegments(context, points,2);
     }
-
 }
 
 UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor)
