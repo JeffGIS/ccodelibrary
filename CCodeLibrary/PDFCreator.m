@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "PDFCreator.h"
+@import CoreText;
 
 @implementation PDFPage
 
@@ -52,17 +53,61 @@
         PDFDict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks,
                                             &kCFTypeDictionaryValueCallBacks);
         
-        CGRect pageRect = CGRectZero;
+        CGRect pageRect = CGRectZero, itemRect = CGRectZero;
         CFDataRef PDFData = NULL;
+        PDFPage *page = nil;
+        PDFPageImage *pageImage = nil;
+        PDFPageTextBlock *pageText = nil;
+        UIImage *image = nil;
         
         for (int i = 0; i < pageArray.count; i++)
         {
-            pageRect = CGRectMake(0.0, 0.0, pageArray[i].pageWidth, pageArray[i].pageHeight);
+            page = pageArray[i];
+            pageRect = CGRectMake(0.0, 0.0, page.pageWidth, page.pageHeight);
             PDFData = CFDataCreate(NULL, (const UInt8 *)&pageRect, sizeof(CGRect));
             CFDictionarySetValue(PDFDict, kCGPDFContextMediaBox, PDFData);
-            CGPDFContextBeginPage (PDFContext, PDFDict);
+            CGPDFContextBeginPage(PDFContext, PDFDict);
             
-            //draw page here
+            for (int j = 0; j < page.PDFPageImages.count; j++)
+            {
+                pageImage = page.PDFPageImages[j];
+                itemRect = pageImage.imageLocation;
+                itemRect.origin.y = (page.pageHeight - itemRect.size.height - itemRect.origin.y);
+                image = [UIImage imageWithContentsOfFile:pageImage.imageFile];
+                CGContextDrawImage(PDFContext, itemRect, image.CGImage);
+            }
+            
+            for (int j = 0; j < page.PDFPageTextBlocks.count; j++)
+            {
+                pageText = page.PDFPageTextBlocks[j];
+                itemRect = pageText.textLocation;
+                itemRect.origin.y = (page.pageHeight - itemRect.size.height - itemRect.origin.y);
+                
+                CTFontRef fontRef = (__bridge CTFontRef)pageText.font;
+                CGColorRef textColor = pageText.textColor.CGColor;
+                
+                NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
+                style.alignment = NSTextAlignmentCenter;
+                
+                NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                (__bridge id)fontRef, kCTFontAttributeName,
+                                                style, kCTParagraphStyleAttributeName,
+                                                textColor, kCTForegroundColorAttributeName, nil];
+                
+                NSAttributedString *text = [[NSAttributedString alloc] initWithString:pageText.text
+                                                                           attributes:textAttributes];
+                
+                CGPathRef path = CGPathCreateWithRect(itemRect, NULL);
+                CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
+                CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.length), path, NULL);
+                
+                CTFrameDraw(frame, PDFContext);
+                
+                CFRelease(path);
+                CFRelease(framesetter);
+                CFRelease(frame);
+                CFRelease(fontRef);
+            }
             
             CGPDFContextEndPage(PDFContext);
             CFRelease(PDFData);

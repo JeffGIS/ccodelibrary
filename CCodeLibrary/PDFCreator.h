@@ -17,6 +17,7 @@
 
 @property (nonatomic, copy) NSString *text;
 @property (nonatomic) UIFont *font;
+@property (nonatomic) UIColor *textColor;
 @property CGRect textLocation;
 
 @end
