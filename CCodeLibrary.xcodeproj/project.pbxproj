@@ -67,6 +67,7 @@
 		697B37711B94B7D60066978B /* NVTextDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 697B37701B94B7D60066978B /* NVTextDrawing.m */; };
 		697B37721B94C0E00066978B /* NVTextDrawing.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697B376F1B94B7D60066978B /* NVTextDrawing.h */; };
 		697BDA3A1B7BCBD200E06EDD /* NVSecretAlertView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */; };
+		697EC2E81F98FDA1000C3F9A /* ChartsBitmap.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69B5F55F1F98EDF6007603B5 /* ChartsBitmap.h */; };
 		698037531E82D58A00C3E49D /* NVSendEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 698037521E82D58A00C3E49D /* NVSendEmail.m */; };
 		698037541E82DC6400C3E49D /* NVSendEmail.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698037511E82D58A00C3E49D /* NVSendEmail.h */; };
 		69848C771EB9415D00EC1EB3 /* NVPDFDrawing.m in Sources */ = {isa = PBXBuildFile; fileRef = 69848C761EB9415D00EC1EB3 /* NVPDFDrawing.m */; };
@@ -90,6 +91,7 @@
 		699DD73A1CEA091000C7A651 /* NVSynchronizeVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 699DD7371CEA057600C7A651 /* NVSynchronizeVC.h */; };
 		69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B36F191BCB0F30004C4B69 /* NVDateRange.m */; };
 		69B36F1B1BCB1C8F004C4B69 /* NVDateRange.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69B36F181BCB0F30004C4B69 /* NVDateRange.h */; };
+		69B5F5611F98EDF6007603B5 /* ChartsBitmap.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B5F5601F98EDF6007603B5 /* ChartsBitmap.m */; };
 		69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */ = {isa = PBXBuildFile; fileRef = 69BB52761CA4689E00DA7BC2 /* ExitApp.c */; };
 		69C3DFA31CB3807200DC1779 /* PercentInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB95A1A51CB16EF500158B40 /* PercentInArea.h */; };
 		69C3DFA61CB4113A00DC1779 /* NVWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C3DFA51CB4113A00DC1779 /* NVWebView.m */; };
@@ -393,6 +395,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				697EC2E81F98FDA1000C3F9A /* ChartsBitmap.h in CopyFiles */,
 				EBC1F6401F97DB0900BBEC69 /* PDFCreator.h in CopyFiles */,
 				1F4972A31F6C538200A60B63 /* DPoint.h in CopyFiles */,
 				BB8BA0EB1F5E3A1B0024B8C2 /* FacilitiesStepValue.h in CopyFiles */,
@@ -636,6 +639,8 @@
 		699DD7381CEA057600C7A651 /* NVSynchronizeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSynchronizeVC.m; sourceTree = "<group>"; };
 		69B36F181BCB0F30004C4B69 /* NVDateRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDateRange.h; sourceTree = "<group>"; };
 		69B36F191BCB0F30004C4B69 /* NVDateRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDateRange.m; sourceTree = "<group>"; };
+		69B5F55F1F98EDF6007603B5 /* ChartsBitmap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChartsBitmap.h; sourceTree = "<group>"; };
+		69B5F5601F98EDF6007603B5 /* ChartsBitmap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChartsBitmap.m; sourceTree = "<group>"; };
 		69BB52761CA4689E00DA7BC2 /* ExitApp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ExitApp.c; sourceTree = "<group>"; };
 		69BB52771CA4689E00DA7BC2 /* ExitApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExitApp.h; sourceTree = "<group>"; };
 		69C3DFA41CB4113A00DC1779 /* NVWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVWebView.h; sourceTree = "<group>"; };
@@ -984,6 +989,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		69B5F55E1F98EDA7007603B5 /* Bitmaps */ = {
+			isa = PBXGroup;
+			children = (
+				69B5F55F1F98EDF6007603B5 /* ChartsBitmap.h */,
+				69B5F5601F98EDF6007603B5 /* ChartsBitmap.m */,
+			);
+			name = Bitmaps;
+			sourceTree = "<group>";
+		};
 		69D5EFAF1C72377D004CE1C0 /* Calendar Interface */ = {
 			isa = PBXGroup;
 			children = (
@@ -1137,6 +1151,7 @@
 		A94A771E19F813810062906E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				69B5F55E1F98EDA7007603B5 /* Bitmaps */,
 				69D5EFAF1C72377D004CE1C0 /* Calendar Interface */,
 				A9C525CE1A3B59880056711F /* Colors.h */,
 				A9C525CF1A3B59880056711F /* Colors.m */,
@@ -1637,6 +1652,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69B5F5611F98EDF6007603B5 /* ChartsBitmap.m in Sources */,
 				EBC01D081BED1C8C0004C751 /* altaz.c in Sources */,
 				BBE299521CBD1D6C0045B3DC /* CityOrOrganizationData.m in Sources */,
 				A9BF333B1B770CF600A72E17 /* NVAlertView.m in Sources */,

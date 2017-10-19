@@ -9,6 +9,7 @@
 #import "CCodeTypes.h"
 #import "MathUtil.h"
 #import "UIDevice+Storage.h"
+#import "ChartsBitmap.h"
 
 int __attribute__ ((noinline)) debugMessage (LPCSTR mess);
 
