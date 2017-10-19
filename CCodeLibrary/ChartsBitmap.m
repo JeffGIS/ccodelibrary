@@ -24,10 +24,12 @@
         //300 DPI, 11 X 8.5 inch page, 1/2 inch margins
         _chartWidth = 3150;
         _chartHeight = 2250;
-        _margin = 150;
+        _xMargin = 75;
+        _topMargin = 75;
+        _bottomMargin = 225;
         
         //reference line every 1/2 inch
-        _numHorLines = 13;
+        _numHorLines = 12;
         _numVertLines = 19;
         
         //default colors
@@ -63,32 +65,32 @@
         CGContextSetFillColorWithColor(context, _backgroundColor.CGColor);
         CGContextFillRect(context, rect);
         
-        int chartAreaWidth = (_chartWidth - (_margin * 2));
-        int chartAreaHeight = (_chartHeight - (_margin * 2));
+        int chartAreaWidth = (_chartWidth - (_xMargin * 2));
+        int chartAreaHeight = (_chartHeight - _topMargin - _bottomMargin);
         
-        CGFloat hLineSpacing = (chartAreaHeight / (CGFloat)_numHorLines);
-        CGFloat vLineSpacing = (chartAreaWidth / (CGFloat)_numVertLines);
+        CGFloat hLineSpacing = (chartAreaHeight / (CGFloat)(_numHorLines + 1));
+        CGFloat vLineSpacing = (chartAreaWidth / (CGFloat)(_numVertLines + 1));
         
         CGContextSetStrokeColorWithColor(context, _lineColor.CGColor);
         CGContextSetLineWidth(context, _lineWidth);
         
         for (int i = 0; i < _numHorLines; i++)
         {
-            CGFloat spacing = ((i + 1) * hLineSpacing);
-            CGContextMoveToPoint(context, _margin, spacing);
-            CGContextAddLineToPoint(context, (_chartWidth - _margin), spacing);
+            CGFloat spacing = (((i + 1) * hLineSpacing) + _topMargin);
+            CGContextMoveToPoint(context, _xMargin, spacing);
+            CGContextAddLineToPoint(context, (_chartWidth - _xMargin), spacing);
             CGContextStrokePath(context);
         }
         
-        for (int i = 1; i < _numVertLines; i++)
+        for (int i = 0; i < _numVertLines; i++)
         {
-            CGFloat spacing = ((i + 1) * vLineSpacing);
-            CGContextMoveToPoint(context, spacing, _margin);
-            CGContextAddLineToPoint(context, spacing, (_chartHeight - _margin));
+            CGFloat spacing = (((i + 1) * vLineSpacing) + _xMargin);
+            CGContextMoveToPoint(context, spacing, _topMargin);
+            CGContextAddLineToPoint(context, spacing, (_chartHeight - _bottomMargin));
             CGContextStrokePath(context);
         }
         
-        rect = CGRectMake(_margin, _margin, chartAreaWidth, chartAreaHeight);
+        rect = CGRectMake(_xMargin, _topMargin, chartAreaWidth, chartAreaHeight);
         CGContextSetStrokeColorWithColor(context, _borderColor.CGColor);
         CGContextSetLineWidth(context, _borderWidth);
         CGContextAddRect(context, rect);
