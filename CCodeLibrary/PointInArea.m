@@ -11,12 +11,20 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
     int bitmapByteCount = 0, bitmapBytesPerRow = 0;
     int nc = (int)CGColorSpaceGetNumberOfComponents(colorSpace);
     uint32_t flags = kCGImageAlphaNone;
+    BOOL fromPIA = FALSE;
+    if (pixelsWide < 0)
+    {
+        pixelsWide = -pixelsWide;
+        fromPIA = TRUE;
+    }
     if (nc > 2)
     {
         nc++;
         flags = kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big;
-        flags = kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Big;
-        flags = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little;
+        if (fromPIA)
+            flags = kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Big;
+        else
+            flags = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little;
     }
     bitmapBytesPerRow = nc * pixelsWide;
     bitmapByteCount = (bitmapBytesPerRow *pixelsHigh);
@@ -108,7 +116,7 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
     _height = max (1,_height);
     _width = max (1,_width);
     
-    _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
+    _context = createBitmapContext(-_width, _height, _colorSpace, &bmData);
     _bitmapData = bmData;
     const CGFloat white[2] = {1, 1};
     const CGFloat gray[2] = {0.5, 1};

@@ -20,7 +20,7 @@
         _colorSpace = CGColorSpaceCreateDeviceGray();
         _width = 2048;
         _height = 2048;
-        _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
+        _context = createBitmapContext(-_width, _height, _colorSpace, &bmData);
         _bitmapData = bmData;
         _areaFile = CRAPI.sharedInstance.placeAreaFile;
     }
