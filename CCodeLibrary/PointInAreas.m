@@ -434,7 +434,7 @@ static int ii;
                 [self bitmapBounds:&_fullBounds];
             
             [self setContextTran:pTranViewToLL];
-            _context = createBitmapContext(_width, _height, _colorSpace, &bmData);
+            _context = createBitmapContext(-_width, _height, _colorSpace, &bmData);
             _bytesPerRow = (int)CGBitmapContextGetBytesPerRow(_context);
             _nColorComponents = (int)CGColorSpaceGetNumberOfComponents(_colorSpace);
             
