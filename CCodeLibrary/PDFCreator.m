@@ -106,7 +106,7 @@
                 CFRelease(path);
                 CFRelease(framesetter);
                 CFRelease(frame);
-                CFRelease(fontRef);
+                //CFRelease(fontRef);
             }
             
             CGPDFContextEndPage(PDFContext);
