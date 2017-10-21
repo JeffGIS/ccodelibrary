@@ -211,8 +211,7 @@
         
         CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"CourierNewPS-BoldMT", 36.0, NULL);
         CGRect fontRect = CTFontGetBoundingBox(fontRef);
-        int fontHeight = (int)round(fontRect.size.height);
-        CGFloat translation = (_bottomMargin - fontHeight - _borderWidth);
+        int gridFontHeight = (int)round(fontRect.size.height);
         CGColorRef textColor = UIColor.blackColor.CGColor;
         
         NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
@@ -229,8 +228,6 @@
         CTFramesetterRef framesetter = NULL;
         CTFrameRef frame = NULL;
         
-        CGContextTranslateCTM(context, 0.0, translation);
-        
         for (int i = 0; i < _numVLines; i++)
         {
             value = [NSString stringWithFormat:@"%i", (150 * i)];
@@ -238,7 +235,10 @@
             text = [[NSAttributedString alloc] initWithString:value
                                                    attributes:textAttributes];
             
-            rect = CGRectMake((_xMargin + (i * hLineSpacing)), -_chartHeight, hLineSpacing, fontHeight);
+            rect = CGRectMake((_xMargin + (i * hLineSpacing)),
+                              (-_chartHeight + (gridFontHeight * 2)),
+                              hLineSpacing, gridFontHeight);
+            
             path = CGPathCreateWithRect(rect, NULL);
             framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
             frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.length), path, NULL);
@@ -250,15 +250,13 @@
             CFRelease(frame);
         }
 
-        CGContextTranslateCTM(context, 0.0, -translation);
-
         CFRelease(fontRef);
         
         if (_title && _title.length)
         {
             fontRef = (__bridge CTFontRef)_titleFont;
-            fontHeight = (int)round(CTFontGetBoundingBox(fontRef).size.height);
-            int offset = ((_bottomMargin - fontHeight) / 2);
+            int titleFontHeight = (int)round(CTFontGetBoundingBox(fontRef).size.height);
+            int offset = ((_bottomMargin - titleFontHeight) / 2);
             textColor = _titleColor.CGColor;
             
             textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -269,20 +267,18 @@
             text = [[NSAttributedString alloc] initWithString:_title
                                                    attributes:textAttributes];
             
-            rect = CGRectMake(_xMargin, -(_chartHeight + offset), _chartAreaWidth, fontHeight);
+            rect = CGRectMake(_xMargin, (offset - _chartHeight - (gridFontHeight / 2)),
+                              _chartAreaWidth, titleFontHeight);
             
             path = CGPathCreateWithRect(rect, NULL);
             framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
             frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.length), path, NULL);
             
-            CGContextTranslateCTM(context, 0.0, fontHeight);
             CTFrameDraw(frame, context);
-            CGContextTranslateCTM(context, 0.0, -fontHeight);
             
             CFRelease(path);
             CFRelease(framesetter);
             CFRelease(frame);
-            CFRelease(fontRef);
         }
         
         WriteBitmapDataToFile((LPSTR)_outputFile.UTF8String, _chartWidth, _chartHeight, colorSpace, bmData);
