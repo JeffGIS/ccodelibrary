@@ -30,8 +30,8 @@ typedef NS_ENUM(NSInteger, ChartsBitmapDataType)
 @interface ChartsBitmap : NSObject
 
 @property ChartsBitmapOrientation chartOrientation;
-@property int chartWidth, chartHeight, borderWidth, gridLineWidth, dpi;
-@property int numHLines, numVLines, xMargin, topMargin, bottomMargin, docMargin;
+@property int chartWidth, chartHeight, borderWidth, gridLineWidth, dpi, docMargin;
+@property int numHLines, numVLines, leftMargin, rightMargin, topMargin, bottomMargin;
 @property (nonatomic) UIColor *gridLineColor, *borderColor, *backgroundColor;
 @property (nonatomic) UIColor *chartBackgroundColor, *titleColor;
 @property (nonatomic) NSMutableArray <ChartsBitmapDataSet *> *dataSets;
