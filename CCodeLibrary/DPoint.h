@@ -7,6 +7,7 @@
 @interface DPoint : NSObject
 
 + (DPoint *)fromDPOINT:(LPDPOINT)dpt;
++ (DPoint *)fromXY:(double)x y:(double)y;
 
 @property double x;
 @property double y;

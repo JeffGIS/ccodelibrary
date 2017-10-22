@@ -11,31 +11,6 @@ static int COLORFAC=1;
 #import "MathUtil.h"
 #import "CensusData.h"
 
-#pragma pack(1)
-typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
-#pragma pack()
-
-@interface AreaData : NSObject
-@property int areaNumber;
-@property NSString * areaID;
-@property COLORDEF colordef;
-@property int icolor;
-@property double count, count1, count2;
-@property int nCounts;
-@property double areaInPixels;
-@property int pixelsInMask;
-@property float pctInMask;
-@property double value;
-@property double valuePerPixel;
-@property int maxTime;
-@property double aveHoursBetweenIncident;
-@property CGColorRef displayColor;
-@property double * yearCounts;
-@property double * monthCounts;
-@property double * dowCounts;
-@property double * hourCounts;
-
-@end
 
 @implementation AreaData
 - (void)dealloc

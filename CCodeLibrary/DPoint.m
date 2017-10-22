@@ -12,5 +12,11 @@
     dp.y = dpt->y;
     return dp;
 }
-
++ (DPoint *)fromXY:(double)x y:(double)y
+{
+    DPoint * dp = DPoint.new;
+    dp.x = x;
+    dp.y = y;
+    return dp;
+}
 @end

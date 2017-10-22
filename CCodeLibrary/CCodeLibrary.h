@@ -68,6 +68,7 @@
 #import "FTPDirectoryCreate.h"
 #import "ArrayOfNumbers.h"
 #import "StringFunctions.h"
+#import "ChartsBitmap.h"
 
 @interface CCodeLibrary : NSObject
 
