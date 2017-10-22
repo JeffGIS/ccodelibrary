@@ -25,7 +25,7 @@
         _barWidth = 60;
         _lineWidth = 10;
         _circleBorderWidth = 10;
-        _circleRadius = 40;
+        _circleRadius = 30;
         
         //initialize data array
         _data = NSMutableArray.array;
@@ -33,6 +33,12 @@
     
     return self;
 }
+
+@end
+
+@interface ChartsBitmap ()
+
+@property int chartAreaWidth, chartAreaHeight;
 
 @end
 
@@ -48,15 +54,19 @@
         _chartOrientation = ChartsBitmapOrientationLandscape;
         
         //300 DPI, 11 X 8.5 inch page, 1/2 inch margins
-        _chartWidth = 3150;
-        _chartHeight = 2250;
-        _xMargin = 75;
-        _topMargin = 75;
-        _bottomMargin = 225;
+        _dpi = 300;
+        _chartWidth = (_dpi * 10);
+        _chartHeight = (_dpi * 7.5);
+        _leftMargin = (_dpi / 2.5);
+        _rightMargin = ((_dpi / 2) - _leftMargin);
+        _topMargin = (_dpi / 5);
+        _bottomMargin =  (_dpi - _topMargin);
         
         //reference line every 1/2 inch
-        _numHLines = 12;
-        _numVLines = 19;
+        _chartAreaWidth = (_chartWidth - _leftMargin - _rightMargin);
+        _chartAreaHeight = (_chartHeight - _topMargin - _bottomMargin);
+        _numHLines = (_chartAreaHeight / (_dpi / 2));
+        _numVLines = (_chartAreaWidth / (_dpi / 2));
         
         //default colors
         _gridLineColor = UIColor.lightGrayColor;
@@ -74,7 +84,7 @@
                        UserDefaults.defaults.localFilePath];
         
         //default fonts
-        _titleFont = [UIFont boldSystemFontOfSize:84.0];
+        _titleFont = [UIFont boldSystemFontOfSize:76.0];
         
         //initialize data sets array
         _dataSets = NSMutableArray.array;
@@ -95,31 +105,33 @@
         CGContextSetShouldAntialias(context, YES);
         CGRect rect = CGRectZero;
         
-        int chartAreaWidth = (_chartWidth - (_xMargin * 2));
-        int chartAreaHeight = (_chartHeight - _topMargin - _bottomMargin);
+        _chartAreaWidth = (_chartWidth - _leftMargin - _rightMargin);
+        _chartAreaHeight = (_chartHeight - _topMargin - _bottomMargin);
         
-        rect = CGRectMake(_xMargin, _topMargin, chartAreaWidth, chartAreaHeight);
+        rect = CGRectMake(_leftMargin, _topMargin, _chartAreaWidth, _chartAreaHeight);
         
         CGContextSetFillColorWithColor(context, _chartBackgroundColor.CGColor);
         CGContextFillRect(context, rect);
         
-        CGFloat hLineSpacing = (chartAreaHeight / (CGFloat)(_numHLines + 1));
-        CGFloat vLineSpacing = (chartAreaWidth / (CGFloat)(_numVLines + 1));
+        int hLineSpacing = (int)round(_chartAreaHeight / (CGFloat)_numHLines);
+        int vLineSpacing = (int)round(_chartAreaWidth / (CGFloat)_numVLines);
+        int hLineOffset = (hLineSpacing / 2);
+        int vLineOffset = (vLineSpacing / 2);
         
         CGContextSetStrokeColorWithColor(context, _gridLineColor.CGColor);
         CGContextSetLineWidth(context, _gridLineWidth);
         
         for (int i = 0; i < _numHLines; i++)
         {
-            CGFloat spacing = (((i + 1) * hLineSpacing) + _topMargin);
-            CGContextMoveToPoint(context, _xMargin, spacing);
-            CGContextAddLineToPoint(context, (_chartWidth - _xMargin), spacing);
+            CGFloat spacing = (((i + 1) * hLineSpacing) + _topMargin - hLineOffset);
+            CGContextMoveToPoint(context, _leftMargin, spacing);
+            CGContextAddLineToPoint(context, (_chartWidth - _rightMargin), spacing);
             CGContextStrokePath(context);
         }
         
         for (int i = 0; i < _numVLines; i++)
         {
-            CGFloat spacing = (((i + 1) * vLineSpacing) + _xMargin);
+            CGFloat spacing = (((i + 1) * vLineSpacing) + _leftMargin - vLineOffset);
             CGContextMoveToPoint(context, spacing, _topMargin);
             CGContextAddLineToPoint(context, spacing, (_chartHeight - _bottomMargin));
             CGContextStrokePath(context);
@@ -133,13 +145,13 @@
                     CGContextSetStrokeColorWithColor(context, dataSet.color.CGColor);
                     CGContextSetLineWidth(context, dataSet.lineWidth);
                     
-                    CGContextMoveToPoint(context, (_xMargin + dataSet.data[0].x),
-                                         (_topMargin + chartAreaHeight - dataSet.data[0].y));
+                    CGContextMoveToPoint(context, (_leftMargin + dataSet.data[0].x),
+                                         (_topMargin + _chartAreaHeight - dataSet.data[0].y));
                     
                     for (int i = 1; i < dataSet.data.count; i++)
                     {
-                        CGContextAddLineToPoint(context, (_xMargin + dataSet.data[i].x),
-                                                (_topMargin + chartAreaHeight - dataSet.data[i].y));
+                        CGContextAddLineToPoint(context, (_leftMargin + dataSet.data[i].x),
+                                                (_topMargin + _chartAreaHeight - dataSet.data[i].y));
                     }
                     
                     CGContextStrokePath(context);
@@ -150,8 +162,8 @@
                     
                     for (int i = 0; i < dataSet.data.count; i++)
                     {
-                        CGPoint point = CGPointMake((_xMargin + dataSet.data[i].x),
-                                                    (_topMargin + chartAreaHeight - dataSet.data[i].y));
+                        CGPoint point = CGPointMake((_leftMargin + dataSet.data[i].x),
+                                                    (_topMargin + _chartAreaHeight - dataSet.data[i].y));
                         
                         rect = CGRectMake((point.x - (dataSet.circleRadius / 2)),
                                           (point.y - (dataSet.circleRadius / 2)),
@@ -167,8 +179,8 @@
                     
                     for (DPoint *point in dataSet.data)
                     {
-                        rect = CGRectMake((_xMargin + point.x - (dataSet.barWidth / 2)),
-                                          (_topMargin + chartAreaHeight - point.y),
+                        rect = CGRectMake((_leftMargin + point.x - (dataSet.barWidth / 2)),
+                                          (_topMargin + _chartAreaHeight - point.y),
                                           dataSet.barWidth, point.y);
                         
                         CGContextFillRect(context, rect);
@@ -181,55 +193,133 @@
         CGContextSetFillColorWithColor(context, _backgroundColor.CGColor);
         rect = CGRectMake(0.0, 0.0, _chartWidth, _topMargin);
         CGContextFillRect(context, rect);
-        rect = CGRectMake(0.0, 0.0, _xMargin, _chartHeight);
+        rect = CGRectMake(0.0, 0.0, _leftMargin, _chartHeight);
         CGContextFillRect(context, rect);
         rect = CGRectMake(0.0, (_chartHeight - _bottomMargin), _chartWidth, _bottomMargin);
         CGContextFillRect(context, rect);
-        rect = CGRectMake((_chartWidth - _xMargin), 0.0, _xMargin, _chartHeight);
+        rect = CGRectMake((_chartWidth - _rightMargin), 0.0, _rightMargin, _chartHeight);
         CGContextFillRect(context, rect);
         
-        rect = CGRectMake((_xMargin - (_borderWidth / 2)), (_topMargin - (_borderWidth / 2)),
-                          (chartAreaWidth + _borderWidth), (chartAreaHeight + _borderWidth));
+        rect = CGRectMake((_leftMargin - (_borderWidth / 2)), (_topMargin - (_borderWidth / 2)),
+                          (_chartAreaWidth + _borderWidth), (_chartAreaHeight + _borderWidth));
         
         CGContextSetStrokeColorWithColor(context, _borderColor.CGColor);
         CGContextSetLineWidth(context, _borderWidth);
         CGContextAddRect(context, rect);
         CGContextStrokePath(context);
         
-        if (_title && _title.length)
+        CGContextScaleCTM(context, 1.0, -1.0);
+        
+        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"CourierNewPS-BoldMT", 36.0, NULL);
+        CGRect fontRect = CTFontGetBoundingBox(fontRef);
+        int gridFontHeight = (int)round(fontRect.size.height);
+        CGColorRef textColor = UIColor.blackColor.CGColor;
+        
+        NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
+        style.alignment = NSTextAlignmentCenter;
+        
+        NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        (__bridge id)fontRef, kCTFontAttributeName,
+                                        style, kCTParagraphStyleAttributeName,
+                                        textColor, kCTForegroundColorAttributeName, nil];
+        
+        NSString *value = nil;
+        NSAttributedString *text = nil;
+        CGPathRef path = NULL;
+        CTFramesetterRef framesetter = NULL;
+        CTFrameRef frame = NULL;
+        
+        for (int i = 0; i < _numVLines; i++)
         {
-            CTFontRef fontRef = (__bridge CTFontRef)_titleFont;
-            int fontHeight = (int)round(CTFontGetBoundingBox(fontRef).size.height);
-            int offset = ((_bottomMargin - fontHeight) / 2);
-            CGColorRef textColor = _titleColor.CGColor;
+            value = [NSString stringWithFormat:@"%i", (150 * i)];
             
-            CGContextTranslateCTM(context, 0.0, fontHeight);
-            CGContextScaleCTM(context, 1.0, -1.0);
+            text = [[NSAttributedString alloc] initWithString:value
+                                                   attributes:textAttributes];
             
-            NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
-            style.alignment = NSTextAlignmentCenter;
+            rect = CGRectMake((_leftMargin + (i * vLineSpacing)),
+                              (-_chartHeight + _bottomMargin - gridFontHeight - (_borderWidth * 2.0)),
+                              vLineSpacing, gridFontHeight);
             
-            NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            (__bridge id)fontRef, kCTFontAttributeName,
-                                            style, kCTParagraphStyleAttributeName,
-                                            textColor, kCTForegroundColorAttributeName, nil];
-            
-            NSAttributedString *text = [[NSAttributedString alloc] initWithString:_title
-                                                                       attributes:textAttributes];
-            
-            rect = CGRectMake(_xMargin, (-_chartHeight + _bottomMargin - offset),
-                              chartAreaWidth, fontHeight);
-            
-            CGPathRef path = CGPathCreateWithRect(rect, NULL);
-            CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
-            CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.length), path, NULL);
+            path = CGPathCreateWithRect(rect, NULL);
+            framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
+            frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.length), path, NULL);
             
             CTFrameDraw(frame, context);
             
             CFRelease(path);
             CFRelease(framesetter);
             CFRelease(frame);
-            CFRelease(fontRef);
+        }
+        
+        for (int i = 0; i < _numHLines; i++)
+        {
+            style.alignment = NSTextAlignmentRight;
+            
+            textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                              (__bridge id)fontRef, kCTFontAttributeName,
+                              style, kCTParagraphStyleAttributeName,
+                              textColor, kCTForegroundColorAttributeName, nil];
+            
+            value = [NSString stringWithFormat:@"%i", (150 * i)];
+            
+            text = [[NSAttributedString alloc] initWithString:value
+                                                   attributes:textAttributes];
+            
+            rect = CGRectMake((_leftMargin - hLineSpacing - (_borderWidth * 2.0)),
+                              (-_chartHeight + _bottomMargin + (i * hLineSpacing) + hLineOffset),
+                              hLineSpacing, gridFontHeight);
+            
+            path = CGPathCreateWithRect(rect, NULL);
+            framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
+            
+            CGSize frameSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.length),
+                                                                            NULL, rect.size, NULL);
+            
+            rect = CGRectMake(rect.origin.x, rect.origin.y - (frameSize.height / 2),
+                              rect.size.width, frameSize.height);
+            
+            path = CGPathCreateWithRect(rect, NULL);
+            framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
+            frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.length), path, NULL);
+            
+            CTFrameDraw(frame, context);
+            
+            CFRelease(path);
+            CFRelease(framesetter);
+            CFRelease(frame);
+        }
+
+        CFRelease(fontRef);
+        
+        if (_title && _title.length)
+        {
+            fontRef = (__bridge CTFontRef)_titleFont;
+            int titleFontHeight = (int)round(CTFontGetBoundingBox(fontRef).size.height);
+            int offset = ((_bottomMargin - titleFontHeight) / 2);
+            textColor = _titleColor.CGColor;
+            
+            style.alignment = NSTextAlignmentCenter;
+            
+            textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                              (__bridge id)fontRef, kCTFontAttributeName,
+                              style, kCTParagraphStyleAttributeName,
+                              textColor, kCTForegroundColorAttributeName, nil];
+            
+            text = [[NSAttributedString alloc] initWithString:_title
+                                                   attributes:textAttributes];
+            
+            rect = CGRectMake(_leftMargin, (offset - _chartHeight - (gridFontHeight / 2)),
+                              _chartAreaWidth, titleFontHeight);
+            
+            path = CGPathCreateWithRect(rect, NULL);
+            framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
+            frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.length), path, NULL);
+            
+            CTFrameDraw(frame, context);
+            
+            CFRelease(path);
+            CFRelease(framesetter);
+            CFRelease(frame);
         }
         
         WriteBitmapDataToFile((LPSTR)_outputFile.UTF8String, _chartWidth, _chartHeight, colorSpace, bmData);
