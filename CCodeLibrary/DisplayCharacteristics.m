@@ -33,6 +33,12 @@
     another.dPoint = self.dPoint;
     another.itemBeginTime = self.itemBeginTime;
     another.itemEndTime = self.itemEndTime;
+    another.year = self.year;
+    another.yearIndex = self.yearIndex;
+    another.dow = self.dow;
+    another.hour = self.hour;
+    another.dayNight = self.dayNight;
+    another.month = self.month;
     another.UCR = self.UCR;
     another.iValue = self.iValue;
     another.incValue = self.incValue;

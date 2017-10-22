@@ -51,6 +51,7 @@ typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
 @property GraphicElementTypes elementType;
 @property DPOINT dPoint;
 @property int itemBeginTime, itemEndTime;
+@property int year, yearIndex, dow, hour, dayNight, month;
 @property int UCR;
 @property long long iValue;
 @property double incValue;

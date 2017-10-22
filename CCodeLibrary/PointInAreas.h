@@ -7,6 +7,7 @@
 #import "PointInArea.h"
 #import "SQLiteLib.h"
 #import "GSSiEnums.h"
+#import "DisplayCharacteristics.h"
 
 @interface PointInAreas : NSObject
 
@@ -24,8 +25,8 @@
                 wantOverdue:(AdjustCrimeOptions)wantOverdue;
 
 - (int)DPointInArea:(DPOINT *)dPoint
-             atTime:(int)itime
-           andRefno:(int)refno
+    displayCharacteristics:(DisplayCharacteristics *)dc
+            andRefno:(int)refno
          whichCount:(int) icount
               value:(double)val;
 - (CGColorRef)colorForArea:(NSString*)areaID;
@@ -72,5 +73,6 @@
 @property double imageFactor;
 @property (nonatomic) double pointSize;
 @property int totPoints;
+@property int numYears;
 
 @end

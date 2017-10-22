@@ -29,6 +29,8 @@ typedef NS_ENUM(NSInteger, CrimeMapMode)
     PINMAP,
     HOTSPOT,
     CHOROPLETH,
+    LINEGRAPH,
+    HOTSPOTVIDEO,
 };
 
 typedef NS_ENUM(NSInteger, FieldDisplayOption)

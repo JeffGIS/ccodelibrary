@@ -30,10 +30,26 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 @property int maxTime;
 @property double aveHoursBetweenIncident;
 @property CGColorRef displayColor;
+@property double * yearCounts;
+@property double * monthCounts;
+@property double * dowCounts;
+@property double * hourCounts;
+
 @end
 
 @implementation AreaData
-
+- (void)dealloc
+{
+    CGColorRelease(self.displayColor);
+    if (self.yearCounts)
+        free (self.yearCounts);
+    if (self.monthCounts)
+        free (self.monthCounts);
+    if (self.dowCounts)
+        free (self.dowCounts);
+    if (self.hourCounts)
+        free (self.hourCounts);
+}
 @end
 
 @implementation PointInAreas
@@ -58,9 +74,6 @@ static int ii;
 }
 - (void)releaseMem
 {
-    for (AreaData *ad in _areaInfo)
-        CGColorRelease(ad.displayColor);
- 
     if (_bitmapData)
         free (_bitmapData);
     
@@ -685,6 +698,10 @@ static int ii;
                 ad.areaNumber = _numAreas;
                 ad.nCounts = nCount;
                 ad.areaID = areaID;
+                ad.yearCounts = calloc (_numYears+1,sizeof(double));
+                ad.monthCounts = calloc (12+1,sizeof(double));
+                ad.dowCounts = calloc (7+1,sizeof(double));
+                ad.hourCounts = calloc (24+1,sizeof(double));
                 [_areaInfo addObject:ad];
                 _numAreas++;
             }
@@ -764,7 +781,7 @@ static int ii;
 
 
 - (int)DPointInArea:(DPOINT *)dPointLL
-             atTime:(int)itime
+displayCharacteristics:(DisplayCharacteristics *)dc
            andRefno:(int)refno
          whichCount:(int) icount
               value:(double)val
@@ -777,7 +794,7 @@ static int ii;
     if (!_pointGridSize)
     {
         rtn = [self DPointInArea2:&dPoint
-                          atTime:itime
+           displayCharacteristics:(DisplayCharacteristics *)dc
                         andRefno:refno
                       whichCount:icount
                            value:1];
@@ -797,7 +814,7 @@ static int ii;
                     dPoint2.x += col;
                     dPoint2.y += row;
                     rtn = [self DPointInArea2:&dPoint2
-                                      atTime:itime
+                       displayCharacteristics:dc
                                     andRefno:refno
                                   whichCount:icount
                                         value:_pointGrid[indx]*val];
@@ -813,7 +830,7 @@ static int ii;
 }
 
 - (int)DPointInArea2:(DPOINT *)dPoint
-              atTime:(int)itime
+displayCharacteristics:(DisplayCharacteristics *)dc
             andRefno:(int)refno
           whichCount:(int) icount
                value:(float)val
@@ -836,10 +853,16 @@ static int ii;
             if (icount)
                 ad.count2 = ad.count2 + _compareFactor * val;
             else
+            {
                 ad.count1 += val;
-            ad.maxTime = max (ad.maxTime,itime);
+                ad.yearCounts[dc.yearIndex] += val;
+                ad.monthCounts[dc.month] += val;
+                ad.dowCounts[dc.dow] += val;
+                ad.hourCounts[dc.hour] += val;
+            }
+            ad.maxTime = max (ad.maxTime,dc.itemBeginTime);
             [self addToTimeLine:ad.areaNumber
-                         atTime:itime
+                         atTime:dc.itemBeginTime
                        andRefno:refno
                        forCount:icount];
             numAreasIn++;
@@ -847,7 +870,7 @@ static int ii;
     }
     else
         _numOutside++;
-    _minTime = min (_minTime,itime);
+    _minTime = min (_minTime,dc.itemBeginTime);
     return numAreasIn;
 }
 
