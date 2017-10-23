@@ -370,7 +370,8 @@
         
         CGColorSpaceRelease(colorSpace);
         CGContextRelease(context);
-        
+        if (bmData)
+            free (bmData);
         return CGSizeMake(_chartWidth, _chartHeight);
     }
     
