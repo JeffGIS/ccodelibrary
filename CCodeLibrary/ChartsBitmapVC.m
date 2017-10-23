@@ -65,6 +65,7 @@
 - (void)returnButtonTapped:(UIButton *)button
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+    CRAPI.sharedInstance.chartBitmaps = nil;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
