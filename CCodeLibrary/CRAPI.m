@@ -1461,4 +1461,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                              deleteWhenDone:_docManager.deleteWhenDone];
 }
 
+- (void)displayChartBitmaps:(NSTimer *)timer
+{
+    [timer invalidate];
+}
+
+
 @end

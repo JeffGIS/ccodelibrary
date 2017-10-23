@@ -65,6 +65,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nullable) NSString *mailAddress;
 @property (nonatomic, copy, nullable) NSString *userName;
 @property (nonatomic, copy, nullable) NSString *eMail;
+@property (nonatomic, copy, nullable) NSString *pdfImageFile;
 @property (nonatomic) int rampCredits, deviceNumber, maxDevices;
 @property (nonatomic, nullable) NSMutableDictionary *deviceLists;
 @property (nonatomic, copy, nullable) NSString *deviceListsKey;
@@ -139,6 +140,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic) BOOL isRentaliPad, canUseSdwk, inSdwkMode, GMTilesVisible, justZoom;
 @property (nonnull)Facility * currentFacility;
 @property (nonatomic) int facilityFieldDisplayOpt;
+@property (nonatomic, nullable) NSMutableArray <ChartsBitmap *> *chartBitmaps;
 
 + (nullable CRAPI *)sharedInstance;
 
@@ -237,5 +239,6 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void) showMapToolbarIndicator:(BOOL)show;
 - (void)showAlert:(nonnull NSString *)text;
 - (void)uploadToCloud;
+- (void)displayChartBitmaps:(nonnull NSTimer *)timer;
 
 @end
