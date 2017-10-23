@@ -1,4 +1,3 @@
-
 //  CRAPI.m
 //  CCodeLibrary
 
@@ -11,6 +10,7 @@
 #import "SharedDefaults.h"
 #include "shr.h"
 #import "NVDocumentManager.h"
+#import "ChartsBitmapVC.h"
 
 @implementation TimeRange
 
@@ -1464,7 +1464,21 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 - (void)displayChartBitmaps:(NSTimer *)timer
 {
     [timer invalidate];
+    
+    [self performSelectorOnMainThread:@selector(displayChart)
+                           withObject:nil
+                        waitUntilDone:YES];
 }
 
+- (void)displayChart
+{
+    ChartsBitmapVC *chartsVC = ChartsBitmapVC.new;
+    chartsVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    UIViewController *parentVC = UIApplication.sharedApplication.keyWindow.rootViewController;
+    
+    [parentVC presentViewController:chartsVC
+                           animated:YES
+                         completion:nil];
+}
 
 @end

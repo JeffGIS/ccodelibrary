@@ -74,6 +74,8 @@
 		69848C781EB9416E00EC1EB3 /* NVPDFDrawing.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69848C751EB9415D00EC1EB3 /* NVPDFDrawing.h */; };
 		6986AF841C7C119E0059DD1B /* NVDigitizerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6986AF831C7C119E0059DD1B /* NVDigitizerView.m */; };
 		6986AF851C7CBD820059DD1B /* NVDigitizerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6986AF821C7C119E0059DD1B /* NVDigitizerView.h */; };
+		698A1C9C1F9E504800D22C03 /* ChartsBitmapVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 698A1C9B1F9E504800D22C03 /* ChartsBitmapVC.m */; };
+		698A1C9D1F9E509500D22C03 /* ChartsBitmapVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698A1C9A1F9E504800D22C03 /* ChartsBitmapVC.h */; };
 		698C20C81DCB030B00F800C3 /* NVKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C20C71DCB030B00F800C3 /* NVKeyboard.m */; };
 		698C20C91DCB84DC00F800C3 /* NVKeyboard.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698C20C61DCB030B00F800C3 /* NVKeyboard.h */; };
 		698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698F987B1C10B96B009F2F01 /* YTPlayerView.m */; };
@@ -395,6 +397,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				698A1C9D1F9E509500D22C03 /* ChartsBitmapVC.h in CopyFiles */,
 				697EC2E81F98FDA1000C3F9A /* ChartsBitmap.h in CopyFiles */,
 				EBC1F6401F97DB0900BBEC69 /* PDFCreator.h in CopyFiles */,
 				1F4972A31F6C538200A60B63 /* DPoint.h in CopyFiles */,
@@ -621,6 +624,8 @@
 		69848C761EB9415D00EC1EB3 /* NVPDFDrawing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPDFDrawing.m; sourceTree = "<group>"; };
 		6986AF821C7C119E0059DD1B /* NVDigitizerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDigitizerView.h; sourceTree = "<group>"; };
 		6986AF831C7C119E0059DD1B /* NVDigitizerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDigitizerView.m; sourceTree = "<group>"; };
+		698A1C9A1F9E504800D22C03 /* ChartsBitmapVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChartsBitmapVC.h; sourceTree = "<group>"; };
+		698A1C9B1F9E504800D22C03 /* ChartsBitmapVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChartsBitmapVC.m; sourceTree = "<group>"; };
 		698C20C61DCB030B00F800C3 /* NVKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVKeyboard.h; sourceTree = "<group>"; };
 		698C20C71DCB030B00F800C3 /* NVKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVKeyboard.m; sourceTree = "<group>"; };
 		698F987A1C10B96B009F2F01 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTPlayerView.h; path = ../YTPlayerView.h; sourceTree = "<group>"; };
@@ -994,6 +999,8 @@
 			children = (
 				69B5F55F1F98EDF6007603B5 /* ChartsBitmap.h */,
 				69B5F5601F98EDF6007603B5 /* ChartsBitmap.m */,
+				698A1C9A1F9E504800D22C03 /* ChartsBitmapVC.h */,
+				698A1C9B1F9E504800D22C03 /* ChartsBitmapVC.m */,
 			);
 			name = Bitmaps;
 			sourceTree = "<group>";
@@ -1818,6 +1825,7 @@
 				EBC01D281BED1C8C0004C751 /* rstar.c in Sources */,
 				EBAB31C71AE6DC2D00C5CCEF /* NamedColors.m in Sources */,
 				EBB1BFC9199C5B0E0059B547 /* UserDefaults.m in Sources */,
+				698A1C9C1F9E504800D22C03 /* ChartsBitmapVC.m in Sources */,
 				BBC361C91F429C0200B51DF3 /* VARDEF.C in Sources */,
 				A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */,
 				69F482371DB7C75B00E4BDB5 /* NVSpreadsheet.m in Sources */,

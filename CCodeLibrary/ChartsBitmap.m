@@ -365,7 +365,7 @@
         }
         
         WriteBitmapDataToFile((LPSTR)_outputFile.UTF8String, _chartWidth, _chartHeight, colorSpace, bmData);
-        UIImage *image = [UIImage imageWithContentsOfFile:_outputFile];
+        //UIImage *image = [UIImage imageWithContentsOfFile:_outputFile];
         
         CGColorSpaceRelease(colorSpace);
         CGContextRelease(context);
