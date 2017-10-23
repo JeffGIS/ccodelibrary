@@ -15,6 +15,13 @@ typedef NS_ENUM(NSInteger, ChartsBitmapDataType)
     ChartsBitmapDataTypeBar,
 };
 
+typedef NS_ENUM(NSInteger, ChartsBitmapDataFormat)
+{
+    ChartsBitmapDataFormatNone,
+    ChartsBitmapDataFormatHourOfDay,
+    ChartsBitmapDataFormatDayOfWeek,
+};
+
 @import Foundation;
 
 @interface ChartsBitmapDataSet : NSObject
@@ -29,7 +36,7 @@ typedef NS_ENUM(NSInteger, ChartsBitmapDataType)
 
 @interface ChartsBitmap : NSObject
 
-@property ChartsBitmapOrientation chartOrientation;
+@property ChartsBitmapDataFormat format;
 @property int chartWidth, chartHeight, borderWidth, gridLineWidth, dpi, docMargin, offset;
 @property int numHLines, numVLines, leftMargin, rightMargin, topMargin, bottomMargin, gridFontSize;
 @property (nonatomic) UIColor *gridLineColor, *borderColor, *backgroundColor;
