@@ -101,7 +101,7 @@
         NSArray *daysArray = @[@"Sun", @"Mon", @"Tues", @"Wed", @"Thurs", @"Fri", @"Sat"];
         
         NSArray *hoursArray = @[@"12am", @"2am", @"4am", @"6am", @"8am", @"10am",
-                                @"12pm", @"2pm", @"4pm", @"6pm", @"8pm", @"10pm"];
+                                @"12pm", @"2pm", @"4pm", @"6pm", @"8pm", @"10pm", @"12am"];
         
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = createBitmapContext(_chartWidth, _chartHeight, colorSpace, &bmData);
@@ -115,7 +115,7 @@
                 _numVLines = 7;
                 break;
             case ChartsBitmapDataFormatHourOfDay:
-                _numVLines = 12;
+                _numVLines = 13;
                 break;
             default:
                 break;
@@ -169,6 +169,9 @@
         double xRange = (maxX - minX);
         double yRange = (maxY - minY);
         double xFactor = 1, yFactor = 1;
+        
+        if (_format == ChartsBitmapDataFormatHourOfDay)
+            xRange = 24;
         
         if (xRange > 0)
             xFactor = ((_chartAreaWidth - vLineSpacing) / xRange);
