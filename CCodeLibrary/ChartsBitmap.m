@@ -87,6 +87,7 @@
         
         //default fonts
         _titleFont = [UIFont boldSystemFontOfSize:76.0];
+        _gridFontSize = 36;
         
         //initialize data sets array
         _dataSets = NSMutableArray.array;
@@ -250,7 +251,7 @@
         
         CGContextScaleCTM(context, 1.0, -1.0);
         
-        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"CourierNewPS-BoldMT", 36.0, NULL);
+        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"CourierNewPS-BoldMT", _gridFontSize, NULL);
         CGRect fontRect = CTFontGetBoundingBox(fontRef);
         int gridFontHeight = (int)round(fontRect.size.height);
         CGColorRef textColor = UIColor.blackColor.CGColor;

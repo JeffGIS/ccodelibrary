@@ -7,9 +7,8 @@
 @interface ChartsBitmapVC ()
 
 @property (nonatomic) UIImageView *chartsView;
-@property (nonatomic) UIButton *returnButton;
 @property NSInteger currentIndex;
-@property int yMargin;
+@property int yMargin, sizeFactor;
 
 @end
 
@@ -21,14 +20,9 @@
     
     _yMargin = 60;
     _currentIndex = 0;
+    _sizeFactor = 2;
     
-    ChartsBitmap *cb = CRAPI.sharedInstance.chartBitmaps[_currentIndex];
-    cb.chartWidth = (int)(self.view.frame.size.width * 4);
-    cb.chartHeight = (int)((self.view.frame.size.height - (_yMargin * 2)) * 4);
-    cb.useOffset = YES;
-    [cb createChartBitmap];
-    UIImage *image = [UIImage imageWithContentsOfFile:cb.outputFile];
-    _chartsView = [[UIImageView alloc] initWithImage:image];
+    _chartsView = UIImageView.new;
     _chartsView.translatesAutoresizingMaskIntoConstraints = NO;
     _chartsView.contentMode = UIViewContentModeScaleAspectFit;
     _chartsView.clipsToBounds = YES;
@@ -36,20 +30,68 @@
     [self.view addSubview:_chartsView];
     [_chartsView constrainToView:self.view leading:0.0 trailing:0.0 top:_yMargin bottom:-_yMargin];
     
-    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
-    _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
-    [_returnButton setTitle:@"< Return" forState:UIControlStateNormal];
-    [_returnButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [_returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    UIFont *font = [UIFont boldSystemFontOfSize:32.0];
+    CGFloat xm = 20.0;
     
-    [_returnButton addTarget:self
-                      action:@selector(returnButtonTapped:)
-            forControlEvents:UIControlEventTouchUpInside];
+    UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    returnButton.translatesAutoresizingMaskIntoConstraints = NO;
+    returnButton.titleLabel.font = font;
+    [returnButton setTitle:@"< Return" forState:UIControlStateNormal];
+    [returnButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
     
-    [self.view addSubview:_returnButton];
-    [_returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:20.0];
-    [_returnButton constrainTopToAnchor:self.view.topAnchor constant:6.0];
+    [returnButton addTarget:self
+                     action:@selector(returnButtonTapped:)
+           forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:returnButton];
+    [returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:xm];
+    [returnButton constrainTopToAnchor:self.view.topAnchor constant:4.0];
+    
+    font = [UIFont boldSystemFontOfSize:48.0];
+    
+    UIButton *previousButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    previousButton.translatesAutoresizingMaskIntoConstraints = NO;
+    previousButton.titleLabel.font = font;
+    [previousButton setTitle:@"<<" forState:UIControlStateNormal];
+    [previousButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [previousButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    
+    [previousButton addTarget:self
+                       action:@selector(previousButtonTapped:)
+             forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:previousButton];
+    [previousButton constrainLeadingToAnchor:self.view.leadingAnchor constant:xm];
+    [previousButton constrainBottomToAnchor:self.view.bottomAnchor];
+    
+    UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    nextButton.translatesAutoresizingMaskIntoConstraints = NO;
+    nextButton.titleLabel.font = font;
+    [nextButton setTitle:@">>" forState:UIControlStateNormal];
+    [nextButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [nextButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    
+    [nextButton addTarget:self
+                       action:@selector(nextButtonTapped:)
+             forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:nextButton];
+    [nextButton constrainTrailingToAnchor:self.view.trailingAnchor constant:-xm];
+    [nextButton constrainBottomToAnchor:self.view.bottomAnchor];
+    
+    [self updateChart];
+}
+
+- (void)updateChart
+{
+    ChartsBitmap *cb = CRAPI.sharedInstance.chartBitmaps[_currentIndex];
+    cb.chartWidth = (int)(self.view.frame.size.width * _sizeFactor);
+    cb.chartHeight = (int)((self.view.frame.size.height - (_yMargin * 2)) * _sizeFactor);
+    cb.useOffset = YES;
+    [cb createChartBitmap];
+    UIImage *image = [UIImage imageWithContentsOfFile:cb.outputFile];
+    _chartsView.image = image;
 }
 
 - (void)didReceiveMemoryWarning
@@ -67,14 +109,31 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)previousButtonTapped:(UIButton *)button
+{
+    if (_currentIndex > 0)
+        _currentIndex--;
+    
+    else
+        _currentIndex = (int)(CRAPI.sharedInstance.chartBitmaps.count - 1);
+    
+    [self updateChart];
+}
+
+- (void)nextButtonTapped:(UIButton *)button
+{
+    if (_currentIndex < (CRAPI.sharedInstance.chartBitmaps.count - 1))
+        _currentIndex++;
+    
+    else
+        _currentIndex = 0;
+    
+    [self updateChart];
+}
+
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    ChartsBitmap *cb = CRAPI.sharedInstance.chartBitmaps[_currentIndex];
-    cb.chartWidth = (int)(self.view.frame.size.width * 4);
-    cb.chartHeight = (int)((self.view.frame.size.height - (_yMargin * 2)) * 4);
-    [cb createChartBitmap];
-    UIImage *image = [UIImage imageWithContentsOfFile:cb.outputFile];
-    _chartsView.image = image;
+    [self updateChart];
 }
 
 @end
