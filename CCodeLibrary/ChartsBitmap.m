@@ -58,7 +58,7 @@
         _chartHeight = (_dpi * 7.5);
         _leftMargin = (_dpi / 2.5);
         _rightMargin = ((_dpi / 2) - _leftMargin);
-        _topMargin = (_dpi / 5);
+        _topMargin = _rightMargin;
         _bottomMargin =  (_dpi - _topMargin);
         
         //reference line every 1/2 inch
