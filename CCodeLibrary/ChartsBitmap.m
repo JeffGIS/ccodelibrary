@@ -18,14 +18,13 @@
         _type = ChartsBitmapDataTypeLine;
         
         //default colors
-        _color = UIColor.blueColor;
         _circleFillColor = UIColor.whiteColor;
         
         //default widths
         _barWidth = 60;
-        _lineWidth = 10;
-        _circleBorderWidth = 10;
-        _circleRadius = 30;
+        _lineWidth = 8;
+        _circleBorderWidth = _lineWidth;
+        _circleRadius = (_circleBorderWidth * 2.5);
         
         //initialize data array
         _data = NSMutableArray.array;
@@ -75,13 +74,16 @@
         _chartBackgroundColor = UIColor.whiteColor;
         _titleColor = UIColor.blackColor;
         
+        _defaultColors = @[UIColor.blueColor, UIColor.redColor, UIColor.greenColor, UIColor.orangeColor,
+                           UIColor.purpleColor, UIColor.cyanColor, UIColor.brownColor, UIColor.magentaColor];
+        
         //default widths
         _borderWidth = 8;
-        _gridLineWidth = 4;
+        _gridLineWidth = 3;
+        _offset = 4;
         
         //default ouput file path
-        _outputFile = [NSString stringWithFormat:@"%@/TestChart.bmp",
-                       UserDefaults.defaults.localFilePath];
+        _outputFile = [NSString stringWithFormat:@"%@/test.bmp", NSTemporaryDirectory()];
         
         //default fonts
         _titleFont = [UIFont boldSystemFontOfSize:76.0];
@@ -137,21 +139,58 @@
             CGContextStrokePath(context);
         }
         
+        double minX = DBL_MAX, maxX = 0, minY = 0, maxY = 0;
+        
         for (ChartsBitmapDataSet *dataSet in _dataSets)
         {
+            for (DPoint *point in dataSet.data)
+            {
+                minX = MIN(minX, point.x);
+                maxX = MAX(maxX, point.x);
+                minY = MIN(minY, point.y);
+                maxY = MAX(maxY, point.y);
+            }
+        }
+        
+        double xRange = (maxX - minX);
+        double yRange = (maxY - minY);
+        double xFactor = 1, yFactor = 1;
+        
+        if (xRange > 0)
+            xFactor = ((_chartAreaWidth - vLineSpacing) / xRange);
+        
+        if (yRange > 0)
+            yFactor = ((_chartAreaHeight - hLineSpacing) / yRange);
+        
+        for (int i = 0; i < _dataSets.count; i++)
+        {
+            ChartsBitmapDataSet *dataSet = _dataSets[i];
+            
+            if (!dataSet.color)
+                dataSet.color = _defaultColors[i % _defaultColors.count];
+            
+            int offset = 0;
+            
+            if (_useOffset)
+                offset = (i * _offset);
+            
             switch (dataSet.type)
             {
                 case ChartsBitmapDataTypeLine:
                     CGContextSetStrokeColorWithColor(context, dataSet.color.CGColor);
                     CGContextSetLineWidth(context, dataSet.lineWidth);
+                    CGContextSetLineJoin(context, kCGLineJoinRound);
                     
-                    CGContextMoveToPoint(context, (_leftMargin + dataSet.data[0].x),
-                                         (_topMargin + _chartAreaHeight - dataSet.data[0].y));
+                    CGContextMoveToPoint(context, (_leftMargin + (dataSet.data[0].x * xFactor) + vLineOffset + offset),
+                                         (_topMargin + _chartAreaHeight - (dataSet.data[0].y * yFactor))
+                                         - hLineOffset - offset);
                     
                     for (int i = 1; i < dataSet.data.count; i++)
                     {
-                        CGContextAddLineToPoint(context, (_leftMargin + dataSet.data[i].x),
-                                                (_topMargin + _chartAreaHeight - dataSet.data[i].y));
+                        CGContextAddLineToPoint(context,
+                                                (_leftMargin + (dataSet.data[i].x * xFactor) + vLineOffset + offset),
+                                                (_topMargin + _chartAreaHeight - (dataSet.data[i].y * yFactor)
+                                                 - hLineOffset - offset));
                     }
                     
                     CGContextStrokePath(context);
@@ -162,8 +201,9 @@
                     
                     for (int i = 0; i < dataSet.data.count; i++)
                     {
-                        CGPoint point = CGPointMake((_leftMargin + dataSet.data[i].x),
-                                                    (_topMargin + _chartAreaHeight - dataSet.data[i].y));
+                        CGPoint point = CGPointMake((_leftMargin + (dataSet.data[i].x * xFactor) + vLineOffset + offset),
+                                                    (_topMargin + _chartAreaHeight - (dataSet.data[i].y * yFactor)
+                                                     - hLineOffset - offset));
                         
                         rect = CGRectMake((point.x - (dataSet.circleRadius / 2)),
                                           (point.y - (dataSet.circleRadius / 2)),
@@ -179,9 +219,9 @@
                     
                     for (DPoint *point in dataSet.data)
                     {
-                        rect = CGRectMake((_leftMargin + point.x - (dataSet.barWidth / 2)),
-                                          (_topMargin + _chartAreaHeight - point.y),
-                                          dataSet.barWidth, point.y);
+                        rect = CGRectMake((_leftMargin + (point.x * xFactor) - (dataSet.barWidth / 2) + vLineOffset),
+                                          (_topMargin + _chartAreaHeight - (point.y * yFactor) - hLineOffset),
+                                          dataSet.barWidth, ((point.y * yFactor) - hLineOffset));
                         
                         CGContextFillRect(context, rect);
                     }
@@ -231,7 +271,8 @@
         
         for (int i = 0; i < _numVLines; i++)
         {
-            value = [NSString stringWithFormat:@"%i", (150 * i)];
+            double gridValue = (xRange / (double)(_numVLines - 1));
+            value = [NSString stringWithFormat:@"%.1f", (i * gridValue)];
             
             text = [[NSAttributedString alloc] initWithString:value
                                                    attributes:textAttributes];
@@ -260,7 +301,8 @@
                               style, kCTParagraphStyleAttributeName,
                               textColor, kCTForegroundColorAttributeName, nil];
             
-            value = [NSString stringWithFormat:@"%i", (150 * i)];
+            double gridValue = (yRange / (double)(_numHLines - 1));
+            value = [NSString stringWithFormat:@"%.1f", (i * gridValue)];
             
             text = [[NSAttributedString alloc] initWithString:value
                                                    attributes:textAttributes];
