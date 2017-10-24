@@ -88,6 +88,8 @@
     ChartsBitmap *cb = CRAPI.sharedInstance.chartBitmaps[_currentIndex];
     cb.chartWidth = (int)(self.view.frame.size.width * _sizeFactor);
     cb.chartHeight = (int)((self.view.frame.size.height - (_yMargin * 2)) * _sizeFactor);
+    cb.gridFontSize = 28;
+    cb.titleFont = [UIFont systemFontOfSize:56.0];
     cb.useOffset = YES;
     [cb createChartBitmap];
     UIImage *image = [UIImage imageWithContentsOfFile:cb.outputFile];

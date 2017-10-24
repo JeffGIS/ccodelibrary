@@ -49,16 +49,13 @@
     
     if (self)
     {
-        //defaults to landscape
-        _chartOrientation = ChartsBitmapOrientationLandscape;
-        
         //300 DPI, 11 X 8.5 inch page, 1/2 inch margins
         _dpi = 300;
         _chartWidth = (_dpi * 10);
         _chartHeight = (_dpi * 7.5);
         _leftMargin = (_dpi / 2.5);
         _rightMargin = ((_dpi / 2) - _leftMargin);
-        _topMargin = (_dpi / 5);
+        _topMargin = (_dpi / 3);
         _bottomMargin =  (_dpi - _topMargin);
         
         //reference line every 1/2 inch
@@ -101,6 +98,10 @@
     if (_outputFile && _outputFile.length)
     {
         void *bmData = NULL;
+        NSArray *daysArray = @[@"Sun", @"Mon", @"Tues", @"Wed", @"Thurs", @"Fri", @"Sat"];
+        
+        NSArray *hoursArray = @[@"12am", @"2am", @"4am", @"6am", @"8am", @"10am",
+                                @"12pm", @"2pm", @"4pm", @"6pm", @"8pm", @"10pm", @"12am"];
         
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef context = createBitmapContext(_chartWidth, _chartHeight, colorSpace, &bmData);
@@ -108,6 +109,18 @@
         CGContextSetShouldAntialias(context, YES);
         CGRect rect = CGRectZero;
         
+        switch (_format)
+        {
+            case ChartsBitmapDataFormatDayOfWeek:
+                _numVLines = 7;
+                break;
+            case ChartsBitmapDataFormatHourOfDay:
+                _numVLines = 13;
+                break;
+            default:
+                break;
+        }
+
         _chartAreaWidth = (_chartWidth - _leftMargin - _rightMargin);
         _chartAreaHeight = (_chartHeight - _topMargin - _bottomMargin);
         
@@ -156,6 +169,9 @@
         double xRange = (maxX - minX);
         double yRange = (maxY - minY);
         double xFactor = 1, yFactor = 1;
+        
+        if (_format == ChartsBitmapDataFormatHourOfDay)
+            xRange = 24;
         
         if (xRange > 0)
             xFactor = ((_chartAreaWidth - vLineSpacing) / xRange);
@@ -272,11 +288,24 @@
         
         for (int i = 0; i < _numVLines; i++)
         {
-            double gridValue = (xRange / (double)(_numVLines - 1));
-            value = [NSString stringWithFormat:@"%.1f", (i * gridValue)];
-            
-            text = [[NSAttributedString alloc] initWithString:value
-                                                   attributes:textAttributes];
+            switch (_format)
+            {
+                case ChartsBitmapDataFormatDayOfWeek:
+                    text = [[NSAttributedString alloc] initWithString:daysArray[i]
+                                                           attributes:textAttributes];
+                    break;
+                case ChartsBitmapDataFormatHourOfDay:
+                    text = [[NSAttributedString alloc] initWithString:hoursArray[i]
+                                                           attributes:textAttributes];
+                    break;
+                default:{
+                    double gridValue = (xRange / (double)(_numVLines - 1));
+                    value = [NSString stringWithFormat:@"%.1f", (i * gridValue)];
+                    
+                    text = [[NSAttributedString alloc] initWithString:value
+                                                           attributes:textAttributes];
+                    break;}
+            }
             
             rect = CGRectMake((_leftMargin + (i * vLineSpacing)),
                               (-_chartHeight + _bottomMargin - gridFontHeight - (_borderWidth * 2.0)),
@@ -338,7 +367,7 @@
         {
             fontRef = (__bridge CTFontRef)_titleFont;
             int titleFontHeight = (int)round(CTFontGetBoundingBox(fontRef).size.height);
-            int offset = ((_bottomMargin - titleFontHeight) / 2);
+            int offset = ((_topMargin - titleFontHeight) / 2);
             textColor = _titleColor.CGColor;
             
             style.alignment = NSTextAlignmentCenter;
@@ -351,8 +380,7 @@
             text = [[NSAttributedString alloc] initWithString:_title
                                                    attributes:textAttributes];
             
-            rect = CGRectMake(_leftMargin, (offset - _chartHeight - (gridFontHeight / 2)),
-                              _chartAreaWidth, titleFontHeight);
+            rect = CGRectMake(_leftMargin, -(titleFontHeight + offset), _chartAreaWidth, titleFontHeight);
             
             path = CGPathCreateWithRect(rect, NULL);
             framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
@@ -369,9 +397,13 @@
         //UIImage *image = [UIImage imageWithContentsOfFile:_outputFile];
         
         CGColorSpaceRelease(colorSpace);
-        CGContextRelease(context);
-        if (bmData)
-            free (bmData);
+        
+        if (context)
+            CGContextRelease(context);
+        
+        if(bmData)
+            free(bmData);
+        
         return CGSizeMake(_chartWidth, _chartHeight);
     }
     
