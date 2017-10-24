@@ -107,7 +107,8 @@
           whichGrid:(int)igrid
 
 {
-//    int igrid = [self selectGridFromTime:time];
+    if (igrid < 0)
+        igrid = [self selectGridFromTime:time];
     if (igrid < 0 || igrid >= _nGrids)
         return;
     int * grid = _grids[igrid];

@@ -64,7 +64,8 @@ didReturnFromDate:(NSInteger)fromDate
                                                  span:(TimeArraySpan)span
                                              interval:(int)interval;
 
-+ (NSArray<NSNumber *> *)getArrayOfMonthsSpanningTime:(NSInteger)time;
++ (NSArray<NSNumber *> *)getArrayOfMonthsSpanningTime:(int)time
+                                               toTime:(int)toTime;
 
 + (void)getCurrentFromDate:(NSInteger *)fromDate
                     toDate:(NSInteger *)toDate;

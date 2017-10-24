@@ -113,22 +113,28 @@
     return timeArray.copy;
 }
 
-+ (NSArray<NSNumber *> *)getArrayOfMonthsSpanningTime:(NSInteger)time
++ (NSArray<NSNumber *> *)getArrayOfMonthsSpanningTime:(int)time
+                                               toTime:(int)toTime
 {
     NVDateRange *nvdr = NVDateRange.new;
     NSDateComponents *dateComponents = [nvdr componentsFromDate:NSDate.date];
     dateComponents.day = 1;
     dateComponents.year -= 1;
     NSMutableArray<NSNumber *> *monthArray = NSMutableArray.array;
-    NSDate *currentDate = nil;
-    NSInteger now = [NSDate date].timeIntervalSince1970;
-    
-    for (int i = 0; i < 14; i++)
+    NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:time];
+    dateComponents = [nvdr componentsFromDate:startDate];
+    int iTime = time;
+    while (iTime < toTime)
     {
-        currentDate = [nvdr startOfDayDateForDate:[nvdr.calendar dateFromComponents:dateComponents]];
-        NSInteger iTime = currentDate.timeIntervalSince1970;
-        [monthArray addObject:[NSNumber numberWithInteger:min(now,iTime)]];
+        NSDate *currentDate = [nvdr startOfDayDateForDate:[nvdr.calendar dateFromComponents:dateComponents]];
+        iTime = currentDate.timeIntervalSince1970;
+        [monthArray addObject:[NSNumber numberWithInteger:min(toTime,iTime)]];
         dateComponents.month++;
+        if (dateComponents.month > 12)
+        {
+            dateComponents.year++;
+            dateComponents.month = 1;
+        }
     }
  
     return monthArray.copy;

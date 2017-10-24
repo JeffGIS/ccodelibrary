@@ -240,5 +240,6 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void)showAlert:(nonnull NSString *)text;
 - (void)uploadToCloud;
 - (void)displayChartBitmaps:(nonnull NSTimer *)timer;
+- (void)displayHotSpotVideo:(nonnull NSTimer *)timer;
 
 @end

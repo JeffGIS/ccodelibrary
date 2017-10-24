@@ -1481,4 +1481,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                          completion:nil];
 }
 
+- (void)displayHotSpotVideo:(nonnull NSTimer *)timer
+{
+    [timer invalidate];
+
+}
+
 @end
