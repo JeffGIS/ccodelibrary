@@ -67,6 +67,10 @@ didReturnFromDate:(NSInteger)fromDate
 + (NSArray<NSNumber *> *)getArrayOfMonthsSpanningTime:(int)time
                                                toTime:(int)toTime;
 
++ (NSArray<NSNumber *> *)getArrayOfQuadWeeksSpanningTime:(int)time
+                                                  toTime:(int)toTime
+                                                maxTimes:(int)maxTimes;
+
 + (void)getCurrentFromDate:(NSInteger *)fromDate
                     toDate:(NSInteger *)toDate;
 

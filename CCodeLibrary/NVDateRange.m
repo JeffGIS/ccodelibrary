@@ -136,8 +136,33 @@
             dateComponents.month = 1;
         }
     }
- 
+    
     return monthArray.copy;
+}
+
++ (NSArray<NSNumber *> *)getArrayOfQuadWeeksSpanningTime:(int)time
+                                                  toTime:(int)toTime
+                                                maxTimes:(int)maxTimes
+{
+    int quadWeekInSeconds = 60 * 60 * 24 * 28;
+    int inc = 1;
+    int numTimes = (toTime - time)/(inc * quadWeekInSeconds);
+    while (numTimes > maxTimes)
+    {
+        inc++;
+        numTimes = (toTime - time)/(inc * quadWeekInSeconds);
+    }
+    NSMutableArray<NSNumber *> *quadArray = NSMutableArray.array;
+    [quadArray addObject:[NSNumber numberWithInteger:time]];
+    for (int i = 0;i < numTimes; i++)
+    {
+        time += quadWeekInSeconds * inc;
+        [quadArray addObject:[NSNumber numberWithInteger:time]];
+    }
+    if (time < toTime)
+        [quadArray addObject:[NSNumber numberWithInteger:toTime]];
+
+    return quadArray.copy;
 }
 
 + (void)getCurrentFromDate:(NSInteger *)fromDate
