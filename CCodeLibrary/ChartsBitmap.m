@@ -104,6 +104,23 @@
         CGContextSetShouldAntialias(context, YES);
         CGRect rect = CGRectZero;
         
+        double minX = DBL_MAX, maxX = 0, minY = 0, maxY = 0;
+        
+        for (ChartsBitmapDataSet *dataSet in _dataSets)
+        {
+            for (DPoint *point in dataSet.data)
+            {
+                minX = MIN(minX, point.x);
+                maxX = MAX(maxX, point.x);
+                minY = MIN(minY, point.y);
+                maxY = MAX(maxY, point.y);
+            }
+        }
+        
+        double xRange = (maxX - minX);
+        double yRange = (maxY - minY);
+        double xFactor = 1, yFactor = 1;
+        
         switch (_format)
         {
             case ChartsBitmapDataFormatDayOfWeek:
@@ -112,22 +129,33 @@
             case ChartsBitmapDataFormatHourOfDay:
                 _numVLines = 13;
                 break;
+            case ChartsBitmapDataFormatYears:
+                _numVLines = (xRange + 1);
             default:
                 break;
         }
-
+        
         _chartAreaWidth = (_chartWidth - _leftMargin - _rightMargin);
         _chartAreaHeight = (_chartHeight - _topMargin - _bottomMargin);
-        
-        rect = CGRectMake(_leftMargin, _topMargin, _chartAreaWidth, _chartAreaHeight);
-        
-        CGContextSetFillColorWithColor(context, _chartBackgroundColor.CGColor);
-        CGContextFillRect(context, rect);
         
         int hLineSpacing = (int)round(_chartAreaHeight / (CGFloat)_numHLines);
         int vLineSpacing = (int)round(_chartAreaWidth / (CGFloat)_numVLines);
         int hLineOffset = (hLineSpacing / 2);
         int vLineOffset = (vLineSpacing / 2);
+        
+        if (_format == ChartsBitmapDataFormatHourOfDay)
+            xRange = 24;
+        
+        if (xRange > 0)
+            xFactor = ((_chartAreaWidth - vLineSpacing) / xRange);
+        
+        if (yRange > 0)
+            yFactor = ((_chartAreaHeight - hLineSpacing) / yRange);
+
+        rect = CGRectMake(_leftMargin, _topMargin, _chartAreaWidth, _chartAreaHeight);
+        
+        CGContextSetFillColorWithColor(context, _chartBackgroundColor.CGColor);
+        CGContextFillRect(context, rect);
         
         CGContextSetStrokeColorWithColor(context, _gridLineColor.CGColor);
         CGContextSetLineWidth(context, _gridLineWidth);
@@ -148,32 +176,6 @@
             CGContextStrokePath(context);
         }
         
-        double minX = DBL_MAX, maxX = 0, minY = 0, maxY = 0;
-        
-        for (ChartsBitmapDataSet *dataSet in _dataSets)
-        {
-            for (DPoint *point in dataSet.data)
-            {
-                minX = MIN(minX, point.x);
-                maxX = MAX(maxX, point.x);
-                minY = MIN(minY, point.y);
-                maxY = MAX(maxY, point.y);
-            }
-        }
-        
-        double xRange = (maxX - minX);
-        double yRange = (maxY - minY);
-        double xFactor = 1, yFactor = 1;
-        
-        if (_format == ChartsBitmapDataFormatHourOfDay)
-            xRange = 24;
-        
-        if (xRange > 0)
-            xFactor = ((_chartAreaWidth - vLineSpacing) / xRange);
-        
-        if (yRange > 0)
-            yFactor = ((_chartAreaHeight - hLineSpacing) / yRange);
-        
         for (int i = 0; i < _dataSets.count; i++)
         {
             ChartsBitmapDataSet *dataSet = _dataSets[i];
@@ -193,16 +195,15 @@
                     CGContextSetLineWidth(context, dataSet.lineWidth);
                     CGContextSetLineJoin(context, kCGLineJoinRound);
                     
-                    CGContextMoveToPoint(context, (_leftMargin + (dataSet.data[0].x * xFactor) + vLineOffset + offset),
-                                         (_topMargin + _chartAreaHeight - (dataSet.data[0].y * yFactor))
-                                         - hLineOffset - offset);
+                    CGContextMoveToPoint(context,
+                         (_leftMargin + ((dataSet.data[0].x - minX) * xFactor) + vLineOffset + offset),
+                         (_topMargin + _chartAreaHeight - (dataSet.data[0].y * yFactor)) - hLineOffset - offset);
                     
                     for (int i = 1; i < dataSet.data.count; i++)
                     {
                         CGContextAddLineToPoint(context,
-                                                (_leftMargin + (dataSet.data[i].x * xFactor) + vLineOffset + offset),
-                                                (_topMargin + _chartAreaHeight - (dataSet.data[i].y * yFactor)
-                                                 - hLineOffset - offset));
+                            (_leftMargin + ((dataSet.data[i].x - minX) * xFactor) + vLineOffset + offset),
+                            (_topMargin + _chartAreaHeight - (dataSet.data[i].y * yFactor) - hLineOffset - offset));
                     }
                     
                     CGContextStrokePath(context);
@@ -213,13 +214,14 @@
                     
                     for (int i = 0; i < dataSet.data.count; i++)
                     {
-                        CGPoint point = CGPointMake((_leftMargin + (dataSet.data[i].x * xFactor) + vLineOffset + offset),
-                                                    (_topMargin + _chartAreaHeight - (dataSet.data[i].y * yFactor)
-                                                     - hLineOffset - offset));
+                        CGPoint point = CGPointMake(
+                            (_leftMargin + ((dataSet.data[i].x - minX) * xFactor) + vLineOffset + offset),
+                            (_topMargin + _chartAreaHeight - (dataSet.data[i].y * yFactor) - hLineOffset - offset));
                         
-                        rect = CGRectMake((point.x - (dataSet.circleRadius / 2)),
-                                          (point.y - (dataSet.circleRadius / 2)),
-                                          dataSet.circleRadius, dataSet.circleRadius);
+                        rect = CGRectMake
+                        ((point.x - (dataSet.circleRadius / 2)),
+                         (point.y - (dataSet.circleRadius / 2)),
+                         dataSet.circleRadius, dataSet.circleRadius);
                         
                         CGContextFillEllipseInRect(context, rect);
                         CGContextStrokeEllipseInRect(context, rect);
@@ -231,9 +233,10 @@
                     
                     for (DPoint *point in dataSet.data)
                     {
-                        rect = CGRectMake((_leftMargin + (point.x * xFactor) - (dataSet.barWidth / 2) + vLineOffset),
-                                          (_topMargin + _chartAreaHeight - (point.y * yFactor) - hLineOffset),
-                                          dataSet.barWidth, ((point.y * yFactor) - hLineOffset));
+                        rect = CGRectMake
+                        ((_leftMargin + ((point.x - minX) * xFactor) - (dataSet.barWidth / 2) + vLineOffset),
+                         (_topMargin + _chartAreaHeight - (point.y * yFactor) - hLineOffset),
+                         dataSet.barWidth, ((point.y * yFactor) - hLineOffset));
                         
                         CGContextFillRect(context, rect);
                     }
@@ -252,8 +255,9 @@
         rect = CGRectMake((_chartWidth - _rightMargin), 0.0, _rightMargin, _chartHeight);
         CGContextFillRect(context, rect);
         
-        rect = CGRectMake((_leftMargin - (_borderWidth / 2)), (_topMargin - (_borderWidth / 2)),
-                          (_chartAreaWidth + _borderWidth), (_chartAreaHeight + _borderWidth));
+        rect = CGRectMake
+        ((_leftMargin - (_borderWidth / 2)), (_topMargin - (_borderWidth / 2)),
+         (_chartAreaWidth + _borderWidth), (_chartAreaHeight + _borderWidth));
         
         CGContextSetStrokeColorWithColor(context, _borderColor.CGColor);
         CGContextSetLineWidth(context, _borderWidth);
@@ -298,9 +302,15 @@
                     text = [[NSAttributedString alloc] initWithString:hoursArray[i]
                                                            attributes:textAttributes];
                     break;
+                case ChartsBitmapDataFormatYears:
+                    value = [NSString stringWithFormat:@"%i", (int)(minX + i)];
+                    
+                    text = [[NSAttributedString alloc] initWithString:value
+                                                           attributes:textAttributes];
+                    break;
                 default:{
                     double gridValue = (xRange / (double)(_numVLines - 1));
-                    value = [NSString stringWithFormat:@"%.1f", (i * gridValue)];
+                    value = [NSString stringWithFormat:@"%.1f", (minX + (i * gridValue))];
                     
                     text = [[NSAttributedString alloc] initWithString:value
                                                            attributes:textAttributes];

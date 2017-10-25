@@ -20,6 +20,7 @@ typedef NS_ENUM(NSInteger, ChartsBitmapDataFormat)
     ChartsBitmapDataFormatNone,
     ChartsBitmapDataFormatHourOfDay,
     ChartsBitmapDataFormatDayOfWeek,
+    ChartsBitmapDataFormatYears,
 };
 
 @import Foundation;
