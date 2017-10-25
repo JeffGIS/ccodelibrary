@@ -31,6 +31,16 @@ static int COLORFAC=1;
 
 static int ii;
 
+- (BOOL)continueProcessing
+{
+    if (self.processingID <= 0)
+        return YES;
+    if (self.processingID == CRAPI.sharedInstance.keepProcessing)
+        return YES;
+    
+    return NO;
+}
+
 - (void) writeImageToPhotos
 {
     if (COLORFAC <= 1)
@@ -72,6 +82,7 @@ static int ii;
         self.minTime = INT_MAX;
         self.currentTime = NSDate.date.timeIntervalSince1970;
         self.compareFactor = 1;
+        self.path = [self path];
     }
     
     return self;
@@ -101,7 +112,7 @@ static int ii;
 {
     if (opened && _isOpen)
     {
-        if (_haveTimeLineDB)
+        if (_haveTimeLineDB && [self continueProcessing])
             [self commitTransaction];
         
         SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);

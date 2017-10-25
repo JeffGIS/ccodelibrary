@@ -66,6 +66,7 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 
 @property NSString * areaType;
 @property NSString * adjustValue;
+@property int processingID;
 @property int loadPass;
 @property int numAreas;
 @property int nCounts;
