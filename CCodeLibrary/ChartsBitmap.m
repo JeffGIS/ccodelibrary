@@ -131,6 +131,7 @@
                 break;
             case ChartsBitmapDataFormatYears:
                 _numVLines = (xRange + 1);
+                break;
             default:
                 break;
         }
