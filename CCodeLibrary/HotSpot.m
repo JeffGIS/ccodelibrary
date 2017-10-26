@@ -247,14 +247,15 @@
     long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:file
                                                                         error:nil].fileSize;
     UIImage *image = [UIImage imageWithContentsOfFile:file];
-    BOOL st = [NSFileManager.defaultManager removeItemAtPath:file error:nil];
     //file = [NSString stringWithFormat:@"%@/map_%i.png", NSTemporaryDirectory(),pageNumber];
     [UIImagePNGRepresentation(image) writeToFile:outFile atomically:YES];
     
     fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:outFile
                                                               error:nil].fileSize;
     CGColorSpaceRelease(colorSpace);
-    
+    image = nil;
+    BOOL st = [NSFileManager.defaultManager removeItemAtPath:file error:nil];
+
     if (bmData)
         free (bmData);
     return outFile;
