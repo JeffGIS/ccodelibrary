@@ -7,7 +7,7 @@
 @interface HotSpotVideoVC ()
 
 @property (nonatomic) UIImageView *imageView1, *imageView2;
-@property (nonatomic, copy) NSArray <UIImage *> *images;
+@property (nonatomic) NSMutableArray <UIImage *> *images;
 @property NSInteger currentIndex;
 
 @end
@@ -20,14 +20,26 @@
     
     _currentIndex = 0;
     
-    for (NSString *filepath in CRAPI.sharedInstance.hsv.imageFiles)
+    for (NSString *filePath in CRAPI.sharedInstance.hsv.imageFiles)
     {
-        NSLog(@"%@", filepath);
+        UIImage *image = [UIImage imageWithContentsOfFile:filePath];
+        [_images addObject:image];
     }
     
-    _imageView1 = UIImageView.new;
-    [self setupImageView:_imageView1];
-    [self setupImageView:_imageView2];
+    if (_images.count)
+    {
+        _imageView1 = UIImageView.new;
+        [self setupImageView:_imageView1];
+        _imageView1.image = _images[0];
+    }
+    
+    if (_images.count > 1)
+    {
+        _imageView2 = UIImageView.new;
+        [self setupImageView:_imageView2];
+        _imageView2.image = _images[1];
+        _imageView2.alpha = 0.0;
+    }
     
     UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     returnButton.translatesAutoresizingMaskIntoConstraints = NO;
