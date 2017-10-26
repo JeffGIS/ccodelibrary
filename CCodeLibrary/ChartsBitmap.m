@@ -88,6 +88,9 @@
         
         //initialize data sets array
         _dataSets = NSMutableArray.array;
+        
+        //default settings
+        _useOffset = YES;
     }
     
     return self;

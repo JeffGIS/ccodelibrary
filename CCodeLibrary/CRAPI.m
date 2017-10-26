@@ -11,6 +11,7 @@
 #include "shr.h"
 #import "NVDocumentManager.h"
 #import "ChartsBitmapVC.h"
+#import "HotSpotVideoVC.h"
 
 @implementation TimeRange
 
@@ -1465,13 +1466,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     [timer invalidate];
     
-    [self performSelectorOnMainThread:@selector(displayChart)
-                           withObject:nil
-                        waitUntilDone:YES];
-}
-
-- (void)displayChart
-{
     ChartsBitmapVC *chartsVC = ChartsBitmapVC.new;
     chartsVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     UIViewController *parentVC = UIApplication.sharedApplication.keyWindow.rootViewController;
@@ -1481,10 +1475,17 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                          completion:nil];
 }
 
-- (void)displayHotSpotVideo:(nonnull NSTimer *)timer
+- (void)displayHotSpotVideo:(NSTimer *)timer
 {
     [timer invalidate];
-
+    
+    HotSpotVideoVC *hsvVC = HotSpotVideoVC.new;
+    hsvVC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    UIViewController *parentVC = UIApplication.sharedApplication.keyWindow.rootViewController;
+    
+    [parentVC presentViewController:hsvVC
+                           animated:YES
+                         completion:nil];
 }
 
 @end

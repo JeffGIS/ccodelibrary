@@ -95,6 +95,8 @@
 		69B36F1B1BCB1C8F004C4B69 /* NVDateRange.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69B36F181BCB0F30004C4B69 /* NVDateRange.h */; };
 		69B5F5611F98EDF6007603B5 /* ChartsBitmap.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B5F5601F98EDF6007603B5 /* ChartsBitmap.m */; };
 		69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */ = {isa = PBXBuildFile; fileRef = 69BB52761CA4689E00DA7BC2 /* ExitApp.c */; };
+		69BD0D6D1FA22D3400B3E6E0 /* HotSpotVideoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69BD0D6C1FA22D3400B3E6E0 /* HotSpotVideoVC.m */; };
+		69BD0D6E1FA22D6A00B3E6E0 /* HotSpotVideoVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69BD0D6B1FA22D3400B3E6E0 /* HotSpotVideoVC.h */; };
 		69C3DFA31CB3807200DC1779 /* PercentInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB95A1A51CB16EF500158B40 /* PercentInArea.h */; };
 		69C3DFA61CB4113A00DC1779 /* NVWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C3DFA51CB4113A00DC1779 /* NVWebView.m */; };
 		69C3DFA71CB4118D00DC1779 /* NVWebView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C3DFA41CB4113A00DC1779 /* NVWebView.h */; };
@@ -399,6 +401,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69BD0D6E1FA22D6A00B3E6E0 /* HotSpotVideoVC.h in CopyFiles */,
 				EBC2BC901FA1A2CC00F2F329 /* HotSpotVideo.h in CopyFiles */,
 				698A1C9D1F9E509500D22C03 /* ChartsBitmapVC.h in CopyFiles */,
 				697EC2E81F98FDA1000C3F9A /* ChartsBitmap.h in CopyFiles */,
@@ -651,6 +654,8 @@
 		69B5F5601F98EDF6007603B5 /* ChartsBitmap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChartsBitmap.m; sourceTree = "<group>"; };
 		69BB52761CA4689E00DA7BC2 /* ExitApp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ExitApp.c; sourceTree = "<group>"; };
 		69BB52771CA4689E00DA7BC2 /* ExitApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExitApp.h; sourceTree = "<group>"; };
+		69BD0D6B1FA22D3400B3E6E0 /* HotSpotVideoVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HotSpotVideoVC.h; sourceTree = "<group>"; };
+		69BD0D6C1FA22D3400B3E6E0 /* HotSpotVideoVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HotSpotVideoVC.m; sourceTree = "<group>"; };
 		69C3DFA41CB4113A00DC1779 /* NVWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVWebView.h; sourceTree = "<group>"; };
 		69C3DFA51CB4113A00DC1779 /* NVWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVWebView.m; sourceTree = "<group>"; };
 		69C441A81BB474B200D026A7 /* NVTabBarEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTabBarEdit.h; sourceTree = "<group>"; };
@@ -999,7 +1004,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		69B5F55E1F98EDA7007603B5 /* Bitmaps */ = {
+		69B5F55E1F98EDA7007603B5 /* ChartsBitmap */ = {
 			isa = PBXGroup;
 			children = (
 				69B5F55F1F98EDF6007603B5 /* ChartsBitmap.h */,
@@ -1007,7 +1012,18 @@
 				698A1C9A1F9E504800D22C03 /* ChartsBitmapVC.h */,
 				698A1C9B1F9E504800D22C03 /* ChartsBitmapVC.m */,
 			);
-			name = Bitmaps;
+			name = ChartsBitmap;
+			sourceTree = "<group>";
+		};
+		69BD0D6A1FA22CF800B3E6E0 /* HotSpotVideo */ = {
+			isa = PBXGroup;
+			children = (
+				EBC2BC8D1FA1A19D00F2F329 /* HotSpotVideo.h */,
+				EBC2BC8E1FA1A19D00F2F329 /* HotSpotVideo.m */,
+				69BD0D6B1FA22D3400B3E6E0 /* HotSpotVideoVC.h */,
+				69BD0D6C1FA22D3400B3E6E0 /* HotSpotVideoVC.m */,
+			);
+			name = HotSpotVideo;
 			sourceTree = "<group>";
 		};
 		69D5EFAF1C72377D004CE1C0 /* Calendar Interface */ = {
@@ -1163,7 +1179,8 @@
 		A94A771E19F813810062906E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				69B5F55E1F98EDA7007603B5 /* Bitmaps */,
+				69BD0D6A1FA22CF800B3E6E0 /* HotSpotVideo */,
+				69B5F55E1F98EDA7007603B5 /* ChartsBitmap */,
 				69D5EFAF1C72377D004CE1C0 /* Calendar Interface */,
 				A9C525CE1A3B59880056711F /* Colors.h */,
 				A9C525CF1A3B59880056711F /* Colors.m */,
@@ -1425,8 +1442,6 @@
 				BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */,
 				1F4972A01F6C513600A60B63 /* DPoint.h */,
 				1F4972A11F6C513600A60B63 /* DPoint.m */,
-				EBC2BC8D1FA1A19D00F2F329 /* HotSpotVideo.h */,
-				EBC2BC8E1FA1A19D00F2F329 /* HotSpotVideo.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1698,6 +1713,7 @@
 				BB3CF30B1E5CE1410064EC9C /* ArrayOfNumbers.m in Sources */,
 				690746E51CD41DCB00B31D8F /* NVTextViewAlert.m in Sources */,
 				694F00791C1B4BBA0074AF72 /* MapToolbar.m in Sources */,
+				69BD0D6D1FA22D3400B3E6E0 /* HotSpotVideoVC.m in Sources */,
 				69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */,
 				A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */,
 				A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */,
