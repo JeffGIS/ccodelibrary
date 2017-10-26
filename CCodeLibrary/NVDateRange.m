@@ -146,11 +146,11 @@
 {
     int quadWeekInSeconds = 60 * 60 * 24 * 28;
     int inc = 1;
-    int numTimes = (toTime - time)/(inc * quadWeekInSeconds);
+    int numTimes = (toTime - time)/(inc * quadWeekInSeconds) + 1;
     while (numTimes > maxTimes)
     {
         inc++;
-        numTimes = (toTime - time)/(inc * quadWeekInSeconds);
+        numTimes = (toTime - time)/(inc * quadWeekInSeconds) + 1;
     }
     NSMutableArray<NSNumber *> *quadArray = NSMutableArray.array;
     [quadArray addObject:[NSNumber numberWithInteger:time]];

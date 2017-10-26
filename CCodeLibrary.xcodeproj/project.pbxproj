@@ -1402,6 +1402,8 @@
 				EB0E4FFC1C6288BF00849766 /* DispersePoint.m */,
 				EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */,
 				EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */,
+				1F4972A01F6C513600A60B63 /* DPoint.h */,
+				1F4972A11F6C513600A60B63 /* DPoint.m */,
 				69BB52761CA4689E00DA7BC2 /* ExitApp.c */,
 				69BB52771CA4689E00DA7BC2 /* ExitApp.h */,
 				1F829A981C342BDD00DD429C /* FileLister.h */,
@@ -1436,12 +1438,10 @@
 				EB0E4FF41C62785200849766 /* SymbolDictionary.m */,
 				EB23A7941CA04AF700F83E6C /* TextOptions.h */,
 				EB23A7951CA04AF700F83E6C /* TextOptions.m */,
-				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
-				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
 				BB9B8FA91EAE8A6600AFB3CA /* TimeLine.h */,
 				BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */,
-				1F4972A01F6C513600A60B63 /* DPoint.h */,
-				1F4972A11F6C513600A60B63 /* DPoint.m */,
+				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
+				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
