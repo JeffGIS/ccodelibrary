@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "HotSpotVideo.h"
+#import "UserDefaults.h"
 
 @implementation HotSpotVideo
 
@@ -15,6 +16,11 @@
     }
 
     return self;
+}
+
+- (void)dealloc
+{
+    [UserDefaults.defaults saveArray:_imageFiles.copy forKey:@"HotSpotVideoImageFiles"];
 }
 
 @end
