@@ -176,6 +176,7 @@ double AZMLatLon (LLPOINT pt1,LLPOINT pt2);
 double AZMToHeading (double azm);
 void BoundsToPoints (LPMNMXCORD pBounds, LPDPOINT Points,LPDOUBLE pAZ);
 LPSTR AddCommas (LPSTR InBuff);
+CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void **bmData);
 Bool WriteBitmapDataToFile (LPSTR file,int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void *bmData);
 CORNERPOINTS * CORNERPOINTS_view (CORNERPOINTS * pcp);
 LPMNMXCORD MNMXCORD_view (LPMNMXCORD pmm);

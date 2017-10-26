@@ -69,6 +69,7 @@
 #import "ArrayOfNumbers.h"
 #import "StringFunctions.h"
 #import "ChartsBitmap.h"
+#import "HotSpotVideo.h"
 
 @interface CCodeLibrary : NSObject
 

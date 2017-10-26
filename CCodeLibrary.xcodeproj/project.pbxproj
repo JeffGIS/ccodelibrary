@@ -376,6 +376,8 @@
 		EBC01D301BED1C8C0004C751 /* ven404.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D051BED1C8C0004C751 /* ven404.c */; };
 		EBC01D311BED1C8C0004C751 /* zatan2.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01D061BED1C8C0004C751 /* zatan2.c */; };
 		EBC1F6401F97DB0900BBEC69 /* PDFCreator.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB9C3C2A1F914C8600E95644 /* PDFCreator.h */; };
+		EBC2BC8F1FA1A19D00F2F329 /* HotSpotVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC2BC8E1FA1A19D00F2F329 /* HotSpotVideo.m */; };
+		EBC2BC901FA1A2CC00F2F329 /* HotSpotVideo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBC2BC8D1FA1A19D00F2F329 /* HotSpotVideo.h */; };
 		EBFC2A301BE90A0F00E0C1B3 /* DisplayCharacteristics.m in Sources */ = {isa = PBXBuildFile; fileRef = EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */; };
 		EBFC2A311BE90AE900E0C1B3 /* DisplayCharacteristics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */; };
 /* End PBXBuildFile section */
@@ -397,6 +399,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EBC2BC901FA1A2CC00F2F329 /* HotSpotVideo.h in CopyFiles */,
 				698A1C9D1F9E509500D22C03 /* ChartsBitmapVC.h in CopyFiles */,
 				697EC2E81F98FDA1000C3F9A /* ChartsBitmap.h in CopyFiles */,
 				EBC1F6401F97DB0900BBEC69 /* PDFCreator.h in CopyFiles */,
@@ -964,6 +967,8 @@
 		EBC01D041BED1C8C0004C751 /* vearth.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vearth.c; sourceTree = "<group>"; };
 		EBC01D051BED1C8C0004C751 /* ven404.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ven404.c; sourceTree = "<group>"; };
 		EBC01D061BED1C8C0004C751 /* zatan2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zatan2.c; sourceTree = "<group>"; };
+		EBC2BC8D1FA1A19D00F2F329 /* HotSpotVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HotSpotVideo.h; sourceTree = "<group>"; };
+		EBC2BC8E1FA1A19D00F2F329 /* HotSpotVideo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HotSpotVideo.m; sourceTree = "<group>"; };
 		EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayCharacteristics.h; sourceTree = "<group>"; };
 		EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayCharacteristics.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1420,6 +1425,8 @@
 				BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */,
 				1F4972A01F6C513600A60B63 /* DPoint.h */,
 				1F4972A11F6C513600A60B63 /* DPoint.m */,
+				EBC2BC8D1FA1A19D00F2F329 /* HotSpotVideo.h */,
+				EBC2BC8E1FA1A19D00F2F329 /* HotSpotVideo.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1777,6 +1784,7 @@
 				A94A771619F8079E0062906E /* FacilityPoint.m in Sources */,
 				EB86BFA71B0B62520074728E /* minilzo.c in Sources */,
 				EBC01D171BED1C8C0004C751 /* gplan.c in Sources */,
+				EBC2BC8F1FA1A19D00F2F329 /* HotSpotVideo.m in Sources */,
 				A96B07BF19FBF276005A73B0 /* LegendView.m in Sources */,
 				EBB3C42C1C36F6E000054DB5 /* PointInAreas.m in Sources */,
 				A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */,

@@ -10,7 +10,6 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "CCodeTypes.h"
 
-CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void **bmData);
 dbounds getAreaBounds (int nPoints,LPDPOINT pPoints);
 
 

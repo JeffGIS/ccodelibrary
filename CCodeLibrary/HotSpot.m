@@ -132,16 +132,19 @@
 }
 
 - (void) display:(CGContextRef)context
+      gridNumber:(int)inGrid
    compareFactor:(double*)compareFactor
 {
     CGRect rect;
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
     CGFloat colors[4] = {1,1,1,1};
-    
+    int iGrid = 0;
+    if (inGrid < 0)
+        iGrid = -inGrid - 1;
     colors[0] = 1;
     rect.size.width = 1;
     rect.size.height = 1;
-    if (_nGrids == 1 || !_counts[1])
+    if (inGrid < 0 || _nGrids == 1 || !_counts[1])
     {
         int * grid = _grids[0];
         for (int row = 0;row < _height; row++)
@@ -219,6 +222,44 @@
     CGColorSpaceRelease(colorspace);
 }
 
+- (NSString *) writeGrid:(int)iGrid
+            toFile:(NSString*)file
+{
+    void *bmData = NULL;
+    NSString * outFile = [file stringByAppendingString:@".png"];
+    file = [file stringByAppendingString:@".bmp"];
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    
+    CGContextRef context = createBitmapContext(_width, _height, colorSpace, &bmData);
+    CGContextTranslateCTM(context, 0, _height);
+    CGContextScaleCTM(context, 1, -1);
+    CGRect colorRect;
+    colorRect.origin.x = 0;
+    colorRect.origin.y = 0;
+    colorRect.size.width = _width;
+    colorRect.size.height = _height;
+    UIColor *white = [UIColor whiteColor];
+    CGContextSetFillColorWithColor(context,[white CGColor]);
+    CGContextFillRect (context,colorRect);
+    
+    [self display:context gridNumber:-(iGrid+1) compareFactor:0];
+    BOOL rtn = WriteBitmapDataToFile((LPSTR)file.UTF8String,_width, _height, colorSpace, bmData);
+    long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:file
+                                                                        error:nil].fileSize;
+    UIImage *image = [UIImage imageWithContentsOfFile:file];
+    BOOL st = [NSFileManager.defaultManager removeItemAtPath:file error:nil];
+    //file = [NSString stringWithFormat:@"%@/map_%i.png", NSTemporaryDirectory(),pageNumber];
+    [UIImagePNGRepresentation(image) writeToFile:outFile atomically:YES];
+    
+    fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:outFile
+                                                              error:nil].fileSize;
+    CGColorSpaceRelease(colorSpace);
+    
+    if (bmData)
+        free (bmData);
+    return outFile;
+    
+}
 - (Bool)dump:(NSString *)outFile
 {
     int igrid = 0;

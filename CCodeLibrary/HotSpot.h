@@ -34,7 +34,10 @@
            whichGrid:(int)igrid;
 
 - (void) display:(CGContextRef)context
+      gridNumber:(int)inGrid
    compareFactor:(double*)compareFactor;
 - (Bool) dump:(NSString*)outFile;
+- (NSString *) writeGrid:(int)iGrid
+            toFile:(NSString*)file;
 
 @end

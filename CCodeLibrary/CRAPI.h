@@ -12,6 +12,7 @@
 #import "MapToolbar.h"
 #import "NVDocumentManager.h"
 #import "NVSendEmail.h"
+#import "HotSpotVideo.h"
 
 #define MANAGEMENT_MODULE       1
 #define PRELIM_MODULE           2
@@ -141,6 +142,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonnull)Facility * currentFacility;
 @property (nonatomic) int facilityFieldDisplayOpt;
 @property (nonatomic, nullable) NSMutableArray <ChartsBitmap *> *chartBitmaps;
+@property (nonatomic, nullable) HotSpotVideo *hsv;
 
 + (nullable CRAPI *)sharedInstance;
 
