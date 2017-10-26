@@ -146,7 +146,7 @@
     rect.size.height = 1;
     if (inGrid < 0 || _nGrids == 1 || !_counts[1])
     {
-        int * grid = _grids[0];
+        int * grid = _grids[iGrid];
         for (int row = 0;row < _height; row++)
         {
             rect.origin.y = row;
