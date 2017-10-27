@@ -9,11 +9,12 @@ typedef NS_ENUM(NSInteger, HSVideoTypes)
     HSTypeDow,
     HSTypeHour,
 };
+
 @interface HotSpotVideo : NSObject
 
 @property int width, height, numImages;
 @property HSVideoTypes type;
-@property (nonatomic) NSMutableArray *imageFiles;
-@property (nonatomic) NSMutableArray *timeRanges;
+@property (nonatomic) NSMutableArray *imageFiles, *timeRanges;
+@property (nonatomic, copy) NSString *backgroundImageFile;
 
 @end

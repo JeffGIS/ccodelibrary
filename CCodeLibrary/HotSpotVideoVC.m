@@ -8,11 +8,12 @@
 
 @interface HotSpotVideoVC ()
 
-@property (nonatomic) UIImageView *imageView1, *imageView2;
+@property (nonatomic) UIImageView *imageView1, *imageView2, *backgroundImageView;
 @property (nonatomic) NSMutableArray <UIImage *> *images;
-@property NSInteger currentIndex;
+@property NSInteger index1, index2;
 @property (nonatomic) UISlider *slider;
-@property CGFloat yMargin, xMargin;
+@property CGFloat yMargin, xMargin, timeInterval, imagesPerSecond;
+@property (nonatomic) NSTimer *timer;
 
 @end
 
@@ -22,9 +23,13 @@
 {
     [super viewDidLoad];
     
-    _currentIndex = 0;
+    _index1 = 0;
+    _index2 = 1;
     _images = NSMutableArray.array;
-    _xMargin = 20.0, _yMargin = 60.0;
+    _xMargin = 20.0;
+    _yMargin = 60.0;
+    _timeInterval = 0.02;
+    _imagesPerSecond = 2.0;
     
     for (NSString *filePath in CRAPI.sharedInstance.hsv.imageFiles)
     {
@@ -36,14 +41,14 @@
     {
         _imageView1 = UIImageView.new;
         [self setupImageView:_imageView1];
-        _imageView1.image = _images[0];
+        _imageView1.image = _images[_index1];
     }
     
     if (_images.count > 1)
     {
         _imageView2 = UIImageView.new;
         [self setupImageView:_imageView2];
-        _imageView2.image = _images[1];
+        _imageView2.image = _images[_index2];
         _imageView2.alpha = 0.0;
         
         _slider = UISlider.new;
@@ -57,6 +62,16 @@
         [_slider addTarget:self
                     action:@selector(sliderValueChanged:)
           forControlEvents:UIControlEventValueChanged];
+    }
+    
+    if (CRAPI.sharedInstance.hsv.backgroundImageFile)
+    {
+        _backgroundImageView = UIImageView.new;
+        [self setupImageView:_backgroundImageView];
+        _backgroundImageView.alpha = 0.1;
+        
+        _backgroundImageView.image = [UIImage imageWithContentsOfFile:
+                                      CRAPI.sharedInstance.hsv.backgroundImageFile];
     }
     
     UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -73,6 +88,15 @@
     [self.view addSubview:returnButton];
     [returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:_xMargin];
     [returnButton constrainTopToAnchor:self.view.topAnchor constant:4.0];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    _timer = [NSTimer scheduledTimerWithTimeInterval:_timeInterval
+                                              target:self
+                                            selector:@selector(moveToNextFrame)
+                                            userInfo:nil
+                                             repeats:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -92,17 +116,40 @@
 
 - (void)returnButtonTapped:(UIButton *)button
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [_timer invalidate];
     CRAPI.sharedInstance.hsv = nil;
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)sliderValueChanged:(UISlider *)slider
 {
-    int image1 = MIN((int)slider.value, ((int)_images.count - 2));
-    int image2 = MIN(MAX((int)(slider.value + 1), 1), ((int)_images.count - 1));
-    _imageView1.image = _images[image1];
-    _imageView2.image = _images[image2];
-    _imageView2.alpha = (slider.value - image1);
+    int idx1 = MIN((int)slider.value, ((int)_images.count - 2));
+    int idx2 = MIN(MAX((int)(slider.value + 1), 1), ((int)_images.count - 1));
+    
+    if (_index1 != idx1)
+    {
+        _index1 = idx1;
+        _imageView1.image = _images[_index1];
+    }
+    
+    if (_index2 != idx2)
+    {
+        _index2 = idx2;
+        _imageView2.image = _images[_index2];
+    }
+    
+    _imageView2.alpha = (slider.value - idx1);
+}
+
+- (void)moveToNextFrame
+{
+    CGFloat increment = (_timeInterval * _imagesPerSecond);
+    
+    [_slider setValue:(_slider.value + increment) animated:NO];
+    [self sliderValueChanged:_slider];
+    
+    if (_slider.value > (_slider.maximumValue - increment))
+        [_timer invalidate];
 }
 
 @end

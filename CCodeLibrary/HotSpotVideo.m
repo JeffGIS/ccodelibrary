@@ -21,9 +21,16 @@
 
 - (void)dealloc
 {
-    [UserDefaults.defaults saveArray:_imageFiles.copy forKey:@"HotSpotVideoImageFiles"];
-    [UserDefaults.defaults saveArray:_timeRanges.copy forKey:@"HotSpotVideoTimeRanges"];
+    if (_imageFiles && _imageFiles.count)
+        [UserDefaults.defaults saveArray:_imageFiles.copy forKey:@"HotSpotVideoImageFiles"];
+    
+    if (_timeRanges && _timeRanges.count)
+        [UserDefaults.defaults saveArray:_timeRanges.copy forKey:@"HotSpotVideoTimeRanges"];
+    
     [UserDefaults.defaults saveInteger:_type forKey:@"HotSpotVideoType"];
+    
+    if (_backgroundImageFile)
+        [UserDefaults.defaults saveString:_backgroundImageFile forKey:@"HotSpotBackgroundImageFile"];
 }
 
 @end
