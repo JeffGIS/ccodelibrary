@@ -3,6 +3,7 @@
 
 #import "HotSpotVideo.h"
 #import "UserDefaults.h"
+#import "CRAPI.h"
 
 @implementation HotSpotVideo
 
@@ -13,7 +14,6 @@
     if (self)
     {
         _imageFiles = NSMutableArray.array;
-        _timeRanges = NSMutableArray.array;
     }
 
     return self;
