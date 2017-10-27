@@ -15,6 +15,7 @@
 @property (nonatomic) NSTimer *timer;
 @property BOOL killTap;
 @property (nonatomic) UILabel *infoLabel;
+@property int labelUpdateFactor, timerCounter;
 
 @end
 
@@ -31,6 +32,8 @@
     _timeInterval = 0.02;
     _imagesPerSecond = 2.0;
     _killTap = NO;
+    _labelUpdateFactor = 10;
+    _timerCounter = 0;
     
     if (CRAPI.sharedInstance.hsv.numImages)
     {
@@ -157,6 +160,9 @@
 
 - (void)sliderValueChanged:(UISlider *)slider
 {
+    if (_timer.valid)
+        _timerCounter++;
+    
     int index = MIN((int)slider.value, (CRAPI.sharedInstance.hsv.numImages - 2));
     
     if (_index1 != index)
@@ -174,17 +180,20 @@
     float offset = (slider.value - index);
     _imageView2.alpha = offset;
     
-    int timeRange = (CRAPI.sharedInstance.hsv.timeRanges[index + 1].intValue -
-                     CRAPI.sharedInstance.hsv.timeRanges[index].intValue);
-    
-    int time = (CRAPI.sharedInstance.hsv.timeRanges[index].intValue + (timeRange * offset));
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:time];
-    
-    NSString *dateString = [NSDateFormatter localizedStringFromDate:date
-                                                          dateStyle:NSDateFormatterLongStyle
-                                                          timeStyle:NSDateFormatterNoStyle];
-    
-    _infoLabel.text = dateString;
+    if (!_timer.valid || (_timerCounter % _labelUpdateFactor == 0))
+    {
+        int timeRange = (CRAPI.sharedInstance.hsv.timeRanges[index + 1].intValue -
+                         CRAPI.sharedInstance.hsv.timeRanges[index].intValue);
+        
+        int time = (CRAPI.sharedInstance.hsv.timeRanges[index].intValue + (timeRange * offset));
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:time];
+        
+        NSString *dateString = [NSDateFormatter localizedStringFromDate:date
+                                                              dateStyle:NSDateFormatterLongStyle
+                                                              timeStyle:NSDateFormatterNoStyle];
+        
+        _infoLabel.text = dateString;
+    }
 }
 
 - (void)sliderTouchedDown:(UISlider *)slider
