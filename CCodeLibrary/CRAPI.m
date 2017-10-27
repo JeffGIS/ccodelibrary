@@ -39,6 +39,8 @@
     
     if (self)
     {
+        _vectorQueue = dispatch_queue_create("vectorQueue", NULL);
+
         _newDataset = CURBRAMPS;
         //_newDataset = ALLEYWALLS;
         _kp = 0;

@@ -143,6 +143,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic) int facilityFieldDisplayOpt;
 @property (nonatomic, nullable) NSMutableArray <ChartsBitmap *> *chartBitmaps;
 @property (nonatomic, nullable) HotSpotVideo *hsv;
+@property (nonatomic) dispatch_queue_t vectorQueue;
 
 + (nullable CRAPI *)sharedInstance;
 
