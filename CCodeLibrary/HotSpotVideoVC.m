@@ -14,6 +14,7 @@
 @property CGFloat yMargin, xMargin, timeInterval, imagesPerSecond;
 @property (nonatomic) NSTimer *timer;
 @property BOOL killTap;
+@property (nonatomic) UILabel *infoLabel;
 
 @end
 
@@ -84,6 +85,21 @@
                                       CRAPI.sharedInstance.hsv.backgroundImageFile];
     }
     
+    if (CRAPI.sharedInstance.hsv.timeRanges.count)
+    {
+        _infoLabel = UILabel.new;
+        _infoLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        _infoLabel.font = [UIFont systemFontOfSize:32.0];
+        _infoLabel.textColor = UIColor.whiteColor;
+        
+        _infoLabel.text = [NSString stringWithFormat:@"%i",
+                           CRAPI.sharedInstance.hsv.timeRanges[0].intValue];
+        
+        [self.view addSubview:_infoLabel];
+        [_infoLabel constrainCenterXToAnchor:self.view.centerXAnchor];
+        [_infoLabel constrainBottomToAnchor:self.view.bottomAnchor constant:-_yMargin];
+    }
+    
     UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     returnButton.translatesAutoresizingMaskIntoConstraints = NO;
     returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
@@ -129,7 +145,7 @@
     imageView.clipsToBounds = YES;
     
     [self.view addSubview:imageView];
-    [imageView constrainToView:self.view leading:0.0 trailing:0.0 top:_yMargin bottom:-_yMargin];
+    [imageView constrainToView:self.view leading:0.0 trailing:0.0 top:_yMargin bottom:(-_yMargin * 2.0)];
 }
 
 - (void)returnButtonTapped:(UIButton *)button
@@ -141,22 +157,34 @@
 
 - (void)sliderValueChanged:(UISlider *)slider
 {
-    int idx1 = MIN((int)slider.value, (CRAPI.sharedInstance.hsv.numImages - 2));
-    int idx2 = MIN(MAX((int)(slider.value + 1), 1), (CRAPI.sharedInstance.hsv.numImages - 1));
+    int index = MIN((int)slider.value, (CRAPI.sharedInstance.hsv.numImages - 2));
     
-    if (_index1 != idx1)
+    if (_index1 != index)
     {
-        _index1 = idx1;
+        _index1 = index;
         _imageView1.image = [UIImage imageWithContentsOfFile:CRAPI.sharedInstance.hsv.imageFiles[_index1]];
     }
     
-    if (_index2 != idx2)
+    if (_index2 != (index + 1))
     {
-        _index2 = idx2;
+        _index2 = (index + 1);
         _imageView2.image = [UIImage imageWithContentsOfFile:CRAPI.sharedInstance.hsv.imageFiles[_index2]];
     }
     
-    _imageView2.alpha = (slider.value - idx1);
+    float offset = (slider.value - index);
+    _imageView2.alpha = offset;
+    
+    int timeRange = (CRAPI.sharedInstance.hsv.timeRanges[index + 1].intValue -
+                     CRAPI.sharedInstance.hsv.timeRanges[index].intValue);
+    
+    int time = (CRAPI.sharedInstance.hsv.timeRanges[index].intValue + (timeRange * offset));
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:time];
+    
+    NSString *dateString = [NSDateFormatter localizedStringFromDate:date
+                                                          dateStyle:NSDateFormatterLongStyle
+                                                          timeStyle:NSDateFormatterNoStyle];
+    
+    _infoLabel.text = dateString;
 }
 
 - (void)sliderTouchedDown:(UISlider *)slider

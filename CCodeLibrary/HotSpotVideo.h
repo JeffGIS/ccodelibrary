@@ -14,7 +14,8 @@ typedef NS_ENUM(NSInteger, HSVideoTypes)
 
 @property int width, height, numImages;
 @property HSVideoTypes type;
-@property (nonatomic) NSMutableArray *imageFiles, *timeRanges;
+@property (nonatomic) NSMutableArray *imageFiles;
+@property (nonatomic, copy) NSArray<NSNumber *> *timeRanges;
 @property (nonatomic, copy) NSString *backgroundImageFile;
 
 @end
