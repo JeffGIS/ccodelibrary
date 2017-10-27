@@ -13,6 +13,7 @@
 @property (nonatomic) UISlider *slider;
 @property CGFloat yMargin, xMargin, timeInterval, imagesPerSecond;
 @property (nonatomic) NSTimer *timer;
+@property BOOL killTap;
 
 @end
 
@@ -28,6 +29,7 @@
     _yMargin = 60.0;
     _timeInterval = 0.02;
     _imagesPerSecond = 2.0;
+    _killTap = NO;
     
     if (CRAPI.sharedInstance.hsv.numImages)
     {
@@ -54,6 +56,22 @@
         [_slider addTarget:self
                     action:@selector(sliderValueChanged:)
           forControlEvents:UIControlEventValueChanged];
+        
+        [_slider addTarget:self
+                    action:@selector(sliderTouchedDown:)
+          forControlEvents:UIControlEventTouchDown];
+        
+        [_slider addTarget:self
+                    action:@selector(sliderTouchedUp:)
+          forControlEvents:UIControlEventTouchUpInside];
+        
+        [_slider addTarget:self
+                    action:@selector(sliderTouchedUp:)
+          forControlEvents:UIControlEventTouchCancel];
+        
+        [_slider addGestureRecognizer:
+         [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                 action:@selector(sliderTapped:)]];
     }
     
     if (CRAPI.sharedInstance.hsv.backgroundImageFile)
@@ -80,9 +98,16 @@
     [self.view addSubview:returnButton];
     [returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:_xMargin];
     [returnButton constrainTopToAnchor:self.view.topAnchor constant:4.0];
+    
+    [self startTimer];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+}
+
+- (void)startTimer
 {
     _timer = [NSTimer scheduledTimerWithTimeInterval:_timeInterval
                                               target:self
@@ -91,9 +116,10 @@
                                              repeats:YES];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)killTimer
 {
-    [super didReceiveMemoryWarning];
+    if (_timer && _timer.valid)
+        [_timer invalidate];
 }
 
 - (void)setupImageView:(UIImageView *)imageView
@@ -108,7 +134,7 @@
 
 - (void)returnButtonTapped:(UIButton *)button
 {
-    [_timer invalidate];
+    [self killTimer];
     CRAPI.sharedInstance.hsv = nil;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -133,6 +159,30 @@
     _imageView2.alpha = (slider.value - idx1);
 }
 
+- (void)sliderTouchedDown:(UISlider *)slider
+{
+    [self killTimer];
+    _killTap = YES;
+}
+
+- (void)sliderTouchedUp:(UISlider *)slider
+{
+    _killTap = NO;
+}
+
+- (void)sliderTapped:(UITapGestureRecognizer *)gesture
+{
+    if (!_killTap)
+    {
+        [self killTimer];
+        CGPoint point = [gesture locationInView:_slider];
+        float value = ((point.x / _slider.frame.size.width) * _slider.maximumValue);
+        value += ((value - (_slider.maximumValue / 2)) / 30.0);
+        [_slider setValue:value animated:NO];
+        [self sliderValueChanged:_slider];
+    }
+}
+
 - (void)moveToNextFrame
 {
     CGFloat increment = (_timeInterval * _imagesPerSecond);
@@ -141,7 +191,7 @@
     [self sliderValueChanged:_slider];
     
     if (_slider.value > (_slider.maximumValue - increment))
-        [_timer invalidate];
+        [self killTimer];
 }
 
 @end
