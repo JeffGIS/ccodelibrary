@@ -11,11 +11,12 @@
 @property (nonatomic) UIImageView *imageView1, *imageView2, *backgroundImageView;
 @property NSInteger index1, index2;
 @property (nonatomic) UISlider *slider;
-@property CGFloat yMargin, xMargin, timeInterval, imagesPerSecond;
+@property CGFloat topMargin, bottomMargin, xMargin, timeInterval, imagesPerSecond;
 @property (nonatomic) NSTimer *timer;
-@property BOOL killTap;
+@property BOOL killTap, loop;
 @property (nonatomic) UILabel *infoLabel;
 @property int labelUpdateFactor, timerCounter;
+@property (nonatomic) UIButton *playPauseButton, *stopButton, *loopButton;
 
 @end
 
@@ -28,12 +29,12 @@
     _index1 = 0;
     _index2 = 1;
     _xMargin = 20.0;
-    _yMargin = 60.0;
+    _topMargin = 72.0;
+    _bottomMargin = 52.0;
     _timeInterval = 0.02;
     _imagesPerSecond = 2.0;
-    _killTap = NO;
+    _killTap = _loop = NO;
     _labelUpdateFactor = 10;
-    _timerCounter = 0;
     
     if (CRAPI.sharedInstance.hsv.numImages)
     {
@@ -55,7 +56,7 @@
         [self.view addSubview:_slider];
         [_slider constrainLeadingToAnchor:self.view.leadingAnchor constant:_xMargin];
         [_slider constrainTrailingToAnchor:self.view.trailingAnchor constant:-_xMargin];
-        [_slider constrainBottomToAnchor:self.view.bottomAnchor constant:-((_yMargin - STD_SLIDER_HEIGHT) / 2)];
+        [_slider constrainBottomToAnchor:self.view.bottomAnchor constant:-((_bottomMargin - STD_SLIDER_HEIGHT) / 2)];
         
         [_slider addTarget:self
                     action:@selector(sliderValueChanged:)
@@ -100,7 +101,7 @@
         
         [self.view addSubview:_infoLabel];
         [_infoLabel constrainCenterXToAnchor:self.view.centerXAnchor];
-        [_infoLabel constrainBottomToAnchor:self.view.bottomAnchor constant:-_yMargin];
+        [_infoLabel constrainBottomToAnchor:self.view.bottomAnchor constant:-_bottomMargin];
     }
     
     UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -116,7 +117,41 @@
     
     [self.view addSubview:returnButton];
     [returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:_xMargin];
-    [returnButton constrainTopToAnchor:self.view.topAnchor constant:4.0];
+    [returnButton constrainCenterYToAnchor:self.view.topAnchor constant:(_topMargin / 2)];
+    
+    _playPauseButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [self setupVideoButton:_playPauseButton
+                     image:@"hsvPause"
+                  selector:@selector(playPauseButtonTapped:)];
+    
+    [_playPauseButton constrainCenterXToAnchor:self.view.centerXAnchor];
+    [_playPauseButton constrainCenterYToAnchor:self.view.topAnchor constant:(_topMargin / 2)];
+    [_playPauseButton constrainHeightToConstant:(_topMargin * 0.8)];
+    [_playPauseButton constrainWidthToAnchor:_playPauseButton.heightAnchor];
+    
+    _stopButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [self setupVideoButton:_stopButton
+                     image:@"hsvStop"
+                  selector:@selector(stopButtonTapped:)];
+    
+    [_stopButton constrainCenterXToAnchor:self.view.centerXAnchor constant:_topMargin];
+    [_stopButton constrainCenterYToAnchor:_playPauseButton.centerYAnchor];
+    [_stopButton constrainHeightToAnchor:_playPauseButton.heightAnchor];
+    [_stopButton constrainWidthToAnchor:_playPauseButton.heightAnchor];
+    
+    _loopButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _loopButton.alpha = 0.5;
+    
+    [self setupVideoButton:_loopButton
+                     image:@"hsvLoop"
+                  selector:@selector(loopButtonTapped:)];
+    
+    [_loopButton constrainCenterXToAnchor:self.view.centerXAnchor constant:(_topMargin * 2)];
+    [_loopButton constrainCenterYToAnchor:_playPauseButton.centerYAnchor];
+    [_loopButton constrainHeightToAnchor:_playPauseButton.heightAnchor];
+    [_loopButton constrainWidthToAnchor:_playPauseButton.heightAnchor];
     
     [self startTimer];
 }
@@ -126,8 +161,17 @@
     [super didReceiveMemoryWarning];
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
 - (void)startTimer
 {
+    _timer = nil;
+    _timerCounter = 0;
+    [self updateButton:_playPauseButton image:@"hsvPause"];
+    
     _timer = [NSTimer scheduledTimerWithTimeInterval:_timeInterval
                                               target:self
                                             selector:@selector(moveToNextFrame)
@@ -138,7 +182,10 @@
 - (void)killTimer
 {
     if (_timer && _timer.valid)
+    {
+        [self updateButton:_playPauseButton image:@"hsvPlay"];
         [_timer invalidate];
+    }
 }
 
 - (void)setupImageView:(UIImageView *)imageView
@@ -148,7 +195,28 @@
     imageView.clipsToBounds = YES;
     
     [self.view addSubview:imageView];
-    [imageView constrainToView:self.view leading:0.0 trailing:0.0 top:_yMargin bottom:(-_yMargin * 2.0)];
+    
+    [imageView constrainToView:self.view leading:0.0 trailing:0.0
+                           top:_topMargin bottom:(-_bottomMargin * 2.0)];
+}
+
+- (void)setupVideoButton:(UIButton *)button
+                   image:(NSString *)image
+                selector:(SEL)selector
+{
+    button.translatesAutoresizingMaskIntoConstraints = NO;
+    NSString *imagePath = [NSBundle.mainBundle pathForResource:image ofType:@"png"];
+    [button setImage:[UIImage imageWithContentsOfFile:imagePath] forState:UIControlStateNormal];
+    button.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [button addTarget:self action:selector forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+}
+
+- (void)updateButton:(UIButton *)button
+               image:(NSString *)image
+{
+    NSString *imagePath = [NSBundle.mainBundle pathForResource:image ofType:@"png"];
+    [button setImage:[UIImage imageWithContentsOfFile:imagePath] forState:UIControlStateNormal];
 }
 
 - (void)returnButtonTapped:(UIButton *)button
@@ -225,10 +293,50 @@
     CGFloat increment = (_timeInterval * _imagesPerSecond);
     
     [_slider setValue:(_slider.value + increment) animated:NO];
-    [self sliderValueChanged:_slider];
     
     if (_slider.value > (_slider.maximumValue - increment))
+    {
+        if (_loop)
+        {
+            _timerCounter = 0;
+            [_slider setValue:0.0 animated:NO];
+        }
+        
+        else
+        {
+            [_slider setValue:_slider.maximumValue animated:NO];
+            [self killTimer];
+        }
+    }
+    
+    [self sliderValueChanged:_slider];
+}
+
+- (void)playPauseButtonTapped:(UIButton *)button
+{
+    if (_timer.valid)
         [self killTimer];
+    
+    else
+        [self startTimer];
+}
+
+- (void)stopButtonTapped:(UIButton *)button
+{
+    [self killTimer];
+    [_slider setValue:0.0 animated:NO];
+    [self sliderValueChanged:_slider];
+}
+
+- (void)loopButtonTapped:(UIButton *)button
+{
+    _loop = !_loop;
+    
+    if (_loop)
+        _loopButton.alpha = 1.0;
+    
+    else
+        _loopButton.alpha = 0.5;
 }
 
 @end
