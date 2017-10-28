@@ -37,7 +37,7 @@
       gridNumber:(int)inGrid
    compareFactor:(double*)compareFactor;
 - (Bool) dump:(NSString*)outFile;
-- (NSString *) writeGrid:(int)iGrid
+- (void) writeGrid:(int)iGrid
             toFile:(NSString*)file;
 
 @end
