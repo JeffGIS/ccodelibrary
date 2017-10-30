@@ -16,7 +16,8 @@
     for (int igrid = 0;igrid < _nGrids;igrid++)
     {
         int * grid = _grids[igrid];
-        free (grid);
+        if (grid)
+            free (grid);
     }
     if (_pointGrid)
         free (_pointGrid);
@@ -222,43 +223,59 @@
     CGColorSpaceRelease(colorspace);
 }
 
-- (NSString *) writeGrid:(int)iGrid
+- (void) writeGrid:(int)iGrid
             toFile:(NSString*)file
 {
     void *bmData = NULL;
-    NSString * outFile = [file stringByAppendingString:@".png"];
-    file = [file stringByAppendingString:@".bmp"];
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     
-    CGContextRef context = createBitmapContext(_width, _height, colorSpace, &bmData);
-    CGContextTranslateCTM(context, 0, _height);
-    CGContextScaleCTM(context, 1, -1);
+    CGContextRef context = createBitmapContext(_width, _height, colorSpace, NULL);
+    //CGContextTranslateCTM(context, 0, _height);
+    //CGContextScaleCTM(context, 1, -1);
     CGRect colorRect;
     colorRect.origin.x = 0;
     colorRect.origin.y = 0;
     colorRect.size.width = _width;
     colorRect.size.height = _height;
-    UIColor *white = [UIColor whiteColor];
+    UIColor *white = [UIColor clearColor];
     CGContextSetFillColorWithColor(context,[white CGColor]);
     CGContextFillRect (context,colorRect);
     
     [self display:context gridNumber:-(iGrid+1) compareFactor:0];
-    BOOL rtn = WriteBitmapDataToFile((LPSTR)file.UTF8String,_width, _height, colorSpace, bmData);
+    
+ /*   UIGraphicsBeginImageContext(self.view.frame.size);
+    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    _vectorView.backgroundImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+ */
+  //  UIImage * image = [UIImage imageWithCGImage:CGBitmapContextCreateImage (context)];
+  /*  BOOL rtn = WriteBitmapDataToFile((LPSTR)file.UTF8String,_width, _height, colorSpace, bmData);
     long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:file
                                                                         error:nil].fileSize;
     UIImage *image = [UIImage imageWithContentsOfFile:file];
-    //file = [NSString stringWithFormat:@"%@/map_%i.png", NSTemporaryDirectory(),pageNumber];
-    [UIImagePNGRepresentation(image) writeToFile:outFile atomically:YES];
+  */
     
-    fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:outFile
-                                                              error:nil].fileSize;
-    CGColorSpaceRelease(colorSpace);
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    UIImage *image = [UIImage imageWithCGImage:imageRef];
+    NSData * data = UIImagePNGRepresentation(image);
     image = nil;
-    BOOL st = [NSFileManager.defaultManager removeItemAtPath:file error:nil];
-
+    [data writeToFile:file atomically:YES];
+    data = nil;
+    CGColorSpaceRelease(colorSpace);
+    CGContextRelease(context);
+    CFRelease(imageRef);
     if (bmData)
         free (bmData);
-    return outFile;
+    int * grid = _grids[iGrid];
+    if (grid)
+        free (grid);
+    _grids[iGrid] = 0;
+
+//    long long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:file
+//                                                              error:nil].fileSize;
+   // image = nil;
+   // BOOL st = [NSFileManager.defaultManager removeItemAtPath:file error:nil];
+
     
 }
 - (Bool)dump:(NSString *)outFile

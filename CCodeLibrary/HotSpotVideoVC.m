@@ -36,6 +36,16 @@
     _killTap = _loop = NO;
     _labelUpdateFactor = 10;
     
+    if (CRAPI.sharedInstance.hsv.backgroundImageFile)
+    {
+        _backgroundImageView = UIImageView.new;
+        [self setupImageView:_backgroundImageView];
+        _backgroundImageView.alpha = 1;
+        
+        _backgroundImageView.image = [UIImage imageWithContentsOfFile:
+                                      CRAPI.sharedInstance.hsv.backgroundImageFile];
+    }
+    
     if (CRAPI.sharedInstance.hsv.numImages)
     {
         _imageView1 = UIImageView.new;
@@ -77,16 +87,6 @@
         [_slider addGestureRecognizer:
          [[UITapGestureRecognizer alloc] initWithTarget:self
                                                  action:@selector(sliderTapped:)]];
-    }
-    
-    if (CRAPI.sharedInstance.hsv.backgroundImageFile)
-    {
-        _backgroundImageView = UIImageView.new;
-        [self setupImageView:_backgroundImageView];
-        _backgroundImageView.alpha = 0.1;
-        
-        _backgroundImageView.image = [UIImage imageWithContentsOfFile:
-                                      CRAPI.sharedInstance.hsv.backgroundImageFile];
     }
     
     if (CRAPI.sharedInstance.hsv.timeRanges.count)

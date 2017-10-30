@@ -7,7 +7,6 @@
 CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef colorSpace, void **bmData)
 {
     CGContextRef context = NULL;
-    void *bitmapData = NULL;
     int bitmapByteCount = 0, bitmapBytesPerRow = 0;
     int nc = (int)CGColorSpaceGetNumberOfComponents(colorSpace);
     uint32_t flags = kCGImageAlphaNone;
@@ -24,35 +23,37 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
         if (fromPIA)
             flags = kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Big;
         else
-            flags = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little;
+            //flags = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little;
+            flags = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little;
     }
     bitmapBytesPerRow = nc * pixelsWide;
     bitmapByteCount = (bitmapBytesPerRow *pixelsHigh);
     
-    bitmapData = malloc(bitmapByteCount); //3
-    
-    if (bitmapData)
+    if (bmData)
     {
-        memset (bitmapData,0,bitmapByteCount);
-        
-       context = CGBitmapContextCreate(bitmapData, pixelsWide, pixelsHigh, 8,
+        *bmData = calloc(bitmapByteCount,1); //3
+    
+        context = CGBitmapContextCreate(*bmData, pixelsWide, pixelsHigh, 8,
+                                    bitmapBytesPerRow, colorSpace,flags);
+    }
+    else
+        context = CGBitmapContextCreate(NULL, pixelsWide, pixelsHigh, 8,
                                         bitmapBytesPerRow, colorSpace,flags);
-        if (!context)
-        {
-            free(bitmapData);
-            bitmapData = NULL;
-        }
-        else
-        {
-            int bi = (int)CGBitmapContextGetBytesPerRow(context);
-            if (bi != bitmapBytesPerRow)
-                bi=1;
-            
-            CGContextSetShouldAntialias(context, NO);
-        }
+
+    if (!context && bmData)
+    {
+        free(*bmData);
+    }
+    else
+    {
+        int bi = (int)CGBitmapContextGetBytesPerRow(context);
+        if (bi != bitmapBytesPerRow)
+            bi=1;
+        
+        CGContextSetShouldAntialias(context, NO);
     }
     
-    *bmData = bitmapData;
+    
     return context;
 }
 dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
