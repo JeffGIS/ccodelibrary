@@ -1858,7 +1858,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
 {
-    return YES;
+    return CRAPI.sharedInstance.showCompassCalibrationScreen;
 }
 
 - (void)locationManager:(CLLocationManager *)manager

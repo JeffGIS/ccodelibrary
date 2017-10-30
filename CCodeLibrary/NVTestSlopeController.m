@@ -535,7 +535,10 @@ typedef NS_ENUM(NSInteger, SCStatus)
 {
     BOOL rtn = NO;
     
-    if (_delegate)
+    if (!CRAPI.sharedInstance.showCompassCalibrationScreen)
+        rtn = NO;
+    
+    else if (_delegate)
         rtn = [_delegate shouldUseCalibration:self];
     
     return rtn;

@@ -2,8 +2,9 @@
 //  CCodeLibrary
 
 #import "NVVideoHeadingViewController.h"
-#import "AVFoundation/AVFoundation.h"
+@import AVFoundation;
 #import "UserDefaults.h"
+#import "CRAPI.h"
 
 typedef NS_ENUM(NSInteger, NVVideoHeadingStatus)
 {
@@ -311,7 +312,7 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 
 - (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
 {
-    return YES;
+    return CRAPI.sharedInstance.showCompassCalibrationScreen;
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
