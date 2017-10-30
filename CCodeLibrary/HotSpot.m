@@ -57,7 +57,15 @@
     HotSpot * hs = [[HotSpot alloc]init];
     if (pointSize % 2)
         pointSize++;
-    hs.nGrids = nGrids;
+    if (nGrids < 0)
+    {
+        if (nGrids == -7)
+            hs.timeType = TTDow;
+        else if (nGrids == -24)
+            hs.timeType = TTHourly;
+        nGrids = -nGrids;
+    }
+    hs.nGrids = abs (nGrids);
     hs.width = width;
     hs.height = height;
     hs.counts = calloc (nGrids,sizeof (int));
@@ -91,25 +99,36 @@
     return hs;
 }
 
--(int) selectGridFromTime:(int)time
+-(int) selectGridFromTime:(DisplayCharacteristics *)dc
 {
     if (_nGrids < 2)
         return 0;
-    for (int iGrid = 0; iGrid<_nGrids;iGrid++)
+    switch (_timeType)
     {
-        if (time >= _times[iGrid] && time < _times[iGrid+1])
-            return iGrid;
+        case 0:
+            for (int iGrid = 0; iGrid<_nGrids;iGrid++)
+            {
+                if (dc.itemBeginTime >= _times[iGrid] && dc.itemBeginTime < _times[iGrid+1])
+                    return iGrid;
+            }
+            break;
+        case TTDow:
+            return dc.dow;
+            break;
+        case TTHourly:
+            return dc.hour;
+            break;
     }
     return -1;
 }
 
 - (void) addPointAtX:(int)x andY:(int)y
-             andTime:(int)time
+             andTime:(DisplayCharacteristics *)dc
           whichGrid:(int)igrid
 
 {
     if (igrid < 0)
-        igrid = [self selectGridFromTime:time];
+        igrid = [self selectGridFromTime:dc];
     if (igrid < 0 || igrid >= _nGrids)
         return;
     int * grid = _grids[igrid];

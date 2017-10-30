@@ -82,6 +82,11 @@
         if (defaultCrimeCompare && defaultCrimeCompare.length)
             _crimeCompare = defaultCrimeCompare;
         
+        NSString *defaultHotspotVideoMode = [UserDefaults.defaults stringForKey:@"Hotspot Video Mode"];
+        
+        if (defaultHotspotVideoMode && defaultHotspotVideoMode.length)
+            _hotspotVideoMode = defaultHotspotVideoMode;
+
         _docManager = NVDocumentManager.new;
         _deviceLists = NSMutableDictionary.new;
         _assignediPadsArray = NSMutableArray.new;

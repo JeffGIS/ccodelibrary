@@ -115,6 +115,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nullable) NSString *crimeCompare;
 @property (nonatomic, copy, nullable) NSString *crimeAdjustValue;
 @property (nonatomic, copy, nullable) NSString *crimeAdjustValueArea;
+@property (nonatomic, copy, nullable) NSString *hotspotVideoMode;
 @property (nonatomic, nullable) MapToolbar *mapToolbar;
 @property (nonatomic, nullable) UIViewController *mapVC;
 @property (nonatomic) CGFloat mapToolbarProgress;

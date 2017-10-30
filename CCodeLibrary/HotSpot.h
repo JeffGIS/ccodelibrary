@@ -9,11 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "MathUtil.h"
 #import "GSSiEnums.h"
+#import "DisplayCharacteristics.h"
+
+#define TTDow       1
+#define TTHourly    2
 
 @interface HotSpot : NSObject
 @property int width;
 @property int height;
 @property int nGrids;
+@property int timeType;
 @property int ** grids;
 @property int * times;
 @property int * counts;
@@ -30,7 +35,7 @@
                  PointSize:(int)pointSize
                       tran:(LPTRANDATA)pTranLLtoView;
 - (void) addPointAtX:(int)x andY:(int)y
-             andTime:(int)time
+             andTime:(DisplayCharacteristics *)dc
            whichGrid:(int)igrid;
 
 - (void) display:(CGContextRef)context
