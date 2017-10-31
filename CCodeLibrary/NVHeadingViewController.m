@@ -5,6 +5,7 @@
 #import "UserDefaults.h"
 #import "NVProgressView.h"
 #import "Colors.h"
+#import "CRAPI.h"
 
 typedef NS_ENUM(NSInteger, NVHeadingStatus)
 {
@@ -371,10 +372,16 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 
 - (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
 {
-    if (_status == NVHeadingStatusGettingHeading)
-        [self startCancelButtonTapped:nil];
+    if (!CRAPI.sharedInstance.showCompassCalibrationScreen)
+        return NO;
     
-    return YES;
+    else
+    {
+        if (_status == NVHeadingStatusGettingHeading)
+            [self startCancelButtonTapped:nil];
+        
+        return YES;
+    }
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation

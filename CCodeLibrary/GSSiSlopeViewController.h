@@ -37,7 +37,6 @@ typedef struct NVSlopeData {
 - (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
              didReturnSlopeData:(NVSlopeData)slopeData;
 
-@optional
 - (void)gssiSlopeViewControllerDidCancelForSystemCalibration:(GSSiSlopeViewController *)controller;
 
 @end

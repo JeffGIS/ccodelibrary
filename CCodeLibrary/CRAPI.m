@@ -120,6 +120,7 @@
         _acreFmt.alwaysShowsDecimalSeparator = NO;
         _acreFmt.usesGroupingSeparator = YES;
         _acreFmt.maximumFractionDigits = 2;
+        _showCompassCalibrationScreen = YES;
     }
     
     return self;

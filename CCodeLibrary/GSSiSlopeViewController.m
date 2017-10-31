@@ -851,7 +851,11 @@ static int COUNT=100;
 
 - (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
 {
-    return _useHeadingCalibration;
+    if (!CRAPI.sharedInstance.showCompassCalibrationScreen)
+        return NO;
+    
+    else
+        return _useHeadingCalibration;
 }
 
 - (void)sliderView:(NVSliderController *)sliderView
