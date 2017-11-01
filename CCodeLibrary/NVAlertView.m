@@ -42,6 +42,15 @@
         return nil;
     }
     
+    for (UIView *subviews in view.subviews)
+    {
+        if ([subviews isKindOfClass:NVAlertView.class])
+        {
+            NSLog(@"NVAlertView ERROR:Cannot present alert when one already exists in superview");
+            return nil;
+        }
+    }
+    
     NVAlertView *alert = NVAlertView.new;
     alert.overlayView = UIView.new;
     alert.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
