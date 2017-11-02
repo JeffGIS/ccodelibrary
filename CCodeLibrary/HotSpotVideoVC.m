@@ -17,6 +17,7 @@
 @property (nonatomic) UILabel *infoLabel;
 @property int labelUpdateFactor, timerCounter;
 @property (nonatomic) UIButton *playPauseButton, *stopButton, *loopButton;
+@property (nonatomic, copy) NSArray *daysOfWeek, *images;
 
 @end
 
@@ -36,6 +37,20 @@
     _killTap = _loop = NO;
     _labelUpdateFactor = 10;
     
+    _daysOfWeek = @[@"Sunday", @"Monday", @"Tuesday", @"Wednesday",
+                    @"Thursday", @"Friday", @"Saturday", @"Sunday"];
+    
+    _images = CRAPI.sharedInstance.hsv.imageFiles.copy;
+    
+    if (CRAPI.sharedInstance.hsv.type == HSTypeDow ||
+        CRAPI.sharedInstance.hsv.type == HSTypeHour)
+    {
+        NSMutableArray *temp = _images.mutableCopy;
+        NSString *first = temp.firstObject;
+        [temp addObject:first.copy];
+        _images = temp.copy;
+    }
+    
     if (CRAPI.sharedInstance.hsv.backgroundImageFile)
     {
         _backgroundImageView = UIImageView.new;
@@ -46,23 +61,33 @@
                                       CRAPI.sharedInstance.hsv.backgroundImageFile];
     }
     
-    if (CRAPI.sharedInstance.hsv.numImages)
+    if (_images.count)
     {
         _imageView1 = UIImageView.new;
         [self setupImageView:_imageView1];
-        _imageView1.image = [UIImage imageWithContentsOfFile:CRAPI.sharedInstance.hsv.imageFiles[_index1]];
+        _imageView1.image = [UIImage imageWithContentsOfFile:_images[_index1]];
+        
+        _infoLabel = UILabel.new;
+        _infoLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        _infoLabel.font = [UIFont systemFontOfSize:32.0];
+        _infoLabel.textColor = UIColor.whiteColor;
+        [self updateInfoLabelAtIndex:0 offset:0.0];
+        
+        [self.view addSubview:_infoLabel];
+        [_infoLabel constrainCenterXToAnchor:self.view.centerXAnchor];
+        [_infoLabel constrainBottomToAnchor:self.view.bottomAnchor constant:-_bottomMargin];
     }
     
-    if (CRAPI.sharedInstance.hsv.numImages > 1)
+    if (_images.count > 1)
     {
         _imageView2 = UIImageView.new;
         [self setupImageView:_imageView2];
-        _imageView2.image = [UIImage imageWithContentsOfFile:CRAPI.sharedInstance.hsv.imageFiles[_index2]];
+        _imageView2.image = [UIImage imageWithContentsOfFile:_images[_index2]];
         _imageView2.alpha = 0.0;
         
         _slider = UISlider.new;
         _slider.translatesAutoresizingMaskIntoConstraints = NO;
-        _slider.maximumValue = (CRAPI.sharedInstance.hsv.numImages - 1);
+        _slider.maximumValue = (_images.count - 1);
         [self.view addSubview:_slider];
         [_slider constrainLeadingToAnchor:self.view.leadingAnchor constant:_xMargin];
         [_slider constrainTrailingToAnchor:self.view.trailingAnchor constant:-_xMargin];
@@ -87,21 +112,6 @@
         [_slider addGestureRecognizer:
          [[UITapGestureRecognizer alloc] initWithTarget:self
                                                  action:@selector(sliderTapped:)]];
-    }
-    
-    if (CRAPI.sharedInstance.hsv.timeRanges.count)
-    {
-        _infoLabel = UILabel.new;
-        _infoLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        _infoLabel.font = [UIFont systemFontOfSize:32.0];
-        _infoLabel.textColor = UIColor.whiteColor;
-        
-        _infoLabel.text = [NSString stringWithFormat:@"%i",
-                           CRAPI.sharedInstance.hsv.timeRanges[0].intValue];
-        
-        [self.view addSubview:_infoLabel];
-        [_infoLabel constrainCenterXToAnchor:self.view.centerXAnchor];
-        [_infoLabel constrainBottomToAnchor:self.view.bottomAnchor constant:-_bottomMargin];
     }
     
     UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -231,36 +241,80 @@
     if (_timer.valid)
         _timerCounter++;
     
-    int index = MIN((int)slider.value, (CRAPI.sharedInstance.hsv.numImages - 2));
+    int index = MIN((int)slider.value, ((int)_images.count - 2));
     
     if (_index1 != index)
     {
         _index1 = index;
-        _imageView1.image = [UIImage imageWithContentsOfFile:CRAPI.sharedInstance.hsv.imageFiles[_index1]];
+        _imageView1.image = [UIImage imageWithContentsOfFile:_images[_index1]];
     }
     
     if (_index2 != (index + 1))
     {
         _index2 = (index + 1);
-        _imageView2.image = [UIImage imageWithContentsOfFile:CRAPI.sharedInstance.hsv.imageFiles[_index2]];
+        _imageView2.image = [UIImage imageWithContentsOfFile:_images[_index2]];
     }
     
     float offset = (slider.value - index);
-    _imageView2.alpha = offset;
+    float alpha1 = cosf(offset * (M_PI / 2));
+    float alpha2 = cosf((1 - offset) * (M_PI / 2));
+    
+    _imageView1.alpha = alpha1;
+    _imageView2.alpha = alpha2;
+    
     
     if (!_timer.valid || (_timerCounter % _labelUpdateFactor == 0))
+        [self updateInfoLabelAtIndex:index offset:offset];
+}
+
+- (void)updateInfoLabelAtIndex:(int)index
+                        offset:(float)offset
+{
+    switch (CRAPI.sharedInstance.hsv.type)
     {
-        int timeRange = (CRAPI.sharedInstance.hsv.timeRanges[index + 1].intValue -
-                         CRAPI.sharedInstance.hsv.timeRanges[index].intValue);
-        
-        int time = (CRAPI.sharedInstance.hsv.timeRanges[index].intValue + (timeRange * offset));
-        NSDate *date = [NSDate dateWithTimeIntervalSince1970:time];
-        
-        NSString *dateString = [NSDateFormatter localizedStringFromDate:date
-                                                              dateStyle:NSDateFormatterLongStyle
-                                                              timeStyle:NSDateFormatterNoStyle];
-        
-        _infoLabel.text = dateString;
+        case HSTypeTime:{
+            int timeRange = (CRAPI.sharedInstance.hsv.timeRanges[index + 1].intValue -
+                             CRAPI.sharedInstance.hsv.timeRanges[index].intValue);
+            
+            int time = (CRAPI.sharedInstance.hsv.timeRanges[index].intValue + (timeRange * offset));
+            
+            NSDate *date = [NSDate dateWithTimeIntervalSince1970:time];
+            
+            NSString *dateString = [NSDateFormatter localizedStringFromDate:date
+                                                                  dateStyle:NSDateFormatterLongStyle
+                                                                  timeStyle:NSDateFormatterNoStyle];
+            
+            _infoLabel.text = dateString;
+            break;}
+        case HSTypeDow:
+            _infoLabel.text = _daysOfWeek[index];
+            break;
+        case HSTypeHour:{
+            NSString *period = @"a.m.";
+            
+            if (index > 11)
+                period = @"p.m.";
+            
+            int hour = (index % 12);
+            
+            if (!hour)
+                hour = 12;
+            
+            int minute = (int)roundf(60 * offset);
+            
+            if (minute == 60)
+            {
+                minute = 0;
+                hour++;
+                
+                if (index > 22 && hour == 12)
+                    period = @"a.m.";
+            }
+            
+            NSString *timeString = [NSString stringWithFormat:@"%i:%02d %@", hour, minute, period];
+            _infoLabel.text = timeString;
+            break;}
+        default:break;
     }
 }
 

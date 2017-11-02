@@ -18,4 +18,6 @@ typedef NS_ENUM(NSInteger, HSVideoTypes)
 @property (nonatomic, copy) NSArray<NSNumber *> *timeRanges;
 @property (nonatomic, copy) NSString *backgroundImageFile;
 
+- (void)wrapImageArray;
+
 @end

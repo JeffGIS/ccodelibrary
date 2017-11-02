@@ -3,12 +3,6 @@
 
 #import "DPoint.h"
 
-typedef NS_ENUM(NSInteger, ChartsBitmapOrientation)
-{
-    ChartsBitmapOrientationLandscape,
-    ChartsBitmapOrientationPortrait,
-};
-
 typedef NS_ENUM(NSInteger, ChartsBitmapDataType)
 {
     ChartsBitmapDataTypeLine,
