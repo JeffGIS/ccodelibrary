@@ -33,7 +33,6 @@
     _topMargin = 72.0;
     _bottomMargin = 52.0;
     _timeInterval = 0.02;
-    _imagesPerSecond = 2.0;
     _killTap = _loop = NO;
     _labelUpdateFactor = 10;
     
@@ -63,6 +62,8 @@
     
     if (_images.count)
     {
+        _imagesPerSecond = (_images.count / (CGFloat)CRAPI.sharedInstance.hsv.length);
+        
         _imageView1 = UIImageView.new;
         [self setupImageView:_imageView1];
         _imageView1.image = [UIImage imageWithContentsOfFile:_images[_index1]];

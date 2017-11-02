@@ -14,6 +14,7 @@
     if (self)
     {
         _imageFiles = NSMutableArray.array;
+        _length = 15;
     }
 
     return self;
@@ -28,6 +29,7 @@
         [UserDefaults.defaults saveArray:_timeRanges.copy forKey:@"HotSpotVideoTimeRanges"];
     
     [UserDefaults.defaults saveInteger:_type forKey:@"HotSpotVideoType"];
+    [UserDefaults.defaults saveInteger:_length forKey:@"HotSpotVideoLength"];
     
     if (_backgroundImageFile)
         [UserDefaults.defaults saveString:_backgroundImageFile forKey:@"HotSpotBackgroundImageFile"];
