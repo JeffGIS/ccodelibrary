@@ -28,6 +28,7 @@
 #define RCL6000 0.6
 
 #define RCR9025 0.9025
+#define RCR9250 0.925
 #define RCR9325 0.9325
 
 #define AR077 0.772727
