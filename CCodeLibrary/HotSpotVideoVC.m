@@ -14,7 +14,7 @@
 @property CGFloat topMargin, bottomMargin, xMargin, timeInterval, imagesPerSecond;
 @property (nonatomic) NSTimer *timer;
 @property BOOL killTap, loop;
-@property (nonatomic) UILabel *infoLabel;
+@property (nonatomic) UILabel *infoLabel, *infoLabel2;
 @property int labelUpdateFactor, timerCounter;
 @property (nonatomic) UIButton *playPauseButton, *stopButton, *loopButton;
 @property (nonatomic, copy) NSArray *daysOfWeek, *images;
@@ -69,14 +69,16 @@
         _imageView1.image = [UIImage imageWithContentsOfFile:_images[_index1]];
         
         _infoLabel = UILabel.new;
-        _infoLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        _infoLabel.font = [UIFont systemFontOfSize:32.0];
-        _infoLabel.textColor = UIColor.whiteColor;
-        [self updateInfoLabelAtIndex:0 offset:0.0];
+        [self setupLabel:_infoLabel];
         
-        [self.view addSubview:_infoLabel];
-        [_infoLabel constrainCenterXToAnchor:self.view.centerXAnchor];
-        [_infoLabel constrainBottomToAnchor:self.view.bottomAnchor constant:-_bottomMargin];
+        if (CRAPI.sharedInstance.hsv.type == HSTypeDow)
+        {
+            _infoLabel2 = UILabel.new;
+            [self setupLabel:_infoLabel2];
+            _infoLabel2.alpha = 0.0;
+        }
+        
+        [self updateInfoLabelAtIndex:0 offset:0.0];
     }
     
     if (_images.count > 1)
@@ -211,6 +213,17 @@
                            top:_topMargin bottom:(-_bottomMargin * 2.0)];
 }
 
+- (void)setupLabel:(UILabel *)label
+{
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    label.font = [UIFont systemFontOfSize:32.0];
+    label.textColor = UIColor.whiteColor;
+    
+    [self.view addSubview:label];
+    [label constrainCenterXToAnchor:self.view.centerXAnchor];
+    [label constrainBottomToAnchor:self.view.bottomAnchor constant:-_bottomMargin];
+}
+
 - (void)setupVideoButton:(UIButton *)button
                    image:(NSString *)image
                 selector:(SEL)selector
@@ -263,9 +276,11 @@
     _imageView1.alpha = alpha1;
     _imageView2.alpha = alpha2;
     
-    
-    if (!_timer.valid || (_timerCounter % _labelUpdateFactor == 0))
+    if (!_timer.valid || (_timerCounter % _labelUpdateFactor == 0) ||
+        CRAPI.sharedInstance.hsv.type == HSTypeDow)
+    {
         [self updateInfoLabelAtIndex:index offset:offset];
+    }
 }
 
 - (void)updateInfoLabelAtIndex:(int)index
@@ -279,16 +294,15 @@
             
             int time = (CRAPI.sharedInstance.hsv.timeRanges[index].intValue + (timeRange * offset));
             
-            NSDate *date = [NSDate dateWithTimeIntervalSince1970:time];
-            
-            NSString *dateString = [NSDateFormatter localizedStringFromDate:date
-                                                                  dateStyle:NSDateFormatterLongStyle
-                                                                  timeStyle:NSDateFormatterNoStyle];
-            
-            _infoLabel.text = dateString;
+            _infoLabel.text = [NSDateFormatter localizedStringFromDate:[NSDate dateWithTimeIntervalSince1970:time]
+                                                             dateStyle:NSDateFormatterLongStyle
+                                                             timeStyle:NSDateFormatterNoStyle];
             break;}
         case HSTypeDow:
             _infoLabel.text = _daysOfWeek[index];
+            _infoLabel.alpha = (1 - offset);
+            _infoLabel2.text = _daysOfWeek[index + 1];
+            _infoLabel2.alpha = offset;
             break;
         case HSTypeHour:{
             NSString *period = @"a.m.";
@@ -312,8 +326,7 @@
                     period = @"a.m.";
             }
             
-            NSString *timeString = [NSString stringWithFormat:@"%i:%02d %@", hour, minute, period];
-            _infoLabel.text = timeString;
+            _infoLabel.text = [NSString stringWithFormat:@"%i:%02d %@", hour, minute, period];
             break;}
         default:break;
     }
@@ -373,7 +386,12 @@
         [self killTimer];
     
     else
+    {
+        if (_slider.value == _slider.maximumValue)
+            [self stopButtonTapped:button];
+        
         [self startTimer];
+    }
 }
 
 - (void)stopButtonTapped:(UIButton *)button
