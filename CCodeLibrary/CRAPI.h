@@ -99,6 +99,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nullable) NSString *currentOverallBoundaryType;
 @property (nonatomic) int currentOverallBoundaryRefno, currentBAR;
 @property (nonatomic) BOOL showPolylineForBounds, maskBoundsForBounds, setToAlleyWalls, isFromGMMobile;
+@property (nonatomic) CGFloat maskTransparency;
 @property (nonatomic, copy, nullable) NSString *sourceApp;
 @property (nonatomic, nullable) UIView *currentView;
 @property (nonatomic) MNMXCORD lastDisplayBounds, lastViewBounds;
