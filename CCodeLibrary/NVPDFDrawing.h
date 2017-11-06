@@ -10,7 +10,10 @@
 #define LCL1200 0.12
 #define LCL1275 0.1275
 #define LCL1400 0.14
+#define LCL1475 0.1475
 #define LCL1575 0.1575
+#define LCL1800 0.18
+#define LCL1975 0.1975
 #define LCL2300 0.23
 
 #define LCR4325 0.4325
@@ -26,6 +29,7 @@
 #define RCL5625 0.5625
 #define RCL5725 0.5725
 #define RCL5825 0.5825
+#define RCL5900 0.59
 #define RCL6000 0.6
 
 #define RCR9025 0.9025
