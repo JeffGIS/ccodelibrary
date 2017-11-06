@@ -110,7 +110,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nullable) NSString *currentPlatType;
 @property (nonatomic, copy, nullable) NSString *selectedPDFID;
 @property (nonatomic, copy, nullable) NSString *extractFile;
-@property (nonatomic) BOOL resetPropList, resetDestinations, resetCrimeList, forAllYears;
+@property (nonatomic) BOOL resetPropList, resetFieldList, resetDestinations, resetCrimeList, forAllYears;
 @property (nonatomic) NSInteger fromDate, toDate, crimeMode;
 @property (nonatomic, copy, nullable) NSString *crimeTarget;
 @property (nonatomic, copy, nullable) NSString *crimeCompare;
