@@ -725,7 +725,6 @@ forCellWithReuseIdentifier:(NSString *)identifier
             adjustedRows = rowCount;
             _lowerLeftContainerView.hidden = !adjustedRows;
             _lowerRightContainerView.hidden = !adjustedRows;
-            [_delegate spreadsheetSwapEnabled:adjustedRows];
             break;
         case NVSpreadsheetCollectionLowerRight:
             adjustedRows = rowCount;

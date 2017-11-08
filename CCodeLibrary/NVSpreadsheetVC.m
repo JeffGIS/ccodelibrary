@@ -627,7 +627,6 @@
         NVGridCell *gc = (NVGridCell *)cell;
         gc.contentView.backgroundColor = UIColor.clearColor;
         
-        
         if (_flipped)
         {
             gc.textLabel.text = [_delegate textForColumn:indexPath.nvSpreadsheetRow
@@ -1446,21 +1445,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     
     return rtn;
-}
-
-- (void)spreadsheetSwapEnabled:(BOOL)enabled
-{
-    if (enabled)
-    {
-        _swap.alpha = 1.0;
-        _swap.userInteractionEnabled = YES;
-    }
-    
-    else
-    {
-        _swap.alpha = 0.5;
-        _swap.userInteractionEnabled = NO;
-    }
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
