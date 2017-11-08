@@ -68,9 +68,12 @@
     return size;
 }
 
-- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
+- (NSArray<__kindof UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect
 {
-    NSMutableArray *attributes = NSMutableArray.array;
+    if (!_gridRowCount || !_gridColumnCount)
+        return nil;
+    
+    NSMutableArray<__kindof UICollectionViewLayoutAttributes *> *attributes = NSMutableArray.array;
     NSUInteger startRow = floorf(rect.origin.y / _itemSize.height);
     NSUInteger startCol = floorf(rect.origin.x / _itemSize.width);
     NSUInteger endRow = MIN((_gridRowCount - 1), ceilf(CGRectGetMaxY(rect) / _itemSize.height));
@@ -88,7 +91,7 @@
         }
     }
     
-    return attributes;
+    return attributes.copy;
 }
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
