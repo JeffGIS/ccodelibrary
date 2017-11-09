@@ -201,7 +201,7 @@ forCellWithReuseIdentifier:(NSString *)identifier
     [self addSubview:container];
     
     collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    collectionView.backgroundColor = [UIColor clearColor];
+    collectionView.backgroundColor = UIColor.clearColor;
     collectionView.tag = tag;
     collectionView.delegate = self;
     collectionView.dataSource = self;
@@ -725,7 +725,6 @@ forCellWithReuseIdentifier:(NSString *)identifier
             adjustedRows = rowCount;
             _lowerLeftContainerView.hidden = !adjustedRows;
             _lowerRightContainerView.hidden = !adjustedRows;
-            [_delegate spreadsheetSwapEnabled:adjustedRows];
             break;
         case NVSpreadsheetCollectionLowerRight:
             adjustedRows = rowCount;

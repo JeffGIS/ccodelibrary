@@ -43,10 +43,10 @@
         CFMutableDictionaryRef PDFDict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks,
                                                                    &kCFTypeDictionaryValueCallBacks);
         
-        CFDictionarySetValue(PDFDict, kCGPDFContextTitle, CFSTR("Sample PDF File"));
+        CFDictionarySetValue(PDFDict, kCGPDFContextTitle, CFSTR("PDF Extract File"));
         CFDictionarySetValue(PDFDict, kCGPDFContextCreator, CFSTR("GSSi"));
         
-        CGContextRef PDFContext = CGPDFContextCreateWithURL (PDFUrl, NULL, PDFDict);
+        CGContextRef PDFContext = CGPDFContextCreateWithURL(PDFUrl, NULL, PDFDict);
         CFRelease(PDFDict);
         CFRelease(PDFUrl);
         
@@ -112,6 +112,101 @@
             CFRelease(PDFData);
         }
         
+        CGContextRelease(PDFContext);
+        CFRelease(PDFDict);
+        
+        returnCode = PDFCreate_OK;
+    }
+    
+    return returnCode;
+}
+
++ (int)writePDFtoFile:(NSString *)filePath
+        fromTextArray:(NSArray <NSArray *> *)textArray
+{
+    int returnCode = PDFCreate_FAIL;
+    
+    if (filePath && filePath.length)
+    {
+        CFStringRef PDFPath = CFStringCreateWithCString(NULL, filePath.UTF8String, kCFStringEncodingUTF8);
+        CFURLRef PDFUrl = CFURLCreateWithFileSystemPath(NULL, PDFPath, kCFURLPOSIXPathStyle, 0);
+        CFRelease(PDFPath);
+        
+        CFMutableDictionaryRef PDFDict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks,
+                                                                   &kCFTypeDictionaryValueCallBacks);
+        
+        CFDictionarySetValue(PDFDict, kCGPDFContextTitle, CFSTR("PDF Extract File"));
+        CFDictionarySetValue(PDFDict, kCGPDFContextCreator, CFSTR("GSSi"));
+        
+        CGContextRef PDFContext = CGPDFContextCreateWithURL(PDFUrl, NULL, PDFDict);
+        CGContextSetStrokeColorWithColor(PDFContext, UIColor.blackColor.CGColor);
+        CFRelease(PDFDict);
+        CFRelease(PDFUrl);
+        
+        PDFDict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks,
+                                            &kCFTypeDictionaryValueCallBacks);
+        
+        CFDataRef PDFData = NULL;
+        
+        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"AppleSDGothicNeo-Bold",
+                                                 32.0, NULL);
+        
+        NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
+        style.alignment = NSTextAlignmentCenter;
+        
+        NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        (__bridge id)fontRef, kCTFontAttributeName,
+                                        style, kCTParagraphStyleAttributeName,
+                                        UIColor.blackColor.CGColor, kCTForegroundColorAttributeName, nil];
+        
+        NSAttributedString *attrbText = nil;
+        CGRect cellRect = CGRectZero;
+        CGFloat margin = 20.0;
+        CGFloat xPos = margin;
+        CGFloat yPos = margin;
+        CGFloat cellWidth = 360.0;
+        CGFloat cellHeight = 60.0;
+        
+        CGRect pageRect = CGRectMake(0.0, 0.0, ((margin * 2.0) + (cellWidth * textArray.count)),
+                                     ((margin * 2.0) + (cellHeight * textArray[0].count)));
+        
+        PDFData = CFDataCreate(NULL, (const UInt8 *)&pageRect, sizeof(CGRect));
+        CFDictionarySetValue(PDFDict, kCGPDFContextMediaBox, PDFData);
+        CGPDFContextBeginPage(PDFContext, PDFDict);
+        
+        for (NSArray *innerArray in textArray)
+        {
+            for (NSString *text in innerArray)
+            {
+                attrbText = [[NSAttributedString alloc] initWithString:text
+                                                            attributes:textAttributes];
+                
+                cellRect = CGRectMake(xPos, (pageRect.size.height - cellHeight - yPos), cellWidth, cellHeight);
+                CGContextAddRect(PDFContext, cellRect);
+                CGContextStrokePath(PDFContext);
+                
+                cellRect = CGRectMake(cellRect.origin.x, (cellRect.origin.y - 6.0),
+                                      cellRect.size.width, cellRect.size.height - 6.0);
+                
+                CGPathRef path = CGPathCreateWithRect(cellRect, NULL);
+                CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attrbText);
+                CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.length), path, NULL);
+                
+                CTFrameDraw(frame, PDFContext);
+                
+                CFRelease(path);
+                CFRelease(framesetter);
+                CFRelease(frame);
+                
+                yPos += cellHeight;
+            }
+            
+            yPos = margin;
+            xPos += cellWidth;
+        }
+        
+        CGPDFContextEndPage(PDFContext);
+        CFRelease(PDFData);
         CGContextRelease(PDFContext);
         CFRelease(PDFDict);
         
