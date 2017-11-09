@@ -1324,18 +1324,18 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     NSMutableArray *innerArray = NSMutableArray.array;
     [innerArray addObject:@""];
     
-    for (int i = 1; i < rows; i++)
-        [innerArray addObject:[_delegate headerTextForRow:i]];
+    for (int i = 1; i < columns; i++)
+        [innerArray addObject:[_delegate headerTextForColumn:i]];
     
     [outerArray addObject:innerArray.copy];
     
-    for (int i = 1; i < columns; i++)
+    for (int i = 1; i < rows; i++)
     {
         innerArray = NSMutableArray.array;
-        [innerArray addObject:[_delegate headerTextForColumn:i]];
+        [innerArray addObject:[_delegate headerTextForRow:i]];
         
-        for (int j = 1; j < rows; j++)
-            [innerArray addObject:[_delegate textForColumn:i row:j]];
+        for (int j = 1; j < columns; j++)
+            [innerArray addObject:[_delegate textForColumn:j row:i]];
         
         [outerArray addObject:innerArray.copy];
     }

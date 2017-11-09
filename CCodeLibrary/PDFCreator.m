@@ -167,8 +167,8 @@
         CGFloat cellWidth = 360.0;
         CGFloat cellHeight = 60.0;
         
-        CGRect pageRect = CGRectMake(0.0, 0.0, ((margin * 2.0) + (cellWidth * textArray[0].count)),
-                                     ((margin * 2.0) + (cellHeight * textArray.count)));
+        CGRect pageRect = CGRectMake(0.0, 0.0, ((margin * 2.0) + (cellWidth * textArray.count)),
+                                     ((margin * 2.0) + (cellHeight * textArray[0].count)));
         
         PDFData = CFDataCreate(NULL, (const UInt8 *)&pageRect, sizeof(CGRect));
         CFDictionarySetValue(PDFDict, kCGPDFContextMediaBox, PDFData);
@@ -198,11 +198,11 @@
                 CFRelease(framesetter);
                 CFRelease(frame);
                 
-                xPos += cellWidth;
+                yPos += cellHeight;
             }
             
-            xPos = margin;
-            yPos += cellHeight;
+            yPos = margin;
+            xPos += cellWidth;
         }
         
         CGPDFContextEndPage(PDFContext);
