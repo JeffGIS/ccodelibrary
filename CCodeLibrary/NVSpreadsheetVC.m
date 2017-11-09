@@ -1325,17 +1325,25 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     [innerArray addObject:@""];
     
     for (int i = 1; i < columns; i++)
-        [innerArray addObject:[_delegate headerTextForColumn:i]];
+    {
+        [innerArray addObject:[[_delegate headerTextForColumn:i] stringByReplacingOccurrencesOfString:@"\n"
+                                                                                           withString:@" "]];
+    }
     
     [outerArray addObject:innerArray.copy];
     
     for (int i = 1; i < rows; i++)
     {
         innerArray = NSMutableArray.array;
-        [innerArray addObject:[_delegate headerTextForRow:i]];
+        
+        [innerArray addObject:[[_delegate headerTextForRow:i] stringByReplacingOccurrencesOfString:@"\n"
+                                                                                        withString:@" "]];
         
         for (int j = 1; j < columns; j++)
-            [innerArray addObject:[_delegate textForColumn:j row:i]];
+        {
+            [innerArray addObject:[[_delegate textForColumn:j row:i] stringByReplacingOccurrencesOfString:@"\n"
+                                                                                               withString:@" "]];
+        }
         
         [outerArray addObject:innerArray.copy];
     }

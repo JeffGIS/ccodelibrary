@@ -148,8 +148,8 @@
         
         CFDataRef PDFData = NULL;
         
-        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"AppleSDGothicNeo-Bold",
-                                                 32.0, NULL);
+        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"CourierNewPS-BoldMT",
+                                                 36.0, NULL);
         
         NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
         style.alignment = NSTextAlignmentCenter;
@@ -164,18 +164,37 @@
         CGFloat margin = 20.0;
         CGFloat xPos = margin;
         CGFloat yPos = margin;
-        CGFloat cellWidth = 360.0;
         CGFloat cellHeight = 60.0;
+        CGFloat cellWidth = 0.0;
+        CGFloat pageWidth = (margin * 2.0);
         
-        CGRect pageRect = CGRectMake(0.0, 0.0, ((margin * 2.0) + (cellWidth * textArray.count)),
-                                     ((margin * 2.0) + (cellHeight * textArray[0].count)));
+        NSMutableArray <NSNumber *> *widthArray = NSMutableArray.array;
+        NSArray *innerArray = nil;
+        NSInteger length = 0;
+        
+        for (NSArray *innerArray in textArray)
+        {
+            length = 0;
+            
+            for (NSString *text in innerArray)
+                length = MAX(text.length, length);
+            
+            float textWidth = ((length * 22.0) + margin);
+            [widthArray addObject: [NSNumber numberWithFloat:textWidth]];
+            pageWidth += textWidth;
+        }
+        
+        CGRect pageRect = CGRectMake(0.0, 0.0, pageWidth, ((margin * 2.0) + (cellHeight * textArray[0].count)));
         
         PDFData = CFDataCreate(NULL, (const UInt8 *)&pageRect, sizeof(CGRect));
         CFDictionarySetValue(PDFDict, kCGPDFContextMediaBox, PDFData);
         CGPDFContextBeginPage(PDFContext, PDFDict);
         
-        for (NSArray *innerArray in textArray)
+        for (int i = 0; i < textArray.count; i++)
         {
+            innerArray = textArray[i];
+            cellWidth = widthArray[i].floatValue;
+            
             for (NSString *text in innerArray)
             {
                 attrbText = [[NSAttributedString alloc] initWithString:text
