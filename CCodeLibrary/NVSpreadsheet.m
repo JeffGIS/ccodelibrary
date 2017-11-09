@@ -201,7 +201,7 @@ forCellWithReuseIdentifier:(NSString *)identifier
     [self addSubview:container];
     
     collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    collectionView.backgroundColor = [UIColor clearColor];
+    collectionView.backgroundColor = UIColor.clearColor;
     collectionView.tag = tag;
     collectionView.delegate = self;
     collectionView.dataSource = self;

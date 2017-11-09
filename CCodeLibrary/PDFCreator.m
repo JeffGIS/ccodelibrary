@@ -139,6 +139,7 @@
         CFDictionarySetValue(PDFDict, kCGPDFContextCreator, CFSTR("GSSi"));
         
         CGContextRef PDFContext = CGPDFContextCreateWithURL(PDFUrl, NULL, PDFDict);
+        CGContextSetStrokeColorWithColor(PDFContext, UIColor.blackColor.CGColor);
         CFRelease(PDFDict);
         CFRelease(PDFUrl);
         
@@ -147,7 +148,7 @@
         
         CFDataRef PDFData = NULL;
         
-        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"AppleSDGothicNeo-Medium",
+        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"AppleSDGothicNeo-Bold",
                                                  32.0, NULL);
         
         NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
@@ -181,6 +182,12 @@
                                                             attributes:textAttributes];
                 
                 cellRect = CGRectMake(xPos, (pageRect.size.height - cellHeight - yPos), cellWidth, cellHeight);
+                CGContextAddRect(PDFContext, cellRect);
+                CGContextStrokePath(PDFContext);
+                
+                cellRect = CGRectMake(cellRect.origin.x, (cellRect.origin.y - 6.0),
+                                      cellRect.size.width, cellRect.size.height - 6.0);
+                
                 CGPathRef path = CGPathCreateWithRect(cellRect, NULL);
                 CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attrbText);
                 CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, text.length), path, NULL);
