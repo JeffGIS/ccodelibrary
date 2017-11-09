@@ -129,6 +129,8 @@
 		69F4823A1DB7CBC300E4BDB5 /* NVGridLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F482391DB7CBC300E4BDB5 /* NVGridLayout.m */; };
 		69F4823D1DB7DDBF00E4BDB5 /* NVSpreadsheetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F4823C1DB7DDBF00E4BDB5 /* NVSpreadsheetCell.m */; };
 		69F482401DB7DF7600E4BDB5 /* NSIndexPath+NVSpreadsheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F4823F1DB7DF7600E4BDB5 /* NSIndexPath+NVSpreadsheet.m */; };
+		69F52BA41FB519C400583485 /* SSDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F52BA31FB519C400583485 /* SSDelegate.m */; };
+		69F52BA51FB51A3F00583485 /* SSDelegate.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F52BA21FB519C400583485 /* SSDelegate.h */; };
 		69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */; };
 		69F5B2301BC5F6CD00119212 /* NVDestinationOptions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */; };
 		69F8E0D51D05C194003E8655 /* NVMarkerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F8E0D41D05C194003E8655 /* NVMarkerView.m */; };
@@ -401,6 +403,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69F52BA51FB51A3F00583485 /* SSDelegate.h in CopyFiles */,
 				69BD0D6E1FA22D6A00B3E6E0 /* HotSpotVideoVC.h in CopyFiles */,
 				EBC2BC901FA1A2CC00F2F329 /* HotSpotVideo.h in CopyFiles */,
 				698A1C9D1F9E509500D22C03 /* ChartsBitmapVC.h in CopyFiles */,
@@ -695,6 +698,8 @@
 		69F4823C1DB7DDBF00E4BDB5 /* NVSpreadsheetCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSpreadsheetCell.m; sourceTree = "<group>"; };
 		69F4823E1DB7DF7600E4BDB5 /* NSIndexPath+NVSpreadsheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexPath+NVSpreadsheet.h"; sourceTree = "<group>"; };
 		69F4823F1DB7DF7600E4BDB5 /* NSIndexPath+NVSpreadsheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexPath+NVSpreadsheet.m"; sourceTree = "<group>"; };
+		69F52BA21FB519C400583485 /* SSDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSDelegate.h; sourceTree = "<group>"; };
+		69F52BA31FB519C400583485 /* SSDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSDelegate.m; sourceTree = "<group>"; };
 		69F5B22D1BC5EFB800119212 /* NVDestinationOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDestinationOptions.h; sourceTree = "<group>"; };
 		69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDestinationOptions.m; sourceTree = "<group>"; };
 		69F8E0D31D05C194003E8655 /* NVMarkerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVMarkerView.h; sourceTree = "<group>"; };
@@ -1432,6 +1437,8 @@
 				A94A770C19F7F9F40062906E /* SharedDefaults.m */,
 				EBAB42311B2B1A5E00C36FFC /* SQLiteLib.h */,
 				BB0FD9381D2422A0007C1219 /* SQLiteLib.m */,
+				69F52BA21FB519C400583485 /* SSDelegate.h */,
+				69F52BA31FB519C400583485 /* SSDelegate.m */,
 				EB7C6A141BD158D8006E985B /* StringFunctions.h */,
 				EB7C6A151BD158D8006E985B /* StringFunctions.m */,
 				EB0E4FF31C62785200849766 /* SymbolDictionary.h */,
@@ -1692,6 +1699,7 @@
 				BB0FD9391D2422A0007C1219 /* SQLiteLib.m in Sources */,
 				A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */,
 				EBA517B71BCA1355005A9CA8 /* CrimeData.m in Sources */,
+				69F52BA41FB519C400583485 /* SSDelegate.m in Sources */,
 				A98A57A81B20ADE600906FBC /* NVCalibrationController.m in Sources */,
 				EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */,
 				A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */,

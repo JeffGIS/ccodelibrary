@@ -1127,7 +1127,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 fileName = [self fileNameWithType:@"pdf"];
                 NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
                 
-                if (![PDFCreator writePDFtoFile:filePath fromTextArray:self.arrayOutput])
+                if (![PDFCreator writePDFtoFile:filePath fromTextArray:CRAPI.sharedInstance.arrayOutput])
                     uploadToCloud(filePath, YES);
                 break;}
             default:break;
@@ -1314,41 +1314,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     
     return output.copy;
-}
-
-- (NSArray <NSArray *> *)arrayOutput
-{
-    int rows = (int)(_delegate.numRowsInSpreadsheet + 1);
-    int columns = (int)(_delegate.numColumnsInSpreadsheet + 1);
-    NSMutableArray <NSArray *> *outerArray = NSMutableArray.array;
-    NSMutableArray *innerArray = NSMutableArray.array;
-    [innerArray addObject:@""];
-    
-    for (int i = 1; i < columns; i++)
-    {
-        [innerArray addObject:[[_delegate headerTextForColumn:i] stringByReplacingOccurrencesOfString:@"\n"
-                                                                                           withString:@" "]];
-    }
-    
-    [outerArray addObject:innerArray.copy];
-    
-    for (int i = 1; i < rows; i++)
-    {
-        innerArray = NSMutableArray.array;
-        
-        [innerArray addObject:[[_delegate headerTextForRow:i] stringByReplacingOccurrencesOfString:@"\n"
-                                                                                        withString:@" "]];
-        
-        for (int j = 1; j < columns; j++)
-        {
-            [innerArray addObject:[[_delegate textForColumn:j row:i] stringByReplacingOccurrencesOfString:@"\n"
-                                                                                               withString:@" "]];
-        }
-        
-        [outerArray addObject:innerArray.copy];
-    }
-    
-    return outerArray.copy;
 }
 
 - (void)documentManagerDidCompleteWithMessage:(NSString *)message

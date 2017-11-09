@@ -13,6 +13,7 @@
 #import "NVDocumentManager.h"
 #import "NVSendEmail.h"
 #import "HotSpotVideo.h"
+#import "SSDelegate.h"
 
 #define MANAGEMENT_MODULE       1
 #define PRELIM_MODULE           2
@@ -149,7 +150,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) dispatch_queue_t vectorQueue;
 @property BOOL showCompassCalibrationScreen;
 @property LLPOINT lastPickPoint;
-@property (nonatomic, nullable) id spreadsheetDelegate;
+@property (nonatomic, nullable) SSDelegate *spreadsheetDelegate;
 
 + (nullable CRAPI *)sharedInstance;
 
@@ -250,5 +251,6 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void)uploadToCloud;
 - (void)displayChartBitmaps:(nonnull NSTimer *)timer;
 - (void)displayHotSpotVideo:(nonnull NSTimer *)timer;
+- (nonnull NSArray<NSArray *> *)arrayOutput;
 
 @end

@@ -1496,4 +1496,39 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                          completion:nil];
 }
 
+- (NSArray <NSArray *> *)arrayOutput
+{
+    int rows = (int)(_spreadsheetDelegate.numRowsInSpreadsheet + 1);
+    int columns = (int)(_spreadsheetDelegate.numColumnsInSpreadsheet + 1);
+    NSMutableArray <NSArray *> *outerArray = NSMutableArray.array;
+    NSMutableArray *innerArray = NSMutableArray.array;
+    [innerArray addObject:@""];
+    
+    for (int i = 1; i < columns; i++)
+    {
+        [innerArray addObject:[[_spreadsheetDelegate headerTextForColumn:i] stringByReplacingOccurrencesOfString:@"\n"
+                                                                                                      withString:@" "]];
+    }
+    
+    [outerArray addObject:innerArray.copy];
+    
+    for (int i = 1; i < rows; i++)
+    {
+        innerArray = NSMutableArray.array;
+        
+        [innerArray addObject:[[_spreadsheetDelegate headerTextForRow:i] stringByReplacingOccurrencesOfString:@"\n"
+                                                                                                   withString:@" "]];
+        
+        for (int j = 1; j < columns; j++)
+        {
+            [innerArray addObject:[[_spreadsheetDelegate textForColumn:j row:i] stringByReplacingOccurrencesOfString:@"\n"
+                                                                                                          withString:@" "]];
+        }
+        
+        [outerArray addObject:innerArray.copy];
+    }
+    
+    return outerArray.copy;
+}
+
 @end
