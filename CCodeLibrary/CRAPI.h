@@ -149,6 +149,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) dispatch_queue_t vectorQueue;
 @property BOOL showCompassCalibrationScreen;
 @property LLPOINT lastPickPoint;
+@property (nonatomic, nullable) id spreadsheetDelegate;
 
 + (nullable CRAPI *)sharedInstance;
 
