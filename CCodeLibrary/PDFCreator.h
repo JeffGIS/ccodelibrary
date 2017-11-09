@@ -35,4 +35,7 @@
 + (int)writePDFtoFile:(NSString *)filePath
         fromPageArray:(NSArray <PDFPage *> *)pageArray;
 
++ (int)writePDFtoFile:(NSString *)filePath
+        fromTextArray:(NSArray <NSArray *> *)textArray;
+
 @end

@@ -11,6 +11,7 @@
 #import "NVTabBarEdit.h"
 #import "NVTextVC.h"
 @import MessageUI;
+#import "CCodeLibrary/PDFCreator.h"
 
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
 
@@ -937,11 +938,14 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)export:(UIButton *)button
 {
-    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                      delegate:self
-                                                         title:@"Select Export Method"
-                                               buttonTextArray:@[@"Export as Email Attachment", @"Export to Cloud", @"Cancel"]
-                                              destructiveIndex:0];
+    NVAlertView *alert =
+    [NVAlertView showLargeAlertViewinView:self.view
+                                 delegate:self
+                                    title:@"Select Export Method"
+                          buttonTextArray:@[@"Export Text as Email Attachment", @"Export Text to Cloud",
+                                            @"Export PDF to Cloud", @"Cancel"]
+                         destructiveIndex:0];
+    
     alert.identifier = @"ExportPrompt";
 }
 
@@ -1090,23 +1094,21 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     if ([alertView.identifier isEqualToString:@"ExportPrompt"])
     {
+        NSString *fileName = [self fileNameWithType:@"txt"];
+        NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
+        
         switch (buttonIndex)
         {
-            case 0://Export as Email Attachment
-            {
-                [NVSendEmail sendEmailWithSubject:[NSString stringWithFormat:@"%@ from NVMobile", self.fileName]
+            case 0:{//Export Text as Email Attachment
+                [NVSendEmail sendEmailWithSubject:[NSString stringWithFormat:@"%@ from NVMobile", fileName]
                                           message:@"The tab-delimited text file attached to this email was created by NVMobile."
                                    attachmentData:[self.tabbedOutput dataUsingEncoding:NSUTF8StringEncoding]
                                          mimeType:@"text/plain"
-                                         fileName:self.fileName
+                                         fileName:fileName
                                        controller:self];
-            }
-                break;
-            case 1://Export to Cloud
-            {
-                NSString *tabbedOutput = [self tabbedOutput];
-                NSString *fileName = [self fileName];
-                NSString *documentsDirectory = UserDefaults.defaults.localFilePath;
+                break;}
+            case 1:{//Export Text to Cloud
+                NSString *tabbedOutput = self.tabbedOutput;
                 NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
                 NSError *error = nil;
                 
@@ -1119,15 +1121,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     NSLog(@"Export to Cloud File Write ERROR:%@", error);
                 
                 else
-                {
-                    [CRAPI.sharedInstance.docManager exportDocumentFromFilePath:filePath
-                                                                       delegate:self
-                                                                 deleteWhenDone:YES];
-                }
-            }
-                break;
-            default:
-                break;
+                    uploadToCloud(filePath, YES);
+                break;}
+            case 2:{//Export PDF to Cloud
+                fileName = [self fileNameWithType:@"pdf"];
+                NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
+                
+                if (![PDFCreator writePDFtoFile:filePath fromTextArray:self.arrayOutput])
+                    uploadToCloud(filePath, YES);
+                break;}
+            default:break;
         }
     }
     
@@ -1197,7 +1200,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                         
                         [self presentViewController:textVC animated:YES completion:nil];
                     }
-                    
                     break;}
             }
         }
@@ -1257,20 +1259,19 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             case 8:
                 [_nvss goToLowerRight];
                 break;
-            default:
-                break;
+            default:break;
         }
     }
     
     [alertView hideLargeAlertView:YES];
 }
 
-- (NSString *)fileName
+- (NSString *)fileNameWithType:(NSString *)type
 {
-    NSString *fileName = @"Spreadsheet.txt";
+    NSString *fileName = [NSString stringWithFormat:@"Spreadsheet.%@", type];
     
     if (_titleTextField.text.length)
-        fileName = [NSString stringWithFormat:@"%@.txt", _titleTextField.text];
+        fileName = [NSString stringWithFormat:@"%@.%@", _titleTextField.text, type];
     
     fileName = [fileName stringByReplacingOccurrencesOfString:@" " withString:@""];
     
@@ -1313,6 +1314,33 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     
     return output.copy;
+}
+
+- (NSArray <NSArray *> *)arrayOutput
+{
+    int rows = (int)(_delegate.numRowsInSpreadsheet + 1);
+    int columns = (int)(_delegate.numColumnsInSpreadsheet + 1);
+    NSMutableArray <NSArray *> *outerArray = NSMutableArray.array;
+    NSMutableArray *innerArray = NSMutableArray.array;
+    [innerArray addObject:@""];
+    
+    for (int i = 1; i < rows; i++)
+        [innerArray addObject:[_delegate headerTextForRow:i]];
+    
+    [outerArray addObject:innerArray.copy];
+    
+    for (int i = 1; i < columns; i++)
+    {
+        innerArray = NSMutableArray.array;
+        [innerArray addObject:[_delegate headerTextForColumn:i]];
+        
+        for (int j = 1; j < rows; j++)
+            [innerArray addObject:[_delegate textForColumn:i row:j]];
+        
+        [outerArray addObject:innerArray.copy];
+    }
+    
+    return outerArray.copy;
 }
 
 - (void)documentManagerDidCompleteWithMessage:(NSString *)message
