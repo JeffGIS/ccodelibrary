@@ -36,6 +36,7 @@
         fromPageArray:(NSArray <PDFPage *> *)pageArray;
 
 + (int)writePDFtoFile:(NSString *)filePath
-        fromTextArray:(NSArray <NSArray *> *)textArray;
+        fromTextArray:(NSArray <NSArray *> *)textArray
+              context:(CGContextRef)context;
 
 @end

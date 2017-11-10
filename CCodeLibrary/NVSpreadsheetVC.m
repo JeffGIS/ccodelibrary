@@ -1127,8 +1127,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 fileName = [self fileNameWithType:@"pdf"];
                 NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
                 
-                if (![PDFCreator writePDFtoFile:filePath fromTextArray:CRAPI.sharedInstance.arrayOutput])
+                if (![PDFCreator writePDFtoFile:filePath
+                                  fromTextArray:CRAPI.sharedInstance.arrayOutput
+                                        context:nil])
+                {
                     uploadToCloud(filePath, YES);
+                }
                 break;}
             default:break;
         }

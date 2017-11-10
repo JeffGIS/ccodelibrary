@@ -3,6 +3,7 @@
 
 #import "PDFCreator.h"
 @import CoreText;
+#import "CRAPI.h"
 
 @implementation PDFPage
 
@@ -112,8 +113,13 @@
             CFRelease(PDFData);
         }
         
-        CGContextRelease(PDFContext);
         CFRelease(PDFDict);
+        
+        [PDFCreator writePDFtoFile:nil
+                     fromTextArray:CRAPI.sharedInstance.arrayOutput
+                           context:PDFContext];
+        
+        CGContextRelease(PDFContext);
         
         returnCode = PDFCreate_OK;
     }
@@ -123,25 +129,35 @@
 
 + (int)writePDFtoFile:(NSString *)filePath
         fromTextArray:(NSArray <NSArray *> *)textArray
+              context:(CGContextRef)context
 {
     int returnCode = PDFCreate_FAIL;
+    CFMutableDictionaryRef PDFDict = NULL;
+    CGContextRef PDFContext = NULL;
     
-    if (filePath && filePath.length)
+    if ((filePath && filePath.length) || context)
     {
-        CFStringRef PDFPath = CFStringCreateWithCString(NULL, filePath.UTF8String, kCFStringEncodingUTF8);
-        CFURLRef PDFUrl = CFURLCreateWithFileSystemPath(NULL, PDFPath, kCFURLPOSIXPathStyle, 0);
-        CFRelease(PDFPath);
+        if (context)
+            PDFContext = context;
         
-        CFMutableDictionaryRef PDFDict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks,
-                                                                   &kCFTypeDictionaryValueCallBacks);
-        
-        CFDictionarySetValue(PDFDict, kCGPDFContextTitle, CFSTR("PDF Extract File"));
-        CFDictionarySetValue(PDFDict, kCGPDFContextCreator, CFSTR("GSSi"));
-        
-        CGContextRef PDFContext = CGPDFContextCreateWithURL(PDFUrl, NULL, PDFDict);
+        else
+        {
+            CFStringRef PDFPath = CFStringCreateWithCString(NULL, filePath.UTF8String, kCFStringEncodingUTF8);
+            CFURLRef PDFUrl = CFURLCreateWithFileSystemPath(NULL, PDFPath, kCFURLPOSIXPathStyle, 0);
+            CFRelease(PDFPath);
+            
+            CFMutableDictionaryRef PDFDict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks,
+                                                                       &kCFTypeDictionaryValueCallBacks);
+            
+            CFDictionarySetValue(PDFDict, kCGPDFContextTitle, CFSTR("PDF Extract File"));
+            CFDictionarySetValue(PDFDict, kCGPDFContextCreator, CFSTR("GSSi"));
+            
+            PDFContext = CGPDFContextCreateWithURL(PDFUrl, NULL, PDFDict);
+            CFRelease(PDFDict);
+            CFRelease(PDFUrl);
+        }
+
         CGContextSetStrokeColorWithColor(PDFContext, UIColor.blackColor.CGColor);
-        CFRelease(PDFDict);
-        CFRelease(PDFUrl);
         
         PDFDict = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks,
                                             &kCFTypeDictionaryValueCallBacks);
@@ -226,8 +242,10 @@
         
         CGPDFContextEndPage(PDFContext);
         CFRelease(PDFData);
-        CGContextRelease(PDFContext);
         CFRelease(PDFDict);
+        
+        if (!context)
+            CGContextRelease(PDFContext);
         
         returnCode = PDFCreate_OK;
     }

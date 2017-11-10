@@ -1498,6 +1498,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (NSArray <NSArray *> *)arrayOutput
 {
+    BOOL opened = [_spreadsheetDelegate openList];
     int rows = (int)(_spreadsheetDelegate.numRowsInSpreadsheet + 1);
     int columns = (int)(_spreadsheetDelegate.numColumnsInSpreadsheet + 1);
     NSMutableArray <NSArray *> *outerArray = NSMutableArray.array;
@@ -1527,6 +1528,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         
         [outerArray addObject:innerArray.copy];
     }
+    
+    if (opened)
+        [_spreadsheetDelegate closeList];
     
     return outerArray.copy;
 }
