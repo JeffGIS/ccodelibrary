@@ -121,6 +121,7 @@
         _acreFmt.usesGroupingSeparator = YES;
         _acreFmt.maximumFractionDigits = 2;
         _showCompassCalibrationScreen = YES;
+        _boundaryBorderWidth = 4;
     }
     
     return self;

@@ -102,6 +102,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic) BOOL showPolylineForBounds, maskBoundsForBounds, setToAlleyWalls, isFromGMMobile;
 @property (nonatomic,copy, nonnull) NSString * currentOverallBoundaryTable;
 @property (nonatomic) CGFloat maskTransparency;
+@property (nonatomic) CGFloat boundaryBorderWidth;
 @property (nonatomic, copy, nullable) NSString *sourceApp;
 @property (nonatomic, nullable) UIView *currentView;
 @property (nonatomic) MNMXCORD lastDisplayBounds, lastViewBounds;
