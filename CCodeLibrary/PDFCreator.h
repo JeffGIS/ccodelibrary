@@ -27,14 +27,15 @@
 @property (nonatomic, copy) NSString *propertyList;
 @property (nonatomic, copy) NSString *fieldList;
 @property int upperLeftX, upperLeftY;
+
 @end
 
 @interface PDFPage : NSObject
 
 @property int pageWidth, pageHeight;
-@property NSMutableArray <PDFPageImage *> *PDFPageImages;
-@property NSMutableArray <PDFPageTextBlock *> *PDFPageTextBlocks;
-@property NSMutableArray <PDFPageTextBlock *> *PDFPagePropertySpreadSheets;
+@property (nonatomic) NSMutableArray <PDFPageImage *> *PDFPageImages;
+@property (nonatomic) NSMutableArray <PDFPageTextBlock *> *PDFPageTextBlocks;
+@property (nonatomic) NSMutableArray <PDFPagePropertySpreadSheet *> *PDFPagePropertySpreadSheets;
 
 @end
 
@@ -45,6 +46,8 @@
 
 + (int)writePDFtoFile:(NSString *)filePath
         fromTextArray:(NSArray <NSArray *> *)textArray
-              context:(CGContextRef)context;
+              context:(CGContextRef)context
+           createPage:(BOOL)createPage
+               origin:(CGPoint)origin;
 
 @end

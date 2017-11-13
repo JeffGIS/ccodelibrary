@@ -1129,7 +1129,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 
                 if (![PDFCreator writePDFtoFile:filePath
                                   fromTextArray:CRAPI.sharedInstance.arrayOutput
-                                        context:nil])
+                                        context:nil
+                                     createPage:YES
+                                         origin:CGPointZero])
                 {
                     uploadToCloud(filePath, YES);
                 }

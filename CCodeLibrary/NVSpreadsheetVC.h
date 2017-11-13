@@ -63,6 +63,8 @@
 - (SpreadsheetAction)actionForTwoTouchLongPressOnRowHeader;
 - (SpreadsheetAction)actionForOneTouchLongPressOnColumnHeader;
 - (SpreadsheetAction)actionForTwoTouchLongPressOnColumnHeader;
+- (void)setCurrentFieldList:(NSString *)fieldList;
+- (void)setCurrentPropList:(NSString *)propList;
 
 @end
 

@@ -5,6 +5,10 @@
 @import CoreText;
 #import "CRAPI.h"
 
+#define SS_CELL_HEIGHT 60
+#define SS_MARGIN 20
+#define SS_FONT_FACTOR 22.0
+
 @implementation PDFPage
 
 - (id)init
@@ -15,6 +19,7 @@
     {
         _PDFPageImages = NSMutableArray.new;
         _PDFPageTextBlocks = NSMutableArray.new;
+        _PDFPagePropertySpreadSheets = NSMutableArray.new;
     }
     
     return self;
@@ -59,6 +64,7 @@
         PDFPage *page = nil;
         PDFPageImage *pageImage = nil;
         PDFPageTextBlock *pageText = nil;
+        PDFPagePropertySpreadSheet *spreadSheet = nil;
         UIImage *image = nil;
         
         for (int i = 0; i < pageArray.count; i++)
@@ -109,16 +115,24 @@
                 CFRelease(frame);
             }
             
+            for (int j = 0; j < page.PDFPagePropertySpreadSheets.count; j++)
+            {
+                spreadSheet = page.PDFPagePropertySpreadSheets[j];
+                [PDFCreator setCurrentSpreadsheet:spreadSheet];
+                CGPoint origin = CGPointMake(spreadSheet.upperLeftX, spreadSheet.upperLeftY);
+                
+                [PDFCreator writePDFtoFile:nil
+                             fromTextArray:CRAPI.sharedInstance.arrayOutput
+                                   context:PDFContext
+                                createPage:NO
+                                    origin:origin];
+            }
+            
             CGPDFContextEndPage(PDFContext);
             CFRelease(PDFData);
         }
         
         CFRelease(PDFDict);
-        
-        [PDFCreator writePDFtoFile:nil
-                     fromTextArray:CRAPI.sharedInstance.arrayOutput
-                           context:PDFContext];
-        
         CGContextRelease(PDFContext);
         
         returnCode = PDFCreate_OK;
@@ -127,9 +141,48 @@
     return returnCode;
 }
 
++ (CGSize)sizeForSpreadSheet:(PDFPagePropertySpreadSheet *)spreadSheet
+                      margin:(CGFloat)margin
+{
+    [PDFCreator setCurrentSpreadsheet:spreadSheet];
+    return [PDFCreator sizeForTextArray:CRAPI.sharedInstance.arrayOutput];
+}
+
++ (CGSize)sizeForTextArray:(NSArray <NSArray *> *)textArray
+{
+    CGFloat pageWidth = 0.0;
+    CGFloat cellHeight = SS_CELL_HEIGHT;
+    CGFloat margin = SS_MARGIN;
+    NSInteger length = 0;
+    
+    for (NSArray *innerArray in textArray)
+    {
+        length = 0;
+        
+        for (NSString *text in innerArray)
+            length = MAX(text.length, length);
+        
+        float textWidth = ((length * SS_FONT_FACTOR) + margin);
+        pageWidth += textWidth;
+    }
+    
+    return CGSizeMake(pageWidth, (margin * 2.0) + (cellHeight * textArray[0].count));
+}
+
++ (void)setCurrentSpreadsheet:(PDFPagePropertySpreadSheet *)spreadSheet
+{
+    if ([CRAPI.sharedInstance.spreadsheetDelegate respondsToSelector:@selector(setCurrentFieldList:)])
+        [CRAPI.sharedInstance.spreadsheetDelegate setCurrentFieldList:spreadSheet.fieldList];
+    
+    if ([CRAPI.sharedInstance.spreadsheetDelegate respondsToSelector:@selector(setCurrentPropList:)])
+        [CRAPI.sharedInstance.spreadsheetDelegate setCurrentPropList:spreadSheet.propertyList];
+}
+
 + (int)writePDFtoFile:(NSString *)filePath
         fromTextArray:(NSArray <NSArray *> *)textArray
               context:(CGContextRef)context
+           createPage:(BOOL)createPage
+               origin:(CGPoint)origin
 {
     int returnCode = PDFCreate_FAIL;
     CFMutableDictionaryRef PDFDict = NULL;
@@ -177,46 +230,45 @@
         
         NSAttributedString *attrbText = nil;
         CGRect cellRect = CGRectZero;
-        CGFloat margin = 20.0;
+        CGFloat margin = SS_MARGIN;
         CGFloat xPos = margin;
         CGFloat yPos = margin;
-        CGFloat cellHeight = 60.0;
+        CGFloat cellHeight = SS_CELL_HEIGHT;
         CGFloat cellWidth = 0.0;
-        CGFloat pageWidth = (margin * 2.0);
-        
-        NSMutableArray <NSNumber *> *widthArray = NSMutableArray.array;
         NSArray *innerArray = nil;
-        NSInteger length = 0;
         
-        for (NSArray *innerArray in textArray)
+        CGSize pageSize = [PDFCreator sizeForTextArray:textArray];
+        
+        if (createPage)
+        {
+            CGRect pageRect = CGRectMake(0.0, 0.0, pageSize.height, pageSize.width);
+            PDFData = CFDataCreate(NULL, (const UInt8 *)&pageRect, sizeof(CGRect));
+            CFDictionarySetValue(PDFDict, kCGPDFContextMediaBox, PDFData);
+            CGPDFContextBeginPage(PDFContext, PDFDict);
+        }
+        
+        NSInteger length = 0;
+        float textWidth = 0.0;
+        
+        for (int i = 0; i < textArray.count; i++)
         {
             length = 0;
             
             for (NSString *text in innerArray)
                 length = MAX(text.length, length);
             
-            float textWidth = ((length * 22.0) + margin);
-            [widthArray addObject: [NSNumber numberWithFloat:textWidth]];
-            pageWidth += textWidth;
-        }
-        
-        CGRect pageRect = CGRectMake(0.0, 0.0, pageWidth, ((margin * 2.0) + (cellHeight * textArray[0].count)));
-        
-        PDFData = CFDataCreate(NULL, (const UInt8 *)&pageRect, sizeof(CGRect));
-        CFDictionarySetValue(PDFDict, kCGPDFContextMediaBox, PDFData);
-        CGPDFContextBeginPage(PDFContext, PDFDict);
-        
-        for (int i = 0; i < textArray.count; i++)
-        {
+            textWidth = ((length * SS_FONT_FACTOR) + margin);
             innerArray = textArray[i];
-            cellWidth = widthArray[i].floatValue;
+            cellWidth = length;
             
             for (NSString *text in innerArray)
             {
                 attrbText = [[NSAttributedString alloc] initWithString:text
                                                             attributes:textAttributes];
                 
-                cellRect = CGRectMake(xPos, (pageRect.size.height - cellHeight - yPos), cellWidth, cellHeight);
+                cellRect = CGRectMake((xPos + origin.x), (pageSize.height - cellHeight - yPos - origin.y),
+                                      cellWidth, cellHeight);
+                
                 CGContextAddRect(PDFContext, cellRect);
                 CGContextStrokePath(PDFContext);
                 
