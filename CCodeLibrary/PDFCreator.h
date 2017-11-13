@@ -22,11 +22,19 @@
 
 @end
 
+@interface PDFPagePropertySpreadSheet : NSObject
+
+@property (nonatomic, copy) NSString *propertyList;
+@property (nonatomic, copy) NSString *fieldList;
+@property int upperLeftX, upperLeftY;
+@end
+
 @interface PDFPage : NSObject
 
 @property int pageWidth, pageHeight;
 @property NSMutableArray <PDFPageImage *> *PDFPageImages;
 @property NSMutableArray <PDFPageTextBlock *> *PDFPageTextBlocks;
+@property NSMutableArray <PDFPageTextBlock *> *PDFPagePropertySpreadSheets;
 
 @end
 
