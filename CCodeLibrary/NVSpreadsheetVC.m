@@ -13,7 +13,8 @@
 @import MessageUI;
 #import "PDFCreator.h"
 
-@interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,NVAlertViewDelegate,NVDocumentManagerDelegate,NVPopoverTableViewDelegate,UITextFieldDelegate>
+@interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,
+NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
 @property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine, *cpyButton, *export, *delete, *mapIt, *create, *select, *help;
