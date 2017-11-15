@@ -16,6 +16,7 @@
 
 @property (nonatomic, weak) id <GSSiPopoverViewDelegate> delegate;
 @property (nonatomic) UIView *popover;
+@property (nonatomic) UIView *parentView;
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UIButton *popoverCancel;
 @property (nonatomic) UILabel *popoverLabel, *progressLabel;

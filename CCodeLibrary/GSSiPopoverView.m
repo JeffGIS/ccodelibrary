@@ -24,7 +24,7 @@
     {
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.backgroundColor = UIColor.clearColor;
-        
+        self.parentView = fromView;
         [fromView addSubview:self];
         [self constrainToView:fromView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
         self.hidden = YES;
@@ -150,6 +150,7 @@
 - (void)show
 {
     self.hidden = NO;
+    [_parentView bringSubviewToFront:self];
 }
 
 - (void)hideFromTimer:(NSTimer *)timer
@@ -233,6 +234,8 @@
     
     _progressLabel.text = [NSString stringWithFormat:@"%i%% complete",
                            (int)roundf(progress * 100.0)];
+    [_parentView bringSubviewToFront:self];
+
 }
 
 - (void)setTitle:(NSString *)title
