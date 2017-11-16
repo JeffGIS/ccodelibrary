@@ -578,6 +578,9 @@ NSString *textInsideParentheses(NSString *string)
         string = [string substringFromIndex:(start.location + 1)];
     }
     
+    else
+        string = @"";
+    
     return string;
 }
 
