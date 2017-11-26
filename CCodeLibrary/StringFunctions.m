@@ -360,6 +360,28 @@ NSString *textBeforeLastChar(NSString *string,NSString* c)
     return string;
 }
 
+NSString *truncateString (NSString *string)
+{
+    if (!string)
+        return nil;
+    
+    else if (!string.length)
+        return string;
+    LPSTR str = (LPSTR)string.UTF8String;
+    long l = string.length;
+    LPSTR lastc = str + l;
+    while (l--)
+    {
+        lastc--;
+        if (*lastc != ' ')
+            break;
+    }
+    
+    string = [string substringToIndex:(l+1)];
+    
+    return string;
+}
+
 NSString *textAfterLastSpace(NSString *string)
 {
     if (!string)

@@ -28,6 +28,7 @@ NSString *paddedString(NSString * str);
 NSString *textBefore(NSString *string, NSString *before);
 NSString *textAfter(NSString *string, NSString *after);
 NSString *textUpTo(NSString *string, NSString *upto);
+NSString *truncateString (NSString *string);
 NSString *removeEndingReturn(NSString *string);
 NSString *textAfterHyphen(NSString *string);
 NSString *textBeforeHyphen(NSString *string);

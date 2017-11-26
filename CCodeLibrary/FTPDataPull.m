@@ -379,13 +379,13 @@ didReceiveResponse:(NSURLResponse *)response
     
     else
     {
-        /*if (_useTestServer)
+        if (_useTestServer)
         {
             _username = @"GSSiLocalUser";
             _password = @"gssi";
         }
         
-        else*/
+        else
         {
             _username = @"GSSiProfessionalServer";
             _password = @"GSSi";
@@ -406,7 +406,7 @@ didReceiveResponse:(NSURLResponse *)response
 {
     NSString * server = [CRAPI.sharedInstance getNVCRISServer];
     if (_useTestServer)
-        server = @"74.39.73.193";
+        server = @"74.39.73.158";
     _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@",
                 _username, _password, server, _port, _directory, _fileName];
 }

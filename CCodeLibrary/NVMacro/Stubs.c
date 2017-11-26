@@ -1197,10 +1197,6 @@ double ComputeAreaAreaDH(HANDLE hPoints, long nPnts, LPDOUBLE pPerim)
 {
 	return 0;
 }
-double ComputeAreaAreaD(HPDPOINT lpDPoints, long nPnts, LPDOUBLE pPerim)
-{
-	return 0;
-}
 Bool CloseFGDB(int iDB)
 {
 	return FALSE;

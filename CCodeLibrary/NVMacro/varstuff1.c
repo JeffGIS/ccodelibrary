@@ -4724,7 +4724,7 @@ short GetGlobalVal (HANDLE hGlobal,LPSTR OutStr,long Index)
                         CurTyp = CurrentTextBaseType;
                     if (CurTyp == GF_AREA)
                     {
-                        ftoa (OutStr,ComputeAreaAreaD (lpDCurPoints,nPnts,&Perimeter));
+                        ftoa (OutStr,ComputeAreaAreaD (lpDCurPoints,nPnts,&Perimeter,0));
                     }
                 }
                 break;
@@ -4735,7 +4735,7 @@ short GetGlobalVal (HANDLE hGlobal,LPSTR OutStr,long Index)
                         CurTyp = CurrentTextBaseType;
                     if (CurTyp == GF_AREA)
                     {
-                        ComputeAreaAreaD (lpDCurPoints,nPnts,&Perimeter);
+                        ComputeAreaAreaD (lpDCurPoints,nPnts,&Perimeter,0);
                         ftoa (OutStr,Perimeter);
                     }
                 }

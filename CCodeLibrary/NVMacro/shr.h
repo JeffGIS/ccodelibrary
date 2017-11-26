@@ -959,7 +959,7 @@ short GetDriveNum (char DriveLetter);
 double RectArea (LPRECT pRect);
 double RectArea16 (LPRECT16 pRect);
 double BoundsArea (LPMNMXCORD pRect);
-double ComputeAreaAreaD (HPDPOINT lpDPoints,long nPnts,LPDOUBLE pPerim);
+double ComputeAreaAreaD (HPDPOINT lpDPoints,long nPnts,LPDOUBLE pPerim,LPMNMXCORD pBounds);
 double ComputeAreaAreaDH (HANDLE hPoints,long nPnts,LPDOUBLE pPerim);
 DPOINT ComputeAreaMidpoint2 (HPDPOINT pPoints,long nPnts);
 DPOINT ComputeAreaMidpoint (HANDLE hPoints,long nPnts);

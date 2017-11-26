@@ -225,11 +225,10 @@ Top:
     }
     PointInArea *pia = [[PointInArea alloc] init];
     pia.maxDimension = 256;
-    
-    CGFloat areaSize = fabs(ComputeAreaAreaD(pPoints, numPoints, 0));
+    MNMXCORD areaBounds;
+    CGFloat areaSize = fabs(ComputeAreaAreaD(pPoints, numPoints, 0,&areaBounds));
     if (areaSize != 0)
     {
-        MNMXCORD areaBounds = PolyBounds(pPoints, (int)numPoints);
         if (pBounds)
         {
             areaBounds.xmn = max (areaBounds.xmn,pBounds->xmn);

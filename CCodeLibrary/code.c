@@ -698,11 +698,14 @@ GSSiExitProg (707);
 #endif
 }
 
-double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim)
+double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim,LPMNMXCORD pBounds)
 {
 	int	i; 
     DPOINT	BeginPoint={0}, LastPoint={0};
 	double	Area=0,Perim=0;    
+
+    if (pBounds)
+        DBoundsInit(pBounds);
 
 	for (i=0;i<nPnts;i++,lpDpoints++)
 	{   
@@ -710,15 +713,22 @@ double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim)
 			BeginPoint = *lpDpoints;
 		else  
 		{
-			Perim += ldistp(LastPoint,*lpDpoints);
+			if (pPerim)
+                Perim += ldistp(LastPoint,*lpDpoints);
 			Area += ( LastPoint.y - lpDpoints->y) * (lpDpoints->x + LastPoint.x) / 2;
 		}
+        if (pBounds)
+            AddDPointToMinMax(lpDpoints, pBounds);
+
 		LastPoint = *lpDpoints;
 	} 
-	Perim += ldistp(LastPoint,BeginPoint);
-	Area += (LastPoint.y - BeginPoint.y) * (BeginPoint.x + LastPoint.x) / 2;  
 	if (pPerim)
-		*pPerim = Perim;
+    {
+        Perim += ldistp(LastPoint,BeginPoint);
+        *pPerim = Perim;
+    }
+	Area += (LastPoint.y - BeginPoint.y) * (BeginPoint.x + LastPoint.x) / 2;
+	
 	return (Area);
 }
 

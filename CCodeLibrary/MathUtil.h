@@ -155,7 +155,7 @@ Bool  POINT_IN_AREAD (DPOINT PickPoint, DWORD nPoints, HPDPOINT lpAreaPoints,int
 Bool PICK_POINT_ON_LINE (DPOINT pickPoint,MNMXCORD pickBounds,LPDPOINT pPickedPoint,long nPnts,HPDPOINT lpPointsIn);
 Bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol);
 Bool samePoint (LPPOINT p1, LPPOINT p2);
-double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim);
+double ComputeAreaAreaD (HPDPOINT lpDpoints,long nPnts,LPDOUBLE pPerim,LPMNMXCORD pBounds);
 LPSTR Truncate(LPSTR Text);
 LPSTR OneSpace(LPSTR Arg1);
 LPSTR REPLAC(LPSTR STRING, LPCSTR OLD, LPCSTR NEW, int MAXLEN);
