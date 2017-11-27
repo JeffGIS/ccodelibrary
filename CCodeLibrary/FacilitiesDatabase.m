@@ -907,7 +907,7 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     else
         headerValue = [FacilityStepDefinition getStepHeader:[NSString stringWithUTF8String:stepDefID]];
     promptValue = ExpandString (promptValue);
-    headerValue = ExpandString (headerValue);
+    headerValue = headerValue;
     NSString * fieldIndex = ExpandString (@"[%FIELDINDEX]");
     NSString * variablesValue = [FacilityStepDefinition getStepVariables:[NSString stringWithUTF8String:stepDefID]];
     NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s','%s',%i,%i,%i,'%s',0,0,0,'','','',0,%i)",facID,stepValueID,lastUpdate,stepDefID,headerValue.UTF8String,promptValue.UTF8String,variablesValue.UTF8String,value,needPhoto,numPhotos,completionStatus,comment,(int)fieldIndex.integerValue];
