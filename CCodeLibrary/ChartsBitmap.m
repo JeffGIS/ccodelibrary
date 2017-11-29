@@ -195,7 +195,6 @@
             
             NSArray<NSNumber *> *patternRef = _patterns[i % _patterns.count];
             CGFloat pattern[patternRef.count];
-            memset(pattern, 0, sizeof(pattern));
             
             for (int i = 0; i < patternRef.count; i++)
                 pattern[i] = patternRef[i].floatValue;
