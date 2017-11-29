@@ -193,12 +193,6 @@
             if (!dataSet.color)
                 dataSet.color = _colors[i % _colors.count];
             
-            NSArray<NSNumber *> *patternRef = _patterns[i % _patterns.count];
-            CGFloat pattern[patternRef.count];
-            
-            for (int i = 0; i < patternRef.count; i++)
-                pattern[i] = patternRef[i].floatValue;
-            
             int offset = 0;
             
             if (_useOffset)
@@ -209,7 +203,21 @@
                 case ChartsBitmapDataTypeLine:
                     CGContextSetStrokeColorWithColor(context, dataSet.color.CGColor);
                     CGContextSetLineWidth(context, dataSet.lineWidth);
-                    CGContextSetLineDash(context, 0.0, pattern, patternRef.count);
+                    
+                    if (i < _colors.count)
+                        CGContextSetLineDash (context, 1, NULL, 0);
+                    
+                    else
+                    {
+                        NSArray<NSNumber *> *patternRef = _patterns[(i / _colors.count) - 1];
+                        CGFloat pattern[patternRef.count];
+                        
+                        for (int i = 0; i < patternRef.count; i++)
+                            pattern[i] = patternRef[i].floatValue;
+                        
+                        CGContextSetLineDash(context, 0.0, pattern, patternRef.count);
+                    }
+                    
                     CGContextSetLineJoin(context, kCGLineJoinRound);
                     
                     CGContextMoveToPoint(context,
