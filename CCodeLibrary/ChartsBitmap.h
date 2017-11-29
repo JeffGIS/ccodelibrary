@@ -39,7 +39,8 @@ typedef NS_ENUM(NSInteger, ChartsBitmapDataFormat)
 @property (nonatomic) NSMutableArray <ChartsBitmapDataSet *> *dataSets;
 @property (nonatomic, copy) NSString *outputFile, *title;
 @property (nonatomic) UIFont *titleFont;
-@property (nonatomic, copy) NSArray <UIColor *> *defaultColors;
+@property (nonatomic, copy) NSArray <UIColor *> *colors;
+@property (nonatomic, copy) NSArray <NSArray<NSNumber *> *> *patterns;
 @property BOOL useOffset;
 
 - (CGSize)createChartBitmap;

@@ -71,8 +71,14 @@
         _chartBackgroundColor = UIColor.whiteColor;
         _titleColor = UIColor.blackColor;
         
-        _defaultColors = @[UIColor.blueColor, UIColor.redColor, UIColor.greenColor, UIColor.orangeColor,
-                           UIColor.purpleColor, UIColor.cyanColor, UIColor.brownColor, UIColor.magentaColor];
+        _colors = @[UIColor.blueColor, UIColor.redColor, UserDefaults.defaults.darkGreen, UIColor.orangeColor,
+                    UIColor.purpleColor, UIColor.cyanColor, UIColor.brownColor, UIColor.magentaColor];
+        
+        //default patterns
+        _patterns = @[@[@30.0,@15.0],//long-short
+                      @[@10.0,@10.0],//short-short
+                      @[@10.0,@10.0,@10.0,@10.0,@50.0,@10.0],//short-short-long
+                      @[@10.0,@10.0,@20.0,@10.0,@40.0,@10.0,@20.0,@10.0]];//short-medium-long-medium
         
         //default widths
         _borderWidth = 8;
@@ -185,7 +191,14 @@
             ChartsBitmapDataSet *dataSet = _dataSets[i];
             
             if (!dataSet.color)
-                dataSet.color = _defaultColors[i % _defaultColors.count];
+                dataSet.color = _colors[i % _colors.count];
+            
+            NSArray<NSNumber *> *patternRef = _patterns[i % _patterns.count];
+            CGFloat pattern[patternRef.count];
+            memset(pattern, 0, (patternRef.count * sizeof(CGFloat)));
+            
+            for (int i = 0; i < patternRef.count; i++)
+                pattern[i] = patternRef[i].floatValue;
             
             int offset = 0;
             
@@ -197,6 +210,7 @@
                 case ChartsBitmapDataTypeLine:
                     CGContextSetStrokeColorWithColor(context, dataSet.color.CGColor);
                     CGContextSetLineWidth(context, dataSet.lineWidth);
+                    CGContextSetLineDash(context, 0.0, pattern, patternRef.count);
                     CGContextSetLineJoin(context, kCGLineJoinRound);
                     
                     CGContextMoveToPoint(context,
@@ -215,6 +229,7 @@
                     CGContextSetFillColorWithColor(context, dataSet.circleFillColor.CGColor);
                     CGContextSetStrokeColorWithColor(context, dataSet.color.CGColor);
                     CGContextSetLineWidth(context, dataSet.circleBorderWidth);
+                    CGContextSetLineDash (context, 1, NULL, 0);
                     
                     for (int i = 0; i < dataSet.data.count; i++)
                     {
