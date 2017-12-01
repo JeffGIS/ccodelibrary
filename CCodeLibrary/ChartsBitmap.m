@@ -5,6 +5,7 @@
 @import CoreText;
 #import "PointInArea.h"
 #import "UserDefaults.h"
+#import "NVColor.h"
 
 @implementation ChartsBitmapDataSet
 
@@ -56,7 +57,7 @@
         _leftMargin = (_dpi / 2.5);
         _rightMargin = ((_dpi / 2) - _leftMargin);
         _topMargin = (_dpi / 3);
-        _bottomMargin =  (_dpi - _topMargin);
+        _bottomMargin = _dpi;
         
         //reference line every 1/2 inch
         _chartAreaWidth = (_chartWidth - _leftMargin - _rightMargin);
@@ -71,8 +72,8 @@
         _chartBackgroundColor = UIColor.whiteColor;
         _titleColor = UIColor.blackColor;
         
-        _colors = @[UIColor.blueColor, UIColor.redColor, UserDefaults.defaults.darkGreen, UIColor.orangeColor,
-                    UIColor.purpleColor, UIColor.cyanColor, UIColor.brownColor, UIColor.magentaColor];
+        _colors = @[NVColor.blueColor, NVColor.redColor, NVColor.darkGreenColor, NVColor.orangeColor,
+                    NVColor.purpleColor, NVColor.lightBlueColor, NVColor.saddleBrownColor, NVColor.magentaColor];
         
         //default patterns
         _patterns = @[@[@30.0,@15.0],//long-short
@@ -210,12 +211,19 @@
                     else
                     {
                         NSArray<NSNumber *> *patternRef = _patterns[(i / _colors.count) - 1];
-                        CGFloat pattern[patternRef.count];
                         
-                        for (int i = 0; i < patternRef.count; i++)
-                            pattern[i] = patternRef[i].floatValue;
+                        if (patternRef.count)
+                        {
+                            CGFloat pattern[patternRef.count];
+                            
+                            for (int i = 0; i < patternRef.count; i++)
+                                pattern[i] = patternRef[i].floatValue;
+                            
+                            CGContextSetLineDash(context, 0.0, pattern, patternRef.count);
+                        }
                         
-                        CGContextSetLineDash(context, 0.0, pattern, patternRef.count);
+                        else
+                            CGContextSetLineDash (context, 1, NULL, 0);
                     }
                     
                     CGContextSetLineJoin(context, kCGLineJoinRound);
@@ -398,8 +406,8 @@
             CFRelease(frame);
         }
         
-        int xOrigin = _leftMargin;
-        int yOrigin = (-_chartHeight + _bottomMargin - (gridFontHeight * 2) - (_borderWidth * 2));
+        int xOrigin = _rightMargin;
+        int yOrigin = (-_chartHeight + _bottomMargin - (gridFontHeight * 2));
         
         style.alignment = NSTextAlignmentLeft;
         
@@ -408,9 +416,31 @@
                           style, kCTParagraphStyleAttributeName,
                           textColor, kCTForegroundColorAttributeName, nil];
         
-        for (ChartsBitmapDataSet *dataSet in _dataSets)
+        for (int i = 0; i < _dataSets.count; i++)
         {
-            CGContextSetFillColorWithColor(context, dataSet.color.CGColor);
+            ChartsBitmapDataSet *dataSet = _dataSets[i];
+            CGContextSetStrokeColorWithColor(context, dataSet.color.CGColor);
+            
+            if (i < _colors.count)
+                CGContextSetLineDash (context, 1, NULL, 0);
+            
+            else
+            {
+                NSArray<NSNumber *> *patternRef = _patterns[(i / _colors.count) - 1];
+                
+                if (patternRef.count)
+                {
+                    CGFloat pattern[patternRef.count];
+                    
+                    for (int i = 0; i < patternRef.count; i++)
+                        pattern[i] = patternRef[i].floatValue;
+                    
+                    CGContextSetLineDash(context, 0.0, pattern, patternRef.count);
+                }
+                
+                else
+                    CGContextSetLineDash (context, 1, NULL, 0);
+            }
             
             text = [[NSAttributedString alloc] initWithString:dataSet.title
                                                    attributes:textAttributes];
@@ -422,10 +452,19 @@
             CGSize frameSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.length),
                                                                             NULL, rect.size, NULL);
             
-            rect = CGRectMake(xOrigin, yOrigin, frameSize.height, frameSize.height);
-            CGContextFillRect(context, rect);
+            if ((xOrigin + frameSize.width + (_borderWidth * 2) + _rightMargin) > _chartWidth)
+            {
+                yOrigin -= (frameSize.height + _borderWidth * 4.0);
+                xOrigin = _rightMargin;
+                
+                rect = CGRectMake(xOrigin, yOrigin, _chartAreaWidth, gridFontHeight);
+                path = CGPathCreateWithRect(rect, NULL);
+                framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
+                
+                frameSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.length),
+                                                                         NULL, rect.size, NULL);
+            }
             
-            xOrigin += (frameSize.height + _borderWidth);
             rect = CGRectMake(xOrigin, yOrigin, frameSize.width, frameSize.height);
             path = CGPathCreateWithRect(rect, NULL);
             framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
@@ -433,7 +472,13 @@
             
             CTFrameDraw(frame, context);
             
-            xOrigin += (frameSize.width + (_borderWidth * 2));
+            rect = CGRectMake((rect.origin.x - _borderWidth), (rect.origin.y - _borderWidth),
+                              (rect.size.width + (_borderWidth * 2)),
+                              (rect.size.height + (_borderWidth * 2)));
+            
+            CGContextStrokeRect(context, rect);
+            
+            xOrigin += (frameSize.width + (_borderWidth * 4));
             
             CFRelease(path);
             CFRelease(framesetter);
