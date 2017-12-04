@@ -210,7 +210,7 @@
                     
                     else
                     {
-                        NSArray<NSNumber *> *patternRef = _patterns[(i / _colors.count) - 1];
+                        NSArray<NSNumber *> *patternRef = _patterns[((i / _colors.count) - 1)%_patterns.count];
                         
                         if (patternRef.count)
                         {
@@ -426,7 +426,7 @@
             
             else
             {
-                NSArray<NSNumber *> *patternRef = _patterns[(i / _colors.count) - 1];
+                NSArray<NSNumber *> *patternRef = _patterns[((i / _colors.count) - 1)%_patterns.count];
                 
                 if (patternRef.count)
                 {
