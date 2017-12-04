@@ -109,6 +109,12 @@
 {
     if (_outputFile && _outputFile.length)
     {
+        void *bmData = NULL;
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGContextRef context = createBitmapContext(_chartWidth, _chartHeight, colorSpace, &bmData);
+        CGContextSetAllowsAntialiasing(context, YES);
+        CGContextSetShouldAntialias(context, YES);
+        
         CGRect rect = CGRectZero;
         CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"CourierNewPS-BoldMT", _gridFontSize, NULL);
         
@@ -157,12 +163,6 @@
         
         legendHeight += rowHeight;
         _bottomMargin = legendHeight;
-        
-        void *bmData = NULL;
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        CGContextRef context = createBitmapContext(_chartWidth, _chartHeight, colorSpace, &bmData);
-        CGContextSetAllowsAntialiasing(context, YES);
-        CGContextSetShouldAntialias(context, YES);
         
         double xRange = (maxX - minX);
         double yRange = (maxY - minY);
