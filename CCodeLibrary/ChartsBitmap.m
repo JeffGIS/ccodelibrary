@@ -7,6 +7,8 @@
 #import "UserDefaults.h"
 #import "NVColor.h"
 
+#define MIN_LINE_LENGTH 90
+
 @implementation ChartsBitmapDataSet
 
 - (id)init
@@ -57,7 +59,7 @@
         _leftMargin = (_dpi / 2.5);
         _rightMargin = ((_dpi / 2) - _leftMargin);
         _topMargin = (_dpi / 3);
-        _bottomMargin = _dpi;
+        _bottomMargin =  (_dpi - _topMargin);
         
         //reference line every 1/2 inch
         _chartAreaWidth = (_chartWidth - _leftMargin - _rightMargin);
@@ -76,10 +78,10 @@
                     NVColor.purpleColor, NVColor.lightBlueColor, NVColor.saddleBrownColor, NVColor.magentaColor];
         
         //default patterns
-        _patterns = @[@[@30.0,@15.0],//long-short
-                      @[@10.0,@10.0],//short-short
-                      @[@10.0,@10.0,@10.0,@10.0,@50.0,@10.0],//short-short-long
-                      @[@10.0,@10.0,@20.0,@10.0,@40.0,@10.0,@20.0,@10.0]];//short-medium-long-medium
+        _patterns = @[@[@20.0,@10.0],//long
+                      @[@5.0,@5.0],//short
+                      @[@5.0,@10.0,@20.0,@10.0],//short-long
+                      @[@5.0,@5.0,@5.0,@5.0,@20.0,@5.0]];//short-short-long
         
         //default widths
         _borderWidth = 8;
@@ -107,17 +109,43 @@
 {
     if (_outputFile && _outputFile.length)
     {
-        void *bmData = NULL;
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        CGContextRef context = createBitmapContext(_chartWidth, _chartHeight, colorSpace, &bmData);
-        CGContextSetAllowsAntialiasing(context, YES);
-        CGContextSetShouldAntialias(context, YES);
         CGRect rect = CGRectZero;
+        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"CourierNewPS-BoldMT", _gridFontSize, NULL);
+        
+        NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        (__bridge id)fontRef, kCTFontAttributeName, nil];
         
         double minX = DBL_MAX, maxX = 0, minY = 0, maxY = 0;
+        NSAttributedString *text = nil;
+        CTFramesetterRef framesetter = NULL;
+        CGFloat legendWidth = _rightMargin;
+        CGFloat legendHeight = 0.0, rowHeight = 0.0;
         
         for (ChartsBitmapDataSet *dataSet in _dataSets)
         {
+            text = [[NSAttributedString alloc] initWithString:dataSet.title
+                                                   attributes:textAttributes];
+            
+            rect = CGRectMake(0.0, 0.0, _chartAreaWidth, _bottomMargin);
+            framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)text);
+            
+            CGSize frameSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.length),
+                                                                            NULL, rect.size, NULL);
+            
+            frameSize = CGSizeMake(MAX(frameSize.width, MIN_LINE_LENGTH), frameSize.height);
+            rowHeight = (frameSize.height + (_borderWidth * 3));
+            
+            if (!legendHeight)
+                legendHeight = (rowHeight + _borderWidth);
+            
+            if ((legendWidth + frameSize.width + (_borderWidth * 2) + _rightMargin) > _chartWidth)
+            {
+                legendWidth = _rightMargin;
+                legendHeight += rowHeight;
+            }
+            
+            legendWidth += (frameSize.width + (_borderWidth * 4));
+            
             for (DPoint *point in dataSet.data)
             {
                 minX = MIN(minX, point.x);
@@ -126,6 +154,15 @@
                 maxY = MAX(maxY, point.y);
             }
         }
+        
+        legendHeight += rowHeight;
+        _bottomMargin = legendHeight;
+        
+        void *bmData = NULL;
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGContextRef context = createBitmapContext(_chartWidth, _chartHeight, colorSpace, &bmData);
+        CGContextSetAllowsAntialiasing(context, YES);
+        CGContextSetShouldAntialias(context, YES);
         
         double xRange = (maxX - minX);
         double yRange = (maxY - minY);
@@ -210,7 +247,7 @@
                     
                     else
                     {
-                        NSArray<NSNumber *> *patternRef = _patterns[((i / _colors.count) - 1)%_patterns.count];
+                        NSArray<NSNumber *> *patternRef = _patterns[((i / _colors.count) - 1) %_patterns.count];
                         
                         if (patternRef.count)
                         {
@@ -300,7 +337,6 @@
         
         CGContextScaleCTM(context, 1.0, -1.0);
         
-        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"CourierNewPS-BoldMT", _gridFontSize, NULL);
         CGRect fontRect = CTFontGetBoundingBox(fontRef);
         int gridFontHeight = (int)round(fontRect.size.height);
         CGColorRef textColor = UIColor.blackColor.CGColor;
@@ -308,15 +344,13 @@
         NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
         style.alignment = NSTextAlignmentCenter;
         
-        NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        (__bridge id)fontRef, kCTFontAttributeName,
-                                        style, kCTParagraphStyleAttributeName,
-                                        textColor, kCTForegroundColorAttributeName, nil];
+        textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                          (__bridge id)fontRef, kCTFontAttributeName,
+                          style, kCTParagraphStyleAttributeName,
+                          textColor, kCTForegroundColorAttributeName, nil];
         
         NSString *value = nil;
-        NSAttributedString *text = nil;
         CGPathRef path = NULL;
-        CTFramesetterRef framesetter = NULL;
         CTFrameRef frame = NULL;
         
         NSArray *daysArray = @[@"Sun", @"Mon", @"Tues", @"Wed", @"Thurs", @"Fri", @"Sat"];
@@ -409,7 +443,7 @@
         int xOrigin = _rightMargin;
         int yOrigin = (-_chartHeight + _bottomMargin - (gridFontHeight * 2));
         
-        style.alignment = NSTextAlignmentLeft;
+        style.alignment = NSTextAlignmentCenter;
         
         textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                           (__bridge id)fontRef, kCTFontAttributeName,
@@ -426,7 +460,7 @@
             
             else
             {
-                NSArray<NSNumber *> *patternRef = _patterns[((i / _colors.count) - 1)%_patterns.count];
+                NSArray<NSNumber *> *patternRef = _patterns[((i / _colors.count) - 1) %_patterns.count];
                 
                 if (patternRef.count)
                 {
@@ -452,9 +486,11 @@
             CGSize frameSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.length),
                                                                             NULL, rect.size, NULL);
             
+            frameSize = CGSizeMake(MAX(frameSize.width, MIN_LINE_LENGTH), frameSize.height);
+            
             if ((xOrigin + frameSize.width + (_borderWidth * 2) + _rightMargin) > _chartWidth)
             {
-                yOrigin -= (frameSize.height + _borderWidth * 4.0);
+                yOrigin -= (frameSize.height + (_borderWidth * 3));
                 xOrigin = _rightMargin;
                 
                 rect = CGRectMake(xOrigin, yOrigin, _chartAreaWidth, gridFontHeight);
@@ -463,6 +499,8 @@
                 
                 frameSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.length),
                                                                          NULL, rect.size, NULL);
+                
+                frameSize = CGSizeMake(MAX(frameSize.width, MIN_LINE_LENGTH), frameSize.height);
             }
             
             rect = CGRectMake(xOrigin, yOrigin, frameSize.width, frameSize.height);
@@ -472,11 +510,10 @@
             
             CTFrameDraw(frame, context);
             
-            rect = CGRectMake((rect.origin.x - _borderWidth), (rect.origin.y - _borderWidth),
-                              (rect.size.width + (_borderWidth * 2)),
-                              (rect.size.height + (_borderWidth * 2)));
-            
-            CGContextStrokeRect(context, rect);
+            CGFloat yPos = (rect.origin.y + rect.size.height + _borderWidth);
+            CGContextMoveToPoint(context, rect.origin.x, yPos);
+            CGContextAddLineToPoint(context, (rect.origin.x + rect.size.width), yPos);
+            CGContextStrokePath(context);
             
             xOrigin += (frameSize.width + (_borderWidth * 4));
             
@@ -493,8 +530,6 @@
             int titleFontHeight = (int)round(CTFontGetBoundingBox(fontRef).size.height);
             int offset = ((_topMargin - titleFontHeight) / 2);
             textColor = _titleColor.CGColor;
-            
-            style.alignment = NSTextAlignmentCenter;
             
             textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                               (__bridge id)fontRef, kCTFontAttributeName,
