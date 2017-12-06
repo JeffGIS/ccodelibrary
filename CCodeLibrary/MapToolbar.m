@@ -15,7 +15,7 @@
 @property (nonatomic) CGFloat buttonSize, switchHeight, switchWidth, SCHeight, mapTypeSCWidth, cornerRad, bordWidth;
 @property (nonatomic) CGFloat buttonMargin, switchMargin, SCMargin, platSCWidth, platSCVertWidth, progressMargin;
 @property (nonatomic) UIProgressView *progressView;
-@property (nonatomic) NSTimer *helpBackgroundToggleTimer;
+//@property (nonatomic) NSTimer *helpBackgroundToggleTimer;
 @property (nonatomic) UIActivityIndicatorView *indicatorView;
 @property (nonatomic) CGFloat indicatorSize;
 
@@ -167,10 +167,10 @@
          edgeInsets:UIEdgeInsetsMake(4.0, -2.0, 4.0, -2.0)
            selector:@selector(helpButtonSelected:)];
     
-    UILongPressGestureRecognizer *helpLpGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:mt
+    /*UILongPressGestureRecognizer *helpLpGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:mt
                                                                                                 action:@selector(helpLongPressed:)];
     
-    [mt.helpButton addGestureRecognizer:helpLpGesture];
+    [mt.helpButton addGestureRecognizer:helpLpGesture];*/
     [mt addSubview:mt.helpButton];
     
     //progress view added by default
@@ -365,11 +365,11 @@
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = _bordWidth;
     
-    if (_helpLongPressed)
+    /*if (_helpLongPressed)
         [self endHBLongPressMode];
+    else*/
     
-    else
-        [_delegate mapToolbarDidSelectHelpButton];
+    [_delegate mapToolbarDidSelectHelpButton];
 }
 
 - (void)returnButtonSelected:(UIButton *)button
@@ -379,7 +379,7 @@
     [_delegate mapToolbarDidSelectReturnButton];
 }
 
-- (void)helpLongPressed:(UILongPressGestureRecognizer *)gesture
+/*- (void)helpLongPressed:(UILongPressGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateBegan && !_helpLongPressed)
     {
@@ -425,7 +425,7 @@
     
     else
         _helpButton.backgroundColor = UIColor.whiteColor;
-}
+}*/
 
 - (void)mapTypeSelected:(UISegmentedControl *)segControl
 {
