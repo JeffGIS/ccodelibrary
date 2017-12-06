@@ -18,6 +18,14 @@
 didReturnWithSelectedRows:(NSArray<NSNumber *> *)selectedRows
                textArray:(NSArray *)selectedTextArray;
 
+- (void)popoverTableView:(NVPopoverTableView *)popoverTableView
+didSelectPDFButtonWithText:(NSString *)text
+                    atIndex:(NSInteger)index;
+
+- (void)popoverTableView:(NVPopoverTableView *)popoverTableView
+didSelectYTButtonWithText:(NSString *)text
+                 atIndex:(NSInteger)index;
+
 @end
 
 @interface NVPopoverTableView : UIView
@@ -26,6 +34,7 @@ didReturnWithSelectedRows:(NSArray<NSNumber *> *)selectedRows
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic, copy) NSArray<UIImage *> *imageArray;
 @property BOOL allowsMultipleSelection;
+@property (nonatomic) BOOL parseTextToButtons;
 @property (nonatomic, copy) NSString *identifier;
 
 + (instancetype)showPopoverTableViewInView:(UIView *)view

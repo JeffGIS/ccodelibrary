@@ -4,6 +4,9 @@
 #import "NVPopoverTableView.h"
 #import "UserDefaults.h"
 
+#define YT_TAG 111
+#define PDF_TAG 222
+
 @interface NVPopoverTableView () <UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, weak) id <NVPopoverTableViewDelegate> delegate;
@@ -15,7 +18,8 @@
 @property CGFloat cellWidth, cornerRadius;
 @property (nonatomic) UIButton *returnButton, *clearButton;
 @property int lastRowTapped;
-@property NSMutableArray *groupArray;
+@property (nonatomic) NSMutableArray *groupArray;
+@property (nonatomic) UIImage *ytImage, *pdfImage;
 
 @end
 
@@ -60,6 +64,7 @@
     nvptv.textArray = textArray;
     nvptv.includeCancel = includeCancel;
     nvptv.allowsMultipleSelection = NO;
+    nvptv.parseTextToButtons = NO;
     nvptv.lastRowTapped = 0;
     
     nvptv.groupColors = @[([UIColor colorWithRed:1.0 green:0.8 blue:0.8 alpha:1.0]),//red
@@ -234,18 +239,28 @@ heightForHeaderInSection:(NSInteger)section
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_tableView.allowsMultipleSelection)
+    if (_parseTextToButtons)
     {
-        return [self getHeightForText:textBefore(_groupArray[indexPath.row], @"\x03")
+        return ([self getHeightForText:textBeforeTab(_textArray[indexPath.row])
                                  font:_font
-                                width:_cellWidth];
+                                width:_cellWidth] + 20.0);
     }
     
     else
     {
-        return [self getHeightForText:textBefore(_textArray[indexPath.row], @"\x03")
-                                 font:_font
-                                width:_cellWidth];
+        if (_tableView.allowsMultipleSelection)
+        {
+            return [self getHeightForText:textBefore(_groupArray[indexPath.row], @"\x03")
+                                     font:_font
+                                    width:_cellWidth];
+        }
+        
+        else
+        {
+            return [self getHeightForText:textBefore(_textArray[indexPath.row], @"\x03")
+                                     font:_font
+                                    width:_cellWidth];
+        }
     }
 }
 
@@ -276,58 +291,123 @@ viewForHeaderInSection:(NSInteger)section
                                       reuseIdentifier:cellIdentifier];
     }
     
-    NSString *group = @"";
-    
-    if (_tableView.allowsMultipleSelection)
-    {
-        cell.textLabel.text = textBefore(_groupArray[indexPath.row], @"\x03");
-        group = textBefore(textAfter(_groupArray[indexPath.row], @"\x05"), @"\x04");
-    }
-    
-    else
-    {
-        cell.textLabel.text = textBefore(_textArray[indexPath.row], @"\x03");
-        group = textBefore(textAfter(_textArray[indexPath.row], @"\x05"), @"\x04");
-    }
-    
-    if (!group)
-        group = @"0";
-    
-    NSInteger groupIndex = group.integerValue;
-    
-    if (groupIndex > 0)
-    {
-        groupIndex--;
-        groupIndex %= _groupColors.count;
-        cell.backgroundColor = _groupColors[groupIndex];
-    }
-    
-    else
-        cell.backgroundColor = UIColor.whiteColor;
-    
-    cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.font = _font;
-    cell.textLabel.numberOfLines = 0;
     cell.tag = indexPath.row;
     
-    if (_includeCancel && indexPath.row == 0)
-        cell.textLabel.textColor = UIColor.redColor;
-    
-    else
+    if (_parseTextToButtons)
     {
-        cell.textLabel.textColor = UserDefaults.defaults.appleBlue;
+        cell.backgroundColor = UIColor.whiteColor;
+        cell.textLabel.text = textBeforeTab(_textArray[indexPath.row]);
+        cell.textLabel.textAlignment = NSTextAlignmentLeft;
+        cell.textLabel.adjustsFontSizeToFitWidth = YES;
+        cell.textLabel.numberOfLines = 1;
         
-        if (_allowsMultipleSelection)
+        if (_includeCancel && indexPath.row == 0)
         {
-            UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self
-                                                                                                    action:@selector(cellLongPressed:)];
+            cell.textLabel.textColor = UIColor.redColor;
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+        }
+        
+        else
+        {
+            for (UIView *subviews in cell.subviews)
+            {
+                if ((subviews.tag == (cell.tag * YT_TAG)) || (subviews.tag == (cell.tag * PDF_TAG)))
+                    [subviews removeFromSuperview];
+            }
             
-            [cell addGestureRecognizer:longPress];
+            cell.textLabel.textColor = UIColor.blackColor;
+            cell.textLabel.textAlignment = NSTextAlignmentLeft;
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            if ([_textArray[indexPath.row] length])
+            {
+                UIButton *ytButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                ytButton.translatesAutoresizingMaskIntoConstraints = NO;
+                [ytButton setImage:_ytImage forState:UIControlStateNormal];
+                ytButton.contentMode = UIViewContentModeScaleAspectFit;
+                ytButton.tag = (cell.tag * YT_TAG);
+                [cell addSubview:ytButton];
+                [ytButton constrainTrailingToAnchor:cell.trailingAnchor constant:-10.0];
+                [ytButton constrainCenterYToAnchor:cell.centerYAnchor];
+                [ytButton constrainHeightToAnchor:cell.heightAnchor multiplier:0.8];
+                [ytButton constrainWidthToAnchor:ytButton.heightAnchor multiplier:1.2];
+                
+                [ytButton addTarget:self
+                             action:@selector(ytButtonTapped:)
+                   forControlEvents:UIControlEventTouchUpInside];
+                
+                UIButton *pdfButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                pdfButton.translatesAutoresizingMaskIntoConstraints = NO;
+                [pdfButton setImage:_pdfImage forState:UIControlStateNormal];
+                pdfButton.contentMode = UIViewContentModeScaleAspectFit;
+                pdfButton.tag = (cell.tag * PDF_TAG);
+                [cell addSubview:pdfButton];
+                [pdfButton constrainTrailingToAnchor:ytButton.leadingAnchor constant:-10.0];
+                [pdfButton constrainCenterYToAnchor:cell.centerYAnchor];
+                [pdfButton constrainHeightToAnchor:cell.heightAnchor multiplier:0.8];
+                [pdfButton constrainWidthToAnchor:ytButton.heightAnchor multiplier:0.8];
+                
+                [pdfButton addTarget:self
+                              action:@selector(pdfButtonTapped:)
+                    forControlEvents:UIControlEventTouchUpInside];
+            }
         }
     }
     
-    if (_imageArray.count)
-        cell.imageView.image = (UIImage *)_imageArray[indexPath.row];
+    else
+    {
+        NSString *group = @"";
+        
+        if (_tableView.allowsMultipleSelection)
+        {
+            cell.textLabel.text = textBefore(_groupArray[indexPath.row], @"\x03");
+            group = textBefore(textAfter(_groupArray[indexPath.row], @"\x05"), @"\x04");
+        }
+        
+        else
+        {
+            cell.textLabel.text = textBefore(_textArray[indexPath.row], @"\x03");
+            group = textBefore(textAfter(_textArray[indexPath.row], @"\x05"), @"\x04");
+        }
+        
+        if (!group)
+            group = @"0";
+        
+        NSInteger groupIndex = group.integerValue;
+        
+        if (groupIndex > 0)
+        {
+            groupIndex--;
+            groupIndex %= _groupColors.count;
+            cell.backgroundColor = _groupColors[groupIndex];
+        }
+        
+        else
+            cell.backgroundColor = UIColor.whiteColor;
+        
+        cell.textLabel.textAlignment = NSTextAlignmentCenter;
+        cell.textLabel.numberOfLines = 0;
+        
+        if (_includeCancel && indexPath.row == 0)
+            cell.textLabel.textColor = UIColor.redColor;
+        
+        else
+        {
+            cell.textLabel.textColor = UserDefaults.defaults.appleBlue;
+            
+            if (_allowsMultipleSelection)
+            {
+                UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                                        action:@selector(cellLongPressed:)];
+                
+                [cell addGestureRecognizer:longPress];
+            }
+        }
+        
+        if (_imageArray.count)
+            cell.imageView.image = (UIImage *)_imageArray[indexPath.row];
+    }
     
     return cell;
 }
@@ -338,23 +418,26 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     if (_includeCancel && indexPath.row == 0 && [_delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
         [_delegate popoverTableViewDidCancel:self];
     
-    else if (_tableView.allowsMultipleSelection)
-        _lastRowTapped = (int)indexPath.row;
-    
-    else
+    else if (!_parseTextToButtons)
     {
-        NSString *text = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
-        NSInteger index = 0;
-        
-        if (_includeCancel)
-            index = (indexPath.row - 1);
+        if (_tableView.allowsMultipleSelection)
+            _lastRowTapped = (int)indexPath.row;
         
         else
-            index = indexPath.row;
-        
-        [_delegate popoverTableView:self
-               didSelectRowWithText:text
-                            atIndex:index];
+        {
+            NSString *text = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
+            NSInteger index = 0;
+            
+            if (_includeCancel)
+                index = (indexPath.row - 1);
+            
+            else
+                index = indexPath.row;
+            
+            [_delegate popoverTableView:self
+                   didSelectRowWithText:text
+                                atIndex:index];
+        }
     }
 }
 
@@ -556,6 +639,37 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
                          _returnButton.alpha = 0.0;
                          _clearButton.alpha = 0.0;
                      }];
+}
+
+- (void)setParseTextToButtons:(BOOL)parseTextToButtons
+{
+    _parseTextToButtons = parseTextToButtons;
+    
+    _ytImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"ytIcon"
+                                                                              ofType:@"png"]];
+    
+    _pdfImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"pdfIcon"
+                                                                               ofType:@"png"]];
+    
+    [_tableView reloadData];
+}
+
+- (void)ytButtonTapped:(UIButton *)button
+{
+    NSInteger index = (button.tag / YT_TAG);
+    NSString *text = textAfterLastTab(_textArray[index]);
+    
+    if ([_delegate respondsToSelector:@selector(popoverTableView:didSelectYTButtonWithText:atIndex:)])
+        [_delegate popoverTableView:self didSelectYTButtonWithText:text atIndex:index];
+}
+
+- (void)pdfButtonTapped:(UIButton *)button
+{
+    NSInteger index = (button.tag / PDF_TAG);
+    NSString *text = textBeforeTab(textAfterTab(_textArray[index]));
+    
+    if ([_delegate respondsToSelector:@selector(popoverTableView:didSelectPDFButtonWithText:atIndex:)])
+        [_delegate popoverTableView:self didSelectPDFButtonWithText:text atIndex:index];
 }
 
 @end
