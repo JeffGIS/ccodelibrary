@@ -1652,7 +1652,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = GSSi;
 			};
 			buildConfigurationList = EBA2E455199527660085B2E0 /* Build configuration list for PBXProject "CCodeLibrary" */;
