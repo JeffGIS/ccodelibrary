@@ -47,25 +47,25 @@
 - (void)startAdvertising
 {
     [_advertiser startAdvertisingPeer];
-    NSLog(@"Device %@ did start advertising", _advertiser.myPeerID.displayName);
+    NSLog(@"%@ did start advertising", _advertiser.myPeerID.displayName);
 }
 
 - (void)stopAdvertising
 {
     [_advertiser stopAdvertisingPeer];
-    NSLog(@"Device %@ did stop advertising", _advertiser.myPeerID.displayName);
+    NSLog(@"%@ did stop advertising", _advertiser.myPeerID.displayName);
 }
 
 - (void)startBrowsing
 {
     [_browser startBrowsingForPeers];
-    NSLog(@"Device %@ did start browsing", _browser.myPeerID.displayName);
+    NSLog(@"%@ did start browsing", _browser.myPeerID.displayName);
 }
 
 - (void)stopBrowsing
 {
     [_browser stopBrowsingForPeers];
-    NSLog(@"Device %@ did stop browsing", _browser.myPeerID.displayName);
+    NSLog(@"%@ did stop browsing", _browser.myPeerID.displayName);
 }
 
 #pragma mark MCSession Delegate Methods
@@ -74,7 +74,7 @@
            peer:(MCPeerID *)peerID
  didChangeState:(MCSessionState)state
 {
-    NSLog(@"MCSession for device %@ with device %@ changed state: %li",
+    NSLog(@"MCSession for %@ with %@ changed state: %li",
           session.myPeerID.displayName, peerID.displayName, state);
 }
 
@@ -82,7 +82,7 @@
  didReceiveData:(NSData *)data
        fromPeer:(MCPeerID *)peerID
 {
-    NSLog(@"MCSession for device %@ received NSData from device %@",
+    NSLog(@"MCSession for %@ received NSData from %@",
           session.myPeerID.displayName, peerID.displayName);
 }
 
@@ -91,7 +91,7 @@ didReceiveStream:(NSInputStream *)stream
        withName:(NSString *)streamName
        fromPeer:(MCPeerID *)peerID
 {
-    NSLog(@"MCSession for device %@ received NSInputStream from device %@",
+    NSLog(@"MCSession for %@ received NSInputStream from %@",
           session.myPeerID.displayName, peerID.displayName);
 }
 
@@ -100,7 +100,7 @@ didReceiveCertificate:(NSArray *)certificate
        fromPeer:(MCPeerID *)peerID
 certificateHandler:(void (^)(BOOL))certificateHandler
 {
-    NSLog(@"MCSession for device %@ received certificate from device %@",
+    NSLog(@"MCSession for %@ received certificate from %@",
           session.myPeerID.displayName, peerID.displayName);
 }
 
@@ -109,7 +109,7 @@ didStartReceivingResourceWithName:(NSString *)resourceName
        fromPeer:(MCPeerID *)peerID
    withProgress:(NSProgress *)progress
 {
-    NSLog(@"MCSession for device %@ started receiving resource from device %@",
+    NSLog(@"MCSession for %@ started receiving resource from %@",
           session.myPeerID.displayName, peerID.displayName);
     
     _progress = progress;
@@ -127,7 +127,7 @@ didStartReceivingResourceWithName:(NSString *)resourceName
 {
     if (object == _progress)
     {
-        NSLog(@"MCSession for device %@ updated progress on resource: %.2f%%",
+        NSLog(@"MCSession for %@ updated progress on resource: %.2f%%",
               _session.myPeerID.displayName, (_progress.fractionCompleted * 100.0));
     }
     
@@ -146,8 +146,17 @@ didFinishReceivingResourceWithName:(NSString *)resourceName
           atURL:(NSURL *)localURL
       withError:(NSError *)error
 {
-    NSLog(@"MCSession for device %@ finished receiving resource from device %@",
-          session.myPeerID.displayName, peerID.displayName);
+    if (error)
+    {
+        NSLog(@"MCSession for %@ from %@ resource received ERROR: %@",
+              session.myPeerID.displayName, peerID.displayName, error.localizedDescription);
+    }
+    
+    else
+    {
+        NSLog(@"MCSession for %@ finished receiving resource from %@",
+              session.myPeerID.displayName, peerID.displayName);
+    }
 }
 
 #pragma mark MCNearbyServiceBrowser Delegate Methods
@@ -156,7 +165,7 @@ didFinishReceivingResourceWithName:(NSString *)resourceName
       foundPeer:(MCPeerID *)peerID
 withDiscoveryInfo:(NSDictionary<NSString *,NSString *> *)info
 {
-    NSLog(@"Browser Device %@ found Advertiser Device %@ and will invite.",
+    NSLog(@"Browser %@ found Advertiser %@ and will invite.",
           browser.myPeerID.displayName, peerID.displayName);
     
     [browser invitePeer:peerID
@@ -168,14 +177,14 @@ withDiscoveryInfo:(NSDictionary<NSString *,NSString *> *)info
 - (void)browser:(MCNearbyServiceBrowser *)browser
 didNotStartBrowsingForPeers:(NSError *)error
 {
-    NSLog(@"ERROR: Device %@ could not browse (%@)",
+    NSLog(@"ERROR: %@ could not browse (%@)",
           browser.myPeerID.displayName, error.localizedDescription);
 }
 
 - (void)browser:(MCNearbyServiceBrowser *)browser
        lostPeer:(MCPeerID *)peerID
 {
-    NSLog(@"Browser Device %@ did lose Advertiser Device %@.",
+    NSLog(@"Browser %@ did lose Advertiser %@.",
           browser.myPeerID.displayName, peerID.displayName);
 }
 
@@ -184,7 +193,7 @@ didNotStartBrowsingForPeers:(NSError *)error
 - (void)advertiser:(MCNearbyServiceAdvertiser *)advertiser
 didNotStartAdvertisingPeer:(NSError *)error
 {
-    NSLog(@"ERROR: Device %@ could not advertise (%@)",
+    NSLog(@"ERROR: %@ could not advertise (%@)",
           advertiser.myPeerID.displayName, error.localizedDescription);
 }
 
@@ -193,7 +202,7 @@ didReceiveInvitationFromPeer:(MCPeerID *)peerID
        withContext:(NSData *)context
  invitationHandler:(void (^)(BOOL, MCSession * _Nullable))invitationHandler
 {
-    NSLog(@"Advertiser Device %@ received invite from Browser Device %@.",
+    NSLog(@"Advertiser %@ received invite from Browser %@.",
           advertiser.myPeerID.displayName, peerID.displayName);
     
     invitationHandler(YES, _session);
