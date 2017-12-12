@@ -74,8 +74,23 @@
            peer:(MCPeerID *)peerID
  didChangeState:(MCSessionState)state
 {
-    NSLog(@"MCSession for %@ with %@ changed state: %li",
-          session.myPeerID.displayName, peerID.displayName, state);
+    NSString *stateString = @"";
+    
+    switch (state)
+    {
+        case MCSessionStateNotConnected:
+            stateString = @"Not Connected";
+            break;
+        case MCSessionStateConnecting:
+            stateString = @"Connecting";
+            break;
+        case MCSessionStateConnected:
+            stateString = @"Connected";
+            break;
+    }
+    
+    NSLog(@"MCSession for %@ with %@ changed state: %@",
+          session.myPeerID.displayName, peerID.displayName, stateString);
 }
 
 - (void)session:(MCSession *)session
@@ -167,6 +182,9 @@ withDiscoveryInfo:(NSDictionary<NSString *,NSString *> *)info
 {
     NSLog(@"Browser %@ found Advertiser %@ and will invite.",
           browser.myPeerID.displayName, peerID.displayName);
+    
+    [browser stopBrowsingForPeers];
+    NSLog(@"%@ did stop browsing", browser.myPeerID.displayName);
     
     [browser invitePeer:peerID
               toSession:_session
