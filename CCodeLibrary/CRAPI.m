@@ -57,6 +57,7 @@
         _mapPropList = [UserDefaults.defaults boolForKey:@"MapPropList"];
         _mapCrimeList = [UserDefaults.defaults stringForKey:@"MapCrimeList"];
         NSString *defaultCrimeTarget = [UserDefaults.defaults stringForKey:@"CrimeTarget"];
+        _peerConnect = NVPeerConnect.new;
         
         if (defaultCrimeTarget && defaultCrimeTarget.length)
             _crimeTarget = defaultCrimeTarget;

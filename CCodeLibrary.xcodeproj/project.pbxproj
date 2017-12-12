@@ -42,6 +42,8 @@
 		692F54A21CDB9B1B001600C9 /* NVRampTypePageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 692F54A11CDB9B1B001600C9 /* NVRampTypePageController.m */; };
 		692F54A51CDB9B8B001600C9 /* NVRampTypePageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 692F54A41CDB9B8B001600C9 /* NVRampTypePageView.m */; };
 		692F54A61CDBAA6B001600C9 /* NVRampTypePageController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692F54A01CDB9B1B001600C9 /* NVRampTypePageController.h */; };
+		693493441FE02671000F192D /* NVPeerConnect.m in Sources */ = {isa = PBXBuildFile; fileRef = 693493431FE02671000F192D /* NVPeerConnect.m */; };
+		693493451FE031D9000F192D /* NVPeerConnect.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 693493421FE02671000F192D /* NVPeerConnect.h */; };
 		6936A3571F0D765C000CDCC3 /* SidewalkData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6936A3561F0D765C000CDCC3 /* SidewalkData.m */; };
 		6936A3581F0D7DB2000CDCC3 /* SidewalkData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6936A3551F0D765C000CDCC3 /* SidewalkData.h */; };
 		693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 693C9B9F1BEC523500564F93 /* UIImage+ImageFromColor.m */; };
@@ -403,6 +405,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				693493451FE031D9000F192D /* NVPeerConnect.h in CopyFiles */,
 				69F52BA51FB51A3F00583485 /* SSDelegate.h in CopyFiles */,
 				69BD0D6E1FA22D6A00B3E6E0 /* HotSpotVideoVC.h in CopyFiles */,
 				EBC2BC901FA1A2CC00F2F329 /* HotSpotVideo.h in CopyFiles */,
@@ -602,6 +605,8 @@
 		692F54A11CDB9B1B001600C9 /* NVRampTypePageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRampTypePageController.m; sourceTree = "<group>"; };
 		692F54A31CDB9B8B001600C9 /* NVRampTypePageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVRampTypePageView.h; sourceTree = "<group>"; };
 		692F54A41CDB9B8B001600C9 /* NVRampTypePageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVRampTypePageView.m; sourceTree = "<group>"; };
+		693493421FE02671000F192D /* NVPeerConnect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVPeerConnect.h; sourceTree = "<group>"; };
+		693493431FE02671000F192D /* NVPeerConnect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NVPeerConnect.m; sourceTree = "<group>"; };
 		6936A3551F0D765C000CDCC3 /* SidewalkData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidewalkData.h; sourceTree = "<group>"; };
 		6936A3561F0D765C000CDCC3 /* SidewalkData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidewalkData.m; sourceTree = "<group>"; };
 		693C9B9E1BEC523500564F93 /* UIImage+ImageFromColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageFromColor.h"; sourceTree = "<group>"; };
@@ -1338,6 +1343,8 @@
 				698037521E82D58A00C3E49D /* NVSendEmail.m */,
 				692EFA501D36A84B007B0D18 /* NVEmailFileList.h */,
 				692EFA511D36A84B007B0D18 /* NVEmailFileList.m */,
+				693493421FE02671000F192D /* NVPeerConnect.h */,
+				693493431FE02671000F192D /* NVPeerConnect.m */,
 				691636201C1FC790000C61B8 /* NVTileCompiler.h */,
 				691636211C1FC790000C61B8 /* NVTileCompiler.m */,
 				A9735AF219E77B6800894359 /* Reachability.h */,
@@ -1744,6 +1751,7 @@
 				EBC01D1E1BED1C8C0004C751 /* mer404.c in Sources */,
 				6943041F1C3351E20077EC9F /* NVColor.m in Sources */,
 				690B3FA91D6A69A600DAC87D /* RampCompliance.c in Sources */,
+				693493441FE02671000F192D /* NVPeerConnect.m in Sources */,
 				69987CF71C94683F000EC26F /* UIView+Constraints.m in Sources */,
 				EBC01D191BED1C8C0004C751 /* kepler.c in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,

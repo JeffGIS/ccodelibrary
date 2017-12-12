@@ -14,6 +14,7 @@
 #import "NVSendEmail.h"
 #import "HotSpotVideo.h"
 #import "SSDelegate.h"
+#import "NVPeerConnect.h"
 
 #define MANAGEMENT_MODULE       1
 #define PRELIM_MODULE           2
@@ -152,6 +153,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property BOOL showCompassCalibrationScreen, barChartOnly;
 @property LLPOINT lastPickPoint;
 @property (nonatomic, nullable) SSDelegate *spreadsheetDelegate;
+@property (nonatomic, nullable) NVPeerConnect *peerConnect;
 
 + (nullable CRAPI *)sharedInstance;
 
