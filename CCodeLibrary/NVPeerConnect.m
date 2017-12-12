@@ -11,6 +11,7 @@
 @property (nonatomic) MCNearbyServiceAdvertiser *advertiser;
 @property (nonatomic) MCNearbyServiceBrowser *browser;
 @property (nonatomic) NSProgress *progress;
+@property BOOL isAdvertiser;
 
 @end
 
@@ -24,10 +25,9 @@
     {
         MCPeerID *peerID = [[MCPeerID alloc] initWithDisplayName:UIDevice.currentDevice.name];
         NSString *serviceType = @"newvision-share";
+        _isAdvertiser = NO;
         
-        _session = [[MCSession alloc] initWithPeer:peerID
-                                  securityIdentity:nil
-                              encryptionPreference:MCEncryptionNone];
+        _session = [[MCSession alloc] initWithPeer:peerID];
         
         _advertiser = [[MCNearbyServiceAdvertiser alloc] initWithPeer:peerID
                                                         discoveryInfo:nil
@@ -47,6 +47,7 @@
 - (void)startAdvertising
 {
     [_advertiser startAdvertisingPeer];
+    _isAdvertiser = YES;
     NSLog(@"%@ did start advertising", _advertiser.myPeerID.displayName);
 }
 
@@ -84,9 +85,42 @@
         case MCSessionStateConnecting:
             stateString = @"Connecting";
             break;
-        case MCSessionStateConnected:
+        case MCSessionStateConnected:{
             stateString = @"Connected";
-            break;
+            
+            if (_isAdvertiser)
+            {
+                NSString *fileName = @"NVMobile_VersionHistory";
+                
+                NSURL *testFile = [NSBundle.mainBundle URLForResource:fileName
+                                                        withExtension:@"pdf"];
+                
+                _progress = [session sendResourceAtURL:testFile
+                                              withName:fileName
+                                                toPeer:peerID
+                                 withCompletionHandler:^(NSError * _Nullable error) {
+                                     if (error)
+                                     {
+                                         NSLog(@"MCSession from %@ to %@ resource received ERROR: %@",
+                                               session.myPeerID.displayName, peerID.displayName, error.localizedDescription);
+                                     }
+                                     
+                                     else
+                                     {
+                                         NSLog(@"MCSession from %@ finished sending resource to %@",
+                                               session.myPeerID.displayName, peerID.displayName);
+                                         
+                                         [_progress removeObserver:self forKeyPath:@"fractionCompleted"];
+                                         [session disconnect];
+                                     }
+                                 }];
+                
+                [_progress addObserver:self
+                            forKeyPath:@"fractionCompleted"
+                               options:NSKeyValueObservingOptionNew
+                               context:NULL];
+            }
+            break;}
     }
     
     NSLog(@"MCSession for %@ with %@ changed state: %@",
@@ -113,10 +147,12 @@ didReceiveStream:(NSInputStream *)stream
 - (void)session:(MCSession *)session
 didReceiveCertificate:(NSArray *)certificate
        fromPeer:(MCPeerID *)peerID
-certificateHandler:(void (^)(BOOL))certificateHandler
+certificateHandler:(void (^)(BOOL accept))certificateHandler
 {
     NSLog(@"MCSession for %@ received certificate from %@",
           session.myPeerID.displayName, peerID.displayName);
+    
+    certificateHandler(YES);
 }
 
 - (void)session:(MCSession *)session
@@ -140,10 +176,12 @@ didStartReceivingResourceWithName:(NSString *)resourceName
                         change:(NSDictionary *)change 
                        context:(void *)context
 {
-    if (object == _progress)
+    if ((object == _progress) && ([keyPath isEqualToString:@"fractionCompleted"]))
     {
+        double progress = _progress.fractionCompleted;
+        
         NSLog(@"MCSession for %@ updated progress on resource: %.2f%%",
-              _session.myPeerID.displayName, (_progress.fractionCompleted * 100.0));
+              _session.myPeerID.displayName, (progress * 100.0));
     }
     
     else
@@ -169,9 +207,28 @@ didFinishReceivingResourceWithName:(NSString *)resourceName
     
     else
     {
-        NSLog(@"MCSession for %@ finished receiving resource from %@",
-              session.myPeerID.displayName, peerID.displayName);
+        NSLog(@"MCSession for %@ finished receiving resource %@ from %@",
+              session.myPeerID.displayName, resourceName, peerID.displayName);
+        
+        NSFileManager *fileMgr = NSFileManager.new;
+        NSString *newPath = [localURL.path stringByDeletingLastPathComponent];
+        newPath = [newPath stringByAppendingPathComponent:@"testFile.pdf"];
+        [fileMgr moveItemAtPath:localURL.path toPath:newPath error:&error];
+        
+        [self performSelectorOnMainThread:@selector(showFile:)
+                               withObject:newPath
+                            waitUntilDone:YES];
     }
+    
+    [_progress removeObserver:self forKeyPath:@"fractionCompleted"];
+    [session disconnect];
+}
+
+- (void)showFile:(NSString *)filePath
+{
+    [NVWebView showWebViewInView:UIApplication.sharedApplication.keyWindow
+                  showFileAtPath:filePath
+                        delegate:nil];
 }
 
 #pragma mark MCNearbyServiceBrowser Delegate Methods
