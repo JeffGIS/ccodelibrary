@@ -138,6 +138,12 @@
 		69F8E0D51D05C194003E8655 /* NVMarkerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F8E0D41D05C194003E8655 /* NVMarkerView.m */; };
 		69F8E0D61D05CD60003E8655 /* NVMarkerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F8E0D31D05C194003E8655 /* NVMarkerView.h */; };
 		69F975971ECCB8200044CCED /* NVContactsViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F975961ECCB8200044CCED /* NVContactsViewer.m */; };
+		69FD71251FE1BE8300EAFDEF /* RHRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FD71241FE1BE8300EAFDEF /* RHRecorder.m */; };
+		69FD71281FE1BEA200EAFDEF /* RHPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FD71271FE1BEA200EAFDEF /* RHPlayer.m */; };
+		69FD71291FE1BEB500EAFDEF /* RHPlayer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69FD71261FE1BEA200EAFDEF /* RHPlayer.h */; };
+		69FD712A1FE1BEBC00EAFDEF /* RHRecorder.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69FD71231FE1BE8300EAFDEF /* RHRecorder.h */; };
+		69FD71311FE1CD4B00EAFDEF /* RHController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69FD71301FE1CD4B00EAFDEF /* RHController.m */; };
+		69FD71321FE1CD6E00EAFDEF /* RHController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69FD712F1FE1CD4B00EAFDEF /* RHController.h */; };
 		A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */; };
 		A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */ = {isa = PBXBuildFile; fileRef = A90C6E951B4A22AB00D87DB8 /* NVPDFSnapshotter.m */; };
 		A90C6E971B4A237600D87DB8 /* NVPDFSnapshotter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */; };
@@ -405,6 +411,9 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69FD71321FE1CD6E00EAFDEF /* RHController.h in CopyFiles */,
+				69FD712A1FE1BEBC00EAFDEF /* RHRecorder.h in CopyFiles */,
+				69FD71291FE1BEB500EAFDEF /* RHPlayer.h in CopyFiles */,
 				693493451FE031D9000F192D /* NVPeerConnect.h in CopyFiles */,
 				69F52BA51FB51A3F00583485 /* SSDelegate.h in CopyFiles */,
 				69BD0D6E1FA22D6A00B3E6E0 /* HotSpotVideoVC.h in CopyFiles */,
@@ -711,6 +720,12 @@
 		69F8E0D41D05C194003E8655 /* NVMarkerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVMarkerView.m; sourceTree = "<group>"; };
 		69F975951ECCB8200044CCED /* NVContactsViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVContactsViewer.h; sourceTree = "<group>"; };
 		69F975961ECCB8200044CCED /* NVContactsViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVContactsViewer.m; sourceTree = "<group>"; };
+		69FD71231FE1BE8300EAFDEF /* RHRecorder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RHRecorder.h; sourceTree = "<group>"; };
+		69FD71241FE1BE8300EAFDEF /* RHRecorder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHRecorder.m; sourceTree = "<group>"; };
+		69FD71261FE1BEA200EAFDEF /* RHPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RHPlayer.h; sourceTree = "<group>"; };
+		69FD71271FE1BEA200EAFDEF /* RHPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHPlayer.m; sourceTree = "<group>"; };
+		69FD712F1FE1CD4B00EAFDEF /* RHController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RHController.h; sourceTree = "<group>"; };
+		69FD71301FE1CD4B00EAFDEF /* RHController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHController.m; sourceTree = "<group>"; };
 		A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVHeadingViewController.h; sourceTree = "<group>"; };
 		A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVHeadingViewController.m; sourceTree = "<group>"; };
 		A90C6E941B4A22AB00D87DB8 /* NVPDFSnapshotter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPDFSnapshotter.h; sourceTree = "<group>"; };
@@ -1066,6 +1081,19 @@
 			name = NVSpreadsheet;
 			sourceTree = "<group>";
 		};
+		69FD71221FE1BE3B00EAFDEF /* RiteHome */ = {
+			isa = PBXGroup;
+			children = (
+				69FD71261FE1BEA200EAFDEF /* RHPlayer.h */,
+				69FD71271FE1BEA200EAFDEF /* RHPlayer.m */,
+				69FD71231FE1BE8300EAFDEF /* RHRecorder.h */,
+				69FD71241FE1BE8300EAFDEF /* RHRecorder.m */,
+				69FD712F1FE1CD4B00EAFDEF /* RHController.h */,
+				69FD71301FE1CD4B00EAFDEF /* RHController.m */,
+			);
+			name = RiteHome;
+			sourceTree = "<group>";
+		};
 		A90D1FB61AE6174700CBFEE7 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -1189,9 +1217,10 @@
 		A94A771E19F813810062906E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				69BD0D6A1FA22CF800B3E6E0 /* HotSpotVideo */,
-				69B5F55E1F98EDA7007603B5 /* ChartsBitmap */,
 				69D5EFAF1C72377D004CE1C0 /* Calendar Interface */,
+				69B5F55E1F98EDA7007603B5 /* ChartsBitmap */,
+				69BD0D6A1FA22CF800B3E6E0 /* HotSpotVideo */,
+				69FD71221FE1BE3B00EAFDEF /* RiteHome */,
 				A9C525CE1A3B59880056711F /* Colors.h */,
 				A9C525CF1A3B59880056711F /* Colors.m */,
 				EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */,
@@ -1704,6 +1733,8 @@
 				A990508E1ACB947000C6AAAF /* SpreadSheetViewCell.m in Sources */,
 				EBC01D101BED1C8C0004C751 /* diurab.c in Sources */,
 				BB0FD9391D2422A0007C1219 /* SQLiteLib.m in Sources */,
+				69FD71251FE1BE8300EAFDEF /* RHRecorder.m in Sources */,
+				69FD71281FE1BEA200EAFDEF /* RHPlayer.m in Sources */,
 				A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */,
 				EBA517B71BCA1355005A9CA8 /* CrimeData.m in Sources */,
 				69F52BA41FB519C400583485 /* SSDelegate.m in Sources */,
@@ -1890,6 +1921,7 @@
 				69F482321DB7314200E4BDB5 /* NVSpreadsheetVC.m in Sources */,
 				69D5F6C01F4D209500721F82 /* varstuff1.c in Sources */,
 				BB8BA0D81F5597250024B8C2 /* FacilitiesStepValue.m in Sources */,
+				69FD71311FE1CD4B00EAFDEF /* RHController.m in Sources */,
 				698C20C81DCB030B00F800C3 /* NVKeyboard.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				699DD7391CEA057600C7A651 /* NVSynchronizeVC.m in Sources */,

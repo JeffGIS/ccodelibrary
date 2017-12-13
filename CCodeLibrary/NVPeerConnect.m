@@ -90,35 +90,41 @@
             
             if (_isAdvertiser)
             {
-                NSString *fileName = @"NVMobile_VersionHistory";
-                
-                NSURL *testFile = [NSBundle.mainBundle URLForResource:fileName
-                                                        withExtension:@"pdf"];
-                
-                _progress = [session sendResourceAtURL:testFile
-                                              withName:fileName
-                                                toPeer:peerID
-                                 withCompletionHandler:^(NSError * _Nullable error) {
-                                     if (error)
-                                     {
-                                         NSLog(@"MCSession from %@ to %@ resource received ERROR: %@",
-                                               session.myPeerID.displayName, peerID.displayName, error.localizedDescription);
-                                     }
-                                     
-                                     else
-                                     {
-                                         NSLog(@"MCSession from %@ finished sending resource to %@",
-                                               session.myPeerID.displayName, peerID.displayName);
+                if (_fileToSend && _fileToSend.path.length)
+                {
+                    _progress = [session sendResourceAtURL:_fileToSend
+                                                  withName:_fileToSend.lastPathComponent
+                                                    toPeer:peerID
+                                     withCompletionHandler:^(NSError * _Nullable error) {
+                                         if (error)
+                                         {
+                                             NSLog(@"MCSession from %@ to %@ resource received ERROR: %@",
+                                                   session.myPeerID.displayName, peerID.displayName, error.localizedDescription);
+                                         }
+                                         
+                                         else
+                                         {
+                                             NSLog(@"MCSession from %@ finished sending resource to %@",
+                                                   session.myPeerID.displayName, peerID.displayName);
+                                         }
                                          
                                          [_progress removeObserver:self forKeyPath:@"fractionCompleted"];
                                          [session disconnect];
-                                     }
-                                 }];
+                                     }];
+                    
+                    [_progress addObserver:self
+                                forKeyPath:@"fractionCompleted"
+                                   options:NSKeyValueObservingOptionNew
+                                   context:NULL];
+                }
                 
-                [_progress addObserver:self
-                            forKeyPath:@"fractionCompleted"
-                               options:NSKeyValueObservingOptionNew
-                               context:NULL];
+                else
+                {
+                    NSLog(@"MCSession ERROR: %@ has no file to send to %@",
+                          session.myPeerID.displayName, peerID.displayName);
+                    
+                    [session disconnect];
+                }
             }
             break;}
     }

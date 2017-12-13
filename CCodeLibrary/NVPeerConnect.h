@@ -5,6 +5,8 @@
 
 @interface NVPeerConnect : NSObject
 
+@property (nonatomic) NSURL *fileToSend;
+
 - (void)startAdvertising;
 - (void)stopAdvertising;
 - (void)startBrowsing;
