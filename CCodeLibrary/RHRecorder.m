@@ -33,6 +33,21 @@
                                            selector:@selector(becameActive:)
                                                name:@"didBecomeActive"
                                              object:nil];
+}
+
+- (void)resignedActive:(id)selector
+{
+    [self stopSession];
+}
+
+- (void)becameActive:(id)selector
+{
+    [self startSession];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
     
     if ([CLLocationManager locationServicesEnabled])
     {
@@ -42,11 +57,11 @@
         switch (CLLocationManager.authorizationStatus)
         {
             case kCLAuthorizationStatusAuthorizedWhenInUse:
+            case kCLAuthorizationStatusAuthorizedAlways:
                 [_locMgr requestLocation];
                 [self setupVideoRecorder];
                 break;
             case kCLAuthorizationStatusNotDetermined:
-            case kCLAuthorizationStatusDenied:
                 if ([_locMgr respondsToSelector:@selector(requestWhenInUseAuthorization)])
                     [_locMgr requestWhenInUseAuthorization];
                 
@@ -65,9 +80,55 @@
         NSLog(@"CLLocationManager ERROR: Location services NOT enabled on this device.");
         [self setupVideoRecorder];
     }
+    
+    [self startSession];
 }
 
-- (void)resignedActive:(id)selector
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self stopSession];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationLandscapeRight;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskLandscapeRight;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
+- (void)startSession
+{
+    if (![_session isRunning])
+        [_session startRunning];
+    
+    if (CRAPI.sharedInstance.peerConnect.fileToSend
+        && CRAPI.sharedInstance.peerConnect.fileToSend.path.length)
+    {
+        [CRAPI.sharedInstance.peerConnect startAdvertising];
+    }
+}
+
+- (void)stopSession
 {
     [CRAPI.sharedInstance.peerConnect stopAdvertising];
     
@@ -78,38 +139,6 @@
         [_session stopRunning];
     
     _isRecording = NO;
-}
-
-- (void)becameActive:(id)selector
-{
-    if (![_session isRunning])
-        [_session startRunning];
-    
-    [CRAPI.sharedInstance.peerConnect startAdvertising];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    [CRAPI.sharedInstance.peerConnect startAdvertising];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-    [CRAPI.sharedInstance.peerConnect stopAdvertising];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
 }
 
 - (void)setupVideoRecorder
@@ -209,7 +238,10 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
         NSLog(@"AVCaptureFileOutput ERROR: %@", error.localizedDescription);
     
     else if (outputFileURL)
+    {
         CRAPI.sharedInstance.peerConnect.fileToSend = outputFileURL;
+        [CRAPI.sharedInstance.peerConnect startAdvertising];
+    }
 }
 
 - (void)controllerDidTapPlayRecordButton
@@ -274,10 +306,13 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
 - (void)locationManager:(CLLocationManager *)manager
 didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
-    if (status == kCLAuthorizationStatusAuthorizedWhenInUse)
+    if (status == kCLAuthorizationStatusAuthorizedWhenInUse ||
+        status == kCLAuthorizationStatusAuthorizedAlways)
     {
         [_locMgr requestLocation];
-        [self setupVideoRecorder];
+        
+        if (!_session)
+            [self setupVideoRecorder];
     }
 }
 

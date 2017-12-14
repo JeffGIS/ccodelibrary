@@ -72,6 +72,23 @@ replaceViewControllerWithID:(NSString *)ID
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController
+       addViewController:(UIViewController *)viewController
+{
+    NSMutableArray *newTabBarVCs = tabBarController.viewControllers.mutableCopy;
+    
+    for (UIViewController *vcs in newTabBarVCs)
+    {
+        if ([vcs.restorationIdentifier isEqualToString:viewController.restorationIdentifier])
+            return;
+    }
+    
+    [newTabBarVCs addObject:viewController];
+    
+    [tabBarController setViewControllers:newTabBarVCs.copy
+                                animated:NO];
+}
+
++ (void)tabBarController:(UITabBarController *)tabBarController
                  setText:(NSString *)text
  forViewControllerWithID:(NSString *)ID
 {

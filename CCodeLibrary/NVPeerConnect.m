@@ -216,25 +216,12 @@ didFinishReceivingResourceWithName:(NSString *)resourceName
         NSLog(@"MCSession for %@ finished receiving resource %@ from %@",
               session.myPeerID.displayName, resourceName, peerID.displayName);
         
-        NSFileManager *fileMgr = NSFileManager.new;
-        NSString *newPath = [localURL.path stringByDeletingLastPathComponent];
-        newPath = [newPath stringByAppendingPathComponent:@"testFile.pdf"];
-        [fileMgr moveItemAtPath:localURL.path toPath:newPath error:&error];
-        
-        [self performSelectorOnMainThread:@selector(showFile:)
-                               withObject:newPath
-                            waitUntilDone:YES];
+        if (_delegate && [_delegate respondsToSelector:@selector(peerConnectDidReceiveFileAtPath:)])
+            [_delegate peerConnectDidReceiveFileAtPath:localURL.path];
     }
     
     [_progress removeObserver:self forKeyPath:@"fractionCompleted"];
     [session disconnect];
-}
-
-- (void)showFile:(NSString *)filePath
-{
-    [NVWebView showWebViewInView:UIApplication.sharedApplication.keyWindow
-                  showFileAtPath:filePath
-                        delegate:nil];
 }
 
 #pragma mark MCNearbyServiceBrowser Delegate Methods

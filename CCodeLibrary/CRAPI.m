@@ -21,7 +21,7 @@
 
 @end
 
-@interface CRAPI () <NVAlertViewDelegate,NVDocumentManagerDelegate>
+@interface CRAPI () <NVAlertViewDelegate,NVDocumentManagerDelegate,NVPeerConnectDelegate>
 
 @property (nonatomic) NVAlertView *alert;
 @property int kp, currentGeoidValue, numAllowedZooms;
@@ -58,6 +58,7 @@
         _mapCrimeList = [UserDefaults.defaults stringForKey:@"MapCrimeList"];
         NSString *defaultCrimeTarget = [UserDefaults.defaults stringForKey:@"CrimeTarget"];
         _peerConnect = NVPeerConnect.new;
+        _peerConnect.delegate = self;
         
         if (defaultCrimeTarget && defaultCrimeTarget.length)
             _crimeTarget = defaultCrimeTarget;
@@ -1535,6 +1536,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         [_spreadsheetDelegate closeList];
     
     return outerArray.copy;
+}
+
+- (void)peerConnectDidReceiveFileAtPath:(NSString *)path
+{
+    NSLog(@"File received at path: %@", path);
 }
 
 @end

@@ -69,6 +69,9 @@
 - (void)setupVideoPlayer
 {
     _isPlaying = NO;
+    
+    _controller = RHController.new;
+    [_controller showInView:self.view delegate:self];
 }
 
 - (void)controllerDidTapPlayRecordButton

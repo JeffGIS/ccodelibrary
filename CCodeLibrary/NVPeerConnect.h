@@ -3,8 +3,17 @@
 
 @import Foundation;
 
+@class NVPeerConnect;
+
+@protocol NVPeerConnectDelegate <NSObject>
+
+- (void)peerConnectDidReceiveFileAtPath:(NSString *)path;
+
+@end
+
 @interface NVPeerConnect : NSObject
 
+@property (nonatomic, weak) id<NVPeerConnectDelegate> delegate;
 @property (nonatomic) NSURL *fileToSend;
 
 - (void)startAdvertising;

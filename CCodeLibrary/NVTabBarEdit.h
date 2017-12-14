@@ -13,6 +13,9 @@ replaceViewControllerWithID:(NSString *)ID
       withViewController:(UIViewController *)viewController;
 
 + (void)tabBarController:(UITabBarController *)tabBarController
+       addViewController:(UIViewController *)viewController;
+
++ (void)tabBarController:(UITabBarController *)tabBarController
     insertViewController:(UIViewController *)viewController
                  atIndex:(NSUInteger)index;
 
