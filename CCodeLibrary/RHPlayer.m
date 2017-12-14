@@ -46,6 +46,7 @@
 {
     [super viewDidAppear:animated];
     
+    [self setupVideoPlayer];
     [CRAPI.sharedInstance.peerConnect startBrowsing];
 }
 
@@ -59,6 +60,21 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationLandscapeRight;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskLandscapeRight;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
 }
 
 - (BOOL)prefersStatusBarHidden
