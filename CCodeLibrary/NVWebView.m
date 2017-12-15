@@ -339,8 +339,8 @@
     _scrollView.alpha = 1.0;
     _scrollView.userInteractionEnabled = YES;
     
-    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidFinishNavigation)])
-        [_delegate webViewDidFinishNavigation];
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidFinishNavigation:)])
+        [_delegate webViewDidFinishNavigation:self];
 }
 
 - (void)addWebViewToView:(UIView *)view
@@ -562,8 +562,8 @@ didFinishNavigation:(WKNavigation *)navigation
         _navigationComplete = YES;
     }
     
-    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidFinishNavigation)])
-        [_delegate webViewDidFinishNavigation];
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidFinishNavigation:)])
+        [_delegate webViewDidFinishNavigation:self];
 }
 
 - (void)webView:(WKWebView *)webView
@@ -1150,6 +1150,25 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 {
     _rotationEnabled = rotationEnabled;
     _scrollView.clipsToBounds = !rotationEnabled;
+}
+
+- (void)getHtmlString
+{
+    [_webView evaluateJavaScript:@"document.documentElement.outerHTML.toString()"
+               completionHandler:^(NSString *result, NSError *error)
+     {
+         if (_delegate && [_delegate respondsToSelector:@selector(webViewDidReturnHtmlString:)])
+         {
+             if (error)
+             {
+                 [_delegate webViewDidReturnHtmlString:[NSString stringWithFormat:@"WKWebView HTML ERROR: %@",
+                                                        error.localizedDescription]];
+             }
+             
+             else
+                 [_delegate webViewDidReturnHtmlString:result];
+         }
+     }];
 }
 
 @end
