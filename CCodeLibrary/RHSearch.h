@@ -10,8 +10,17 @@
 
 @end
 
+@class RHSearch;
+
+@protocol RHSearchDelegate <NSObject>
+
+- (void)searchDidReturnItems:(NSArray<RHSearchItem *> *)items;
+
+@end
+
 @interface RHSearch : NSObject
 
++ (instancetype)searchWithDelegate:(id<RHSearchDelegate>)delegate;
 - (void)getItemsForZip:(int)zip;
 
 @end
