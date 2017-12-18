@@ -5,7 +5,7 @@
 
 @interface RHSearchItem : NSObject
 
-@property (nonatomic, copy) NSString *address, *city, *state, *zip;
+@property (nonatomic, copy) NSString *address, *city, *state, *zip, *url;
 @property CLLocationCoordinate2D coordinate;
 
 @end
@@ -14,7 +14,11 @@
 
 @protocol RHSearchDelegate <NSObject>
 
-- (void)searchDidReturnItems:(NSArray<RHSearchItem *> *)items;
+- (void)searchDidReturnItems:(NSArray<RHSearchItem *> *)items
+                      forZip:(int)zip;
+
+- (void)searchDidReceiveError:(NSString *)error
+                       forZip:(int)zip;
 
 @end
 
