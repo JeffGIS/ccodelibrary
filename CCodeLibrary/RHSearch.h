@@ -7,6 +7,8 @@
 
 @property (nonatomic, copy) NSString *address, *city, *state, *zip, *url;
 @property CLLocationCoordinate2D coordinate;
+@property int price, sqft;
+@property float beds, baths, garage, lotsize;
 
 @end
 

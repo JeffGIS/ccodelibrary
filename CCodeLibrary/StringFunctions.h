@@ -27,6 +27,7 @@ NSString *stringWithoutID(NSString *string);
 NSString *paddedString(NSString * str);
 NSString *textBefore(NSString *string, NSString *before);
 NSString *textAfter(NSString *string, NSString *after);
+NSString *textBetween(NSString *string, NSString *before, NSString *after);
 NSString *textUpTo(NSString *string, NSString *upto);
 NSString *truncateString (NSString *string);
 NSString *removeEndingReturn(NSString *string);

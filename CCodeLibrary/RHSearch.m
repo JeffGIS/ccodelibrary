@@ -11,8 +11,10 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"ADDRESS:%@, %@, %@ %@; COORDS:(%f,%f); URL:%@",
-            _address, _city, _state, _zip, _coordinate.latitude, _coordinate.longitude, _url];
+    return [NSString stringWithFormat:@"ADDRESS:%@, %@, %@ %@; COORDS:(%f,%f); URL:%@; "
+            "PRICE:$%i; SQFT:%i; LOTSIZE:%.2f; BEDS:%.1f; BATHS:%.1f; GARAGE:%.1f",
+            _address, _city, _state, _zip, _coordinate.latitude, _coordinate.longitude,
+            _url, _price, _sqft, _lotsize, _beds, _baths, _garage];
 }
 
 @end
@@ -71,12 +73,23 @@
                 for (NSString *component in htmlArray)
                 {
                     RHSearchItem *item = RHSearchItem.new;
-                    substring = textBefore(textAfter(component, @"data-url=\""), @"\"");
+                    substring = textBetween(component, @"data-url=\"", @"\"");
                     item.url = [NSString stringWithFormat:@"%@%@", WEBSITE_URL, substring];
-                    item.address = textBefore(textAfter(component, @"streetAddress\">"), @"</");
-                    item.city = textBefore(textAfter(component, @"addressLocality\">"), @"</");
-                    item.state = textBefore(textAfter(component, @"addressRegion\">"), @"</");
-                    item.zip = textBefore(textAfter(component, @"postalCode\">"), @"</");
+                    item.price = textBetween(component, @"data-price=\"", @"\"").intValue;
+                    item.address = textBetween(component, @"streetAddress\">", @"</");
+                    item.city = textBetween(component, @"addressLocality\">", @"</");
+                    item.state = textBetween(component, @"addressRegion\">", @"</");
+                    item.zip = textBetween(component, @"postalCode\">", @"</");
+                    item.beds = textBetween(component, @"data-value meta-beds\">", @"</").floatValue;
+                    substring = textAfter(component, @"property-meta-baths");
+                    item.baths = textBetween(substring, @"data-value\">", @"</").floatValue;
+                    substring = textAfter(component, @"property-meta-sqft");
+                    substring =  textBetween(substring, @"data-value\">", @"</");
+                    item.sqft = [substring stringByReplacingOccurrencesOfString:@"," withString:@""].intValue;
+                    substring = textAfter(component, @"property-meta-lotsize");
+                    item.lotsize = textBetween(substring, @"data-value\">", @"</").floatValue;
+                    substring = textAfter(component, @"property-meta-garage");
+                    item.garage = textBetween(substring, @"data-value\">", @"</").floatValue;
                     substring = textAfter(component, @"GeoCoordinates");
                     substring = textAfter(substring, @"content=\"");
                     double latitude = textBefore(substring, @"\"").doubleValue;

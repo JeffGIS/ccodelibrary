@@ -174,6 +174,11 @@ NSString *textBefore(NSString *string, NSString *before)
     return string;
 }
 
+NSString *textBetween(NSString *string, NSString *after, NSString *before)
+{
+    return textBefore(textAfter(string, after), before);
+}
+
 NSString *textUpTo(NSString *string, NSString *upto)
 {
     if (!string)
