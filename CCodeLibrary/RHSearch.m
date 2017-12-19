@@ -9,6 +9,12 @@
 
 @implementation RHSearchItem
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"ADDRESS:%@, %@, %@ %@; COORDS:(%f,%f); URL:%@",
+            _address, _city, _state, _zip, _coordinate.latitude, _coordinate.longitude, _url];
+}
+
 @end
 
 @interface RHSearch ()
