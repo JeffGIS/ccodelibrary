@@ -2,19 +2,262 @@
 //  CCodeLibrary
 
 #import "RHSearch.h"
+#import "UserDefaults.h"
+#import "SQLiteLib.h"
+#import "CRAPI.h"
 
 #define MAX_ITEMS 50
 #define WEBSITE_URL @"https://www.realtor.com"
 #define HTML_SEPARATOR @"js-record-user-activity"
+#define TABLE_NAME @"RHSearch"
 
 @implementation RHSearchItem
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"ADDRESS:%@, %@, %@ %@; COORDS:(%f,%f); URL:%@; "
-            "PRICE:$%i; SQFT:%i; LOTSIZE:%.2f; BEDS:%.1f; BATHS:%.1f; GARAGE:%.1f",
-            _address, _city, _state, _zip, _coordinate.latitude, _coordinate.longitude,
-            _url, _price, _sqft, _lotsize, _beds, _baths, _garage];
+    return [NSString stringWithFormat:@"ID:%lli; ADDRESS:%@, %@, %@ %i; COORDS:(%f,%f); "
+            "PRICE:$%i; SQFT:%i; LOTSIZE:%.2f; BEDS:%.1f; BATHS:%.1f; GARAGE:%.1f; URL:%@",
+            _listingID, _address, _city, _state, _zip, _latitude, _longitude,
+            _price, _sqft, _lotsize, _beds, _baths, _garage, _url];
+}
+
+- (BOOL)isEqual:(id)object
+{
+    if (!object || ![object isKindOfClass:self.class])
+        return NO;
+    
+    else
+    {
+        RHSearchItem *item = (RHSearchItem *)object;
+        
+        if (item.price == _price && item.sqft == _sqft && item.lotsize == _lotsize &&
+            item.beds == _beds && item.baths == _baths && item.garage == _garage &&
+            item.latitude == _latitude && item.longitude == _longitude &&
+            [item.address isEqualToString:_address] && [item.url isEqualToString:_url])
+        {
+            return YES;
+        }
+        
+        else
+            return NO;
+    }
+}
+
+@end
+
+@interface RHSearchDatabase ()
+
+@property (nonatomic, copy) NSString *path;
+@property sqlite3 *database;
+@property BOOL isOpen;
+
+@end
+
+@implementation RHSearchDatabase
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _path = [NSString stringWithFormat:@"%@/%@Database.sqlite3",
+                 UserDefaults.defaults.localFilePath, TABLE_NAME];
+        
+        BOOL opened = self.open;
+        
+        NSString *cmd = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (listing_id INTEGER PRIMARY KEY, "
+        "insert_time INTEGER, modify_time INTEGER, update_time INTEGER, price INTEGER, sqft INTEGER, zip INTEGER, "
+        "latitude REAL, longitude REAL, lotsize REAL, beds REAL, baths REAL, garage REAL, "
+        "address TEXT, city TEXT, state TEXT, url TEXT);", TABLE_NAME];
+        
+        SQLOK(__FILE__,__LINE__, SQLiteExec(_database, cmd.UTF8String, 0, 0, 0), _database);
+        [self close:opened];
+    }
+    
+    return self;
+}
+
+- (BOOL)open
+{
+    BOOL rtn = NO;
+    
+    if (!_isOpen)
+    {
+        _isOpen = !SQLOK(__FILE__,__LINE__, sqlite3_open(_path.UTF8String, &_database), _database);
+        rtn = YES;
+    }
+    
+    return rtn;
+}
+
+- (void)close:(BOOL)opened
+{
+    if (opened)
+    {
+        SQLOK(__FILE__,__LINE__, sqlite3_close(_database), _database);
+        _isOpen = NO;
+    }
+}
+
+- (void)dealloc
+{
+    [self close:_isOpen];
+}
+
+- (void)startTransaction
+{
+    [self open];
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "BEGIN", 0, 0, 0), _database);
+}
+
+- (void)commitTransaction
+{
+    SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "COMMIT", 0, 0, 0),_database);
+}
+
+- (RHSearchItem *)searchItemWithListingID:(long long)listingID
+{
+    RHSearchItem *item = nil;
+    BOOL opened = self.open;
+    sqlite3_stmt *statement = NULL;
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE listing_id=%lli;",
+                       TABLE_NAME, listingID];
+    
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int iCol = 0;
+        item = RHSearchItem.new;
+        item.listingID = listingID;
+        item.insertTime = sqlite3_column_int(statement, ++iCol);
+        item.modifyTime = sqlite3_column_int(statement, ++iCol);
+        item.updateTime = sqlite3_column_int(statement, ++iCol);
+        item.price = sqlite3_column_int(statement, ++iCol);
+        item.sqft = sqlite3_column_int(statement, ++iCol);
+        item.zip = sqlite3_column_int(statement, ++iCol);
+        item.latitude = sqlite3_column_double(statement, ++iCol);
+        item.longitude = sqlite3_column_double(statement, ++iCol);
+        item.lotsize = sqlite3_column_double(statement, ++iCol);
+        item.beds = sqlite3_column_double(statement, ++iCol);
+        item.baths = sqlite3_column_double(statement, ++iCol);
+        item.garage = sqlite3_column_double(statement, ++iCol);
+        item.address = [NSString stringWithUTF8String:(LPSTR)sqlite3_column_text(statement, ++iCol)];
+        item.city = [NSString stringWithUTF8String:(LPSTR)sqlite3_column_text(statement, ++iCol)];
+        item.state = [NSString stringWithUTF8String:(LPSTR)sqlite3_column_text(statement, ++iCol)];
+        item.url = [NSString stringWithUTF8String:(LPSTR)sqlite3_column_text(statement, ++iCol)];
+    }
+    
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    [self close:opened];
+    
+    return item;
+}
+
+- (int)numberOfItems
+{
+    int count = 0;
+    BOOL opened = self.open;
+    sqlite3_stmt *statement = NULL;
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT Count(*) FROM %@;", TABLE_NAME];
+    
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+        count = sqlite3_column_int(statement, 0);
+    
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    [self close:opened];
+    
+    return count;
+}
+
+- (void)updateDatabaseForSearchItems:(NSArray<RHSearchItem *> *)searchItems
+{
+    for (RHSearchItem *searchItem in searchItems)
+    {
+        RHSearchItem *item = [self searchItemWithListingID:searchItem.listingID];
+        
+        if (item)
+        {
+            if ([item isEqual:searchItem])
+                [self updateItem:item];
+            
+            else
+                [self modifyItem:searchItem];
+        }
+        
+        else
+            [self addItem:searchItem];
+    }
+}
+
+- (void)updateItem:(RHSearchItem *)item
+{
+    BOOL opened = self.open;
+    
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE %@ SET update_time=%i WHERE listing_id=%lli",
+                     TABLE_NAME, CRAPI.sharedInstance.rhUpdateTime, item.listingID];
+    
+    SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    
+    [self close:opened];
+    
+    CRAPI.sharedInstance.rhItemsUpdated++;
+}
+
+- (void)modifyItem:(RHSearchItem *)item
+{
+    BOOL opened = self.open;
+    int time = CRAPI.sharedInstance.rhUpdateTime;
+    
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE %@ SET modify_time=%i, update_time=%i, price=%i, "
+                     "sqft=%i, zip=%i, latitude=%f, longitude=%f, lotsize=%.2f, beds=%.1f, baths=%.1f, "
+                     "garage=%.1f, address='%@', city='%@', state='%@', url='%@' WHERE listing_id=%lli",
+                     TABLE_NAME, time, time, item.price, item.sqft, item.zip, item.latitude, item.longitude,
+                     item.lotsize, item.beds, item.baths, item.garage, item.address, item.city, item.state,
+                     item.url, item.listingID];
+    
+    SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    
+    [self close:opened];
+    
+    CRAPI.sharedInstance.rhItemsUpdated++;
+    CRAPI.sharedInstance.rhItemsModified++;
+}
+
+- (void)addItem:(RHSearchItem *)item
+{
+    BOOL opened = self.open;
+    int time = CRAPI.sharedInstance.rhUpdateTime;
+    
+    NSString *cmd = [NSString stringWithFormat:
+    @"INSERT INTO %@ VALUES(%lli,%i,%i,%i,%i,%i,%i,%f,%f,%.2f,%.1f,%.1f,%.1f,'%@','%@','%@','%@');",
+                     TABLE_NAME, item.listingID, time, time, time, item.price, item.sqft, item.zip,
+                     item.latitude, item.longitude, item.lotsize, item.beds, item.baths, item.garage,
+                     item.address, item.city, item.state, item.url];
+    
+    SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    
+    [self close:opened];
+    
+    CRAPI.sharedInstance.rhItemsUpdated++;
+    CRAPI.sharedInstance.rhItemsAdded++;
+}
+
+- (void)deleteOldItems
+{
+    BOOL opened = self.open;
+    
+    NSString *cmd = [NSString stringWithFormat:@"DELETE FROM %@ WHERE update_time != %i;",
+                     TABLE_NAME, CRAPI.sharedInstance.rhUpdateTime];
+    
+    SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    
+    [self close:opened];
 }
 
 @end
@@ -73,13 +316,14 @@
                 for (NSString *component in htmlArray)
                 {
                     RHSearchItem *item = RHSearchItem.new;
+                    item.listingID = textBetween(component, @"data-listingid=\"", @"\"").intValue;
                     substring = textBetween(component, @"data-url=\"", @"\"");
                     item.url = [NSString stringWithFormat:@"%@%@", WEBSITE_URL, substring];
                     item.price = textBetween(component, @"data-price=\"", @"\"").intValue;
                     item.address = textBetween(component, @"streetAddress\">", @"</");
                     item.city = textBetween(component, @"addressLocality\">", @"</");
                     item.state = textBetween(component, @"addressRegion\">", @"</");
-                    item.zip = textBetween(component, @"postalCode\">", @"</");
+                    item.zip = textBetween(component, @"postalCode\">", @"</").intValue;
                     item.beds = textBetween(component, @"data-value meta-beds\">", @"</").floatValue;
                     substring = textAfter(component, @"property-meta-baths");
                     item.baths = textBetween(substring, @"data-value\">", @"</").floatValue;
@@ -92,10 +336,9 @@
                     item.garage = textBetween(substring, @"data-value\">", @"</").floatValue;
                     substring = textAfter(component, @"GeoCoordinates");
                     substring = textAfter(substring, @"content=\"");
-                    double latitude = textBefore(substring, @"\"").doubleValue;
+                    item.latitude = textBefore(substring, @"\"").floatValue;
                     substring = textAfter(substring, @"content=\"");
-                    double longitude = textBefore(substring, @"\"").doubleValue;
-                    item.coordinate = CLLocationCoordinate2DMake(latitude, longitude);
+                    item.longitude = textBefore(substring, @"\"").floatValue;
                     [_items addObject:item];
                 }
                 

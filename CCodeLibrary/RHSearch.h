@@ -5,10 +5,10 @@
 
 @interface RHSearchItem : NSObject
 
-@property (nonatomic, copy) NSString *address, *city, *state, *zip, *url;
-@property CLLocationCoordinate2D coordinate;
-@property int price, sqft;
-@property float beds, baths, garage, lotsize;
+@property (nonatomic, copy) NSString *address, *city, *state, *url;
+@property float beds, baths, garage, lotsize, latitude, longitude;
+@property int zip, price, sqft, insertTime, modifyTime, updateTime;
+@property long long listingID;
 
 @end
 
@@ -21,6 +21,14 @@
 
 - (void)searchDidReceiveError:(NSString *)error
                        forZip:(int)zip;
+
+@end
+
+@interface RHSearchDatabase : NSObject
+
+- (void)updateDatabaseForSearchItems:(NSArray<RHSearchItem *> *)searchItems;
+- (void)deleteOldItems;
+- (int)numberOfItems;
 
 @end
 
