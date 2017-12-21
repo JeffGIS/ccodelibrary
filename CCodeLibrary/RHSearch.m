@@ -205,8 +205,6 @@
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     
     [self close:opened];
-    
-    CRAPI.sharedInstance.rhItemsUpdated++;
 }
 
 - (void)modifyItem:(RHSearchItem *)item
@@ -225,7 +223,6 @@
     
     [self close:opened];
     
-    CRAPI.sharedInstance.rhItemsUpdated++;
     CRAPI.sharedInstance.rhItemsModified++;
 }
 
@@ -244,7 +241,6 @@
     
     [self close:opened];
     
-    CRAPI.sharedInstance.rhItemsUpdated++;
     CRAPI.sharedInstance.rhItemsAdded++;
 }
 
