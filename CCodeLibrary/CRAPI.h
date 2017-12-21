@@ -154,7 +154,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property LLPOINT lastPickPoint;
 @property (nonatomic, nullable) SSDelegate *spreadsheetDelegate;
 @property (nonatomic, nullable) NVPeerConnect *peerConnect;
-@property int rhUpdateTime, rhItemsAdded, rhItemsModified, rhItemsIgnored, rhCurrentZip;
+@property int rhUpdateTime, rhItemsUpdated, rhItemsAdded, rhItemsModified, rhItemsIgnored, rhCurrentZip;
 
 + (nullable CRAPI *)sharedInstance;
 

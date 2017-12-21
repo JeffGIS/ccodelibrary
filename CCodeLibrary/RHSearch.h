@@ -17,10 +17,9 @@
 @protocol RHSearchDelegate <NSObject>
 
 - (void)searchDidReturnItems:(NSArray<RHSearchItem *> *)items
-                      forZip:(int)zip;
+                   morePages:(BOOL)morePages;
 
-- (void)searchDidReceiveError:(NSString *)error
-                       forZip:(int)zip;
+- (void)searchDidReceiveError:(NSString *)error;
 
 @end
 
@@ -35,6 +34,6 @@
 @interface RHSearch : NSObject
 
 + (instancetype)searchWithDelegate:(id<RHSearchDelegate>)delegate;
-- (void)getItemsForZip:(int)zip;
+- (void)getItemsForZip;
 
 @end

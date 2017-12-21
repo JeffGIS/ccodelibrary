@@ -268,6 +268,7 @@
 
 @property (nonatomic, weak) id<RHSearchDelegate> delegate;
 @property (nonatomic) NSMutableArray<RHSearchItem *> *items;
+@property (nonatomic) NSURLSession *session;
 @property int page;
 
 @end
@@ -277,15 +278,18 @@
 + (instancetype)searchWithDelegate:(id<RHSearchDelegate>)delegate
 {
     RHSearch *search = RHSearch.new;
-    search.items = NSMutableArray.array;
     search.delegate = delegate;
     search.page = 1;
+    search.items = NSMutableArray.array;
+    search.session = NSURLSession.sharedSession;
     
     return search;
 }
 
-- (void)getItemsForZip:(int)zip
+- (void)getItemsForZip
 {
+    int zip = CRAPI.sharedInstance.rhCurrentZip;
+    
     NSString *urlString = [NSString stringWithFormat:@"%@/realestateandhomes-search/%i?pgsz=%i",
                            WEBSITE_URL, zip, MAX_ITEMS];
     
@@ -297,13 +301,12 @@
     }
     
     NSURL *url = [[NSURL alloc] initWithString:urlString];
-    NSURLSession *session = NSURLSession.sharedSession;
     
-    [[session dataTaskWithURL:(NSURL *)url
-            completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+    [[_session dataTaskWithURL:(NSURL *)url
+             completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
     {
         if (error)
-            [_delegate searchDidReceiveError:error.localizedDescription forZip:zip];
+            [_delegate searchDidReceiveError:error.localizedDescription];
         
         else
         {
@@ -313,30 +316,31 @@
             if (htmlString && htmlString.length)
             {
                 NSArray *htmlArray = [htmlString componentsSeparatedByString:HTML_SEPARATOR];
-                NSString *substring = @"";
+                NSString *substring = @"", *subcomponent = @"";
                 
                 for (NSString *component in htmlArray)
                 {
                     RHSearchItem *item = RHSearchItem.new;
-                    item.listingID = textBetween(component, @"data-listingid=\"", @"\"").longLongValue;
-                    substring = textBetween(component, @"data-url=\"", @"\"");
+                    subcomponent = textBefore(component, @"longitude\">");
+                    item.listingID = textBetween(subcomponent, @"data-listingid=\"", @"\"").longLongValue;
+                    substring = textBetween(subcomponent, @"data-url=\"", @"\"");
                     item.url = [NSString stringWithFormat:@"%@%@", WEBSITE_URL, substring];
-                    item.price = textBetween(component, @"data-price=\"", @"\"").intValue;
-                    item.address = textBetween(component, @"streetAddress\">", @"</");
-                    item.city = textBetween(component, @"addressLocality\">", @"</");
-                    item.state = textBetween(component, @"addressRegion\">", @"</");
-                    item.zip = textBetween(component, @"postalCode\">", @"</").intValue;
-                    item.beds = textBetween(component, @"data-value meta-beds\">", @"</").floatValue;
-                    substring = textAfter(component, @"property-meta-baths");
+                    item.price = textBetween(subcomponent, @"data-price=\"", @"\"").intValue;
+                    item.address = textBetween(subcomponent, @"streetAddress\">", @"</");
+                    item.city = textBetween(subcomponent, @"addressLocality\">", @"</");
+                    item.state = textBetween(subcomponent, @"addressRegion\">", @"</");
+                    item.zip = textBetween(subcomponent, @"postalCode\">", @"</").intValue;
+                    item.beds = textBetween(subcomponent, @"data-value meta-beds\">", @"</").floatValue;
+                    substring = textAfter(subcomponent, @"property-meta-baths");
                     item.baths = textBetween(substring, @"data-value\">", @"</").floatValue;
-                    substring = textAfter(component, @"property-meta-sqft");
+                    substring = textAfter(subcomponent, @"property-meta-sqft");
                     substring =  textBetween(substring, @"data-value\">", @"</");
                     item.sqft = [substring stringByReplacingOccurrencesOfString:@"," withString:@""].intValue;
-                    substring = textAfter(component, @"property-meta-lotsize");
+                    substring = textAfter(subcomponent, @"property-meta-lotsize");
                     item.lotsize = textBetween(substring, @"data-value\">", @"</").floatValue;
-                    substring = textAfter(component, @"property-meta-garage");
+                    substring = textAfter(subcomponent, @"property-meta-garage");
                     item.garage = textBetween(substring, @"data-value\">", @"</").floatValue;
-                    substring = textAfter(component, @"GeoCoordinates");
+                    substring = textAfter(subcomponent, @"GeoCoordinates");
                     substring = textAfter(substring, @"content=\"");
                     item.latitude = textBefore(substring, @"\"").floatValue;
                     substring = textAfter(substring, @"content=\"");
@@ -346,16 +350,26 @@
                 
                 if (htmlArray.count == MAX_ITEMS)
                 {
+                    [_delegate searchDidReturnItems:_items.copy
+                                          morePages:YES];
+                    
+                    [_items removeAllObjects];
                     _page++;
-                    [self getItemsForZip:zip];
+                    [self getItemsForZip];
                 }
                 
                 else
-                    [_delegate searchDidReturnItems:_items.copy forZip:zip];
+                {
+                    [_delegate searchDidReturnItems:_items.copy
+                                          morePages:NO];
+                }
             }
             
             else
-                [_delegate searchDidReturnItems:nil forZip:zip];
+            {
+                [_delegate searchDidReturnItems:nil
+                                      morePages:NO];
+            }
         }
     }] resume];
 }
