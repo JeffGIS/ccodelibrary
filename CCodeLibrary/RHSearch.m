@@ -179,19 +179,25 @@
 {
     for (RHSearchItem *searchItem in searchItems)
     {
-        RHSearchItem *item = [self searchItemWithListingID:searchItem.listingID];
-        
-        if (item)
+        if (searchItem.listingID)
         {
-            if ([item isEqual:searchItem])
-                [self updateItem:item];
+            RHSearchItem *item = [self searchItemWithListingID:searchItem.listingID];
+            
+            if (item)
+            {
+                if ([item isEqual:searchItem])
+                    [self updateItem:item];
+                
+                else
+                    [self modifyItem:searchItem];
+            }
             
             else
-                [self modifyItem:searchItem];
+                [self addItem:searchItem];
         }
         
         else
-            [self addItem:searchItem];
+            CRAPI.sharedInstance.rhItemsIgnored++;
     }
 }
 
@@ -312,7 +318,7 @@
                 for (NSString *component in htmlArray)
                 {
                     RHSearchItem *item = RHSearchItem.new;
-                    item.listingID = textBetween(component, @"data-listingid=\"", @"\"").intValue;
+                    item.listingID = textBetween(component, @"data-listingid=\"", @"\"").longLongValue;
                     substring = textBetween(component, @"data-url=\"", @"\"");
                     item.url = [NSString stringWithFormat:@"%@%@", WEBSITE_URL, substring];
                     item.price = textBetween(component, @"data-price=\"", @"\"").intValue;
