@@ -27,6 +27,10 @@
 #define PROJECT_MPLS            1
 #define PROJECT_METROGIS        2
 
+#define RH_QUERY_INTERVAL 120
+#define RH_ERROR_INTERVAL 3600
+#define RH_BATCH_INTERVAL 900
+
 typedef NS_ENUM(NSInteger, CrimeMapMode)
 {
     PINMAP,

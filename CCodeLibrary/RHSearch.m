@@ -288,7 +288,7 @@
 
 - (void)getItemsForZip
 {
-    [NSThread sleepForTimeInterval:30.0];
+    [NSThread sleepForTimeInterval:RH_QUERY_INTERVAL];
     
     int zip = CRAPI.sharedInstance.rhCurrentZip;
     
