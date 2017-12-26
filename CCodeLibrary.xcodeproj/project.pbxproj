@@ -63,6 +63,8 @@
 		694F007A1C1B4C4B0074AF72 /* MapToolbar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 694F00771C1B4BBA0074AF72 /* MapToolbar.h */; };
 		6956B9981CB230210070416B /* NVPopoverTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6956B9971CB230210070416B /* NVPopoverTableView.m */; };
 		6956B9991CB235490070416B /* NVPopoverTableView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6956B9961CB230210070416B /* NVPopoverTableView.h */; };
+		695C062E1FF2B1300081712C /* RHWalkScore.m in Sources */ = {isa = PBXBuildFile; fileRef = 695C062D1FF2B1300081712C /* RHWalkScore.m */; };
+		695C06301FF2BAA00081712C /* RHWalkScore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 695C062C1FF2B1300081712C /* RHWalkScore.h */; };
 		696D03821D67A616002E686A /* RampCompliance.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 696D03801D679E66002E686A /* RampCompliance.h */; };
 		697486441E5C85BD0051B5BC /* NVPager.m in Sources */ = {isa = PBXBuildFile; fileRef = 697486431E5C85BD0051B5BC /* NVPager.m */; };
 		697486451E5C89450051B5BC /* NVPager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697486421E5C85BD0051B5BC /* NVPager.h */; };
@@ -413,6 +415,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				695C06301FF2BAA00081712C /* RHWalkScore.h in CopyFiles */,
 				6910F6DB1FE487C70006375C /* RHSearch.h in CopyFiles */,
 				69FD71321FE1CD6E00EAFDEF /* RHController.h in CopyFiles */,
 				69FD712A1FE1BEBC00EAFDEF /* RHRecorder.h in CopyFiles */,
@@ -638,6 +641,8 @@
 		694F00781C1B4BBA0074AF72 /* MapToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapToolbar.m; sourceTree = "<group>"; };
 		6956B9961CB230210070416B /* NVPopoverTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPopoverTableView.h; sourceTree = "<group>"; };
 		6956B9971CB230210070416B /* NVPopoverTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPopoverTableView.m; sourceTree = "<group>"; };
+		695C062C1FF2B1300081712C /* RHWalkScore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RHWalkScore.h; sourceTree = "<group>"; };
+		695C062D1FF2B1300081712C /* RHWalkScore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHWalkScore.m; sourceTree = "<group>"; };
 		696D037F1D679E66002E686A /* RampCompliance.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RampCompliance.c; sourceTree = "<group>"; };
 		696D03801D679E66002E686A /* RampCompliance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RampCompliance.h; sourceTree = "<group>"; };
 		697486421E5C85BD0051B5BC /* NVPager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPager.h; sourceTree = "<group>"; };
@@ -1034,6 +1039,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		695C062B1FF2B0F60081712C /* RiteHome */ = {
+			isa = PBXGroup;
+			children = (
+				69FD712F1FE1CD4B00EAFDEF /* RHController.h */,
+				69FD71301FE1CD4B00EAFDEF /* RHController.m */,
+				69FD71261FE1BEA200EAFDEF /* RHPlayer.h */,
+				69FD71271FE1BEA200EAFDEF /* RHPlayer.m */,
+				69FD71231FE1BE8300EAFDEF /* RHRecorder.h */,
+				69FD71241FE1BE8300EAFDEF /* RHRecorder.m */,
+				6910F6D81FE482230006375C /* RHSearch.h */,
+				6910F6D91FE482230006375C /* RHSearch.m */,
+				695C062C1FF2B1300081712C /* RHWalkScore.h */,
+				695C062D1FF2B1300081712C /* RHWalkScore.m */,
+			);
+			name = RiteHome;
+			sourceTree = "<group>";
+		};
 		69B5F55E1F98EDA7007603B5 /* ChartsBitmap */ = {
 			isa = PBXGroup;
 			children = (
@@ -1084,21 +1106,6 @@
 				69F482311DB7314200E4BDB5 /* NVSpreadsheetVC.m */,
 			);
 			name = NVSpreadsheet;
-			sourceTree = "<group>";
-		};
-		69FD71221FE1BE3B00EAFDEF /* RiteHome */ = {
-			isa = PBXGroup;
-			children = (
-				69FD712F1FE1CD4B00EAFDEF /* RHController.h */,
-				69FD71301FE1CD4B00EAFDEF /* RHController.m */,
-				69FD71261FE1BEA200EAFDEF /* RHPlayer.h */,
-				69FD71271FE1BEA200EAFDEF /* RHPlayer.m */,
-				69FD71231FE1BE8300EAFDEF /* RHRecorder.h */,
-				69FD71241FE1BE8300EAFDEF /* RHRecorder.m */,
-				6910F6D81FE482230006375C /* RHSearch.h */,
-				6910F6D91FE482230006375C /* RHSearch.m */,
-			);
-			name = RiteHome;
 			sourceTree = "<group>";
 		};
 		A90D1FB61AE6174700CBFEE7 /* Categories */ = {
@@ -1227,7 +1234,6 @@
 				69D5EFAF1C72377D004CE1C0 /* Calendar Interface */,
 				69B5F55E1F98EDA7007603B5 /* ChartsBitmap */,
 				69BD0D6A1FA22CF800B3E6E0 /* HotSpotVideo */,
-				69FD71221FE1BE3B00EAFDEF /* RiteHome */,
 				A9C525CE1A3B59880056711F /* Colors.h */,
 				A9C525CF1A3B59880056711F /* Colors.m */,
 				EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */,
@@ -1534,6 +1540,7 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				695C062B1FF2B0F60081712C /* RiteHome */,
 				BBC361921F429C0200B51DF3 /* NVMacro */,
 				A933D9F31B5D494600D621CD /* 3D Views */,
 				A90D1FB61AE6174700CBFEE7 /* Categories */,
@@ -1918,6 +1925,7 @@
 				698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */,
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
 				EBC01D261BED1C8C0004C751 /* refrac.c in Sources */,
+				695C062E1FF2B1300081712C /* RHWalkScore.m in Sources */,
 				69D5EFBC1C7248DB004CE1C0 /* NVCalendarCell.m in Sources */,
 				A94A771919F807CE0062906E /* FacilityRecord.m in Sources */,
 				69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */,

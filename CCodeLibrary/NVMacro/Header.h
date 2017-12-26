@@ -1,5 +1,5 @@
 //
-//  Header.h
+//  RiteHome.h
 //  CCodeLibrary
 //
 //  Created by Jeff Smith on 8/15/17.
