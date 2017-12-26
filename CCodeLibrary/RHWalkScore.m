@@ -204,7 +204,7 @@ typedef NS_ENUM(NSInteger, WSStatus)
                                   break;
                           }
                           
-                          if (error)
+                          if (errorString)
                               [_delegate walkScoreDidReceiveError:errorString];
                       }
                   }
