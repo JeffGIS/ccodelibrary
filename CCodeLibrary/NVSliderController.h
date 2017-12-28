@@ -1,7 +1,7 @@
 //  NVSliderController.h
 //  CCodeLibrary
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 typedef NS_ENUM(NSInteger, NVSliderConfiguration)
 {
@@ -46,6 +46,7 @@ typedef NS_ENUM(NSInteger, NVSliderButton)
 
 @property (nonatomic, weak) id <NVSliderControllerDelegate> delegate;
 @property NVSliderMeasurementType type;
+@property CGFloat usedTopSpace;
 
 - (id)initWithCenter:(CGPoint)center
                width:(double)width
@@ -57,17 +58,17 @@ typedef NS_ENUM(NSInteger, NVSliderButton)
                 type:(NVSliderMeasurementType)type
                 unit:(NSString *)unit;
 
-- (void)addTitle:(NSString *)title;
-
 - (void)showSliderControllerInView:(UIView *)view
                           animated:(BOOL)animated
                            overlay:(BOOL)overlay;
 
 - (void)hideSliderController:(BOOL)animated;
 
-- (void)addHelp:(BOOL)help
-      reference:(BOOL)reference
-           link:(BOOL)link
-        comment:(BOOL)comment;
+- (void)addTitle:(NSString *)title
+          prompt:(NSString *)prompt
+            help:(BOOL)help
+       reference:(BOOL)reference
+            link:(BOOL)link
+         comment:(BOOL)comment;
 
 @end

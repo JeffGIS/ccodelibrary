@@ -620,76 +620,84 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 }
 
 - (void)addTitle:(NSString *)title
+          prompt:(NSString *)prompt
+            help:(BOOL)help
+       reference:(BOOL)reference
+            link:(BOOL)link
+         comment:(BOOL)comment
 {
-    title = removeEndingReturn(title);
-    NSInteger lines = [title componentsSeparatedByCharactersInSet:NSCharacterSet.newlineCharacterSet].count;
-    UIFont *font = [UIFont boldSystemFontOfSize:32.0];
-    CGFloat titleHeight = (lines * 40.0);
+    CGFloat fontSize = 24.0;
+    CGFloat margin = 20.0;
+    _usedTopSpace = margin;
+    UILabel *label = nil;
     
-    UILabel *label = UILabel.new;
-    label.frame = CGRectMake(0.0, self.frame.size.height, self.frame.size.width, titleHeight);
-    label.text = title;
-    label.numberOfLines = 0;
-    label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = UIColor.blackColor;
-    label.font = font;
+    if (title && title.length)
+    {
+        title = removeEndingReturn(title);
+        NSInteger lines = [title componentsSeparatedByCharactersInSet:NSCharacterSet.newlineCharacterSet].count;
+        CGFloat titleHeight = (lines * (fontSize * 1.2));
+        
+        label = UILabel.new;
+        label.frame = CGRectMake(0.0, _usedTopSpace, self.frame.size.width, titleHeight);
+        label.text = title;
+        label.numberOfLines = 0;
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = UIColor.blackColor;
+        label.font = [UIFont boldSystemFontOfSize:fontSize];
+        _usedTopSpace += (titleHeight + margin);
+        
+        [self.superview addSubview:label];
+    }
     
-    CGRect frame = self.frame;
-    frame.size.height += titleHeight;
-    self.frame = frame;
+    if (prompt && prompt.length)
+    {
+        label = UILabel.new;
+        label.frame = CGRectMake(0.0, _usedTopSpace, self.frame.size.width, (fontSize * 1.8));
+        label.text = prompt;
+        label.numberOfLines = 0;
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = UIColor.blackColor;
+        label.font = [UIFont boldSystemFontOfSize:(fontSize * 1.2)];
+        _usedTopSpace += (label.frame.size.height + margin);
+        
+        [self.superview addSubview:label];
+    }
     
-    CGPoint center = self.center;
-    center.y -= titleHeight;
-    self.center = center;
-
-    [self addSubview:label];
-}
-
-- (void)addHelp:(BOOL)help
-      reference:(BOOL)reference
-           link:(BOOL)link
-        comment:(BOOL)comment
-{
     if (help || reference || link || comment)
     {
-        CGRect frame = self.frame;
-        frame.size.height += _buttonHeight;
-        self.frame = frame;
-        
-        CGPoint center = self.center;
-        center.y -= _buttonHeight;
-        self.center = center;
         CGFloat buttonWidth = (self.frame.size.width / 4);
-        CGFloat originY = (self.frame.size.height - _buttonHeight);
+        
         UIButton *button = nil;
         
         if (help)
         {
             button = [self bottomButton:@"Help" tag:NVSliderButtonHelp];
-            button.frame = CGRectMake(0.0, originY, buttonWidth, _buttonHeight);
-            [self addSubview:button];
+            button.frame = CGRectMake(0.0, _usedTopSpace, buttonWidth, _buttonHeight);
+            [self.superview addSubview:button];
         }
         
         if (reference)
         {
             button = [self bottomButton:@"Reference" tag:NVSliderButtonReference];
-            button.frame = CGRectMake(buttonWidth, originY, buttonWidth, _buttonHeight);
-            [self addSubview:button];
+            button.frame = CGRectMake(buttonWidth, _usedTopSpace, buttonWidth, _buttonHeight);
+            [self.superview addSubview:button];
         }
         
         if (link)
         {
             button = [self bottomButton:@"Link" tag:NVSliderButtonLink];
-            button.frame = CGRectMake((buttonWidth * 2), originY, buttonWidth, _buttonHeight);
-            [self addSubview:button];
+            button.frame = CGRectMake((buttonWidth * 2), _usedTopSpace, buttonWidth, _buttonHeight);
+            [self.superview addSubview:button];
         }
         
         if (comment)
         {
             button = [self bottomButton:@"Comment" tag:NVSliderButtonComment];
-            button.frame = CGRectMake((buttonWidth * 3), originY, buttonWidth, _buttonHeight);
-            [self addSubview:button];
+            button.frame = CGRectMake((buttonWidth * 3), _usedTopSpace, buttonWidth, _buttonHeight);
+            [self.superview addSubview:button];
         }
+        
+        _usedTopSpace += (_buttonHeight + margin);
     }
 }
 
@@ -701,7 +709,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitleColor:UserDefaults.defaults.appleBlue forState:UIControlStateNormal];
     [button setTitleColor:UIColor.grayColor forState:UIControlStateHighlighted];
-    button.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     
     [button addTarget:self
