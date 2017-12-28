@@ -1,7 +1,8 @@
 //  GSSiBumpDetector.h
 //  CCodeLibrary
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+#import "GSSiEnums.h"
 
 @class GSSiBumpDetector;
 
@@ -21,6 +22,7 @@ didReturnTimeInterval:(NSString *)timeInterval;
 + (GSSiBumpDetector *)showBumpDetectorWithView:(UIView *)view
                                   coundownTime:(NSInteger)countdownTime
                                          title:(NSString *)title
+                                        prompt:(NSString *)prompt
                                       delegate:(id)delegate;
 
 - (void)hideBumpDetector:(BOOL)animated;

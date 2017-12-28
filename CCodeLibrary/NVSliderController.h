@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 @import UIKit;
+#import "GSSiEnums.h"
 
 typedef NS_ENUM(NSInteger, NVSliderConfiguration)
 {
@@ -20,14 +21,6 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
     NVSliderMeasurementTypeSideSlope,
 };
 
-typedef NS_ENUM(NSInteger, NVSliderButton)
-{
-    NVSliderButtonHelp=1,
-    NVSliderButtonReference=2,
-    NVSliderButtonLink=3,
-    NVSliderButtonComment=4,
-};
-
 @class NVSliderController;
 
 @protocol NVSliderControllerDelegate <NSObject>
@@ -38,7 +31,7 @@ typedef NS_ENUM(NSInteger, NVSliderButton)
 - (void)sliderViewDidCancel:(NVSliderController *)sliderView;
 
 @optional
-- (void)sliderViewDidTapButtonWithType:(NVSliderButton)type;
+- (void)sliderViewDidTapButtonWithType:(NVFacButtonType)type;
 
 @end
 

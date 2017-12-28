@@ -10,10 +10,9 @@
 
 @property (nonatomic) NSInteger countdownTime, countdownStart;
 @property (nonatomic) NSTimer *timer;
-@property (nonatomic) UILabel *countdownLabel, *titleLabel;
-@property (nonatomic) UIButton *startButton, *cancelButton;
+@property (nonatomic) UILabel *countdownLabel, *titleLabel, *promptLabel;
+@property (nonatomic) UIButton *start, *cancel, *help, *reference, *link, *comment;
 @property (nonatomic) BOOL timerIsFiring, isFirstTime, isComplete;
-@property (nonatomic) UIColor *green;
 @property (nonatomic) AVAudioPlayer *beep, *finalBeep;
 @property (nonatomic) CMMotionManager *motionManager;
 @property (nonatomic) CMAcceleration userAcceleration, gravity;
@@ -28,42 +27,38 @@
 + (GSSiBumpDetector *)showBumpDetectorWithView:(UIView *)view
                                   coundownTime:(NSInteger)countdownTime
                                          title:(NSString *)title
+                                        prompt:(NSString *)prompt
                                       delegate:(id)delegate
 {
-    GSSiBumpDetector *bumpDetector = [[GSSiBumpDetector alloc] initWithFrame:view.frame];
-    bumpDetector.delegate = delegate;
-    bumpDetector.countdownTime = bumpDetector.countdownStart = countdownTime;
-    bumpDetector.timerIsFiring = bumpDetector.isComplete = NO;
-    bumpDetector.isFirstTime = YES;
-    bumpDetector.backgroundColor = UserDefaults.defaults.appleBlue;
-    bumpDetector.alpha = 0.0;
+    GSSiBumpDetector *bd = [[GSSiBumpDetector alloc] initWithFrame:view.frame];
+    bd.delegate = delegate;
+    bd.countdownTime = bd.countdownStart = countdownTime;
+    bd.timerIsFiring = bd.isComplete = NO;
+    bd.isFirstTime = YES;
+    bd.backgroundColor = UserDefaults.defaults.appleBlue;
+    bd.alpha = 0.0;
     
-    bumpDetector.green = [UIColor colorWithRed:0.0
-                                         green:0.6
-                                          blue:0.0
-                                         alpha:1.0];
-    
-    [view addSubview:bumpDetector];
+    [view addSubview:bd];
     
     CGSize size = view.frame.size;
     
-    bumpDetector.countdownLabel = [[UILabel alloc] initWithFrame:
-                                   CGRectMake((size.width * 0.1), (size.height * 0.2),
-                                              (size.width * 0.8), (size.height * 0.6))];
+    bd.countdownLabel = [[UILabel alloc] initWithFrame:
+                                   CGRectMake((size.width * 0.12), (size.height * 0.3025),
+                                              (size.width * 0.76), (size.height * 0.57))];
     
-    bumpDetector.countdownLabel.backgroundColor = UIColor.blackColor;
-    bumpDetector.countdownLabel.textColor = UIColor.whiteColor;
-    bumpDetector.countdownLabel.font = [UIFont boldSystemFontOfSize:360.0];
-    bumpDetector.countdownLabel.textAlignment = NSTextAlignmentCenter;
-    bumpDetector.countdownLabel.adjustsFontSizeToFitWidth = YES;
-    bumpDetector.countdownLabel.numberOfLines = 0;
-    bumpDetector.countdownLabel.layer.borderColor = UIColor.whiteColor.CGColor;
-    bumpDetector.countdownLabel.layer.borderWidth = 4.0;
-    bumpDetector.countdownLabel.layer.cornerRadius = 10.0;
-    bumpDetector.countdownLabel.layer.masksToBounds = YES;
-    bumpDetector.countdownLabel.layer.backgroundColor = UIColor.blackColor.CGColor;
-    [bumpDetector updateCountdownLabelText];
-    [bumpDetector addSubview:bumpDetector.countdownLabel];
+    bd.countdownLabel.backgroundColor = UIColor.blackColor;
+    bd.countdownLabel.textColor = UIColor.whiteColor;
+    bd.countdownLabel.font = [UIFont boldSystemFontOfSize:360.0];
+    bd.countdownLabel.textAlignment = NSTextAlignmentCenter;
+    bd.countdownLabel.adjustsFontSizeToFitWidth = YES;
+    bd.countdownLabel.numberOfLines = 0;
+    bd.countdownLabel.layer.borderColor = UIColor.whiteColor.CGColor;
+    bd.countdownLabel.layer.borderWidth = 4.0;
+    bd.countdownLabel.layer.cornerRadius = 10.0;
+    bd.countdownLabel.layer.masksToBounds = YES;
+    bd.countdownLabel.layer.backgroundColor = UIColor.blackColor.CGColor;
+    [bd updateCountdownLabelText];
+    [bd addSubview:bd.countdownLabel];
     
     DPOINT ul = {0}, lr = {0};
     ul.x = 0.4175, ul.y = 0.295, lr.x = 0.625, lr.y = 0.465;
@@ -74,52 +69,89 @@
                                                    page:26
                                               upperLeft:ul lowerRight:lr];
     
-    bumpDetector.webView = [NVWebView showPDFDrawing:drawing
+    bd.webView = [NVWebView showPDFDrawing:drawing
                                         fromDocument:NVPDFDocumentADAChecklist
-                                              inView:bumpDetector.countdownLabel
+                                              inView:bd.countdownLabel
                                          enableSwipe:NO];
     
-    bumpDetector.titleLabel = [[UILabel alloc] initWithFrame:
-                               CGRectMake(20.0, 20.0, (size.width - 40.0),
-                                          ((size.height * 0.2) - 40.0))];
+    bd.titleLabel = [[UILabel alloc] initWithFrame:
+                               CGRectMake((size.width * 0.05), (size.height * 0.025),
+                                          (size.width * 0.9), (size.height * 0.15))];
     
-    bumpDetector.titleLabel.backgroundColor = UIColor.clearColor;
-    bumpDetector.titleLabel.textColor = UIColor.whiteColor;
-    bumpDetector.titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
-    bumpDetector.titleLabel.textAlignment = NSTextAlignmentCenter;
-    bumpDetector.titleLabel.adjustsFontSizeToFitWidth = YES;
-    bumpDetector.titleLabel.numberOfLines = 2;
-    bumpDetector.titleLabel.layer.shadowColor = UIColor.blackColor.CGColor;
-    bumpDetector.titleLabel.layer.shadowOffset = CGSizeMake(2.0, 2.0);
-    bumpDetector.titleLabel.layer.shadowOpacity = 1.0;
-    bumpDetector.titleLabel.text = [NSString stringWithFormat:@"Collision Detection Manager\n%@", title];
-    [bumpDetector addSubview:bumpDetector.titleLabel];
+    bd.titleLabel.backgroundColor = UIColor.clearColor;
+    bd.titleLabel.textColor = UIColor.whiteColor;
+    bd.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
+    bd.titleLabel.textAlignment = NSTextAlignmentCenter;
+    bd.titleLabel.adjustsFontSizeToFitWidth = YES;
+    bd.titleLabel.numberOfLines = 5;
+    bd.titleLabel.text = title;
+    [bd addSubview:bd.titleLabel];
     
-    bumpDetector.startButton = [[UIButton alloc] initWithFrame:
-                                CGRectMake((size.width * 0.05), (size.height * 0.85),
-                                           (size.width * 0.4), (size.height * 0.1))];
+    bd.promptLabel = [[UILabel alloc] initWithFrame:
+                               CGRectMake((size.width * 0.05), (size.height * 0.185),
+                                          (size.width * 0.9), (size.height * 0.05))];
     
-    [bumpDetector setupButton:bumpDetector.startButton
-                       target:bumpDetector
-                     selector:@selector(startBumpDetection:)
-                        title:@"Start"];
+    bd.promptLabel.backgroundColor = UIColor.clearColor;
+    bd.promptLabel.textColor = UIColor.whiteColor;
+    bd.promptLabel.font = [UIFont boldSystemFontOfSize:36.0];
+    bd.promptLabel.textAlignment = NSTextAlignmentCenter;
+    bd.promptLabel.adjustsFontSizeToFitWidth = YES;
+    bd.promptLabel.numberOfLines = 5;
+    bd.promptLabel.text = prompt;
+    [bd addSubview:bd.promptLabel];
     
-    bumpDetector.startButton.backgroundColor = bumpDetector.green;
+    bd.help = [bd facButton:@"Help" tag:NVFacButtonTypeHelp];
     
-    [bumpDetector addSubview:bumpDetector.startButton];
+    bd.help.frame = CGRectMake((size.width * 0.04), (size.height * 0.235),
+                               (size.width * 0.2), (size.height * 0.05));
     
-    bumpDetector.cancelButton = [[UIButton alloc] initWithFrame:
-                                 CGRectMake((size.width * 0.55), (size.height * 0.85),
-                                            (size.width * 0.4), (size.height * 0.1))];
+    [bd addSubview:bd.help];
     
-    [bumpDetector setupButton:bumpDetector.cancelButton
-                       target:bumpDetector
-                     selector:@selector(cancelBumpDetection:)
-                        title:@"Cancel"];
+    bd.reference = [bd facButton:@"Reference" tag:NVFacButtonTypeReference];
     
-    bumpDetector.cancelButton.backgroundColor = UIColor.blackColor;
+    bd.reference.frame = CGRectMake((size.width * 0.28), (size.height * 0.235),
+                                    (size.width * 0.2), (size.height * 0.05));
     
-    [bumpDetector addSubview:bumpDetector.cancelButton];
+    [bd addSubview:bd.reference];
+    
+    bd.link = [bd facButton:@"Link" tag:NVFacButtonTypeLink];
+    
+    bd.link.frame = CGRectMake((size.width * 0.52), (size.height * 0.235),
+                               (size.width * 0.2), (size.height * 0.05));
+    
+    [bd addSubview:bd.link];
+    
+    bd.comment = [bd facButton:@"Comment" tag:NVFacButtonTypeComment];
+    
+    bd.comment.frame = CGRectMake((size.width * 0.76), (size.height * 0.235),
+                                  (size.width * 0.2), (size.height * 0.05));
+    
+    [bd addSubview:bd.comment];
+    
+    
+    bd.start = [[UIButton alloc] initWithFrame:
+                                CGRectMake((size.width * 0.05), (size.height * 0.9),
+                                           (size.width * 0.4), (size.height * 0.075))];
+    
+    [bd setupButton:bd.start
+             target:bd
+           selector:@selector(startBumpDetection:)
+              title:@"Start"];
+    
+    bd.start.backgroundColor = UserDefaults.defaults.darkGreen;
+    [bd addSubview:bd.start];
+    
+    bd.cancel = [[UIButton alloc] initWithFrame:
+                                 CGRectMake((size.width * 0.55), (size.height * 0.9),
+                                            (size.width * 0.4), (size.height * 0.075))];
+    
+    [bd setupButton:bd.cancel
+             target:bd
+           selector:@selector(cancelBumpDetection:)
+              title:@"Cancel"];
+    
+    bd.cancel.backgroundColor = UIColor.blackColor;
+    [bd addSubview:bd.cancel];
     
     NSError *error = nil;
     [AVAudioSession.sharedInstance setCategory:AVAudioSessionCategoryPlayback error:&error];
@@ -127,25 +159,25 @@
     if (error)
         NSLog(@"AVAudioSession set category ERROR");
     
-    bumpDetector.beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
+    bd.beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
                                 [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
                                                         NSBundle.mainBundle.resourcePath]] error:nil];
     
-    bumpDetector.finalBeep = [[AVAudioPlayer alloc] initWithContentsOfURL:
+    bd.finalBeep = [[AVAudioPlayer alloc] initWithContentsOfURL:
                               [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/finalBeep.mp3",
                                                       NSBundle.mainBundle.resourcePath]] error:nil];
     
-    [bumpDetector.beep prepareToPlay];
-    [bumpDetector.finalBeep prepareToPlay];
-    bumpDetector.finalBeep.volume = 1.0;
-    bumpDetector.motionManager = CMMotionManager.new;
+    [bd.beep prepareToPlay];
+    [bd.finalBeep prepareToPlay];
+    bd.finalBeep.volume = 1.0;
+    bd.motionManager = CMMotionManager.new;
     
     [UIView animateWithDuration:0.25
                      animations:^{
-                         bumpDetector.alpha = 1.0;
+                         bd.alpha = 1.0;
                      }];
     
-    return bumpDetector;
+    return bd;
 }
 
 - (void)setupButton:(UIButton *)button
@@ -224,8 +256,8 @@
         [_motionManager stopDeviceMotionUpdates];
         _isFirstTime = YES;
         [self updateCountdownLabelText];
-        _startButton.backgroundColor = _green;
-        [_startButton setTitle:@"Start" forState:UIControlStateNormal];
+        _start.backgroundColor = UserDefaults.defaults.darkGreen;
+        [_start setTitle:@"Start" forState:UIControlStateNormal];
     }
     
     else if (_timerIsFiring)
@@ -239,8 +271,8 @@
                 _timerIsFiring = NO;
                 _countdownTime = _countdownStart;
                 [self updateCountdownLabelText];
-                _startButton.backgroundColor = _green;
-                [_startButton setTitle:@"Start" forState:UIControlStateNormal];
+                _start.backgroundColor = UserDefaults.defaults.darkGreen;
+                [_start setTitle:@"Start" forState:UIControlStateNormal];
             }
         }
     }
@@ -256,8 +288,8 @@
         if (_timer.valid)
         {
             _timerIsFiring = YES;
-            _startButton.backgroundColor = UIColor.redColor;
-            [_startButton setTitle:@"Stop" forState:UIControlStateNormal];
+            _start.backgroundColor = UIColor.redColor;
+            [_start setTitle:@"Stop" forState:UIControlStateNormal];
             _beep.volume = 0.0;
             [_beep play];
         }
@@ -291,11 +323,11 @@
     if (_isComplete)
     {
         [self updateCountdownLabelText];
-        _startButton.backgroundColor = _green;
-        [_startButton setTitle:@"Start" forState:UIControlStateNormal];
-        [_startButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-        _startButton.layer.borderColor = UIColor.whiteColor.CGColor;
-        [_cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
+        _start.backgroundColor = UserDefaults.defaults.darkGreen;
+        [_start setTitle:@"Start" forState:UIControlStateNormal];
+        [_start setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        _start.layer.borderColor = UIColor.whiteColor.CGColor;
+        [_cancel setTitle:@"Cancel" forState:UIControlStateNormal];
         _isComplete = NO;
         return;
     }
@@ -350,11 +382,11 @@
         {
             [self.motionManager stopDeviceMotionUpdates];
             _isFirstTime = _isComplete = YES;
-            _startButton.backgroundColor = UIColor.whiteColor;
-            [_startButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
-            _startButton.layer.borderColor = UIColor.blackColor.CGColor;
-            [_startButton setTitle:@"Use It" forState:UIControlStateNormal];
-            [_cancelButton setTitle:@"Do Over" forState:UIControlStateNormal];
+            _start.backgroundColor = UIColor.whiteColor;
+            [_start setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+            _start.layer.borderColor = UIColor.blackColor.CGColor;
+            [_start setTitle:@"Use It" forState:UIControlStateNormal];
+            [_cancel setTitle:@"Do Over" forState:UIControlStateNormal];
             return;
         }
     }
@@ -390,17 +422,51 @@
                                                         (frame.size.height + tabBarHeight - 40.0),
                                                         (((frame.size.width - tabBarHeight) * 0.2) - 40.0));
                          
-                         _startButton.frame = CGRectMake(((frame.size.height + tabBarHeight) * 0.05),
+                         _start.frame = CGRectMake(((frame.size.height + tabBarHeight) * 0.05),
                                                          ((frame.size.width - tabBarHeight) * 0.85),
                                                          ((frame.size.height + tabBarHeight) * 0.4),
                                                          ((frame.size.width - tabBarHeight) * 0.1));
                          
-                         _cancelButton.frame = CGRectMake(((frame.size.height + tabBarHeight) * 0.55),
+                         _cancel.frame = CGRectMake(((frame.size.height + tabBarHeight) * 0.55),
                                                          ((frame.size.width - tabBarHeight) * 0.85),
                                                          ((frame.size.height + tabBarHeight) * 0.4),
                                                          ((frame.size.width - tabBarHeight) * 0.1));
                          
                      }];
+}
+
+- (UIButton *)facButton:(NSString *)title
+                    tag:(NVFacButtonType)tag
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.tag = tag;
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
+    button.titleLabel.textAlignment = NSTextAlignmentCenter;
+    
+    [button addTarget:self
+               action:@selector(facButtonTapped:)
+     forControlEvents:UIControlEventTouchUpInside];
+    
+    return button;
+}
+
+- (void)facButtonTapped:(UIButton *)button
+{
+    switch (button.tag)
+    {
+        case NVFacButtonTypeHelp:
+            break;
+        case NVFacButtonTypeReference:
+            break;
+        case NVFacButtonTypeLink:
+            break;
+        case NVFacButtonTypeComment:
+            break;
+        default:break;
+    }
 }
 
 @end

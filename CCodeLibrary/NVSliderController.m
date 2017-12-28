@@ -671,28 +671,28 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         
         if (help)
         {
-            button = [self bottomButton:@"Help" tag:NVSliderButtonHelp];
+            button = [self facButton:@"Help" tag:NVFacButtonTypeHelp];
             button.frame = CGRectMake(0.0, _usedTopSpace, buttonWidth, _buttonHeight);
             [self.superview addSubview:button];
         }
         
         if (reference)
         {
-            button = [self bottomButton:@"Reference" tag:NVSliderButtonReference];
+            button = [self facButton:@"Reference" tag:NVFacButtonTypeReference];
             button.frame = CGRectMake(buttonWidth, _usedTopSpace, buttonWidth, _buttonHeight);
             [self.superview addSubview:button];
         }
         
         if (link)
         {
-            button = [self bottomButton:@"Link" tag:NVSliderButtonLink];
+            button = [self facButton:@"Link" tag:NVFacButtonTypeLink];
             button.frame = CGRectMake((buttonWidth * 2), _usedTopSpace, buttonWidth, _buttonHeight);
             [self.superview addSubview:button];
         }
         
         if (comment)
         {
-            button = [self bottomButton:@"Comment" tag:NVSliderButtonComment];
+            button = [self facButton:@"Comment" tag:NVFacButtonTypeComment];
             button.frame = CGRectMake((buttonWidth * 3), _usedTopSpace, buttonWidth, _buttonHeight);
             [self.superview addSubview:button];
         }
@@ -701,8 +701,8 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     }
 }
 
-- (UIButton *)bottomButton:(NSString *)title
-                       tag:(NSInteger)tag
+- (UIButton *)facButton:(NSString *)title
+                    tag:(NVFacButtonType)tag
 {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.tag = tag;
@@ -713,13 +713,13 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     
     [button addTarget:self
-               action:@selector(bottomButtonTapped:)
+               action:@selector(facButtonTapped:)
      forControlEvents:UIControlEventTouchUpInside];
     
     return button;
 }
 
-- (void)bottomButtonTapped:(UIButton *)button
+- (void)facButtonTapped:(UIButton *)button
 {
     [_delegate sliderViewDidTapButtonWithType:button.tag];
 }

@@ -1,12 +1,10 @@
 //  GSSiEnums.h
 //  CCodeLibrary
+
 #ifndef GSSiEnums_h
 #define GSSiEnums_h
 
-
-#import <Foundation/Foundation.h>
-
-//@interface GSSiEnums : NSObject
+@import Foundation;
 
 typedef NS_ENUM(NSInteger, DataSetTypes)
 {
@@ -363,8 +361,12 @@ typedef NS_ENUM(NSInteger, FacPolygonSymbols)
     FPSWorkArea=Green50PCTPolygon,
 };
 
-
-
-//@end
+typedef NS_ENUM(NSInteger, NVFacButtonType)
+{
+    NVFacButtonTypeHelp=1,
+    NVFacButtonTypeReference=2,
+    NVFacButtonTypeLink=3,
+    NVFacButtonTypeComment=4,
+};
 
 #endif
