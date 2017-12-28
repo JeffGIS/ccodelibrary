@@ -790,7 +790,7 @@ Exit:
 {
     NSString * header = @"";
     int facID = CRAPI.sharedInstance.currentFacility.facID;
-    NSString *query = [NSString stringWithFormat:@"SELECT header, value FROM FacilityValues WHERE facilityNumber = %i AND stepValueID = '%@'",facID,stepID];
+    NSString *query = [NSString stringWithFormat:@"SELECT header, value, fieldIndex FROM FacilityValues WHERE facilityNumber = %i AND stepValueID = '%@'",facID,stepID];
     sqlite3_stmt *statement = NULL;
     Bool opened = [self open];
     SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
@@ -803,8 +803,12 @@ Exit:
         value = (LPSTR)sqlite3_column_text(statement, 1);
         HANDLE hSaveValue = SaveValue ();
         SetValue (value);
+        value = (LPSTR)sqlite3_column_text(statement, 2);
+        HANDLE hSaveFI = SaveFieldIndex();
+        SetFieldIndex(value);
         header = ExpandString (header);
         RestoreValue (hSaveValue);
+        RestoreFieldIndex (hSaveFI);
     }
     
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
