@@ -20,6 +20,14 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
     NVSliderMeasurementTypeSideSlope,
 };
 
+typedef NS_ENUM(NSInteger, NVSliderButton)
+{
+    NVSliderButtonHelp=1,
+    NVSliderButtonReference=2,
+    NVSliderButtonLink=3,
+    NVSliderButtonComment=4,
+};
+
 @class NVSliderController;
 
 @protocol NVSliderControllerDelegate <NSObject>
@@ -28,6 +36,9 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
     didReturnValue:(double)value;
 
 - (void)sliderViewDidCancel:(NVSliderController *)sliderView;
+
+@optional
+- (void)sliderViewDidTapButtonWithType:(NVSliderButton)type;
 
 @end
 
@@ -46,10 +57,17 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
                 type:(NVSliderMeasurementType)type
                 unit:(NSString *)unit;
 
+- (void)addTitle:(NSString *)title;
+
 - (void)showSliderControllerInView:(UIView *)view
                           animated:(BOOL)animated
                            overlay:(BOOL)overlay;
 
 - (void)hideSliderController:(BOOL)animated;
+
+- (void)addHelp:(BOOL)help
+      reference:(BOOL)reference
+           link:(BOOL)link
+        comment:(BOOL)comment;
 
 @end

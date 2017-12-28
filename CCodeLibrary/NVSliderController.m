@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 @property NVSliderControllerRange range;
 @property NVSliderConfiguration configuration;
 @property (nonatomic, copy) NSString *unit;
+@property CGFloat buttonHeight;
 
 @end
 
@@ -38,6 +39,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                 unit:(NSString *)unit
 {
     double height = 260.0;
+    _buttonHeight = 56.0;
     
     self = [super initWithFrame:CGRectMake((center.x - (width / 2.0)),
                                            (center.y - (height / 2.0)), width, height)];
@@ -176,7 +178,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         [self addSubview:_sliderLabel];
         
         _saveButton = [[UIButton alloc] initWithFrame:CGRectMake((width * 0.05), (height - 72.0),
-                                                                 (width * 0.3), 56.0)];
+                                                                 (width * 0.3), _buttonHeight)];
         
         [self setupButton:_saveButton
                    target:self
@@ -184,7 +186,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                     title:@"Save"];
         
         _cancelButton = [[UIButton alloc] initWithFrame:CGRectMake((width * 0.65), (height - 72.0),
-                                                                   (width * 0.3), 56.0)];
+                                                                   (width * 0.3), _buttonHeight)];
         
         [self setupButton:_cancelButton
                    target:self
@@ -193,7 +195,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         if (_configuration == NVSliderConfigurationDefault)
         {
             _rangeButton = [[UIButton alloc] initWithFrame:CGRectMake((width * 0.4), (height - 72.0),
-                                                                      (width * 0.2), 56.0)];
+                                                                      (width * 0.2), _buttonHeight)];
             
             [self setupButton:_rangeButton
                        target:self
@@ -447,8 +449,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
     switch (_configuration)
     {
-        case NVSliderConfigurationManualSlope:
-        {
+        case NVSliderConfigurationManualSlope:{
             switch (_range)
             {
                 case NVSliderControllerRangeMax:
@@ -457,35 +458,26 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                     _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
                     _range = NVSliderControllerRangeTen;
                     break;
-                    
                 case NVSliderControllerRangeTen:
                     _slider.minimumValue = (_slider.value - 0.5);
                     _slider.maximumValue = (_slider.value + 0.5);
                     _sliderLabel.text = [NSString stringWithFormat:@"%.2f", _slider.value];
                     _range = NVSliderControllerRangeTwo;
                     break;
-                    
                 case NVSliderControllerRangeTwo:
                     _slider.minimumValue = _minValue;
                     _slider.maximumValue = _maxValue;
                     _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
                     _range = NVSliderControllerRangeMax;
                     break;
-                    
-                default:
-                    break;
+                default:break;
             }
-        }
-            
-            break;
-            
+            break;}
         case NVSliderConfigurationDefault:
         case NVSliderConfigurationDefaultNoRange:
         case NVSliderConfigurationCalibrationRunningSlope:
         case NVSliderConfigurationCalibrationDegrees:
-        case NVSliderConfigurationCalibrationRiseRun:
-            
-        {
+        case NVSliderConfigurationCalibrationRiseRun:{
             switch (_range)
             {
                 case NVSliderControllerRangeMax:
@@ -505,7 +497,6 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                     
                     _range = NVSliderControllerRangeTen;
                     break;
-                    
                 case NVSliderControllerRangeTen:
                     _slider.value = ((roundf(_slider.value * 10.0)) / 10.0);
                     _slider.minimumValue = (_slider.value - 1.0);
@@ -523,7 +514,6 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                     
                     _range = NVSliderControllerRangeTwo;
                     break;
-                    
                 case NVSliderControllerRangeTwo:
                     _slider.value = roundf(_slider.value);
                     _slider.minimumValue = _minValue;
@@ -541,16 +531,10 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                     
                     _range = NVSliderControllerRangeMax;
                     break;
-                    
-                default:
-                    break;
+                default:break;
             }
-        }
-            
-            break;
-            
-        default:
-            break;
+            break;}
+        default:break;
     }
     
     _sliderLabel.text = [NSString stringWithFormat:@"%@ %@", _sliderLabel.text, _unit];
@@ -633,6 +617,103 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         [_overlayView removeFromSuperview];
         [self removeFromSuperview];
     }
+}
+
+- (void)addTitle:(NSString *)title
+{
+    title = removeEndingReturn(title);
+    NSInteger lines = [title componentsSeparatedByCharactersInSet:NSCharacterSet.newlineCharacterSet].count;
+    UIFont *font = [UIFont boldSystemFontOfSize:32.0];
+    CGFloat titleHeight = (lines * 40.0);
+    
+    UILabel *label = UILabel.new;
+    label.frame = CGRectMake(0.0, self.frame.size.height, self.frame.size.width, titleHeight);
+    label.text = title;
+    label.numberOfLines = 0;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = UIColor.blackColor;
+    label.font = font;
+    
+    CGRect frame = self.frame;
+    frame.size.height += titleHeight;
+    self.frame = frame;
+    
+    CGPoint center = self.center;
+    center.y -= titleHeight;
+    self.center = center;
+
+    [self addSubview:label];
+}
+
+- (void)addHelp:(BOOL)help
+      reference:(BOOL)reference
+           link:(BOOL)link
+        comment:(BOOL)comment
+{
+    if (help || reference || link || comment)
+    {
+        CGRect frame = self.frame;
+        frame.size.height += _buttonHeight;
+        self.frame = frame;
+        
+        CGPoint center = self.center;
+        center.y -= _buttonHeight;
+        self.center = center;
+        CGFloat buttonWidth = (self.frame.size.width / 4);
+        CGFloat originY = (self.frame.size.height - _buttonHeight);
+        UIButton *button = nil;
+        
+        if (help)
+        {
+            button = [self bottomButton:@"Help" tag:NVSliderButtonHelp];
+            button.frame = CGRectMake(0.0, originY, buttonWidth, _buttonHeight);
+            [self addSubview:button];
+        }
+        
+        if (reference)
+        {
+            button = [self bottomButton:@"Reference" tag:NVSliderButtonReference];
+            button.frame = CGRectMake(buttonWidth, originY, buttonWidth, _buttonHeight);
+            [self addSubview:button];
+        }
+        
+        if (link)
+        {
+            button = [self bottomButton:@"Link" tag:NVSliderButtonLink];
+            button.frame = CGRectMake((buttonWidth * 2), originY, buttonWidth, _buttonHeight);
+            [self addSubview:button];
+        }
+        
+        if (comment)
+        {
+            button = [self bottomButton:@"Comment" tag:NVSliderButtonComment];
+            button.frame = CGRectMake((buttonWidth * 3), originY, buttonWidth, _buttonHeight);
+            [self addSubview:button];
+        }
+    }
+}
+
+- (UIButton *)bottomButton:(NSString *)title
+                       tag:(NSInteger)tag
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.tag = tag;
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:UserDefaults.defaults.appleBlue forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.grayColor forState:UIControlStateHighlighted];
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    button.titleLabel.textAlignment = NSTextAlignmentCenter;
+    
+    [button addTarget:self
+               action:@selector(bottomButtonTapped:)
+     forControlEvents:UIControlEventTouchUpInside];
+    
+    return button;
+}
+
+- (void)bottomButtonTapped:(UIButton *)button
+{
+    [_delegate sliderViewDidTapButtonWithType:button.tag];
 }
 
 @end
