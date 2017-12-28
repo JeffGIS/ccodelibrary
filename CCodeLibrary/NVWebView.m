@@ -15,8 +15,8 @@
 
 @property (nonatomic) WKWebView *webView;
 @property (nonatomic) UIButton *returnButton, *realtor, *nextButton, *previousButton;
-@property (nonatomic) CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation;
-@property (nonatomic) CGFloat origScale, origRotation, markerSize, fontSize;
+@property CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation;
+@property CGFloat origScale, origRotation, markerSize, fontSize, aspectRatio;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIActivityIndicatorView *indicator;
 @property CGPoint zoomPoint, origPoint;
@@ -196,31 +196,39 @@
                    enableSwipe:(BOOL)enableSwipe
 {
     NSString *resourcePath = @"";
-    CGFloat aspectRatio = 0.0;
     
     switch (document)
     {
         case NVPDFDocumentMNAccessbility:
             resourcePath = [NSString stringWithFormat:@"2015_mn_accessibility_code_part%i", drawing.page];
-            aspectRatio = AR077;
             break;
         case NVPDFDocumentFederalADA:
             resourcePath = @"2010ADAStandards";
-            aspectRatio = AR077;
             break;
         case NVPDFDocumentADAChecklist:
             resourcePath = @"ada-checklist";
-            aspectRatio = AR129;
             break;
         default:break;
     }
-    
-    NSLog(@"PDF drawing path: %@", resourcePath);
     
     NVWebView *nvwv = [NVWebView showWebViewInView:view
                                     showFileAtPath:[NSBundle.mainBundle pathForResource:resourcePath
                                                                                  ofType:@"pdf"]
                                           delegate:nil];
+    
+    switch (document)
+    {
+        case NVPDFDocumentMNAccessbility:
+            nvwv.aspectRatio = AR077;
+            break;
+        case NVPDFDocumentFederalADA:
+            nvwv.aspectRatio = AR077;
+            break;
+        case NVPDFDocumentADAChecklist:
+            nvwv.aspectRatio = AR129;
+            break;
+        default:break;
+    }
     
     nvwv.enableSwipe = enableSwipe;
     nvwv.zoomToPDFDrawing = YES;
@@ -229,7 +237,7 @@
     nvwv.drawing = drawing;
     
     CGFloat xMargin = 0.0, yMargin = 0.0;
-    CGFloat width = ((drawing.lowerRight.x - drawing.upperLeft.x) * aspectRatio);
+    CGFloat width = ((drawing.lowerRight.x - drawing.upperLeft.x) * nvwv.aspectRatio);
     CGFloat height = (drawing.lowerRight.y - drawing.upperLeft.y);
     CGSize svSize = view.frame.size;
     CGFloat drawingAR = (width / height);
@@ -248,7 +256,7 @@
         yMargin = ((svSize.height - (arRatio * svSize.height)) / 2.0);
     }
     
-    //[nvwv setConstraintsToLeading:xMargin trailing:-xMargin top:yMargin bottom:-yMargin];
+    [nvwv setConstraintsToLeading:xMargin trailing:-xMargin top:yMargin bottom:-yMargin];
     return nvwv;
 }
 
@@ -299,6 +307,7 @@
     _imageView = [[UIImageView alloc] initWithImage:image];
     
     _scrollView = UIScrollView.new;
+    _scrollView.backgroundColor = UIColor.clearColor;
     _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
     _scrollView.bouncesZoom = YES;
     _scrollView.bounces = YES;
@@ -330,12 +339,14 @@
 
 - (void)fitImage
 {
-    CGFloat maxImageSize = max(_imageView.frame.size.width, _imageView.frame.size.height);
-    CGFloat minContainerSize = min(self.frame.size.width, self.frame.size.height);
-    CGFloat minScale = (minContainerSize / maxImageSize);
+    CGFloat hScale = (self.frame.size.width / _imageView.frame.size.width);
+    CGFloat vScale = (self.frame.size.height / _imageView.frame.size.height);
+    CGFloat minScale = MIN(hScale, vScale);
+    CGFloat scale = MAX(hScale, vScale);
+    
     _scrollView.minimumZoomScale = minScale;
     _scrollView.maximumZoomScale = (minScale * 100.0);
-    [_scrollView setZoomScale:minScale animated:NO];
+    [_scrollView setZoomScale:scale animated:NO];
     _scrollView.alpha = 1.0;
     _scrollView.userInteractionEnabled = YES;
     
@@ -496,9 +507,20 @@
     _lr.x = lowerRight.x;
     _lr.y = lowerRight.y;
     
+    CGFloat pageHeight = 0.0;
+    
     if (page > 0)
     {
-        CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
+        if (_numPages == 1)
+        {
+            pageHeight = MIN((_scrollView.contentSize.width / _aspectRatio),
+                             _scrollView.contentSize.height);
+        }
+        
+        else
+            pageHeight = (_scrollView.contentSize.height / _numPages);
+        
+        pageHeight = MIN(pageHeight, (_scrollView.contentSize.width / _aspectRatio));
         upperLeft.x *= _scrollView.contentSize.width;
         upperLeft.y *= pageHeight;
         lowerRight.x *= _scrollView.contentSize.width;
