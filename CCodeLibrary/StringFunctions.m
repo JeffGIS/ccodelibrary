@@ -227,7 +227,7 @@ NSString *removeEndingReturn(NSString *string)
     
     NSString *end = [NSString stringWithFormat:@"%@", [string substringFromIndex:(string.length - 1)]];
     
-    if ([end isEqualToString:@"\r"])
+    if ([end isEqualToString:@"\r"] || [end isEqualToString:@"\n"])
         string = [NSString stringWithFormat:@"%@", [string substringToIndex:(string.length - 1)]];
         
         return string;

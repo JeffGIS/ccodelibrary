@@ -1,7 +1,7 @@
 //  NVSliderController.h
 //  CCodeLibrary
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
 typedef NS_ENUM(NSInteger, NVSliderConfiguration)
 {
@@ -20,6 +20,14 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
     NVSliderMeasurementTypeSideSlope,
 };
 
+typedef NS_ENUM(NSInteger, NVSliderButton)
+{
+    NVSliderButtonHelp=1,
+    NVSliderButtonReference=2,
+    NVSliderButtonLink=3,
+    NVSliderButtonComment=4,
+};
+
 @class NVSliderController;
 
 @protocol NVSliderControllerDelegate <NSObject>
@@ -29,12 +37,16 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
 
 - (void)sliderViewDidCancel:(NVSliderController *)sliderView;
 
+@optional
+- (void)sliderViewDidTapButtonWithType:(NVSliderButton)type;
+
 @end
 
 @interface NVSliderController : UIView
 
 @property (nonatomic, weak) id <NVSliderControllerDelegate> delegate;
 @property NVSliderMeasurementType type;
+@property CGFloat usedTopSpace;
 
 - (id)initWithCenter:(CGPoint)center
                width:(double)width
@@ -51,5 +63,12 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
                            overlay:(BOOL)overlay;
 
 - (void)hideSliderController:(BOOL)animated;
+
+- (void)addTitle:(NSString *)title
+          prompt:(NSString *)prompt
+            help:(BOOL)help
+       reference:(BOOL)reference
+            link:(BOOL)link
+         comment:(BOOL)comment;
 
 @end

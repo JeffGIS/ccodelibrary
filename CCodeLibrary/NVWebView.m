@@ -248,7 +248,7 @@
         yMargin = ((svSize.height - (arRatio * svSize.height)) / 2.0);
     }
     
-    [nvwv setConstraintsToLeading:xMargin trailing:-xMargin top:yMargin bottom:-yMargin];
+    //[nvwv setConstraintsToLeading:xMargin trailing:-xMargin top:yMargin bottom:-yMargin];
     return nvwv;
 }
 
