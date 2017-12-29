@@ -232,13 +232,8 @@ void static const *playerItemContext;
 
 - (void)peerConnectDidReceiveFileAtUrl:(NSURL *)url
 {
-    NSError *error = nil;
-    NSFileManager *fm = NSFileManager.new;
-    NSURL *newURL = [url.URLByDeletingLastPathComponent URLByAppendingPathComponent:@"output.mp4"];
-    [fm moveItemAtPath:url.path toPath:newURL.path error:&error];
-    
-    CRAPI.sharedInstance.rhVideoURL = newURL;
-    [self setupVideoPlayer];
+    CRAPI.sharedInstance.rhVideoURL = url;
+    [self performSelectorOnMainThread:@selector(setupVideoPlayer) withObject:nil waitUntilDone:YES];
 }
 
 @end

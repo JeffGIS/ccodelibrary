@@ -216,8 +216,13 @@ didFinishReceivingResourceWithName:(NSString *)resourceName
         NSLog(@"MCSession for %@ finished receiving resource %@ from %@",
               session.myPeerID.displayName, resourceName, peerID.displayName);
         
+        NSError *error = nil;
+        NSFileManager *fm = NSFileManager.new;
+        NSURL *newURL = [localURL.URLByDeletingLastPathComponent URLByAppendingPathComponent:resourceName];
+        [fm moveItemAtPath:localURL.path toPath:newURL.path error:&error];
+        
         if (_delegate && [_delegate respondsToSelector:@selector(peerConnectDidReceiveFileAtUrl:)])
-            [_delegate peerConnectDidReceiveFileAtUrl:localURL];
+            [_delegate peerConnectDidReceiveFileAtUrl:newURL];
     }
     
     [_progress removeObserver:self forKeyPath:@"fractionCompleted"];
