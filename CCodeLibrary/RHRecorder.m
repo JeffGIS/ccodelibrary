@@ -120,12 +120,6 @@
 {
     if (![_session isRunning])
         [_session startRunning];
-    
-    if (CRAPI.sharedInstance.peerConnect.fileToSend
-        && CRAPI.sharedInstance.peerConnect.fileToSend.path.length)
-    {
-        [CRAPI.sharedInstance.peerConnect startAdvertising];
-    }
 }
 
 - (void)stopSession
@@ -240,7 +234,8 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
     else if (outputFileURL)
     {
         CRAPI.sharedInstance.peerConnect.fileToSend = outputFileURL;
-        [CRAPI.sharedInstance.peerConnect startAdvertising];
+        CRAPI.sharedInstance.rhVideoURL = outputFileURL;
+        [_controller updateConnectButton];
     }
 }
 
@@ -281,6 +276,16 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
                                                                               ofType:@"png"]]
                                       forState:UIControlStateNormal];
     }
+}
+
+- (void)controllerDidTapConnectButton
+{
+    [CRAPI.sharedInstance.peerConnect startAdvertising];
+}
+
+- (void)controllerDidTapReturnButton
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)locationManager:(CLLocationManager *)manager

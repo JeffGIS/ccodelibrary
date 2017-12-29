@@ -159,6 +159,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) SSDelegate *spreadsheetDelegate;
 @property (nonatomic, nullable) NVPeerConnect *peerConnect;
 @property int rhUpdateTime, rhItemsUpdated, rhItemsAdded, rhItemsModified, rhItemsIgnored, rhCurrentZip, rhErrors;
+@property (nonatomic, copy, nullable) NSURL *rhVideoURL;
 
 + (nullable CRAPI *)sharedInstance;
 

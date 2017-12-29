@@ -25,21 +25,11 @@
                                            selector:@selector(resignedActive:)
                                                name:@"didResignActive"
                                              object:nil];
-    
-    [NSNotificationCenter.defaultCenter addObserver:self
-                                           selector:@selector(becameActive:)
-                                               name:@"didBecomeActive"
-                                             object:nil];
 }
 
 - (void)resignedActive:(id)selector
 {
-    [CRAPI.sharedInstance.peerConnect stopBrowsing];
-}
-
-- (void)becameActive:(id)selector
-{
-    [CRAPI.sharedInstance.peerConnect startBrowsing];
+    [self stopSession];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -47,14 +37,13 @@
     [super viewDidAppear:animated];
     
     [self setupVideoPlayer];
-    [CRAPI.sharedInstance.peerConnect startBrowsing];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    [CRAPI.sharedInstance.peerConnect stopBrowsing];
+    [self stopSession];
 }
 
 - (void)didReceiveMemoryWarning
@@ -82,6 +71,13 @@
     return YES;
 }
 
+- (void)stopSession
+{
+    [CRAPI.sharedInstance.peerConnect stopBrowsing];
+    
+    _isPlaying = NO;
+}
+
 - (void)setupVideoPlayer
 {
     _isPlaying = NO;
@@ -93,6 +89,16 @@
 - (void)controllerDidTapPlayRecordButton
 {
     
+}
+
+- (void)controllerDidTapConnectButton
+{
+    [CRAPI.sharedInstance.peerConnect startBrowsing];
+}
+
+- (void)controllerDidTapReturnButton
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

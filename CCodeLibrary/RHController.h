@@ -8,6 +8,8 @@
 @protocol RHControllerDelegate <NSObject>
 
 - (void)controllerDidTapPlayRecordButton;
+- (void)controllerDidTapConnectButton;
+- (void)controllerDidTapReturnButton;
 
 @end
 
@@ -21,5 +23,6 @@
 - (void)incrementTime;
 - (void)startTimer;
 - (void)stopTimer;
+- (void)updateConnectButton;
 
 @end
