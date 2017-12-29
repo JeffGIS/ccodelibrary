@@ -42,10 +42,21 @@
     _playRecordButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _playRecordButton.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [_playRecordButton setImage:[UIImage imageWithContentsOfFile:
-                                 [NSBundle.mainBundle pathForResource:@"VideoRecordIcon"
-                                                               ofType:@"png"]]
-                       forState:UIControlStateNormal];
+    if ([delegate isKindOfClass:RHRecorder.class])
+    {
+        [_playRecordButton setImage:[UIImage imageWithContentsOfFile:
+                                     [NSBundle.mainBundle pathForResource:@"VideoRecordIcon"
+                                                                   ofType:@"png"]]
+                           forState:UIControlStateNormal];
+    }
+    
+    else
+    {
+        [_playRecordButton setImage:[UIImage imageWithContentsOfFile:
+                                     [NSBundle.mainBundle pathForResource:@"VideoPlayIcon"
+                                                                   ofType:@"png"]]
+                           forState:UIControlStateNormal];
+    }
     
     [self addSubview:_playRecordButton];
     [_playRecordButton constrainCenterXToAnchor:self.centerXAnchor];
@@ -91,7 +102,6 @@
     
     _connectButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _connectButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self updateConnectButton];
     
     if ([delegate isKindOfClass:RHRecorder.class])
     {
@@ -99,6 +109,8 @@
                                   [NSBundle.mainBundle pathForResource:@"advertiseIcon"
                                                                 ofType:@"png"]]
                         forState:UIControlStateNormal];
+        
+        [self updateConnectButton];
     }
     
     else
@@ -122,8 +134,8 @@
 
 - (void)updateConnectButton
 {
-    if (CRAPI.sharedInstance.peerConnect.fileToSend
-        && CRAPI.sharedInstance.peerConnect.fileToSend.path.length)
+    if (CRAPI.sharedInstance.peerConnect.fileToSend &&
+        CRAPI.sharedInstance.peerConnect.fileToSend.path.length)
     {
         _connectButton.alpha = 1.0;
         _connectButton.userInteractionEnabled = YES;
@@ -164,8 +176,11 @@
                                              repeats:YES];
 }
 
-- (void)stopTimer
+- (void)stopTimer:(BOOL)reset
 {
+    if (reset)
+        _timeLabel.text = @"0:00";
+    
     if (_timer.isValid)
         [_timer invalidate];
 }

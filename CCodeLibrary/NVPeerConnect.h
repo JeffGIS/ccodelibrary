@@ -7,7 +7,7 @@
 
 @protocol NVPeerConnectDelegate <NSObject>
 
-- (void)peerConnectDidReceiveFileAtPath:(NSString *)path;
+- (void)peerConnectDidReceiveFileAtUrl:(NSURL *)url;
 
 @end
 

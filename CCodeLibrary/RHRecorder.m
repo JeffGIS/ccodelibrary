@@ -125,6 +125,7 @@
 - (void)stopSession
 {
     [CRAPI.sharedInstance.peerConnect stopAdvertising];
+    [_controller stopTimer:NO];
     
     if ([_output isRecording])
         [_output stopRecording];
@@ -198,28 +199,22 @@
                             [_controller showInView:self.view delegate:self];
                         }
                         
-                        else
-                            NSLog(@"AVCaptureSession Video Output ERROR: %@", error.localizedDescription);
+                        else {NSLog(@"AVCaptureSession Video Output ERROR: %@", error.localizedDescription);}
                     }
                     
-                    else
-                        NSLog(@"AVCaptureSession ERROR: Couldn't create video preview layer.");
+                    else {NSLog(@"AVCaptureSession ERROR: Couldn't create video preview layer.");}
                 }
                 
-                else
-                    NSLog(@"AVCaptureSession Audio Input ERROR: %@", error.localizedDescription);
+                else {NSLog(@"AVCaptureSession Audio Input ERROR: %@", error.localizedDescription);}
             }
             
-            else
-                NSLog(@"AVCaptureSession ERROR: Couldn't create audio device.");
+            else {NSLog(@"AVCaptureSession ERROR: Couldn't create audio device.");}
         }
         
-        else
-            NSLog(@"AVCaptureSession Video Input ERROR: %@", error.localizedDescription);
+        else {NSLog(@"AVCaptureSession Video Input ERROR: %@", error.localizedDescription);}
     }
     
-    else
-        NSLog(@"AVCaptureSession ERROR: Couldn't create video device.");
+    else {NSLog(@"AVCaptureSession ERROR: Couldn't create video device.");}
 }
 
 
@@ -229,7 +224,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
                 error:(NSError *)error
 {
     if (error)
-        NSLog(@"AVCaptureFileOutput ERROR: %@", error.localizedDescription);
+        {NSLog(@"AVCaptureFileOutput ERROR: %@", error.localizedDescription);}
     
     else if (outputFileURL)
     {
@@ -241,10 +236,9 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
 
 - (void)controllerDidTapPlayRecordButton
 {
-    [_controller stopTimer];
-    
     if (_isRecording)
     {
+        [_controller stopTimer:NO];
         [_output stopRecording];
         _isRecording = NO;
         
@@ -264,7 +258,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
             NSError *error;
             
             if (![fileManager removeItemAtPath:_outputURL.path error:&error])
-                NSLog(@"NSFileManager ERROR: Couldn't remove previous output video file.");
+                {NSLog(@"NSFileManager ERROR: Couldn't remove previous output video file.");}
         }
         
         [_output startRecordingToOutputFileURL:_outputURL recordingDelegate:self];

@@ -216,8 +216,8 @@ didFinishReceivingResourceWithName:(NSString *)resourceName
         NSLog(@"MCSession for %@ finished receiving resource %@ from %@",
               session.myPeerID.displayName, resourceName, peerID.displayName);
         
-        if (_delegate && [_delegate respondsToSelector:@selector(peerConnectDidReceiveFileAtPath:)])
-            [_delegate peerConnectDidReceiveFileAtPath:localURL.path];
+        if (_delegate && [_delegate respondsToSelector:@selector(peerConnectDidReceiveFileAtUrl:)])
+            [_delegate peerConnectDidReceiveFileAtUrl:localURL];
     }
     
     [_progress removeObserver:self forKeyPath:@"fractionCompleted"];

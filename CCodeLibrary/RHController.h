@@ -22,7 +22,7 @@
 
 - (void)incrementTime;
 - (void)startTimer;
-- (void)stopTimer;
+- (void)stopTimer:(BOOL)reset;
 - (void)updateConnectButton;
 
 @end
