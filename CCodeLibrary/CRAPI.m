@@ -124,10 +124,12 @@
         _showCompassCalibrationScreen = YES;
         _boundaryBorderWidth = 4;
         
-        NSString *rhVideoPath = [UserDefaults.defaults stringForKey:@"RHVideoPath"];
+        NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%@",
+                                UserDefaults.defaults.localFilePath,
+                                [UserDefaults.defaults stringForKey:@"RHVideoPath"]];
         
-        if (rhVideoPath && rhVideoPath.length)
-            _rhVideoURL = [NSURL fileURLWithPath:rhVideoPath];
+        if (outputPath && outputPath.length)
+            _rhVideoURL = [NSURL fileURLWithPath:outputPath isDirectory:NO];
     }
     
     return self;

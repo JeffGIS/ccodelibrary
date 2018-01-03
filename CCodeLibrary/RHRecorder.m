@@ -182,9 +182,9 @@
                             [_session addOutput:_output];
                             
                             NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/output.mov",
-                                                    NSTemporaryDirectory()];
+                                                    UserDefaults.defaults.localFilePath];
                             
-                            _outputURL = [NSURL fileURLWithPath:outputPath];
+                            _outputURL = [NSURL fileURLWithPath:outputPath isDirectory:NO];
                             
                             AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationLandscapeRight;
                             
@@ -233,7 +233,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
     {
         CRAPI.sharedInstance.peerConnect.fileToSend = outputFileURL;
         CRAPI.sharedInstance.rhVideoURL = outputFileURL;
-        [UserDefaults.defaults saveString:outputFileURL.path forKey:@"RHVideoPath"];
+        [UserDefaults.defaults saveString:outputFileURL.lastPathComponent forKey:@"RHVideoPath"];
         [_controller updateConnectButton];
     }
 }
@@ -295,9 +295,9 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
     NSDate *date = NSDate.date;
     
     NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%i_%i_%i.mov",
-                            NSTemporaryDirectory(), lat, lon, (int)date.timeIntervalSince1970];
+                            UserDefaults.defaults.localFilePath, lat, lon, (int)date.timeIntervalSince1970];
     
-    _outputURL = [NSURL fileURLWithPath:outputPath];
+    _outputURL = [NSURL fileURLWithPath:outputPath isDirectory:NO];
 }
 
 - (void)locationManager:(CLLocationManager *)manager

@@ -85,8 +85,13 @@ void static const *playerItemContext;
 - (void)stopSession
 {
     [CRAPI.sharedInstance.peerConnect stopBrowsing];
-    [_controller stopTimer:NO];
-    [_player pause];
+    
+    if (_isPlaying)
+    {
+        [_controller stopTimer:NO];
+        [_player pause];
+    }
+    
     _isPlaying = NO;
 }
 
@@ -172,7 +177,7 @@ void static const *playerItemContext;
                 break;
             case AVPlayerItemStatusFailed:
                 NSLog(@"AVPlayer ERROR: Player status failed: %@.",
-                      _player.error.localizedDescription);
+                      _item.error.localizedDescription);
                 break;
             case AVPlayerItemStatusUnknown:
                 break;

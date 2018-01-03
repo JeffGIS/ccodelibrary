@@ -11,8 +11,10 @@ void static const *playerItemContext;
 
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *item;
-@property BOOL isPlaying;
+@property BOOL isPlaying, isAtEnd;
 @property (nonatomic) id timeObserver;
+@property (nonatomic) UIButton *returnButton;
+@property (nonatomic) UISlider *progressSlider;
 
 @end
 
@@ -28,6 +30,26 @@ void static const *playerItemContext;
     [super viewDidAppear:animated];
     
     [self setupVideoPlayer];
+    [self setupControls];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    if (_isPlaying)
+    {
+        [_player pause];
+        [_player removeTimeObserver:_timeObserver];
+    }
+    
+    [_item removeObserver:self
+               forKeyPath:@"status"
+                  context:&playerItemContext];
+    
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:AVPlayerItemDidPlayToEndTimeNotification
+                                                object:_item];
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,6 +98,11 @@ void static const *playerItemContext;
                     forKeyPath:@"status"
                        options:options
                        context:&playerItemContext];
+            
+            [NSNotificationCenter.defaultCenter addObserver:self
+                                                   selector:@selector(playerDidFinishPlaying:)
+                                                       name:AVPlayerItemDidPlayToEndTimeNotification
+                                                     object:_item];
             
             _player = [AVPlayer playerWithPlayerItem:_item];
             _player.actionAtItemEnd = AVPlayerActionAtItemEndPause;
@@ -136,6 +163,56 @@ void static const *playerItemContext;
     }
 }
 
+- (void)playerDidFinishPlaying:(AVPlayerItem *)item
+{
+    [_player removeTimeObserver:_timeObserver];
+    _isPlaying = NO;
+    _isAtEnd = YES;
+}
+
+- (void)setupControls
+{
+    CGFloat margin = 20.0, inset = 5.0;
+    
+    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
+    _returnButton.imageEdgeInsets = UIEdgeInsetsMake(inset, inset, inset, inset);
+    
+    [_returnButton setImage:[UIImage imageWithContentsOfFile:
+                             [NSBundle.mainBundle pathForResource:@"returnIcon"
+                                                           ofType:@"png"]]
+                   forState:UIControlStateNormal];
+    
+    [self.view addSubview:_returnButton];
+    [_returnButton constrainLeadingToAnchor:self.view.leadingAnchor];
+    [_returnButton constrainTopToAnchor:self.view.topAnchor];
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        [_returnButton constrainWidthToConstant:60.0];
+    
+    else
+        [_returnButton constrainWidthToConstant:80.0];
+    
+    [_returnButton constrainHeightToAnchor:_returnButton.widthAnchor];
+    
+    [_returnButton addTarget:self
+                      action:@selector(returnButtonTapped)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    _progressSlider = UISlider.new;
+    _progressSlider.translatesAutoresizingMaskIntoConstraints = NO;
+    _progressSlider.maximumValue = CMTimeGetSeconds(_player.currentItem.asset.duration);
+    
+    [self.view addSubview:_progressSlider];
+    [_progressSlider constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
+    [_progressSlider constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_progressSlider constrainBottomToAnchor:self.view.bottomAnchor constant:-margin];
+    
+    [_progressSlider addTarget:self
+                        action:@selector(progressSliderValueChanged)
+              forControlEvents:UIControlEventValueChanged];
+}
+
 - (void)playerTapped
 {
     if (_isPlaying)
@@ -146,6 +223,13 @@ void static const *playerItemContext;
     
     else
     {
+        if (_isAtEnd)
+        {
+            [_player seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+            [_progressSlider setValue:0.0 animated:NO];
+            _isAtEnd = NO;
+        }
+        
         [_player play];
         
         __weak __typeof(self)welf = self;
@@ -153,12 +237,27 @@ void static const *playerItemContext;
         _timeObserver = [_player addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:NULL
                                                          usingBlock:^(CMTime time)
         {
-            double currentTime = CMTimeGetSeconds(welf.player.currentTime);
-            NSLog(@"%.2f", currentTime);
+            [welf.progressSlider setValue:CMTimeGetSeconds(welf.player.currentTime)
+                                 animated:NO];
         }];
     }
     
     _isPlaying = !_isPlaying;
+}
+
+- (void)returnButtonTapped
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)progressSliderValueChanged
+{
+    if (_isPlaying)
+        [self playerTapped];
+    
+    CMTime time = CMTimeMake((_progressSlider.value * 1000), 1000);
+    [_player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    _isAtEnd = NO;
 }
 
 @end
