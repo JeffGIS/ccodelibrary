@@ -123,6 +123,11 @@
         _acreFmt.maximumFractionDigits = 2;
         _showCompassCalibrationScreen = YES;
         _boundaryBorderWidth = 4;
+        
+        NSString *rhVideoPath = [UserDefaults.defaults stringForKey:@"RHVideoPath"];
+        
+        if (rhVideoPath && rhVideoPath.length)
+            _rhVideoURL = [NSURL fileURLWithPath:rhVideoPath];
     }
     
     return self;

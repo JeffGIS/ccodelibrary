@@ -13,8 +13,6 @@ void static const *playerItemContext;
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *item;
 @property BOOL isPlaying;
-@property (nonatomic) NSTimer *timer;
-@property int seconds, minutes;
 @property RHController *controller;
 
 @end

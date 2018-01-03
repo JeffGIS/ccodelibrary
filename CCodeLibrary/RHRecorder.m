@@ -140,30 +140,31 @@
 {
     _isRecording = NO;
     _session = AVCaptureSession.new;
+    [_session beginConfiguration];
     
-    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    AVCaptureDevice *vDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     
-    if (device)
+    if (vDevice)
     {
         NSError *error = nil;
         
-        AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:device
-                                                                            error:&error];
+        AVCaptureDeviceInput *vInput = [AVCaptureDeviceInput deviceInputWithDevice:vDevice
+                                                                             error:&error];
         
-        if (input && [_session canAddInput:input])
+        if (vInput && [_session canAddInput:vInput])
         {
-            [_session addInput:input];
+            [_session addInput:vInput];
             
-            device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+            AVCaptureDevice *aDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
             
-            if (device)
+            if (aDevice)
             {
-                input = [AVCaptureDeviceInput deviceInputWithDevice:device
-                                                              error:&error];
+                AVCaptureDeviceInput *aInput = [AVCaptureDeviceInput deviceInputWithDevice:aDevice
+                                                                                     error:&error];
                 
-                if (input && [_session canAddInput:input])
+                if (aInput && [_session canAddInput:aInput])
                 {
-                    [_session addInput:input];
+                    [_session addInput:aInput];
                     
                     AVCaptureVideoPreviewLayer *preview = [AVCaptureVideoPreviewLayer layerWithSession:_session];
                     
@@ -180,10 +181,10 @@
                         {
                             [_session addOutput:_output];
                             
-                            NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/output.mp4",
+                            NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/output.mov",
                                                     NSTemporaryDirectory()];
                             
-                            _outputURL = [[NSURL alloc] initFileURLWithPath:outputPath];
+                            _outputURL = [NSURL fileURLWithPath:outputPath];
                             
                             AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationLandscapeRight;
                             
@@ -215,6 +216,8 @@
     }
     
     else {NSLog(@"AVCaptureSession ERROR: Couldn't create video device.");}
+    
+    [_session commitConfiguration];
 }
 
 
@@ -230,6 +233,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
     {
         CRAPI.sharedInstance.peerConnect.fileToSend = outputFileURL;
         CRAPI.sharedInstance.rhVideoURL = outputFileURL;
+        [UserDefaults.defaults saveString:outputFileURL.path forKey:@"RHVideoPath"];
         [_controller updateConnectButton];
     }
 }
@@ -290,10 +294,10 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
     int lon = abs((int)round(coordinate.longitude * 100000));
     NSDate *date = NSDate.date;
     
-    NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%i_%i_%i.mp4",
+    NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%i_%i_%i.mov",
                             NSTemporaryDirectory(), lat, lon, (int)date.timeIntervalSince1970];
     
-    _outputURL = [[NSURL alloc] initFileURLWithPath:outputPath];
+    _outputURL = [NSURL fileURLWithPath:outputPath];
 }
 
 - (void)locationManager:(CLLocationManager *)manager
@@ -316,4 +320,3 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 }
 
 @end
-
