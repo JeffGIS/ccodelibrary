@@ -231,9 +231,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
     
     else if (outputFileURL)
     {
-        CRAPI.sharedInstance.peerConnect.fileToSend = outputFileURL;
         CRAPI.sharedInstance.rhVideoURL = outputFileURL;
-        [UserDefaults.defaults saveString:outputFileURL.lastPathComponent forKey:@"RHVideoPath"];
         [_controller updateConnectButton];
     }
 }
@@ -278,6 +276,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
 
 - (void)controllerDidTapConnectButton
 {
+    CRAPI.sharedInstance.peerConnect.fileToSend = CRAPI.sharedInstance.rhVideoURL;
     [CRAPI.sharedInstance.peerConnect startAdvertising];
 }
 

@@ -129,7 +129,10 @@
                                 [UserDefaults.defaults stringForKey:@"RHVideoPath"]];
         
         if (outputPath && outputPath.length)
-            _rhVideoURL = [NSURL fileURLWithPath:outputPath isDirectory:NO];
+        {
+            NSURL *outputURL = [NSURL fileURLWithPath:outputPath isDirectory:NO];
+            _rhVideoURL = outputURL;
+        }
     }
     
     return self;
@@ -1542,6 +1545,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         [_spreadsheetDelegate closeList];
     
     return outerArray.copy;
+}
+
+- (void)setRhVideoURL:(NSURL *)rhVideoURL
+{
+    _rhVideoURL = rhVideoURL;
+    [UserDefaults.defaults saveString:rhVideoURL.lastPathComponent forKey:@"RHVideoPath"];
 }
 
 @end

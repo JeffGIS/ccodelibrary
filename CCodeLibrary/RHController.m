@@ -134,8 +134,8 @@
 
 - (void)updateConnectButton
 {
-    if (CRAPI.sharedInstance.peerConnect.fileToSend &&
-        CRAPI.sharedInstance.peerConnect.fileToSend.path.length)
+    if (CRAPI.sharedInstance.rhVideoURL &&
+        CRAPI.sharedInstance.rhVideoURL.path.length)
     {
         _connectButton.alpha = 1.0;
         _connectButton.userInteractionEnabled = YES;

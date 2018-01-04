@@ -12,6 +12,7 @@
 @property (nonatomic) MCNearbyServiceBrowser *browser;
 @property (nonatomic) NSProgress *progress;
 @property BOOL isAdvertiser;
+@property (nonatomic) GSSiPopoverView *popover;
 
 @end
 
@@ -109,13 +110,30 @@
                                          }
                                          
                                          [_progress removeObserver:self forKeyPath:@"fractionCompleted"];
+                                         
+                                         dispatch_async(dispatch_get_main_queue(),
+                                        ^{
+                                            [_popover hide];
+                                            _popover = nil;
+                                        });
+
                                          [session disconnect];
+                                         [self stopAdvertising];
                                      }];
                     
                     [_progress addObserver:self
                                 forKeyPath:@"fractionCompleted"
                                    options:NSKeyValueObservingOptionNew
                                    context:NULL];
+                    
+                    dispatch_async(dispatch_get_main_queue(),
+                    ^{
+                        _popover = [[GSSiPopoverView alloc] initWithView:UIApplication.sharedApplication.keyWindow];
+                        
+                        [_popover showAfter:0.0
+                                  withTitle:[NSString stringWithFormat:@"MCSession send resource %@ to %@",
+                                             _fileToSend.lastPathComponent, peerID.displayName]];
+                    });
                 }
                 
                 else
@@ -175,6 +193,15 @@ didStartReceivingResourceWithName:(NSString *)resourceName
                 forKeyPath:@"fractionCompleted"
                    options:NSKeyValueObservingOptionNew
                    context:NULL];
+    
+    dispatch_async(dispatch_get_main_queue(),
+    ^{
+        _popover = [[GSSiPopoverView alloc] initWithView:UIApplication.sharedApplication.keyWindow];
+                       
+        [_popover showAfter:0.0
+                  withTitle:[NSString stringWithFormat:@"MCSession receive resource %@ from %@",
+                             resourceName, peerID.displayName]];
+    });
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath 
@@ -184,10 +211,10 @@ didStartReceivingResourceWithName:(NSString *)resourceName
 {
     if ((object == _progress) && ([keyPath isEqualToString:@"fractionCompleted"]))
     {
-        double progress = _progress.fractionCompleted;
-        
-        NSLog(@"MCSession for %@ updated progress on resource: %.2f%%",
-              _session.myPeerID.displayName, (progress * 100.0));
+        dispatch_async(dispatch_get_main_queue(),
+        ^{
+            [_popover updateProgress:_progress.fractionCompleted];
+        });
     }
     
     else
@@ -205,6 +232,14 @@ didFinishReceivingResourceWithName:(NSString *)resourceName
           atURL:(NSURL *)localURL
       withError:(NSError *)error
 {
+    [_progress removeObserver:self forKeyPath:@"fractionCompleted"];
+    
+    dispatch_async(dispatch_get_main_queue(),
+    ^{
+        [_popover hide];
+        _popover = nil;
+    });
+    
     if (error)
     {
         NSLog(@"MCSession for %@ from %@ resource received ERROR: %@",
@@ -225,8 +260,8 @@ didFinishReceivingResourceWithName:(NSString *)resourceName
             [_delegate peerConnectDidReceiveFileAtUrl:newURL];
     }
     
-    [_progress removeObserver:self forKeyPath:@"fractionCompleted"];
     [session disconnect];
+    [self stopBrowsing];
 }
 
 #pragma mark MCNearbyServiceBrowser Delegate Methods

@@ -45,19 +45,14 @@
         
         _popover.layer.cornerRadius = 20.0;
         
-        CGFloat tabBarAdj = 0.0;
-        
-        if ([[NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleDisplayName"] isEqualToString:@"NVMobile"])
-            tabBarAdj = 24.5;
-        
         CGFloat width = MIN(fromView.frame.size.height, fromView.frame.size.width);
         CGFloat height = MAX(fromView.frame.size.height, fromView.frame.size.width);
         
         [self addSubview:_popover];
         [_popover constrainLeadingToAnchor:self.centerXAnchor constant:(-width / 2.5)];
         [_popover constrainTrailingToAnchor:self.centerXAnchor constant:(width / 2.5)];
-        [_popover constrainTopToAnchor:self.centerYAnchor constant:(-height / 5.0) + tabBarAdj];
-        [_popover constrainBottomToAnchor:self.centerYAnchor constant:(height / 5.0) + tabBarAdj];
+        [_popover constrainTopToAnchor:self.centerYAnchor constant:(-height / 5.0)];
+        [_popover constrainBottomToAnchor:self.centerYAnchor constant:(height / 5.0)];
         
         _progressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
                                                      progressColor:UIColor.whiteColor];
@@ -234,8 +229,8 @@
     
     _progressLabel.text = [NSString stringWithFormat:@"%i%% complete",
                            (int)roundf(progress * 100.0)];
+    
     [_parentView bringSubviewToFront:self];
-
 }
 
 - (void)setTitle:(NSString *)title
