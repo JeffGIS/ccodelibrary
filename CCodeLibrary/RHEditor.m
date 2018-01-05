@@ -15,15 +15,11 @@ void static const *playerItemContext;
 @property (nonatomic) id timeObserver;
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) UISlider *progressSlider;
+@property (nonatomic) UIView *markupView;
 
 @end
 
 @implementation RHEditor
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -172,7 +168,7 @@ void static const *playerItemContext;
 
 - (void)setupControls
 {
-    CGFloat margin = 20.0, inset = 5.0;
+    CGFloat margin = 20.0, inset = 10.0, width = 80.0;
     
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -188,25 +184,38 @@ void static const *playerItemContext;
     [_returnButton constrainTopToAnchor:self.view.topAnchor];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        [_returnButton constrainWidthToConstant:60.0];
-    
-    else
-        [_returnButton constrainWidthToConstant:80.0];
-    
+        width = 60.0;
+
+    [_returnButton constrainWidthToConstant:width];
     [_returnButton constrainHeightToAnchor:_returnButton.widthAnchor];
     
     [_returnButton addTarget:self
                       action:@selector(returnButtonTapped)
             forControlEvents:UIControlEventTouchUpInside];
     
+    _markupView = UIView.new;
+    _markupView.translatesAutoresizingMaskIntoConstraints = NO;
+    _markupView.alpha = 0.4;
+    _markupView.backgroundColor = UIColor.clearColor;
+    [self.view addSubview:_markupView];
+    [_markupView constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
+    [_markupView constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_markupView constrainBottomToAnchor:self.view.bottomAnchor];
+    [_markupView constrainHeightToConstant:(margin * 2.0)];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                          action:@selector(markupTapped:)];
+    
+    [_markupView addGestureRecognizer:tap];
+    
     _progressSlider = UISlider.new;
     _progressSlider.translatesAutoresizingMaskIntoConstraints = NO;
     _progressSlider.maximumValue = CMTimeGetSeconds(_player.currentItem.asset.duration);
     
     [self.view addSubview:_progressSlider];
-    [_progressSlider constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
-    [_progressSlider constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
-    [_progressSlider constrainBottomToAnchor:self.view.bottomAnchor constant:-margin];
+    [_progressSlider constrainLeadingToAnchor:_markupView.leadingAnchor];
+    [_progressSlider constrainTrailingToAnchor:_markupView.trailingAnchor];
+    [_progressSlider constrainBottomToAnchor:_markupView.topAnchor];
     
     [_progressSlider addTarget:self
                         action:@selector(progressSliderValueChanged)
@@ -258,6 +267,16 @@ void static const *playerItemContext;
     CMTime time = CMTimeMake((_progressSlider.value * 1000), 1000);
     [_player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
     _isAtEnd = NO;
+}
+
+- (void)markupTapped:(UITapGestureRecognizer *)gesture
+{
+    CGPoint point = [gesture locationInView:_markupView];
+    UIView *marker = UIView.new;
+    marker.backgroundColor = UserDefaults.defaults.appleBlue;
+    marker.frame = CGRectMake(0.0, 0.0, 10.0, _markupView.frame.size.height);
+    marker.center = CGPointMake(point.x, _markupView.frame.size.height / 2);
+    [_markupView addSubview:marker];
 }
 
 @end
