@@ -11,11 +11,11 @@ void static const *playerItemContext;
 
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *item;
-@property BOOL isPlaying, isAtEnd;
+@property BOOL isPlaying, isAtEnd, constraintsRemoved;
 @property (nonatomic) id timeObserver;
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) UISlider *progressSlider;
-@property (nonatomic) UIView *markupView;
+@property (nonatomic) UIView *markupView, *marker1, *marker2, *maskView;
 
 @end
 
@@ -168,7 +168,8 @@ void static const *playerItemContext;
 
 - (void)setupControls
 {
-    CGFloat margin = 20.0, inset = 10.0, width = 80.0;
+    CGFloat margin = 30.0, inset = 10.0, width = 80.0;
+    CGFloat markupHeight = (margin * 1.5);
     
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -198,23 +199,47 @@ void static const *playerItemContext;
     _markupView.alpha = 0.4;
     _markupView.backgroundColor = UIColor.clearColor;
     [self.view addSubview:_markupView];
-    [_markupView constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
-    [_markupView constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_markupView constrainLeadingToAnchor:self.view.leadingAnchor];
+    [_markupView constrainTrailingToAnchor:self.view.trailingAnchor];
     [_markupView constrainBottomToAnchor:self.view.bottomAnchor];
-    [_markupView constrainHeightToConstant:(margin * 2.0)];
+    [_markupView constrainHeightToConstant:markupHeight];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(markupTapped:)];
     
     [_markupView addGestureRecognizer:tap];
     
+    _marker1 = UIView.new;
+    _marker1.backgroundColor = UIColor.redColor;
+    _marker1.frame = CGRectMake(0.0, 0.0, 40.0, markupHeight);
+    
+    UIView *line1 = UIView.new;
+    line1.translatesAutoresizingMaskIntoConstraints = NO;
+    line1.backgroundColor = UserDefaults.defaults.appleBlue;
+    [_marker1 addSubview:line1];
+    [line1 constrainToView:_marker1 leading:15.0 trailing:-15.0 top:0.0 bottom:0.0];
+    
+    _marker2 = UIView.new;
+    _marker2.backgroundColor = UIColor.redColor;
+    _marker2.frame = CGRectMake(0.0, 0.0, 40.0, markupHeight);
+    
+    UIView *line2 = UIView.new;
+    line2.translatesAutoresizingMaskIntoConstraints = NO;
+    line2.backgroundColor = UserDefaults.defaults.appleBlue;
+    [_marker2 addSubview:line2];
+    [line2 constrainToView:_marker2 leading:15.0 trailing:-15.0 top:0.0 bottom:0.0];
+    
+    _maskView = UIView.new;
+    _maskView.translatesAutoresizingMaskIntoConstraints = NO;
+    _maskView.backgroundColor = UIColor.grayColor;
+    
     _progressSlider = UISlider.new;
     _progressSlider.translatesAutoresizingMaskIntoConstraints = NO;
     _progressSlider.maximumValue = CMTimeGetSeconds(_player.currentItem.asset.duration);
     
     [self.view addSubview:_progressSlider];
-    [_progressSlider constrainLeadingToAnchor:_markupView.leadingAnchor];
-    [_progressSlider constrainTrailingToAnchor:_markupView.trailingAnchor];
+    [_progressSlider constrainLeadingToAnchor:_markupView.leadingAnchor constant:margin];
+    [_progressSlider constrainTrailingToAnchor:_markupView.trailingAnchor constant:-margin];
     [_progressSlider constrainBottomToAnchor:_markupView.topAnchor];
     
     [_progressSlider addTarget:self
@@ -271,12 +296,77 @@ void static const *playerItemContext;
 
 - (void)markupTapped:(UITapGestureRecognizer *)gesture
 {
-    CGPoint point = [gesture locationInView:_markupView];
-    UIView *marker = UIView.new;
-    marker.backgroundColor = UserDefaults.defaults.appleBlue;
-    marker.frame = CGRectMake(0.0, 0.0, 10.0, _markupView.frame.size.height);
-    marker.center = CGPointMake(point.x, _markupView.frame.size.height / 2);
-    [_markupView addSubview:marker];
+    CGPoint point = CGPointMake([gesture locationInView:_markupView].x,
+                                _markupView.frame.size.height / 2);
+    
+    if (![_markupView.subviews containsObject:_marker1])
+    {
+        _marker1.center = point;
+        [_markupView addSubview:_marker1];
+    }
+    
+    else if (![_markupView.subviews containsObject:_marker2])
+    {
+        _marker2.center = point;
+        [_markupView addSubview:_marker2];
+        [_markupView addSubview:_maskView];
+        [self updateMaskConstraints];
+        
+        SEL sel = @selector(markerPanned:);
+        
+        UIPanGestureRecognizer *pan1 = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                               action:sel];
+        
+        [_marker1 addGestureRecognizer:pan1];
+        
+        UIPanGestureRecognizer *pan2 = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                               action:sel];
+        
+        [_marker2 addGestureRecognizer:pan2];
+    }
+}
+
+- (void)markerPanned:(UIPanGestureRecognizer *)gesture
+{
+    CGPoint translation = [gesture translationInView:gesture.view];
+    
+    CGFloat xPos = MIN(MAX((gesture.view.center.x + translation.x), CGRectGetMinX(_progressSlider.frame)),
+                       CGRectGetMaxX(_progressSlider.frame));
+    
+    gesture.view.center = CGPointMake(xPos, gesture.view.center.y);
+    [gesture setTranslation:CGPointZero inView:gesture.view];
+    
+    if (CGRectIntersectsRect(_marker1.frame, _marker2.frame))
+    {
+        [_maskView removeAllConstraints];
+        _constraintsRemoved = YES;
+    }
+    
+    else if (_constraintsRemoved)
+        [self updateMaskConstraints];
+}
+
+- (void)updateMaskConstraints
+{
+    [_maskView constrainTopToAnchor:_markupView.topAnchor];
+    [_maskView constrainBottomToAnchor:_markupView.bottomAnchor];
+    
+    if (CGRectGetMaxX(_marker1.frame) < CGRectGetMinX(_marker2.frame))
+    {
+        [_maskView constrainLeadingToAnchor:_marker1.trailingAnchor];
+        [_maskView constrainTrailingToAnchor:_marker2.leadingAnchor];
+        _constraintsRemoved = NO;
+    }
+    
+    else if (CGRectGetMaxX(_marker2.frame) < CGRectGetMinX(_marker1.frame))
+    {
+        [_maskView constrainLeadingToAnchor:_marker2.trailingAnchor];
+        [_maskView constrainTrailingToAnchor:_marker1.leadingAnchor];
+        _constraintsRemoved = NO;
+    }
+    
+    else
+        _constraintsRemoved = YES;
 }
 
 @end
