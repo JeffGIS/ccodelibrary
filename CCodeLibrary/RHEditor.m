@@ -13,7 +13,7 @@ void static const *playerItemContext;
 @property (nonatomic) AVPlayerItem *item;
 @property BOOL isPlaying, isAtEnd;
 @property (nonatomic) id timeObserver;
-@property (nonatomic) UIButton *returnButton, *placeMarkers;
+@property (nonatomic) UIButton *returnButton, *placeMarkers, *stepForward, *stepBackward;
 @property (nonatomic) UISlider *progressSlider;
 @property (nonatomic) UIView *markupView, *beginning, *ending, *maskView;
 
@@ -184,7 +184,7 @@ void static const *playerItemContext;
     [_returnButton constrainTopToAnchor:self.view.topAnchor];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        width = 60.0;
+        width = 60.0, markupHeight = 40.0;
 
     [_returnButton constrainWidthToConstant:width];
     [_returnButton constrainHeightToAnchor:_returnButton.widthAnchor];
@@ -195,7 +195,7 @@ void static const *playerItemContext;
     
     _markupView = UIView.new;
     _markupView.translatesAutoresizingMaskIntoConstraints = NO;
-    _markupView.alpha = 0.4;
+    _markupView.alpha = 0.5;
     _markupView.backgroundColor = UIColor.clearColor;
     
     [self.view addSubview:_markupView];
@@ -236,18 +236,52 @@ void static const *playerItemContext;
     _placeMarkers = [UIButton buttonWithType:UIButtonTypeCustom];
     _placeMarkers.translatesAutoresizingMaskIntoConstraints = NO;
     _placeMarkers.backgroundColor = UIColor.blackColor;
-    [_placeMarkers setTitle:@"Mark Beginning" forState:UIControlStateNormal];
+    [_placeMarkers setTitle:@"  Mark Beginning  " forState:UIControlStateNormal];
     [_placeMarkers setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [_placeMarkers setTitleColor:UIColor.grayColor forState:UIControlStateHighlighted];
-    _placeMarkers.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    _placeMarkers.titleLabel.font = [UIFont boldSystemFontOfSize:(markupHeight * 0.6)];
     
     [self.view addSubview:_placeMarkers];
     [_placeMarkers constrainCenterXToAnchor:self.view.centerXAnchor];
-    [_placeMarkers constrainBottomToAnchor:_markupView.topAnchor constant:-margin];
+    [_placeMarkers constrainBottomToAnchor:_markupView.topAnchor constant:-(margin / 2)];
     [_placeMarkers constrainHeightToAnchor:_markupView.heightAnchor];
     
     [_placeMarkers addTarget:self
                       action:@selector(placeMarkersTapped)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    _stepForward = [UIButton buttonWithType:UIButtonTypeCustom];
+    _stepForward.translatesAutoresizingMaskIntoConstraints = NO;
+    _stepForward.backgroundColor = UIColor.whiteColor;
+    [_stepForward setTitle:@"   +   " forState:UIControlStateNormal];
+    [_stepForward setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [_stepForward setTitleColor:UIColor.grayColor forState:UIControlStateHighlighted];
+    _stepForward.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    
+    [self.view addSubview:_stepForward];
+    [_stepForward constrainBottomToAnchor:_placeMarkers.bottomAnchor];
+    [_stepForward constrainTopToAnchor:_placeMarkers.topAnchor];
+    [_stepForward constrainLeadingToAnchor:_placeMarkers.trailingAnchor];
+    
+    [_stepForward addTarget:self
+                     action:@selector(stepForwardTapped)
+           forControlEvents:UIControlEventTouchUpInside];
+    
+    _stepBackward = [UIButton buttonWithType:UIButtonTypeCustom];
+    _stepBackward.translatesAutoresizingMaskIntoConstraints = NO;
+    _stepBackward.backgroundColor = UIColor.whiteColor;
+    [_stepBackward setTitle:@"   -   " forState:UIControlStateNormal];
+    [_stepBackward setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [_stepBackward setTitleColor:UIColor.grayColor forState:UIControlStateHighlighted];
+    _stepBackward.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    
+    [self.view addSubview:_stepBackward];
+    [_stepBackward constrainBottomToAnchor:_placeMarkers.bottomAnchor];
+    [_stepBackward constrainTopToAnchor:_placeMarkers.topAnchor];
+    [_stepBackward constrainTrailingToAnchor:_placeMarkers.leadingAnchor];
+    
+    [_stepBackward addTarget:self
+                      action:@selector(stepBackwardTapped)
             forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -263,7 +297,7 @@ void static const *playerItemContext;
     {
         if (_isAtEnd)
         {
-            [_player seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+            [_player.currentItem seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
             [_progressSlider setValue:0.0 animated:NO];
             _isAtEnd = NO;
         }
@@ -294,7 +328,7 @@ void static const *playerItemContext;
         [self playerTapped];
     
     CMTime time = CMTimeMake((_progressSlider.value * 1000), 1000);
-    [_player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    [_player.currentItem seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
     _isAtEnd = NO;
 }
 
@@ -305,7 +339,7 @@ void static const *playerItemContext;
 
 - (void)placeMarkersTapped
 {
-    double time = CMTimeGetSeconds(_player.currentTime);
+    double time = CMTimeGetSeconds(_player.currentItem.currentTime);
     CGFloat dCenter = ((_progressSlider.maximumValue / 2) - time);
     dCenter /= (_progressSlider.maximumValue / 2);
     dCenter *= _beginning.frame.size.width;
@@ -315,12 +349,12 @@ void static const *playerItemContext;
     xPos += _progressSlider.frame.origin.x;
     xPos += dCenter;
     
-    if ([_placeMarkers.titleLabel.text isEqualToString:@"Mark Beginning"])
+    if ([_placeMarkers.titleLabel.text isEqualToString:@"  Mark Beginning  "])
     {
         [_markupView addSubview:_beginning];
         _beginning.center = CGPointMake(xPos, _markupView.frame.size.height / 2);
         
-        [_placeMarkers setTitle:@"Mark Ending" forState:UIControlStateNormal];
+        [_placeMarkers setTitle:@"  Mark Ending  " forState:UIControlStateNormal];
     }
     
     else
@@ -335,7 +369,33 @@ void static const *playerItemContext;
         [_maskView constrainTrailingToAnchor:_ending.leadingAnchor];
         
         _placeMarkers.hidden = YES;
+        _stepForward.hidden = YES;
+        _stepBackward.hidden = YES;
     }
+}
+
+- (void)stepForwardTapped
+{
+    if (_isPlaying)
+        [self playerTapped];
+    
+    [_player.currentItem stepByCount:1];
+    [self performSelector:@selector(updateSlider) withObject:nil afterDelay:0.1];
+}
+
+- (void)stepBackwardTapped
+{
+    if (_isPlaying)
+        [self playerTapped];
+    
+    [_player.currentItem stepByCount:-1];
+    [self performSelector:@selector(updateSlider) withObject:nil afterDelay:0.1];
+}
+
+- (void)updateSlider
+{
+    [_progressSlider setValue:CMTimeGetSeconds(_player.currentItem.currentTime)
+                     animated:NO];
 }
 
 @end
