@@ -52,7 +52,7 @@
 //#include <tchar.h>
 //#include <strsafe.h>
 //#include <toolhelp.h>
-#include <sqlite3.h>
+#include "SQLiteLib.h"
 // For C compatibility --------------------------------------------------------
 
 #ifdef __cplusplus
@@ -380,7 +380,7 @@ void SQLFieldTypeToGMD (LPSTR sql,LPSTR gmd);
 short OpenDataFile (LPSTR InName, LPSTR SQL, short Access, HANDLE *hDB);
 HANDLE	OpenSLTDatabase(LPSTR Name, LPSTR SQL, short Access);
 HANDLE	OpenSLTDatabaseQuery(LPSTR Name, LPSTR SQL);
-INT64 GetSQLITENumRows(sqlite3 *db, LPSTR tableName, LPSTR where);
+INT64 GetSQLITENumRows(sqlite3nv *db, LPSTR tableName, LPSTR where);
 void CloseSLTDatabase(LPHANDLE pHandle);
 void SLTCloseCursor(LPSQLDATABASE pDB);
 LPSTR GetSLTFieldData(HANDLE hDB, LPSTR SQL, LPFIELDINFO infield, Bool SingleVal, LPSHORT irc, LPFIELDINFO FirstField);
@@ -388,12 +388,12 @@ int FetchSLTRec(LPSQLDATABASE pSQL);
 Bool SLTPrepareStatement(LPSQLDATABASE pDB, LPSTR SQL);
 void CloseSLTDatabaseQuery(LPHANDLE pHandle);
 HANDLE	OpenLISTVARDatabase (LPSTR Name);
-Bool SLTSpatialIndexCreate(sqlite3 *db, LPSTR tableName);
-Bool SLTSpatialIndexAdd(sqlite3 *db, LPSTR tableName, INT64 id, LPSTR Name, LPMNMXCORD pBounds);
-Bool SLTSpatialIndexCreate3D(sqlite3 *db, LPSTR tableName);
-Bool SLTSpatialIndexAdd3D(sqlite3 *db, LPSTR tableName, INT64 id, LPSTR Name, LPMNMXCORD3D pBounds);
-MNMXCORD SLTSpatialIndexBounds(sqlite3 *db, LPSTR tableName);
-MNMXCORD3D SLTSpatialIndexBounds3D(sqlite3 *db, LPSTR tableName);
+Bool SLTSpatialIndexCreate(sqlite3nv *db, LPSTR tableName);
+Bool SLTSpatialIndexAdd(sqlite3nv *db, LPSTR tableName, INT64 id, LPSTR Name, LPMNMXCORD pBounds);
+Bool SLTSpatialIndexCreate3D(sqlite3nv *db, LPSTR tableName);
+Bool SLTSpatialIndexAdd3D(sqlite3nv *db, LPSTR tableName, INT64 id, LPSTR Name, LPMNMXCORD3D pBounds);
+MNMXCORD SLTSpatialIndexBounds(sqlite3nv *db, LPSTR tableName);
+MNMXCORD3D SLTSpatialIndexBounds3D(sqlite3nv *db, LPSTR tableName);
 void DecodeSHPParam(LPSTR str, LPSTR cDesc, LPSTR cIF, LPSTR cColor, LPSTR cWidth, LPSTR cRot);
 
 Bool GetCurrentPNDBName (LPSTR Name);

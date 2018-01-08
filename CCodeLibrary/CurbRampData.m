@@ -94,7 +94,7 @@ static int nInit=0;
     if (!_isOpen)
     {
         _transactionActive = NO;
-        _isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(self.path.UTF8String, &_database), _database);
         //NSLog(@"CurbRamp Database open");
         
         _fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:_path
@@ -121,7 +121,7 @@ static int nInit=0;
 {
     if (opened && _isOpen)
     {
-        SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(_database),_database);
         //NSLog(@"CurbRamp Database close");
         _isOpen = NO;
     }

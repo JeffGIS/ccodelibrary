@@ -10,19 +10,44 @@
 #import "CRAPI.h"
 #import <string.h>
 
-static LPSTR lastQuery = 0;
+SQLITE_API int SQLite_Open(
+                           const char *filename,   /* Database filename (UTF-8) */
+                           sqlite3nv **ppDb          /* OUT: SQLite db handle */
+)
+{
+    int l = sizeof(sqlite3nv);
+    *ppDb = malloc (sizeof(sqlite3nv));
+    (*ppDb)->lastQuery = 0;
+    sqlite3 * db;
+    int rtn = sqlite3_open(filename, &db);
+    (*ppDb)->db = db;
+    return rtn;
+}
+SQLITE_API int SQLite_Close(sqlite3nv* db)
+{
+    int rtn = 0;
+    if (db)
+    {
+        rtn = sqlite3_close(db->db);
+        if (db->lastQuery)
+            free (db->lastQuery);
+        free (db);
+    }
+    return rtn;
+}
 
-int SQLOK(char * fromFile, int fromLine,int sqlReturn, sqlite3 *database)
+
+int SQLOK(char * fromFile, int fromLine,int sqlReturn, sqlite3nv *database)
 {
     if (sqlReturn != SQLITE_OK)
     {
         NSString * dbName = @"";
         NSString * query = @"";
-        if (lastQuery)
-            query = [NSString stringWithUTF8String:lastQuery];
+        if (database->lastQuery)
+            query = [NSString stringWithUTF8String:database->lastQuery];
         int shared = 0;
         
-        char *name = (char *)sqlite3_db_filename(database, "main");
+        char *name = (char *)sqlite3_db_filename(database->db, "main");
         if (name)
         {
             NSString *fullPath = [NSString stringWithUTF8String:name];
@@ -37,14 +62,14 @@ int SQLOK(char * fromFile, int fromLine,int sqlReturn, sqlite3 *database)
         else
             ffile = fromFile;
         NSString *errmess = [NSString stringWithFormat:@"SQLite Error %i = %i:%s db(%i):%@\r\nFrom:%s line%i\r\n%@",
-                           sqlReturn, sqlite3_errcode(database),sqlite3_errmsg(database),shared,dbName,ffile,fromLine,query];
+                           sqlReturn, sqlite3_errcode(database->db),sqlite3_errmsg(database->db),shared,dbName,ffile,fromLine,query];
         [CRAPI.sharedInstance logToErrorFile:errmess];
     }
     
     return sqlReturn;
 }
 
-BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,sqlite3 *database)
+BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,sqlite3nv *database)
 {
     BOOL doesExist = FALSE;
     
@@ -69,45 +94,45 @@ BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,sqlite3 *database)
     return doesExist;
 }
 
-int SQLitePrepare (sqlite3 *db,            /* Database handle */
+int SQLitePrepare (sqlite3nv *db,            /* Database handle */
                    const char *zSql,       /* SQL statement, UTF-8 encoded */
                    int nByte,              /* Maximum length of zSql in bytes. */
                    sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
                    const char **pzTail     /* OUT: Pointer to unused portion of zSql */)
 
 {
-    int rtn = sqlite3_prepare_v2(db, zSql,nByte,ppStmt,pzTail);
+    int rtn = sqlite3_prepare_v2(db->db, zSql,nByte,ppStmt,pzTail);
     int qlen =  (int)strlen (zSql);
-    if (lastQuery)
-        free (lastQuery);
-    lastQuery = malloc (qlen+4);
-    strcpy (lastQuery,zSql);
+    if (db->lastQuery)
+        free (db->lastQuery);
+    db->lastQuery = malloc (qlen+4);
+    strcpy (db->lastQuery,zSql);
     return rtn;
 }
 int SQLiteFinalize(sqlite3_stmt *pStmt)
 {
     int rtn = sqlite3_finalize(pStmt);
-    if (lastQuery)
-        free (lastQuery);
-    lastQuery = 0;
+//    if (lastQuery)
+//        free (lastQuery);
+//    lastQuery = 0;
     return rtn;
 }
 int SQLiteExec(
-                            sqlite3* db,                                  /* An open database */
+                            sqlite3nv* db,                                  /* An open database */
                             const char *sql,                           /* SQL to be evaluated */
                             int (*callback)(void*,int,char**,char**),  /* Callback function */
                             void * arg,                                    /* 1st argument to callback */
                             char **errmsg                              /* Error msg written here */)
 {
     int qlen =  (int)strlen (sql);
-    if (lastQuery)
-        free (lastQuery);
-    lastQuery = malloc (qlen+4);
-    strcpy (lastQuery,sql);
-    return sqlite3_exec(db, sql, callback, arg, errmsg);
+    if (db->lastQuery)
+        free (db->lastQuery);
+    db->lastQuery = malloc (qlen+4);
+    strcpy (db->lastQuery,sql);
+    return sqlite3_exec(db->db, sql, callback, arg, errmsg);
 }
 
-BOOL doesSQLiteTableExist(char* tableNameIN, sqlite3 *database)
+BOOL doesSQLiteTableExist(char* tableNameIN, sqlite3nv *database)
 {
     BOOL doesExist = FALSE;
     char tableName[256];

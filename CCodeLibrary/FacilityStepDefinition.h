@@ -23,7 +23,7 @@
 @property NSArray * choiceList;
 @property double minValue, maxValue;
 
-@property sqlite3 *database;
+@property sqlite3nv *database;
 
 @property (atomic) BOOL isOpen;
 @property (atomic) BOOL allowUpdates;

@@ -16,7 +16,7 @@ static int fileSequence = 0;
 @implementation AlleyWallData
 
 - (void)logError:(int)sqlReturn
-          method:(sqlite3*)database
+          method:(sqlite3nv *)database
 {
     NSLog(@"%@", [NSString stringWithFormat:@"SQLite Error %i = %i:%s",
                   sqlReturn, sqlite3_errcode(database), sqlite3_errmsg(database)]);
@@ -46,7 +46,7 @@ static int fileSequence = 0;
 
 - (void)dealloc
 {
-    sqlite3_close(_database);
+    SQLite_Close(_database);
     NSLog(@"AlleyWall Database dealloc");
 }
 - (BOOL)open
@@ -56,7 +56,7 @@ static int fileSequence = 0;
     {
         self.isOpen = YES;
         NSString * path = [self databasePath];
-        self.isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(path.UTF8String, &_database), _database);
+        self.isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(path.UTF8String, &_database), _database);
         NSLog(@"AlleyWall Database open");
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:path
@@ -107,7 +107,7 @@ static int fileSequence = 0;
 {
     if (opened && _isOpen)
     {
-        SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(_database),_database);
         NSLog(@"AlleyWall Database close");
         self.isOpen = NO;
     }

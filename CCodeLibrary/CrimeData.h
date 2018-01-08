@@ -19,7 +19,7 @@
 
 @interface CrimeData : NSObject
 @property (nonatomic, weak) id <CrimeDataDelegate> delegate;
-@property sqlite3 *database;
+@property sqlite3nv *database;
 @property (nonatomic) int datasetVersion;
 @property (nonatomic) Bool isOpen;
 @property (nonatomic, copy) NSString *documentsDirectory;

@@ -100,7 +100,7 @@ static int ii;
     {
         //int fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:self.path error:nil].fileSize;
         
-        _isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(self.path.UTF8String, &_database), _database);
         NSLog(@"PointInAreas Database open");
         
         return TRUE;
@@ -115,7 +115,7 @@ static int ii;
         if (_haveTimeLineDB && [self continueProcessing])
             [self commitTransaction];
         
-        SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(_database),_database);
         NSLog(@"PointInAreas Database close");
         _isOpen = NO;
         
@@ -162,7 +162,7 @@ static int ii;
     return path;
 }
 
-- (BOOL)initTimeLine:(sqlite3 *)db
+- (BOOL)initTimeLine:(sqlite3nv *)db
 {
     //_database = db;
     BOOL rtn = [self open];

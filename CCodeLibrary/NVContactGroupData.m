@@ -13,7 +13,7 @@
 @interface NVContactGroupData ()
 
 @property (nonatomic, copy) NSString *path;
-@property sqlite3 *database;
+@property sqlite3nv *database;
 @property BOOL isOpen;
 
 @end
@@ -47,7 +47,7 @@
     
     if (!_isOpen)
     {
-        _isOpen = !SQLOK(__FILE__,__LINE__, sqlite3_open(_path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__, SQLite_Open(_path.UTF8String, &_database), _database);
         //NSLog(@"NVContactGroupData Database open");
         rtn = YES;
     }
@@ -59,7 +59,7 @@
 {
     if (opened)
     {
-        SQLOK(__FILE__,__LINE__, sqlite3_close(_database), _database);
+        SQLOK(__FILE__,__LINE__, SQLite_Close(_database), _database);
         //NSLog(@"NVContactGroupData Database close");
         _isOpen = NO;
     }

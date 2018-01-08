@@ -6776,7 +6776,7 @@ HaveVP:;
 				ConvertCoord(&pt, 1, 2);
 				ptll.lat = pt.y;
 				ptll.lon = pt.x;
-				int code = AssignLandUseCodeToParcels(ptll, (sqlite3 *)atol(Arg[2]));
+				int code = AssignLandUseCodeToParcels(ptll, (sqlite3nv *)atol(Arg[2]));
 				_itoa(code, OutLoc, 10);
 				goto Rtnl;
 			}

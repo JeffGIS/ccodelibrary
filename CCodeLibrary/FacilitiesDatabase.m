@@ -562,7 +562,7 @@ Exit:
         NSString *toDirectory = [CRAPI.sharedInstance directoryFromPath:path
                                                                 andName:[NSString stringWithFormat:@"/%i",self.geoid] create:YES];
         if (self.gettingUploaded)
-            SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database), _database);
+            SQLOK(__FILE__,__LINE__,SQLite_Open(self.path.UTF8String, &_database), _database);
         
         else
         {
@@ -653,7 +653,7 @@ Exit:
     BOOL rtn = FALSE;
     if (!_isOpen)
     {
-        self.isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(_path.UTF8String, &_database), _database);
+        self.isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(_path.UTF8String, &_database), _database);
         NSLog(@"Facilities Database open");
         
         rtn = TRUE;
@@ -667,7 +667,7 @@ Exit:
     BOOL rtn = FALSE;
     if (!_isOpen)
     {
-        self.isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(path, &_database), _database);
+        self.isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(path, &_database), _database);
         NSLog(@"Facilities Database open");
         
         rtn = TRUE;
@@ -680,7 +680,7 @@ Exit:
 {
     if (opened && _isOpen)
     {
-        SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(_database),_database);
         NSLog(@"Facilities Database close");
         self.isOpen = NO;
     }
@@ -695,7 +695,7 @@ Exit:
 
 - (void)dealloc
 {
-    sqlite3_close(_database);
+    SQLite_Close(_database);
     _statdatabase = nil;
 }
 

@@ -108,7 +108,7 @@ static BOOL _createDirectory = YES;
 {
     if (!_isOpen)
     {
-        _isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(self.path.UTF8String, &_database), _database);
         NSLog(@"Sewer Database open");
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
@@ -120,7 +120,7 @@ static BOOL _createDirectory = YES;
 {
     if (_isOpen)
     {
-        SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(_database),_database);
         NSLog(@"Sewer Database close");
         _isOpen = NO;
     }

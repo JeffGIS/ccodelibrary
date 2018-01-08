@@ -10,7 +10,7 @@
 
 @interface AlleyWallData : NSObject
 
-@property sqlite3 *database;
+@property sqlite3nv *database;
 @property NSString *sendToServerFile;
 @property (atomic) BOOL isOpen;
 @property (atomic) int processingID;

@@ -7,7 +7,7 @@
 
 @property BOOL isOpen;
 @property (nonatomic, copy) NSString *path;
-@property sqlite3 *database;
+@property sqlite3nv *database;
 
 + (ManagePlacesDatabase *)database;
 

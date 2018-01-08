@@ -16,7 +16,7 @@
 
 @interface SewerData : NSObject<FTPDataPullDelegate>
 
-@property sqlite3 *database;
+@property sqlite3nv *database;
 @property (nonatomic) int datasetVersion;
 @property (nonatomic) BOOL isOpen;
 @property (nonatomic, copy) NSString *documentsDirectory;

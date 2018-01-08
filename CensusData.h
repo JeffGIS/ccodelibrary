@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, CensusAreaValue)
 
 @interface CensusData : NSObject
 
-@property sqlite3 *database;
+@property sqlite3nv *database;
 @property (atomic) BOOL isOpen;
 
 + (NSString *)databasePath;

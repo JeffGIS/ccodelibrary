@@ -14,7 +14,7 @@
 
 - (void)dealloc
 {
-    sqlite3_close(_database);
+    SQLite_Close(_database);
     NSLog(@"Step Definitions Closed");
 }
 
@@ -47,7 +47,7 @@
     {
         self.isOpen = YES;
         NSString * path = [self databasePath];
-        self.isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(path.UTF8String, &_database), _database);
+        self.isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(path.UTF8String, &_database), _database);
         NSLog(@"Step Definitions Database open");
         
         rtn = TRUE;
@@ -60,7 +60,7 @@
 {
     if (opened && _isOpen)
     {
-        SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(_database),_database);
         NSLog(@"Step Definitions Database close");
         self.isOpen = NO;
     }

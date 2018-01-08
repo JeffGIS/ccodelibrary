@@ -40,7 +40,7 @@
 @property NSString *path;
 @property NSString *photoDir;
 @property sqlite3_stmt *statement;
-@property sqlite3 * database;
+@property sqlite3nv * database;
 
 + (FacilitiesDatabase *)databaseForGeoid:(int)geoid;
 

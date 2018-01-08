@@ -49,7 +49,7 @@
 {
     if (!_isOpen)
     {
-        _isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(self.path.UTF8String, &_database), _database);
         NSLog(@"Dispersed Database open");
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
@@ -63,7 +63,7 @@
 {
     if (_isOpen)
     {
-        SQLOK(__FILE__,__LINE__,sqlite3_close(_database),_database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(_database),_database);
         NSLog(@"Dispersed Database close");
         _isOpen = NO;
     }

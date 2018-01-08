@@ -10,7 +10,7 @@
 #import "CCodeLibrary.h"
 
 @interface CensusData ()
-@property sqlite3 *tempdatabase;
+@property sqlite3nv *tempdatabase;
 @end
 
 @implementation CensusData
@@ -39,15 +39,15 @@
                                                                        error:nil].fileSize;
     if (fileSize <= 0)
     {
-        SQLOK(__FILE__,__LINE__,sqlite3_open([CensusData computedFieldsPath].UTF8String, &_tempdatabase), _tempdatabase);
-        SQLOK(__FILE__,__LINE__,sqlite3_close(_tempdatabase), _tempdatabase);
+        SQLOK(__FILE__,__LINE__,SQLite_Open([CensusData computedFieldsPath].UTF8String, &_tempdatabase), _tempdatabase);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(_tempdatabase), _tempdatabase);
     }
     
     fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[CensusData databasePath]
                                                                    error:nil].fileSize;
     if (fileSize > 0)
     {
-        _isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open([CensusData databasePath].UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open([CensusData databasePath].UTF8String, &_database), _database);
         if (_isOpen)
         {
             NSString *attachCmd = [NSString stringWithFormat:@"ATTACH DATABASE '%@' AS COMPUTEDCENSUSFIELDS",[CensusData computedFieldsPath]];
@@ -63,7 +63,7 @@
 {
     if (opened)
     {
-        SQLOK(__FILE__,__LINE__,sqlite3_close(_database), _database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(_database), _database);
         //NSLog(@"Property Database close");
         _isOpen = NO;
     }

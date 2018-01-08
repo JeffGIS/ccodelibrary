@@ -320,7 +320,7 @@ HANDLE	OpenSLTDatabaseQuery(LPSTR Name, LPSTR SQL)
 	return rtn;
 }
 
-LONGLONG GetSQLITENumRows(sqlite3 *db, LPSTR tableName, LPSTR where)
+LONGLONG GetSQLITENumRows(sqlite3nv *db, LPSTR tableName, LPSTR where)
 {
 	return 0;
 }
@@ -346,32 +346,32 @@ void CloseSLTDatabaseQuery(LPHANDLE pHandle)
 	return;
 }
 
-Bool SLTSpatialIndexCreate(sqlite3 *db, LPSTR tableName)
+Bool SLTSpatialIndexCreate(sqlite3nv *db, LPSTR tableName)
 {
 	return FALSE;
 }
 
-Bool SLTSpatialIndexAdd(sqlite3 *db, LPSTR tableName, LONGLONG id, LPSTR Name, LPMNMXCORD pBounds)
+Bool SLTSpatialIndexAdd(sqlite3nv *db, LPSTR tableName, LONGLONG id, LPSTR Name, LPMNMXCORD pBounds)
 {
 	return FALSE;
 }
 
-Bool SLTSpatialIndexCreate3D(sqlite3 *db, LPSTR tableName)
+Bool SLTSpatialIndexCreate3D(sqlite3nv *db, LPSTR tableName)
 {
 	return FALSE;
 }
 
-Bool SLTSpatialIndexAdd3D(sqlite3 *db, LPSTR tableName, LONGLONG id, LPSTR Name, LPMNMXCORD3D pBounds)
+Bool SLTSpatialIndexAdd3D(sqlite3nv *db, LPSTR tableName, LONGLONG id, LPSTR Name, LPMNMXCORD3D pBounds)
 {
 	return FALSE;
 }
 
-MNMXCORD SLTSpatialIndexBounds(sqlite3 *db, LPSTR tableName)
+MNMXCORD SLTSpatialIndexBounds(sqlite3nv *db, LPSTR tableName)
 {
 	MNMXCORD rtn = { 0 };
 	return rtn;
 }
-MNMXCORD3D SLTSpatialIndexBounds3D(sqlite3 *db, LPSTR tableName)
+MNMXCORD3D SLTSpatialIndexBounds3D(sqlite3nv *db, LPSTR tableName)
 {
 	MNMXCORD3D rtn = { 0 };
 	return rtn;

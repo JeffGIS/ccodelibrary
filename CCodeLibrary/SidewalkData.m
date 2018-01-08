@@ -31,7 +31,7 @@
 @interface SidewalkData ()
 
 @property (nonatomic, copy) NSString *path;
-@property sqlite3 *database;
+@property sqlite3nv *database;
 @property BOOL isOpen, sendToServer;
 @property unsigned long long fileSize;
 @property float wallPtSize;
@@ -72,7 +72,7 @@
     
     if (!_isOpen)
     {
-        _isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(_path.UTF8String, &_database), _database);
+        _isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(_path.UTF8String, &_database), _database);
         NSLog(@"SidewalkPoints Database open");
         
         _fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_path
@@ -122,7 +122,7 @@
 {
     if (opened)
     {
-        SQLOK(__FILE__,__LINE__, sqlite3_close(_database), _database);
+        SQLOK(__FILE__,__LINE__, SQLite_Close(_database), _database);
         NSLog(@"SidewalkPoint Database close");
         _isOpen = NO;
     }

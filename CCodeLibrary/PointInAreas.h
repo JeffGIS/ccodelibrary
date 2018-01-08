@@ -59,7 +59,7 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 - (double)countForArea:(NSString*)areaID
             whichCount:(int) icount;
 - (NSString *) overdueTextForArea:(NSString *)areaID;
-- (BOOL) initTimeLine:(sqlite3 *) db;
+- (BOOL) initTimeLine:(sqlite3nv *) db;
 - (NSArray *) getAreaTimeline:(NSString*) areaName;
 - (NSArray *) getAreaPointRefs:(NSString *)areaName;
 - (MNMXCORD) bitmapBounds:(MNMXCORD*) viewBounds;
@@ -87,7 +87,7 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 @property LPTRANDATA pTranContextToWorld, pTranWorldToContext;
 @property BOOL haveTimeLineDB;
 @property int timeLineID;
-@property sqlite3 *database;
+@property sqlite3nv *database;
 @property (nonatomic) NSString * path;
 @property BOOL isOpen;
 @property int minTime;

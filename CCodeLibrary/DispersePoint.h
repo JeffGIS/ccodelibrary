@@ -12,7 +12,7 @@
 #import "SymbolDictionary.h"
 
 @interface DispersePoint : NSObject
-@property sqlite3 *database;
+@property sqlite3nv *database;
 @property (nonatomic, copy) NSString *documentsDirectory;
 @property (nonatomic, copy) NSString *fileName;
 @property (nonatomic, copy) NSString *path;

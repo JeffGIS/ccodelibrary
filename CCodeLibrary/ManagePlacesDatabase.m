@@ -26,7 +26,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
         self.path = [NSBundle.mainBundle pathForResource:@"places"
                                                   ofType:@"slt"];
         
-        self.isOpen = SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database),_database);
+        self.isOpen = SQLOK(__FILE__,__LINE__,SQLite_Open(self.path.UTF8String, &_database),_database);
         NSLog(@"Places Database init");
     }
     
@@ -35,7 +35,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
 
 - (void)dealloc
 {
-    sqlite3_close(_database);
+    SQLite_Close(_database);
     _statdatabase = nil;
     NSLog(@"Places Database dealloc");
 }
@@ -45,7 +45,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
     BOOL rtn = FALSE;
     if (!self.isOpen)
     {
-        self.isOpen = !SQLOK(__FILE__,__LINE__,sqlite3_open(self.path.UTF8String, &_database),_database);
+        self.isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(self.path.UTF8String, &_database),_database);
         rtn = TRUE;
         NSLog(@"Places Database open");
     }
@@ -56,7 +56,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
 {
     if (opened && self.isOpen)
     {
-        sqlite3_close(_database);
+        SQLite_Close(_database);
         NSLog(@"Places Database close");
         self.isOpen = NO;
     }

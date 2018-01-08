@@ -6,7 +6,7 @@
 #import "MathUtil.h"
 
 @interface CurbRampData : NSObject
-@property sqlite3 *database;
+@property sqlite3nv *database;
 @property (atomic) BOOL isOpen;
 @property int geoid;
 @property (atomic) int processingID;
