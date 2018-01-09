@@ -23,8 +23,8 @@ replacementString:(NSString *)string;
 @property UIKeyboardType keyboardType;
 @property UITextAutocapitalizationType capitalizationType;
 @property NSInteger minimumCharacters;
-@property (nonatomic, copy) NSString *text;
-@property BOOL blockWhiteSpace, useCustomFormat;
+@property (nonatomic, copy) NSString *text, *identifier;
+@property BOOL blockWhiteSpace, useCustomFormat, blockTapDismiss;
 
 + (NVTextAlert *)showTextAlertinView:(UIView *)view
                             delegate:(id)delegate

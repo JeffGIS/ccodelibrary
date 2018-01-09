@@ -46,7 +46,7 @@
     UIFont *font = [UIFont boldSystemFontOfSize:28.0];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        width = 300.0, heightSpacer = 6.0, font = [UIFont boldSystemFontOfSize:20.0];
+        width = 300.0, heightSpacer = 0.0, font = [UIFont boldSystemFontOfSize:20.0];
     
     CGFloat yPosition = heightSpacer;
     
@@ -135,15 +135,8 @@
     yPosition += (height - 1.0);
     
     alert.frame = CGRectMake(0.0, 0.0, width, yPosition);
-    
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-    {
-        CGPoint center = CGPointMake(view.center.x, (view.center.y * 0.5));
-        alert.center = center;
-    }
-    
-    else
-        alert.center = view.center;
+    CGPoint center = CGPointMake(view.center.x, (view.center.y * 0.5));
+    alert.center = center;
     
     alert.backgroundColor = UIColor.whiteColor;
     alert.alpha = 0.0;
@@ -214,8 +207,12 @@
                                    context:nil].size;
     
     totalHeight = ceil(titleSize.height);
-    CGFloat height = MAX(totalHeight, 40.0);
-    return height;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        return MAX(totalHeight, 32.0);
+    
+    else
+        return MAX(totalHeight, 40.0);
 }
 
 - (void)saveButtonTapped:(UIButton *)button

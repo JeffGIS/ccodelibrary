@@ -19,7 +19,7 @@
                             delegate:(id)delegate
                                title:(NSString *)title
 {
-    NVTextAlert *textAlert = [[NVTextAlert alloc] init];
+    NVTextAlert *textAlert = NVTextAlert.new;
     CGRect bounds = UIScreen.mainScreen.bounds;
     CGFloat longestSide = MAX(bounds.size.height, bounds.size.width);
     CGFloat shortestSide = MIN(bounds.size.height, bounds.size.width);
@@ -215,12 +215,8 @@ replacementString:(NSString *)string
 
 - (void)overlayTapped:(UITapGestureRecognizer *)gesture
 {
-    [_textField resignFirstResponder];
-}
-
-- (void)setText:(NSString *)text
-{
-    _textField.text = text;
+    if (!_blockTapDismiss)
+        [_textField resignFirstResponder];
 }
 
 - (void)willRotateWithDuration:(NSTimeInterval)duration

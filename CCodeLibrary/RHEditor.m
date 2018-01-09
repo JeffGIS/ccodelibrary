@@ -4,18 +4,48 @@
 #import "RHEditor.h"
 @import AVFoundation;
 #import "CRAPI.h"
+#import "NVTextAlert.h"
+#import "NVTextViewAlert.h"
 
 void static const *playerItemContext;
 
-@interface RHEditor ()
+@implementation RHClip
+
+- (NSString *)description
+{
+    NSString *qualityString = @"";
+    NSString *notesString = [_notes stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+    
+    switch (_quality)
+    {
+        case RHClipQualityNeutral:
+            qualityString = @"Neutral";
+            break;
+        case RHClipQualityPro:
+            qualityString = @"Pro";
+            break;
+        case RHClipQualityCon:
+            qualityString = @"Con";
+            break;
+        default:break;
+    }
+    
+    return [NSString stringWithFormat:@"TITLE:%@, START:%f, END:%f, QUALITY:%@, NOTES:%@ ",
+            _title, _startTime, _endTime, qualityString, notesString];
+}
+
+@end
+
+@interface RHEditor () <NVTextAlertDelegate,NVAlertViewDelegate,NVTextViewAlertDelegate>
 
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *item;
-@property BOOL isPlaying, isAtEnd;
+@property BOOL isPlaying, isAtEnd, inEditMode;
 @property (nonatomic) id timeObserver;
 @property (nonatomic) UIButton *returnButton, *placeMarkers, *stepForward, *stepBackward;
 @property (nonatomic) UISlider *progressSlider;
 @property (nonatomic) UIView *markupView, *beginning, *ending, *maskView;
+@property (nonatomic) RHClip *currentClip;
 
 @end
 
@@ -287,6 +317,9 @@ void static const *playerItemContext;
 
 - (void)playerTapped
 {
+    if (_inEditMode)
+        return;
+    
     if (_isPlaying)
     {
         [_player pause];
@@ -311,6 +344,8 @@ void static const *playerItemContext;
         {
             [welf.progressSlider setValue:CMTimeGetSeconds(welf.player.currentTime)
                                  animated:NO];
+            
+            [welf updatePlaceMarkersButton];
         }];
     }
     
@@ -330,6 +365,8 @@ void static const *playerItemContext;
     CMTime time = CMTimeMake((_progressSlider.value * 1000), 1000);
     [_player.currentItem seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
     _isAtEnd = NO;
+    
+    [self performSelector:@selector(updatePlaceMarkersButton) withObject:nil afterDelay:0.1];
 }
 
 - (void)progressSliderTouchUp
@@ -349,29 +386,135 @@ void static const *playerItemContext;
     xPos += _progressSlider.frame.origin.x;
     xPos += dCenter;
     
-    if ([_placeMarkers.titleLabel.text isEqualToString:@"  Mark Beginning  "])
+    if ([_placeMarkers.titleLabel.text containsString:@"Beginning"])
     {
         [_markupView addSubview:_beginning];
         _beginning.center = CGPointMake(xPos, _markupView.frame.size.height / 2);
+        _currentClip = RHClip.new;
+        _currentClip.startTime = time;
         
         [_placeMarkers setTitle:@"  Mark Ending  " forState:UIControlStateNormal];
     }
     
     else
     {
+        if (_isPlaying)
+        {
+            [_player pause];
+            [_player removeTimeObserver:_timeObserver];
+        }
+        
         [_markupView addSubview:_ending];
         _ending.center = CGPointMake(xPos, _markupView.frame.size.height / 2);
+        _currentClip.endTime = time;
         
-        [_markupView addSubview:_maskView];
-        [_maskView constrainTopToAnchor:_markupView.topAnchor];
-        [_maskView constrainBottomToAnchor:_markupView.bottomAnchor];
-        [_maskView constrainLeadingToAnchor:_beginning.trailingAnchor];
-        [_maskView constrainTrailingToAnchor:_ending.leadingAnchor];
+        if (!CGRectIntersectsRect(_beginning.frame, _ending.frame))
+        {
+            [_markupView addSubview:_maskView];
+            [_maskView constrainTopToAnchor:_markupView.topAnchor];
+            [_maskView constrainBottomToAnchor:_markupView.bottomAnchor];
+            [_maskView constrainLeadingToAnchor:_beginning.trailingAnchor];
+            [_maskView constrainTrailingToAnchor:_ending.leadingAnchor];
+        }
         
-        _placeMarkers.hidden = YES;
-        _stepForward.hidden = YES;
-        _stepBackward.hidden = YES;
+        [_placeMarkers setTitle:@"  Mark Beginning  " forState:UIControlStateNormal];
+        _placeMarkers.hidden = _stepForward.hidden = _stepBackward.hidden = YES;
+        _inEditMode = YES;
+        
+        NVTextAlert *alert = [NVTextAlert showTextAlertinView:self.view
+                                                     delegate:self
+                                                        title:@"Enter Title for this Clip"];
+
+        alert.minimumCharacters = 0;
+        alert.blockTapDismiss = YES;
     }
+}
+
+- (void)textAlert:(NVTextAlert *)textAlert
+    didReturnText:(NSString *)text
+{
+    [textAlert hideTextAlert:NO];
+    
+    _currentClip.title = text;
+    
+    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                      delegate:self
+                                                         title:@"Select Quality for this Clip"
+                                               buttonTextArray:@[@"Pro", @"Con", @"Neutral"]
+                                              destructiveIndex:0];
+    
+    alert.identifier = @"Quality";
+}
+
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView hideLargeAlertView:NO];
+    
+    if ([alertView.identifier isEqualToString:@"Quality"])
+    {
+        switch (buttonIndex)
+        {
+            case 0://pro
+                _currentClip.quality = RHClipQualityPro;
+                break;
+            case 1://con
+                _currentClip.quality = RHClipQualityCon;
+                break;
+            case 2://neutral
+                _currentClip.quality = RHClipQualityNeutral;
+                break;
+            default:break;
+        }
+        
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                          delegate:self
+                                                             title:@"Do You Have Notes for this Clip?"
+                                                   buttonTextArray:@[@"Yes", @"No"]
+                                                  destructiveIndex:0];
+        
+        alert.identifier = @"Notes";
+    }
+    
+    else if ([alertView.identifier isEqualToString:@"Notes"])
+    {
+        if (!buttonIndex)
+        {
+            NVTextViewAlert *alert = [NVTextViewAlert showTextViewAlertinView:self.view
+                                                                     delegate:self
+                                                                        title:@"Enter Notes for this Clip"
+                                                                         text:@""];
+#pragma unused(alert)
+        }
+        
+        else
+            [self finishCurrentClip];
+    }
+}
+
+- (void)textViewAlertDidCancel:(NVTextViewAlert *)textViewAlert
+{
+    [textViewAlert hideTextViewAlert:YES];
+}
+
+- (void)textViewAlert:(NVTextViewAlert *)textViewAlert
+        didReturnText:(NSString *)text
+{
+    [textViewAlert hideTextViewAlert:YES];
+    _currentClip.notes = text;
+    [self finishCurrentClip];
+}
+
+- (void)finishCurrentClip
+{
+    NSLog(@"%@", _currentClip);
+    
+    [_beginning removeFromSuperview];
+    [_ending removeFromSuperview];
+    [_maskView removeFromSuperview];
+    
+    _placeMarkers.hidden = _stepForward.hidden = _stepBackward.hidden = NO;
+    _inEditMode = NO;
 }
 
 - (void)stepForwardTapped
@@ -396,6 +539,26 @@ void static const *playerItemContext;
 {
     [_progressSlider setValue:CMTimeGetSeconds(_player.currentItem.currentTime)
                      animated:NO];
+    
+    [self updatePlaceMarkersButton];
+}
+
+- (void)updatePlaceMarkersButton
+{
+    if ([_placeMarkers.titleLabel.text containsString:@"Ending"])
+    {
+        if (CMTimeGetSeconds(_player.currentItem.currentTime) < _currentClip.startTime)
+        {
+            _placeMarkers.alpha = 0.5;
+            _placeMarkers.userInteractionEnabled = NO;
+        }
+        
+        else
+        {
+            _placeMarkers.alpha = 1.0;
+            _placeMarkers.userInteractionEnabled = YES;
+        }
+    }
 }
 
 @end
