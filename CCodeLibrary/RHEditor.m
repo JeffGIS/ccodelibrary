@@ -40,12 +40,14 @@ void static const *playerItemContext;
 
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *item;
-@property BOOL isPlaying, isAtEnd, inEditMode;
+@property BOOL isPlaying, isAtEnd;
+@property (nonatomic) BOOL inEditMode;
 @property (nonatomic) id timeObserver;
 @property (nonatomic) UIButton *returnButton, *placeMarkers, *stepForward, *stepBackward;
 @property (nonatomic) UISlider *progressSlider;
 @property (nonatomic) UIView *markupView, *beginning, *ending, *maskView;
 @property (nonatomic) RHClip *currentClip;
+@property int timestamp;
 
 @end
 
@@ -57,6 +59,7 @@ void static const *playerItemContext;
     
     [self setupVideoPlayer];
     [self setupControls];
+    self.inEditMode = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -145,6 +148,27 @@ void static const *playerItemContext;
                                                                                       action:@selector(playerTapped)];
 
                 [self.view addGestureRecognizer:tap];
+                
+                NSString *path = CRAPI.sharedInstance.rhVideoURL.lastPathComponent.stringByDeletingPathExtension;
+                NSArray<NSString *> *components = [path componentsSeparatedByString:@"_"];
+                CLLocationCoordinate2D coord;
+                coord.latitude = (components[0].intValue / 100000.0);
+                coord.longitude = (components[1].intValue / 100000.0);
+                _timestamp = components[2].intValue;
+                
+                if (_delegate && [_delegate respondsToSelector:@selector(pidForCoord:)])
+                {
+                    NSString *pid = [_delegate pidForCoord:&coord];
+                    NSString *title = [NSString stringWithFormat:@"pid: %@", pid];
+                    
+                    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                                      delegate:self
+                                                                         title:title
+                                                               buttonTextArray:@[@"Yes", @"No"]
+                                                              destructiveIndex:0];
+                    
+                    alert.identifier = @"Property";
+                }
             }
             
             else {NSLog(@"AVPlayer ERROR: Couldn't create AVPlayerLayer.");}
@@ -418,8 +442,7 @@ void static const *playerItemContext;
         }
         
         [_placeMarkers setTitle:@"  Mark Beginning  " forState:UIControlStateNormal];
-        _placeMarkers.hidden = _stepForward.hidden = _stepBackward.hidden = YES;
-        _inEditMode = YES;
+        self.inEditMode = YES;
         
         NVTextAlert *alert = [NVTextAlert showTextAlertinView:self.view
                                                      delegate:self
@@ -490,6 +513,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         else
             [self finishCurrentClip];
     }
+    
+    else if ([alertView.identifier isEqualToString:@"Property"])
+    {
+        self.inEditMode = NO;
+    }
 }
 
 - (void)textViewAlertDidCancel:(NVTextViewAlert *)textViewAlert
@@ -513,8 +541,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     [_ending removeFromSuperview];
     [_maskView removeFromSuperview];
     
-    _placeMarkers.hidden = _stepForward.hidden = _stepBackward.hidden = NO;
-    _inEditMode = NO;
+    self.inEditMode = NO;
 }
 
 - (void)stepForwardTapped
@@ -559,6 +586,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             _placeMarkers.userInteractionEnabled = YES;
         }
     }
+}
+
+- (void)setInEditMode:(BOOL)inEditMode
+{
+    _inEditMode = inEditMode;
+    _placeMarkers.hidden = _stepForward.hidden = _stepBackward.hidden = inEditMode;
 }
 
 @end
