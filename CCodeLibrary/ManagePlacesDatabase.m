@@ -35,7 +35,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
 
 - (void)dealloc
 {
-    SQLite_Close(_database);
+    SQLite_Close(&_database);
     _statdatabase = nil;
     NSLog(@"Places Database dealloc");
 }
@@ -56,7 +56,7 @@ static ManagePlacesDatabase *_statdatabase = nil;
 {
     if (opened && self.isOpen)
     {
-        SQLite_Close(_database);
+        SQLite_Close(&_database);
         NSLog(@"Places Database close");
         self.isOpen = NO;
     }

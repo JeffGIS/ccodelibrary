@@ -120,7 +120,7 @@ static BOOL _createDirectory = YES;
 {
     if (_isOpen)
     {
-        SQLOK(__FILE__,__LINE__,SQLite_Close(_database),_database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(&_database),_database);
         NSLog(@"Sewer Database close");
         _isOpen = NO;
     }

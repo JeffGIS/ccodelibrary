@@ -46,7 +46,7 @@ static int fileSequence = 0;
 
 - (void)dealloc
 {
-    SQLite_Close(_database);
+    SQLite_Close(&_database);
     NSLog(@"AlleyWall Database dealloc");
 }
 - (BOOL)open
@@ -107,7 +107,7 @@ static int fileSequence = 0;
 {
     if (opened && _isOpen)
     {
-        SQLOK(__FILE__,__LINE__,SQLite_Close(_database),_database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(&_database),_database);
         NSLog(@"AlleyWall Database close");
         self.isOpen = NO;
     }

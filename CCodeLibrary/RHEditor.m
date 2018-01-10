@@ -151,10 +151,14 @@ void static const *playerItemContext;
                 
                 NSString *path = CRAPI.sharedInstance.rhVideoURL.lastPathComponent.stringByDeletingPathExtension;
                 NSArray<NSString *> *components = [path componentsSeparatedByString:@"_"];
-                CLLocationCoordinate2D coord;
-                coord.latitude = (components[0].intValue / 100000.0);
-                coord.longitude = -(components[1].intValue / 100000.0);
-                _timestamp = components[2].intValue;
+                CLLocationCoordinate2D coord={0};
+                if (components.count == 2)
+                {
+                    coord.latitude = (components[0].intValue / 100000.0);
+                    coord.longitude = -(components[1].intValue / 100000.0);
+                    _timestamp = components[2].intValue;
+                }
+                
                 
                 if (_delegate && [_delegate respondsToSelector:@selector(pidForCoord:)])
                 {

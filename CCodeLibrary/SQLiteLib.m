@@ -12,10 +12,9 @@
 
 SQLITE_API int SQLite_Open(
                            const char *filename,   /* Database filename (UTF-8) */
-                           sqlite3nv **ppDb          /* OUT: SQLite db handle */
+                           LPsqlite3nv *ppDb          /* OUT: SQLite db handle */
 )
 {
-    int l = sizeof(sqlite3nv);
     *ppDb = malloc (sizeof(sqlite3nv));
     (*ppDb)->lastQuery = 0;
     sqlite3 * db;
@@ -23,31 +22,35 @@ SQLITE_API int SQLite_Open(
     (*ppDb)->db = db;
     return rtn;
 }
-SQLITE_API int SQLite_Close(sqlite3nv* db)
+SQLITE_API int SQLite_Close(LPsqlite3nv *pdb)
 {
     int rtn = 0;
-    if (db)
+    if (*pdb)
     {
-        rtn = sqlite3_close(db->db);
-        if (db->lastQuery)
-            free (db->lastQuery);
-        free (db);
+        rtn = sqlite3_close((*pdb)->db);
+        if ((*pdb)->lastQuery)
+        {
+            free ((*pdb)->lastQuery);
+            (*pdb)->lastQuery = 0;
+        }
+        free (*pdb);
+        *pdb = 0;
     }
     return rtn;
 }
 
 
-int SQLOK(char * fromFile, int fromLine,int sqlReturn, sqlite3nv *database)
+int SQLOK(char * fromFile, int fromLine,int sqlReturn, LPsqlite3nv pdatabase)
 {
     if (sqlReturn != SQLITE_OK)
     {
         NSString * dbName = @"";
         NSString * query = @"";
-        if (database->lastQuery)
-            query = [NSString stringWithUTF8String:database->lastQuery];
+        if (pdatabase->lastQuery)
+            query = [NSString stringWithUTF8String:pdatabase->lastQuery];
         int shared = 0;
         
-        char *name = (char *)sqlite3_db_filename(database->db, "main");
+        char *name = (char *)sqlite3_db_filename(pdatabase->db, "main");
         if (name)
         {
             NSString *fullPath = [NSString stringWithUTF8String:name];
@@ -62,21 +65,21 @@ int SQLOK(char * fromFile, int fromLine,int sqlReturn, sqlite3nv *database)
         else
             ffile = fromFile;
         NSString *errmess = [NSString stringWithFormat:@"SQLite Error %i = %i:%s db(%i):%@\r\nFrom:%s line%i\r\n%@",
-                           sqlReturn, sqlite3_errcode(database->db),sqlite3_errmsg(database->db),shared,dbName,ffile,fromLine,query];
+                           sqlReturn, sqlite3_errcode(pdatabase->db),sqlite3_errmsg(pdatabase->db),shared,dbName,ffile,fromLine,query];
         [CRAPI.sharedInstance logToErrorFile:errmess];
     }
     
     return sqlReturn;
 }
 
-BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,sqlite3nv *database)
+BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,LPsqlite3nv pdatabase)
 {
     BOOL doesExist = FALSE;
     
     sqlite3_stmt *stmt = NULL;
     char * query = malloc (1024);
     sprintf (query,"pragma table_info ('%s')",tableName);
-    int rc = SQLitePrepare(database, query, -1, &stmt, NULL);
+    int rc = SQLitePrepare(pdatabase, query, -1, &stmt, NULL);
     
     if (rc==SQLITE_OK)
     {
@@ -89,24 +92,24 @@ BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,sqlite3nv *database)
                 doesExist = YES;
         }
     }
-    SQLOK(__FILE__,__LINE__,SQLiteFinalize(stmt), database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(stmt), pdatabase);
     free (query);
     return doesExist;
 }
 
-int SQLitePrepare (sqlite3nv *db,            /* Database handle */
+int SQLitePrepare (LPsqlite3nv pdb,            /* Database handle */
                    const char *zSql,       /* SQL statement, UTF-8 encoded */
                    int nByte,              /* Maximum length of zSql in bytes. */
                    sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
                    const char **pzTail     /* OUT: Pointer to unused portion of zSql */)
 
 {
-    int rtn = sqlite3_prepare_v2(db->db, zSql,nByte,ppStmt,pzTail);
+    int rtn = sqlite3_prepare_v2(pdb->db, zSql,nByte,ppStmt,pzTail);
     int qlen =  (int)strlen (zSql);
-    if (db->lastQuery)
-        free (db->lastQuery);
-    db->lastQuery = malloc (qlen+4);
-    strcpy (db->lastQuery,zSql);
+    if (pdb->lastQuery)
+        free (pdb->lastQuery);
+    pdb->lastQuery = malloc (qlen+4);
+    strcpy (pdb->lastQuery,zSql);
     return rtn;
 }
 int SQLiteFinalize(sqlite3_stmt *pStmt)
@@ -118,21 +121,21 @@ int SQLiteFinalize(sqlite3_stmt *pStmt)
     return rtn;
 }
 int SQLiteExec(
-                            sqlite3nv* db,                                  /* An open database */
+                            LPsqlite3nv pdb,                                  /* An open database */
                             const char *sql,                           /* SQL to be evaluated */
                             int (*callback)(void*,int,char**,char**),  /* Callback function */
                             void * arg,                                    /* 1st argument to callback */
                             char **errmsg                              /* Error msg written here */)
 {
     int qlen =  (int)strlen (sql);
-    if (db->lastQuery)
-        free (db->lastQuery);
-    db->lastQuery = malloc (qlen+4);
-    strcpy (db->lastQuery,sql);
-    return sqlite3_exec(db->db, sql, callback, arg, errmsg);
+    if (pdb->lastQuery)
+        free (pdb->lastQuery);
+    pdb->lastQuery = malloc (qlen+4);
+    strcpy (pdb->lastQuery,sql);
+    return sqlite3_exec(pdb->db, sql, callback, arg, errmsg);
 }
 
-BOOL doesSQLiteTableExist(char* tableNameIN, sqlite3nv *database)
+BOOL doesSQLiteTableExist(char* tableNameIN, LPsqlite3nv pdatabase)
 {
     BOOL doesExist = FALSE;
     char tableName[256];
@@ -152,7 +155,7 @@ BOOL doesSQLiteTableExist(char* tableNameIN, sqlite3nv *database)
         pDot = tableName;
         sprintf (query,"SELECT name FROM sqlite_master WHERE type='table' AND name='%s';",tableName);
     }
-    BOOL rc = !SQLOK(__FILE__,__LINE__,SQLitePrepare(database, query, -1, &stmt, NULL),database);
+    BOOL rc = !SQLOK(__FILE__,__LINE__,SQLitePrepare(pdatabase, query, -1, &stmt, NULL),pdatabase);
     
     if (rc)
     {
@@ -163,7 +166,7 @@ BOOL doesSQLiteTableExist(char* tableNameIN, sqlite3nv *database)
                 doesExist = YES;
         }
     }
-    SQLOK(__FILE__,__LINE__,SQLiteFinalize(stmt), database);//,query);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(stmt), pdatabase);//,query);
     free (query);
     return doesExist;
 }

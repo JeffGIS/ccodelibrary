@@ -40,7 +40,7 @@
     if (fileSize <= 0)
     {
         SQLOK(__FILE__,__LINE__,SQLite_Open([CensusData computedFieldsPath].UTF8String, &_tempdatabase), _tempdatabase);
-        SQLOK(__FILE__,__LINE__,SQLite_Close(_tempdatabase), _tempdatabase);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(&_tempdatabase), _tempdatabase);
     }
     
     fileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:[CensusData databasePath]
@@ -63,7 +63,7 @@
 {
     if (opened)
     {
-        SQLOK(__FILE__,__LINE__,SQLite_Close(_database), _database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(&_database), _database);
         //NSLog(@"Property Database close");
         _isOpen = NO;
     }

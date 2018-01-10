@@ -121,7 +121,7 @@ static int nInit=0;
 {
     if (opened && _isOpen)
     {
-        SQLOK(__FILE__,__LINE__,SQLite_Close(_database),_database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(&_database),_database);
         //NSLog(@"CurbRamp Database close");
         _isOpen = NO;
     }

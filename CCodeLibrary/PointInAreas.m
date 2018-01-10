@@ -115,7 +115,7 @@ static int ii;
         if (_haveTimeLineDB && [self continueProcessing])
             [self commitTransaction];
         
-        SQLOK(__FILE__,__LINE__,SQLite_Close(_database),_database);
+        SQLOK(__FILE__,__LINE__,SQLite_Close(&_database),_database);
         NSLog(@"PointInAreas Database close");
         _isOpen = NO;
         
