@@ -418,7 +418,10 @@ void static const *playerItemContext;
     {
         [_markupView addSubview:_beginning];
         _beginning.center = CGPointMake(xPos, _markupView.frame.size.height / 2);
+        
         _currentClip = RHClip.new;
+        _currentClip.notes = @"";
+        _currentClip.title = @"";
         _currentClip.startTime = time;
         
         [_placeMarkers setTitle:@"  Mark Ending  " forState:UIControlStateNormal];

@@ -1353,11 +1353,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     if ([_delegate respondsToSelector:@selector(spreadsheetRowHeaderTextPrefixAtIndex:)])
         return [_delegate spreadsheetRowHeaderTextPrefixAtIndex:index];
     
-    else
-    {
-        NSLog(@"ERROR:spreadsheetRowHeaderTextPrefixAtIndex not implemented.");
-        return nil;
-    }
+    else return nil;
 }
 
 - (void)spreadsheetViewInEditingMode:(BOOL)editingMode
