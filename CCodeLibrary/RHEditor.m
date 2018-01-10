@@ -153,7 +153,7 @@ void static const *playerItemContext;
                 NSArray<NSString *> *components = [path componentsSeparatedByString:@"_"];
                 CLLocationCoordinate2D coord;
                 coord.latitude = (components[0].intValue / 100000.0);
-                coord.longitude = (components[1].intValue / 100000.0);
+                coord.longitude = -(components[1].intValue / 100000.0);
                 _timestamp = components[2].intValue;
                 
                 if (_delegate && [_delegate respondsToSelector:@selector(pidForCoord:)])
