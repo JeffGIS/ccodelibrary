@@ -19,6 +19,18 @@ void static const *playerItemContext;
 
 @implementation RHPlayer
 
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    }
+    
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

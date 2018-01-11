@@ -11,20 +11,32 @@
 
 @property (nonatomic) AVCaptureSession *session;
 @property (nonatomic) AVCaptureMovieFileOutput *output;
-@property (nonatomic) NSURL *outputURL;
 @property BOOL isRecording, canGetLocation;
 @property (nonatomic) CLLocationManager *locMgr;
 @property RHController *controller;
-@property (nonatomic, copy) NSString *pid;
+@property (nonatomic, copy) NSString *pid, *outputDir;
+@property (nonatomic) NSMutableString *locations;
+@property (nonatomic) NSTimer *locationTimer;
 
 @end
 
 @implementation RHRecorder
 
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    }
+    
+    return self;
+}
+
 + (instancetype)recorderWithPID:(NSString *)pid
 {
     RHRecorder *recorder = RHRecorder.new;
-    recorder.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     recorder.pid = pid;
     return recorder;
 }
@@ -44,6 +56,7 @@
                                              object:nil];
     
     _canGetLocation = NO;
+    _locations = NSMutableString.string;
     
     if ([CLLocationManager locationServicesEnabled])
     {
@@ -132,6 +145,9 @@
     if ([_session isRunning])
         [_session stopRunning];
     
+    if (_locationTimer.isValid)
+        [_locationTimer invalidate];
+    
     _isRecording = NO;
 }
 
@@ -180,24 +196,28 @@
                         {
                             [_session addOutput:_output];
                             
-                            NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%@_%d.mov",
-                                                    UserDefaults.defaults.localFilePath, _pid,
-                                                    (int)NSDate.date.timeIntervalSince1970];
+                            _outputDir = [NSString stringWithFormat:@"%@/RHVideos/%@",
+                                          UserDefaults.defaults.localFilePath, _pid];
                             
-                            _outputURL = [NSURL fileURLWithPath:outputPath isDirectory:NO];
+                            [NSFileManager.new createDirectoryAtPath:_outputDir
+                                         withIntermediateDirectories:YES
+                                                          attributes:nil
+                                                               error:&error];
                             
-                            AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationLandscapeRight;
+                            if (!error)
+                            {
+                                AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationLandscapeRight;
+                                
+                                if (preview.connection.isVideoOrientationSupported)
+                                    preview.connection.videoOrientation = orientation;
+                                
+                                AVCaptureConnection *connection = [_output connectionWithMediaType:AVMediaTypeVideo];
+                                
+                                if (connection.isVideoOrientationSupported)
+                                    connection.videoOrientation = orientation;
+                            }
                             
-                            if (preview.connection.isVideoOrientationSupported)
-                                preview.connection.videoOrientation = orientation;
-                            
-                            AVCaptureConnection *connection = [_output connectionWithMediaType:AVMediaTypeVideo];
-                            
-                            if (connection.isVideoOrientationSupported)
-                                connection.videoOrientation = orientation;
-                            
-                            _controller = RHController.new;
-                            [_controller showInView:self.view delegate:self];
+                            else {NSLog(@"NSFileManager Directory Create ERROR: %@", error.localizedDescription);}
                         }
                         
                         else {NSLog(@"AVCaptureSession Video Output ERROR: %@", error.localizedDescription);}
@@ -218,6 +238,9 @@
     else {NSLog(@"AVCaptureSession ERROR: Couldn't create video device.");}
     
     [_session commitConfiguration];
+    
+    _controller = RHController.new;
+    [_controller showInView:self.view delegate:self];
 }
 
 
@@ -242,6 +265,10 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
     {
         [_controller stopTimer:NO];
         [_output stopRecording];
+        
+        if (_locationTimer.isValid)
+            [_locationTimer invalidate];
+        
         _isRecording = NO;
         
         [_controller.playRecordButton setImage:[UIImage imageWithContentsOfFile:
@@ -252,17 +279,22 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
     
     else
     {
-        NSFileManager *fileManager = NSFileManager.defaultManager;
+        NSFileManager *fm = NSFileManager.defaultManager;
+        int time = (int)NSDate.date.timeIntervalSince1970;
         
-        if ([fileManager fileExistsAtPath:_outputURL.path])
+        NSString *vidPath = [NSString stringWithFormat:@"%@/%d.mov", _outputDir, time];
+        NSString *txtPath = [NSString stringWithFormat:@"%@/%d.txt", _outputDir, time];
+        NSURL *vidURL = [NSURL fileURLWithPath:vidPath isDirectory:NO];
+        
+        if ([fm fileExistsAtPath:vidURL.path])
         {
             NSError *error;
             
-            if (![fileManager removeItemAtPath:_outputURL.path error:&error])
+            if (![fm removeItemAtPath:vidURL.path error:&error])
                 {NSLog(@"NSFileManager ERROR: Couldn't remove previous output video file.");}
         }
         
-        [_output startRecordingToOutputFileURL:_outputURL recordingDelegate:self];
+        [_output startRecordingToOutputFileURL:vidURL recordingDelegate:self];
         [_controller startTimer];
         _isRecording = YES;
         
@@ -270,6 +302,17 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
                                                 [NSBundle.mainBundle pathForResource:@"VideoStopIcon"
                                                                               ofType:@"png"]]
                                       forState:UIControlStateNormal];
+        
+        if (_canGetLocation)
+        {
+            [_locMgr requestLocation];
+            
+            _locationTimer = [NSTimer scheduledTimerWithTimeInterval:10.0
+                                                              target:_locMgr
+                                                            selector:@selector(requestLocation)
+                                                            userInfo:nil
+                                                             repeats:YES];
+        }
     }
 }
 
@@ -288,6 +331,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
      didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
     CLLocationCoordinate2D coordinate = locations.lastObject.coordinate;
+    NSLog(@"LAT:%f,LON:%f", coordinate.latitude, coordinate.longitude);
 }
 
 - (void)locationManager:(CLLocationManager *)manager

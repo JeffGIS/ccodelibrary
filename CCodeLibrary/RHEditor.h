@@ -15,7 +15,7 @@ typedef NS_ENUM(NSInteger, RHClipQuality)
 @property double startTime, endTime;
 @property int timestamp;
 @property RHClipQuality quality;
-@property (nonatomic, copy) NSString *title, *notes;
+@property (nonatomic, copy) NSString *title, *notes, *pid;
 
 @end
 

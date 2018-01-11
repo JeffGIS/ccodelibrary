@@ -161,7 +161,7 @@
 {
     NSInteger buttonIndex = (button.tag - 1);
     
-    if (textAfterPipe(_buttonTextArray[buttonIndex]).integerValue > 0)
+    if ([_buttonTextArray[buttonIndex] containsString:@"|"])
         buttonIndex = textAfterPipe(_buttonTextArray[buttonIndex]).integerValue;
     
     [_delegate alertView:self didTapButtonAtIndex:buttonIndex];

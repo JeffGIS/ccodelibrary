@@ -28,6 +28,8 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
 @property (nonatomic) UIColor *selectedRowColor;
 @property NSInteger selectedRow, selectedColumn, lastTapSelectedRow;
 @property int zoomCancel;
+@property (nonatomic, copy) NSString *dir;
+@property (nonatomic, copy) NSArray<NSString *> *files;
 
 @end
 
@@ -734,10 +736,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             case SST_PropertyList:
                 if (_selectedRow == 1)
                 {
-                    optionsArray = @[@"Zoom to This Property", @"Zoom to All Properties in List",
-                                     @"Show Areas", @"Video Record This Property", @"Cancel"];
+                    optionsArray = @[@"Zoom to This Property", @"Zoom to All Properties in List", @"Show Areas",
+                                     @"Record RiteHome Video", @"Create RiteHome Clips", @"View RiteHome Clips", @"Cancel"];
                     
-                    _zoomCancel = 4;
+                    _zoomCancel = (int)(optionsArray.count - 1);
                     alertID = @"ZOOM";
                 }
                 
@@ -1094,6 +1096,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)alertView:(NVAlertView *)alertView
 didTapButtonAtIndex:(NSInteger)buttonIndex
 {
+    [alertView hideLargeAlertView:NO];
+    
     if ([alertView.identifier isEqualToString:@"ExportPrompt"])
     {
         NSString *fileName = [self fileNameWithType:@"txt"];
@@ -1221,6 +1225,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 case SST_PropertyList:
                 {
                     int option = (int)_selectedColumn;
+                    NSString *pid = [_delegate textForColumn:_selectedColumn row:_selectedRow];
+                    NSError *error = nil;
                     
                     switch (buttonIndex)
                     {
@@ -1230,12 +1236,31 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                         case 2:
                             _selectedRow = -1;
                             break;
-                        case 3:{
-                            NSString *pid = [_delegate textForColumn:_selectedColumn row:_selectedRow];
-                            NSLog(@"PID: %@", pid);
+                        case 3:{//RHRecorder
                             RHRecorder *recorder = [RHRecorder recorderWithPID:pid];
                             [self presentViewController:recorder animated:YES completion:nil];
-                            [alertView hideLargeAlertView:YES];
+                            return;}
+                        case 4:{//RHEditor
+                            _dir = [NSString stringWithFormat:@"%@/RHVideos/%@",
+                                    UserDefaults.defaults.localFilePath, pid];
+                            
+                            _files = [NSFileManager.defaultManager contentsOfDirectoryAtPath:_dir
+                                                                                       error:&error];
+                            
+                            NSMutableArray *text = NSMutableArray.array;
+                            [text addObject:@"Cancel"];
+                            [text addObjectsFromArray:_files];
+                            
+                            NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                                              delegate:self
+                                                                                 title:@"Select RiteHome Video File" buttonTextArray:text.copy
+                                                                      destructiveIndex:1];
+                            alert.identifier = @"RHEditorSelect";
+                            return;}
+                        case 5:{//RHPlayer
+                            //populate list of clips from database here
+                            NVAlertView *alert = nil;
+                            alert.identifier = @"RHPlayerSelect";
                             return;}
                     }
                     
@@ -1247,6 +1272,27 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     break;
                 default:break;
             }
+        }
+    }
+    
+    else if ([alertView.identifier isEqualToString:@"RHEditorSelect"])
+    {
+        if (buttonIndex)
+        {
+            NSString *file =_files[buttonIndex - 1];
+            NSString *path = [NSString stringWithFormat:@"%@/%@", _dir, file];
+            CRAPI.sharedInstance.rhVideoURL = [NSURL fileURLWithPath:path isDirectory:NO];
+            RHEditor *editor = RHEditor.new;
+            [self presentViewController:editor animated:YES completion:nil];
+        }
+    }
+    
+    else if ([alertView.identifier isEqualToString:@"RHPlayerSelect"])
+    {
+        if (buttonIndex)
+        {
+            //implement RHPlayer here
+            //add startTime & stopTime parameters
         }
     }
     
@@ -1283,8 +1329,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             default:break;
         }
     }
-    
-    [alertView hideLargeAlertView:YES];
 }
 
 - (NSString *)fileNameWithType:(NSString *)type

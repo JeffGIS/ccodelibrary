@@ -30,8 +30,8 @@ void static const *playerItemContext;
         default:break;
     }
     
-    return [NSString stringWithFormat:@"TITLE:%@, START:%f, END:%f, QUALITY:%@, NOTES:%@ ",
-            _title, _startTime, _endTime, qualityString, notesString];
+    return [NSString stringWithFormat:@"PID:%@, TIMESTAMP:%d, TITLE:%@, START:%f, END:%f, QUALITY:%@, NOTES:%@ ",
+            _pid, _timestamp, _title, _startTime, _endTime, qualityString, notesString];
 }
 
 @end
@@ -47,11 +47,22 @@ void static const *playerItemContext;
 @property (nonatomic) UISlider *progressSlider;
 @property (nonatomic) UIView *markupView, *beginning, *ending, *maskView;
 @property (nonatomic) RHClip *currentClip;
-@property int timestamp;
 
 @end
 
 @implementation RHEditor
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    }
+    
+    return self;
+}
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -59,7 +70,6 @@ void static const *playerItemContext;
     
     [self setupVideoPlayer];
     [self setupControls];
-    self.inEditMode = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -148,31 +158,6 @@ void static const *playerItemContext;
                                                                                       action:@selector(playerTapped)];
 
                 [self.view addGestureRecognizer:tap];
-                
-                NSString *path = CRAPI.sharedInstance.rhVideoURL.lastPathComponent.stringByDeletingPathExtension;
-                NSArray<NSString *> *components = [path componentsSeparatedByString:@"_"];
-                CLLocationCoordinate2D coord={0};
-                if (components.count == 2)
-                {
-                    coord.latitude = (components[0].intValue / 100000.0);
-                    coord.longitude = -(components[1].intValue / 100000.0);
-                    _timestamp = components[2].intValue;
-                }
-                
-                
-                if (_delegate && [_delegate respondsToSelector:@selector(pidForCoord:)])
-                {
-                    NSString *pid = [_delegate pidForCoord:&coord];
-                    NSString *title = [NSString stringWithFormat:@"pid: %@", pid];
-                    
-                    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                                      delegate:self
-                                                                         title:title
-                                                               buttonTextArray:@[@"Yes", @"No"]
-                                                              destructiveIndex:0];
-                    
-                    alert.identifier = @"Property";
-                }
             }
             
             else {NSLog(@"AVPlayer ERROR: Couldn't create AVPlayerLayer.");}
@@ -423,6 +408,8 @@ void static const *playerItemContext;
         _currentClip.notes = @"";
         _currentClip.title = @"";
         _currentClip.startTime = time;
+        _currentClip.pid = CRAPI.sharedInstance.rhVideoURL.path.stringByDeletingLastPathComponent.lastPathComponent;
+        _currentClip.timestamp = CRAPI.sharedInstance.rhVideoURL.lastPathComponent.stringByDeletingPathExtension.intValue;
         
         [_placeMarkers setTitle:@"  Mark Ending  " forState:UIControlStateNormal];
     }
@@ -519,11 +506,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         
         else
             [self finishCurrentClip];
-    }
-    
-    else if ([alertView.identifier isEqualToString:@"Property"])
-    {
-        self.inEditMode = NO;
     }
 }
 
