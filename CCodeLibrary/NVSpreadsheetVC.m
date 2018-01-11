@@ -12,12 +12,14 @@
 #import "NVTextVC.h"
 @import MessageUI;
 #import "PDFCreator.h"
+#import "RiteHome.h"
 
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,
 NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
-@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine, *cpyButton, *export, *delete, *mapIt, *create, *select, *help;
+@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine, *cpyButton;
+@property (nonatomic) UIButton *export, *delete, *mapIt, *create, *select, *help;
 @property (nonatomic) CGFloat columnWidth, rowHeight;
 @property (nonatomic) UITextField *titleTextField;
 @property (nonatomic) UILabel *numRowsLabel, *numColsLabel;
@@ -722,28 +724,27 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         }
         
         NSArray *optionsArray = NSArray.array;
-        NSString * alertID = @"MapIt";
+        NSString *alertID = @"MapIt";
+        
         switch (_delegate.getSpreadSheetType)
         {
             case SST_CrimeList:
                 optionsArray = @[@"Display Report"];
                 break;
             case SST_PropertyList:
-                if (column == 1)
+                if (_selectedRow == 1)
                 {
-                    optionsArray = @[@"Zoom to This Parcel",@"Zoom to All Parcels in List", @"Cancel"];
-                    _zoomCancel = 2;
-                    optionsArray = @[@"Zoom to This Parcel",@"Zoom to All Parcels in List", @"Show Areas",@"Cancel"];
-                    _zoomCancel = 3;
+                    optionsArray = @[@"Zoom to This Property", @"Zoom to All Properties in List",
+                                     @"Show Areas", @"Video Record This Property", @"Cancel"];
+                    
+                    _zoomCancel = 4;
                     alertID = @"ZOOM";
                 }
+                
                 else
-                {
                     optionsArray = @[@"Map It", @"Cancel"];
-                }
                 break;
-            default:
-                break;
+            default:break;
         }
         
         if (optionsArray.count)
@@ -1221,10 +1222,23 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 {
                     int option = (int)_selectedColumn;
                     
-                    if (buttonIndex == 1)
-                        option = -1;
-                    if (buttonIndex == 2)
-                        _selectedRow = -1;
+                    switch (buttonIndex)
+                    {
+                        case 1:
+                            option = -1;
+                            break;
+                        case 2:
+                            _selectedRow = -1;
+                            break;
+                        case 3:{
+                            NSString *pid = [_delegate textForColumn:_selectedColumn row:_selectedRow];
+                            NSLog(@"PID: %@", pid);
+                            RHRecorder *recorder = [RHRecorder recorderWithPID:pid];
+                            [self presentViewController:recorder animated:YES completion:nil];
+                            [alertView hideLargeAlertView:YES];
+                            return;}
+                    }
+                    
                     [_delegate spreadsheetDidZoomForRow:_selectedRow
                                                  column:option
                                                    from:self

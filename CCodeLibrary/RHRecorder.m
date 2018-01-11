@@ -12,13 +12,22 @@
 @property (nonatomic) AVCaptureSession *session;
 @property (nonatomic) AVCaptureMovieFileOutput *output;
 @property (nonatomic) NSURL *outputURL;
-@property BOOL isRecording;
+@property BOOL isRecording, canGetLocation;
 @property (nonatomic) CLLocationManager *locMgr;
 @property RHController *controller;
+@property (nonatomic, copy) NSString *pid;
 
 @end
 
 @implementation RHRecorder
+
++ (instancetype)recorderWithPID:(NSString *)pid
+{
+    RHRecorder *recorder = RHRecorder.new;
+    recorder.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    recorder.pid = pid;
+    return recorder;
+}
 
 - (void)viewDidLoad
 {
@@ -33,6 +42,27 @@
                                            selector:@selector(becameActive:)
                                                name:@"didBecomeActive"
                                              object:nil];
+    
+    _canGetLocation = NO;
+    
+    if ([CLLocationManager locationServicesEnabled])
+    {
+        _locMgr = CLLocationManager.new;
+        _locMgr.delegate = self;
+        
+        if (CLLocationManager.authorizationStatus == kCLAuthorizationStatusNotDetermined)
+        {
+            if ([_locMgr respondsToSelector:@selector(requestWhenInUseAuthorization)])
+                [_locMgr requestWhenInUseAuthorization];
+            
+            else {NSLog(@"CLLocationManager ERROR: Not able to request authorization.");}
+        }
+        
+        else
+            _canGetLocation = YES;
+    }
+    
+    else {NSLog(@"CLLocationManager ERROR: Location services NOT enabled on this device.");}
 }
 
 - (void)resignedActive:(id)selector
@@ -49,38 +79,7 @@
 {
     [super viewDidAppear:animated];
     
-    if ([CLLocationManager locationServicesEnabled])
-    {
-        _locMgr = CLLocationManager.new;
-        _locMgr.delegate = self;
-        
-        switch (CLLocationManager.authorizationStatus)
-        {
-            case kCLAuthorizationStatusAuthorizedWhenInUse:
-            case kCLAuthorizationStatusAuthorizedAlways:
-                [_locMgr requestLocation];
-                [self setupVideoRecorder];
-                break;
-            case kCLAuthorizationStatusNotDetermined:
-                if ([_locMgr respondsToSelector:@selector(requestWhenInUseAuthorization)])
-                    [_locMgr requestWhenInUseAuthorization];
-                
-                else
-                {
-                    NSLog(@"CLLocationManager ERROR: Not able to request authorization.");
-                    [self setupVideoRecorder];
-                }
-                break;
-            default:break;
-        }
-    }
-    
-    else
-    {
-        NSLog(@"CLLocationManager ERROR: Location services NOT enabled on this device.");
-        [self setupVideoRecorder];
-    }
-    
+    [self setupVideoRecorder];
     [self startSession];
 }
 
@@ -181,8 +180,9 @@
                         {
                             [_session addOutput:_output];
                             
-                            NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/output.mov",
-                                                    UserDefaults.defaults.localFilePath];
+                            NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%@_%d.mov",
+                                                    UserDefaults.defaults.localFilePath, _pid,
+                                                    (int)NSDate.date.timeIntervalSince1970];
                             
                             _outputURL = [NSURL fileURLWithPath:outputPath isDirectory:NO];
                             
@@ -252,7 +252,6 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
     
     else
     {
-        [_locMgr requestLocation];
         NSFileManager *fileManager = NSFileManager.defaultManager;
         
         if ([fileManager fileExistsAtPath:_outputURL.path])
@@ -289,14 +288,6 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
      didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
     CLLocationCoordinate2D coordinate = locations.lastObject.coordinate;
-    int lat = (int)round(coordinate.latitude * 100000);
-    int lon = abs((int)round(coordinate.longitude * 100000));
-    NSDate *date = NSDate.date;
-    
-    NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%i_%i_%i.mov",
-                            UserDefaults.defaults.localFilePath, lat, lon, (int)date.timeIntervalSince1970];
-    
-    _outputURL = [NSURL fileURLWithPath:outputPath isDirectory:NO];
 }
 
 - (void)locationManager:(CLLocationManager *)manager
@@ -311,10 +302,7 @@ didChangeAuthorizationStatus:(CLAuthorizationStatus)status
     if (status == kCLAuthorizationStatusAuthorizedWhenInUse ||
         status == kCLAuthorizationStatusAuthorizedAlways)
     {
-        [_locMgr requestLocation];
-        
-        if (!_session)
-            [self setupVideoRecorder];
+        _canGetLocation = YES;
     }
 }
 
