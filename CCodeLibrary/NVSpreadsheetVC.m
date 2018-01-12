@@ -1244,8 +1244,17 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                             _dir = [NSString stringWithFormat:@"%@/RHVideos/%@",
                                     UserDefaults.defaults.localFilePath, pid];
                             
-                            _files = [NSFileManager.defaultManager contentsOfDirectoryAtPath:_dir
-                                                                                       error:&error];
+                            NSArray<NSString *> *files = [NSFileManager.defaultManager contentsOfDirectoryAtPath:_dir
+                                                                                                           error:&error];
+                            NSMutableArray *movFiles = NSMutableArray.array;
+                            
+                            for (NSString *file in files)
+                            {
+                                if ([file.pathExtension isEqualToString:@"mov"])
+                                    [movFiles addObject:file];
+                            }
+                            
+                            _files = movFiles.copy;
                             
                             NSMutableArray *text = NSMutableArray.array;
                             [text addObject:@"Cancel"];

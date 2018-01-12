@@ -122,6 +122,18 @@ void static const *playerItemContext;
     
     if (CRAPI.sharedInstance.rhVideoURL && CRAPI.sharedInstance.rhVideoURL.path.length)
     {
+        NSError *error = nil;
+        
+        NSString *txtPath = [CRAPI.sharedInstance.rhVideoURL.path stringByReplacingOccurrencesOfString:@"mov"
+                                                                                            withString:@"txt"];
+        
+        NSString *locations = [NSString stringWithContentsOfFile:txtPath encoding:NSUTF8StringEncoding error:&error];
+        
+        if (error) {NSLog(@"Locations List ERROR: Couldn't open or doesn't exist.");}
+        
+        else if (locations && locations.length)
+            {NSLog(@"\nLocations List:\n%@", locations);}
+        
         AVAsset *asset = [AVAsset assetWithURL:CRAPI.sharedInstance.rhVideoURL];
         NSArray *assetKeys = @[@"playable", @"hasProtectedContent"];
         

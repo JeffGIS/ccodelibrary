@@ -17,6 +17,7 @@
 @property (nonatomic, copy) NSString *pid, *outputDir;
 @property (nonatomic) NSMutableString *locations;
 @property (nonatomic) NSTimer *locationTimer;
+@property int time;
 
 @end
 
@@ -275,20 +276,29 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
                                                 [NSBundle.mainBundle pathForResource:@"VideoRecordIcon"
                                                                               ofType:@"png"]]
                                       forState:UIControlStateNormal];
+        
+        if (_locations && _locations.length)
+        {
+            NSError *error = nil;
+            NSString *txtPath = [NSString stringWithFormat:@"%@/%d.txt", _outputDir, _time];
+            [_locations.copy writeToFile:txtPath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+            
+            if (error) {NSLog(@"Locations List write to file ERROR: %@", error.localizedDescription);}
+        }
+        
+        else {NSLog(@"ERROR: Empty Locations List");}
     }
     
     else
     {
         NSFileManager *fm = NSFileManager.defaultManager;
-        int time = (int)NSDate.date.timeIntervalSince1970;
-        
-        NSString *vidPath = [NSString stringWithFormat:@"%@/%d.mov", _outputDir, time];
-        NSString *txtPath = [NSString stringWithFormat:@"%@/%d.txt", _outputDir, time];
+        _time = (int)NSDate.date.timeIntervalSince1970;
+        NSString *vidPath = [NSString stringWithFormat:@"%@/%d.mov", _outputDir, _time];
         NSURL *vidURL = [NSURL fileURLWithPath:vidPath isDirectory:NO];
         
         if ([fm fileExistsAtPath:vidURL.path])
         {
-            NSError *error;
+            NSError *error = nil;
             
             if (![fm removeItemAtPath:vidURL.path error:&error])
                 {NSLog(@"NSFileManager ERROR: Couldn't remove previous output video file.");}
@@ -307,7 +317,7 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
         {
             [_locMgr requestLocation];
             
-            _locationTimer = [NSTimer scheduledTimerWithTimeInterval:10.0
+            _locationTimer = [NSTimer scheduledTimerWithTimeInterval:60.0
                                                               target:_locMgr
                                                             selector:@selector(requestLocation)
                                                             userInfo:nil
@@ -331,7 +341,9 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
      didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
     CLLocationCoordinate2D coordinate = locations.lastObject.coordinate;
-    NSLog(@"LAT:%f,LON:%f", coordinate.latitude, coordinate.longitude);
+    
+    [_locations appendString:[NSString stringWithFormat:@"%f\t%f\t%@\n",
+                              (float)coordinate.latitude, (float)coordinate.longitude, _controller.currentTime]];
 }
 
 - (void)locationManager:(CLLocationManager *)manager

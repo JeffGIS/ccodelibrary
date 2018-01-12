@@ -199,4 +199,9 @@
     _timeLabel.text = [NSString stringWithFormat:@"%i:%02i", _minutes, _seconds];
 }
 
+- (NSString *)currentTime
+{
+    return _timeLabel.text;
+}
+
 @end

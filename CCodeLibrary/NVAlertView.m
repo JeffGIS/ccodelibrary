@@ -188,6 +188,7 @@
         [_overlayView removeFromSuperview];
         [self removeFromSuperview];
         _tabBar.userInteractionEnabled = YES;
+        _tabBar.alpha = 1.0;
     }
 }
 

@@ -20,9 +20,9 @@
 - (void)showInView:(UIView *)view
           delegate:(id<RHControllerDelegate>)delegate;
 
-- (void)incrementTime;
 - (void)startTimer;
 - (void)stopTimer:(BOOL)reset;
 - (void)updateConnectButton;
+- (NSString *)currentTime;
 
 @end
