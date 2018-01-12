@@ -358,7 +358,10 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     switch (server.messageID)
     {
         case GMSMessageGetPoliceUpdate:
-            msg = [NSString stringWithFormat:@"$M(LastPoliceUpdate,(%@),%i)\r\n",UIDevice.currentDevice.name,_myLastUpdate];
+        {
+            NSString *name = [NSString stringWithUTF8String:UIDevice.currentDevice.name.UTF8String];
+            msg = [NSString stringWithFormat:@"$M(LastPoliceUpdate,(%@),%i,%@,%@)\r\n",name,_myLastUpdate,CRAPI.sharedInstance.appAndVersion,vendorUUIDString()];
+        }
             break;
             
     }
