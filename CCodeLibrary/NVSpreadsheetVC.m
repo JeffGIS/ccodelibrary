@@ -220,7 +220,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
     if (_delegate)
     {
         _titleTextField.text = _delegate.currentListName;
-        [_delegate openList];
+        [_delegate openList:self];
         
         switch (_delegate.getSpreadSheetType)
         {
@@ -843,6 +843,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     _lastTapSelectedRow = index;
     [_nvss reloadData];
     [self resetCopyButton];
+}
+- (void)autoSelectRow:(NSTimer*)timer
+{
+    NSInteger row = [_delegate getAutoSelectRow];
+    [_selectedRows removeAllObjects];
+    [self updateSelectedRowsAtIndex:row];
 }
 
 - (void)resetCopyButton

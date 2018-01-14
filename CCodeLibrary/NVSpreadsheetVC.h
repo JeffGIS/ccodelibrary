@@ -9,7 +9,7 @@
 @protocol NVSpreadsheetVCDelegate <NSObject>
 
 - (SpreadsheetTypes) getSpreadSheetType;
-- (BOOL)openList;
+- (BOOL)openList:(NVSpreadsheetVC*)vc;
 - (void)closeList;
 - (NSString *)currentListName;
 - (NSString *)headerTextForColumn:(NSUInteger)column;
@@ -65,7 +65,7 @@
 - (SpreadsheetAction)actionForTwoTouchLongPressOnColumnHeader;
 - (void)setCurrentFieldList:(NSString *)fieldList;
 - (void)setCurrentPropList:(NSString *)propList;
-
+- (NSInteger)getAutoSelectRow;
 @end
 
 @interface NVSpreadsheetVC : UIViewController
@@ -74,5 +74,7 @@
 @property BOOL flipped;
 
 - (NSArray *)retrieveSearchStrings;
+- (void)updateSelectedRowsAtIndex:(NSInteger)index;
+- (void)autoSelectRow:(NSTimer*)timer;
 
 @end

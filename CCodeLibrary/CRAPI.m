@@ -1510,7 +1510,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (NSArray <NSArray *> *)arrayOutput
 {
-    BOOL opened = [_spreadsheetDelegate openList];
+    BOOL opened = [_spreadsheetDelegate openList:nil];
     int rows = (int)(_spreadsheetDelegate.numRowsInSpreadsheet + 1);
     int columns = (int)(_spreadsheetDelegate.numColumnsInSpreadsheet + 1);
     NSMutableArray <NSArray *> *outerArray = NSMutableArray.array;
