@@ -1487,7 +1487,15 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 - (BOOL)spreadsheetViewSortOnRow:(NSInteger)row
 {
     if ([_delegate respondsToSelector:@selector(spreadsheetSortOnRow:)])
-        return [_delegate spreadsheetSortOnRow:row];
+    {
+        NSArray * selectedRowKeys = [_delegate getSelectedRowKeys:_selectedRows];
+        BOOL rtn = [_delegate spreadsheetSortOnRow:row];
+        if (rtn)
+        {
+            _selectedRows = [_delegate selectRowsUsingKeys:selectedRowKeys];
+        }
+        return rtn;
+    }
     
     else
     {
