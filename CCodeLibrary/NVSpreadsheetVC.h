@@ -55,6 +55,8 @@
                                    atIndex:(NSInteger)index;
 
 - (BOOL)spreadsheetSortOnRow:(NSInteger)row;
+- (NSArray *) getSelectedRowKeys:(NSArray*)selectedRows;
+- (NSMutableArray *) selectRowsUsingKeys:(NSArray*)selectedRowKeys;
 - (void)getTimeLine:(NVSpreadsheetVC *)parentController;
 
 - (NSString *)spreadsheetGetReportForRow:(NSInteger)row
