@@ -581,14 +581,22 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
             tr.textLabel.text = [_delegate headerTextForColumn:indexPath.nvSpreadsheetColumn];
             tr.textLabel.numberOfLines = 1;
             
-            for (NSNumber *row in _selectedRows)
+            if (indexPath.nvSpreadsheetColumn < (_delegate.numRowsInSpreadsheet - 3))
             {
-                if (indexPath.nvSpreadsheetColumn == row.integerValue)
+                tr.userInteractionEnabled = YES;
+                
+                for (NSNumber *row in _selectedRows)
                 {
-                    tr.contentView.backgroundColor = _selectedRowColor;
-                    break;
+                    if (indexPath.nvSpreadsheetColumn == row.integerValue)
+                    {
+                        tr.contentView.backgroundColor = _selectedRowColor;
+                        break;
+                    }
                 }
             }
+            
+            else
+                tr.userInteractionEnabled = NO;
         }
         
         tr.backgroundColor = UIColor.whiteColor;
@@ -608,14 +616,22 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
             lc.textLabel.text = [_delegate headerTextForColumn:indexPath.nvSpreadsheetRow];
             lc.textLabel.numberOfLines = 1;
             
-            for (NSNumber *row in _selectedRows)
+            if (indexPath.nvSpreadsheetRow < (_delegate.numRowsInSpreadsheet - 3))
             {
-                if (indexPath.nvSpreadsheetRow == row.integerValue)
+                lc.userInteractionEnabled = YES;
+                
+                for (NSNumber *row in _selectedRows)
                 {
-                    lc.contentView.backgroundColor = _selectedRowColor;
-                    break;
+                    if (indexPath.nvSpreadsheetColumn == row.integerValue)
+                    {
+                        lc.contentView.backgroundColor = _selectedRowColor;
+                        break;
+                    }
                 }
             }
+            
+            else
+                lc.userInteractionEnabled = NO;
         }
         
         else
@@ -854,14 +870,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             return;
         }
     }
-    if ((_flipped && (index < [self numberOfRowsInSpreadsheetView:nil]-4)) ||
-        (!_flipped && (index < [self numberOfColumnsInSpreadsheetView:nil]-4)))
-    {
-        [_selectedRows addObject:[NSNumber numberWithInteger:index]];
-        _lastTapSelectedRow = index;
-        [_nvss reloadData];
-        [self resetCopyButton];
-    }
+    
+    [_selectedRows addObject:[NSNumber numberWithInteger:index]];
+    _lastTapSelectedRow = index;
+    [_nvss reloadData];
+    [self resetCopyButton];
 }
 - (void)autoSelectRow:(NSTimer*)timer
 {
