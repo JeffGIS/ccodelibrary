@@ -581,7 +581,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
             tr.textLabel.text = [_delegate headerTextForColumn:indexPath.nvSpreadsheetColumn];
             tr.textLabel.numberOfLines = 1;
             
-            if (indexPath.nvSpreadsheetColumn < (_delegate.numRowsInSpreadsheet - 3))
+            if (indexPath.nvSpreadsheetColumn <= (_delegate.numSelectableRows))
             {
                 tr.userInteractionEnabled = YES;
                 
@@ -616,7 +616,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
             lc.textLabel.text = [_delegate headerTextForColumn:indexPath.nvSpreadsheetRow];
             lc.textLabel.numberOfLines = 1;
             
-            if (indexPath.nvSpreadsheetRow < (_delegate.numRowsInSpreadsheet - 3))
+            if (indexPath.nvSpreadsheetRow <= (_delegate.numSelectableRows))
             {
                 lc.userInteractionEnabled = YES;
                 

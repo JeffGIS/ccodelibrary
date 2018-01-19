@@ -20,6 +20,7 @@
 
 - (NSInteger)numRowsInSpreadsheet;
 - (NSInteger)numColumnsInSpreadsheet;
+- (NSInteger)numSelectableRows;
 - (NSArray *)spreadsheetDidGetLists;
 - (void)spreadsheetDidEditTitleText:(NSString *)titleText;
 - (void)spreadsheetDidSetCurrentList:(NSString *)file;
