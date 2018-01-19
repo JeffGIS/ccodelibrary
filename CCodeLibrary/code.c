@@ -486,7 +486,7 @@ Bool PICK_POINT_ON_LINE(DPOINT pickPoint, MNMXCORD pickBounds, LPDPOINT pPickedP
     Bool rtn = FALSE;
     double offDist, totDist=0;
     double az, pct;
-    long fromPt;
+    int fromPt;
     //MNMXCORD bounds;
     
     PickPointBase = pickPoint;
@@ -510,7 +510,7 @@ Bool PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUB
     //double Area = 0;
 	Bool	First=TRUE, rtn=FALSE;   
 	MNMXCORD	Rect;       
-	long	FromPtID=-1;
+	int	FromPtID=-1;
    	double	PickDist;   
 MNMXCORD WBounds;
 

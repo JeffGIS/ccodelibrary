@@ -7,7 +7,7 @@
 #include "gmlimits.h"
 
 #define	GlobalLock	GSSiGLOBALLOCK
-HGLOBAL GSSiGLOBALLOCK(HANDLE hglb);
+LPSTR GSSiGLOBALLOCK(HANDLE hglb);
 #define	GlobalUnlock	GSSiGLOBALUNLOCK
 Bool GSSiGLOBALUNLOCK(HANDLE hglb);
 #define GlobalSize GSSiGLOBALSIZE

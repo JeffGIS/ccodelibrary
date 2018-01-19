@@ -37,7 +37,7 @@ static BOOL _createDirectory = YES;
           method:(char *)method
 {
     NSLog(@"%@", [NSString stringWithFormat:@"SQLite Error %i in %s = %i:%s",
-                  sqlReturn, method, sqlite3_errcode(_database), sqlite3_errmsg(_database)]);
+                  sqlReturn, method, sqlite3_errcode(_database->db), sqlite3_errmsg(_database->db)]);
 }
 
 + (NSString *)getActualPlatFileName:(NSString *)platID

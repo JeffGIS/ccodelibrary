@@ -459,7 +459,7 @@
     BOOL opened = [self open];
     
     FILE *fid = fopen(file.UTF8String, "rb");
-    int totLen = (int)FileLength(fid);
+    int totLen = (int)FileLengthF(fid);
     int maxLineLen = (totLen + 2);
     LPSTR str = malloc(totLen + 4);
     [self startTransaction];

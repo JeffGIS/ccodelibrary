@@ -952,7 +952,7 @@ HWND	hWndStrmPipe = 0;
 HWND	hWndStrmPoint = 0;  
 HWND	hWndUserForm = 0;
 HWND	hWndAbortWaitMessage=0;
-HANDLE	hPDChunk=NULL;
+HANDLE	hPDChunk=0;
 Bool	OverWritePrompt=TRUE;
 DWORD	OtherFontOpts=0;
 //LPPRINTDLG	lpPDChunk;

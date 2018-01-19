@@ -112,8 +112,8 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
         _height *= hb / wb;
     else if (hb > 0)
         _width *= wb / hb;
-    _height += _height % 4;
-    _width += _width % 4;
+    _height += _height % 4 + 4;
+    _width += _width % 4 + 4;
     _height = max (1,_height);
     _width = max (1,_width);
     
@@ -201,8 +201,10 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
         pt.y = _bounds.ymx - Point->y;
     
     pt.y /= (_bounds.ymx - _bounds.ymn);
-    pt.x *= _width;
-    pt.y *= _height;
+    pt.x *= (_width-4);
+    pt.y *= (_height-4);
+    pt.x += 2;
+    pt.y += 2;
     return pt;
 }
 
@@ -229,6 +231,7 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
             return 2;
         if (bitmapValue)
             return 4;
+        return 0;
     }
     
     return 0;
@@ -253,9 +256,10 @@ dbounds getAreaBounds (int nPoints,LPDPOINT pPoints)
             return 2;
         if (bitmapValue)
             return 4;
+        return 0;
     }
     
-    return 0;
+     return 0;
 }
 
 @end

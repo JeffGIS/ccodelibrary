@@ -534,7 +534,7 @@ static char lastDBPath[PATH_MAX]={0};
         SQLOK(__FILE__,__LINE__,sqlite3_bind_text(statement, 30, facStruct.streetAzms, -1, SQLITE_STATIC),_database);
         
         if (sqlite3_step(statement) != SQLITE_DONE)
-            NSLog(@"Error inserting facility. '%s'", sqlite3_errmsg(_database));
+            NSLog(@"Error inserting facility. '%s'", sqlite3_errmsg(_database->db));
         
         nLoaded++;
         SQLOK(__FILE__,__LINE__,sqlite3_reset(statement), _database);
@@ -703,7 +703,7 @@ Exit:
           method:(char *)method
 {
     NSLog(@"%@", [NSString stringWithFormat:@"SQLite Error %i in %s = %i:%s",
-                  sqlReturn, method, sqlite3_errcode(_database), sqlite3_errmsg(_database)]);
+                  sqlReturn, method, sqlite3_errcode(_database->db), sqlite3_errmsg(_database->db)]);
 }
 
 - (void) loadTestData:(int)facID

@@ -382,11 +382,11 @@ void GSSiGlobUlFree(LPHANDLE pHandle)
 	free((LPVOID)mem);
     *pHandle = 0;
 }
-HGLOBAL GSSiGLOBALLOCK(HANDLE hglb)
+LPSTR GSSiGLOBALLOCK(HANDLE hglb)
 {
-	HGLOBAL pMem = hglb;
+	LPSTR pMem = (LPSTR)hglb;
 	pMem += sizeof(long);
-	return (HGLOBAL)pMem;
+	return (LPSTR)pMem;
 }
 Bool GSSiGLOBALUNLOCK(HANDLE hglb)
 {

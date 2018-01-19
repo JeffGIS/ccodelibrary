@@ -5975,10 +5975,10 @@ HANDLE	AllocateVar (LPSTR Name)
 {GSSiEnterProg (550);
 #endif
     {   VARPNT  VarPnt;
-        HANDLE	handle;
+        HANDLE	handle = FindVar(Name);
         HANDLE	hVarSpace;
         
-        if (handle = FindVar(Name))
+        if (handle)
         {
 #if ENABLETRACE
             GSSiExitProg (550);
@@ -7572,7 +7572,7 @@ Bool NeedRead (LPOPENSQLDATA SQLPtr)
         if (SQLPtr->NumGlobals < 0)
         {
             SQLPtr->NumGlobals = 0;
-            MaxVarTime = ULONG_MAX;
+            MaxVarTime = UINT_MAX;
         }
         for (i=0;i<SQLPtr->NumGlobals;i++,lpSQLField++)
         {
@@ -7588,7 +7588,7 @@ Bool NeedRead (LPOPENSQLDATA SQLPtr)
                         LPOPENSQLDATA SQLPtr2 = (LPOPENSQLDATA)GlobalLock(CurrentComboFile->hSQL[FileNo]);
                         
                         if ((!SQLPtr2->st && SQLPtr2->lastreadtime > VarPtr->changetime) || (SQLPtr->st !=-999 && NeedRead (SQLPtr2)))
-                            MaxVarTime = ULONG_MAX;
+                            MaxVarTime = UINT_MAX;
                         GlobalUnlock (CurrentComboFile->hSQL[FileNo]);
                     }
                 }
@@ -7653,7 +7653,7 @@ Bool ReadDBSequential (HANDLE hDB,short Index,LPSHORT First)
             else
             {
                 rtn = TRUE;
-                SQLPtr->lastreadtime = LONG_MAX;
+                SQLPtr->lastreadtime = INT_MAX;
             }
         }
     Exit:
