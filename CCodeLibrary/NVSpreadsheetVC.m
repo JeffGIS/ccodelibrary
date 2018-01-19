@@ -434,6 +434,22 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
         return (_delegate.numColumnsInSpreadsheet + 1);
 }
 
+- (UIColor*) cellBackgroundColor:(NSIndexPath*)indexPath
+{
+    if ([_delegate respondsToSelector:@selector(backgroundColorForCell:column:)])
+    {
+        NSInteger row = indexPath.nvSpreadsheetRow;
+        NSInteger col = indexPath.nvSpreadsheetColumn;
+        if (!_flipped)
+        {
+            row = indexPath.nvSpreadsheetColumn;
+            col = indexPath.nvSpreadsheetRow;
+        }
+        return [_delegate backgroundColorForCell:row column:col];
+    }
+    return UIColor.clearColor;
+}
+
 - (UICollectionViewCell *)spreadsheetView:(NVSpreadsheet *)spreadsheetView
                    cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -552,7 +568,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
         
         NVTopRowCell *tr = (NVTopRowCell *)cell;
         tr.idLabel.text = [NSString stringWithFormat:@"%li", (long)indexPath.nvSpreadsheetColumn];
-        tr.contentView.backgroundColor = UIColor.clearColor;
+        tr.contentView.backgroundColor = [self cellBackgroundColor:indexPath];
         
         if (_flipped)
         {
@@ -585,7 +601,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
         
         NVLeftColumnCell *lc = (NVLeftColumnCell *)cell;
         lc.idLabel.text = [NSString stringWithFormat:@"%li", (long)indexPath.nvSpreadsheetRow];
-        lc.contentView.backgroundColor = UIColor.clearColor;
+        lc.contentView.backgroundColor = [self cellBackgroundColor:indexPath];
         
         if (_flipped)
         {
@@ -631,7 +647,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
                                                           forIndexPath:indexPath];
         
         NVGridCell *gc = (NVGridCell *)cell;
-        gc.contentView.backgroundColor = UIColor.clearColor;
+        gc.contentView.backgroundColor = [self cellBackgroundColor:indexPath];
         
         if (_flipped)
         {
@@ -838,11 +854,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             return;
         }
     }
-    
-    [_selectedRows addObject:[NSNumber numberWithInteger:index]];
-    _lastTapSelectedRow = index;
-    [_nvss reloadData];
-    [self resetCopyButton];
+    if (index < [self numberOfRowsInSpreadsheetView:nil]-4)
+    {
+        [_selectedRows addObject:[NSNumber numberWithInteger:index]];
+        _lastTapSelectedRow = index;
+        [_nvss reloadData];
+        [self resetCopyButton];
+    }
 }
 - (void)autoSelectRow:(NSTimer*)timer
 {

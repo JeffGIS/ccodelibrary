@@ -66,6 +66,8 @@
 - (void)setCurrentFieldList:(NSString *)fieldList;
 - (void)setCurrentPropList:(NSString *)propList;
 - (NSInteger)getAutoSelectRow;
+- (UIColor*)backgroundColorForCell:(NSInteger)row
+                            column:(NSInteger)column;
 @end
 
 @interface NVSpreadsheetVC : UIViewController
