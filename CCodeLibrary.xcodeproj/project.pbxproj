@@ -136,6 +136,8 @@
 		69E9E3CA1E895BCF002157D9 /* NVContactGroupData.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E9E3C91E895BCF002157D9 /* NVContactGroupData.m */; };
 		69EB2C2A1C8755C100E1F21E /* UIDevice+Storage.m in Sources */ = {isa = PBXBuildFile; fileRef = 69EB2C291C8755C100E1F21E /* UIDevice+Storage.m */; };
 		69EB2C2B1C87579E00E1F21E /* UIDevice+Storage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69EB2C281C8755C100E1F21E /* UIDevice+Storage.h */; };
+		69EE923E20127C3900A610D6 /* RHViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69EE923D20127C3900A610D6 /* RHViewController.m */; };
+		69EE923F20127F0100A610D6 /* RHViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69EE923C20127C3900A610D6 /* RHViewController.h */; };
 		69F482321DB7314200E4BDB5 /* NVSpreadsheetVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F482311DB7314200E4BDB5 /* NVSpreadsheetVC.m */; };
 		69F482331DB7368E00E4BDB5 /* NVSpreadsheetVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F482301DB7314200E4BDB5 /* NVSpreadsheetVC.h */; };
 		69F482371DB7C75B00E4BDB5 /* NVSpreadsheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F482361DB7C75B00E4BDB5 /* NVSpreadsheet.m */; };
@@ -419,6 +421,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69EE923F20127F0100A610D6 /* RHViewController.h in CopyFiles */,
 				6996D34A1FFD43E20013139B /* RHWalkScore.h in CopyFiles */,
 				6996D3491FFD43DD0013139B /* RHSearch.h in CopyFiles */,
 				6996D3481FFD43D70013139B /* RHRecorder.h in CopyFiles */,
@@ -722,6 +725,8 @@
 		69E9E3C91E895BCF002157D9 /* NVContactGroupData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVContactGroupData.m; sourceTree = "<group>"; };
 		69EB2C281C8755C100E1F21E /* UIDevice+Storage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+Storage.h"; sourceTree = "<group>"; };
 		69EB2C291C8755C100E1F21E /* UIDevice+Storage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+Storage.m"; sourceTree = "<group>"; };
+		69EE923C20127C3900A610D6 /* RHViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RHViewController.h; sourceTree = "<group>"; };
+		69EE923D20127C3900A610D6 /* RHViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHViewController.m; sourceTree = "<group>"; };
 		69F482301DB7314200E4BDB5 /* NVSpreadsheetVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSpreadsheetVC.h; sourceTree = "<group>"; };
 		69F482311DB7314200E4BDB5 /* NVSpreadsheetVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVSpreadsheetVC.m; sourceTree = "<group>"; };
 		69F482351DB7C75B00E4BDB5 /* NVSpreadsheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVSpreadsheet.h; sourceTree = "<group>"; };
@@ -1064,6 +1069,8 @@
 				69FD71241FE1BE8300EAFDEF /* RHRecorder.m */,
 				6910F6D81FE482230006375C /* RHSearch.h */,
 				6910F6D91FE482230006375C /* RHSearch.m */,
+				69EE923C20127C3900A610D6 /* RHViewController.h */,
+				69EE923D20127C3900A610D6 /* RHViewController.m */,
 				695C062C1FF2B1300081712C /* RHWalkScore.h */,
 				695C062D1FF2B1300081712C /* RHWalkScore.m */,
 			);
@@ -1842,6 +1849,7 @@
 				BBC361C71F429C0200B51DF3 /* fundefs.c in Sources */,
 				EBC01D311BED1C8C0004C751 /* zatan2.c in Sources */,
 				EBC01D121BED1C8C0004C751 /* dms.c in Sources */,
+				69EE923E20127C3900A610D6 /* RHViewController.m in Sources */,
 				6956B9981CB230210070416B /* NVPopoverTableView.m in Sources */,
 				EBAEED0119B0E7BA0084A579 /* GeoMasterServer.m in Sources */,
 				69DE24281C76311D00680B00 /* NVTextVC.m in Sources */,

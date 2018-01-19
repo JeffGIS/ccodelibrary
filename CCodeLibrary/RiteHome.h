@@ -7,6 +7,7 @@
 #import "RHRecorder.h"
 #import "RHSearch.h"
 #import "RHWalkScore.h"
+#import "RHViewController.h"
 
 @interface RiteHome : NSObject
 

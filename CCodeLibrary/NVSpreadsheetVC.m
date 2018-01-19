@@ -30,6 +30,8 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
 @property int zoomCancel;
 @property (nonatomic, copy) NSString *dir;
 @property (nonatomic, copy) NSArray<NSString *> *files;
+@property (nonatomic) RHViewController *rhvc;
+@property (nonatomic) UIViewController *nvmsvc;
 
 @end
 
@@ -38,6 +40,15 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _rhvc = RHViewController.new;
+    _rhvc.restorationIdentifier = @"RHViewController";
+    _rhvc.tabBarItem.title = @"Video";
+    
+    _rhvc.tabBarItem.image = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"VideoTabItem"
+                                                                                             ofType:@"png"]];
+    
+    _nvmsvc = [NVTabBarEdit viewControllerWithID:@"NVMetroSettingsVC" inTabBarController:self.tabBarController];
     
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(pasteboardChanged:)
@@ -867,6 +878,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             [_selectedRows removeObject:row];
             [_nvss reloadData];
             [self resetCopyButton];
+            [self updateTabBar];
             return;
         }
     }
@@ -875,7 +887,26 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     _lastTapSelectedRow = index;
     [_nvss reloadData];
     [self resetCopyButton];
+    [self updateTabBar];
 }
+
+- (void)updateTabBar
+{
+    if (_selectedRows.count == 1)
+    {
+        [NVTabBarEdit tabBarController:self.tabBarController
+           replaceViewControllerWithID:@"NVMetroSettingsVC"
+                    withViewController:_rhvc];
+    }
+    
+    else
+    {
+        [NVTabBarEdit tabBarController:self.tabBarController
+           replaceViewControllerWithID:@"RHViewController"
+                    withViewController:_nvmsvc];
+    }
+}
+
 - (void)autoSelectRow:(NSTimer*)timer
 {
     NSInteger row = [_delegate getAutoSelectRow];
