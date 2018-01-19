@@ -887,11 +887,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     _lastTapSelectedRow = index;
     [_nvss reloadData];
     [self resetCopyButton];
+    
     [self updateTabBar];
 }
 
 - (void)updateTabBar
 {
+    if (CRAPI.sharedInstance.currentApp != HCConfigMetroProp)
+        return;
+    
     if (_selectedRows.count == 1)
     {
         [NVTabBarEdit tabBarController:self.tabBarController
