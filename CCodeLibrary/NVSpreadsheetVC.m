@@ -622,7 +622,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
                 
                 for (NSNumber *row in _selectedRows)
                 {
-                    if (indexPath.nvSpreadsheetColumn == row.integerValue)
+                    if (indexPath.nvSpreadsheetRow == row.integerValue)
                     {
                         lc.contentView.backgroundColor = _selectedRowColor;
                         break;
