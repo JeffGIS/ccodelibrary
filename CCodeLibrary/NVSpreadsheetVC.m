@@ -419,19 +419,19 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
 - (NSInteger)numberOfRowsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
     if (_flipped)
-        return (_delegate.numColumnsInSpreadsheet + 1);
+        return (_delegate.numRowsInSpreadsheet + 1);
     
     else
-        return (_delegate.numRowsInSpreadsheet + 1);
+        return (_delegate.numColumnsInSpreadsheet + 1);
 }
 
 - (NSInteger)numberOfColumnsInSpreadsheetView:(NVSpreadsheet *)spreadsheetView
 {
     if (_flipped)
-        return (_delegate.numRowsInSpreadsheet + 1);
+        return (_delegate.numColumnsInSpreadsheet + 1);
     
     else
-        return (_delegate.numColumnsInSpreadsheet + 1);
+        return (_delegate.numRowsInSpreadsheet + 1);
 }
 
 - (UIColor*) cellBackgroundColor:(NSIndexPath*)indexPath
@@ -854,7 +854,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             return;
         }
     }
-    if (index < [self numberOfRowsInSpreadsheetView:nil]-4)
+    if ((_flipped && (index < [self numberOfRowsInSpreadsheetView:nil]-4)) ||
+        (!_flipped && (index < [self numberOfColumnsInSpreadsheetView:nil]-4)))
     {
         [_selectedRows addObject:[NSNumber numberWithInteger:index]];
         _lastTapSelectedRow = index;
