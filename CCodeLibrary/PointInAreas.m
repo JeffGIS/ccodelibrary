@@ -862,11 +862,11 @@ displayCharacteristics:(DisplayCharacteristics *)dc
 
 - (AreaData *)getAreaDataFromID:(NSString *)areaID
 {
-    NSString * mes = [NSString stringWithFormat:@"Area Info count:%lu search for %@",(unsigned long)_areaInfo.count,areaID];
+    //NSString * mes = [NSString stringWithFormat:@"Area Info count:%lu search for %@",(unsigned long)_areaInfo.count,areaID];
     //debugMessage (mes.UTF8String);
     for (AreaData *ad in _areaInfo)
     {
-        mes = [NSString stringWithFormat:@"%@ count:%f %f %f",ad.areaID,ad.count,ad.count1,ad.count2];
+        //mes = [NSString stringWithFormat:@"%@ count:%f %f %f",ad.areaID,ad.count,ad.count1,ad.count2];
         //debugMessage (mes.UTF8String);
         if ([ad.areaID isEqualToString:areaID])
             return ad;
