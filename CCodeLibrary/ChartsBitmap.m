@@ -205,6 +205,9 @@
             case ChartsBitmapDataFormatHourOfDay:
                 _numVLines = 13;
                 break;
+            case ChartsBitmapDataFormatMonths:
+                _numVLines = 12;
+                break;
             case ChartsBitmapDataFormatYears:
                 _numVLines = (xRange + 1);
                 break;
@@ -381,8 +384,10 @@
         CGPathRef path = NULL;
         CTFrameRef frame = NULL;
         
-        NSArray *daysArray = @[@"Sun", @"Mon", @"Tues", @"Wed", @"Thurs", @"Fri", @"Sat"];
+        NSArray *monthsArray = @[@"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep", @"Oct", @"Nov", @"Dec"];
         
+        NSArray *daysArray = @[@"Sun", @"Mon", @"Tues", @"Wed", @"Thurs", @"Fri", @"Sat"];
+
         NSArray *hoursArray = @[@"12am", @"2am", @"4am", @"6am", @"8am", @"10am",
                                 @"12pm", @"2pm", @"4pm", @"6pm", @"8pm", @"10pm", @"12am"];
         
@@ -392,6 +397,10 @@
             {
                 case ChartsBitmapDataFormatDayOfWeek:
                     text = [[NSAttributedString alloc] initWithString:daysArray[i]
+                                                           attributes:textAttributes];
+                    break;
+                case ChartsBitmapDataFormatMonths:
+                    text = [[NSAttributedString alloc] initWithString:monthsArray[i]
                                                            attributes:textAttributes];
                     break;
                 case ChartsBitmapDataFormatHourOfDay:
