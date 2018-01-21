@@ -382,7 +382,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
         
         [NVTabBarEdit tabBarController:self.tabBarController removeViewControllerWithID:@"ConfigVC"];
         
-        if ([NSBundle.mainBundle.bundleIdentifier isEqualToString:@"com.gssi.newvisionmetro"])
+        if ([CRAPI.sharedInstance.bundleID isEqualToString:@"com.gssi.newvisionmetro"])
         {
             [NVTabBarEdit tabBarController:self.tabBarController
                replaceViewControllerWithID:@"NVMetroSettingsVC"

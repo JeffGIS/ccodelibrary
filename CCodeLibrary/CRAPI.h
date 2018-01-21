@@ -62,6 +62,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @interface CRAPI : NSObject
 
 @property (nonatomic) int currentModule, currentSubModule, currentApp;
+@property (nonatomic, copy, nullable) NSString *bundleID;
 @property (nonatomic, copy, nullable) NSString *documentsDirectory;
 @property (nonatomic, copy, nullable) NSString *outputDirectory;
 @property (nonatomic, copy, nullable) NSString *imageDirectory;

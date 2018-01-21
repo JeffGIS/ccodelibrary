@@ -39,6 +39,12 @@
     
     if (self)
     {
+        _bundleID = NSBundle.mainBundle.bundleIdentifier;
+#ifdef DEBUG
+
+        _bundleID = @"com.gssi.newvisioncrime";
+        
+#endif
         _vectorQueue = dispatch_queue_create("vectorQueue", NULL);
 
         _newDataset = CURBRAMPS;

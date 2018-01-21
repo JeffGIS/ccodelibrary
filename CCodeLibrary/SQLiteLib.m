@@ -72,7 +72,7 @@ int SQLOK(char * fromFile, int fromLine,int sqlReturn, LPsqlite3nv pdatabase)
     return sqlReturn;
 }
 
-BOOL doesSQLiteFieldExist(char* tableName, char* fieldName,LPsqlite3nv pdatabase)
+bool doesSQLiteFieldExist(char* tableName, char* fieldName,LPsqlite3nv pdatabase)
 {
     BOOL doesExist = FALSE;
     
@@ -135,7 +135,7 @@ int SQLiteExec(
     return sqlite3_exec(pdb->db, sql, callback, arg, errmsg);
 }
 
-BOOL doesSQLiteTableExist(char* tableNameIN, LPsqlite3nv pdatabase)
+bool doesSQLiteTableExist(char* tableNameIN, LPsqlite3nv pdatabase)
 {
     BOOL doesExist = FALSE;
     char tableName[256];
