@@ -5,4 +5,6 @@
 
 @interface RHViewController : UIViewController
 
+@property (nonatomic, copy) NSString *pid;
+
 @end

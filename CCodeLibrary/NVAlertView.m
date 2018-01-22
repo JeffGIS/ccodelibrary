@@ -221,4 +221,10 @@
     _buttonBorderColor = buttonBorderColor;
 }
 
+- (void)showTabBar
+{
+    _tabBar.userInteractionEnabled = YES;
+    _tabBar.alpha = 1.0;
+}
+
 @end
