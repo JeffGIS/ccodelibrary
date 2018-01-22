@@ -1028,26 +1028,30 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)delete:(UIButton *)button
 {
-    NSString *title = @"", *identifier = @"";
+    NVAlertView *alert = nil;
     
     if (_selectedRows.count)
     {
-        title = @"Are you sure you want to delete selected rows?";
-        identifier = @"RowDeletePrompt";
+        alert = [NVAlertView showLargeAlertViewinView:self.view
+                                             delegate:self
+                                                title:@"Which action do you want to take?"
+                                      buttonTextArray:@[@"Clear Row Selection", @"Delete Selected Rows", @"Cancel"]
+                                     destructiveIndex:3];
+        
+        alert.identifier = @"SpeadsheetActionDecision";
     }
     
     else
     {
-        title = [NSString stringWithFormat:@"Are you sure you want to delete %@?", _titleTextField.text];
-        identifier = @"SpreadsheetDeletePrompt";
+        alert = [NVAlertView showLargeAlertViewinView:self.view
+                                             delegate:self
+                                                title:[NSString stringWithFormat:@"Are you sure you want to delete %@?",
+                                                       _titleTextField.text]
+                                      buttonTextArray:@[@"YES", @"NO"]
+                                     destructiveIndex:1];
+        
+        alert.identifier = @"SpreadsheetDeletePrompt";
     }
-    
-    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                      delegate:self
-                                                         title:title
-                                               buttonTextArray:@[@"YES", @"NO"]
-                                              destructiveIndex:1];
-    alert.identifier = identifier;
 }
 
 - (void)toggleMapIt:(UIButton *)button
@@ -1226,6 +1230,28 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             [_delegate spreadsheetDidDeleteCurrentList];
             _titleTextField.text = _delegate.currentListName;
             [_nvss reloadData];
+        }
+    }
+    
+    else if ([alertView.identifier isEqualToString:@"SpeadsheetActionDecision"])
+    {
+        switch (buttonIndex)
+        {
+            case 0://clear row selection
+                [_selectedRows removeAllObjects];
+                [_nvss reloadData];
+                break;
+            case 1:{//delete selected rows
+                NVAlertView *alert =
+                [NVAlertView showLargeAlertViewinView:self.view
+                                             delegate:self
+                                                title:@"Are you sure you want to delete selected rows?"
+                                      buttonTextArray:@[@"YES", @"NO"]
+                                     destructiveIndex:1];
+                
+                alert.identifier = @"RowDeletePrompt";
+                break;}
+            default:break;
         }
     }
     
