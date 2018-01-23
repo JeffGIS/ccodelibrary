@@ -7,8 +7,9 @@
 #import "RHEditor.h"
 #import "UserDefaults.h"
 #import "CRAPI.h"
+@import MobileCoreServices;
 
-@interface RHViewController () <NVAlertViewDelegate>
+@interface RHViewController () <NVAlertViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
 @property (nonatomic, copy) NSString *dir;
 @property (nonatomic, copy) NSArray<NSString *> *files;
@@ -102,9 +103,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 _alert.identifier = @"RHEditorSelect";
                 [_alert showTabBar];
                 break;}
-            case 3://import
-                //implement import from photos here
-                break;
+            case 3:{//import
+                UIImagePickerController *picker = UIImagePickerController.new;
+                picker.delegate = self;
+                picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+                picker.mediaTypes = [[NSArray alloc] initWithObjects:(NSString *)kUTTypeMovie, nil];
+                picker.modalPresentationStyle = UIModalPresentationPopover;
+                UIPopoverPresentationController *controller = picker.popoverPresentationController;
+                controller.sourceView = self.view;
+                [self presentViewController:picker animated:YES completion:nil];
+                break;}
             default:break;
         }
     }
@@ -123,6 +131,20 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         else
             [self showTopLevelAlert];
     }
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
+{
+    [picker dismissViewControllerAnimated:NO completion:nil];
+    CRAPI.sharedInstance.rhVideoURL = info[UIImagePickerControllerMediaURL];
+    RHEditor *editor = RHEditor.new;
+    [self presentViewController:editor animated:YES completion:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
