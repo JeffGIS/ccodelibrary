@@ -28,8 +28,6 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
 @property (nonatomic) UIColor *selectedRowColor;
 @property NSInteger selectedRow, selectedColumn, lastTapSelectedRow;
 @property int zoomCancel;
-@property (nonatomic, copy) NSString *dir;
-@property (nonatomic, copy) NSArray<NSString *> *files;
 @property (nonatomic) RHViewController *rhvc;
 @property (nonatomic) UIViewController *nvmsvc;
 
@@ -779,8 +777,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             case SST_PropertyList:
                 if (_selectedRow == 1)
                 {
-                    optionsArray = @[@"Zoom to This Property", @"Zoom to All Properties in List", @"Show Areas",
-                                     @"Record RiteHome Video", @"Create RiteHome Clips", @"View RiteHome Clips", @"Cancel"];
+                    optionsArray = @[@"Zoom to This Property", @"Zoom to All Properties in List",
+                                     @"Show Areas", @"Cancel"];
                     
                     _zoomCancel = (int)(optionsArray.count - 1);
                     alertID = @"ZOOM";
@@ -898,6 +896,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     if (_selectedRows.count == 1)
     {
+        NSUInteger column = _selectedRows.firstObject.unsignedIntegerValue;
+        _rhvc.pid = [_delegate textForColumn:column row:1];
+        
         [NVTabBarEdit tabBarController:self.tabBarController
            replaceViewControllerWithID:@"NVMetroSettingsVC"
                     withViewController:_rhvc];
@@ -1324,8 +1325,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 case SST_PropertyList:
                 {
                     int option = (int)_selectedColumn;
-                    NSString *pid = [_delegate textForColumn:_selectedColumn row:_selectedRow];
-                    NSError *error = nil;
                     
                     switch (buttonIndex)
                     {
@@ -1335,41 +1334,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                         case 2:
                             _selectedRow = -1;
                             break;
-                        case 3:{//RHRecorder
-                            RHRecorder *recorder = [RHRecorder recorderWithPID:pid];
-                            [self presentViewController:recorder animated:YES completion:nil];
-                            return;}
-                        case 4:{//RHEditor
-                            _dir = [NSString stringWithFormat:@"%@/RHVideos/%@",
-                                    UserDefaults.defaults.localFilePath, pid];
-                            
-                            NSArray<NSString *> *files = [NSFileManager.defaultManager contentsOfDirectoryAtPath:_dir
-                                                                                                           error:&error];
-                            NSMutableArray *movFiles = NSMutableArray.array;
-                            
-                            for (NSString *file in files)
-                            {
-                                if ([file.pathExtension isEqualToString:@"mov"])
-                                    [movFiles addObject:file];
-                            }
-                            
-                            _files = movFiles.copy;
-                            
-                            NSMutableArray *text = NSMutableArray.array;
-                            [text addObject:@"Cancel"];
-                            [text addObjectsFromArray:_files];
-                            
-                            NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                                              delegate:self
-                                                                                 title:@"Select RiteHome Video File" buttonTextArray:text.copy
-                                                                      destructiveIndex:1];
-                            alert.identifier = @"RHEditorSelect";
-                            return;}
-                        case 5:{//RHPlayer
-                            //populate list of clips from database here
-                            NVAlertView *alert = nil;
-                            alert.identifier = @"RHPlayerSelect";
-                            return;}
+                        default:break;
                     }
                     
                     [_delegate spreadsheetDidZoomForRow:_selectedRow
@@ -1380,27 +1345,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     break;
                 default:break;
             }
-        }
-    }
-    
-    else if ([alertView.identifier isEqualToString:@"RHEditorSelect"])
-    {
-        if (buttonIndex)
-        {
-            NSString *file =_files[buttonIndex - 1];
-            NSString *path = [NSString stringWithFormat:@"%@/%@", _dir, file];
-            CRAPI.sharedInstance.rhVideoURL = [NSURL fileURLWithPath:path isDirectory:NO];
-            RHEditor *editor = RHEditor.new;
-            [self presentViewController:editor animated:YES completion:nil];
-        }
-    }
-    
-    else if ([alertView.identifier isEqualToString:@"RHPlayerSelect"])
-    {
-        if (buttonIndex)
-        {
-            //implement RHPlayer here
-            //add startTime & stopTime parameters
         }
     }
     
