@@ -15,22 +15,15 @@ typedef NS_ENUM(NSInteger, RHClipQuality)
 @property int clipID; //set to 0 for new clip, non zero to edit existing clip
 @property double startTime, endTime;
 @property double cost;
-@property int timestamp;
+@property int timestamp, propNum;
 @property RHClipQuality quality;
-@property (nonatomic, copy) NSString *title, *notes, *pid, *videoFileName;
-
-@end
-
-@class RHEditor;
-
-@protocol RHEditorDelegate <NSObject>
-
-- (NSString *)pidForCoord:(CLLocationCoordinate2D *)coord;
+@property (nonatomic, copy) NSString *title, *notes, *videoFileName;
 
 @end
 
 @interface RHEditor : UIViewController
 
-@property (nonatomic, weak) id<RHEditorDelegate> delegate;
++ (instancetype)editorWithPropNum:(int)propNum
+                         delegate:(id)delegate;
 
 @end

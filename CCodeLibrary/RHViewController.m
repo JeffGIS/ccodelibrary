@@ -8,9 +8,11 @@
 #import "UserDefaults.h"
 #import "CRAPI.h"
 @import MobileCoreServices;
+#import "NVSpreadsheetVC.h"
 
 @interface RHViewController () <NVAlertViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
+@property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
 @property (nonatomic, copy) NSString *dir;
 @property (nonatomic, copy) NSArray<NSString *> *files;
 @property (nonatomic) NVAlertView *alert;
@@ -19,14 +21,19 @@
 
 @implementation RHViewController
 
++ (instancetype)controllerWithDelegate:(id)delegate
+{
+    RHViewController *rhvc = RHViewController.new;
+    rhvc.delegate = delegate;
+    return rhvc;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
     NSError *error = nil;
-    
-    _dir = [NSString stringWithFormat:@"%@/RHVideos/%@",
-            UserDefaults.defaults.localFilePath, _pid];
+    _dir = [_delegate vidDirForPropNum:_propNum];
     
     NSArray *files = [NSFileManager.defaultManager contentsOfDirectoryAtPath:_dir
                                                                        error:&error];
@@ -52,7 +59,7 @@
     
     [options addObject:@"Import Video from Photos|3"];
     
-    NSString *title = [NSString stringWithFormat:@"Video Options for\n%@", _pid];
+    NSString *title = [NSString stringWithFormat:@"Video Options for\n%d", _propNum];
     
     _alert = [NVAlertView showLargeAlertViewinView:self.view
                                           delegate:self
@@ -86,7 +93,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         switch (buttonIndex)
         {
             case 1:{//new
-                RHRecorder *recorder = [RHRecorder recorderWithPID:_pid];
+                RHRecorder *recorder = [RHRecorder recorderWithPropNum:_propNum delegate:_delegate];
                 [self presentViewController:recorder animated:YES completion:nil];
                 break;}
             case 2:{//edit
@@ -124,7 +131,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             NSString *file =_files[buttonIndex - 1];
             NSString *path = [NSString stringWithFormat:@"%@/%@", _dir, file];
             CRAPI.sharedInstance.rhVideoURL = [NSURL fileURLWithPath:path isDirectory:NO];
-            RHEditor *editor = RHEditor.new;
+            RHEditor *editor = [RHEditor editorWithPropNum:_propNum delegate:_delegate];
             [self presentViewController:editor animated:YES completion:nil];
         }
         
@@ -138,7 +145,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     [picker dismissViewControllerAnimated:NO completion:nil];
     CRAPI.sharedInstance.rhVideoURL = info[UIImagePickerControllerMediaURL];
-    RHEditor *editor = RHEditor.new;
+    RHEditor *editor = [RHEditor editorWithPropNum:_propNum delegate:_delegate];
     [self presentViewController:editor animated:YES completion:nil];
 }
 

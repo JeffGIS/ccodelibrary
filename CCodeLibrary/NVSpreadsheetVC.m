@@ -12,7 +12,6 @@
 #import "NVTextVC.h"
 @import MessageUI;
 #import "PDFCreator.h"
-#import "RiteHome.h"
 
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,
 NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UITextFieldDelegate>
@@ -39,7 +38,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
 {
     [super viewDidLoad];
     
-    _rhvc = RHViewController.new;
+    _rhvc = [RHViewController controllerWithDelegate:_delegate];
     _rhvc.restorationIdentifier = @"RHViewController";
     _rhvc.tabBarItem.title = @"Video";
     
@@ -900,18 +899,36 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     if (_selectedRows.count == 1)
     {
         NSUInteger column = _selectedRows.firstObject.unsignedIntegerValue;
-        _rhvc.pid = [_delegate textForColumn:column row:1];
+        _rhvc.propNum = (int)[_delegate getPropNumForColumn:column];
         
-        [NVTabBarEdit tabBarController:self.tabBarController
-           replaceViewControllerWithID:@"NVMetroSettingsVC"
-                    withViewController:_rhvc];
+        if ([CRAPI.sharedInstance.bundleID isEqualToString:@"com.gssi.newvisionmetro"])
+        {
+            [NVTabBarEdit tabBarController:self.tabBarController
+                         addViewController:_rhvc];
+        }
+        
+        else
+        {
+            [NVTabBarEdit tabBarController:self.tabBarController
+               replaceViewControllerWithID:@"NVMetroSettingsVC"
+                        withViewController:_rhvc];
+        }
     }
     
     else
     {
-        [NVTabBarEdit tabBarController:self.tabBarController
-           replaceViewControllerWithID:@"RHViewController"
-                    withViewController:_nvmsvc];
+        if ([CRAPI.sharedInstance.bundleID isEqualToString:@"com.gssi.newvisionmetro"])
+        {
+            [NVTabBarEdit tabBarController:self.tabBarController
+                removeViewControllerWithID:@"RHViewController"];
+        }
+        
+        else
+        {
+            [NVTabBarEdit tabBarController:self.tabBarController
+               replaceViewControllerWithID:@"RHViewController"
+                        withViewController:_nvmsvc];
+        }
     }
 }
 

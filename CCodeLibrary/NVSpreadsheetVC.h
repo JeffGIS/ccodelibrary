@@ -3,6 +3,7 @@
 
 @import UIKit;
 #import "GSSiEnums.h"
+#import "RiteHome.h"
 
 @class NVSpreadsheetVC;
 
@@ -46,6 +47,9 @@
                                column:(NSInteger)column;
 
 @optional
+- (BOOL)addVideoClip:(RHClip *)clip;
+- (NSInteger)getPropNumForColumn:(NSInteger)column;
+- (NSString *)vidDirForPropNum:(int)propNum;
 - (BOOL)spreadsheetCanEditRowHeaderTextAtIndex:(NSInteger)index;
 - (NSString *)spreadsheetRowHeaderTextPrefixAtIndex:(NSInteger)index;
 - (BOOL)spreadsheetCanEditColumnHeaderTextAtIndex:(NSInteger)index;
