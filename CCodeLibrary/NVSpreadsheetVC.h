@@ -42,6 +42,8 @@
 
 - (void)copyRows:(NSArray *)arrayOfRows
           toList:(NSString *)listName;
+- (NSMutableArray*) getOptionsForCell:(NSInteger)row
+                               column:(NSInteger)column;
 
 @optional
 - (BOOL)spreadsheetCanEditRowHeaderTextAtIndex:(NSInteger)index;

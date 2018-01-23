@@ -42,7 +42,7 @@
         _bundleID = NSBundle.mainBundle.bundleIdentifier;
         
 #ifdef DEBUG
-        //_bundleID = @"com.gssi.newvisioncrime";
+        _bundleID = @"com.gssi.newvisioncrime";
         _bundleID = @"com.gssi.newvisionmetro";
 #endif
         

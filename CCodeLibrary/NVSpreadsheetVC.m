@@ -766,26 +766,29 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             _selectedColumn = column;
         }
         
-        NSArray *optionsArray = NSArray.array;
+        NSMutableArray *optionsArray = NSMutableArray.new;
         NSString *alertID = @"MapIt";
         
         switch (_delegate.getSpreadSheetType)
         {
             case SST_CrimeList:
-                optionsArray = @[@"Display Report"];
+                optionsArray = [NSMutableArray arrayWithArray:@[@"Display Report"]];
                 break;
             case SST_PropertyList:
                 if (_selectedRow == 1)
                 {
-                    optionsArray = @[@"Zoom to This Property", @"Zoom to All Properties in List",
-                                     @"Show Areas", @"Cancel"];
+                    optionsArray = [NSMutableArray arrayWithArray:@[@"Zoom to This Property", @"Zoom to All Properties in List",
+                                     @"Cancel"]];
                     
                     _zoomCancel = (int)(optionsArray.count - 1);
                     alertID = @"ZOOM";
                 }
                 
                 else
-                    optionsArray = @[@"Map It", @"Cancel"];
+                {
+                    optionsArray = [_delegate getOptionsForCell:row
+                                                         column:column];
+                }
                 break;
             default:break;
         }
@@ -1282,9 +1285,19 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             switch (_delegate.getSpreadSheetType)
             {
                 case SST_PropertyList:
-                    [_delegate spreadsheetDidMapItForRow:_selectedRow
-                                                  column:_selectedColumn
-                                        tabBarController:self.tabBarController];
+                {
+                    NSString * prompt = alertView.buttonTextArray[0];
+                    if ([prompt isEqualToString:@"Show Pros And Cons"])
+                    {
+                        //Bill:Implement video display list here
+                    }
+                    else
+                    {
+                        [_delegate spreadsheetDidMapItForRow:_selectedRow
+                                                      column:_selectedColumn
+                                            tabBarController:self.tabBarController];
+                    }
+                }
                     break;
                 case SST_CrimeList:{
                     NSString *reportText = [_delegate spreadsheetGetReportForRow:_selectedRow
