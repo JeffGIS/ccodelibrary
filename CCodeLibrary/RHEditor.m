@@ -6,6 +6,7 @@
 #import "CRAPI.h"
 #import "NVTextAlert.h"
 #import "NVTextViewAlert.h"
+#import "NVSpreadsheetVC.h"
 
 void static const *playerItemContext;
 
@@ -30,14 +31,15 @@ void static const *playerItemContext;
         default:break;
     }
     
-    return [NSString stringWithFormat:@"PID:%@, TIMESTAMP:%d, TITLE:%@, START:%f, END:%f, QUALITY:%@, NOTES:%@ ",
-            _pid, _timestamp, _title, _startTime, _endTime, qualityString, notesString];
+    return [NSString stringWithFormat:@"PROPNUM:%d, TIMESTAMP:%d, TITLE:%@, START:%f, END:%f, QUALITY:%@, NOTES:%@ ",
+            _propNum, _timestamp, _title, _startTime, _endTime, qualityString, notesString];
 }
 
 @end
 
 @interface RHEditor () <NVTextAlertDelegate,NVAlertViewDelegate,NVTextViewAlertDelegate>
 
+@property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *item;
 @property BOOL isPlaying, isAtEnd;
@@ -47,10 +49,20 @@ void static const *playerItemContext;
 @property (nonatomic) UISlider *progressSlider;
 @property (nonatomic) UIView *markupView, *beginning, *ending, *maskView;
 @property (nonatomic) RHClip *currentClip;
+@property int propNum;
 
 @end
 
 @implementation RHEditor
+
++ (instancetype)editorWithPropNum:(int)propNum
+                         delegate:(id)delegate
+{
+    RHEditor *editor = RHEditor.new;
+    editor.propNum = propNum;
+    editor.delegate = delegate;
+    return editor;
+}
 
 - (id)init
 {
@@ -420,7 +432,8 @@ void static const *playerItemContext;
         _currentClip.notes = @"";
         _currentClip.title = @"";
         _currentClip.startTime = time;
-        _currentClip.pid = CRAPI.sharedInstance.rhVideoURL.path.stringByDeletingLastPathComponent.lastPathComponent;
+        _currentClip.propNum = _propNum;
+        _currentClip.videoFileName = CRAPI.sharedInstance.rhVideoURL.lastPathComponent;
         _currentClip.timestamp = CRAPI.sharedInstance.rhVideoURL.lastPathComponent.stringByDeletingPathExtension.intValue;
         
         [_placeMarkers setTitle:@"  Mark Ending  " forState:UIControlStateNormal];
@@ -536,7 +549,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)finishCurrentClip
 {
-    NSLog(@"%@", _currentClip);
+    if (_delegate && [_delegate respondsToSelector:@selector(addVideoClip:)])
+        [_delegate addVideoClip:_currentClip];
     
     [_beginning removeFromSuperview];
     [_ending removeFromSuperview];

@@ -5,6 +5,7 @@
 
 @interface RHRecorder : UIViewController
 
-+ (instancetype)recorderWithPID:(NSString *)pid;
++ (instancetype)recorderWithPropNum:(int)propNum
+                           delegate:(id)delegate;
 
 @end

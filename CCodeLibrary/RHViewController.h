@@ -5,6 +5,8 @@
 
 @interface RHViewController : UIViewController
 
-@property (nonatomic, copy) NSString *pid;
+@property int propNum;
+
++ (instancetype)controllerWithDelegate:(id)delegate;
 
 @end

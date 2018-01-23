@@ -6,22 +6,33 @@
 @import CoreLocation;
 #import "CRAPI.h"
 #import "RHController.h"
+#import "NVSpreadsheetVC.h"
 
 @interface RHRecorder () <AVCaptureFileOutputRecordingDelegate,CLLocationManagerDelegate,RHControllerDelegate>
 
+@property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
 @property (nonatomic) AVCaptureSession *session;
 @property (nonatomic) AVCaptureMovieFileOutput *output;
 @property BOOL isRecording, canGetLocation;
 @property (nonatomic) CLLocationManager *locMgr;
 @property RHController *controller;
-@property (nonatomic, copy) NSString *pid, *outputDir;
+@property (nonatomic, copy) NSString *outputDir;
 @property (nonatomic) NSMutableString *locations;
 @property (nonatomic) NSTimer *locationTimer;
-@property int time;
+@property int time, propNum;
 
 @end
 
 @implementation RHRecorder
+
++ (instancetype)recorderWithPropNum:(int)propNum
+                           delegate:(id)delegate
+{
+    RHRecorder *recorder = RHRecorder.new;
+    recorder.propNum = propNum;
+    recorder.delegate = delegate;
+    return recorder;
+}
 
 - (id)init
 {
@@ -33,13 +44,6 @@
     }
     
     return self;
-}
-
-+ (instancetype)recorderWithPID:(NSString *)pid
-{
-    RHRecorder *recorder = RHRecorder.new;
-    recorder.pid = pid;
-    return recorder;
 }
 
 - (void)viewDidLoad
@@ -196,9 +200,7 @@
                         if (_output && [_session canAddOutput:_output])
                         {
                             [_session addOutput:_output];
-                            
-                            _outputDir = [NSString stringWithFormat:@"%@/RHVideos/%@",
-                                          UserDefaults.defaults.localFilePath, _pid];
+                            _outputDir = [_delegate vidDirForPropNum:_propNum];
                             
                             [NSFileManager.new createDirectoryAtPath:_outputDir
                                          withIntermediateDirectories:YES
