@@ -70,6 +70,7 @@
 #import "StringFunctions.h"
 #import "ChartsBitmap.h"
 #import "HotSpotVideo.h"
+#import "RHEditor.h"
 
 @interface CCodeLibrary : NSObject
 
