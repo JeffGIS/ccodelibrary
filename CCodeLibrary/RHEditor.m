@@ -115,12 +115,7 @@ void static const *playerItemContext;
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-    return UIInterfaceOrientationMaskLandscapeRight;
-}
-
-- (BOOL)shouldAutorotate
-{
-    return NO;
+    return UIInterfaceOrientationMaskLandscape;
 }
 
 - (BOOL)prefersStatusBarHidden
