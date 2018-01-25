@@ -63,6 +63,8 @@
 		6956B9981CB230210070416B /* NVPopoverTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6956B9971CB230210070416B /* NVPopoverTableView.m */; };
 		6956B9991CB235490070416B /* NVPopoverTableView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6956B9961CB230210070416B /* NVPopoverTableView.h */; };
 		695C062E1FF2B1300081712C /* RHWalkScore.m in Sources */ = {isa = PBXBuildFile; fileRef = 695C062D1FF2B1300081712C /* RHWalkScore.m */; };
+		696C9899201912D300FBA08F /* RHList.m in Sources */ = {isa = PBXBuildFile; fileRef = 696C9898201912D300FBA08F /* RHList.m */; };
+		696C989A2019154600FBA08F /* RHList.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 696C9897201912D300FBA08F /* RHList.h */; };
 		696D03821D67A616002E686A /* RampCompliance.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 696D03801D679E66002E686A /* RampCompliance.h */; };
 		697486441E5C85BD0051B5BC /* NVPager.m in Sources */ = {isa = PBXBuildFile; fileRef = 697486431E5C85BD0051B5BC /* NVPager.m */; };
 		697486451E5C89450051B5BC /* NVPager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 697486421E5C85BD0051B5BC /* NVPager.h */; };
@@ -421,6 +423,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				696C989A2019154600FBA08F /* RHList.h in CopyFiles */,
 				69EE923F20127F0100A610D6 /* RHViewController.h in CopyFiles */,
 				6996D34A1FFD43E20013139B /* RHWalkScore.h in CopyFiles */,
 				6996D3491FFD43DD0013139B /* RHSearch.h in CopyFiles */,
@@ -652,6 +655,8 @@
 		6956B9971CB230210070416B /* NVPopoverTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPopoverTableView.m; sourceTree = "<group>"; };
 		695C062C1FF2B1300081712C /* RHWalkScore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RHWalkScore.h; sourceTree = "<group>"; };
 		695C062D1FF2B1300081712C /* RHWalkScore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHWalkScore.m; sourceTree = "<group>"; };
+		696C9897201912D300FBA08F /* RHList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RHList.h; sourceTree = "<group>"; };
+		696C9898201912D300FBA08F /* RHList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHList.m; sourceTree = "<group>"; };
 		696D037F1D679E66002E686A /* RampCompliance.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RampCompliance.c; sourceTree = "<group>"; };
 		696D03801D679E66002E686A /* RampCompliance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RampCompliance.h; sourceTree = "<group>"; };
 		697486421E5C85BD0051B5BC /* NVPager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPager.h; sourceTree = "<group>"; };
@@ -1063,6 +1068,8 @@
 				69FD71301FE1CD4B00EAFDEF /* RHController.m */,
 				6996D33E1FFD3E510013139B /* RHEditor.h */,
 				6996D33F1FFD3E510013139B /* RHEditor.m */,
+				696C9897201912D300FBA08F /* RHList.h */,
+				696C9898201912D300FBA08F /* RHList.m */,
 				69FD71261FE1BEA200EAFDEF /* RHPlayer.h */,
 				69FD71271FE1BEA200EAFDEF /* RHPlayer.m */,
 				69FD71231FE1BE8300EAFDEF /* RHRecorder.h */,
@@ -1837,6 +1844,7 @@
 				699AE9001CEFB1A400A9EBF2 /* NVPhotoController.m in Sources */,
 				A9E2130E1AFE4BFC005ECBBA /* NVImagePickerController.m in Sources */,
 				EBC01D2F1BED1C8C0004C751 /* vearth.c in Sources */,
+				696C9899201912D300FBA08F /* RHList.m in Sources */,
 				EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */,
 				69E9E3CA1E895BCF002157D9 /* NVContactGroupData.m in Sources */,
 				EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */,
