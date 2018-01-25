@@ -13,6 +13,7 @@
 @property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
 @property (nonatomic) AVCaptureSession *session;
 @property (nonatomic) AVCaptureMovieFileOutput *output;
+@property (nonatomic) AVCaptureVideoPreviewLayer *preview;
 @property BOOL isRecording, canGetLocation;
 @property (nonatomic) CLLocationManager *locMgr;
 @property RHController *controller;
@@ -120,12 +121,12 @@
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-    return UIInterfaceOrientationMaskLandscapeRight;
+    return UIInterfaceOrientationMaskLandscape;
 }
 
 - (BOOL)shouldAutorotate
 {
-    return NO;
+    return !_isRecording;
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -186,13 +187,13 @@
                 {
                     [_session addInput:aInput];
                     
-                    AVCaptureVideoPreviewLayer *preview = [AVCaptureVideoPreviewLayer layerWithSession:_session];
+                    _preview = [AVCaptureVideoPreviewLayer layerWithSession:_session];
                     
-                    if (preview)
+                    if (_preview)
                     {
-                        preview.frame = self.view.bounds;
-                        preview.videoGravity = AVLayerVideoGravityResizeAspectFill;
-                        [self.view.layer addSublayer:preview];
+                        _preview.frame = self.view.bounds;
+                        _preview.videoGravity = AVLayerVideoGravityResizeAspectFill;
+                        [self.view.layer addSublayer:_preview];
                         
                         _output = AVCaptureMovieFileOutput.new;
                         _output.minFreeDiskSpaceLimit = 1048576;
@@ -209,15 +210,7 @@
                             
                             if (!error)
                             {
-                                AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationLandscapeRight;
-                                
-                                if (preview.connection.isVideoOrientationSupported)
-                                    preview.connection.videoOrientation = orientation;
-                                
-                                AVCaptureConnection *connection = [_output connectionWithMediaType:AVMediaTypeVideo];
-                                
-                                if (connection.isVideoOrientationSupported)
-                                    connection.videoOrientation = orientation;
+                                [self updateVideoOrientation];
                             }
                             
                             else {NSLog(@"NSFileManager Directory Create ERROR: %@", error.localizedDescription);}
@@ -246,6 +239,21 @@
     [_controller showInView:self.view delegate:self];
 }
 
+- (void)updateVideoOrientation
+{
+    AVCaptureVideoOrientation orientation = AVCaptureVideoOrientationLandscapeLeft;
+    
+    if (UIApplication.sharedApplication.statusBarOrientation == UIDeviceOrientationLandscapeLeft)
+        orientation = AVCaptureVideoOrientationLandscapeRight;
+    
+    if (_preview.connection.isVideoOrientationSupported)
+        _preview.connection.videoOrientation = orientation;
+    
+    AVCaptureConnection *connection = [_output connectionWithMediaType:AVMediaTypeVideo];
+    
+    if (connection.isVideoOrientationSupported)
+        connection.videoOrientation = orientation;
+}
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput
 didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
@@ -326,6 +334,12 @@ didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
                                                              repeats:YES];
         }
     }
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                                duration:(NSTimeInterval)duration
+{
+    [self performSelector:@selector(updateVideoOrientation) withObject:nil afterDelay:duration];
 }
 
 - (void)controllerDidTapConnectButton
