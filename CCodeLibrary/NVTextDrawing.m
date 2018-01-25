@@ -226,8 +226,9 @@ Top:
     PointInArea *pia = [[PointInArea alloc] init];
     pia.maxDimension = 256;
     MNMXCORD areaBounds;
-    CGFloat areaSize = fabs(ComputeAreaAreaD(pPoints, numPoints, 0,&areaBounds));
-    if (areaSize != 0)
+    double areaSize = fabs(ComputeAreaAreaD(pPoints, numPoints, 0,&areaBounds));
+    double minAreaSize = minFontSize * text.length;
+    if (areaSize >= minAreaSize)
     {
         if (pBounds)
         {

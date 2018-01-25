@@ -48,7 +48,7 @@
 
 @optional
 - (BOOL)addVideoClip:(RHClip *)clip;
-- (NSInteger)getPropNumForColumn:(NSInteger)column;
+- (NSInteger)getPropNumForRow:(NSInteger)row;
 - (NSString *)vidDirForPropNum:(int)propNum;
 - (BOOL)spreadsheetCanEditRowHeaderTextAtIndex:(NSInteger)index;
 - (NSString *)spreadsheetRowHeaderTextPrefixAtIndex:(NSInteger)index;

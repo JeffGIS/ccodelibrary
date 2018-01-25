@@ -26,7 +26,6 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
 @property (nonatomic) NSMutableArray<NSNumber *> *selectedRows;
 @property (nonatomic) UIColor *selectedRowColor;
 @property NSInteger selectedRow, selectedColumn, lastTapSelectedRow;
-@property int zoomCancel;
 @property (nonatomic) RHViewController *rhvc;
 @property (nonatomic) UIViewController *nvmsvc;
 
@@ -753,7 +752,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     {
         [_nvss reloadData];
         
-        if (_flipped)
+        if (!_flipped)
         {
             _selectedRow = column;
             _selectedColumn = row;
@@ -774,20 +773,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 optionsArray = [NSMutableArray arrayWithArray:@[@"Display Report"]];
                 break;
             case SST_PropertyList:
-                if (_selectedRow == 1)
-                {
-                    optionsArray = [NSMutableArray arrayWithArray:@[@"Zoom to This Property", @"Zoom to All Properties in List",
-                                     @"Cancel"]];
-                    
-                    _zoomCancel = (int)(optionsArray.count - 1);
-                    alertID = @"ZOOM";
-                }
-                
-                else
-                {
-                    optionsArray = [_delegate getOptionsForCell:row
-                                                         column:column];
-                }
+                    optionsArray = [_delegate getOptionsForCell:_selectedRow
+                                                         column:_selectedColumn];
                 break;
             default:break;
         }
@@ -898,8 +885,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     if (_selectedRows.count == 1)
     {
-        NSUInteger column = _selectedRows.firstObject.unsignedIntegerValue;
-        _rhvc.propNum = (int)[_delegate getPropNumForColumn:column];
+        NSUInteger row = _selectedRows.firstObject.unsignedIntegerValue;
+        _rhvc.propNum = (int)[_delegate getPropNumForRow:row];
         
         if ([CRAPI.sharedInstance.bundleID isEqualToString:@"com.gssi.newvisionmetro"])
         {
@@ -1297,18 +1284,34 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     else if ([alertView.identifier isEqualToString:@"MapIt"])
     {
-        if (buttonIndex == 0)
+        NSString * prompt = alertView.buttonTextArray[buttonIndex];
+        if (![prompt isEqualToString:@"Cancel"])
         {
             switch (_delegate.getSpreadSheetType)
             {
                 case SST_PropertyList:
                 {
-                    NSString * prompt = alertView.buttonTextArray[0];
                     if ([prompt isEqualToString:@"Show Pros And Cons"])
                     {
                         //Bill:Implement video display list here
                     }
-                    else
+                    else if ([prompt isEqualToString:@"Zoom to This Property"])
+                    {
+                        [_delegate spreadsheetDidZoomForRow:_selectedRow
+                                                     column:-1
+                                                       from:self
+                                           tabBarController:self.tabBarController];
+                    }
+                    else if ([prompt isEqualToString:@"Zoom to All Properties in List"])
+                    {
+                        [_delegate spreadsheetDidZoomForRow:-1
+                                                     column:_selectedColumn
+                                                       from:self
+                                           tabBarController:self.tabBarController];
+                        
+                        
+                    }
+                    else if ([prompt isEqualToString:@"Mapit"])
                     {
                         [_delegate spreadsheetDidMapItForRow:_selectedRow
                                                       column:_selectedColumn
@@ -1343,37 +1346,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                         [self presentViewController:textVC animated:YES completion:nil];
                     }
                     break;}
-            }
-        }
-    }
-    else if ([alertView.identifier isEqualToString:@"ZOOM"])
-    {
-        if (buttonIndex < _zoomCancel)
-        {
-            switch (_delegate.getSpreadSheetType)
-            {
-                case SST_PropertyList:
-                {
-                    int option = (int)_selectedColumn;
-                    
-                    switch (buttonIndex)
-                    {
-                        case 1:
-                            option = -1;
-                            break;
-                        case 2:
-                            _selectedRow = -1;
-                            break;
-                        default:break;
-                    }
-                    
-                    [_delegate spreadsheetDidZoomForRow:_selectedRow
-                                                 column:option
-                                                   from:self
-                                       tabBarController:self.tabBarController];
-                }
-                    break;
-                default:break;
             }
         }
     }
