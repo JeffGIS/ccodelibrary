@@ -30,21 +30,10 @@
                            delegate:(id)delegate
 {
     RHRecorder *recorder = RHRecorder.new;
+    recorder.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     recorder.propNum = propNum;
     recorder.delegate = delegate;
     return recorder;
-}
-
-- (id)init
-{
-    self = [super init];
-    
-    if (self)
-    {
-        self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    }
-    
-    return self;
 }
 
 - (void)viewDidLoad

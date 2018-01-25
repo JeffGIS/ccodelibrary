@@ -1293,7 +1293,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 {
                     if ([prompt isEqualToString:@"Show Pros And Cons"])
                     {
-                        //Bill:Implement video display list here
+                        int propNum = (int)[_delegate getPropNumForRow:_selectedRow];
+                        RHList *list = [RHList listWithPropNum:propNum delegate:_delegate];
+                        [self presentViewController:list animated:YES completion:nil];
                     }
                     else if ([prompt isEqualToString:@"Zoom to This Property"])
                     {

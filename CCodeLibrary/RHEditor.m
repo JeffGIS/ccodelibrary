@@ -61,19 +61,8 @@ void static const *playerItemContext;
     RHEditor *editor = RHEditor.new;
     editor.propNum = propNum;
     editor.delegate = delegate;
+    editor.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     return editor;
-}
-
-- (id)init
-{
-    self = [super init];
-    
-    if (self)
-    {
-        self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    }
-    
-    return self;
 }
 
 - (void)viewDidAppear:(BOOL)animated

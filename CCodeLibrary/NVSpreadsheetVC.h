@@ -47,6 +47,7 @@
                                column:(NSInteger)column;
 
 @optional
+- (NSArray *)clipsForProperty:(int)propNum;
 - (BOOL)addVideoClip:(RHClip *)clip;
 - (NSInteger)getPropNumForRow:(NSInteger)row;
 - (NSString *)vidDirForPropNum:(int)propNum;
