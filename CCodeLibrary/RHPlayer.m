@@ -9,15 +9,16 @@
 
 void static const *playerItemContext;
 
-@interface RHPlayer () <RHControllerDelegate,NVPeerConnectDelegate>
+@interface RHPlayer ()
 
 @property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
 @property (nonatomic) AVPlayer *player;
 @property (nonatomic) AVPlayerItem *item;
-@property BOOL isPlaying;
-@property (nonatomic) RHController *controller;
+@property BOOL isPlaying, isAtEnd;
 @property (nonatomic) RHClip *currentClip;
 @property (nonatomic) id timeObserver;
+@property (nonatomic) UIButton *returnButton, *stepForward, *stepBackward;
+@property (nonatomic) UISlider *progressSlider;
 
 @end
 
@@ -64,14 +65,18 @@ void static const *playerItemContext;
     [super viewDidAppear:animated];
     
     [self setupVideoPlayer];
-    CRAPI.sharedInstance.peerConnect.delegate = self;
+    [self setupControls];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    [self stopSession];
+    if (_isPlaying)
+    {
+        [_player pause];
+        [_player removeTimeObserver:_timeObserver];
+    }
     
     [_item removeObserver:self
                forKeyPath:@"status"
@@ -104,11 +109,8 @@ void static const *playerItemContext;
 
 - (void)stopSession
 {
-    [CRAPI.sharedInstance.peerConnect stopBrowsing];
-    
     if (_isPlaying)
     {
-        [_controller stopTimer:NO];
         [_player pause];
     }
     
@@ -153,9 +155,12 @@ void static const *playerItemContext;
                 __weak __typeof(self)welf = self;
                 
                 _timeObserver = [_player addBoundaryTimeObserverForTimes:times queue:NULL
-                                                              usingBlock:^{
-                                                                  [welf controllerDidTapPlayRecordButton];
-                                                              }];
+                                usingBlock:^{
+                                    [welf playerTapped];
+                                    [welf.progressSlider setValue:welf.progressSlider.maximumValue
+                                                         animated:NO];
+                                    welf.isAtEnd = YES;
+                                }];
                 
                 AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
                 
@@ -164,6 +169,12 @@ void static const *playerItemContext;
                     playerLayer.frame = self.view.bounds;
                     playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
                     [self.view.layer addSublayer:playerLayer];
+                    
+                    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                          action:@selector(playerTapped)];
+                    
+                    [self.view addGestureRecognizer:tap];
+                    [self setStartPosition];
                 }
                 
                 else {NSLog(@"AVPlayer ERROR: Couldn't create AVPlayerLayer.");}
@@ -176,15 +187,88 @@ void static const *playerItemContext;
     }
     
     else {NSLog(@"AVPlayer ERROR: There is no video to play.");}
+}
+
+- (void)setupControls
+{
+    CGFloat margin = 10.0, width = 80.0, height = 60.0, insets = 4.0;
     
-    if (![self.view.subviews containsObject:_controller])
-    {
-        _controller = RHController.new;
-        [_controller showInView:self.view delegate:self];
-    }
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        width = 60.0, height = 45.0;
     
-    else
-        [self.view bringSubviewToFront:_controller];
+    _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
+    _returnButton.imageEdgeInsets = UIEdgeInsetsMake(insets, insets, insets, insets);
+    _returnButton.backgroundColor = UIColor.blackColor;
+    
+    [_returnButton setImage:[UIImage imageWithContentsOfFile:
+                             [NSBundle.mainBundle pathForResource:@"returnIcon"
+                                                           ofType:@"png"]]
+                   forState:UIControlStateNormal];
+    
+    [self.view addSubview:_returnButton];
+    [_returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
+    [_returnButton constrainTopToAnchor:self.view.topAnchor constant:margin];
+    [_returnButton constrainWidthToConstant:width];
+    [_returnButton constrainHeightToConstant:height];
+    
+    [_returnButton addTarget:self
+                      action:@selector(returnButtonTapped)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    _stepForward = [UIButton buttonWithType:UIButtonTypeCustom];
+    _stepForward.translatesAutoresizingMaskIntoConstraints = NO;
+    _stepForward.backgroundColor = UIColor.blackColor;
+    [_stepForward setTitle:@"  +  " forState:UIControlStateNormal];
+    [_stepForward setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [_stepForward setTitleColor:UIColor.grayColor forState:UIControlStateHighlighted];
+    _stepForward.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    
+    [self.view addSubview:_stepForward];
+    [_stepForward constrainBottomToAnchor:self.view.bottomAnchor constant:-margin];
+    [_stepForward constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_stepForward constrainHeightToConstant:height];
+    
+    [_stepForward addTarget:self
+                     action:@selector(stepForwardTapped)
+           forControlEvents:UIControlEventTouchUpInside];
+    
+    _stepBackward = [UIButton buttonWithType:UIButtonTypeCustom];
+    _stepBackward.translatesAutoresizingMaskIntoConstraints = NO;
+    _stepBackward.backgroundColor = UIColor.blackColor;
+    [_stepBackward setTitle:@"  -  " forState:UIControlStateNormal];
+    [_stepBackward setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [_stepBackward setTitleColor:UIColor.grayColor forState:UIControlStateHighlighted];
+    _stepBackward.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
+    
+    [self.view addSubview:_stepBackward];
+    [_stepBackward constrainBottomToAnchor:_stepForward.bottomAnchor];
+    [_stepBackward constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
+    [_stepBackward constrainHeightToAnchor:_stepForward.heightAnchor];
+    
+    [_stepBackward addTarget:self
+                      action:@selector(stepBackwardTapped)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    _progressSlider = UISlider.new;
+    _progressSlider.translatesAutoresizingMaskIntoConstraints = NO;
+    _progressSlider.minimumValue = _currentClip.startTime;
+    _progressSlider.maximumValue = _currentClip.endTime;
+    [_progressSlider setValue:_progressSlider.minimumValue animated:NO];
+    
+    [self.view addSubview:_progressSlider];
+    [_progressSlider constrainLeadingToAnchor:_stepBackward.trailingAnchor constant:margin];
+    [_progressSlider constrainTrailingToAnchor:_stepForward.leadingAnchor constant:-margin];
+    [_progressSlider constrainBottomToAnchor:_stepForward.bottomAnchor];
+    [_progressSlider constrainHeightToAnchor:_stepForward.heightAnchor];
+    
+    [_progressSlider addTarget:self
+                        action:@selector(progressSliderValueChanged)
+              forControlEvents:UIControlEventValueChanged];
+    
+    [_progressSlider addTarget:self
+                        action:@selector(progressSliderTouchUp)
+              forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -222,66 +306,98 @@ void static const *playerItemContext;
 
 - (void)playerDidFinishPlaying:(AVPlayerItem *)item
 {
-    [self videoStopped];
-}
-
-- (void)videoStopped
-{
+    [_player removeTimeObserver:_timeObserver];
     _isPlaying = NO;
-    [_controller stopTimer:NO];
-    
-    [_controller.playRecordButton setImage:[UIImage imageWithContentsOfFile:
-                                            [NSBundle.mainBundle pathForResource:@"VideoPlayIcon"
-                                                                          ofType:@"png"]]
-                                  forState:UIControlStateNormal];
+    _isAtEnd = YES;
 }
 
-- (void)controllerDidTapPlayRecordButton
+- (void)setStartPosition
+{
+    CMTime time = CMTimeMake((_currentClip.startTime * 1000), 1000);
+    [_player.currentItem seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    [_progressSlider setValue:0.0 animated:NO];
+}
+
+- (void)playerTapped
 {
     if (_isPlaying)
     {
         [_player pause];
-        [self videoStopped];
+        [_player removeTimeObserver:_timeObserver];
     }
     
     else
     {
-        CMTime time = CMTimeMake((_currentClip.startTime * 1000), 1000);
-        [_player seekToTime:time];
-        [_player play];
-        [_controller startTimer];
-        _isPlaying = YES;
+        if (_isAtEnd)
+        {
+            [self setStartPosition];
+            _isAtEnd = NO;
+        }
         
-        [_controller.playRecordButton setImage:[UIImage imageWithContentsOfFile:
-                                                [NSBundle.mainBundle pathForResource:@"VideoStopIcon"
-                                                                              ofType:@"png"]]
-                                      forState:UIControlStateNormal];
+        [_player play];
+        
+        __weak __typeof(self)welf = self;
+        
+        _timeObserver = [_player addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:NULL
+                                                         usingBlock:^(CMTime time)
+                         {
+                             [welf.progressSlider setValue:CMTimeGetSeconds(welf.player.currentItem.currentTime)
+                                                  animated:NO];
+                         }];
     }
+    
+    _isPlaying = !_isPlaying;
+    [self setStepperHidden:_isPlaying];
 }
 
-- (void)controllerDidTapConnectButton
-{
-    [CRAPI.sharedInstance.peerConnect startBrowsing];
-}
-
-- (void)controllerDidTapReturnButton
+- (void)returnButtonTapped
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)peerConnectDidReceiveFileAtUrl:(NSURL *)url
+- (void)progressSliderValueChanged
 {
-    NSError *error = nil;
-    NSFileManager *fm = NSFileManager.new;
+    if (_isPlaying)
+        [self playerTapped];
     
-    NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%@",
-                            UserDefaults.defaults.localFilePath, url.lastPathComponent];
-    
-    NSURL *outputURL = [NSURL fileURLWithPath:outputPath isDirectory:NO];
-    [fm moveItemAtPath:url.path toPath:outputURL.path error:&error];
-    
-    CRAPI.sharedInstance.rhVideoURL = outputURL;
-    [self performSelectorOnMainThread:@selector(setupVideoPlayer) withObject:nil waitUntilDone:YES];
+    CMTime time = CMTimeMake((_progressSlider.value * 1000), 1000);
+    [_player.currentItem seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+}
+
+- (void)progressSliderTouchUp
+{
+    [_progressSlider setValue:_progressSlider.value animated:NO];
+}
+
+- (void)setStepperHidden:(BOOL)hidden
+{
+    _stepBackward.hidden = hidden;
+    _stepForward.hidden = hidden;
+}
+
+- (void)stepForwardTapped
+{
+    if (CMTimeGetSeconds(_player.currentItem.currentTime) < _currentClip.endTime)
+    {
+        [_player.currentItem stepByCount:1];
+        [self performSelector:@selector(updateSlider) withObject:nil afterDelay:0.1];
+    }
+}
+
+- (void)stepBackwardTapped
+{
+    if (CMTimeGetSeconds(_player.currentItem.currentTime) > _currentClip.startTime)
+    {
+        [_player.currentItem stepByCount:-1];
+        [self performSelector:@selector(updateSlider) withObject:nil afterDelay:0.1];
+        _isAtEnd = NO;
+    }
+}
+
+- (void)updateSlider
+{
+    [_progressSlider setValue:CMTimeGetSeconds(_player.currentItem.currentTime)
+                     animated:NO];
 }
 
 @end
