@@ -1304,6 +1304,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                        from:self
                                            tabBarController:self.tabBarController];
                     }
+                    else if ([prompt isEqualToString:@"Show Sales History"])
+                    {
+                        int propNum = (int)[_delegate getPropNumForRow:_selectedRow];
+                        [_delegate displayPropHistory:propNum overVC:self];
+                    }
                     else if ([prompt isEqualToString:@"Zoom to All Properties in List"])
                     {
                         [_delegate spreadsheetDidZoomForRow:-1
