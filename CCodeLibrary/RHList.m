@@ -12,10 +12,12 @@
 @property (nonatomic, copy) NSArray<RHClip *> *clips;
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) UIImageView *imageView;
-@property (nonatomic) UIButton *returnButton;
+@property (nonatomic) UIButton *returnButton, *editButton;
 @property int propNum;
 @property (nonatomic) UIFont *font;
 @property (nonatomic, copy) NSString *vidDir;
+@property (nonatomic) UIImage *playImage;
+@property SEL playSEL;
 
 @end
 
@@ -35,9 +37,6 @@
 {
     [super viewDidLoad];
     
-    if (_delegate && [_delegate respondsToSelector:@selector(clipsForProperty:)])
-        _clips = [_delegate clipsForProperty:_propNum];
-    
     if (_delegate)
     {
         if ([_delegate respondsToSelector:@selector(clipsForProperty:)])
@@ -47,8 +46,13 @@
             _vidDir = [_delegate vidDirForPropNum:_propNum];
     }
     
-    else {NSLog(@"ERROR: ClipsForProperty method not implemented by delegate");}
+    else {NSLog(@"ERROR: delegate cannot be set to nil.");}
     
+    _playImage = [UIImage imageWithContentsOfFile:
+                  [NSBundle.mainBundle pathForResource:@"VideoPlayIcon"
+                                                ofType:@"png"]];
+    
+    _playSEL = @selector(playButtonTapped:);
     _font = [UIFont boldSystemFontOfSize:32.0];
     
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -66,6 +70,22 @@
                       action:@selector(returnButtonTapped)
             forControlEvents:UIControlEventTouchUpInside];
     
+    _editButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _editButton.translatesAutoresizingMaskIntoConstraints = NO;
+    _editButton.backgroundColor = UIColor.clearColor;
+    [_editButton setTitle:@"Edit" forState:UIControlStateNormal];
+    [_editButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [_editButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    _editButton.titleLabel.font = _font;
+    [self.view addSubview:_editButton];
+    [_editButton constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
+    [_editButton constrainTopToAnchor:self.view.topAnchor];
+    _editButton.hidden = YES;
+    
+    [_editButton addTarget:self
+                    action:@selector(editButtonTapped)
+          forControlEvents:UIControlEventTouchUpInside];
+    
     _imageView = UIImageView.new;
     _imageView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_imageView];
@@ -75,9 +95,10 @@
     
     _tableView = UITableView.new;
     _tableView.translatesAutoresizingMaskIntoConstraints = NO;
-    _tableView.rowHeight = 48.0;
+    _tableView.rowHeight = 64.0;
     _tableView.dataSource = self;
     _tableView.delegate = self;
+    _tableView.delaysContentTouches = NO;
     [self.view addSubview:_tableView];
     [_tableView constrainBottomToAnchor:self.view.bottomAnchor];
     [_tableView constrainLeadingToAnchor:self.view.leadingAnchor];
@@ -111,6 +132,11 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)editButtonTapped
+{
+    RHClip *clip = _clips[_tableView.indexPathForSelectedRow.row];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -139,6 +165,15 @@
     cell.textLabel.text = clip.title;
     cell.textLabel.textColor = UIColor.blackColor;
     cell.textLabel.font = _font;
+    
+    UIButton *playButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    playButton.frame = CGRectMake(0.0, 0.0, _tableView.rowHeight, _tableView.rowHeight);
+    [playButton setImage:_playImage forState:UIControlStateNormal];
+    CGFloat inset = (_tableView.rowHeight * 0.1);
+    playButton.imageEdgeInsets = UIEdgeInsetsMake(inset, inset, inset, inset);
+    playButton.tag = indexPath.row;
+    [playButton addTarget:self action:_playSEL forControlEvents:UIControlEventTouchUpInside];
+    cell.accessoryView = playButton;
     
     if (clip.quality == RHClipQualityCon)
         cell.textLabel.textColor = UIColor.redColor;
@@ -181,7 +216,22 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     else {NSLog(@"CGImageRef ERROR: %@", error.localizedDescription);}
     
     CGImageRelease(imageRef);
+    _editButton.hidden = NO;
+}
+
+- (void)playButtonTapped:(UIButton *)button
+{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:button.tag inSection:0];
     
+    [_tableView selectRowAtIndexPath:indexPath
+                            animated:NO
+                      scrollPosition:UITableViewScrollPositionNone];
+    
+    [self tableView:_tableView didSelectRowAtIndexPath:indexPath];
+    
+    RHClip *clip = _clips[button.tag];
+    RHPlayer *player = [RHPlayer playerWithClip:clip delegate:_delegate];
+    [self presentViewController:player animated:YES completion:nil];
 }
 
 @end

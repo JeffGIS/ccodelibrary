@@ -31,8 +31,8 @@ void static const *playerItemContext;
         default:break;
     }
     
-    return [NSString stringWithFormat:@"PROPNUM:%d, TIMESTAMP:%d, TITLE:%@, START:%f, END:%f, QUALITY:%@, NOTES:%@ ",
-            _propNum, _timestamp, _title, _startTime, _endTime, qualityString, notesString];
+    return [NSString stringWithFormat:@"PROPNUM:%d, TITLE:%@, START:%f, END:%f, QUALITY:%@, COST:%f, NOTES:%@ ",
+            _propNum, _title, _startTime, _endTime, qualityString, _cost, notesString];
 }
 
 @end
@@ -418,7 +418,6 @@ void static const *playerItemContext;
         _currentClip.startTime = time;
         _currentClip.propNum = _propNum;
         _currentClip.videoFileName = CRAPI.sharedInstance.rhVideoURL.lastPathComponent;
-        _currentClip.timestamp = CRAPI.sharedInstance.rhVideoURL.lastPathComponent.stringByDeletingPathExtension.intValue;
         
         [_placeMarkers setTitle:@"  Mark Ending  " forState:UIControlStateNormal];
     }
