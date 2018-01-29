@@ -19,8 +19,7 @@ typedef NS_ENUM(NSInteger, WSStatus)
 
 @property (nonatomic, weak) id<RHWalkScoreDelegate> delegate;
 @property (nonatomic) NSURLSession *session;
-@property int walkScore, transitScore, bikeScore, lastUpdate;
-@property (nonatomic) NSString *walkDescription, *transitDescription, *bikeDescription, *url;
+@property (nonatomic) NSString *url;
 
 @end
 
@@ -43,19 +42,20 @@ typedef NS_ENUM(NSInteger, WSStatus)
             _bikeScore, _bikeDescription, _lastUpdate, _url];
 }
 
-- (void)getWalkScoreForAddress:(NSString *)address
+- (bool)getWalkScoreForAddress:(NSString *)address
                           city:(NSString *)city
                          state:(NSString *)state
                            zip:(int)zip
                            lat:(float)lat
                            lon:(float)lon
 {
+    bool rtn = FALSE;
     if (_delegate && [_delegate respondsToSelector:@selector(walkScoreDidReturnItem:)] &&
         [_delegate respondsToSelector:@selector(walkScoreDidReceiveError:)])
     {
-        if (address && address.length && city && city.length && state && state.length && zip && lat && lon)
+        if (address && address.length && city && city.length && state && state.length && lat && lon)
         {
-            NSString *fullAddress = [NSString stringWithFormat:@"%@ %@ %@ %i", address, city, state, zip];
+            NSString *fullAddress = [NSString stringWithFormat:@"%@ %@ %@", address, city, state];
             fullAddress = [fullAddress stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
             NSString *urlString = [NSString stringWithFormat:@"http://api.walkscore.com/score?format=json&"
@@ -63,7 +63,8 @@ typedef NS_ENUM(NSInteger, WSStatus)
                                    fullAddress, lat, lon, WALKSCORE_API_KEY];
             
             NSURL *url = [[NSURL alloc] initWithString:urlString];
-            
+            rtn = TRUE;
+
             [[_session dataTaskWithURL:(NSURL *)url
                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
               {
@@ -217,6 +218,7 @@ typedef NS_ENUM(NSInteger, WSStatus)
     
     else
         NSLog(@"RHWalkScore ERROR: a delegate must implement all methods in protocol.");
+    return rtn;
 }
 
 @end

@@ -17,9 +17,12 @@
 
 @interface RHWalkScore : NSObject
 
+@property int walkScore, transitScore, bikeScore, lastUpdate;
+@property (nonatomic) NSString *walkDescription, *transitDescription, *bikeDescription;
+
 + (instancetype)walkScoreWithDelegate:(id<RHWalkScoreDelegate>)delegate;
 
-- (void)getWalkScoreForAddress:(NSString *)address
+- (bool)getWalkScoreForAddress:(NSString *)address
                           city:(NSString *)city
                          state:(NSString *)state
                            zip:(int)zip
