@@ -78,6 +78,8 @@
 - (NSInteger)getAutoSelectRow;
 - (UIColor*)backgroundColorForCell:(NSInteger)row
                             column:(NSInteger)column;
+- (void)displayPropHistory:(int)propNum
+                    overVC:(UIViewController*)vc;
 @end
 
 @interface NVSpreadsheetVC : UIViewController

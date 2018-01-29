@@ -17,6 +17,8 @@ typedef NS_ENUM(NSInteger, ValueTypes)
 {
     VTInteger,
     VTDouble,
+    VTDollars,
+    VTAcres,
     VTLLPoint,
     VTString,
 };
