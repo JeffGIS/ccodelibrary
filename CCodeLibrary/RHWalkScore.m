@@ -17,7 +17,6 @@ typedef NS_ENUM(NSInteger, WSStatus)
 
 @interface RHWalkScore ()
 
-@property (nonatomic, weak) id<RHWalkScoreDelegate> delegate;
 @property (nonatomic) NSURLSession *session;
 @property (nonatomic) NSString *url;
 
@@ -31,6 +30,11 @@ typedef NS_ENUM(NSInteger, WSStatus)
     ws.delegate = delegate;
     ws.session = NSURLSession.sharedSession;
     return ws;
+}
+
+- (void)dealloc
+{
+    NSLog(@"Walkscore dealloc");
 }
 
 - (NSString *)description
@@ -64,149 +68,152 @@ typedef NS_ENUM(NSInteger, WSStatus)
             
             NSURL *url = [[NSURL alloc] initWithString:urlString];
             rtn = TRUE;
-
+            
             [[_session dataTaskWithURL:(NSURL *)url
                      completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
               {
-                  if (error)
-                      [_delegate walkScoreDidReceiveError:error.localizedDescription];
-                  
-                  else
+                  if (_delegate)
                   {
-                      NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data
-                                                                           options:kNilOptions
-                                                                             error:&error];
-                      
                       if (error)
                           [_delegate walkScoreDidReceiveError:error.localizedDescription];
                       
                       else
                       {
-                          WSStatus status = [[json objectForKey:@"status"] intValue];
-                          NSString *errorString = nil;
+                          NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data
+                                                                               options:kNilOptions
+                                                                                 error:&error];
                           
-                          switch (status)
+                          if (error)
+                              [_delegate walkScoreDidReceiveError:error.localizedDescription];
+                          
+                          else
                           {
-                              case WSStatusOK:{
-                                  id item = [json objectForKey:@"walkscore"];
-                                  
-                                  if (!item || [item isKindOfClass:NSNull.class])
-                                  {
-                                      _walkScore = RH_SCORE_NONE;
-                                      _walkDescription = RH_DESCRIPTION_NONE;
-                                  }
-                                  
-                                  else
-                                  {
-                                      _walkScore = [(NSString *)item intValue];
-                                      item = [json objectForKey:@"description"];
+                              WSStatus status = [[json objectForKey:@"status"] intValue];
+                              NSString *errorString = nil;
+                              
+                              switch (status)
+                              {
+                                  case WSStatusOK:{
+                                      id item = [json objectForKey:@"walkscore"];
                                       
                                       if (!item || [item isKindOfClass:NSNull.class])
                                       {
+                                          _walkScore = RH_SCORE_NONE;
                                           _walkDescription = RH_DESCRIPTION_NONE;
                                       }
                                       
                                       else
-                                          _walkDescription = (NSString *)item;
-                                  }
-                                  
-                                  item = [[json objectForKey:@"transit"] objectForKey:@"score"];
-                                  
-                                  if (!item || [item isKindOfClass:NSNull.class])
-                                  {
-                                      _transitScore = RH_SCORE_NONE;
-                                      _transitDescription = RH_DESCRIPTION_NONE;
-                                  }
-                                  
-                                  else
-                                  {
-                                      _transitScore = [(NSString *)item intValue];
-                                      item = [[json objectForKey:@"transit"] objectForKey:@"description"];
+                                      {
+                                          _walkScore = [(NSString *)item intValue];
+                                          item = [json objectForKey:@"description"];
+                                          
+                                          if (!item || [item isKindOfClass:NSNull.class])
+                                          {
+                                              _walkDescription = RH_DESCRIPTION_NONE;
+                                          }
+                                          
+                                          else
+                                              _walkDescription = (NSString *)item;
+                                      }
+                                      
+                                      item = [[json objectForKey:@"transit"] objectForKey:@"score"];
                                       
                                       if (!item || [item isKindOfClass:NSNull.class])
                                       {
+                                          _transitScore = RH_SCORE_NONE;
                                           _transitDescription = RH_DESCRIPTION_NONE;
                                       }
                                       
                                       else
-                                          _transitDescription = (NSString *)item;
-                                  }
-                                  
-                                  item = [[json objectForKey:@"bike"] objectForKey:@"score"];
-                                  
-                                  if (!item || [item isKindOfClass:NSNull.class])
-                                  {
-                                      _bikeScore = RH_SCORE_NONE;
-                                      _bikeDescription = RH_DESCRIPTION_NONE;
-                                  }
-                                  
-                                  else
-                                  {
-                                      _bikeScore = [(NSString *)item intValue];
-                                      item = [[json objectForKey:@"bike"] objectForKey:@"description"];
+                                      {
+                                          _transitScore = [(NSString *)item intValue];
+                                          item = [[json objectForKey:@"transit"] objectForKey:@"description"];
+                                          
+                                          if (!item || [item isKindOfClass:NSNull.class])
+                                          {
+                                              _transitDescription = RH_DESCRIPTION_NONE;
+                                          }
+                                          
+                                          else
+                                              _transitDescription = (NSString *)item;
+                                      }
+                                      
+                                      item = [[json objectForKey:@"bike"] objectForKey:@"score"];
                                       
                                       if (!item || [item isKindOfClass:NSNull.class])
                                       {
+                                          _bikeScore = RH_SCORE_NONE;
                                           _bikeDescription = RH_DESCRIPTION_NONE;
                                       }
                                       
                                       else
-                                          _bikeDescription = (NSString *)item;
-                                  }
-                                  
-                                  item = [json objectForKey:@"updated"];
-                                  
-                                  if (!item || [item isKindOfClass:NSNull.class])
-                                  {
-                                      _lastUpdate = RH_SCORE_NONE;
-                                  }
-                                  
-                                  else
-                                  {
-                                      NSString *update = (NSString *)item;
-                                      NSDateFormatter *formatter = NSDateFormatter.new;
-                                      [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSSSSS"];
-                                      NSDate *date = [formatter dateFromString:update];
-                                      _lastUpdate = date.timeIntervalSince1970;
-                                  }
-                                  
-                                  item = [json objectForKey:@"ws_link"];
-                                  
-                                  if (!item || [item isKindOfClass:NSNull.class])
-                                  {
-                                      _url = RH_DESCRIPTION_NONE;
-                                  }
-                                  
-                                  else
-                                      _url = [(NSString *)item stringByReplacingOccurrencesOfString:@" " withString:@""];
-                                  
-                                  [_delegate walkScoreDidReturnItem:self];
-                                  break;}
-                              case WSStatusNotAvailable:
-                                  errorString = @"Walk Score not currently available for this address";
-                                  break;
-                              case WSStatusInvalidLatLon:
-                                  errorString = @"Invalid latitude or longitude value";
-                                  break;
-                              case WSStatusInternalError:
-                                  errorString = @"Internal error on remote server";
-                                  break;
-                              case WSStatusInvalidApiKey:
-                                  errorString = @"Invalid API key";
-                                  break;
-                              case WSStatusQuotaExceeded:
-                                  errorString = @"Daily API quota exceeded";
-                                  break;
-                              case WSStatusBlocked:
-                                  errorString = @"Blocked by remote server";
-                                  break;
-                              default:
-                                  errorString = @"Undefined status value";
-                                  break;
+                                      {
+                                          _bikeScore = [(NSString *)item intValue];
+                                          item = [[json objectForKey:@"bike"] objectForKey:@"description"];
+                                          
+                                          if (!item || [item isKindOfClass:NSNull.class])
+                                          {
+                                              _bikeDescription = RH_DESCRIPTION_NONE;
+                                          }
+                                          
+                                          else
+                                              _bikeDescription = (NSString *)item;
+                                      }
+                                      
+                                      item = [json objectForKey:@"updated"];
+                                      
+                                      if (!item || [item isKindOfClass:NSNull.class])
+                                      {
+                                          _lastUpdate = RH_SCORE_NONE;
+                                      }
+                                      
+                                      else
+                                      {
+                                          NSString *update = (NSString *)item;
+                                          NSDateFormatter *formatter = NSDateFormatter.new;
+                                          [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSSSSS"];
+                                          NSDate *date = [formatter dateFromString:update];
+                                          _lastUpdate = date.timeIntervalSince1970;
+                                      }
+                                      
+                                      item = [json objectForKey:@"ws_link"];
+                                      
+                                      if (!item || [item isKindOfClass:NSNull.class])
+                                      {
+                                          _url = RH_DESCRIPTION_NONE;
+                                      }
+                                      
+                                      else
+                                          _url = [(NSString *)item stringByReplacingOccurrencesOfString:@" " withString:@""];
+                                      
+                                      [_delegate walkScoreDidReturnItem:self];
+                                      break;}
+                                  case WSStatusNotAvailable:
+                                      errorString = @"Walk Score not currently available for this address";
+                                      break;
+                                  case WSStatusInvalidLatLon:
+                                      errorString = @"Invalid latitude or longitude value";
+                                      break;
+                                  case WSStatusInternalError:
+                                      errorString = @"Internal error on remote server";
+                                      break;
+                                  case WSStatusInvalidApiKey:
+                                      errorString = @"Invalid API key";
+                                      break;
+                                  case WSStatusQuotaExceeded:
+                                      errorString = @"Daily API quota exceeded";
+                                      break;
+                                  case WSStatusBlocked:
+                                      errorString = @"Blocked by remote server";
+                                      break;
+                                  default:
+                                      errorString = @"Undefined status value";
+                                      break;
+                              }
+                              
+                              if (errorString)
+                                  [_delegate walkScoreDidReceiveError:errorString];
                           }
-                          
-                          if (errorString)
-                              [_delegate walkScoreDidReceiveError:errorString];
                       }
                   }
               }] resume];

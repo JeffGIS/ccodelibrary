@@ -17,6 +17,8 @@
 
 @interface RHWalkScore : NSObject
 
+@property (nonatomic, weak) id<RHWalkScoreDelegate> delegate;
+
 @property int walkScore, transitScore, bikeScore, lastUpdate;
 @property (nonatomic) NSString *walkDescription, *transitDescription, *bikeDescription;
 
