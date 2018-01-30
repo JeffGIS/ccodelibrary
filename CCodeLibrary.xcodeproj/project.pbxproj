@@ -117,6 +117,22 @@
 		69C3DFA71CB4118D00DC1779 /* NVWebView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C3DFA41CB4113A00DC1779 /* NVWebView.h */; };
 		69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C441A91BB474B200D026A7 /* NVTabBarEdit.m */; };
 		69C441AB1BB475B900D026A7 /* NVTabBarEdit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69C441A81BB474B200D026A7 /* NVTabBarEdit.h */; };
+		69CF3A122020FB4E00309852 /* RHClip.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CF3A112020FB4E00309852 /* RHClip.m */; };
+		69CF3A132020FC3600309852 /* RHClip.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69CF3A102020FB4E00309852 /* RHClip.h */; };
+		69CF3A162020FDB700309852 /* RHClipEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 69CF3A152020FDB700309852 /* RHClipEditor.m */; };
+		69CF3A172020FDDF00309852 /* RHClipEditor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69CF3A142020FDB700309852 /* RHClipEditor.h */; };
+		69CF3A182020FDF000309852 /* NVContactGroupData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69E9E3C81E895BCF002157D9 /* NVContactGroupData.h */; };
+		69CF3A192020FE0700309852 /* NVCalendarView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D5EFB31C7237FD004CE1C0 /* NVCalendarView.h */; };
+		69CF3A1A2020FE1100309852 /* NVCalendarCell.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D5EFBA1C7248DB004CE1C0 /* NVCalendarCell.h */; };
+		69CF3A1B2020FE1C00309852 /* NVXWalkButton.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9A7E3681B75796500DC7F3D /* NVXWalkButton.h */; };
+		69CF3A1C2020FE2900309852 /* NVGridLayout.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F482381DB7CBC300E4BDB5 /* NVGridLayout.h */; };
+		69CF3A1D2020FE3000309852 /* NVSpreadsheet.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F482351DB7C75B00E4BDB5 /* NVSpreadsheet.h */; };
+		69CF3A1E2020FE3B00309852 /* NVSpreadsheetCell.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F4823B1DB7DDBF00E4BDB5 /* NVSpreadsheetCell.h */; };
+		69CF3A1F2020FE4200309852 /* NSIndexPath+NVSpreadsheet.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F4823E1DB7DF7600E4BDB5 /* NSIndexPath+NVSpreadsheet.h */; };
+		69CF3A202020FE5000309852 /* NVContactsViewer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69F975951ECCB8200044CCED /* NVContactsViewer.h */; };
+		69CF3A212020FE5900309852 /* NVRampTypePageView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 692F54A31CDB9B8B001600C9 /* NVRampTypePageView.h */; };
+		69CF3A222020FE6300309852 /* NVSignalButton.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9A7E3651B75795300DC7F3D /* NVSignalButton.h */; };
+		69CF3A232020FE6B00309852 /* NVRampButton.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = A9A7E3621B75663500DC7F3D /* NVRampButton.h */; };
 		69D277D21DA6DEC1002B1447 /* NVStreetSideController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D277D11DA6DEC1002B1447 /* NVStreetSideController.m */; };
 		69D277D31DA6E369002B1447 /* NVStreetSideController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69D277D01DA6DEC1002B1447 /* NVStreetSideController.h */; };
 		69D5EFB21C7237AB004CE1C0 /* NVCalendarVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D5EFB11C7237AB004CE1C0 /* NVCalendarVC.m */; };
@@ -423,6 +439,20 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				69CF3A232020FE6B00309852 /* NVRampButton.h in CopyFiles */,
+				69CF3A222020FE6300309852 /* NVSignalButton.h in CopyFiles */,
+				69CF3A212020FE5900309852 /* NVRampTypePageView.h in CopyFiles */,
+				69CF3A202020FE5000309852 /* NVContactsViewer.h in CopyFiles */,
+				69CF3A1F2020FE4200309852 /* NSIndexPath+NVSpreadsheet.h in CopyFiles */,
+				69CF3A1E2020FE3B00309852 /* NVSpreadsheetCell.h in CopyFiles */,
+				69CF3A1D2020FE3000309852 /* NVSpreadsheet.h in CopyFiles */,
+				69CF3A1C2020FE2900309852 /* NVGridLayout.h in CopyFiles */,
+				69CF3A1B2020FE1C00309852 /* NVXWalkButton.h in CopyFiles */,
+				69CF3A1A2020FE1100309852 /* NVCalendarCell.h in CopyFiles */,
+				69CF3A192020FE0700309852 /* NVCalendarView.h in CopyFiles */,
+				69CF3A182020FDF000309852 /* NVContactGroupData.h in CopyFiles */,
+				69CF3A172020FDDF00309852 /* RHClipEditor.h in CopyFiles */,
+				69CF3A132020FC3600309852 /* RHClip.h in CopyFiles */,
 				696C989A2019154600FBA08F /* RHList.h in CopyFiles */,
 				69EE923F20127F0100A610D6 /* RHViewController.h in CopyFiles */,
 				6996D34A1FFD43E20013139B /* RHWalkScore.h in CopyFiles */,
@@ -705,6 +735,10 @@
 		69C3DFA51CB4113A00DC1779 /* NVWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVWebView.m; sourceTree = "<group>"; };
 		69C441A81BB474B200D026A7 /* NVTabBarEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTabBarEdit.h; sourceTree = "<group>"; };
 		69C441A91BB474B200D026A7 /* NVTabBarEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTabBarEdit.m; sourceTree = "<group>"; };
+		69CF3A102020FB4E00309852 /* RHClip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RHClip.h; sourceTree = "<group>"; };
+		69CF3A112020FB4E00309852 /* RHClip.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHClip.m; sourceTree = "<group>"; };
+		69CF3A142020FDB700309852 /* RHClipEditor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RHClipEditor.h; sourceTree = "<group>"; };
+		69CF3A152020FDB700309852 /* RHClipEditor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHClipEditor.m; sourceTree = "<group>"; };
 		69D277D01DA6DEC1002B1447 /* NVStreetSideController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVStreetSideController.h; sourceTree = "<group>"; };
 		69D277D11DA6DEC1002B1447 /* NVStreetSideController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVStreetSideController.m; sourceTree = "<group>"; };
 		69D5EFB01C7237AB004CE1C0 /* NVCalendarVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVCalendarVC.h; sourceTree = "<group>"; };
@@ -1064,6 +1098,10 @@
 			children = (
 				6996D3411FFD42910013139B /* RiteHome.h */,
 				6996D3421FFD42910013139B /* RiteHome.m */,
+				69CF3A102020FB4E00309852 /* RHClip.h */,
+				69CF3A112020FB4E00309852 /* RHClip.m */,
+				69CF3A142020FDB700309852 /* RHClipEditor.h */,
+				69CF3A152020FDB700309852 /* RHClipEditor.m */,
 				69FD712F1FE1CD4B00EAFDEF /* RHController.h */,
 				69FD71301FE1CD4B00EAFDEF /* RHController.m */,
 				6996D33E1FFD3E510013139B /* RHEditor.h */,
@@ -1899,6 +1937,7 @@
 				EBB3C42C1C36F6E000054DB5 /* PointInAreas.m in Sources */,
 				A9ADCB1E1ACD0870000E5C00 /* GSSiNotesView.m in Sources */,
 				A9C1835F1B6674A600780BF6 /* NVMesh.m in Sources */,
+				69CF3A122020FB4E00309852 /* RHClip.m in Sources */,
 				EB268A1A1AC5E9F700A68EC8 /* code.c in Sources */,
 				EBC01D2A1BED1C8C0004C751 /* sidrlt.c in Sources */,
 				BBC361C31F429C0200B51DF3 /* function.c in Sources */,
@@ -1912,6 +1951,7 @@
 				BBC361C51F429C0200B51DF3 /* functn2.c in Sources */,
 				A9C8ED3C1A5849F800DF9856 /* GetPriorityLocations.m in Sources */,
 				BB8BA0D51F5596D90024B8C2 /* FacilityStepDefinition.m in Sources */,
+				69CF3A162020FDB700309852 /* RHClipEditor.m in Sources */,
 				6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */,

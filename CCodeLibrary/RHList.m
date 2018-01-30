@@ -4,6 +4,7 @@
 #import "RHList.h"
 #import "NVSpreadsheetVC.h"
 #import "UserDefaults.h"
+#import "RHClipEditor.h"
 @import AVFoundation;
 
 @interface RHList () <UITableViewDelegate,UITableViewDataSource>
@@ -13,8 +14,8 @@
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic) UIButton *returnButton, *editButton;
+@property CGFloat fontSize;
 @property int propNum;
-@property (nonatomic) UIFont *font;
 @property (nonatomic, copy) NSString *vidDir;
 @property (nonatomic) UIImage *playImage;
 @property SEL playSEL;
@@ -53,7 +54,7 @@
                                                 ofType:@"png"]];
     
     _playSEL = @selector(playButtonTapped:);
-    _font = [UIFont boldSystemFontOfSize:32.0];
+    _fontSize = 36.0;
     
     _returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _returnButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -61,7 +62,7 @@
     [_returnButton setTitle:@"< Return" forState:UIControlStateNormal];
     [_returnButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [_returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
-    _returnButton.titleLabel.font = _font;
+    _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:_fontSize];
     [self.view addSubview:_returnButton];
     [_returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:10.0];
     [_returnButton constrainTopToAnchor:self.view.topAnchor];
@@ -76,7 +77,7 @@
     [_editButton setTitle:@"Edit" forState:UIControlStateNormal];
     [_editButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [_editButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
-    _editButton.titleLabel.font = _font;
+    _editButton.titleLabel.font = [UIFont boldSystemFontOfSize:_fontSize];
     [self.view addSubview:_editButton];
     [_editButton constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
     [_editButton constrainTopToAnchor:self.view.topAnchor];
@@ -135,6 +136,11 @@
 - (void)editButtonTapped
 {
     RHClip *clip = _clips[_tableView.indexPathForSelectedRow.row];
+    
+    RHClipEditor *editor = [RHClipEditor editorWithClip:clip
+                                               delegate:_delegate];
+    
+    [self presentViewController:editor animated:YES completion:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -157,14 +163,15 @@
     
     if (!cell)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                       reuseIdentifier:cellIdentifier];
     }
     
     RHClip *clip = _clips[indexPath.row];
     cell.textLabel.text = clip.title;
-    cell.textLabel.textColor = UIColor.blackColor;
-    cell.textLabel.font = _font;
+    cell.textLabel.font = [UIFont boldSystemFontOfSize:_fontSize * 0.75];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"COST: $%.2f", clip.cost];
+    cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:_fontSize * 0.5];
     
     UIButton *playButton = [UIButton buttonWithType:UIButtonTypeCustom];
     playButton.frame = CGRectMake(0.0, 0.0, _tableView.rowHeight, _tableView.rowHeight);
@@ -176,13 +183,22 @@
     cell.accessoryView = playButton;
     
     if (clip.quality == RHClipQualityCon)
+    {
         cell.textLabel.textColor = UIColor.redColor;
+        cell.detailTextLabel.textColor = UIColor.redColor;
+    }
     
     else if (clip.quality == RHClipQualityPro)
+    {
         cell.textLabel.textColor = UserDefaults.defaults.darkGreen;
+        cell.detailTextLabel.textColor = UserDefaults.defaults.darkGreen;
+    }
     
     else
+    {
         cell.textLabel.textColor = UIColor.blackColor;
+        cell.detailTextLabel.text = @"";
+    }
     
     return cell;
 }

@@ -3,6 +3,7 @@
 
 @import UIKit;
 #import "RHEditor.h"
+#import "RHClip.h"
 
 @interface RHPlayer : UIViewController
 
