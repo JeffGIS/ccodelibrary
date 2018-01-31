@@ -182,23 +182,12 @@
     [playButton addTarget:self action:_playSEL forControlEvents:UIControlEventTouchUpInside];
     cell.accessoryView = playButton;
     
-    if (clip.quality == RHClipQualityCon)
-    {
-        cell.textLabel.textColor = UIColor.redColor;
-        cell.detailTextLabel.textColor = UIColor.redColor;
-    }
+    UIColor *textColor = [RHClip colorForQuality:clip.quality];
+    cell.textLabel.textColor = textColor;
+    cell.detailTextLabel.textColor = textColor;
     
-    else if (clip.quality == RHClipQualityPro)
-    {
-        cell.textLabel.textColor = UserDefaults.defaults.darkGreen;
-        cell.detailTextLabel.textColor = UserDefaults.defaults.darkGreen;
-    }
-    
-    else
-    {
-        cell.textLabel.textColor = UIColor.blackColor;
+    if (clip.quality == RHClipQualityNeutral)
         cell.detailTextLabel.text = @"";
-    }
     
     return cell;
 }

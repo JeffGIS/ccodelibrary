@@ -43,7 +43,7 @@
         
 #ifdef DEBUG
         //_bundleID = @"com.gssi.newvisioncrime";
-        _bundleID = @"com.gssi.newvisionmetro";
+        //_bundleID = @"com.gssi.newvisionmetro";
 #endif
         
         _vectorQueue = dispatch_queue_create("vectorQueue", NULL);

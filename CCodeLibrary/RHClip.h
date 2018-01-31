@@ -18,4 +18,7 @@ typedef NS_ENUM(NSInteger, RHClipQuality)
 @property RHClipQuality quality;
 @property (nonatomic, copy) NSString *title, *notes, *videoFileName;
 
++ (NSString *)stringForQuality:(RHClipQuality)quality;
++ (UIColor *)colorForQuality:(RHClipQuality)quality;
+
 @end
