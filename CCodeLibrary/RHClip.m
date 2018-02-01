@@ -53,8 +53,9 @@
     NSString *qualityString = [RHClip stringForQuality:_quality];
     NSString *notesString = [_notes stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
     
-    return [NSString stringWithFormat:@"PROPNUM:%d, TITLE:%@, START:%f, END:%f, QUALITY:%@, COST:%f, NOTES:%@ ",
-            _propNum, _title, _startTime, _endTime, qualityString, _cost, notesString];
+    return [NSString stringWithFormat:@"PROPNUM:%d, CLIPID:%d, TITLE:%@, START:%f, END:%f, "
+            "QUALITY:%@, COST:%f, NOTES:%@ ", _propNum, _clipID, _title, _startTime,
+            _endTime, qualityString, _cost, notesString];
 }
 
 @end

@@ -7,7 +7,7 @@
 #import "RHClipEditor.h"
 @import AVFoundation;
 
-@interface RHList () <UITableViewDelegate,UITableViewDataSource>
+@interface RHList () <UITableViewDelegate,UITableViewDataSource,RHClipEditorDelegate>
 
 @property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
 @property (nonatomic, copy) NSArray<RHClip *> *clips;
@@ -38,16 +38,7 @@
 {
     [super viewDidLoad];
     
-    if (_delegate)
-    {
-        if ([_delegate respondsToSelector:@selector(clipsForProperty:)])
-            _clips = [_delegate clipsForProperty:_propNum];
-        
-        if ([_delegate respondsToSelector:@selector(vidDirForPropNum:)])
-            _vidDir = [_delegate vidDirForPropNum:_propNum];
-    }
-    
-    else {NSLog(@"ERROR: delegate cannot be set to nil.");}
+    [self updateContents];
     
     _playImage = [UIImage imageWithContentsOfFile:
                   [NSBundle.mainBundle pathForResource:@"VideoPlayIcon"
@@ -128,6 +119,20 @@
     return YES;
 }
 
+- (void)updateContents
+{
+    if (_delegate)
+    {
+        if ([_delegate respondsToSelector:@selector(clipsForProperty:)])
+            _clips = [_delegate clipsForProperty:_propNum];
+        
+        if ([_delegate respondsToSelector:@selector(vidDirForPropNum:)])
+            _vidDir = [_delegate vidDirForPropNum:_propNum];
+    }
+    
+    else {NSLog(@"ERROR: delegate cannot be set to nil.");}
+}
+
 - (void)returnButtonTapped
 {
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -138,7 +143,8 @@
     RHClip *clip = _clips[_tableView.indexPathForSelectedRow.row];
     
     RHClipEditor *editor = [RHClipEditor editorWithClip:clip
-                                               delegate:_delegate];
+                                               delegate:_delegate
+                                      presenterDelegate:self];
     
     [self presentViewController:editor animated:YES completion:nil];
 }
@@ -237,6 +243,19 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     RHClip *clip = _clips[button.tag];
     RHPlayer *player = [RHPlayer playerWithClip:clip delegate:_delegate];
     [self presentViewController:player animated:YES completion:nil];
+}
+
+- (void)clipEditorDidReturn:(RHClipEditor *)clipEditor
+{
+    [self updateContents];
+    NSIndexPath *selectedIP = _tableView.indexPathForSelectedRow;
+    [_tableView reloadData];
+    
+    [_tableView selectRowAtIndexPath:selectedIP
+                            animated:NO
+                      scrollPosition:UITableViewScrollPositionNone];
+    
+    [clipEditor dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
