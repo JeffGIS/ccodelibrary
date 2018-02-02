@@ -129,6 +129,7 @@
         _acreFmt.maximumFractionDigits = 2;
         _showCompassCalibrationScreen = YES;
         _boundaryBorderWidth = 4;
+        _allowLegendMinimize = YES;
         
         NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%@",
                                 UserDefaults.defaults.localFilePath,
