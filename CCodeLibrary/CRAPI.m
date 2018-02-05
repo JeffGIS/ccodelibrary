@@ -1269,16 +1269,20 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             break;
     }
     
-    if ([UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:urlString]])
-        [UIApplication.sharedApplication openURL:[NSURL URLWithString:urlString]];
+    NSURL *url = [NSURL URLWithString:urlString];
+    UIApplication *app = UIApplication.sharedApplication;
+    
+    if ([app canOpenURL:url])
+        [app openURL:url options:@{} completionHandler:nil];
 }
 
 - (void)gotoTestFlight
 {
-    NSString *urlString = @"https://beta.itunes.apple.com";
+    NSURL *url = [NSURL URLWithString:@"https://beta.itunes.apple.com"];
+    UIApplication *app = UIApplication.sharedApplication;
     
-    if ([UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:urlString]])
-        [UIApplication.sharedApplication openURL:[NSURL URLWithString:urlString]];
+    if ([app canOpenURL:url])
+        [app openURL:url options:@{} completionHandler:nil];
 }
 
 - (void)checkStorageForMinStorage:(NSNumber *)minStorage

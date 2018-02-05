@@ -628,14 +628,19 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
                                   options:0
                                     range:NSMakeRange(0, [url.absoluteString length])];
 
-  if (ytMatch || adMatch || oauthMatch || staticProxyMatch) {
+  if (ytMatch || adMatch || oauthMatch || staticProxyMatch)
     return YES;
-  } else {
-    [[UIApplication sharedApplication] openURL:url];
+  
+  else
+  {
+      UIApplication *app = UIApplication.sharedApplication;
+      
+      if ([app canOpenURL:url])
+          [app openURL:url options:@{} completionHandler:nil];
+      
     return NO;
   }
 }
-
 
 /**
  * Private helper method to load an iframe player with the given player parameters.
