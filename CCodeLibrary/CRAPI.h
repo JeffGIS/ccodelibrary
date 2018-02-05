@@ -1,7 +1,7 @@
 //  CRAPI.h
 //  CCodeLibrary
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 #import "shr.h"
 #import "MathUtil.h"
 #import "TileGraphics.h"
@@ -105,10 +105,10 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nullable) NSString *currentOverallBoundaryType;
 @property (nonatomic) int currentOverallBoundaryRefno, currentBAR;
 @property (nonatomic) BOOL showPolylineForBounds, maskBoundsForBounds, setToAlleyWalls, isFromGMMobile;
-@property (nonatomic,copy, nonnull) NSString * currentOverallBoundaryTable;
+@property (nonatomic,copy, nonnull) NSString *currentOverallBoundaryTable;
 @property (nonatomic) CGFloat maskTransparency;
 @property (nonatomic) CGFloat boundaryBorderWidth;
-@property (nonatomic, copy, nullable) NSString *sourceApp;
+@property (nonatomic, copy, nullable) NSString *sourceApp, *stateID;
 @property (nonatomic, nullable) UIView *currentView;
 @property (nonatomic) MNMXCORD lastDisplayBounds, lastViewBounds;
 @property (nonatomic, copy, nullable) NSString *currentCounty;

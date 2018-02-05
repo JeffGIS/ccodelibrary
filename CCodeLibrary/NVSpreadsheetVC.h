@@ -85,7 +85,7 @@
 @interface NVSpreadsheetVC : UIViewController
 
 @property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
-@property BOOL flipped;
+@property (nonatomic) BOOL flipped;
 
 - (NSArray *)retrieveSearchStrings;
 - (void)updateSelectedRowsAtIndex:(NSInteger)index;

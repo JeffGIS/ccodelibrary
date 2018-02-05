@@ -21,7 +21,7 @@
 
 @end
 
-@interface CRAPI () <NVAlertViewDelegate,NVDocumentManagerDelegate>
+@interface CRAPI () <NVAlertViewDelegate, NVDocumentManagerDelegate>
 
 @property (nonatomic) NVAlertView *alert;
 @property int kp, currentGeoidValue, numAllowedZooms;
@@ -43,7 +43,7 @@
         
 #ifdef DEBUG
         //_bundleID = @"com.gssi.newvisioncrime";
-        _bundleID = @"com.gssi.newvisionmetro";
+        //_bundleID = @"com.gssi.newvisionmetro";
 #endif
         
         _vectorQueue = dispatch_queue_create("vectorQueue", NULL);
@@ -64,6 +64,7 @@
         _mapCrimeList = [UserDefaults.defaults stringForKey:@"MapCrimeList"];
         NSString *defaultCrimeTarget = [UserDefaults.defaults stringForKey:@"CrimeTarget"];
         _peerConnect = NVPeerConnect.new;
+        _stateID = @"Default";
         
         if (defaultCrimeTarget && defaultCrimeTarget.length)
             _crimeTarget = defaultCrimeTarget;

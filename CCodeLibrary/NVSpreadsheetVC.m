@@ -53,7 +53,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
     
     self.view.backgroundColor = UIColor.darkGrayColor;
     _selectedRows = NSMutableArray.array;
-    _flipped = YES;
+    _flipped = ![UserDefaults.defaults boolForKey:@"SpreadsheetFlipped"];
     
     _selectedRowColor = [UIColor colorWithRed:(127.0 / 255.0)
                                         green:(255.0 / 255.0)
@@ -1601,6 +1601,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         return _delegate.getSearchStrings;
     
     else return @[];
+}
+
+- (void)setFlipped:(BOOL)flipped
+{
+    _flipped = flipped;
+    [UserDefaults.defaults saveBool:!flipped forKey:@"SpreadsheetFlipped"];
 }
 
 @end
