@@ -149,18 +149,19 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) NVSendEmail *currentEmail;
 @property (nonatomic, nullable) NSMutableArray *lastAreaText;
 @property (nonatomic) BOOL isRentaliPad, canUseSdwk, inSdwkMode, GMTilesVisible, justZoom;
-@property (nonnull)Facility * currentFacility;
+@property (nonnull)Facility *currentFacility;
 @property (nonatomic) int facilityFieldDisplayOpt;
-@property (nonatomic, nullable) NSMutableArray <ChartsBitmap *> *chartBitmaps;
+@property (nonatomic, nullable) NSMutableArray<ChartsBitmap *> *chartBitmaps;
 @property (nonatomic, nullable) HotSpotVideo *hsv;
 @property (nonatomic, nullable) dispatch_queue_t vectorQueue;
 @property BOOL showCompassCalibrationScreen, barChartOnly, allowLegendMinimize;
 @property LLPOINT lastPickPoint;
 @property (nonatomic, nullable) SSDelegate *spreadsheetDelegate;
 @property (nonatomic, nullable) NVPeerConnect *peerConnect;
-@property int rhUpdateTime, rhItemsUpdated, rhItemsAdded, rhItemsModified, rhItemsIgnored, rhCurrentZip, rhErrors;
+@property int rhUpdateTime, rhCurrentZip;
 @property (nonatomic, copy, nullable) NSURL *rhVideoURL;
 @property (nonatomic, nullable) NSMutableString *rhSearchSqlCommands;
+@property (nonatomic, copy, nullable) NSString *rhSearchFilePath;
 
 + (nullable CRAPI *)sharedInstance;
 

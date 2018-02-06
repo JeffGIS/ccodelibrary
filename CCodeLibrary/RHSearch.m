@@ -195,9 +195,6 @@
             else
                 [self addItem:searchItem];
         }
-        
-        else
-            CRAPI.sharedInstance.rhItemsIgnored++;
     }
 }
 
@@ -208,10 +205,9 @@
     NSString *cmd = [NSString stringWithFormat:@"UPDATE %@ SET update_time=%i WHERE listing_id=%lli",
                      TABLE_NAME, CRAPI.sharedInstance.rhUpdateTime, item.listingID];
     
-    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
-    
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
-    
+    cmd = [cmd stringByAppendingString:@"\r\n"];
+    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
     [self close:opened];
 }
 
@@ -227,13 +223,10 @@
                      item.lotsize, item.beds, item.baths, item.garage, item.address, item.city, item.state,
                      item.url, item.listingID];
     
-    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
-    
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
-    
+    cmd = [cmd stringByAppendingString:@"\r\n"];
+    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
     [self close:opened];
-    
-    CRAPI.sharedInstance.rhItemsModified++;
 }
 
 - (void)addItem:(RHSearchItem *)item
@@ -247,13 +240,10 @@
                      item.latitude, item.longitude, item.lotsize, item.beds, item.baths, item.garage,
                      item.address, item.city, item.state, item.url];
     
-    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
-    
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
-    
+    cmd = [cmd stringByAppendingString:@"\r\n"];
+    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
     [self close:opened];
-    
-    CRAPI.sharedInstance.rhItemsAdded++;
 }
 
 - (void)deleteOldItems
@@ -263,10 +253,9 @@
     NSString *cmd = [NSString stringWithFormat:@"DELETE FROM %@ WHERE update_time != %i;",
                      TABLE_NAME, CRAPI.sharedInstance.rhUpdateTime];
     
-    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
-    
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
-    
+    cmd = [cmd stringByAppendingString:@"\r\n"];
+    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
     [self close:opened];
 }
 
