@@ -208,6 +208,8 @@
     NSString *cmd = [NSString stringWithFormat:@"UPDATE %@ SET update_time=%i WHERE listing_id=%lli",
                      TABLE_NAME, CRAPI.sharedInstance.rhUpdateTime, item.listingID];
     
+    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
+    
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     
     [self close:opened];
@@ -224,6 +226,8 @@
                      TABLE_NAME, time, time, item.price, item.sqft, item.zip, item.latitude, item.longitude,
                      item.lotsize, item.beds, item.baths, item.garage, item.address, item.city, item.state,
                      item.url, item.listingID];
+    
+    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
     
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     
@@ -243,6 +247,8 @@
                      item.latitude, item.longitude, item.lotsize, item.beds, item.baths, item.garage,
                      item.address, item.city, item.state, item.url];
     
+    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
+    
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     
     [self close:opened];
@@ -256,6 +262,8 @@
     
     NSString *cmd = [NSString stringWithFormat:@"DELETE FROM %@ WHERE update_time != %i;",
                      TABLE_NAME, CRAPI.sharedInstance.rhUpdateTime];
+    
+    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
     
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     

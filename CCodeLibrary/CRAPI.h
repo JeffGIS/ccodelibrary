@@ -160,6 +160,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) NVPeerConnect *peerConnect;
 @property int rhUpdateTime, rhItemsUpdated, rhItemsAdded, rhItemsModified, rhItemsIgnored, rhCurrentZip, rhErrors;
 @property (nonatomic, copy, nullable) NSURL *rhVideoURL;
+@property (nonatomic, nullable) NSMutableString *rhSearchSqlCommands;
 
 + (nullable CRAPI *)sharedInstance;
 
