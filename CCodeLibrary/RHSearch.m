@@ -352,7 +352,7 @@
                     [_delegate searchDidReturnItems:_items.copy
                                           morePages:YES];
                     
-                    [_items removeAllObjects];
+                    _items = NSMutableArray.array;
                     _page++;
                     [self getItemsForZip];
                 }
