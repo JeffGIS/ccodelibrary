@@ -202,10 +202,14 @@
 {
     BOOL opened = self.open;
     
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE %@ SET update_time=%i WHERE listing_id=%lli",
-                     TABLE_NAME, CRAPI.sharedInstance.rhUpdateTime, item.listingID];
+    NSString *prefix = [NSString stringWithFormat:@"UPDATE %@ SET update_time=%i WHERE listing_id=",
+                        TABLE_NAME, CRAPI.sharedInstance.rhUpdateTime];
+    
+    NSString *cmd = [NSString stringWithFormat:@"%@%lli", prefix, item.listingID];
     
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    
+    cmd = [cmd stringByReplacingOccurrencesOfString:prefix withString:@"b"];
     cmd = [cmd stringByAppendingString:@"\r\n"];
     [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
     [self close:opened];
@@ -233,14 +237,17 @@
 {
     BOOL opened = self.open;
     int time = CRAPI.sharedInstance.rhUpdateTime;
+    NSString *prefix = [NSString stringWithFormat:@"INSERT INTO %@ VALUES", TABLE_NAME];
     
     NSString *cmd = [NSString stringWithFormat:
-    @"INSERT INTO %@ VALUES(%lli,%i,%i,%i,%i,%i,%i,%f,%f,%.2f,%.1f,%.1f,%.1f,'%@','%@','%@','%@');",
-                     TABLE_NAME, item.listingID, time, time, time, item.price, item.sqft, item.zip,
-                     item.latitude, item.longitude, item.lotsize, item.beds, item.baths, item.garage,
-                     item.address, item.city, item.state, item.url];
+    @"%@(%lli,%i,%i,%i,%i,%i,%i,%f,%f,%.2f,%.1f,%.1f,%.1f,'%@','%@','%@','%@');",
+    prefix, item.listingID, time, time, time, item.price, item.sqft, item.zip,
+    item.latitude, item.longitude, item.lotsize, item.beds, item.baths, item.garage,
+    item.address, item.city, item.state, item.url];
     
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    
+    cmd = [cmd stringByReplacingOccurrencesOfString:prefix withString:@"a"];
     cmd = [cmd stringByAppendingString:@"\r\n"];
     [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
     [self close:opened];
@@ -254,8 +261,7 @@
                      TABLE_NAME, CRAPI.sharedInstance.rhUpdateTime];
     
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
-    cmd = [cmd stringByAppendingString:@"\r\n"];
-    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
+    
     [self close:opened];
 }
 
@@ -322,8 +328,7 @@
                     RHSearchItem *item = RHSearchItem.new;
                     subcomponent = textBefore(component, @"longitude\">");
                     item.listingID = textBetween(subcomponent, @"data-listingid=\"", @"\"").longLongValue;
-                    substring = textBetween(subcomponent, @"data-url=\"", @"\"");
-                    item.url = [NSString stringWithFormat:@"%@%@", WEBSITE_URL, substring];
+                    item.url = textBetween(subcomponent, @"data-url=\"/realestateandhomes-detail/", @"\"");
                     item.price = textBetween(subcomponent, @"data-price=\"", @"\"").intValue;
                     item.address = textBetween(subcomponent, @"streetAddress\">", @"</");
                     item.city = textBetween(subcomponent, @"addressLocality\">", @"</");
