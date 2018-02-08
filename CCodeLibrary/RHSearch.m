@@ -291,8 +291,6 @@
 
 - (void)getItemsForZip
 {
-    [NSThread sleepForTimeInterval:RH_QUERY_INTERVAL];
-    
     int zip = CRAPI.sharedInstance.rhCurrentZip;
     
     NSString *urlString = [NSString stringWithFormat:@"%@/realestateandhomes-search/%i?pgsz=%i",
@@ -359,6 +357,7 @@
                     
                     _items = NSMutableArray.array;
                     _page++;
+                    [NSThread sleepForTimeInterval:RH_QUERY_INTERVAL];
                     [self getItemsForZip];
                 }
                 

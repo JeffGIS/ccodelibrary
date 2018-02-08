@@ -27,7 +27,7 @@
 #define PROJECT_MPLS            1
 #define PROJECT_METROGIS        2
 
-#define RH_QUERY_INTERVAL 240
+#define RH_QUERY_INTERVAL 300
 #define RH_ERROR_INTERVAL 43200
 
 typedef NS_ENUM(NSInteger, CrimeMapMode)
