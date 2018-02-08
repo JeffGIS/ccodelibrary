@@ -416,7 +416,7 @@ SELECT max(_id) FROM MyTable*/
         
         if (PICK_POINT_ON_LINE(p1, bnds, &pickedPoint, numPoints, llpoints))
         {
-            if (findClosestPoint (&pickedPoint, &minpt, &mind, &p1))
+            if (findClosestPointll (&pickedPoint, &minpt, &mind, &p1))
             {
                 nPicked++;
                 minFid = [NSString stringWithUTF8String:ALLEYSEG];

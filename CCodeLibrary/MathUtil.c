@@ -91,6 +91,29 @@ MNMXCORD LLBoundsToMetricBounds (LPMNMXCORD pLLBounds)
     return bounds;
 }
 
+MNMXCORD LLBoundsToPixelBounds (MNMXCORD * latlonBounds,int levelOfDetail)
+{
+    MNMXCORD bounds;
+    DBoundsInit (&bounds);
+    DPOINT pt, pt2;
+    pt.x = latlonBounds->xmn;
+    pt.y = latlonBounds->ymn;
+    LatLongToPixelXYd (pt.y,pt.x,levelOfDetail,&pt2.x,&pt2.y);
+    AddDPointToBounds(&bounds, &pt2);
+    pt.x = latlonBounds->xmn;
+    pt.y = latlonBounds->ymx;
+    LatLongToPixelXYd (pt.y,pt.x,levelOfDetail,&pt2.x,&pt2.y);
+    AddDPointToBounds(&bounds, &pt2);
+    pt.x = latlonBounds->xmx;
+    pt.y = latlonBounds->ymn;
+    LatLongToPixelXYd (pt.y,pt.x,levelOfDetail,&pt2.x,&pt2.y);
+    AddDPointToBounds(&bounds, &pt2);
+    pt.x = latlonBounds->xmx;
+    pt.y = latlonBounds->ymx;
+    LatLongToPixelXYd (pt.y,pt.x,levelOfDetail,&pt2.x,&pt2.y);
+    AddDPointToBounds(&bounds, &pt2);
+    return bounds;
+}
 
 CORNERPOINTS CornerPointsFromLLBoundsAndView (LPMNMXCORD pareaBoundsLL,LPMNMXCORD pviewBounds)
 {
@@ -229,6 +252,20 @@ double AZMLatLon (LLPOINT pt1,LLPOINT pt2)
 }
 
 Bool findClosestPoint (LPDPOINT pPoint,LPDPOINT pNearPt,double *mind,LPDPOINT p1)
+{
+    double d = ldistpp(p1,pPoint);
+    
+    if (d < *mind)
+    {
+        *mind = d;
+        *pNearPt = *pPoint;
+        return TRUE;
+    }
+    
+    return FALSE;
+}
+
+Bool findClosestPointll (LPDPOINT pPoint,LPDPOINT pNearPt,double *mind,LPDPOINT p1)
 {
     double d = ArcDistance(*p1,*pPoint);
     

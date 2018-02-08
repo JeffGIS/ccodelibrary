@@ -104,7 +104,6 @@ DPOINT LatLongPointToPixelPoint(DPOINT llPoint, int levelOfDetail)
     
     return pixPt;
 }
-
 /*
     Converts a pixel from pixel XY coordinates at a specified level of detail into latitude/longitude WGS-84 coordinates (in degrees).
     <param name="pixelX">X coordinate of the point, in pixels.</param>

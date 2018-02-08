@@ -360,13 +360,13 @@ static BOOL _createDirectory = YES;
         {
             for (int i = 0; i < numPoints; i++)
             {
-                if (findClosestPoint (&llpoints[i],&minpt,&mind,&p1))
+                if (findClosestPointll (&llpoints[i],&minpt,&mind,&p1))
                 {
                     minRef = refno;
                     minPlatID = [NSString stringWithUTF8String:platID];
                 }
             }
-            if (findClosestPoint (&BasePt,&minpt,&mind,&p1))
+            if (findClosestPointll (&BasePt,&minpt,&mind,&p1))
             {
                 minRef = refno;
                 minPlatID = [NSString stringWithUTF8String:platID];
@@ -630,7 +630,7 @@ static BOOL _createDirectory = YES;
             {
                 point.x = (BasePt.x + offsetPoints16[i].x / COORDINATE_FACTOR);
                 point.y = (BasePt.y + offsetPoints16[i].y / COORDINATE_FACTOR);
-                if (findClosestPoint (&point,&minpt,&mind,&p1))
+                if (findClosestPointll (&point,&minpt,&mind,&p1))
                 {
                     nPicked++;
                     minref = refno;
@@ -643,7 +643,7 @@ static BOOL _createDirectory = YES;
         {
             point.x = (BasePt.x + offsetPoints[i].x / COORDINATE_FACTOR);
             point.y = (BasePt.y + offsetPoints[i].y / COORDINATE_FACTOR);
-            if (findClosestPoint (&point,&minpt,&mind,&p1))
+            if (findClosestPointll (&point,&minpt,&mind,&p1))
             {
                 nPicked++;
                 minref = refno;
@@ -675,7 +675,7 @@ static BOOL _createDirectory = YES;
 
         if (PICK_POINT_ON_LINE(p1, bnds, &pickedPoint, numPoints, llpoints))
         {
-            if (findClosestPoint (&pickedPoint, &minpt, &mind, &p1))
+            if (findClosestPointll (&pickedPoint, &minpt, &mind, &p1))
             {
                 nPicked++;
                 minref = refno;
