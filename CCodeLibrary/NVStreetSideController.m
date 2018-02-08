@@ -26,6 +26,17 @@
     return nvssc;
 }
 
++ (instancetype)presentStreetSideInController:(UIViewController *)controller
+                                 atCoordinate:(CLLocationCoordinate2D)atCoordinate
+                          lookingAtCoordinate:(CLLocationCoordinate2D)coordinate
+{
+    NVStreetSideController *nvssc = NVStreetSideController.new;
+    nvssc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    nvssc.location = coordinate;
+    [controller presentViewController:nvssc animated:YES completion:nil];
+    return nvssc;
+}
+
 - (void)loadView
 {
     UIView *view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
