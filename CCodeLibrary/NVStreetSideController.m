@@ -19,11 +19,9 @@
 + (instancetype)presentStreetSideInController:(UIViewController *)controller
                           lookingAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
-    NVStreetSideController *nvssc = NVStreetSideController.new;
-    nvssc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    nvssc.location = coordinate;
-    [controller presentViewController:nvssc animated:YES completion:nil];
-    return nvssc;
+    return [NVStreetSideController presentStreetSideInController:controller
+                                                    atCoordinate:coordinate
+                                             lookingAtCoordinate:coordinate];
 }
 
 + (instancetype)presentStreetSideInController:(UIViewController *)controller
@@ -35,12 +33,6 @@
     nvssc.location = coordinate;
     [controller presentViewController:nvssc animated:YES completion:nil];
     return nvssc;
-}
-
-- (void)loadView
-{
-    UIView *view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
-    self.view = view;
 }
 
 - (void)viewDidLoad
@@ -143,13 +135,12 @@ didFailLoadWithError:(NSError *)error
 {
     [_timer invalidate];
     
-    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                      delegate:CRAPI.sharedInstance
-                                                         title:[NSString stringWithFormat:@"Bing Streetside Load ERROR: %@",
-                                                                error.localizedDescription]
-                                               buttonTextArray:@[@"OK"]
-                                              destructiveIndex:0];
-#pragma unused(alert)
+    [NVAlertView showLargeAlertViewinView:self.view
+                                 delegate:CRAPI.sharedInstance
+                                    title:[NSString stringWithFormat:@"Bing Streetside Load ERROR: %@",
+                                           error.localizedDescription]
+                          buttonTextArray:@[@"OK"]
+                         destructiveIndex:0];
 }
 
 - (void)checkForCompletion
@@ -161,12 +152,11 @@ didFailLoadWithError:(NSError *)error
     {
         [_timer invalidate];
         
-        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                          delegate:CRAPI.sharedInstance
-                                                             title:@"Bing Streetside is not available for this location."
-                                                   buttonTextArray:@[@"OK"]
-                                                  destructiveIndex:0];
-#pragma unused(alert)
+        [NVAlertView showLargeAlertViewinView:self.view
+                                     delegate:CRAPI.sharedInstance
+                                        title:@"Bing Streetside is not available for this location."
+                              buttonTextArray:@[@"OK"]
+                             destructiveIndex:0];
     }
     
     else if ([printoutPanelHtml isEqualToString:@"Load Complete"])
