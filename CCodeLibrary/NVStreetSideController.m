@@ -8,9 +8,9 @@
 
 @interface NVStreetSideController () <UIWebViewDelegate>
 
-@property (nonatomic) CLLocationCoordinate2D location;
 @property (nonatomic) UIWebView *webView;
 @property (nonatomic) NSTimer *timer;
+@property CLLocationCoordinate2D centerCoord, lookAtCoord;
 
 @end
 
@@ -30,7 +30,8 @@
 {
     NVStreetSideController *nvssc = NVStreetSideController.new;
     nvssc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    nvssc.location = coordinate;
+    nvssc.lookAtCoord = coordinate;
+    nvssc.centerCoord = atCoordinate;
     [controller presentViewController:nvssc animated:YES completion:nil];
     return nvssc;
 }
@@ -39,7 +40,8 @@
 {
     [super viewDidLoad];
     
-    NSString *html = [NSString stringWithFormat:@"<!DOCTYPE html><html><head><style>"
+    NSString *html = [NSString stringWithFormat:
+                      @"<!DOCTYPE html><html><head><style>"
                       "body{width:100vw;height:100vh;border:0px;margin:0px;padding:0px}"
                       "</style></head><body>"
                       "<div id='printoutPanel' style='display:none';></div>"
@@ -48,7 +50,8 @@
                       "window.amd = function(){};"
                       "window.amd.define = function(){};"
                       "function loadMapScenario(){"
-                      "var pidCoords=new Microsoft.Maps.Location(%f, %f);"
+                      "var centerCoord = new Microsoft.Maps.Location(%f, %f);"
+                      "var lookAtCoord = new Microsoft.Maps.Location(%f, %f);"
                       "var map=new Microsoft.Maps.Map(document.getElementById('myMap'),{"
                       "credentials:'%@',"
                       "enableHighDpi:true,"
@@ -59,16 +62,18 @@
                       "overviewMapMode:Microsoft.Maps.OverviewMapMode.hidden,"
                       "showCurrentAddress:false,"
                       "showExitButton:false,"
-                      "locationToLookAt:pidCoords},"
+                      "locationToLookAt:lookAtCoord},"
                       "mapTypeId:Microsoft.Maps.MapTypeId.streetside,"
-                      "center:pidCoords});"
+                      "center:centerCoord});"
                       "Microsoft.Maps.Events.addHandler(map,'viewchangeend',function()"
                       "{document.getElementById('printoutPanel').innerHTML='Load Complete';});"
                       "function onErrorLoading(){"
                       "document.getElementById('printoutPanel').innerHTML='No Streetview';}}</script>"
                       "<script type='text/javascript' src="
-                      "'https://www.bing.com/api/maps/mapcontrol?branch=release&callback=loadMapScenario' async defer>"
-                      "</script></body></html>", _location.latitude, _location.longitude, BING_API_KEY];
+                      "'https://www.bing.com/api/maps/mapcontrol?branch=release&callback=loadMapScenario'"
+                      "async defer></script></body></html>",
+                      _centerCoord.latitude, _centerCoord.longitude,
+                      _lookAtCoord.latitude, _lookAtCoord.longitude, BING_API_KEY];
     
     _webView = UIWebView.new;
     _webView.translatesAutoresizingMaskIntoConstraints = NO;
