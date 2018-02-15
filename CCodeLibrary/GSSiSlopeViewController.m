@@ -24,7 +24,7 @@ static int COUNT=100;
 
 @interface GSSiSlopeViewController ()
 
-@property (nonatomic) UIButton *unableButton, *startCancelButton, *manualButton, *cancelButton, *doesNotExistButton;
+@property (nonatomic) UIButton *unableButton, *startCancelButton, *manualFront, *manualSide, *cancelButton, *doesNotExistButton;
 @property (nonatomic) UIImageView *arrowView;
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UILabel *frontSlopeLabel, *sideSlopeLabel, *maxSlopeLabel, *promptLabel;
@@ -170,7 +170,7 @@ static int COUNT=100;
     
     if (!_fromCalibration)
     {
-        [self setupManualButton];
+        [self setupManualButtons];
         [self setupDoesNotExistButton];
     }
     
@@ -337,22 +337,31 @@ static int COUNT=100;
     _progressView.hidden = YES;
 }
 
-- (void)setupManualButton
+- (void)setupManualButtons
 {
-    _manualButton = [[UIButton alloc] initWithFrame:CGRectMake(104.0, (((_promptLabel.center.y * 3.0) + _headingLabel.center.y) / 4.0),
-                                                               560.0, 80.0)];
+    CGFloat yCenter = (((CGRectGetMaxY(_promptLabel.frame) + CGRectGetMinY(_headingLabel.frame)) / 2.0) - 40.0);
     
-    [_manualButton addTarget:self
-                      action:@selector(manual:)
-            forControlEvents:UIControlEventTouchUpInside];
+    _manualFront = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, 60.0)];
+    _manualFront.center = CGPointMake((self.view.frame.size.width * 0.25), yCenter);
     
-    _manualButton.hidden = YES;
+    [_manualFront addTarget:self
+                     action:@selector(manualFrontTapped)
+           forControlEvents:UIControlEventTouchUpInside];
     
-    [self setupButton:_manualButton
-                title:@"Manual Measurement"];
+    _manualFront.hidden = YES;
+    [self setupButton:_manualFront title:@"Manual Front"];
+    _manualFront.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
     
-    _manualButton.titleLabel.font = [UIFont boldSystemFontOfSize:48.0];
-    _manualButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    _manualSide = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, 60.0)];
+    _manualSide.center = CGPointMake((self.view.frame.size.width * 0.75), yCenter);
+    
+    [_manualSide addTarget:self
+                    action:@selector(manualSideTapped)
+          forControlEvents:UIControlEventTouchUpInside];
+    
+    _manualSide.hidden = YES;
+    [self setupButton:_manualSide title:@"Manual Side"];
+    _manualSide.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
 }
 
 - (void)setupButton:(UIButton *)button
@@ -457,9 +466,9 @@ static int COUNT=100;
     [self updateButtonAppearance:_doesNotExistButton];
 }
 
-- (void)manual:(UIButton *)button
+- (void)manualFrontTapped
 {
-    NVSliderController *slider;
+    NVSliderController *slider = nil;
     
     if (_displayDegrees)
     {
@@ -470,8 +479,8 @@ static int COUNT=100;
                                                    maxValue:(_data.frontSlopeDegrees + 2.0)
                                                    delegate:self
                                               configuration:NVSliderConfigurationManualSlope
-                                                       type:NVSliderMeasurementTypeDefault
-                                                       unit:@""];
+                                                       type:NVSliderMeasurementTypeFrontSlope
+                                                       unit:@"°"];
     }
     
     else
@@ -483,13 +492,52 @@ static int COUNT=100;
                                                    maxValue:(_data.frontSlopePct + 2.0)
                                                    delegate:self
                                               configuration:NVSliderConfigurationManualSlope
-                                                       type:NVSliderMeasurementTypeDefault
-                                                       unit:@""];
+                                                       type:NVSliderMeasurementTypeFrontSlope
+                                                       unit:@"%"];
     }
-   
+    
     [slider showSliderControllerInView:self.view
                               animated:YES
                                overlay:YES];
+    
+    [slider removeRequiredFromLabel];
+}
+
+- (void)manualSideTapped
+{
+    NVSliderController *slider = nil;
+    
+    if (_displayDegrees)
+    {
+        slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                      width:728.0
+                                                 startValue:_data.sideSlopeDegrees
+                                                   minValue:(_data.sideSlopeDegrees - 2.0)
+                                                   maxValue:(_data.sideSlopeDegrees + 2.0)
+                                                   delegate:self
+                                              configuration:NVSliderConfigurationManualSlope
+                                                       type:NVSliderMeasurementTypeSideSlope
+                                                       unit:@"°"];
+    }
+    
+    else
+    {
+        slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                      width:728.0
+                                                 startValue:_data.sideSlopePct
+                                                   minValue:(_data.sideSlopePct - 2.0)
+                                                   maxValue:(_data.sideSlopePct + 2.0)
+                                                   delegate:self
+                                              configuration:NVSliderConfigurationManualSlope
+                                                       type:NVSliderMeasurementTypeSideSlope
+                                                       unit:@"%"];
+    }
+    
+    [slider showSliderControllerInView:self.view
+                              animated:YES
+                               overlay:YES];
+    
+    [slider removeRequiredFromLabel];
 }
 
 - (void)startManagers
@@ -777,15 +825,15 @@ static int COUNT=100;
 {
     if (_displayDegrees)
     {
-        _headingLabel.text = [NSString stringWithFormat:@"Heading = %.01f\u00B0", _data.heading];
-        _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f\u00B0", _data.frontSlopeDegrees];
-        _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f\u00B0", _data.sideSlopeDegrees];
-        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f\u00B0", _data.maxSlopeDegrees];
+        _headingLabel.text = [NSString stringWithFormat:@"Heading = %.01f°", _data.heading];
+        _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f°", _data.frontSlopeDegrees];
+        _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f°", _data.sideSlopeDegrees];
+        _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f°", _data.maxSlopeDegrees];
     }
     
     else
     {
-        _headingLabel.text = [NSString stringWithFormat:@"Heading = %.01f\u00B0", _data.heading];
+        _headingLabel.text = [NSString stringWithFormat:@"Heading = %.01f°", _data.heading];
         _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f%%", _data.frontSlopePct];
         _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f%%", _data.sideSlopePct];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f%%", _data.maxSlopePct];
@@ -801,7 +849,8 @@ static int COUNT=100;
     _unableButton.enabled = _doesNotExistButton.enabled = YES;
     [self updateButtonAppearance:_unableButton];
     [self updateButtonAppearance:_doesNotExistButton];
-    _manualButton.hidden = NO;
+    _manualFront.hidden = NO;
+    _manualSide.hidden = NO;
     
     [self hideDoesNotExist];
     
@@ -820,7 +869,7 @@ static int COUNT=100;
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
                                                            type:NVSliderMeasurementTypeFrontSlope
-                                                           unit:@""];
+                                                           unit:@"°"];
         }
         
         else
@@ -833,7 +882,7 @@ static int COUNT=100;
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
                                                            type:NVSliderMeasurementTypeFrontSlope
-                                                           unit:@""];
+                                                           unit:@"%"];
         }
         
         [slider showSliderControllerInView:self.view
@@ -870,18 +919,21 @@ static int COUNT=100;
             case NVSliderMeasurementTypeFrontSlope:
             case NVSliderMeasurementTypeDefault:
                 _data.manualFrontSlopeDegrees = value;
-                _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f\u00B0", _data.manualFrontSlopeDegrees];
+                
+                _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f°",
+                                         _data.manualFrontSlopeDegrees];
+                
                 _data.frontManualStatus = NVManualStatusManual;
                 break;
-                
             case NVSliderMeasurementTypeSideSlope:
                 _data.manualSideSlopeDegrees = value;
-                _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f\u00B0", _data.manualSideSlopeDegrees];
+                
+                _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f°",
+                                        _data.manualSideSlopeDegrees];
+                
                 _data.sideManualStatus = NVManualStatusManual;
                 break;
-                
-            default:
-                break;
+            default:break;
         }
     }
     
@@ -895,15 +947,12 @@ static int COUNT=100;
                 _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.manualFrontSlopePct];
                 _data.frontManualStatus = NVManualStatusManual;
                 break;
-                
             case NVSliderMeasurementTypeSideSlope:
                 _data.manualSideSlopePct = value;
                 _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f%%", _data.manualSideSlopePct];
                 _data.sideManualStatus = NVManualStatusManual;
                 break;
-                
-            default:
-                break;
+            default:break;
         }
     }
     
@@ -927,7 +976,7 @@ static int COUNT=100;
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
                                                            type:NVSliderMeasurementTypeSideSlope
-                                                           unit:@""];
+                                                           unit:@"°"];
         }
         
         else
@@ -940,7 +989,7 @@ static int COUNT=100;
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
                                                            type:NVSliderMeasurementTypeSideSlope
-                                                           unit:@""];
+                                                           unit:@"%"];
         }
         
         [slider showSliderControllerInView:self.view
@@ -956,13 +1005,10 @@ static int COUNT=100;
         case NVSliderMeasurementTypeFrontSlope:
             _data.frontManualStatus = NVManualStatusCancelled;
             break;
-            
         case NVSliderMeasurementTypeSideSlope:
             _data.sideManualStatus = NVManualStatusCancelled;
             break;
-            
-        default:
-            break;
+        default:break;
     }
     
     [sliderView hideSliderController:YES];

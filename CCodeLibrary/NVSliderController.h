@@ -56,6 +56,7 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
                            overlay:(BOOL)overlay;
 
 - (void)hideSliderController:(BOOL)animated;
+- (void)removeRequiredFromLabel;
 
 - (void)addTitle:(NSString *)title
           prompt:(NSString *)prompt

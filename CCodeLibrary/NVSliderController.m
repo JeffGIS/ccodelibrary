@@ -724,4 +724,10 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     [_delegate sliderViewDidTapButtonWithType:button.tag];
 }
 
+- (void)removeRequiredFromLabel
+{
+    _promptLabel.text = [_promptLabel.text stringByReplacingOccurrencesOfString:@" Required"
+                                                                     withString:@""];
+}
+
 @end
