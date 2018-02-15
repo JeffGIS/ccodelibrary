@@ -112,7 +112,7 @@ typedef struct RampStruct {
     int detectableWarningDepth;
     float domeSpacing, spaceBetweenDomes, domeBaseWidth, domeCapWidth;//these are for detectable warnings
     DetectableWarningShape dwShape;//these are for detectable warnings
-    int dwMinOffset, dwMaxOffset;//these are for detectable warnings
+    int dwMinOffset, dwMaxOffset, dwWidth, dwDepth;//these are for detectable warnings
     int streetLandingDepth, leftXWalkSideWidth, rightXWalkSideWidth;//these are for diagonal ramp type
     int rampWidth, rampDepth;
     float rampSlopeFront;
