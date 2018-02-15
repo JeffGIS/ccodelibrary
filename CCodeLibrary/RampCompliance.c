@@ -24,8 +24,11 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, ToleranceValues *t
     {
         if (ramp->texture < truncatedStoneDomes || ramp->texture > castironTruncatedDomes)
         {
-            basic = strcat(basic, DetectableWarning);
-            detail = strcat(detail, DetectableWarning);
+            if (ramp->texture != castInPlacePanels)
+            {
+                basic = strcat(basic, DetectableWarning);
+                detail = strcat(detail, DetectableWarning);
+            }
         }
     }
     

@@ -15,7 +15,8 @@ enum textures {
     castironTruncatedDomes=6,
     exposedAggregate=7,
     cutStone=8,
-    other=10
+    other=10,
+    castInPlacePanels=11
 };
 
 enum obstructions {
