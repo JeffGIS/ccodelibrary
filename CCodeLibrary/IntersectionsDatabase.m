@@ -575,7 +575,7 @@ static int ii;
 %i,%i,'%s',%i,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\
 %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\
 %i,%i,%i,%i,%f,%f,%i,%i,%i,'%@',\
-%i,%i,%i,%i,%i,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f);",
+%i,%i,%i,%i,%i,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%i,%i);",
                              (int)mpint.intID,
                              (int)ramp.rampNum,
                              rampID,
@@ -642,7 +642,9 @@ static int ii;
                              ramp.crackWidth.rightSidewalkCrackWidth,
                              ramp.curbCutDistance,
                              ramp.bumpWidth,
-                             ramp.bumpHeight
+                             ramp.bumpHeight,
+                             ramp.dwWidth,
+                             ramp.dwDepth
                     ];
             
             rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String

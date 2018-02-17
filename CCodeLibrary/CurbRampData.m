@@ -5,7 +5,7 @@
 //  Created by JEFFREY E SMITH on 6/12/15.
 //  Copyright (c) 2015 GSSi. All rights reserved.
 //
-#define CURRENT_INTERSECTION_VERSION "2.0"
+#define CURRENT_INTERSECTION_VERSION "3.0"
 
 #import "CurbRampData.h"
 #import "UserDefaults.h"
@@ -492,7 +492,28 @@ static int nInit=0;
     {
         switch (version)
         {
-            case 1://convert version 1 to version 2
+            case 2://convert version 2 to version 3
+            {
+                BOOL st = TRUE;
+                rtn = FALSE;
+                [self startTransaction];
+                NSString * cmd = @"";
+                cmd = @"ALTER TABLE Ramps ADD COLUMN detectableWidth REAL;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN detectableDepth REAL;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = [NSString stringWithFormat:@"UPDATE Version SET VersionID = '%s' WHERE vid = 1;",CURRENT_INTERSECTION_VERSION];
+                st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                if (st)
+                {
+                    [self commitTransaction];
+                    rtn = TRUE;
+                }
+                else
+                    [self cancelTransaction];
+            }
+                break;
+           case 1://convert version 1 to version 2
             {
                 BOOL st = TRUE;
                 rtn = FALSE;
@@ -958,6 +979,9 @@ void convertVersion (LPSTR str,int fromVer,int toVer)
             case 1:
                 convertVersion_1_to_2 (str);
                 break;
+            case 2:
+                convertVersion_2_to_3 (str);
+                break;
         }
     }
     return;
@@ -969,6 +993,16 @@ void convertVersion_1_to_2 (LPSTR str)
     {
         LPSTR pEnd = strrchr (ploc,')');
         sprintf (pEnd,",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);");
+    }
+}
+
+void convertVersion_2_to_3 (LPSTR str)
+{
+    LPSTR ploc = strstr (str,"INSERT OR REPLACE INTO Ramps VALUES(");
+    if (ploc)
+    {
+        LPSTR pEnd = strrchr (ploc,')');
+        sprintf (pEnd,",0,0);");
     }
 }
 
