@@ -457,6 +457,8 @@ static int nInit=0;
  curbCutDist REAL,\
  bumpWidth REAL,\
  bumpHeight REAL,\
+ detectableWidth INT,\
+ detectableDepth INT\
  PRIMARY KEY (intID,rampNum ASC));"];
    
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
@@ -498,9 +500,9 @@ static int nInit=0;
                 rtn = FALSE;
                 [self startTransaction];
                 NSString * cmd = @"";
-                cmd = @"ALTER TABLE Ramps ADD COLUMN detectableWidth REAL;";
+                cmd = @"ALTER TABLE Ramps ADD COLUMN detectableWidth INT;";
                 if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
-                cmd = @"ALTER TABLE Ramps ADD COLUMN detectableDepth REAL;";
+                cmd = @"ALTER TABLE Ramps ADD COLUMN detectableDepth INT;";
                 if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
                 cmd = [NSString stringWithFormat:@"UPDATE Version SET VersionID = '%s' WHERE vid = 1;",CURRENT_INTERSECTION_VERSION];
                 st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
