@@ -1024,6 +1024,8 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
             ramp.curbCutDistance = sqlite3_column_double(statement, i++);
             ramp.bumpWidth = sqlite3_column_double(statement, i++);
             ramp.bumpHeight = sqlite3_column_double(statement, i++);
+            ramp.dwWidth = sqlite3_column_int(statement, i++);
+            ramp.dwDepth = sqlite3_column_int(statement, i++);
             if (ramp.bumpWidth > 0 || ramp.bumpHeight > 0)
                 ii=1;
         }
