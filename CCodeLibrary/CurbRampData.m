@@ -458,7 +458,7 @@ static int nInit=0;
  bumpWidth REAL,\
  bumpHeight REAL,\
  detectableWidth INT,\
- detectableDepth INT\
+ detectableDepth INT,\
  PRIMARY KEY (intID,rampNum ASC));"];
    
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
