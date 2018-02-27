@@ -96,6 +96,8 @@
 		6996D3481FFD43D70013139B /* RHRecorder.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69FD71231FE1BE8300EAFDEF /* RHRecorder.h */; };
 		6996D3491FFD43DD0013139B /* RHSearch.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6910F6D81FE482230006375C /* RHSearch.h */; };
 		6996D34A1FFD43E20013139B /* RHWalkScore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 695C062C1FF2B1300081712C /* RHWalkScore.h */; };
+		6997D86320446AB700A24F5D /* NVFrontBackPhotoCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 6997D86220446AB700A24F5D /* NVFrontBackPhotoCapture.m */; };
+		6997D86420447DB600A24F5D /* NVFrontBackPhotoCapture.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6997D86120446AB700A24F5D /* NVFrontBackPhotoCapture.h */; };
 		6998225E1C6904E4003476DD /* NVDocumentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6998225D1C6904E4003476DD /* NVDocumentManager.m */; };
 		6998225F1C690A38003476DD /* NVDocumentManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6998225C1C6904E4003476DD /* NVDocumentManager.h */; };
 		69987CF71C94683F000EC26F /* UIView+Constraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 69987CF61C94683F000EC26F /* UIView+Constraints.m */; };
@@ -439,6 +441,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				6997D86420447DB600A24F5D /* NVFrontBackPhotoCapture.h in CopyFiles */,
 				69CF3A232020FE6B00309852 /* NVRampButton.h in CopyFiles */,
 				69CF3A222020FE6300309852 /* NVSignalButton.h in CopyFiles */,
 				69CF3A212020FE5900309852 /* NVRampTypePageView.h in CopyFiles */,
@@ -713,6 +716,8 @@
 		6996D33F1FFD3E510013139B /* RHEditor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHEditor.m; sourceTree = "<group>"; };
 		6996D3411FFD42910013139B /* RiteHome.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RiteHome.h; sourceTree = "<group>"; };
 		6996D3421FFD42910013139B /* RiteHome.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RiteHome.m; sourceTree = "<group>"; };
+		6997D86120446AB700A24F5D /* NVFrontBackPhotoCapture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVFrontBackPhotoCapture.h; sourceTree = "<group>"; };
+		6997D86220446AB700A24F5D /* NVFrontBackPhotoCapture.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NVFrontBackPhotoCapture.m; sourceTree = "<group>"; };
 		6998225C1C6904E4003476DD /* NVDocumentManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVDocumentManager.h; sourceTree = "<group>"; };
 		6998225D1C6904E4003476DD /* NVDocumentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDocumentManager.m; sourceTree = "<group>"; };
 		69987CF51C94683F000EC26F /* UIView+Constraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Constraints.h"; sourceTree = "<group>"; };
@@ -1341,6 +1346,8 @@
 				69F5B22E1BC5EFB800119212 /* NVDestinationOptions.m */,
 				6986AF821C7C119E0059DD1B /* NVDigitizerView.h */,
 				6986AF831C7C119E0059DD1B /* NVDigitizerView.m */,
+				6997D86120446AB700A24F5D /* NVFrontBackPhotoCapture.h */,
+				6997D86220446AB700A24F5D /* NVFrontBackPhotoCapture.m */,
 				A903264D1AE6C4BA00126158 /* NVHeadingViewController.h */,
 				A903264E1AE6C4BA00126158 /* NVHeadingViewController.m */,
 				A9E2130C1AFE4BFC005ECBBA /* NVImagePickerController.h */,
@@ -2012,6 +2019,7 @@
 				69FD71311FE1CD4B00EAFDEF /* RHController.m in Sources */,
 				698C20C81DCB030B00F800C3 /* NVKeyboard.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
+				6997D86320446AB700A24F5D /* NVFrontBackPhotoCapture.m in Sources */,
 				699DD7391CEA057600C7A651 /* NVSynchronizeVC.m in Sources */,
 				EBC01D0F1BED1C8C0004C751 /* deltat.c in Sources */,
 				69F4823D1DB7DDBF00E4BDB5 /* NVSpreadsheetCell.m in Sources */,
