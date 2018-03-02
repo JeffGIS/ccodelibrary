@@ -166,7 +166,6 @@ static int COUNT=100;
     [self setupArrowView];
     [self setupLabels];
     [self setupProgressView];
-    [self setupCancelButton];
     
     if (!_fromCalibration)
     {
@@ -237,7 +236,8 @@ static int COUNT=100;
 
 - (void)setupUnableButton
 {
-    _unableButton = [[UIButton alloc] initWithFrame:CGRectMake(56.0, 884.0, 300.0, 80.0)];
+    _unableButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _unableButton.frame = CGRectMake(56.0, 884.0, 300.0, 80.0);
     
     [_unableButton addTarget:self
                       action:@selector(goBack:)
@@ -249,14 +249,14 @@ static int COUNT=100;
 
 - (void)setupStartCancelButton
 {
-    _startCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(184.0, 564.0, 400.0, 80.0)];
+    _startCancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _startCancelButton.frame = CGRectMake(184.0, 564.0, 400.0, 80.0);
     
     [_startCancelButton addTarget:self
                            action:@selector(startCancel:)
                  forControlEvents:UIControlEventTouchUpInside];
     
-    [self setupButton:_startCancelButton
-                title:@"Start"];
+    [self setupButton:_startCancelButton title:@"Start"];
 }
 
 - (void)setupCancelButton
@@ -281,7 +281,8 @@ static int COUNT=100;
 
 - (void)setupDoesNotExistButton
 {
-    _doesNotExistButton = [[UIButton alloc] initWithFrame:CGRectMake(412.0, 884.0, 300.0, 80.0)];
+    _doesNotExistButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _doesNotExistButton.frame = CGRectMake(412.0, 884.0, 300.0, 80.0);
     
     [_doesNotExistButton addTarget:self
                             action:@selector(doesNotExistTapped:)
@@ -341,7 +342,8 @@ static int COUNT=100;
 {
     CGFloat yCenter = (((CGRectGetMaxY(_promptLabel.frame) + CGRectGetMinY(_headingLabel.frame)) / 2.0) - 40.0);
     
-    _manualFront = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, 60.0)];
+    _manualFront = [UIButton buttonWithType:UIButtonTypeCustom];
+    _manualFront.frame = CGRectMake(0.0, 0.0, 300.0, 60.0);
     _manualFront.center = CGPointMake((self.view.frame.size.width * 0.25), yCenter);
     
     [_manualFront addTarget:self
@@ -352,7 +354,8 @@ static int COUNT=100;
     [self setupButton:_manualFront title:@"Manual Front"];
     _manualFront.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
     
-    _manualSide = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, 60.0)];
+    _manualSide = [UIButton buttonWithType:UIButtonTypeCustom];
+    _manualSide.frame = CGRectMake(0.0, 0.0, 300.0, 60.0);
     _manualSide.center = CGPointMake((self.view.frame.size.width * 0.75), yCenter);
     
     [_manualSide addTarget:self
@@ -555,10 +558,10 @@ static int COUNT=100;
                                                      NSLog(@"DeviceMotionError:%@", error.localizedDescription);
                                              }];
     }
+    
     if (CLLocationManager.headingAvailable && !_hasRun)
         [_locationManager startUpdatingHeading];
     
-
     _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
 }
 
@@ -566,7 +569,6 @@ static int COUNT=100;
 {
     [_motionManager stopAccelerometerUpdates];
     [_locationManager stopUpdatingHeading];
-    _locationManager.delegate = nil;
 }
 
 - (void)stopMotionManager
@@ -727,6 +729,7 @@ static int COUNT=100;
     
     if (_headingCounter >= MIN_HEADING_COUNTER)
         _sumHeading += [self correctedHeading:newHeading.trueHeading];
+    
     _headingCounter++;
 }
 
@@ -734,7 +737,7 @@ static int COUNT=100;
 {
     if (_counter == COUNT)
     {
-        if (_headingCounter  > MIN_HEADING_COUNTER + 10 || !CLLocationManager.headingAvailable)
+        if (_headingCounter > (MIN_HEADING_COUNTER + 10) || !CLLocationManager.headingAvailable)
         {
             [self stopManagers];
             
@@ -772,7 +775,6 @@ static int COUNT=100;
             _data.maxSlopeDegrees = (atan(_data.maxSlopePct / 100) * RADtoDEG);
             
             [self slopeMeasurementComplete];
-            
         }
         
         if (_headingCounter  > MIN_HEADING_COUNTER + 10)
@@ -840,11 +842,9 @@ static int COUNT=100;
     }
     
     _promptLabel.text = @"Press 'Done' to continue.";
+    [_unableButton setTitle:@"Done" forState:UIControlStateNormal];
     
-    [_unableButton setTitle:@"Done"
-                   forState:UIControlStateNormal];
-    
-    _startCancelButton.hidden = _progressView.hidden = YES;
+    _startCancelButton.hidden = _progressView.hidden = _cancelButton.hidden = YES;
     _unable = _hasRun = NO;
     _unableButton.enabled = _doesNotExistButton.enabled = YES;
     [self updateButtonAppearance:_unableButton];
