@@ -12,6 +12,7 @@
 @property BOOL backImageIsTaken;
 @property (nonatomic) AVCaptureSession *session;
 @property (nonatomic) AVCaptureStillImageOutput *output;
+
 @end
 
 @implementation NVFrontBackPhotoCapture
@@ -21,6 +22,7 @@
     NVFrontBackPhotoCapture *capture = NVFrontBackPhotoCapture.new;
     capture.backImageIsTaken = NO;
     capture.delegate = delegate;
+
     return capture;
 }
 
