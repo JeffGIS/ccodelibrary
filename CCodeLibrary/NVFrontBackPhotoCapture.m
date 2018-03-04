@@ -66,7 +66,10 @@
 - (void)takeThePhoto
 {
     AVCaptureConnection *connection =  [_output connectionWithMediaType:AVMediaTypeVideo];
-    
+    if (connection.supportsVideoOrientation)
+    {
+        connection.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
+    }
     if (connection && connection.enabled && connection.active)
     {
         [_output captureStillImageAsynchronouslyFromConnection:connection
