@@ -288,7 +288,7 @@ void SetUseOnlyOneDBHandle (HANDLE handle)
  }
  #endif
  }
- */
+ 
 
 Bool UpdateGlobalFile (LPSTR RptFileIn,LPSTR VName,LPSTR Value)
 #if ENABLETRACE
@@ -435,7 +435,7 @@ void GetRunDate (LPSTR RunID, LPSTR Date)
     }
 #endif
 }
-
+*/
 DWORD NextVarTime (void)
 #if ENABLETRACE
 {GSSiEnterProg (517);
@@ -456,7 +456,7 @@ DWORD NextVarTime (void)
     }
 #endif
 }
-
+/*
 Bool LoadGlobalInit (LPSTR File,Bool First)
 #if ENABLETRACE
 {GSSiEnterProg (518);
@@ -499,16 +499,16 @@ Bool LoadGlobalInit (LPSTR File,Bool First)
         IgnoreFileOpenError = SaveIgnoreFileOpenError;
         if (Fid==HFILE_ERROR)
         {
-            /*		LPSTR	pDot;
+            //		LPSTR	pDot;
              
-             _fstrcpy (str,File);
-             if ((pDot = _fstrrchr (str,'.')))
-             {
-             _fstrcpy (pDot,".inb");
-             Fid = GSSiOpenFile (str,0,OF_READ);
-             if (Fid != HFILE_ERROR)
-             goto Next;
-             } */
+            // _fstrcpy (str,File);
+            // if ((pDot = _fstrrchr (str,'.')))
+            // {
+            // _fstrcpy (pDot,".inb");
+           //  Fid = GSSiOpenFile (str,0,OF_READ);
+           //  if (Fid != HFILE_ERROR)
+           //  goto Next;
+           //  }
             GSSiGlobUlFree (&hMem);
             {
 #if ENABLETRACE
@@ -528,41 +528,7 @@ Bool LoadGlobalInit (LPSTR File,Bool First)
             n++;
             if (str[0] != '\0' && str[0] != '#')
             {
-                /*			lpEq = _fstrchr (str,'=');
-                 if (!lpEq)
-                 {
-                 sprintf (str2,"Error on line %i of %s",n,File);
-                 noerr = FALSE;
-                 GSSiMsgBox( GetFocus(),str,str2,MB_ICONEXCLAMATION);
-                 }
-                 else
-                 {
-                 lpEq--;
-                 if (str[0] != '[' && *lpEq != ']')
-                 {
-                 sprintf (str2,"Error on line %i of %s",n,File);
-                 noerr = FALSE;
-                 GSSiMsgBox( GetFocus(),str,str2,MB_ICONEXCLAMATION);
-                 }
-                 else
-                 {
-                 *lpEq = '\0';
-                 lpEq+=2;
-                 lpEnd = _fstrchr(lpEq,0);
-                 lpEnd--;
-                 if (*lpEnd == ';') *lpEnd = 0;
-                 _fstrcpy (str2,lpEq);
-                 if (First || _fstricmp (&str[1],"%DATA_LOC"))
-                 SetGlobalValue (&str[1],str2);
-                 if (TraceOn)
-                 {
-                 sprintf (mess,"%s: %s",&str[1],str2);
-                 GSSiTrace (mess,0);
-                 }
-                 
-                 }
-                 }*/
-                if (PeopleNet && !strncmp (str,"[STATE]=",8))
+                 if (PeopleNet && !strncmp (str,"[STATE]=",8))
                 {
                     char str2[64]="[%STATE]=";
                     
@@ -591,7 +557,7 @@ Bool LoadGlobalInit (LPSTR File,Bool First)
     }
 #endif
 }
-
+*/
 /*Bool GetCurrentPNDBName (LPSTR Name)
  {
 	short	NumFields=0, NumIndexFields=1;
@@ -691,7 +657,7 @@ Bool LoadGlobalInit (LPSTR File,Bool First)
  }
  #endif
  }
- */
+ 
 int ReadMultiLine (HFILE Fid,LPSTR str)
 {
     LPSTR	strb=str;
@@ -1261,20 +1227,7 @@ short OpenDataFile (LPSTR InName, LPSTR SQL, short Access, HANDLE *hDB)
                 pDBFAddress = (LPDWORD)GlobalLock (FileHandle);
                 *pDBFAddress = (DWORD)pDBF;
                 GlobalUnlock (FileHandle);
-                /*	short	FieldWidth, FieldDecimals;
-                 nFields= DBFGetFieldCount(pDBF );
-                 nRecs =  DBFGetRecordCount(pDBF );
-                 for (i=0;i<nFields;i++)
-                 {
-                 DBFGetFieldInfo(pDBF, i, FieldName, &FieldWidth,&FieldDecimals );
-                 }
-                 x1=DBFReadDoubleAttribute(pDBF,1, 1);
-                 Refno=DBFReadIntegerAttribute(pDBF,1, 2);
-                 Refno=DBFReadIntegerAttribute(pDBF,2, 3);
-                 pLoc=DBFReadStringAttribute(pDBF,3, 4);
-                 pLoc=DBFReadStringAttribute(pDBF,3, 7);
-                 DBFClose(pDBF);*/
-            }
+             }
                 break;
             case DBF_DATAFILE:
             {
@@ -1292,18 +1245,7 @@ short OpenDataFile (LPSTR InName, LPSTR SQL, short Access, HANDLE *hDB)
                 GlobalUnlock (FileHandle);
                 
                 
-                /*
-                 _splitpath (Name,drive,dir,fname,ext);
-                 if (*LastChr (dir) == '\\')
-                 *LastChr (dir) = 0;
-                 sprintf (driver,"dBASE Files;DefaultDir=%s%s",drive,dir);
-                 FileHandle = OpenExternalDatabase (driver);
-                 if(FileHandle && *fname != '*')
-                 {
-                 sprintf (table,"%s%s",fname,ext);
-                 FileHandle =(HANDLE)OpenDatabaseTable ((int)FileHandle, Name);
-                 } */
-            }
+             }
                 break;
             case TEXT_DATAFILE:
             {
@@ -1402,10 +1344,6 @@ short OpenDataFile (LPSTR InName, LPSTR SQL, short Access, HANDLE *hDB)
             else
                 _fstrcpy (FilePtr->fullpath,path);
         }
-        /*	if (FilePtr->Fid != HFILE_ERROR)
-         FilePtr->Offset = GSSillseek (FilePtr->Fid,0,1);
-         else
-         FilePtr->Offset = -1;   */
         FilePtr->FileHandle = FileHandle;
         FilePtr->NumFields = NumFields;
         lpFieldInfoSave = (LPFIELDINFO)GlobalLock(hFields);
@@ -1413,19 +1351,6 @@ short OpenDataFile (LPSTR InName, LPSTR SQL, short Access, HANDLE *hDB)
         if (NumFields)
             for (i=0;i<NumFields;i++,lpFieldInfoSave++,lpFieldInfo++)
                 *lpFieldInfo = *lpFieldInfoSave;
-        /*	else //enabling this keeps PGDBs from working
-         {
-         for (i=0;i<nf;i++,lpFieldInfoSave++,lpFieldInfo++)
-         {
-         if (!i)
-         _fstrcpy (lpFieldInfo->name,"RESULT");
-         else
-         sprintf (lpFieldInfo->name,"RESULT%i",i+1);
-         lpFieldInfo->type = SQL_VARCHAR;
-         lpFieldInfo->length = 255;
-         }
-         FilePtr->NumFields = nf;
-         }*/
         GSSiGlobUlFree (&hFields);
         if (FilePtr->Type == SQL_DATAFILE)
         {
@@ -1748,7 +1673,7 @@ int	SelectGWDIndex (HANDLE hFile,LPOPENSQLDATA	SQLPtr,LPSHORT pUnique)
     }
 #endif
 }
-
+*/
 
 HANDLE GetDBHandleFromSQL (HANDLE hSQL)
 #if ENABLETRACE
@@ -7681,7 +7606,7 @@ Bool LogicPFile (LPOPENSQLDATA	SQLPtr,LPSTR SQL,LPBool pErr)
     LogicPSQLPtr = 0;
     return rtn;
 }
-
+/*
 int GetDBPos(HANDLE hSQLPtr)
 {
     LPOPENSQLDATA	SQLPtr;
@@ -8230,7 +8155,7 @@ short WantGMDRecord (LPOPENFILEDATA FilePtr,LPOPENSQLDATA SQLPtr,LPGWDHEADER lpG
     }
 #endif
 } 
-
+*/
 HANDLE GetDBByIDName (LPSTR IDName)
 #if ENABLETRACE
 {GSSiEnterProg (575);
@@ -8286,7 +8211,7 @@ HANDLE GetDBByIDName (LPSTR IDName)
     }
 #endif
 }
-
+/*
 Bool SaveDBRec (HANDLE hSQLPtr)
 #if ENABLETRACE
 {GSSiEnterProg (576);
@@ -8337,7 +8262,7 @@ Bool SaveDBRec (HANDLE hSQLPtr)
     }
 #endif
 }
-
+*/
 Bool SetGMDField (HANDLE hSQLPtr,LPSTR Name,LPSTR Value)
 #if ENABLETRACE
 {GSSiEnterProg (577);
@@ -8576,8 +8501,14 @@ short GetDlgListVal (LPSTR VarName,LPSTR Value)
     
     return ln;
 }
-
 int GetValFromOpenFiles (LPSTR VarName,LPSTR Value,int maxlval)
+{
+    return 0;
+}
+/*
+int GetValFromOpenFiles (LPSTR VarName,LPSTR Value,int maxlval)
+{
+
 #if ENABLETRACE
 {GSSiEnterProg (578);
 #endif
@@ -8657,8 +8588,6 @@ int GetValFromOpenFiles (LPSTR VarName,LPSTR Value,int maxlval)
             LPSTR		TempValue = str + maxlval;
             LPSTR		pSQL=TempValue+256;   
             
-            /*	if (*VarName == '%')
-             goto GetOut;*/
             FilePathPtr = (LPFILEPATH)GlobalLock (FilePathHandle);
             
             if (!_fstricmp (VarName,"%RECORDOFFSET"))
@@ -9129,25 +9058,6 @@ int GetValFromOpenFiles (LPSTR VarName,LPSTR Value,int maxlval)
                                         goto NotFound;
                                     }
                                     NumFetch++;
-                                    /*SQLPtr->lastreadtime = NextVarTime ();
-                                     GWDClearSetValues (lpGWDHead);
-                                     for (i=0,lpSQLField=&SQLPtr->SQLField;i<SQLPtr->NumGlobals;i++,lpSQLField++)
-                                     {
-                                     if (lpSQLField->FieldNum >= 0 && lpSQLField->OpCode == OPCODE_EQ)
-                                     {
-                                     _fstrcpy (str,lpSQLField->String);
-                                     ExpandText (str);
-                                     lpGWFldInfo=lpGWDHead->pFldInfo + lpSQLField->FieldNum;
-                                     SetFieldValFromChar(lpGWDHead,lpGWFldInfo,str,FALSE);
-                                     }
-                                     }
-                                     if (GWDInitUnsetKeyValues (lpGWDHead,SQLPtr->IndexToUse))
-                                     FirstCond = BT_GE;
-                                     GWDFormKey(lpGWDHead,SQLPtr->IndexToUse,TRUE,0);
-                                     if (SQLPtr->IndexToUse)
-                                     SetReadSecIndex(TRUE);
-                                     SQLPtr->st = BT_FIND (hBT,lpGWDHead->pKeys[SQLPtr->IndexToUse],BT_FIRST,FirstCond, (LPSTR)&SQLPtr->Offset);
-                                     SetReadSecIndex(FALSE); */
                                     SQLPtr->lastreadtime = NextVarTime();
                                 }
                                 if (lpGWDHead->Version > 1000)
@@ -9358,7 +9268,7 @@ int GetValFromOpenFiles (LPSTR VarName,LPSTR Value,int maxlval)
     }
 #endif
 } 
-
+*/
 short GetDBType (HANDLE hDB)
 {
     LPOPENFILEDATA	FilePtr;

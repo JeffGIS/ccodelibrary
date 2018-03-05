@@ -1056,7 +1056,7 @@ DPOINT CopyFilePtToBasePt(POINT Point)
 
 LPSTR fgetstring(LPSTR lpStr, int len, HFILE Fid)
 {
-	return lpStr;
+    return lpStr;
 }
 
 LPSTR fgetstring2(LPSTR lpStr, int len, HFILE Fid)

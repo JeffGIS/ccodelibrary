@@ -464,7 +464,7 @@
     LPSTR str = malloc(totLen + 4);
     [self startTransaction];
     
-    while (rtn && fgetstring(str, maxLineLen, fid))
+    while (rtn && fgetstringF(str, maxLineLen, fid))
     {
         rtn = [self executeCmd:str
                   sendToServer:NO
@@ -713,7 +713,7 @@
         else
             color = sdwkPointColor;
         
-        DPOINT llpoint = TranDPOINT(&basePt, _pTranLLtoView);
+        DPOINT llpoint = TranDPOINTP(&basePt, _pTranLLtoView);
         
         [self drawSdwkPoint:context
                     atPoint:&llpoint

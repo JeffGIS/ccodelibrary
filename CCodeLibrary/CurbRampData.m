@@ -946,7 +946,7 @@ static int nInit=0;
         LPSTR vloc = strstr (str,"DBVer ");
         if (vloc)
             fromVer = atoi (vloc+6);
-        while (rtn && fgetstring(str, maxLineLen, fid))
+        while (rtn && fgetstringF(str, maxLineLen, fid))
         {
             convertVersion (str,fromVer,toVer);
             rtn = [self executeCmd:str
