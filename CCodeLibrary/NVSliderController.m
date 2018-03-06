@@ -569,10 +569,10 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         _promptLabel.adjustsFontSizeToFitWidth = YES;
         
         if (_type == NVSliderMeasurementTypeFrontSlope)
-            _promptLabel.text = @"Manual Front Slope Measurement Required";
+            _promptLabel.text = @"Manual Running Slope Measurement Required";
         
         else if (_type == NVSliderMeasurementTypeSideSlope)
-            _promptLabel.text = @"Manual Side Slope Measurement Required";
+            _promptLabel.text = @"Manual Cross Slope Measurement Required";
         
         if (animated)
             _promptLabel.alpha = 0.0;
