@@ -662,68 +662,68 @@ static int ii;
     }
 
     PixelXYToLatLong(mpint.lev21x, mpint.lev21y, 21, &lat, &lon);
-   
+//do not restructure (shift right) the following lines
     NSString *cmd = [NSString stringWithFormat:@"UPDATE Intersections SET lastUpdateTime=%i, status=%li,\
-                     assignedToPrelim=%i,\
-                     assignedToDetail=%i,\
-                     intX=%i,\
-                     intY=%i,\
-                     ramp1=%i,\
-                     ramp2=%i,\
-                     ramp3=%i,\
-                     ramp4=%i,\
-                     ramp5=%i,\
-                     ramp6=%i,\
-                     ramp7=%i,\
-                     ramp8=%i,\
-                     ramp81=%i,\
-                     ramp23=%i,\
-                     ramp45=%i,\
-                     ramp67=%i,\
-                     xWalkA=%i,\
-                     xWalkB=%i,\
-                     xWalkC=%i,\
-                     xWalkD=%i,\
-                     signal81=%i,\
-                     signal23=%i,\
-                     signal45=%i,\
-                     signal67=%i,\
-                     latitude=%f,\
-                     longitude=%f,\
-                     zoomLevel=%i,\
-                     doLater=%i,\
-                     intersectionComment='%s' \
-                     WHERE intID=%i;",
-                     iTime, (long)mpint.status,
-                       mpint.assignedPrelim,
-                       mpint.assignedDetail,
-                       mpint.lev21x,
-                       mpint.lev21y,
-                       [self getRampCoord:mpint ramp:1],
-                       [self getRampCoord:mpint ramp:2],
-                       [self getRampCoord:mpint ramp:3],
-                       [self getRampCoord:mpint ramp:4],
-                       [self getRampCoord:mpint ramp:5],
-                       [self getRampCoord:mpint ramp:6],
-                       [self getRampCoord:mpint ramp:7],
-                       [self getRampCoord:mpint ramp:8],
-                       [self getRampCoord:mpint ramp:9],
-                       [self getRampCoord:mpint ramp:10],
-                       [self getRampCoord:mpint ramp:11],
-                       [self getRampCoord:mpint ramp:12],
-                       [self getXWalkCoord:mpint xWalk:'A'],
-                       [self getXWalkCoord:mpint xWalk:'B'],
-                       [self getXWalkCoord:mpint xWalk:'C'],
-                       [self getXWalkCoord:mpint xWalk:'D'],
-                       [self getSignalCoord:mpint signal:81],
-                       [self getSignalCoord:mpint signal:23],
-                       [self getSignalCoord:mpint signal:45],
-                       [self getSignalCoord:mpint signal:67],
-                       lat,lon,
-                       mpint.zoomLevel,
-                       mpint.doLater,
-                       mpint.intersectionComment.UTF8String,
-                       mpint.intID];
+assignedToPrelim=%i,\
+assignedToDetail=%i,\
+intX=%i,\
+intY=%i,\
+ramp1=%i,\
+ramp2=%i,\
+ramp3=%i,\
+ramp4=%i,\
+ramp5=%i,\
+ramp6=%i,\
+ramp7=%i,\
+ramp8=%i,\
+ramp81=%i,\
+ramp23=%i,\
+ramp45=%i,\
+ramp67=%i,\
+xWalkA=%i,\
+xWalkB=%i,\
+xWalkC=%i,\
+xWalkD=%i,\
+signal81=%i,\
+signal23=%i,\
+signal45=%i,\
+signal67=%i,\
+latitude=%f,\
+longitude=%f,\
+zoomLevel=%i,\
+doLater=%i,\
+intersectionComment='%s' \
+WHERE intID=%i;",
+iTime, (long)mpint.status,
+mpint.assignedPrelim,
+mpint.assignedDetail,
+mpint.lev21x,
+mpint.lev21y,
+[self getRampCoord:mpint ramp:1],
+[self getRampCoord:mpint ramp:2],
+[self getRampCoord:mpint ramp:3],
+[self getRampCoord:mpint ramp:4],
+[self getRampCoord:mpint ramp:5],
+[self getRampCoord:mpint ramp:6],
+[self getRampCoord:mpint ramp:7],
+[self getRampCoord:mpint ramp:8],
+[self getRampCoord:mpint ramp:9],
+[self getRampCoord:mpint ramp:10],
+[self getRampCoord:mpint ramp:11],
+[self getRampCoord:mpint ramp:12],
+[self getXWalkCoord:mpint xWalk:'A'],
+[self getXWalkCoord:mpint xWalk:'B'],
+[self getXWalkCoord:mpint xWalk:'C'],
+[self getXWalkCoord:mpint xWalk:'D'],
+[self getSignalCoord:mpint signal:81],
+[self getSignalCoord:mpint signal:23],
+[self getSignalCoord:mpint signal:45],
+[self getSignalCoord:mpint signal:67],
+lat,lon,
+mpint.zoomLevel,
+mpint.doLater,
+mpint.intersectionComment.UTF8String,
+mpint.intID];
     
     rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
                            sendToServer:YES
