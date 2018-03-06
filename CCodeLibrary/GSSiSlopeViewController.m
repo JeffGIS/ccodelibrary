@@ -351,7 +351,7 @@ static int COUNT=100;
            forControlEvents:UIControlEventTouchUpInside];
     
     _manualFront.hidden = YES;
-    [self setupButton:_manualFront title:@"Manual Front"];
+    [self setupButton:_manualFront title:@"Manual Running"];
     _manualFront.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
     
     _manualSide = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -363,7 +363,7 @@ static int COUNT=100;
           forControlEvents:UIControlEventTouchUpInside];
     
     _manualSide.hidden = YES;
-    [self setupButton:_manualSide title:@"Manual Side"];
+    [self setupButton:_manualSide title:@"Manual Cross"];
     _manualSide.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
 }
 
@@ -828,16 +828,16 @@ static int COUNT=100;
     if (_displayDegrees)
     {
         _headingLabel.text = [NSString stringWithFormat:@"Heading = %.01f°", _data.heading];
-        _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f°", _data.frontSlopeDegrees];
-        _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f°", _data.sideSlopeDegrees];
+        _frontSlopeLabel.text = [NSString stringWithFormat:@"Running Slope = %+.01f°", _data.frontSlopeDegrees];
+        _sideSlopeLabel.text = [NSString stringWithFormat:@"Cross Slope = %+.01f°", _data.sideSlopeDegrees];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f°", _data.maxSlopeDegrees];
     }
     
     else
     {
         _headingLabel.text = [NSString stringWithFormat:@"Heading = %.01f°", _data.heading];
-        _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.01f%%", _data.frontSlopePct];
-        _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.01f%%", _data.sideSlopePct];
+        _frontSlopeLabel.text = [NSString stringWithFormat:@"Running Slope = %+.01f%%", _data.frontSlopePct];
+        _sideSlopeLabel.text = [NSString stringWithFormat:@"Cross Slope = %+.01f%%", _data.sideSlopePct];
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f%%", _data.maxSlopePct];
     }
     
@@ -920,7 +920,7 @@ static int COUNT=100;
             case NVSliderMeasurementTypeDefault:
                 _data.manualFrontSlopeDegrees = value;
                 
-                _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f°",
+                _frontSlopeLabel.text = [NSString stringWithFormat:@"Running Slope = %+.02f°",
                                          _data.manualFrontSlopeDegrees];
                 
                 _data.frontManualStatus = NVManualStatusManual;
@@ -928,7 +928,7 @@ static int COUNT=100;
             case NVSliderMeasurementTypeSideSlope:
                 _data.manualSideSlopeDegrees = value;
                 
-                _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f°",
+                _sideSlopeLabel.text = [NSString stringWithFormat:@"Cross Slope = %+.02f°",
                                         _data.manualSideSlopeDegrees];
                 
                 _data.sideManualStatus = NVManualStatusManual;
@@ -944,12 +944,12 @@ static int COUNT=100;
             case NVSliderMeasurementTypeFrontSlope:
             case NVSliderMeasurementTypeDefault:
                 _data.manualFrontSlopePct = value;
-                _frontSlopeLabel.text = [NSString stringWithFormat:@"Front Slope = %+.02f%%", _data.manualFrontSlopePct];
+                _frontSlopeLabel.text = [NSString stringWithFormat:@"Running Slope = %+.02f%%", _data.manualFrontSlopePct];
                 _data.frontManualStatus = NVManualStatusManual;
                 break;
             case NVSliderMeasurementTypeSideSlope:
                 _data.manualSideSlopePct = value;
-                _sideSlopeLabel.text = [NSString stringWithFormat:@"Side Slope = %+.02f%%", _data.manualSideSlopePct];
+                _sideSlopeLabel.text = [NSString stringWithFormat:@"Cross Slope = %+.02f%%", _data.manualSideSlopePct];
                 _data.sideManualStatus = NVManualStatusManual;
                 break;
             default:break;

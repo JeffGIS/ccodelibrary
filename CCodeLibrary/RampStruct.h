@@ -16,7 +16,8 @@ enum textures {
     exposedAggregate=7,
     cutStone=8,
     other=10,
-    castInPlacePanels=11
+    castInPlacePanels=11,
+    linearGrooves=12
 };
 
 enum obstructions {
