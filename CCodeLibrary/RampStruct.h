@@ -28,7 +28,11 @@ enum obstructions {
     streetmanhole=5,
     otherob=6,
     none=10,
-    masterNone=11
+    masterNone=11,
+    sdwkClearWidth=21,
+    sdwkProtrudingObject=22,
+    sdwkVerticalClearance=23,
+    sdwkUndergroundUtility=24
 };
 
 typedef enum {
