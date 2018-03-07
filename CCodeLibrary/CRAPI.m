@@ -142,6 +142,7 @@
         _showCompassCalibrationScreen = YES;
         _boundaryBorderWidth = 4;
         _allowLegendMinimize = YES;
+        _allowPortraitPhotos = NO;
         
         NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%@",
                                 UserDefaults.defaults.localFilePath,
