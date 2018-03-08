@@ -9,7 +9,7 @@
 #import "PickedItem.h"
 #include "shr.h"
 
-#define CURRENT_SIDEWALK_VERSION "1.2"
+#define CURRENT_SIDEWALK_VERSION "1.3"
 
 @implementation  NVSidewalkPoint
 
@@ -47,14 +47,13 @@
     
     if (self)
     {
-        _path = [NSString stringWithFormat:@"%@/SidewalkDatabase.sqlite3", UserDefaults.defaults.sharedFilePath];
+        _path = [NSString stringWithFormat:@"%@/NVSdwkPtsDb.sqlite3",
+                 UserDefaults.defaults.sharedFilePath];
+        
         _sendToServer = YES;
         BOOL opened = self.open;
         
-        NSString *cmd = @"CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), "
-        "latitude REAL, longitude REAL, slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, "
-        "width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, deleted INT); "
-        "CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
+        NSString *cmd = @"CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), latitude REAL, longitude REAL, slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, type INT, deleted INT); CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
         
         [self executeCmd:(char *)cmd.UTF8String
             sendToServer:_sendToServer
@@ -85,7 +84,9 @@
             
             BOOL tableOK = NO;
             sqlite3_stmt *statement = NULL;
-            int rc = SQLitePrepare(_database, "pragma table_info ('SidewalkPointsUpdates')", -1, &statement, NULL);
+            
+            int rc = SQLitePrepare(_database, "pragma table_info ('SidewalkPointsUpdates')",
+                                   -1, &statement, NULL);
             
             if (rc == SQLITE_OK)
             {
@@ -123,7 +124,7 @@
     if (opened)
     {
         SQLOK(__FILE__,__LINE__, SQLite_Close(&_database), _database);
-        NSLog(@"SidewalkPoint Database close");
+        NSLog(@"SidewalkPoints Database close");
         _isOpen = NO;
     }
 }
@@ -145,8 +146,7 @@
 {
     BOOL rtn = YES;
     
-    NSString *cmd = @"CREATE TABLE IF NOT EXISTS SidewalkPointsPictures (id INTEGER PRIMARY KEY, "
-    "iPadNum INT, pictNum INT, pointID INT, type INT, heading INT, latitude REAL, longitude REAL, time INT)";
+    NSString *cmd = @"CREATE TABLE IF NOT EXISTS SidewalkPointsPictures (id INTEGER PRIMARY KEY, iPadNum INT, pictNum INT, pointID INT, type INT, heading INT, latitude REAL, longitude REAL, time INT)";
     
     rtn = !SQLOK(__FILE__,__LINE__,SQLiteExec(_database, cmd.UTF8String, NULL, NULL, NULL), _database);
     cmd = @"CREATE INDEX IF NOT EXISTS SidewalkPointsPictures_index ON SidewalkPointsPictures (pointID)";
@@ -422,8 +422,7 @@
     int iTime = NSDate.timeIntervalSinceReferenceDate;
     uint pictID = [self getNextPictID];
     
-    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO SidewalkPointsPictures VALUES (%i,%i,%i,%i,%i,%i,%f,%f,%i);",
-                     pictID, CRAPI.sharedInstance.currentiPadWithinManager, pictNum, sdwkPtID, type, heading, ll.lat, ll.lon, iTime];
+    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO SidewalkPointsPictures VALUES (%i,%i,%i,%i,%i,%i,%f,%f,%i);", pictID, CRAPI.sharedInstance.currentiPadWithinManager, pictNum, sdwkPtID, type, heading, ll.lat, ll.lon, iTime];
     
     BOOL rtn = [self executeCmd:(LPSTR)cmd.UTF8String
                    sendToServer:YES
@@ -494,9 +493,9 @@
     return rtn;
 }
 
-- (BOOL)createNewSdwkPointAtLocation:(CLLocationCoordinate2D)location
-                           withHouse:(NSString *)house
-                           andStreet:(NSString *)street
+- (int)createNewSdwkPointAtLocation:(CLLocationCoordinate2D)location
+                          withHouse:(NSString *)house
+                          andStreet:(NSString *)street
 {
     BOOL rtn = NO;
     NSInteger refno = 0;
@@ -515,9 +514,7 @@
     
     SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     
-    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, house_num, street, latitude, "
-                     "longitude, deleted) VALUES (%ld,%ld,'%@',%f,%f,0);",
-                     (long)refno, (long)iHouse, street, location.latitude, location.longitude];
+    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, house_num, street, latitude, longitude, deleted) VALUES (%ld,%ld,'%@',%f,%f,0);", (long)refno, (long)iHouse, street, location.latitude, location.longitude];
     
     [self executeCmd:(LPSTR)cmd.UTF8String
         sendToServer:YES
@@ -531,7 +528,7 @@
                   fromFile:__FILE__ fromLine:__LINE__];
     
     [self close:opened];
-    return rtn;
+    return (int)refno;
 }
 
 - (BOOL)deleteSdwkPoint:(NSInteger)refno;
@@ -540,8 +537,7 @@
     BOOL rtn = NO;
     BOOL opened = [self open];
     
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET deleted=1, last_update=%i WHERE id=%ld",
-                     iTime, (long)refno];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET deleted=1, last_update=%i WHERE id=%ld", iTime, (long)refno];
     
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
               sendToServer:YES
@@ -560,9 +556,7 @@
     NSInteger iHouse = house.integerValue;
     BOOL opened = [self open];
     
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET house_num=%ld, street='%@', "
-                     "latitude=%f, longitude=%f WHERE id=%ld",
-                     (long)iHouse, street, location.latitude, location.longitude, (long)refno];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET house_num=%ld, street='%@', latitude=%f, longitude=%f WHERE id=%ld", (long)iHouse, street, location.latitude, location.longitude, (long)refno];
     
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
               sendToServer:YES
@@ -570,9 +564,7 @@
     
     if (rtn)
     {
-        cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints_index SET minY=%f, minX=%f, maxY=%f, "
-               "maxX=%f WHERE SidewalkPoints_index.id=%ld",
-               location.latitude, location.longitude, location.latitude, location.longitude, (long)refno];
+        cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints_index SET minY=%f, minX=%f, maxY=%f, maxX=%f WHERE SidewalkPoints_index.id=%ld", location.latitude, location.longitude, location.latitude, location.longitude, (long)refno];
         
         rtn = [self executeCmd:(LPSTR)cmd.UTF8String
                   sendToServer:YES
@@ -587,12 +579,7 @@
 {
     BOOL opened = [self open];
     
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET note='%@', slope_front=%f, "
-                     "slope_side=%f, slope_heading=%f, crack_width=%f, width=%f, level_change=%f, "
-                     "last_update=%i, condition=%i, obstruction=%i WHERE id=%u",
-                     sdwkPoint.note, sdwkPoint.slopeFront, sdwkPoint.slopeSide, sdwkPoint.slopeHeading,
-                     sdwkPoint.crackWidth, sdwkPoint.width, sdwkPoint.levelChange,sdwkPoint.lastUpdate,
-                     sdwkPoint.condition, sdwkPoint.obstruction, sdwkPoint.pointID];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET note='%@', slope_front=%f, slope_side=%f, slope_heading=%f, crack_width=%f, width=%f, level_change=%f, last_update=%i, condition=%d, obstruction=%d, type=%ld WHERE id=%u", sdwkPoint.note, sdwkPoint.slopeFront, sdwkPoint.slopeSide, sdwkPoint.slopeHeading, sdwkPoint.crackWidth, sdwkPoint.width, sdwkPoint.levelChange,sdwkPoint.lastUpdate, sdwkPoint.condition, sdwkPoint.obstruction, (long)sdwkPoint.type, sdwkPoint.pointID];
     
     [self executeCmd:(LPSTR)cmd.UTF8String
         sendToServer:YES
@@ -626,7 +613,8 @@
         int lastUpdate = sqlite3_column_int(statement, iCol++);
         int condition = sqlite3_column_int(statement, iCol++);
         int obstruction = sqlite3_column_int(statement, iCol++);
-        int houseNum = sqlite3_column_int(statement, iCol);
+        int houseNum = sqlite3_column_int(statement, iCol++);
+        int type = sqlite3_column_int(statement, iCol);
         sdwkPoint.pointID = refno;
         
         if (note)
@@ -646,6 +634,7 @@
         sdwkPoint.condition = condition;
         sdwkPoint.obstruction = obstruction;
         sdwkPoint.houseNum = houseNum;
+        sdwkPoint.type = type;
     }
     
     SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
@@ -694,10 +683,7 @@
     BOOL opened = [self open];
     sqlite3_stmt *statement = NULL;
     
-    NSString *query = [NSString stringWithFormat:@"SELECT longitude, latitude, last_update FROM SidewalkPoints, "
-                       "SidewalkPoints_index WHERE deleted=0 AND SidewalkPoints.id=SidewalkPoints_index.id "
-                       "AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f",
-                       platlonBounds->xmn, platlonBounds->xmx, platlonBounds->ymn, platlonBounds->ymx];
+    NSString *query = [NSString stringWithFormat:@"SELECT longitude, latitude, last_update FROM SidewalkPoints, SidewalkPoints_index WHERE deleted=0 AND SidewalkPoints.id=SidewalkPoints_index.id AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f", platlonBounds->xmn, platlonBounds->xmx, platlonBounds->ymn, platlonBounds->ymx];
     
     SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
@@ -759,10 +745,7 @@
     dbounds bnds = [CRAPI.sharedInstance getPickApBoundsAtPoint:pt];
     BOOL opened = [self open];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT SidewalkPoints.id, latitude, longitude, house_num, street "
-                       "FROM SidewalkPoints, SidewalkPoints_index WHERE deleted=0 AND SidewalkPoints.id=SidewalkPoints_index.id "
-                       "AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f",
-                       bnds.xmn, bnds.xmx, bnds.ymn, bnds.ymx];
+    NSString *query = [NSString stringWithFormat:@"SELECT SidewalkPoints.id, latitude, longitude, house_num, street FROM SidewalkPoints, SidewalkPoints_index WHERE deleted=0 AND SidewalkPoints.id=SidewalkPoints_index.id AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f", bnds.xmn, bnds.xmx, bnds.ymn, bnds.ymx];
     
     sqlite3_stmt *statement = NULL;
     int iCol = 0;
