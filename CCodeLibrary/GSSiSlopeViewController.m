@@ -193,12 +193,12 @@ static int COUNT=100;
     
     [self.view addSubview:helpButton];
     
-    _locationManager = [[CLLocationManager alloc] init];
+    _locationManager = CLLocationManager.new;
     _locationManager.headingFilter = kCLHeadingFilterNone;
     _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
     _locationManager.delegate = self;
     
-    _motionManager = [[CMMotionManager alloc] init];
+    _motionManager = CMMotionManager.new;
     [self resetSumsAndCounter];
 
     if (_hideDoesNotExistButton || _fromCalibration)
@@ -213,6 +213,33 @@ static int COUNT=100;
                                            selector:@selector(becameActive:)
                                                name:@"didBecomeActive"
                                              object:nil];
+    
+    if (CRAPI.sharedInstance.inSdwkMode)
+    {
+        UIButton *autoLoopStartStop = [UIButton buttonWithType:UIButtonTypeCustom];
+        autoLoopStartStop.translatesAutoresizingMaskIntoConstraints = NO;
+        autoLoopStartStop.backgroundColor = UIColor.blackColor;
+        
+        if (CRAPI.sharedInstance.inAutoLoopMode)
+        {
+            [self setupButton:autoLoopStartStop title:@"Stop Auto Loop"];
+            _useHeadingCalibration = NO;
+            _errorValue = 0.0;
+            [self startCancel];
+        }
+        
+        else
+            [self setupButton:autoLoopStartStop title:@"Start Auto Loop"];
+        
+        autoLoopStartStop.titleLabel.font = [UIFont systemFontOfSize:32.0];
+        
+        [autoLoopStartStop addTarget:self
+                              action:@selector(startStopAutoLoop:)
+                    forControlEvents:UIControlEventTouchUpInside];
+        
+        [autoLoopStartStop constrainLeadingToAnchor:self.view.leadingAnchor constant:20.0];
+        [autoLoopStartStop constrainTopToAnchor:self.view.topAnchor constant:100.0];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -240,7 +267,7 @@ static int COUNT=100;
     _unableButton.frame = CGRectMake(56.0, 884.0, 300.0, 80.0);
     
     [_unableButton addTarget:self
-                      action:@selector(goBack:)
+                      action:@selector(goBack)
             forControlEvents:UIControlEventTouchUpInside];
     
     [self setupButton:_unableButton title:@"Unable"];
@@ -253,7 +280,7 @@ static int COUNT=100;
     _startCancelButton.frame = CGRectMake(184.0, 564.0, 400.0, 80.0);
     
     [_startCancelButton addTarget:self
-                           action:@selector(startCancel:)
+                           action:@selector(startCancel)
                  forControlEvents:UIControlEventTouchUpInside];
     
     [self setupButton:_startCancelButton title:@"Start"];
@@ -401,7 +428,7 @@ static int COUNT=100;
     [self.view addSubview:label];
 }
 
-- (void)goBack:(UIButton *)button
+- (void)goBack
 {
     [self stopMotionManager];
     
@@ -438,7 +465,7 @@ static int COUNT=100;
 }
 
 
-- (void)startCancel:(UIButton *)button
+- (void)startCancel
 {
     if (_status == SCStatusStart)
     {
@@ -705,7 +732,7 @@ static int COUNT=100;
     NSLog(@"location ERROR:%@", error.localizedDescription);
 }
 
--(double)correctedHeading:(double)heading
+- (double)correctedHeading:(double)heading
 {
     double corrected = heading;
     
@@ -825,6 +852,12 @@ static int COUNT=100;
 
 - (void)slopeMeasurementComplete
 {
+    if (CRAPI.sharedInstance.inAutoLoopMode)
+    {
+        [self goBack];
+        return;
+    }
+    
     if (_displayDegrees)
     {
         _headingLabel.text = [NSString stringWithFormat:@"Heading = %.01f°", _data.heading];
@@ -1043,6 +1076,29 @@ static int COUNT=100;
                                     showFileAtPath:filePath
                                           delegate:nil];
 #pragma unused(nvwv)
+}
+
+- (void)startStopAutoLoop:(UIButton *)button
+{
+    CRAPI.sharedInstance.inAutoLoopMode = !CRAPI.sharedInstance.inAutoLoopMode;
+    
+    _cancelButton.hidden = CRAPI.sharedInstance.inAutoLoopMode;
+    _startCancelButton.hidden = CRAPI.sharedInstance.inAutoLoopMode;
+    _useHeadingCalibration = !CRAPI.sharedInstance.inAutoLoopMode;
+    
+    if (CRAPI.sharedInstance.inAutoLoopMode)
+    {
+        [button setTitle:@"Stop Auto Loop" forState:UIControlStateNormal];
+        _errorValue = 0.0;
+    }
+    
+    else
+    {
+        [button setTitle:@"Start Auto Loop" forState:UIControlStateNormal];
+        _errorValue = SDWK_ERROR_VAL;
+    }
+    
+    [self startCancel];
 }
 
 @end

@@ -105,7 +105,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     _startCancelButton = [[UIButton alloc] initWithFrame:CGRectMake(184.0, 564.0, 400.0, 100.0)];
     
     [_startCancelButton addTarget:self
-                           action:@selector(startCancel:)
+                           action:@selector(startCancel)
                  forControlEvents:UIControlEventTouchUpInside];
     
     [self setupButton:_startCancelButton
@@ -270,7 +270,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     }
 }
 
-- (void)startCancel:(UIButton *)button
+- (void)startCancel
 {
     if (_status == SCStatusStart)
     {

@@ -143,7 +143,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nullable) NSString *minAlleyVersion;
 @property (nonatomic) int currentMessageNum, serverToUse, showDeveloperFunctions;
 @property (nonatomic , nullable) CLLocation *lastLocation;
-@property (nonatomic) BOOL hideConnectButton, appChanged, inDataUpdate;
+@property (nonatomic) BOOL hideConnectButton, appChanged, inDataUpdate, inAutoLoopMode;
 @property (nonatomic, nullable) NSNumberFormatter *dollarFmt;
 @property (nonatomic, nullable) NSNumberFormatter *acreFmt;
 @property (nonatomic, nullable) NVSendEmail *currentEmail;

@@ -4,6 +4,8 @@
 @import UIKit;
 #import "NVSliderController.h"
 
+#define SDWK_ERROR_VAL 0.25
+
 typedef NS_ENUM(NSInteger, NVManualStatus)
 {
     NVManualStatusDevice,
