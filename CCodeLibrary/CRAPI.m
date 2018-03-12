@@ -42,8 +42,8 @@
         _bundleID = NSBundle.mainBundle.bundleIdentifier;
         
 #ifdef DEBUG
-        if ([UIDevice.currentDevice.name isEqualToString:@"Bill's iPad Air"] ||
-            [UIDevice.currentDevice.name isEqualToString:@"WildBill's iPhone"] ||
+        if ([UIDevice.currentDevice.name isEqualToString:@"Bill’s iPad Air"] ||
+            [UIDevice.currentDevice.name isEqualToString:@"WildBill’s iPhone"] ||
             [UIDevice.currentDevice.name isEqualToString:@"GSSiRental006"])
         {
             //_bundleID = @"com.gssi.newvisioncrime";
