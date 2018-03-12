@@ -10,6 +10,7 @@ typedef NS_ENUM(NSInteger, SPType)
     SPTypeObstruction,
     SPTypeCrack,
     SPTypeLevelChange,
+    SPTypeDrivwayCut,
 };
 
 @interface NVSidewalkPoint : NSObject
