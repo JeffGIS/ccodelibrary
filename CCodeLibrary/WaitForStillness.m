@@ -173,6 +173,8 @@
 
 - (void)cancelWaitForStillness
 {
+    [_motionManager stopAccelerometerUpdates];
+    
     if (_aTarget && [_aTarget respondsToSelector:@selector(stillnessWasCanceled)])
         [_aTarget stillnessWasCanceled];
 }
