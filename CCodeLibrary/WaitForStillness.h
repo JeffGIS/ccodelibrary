@@ -11,6 +11,13 @@
 
 @interface WaitForStillness : NSObject
 
+/**
+            PARAMETER UNITS
+            steadyFactor: +/- 0.02 g forces
+            countFactor: 4 seconds
+            orientationFactor: +/- 0.1 radians
+ **/
+
 + (instancetype)waitForHorizontalStillness:(double)steadyFactor
                                countFactor:(double)countFactor
                          orientationFactor:(double)orientationFactor
