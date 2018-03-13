@@ -227,6 +227,9 @@ static int COUNT=100;
             [self setupButton:autoLoopStartStop title:@"Stop Auto Loop"];
             _useHeadingCalibration = NO;
             _errorValue = 0.0;
+            _cancelButton.hidden = YES;
+            _startCancelButton.hidden = YES;
+            
             [self startCancel];
             
             if (CLLocationManager.locationServicesEnabled)

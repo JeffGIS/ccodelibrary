@@ -2189,6 +2189,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "CCodeLibrary/CCodeLibrary-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				"WARNING_CFLAGS[arch=*]" = "-Wno-arc-performSelector-leaks";
 			};
 			name = Debug;
 		};
@@ -2218,6 +2219,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "CCodeLibrary/CCodeLibrary-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
+				"WARNING_CFLAGS[arch=*]" = "-Wno-arc-performSelector-leaks";
 			};
 			name = Release;
 		};
