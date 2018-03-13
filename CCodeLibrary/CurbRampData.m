@@ -28,6 +28,38 @@ static int nInit=0;
                                                      create:create];
     return crd;
 }
+
++ (BOOL)deleteAllPhotos
+{
+    NSFileManager *fm = NSFileManager.defaultManager;
+    NSError *error = nil;
+    
+    NSString *dir = [NSString stringWithFormat:@"%@",
+                     [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"]];
+    
+    for (NSString *file in [fm contentsOfDirectoryAtPath:dir error:&error])
+    {
+        if (!error)
+        {
+            BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@/%@", dir, file]
+                                          error:&error];
+            if (!success || error)
+            {
+                NSLog(@"ERROR: File %@ couldn't be removed!", file);
+                return NO;
+            }
+        }
+        
+        else
+        {
+            NSLog(@"ERROR: Directory %@ couldn't be accessed!", dir);
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
 - (void) setDBFile:(int)geoid
             create:(BOOL)create
 {
@@ -700,14 +732,14 @@ static int nInit=0;
                       [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],iPad,fileNum];
     return file;
 }
-- (NSString*) outputPictFile:(int)fileNum
+
+- (NSString *)outputPictFile:(int)fileNum
                         iPad:(int)iPad
 {
     NSString* file = [NSString stringWithFormat:@"%@/%i_%i.jpg",
                       [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"],iPad,fileNum];
     return file;
 }
-
 
 - (int) getLastDataUpdateNumber:(int)iPad
                     lastPictNum:(int*)pictNum

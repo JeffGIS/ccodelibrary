@@ -21,6 +21,7 @@
 
 + (CurbRampData *)databaseForGeoid:(int)geoid
                             create:(BOOL)create;
++ (BOOL)deleteAllPhotos;
 - (BOOL)open;
 - (void)close:(BOOL)opened;
 - (void)clear;
