@@ -354,6 +354,8 @@
 		EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB7C6A141BD158D8006E985B /* StringFunctions.h */; };
 		EB86BFA71B0B62520074728E /* minilzo.c in Sources */ = {isa = PBXBuildFile; fileRef = EB86BFA51B0B62520074728E /* minilzo.c */; };
 		EB95A1A71CB16EF500158B40 /* PercentInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB95A1A61CB16EF500158B40 /* PercentInArea.m */; };
+		EB96A8602058248200A4B9B2 /* WaitForStillness.m in Sources */ = {isa = PBXBuildFile; fileRef = EB96A85F2058248100A4B9B2 /* WaitForStillness.m */; };
+		EB96A8612058284400A4B9B2 /* WaitForStillness.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB96A85E2058248100A4B9B2 /* WaitForStillness.h */; };
 		EB9C3C2C1F914C8600E95644 /* PDFCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9C3C2B1F914C8600E95644 /* PDFCreator.m */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
@@ -441,6 +443,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB96A8612058284400A4B9B2 /* WaitForStillness.h in CopyFiles */,
 				6997D86420447DB600A24F5D /* NVFrontBackPhotoCapture.h in CopyFiles */,
 				69CF3A232020FE6B00309852 /* NVRampButton.h in CopyFiles */,
 				69CF3A222020FE6300309852 /* NVSignalButton.h in CopyFiles */,
@@ -982,6 +985,8 @@
 		EB86BFA91B0B62A30074728E /* lzodefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzodefs.h; sourceTree = "<group>"; };
 		EB95A1A51CB16EF500158B40 /* PercentInArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PercentInArea.h; sourceTree = "<group>"; };
 		EB95A1A61CB16EF500158B40 /* PercentInArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PercentInArea.m; sourceTree = "<group>"; };
+		EB96A85E2058248100A4B9B2 /* WaitForStillness.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaitForStillness.h; sourceTree = "<group>"; };
+		EB96A85F2058248100A4B9B2 /* WaitForStillness.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WaitForStillness.m; sourceTree = "<group>"; };
 		EB9C3C2A1F914C8600E95644 /* PDFCreator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFCreator.h; sourceTree = "<group>"; };
 		EB9C3C2B1F914C8600E95644 /* PDFCreator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDFCreator.m; sourceTree = "<group>"; };
 		EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCCodeLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1515,6 +1520,8 @@
 		EB95A1A41CB16EAF00158B40 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				EB96A85E2058248100A4B9B2 /* WaitForStillness.h */,
+				EB96A85F2058248100A4B9B2 /* WaitForStillness.m */,
 				BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */,
 				BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */,
 				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
@@ -2009,6 +2016,7 @@
 				A94A771919F807CE0062906E /* FacilityRecord.m in Sources */,
 				69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */,
 				A92382AD1AD986010027659B /* GSSiBumpDetector.m in Sources */,
+				EB96A8602058248200A4B9B2 /* WaitForStillness.m in Sources */,
 				A99C893D1AEDE1B900A0856F /* GSSiDefs.m in Sources */,
 				A9DDC08A1B613EF4000DEEA9 /* FTPDirectoryList.m in Sources */,
 				EBC01D141BED1C8C0004C751 /* ear404.c in Sources */,
