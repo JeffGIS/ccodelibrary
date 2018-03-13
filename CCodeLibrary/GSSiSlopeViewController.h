@@ -41,6 +41,11 @@ typedef struct NVSlopeData {
 
 - (void)gssiSlopeViewControllerDidCancelForSystemCalibration:(GSSiSlopeViewController *)controller;
 
+@optional
+- (void)gssiSlopeViewController:(GSSiSlopeViewController *)controller
+             didReturnSlopeData:(NVSlopeData)slopeData
+                       location:(CLLocationCoordinate2D)location;
+
 @end
 
 @interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate,CLLocationManagerDelegate>

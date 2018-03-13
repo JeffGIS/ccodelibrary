@@ -934,7 +934,10 @@ didReceiveMessage:(NSString *)message
                 _locationManager.distanceFilter = kCLDistanceFilterNone;
                 _locationManager.delegate = self;
                 [self updateConnectLabel];
-                [_locationManager startUpdatingLocation];
+                
+                if (CLLocationManager.locationServicesEnabled)
+                    [_locationManager startUpdatingLocation];
+                
                 [_connectButton setHidden:CRAPI.sharedInstance.hideConnectButton];
                 [self sendGMServerMessage:GMSMessageGetUploadStatus];
             }

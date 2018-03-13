@@ -42,6 +42,7 @@ static int COUNT=100;
 @property (nonatomic) CMMotionManager *motionManager;
 @property SCStatus status;
 @property BOOL unable, hasRun;
+@property (nonatomic) NSMutableArray<CLLocation *> *locations;
 
 @end
 
@@ -196,6 +197,7 @@ static int COUNT=100;
     _locationManager = CLLocationManager.new;
     _locationManager.headingFilter = kCLHeadingFilterNone;
     _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
+    _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     _locationManager.delegate = self;
     
     _motionManager = CMMotionManager.new;
@@ -226,6 +228,12 @@ static int COUNT=100;
             _useHeadingCalibration = NO;
             _errorValue = 0.0;
             [self startCancel];
+            
+            if (CLLocationManager.locationServicesEnabled)
+            {
+                _locations = NSMutableArray.new;
+                [_locationManager startUpdatingLocation];
+            }
         }
         
         else
@@ -760,6 +768,12 @@ static int COUNT=100;
     _headingCounter++;
 }
 
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray<CLLocation *> *)locations
+{
+    [_locations addObject:locations.lastObject];
+}
+
 - (void)computeSlopeFromAccelerometer:(CMAccelerometerData *)accelerometerData
 {
     if (_counter == COUNT)
@@ -854,7 +868,31 @@ static int COUNT=100;
 {
     if (CRAPI.sharedInstance.inAutoLoopMode)
     {
-        [self goBack];
+        [self stopMotionManager];
+        [_locationManager stopUpdatingLocation];
+        
+        int count = 0;
+        CLLocationDegrees lat = 0.0, lon = 0.0;
+        int numCoords = min(5, (int)(_locations.count - 1));
+        
+        for (int i = (int)(_locations.count - numCoords); i < _locations.count; i++)
+        {
+            CLLocationCoordinate2D coord = _locations[i].coordinate;
+            lat += coord.latitude;
+            lon += coord.longitude;
+            count++;
+        }
+        
+        CLLocationCoordinate2D avgCoord = CLLocationCoordinate2DMake((lat / (double)count),
+                                                                     (lon / (double)count));
+        
+        if (_delegate)
+        {
+            [_delegate gssiSlopeViewController:self
+                            didReturnSlopeData:_data
+                                      location:avgCoord];
+        }
+        
         return;
     }
     
@@ -1090,6 +1128,12 @@ static int COUNT=100;
     {
         [button setTitle:@"Stop Auto Loop" forState:UIControlStateNormal];
         _errorValue = 0.0;
+        
+        if (CLLocationManager.locationServicesEnabled)
+        {
+            _locations = NSMutableArray.new;
+            [_locationManager startUpdatingLocation];
+        }
     }
     
     else
