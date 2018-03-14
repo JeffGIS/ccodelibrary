@@ -60,6 +60,8 @@
 		694A9B621F4DF24A00B02C28 /* function1.c in Sources */ = {isa = PBXBuildFile; fileRef = 694A9B611F4DF24A00B02C28 /* function1.c */; };
 		694F00791C1B4BBA0074AF72 /* MapToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 694F00781C1B4BBA0074AF72 /* MapToolbar.m */; };
 		694F007A1C1B4C4B0074AF72 /* MapToolbar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 694F00771C1B4BBA0074AF72 /* MapToolbar.h */; };
+		6954DC5E20597905007D4C65 /* HeightCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6954DC5D20597905007D4C65 /* HeightCalculator.m */; };
+		6954DC5F205979D3007D4C65 /* HeightCalculator.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6954DC5C20597905007D4C65 /* HeightCalculator.h */; };
 		6956B9981CB230210070416B /* NVPopoverTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6956B9971CB230210070416B /* NVPopoverTableView.m */; };
 		6956B9991CB235490070416B /* NVPopoverTableView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6956B9961CB230210070416B /* NVPopoverTableView.h */; };
 		695C062E1FF2B1300081712C /* RHWalkScore.m in Sources */ = {isa = PBXBuildFile; fileRef = 695C062D1FF2B1300081712C /* RHWalkScore.m */; };
@@ -443,6 +445,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				6954DC5F205979D3007D4C65 /* HeightCalculator.h in CopyFiles */,
 				EB96A8612058284400A4B9B2 /* WaitForStillness.h in CopyFiles */,
 				6997D86420447DB600A24F5D /* NVFrontBackPhotoCapture.h in CopyFiles */,
 				69CF3A232020FE6B00309852 /* NVRampButton.h in CopyFiles */,
@@ -687,6 +690,8 @@
 		694A9B611F4DF24A00B02C28 /* function1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = function1.c; sourceTree = "<group>"; };
 		694F00771C1B4BBA0074AF72 /* MapToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapToolbar.h; sourceTree = "<group>"; };
 		694F00781C1B4BBA0074AF72 /* MapToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapToolbar.m; sourceTree = "<group>"; };
+		6954DC5C20597905007D4C65 /* HeightCalculator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeightCalculator.h; sourceTree = "<group>"; };
+		6954DC5D20597905007D4C65 /* HeightCalculator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HeightCalculator.m; sourceTree = "<group>"; };
 		6956B9961CB230210070416B /* NVPopoverTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVPopoverTableView.h; sourceTree = "<group>"; };
 		6956B9971CB230210070416B /* NVPopoverTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVPopoverTableView.m; sourceTree = "<group>"; };
 		695C062C1FF2B1300081712C /* RHWalkScore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RHWalkScore.h; sourceTree = "<group>"; };
@@ -1522,6 +1527,8 @@
 			children = (
 				EB96A85E2058248100A4B9B2 /* WaitForStillness.h */,
 				EB96A85F2058248100A4B9B2 /* WaitForStillness.m */,
+				6954DC5C20597905007D4C65 /* HeightCalculator.h */,
+				6954DC5D20597905007D4C65 /* HeightCalculator.m */,
 				BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */,
 				BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */,
 				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
@@ -1980,6 +1987,7 @@
 				BB6777981C95C13200A2D508 /* CensusData.m in Sources */,
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
 				693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */,
+				6954DC5E20597905007D4C65 /* HeightCalculator.m in Sources */,
 				1F5150A31CE3959000BA4A5E /* AlleyWallData.m in Sources */,
 				EBC01D231BED1C8C0004C751 /* nutate.c in Sources */,
 				EBC01D0B1BED1C8C0004C751 /* arcdot.c in Sources */,

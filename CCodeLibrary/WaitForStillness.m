@@ -21,18 +21,12 @@
 @property SEL aSelector;
 @property int orientation, counter;
 @property (nonatomic) CMMotionManager *motionManager;
-@property (nonatomic) NSTimer * beepTimer;
+@property (nonatomic) NSTimer *beepTimer;
 @property (nonatomic) AVAudioPlayer *beep, *finalBeep;
 
 @end
 
 @implementation WaitForStillness
-
-- (id) init
-{
-    self = [super init];
-    return self;
-}
 
 + (instancetype)waitForVerticalStillness:(double)steadyFactor
                              countFactor:(double)countFactor
@@ -54,7 +48,7 @@
                                countFactor:(double)countFactor
                          orientationFactor:(double)orientationFactor
                                 beepFactor:(double)beepSeconds
-                                   target:(id)aTarget
+                                    target:(id)aTarget
                                   selector:(SEL)aSelector
 {
     return [self waitForStillness:steadyFactor
@@ -82,26 +76,28 @@
     wfs.aSelector = aSelector;
     wfs.orientation = orientation;
     wfs.motionManager = CMMotionManager.new;
+    
     if (beepSeconds > 0)
     {
         wfs.beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
                     [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
                                             NSBundle.mainBundle.resourcePath]] error:nil];
+        
         [wfs.beep prepareToPlay];
         wfs.beep.volume = 1.0;
+        
         wfs.beepTimer = [NSTimer scheduledTimerWithTimeInterval:beepSeconds
-                                                  target:wfs
-                                                selector:@selector(doBeep:)
-                                                userInfo:nil
-                                                 repeats:YES];
-
+                                                         target:wfs
+                                                       selector:@selector(doBeep:)
+                                                       userInfo:nil
+                                                        repeats:YES];
     }
 
     [wfs verifyStillness];
     return wfs;
 }
 
-- (void) doBeep:(NSTimer *)timer
+- (void)doBeep:(NSTimer *)timer
 {
     [_beep play];
 }
@@ -138,20 +134,22 @@
         double accelZ = (_sumZ / _count);
         
         double denom = sqrt(square(accelX) + square(accelY) + square(accelZ));
-        double angleX = acos(accelY / denom);
-        double angleY = acos(accelX / denom);
+        double angleX = acos(accelX / denom);
+        double angleY = acos(accelY / denom);
         double angleZ = acos(accelZ / denom);
         
         switch (_orientation)
         {
+            //horizontal: x=90°, y=90°, z=180°
             case HORIZONTAL:
                 angleX = fabs(angleX - M_PI_2);
                 angleY = fabs(angleY - M_PI_2);
                 angleZ = fabs(angleZ - M_PI);
                 break;
+            //horizontal: x=0°, y=90°, z=90°
             case VERTICAL:
-                angleX = fabs(angleX - M_PI_2);
-                angleY = fabs(angleY);
+                angleX = fabs(angleX);
+                angleY = fabs(angleY - M_PI_2);
                 angleZ = fabs(angleZ - M_PI_2);
                 break;
             default:break;
@@ -212,6 +210,7 @@
 {
     if (_beepTimer)
         [_beepTimer invalidate];
+    
     [_motionManager stopAccelerometerUpdates];
     
     if (_aTarget && [_aTarget respondsToSelector:@selector(stillnessWasCanceled)])

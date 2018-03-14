@@ -3,6 +3,8 @@
 
 @import Foundation;
 
+@class WaitForStillness;
+
 @protocol WaitForStillnessTarget <NSObject>
 
 - (void)stillnessWasCanceled;
@@ -15,7 +17,7 @@
             PARAMETER UNITS
             steadyFactor: +/- 0.02 g forces
             countFactor: 4 seconds
-            orientationFactor: +/- 0.1 radians
+            orientationFactor: +/- 0.1 radians (+/- 5.73°)
  **/
 
 + (instancetype)waitForHorizontalStillness:(double)steadyFactor
