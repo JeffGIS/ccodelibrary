@@ -3,6 +3,7 @@
 
 #import "WaitForStillness.h"
 @import CoreMotion;
+@import AVFoundation;
 
 #define HORIZONTAL 1
 #define VERTICAL 2
@@ -20,20 +21,30 @@
 @property SEL aSelector;
 @property int orientation, counter;
 @property (nonatomic) CMMotionManager *motionManager;
+@property (nonatomic) NSTimer * beepTimer;
+@property (nonatomic) AVAudioPlayer *beep, *finalBeep;
 
 @end
 
 @implementation WaitForStillness
 
+- (id) init
+{
+    self = [super init];
+    return self;
+}
+
 + (instancetype)waitForVerticalStillness:(double)steadyFactor
                              countFactor:(double)countFactor
                        orientationFactor:(double)orientationFactor
+                              beepFactor:(double)beepSeconds
                                   target:(id)aTarget
                                 selector:(SEL)aSelector
 {
     return [self waitForStillness:steadyFactor
                       countFactor:countFactor
                 orientationFactor:orientationFactor
+                       beepFactor:beepSeconds
                            target:aTarget
                          selector:aSelector
                       orientation:VERTICAL];
@@ -42,12 +53,14 @@
 + (instancetype)waitForHorizontalStillness:(double)steadyFactor
                                countFactor:(double)countFactor
                          orientationFactor:(double)orientationFactor
-                                    target:(id)aTarget
+                                beepFactor:(double)beepSeconds
+                                   target:(id)aTarget
                                   selector:(SEL)aSelector
 {
     return [self waitForStillness:steadyFactor
                       countFactor:countFactor
                 orientationFactor:orientationFactor
+                       beepFactor:beepSeconds
                            target:aTarget
                          selector:aSelector
                       orientation:HORIZONTAL];
@@ -56,6 +69,7 @@
 + (instancetype)waitForStillness:(double)steadyFactor
                      countFactor:(double)countFactor
                orientationFactor:(double)orientationFactor
+                      beepFactor:(double)beepSeconds
                           target:(id)aTarget
                         selector:(SEL)aSelector
                      orientation:(int)orientation
@@ -68,8 +82,28 @@
     wfs.aSelector = aSelector;
     wfs.orientation = orientation;
     wfs.motionManager = CMMotionManager.new;
+    if (beepSeconds > 0)
+    {
+        wfs.beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
+                    [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
+                                            NSBundle.mainBundle.resourcePath]] error:nil];
+        [wfs.beep prepareToPlay];
+        wfs.beep.volume = 1.0;
+        wfs.beepTimer = [NSTimer scheduledTimerWithTimeInterval:beepSeconds
+                                                  target:wfs
+                                                selector:@selector(doBeep:)
+                                                userInfo:nil
+                                                 repeats:YES];
+
+    }
+
     [wfs verifyStillness];
     return wfs;
+}
+
+- (void) doBeep:(NSTimer *)timer
+{
+    [_beep play];
 }
 
 - (void)verifyStillness
@@ -127,6 +161,9 @@
             (angleY < _orientationTolerance) &&
             (angleZ < _orientationTolerance))
         {
+            if (_beepTimer)
+                [_beepTimer invalidate];
+
             [_aTarget performSelector:_aSelector];
         }
         
@@ -173,6 +210,8 @@
 
 - (void)cancelWaitForStillness
 {
+    if (_beepTimer)
+        [_beepTimer invalidate];
     [_motionManager stopAccelerometerUpdates];
     
     if (_aTarget && [_aTarget respondsToSelector:@selector(stillnessWasCanceled)])

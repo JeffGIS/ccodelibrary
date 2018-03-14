@@ -75,8 +75,11 @@
         [_output captureStillImageAsynchronouslyFromConnection:connection
                                             completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error)
          {
-             if (error) {NSLog(@"AVCaptureStillImageOutput ERROR: %@", error.localizedDescription);}
-             
+             if (error)
+             {
+                 NSLog(@"AVCaptureStillImageOutput ERROR: %@", error.localizedDescription);
+             }
+         
              else
              {
                  NSData *imageData =  [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];

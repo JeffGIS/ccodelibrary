@@ -21,12 +21,14 @@
 + (instancetype)waitForHorizontalStillness:(double)steadyFactor
                                countFactor:(double)countFactor
                          orientationFactor:(double)orientationFactor
+                                beepFactor:(double)beepSeconds
                                     target:(id)aTarget
                                   selector:(SEL)aSelector;
 
 + (instancetype)waitForVerticalStillness:(double)steadyFactor
                              countFactor:(double)countFactor
                        orientationFactor:(double)orientationFactor
+                              beepFactor:(double)beepSeconds
                                   target:(id)aTarget
                                 selector:(SEL)aSelector;
 
