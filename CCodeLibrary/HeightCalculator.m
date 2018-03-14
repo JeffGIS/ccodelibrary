@@ -9,7 +9,9 @@
 
 @property (nonatomic, weak) id<HeightCalculatorDelegate> delegate;
 @property (nonatomic) CMMotionManager *motionManager;
-@property double height;
+@property double distance, height, sumX, sumY, sumZ, firstHeight;
+@property BOOL collectData;
+@property int counter, count, collectionMode;
 
 @end
 
@@ -31,6 +33,10 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = UIColor.blackColor;
+    UITapGestureRecognizer *tap = UITapGestureRecognizer.new;
+    [tap addTarget:self action:@selector(viewTapped)];
+    
+    [self.view addGestureRecognizer:tap];
     [self createPreviewLayer];
     [self createButtons];
     [self createCrosshairs];
@@ -121,6 +127,11 @@
 
 - (void)startAccelerometerUpdates
 {
+    _count = 50;
+    _counter = _collectionMode = 0;
+    _collectData = NO;
+    _distance = 10.0;
+    
     _motionManager = CMMotionManager.new;
     _motionManager.accelerometerUpdateInterval = 0.02;
     typedef void (^CMAccelerometerHandler)(CMAccelerometerData *accelerometerData, NSError *error);
@@ -141,13 +152,41 @@
 
 - (void)computeSlopeFromAccelerometer:(CMAccelerometerData *)accelerometerData
 {
-    CMAcceleration accel = accelerometerData.acceleration;
-    
-    double denom = sqrt(square(accel.x) + square(accel.y) + square(accel.z));
-    double angleX = ((acos(accel.x / denom)) * RADtoDEG);
-    double angleY = ((acos(accel.y / denom)) * RADtoDEG);
-    double angleZ = ((acos(accel.z / denom)) * RADtoDEG);
-    NSLog(@"%f, %f, %f", angleX, angleY, angleZ);
+    if (_collectData)
+    {
+        if (_counter == _count)
+        {
+            _collectData = NO;
+            double accelX = (_sumX / _count);
+            double accelY = (_sumY / _count);
+            double accelZ = (_sumZ / _count);
+            
+            double denom = sqrt(square(accelX) + square(accelY) + square(accelZ));
+            double angleZ = -(acos(accelZ / denom) - M_PI_2);
+            double heightZ = (tan(angleZ) * _distance);
+            NSLog(@"HEIGHT %d = %f", _collectionMode, heightZ);
+            
+            if (_collectionMode == 1)
+                _firstHeight = heightZ;
+            
+            else if (_collectionMode == 2)
+            {
+                _collectionMode = 0;
+                _height = fabs(heightZ - _firstHeight);
+                NSLog(@"TOTAL HEIGHT = %f", _height);
+            }
+        }
+        
+        else if (_counter < _count)
+        {
+            CMAcceleration acceleration = accelerometerData.acceleration;
+            
+            _sumX += acceleration.x;
+            _sumY += acceleration.y;
+            _sumZ += acceleration.z;
+            _counter++;
+        }
+    }
 }
 
 - (void)returnButtonTapped
@@ -156,6 +195,16 @@
     
     if (_delegate && [_delegate respondsToSelector:@selector(heightCalculator:returnedHeight:)])
         [_delegate heightCalculator:self returnedHeight:_height];
+}
+
+- (void)viewTapped
+{
+    if (!_collectData)
+    {
+        _collectionMode++;
+        _counter = _sumX = _sumY = _sumZ = 0;
+        _collectData = YES;
+    }
 }
 
 @end
