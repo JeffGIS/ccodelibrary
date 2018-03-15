@@ -9,9 +9,13 @@
 
 @property (nonatomic, weak) id<HeightCalculatorDelegate> delegate;
 @property (nonatomic) CMMotionManager *motionManager;
-@property double distance, height, sumX, sumY, sumZ, firstHeight;
+@property double sumX, sumY, sumZ, firstHeight;
+@property float distance, height;
 @property BOOL collectData;
 @property int counter, count, collectionMode;
+@property (nonatomic) UIButton *startButton;
+@property (nonatomic) UILabel *distanceLabel;
+@property (nonatomic) AVAudioPlayer *beep, *finalBeep;
 
 @end
 
@@ -23,6 +27,7 @@
     HeightCalculator *hc = HeightCalculator.new;
     hc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     hc.delegate = delegate;
+    hc.distance = 10.0;
     [controller presentViewController:hc animated:YES completion:nil];
     
     return hc;
@@ -33,12 +38,10 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = UIColor.blackColor;
-    UITapGestureRecognizer *tap = UITapGestureRecognizer.new;
-    [tap addTarget:self action:@selector(viewTapped)];
     
-    [self.view addGestureRecognizer:tap];
+    [self createBeeps];
     [self createPreviewLayer];
-    [self createButtons];
+    [self createButtonsAndSlider];
     [self createCrosshairs];
     [self startAccelerometerUpdates];
 }
@@ -63,6 +66,21 @@
     return YES;
 }
 
+- (void)createBeeps
+{
+    _beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
+             [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
+                                     NSBundle.mainBundle.resourcePath]] error:nil];
+    
+    _finalBeep = [[AVAudioPlayer alloc] initWithContentsOfURL:
+                  [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/finalBeep.mp3",
+                                          NSBundle.mainBundle.resourcePath]] error:nil];
+    
+    _beep.volume = _finalBeep.volume = 1.0;
+    [_beep prepareToPlay];
+    [_finalBeep prepareToPlay];
+}
+
 - (void)createPreviewLayer
 {
     AVCaptureSession *session = AVCaptureSession.new;
@@ -81,33 +99,73 @@
     [session startRunning];
 }
 
-- (void)createButtons
+- (void)createButtonsAndSlider
 {
-    UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    returnButton.translatesAutoresizingMaskIntoConstraints = NO;
-    returnButton.backgroundColor = UIColor.clearColor;
+    CGFloat sizeFactor = 22.0;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
+        sizeFactor = 16.0;
     
-    else
-        returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:40.0];
-    
-    returnButton.titleLabel.layer.shadowColor = UIColor.blackColor.CGColor;
-    returnButton.titleLabel.layer.shadowOpacity = 1.0;
-    returnButton.titleLabel.layer.shadowRadius = 4.0;
-    returnButton.titleLabel.layer.shadowOffset = CGSizeZero;
-    [returnButton setTitle:@"< Return" forState:UIControlStateNormal];
-    [returnButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-    [returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    returnButton.translatesAutoresizingMaskIntoConstraints = NO;
+    returnButton.backgroundColor = UIColor.whiteColor;
+    returnButton.titleLabel.numberOfLines = 0;
+    returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:(sizeFactor * 2)];
+    [returnButton setTitle:@"R\nE\nT\nU\nR\nN" forState:UIControlStateNormal];
+    [returnButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
     
     [self.view addSubview:returnButton];
-    [returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:20.0];
-    [returnButton constrainTopToAnchor:self.view.topAnchor constant:10.0];
+    [returnButton constrainTopToAnchor:self.view.topAnchor];
+    [returnButton constrainBottomToAnchor:self.view.bottomAnchor];
+    [returnButton constrainLeadingToAnchor:self.view.leadingAnchor];
+    [returnButton constrainWidthToConstant:(sizeFactor * 2.5)];
     
     [returnButton addTarget:self
                      action:@selector(returnButtonTapped)
            forControlEvents:UIControlEventTouchUpInside];
+    
+    _startButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _startButton.translatesAutoresizingMaskIntoConstraints = NO;
+    _startButton.backgroundColor = UIColor.whiteColor;
+    _startButton.titleLabel.numberOfLines = 0;
+    _startButton.titleLabel.font = [UIFont boldSystemFontOfSize:(sizeFactor * 2)];
+    [_startButton setTitle:@"T\nA\nP\n\nT\nO\n\nS\nT\nA\nR\nT" forState:UIControlStateNormal];
+    [_startButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    
+    [self.view addSubview:_startButton];
+    [_startButton constrainTopToAnchor:self.view.topAnchor];
+    [_startButton constrainBottomToAnchor:self.view.bottomAnchor];
+    [_startButton constrainTrailingToAnchor:self.view.trailingAnchor];
+    [_startButton constrainWidthToConstant:(sizeFactor * 2.5)];
+    
+    [_startButton addTarget:self
+                     action:@selector(startButtonTapped)
+           forControlEvents:UIControlEventTouchUpInside];
+    
+    _distanceLabel = UILabel.new;
+    _distanceLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    _distanceLabel.textColor = UIColor.whiteColor;
+    _distanceLabel.font = [UIFont boldSystemFontOfSize:(sizeFactor * 1.6)];
+    [self updateDistanceLabel];
+    
+    [self.view addSubview:_distanceLabel];
+    [_distanceLabel constrainCenterXToAnchor:self.view.centerXAnchor];
+    [_distanceLabel constrainBottomToAnchor:self.view.bottomAnchor constant:-sizeFactor];
+    
+    UISlider *distanceSlider = UISlider.new;
+    distanceSlider.translatesAutoresizingMaskIntoConstraints = NO;
+    distanceSlider.minimumValue = 5.0;
+    distanceSlider.maximumValue = 25.0;
+    [distanceSlider setValue:_distance animated:NO];
+    
+    [self.view addSubview:distanceSlider];
+    [distanceSlider constrainBottomToAnchor:_distanceLabel.topAnchor constant:-sizeFactor];
+    [distanceSlider constrainLeadingToAnchor:returnButton.trailingAnchor constant:sizeFactor];
+    [distanceSlider constrainTrailingToAnchor:_startButton.leadingAnchor constant:-sizeFactor];
+    
+    [distanceSlider addTarget:self
+                       action:@selector(sliderValueChanged:)
+             forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)createCrosshairs
@@ -130,7 +188,6 @@
     _count = 50;
     _counter = _collectionMode = 0;
     _collectData = NO;
-    _distance = 10.0;
     
     _motionManager = CMMotionManager.new;
     _motionManager.accelerometerUpdateInterval = 0.02;
@@ -156,6 +213,7 @@
     {
         if (_counter == _count)
         {
+            [_finalBeep play];
             _collectData = NO;
             double accelX = (_sumX / _count);
             double accelY = (_sumY / _count);
@@ -164,7 +222,6 @@
             double denom = sqrt(square(accelX) + square(accelY) + square(accelZ));
             double angleZ = -(acos(accelZ / denom) - M_PI_2);
             double heightZ = (tan(angleZ) * _distance);
-            NSLog(@"HEIGHT %d = %f", _collectionMode, heightZ);
             
             if (_collectionMode == 1)
                 _firstHeight = heightZ;
@@ -172,8 +229,8 @@
             else if (_collectionMode == 2)
             {
                 _collectionMode = 0;
-                _height = fabs(heightZ - _firstHeight);
-                NSLog(@"TOTAL HEIGHT = %f", _height);
+                _height = ((roundf(fabs(heightZ - _firstHeight) * 100)) / 100);
+                showAlert([NSString stringWithFormat:@"Height = %.2f feet.", _height]);
             }
         }
         
@@ -197,14 +254,27 @@
         [_delegate heightCalculator:self returnedHeight:_height];
 }
 
-- (void)viewTapped
+- (void)startButtonTapped
 {
     if (!_collectData)
     {
+        [_beep play];
         _collectionMode++;
         _counter = _sumX = _sumY = _sumZ = 0;
         _collectData = YES;
     }
+}
+
+- (void)sliderValueChanged:(UISlider *)slider
+{
+    float value = roundf(slider.value * 2);
+    _distance = (value / 2);
+    [self updateDistanceLabel];
+}
+
+- (void)updateDistanceLabel
+{
+    _distanceLabel.text = [NSString stringWithFormat:@"Distance: %.1f feet", _distance];
 }
 
 @end

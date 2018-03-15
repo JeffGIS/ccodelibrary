@@ -8,7 +8,7 @@
 @protocol HeightCalculatorDelegate <NSObject>
 
 - (void)heightCalculator:(HeightCalculator *)heightCalculator
-          returnedHeight:(double)height;
+          returnedHeight:(float)height;
 
 @end
 
