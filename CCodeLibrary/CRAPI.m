@@ -241,6 +241,23 @@
     }
 }
 
+- (void) setInAutoLoopMode:(BOOL)inAutoLoopMode
+{
+    static BOOL saveIdleTimer = NO;
+    
+    _inAutoLoopMode = inAutoLoopMode;
+    if (inAutoLoopMode)
+    {
+        saveIdleTimer = [UIApplication sharedApplication].idleTimerDisabled;
+        [UIApplication sharedApplication].idleTimerDisabled = YES;
+    }
+    else
+    {
+        [UIApplication sharedApplication].idleTimerDisabled = saveIdleTimer;
+    }
+
+}
+
 -(void) setCurrentOverallBoundaryRefno:(int)i
 {
     _currentBAR = i;
