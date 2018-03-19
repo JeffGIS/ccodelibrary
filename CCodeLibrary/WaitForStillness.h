@@ -7,6 +7,7 @@
 
 @protocol WaitForStillnessTarget <NSObject>
 
+@optional
 - (void)stillnessWasCanceled;
 - (void)deviceIsInPortraitOrUpsideDown:(BOOL)portraitOrUpsideDown;
 
