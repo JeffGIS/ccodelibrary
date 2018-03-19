@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "HeightCalculator.h"
+#import "CRAPI.h"
 @import AVFoundation;
 @import CoreMotion;
 
@@ -53,12 +54,20 @@
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
-    return UIInterfaceOrientationPortrait;
+    if (CRAPI.sharedInstance.presentUpsideDown)
+        return UIInterfaceOrientationPortraitUpsideDown;
+    
+    else
+        return UIInterfaceOrientationPortrait;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-    return UIInterfaceOrientationMaskPortrait;
+    if (CRAPI.sharedInstance.presentUpsideDown)
+        return UIInterfaceOrientationMaskPortraitUpsideDown;
+    
+    else
+        return UIInterfaceOrientationMaskPortrait;
 }
 
 - (BOOL)prefersStatusBarHidden

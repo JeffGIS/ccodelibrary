@@ -355,31 +355,22 @@
     return YES;
 }
 
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
-{
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        return UIInterfaceOrientationMaskPortrait;
-    
-    else
-        return UIInterfaceOrientationMaskAll;
-}
-
-- (BOOL)shouldAutorotate
-{
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        return NO;
-    
-    else
-        return YES;
-}
-
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        return UIInterfaceOrientationPortrait;
+    if (CRAPI.sharedInstance.presentUpsideDown)
+        return UIInterfaceOrientationPortraitUpsideDown;
     
     else
-        return UIApplication.sharedApplication.statusBarOrientation;
+        return UIInterfaceOrientationPortrait;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    if (CRAPI.sharedInstance.presentUpsideDown)
+        return UIInterfaceOrientationMaskPortraitUpsideDown;
+    
+    else
+        return UIInterfaceOrientationMaskPortrait;
 }
 
 - (void)viewDidAppear:(BOOL)animated

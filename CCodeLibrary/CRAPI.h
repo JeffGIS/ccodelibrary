@@ -96,7 +96,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nullable) NSString *selectedPID;
 @property (nonatomic, nullable) NSMutableArray *annotations;
 @property (nonatomic) CGFloat currentZoom;
-@property (nonatomic) BOOL controlledInterface, controllControlledInterface;
+@property (nonatomic) BOOL controlledInterface, controllControlledInterface, presentUpsideDown;
 @property (nonatomic) int pickApInPixels, project;
 @property (nonatomic, copy, nullable) NSString *sharedFilePath;
 @property (nonatomic) int showPlats, parcelShadingOption, parcelTextOption;

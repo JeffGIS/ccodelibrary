@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "NVImagePickerController.h"
+#import "CRAPI.h"
 
 @interface NVImagePickerController ()
 
@@ -29,24 +30,22 @@
     [super didReceiveMemoryWarning];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    return toInterfaceOrientation == UIInterfaceOrientationPortrait;
-}
-
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
-    return UIInterfaceOrientationPortrait;
+    if (CRAPI.sharedInstance.presentUpsideDown)
+        return UIInterfaceOrientationPortraitUpsideDown;
+    
+    else
+        return UIInterfaceOrientationPortrait;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (BOOL)shouldAutorotate
-{
-    return NO;
+    if (CRAPI.sharedInstance.presentUpsideDown)
+        return UIInterfaceOrientationMaskPortraitUpsideDown;
+    
+    else
+        return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

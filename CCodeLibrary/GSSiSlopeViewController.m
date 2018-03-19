@@ -1087,19 +1087,23 @@ static int COUNT=100;
     
     [sliderView hideSliderController:YES];
 }
+
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
-    return UIInterfaceOrientationPortrait;
+    if (CRAPI.sharedInstance.presentUpsideDown)
+        return UIInterfaceOrientationPortraitUpsideDown;
+    
+    else
+        return UIInterfaceOrientationPortrait;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (BOOL)shouldAutorotate
-{
-    return NO;
+    if (CRAPI.sharedInstance.presentUpsideDown)
+        return UIInterfaceOrientationMaskPortraitUpsideDown;
+    
+    else
+        return UIInterfaceOrientationMaskPortrait;
 }
 
 - (void)setPromptText:(NSString *)promptText
