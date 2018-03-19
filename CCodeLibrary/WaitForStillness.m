@@ -11,15 +11,15 @@
 #define STEADY_MULTIPLIER 0.02
 #define COUNT_MULTIPLIER 100
 #define ORIENTATION_MULTIPLER 0.1
-#define MEASUREMENT_FREQUENCY 0.04
+#define MEASUREMENT_FREQUENCY 0.02
 
 @interface WaitForStillness ()
 
-@property double count, steadyDiff, orientationTolerance;
+@property double steadyDiff, orientationTolerance;
 @property double maxX, minX, maxY, minY, maxZ, minZ, sumX, sumY, sumZ;
 @property id aTarget;
 @property SEL aSelector;
-@property int orientation, counter;
+@property int orientation, counter, count;
 @property (nonatomic) CMMotionManager *motionManager;
 @property (nonatomic) NSTimer *beepTimer;
 @property (nonatomic) AVAudioPlayer *beep, *finalBeep;
@@ -70,7 +70,7 @@
 {
     WaitForStillness *wfs = WaitForStillness.new;
     wfs.steadyDiff = (steadyFactor * STEADY_MULTIPLIER);
-    wfs.count = (countFactor * COUNT_MULTIPLIER);
+    wfs.count = (int)(countFactor * COUNT_MULTIPLIER);
     wfs.orientationTolerance = (orientationFactor * ORIENTATION_MULTIPLER);
     wfs.aTarget = aTarget;
     wfs.aSelector = aSelector;
@@ -95,6 +95,15 @@
 
     [wfs verifyStillness];
     return wfs;
+}
+
++ (void)determineIsDeviceIsPortraitOrUpsideDown:(id)aTarget
+{
+    WaitForStillness *wfs = WaitForStillness.new;
+    wfs.aTarget = aTarget;
+    wfs.motionManager = CMMotionManager.new;
+    wfs.count = 5;
+    [wfs verifyPortraitOrUpsideDown];
 }
 
 - (void)doBeep:(NSTimer *)timer
@@ -127,7 +136,7 @@
 {
     if (_counter == _count)
     {
-        [_motionManager stopAccelerometerUpdates];
+        [self cancelOperations];
         
         double accelX = (_sumX / _count);
         double accelY = (_sumY / _count);
@@ -146,7 +155,7 @@
                 angleY = fabs(angleY - M_PI_2);
                 angleZ = fabs(angleZ - M_PI);
                 break;
-            //horizontal: x=0°, y=90°, z=90°
+            //vertical: x=0°, y=90°, z=90°
             case VERTICAL:
                 angleX = fabs(angleX);
                 angleY = fabs(angleY - M_PI_2);
@@ -159,9 +168,6 @@
             (angleY < _orientationTolerance) &&
             (angleZ < _orientationTolerance))
         {
-            if (_beepTimer)
-                [_beepTimer invalidate];
-
             [_aTarget performSelector:_aSelector];
         }
         
@@ -206,15 +212,65 @@
     _counter = 0;
 }
 
-- (void)cancelWaitForStillness
+- (void)cancelOperations
 {
     if (_beepTimer)
         [_beepTimer invalidate];
     
     [_motionManager stopAccelerometerUpdates];
+    [_beep stop];
+}
+
+- (void)cancelWaitForStillness
+{
+    [self cancelOperations];
     
     if (_aTarget && [_aTarget respondsToSelector:@selector(stillnessWasCanceled)])
         [_aTarget stillnessWasCanceled];
+}
+
+- (void)verifyPortraitOrUpsideDown
+{
+    typedef void (^CMAccelerometerHandler)(CMAccelerometerData *accelerometerData, NSError *error);
+    _motionManager.accelerometerUpdateInterval = MEASUREMENT_FREQUENCY;
+    
+    if (_motionManager.isAccelerometerAvailable)
+    {
+        [_motionManager startAccelerometerUpdatesToQueue:NSOperationQueue.currentQueue
+                                             withHandler:^(CMAccelerometerData *accelerometerData, NSError *error){
+                                                 [self verifyPortraitFromAccelerometer:accelerometerData];
+                                                 
+                                                 if(error)
+                                                     NSLog(@"CMMotionManager ERROR: %@", error.localizedDescription);
+                                             }];
+    }
+    
+    else {NSLog(@"CMMotionManager ERROR: No Accelerometer Data Available.");}
+}
+
+- (void)verifyPortraitFromAccelerometer:(CMAccelerometerData *)accelerometerData
+{
+    if (_counter == _count)
+    {
+        [_motionManager stopAccelerometerUpdates];
+        
+        if (_aTarget && [_aTarget respondsToSelector:@selector(deviceIsInPortraitOrUpsideDown:)])
+        {
+            double accelY = (_sumY / _count);
+            
+            if (accelY > 0.5 || accelY < -0.5)
+                [_aTarget deviceIsInPortraitOrUpsideDown:YES];
+            
+            else
+                [_aTarget deviceIsInPortraitOrUpsideDown:NO];
+        }
+    }
+    
+    else if (_counter < _count)
+    {
+        _sumY += accelerometerData.acceleration.y;
+        _counter++;
+    }
 }
 
 @end

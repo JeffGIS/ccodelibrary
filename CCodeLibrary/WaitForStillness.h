@@ -8,6 +8,7 @@
 @protocol WaitForStillnessTarget <NSObject>
 
 - (void)stillnessWasCanceled;
+- (void)deviceIsInPortraitOrUpsideDown:(BOOL)portraitOrUpsideDown;
 
 @end
 
@@ -33,6 +34,8 @@
                               beepFactor:(double)beepSeconds
                                   target:(id)aTarget
                                 selector:(SEL)aSelector;
+
++ (void)determineIsDeviceIsPortraitOrUpsideDown:(id)aTarget;
 
 - (void)cancelWaitForStillness;
 
