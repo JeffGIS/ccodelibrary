@@ -1145,6 +1145,7 @@ static int COUNT=100;
     
     else
     {
+        [_locationManager stopUpdatingLocation];
         [button setTitle:@"Start Auto Loop" forState:UIControlStateNormal];
         _errorValue = SDWK_ERROR_VAL;
     }
