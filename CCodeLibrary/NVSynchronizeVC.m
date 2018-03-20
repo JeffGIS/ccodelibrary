@@ -1141,8 +1141,27 @@ Top:
                                                                        error:nil].fileSize;
     if (!fileSize)
     {
-        NSString * emptyFileMessage = @"/*This file is empty*/";
-        [emptyFileMessage writeToFile:_filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        if ([[_filePath pathExtension] isEqualToString:@"jpg"])
+        {
+            NSError *error = nil;
+            
+            NSString *defaultPath = [NSBundle.mainBundle pathForResource:@"deletedImage"
+                                                                  ofType:@"jpg"];
+            [NSFileManager.defaultManager copyItemAtPath:defaultPath toPath:_filePath error:&error];
+            if (error)
+            {
+                NSLog(@"Copy deletedImage.jpg ERROR: %@", error.localizedDescription);
+                [CRAPI.sharedInstance logToErrorFile:[NSString stringWithFormat:@"Copy deletedImage to %@:%@",[_filePath lastPathComponent],error.localizedDescription]
+                                          withHeader:@"Copy empty image"];
+
+            }
+            
+        }
+        else
+        {
+            NSString * emptyFileMessage = @"/*This file is empty*/";
+            [emptyFileMessage writeToFile:_filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+        }
         [CRAPI.sharedInstance logToErrorFile:[_filePath lastPathComponent]
                                   withHeader:@"Writing empty file"];
     }
