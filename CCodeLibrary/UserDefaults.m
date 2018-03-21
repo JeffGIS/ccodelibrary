@@ -99,6 +99,12 @@ static UserDefaults *_defaults;
     return defaultFloat;
 }
 
+- (double)doubleForKey:(NSString *)key
+{
+    double defaultDouble = [_defaults doubleForKey:key];
+    return defaultDouble;
+}
+
 - (NSData *)NSDataForKey:(NSString *)key
 {
     NSData *data = [_defaults objectForKey:key];
@@ -478,6 +484,13 @@ static UserDefaults *_defaults;
     [_defaults setFloat:CGFloat
                  forKey:key];
     
+    [self doSync];
+}
+
+- (void)saveDouble:(double)aDouble
+            forKey:(NSString *)key
+{
+    [_defaults setDouble:aDouble forKey:key];
     [self doSync];
 }
 
