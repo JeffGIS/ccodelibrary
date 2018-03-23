@@ -291,29 +291,60 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, ToleranceValues *t
     //sidewalk left slopes (5,2)
     value = fabsf(ramp->swkLeftSlopeFront);
     
-    if (value > (CV5 + tolerances->cv5) && value < 9990.0)
+    if (ramp->rampType == RampTypeParallel)
     {
-        if (flagged < 2)
+        if (value > (CV8 + tolerances->cv8) && value < 9990.0)
         {
-            if (flagged == 1)
-                basic[strlen(basic) - 1] = '\0';
+            if (flagged < 2)
+            {
+                if (flagged == 1)
+                    basic[strlen(basic) - 1] = '\0';
+                
+                basic = strcat(basic, SlopeMajor);
+                flagged = 2;
+            }
             
-            basic = strcat(basic, SlopeMajor);
-            flagged = 2;
+            detail = strcat(detail, SwkLeftFrontMajor);
         }
         
-        detail = strcat(detail, SwkLeftFrontMajor);
+        else if (value > CV8 && value < 9990.0)
+        {
+            if (flagged < 1)
+            {
+                basic = strcat(basic, SlopeMinor);
+                flagged = 1;
+            }
+            
+            detail = strcat(detail, SwkLeftFrontMinor);
+        }
     }
     
-    else if (value > CV5 && value < 9990.0)
+    else
     {
-        if (flagged < 1)
+        if (value > (CV5 + tolerances->cv5) && value < 9990.0)
         {
-            basic = strcat(basic, SlopeMinor);
-            flagged = 1;
+            if (flagged < 2)
+            {
+                if (flagged == 1)
+                    basic[strlen(basic) - 1] = '\0';
+                
+                basic = strcat(basic, SlopeMajor);
+                flagged = 2;
+            }
+            
+            detail = strcat(detail, SwkLeftFrontMajor);
         }
         
-        detail = strcat(detail, SwkLeftFrontMinor);
+        else if (value > CV5 && value < 9990.0)
+        {
+            if (flagged < 1)
+            {
+                basic = strcat(basic, SlopeMinor);
+                flagged = 1;
+            }
+            
+            detail = strcat(detail, SwkLeftFrontMinor);
+        }
     }
     
     value = fabsf(ramp->swkLeftSlopeSide);
@@ -346,29 +377,60 @@ char *rampComplianceCode(RampStruct *ramp, char **detailCode, ToleranceValues *t
     //sidewalk right slopes (5,2)
     value = fabsf(ramp->swkRightSlopeFront);
     
-    if (value > (CV5 + tolerances->cv5) && value < 9990.0)
+    if (ramp->rampType == RampTypeParallel)
     {
-        if (flagged < 2)
+        if (value > (CV5 + tolerances->cv5) && value < 9990.0)
         {
-            if (flagged == 1)
-                basic[strlen(basic) - 1] = '\0';
+            if (flagged < 2)
+            {
+                if (flagged == 1)
+                    basic[strlen(basic) - 1] = '\0';
+                
+                basic = strcat(basic, SlopeMajor);
+                flagged = 2;
+            }
             
-            basic = strcat(basic, SlopeMajor);
-            flagged = 2;
+            detail = strcat(detail, SwkRightFrontMajor);
         }
         
-        detail = strcat(detail, SwkRightFrontMajor);
+        else if (value > CV5 && value < 9990.0)
+        {
+            if (flagged < 1)
+            {
+                basic = strcat(basic, SlopeMinor);
+                flagged = 1;
+            }
+            
+            detail = strcat(detail, SwkRightFrontMinor);
+        }
     }
     
-    else if (value > CV5 && value < 9990.0)
+    else
     {
-        if (flagged < 1)
+        if (value > (CV8 + tolerances->cv8) && value < 9990.0)
         {
-            basic = strcat(basic, SlopeMinor);
-            flagged = 1;
+            if (flagged < 2)
+            {
+                if (flagged == 1)
+                    basic[strlen(basic) - 1] = '\0';
+                
+                basic = strcat(basic, SlopeMajor);
+                flagged = 2;
+            }
+            
+            detail = strcat(detail, SwkRightFrontMajor);
         }
         
-        detail = strcat(detail, SwkRightFrontMinor);
+        else if (value > CV5 && value < 9990.0)
+        {
+            if (flagged < 1)
+            {
+                basic = strcat(basic, SlopeMinor);
+                flagged = 1;
+            }
+            
+            detail = strcat(detail, SwkRightFrontMinor);
+        }
     }
     
     value = fabsf(ramp->swkRightSlopeSide);
