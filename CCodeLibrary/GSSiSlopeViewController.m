@@ -349,6 +349,10 @@ static int COUNT=100;
     [self setupLabel:_maxSlopeLabel];
     [self setupLabel:_promptLabel];
     _promptLabel.text = _promptText;
+    _frontSlopeLabel.layer.borderColor = UIColor.redColor.CGColor;
+    _sideSlopeLabel.layer.borderColor = UIColor.redColor.CGColor;
+    _frontSlopeLabel.layer.borderWidth = 0.0;
+    _sideSlopeLabel.layer.borderWidth = 0.0;
 }
 
 - (void)setupArrowView
@@ -915,6 +919,18 @@ static int COUNT=100;
         _maxSlopeLabel.text = [NSString stringWithFormat:@"Max Slope = %.01f%%", _data.maxSlopePct];
     }
     
+    if (fabs(_data.frontSlopePct) > fabs(_criticalValue))
+        _frontSlopeLabel.layer.borderWidth = 4.0;
+    
+    else
+        _frontSlopeLabel.layer.borderWidth = 0.0;
+    
+    if (fabs(_data.sideSlopePct) > fabs(_criticalSideValue))
+        _sideSlopeLabel.layer.borderWidth = 4.0;
+    
+    else
+        _sideSlopeLabel.layer.borderWidth = 0.0;
+    
     _promptLabel.text = @"Press 'Done' to continue.";
     [_unableButton setTitle:@"Done" forState:UIControlStateNormal];
     
@@ -1020,11 +1036,23 @@ static int COUNT=100;
                 _data.manualFrontSlopePct = value;
                 _frontSlopeLabel.text = [NSString stringWithFormat:@"Running Slope = %+.02f%%", _data.manualFrontSlopePct];
                 _data.frontManualStatus = NVManualStatusManual;
+                
+                if (fabs(_data.manualFrontSlopePct) > fabs(_criticalValue))
+                    _frontSlopeLabel.layer.borderWidth = 4.0;
+                
+                else
+                    _frontSlopeLabel.layer.borderWidth = 0.0;
                 break;
             case NVSliderMeasurementTypeSideSlope:
                 _data.manualSideSlopePct = value;
                 _sideSlopeLabel.text = [NSString stringWithFormat:@"Cross Slope = %+.02f%%", _data.manualSideSlopePct];
                 _data.sideManualStatus = NVManualStatusManual;
+                
+                if (fabs(_data.manualSideSlopePct) > fabs(_criticalSideValue))
+                    _sideSlopeLabel.layer.borderWidth = 4.0;
+                
+                else
+                    _sideSlopeLabel.layer.borderWidth = 0.0;
                 break;
             default:break;
         }
