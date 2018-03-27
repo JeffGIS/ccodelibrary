@@ -32,7 +32,8 @@ enum obstructions {
     sdwkClearWidth=21,
     sdwkProtrudingObject=22,
     sdwkVerticalClearance=23,
-    sdwkUndergroundUtility=24
+    sdwkUndergroundUtility=24,
+	obstructions_max
 };
 
 typedef enum {
@@ -62,13 +63,15 @@ typedef enum {
     NVSignalTypeText,
     NVSignalTypeSymbol,
     NVSignalTypeSideTimer,
-    NVSignalTypeBelowTimer
+    NVSignalTypeBelowTimer,
+    NVSignalTypeCount,
 } NVSignalType;
 
 typedef enum {
     AudibleWalkIndicationNone,
     AudibleWalkIndicationTones,
     AudibleWalkIndicationSpeechMessage,
+	AudibleWalkIndicationCount,
 } AudibleWalkIndication;
 
 typedef enum {
@@ -77,6 +80,7 @@ typedef enum {
     NVButtonTypeLargePush,
     NVButtonTypeTouch,
     NVButtonTypeAPS,
+	NVButtonTypeCount,
 } NVButtonType;
 
 typedef enum {
@@ -93,6 +97,7 @@ typedef struct CrackWidth {
 } CrackWidth;
 
 typedef struct RampStruct {
+	int uniqueID;
     int rampNum;
     char rampID[16];
     int timeComplete;
@@ -150,11 +155,13 @@ typedef struct RampStruct {
     float SteepTopOfCurb;
     float PedRampLip;
     int lev21x, lev21y;
+	double latitude, longitude;
     char rampComment[4096];
     RampType rampType;
     float curbCutDistance;
     float bumpWidth;
     float bumpHeight;
+	char fileID[12];
 } RampStruct;
 
 typedef struct ToleranceValues {
@@ -164,7 +171,7 @@ typedef struct ToleranceValues {
     float cv8;
     float cv5;
     float cv2;
-    float cracks;;
+    float cracks;
     float levelChange;
 } ToleranceValues;
 

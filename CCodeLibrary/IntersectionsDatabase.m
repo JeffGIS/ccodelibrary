@@ -788,7 +788,7 @@ mpint.intID];
             rampToRampStruct (ramp,&rstruct);
             LPSTR detailCode;
             
-            LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, tolerances);
+            LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, tolerances,1);
            // [self saveComplianceCode:ccode forInt:intID ramp:ramp.rampNum];
             
             //show all non-compliant intersections

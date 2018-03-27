@@ -9,6 +9,12 @@
 #include <math.h>
 #include "RampStruct.h"
 
+#define max(a,b)    (((a) > (b)) ? (a) : (b))
+#define min(a,b)    (((a) < (b)) ? (a) : (b))
+typedef char * LPSTR;
+
+LPSTR ExpandText(LPSTR InText);
+
 //definitions for critical values
 #define CVButtonHeight 42.0
 #define CVDimensions 48.0
@@ -79,9 +85,9 @@
 #define UpperLandingObstruction "H02"
 #define StreetLandingObstruction "H03"
 
-char *rampComplianceCode(RampStruct *ramp, char **detailCode, ToleranceValues *tolerances);
+char *rampComplianceCode(RampStruct *ramp, char **detailCode, ToleranceValues *tolerances,int codeSystem);
 void setStandardToleranceValues(ToleranceValues *tolerances);
-char *rampToText(RampStruct *ramp);
-const char *rampToTextHeader(void);
+char *rampToText(int intNum,RampStruct *ramp);
+const char *rampToTextHeader(int type);
 
 #endif /* RampCompliance_h */
