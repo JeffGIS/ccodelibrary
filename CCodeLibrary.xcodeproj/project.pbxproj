@@ -29,6 +29,8 @@
 		690B3FA91D6A69A600DAC87D /* RampCompliance.c in Sources */ = {isa = PBXBuildFile; fileRef = 696D037F1D679E66002E686A /* RampCompliance.c */; };
 		690E829F1C11055F00AB410E /* YTPlayerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698F987A1C10B96B009F2F01 /* YTPlayerView.h */; };
 		6910F6DA1FE482230006375C /* RHSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6910F6D91FE482230006375C /* RHSearch.m */; };
+		6912FEE6206AADD60020F5FE /* PavementQualityVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6912FEE5206AADD60020F5FE /* PavementQualityVC.m */; };
+		6912FEE7206AB0250020F5FE /* PavementQualityVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6912FEE4206AADD60020F5FE /* PavementQualityVC.h */; };
 		691636221C1FC790000C61B8 /* NVTileCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 691636211C1FC790000C61B8 /* NVTileCompiler.m */; };
 		691636231C1FDA11000C61B8 /* NVTileCompiler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 691636201C1FC790000C61B8 /* NVTileCompiler.h */; };
 		6917A7721E5B423C0012BDE4 /* CensusData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB6777961C95C13200A2D508 /* CensusData.h */; };
@@ -445,6 +447,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				6912FEE7206AB0250020F5FE /* PavementQualityVC.h in CopyFiles */,
 				6954DC5F205979D3007D4C65 /* HeightCalculator.h in CopyFiles */,
 				EB96A8612058284400A4B9B2 /* WaitForStillness.h in CopyFiles */,
 				6997D86420447DB600A24F5D /* NVFrontBackPhotoCapture.h in CopyFiles */,
@@ -658,6 +661,8 @@
 		690746E41CD41DCB00B31D8F /* NVTextViewAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTextViewAlert.m; sourceTree = "<group>"; };
 		6910F6D81FE482230006375C /* RHSearch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RHSearch.h; sourceTree = "<group>"; };
 		6910F6D91FE482230006375C /* RHSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHSearch.m; sourceTree = "<group>"; };
+		6912FEE4206AADD60020F5FE /* PavementQualityVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PavementQualityVC.h; sourceTree = "<group>"; };
+		6912FEE5206AADD60020F5FE /* PavementQualityVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PavementQualityVC.m; sourceTree = "<group>"; };
 		691636201C1FC790000C61B8 /* NVTileCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTileCompiler.h; sourceTree = "<group>"; };
 		691636211C1FC790000C61B8 /* NVTileCompiler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTileCompiler.m; sourceTree = "<group>"; };
 		6919EAF61C27AF1700A9D0F1 /* NVUnitPickerTextAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVUnitPickerTextAlert.h; sourceTree = "<group>"; };
@@ -1429,6 +1434,8 @@
 				69C3DFA51CB4113A00DC1779 /* NVWebView.m */,
 				A9A7E3681B75796500DC7F3D /* NVXWalkButton.h */,
 				A9A7E3691B75796500DC7F3D /* NVXWalkButton.m */,
+				6912FEE4206AADD60020F5FE /* PavementQualityVC.h */,
+				6912FEE5206AADD60020F5FE /* PavementQualityVC.m */,
 				EB9C3C2A1F914C8600E95644 /* PDFCreator.h */,
 				EB9C3C2B1F914C8600E95644 /* PDFCreator.m */,
 				A990508B1ACB947000C6AAAF /* SpreadSheetViewCell.h */,
@@ -1881,6 +1888,7 @@
 				A90C6E961B4A22AB00D87DB8 /* NVPDFSnapshotter.m in Sources */,
 				EBC01D2E1BED1C8C0004C751 /* ura404.c in Sources */,
 				EBC01D1E1BED1C8C0004C751 /* mer404.c in Sources */,
+				6912FEE6206AADD60020F5FE /* PavementQualityVC.m in Sources */,
 				6943041F1C3351E20077EC9F /* NVColor.m in Sources */,
 				690B3FA91D6A69A600DAC87D /* RampCompliance.c in Sources */,
 				693493441FE02671000F192D /* NVPeerConnect.m in Sources */,
