@@ -31,6 +31,8 @@
 		6910F6DA1FE482230006375C /* RHSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6910F6D91FE482230006375C /* RHSearch.m */; };
 		6912FEE6206AADD60020F5FE /* PavementQualityVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6912FEE5206AADD60020F5FE /* PavementQualityVC.m */; };
 		6912FEE7206AB0250020F5FE /* PavementQualityVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6912FEE4206AADD60020F5FE /* PavementQualityVC.h */; };
+		6912FF10206B5DD40020F5FE /* DrivewayCrossingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6912FF0F206B5DD40020F5FE /* DrivewayCrossingVC.m */; };
+		6912FF11206B65130020F5FE /* DrivewayCrossingVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6912FF0E206B5DD40020F5FE /* DrivewayCrossingVC.h */; };
 		691636221C1FC790000C61B8 /* NVTileCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 691636211C1FC790000C61B8 /* NVTileCompiler.m */; };
 		691636231C1FDA11000C61B8 /* NVTileCompiler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 691636201C1FC790000C61B8 /* NVTileCompiler.h */; };
 		6917A7721E5B423C0012BDE4 /* CensusData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BB6777961C95C13200A2D508 /* CensusData.h */; };
@@ -447,6 +449,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				6912FF11206B65130020F5FE /* DrivewayCrossingVC.h in CopyFiles */,
 				6912FEE7206AB0250020F5FE /* PavementQualityVC.h in CopyFiles */,
 				6954DC5F205979D3007D4C65 /* HeightCalculator.h in CopyFiles */,
 				EB96A8612058284400A4B9B2 /* WaitForStillness.h in CopyFiles */,
@@ -663,6 +666,8 @@
 		6910F6D91FE482230006375C /* RHSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RHSearch.m; sourceTree = "<group>"; };
 		6912FEE4206AADD60020F5FE /* PavementQualityVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PavementQualityVC.h; sourceTree = "<group>"; };
 		6912FEE5206AADD60020F5FE /* PavementQualityVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PavementQualityVC.m; sourceTree = "<group>"; };
+		6912FF0E206B5DD40020F5FE /* DrivewayCrossingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DrivewayCrossingVC.h; sourceTree = "<group>"; };
+		6912FF0F206B5DD40020F5FE /* DrivewayCrossingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DrivewayCrossingVC.m; sourceTree = "<group>"; };
 		691636201C1FC790000C61B8 /* NVTileCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVTileCompiler.h; sourceTree = "<group>"; };
 		691636211C1FC790000C61B8 /* NVTileCompiler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVTileCompiler.m; sourceTree = "<group>"; };
 		6919EAF61C27AF1700A9D0F1 /* NVUnitPickerTextAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVUnitPickerTextAlert.h; sourceTree = "<group>"; };
@@ -1113,6 +1118,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6912FF0D206B5D990020F5FE /* Sidewalk */ = {
+			isa = PBXGroup;
+			children = (
+				6912FF0E206B5DD40020F5FE /* DrivewayCrossingVC.h */,
+				6912FF0F206B5DD40020F5FE /* DrivewayCrossingVC.m */,
+				6912FEE4206AADD60020F5FE /* PavementQualityVC.h */,
+				6912FEE5206AADD60020F5FE /* PavementQualityVC.m */,
+			);
+			name = Sidewalk;
+			sourceTree = "<group>";
+		};
 		695C062B1FF2B0F60081712C /* RiteHome */ = {
 			isa = PBXGroup;
 			children = (
@@ -1317,6 +1333,7 @@
 		A94A771E19F813810062906E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6912FF0D206B5D990020F5FE /* Sidewalk */,
 				69D5EFAF1C72377D004CE1C0 /* Calendar Interface */,
 				69B5F55E1F98EDA7007603B5 /* ChartsBitmap */,
 				69BD0D6A1FA22CF800B3E6E0 /* HotSpotVideo */,
@@ -1434,8 +1451,6 @@
 				69C3DFA51CB4113A00DC1779 /* NVWebView.m */,
 				A9A7E3681B75796500DC7F3D /* NVXWalkButton.h */,
 				A9A7E3691B75796500DC7F3D /* NVXWalkButton.m */,
-				6912FEE4206AADD60020F5FE /* PavementQualityVC.h */,
-				6912FEE5206AADD60020F5FE /* PavementQualityVC.m */,
 				EB9C3C2A1F914C8600E95644 /* PDFCreator.h */,
 				EB9C3C2B1F914C8600E95644 /* PDFCreator.m */,
 				A990508B1ACB947000C6AAAF /* SpreadSheetViewCell.h */,
@@ -1943,6 +1958,7 @@
 				EBC01D201BED1C8C0004C751 /* mlr404.c in Sources */,
 				EB0E4FF51C62785200849766 /* SymbolDictionary.m in Sources */,
 				69F8E0D51D05C194003E8655 /* NVMarkerView.m in Sources */,
+				6912FF10206B5DD40020F5FE /* DrivewayCrossingVC.m in Sources */,
 				A903264F1AE6C4BA00126158 /* NVHeadingViewController.m in Sources */,
 				69D277D21DA6DEC1002B1447 /* NVStreetSideController.m in Sources */,
 				BBC361C11F429C0200B51DF3 /* CVTCOORD.C in Sources */,

@@ -88,6 +88,15 @@ typedef enum {
     DetectableWarningShapeRadial=2,
 } DetectableWarningShape;
 
+typedef enum {
+    DrivewayCrossingTypeNone,
+    DrivewayCrossingTypeOffCurbWalkable,
+    DrivewayCrossingTypeOffCurbNonWalkable,
+    DrivewayCrossingTypeOnCurbZigZag,
+    DrivewayCrossingTypeOnCurbRamps,
+    DrivewayCrossingTypeOnCurbNonCompliant,
+} DrivewayCrossingType;
+
 typedef struct CrackWidth {
     float rampCrackWidth;
     float upperLandingCrackWidth;

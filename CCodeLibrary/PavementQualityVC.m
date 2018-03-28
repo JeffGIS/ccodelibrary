@@ -103,8 +103,6 @@
                                                         ofType:@"png"]]
                     forState:UIControlStateNormal];
         
-        
-        
         [button addTarget:self
                    action:@selector(qualityButtonTapped:)
          forControlEvents:UIControlEventTouchUpInside];
@@ -236,7 +234,7 @@
 
 - (void)helpTapped:(UIButton *)button
 {
-    NSString *filePath = [NSBundle.mainBundle pathForResource:[NSString stringWithFormat:@"Rating_%ld", button.tag]
+    NSString *filePath = [NSBundle.mainBundle pathForResource:[NSString stringWithFormat:@"Rating_%d", (int)button.tag]
                                                        ofType:@"pdf"];
     
     [NVWebView showWebViewInView:self.view
