@@ -94,7 +94,7 @@
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.translatesAutoresizingMaskIntoConstraints = NO;
         button.tag = i;
-        button.imageView.contentMode = UIViewContentModeScaleAspectFill;
+        button.imageView.contentMode = UIViewContentModeScaleAspectFit;
         
         NSString *imageName = [NSString stringWithFormat:@"Driveway_%d", i];
         
