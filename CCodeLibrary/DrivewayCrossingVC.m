@@ -94,7 +94,7 @@
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.translatesAutoresizingMaskIntoConstraints = NO;
         button.tag = i;
-        button.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        button.imageView.contentMode = UIViewContentModeScaleToFill;
         
         NSString *imageName = [NSString stringWithFormat:@"Driveway_%d", i];
         
@@ -108,6 +108,17 @@
          forControlEvents:UIControlEventTouchUpInside];
         
         [self.view addSubview:button];
+        
+        UILabel *label = UILabel.new;
+        label.translatesAutoresizingMaskIntoConstraints = NO;
+        label.text = [NSString stringWithFormat:@"%d", i];
+        label.backgroundColor = UIColor.blackColor;
+        label.textColor = UIColor.whiteColor;
+        label.font = [UIFont boldSystemFontOfSize:64.0];
+        
+        [button addSubview:label];
+        [label constrainTopToAnchor:button.topAnchor];
+        [label constrainLeadingToAnchor:button.leadingAnchor];
         
         switch (i)
         {
