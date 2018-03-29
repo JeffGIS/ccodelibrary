@@ -111,6 +111,7 @@ typedef enum {
     SdwkMaterialAsphalt,
     SdwkMaterialBrickPavers,
     SdwkMaterialInterlockingPavers,
+    SdwkMaterialOther,
 } SdwkMaterial;
 
 typedef struct CrackWidth {
