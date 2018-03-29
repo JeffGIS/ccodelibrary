@@ -89,13 +89,29 @@ typedef enum {
 } DetectableWarningShape;
 
 typedef enum {
-    DrivewayCrossingTypeNone,
-    DrivewayCrossingTypeOffCurbWalkable,
-    DrivewayCrossingTypeOffCurbNonWalkable,
-    DrivewayCrossingTypeOnCurbZigZag,
-    DrivewayCrossingTypeOnCurbRamps,
-    DrivewayCrossingTypeOnCurbNonCompliant,
-} DrivewayCrossingType;
+    DCTypeNone,
+    DCTypeOffCurbNonWalkable,
+    DCTypeOffCurbWalkable,
+    DCTypeOnCurbZigZag,
+    DCTypeOnCurbRamps,
+    DCTypeOnCurbNonCompliant,
+} DCType;
+
+typedef enum {
+    SPTypeSidewalkPoint,
+    SPTypeObstruction,
+    SPTypeCrack,
+    SPTypeLevelChange,
+    SPTypeDrivewayCrossing,
+} SPType;
+
+typedef enum {
+    SdwkMaterialNone,
+    SdwkMaterialConcrete,
+    SdwkMaterialAsphalt,
+    SdwkMaterialBrickPavers,
+    SdwkMaterialInterlockingPavers,
+} SdwkMaterial;
 
 typedef struct CrackWidth {
     float rampCrackWidth;

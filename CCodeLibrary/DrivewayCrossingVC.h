@@ -9,7 +9,7 @@
 @protocol DrivewayCrossingDelegate<NSObject>
 
 - (void)drivewayCrossingController:(DrivewayCrossingVC *)controller
-                     didReturnType:(DrivewayCrossingType)type;
+                     didReturnType:(DCType)type;
 
 @end
 

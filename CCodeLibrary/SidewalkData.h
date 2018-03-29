@@ -4,22 +4,16 @@
 @import Foundation;
 #import "RampStruct.h"
 
-typedef NS_ENUM(NSInteger, SPType)
-{
-    SPTypeSidewalkPoint,
-    SPTypeObstruction,
-    SPTypeCrack,
-    SPTypeLevelChange,
-    SPTypeDrivwayCut,
-};
-
 @interface NVSidewalkPoint : NSObject
 
 @property int lastUpdate, condition, houseNum;
 @property uint pointID;
 @property double slopeFront, slopeSide, slopeHeading, crackWidth, width, levelChange;
+@property double flare1Slope, flare2Slope;
 @property enum obstructions obstruction;
 @property SPType type;
+@property DCType driveCrossType;
+@property SdwkMaterial material;
 @property (nonatomic, copy) NSString *note, *street;
 @property CLLocationCoordinate2D location;
 
