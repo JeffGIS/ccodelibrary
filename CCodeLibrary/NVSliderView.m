@@ -10,6 +10,7 @@
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UILabel *sliderLabel, *titleLabel;
 @property (nonatomic) UIButton *cancelButton, *saveButton, *photoButton;
+@property (nonatomic) UISegmentedControl *stepperSC;
 @property (nonatomic) UITabBar *tabBar;
 
 @end
@@ -57,13 +58,14 @@
     sliderView.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((sliderView.frame.size.width * 0.05),
                                                                       (sliderView.frame.size.height * 0.05),
                                                                       (sliderView.frame.size.width * 0.9),
-                                                                      (sliderView.frame.size.height * 0.1))];
+                                                                      (sliderView.frame.size.height * 0.15))];
     
     sliderView.titleLabel.backgroundColor = UIColor.clearColor;
     sliderView.titleLabel.text = sliderView.titleText;
     sliderView.titleLabel.textColor = UIColor.blackColor;
     sliderView.titleLabel.textAlignment = NSTextAlignmentCenter;
     sliderView.titleLabel.adjustsFontSizeToFitWidth = YES;
+    sliderView.titleLabel.numberOfLines = 2;
     sliderView.titleLabel.font = [UIFont boldSystemFontOfSize:44.0];
     
     [sliderView addSubview:sliderView.titleLabel];
@@ -93,7 +95,7 @@
     sliderView.slider.value = roundf(startValue);
     
     [sliderView.slider addTarget:sliderView
-                          action:@selector(sliderValueChanged:)
+                          action:@selector(sliderValueChanged)
                 forControlEvents:UIControlEventValueChanged];
     
     [sliderView addSubview:sliderView.slider];
@@ -155,6 +157,8 @@
                                action:@selector(photoButtonTapped:)
                      forControlEvents:UIControlEventTouchUpInside];
     
+    [sliderView setupStepper];
+    
     [UIView animateWithDuration:0.25
                      animations:^{
                          sliderView.overlayView.alpha = 0.7;
@@ -182,7 +186,46 @@
      forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)sliderValueChanged:(UISlider *)slider
+- (void)setupStepper
+{
+    _stepperSC = [[UISegmentedControl alloc] initWithItems:@[@"-", @"+"]];
+    
+    _stepperSC.frame = CGRectMake(0.0, 0.0, (self.frame.size.width * 0.3),
+                                  (self.frame.size.height * 0.1));
+    
+    CGFloat midY = ((CGRectGetMaxY(_slider.frame) + CGRectGetMinY(_cancelButton.frame)) / 2);
+    
+    _stepperSC.center = CGPointMake(_slider.center.x, midY);
+    _stepperSC.tintColor = UIColor.blackColor;
+    _stepperSC.momentary = YES;
+    
+    [_stepperSC setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:48.0]
+                                                                   forKey:NSFontAttributeName]
+                              forState:UIControlStateNormal];
+    
+    [_stepperSC setContentPositionAdjustment:UIOffsetMake(0.0, -2.0)
+                              forSegmentType:UISegmentedControlSegmentAny
+                                  barMetrics:UIBarMetricsDefault];
+    
+    [self addSubview:_stepperSC];
+    
+    [_stepperSC addTarget:self
+                   action:@selector(stepperSCTapped:)
+         forControlEvents:UIControlEventValueChanged];
+}
+
+- (void)stepperSCTapped:(UISegmentedControl *)sc
+{
+    if (sc.selectedSegmentIndex)
+        [_slider setValue:(_slider.value + 1) animated:NO];
+    
+    else
+        [_slider setValue:(_slider.value - 1) animated:NO];
+    
+    [self updateSliderLabel];
+}
+
+- (void)sliderValueChanged
 {
     [self updateSliderLabel];
 }
