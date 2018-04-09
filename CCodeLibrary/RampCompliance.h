@@ -18,9 +18,9 @@ LPSTR ExpandText(LPSTR InText);
 //definitions for critical values
 #define CVButtonHeight 42.0
 #define CVDimensions 48.0
-#define CV2 100 / 48.0
+#define CV2 2.1
 #define CV5 5.0
-#define CV8 100.0 / 12.0
+#define CV8 8.3
 #define CV10 10.0
 #define CVNone -9999.0
 
