@@ -42,7 +42,7 @@ static LPSTR selectCode(LPSTR codes, int whichCode)
 	return code;
 }
 
-float roundToTenth(float value)
+double roundToTenth(double value)
 {
     value *= 10;
     value += 0.5;
@@ -762,7 +762,7 @@ void setStandardToleranceValues(ToleranceValues *tolerances)
     return;
 }
 
-static char *textures[] = {"None", "SmoothedConcrete", "BrushedConcrete", "TintedConcrete", "TruncatedStoneDomes", "TruncatedStampedConcrete", "CastironTruncatedDomes", "ExposedAggregate", "CutStone", "None", "Other","CastInPlacePanels","LinearGrove"};    
+static char *textures[] = {"None", "SmoothedConcrete", "BrushedConcrete", "TintedConcrete", "TruncatedStoneDomes", "TruncatedStampedConcrete", "CastironTruncatedDomes", "ExposedAggregate", "CutStone", "None", "Other","CastInPlacePanels","LinearGroove"};    
 static char *obstructions[] = {"None", "Hydrant", "Manhole", "Polebox", "Pole", "StreetManhole", "Other", "None", "None", "None", "None", "MasterNone","","","","","","","","","","SDWKClearWidth","SDWKProtudingObject","SDWKVerticalClearance","SDWKUndergroundUtility"};    
 static char *rampTypes[] = {"Perp", "PerpNonWalk", "CombPerpWalk", "CombPerpNonWalk", "OneWayPerp", "OneWayDirBlendTrans", "Parallel", "DepressedCorner", "Fan", "BuiltUp", "Diagonal", "OneWayDirCurbGutter", "CombLeftWalk", "CombRightWalk", "CombLeftNonWalk", "CombRightNonWalk"};
 static char *AWITypes[] = {"None", "Tones", "SpeechMessage"};

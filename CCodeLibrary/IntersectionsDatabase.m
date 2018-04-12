@@ -777,6 +777,7 @@ mpint.intID];
             tolerances:(ToleranceValues *)tolerances
 {
     int numProblems = 0;
+    int codeSystem = 2;
     MPIntersection * mpint = [self getMPIntersectionFromDB:intID withRamps:YES];
     
     for (MPRamp *ramp in mpint.ramps)
@@ -788,7 +789,7 @@ mpint.intID];
             rampToRampStruct (ramp,&rstruct);
             LPSTR detailCode;
             
-            LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, tolerances,1);
+            LPSTR ccode = rampComplianceCode(&rstruct, &detailCode, tolerances,codeSystem);
            // [self saveComplianceCode:ccode forInt:intID ramp:ramp.rampNum];
             
             //show all non-compliant intersections
