@@ -8503,7 +8503,7 @@ short GetDlgListVal (LPSTR VarName,LPSTR Value)
 }
 int GetValFromOpenFiles (LPSTR VarName,LPSTR Value,int maxlval)
 {
-    return 0;
+    return -1;
 }
 /*
 int GetValFromOpenFiles (LPSTR VarName,LPSTR Value,int maxlval)

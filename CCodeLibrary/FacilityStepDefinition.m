@@ -181,6 +181,12 @@
     NSError *error = nil;
     cmd = [NSString stringWithContentsOfFile:bundlePath encoding:NSUTF8StringEncoding error:&error];
     rtn = [self executeCmd:cmd.UTF8String];
+    
+    bundlePath = [NSBundle.mainBundle pathForResource:@"BuildingBlocks"
+                                               ofType:@"txt"];
+    cmd = [NSString stringWithContentsOfFile:bundlePath encoding:NSUTF8StringEncoding error:&error];
+    rtn = [self executeCmd:cmd.UTF8String];
+    
     [self close:opened];
     return rtn;
 }
