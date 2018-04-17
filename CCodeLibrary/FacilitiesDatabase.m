@@ -710,7 +710,7 @@ Exit:
 {
     Bool opened = [self open];
     NSString * stepValueID = @"1";
-    NSString * stepDefID = @"PublicAccess";
+    NSString * stepDefID = @"Turning Space";
     NSString * prompt = @"";
     NSString * value = @"";
     NSString * header = @"Eagan City Hall";
