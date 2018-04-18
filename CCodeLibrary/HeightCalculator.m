@@ -16,7 +16,6 @@
 @property int counter, count, collectionMode;
 @property (nonatomic) UIButton *startButton;
 @property (nonatomic) UILabel *distanceLabel;
-@property (nonatomic) AVAudioPlayer *beep, *finalBeep;
 
 @end
 
@@ -40,7 +39,6 @@
     
     self.view.backgroundColor = UIColor.blackColor;
     
-    [self createBeeps];
     [self createPreviewLayer];
     [self createButtonsAndSlider];
     [self createCrosshairs];
@@ -73,21 +71,6 @@
 - (BOOL)prefersStatusBarHidden
 {
     return YES;
-}
-
-- (void)createBeeps
-{
-    _beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
-             [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
-                                     NSBundle.mainBundle.resourcePath]] error:nil];
-    
-    _finalBeep = [[AVAudioPlayer alloc] initWithContentsOfURL:
-                  [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/finalBeep.mp3",
-                                          NSBundle.mainBundle.resourcePath]] error:nil];
-    
-    _beep.volume = _finalBeep.volume = 1.0;
-    [_beep prepareToPlay];
-    [_finalBeep prepareToPlay];
 }
 
 - (void)createPreviewLayer
@@ -222,7 +205,7 @@
     {
         if (_counter == _count)
         {
-            [_finalBeep play];
+            [CRAPI.sharedInstance playFinalBeep];
             _collectData = NO;
             double accelX = (_sumX / _count);
             double accelY = (_sumY / _count);
@@ -267,7 +250,7 @@
 {
     if (!_collectData)
     {
-        [_beep play];
+        [CRAPI.sharedInstance playBeep];
         _collectionMode++;
         _counter = _sumX = _sumY = _sumZ = 0;
         _collectData = YES;
