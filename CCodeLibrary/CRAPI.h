@@ -163,6 +163,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nullable) NSURL *rhVideoURL;
 @property (nonatomic, nullable) NSMutableString *rhSearchSqlCommands;
 @property (nonatomic, copy, nullable) NSString *rhSearchFilePath;
+@property BOOL inDevMode;
 
 + (nullable CRAPI *)sharedInstance;
 

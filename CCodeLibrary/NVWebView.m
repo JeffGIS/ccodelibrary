@@ -800,6 +800,11 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [[self.superview viewWithTag:777] removeFromSuperview];
 }
 
+- (void)disableZoomScroll
+{
+    _scrollView.scrollEnabled = NO;
+}
+
 - (void)clearPosition
 {
     _scrollView.transform = CGAffineTransformMakeRotation(0.0);
@@ -914,20 +919,34 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
                               lowerRight:(DPOINT)lowerRight
                            identifierTag:(int)identifierTag
 {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = [self frameForUpperLeft:upperLeft lowerRight:lowerRight];
+    button.tag = identifierTag;
+    button.backgroundColor = UIColor.clearColor;
+    [button addTarget:self action:@selector(windowTouchedDown:) forControlEvents:UIControlEventTouchDown];
+    [[self.superview viewWithTag:777] addSubview:button];
+}
+
+- (void)addViewToFrameWithUpperLeft:(DPOINT)upperLeft
+                         lowerRight:(DPOINT)lowerRight
+{
+    UIView *view = UIView.new;
+    view.frame = [self frameForUpperLeft:upperLeft lowerRight:lowerRight];
+    view.backgroundColor = UIColor.redColor;
+    view.alpha = 0.5;
+    [[self.superview viewWithTag:777] addSubview:view];
+}
+
+- (CGRect)frameForUpperLeft:(DPOINT)upperLeft
+                 lowerRight:(DPOINT)lowerRight
+{
     CGFloat xFactor = (_webView.frame.size.width / (_lr.x - _ul.x));
     CGFloat yFactor = (_webView.frame.size.height / (_lr.y - _ul.y));
     CGPoint origin = CGPointMake(((upperLeft.x - _ul.x) * xFactor), ((upperLeft.y - _ul.y) * yFactor));
     CGFloat xSize = (lowerRight.x - upperLeft.x);
     CGFloat ySize = (lowerRight.y - upperLeft.y);
     CGSize size = CGSizeMake((xSize * xFactor), (ySize * yFactor));
-    CGRect frame = CGRectMake(origin.x, origin.y, size.width, size.height);
-    
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = frame;
-    button.tag = identifierTag;
-    button.backgroundColor = UIColor.clearColor;
-    [button addTarget:self action:@selector(windowTouchedDown:) forControlEvents:UIControlEventTouchDown];
-    [[self.superview viewWithTag:777] addSubview:button];
+    return CGRectMake(origin.x, origin.y, size.width, size.height);
 }
 
 - (void)windowTouchedDown:(UIButton *)button
