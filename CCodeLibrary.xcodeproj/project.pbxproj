@@ -1616,10 +1616,10 @@
 			children = (
 				691BC0E91F755173007E0423 /* .gitignore */,
 				EBA2E45F199527660085B2E0 /* CCodeLibrary */,
-				EBA2E460199527660085B2E0 /* Supporting Files */,
-				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E473199527660085B2E0 /* CCodeLibraryTests */,
+				EBA2E45C199527660085B2E0 /* Frameworks */,
 				EBA2E45B199527660085B2E0 /* Products */,
+				EBA2E460199527660085B2E0 /* Supporting Files */,
 			);
 			sourceTree = "<group>";
 		};

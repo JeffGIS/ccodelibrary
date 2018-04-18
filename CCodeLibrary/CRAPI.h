@@ -15,6 +15,7 @@
 #import "HotSpotVideo.h"
 #import "SSDelegate.h"
 #import "NVPeerConnect.h"
+@import AVKit;
 
 #define MANAGEMENT_MODULE       1
 #define PRELIM_MODULE           2
@@ -263,5 +264,10 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void)displayChartBitmaps:(nonnull NSTimer *)timer;
 - (void)displayHotSpotVideo:(nonnull NSTimer *)timer;
 - (nonnull NSArray<NSArray *> *)arrayOutput;
+- (void)playBeep;
+- (void)playFinalBeep;
+- (void)startBeepTimer:(NSTimeInterval)timeInterval;
+- (void)cancelBeepTimer;
+- (void)setBeepVolume:(float)volume;
 
 @end

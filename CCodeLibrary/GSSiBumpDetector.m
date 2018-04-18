@@ -5,6 +5,7 @@
 #import "UserDefaults.h"
 @import AVFoundation;
 @import CoreMotion;
+#import "CRAPI.h"
 
 @interface GSSiBumpDetector ()
 
@@ -13,7 +14,6 @@
 @property (nonatomic) UILabel *countdownLabel, *titleLabel, *promptLabel;
 @property (nonatomic) UIButton *start, *cancel, *help, *reference, *link, *comment;
 @property (nonatomic) BOOL timerIsFiring, isFirstTime, isComplete;
-@property (nonatomic) AVAudioPlayer *beep, *finalBeep;
 @property (nonatomic) CMMotionManager *motionManager;
 @property (nonatomic) CMAcceleration userAcceleration, gravity;
 @property (nonatomic) NSDate *startTime;
@@ -159,17 +159,6 @@
     if (error)
         NSLog(@"AVAudioSession set category ERROR");
     
-    bd.beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
-                                [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
-                                                        NSBundle.mainBundle.resourcePath]] error:nil];
-    
-    bd.finalBeep = [[AVAudioPlayer alloc] initWithContentsOfURL:
-                              [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/finalBeep.mp3",
-                                                      NSBundle.mainBundle.resourcePath]] error:nil];
-    
-    [bd.beep prepareToPlay];
-    [bd.finalBeep prepareToPlay];
-    bd.finalBeep.volume = 1.0;
     bd.motionManager = CMMotionManager.new;
     
     [UIView animateWithDuration:0.25
@@ -223,12 +212,12 @@
     
     if (_countdownTime > 0)
     {
-        _beep.volume = (1.0 / _countdownTime);
-        [_beep play];
+        [CRAPI.sharedInstance setBeepVolume:(1.0 / _countdownTime)];
+        [CRAPI.sharedInstance playBeep];
     }
     
     else if (_countdownTime == 0)
-        [_finalBeep play];
+        [CRAPI.sharedInstance playFinalBeep];
 
     [self updateCountdownLabelText];
 }
@@ -290,8 +279,6 @@
             _timerIsFiring = YES;
             _start.backgroundColor = UIColor.redColor;
             [_start setTitle:@"Stop" forState:UIControlStateNormal];
-            _beep.volume = 0.0;
-            [_beep play];
         }
     }
 }

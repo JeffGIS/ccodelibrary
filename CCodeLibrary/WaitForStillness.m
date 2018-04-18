@@ -4,6 +4,7 @@
 #import "WaitForStillness.h"
 @import CoreMotion;
 @import AVFoundation;
+#import "CRAPI.h"
 
 #define HORIZONTAL 1
 #define VERTICAL 2
@@ -21,8 +22,6 @@
 @property SEL aSelector;
 @property int orientation, counter, count;
 @property (nonatomic) CMMotionManager *motionManager;
-@property (nonatomic) NSTimer *beepTimer;
-@property (nonatomic) AVAudioPlayer *beep, *finalBeep;
 
 @end
 
@@ -77,22 +76,7 @@
     wfs.orientation = orientation;
     wfs.motionManager = CMMotionManager.new;
     
-    if (beepSeconds > 0)
-    {
-        wfs.beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
-                    [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
-                                            NSBundle.mainBundle.resourcePath]] error:nil];
-        
-        [wfs.beep prepareToPlay];
-        wfs.beep.volume = 1.0;
-        
-        wfs.beepTimer = [NSTimer scheduledTimerWithTimeInterval:beepSeconds
-                                                         target:wfs
-                                                       selector:@selector(doBeep:)
-                                                       userInfo:nil
-                                                        repeats:YES];
-    }
-
+    [CRAPI.sharedInstance startBeepTimer:beepSeconds];
     [wfs verifyStillness];
     return wfs;
 }
@@ -104,11 +88,6 @@
     wfs.motionManager = CMMotionManager.new;
     wfs.count = 5;
     [wfs verifyPortraitOrUpsideDown];
-}
-
-- (void)doBeep:(NSTimer *)timer
-{
-    [_beep play];
 }
 
 - (void)verifyStillness
@@ -136,8 +115,6 @@
 {
     if (_counter == _count)
     {
-        [self cancelOperations];
-        
         double accelX = (_sumX / _count);
         double accelY = (_sumY / _count);
         double accelZ = (_sumZ / _count);
@@ -168,7 +145,10 @@
             (angleY < _orientationTolerance) &&
             (angleZ < _orientationTolerance))
         {
-            [_aTarget performSelector:_aSelector];
+            NSTimeInterval delay = 0.1;
+            
+            [self cancelOperations:delay];
+            [_aTarget performSelector:_aSelector withObject:nil afterDelay:delay];
         }
         
         else
@@ -212,18 +192,18 @@
     _counter = 0;
 }
 
-- (void)cancelOperations
+- (void)cancelOperations:(NSTimeInterval)stopBeepDelay
 {
-    if (_beepTimer)
-        [_beepTimer invalidate];
-    
     [_motionManager stopAccelerometerUpdates];
-    [_beep stop];
+    
+    [CRAPI.sharedInstance performSelector:@selector(cancelBeepTimer)
+                               withObject:nil
+                               afterDelay:stopBeepDelay];
 }
 
 - (void)cancelWaitForStillness
 {
-    [self cancelOperations];
+    [self cancelOperations:0];
     
     if (_aTarget && [_aTarget respondsToSelector:@selector(stillnessWasCanceled)])
         [_aTarget stillnessWasCanceled];

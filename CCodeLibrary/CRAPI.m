@@ -23,8 +23,10 @@
 
 @interface CRAPI () <NVAlertViewDelegate, NVDocumentManagerDelegate>
 
-@property (nonatomic) NVAlertView *alert;
+@property (nonatomic, nullable) NVAlertView *alert;
 @property int kp, currentGeoidValue, numAllowedZooms;
+@property (nonatomic, nullable) AVAudioPlayer *beep, *finalBeep;
+@property (nonatomic, nullable) NSTimer *beepTimer;
 
 @end
 
@@ -153,6 +155,14 @@
             NSURL *outputURL = [NSURL fileURLWithPath:outputPath isDirectory:NO];
             _rhVideoURL = outputURL;
         }
+        
+        _beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
+                 [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
+                                         NSBundle.mainBundle.resourcePath]] error:nil];
+        
+        _finalBeep = [[AVAudioPlayer alloc] initWithContentsOfURL:
+                      [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/finalBeep.mp3",
+                                              NSBundle.mainBundle.resourcePath]] error:nil];
     }
     
     return self;
@@ -241,21 +251,20 @@
     }
 }
 
-- (void) setInAutoLoopMode:(BOOL)inAutoLoopMode
+- (void)setInAutoLoopMode:(BOOL)inAutoLoopMode
 {
     static BOOL saveIdleTimer = NO;
     
     _inAutoLoopMode = inAutoLoopMode;
+    
     if (inAutoLoopMode)
     {
-        saveIdleTimer = [UIApplication sharedApplication].idleTimerDisabled;
-        [UIApplication sharedApplication].idleTimerDisabled = YES;
+        saveIdleTimer = UIApplication.sharedApplication.idleTimerDisabled;
+        UIApplication.sharedApplication.idleTimerDisabled = YES;
     }
+    
     else
-    {
-        [UIApplication sharedApplication].idleTimerDisabled = saveIdleTimer;
-    }
-
+        UIApplication.sharedApplication.idleTimerDisabled = saveIdleTimer;
 }
 
 -(void) setCurrentOverallBoundaryRefno:(int)i
@@ -1592,6 +1601,53 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     _rhVideoURL = rhVideoURL;
     [UserDefaults.defaults saveString:rhVideoURL.lastPathComponent forKey:@"RHVideoPath"];
+}
+
+- (void)playBeep
+{
+    [_beep play];
+}
+
+- (void)playFinalBeep
+{
+    [_finalBeep play];
+}
+
+- (void)startBeepTimer:(NSTimeInterval)timeInterval
+{
+    if (timeInterval > 0.0)
+    {
+        [_beep prepareToPlay];
+        [self cancelBeepTimer];
+        
+        _beepTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval
+                                                      target:_beep
+                                                    selector:@selector(play)
+                                                    userInfo:nil
+                                                     repeats:YES];
+        
+        NSLog(@"Beep Timer Started");
+    }
+}
+
+- (void)cancelBeepTimer
+{
+    [_beep stop];
+    
+    if (_beepTimer)
+    {
+        if (_beepTimer.isValid)
+            [_beepTimer invalidate];
+        
+        _beepTimer = nil;
+        
+        NSLog(@"Beep Timer Canceled");
+    }
+}
+
+- (void)setBeepVolume:(float)volume
+{
+    _beep.volume = volume;
 }
 
 @end
