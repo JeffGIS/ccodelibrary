@@ -633,12 +633,10 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
   
   else
   {
-      UIApplication *app = UIApplication.sharedApplication;
-      
-      if ([app canOpenURL:url])
-          [app openURL:url options:@{} completionHandler:nil];
-      
-    return NO;
+      if ([UIApplication.sharedApplication canOpenURL:url])
+          [UIApplication.sharedApplication openURL:url];
+    
+      return NO;
   }
 }
 

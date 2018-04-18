@@ -46,7 +46,7 @@
 #ifdef DEBUG
         if ([UIDevice.currentDevice.name isEqualToString:@"Bill’s iPad Air"] ||
             [UIDevice.currentDevice.name isEqualToString:@"WildBill’s iPhone"] ||
-            [UIDevice.currentDevice.name isEqualToString:@"GSSiRental006"])
+            [UIDevice.currentDevice.name isEqualToString:@"GSSiRental005"])
         {
             //_bundleID = @"com.gssi.newvisioncrime";
             //_bundleID = @"com.gssi.newvisionmetro";
@@ -1298,19 +1298,17 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     }
     
     NSURL *url = [NSURL URLWithString:urlString];
-    UIApplication *app = UIApplication.sharedApplication;
     
-    if ([app canOpenURL:url])
-        [app openURL:url options:@{} completionHandler:nil];
+    if ([UIApplication.sharedApplication canOpenURL:url])
+        [UIApplication.sharedApplication openURL:url];
 }
 
 - (void)gotoTestFlight
 {
     NSURL *url = [NSURL URLWithString:@"https://beta.itunes.apple.com"];
-    UIApplication *app = UIApplication.sharedApplication;
     
-    if ([app canOpenURL:url])
-        [app openURL:url options:@{} completionHandler:nil];
+    if ([UIApplication.sharedApplication canOpenURL:url])
+        [UIApplication.sharedApplication openURL:url];
 }
 
 - (void)checkStorageForMinStorage:(NSNumber *)minStorage
