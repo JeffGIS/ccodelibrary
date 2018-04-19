@@ -16,7 +16,7 @@
 @property (nonatomic) WKWebView *webView;
 @property (nonatomic) UIButton *returnButton, *realtor, *nextButton, *previousButton;
 @property CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation;
-@property CGFloat origScale, origRotation, markerSize, fontSize, aspectRatio;
+@property CGFloat origScale, origRotation, markerSize, fontSize, aspectRatio, lastScale;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIActivityIndicatorView *indicator;
 @property CGPoint zoomPoint, origPoint;
@@ -43,7 +43,7 @@
     if (self)
     {
         _zoomPoint = CGPointZero;
-        _zoomScale = 1.0;
+        _zoomScale = _lastScale = 1.0;
         _zoomRotation = 0.0;
         _numPages = _zoomPage = 1;
         _navigationComplete = _zoomToPDFDrawing = _drawsMarkers = NO;
@@ -932,10 +932,29 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 {
     if (CRAPI.sharedInstance.inDevMode)
     {
-        upperLeft.x = roundTo400th(upperLeft.x);
-        upperLeft.y = roundTo400th(upperLeft.y);
-        lowerRight.x = roundTo400th(lowerRight.x);
-        lowerRight.y = roundTo400th(lowerRight.y);
+        if (upperLeft.x > lowerRight.x)
+        {
+            double tmp = lowerRight.x;
+            lowerRight.x = upperLeft.x;
+            upperLeft.x = tmp;
+        }
+        
+        if (upperLeft.y > lowerRight.y)
+        {
+            double tmp = lowerRight.y;
+            lowerRight.y = upperLeft.y;
+            upperLeft.y = tmp;
+        }
+        
+        upperLeft.x = MAX(upperLeft.x, _ul.x);
+        upperLeft.y = MAX(upperLeft.y, _ul.y);
+        lowerRight.x = MIN(lowerRight.x, _lr.x);
+        lowerRight.y = MIN(lowerRight.y, _lr.y);
+        
+        upperLeft.x = roundTo1000th(upperLeft.x);
+        upperLeft.y = roundTo1000th(upperLeft.y);
+        lowerRight.x = roundTo1000th(lowerRight.x);
+        lowerRight.y = roundTo1000th(lowerRight.y);
     }
     
     UIView *view = UIView.new;
@@ -964,31 +983,87 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     }
 }
 
-double roundTo400th(double value)
+double roundTo1000th(double value)
 {
-    value *= 400;
+    value *= 1000;
     value += 0.5;
     value = floor(value);
-    value /= 400;
+    value /= 1000;
     return value;
 }
 
 - (void)viewTapped:(UITapGestureRecognizer *)gesture
 {
-    NSString *info = [NSString stringWithFormat:@"ULX: %.4f\nULY: %.4f\nLRX: %.4f\nLRY: %.4f",
+    NSString *info = [NSString stringWithFormat:@"ULX: %.3f\nULY: %.3f\nLRX: %.3f\nLRY: %.3f",
                       _frameUL.x, _frameUL.y, _frameLR.x, _frameLR.y];
     
     showAlert(info);
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(tapViewFinished)])
+        [_delegate tapViewFinished];
 }
 
 - (void)viewPanned:(UIPanGestureRecognizer *)gesture
 {
+    CGPoint translation = [gesture translationInView:gesture.view];
+    float panFactor = 0.001;
     
+    if (translation.x > 0 && (_lr.x - _frameLR.x) >= panFactor)
+    {
+        _frameUL.x += panFactor;
+        _frameLR.x += panFactor;
+    }
+    
+    else if (translation.x < 0 && (_frameUL.x - _ul.x) >= panFactor)
+    {
+        _frameUL.x -= panFactor;
+        _frameLR.x -= panFactor;
+    }
+    
+    if (translation.y > 0 && (_lr.y - _frameLR.y) >= panFactor)
+    {
+        _frameUL.y += panFactor;
+        _frameLR.y += panFactor;
+    }
+    
+    else if (translation.y < 0 && (_frameUL.y - _ul.y) >= panFactor)
+    {
+        _frameUL.y -= panFactor;
+        _frameLR.y -= panFactor;
+    }
+    
+    gesture.view.frame = [self frameForUpperLeft:_frameUL lowerRight:_frameLR];
+    [gesture setTranslation:CGPointZero inView:gesture.view];
 }
 
 - (void)viewPinched:(UIPinchGestureRecognizer *)gesture
 {
+    float scaleFactor = 0.001;
     
+    if ((gesture.scale - _lastScale) > 0)
+    {
+        if ((_lr.x - _frameLR.x) >= scaleFactor &&
+            (_frameUL.x - _ul.x) >= scaleFactor &&
+            (_lr.y - _frameLR.y) >= scaleFactor &&
+            (_frameUL.y - _ul.y) >= scaleFactor)
+        {
+            _frameUL.x -= scaleFactor;
+            _frameUL.y -= scaleFactor;
+            _frameLR.x += scaleFactor;
+            _frameLR.y += scaleFactor;
+        }
+    }
+    
+    else
+    {
+        _frameUL.x += scaleFactor;
+        _frameUL.y += scaleFactor;
+        _frameLR.x -= scaleFactor;
+        _frameLR.y -= scaleFactor;
+    }
+    
+    _lastScale = gesture.scale;
+    gesture.view.frame = [self frameForUpperLeft:_frameUL lowerRight:_frameLR];
 }
 
 - (CGRect)frameForUpperLeft:(DPOINT)upperLeft

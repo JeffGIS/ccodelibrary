@@ -36,6 +36,7 @@ wasTappedAtPoint:(DPOINT)point
 - (void)webViewWasLeftSwiped;
 - (void)webViewWasRightSwiped;
 - (void)webViewDidRemovePolygon;
+- (void)tapViewFinished;
 
 @end
 
