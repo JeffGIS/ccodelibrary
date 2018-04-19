@@ -27,7 +27,7 @@
 @property (nonatomic) NSMutableArray<NVWebViewMarker *> *markers;
 @property (nonatomic) NSMutableArray<CAShapeLayer *> *lines, *symbols, *polylines, *polygons;
 @property (nonatomic) NSMutableArray<NSArray<DPoint *> *> *symbolPoints, *polylinePoints, *polygonPoints;
-@property DPOINT markerPosition, ul, lr;
+@property DPOINT markerPosition, ul, lr, frameUL, frameLR;
 @property (nonatomic) CAShapeLayer *polygon;
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) UIImageView *imageView;
@@ -930,11 +930,65 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 - (void)addViewToFrameWithUpperLeft:(DPOINT)upperLeft
                          lowerRight:(DPOINT)lowerRight
 {
+    if (CRAPI.sharedInstance.inDevMode)
+    {
+        upperLeft.x = roundTo400th(upperLeft.x);
+        upperLeft.y = roundTo400th(upperLeft.y);
+        lowerRight.x = roundTo400th(lowerRight.x);
+        lowerRight.y = roundTo400th(lowerRight.y);
+    }
+    
     UIView *view = UIView.new;
     view.frame = [self frameForUpperLeft:upperLeft lowerRight:lowerRight];
     view.backgroundColor = UIColor.redColor;
     view.alpha = 0.5;
     [[self.superview viewWithTag:777] addSubview:view];
+    
+    if (CRAPI.sharedInstance.inDevMode)
+    {
+        _frameUL = upperLeft;
+        _frameLR = lowerRight;
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(viewTapped:)];
+        
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(viewPanned:)];
+        
+        UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(viewPinched:)];
+        
+        [view addGestureRecognizer:tap];
+        [view addGestureRecognizer:pan];
+        [view addGestureRecognizer:pinch];
+    }
+}
+
+double roundTo400th(double value)
+{
+    value *= 400;
+    value += 0.5;
+    value = floor(value);
+    value /= 400;
+    return value;
+}
+
+- (void)viewTapped:(UITapGestureRecognizer *)gesture
+{
+    NSString *info = [NSString stringWithFormat:@"ULX: %.4f\nULY: %.4f\nLRX: %.4f\nLRY: %.4f",
+                      _frameUL.x, _frameUL.y, _frameLR.x, _frameLR.y];
+    
+    showAlert(info);
+}
+
+- (void)viewPanned:(UIPanGestureRecognizer *)gesture
+{
+    
+}
+
+- (void)viewPinched:(UIPinchGestureRecognizer *)gesture
+{
+    
 }
 
 - (CGRect)frameForUpperLeft:(DPOINT)upperLeft
