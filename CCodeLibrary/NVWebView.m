@@ -932,6 +932,20 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 {
     if (CRAPI.sharedInstance.inDevMode)
     {
+        if (upperLeft.x > lowerRight.x)
+        {
+            double tmp = lowerRight.x;
+            lowerRight.x = upperLeft.x;
+            upperLeft.x = tmp;
+        }
+        
+        if (upperLeft.y > lowerRight.y)
+        {
+            double tmp = lowerRight.y;
+            lowerRight.y = upperLeft.y;
+            upperLeft.y = tmp;
+        }
+        
         upperLeft.x = roundTo1000th(upperLeft.x);
         upperLeft.y = roundTo1000th(upperLeft.y);
         lowerRight.x = roundTo1000th(lowerRight.x);
@@ -979,6 +993,9 @@ double roundTo1000th(double value)
                       _frameUL.x, _frameUL.y, _frameLR.x, _frameLR.y];
     
     showAlert(info);
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(tapViewFinished)])
+        [_delegate tapViewFinished];
 }
 
 - (void)viewPanned:(UIPanGestureRecognizer *)gesture
