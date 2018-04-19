@@ -127,7 +127,11 @@ Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCS
                               inFile:(NSString *)file;
 
 + (BOOL) removeExistingChildren:(NSString*)ID
-                           view:(UIView *)view;
+                           view:(UIView *)view
+                           from:(id)from;
++ (BOOL) doRemoveChildren:(NSString*)stepID;
++ (NSString *) getStepDefForStep:(NSString *)stepID;
++ (void) doProcessCommand:(NSString *)stepValueID;
 
 
 @end

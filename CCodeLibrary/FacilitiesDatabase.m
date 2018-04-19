@@ -13,10 +13,6 @@
 #import "FacilitiesStepValue.h"
 #import "FacilityStepDefinition.h"
 #import "GSSiEnums.h"
-#import "NVAlertView.h"
-
-@interface FacilitiesDatabase () <NVAlertViewDelegate>
-@end
 
 @implementation FacilitiesDatabase
 
@@ -761,47 +757,42 @@ Exit:
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     return count;
 }
-+ (BOOL) removeExistingChildren:(NSString*)stepID
-                           view:(UIView *)view
++ (BOOL) doRemoveChildren:(NSString*)stepID
 {
     Bool rtn = FALSE;
     int facID = CRAPI.sharedInstance.currentFacility.facID;
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    NSString * cmd = [NSString stringWithFormat:@"DELETE FROM FacilityValues WHERE facilityNumber=%i AND stepValueID LIKE'%@.%%'",facID, stepID];
+    rtn = [fd executeCmd:cmd.UTF8String];
+    [fd close:opened];
+    return rtn;
+}
+
++ (BOOL) removeExistingChildren:(NSString*)stepID
+                           view:(UIView *)view
+                           from:(id)from
+{
+    Bool rtn = TRUE;
     FacilitiesDatabase * fd = FacilitiesDatabase.new;
     Bool opened = [fd open:lastDBPath];
     int numExisting = [fd numExistingChildren:stepID];
     [fd close:opened];
     if (numExisting)
     {
+        rtn = FALSE;
         NVAlertView * alert = [NVAlertView showLargeAlertViewinView:view
-                                             delegate:self
+                                             delegate:from
                                                 title:[NSString stringWithFormat:@"Are you sure you want to delete %i existing children?",
                                                        numExisting]
                                       buttonTextArray:@[@"YES", @"NO"]
                                      destructiveIndex:1];
         
-        alert.identifier = @"RemoveChildren";
+        alert.identifier = [NSString stringWithFormat:@"RemoveChildren:%@",stepID];
 
     }
-    return TRUE;
+    return rtn;
 }
-+ (void) doRemoveChildren:(NSString*)stepID
-{
-    NSString * cmd = [NSString stringWithFormat:@""];
-}
-- (void)alertView:(NVAlertView *)alertView
-didTapButtonAtIndex:(NSInteger)buttonIndex
-{
-    [alertView hideLargeAlertView:NO];
-    
-    if ([alertView.identifier isEqualToString:@"RemoveChildren"])
-    {
-        switch (buttonIndex)
-        {
-                [FacilitiesDatabase doRemoveChildren:alertView.identifier];
-        }
-    }
-}
-
 + (Bool) setNumPhotosForStep:(NSString *)stepID to:(int) num
 {
     Bool rtn = FALSE;
@@ -812,6 +803,18 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     rtn = [fd executeCmd:cmd.UTF8String];
     [fd close:opened];
     return rtn;
+}
++ (void) doProcessCommand:(NSString *)stepValueID
+{
+    NSString * saveSequence = ExpandString (@"@[%SEQUENCE]@=[%SEQUENCE]");
+    NSString * setSequence = ExpandString (@"[%SEQUENCE]=1;");
+    NSString *cmd = [NSString stringWithFormat:@"[%%STEPID]=%@;[%%FIELDINDEX]=%i",stepValueID,0];
+    ExpandString (cmd);
+    NSString * stepDefID = [FacilitiesDatabase getStepDefForStep:stepValueID];
+    NSString * command = [FacilityStepDefinition getStepCommand:stepDefID];
+
+    ExpandString (command);
+    ExpandString (saveSequence);
 }
 
 + (Bool) setHeaderForStep:(NSString *)stepID to:(NSString *)value
@@ -845,6 +848,26 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     return rtn;
 }
 
++ (NSString *) getStepDefForStep:(NSString *)stepID
+{
+    NSString * stepDefID = @"";
+    int facID = CRAPI.sharedInstance.currentFacility.facID;
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    NSString *query = [NSString stringWithFormat:@"SELECT stepDefinitionID FROM FacilityValues WHERE facilityNumber = %i AND stepValueID = '%@'",facID,stepID];
+    sqlite3_stmt *statement = NULL;
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(fd.database, query.UTF8String, -1, &statement, NULL), fd.database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        LPSTR value = (LPSTR)sqlite3_column_text(statement, 0);
+        stepDefID = [NSString stringWithUTF8String:value];
+    }
+    
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), fd.database);
+    [fd close:opened];
+    return stepDefID;
+}
 - (NSString *) getHeaderForStep:(NSString *)stepID
 {
     NSString * header = @"";
