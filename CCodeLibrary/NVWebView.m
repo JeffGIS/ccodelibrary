@@ -946,6 +946,11 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             upperLeft.y = tmp;
         }
         
+        upperLeft.x = MAX(upperLeft.x, _ul.x);
+        upperLeft.y = MAX(upperLeft.y, _ul.y);
+        lowerRight.x = MIN(lowerRight.x, _lr.x);
+        lowerRight.y = MIN(lowerRight.y, _lr.y);
+        
         upperLeft.x = roundTo1000th(upperLeft.x);
         upperLeft.y = roundTo1000th(upperLeft.y);
         lowerRight.x = roundTo1000th(lowerRight.x);
