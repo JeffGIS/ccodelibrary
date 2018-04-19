@@ -126,5 +126,8 @@ Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCS
                              forPage:(int)page
                               inFile:(NSString *)file;
 
++ (BOOL) removeExistingChildren:(NSString*)ID
+                           view:(UIView *)view;
+
 
 @end

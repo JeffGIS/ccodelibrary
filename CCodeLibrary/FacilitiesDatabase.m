@@ -13,6 +13,10 @@
 #import "FacilitiesStepValue.h"
 #import "FacilityStepDefinition.h"
 #import "GSSiEnums.h"
+#import "NVAlertView.h"
+
+@interface FacilitiesDatabase () <NVAlertViewDelegate>
+@end
 
 @implementation FacilitiesDatabase
 
@@ -741,6 +745,61 @@ Exit:
     rtn = [fd executeCmd:cmd.UTF8String];
     [fd close:opened];
     return rtn;
+}
+
+- (int) numExistingChildren:(NSString*)stepID
+{
+    int facID = CRAPI.sharedInstance.currentFacility.facID;
+    NSString *query = [NSString stringWithFormat:@"SELECT COUNT(*) FROM FacilityValues WHERE facilityNumber=%i AND stepValueID LIKE '%@.%%'",facID, stepID];
+    sqlite3_stmt *statement = NULL;
+    int count = 0;
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+        count = sqlite3_column_int(statement, 0);
+    
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    return count;
+}
++ (BOOL) removeExistingChildren:(NSString*)stepID
+                           view:(UIView *)view
+{
+    Bool rtn = FALSE;
+    int facID = CRAPI.sharedInstance.currentFacility.facID;
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    int numExisting = [fd numExistingChildren:stepID];
+    [fd close:opened];
+    if (numExisting)
+    {
+        NVAlertView * alert = [NVAlertView showLargeAlertViewinView:view
+                                             delegate:self
+                                                title:[NSString stringWithFormat:@"Are you sure you want to delete %i existing children?",
+                                                       numExisting]
+                                      buttonTextArray:@[@"YES", @"NO"]
+                                     destructiveIndex:1];
+        
+        alert.identifier = @"RemoveChildren";
+
+    }
+    return TRUE;
+}
++ (void) doRemoveChildren:(NSString*)stepID
+{
+    NSString * cmd = [NSString stringWithFormat:@""];
+}
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView hideLargeAlertView:NO];
+    
+    if ([alertView.identifier isEqualToString:@"RemoveChildren"])
+    {
+        switch (buttonIndex)
+        {
+                [FacilitiesDatabase doRemoveChildren:alertView.identifier];
+        }
+    }
 }
 
 + (Bool) setNumPhotosForStep:(NSString *)stepID to:(int) num
