@@ -110,7 +110,7 @@ wasTappedAtPoint:(DPOINT)point
                               lowerRight:(DPOINT)lowerRight
                            identifierTag:(int)identifierTag;
 
-- (void)addViewToFrameWithUpperLeft:(DPOINT)upperLeft
+- (BOOL)addViewToFrameWithUpperLeft:(DPOINT)upperLeft
                          lowerRight:(DPOINT)lowerRight;
 
 - (void)getHtmlString;
