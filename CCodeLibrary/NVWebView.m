@@ -56,6 +56,7 @@
 @property (nonatomic) CAShapeLayer *polygon;
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) UIImageView *imageView;
+@property (nonatomic, copy) NSString *highlights;
 
 @end
 
@@ -261,6 +262,7 @@
     [nvwv hideReturnButton];
     [nvwv disableUserInteraction];
     nvwv.drawing = drawing;
+    nvwv.highlights = highlights;
     
     CGFloat xMargin = 0.0, yMargin = 0.0;
     CGFloat width = ((drawing.lowerRight.x - drawing.upperLeft.x) * nvwv.aspectRatio);
@@ -283,6 +285,7 @@
     }
     
     [nvwv setConstraintsToLeading:xMargin trailing:-xMargin top:yMargin bottom:-yMargin];
+    
     return nvwv;
 }
 
@@ -562,6 +565,22 @@
     
     if (_delegate && [_delegate respondsToSelector:@selector(webViewDidZoom)])
         [_delegate webViewDidZoom];
+    
+    if (_highlights && _highlights.length)
+    {
+        NSArray *highlightList = [_highlights componentsSeparatedByString:@" "];
+        NSString *shapeID = highlightList[0];
+        double ulx = ([highlightList[1] intValue] / 1000.0);
+        double uly = ([highlightList[2] intValue] / 1000.0);
+        double lrx = ([highlightList[3] intValue] / 1000.0);
+        double lry = ([highlightList[4] intValue] / 1000.0);
+        
+        DPOINT ul = {ulx, uly};
+        DPOINT lr = {lrx, lry};
+        
+        if ([shapeID isEqualToString:@"E"])
+            [self addEllipseToFrameWithUpperLeft:ul lowerRight:lr];
+    }
 }
 
 - (void)realtor:(UIButton *)button
@@ -955,6 +974,14 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [[self.superview viewWithTag:777] addSubview:button];
 }
 
+- (void)addEllipseToFrameWithUpperLeft:(DPOINT)upperLeft
+                            lowerRight:(DPOINT)lowerRight
+{
+    UIView *ellipse = NVEllipseView.new;
+    ellipse.frame = [self frameForUpperLeft:upperLeft lowerRight:lowerRight];
+    [[self.superview viewWithTag:777] addSubview:ellipse];
+}
+
 - (BOOL)addViewToFrameWithUpperLeft:(DPOINT)upperLeft
                          lowerRight:(DPOINT)lowerRight
 {
@@ -992,24 +1019,21 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     ellipse.frame = [self frameForUpperLeft:upperLeft lowerRight:lowerRight];
     [[self.superview viewWithTag:777] addSubview:ellipse];
     
-    if (CRAPI.sharedInstance.inDevMode)
-    {
-        _frameUL = upperLeft;
-        _frameLR = lowerRight;
-        
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                              action:@selector(viewTapped:)];
-        
-        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
-                                                                              action:@selector(viewPanned:)];
-        
-        UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self
-                                                                                    action:@selector(viewPinched:)];
-        
-        [ellipse addGestureRecognizer:tap];
-        [ellipse addGestureRecognizer:pan];
-        [ellipse addGestureRecognizer:pinch];
-    }
+    _frameUL = upperLeft;
+    _frameLR = lowerRight;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                          action:@selector(viewTapped:)];
+    
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                          action:@selector(viewPanned:)];
+    
+    UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self
+                                                                                action:@selector(viewPinched:)];
+    
+    [ellipse addGestureRecognizer:tap];
+    [ellipse addGestureRecognizer:pan];
+    [ellipse addGestureRecognizer:pinch];
     
     return YES;
 }

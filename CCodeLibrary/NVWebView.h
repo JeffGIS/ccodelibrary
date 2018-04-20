@@ -114,6 +114,9 @@ wasTappedAtPoint:(DPOINT)point
 - (BOOL)addViewToFrameWithUpperLeft:(DPOINT)upperLeft
                          lowerRight:(DPOINT)lowerRight;
 
+- (void)addEllipseToFrameWithUpperLeft:(DPOINT)upperLeft
+                            lowerRight:(DPOINT)lowerRight;
+
 - (void)getHtmlString;
 - (void)disableZoomScroll;
 
