@@ -828,7 +828,9 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 - (void)disableZoomScroll
 {
-    _scrollView.scrollEnabled = NO;
+    _scrollView.panGestureRecognizer.enabled = NO;
+    _scrollView.pinchGestureRecognizer.enabled = NO;
+    _rotationEnabled = NO;
 }
 
 - (void)clearPosition
@@ -953,35 +955,38 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [[self.superview viewWithTag:777] addSubview:button];
 }
 
-- (void)addViewToFrameWithUpperLeft:(DPOINT)upperLeft
+- (BOOL)addViewToFrameWithUpperLeft:(DPOINT)upperLeft
                          lowerRight:(DPOINT)lowerRight
 {
-    if (CRAPI.sharedInstance.inDevMode)
+    if (upperLeft.x > lowerRight.x)
     {
-        if (upperLeft.x > lowerRight.x)
-        {
-            double tmp = lowerRight.x;
-            lowerRight.x = upperLeft.x;
-            upperLeft.x = tmp;
-        }
-        
-        if (upperLeft.y > lowerRight.y)
-        {
-            double tmp = lowerRight.y;
-            lowerRight.y = upperLeft.y;
-            upperLeft.y = tmp;
-        }
-        
-        upperLeft.x = MAX(upperLeft.x, _ul.x);
-        upperLeft.y = MAX(upperLeft.y, _ul.y);
-        lowerRight.x = MIN(lowerRight.x, _lr.x);
-        lowerRight.y = MIN(lowerRight.y, _lr.y);
-        
-        upperLeft.x = roundTo1000th(upperLeft.x);
-        upperLeft.y = roundTo1000th(upperLeft.y);
-        lowerRight.x = roundTo1000th(lowerRight.x);
-        lowerRight.y = roundTo1000th(lowerRight.y);
+        double tmp = lowerRight.x;
+        lowerRight.x = upperLeft.x;
+        upperLeft.x = tmp;
     }
+    
+    if (upperLeft.y > lowerRight.y)
+    {
+        double tmp = lowerRight.y;
+        lowerRight.y = upperLeft.y;
+        upperLeft.y = tmp;
+    }
+    
+    if (upperLeft.x > _lr.x || lowerRight.x < _ul.x ||
+        upperLeft.y > _lr.y || lowerRight.y < _ul.y)
+    {
+        return NO;
+    }
+    
+    upperLeft.x = MAX(upperLeft.x, _ul.x);
+    upperLeft.y = MAX(upperLeft.y, _ul.y);
+    lowerRight.x = MIN(lowerRight.x, _lr.x);
+    lowerRight.y = MIN(lowerRight.y, _lr.y);
+    
+    upperLeft.x = roundTo1000th(upperLeft.x);
+    upperLeft.y = roundTo1000th(upperLeft.y);
+    lowerRight.x = roundTo1000th(lowerRight.x);
+    lowerRight.y = roundTo1000th(lowerRight.y);
     
     UIView *ellipse = NVEllipseView.new;
     ellipse.frame = [self frameForUpperLeft:upperLeft lowerRight:lowerRight];
@@ -1005,6 +1010,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         [ellipse addGestureRecognizer:pan];
         [ellipse addGestureRecognizer:pinch];
     }
+    
+    return YES;
 }
 
 double roundTo1000th(double value)
