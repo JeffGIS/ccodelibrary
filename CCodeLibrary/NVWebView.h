@@ -68,6 +68,7 @@ wasTappedAtPoint:(DPOINT)point
 + (instancetype)showPDFDrawing:(NVPDFDrawing *)drawing
                   fromDocument:(NVPDFDocument)document
                         inView:(UIView *)view
+                withHighlights:(NSString *)highlights
                    enableSwipe:(BOOL)enableSwipe;
 
 - (void)hide:(BOOL)animated;

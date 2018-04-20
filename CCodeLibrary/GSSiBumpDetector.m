@@ -70,9 +70,10 @@
                                               upperLeft:ul lowerRight:lr];
     
     bd.webView = [NVWebView showPDFDrawing:drawing
-                                        fromDocument:NVPDFDocumentADAChecklist
-                                              inView:bd.countdownLabel
-                                         enableSwipe:NO];
+                              fromDocument:NVPDFDocumentADAChecklist
+                                    inView:bd.countdownLabel
+                            withHighlights:@""
+                               enableSwipe:NO];
     
     bd.titleLabel = [[UILabel alloc] initWithFrame:
                                CGRectMake((size.width * 0.05), (size.height * 0.025),

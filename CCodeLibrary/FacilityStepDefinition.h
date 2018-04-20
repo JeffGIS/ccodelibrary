@@ -21,6 +21,7 @@
 @property NSString * command;
 @property NSString * fieldIndex;
 @property NSArray * choiceList;
+@property NSString * highlights;
 @property double minValue, maxValue;
 
 @property sqlite3nv *database;
@@ -37,5 +38,6 @@
 + (NSString *) getStepHeader:(NSString *)stepID;
 + (NSString *) getStepVariables:(NSString *)stepID;
 + (NSString *) getStepPrompt:(NSString *)stepID;
++ (NSString *) getStepHighlights:(NSString *)stepID;
 
 @end

@@ -195,7 +195,7 @@
     Bool rtn = FALSE;
     BOOL opened = [self open];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT Title,Prompt,Header,Type,PhotoRequired,Reference,Link,Test,Variables,Command,ChoiceList,MinValue,MaxValue,Symbol FROM STEPDEF WHERE SectionID = '%@'",stepID];
+    NSString *query = [NSString stringWithFormat:@"SELECT Title,Prompt,Header,Type,PhotoRequired,Reference,Link,Test,Variables,Command,ChoiceList,MinValue,MaxValue,Symbol,HighlightDef FROM STEPDEF WHERE SectionID = '%@'",stepID];
     
     sqlite3_stmt *statement = NULL;
     _sectionID = stepID;
@@ -232,7 +232,8 @@
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _symbol = [self symbolFromType:_measurementType
                                andText:[NSString stringWithUTF8String:value]];
-
+        value = (LPSTR)sqlite3_column_text(statement, i++);
+        _highlights = [NSString stringWithUTF8String:value];
     }
     
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
@@ -248,6 +249,18 @@
     if ([fsd getStepDefinition:stepID])
     {
         rtn = fsd.command;
+    }
+    [fsd close:opened];
+    return rtn;
+}
++ (NSString *) getStepHighlights:(NSString *)stepID
+{
+    NSString * rtn = @"";
+    FacilityStepDefinition *fsd = FacilityStepDefinition.new;
+    Bool opened = [fsd open];
+    if ([fsd getStepDefinition:stepID])
+    {
+        rtn = fsd.highlights;
     }
     [fsd close:opened];
     return rtn;
