@@ -769,30 +769,32 @@ Exit:
     return rtn;
 }
 
-+ (BOOL) removeExistingChildren:(NSString*)stepID
-                           view:(UIView *)view
-                           from:(id)from
++ (BOOL)removeExistingChildren:(NSString *)stepID
+                          from:(id)from
 {
-    Bool rtn = TRUE;
-    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    BOOL rtn = YES;
+    FacilitiesDatabase *fd = FacilitiesDatabase.new;
     Bool opened = [fd open:lastDBPath];
     int numExisting = [fd numExistingChildren:stepID];
     [fd close:opened];
+    
     if (numExisting)
     {
-        rtn = FALSE;
-        NVAlertView * alert = [NVAlertView showLargeAlertViewinView:view
-                                             delegate:from
-                                                title:[NSString stringWithFormat:@"Are you sure you want to delete %i existing children?",
-                                                       numExisting]
-                                      buttonTextArray:@[@"YES", @"NO"]
-                                     destructiveIndex:1];
+        rtn = NO;
         
-        alert.identifier = [NSString stringWithFormat:@"RemoveChildren:%@",stepID];
-
+        NVAlertView *alert =
+        [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
+                                     delegate:from
+                                        title:[NSString stringWithFormat:@"Are you sure you want to delete %i existing children?", numExisting]
+                              buttonTextArray:@[@"YES", @"NO"]
+                             destructiveIndex:1];
+        
+        alert.identifier = [NSString stringWithFormat:@"RemoveChildren:%@", stepID];
     }
+    
     return rtn;
 }
+
 + (Bool) setNumPhotosForStep:(NSString *)stepID to:(int) num
 {
     Bool rtn = FALSE;
