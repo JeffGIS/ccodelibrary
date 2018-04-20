@@ -15,6 +15,18 @@ typedef NS_ENUM(NSInteger, NVPDFDocument)
     NVPDFDocumentADAChecklist,
 };
 
+@interface NVWebViewMarker : UIView
+
+@property CGPoint position;
+
+@end
+
+@interface NVEllipseView : UIView
+
+@property (nonatomic) UIColor *fillColor;
+
+@end
+
 @class NVWebView;
 
 @protocol NVWebViewDelegate <NSObject>
@@ -103,11 +115,5 @@ wasTappedAtPoint:(DPOINT)point
 
 - (void)getHtmlString;
 - (void)disableZoomScroll;
-
-@end
-
-@interface NVWebViewMarker : UIView
-
-@property CGPoint position;
 
 @end

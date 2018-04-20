@@ -11,6 +11,31 @@
 
 @end
 
+@implementation NVEllipseView
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        self.backgroundColor = UIColor.clearColor;
+        self.alpha = 0.5;
+        _fillColor = UIColor.redColor;
+    }
+    
+    return self;
+}
+
+- (void)drawRect:(CGRect)rect
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+    CGContextFillEllipseInRect(context, rect);
+}
+
+@end
+
 @interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate>
 
 @property (nonatomic) WKWebView *webView;
@@ -957,11 +982,9 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         lowerRight.y = roundTo1000th(lowerRight.y);
     }
     
-    UIView *view = UIView.new;
-    view.frame = [self frameForUpperLeft:upperLeft lowerRight:lowerRight];
-    view.backgroundColor = UIColor.redColor;
-    view.alpha = 0.5;
-    [[self.superview viewWithTag:777] addSubview:view];
+    UIView *ellipse = NVEllipseView.new;
+    ellipse.frame = [self frameForUpperLeft:upperLeft lowerRight:lowerRight];
+    [[self.superview viewWithTag:777] addSubview:ellipse];
     
     if (CRAPI.sharedInstance.inDevMode)
     {
@@ -977,9 +1000,9 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(viewPinched:)];
         
-        [view addGestureRecognizer:tap];
-        [view addGestureRecognizer:pan];
-        [view addGestureRecognizer:pinch];
+        [ellipse addGestureRecognizer:tap];
+        [ellipse addGestureRecognizer:pan];
+        [ellipse addGestureRecognizer:pinch];
     }
 }
 
