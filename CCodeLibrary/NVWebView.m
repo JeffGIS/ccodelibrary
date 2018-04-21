@@ -509,7 +509,7 @@
     {
         if (_zoomPage > 0)
         {
-            CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
+            CGFloat pageHeight = self.pageHeight;
             _zoomPoint.x *= _scrollView.contentSize.width;
             _zoomPoint.y *= pageHeight;
             _zoomPoint.y += (pageHeight * (_zoomPage - 1));
@@ -527,6 +527,22 @@
     }
 }
 
+- (CGFloat)pageHeight
+{
+    CGFloat rtn = 0.0;
+    
+    if (_numPages == 1)
+    {
+        rtn = MIN((_scrollView.contentSize.width / _aspectRatio),
+                  _scrollView.contentSize.height);
+    }
+    
+    else
+        rtn = (_scrollView.contentSize.height / _numPages);
+    
+    return rtn;
+}
+
 - (void)zoomToPage:(int)page
          upperLeft:(DPOINT)upperLeft
         lowerRight:(DPOINT)lowerRight
@@ -536,20 +552,9 @@
     _lr.x = lowerRight.x;
     _lr.y = lowerRight.y;
     
-    CGFloat pageHeight = 0.0;
-    
     if (page > 0)
     {
-        if (_numPages == 1)
-        {
-            pageHeight = MIN((_scrollView.contentSize.width / _aspectRatio),
-                             _scrollView.contentSize.height);
-        }
-        
-        else
-            pageHeight = (_scrollView.contentSize.height / _numPages);
-        
-        pageHeight = MIN(pageHeight, (_scrollView.contentSize.width / _aspectRatio));
+        CGFloat pageHeight = self.pageHeight;
         upperLeft.x *= _scrollView.contentSize.width;
         upperLeft.y *= pageHeight;
         lowerRight.x *= _scrollView.contentSize.width;
@@ -558,7 +563,7 @@
         lowerRight.y += (pageHeight * (page - 1));
     }
     
-    CGSize size = CGSizeMake(lowerRight.x - upperLeft.x, lowerRight.y - upperLeft.y);
+    CGSize size = CGSizeMake((lowerRight.x - upperLeft.x), (lowerRight.y - upperLeft.y));
     CGRect rect = CGRectMake(upperLeft.x, upperLeft.y, size.width, size.height);
     
     [_scrollView zoomToRect:rect animated:NO];
@@ -669,7 +674,7 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
 - (void)webViewWasTapped:(UITapGestureRecognizer *)gesture
 {
     CGPoint point = [gesture locationInView:_scrollView];
-    CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
+    CGFloat pageHeight = self.pageHeight;
     _markerPage = (int)ceilf(point.y / pageHeight);
     CGFloat offset = (CGFloat)(pageHeight * (_markerPage - 1));
     point.y -= offset;
@@ -887,8 +892,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView
 {
-    CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
-    
     if (_symbols.count)
     {
         for (int i = 0; i < _symbols.count; i++)
@@ -915,6 +918,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             _polygons[i].path = path.CGPath;
         }
     }
+    
+    CGFloat pageHeight = self.pageHeight;
     
     if (_markers.count)
     {
@@ -1237,7 +1242,7 @@ double roundTo1000th(double value)
 - (UIBezierPath *)pathFromPoints:(NSArray<DPoint *> *)points
 {
     UIBezierPath *path = UIBezierPath.bezierPath;
-    CGFloat pageHeight = (_scrollView.contentSize.height / _numPages);
+    CGFloat pageHeight = self.pageHeight;
     DPoint *firstPoint = points[0];
     CGPoint point = CGPointZero;
     point.x = (firstPoint.x * _scrollView.contentSize.width);

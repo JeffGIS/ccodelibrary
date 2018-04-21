@@ -42,7 +42,7 @@
 #define RCR9250 0.925
 #define RCR9325 0.9325
 
-#define AR077 0.772727
+#define AR077 0.77272727
 #define AR129 1.294118
 
 @interface NVPDFDrawing : NSObject
