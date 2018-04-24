@@ -251,7 +251,7 @@
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     [self close:opened];
     if (!rtn)
-        NSLog([NSString stringWithFormat:@"Missing step %@",stepID]);
+        NSLog(@"%@", [NSString stringWithFormat:@"Missing step %@",stepID]);
     return rtn;
 }
 + (NSString *) getStepCommand:(NSString *)stepID
