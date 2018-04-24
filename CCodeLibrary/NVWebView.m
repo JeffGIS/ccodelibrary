@@ -144,7 +144,7 @@
         
         return nvwv;
     }
-
+    
     else
     {
         NSLog(@"NVWebview ERROR:cannot set URL to nil.");
@@ -188,7 +188,7 @@
     
     if (![url checkResourceIsReachableAndReturnError:&error])
         showAlert([NSString stringWithFormat:@"PDF resource not available at %@", path]);
-
+    
     else if ([type isEqualToString:@"pdf"])
     {
         if ([name containsString:@"NVCRISHelp"] || [name containsString:@"VersionHistory"])
@@ -418,9 +418,11 @@
     {
         [UIView animateWithDuration:0.25
                          animations:^{
+                             [self.superview viewWithTag:777].alpha = 0.0;
                              self.alpha = 0.0;
                              _tabBar.alpha = 1.0;
                          } completion:^(BOOL finished) {
+                             [[self.superview viewWithTag:777] removeFromSuperview];
                              [self removeFromSuperview];
                              _tabBar.userInteractionEnabled = YES;
                          }];
@@ -428,6 +430,7 @@
     
     else
     {
+        [[self.superview viewWithTag:777] removeFromSuperview];
         [self removeFromSuperview];
         _tabBar.userInteractionEnabled = YES;
     }
@@ -963,7 +966,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     else if ([scrollView.subviews containsObject:_marker])
     {
         _marker.center = CGPointMake((_markerPosition.x * scrollView.contentSize.width),
-                                    ((_markerPosition.y * pageHeight) * _markerPage));
+                                     ((_markerPosition.y * pageHeight) * _markerPage));
     }
 }
 
@@ -1350,8 +1353,8 @@ double roundTo1000th(double value)
     [_previousButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
     
     [_previousButton addTarget:self
-                 action:@selector(previousButtonTapped:)
-       forControlEvents:UIControlEventTouchUpInside];
+                        action:@selector(previousButtonTapped:)
+              forControlEvents:UIControlEventTouchUpInside];
     
     [self addSubview:_previousButton];
     [_previousButton constrainLeadingToAnchor:self.leadingAnchor constant:20.0];
@@ -1372,7 +1375,7 @@ double roundTo1000th(double value)
 
 - (void)updateImageViewToImageAtPath:(NSString *)path
 {
-     UIImage *image = [UIImage imageWithContentsOfFile:path];
+    UIImage *image = [UIImage imageWithContentsOfFile:path];
     _imageView.image = image;
 }
 

@@ -58,6 +58,35 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         _type = type;
         _unit = unit;
         
+        double capHeight = 29.0;
+        double capWidth = (capHeight / 2.0);
+        
+        _slider = [[UISlider alloc] initWithFrame:CGRectMake(10.0, ((height / 2.0) - (capHeight / 2.0)),
+                                                             (width - 20.0), capHeight)];
+        
+        [_slider setThumbImage:UserDefaults.defaults.redSliderThumb
+                      forState:UIControlStateNormal];
+        
+        UIImage *sliderLeft = [UserDefaults.defaults.metalSliderLeft stretchableImageWithLeftCapWidth:capWidth
+                                                                                         topCapHeight:capHeight];
+        
+        UIImage *sliderRight = [UserDefaults.defaults.metalSliderRight stretchableImageWithLeftCapWidth:capWidth
+                                                                                           topCapHeight:capHeight];
+        
+        [_slider setMinimumTrackImage:sliderLeft
+                             forState:UIControlStateNormal];
+        
+        [_slider setMaximumTrackImage:sliderRight
+                             forState:UIControlStateNormal];
+        
+        _slider.minimumValue = _minValue;
+        _slider.maximumValue = _maxValue;
+        _slider.value = startValue;
+        
+        [_slider addTarget:self
+                    action:@selector(sliderValueChanged:)
+          forControlEvents:UIControlEventValueChanged];
+        
         double ticMargin = ((UserDefaults.defaults.redSliderThumb.size.width / 2.0) - 10.0);
         
         UIView *ticView = [[UIView alloc] initWithFrame:CGRectMake(ticMargin, 58.0,
@@ -108,35 +137,6 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         
         [ticView addSubview:_midHighTic];
         
-        double capHeight = 29.0;
-        double capWidth = (capHeight / 2.0);
-        
-        _slider = [[UISlider alloc] initWithFrame:CGRectMake(10.0, ((height / 2.0) - (capHeight / 2.0)),
-                                                             (width - 20.0), capHeight)];
-        
-        [_slider setThumbImage:UserDefaults.defaults.redSliderThumb
-                      forState:UIControlStateNormal];
-        
-        UIImage *sliderLeft = [UserDefaults.defaults.metalSliderLeft stretchableImageWithLeftCapWidth:capWidth
-                                                                                         topCapHeight:capHeight];
-        
-        UIImage *sliderRight = [UserDefaults.defaults.metalSliderRight stretchableImageWithLeftCapWidth:capWidth
-                                                                                           topCapHeight:capHeight];
-        
-        [_slider setMinimumTrackImage:sliderLeft
-                             forState:UIControlStateNormal];
-        
-        [_slider setMaximumTrackImage:sliderRight
-                             forState:UIControlStateNormal];
-        
-        _slider.minimumValue = _minValue;
-        _slider.maximumValue = _maxValue;
-        _slider.value = startValue;
-        
-        [_slider addTarget:self
-                    action:@selector(sliderValueChanged:)
-          forControlEvents:UIControlEventValueChanged];
-        
         [self addSubview:_slider];
         
         _sliderLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 6.0, width, 52.0)];
@@ -148,7 +148,13 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             case NVSliderConfigurationManualSlope:
                 _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
                 break;
+            case NVSliderConfigurationFacilities:
+                if (_slider.maximumValue - _slider.minimumValue > 10.0)
+                    _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
                 
+                else
+                    _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
+                break;
             case NVSliderConfigurationDefault:
             case NVSliderConfigurationDefaultNoRange:
                 _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
@@ -192,6 +198,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                    target:self
                  selector:@selector(cancelButtonTapped:)
                     title:@"Cancel"];
+        
         if (_configuration == NVSliderConfigurationDefault)
         {
             _rangeButton = [[UIButton alloc] initWithFrame:CGRectMake((width * 0.4), (height - 72.0),
@@ -238,7 +245,16 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
     label.numberOfLines = 2;
     
-    if (_configuration == NVSliderConfigurationManualSlope)
+    if (_configuration == NVSliderConfigurationFacilities)
+    {
+        if (_slider.maximumValue - _slider.minimumValue > 10.0)
+            label.text = [NSString stringWithFormat:@"%.0f\n|", value];
+        
+        else
+            label.text = [NSString stringWithFormat:@"%.1f\n|", value];
+    }
+    
+    else if (_configuration == NVSliderConfigurationManualSlope)
         label.text = [NSString stringWithFormat:@"%.1f\n|", value];
     
     else
@@ -260,9 +276,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             switch (_range)
             {
                 case NVSliderControllerRangeMax:
-                {
-                    _lowTic.text = [NSString stringWithFormat:@"%.1f\n|",
-                                    _minValue];
+                    _lowTic.text = [NSString stringWithFormat:@"%.1f\n|", _minValue];
                     
                     _midLowTic.text = [NSString stringWithFormat:@"%.1f\n|",
                                        (((_minValue * 3.0) + _maxValue) / 4.0)];
@@ -273,93 +287,65 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                     _midHighTic.text = [NSString stringWithFormat:@"%.1f\n|",
                                         (((_maxValue * 3.0) + _minValue) / 4.0)];
                     
-                    _highTic.text = [NSString stringWithFormat:@"%.1f\n|",
-                                     _maxValue];
-                }
+                    _highTic.text = [NSString stringWithFormat:@"%.1f\n|", _maxValue];
                     break;
-                    
                 case NVSliderControllerRangeTen:
-                {
                     _lowTic.text = @"-1.0\n|";
                     _midLowTic.text = @"-0.5\n|";
                     _midTic.text = @"0.0\n|";
                     _midHighTic.text = @"+0.5\n|";
                     _highTic.text = @"+1.0\n|";
-                }
                     break;
-                    
                 case NVSliderControllerRangeTwo:
-                {
                     _lowTic.text = @"-.50\n|";
                     _midLowTic.text = @"-.25\n|";
                     _midTic.text = @".00\n|";
                     _midHighTic.text = @"+.25\n|";
                     _highTic.text = @"+.50\n|";
-                }
                     break;
-                    
-                default:
-                    break;
+                default:break;
             }
         }
             break;
-            
         case NVSliderConfigurationDefault:
         case NVSliderConfigurationDefaultNoRange:
         case NVSliderConfigurationCalibrationRunningSlope:
         case NVSliderConfigurationCalibrationDegrees:
         case NVSliderConfigurationCalibrationRiseRun:
-        {
             switch (_range)
-            {
-                case NVSliderControllerRangeMax:
-                {
-                    _lowTic.text = [NSString stringWithFormat:@"%.0f\n|",
-                                    _minValue];
-                    
-                    _midLowTic.text = [NSString stringWithFormat:@"%.0f\n|",
-                                       (((_minValue * 3.0) + _maxValue) / 4.0)];
-                    
-                    _midTic.text = [NSString stringWithFormat:@"%.0f\n|",
-                                    ((_maxValue + _minValue) / 2.0)];
-                    
-                    _midHighTic.text = [NSString stringWithFormat:@"%.0f\n|",
-                                        (((_maxValue * 3.0) + _minValue) / 4.0)];
-                    
-                    _highTic.text = [NSString stringWithFormat:@"%.0f\n|",
-                                     _maxValue];
-                }
-                    break;
-                    
-                case NVSliderControllerRangeTen:
-                {
-                    _lowTic.text = @"-5\n|";
-                    _midLowTic.text = @"-2.5\n|";
-                    _midTic.text = @"0\n|";
-                    _midHighTic.text = @"+2.5\n|";
-                    _highTic.text = @"+5\n|";
-                }
-                    break;
-                    
-                case NVSliderControllerRangeTwo:
-                {
-                    _lowTic.text = @"-1.0\n|";
-                    _midLowTic.text = @"-0.5\n|";
-                    _midTic.text = @"0.0\n|";
-                    _midHighTic.text = @"+0.5\n|";
-                    _highTic.text = @"+1.0\n|";
-                }
-                    break;
-                    
-                default:
-                    break;
-            }
+        {
+            case NVSliderControllerRangeMax:
+                _lowTic.text = [NSString stringWithFormat:@"%.0f\n|", _minValue];
+                
+                _midLowTic.text = [NSString stringWithFormat:@"%.0f\n|",
+                                   (((_minValue * 3.0) + _maxValue) / 4.0)];
+                
+                _midTic.text = [NSString stringWithFormat:@"%.0f\n|",
+                                ((_maxValue + _minValue) / 2.0)];
+                
+                _midHighTic.text = [NSString stringWithFormat:@"%.0f\n|",
+                                    (((_maxValue * 3.0) + _minValue) / 4.0)];
+                
+                _highTic.text = [NSString stringWithFormat:@"%.0f\n|", _maxValue];
+                break;
+            case NVSliderControllerRangeTen:
+                _lowTic.text = @"-5\n|";
+                _midLowTic.text = @"-2.5\n|";
+                _midTic.text = @"0\n|";
+                _midHighTic.text = @"+2.5\n|";
+                _highTic.text = @"+5\n|";
+                break;
+            case NVSliderControllerRangeTwo:
+                _lowTic.text = @"-1.0\n|";
+                _midLowTic.text = @"-0.5\n|";
+                _midTic.text = @"0.0\n|";
+                _midHighTic.text = @"+0.5\n|";
+                _highTic.text = @"+1.0\n|";
+                break;
+            default:break;
         }
             break;
-            
-        default:
-            break;
-       
+        default:break;
     }
 }
 
@@ -367,31 +353,29 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
     switch (_configuration)
     {
+        case NVSliderConfigurationFacilities:
+            if (_slider.maximumValue - _slider.minimumValue > 10.0)
+                _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
+            
+            else
+                _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
+            break;
         case NVSliderConfigurationManualSlope:
-        {
             if (_range == NVSliderControllerRangeTwo)
                 _sliderLabel.text = [NSString stringWithFormat:@"%.2f", _slider.value];
             
             else
                 _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
-        }
-            
             break;
-            
         case NVSliderConfigurationDefault:
         case NVSliderConfigurationDefaultNoRange:
-        {
             if (_range == NVSliderControllerRangeTwo)
                 _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
             
             else
                 _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
-        }
-            
             break;
-            
         case NVSliderConfigurationCalibrationRunningSlope:
-        {
             if (_range == NVSliderControllerRangeTwo)
                 _sliderLabel.text = [NSString stringWithFormat:@"%.2f%%", _slider.value];
             
@@ -400,12 +384,8 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             
             else
                 _sliderLabel.text = [NSString stringWithFormat:@"%.0f%%", _slider.value];
-        }
-            
             break;
-            
         case NVSliderConfigurationCalibrationDegrees:
-        {
             if (_range == NVSliderControllerRangeTwo)
                 _sliderLabel.text = [NSString stringWithFormat:@"%.2f\u00B0", _slider.value];
             
@@ -414,16 +394,11 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             
             else
                 _sliderLabel.text = [NSString stringWithFormat:@"%.0f\u00B0", _slider.value];
-        }
-            
             break;
-            
         case NVSliderConfigurationCalibrationRiseRun:
             _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
             break;
-            
-        default:
-            break;
+        default:break;
     }
     
     _sliderLabel.text = [NSString stringWithFormat:@"%@ %@", _sliderLabel.text, _unit];
@@ -449,91 +424,91 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
     switch (_configuration)
     {
-        case NVSliderConfigurationManualSlope:{
+        case NVSliderConfigurationManualSlope:
             switch (_range)
-            {
-                case NVSliderControllerRangeMax:
-                    _slider.minimumValue = (_slider.value - 1.0);
-                    _slider.maximumValue = (_slider.value + 1.0);
-                    _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
-                    _range = NVSliderControllerRangeTen;
-                    break;
-                case NVSliderControllerRangeTen:
-                    _slider.minimumValue = (_slider.value - 0.5);
-                    _slider.maximumValue = (_slider.value + 0.5);
-                    _sliderLabel.text = [NSString stringWithFormat:@"%.2f", _slider.value];
-                    _range = NVSliderControllerRangeTwo;
-                    break;
-                case NVSliderControllerRangeTwo:
-                    _slider.minimumValue = _minValue;
-                    _slider.maximumValue = _maxValue;
-                    _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
-                    _range = NVSliderControllerRangeMax;
-                    break;
-                default:break;
-            }
-            break;}
+        {
+            case NVSliderControllerRangeMax:
+                _slider.minimumValue = (_slider.value - 1.0);
+                _slider.maximumValue = (_slider.value + 1.0);
+                _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
+                _range = NVSliderControllerRangeTen;
+                break;
+            case NVSliderControllerRangeTen:
+                _slider.minimumValue = (_slider.value - 0.5);
+                _slider.maximumValue = (_slider.value + 0.5);
+                _sliderLabel.text = [NSString stringWithFormat:@"%.2f", _slider.value];
+                _range = NVSliderControllerRangeTwo;
+                break;
+            case NVSliderControllerRangeTwo:
+                _slider.minimumValue = _minValue;
+                _slider.maximumValue = _maxValue;
+                _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
+                _range = NVSliderControllerRangeMax;
+                break;
+            default:break;
+        }
+            break;
         case NVSliderConfigurationDefault:
         case NVSliderConfigurationDefaultNoRange:
         case NVSliderConfigurationCalibrationRunningSlope:
         case NVSliderConfigurationCalibrationDegrees:
-        case NVSliderConfigurationCalibrationRiseRun:{
+        case NVSliderConfigurationCalibrationRiseRun:
             switch (_range)
-            {
-                case NVSliderControllerRangeMax:
-                    _slider.value = roundf(_slider.value);
-                    _slider.minimumValue = (_slider.value - 5.0);
-                    _slider.maximumValue = (_slider.value + 5.0);
-                    _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
-                    
-                    if (_configuration == NVSliderConfigurationCalibrationRunningSlope)
-                        _sliderLabel.text = [NSString stringWithFormat:@"%.1f%%", _slider.value];
-                    
-                    else if (_configuration == NVSliderConfigurationCalibrationDegrees)
-                        _sliderLabel.text = [NSString stringWithFormat:@"%.1f\u00B0", _slider.value];
-                    
-                    else if (_configuration == NVSliderConfigurationCalibrationRiseRun)
-                        _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
-                    
-                    _range = NVSliderControllerRangeTen;
-                    break;
-                case NVSliderControllerRangeTen:
-                    _slider.value = ((roundf(_slider.value * 10.0)) / 10.0);
-                    _slider.minimumValue = (_slider.value - 1.0);
-                    _slider.maximumValue = (_slider.value + 1.0);
-                    _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
-                    
-                    if (_configuration == NVSliderConfigurationCalibrationRunningSlope)
-                        _sliderLabel.text = [NSString stringWithFormat:@"%.2f%%", _slider.value];
-                    
-                    else if (_configuration == NVSliderConfigurationCalibrationDegrees)
-                        _sliderLabel.text = [NSString stringWithFormat:@"%.2f\u00B0", _slider.value];
-                    
-                    else if (_configuration == NVSliderConfigurationCalibrationRiseRun)
-                        _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
-                    
-                    _range = NVSliderControllerRangeTwo;
-                    break;
-                case NVSliderControllerRangeTwo:
-                    _slider.value = roundf(_slider.value);
-                    _slider.minimumValue = _minValue;
-                    _slider.maximumValue = _maxValue;
-                    _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
-                    
-                    if (_configuration == NVSliderConfigurationCalibrationRunningSlope)
-                        _sliderLabel.text = [NSString stringWithFormat:@"%.0f%%", _slider.value];
-                    
-                    else if (_configuration == NVSliderConfigurationCalibrationDegrees)
-                        _sliderLabel.text = [NSString stringWithFormat:@"%.0f\u00B0", _slider.value];
-                    
-                    else if (_configuration == NVSliderConfigurationCalibrationRiseRun)
-                        _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
-                    
-                    _range = NVSliderControllerRangeMax;
-                    break;
-                default:break;
-            }
-            break;}
+        {
+            case NVSliderControllerRangeMax:
+                _slider.value = roundf(_slider.value);
+                _slider.minimumValue = (_slider.value - 5.0);
+                _slider.maximumValue = (_slider.value + 5.0);
+                _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
+                
+                if (_configuration == NVSliderConfigurationCalibrationRunningSlope)
+                    _sliderLabel.text = [NSString stringWithFormat:@"%.1f%%", _slider.value];
+                
+                else if (_configuration == NVSliderConfigurationCalibrationDegrees)
+                    _sliderLabel.text = [NSString stringWithFormat:@"%.1f\u00B0", _slider.value];
+                
+                else if (_configuration == NVSliderConfigurationCalibrationRiseRun)
+                    _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
+                
+                _range = NVSliderControllerRangeTen;
+                break;
+            case NVSliderControllerRangeTen:
+                _slider.value = ((roundf(_slider.value * 10.0)) / 10.0);
+                _slider.minimumValue = (_slider.value - 1.0);
+                _slider.maximumValue = (_slider.value + 1.0);
+                _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
+                
+                if (_configuration == NVSliderConfigurationCalibrationRunningSlope)
+                    _sliderLabel.text = [NSString stringWithFormat:@"%.2f%%", _slider.value];
+                
+                else if (_configuration == NVSliderConfigurationCalibrationDegrees)
+                    _sliderLabel.text = [NSString stringWithFormat:@"%.2f\u00B0", _slider.value];
+                
+                else if (_configuration == NVSliderConfigurationCalibrationRiseRun)
+                    _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
+                
+                _range = NVSliderControllerRangeTwo;
+                break;
+            case NVSliderControllerRangeTwo:
+                _slider.value = roundf(_slider.value);
+                _slider.minimumValue = _minValue;
+                _slider.maximumValue = _maxValue;
+                _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
+                
+                if (_configuration == NVSliderConfigurationCalibrationRunningSlope)
+                    _sliderLabel.text = [NSString stringWithFormat:@"%.0f%%", _slider.value];
+                
+                else if (_configuration == NVSliderConfigurationCalibrationDegrees)
+                    _sliderLabel.text = [NSString stringWithFormat:@"%.0f\u00B0", _slider.value];
+                
+                else if (_configuration == NVSliderConfigurationCalibrationRiseRun)
+                    _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
+                
+                _range = NVSliderControllerRangeMax;
+                break;
+            default:break;
+        }
+            break;
         default:break;
     }
     
@@ -558,7 +533,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     if (_type != NVSliderMeasurementTypeDefault)
     {
         _promptLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.frame.origin.x, (self.frame.origin.y - 120.0),
-                                                              self.frame.size.width, 80.0)];
+                                                                 self.frame.size.width, 80.0)];
         
         _promptLabel.backgroundColor = UIColor.whiteColor;
         _promptLabel.layer.cornerRadius = 6.0;
@@ -721,7 +696,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 
 - (void)facButtonTapped:(UIButton *)button
 {
-    [_delegate sliderViewDidTapButtonWithType:button.tag];
+    [_delegate sliderViewDidTapButton:button];
 }
 
 - (void)removeRequiredFromLabel
