@@ -2901,7 +2901,7 @@ SetVis:
 		    	goto RtnTrue;
 		    else
 		    	goto RtnFalse;
-		}
+		}*/
 		case 411: // $INDX(string1,string2) returns 1 based position of string2 in string1  
 		{	long pos;
 			LPSTR	loc;
@@ -2916,7 +2916,7 @@ SetVis:
 			_ltoa (pos,OutLoc,10);
 			goto Rtnl;
 		}
-
+/*
 		case 412: // $TEST(string1,string2,Message) tests string1 vs string2. If not same displays message and returns false  
 		{	
 			nArgs = GetFunArgs (Args,Arg,3,&hMem, pBrkPt, bpOffset, bpLen); 
