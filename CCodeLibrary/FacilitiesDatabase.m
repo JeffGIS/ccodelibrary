@@ -654,7 +654,7 @@ Exit:
     if (!_isOpen)
     {
         self.isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(_path.UTF8String, &_database), _database);
-        NSLog(@"Facilities Database open");
+       // NSLog(@"Facilities Database open");
         
         rtn = TRUE;
     }
@@ -668,7 +668,7 @@ Exit:
     if (!_isOpen)
     {
         self.isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(path, &_database), _database);
-        NSLog(@"Facilities Database open");
+        //NSLog(@"Facilities Database open");
         
         rtn = TRUE;
     }
@@ -681,7 +681,7 @@ Exit:
     if (opened && _isOpen)
     {
         SQLOK(__FILE__,__LINE__,SQLite_Close(&_database),_database);
-        NSLog(@"Facilities Database close");
+        //NSLog(@"Facilities Database close");
         self.isOpen = NO;
     }
 }

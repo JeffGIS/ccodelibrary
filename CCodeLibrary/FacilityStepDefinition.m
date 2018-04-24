@@ -15,7 +15,7 @@
 - (void)dealloc
 {
     SQLite_Close(&_database);
-    NSLog(@"Step Definitions Closed");
+    //NSLog(@"Step Definitions Closed");
 }
 
 - (NSString *)databasePath
@@ -48,7 +48,7 @@
         self.isOpen = YES;
         NSString * path = [self databasePath];
         self.isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(path.UTF8String, &_database), _database);
-        NSLog(@"Step Definitions Database open");
+        //NSLog(@"Step Definitions Database open");
         
         rtn = TRUE;
     }
@@ -61,7 +61,7 @@
     if (opened && _isOpen)
     {
         SQLOK(__FILE__,__LINE__,SQLite_Close(&_database),_database);
-        NSLog(@"Step Definitions Database close");
+       // NSLog(@"Step Definitions Database close");
         self.isOpen = NO;
     }
 }
@@ -170,9 +170,20 @@
     }
     return rtn;
 }
+- (Bool) doLoad:(NSString *)cmd
+{
+    BOOL rtn = TRUE;
+    NSArray * array = [cmd componentsSeparatedByString:@"\n\n"];
+    for (NSString * cmd in array)
+    {
+        if (![self executeCmd:cmd.UTF8String])
+            rtn = FALSE;
+    }
+    return rtn;
+}
  - (Bool) load
 {
-    Bool rtn = FALSE;
+    Bool rtn = TRUE;
     Bool opened = [self open];
     NSString * bundlePath = [NSBundle.mainBundle pathForResource:@"StepDefinitions"
                                                           ofType:@"txt"];
@@ -180,13 +191,14 @@
     rtn = [self executeCmd:cmd.UTF8String];
     NSError *error = nil;
     cmd = [NSString stringWithContentsOfFile:bundlePath encoding:NSUTF8StringEncoding error:&error];
-    rtn = [self executeCmd:cmd.UTF8String];
-    
+    if (![self doLoad:cmd])
+        rtn = FALSE;
     bundlePath = [NSBundle.mainBundle pathForResource:@"BuildingBlocks"
                                                ofType:@"txt"];
     cmd = [NSString stringWithContentsOfFile:bundlePath encoding:NSUTF8StringEncoding error:&error];
-    rtn = [self executeCmd:cmd.UTF8String];
-    
+    if (![self doLoad:cmd])
+        rtn = FALSE;
+
     [self close:opened];
     return rtn;
 }
