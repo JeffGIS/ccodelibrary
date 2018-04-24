@@ -12,6 +12,7 @@ typedef NS_ENUM(NSInteger, NVSliderConfiguration)
     NVSliderConfigurationCalibrationRunningSlope,
     NVSliderConfigurationCalibrationDegrees,
     NVSliderConfigurationCalibrationRiseRun,
+    NVSliderConfigurationFacilities,
 };
 
 typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
@@ -31,7 +32,7 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
 - (void)sliderViewDidCancel:(NVSliderController *)sliderView;
 
 @optional
-- (void)sliderViewDidTapButtonWithType:(NVFacButtonType)type;
+- (void)sliderViewDidTapButton:(UIButton *)button;
 
 @end
 
