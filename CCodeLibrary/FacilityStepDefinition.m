@@ -230,10 +230,13 @@
         rtn = TRUE;
         LPSTR value = (LPSTR)sqlite3_column_text(statement, i++);
         _title = [NSString stringWithUTF8String:value];
+        _title = [_title stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _prompt = [NSString stringWithUTF8String:value];
+        _prompt = [_prompt stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _header = [NSString stringWithUTF8String:value];
+        _header = [_header stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _measurementType = [self measurementTypeFromText:[NSString stringWithUTF8String:value]];
         _photoRequired = sqlite3_column_int(statement, i++);
