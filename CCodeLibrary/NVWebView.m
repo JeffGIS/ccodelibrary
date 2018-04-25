@@ -30,7 +30,7 @@
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);
+    CGContextSetFillColorWithColor(context, _fillColor.CGColor);
     CGContextFillEllipseInRect(context, rect);
 }
 
@@ -635,6 +635,15 @@ didFinishNavigation:(WKNavigation *)navigation
         
         [self updatePosition];
         _navigationComplete = YES;
+    }
+    
+    for (UIView *view in webView.subviews)
+    {
+        for (UIView *subview in view.subviews)
+        {
+            if ([subview.description containsString:@"WKPDFPageNumberIndicator"])
+                subview.hidden = YES;
+        }
     }
     
     if (_delegate && [_delegate respondsToSelector:@selector(webViewDidFinishNavigation:)])
