@@ -23,6 +23,7 @@
 @property NSArray * choiceList;
 @property NSString * highlights;
 @property double minValue, maxValue;
+@property int numDecimals;
 
 @property sqlite3nv *database;
 

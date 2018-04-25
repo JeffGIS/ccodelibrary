@@ -73,9 +73,15 @@
 }
 
 - (FacilityMeasurementType) measurementTypeFromText:(NSString *)type
+                                        numDecimals:(int *)pNumDec;
 {
     FacilityMeasurementType ft = FMTInvalidType;
+    NSString * numDec = textAfter (type,@":");
     
+    int numDecimals = numDec.integerValue;
+    *pNumDec = numDecimals;
+    
+    type = textBefore(type, @":");
     if ([type isEqualToString:@"YesNo"])
         ft = FMTYesNo;
     if ([type isEqualToString:@"ImageList"])
@@ -228,6 +234,7 @@
     {
         int i = 0;
         rtn = TRUE;
+        int numDecimals = 0;
         LPSTR value = (LPSTR)sqlite3_column_text(statement, i++);
         _title = [NSString stringWithUTF8String:value];
         _title = [_title stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
@@ -238,7 +245,9 @@
         _header = [NSString stringWithUTF8String:value];
         _header = [_header stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
         value = (LPSTR)sqlite3_column_text(statement, i++);
-        _measurementType = [self measurementTypeFromText:[NSString stringWithUTF8String:value]];
+        _measurementType = [self measurementTypeFromText:[NSString stringWithUTF8String:value]
+                                             numDecimals:&numDecimals];
+        _numDecimals = numDecimals;
         _photoRequired = sqlite3_column_int(statement, i++);
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _reference = [[NSString stringWithUTF8String:value]componentsSeparatedByString:@";"];
