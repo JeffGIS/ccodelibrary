@@ -236,14 +236,11 @@
         rtn = TRUE;
         int numDecimals = 0;
         LPSTR value = (LPSTR)sqlite3_column_text(statement, i++);
-        _title = [NSString stringWithUTF8String:value];
-        _title = [_title stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
+        _title = [[NSString stringWithUTF8String:value] stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
         value = (LPSTR)sqlite3_column_text(statement, i++);
-        _prompt = [NSString stringWithUTF8String:value];
-        _prompt = [_prompt stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
+        _prompt = [[NSString stringWithUTF8String:value] stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
         value = (LPSTR)sqlite3_column_text(statement, i++);
-        _header = [NSString stringWithUTF8String:value];
-        _header = [_header stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
+        _header = [[NSString stringWithUTF8String:value] stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _measurementType = [self measurementTypeFromText:[NSString stringWithUTF8String:value]
                                              numDecimals:&numDecimals];
@@ -254,11 +251,11 @@
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _link = [NSString stringWithUTF8String:value];
         value = (LPSTR)sqlite3_column_text(statement, i++);
-        _test = [NSString stringWithUTF8String:value];
+        _test = [[NSString stringWithUTF8String:value] stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
         value = (LPSTR)sqlite3_column_text(statement, i++);
-        _variables = [NSString stringWithUTF8String:value];
+        _variables = [[NSString stringWithUTF8String:value] stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
         value = (LPSTR)sqlite3_column_text(statement, i++);
-        _command = [NSString stringWithUTF8String:value];
+        _command = [[NSString stringWithUTF8String:value] stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID];
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _choiceList = [[NSString stringWithUTF8String:value]componentsSeparatedByString:@";"];
         _minValue = sqlite3_column_double(statement, i++);
