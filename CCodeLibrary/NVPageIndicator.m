@@ -10,7 +10,7 @@
 @property (nonatomic, weak) id<NVPageIndicatorDelegate> delegate;
 @property CGFloat spacing;
 @property int numDots;
-@property (nonatomic) UIColor *tintColor, *selectedColor, *highlightedColor;
+@property (nonatomic) UIColor *tintColor, *selectedColor;
 
 @end
 
