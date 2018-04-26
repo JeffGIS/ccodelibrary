@@ -209,6 +209,14 @@
     if (![self doLoad:cmd])
         rtn = FALSE;
     
+    bundlePath = [NSBundle.mainBundle pathForResource:@"BuildingBlocks2"
+                                               ofType:@"txt"];
+    
+    cmd = [NSString stringWithContentsOfFile:bundlePath encoding:NSUTF8StringEncoding error:&error];
+    
+    if (![self doLoad:cmd])
+        rtn = FALSE;
+    
     bundlePath = [NSBundle.mainBundle pathForResource:@"Elevators"
                                                ofType:@"txt"];
     
@@ -262,7 +270,7 @@
         _maxValue = sqlite3_column_double(statement, i++);
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _symbol = [self symbolFromType:_measurementType
-                               andText:[NSString stringWithUTF8String:value]];
+                               andText:[[NSString stringWithUTF8String:value] stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID]];
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _highlights = [NSString stringWithUTF8String:value];
     }
