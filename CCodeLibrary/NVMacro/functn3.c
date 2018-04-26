@@ -2223,7 +2223,47 @@ GotCloseFilehSQL:
 				goto Rtnl;
 			goto RtnFalse;
 		}
-
+         */
+         case 539: //$SLOPE(FRONT,value
+                   //$SLOPE(SIDE,value
+                   //$SLOPE(MAX,value
+         {
+             LPSTR pEnd;
+             nArgs = GetFunArgs (Args,Arg,3,&hMem, pBrkPt, bpOffset, bpLen);
+             *OutLoc = 0;
+             if (nArgs == 2)
+             {
+                 LPSTR pValue = Arg[2];
+                 if (!strcasecmp (Arg[1],"FRONT"))
+                 {
+                     pEnd = strchr (pValue,'|');
+                     if (pEnd)
+                         *pEnd = 0;
+                     strcpy (OutLoc,pValue);
+                 }
+                 else if (!strcasecmp (Arg[1],"SIDE"))
+                 {
+                     pEnd = strchr (pValue,'|');
+                     if (pEnd)
+                     {
+                         pValue = pEnd + 1;
+                         pEnd = strchr (pValue,'|');
+                         if (pEnd)
+                             *pEnd = 0;
+                         strcpy (OutLoc,pValue);
+                     }
+                 }
+                 else
+                 {
+                     pEnd = strrchr (pValue,'|');
+                     if (pEnd)
+                         pValue = pEnd + 1;
+                     strcpy (OutLoc,pValue);
+                 }
+             }
+             goto Rtnl;
+         }
+        /*
 		case 601: // $TAGLOC(Prefix,minchar,SaveGlobalName(optional-not in brackets),Title(opt),Viewport(opt),Layer(opt),locatetagonly(opt,T locates,)) Tag locator 
 		{	 
             DLGPROC lpfnTAGLOCMsgProc;
