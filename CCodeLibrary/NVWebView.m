@@ -34,6 +34,12 @@
     CGContextFillEllipseInRect(context, rect);
 }
 
+- (void)setFillColor:(UIColor *)fillColor
+{
+    _fillColor = fillColor;
+    [self setNeedsDisplay];
+}
+
 @end
 
 @interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate>

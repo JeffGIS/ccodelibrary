@@ -55,6 +55,7 @@
         [nvpi constrainBottomToAnchor:view.bottomAnchor];
     
     [nvpi addDots];
+    [nvpi selectFirstDot];
     
     return nvpi;
 }
@@ -66,12 +67,7 @@
         NVEllipseView *dot = NVEllipseView.new;
         dot.translatesAutoresizingMaskIntoConstraints = NO;
         dot.alpha = 1.0;
-        
-        if (i == 1)
-            dot.fillColor = _selectedColor;
-        
-        else
-            dot.fillColor = _tintColor;
+        dot.fillColor = _tintColor;
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                               action:@selector(dotTapped:)];
@@ -127,20 +123,47 @@
     }
 }
 
+- (void)selectFirstDot
+{
+    int selectedIndex = 5;
+    
+    switch (_numDots)
+    {
+        case 3:
+        case 4:
+            selectedIndex = 4;
+            break;
+        case 5:
+        case 6:
+            selectedIndex = 3;
+            break;
+        case 7:
+        case 8:
+            selectedIndex = 2;
+        case 9:
+            selectedIndex = 1;
+    }
+    
+    for (NVEllipseView *dot in self.subviews)
+    {
+        if ([dot isKindOfClass:NVEllipseView.class])
+        {
+            if (dot.tag == selectedIndex)
+                dot.fillColor = _selectedColor;
+        }
+    }
+}
+
 - (void)dotTapped:(UITapGestureRecognizer *)gesture
 {
     for (NVEllipseView *dot in self.subviews)
     {
         if ([dot isKindOfClass:NVEllipseView.class])
-        {
             dot.fillColor = _tintColor;
-            [dot setNeedsDisplay];
-        }
     }
     
     NVEllipseView *thisDot = (NVEllipseView *)gesture.view;
     thisDot.fillColor = _selectedColor;
-    [thisDot setNeedsDisplay];
     
     if (_delegate && [_delegate respondsToSelector:@selector(pageIndicator:wasTappedAtIndex:)])
     {
