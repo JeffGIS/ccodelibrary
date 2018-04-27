@@ -14,6 +14,9 @@
 
 @interface NVPageIndicator : UIView
 
+@property (nonatomic) int selectedIndex;
+@property (nonatomic) UIColor *tintColor, *selectedColor;
+
 + (instancetype)showPageIndicatorInView:(UIView *)view
                             leadingView:(UIView *)leadingView
                            trailingView:(UIView *)trailingView

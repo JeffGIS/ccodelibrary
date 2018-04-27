@@ -10,7 +10,6 @@
 @property (nonatomic, weak) id<NVPageIndicatorDelegate> delegate;
 @property CGFloat spacing;
 @property int numDots;
-@property (nonatomic) UIColor *tintColor, *selectedColor;
 
 @end
 
@@ -55,7 +54,7 @@
         [nvpi constrainBottomToAnchor:view.bottomAnchor];
     
     [nvpi addDots];
-    [nvpi selectFirstDot];
+    nvpi.selectedIndex = 0;
     
     return nvpi;
 }
@@ -123,75 +122,92 @@
     }
 }
 
-- (void)selectFirstDot
+- (void)setSelectedIndex:(int)selectedIndex
 {
-    int selectedIndex = 5;
+    if (selectedIndex >= _numDots)
+        return;
     
-    switch (_numDots)
+    else
     {
-        case 3:
-        case 4:
-            selectedIndex = 4;
-            break;
-        case 5:
-        case 6:
-            selectedIndex = 3;
-            break;
-        case 7:
-        case 8:
-            selectedIndex = 2;
-        case 9:
-            selectedIndex = 1;
-    }
-    
-    for (NVEllipseView *dot in self.subviews)
-    {
-        if ([dot isKindOfClass:NVEllipseView.class])
+        _selectedIndex = selectedIndex;
+        int tag = [self tagForIndex:selectedIndex];
+        
+        for (NVEllipseView *dot in self.subviews)
         {
-            if (dot.tag == selectedIndex)
-                dot.fillColor = _selectedColor;
+            if ([dot isKindOfClass:NVEllipseView.class])
+            {
+                if (dot.tag == tag)
+                    dot.fillColor = _selectedColor;
+                
+                else
+                    dot.fillColor = _tintColor;
+            }
         }
     }
 }
 
 - (void)dotTapped:(UITapGestureRecognizer *)gesture
 {
-    for (NVEllipseView *dot in self.subviews)
-    {
-        if ([dot isKindOfClass:NVEllipseView.class])
-            dot.fillColor = _tintColor;
-    }
-    
-    NVEllipseView *thisDot = (NVEllipseView *)gesture.view;
-    thisDot.fillColor = _selectedColor;
+    int index = [self indexForTag:(int)(gesture.view.tag - 1)];
+    self.selectedIndex = index;
     
     if (_delegate && [_delegate respondsToSelector:@selector(pageIndicator:wasTappedAtIndex:)])
+        [_delegate pageIndicator:self wasTappedAtIndex:index];
+}
+
+- (int)indexForTag:(int)tag
+{
+    switch (_numDots)
     {
-        int tag = (int)(gesture.view.tag - 1);
-        
-        switch (_numDots)
-        {
-            case 1:
-            case 2:
-                tag -= 4;
-                break;
-            case 3:
-            case 4:
-                tag -= 3;
-                break;
-            case 5:
-            case 6:
-                tag -= 2;
-                break;
-            case 7:
-            case 8:
-                tag -= 1;
-                break;
-            default:break;
-        }
-        
-        [_delegate pageIndicator:self wasTappedAtIndex:tag];
+        case 1:
+        case 2:
+            tag -= 4;
+            break;
+        case 3:
+        case 4:
+            tag -= 3;
+            break;
+        case 5:
+        case 6:
+            tag -= 2;
+            break;
+        case 7:
+        case 8:
+            tag -= 1;
+            break;
+        default:break;
     }
+    
+    return tag;
+}
+
+- (int)tagForIndex:(int)index
+{
+    switch (_numDots)
+    {
+        case 1:
+        case 2:
+            index += 5;
+            break;
+        case 3:
+        case 4:
+            index += 4;
+            break;
+        case 5:
+        case 6:
+            index += 3;
+            break;
+        case 7:
+        case 8:
+            index += 2;
+            break;
+        case 9:
+            index += 1;
+            break;
+        default:break;
+    }
+    
+    return index;
 }
 
 @end
