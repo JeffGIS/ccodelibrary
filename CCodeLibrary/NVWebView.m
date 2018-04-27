@@ -582,18 +582,22 @@
     
     if (_highlights && _highlights.length)
     {
-        NSArray *highlightList = [_highlights componentsSeparatedByString:@" "];
-        NSString *shapeID = highlightList[0];
-        double ulx = ([highlightList[1] intValue] / 1000.0);
-        double uly = ([highlightList[2] intValue] / 1000.0);
-        double lrx = ([highlightList[3] intValue] / 1000.0);
-        double lry = ([highlightList[4] intValue] / 1000.0);
-        
-        DPOINT ul = {ulx, uly};
-        DPOINT lr = {lrx, lry};
-        
-        if ([shapeID isEqualToString:@"E"])
-            [self addEllipseToFrameWithUpperLeft:ul lowerRight:lr];
+        NSArray *highlightArray = [_highlights componentsSeparatedByString:@";"];
+        for (NSString * highlights in highlightArray)
+        {
+            NSArray *highlightList = [highlights componentsSeparatedByString:@" "];
+            NSString *shapeID = highlightList[0];
+            double ulx = ([highlightList[1] intValue] / 1000.0);
+            double uly = ([highlightList[2] intValue] / 1000.0);
+            double lrx = ([highlightList[3] intValue] / 1000.0);
+            double lry = ([highlightList[4] intValue] / 1000.0);
+            
+            DPOINT ul = {ulx, uly};
+            DPOINT lr = {lrx, lry};
+            
+            if ([shapeID isEqualToString:@"E"])
+                [self addEllipseToFrameWithUpperLeft:ul lowerRight:lr];
+        }
     }
 }
 
