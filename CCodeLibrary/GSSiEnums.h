@@ -341,6 +341,7 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
     FMTHeaderOnly,
     FMTCount,
     FMTPriorHeader,
+    FMTSlopesAndLocation,
 };
 
 typedef NS_ENUM(NSInteger, FacPointSymbols)

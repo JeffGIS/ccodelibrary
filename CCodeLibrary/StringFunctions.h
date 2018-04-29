@@ -88,5 +88,5 @@ void ShowTheAlert(LPCSTR text);
 void showAlert(NSString *text);
 void UploadToTheCloud (LPCSTR filePath, BOOL deleteWhenDone);
 void uploadToCloud(NSString *filePath, BOOL deleteWhenDone);
-
+Bool GetStringArrayElement (int index,LPSTR string,LPSTR seperator,LPSTR OutLoc,int maxOutLocLen);
 #endif

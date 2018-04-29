@@ -450,10 +450,39 @@ static int COUNT=100;
     if (_unable)
         _data.frontSlopePct = _data.sideSlopePct = _data.frontSlopeDegrees = _data.sideSlopeDegrees = _data.heading = -9999.0;
     
-    if (_delegate)
+    if (_wantLocation)
     {
-        [_delegate gssiSlopeViewController:self
-                        didReturnSlopeData:_data];
+        [_locationManager stopUpdatingLocation];
+        
+        int count = 0;
+        CLLocationDegrees lat = 0.0, lon = 0.0;
+        int numCoords = min(5, (int)(_locations.count - 1));
+        
+        for (int i = (int)(_locations.count - numCoords); i < _locations.count; i++)
+        {
+            CLLocationCoordinate2D coord = _locations[i].coordinate;
+            lat += coord.latitude;
+            lon += coord.longitude;
+            count++;
+        }
+        
+        CLLocationCoordinate2D avgCoord = CLLocationCoordinate2DMake((lat / (double)count),
+                                                                     (lon / (double)count));
+        
+        if (_delegate)
+        {
+            [_delegate gssiSlopeViewController:self
+                            didReturnSlopeData:_data
+                                      location:avgCoord];
+        }
+    }
+    else
+    {
+        if (_delegate)
+        {
+            [_delegate gssiSlopeViewController:self
+                            didReturnSlopeData:_data];
+        }
     }
 }
 
@@ -603,7 +632,11 @@ static int COUNT=100;
     
     if (CLLocationManager.headingAvailable && !_hasRun)
         [_locationManager startUpdatingHeading];
-    
+    if (_wantLocation)
+    {
+        _locations = NSMutableArray.new;
+        [_locationManager startUpdatingLocation];
+    }
     _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
 }
 

@@ -24,6 +24,7 @@ static HWND wantWnd;
 static LPSTR	pFindWindowText=0;
 
 Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCSTR header,int needPhoto);
+Bool GetStringArrayElement (int index,LPSTR string,LPSTR seperator,LPSTR OutLoc,int maxOutLocLen);
 
 typedef struct {
 	DWORD process, thread;
@@ -2228,37 +2229,27 @@ GotCloseFilehSQL:
                    //$SLOPE(SIDE,value
                    //$SLOPE(MAX,value
          {
-             LPSTR pEnd;
              nArgs = GetFunArgs (Args,Arg,3,&hMem, pBrkPt, bpOffset, bpLen);
              *OutLoc = 0;
              if (nArgs == 2)
              {
                  LPSTR pValue = Arg[2];
+                 char sep[2] = "|";
                  if (!strcasecmp (Arg[1],"FRONT"))
                  {
-                     pEnd = strchr (pValue,'|');
-                     if (pEnd)
-                         *pEnd = 0;
-                     strcpy (OutLoc,pValue);
+                     GetStringArrayElement (0,pValue,sep,OutLoc,256);
                  }
                  else if (!strcasecmp (Arg[1],"SIDE"))
                  {
-                     pEnd = strchr (pValue,'|');
-                     if (pEnd)
-                     {
-                         pValue = pEnd + 1;
-                         pEnd = strchr (pValue,'|');
-                         if (pEnd)
-                             *pEnd = 0;
-                         strcpy (OutLoc,pValue);
-                     }
+                     GetStringArrayElement (1,pValue,sep,OutLoc,256);
                  }
-                 else
+                 else if (!strcasecmp (Arg[1],"MAX"))
                  {
-                     pEnd = strrchr (pValue,'|');
-                     if (pEnd)
-                         pValue = pEnd + 1;
-                     strcpy (OutLoc,pValue);
+                     GetStringArrayElement (2,pValue,sep,OutLoc,256);
+                }
+                 else if (!strcasecmp (Arg[1],"LOCATION"))
+                 {
+                     GetStringArrayElement (3,pValue,sep,OutLoc,256);
                  }
              }
              goto Rtnl;
@@ -6862,6 +6853,10 @@ HaveVP:;
                     }
                     ProcessText ("$INC(%SEQUENCE)");
                  }
+                else if (!_stricmp(Arg[1], "FIRST"))
+                {
+                     AddStep ("1",Arg[3],Arg[4],Arg[5],Arg[6],-1);
+                }
                 else
                 {
                 }

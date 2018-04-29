@@ -90,6 +90,8 @@
         ft = FMTChoiceList;
     if ([type isEqualToString:@"Slope"])
         ft = FMTSlope;
+    if ([type isEqualToString:@"SlopesAndLocation"])
+        ft = FMTSlopesAndLocation;
     if ([type isEqualToString:@"Pounds"])
         ft = FMTPounds;
     if ([type isEqualToString:@"Inches"])

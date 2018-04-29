@@ -343,7 +343,13 @@
     currentFacility.imageTypes = NSMutableArray.array;
     currentFacility.imageDescriptions = NSMutableArray.array;
     
-    NSString *path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A03" ofType:@"jpg"];
+    NSString *path = [NSBundle.mainBundle pathForResource:@"CityHallSite" ofType:@"jpg"];
+    path = [path stringByDeletingPathExtension];
+    [currentFacility.imagePaths addObject:path];
+    [currentFacility.imageTypes addObject:@"jpg"];
+    [currentFacility.imageDescriptions addObject:@"Site"];
+    
+    path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A03" ofType:@"jpg"];
     path = [path stringByDeletingPathExtension];
     [currentFacility.imagePaths addObject:path];
     [currentFacility.imageTypes addObject:@"jpg"];

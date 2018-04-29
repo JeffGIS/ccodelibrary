@@ -689,7 +689,7 @@ typedef struct
         DWORD   changetime; 
         Bool	ContainsGorF;
         Bool	Save;
-        char    Name[34];
+        char    Name[MAXVARNAMELEN];
         char    Value[MAXVARLEN]; 
         HANDLE	LinkedVar[1];
     } VARINFO;

@@ -20,6 +20,7 @@
 #define		MAXPENS				266       
 #define		MAXVEHLOC			256   
 #define 	MAXREORGBUF			8*1024L*1024L
+#define     MAXVARNAMELEN       128
 #define		MAXVARLEN			4095*4
 #define		MAXDLTVAR			256
 #define 	MAXSQLPERFILE   	32   

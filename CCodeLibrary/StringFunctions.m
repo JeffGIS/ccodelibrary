@@ -1428,6 +1428,24 @@ BOOL stringContainsCaseInsenitiveString (NSString * str, NSString * substr)
     return rtn;
 }
 
+Bool GetStringArrayElement (int index,LPSTR string,LPSTR seperator,LPSTR OutLoc,int maxOutLocLen)
+{
+    BOOL rtn = FALSE;
+    
+    NSString * sep = [NSString stringWithUTF8String:seperator];
+    NSString * str = [NSString stringWithUTF8String:string];
+    NSArray * array = [str componentsSeparatedByString:sep];
+    if (array.count > index)
+    {
+        rtn = TRUE;
+        NSString * out = array[index];
+        strncpy (OutLoc,out.UTF8String,maxOutLocLen);
+    }
+    else
+        *OutLoc = 0;
+    return rtn;
+}
+
 int numberOfOccurencesOfStringInString (NSString *str,NSString *substr)
 {
     if (!str || !substr)

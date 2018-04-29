@@ -60,6 +60,7 @@ typedef struct NVSlopeData {
 @property (nonatomic) double criticalSideValue;
 @property (nonatomic, copy) NSString *promptText;
 @property (nonatomic) double errorValue;
+@property BOOL wantLocation;
 
 + (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(double)criticalVal
                                             criticalSideValue:(double)criticalSideVal
