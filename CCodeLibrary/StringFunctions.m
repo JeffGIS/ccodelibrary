@@ -13,6 +13,10 @@
 static BOOL useMasterID = FALSE;
 static BOOL useDemoID = FALSE;
 static int useIDInc = 0;
+typedef FILE * LPFILE;
+static LPFILE openFiles[MAXOPENFILES]={0};
+static Bool fileInUse[MAXOPENFILES] = {0};
+
 
 int __attribute__ ((noinline)) debugMessage (LPCSTR mess)
 {
@@ -20,6 +24,57 @@ int __attribute__ ((noinline)) debugMessage (LPCSTR mess)
     l++;
     printf("%s\n",mess);
     return l;
+}
+
+HFILE GSSiOpenFile(LPSTR Name, LPOFSTRUCTGM pOFStruct, UINT Mode)
+{
+    NSString * fullPath = [NSString stringWithUTF8String:Name];
+    NSString * type = fullPath.pathExtension;
+    
+    int iFile = HFILE_ERROR;
+    for (int i=0;i<MAXOPENFILES;i++)
+    {
+        if (!fileInUse[i])
+        {
+            iFile = i;
+            goto doOpen;
+        }
+    }
+    return iFile;
+    
+doOpen:
+    fullPath = [fullPath stringByDeletingPathExtension];
+    if ([fullPath containsString:@"BUNDLE:"])
+    {
+        fullPath = [fullPath stringByReplacingOccurrencesOfString:@"BUNDLE:" withString:@""];
+        fullPath = [NSBundle.mainBundle pathForResource:fullPath ofType:type];
+    }
+    openFiles[iFile] = fopen(fullPath.UTF8String,"rb");
+    return iFile;
+ }
+HFILE GSSiClose(HFILE Fid)
+{
+    if (Fid != HFILE_ERROR)
+    {
+        fileInUse[Fid] = FALSE;
+        fclose(openFiles[Fid]);
+    }
+    return 0;
+}
+LPSTR fgetstring(LPSTR lpStr, int len, HFILE Fid)
+{
+    return fgetstringF(lpStr,len,openFiles[Fid]);
+}
+
+long GSSifilelength(HFILE Fid)
+{
+    if (Fid == HFILE_ERROR)
+        return -1;
+    long curloc = ftell (openFiles[Fid]);
+    fseek (openFiles[Fid],0,SEEK_END);
+    long len = ftell (openFiles[Fid]);
+    fseek (openFiles[Fid],curloc,SEEK_SET);
+    return len;
 }
 
 UIColor *UIColorFromInt (unsigned int ival)

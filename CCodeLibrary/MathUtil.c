@@ -1855,7 +1855,7 @@ long FileLengthF (FILE *fid)
     return totLen;
 }
 
-int fgetstringF(char *str, int maxlen, FILE *fid)
+LPSTR fgetstringF(char *str, int maxlen, FILE *fid)
 {
     int ln;
     char * pEnd;
@@ -1874,7 +1874,7 @@ int fgetstringF(char *str, int maxlen, FILE *fid)
         *pEnd = 0;
     
     ln = (int)strlen(str);
-    return ln;
+    return str;
 }
 Bool fputstringF(LPSTR lpStr, FILE *Fid)
 {

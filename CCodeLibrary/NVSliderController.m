@@ -615,6 +615,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         label.frame = CGRectMake(0.0, _usedTopSpace, self.frame.size.width, (fontSize * 1.8));
         label.text = prompt;
         label.numberOfLines = 0;
+        label.adjustsFontSizeToFitWidth = YES;
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = UIColor.blackColor;
         label.font = [UIFont boldSystemFontOfSize:(fontSize * 1.2)];

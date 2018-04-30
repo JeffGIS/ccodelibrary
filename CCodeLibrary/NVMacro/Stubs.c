@@ -796,10 +796,6 @@ int GSSiRemove2(LPSTR Name)
 {
 	return 0;
 }
-HFILE GSSiOpenFile(LPSTR Name, LPOFSTRUCTGM pOFStruct, UINT Mode)
-{
-	return 0;
-}
 HFILE GSSiOpenFileMem(LPSTR InName, UINT mode, UINT maxlen)
 {
 	return 0;
@@ -843,10 +839,6 @@ void GSSiEndDialog(HWND hWndDlg, Bool rtn, HANDLE hSaveBM)
 	return;
 }
 
-HFILE GSSiClose(HFILE Fid)
-{
-	return 0;
-}
 HFILE GSSiClose2(LPHFILE pFid)
 {
 	return 0;
@@ -1052,11 +1044,6 @@ DPOINT CopyFilePtToBasePt(POINT Point)
 {
 	DPOINT pt = { 0 };
 	return pt;
-}
-
-LPSTR fgetstring(LPSTR lpStr, int len, HFILE Fid)
-{
-    return lpStr;
 }
 
 LPSTR fgetstring2(LPSTR lpStr, int len, HFILE Fid)

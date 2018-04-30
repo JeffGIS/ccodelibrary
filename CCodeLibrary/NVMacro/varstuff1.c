@@ -6428,7 +6428,7 @@ LPSTR ExpandTextDB (LPSTR InText,LPBREAKPOINT pBrkPt,int bpOffset,int bpLen)
             {
                 if (!(EndBrack = MatchLev((LPSTR)(InLoc + 1), ']')))
                 {
-                    if (_strnicmp (InLoc+1,"$Bool",5) && GetDebug())
+                    if (_strnicmp (InLoc+1,"$BOOL",5) && GetDebug())
                         MessageBox(0, InLoc, "No matching bracket", MB_ICONEXCLAMATION);
                     goto OutChar;
                 }

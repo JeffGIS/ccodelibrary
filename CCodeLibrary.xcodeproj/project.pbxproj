@@ -331,7 +331,6 @@
 		BBC361C71F429C0200B51DF3 /* fundefs.c in Sources */ = {isa = PBXBuildFile; fileRef = BBC361A41F429C0200B51DF3 /* fundefs.c */; };
 		BBC361C81F429C0200B51DF3 /* Stubs.c in Sources */ = {isa = PBXBuildFile; fileRef = BBC361B91F429C0200B51DF3 /* Stubs.c */; };
 		BBC361C91F429C0200B51DF3 /* VARDEF.C in Sources */ = {isa = PBXBuildFile; fileRef = BBC361BD1F429C0200B51DF3 /* VARDEF.C */; };
-		BBC361CA1F429C0200B51DF3 /* VARSTUF2.C in Sources */ = {isa = PBXBuildFile; fileRef = BBC361BE1F429C0200B51DF3 /* VARSTUF2.C */; };
 		BBE299521CBD1D6C0045B3DC /* CityOrOrganizationData.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */; };
 		BBE299531CBD30BB0045B3DC /* CityOrOrganizationData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */; };
 		EB05C21019EA999F00F0688B /* ElementOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB05C20F19EA999F00F0688B /* ElementOverlayView.m */; };
@@ -350,6 +349,7 @@
 		EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB019BA004900F6D9F0 /* IntersectionsDatabase.m */; };
 		EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */; };
 		EB2C7DBA19BCB9C400F6D9F0 /* IntersectionPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = EB2C7DB919BCB9C400F6D9F0 /* IntersectionPoint.m */; };
+		EB333D1A20962F0A00254B87 /* varstuff2.c in Sources */ = {isa = PBXBuildFile; fileRef = EB333D1920962F0A00254B87 /* varstuff2.c */; };
 		EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */ = {isa = PBXBuildFile; fileRef = EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */; };
 		EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EB3CC5F61AD95F8B002453A9 /* PickedItem.m */; };
 		EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4DB2571B9600AA008157D8 /* PointInArea.m */; };
@@ -959,7 +959,6 @@
 		BBC361BB1F429C0200B51DF3 /* TRANSLAT.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TRANSLAT.H; sourceTree = "<group>"; };
 		BBC361BC1F429C0200B51DF3 /* UMIO.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UMIO.H; sourceTree = "<group>"; };
 		BBC361BD1F429C0200B51DF3 /* VARDEF.C */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VARDEF.C; sourceTree = "<group>"; };
-		BBC361BE1F429C0200B51DF3 /* VARSTUF2.C */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VARSTUF2.C; sourceTree = "<group>"; };
 		BBCA58FC1F434EF50021E218 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		BBE299501CBD1D6C0045B3DC /* CityOrOrganizationData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CityOrOrganizationData.h; sourceTree = "<group>"; };
 		BBE299511CBD1D6C0045B3DC /* CityOrOrganizationData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CityOrOrganizationData.m; sourceTree = "<group>"; };
@@ -987,6 +986,7 @@
 		EB2C7DB319BA5A6F00F6D9F0 /* IntersectionRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntersectionRecord.m; sourceTree = "<group>"; };
 		EB2C7DB819BCB9C400F6D9F0 /* IntersectionPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntersectionPoint.h; sourceTree = "<group>"; };
 		EB2C7DB919BCB9C400F6D9F0 /* IntersectionPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntersectionPoint.m; sourceTree = "<group>"; };
+		EB333D1920962F0A00254B87 /* varstuff2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = varstuff2.c; sourceTree = "<group>"; };
 		EB36639A1A55A97C00ABA486 /* PointInAreaClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointInAreaClass.h; sourceTree = "<group>"; };
 		EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInAreaClass.m; sourceTree = "<group>"; };
 		EB3CC5F51AD95F8B002453A9 /* PickedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickedItem.h; sourceTree = "<group>"; };
@@ -1510,6 +1510,7 @@
 		BBC361921F429C0200B51DF3 /* NVMacro */ = {
 			isa = PBXGroup;
 			children = (
+				EB333D1920962F0A00254B87 /* varstuff2.c */,
 				BBC361931F429C0200B51DF3 /* Address.h */,
 				BBC361941F429C0200B51DF3 /* bigmem.c */,
 				BBC361951F429C0200B51DF3 /* bigmem.h */,
@@ -1545,7 +1546,6 @@
 				BBC361BC1F429C0200B51DF3 /* UMIO.H */,
 				BBC361BD1F429C0200B51DF3 /* VARDEF.C */,
 				69D5F6BF1F4D209500721F82 /* varstuff1.c */,
-				BBC361BE1F429C0200B51DF3 /* VARSTUF2.C */,
 				BBCA58FC1F434EF50021E218 /* Header.h */,
 			);
 			path = NVMacro;
@@ -1921,7 +1921,6 @@
 				EB9C3C2C1F914C8600E95644 /* PDFCreator.m in Sources */,
 				EBC01D161BED1C8C0004C751 /* fk4fk5.c in Sources */,
 				A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */,
-				BBC361CA1F429C0200B51DF3 /* VARSTUF2.C in Sources */,
 				1FE2BC0219C2036A00FA5C4C /* ManagePlacesDatabase.m in Sources */,
 				6996D3401FFD3E510013139B /* RHEditor.m in Sources */,
 				6996D3431FFD42910013139B /* RiteHome.m in Sources */,
@@ -2005,6 +2004,7 @@
 				BB8BA0D51F5596D90024B8C2 /* FacilityStepDefinition.m in Sources */,
 				69CF3A162020FDB700309852 /* RHClipEditor.m in Sources */,
 				6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */,
+				EB333D1A20962F0A00254B87 /* varstuff2.c in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,

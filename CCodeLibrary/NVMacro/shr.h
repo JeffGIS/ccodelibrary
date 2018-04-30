@@ -521,7 +521,7 @@ void fputss (LPSTR lpStr, FILE *Fid);
 Bool fputstring(LPSTR lpStr, HFILE Fid);
 LPSTR fgetstring (LPSTR lpStr, int len, HFILE Fid);
 Bool fputstringF(LPSTR lpStr, FILE *Fid);
-int fgetstringF (LPSTR lpStr, int len, FILE *Fid);
+LPSTR fgetstringF (LPSTR lpStr, int len, FILE *Fid);
 float MULREG (double Y[], double X1[], double X2[], int N,
               LPDOUBLE A,LPDOUBLE B, LPDOUBLE C);
 double AMEAN (double *X,int N);

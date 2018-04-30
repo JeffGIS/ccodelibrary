@@ -1746,7 +1746,7 @@ SetVis:
 
 			goto RtnFalse;
 		}
-		
+*/
 		case 334:  //$INT(returns integer value (truncates))
 			hMem = GSSiGlobAlloc ( 821,GMEM_MOVEABLE,2048);
 			Arg1 = GlobalLock(hMem); 
@@ -1758,7 +1758,7 @@ SetVis:
 			nlong = (long)RVal;
 			_ltoa (nlong,OutLoc,10);
 			goto Rtnl;  
-*/
+
 		case 335:  //$INC(returns value + 1 (or arg2)) 
 		{
 			static	long	NextNum=1;
@@ -2867,8 +2867,8 @@ SetVis:
 			}
 			goto RtnFalse;
 		}
-		
-		case 410: //$Bool(str)
+*/
+		case 410: //$BOOL(str)
 		{
 			Bool val;      
 			Bool irc;
@@ -2901,7 +2901,7 @@ SetVis:
 		    	goto RtnTrue;
 		    else
 		    	goto RtnFalse;
-		}*/
+		}
 		case 411: // $INDX(string1,string2) returns 1 based position of string2 in string1  
 		{	long pos;
 			LPSTR	loc;

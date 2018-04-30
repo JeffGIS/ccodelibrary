@@ -129,9 +129,11 @@ Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCS
 + (BOOL)removeExistingChildren:(NSString *)ID
                           from:(id)from;
 
++ (BOOL) doesStepExist:(NSString*)stepID;
 + (BOOL) doRemoveChildren:(NSString*)stepID;
 + (NSString *) getStepDefForStep:(NSString *)stepID;
 + (void) doProcessCommand:(NSString *)stepValueID;
++ (NSString *) removeLastStep:(NSString *)stepID;
 
 
 @end

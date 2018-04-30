@@ -280,6 +280,9 @@ Bool FAR PASCAL VEHICLE_STATUSMsgProc(HWND hWndDlg, int Message, WPARAM wParam, 
 Bool FAR PASCAL VEHICLE_TIMEMsgProc(HWND hWndDlg, int Message, WPARAM wParam, LPARAM lParam);
 Bool TabbedWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
 
+void CloseBufferedMacros (void);
+Bool ProcessMacroFile (LPSTR Name,LPSTR RtnVal,LPHANDLE phArgs,short NumArgs);
+
 Bool CaptureClipboard(LPSTR title, LPSTR menu);
 HWND DoCreateTabControl(HWND hwndParent,int nTabs,LPSTR TabItems,int TabItemLen,LPRECT pRect,Bool Verticle,Bool Flat,int xPad,int yPad);
 HWND DoCreateDisplayWindow(HWND hwndParent);
@@ -307,8 +310,6 @@ double AreaFromPolyWithCurves(HANDLE hUnSplinedPoly, long nUnSplinedPoints, HAND
 void SetCurvPltCtol (double INCTOL);
 void CreateNewObject(int i);
 void SetClassLineType (int Desc,int Type, float Width, int Style, int ProPen, COLORREF color);
-void CloseBufferedMacros (void);
-Bool ProcessMacroFile (LPSTR Name,LPSTR RtnVal,LPHANDLE phArgs,short NumArgs);
 void GetItemMinMax (LPMINMAX pMinMax,LPMNMXCORD Rect);
 void SetDestination (LPMNMXCORD pDest);
 Bool SetScaleAndMidpointFromBounds (LPVIEWPORT CurView);

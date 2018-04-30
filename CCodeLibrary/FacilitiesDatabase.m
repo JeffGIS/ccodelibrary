@@ -1121,5 +1121,10 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     
     return;
 }
++ (BOOL) doesStepExist:(NSString*)stepID
+{
+    NSString * def = [FacilitiesDatabase getStepDefForStep:stepID];
+    return ![def isEqualToString:@""];
+}
 
 @end

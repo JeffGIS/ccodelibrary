@@ -1157,7 +1157,7 @@ GotCloseFilehSQL:
             SetCurView ( SaveVP);
 			goto RtnTrue;
     	} 
-    	
+    	*/
 		case 510: // $MACRO(macro file pathname,arg1,arg2...arg10)
 				  // $MACRO(pathname(type),arg1,arg2) runs multiple macros from directory pathname (not sure about this one)
 				  // $MACRO() clears macro buffer
@@ -1203,8 +1203,8 @@ GotCloseFilehSQL:
 				pLoc = Arg1;
 	        if (!(pPAR = _fstrchr (pLoc,'(')))
 				ProcessMacroFile (Arg1,OutLoc,&hMacroArgs,NumArgs);
-			else
-			{   
+			/*else
+			{   //for loading database text input as macros
 				long	TotFiles=0;
 				
 				*pPAR++ = 0; 
@@ -1224,11 +1224,11 @@ GotCloseFilehSQL:
 				}
 				GSSiClose (Fid);			
 				GSSiRemove (pName);
-			}
+			}*/
 			GSSiGlobFree (&hMacroArgs);
 			goto Rtnl;
 		}   
-		 
+		 /*
 		case 511: // $IMAGE(image file pathname)  
 				  // $IMAGE(WINDOW,image file name)
 				  // $IMAGE(SPLIT,imagefile,outdir,outtype,width,height)
@@ -2247,9 +2247,13 @@ GotCloseFilehSQL:
                  {
                      GetStringArrayElement (2,pValue,sep,OutLoc,256);
                 }
-                 else if (!strcasecmp (Arg[1],"LOCATION"))
+                 else if (!strcasecmp (Arg[1],"HEADING"))
                  {
                      GetStringArrayElement (3,pValue,sep,OutLoc,256);
+                 }
+                 else if (!strcasecmp (Arg[1],"LOCATION"))
+                 {
+                     GetStringArrayElement (4,pValue,sep,OutLoc,256);
                  }
              }
              goto Rtnl;
@@ -2832,7 +2836,7 @@ GotCloseFilehSQL:
 			goto RtnTrue;
 		}
 		
-		
+*/
 		case 613: // $RETURN(value) returns from current macro
 		{				
 			nArgs = GetFunArgs(Args, Arg, 1, &hMem, pBrkPt, bpOffset, bpLen);
@@ -2842,7 +2846,7 @@ GotCloseFilehSQL:
 			ContinueProcessing = FALSE;
             goto RtnTrue;
 		}
-		
+/*
 		case 614: //$SYMNUM(symname)
 		{
 			short	n;
