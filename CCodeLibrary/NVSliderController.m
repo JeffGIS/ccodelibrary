@@ -180,6 +180,12 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                      selector:@selector(rangeButtonTapped:)
                         title:@"Range"];
         }
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                              action:@selector(sliderTapped:)];
+        
+        [_slider addGestureRecognizer:tap];
+        
     }
     
     return self;
@@ -695,6 +701,18 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
     _formatString = [NSString stringWithFormat:@"%%.%df", numDecimals];
     [self updateTicLabelText];
+    [self sliderValueChanged];
+}
+
+- (void)sliderTapped:(UITapGestureRecognizer *)gesture
+{
+    CGPoint point = [gesture locationInView:_slider];
+    double percentage = (point.x / _slider.bounds.size.width);
+    double delta = (percentage * (_slider.maximumValue - _slider.minimumValue));
+    double rawValue = (_slider.minimumValue + delta);
+    double medianValue = ((_slider.maximumValue + _slider.minimumValue) / 2.0);
+    double value = (rawValue - ((medianValue - rawValue) * 0.15));
+    [_slider setValue:value animated:NO];
     [self sliderValueChanged];
 }
 
