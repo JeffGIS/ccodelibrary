@@ -12,7 +12,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     NVSliderControllerRangeTwo,
 };
 
-@interface NVSliderController ()
+@interface NVSliderController () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) id <NVSliderControllerDelegate>delegate;
 @property (nonatomic) UISlider *slider;
@@ -184,8 +184,8 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                               action:@selector(sliderTapped:)];
         
+        tap.delegate = self;
         [_slider addGestureRecognizer:tap];
-        
     }
     
     return self;
@@ -714,6 +714,30 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     double value = (rawValue - ((medianValue - rawValue) * 0.15));
     [_slider setValue:value animated:NO];
     [self sliderValueChanged];
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    BOOL rtn = YES;
+    
+    for (UIImageView *imageView in _slider.subviews)
+    {
+        if ([imageView isKindOfClass:UIImageView.class])
+        {
+            if (imageView.image == _slider.currentThumbImage)
+            {
+                CGPoint point = [gestureRecognizer locationInView:_slider];
+                
+                if (CGRectContainsPoint(imageView.frame, point))
+                {
+                    rtn = NO;
+                    break;
+                }
+            }
+        }
+    }
+    
+    return rtn;
 }
 
 @end
