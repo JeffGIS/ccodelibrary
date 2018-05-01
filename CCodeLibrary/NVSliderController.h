@@ -40,6 +40,7 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
 
 @property NVSliderMeasurementType type;
 @property CGFloat usedTopSpace;
+@property (nonatomic) int numDecimals;
 
 - (id)initWithCenter:(CGPoint)center
                width:(double)width
@@ -57,7 +58,7 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
 
 - (void)hideSliderController:(BOOL)animated;
 - (void)removeRequiredFromLabel;
-- (void)setNumDecimals:(int)numDecimals;
+- (void)showStepper;
 
 - (void)addTitle:(NSString *)title
           prompt:(NSString *)prompt

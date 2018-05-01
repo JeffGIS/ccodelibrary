@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 @property (nonatomic) UILabel *sliderLabel, *lowTic, *highTic, *midTic, *midLowTic, *midHighTic, *promptLabel;
 @property (nonatomic) UIButton *saveButton, *cancelButton, *rangeButton;
 @property (nonatomic) UIView *ticView, *overlayView;
-@property (nonatomic) double minValue, maxValue;
+@property double minValue, maxValue;
 @property NVSliderControllerRange range;
 @property NVSliderConfiguration configuration;
 @property (nonatomic, copy) NSString *unit, *formatString;
@@ -129,7 +129,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                     _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
                 
                 else
-                    _sliderLabel.text = [NSString stringWithFormat:@"%.1f", _slider.value];
+                    self.numDecimals = 1;
                 break;
             case NVSliderConfigurationDefault:
             case NVSliderConfigurationDefaultNoRange:
@@ -147,7 +147,9 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             default:break;
         }
         
-        _sliderLabel.text = [NSString stringWithFormat:@"%@ %@", _sliderLabel.text, _unit];
+        if (![_sliderLabel.text containsString:_unit])
+            _sliderLabel.text = [NSString stringWithFormat:@"%@ %@", _sliderLabel.text, _unit];
+        
         _sliderLabel.textColor = UIColor.blackColor;
         _sliderLabel.font = [UIFont boldSystemFontOfSize:56.0];
         _sliderLabel.textAlignment = NSTextAlignmentCenter;
@@ -397,11 +399,10 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 
 - (void)saveButtonTapped:(UIButton *)button
 {
-    if (_delegate)
+    if (_delegate && [_delegate respondsToSelector:@selector(sliderView:didReturnValue:)])
     {
         double value = [_sliderLabel.text floatValue];
-        [_delegate sliderView:self
-               didReturnValue:value];
+        [_delegate sliderView:self didReturnValue:value];
     }
 }
 
@@ -699,6 +700,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 
 - (void)setNumDecimals:(int)numDecimals
 {
+    _numDecimals = numDecimals;
     _formatString = [NSString stringWithFormat:@"%%.%df", numDecimals];
     [self updateTicLabelText];
     [self sliderValueChanged];
@@ -738,6 +740,54 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     }
     
     return rtn;
+}
+
+- (void)showStepper
+{
+    CGFloat height = _saveButton.frame.size.height;
+    UISegmentedControl *stepperSC = [[UISegmentedControl alloc] initWithItems:@[@"-", @"+"]];
+    stepperSC.momentary = YES;
+    stepperSC.tintColor = UIColor.blackColor;
+    
+    [stepperSC setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:48.0]
+                                                                  forKey:NSFontAttributeName]
+                             forState:UIControlStateNormal];
+    
+    [stepperSC setContentPositionAdjustment:UIOffsetMake(0.0, -2.0)
+                             forSegmentType:UISegmentedControlSegmentAny
+                                 barMetrics:UIBarMetricsDefault];
+    
+    stepperSC.frame = CGRectMake(0.0, 0.0, (height * 2.0), height);
+    stepperSC.center = CGPointMake(((_saveButton.center.x + _cancelButton.center.x) / 2.0), _saveButton.center.y);
+    [self addSubview:stepperSC];
+    
+    [stepperSC addTarget:self
+                  action:@selector(stepperSCTapped:)
+        forControlEvents:UIControlEventValueChanged];
+}
+
+- (void)stepperSCTapped:(UISegmentedControl *)stepperSC
+{
+    float gradient = 1.0;
+    
+    if (_numDecimals > 0)
+        gradient = (1 / pow(10.0, _numDecimals));
+    
+    float newValue = _slider.value;
+    
+    switch (stepperSC.selectedSegmentIndex)
+    {
+        case 0:
+            newValue -= gradient;
+            break;
+        case 1:
+            newValue += gradient;
+            break;
+        default:break;
+    }
+    
+    [_slider setValue:newValue animated:NO];
+    [self sliderValueChanged];
 }
 
 @end
