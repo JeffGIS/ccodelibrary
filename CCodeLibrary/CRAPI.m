@@ -367,11 +367,11 @@
     [currentFacility.imageTypes addObject:@"jpg"];
     [currentFacility.imageDescriptions addObject:@"Upper Level"];
     
-    path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A06" ofType:@"jpg"];
+/*    path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A06" ofType:@"jpg"];
     path = [path stringByDeletingPathExtension];
     [currentFacility.imagePaths addObject:path];
     [currentFacility.imageTypes addObject:@"jpg"];
-    [currentFacility.imageDescriptions addObject:@"Council Chambers"];
+    [currentFacility.imageDescriptions addObject:@"Council Chambers"];*/
     return currentFacility;
 }
 
