@@ -906,7 +906,7 @@ Exit:
     NSString *variables = [FacilityStepDefinition getStepVariables:stepDefID];
 
     int facID = CRAPI.sharedInstance.currentFacility.facID;
-    NSString *query = [NSString stringWithFormat:@"SELECT value FROM FacilityValues WHERE facilityNumber = %i AND stepValueID = '%@'",facID,stepID];
+    NSString *query = [NSString stringWithFormat:@"SELECT value, fieldIndex FROM FacilityValues WHERE facilityNumber = %i AND stepValueID = '%@'",facID,stepID];
     sqlite3_stmt *statement = NULL;
     Bool opened = [self open];
     SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
@@ -918,12 +918,16 @@ Exit:
         if (*value)
         {
             HANDLE hSaveValue = SaveValue ();
+            HANDLE hSaveIndex = SaveFieldIndex();
             SetValue (value);
+            value = (LPSTR)sqlite3_column_text(statement, 1);
+            SetFieldIndex(value);
             variables = ExpandString (variables);
             if (![variables isEqualToString:@""])
                 variables = ExpandString (variables);
             
             RestoreValue (hSaveValue);
+            RestoreFieldIndex(hSaveIndex);
         }
     }
     
