@@ -401,7 +401,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
     if (_delegate && [_delegate respondsToSelector:@selector(sliderView:didReturnValue:)])
     {
-        double value = [_sliderLabel.text floatValue];
+        double value = [textBefore(_sliderLabel.text, @" ") doubleValue];
         [_delegate sliderView:self didReturnValue:value];
     }
 }
