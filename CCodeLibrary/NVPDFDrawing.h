@@ -3,8 +3,12 @@
 
 @import Foundation;
 
+#define TOP0900 0.09
 #define TOP0950 0.095
 #define TOP0975 0.0975
+#define TOP1000 0.1
+#define TOP1025 0.1025
+#define TOP1050 0.105
 
 #define LCL0700 0.07
 #define LCL0875 0.0875
