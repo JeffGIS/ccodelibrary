@@ -72,6 +72,7 @@ static char lastDBPath[PATH_MAX]={0};
                        stepValueID CHAR(64),\
                        lastUpdateTime INTEGER,\
                        stepDefinitionID CHAR(64),\
+                       title  CHAR(256),\
                        header CHAR(256),\
                        prompt CHAR(256),\
                        variables CHAR(4096),\
@@ -614,7 +615,7 @@ Exit:
 - (NSArray *) getValuesForFacility:(int) faciltyNumber
 {
     NSMutableArray * array = NSMutableArray.new;
-    NSString *query = [NSString stringWithFormat:@"SELECT stepValueID, stepDefinitionID, header, prompt, value, needPhoto, numPhotos, complete,fieldIndex FROM FacilityValues WHERE facilityNumber = %i",faciltyNumber];
+    NSString *query = [NSString stringWithFormat:@"SELECT stepValueID, stepDefinitionID, title, header, prompt, value, needPhoto, numPhotos, complete,fieldIndex, variables FROM FacilityValues WHERE facilityNumber = %i ORDER BY stepValueID",faciltyNumber];
     sqlite3_stmt *statement = NULL;
     Bool opened = [self open];
     SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
@@ -629,16 +630,23 @@ Exit:
         value = (LPSTR)sqlite3_column_text(statement, i++);
         fsv.stepDefinitionID = [NSString stringWithUTF8String:value];
         value = (LPSTR)sqlite3_column_text(statement, i++);
+        fsv.title = [NSString stringWithUTF8String:value];
+        value = (LPSTR)sqlite3_column_text(statement, i++);
         fsv.header = [NSString stringWithUTF8String:value];
         value = (LPSTR)sqlite3_column_text(statement, i++);
         fsv.prompt = [NSString stringWithUTF8String:value];
         value = (LPSTR)sqlite3_column_text(statement, i++);
         fsv.value = [NSString stringWithUTF8String:value];
+        SetValue (value);
         fsv.needPhoto = sqlite3_column_int(statement, i++);
         fsv.numPhotos = sqlite3_column_int(statement, i++);
         fsv.completionStatus = sqlite3_column_int(statement, i++);
-        fsv.fieldIndex = sqlite3_column_int(statement, i++);
-        
+        fsv.fieldIndex = sqlite3_column_int(statement, i);
+        value = (LPSTR)sqlite3_column_text(statement, i++);
+        SetFieldIndex(value);
+        value = (LPSTR)sqlite3_column_text(statement, i++);
+        NSString * varstr = ExpandString([NSString stringWithUTF8String:value]);
+        ExpandString (varstr);
         [array addObject:fsv];
     }
     
@@ -815,6 +823,7 @@ Exit:
     NSString * stepDefID = [FacilitiesDatabase getStepDefForStep:stepValueID];
     NSString * command = [FacilityStepDefinition getStepCommand:stepDefID];
 
+    [FacilitiesDatabase setVariablesForStep:stepValueID];
     ExpandString (command);
     ExpandString (saveSequence);
 }
@@ -1013,11 +1022,14 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
         headerValue = [NSString stringWithUTF8String:header];
     else
         headerValue = [FacilityStepDefinition getStepHeader:[NSString stringWithUTF8String:stepDefID]];
-    promptValue = ExpandString (promptValue);
-    headerValue = headerValue;
+    headerValue = ExpandString (headerValue);
+    
+    NSString * title =[FacilityStepDefinition getStepTitle:[NSString stringWithUTF8String:stepDefID]];
+    title = ExpandString (title);
+    
     NSString * fieldIndex = ExpandString (@"[%FIELDINDEX]");
     NSString * variablesValue = [FacilityStepDefinition getStepVariables:[NSString stringWithUTF8String:stepDefID]];
-    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s','%s',%i,%i,%i,'%s',0,0,0,'','','',0,%i)",facID,stepValueID,lastUpdate,stepDefID,headerValue.UTF8String,promptValue.UTF8String,variablesValue.UTF8String,value,needPhoto,numPhotos,completionStatus,comment,(int)fieldIndex.integerValue];
+    NSString * cmd = [NSString stringWithFormat:@"INSERT INTO FacilityValues VALUES (%i,'%s',%i,'%s','%s','%s','%s','%s','%s',%i,%i,%i,'%s',0,0,0,'','','',0,%i)",facID,stepValueID,lastUpdate, stepDefID,title.UTF8String,headerValue.UTF8String,promptValue.UTF8String,variablesValue.UTF8String,value,needPhoto,numPhotos,completionStatus,comment,(int)fieldIndex.integerValue];
     rtn = [fd executeCmd:cmd.UTF8String];
     
     [fd close:opened];

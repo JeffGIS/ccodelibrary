@@ -1252,10 +1252,10 @@
 		A94A771A19F812940062906E /* Facilities */ = {
 			isa = PBXGroup;
 			children = (
-				69848C751EB9415D00EC1EB3 /* NVPDFDrawing.h */,
-				69848C761EB9415D00EC1EB3 /* NVPDFDrawing.m */,
 				A94A770E19F8045C0062906E /* FacilitiesDatabase.h */,
 				A94A770F19F8045C0062906E /* FacilitiesDatabase.m */,
+				BB8BA0D61F5597250024B8C2 /* FacilitiesStepValue.h */,
+				BB8BA0D71F5597250024B8C2 /* FacilitiesStepValue.m */,
 				A94A771119F807570062906E /* Facility.h */,
 				A94A771219F807570062906E /* Facility.m */,
 				A94A771419F8079E0062906E /* FacilityPoint.h */,
@@ -1264,8 +1264,8 @@
 				A94A771819F807CE0062906E /* FacilityRecord.m */,
 				BB8BA0D31F5596D90024B8C2 /* FacilityStepDefinition.h */,
 				BB8BA0D41F5596D90024B8C2 /* FacilityStepDefinition.m */,
-				BB8BA0D61F5597250024B8C2 /* FacilitiesStepValue.h */,
-				BB8BA0D71F5597250024B8C2 /* FacilitiesStepValue.m */,
+				69848C751EB9415D00EC1EB3 /* NVPDFDrawing.h */,
+				69848C761EB9415D00EC1EB3 /* NVPDFDrawing.m */,
 			);
 			name = Facilities;
 			sourceTree = "<group>";

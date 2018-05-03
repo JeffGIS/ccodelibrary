@@ -7,6 +7,7 @@
 
 @property NSString * stepValueID;
 @property NSString * stepDefinitionID;
+@property NSString * title;
 @property NSString * value;
 @property NSString * prompt;
 @property NSString * header;

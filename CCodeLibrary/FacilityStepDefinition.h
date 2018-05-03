@@ -39,6 +39,7 @@
 + (NSString *) getStepHeader:(NSString *)stepID;
 + (NSString *) getStepVariables:(NSString *)stepID;
 + (NSString *) getStepPrompt:(NSString *)stepID;
++ (NSString *) getStepTitle:(NSString *)stepID;
 + (NSString *) getStepHighlights:(NSString *)stepID;
 
 @end
