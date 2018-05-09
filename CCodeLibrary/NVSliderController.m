@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 @property NVSliderConfiguration configuration;
 @property (nonatomic, copy) NSString *unit, *origUnit, *formatString;
 @property CGFloat buttonHeight;
+@property int origNumDecimals;
 
 @end
 
@@ -59,6 +60,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         _type = type;
         _unit = _origUnit = unit;
         _unitFactor = 1.0;
+        _origNumDecimals = -1;
         
         double capHeight = 29.0;
         double capWidth = (capHeight / 2.0);
@@ -693,6 +695,9 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 
 - (void)setNumDecimals:(int)numDecimals
 {
+    if (_origNumDecimals == -1)
+        _origNumDecimals = numDecimals;
+    
     _numDecimals = numDecimals;
     _formatString = [NSString stringWithFormat:@"%%.%df", numDecimals];
     [self updateTicLabelText];
@@ -763,8 +768,8 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
     float gradient = 1.0;
     
-    if (_numDecimals > 0)
-        gradient = (1 / pow(10.0, _numDecimals));
+    if (_origNumDecimals > 0)
+        gradient = (1 / pow(10.0, _origNumDecimals));
     
     float newValue = _slider.value;
     
@@ -814,6 +819,9 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
     NSString *unit = _unit.uppercaseString;
     NSString *origUnit = _origUnit.uppercaseString;
+    
+    if (_origNumDecimals == -1)
+        _origNumDecimals = _numDecimals;
     
     if ([unit.uppercaseString isEqualToString:@"FEET"])
     {
