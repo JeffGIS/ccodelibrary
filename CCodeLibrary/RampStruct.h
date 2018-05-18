@@ -64,6 +64,7 @@ typedef enum {
     NVSignalTypeSymbol,
     NVSignalTypeSideTimer,
     NVSignalTypeBelowTimer,
+    NVSignalTypeMidBlock,
     NVSignalTypeCount,
 } NVSignalType;
 
