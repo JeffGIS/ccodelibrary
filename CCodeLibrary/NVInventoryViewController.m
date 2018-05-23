@@ -1009,46 +1009,39 @@
 - (void)performItemEdit:(UIButton *)button
 {
     _currentEditButton = button;
-    NVAlertView *alert = nil;
+    NSString *title = @"";
+    NSMutableArray *options = NSMutableArray.array;
+    [options addObject:@"Cancel|0"];
+    [options addObject:@"Delete|1"];
     
     if ([button isKindOfClass:NVXWalkButton.class])
-    {
-        alert = [NVAlertView showLargeAlertViewinView:self.view
-                                             delegate:self
-                                                title:@"Edit XWalk"
-                                      buttonTextArray:@[@"Cancel", @"Delete"]
-                                     destructiveIndex:2];
-    }
+        title = @"Edit XWalk";
     
     else if ([button isKindOfClass:NVSignalButton.class])
-    {
-        alert = [NVAlertView showLargeAlertViewinView:self.view
-                                             delegate:self
-                                                title:@"Edit Signal"
-                                      buttonTextArray:@[@"Cancel", @"Delete"]
-                                     destructiveIndex:2];
-    }
+        title = @"Edit Signal";
     
     else
     {
-        NSArray *rampOptions = nil;
         MPRamp *ramp = _currentIntersection.ramps[_currentEditButton.tag];
+        [options addObject:@"Change Ramp Type|2"];
+        title = @"Edit Ramp";
         
-        if ([self isMiddleRamp:_currentEditButton.tag] && [self isMiddleRampType:ramp.rampType])
-            rampOptions = @[@"Cancel", @"Delete", @"Change Ramp Type"];
-        
-        else
+        if (![self isMiddleRamp:_currentEditButton.tag] || ![self isMiddleRampType:ramp.rampType])
         {
-            rampOptions = @[@"Cancel", @"Delete", @"Change Ramp Type", @"Change to Left Ramp",
-                            @"Change to Middle Ramp", @"Change to Right Ramp"];
+            [options addObject:@"Change to Left Ramp|3"];
+            [options addObject:@"Change to Middle Ramp|4"];
+            [options addObject:@"Change to Right Ramp|5"];
         }
-        
-        alert = [NVAlertView showLargeAlertViewinView:self.view
-                                             delegate:self
-                                                title:@"Edit Ramp"
-                                      buttonTextArray:rampOptions
-                                     destructiveIndex:2];
     }
+    
+    if (!CRAPI.sharedInstance.controlledInterface)
+        [options addObject:@"DELETE ALL ELEMENTS|6"];
+    
+    [NVAlertView showLargeAlertViewinView:self.view
+                                 delegate:self
+                                    title:title
+                          buttonTextArray:options.copy
+                         destructiveIndex:2];
 }
 
 - (void)alertView:(NVAlertView *)alertView
@@ -1065,6 +1058,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     {
         [self dismissViewControllerAnimated:YES
                                  completion:nil];
+        return;
     }
     
     switch (buttonIndex)
@@ -1241,6 +1235,26 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             
             [self setupButtons];
             break;
+        case 6://delete all elements
+            _currentIntersection.xWalkAExists = NO;
+            _currentIntersection.xWalkBExists = NO;
+            _currentIntersection.xWalkCExists = NO;
+            _currentIntersection.xWalkDExists = NO;
+            _currentIntersection.signal81Exists = NO;
+            _currentIntersection.signal23Exists = NO;
+            _currentIntersection.signal45Exists = NO;
+            _currentIntersection.signal67Exists = NO;
+            
+            for (MPRamp *ramp in _currentIntersection.ramps)
+            {
+                ramp.rampExists = NO;
+                ramp.isComplete = YES;
+                ramp.rampType = 0;
+            }
+            
+            [self setupButtons];
+            break;
+        default:break;
     }
     
     _editItemButton.selected = NO;
