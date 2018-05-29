@@ -76,44 +76,47 @@
                                         numDecimals:(int *)pNumDec;
 {
     FacilityMeasurementType ft = FMTInvalidType;
-    NSString * numDec = textAfter (type,@":");
-    
-    int numDecimals = numDec.integerValue;
+    NSString *numDec = textAfter(type,@":");
+    int numDecimals = numDec.intValue;
     *pNumDec = numDecimals;
     
     type = textBefore(type, @":");
+    
     if ([type isEqualToString:@"YesNo"])
         ft = FMTYesNo;
-    if ([type isEqualToString:@"ImageList"])
+    else if ([type isEqualToString:@"ImageList"])
         ft = FMTImageList;
-    if ([type isEqualToString:@"ChoiceList"])
+    else if ([type isEqualToString:@"ChoiceList"])
         ft = FMTChoiceList;
-    if ([type isEqualToString:@"Slope"])
+    else if ([type isEqualToString:@"Slope"])
         ft = FMTSlope;
-    if ([type isEqualToString:@"SlopesAndLocation"])
+    else if ([type isEqualToString:@"SlopesAndLocation"])
         ft = FMTSlopesAndLocation;
-    if ([type isEqualToString:@"Pounds"])
+    else if ([type isEqualToString:@"Pounds"])
         ft = FMTPounds;
-    if ([type isEqualToString:@"Inches"])
+    else if ([type isEqualToString:@"Inches"])
         ft = FMTInches;
-    if ([type isEqualToString:@"Feet"])
+    else if ([type isEqualToString:@"Feet"])
         ft = FMTFeet;
-    if ([type isEqualToString:@"Text"])
+    else if ([type isEqualToString:@"Text"])
         ft = FMTText;
-    if ([type isEqualToString:@"HeaderOnly"])
+    else if ([type isEqualToString:@"HeaderOnly"])
         ft = FMTHeaderOnly;
-    if ([type isEqualToString:@"FieldCount"])
+    else if ([type isEqualToString:@"FieldCount"])
         ft = FMTFieldCount;
-    if ([type isEqualToString:@"Count"])
+    else if ([type isEqualToString:@"Count"])
         ft = FMTCount;
-    if ([type isEqualToString:@"LocatePoint"])
+    else if ([type isEqualToString:@"LocatePoint"])
         ft = FMTLocatePoint;
-    if ([type isEqualToString:@"LocatePolyline"])
+    else if ([type isEqualToString:@"LocatePolyline"])
         ft = FMTLocatePolyline;
-    if ([type isEqualToString:@"LocatePolygon"])
+    else if ([type isEqualToString:@"LocatePolygon"])
         ft = FMTLocatePolygon;
-    if ([type isEqualToString:@"DoorCloseSeconds"])
+    else if ([type isEqualToString:@"DoorCloseSeconds"])
         ft = FMTDoorCloseSeconds;
+    else if ([type isEqualToString:@"CurbRamp"])
+        ft = FMTCurbRamp;
+    
     return ft;
 }
 - (FacPointSymbols) pointSymbolFromText:(NSString *)type
@@ -122,16 +125,20 @@
     
     if ([type isEqualToString:@"DrinkingFountain"])
         ft = FPSDrinkingFountain;
-    if ([type isEqualToString:@"ToiletRoom"])
+    else if ([type isEqualToString:@"ToiletRoom"])
         ft = FPSToiletRoom;
-    if ([type isEqualToString:@"Elevator"])
+    else if ([type isEqualToString:@"Elevator"])
         ft = FPSElevator;
-    if ([type isEqualToString:@"Entrance"])
+    else if ([type isEqualToString:@"Entrance"])
         ft = FPSEntrance;
-    if ([type isEqualToString:@"Door"])
+    else if ([type isEqualToString:@"Door"])
         ft = FPSDoor;
+    else if ([type isEqualToString:@"Curb Ramp"])
+        ft = FPSCurbRamp;
+    
     if (!ft)
-        showAlert ([NSString stringWithFormat:@"Point symbol %@ not found",type]);
+        showAlert([NSString stringWithFormat:@"Point symbol %@ not found",type]);
+    
     return ft;
 }
 
