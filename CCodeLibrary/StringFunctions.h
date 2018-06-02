@@ -86,6 +86,8 @@ UIColor *UIColorFromInt (unsigned int ival);
 BOOL hasNetwork(void);
 void ShowTheAlert(LPCSTR text);
 void showAlert(NSString *text);
+void ShowTheReference(LPCSTR refID);
+void showReference(NSString *refID);
 void UploadToTheCloud (LPCSTR filePath, BOOL deleteWhenDone);
 void uploadToCloud(NSString *filePath, BOOL deleteWhenDone);
 Bool GetStringArrayElement (int index,LPSTR string,LPSTR seperator,LPSTR OutLoc,int maxOutLocLen);

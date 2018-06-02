@@ -1573,6 +1573,19 @@ void showAlert(NSString *text)
                                afterDelay:0.5];
 }
 
+void ShowTheReference(LPCSTR refID)
+{
+    NSString *txt = [NSString stringWithUTF8String:refID];
+    showReference(txt);
+}
+
+void showReference(NSString *refID)
+{
+    [CRAPI.sharedInstance performSelector:@selector(showReference:)
+                               withObject:refID
+                               afterDelay:0.5];
+}
+
 void UploadToTheCloud (LPCSTR filePath, BOOL deleteWhenDone)
 {
     NSString *txt = [NSString stringWithUTF8String:filePath];

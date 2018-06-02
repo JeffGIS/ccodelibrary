@@ -57,6 +57,9 @@
 		6943041F1C3351E20077EC9F /* NVColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943041E1C3351E20077EC9F /* NVColor.m */; };
 		694304201C336DC00077EC9F /* NVColor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6943041D1C3351E20077EC9F /* NVColor.h */; };
 		694304211C336DCC0077EC9F /* NVColorSet.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 694304141C334E5A0077EC9F /* NVColorSet.h */; };
+		6944D86020C319D000E0B49B /* NVReferenceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6944D85F20C319D000E0B49B /* NVReferenceView.m */; };
+		6944D86320C325ED00E0B49B /* DriverDefinitions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6944D86120C325ED00E0B49B /* DriverDefinitions.m */; };
+		6944D86420C3261800E0B49B /* DriverDefinitions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6944D86220C325ED00E0B49B /* DriverDefinitions.h */; };
 		69450DAD1BD5F6120079F7EC /* NVContactPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 69450DAC1BD5F6120079F7EC /* NVContactPicker.m */; };
 		69450DAE1BD5FA2B0079F7EC /* NVContactPicker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 69450DAB1BD5F6120079F7EC /* NVContactPicker.h */; };
 		6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6948D5D41BC780EE009CA04F /* NVStaticMapView.m */; };
@@ -451,6 +454,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				6944D86420C3261800E0B49B /* DriverDefinitions.h in CopyFiles */,
 				69751B412090F29100F221D6 /* NVPageIndicator.h in CopyFiles */,
 				6912FF11206B65130020F5FE /* DrivewayCrossingVC.h in CopyFiles */,
 				6912FEE7206AB0250020F5FE /* PavementQualityVC.h in CopyFiles */,
@@ -696,6 +700,10 @@
 		694304151C334E5A0077EC9F /* NVColorSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVColorSet.m; sourceTree = "<group>"; };
 		6943041D1C3351E20077EC9F /* NVColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVColor.h; sourceTree = "<group>"; };
 		6943041E1C3351E20077EC9F /* NVColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVColor.m; sourceTree = "<group>"; };
+		6944D85E20C319D000E0B49B /* NVReferenceView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVReferenceView.h; sourceTree = "<group>"; };
+		6944D85F20C319D000E0B49B /* NVReferenceView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NVReferenceView.m; sourceTree = "<group>"; };
+		6944D86120C325ED00E0B49B /* DriverDefinitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DriverDefinitions.m; sourceTree = "<group>"; };
+		6944D86220C325ED00E0B49B /* DriverDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriverDefinitions.h; sourceTree = "<group>"; };
 		69450DAB1BD5F6120079F7EC /* NVContactPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVContactPicker.h; sourceTree = "<group>"; };
 		69450DAC1BD5F6120079F7EC /* NVContactPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVContactPicker.m; sourceTree = "<group>"; };
 		6948D5D31BC780EE009CA04F /* NVStaticMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVStaticMapView.h; sourceTree = "<group>"; };
@@ -1252,6 +1260,8 @@
 		A94A771A19F812940062906E /* Facilities */ = {
 			isa = PBXGroup;
 			children = (
+				6944D86220C325ED00E0B49B /* DriverDefinitions.h */,
+				6944D86120C325ED00E0B49B /* DriverDefinitions.m */,
 				A94A770E19F8045C0062906E /* FacilitiesDatabase.h */,
 				A94A770F19F8045C0062906E /* FacilitiesDatabase.m */,
 				BB8BA0D61F5597250024B8C2 /* FacilitiesStepValue.h */,
@@ -1423,6 +1433,8 @@
 				692F54A11CDB9B1B001600C9 /* NVRampTypePageController.m */,
 				692F54A31CDB9B8B001600C9 /* NVRampTypePageView.h */,
 				692F54A41CDB9B8B001600C9 /* NVRampTypePageView.m */,
+				6944D85E20C319D000E0B49B /* NVReferenceView.h */,
+				6944D85F20C319D000E0B49B /* NVReferenceView.m */,
 				69D9E76C1B7BAD32003058E0 /* NVSecretAlertView.h */,
 				69D9E76D1B7BAD32003058E0 /* NVSecretAlertView.m */,
 				A9A7E3651B75795300DC7F3D /* NVSignalButton.h */,
@@ -1874,10 +1886,12 @@
 				EBC01D0D1BED1C8C0004C751 /* constel.c in Sources */,
 				A97867371A5219FD000A9BB8 /* PriorityLocation.m in Sources */,
 				69F482401DB7DF7600E4BDB5 /* NSIndexPath+NVSpreadsheet.m in Sources */,
+				6944D86020C319D000E0B49B /* NVReferenceView.m in Sources */,
 				697560BE1CB18D5A006EEA14 /* NVMarkerInfoButton.m in Sources */,
 				A94A771319F807570062906E /* Facility.m in Sources */,
 				692F54A21CDB9B1B001600C9 /* NVRampTypePageController.m in Sources */,
 				692EFA521D36A84B007B0D18 /* NVEmailFileList.m in Sources */,
+				6944D86320C325ED00E0B49B /* DriverDefinitions.m in Sources */,
 				694A9B621F4DF24A00B02C28 /* function1.c in Sources */,
 				691B5DD11E52668600C90383 /* NVGetODR.m in Sources */,
 				EBC01D301BED1C8C0004C751 /* ven404.c in Sources */,

@@ -12,6 +12,7 @@
 #import "NVDocumentManager.h"
 #import "ChartsBitmapVC.h"
 #import "HotSpotVideoVC.h"
+#import "NVReferenceView.h"
 
 @implementation TimeRange
 
@@ -1514,6 +1515,19 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                        buttonTextArray:@[@"OK"]
                                       destructiveIndex:0];
     }
+}
+
+- (void)showReference:(NSString *)reference
+{
+    [self performSelectorOnMainThread:@selector(presentReference:)
+                           withObject:reference
+                        waitUntilDone:YES];
+}
+
+- (void)presentReference:(NSString *)reference
+{
+    if (![UIApplication.sharedApplication.keyWindow.subviews containsObject:_alert])
+        [NVReferenceView showReference:reference inView:UIApplication.sharedApplication.keyWindow];
 }
 
 - (void)documentManagerDidCompleteWithMessage:(NSString *)message

@@ -261,6 +261,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (nullable AreaText *) areaTextForRefno:(int) refno;
 - (void) showMapToolbarIndicator:(BOOL)show;
 - (void)showAlert:(nonnull NSString *)text;
+- (void)showReference:(nonnull NSString *)reference;
 - (void)uploadToCloud;
 - (void)displayChartBitmaps:(nonnull NSTimer *)timer;
 - (void)displayHotSpotVideo:(nonnull NSTimer *)timer;
