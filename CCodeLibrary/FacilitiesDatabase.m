@@ -808,7 +808,8 @@ Exit:
     NSString * message = @"";
     NSString * stepDefID = [FacilitiesDatabase getStepDefForStep:stepID];
     message = [FacilityStepDefinition getFailMessage:stepDefID];
-
+    [FacilitiesDatabase setVariablesForStep:stepID];
+    message = ExpandString(message);
     return message;
 }
 + (Bool) setNumPhotosForStep:(NSString *)stepID to:(int) num

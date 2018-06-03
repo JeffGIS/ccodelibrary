@@ -240,7 +240,7 @@
     Bool rtn = FALSE;
     BOOL opened = [self open];
     
-    NSString *query = [NSString stringWithFormat:@"SELECT Title,Prompt,Header,Type,PhotoRequired,Reference,Link,Test,Variables,Command,ChoiceList,MinValue,MaxValue,Symbol,HighlightDef FROM STEPDEF WHERE SectionID = '%@'",stepID];
+    NSString *query = [NSString stringWithFormat:@"SELECT Title,Prompt,Header,Type,PhotoRequired,Reference,Link,Test,Variables,Command,ChoiceList,MinValue,MaxValue,Symbol,HighlightDef, FailMessage FROM STEPDEF WHERE SectionID = '%@'",stepID];
     
     sqlite3_stmt *statement = NULL;
     _sectionID = stepID;
@@ -282,6 +282,8 @@
                                andText:[[NSString stringWithUTF8String:value] stringByReplacingOccurrencesOfString:@"[%ID]" withString:stepID]];
         value = (LPSTR)sqlite3_column_text(statement, i++);
         _highlights = [NSString stringWithUTF8String:value];
+        value = (LPSTR)sqlite3_column_text(statement, i++);
+        _failMessage = [NSString stringWithUTF8String:value];
     }
     
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);

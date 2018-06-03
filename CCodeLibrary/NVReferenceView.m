@@ -21,6 +21,7 @@
     
     CGFloat margin = 20.0;
     NVReferenceView *nvrv = NVReferenceView.new;
+    nvrv.references = [reference componentsSeparatedByString:@";"];
     nvrv.translatesAutoresizingMaskIntoConstraints = NO;
     nvrv.backgroundColor = UserDefaults.defaults.appleBlue;
     [view addSubview:nvrv];
@@ -41,15 +42,39 @@
                      action:@selector(returnButtonTapped)
            forControlEvents:UIControlEventTouchUpInside];
     
-    UIView *containerView = UIView.new;
-    containerView.frame = CGRectMake(20.0, 148.0, 728.0, 728.0);
-    containerView.backgroundColor = UIColor.clearColor;
-    [nvrv addSubview:containerView];
-    
+    if (nvrv.references.count > 1)
+    {
+        UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        nextButton.translatesAutoresizingMaskIntoConstraints = NO;
+        nextButton.backgroundColor = UIColor.clearColor;
+        [nextButton setTitle:@"> Next" forState:UIControlStateNormal];
+        [nextButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+        [nextButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+        nextButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
+        [nvrv addSubview:nextButton];
+        [nextButton constrainLeadingToAnchor:nvrv.leadingAnchor constant:margin];
+        [nextButton constrainBottomToAnchor:nvrv.bottomAnchor constant:-margin * 0.5];
+        
+        [nextButton addTarget:nvrv
+                         action:@selector(nextButtonTapped)
+               forControlEvents:UIControlEventTouchUpInside];
+    }
+
+    nvrv.containerView = UIView.new;
+    nvrv.containerView.frame = CGRectMake(20.0, 148.0, 728.0, 728.0);
+    nvrv.containerView.backgroundColor = UIColor.clearColor;
+    [nvrv addSubview:nvrv.containerView];
+    nvrv.currentReferenceIndex = 0;
+    [nvrv showCurrentReference];
+}
+
+- (void) showCurrentReference
+{
     DriverDefinitions *dd = DriverDefinitions.new;
     PDFPARM parms = {0};
     DPOINT ul = {0}, lr = {0};
     
+    NSString * reference = _references[_currentReferenceIndex];
     if ([dd getPDFParamters:reference
                        parm:&parms
                 defaultType:@"ITEM"])
@@ -65,16 +90,16 @@
                                                        page:parms.PAGE
                                                   upperLeft:ul lowerRight:lr];
         
-        [NVWebView showPDFDrawing:drawing
+        _nvwv = [NVWebView showPDFDrawing:drawing
                      fromDocument:NVPDFDocumentMNAccessbility
-                           inView:containerView
+                           inView:_containerView
                    withHighlights:@""
                       enableSwipe:NO];
     }
     
     else
     {
-        [nvrv removeFromSuperview];
+        [self removeFromSuperview];
         showAlert([NSString stringWithFormat:@"Reference with ID '%@' does not exist.", reference]);
     }
 }
@@ -82,6 +107,15 @@
 - (void)returnButtonTapped
 {
     [self removeFromSuperview];
+}
+
+- (void)nextButtonTapped
+{
+     _currentReferenceIndex++;
+    if (_currentReferenceIndex >= _references.count)
+        _currentReferenceIndex = 0;
+    [_nvwv removeFromSuperview];
+    [self showCurrentReference];
 }
 
 @end
