@@ -134,6 +134,8 @@ Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCS
 + (NSString *) getStepDefForStep:(NSString *)stepID;
 + (void) doProcessCommand:(NSString *)stepValueID;
 + (NSString *) removeLastStep:(NSString *)stepID;
++ (NSString *) getFailMessage:(NSString *)stepID
+                        value:(NSString *)value;
 
 
 @end

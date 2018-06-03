@@ -22,6 +22,7 @@
 @property NSString * fieldIndex;
 @property NSArray * choiceList;
 @property NSString * highlights;
+@property NSString * failMessage;
 @property double minValue, maxValue;
 @property int numDecimals;
 
@@ -41,5 +42,6 @@
 + (NSString *) getStepPrompt:(NSString *)stepID;
 + (NSString *) getStepTitle:(NSString *)stepID;
 + (NSString *) getStepHighlights:(NSString *)stepID;
++ (NSString *) getFailMessage:(NSString *)stepID;
 
 @end

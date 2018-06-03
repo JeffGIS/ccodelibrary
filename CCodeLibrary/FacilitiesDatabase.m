@@ -802,7 +802,15 @@ Exit:
     
     return rtn;
 }
++ (NSString *) getFailMessage:(NSString *)stepID
+                        value:(NSString *)value
+{
+    NSString * message = @"";
+    NSString * stepDefID = [FacilitiesDatabase getStepDefForStep:stepID];
+    message = [FacilityStepDefinition getFailMessage:stepDefID];
 
+    return message;
+}
 + (Bool) setNumPhotosForStep:(NSString *)stepID to:(int) num
 {
     Bool rtn = FALSE;

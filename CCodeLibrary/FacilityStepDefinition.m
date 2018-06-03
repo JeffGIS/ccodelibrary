@@ -314,6 +314,19 @@
     [fsd close:opened];
     return rtn;
 }
++ (NSString *) getFailMessage:(NSString *)stepID
+{
+    NSString * rtn = @"";
+    FacilityStepDefinition *fsd = FacilityStepDefinition.new;
+    Bool opened = [fsd open];
+    if ([fsd getStepDefinition:stepID])
+    {
+        rtn = fsd.failMessage;
+    }
+    [fsd close:opened];
+    return rtn;
+}
+
 + (NSString *) getStepHeader:(NSString *)stepID
 {
     NSString * rtn = @"";
