@@ -2221,7 +2221,11 @@ void ComputeAZMsFromRotation (LPSTR pRot,LPSTR intAZMs)
         intRec.status = AddedInDetail;
         intRec.assignedToDetail = CRAPI.sharedInstance.currentiPadWithinManager;
     }
-    
+    else if (CRAPI.sharedInstance.currentModule == FAC_DETAIL_MODULE)
+    {
+        intRec.status = AddedInFacilities;
+        intRec.assignedToDetail = CRAPI.sharedInstance.currentiPadWithinManager;
+    }
     else
     {
         intRec.status = InitialStatus;

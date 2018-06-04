@@ -116,7 +116,8 @@
         ft = FMTDoorCloseSeconds;
     else if ([type isEqualToString:@"CurbRamp"])
         ft = FMTCurbRamp;
-    
+    else if ([type isEqualToString:@"CreateCurbRamp"])
+        ft = FMTCreateCurbRamp;
     return ft;
 }
 - (FacPointSymbols) pointSymbolFromText:(NSString *)type

@@ -292,6 +292,7 @@ typedef NS_ENUM(NSInteger, PointSymbols)
     Star2Sym,
     CircleSym,
     ArsonSym,
+    CurbRampSym,
     PointSymbolCount
 };
 
@@ -343,6 +344,7 @@ typedef NS_ENUM(NSInteger, FacilityMeasurementType)
     FMTPriorHeader,
     FMTSlopesAndLocation,
     FMTCurbRamp,
+    FMTCreateCurbRamp,
 };
 
 typedef NS_ENUM(NSInteger, FacPointSymbols)

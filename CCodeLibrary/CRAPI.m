@@ -333,60 +333,47 @@
     NSString *uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, _currentGeoidValue];
     return uploadDirectory;
 }
-
+- (NSString *) boundsForFacilityImage:(NSString *)image
+{
+    NSString *path = [NSBundle.mainBundle pathForResource:@"imageBounds" ofType:@"txt"];
+    NSString * bounds = @"";
+    NSString * file = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    NSArray * lines = [file componentsSeparatedByString:@"\r\n"];
+    for (NSString * line in lines)
+    {
+        NSArray * fields = [line componentsSeparatedByString:@"\t"];
+        NSString * imageName = fields[0];
+        if ([imageName isEqualToString:image])
+        {
+            bounds = fields[1];
+            break;
+        }
+    }
+    return bounds;
+}
 - (Facility *)facilityInit
 {
-    self.currentGeoid = 22;
+    self.currentGeoid = 608100;//22;
     Facility *currentFacility = Facility.new;
     currentFacility.facID = 1;
+    NSArray * names = [NSArray arrayWithObjects:@"City Hall Site",@"Parking Lot 1",@"Parking Lot 2",@"Parking Lot 3",@"Parking Lot 4",@"City Hall",@"Police", nil];
     currentFacility.name = @"Eagan City Hall";
     currentFacility.imagePaths = NSMutableArray.array;
     currentFacility.imageTypes = NSMutableArray.array;
     currentFacility.imageDescriptions = NSMutableArray.array;
+    currentFacility.cbounds = NSMutableArray.array;
     
-    NSString *path = [NSBundle.mainBundle pathForResource:@"City Hall Site" ofType:@"png"];
-    path = [path stringByDeletingPathExtension];
-    [currentFacility.imagePaths addObject:path];
-    [currentFacility.imageTypes addObject:@"png"];
-    [currentFacility.imageDescriptions addObject:@"City Hall Site"];
-    
-    path = [NSBundle.mainBundle pathForResource:@"Parking Lot 1" ofType:@"png"];
-    path = [path stringByDeletingPathExtension];
-    [currentFacility.imagePaths addObject:path];
-    [currentFacility.imageTypes addObject:@"png"];
-    [currentFacility.imageDescriptions addObject:@"Parking Lot 1"];
-    
-    path = [NSBundle.mainBundle pathForResource:@"Parking Lot 2" ofType:@"png"];
-    path = [path stringByDeletingPathExtension];
-    [currentFacility.imagePaths addObject:path];
-    [currentFacility.imageTypes addObject:@"png"];
-    [currentFacility.imageDescriptions addObject:@"Parking Lot 2"];
-    
-    path = [NSBundle.mainBundle pathForResource:@"Parking Lot 3" ofType:@"png"];
-    path = [path stringByDeletingPathExtension];
-    [currentFacility.imagePaths addObject:path];
-    [currentFacility.imageTypes addObject:@"png"];
-    [currentFacility.imageDescriptions addObject:@"Parking Lot 3"];
-    
-    path = [NSBundle.mainBundle pathForResource:@"Parking Lot 4" ofType:@"png"];
-    path = [path stringByDeletingPathExtension];
-    [currentFacility.imagePaths addObject:path];
-    [currentFacility.imageTypes addObject:@"png"];
-    [currentFacility.imageDescriptions addObject:@"Parking Lot 4"];
-    
-    path = [NSBundle.mainBundle pathForResource:@"City Hall" ofType:@"png"];
-    path = [path stringByDeletingPathExtension];
-    [currentFacility.imagePaths addObject:path];
-    [currentFacility.imageTypes addObject:@"png"];
-    [currentFacility.imageDescriptions addObject:@"City Hall Building"];
-    
-    path = [NSBundle.mainBundle pathForResource:@"Police" ofType:@"png"];
-    path = [path stringByDeletingPathExtension];
-    [currentFacility.imagePaths addObject:path];
-    [currentFacility.imageTypes addObject:@"png"];
-    [currentFacility.imageDescriptions addObject:@"Police Building"];
-    
-    path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A03" ofType:@"jpg"];
+    for (NSString *name in names)
+    {
+        NSString *path = [NSBundle.mainBundle pathForResource:name ofType:@"png"];
+        path = [path stringByDeletingPathExtension];
+        [currentFacility.imagePaths addObject:path];
+        [currentFacility.imageTypes addObject:@"png"];
+        [currentFacility.imageDescriptions addObject:name];
+        NSString * bounds = [self boundsForFacilityImage:name];
+        [currentFacility.cbounds addObject:bounds];
+    }
+    NSString * path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A03" ofType:@"jpg"];
     path = [path stringByDeletingPathExtension];
     [currentFacility.imagePaths addObject:path];
     [currentFacility.imageTypes addObject:@"jpg"];

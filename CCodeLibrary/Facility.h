@@ -11,6 +11,7 @@
 @property NSMutableArray * imagePaths;
 @property NSMutableArray * imageTypes;
 @property NSMutableArray * imageDescriptions;
+@property NSMutableArray * cbounds;
 
 @property (nonatomic, copy) NSString *name;
 

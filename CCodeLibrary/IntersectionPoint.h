@@ -13,6 +13,7 @@ typedef NS_ENUM(NSInteger, IntersectionStatus)
     IntersectionRebuilt,
     ResurveyedAfterRebuild,
     AddedInDetail,
+    AddedInFacilities,
 };
 
 
