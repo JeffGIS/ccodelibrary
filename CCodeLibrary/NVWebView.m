@@ -693,6 +693,40 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
     return nil;
 }
 
+- (CORNERPOINTS)cornerPoints
+{
+    CORNERPOINTS points = {0};
+    MNMXCORD coords = {0};
+    DPOINT dPoint = {0};
+    CGPoint offset = _scrollView.contentOffset;
+    CGSize size = _scrollView.contentSize;
+    
+    coords.xmn = (offset.x / size.width);
+    coords.ymn = (offset.y / size.height);
+    offset.x += self.frame.size.width;
+    offset.y += self.frame.size.height;
+    coords.xmx = (offset.x / size.width);
+    coords.ymx = (offset.y / size.height);
+    
+    dPoint.x = (coords.xmn);
+    dPoint.y = (coords.ymn);
+    points.farLeft = dPoint;
+    
+    dPoint.x = (coords.xmn);
+    dPoint.y = (coords.ymx);
+    points.nearLeft = dPoint;
+    
+    dPoint.x = (coords.xmx);
+    dPoint.y = (coords.ymn);
+    points.farRight = dPoint;
+    
+    dPoint.x = (coords.xmx);
+    dPoint.y = (coords.ymx);
+    points.nearRight = dPoint;
+    
+    return points;
+}
+
 - (void)webViewWasTapped:(UITapGestureRecognizer *)gesture
 {
     CGPoint point = [gesture locationInView:_scrollView];
