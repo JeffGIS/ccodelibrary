@@ -83,6 +83,7 @@ wasTappedAtPoint:(DPOINT)point
 - (void)maskPolygon;
 - (void)showNextAndPrevious;
 - (void)updateImageViewToImageAtPath:(NSString *)path;
+- (CORNERPOINTS)cornerPoints;
 
 - (void)drawShapeWithPoint:(DPoint *)point
                       type:(PointSymbols)type;
