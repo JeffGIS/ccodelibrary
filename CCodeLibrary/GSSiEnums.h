@@ -354,7 +354,7 @@ typedef NS_ENUM(NSInteger, FacPointSymbols)
     FPSElevator=TriangleSym,
     FPSEntrance=SquareSym,
     FPSDoor=Star1Sym,
-    FPSCurbRamp=CircleSym,
+    FPSCurbRamp=CurbRampSym,
 };
 
 typedef NS_ENUM(NSInteger, FacPolylineSymbols)

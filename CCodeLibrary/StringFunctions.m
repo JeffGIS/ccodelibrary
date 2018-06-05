@@ -1345,6 +1345,17 @@ LLPOINT LLPOINTFromString (NSString* string)
     return pt;
 }
 
+MNMXCORD atobounds(LPCSTR Value, LPBool pErr)
+{
+    MNMXCORD rtn = { 0 };
+    NSArray <NSString *>* coords = [[NSString stringWithUTF8String:Value] componentsSeparatedByString:@" "];
+    rtn.xmn = coords[0].doubleValue;
+    rtn.ymn = coords[1].doubleValue;
+    rtn.xmx = coords[2].doubleValue;
+    rtn.ymx = coords[3].doubleValue;
+    return rtn;
+}
+
 NSString * stringToBlob(NSString* str)
 {
     if (!str)

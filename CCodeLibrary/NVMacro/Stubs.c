@@ -1247,14 +1247,7 @@ MNMXCORD3D atobounds3D(LPSTR Value, LPBool pErr)
 	return rtn;
 }
 
-MNMXCORD atobounds(LPSTR Value, LPBool pErr)
-{
-	MNMXCORD rtn = { 0 };
-	return rtn;
-}
-
-
-Bool atob(LPSTR Value)
+Bool atob(LPCSTR Value)
 {
     Bool rtn = FALSE;
     if (strlen (Value) > 1)
