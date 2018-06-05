@@ -952,7 +952,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     {
         for (int i = 0; i < _symbols.count; i++)
         {
-            UIBezierPath *path = [self pathFromPoints:_symbolPoints[i]];
+            UIBezierPath *path = [self pathFromPoints:_symbolPoints[i] closePath:NO];
             _symbols[i].path = path.CGPath;
         }
     }
@@ -961,7 +961,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     {
         for (int i = 0; i < _polylines.count; i++)
         {
-            UIBezierPath *path = [self pathFromPoints:_polylinePoints[i]];
+            UIBezierPath *path = [self pathFromPoints:_polylinePoints[i] closePath:NO];
             _polylines[i].path = path.CGPath;
         }
     }
@@ -970,7 +970,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     {
         for (int i = 0; i < _polygons.count; i++)
         {
-            UIBezierPath *path = [self pathFromPoints:_polygonPoints[i]];
+            UIBezierPath *path = [self pathFromPoints:_polygonPoints[i] closePath:YES];
             _polygons[i].path = path.CGPath;
         }
     }
@@ -1296,14 +1296,15 @@ double roundTo1000th(double value)
 }
 
 - (UIBezierPath *)pathFromPoints:(NSArray<DPoint *> *)points
+                       closePath:(BOOL)closePath
 {
     UIBezierPath *path = UIBezierPath.bezierPath;
     CGFloat pageHeight = self.pageHeight;
     DPoint *firstPoint = points[0];
-    CGPoint point = CGPointZero;
-    point.x = (firstPoint.x * _scrollView.contentSize.width);
-    point.y = (firstPoint.y * pageHeight);
-    [path moveToPoint:point];
+    CGPoint point1 = CGPointZero;
+    point1.x = (firstPoint.x * _scrollView.contentSize.width);
+    point1.y = (firstPoint.y * pageHeight);
+    [path moveToPoint:point1];
     
     for (int i = 1; i < points.count; i++)
     {
@@ -1313,6 +1314,9 @@ double roundTo1000th(double value)
         point.y = (currentPoint.y * pageHeight);
         [path addLineToPoint:point];
     }
+    
+    if (closePath)
+        [path addLineToPoint:point1];
     
     return path;
 }
@@ -1334,7 +1338,7 @@ double roundTo1000th(double value)
     }
     
     NSArray<DPoint *> *points = symbolPoints.copy;
-    UIBezierPath *path = [self pathFromPoints:points];
+    UIBezierPath *path = [self pathFromPoints:points closePath:NO];
     CAShapeLayer *shape = CAShapeLayer.layer;
     shape.fillColor = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.5].CGColor;
     shape.position = CGPointZero;
@@ -1350,7 +1354,7 @@ double roundTo1000th(double value)
                           type:(PolylineSymbols)type
 {
     CGFloat lineWidth = 0.0;
-    UIBezierPath *path = [self pathFromPoints:points];
+    UIBezierPath *path = [self pathFromPoints:points closePath:NO];
     CAShapeLayer *polyline = CAShapeLayer.layer;
     polyline.position = CGPointZero;
     polyline.path = path.CGPath;
@@ -1365,13 +1369,13 @@ double roundTo1000th(double value)
 - (void)drawPolygonWithPoints:(NSArray<DPoint *> *)points
                          type:(PolygonSymbols)type
 {
-    UIBezierPath *path = [self pathFromPoints:points];
+    UIBezierPath *path = [self pathFromPoints:points closePath:YES];
     CAShapeLayer *polygon = CAShapeLayer.layer;
     polygon.position = CGPointZero;
     polygon.path = path.CGPath;
-    polygon.strokeColor = [UIColor colorWithWhite:0.0 alpha:0.5].CGColor;
-    polygon.lineWidth = 1.0;
-    polygon.fillColor = [SymbolDictionary polygonSymbolFillColor:type].CGColor;
+    polygon.strokeColor = UIColor.yellowColor.CGColor;
+    polygon.lineWidth = 4.0;
+    polygon.fillColor = UIColor.clearColor.CGColor;
     [_scrollView.layer addSublayer:polygon];
     [_polygonPoints addObject:points];
     [_polygons addObject:polygon];
