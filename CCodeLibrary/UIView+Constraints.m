@@ -271,4 +271,15 @@
     return nil;
 }
 
+- (UIImage *)imageOfFrame:(CGRect)frame
+{
+    UIGraphicsBeginImageContextWithOptions(frame.size, YES, 0.0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(context, -frame.origin.x, -frame.origin.y);
+    [self.layer renderInContext:context];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 @end

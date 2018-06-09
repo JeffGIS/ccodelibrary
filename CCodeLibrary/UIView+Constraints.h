@@ -73,4 +73,6 @@
 - (void)constrainCenterYToAnchor:(NSLayoutYAxisAnchor *)anchor
                         constant:(CGFloat)constant;
 
+- (UIImage *)imageOfFrame:(CGRect)frame;
+
 @end
