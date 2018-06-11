@@ -74,5 +74,8 @@
                         constant:(CGFloat)constant;
 
 - (UIImage *)imageOfFrame:(CGRect)frame;
+- (UIImageView *)imageViewOfFrame:(CGRect)frame;
+- (UIImageView *)invertedImageViewOfFrame:(CGRect)frame;
+- (void)invertColorsInsideFrame:(CGRect)frame;
 
 @end

@@ -282,4 +282,29 @@
     return image;
 }
 
+- (UIImageView *)imageViewOfFrame:(CGRect)frame
+{
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
+    imageView.image = [self imageOfFrame:frame];
+    return imageView;
+}
+
+- (UIImageView *)invertedImageViewOfFrame:(CGRect)frame
+{
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
+    CIImage *input = [[CIImage alloc] initWithImage:[self imageOfFrame:frame]];
+    CIFilter *filter = [CIFilter filterWithName:@"CIColorInvert"];
+    [filter setDefaults];
+    [filter setValue:input forKey:@"inputImage"];
+    CIImage *output = [filter valueForKey:@"outputImage"];
+    UIImage *image = [[UIImage alloc] initWithCIImage:output];
+    imageView.image = image;
+    return imageView;
+}
+
+- (void)invertColorsInsideFrame:(CGRect)frame
+{
+    [self addSubview:[self invertedImageViewOfFrame:frame]];
+}
+
 @end
