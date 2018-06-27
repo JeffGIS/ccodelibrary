@@ -25,6 +25,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 @property (nonatomic, copy) NSString *unit, *origUnit, *formatString;
 @property CGFloat buttonHeight;
 @property int origNumDecimals;
+@property BOOL titleAdded;
 
 @end
 
@@ -588,6 +589,9 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
             link:(BOOL)link
          comment:(BOOL)comment
 {
+    if (_titleAdded)
+        return;
+    
     CGFloat fontSize = 24.0;
     CGFloat margin = 20.0;
     _usedTopSpace = margin;
@@ -661,6 +665,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         }
         
         _usedTopSpace += (_buttonHeight + margin);
+        _titleAdded = YES;
     }
 }
 
