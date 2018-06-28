@@ -704,7 +704,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         _origNumDecimals = numDecimals;
     
     _numDecimals = numDecimals;
-    _formatString = [NSString stringWithFormat:@"%%.%df", numDecimals];
+    _formatString = [NSString stringWithFormat:@"%%.%df", MAX(0, numDecimals)];
     [self updateTicLabelText];
     [self sliderValueChanged];
 }
@@ -828,38 +828,30 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     if (_origNumDecimals == -1)
         _origNumDecimals = _numDecimals;
     
-    if ([unit.uppercaseString isEqualToString:@"FEET"])
+    if ([unit isEqualToString:@"FEET"])
     {
         _unit = @"Inches";
         
         if ([origUnit isEqualToString:@"FEET"])
-        {
             _unitFactor = 12.0;
-            self.numDecimals++;
-        }
         
         else if ([origUnit isEqualToString:@"INCHES"])
-        {
             _unitFactor = 1.0;
-            self.numDecimals--;
-        }
+        
+        self.numDecimals--;
     }
     
-    else if ([unit.uppercaseString isEqualToString:@"INCHES"])
+    else if ([unit isEqualToString:@"INCHES"])
     {
         _unit = @"Feet";
         
         if ([origUnit isEqualToString:@"INCHES"])
-        {
             _unitFactor = (1.0 / 12.0);
-            self.numDecimals++;
-        }
         
         else if ([origUnit isEqualToString:@"FEET"])
-        {
             _unitFactor = 1.0;
-            self.numDecimals--;
-        }
+        
+        self.numDecimals++;
     }
     
     [self sliderValueChanged];
