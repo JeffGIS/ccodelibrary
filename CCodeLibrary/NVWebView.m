@@ -883,7 +883,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     _overlay.translatesAutoresizingMaskIntoConstraints = NO;
     _overlay.backgroundColor = UIColor.clearColor;
     [self.superview addSubview:_overlay];
-    [_overlay constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    [_overlay constrainToView:self.superview leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     if (_enableSwipe)
     {
@@ -936,7 +936,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         [_scrollView constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     if (_overlay)
-        [_overlay constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+        [_overlay constrainToView:self.superview leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
@@ -1042,7 +1042,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 {
     UIView *ellipse = NVEllipseView.new;
     ellipse.frame = [self frameForUpperLeft:upperLeft lowerRight:lowerRight];
-    [_overlay addSubview:ellipse];
+    [self addSubview:ellipse];
 }
 
 - (BOOL)addViewToFrameWithUpperLeft:(DPOINT)upperLeft
