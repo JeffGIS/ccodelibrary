@@ -63,6 +63,11 @@ CREATE TABLE OFFENSEXY (id INT PRIMARY KEY,'ControlNbr' INT,'OffenseOrder' INT,'
     
     return self;
 }
++ (NSString *) crimeDataPath
+{
+    CrimeData *cd = CrimeData.new;
+    return cd.path;
+}
 
 - (void)dealloc
 {

@@ -31,6 +31,8 @@
 @property int serversLastUpdate;
 @property Bool autoUpdate;
 
++ (NSString *) crimeDataPath;
+
 - (Bool)open;
 - (void)close:(Bool)opened;
 - (Bool)clear;
