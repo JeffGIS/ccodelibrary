@@ -63,6 +63,7 @@
 @property (nonatomic) UIScrollView *scrollView;
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic, copy) NSString *highlights;
+@property (nonatomic) UIView *overlay;
 
 @end
 
@@ -424,11 +425,11 @@
     {
         [UIView animateWithDuration:0.25
                          animations:^{
-                             [self.superview viewWithTag:777].alpha = 0.0;
+                             _overlay.alpha = 0.0;
                              self.alpha = 0.0;
                              _tabBar.alpha = 1.0;
                          } completion:^(BOOL finished) {
-                             [[self.superview viewWithTag:777] removeFromSuperview];
+                             [_overlay removeFromSuperview];
                              [self removeFromSuperview];
                              _tabBar.userInteractionEnabled = YES;
                          }];
@@ -436,7 +437,7 @@
     
     else
     {
-        [[self.superview viewWithTag:777] removeFromSuperview];
+        [_overlay removeFromSuperview];
         [self removeFromSuperview];
         _tabBar.userInteractionEnabled = YES;
     }
@@ -583,7 +584,8 @@
     if (_highlights && _highlights.length)
     {
         NSArray *highlightArray = [_highlights componentsSeparatedByString:@";"];
-        for (NSString * highlights in highlightArray)
+        
+        for (NSString *highlights in highlightArray)
         {
             NSArray *highlightList = [highlights componentsSeparatedByString:@" "];
             NSString *shapeID = highlightList[0];
@@ -876,12 +878,12 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 - (void)disableUserInteraction
 {
-    UIView *overlay = UIView.new;
-    overlay.tag = 777;
-    overlay.translatesAutoresizingMaskIntoConstraints = NO;
-    overlay.backgroundColor = UIColor.clearColor;
-    [self.superview addSubview:overlay];
-    [overlay constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    _overlay = UIView.new;
+    _overlay.tag = 777;
+    _overlay.translatesAutoresizingMaskIntoConstraints = NO;
+    _overlay.backgroundColor = UIColor.clearColor;
+    [self.superview addSubview:_overlay];
+    [_overlay constrainToView:self.superview leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     if (_enableSwipe)
     {
@@ -890,20 +892,20 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         
         leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
         
-        [overlay addGestureRecognizer:leftSwipe];
+        [_overlay addGestureRecognizer:leftSwipe];
         
         UISwipeGestureRecognizer *rightSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self
                                                                                          action:@selector(webViewRightSwiped:)];
         
         rightSwipe.direction = UISwipeGestureRecognizerDirectionRight;
         
-        [overlay addGestureRecognizer:rightSwipe];
+        [_overlay addGestureRecognizer:rightSwipe];
     }
 }
 
 - (void)enableUserInteraction
 {
-    [[self.superview viewWithTag:777] removeFromSuperview];
+    [_overlay removeFromSuperview];
 }
 
 - (void)disableZoomScroll
@@ -933,8 +935,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     else
         [_scrollView constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
-    if ([self.superview viewWithTag:777])
-        [[self.superview viewWithTag:777] constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    if (_overlay)
+        [_overlay constrainToView:self.superview leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
@@ -1032,7 +1034,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     button.tag = identifierTag;
     button.backgroundColor = UIColor.clearColor;
     [button addTarget:self action:@selector(windowTouchedDown:) forControlEvents:UIControlEventTouchDown];
-    [[self.superview viewWithTag:777] addSubview:button];
+    [_overlay addSubview:button];
 }
 
 - (void)addEllipseToFrameWithUpperLeft:(DPOINT)upperLeft
@@ -1040,7 +1042,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 {
     UIView *ellipse = NVEllipseView.new;
     ellipse.frame = [self frameForUpperLeft:upperLeft lowerRight:lowerRight];
-    [[self.superview viewWithTag:777] addSubview:ellipse];
+    [self addSubview:ellipse];
 }
 
 - (BOOL)addViewToFrameWithUpperLeft:(DPOINT)upperLeft
@@ -1078,7 +1080,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     
     UIView *ellipse = NVEllipseView.new;
     ellipse.frame = [self frameForUpperLeft:upperLeft lowerRight:lowerRight];
-    [[self.superview viewWithTag:777] addSubview:ellipse];
+    [_overlay addSubview:ellipse];
     
     _frameUL = upperLeft;
     _frameLR = lowerRight;
