@@ -4,6 +4,23 @@
 #import <Foundation/Foundation.h>
 #import "SQLiteLib.h"
 #import "MathUtil.h"
+#import "RampStruct.h"
+
+@interface NVSidewalkPoint : NSObject
+
+@property int lastUpdate, condition, houseNum, fromIntersection;
+@property uint pointID;
+@property double slopeFront, slopeSide, slopeHeading, crackWidth, width, levelChange;
+@property double flare1Slope, flare2Slope;
+@property enum obstructions obstruction;
+@property SPType type;
+@property DCType driveCrossType;
+@property SdwkMaterial material;
+@property (nonatomic, copy) NSString *note, *street;
+@property CLLocationCoordinate2D location;
+
+@end
+
 
 @interface CurbRampData : NSObject
 @property sqlite3nv *database;
@@ -88,5 +105,17 @@
 
 - (BOOL)setLastDataUpdateNum:(int)lastNum
                      foriPad:(int)iPad;
+
+- (int)createNewSdwkPointAtLocation:(CLLocationCoordinate2D)location
+                          withHouse:(NSString *)house
+                          andStreet:(NSString *)street;
+- (BOOL)deleteSdwkPoint:(NSInteger)refno;
+- (void)updateSdwkPoint:(NVSidewalkPoint *)sdwkPoint;
+- (NVSidewalkPoint *)getSdwkPointForRefno:(uint)refno;
+- (BOOL)moveSdwkPoint:(NSInteger)refno
+           toLocation:(CLLocationCoordinate2D)location
+            withHouse:(NSString *)house
+            andStreet:(NSString *)street;
+
 
 @end

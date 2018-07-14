@@ -913,7 +913,7 @@ static int COUNT=100;
         
         int count = 0;
         CLLocationDegrees lat = 0.0, lon = 0.0;
-        int numCoords = min(5, (int)(_locations.count - 1));
+        int numCoords = min(5, (int)(_locations.count));
         
         for (int i = (int)(_locations.count - numCoords); i < _locations.count; i++)
         {

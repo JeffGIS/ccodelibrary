@@ -221,6 +221,11 @@
     _uploadDirectory = [NSString stringWithFormat:@"PedRampSurvey/%i/%i", _currentManageriPad, _currentGeoidValue];
 }
 
+- (void)setCurrentIntersection:(int)currentIntersection
+{
+    _currentIntersection = currentIntersection;
+}
+
 - (void)setCurrentGeoid:(int)geoid
 {
     if (geoid != _currentGeoidValue)

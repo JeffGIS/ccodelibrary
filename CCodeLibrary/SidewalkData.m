@@ -1,6 +1,6 @@
 //  SidewalkData.m
 //  CCodeLibrary
-
+/*
 #import "SidewalkData.h"
 #import "UserDefaults.h"
 #import "SQLiteLib.h"
@@ -53,7 +53,7 @@
         _sendToServer = YES;
         BOOL opened = self.open;
         
-        NSString *cmd = @"CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), latitude REAL, longitude REAL, slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, type INT, deleted INT); CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
+        NSString *cmd = @"CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), latitude REAL, longitude REAL, fromIntersection INT,slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, type INT, deleted INT); CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
         
         [self executeCmd:(char *)cmd.UTF8String
             sendToServer:_sendToServer
@@ -176,7 +176,7 @@
         
         if (!fileSize)
         {
-            NSString *versions = [NSString stringWithFormat:@"/*ApVer %@ DBVer %s Time %i*/",
+            NSString *versions = [NSString stringWithFormat:@"",
                                   UIApplication.appVersionBuild, CURRENT_SIDEWALK_VERSION,
                                   (int)NSDate.timeIntervalSinceReferenceDate];
             
@@ -514,7 +514,7 @@
     
     SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     
-    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, house_num, street, latitude, longitude, deleted) VALUES (%ld,%ld,'%@',%f,%f,0);", (long)refno, (long)iHouse, street, location.latitude, location.longitude];
+    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, fromIntersection, house_num, street, latitude, longitude, deleted) VALUES (%ld,%d,%ld,'%@',%f,%f,0);", (long)refno, CRAPI.sharedInstance.currentIntersection, (long)iHouse, street, location.latitude, location.longitude];
     
     [self executeCmd:(LPSTR)cmd.UTF8String
         sendToServer:YES
@@ -798,3 +798,4 @@
 }
 
 @end
+*/

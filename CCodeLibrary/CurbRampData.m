@@ -17,6 +17,23 @@
 
 static int fileSequence = 0;
 
+@implementation  NVSidewalkPoint
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _note = @"";
+        _street = @"";
+    }
+    
+    return self;
+}
+
+@end
+
 @implementation CurbRampData
 
 static int nInit=0;
@@ -133,11 +150,31 @@ static int nInit=0;
                                                                    error:nil].fileSize;
         
         if (_fileSize)
+        {
+            [self createSidewalkTables];
             [self adjustToLatestVersion];
+        }
         rtn = TRUE;
     }
     return rtn;
 }
+
+- (BOOL) createSidewalkTables
+{
+    BOOL rtn = TRUE;
+    if (CRAPI.sharedInstance.canUseSdwk)
+    {
+        if (!doesSQLiteTableExist("SidewalkPoints",_database))
+        {
+            NSString *cmd = @"DROP TABLE IF EXISTS SidewalkPoints;DROP TABLE IF EXISTS SidewalkPoints_index;CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), latitude REAL, longitude REAL, fromIntersection INT,slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, type INT, deleted INT); CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
+            rtn = [self executeCmd:(char *)cmd.UTF8String
+                      sendToServer:YES
+                              from:1662];
+        }
+    }
+    return rtn;
+}
+
 - (BOOL)createNextUpdateTable
 {
     BOOL rtn = TRUE;
@@ -1100,6 +1137,164 @@ void convertVersion_2_to_3 (LPSTR str)
         free (deviceValsC);
     }
     return rtn;
+}
+- (int)createNewSdwkPointAtLocation:(CLLocationCoordinate2D)location
+                          withHouse:(NSString *)house
+                          andStreet:(NSString *)street
+{
+    BOOL rtn = NO;
+    NSInteger refno = 0;
+    NSInteger iHouse = house.integerValue;
+    BOOL opened = [self open];
+    NSString *query = [NSString stringWithFormat:@"SELECT max(id) FROM SidewalkPoints"];
+    sqlite3_stmt *statement = NULL;
+    
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(self.database, query.UTF8String, -1, &statement, 0), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        refno = sqlite3_column_int(statement, 0);
+        refno = [CRAPI.sharedInstance adjustNextRefno:refno];
+    }
+    
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
+    
+    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, fromIntersection, house_num, street, latitude, longitude, deleted) VALUES (%ld,%d,%ld,'%@',%f,%f,0);", (long)refno, CRAPI.sharedInstance.currentIntersection, (long)iHouse, street, location.latitude, location.longitude];
+    
+    [self executeCmd:(LPSTR)cmd.UTF8String
+        sendToServer:YES
+            fromFile:__FILE__ fromLine:__LINE__];
+    
+    cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints_index VALUES (%ld,%f,%f,%f,%f)",
+           (long)refno, location.longitude, location.longitude, location.latitude, location.latitude];
+    
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                  fromFile:__FILE__ fromLine:__LINE__];
+    
+    [self close:opened];
+    CRAPI.sharedInstance.currentSidewalkPointID = refno;
+    return (int)refno;
+}
+
+- (BOOL)deleteSdwkPoint:(NSInteger)refno
+{
+    int iTime = NSDate.timeIntervalSinceReferenceDate;
+    BOOL rtn = NO;
+    BOOL opened = [self open];
+    
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET deleted=1, last_update=%i WHERE id=%ld", iTime, (long)refno];
+    
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                  fromFile:__FILE__ fromLine:__LINE__];
+    
+    [self close:opened];
+    return rtn;
+}
+
+- (BOOL)moveSdwkPoint:(NSInteger)refno
+           toLocation:(CLLocationCoordinate2D)location
+            withHouse:(NSString *)house
+            andStreet:(NSString *)street
+{
+    BOOL rtn = NO;
+    NSInteger iHouse = house.integerValue;
+    BOOL opened = [self open];
+    
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET house_num=%ld, street='%@', latitude=%f, longitude=%f WHERE id=%ld", (long)iHouse, street, location.latitude, location.longitude, (long)refno];
+    
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                  fromFile:__FILE__ fromLine:__LINE__];
+    
+    if (rtn)
+    {
+        cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints_index SET minY=%f, minX=%f, maxY=%f, maxX=%f WHERE SidewalkPoints_index.id=%ld", location.latitude, location.longitude, location.latitude, location.longitude, (long)refno];
+        
+        rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+                  sendToServer:YES
+                      fromFile:__FILE__ fromLine:__LINE__];
+    }
+    
+    [self close:opened];
+    CRAPI.sharedInstance.currentSidewalkPointID = refno;
+
+    return rtn;
+}
+
+- (void)updateSdwkPoint:(NVSidewalkPoint *)sdwkPoint
+{
+    BOOL opened = [self open];
+    
+    sdwkPoint.lastUpdate = NSDate.date.timeIntervalSinceReferenceDate;
+
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET note='%@',fromIntersection=%i, slope_front=%f, slope_side=%f, slope_heading=%f, crack_width=%f, width=%f, level_change=%f, last_update=%i, condition=%d, obstruction=%d, type=%ld WHERE id=%u", sdwkPoint.note, sdwkPoint.fromIntersection, sdwkPoint.slopeFront, sdwkPoint.slopeSide, sdwkPoint.slopeHeading, sdwkPoint.crackWidth, sdwkPoint.width, sdwkPoint.levelChange,sdwkPoint.lastUpdate, sdwkPoint.condition, sdwkPoint.obstruction, (long)sdwkPoint.type, sdwkPoint.pointID];
+    
+    [self executeCmd:(LPSTR)cmd.UTF8String
+        sendToServer:YES
+            fromFile:__FILE__ fromLine:__LINE__];
+    CRAPI.sharedInstance.currentSidewalkPointID = sdwkPoint.pointID;
+
+    [self close:opened];
+}
+
+- (NVSidewalkPoint *)getSdwkPointForRefno:(uint)refno
+{
+    BOOL opened = [self open];
+    sqlite3_stmt *statement = NULL;
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM SidewalkPoints WHERE id=%u;", refno];
+    NVSidewalkPoint *sdwkPoint = NVSidewalkPoint.new;
+    int iCol = 1;
+    
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        LPSTR note = (LPSTR)sqlite3_column_text(statement, iCol++);
+        LPSTR street = (LPSTR)sqlite3_column_text(statement, iCol++);
+        double latitude = sqlite3_column_double(statement, iCol++);
+        double longitude = sqlite3_column_double(statement, iCol++);
+        int fromIntersection = sqlite3_column_int(statement, iCol++);
+        double slopeFront = sqlite3_column_double(statement, iCol++);
+        double slopeSide = sqlite3_column_double(statement, iCol++);
+        double slopeHeading = sqlite3_column_double(statement, iCol++);
+        double crackWidth = sqlite3_column_double(statement, iCol++);
+        double width = sqlite3_column_double(statement, iCol++);
+        double levelChange = sqlite3_column_double(statement, iCol++);
+        int lastUpdate = sqlite3_column_int(statement, iCol++);
+        int condition = sqlite3_column_int(statement, iCol++);
+        int obstruction = sqlite3_column_int(statement, iCol++);
+        int houseNum = sqlite3_column_int(statement, iCol++);
+        int type = sqlite3_column_int(statement, iCol);
+        sdwkPoint.pointID = refno;
+        
+        if (note)
+            sdwkPoint.note = [NSString stringWithUTF8String:note];
+        
+        if (street)
+            sdwkPoint.street = [NSString stringWithUTF8String:street];
+        
+        sdwkPoint.location = CLLocationCoordinate2DMake(latitude, longitude);
+        sdwkPoint.fromIntersection = fromIntersection;
+        sdwkPoint.slopeFront = slopeFront;
+        sdwkPoint.slopeSide = slopeSide;
+        sdwkPoint.slopeHeading = slopeHeading;
+        sdwkPoint.crackWidth = crackWidth;
+        sdwkPoint.width = width;
+        sdwkPoint.levelChange = levelChange;
+        sdwkPoint.lastUpdate = lastUpdate;
+        sdwkPoint.condition = condition;
+        sdwkPoint.obstruction = obstruction;
+        sdwkPoint.houseNum = houseNum;
+        sdwkPoint.type = type;
+    }
+    
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
+    [self close:opened];
+    CRAPI.sharedInstance.currentSidewalkPointID = refno;
+    
+    return sdwkPoint;
 }
 
 @end
