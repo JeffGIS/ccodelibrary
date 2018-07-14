@@ -6,9 +6,6 @@
 @import AVFoundation;
 #import "CRAPI.h"
 
-#define HORIZONTAL 1
-#define VERTICAL 2
-
 #define STEADY_MULTIPLIER 0.02
 #define COUNT_MULTIPLIER 100
 #define ORIENTATION_MULTIPLER 0.1
@@ -20,7 +17,7 @@
 @property double maxX, minX, maxY, minY, maxZ, minZ, sumX, sumY, sumZ;
 @property id aTarget;
 @property SEL aSelector;
-@property int orientation, counter, count;
+@property int counter, count;
 @property (nonatomic) CMMotionManager *motionManager;
 
 @end
@@ -123,7 +120,9 @@
         double angleX = acos(accelX / denom);
         double angleY = acos(accelY / denom);
         double angleZ = acos(accelZ / denom);
-        
+        angleX = min (angleX,fabs (M_PI - angleX));
+        angleY = min (angleY,fabs (M_PI - angleY));
+        //angleZ = min (angleZ,fabs (M_PI - angleZ));
         switch (_orientation)
         {
             //horizontal: x=90°, y=90°, z=180°

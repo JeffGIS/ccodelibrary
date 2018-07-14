@@ -3,6 +3,9 @@
 
 @import Foundation;
 
+#define HORIZONTAL 1
+#define VERTICAL 2
+
 @class WaitForStillness;
 
 @protocol WaitForStillnessTarget <NSObject>
@@ -15,6 +18,7 @@
 
 @interface WaitForStillness : NSObject
 
+@property int orientation;
 /**
             PARAMETER UNITS
             steadyFactor: +/- 0.02 g forces
