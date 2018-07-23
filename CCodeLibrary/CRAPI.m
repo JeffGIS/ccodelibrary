@@ -1671,8 +1671,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                     selector:@selector(play)
                                                     userInfo:nil
                                                      repeats:YES];
-        
-        NSLog(@"Beep Timer Started");
     }
 }
 
@@ -1686,8 +1684,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             [_beepTimer invalidate];
         
         _beepTimer = nil;
-        
-        NSLog(@"Beep Timer Canceled");
     }
 }
 
