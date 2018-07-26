@@ -130,7 +130,7 @@
     [_id6SC constrainWidthToAnchor:_id5SC.widthAnchor];
     [_id6SC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
     
-    items = @[@"-.500", @"-.250", @"-.100", @"-.025", @"+.025", @"+.100", @"+.250", @"+.500"];
+    items = @[@"-2500", @"-500", @"-100", @"-25", @"+25", @"+100", @"+500", @"+2500"];
     
     UILabel *ulxLabel = UILabel.new;
     [self setupLabel:ulxLabel];
@@ -204,11 +204,11 @@
     label.backgroundColor = UIColor.clearColor;
     label.textColor = UIColor.whiteColor;
     label.textAlignment = NSTextAlignmentCenter;
-    label.font = [UIFont systemFontOfSize:24.0];
+    label.font = [UIFont systemFontOfSize:20.0];
     [self.view addSubview:label];
     [label constrainLeadingToAnchor:self.view.leadingAnchor];
     [label constrainHeightToConstant:40.0];
-    [label constrainWidthToConstant:70.0];
+    [label constrainWidthToConstant:60.0];
 }
 
 - (void)setupSC:(UISegmentedControl *)sc
@@ -220,7 +220,7 @@
     sc.layer.borderWidth = 2.0;
     sc.layer.borderColor = UIColor.whiteColor.CGColor;
     
-    [sc setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:28.0]
+    [sc setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:26.0]
                                                            forKey:NSFontAttributeName]
                       forState:UIControlStateNormal];
     
@@ -266,6 +266,7 @@
             case 7:
                 diff = 25;
                 break;
+            default:break;
         }
         
         _page += diff;
@@ -275,29 +276,30 @@
     else switch (sc.selectedSegmentIndex)
     {
         case 0:
-            diff = -0.5;
-            break;
-        case 1:
             diff = -0.25;
             break;
+        case 1:
+            diff = -0.05;
+            break;
         case 2:
-            diff = -0.1;
+            diff = -0.01;
             break;
         case 3:
-            diff = -0.025;
+            diff = -0.0025;
             break;
         case 4:
-            diff = 0.025;
+            diff = 0.0025;
             break;
         case 5:
-            diff = 0.1;
+            diff = 0.01;
             break;
         case 6:
-            diff = 0.25;
+            diff = 0.05;
             break;
         case 7:
-            diff = 0.5;
+            diff = 0.25;
             break;
+        default:break;
     }
     
     if (sc == _ulxSC)
