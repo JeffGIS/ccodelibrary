@@ -13,7 +13,8 @@
 @property NVPDFDocument document;
 @property (nonatomic) NVPDFDrawing *drawing;
 @property (nonatomic) NVWebView *webView;
-@property (nonatomic) UISegmentedControl *pageSC, *ulxSC, *ulySC, *lrxSC, *lrySC;
+@property (nonatomic) UISegmentedControl *sectSC, *pageSC, *ulxSC, *ulySC, *lrxSC, *lrySC;
+@property (nonatomic) UISegmentedControl *id1SC, *id2SC, *id3SC, *id4SC, *id5SC, *id6SC;
 
 @end
 
@@ -24,7 +25,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = UserDefaults.defaults.appleBlue;
-    CGFloat margin = 20.0;
+    CGFloat margin = 10.0;
     
     UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     returnButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -71,18 +72,76 @@
     [self setupSC:_pageSC];
     [_pageSC constrainTopToAnchor:pageLabel.topAnchor];
     [_pageSC constrainLeadingToAnchor:pageLabel.trailingAnchor];
+    [_pageSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
+    
+    items = @[@"-100", @"-10", @"-5", @"-1", @"+1", @"+5", @"+10", @"+100"];
+    
+    UILabel *sectLabel = UILabel.new;
+    [self setupLabel:sectLabel];
+    sectLabel.text = @"SECT";
+    [sectLabel constrainTopToAnchor:pageLabel.bottomAnchor constant:margin];
+    
+    _sectSC = [[UISegmentedControl alloc] initWithItems:items];
+    [self setupSC:_sectSC];
+    [_sectSC constrainTopToAnchor:sectLabel.topAnchor];
+    [_sectSC constrainLeadingToAnchor:sectLabel.trailingAnchor];
+    [_sectSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
+    
+    items = @[@"-1", @"+1"];
+    
+    UILabel *idLabel = UILabel.new;
+    [self setupLabel:idLabel];
+    idLabel.text = @"ID";
+    [idLabel constrainTopToAnchor:sectLabel.bottomAnchor constant:margin];
+    
+    _id1SC = [[UISegmentedControl alloc] initWithItems:items];
+    [self setupSC:_id1SC];
+    [_id1SC constrainTopToAnchor:idLabel.topAnchor];
+    [_id1SC constrainLeadingToAnchor:idLabel.trailingAnchor];
+    
+    _id2SC = [[UISegmentedControl alloc] initWithItems:items];
+    [self setupSC:_id2SC];
+    [_id2SC constrainTopToAnchor:idLabel.topAnchor];
+    [_id2SC constrainLeadingToAnchor:_id1SC.trailingAnchor constant:margin];
+    [_id2SC constrainWidthToAnchor:_id1SC.widthAnchor];
+    
+    _id3SC = [[UISegmentedControl alloc] initWithItems:items];
+    [self setupSC:_id3SC];
+    [_id3SC constrainTopToAnchor:idLabel.topAnchor];
+    [_id3SC constrainLeadingToAnchor:_id2SC.trailingAnchor constant:margin];
+    [_id3SC constrainWidthToAnchor:_id2SC.widthAnchor];
+    
+    _id4SC = [[UISegmentedControl alloc] initWithItems:items];
+    [self setupSC:_id4SC];
+    [_id4SC constrainTopToAnchor:idLabel.topAnchor];
+    [_id4SC constrainLeadingToAnchor:_id3SC.trailingAnchor constant:margin];
+    [_id4SC constrainWidthToAnchor:_id3SC.widthAnchor];
+    
+    _id5SC = [[UISegmentedControl alloc] initWithItems:items];
+    [self setupSC:_id5SC];
+    [_id5SC constrainTopToAnchor:idLabel.topAnchor];
+    [_id5SC constrainLeadingToAnchor:_id4SC.trailingAnchor constant:margin];
+    [_id5SC constrainWidthToAnchor:_id4SC.widthAnchor];
+    
+    _id6SC = [[UISegmentedControl alloc] initWithItems:items];
+    [self setupSC:_id6SC];
+    [_id6SC constrainTopToAnchor:idLabel.topAnchor];
+    [_id6SC constrainLeadingToAnchor:_id5SC.trailingAnchor constant:margin];
+    [_id6SC constrainWidthToAnchor:_id5SC.widthAnchor];
+    [_id6SC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
     
     items = @[@"-.500", @"-.250", @"-.100", @"-.025", @"+.025", @"+.100", @"+.250", @"+.500"];
     
     UILabel *ulxLabel = UILabel.new;
     [self setupLabel:ulxLabel];
     ulxLabel.text = @"ULX";
-    [ulxLabel constrainTopToAnchor:pageLabel.bottomAnchor constant:margin];
+    [ulxLabel constrainTopToAnchor:idLabel.bottomAnchor constant:margin];
     
     _ulxSC = [[UISegmentedControl alloc] initWithItems:items];
     [self setupSC:_ulxSC];
     [_ulxSC constrainTopToAnchor:ulxLabel.topAnchor];
     [_ulxSC constrainLeadingToAnchor:ulxLabel.trailingAnchor];
+    [_ulxSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
     
     UILabel *ulyLabel = UILabel.new;
     [self setupLabel:ulyLabel];
@@ -93,6 +152,7 @@
     [self setupSC:_ulySC];
     [_ulySC constrainTopToAnchor:ulyLabel.topAnchor];
     [_ulySC constrainLeadingToAnchor:ulyLabel.trailingAnchor];
+    [_ulySC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
     
     UILabel *lrxLabel = UILabel.new;
     [self setupLabel:lrxLabel];
@@ -103,6 +163,7 @@
     [self setupSC:_lrxSC];
     [_lrxSC constrainTopToAnchor:lrxLabel.topAnchor];
     [_lrxSC constrainLeadingToAnchor:lrxLabel.trailingAnchor];
+    [_lrxSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
     
     UILabel *lryLabel = UILabel.new;
     [self setupLabel:lryLabel];
@@ -113,6 +174,7 @@
     [self setupSC:_lrySC];
     [_lrySC constrainTopToAnchor:lryLabel.topAnchor];
     [_lrySC constrainLeadingToAnchor:lryLabel.trailingAnchor];
+    [_lrySC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -163,7 +225,6 @@
                       forState:UIControlStateNormal];
     
     [self.view addSubview:sc];
-    [sc constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
     [sc constrainHeightToConstant:40.0];
     [sc addTarget:self action:@selector(scTapped:) forControlEvents:UIControlEventValueChanged];
 }
