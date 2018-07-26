@@ -13,7 +13,7 @@
 @property NVPDFDocument document;
 @property (nonatomic) NVPDFDrawing *drawing;
 @property (nonatomic) NVWebView *webView;
-@property (nonatomic) UISegmentedControl *ulxSC, *ulySC, *lrxSC, *lrySC;
+@property (nonatomic) UISegmentedControl *pageSC, *ulxSC, *ulySC, *lrxSC, *lrySC;
 
 @end
 
@@ -60,12 +60,24 @@
     _drawing = [NVPDFDrawing drawingWithID:@"" name:@"" type:@""
                                       page:_page upperLeft:_ul lowerRight:_lr];
     
-    NSArray *items = @[@"-.500", @"-.250", @"-.100", @"-.025", @"+.025", @"+.100", @"+.250", @"+.500"];
+    NSArray *items = @[@"-25", @"-10", @"-5", @"-1", @"+1", @"+5", @"+10", @"+25"];
+    
+    UILabel *pageLabel = UILabel.new;
+    [self setupLabel:pageLabel];
+    pageLabel.text = @"PAGE";
+    [pageLabel constrainTopToAnchor:returnButton.bottomAnchor constant:margin];
+    
+    _pageSC = [[UISegmentedControl alloc] initWithItems:items];
+    [self setupSC:_pageSC];
+    [_pageSC constrainTopToAnchor:pageLabel.topAnchor];
+    [_pageSC constrainLeadingToAnchor:pageLabel.trailingAnchor];
+    
+    items = @[@"-.500", @"-.250", @"-.100", @"-.025", @"+.025", @"+.100", @"+.250", @"+.500"];
     
     UILabel *ulxLabel = UILabel.new;
     [self setupLabel:ulxLabel];
     ulxLabel.text = @"ULX";
-    [ulxLabel constrainTopToAnchor:returnButton.bottomAnchor constant:margin];
+    [ulxLabel constrainTopToAnchor:pageLabel.bottomAnchor constant:margin];
     
     _ulxSC = [[UISegmentedControl alloc] initWithItems:items];
     [self setupSC:_ulxSC];
@@ -165,7 +177,41 @@
 {
     float diff = 0.0;
     
-    switch (sc.selectedSegmentIndex)
+    if (sc == _pageSC)
+    {
+        switch (sc.selectedSegmentIndex)
+        {
+            case 0:
+                diff = -25;
+                break;
+            case 1:
+                diff = -10;
+                break;
+            case 2:
+                diff = -5;
+                break;
+            case 3:
+                diff = -1;
+                break;
+            case 4:
+                diff = 1;
+                break;
+            case 5:
+                diff = 5;
+                break;
+            case 6:
+                diff = 10;
+                break;
+            case 7:
+                diff = 25;
+                break;
+        }
+        
+        _page += diff;
+        _drawing.page = _page;
+    }
+    
+    else switch (sc.selectedSegmentIndex)
     {
         case 0:
             diff = -0.5;
@@ -217,7 +263,7 @@
         _drawing.lowerRight = _lr;
     }
     
-    else //sc==lrySC
+    else if (sc == _lrySC)
     {
         _lr.y += diff;
         _lr.y = MAX(_lr.y, _ul.y);
