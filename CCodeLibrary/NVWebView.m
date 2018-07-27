@@ -51,7 +51,7 @@
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIActivityIndicatorView *indicator;
 @property CGPoint zoomPoint, origPoint;
-@property int numPages, zoomPage, origPage, markerPage;
+@property int zoomPage, origPage, markerPage;
 @property BOOL isFile, navigationComplete, zoomToPDFDrawing, enableSwipe;
 @property (nonatomic) NVPDFDrawing *drawing;
 @property (nonatomic) NVWebViewMarker *marker;

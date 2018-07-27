@@ -7,7 +7,8 @@
 
 @interface NVPDFDefCreatorVC ()
 
-@property int page;
+@property int page, section, id1, id2, id3, id4, id5, id6;
+@property (nonatomic, copy) NSString *drawingID;
 @property DPOINT ul, lr;
 @property (nonatomic) UIView *containerView;
 @property NVPDFDocument document;
@@ -15,6 +16,7 @@
 @property (nonatomic) NVWebView *webView;
 @property (nonatomic) UISegmentedControl *sectSC, *pageSC, *ulxSC, *ulySC, *lrxSC, *lrySC;
 @property (nonatomic) UISegmentedControl *id1SC, *id2SC, *id3SC, *id4SC, *id5SC, *id6SC;
+@property (nonatomic) UILabel *pageSectIDLabel, *drawingDefLabel;
 
 @end
 
@@ -33,7 +35,7 @@
     [returnButton setTitle:@"< Return" forState:UIControlStateNormal];
     [returnButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
-    returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:40.0];
+    returnButton.titleLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:48.0];
     [self.view addSubview:returnButton];
     [returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
     [returnButton constrainTopToAnchor:self.view.topAnchor];
@@ -44,7 +46,7 @@
     
     _document = NVPDFDocumentFederalADA;
     _page = 1;
-    _ul.x = _ul.y = 0.1;
+    _ul.x = _ul.y = 0.0;
     _lr.x = _lr.y = 1.0;
     
     _containerView = UIView.new;
@@ -72,7 +74,7 @@
     [self setupSC:_pageSC];
     [_pageSC constrainTopToAnchor:pageLabel.topAnchor];
     [_pageSC constrainLeadingToAnchor:pageLabel.trailingAnchor];
-    [_pageSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
+    [_pageSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
     
     items = @[@"-100", @"-10", @"-5", @"-1", @"+1", @"+5", @"+10", @"+100"];
     
@@ -85,9 +87,9 @@
     [self setupSC:_sectSC];
     [_sectSC constrainTopToAnchor:sectLabel.topAnchor];
     [_sectSC constrainLeadingToAnchor:sectLabel.trailingAnchor];
-    [_sectSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
+    [_sectSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
     
-    items = @[@"-1", @"+1"];
+    items = @[@"-", @"+"];
     
     UILabel *idLabel = UILabel.new;
     [self setupLabel:idLabel];
@@ -130,7 +132,7 @@
     [_id6SC constrainWidthToAnchor:_id5SC.widthAnchor];
     [_id6SC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
     
-    items = @[@"-2500", @"-500", @"-100", @"-25", @"+25", @"+100", @"+500", @"+2500"];
+    items = @[@"-.25", @"-.05", @"-.01", @"-.0025", @"+.0025", @"+.01", @"+.05", @"+.25"];
     
     UILabel *ulxLabel = UILabel.new;
     [self setupLabel:ulxLabel];
@@ -141,7 +143,7 @@
     [self setupSC:_ulxSC];
     [_ulxSC constrainTopToAnchor:ulxLabel.topAnchor];
     [_ulxSC constrainLeadingToAnchor:ulxLabel.trailingAnchor];
-    [_ulxSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
+    [_ulxSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
     
     UILabel *ulyLabel = UILabel.new;
     [self setupLabel:ulyLabel];
@@ -152,7 +154,7 @@
     [self setupSC:_ulySC];
     [_ulySC constrainTopToAnchor:ulyLabel.topAnchor];
     [_ulySC constrainLeadingToAnchor:ulyLabel.trailingAnchor];
-    [_ulySC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
+    [_ulySC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
     
     UILabel *lrxLabel = UILabel.new;
     [self setupLabel:lrxLabel];
@@ -163,7 +165,7 @@
     [self setupSC:_lrxSC];
     [_lrxSC constrainTopToAnchor:lrxLabel.topAnchor];
     [_lrxSC constrainLeadingToAnchor:lrxLabel.trailingAnchor];
-    [_lrxSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
+    [_lrxSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
     
     UILabel *lryLabel = UILabel.new;
     [self setupLabel:lryLabel];
@@ -174,7 +176,31 @@
     [self setupSC:_lrySC];
     [_lrySC constrainTopToAnchor:lryLabel.topAnchor];
     [_lrySC constrainLeadingToAnchor:lryLabel.trailingAnchor];
-    [_lrySC constrainTrailingToAnchor:self.view.trailingAnchor constant:-10.0];
+    [_lrySC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    
+    _pageSectIDLabel = UILabel.new;
+    _pageSectIDLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    _pageSectIDLabel.backgroundColor = UIColor.clearColor;
+    _pageSectIDLabel.textColor = UIColor.whiteColor;
+    _pageSectIDLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:28.0];
+    [self.view addSubview:_pageSectIDLabel];
+    [_pageSectIDLabel constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
+    [_pageSectIDLabel constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_pageSectIDLabel constrainTopToAnchor:lryLabel.bottomAnchor constant:margin];
+    [self updatePageSectIDLabel];
+    
+    _drawingDefLabel = UILabel.new;
+    _drawingDefLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    _drawingDefLabel.backgroundColor = UIColor.clearColor;
+    _drawingDefLabel.textColor = UIColor.whiteColor;
+    _drawingDefLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:28.0];
+    [self.view addSubview:_drawingDefLabel];
+    [_drawingDefLabel constrainLeadingToAnchor:_pageSectIDLabel.leadingAnchor];
+    [_drawingDefLabel constrainTrailingToAnchor:_pageSectIDLabel.trailingAnchor];
+    [_drawingDefLabel constrainTopToAnchor:_pageSectIDLabel.bottomAnchor];
+    [_drawingDefLabel constrainBottomToAnchor:_containerView.topAnchor constant:-margin];
+    [_drawingDefLabel constrainHeightToAnchor:_pageSectIDLabel.heightAnchor];
+    [self updateDrawingDefLabel];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -204,7 +230,7 @@
     label.backgroundColor = UIColor.clearColor;
     label.textColor = UIColor.whiteColor;
     label.textAlignment = NSTextAlignmentCenter;
-    label.font = [UIFont systemFontOfSize:20.0];
+    label.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:22.0];
     [self.view addSubview:label];
     [label constrainLeadingToAnchor:self.view.leadingAnchor];
     [label constrainHeightToConstant:40.0];
@@ -220,7 +246,7 @@
     sc.layer.borderWidth = 2.0;
     sc.layer.borderColor = UIColor.whiteColor.CGColor;
     
-    [sc setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIFont systemFontOfSize:26.0]
+    [sc setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIFont fontWithName:@"CourierNewPSMT" size:22.0]
                                                            forKey:NSFontAttributeName]
                       forState:UIControlStateNormal];
     
@@ -238,12 +264,15 @@
 {
     float diff = 0.0;
     
-    if (sc == _pageSC)
+    if (sc == _pageSC || sc == _sectSC)
     {
         switch (sc.selectedSegmentIndex)
         {
             case 0:
-                diff = -25;
+                if (sc == _pageSC)
+                    diff = -25;
+                else
+                    diff = -100;
                 break;
             case 1:
                 diff = -10;
@@ -264,76 +293,154 @@
                 diff = 10;
                 break;
             case 7:
-                diff = 25;
+                if (sc == _pageSC)
+                    diff = 25;
+                else
+                    diff = 100;
                 break;
             default:break;
         }
         
-        _page += diff;
-        _drawing.page = _page;
+        if (sc == _pageSC)
+        {
+            _page += diff;
+            _page = MAX(_page, 1);
+            _page = MIN(_page, _webView.numPages);
+            _drawing.page = _page;
+            [self updateWebview];
+        }
+        
+        else
+        {
+            _section += diff;
+            _section = MAX(_section, 0);
+        }
+        
+        [self updatePageSectIDLabel];
     }
     
-    else switch (sc.selectedSegmentIndex)
+    else if (sc.numberOfSegments == 2)
     {
-        case 0:
-            diff = -0.25;
-            break;
-        case 1:
-            diff = -0.05;
-            break;
-        case 2:
-            diff = -0.01;
-            break;
-        case 3:
-            diff = -0.0025;
-            break;
-        case 4:
-            diff = 0.0025;
-            break;
-        case 5:
-            diff = 0.01;
-            break;
-        case 6:
-            diff = 0.05;
-            break;
-        case 7:
-            diff = 0.25;
-            break;
-        default:break;
+        switch (sc.selectedSegmentIndex)
+        {
+            case 0:
+                diff = -1;
+                break;
+            case 1:
+                diff = 1;
+                break;
+            default:break;
+        }
+        
+        if (sc == _id1SC)
+        {
+            _id1 += diff;
+            _id1 = MAX(_id1, 0);
+        }
+        
+        else if (sc == _id2SC)
+        {
+            _id2 += diff;
+            _id2 = MAX(_id2, 0);
+        }
+        
+        else if (sc == _id3SC)
+        {
+            _id3 += diff;
+            _id3 = MAX(_id3, 0);
+        }
+        
+        else if (sc == _id4SC)
+        {
+            _id4 += diff;
+            _id4 = MAX(_id4, 0);
+        }
+        
+        else if (sc == _id5SC)
+        {
+            _id5 += diff;
+            _id5 = MAX(_id5, 0);
+        }
+        
+        else if (sc == _id6SC)
+        {
+            _id6 += diff;
+            _id6 = MAX(_id6, 0);
+        }
+        
+        [self updatePageSectIDLabel];
     }
     
-    if (sc == _ulxSC)
+    else
     {
-        _ul.x += diff;
-        _ul.x = MAX(_ul.x, 0.0);
-        _ul.x = MIN(_ul.x, _lr.x);
-        _drawing.upperLeft = _ul;
+        switch (sc.selectedSegmentIndex)
+        {
+            case 0:
+                diff = -0.25;
+                break;
+            case 1:
+                diff = -0.05;
+                break;
+            case 2:
+                diff = -0.01;
+                break;
+            case 3:
+                diff = -0.0025;
+                break;
+            case 4:
+                diff = 0.0025;
+                break;
+            case 5:
+                diff = 0.01;
+                break;
+            case 6:
+                diff = 0.05;
+                break;
+            case 7:
+                diff = 0.25;
+                break;
+            default:break;
+        }
+        
+        if (sc == _ulxSC)
+        {
+            _ul.x += diff;
+            _ul.x = MAX(_ul.x, 0.0);
+            _ul.x = MIN(_ul.x, _lr.x);
+            _drawing.upperLeft = _ul;
+        }
+        
+        else if (sc == _ulySC)
+        {
+            _ul.y += diff;
+            _ul.y = MAX(_ul.y, 0.0);
+            _ul.y = MIN(_ul.y, _lr.y);
+            _drawing.upperLeft = _ul;
+        }
+        
+        else if (sc == _lrxSC)
+        {
+            _lr.x += diff;
+            _lr.x = MAX(_lr.x, _ul.x);
+            _lr.x = MIN(_lr.x, 1.0);
+            _drawing.lowerRight = _lr;
+        }
+        
+        else if (sc == _lrySC)
+        {
+            _lr.y += diff;
+            _lr.y = MAX(_lr.y, _ul.y);
+            _lr.y = MIN(_lr.y, 1.0);
+            _drawing.lowerRight = _lr;
+        }
+        
+        [self updateWebview];
+        [self updateDrawingDefLabel];
     }
-    
-    else if (sc == _ulySC)
-    {
-        _ul.y += diff;
-        _ul.y = MAX(_ul.y, 0.0);
-        _ul.y = MIN(_ul.y, _lr.y);
-        _drawing.upperLeft = _ul;
-    }
-    
-    else if (sc == _lrxSC)
-    {
-        _lr.x += diff;
-        _lr.x = MAX(_lr.x, _ul.x);
-        _lr.x = MIN(_lr.x, 1.0);
-        _drawing.lowerRight = _lr;
-    }
-    
-    else if (sc == _lrySC)
-    {
-        _lr.y += diff;
-        _lr.y = MAX(_lr.y, _ul.y);
-        _lr.y = MIN(_lr.y, 1.0);
-        _drawing.lowerRight = _lr;
-    }
-    
+}
+
+- (void)updateWebview
+{
     [_webView removeFromSuperview];
     
     _webView = [NVWebView showPDFDrawing:_drawing
@@ -341,6 +448,26 @@
                                   inView:_containerView
                           withHighlights:@""
                              enableSwipe:NO];
+}
+
+- (void)updatePageSectIDLabel
+{
+    _drawingID = [NSString stringWithFormat:@"%d.%d.%d.%d.%d.%d.%d",
+                  _section, _id1, _id2, _id3, _id4, _id5, _id6];
+    
+    NSString *text = [NSString stringWithFormat:@"PAGE:%d,ID:%@",
+                      _page, _drawingID];
+    
+    while ([[text substringFromIndex:(text.length - 2)] isEqualToString:@".0"])
+        text = [text substringToIndex:(text.length - 2)];
+    
+    _pageSectIDLabel.text = text;
+}
+
+- (void)updateDrawingDefLabel
+{
+    _drawingDefLabel.text = [NSString stringWithFormat:@"ULX:%.4f,ULY:%.4f,LRX:%.4f,LRY:%.4f",
+                             _ul.x, _ul.y, _lr.x, _lr.y];
 }
 
 @end
