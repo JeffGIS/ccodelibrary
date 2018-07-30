@@ -7,14 +7,15 @@
 
 @interface NVPDFDefCreatorVC ()
 
-@property int page, section, id1, id2, id3, id4, id5, id6;
-@property (nonatomic, copy) NSString *drawingID;
+@property int page, section, id1, id2, id3, id4, id5, id6, maxPage;
+@property (nonatomic, copy) NSString *drawingID, *type;
+@property (nonatomic, copy) NSArray *typesArray;
 @property DPOINT ul, lr;
 @property (nonatomic) UIView *containerView;
 @property NVPDFDocument document;
 @property (nonatomic) NVPDFDrawing *drawing;
 @property (nonatomic) NVWebView *webView;
-@property (nonatomic) UISegmentedControl *sectSC, *pageSC, *ulxSC, *ulySC, *lrxSC, *lrySC;
+@property (nonatomic) UISegmentedControl *typeSC, *sectSC, *pageSC, *ulxSC, *ulySC, *lrxSC, *lrySC;
 @property (nonatomic) UISegmentedControl *id1SC, *id2SC, *id3SC, *id4SC, *id5SC, *id6SC;
 @property (nonatomic) UILabel *pageSectIDLabel, *drawingDefLabel;
 
@@ -28,6 +29,8 @@
     
     self.view.backgroundColor = UserDefaults.defaults.appleBlue;
     CGFloat margin = 10.0;
+    _drawingID = _type = @"NONE";
+    _typesArray = @[@"SECTION", @"TABLE", @"FIGURE", @"ITEM"];
     
     UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     returnButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -35,7 +38,7 @@
     [returnButton setTitle:@"< Return" forState:UIControlStateNormal];
     [returnButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
     [returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
-    returnButton.titleLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:48.0];
+    returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:32.0];
     [self.view addSubview:returnButton];
     [returnButton constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
     [returnButton constrainTopToAnchor:self.view.topAnchor];
@@ -45,6 +48,7 @@
            forControlEvents:UIControlEventTouchUpInside];
     
     _document = NVPDFDocumentFederalADA;
+    _maxPage = 279;
     _page = 1;
     _ul.x = _ul.y = 0.0;
     _lr.x = _lr.y = 1.0;
@@ -63,37 +67,48 @@
     _drawing = [NVPDFDrawing drawingWithID:@"" name:@"" type:@""
                                       page:_page upperLeft:_ul lowerRight:_lr];
     
+    _typeSC = [[UISegmentedControl alloc] initWithItems:_typesArray];
+    [self setupSC:_typeSC];
+    _typeSC.momentary = NO;
+    [_typeSC constrainTopToAnchor:self.view.topAnchor constant:margin];
+    [_typeSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    
+    UILabel *typeLabel = UILabel.new;
+    [self setupLabel:typeLabel text:@"TYPE"];
+    [typeLabel removeAllConstraints];
+    [typeLabel constrainTopToAnchor:_typeSC.topAnchor];
+    [typeLabel constrainHeightToAnchor:_typeSC.heightAnchor];
+    [typeLabel constrainWidthToConstant:60.0];
+    [typeLabel constrainTrailingToAnchor:_typeSC.leadingAnchor];
+    
     NSArray *items = @[@"-25", @"-10", @"-5", @"-1", @"+1", @"+5", @"+10", @"+25"];
     
     UILabel *pageLabel = UILabel.new;
-    [self setupLabel:pageLabel];
-    pageLabel.text = @"PAGE";
-    [pageLabel constrainTopToAnchor:returnButton.bottomAnchor constant:margin];
+    [self setupLabel:pageLabel text:@"PAGE"];
+    [pageLabel constrainTopToAnchor:_typeSC.bottomAnchor constant:margin];
     
     _pageSC = [[UISegmentedControl alloc] initWithItems:items];
     [self setupSC:_pageSC];
     [_pageSC constrainTopToAnchor:pageLabel.topAnchor];
     [_pageSC constrainLeadingToAnchor:pageLabel.trailingAnchor];
-    [_pageSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_pageSC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
     items = @[@"-100", @"-10", @"-5", @"-1", @"+1", @"+5", @"+10", @"+100"];
     
     UILabel *sectLabel = UILabel.new;
-    [self setupLabel:sectLabel];
-    sectLabel.text = @"SECT";
+    [self setupLabel:sectLabel text:@"SECT"];
     [sectLabel constrainTopToAnchor:pageLabel.bottomAnchor constant:margin];
     
     _sectSC = [[UISegmentedControl alloc] initWithItems:items];
     [self setupSC:_sectSC];
     [_sectSC constrainTopToAnchor:sectLabel.topAnchor];
     [_sectSC constrainLeadingToAnchor:sectLabel.trailingAnchor];
-    [_sectSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_sectSC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
     items = @[@"-", @"+"];
     
     UILabel *idLabel = UILabel.new;
-    [self setupLabel:idLabel];
-    idLabel.text = @"ID";
+    [self setupLabel:idLabel text:@"ID"];
     [idLabel constrainTopToAnchor:sectLabel.bottomAnchor constant:margin];
     
     _id1SC = [[UISegmentedControl alloc] initWithItems:items];
@@ -130,53 +145,49 @@
     [_id6SC constrainTopToAnchor:idLabel.topAnchor];
     [_id6SC constrainLeadingToAnchor:_id5SC.trailingAnchor constant:margin];
     [_id6SC constrainWidthToAnchor:_id5SC.widthAnchor];
-    [_id6SC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_id6SC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
     items = @[@"-.25", @"-.05", @"-.01", @"-.0025", @"+.0025", @"+.01", @"+.05", @"+.25"];
     
     UILabel *ulxLabel = UILabel.new;
-    [self setupLabel:ulxLabel];
-    ulxLabel.text = @"ULX";
+    [self setupLabel:ulxLabel text:@"ULX"];
     [ulxLabel constrainTopToAnchor:idLabel.bottomAnchor constant:margin];
     
     _ulxSC = [[UISegmentedControl alloc] initWithItems:items];
     [self setupSC:_ulxSC];
     [_ulxSC constrainTopToAnchor:ulxLabel.topAnchor];
     [_ulxSC constrainLeadingToAnchor:ulxLabel.trailingAnchor];
-    [_ulxSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_ulxSC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
     UILabel *ulyLabel = UILabel.new;
-    [self setupLabel:ulyLabel];
-    ulyLabel.text = @"ULY";
+    [self setupLabel:ulyLabel text:@"ULY"];
     [ulyLabel constrainTopToAnchor:ulxLabel.bottomAnchor constant:margin];
     
     _ulySC = [[UISegmentedControl alloc] initWithItems:items];
     [self setupSC:_ulySC];
     [_ulySC constrainTopToAnchor:ulyLabel.topAnchor];
     [_ulySC constrainLeadingToAnchor:ulyLabel.trailingAnchor];
-    [_ulySC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_ulySC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
     UILabel *lrxLabel = UILabel.new;
-    [self setupLabel:lrxLabel];
-    lrxLabel.text = @"LRX";
+    [self setupLabel:lrxLabel text:@"LRX"];
     [lrxLabel constrainTopToAnchor:ulyLabel.bottomAnchor constant:margin];
     
     _lrxSC = [[UISegmentedControl alloc] initWithItems:items];
     [self setupSC:_lrxSC];
     [_lrxSC constrainTopToAnchor:lrxLabel.topAnchor];
     [_lrxSC constrainLeadingToAnchor:lrxLabel.trailingAnchor];
-    [_lrxSC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_lrxSC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
     UILabel *lryLabel = UILabel.new;
-    [self setupLabel:lryLabel];
-    lryLabel.text = @"LRY";
+    [self setupLabel:lryLabel text:@"LRY"];
     [lryLabel constrainTopToAnchor:lrxLabel.bottomAnchor constant:margin];
     
     _lrySC = [[UISegmentedControl alloc] initWithItems:items];
     [self setupSC:_lrySC];
     [_lrySC constrainTopToAnchor:lryLabel.topAnchor];
     [_lrySC constrainLeadingToAnchor:lryLabel.trailingAnchor];
-    [_lrySC constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_lrySC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
     _pageSectIDLabel = UILabel.new;
     _pageSectIDLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -185,7 +196,7 @@
     _pageSectIDLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:28.0];
     [self.view addSubview:_pageSectIDLabel];
     [_pageSectIDLabel constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
-    [_pageSectIDLabel constrainTrailingToAnchor:self.view.trailingAnchor constant:-margin];
+    [_pageSectIDLabel constrainTrailingToAnchor:_typeSC.trailingAnchor];
     [_pageSectIDLabel constrainTopToAnchor:lryLabel.bottomAnchor constant:margin];
     [self updatePageSectIDLabel];
     
@@ -196,7 +207,7 @@
     _drawingDefLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:28.0];
     [self.view addSubview:_drawingDefLabel];
     [_drawingDefLabel constrainLeadingToAnchor:_pageSectIDLabel.leadingAnchor];
-    [_drawingDefLabel constrainTrailingToAnchor:_pageSectIDLabel.trailingAnchor];
+    [_drawingDefLabel constrainTrailingToAnchor:_typeSC.trailingAnchor];
     [_drawingDefLabel constrainTopToAnchor:_pageSectIDLabel.bottomAnchor];
     [_drawingDefLabel constrainBottomToAnchor:_containerView.topAnchor constant:-margin];
     [_drawingDefLabel constrainHeightToAnchor:_pageSectIDLabel.heightAnchor];
@@ -225,10 +236,12 @@
 }
 
 - (void)setupLabel:(UILabel *)label
+              text:(NSString *)text
 {
     label.translatesAutoresizingMaskIntoConstraints = NO;
     label.backgroundColor = UIColor.clearColor;
     label.textColor = UIColor.whiteColor;
+    label.text = text;
     label.textAlignment = NSTextAlignmentCenter;
     label.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:22.0];
     [self.view addSubview:label];
@@ -264,7 +277,13 @@
 {
     float diff = 0.0;
     
-    if (sc == _pageSC || sc == _sectSC)
+    if (sc == _typeSC)
+    {
+        _type = _typesArray[sc.selectedSegmentIndex];
+        [self updatePageSectIDLabel];
+    }
+    
+    else if (sc == _pageSC || sc == _sectSC)
     {
         switch (sc.selectedSegmentIndex)
         {
@@ -305,7 +324,7 @@
         {
             _page += diff;
             _page = MAX(_page, 1);
-            _page = MIN(_page, _webView.numPages);
+            _page = MIN(_page, _maxPage);
             _drawing.page = _page;
             [self updateWebview];
         }
@@ -442,6 +461,7 @@
 - (void)updateWebview
 {
     [_webView removeFromSuperview];
+    _webView = nil;
     
     _webView = [NVWebView showPDFDrawing:_drawing
                             fromDocument:_document
@@ -452,11 +472,20 @@
 
 - (void)updatePageSectIDLabel
 {
-    _drawingID = [NSString stringWithFormat:@"%d.%d.%d.%d.%d.%d.%d",
-                  _section, _id1, _id2, _id3, _id4, _id5, _id6];
+    if (_section)
+    {
+        _drawingID = [NSString stringWithFormat:@"%d.%d.%d.%d.%d.%d.%d",
+                      _section, _id1, _id2, _id3, _id4, _id5, _id6];
+    }
     
-    NSString *text = [NSString stringWithFormat:@"PAGE:%d,ID:%@",
-                      _page, _drawingID];
+    else
+    {
+        _drawingID = @"NONE";
+        _id1 = _id2 = _id3 = _id4 = _id5 = _id6 = 0;
+    }
+    
+    NSString *text = [NSString stringWithFormat:@"PAGE:%d,TYPE:%@,ID:%@",
+                      _page, _type, _drawingID];
     
     while ([[text substringFromIndex:(text.length - 2)] isEqualToString:@".0"])
         text = [text substringToIndex:(text.length - 2)];

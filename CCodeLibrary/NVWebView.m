@@ -93,9 +93,13 @@
 
 - (void)dealloc
 {
+    [_webView stopLoading];
     _scrollView.delegate = nil;
     _webView.UIDelegate = nil;
     _webView.navigationDelegate = nil;
+    _scrollView = nil;
+    [_webView removeFromSuperview];
+    _webView = nil;
 }
 
 + (instancetype)showWebViewInView:(UIView *)view
@@ -237,7 +241,7 @@
             resourcePath = [NSString stringWithFormat:@"2015_mn_accessibility_code_part%i", drawing.page];
             break;
         case NVPDFDocumentFederalADA:
-            resourcePath = @"2010ADAStandards";
+            resourcePath = [NSString stringWithFormat:@"2010ADAStandards_page%i", drawing.page];
             break;
         case NVPDFDocumentADAChecklist:
             resourcePath = @"ada-checklist";
