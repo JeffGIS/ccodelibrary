@@ -5,6 +5,14 @@
 #import "UserDefaults.h"
 #import "NVPDFDrawing.h"
 
+@interface NVPDFDefDatabase ()
+
+@end
+
+@implementation NVPDFDefDatabase
+
+@end
+
 @interface NVPDFDefCreatorVC ()
 
 @property int page, section, id1, id2, id3, id4, id5, id6, maxPage;
@@ -196,7 +204,6 @@
     _pageSectIDLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:28.0];
     [self.view addSubview:_pageSectIDLabel];
     [_pageSectIDLabel constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
-    [_pageSectIDLabel constrainTrailingToAnchor:_typeSC.trailingAnchor];
     [_pageSectIDLabel constrainTopToAnchor:lryLabel.bottomAnchor constant:margin];
     [self updatePageSectIDLabel];
     
@@ -207,11 +214,25 @@
     _drawingDefLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:28.0];
     [self.view addSubview:_drawingDefLabel];
     [_drawingDefLabel constrainLeadingToAnchor:_pageSectIDLabel.leadingAnchor];
-    [_drawingDefLabel constrainTrailingToAnchor:_typeSC.trailingAnchor];
     [_drawingDefLabel constrainTopToAnchor:_pageSectIDLabel.bottomAnchor];
     [_drawingDefLabel constrainBottomToAnchor:_containerView.topAnchor constant:-margin];
     [_drawingDefLabel constrainHeightToAnchor:_pageSectIDLabel.heightAnchor];
     [self updateDrawingDefLabel];
+    
+    UIButton *saveButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    saveButton.translatesAutoresizingMaskIntoConstraints = NO;
+    saveButton.backgroundColor = UserDefaults.defaults.darkGreen;
+    saveButton.titleLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:40.0];
+    saveButton.layer.borderColor = UIColor.blackColor.CGColor;
+    saveButton.layer.borderWidth = 2.0;
+    [saveButton setTitle:@"SAVE" forState:UIControlStateNormal];
+    [saveButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [saveButton setTitleColor:UIColor.blackColor forState:UIControlStateHighlighted];
+    [self.view addSubview:saveButton];
+    [saveButton constrainTrailingToAnchor:_typeSC.trailingAnchor];
+    [saveButton constrainTopToAnchor:_pageSectIDLabel.topAnchor];
+    [saveButton constrainHeightToAnchor:_pageSectIDLabel.heightAnchor];
+    [saveButton constrainWidthToConstant:120.0];
 }
 
 - (void)viewDidAppear:(BOOL)animated
