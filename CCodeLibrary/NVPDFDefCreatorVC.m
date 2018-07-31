@@ -4,12 +4,98 @@
 #import "NVPDFDefCreatorVC.h"
 #import "UserDefaults.h"
 #import "NVPDFDrawing.h"
+#import "SQLiteLib.h"
 
 @interface NVPDFDefDatabase ()
+
+@property (nonatomic, copy) NSString *path;
+@property sqlite3nv *database;
+@property BOOL isOpen;
 
 @end
 
 @implementation NVPDFDefDatabase
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _path = [NSString stringWithFormat:@"%@/NVPDFDefDatabase.sqlite3", UserDefaults.defaults.sharedFilePath];
+        BOOL opened = self.open;
+        
+        NSString *cmd = @"CREATE TABLE IF NOT EXISTS NVPDFDefs (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "page INTEGER, ulx REAL, uly REAL, lrx REAL, lry REAL, type TEXT, identifier TEXT, "
+        "name TEXT, UNIQUE(type, identifier));";
+        
+        SQLOK(__FILE__,__LINE__, SQLiteExec(_database, cmd.UTF8String, 0, 0, 0), _database);
+        [self close:opened];
+    }
+    
+    return self;
+}
+
+- (BOOL)open
+{
+    BOOL rtn = NO;
+    
+    if (!_isOpen)
+    {
+        _isOpen = !SQLOK(__FILE__,__LINE__, SQLite_Open(_path.UTF8String, &_database), _database);
+        NSLog(@"NVPDFDefs Database open");
+        rtn = YES;
+    }
+    
+    return rtn;
+}
+
+- (void)close:(BOOL)opened
+{
+    if (opened)
+    {
+        SQLOK(__FILE__,__LINE__, SQLite_Close(&_database), _database);
+        NSLog(@"NVPDFDefs Database close");
+        _isOpen = NO;
+    }
+}
+
+- (void)dealloc
+{
+    [self close:_isOpen];
+}
+
+- (void)addDrawing:(NVPDFDrawing *)drawing
+{
+    BOOL opened = self.open;
+    
+    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO NVPDFDefs VALUES "
+                     "(null,'%d','%.4f','%.4f','%.4f','%.4f','%@','%@','%@');",
+                    drawing.page, drawing.upperLeft.x, drawing.upperLeft.y, drawing.lowerRight.x,
+                     drawing.lowerRight.y, drawing.type, drawing.identifier, drawing.name];
+    
+    SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    [self close:opened];
+}
+
+- (int)count
+{
+    int rtn = 0;
+    BOOL opened = self.open;
+    sqlite3_stmt *statement = NULL;
+    
+    NSString *query = @"SELECT Count(*) FROM NVPDFDefs;";
+    
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+        rtn = sqlite3_column_int(statement, 0);
+    
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    [self close:opened];
+    
+    return rtn;
+}
 
 @end
 
@@ -211,7 +297,7 @@
     _drawingDefLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _drawingDefLabel.backgroundColor = UIColor.clearColor;
     _drawingDefLabel.textColor = UIColor.whiteColor;
-    _drawingDefLabel.font = [UIFont fontWithName:@"CourierNewPSMT" size:30.0];
+    _drawingDefLabel.font = [UIFont fontWithName:@"CourierNewPSMT" size:28.0];
     [self.view addSubview:_drawingDefLabel];
     [_drawingDefLabel constrainLeadingToAnchor:_pageSectIDLabel.leadingAnchor];
     [_drawingDefLabel constrainTopToAnchor:_pageSectIDLabel.bottomAnchor];
@@ -300,7 +386,10 @@
 
 - (void)saveButtonTapped
 {
-    NSLog(@"%@", _drawing);
+    NVPDFDefDatabase *nvpdfdd = NVPDFDefDatabase.new;
+    [nvpdfdd addDrawing:_drawing];
+    
+    NSLog(@"COUNT:%d", nvpdfdd.count);
 }
 
 - (void)scTapped:(UISegmentedControl *)sc
