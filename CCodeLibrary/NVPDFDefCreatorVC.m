@@ -16,7 +16,7 @@
 @interface NVPDFDefCreatorVC ()
 
 @property int page, section, id1, id2, id3, id4, id5, id6, maxPage;
-@property (nonatomic, copy) NSString *drawingID, *type;
+@property (nonatomic, copy) NSString *drawingID, *type, *name;
 @property (nonatomic, copy) NSArray *typesArray;
 @property DPOINT ul, lr;
 @property (nonatomic) UIView *containerView;
@@ -37,7 +37,7 @@
     
     self.view.backgroundColor = UserDefaults.defaults.appleBlue;
     CGFloat margin = 10.0;
-    _drawingID = _type = @"NONE";
+    _name = _drawingID = _type = @"NONE";
     _typesArray = @[@"SECTION", @"TABLE", @"FIGURE", @"ITEM"];
     
     UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -72,7 +72,7 @@
     [_containerView constrainTopToAnchor:self.view.centerYAnchor];
     [_containerView constrainBottomToAnchor:self.view.bottomAnchor constant:-margin];
     
-    _drawing = [NVPDFDrawing drawingWithID:@"" name:@"" type:@""
+    _drawing = [NVPDFDrawing drawingWithID:_drawingID name:_name type:_type
                                       page:_page upperLeft:_ul lowerRight:_lr];
     
     _typeSC = [[UISegmentedControl alloc] initWithItems:_typesArray];
@@ -201,9 +201,9 @@
     _pageSectIDLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _pageSectIDLabel.backgroundColor = UIColor.clearColor;
     _pageSectIDLabel.textColor = UIColor.whiteColor;
-    _pageSectIDLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:28.0];
+    _pageSectIDLabel.font = [UIFont fontWithName:@"CourierNewPSMT" size:24.0];
     [self.view addSubview:_pageSectIDLabel];
-    [_pageSectIDLabel constrainLeadingToAnchor:self.view.leadingAnchor constant:margin];
+    [_pageSectIDLabel constrainLeadingToAnchor:self.view.leadingAnchor constant:(margin / 2.0)];
     [_pageSectIDLabel constrainTopToAnchor:lryLabel.bottomAnchor constant:margin];
     [self updatePageSectIDLabel];
     
@@ -211,7 +211,7 @@
     _drawingDefLabel.translatesAutoresizingMaskIntoConstraints = NO;
     _drawingDefLabel.backgroundColor = UIColor.clearColor;
     _drawingDefLabel.textColor = UIColor.whiteColor;
-    _drawingDefLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:28.0];
+    _drawingDefLabel.font = [UIFont fontWithName:@"CourierNewPSMT" size:30.0];
     [self.view addSubview:_drawingDefLabel];
     [_drawingDefLabel constrainLeadingToAnchor:_pageSectIDLabel.leadingAnchor];
     [_drawingDefLabel constrainTopToAnchor:_pageSectIDLabel.bottomAnchor];
@@ -233,6 +233,10 @@
     [saveButton constrainTopToAnchor:_pageSectIDLabel.topAnchor];
     [saveButton constrainHeightToAnchor:_pageSectIDLabel.heightAnchor];
     [saveButton constrainWidthToConstant:120.0];
+    
+    [saveButton addTarget:self
+                   action:@selector(saveButtonTapped)
+         forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -292,6 +296,11 @@
 - (void)returnButtonTapped
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)saveButtonTapped
+{
+    NSLog(@"%@", _drawing);
 }
 
 - (void)scTapped:(UISegmentedControl *)sc
@@ -505,11 +514,14 @@
         _id1 = _id2 = _id3 = _id4 = _id5 = _id6 = 0;
     }
     
+    while ([[_drawingID substringFromIndex:(_drawingID.length - 2)] isEqualToString:@".0"])
+        _drawingID = [_drawingID substringToIndex:(_drawingID.length - 2)];
+    
+    _drawing.identifier = _drawingID;
+    _drawing.type = _type;
+    
     NSString *text = [NSString stringWithFormat:@"PAGE:%d,TYPE:%@,ID:%@",
                       _page, _type, _drawingID];
-    
-    while ([[text substringFromIndex:(text.length - 2)] isEqualToString:@".0"])
-        text = [text substringToIndex:(text.length - 2)];
     
     _pageSectIDLabel.text = text;
 }
