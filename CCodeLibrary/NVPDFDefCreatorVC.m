@@ -149,7 +149,7 @@
 @property (nonatomic) NVWebView *webView;
 @property (nonatomic) UISegmentedControl *typeSC, *sectSC, *pageSC, *ulxSC, *ulySC, *lrxSC, *lrySC;
 @property (nonatomic) UISegmentedControl *id1SC, *id2SC, *id3SC, *id4SC, *id5SC, *id6SC;
-@property (nonatomic) UILabel *pageSectIDLabel, *drawingDefLabel;
+@property (nonatomic) UILabel *pageSectIDLabel, *drawingDefLabel, *countLabel;
 
 @end
 
@@ -361,6 +361,17 @@
     [saveButton addTarget:self
                    action:@selector(saveButtonTapped)
          forControlEvents:UIControlEventTouchUpInside];
+    
+    _countLabel = UILabel.new;
+    _countLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:_countLabel];
+    [_countLabel constrainTopToAnchor:_typeSC.topAnchor];
+    [_countLabel constrainHeightToAnchor:_typeSC.heightAnchor];
+    [_countLabel constrainLeadingToAnchor:returnButton.trailingAnchor constant:margin];
+    _countLabel.backgroundColor = UIColor.blackColor;
+    _countLabel.textColor = saveButton.backgroundColor;
+    _countLabel.font = saveButton.titleLabel.font;
+    _countLabel.text = [NSString stringWithFormat:@"%d", NVPDFDefDatabase.new.count];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -426,8 +437,7 @@
 {
     NVPDFDefDatabase *nvpdfdd = NVPDFDefDatabase.new;
     [nvpdfdd addDrawing:_drawing];
-    
-    NSLog(@"COUNT:%d", nvpdfdd.count);
+    _countLabel.text = [NSString stringWithFormat:@"%d", nvpdfdd.count];
     NSLog(@"DRAWINGS:%@", nvpdfdd.drawings);
 }
 
@@ -512,38 +522,60 @@
         if (sc == _id1SC)
         {
             _id1 += diff;
-            _id1 = MAX(_id1, 0);
+            
+            if (!_id1)
+                _id2 = _id3 = _id4 = _id5 = _id6 = 0;
         }
         
         else if (sc == _id2SC)
         {
             _id2 += diff;
-            _id2 = MAX(_id2, 0);
+            
+            if (!_id2)
+                _id3 = _id4 = _id5 = _id6 = 0;
         }
         
         else if (sc == _id3SC)
         {
             _id3 += diff;
-            _id3 = MAX(_id3, 0);
+            
+            if (!_id3)
+                _id4 = _id5 = _id6 = 0;
         }
         
         else if (sc == _id4SC)
         {
             _id4 += diff;
-            _id4 = MAX(_id4, 0);
+            
+            if (!_id4)
+                _id5 = _id6 = 0;
         }
         
         else if (sc == _id5SC)
         {
             _id5 += diff;
-            _id5 = MAX(_id5, 0);
+            
+            if (!_id5)
+                _id6 = 0;
         }
         
         else if (sc == _id6SC)
-        {
             _id6 += diff;
-            _id6 = MAX(_id6, 0);
-        }
+        
+        if (_id6)
+            _id5 = MAX(_id5, 1);
+        
+        if (_id5)
+            _id4 = MAX(_id4, 1);
+        
+        if (_id4)
+            _id3 = MAX(_id3, 1);
+        
+        if (_id3)
+            _id2 = MAX(_id2, 1);
+        
+        if (_id2)
+            _id1 = MAX(_id1, 1);
         
         [self updatePageSectIDLabel];
     }
@@ -632,8 +664,62 @@
 {
     if (_section)
     {
-        _drawingID = [NSString stringWithFormat:@"%d.%d.%d.%d.%d.%d.%d",
-                      _section, _id1, _id2, _id3, _id4, _id5, _id6];
+        _drawingID = [NSString stringWithFormat:@"%d", _section];
+        int asciiStart = 64;
+        
+        if (_id1)
+        {
+            if (_id1 > 0)
+                _drawingID = [NSString stringWithFormat:@"%@.%d", _drawingID, _id1];
+            
+            else
+                _drawingID = [NSString stringWithFormat:@"%@.%c", _drawingID, (asciiStart - _id1)];
+            
+            if (_id2)
+            {
+                if (_id2 > 0)
+                    _drawingID = [NSString stringWithFormat:@"%@.%d", _drawingID, _id2];
+                
+                else
+                    _drawingID = [NSString stringWithFormat:@"%@.%c", _drawingID, (asciiStart - _id2)];
+                
+                if (_id3)
+                {
+                    if (_id3 > 0)
+                        _drawingID = [NSString stringWithFormat:@"%@.%d", _drawingID, _id3];
+                    
+                    else
+                        _drawingID = [NSString stringWithFormat:@"%@.%c", _drawingID, (asciiStart - _id3)];
+                    
+                    if (_id4)
+                    {
+                        if (_id4 > 0)
+                            _drawingID = [NSString stringWithFormat:@"%@.%d", _drawingID, _id4];
+                        
+                        else
+                            _drawingID = [NSString stringWithFormat:@"%@.%c", _drawingID, (asciiStart - _id4)];
+                        
+                        if (_id5)
+                        {
+                            if (_id5 > 0)
+                                _drawingID = [NSString stringWithFormat:@"%@.%d", _drawingID, _id5];
+                            
+                            else
+                                _drawingID = [NSString stringWithFormat:@"%@.%c", _drawingID, (asciiStart - _id5)];
+                            
+                            if (_id6)
+                            {
+                                if (_id6 > 0)
+                                    _drawingID = [NSString stringWithFormat:@"%@.%d", _drawingID, _id6];
+                                
+                                else
+                                    _drawingID = [NSString stringWithFormat:@"%@.%c", _drawingID, (asciiStart - _id6)];
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     else
@@ -641,9 +727,6 @@
         _drawingID = @"NONE";
         _id1 = _id2 = _id3 = _id4 = _id5 = _id6 = 0;
     }
-    
-    while ([[_drawingID substringFromIndex:(_drawingID.length - 2)] isEqualToString:@".0"])
-        _drawingID = [_drawingID substringToIndex:(_drawingID.length - 2)];
     
     _drawing.identifier = _drawingID;
     _drawing.type = _type;
