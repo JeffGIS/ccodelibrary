@@ -22,7 +22,7 @@
     
     if (self)
     {
-        _path = [NSString stringWithFormat:@"%@/NVPDFDefDatabase.sqlite3", UserDefaults.defaults.sharedFilePath];
+        _path = [NSString stringWithFormat:@"%@/NVPDFDefDatabase.sqlite3", UserDefaults.defaults.localFilePath];
         BOOL opened = self.open;
         
         NSString *cmd = @"CREATE TABLE IF NOT EXISTS NVPDFDefs (id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -95,6 +95,44 @@
     [self close:opened];
     
     return rtn;
+}
+
+- (NSArray<NVPDFDrawing *> *)drawings
+{
+    NSMutableArray<NVPDFDrawing *> *drawings = NSMutableArray.array;
+    BOOL opened = self.open;
+    sqlite3_stmt *statement = NULL;
+    DPOINT ul = {0}, lr = {0};
+    LPSTR type = {0}, identifier = {0}, name = {0};
+    int iCol = 1, page = 0;
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM NVPDFDefs ORDER BY type ASC, identifier ASC;"];
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    while (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        iCol = 1;
+        page = sqlite3_column_int(statement, iCol++);
+        ul.x = sqlite3_column_double(statement, iCol++);
+        ul.y = sqlite3_column_double(statement, iCol++);
+        lr.x = sqlite3_column_double(statement, iCol++);
+        lr.y = sqlite3_column_double(statement, iCol++);
+        type = (LPSTR)sqlite3_column_text(statement, iCol++);
+        identifier = (LPSTR)sqlite3_column_text(statement, iCol++);
+        name = (LPSTR)sqlite3_column_text(statement, iCol);
+        
+        NVPDFDrawing *drawing = [NVPDFDrawing drawingWithID:[NSString stringWithUTF8String:identifier]
+                                                       name:[NSString stringWithUTF8String:name]
+                                                       type:[NSString stringWithUTF8String:type]
+                                                       page:page upperLeft:ul lowerRight:lr];
+
+        [drawings addObject:drawing];
+    }
+    
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
+    [self close:opened];
+    
+    return drawings.copy;
 }
 
 @end
@@ -390,6 +428,7 @@
     [nvpdfdd addDrawing:_drawing];
     
     NSLog(@"COUNT:%d", nvpdfdd.count);
+    NSLog(@"DRAWINGS:%@", nvpdfdd.drawings);
 }
 
 - (void)scTapped:(UISegmentedControl *)sc
