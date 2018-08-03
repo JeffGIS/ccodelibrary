@@ -3,18 +3,40 @@
 
 #import "NVPDFDefCreatorVC.h"
 #import "UserDefaults.h"
-#import "NVPDFDrawing.h"
 #import "SQLiteLib.h"
+#import "FTPDataPush.h"
+
+#define CURRENT_TABLE @"ADASTANDARDS"
+#define DB_FILENAME @"NVPDFDefDatabase"
+#define DB_FILETYPE @"sqlite3"
 
 @interface NVPDFDefDatabase ()
 
 @property (nonatomic, copy) NSString *path;
-@property sqlite3nv *database;
+@property (nonatomic) sqlite3nv *database;
 @property BOOL isOpen;
 
 @end
 
 @implementation NVPDFDefDatabase
+
++ (instancetype)staticDatabase
+{
+    NVPDFDefDatabase *pdfdb = [[NVPDFDefDatabase alloc] initWithPath:[NSBundle.mainBundle pathForResource:DB_FILENAME
+                                                                                                   ofType:DB_FILETYPE]];
+    
+    return pdfdb;
+}
+
+- (id)initWithPath:(NSString *)path
+{
+    self = [super init];
+    
+    if (self)
+        _path = path;
+    
+    return self;
+}
 
 - (id)init
 {
@@ -22,12 +44,12 @@
     
     if (self)
     {
-        _path = [NSString stringWithFormat:@"%@/NVPDFDefDatabase.sqlite3", UserDefaults.defaults.localFilePath];
+        _path = [NSString stringWithFormat:@"%@/%@.%@", UserDefaults.defaults.localFilePath, DB_FILENAME, DB_FILETYPE];
         BOOL opened = self.open;
         
-        NSString *cmd = @"CREATE TABLE IF NOT EXISTS NVPDFDefs (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        NSString *cmd = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "page INTEGER, ulx REAL, uly REAL, lrx REAL, lry REAL, type TEXT, identifier TEXT, "
-        "name TEXT, UNIQUE(type, identifier));";
+        "name TEXT, UNIQUE(type, identifier));", CURRENT_TABLE];
         
         SQLOK(__FILE__,__LINE__, SQLiteExec(_database, cmd.UTF8String, 0, 0, 0), _database);
         [self close:opened];
@@ -43,7 +65,7 @@
     if (!_isOpen)
     {
         _isOpen = !SQLOK(__FILE__,__LINE__, SQLite_Open(_path.UTF8String, &_database), _database);
-        NSLog(@"NVPDFDefs Database open");
+        //NSLog(@"NVPDFDefs Database open");
         rtn = YES;
     }
     
@@ -55,7 +77,7 @@
     if (opened)
     {
         SQLOK(__FILE__,__LINE__, SQLite_Close(&_database), _database);
-        NSLog(@"NVPDFDefs Database close");
+        //NSLog(@"NVPDFDefs Database close");
         _isOpen = NO;
     }
 }
@@ -69,10 +91,10 @@
 {
     BOOL opened = self.open;
     
-    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO NVPDFDefs VALUES "
+    NSString *cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@ VALUES "
                      "(null,'%d','%.4f','%.4f','%.4f','%.4f','%@','%@','%@');",
-                    drawing.page, drawing.upperLeft.x, drawing.upperLeft.y, drawing.lowerRight.x,
-                     drawing.lowerRight.y, drawing.type, drawing.identifier, drawing.name];
+                     CURRENT_TABLE, drawing.page, drawing.upperLeft.x, drawing.upperLeft.y,
+                     drawing.lowerRight.x, drawing.lowerRight.y, drawing.type, drawing.identifier, drawing.name];
     
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     [self close:opened];
@@ -84,7 +106,7 @@
     BOOL opened = self.open;
     sqlite3_stmt *statement = NULL;
     
-    NSString *query = @"SELECT Count(*) FROM NVPDFDefs;";
+    NSString *query = [NSString stringWithFormat:@"SELECT Count(*) FROM %@;", CURRENT_TABLE];
     
     SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
@@ -106,7 +128,8 @@
     LPSTR type = {0}, identifier = {0}, name = {0};
     int iCol = 1, page = 0;
     
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM NVPDFDefs ORDER BY type ASC, identifier ASC;"];
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM %@ ORDER BY type ASC, identifier ASC;", CURRENT_TABLE];
+    
     SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
     while (sqlite3_step(statement) == SQLITE_ROW)
@@ -137,7 +160,7 @@
 
 @end
 
-@interface NVPDFDefCreatorVC ()
+@interface NVPDFDefCreatorVC () <FTPDataPushDelegate>
 
 @property int page, section, id1, id2, id3, id4, id5, id6, maxPage;
 @property (nonatomic, copy) NSString *drawingID, *type, *name;
@@ -150,6 +173,7 @@
 @property (nonatomic) UISegmentedControl *typeSC, *sectSC, *pageSC, *ulxSC, *ulySC, *lrxSC, *lrySC;
 @property (nonatomic) UISegmentedControl *id1SC, *id2SC, *id3SC, *id4SC, *id5SC, *id6SC;
 @property (nonatomic) UILabel *pageSectIDLabel, *drawingDefLabel, *countLabel;
+@property (nonatomic) FTPDataPush *push;
 
 @end
 
@@ -333,9 +357,9 @@
     
     _drawingDefLabel = UILabel.new;
     _drawingDefLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    _drawingDefLabel.backgroundColor = UIColor.clearColor;
-    _drawingDefLabel.textColor = UIColor.whiteColor;
-    _drawingDefLabel.font = [UIFont fontWithName:@"CourierNewPSMT" size:28.0];
+    _drawingDefLabel.backgroundColor = _pageSectIDLabel.backgroundColor;
+    _drawingDefLabel.textColor = _pageSectIDLabel.textColor;
+    _drawingDefLabel.font = _pageSectIDLabel.font;
     [self.view addSubview:_drawingDefLabel];
     [_drawingDefLabel constrainLeadingToAnchor:_pageSectIDLabel.leadingAnchor];
     [_drawingDefLabel constrainTopToAnchor:_pageSectIDLabel.bottomAnchor];
@@ -354,13 +378,32 @@
     [saveButton setTitleColor:UIColor.blackColor forState:UIControlStateHighlighted];
     [self.view addSubview:saveButton];
     [saveButton constrainTrailingToAnchor:_typeSC.trailingAnchor];
-    [saveButton constrainTopToAnchor:_pageSectIDLabel.topAnchor];
-    [saveButton constrainHeightToAnchor:_pageSectIDLabel.heightAnchor];
+    [saveButton constrainTopToAnchor:_lrySC.bottomAnchor constant:margin];
     [saveButton constrainWidthToConstant:120.0];
     
     [saveButton addTarget:self
                    action:@selector(saveButtonTapped)
          forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *uploadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    uploadButton.translatesAutoresizingMaskIntoConstraints = NO;
+    uploadButton.backgroundColor = UIColor.redColor;
+    uploadButton.titleLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:40.0];
+    uploadButton.layer.borderColor = UIColor.blackColor.CGColor;
+    uploadButton.layer.borderWidth = 2.0;
+    [uploadButton setTitle:@"PUSH" forState:UIControlStateNormal];
+    [uploadButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [uploadButton setTitleColor:UIColor.blackColor forState:UIControlStateHighlighted];
+    [self.view addSubview:uploadButton];
+    [uploadButton constrainTrailingToAnchor:_typeSC.trailingAnchor];
+    [uploadButton constrainTopToAnchor:saveButton.bottomAnchor constant:margin];
+    [uploadButton constrainWidthToAnchor:saveButton.widthAnchor];
+    [uploadButton constrainHeightToAnchor:saveButton.heightAnchor];
+    [uploadButton constrainBottomToAnchor:_containerView.topAnchor constant:-margin];
+    
+    [uploadButton addTarget:self
+                     action:@selector(uploadButtonTapped)
+           forControlEvents:UIControlEventTouchUpInside];
     
     _countLabel = UILabel.new;
     _countLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -435,10 +478,42 @@
 
 - (void)saveButtonTapped
 {
-    NVPDFDefDatabase *nvpdfdd = NVPDFDefDatabase.new;
-    [nvpdfdd addDrawing:_drawing];
-    _countLabel.text = [NSString stringWithFormat:@"%d", nvpdfdd.count];
-    NSLog(@"DRAWINGS:%@", nvpdfdd.drawings);
+    if (_typeSC.selectedSegmentIndex == UISegmentedControlNoSegment)
+        showAlert(@"ERROR: No type selected.");
+    
+    else if ([_drawingID isEqualToString:@"NONE"])
+        showAlert(@"ERROR: No drawing ID.");
+    
+    else
+    {
+        NVPDFDefDatabase *pdfdb = NVPDFDefDatabase.new;
+        [pdfdb addDrawing:_drawing];
+        _countLabel.text = [NSString stringWithFormat:@"%d", pdfdb.count];
+    }
+}
+
+- (void)uploadButtonTapped
+{
+    _push = FTPDataPush.push;
+    _push.delegate = self;
+    
+    NVPDFDefDatabase *pdfdb = NVPDFDefDatabase.new;
+    NSString *file = pdfdb.path.lastPathComponent;
+    
+    [_push sendFile:file
+      fromDirectory:pdfdb.path.stringByDeletingLastPathComponent
+             toFile:file
+        toDirectory:@"NVCRIS/UploadedDatabases"
+     deleteWhenDone:NO
+     appendFileName:NO];
+}
+
+- (void)FTPPushDidComplete:(FTPDataType)dataType
+                withStatus:(FTPStatus)status
+           andStatusString:(NSString *)statusString
+                  filePath:(NSString *)path
+{
+    NSLog(@"FTP push completed:%@", statusString);
 }
 
 - (void)scTapped:(UISegmentedControl *)sc
