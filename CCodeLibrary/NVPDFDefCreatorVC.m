@@ -237,7 +237,7 @@
     [typeLabel constrainWidthToConstant:60.0];
     [typeLabel constrainTrailingToAnchor:_typeSC.leadingAnchor];
     
-    NSArray *items = @[@"-25", @"-10", @"-5", @"-1", @"+1", @"+5", @"+10", @"+25"];
+    NSArray *items = @[@"-1", @"-10", @"-25", @"+25", @"+10", @"+1"];
     
     UILabel *pageLabel = UILabel.new;
     [self setupLabel:pageLabel text:@"PAGE"];
@@ -247,9 +247,32 @@
     [self setupSC:_pageSC];
     [_pageSC constrainTopToAnchor:pageLabel.topAnchor];
     [_pageSC constrainLeadingToAnchor:pageLabel.trailingAnchor];
-    [_pageSC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
-    items = @[@"-100", @"-10", @"-5", @"-1", @"+1", @"+5", @"+10", @"+100"];
+    UIButton *zoomButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    zoomButton.translatesAutoresizingMaskIntoConstraints = NO;
+    zoomButton.backgroundColor = UIColor.whiteColor;
+    zoomButton.layer.borderColor = UIColor.blackColor.CGColor;
+    zoomButton.layer.borderWidth = 2.0;
+    zoomButton.adjustsImageWhenHighlighted = YES;
+    zoomButton.showsTouchWhenHighlighted = YES;
+    
+    [zoomButton setBackgroundImage:[UIImage imageWithContentsOfFile:
+                          [NSBundle.mainBundle pathForResource:@"zoom"
+                                                        ofType:@"png"]]
+                forState:UIControlStateNormal];
+    
+    [self.view addSubview:zoomButton];
+    [zoomButton constrainTopToAnchor:pageLabel.topAnchor constant:-2.0];
+    [zoomButton constrainLeadingToAnchor:_pageSC.trailingAnchor constant:(margin - 2.0)];
+    [zoomButton constrainTrailingToAnchor:_typeSC.trailingAnchor constant:2.0];
+    [zoomButton constrainHeightToAnchor:_pageSC.heightAnchor multiplier:1.1];
+    [zoomButton constrainWidthToAnchor:zoomButton.heightAnchor multiplier:1.5];
+    
+    [zoomButton addTarget:self
+                   action:@selector(zoomButtonTapped)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    items = @[@"-1", @"-10", @"-100", @"+100", @"+10", @"+1"];
     
     UILabel *sectLabel = UILabel.new;
     [self setupLabel:sectLabel text:@"SECT"];
@@ -508,6 +531,17 @@
      appendFileName:NO];
 }
 
+- (void)zoomButtonTapped
+{
+    _ul.x = _ul.y = 0.0;
+    _lr.x = _lr.y = 1.0;
+    _drawing.upperLeft = _ul;
+    _drawing.lowerRight = _lr;
+    
+    [self updateWebview];
+    [self updateDrawingDefLabel];
+}
+
 - (void)FTPPushDidComplete:(FTPDataType)dataType
                 withStatus:(FTPStatus)status
            andStatusString:(NSString *)statusString
@@ -531,34 +565,28 @@
         switch (sc.selectedSegmentIndex)
         {
             case 0:
-                if (sc == _pageSC)
-                    diff = -25;
-                else
-                    diff = -100;
+                diff = -1;
                 break;
             case 1:
                 diff = -10;
                 break;
             case 2:
-                diff = -5;
+                if (sc == _pageSC)
+                    diff = -25;
+                else
+                    diff = -100;
                 break;
             case 3:
-                diff = -1;
-                break;
-            case 4:
-                diff = 1;
-                break;
-            case 5:
-                diff = 5;
-                break;
-            case 6:
-                diff = 10;
-                break;
-            case 7:
                 if (sc == _pageSC)
                     diff = 25;
                 else
                     diff = 100;
+                break;
+            case 4:
+                diff = 10;
+                break;
+            case 5:
+                diff = 1;
                 break;
             default:break;
         }
