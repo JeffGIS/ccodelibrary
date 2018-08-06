@@ -198,6 +198,18 @@
     return drawing;
 }
 
+- (void)deleteDrawingWithType:(NSString *)type
+                   identifier:(NSString *)identifier
+{
+    BOOL opened = self.open;
+    
+    NSString *cmd = [NSString stringWithFormat:@"DELETE FROM %@ WHERE type='%@' AND identifier='%@';",
+                     CURRENT_TABLE, type, identifier];
+    
+    SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
+    [self close:opened];
+}
+
 @end
 
 @interface NVPDFDefCreatorVC () <FTPDataPushDelegate, NVPopoverTableViewDelegate>
@@ -288,6 +300,25 @@
     [_pageSC constrainTopToAnchor:pageLabel.topAnchor];
     [_pageSC constrainLeadingToAnchor:pageLabel.trailingAnchor];
     
+    UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    deleteButton.translatesAutoresizingMaskIntoConstraints = NO;
+    deleteButton.backgroundColor = UIColor.redColor;
+    deleteButton.titleLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:36.0];
+    deleteButton.layer.borderColor = UIColor.blackColor.CGColor;
+    deleteButton.layer.borderWidth = 2.0;
+    [deleteButton setTitle:@"DEL" forState:UIControlStateNormal];
+    [deleteButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [deleteButton setTitleColor:UIColor.blackColor forState:UIControlStateHighlighted];
+    [self.view addSubview:deleteButton];
+    [deleteButton constrainLeadingToAnchor:_pageSC.trailingAnchor constant:margin];
+    [deleteButton constrainHeightToAnchor:_pageSC.heightAnchor];
+    [deleteButton constrainTopToAnchor:pageLabel.topAnchor];
+    [deleteButton constrainWidthToConstant:80.0];
+    
+    [deleteButton addTarget:self
+                     action:@selector(deleteButtonTapped)
+           forControlEvents:UIControlEventTouchUpInside];
+    
     UIButton *zoomButton = [UIButton buttonWithType:UIButtonTypeCustom];
     zoomButton.translatesAutoresizingMaskIntoConstraints = NO;
     zoomButton.backgroundColor = UIColor.whiteColor;
@@ -303,7 +334,7 @@
     
     [self.view addSubview:zoomButton];
     [zoomButton constrainTopToAnchor:pageLabel.topAnchor constant:-2.0];
-    [zoomButton constrainLeadingToAnchor:_pageSC.trailingAnchor constant:(margin - 2.0)];
+    [zoomButton constrainLeadingToAnchor:deleteButton.trailingAnchor constant:(margin - 2.0)];
     [zoomButton constrainTrailingToAnchor:_typeSC.trailingAnchor constant:2.0];
     [zoomButton constrainHeightToAnchor:_pageSC.heightAnchor multiplier:1.1];
     [zoomButton constrainWidthToAnchor:zoomButton.heightAnchor multiplier:1.5];
@@ -656,6 +687,19 @@
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
 {
     [popoverTableView hide:YES];
+}
+
+- (void)deleteButtonTapped
+{
+    NVPDFDefDatabase *pdfdb = NVPDFDefDatabase.new;
+    
+    if (_drawing.identifier && _drawing.identifier.length &&
+        _drawing.type && _drawing.type.length)
+    {
+        [pdfdb deleteDrawingWithType:_drawing.type identifier:_drawing.identifier];
+    }
+    
+    _countLabel.text = [NSString stringWithFormat:@"%d", pdfdb.count];
 }
 
 - (void)FTPPushDidComplete:(FTPDataType)dataType
