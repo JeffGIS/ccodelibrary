@@ -653,6 +653,11 @@
     [popoverTableView hide:YES];
 }
 
+- (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
+{
+    [popoverTableView hide:YES];
+}
+
 - (void)FTPPushDidComplete:(FTPDataType)dataType
                 withStatus:(FTPStatus)status
            andStatusString:(NSString *)statusString
