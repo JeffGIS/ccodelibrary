@@ -8,6 +8,10 @@
 
 + (instancetype)staticDatabase;
 - (NSArray<NVPDFDrawing *> *)drawings;
+
+- (NVPDFDrawing *)drawingWithType:(NSString *)type
+                       identifier:(NSString *)identifier;
+
 - (int)count;
 
 @end

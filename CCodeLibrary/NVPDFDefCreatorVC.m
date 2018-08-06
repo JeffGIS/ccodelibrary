@@ -5,6 +5,7 @@
 #import "UserDefaults.h"
 #import "SQLiteLib.h"
 #import "FTPDataPush.h"
+#import "NVPopoverTableView.h"
 
 #define CURRENT_TABLE @"ADASTANDARDS"
 #define DB_FILENAME @"NVPDFDefDatabase"
@@ -158,9 +159,48 @@
     return drawings.copy;
 }
 
+- (NVPDFDrawing *)drawingWithType:(NSString *)type
+                       identifier:(NSString *)identifier
+{
+    NVPDFDrawing *drawing = nil;
+    BOOL opened = self.open;
+    sqlite3_stmt *statement = NULL;
+    DPOINT ul = {0}, lr = {0};
+    LPSTR theType = {0}, theIdentifier = {0}, name = {0};
+    int iCol = 1, page = 0;
+    
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE type='%@' AND identifier='%@';",
+                       CURRENT_TABLE, type, identifier];
+    
+    SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        iCol = 1;
+        page = sqlite3_column_int(statement, iCol++);
+        ul.x = sqlite3_column_double(statement, iCol++);
+        ul.y = sqlite3_column_double(statement, iCol++);
+        lr.x = sqlite3_column_double(statement, iCol++);
+        lr.y = sqlite3_column_double(statement, iCol++);
+        theType = (LPSTR)sqlite3_column_text(statement, iCol++);
+        theIdentifier = (LPSTR)sqlite3_column_text(statement, iCol++);
+        name = (LPSTR)sqlite3_column_text(statement, iCol);
+        
+        drawing = [NVPDFDrawing drawingWithID:[NSString stringWithUTF8String:theIdentifier]
+                                         name:[NSString stringWithUTF8String:name]
+                                         type:[NSString stringWithUTF8String:theType]
+                                         page:page upperLeft:ul lowerRight:lr];
+    }
+    
+    SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
+    [self close:opened];
+    
+    return drawing;
+}
+
 @end
 
-@interface NVPDFDefCreatorVC () <FTPDataPushDelegate>
+@interface NVPDFDefCreatorVC () <FTPDataPushDelegate, NVPopoverTableViewDelegate>
 
 @property int page, section, id1, id2, id3, id4, id5, id6, maxPage;
 @property (nonatomic, copy) NSString *drawingID, *type, *name;
@@ -282,7 +322,30 @@
     [self setupSC:_sectSC];
     [_sectSC constrainTopToAnchor:sectLabel.topAnchor];
     [_sectSC constrainLeadingToAnchor:sectLabel.trailingAnchor];
-    [_sectSC constrainTrailingToAnchor:_typeSC.trailingAnchor];
+    
+    UIButton *listButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    listButton.translatesAutoresizingMaskIntoConstraints = NO;
+    listButton.backgroundColor = UIColor.whiteColor;
+    listButton.layer.borderColor = UIColor.blackColor.CGColor;
+    listButton.layer.borderWidth = 2.0;
+    listButton.adjustsImageWhenHighlighted = YES;
+    listButton.showsTouchWhenHighlighted = YES;
+    
+    [listButton setBackgroundImage:[UIImage imageWithContentsOfFile:
+                                    [NSBundle.mainBundle pathForResource:@"list"
+                                                                  ofType:@"png"]]
+                          forState:UIControlStateNormal];
+    
+    [self.view addSubview:listButton];
+    [listButton constrainTopToAnchor:sectLabel.topAnchor constant:-2.0];
+    [listButton constrainLeadingToAnchor:_sectSC.trailingAnchor constant:(margin - 2.0)];
+    [listButton constrainTrailingToAnchor:_typeSC.trailingAnchor constant:2.0];
+    [listButton constrainHeightToAnchor:_typeSC.heightAnchor multiplier:1.1];
+    [listButton constrainWidthToAnchor:listButton.heightAnchor multiplier:1.5];
+    
+    [listButton addTarget:self
+                   action:@selector(listButtonTapped)
+         forControlEvents:UIControlEventTouchUpInside];
     
     items = @[@"-", @"+"];
     
@@ -540,6 +603,54 @@
     
     [self updateWebview];
     [self updateDrawingDefLabel];
+}
+
+- (void)listButtonTapped
+{
+    NSMutableArray *textArray = NSMutableArray.array;
+    
+    for (NVPDFDrawing *drawing in NVPDFDefDatabase.new.drawings)
+        [textArray addObject:[NSString stringWithFormat:@"%@:%@", drawing.type, drawing.identifier]];
+    
+    [NVPopoverTableView showPopoverTableViewInView:self.view
+                                          delegate:self
+                                             title:CURRENT_TABLE
+                                         textArray:textArray.copy
+                                     includeCancel:YES];
+}
+
+- (void)popoverTableView:(NVPopoverTableView *)popoverTableView
+    didSelectRowWithText:(NSString *)text
+                 atIndex:(NSInteger)index
+{
+    _drawing = [NVPDFDefDatabase.new drawingWithType:textBeforeColon(text)
+                                          identifier:textAfterFirstColon(text)];
+    
+    _page = _drawing.page;
+    _lr = _drawing.lowerRight;
+    _ul = _drawing.upperLeft;
+    _type = _drawing.type;
+    _drawingID = _drawing.identifier;
+    
+    if ([_type isEqualToString:@"SECTION"])
+        [_typeSC setSelectedSegmentIndex:0];
+    
+    else if ([_type isEqualToString:@"TABLE"])
+        [_typeSC setSelectedSegmentIndex:1];
+    
+    else if ([_type isEqualToString:@"FIGURE"])
+        [_typeSC setSelectedSegmentIndex:2];
+    
+    else if ([_type isEqualToString:@"ITEM"])
+        [_typeSC setSelectedSegmentIndex:3];
+    
+    [self updateWebview];
+    [self updateDrawingDefLabel];
+    
+    _pageSectIDLabel.text = [NSString stringWithFormat:@"PAGE:%d,TYPE:%@,ID:%@",
+                             _page, _type, _drawingID];
+    
+    [popoverTableView hide:YES];
 }
 
 - (void)FTPPushDidComplete:(FTPDataType)dataType
@@ -834,10 +945,8 @@
     _drawing.identifier = _drawingID;
     _drawing.type = _type;
     
-    NSString *text = [NSString stringWithFormat:@"PAGE:%d,TYPE:%@,ID:%@",
-                      _page, _type, _drawingID];
-    
-    _pageSectIDLabel.text = text;
+    _pageSectIDLabel.text = [NSString stringWithFormat:@"PAGE:%d,TYPE:%@,ID:%@",
+                             _page, _type, _drawingID];
 }
 
 - (void)updateDrawingDefLabel
