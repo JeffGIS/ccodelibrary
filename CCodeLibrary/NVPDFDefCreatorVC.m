@@ -707,7 +707,7 @@
            andStatusString:(NSString *)statusString
                   filePath:(NSString *)path
 {
-    NSLog(@"FTP push completed:%@", statusString);
+    showAlert([NSString stringWithFormat:@"FTP push completed:%@", statusString]);
 }
 
 - (void)scTapped:(UISegmentedControl *)sc
