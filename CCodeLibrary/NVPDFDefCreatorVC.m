@@ -129,7 +129,8 @@
     LPSTR type = {0}, identifier = {0}, name = {0};
     int iCol = 1, page = 0;
     
-    NSString *query = [NSString stringWithFormat:@"SELECT * FROM %@ ORDER BY type ASC, identifier ASC;", CURRENT_TABLE];
+    //returns results in the reverse order they were entered.
+    NSString *query = [NSString stringWithFormat:@"SELECT * FROM %@ ORDER BY id DESC;", CURRENT_TABLE];
     
     SQLOK(__FILE__,__LINE__, SQLitePrepare(_database, query.UTF8String, -1, &statement, 0), _database);
     
