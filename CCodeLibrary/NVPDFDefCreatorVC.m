@@ -421,7 +421,7 @@
     [_id6SC constrainWidthToAnchor:_id5SC.widthAnchor];
     [_id6SC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
-    items = @[@"-25", @"-5", @"-1", @"-0.25", @"+0.25", @"+1", @"+5", @"+25"];
+    items = @[@"←25", @"←5", @"←1", @"←0.25", @"→0.25", @"→1", @"→5", @"→25"];
     
     UILabel *ulxLabel = UILabel.new;
     [self setupLabel:ulxLabel text:@"LEFT"];
@@ -433,19 +433,9 @@
     [_ulxSC constrainLeadingToAnchor:_pageSC.leadingAnchor];
     [_ulxSC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
-    UILabel *ulyLabel = UILabel.new;
-    [self setupLabel:ulyLabel text:@"TOP"];
-    [ulyLabel constrainTopToAnchor:ulxLabel.bottomAnchor constant:margin];
-    
-    _ulySC = [[UISegmentedControl alloc] initWithItems:items];
-    [self setupSC:_ulySC];
-    [_ulySC constrainTopToAnchor:ulyLabel.topAnchor];
-    [_ulySC constrainLeadingToAnchor:_pageSC.leadingAnchor];
-    [_ulySC constrainTrailingToAnchor:_typeSC.trailingAnchor];
-    
     UILabel *lrxLabel = UILabel.new;
     [self setupLabel:lrxLabel text:@"RIGHT"];
-    [lrxLabel constrainTopToAnchor:ulyLabel.bottomAnchor constant:margin];
+    [lrxLabel constrainTopToAnchor:ulxLabel.bottomAnchor constant:margin];
     
     _lrxSC = [[UISegmentedControl alloc] initWithItems:items];
     [self setupSC:_lrxSC];
@@ -453,9 +443,21 @@
     [_lrxSC constrainLeadingToAnchor:_pageSC.leadingAnchor];
     [_lrxSC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
+    items = @[@"↓25", @"↓5", @"↓1", @"↓0.25", @"↑0.25", @"↑1", @"↑5", @"↑25"];
+    
+    UILabel *ulyLabel = UILabel.new;
+    [self setupLabel:ulyLabel text:@"TOP"];
+    [ulyLabel constrainTopToAnchor:lrxLabel.bottomAnchor constant:margin];
+    
+    _ulySC = [[UISegmentedControl alloc] initWithItems:items];
+    [self setupSC:_ulySC];
+    [_ulySC constrainTopToAnchor:ulyLabel.topAnchor];
+    [_ulySC constrainLeadingToAnchor:_pageSC.leadingAnchor];
+    [_ulySC constrainTrailingToAnchor:_typeSC.trailingAnchor];
+    
     UILabel *lryLabel = UILabel.new;
     [self setupLabel:lryLabel text:@"BOTTOM"];
-    [lryLabel constrainTopToAnchor:lrxLabel.bottomAnchor constant:margin];
+    [lryLabel constrainTopToAnchor:ulyLabel.bottomAnchor constant:margin];
     
     _lrySC = [[UISegmentedControl alloc] initWithItems:items];
     [self setupSC:_lrySC];
