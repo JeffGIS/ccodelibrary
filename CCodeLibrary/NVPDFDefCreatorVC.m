@@ -443,7 +443,7 @@
     [_lrxSC constrainLeadingToAnchor:_pageSC.leadingAnchor];
     [_lrxSC constrainTrailingToAnchor:_typeSC.trailingAnchor];
     
-    items = @[@"↓25", @"↓5", @"↓1", @"↓0.25", @"↑0.25", @"↑1", @"↑5", @"↑25"];
+    items = @[@"↑25", @"↑5", @"↑1", @"↑0.25", @"↓0.25", @"↓1", @"↓5", @"↓25"];
     
     UILabel *ulyLabel = UILabel.new;
     [self setupLabel:ulyLabel text:@"TOP"];
