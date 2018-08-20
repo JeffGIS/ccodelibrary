@@ -282,7 +282,7 @@
     
     UILabel *leftMidTicValue = UILabel.new;
     [nvps setupLabel:leftMidTicValue];
-    leftMidTicValue.text = [NSString stringWithFormat:@"%i", (int)round((maxValue + (minValue * 2.0)) / 2.0)];
+    leftMidTicValue.text = [NSString stringWithFormat:@"%i", (int)round((maxValue + (minValue * 3.0)) / 4.0)];
     leftMidTicValue.font = ticFont;
     
     [leftValueFill addSubview:leftMidTicValue];
@@ -303,7 +303,7 @@
     
     UILabel *rightMidTicValue = UILabel.new;
     [nvps setupLabel:rightMidTicValue];
-    rightMidTicValue.text = [NSString stringWithFormat:@"%i", (int)round((minValue + (maxValue * 2.0)) / 2.0)];
+    rightMidTicValue.text = [NSString stringWithFormat:@"%i", (int)round((minValue + (maxValue * 3.0)) / 4.0)];
     rightMidTicValue.font = ticFont;
     
     [rightValueFill addSubview:rightMidTicValue];
