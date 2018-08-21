@@ -43,6 +43,10 @@ typedef NS_ENUM(NSInteger, NVPDFDocument)
 wasTappedAtPoint:(DPOINT)point
      withinPage:(int)page;
 
+- (void)webView:(NVWebView *)webView
+wasLongPressedAtPoint:(DPOINT)point
+     withinPage:(int)page;
+
 - (void)windowWasSelectedWithIdentifierTag:(int)identifierTag;
 - (void)webViewDidRemoveLastMarker;
 - (void)webViewWasLeftSwiped;
@@ -85,6 +89,9 @@ wasTappedAtPoint:(DPOINT)point
 - (void)showNextAndPrevious;
 - (void)updateImageViewToImageAtPath:(NSString *)path;
 - (CORNERPOINTS)cornerPoints;
+- (void)getHtmlString;
+- (void)disableZoomScroll;
+- (void)addLongPressGestureResponder;
 
 - (void)drawShapeWithPoint:(DPoint *)point
                       type:(PointSymbols)type;
@@ -118,8 +125,5 @@ wasTappedAtPoint:(DPOINT)point
 
 - (void)addEllipseToFrameWithUpperLeft:(DPOINT)upperLeft
                             lowerRight:(DPOINT)lowerRight;
-
-- (void)getHtmlString;
-- (void)disableZoomScroll;
 
 @end

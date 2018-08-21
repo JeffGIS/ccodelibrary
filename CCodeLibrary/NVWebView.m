@@ -1467,4 +1467,36 @@ double roundTo1000th(double value)
      }];
 }
 
+- (void)addLongPressGestureResponder
+{
+    UILongPressGestureRecognizer *longPress =
+    [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                  action:@selector(webViewWasLongPressed:)];
+    
+    [_scrollView addGestureRecognizer:longPress];
+}
+
+- (void)webViewWasLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
+        if (_delegate && [_delegate respondsToSelector:@selector(webView:wasLongPressedAtPoint:withinPage:)])
+        {
+            CGPoint point = [gesture locationInView:_scrollView];
+            CGFloat pageHeight = self.pageHeight;
+            int page = (int)ceilf(point.y / pageHeight);
+            CGFloat offset = (CGFloat)(pageHeight * (page - 1));
+            point.y -= offset;
+            
+            DPOINT dPoint = {0};
+            dPoint.x = (point.x / _scrollView.contentSize.width);
+            dPoint.y = (point.y / pageHeight);
+            
+            [_delegate webView:self
+         wasLongPressedAtPoint:dPoint
+                    withinPage:page];
+        }
+    }
+}
+
 @end
