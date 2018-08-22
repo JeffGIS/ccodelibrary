@@ -214,12 +214,11 @@
 
 - (void)qualityButtonTapped
 {
-    NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
-                                                      delegate:self
-                                                         title:@"Select Quality for this Clip"
-                                               buttonTextArray:@[@"Pro", @"Con", @"Neutral"]
-                                              destructiveIndex:0];
-#pragma unused(alert)
+    [NVAlertView showLargeAlertViewinView:self.view
+                                 delegate:self
+                                    title:@"Select Quality for this Clip"
+                          buttonTextArray:@[@"Pro", @"Con", @"Neutral"]
+                         destructiveIndex:0];
 }
 
 - (void)alertView:(NVAlertView *)alertView

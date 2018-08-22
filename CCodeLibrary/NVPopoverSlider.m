@@ -11,8 +11,10 @@
 @property (nonatomic) UISlider *slider;
 @property (nonatomic) UITapGestureRecognizer *tap;
 @property (nonatomic) UILabel *titleLabel, *valueLabel;
+@property (nonatomic) UIButton *left, *right, *mid, *leftMid, *rightMid;
 @property (nonatomic, weak) id <NVPopoverSliderDelegate> delegate;
-@property float initialValue;
+@property float initialValue, initialMin, initialMax;
+@property (nonatomic) UISwitch *modeSwitch;
 
 @end
 
@@ -108,8 +110,8 @@
     [nvps.slider setMaximumTrackImage:sliderRight
                              forState:UIControlStateNormal];
     
-    nvps.slider.minimumValue = minValue;
-    nvps.slider.maximumValue = maxValue;
+    nvps.slider.minimumValue = nvps.initialMin = minValue;
+    nvps.slider.maximumValue = nvps.initialMax = maxValue;
     nvps.slider.value = nvps.initialValue = startValue;
     
     [nvps.slider addTarget:nvps
@@ -224,41 +226,29 @@
     [ticValuesView constrainBottomToAnchor:ticView.topAnchor];
     [ticValuesView constrainHeightToConstant:capHeight];
     
-    UIButton *left = [UIButton buttonWithType:UIButtonTypeCustom];
-    [nvps setupTicButton:left];
+    nvps.left = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupTicButton:nvps.left];
+    [ticValuesView addSubview:nvps.left];
+    [nvps.left constrainTopToAnchor:ticValuesView.topAnchor];
+    [nvps.left constrainBottomToAnchor:ticValuesView.bottomAnchor];
+    [nvps.left constrainCenterXToAnchor:ticValuesView.leadingAnchor constant:(width / 2.0)];
+    [nvps.left constrainWidthToConstant:width];
     
-    [left setTitle:[NSString stringWithFormat:@"%i", (int)round(minValue)]
-          forState:UIControlStateNormal];
+    nvps.right = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupTicButton:nvps.right];
+    [ticValuesView addSubview:nvps.right];
+    [nvps.right constrainTopToAnchor:ticValuesView.topAnchor];
+    [nvps.right constrainBottomToAnchor:ticValuesView.bottomAnchor];
+    [nvps.right constrainCenterXToAnchor:ticValuesView.trailingAnchor constant:(-width / 2.0)];
+    [nvps.right constrainWidthToConstant:width];
     
-    [ticValuesView addSubview:left];
-    [left constrainTopToAnchor:ticValuesView.topAnchor];
-    [left constrainBottomToAnchor:ticValuesView.bottomAnchor];
-    [left constrainCenterXToAnchor:ticValuesView.leadingAnchor constant:(width / 2.0)];
-    [left constrainWidthToConstant:width];
-    
-    UIButton *right = [UIButton buttonWithType:UIButtonTypeCustom];
-    [nvps setupTicButton:right];
-    
-    [right setTitle:[NSString stringWithFormat:@"%i", (int)round(maxValue)]
-           forState:UIControlStateNormal];
-    
-    [ticValuesView addSubview:right];
-    [right constrainTopToAnchor:ticValuesView.topAnchor];
-    [right constrainBottomToAnchor:ticValuesView.bottomAnchor];
-    [right constrainCenterXToAnchor:ticValuesView.trailingAnchor constant:(-width / 2.0)];
-    [right constrainWidthToConstant:width];
-    
-    UIButton *mid = [UIButton buttonWithType:UIButtonTypeCustom];
-    [nvps setupTicButton:mid];
-    
-    [mid setTitle:[NSString stringWithFormat:@"%i", (int)round((maxValue + minValue) / 2.0)]
-         forState:UIControlStateNormal];
-    
-    [ticValuesView addSubview:mid];
-    [mid constrainTopToAnchor:ticValuesView.topAnchor];
-    [mid constrainBottomToAnchor:ticValuesView.bottomAnchor];
-    [mid constrainCenterXToAnchor:ticValuesView.centerXAnchor];
-    [mid constrainWidthToConstant:width];
+    nvps.mid = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupTicButton:nvps.mid];
+    [ticValuesView addSubview:nvps.mid];
+    [nvps.mid constrainTopToAnchor:ticValuesView.topAnchor];
+    [nvps.mid constrainBottomToAnchor:ticValuesView.bottomAnchor];
+    [nvps.mid constrainCenterXToAnchor:ticValuesView.centerXAnchor];
+    [nvps.mid constrainWidthToConstant:width];
     
     UIView *leftValueFill = UIView.new;
     leftValueFill.translatesAutoresizingMaskIntoConstraints = NO;
@@ -267,20 +257,16 @@
     [ticValuesView addSubview:leftValueFill];
     [leftValueFill constrainTopToAnchor:ticValuesView.topAnchor];
     [leftValueFill constrainBottomToAnchor:ticValuesView.bottomAnchor];
-    [leftValueFill constrainLeadingToAnchor:left.trailingAnchor];
-    [leftValueFill constrainTrailingToAnchor:mid.leadingAnchor];
+    [leftValueFill constrainLeadingToAnchor:nvps.left.trailingAnchor];
+    [leftValueFill constrainTrailingToAnchor:nvps.mid.leadingAnchor];
     
-    UIButton *leftMid = [UIButton buttonWithType:UIButtonTypeCustom];
-    [nvps setupTicButton:leftMid];
-    
-    [leftMid setTitle:[NSString stringWithFormat:@"%i", (int)round((maxValue + (minValue * 3.0)) / 4.0)]
-             forState:UIControlStateNormal];
-    
-    [leftValueFill addSubview:leftMid];
-    [leftMid constrainTopToAnchor:leftValueFill.topAnchor];
-    [leftMid constrainBottomToAnchor:leftValueFill.bottomAnchor];
-    [leftMid constrainCenterXToAnchor:leftValueFill.centerXAnchor];
-    [leftMid constrainWidthToConstant:width];
+    nvps.leftMid = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupTicButton:nvps.leftMid];
+    [leftValueFill addSubview:nvps.leftMid];
+    [nvps.leftMid constrainTopToAnchor:leftValueFill.topAnchor];
+    [nvps.leftMid constrainBottomToAnchor:leftValueFill.bottomAnchor];
+    [nvps.leftMid constrainCenterXToAnchor:leftValueFill.centerXAnchor];
+    [nvps.leftMid constrainWidthToConstant:width];
     
     UIView *rightValueFill = UIView.new;
     rightValueFill.translatesAutoresizingMaskIntoConstraints = NO;
@@ -289,20 +275,16 @@
     [ticValuesView addSubview:rightValueFill];
     [rightValueFill constrainTopToAnchor:ticValuesView.topAnchor];
     [rightValueFill constrainBottomToAnchor:ticValuesView.bottomAnchor];
-    [rightValueFill constrainLeadingToAnchor:mid.trailingAnchor];
-    [rightValueFill constrainTrailingToAnchor:right.leadingAnchor];
+    [rightValueFill constrainLeadingToAnchor:nvps.mid.trailingAnchor];
+    [rightValueFill constrainTrailingToAnchor:nvps.right.leadingAnchor];
     
-    UIButton *rightMid = [UIButton buttonWithType:UIButtonTypeCustom];
-    [nvps setupTicButton:rightMid];
-    
-    [rightMid setTitle:[NSString stringWithFormat:@"%i", (int)round((minValue + (maxValue * 3.0)) / 4.0)]
-              forState:UIControlStateNormal];
-    
-    [rightValueFill addSubview:rightMid];
-    [rightMid constrainTopToAnchor:rightValueFill.topAnchor];
-    [rightMid constrainBottomToAnchor:rightValueFill.bottomAnchor];
-    [rightMid constrainCenterXToAnchor:rightValueFill.centerXAnchor];
-    [rightMid constrainWidthToConstant:width];
+    nvps.rightMid = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupTicButton:nvps.rightMid];
+    [rightValueFill addSubview:nvps.rightMid];
+    [nvps.rightMid constrainTopToAnchor:rightValueFill.topAnchor];
+    [nvps.rightMid constrainBottomToAnchor:rightValueFill.bottomAnchor];
+    [nvps.rightMid constrainCenterXToAnchor:rightValueFill.centerXAnchor];
+    [nvps.rightMid constrainWidthToConstant:width];
     
     nvps.titleLabel = UILabel.new;
     [nvps setupLabel:nvps.titleLabel];
@@ -406,6 +388,7 @@
     
     [nvps bringSubviewToFront:nvps.slider];
     [nvps showStepper];
+    [nvps updateTicLabels];
     
     [UIView animateWithDuration:0.25
                      animations:^{
@@ -511,8 +494,21 @@
 
 - (void)saveTapped
 {
+    float value = _slider.value;
+    
+    if (_modeSwitch.on)
+    {
+        value = (_initialValue + _slider.value);
+        
+        if (value < _initialMin)
+            value+= _initialMax;
+        
+        else if (value > _initialMax)
+            value -= _initialMax;
+    }
+    
     [_delegate popoverSlider:self
-              didReturnValue:_slider.value
+              didReturnValue:value
                          tag:self.tag];
 }
 
@@ -559,41 +555,76 @@
     [self updateSliderLabel];
 }
 
-- (void)updateSliderLabel
-{
-    _valueLabel.text = [NSString stringWithFormat:@"%i", (int)round(_slider.value)];
-}
-
 - (void)showRelativeModeSwitch
 {
-    UISwitch *modeSwitch = UISwitch.new;
-    modeSwitch.translatesAutoresizingMaskIntoConstraints = NO;
-    modeSwitch.tintColor = UIColor.redColor;
-    modeSwitch.backgroundColor = UIColor.redColor;
-    modeSwitch.layer.cornerRadius = 18.0;
-    modeSwitch.onTintColor = UIColor.greenColor;
-    modeSwitch.on = NO;
+    _modeSwitch = UISwitch.new;
+    _modeSwitch.translatesAutoresizingMaskIntoConstraints = NO;
+    _modeSwitch.tintColor = UIColor.redColor;
+    _modeSwitch.backgroundColor = UIColor.redColor;
+    _modeSwitch.layer.cornerRadius = 18.0;
+    _modeSwitch.onTintColor = UIColor.greenColor;
     
-    [self addSubview:modeSwitch];
-    [modeSwitch constrainCenterXToAnchor:self.centerXAnchor];
-    [modeSwitch constrainBottomToAnchor:self.bottomAnchor constant:-20.0];
+    [self addSubview:_modeSwitch];
+    [_modeSwitch constrainCenterXToAnchor:self.centerXAnchor];
+    [_modeSwitch constrainBottomToAnchor:self.bottomAnchor constant:-20.0];
     
-    [modeSwitch addTarget:self
-                   action:@selector(modeSwitchChanged:)
-         forControlEvents:UIControlEventValueChanged];
+    [_modeSwitch addTarget:self
+                    action:@selector(modeSwitchChanged:)
+          forControlEvents:UIControlEventValueChanged];
     
     UILabel *switchLabel = UILabel.new;
     switchLabel.translatesAutoresizingMaskIntoConstraints = NO;
     switchLabel.text = @"Relative to Current Value";
     switchLabel.textColor = UIColor.blackColor;
     [self addSubview:switchLabel];
-    [switchLabel constrainLeadingToAnchor:modeSwitch.trailingAnchor constant:10.0];
-    [switchLabel constrainCenterYToAnchor:modeSwitch.centerYAnchor];
+    [switchLabel constrainLeadingToAnchor:_modeSwitch.trailingAnchor constant:10.0];
+    [switchLabel constrainCenterYToAnchor:_modeSwitch.centerYAnchor];
 }
 
 - (void)modeSwitchChanged:(UISwitch *)modeSwitch
 {
+    if (modeSwitch.on)
+    {
+        _slider.maximumValue = 180.0;
+        _slider.minimumValue = -180.0;
+        [_slider setValue:0.0 animated:NO];
+    }
     
+    else
+    {
+        _slider.maximumValue = _initialMax;
+        _slider.minimumValue = _initialMin;
+        [_slider setValue:_initialValue animated:NO];
+    }
+    
+    [self updateTicLabels];
+    [self updateSliderLabel];
+}
+
+- (void)updateTicLabels
+{
+    float max = _slider.maximumValue;
+    float min = _slider.minimumValue;
+    
+    [_left setTitle:[NSString stringWithFormat:@"%d", (int)round(min)]
+           forState:UIControlStateNormal];
+    
+    [_right setTitle:[NSString stringWithFormat:@"%d", (int)round(max)]
+            forState:UIControlStateNormal];
+    
+    [_mid setTitle:[NSString stringWithFormat:@"%d", (int)round((max + min) / 2.0)]
+          forState:UIControlStateNormal];
+    
+    [_leftMid setTitle:[NSString stringWithFormat:@"%d", (int)round((max + (min * 3.0)) / 4.0)]
+              forState:UIControlStateNormal];
+    
+    [_rightMid setTitle:[NSString stringWithFormat:@"%d", (int)round((min + (max * 3.0)) / 4.0)]
+               forState:UIControlStateNormal];
+}
+
+- (void)updateSliderLabel
+{
+    _valueLabel.text = [NSString stringWithFormat:@"%i", (int)round(_slider.value)];
 }
 
 @end
