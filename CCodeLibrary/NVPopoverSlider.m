@@ -42,6 +42,7 @@
     CGRect bounds = UIScreen.mainScreen.bounds;
     CGFloat shortestSide = MIN(bounds.size.height, bounds.size.width);
     CGFloat height = (shortestSide * 0.75);
+    CGFloat width = 80.0;
     
     NVPopoverSlider *nvps = NVPopoverSlider.new;
     nvps.translatesAutoresizingMaskIntoConstraints = NO;
@@ -218,57 +219,46 @@
     ticValuesView.clipsToBounds = NO;
     
     [nvps addSubview:ticValuesView];
-    [ticValuesView constrainLeadingToAnchor:ticView.leadingAnchor];
-    [ticValuesView constrainTrailingToAnchor:ticView.trailingAnchor];
+    [ticValuesView constrainLeadingToAnchor:ticView.leadingAnchor constant:(-width / 2.0)];
+    [ticValuesView constrainTrailingToAnchor:ticView.trailingAnchor constant:(width / 2.0)];
     [ticValuesView constrainBottomToAnchor:ticView.topAnchor];
     [ticValuesView constrainHeightToConstant:capHeight];
     
-    UIFont *ticFont = nil;
+    UIButton *left = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupTicButton:left];
     
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-    {
-        ticFont = [UIFont fontWithName:@"Avenir Next Condensed"
-                                  size:22];
-    }
+    [left setTitle:[NSString stringWithFormat:@"%i", (int)round(minValue)]
+          forState:UIControlStateNormal];
     
-    else
-    {
-        ticFont = [UIFont fontWithName:@"Avenir Next Condensed"
-                                  size:32];
-    }
+    [ticValuesView addSubview:left];
+    [left constrainTopToAnchor:ticValuesView.topAnchor];
+    [left constrainBottomToAnchor:ticValuesView.bottomAnchor];
+    [left constrainCenterXToAnchor:ticValuesView.leadingAnchor constant:(width / 2.0)];
+    [left constrainWidthToConstant:width];
     
-    UILabel *leftTicValue = UILabel.new;
-    [nvps setupLabel:leftTicValue];
-    leftTicValue.text = [NSString stringWithFormat:@"%i", (int)round(minValue)];
-    leftTicValue.font = ticFont;
+    UIButton *right = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupTicButton:right];
     
-    [ticValuesView addSubview:leftTicValue];
-    [leftTicValue constrainTopToAnchor:ticValuesView.topAnchor];
-    [leftTicValue constrainBottomToAnchor:ticValuesView.bottomAnchor];
-    [leftTicValue constrainCenterXToAnchor:ticValuesView.leadingAnchor];
-    [leftTicValue constrainWidthToConstant:60.0];
+    [right setTitle:[NSString stringWithFormat:@"%i", (int)round(maxValue)]
+           forState:UIControlStateNormal];
     
-    UILabel *rightTicValue = UILabel.new;
-    [nvps setupLabel:rightTicValue];
-    rightTicValue.text = [NSString stringWithFormat:@"%i", (int)round(maxValue)];
-    rightTicValue.font = ticFont;
+    [ticValuesView addSubview:right];
+    [right constrainTopToAnchor:ticValuesView.topAnchor];
+    [right constrainBottomToAnchor:ticValuesView.bottomAnchor];
+    [right constrainCenterXToAnchor:ticValuesView.trailingAnchor constant:(-width / 2.0)];
+    [right constrainWidthToConstant:width];
     
-    [ticValuesView addSubview:rightTicValue];
-    [rightTicValue constrainTopToAnchor:ticValuesView.topAnchor];
-    [rightTicValue constrainBottomToAnchor:ticValuesView.bottomAnchor];
-    [rightTicValue constrainCenterXToAnchor:ticValuesView.trailingAnchor];
-    [rightTicValue constrainWidthToConstant:60.0];
+    UIButton *mid = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupTicButton:mid];
     
-    UILabel *midTicValue = UILabel.new;
-    [nvps setupLabel:midTicValue];
-    midTicValue.text = [NSString stringWithFormat:@"%i", (int)round((maxValue + minValue) / 2.0)];
-    midTicValue.font = ticFont;
+    [mid setTitle:[NSString stringWithFormat:@"%i", (int)round((maxValue + minValue) / 2.0)]
+         forState:UIControlStateNormal];
     
-    [ticValuesView addSubview:midTicValue];
-    [midTicValue constrainTopToAnchor:ticValuesView.topAnchor];
-    [midTicValue constrainBottomToAnchor:ticValuesView.bottomAnchor];
-    [midTicValue constrainCenterXToAnchor:ticValuesView.centerXAnchor];
-    [midTicValue constrainWidthToConstant:60.0];
+    [ticValuesView addSubview:mid];
+    [mid constrainTopToAnchor:ticValuesView.topAnchor];
+    [mid constrainBottomToAnchor:ticValuesView.bottomAnchor];
+    [mid constrainCenterXToAnchor:ticValuesView.centerXAnchor];
+    [mid constrainWidthToConstant:width];
     
     UIView *leftValueFill = UIView.new;
     leftValueFill.translatesAutoresizingMaskIntoConstraints = NO;
@@ -277,19 +267,20 @@
     [ticValuesView addSubview:leftValueFill];
     [leftValueFill constrainTopToAnchor:ticValuesView.topAnchor];
     [leftValueFill constrainBottomToAnchor:ticValuesView.bottomAnchor];
-    [leftValueFill constrainLeadingToAnchor:leftTicValue.trailingAnchor];
-    [leftValueFill constrainTrailingToAnchor:midTicValue.leadingAnchor];
+    [leftValueFill constrainLeadingToAnchor:left.trailingAnchor];
+    [leftValueFill constrainTrailingToAnchor:mid.leadingAnchor];
     
-    UILabel *leftMidTicValue = UILabel.new;
-    [nvps setupLabel:leftMidTicValue];
-    leftMidTicValue.text = [NSString stringWithFormat:@"%i", (int)round((maxValue + (minValue * 3.0)) / 4.0)];
-    leftMidTicValue.font = ticFont;
+    UIButton *leftMid = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupTicButton:leftMid];
     
-    [leftValueFill addSubview:leftMidTicValue];
-    [leftMidTicValue constrainTopToAnchor:leftValueFill.topAnchor];
-    [leftMidTicValue constrainBottomToAnchor:leftValueFill.bottomAnchor];
-    [leftMidTicValue constrainCenterXToAnchor:leftValueFill.centerXAnchor];
-    [leftMidTicValue constrainWidthToConstant:60.0];
+    [leftMid setTitle:[NSString stringWithFormat:@"%i", (int)round((maxValue + (minValue * 3.0)) / 4.0)]
+             forState:UIControlStateNormal];
+    
+    [leftValueFill addSubview:leftMid];
+    [leftMid constrainTopToAnchor:leftValueFill.topAnchor];
+    [leftMid constrainBottomToAnchor:leftValueFill.bottomAnchor];
+    [leftMid constrainCenterXToAnchor:leftValueFill.centerXAnchor];
+    [leftMid constrainWidthToConstant:width];
     
     UIView *rightValueFill = UIView.new;
     rightValueFill.translatesAutoresizingMaskIntoConstraints = NO;
@@ -298,19 +289,20 @@
     [ticValuesView addSubview:rightValueFill];
     [rightValueFill constrainTopToAnchor:ticValuesView.topAnchor];
     [rightValueFill constrainBottomToAnchor:ticValuesView.bottomAnchor];
-    [rightValueFill constrainLeadingToAnchor:midTicValue.trailingAnchor];
-    [rightValueFill constrainTrailingToAnchor:rightTicValue.leadingAnchor];
+    [rightValueFill constrainLeadingToAnchor:mid.trailingAnchor];
+    [rightValueFill constrainTrailingToAnchor:right.leadingAnchor];
     
-    UILabel *rightMidTicValue = UILabel.new;
-    [nvps setupLabel:rightMidTicValue];
-    rightMidTicValue.text = [NSString stringWithFormat:@"%i", (int)round((minValue + (maxValue * 3.0)) / 4.0)];
-    rightMidTicValue.font = ticFont;
+    UIButton *rightMid = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupTicButton:rightMid];
     
-    [rightValueFill addSubview:rightMidTicValue];
-    [rightMidTicValue constrainTopToAnchor:rightValueFill.topAnchor];
-    [rightMidTicValue constrainBottomToAnchor:rightValueFill.bottomAnchor];
-    [rightMidTicValue constrainCenterXToAnchor:rightValueFill.centerXAnchor];
-    [rightMidTicValue constrainWidthToConstant:60.0];
+    [rightMid setTitle:[NSString stringWithFormat:@"%i", (int)round((minValue + (maxValue * 3.0)) / 4.0)]
+              forState:UIControlStateNormal];
+    
+    [rightValueFill addSubview:rightMid];
+    [rightMid constrainTopToAnchor:rightValueFill.topAnchor];
+    [rightMid constrainBottomToAnchor:rightValueFill.bottomAnchor];
+    [rightMid constrainCenterXToAnchor:rightValueFill.centerXAnchor];
+    [rightMid constrainWidthToConstant:width];
     
     nvps.titleLabel = UILabel.new;
     [nvps setupLabel:nvps.titleLabel];
@@ -356,9 +348,7 @@
     
     nvps.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [nvps setupButton:nvps.cancelButton];
-    
-    [nvps.cancelButton setTitle:@"Cancel"
-                       forState:UIControlStateNormal];
+    [nvps.cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
     
     [leftButtonSpace addSubview:nvps.cancelButton];
     [nvps.cancelButton constrainCenterXToAnchor:leftButtonSpace.centerXAnchor];
@@ -392,9 +382,7 @@
     
     nvps.saveButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [nvps setupButton:nvps.saveButton];
-    
-    [nvps.saveButton setTitle:@"Save"
-                     forState:UIControlStateNormal];
+    [nvps.saveButton setTitle:@"Save" forState:UIControlStateNormal];
     
     [rightButtonSpace addSubview:nvps.saveButton];
     [nvps.saveButton constrainCenterXToAnchor:rightButtonSpace.centerXAnchor];
@@ -437,25 +425,38 @@
     label.adjustsFontSizeToFitWidth = YES;
 }
 
+- (void)setupTicButton:(UIButton *)button
+{
+    CGFloat fontSize = 32.0;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        fontSize = 22.0;
+    
+    button.translatesAutoresizingMaskIntoConstraints = NO;
+    button.backgroundColor = UIColor.clearColor;
+    button.titleLabel.textAlignment = NSTextAlignmentCenter;
+    button.clipsToBounds = NO;
+    button.titleLabel.adjustsFontSizeToFitWidth = YES;
+    button.titleLabel.font = [UIFont fontWithName:@"Avenir Next Condensed" size:fontSize];
+    [button setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(ticTapped:) forControlEvents:UIControlEventTouchDown];
+}
+
 - (void)setupButton:(UIButton *)button
 {
+    CGFloat fontSize = 40.0;
+    
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        fontSize = 28.0;
+    
     button.translatesAutoresizingMaskIntoConstraints = NO;
     button.backgroundColor = UIColor.blackColor;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     button.titleLabel.adjustsFontSizeToFitWidth = YES;
     button.layer.cornerRadius = 10.0;
-    
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        button.titleLabel.font = [UIFont boldSystemFontOfSize:28.0];
-    
-    else
-        button.titleLabel.font = [UIFont boldSystemFontOfSize:40.0];
-    
-    [button setTitleColor:UIColor.whiteColor
-                 forState:UIControlStateNormal];
-    
-    [button setTitleColor:UIColor.grayColor
-                 forState:UIControlStateHighlighted];
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:fontSize];
+    [button setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [button setTitleColor:UIColor.grayColor forState:UIControlStateHighlighted];
 }
 
 - (void)hidePopoverSliderView:(BOOL)animated
@@ -499,9 +500,7 @@
     float medianValue = ((_slider.maximumValue + _slider.minimumValue) / 2.0);
     float value = (rawValue - ((medianValue - rawValue) * 0.15));
     
-    [_slider setValue:value
-             animated:NO];
-    
+    [_slider setValue:value animated:NO];
     _valueLabel.text = [NSString stringWithFormat:@"%i", (int)round(_slider.value)];
 }
 
@@ -515,6 +514,12 @@
     [_delegate popoverSlider:self
               didReturnValue:_slider.value
                          tag:self.tag];
+}
+
+- (void)ticTapped:(UIButton *)button
+{
+    [_slider setValue:button.titleLabel.text.intValue animated:NO];
+    _valueLabel.text = [NSString stringWithFormat:@"%i", (int)round(_slider.value)];
 }
 
 @end
