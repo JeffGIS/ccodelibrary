@@ -18,14 +18,15 @@
 @interface NVPopoverSlider : UIView
 
 + (instancetype)showPopoverSliderInView:(UIView *)view
-                               minValue:(double)minValue
-                               maxValue:(double)maxValue
-                             startValue:(double)startValue
+                               minValue:(float)minValue
+                               maxValue:(float)maxValue
+                             startValue:(float)startValue
                                delegate:(id)delegate
                                     tag:(NSInteger)tag
                                   title:(NSString *)title;
 
 - (void)hidePopoverSliderView:(BOOL)animated;
 - (void)showStepper;
+- (void)showRelativeModeSwitch;
 
 @end

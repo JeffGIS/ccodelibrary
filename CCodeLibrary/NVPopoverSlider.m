@@ -12,15 +12,16 @@
 @property (nonatomic) UITapGestureRecognizer *tap;
 @property (nonatomic) UILabel *titleLabel, *valueLabel;
 @property (nonatomic, weak) id <NVPopoverSliderDelegate> delegate;
+@property float initialValue;
 
 @end
 
 @implementation NVPopoverSlider
 
 + (instancetype)showPopoverSliderInView:(UIView *)view
-                               minValue:(double)minValue
-                               maxValue:(double)maxValue
-                             startValue:(double)startValue
+                               minValue:(float)minValue
+                               maxValue:(float)maxValue
+                             startValue:(float)startValue
                                delegate:(id)delegate
                                     tag:(NSInteger)tag
                                   title:(NSString *)title
@@ -109,7 +110,7 @@
     
     nvps.slider.minimumValue = minValue;
     nvps.slider.maximumValue = maxValue;
-    nvps.slider.value = startValue;
+    nvps.slider.value = nvps.initialValue = startValue;
     
     [nvps.slider addTarget:nvps
                     action:@selector(sliderValueChanged:)
@@ -118,7 +119,7 @@
     [nvps addSubview:nvps.slider];
     [nvps.slider constrainLeadingToAnchor:nvps.leadingAnchor constant:(height * 0.05)];
     [nvps.slider constrainTrailingToAnchor:nvps.trailingAnchor constant:-(height * 0.05)];
-    [nvps.slider constrainTopToAnchor:nvps.centerYAnchor];
+    [nvps.slider constrainTopToAnchor:nvps.centerYAnchor constant:-(height * 0.1)];
     
     nvps.tap = [[UITapGestureRecognizer alloc] initWithTarget:nvps
                                                        action:@selector(sliderTapped:)];
@@ -158,7 +159,7 @@
     [leftTic constrainTopToAnchor:ticView.topAnchor];
     [leftTic constrainBottomToAnchor:ticView.bottomAnchor];
     [leftTic constrainLeadingToAnchor:ticView.leadingAnchor];
-    [leftTic constrainWidthToConstant:2.0];
+    [leftTic constrainWidthToAnchor:midTic.widthAnchor];
     
     [nvps bringSubviewToFront:nvps.slider];
     
@@ -170,7 +171,7 @@
     [rightTic constrainTopToAnchor:ticView.topAnchor];
     [rightTic constrainBottomToAnchor:ticView.bottomAnchor];
     [rightTic constrainTrailingToAnchor:ticView.trailingAnchor];
-    [rightTic constrainWidthToConstant:2.0];
+    [rightTic constrainWidthToAnchor:midTic.widthAnchor];
     
     UIView *leftFill = UIView.new;
     leftFill.translatesAutoresizingMaskIntoConstraints = NO;
@@ -190,7 +191,7 @@
     [leftMidTic constrainTopToAnchor:leftFill.topAnchor];
     [leftMidTic constrainBottomToAnchor:leftFill.bottomAnchor];
     [leftMidTic constrainCenterXToAnchor:leftFill.centerXAnchor];
-    [leftMidTic constrainWidthToConstant:2.0];
+    [leftMidTic constrainWidthToAnchor:midTic.widthAnchor];
     
     UIView *rightFill = UIView.new;
     rightFill.translatesAutoresizingMaskIntoConstraints = NO;
@@ -210,7 +211,7 @@
     [rightMidTic constrainTopToAnchor:rightFill.topAnchor];
     [rightMidTic constrainBottomToAnchor:rightFill.bottomAnchor];
     [rightMidTic constrainCenterXToAnchor:rightFill.centerXAnchor];
-    [rightMidTic constrainWidthToConstant:2.0];
+    [rightMidTic constrainWidthToAnchor:midTic.widthAnchor];
     
     UIView *ticValuesView = UIView.new;
     ticValuesView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -324,13 +325,13 @@
     }
     
     [nvps addSubview:nvps.titleLabel];
-    [nvps.titleLabel constrainLeadingToAnchor:nvps.leadingAnchor constant:(height * 0.05)];
-    [nvps.titleLabel constrainTrailingToAnchor:nvps.trailingAnchor constant:-(height * 0.05)];
+    [nvps.titleLabel constrainLeadingToAnchor:nvps.slider.leadingAnchor];
+    [nvps.titleLabel constrainTrailingToAnchor:nvps.slider.trailingAnchor];
     [nvps.titleLabel constrainTopToAnchor:nvps.topAnchor];
     
     [nvps addSubview:nvps.valueLabel];
-    [nvps.valueLabel constrainLeadingToAnchor:nvps.leadingAnchor constant:(height * 0.05)];
-    [nvps.valueLabel constrainTrailingToAnchor:nvps.trailingAnchor constant:-(height * 0.05)];
+    [nvps.valueLabel constrainLeadingToAnchor:nvps.slider.leadingAnchor];
+    [nvps.valueLabel constrainTrailingToAnchor:nvps.slider.trailingAnchor];
     [nvps.valueLabel constrainBottomToAnchor:ticValuesView.topAnchor];
     [nvps.valueLabel constrainTopToAnchor:nvps.titleLabel.bottomAnchor];
     [nvps.valueLabel constrainHeightToAnchor:nvps.titleLabel.heightAnchor multiplier:1.5];
@@ -343,7 +344,7 @@
     [leftButtonSpace constrainLeadingToAnchor:nvps.leadingAnchor];
     [leftButtonSpace constrainTrailingToAnchor:nvps.centerXAnchor];
     [leftButtonSpace constrainBottomToAnchor:nvps.bottomAnchor];
-    [leftButtonSpace constrainTopToAnchor:nvps.slider.bottomAnchor constant:60.0];
+    [leftButtonSpace constrainTopToAnchor:nvps.slider.bottomAnchor constant:40.0];
     
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [nvps setupButton:cancelButton];
@@ -356,13 +357,13 @@
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
         [cancelButton constrainWidthToAnchor:leftButtonSpace.widthAnchor multiplier:0.8];
-        [cancelButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.7];
+        [cancelButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.6];
     }
     
     else
     {
         [cancelButton constrainWidthToAnchor:leftButtonSpace.widthAnchor multiplier:0.8];
-        [cancelButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.4];
+        [cancelButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.3];
     }
     
     [cancelButton addTarget:nvps
@@ -390,13 +391,13 @@
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
         [saveButton constrainWidthToAnchor:rightButtonSpace.widthAnchor multiplier:0.8];
-        [saveButton constrainHeightToAnchor:rightButtonSpace.heightAnchor multiplier:0.7];
+        [saveButton constrainHeightToAnchor:rightButtonSpace.heightAnchor multiplier:0.6];
     }
     
     else
     {
         [saveButton constrainWidthToAnchor:rightButtonSpace.widthAnchor multiplier:0.8];
-        [saveButton constrainHeightToAnchor:rightButtonSpace.heightAnchor multiplier:0.4];
+        [saveButton constrainHeightToAnchor:rightButtonSpace.heightAnchor multiplier:0.3];
     }
     
     [saveButton addTarget:nvps
@@ -404,6 +405,7 @@
          forControlEvents:UIControlEventTouchUpInside];
     
     [nvps bringSubviewToFront:nvps.slider];
+    [nvps showStepper];
     
     [UIView animateWithDuration:0.25
                      animations:^{
@@ -560,6 +562,38 @@
 - (void)updateSliderLabel
 {
     _valueLabel.text = [NSString stringWithFormat:@"%i", (int)round(_slider.value)];
+}
+
+- (void)showRelativeModeSwitch
+{
+    UISwitch *modeSwitch = UISwitch.new;
+    modeSwitch.translatesAutoresizingMaskIntoConstraints = NO;
+    modeSwitch.tintColor = UIColor.redColor;
+    modeSwitch.backgroundColor = UIColor.redColor;
+    modeSwitch.layer.cornerRadius = 18.0;
+    modeSwitch.onTintColor = UIColor.greenColor;
+    modeSwitch.on = NO;
+    
+    [self addSubview:modeSwitch];
+    [modeSwitch constrainCenterXToAnchor:self.centerXAnchor];
+    [modeSwitch constrainBottomToAnchor:self.bottomAnchor constant:-20.0];
+    
+    [modeSwitch addTarget:self
+                   action:@selector(modeSwitchChanged:)
+         forControlEvents:UIControlEventValueChanged];
+    
+    UILabel *switchLabel = UILabel.new;
+    switchLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    switchLabel.text = @"Relative to Current Value";
+    switchLabel.textColor = UIColor.blackColor;
+    [self addSubview:switchLabel];
+    [switchLabel constrainLeadingToAnchor:modeSwitch.trailingAnchor constant:10.0];
+    [switchLabel constrainCenterYToAnchor:modeSwitch.centerYAnchor];
+}
+
+- (void)modeSwitchChanged:(UISwitch *)modeSwitch
+{
+    
 }
 
 @end
