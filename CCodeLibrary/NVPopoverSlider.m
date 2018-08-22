@@ -11,7 +11,6 @@
 @property (nonatomic) UISlider *slider;
 @property (nonatomic) UITapGestureRecognizer *tap;
 @property (nonatomic) UILabel *titleLabel, *valueLabel;
-@property (nonatomic) UIButton *saveButton, *cancelButton;
 @property (nonatomic, weak) id <NVPopoverSliderDelegate> delegate;
 
 @end
@@ -344,65 +343,65 @@
     [leftButtonSpace constrainLeadingToAnchor:nvps.leadingAnchor];
     [leftButtonSpace constrainTrailingToAnchor:nvps.centerXAnchor];
     [leftButtonSpace constrainBottomToAnchor:nvps.bottomAnchor];
-    [leftButtonSpace constrainTopToAnchor:nvps.slider.bottomAnchor];
+    [leftButtonSpace constrainTopToAnchor:nvps.slider.bottomAnchor constant:60.0];
     
-    nvps.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [nvps setupButton:nvps.cancelButton];
-    [nvps.cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
+    UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupButton:cancelButton];
+    [cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
     
-    [leftButtonSpace addSubview:nvps.cancelButton];
-    [nvps.cancelButton constrainCenterXToAnchor:leftButtonSpace.centerXAnchor];
-    [nvps.cancelButton constrainCenterYToAnchor:leftButtonSpace.centerYAnchor];
+    [leftButtonSpace addSubview:cancelButton];
+    [cancelButton constrainCenterXToAnchor:leftButtonSpace.centerXAnchor];
+    [cancelButton constrainCenterYToAnchor:leftButtonSpace.centerYAnchor];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
-        [nvps.cancelButton constrainWidthToAnchor:leftButtonSpace.widthAnchor multiplier:0.8];
-        [nvps.cancelButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.7];
+        [cancelButton constrainWidthToAnchor:leftButtonSpace.widthAnchor multiplier:0.8];
+        [cancelButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.7];
     }
     
     else
     {
-        [nvps.cancelButton constrainWidthToAnchor:leftButtonSpace.widthAnchor multiplier:0.7];
-        [nvps.cancelButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.4];
+        [cancelButton constrainWidthToAnchor:leftButtonSpace.widthAnchor multiplier:0.8];
+        [cancelButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.4];
     }
     
-    [nvps.cancelButton addTarget:nvps
-                          action:@selector(cancelTapped:)
-                forControlEvents:UIControlEventTouchUpInside];
+    [cancelButton addTarget:nvps
+                     action:@selector(cancelTapped)
+           forControlEvents:UIControlEventTouchUpInside];
     
     UIView *rightButtonSpace = UIView.new;
     rightButtonSpace.translatesAutoresizingMaskIntoConstraints = NO;
     rightButtonSpace.backgroundColor = UIColor.clearColor;
     
     [nvps addSubview:rightButtonSpace];
-    [rightButtonSpace constrainLeadingToAnchor:nvps.centerXAnchor];
+    [rightButtonSpace constrainLeadingToAnchor:leftButtonSpace.trailingAnchor];
     [rightButtonSpace constrainTrailingToAnchor:nvps.trailingAnchor];
-    [rightButtonSpace constrainBottomToAnchor:nvps.bottomAnchor];
-    [rightButtonSpace constrainTopToAnchor:nvps.slider.bottomAnchor];
+    [rightButtonSpace constrainBottomToAnchor:leftButtonSpace.bottomAnchor];
+    [rightButtonSpace constrainTopToAnchor:leftButtonSpace.topAnchor];
     
-    nvps.saveButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [nvps setupButton:nvps.saveButton];
-    [nvps.saveButton setTitle:@"Save" forState:UIControlStateNormal];
+    UIButton *saveButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nvps setupButton:saveButton];
+    [saveButton setTitle:@"Save" forState:UIControlStateNormal];
     
-    [rightButtonSpace addSubview:nvps.saveButton];
-    [nvps.saveButton constrainCenterXToAnchor:rightButtonSpace.centerXAnchor];
-    [nvps.saveButton constrainCenterYToAnchor:rightButtonSpace.centerYAnchor];
+    [rightButtonSpace addSubview:saveButton];
+    [saveButton constrainCenterXToAnchor:rightButtonSpace.centerXAnchor];
+    [saveButton constrainCenterYToAnchor:rightButtonSpace.centerYAnchor];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
-        [nvps.saveButton constrainWidthToAnchor:rightButtonSpace.widthAnchor multiplier:0.9];
-        [nvps.saveButton constrainHeightToAnchor:rightButtonSpace.heightAnchor multiplier:0.7];
+        [saveButton constrainWidthToAnchor:rightButtonSpace.widthAnchor multiplier:0.8];
+        [saveButton constrainHeightToAnchor:rightButtonSpace.heightAnchor multiplier:0.7];
     }
     
     else
     {
-        [nvps.saveButton constrainWidthToAnchor:rightButtonSpace.widthAnchor multiplier:0.7];
-        [nvps.saveButton constrainHeightToAnchor:rightButtonSpace.heightAnchor multiplier:0.4];
+        [saveButton constrainWidthToAnchor:rightButtonSpace.widthAnchor multiplier:0.8];
+        [saveButton constrainHeightToAnchor:rightButtonSpace.heightAnchor multiplier:0.4];
     }
     
-    [nvps.saveButton addTarget:nvps
-                        action:@selector(saveTapped:)
-              forControlEvents:UIControlEventTouchUpInside];
+    [saveButton addTarget:nvps
+                   action:@selector(saveTapped)
+         forControlEvents:UIControlEventTouchUpInside];
     
     [nvps bringSubviewToFront:nvps.slider];
     
@@ -487,8 +486,7 @@
 {
     _tap.enabled = NO;
     _tap.enabled = YES;
-    
-    _valueLabel.text = [NSString stringWithFormat:@"%i", (int)round(_slider.value)];
+    [self updateSliderLabel];
 }
 
 - (void)sliderTapped:(UITapGestureRecognizer *)gesture
@@ -501,15 +499,15 @@
     float value = (rawValue - ((medianValue - rawValue) * 0.15));
     
     [_slider setValue:value animated:NO];
-    _valueLabel.text = [NSString stringWithFormat:@"%i", (int)round(_slider.value)];
+    [self updateSliderLabel];
 }
 
-- (void)cancelTapped:(UIButton *)button
+- (void)cancelTapped
 {
     [_delegate popoverSliderDidCancel:self];
 }
 
-- (void)saveTapped:(UIButton *)button
+- (void)saveTapped
 {
     [_delegate popoverSlider:self
               didReturnValue:_slider.value
@@ -519,6 +517,48 @@
 - (void)ticTapped:(UIButton *)button
 {
     [_slider setValue:button.titleLabel.text.intValue animated:NO];
+    [self updateSliderLabel];
+}
+
+- (void)showStepper
+{
+    UISegmentedControl *stepperSC = [[UISegmentedControl alloc] initWithItems:@[@"-", @"+"]];
+    stepperSC.translatesAutoresizingMaskIntoConstraints = NO;
+    stepperSC.momentary = YES;
+    stepperSC.tintColor = UIColor.blackColor;
+    
+    [stepperSC setTitleTextAttributes:[NSDictionary dictionaryWithObject:[UIFont boldSystemFontOfSize:48.0]
+                                                                  forKey:NSFontAttributeName]
+                             forState:UIControlStateNormal];
+    
+    [stepperSC setContentPositionAdjustment:UIOffsetMake(0.0, -2.0)
+                             forSegmentType:UISegmentedControlSegmentAny
+                                 barMetrics:UIBarMetricsDefault];
+    
+    [self addSubview:stepperSC];
+    [stepperSC constrainCenterXToAnchor:_slider.centerXAnchor];
+    [stepperSC constrainTopToAnchor:_slider.bottomAnchor constant:20.0];
+    [stepperSC constrainHeightToConstant:50.0];
+    [stepperSC constrainWidthToAnchor:stepperSC.heightAnchor multiplier:3.0];
+    
+    [stepperSC addTarget:self
+                  action:@selector(stepperSCTapped:)
+        forControlEvents:UIControlEventValueChanged];
+}
+
+- (void)stepperSCTapped:(UISegmentedControl *)sc
+{
+    if (sc.selectedSegmentIndex)
+        [_slider setValue:(_slider.value + 1) animated:NO];
+    
+    else
+        [_slider setValue:(_slider.value - 1) animated:NO];
+    
+    [self updateSliderLabel];
+}
+
+- (void)updateSliderLabel
+{
     _valueLabel.text = [NSString stringWithFormat:@"%i", (int)round(_slider.value)];
 }
 

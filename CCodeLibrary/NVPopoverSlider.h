@@ -26,5 +26,6 @@
                                   title:(NSString *)title;
 
 - (void)hidePopoverSliderView:(BOOL)animated;
+- (void)showStepper;
 
 @end
