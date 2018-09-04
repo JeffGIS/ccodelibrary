@@ -116,6 +116,15 @@
     return rt;
 }
 
++ (instancetype)noRamp
+{
+    NVRampType *rt = NVRampType.new;
+    rt.displayText = @"No Ramp";
+    rt.imageName = @"NoRamp";
+    rt.type = RampTypeNoRamp;
+    return rt;
+}
+
 @end
 
 @interface NVRampTypePageController () <UIPageViewControllerDataSource,UIPageViewControllerDelegate,NVRampTypePageViewDelegate>
@@ -161,7 +170,7 @@
 {
     return @[NVRampType.perp, NVRampType.perpNonWalkable, NVRampType.comPerp, NVRampType.comPerpNW,
              NVRampType.oneWayPerp, NVRampType.oneWayBlend, NVRampType.parallel, NVRampType.depCorner,
-             NVRampType.fan, NVRampType.builtUp, NVRampType.diagonal, NVRampType.oneWayAdj];
+             NVRampType.fan, NVRampType.builtUp, NVRampType.diagonal, NVRampType.oneWayAdj, NVRampType.noRamp];
 }
 
 - (id)init

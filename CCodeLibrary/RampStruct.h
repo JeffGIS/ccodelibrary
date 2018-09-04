@@ -49,6 +49,7 @@ typedef enum {
     RampTypeBuiltUp,
     RampTypeDiagonal,
     RampTypeOneWayDirCurbGutter,
+    RampTypeNoRamp,
     RampTypeCombLeftWalk=101,//left side of RampTypeCombPerpWalk
     RampTypeCombRightWalk=102,//right side of RampTypeCombPerpWalk
     RampTypeCombLeftNonWalk=103,//left side of RampTypeCombPerpNonWalk
