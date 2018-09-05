@@ -136,7 +136,9 @@
         ft = FPSDoor;
     else if ([type isEqualToString:@"Curb Ramp"])
         ft = FPSCurbRamp;
-    
+    else if ([type isEqualToString:@"Bus"])
+        ft = FPSBus;
+
     if (!ft)
         showAlert([NSString stringWithFormat:@"Point symbol %@ not found",type]);
     

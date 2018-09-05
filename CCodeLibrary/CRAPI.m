@@ -383,19 +383,25 @@
     [currentFacility.imagePaths addObject:path];
     [currentFacility.imageTypes addObject:@"jpg"];
     [currentFacility.imageDescriptions addObject:@"Lower Level"];
-    
+    NSString * bounds = [self boundsForFacilityImage:@"Lower Level"];
+    [currentFacility.cbounds addObject:bounds];
+
     path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A04" ofType:@"jpg"];
     path = [path stringByDeletingPathExtension];
     [currentFacility.imagePaths addObject:path];
     [currentFacility.imageTypes addObject:@"jpg"];
     [currentFacility.imageDescriptions addObject:@"Entry Level"];
-    
+    bounds = [self boundsForFacilityImage:@"Entry Level"];
+    [currentFacility.cbounds addObject:bounds];
+
     path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A05" ofType:@"jpg"];
     path = [path stringByDeletingPathExtension];
     [currentFacility.imagePaths addObject:path];
     [currentFacility.imageTypes addObject:@"jpg"];
     [currentFacility.imageDescriptions addObject:@"Upper Level"];
-    
+    bounds = [self boundsForFacilityImage:@"Upper Level"];
+    [currentFacility.cbounds addObject:bounds];
+
 /*    path = [NSBundle.mainBundle pathForResource:@"1995 City Hall Plans A06" ofType:@"jpg"];
     path = [path stringByDeletingPathExtension];
     [currentFacility.imagePaths addObject:path];

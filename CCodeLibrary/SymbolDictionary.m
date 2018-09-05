@@ -101,6 +101,8 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
     BOOL dispersed = FALSE;
     static int ii=1;
     CGFloat screenScale = 1;//[[UIScreen mainScreen] scale];
+    UIImage * symImage=nil;
+    CGRect imageRect;
     
     size *= screenScale;
     CGFloat origSize = size;
@@ -113,7 +115,20 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
         dispersed = FALSE;
     if (size < 60)
         lwidth = 1;
-    CGContextSetFillColorWithColor(context,fcolor);
+    
+    switch (sym)
+    {
+        BusSym:
+            imageRect = CGRectMake(pt->x, pt->y, size, size);
+            symImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"BusSymbol"
+                                                                                      ofType:@"png"]];
+            CGContextDrawImage(context, imageRect, symImage.CGImage);
+
+            break;
+        default:
+            break;
+    }
+   CGContextSetFillColorWithColor(context,fcolor);
     
     if (sym == CircleSym)
     {
