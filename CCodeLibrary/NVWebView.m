@@ -345,6 +345,7 @@
 {
     UIImage *image = [UIImage imageWithContentsOfFile:path];
     _imageView = [[UIImageView alloc] initWithImage:image];
+    _imageView.contentMode = UIViewContentModeScaleAspectFit;
     
     _scrollView = UIScrollView.new;
     _scrollView.backgroundColor = UIColor.clearColor;
