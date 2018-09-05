@@ -345,7 +345,6 @@
 {
     UIImage *image = [UIImage imageWithContentsOfFile:path];
     _imageView = [[UIImageView alloc] initWithImage:image];
-    _imageView.contentMode = UIViewContentModeScaleAspectFit;
     
     _scrollView = UIScrollView.new;
     _scrollView.backgroundColor = UIColor.clearColor;
@@ -383,11 +382,10 @@
     CGFloat hScale = (self.frame.size.width / _imageView.frame.size.width);
     CGFloat vScale = (self.frame.size.height / _imageView.frame.size.height);
     CGFloat minScale = MIN(hScale, vScale);
-    CGFloat scale = MAX(hScale, vScale);
     
     _scrollView.minimumZoomScale = minScale;
     _scrollView.maximumZoomScale = (minScale * 100.0);
-    [_scrollView setZoomScale:scale animated:NO];
+    [_scrollView setZoomScale:minScale animated:NO];
     _scrollView.alpha = 1.0;
     _scrollView.userInteractionEnabled = YES;
     
