@@ -19,4 +19,11 @@
     dp.y = y;
     return dp;
 }
+- (DPOINT) toDPOINT
+{
+    DPOINT dp;
+    dp.x = _x;
+    dp.y = _y;
+    return dp;
+}
 @end
