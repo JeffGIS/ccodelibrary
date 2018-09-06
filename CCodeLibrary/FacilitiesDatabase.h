@@ -136,6 +136,8 @@ Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCS
 + (NSString *) removeLastStep:(NSString *)stepID;
 + (NSString *) getFailMessage:(NSString *)stepID
                         value:(NSString *)value;
++(NSString *) getGraphicsFileAndPageForStep:(NSString *)stepID
+                                       page:(int *)pPage;
 
 
 @end

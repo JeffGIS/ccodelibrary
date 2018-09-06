@@ -343,10 +343,11 @@
     NSString *path = [NSBundle.mainBundle pathForResource:@"imageBounds" ofType:@"txt"];
     NSString * bounds = @"";
     NSString * file = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    NSArray * lines = [file componentsSeparatedByString:@"\r\n"];
+    NSArray * lines = [file componentsSeparatedByString:@"\n"];
     for (NSString * line in lines)
     {
-        NSArray * fields = [line componentsSeparatedByString:@"\t"];
+        NSString *line2 = [line stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+        NSArray * fields = [line2 componentsSeparatedByString:@"\t"];
         NSString * imageName = fields[0];
         if ([imageName isEqualToString:image])
         {

@@ -1103,6 +1103,38 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     return rtn;
 }
 
++(NSString *) getGraphicsFileAndPageForStep:(NSString *)stepID
+                                 page:(int *)pPage
+{
+    NSString * rtn = @"";
+    NSString * type;
+    int page;
+    int facID = CRAPI.sharedInstance.currentFacility.facID;
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    NSString *query = [NSString stringWithFormat:@"SELECT graphicElementReferenceFile,graphicElementReferenceFileType,graphicElementReferenceFilePage FROM FacilityValues WHERE facilityNumber = %i AND stepValueID = '%@'",facID,stepID];
+    sqlite3_stmt *statement = NULL;
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(fd.database, query.UTF8String, -1, &statement, NULL), fd.database);
+    
+    if (sqlite3_step(statement) == SQLITE_ROW)
+    {
+        
+        LPSTR value = (LPSTR)sqlite3_column_text(statement, 0);
+        if (*value)
+        {
+            rtn = [NSString stringWithUTF8String:value];
+            value = (LPSTR)sqlite3_column_text(statement, 1);
+            type = [NSString stringWithUTF8String:value];
+            page = sqlite3_column_int(statement, 2);
+            *pPage = page;
+        }
+    }
+    
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), fd.database);
+    [fd close:opened];
+    return rtn;
+}
+
 + (void)getExistingGraphicDataTypes:(NSMutableArray<NSNumber *> *)types
                        usingSymbols:(NSMutableArray<NSNumber *> *)symbols
                   havingCoordinates:(NSMutableArray<NSMutableArray<DPoint *> *> *)coordinates
