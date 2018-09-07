@@ -705,11 +705,14 @@ createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
     DPOINT dPoint = {0};
     CGPoint offset = _scrollView.contentOffset;
     CGSize size = _scrollView.contentSize;
+    CGSize frameSize = self.frame.size;
+    if (!frameSize.width && !frameSize.height)
+        frameSize = size;
     
     coords.xmn = (offset.x / size.width);
     coords.ymn = (offset.y / size.height);
-    offset.x += self.frame.size.width;
-    offset.y += self.frame.size.height;
+    offset.x += frameSize.width;
+    offset.y += frameSize.height;
     coords.xmx = (offset.x / size.width);
     coords.ymx = (offset.y / size.height);
     

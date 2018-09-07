@@ -8,6 +8,7 @@
 
 + (DPoint *)fromDPOINT:(LPDPOINT)dpt;
 + (DPoint *)fromXY:(double)x y:(double)y;
+- (DPOINT) toDPOINT;
 
 @property double x;
 @property double y;
