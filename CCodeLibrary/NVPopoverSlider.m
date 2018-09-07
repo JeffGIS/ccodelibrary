@@ -55,6 +55,7 @@
     nvps.alpha = 0.0;
     nvps.backgroundColor = UIColor.whiteColor;
     nvps.layer.cornerRadius = 10.0;
+    nvps.units = @"";
     
     nvps.overlayView = UIView.new;
     nvps.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -494,11 +495,14 @@
 
 - (void)saveTapped
 {
-    float value = _slider.value;
+    float value = roundf(_slider.value);
+    
+    if (_roundToTenths)
+        value = ((roundf(_slider.value * 10.0)) / 10.0);
     
     if (_modeSwitch.on)
     {
-        value = (_initialValue + _slider.value);
+        value+= _initialValue;
         
         if (value < _initialMin)
             value+= _initialMax;
@@ -514,7 +518,7 @@
 
 - (void)ticTapped:(UIButton *)button
 {
-    [_slider setValue:button.titleLabel.text.intValue animated:NO];
+    [_slider setValue:button.titleLabel.text.floatValue animated:NO];
     [self updateSliderLabel];
 }
 
@@ -547,10 +551,22 @@
 - (void)stepperSCTapped:(UISegmentedControl *)sc
 {
     if (sc.selectedSegmentIndex)
-        [_slider setValue:(_slider.value + 1) animated:NO];
+    {
+        if (_roundToTenths)
+            [_slider setValue:(_slider.value + 0.1) animated:NO];
+        
+        else
+            [_slider setValue:(_slider.value + 1) animated:NO];
+    }
     
     else
-        [_slider setValue:(_slider.value - 1) animated:NO];
+    {
+        if (_roundToTenths)
+            [_slider setValue:(_slider.value - 0.1) animated:NO];
+        
+        else
+            [_slider setValue:(_slider.value - 1) animated:NO];
+    }
     
     [self updateSliderLabel];
 }
@@ -606,25 +622,72 @@
     float max = _slider.maximumValue;
     float min = _slider.minimumValue;
     
-    [_left setTitle:[NSString stringWithFormat:@"%d", (int)round(min)]
-           forState:UIControlStateNormal];
-    
-    [_right setTitle:[NSString stringWithFormat:@"%d", (int)round(max)]
-            forState:UIControlStateNormal];
-    
-    [_mid setTitle:[NSString stringWithFormat:@"%d", (int)round((max + min) / 2.0)]
-          forState:UIControlStateNormal];
-    
-    [_leftMid setTitle:[NSString stringWithFormat:@"%d", (int)round((max + (min * 3.0)) / 4.0)]
-              forState:UIControlStateNormal];
-    
-    [_rightMid setTitle:[NSString stringWithFormat:@"%d", (int)round((min + (max * 3.0)) / 4.0)]
+    if (_roundToTenths)
+    {
+        [_left setTitle:[NSString stringWithFormat:@"%.1f", roundf(min * 10.0) / 10.0]
                forState:UIControlStateNormal];
+        
+        [_right setTitle:[NSString stringWithFormat:@"%.1f", roundf(max * 10.0) / 10.0]
+                forState:UIControlStateNormal];
+        
+        [_mid setTitle:[NSString stringWithFormat:@"%.1f", roundf(((max + min) / 2.0) * 10.0) / 10.0]
+              forState:UIControlStateNormal];
+        
+        [_leftMid setTitle:[NSString stringWithFormat:@"%.1f", roundf(((max + (min * 3.0)) / 4.0) * 10.0) / 10.0]
+                  forState:UIControlStateNormal];
+        
+        [_rightMid setTitle:[NSString stringWithFormat:@"%.1f", roundf(((min + (max * 3.0)) / 4.0) * 10.0) / 10.0]
+                   forState:UIControlStateNormal];
+    }
+    
+    else
+    {
+        [_left setTitle:[NSString stringWithFormat:@"%.0f", roundf(min)]
+               forState:UIControlStateNormal];
+        
+        [_right setTitle:[NSString stringWithFormat:@"%.0f", roundf(max)]
+                forState:UIControlStateNormal];
+        
+        [_mid setTitle:[NSString stringWithFormat:@"%.0f", roundf((max + min) / 2.0)]
+              forState:UIControlStateNormal];
+        
+        [_leftMid setTitle:[NSString stringWithFormat:@"%.0f", roundf((max + (min * 3.0)) / 4.0)]
+                  forState:UIControlStateNormal];
+        
+        [_rightMid setTitle:[NSString stringWithFormat:@"%.0f", roundf((min + (max * 3.0)) / 4.0)]
+                   forState:UIControlStateNormal];
+    }
 }
 
 - (void)updateSliderLabel
 {
-    _valueLabel.text = [NSString stringWithFormat:@"%i", (int)round(_slider.value)];
+    double value = 0.0;
+    
+    if (_roundToTenths)
+    {
+        value = roundf(_slider.value * 10.0) / 10.0;
+        _valueLabel.text = [NSString stringWithFormat:@"%.1f %@", value, _units];
+    }
+    
+    else
+    {
+        value = roundf(_slider.value);
+        _valueLabel.text = [NSString stringWithFormat:@"%.0f %@", value, _units];
+    }
+}
+
+- (void)setRoundToTenths:(BOOL)roundToTenths
+{
+    _roundToTenths = roundToTenths;
+    [self updateSliderLabel];
+    [self updateTicLabels];
+}
+
+- (void)setUnits:(NSString *)units
+{
+    _units = units;
+    [self updateSliderLabel];
+    [self updateTicLabels];
 }
 
 @end

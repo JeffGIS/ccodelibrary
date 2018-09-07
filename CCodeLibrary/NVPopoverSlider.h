@@ -17,6 +17,9 @@
 
 @interface NVPopoverSlider : UIView
 
+@property (nonatomic) BOOL roundToTenths;
+@property (nonatomic, copy) NSString *units;
+
 + (instancetype)showPopoverSliderInView:(UIView *)view
                                minValue:(float)minValue
                                maxValue:(float)maxValue
