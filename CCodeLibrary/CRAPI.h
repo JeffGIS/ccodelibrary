@@ -165,6 +165,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) NSMutableString *rhSearchSqlCommands;
 @property (nonatomic, copy, nullable) NSString *rhSearchFilePath;
 @property BOOL inDevMode;
+@property double feetPerStep;
 
 + (nullable CRAPI *)sharedInstance;
 

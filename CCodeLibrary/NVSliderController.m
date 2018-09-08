@@ -335,8 +335,11 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     double labelValue = (_slider.value * _unitFactor);
     
     if (_formatString && _formatString.length)
+    {
         _sliderLabel.text = [NSString stringWithFormat:_formatString, labelValue];
-    
+        labelValue = [_sliderLabel.text doubleValue]/_unitFactor;
+        [_slider setValue:labelValue animated:NO];
+    }
     else switch (_configuration)
     {
         case NVSliderConfigurationFacilities:
@@ -773,18 +776,18 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
     float gradient = 1.0;
     
-    if (_origNumDecimals > 0)
-        gradient = (1 / pow(10.0, _origNumDecimals));
+    if (_numDecimals > 0)
+        gradient = (1 / pow(10.0, _numDecimals));
     
     float newValue = _slider.value;
     
     switch (stepperSC.selectedSegmentIndex)
     {
         case 0:
-            newValue -= gradient;
+            newValue -= gradient / _unitFactor ;
             break;
         case 1:
-            newValue += gradient;
+            newValue += gradient / _unitFactor;
             break;
         default:break;
     }
@@ -843,16 +846,46 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     
     else if ([unit isEqualToString:@"INCHES"])
     {
+        if (_allowSteps)
+        {
+            _unit = @"Steps";
+            _unitFactor = 1.0/CRAPI.sharedInstance.feetPerStep;
+            if ([origUnit isEqualToString:@"INCHES"])
+            {
+                _unitFactor = (_unitFactor / 12.0);
+                self.numDecimals++;
+            }
+            else
+                self.numDecimals = 1;
+        }
+        else
+        {
+            _unit = @"Feet";
+            if ([origUnit isEqualToString:@"INCHES"])
+                _unitFactor = (1.0 / 12.0);
+            else if ([origUnit isEqualToString:@"FEET"])
+                _unitFactor = 1.0;
+            self.numDecimals++;
+        }
+    }
+    
+    else if ([unit isEqualToString:@"STEPS"])
+    {
         _unit = @"Feet";
         
         if ([origUnit isEqualToString:@"INCHES"])
+        {
             _unitFactor = (1.0 / 12.0);
+            self.numDecimals++;
+        }
         
         else if ([origUnit isEqualToString:@"FEET"])
+        {
             _unitFactor = 1.0;
+            self.numDecimals = _origNumDecimals;
+        }
         
-        self.numDecimals++;
-    }
+     }
     
     [self sliderValueChanged];
 }

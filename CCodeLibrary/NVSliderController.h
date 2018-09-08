@@ -3,6 +3,7 @@
 
 @import UIKit;
 #import "GSSiEnums.h"
+#import "CRAPI.h"
 
 typedef NS_ENUM(NSInteger, NVSliderConfiguration)
 {
@@ -41,6 +42,7 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
 @property NVSliderMeasurementType type;
 @property CGFloat usedTopSpace;
 @property (nonatomic) int numDecimals;
+@property BOOL allowSteps;
 
 - (id)initWithCenter:(CGPoint)center
                width:(double)width

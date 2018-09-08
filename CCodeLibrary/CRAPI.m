@@ -146,6 +146,7 @@
         _boundaryBorderWidth = 4;
         _allowLegendMinimize = YES;
         _allowPortraitPhotos = NO;
+        _feetPerStep = 2.5;
         
         NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%@",
                                 UserDefaults.defaults.localFilePath,

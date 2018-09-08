@@ -372,19 +372,19 @@ UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor)
     {
         case NoPolylineSym:
             rtn = [UIColor colorWithWhite:0.0 alpha:0.5];
-            *lineWidth = 3.0;
+            *lineWidth = 3.0 * UIScreen.mainScreen.scale;
             break;
         case BlueWidth3Polyline:
             rtn = [UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.5];
-            *lineWidth = 3.0;
+            *lineWidth = 3.0 * UIScreen.mainScreen.scale;
             break;
         case RedWidth3Polyline:
             rtn = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.5];
-            *lineWidth = 3.0;
+            *lineWidth = 3.0 * UIScreen.mainScreen.scale;
             break;
         case GreenWidth3Polyline:
             rtn = [UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.5];
-            *lineWidth = 3.0;
+            *lineWidth = 3.0 * UIScreen.mainScreen.scale;
             break;
         default:break;
     }
