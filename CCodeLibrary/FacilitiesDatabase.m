@@ -1103,18 +1103,16 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
     return rtn;
 }
 
-+(NSString *) getGraphicsFileAndPageForStep:(NSString *)stepID
-                                 page:(int *)pPage
+-(NSString *) getGraphicsFileAndPageForStep:(NSString *)stepID
+                                       page:(int *)pPage
 {
     NSString * rtn = @"";
     NSString * type;
     int page;
     int facID = CRAPI.sharedInstance.currentFacility.facID;
-    FacilitiesDatabase * fd = FacilitiesDatabase.new;
-    Bool opened = [fd open:lastDBPath];
     NSString *query = [NSString stringWithFormat:@"SELECT graphicElementReferenceFile,graphicElementReferenceFileType,graphicElementReferenceFilePage FROM FacilityValues WHERE facilityNumber = %i AND stepValueID = '%@'",facID,stepID];
     sqlite3_stmt *statement = NULL;
-    SQLOK(__FILE__,__LINE__,SQLitePrepare(fd.database, query.UTF8String, -1, &statement, NULL), fd.database);
+    SQLOK(__FILE__,__LINE__,SQLitePrepare(_database, query.UTF8String, -1, &statement, NULL), _database);
     
     if (sqlite3_step(statement) == SQLITE_ROW)
     {
@@ -1130,7 +1128,34 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
         }
     }
     
-    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), fd.database);
+    SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
+    return rtn;
+}
++(NSString *) getGraphicsFileAndPageForThisStep:(NSString *)stepID
+                                           page:(int *)pPage
+{
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    NSString * rtn = [fd getGraphicsFileAndPageForStep:stepID
+                                                  page:pPage];
+    [fd close:opened];
+    return rtn;
+}
++(NSString *) getGraphicsFileAndPageForUpperStep:(NSString *)startStepID
+                                        usedStep:(NSString **)usedStepID
+                                            page:(int *)pPage;
+{
+    NSString * rtn = @"";
+    FacilitiesDatabase * fd = FacilitiesDatabase.new;
+    Bool opened = [fd open:lastDBPath];
+    NSString * newStepID = startStepID;
+    do
+    {
+        rtn = [fd getGraphicsFileAndPageForStep:newStepID
+                                                  page:pPage];
+        *usedStepID = newStepID;
+        newStepID = [FacilitiesDatabase removeLastStep:newStepID];
+    }while (![newStepID isEqualToString:@""] && [rtn isEqualToString:@""]);
     [fd close:opened];
     return rtn;
 }
@@ -1140,12 +1165,13 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
                   havingCoordinates:(NSMutableArray<NSMutableArray<DPoint *> *> *)coordinates
                             forPage:(int)page
                              inFile:(NSString *)refFile
+                           wantStep:(NSString *)wantStepID
 {
     int facID = CRAPI.sharedInstance.currentFacility.facID;
     FacilitiesDatabase *fd = FacilitiesDatabase.new;
     BOOL opened = [fd open:lastDBPath];
     NSString *refFileName = [refFile lastPathComponent];
-    NSString *query = [NSString stringWithFormat:@"SELECT graphicElementType, graphicElementSymbol, graphicElementNumCoord, graphicElementCoordinates FROM FacilityValues WHERE facilityNumber=%i AND graphicElementReferenceFile='%@' AND graphicElementReferenceFilePage=%i",facID,refFileName,page];
+    NSString *query = [NSString stringWithFormat:@"SELECT graphicElementType, graphicElementSymbol, graphicElementNumCoord, graphicElementCoordinates, stepValueID FROM FacilityValues WHERE facilityNumber=%i AND graphicElementReferenceFile='%@' AND graphicElementReferenceFilePage=%i",facID,refFileName,page];
     sqlite3_stmt *statement = NULL;
     SQLOK(__FILE__,__LINE__,SQLitePrepare(fd.database, query.UTF8String, -1, &statement, NULL), fd.database);
     
@@ -1156,9 +1182,7 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
         int symbol = (int)sqlite3_column_int(statement, i++);
         int numPoints = (int)sqlite3_column_int(statement, i++);
         NSNumber *typ = [NSNumber numberWithInt:type];
-        [types addObject:typ];
         NSNumber *sym = [NSNumber numberWithInt:symbol];
-        [symbols addObject:sym];
         
         //int nBlobBytes = sqlite3_column_bytes(statement,i);
         LPDPOINT points = (LPDPOINT)sqlite3_column_blob(statement,i++);
@@ -1169,7 +1193,15 @@ Bool AddStep (LPSTR stepValueID,LPCSTR stepDefID,LPCSTR prompt,LPCSTR value,LPCS
             DPoint *dp = [DPoint fromDPOINT:points++];
             [pointArray addObject:dp];
         }
-        
+        LPSTR stepValue = (LPSTR)sqlite3_column_text(statement, i++);
+        if (stepValue && wantStepID && ![wantStepID isEqualToString:@""])
+        {
+            NSString * stepValueID = [NSString stringWithUTF8String:stepValue];
+            if (![stepValueID isEqualToString:wantStepID])
+                continue;
+        }
+        [types addObject:typ];
+        [symbols addObject:sym];
         [coordinates addObject:pointArray];
     }
     

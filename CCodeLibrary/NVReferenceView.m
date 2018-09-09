@@ -4,6 +4,7 @@
 #import "NVReferenceView.h"
 #import "UserDefaults.h"
 #import "DriverDefinitions.h"
+#import "CRAPI.h"
 
 @implementation NVReferenceView
 
@@ -41,7 +42,24 @@
     [returnButton addTarget:nvrv
                      action:@selector(returnButtonTapped)
            forControlEvents:UIControlEventTouchUpInside];
-    
+
+    UIButton *locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    locationButton.translatesAutoresizingMaskIntoConstraints = NO;
+    locationButton.backgroundColor = UIColor.clearColor;
+    [locationButton setTitle:@"Show Location" forState:UIControlStateNormal];
+    [locationButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [locationButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    locationButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
+    [nvrv addSubview:locationButton];
+    //[locationButton constrainLeadingToAnchor:nvrv.leadingAnchor constant:margin];
+    [locationButton constrainTrailingToAnchor:nvrv.trailingAnchor constant:-margin];
+    //[locationButton constrainCenterXToAnchor:nvrv.centerXAnchor];
+    [locationButton constrainBottomToAnchor:nvrv.bottomAnchor constant:-margin * 0.5];
+    //constrainBottomToAnchor:view.bottomAnchor
+    [locationButton addTarget:nvrv
+                     action:@selector(locationButtonTapped)
+           forControlEvents:UIControlEventTouchUpInside];
+
     if (nvrv.references.count > 1)
     {
         UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -117,5 +135,17 @@
     [_nvwv removeFromSuperview];
     [self showCurrentReference];
 }
+
+- (void)locationButtonTapped
+{
+    
+    [NSTimer scheduledTimerWithTimeInterval:0.1
+                                     target:CRAPI.sharedInstance.showLocationTarget
+                                   selector:@selector(showLocation:)
+                                   userInfo:nil
+                                    repeats:NO];
+
+}
+
 
 @end

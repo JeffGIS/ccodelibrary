@@ -124,7 +124,8 @@ Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCS
                         usingSymbols:(NSMutableArray *)symbols
                    havingCoordinates:(NSMutableArray *)coordinates
                              forPage:(int)page
-                              inFile:(NSString *)file;
+                              inFile:(NSString *)file
+                            wantStep:(NSString *)wantStepID;
 
 + (BOOL)removeExistingChildren:(NSString *)ID
                           from:(id)from;
@@ -136,8 +137,11 @@ Bool AddStep (LPSTR StepValueID,LPCSTR stepDefID,LPCSTR Prompt,LPCSTR value,LPCS
 + (NSString *) removeLastStep:(NSString *)stepID;
 + (NSString *) getFailMessage:(NSString *)stepID
                         value:(NSString *)value;
-+(NSString *) getGraphicsFileAndPageForStep:(NSString *)stepID
-                                       page:(int *)pPage;
++(NSString *) getGraphicsFileAndPageForThisStep:(NSString *)stepID
+                                           page:(int *)pPage;
++(NSString *) getGraphicsFileAndPageForUpperStep:(NSString *)startStepID
+                                        usedStep:(NSString **)usedStepID
+                                           page:(int *)pPage;
 
 
 @end

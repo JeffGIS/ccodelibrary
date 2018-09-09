@@ -166,6 +166,9 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nullable) NSString *rhSearchFilePath;
 @property BOOL inDevMode;
 @property double feetPerStep;
+@property (nonatomic, copy, nullable) NSString *currentStepValueID;
+@property id showLocationTarget;
+
 
 + (nullable CRAPI *)sharedInstance;
 
