@@ -326,7 +326,19 @@
     Bool opened = [fsd open];
     if ([fsd getStepDefinition:stepID])
     {
-        rtn = fsd.failMessage;
+        if ([fsd.failMessage isEqualToString:@""])
+        {
+            if (fsd.reference.count)
+            {
+                NSString * ref = fsd.reference[0];
+                if ([ref containsString:@":"])
+                    rtn = ref;
+                else
+                    rtn = [NSString stringWithFormat:@"ITEM:%@",ref];
+            }
+        }
+        else
+            rtn = fsd.failMessage;
     }
     [fsd close:opened];
     return rtn;
