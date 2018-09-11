@@ -138,7 +138,11 @@
         ft = FPSCurbRamp;
     else if ([type isEqualToString:@"Bus"])
         ft = FPSBus;
-
+    if ([type isEqualToString:@"Ramp"])
+        ft = FPSRamp;
+    if ([type isEqualToString:@"Walking Surface"])
+        ft = FPSWalkingPath;
+ 
     if (!ft)
         showAlert([NSString stringWithFormat:@"Point symbol %@ not found",type]);
     
@@ -153,8 +157,6 @@
         ft = FPSCirculationPath;
     if ([type isEqualToString:@"AccessibleRoute"])
         ft = FPSAccessibleRoute;
-    if ([type isEqualToString:@"Ramp"])
-        ft = FPSRamp;
     return ft;
 }
 

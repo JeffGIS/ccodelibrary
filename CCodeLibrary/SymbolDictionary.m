@@ -85,7 +85,21 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                 [symbolDef addObject:point];
             }
             break;
-    }
+        case RampSym:
+            for (int i = 0; i < (sizeof(Square) / sizeof(DPOINT)); i++)
+            {
+                DPoint *point = [DPoint fromDPOINT:&Square[i]];
+                [symbolDef addObject:point];
+            }
+            break;
+        case WalkingPathSym:
+            for (int i = 0; i < (sizeof(Square) / sizeof(DPOINT)); i++)
+            {
+                DPoint *point = [DPoint fromDPOINT:&Square[i]];
+                [symbolDef addObject:point];
+            }
+            break;
+   }
     
     return symbolDef.copy;
 }

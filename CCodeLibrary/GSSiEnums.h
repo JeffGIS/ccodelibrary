@@ -294,6 +294,8 @@ typedef NS_ENUM(NSInteger, PointSymbols)
     ArsonSym,
     CurbRampSym,
     BusSym,
+    RampSym,
+    WalkingPathSym,
     PointSymbolCount
 };
 
@@ -357,13 +359,14 @@ typedef NS_ENUM(NSInteger, FacPointSymbols)
     FPSDoor=Star1Sym,
     FPSCurbRamp=CurbRampSym,
     FPSBus=BusSym,
+    FPSRamp=RampSym,
+    FPSWalkingPath=WalkingPathSym,
 };
 
 typedef NS_ENUM(NSInteger, FacPolylineSymbols)
 {
     FPSCirculationPath=RedWidth3Polyline,
     FPSAccessibleRoute=GreenWidth3Polyline,
-    FPSRamp=BlueWidth3Polyline,
 };
 
 typedef NS_ENUM(NSInteger, FacPolygonSymbols)

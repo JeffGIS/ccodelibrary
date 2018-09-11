@@ -2234,19 +2234,26 @@ GotCloseFilehSQL:
              if (nArgs == 2)
              {
                  LPSTR pValue = Arg[2];
+                 double fval;
                  char sep[2] = "|";
                  if (!strcasecmp (Arg[1],"FRONT"))
                  {
                      GetStringArrayElement (0,pValue,sep,OutLoc,256);
+                     fval = atof (OutLoc);
+                     sprintf (OutLoc,"%0.1f",fabs(fval));
                  }
                  else if (!strcasecmp (Arg[1],"SIDE"))
                  {
                      GetStringArrayElement (1,pValue,sep,OutLoc,256);
+                     fval = atof (OutLoc);
+                     sprintf (OutLoc,"%0.1f",fabs(fval));
                  }
                  else if (!strcasecmp (Arg[1],"MAX"))
                  {
                      GetStringArrayElement (2,pValue,sep,OutLoc,256);
-                }
+                     fval = atof (OutLoc);
+                     sprintf (OutLoc,"%0.1f",fabs(fval));
+                 }
                  else if (!strcasecmp (Arg[1],"HEADING"))
                  {
                      GetStringArrayElement (3,pValue,sep,OutLoc,256);
