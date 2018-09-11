@@ -296,6 +296,8 @@ typedef NS_ENUM(NSInteger, PointSymbols)
     BusSym,
     RampSym,
     WalkingPathSym,
+    ProtrudingObjectSym,
+    ReducedVerticalSym,
     PointSymbolCount
 };
 
@@ -361,6 +363,8 @@ typedef NS_ENUM(NSInteger, FacPointSymbols)
     FPSBus=BusSym,
     FPSRamp=RampSym,
     FPSWalkingPath=WalkingPathSym,
+    FPSProtrudingObject=ProtrudingObjectSym,
+    FPSReducedVertical=ReducedVerticalSym,
 };
 
 typedef NS_ENUM(NSInteger, FacPolylineSymbols)

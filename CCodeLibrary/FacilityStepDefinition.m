@@ -142,7 +142,11 @@
         ft = FPSRamp;
     if ([type isEqualToString:@"Walking Surface"])
         ft = FPSWalkingPath;
- 
+    if ([type isEqualToString:@"Protruding Object"])
+        ft = FPSProtrudingObject;
+    if ([type isEqualToString:@"Reduced Vertical Clearance"])
+        ft = FPSReducedVertical;
+
     if (!ft)
         showAlert([NSString stringWithFormat:@"Point symbol %@ not found",type]);
     
