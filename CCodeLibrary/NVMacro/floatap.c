@@ -709,7 +709,19 @@ Bool ComputeLogValue (LPSTR Inval1, LPSTR Inval2, UINT OpCode,LPBool IRC)
 	double	dval1=0, dval2=0; 
 	HANDLE	hVals=GSSiGlobAlloc ( 746,GMEM_MOVEABLE,USHRT_MAX); 
 	LPSTR	val1=(LPSTR)GlobalLock (hVals), val2=val1+4096;
-	
+/*    LPSTR   Inval1 = malloc (strlen(Inval11+2));
+    LPSTR   Inval2 = malloc (strlen(Inval21+2));
+
+    strcpy (Inval1,Inval11);
+    strcpy (Inval2,Inval21);
+    if (!stricmp(Inval1,"Yes"))
+        strcpy (Inval1,"1");
+    if (!stricmp(Inval2,"Yes"))
+        strcpy (Inval2,"1");
+    if (!stricmp(Inval1,"No"))
+        strcpy (Inval1,"0");
+    if (!stricmp(Inval2,"No"))
+        strcpy (Inval2,"0");*/
 	*val1 = 0;
 	*val2 = 0; 
 	if (hLogicPStatements && nLogicPStatements < 512 && Inval1 && Inval2)
@@ -919,6 +931,8 @@ Bool ComputeLogValue (LPSTR Inval1, LPSTR Inval2, UINT OpCode,LPBool IRC)
 	} 
 Exit:
 	GSSiGlobUlFree (&hVals);
+    //free (Inval1);
+    //free (Inval2);
 {
 #if ENABLETRACE
 GSSiExitProg (1193);

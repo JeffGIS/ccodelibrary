@@ -95,7 +95,8 @@
     NSString * reference = _references[_currentReferenceIndex];
     if ([dd getPDFParamters:reference
                        parm:&parms
-                defaultType:@"ITEM"])
+                defaultType:@"ITEM"
+                   maxParms:1])
     {
         ul.x = parms.ULX;
         ul.y = parms.ULY;

@@ -23,9 +23,10 @@ typedef PDFPARM *LPPDFPARM;
 - (void)close:(BOOL)opened;
 - (NSString *)databasePath;
 
-- (BOOL)getPDFParamters:(NSString*)ID
+- (int)getPDFParamters:(NSString*)ID
                    parm:(LPPDFPARM) parm
-            defaultType:(NSString *)defType;
+            defaultType:(NSString *)defType
+              maxParms:(int)nMax;
 
 - (BOOL)addDefinition:(NSString *)ID
                  name:(NSString *)name

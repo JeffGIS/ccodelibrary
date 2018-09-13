@@ -72,11 +72,12 @@
     }
 }
 
-- (BOOL)getPDFParamters:(NSString *)ID
-                   parm:(LPPDFPARM)parm
-            defaultType:(NSString *)defType
+- (int)getPDFParamters:(NSString *)ID
+                  parm:(LPPDFPARM)parm
+           defaultType:(NSString *)defType
+              maxParms:(int)nMax;
 {
-    Bool rtn = FALSE;
+    int rtn = 0;
     if ([ID isEqualToString:@""])
         return rtn;
     Bool opened = [self open];
@@ -92,15 +93,21 @@
         sectID = ID;
         type = defType;
     }
-    NSString *query = [NSString stringWithFormat:@"SELECT NAME,PAGE,ULX,ULY,LRX,LRY FROM MNACCESSCODE WHERE SECTIONID='%@' AND TYPE='%@'",sectID,type];
+    int lenSectID = (int)sectID.length;
+    NSString *query = [NSString stringWithFormat:@"SELECT SECTIONID,NAME,PAGE,ULX,ULY,LRX,LRY FROM MNACCESSCODE WHERE SECTIONID>='%@' AND TYPE='%@'",sectID,type];
     
     sqlite3_stmt *statement = NULL;
     
     SQLOK(__FILE__,__LINE__,SQLitePrepare(self.database, query.UTF8String, -1, &statement, 0), _database);
-    if (sqlite3_step(statement) == SQLITE_ROW)
+    while (rtn < nMax && sqlite3_step(statement) == SQLITE_ROW)
     {
         int i = 0;
-        LPSTR pName = (LPSTR)sqlite3_column_text(statement, i++);
+        LPSTR pSectID = (LPSTR)sqlite3_column_text(statement, i++);
+        if (strnicmp (pSectID,sectID.UTF8String,lenSectID))
+            break;
+        strncpy (parm->SECTIONID,pSectID,sizeof(parm->SECTIONID)-1);
+        parm->NAME[sizeof(parm->SECTIONID)-1] = 0;
+       LPSTR pName = (LPSTR)sqlite3_column_text(statement, i++);
         strncpy (parm->NAME,pName,sizeof(parm->NAME)-1);
         parm->NAME[sizeof(parm->NAME)-1] = 0;
         parm->PAGE = sqlite3_column_int(statement, i++);
@@ -108,12 +115,8 @@
         parm->ULY = sqlite3_column_double(statement, i++);
         parm->LRX = sqlite3_column_double(statement, i++);
         parm->LRY = sqlite3_column_double(statement, i++);
-        rtn = TRUE;
-    }
-    else
-    {
-        //showAlert ([NSString stringWithFormat:@"PDF parms not found:%@",ID]);
-        rtn = FALSE;
+        rtn++;
+        parm++;
     }
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     [self close:opened];
@@ -159,20 +162,20 @@
             break;
     }
     
-    if ([self getPDFParamters:figure parm:&parms defaultType:@"ITEM"])
+    if ([self getPDFParamters:figure parm:&parms defaultType:@"ITEM" maxParms:1])
         [refs addObject:figure];
     
     int outer = 1;
     NSString *outerID = [figure stringByAppendingString:[NSString stringWithFormat:@".%d", outer]];
     
-    while ([self getPDFParamters:outerID parm:&parms defaultType:@"ITEM"])
+    while ([self getPDFParamters:outerID parm:&parms defaultType:@"ITEM" maxParms:1])
     {
         [refs addObject:outerID];
         
         int inner = 1;
         NSString *innerID = [outerID stringByAppendingString:[NSString stringWithFormat:@".%d", inner]];
         
-        while ([self getPDFParamters:innerID parm:&parms defaultType:@"ITEM"])
+        while ([self getPDFParamters:innerID parm:&parms defaultType:@"ITEM" maxParms:1])
         {
             [refs addObject:innerID];
             innerID = [outerID stringByAppendingString:[NSString stringWithFormat:@".%d", ++inner]];
