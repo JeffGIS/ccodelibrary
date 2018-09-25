@@ -142,13 +142,13 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                 _sliderLabel.text = [NSString stringWithFormat:@"%.0f", _slider.value];
                 break;
             case NVSliderConfigurationCalibrationRunningSlope:
-                _sliderLabel.text = [NSString stringWithFormat:@"%.0f%%", _slider.value];
+                _sliderLabel.text = [NSString stringWithFormat:@"%.1f%%", _slider.value];
                 break;
             case NVSliderConfigurationCalibrationDegrees:
-                _sliderLabel.text = [NSString stringWithFormat:@"%.0f\u00B0", _slider.value];
+                _sliderLabel.text = [NSString stringWithFormat:@"%.1f\u00B0", _slider.value];
                 break;
             case NVSliderConfigurationCalibrationRiseRun:
-                _sliderLabel.text = [NSString stringWithFormat:@"1:%.0f", _slider.value];
+                _sliderLabel.text = [NSString stringWithFormat:@"1:%.1f", _slider.value];
                 break;
             default:break;
         }
@@ -178,7 +178,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
                  selector:@selector(cancelButtonTapped:)
                     title:@"Cancel"];
         
-        if (_configuration == NVSliderConfigurationDefault)
+        if (_configuration == NVSliderConfigurationDefault || _configuration == NVSliderConfigurationCalibrationRunningSlope)
         {
             _rangeButton = [[UIButton alloc] initWithFrame:CGRectMake((width * 0.4), (height - 72.0),
                                                                       (width * 0.2), _buttonHeight)];

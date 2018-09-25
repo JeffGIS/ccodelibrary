@@ -927,7 +927,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                           width:(self.view.frame.size.width - 40.0)
                                                      startValue:_startValue
                                                        minValue:0.0
-                                                       maxValue:100.0
+                                                       maxValue:20.0
                                                        delegate:self
                                                   configuration:NVSliderConfigurationCalibrationRunningSlope
                                                            type:NVSliderMeasurementTypeDefault
