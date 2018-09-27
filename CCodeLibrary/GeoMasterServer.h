@@ -36,7 +36,7 @@ didReceiveMessage:(NSString *)message
 @property (nonatomic) NSTimer *openTimer, *sendTimer, *responseTimer;
 @property (nonatomic) CGFloat responseTimeoutInSeconds;
 @property (nonatomic) NSData *data;
-
+@property NSString * ipAddress;
 - (BOOL)initCommunication:(CGFloat)connectionTimeoutInSeconds;
 - (void)closeServer;
 - (BOOL)sendMessage:(NSString *)message;

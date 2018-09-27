@@ -80,6 +80,8 @@ static GeoMasterServer *statServer = nil;
     BOOL rtn = NO;
     int port = PRODUCTION_PORT;
     NSString * ipAddress = [CRAPI.sharedInstance getNVCRISServer];
+    if (_ipAddress)
+        ipAddress = _ipAddress;
     
     _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
