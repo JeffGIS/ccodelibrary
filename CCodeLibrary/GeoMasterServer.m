@@ -78,7 +78,9 @@ static GeoMasterServer *statServer = nil;
 - (BOOL)initCommunication:(CGFloat)connectionTimeoutInSeconds
 {
     BOOL rtn = NO;
-    int port = PRODUCTION_PORT;
+    int port = _port;
+    if (!_port)
+        port = PRODUCTION_PORT;
     NSString * ipAddress = [CRAPI.sharedInstance getNVCRISServer];
     if (_ipAddress)
         ipAddress = _ipAddress;
