@@ -17,13 +17,19 @@
 #import "NVPeerConnect.h"
 @import AVKit;
 
-#define MANAGEMENT_MODULE       1
-#define PRELIM_MODULE           2
-#define DETAIL_MODULE           3
-#define GMMOBILE_MODULE         4
-#define FAC_MANAGEMENT_MODULE   5
-#define FAC_PRELIM_MODULE       6
-#define FAC_DETAIL_MODULE       7
+#define DOWNLOAD_DATABASE_PROCESS 3
+
+typedef NS_ENUM(NSInteger, ModuleNames)
+{
+    MANAGEMENT_MODULE  =     1,
+    PRELIM_MODULE      =     2,
+    DETAIL_MODULE      =     3,
+    GMMOBILE_MODULE    =     4,
+    FAC_MANAGEMENT_MODULE =  5,
+    FAC_PRELIM_MODULE     =  6,
+    FAC_DETAIL_MODULE  =     7,
+    ALLEYWALL_DETAIL_MODULE = 8,
+};
 
 #define PROJECT_MPLS            1
 #define PROJECT_METROGIS        2
@@ -62,7 +68,9 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 
 @interface CRAPI : NSObject
 
-@property (nonatomic) int currentModule, currentSubModule, currentApp;
+@property (nonatomic) ModuleNames currentModule;
+@property (nonatomic) int currentSubModule;
+@property (nonatomic) HardCodedConfigs currentApp;
 @property (nonatomic, copy, nullable) NSString *bundleID;
 @property (nonatomic, copy, nullable) NSString *documentsDirectory;
 @property (nonatomic, copy, nullable) NSString *outputDirectory;
@@ -143,6 +151,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nullable) NSString *minDetailVersion;
 @property (nonatomic, copy, nullable) NSString *minAlleyVersion;
 @property (nonatomic) int currentMessageNum, serverToUse, showDeveloperFunctions;
+@property int databaseToDownload;
 @property (nonatomic , nullable) CLLocation *lastLocation;
 @property (nonatomic) BOOL hideConnectButton, appChanged, inDataUpdate, inAutoLoopMode;
 @property (nonatomic, nullable) NSNumberFormatter *dollarFmt;

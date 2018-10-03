@@ -227,6 +227,35 @@
     _currentIntersection = currentIntersection;
 }
 
+- (void)setCurrentApp:(HardCodedConfigs)currentApp
+{
+    _currentApp = currentApp;
+}
+
+- (void) setCurrentModule:(ModuleNames)currentModule
+{
+    _currentModule = currentModule;
+    switch (currentModule)
+    {
+        case FAC_DETAIL_MODULE:
+            _currentFacility = [self facilityInit];
+            _currentApp = HCConfigFacilities;
+            break;
+        case FAC_PRELIM_MODULE:
+        case FAC_MANAGEMENT_MODULE:
+            _currentApp = HCConfigFacilities;
+            break;
+        case ALLEYWALL_DETAIL_MODULE:
+            _currentApp = HCConfigAlleyWalls;
+            break;
+        case MANAGEMENT_MODULE:
+        case DETAIL_MODULE:
+        case PRELIM_MODULE:
+            _currentApp = HCConfigCurbRamps;
+            break;
+    }
+}
+
 - (void)setCurrentGeoid:(int)geoid
 {
     if (geoid != _currentGeoidValue)
@@ -1048,6 +1077,14 @@
     {
         str = arr[2];
         _showDeveloperFunctions = (int)str.integerValue;
+        if (_showDeveloperFunctions >= 100)
+        {
+            NSString * process = [str substringToIndex:1];
+            if (process.integerValue == 2)
+                _showDeveloperFunctions = DOWNLOAD_DATABASE_PROCESS;
+            NSString * database = [str substringWithRange:NSMakeRange(1,2)];
+            _databaseToDownload = (int)database.integerValue;
+        }
         if (isGSSiDevice())
             _showDeveloperFunctions = max (1,_showDeveloperFunctions);
     }
@@ -1418,13 +1455,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         _currentCounty = @"139";
     if ([name isEqualToString:@"WASHINGTON"])
         _currentCounty = @"163";
-}
-
-- (void) setCurrentModule:(int)currentModule
-{
-    _currentModule = currentModule;
-    if (_currentModule == FAC_DETAIL_MODULE)
-        _currentFacility = [self facilityInit];
 }
 
 - (NSString *)acreFormat:(double)acres

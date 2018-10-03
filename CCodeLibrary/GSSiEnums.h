@@ -234,6 +234,7 @@ typedef NS_ENUM(NSInteger, HardCodedConfigs)
     HCConfigFromSlowValues,
     HCConfigMinnesotaGame,
     HCConfigHunting,
+    HCConfigFacilities,
     NUMHardCodedConfigs};
 
 typedef NS_ENUM(NSInteger, MapitBaseLayer)

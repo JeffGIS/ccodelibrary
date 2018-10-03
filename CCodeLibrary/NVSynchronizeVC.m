@@ -37,6 +37,8 @@
 @property NSInteger selectedRow;
 @property (nonatomic) NVEmailFileList *nvefl;
 @property NSDate *sendDataStartTime;
+@property NSString * getFromServerFile;
+@property BOOL  showErrorPopover;
 
 @end
 
@@ -542,6 +544,10 @@
                 [_emailFileListButton setTitle:@"Email File List"
                                       forState:UIControlStateNormal];
                 break;
+            case DOWNLOAD_DATABASE_PROCESS:
+                [_emailFileListButton setTitle:@"Download Database"
+                                      forState:UIControlStateNormal];
+                break;
         }
     }
 }
@@ -555,6 +561,9 @@
             break;
         case 2:
             [NVEmailFileList sendFileList:self];
+            break;
+        case DOWNLOAD_DATABASE_PROCESS:
+            [self downloadDatabases:button];
             break;
     }
 }
@@ -1394,11 +1403,13 @@ Top:
                 }
             }
             
-            else
+            else if (_process == DOWNLOAD_PICT_PROCESS)
             {
                 [_databaseID setLastPictUpdateNum:_nextFileNumToDownload
                                           foriPad:_downloadiPad];
             }
+            else if (_process == DOWNLOAD_DATABASE_PROCESS)
+                return;
             
             _nextFileNumToDownload++;
             
@@ -1423,6 +1434,11 @@ Top:
         NSString * msg = [NSString stringWithFormat:@"%@\n%@",statusString,[path lastPathComponent]];
         _popoverView.title = msg;
         [CRAPI.sharedInstance logToErrorFile:msg];
+        if (_showErrorPopover)
+        {
+            [_popoverView setCancelButtonTitle:@"OK"];
+            [_popoverView show];
+        }
     }
 }
 
@@ -1496,6 +1512,24 @@ Top:
 didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     [alertView hideLargeAlertView:YES];
+    if ([alertView.identifier isEqualToString:@"ReplaceExistingDatabase"] && buttonIndex == 0)
+    {
+        NSString * fromDir = @"NVCRIS\\DownloadFiles";
+        _pull = FTPDataPull.pull;
+        _pull.delegate = self;
+        _pull.popover = _popoverView;
+        _pull.useTestServer = NO;
+        _process = DOWNLOAD_DATABASE_PROCESS;
+        _showErrorPopover = TRUE;
+        _pull.dataType = FTPData;
+        _popoverView.title = [NSString stringWithFormat:@"Download Database\n%@",[_filePath lastPathComponent]];
+        [_pull getFile:[_getFromServerFile lastPathComponent]
+         fromDirectory:fromDir
+                toFile:[_getFromServerFile lastPathComponent]
+           toDirectory:[_getFromServerFile stringByDeletingLastPathComponent]
+         refreshOption:FTPDataPullRefreshOptionOverwriteFile];
+    }
+
 }
 
 - (void)tempFix:(int)iPad
@@ -1616,7 +1650,52 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
      
      }*/
 }
+- (IBAction)downloadDatabases:(id)sender
+{
+    switch (CRAPI.sharedInstance.databaseToDownload)
+    {
+        case 0:
+        {
+            _getFromServerFile = @"";
+            
+            switch (CRAPI.sharedInstance.currentApp)
+            {
+                case HCConfigCrimes:
+                    _getFromServerFile = CrimeData.new.path;
+                    break;
+                case HCConfigSewers:
+                    _getFromServerFile = SewerData.new.path;
+                    break;
+                case HCConfigCurbRamps:
+                    _getFromServerFile = CurbRampData.new.databasePath;
+                    break;
+                case HCConfigAlleyWalls:
+                case HCConfigAlleyWallStatus:
+                    _getFromServerFile = AlleyWallData.new.databasePath;
+                    break;
+                default:break;
+            }
+            if (![_getFromServerFile isEqualToString:@""])
+            {
+                
+                NSString *title = [NSString stringWithFormat:@"Do you want to replace the file %@?",[_getFromServerFile lastPathComponent]];
+                
+                NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
+                                                                  delegate:self
+                                                                     title:title
+                                                           buttonTextArray:@[@"YES", @"NO"]
+                                                          destructiveIndex:1];
+                
+                alert.identifier = @"ReplaceExistingDatabase";
 
+                
+            }
+        }
+        case 1:
+            break;
+    }
+    return;
+}
 - (IBAction)uploadDatabases:(id)sender
 {
     NSString *dir1 = [NSString stringWithFormat:@"%i",CRAPI.sharedInstance.currentManageriPad];
@@ -1684,20 +1763,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         default:break;
     }
     
-    NSString *toDir = [NSString stringWithFormat:@"NVMobile/UploadedDatabases/%i/%i",
-                       CRAPI.sharedInstance.currentManageriPad,
-                       CRAPI.sharedInstance.currentiPadWithinManager];
-    
-    NSString *file = sendToServerFile.lastPathComponent;
-    NSString *fromDir = sendToServerFile.stringByDeletingLastPathComponent;
-    [_popoverView showAfter:0.1 withTitle:@"Upload Database"];
-    
-    [_push sendFile:file
-      fromDirectory:fromDir
-             toFile:file
-        toDirectory:toDir
-     deleteWhenDone:NO
-     appendFileName:NO];
 }
 
 - (void)helpButtonTapped:(UIButton *)button
@@ -1710,5 +1775,6 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                           delegate:nil];
 #pragma unused(nvwv)
 }
+
 
 @end
