@@ -17,7 +17,7 @@
 #import "NVPeerConnect.h"
 @import AVKit;
 
-#define DOWNLOAD_DATABASE_PROCESS 3
+#define DOWNLOAD_DATABASE_FUNCTION 3
 
 typedef NS_ENUM(NSInteger, ModuleNames)
 {

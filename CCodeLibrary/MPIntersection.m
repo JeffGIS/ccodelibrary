@@ -137,6 +137,9 @@
     another.dwShape = self.dwShape;
     another.dwMaxOffset = self.dwMaxOffset;
     another.dwMinOffset = self.dwMinOffset;
+    another.fromFile = self.fromFile;
+    another.CornerID = self.CornerID;
+    another.Retired = self.Retired;
     return another;
 }
 
@@ -204,7 +207,9 @@
     if (oldRamp.dwShape != self.dwShape) goto RtnFalse;
     if (oldRamp.dwMaxOffset != self.dwMaxOffset) goto RtnFalse;
     if (oldRamp.dwMinOffset != self.dwMinOffset) goto RtnFalse;
-    
+    if (oldRamp.CornerID != self.CornerID) goto RtnFalse;
+    if (oldRamp.Retired != self.Retired) goto RtnFalse;
+
     CrackWidth oldCW = oldRamp.crackWidth;
     CrackWidth newCW = self.crackWidth;
     

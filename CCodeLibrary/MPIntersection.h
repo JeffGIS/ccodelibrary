@@ -112,6 +112,9 @@ typedef NS_ENUM(NSInteger, MiddleMeasurement)
 @property float curbCutDistance;
 @property float bumpWidth;
 @property float bumpHeight;
+@property NSString * fromFile;
+@property int CornerID;
+@property int Retired;
 
 - (BOOL) isEqualTo:(MPRamp*)oldRamp;
 

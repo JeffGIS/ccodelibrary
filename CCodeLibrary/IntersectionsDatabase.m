@@ -575,7 +575,7 @@ static int ii;
 %i,%i,'%s',%i,%i,%i,%i,%f,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,\
 %f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,\
 %i,%i,%i,%i,%f,%f,%i,%i,%i,'%@',\
-%i,%i,%i,%i,%i,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%i,%i);",
+%i,%i,%i,%i,%i,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%i,%i,'%@',%i,%i);",
                              (int)mpint.intID,
                              (int)ramp.rampNum,
                              rampID,
@@ -644,7 +644,10 @@ static int ii;
                              ramp.bumpWidth,
                              ramp.bumpHeight,
                              ramp.dwWidth,
-                             ramp.dwDepth
+                             ramp.dwDepth,
+                             ramp.fromFile,
+                             ramp.CornerID,
+                             ramp.Retired
                     ];
             
             rtn = [self.curbRampData executeCmd:(char *)cmd.UTF8String
@@ -1027,6 +1030,13 @@ void rampToRampStruct (MPRamp *ramp,RampStruct *rstruct)
             ramp.bumpHeight = sqlite3_column_double(statement, i++);
             ramp.dwWidth = sqlite3_column_int(statement, i++);
             ramp.dwDepth = sqlite3_column_int(statement, i++);
+            LPSTR fromfile = (LPSTR)sqlite3_column_text(statement,i++);
+            if (fromfile)
+                ramp.fromFile = [NSString stringWithCString:fromfile encoding:NSUTF8StringEncoding];
+            else
+                ramp.fromFile = @"";
+            ramp.CornerID = sqlite3_column_int(statement, i++);
+            ramp.Retired = sqlite3_column_int(statement, i++);
             if (ramp.bumpWidth > 0 || ramp.bumpHeight > 0)
                 ii=1;
         }

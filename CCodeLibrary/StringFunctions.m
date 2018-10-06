@@ -245,6 +245,38 @@ NSString *deviceCarrier(void)
     return rtn;
 }
 
+NSString * ConvertSingleQuote (NSString * str)
+{
+    int ln = (int)str.length;
+    LPSTR newstr = calloc (ln+4,1);
+    LPSTR oldstr = calloc (ln*3+4,1);
+    NSString * convertedStr = @"";
+    int i = 0;
+    int newln = 0;
+    
+    strcpy (oldstr,str.UTF8String);
+    ln = (int)strlen (oldstr);
+    while (i < ln)
+    {
+        int ic = (int)*(oldstr+i);
+        int ic2 = (int)*(oldstr+i+1);
+        int ic3 = (int)*(oldstr+i+2);
+        if (ic == -30 && ic2 == -128 && ic3 == -103)
+        {
+            newstr[newln++] = '\'';
+            i += 3;
+        }
+        else
+        {
+            newstr[newln++] = *(oldstr+i);
+            i++;
+        }
+    }
+    convertedStr = [NSString stringWithUTF8String:newstr];
+    free (newstr);
+    free (oldstr);
+    return convertedStr;
+}
 NSString *deviceInfo(void)
 {
     UIDevice *device = UIDevice.currentDevice;
@@ -254,6 +286,7 @@ NSString *deviceInfo(void)
     floatSize = -floatSize;
 #endif
     NSString * dname = [device.name stringByReplacingOccurrencesOfString:@"," withString:@""];
+    dname = ConvertSingleQuote (dname);
     return [NSString stringWithFormat:@"%@,%@,%@|%@|%llu|%llu|%@|%i",
             vendorUUIDString(), dname, device.systemVersion, deviceSystemInfo(),
             UIDevice.availableStorageSpace, UIDevice.totalStorageSpace, carrier, floatSize];
@@ -1289,9 +1322,16 @@ CLLocationCoordinate2D locationWithBearing(double bearing, double distanceFeet, 
 
 BOOL isGSSiDevice(void)
 {
+    char dnam[32];
     NSString *deviceName = UIDevice.currentDevice.name;
     BOOL rtn = NO;
-    
+    strcpy (dnam,deviceName.UTF8String);
+    for (int i=0;i<strlen(dnam);i++)
+    {
+        char c = dnam[i];
+        unsigned int ic = dnam[i];
+        ic = ic + 1;
+    }
     if ([deviceName containsString:@"GSSi"] ||
         [deviceName isEqualToString:@"Jeff’s iPhone"] ||
         [deviceName isEqualToString:@"WildBill iPhone"] ||

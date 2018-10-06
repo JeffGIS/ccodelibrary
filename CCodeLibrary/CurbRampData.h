@@ -106,6 +106,10 @@
 - (BOOL)setLastDataUpdateNum:(int)lastNum
                      foriPad:(int)iPad;
 
+- (BOOL) setLastDataUpdateNum:(int)lastNum
+                      pictNum:(int)pictNum
+                      foriPad:(int)iPad;
+
 - (int)createNewSdwkPointAtLocation:(CLLocationCoordinate2D)location
                           withHouse:(NSString *)house
                           andStreet:(NSString *)street;

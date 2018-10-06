@@ -30,6 +30,9 @@ typedef NS_ENUM(NSInteger, NVUpdateOption)
 - (void)inventoryViewController:(NVInventoryViewController *)controller
            didCompleteInventory:(MPIntersection *)intersection;
 
+- (void)inventoryViewController:(NVInventoryViewController *)controller
+           didCancelChanges:(MPIntersection *)intersection;
+
 - (MPIntersection *)inventoryViewController:(NVInventoryViewController *)controller
                             didSetInventory:(MPIntersection *)intersection;
 

@@ -39,7 +39,7 @@
 @property NSDate *sendDataStartTime;
 @property NSString * getFromServerFile;
 @property BOOL  showErrorPopover;
-
+@property BOOL  justDownloadedNewDatabase;
 @end
 
 @implementation NVSynchronizeVC
@@ -544,7 +544,7 @@
                 [_emailFileListButton setTitle:@"Email File List"
                                       forState:UIControlStateNormal];
                 break;
-            case DOWNLOAD_DATABASE_PROCESS:
+            case DOWNLOAD_DATABASE_FUNCTION:
                 [_emailFileListButton setTitle:@"Download Database"
                                       forState:UIControlStateNormal];
                 break;
@@ -562,7 +562,7 @@
         case 2:
             [NVEmailFileList sendFileList:self];
             break;
-        case DOWNLOAD_DATABASE_PROCESS:
+        case DOWNLOAD_DATABASE_FUNCTION:
             [self downloadDatabases:button];
             break;
     }
@@ -987,9 +987,29 @@ didReceiveMessage:(NSString *)message
                 // NSString *edit = [_uploadStatusMsg stringByReplacingOccurrencesOfString:@"3-5" withString:@"1-5"];
                 // _uploadStatusMsg = edit;
                 _numiPadsInMsg = atoi (_uploadStatusMsg.UTF8String)+1;
-                
-                int pictNum = 0;
                 _myiPad = CRAPI.sharedInstance.currentiPadWithinManager;
+
+                if (_justDownloadedNewDatabase)
+                {
+                    NSArray * ar = [_uploadStatusMsg componentsSeparatedByString:@"|"];
+                    for (int i = 0;i < _numiPadsInMsg; i++)
+                    {
+                        NSString * vals = ar[i+1];
+                        NSArray<NSString *> * ivals = [vals componentsSeparatedByString:@"-"];
+                        int dataNum = (int)ivals[0].integerValue;
+                        int pictNum = (int)ivals[1].integerValue;
+                        if (i == _myiPad)
+                        {
+                            dataNum = 1;
+                            pictNum = 0;
+                        }
+                        [_databaseID setLastDataUpdateNum:dataNum
+                                              pictNum:pictNum
+                                              foriPad:i];
+                    }
+                    _justDownloadedNewDatabase = FALSE;
+                }
+                int pictNum = 0;
                 int lastNum = [_databaseID getLastDataUpdateNumber:_myiPad
                                                        lastPictNum:&pictNum];
                 if (_myiPad > 0 || getUseMasterID())
@@ -1409,8 +1429,12 @@ Top:
                                           foriPad:_downloadiPad];
             }
             else if (_process == DOWNLOAD_DATABASE_PROCESS)
+            {
+                _justDownloadedNewDatabase = TRUE;
+                [_popoverView hide];
+                [self sendGMServerMessage:GMSMessageGetUploadStatus];
                 return;
-            
+            }
             _nextFileNumToDownload++;
             
             if (_process == DOWNLOAD_DATA_PROCESS)
@@ -1522,7 +1546,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         _process = DOWNLOAD_DATABASE_PROCESS;
         _showErrorPopover = TRUE;
         _pull.dataType = FTPData;
-        _popoverView.title = [NSString stringWithFormat:@"Download Database\n%@",[_filePath lastPathComponent]];
+        _popoverView.title = [NSString stringWithFormat:@"Download Database\n%@",[_getFromServerFile lastPathComponent]];
+        [_popoverView show];
         [_pull getFile:[_getFromServerFile lastPathComponent]
          fromDirectory:fromDir
                 toFile:[_getFromServerFile lastPathComponent]

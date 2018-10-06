@@ -43,7 +43,7 @@
     if (self)
     {
         _bundleID = NSBundle.mainBundle.bundleIdentifier;
-        
+
 #ifdef DEBUG
         if ([UIDevice.currentDevice.name isEqualToString:@"WildBill iPad Air"] ||
             [UIDevice.currentDevice.name isEqualToString:@"WildBill iPhone"] ||
@@ -1081,7 +1081,7 @@
         {
             NSString * process = [str substringToIndex:1];
             if (process.integerValue == 2)
-                _showDeveloperFunctions = DOWNLOAD_DATABASE_PROCESS;
+                _showDeveloperFunctions = DOWNLOAD_DATABASE_FUNCTION;
             NSString * database = [str substringWithRange:NSMakeRange(1,2)];
             _databaseToDownload = (int)database.integerValue;
         }

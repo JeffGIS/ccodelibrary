@@ -5,7 +5,7 @@
 //  Created by JEFFREY E SMITH on 6/12/15.
 //  Copyright (c) 2015 GSSi. All rights reserved.
 //
-#define CURRENT_INTERSECTION_VERSION "3.0"
+#define CURRENT_INTERSECTION_VERSION "4.0"
 
 #import "CurbRampData.h"
 #import "UserDefaults.h"
@@ -528,7 +528,7 @@ static int nInit=0;
  bumpHeight REAL,\
  detectableWidth INT,\
  detectableDepth INT,\
- PRIMARY KEY (intID,rampNum ASC));"];
+ FromFileID CHAR(12),PRIMARY KEY (intID,rampNum ASC));"];
    
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
               sendToServer:YES
@@ -563,6 +563,29 @@ static int nInit=0;
     {
         switch (version)
         {
+            case 3://convert version 3 to version 4
+            {
+                BOOL st = TRUE;
+                rtn = FALSE;
+                [self startTransaction];
+                NSString * cmd = @"";
+                cmd = @"ALTER TABLE Ramps ADD COLUMN FromFileID CHAR(12);";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN CornerID INT;";
+                st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"ALTER TABLE Ramps ADD COLUMN Retired INT;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = [NSString stringWithFormat:@"UPDATE Version SET VersionID = '%s' WHERE vid = 1;",CURRENT_INTERSECTION_VERSION];
+                st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                if (st)
+                {
+                    [self commitTransaction];
+                    rtn = TRUE;
+                }
+                else
+                [self cancelTransaction];
+            }
+            break;
             case 2://convert version 2 to version 3
             {
                 BOOL st = TRUE;
@@ -581,9 +604,9 @@ static int nInit=0;
                     rtn = TRUE;
                 }
                 else
-                    [self cancelTransaction];
+                [self cancelTransaction];
             }
-                break;
+            break;
            case 1://convert version 1 to version 2
             {
                 BOOL st = TRUE;

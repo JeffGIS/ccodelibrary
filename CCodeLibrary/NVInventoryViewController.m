@@ -1056,8 +1056,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     if (alertView.tag == 999 && buttonIndex == 1)
     {
-        [self dismissViewControllerAnimated:YES
-                                 completion:nil];
+        if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didCancelChanges:)])
+        {
+            [_delegate inventoryViewController:self
+                           didCancelChanges:_currentIntersection];
+        }
         return;
     }
     
@@ -1250,6 +1253,18 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 ramp.rampExists = NO;
                 ramp.isComplete = YES;
                 ramp.rampType = 0;
+                if (rampID > 8)
+                {
+                    MPRamp *sideRamp = _currentIntersection.ramps[[self getLeftRampIDFromRampID:rampID]];
+                    sideRamp.rampExists = NO;
+                    sideRamp.isComplete = YES;
+                    sideRamp.rampType = 0;
+                    
+                    sideRamp = _currentIntersection.ramps[[self getRightRampIDFromRampID:rampID]];
+                    sideRamp.rampExists = NO;
+                    sideRamp.isComplete = YES;
+                    sideRamp.rampType = 0;
+                }
             }
             
             [self setupButtons];
