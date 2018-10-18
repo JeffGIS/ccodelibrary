@@ -178,6 +178,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nullable) NSString *currentStepValueID;
 @property id showLocationTarget;
 @property int cellPadding;
+@property (nonatomic) int rebuildYear;
 
 
 + (nullable CRAPI *)sharedInstance;

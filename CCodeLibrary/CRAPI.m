@@ -165,6 +165,7 @@
         _finalBeep = [[AVAudioPlayer alloc] initWithContentsOfURL:
                       [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/finalBeep.mp3",
                                               NSBundle.mainBundle.resourcePath]] error:nil];
+        _rebuildYear = max (2012,(int)[UserDefaults.defaults integerForKey:@"RebuildYear"]);
     }
     
     return self;
@@ -954,6 +955,11 @@
         [UserDefaults.defaults saveInteger:num forKey:key];
 }
 
+- (void) setRebuildYear:(int)rebuildYear
+{
+    _rebuildYear = rebuildYear;
+    [UserDefaults.defaults saveInteger:rebuildYear forKey:@"RebuildYear"];
+}
 - (NSInteger)adjustNextRefno:(NSInteger)refno
 {
     NSInteger nextRef = refno % _maxDevices;

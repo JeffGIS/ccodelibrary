@@ -36,6 +36,7 @@
 @property (nonatomic) CGPoint newTarget;
 @property (nonatomic) double targetSize;
 @property (nonatomic) MPIntersection *currentIntersection;
+@property BOOL haveDoneRetired;
 
 @end
 
@@ -517,62 +518,62 @@
         switch (i)
         {
             case 1:
-                _ramp1.hidden = !ramp.rampExists;
+                _ramp1.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp1;
                 break;
                 
             case 2:
-                _ramp2.hidden = !ramp.rampExists;
+                _ramp2.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp2;
                 break;
                 
             case 3:
-                _ramp3.hidden = !ramp.rampExists;
+                _ramp3.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp3;
                 break;
                 
             case 4:
-                _ramp4.hidden = !ramp.rampExists;
+                _ramp4.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp4;
                 break;
                 
             case 5:
-                _ramp5.hidden = !ramp.rampExists;
+                _ramp5.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp5;
                 break;
                 
             case 6:
-                _ramp6.hidden = !ramp.rampExists;
+                _ramp6.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp6;
                 break;
                 
             case 7:
-                _ramp7.hidden = !ramp.rampExists;
+                _ramp7.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp7;
                 break;
                 
             case 8:
-                _ramp8.hidden = !ramp.rampExists;
+                _ramp8.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp8;
                 break;
                 
             case 9:
-                _ramp23.hidden = !ramp.rampExists;
+                _ramp23.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp23;
                 break;
                 
             case 10:
-                _ramp45.hidden = !ramp.rampExists;
+                _ramp45.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp45;
                 break;
                 
             case 11:
-                _ramp67.hidden = !ramp.rampExists;
+                _ramp67.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp67;
                 break;
                 
             case 12:
-                _ramp81.hidden = !ramp.rampExists;
+                _ramp81.hidden = !ramp.rampExists || ramp.Retired;
                 rampButton = _ramp81;
                 break;
         }
@@ -596,7 +597,7 @@
             
             rampButton.frame = CGRectMake(x, y, rampButton.frame.size.width, rampButton.frame.size.height);
             rampButton.type = ramp.rampType;
-            rampButton.hidden = (rampButton.type > lastSelectableRampType);
+            rampButton.hidden = (rampButton.type > lastSelectableRampType) || ramp.Retired;
         }
     }
     
@@ -1035,7 +1036,11 @@
     }
     
     if (!CRAPI.sharedInstance.controlledInterface)
+    {
         [options addObject:@"DELETE ALL ELEMENTS|6"];
+        [options addObject:@"Retire this Corner|7"];
+        [options addObject:@"RETIRE ALL ELEMENTS|8"];
+    }
     
     [NVAlertView showLargeAlertViewinView:self.view
                                  delegate:self
@@ -1044,6 +1049,45 @@
                          destructiveIndex:2];
 }
 
+- (int) getRampsAtCorner:(int)rampID lastNum:(int)num
+{
+    int ramps[3];
+    
+    if (num >= 3)
+        return 0;
+    switch (rampID)
+    {
+        case 1:
+        case 8:
+        case 12:
+            ramps[0] = 1;
+            ramps[1] = 8;
+            ramps[2] = 12;
+            break;
+        case 2:
+        case 3:
+        case 9:
+            ramps[0] = 2;
+            ramps[1] = 3;
+            ramps[2] = 9;
+            break;
+        case 4:
+        case 5:
+        case 10:
+            ramps[0] = 4;
+            ramps[1] = 5;
+            ramps[2] = 10;
+            break;
+        case 6:
+        case 7:
+        case 11:
+            ramps[0] = 6;
+            ramps[1] = 7;
+            ramps[2] = 11;
+            break;
+    }
+    return ramps[num];
+}
 - (void)alertView:(NVAlertView *)alertView
 didTapButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -1264,6 +1308,56 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     sideRamp.rampExists = NO;
                     sideRamp.isComplete = YES;
                     sideRamp.rampType = 0;
+                }
+            }
+            
+            [self setupButtons];
+            break;
+        case 7://retire corner
+            if ((rampID = (int)_currentEditButton.tag))
+            {
+                int i = 0;
+                int iRamp;
+                while ((iRamp = [self getRampsAtCorner:rampID lastNum:i++]))
+                {
+                    MPRamp *ramp = _currentIntersection.ramps[iRamp];
+                    
+                    if (ramp.rampExists)
+                    {
+                        ramp.Retired = YES;
+                        _haveDoneRetired = YES;
+                        _addRampButton.enabled = NO;
+                    }
+                }
+            }
+            [self setupButtons];
+            break;
+
+        case 8://retire all elements
+            _haveDoneRetired = YES;
+            _addRampButton.enabled = NO;
+            _addXWalkButton.enabled = NO;
+            _addSignalButton.enabled = NO;
+
+            _currentIntersection.xWalkAExists = NO;
+            _currentIntersection.xWalkBExists = NO;
+            _currentIntersection.xWalkCExists = NO;
+            _currentIntersection.xWalkDExists = NO;
+            _currentIntersection.signal81Exists = NO;
+            _currentIntersection.signal23Exists = NO;
+            _currentIntersection.signal45Exists = NO;
+            _currentIntersection.signal67Exists = NO;
+            
+            for (MPRamp *ramp in _currentIntersection.ramps)
+            {
+                ramp.Retired = YES;
+                if (rampID > 8)
+                {
+                    MPRamp *sideRamp = _currentIntersection.ramps[[self getLeftRampIDFromRampID:rampID]];
+                    sideRamp.Retired = YES;
+                    
+                    sideRamp = _currentIntersection.ramps[[self getRightRampIDFromRampID:rampID]];
+                    sideRamp.Retired = YES;
                 }
             }
             
@@ -1520,7 +1614,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             int middleID = [self getMiddleRampIDFromRampID:rampID];
             MPRamp *middleRamp = _currentIntersection.ramps[middleID];
             
-            if (middleRamp.rampExists)
+            if (middleRamp.rampExists && !middleRamp.Retired)
                 return;
             
             if (rampID > 0)
@@ -1531,6 +1625,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 ramp.rampType = _currentRampType;
                 ramp.rampExists = YES;
                 ramp.isComplete = NO;
+                ramp.yearRebuilt = CRAPI.sharedInstance.rebuildYear;
+                ramp.Retired = NO;
                 ramp.lev21x = x;
                 ramp.lev21y = y;
                 pt.x = x;
@@ -1778,16 +1874,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             ramp1 = _currentIntersection.ramps[2];
             ramp2 = _currentIntersection.ramps[3];
             
-            if (ramp1.rampExists && ramp2.rampExists)
+            if ((ramp1.rampExists && !ramp1.Retired) && (ramp2.rampExists && !ramp2.Retired))
                 break;
             
-            if (ramp1.rampExists)
+            if (ramp1.rampExists && !ramp1.Retired)
             {
                 rampID = 3;
                 *switchID = 2;
             }
             
-            else if (ramp2.rampExists)
+            else if (ramp2.rampExists && !ramp2.Retired)
             {
                 rampID = 2;
                 *switchID = -3;
@@ -1878,9 +1974,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)setButtonAppearance:(UIButton *)button
 {
-    if (button.selected)
+    if (!button.isEnabled)
+        button.backgroundColor = UIColor.grayColor;
+    else if (button.selected)
         button.backgroundColor = UIColor.whiteColor;
-    
     else
         button.backgroundColor = UserDefaults.defaults.appleBlue;
 }

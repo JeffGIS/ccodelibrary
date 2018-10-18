@@ -75,7 +75,8 @@ static int COUNT=100;
     
     slopeController.criticalValue = criticalVal;
     slopeController.criticalSideValue = criticalSideVal;
-    slopeController.errorValue = errVal;
+    slopeController.errorValue = errVal * criticalVal;
+    slopeController.errorValueSide = errVal * criticalSideVal;
     slopeController.promptText = @"Place the iPad with the arrow pointing toward the downslope and tap 'Start' to begin measurement.";
     
     NVSlopeData data;
@@ -1012,6 +1013,42 @@ static int COUNT=100;
                                   animated:YES
                                    overlay:YES];
     }
+    else if ((fabs(_data.sideSlopePct) > (_criticalSideValue - _errorValueSide)) &&
+        (fabs(_data.sideSlopePct) < (_criticalSideValue + _errorValueSide)))
+    {
+        NVSliderController *slider = nil;
+        
+        if (_displayDegrees)
+        {
+            slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                          width:728.0
+                                                     startValue:_data.sideSlopeDegrees
+                                                       minValue:(_data.sideSlopeDegrees - 2.0)
+                                                       maxValue:(_data.sideSlopeDegrees + 2.0)
+                                                       delegate:self
+                                                  configuration:NVSliderConfigurationManualSlope
+                                                           type:NVSliderMeasurementTypeSideSlope
+                                                           unit:@"°"];
+        }
+        
+        else
+        {
+            slider = [[NVSliderController alloc] initWithCenter:self.view.center
+                                                          width:728.0
+                                                     startValue:_data.sideSlopePct
+                                                       minValue:(_data.sideSlopePct - 2.0)
+                                                       maxValue:(_data.sideSlopePct + 2.0)
+                                                       delegate:self
+                                                  configuration:NVSliderConfigurationManualSlope
+                                                           type:NVSliderMeasurementTypeSideSlope
+                                                           unit:@"%"];
+        }
+        
+        [slider showSliderControllerInView:self.view
+                                  animated:YES
+                                   overlay:YES];
+    }
+
 }
 
 - (void)hideDoesNotExist
@@ -1094,8 +1131,8 @@ static int COUNT=100;
     [sliderView hideSliderController:YES];
     
     if ((type == NVSliderMeasurementTypeFrontSlope) &&
-        (fabs(_data.sideSlopePct) > (_criticalSideValue - _errorValue)) &&
-        (fabs(_data.sideSlopePct) < (_criticalSideValue + _errorValue)))
+        (fabs(_data.sideSlopePct) > (_criticalSideValue - _errorValueSide)) &&
+        (fabs(_data.sideSlopePct) < (_criticalSideValue + _errorValueSide)))
     {
         NSLog(@"sidePct=%f, critSV=%f, errorVal=%f", _data.sideSlopePct, _criticalSideValue, _errorValue);
         
