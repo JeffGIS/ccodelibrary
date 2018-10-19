@@ -520,7 +520,7 @@ static double _deviceValues[9][4];
             
             _currentIndex++;
 
-            if (headingError && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE && !_headingErrorShown)
+            if ((CRAPI.sharedInstance.showCompassCalibrationScreen && headingError) && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE && !_headingErrorShown)
             {
                 NVAlertView *alert =
                 [NVAlertView showLargeAlertViewinView:self.view
@@ -592,7 +592,7 @@ static double _deviceValues[9][4];
 
             }
             
-            if (headingError && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE && !_headingErrorShown)
+            if ((CRAPI.sharedInstance.showCompassCalibrationScreen && headingError) && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE && !_headingErrorShown)
             {
                 NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                                   delegate:self
