@@ -151,7 +151,7 @@ static int nInit=0;
         
         if (_fileSize)
         {
-            [self createSidewalkTables];
+            [self createSidewalkTables:FALSE];
             [self adjustToLatestVersion];
         }
         rtn = TRUE;
@@ -159,19 +159,28 @@ static int nInit=0;
     return rtn;
 }
 
-- (BOOL) createSidewalkTables
+- (BOOL) createSidewalkTables:(BOOL)forceDelete
 {
     BOOL rtn = TRUE;
     if (CRAPI.sharedInstance.canUseSdwk)
     {
-        if (!doesSQLiteTableExist("SidewalkPoints",_database))
+        if (!doesSQLiteTableExist("SidewalkPoints",_database) || forceDelete)
         {
-            NSString *cmd = @"DROP TABLE IF EXISTS SidewalkPoints;DROP TABLE IF EXISTS SidewalkPoints_index;CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), latitude REAL, longitude REAL, fromIntersection INT,slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, type INT, deleted INT); CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
+            NSString *cmd = @"DROP TABLE IF EXISTS SidewalkPoints;DROP TABLE IF EXISTS SidewalkPoints_index;CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), latitude REAL, longitude REAL, fromIntersection INT,steps INT, slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, type INT, deleted INT); CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
             rtn = [self executeCmd:(char *)cmd.UTF8String
                       sendToServer:YES
                               from:1662];
         }
     }
+    return rtn;
+}
++ (BOOL) clearSidewalkTables
+{
+    BOOL rtn = FALSE;
+    CurbRampData *crd = CurbRampData.new;
+    BOOL opened = [crd open];
+    rtn = [crd createSidewalkTables:TRUE];
+    [crd close:opened];
     return rtn;
 }
 
@@ -1252,7 +1261,7 @@ void convertVersion_2_to_3 (LPSTR str)
     
     sdwkPoint.lastUpdate = NSDate.date.timeIntervalSinceReferenceDate;
 
-    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET note='%@',fromIntersection=%i, slope_front=%f, slope_side=%f, slope_heading=%f, crack_width=%f, width=%f, level_change=%f, last_update=%i, condition=%d, obstruction=%d, type=%ld WHERE id=%u", sdwkPoint.note, sdwkPoint.fromIntersection, sdwkPoint.slopeFront, sdwkPoint.slopeSide, sdwkPoint.slopeHeading, sdwkPoint.crackWidth, sdwkPoint.width, sdwkPoint.levelChange,sdwkPoint.lastUpdate, sdwkPoint.condition, sdwkPoint.obstruction, (long)sdwkPoint.type, sdwkPoint.pointID];
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET steps=%i, note='%@',fromIntersection=%i, slope_front=%f, slope_side=%f, slope_heading=%f, crack_width=%f, width=%f, level_change=%f, last_update=%i, condition=%d, obstruction=%d, type=%ld WHERE id=%u", sdwkPoint.steps, sdwkPoint.note, sdwkPoint.fromIntersection, sdwkPoint.slopeFront, sdwkPoint.slopeSide, sdwkPoint.slopeHeading, sdwkPoint.crackWidth, sdwkPoint.width, sdwkPoint.levelChange,sdwkPoint.lastUpdate, sdwkPoint.condition, sdwkPoint.obstruction, (long)sdwkPoint.type, sdwkPoint.pointID];
     
     [self executeCmd:(LPSTR)cmd.UTF8String
         sendToServer:YES

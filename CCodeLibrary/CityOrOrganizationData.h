@@ -13,6 +13,7 @@
 @property NSInteger totWithinManager;
 @property NSInteger GSSiPadNumber;
 @property bool controlledInterface;
+@property bool allowSidewalk;
 
 - (bool) inArray:(NSArray*)array;
 - (NSComparisonResult)compareName:(CityOrOrganizationData *)c;

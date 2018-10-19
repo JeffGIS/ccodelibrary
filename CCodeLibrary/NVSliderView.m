@@ -12,6 +12,7 @@
 @property (nonatomic) UIButton *cancelButton, *saveButton, *photoButton;
 @property (nonatomic) UISegmentedControl *stepperSC;
 @property (nonatomic) UITabBar *tabBar;
+@property BOOL valueChanged;
 
 @end
 
@@ -227,6 +228,7 @@
 
 - (void)sliderValueChanged
 {
+    _valueChanged = YES;
     [self updateSliderLabel];
 }
 
@@ -316,6 +318,11 @@
 
 - (void)photoButtonTapped:(UIButton *)button
 {
+    if (!_valueChanged)
+    {
+        _slider.value = 0;
+        [self updateSliderLabel];
+    }
     [_delegate sliderViewDidWantPhoto:self];
 }
 

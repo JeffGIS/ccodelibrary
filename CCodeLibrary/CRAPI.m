@@ -1019,6 +1019,17 @@
     return -1;
 }
 
+int ControlChar (NSString * controlStr,int whichChar)
+{
+    int rtn = 0;
+    char chr[2];
+    if (controlStr.length < whichChar)
+        return 0;
+    chr[0] = [controlStr characterAtIndex:whichChar-1];
+    chr[1] = 0;
+    rtn = atoi (chr);
+    return rtn;
+}
 - (BOOL)processPlaces
 {
     NSString *message = [UserDefaults.defaults stringForKey:@"PlacesString"];
@@ -1040,7 +1051,8 @@
         NSString *str = textBeforeLastChar(instr,@"*");
         NSString *controlStr = textAfterLastChar(instr,@"*");
         CityOrOrganizationData *c = [[CityOrOrganizationData alloc]init];
-        c.controlledInterface = controlStr.integerValue;
+        c.controlledInterface = ControlChar (controlStr,1);
+        c.allowSidewalk = ControlChar(controlStr, 2);
         c.fullDescription = str;
         c.name = textInsideParentheses(str);
         c.number = [textBeforeParentheses(str) integerValue];
@@ -1214,6 +1226,7 @@
     _totiPadWithinManager = (int)c.totWithinManager;
     _controlledInterface = c.controlledInterface;
     _controllControlledInterface = !c.controlledInterface;
+    _allowSidewalk = c.allowSidewalk;
     [self saveiPadIDs];
     return TRUE;
 }

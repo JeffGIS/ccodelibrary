@@ -9,6 +9,7 @@
 @interface NVSidewalkPoint : NSObject
 
 @property int lastUpdate, condition, houseNum, fromIntersection;
+@property int steps;
 @property uint pointID;
 @property double slopeFront, slopeSide, slopeHeading, crackWidth, width, levelChange;
 @property double flare1Slope, flare2Slope;
@@ -120,6 +121,8 @@
            toLocation:(CLLocationCoordinate2D)location
             withHouse:(NSString *)house
             andStreet:(NSString *)street;
+- (BOOL) createSidewalkTables:(BOOL)forceDelete;
++ (BOOL) clearSidewalkTables;
 
 
 @end
