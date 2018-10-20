@@ -180,6 +180,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property id showLocationTarget;
 @property int cellPadding;
 @property (nonatomic) int rebuildYear;
+@property BOOL requirePhotoLandscape;
 
 
 + (nullable CRAPI *)sharedInstance;

@@ -206,7 +206,8 @@ static int COUNT=100;
 
     if (_hideDoesNotExistButton || _fromCalibration)
         [self hideDoesNotExist];
-    
+    if (_fromCalibration)
+        _unableButton.hidden = YES;
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(resignedActive:)
                                                name:@"didResignActive"
@@ -967,6 +968,7 @@ static int COUNT=100;
     
     _promptLabel.text = @"Press 'Done' to continue.";
     [_unableButton setTitle:@"Done" forState:UIControlStateNormal];
+    _unableButton.hidden = NO;
     
     _startCancelButton.hidden = _progressView.hidden = _cancelButton.hidden = YES;
     _unable = _hasRun = NO;

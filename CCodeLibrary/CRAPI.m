@@ -166,6 +166,7 @@
                       [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/finalBeep.mp3",
                                               NSBundle.mainBundle.resourcePath]] error:nil];
         _rebuildYear = max (2012,(int)[UserDefaults.defaults integerForKey:@"RebuildYear"]);
+        _requirePhotoLandscape = YES;
     }
     
     return self;
