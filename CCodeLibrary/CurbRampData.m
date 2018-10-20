@@ -1188,7 +1188,8 @@ void convertVersion_2_to_3 (LPSTR str)
         refno = sqlite3_column_int(statement, 0);
         refno = [CRAPI.sharedInstance adjustNextRefno:refno];
     }
-    
+    else
+        refno = 1;
     SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     
     NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, fromIntersection, house_num, street, latitude, longitude, deleted) VALUES (%ld,%d,%ld,'%@',%f,%f,0);", (long)refno, CRAPI.sharedInstance.currentIntersection, (long)iHouse, street, location.latitude, location.longitude];
@@ -1203,9 +1204,11 @@ void convertVersion_2_to_3 (LPSTR str)
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
               sendToServer:YES
                   fromFile:__FILE__ fromLine:__LINE__];
-    
     [self close:opened];
-    CRAPI.sharedInstance.currentSidewalkPointID = refno;
+    if (!rtn)
+        refno = 0;
+    else
+        CRAPI.sharedInstance.currentSidewalkPointID = refno;
     return (int)refno;
 }
 
@@ -1216,6 +1219,21 @@ void convertVersion_2_to_3 (LPSTR str)
     BOOL opened = [self open];
     
     NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET deleted=1, last_update=%i WHERE id=%ld", iTime, (long)refno];
+    
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                  fromFile:__FILE__ fromLine:__LINE__];
+    
+    [self close:opened];
+    return rtn;
+}
+
+- (BOOL)removeSdwkPoint:(NSInteger)refno
+{
+    BOOL rtn = NO;
+    BOOL opened = [self open];
+    
+    NSString *cmd = [NSString stringWithFormat:@"DELETE FROM SidewalkPoints WHERE id=%ld;DELETE FROM SidewalkPoints_index WHERE id=%ld", (long)refno,(long)refno];
     
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
               sendToServer:YES
@@ -1288,6 +1306,7 @@ void convertVersion_2_to_3 (LPSTR str)
         double latitude = sqlite3_column_double(statement, iCol++);
         double longitude = sqlite3_column_double(statement, iCol++);
         int fromIntersection = sqlite3_column_int(statement, iCol++);
+        int steps = sqlite3_column_int(statement, iCol++);
         double slopeFront = sqlite3_column_double(statement, iCol++);
         double slopeSide = sqlite3_column_double(statement, iCol++);
         double slopeHeading = sqlite3_column_double(statement, iCol++);
@@ -1309,6 +1328,7 @@ void convertVersion_2_to_3 (LPSTR str)
         
         sdwkPoint.location = CLLocationCoordinate2DMake(latitude, longitude);
         sdwkPoint.fromIntersection = fromIntersection;
+        sdwkPoint.steps = steps;
         sdwkPoint.slopeFront = slopeFront;
         sdwkPoint.slopeSide = slopeSide;
         sdwkPoint.slopeHeading = slopeHeading;

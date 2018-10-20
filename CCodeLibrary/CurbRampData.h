@@ -114,7 +114,10 @@
 - (int)createNewSdwkPointAtLocation:(CLLocationCoordinate2D)location
                           withHouse:(NSString *)house
                           andStreet:(NSString *)street;
+
 - (BOOL)deleteSdwkPoint:(NSInteger)refno;
+- (BOOL)removeSdwkPoint:(NSInteger)refno;
+
 - (void)updateSdwkPoint:(NVSidewalkPoint *)sdwkPoint;
 - (NVSidewalkPoint *)getSdwkPointForRefno:(uint)refno;
 - (BOOL)moveSdwkPoint:(NSInteger)refno
