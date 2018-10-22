@@ -181,6 +181,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property int cellPadding;
 @property (nonatomic) int rebuildYear;
 @property BOOL requirePhotoLandscape;
+@property SideOfStreet currentSideOfStreet;
+@property int firstSidewalkPointIDOnSegment;
 
 
 + (nullable CRAPI *)sharedInstance;

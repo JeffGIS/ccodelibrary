@@ -388,4 +388,12 @@ typedef NS_ENUM(NSInteger, NVFacButtonType)
     NVFacButtonTypeComment=4,
 };
 
+typedef NS_ENUM(NSInteger, SideOfStreet)
+{
+    SideOfStreetNotSet,
+    RightSideOfStreet,
+    LeftSideOfStreet,
+    OnTrail,
+};
+
 #endif

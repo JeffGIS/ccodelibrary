@@ -167,6 +167,7 @@
                                               NSBundle.mainBundle.resourcePath]] error:nil];
         _rebuildYear = max (2012,(int)[UserDefaults.defaults integerForKey:@"RebuildYear"]);
         _requirePhotoLandscape = YES;
+        _currentSideOfStreet = SideOfStreetNotSet;
     }
     
     return self;

@@ -8,7 +8,9 @@
 
 @interface NVSidewalkPoint : NSObject
 
-@property int lastUpdate, condition, houseNum, fromIntersection;
+@property int lastUpdate, condition, houseNum;
+@property int fromIntersection, toIntersection;
+@property SideOfStreet sideOfStreet;
 @property int steps;
 @property uint pointID;
 @property double slopeFront, slopeSide, slopeHeading, crackWidth, width, levelChange;
@@ -112,7 +114,8 @@
                       foriPad:(int)iPad;
 
 - (int)createNewSdwkPointAtLocation:(CLLocationCoordinate2D)location
-                          withHouse:(NSString *)house
+                             onSide:(SideOfStreet)sideOfStreet
+                         withHouse:(NSString *)house
                           andStreet:(NSString *)street;
 
 - (BOOL)deleteSdwkPoint:(NSInteger)refno;
@@ -126,6 +129,8 @@
             andStreet:(NSString *)street;
 - (BOOL) createSidewalkTables:(BOOL)forceDelete;
 + (BOOL) clearSidewalkTables;
+- (BOOL) setSidewalkToIntersection:(int) intID
+                      beginingWith:(long) sideWalkID;
 
 
 @end

@@ -166,7 +166,7 @@ static int nInit=0;
     {
         if (!doesSQLiteTableExist("SidewalkPoints",_database) || forceDelete)
         {
-            NSString *cmd = @"DROP TABLE IF EXISTS SidewalkPoints;DROP TABLE IF EXISTS SidewalkPoints_index;CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), latitude REAL, longitude REAL, fromIntersection INT,steps INT, slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, type INT, deleted INT); CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
+            NSString *cmd = @"DROP TABLE IF EXISTS SidewalkPoints;DROP TABLE IF EXISTS SidewalkPoints_index;CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), latitude REAL, longitude REAL, fromIntersection INT, toIntersection INT, side INT, steps INT, slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, type INT, deleted INT); CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
             rtn = [self executeCmd:(char *)cmd.UTF8String
                       sendToServer:YES
                               from:1662];
@@ -1171,6 +1171,7 @@ void convertVersion_2_to_3 (LPSTR str)
     return rtn;
 }
 - (int)createNewSdwkPointAtLocation:(CLLocationCoordinate2D)location
+                             onSide:(SideOfStreet)sideOfStreet
                           withHouse:(NSString *)house
                           andStreet:(NSString *)street
 {
@@ -1192,7 +1193,7 @@ void convertVersion_2_to_3 (LPSTR str)
         refno = 1;
     SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     
-    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, fromIntersection, house_num, street, latitude, longitude, deleted) VALUES (%ld,%d,%ld,'%@',%f,%f,0);", (long)refno, CRAPI.sharedInstance.currentIntersection, (long)iHouse, street, location.latitude, location.longitude];
+    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, fromIntersection, side, house_num, street, latitude, longitude, deleted) VALUES (%ld,%i,%d,%ld,'%@',%f,%f,0);", (long)refno, CRAPI.sharedInstance.currentIntersection, sideOfStreet, (long)iHouse, street, location.latitude, location.longitude];
     
     [self executeCmd:(LPSTR)cmd.UTF8String
         sendToServer:YES
@@ -1234,6 +1235,23 @@ void convertVersion_2_to_3 (LPSTR str)
     BOOL opened = [self open];
     
     NSString *cmd = [NSString stringWithFormat:@"DELETE FROM SidewalkPoints WHERE id=%ld;DELETE FROM SidewalkPoints_index WHERE id=%ld", (long)refno,(long)refno];
+    
+    rtn = [self executeCmd:(LPSTR)cmd.UTF8String
+              sendToServer:YES
+                  fromFile:__FILE__ fromLine:__LINE__];
+    
+    [self close:opened];
+    return rtn;
+}
+
+- (BOOL) setSidewalkToIntersection:(int) intID
+                      beginingWith:(long) sideWalkID
+{
+    BOOL rtn = FALSE;
+    
+    BOOL opened = [self open];
+    
+    NSString *cmd = [NSString stringWithFormat:@"UPDATE SidewalkPoints SET ToIntersection = %i WHERE id>=%ld", intID,sideWalkID];
     
     rtn = [self executeCmd:(LPSTR)cmd.UTF8String
               sendToServer:YES
@@ -1306,6 +1324,8 @@ void convertVersion_2_to_3 (LPSTR str)
         double latitude = sqlite3_column_double(statement, iCol++);
         double longitude = sqlite3_column_double(statement, iCol++);
         int fromIntersection = sqlite3_column_int(statement, iCol++);
+        int toIntersection = sqlite3_column_int(statement, iCol++);
+        int sideOfStreet = sqlite3_column_int(statement, iCol++);
         int steps = sqlite3_column_int(statement, iCol++);
         double slopeFront = sqlite3_column_double(statement, iCol++);
         double slopeSide = sqlite3_column_double(statement, iCol++);
@@ -1328,6 +1348,8 @@ void convertVersion_2_to_3 (LPSTR str)
         
         sdwkPoint.location = CLLocationCoordinate2DMake(latitude, longitude);
         sdwkPoint.fromIntersection = fromIntersection;
+        sdwkPoint.toIntersection = toIntersection;
+        sdwkPoint.sideOfStreet = sideOfStreet;
         sdwkPoint.steps = steps;
         sdwkPoint.slopeFront = slopeFront;
         sdwkPoint.slopeSide = slopeSide;
