@@ -12,6 +12,8 @@
 @property BOOL backImageIsTaken;
 @property (nonatomic) AVCaptureSession *session;
 @property (nonatomic) AVCaptureStillImageOutput *output;
+@property (nonatomic) CLLocation *currentLocation;
+@property int currentHeading;
 
 @end
 
@@ -22,9 +24,32 @@
     NVFrontBackPhotoCapture *capture = NVFrontBackPhotoCapture.new;
     capture.backImageIsTaken = NO;
     capture.delegate = delegate;
+    capture.locationManager = CLLocationManager.new;
+    capture.locationManager.headingFilter = kCLHeadingFilterNone;
+    capture.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    capture.locationManager.delegate = capture;
+    if (CLLocationManager.locationServicesEnabled)
+        [capture.locationManager startUpdatingLocation];
+    
+    if (CLLocationManager.headingAvailable)
+        [capture.locationManager startUpdatingHeading];
 
     return capture;
 }
+
+- (void)locationManager:(CLLocationManager *)manager
+       didUpdateHeading:(CLHeading *)heading
+{
+    _currentHeading = heading.trueHeading;
+}
+
+- (void)locationManager:(CLLocationManager *)manager
+    didUpdateToLocation:(CLLocation *)newLocation
+           fromLocation:(CLLocation *)oldLocation
+{
+    _currentLocation = newLocation;
+}
+
 
 - (void)takePhotos
 {
@@ -92,12 +117,22 @@
                      _session = nil;
                      
                      if (_delegate && [_delegate respondsToSelector:@selector
-                                       (frontBackPhotoCaptureDidReturnFrontImage:backImage:)])
+                                       (frontBackPhotoCaptureDidReturnFrontImage:backImage:atLocation:withHeading:)])
                      {
                          [_delegate frontBackPhotoCaptureDidReturnFrontImage:_frontImage
-                                                                   backImage:_backImage];
+                                                                   backImage:_backImage
+                                                                  atLocation:_currentLocation
+                                                                 withHeading:_currentHeading];
+
                      }
-                     
+                     if (_locationManager)
+                     {
+                         [_locationManager stopUpdatingHeading];
+                         [_locationManager stopUpdatingLocation];
+                         _locationManager.delegate = nil;
+                         _locationManager = nil;
+                     }
+
                  }
                  
                  else

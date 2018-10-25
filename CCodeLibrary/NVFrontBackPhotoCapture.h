@@ -8,11 +8,14 @@
 @protocol NVFrontBackPhotoCaptureDelegate<NSObject>
 
 - (void)frontBackPhotoCaptureDidReturnFrontImage:(UIImage *)frontImage
-                                       backImage:(UIImage *)backImage;
+                                       backImage:(UIImage *)backImage
+                                      atLocation:(CLLocation*)location
+                                     withHeading:(int) heading;
 
 @end
 
-@interface NVFrontBackPhotoCapture : NSObject
+@interface NVFrontBackPhotoCapture : NSObject <CLLocationManagerDelegate>
+@property (nonatomic) CLLocationManager *locationManager;
 
 + (instancetype)frontBackPhotoCaptureWithDelegate:(id)delegate;
 - (void)takePhotos;
