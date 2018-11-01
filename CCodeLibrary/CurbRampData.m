@@ -50,6 +50,7 @@ static int nInit=0;
 {
     NSFileManager *fm = NSFileManager.defaultManager;
     NSError *error = nil;
+    int ii;
     
     NSString *dir = [NSString stringWithFormat:@"%@",
                      [CRAPI.sharedInstance sharedOutputDirectory:@"CurbRamps"]];
@@ -58,13 +59,20 @@ static int nInit=0;
     {
         if (!error)
         {
-            BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@/%@", dir, file]
-                                          error:&error];
-            if (!success || error)
+            NSString * type = [file pathExtension];
+            if ([type isEqualToString:@"jpg"])
             {
-                NSLog(@"ERROR: File %@ couldn't be removed!", file);
-                return NO;
+                ii=0;
+                /*BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@/%@", dir, file]
+                                              error:&error];
+                if (!success || error)
+                {
+                    NSLog(@"ERROR: File %@ couldn't be removed!", file);
+                    return NO;
+                }*/
             }
+            else
+                ii = 1;
         }
         
         else
