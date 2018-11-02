@@ -5,6 +5,7 @@
 
 #define HORIZONTAL 1
 #define VERTICAL 2
+#define WAITFORMOTION 3
 
 @class WaitForStillness;
 
@@ -39,6 +40,13 @@
                               beepFactor:(double)beepSeconds
                                   target:(id)aTarget
                                 selector:(SEL)aSelector;
+
++ (instancetype)waitForMotion:(double)steadyFactor
+                  countFactor:(double)countFactor
+            orientationFactor:(double)orientationFactor
+                   beepFactor:(double)beepSeconds
+                       target:(id)aTarget
+                     selector:(SEL)aSelector;
 
 + (void)determineIsDeviceIsPortraitOrUpsideDown:(id)aTarget;
 

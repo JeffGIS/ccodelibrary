@@ -56,6 +56,22 @@
                       orientation:HORIZONTAL];
 }
 
++ (instancetype)waitForMotion:(double)steadyFactor
+                               countFactor:(double)countFactor
+                         orientationFactor:(double)orientationFactor
+                                beepFactor:(double)beepSeconds
+                                    target:(id)aTarget
+                                  selector:(SEL)aSelector
+{
+    return [self waitForStillness:steadyFactor
+                      countFactor:countFactor
+                orientationFactor:orientationFactor
+                       beepFactor:beepSeconds
+                           target:aTarget
+                         selector:aSelector
+                      orientation:WAITFORMOTION];
+}
+
 + (instancetype)waitForStillness:(double)steadyFactor
                      countFactor:(double)countFactor
                orientationFactor:(double)orientationFactor
@@ -137,8 +153,11 @@
                 angleY = fabs(angleY - M_PI_2);
                 angleZ = fabs(angleZ - M_PI_2);
                 break;
-            default:break;
-        }
+            case WAITFORMOTION:
+                [self resetSumsAndCounter];
+                return;
+                break;
+       }
         
         if ((angleX < _orientationTolerance) &&
             (angleY < _orientationTolerance) &&
@@ -173,7 +192,16 @@
             xRange > _steadyDiff ||
             zRange > _steadyDiff)
         {
-            [self resetSumsAndCounter];
+            if (_orientation == WAITFORMOTION)
+            {
+                NSTimeInterval delay = 0.1;
+                
+                [self cancelOperations:delay];
+                [_aTarget performSelector:_aSelector withObject:nil afterDelay:delay];
+                
+            }
+            else
+                [self resetSumsAndCounter];
         }
         
         _sumX += acceleration.x;
