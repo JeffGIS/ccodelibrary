@@ -1396,6 +1396,26 @@ MNMXCORD atobounds(LPCSTR Value, LPBool pErr)
     return rtn;
 }
 
+NSString * dataToBlob (NSData * data)
+{
+    NSString * blob=@"";
+    NSInteger sln = data.length;
+    NSInteger lblb = 0;
+    if (sln)
+    {
+        LPSTR blb = malloc (sln*2+4);
+        LPCSTR cstr = data.bytes;
+        for (NSInteger i = 0;i<sln;i++)
+        {
+            sprintf (&blb[lblb],"%2.2x",cstr[i]);
+            lblb += 2;
+        }
+        blb[lblb] = 0;
+        blob = [NSString stringWithUTF8String:blb];
+        free (blb);
+    }
+    return blob;
+}
 NSString * stringToBlob(NSString* str)
 {
     if (!str)
