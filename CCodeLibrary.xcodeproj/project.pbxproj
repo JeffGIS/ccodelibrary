@@ -1573,10 +1573,6 @@
 		EB95A1A41CB16EAF00158B40 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				EB96A85E2058248100A4B9B2 /* WaitForStillness.h */,
-				EB96A85F2058248100A4B9B2 /* WaitForStillness.m */,
-				6954DC5C20597905007D4C65 /* HeightCalculator.h */,
-				6954DC5D20597905007D4C65 /* HeightCalculator.m */,
 				BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */,
 				BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */,
 				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
@@ -1601,6 +1597,8 @@
 				A99C893C1AEDE1B900A0856F /* GSSiDefs.m */,
 				A90EBDC71A48874B001E72CF /* GSSiEnums.h */,
 				A90EBDC81A48874B001E72CF /* GSSiEnums.m */,
+				6954DC5C20597905007D4C65 /* HeightCalculator.h */,
+				6954DC5D20597905007D4C65 /* HeightCalculator.m */,
 				EB0E4FE51C60D21700849766 /* HotSpot.h */,
 				EB0E4FE61C60D21700849766 /* HotSpot.m */,
 				EBAB31C51AE6DC2D00C5CCEF /* NamedColors.h */,
@@ -1633,6 +1631,8 @@
 				BB9B8FAA1EAE8A6600AFB3CA /* TimeLine.m */,
 				EBB1BFC7199C5B0E0059B547 /* UserDefaults.h */,
 				EBB1BFC8199C5B0E0059B547 /* UserDefaults.m */,
+				EB96A85E2058248100A4B9B2 /* WaitForStillness.h */,
+				EB96A85F2058248100A4B9B2 /* WaitForStillness.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";

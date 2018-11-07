@@ -15,6 +15,8 @@
 #import "HotSpotVideo.h"
 #import "SSDelegate.h"
 #import "NVPeerConnect.h"
+#import "ChartsBitmap.h"
+
 @import AVKit;
 
 #define DOWNLOAD_DATABASE_FUNCTION 3
