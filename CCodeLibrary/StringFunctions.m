@@ -1334,8 +1334,7 @@ BOOL isGSSiDevice(void)
     }
     if ([deviceName containsString:@"GSSi"] ||
         [deviceName isEqualToString:@"Jeff’s iPhone"] ||
-        [deviceName isEqualToString:@"WildBill iPhone"] ||
-        [deviceName isEqualToString:@"WildBill iPad Air"])
+        [deviceName isEqualToString:@"WildBill iPhone"])
     {
         rtn = YES;
     }
