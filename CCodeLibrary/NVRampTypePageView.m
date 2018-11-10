@@ -23,7 +23,7 @@
 
 @implementation NVRampTypePageView
 
-+ (instancetype)pageViewWithRampTypes:(NSArray *)rampTypes
++ (instancetype)pageViewWithRampTypes:(NSArray <NVRampType *> *)rampTypes
                         startingIndex:(NSUInteger)startingIndex
                          selectedType:(RampType)selectedType
                              delegate:(id)delegate
@@ -70,8 +70,9 @@
     
     [self setupReturnButton];
     
-    _selectButton = [[UIButton alloc] initWithFrame:CGRectMake(64.0, (self.view.frame.size.height - 118.0),
-                                                                     (self.view.frame.size.width - 128.0), 60.0)];
+    _selectButton = [[UIButton alloc] initWithFrame:
+                     CGRectMake(64.0, (self.view.frame.size.height - 118.0),
+                                (self.view.frame.size.width - 128.0), 60.0)];
     
     _selectButton.alpha = 0.0;
     
@@ -100,9 +101,10 @@
             if (tag >= (_startingIndex + _rampTypes.count))
                 break;
             
-            UIButton *rtButton = [[UIButton alloc] initWithFrame:CGRectMake(((column * buttonSize.width) + 4.0),
-                                                                            ((row * buttonSize.height) + 4.0),
-                                                                            buttonSize.width, buttonSize.height)];
+            UIButton *rtButton = [[UIButton alloc] initWithFrame:
+                                  CGRectMake(((column * buttonSize.width) + 4.0),
+                                             ((row * buttonSize.height) + 4.0),
+                                             buttonSize.width, buttonSize.height)];
             
             rtButton.tag = tag;
             rtButton.imageEdgeInsets = UIEdgeInsetsMake(4.0, 4.0, 44.0, 4.0);
@@ -111,22 +113,25 @@
             rtButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
             rtButton.imageView.backgroundColor = UIColor.whiteColor;
             
-            NVRampType *rt = NVRampTypePageController.defaultRampTypes[rtButton.tag];
+            NVRampType *rt = NVRampTypePageController.rampTypes[rtButton.tag];
             
-            UIImage *rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:rt.imageName
-                                                                                                ofType:@"png"]];
+            UIImage *rampImage = [UIImage imageWithContentsOfFile:
+                                  [NSBundle.mainBundle pathForResource:rt.imageName
+                                                                ofType:@"png"]];
             
             if (!rampImage)
             {
-                rampImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"BlankWhiteImage"
-                                                                                           ofType:@"png"]];
+                rampImage = [UIImage imageWithContentsOfFile:
+                             [NSBundle.mainBundle pathForResource:@"BlankWhiteImage"
+                                                           ofType:@"png"]];
             }
             
             [rtButton setImage:rampImage
                       forState:UIControlStateNormal];
             
-            UILabel *rampImageLabel = [[UILabel alloc] initWithFrame:CGRectMake(4.0, (buttonSize.height - 44.0),
-                                                                                (buttonSize.width - 8.0), 40.0)];
+            UILabel *rampImageLabel = [[UILabel alloc] initWithFrame:
+                                       CGRectMake(4.0, (buttonSize.height - 44.0),
+                                                  (buttonSize.width - 8.0), 40.0)];
             
             rampImageLabel.backgroundColor = UIColor.lightGrayColor;
             rampImageLabel.textColor = UIColor.blackColor;
@@ -136,21 +141,31 @@
             rampImageLabel.text = rt.displayText;
             [rtButton addSubview:rampImageLabel];
             
-            TableViewCellLabel *rtNumberLabel = [[TableViewCellLabel alloc] initWithFrame:
-                                                 CGRectMake(4.0, 4.0, (buttonSize.width - 8.0), (buttonSize.height - 44.0))];
+            if (rt.type != rampTypeCreateNew)
+            {
+                TableViewCellLabel *rtNumberLabel = [[TableViewCellLabel alloc] initWithFrame:
+                                                     CGRectMake(4.0, 4.0, (buttonSize.width - 8.0), (buttonSize.height - 44.0))];
+                
+                rtNumberLabel.backgroundColor = UIColor.clearColor;
+                rtNumberLabel.textColor = UserDefaults.defaults.appleBlue;
+                rtNumberLabel.alpha = 0.3;
+                rtNumberLabel.textAlignment = NSTextAlignmentCenter;
+                rtNumberLabel.font = [UIFont boldSystemFontOfSize:200.0];
+                rtNumberLabel.adjustsFontSizeToFitWidth = YES;
+                rtNumberLabel.text = [NSString stringWithFormat:@"%li", (long)(tag + 1)];
+                [rtButton addSubview:rtNumberLabel];
+                
+                [rtButton addTarget:self
+                             action:@selector(rtButtonTapped:)
+                   forControlEvents:UIControlEventTouchUpInside];
+            }
             
-            rtNumberLabel.backgroundColor = UIColor.clearColor;
-            rtNumberLabel.textColor = UserDefaults.defaults.appleBlue;
-            rtNumberLabel.alpha = 0.3;
-            rtNumberLabel.textAlignment = NSTextAlignmentCenter;
-            rtNumberLabel.font = [UIFont boldSystemFontOfSize:200.0];
-            rtNumberLabel.adjustsFontSizeToFitWidth = YES;
-            rtNumberLabel.text = [NSString stringWithFormat:@"%li", (long)(tag + 1)];
-            [rtButton addSubview:rtNumberLabel];
-            
-            [rtButton addTarget:self
-                         action:@selector(rtButtonTapped:)
-               forControlEvents:UIControlEventTouchUpInside];
+            else
+            {
+                [rtButton addTarget:self
+                             action:@selector(createNewRampTypeTapped)
+                   forControlEvents:UIControlEventTouchUpInside];
+            }
             
             [_buttonView addSubview:rtButton];
             
@@ -293,6 +308,11 @@
                      } completion:^(BOOL finished) {
                          _selectButton.hidden = YES;
                      }];
+}
+
+- (void)createNewRampTypeTapped
+{
+    
 }
 
 - (void)rtButtonTapped:(UIButton *)button

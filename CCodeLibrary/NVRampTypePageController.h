@@ -34,6 +34,7 @@ typedef NS_ENUM(NSInteger, RampTypeEditOption)
                                   selectedType:(RampType)selectedType
                                     editOption:(RampTypeEditOption)editOption;
 
-+ (NSArray *)defaultRampTypes;
++ (NSArray <NVRampType *> *)defaultRampTypes;
++ (NSArray <NVRampType *> *)rampTypes;
 
 @end

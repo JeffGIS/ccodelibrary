@@ -19,7 +19,7 @@
 
 @property BOOL isZoomed;
 
-+ (instancetype)pageViewWithRampTypes:(NSArray *)rampTypes
++ (instancetype)pageViewWithRampTypes:(NSArray <NVRampType *> *)rampTypes
                         startingIndex:(NSUInteger)startingIndex
                          selectedType:(RampType)selectedType
                              delegate:(id)delegate;
