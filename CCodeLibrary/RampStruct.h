@@ -54,7 +54,8 @@ typedef enum {
     RampTypeCombRightWalk=102,//right side of RampTypeCombPerpWalk
     RampTypeCombLeftNonWalk=103,//left side of RampTypeCombPerpNonWalk
     RampTypeCombRightNonWalk=104,//right side of RampTypeCombPerpNonWalk
-    rampTypeCount //always last item
+    rampTypeCount, //always last item
+    rampTypeCreateNew
 } RampType;
 
 #define lastSelectableRampType RampTypeNoRamp

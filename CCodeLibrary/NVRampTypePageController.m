@@ -125,6 +125,15 @@
     return rt;
 }
 
++ (instancetype)createNewRamp
+{
+    NVRampType *rt = NVRampType.new;
+    rt.displayText = @"Create New Ramp Type";
+    rt.imageName = @"createNewIcon";
+    rt.type = rampTypeCreateNew;
+    return rt;
+}
+
 @end
 
 @interface NVRampTypePageController () <UIPageViewControllerDataSource,UIPageViewControllerDelegate,NVRampTypePageViewDelegate>
@@ -132,7 +141,7 @@
 @property (nonatomic, weak) id <NVRampTypePageControllerDelegate> controllerDelegate;
 @property (nonatomic) NSMutableArray *pages;
 @property (nonatomic) UIPageControl *pageControl;
-@property (nonatomic) NSMutableArray *rampTypes;
+@property (nonatomic) NSArray<NVRampType *> *rampTypes;
 @property (nonatomic) UIButton *returnButton;
 @property (nonatomic) Colors *colors;
 @property RampTypeEditOption editOption;
@@ -166,11 +175,20 @@
     return nvrtpc;
 }
 
-+ (NSArray *)defaultRampTypes
++ (NSArray<NVRampType *> *)defaultRampTypes
 {
     return @[NVRampType.perp, NVRampType.perpNonWalkable, NVRampType.comPerp, NVRampType.comPerpNW,
              NVRampType.oneWayPerp, NVRampType.oneWayBlend, NVRampType.parallel, NVRampType.depCorner,
              NVRampType.fan, NVRampType.builtUp, NVRampType.diagonal, NVRampType.oneWayAdj, NVRampType.noRamp];
+}
+
++ (NSArray<NVRampType *> *)rampTypes
+{
+    NSMutableArray<NVRampType *> *types = NSMutableArray.array;
+    [types addObjectsFromArray:self.defaultRampTypes];
+    [types addObjectsFromArray:[UserDefaults.defaults arrayForKey:@"CustomRampTypes"]];
+    [types addObject:NVRampType.createNewRamp];
+    return types.copy;
 }
 
 - (id)init
@@ -190,10 +208,7 @@
     self.delegate = self;
     self.view.backgroundColor = _colors.backgroundColor;
     _pages = NSMutableArray.array;
-    
-    _rampTypes = NSMutableArray.array;
-    [_rampTypes addObjectsFromArray:NVRampTypePageController.defaultRampTypes];
-    [_rampTypes addObjectsFromArray:[UserDefaults.defaults arrayForKey:@"CustomRampTypes"]];
+    _rampTypes = NVRampTypePageController.rampTypes;
     
     UILabel *header = [[UILabel alloc] initWithFrame:CGRectMake(200.0, 8.0, 368.0, 56.0)];
     header.backgroundColor = UIColor.clearColor;
