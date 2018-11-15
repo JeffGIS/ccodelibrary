@@ -20,20 +20,24 @@
 @implementation NVFrontBackPhotoCapture
 
 + (instancetype)frontBackPhotoCaptureWithDelegate:(id)delegate
+                                      wantHeading:(BOOL)wantHeading
 {
     NVFrontBackPhotoCapture *capture = NVFrontBackPhotoCapture.new;
     capture.backImageIsTaken = NO;
+    capture.wantFrontImage = YES;
     capture.delegate = delegate;
-    capture.locationManager = CLLocationManager.new;
-    capture.locationManager.headingFilter = kCLHeadingFilterNone;
-    capture.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    capture.locationManager.delegate = capture;
-    if (CLLocationManager.locationServicesEnabled)
-        [capture.locationManager startUpdatingLocation];
-    
-    if (CLLocationManager.headingAvailable)
-        [capture.locationManager startUpdatingHeading];
-
+    if (wantHeading)
+    {
+        capture.locationManager = CLLocationManager.new;
+        capture.locationManager.headingFilter = kCLHeadingFilterNone;
+        capture.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        capture.locationManager.delegate = capture;
+        if (CLLocationManager.locationServicesEnabled)
+            [capture.locationManager startUpdatingLocation];
+        
+        if (CLLocationManager.headingAvailable)
+            [capture.locationManager startUpdatingHeading];
+    }
     return capture;
 }
 
@@ -115,24 +119,7 @@
                      _frontImage = image;
                      [_session stopRunning];
                      _session = nil;
-                     
-                     if (_delegate && [_delegate respondsToSelector:@selector
-                                       (frontBackPhotoCaptureDidReturnFrontImage:backImage:atLocation:withHeading:)])
-                     {
-                         [_delegate frontBackPhotoCaptureDidReturnFrontImage:_frontImage
-                                                                   backImage:_backImage
-                                                                  atLocation:_currentLocation
-                                                                 withHeading:_currentHeading];
-
-                     }
-                     if (_locationManager)
-                     {
-                         [_locationManager stopUpdatingHeading];
-                         [_locationManager stopUpdatingLocation];
-                         _locationManager.delegate = nil;
-                         _locationManager = nil;
-                     }
-
+                     [self endCapture];
                  }
                  
                  else
@@ -141,11 +128,36 @@
                      _backImage = image;
                      [_session stopRunning];
                      _session = nil;
-                     [self takePhotos];
+                     if (_wantFrontImage)
+                         [self takePhotos];
+                     else
+                         [self endCapture];
+
                  }
              }
          }];
     }
+}
+
+- (void) endCapture
+{
+    if (_delegate && [_delegate respondsToSelector:@selector
+                      (frontBackPhotoCaptureDidReturnFrontImage:backImage:atLocation:withHeading:)])
+    {
+        [_delegate frontBackPhotoCaptureDidReturnFrontImage:_frontImage
+                                                  backImage:_backImage
+                                                 atLocation:_currentLocation
+                                                withHeading:_currentHeading];
+        
+    }
+    if (_locationManager)
+    {
+        [_locationManager stopUpdatingHeading];
+        [_locationManager stopUpdatingLocation];
+        _locationManager.delegate = nil;
+        _locationManager = nil;
+    }
+
 }
 
 - (AVCaptureDevice *)cameraWithPosition:(AVCaptureDevicePosition)position

@@ -290,6 +290,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (nonnull NSArray<NSArray *> *)arrayOutput;
 - (void)playBeep;
 - (void)playFinalBeep;
+- (void)playErrorBeep;
 - (void)startBeepTimer:(NSTimeInterval)timeInterval;
 - (void)cancelBeepTimer;
 - (void)setBeepVolume:(float)volume;

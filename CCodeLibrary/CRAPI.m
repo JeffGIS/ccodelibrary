@@ -1717,6 +1717,13 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     [_finalBeep play];
 }
 
+- (void)playErrorBeep
+{
+    [_finalBeep play];
+    [_finalBeep play];
+    [_finalBeep play];
+}
+
 - (void)startBeepTimer:(NSTimeInterval)timeInterval
 {
     if (timeInterval > 0.0)

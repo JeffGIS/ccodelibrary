@@ -16,8 +16,9 @@
 
 @interface NVFrontBackPhotoCapture : NSObject <CLLocationManagerDelegate>
 @property (nonatomic) CLLocationManager *locationManager;
-
-+ (instancetype)frontBackPhotoCaptureWithDelegate:(id)delegate;
+@property BOOL wantFrontImage;
++ (instancetype)frontBackPhotoCaptureWithDelegate:(id)delegate
+                                      wantHeading:(BOOL)wantHeading;
 - (void)takePhotos;
 
 @end
