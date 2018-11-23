@@ -62,14 +62,13 @@ static int nInit=0;
             NSString * type = [file pathExtension];
             if ([type isEqualToString:@"jpg"])
             {
-                ii=0;
-                /*BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@/%@", dir, file]
+                BOOL success = [fm removeItemAtPath:[NSString stringWithFormat:@"%@/%@", dir, file]
                                               error:&error];
                 if (!success || error)
                 {
                     NSLog(@"ERROR: File %@ couldn't be removed!", file);
                     return NO;
-                }*/
+                }
             }
             else
                 ii = 1;
