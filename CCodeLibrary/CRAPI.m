@@ -213,6 +213,18 @@
     return outdir;
 }
 
+- (NSString *)localOutputDirectory:(NSString*)subDir
+{
+    NSString* outdir = [NSString stringWithFormat:@"%@/%@",
+                        self.documentsDirectory,subDir];
+    
+    [NSFileManager.defaultManager createDirectoryAtPath:outdir
+                            withIntermediateDirectories:YES
+                                             attributes:nil
+                                                  error:nil];
+    return outdir;
+}
+
 - (int)currentGeoid
 {
     return _currentGeoidValue;
@@ -892,6 +904,7 @@
     NSString *idString = [NSString stringWithFormat:@"%@ %i %i %@ %i %i %i %i",[self timeStamp],_currentModule,_currentSubModule,UIApplication.appVersionBuild,_GSSiPadNumber,_currentManageriPad,_currentiPadWithinManager,self.currentGeoid];
     //#ifdef DEBUG
     NSLog(@"%@", error);
+    //showAlert (error);
 //#else
     [self appendString:idString
                 toFile:errorFile];

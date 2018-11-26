@@ -192,6 +192,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void)setCurrentGeoid:(int)currentGeoid;
 - (nullable Facility *)facilityInit;
 - (nullable NSString *)sharedOutputDirectory:(nullable NSString *)subDir;
+- (NSString *)localOutputDirectory:(NSString*)subDir;
 
 - (void)setIntersectionRotAndQuadDeviders:(nullable NSString *)intAzm
                                    forInt:(nullable MPIntersection *)currentIntersection;
