@@ -63,7 +63,21 @@ enum {
     _filePath = [NSString stringWithFormat:@"%@/%@", _directory, _fileName];
     
     assert(_filePath);
-    
+    long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_filePath
+                                                               error:nil].fileSize;
+    if (fileSize <= 0)
+    {
+        if (_delegate)
+        {
+            [_delegate FTPPushDidComplete:_dataType
+                               withStatus:FTPStatusConnectionFailed
+                          andStatusString:@"File does not exist"
+                                 filePath:_filePath];
+        }
+        
+        return NO;
+    }
+
     _reachability = [Reachability reachabilityWithHostName:@"www.google.com"];
     NetworkStatus remoteHostStatus = _reachability.currentReachabilityStatus;
     

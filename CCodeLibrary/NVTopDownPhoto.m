@@ -108,7 +108,7 @@
 {
     if (!_EOMsent)
         return FALSE;
-    _command = [NSString stringWithFormat:@"TakePhoto:%i_%i.jpg|%i|%i",photoNum,ipadNum,manager,geoid];
+    _command = [NSString stringWithFormat:@"TakePhoto:%i_%i.jpg|%i|%i",ipadNum,photoNum,manager,geoid];
     _EOMsent = NO;
     // Reset the index
     self.sendDataIndex = 0;
