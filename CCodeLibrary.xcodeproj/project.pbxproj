@@ -95,6 +95,7 @@
 		6986AF851C7CBD820059DD1B /* NVDigitizerView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6986AF821C7C119E0059DD1B /* NVDigitizerView.h */; };
 		698A1C9C1F9E504800D22C03 /* ChartsBitmapVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 698A1C9B1F9E504800D22C03 /* ChartsBitmapVC.m */; };
 		698A1C9D1F9E509500D22C03 /* ChartsBitmapVC.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698A1C9A1F9E504800D22C03 /* ChartsBitmapVC.h */; };
+		698A69F721DA837D003E73D3 /* CustomRampTypeBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 698A69F621DA837D003E73D3 /* CustomRampTypeBuilder.m */; };
 		698C20C81DCB030B00F800C3 /* NVKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C20C71DCB030B00F800C3 /* NVKeyboard.m */; };
 		698C20C91DCB84DC00F800C3 /* NVKeyboard.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 698C20C61DCB030B00F800C3 /* NVKeyboard.h */; };
 		698F987C1C10B96B009F2F01 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698F987B1C10B96B009F2F01 /* YTPlayerView.m */; };
@@ -747,6 +748,8 @@
 		6986AF831C7C119E0059DD1B /* NVDigitizerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVDigitizerView.m; sourceTree = "<group>"; };
 		698A1C9A1F9E504800D22C03 /* ChartsBitmapVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChartsBitmapVC.h; sourceTree = "<group>"; };
 		698A1C9B1F9E504800D22C03 /* ChartsBitmapVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChartsBitmapVC.m; sourceTree = "<group>"; };
+		698A69F521DA837D003E73D3 /* CustomRampTypeBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomRampTypeBuilder.h; sourceTree = "<group>"; };
+		698A69F621DA837D003E73D3 /* CustomRampTypeBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomRampTypeBuilder.m; sourceTree = "<group>"; };
 		698C20C61DCB030B00F800C3 /* NVKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NVKeyboard.h; sourceTree = "<group>"; };
 		698C20C71DCB030B00F800C3 /* NVKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NVKeyboard.m; sourceTree = "<group>"; };
 		698F987A1C10B96B009F2F01 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTPlayerView.h; path = ../YTPlayerView.h; sourceTree = "<group>"; };
@@ -1371,6 +1374,8 @@
 				A9C525CE1A3B59880056711F /* Colors.h */,
 				A9C525CF1A3B59880056711F /* Colors.m */,
 				EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */,
+				698A69F521DA837D003E73D3 /* CustomRampTypeBuilder.h */,
+				698A69F621DA837D003E73D3 /* CustomRampTypeBuilder.m */,
 				EB05C20E19EA999F00F0688B /* ElementOverlayView.h */,
 				EB05C20F19EA999F00F0688B /* ElementOverlayView.m */,
 				A92382AB1AD986010027659B /* GSSiBumpDetector.h */,
@@ -2102,6 +2107,7 @@
 				69FD71311FE1CD4B00EAFDEF /* RHController.m in Sources */,
 				698C20C81DCB030B00F800C3 /* NVKeyboard.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
+				698A69F721DA837D003E73D3 /* CustomRampTypeBuilder.m in Sources */,
 				6997D86320446AB700A24F5D /* NVFrontBackPhotoCapture.m in Sources */,
 				EB6D4B31219D8C1800D5602B /* NVTopDownPhoto.m in Sources */,
 				699DD7391CEA057600C7A651 /* NVSynchronizeVC.m in Sources */,

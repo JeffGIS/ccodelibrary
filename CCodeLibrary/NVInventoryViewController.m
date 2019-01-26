@@ -1098,13 +1098,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     
     int rampID = 0, switchWith = 0;
     
-    if (alertView.tag == 999 && buttonIndex == 1)
+    if (alertView.tag == 999 && buttonIndex == 1)//cancel
     {
         if (_delegate && [_delegate respondsToSelector:@selector(inventoryViewController:didCancelChanges:)])
         {
             [_delegate inventoryViewController:self
                            didCancelChanges:_currentIntersection];
         }
+        
+        else
+            [self dismissViewControllerAnimated:YES completion:nil];
         return;
     }
     

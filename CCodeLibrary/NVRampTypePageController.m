@@ -5,6 +5,7 @@
 #import "NVRampTypePageView.h"
 #import "UserDefaults.h"
 #import "Colors.h"
+#import "CRAPI.h"
 
 @implementation NVRampType
 
@@ -128,7 +129,7 @@
 + (instancetype)createNewRamp
 {
     NVRampType *rt = NVRampType.new;
-    rt.displayText = @"Create New Ramp Type";
+    rt.displayText = @"Custom Ramp Type";
     rt.imageName = @"createNewIcon";
     rt.type = rampTypeCreateNew;
     return rt;
@@ -187,7 +188,10 @@
     NSMutableArray<NVRampType *> *types = NSMutableArray.array;
     [types addObjectsFromArray:self.defaultRampTypes];
     [types addObjectsFromArray:[UserDefaults.defaults arrayForKey:@"CustomRampTypes"]];
-    [types addObject:NVRampType.createNewRamp];
+    
+    if (CRAPI.sharedInstance.currentModule == DETAIL_MODULE)
+        [types addObject:NVRampType.createNewRamp];
+    
     return types.copy;
 }
 

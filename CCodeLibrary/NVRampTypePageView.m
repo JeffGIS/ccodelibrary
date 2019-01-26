@@ -6,6 +6,7 @@
 #import "TableViewCellLabel.h"
 #import "UIImage+ImageFromColor.h"
 #import "Colors.h"
+#import "CustomRampTypeBuilder.h"
 
 @interface NVRampTypePageView ()
 
@@ -163,7 +164,7 @@
             else
             {
                 [rtButton addTarget:self
-                             action:@selector(createNewRampTypeTapped)
+                             action:@selector(customRampTypeTapped)
                    forControlEvents:UIControlEventTouchUpInside];
             }
             
@@ -310,9 +311,11 @@
                      }];
 }
 
-- (void)createNewRampTypeTapped
+- (void)customRampTypeTapped
 {
-    
+    CustomRampTypeBuilder *crtb = CustomRampTypeBuilder.new;
+    crtb.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentViewController:crtb animated:YES completion:nil];
 }
 
 - (void)rtButtonTapped:(UIButton *)button
