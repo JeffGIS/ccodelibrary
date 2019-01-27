@@ -1,6 +1,8 @@
 //  CustomRampTypeBuilder.h
 //  CCodeLibrary
 
+@import UIKit;
+
 typedef enum {
     RampElementTypeNone,
     RampElementTypeRamp,
@@ -8,13 +10,18 @@ typedef enum {
     RampElementTypeLanding,
     RampElementTypeSdwk
 } RampElementType;
-@import UIKit;
 
 @interface CustomRampElement : NSObject
+
+@property RampElementType type;
+@property DPOINT position;
 
 @end
 
 @interface CustomRampType : NSObject
+
+@property (nonatomic, copy) NSString *photo;
+@property (nonatomic, copy) NSArray<CustomRampElement *> *elements;
 
 @end
 

@@ -6,21 +6,30 @@
 #import "NVAlertView.h"
 #import "UserDefaults.h"
 
-@interface CustomRampElement ()
+@implementation CustomRampElement
 
-@property RampElementType *type;
-@property DPOINT position;
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<CustomRampElement: %p> "
+            "Type: %d, Position: (%f,%f)",
+            self, _type, _position.x, _position.y];
+}
 
 @end
 
-@interface CustomRampType ()
+@implementation CustomRampType
 
-@property (nonatomic, copy) NSString *photo;
-@property (nonatomic) NSMutableArray<CustomRampElement *> *elements;
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"\n<CustomRampType: %p>"
+            "\n\tPhoto: %@,\n\tElements: %@",
+            self, _photo, _elements];
+}
 
 @end
 
 @interface CustomRampTypeBuilder () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+
 @property (nonatomic) UIButton *returnButton, *photoButton;
 @property (nonatomic) UIImageView *photoView;
 @property (nonatomic) UIImagePickerController *picker;
@@ -28,6 +37,7 @@
 @property (nonatomic) UILabel *ramps, *flares, *landings, *sdwks;
 @property CGFloat buttonSize;
 @property CGPoint originalPosition;
+@property (nonatomic, copy) NSString *photo;
 
 @end
 
@@ -205,6 +215,30 @@
 
 - (void)returnButtonTapped
 {
+    CustomRampType *ramp = CustomRampType.new;
+    NSMutableArray<CustomRampElement *> *elements = NSMutableArray.array;
+    CGFloat width = _photoView.frame.size.width;
+    CGFloat height = _photoView.frame.size.height;
+    
+    for (UILabel *label in _photoView.subviews)
+    {
+        if ([label isKindOfClass:UILabel.class])
+        {
+            DPOINT position = {0};
+            position.x = (label.center.x / width);
+            position.y = (label.center.y / height);
+            CustomRampElement *element = CustomRampElement.new;
+            element.position = position;
+            element.type = label.tag;
+            [elements addObject:element];
+        }
+    }
+    
+    ramp.photo = _photo;
+    ramp.elements = elements.copy;
+    
+    NSLog(@"%@", ramp);
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -253,10 +287,13 @@ didFinishPickingMediaWithInfo:(NSDictionary<UIImagePickerControllerInfoKey,id> *
         {
             case UIGestureRecognizerStateBegan:
                 _originalPosition = gesture.view.center;
+                [gesture.view.superview bringSubviewToFront:gesture.view];
                 break;
             case UIGestureRecognizerStateEnded:{
-                CGRect frame = [gesture.view.superview convertRect:gesture.view.frame
-                                                            toView:_photoView];
+                CGRect frame = [_elementsView convertRect:gesture.view.frame
+                                                   toView:_photoView];
+                
+                frame.origin.y += _photoView.frame.origin.y;
                 
                 if (CGRectContainsRect(_photoView.frame, frame))
                 {
