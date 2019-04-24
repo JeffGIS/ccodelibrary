@@ -835,7 +835,8 @@ static int nInit=0;
     SQLOK(__FILE__,__LINE__,SQLiteFinalize(statement), _database);
     if (!lastNum)
     {
-        lastNum = 1;
+        if (iPad == CRAPI.sharedInstance.currentiPadWithinManager)
+            lastNum = 1;
         cmd = [NSString stringWithFormat:@"INSERT OR REPLACE INTO CURBRAMP_UPDATES VALUES(%i,1,0);",iPad];
         [self executeCmd:(LPSTR)cmd.UTF8String
             sendToServer:NO
