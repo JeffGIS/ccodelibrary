@@ -1855,7 +1855,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = GSSi;
 			};
 			buildConfigurationList = EBA2E455199527660085B2E0 /* Build configuration list for PBXProject "CCodeLibrary" */;
@@ -1863,6 +1863,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = EBA2E451199527660085B2E0;
