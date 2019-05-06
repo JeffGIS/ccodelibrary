@@ -9,7 +9,7 @@
 #define SS_MARGIN 20
 #define SS_FONT_FACTOR 22.0
 
-@implementation PDFPage
+@implementation PDFPageNV
 
 - (id)init
 {
@@ -36,7 +36,7 @@
 @implementation PDFCreator
 
 + (int)writePDFtoFile:(NSString *)filePath
-        fromPageArray:(NSArray <PDFPage *> *)pageArray
+        fromPageArray:(NSArray <PDFPageNV *> *)pageArray
 {
     int returnCode = PDFCreate_FAIL;
     
@@ -61,7 +61,7 @@
         
         CGRect pageRect = CGRectZero, itemRect = CGRectZero;
         CFDataRef PDFData = NULL;
-        PDFPage *page = nil;
+        PDFPageNV *page = nil;
         PDFPageImage *pageImage = nil;
         PDFPageTextBlock *pageText = nil;
         PDFPagePropertySpreadSheet *spreadSheet = nil;

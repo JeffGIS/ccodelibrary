@@ -30,7 +30,7 @@
 
 @end
 
-@interface PDFPage : NSObject
+@interface PDFPageNV : NSObject
 
 @property int pageWidth, pageHeight;
 @property (nonatomic) NSMutableArray <PDFPageImage *> *PDFPageImages;
@@ -42,7 +42,7 @@
 @interface PDFCreator : NSObject
 
 + (int)writePDFtoFile:(NSString *)filePath
-        fromPageArray:(NSArray <PDFPage *> *)pageArray;
+        fromPageArray:(NSArray <PDFPageNV *> *)pageArray;
 
 + (int)writePDFtoFile:(NSString *)filePath
         fromTextArray:(NSArray <NSArray *> *)textArray
