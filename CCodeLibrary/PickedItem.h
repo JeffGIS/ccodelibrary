@@ -28,6 +28,7 @@
 @property NSInteger nLinks;
 @property DPOINT pickedPoint;
 @property DPOINT screenPoint;
+@property MNMXCORD llbounds;
 
 + (PickedItem *) nearestPickedItem:(NSMutableArray *)highlightList;
 
