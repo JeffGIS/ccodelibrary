@@ -62,6 +62,7 @@ typedef struct NVSlopeData {
 @property (nonatomic) double errorValue;
 @property (nonatomic) double errorValueSide;
 @property BOOL wantLocation;
+@property BOOL wantWitMotion;
 
 + (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(double)criticalVal
                                             criticalSideValue:(double)criticalSideVal

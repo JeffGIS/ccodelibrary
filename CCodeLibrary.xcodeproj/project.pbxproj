@@ -358,6 +358,7 @@
 		EB333D1A20962F0A00254B87 /* varstuff2.c in Sources */ = {isa = PBXBuildFile; fileRef = EB333D1920962F0A00254B87 /* varstuff2.c */; };
 		EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */ = {isa = PBXBuildFile; fileRef = EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */; };
 		EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EB3CC5F61AD95F8B002453A9 /* PickedItem.m */; };
+		EB40255322B0295E005862AD /* WIT_MotionInput.m in Sources */ = {isa = PBXBuildFile; fileRef = EB40255222B0295E005862AD /* WIT_MotionInput.m */; };
 		EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4DB2571B9600AA008157D8 /* PointInArea.m */; };
 		EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB4DB2561B9600AA008157D8 /* PointInArea.h */; };
 		EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */; };
@@ -1012,6 +1013,9 @@
 		EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInAreaClass.m; sourceTree = "<group>"; };
 		EB3CC5F51AD95F8B002453A9 /* PickedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickedItem.h; sourceTree = "<group>"; };
 		EB3CC5F61AD95F8B002453A9 /* PickedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickedItem.m; sourceTree = "<group>"; };
+		EB40255122B0295E005862AD /* WIT_MotionInput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WIT_MotionInput.h; sourceTree = "<group>"; };
+		EB40255222B0295E005862AD /* WIT_MotionInput.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WIT_MotionInput.m; sourceTree = "<group>"; };
+		EB40255422B02A81005862AD /* JY901.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JY901.h; sourceTree = "<group>"; };
 		EB4DB2561B9600AA008157D8 /* PointInArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointInArea.h; sourceTree = "<group>"; };
 		EB4DB2571B9600AA008157D8 /* PointInArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInArea.m; sourceTree = "<group>"; };
 		EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPlaceAreaFile.h; sourceTree = "<group>"; };
@@ -1589,6 +1593,7 @@
 		EB95A1A41CB16EAF00158B40 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				EB40255422B02A81005862AD /* JY901.h */,
 				BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */,
 				BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */,
 				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
@@ -1651,6 +1656,8 @@
 				EB96A85F2058248100A4B9B2 /* WaitForStillness.m */,
 				EB6D4B26219C06C900D5602B /* Header.h */,
 				EB6D4B27219C071A00D5602B /* PhotoTakerTransferService.h */,
+				EB40255122B0295E005862AD /* WIT_MotionInput.h */,
+				EB40255222B0295E005862AD /* WIT_MotionInput.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -2081,6 +2088,7 @@
 				698A1C9C1F9E504800D22C03 /* ChartsBitmapVC.m in Sources */,
 				BBC361C91F429C0200B51DF3 /* VARDEF.C in Sources */,
 				A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */,
+				EB40255322B0295E005862AD /* WIT_MotionInput.m in Sources */,
 				69F482371DB7C75B00E4BDB5 /* NVSpreadsheet.m in Sources */,
 				6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */,
 				EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */,

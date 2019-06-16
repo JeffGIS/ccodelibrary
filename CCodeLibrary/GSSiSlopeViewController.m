@@ -8,10 +8,12 @@
 #import "MathUtil.h"
 #import "NVProgressView.h"
 #import "SharedDefaults.h"
+#import "WIT_MotionInput.h"
 
 static double _deviceVals[5][4];
 static double _targetValues[5];
 static NSInteger _nCalibrationPoints;
+static double WitMotionAngles[3]; //roll,pitch,yaw
 
 typedef NS_ENUM(NSInteger, SCStatus)
 {
@@ -43,6 +45,8 @@ static int COUNT=100;
 @property SCStatus status;
 @property BOOL unable, hasRun;
 @property (nonatomic) NSMutableArray<CLLocation *> *locations;
+@property WIT_MotionInput *witMotionInput;
+@property BOOL inWitMotionCalibrate;
 
 @end
 
@@ -95,7 +99,10 @@ static int COUNT=100;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    _wantWitMotion = YES;
+    _inWitMotionCalibrate = NO;
+    if (_wantWitMotion)
+        _witMotionInput = WIT_MotionInput.new;
     if (!_fromCalibration)
     {
         _calDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 964.0, 728.0, 60.0)];
@@ -194,7 +201,15 @@ static int COUNT=100;
          forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:helpButton];
-    
+    if (_wantWitMotion)
+    {
+        UIButton *zeroButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        zeroButton.frame = CGRectMake(568.0, 120.0, 190.0, 80.0);
+        [self setupButton:zeroButton    title:@"Zero"];
+        [zeroButton addTarget:self
+                       action:@selector(zeroButtonTapped:)
+             forControlEvents:UIControlEventTouchUpInside];
+   }
     _locationManager = CLLocationManager.new;
     _locationManager.headingFilter = kCLHeadingFilterNone;
     _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
@@ -515,15 +530,23 @@ static int COUNT=100;
 {
     if (_status == SCStatusStart)
     {
-        [self startManagers];
-        [self resetSumsAndCounter];
-        
-        _status = SCStatusCancel;
-        _unableButton.enabled = _doesNotExistButton.enabled = NO;
-        _progressView.hidden = NO;
-        
-        [_startCancelButton setTitle:@"Cancel"
-                            forState:UIControlStateNormal];
+        if (_inWitMotionCalibrate)
+        {
+            [_witMotionInput rightCalibrate];
+            _inWitMotionCalibrate = NO;
+        }
+        else
+        {
+            [self startManagers];
+            [self resetSumsAndCounter];
+            
+            _status = SCStatusCancel;
+            _unableButton.enabled = _doesNotExistButton.enabled = NO;
+            _progressView.hidden = NO;
+            
+            [_startCancelButton setTitle:@"Cancel"
+                                forState:UIControlStateNormal];
+        }
     }
     
     else if (_status == SCStatusCancel)
@@ -639,6 +662,10 @@ static int COUNT=100;
         _locations = NSMutableArray.new;
         [_locationManager startUpdatingLocation];
     }
+    if (_wantWitMotion)
+    {
+        [_witMotionInput startInput];
+    }
     _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
 }
 
@@ -646,6 +673,7 @@ static int COUNT=100;
 {
     [_motionManager stopAccelerometerUpdates];
     [_locationManager stopUpdatingHeading];
+    [_witMotionInput cancel];
 }
 
 - (void)stopMotionManager
@@ -822,7 +850,6 @@ static int COUNT=100;
     {
         if (_headingCounter > (MIN_HEADING_COUNTER + 10) || !CLLocationManager.headingAvailable)
         {
-            [self stopManagers];
             
             _data.accelX = (_aSumX / COUNT);
             _data.accelY = (_aSumY / COUNT);
@@ -847,8 +874,23 @@ static int COUNT=100;
             angy *= RADtoDEG;
             angx = (angx - 90.0);
             angy = (angy - 90.0);
+
+            if (_wantWitMotion)
+            {
+                if ([_witMotionInput getResults:WitMotionAngles] > 4)
+                {
+                    angy = WitMotionAngles[1];
+                    angx = WitMotionAngles[0];
+                }
+                else
+                {
+                    [self resetSumsAndCounter];
+                    return;
+                }
+            }
             _lastDegrees = angy;
-            
+            [self stopManagers];
+
             _data.frontSlopeDegrees = [self adjustSlope:angy isSideSlope:NO];
             _data.sideSlopeDegrees = [self adjustSlope:angx isSideSlope:YES];
             
@@ -856,7 +898,6 @@ static int COUNT=100;
             _data.sideSlopePct = (tan(_data.sideSlopeDegrees * DEGtoRAD) * 100);
             _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
             _data.maxSlopeDegrees = (atan(_data.maxSlopePct / 100) * RADtoDEG);
-            
             [self slopeMeasurementComplete];
         }
         
@@ -904,6 +945,8 @@ static int COUNT=100;
     _headingCounter = 0;
     _minHead = 10000;
     _maxHead = -10000;
+    if (_witMotionInput)
+        [_witMotionInput restart];
 }
 
 - (void)slopeMeasurementComplete
@@ -1252,5 +1295,11 @@ static int COUNT=100;
     
     [self startCancel];
 }
-
+ - (void) zeroButtonTapped:(UIButton *)button
+ {
+     [_witMotionInput startCalibration];
+     _promptLabel.text = @"Reverse the direction and hit Start";
+     [_witMotionInput leftCalibrate];
+     _inWitMotionCalibrate = YES;
+ }
 @end
