@@ -16,6 +16,7 @@
 #import "SSDelegate.h"
 #import "NVPeerConnect.h"
 #import "ChartsBitmap.h"
+#import <CoreBluetooth/CoreBluetooth.h>
 
 @import AVKit;
 
@@ -185,7 +186,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property BOOL requirePhotoLandscape;
 @property SideOfStreet currentSideOfStreet;
 @property int firstSidewalkPointIDOnSegment;
-
+@property (strong, nonatomic) CBCentralManager      *centralManager;
+@property (strong, nonatomic) CBPeripheral          *WITMotionPeripheral;
 
 + (nullable CRAPI *)sharedInstance;
 
@@ -295,5 +297,5 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void)startBeepTimer:(NSTimeInterval)timeInterval;
 - (void)cancelBeepTimer;
 - (void)setBeepVolume:(float)volume;
-
+- (CBCentralManager *)getCentralManager;
 @end

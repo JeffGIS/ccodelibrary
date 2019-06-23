@@ -185,7 +185,12 @@
     
     return sharedInstance;
 }
-
+- (CBCentralManager *)getCentralManager
+{
+    if (!self.centralManager)
+        self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+    return self.centralManager;
+}
 - (void)setNewDataset:(DataSetTypes)newDataset
 {
     _newDataset = newDataset;

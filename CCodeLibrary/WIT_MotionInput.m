@@ -7,6 +7,7 @@
 //
 
 #import "WIT_MotionInput.h"
+#import "CRAPI.h"
 
 
 #include "JY901.h"
@@ -29,20 +30,26 @@ static unsigned char calibrationBytes[5];
     {
         if (self.centralManager)
             [self cleanup];
-        self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+        self.centralManager = [CRAPI.sharedInstance getCentralManager];
+        self.centralManager.delegate = self;
+        if (CRAPI.sharedInstance.WITMotionPeripheral)
+            [self.centralManager connectPeripheral:CRAPI.sharedInstance.WITMotionPeripheral options:nil];
+        else
+            self.wantScan = TRUE;
+        
+        self.nValues = 0;
+        self.pitch = 0;
+        self.roll = 0;
+        self.yaw = 0;
+        self.wantSetNotify = NO;
+        self.wantDisconnect = NO;
+        calibrationBytes[0] = 0xFF;
+        calibrationBytes[1] = 0xAA;
+        calibrationBytes[2] = 0x01;
+        calibrationBytes[3] = 0x01;
+        calibrationBytes[4] = 0x00;
     }
-    self.nValues = 0;
-    self.pitch = 0;
-    self.roll = 0;
-    self.yaw = 0;
-    self.wantScan = TRUE;
-    self.wantSetNotify = NO;
-    calibrationBytes[0] = 0xFF;
-    calibrationBytes[1] = 0xAA;
-    calibrationBytes[2] = 0x01;
-    calibrationBytes[3] = 0x01;
-    calibrationBytes[4] = 0x00;
-    return self;
+  return self;
 }
 - (void)dealloc
 {
@@ -119,12 +126,18 @@ static unsigned char calibrationBytes[5];
     
     // Ok, it's in range - have we already seen it?
     //if ([peripheral.name isEqualToString:@"WT901BLE"])
-        if (self.discoveredPeripheral != peripheral) {
+        if (CRAPI.sharedInstance.WITMotionPeripheral != peripheral)
+        {
             
             // Save a local copy of the peripheral, so CoreBluetooth doesn't get rid of it
-            self.discoveredPeripheral = peripheral;
             
+            CRAPI.sharedInstance.WITMotionPeripheral = peripheral;
             // And connect
+            NSLog(@"Connecting to peripheral %@", peripheral);
+            [self.centralManager connectPeripheral:peripheral options:nil];
+        }
+        else if (CRAPI.sharedInstance.WITMotionPeripheral.state == CBPeripheralStateDisconnected)
+        {
             NSLog(@"Connecting to peripheral %@", peripheral);
             [self.centralManager connectPeripheral:peripheral options:nil];
         }
@@ -201,11 +214,12 @@ static unsigned char calibrationBytes[5];
             // If it is, subscribe to it
             _dataCharacteristic = characteristic;
             if (_wantSetNotify)
-                [_discoveredPeripheral setNotifyValue:YES forCharacteristic:_dataCharacteristic];
+                [CRAPI.sharedInstance.WITMotionPeripheral setNotifyValue:YES forCharacteristic:_dataCharacteristic];
 
          }
         if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:WIT_MOTION_UUID2]]) {
             _calibrationCharacteristic = characteristic;
+            
          }
    }
     
@@ -233,6 +247,12 @@ static unsigned char calibrationBytes[5];
     _roll += WitRecord.RollAngle;
     _pitch += WitRecord.PitchAngle;
     _yaw += WitRecord.YawAngle;
+    if (_firstValueSinceStartInput)
+    {
+        if (_delegate)
+            [_delegate WIT_MotionInputDidConnect:self];
+    }
+    _firstValueSinceStartInput = NO;
 }
 
 
@@ -257,8 +277,9 @@ static unsigned char calibrationBytes[5];
     // Notification has stopped
     else {
         // so disconnect from the peripheral
-        NSLog(@"Notification stopped on %@.  Disconnecting", characteristic);
-        [self.centralManager cancelPeripheralConnection:peripheral];
+        NSLog(@"Notification stopped on %@.  Disconnecting=%i", characteristic,_wantDisconnect);
+        if (_wantDisconnect)
+            [self.centralManager cancelPeripheralConnection:peripheral];
     }
 }
 
@@ -268,7 +289,7 @@ static unsigned char calibrationBytes[5];
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
     NSLog(@"Peripheral Disconnected");
-    _discoveredPeripheral = nil;
+    //CRAPI.sharedInstance.WITMotionPeripheral = ni;
     
     // We're disconnected, so start scanning again
     [self scan];
@@ -285,19 +306,20 @@ static unsigned char calibrationBytes[5];
 - (void)cleanup
 {
     // Don't do anything if we're not connected
-    if (self.discoveredPeripheral.state == CBPeripheralStateDisconnected) {
+    if (CRAPI.sharedInstance.WITMotionPeripheral.state == CBPeripheralStateDisconnected) {
         return;
     }
     
     // See if we are subscribed to a characteristic on the peripheral
-    if (self.discoveredPeripheral.services != nil) {
-        for (CBService *service in self.discoveredPeripheral.services) {
+    if (CRAPI.sharedInstance.WITMotionPeripheral.services != nil) {
+        for (CBService *service in CRAPI.sharedInstance.WITMotionPeripheral.services) {
             if (service.characteristics != nil) {
                 for (CBCharacteristic *characteristic in service.characteristics) {
                     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:WIT_MOTION_UUID1]]) {
                         if (characteristic.isNotifying) {
                             // It is notifying, so unsubscribe
-                            [self.discoveredPeripheral setNotifyValue:NO forCharacteristic:characteristic];
+                            _wantDisconnect = YES;
+                            [CRAPI.sharedInstance.WITMotionPeripheral setNotifyValue:NO forCharacteristic:characteristic];
                             
                             // And we're done.
                             return;
@@ -309,32 +331,49 @@ static unsigned char calibrationBytes[5];
     }
     
     // If we've got this far, we're connected, but we're not subscribed, so we just disconnect
-    [self.centralManager cancelPeripheralConnection:self.discoveredPeripheral];
+    [self.centralManager cancelPeripheralConnection:CRAPI.sharedInstance.WITMotionPeripheral];
 }
 
 - (void) startInput
 {
     _wantSetNotify = NO;
-    if (!_discoveredPeripheral || _discoveredPeripheral.state == CBPeripheralStateDisconnected)
+    _firstValueSinceStartInput = YES;
+    [self restart];
+    if (!CRAPI.sharedInstance.WITMotionPeripheral || CRAPI.sharedInstance.WITMotionPeripheral.state == CBPeripheralStateDisconnected)
     {
         _wantScan = YES;
+        _wantSetNotify = YES;
         [self scan];
     }
     else if (_dataCharacteristic)
-        [_discoveredPeripheral setNotifyValue:YES forCharacteristic:_dataCharacteristic];
+        [CRAPI.sharedInstance.WITMotionPeripheral setNotifyValue:YES forCharacteristic:_dataCharacteristic];
     else
         _wantSetNotify = YES;
 }
 - (void) stopInput
 {
-    [self.discoveredPeripheral setNotifyValue:NO forCharacteristic:_dataCharacteristic];
+    _wantDisconnect = NO;
+    if (CRAPI.sharedInstance.WITMotionPeripheral&& _dataCharacteristic)
+        [CRAPI.sharedInstance.WITMotionPeripheral setNotifyValue:NO forCharacteristic:_dataCharacteristic];
 }
 - (void) startCalibration
 {
-    // Encode as data
+    _wantScan = YES;
+    _wantSetNotify = NO;
+    _wantDisconnect = NO;
+    _calibrationStep = InStartCalibrate;
+    [self.centralManager stopScan];
+    NSLog(@"Scanning stopped");
+    [CRAPI.sharedInstance.WITMotionPeripheral setNotifyValue:NO forCharacteristic:_dataCharacteristic];
     calibrationBytes[3] = 0x01;
     NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
-    [self.discoveredPeripheral writeValue:data forCharacteristic:_calibrationCharacteristic type:CBCharacteristicWriteWithResponse];
+
+    [self writeCalibrationData:data];
+ }
+- (void) writeCalibrationData:(NSData*)data
+{
+    NSLog (@"Writing data:%@",data);
+    [CRAPI.sharedInstance.WITMotionPeripheral writeValue:data forCharacteristic:_calibrationCharacteristic type:CBCharacteristicWriteWithResponse];
 
 }
 - (void) leftCalibrate
@@ -342,8 +381,12 @@ static unsigned char calibrationBytes[5];
     calibrationBytes[3] = 0x05;
     NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
     
-    sleep (2);
-    [self.discoveredPeripheral writeValue:data forCharacteristic:_calibrationCharacteristic type:CBCharacteristicWriteWithResponse];
+    if (_calibrationCharacteristic)
+    {
+        _calibrationStep = InLeftCalibrate;
+        [self writeCalibrationData:data];
+        sleep (2);
+    }
     
 
 }
@@ -352,17 +395,69 @@ static unsigned char calibrationBytes[5];
     calibrationBytes[3] = 0x06;
     NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
     
-    sleep (2);
-    [self.discoveredPeripheral writeValue:data forCharacteristic:_calibrationCharacteristic type:CBCharacteristicWriteWithResponse];
-    
 
+    if (_calibrationCharacteristic)
+    {
+        _calibrationStep = InRightCalibrate;
+        [self writeCalibrationData:data];
+        sleep (2);
+    }
+
+
+}
+- (void)endCalibration
+{
+    _calibrationStep = InEndCalibration;
+    calibrationBytes[2] = 0x01;
+    calibrationBytes[3] = 0x00;
+    NSLog (@"Calibration end");
+    NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
+    [self writeCalibrationData:data];
+
+    sleep (2);
+    
+}
+- (void)saveCalibration
+{
+    _calibrationStep = InSaveCalibration;
+    calibrationBytes[2] = 0x00;
+    calibrationBytes[3] = 0x00;
+    NSLog (@"Calibration data saved");
+    NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
+    [self writeCalibrationData:data];
+    sleep (2);
+    
+}
+- (void)notifyStepCompleted
+{
+    [_delegate WIT_MotionCompletedCalibrationStep:_calibrationStep];
 }
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
     if (error)
         NSLog(@"Error on write: %@\r\nchar: %@", [error localizedDescription],characteristic);
     else
-        NSLog (@"Calibration data written");
+    {
+        NSLog (@"Calibration data written for step %li",(long)_calibrationStep);
+        [self performSelectorOnMainThread:@selector(notifyStepCompleted)
+                               withObject:nil
+                            waitUntilDone:NO];
+
+        
+        switch (_calibrationStep)
+        {
+            case InSaveCalibration:
+                break;
+            case InStartCalibrate:
+                break;
+            case InLeftCalibrate:
+                break;
+            case InRightCalibrate:
+                break;
+            case InEndCalibration:
+                break;
+        }
+    }
 }
 
 short Witshort (unsigned char *in)

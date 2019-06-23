@@ -8,7 +8,7 @@
 #import "MathUtil.h"
 #import "NVProgressView.h"
 #import "SharedDefaults.h"
-#import "WIT_MotionInput.h"
+
 
 static double _deviceVals[5][4];
 static double _targetValues[5];
@@ -26,7 +26,7 @@ static int COUNT=100;
 
 @interface GSSiSlopeViewController ()
 
-@property (nonatomic) UIButton *unableButton, *startCancelButton, *manualFront, *manualSide, *cancelButton, *doesNotExistButton;
+@property (nonatomic) UIButton *unableButton, *startCancelButton, *manualFront, *manualSide, *cancelButton, *doesNotExistButton, *zeroButton;
 @property (nonatomic) UIImageView *arrowView;
 @property (nonatomic) NVProgressView *progressView;
 @property (nonatomic) UILabel *frontSlopeLabel, *sideSlopeLabel, *maxSlopeLabel, *promptLabel;
@@ -75,7 +75,7 @@ static int COUNT=100;
     if (countFac)
         slopeController.countFactor = countFac;
     else
-        slopeController.countFactor = 1.0;
+        slopeController.countFactor = 0.5;
     
     slopeController.criticalValue = criticalVal;
     slopeController.criticalSideValue = criticalSideVal;
@@ -99,10 +99,13 @@ static int COUNT=100;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _wantWitMotion = YES;
+    _wantWitMotion = NO;
     _inWitMotionCalibrate = NO;
     if (_wantWitMotion)
+    {
         _witMotionInput = WIT_MotionInput.new;
+        _witMotionInput.delegate = self;
+    }
     if (!_fromCalibration)
     {
         _calDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 964.0, 728.0, 60.0)];
@@ -201,14 +204,15 @@ static int COUNT=100;
          forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:helpButton];
-    if (_wantWitMotion)
+    if (_wantWitMotion && _fromCalibration && _wantZeroButton)
     {
-        UIButton *zeroButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        zeroButton.frame = CGRectMake(568.0, 120.0, 190.0, 80.0);
-        [self setupButton:zeroButton    title:@"Zero"];
-        [zeroButton addTarget:self
+        _zeroButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _zeroButton.frame = CGRectMake(568.0, 120.0, 190.0, 80.0);
+        [self setupButton:_zeroButton    title:@"Zero"];
+        [_zeroButton addTarget:self
                        action:@selector(zeroButtonTapped:)
              forControlEvents:UIControlEventTouchUpInside];
+        [_zeroButton setHidden:NO];
    }
     _locationManager = CLLocationManager.new;
     _locationManager.headingFilter = kCLHeadingFilterNone;
@@ -532,8 +536,21 @@ static int COUNT=100;
     {
         if (_inWitMotionCalibrate)
         {
-            [_witMotionInput rightCalibrate];
-            _inWitMotionCalibrate = NO;
+            switch (_WITMotionCalibrationStep)
+            {
+                case InLeftCalibrate:
+                    [_witMotionInput rightCalibrate];
+                    [_startCancelButton setHidden:YES];
+                    _promptLabel.text = @"Please wait...";
+                    break;
+                default:
+                    [self stopMotionManager];
+                    
+                    [self dismissViewControllerAnimated:YES
+                                             completion:nil];
+
+                    break;
+            }
         }
         else
         {
@@ -638,8 +655,16 @@ static int COUNT=100;
     
     [slider removeRequiredFromLabel];
 }
-
 - (void)startManagers
+{
+    if (_wantWitMotion)
+    {
+        [_witMotionInput startInput];//let WITMotion start first
+    }
+    else
+        [self startManagers2];
+}
+- (void)startManagers2
 {
     typedef void (^CMAccelerometerHandler)(CMAccelerometerData *accelerometerData, NSError *error);
     _motionManager.accelerometerUpdateInterval = 0.04;
@@ -662,13 +687,15 @@ static int COUNT=100;
         _locations = NSMutableArray.new;
         [_locationManager startUpdatingLocation];
     }
-    if (_wantWitMotion)
-    {
-        [_witMotionInput startInput];
-    }
     _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
 }
-
+- (void)WIT_MotionInputDidConnect:(WIT_MotionInput *)controller
+{
+    if (_inWitMotionCalibrate)
+        [_witMotionInput startCalibration];
+    else
+        [self startManagers2];
+ }
 - (void)stopManagers
 {
     [_motionManager stopAccelerometerUpdates];
@@ -1297,9 +1324,41 @@ static int COUNT=100;
 }
  - (void) zeroButtonTapped:(UIButton *)button
  {
-     [_witMotionInput startCalibration];
-     _promptLabel.text = @"Reverse the direction and hit Start";
-     [_witMotionInput leftCalibrate];
+     [button setHidden:YES];
      _inWitMotionCalibrate = YES;
+     [_witMotionInput startInput];
  }
+- (void)WIT_MotionCompletedCalibrationStep:(WITMotionCalibrateSteps)step
+{
+    _WITMotionCalibrationStep = step;
+    switch (step)
+    {
+        case InStartCalibrate:
+            [_startCancelButton setHidden:YES];
+            _promptLabel.text = @"Please wait...";
+            [_witMotionInput leftCalibrate];
+            break;
+        case InLeftCalibrate:
+            [_startCancelButton setHidden:NO];
+            [_startCancelButton setTitle:@"Continue"
+                                forState:UIControlStateNormal];
+            _promptLabel.text = @"Turn the iPad 180 degrees and tap Continue";
+            break;
+        case InRightCalibrate:
+            _promptLabel.text = @"Please wait...";
+            [_witMotionInput saveCalibration];
+            break;
+        case InEndCalibration:
+            _promptLabel.text = @"Please wait...";
+            [_witMotionInput saveCalibration];
+           break;
+        case InSaveCalibration:
+            [_startCancelButton setHidden:NO];
+            [_startCancelButton setTitle:@"Finish"
+                                forState:UIControlStateNormal];
+            _promptLabel.text = @"WIT-Motion Calibration Saved";
+            break;
+    }
+}
+
 @end

@@ -357,7 +357,8 @@ static double _deviceValues[9][4];
     
     else
         slopeVC.promptText = @"Place the iPad with the arrow pointing to the left of the upslope and tap 'Start' to begin measurement.";
-    
+    if (!_currentIndex)
+        slopeVC.wantZeroButton = YES;
     [self presentViewController:slopeVC animated:YES completion:nil];
     NSUInteger count = [_calibrationValues[0] count];
     index = ((_currentIndex + 2) / 2);

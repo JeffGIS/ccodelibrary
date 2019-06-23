@@ -1,5 +1,7 @@
 //  DPoint.h
 //  CCodeLibrary
+#ifndef DPoint_h
+#define DPoint_h
 
 @import Foundation;
 #import "CCodeTypes.h"
@@ -14,3 +16,4 @@
 @property double y;
 
 @end
+#endif

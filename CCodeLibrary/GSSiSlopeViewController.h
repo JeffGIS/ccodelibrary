@@ -3,6 +3,7 @@
 
 @import UIKit;
 #import "NVSliderController.h"
+#import "WIT_MotionInput.h"
 
 #define SDWK_ERROR_VAL 0.25
 
@@ -48,7 +49,7 @@ typedef struct NVSlopeData {
 
 @end
 
-@interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate,CLLocationManagerDelegate>
+@interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate,CLLocationManagerDelegate, WIT_MotionInputDelegate>
 
 @property (nonatomic, weak) id <GSSiSlopeViewControllerDelegate> delegate;
 @property BOOL displayDegrees;
@@ -63,6 +64,8 @@ typedef struct NVSlopeData {
 @property (nonatomic) double errorValueSide;
 @property BOOL wantLocation;
 @property BOOL wantWitMotion;
+@property BOOL wantZeroButton;
+@property WITMotionCalibrateSteps WITMotionCalibrationStep;
 
 + (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(double)criticalVal
                                             criticalSideValue:(double)criticalSideVal
