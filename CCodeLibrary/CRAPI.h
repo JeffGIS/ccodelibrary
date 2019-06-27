@@ -17,9 +17,18 @@
 #import "NVPeerConnect.h"
 #import "ChartsBitmap.h"
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "NVCRIS_PeripheralManager.h"
 
 @import AVKit;
 
+#ifndef LE_Transfer_TransferService_h
+#define LE_Transfer_TransferService_h
+
+#define TRANSFER_SERVICE_UUID           @"E20A39F4-73F5-4BC4-A12F-17D1AD07A961"
+#define TRANSFER_CHARACTERISTIC_UUID    @"08590F7E-DB05-467E-8757-72F6FAEB13D4"
+
+#endif
+#define NOTIFY_MTU      20
 #define DOWNLOAD_DATABASE_FUNCTION 3
 
 typedef NS_ENUM(NSInteger, ModuleNames)
@@ -188,6 +197,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property int firstSidewalkPointIDOnSegment;
 @property (strong, nonatomic) CBCentralManager      *centralManager;
 @property (strong, nonatomic) CBPeripheral          *WITMotionPeripheral;
+@property (strong, nonatomic) CBPeripheralManager *peripheralManager;
+@property (strong, nonatomic) NVCRIS_PeripheralManager * nvcpm;
 
 + (nullable CRAPI *)sharedInstance;
 
@@ -297,5 +308,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void)startBeepTimer:(NSTimeInterval)timeInterval;
 - (void)cancelBeepTimer;
 - (void)setBeepVolume:(float)volume;
-- (CBCentralManager *)getCentralManager;
+- (nullable CBCentralManager *)getCentralManager:(id)delegate;
+- (nullable CBPeripheralManager *) getPeripheralManager:(id)delegate;
+- (NVCRIS_PeripheralManager *) getNVCRIS_PeripheralManager:(id)delegate;
+
 @end

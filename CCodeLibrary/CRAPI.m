@@ -185,11 +185,28 @@
     
     return sharedInstance;
 }
-- (CBCentralManager *)getCentralManager
+- (nullable CBCentralManager *)getCentralManager:(id)delegate
 {
     if (!self.centralManager)
-        self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+        self.centralManager = [[CBCentralManager alloc] initWithDelegate:delegate queue:nil];
+    self.centralManager.delegate = delegate;
     return self.centralManager;
+}
+
+- (nullable CBPeripheralManager *) getPeripheralManager:(id)delegate
+{
+    if (!self.peripheralManager)
+        self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:delegate queue:nil];
+    self.peripheralManager.delegate = delegate;
+    return self.peripheralManager;
+}
+
+- (NVCRIS_PeripheralManager *) getNVCRIS_PeripheralManager:(id)delegate
+{
+    if (!_nvcpm)
+        _nvcpm = NVCRIS_PeripheralManager.new;
+    _nvcpm.delegate = delegate;
+    return _nvcpm;
 }
 - (void)setNewDataset:(DataSetTypes)newDataset
 {

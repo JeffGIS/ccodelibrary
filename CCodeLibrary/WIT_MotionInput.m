@@ -30,8 +30,7 @@ static unsigned char calibrationBytes[5];
     {
         if (self.centralManager)
             [self cleanup];
-        self.centralManager = [CRAPI.sharedInstance getCentralManager];
-        self.centralManager.delegate = self;
+        self.centralManager = [CRAPI.sharedInstance getCentralManager:self];
         if (CRAPI.sharedInstance.WITMotionPeripheral)
             [self.centralManager connectPeripheral:CRAPI.sharedInstance.WITMotionPeripheral options:nil];
         else
@@ -79,7 +78,7 @@ static unsigned char calibrationBytes[5];
 }
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
-    NSLog (@"Central State:%li",central.state);
+    NSLog (@"Central State:%li",(long)central.state);
     if (central.state != CBCentralManagerStatePoweredOn) {
         showAlert(@"Bluetooth not on");
         return;
@@ -100,7 +99,7 @@ static unsigned char calibrationBytes[5];
     if (!_wantScan)
         return;
     [self.centralManager scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:WIT_MOTION_SERVICE_UUID]]
-                                                options:@{ CBCentralManagerScanOptionAllowDuplicatesKey : @YES }];
+                                                options:@{ CBCentralManagerScanOptionAllowDuplicatesKey : @NO }];
     
     NSLog(@"Scanning started");
 }

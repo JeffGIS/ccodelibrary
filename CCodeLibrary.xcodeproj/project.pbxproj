@@ -360,6 +360,8 @@
 		EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EB3CC5F61AD95F8B002453A9 /* PickedItem.m */; };
 		EB40255322B0295E005862AD /* WIT_MotionInput.m in Sources */ = {isa = PBXBuildFile; fileRef = EB40255222B0295E005862AD /* WIT_MotionInput.m */; };
 		EB40255522BC0BFA005862AD /* WIT_MotionInput.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB40255122B0295E005862AD /* WIT_MotionInput.h */; };
+		EB40255822C0EEB9005862AD /* NVCRIS_PeripheralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB40255722C0EEB9005862AD /* NVCRIS_PeripheralManager.m */; };
+		EB40255922C321DA005862AD /* NVCRIS_PeripheralManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB40255622C0EEB9005862AD /* NVCRIS_PeripheralManager.h */; };
 		EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4DB2571B9600AA008157D8 /* PointInArea.m */; };
 		EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB4DB2561B9600AA008157D8 /* PointInArea.h */; };
 		EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */; };
@@ -367,8 +369,6 @@
 		EB568F3A1C8CA52D00C45ACE /* CompressDecompress.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */; };
 		EB568F3B1C8CA70E00C45ACE /* CompressDecompress.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB568F371C8C9BAB00C45ACE /* CompressDecompress.h */; };
 		EB6D4B28219C07A700D5602B /* PhotoTakerTransferService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB6D4B27219C071A00D5602B /* PhotoTakerTransferService.h */; };
-		EB6D4B31219D8C1800D5602B /* NVTopDownPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6D4B30219D8C1800D5602B /* NVTopDownPhoto.m */; };
-		EB6D4B32219D91E000D5602B /* NVTopDownPhoto.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB6D4B2F219D8C1800D5602B /* NVTopDownPhoto.h */; };
 		EB7C6A161BD158D8006E985B /* StringFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7C6A151BD158D8006E985B /* StringFunctions.m */; };
 		EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB7C6A141BD158D8006E985B /* StringFunctions.h */; };
 		EB86BFA71B0B62520074728E /* minilzo.c in Sources */ = {isa = PBXBuildFile; fileRef = EB86BFA51B0B62520074728E /* minilzo.c */; };
@@ -462,8 +462,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB40255922C321DA005862AD /* NVCRIS_PeripheralManager.h in CopyFiles */,
 				EB40255522BC0BFA005862AD /* WIT_MotionInput.h in CopyFiles */,
-				EB6D4B32219D91E000D5602B /* NVTopDownPhoto.h in CopyFiles */,
 				EB6D4B28219C07A700D5602B /* PhotoTakerTransferService.h in CopyFiles */,
 				6925896D2108D09F00E841AF /* NVPDFDefCreatorVC.h in CopyFiles */,
 				6944D86420C3261800E0B49B /* DriverDefinitions.h in CopyFiles */,
@@ -1018,6 +1018,9 @@
 		EB40255122B0295E005862AD /* WIT_MotionInput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WIT_MotionInput.h; sourceTree = "<group>"; };
 		EB40255222B0295E005862AD /* WIT_MotionInput.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WIT_MotionInput.m; sourceTree = "<group>"; };
 		EB40255422B02A81005862AD /* JY901.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JY901.h; sourceTree = "<group>"; };
+		EB40255622C0EEB9005862AD /* NVCRIS_PeripheralManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVCRIS_PeripheralManager.h; sourceTree = "<group>"; };
+		EB40255722C0EEB9005862AD /* NVCRIS_PeripheralManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NVCRIS_PeripheralManager.m; sourceTree = "<group>"; };
+		EB40255A22C32642005862AD /* NVCRIS_UUIDs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVCRIS_UUIDs.h; sourceTree = "<group>"; };
 		EB4DB2561B9600AA008157D8 /* PointInArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointInArea.h; sourceTree = "<group>"; };
 		EB4DB2571B9600AA008157D8 /* PointInArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInArea.m; sourceTree = "<group>"; };
 		EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPlaceAreaFile.h; sourceTree = "<group>"; };
@@ -1026,8 +1029,6 @@
 		EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CompressDecompress.m; path = ../CompressDecompress.m; sourceTree = "<group>"; };
 		EB6D4B26219C06C900D5602B /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		EB6D4B27219C071A00D5602B /* PhotoTakerTransferService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoTakerTransferService.h; sourceTree = "<group>"; };
-		EB6D4B2F219D8C1800D5602B /* NVTopDownPhoto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVTopDownPhoto.h; sourceTree = "<group>"; };
-		EB6D4B30219D8C1800D5602B /* NVTopDownPhoto.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NVTopDownPhoto.m; sourceTree = "<group>"; };
 		EB7C6A141BD158D8006E985B /* StringFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringFunctions.h; sourceTree = "<group>"; };
 		EB7C6A151BD158D8006E985B /* StringFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringFunctions.m; sourceTree = "<group>"; };
 		EB86BFA51B0B62520074728E /* minilzo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minilzo.c; sourceTree = "<group>"; };
@@ -1509,8 +1510,6 @@
 				1F2F471D19B80020004186EF /* VerticalSegmentedControl.m */,
 				698F987A1C10B96B009F2F01 /* YTPlayerView.h */,
 				698F987B1C10B96B009F2F01 /* YTPlayerView.m */,
-				EB6D4B2F219D8C1800D5602B /* NVTopDownPhoto.h */,
-				EB6D4B30219D8C1800D5602B /* NVTopDownPhoto.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1606,6 +1605,8 @@
 				EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */,
 				EB1A69741999A6A9005A1CCB /* CRAPI.h */,
 				EB1A69751999A6A9005A1CCB /* CRAPI.m */,
+				EB40255622C0EEB9005862AD /* NVCRIS_PeripheralManager.h */,
+				EB40255722C0EEB9005862AD /* NVCRIS_PeripheralManager.m */,
 				EB0E4FFB1C6288BF00849766 /* DispersePoint.h */,
 				EB0E4FFC1C6288BF00849766 /* DispersePoint.m */,
 				EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */,
@@ -1660,6 +1661,7 @@
 				EB6D4B27219C071A00D5602B /* PhotoTakerTransferService.h */,
 				EB40255122B0295E005862AD /* WIT_MotionInput.h */,
 				EB40255222B0295E005862AD /* WIT_MotionInput.m */,
+				EB40255A22C32642005862AD /* NVCRIS_UUIDs.h */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1929,6 +1931,7 @@
 				6944D86320C325ED00E0B49B /* DriverDefinitions.m in Sources */,
 				694A9B621F4DF24A00B02C28 /* function1.c in Sources */,
 				691B5DD11E52668600C90383 /* NVGetODR.m in Sources */,
+				EB40255822C0EEB9005862AD /* NVCRIS_PeripheralManager.m in Sources */,
 				EBC01D301BED1C8C0004C751 /* ven404.c in Sources */,
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
 				A9A7E3671B75795300DC7F3D /* NVSignalButton.m in Sources */,
@@ -2120,7 +2123,6 @@
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
 				698A69F721DA837D003E73D3 /* CustomRampTypeBuilder.m in Sources */,
 				6997D86320446AB700A24F5D /* NVFrontBackPhotoCapture.m in Sources */,
-				EB6D4B31219D8C1800D5602B /* NVTopDownPhoto.m in Sources */,
 				699DD7391CEA057600C7A651 /* NVSynchronizeVC.m in Sources */,
 				EBC01D0F1BED1C8C0004C751 /* deltat.c in Sources */,
 				69F4823D1DB7DDBF00E4BDB5 /* NVSpreadsheetCell.m in Sources */,
