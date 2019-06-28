@@ -362,6 +362,7 @@
 		EB40255522BC0BFA005862AD /* WIT_MotionInput.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB40255122B0295E005862AD /* WIT_MotionInput.h */; };
 		EB40255822C0EEB9005862AD /* NVCRIS_PeripheralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB40255722C0EEB9005862AD /* NVCRIS_PeripheralManager.m */; };
 		EB40255922C321DA005862AD /* NVCRIS_PeripheralManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB40255622C0EEB9005862AD /* NVCRIS_PeripheralManager.h */; };
+		EB40255B22C5B6D9005862AD /* NVCRIS_UUIDs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB40255A22C32642005862AD /* NVCRIS_UUIDs.h */; };
 		EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4DB2571B9600AA008157D8 /* PointInArea.m */; };
 		EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB4DB2561B9600AA008157D8 /* PointInArea.h */; };
 		EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */; };
@@ -462,6 +463,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB40255B22C5B6D9005862AD /* NVCRIS_UUIDs.h in CopyFiles */,
 				EB40255922C321DA005862AD /* NVCRIS_PeripheralManager.h in CopyFiles */,
 				EB40255522BC0BFA005862AD /* WIT_MotionInput.h in CopyFiles */,
 				EB6D4B28219C07A700D5602B /* PhotoTakerTransferService.h in CopyFiles */,

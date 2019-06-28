@@ -19,9 +19,11 @@
 @property (nonatomic, readwrite) NSInteger              sendPhotoDataIndex;
 @property (strong, nonatomic) NSData                    *slopeDataToSend;
 @property (nonatomic, readwrite) NSInteger              slopeDataIndex;
-@property NSString * command;
+@property NSString * slopeCommand;
+@property NSString * photoCommand;
 
-@property BOOL EOMsent;
+@property BOOL photoEOMsent;
+@property BOOL slopeEOMsent;
 
 @end
 @implementation NVCRIS_PeripheralManager
@@ -56,18 +58,18 @@
     // ... so build our service.
     
     // Start with the slope data char
-    self.slopeDataCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:NVCRIS_SLOPEDATA_CHARACTERISTIC_UUID]
+    _slopeDataCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:NVCRIS_SLOPEDATA_CHARACTERISTIC_UUID]
                                                                       properties:CBCharacteristicPropertyNotify|CBCharacteristicPropertyRead
                                                                            value:nil
                                                                      permissions:CBAttributePermissionsReadable];
     // then the take photo char
-    self.takePhotoCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:NVCRIS_TAKEPHOTO_CHARACTERISTIC_UUID]
+    _takePhotoCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:NVCRIS_TAKEPHOTO_CHARACTERISTIC_UUID]
                                                                       properties:CBCharacteristicPropertyNotify|CBCharacteristicPropertyRead
                                                                            value:nil
                                                                      permissions:CBAttributePermissionsReadable];
     
     // then the photo taken response char
-    self.photoTakenCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:NVCRIS_PHOTOTAKEN_CHARACTERISTIC_UUID]
+    _photoTakenCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:NVCRIS_PHOTOTAKEN_CHARACTERISTIC_UUID]
                                                                       properties:CBCharacteristicPropertyWrite
                                                                            value:nil
                                                                      permissions:CBAttributePermissionsWriteable];
@@ -75,16 +77,23 @@
     // Then the service
      CBMutableService *NVCRISService = [[CBMutableService alloc] initWithType:[CBUUID UUIDWithString:NVCRIS_SERVICE_UUID]
                                                                        primary:YES];
-    
     // Add the characteristics to the service
-    NVCRISService.characteristics = @[self.slopeDataCharacteristic,self.takePhotoCharacteristic,self.photoTakenCharacteristic];
+    NVCRISService.characteristics = [NSArray arrayWithObject:_takePhotoCharacteristic];
     
     // And add it to the peripheral manager
+    [_manager removeAllServices];
     [_manager addService:NVCRISService];
     // Start sending
     [_manager startAdvertising:@{ CBAdvertisementDataServiceUUIDsKey : @[[CBUUID UUIDWithString:NVCRIS_SERVICE_UUID]] }];
 }
-
+ - (void)peripheralManager:(CBPeripheralManager *)peripheral didAddService:(CBService *)service error:(NSError *)error
+{
+    if (error) {
+        NSLog(@"Error adding service: %@", [error localizedDescription]);
+        return;
+    }
+    NSLog (@"Service added successfully:%@",service);
+}
 
 /** Catch when someone subscribes to our characteristic, then start sending them data
  */
@@ -94,14 +103,19 @@
     
     if (characteristic == _slopeDataCharacteristic)
     {
+        _slopeEOMsent = YES;
         // Get the data
-        _slopeDataToSend = [self.command dataUsingEncoding:NSUTF8StringEncoding];
+        _slopeDataToSend = [_slopeCommand dataUsingEncoding:NSUTF8StringEncoding];
         
         // Reset the index
         _slopeDataIndex = 0;
         
         // Start sending
         [self sendSlopeData];
+    }
+    if (characteristic == _takePhotoCharacteristic)
+    {
+        _photoEOMsent = YES;
     }
     return;
 }
@@ -133,7 +147,7 @@
             sendingEOM = NO;
             
             NSLog(@"Sent: EOM");
-            _EOMsent = YES;
+            _photoEOMsent = YES;
             [self photoTaken];
         }
         
@@ -222,7 +236,7 @@
             sendingEOM = NO;
             
             NSLog(@"Sent: EOM");
-            _EOMsent = YES;
+            _slopeEOMsent = YES;
  
         }
         
@@ -280,7 +294,7 @@
             sendingEOM = YES;
             
             // Send it
-            BOOL eomSent = [self.manager updateValue:[@"EOM" dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:_slopeDataCharacteristic onSubscribedCentrals:nil];
+            BOOL eomSent = [_manager updateValue:[@"EOM" dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:_slopeDataCharacteristic onSubscribedCentrals:nil];
             
             if (eomSent) {
                 // It sent, we're all done
@@ -309,20 +323,21 @@
       underManager:(int)manager
            inGeoid:(int)geoid
 {
-    if (!_EOMsent)
+    if (!_photoEOMsent)
         return FALSE;
     if (!_manager)
         return FALSE;
-    _command = [NSString stringWithFormat:@"TakePhoto:%i_%i.jpg|%i|%i",ipadNum,photoNum,manager,geoid];
-    _EOMsent = NO;
+    _photoCommand = [NSString stringWithFormat:@"TakePhoto:%i_%i.jpg|%i|%i",ipadNum,photoNum,manager,geoid];
+    _photoEOMsent = NO;
     // Reset the index
     _sendPhotoDataIndex = 0;
+    _photoDataToSend = [_photoCommand dataUsingEncoding:NSUTF8StringEncoding];
     [self sendPhotoData];
     return TRUE;
 }
 - (void) photoTaken
 {
-    [_delegate topDownPhotoDidReturn:YES];
+    //[_delegate topDownPhotoDidReturn:YES];
 }
 
 
