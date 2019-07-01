@@ -216,6 +216,14 @@ NVSlopeData CurrentSlopeData;
     return self.peripheralManager;
 }
 
+- (nullable SlopeClient *) getSlopeClient:(id)delegate
+{
+    if (!self.slopeClient)
+        self.slopeClient = [[SlopeClient alloc] init];
+    self.slopeClient.delegate = delegate;
+    return self.slopeClient;
+}
+
 - (NVCRIS_PeripheralManager *) getNVCRIS_PeripheralManager:(id)delegate
 {
     if (!_nvcpm)

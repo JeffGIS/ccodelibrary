@@ -5,7 +5,7 @@
 //  Created by Jeff Smith on 6/30/19.
 //  Copyright © 2019 GSSi. All rights reserved.
 //
-
+#import "CRAPI.h"
 #import "SlopeClient.h"
 
 @implementation SlopeClient
@@ -25,17 +25,21 @@
         else
             self.wantScan = TRUE;
         self.data = NSMutableData.new;
-        
+
     }
     return self;
 }
 - (void)dealloc
 {
-   // [self cleanup];
-    _centralManager.delegate = nil;
     NSLog(@"slopeClient dealloc");
 }
+- (void) setDelegate:(id<SlopeClientDelegate>)delegate
+{
+    _delegate = delegate;
+    if (_haveData && delegate)
+        [_delegate SlopeClient:self returnedData:_slopeData];
 
+}
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
     NSLog (@"Central State:%li",(long)central.state);
@@ -207,13 +211,14 @@
         
         NSString * command = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
         NSArray<NSString *> * array  = [command componentsSeparatedByString:@";"];
-        NVSlopeData slopeData;
-        slopeData.frontSlopePct = array[0].doubleValue;
-        slopeData.sideSlopePct = array[1].doubleValue;
-        slopeData.maxSlopePct = array[2].doubleValue;
-        slopeData.heading = array[3].doubleValue;
-        [_delegate SlopeClient:self returnedData:slopeData];
-        [CRAPI.sharedInstance.NVCRIS_Peripheral setNotifyValue:NO forCharacteristic:_slopeDataCharacteristic];
+        _slopeData.frontSlopePct = array[0].doubleValue;
+        _slopeData.sideSlopePct = array[1].doubleValue;
+        _slopeData.maxSlopePct = array[2].doubleValue;
+        _slopeData.heading = array[3].doubleValue;
+        if (_delegate)
+            [_delegate SlopeClient:self returnedData:_slopeData];
+        _data = NSMutableData.new;
+        _haveData = YES;
         return;
     }
     

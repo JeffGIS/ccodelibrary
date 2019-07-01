@@ -6,8 +6,8 @@
 //  Copyright © 2019 GSSi. All rights reserved.
 //
 
-#import "NVCRIS_PeripheralManager.h"
 #import "CRAPI.h"
+
 
 
 @interface NVCRIS_PeripheralManager () <CBPeripheralManagerDelegate>
@@ -24,6 +24,7 @@
 
 @property BOOL photoEOMsent;
 @property BOOL slopeEOMsent;
+@property NVSlopeData currentSlopeData;
 
 @end
 @implementation NVCRIS_PeripheralManager
@@ -343,9 +344,21 @@
 
 - (NSString *)packageCurrentSlopeData
 {
-    NSString * data = [NSString stringWithFormat:@"%.1f;%.1f;%.1f;%.1f",CurrentSlopeData.frontSlopePct,CurrentSlopeData.sideSlopePct,CurrentSlopeData.maxSlopePct,CurrentSlopeData.heading];
+    NSString * data = [NSString stringWithFormat:@"%.1f;%.1f;%.1f;%.1f",_currentSlopeData.frontSlopePct,_currentSlopeData.sideSlopePct,_currentSlopeData.maxSlopePct,_currentSlopeData.heading];
     
     return data;
+}
+
+-(void) updateSlopeData:(NVSlopeData)slopeData
+{
+    _currentSlopeData = slopeData;
+    _slopeCommand = [self packageCurrentSlopeData];
+    _slopeDataToSend = [_slopeCommand dataUsingEncoding:NSUTF8StringEncoding];
+    
+    // Reset the index
+    _slopeDataIndex = 0;
+
+    [self sendSlopeData];
 }
 
 @end

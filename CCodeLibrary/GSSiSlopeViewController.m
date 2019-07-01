@@ -469,7 +469,6 @@ static int COUNT=100;
 {
     [self stopMotionManager];
     
-    CurrentSlopeData = _data;
     
     if (_unable)
         _data.frontSlopePct = _data.sideSlopePct = _data.frontSlopeDegrees = _data.sideSlopeDegrees = _data.heading = -9999.0;
@@ -662,8 +661,7 @@ static int COUNT=100;
 {
     if (CRAPI.sharedInstance.NVCRIS_Slope_Client)
     {
-        _slopeClient = SlopeClient.new;
-        _slopeClient.delegate = self;
+        _slopeClient = [CRAPI.sharedInstance getSlopeClient:self];
     }
     else if (_wantWitMotion)
     {
@@ -709,6 +707,8 @@ static int COUNT=100;
     [_motionManager stopAccelerometerUpdates];
     [_locationManager stopUpdatingHeading];
     [_witMotionInput cancel];
+    if (_slopeClient)
+        _slopeClient.delegate = nil;
 }
 
 - (void)stopMotionManager
@@ -984,9 +984,15 @@ static int COUNT=100;
         [_witMotionInput restart];
 }
 
+- (void) setCurrentSlopeData:(NVSlopeData)slopeData
+{
+     if (CRAPI.sharedInstance.nvcpm)
+        [CRAPI.sharedInstance.nvcpm updateSlopeData:slopeData];
+}
 - (void)slopeMeasurementComplete
 {
-    CurrentSlopeData = _data;
+    [self setCurrentSlopeData:_data];
+    
 
     if (CRAPI.sharedInstance.inAutoLoopMode)
     {
@@ -1371,9 +1377,11 @@ static int COUNT=100;
     }
 }
 
-- (void) SlopeClient:(WIT_MotionInput *)controller returnedData:(NVSlopeData)slopeData
+- (void) SlopeClient:(SlopeClient *)controller returnedData:(NVSlopeData)slopeData
 {
     _data = slopeData;
-    [self slopeMeasurementComplete];
+    [self performSelectorOnMainThread:@selector(slopeMeasurementComplete)
+                           withObject:nil
+                        waitUntilDone:NO];
 }
 @end

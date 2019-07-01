@@ -368,6 +368,7 @@
 		EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4DB2571B9600AA008157D8 /* PointInArea.m */; };
 		EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB4DB2561B9600AA008157D8 /* PointInArea.h */; };
 		EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */; };
+		EB55FB7122CA5B3300E8EF6B /* NVSlopeData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB55FB7022CA593000E8EF6B /* NVSlopeData.h */; };
 		EB568F391C8C9BAB00C45ACE /* CompressDecompress.m in Sources */ = {isa = PBXBuildFile; fileRef = EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */; };
 		EB568F3A1C8CA52D00C45ACE /* CompressDecompress.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */; };
 		EB568F3B1C8CA70E00C45ACE /* CompressDecompress.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB568F371C8C9BAB00C45ACE /* CompressDecompress.h */; };
@@ -465,6 +466,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB55FB7122CA5B3300E8EF6B /* NVSlopeData.h in CopyFiles */,
 				EB40256322C9B062005862AD /* SlopeClient.h in CopyFiles */,
 				EB40255B22C5B6D9005862AD /* NVCRIS_UUIDs.h in CopyFiles */,
 				EB40255922C321DA005862AD /* NVCRIS_PeripheralManager.h in CopyFiles */,
@@ -1032,6 +1034,7 @@
 		EB4DB2571B9600AA008157D8 /* PointInArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInArea.m; sourceTree = "<group>"; };
 		EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPlaceAreaFile.h; sourceTree = "<group>"; };
 		EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPlaceAreaFile.m; sourceTree = "<group>"; };
+		EB55FB7022CA593000E8EF6B /* NVSlopeData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVSlopeData.h; sourceTree = "<group>"; };
 		EB568F371C8C9BAB00C45ACE /* CompressDecompress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CompressDecompress.h; path = ../CompressDecompress.h; sourceTree = "<group>"; };
 		EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CompressDecompress.m; path = ../CompressDecompress.m; sourceTree = "<group>"; };
 		EB6D4B26219C06C900D5602B /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
@@ -1671,6 +1674,7 @@
 				EB40255122B0295E005862AD /* WIT_MotionInput.h */,
 				EB40255222B0295E005862AD /* WIT_MotionInput.m */,
 				EB40255A22C32642005862AD /* NVCRIS_UUIDs.h */,
+				EB55FB7022CA593000E8EF6B /* NVSlopeData.h */,
 			);
 			name = Other;
 			sourceTree = "<group>";

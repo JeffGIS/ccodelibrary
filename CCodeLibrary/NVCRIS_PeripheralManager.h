@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NVSlopeData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class NVCRIS_PeripheralManager;
@@ -23,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
            foriPad:(int)ipadNum
       underManager:(int)manager
            inGeoid:(int)geoid;
+-(void) updateSlopeData:(NVSlopeData)slopeData;
 
 @end
 

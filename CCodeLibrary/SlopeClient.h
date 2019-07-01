@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
-#import "CRAPI.h"
+#import "NVSlopeData.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,6 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property BOOL wantSetNotify;
 @property BOOL wantDisconnect;
 @property NSMutableData * data;
+@property NVSlopeData slopeData;
+@property BOOL haveData;
+
 @property CBCharacteristic *slopeDataCharacteristic;
 
 @end

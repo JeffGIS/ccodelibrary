@@ -18,6 +18,8 @@
 #import "ChartsBitmap.h"
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "NVCRIS_PeripheralManager.h"
+#import "SlopeClient.h"
+#import "NVSlopeData.h"
 
 @import AVKit;
 
@@ -30,33 +32,6 @@
 #endif
 #define NOTIFY_MTU      20
 #define DOWNLOAD_DATABASE_FUNCTION 3
-
-typedef NS_ENUM(NSInteger, NVManualStatus)
-{
-    NVManualStatusDevice,
-    NVManualStatusManual,
-    NVManualStatusCancelled,
-};
-
-typedef struct NVSlopeData {
-    double accelX;
-    double accelY;
-    double accelZ;
-    double frontSlopeDegrees;
-    double sideSlopeDegrees;
-    double frontSlopePct;
-    double sideSlopePct;
-    double manualFrontSlopeDegrees;
-    double manualSideSlopeDegrees;
-    double manualFrontSlopePct;
-    double manualSideSlopePct;
-    double maxSlopePct;
-    double maxSlopeDegrees;
-    double heading;
-    NVManualStatus frontManualStatus;
-    NVManualStatus sideManualStatus;
-} NVSlopeData;
-extern NVSlopeData CurrentSlopeData;
 
 typedef NS_ENUM(NSInteger, ModuleNames)
 {
@@ -234,6 +209,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) NSString *group_NVCRIS_PHOTOTAKEN_CHARACTERISTIC_UUID;
 @property BOOL NVCRIS_Central_Server;
 @property BOOL NVCRIS_Slope_Client;
+@property (strong, nonatomic) SlopeClient *slopeClient;
 
 + (nullable CRAPI *)sharedInstance;
 
@@ -346,5 +322,6 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (nullable CBCentralManager *)getCentralManager:(id)delegate;
 - (nullable CBPeripheralManager *) getPeripheralManager:(id)delegate;
 - (NVCRIS_PeripheralManager *) getNVCRIS_PeripheralManager:(id)delegate;
+- (nullable SlopeClient *) getSlopeClient:(id)delegate;
 
 @end
