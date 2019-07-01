@@ -4,34 +4,10 @@
 @import UIKit;
 #import "NVSliderController.h"
 #import "WIT_MotionInput.h"
+#import "SlopeClient.h"
 
 #define SDWK_ERROR_VAL 0.25
 
-typedef NS_ENUM(NSInteger, NVManualStatus)
-{
-    NVManualStatusDevice,
-    NVManualStatusManual,
-    NVManualStatusCancelled,
-};
-
-typedef struct NVSlopeData {
-    double accelX;
-    double accelY;
-    double accelZ;
-    double frontSlopeDegrees;
-    double sideSlopeDegrees;
-    double frontSlopePct;
-    double sideSlopePct;
-    double manualFrontSlopeDegrees;
-    double manualSideSlopeDegrees;
-    double manualFrontSlopePct;
-    double manualSideSlopePct;
-    double maxSlopePct;
-    double maxSlopeDegrees;
-    double heading;
-    NVManualStatus frontManualStatus;
-    NVManualStatus sideManualStatus;
-} NVSlopeData;
 
 @class GSSiSlopeViewController;
 
@@ -49,7 +25,7 @@ typedef struct NVSlopeData {
 
 @end
 
-@interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate,CLLocationManagerDelegate, WIT_MotionInputDelegate>
+@interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate,CLLocationManagerDelegate,WIT_MotionInputDelegate,SlopeClientDelegate>
 
 @property (nonatomic, weak) id <GSSiSlopeViewControllerDelegate> delegate;
 @property BOOL displayDegrees;

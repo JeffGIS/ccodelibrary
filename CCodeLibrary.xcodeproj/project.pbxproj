@@ -363,6 +363,8 @@
 		EB40255822C0EEB9005862AD /* NVCRIS_PeripheralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB40255722C0EEB9005862AD /* NVCRIS_PeripheralManager.m */; };
 		EB40255922C321DA005862AD /* NVCRIS_PeripheralManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB40255622C0EEB9005862AD /* NVCRIS_PeripheralManager.h */; };
 		EB40255B22C5B6D9005862AD /* NVCRIS_UUIDs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB40255A22C32642005862AD /* NVCRIS_UUIDs.h */; };
+		EB40256222C964B4005862AD /* SlopeClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EB40256122C964B4005862AD /* SlopeClient.m */; };
+		EB40256322C9B062005862AD /* SlopeClient.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB40256022C964B4005862AD /* SlopeClient.h */; };
 		EB4DB2581B9600AA008157D8 /* PointInArea.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4DB2571B9600AA008157D8 /* PointInArea.m */; };
 		EB4DB2591B962579008157D8 /* PointInArea.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB4DB2561B9600AA008157D8 /* PointInArea.h */; };
 		EB521B7919D3782800DA0D5A /* GetPlaceAreaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = EB521B7819D3782800DA0D5A /* GetPlaceAreaFile.m */; };
@@ -463,6 +465,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EB40256322C9B062005862AD /* SlopeClient.h in CopyFiles */,
 				EB40255B22C5B6D9005862AD /* NVCRIS_UUIDs.h in CopyFiles */,
 				EB40255922C321DA005862AD /* NVCRIS_PeripheralManager.h in CopyFiles */,
 				EB40255522BC0BFA005862AD /* WIT_MotionInput.h in CopyFiles */,
@@ -1023,6 +1026,8 @@
 		EB40255622C0EEB9005862AD /* NVCRIS_PeripheralManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVCRIS_PeripheralManager.h; sourceTree = "<group>"; };
 		EB40255722C0EEB9005862AD /* NVCRIS_PeripheralManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NVCRIS_PeripheralManager.m; sourceTree = "<group>"; };
 		EB40255A22C32642005862AD /* NVCRIS_UUIDs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVCRIS_UUIDs.h; sourceTree = "<group>"; };
+		EB40256022C964B4005862AD /* SlopeClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SlopeClient.h; sourceTree = "<group>"; };
+		EB40256122C964B4005862AD /* SlopeClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SlopeClient.m; sourceTree = "<group>"; };
 		EB4DB2561B9600AA008157D8 /* PointInArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointInArea.h; sourceTree = "<group>"; };
 		EB4DB2571B9600AA008157D8 /* PointInArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInArea.m; sourceTree = "<group>"; };
 		EB521B7719D3782800DA0D5A /* GetPlaceAreaFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPlaceAreaFile.h; sourceTree = "<group>"; };
@@ -1596,6 +1601,8 @@
 		EB95A1A41CB16EAF00158B40 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				EB40256022C964B4005862AD /* SlopeClient.h */,
+				EB40256122C964B4005862AD /* SlopeClient.m */,
 				EB40255422B02A81005862AD /* JY901.h */,
 				BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */,
 				BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */,
@@ -2095,6 +2102,7 @@
 				698A1C9C1F9E504800D22C03 /* ChartsBitmapVC.m in Sources */,
 				BBC361C91F429C0200B51DF3 /* VARDEF.C in Sources */,
 				A94A771019F8045C0062906E /* FacilitiesDatabase.m in Sources */,
+				EB40256222C964B4005862AD /* SlopeClient.m in Sources */,
 				EB40255322B0295E005862AD /* WIT_MotionInput.m in Sources */,
 				69F482371DB7C75B00E4BDB5 /* NVSpreadsheet.m in Sources */,
 				6992A8881BE0040C00FB53F0 /* NSData+Compression.m in Sources */,

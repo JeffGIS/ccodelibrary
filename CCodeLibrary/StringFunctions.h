@@ -61,6 +61,7 @@ NSString *addSpaceAfterColon(NSString *string);
 NSString *removeOpeningSpaces(NSString *string);
 NSString *removeOpeningReturn(NSString *string);
 NSString *removePIDPrefix(NSString *string);
+NSString *replaceLastChar(NSString *string,char with);
 NSString * ExpandString (NSString * string);
 NSMutableAttributedString *addLineBreakToLastSpace(NSString *string);
 NSString *reverseString(NSString *string);

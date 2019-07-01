@@ -984,6 +984,18 @@ NSString *removeOpeningReturn(NSString *string)
     return string;
 }
 
+NSString *replaceLastChar(NSString *string,char with)
+{
+    char withchars[2];
+    withchars[0] = with;
+    withchars[1] = 0;
+    NSString *withs = [NSString stringWithUTF8String:withchars];
+    NSUInteger l = string.length;
+    NSRange range = NSMakeRange(l-1,1);
+    NSString * rtn = [string stringByReplacingCharactersInRange:range withString:withs];
+    return rtn;
+}
+
 NSString *removePIDPrefix(NSString *string)
 {
     if (!string)

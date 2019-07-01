@@ -47,6 +47,7 @@ static int COUNT=100;
 @property (nonatomic) NSMutableArray<CLLocation *> *locations;
 @property WIT_MotionInput *witMotionInput;
 @property BOOL inWitMotionCalibrate;
+@property SlopeClient * slopeClient;
 
 @end
 
@@ -468,6 +469,8 @@ static int COUNT=100;
 {
     [self stopMotionManager];
     
+    CurrentSlopeData = _data;
+    
     if (_unable)
         _data.frontSlopePct = _data.sideSlopePct = _data.frontSlopeDegrees = _data.sideSlopeDegrees = _data.heading = -9999.0;
     
@@ -657,7 +660,12 @@ static int COUNT=100;
 }
 - (void)startManagers
 {
-    if (_wantWitMotion)
+    if (CRAPI.sharedInstance.NVCRIS_Slope_Client)
+    {
+        _slopeClient = SlopeClient.new;
+        _slopeClient.delegate = self;
+    }
+    else if (_wantWitMotion)
     {
         [_witMotionInput startInput];//let WITMotion start first
     }
@@ -978,6 +986,8 @@ static int COUNT=100;
 
 - (void)slopeMeasurementComplete
 {
+    CurrentSlopeData = _data;
+
     if (CRAPI.sharedInstance.inAutoLoopMode)
     {
         [self stopMotionManager];
@@ -1361,4 +1371,9 @@ static int COUNT=100;
     }
 }
 
+- (void) SlopeClient:(WIT_MotionInput *)controller returnedData:(NVSlopeData)slopeData
+{
+    _data = slopeData;
+    [self slopeMeasurementComplete];
+}
 @end

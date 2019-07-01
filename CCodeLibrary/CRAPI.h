@@ -31,6 +31,33 @@
 #define NOTIFY_MTU      20
 #define DOWNLOAD_DATABASE_FUNCTION 3
 
+typedef NS_ENUM(NSInteger, NVManualStatus)
+{
+    NVManualStatusDevice,
+    NVManualStatusManual,
+    NVManualStatusCancelled,
+};
+
+typedef struct NVSlopeData {
+    double accelX;
+    double accelY;
+    double accelZ;
+    double frontSlopeDegrees;
+    double sideSlopeDegrees;
+    double frontSlopePct;
+    double sideSlopePct;
+    double manualFrontSlopeDegrees;
+    double manualSideSlopeDegrees;
+    double manualFrontSlopePct;
+    double manualSideSlopePct;
+    double maxSlopePct;
+    double maxSlopeDegrees;
+    double heading;
+    NVManualStatus frontManualStatus;
+    NVManualStatus sideManualStatus;
+} NVSlopeData;
+extern NVSlopeData CurrentSlopeData;
+
 typedef NS_ENUM(NSInteger, ModuleNames)
 {
     MANAGEMENT_MODULE  =     1,
@@ -197,8 +224,16 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property int firstSidewalkPointIDOnSegment;
 @property (strong, nonatomic) CBCentralManager      *centralManager;
 @property (strong, nonatomic) CBPeripheral          *WITMotionPeripheral;
+@property (strong, nonatomic) CBPeripheral          *NVCRIS_Peripheral;
 @property (strong, nonatomic) CBPeripheralManager *peripheralManager;
 @property (strong, nonatomic) NVCRIS_PeripheralManager * nvcpm;
+@property int NVCRIS_GroupNum;
+@property (nonatomic, nullable) NSString *group_NVCRIS_SERVICE_UUID;
+@property (nonatomic, nullable) NSString *group_NVCRIS_SLOPEDATA_CHARACTERISTIC_UUID;
+@property (nonatomic, nullable) NSString *group_NVCRIS_TAKEPHOTO_CHARACTERISTIC_UUID;
+@property (nonatomic, nullable) NSString *group_NVCRIS_PHOTOTAKEN_CHARACTERISTIC_UUID;
+@property BOOL NVCRIS_Central_Server;
+@property BOOL NVCRIS_Slope_Client;
 
 + (nullable CRAPI *)sharedInstance;
 

@@ -13,6 +13,8 @@
 #import "ChartsBitmapVC.h"
 #import "HotSpotVideoVC.h"
 #import "NVReferenceView.h"
+#import "NVCRIS_UUIDs.h"
+NVSlopeData CurrentSlopeData;
 
 @implementation TimeRange
 
@@ -167,6 +169,19 @@
         _rebuildYear = max (2012,(int)[UserDefaults.defaults integerForKey:@"RebuildYear"]);
         _requirePhotoLandscape = YES;
         _currentSideOfStreet = SideOfStreetNotSet;
+        {
+            NSUserDefaults *defaults = [[NSUserDefaults alloc] init];
+            _NVCRIS_GroupNum = (int)[defaults integerForKey:@"NVCRIS_group_number"];
+            char groupc = '1' + _NVCRIS_GroupNum - 1;
+            _group_NVCRIS_SERVICE_UUID = replaceLastChar(NVCRIS_SERVICE_UUID,groupc);
+            _group_NVCRIS_SLOPEDATA_CHARACTERISTIC_UUID = replaceLastChar(NVCRIS_SLOPEDATA_CHARACTERISTIC_UUID,groupc);
+            _group_NVCRIS_TAKEPHOTO_CHARACTERISTIC_UUID = replaceLastChar(NVCRIS_TAKEPHOTO_CHARACTERISTIC_UUID,groupc);
+            _group_NVCRIS_PHOTOTAKEN_CHARACTERISTIC_UUID = replaceLastChar(NVCRIS_PHOTOTAKEN_CHARACTERISTIC_UUID,groupc);
+            _NVCRIS_Central_Server = (int)[defaults integerForKey:@"NVCRIS_central_server"];
+            _NVCRIS_Slope_Client = (int)[defaults integerForKey:@"NVCRIS_slope_client"];
+
+        }
+
     }
     
     return self;

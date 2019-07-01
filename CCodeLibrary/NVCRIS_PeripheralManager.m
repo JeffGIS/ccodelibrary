@@ -8,7 +8,7 @@
 
 #import "NVCRIS_PeripheralManager.h"
 #import "CRAPI.h"
-#import "NVCRIS_UUIDs.h"
+
 
 @interface NVCRIS_PeripheralManager () <CBPeripheralManagerDelegate>
 @property CBPeripheralManager * manager;
@@ -58,33 +58,33 @@
     // ... so build our service.
     
     // Start with the slope data char
-    _slopeDataCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:NVCRIS_SLOPEDATA_CHARACTERISTIC_UUID]
+    _slopeDataCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_SLOPEDATA_CHARACTERISTIC_UUID]
                                                                       properties:CBCharacteristicPropertyNotify|CBCharacteristicPropertyRead
                                                                            value:nil
                                                                      permissions:CBAttributePermissionsReadable];
     // then the take photo char
-    _takePhotoCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:NVCRIS_TAKEPHOTO_CHARACTERISTIC_UUID]
+    _takePhotoCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_TAKEPHOTO_CHARACTERISTIC_UUID]
                                                                       properties:CBCharacteristicPropertyNotify|CBCharacteristicPropertyRead
                                                                            value:nil
                                                                      permissions:CBAttributePermissionsReadable];
     
     // then the photo taken response char
-    _photoTakenCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:NVCRIS_PHOTOTAKEN_CHARACTERISTIC_UUID]
+    _photoTakenCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_PHOTOTAKEN_CHARACTERISTIC_UUID]
                                                                       properties:CBCharacteristicPropertyWrite
                                                                            value:nil
                                                                      permissions:CBAttributePermissionsWriteable];
     
     // Then the service
-     CBMutableService *NVCRISService = [[CBMutableService alloc] initWithType:[CBUUID UUIDWithString:NVCRIS_SERVICE_UUID]
+     CBMutableService *NVCRISService = [[CBMutableService alloc] initWithType:[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_SERVICE_UUID]
                                                                        primary:YES];
     // Add the characteristics to the service
-    NVCRISService.characteristics = [NSArray arrayWithObject:_takePhotoCharacteristic];
+    NVCRISService.characteristics = @[_takePhotoCharacteristic,_photoTakenCharacteristic,_slopeDataCharacteristic];
     
     // And add it to the peripheral manager
     [_manager removeAllServices];
     [_manager addService:NVCRISService];
     // Start sending
-    [_manager startAdvertising:@{ CBAdvertisementDataServiceUUIDsKey : @[[CBUUID UUIDWithString:NVCRIS_SERVICE_UUID]] }];
+    [_manager startAdvertising:@{ CBAdvertisementDataServiceUUIDsKey : @[[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_SERVICE_UUID]] }];
 }
  - (void)peripheralManager:(CBPeripheralManager *)peripheral didAddService:(CBService *)service error:(NSError *)error
 {
@@ -105,6 +105,7 @@
     {
         _slopeEOMsent = YES;
         // Get the data
+        _slopeCommand = [self packageCurrentSlopeData];
         _slopeDataToSend = [_slopeCommand dataUsingEncoding:NSUTF8StringEncoding];
         
         // Reset the index
@@ -269,7 +270,7 @@
         if (amountToSend > NOTIFY_MTU) amountToSend = NOTIFY_MTU;
         
         // Copy out the data we want
-        NSData *chunk = [NSData dataWithBytes:_photoDataToSend.bytes+_sendPhotoDataIndex length:amountToSend];
+        NSData *chunk = [NSData dataWithBytes:_slopeDataToSend.bytes+_slopeDataIndex length:amountToSend];
         
         // Send it
         didSend = [_manager updateValue:chunk forCharacteristic:_slopeDataCharacteristic onSubscribedCentrals:nil];
@@ -340,5 +341,11 @@
     //[_delegate topDownPhotoDidReturn:YES];
 }
 
+- (NSString *)packageCurrentSlopeData
+{
+    NSString * data = [NSString stringWithFormat:@"%.1f;%.1f;%.1f;%.1f",CurrentSlopeData.frontSlopePct,CurrentSlopeData.sideSlopePct,CurrentSlopeData.maxSlopePct,CurrentSlopeData.heading];
+    
+    return data;
+}
 
 @end
