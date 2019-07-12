@@ -339,7 +339,7 @@
 }
 - (void) photoTaken
 {
-    //[_delegate topDownPhotoDidReturn:YES];
+    [_delegate topDownPhotoDidReturn:YES];
 }
 
 - (NSString *)packageCurrentSlopeData

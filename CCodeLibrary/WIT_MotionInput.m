@@ -418,6 +418,12 @@ static unsigned char calibrationBytes[5];
 }
 - (void)saveCalibration
 {
+    calibrationBytes[0] = 0xFF;
+    calibrationBytes[1] = 0xAA;
+    calibrationBytes[2] = 0x01;
+    calibrationBytes[3] = 0x01;
+    calibrationBytes[4] = 0x00;
+
     _calibrationStep = InSaveCalibration;
     calibrationBytes[2] = 0x00;
     calibrationBytes[3] = 0x00;

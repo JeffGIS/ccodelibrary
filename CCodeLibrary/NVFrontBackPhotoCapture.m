@@ -73,7 +73,11 @@
     AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:device
                                                    error:&error];
     
-    if (error) {NSLog(@"AVCaptureDeviceInput ERROR: %@", error.localizedDescription);}
+    if (error)
+    {
+        NSLog(@"AVCaptureDeviceInput ERROR: %@", error.localizedDescription);
+        showAlert(error.localizedDescription);
+    }
     
     else
     {
