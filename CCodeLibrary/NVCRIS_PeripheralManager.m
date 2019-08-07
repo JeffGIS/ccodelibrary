@@ -50,6 +50,7 @@
 {
     // Opt out from any other state
     if (peripheralManager.state != CBPeripheralManagerStatePoweredOn) {
+        showAlert(@"Bluetooth not on");
         return;
     }
     
@@ -351,14 +352,17 @@
 
 -(void) updateSlopeData:(NVSlopeData)slopeData
 {
-    _currentSlopeData = slopeData;
-    _slopeCommand = [self packageCurrentSlopeData];
-    _slopeDataToSend = [_slopeCommand dataUsingEncoding:NSUTF8StringEncoding];
-    
-    // Reset the index
-    _slopeDataIndex = 0;
-
-    [self sendSlopeData];
+    if (_slopeDataCharacteristic)
+    {
+        _currentSlopeData = slopeData;
+        _slopeCommand = [self packageCurrentSlopeData];
+        _slopeDataToSend = [_slopeCommand dataUsingEncoding:NSUTF8StringEncoding];
+        
+        // Reset the index
+        _slopeDataIndex = 0;
+        
+        [self sendSlopeData];
+    }
 }
 
 @end

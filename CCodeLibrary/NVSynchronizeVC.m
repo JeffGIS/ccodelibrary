@@ -40,6 +40,7 @@
 @property NSString * getFromServerFile;
 @property BOOL  showErrorPopover;
 @property BOOL  justDownloadedNewDatabase;
+@property NSString * directoryToUploadDatabaseTo;
 @end
 
 @implementation NVSynchronizeVC
@@ -1729,7 +1730,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                      CRAPI.sharedInstance.currentManageriPad,CRAPI.sharedInstance.currentiPadWithinManager];
     
     NSArray *directories = @[dir1,dir2];
-    
+    _directoryToUploadDatabaseTo = [NSString stringWithFormat:@"NVMobile/UploadedDatabases/%@",dir2];
     _ftpdc = [FTPDirectoryCreate createDirectories:directories
                                        inFTPDomain:[CRAPI.sharedInstance getNVCRISServer]
                                          directory:@"NVMobile/UploadedDatabases"
@@ -1787,7 +1788,20 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             break;
         default:break;
     }
-    
+    _process = UPLOAD_DATABASE_PROCESS;
+    _lastUploadFileSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:sendToServerFile
+                                                                              error:nil].fileSize;
+    _filePath = sendToServerFile;
+    [_popoverView showAfter:0.5
+                  withTitle:@"Upload Database"];
+
+    [_push sendFile:[_filePath lastPathComponent]
+      fromDirectory:[_filePath stringByDeletingLastPathComponent]
+             toFile:[_filePath lastPathComponent]
+        toDirectory:_directoryToUploadDatabaseTo
+     deleteWhenDone:NO
+     appendFileName:YES];
+
 }
 
 - (void)helpButtonTapped:(UIButton *)button

@@ -210,6 +210,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property BOOL NVCRIS_Central_Server;
 @property BOOL NVCRIS_Slope_Client;
 @property (strong, nonatomic) SlopeClient *slopeClient;
+@property (nonatomic) int useExternalAccelerometer;
 
 + (nullable CRAPI *)sharedInstance;
 

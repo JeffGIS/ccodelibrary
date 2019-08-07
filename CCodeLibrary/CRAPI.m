@@ -148,7 +148,7 @@ NVSlopeData CurrentSlopeData;
         _allowLegendMinimize = YES;
         _allowPortraitPhotos = NO;
         _feetPerStep = 2.5;
-        
+        [self getUseExternalAccelerometer];
         NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%@",
                                 UserDefaults.defaults.localFilePath,
                                 [UserDefaults.defaults stringForKey:@"RHVideoPath"]];
@@ -1018,6 +1018,16 @@ NVSlopeData CurrentSlopeData;
 {
     _rebuildYear = rebuildYear;
     [UserDefaults.defaults saveInteger:rebuildYear forKey:@"RebuildYear"];
+}
+- (void) setUseExternalAccelerometer:(int)useExternalAccelerometer
+{
+    _useExternalAccelerometer = useExternalAccelerometer;
+    [UserDefaults.defaults saveInteger:useExternalAccelerometer forKey:@"UseExternalAccelerometer"];
+}
+- (int) getUseExternalAccelerometer
+{
+    _useExternalAccelerometer = (int)[UserDefaults.defaults integerForKey:@"UseExternalAccelerometer"];
+    return _useExternalAccelerometer;
 }
 - (NSInteger)adjustNextRefno:(NSInteger)refno
 {

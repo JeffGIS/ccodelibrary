@@ -100,7 +100,7 @@ static int COUNT=100;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _wantWitMotion = NO;
+    _wantWitMotion = CRAPI.sharedInstance.useExternalAccelerometer;
     _inWitMotionCalibrate = NO;
     if (_wantWitMotion)
     {
