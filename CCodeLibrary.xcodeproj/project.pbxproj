@@ -1879,16 +1879,16 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1030;
 				ORGANIZATIONNAME = GSSi;
 			};
 			buildConfigurationList = EBA2E455199527660085B2E0 /* Build configuration list for PBXProject "CCodeLibrary" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = EBA2E451199527660085B2E0;
 			productRefGroup = EBA2E45B199527660085B2E0 /* Products */;
