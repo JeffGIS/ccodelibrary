@@ -138,7 +138,7 @@ NVSlopeData CurrentSlopeData;
         _acreFmt = [[NSNumberFormatter alloc] init];
         _acreFmt.numberStyle = NSNumberFormatterNoStyle;
         _acreFmt.roundingMode = NSNumberFormatterRoundHalfUp;
-        _acreFmt.groupingSeparator = @"'";
+        _acreFmt.groupingSeparator = @",";
         _acreFmt.groupingSize = 3;
         _acreFmt.alwaysShowsDecimalSeparator = NO;
         _acreFmt.usesGroupingSeparator = YES;
