@@ -72,6 +72,7 @@
 #import "HotSpotVideo.h"
 #import "RHEditor.h"
 
+extern int ii, idebug;
 @interface CCodeLibrary : NSObject
 
 @end

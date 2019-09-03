@@ -247,6 +247,7 @@ typedef NS_ENUM(NSInteger, MapitBaseLayer)
     MBL_CensusTracts,
     MBL_VotingDistricts,
     MBL_StreetCenterlines,
+    MBL_Roads,
 };
 
 typedef NS_ENUM(NSInteger, AdjustCrimeOptions)

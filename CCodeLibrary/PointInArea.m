@@ -51,6 +51,16 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
             bi=1;
         
         CGContextSetShouldAntialias(context, NO);
+ /*       CGRect colorRect;
+        colorRect.origin.x = 0;
+        colorRect.origin.y = 0;
+        colorRect.size.width = pixelsWide;
+        colorRect.size.height = pixelsHigh;
+        UIColor * color = [UIColor greenColor];
+        CGColorRef colorRef =[color CGColor];
+        CGContextSetFillColorWithColor(context,colorRef);
+        CGContextFillRect (context,colorRect);*/
+
     }
     
     
