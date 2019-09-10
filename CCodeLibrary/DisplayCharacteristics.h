@@ -55,6 +55,7 @@ typedef NS_ENUM(NSInteger, ItemProcessingPassTypes) {
 @property int year, yearIndex, dow, hour, dayNight, month;
 @property int UCR;
 @property long long iValue;
+@property int iClass;
 @property double incValue;
 @property int sunAngle;
 @property PointSymbols pointSymbol;

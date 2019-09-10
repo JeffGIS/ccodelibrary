@@ -50,6 +50,7 @@
     another.width = self.width;
     another.string1 = self.string1.copy;
     another.string2 = self.string2.copy;
+    another.iClass = self.iClass;
     
     return another;
 }
