@@ -14,6 +14,8 @@
 #import "HotSpotVideoVC.h"
 #import "NVReferenceView.h"
 #import "NVCRIS_UUIDs.h"
+#import "NVSendEmail.h"
+
 NVSlopeData CurrentSlopeData;
 
 @implementation TimeRange
@@ -1824,5 +1826,40 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     _beep.volume = volume;
 }
+- (void)sendDebugFile
+{
+    NSInteger totSize = 0;
+    NSString *documentsDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    NSString *txtfile = [NSString stringWithFormat:@"%@/debug.txt", documentsDir];
+    
+   totSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:txtfile
+                                                                       error:nil].fileSize;
 
+    NSString *message = [NSString stringWithFormat:@"Debug file (%li) from %@(%i)",totSize,
+                         UIDevice.currentDevice.name, CRAPI.sharedInstance.GSSiPadNumber];
+    dispatch_async(dispatch_get_main_queue(),
+                   ^{
+
+
+    [NVSendEmail sendEmailWithSubject:@"Debug file from GMMobile"
+                              message:message
+                       attachmentData:[NSData dataWithContentsOfFile:txtfile]
+                             mimeType:@"application/csvm+json"
+                             fileName:@"debug.txt"
+                           controller:_mapVC];
+                   });
+}
+- (void) clearDebugFile
+{
+    NSString *documentsDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    NSString *txtfile = [NSString stringWithFormat:@"%@/debug.txt", documentsDir];
+    [NSFileManager.defaultManager removeItemAtPath:txtfile
+                        error:nil];
+}
+- (void) addToDebugFile:(NSString *)line
+{
+    NSString *documentsDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    NSString *txtfile = [NSString stringWithFormat:@"%@/debug.txt", documentsDir];
+    [self appendString:line toFile:txtfile];
+}
 @end

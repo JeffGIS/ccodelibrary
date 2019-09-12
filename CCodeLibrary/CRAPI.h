@@ -324,5 +324,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (nullable CBPeripheralManager *) getPeripheralManager:(id)delegate;
 - (NVCRIS_PeripheralManager *) getNVCRIS_PeripheralManager:(id)delegate;
 - (nullable SlopeClient *) getSlopeClient:(id)delegate;
-
+- (void)sendDebugFile;
+- (void) clearDebugFile;
+- (void) addToDebugFile:(NSString *)line;
 @end
