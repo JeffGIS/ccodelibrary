@@ -1829,10 +1829,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 - (void)sendDebugFile
 {
     NSInteger totSize = 0;
-    NSString *documentsDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-    NSString *txtfile = [NSString stringWithFormat:@"%@/debug.txt", documentsDir];
     
-   totSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:txtfile
+   totSize = (int)[NSFileManager.defaultManager attributesOfItemAtPath:_debugFilePath
                                                                        error:nil].fileSize;
 
     NSString *message = [NSString stringWithFormat:@"Debug file (%li) from %@(%i)",totSize,
@@ -1843,23 +1841,42 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
     [NVSendEmail sendEmailWithSubject:@"Debug file from GMMobile"
                               message:message
-                       attachmentData:[NSData dataWithContentsOfFile:txtfile]
+                       attachmentData:[NSData dataWithContentsOfFile:_debugFilePath]
                              mimeType:@"application/csvm+json"
-                             fileName:@"debug.txt"
+                             fileName:[_debugFilePath lastPathComponent]
                            controller:_mapVC];
                    });
 }
 - (void) clearDebugFile
 {
     NSString *documentsDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-    NSString *txtfile = [NSString stringWithFormat:@"%@/debug.txt", documentsDir];
-    [NSFileManager.defaultManager removeItemAtPath:txtfile
+    _debugFilePath = [NSString stringWithFormat:@"%@/debug.txt", documentsDir];
+    [NSFileManager.defaultManager removeItemAtPath:_debugFilePath
                         error:nil];
 }
 - (void) addToDebugFile:(NSString *)line
 {
     NSString *documentsDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-    NSString *txtfile = [NSString stringWithFormat:@"%@/debug.txt", documentsDir];
-    [self appendString:line toFile:txtfile];
+    _debugFilePath = [NSString stringWithFormat:@"%@/debug.txt", documentsDir];
+    [self appendString:line toFile:_debugFilePath];
+}
+- (void) openDebugFile:(NSString *)name
+{
+    NSString *documentsDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    _debugFilePath = [NSString stringWithFormat:@"%@/%@.txt", documentsDir,name];
+    [NSFileManager.defaultManager removeItemAtPath:_debugFilePath
+                                             error:nil];
+    [NSFileManager.defaultManager createFileAtPath:_debugFilePath contents:nil attributes:nil];
+    _debugFileHandle = [NSFileHandle fileHandleForWritingAtPath:_debugFilePath];
+}
+- (void) closeDebugFile
+{
+    [_debugFileHandle closeFile];
+    _debugFileHandle = nil;
+}
+- (void) writeToDebugFile:(NSString *)line
+{
+    NSString *newLine = [NSString stringWithFormat:@"%@\r\n", line];
+    [_debugFileHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
 }
 @end

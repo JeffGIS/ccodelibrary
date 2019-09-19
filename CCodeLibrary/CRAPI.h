@@ -211,6 +211,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property BOOL NVCRIS_Slope_Client;
 @property (strong, nonatomic) SlopeClient *slopeClient;
 @property (nonatomic) int useExternalAccelerometer;
+@property NSFileHandle *debugFileHandle;
+@property NSString * debugFilePath;
 
 + (nullable CRAPI *)sharedInstance;
 
@@ -327,4 +329,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void)sendDebugFile;
 - (void) clearDebugFile;
 - (void) addToDebugFile:(NSString *)line;
+- (void) openDebugFile:(NSString *)name;
+- (void) closeDebugFile;
+- (void) writeToDebugFile:(NSString *)line;
+
 @end
