@@ -34,6 +34,7 @@ didSelectYTButtonWithText:(NSString *)text
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic, copy) NSArray<UIImage *> *imageArray;
 @property BOOL allowsMultipleSelection;
+@property BOOL allowsSubtitle;
 @property (nonatomic) BOOL parseTextToButtons;
 @property (nonatomic, copy) NSString *identifier;
 

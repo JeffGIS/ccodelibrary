@@ -281,14 +281,26 @@ viewForHeaderInSection:(NSInteger)section
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *cellIdentifier = @"CustomCell";
+    static NSString *cellIdentifier1 = @"CustomCell1";
+    static NSString *cellIdentifier2 = @"CustomCell2";
+
+    NSString *cellID = cellIdentifier1;
+    UITableViewCellStyle style = UITableViewCellStyleDefault;
+    NSString *cellText = _textArray[indexPath.row];
+    NSString *subtitle = textAfter(_textArray[indexPath.row], @"\n");
     
-    UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (_allowsSubtitle && subtitle.length)
+    {
+        cellID = cellIdentifier2;
+        style = UITableViewCellStyleSubtitle;
+        cellText = textBefore(cellText, @"\n");
+    }
+    UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellID];
     
     if (!cell)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                      reuseIdentifier:cellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:style
+                reuseIdentifier:cellID];
     }
     
     cell.textLabel.font = _font;
@@ -359,6 +371,9 @@ viewForHeaderInSection:(NSInteger)section
     {
         NSString *group = @"";
         
+        if (_allowsSubtitle && subtitle.length)
+            cell.detailTextLabel.text = subtitle;
+
         if (_tableView.allowsMultipleSelection)
         {
             cell.textLabel.text = textBefore(_groupArray[indexPath.row], @"\x03");
@@ -367,8 +382,8 @@ viewForHeaderInSection:(NSInteger)section
         
         else
         {
-            cell.textLabel.text = textBefore(_textArray[indexPath.row], @"\x03");
-            group = textBefore(textAfter(_textArray[indexPath.row], @"\x05"), @"\x04");
+            cell.textLabel.text = textBefore(cellText, @"\x03");
+            group = textBefore(textAfter(cellText, @"\x05"), @"\x04");
         }
         
         if (!group)
