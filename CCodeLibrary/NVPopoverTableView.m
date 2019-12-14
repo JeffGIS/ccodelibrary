@@ -372,7 +372,12 @@ viewForHeaderInSection:(NSInteger)section
         NSString *group = @"";
         
         if (_allowsSubtitle && subtitle.length)
+        {
             cell.detailTextLabel.text = subtitle;
+            cell.detailTextLabel.numberOfLines = 2;
+            cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            cell.detailTextLabel.textColor = UIColor.darkTextColor;
+        }
 
         if (_tableView.allowsMultipleSelection)
         {
