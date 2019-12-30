@@ -389,6 +389,14 @@ static UserDefaults *_defaults;
     return documentsDirectory;
 }
 
+- (NSString *)nonBackedUpFilePath
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *useDirectory = paths.firstObject;
+    
+    return useDirectory;
+}
+
 - (NSArray *)realtorList
 {
     return @[@"http://www.edinarealty.com", @"http://www.remax.com", @"http://www.trulia.com", @"http://www.zillow.com/homes"];

@@ -17,7 +17,7 @@
 
 + (NSString*) databasePath
 {
-    NSString * documentsDirectory = UserDefaults.defaults.localFilePath;
+    NSString * documentsDirectory = UserDefaults.defaults.nonBackedUpFilePath;
     NSString * path = [NSBundle.mainBundle pathForResource:@"censusdata"
                                                     ofType:@"slt"];
     return path;
@@ -25,7 +25,7 @@
 
 + (NSString*) computedFieldsPath
 {
-    NSString * documentsDirectory = UserDefaults.defaults.localFilePath;
+    NSString * documentsDirectory = UserDefaults.defaults.nonBackedUpFilePath;
     NSString * path = [NSString stringWithFormat:@"%@/ComputedCensusData.slt",documentsDirectory];
     return path;
 }

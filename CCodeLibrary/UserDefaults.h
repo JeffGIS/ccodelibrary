@@ -58,6 +58,7 @@
 - (void)disableWebKitDiskImageCache;
 - (NSString *)sharedFilePath;
 - (NSString *)localFilePath;
+- (NSString *)nonBackedUpFilePath;
 - (NSArray *)realtorList;
 
 - (void)saveColorWithRed:(CGFloat)red
