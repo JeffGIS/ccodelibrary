@@ -586,7 +586,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
         else
         {
             tr.textLabel.text = [_delegate headerTextForColumn:indexPath.nvSpreadsheetColumn];
-            tr.textLabel.numberOfLines = 1;
+            tr.textLabel.numberOfLines = 0;
             
             if (indexPath.nvSpreadsheetColumn <= (_delegate.numSelectableRows))
             {
@@ -621,7 +621,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
         if (_flipped)
         {
             lc.textLabel.text = [_delegate headerTextForColumn:indexPath.nvSpreadsheetRow];
-            lc.textLabel.numberOfLines = 1;
+            lc.textLabel.numberOfLines = 0;
             
             if (indexPath.nvSpreadsheetRow <= (_delegate.numSelectableRows))
             {
