@@ -365,7 +365,10 @@ didReceiveResponse:(NSURLResponse *)response
     [self stopReceiveWithStatus:FTPStatusOK
                    statusString:@""];
 }
-
+-(void) setUseTestServer:(BOOL)useTestServer
+{
+    _useTestServer = useTestServer;
+}
 - (void)setUpFTP
 {
     if (_ftpSiteOveride)
@@ -406,7 +409,7 @@ didReceiveResponse:(NSURLResponse *)response
 {
     NSString * server = [CRAPI.sharedInstance getNVCRISServer];
     if (_useTestServer)
-        server = @"74.39.73.20";
+        server = @"74.36.96.36";
     _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@",
                 _username, _password, server, _port, _directory, _fileName];
 }
