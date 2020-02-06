@@ -24,7 +24,8 @@ CGContextRef createBitmapContext(int pixelsWide, int pixelsHigh, CGColorSpaceRef
             flags = kCGImageAlphaNoneSkipLast | kCGBitmapByteOrder32Big;
         else
             //flags = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Little;
-            flags = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little;
+           flags = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little;
+        
     }
     bitmapBytesPerRow = nc * pixelsWide;
     bitmapByteCount = (bitmapBytesPerRow *pixelsHigh);

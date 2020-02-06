@@ -79,11 +79,15 @@ long GSSifilelength(HFILE Fid)
 
 UIColor *UIColorFromInt (unsigned int ival)
 {
+    int ii;
     UIColor *uiColor;
 #pragma pack(1)
     typedef struct {unsigned char r,g,b,a;} RGBC;
 #pragma pack()
+    ival *= 4;
     RGBC *rgbc = (RGBC*)&ival;
+    if (rgbc->a != 0)
+        ii=1;
     double r=rgbc->r/255.0,g=rgbc->g/255.0,b=rgbc->b/255.0,a=1;
     uiColor = [UIColor colorWithRed:r green:g blue:b alpha:a];
     return uiColor;
