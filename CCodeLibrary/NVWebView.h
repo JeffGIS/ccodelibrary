@@ -54,6 +54,8 @@ wasLongPressedAtPoint:(DPOINT)point
 - (void)webViewDidRemovePolygon;
 - (void)tapViewFinished;
 
+-(void)webViewRealtorWasTapped;
+
 @end
 
 @interface NVWebView : UIView
@@ -65,6 +67,9 @@ wasLongPressedAtPoint:(DPOINT)point
 
 + (instancetype)showWebViewInView:(UIView *)view
                         urlString:(NSString *)urlString;
++ (instancetype)showWebViewInView:(UIView *)view
+                        urlString:(NSString *)urlString
+                     withDelegate:(id)delegate;
 
 + (instancetype)showWebViewInView:(UIView *)view
                    showFileAtPath:(NSString *)path

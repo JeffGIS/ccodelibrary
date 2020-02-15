@@ -86,6 +86,7 @@
 
 @property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
 @property (nonatomic) BOOL flipped;
+@property (nonatomic) NVWebView *nvRealtorwv;
 
 - (NSArray *)retrieveSearchStrings;
 - (void)updateSelectedRowsAtIndex:(NSInteger)index;

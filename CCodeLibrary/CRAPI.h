@@ -332,5 +332,6 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void) openDebugFile:(NSString *)name;
 - (void) closeDebugFile;
 - (void) writeToDebugFile:(NSString *)line;
+- (NSString *_Nonnull) getRouteServer;
 
 @end

@@ -32,6 +32,7 @@ NVSlopeData CurrentSlopeData;
 @property int kp, currentGeoidValue, numAllowedZooms;
 @property (nonatomic, nullable) AVAudioPlayer *beep, *finalBeep;
 @property (nonatomic, nullable) NSTimer *beepTimer;
+@property (nonatomic, nullable) NSString * routeServer;
 
 @end
 
@@ -150,6 +151,7 @@ NVSlopeData CurrentSlopeData;
         _allowLegendMinimize = YES;
         _allowPortraitPhotos = NO;
         _feetPerStep = 2.5;
+        [self setRouteServer:@"Both"];
         [self getUseExternalAccelerometer];
         NSString *outputPath = [[NSString alloc] initWithFormat:@"%@/%@",
                                 UserDefaults.defaults.localFilePath,
@@ -224,6 +226,25 @@ NVSlopeData CurrentSlopeData;
         self.slopeClient = [[SlopeClient alloc] init];
     self.slopeClient.delegate = delegate;
     return self.slopeClient;
+}
+- (void) setRouteServer:(NSString *)routeServer
+{
+    _routeServer = routeServer;
+    [UserDefaults.defaults saveString:_routeServer forKey:@"RouteServer"];
+}
+- (NSString *_Nonnull) getRouteServer
+{
+    if (_routeServer.length)
+        return _routeServer;
+    
+    _routeServer = [UserDefaults.defaults stringForKey:@"RouteServer"];
+
+    if (_routeServer.length)
+    {
+        _routeServer = @"GOOGLE";
+        [UserDefaults.defaults saveString:_routeServer forKey:@"RouteServer"];
+    }
+    return _routeServer;
 }
 
 - (NVCRIS_PeripheralManager *) getNVCRIS_PeripheralManager:(id)delegate

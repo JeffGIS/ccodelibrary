@@ -14,7 +14,7 @@
 #import "PDFCreator.h"
 
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,
-NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UITextFieldDelegate>
+NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UITextFieldDelegate,NVWebViewDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
 @property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine, *cpyButton;
@@ -736,19 +736,25 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             [self updateSelectedRowsAtIndex:row];
         
         else
+        {
             [self performRowHeaderActionAtIndex:row];
+            return;
+        }
     }
     
     else if (row == 0)
     {
         if (_flipped)
+        {
             [self performRowHeaderActionAtIndex:column];
+            return;
+        }
         
         else
             [self updateSelectedRowsAtIndex:column];
     }
     
-    else
+    //else
     {
         [_nvss reloadData];
         
@@ -783,7 +789,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         {
             NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                               delegate:self
-                                                                 title:@"Spreadsheet Options"
+                                                                 title:@"Property List Options"
                                                        buttonTextArray:optionsArray
                                                       destructiveIndex:0];
             alert.identifier = alertID;
@@ -1156,10 +1162,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     else if ([popoverTableView.identifier isEqualToString:@"Realtor"])
     {
-        NVWebView *nvwv = [NVWebView showWebViewInView:self.view
-                                             urlString:text];
+         NSString * url = UserDefaults.defaults.realtorWebSites[index];
+         _nvRealtorwv = [NVWebView showWebViewInView:self.view
+                                             urlString:url
+                                        withDelegate:self];
         
-        [nvwv showRealtorButton];
+        [_nvRealtorwv showRealtorButton];
     }
     
     else if ([popoverTableView.identifier isEqualToString:@"CopyRows"])
@@ -1173,6 +1181,17 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [popoverTableView hide:YES];
 }
 
+-(void)webViewRealtorWasTapped
+{
+    if (_nvRealtorwv)
+    {
+        [_nvRealtorwv hide:FALSE];
+        _nvRealtorwv = nil;
+        [self performSelectorOnMainThread:@selector(realtor:)
+                               withObject:nil
+                            waitUntilDone:NO];
+    }
+}
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
 {
     [popoverTableView hide:YES];

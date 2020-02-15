@@ -101,6 +101,15 @@
     [_webView removeFromSuperview];
     _webView = nil;
 }
++ (instancetype)showWebViewInView:(UIView *)view
+                        urlString:(NSString *)urlString
+                     withDelegate:(id)delegate
+{
+    NVWebView *nvwv = [NVWebView showWebViewInView:(UIView *)view
+                                         urlString:(NSString *)urlString];
+    nvwv.delegate = delegate;
+    return nvwv;
+}
 
 + (instancetype)showWebViewInView:(UIView *)view
                         urlString:(NSString *)urlString
@@ -608,12 +617,19 @@
 
 - (void)realtor:(UIButton *)button
 {
-    NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self
-                                                                      delegate:self
-                                                                         title:@"Select Realtor Website"
-                                                                     textArray:UserDefaults.defaults.realtorList
-                                                                 includeCancel:YES];
-#pragma unused(nvptv)
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewRealtorWasTapped)])
+    {
+        [_delegate webViewRealtorWasTapped];
+    }
+    else
+    {
+        NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self
+                                                                          delegate:self
+                                                                             title:@"Select Realtor Website"
+                                                                         textArray:UserDefaults.defaults.realtorList
+                                                                     includeCancel:YES];
+        #pragma unused(nvptv)
+    }
 }
 
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView

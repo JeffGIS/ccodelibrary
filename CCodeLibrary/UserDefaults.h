@@ -60,6 +60,7 @@
 - (NSString *)localFilePath;
 - (NSString *)nonBackedUpFilePath;
 - (NSArray *)realtorList;
+- (NSArray *)realtorWebSites;
 
 - (void)saveColorWithRed:(CGFloat)red
                    green:(CGFloat)green
