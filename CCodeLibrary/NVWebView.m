@@ -505,8 +505,6 @@
 
 - (void)hideSaveLinkButton
 {
-    _tabBar.userInteractionEnabled = YES;
-    _tabBar.alpha = 1.0;
     [_saveLinkButton setHidden:YES];
 }
 

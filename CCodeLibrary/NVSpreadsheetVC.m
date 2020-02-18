@@ -1192,12 +1192,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             
             [_nvRealtorwv showRealtorButton];
             
-            _nvRealtorwv = [NVWebView showWebViewInView:self.view
-                                              urlString:url
-                                           withDelegate:self];
-            
-            [_nvRealtorwv showRealtorButton];
-        }
+         }
 
     }
     
