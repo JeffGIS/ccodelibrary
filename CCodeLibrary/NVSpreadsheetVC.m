@@ -14,10 +14,10 @@
 #import "PDFCreator.h"
 
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,
-NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UITextFieldDelegate,NVWebViewDelegate>
+NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UITextFieldDelegate,NVWebViewDelegate,RHSearchDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
-@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor, *timeLine, *cpyButton;
+@property (nonatomic) UIButton *swap, *returnToOrigin, *realtor,*timeLine, *cpyButton;
 @property (nonatomic) UIButton *export, *delete, *mapIt, *create, *select, *help;
 @property (nonatomic) CGFloat columnWidth, rowHeight;
 @property (nonatomic) UITextField *titleTextField;
@@ -28,6 +28,10 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
 @property NSInteger selectedRow, selectedColumn, lastTapSelectedRow;
 @property (nonatomic) RHViewController *rhvc;
 @property (nonatomic) UIViewController *nvmsvc;
+@property (nonatomic, copy) NSArray<NSString *> *zips;
+@property int numZips;
+@property int numListings;
+@property (nonatomic) GSSiPopoverView *popoverView;
 
 @end
 
@@ -143,6 +147,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
     
     [_realtor addTarget:self action:@selector(realtor:) forControlEvents:UIControlEventTouchUpInside];
     
+
     _timeLine = [UIButton buttonWithType:UIButtonTypeCustom];
     [self setupButton:_timeLine];
     
@@ -203,6 +208,9 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
     
     [self.view addSubview:_nvss];
     [self resetConstraints:UIApplication.sharedApplication.statusBarOrientation];
+    
+    _popoverView = [[GSSiPopoverView alloc] initWithView:self.view];
+
 }
 
 - (void)setupButton:(UIButton *)button
@@ -1160,14 +1168,37 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [_nvss reloadData];
     }
     
+    else if ([popoverTableView.identifier isEqualToString:@"Realtor.com"])
+    {
+        if (!index)
+        {
+            [self performListingsSearch];
+        }
+    }
     else if ([popoverTableView.identifier isEqualToString:@"Realtor"])
     {
-         NSString * url = UserDefaults.defaults.realtorWebSites[index];
-         _nvRealtorwv = [NVWebView showWebViewInView:self.view
-                                             urlString:url
-                                        withDelegate:self];
-        
-        [_nvRealtorwv showRealtorButton];
+        NSString * url = UserDefaults.defaults.realtorWebSites[index];
+        if ([url containsString:@"realtor.com"])
+        {
+            [self performSelectorOnMainThread:@selector(realtor_com_options)
+                                                   withObject:nil
+                                                waitUntilDone:NO];
+        }
+        else
+        {
+            _nvRealtorwv = [NVWebView showWebViewInView:self.view
+                                              urlString:url
+                                           withDelegate:self];
+            
+            [_nvRealtorwv showRealtorButton];
+            
+            _nvRealtorwv = [NVWebView showWebViewInView:self.view
+                                              urlString:url
+                                           withDelegate:self];
+            
+            [_nvRealtorwv showRealtorButton];
+        }
+
     }
     
     else if ([popoverTableView.identifier isEqualToString:@"CopyRows"])
@@ -1626,6 +1657,159 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     _flipped = flipped;
     [UserDefaults.defaults saveBool:!flipped forKey:@"SpreadsheetFlipped"];
+}
+
+#pragma mark - Realtor.com
+
+- (void) realtor_com_options
+{
+    NSArray *options = @[@"Refresh",@"Select ZIP Codes"];
+    NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
+                                                                      delegate:self
+                                                                         title:@"Realtor.com Options"
+                                                                     textArray:options
+                                                                 includeCancel:YES];
+    nvptv.identifier = @"Realtor.com";
+
+}
+
+
+- (void)performListingsSearch
+{
+    if (hasNetwork())
+    {
+        NSString *filePath = [NSBundle.mainBundle pathForResource:@"zipcodes" ofType:@"txt"];
+        
+        NSString *text = [NSString stringWithContentsOfFile:filePath
+                                                   encoding:NSUTF8StringEncoding
+                                                      error:nil];
+        
+        _zips = [text componentsSeparatedByString:@"\n"];
+        _numZips = 0;
+
+        [_popoverView showAfter:0.0 withTitle:@""];
+        CRAPI.sharedInstance.rhCurrentZip = _zips[_numZips++].intValue;
+        
+        CRAPI.sharedInstance.rhSearchFilePath =
+        [NSString stringWithFormat:@"%@/RHSearchSqlCommands_%d.txt",
+         UserDefaults.defaults.localFilePath, CRAPI.sharedInstance.rhUpdateTime];
+        
+        [self searchPropsForZip];
+    }
+    
+    else
+        showAlert(@"RHSearch ERROR: Network required.");
+}
+
+- (void)searchPropsForZip
+{
+   // CRAPI.sharedInstance.rhSearchSqlCommands = NSMutableString.string;
+    RHSearch *search = [RHSearch searchWithDelegate:self];
+    
+    if (_numZips > 1)
+        [NSThread sleepForTimeInterval:RH_QUERY_INTERVAL];
+    
+    [search getItemsForZip];
+    
+    [NSOperationQueue.mainQueue addOperationWithBlock:^{
+        _popoverView.title = [NSString stringWithFormat:@"RHSearch for Zip: %i",
+                              CRAPI.sharedInstance.rhCurrentZip];
+        
+        [_popoverView updateProgress:(_numZips / (float)_zips.count)];
+    }];
+}
+
+- (void)searchDidReturnItems:(NSArray<RHSearchItem *> *)items
+                   morePages:(BOOL)morePages
+{
+    _numListings += items.count;
+    RHSearchDatabase *rhsd = RHSearchDatabase.new;
+    [rhsd updateDatabaseForSearchItems:items];
+    
+    if (!morePages)
+    {
+        if (_numZips < _zips.count)
+        {
+            //[self updateSqlCmdFile];
+            CRAPI.sharedInstance.rhCurrentZip = _zips[_numZips++].intValue;
+            [self searchPropsForZip];
+        }
+        
+        else
+        {
+            [rhsd deleteOldItems];
+            /*
+            [NSOperationQueue.mainQueue addOperationWithBlock:^ {
+                NSString *filePath = CRAPI.sharedInstance.rhSearchFilePath;
+                
+                _push = FTPDataPush.push;
+                _push.delegate = self;
+                [_popoverView updateProgress:0.0];
+                _push.popover = _popoverView;
+                _popoverView.title = @"Upload RHSearchSqlCommands File";
+                
+                [_push sendFile:filePath.lastPathComponent
+                  fromDirectory:filePath.stringByDeletingLastPathComponent
+                         toFile:filePath.lastPathComponent
+                    toDirectory:@"RiteHome"
+                 deleteWhenDone:YES
+                 appendFileName:NO];
+            }];
+            
+            [NSThread sleepForTimeInterval:RH_QUERY_INTERVAL];
+            CRAPI.sharedInstance.rhUpdateTime++;
+            
+            [UserDefaults.defaults saveInteger:CRAPI.sharedInstance.rhUpdateTime
+                                        forKey:@"RHUpdateTime"];
+            
+            [self performListingsSearch];
+             */
+        }
+    }
+}
+
+- (void)updateSqlCmdFile
+{
+    NSMutableString *cmds = CRAPI.sharedInstance.rhSearchSqlCommands;
+    
+    if (cmds.length)
+    {
+        NSString *filePath = CRAPI.sharedInstance.rhSearchFilePath;
+        NSError *error = nil;
+        
+        if (![NSFileManager.defaultManager fileExistsAtPath:filePath])
+        {
+            [cmds writeToFile:filePath
+                   atomically:YES
+                     encoding:NSUTF8StringEncoding
+                        error:&error];
+            
+            if (error) {showAlert(@"ERROR: RHSearchSqlCommands File could not be written.");}
+        }
+        
+        else
+        {
+            NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
+            [fileHandle seekToEndOfFile];
+            [fileHandle writeData:[cmds dataUsingEncoding:NSUTF8StringEncoding]];
+            [fileHandle closeFile];
+        }
+    }
+}
+
+- (void)searchDidReceiveError:(NSString *)error
+{
+    [NSOperationQueue.mainQueue addOperationWithBlock:^ {
+        _popoverView.title = @"RHSearch ERROR...waiting";
+    }];
+    
+    [NSThread sleepForTimeInterval:RH_ERROR_INTERVAL];
+    if (_numZips < _zips.count)
+    {
+        //[self updateSqlCmdFile];
+        CRAPI.sharedInstance.rhCurrentZip = _zips[_numZips++].intValue;
+        [self searchPropsForZip];
+    }
 }
 
 @end

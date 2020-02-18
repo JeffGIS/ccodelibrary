@@ -48,8 +48,8 @@ typedef NS_ENUM(NSInteger, ModuleNames)
 #define PROJECT_MPLS            1
 #define PROJECT_METROGIS        2
 
-#define RH_QUERY_INTERVAL 300
-#define RH_ERROR_INTERVAL 43200
+#define RH_QUERY_INTERVAL 3
+#define RH_ERROR_INTERVAL 432
 
 typedef NS_ENUM(NSInteger, CrimeMapMode)
 {

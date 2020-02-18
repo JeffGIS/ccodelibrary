@@ -45,7 +45,7 @@
 @interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate>
 
 @property (nonatomic) WKWebView *webView;
-@property (nonatomic) UIButton *returnButton, *realtor, *nextButton, *previousButton;
+@property (nonatomic) UIButton *returnButton, *realtor, *nextButton, *previousButton, *saveLinkButton;
 @property CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation;
 @property CGFloat origScale, origRotation, markerSize, fontSize, aspectRatio, lastScale;
 @property (nonatomic) UITabBar *tabBar;
@@ -64,7 +64,7 @@
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic, copy) NSString *highlights;
 @property (nonatomic) UIView *overlay;
-
+@property (nonatomic) NSTimer *lookForPasteBufferTimer;
 @end
 
 @implementation NVWebView
@@ -101,6 +101,8 @@
     [_webView removeFromSuperview];
     _webView = nil;
 }
+
+
 + (instancetype)showWebViewInView:(UIView *)view
                         urlString:(NSString *)urlString
                      withDelegate:(id)delegate
@@ -161,7 +163,7 @@
         NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
         [nvwv.webView loadRequest:urlRequest];
         [nvwv show];
-        
+        [nvwv startLookForPasteBufferTimer];
         return nvwv;
     }
     
@@ -231,8 +233,11 @@
     }
     
     [nvwv bringSubviewToFront:nvwv.returnButton];
+    [nvwv bringSubviewToFront:nvwv.saveLinkButton];
+ 
     [nvwv.webView loadFileURL:url allowingReadAccessToURL:url];
     [nvwv show];
+
     return nvwv;
 }
 
@@ -328,9 +333,9 @@
     _returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:_fontSize];
     _returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     _returnButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    _returnButton.titleLabel.backgroundColor = UIColor.blackColor;
+    _returnButton.titleLabel.backgroundColor = UIColor.grayColor;
     [_returnButton setTitle:@"< Return" forState:UIControlStateNormal];
-    [_returnButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    [_returnButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
     [_returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
     
     [_returnButton addTarget:self
@@ -339,7 +344,26 @@
     
     [self addSubview:_returnButton];
     [_returnButton constrainLeadingToAnchor:self.leadingAnchor constant:_headerSideMargin];
-    [_returnButton constrainTopToAnchor:self.topAnchor constant:20.0];
+    [_returnButton constrainTopToAnchor:self.topAnchor constant:10.0];
+    
+    _saveLinkButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _saveLinkButton.translatesAutoresizingMaskIntoConstraints = NO;
+    _saveLinkButton.titleLabel.font = [UIFont boldSystemFontOfSize:_fontSize];
+    _saveLinkButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    _saveLinkButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    _saveLinkButton.titleLabel.backgroundColor = UIColor.grayColor;
+    [_saveLinkButton setTitle:@"Save Link" forState:UIControlStateNormal];
+    [_saveLinkButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
+    [_saveLinkButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+    
+    [_saveLinkButton addTarget:self
+                      action:@selector(saveLinkButtonTapped:)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    [self addSubview:_saveLinkButton];
+    [_saveLinkButton constrainLeadingToAnchor:self.centerXAnchor constant:-20];
+    [_saveLinkButton constrainTopToAnchor:self.topAnchor constant:10.0];
+    _saveLinkButton.hidden = YES;
     
     _symbols = NSMutableArray.array;
     _symbolPoints = NSMutableArray.array;
@@ -380,7 +404,9 @@
     
     [self addSubview:_scrollView];
     [_scrollView constrainToView:self leading:0.0 trailing:0.0 top:_headerHeight bottom:0.0];
-    [_returnButton constrainBottomToAnchor:_scrollView.topAnchor];
+    [_returnButton constrainBottomToAnchor:_scrollView.topAnchor constant:5];
+    [_saveLinkButton constrainBottomToAnchor:_scrollView.topAnchor constant:5];
+
     [_scrollView addSubview:_imageView];
     
     [self performSelector:@selector(fitImage) withObject:nil afterDelay:0.1];
@@ -419,7 +445,10 @@
     
     [self addSubview:_webView];
     [_webView constrainToView:self leading:0.0 trailing:0.0 top:_headerHeight bottom:0.0];
-    [_returnButton constrainBottomToAnchor:_webView.topAnchor];
+    [_returnButton constrainBottomToAnchor:_webView.topAnchor constant:5];
+    [_saveLinkButton constrainBottomToAnchor:_webView.topAnchor constant:5];
+ 
+   // [_saveLinkButton constrainBottomToAnchor:_webView.topAnchor];
 }
 
 - (void)show
@@ -474,6 +503,13 @@
         [_scrollView constrainToView:self leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
 }
 
+- (void)hideSaveLinkButton
+{
+    _tabBar.userInteractionEnabled = YES;
+    _tabBar.alpha = 1.0;
+    [_saveLinkButton setHidden:YES];
+}
+
 - (void)returnButtonTapped:(UIButton *)button
 {
     if (_delegate && [_delegate respondsToSelector:@selector(webViewDidReturn:)])
@@ -481,6 +517,40 @@
     
     else
         [self hide:YES];
+}
+- (void)startLookForPasteBufferTimer
+{
+    UIPasteboard *thePasteboard = [UIPasteboard generalPasteboard];
+    thePasteboard.string = @"";
+    _lookForPasteBufferTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                               target:self
+                                             selector:@selector(lookForPasteBuffer:)
+                                             userInfo:nil
+                                              repeats:YES];
+
+}
+- (void) lookForPasteBuffer:(NSTimer*)timer
+{
+    UIPasteboard *thePasteboard = [UIPasteboard generalPasteboard];
+    NSString *linkText = thePasteboard.string;
+    if (linkText.length > 0)
+    {
+        [_saveLinkButton setHidden:NO];
+        [self bringSubviewToFront:_saveLinkButton];
+        [timer invalidate];
+    }
+}
+- (void)saveLinkButtonTapped:(UIButton *)button
+{
+    UIPasteboard *thePasteboard = [UIPasteboard generalPasteboard];
+    NSString *linkText = thePasteboard.string;
+    NSLog(@"%@", linkText);
+
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewLinkCopied:link:)])
+        [_delegate webViewLinkCopied:self link:linkText];
+    [self hideSaveLinkButton];
+    thePasteboard.string = @"";
+    [self startLookForPasteBufferTimer];
 }
 
 - (void)zoomToPoint:(DPOINT)point

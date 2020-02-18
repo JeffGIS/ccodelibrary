@@ -7,7 +7,7 @@
 
 @property (nonatomic, copy) NSString *address, *city, *state, *url;
 @property float beds, baths, garage, lotsize, latitude, longitude;
-@property int zip, price, sqft, insertTime, modifyTime, updateTime;
+@property int zip, price, sqft, insertTime, modifyTime, updateTime, status;
 @property long long listingID;
 
 @end

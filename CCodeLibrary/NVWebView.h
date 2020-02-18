@@ -38,6 +38,8 @@ typedef NS_ENUM(NSInteger, NVPDFDocument)
 - (void)webViewDidRequestNextImage:(NVWebView *)webView;
 - (void)webViewDidRequestPreviousImage:(NVWebView *)webView;
 - (void)webViewDidReturnHtmlString:(NSString *)htmlString;
+- (void)webViewLinkCopied:(NVWebView *)webView
+                     link:(NSString *)linktext;
 
 - (void)webView:(NVWebView *)webView
 wasTappedAtPoint:(DPOINT)point

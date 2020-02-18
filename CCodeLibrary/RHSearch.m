@@ -6,10 +6,10 @@
 #import "SQLiteLib.h"
 #import "CRAPI.h"
 
-#define MAX_ITEMS 50
+#define MAX_ITEMS 10
 #define WEBSITE_URL @"https://www.realtor.com"
 #define HTML_SEPARATOR @"js-record-user-activity"
-#define TABLE_NAME @"RHSearch"
+#define TABLE_NAME @"REALTORDOTCOM"
 
 @implementation RHSearchItem
 
@@ -61,12 +61,12 @@
     
     if (self)
     {
-        _path = [NSString stringWithFormat:@"%@/%@Database.sqlite3",
+        _path = [NSString stringWithFormat:@"%@/%@RealtorDotCom.sqlite3",
                  UserDefaults.defaults.localFilePath, TABLE_NAME];
         
         BOOL opened = self.open;
         
-        NSString *cmd = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (listing_id INTEGER PRIMARY KEY, "
+        NSString *cmd = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (listing_id INTEGER PRIMARY KEY, status INT,"
         "insert_time INTEGER, modify_time INTEGER, update_time INTEGER, price INTEGER, sqft INTEGER, zip INTEGER, "
         "latitude REAL, longitude REAL, lotsize REAL, beds REAL, baths REAL, garage REAL, "
         "address TEXT, city TEXT, state TEXT, url TEXT);", TABLE_NAME];
@@ -107,7 +107,6 @@
 
 - (void)startTransaction
 {
-    [self open];
     SQLOK(__FILE__,__LINE__,SQLiteExec(_database, "BEGIN", 0, 0, 0), _database);
 }
 
@@ -132,6 +131,7 @@
         int iCol = 0;
         item = RHSearchItem.new;
         item.listingID = listingID;
+        item.status = sqlite3_column_int(statement, ++iCol);
         item.insertTime = sqlite3_column_int(statement, ++iCol);
         item.modifyTime = sqlite3_column_int(statement, ++iCol);
         item.updateTime = sqlite3_column_int(statement, ++iCol);
@@ -177,6 +177,10 @@
 
 - (void)updateDatabaseForSearchItems:(NSArray<RHSearchItem *> *)searchItems
 {
+    CRAPI.sharedInstance.rhUpdateTime = (int)NSDate.date.timeIntervalSinceReferenceDate;
+    BOOL opened = [self open];
+    
+    [self startTransaction];
     for (RHSearchItem *searchItem in searchItems)
     {
         if (searchItem.listingID)
@@ -196,6 +200,10 @@
                 [self addItem:searchItem];
         }
     }
+    [self deleteOldItems];
+    [self commitTransaction];
+    [self close:opened];
+    NSLog (@"%lu records stored for zip %i",(unsigned long)searchItems.count,CRAPI.sharedInstance.rhCurrentZip);
 }
 
 - (void)updateItem:(RHSearchItem *)item
@@ -209,9 +217,9 @@
     
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     
-    cmd = [cmd stringByReplacingOccurrencesOfString:prefix withString:@"b"];
-    cmd = [cmd stringByAppendingString:@"\r\n"];
-    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
+   // cmd = [cmd stringByReplacingOccurrencesOfString:prefix withString:@"b"];
+   // cmd = [cmd stringByAppendingString:@"\r\n"];
+   // [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
     [self close:opened];
 }
 
@@ -228,8 +236,8 @@
                      item.url, item.listingID];
     
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
-    cmd = [cmd stringByAppendingString:@"\r\n"];
-    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
+    //cmd = [cmd stringByAppendingString:@"\r\n"];
+    //[CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
     [self close:opened];
 }
 
@@ -240,16 +248,16 @@
     NSString *prefix = [NSString stringWithFormat:@"INSERT INTO %@ VALUES", TABLE_NAME];
     
     NSString *cmd = [NSString stringWithFormat:
-    @"%@(%lli,%i,%i,%i,%i,%i,%i,%f,%f,%.2f,%.1f,%.1f,%.1f,'%@','%@','%@','%@');",
-    prefix, item.listingID, time, time, time, item.price, item.sqft, item.zip,
+    @"%@(%lli,%i,%i,%i,%i,%i,%i,%i,%f,%f,%.2f,%.1f,%.1f,%.1f,'%@','%@','%@','%@');",
+    prefix, item.listingID, item.status,time, time, time, item.price, item.sqft, item.zip,
     item.latitude, item.longitude, item.lotsize, item.beds, item.baths, item.garage,
     item.address, item.city, item.state, item.url];
     
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     
-    cmd = [cmd stringByReplacingOccurrencesOfString:prefix withString:@"a"];
-    cmd = [cmd stringByAppendingString:@"\r\n"];
-    [CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
+    //cmd = [cmd stringByReplacingOccurrencesOfString:prefix withString:@"a"];
+    //cmd = [cmd stringByAppendingString:@"\r\n"];
+    //[CRAPI.sharedInstance.rhSearchSqlCommands appendString:cmd];
     [self close:opened];
 }
 
@@ -257,8 +265,8 @@
 {
     BOOL opened = self.open;
     
-    NSString *cmd = [NSString stringWithFormat:@"DELETE FROM %@ WHERE update_time != %i;",
-                     TABLE_NAME, CRAPI.sharedInstance.rhUpdateTime];
+    NSString *cmd = [NSString stringWithFormat:@"DELETE FROM %@ WHERE update_time != %i AND zip = %i;",
+                     TABLE_NAME, CRAPI.sharedInstance.rhUpdateTime,CRAPI.sharedInstance.rhCurrentZip];
     
     SQLOK(__FILE__,__LINE__, SQLiteExec(_database, (LPSTR)cmd.UTF8String, 0, 0, 0), _database);
     
@@ -291,11 +299,12 @@
 
 - (void)getItemsForZip
 {
-    int zip = CRAPI.sharedInstance.rhCurrentZip;
+    int zip = 55112;//CRAPI.sharedInstance.rhCurrentZip;
     
     NSString *urlString = [NSString stringWithFormat:@"%@/realestateandhomes-search/%i?pgsz=%i",
                            WEBSITE_URL, zip, MAX_ITEMS];
-    
+/*    urlString = [NSString stringWithFormat:@"https://www.edinarealty.com/listing/listingsearch/properties?minPrice=0&maxPrice=0&nBed=0&nBath=0&pt_val=ForSale&age=age_any&sts_sale=1&sts_con=1&addl_stat=addl_stat_any&ext_gar=0&sugg_txt=55112%%20(Zip%%20Code)&add_zip=%i&geoId=ZI%i&pgeSize=%i&pgeNum=1&srtBy=DateListed&nearby=0",
+                 zip,zip, MAX_ITEMS];*/
     
     if (_page > 1)
     {
