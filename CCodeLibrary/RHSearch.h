@@ -2,6 +2,8 @@
 //  CCodeLibrary
 
 @import Foundation;
+#import "FTPDataPull.h"
+#import "GSSiPopoverView.h"
 
 @interface RHSearchItem : NSObject
 
@@ -36,4 +38,19 @@
 + (instancetype)searchWithDelegate:(id<RHSearchDelegate>)delegate;
 - (void)getItemsForZip;
 
+@end
+
+@protocol RHGoogleSearchDelegate <NSObject>
+
+- (void)GoogleSearchDidReturnString:(NSString *)str;
+
+- (void)GoogleSearchDidReceiveError:(NSString *)error;
+
+@end
+@interface RHGoogleSearch : NSObject <FTPDataPullDelegate,GSSiPopoverViewDelegate>
++ (void) GOOGLEPropertySearch:(NSString*) searchAddress
+                   usePopover:(GSSiPopoverView *) popover
+                     delegate:(id<RHGoogleSearchDelegate>)delegate;
+@property (nonatomic, weak) id<RHGoogleSearchDelegate> delegate;
+@property (nonatomic) GSSiPopoverView * popover;
 @end

@@ -78,7 +78,8 @@ static FTPDataPull * _statpull = nil;
     //_haveCalledDelegate = NO;
     assert(_filePath);
     
-    _existingFileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_filePath
+    if (_dataType != GOOGLESearch)
+        _existingFileSize = [NSFileManager.defaultManager attributesOfItemAtPath:_filePath
                                                                        error:nil].fileSize;
     
     if (!_existingFileSize || _refreshOption == FTPDataPullRefreshOptionOverwriteFile ||
@@ -177,7 +178,12 @@ static FTPDataPull * _statpull = nil;
     assert(!_connection);
     assert(!_fileStream);
     
-    NSURL *url = [CRAPI.sharedInstance smartURLForString:_urlText];
+    NSURL *url;
+    
+    if (_dataType == GOOGLESearch)
+        url = [NSURL URLWithString:_urlText];
+    else
+        url = [CRAPI.sharedInstance smartURLForString:_urlText];
     
     if (!url)
     {
@@ -407,11 +413,18 @@ didReceiveResponse:(NSURLResponse *)response
 
 - (void)setToFtpSite1
 {
-    NSString * server = [CRAPI.sharedInstance getNVCRISServer];
-    if (_useTestServer)
-        server = @"74.36.96.36";
-    _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@",
-                _username, _password, server, _port, _directory, _fileName];
+    if (_dataType == GOOGLESearch)
+    {
+        _urlText = [NSString stringWithFormat:@"http://www.google.com/search?q=%@",_fileName];
+    }
+    else
+    {
+        NSString * server = [CRAPI.sharedInstance getNVCRISServer];
+        if (_useTestServer)
+            server = @"74.36.96.36";
+        _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@",
+                    _username, _password, server, _port, _directory, _fileName];
+    }
 }
 
 - (void)setToFtpSite2

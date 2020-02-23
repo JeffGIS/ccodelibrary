@@ -16,8 +16,8 @@
 - (NSString *)headerTextForColumn:(NSUInteger)column;
 - (NSString *)headerTextForRow:(NSUInteger)row;
 
-- (NSString *)textForColumn:(NSUInteger)column
-                        row:(NSUInteger)row;
+- (NSString *)textForColumn:(int)column
+                        row:(int)row;
 
 - (NSInteger)numRowsInSpreadsheet;
 - (NSInteger)numColumnsInSpreadsheet;

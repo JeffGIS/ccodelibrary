@@ -385,5 +385,62 @@
         }
     }] resume];
 }
+@end
+
+@implementation RHGoogleSearch
+
++ (void) GOOGLEPropertySearch:(NSString*) searchAddress
+                   usePopover:(GSSiPopoverView *) popover
+                     delegate:(id<RHGoogleSearchDelegate>)delegate
+{
+    RHGoogleSearch *gs = RHGoogleSearch.new;
+    gs.delegate = delegate;
+    gs.popover = popover;
+    NSString * documentsDirectory = UserDefaults.defaults.nonBackedUpFilePath;
+    NSString * fileName = @"GoogleSearchResults.txt";
+    
+    FTPDataPull *pull = FTPDataPull.pull;
+    pull.delegate = gs;
+    pull.popover = popover;
+    pull.dataType = GOOGLESearch;
+    pull.useTestServer = NO;
+
+    [popover showAfter:2.5
+              withTitle:@"Searching for Websites"];
+    
+    [pull getFile:searchAddress
+    fromDirectory:@"GOOGLE"
+           toFile:fileName
+      toDirectory:documentsDirectory
+    refreshOption:FTPDataPullRefreshOptionOverwriteFile];
+
+}
+- (void)FTPdidComplete:(FTPDataType)dataType
+     withStatus:(FTPStatus)status
+andStatusString:(NSString *)statusString
+       filePath:(NSString *)path
+{
+    NSError *error = nil;
+    [_popover hide];
+    if (status == FTPStatusOK)
+    {
+        long fileSize = [NSFileManager.defaultManager attributesOfItemAtPath:path
+                                                                       error:nil].fileSize;
+        NSString * str = [NSString stringWithContentsOfFile:path encoding:NSASCIIStringEncoding error:&error];
+        [_delegate GoogleSearchDidReturnString:str];
+    }
+    else
+    {
+        [_delegate GoogleSearchDidReceiveError:(NSString *)statusString];
+    }
+    return;
+}
+
+
+- (void)GSSiPopoverViewdidCancel:(GSSiPopoverView *)popoverView {
+    [popoverView hide];
+    [_delegate GoogleSearchDidReceiveError:@"Cancelled by user"];
+
+}
 
 @end

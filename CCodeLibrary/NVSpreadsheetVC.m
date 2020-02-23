@@ -14,7 +14,7 @@
 #import "PDFCreator.h"
 
 @interface NVSpreadsheetVC () <NVSpreadsheetDataSource,NVSpreadsheetDelegate,
-NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UITextFieldDelegate,NVWebViewDelegate,RHSearchDelegate>
+NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UITextFieldDelegate,NVWebViewDelegate,RHSearchDelegate,RHGoogleSearchDelegate>
 
 @property (nonatomic) NVSpreadsheet *nvss;
 @property (nonatomic) UIButton *swap, *returnToOrigin, *realtor,*timeLine, *cpyButton;
@@ -29,6 +29,8 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
 @property (nonatomic) RHViewController *rhvc;
 @property (nonatomic) UIViewController *nvmsvc;
 @property (nonatomic, copy) NSArray<NSString *> *zips;
+@property (nonatomic, copy) NSMutableArray<NSString *> *webSiteNames;
+@property (nonatomic, copy) NSMutableArray<NSString *> *webSiteURLTexts;
 @property int numZips;
 @property int numListings;
 @property (nonatomic) GSSiPopoverView *popoverView;
@@ -778,7 +780,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             _selectedColumn = column;
         }
         
-        NSMutableArray *optionsArray = NSMutableArray.new;
+        NSMutableArray <NSString *>*optionsArray = NSMutableArray.new;
         NSString *alertID = @"MapIt";
         
         switch (_delegate.getSpreadSheetType)
@@ -792,8 +794,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 break;
             default:break;
         }
-        
-        if (optionsArray.count)
+        if (optionsArray.count == 1 && [optionsArray[0] isEqualToString:@"Get Links"])
+        {
+            NSString *address = [_delegate textForColumn:(int)-(_selectedRow)
+                                                     row:(int)_selectedColumn];
+            NSString *propaddress = [address stringByReplacingOccurrencesOfString:@" " withString:@"-"];
+            propaddress = [propaddress stringByReplacingOccurrencesOfString:@"\n" withString:@"-"];
+            [self getRealtorSitesForProperty:propaddress];
+        }
+        else if (optionsArray.count)
         {
             NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self.view
                                                               delegate:self
@@ -1116,7 +1125,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         nvptv.identifier = @"Select";
     }
 }
+- (void) getRealtorSitesForProperty:(NSString *) propAddress
+{
+    [RHGoogleSearch GOOGLEPropertySearch:propAddress
+                              usePopover:(GSSiPopoverView *) _popoverView
+                                delegate:self];
 
+}
 - (void)realtor:(UIButton *)button
 {
     NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
@@ -1175,10 +1190,18 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             [self performListingsSearch];
         }
     }
+    else if ([popoverTableView.identifier isEqualToString:@"RealtorWebSites"])
+    {
+        NSString *urlText = [_webSiteURLTexts[index] stringByReplacingOccurrencesOfString:@"&amp" withString:@""];
+        
+        _nvRealtorwv = [NVWebView showWebViewInView:self.view
+                                          urlString:urlText
+                                       withDelegate:self];
+    }
     else if ([popoverTableView.identifier isEqualToString:@"Realtor"])
     {
         NSString * url = UserDefaults.defaults.realtorWebSites[index];
-        if ([url containsString:@"realtor.com"])
+        if ([url containsString:@"realtor.comx"])
         {
             [self performSelectorOnMainThread:@selector(realtor_com_options)
                                                    withObject:nil
@@ -1217,6 +1240,18 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                                withObject:nil
                             waitUntilDone:NO];
     }
+}
+
+- (void)webViewLinkCopied:(NVWebView *)webView
+                     link:(NSString *)linktext
+{
+    //https://www.edinarealty.com/homes-for-sale/8356-oakview-court-n-maple-grove-mn-55369-5431354
+    //https://www.trulia.com/p/mn/lakeville/19173-ismay-path-lakeville-mn-55044--1002913746
+    //https://www.zillow.com/homedetails/5721-Squire-Ln-Mounds-View-MN-55112/185025075_zpid/
+    //https://www.realtor.com/realestateandhomes-detail/4495-Comstock-Ln-N_Plymouth_MN_55446_M74782-95293
+
+
+    return;
 }
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
 {
@@ -1806,5 +1841,49 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         [self searchPropsForZip];
     }
 }
+
+- (void)GoogleSearchDidReceiveError:(NSString *)error {
+    return;
+}
+
+- (void)GoogleSearchDidReturnString:(NSString *)str;
+{
+    NSRange range;
+    NSArray * sites=@[@"coldwellbankerhomes.com",@"edinarealty.com",@"estately.com",@"movoto.com",@"realtor.com",@"redfin.com",@"remax.com",@"trulia.com",@"xome.com",@"zillow.com"];
+
+    _webSiteNames = NSMutableArray.new;
+    _webSiteURLTexts = NSMutableArray.new;
+    for (NSString *site in sites)
+    {
+        NSString *searchStr = [NSString stringWithFormat:@"https://www.%@",site];
+        range = [str rangeOfString:searchStr];
+        if (range.length >0)
+        {
+            NSString *substr = [str substringFromIndex:range.location];
+            range = [substr rangeOfString:@";"];
+            if (range.length > 0)
+            {
+                substr = [substr substringToIndex:range.location];
+                [_webSiteNames addObject:site];
+                [_webSiteURLTexts addObject:substr];
+            }
+        }
+    }
+    if (_webSiteNames.count)
+    {
+        NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
+                                                                              delegate:self
+                                                                                 title:@"Select Realtor Website"
+                                                                             textArray:_webSiteNames
+                                                                         includeCancel:YES];
+        nvptv.identifier = @"RealtorWebSites";
+    }
+    return;
+}
+
+- (void)encodeWithCoder:(nonnull NSCoder *)coder {
+     return;
+}
+
 
 @end

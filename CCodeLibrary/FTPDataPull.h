@@ -38,6 +38,7 @@ typedef NS_ENUM(NSInteger, FTPDataType)
     FTPDataPhoto,
     FTPData,
     FTPDatabase,
+    GOOGLESearch,
     FTPErrorFile,
 };
 
