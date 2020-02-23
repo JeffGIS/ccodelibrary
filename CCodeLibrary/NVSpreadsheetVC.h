@@ -87,6 +87,7 @@
 @property (nonatomic, weak) id<NVSpreadsheetVCDelegate> delegate;
 @property (nonatomic) BOOL flipped;
 @property (nonatomic) NVWebView *nvRealtorwv;
+@property (nonatomic) NSString * searchGoogleForAddress;
 
 - (NSArray *)retrieveSearchStrings;
 - (void)updateSelectedRowsAtIndex:(NSInteger)index;

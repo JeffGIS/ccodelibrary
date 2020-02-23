@@ -1125,23 +1125,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         nvptv.identifier = @"Select";
     }
 }
-- (void) getRealtorSitesForProperty:(NSString *) propAddress
-{
-    [RHGoogleSearch GOOGLEPropertySearch:propAddress
-                              usePopover:(GSSiPopoverView *) _popoverView
-                                delegate:self];
-
-}
-- (void)realtor:(UIButton *)button
-{
-    NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
-                                                                      delegate:self
-                                                                         title:@"Select Realtor Website"
-                                                                     textArray:UserDefaults.defaults.realtorList
-                                                                 includeCancel:YES];
-    nvptv.identifier = @"Realtor";
-}
-
 - (void)timeLine:(UIButton *)button
 {
     if ([_delegate respondsToSelector:@selector(getTimeLine:)])
@@ -1229,7 +1212,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     [popoverTableView hide:YES];
 }
-
+- (void) webViewDidReturn:(NVWebView *)webView
+{
+    [webView hide:YES];
+    [self showWebSiteList];
+}
 -(void)webViewRealtorWasTapped
 {
     if (_nvRealtorwv)
@@ -1255,6 +1242,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 }
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
 {
+    _webSiteNames = nil;
+    _webSiteURLTexts = nil;
     [popoverTableView hide:YES];
 }
 
@@ -1731,6 +1720,17 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         showAlert(@"RHSearch ERROR: Network required.");
 }
 
+- (void)realtor:(UIButton *)button
+{
+    NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
+                                                                      delegate:self
+                                                                         title:@"Select Realtor Website"
+                                                                     textArray:UserDefaults.defaults.realtorList
+                                                                 includeCancel:YES];
+    nvptv.identifier = @"Realtor";
+}
+
+
 - (void)searchPropsForZip
 {
    // CRAPI.sharedInstance.rhSearchSqlCommands = NSMutableString.string;
@@ -1843,7 +1843,16 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 }
 
 - (void)GoogleSearchDidReceiveError:(NSString *)error {
-    return;
+    showAlert(error);
+}
+
+- (void) getRealtorSitesForProperty:(NSString *) propAddress
+{
+    _searchGoogleForAddress = propAddress;
+    [RHGoogleSearch GOOGLEPropertySearch:propAddress
+                              usePopover:(GSSiPopoverView *) _popoverView
+                                delegate:self];
+
 }
 
 - (void)GoogleSearchDidReturnString:(NSString *)str;
@@ -1860,15 +1869,43 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         if (range.length >0)
         {
             NSString *substr = [str substringFromIndex:range.location];
+            NSString *urlText = @"";
             range = [substr rangeOfString:@";"];
             if (range.length > 0)
             {
                 substr = [substr substringToIndex:range.location];
-                [_webSiteNames addObject:site];
-                [_webSiteURLTexts addObject:substr];
+                urlText = substr;
+                NSString *houseNum = textBefor(_searchGoogleForAddress, @"-");
+                if (houseNum.length)
+                {
+                    NSString * streetName = textAfter(_searchGoogleForAddress,@"-");
+                    streetName = textBefor(streetName, @"-");
+                    houseNum = [houseNum stringByAppendingString:@"-"];
+                    range = [substr rangeOfString:houseNum];
+                    if (range.location != NSNotFound)
+                    {
+                        substr = [substr substringFromIndex:range.location];
+                        range.location = 0;
+                        range.length = houseNum.length + streetName.length;
+                        houseNum = [houseNum stringByAppendingString:streetName];
+                        NSComparisonResult st = [substr compare:houseNum options:NSCaseInsensitiveSearch range:range];
+                        if (st == NSOrderedSame)
+                        {
+                            [_webSiteNames addObject:site];
+                            [_webSiteURLTexts addObject:urlText];
+                        }
+                    }
+                }
             }
         }
     }
+    [self showWebSiteList];
+    return;
+}
+- (void) showWebSiteList
+{
+    if (!_webSiteNames)
+        return;
     if (_webSiteNames.count)
     {
         NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
@@ -1878,9 +1915,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                                                                          includeCancel:YES];
         nvptv.identifier = @"RealtorWebSites";
     }
-    return;
-}
+    else
+    {
+        showAlert(@"No sites found");
+    }
 
+}
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
      return;
 }

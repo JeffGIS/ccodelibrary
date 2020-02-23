@@ -359,7 +359,7 @@ NSString *vendorUUIDString(void)
     return rtn;
 }
 
-NSString *textBefore(NSString *string, NSString *before)
+NSString *textBefore(NSString *string, NSString *before)//returns string if not found
 {
     if (!string)
         return nil;
@@ -372,6 +372,26 @@ NSString *textBefore(NSString *string, NSString *before)
         NSRange range = [string rangeOfString:before];
         
         if (range.location != NSNotFound)
+            string = [string substringToIndex:(range.location)];
+    }
+    
+    return string;
+}
+NSString *textBefor(NSString *string, NSString *before)//returns empty string if not found
+{
+    if (!string)
+        return nil;
+    
+    else if (!string.length)
+        return string;
+    
+    if (before)
+    {
+        NSRange range = [string rangeOfString:before];
+        
+        if (range.location == NSNotFound)
+            string = @"";
+        else
             string = [string substringToIndex:(range.location)];
     }
     

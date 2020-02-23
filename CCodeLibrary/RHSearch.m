@@ -395,7 +395,6 @@
 {
     RHGoogleSearch *gs = RHGoogleSearch.new;
     gs.delegate = delegate;
-    gs.popover = popover;
     NSString * documentsDirectory = UserDefaults.defaults.nonBackedUpFilePath;
     NSString * fileName = @"GoogleSearchResults.txt";
     
@@ -404,10 +403,10 @@
     pull.popover = popover;
     pull.dataType = GOOGLESearch;
     pull.useTestServer = NO;
-
+    gs.popover = popover;
     [popover showAfter:2.5
               withTitle:@"Searching for Websites"];
-    
+    popover.hideAtCancel = YES;
     [pull getFile:searchAddress
     fromDirectory:@"GOOGLE"
            toFile:fileName
