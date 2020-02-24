@@ -49,7 +49,7 @@
 
 @optional
 - (void) addPropFromWebsiteToPropList:(NSString *)link
-                              popover:(NVPopoverTableView *)popover;
+                              popover:(GSSiPopoverView *)popover;
 - (NSArray *)clipsForProperty:(int)propNum;
 - (BOOL)addVideoClip:(RHClip *)clip;
 - (NSInteger)getPropNumForRow:(NSInteger)row;
