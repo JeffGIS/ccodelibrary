@@ -52,6 +52,13 @@ const static NSUInteger NVScrollIndicatorTag = 12345;
 
 @implementation NVSpreadsheet
 
+- (id)init
+{
+    self = [super init];
+        
+    return self;
+}
+
 - (id)initWithNumberOfHeaderRows:(NSUInteger)headerRowCount
            numberOfHeaderColumns:(NSUInteger)headerColumnCount
                            frame:(CGRect)frame

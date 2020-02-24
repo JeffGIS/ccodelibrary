@@ -39,6 +39,13 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
 
 @implementation NVSpreadsheetVC
 
+- (id)init
+{
+    self = [super init];
+        
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -237,7 +244,6 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
     if (_delegate)
     {
         _titleTextField.text = _delegate.currentListName;
-        [_delegate openList:self];
         
         switch (_delegate.getSpreadSheetType)
         {
@@ -403,9 +409,13 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
         }
     }
     
+    [self doDataReload];
+}
+- (void) doDataReload
+{
+    [_delegate openList:self];
     [_nvss reloadData];
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -766,7 +776,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     //else
     {
-        [_nvss reloadData];
+        //[self doDataReload];
         
         if (!_flipped)
         {
@@ -828,7 +838,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         {
             case SSA_SortRows:
                 if ([self spreadsheetViewSortOnRow:index])
-                    [_nvss reloadData];
+                    [self doDataReload];
                 break;
             case SSA_ShowDescription:
             default:
@@ -886,7 +896,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         if (row.integerValue == index)
         {
             [_selectedRows removeObject:row];
-            [_nvss reloadData];
+            [self doDataReload];
             [self resetCopyButton];
             [self updateTabBar];
             return;
@@ -895,7 +905,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     [_selectedRows addObject:[NSNumber numberWithInteger:index]];
     _lastTapSelectedRow = index;
-    [_nvss reloadData];
+    [self doDataReload];
     [self resetCopyButton];
     
     [self updateTabBar];
@@ -967,7 +977,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)swap:(UIButton *)button
 {
     _flipped = !_flipped;
-    [_nvss reloadData];
+    [self doDataReload];
 }
 
 - (void)returnToOrigin:(UIButton *)button
@@ -1108,7 +1118,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     [_delegate spreadsheetDidCreateList];
     _titleTextField.text = _delegate.currentListName;
-    [_nvss reloadData];
+    [self doDataReload];
 }
 
 - (void)select:(UIButton *)button
@@ -1163,7 +1173,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [_delegate spreadsheetDidSetCurrentList:text];
         _titleTextField.text = _delegate.currentListName;
         [_selectedRows removeAllObjects];
-        [_nvss reloadData];
+        [self doDataReload];
     }
     
     else if ([popoverTableView.identifier isEqualToString:@"Realtor.com"])
@@ -1213,9 +1223,17 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [popoverTableView hide:YES];
 }
 - (void) webViewDidReturn:(NVWebView *)webView
+                     link:(NSString *)linktext
 {
     [webView hide:YES];
-    [self showWebSiteList];
+    webView = nil;
+    if (linktext && linktext.length > 0)
+        [self addPropertyFromWeb:linktext];
+    else
+    {
+        if (![self showWebSiteList])
+            [self doDataReload];
+    }
 }
 -(void)webViewRealtorWasTapped
 {
@@ -1229,22 +1247,21 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-- (void)webViewLinkCopied:(NVWebView *)webView
-                     link:(NSString *)linktext
+- (void) addPropertyFromWeb:(NSString *)linktext
 {
-    //https://www.edinarealty.com/homes-for-sale/8356-oakview-court-n-maple-grove-mn-55369-5431354
-    //https://www.trulia.com/p/mn/lakeville/19173-ismay-path-lakeville-mn-55044--1002913746
-    //https://www.zillow.com/homedetails/5721-Squire-Ln-Mounds-View-MN-55112/185025075_zpid/
-    //https://www.realtor.com/realestateandhomes-detail/4495-Comstock-Ln-N_Plymouth_MN_55446_M74782-95293
+    if ([_delegate respondsToSelector:@selector(addPropFromWebsiteToPropList:popover:)])
+    {
+        [_delegate addPropFromWebsiteToPropList:linktext
+                                        popover:_popoverView];
+    }
 
-
-    return;
 }
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
 {
     _webSiteNames = nil;
     _webSiteURLTexts = nil;
     [popoverTableView hide:YES];
+    [self doDataReload];
 }
 
 - (void)alertView:(NVAlertView *)alertView
@@ -1306,7 +1323,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         {
             [_delegate spreadsheetDidDeleteCurrentList];
             _titleTextField.text = _delegate.currentListName;
-            [_nvss reloadData];
+            [self doDataReload];
         }
     }
     
@@ -1316,7 +1333,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         {
             case 0://clear row selection
                 [_selectedRows removeAllObjects];
-                [_nvss reloadData];
+                [self doDataReload];
                 break;
             case 1:{//delete selected rows
                 NVAlertView *alert =
@@ -1347,7 +1364,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             if (!_flipped && _delegate.numColumnsInSpreadsheet == 0)
                 _flipped = YES;
             
-            [_nvss reloadData];
+            [self doDataReload];
         }
     }
     
@@ -1722,6 +1739,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 
 - (void)realtor:(UIButton *)button
 {
+    [_delegate closeList];
+
     NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
                                                                       delegate:self
                                                                          title:@"Select Realtor Website"
@@ -1849,6 +1868,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 - (void) getRealtorSitesForProperty:(NSString *) propAddress
 {
     _searchGoogleForAddress = propAddress;
+    [_delegate closeList];
+    
     [RHGoogleSearch GOOGLEPropertySearch:propAddress
                               usePopover:(GSSiPopoverView *) _popoverView
                                 delegate:self];
@@ -1902,10 +1923,12 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     [self showWebSiteList];
     return;
 }
-- (void) showWebSiteList
+- (BOOL) showWebSiteList
 {
     if (!_webSiteNames)
-        return;
+        return FALSE;
+    [_delegate closeList];
+
     if (_webSiteNames.count)
     {
         NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
@@ -1919,7 +1942,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     {
         showAlert(@"No sites found");
     }
-
+    return TRUE;
 }
 - (void)encodeWithCoder:(nonnull NSCoder *)coder {
      return;

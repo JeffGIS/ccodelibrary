@@ -4,6 +4,7 @@
 @import UIKit;
 #import "GSSiEnums.h"
 #import "RiteHome.h"
+#import "NVPopoverTableView.h"
 
 @class NVSpreadsheetVC;
 
@@ -47,6 +48,8 @@
                                column:(NSInteger)column;
 
 @optional
+- (void) addPropFromWebsiteToPropList:(NSString *)link
+                              popover:(NVPopoverTableView *)popover;
 - (NSArray *)clipsForProperty:(int)propNum;
 - (BOOL)addVideoClip:(RHClip *)clip;
 - (NSInteger)getPropNumForRow:(NSInteger)row;

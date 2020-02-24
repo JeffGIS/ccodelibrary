@@ -510,8 +510,9 @@
 
 - (void)returnButtonTapped:(UIButton *)button
 {
-    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidReturn:)])
-        [_delegate webViewDidReturn:self];
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidReturn:link:)])
+        [_delegate webViewDidReturn:self
+                               link:nil];
     
     else
         [self hide:YES];
@@ -544,11 +545,11 @@
     NSString *linkText = thePasteboard.string;
     NSLog(@"%@", linkText);
 
-    if (_delegate && [_delegate respondsToSelector:@selector(webViewLinkCopied:link:)])
-        [_delegate webViewLinkCopied:self link:linkText];
-    [self hideSaveLinkButton];
     thePasteboard.string = @"";
-    [self startLookForPasteBufferTimer];
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidReturn:link:)])
+        [_delegate webViewDidReturn:self link:linkText];
+    else
+        [self startLookForPasteBufferTimer];
 }
 
 - (void)zoomToPoint:(DPOINT)point
