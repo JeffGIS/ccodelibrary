@@ -416,6 +416,10 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
     [_delegate openList:self];
     [_nvss reloadData];
 }
+- (void)doDataReload:(NSTimer*)timer
+{
+    [self doDataReload];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

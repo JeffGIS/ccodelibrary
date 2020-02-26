@@ -95,5 +95,6 @@
 - (NSArray *)retrieveSearchStrings;
 - (void)updateSelectedRowsAtIndex:(NSInteger)index;
 - (void)autoSelectRow:(NSTimer*)timer;
+- (void)doDataReload:(NSTimer*)timer;
 
 @end
