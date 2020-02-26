@@ -534,8 +534,9 @@
     NSString *linkText = thePasteboard.string;
     if (linkText.length > 0)
     {
-        [_saveLinkButton setHidden:NO];
-        [self bringSubviewToFront:_saveLinkButton];
+        //[_saveLinkButton setHidden:NO];
+        //[self bringSubviewToFront:_saveLinkButton];
+        [self saveLinkButtonTapped:nil];
         [timer invalidate];
     }
 }

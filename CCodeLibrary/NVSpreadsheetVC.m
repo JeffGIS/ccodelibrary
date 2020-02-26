@@ -418,6 +418,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
 }
 - (void)doDataReload:(NSTimer*)timer
 {
+    [self setTabBarVisible:TRUE animated:YES completion:nil];
     [self doDataReload];
 }
 - (void)didReceiveMemoryWarning
@@ -1168,6 +1169,36 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     nvptv.identifier = @"CopyRows";
 }
 
+// pass a param to describe the state change, an animated flag and a completion block matching UIView animations completion
+- (void)setTabBarVisible:(BOOL)visible animated:(BOOL)animated completion:(void (^)(BOOL))completion {
+
+    // bail if the current state matches the desired state
+    //if ([self tabBarVisible] == visible) return (completion)? completion(YES) : nil;
+
+    // get a frame calculation ready
+    CGRect frame = self.tabBarController.tabBar.frame;
+    CGFloat height = frame.size.height;
+    CGFloat offsetY = (visible)? -height : height;
+
+    // zero duration means no animation
+    CGFloat duration = (animated)? 0.3 : 0.0;
+
+    [UIView animateWithDuration:duration animations:^{
+        self.tabBarController.tabBar.frame = CGRectOffset(frame, 0, offsetY);
+    } completion:completion];
+}
+
+//Getter to know the current state
+- (BOOL)tabBarIsVisible {
+    return self.tabBarController.tabBar.frame.origin.y < CGRectGetMaxY(self.view.frame);
+}
+
+//An illustration of a call to toggle current state
+- (IBAction)pressedButton:(id)sender {
+    [self setTabBarVisible:![self tabBarIsVisible] animated:YES completion:^(BOOL finished) {
+        NSLog(@"finished");
+    }];
+}
 - (void)popoverTableView:(NVPopoverTableView *)popoverTableView
     didSelectRowWithText:(NSString *)text
                  atIndex:(NSInteger)index
@@ -1206,6 +1237,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         }
         else
         {
+            [self setTabBarVisible:FALSE animated:YES completion:nil];
             _nvRealtorwv = [NVWebView showWebViewInView:self.view
                                               urlString:url
                                            withDelegate:self];
@@ -1236,7 +1268,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     else
     {
         if (![self showWebSiteList])
-            [self doDataReload];
+            [self doDataReload:nil];
     }
 }
 -(void)webViewRealtorWasTapped
