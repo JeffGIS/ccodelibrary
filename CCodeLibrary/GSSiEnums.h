@@ -246,7 +246,8 @@ typedef NS_ENUM(NSInteger, MapitBaseLayer)
     MBL_CensusBlocks,
     MBL_CensusBlockGroups,
     MBL_CensusTracts,
-    MBL_VotingDistricts,
+    MBL_VotingDistricts2018,
+    MBL_VotingDistricts2016,
     MBL_StreetCenterlines,
     MBL_Roads,
 };
