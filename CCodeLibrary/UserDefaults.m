@@ -399,12 +399,12 @@ static UserDefaults *_defaults;
 
 - (NSArray *)realtorList
 {
-    return @[@"Edina Realty", @"Realtor.com",@"Remax", @"Trulia", @"Zillow"];
+    return @[@"Coldwell Banker",@"Edina Realty", @"Keller Williams", @"Kris Lindahl Real Estate",@"Realtor.com",@"Remax", @"Trulia", @"Zillow"];
 }
 
 - (NSArray *)realtorWebSites
 {
-    return @[@"http://www.edinarealty.com", @"http://www.realtor.com", @"http://www.remax.com", @"http://www.trulia.com", @"http://www.zillow.com/homes"];
+    return @[@"https://www.coldwellbanker.com",@"http://www.edinarealty.com",@"kw.com", @"https://www.krislindahl.com/comingsoonlistings.php",@"http://www.realtor.com", @"http://www.remax.com", @"http://www.trulia.com", @"http://www.zillow.com/homes"];
 }
 
 - (void)saveColorWithRed:(CGFloat)red

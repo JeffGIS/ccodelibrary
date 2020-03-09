@@ -510,6 +510,8 @@
 
 - (void)returnButtonTapped:(UIButton *)button
 {
+    if (_lookForPasteBufferTimer)
+        [_lookForPasteBufferTimer invalidate];
     if (_delegate && [_delegate respondsToSelector:@selector(webViewDidReturn:link:)])
         [_delegate webViewDidReturn:self
                                link:nil];
@@ -545,11 +547,14 @@
     UIPasteboard *thePasteboard = [UIPasteboard generalPasteboard];
     NSString *linkText = thePasteboard.string;
     NSLog(@"%@", linkText);
+    BOOL stayAlive = TRUE;
 
     thePasteboard.string = @"";
     if (_delegate && [_delegate respondsToSelector:@selector(webViewDidReturn:link:)])
-        [_delegate webViewDidReturn:self link:linkText];
-    else
+    {
+        stayAlive = ![_delegate webViewDidReturn:self link:linkText];
+    }
+    if (stayAlive)
         [self startLookForPasteBufferTimer];
 }
 

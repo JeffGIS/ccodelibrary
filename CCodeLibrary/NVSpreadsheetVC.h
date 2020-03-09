@@ -48,7 +48,7 @@
                                column:(NSInteger)column;
 
 @optional
-- (void) addPropFromWebsiteToPropList:(NSString *)link
+- (BOOL) addPropFromWebsiteToPropList:(NSString *)link
                               popover:(GSSiPopoverView *)popover;
 - (NSArray *)clipsForProperty:(int)propNum;
 - (BOOL)addVideoClip:(RHClip *)clip;
@@ -83,6 +83,8 @@
                             column:(NSInteger)column;
 - (void)displayPropHistory:(int)propNum
                     overVC:(UIViewController*)vc;
+- (void) routeToProperty:(int)propNum;
+
 @end
 
 @interface NVSpreadsheetVC : UIViewController

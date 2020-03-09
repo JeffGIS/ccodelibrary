@@ -1221,7 +1221,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     else if ([popoverTableView.identifier isEqualToString:@"RealtorWebSites"])
     {
         NSString *urlText = [_webSiteURLTexts[index] stringByReplacingOccurrencesOfString:@"&amp" withString:@""];
-        
+        [self setTabBarVisible:FALSE animated:YES completion:nil];
+
         _nvRealtorwv = [NVWebView showWebViewInView:self.view
                                           urlString:urlText
                                        withDelegate:self];
@@ -1258,18 +1259,26 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     [popoverTableView hide:YES];
 }
-- (void) webViewDidReturn:(NVWebView *)webView
+- (BOOL) webViewDidReturn:(NVWebView *)webView
                      link:(NSString *)linktext
 {
-    [webView hide:YES];
-    webView = nil;
+    BOOL doHide = TRUE;
     if (linktext && linktext.length > 0)
-        [self addPropertyFromWeb:linktext];
+        doHide = [self addPropertyFromWeb:linktext];
     else
     {
-        if (![self showWebSiteList])
-            [self doDataReload:nil];
+        if ([self showWebSiteList])
+        {
+            doHide = FALSE;
+        }
     }
+    if (doHide)
+    {
+        [webView hide:YES];
+        webView = nil;
+        [self doDataReload:nil];
+    }
+    return doHide;
 }
 -(void)webViewRealtorWasTapped
 {
@@ -1283,17 +1292,24 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-- (void) addPropertyFromWeb:(NSString *)linktext
+- (BOOL) addPropertyFromWeb:(NSString *)linktext
 {
+    BOOL rtn = FALSE;
     if ([_delegate respondsToSelector:@selector(addPropFromWebsiteToPropList:popover:)])
     {
-        [_delegate addPropFromWebsiteToPropList:linktext
+        rtn = [_delegate addPropFromWebsiteToPropList:linktext
                                         popover:_popoverView];
     }
+    return FALSE;
 
 }
 - (void)popoverTableViewDidCancel:(NVPopoverTableView *)popoverTableView
 {
+    if (_nvRealtorwv)
+    {
+        [_nvRealtorwv hide:TRUE];
+        _nvRealtorwv = nil;
+    }
     _webSiteNames = nil;
     _webSiteURLTexts = nil;
     [popoverTableView hide:YES];
@@ -1430,6 +1446,11 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                     {
                         int propNum = (int)[_delegate getPropNumForRow:_selectedRow];
                         [_delegate displayPropHistory:propNum overVC:self];
+                    }
+                    else if ([prompt isEqualToString:@"Route to This Property"])
+                    {
+                        int propNum = (int)[_delegate getPropNumForRow:_selectedRow];
+                        [_delegate routeToProperty:propNum];
                     }
                     else if ([prompt isEqualToString:@"Zoom to All Properties in List"])
                     {
@@ -1915,7 +1936,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 - (void)GoogleSearchDidReturnString:(NSString *)str;
 {
     NSRange range;
-    NSArray * sites=@[@"coldwellbankerhomes.com",@"edinarealty.com",@"estately.com",@"movoto.com",@"realtor.com",@"redfin.com",@"remax.com",@"trulia.com",@"xome.com",@"zillow.com"];
+    NSArray * sites=@[@"coldwellbankerhomes.com",@"edinarealty.com",@"estately.com",@"KrisLindahl.com",@"movoto.com",@"realtor.com",@"redfin.com",@"remax.com",@"trulia.com",@"xome.com",@"zillow.com"];
 
     _webSiteNames = NSMutableArray.new;
     _webSiteURLTexts = NSMutableArray.new;
