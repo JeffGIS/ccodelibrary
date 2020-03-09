@@ -22,6 +22,7 @@ typedef NS_ENUM(NSInteger, ValueTypes)
     VTLLPoint,
     VTString,
     VTDoubleOneDecimal,
+    VTDateYYYY_MM_DD,
 };
 
 typedef NS_ENUM(NSInteger, NVNoteType)
