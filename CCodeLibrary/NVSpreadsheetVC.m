@@ -807,7 +807,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     optionsArray = [_delegate getOptionsForCell:_selectedRow
                                                          column:_selectedColumn];
                 break;
-            default:break;
+            default:
+                break;
         }
         if (optionsArray.count == 1 && [optionsArray[0] isEqualToString:@"Get Links"])
         {
