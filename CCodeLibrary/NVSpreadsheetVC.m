@@ -796,7 +796,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         }
         
         NSMutableArray <NSString *>*optionsArray = NSMutableArray.new;
-        NSString *alertID = @"MapIt";
+        NSString *alertID = @"Map It";
         
         switch (_delegate.getSpreadSheetType)
         {
@@ -1421,7 +1421,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
         }
     }
     
-    else if ([alertView.identifier isEqualToString:@"MapIt"])
+    else if ([alertView.identifier isEqualToString:@"Map It"])
     {
         NSString * prompt = alertView.buttonTextArray[buttonIndex];
         if (![prompt isEqualToString:@"Cancel"])
@@ -1462,7 +1462,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                         
                         
                     }
-                    else if ([prompt isEqualToString:@"Mapit"])
+                    else if ([prompt isEqualToString:@"Map It"])
                     {
                         [_delegate spreadsheetDidMapItForRow:_selectedRow
                                                       column:_selectedColumn
