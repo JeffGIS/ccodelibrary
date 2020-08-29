@@ -5,6 +5,7 @@
 #import "GSSiEnums.h"
 #import "RiteHome.h"
 #import "NVPopoverTableView.h"
+#import "NVWebView.h"
 
 @class NVSpreadsheetVC;
 

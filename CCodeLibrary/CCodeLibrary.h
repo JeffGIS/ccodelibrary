@@ -71,6 +71,7 @@
 #import "ChartsBitmap.h"
 #import "HotSpotVideo.h"
 #import "RHEditor.h"
+#import "NVWebView.h"
 
 extern int ii, idebug;
 @interface CCodeLibrary : NSObject

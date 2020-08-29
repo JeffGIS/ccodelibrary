@@ -698,7 +698,10 @@ static int COUNT=100;
 - (void)WIT_MotionInputDidConnect:(WIT_MotionInput *)controller
 {
     if (_inWitMotionCalibrate)
+    {
+        [_startCancelButton setHidden:YES];
         [_witMotionInput startCalibration];
+    }
     else
         [self startManagers2];
  }
@@ -725,7 +728,7 @@ static int COUNT=100;
     NSArray *calibrationValues = SharedDefaults.defaults.calibrationValueArray;
     NSArray *targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
     _nCalibrationPoints = targetValues.count;
-    int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][0] intValue];
+    int currentType = (int)(NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][0] intValue];
     _displayDegrees = (currentType == NVCalibrationTypeDegrees);
         
     if (_nCalibrationPoints > 1 && _nCalibrationPoints < 6)
@@ -742,7 +745,7 @@ static int COUNT=100;
         {
             num = targetValues[i];
             _targetValues[i] = num.doubleValue;
-            int currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] intValue];
+            int currentType = (int)(NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][i] intValue];
             
             if (currentType == NVCalibrationTypeRunningSlope)
                 _targetValues[i] = (atan(_targetValues[i] / 100) * RADtoDEG);
@@ -1295,7 +1298,11 @@ static int COUNT=100;
 - (void)setPromptText:(NSString *)promptText
 {
     _promptText = promptText;
-    _promptLabel.text = promptText;
+    dispatch_async(dispatch_get_main_queue(), ^
+                   {
+                       _promptLabel.text = promptText;
+                   });
+
 }
 
 - (void)helpButtonTapped:(UIButton *)button
@@ -1351,28 +1358,28 @@ static int COUNT=100;
     {
         case InStartCalibrate:
             [_startCancelButton setHidden:YES];
-            _promptLabel.text = @"Please wait...";
+            [self setPromptText:@"Please wait..."];
             [_witMotionInput leftCalibrate];
             break;
         case InLeftCalibrate:
             [_startCancelButton setHidden:NO];
             [_startCancelButton setTitle:@"Continue"
                                 forState:UIControlStateNormal];
-            _promptLabel.text = @"Turn the iPad 180 degrees and tap Continue";
+            [self setPromptText:@"Turn the iPad 180 degrees and tap Continue"];
             break;
         case InRightCalibrate:
-            _promptLabel.text = @"Please wait...";
+            [self setPromptText:@"Please wait..."];
             [_witMotionInput saveCalibration];
             break;
         case InEndCalibration:
-            _promptLabel.text = @"Please wait...";
+            [self setPromptText:@"Please wait..."];
             [_witMotionInput saveCalibration];
            break;
         case InSaveCalibration:
             [_startCancelButton setHidden:NO];
             [_startCancelButton setTitle:@"Finish"
                                 forState:UIControlStateNormal];
-            _promptLabel.text = @"WIT-Motion Calibration Saved";
+            [self setPromptText:@"WIT-Motion Calibration Saved"];
             break;
     }
 }
