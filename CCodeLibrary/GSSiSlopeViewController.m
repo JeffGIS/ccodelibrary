@@ -543,7 +543,7 @@ static int COUNT=100;
                 case InLeftCalibrate:
                     [_witMotionInput rightCalibrate];
                     [_startCancelButton setHidden:YES];
-                    _promptLabel.text = @"Please wait...";
+                    [self setPromptText: @"Please wait..."];
                     break;
                 default:
                     [self stopMotionManager];
@@ -700,6 +700,7 @@ static int COUNT=100;
     if (_inWitMotionCalibrate)
     {
         [_startCancelButton setHidden:YES];
+        [self setPromptText:@""];
         [_witMotionInput startCalibration];
     }
     else
@@ -1357,15 +1358,15 @@ static int COUNT=100;
     switch (step)
     {
         case InStartCalibrate:
-            [_startCancelButton setHidden:YES];
             [self setPromptText:@"Please wait..."];
+            [_startCancelButton setHidden:YES];
             [_witMotionInput leftCalibrate];
             break;
         case InLeftCalibrate:
+            [self setPromptText:@"Turn the iPad 180 degrees and tap Continue"];
             [_startCancelButton setHidden:NO];
             [_startCancelButton setTitle:@"Continue"
                                 forState:UIControlStateNormal];
-            [self setPromptText:@"Turn the iPad 180 degrees and tap Continue"];
             break;
         case InRightCalibrate:
             [self setPromptText:@"Please wait..."];
@@ -1376,10 +1377,10 @@ static int COUNT=100;
             [_witMotionInput saveCalibration];
            break;
         case InSaveCalibration:
+            [self setPromptText:@"WIT-Motion Calibration Saved"];
             [_startCancelButton setHidden:NO];
             [_startCancelButton setTitle:@"Finish"
                                 forState:UIControlStateNormal];
-            [self setPromptText:@"WIT-Motion Calibration Saved"];
             break;
     }
 }

@@ -8,7 +8,7 @@
 
 #import "WIT_MotionInput.h"
 #import "CRAPI.h"
-
+#import "SharedDefaults.h"
 
 #include "JY901.h"
 WITRECORD WitRecord;
@@ -357,6 +357,7 @@ static unsigned char calibrationBytes[5];
 }
 - (void) startCalibration
 {
+    [SharedDefaults.defaults saveString:@"" forKey:@"LastCalString"];
     _wantScan = YES;
     _wantSetNotify = NO;
     _wantDisconnect = NO;
