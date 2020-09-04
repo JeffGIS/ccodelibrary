@@ -1654,8 +1654,6 @@ int		expandOnly = 0;
 Bool	useGDIPlus = FALSE;
 int		ShowLineDirection=0;
 
-int		ii;
-
 #endif
 
 

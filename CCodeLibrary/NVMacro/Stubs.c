@@ -111,11 +111,6 @@ SQLRETURN   SQLFreeStmt(SQLHSTMT StatementHandle,
 }
 
 
-Bool LoadInternalGMD (LPGWDHEADER lpGWDHead,long iref)
-{
-    return FALSE;
-}
-
 int GetDlgItem (HWND hWndDlg,UINT Control)
 {
     return 0;
@@ -189,11 +184,6 @@ int GetWindowText (HWND hWnd,LPSTR txt,int maxchar)
 {
     *txt = 0;
     return 0;
-}
-
-LPSTR Truncate(LPSTR str)
-{
-	return str;
 }
 
 long LoadProjection(long nj, LPSTR NAME)
@@ -641,10 +631,6 @@ void OpenDisplayedRefs(void)
 {
 	return;
 }
-LPSTR OneSpace(LPSTR Arg1)
-{
-	return Arg1;
-}
 LPSTR MatchLev(LPSTR InStr, char MatchChar)
 #if ENABLETRACE
 {
@@ -716,10 +702,6 @@ Bool makedirectories(LPSTR Name, Bool IsDir, Bool Verify)
 {
 	return FALSE;
 }
-double LTWOPI(double AZ1)
-{
-	return 0;
-}
 
 Bool LoadUserLib(Bool Close)
 {
@@ -730,14 +712,6 @@ HDIB32 LoadDIB32(LPSTR lpFileName, Bool AdjustColorsToVP)
 {
 	HDIB32 h = 0;
 	return h;
-}
-double ldistp(DPOINT Point1, DPOINT Point2)
-{
-	return 0;
-}
-double ldistpp(LPDPOINT Point1, LPDPOINT Point2)
-{
-	return 0;
 }
 LPSTR LastChr(LPSTR str)
 {
@@ -829,11 +803,6 @@ LONGLONG GSSillseek2(HFILE Fid, LONGLONG loc, int opt)
 {
 	return FALSE;
 }*/
-long GSSifilelength(HFILE Fid)
-{
-		return FALSE;
-}
-
 void GSSiEndDialog(HWND hWndDlg, Bool rtn, HANDLE hSaveBM)
 {
 	return;
@@ -887,10 +856,6 @@ short GetPolyPoints2(LPPICKDATAHEADER PickData, LPINT pnPnts, LPHANDLE pHandle, 
 	return 0;
 }
 int GetPolyPointsWithParts(LPPICKDATAHEADER PickData, LPLONG pnPnts, LPHANDLE phPoints, LPHANDLE phPolyPartLen)
-{
-	return 0;
-}
-double GetPolyLengthD(HPDPOINT lpPoints, long nPnts)
 {
 	return 0;
 }
@@ -966,10 +931,7 @@ Bool GetBitmapInfoFromHandle(LPBITMAPINFOHEADER pDibInfo, HDIB32 hDib)
 	return FALSE;
 }
 
-double getaz(POINT Point1, POINT Point2)
-{
-	return 0;
-}
+
 double getazF(FPOINT Point1, FPOINT Point2)
 {
 	return 0;
@@ -979,10 +941,6 @@ double fgetaz(FLTPOINT Point1, FLTPOINT Point2)
 	return 0;
 }
 double getazl(LPOINT Point1, LPOINT Point2)
-{
-	return 0;
-}
-double LGETAZ(double X1, double Y1, double X2, double Y2)
 {
 	return 0;
 }
@@ -1087,11 +1045,6 @@ void DTMClose(LPHANDLE pHandle)
 	return;
 }
 
-DPOINT dnewpt(DPOINT OldPoint, double AZM, double DIS)
-{
-	DPOINT pt = { 0 };
-	return pt;
-}
 
 DPOINT dnewptproj(DPOINT OldPoint, double AZM, double DIS)
 {
@@ -1264,10 +1217,6 @@ double atobasedist(LPSTR Dist, LPBool perr)
 {
 	return 0;
 }
-double ArcDistance(DPOINT p1, DPOINT p2)
-{
-	return 0;
-}
 int AddToMacroStack(int from, int iCurrentMacro, LPSTR File, LPHANDLE phArgs, int NumArgs)
 {
 	return 0;
@@ -1282,18 +1231,6 @@ void AddGraphicsCmd(HWND hWnd, LPSTR Cmd, Bool Keydef, UINT StartPrompt)
 }
 
 void AddBMPToCache32(LPSTR Name, HDIB32 hBMP)
-{
-	return;
-}
-void LatLongToPixelXY(double latitudein, double longitudein, int levelOfDetail, int *pixelX, int *pixelY)
-{
-	return;
-}
-void LatLongToPixelXYd(double latitudein, double longitudein, int levelOfDetail, double *pixelX, double *pixelY)
-{
-	return;
-}
-void PixelXYToLatLong(int pixelX, int pixelY, int levelOfDetail, double *latitude, double *longitude)
 {
 	return;
 }

@@ -511,6 +511,7 @@ static int COUNT=100;
 
 - (void)doesNotExistTapped:(UIButton *)button
 {
+  
     [self stopMotionManager];
     
     if (_unable)

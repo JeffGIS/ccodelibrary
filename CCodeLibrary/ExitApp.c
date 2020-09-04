@@ -2,7 +2,7 @@
 //  CCodeLibrary
 
 #include "ExitApp.h"
-#include "Assert.h"
+#include "assert.h"
 #include <execinfo.h>
 
 void exitApp(const char *callingFunctionSignature)
