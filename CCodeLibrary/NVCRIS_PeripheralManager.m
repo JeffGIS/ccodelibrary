@@ -330,7 +330,7 @@
         return FALSE;
     if (!_manager)
         return FALSE;
-    _photoCommand = [NSString stringWithFormat:@"TakePhoto:%i_%i.jpg|%i|%i",ipadNum,photoNum,manager,geoid];
+    _photoCommand = [NSString stringWithFormat:@"TakePhoto:%i_%i.jpg|%i|%i|%i",ipadNum,photoNum,manager,geoid,(int)CRAPI.sharedInstance.currentSidewalkPointID];
     _photoEOMsent = NO;
     // Reset the index
     _sendPhotoDataIndex = 0;

@@ -174,7 +174,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) NVSendEmail *currentEmail;
 @property (nonatomic, nullable) NSMutableArray *lastAreaText;
 @property (nonatomic) BOOL isRentaliPad, canUseSdwk, inSdwkMode, GMTilesVisible, justZoom;
-@property int currentSidewalkPointID;
+@property long currentSidewalkPointID;
 @property (nonnull)Facility *currentFacility;
 @property (nonatomic) int facilityFieldDisplayOpt;
 @property (nonatomic, nullable) NSMutableArray<ChartsBitmap *> *chartBitmaps;
