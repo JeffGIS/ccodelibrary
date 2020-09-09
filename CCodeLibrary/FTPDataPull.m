@@ -421,7 +421,7 @@ didReceiveResponse:(NSURLResponse *)response
     {
         NSString * server = [CRAPI.sharedInstance getNVCRISServer];
         if (_useTestServer)
-            server = @"74.36.96.36";
+            server = @"192.168.254.17";
         _urlText = [NSString stringWithFormat:@"%@:%@@%@:%@/%@/%@",
                     _username, _password, server, _port, _directory, _fileName];
     }
