@@ -3,7 +3,6 @@
 
 #import <UIKit/UIKit.h>
 #import "NVProgressView.h"
-
 @class GSSiPopoverView;
 
 @protocol GSSiPopoverViewDelegate <NSObject>
@@ -12,7 +11,7 @@
 
 @end
 
-@interface GSSiPopoverView : UIView
+@interface GSSiPopoverView : NVConstrainedView
 
 @property (nonatomic, weak) id <GSSiPopoverViewDelegate> delegate;
 @property (nonatomic) UIView *popover;
@@ -21,7 +20,7 @@
 @property (nonatomic) UIButton *popoverCancel;
 @property (nonatomic) UILabel *popoverLabel, *progressLabel;
 @property BOOL inShowAfter, hideAtCancel;
-@property BOOL useContstraints;
+@property BOOL useConstraints;
 @property (nonatomic) int showTime;
 @property (nonatomic, copy) NSString *title, *cancelButtonTitle;
 @property (nonatomic, copy) NSString *identifier;

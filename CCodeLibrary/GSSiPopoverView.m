@@ -26,8 +26,8 @@
         self.backgroundColor = UIColor.clearColor;
         self.parentView = fromView;
         [fromView addSubview:self];
-        _useContstraints = YES;
-        if (_useContstraints)
+        _useConstraints = YES;
+        if (_useConstraints)
             [self constrainToView:fromView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
         self.hidden = YES;
         
@@ -51,7 +51,7 @@
         CGFloat height = MAX(fromView.frame.size.height, fromView.frame.size.width);
         
         [self addSubview:_popover];
-        if (_useContstraints)
+        if (_useConstraints)
         {
             [_popover constrainLeadingToAnchor:self.centerXAnchor constant:(-width / 2.5)];
             [_popover constrainTrailingToAnchor:self.centerXAnchor constant:(width / 2.5)];
@@ -62,7 +62,7 @@
                                                      progressColor:UIColor.whiteColor];
         
         [_popover addSubview:_progressView];
-        if (_useContstraints)
+        if (_useConstraints)
         {
             [_progressView constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 2.75)];
             [_progressView constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 2.75)];
@@ -90,7 +90,7 @@
                  forControlEvents:UIControlEventTouchUpInside];
         
         [_popover addSubview:_popoverCancel];
-        if (_useContstraints)
+        if (_useConstraints)
         {
             [_popoverCancel constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 5.0)];
             [_popoverCancel constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 5.0)];
@@ -108,7 +108,7 @@
         _popoverLabel.adjustsFontSizeToFitWidth = YES;
         
         [_popover addSubview:_popoverLabel];
-        if (_useContstraints)
+        if (_useConstraints)
         {
             [_popoverLabel constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 2.75)];
             [_popoverLabel constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 2.75)];
@@ -125,7 +125,7 @@
         _progressLabel.text = @"0% complete";
         
         [_popover addSubview:_progressLabel];
-        if (_useContstraints)
+        if (_useConstraints)
         {
             [_progressLabel constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 2.75)];
             [_progressLabel constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 2.75)];
