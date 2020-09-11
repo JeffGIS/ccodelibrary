@@ -284,9 +284,10 @@ static int nInit=0;
         if (!fileSize)
         {
             int iTime = NSDate.timeIntervalSinceReferenceDate;
-            
+            UIApplication *app = UIApplication.sharedApplication;
+            NSString * appVersionBuild = CRAPI.sharedInstance.appAndVersion;
             NSString *versions = [NSString stringWithFormat:@"/*ApVer %@ DBVer %s Time %i*/",
-                                  UIApplication.appVersionBuild,CURRENT_INTERSECTION_VERSION,iTime];
+                                  appVersionBuild,CURRENT_INTERSECTION_VERSION,iTime];
             
             rtn = appendStringToFile (versions, sendToServerFile);
         }

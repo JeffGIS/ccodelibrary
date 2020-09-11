@@ -367,16 +367,20 @@ static UserDefaults *_defaults;
 
 - (NSString *)sharedFilePath
 {
+    NSString * path = @"";
     NSFileManager *fileManager = NSFileManager.defaultManager;
     NSURL *groupContainerURL = [fileManager containerURLForSecurityApplicationGroupIdentifier:APP_GROUP_ID];
-    
+    if (groupContainerURL)
+    {
     [groupContainerURL setResourceValue:[NSNumber numberWithBool:YES]
                                  forKey:NSURLIsExcludedFromBackupKey
                                   error:nil];
-    NSString * path = groupContainerURL.relativePath;
+    path = groupContainerURL.relativePath;
     if (getUseMasterID())
         path = [path stringByAppendingString:@"/MASTER"];
-    
+    }
+    else
+        path = self.localFilePath;
     return path;
 }
 

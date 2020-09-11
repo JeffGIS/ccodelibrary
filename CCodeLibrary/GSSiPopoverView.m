@@ -26,7 +26,7 @@
         self.backgroundColor = UIColor.clearColor;
         self.parentView = fromView;
         [fromView addSubview:self];
-        [self constrainToView:fromView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+        //[self constrainToView:fromView leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
         self.hidden = YES;
         
         if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
@@ -49,20 +49,22 @@
         CGFloat height = MAX(fromView.frame.size.height, fromView.frame.size.width);
         
         [self addSubview:_popover];
+        /*
         [_popover constrainLeadingToAnchor:self.centerXAnchor constant:(-width / 2.5)];
         [_popover constrainTrailingToAnchor:self.centerXAnchor constant:(width / 2.5)];
         [_popover constrainTopToAnchor:self.centerYAnchor constant:(-height / 5.0)];
-        [_popover constrainBottomToAnchor:self.centerYAnchor constant:(height / 5.0)];
+        [_popover constrainBottomToAnchor:self.centerYAnchor constant:(height / 5.0)];*/
         
         _progressView = [[NVProgressView alloc] initWithTrackColor:UIColor.blackColor
                                                      progressColor:UIColor.whiteColor];
         
         [_popover addSubview:_progressView];
+        /*
         [_progressView constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 2.75)];
         [_progressView constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 2.75)];
         [_progressView constrainTopToAnchor:_popover.centerYAnchor constant:(-height / 64.0)];
         [_progressView constrainBottomToAnchor:_popover.centerYAnchor constant:(height / 64.0)];
-        
+        */
         _popoverCancel = [UIButton buttonWithType:UIButtonTypeCustom];
         _popoverCancel.translatesAutoresizingMaskIntoConstraints = NO;
         _popoverCancel.layer.cornerRadius = 10.0;
@@ -84,11 +86,12 @@
                  forControlEvents:UIControlEventTouchUpInside];
         
         [_popover addSubview:_popoverCancel];
+        /*
         [_popoverCancel constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 5.0)];
         [_popoverCancel constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 5.0)];
         [_popoverCancel constrainTopToAnchor:_popover.centerYAnchor constant:(height / 10.0)];
         [_popoverCancel constrainBottomToAnchor:_popover.centerYAnchor constant:(height / 6.0)];
-        
+        */
         _popoverLabel = UILabel.new;
         _popoverLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _popoverLabel.backgroundColor = UIColor.clearColor;
@@ -100,11 +103,12 @@
         _popoverLabel.adjustsFontSizeToFitWidth = YES;
         
         [_popover addSubview:_popoverLabel];
+        /*
         [_popoverLabel constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 2.75)];
         [_popoverLabel constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 2.75)];
         [_popoverLabel constrainTopToAnchor:_popover.centerYAnchor constant:(-height / 5.3)];
         [_popoverLabel constrainBottomToAnchor:_popover.centerYAnchor constant:(-height / 36.0)];
-        
+        */
         _progressLabel = UILabel.new;
         _progressLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _progressLabel.backgroundColor = UIColor.clearColor;
@@ -115,10 +119,12 @@
         _progressLabel.text = @"0% complete";
         
         [_popover addSubview:_progressLabel];
+        /*
         [_progressLabel constrainLeadingToAnchor:_popover.centerXAnchor constant:(-width / 2.75)];
         [_progressLabel constrainTrailingToAnchor:_popover.centerXAnchor constant:(width / 2.75)];
         [_progressLabel constrainTopToAnchor:_popover.centerYAnchor constant:(height / 44.0)];
         [_progressLabel constrainBottomToAnchor:_popover.centerYAnchor constant:(height / 12.0)];
+         */
     }
     
     return self;

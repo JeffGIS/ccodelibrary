@@ -991,8 +991,13 @@ NVSlopeData CurrentSlopeData;
 
 - (NSString *)appAndVersion
 {
+    //NSString *vb = UIApplication.appVersionBuild;
+    NSString * version = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+    NSString * build = [[NSBundle mainBundle] objectForInfoDictionaryKey: (NSString *)kCFBundleVersionKey];
+    NSString *appVersionBuild = [NSString stringWithFormat:@"%@ (%@)",version,build];
     NSString *rtn = [NSString stringWithFormat:@"%i.%i-%@",
-                     _currentModule, _currentSubModule, UIApplication.appVersionBuild];
+                     (int)_currentModule, (int)_currentSubModule,
+                     appVersionBuild];
     return rtn;
 }
 

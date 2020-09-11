@@ -43,6 +43,7 @@ typedef NS_ENUM(NSInteger, ModuleNames)
     FAC_PRELIM_MODULE     =  6,
     FAC_DETAIL_MODULE  =     7,
     ALLEYWALL_DETAIL_MODULE = 8,
+    SIDEWALK_ASSISTANT_MODULE = 9,
 };
 
 #define PROJECT_MPLS            1
