@@ -21,6 +21,7 @@
 @property (nonatomic) UIButton *popoverCancel;
 @property (nonatomic) UILabel *popoverLabel, *progressLabel;
 @property BOOL inShowAfter, hideAtCancel;
+@property BOOL useContstraints;
 @property (nonatomic) int showTime;
 @property (nonatomic, copy) NSString *title, *cancelButtonTitle;
 @property (nonatomic, copy) NSString *identifier;
