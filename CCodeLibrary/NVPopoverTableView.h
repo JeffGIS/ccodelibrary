@@ -37,6 +37,7 @@ didSelectYTButtonWithText:(NSString *)text
 @property BOOL allowsSubtitle;
 @property (nonatomic) BOOL parseTextToButtons;
 @property (nonatomic, copy) NSString *identifier;
+@property (nonatomic, copy) NSArray *textArray;
 
 + (instancetype)showPopoverTableViewInView:(UIView *)view
                                   delegate:(id)delegate

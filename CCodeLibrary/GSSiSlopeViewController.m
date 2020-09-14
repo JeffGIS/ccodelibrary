@@ -701,7 +701,7 @@ static int COUNT=100;
     if (_inWitMotionCalibrate)
     {
         [_startCancelButton setHidden:YES];
-        [self setPromptText:@""];
+        [self setPromptText:@"Connected to WIT-Motion"];
         [_witMotionInput startCalibration];
     }
     else

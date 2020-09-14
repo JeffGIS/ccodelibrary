@@ -11,7 +11,7 @@
 
 @property (nonatomic, weak) id <NVPopoverTableViewDelegate> delegate;
 @property (nonatomic) UITableView *tableView;
-@property (nonatomic, copy) NSArray *textArray, *groupColors;
+@property (nonatomic, copy) NSArray *groupColors;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UIFont *font;
 @property BOOL includeCancel;

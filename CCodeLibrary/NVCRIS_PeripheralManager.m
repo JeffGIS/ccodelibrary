@@ -118,7 +118,15 @@
     }
     if (characteristic == _takePhotoCharacteristic)
     {
+        int iPad = CRAPI.sharedInstance.currentiPadWithinManager;
+        int manager = CRAPI.sharedInstance.currentManageriPad;
+        int geoid = CRAPI.sharedInstance.currentGeoid;
         _photoEOMsent = YES;
+        [self takePhoto:0
+                foriPad:iPad
+           underManager:manager
+                inGeoid:-geoid];
+
     }
     return;
 }
@@ -340,7 +348,8 @@
 }
 - (void) photoTaken
 {
-    [_delegate topDownPhotoDidReturn:YES];
+    if ([_delegate respondsToSelector:@selector(topDownPhotoDidReturn:)])
+        [_delegate topDownPhotoDidReturn:YES];
 }
 
 - (NSString *)packageCurrentSlopeData

@@ -441,7 +441,7 @@ DWORD NextVarTime (void)
 {GSSiEnterProg (517);
 #endif
     {
-        if (VarTime < ULONG_MAX)
+        if (VarTime < UINT_MAX)
             VarTime++;
         else
             VarTime = 0;
