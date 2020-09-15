@@ -258,6 +258,9 @@ static int nInit=0;
 }
 - (NSString*) getSendToServerFile:(int)iPad
 {
+    if (_overrideServerFile)
+        return _overrideServerFile;
+
     int pictNum;
     int currentFileNum = [self getLastDataUpdateNumber:iPad
                           lastPictNum:&pictNum];
@@ -318,7 +321,7 @@ static int nInit=0;
         {
             int iTime = NSDate.timeIntervalSinceReferenceDate;
             NSString * versions = [NSString stringWithFormat:@"/*ApVer %@ DBVer %s Time %i*/",
-                                   UIApplication.appVersionBuild,CURRENT_INTERSECTION_VERSION,iTime];
+                                   CRAPI.sharedInstance.appAndVersion,CURRENT_INTERSECTION_VERSION,iTime];
             rtn = appendStringToFile (versions ,sendToServerFile);
         }
         rtn = appendStringToFile ([NSString stringWithUTF8String:cmd] ,sendToServerFile);

@@ -132,6 +132,6 @@
 + (BOOL) clearSidewalkTables;
 - (BOOL) setSidewalkToIntersection:(int) intID
                       beginingWith:(long) sideWalkID;
-
+@property NSString * overrideServerFile;
 
 @end
