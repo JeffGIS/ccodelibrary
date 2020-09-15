@@ -611,24 +611,24 @@ static int ii;
     {
         if (wantOverdue)
         {
-            ad.count = ad.count1;
-            if (ad.count)
+            ad.count0 = ad.count1;
+            if (ad.count0)
             {
-                double secondsPerIncident = _timeRange / ad.count;
+                double secondsPerIncident = _timeRange / ad.count0;
                 ad.aveHoursBetweenIncident = secondsPerIncident / 3600;
-                ad.count = (100 * (_currentTime - ad.maxTime) / secondsPerIncident) - 100;
+                ad.count0 = (100 * (_currentTime - ad.maxTime) / secondsPerIncident) - 100;
             }
             
         }
         else
         {
             if (ad.nCounts)
-                ad.count = ad.count2 - ad.count1;
+                ad.count0 = ad.count2 - ad.count1;
             else
-                ad.count = ad.count1;
+                ad.count0 = ad.count1;
             if (ad.value)
             {
-                ad.count /= ad.value;
+                ad.count0 /= ad.value;
             }
             else
                 ii=1;
@@ -636,7 +636,7 @@ static int ii;
         ad.pctInMask = 100.0 * ad.pixelsInMask / ad.areaInPixels;
         if (ad.pctInMask >= MINAREAPCT)
         {
-            maxCount = max (maxCount,fabs(ad.count));
+            maxCount = max (maxCount,fabs(ad.count0));
             maxValue = max (maxValue,ad.value);
         }
     }
@@ -647,13 +647,13 @@ static int ii;
         if (ad.pctInMask >= MINAREAPCT)
         {
             if (maxCount)
-                clr = 1.0 - fabs(ad.count)/maxCount;
+                clr = 1.0 - fabs(ad.count0)/maxCount;
         }
         else
             alpha = 0;
         CGFloat redColor[4] =  {1.0,clr,clr, alpha};
         CGFloat blueColor[4] = {clr,clr,1.0, alpha};
-        if (ad.count < 0)
+        if (ad.count0 < 0)
             ad.displayColor = CGColorCreate(_colorSpace, blueColor);
         else
             ad.displayColor = CGColorCreate(_colorSpace, redColor);
@@ -885,7 +885,7 @@ displayCharacteristics:(DisplayCharacteristics *)dc
         switch (icount)
         {
             case 0:
-                rtn = ad.count;
+                rtn = ad.count0;
                 break;
             case 1:
                 rtn = ad.count1;
@@ -904,10 +904,10 @@ displayCharacteristics:(DisplayCharacteristics *)dc
 {
     NSString * text = @"";
     AreaData *ad = [self getAreaDataFromID:areaID];
-    if (ad && ad.count)
+    if (ad && ad.count0)
     {
         double hoursSinceLast = (_currentTime - ad.maxTime) / 3600.0;
-        text = [NSString stringWithFormat:@"%.0f\n%.1f ave days\n%.1f days since last\n%.1f incidents",ad.count,ad.aveHoursBetweenIncident/24, hoursSinceLast/24,ad.count1];
+        text = [NSString stringWithFormat:@"%.0f\n%.1f ave days\n%.1f days since last\n%.1f incidents",ad.count0,ad.aveHoursBetweenIncident/24, hoursSinceLast/24,ad.count1];
     }
     return text;
 }

@@ -18,7 +18,7 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 @property NSString * areaID;
 @property COLORDEF colordef;
 @property int icolor;
-@property double count, count1, count2;
+@property double count0, count1, count2;
 @property int nCounts;
 @property double areaInPixels;
 @property int pixelsInMask;

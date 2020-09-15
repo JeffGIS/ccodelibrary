@@ -5,6 +5,7 @@
 #import "SQLiteLib.h"
 #import "MathUtil.h"
 #import "RampStruct.h"
+#import "GSSiEnums.h"
 
 @interface NVSidewalkPoint : NSObject
 
