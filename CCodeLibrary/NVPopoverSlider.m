@@ -49,6 +49,7 @@
     NVPopoverSlider *nvps = NVPopoverSlider.new;
     nvps.translatesAutoresizingMaskIntoConstraints = NO;
     nvps.delegate = delegate;
+    nvps.title = title;
     nvps.tabBar = view.parentViewController.tabBarController.tabBar;
     nvps.tabBar.userInteractionEnabled = NO;
     nvps.tag = tag;

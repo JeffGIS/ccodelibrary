@@ -19,6 +19,7 @@
 
 @property (nonatomic) BOOL roundToTenths;
 @property (nonatomic, copy) NSString *units;
+@property NSString * title;
 
 + (instancetype)showPopoverSliderInView:(UIView *)view
                                minValue:(float)minValue
