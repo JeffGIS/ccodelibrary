@@ -141,11 +141,13 @@
 
 /** Sends the next amount of data to the connected central
  */
-- (void)sendPhotoData
+- (void)sendPhotoData:(int)start
 {
     // First up, check if we're meant to be sending an EOM
     static BOOL sendingEOM = NO;
-    
+    static BOOL callPhotoTaken = NO;
+    if (start)
+        callPhotoTaken = (start == 2);
     if (sendingEOM) {
         
         // send it
@@ -159,7 +161,8 @@
             
             NSLog(@"Sent: EOM");
             _photoEOMsent = YES;
-            [self photoTaken];
+            if (callPhotoTaken)
+                [self photoTaken];
         }
         
         // It didn't send, so we'll exit and wait for peripheralManagerIsReadyToUpdateSubscribers to call sendData again
@@ -326,7 +329,7 @@
 {
     // Start sending again
     [self sendSlopeData];
-    [self sendPhotoData];
+    [self sendPhotoData:0];
 }
 
 - (BOOL) takePhoto:(int)photoNum
@@ -334,6 +337,9 @@
       underManager:(int)manager
            inGeoid:(int)geoid
 {
+    int start = 1;
+    if (geoid > 0)
+        start = 2;
     if (!_photoEOMsent)
         return FALSE;
     if (!_manager)
@@ -343,7 +349,7 @@
     // Reset the index
     _sendPhotoDataIndex = 0;
     _photoDataToSend = [_photoCommand dataUsingEncoding:NSUTF8StringEncoding];
-    [self sendPhotoData];
+    [self sendPhotoData:start];
     return TRUE;
 }
 - (void) photoTaken
