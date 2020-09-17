@@ -21,6 +21,9 @@ didFindMatchBetweenNote:(NSString *)note
     andItemInList:(NSString *)itemInList;
 
 - (NSArray *)arrayOfPickableNotesItemsForNotesView:(GSSiNotesView *)notesView;
+- (void)notesView:(GSSiNotesView *)notesView
+    addNoteToList:(NSString *)notes;
+
 
 @end
 

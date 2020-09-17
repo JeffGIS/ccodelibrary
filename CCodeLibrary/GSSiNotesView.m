@@ -480,7 +480,7 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
     {
         if([listItem caseInsensitiveCompare:note] == NSOrderedSame)
         {
-            if (_delegate)
+                if (_delegate && [_delegate respondsToSelector:@selector(notesView:didFindMatchBetweenNote:andItemInList:)])
             {
                 [_delegate notesView:self
              didFindMatchBetweenNote:note
@@ -500,6 +500,9 @@ typedef NS_ENUM(NSInteger, GSSiNotesViewOption)
 
 - (void)addNoteToArray:(NSString *)note
 {
+    if (_delegate && [_delegate respondsToSelector:@selector(notesView:addNoteToList:)])
+        [_delegate notesView:self
+               addNoteToList:note];
     [_notesArray addObject:note];
     
     NSSortDescriptor *sortOrder = [NSSortDescriptor sortDescriptorWithKey:nil

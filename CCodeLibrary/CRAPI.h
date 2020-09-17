@@ -83,6 +83,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 
 @interface CRAPI : NSObject
 
+@property (nonatomic, nullable) NSMutableArray *savedNotesArray;//temp till store in DB
+
 @property (nonatomic) ModuleNames currentModule;
 @property (nonatomic) int currentSubModule;
 @property (nonatomic) HardCodedConfigs currentApp;

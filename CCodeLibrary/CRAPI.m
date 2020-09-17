@@ -185,7 +185,7 @@ NVSlopeData CurrentSlopeData;
             _NVCRIS_Slope_Client = (int)[defaults integerForKey:@"NVCRIS_slope_client"];
 
         }
-
+        _savedNotesArray = NSMutableArray.new;
     }
     
     return self;
