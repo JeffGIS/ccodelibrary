@@ -45,7 +45,6 @@ static int COUNT=100;
 @property SCStatus status;
 @property BOOL unable, hasRun;
 @property (nonatomic) NSMutableArray<CLLocation *> *locations;
-@property WIT_MotionInput *witMotionInput;
 @property BOOL inWitMotionCalibrate;
 @property SlopeClient * slopeClient;
 
@@ -104,8 +103,9 @@ static int COUNT=100;
     _inWitMotionCalibrate = NO;
     if (_wantWitMotion)
     {
-        _witMotionInput = WIT_MotionInput.new;
-        _witMotionInput.delegate = self;
+        if (!CRAPI.sharedInstance.witMotionInput)
+            CRAPI.sharedInstance.witMotionInput = WIT_MotionInput.new;
+        CRAPI.sharedInstance.witMotionInput.delegate = self;
     }
     if (!_fromCalibration)
     {
@@ -542,7 +542,7 @@ static int COUNT=100;
             switch (_WITMotionCalibrationStep)
             {
                 case InLeftCalibrate:
-                    [_witMotionInput rightCalibrate];
+                    [CRAPI.sharedInstance.witMotionInput rightCalibrate];
                     [_startCancelButton setHidden:YES];
                     [self setPromptText: @"Please wait..."];
                     break;
@@ -666,10 +666,25 @@ static int COUNT=100;
     }
     else if (_wantWitMotion)
     {
-        [_witMotionInput startInput];//let WITMotion start first
+        [self startWitMotion:nil];
     }
     else
         [self startManagers2];
+}
+
+- (void) startWitMotion:(NSTimer*)timer
+{
+    if (timer)
+        [timer invalidate];
+    if (![CRAPI.sharedInstance.witMotionInput startInput])
+    {
+        _timer = [NSTimer scheduledTimerWithTimeInterval:1
+                                                   target:self
+                                                 selector:@selector(startWitMotion:)
+                                                 userInfo:nil
+                                                  repeats:NO];
+
+    }
 }
 - (void)startManagers2
 {
@@ -702,7 +717,7 @@ static int COUNT=100;
     {
         [_startCancelButton setHidden:YES];
         [self setPromptText:@"Connected to WIT-Motion"];
-        [_witMotionInput startCalibration];
+        [CRAPI.sharedInstance.witMotionInput startCalibration];
     }
     else
         [self startManagers2];
@@ -711,7 +726,7 @@ static int COUNT=100;
 {
     [_motionManager stopAccelerometerUpdates];
     [_locationManager stopUpdatingHeading];
-    [_witMotionInput cancel];
+    [CRAPI.sharedInstance.witMotionInput cancel];
     if (_slopeClient)
         _slopeClient.delegate = nil;
 }
@@ -917,7 +932,7 @@ static int COUNT=100;
 
             if (_wantWitMotion)
             {
-                if ([_witMotionInput getResults:WitMotionAngles] > 4)
+                if ([CRAPI.sharedInstance.witMotionInput getResults:WitMotionAngles] > 4)
                 {
                     angy = WitMotionAngles[1];
                     angx = WitMotionAngles[0];
@@ -985,8 +1000,8 @@ static int COUNT=100;
     _headingCounter = 0;
     _minHead = 10000;
     _maxHead = -10000;
-    if (_witMotionInput)
-        [_witMotionInput restart];
+    if (CRAPI.sharedInstance.witMotionInput)
+        [CRAPI.sharedInstance.witMotionInput restart];
 }
 
 - (void) setCurrentSlopeData:(NVSlopeData)slopeData
@@ -1351,7 +1366,7 @@ static int COUNT=100;
  {
      [button setHidden:YES];
      _inWitMotionCalibrate = YES;
-     [_witMotionInput startInput];
+     [CRAPI.sharedInstance.witMotionInput startInput];
  }
 - (void)WIT_MotionCompletedCalibrationStep:(WITMotionCalibrateSteps)step
 {
@@ -1361,7 +1376,7 @@ static int COUNT=100;
         case InStartCalibrate:
             [self setPromptText:@"Please wait..."];
             [_startCancelButton setHidden:YES];
-            [_witMotionInput leftCalibrate];
+            [CRAPI.sharedInstance.witMotionInput leftCalibrate];
             break;
         case InLeftCalibrate:
             [self setPromptText:@"Turn the iPad 180 degrees and tap Continue"];
@@ -1371,11 +1386,11 @@ static int COUNT=100;
             break;
         case InRightCalibrate:
             [self setPromptText:@"Please wait..."];
-            [_witMotionInput saveCalibration];
+            [CRAPI.sharedInstance.witMotionInput saveCalibration];
             break;
         case InEndCalibration:
             [self setPromptText:@"Please wait..."];
-            [_witMotionInput saveCalibration];
+            [CRAPI.sharedInstance.witMotionInput saveCalibration];
            break;
         case InSaveCalibration:
             [self setPromptText:@"WIT-Motion Calibration Saved"];
@@ -1393,4 +1408,10 @@ static int COUNT=100;
                            withObject:nil
                         waitUntilDone:NO];
 }
+
+- (void)SlopeClientFailed:(nonnull SlopeClient *)controller {
+
+}
+
+
 @end

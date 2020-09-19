@@ -98,6 +98,7 @@ static unsigned char calibrationBytes[5];
 {
     if (!_wantScan)
         return;
+    _waitingToConnect = YES;
     [self.centralManager scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:WIT_MOTION_SERVICE_UUID]]
                                                 options:@{ CBCentralManagerScanOptionAllowDuplicatesKey : @NO }];
     
@@ -165,7 +166,7 @@ static unsigned char calibrationBytes[5];
         
     // Make sure we get the discovery callbacks
     peripheral.delegate = self;
-    
+    _waitingToConnect = NO;
     // Search only for services that match our UUID
     [peripheral discoverServices:@[[CBUUID UUIDWithString:WIT_MOTION_SERVICE_UUID]]];
 }
@@ -295,7 +296,7 @@ static unsigned char calibrationBytes[5];
 }
 
 - (void) cancel{
-    _wantScan = FALSE;
+    //_wantScan = FALSE;
     [self cleanup];
 }
 /** Call this when things either go wrong, or you're done with the connection.
@@ -317,7 +318,7 @@ static unsigned char calibrationBytes[5];
                     if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:WIT_MOTION_UUID1]]) {
                         if (characteristic.isNotifying) {
                             // It is notifying, so unsubscribe
-                            _wantDisconnect = YES;
+                            _wantDisconnect = NO;
                             [CRAPI.sharedInstance.WITMotionPeripheral setNotifyValue:NO forCharacteristic:characteristic];
                             
                             // And we're done.
@@ -333,8 +334,10 @@ static unsigned char calibrationBytes[5];
     [self.centralManager cancelPeripheralConnection:CRAPI.sharedInstance.WITMotionPeripheral];
 }
 
-- (void) startInput
+- (BOOL) startInput
 {
+    if (_waitingToConnect)
+        return FALSE;
     _wantSetNotify = NO;
     _firstValueSinceStartInput = YES;
     [self restart];
@@ -348,6 +351,7 @@ static unsigned char calibrationBytes[5];
         [CRAPI.sharedInstance.WITMotionPeripheral setNotifyValue:YES forCharacteristic:_dataCharacteristic];
     else
         _wantSetNotify = YES;
+    return TRUE;
 }
 - (void) stopInput
 {

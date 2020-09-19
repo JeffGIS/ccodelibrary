@@ -20,6 +20,7 @@
 #import "NVCRIS_PeripheralManager.h"
 #import "SlopeClient.h"
 #import "NVSlopeData.h"
+#import "WIT_MotionInput.h"
 
 @import AVKit;
 
@@ -84,6 +85,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @interface CRAPI : NSObject
 
 @property (nonatomic, nullable) NSMutableArray *savedNotesArray;//temp till store in DB
+
+@property WIT_MotionInput *witMotionInput;
 
 @property (nonatomic) ModuleNames currentModule;
 @property (nonatomic) int currentSubModule;

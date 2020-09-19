@@ -37,6 +37,7 @@ typedef NS_ENUM(NSInteger, WITMotionCalibrateSteps)
 @property BOOL wantScan;
 @property BOOL wantSetNotify;
 @property BOOL wantDisconnect;
+@property BOOL waitingToConnect;
 @property WITMotionCalibrateSteps calibrationStep;
 @property BOOL firstValueSinceStartInput;
 @property CBCharacteristic *dataCharacteristic;
@@ -45,7 +46,7 @@ typedef NS_ENUM(NSInteger, WITMotionCalibrateSteps)
 - (int) getResults:(double *)angles;
 - (void) restart;
 - (void) cancel;
-- (void) startInput;
+- (BOOL) startInput;
 - (void) stopInput;
 - (void) startCalibration;
 - (void) leftCalibrate;

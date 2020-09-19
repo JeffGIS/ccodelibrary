@@ -42,6 +42,7 @@
 @property BOOL wantWitMotion;
 @property BOOL wantZeroButton;
 @property WITMotionCalibrateSteps WITMotionCalibrationStep;
+@property NSTimer * timer;
 
 + (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(double)criticalVal
                                             criticalSideValue:(double)criticalSideVal

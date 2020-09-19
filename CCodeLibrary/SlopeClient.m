@@ -269,7 +269,7 @@
 }
 
 - (void) cancel{
-    _wantScan = FALSE;
+    //_wantScan = FALSE;
     [self cleanup];
 }
 /** Call this when things either go wrong, or you're done with the connection.
