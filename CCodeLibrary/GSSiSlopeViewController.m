@@ -896,7 +896,10 @@ static int COUNT=100;
 - (void)locationManager:(CLLocationManager *)manager
      didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
-    [_locations addObject:locations.lastObject];
+    for (CLLocation * loc in locations)
+    {
+        [_locations addObject:loc];
+    }
 }
 
 - (void)computeSlopeFromAccelerometer:(CMAccelerometerData *)accelerometerData
