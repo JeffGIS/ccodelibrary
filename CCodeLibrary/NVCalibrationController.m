@@ -30,7 +30,8 @@ static double _deviceValues[9][4];
 @property (nonatomic, copy) NSArray *calibrationValues;
 @property NVCalibrationType currentType, newType;
 @property (nonatomic) double currentValue;
-@property NSInteger currentIndex, counter;
+@property (nonatomic) NSInteger currentIndex;
+@property int counter;
 @property (nonatomic, copy) NSString *previousPromptText, *nextPromptText;
 @property BOOL hasBeenFlipped, hasBeenCalibrated;
 @property int initialHeading;
@@ -61,6 +62,10 @@ static double _deviceValues[9][4];
     self.view = view;
 }
 
+-(void) setCurrentIndex:(NSInteger)currentIndex
+{
+    _currentIndex = currentIndex;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -68,7 +73,7 @@ static double _deviceValues[9][4];
     self.view.backgroundColor = CRAPI.sharedInstance.defaultColors.backgroundColor;
     _currentType = NVCalibrationTypeDefault, _newType = NVCalibrationTypeRunningSlope;
     _currentValue = 0.0;
-    _currentIndex = 0;
+    self.currentIndex = 0;
     _hasBeenFlipped = NO;
     _hasBeenCalibrated = YES;
 
@@ -472,7 +477,7 @@ static double _deviceValues[9][4];
     
     if (slopeData.frontSlopePct == -9999.0)
     {
-        _currentIndex = 0;
+        self.currentIndex = 0;
         [self setupCalibrationButtons];
         [self setTestEditButtonsEnabled:YES];
         _promptLabel.text = @"Place the iPad on a level surface and tap on 'Calibrate 0.0%' to begin calibration routine.";
@@ -519,14 +524,14 @@ static double _deviceValues[9][4];
                 }
             }
             
-            _currentIndex++;
+            self.currentIndex++;
 
             if ((CRAPI.sharedInstance.showCompassCalibrationScreen && headingError) && CRAPI.sharedInstance.currentModule != GMMOBILE_MODULE && !_headingErrorShown)
             {
                 NVAlertView *alert =
                 [NVAlertView showLargeAlertViewinView:self.view
                                              delegate:self
-                                                title:@"The device appears to be pointed in the wrong direction. Calibration process will restart."
+                                                title:@"The device appears to be pointed in the wrong direction. Calibration will restart."
                                       buttonTextArray:@[@"OK"]
                                      destructiveIndex:0];
                 
@@ -551,7 +556,7 @@ static double _deviceValues[9][4];
                     NSString *lastCalString = [NSString stringWithFormat:@"Calibrated on %@", dateString];
                     _lastCalibrationlabel.text = lastCalString;
                     [SharedDefaults.defaults saveString:lastCalString forKey:@"LastCalString"];
-                    _currentIndex = 0;
+                    self.currentIndex = 0;
                 }
                 
                 for (UIButton *buttons in self.view.subviews)

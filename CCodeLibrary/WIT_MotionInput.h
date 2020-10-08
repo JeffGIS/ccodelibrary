@@ -34,6 +34,9 @@ typedef NS_ENUM(NSInteger, WITMotionCalibrateSteps)
 @property (strong, nonatomic) CBCentralManager      *centralManager;
 @property int nValues;
 @property double roll, pitch, yaw;
+@property NSMutableArray * rollValues;
+@property NSMutableArray * pitchValues;
+@property NSMutableArray * yawValues;
 @property BOOL wantScan;
 @property BOOL wantSetNotify;
 @property BOOL wantDisconnect;

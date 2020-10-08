@@ -47,7 +47,7 @@ static int COUNT=100;
 @property (nonatomic) NSMutableArray<CLLocation *> *locations;
 @property BOOL inWitMotionCalibrate;
 @property SlopeClient * slopeClient;
-
+@property BOOL clearWMM;
 @end
 
 @implementation GSSiSlopeViewController
@@ -678,6 +678,7 @@ static int COUNT=100;
         [timer invalidate];
     if (![CRAPI.sharedInstance.witMotionInput startInput])
     {
+        [self waitingOnWitMotionConnection:NO];
         _timer = [NSTimer scheduledTimerWithTimeInterval:1
                                                    target:self
                                                  selector:@selector(startWitMotion:)
@@ -685,6 +686,9 @@ static int COUNT=100;
                                                   repeats:NO];
 
     }
+    else
+        [self waitingOnWitMotionConnection:YES];
+
 }
 - (void)startManagers2
 {
@@ -743,15 +747,15 @@ static int COUNT=100;
     BOOL rtn = NO;
    
     NSArray *calibrationValues = SharedDefaults.defaults.calibrationValueArray;
-    NSArray *targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
+    NSArray <NSNumber*>*targetValues = [calibrationValues[NVCalibrationArrayIndexValue] copy];
     _nCalibrationPoints = targetValues.count;
-    int currentType = (int)(NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][0] intValue];
+    NVCalibrationType currentType = (NVCalibrationType)[calibrationValues[NVCalibrationArrayIndexType][0] intValue];
     _displayDegrees = (currentType == NVCalibrationTypeDegrees);
         
     if (_nCalibrationPoints > 1 && _nCalibrationPoints < 6)
     {
         _targetValues[0] = 0.0;
-        NSArray *deviceValuesArray = [calibrationValues[NVCalibrationArrayDeviceValues] copy];
+        NSArray <NSNumber *>*deviceValuesArray = [calibrationValues[NVCalibrationArrayDeviceValues] copy];
         NSNumber *num = deviceValuesArray[0];
         _deviceVals[0][0] = num.doubleValue;
         num = deviceValuesArray[1];
@@ -943,6 +947,7 @@ static int COUNT=100;
                 else
                 {
                     [self resetSumsAndCounter];
+                    [self startWitMotion:nil];
                     return;
                 }
             }
@@ -1369,7 +1374,7 @@ static int COUNT=100;
  {
      [button setHidden:YES];
      _inWitMotionCalibrate = YES;
-     [CRAPI.sharedInstance.witMotionInput startInput];
+     [self startWitMotion:nil];
  }
 - (void)WIT_MotionCompletedCalibrationStep:(WITMotionCalibrateSteps)step
 {
@@ -1411,7 +1416,20 @@ static int COUNT=100;
                            withObject:nil
                         waitUntilDone:NO];
 }
-
+- (void) waitingOnWitMotionMessage
+{
+    if (_clearWMM)
+        _promptLabel.text = @"";
+    else
+        _promptLabel.text = @"Waiting On Wit-Motion";
+}
+-(void) waitingOnWitMotionConnection:(BOOL)clear
+{
+    _clearWMM = clear;
+    [self performSelectorOnMainThread:@selector(waitingOnWitMotionMessage)
+                           withObject:nil
+                        waitUntilDone:NO];
+}
 - (void)SlopeClientFailed:(nonnull SlopeClient *)controller {
 
 }

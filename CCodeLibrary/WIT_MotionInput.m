@@ -35,11 +35,7 @@ static unsigned char calibrationBytes[5];
             [self.centralManager connectPeripheral:CRAPI.sharedInstance.WITMotionPeripheral options:nil];
         else
             self.wantScan = TRUE;
-        
-        self.nValues = 0;
-        self.pitch = 0;
-        self.roll = 0;
-        self.yaw = 0;
+        [self restart];
         self.wantSetNotify = NO;
         self.wantDisconnect = NO;
         calibrationBytes[0] = 0xFF;
@@ -55,7 +51,52 @@ static unsigned char calibrationBytes[5];
     _centralManager.delegate = nil;
     NSLog(@"WIT_Motioninput dealloc");
 }
-
+- (double) averageValue:(NSArray*)values
+{
+    double tot = 0;
+    if (values.count)
+    {
+        for (NSNumber * num in values)
+        {
+            tot += num.doubleValue;
+        }
+        tot /= values.count;
+    }
+    return tot;
+}
+- (NSArray *) removeOutliers:(NSArray*)values
+{
+    NSMutableArray * newValues=NSMutableArray.new;
+    NSMutableArray <NSNumber*>* diffArray = NSMutableArray.new;
+    double aveValue = [self averageValue:values];
+    for (NSNumber *num in values)
+    {
+        double diff = fabs (num.doubleValue - aveValue);
+        NSNumber *dif = [NSNumber numberWithDouble:diff];
+        [diffArray addObject:dif];
+    }
+    [diffArray sortUsingSelector:@selector(compare:)];
+    int maxDiffIndex = min (max (0,values.count * 0.8),values.count-1);
+    double maxdiff = diffArray[maxDiffIndex].doubleValue;
+    for (NSNumber * num in values)
+    {
+        if (fabs(num.doubleValue - aveValue) <= maxdiff)
+        {
+            [newValues addObject:num];
+        }
+    }
+    return newValues;
+}
+- (double) computeAngle:(NSArray*)values
+{
+    double rtn = [self averageValue:values];
+    if (values.count>5)
+    {
+        NSArray *newValues= [self removeOutliers:values];
+        rtn = [self averageValue:newValues];
+    }
+    return rtn;
+}
 - (int) getResults:(double *)angles
 {
     int rtn = _nValues;
@@ -66,6 +107,11 @@ static unsigned char calibrationBytes[5];
         angles[1] = _pitch/_nValues;
         angles[2] = _yaw/_nValues;
     }
+    NSLog (@"%@",_pitchValues.debugDescription);
+    angles[0] = -[self computeAngle:_rollValues];
+    angles[1] = -[self computeAngle:_pitchValues];
+    angles[2] = [self computeAngle:_yawValues];
+
     return rtn;
 }
  - (void) restart
@@ -74,7 +120,9 @@ static unsigned char calibrationBytes[5];
     self.pitch = 0;
     self.roll = 0;
     self.yaw = 0;
-
+    self.rollValues = NSMutableArray.new;
+    self.pitchValues = NSMutableArray.new;
+    self.yawValues = NSMutableArray.new;
 }
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
@@ -247,6 +295,12 @@ static unsigned char calibrationBytes[5];
     _roll += WitRecord.RollAngle;
     _pitch += WitRecord.PitchAngle;
     _yaw += WitRecord.YawAngle;
+    NSNumber * rAngle = [NSNumber numberWithDouble:WitRecord.RollAngle];
+    [_rollValues addObject:rAngle];
+    NSNumber * pAngle = [NSNumber numberWithDouble:WitRecord.PitchAngle];
+    [_pitchValues addObject:pAngle];
+    NSNumber * yAngle = [NSNumber numberWithDouble:WitRecord.YawAngle];
+    [_yawValues addObject:yAngle];
     if (_firstValueSinceStartInput)
     {
         if (_delegate)
@@ -380,6 +434,11 @@ static unsigned char calibrationBytes[5];
     [CRAPI.sharedInstance.WITMotionPeripheral writeValue:data forCharacteristic:_calibrationCharacteristic type:CBCharacteristicWriteWithResponse];
 
 }
+-(void) sleep:(double)secs
+{
+    [NSThread sleepForTimeInterval:secs];
+    return;
+}
 - (void) leftCalibrate
 {
     calibrationBytes[3] = 0x05;
@@ -389,7 +448,7 @@ static unsigned char calibrationBytes[5];
     {
         _calibrationStep = InLeftCalibrate;
         [self writeCalibrationData:data];
-        sleep (2);
+        [self sleep:2];
     }
     
 
@@ -404,7 +463,7 @@ static unsigned char calibrationBytes[5];
     {
         _calibrationStep = InRightCalibrate;
         [self writeCalibrationData:data];
-        sleep (2);
+        [self sleep:2];
     }
 
 
@@ -418,7 +477,7 @@ static unsigned char calibrationBytes[5];
     NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
     [self writeCalibrationData:data];
 
-    sleep (2);
+    [self sleep:2];
     
 }
 - (void)saveCalibration
@@ -435,7 +494,7 @@ static unsigned char calibrationBytes[5];
     NSLog (@"Calibration data saved");
     NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
     [self writeCalibrationData:data];
-    sleep (2);
+    [self sleep:2];
     
 }
 - (void)notifyStepCompleted
