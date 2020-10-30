@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "UIDevice+Storage.h"
+#import <mach/mach.h>
 @import MachO;
 
 @implementation UIDevice (Storage)
