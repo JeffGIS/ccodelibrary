@@ -33,7 +33,6 @@
     
     NSDictionary *dictionary = [NSFileManager.defaultManager attributesOfFileSystemForPath:paths.lastObject
                                                                                      error:&error];
-    
     if (dictionary)
         totalSpace = [[dictionary objectForKey: NSFileSystemSize] unsignedLongLongValue];
     
