@@ -49,6 +49,7 @@
                                column:(NSInteger)column;
 
 @optional
+- (BOOL) addCurrentPropertyListToPropertyList:(NSString *)listToAddTo;
 - (BOOL) addPropFromWebsiteToPropList:(NSString *)link
                               popover:(GSSiPopoverView *)popover;
 - (NSArray *)clipsForProperty:(int)propNum;

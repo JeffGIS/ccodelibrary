@@ -1067,7 +1067,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                                  delegate:self
                                     title:@"Select Export Method"
                           buttonTextArray:@[@"Export Text as Email Attachment", @"Export Text to Cloud",
-                                            @"Export PDF to Cloud", @"Cancel"]
+                                            @"Export PDF to Cloud",@"Export to Property List", @"Cancel"]
                          destructiveIndex:0];
     
     alert.identifier = @"ExportPrompt";
@@ -1135,7 +1135,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     {
         NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
                                                                           delegate:self
-                                                                             title:@"Select Spreadsheet"
+                                                                             title:@"Select Property List"
                                                                          textArray:fileList
                                                                      includeCancel:YES];
         nvptv.identifier = @"Select";
@@ -1257,7 +1257,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         
         [_delegate copyRows:_selectedRows toList:text];
     }
+    else if ([popoverTableView.identifier isEqualToString:@"SelectProplistToExportTo"])
+    {
+        if ([_delegate respondsToSelector:@selector(addCurrentPropertyListToPropertyList:)])
+     
+        [_delegate addCurrentPropertyListToPropertyList:text];
+
+    }
     
+
     [popoverTableView hide:YES];
 }
 - (BOOL) webViewDidReturn:(NVWebView *)webView
@@ -1365,7 +1373,25 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
                 {
                     uploadToCloud(filePath, YES);
                 }
-                break;}
+            }
+                break;
+            case 3:{//Export to Property List
+                NSMutableArray *fileList = _delegate.spreadsheetDidGetLists;
+                
+                //[fileList addObject:@"Create New List"];
+                if (fileList.count > 0)
+                {
+                    NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
+                                                                                      delegate:self
+                                                                                         title:@"Select Property List"
+                                                                                     textArray:fileList
+                                                                                 includeCancel:YES];
+                    nvptv.identifier = @"SelectProplistToExportTo";
+                }
+
+                
+            }
+                break;
             default:break;
         }
     }

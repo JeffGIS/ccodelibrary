@@ -912,6 +912,25 @@ LPDPOINT PointsFromCorners (CORNERPOINTS* pCornerPoints)
     return pPoints;
 }
 
+Bool ValidBounds (LPMNMXCORD Bounds)
+{
+    if (Bounds->xmx == Bounds->xmn &&
+        Bounds->ymx == Bounds->ymn)
+            return FALSE;
+    if (Bounds->xmx < Bounds->xmn ||
+        Bounds->ymx < Bounds->ymn)
+            return FALSE;
+    return TRUE;
+}
+
+Bool ValidBounds2 (LPMNMXCORD Bounds)
+{
+    if (Bounds->xmx < Bounds->xmn ||
+        Bounds->ymx < Bounds->ymn)
+            return FALSE;
+    return TRUE;
+}
+
 MNMXCORD PolyBounds (LPDPOINT points,int npoints)
 {
     MNMXCORD bounds;
