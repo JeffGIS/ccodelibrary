@@ -75,7 +75,7 @@
     nvmib.label.font = [UIFont systemFontOfSize:16.0];
     nvmib.label.adjustsFontSizeToFitWidth = YES;
     nvmib.label.textAlignment = NSTextAlignmentCenter;
-    nvmib.label.numberOfLines = 2;
+    nvmib.label.numberOfLines = 0;
     nvmib.label.text = nvmib.title;
     nvmib.label.textColor = UIColor.blackColor;
     [nvmib addSubview:nvmib.label];

@@ -47,6 +47,7 @@
           toList:(NSString *)listName;
 - (NSMutableArray*) getOptionsForCell:(NSInteger)row
                                column:(NSInteger)column;
+- (NSArray*) getListMapitOptions;
 
 @optional
 - (BOOL) addCurrentPropertyListToPropertyList:(NSString *)listToAddTo;

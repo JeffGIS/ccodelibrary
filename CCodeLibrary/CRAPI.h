@@ -164,7 +164,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic) int offsetForBoundsInMeters, keepProcessing;
 @property (nonatomic, copy, nullable) NSString *selectBoundaryFromMapType;
 @property (nonatomic, nullable) NVDocumentManager *docManager;
-@property (nonatomic) BOOL mapIndividualDest, mapGroupDest, mapPropList;
+@property (nonatomic) BOOL mapIndividualDest, mapGroupDest;
+@property (nonatomic) NSString*  mapPropList;
 @property (nonatomic, copy, nullable) NSString *mapCrimeList;
 @property (nonatomic) BOOL uploadPix, downloadData, downloadPix;
 @property (nonatomic) DataSetTypes newDataset;

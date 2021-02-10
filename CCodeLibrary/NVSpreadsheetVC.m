@@ -248,7 +248,7 @@ NVAlertViewDelegate,NVDocumentManagerDelegate, NVPopoverTableViewDelegate,UIText
         switch (_delegate.getSpreadSheetType)
         {
             case SST_PropertyList:
-                _mapIt.selected = CRAPI.sharedInstance.mapPropList;
+                _mapIt.selected = ![CRAPI.sharedInstance.mapPropList isEqual:@""];
                 break;
             case SST_CrimeList:
                 _mapIt.selected = CRAPI.sharedInstance.mapCrimeList != nil;
@@ -1103,11 +1103,22 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)toggleMapIt:(UIButton *)button
 {
-    button.selected = !button.selected;
     switch ([_delegate getSpreadSheetType])
     {
         case SST_PropertyList:
-            CRAPI.sharedInstance.mapPropList = button.selected;
+        {
+            NSArray * list = [_delegate getListMapitOptions];
+            
+            if (list.count > 0)
+            {
+                NVPopoverTableView *nvptv = [NVPopoverTableView showPopoverTableViewInView:self.view
+                                                                                  delegate:self
+                                                                                     title:@"Select Mapping Option"
+                                                                                 textArray:list
+                                                                             includeCancel:YES];
+                nvptv.identifier = @"SelectPropListMapitOption";
+            }
+        }
             break;
         case SST_CrimeList:
         {
@@ -1264,8 +1275,19 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [_delegate addCurrentPropertyListToPropertyList:text];
 
     }
-    
+    else if ([popoverTableView.identifier isEqualToString:@"SelectPropListMapitOption"])
+    {
+        if ([text isEqual:@"None"])
+        {
+            CRAPI.sharedInstance.mapPropList = @"";
+        }
+        else
+        {
+            CRAPI.sharedInstance.mapPropList = text;
+        }
+        _mapIt.selected = ![CRAPI.sharedInstance.mapPropList isEqual:@""];
 
+    }
     [popoverTableView hide:YES];
 }
 - (BOOL) webViewDidReturn:(NVWebView *)webView
@@ -1376,7 +1398,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             }
                 break;
             case 3:{//Export to Property List
-                NSMutableArray *fileList = _delegate.spreadsheetDidGetLists;
+                NSArray *fileList = _delegate.spreadsheetDidGetLists;
                 
                 //[fileList addObject:@"Create New List"];
                 if (fileList.count > 0)

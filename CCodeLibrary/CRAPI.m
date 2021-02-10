@@ -78,7 +78,7 @@ NVSlopeData CurrentSlopeData;
         _documentsDirectory = UserDefaults.defaults.localFilePath;
         _extractFile = [NSString stringWithFormat:@"%@/extract.bmp", _documentsDirectory];
         _crimeMode = (CrimeMapMode)[UserDefaults.defaults integerForKey:@"CrimeMode"];
-        _mapPropList = [UserDefaults.defaults boolForKey:@"MapPropList"];
+        _mapPropList = [UserDefaults.defaults stringForKey:@"MapPropList"];
         _mapCrimeList = [UserDefaults.defaults stringForKey:@"MapCrimeList"];
         NSString *defaultCrimeTarget = [UserDefaults.defaults stringForKey:@"CrimeTarget"];
         _peerConnect = NVPeerConnect.new;
@@ -1651,10 +1651,10 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     [UserDefaults.defaults saveString:mapCrimeList forKey:@"MapCrimeList"];
 }
 
-- (void)setMapPropList:(BOOL)mapPropList
+- (void)setMapPropList:(NSString *)mapPropList
 {
     _mapPropList = mapPropList;
-    [UserDefaults.defaults saveBool:mapPropList forKey:@"MapPropList"];
+    [UserDefaults.defaults saveString:mapPropList forKey:@"MapPropList"];
 }
 
 - (BOOL) refnoInAreaText:(int) refno
