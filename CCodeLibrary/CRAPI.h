@@ -21,6 +21,7 @@
 #import "SlopeClient.h"
 #import "NVSlopeData.h"
 #import "WIT_MotionInput.h"
+#import "SOLAR-2Input.h"
 
 @import AVKit;
 
@@ -87,7 +88,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 
 @property (nonatomic, nullable) NSMutableArray *savedNotesArray;//temp till store in DB
 
-@property WIT_MotionInput *witMotionInput;
+@property (nonatomic, nullable) WIT_MotionInput *witMotionInput;
+@property (nonatomic, nullable) SOLAR2Input *solar2Input;
 
 @property (nonatomic) ModuleNames currentModule;
 @property (nonatomic) int currentSubModule;
@@ -207,6 +209,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property int firstSidewalkPointIDOnSegment;
 @property (strong, nonatomic) CBCentralManager      *centralManager;
 @property (strong, nonatomic) CBPeripheral          *WITMotionPeripheral;
+@property (strong, nonatomic) CBPeripheral          *SOLAR2Peripheral;
 @property (strong, nonatomic) CBPeripheral          *NVCRIS_Peripheral;
 @property (strong, nonatomic) CBPeripheralManager *peripheralManager;
 @property (strong, nonatomic) NVCRIS_PeripheralManager * nvcpm;

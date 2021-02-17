@@ -4,6 +4,7 @@
 @import UIKit;
 #import "NVSliderController.h"
 #import "WIT_MotionInput.h"
+#import "SOLAR-2Input.h"
 #import "SlopeClient.h"
 
 #define SDWK_ERROR_VAL 0.25
@@ -25,7 +26,7 @@
 
 @end
 
-@interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate,CLLocationManagerDelegate,WIT_MotionInputDelegate,SlopeClientDelegate>
+@interface GSSiSlopeViewController : UIViewController <NVSliderControllerDelegate,CLLocationManagerDelegate,WIT_MotionInputDelegate,SOLAR2InputDelegate,SlopeClientDelegate>
 
 @property (nonatomic, weak) id <GSSiSlopeViewControllerDelegate> delegate;
 @property BOOL displayDegrees;
@@ -40,6 +41,7 @@
 @property (nonatomic) double errorValueSide;
 @property BOOL wantLocation;
 @property BOOL wantWitMotion;
+@property BOOL wantSOLAR2;
 @property BOOL wantZeroButton;
 @property WITMotionCalibrateSteps WITMotionCalibrationStep;
 @property NSTimer * timer;

@@ -99,13 +99,20 @@ static int COUNT=100;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _wantWitMotion = CRAPI.sharedInstance.useExternalAccelerometer;
+    _wantWitMotion = NO;
+    _wantSOLAR2 = CRAPI.sharedInstance.useExternalAccelerometer;
     _inWitMotionCalibrate = NO;
     if (_wantWitMotion)
     {
         if (!CRAPI.sharedInstance.witMotionInput)
             CRAPI.sharedInstance.witMotionInput = WIT_MotionInput.new;
         CRAPI.sharedInstance.witMotionInput.delegate = self;
+    }
+    if (_wantSOLAR2)
+    {
+        if (!CRAPI.sharedInstance.solar2Input)
+            CRAPI.sharedInstance.solar2Input = SOLAR2Input.new;
+        CRAPI.sharedInstance.solar2Input.delegate = self;
     }
     if (!_fromCalibration)
     {
@@ -668,6 +675,10 @@ static int COUNT=100;
     {
         [self startWitMotion:nil];
     }
+    else if (_wantSOLAR2)
+    {
+        [self startSOLAR2:nil];
+    }
     else
         [self startManagers2];
 }
@@ -688,6 +699,24 @@ static int COUNT=100;
     }
     else
         [self waitingOnWitMotionConnection:YES];
+
+}
+- (void) startSOLAR2:(NSTimer*)timer
+{
+    if (timer)
+        [timer invalidate];
+    if (![CRAPI.sharedInstance.solar2Input startInput])
+    {
+        [self waitingOnSOLAR2Connection:NO];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:1
+                                                   target:self
+                                                 selector:@selector(startSOLAR2:)
+                                                 userInfo:nil
+                                                  repeats:NO];
+
+    }
+    else
+        [self waitingOnSOLAR2Connection:YES];
 
 }
 - (void)startManagers2
@@ -1423,10 +1452,24 @@ static int COUNT=100;
     else
         _promptLabel.text = @"Waiting On Wit-Motion";
 }
+- (void) waitingOnSOLAR2Message
+{
+    if (_clearWMM)
+        _promptLabel.text = @"";
+    else
+        _promptLabel.text = @"Waiting On SOLAR-2";
+}
 -(void) waitingOnWitMotionConnection:(BOOL)clear
 {
     _clearWMM = clear;
     [self performSelectorOnMainThread:@selector(waitingOnWitMotionMessage)
+                           withObject:nil
+                        waitUntilDone:NO];
+}
+-(void) waitingOnSOLAR2Connection:(BOOL)clear
+{
+    _clearWMM = clear;
+    [self performSelectorOnMainThread:@selector(waitingOnSOLAR2Message)
                            withObject:nil
                         waitUntilDone:NO];
 }
