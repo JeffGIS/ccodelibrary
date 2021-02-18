@@ -17,7 +17,6 @@ typedef NS_ENUM(NSInteger, SOLAR2CalibrateSteps)
     InLeftCalibrateSOLAR2,
     InRightCalibrateSOLAR2,
     InEndCalibrationSOLAR2,
-    InSaveCalibrationSOLAR2,
 };
 
 @class SOLAR2Input;

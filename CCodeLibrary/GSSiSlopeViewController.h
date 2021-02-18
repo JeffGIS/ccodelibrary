@@ -44,6 +44,7 @@
 @property BOOL wantSOLAR2;
 @property BOOL wantZeroButton;
 @property WITMotionCalibrateSteps WITMotionCalibrationStep;
+@property SOLAR2CalibrateSteps SOLAR2CalibrationStep;
 @property NSTimer * timer;
 
 + (GSSiSlopeViewController *)slopeControllerWithCriticalValue:(double)criticalVal

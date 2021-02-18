@@ -564,6 +564,19 @@ static int COUNT=100;
                     break;
             }
         }
+        if (_inSOLAR2Calibrate)
+        {
+            switch (_SOLAR2CalibrationStep)
+            {
+                default:
+                    [self stopMotionManager];
+                    
+                    [self dismissViewControllerAnimated:YES
+                                             completion:nil];
+
+                    break;
+            }
+        }
         else
         {
             [self startManagers];
@@ -1472,6 +1485,31 @@ static int COUNT=100;
             break;
     }
 }
+- (void)SOLAR2CompletedCalibrationStep:(SOLAR2CalibrateSteps)step
+{
+    _SOLAR2CalibrationStep = step;
+    switch (step)
+    {
+        case InStartCalibrateSOLAR2:
+            [self setPromptText:@"Please wait..."];
+            [_startCancelButton setHidden:YES];
+            [CRAPI.sharedInstance.solar2Input leftCalibrate];
+            break;
+        case InLeftCalibrateSOLAR2:
+            [CRAPI.sharedInstance.solar2Input rightCalibrate];
+            break;
+        case InRightCalibrateSOLAR2:
+            [CRAPI.sharedInstance.solar2Input endCalibration];
+            break;
+        case InEndCalibrationSOLAR2:
+            [self setPromptText:@"SOLAR-2 Calibration Saved"];
+            [_startCancelButton setHidden:NO];
+            [_startCancelButton setTitle:@"Finish"
+                                forState:UIControlStateNormal];
+            break;
+    }
+}
+
 
 - (void) SlopeClient:(SlopeClient *)controller returnedData:(NVSlopeData)slopeData
 {

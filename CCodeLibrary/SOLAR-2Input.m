@@ -40,11 +40,6 @@ static unsigned char calibrationBytes[8];
         [self restart];
         self.wantSetNotify = NO;
         self.wantDisconnect = NO;
-        calibrationBytes[0] = 0xFF;
-        calibrationBytes[1] = 0xAA;
-        calibrationBytes[2] = 0x01;
-        calibrationBytes[3] = 0x01;
-        calibrationBytes[4] = 0x00;
     }
   return self;
 }
@@ -445,60 +440,39 @@ static unsigned char calibrationBytes[8];
 }
 - (void) leftCalibrate
 {
-    strcpy (calibrationBytes,"setzcur");
+    strcpy (calibrationBytes,"setcasc");
     NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
     
     if (_calibrationCharacteristic)
     {
-        _calibrationStep = InLeftCalibrate;
+        _calibrationStep = InLeftCalibrateSOLAR2;
         [self writeCalibrationData:data];
-        [self sleep:2];
+        [self sleep:1];
     }
     
 
 }
 - (void) rightCalibrate
 {
-    calibrationBytes[3] = 0x06;
-    NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
-    
+    strcpy (calibrationBytes,"str0100");
+    NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
+
 
     if (_calibrationCharacteristic)
     {
-        _calibrationStep = InRightCalibrate;
+        _calibrationStep = InRightCalibrateSOLAR2;
         [self writeCalibrationData:data];
-        [self sleep:2];
+        [self sleep:1];
     }
 
 
 }
 - (void)endCalibration
 {
-    _calibrationStep = InEndCalibration;
-    calibrationBytes[2] = 0x01;
-    calibrationBytes[3] = 0x00;
+    _calibrationStep = InEndCalibrationSOLAR2;
     NSLog (@"Calibration end");
-    NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
-    [self writeCalibrationData:data];
 
-    [self sleep:2];
-    
-}
-- (void)saveCalibration
-{
-    calibrationBytes[0] = 0xFF;
-    calibrationBytes[1] = 0xAA;
-    calibrationBytes[2] = 0x01;
-    calibrationBytes[3] = 0x01;
-    calibrationBytes[4] = 0x00;
-
-    _calibrationStep = InSaveCalibration;
-    calibrationBytes[2] = 0x00;
-    calibrationBytes[3] = 0x00;
-    NSLog (@"Calibration data saved");
-    NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
-    [self writeCalibrationData:data];
-    [self sleep:2];
+    [self notifyStepCompleted];
     
 }
 - (void)notifyStepCompleted
@@ -519,15 +493,13 @@ static unsigned char calibrationBytes[8];
         
         switch (_calibrationStep)
         {
-            case InSaveCalibration:
+            case InStartCalibrateSOLAR2:
                 break;
-            case InStartCalibrate:
+            case InLeftCalibrateSOLAR2:
                 break;
-            case InLeftCalibrate:
+            case InRightCalibrateSOLAR2:
                 break;
-            case InRightCalibrate:
-                break;
-            case InEndCalibration:
+            case InEndCalibrationSOLAR2:
                 break;
         }
     }
