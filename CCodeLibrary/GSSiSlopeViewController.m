@@ -46,6 +46,7 @@ static int COUNT=100;
 @property BOOL unable, hasRun;
 @property (nonatomic) NSMutableArray<CLLocation *> *locations;
 @property BOOL inWitMotionCalibrate;
+@property BOOL inSOLAR2Calibrate;
 @property SlopeClient * slopeClient;
 @property BOOL clearWMM;
 @end
@@ -102,6 +103,7 @@ static int COUNT=100;
     _wantWitMotion = NO;
     _wantSOLAR2 = CRAPI.sharedInstance.useExternalAccelerometer;
     _inWitMotionCalibrate = NO;
+    _inSOLAR2Calibrate = NO;
     if (_wantWitMotion)
     {
         if (!CRAPI.sharedInstance.witMotionInput)
@@ -212,7 +214,7 @@ static int COUNT=100;
          forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:helpButton];
-    if (_wantWitMotion && _fromCalibration && _wantZeroButton)
+    if ((_wantWitMotion || _wantSOLAR2) && _fromCalibration && _wantZeroButton)
     {
         _zeroButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _zeroButton.frame = CGRectMake(568.0, 120.0, 190.0, 80.0);
@@ -755,6 +757,17 @@ static int COUNT=100;
     else
         [self startManagers2];
  }
+- (void)SOLAR2InputDidConnect:(WIT_MotionInput *)controller
+{
+    if (_inSOLAR2Calibrate)
+    {
+        [_startCancelButton setHidden:YES];
+        [self setPromptText:@"Connected to SOLAR-2"];
+        [CRAPI.sharedInstance.solar2Input startCalibration];
+    }
+    else
+        [self startManagers2];
+ }
 - (void)stopManagers
 {
     [_motionManager stopAccelerometerUpdates];
@@ -969,6 +982,20 @@ static int COUNT=100;
             if (_wantWitMotion)
             {
                 if ([CRAPI.sharedInstance.witMotionInput getResults:WitMotionAngles] > 4)
+                {
+                    angy = WitMotionAngles[1];
+                    angx = WitMotionAngles[0];
+                }
+                else
+                {
+                    [self resetSumsAndCounter];
+                    [self startWitMotion:nil];
+                    return;
+                }
+            }
+            if (_wantSOLAR2)
+            {
+                if ([CRAPI.sharedInstance.solar2Input getResults:WitMotionAngles] > 4)
                 {
                     angy = WitMotionAngles[1];
                     angx = WitMotionAngles[0];
@@ -1402,8 +1429,16 @@ static int COUNT=100;
  - (void) zeroButtonTapped:(UIButton *)button
  {
      [button setHidden:YES];
-     _inWitMotionCalibrate = YES;
-     [self startWitMotion:nil];
+     if (_wantWitMotion)
+     {
+         _inWitMotionCalibrate = YES;
+         [self startWitMotion:nil];
+     }
+     else if (_wantSOLAR2)
+     {
+         _inSOLAR2Calibrate = YES;
+         [self startSOLAR2:nil];
+     }
  }
 - (void)WIT_MotionCompletedCalibrationStep:(WITMotionCalibrateSteps)step
 {

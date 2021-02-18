@@ -33,10 +33,9 @@ typedef NS_ENUM(NSInteger, SOLAR2CalibrateSteps)
 @property (nonatomic, weak) id <SOLAR2InputDelegate> delegate;
 @property (strong, nonatomic) CBCentralManager      *centralManager;
 @property int nValues;
-@property double roll, pitch, yaw;
+@property double roll, pitch;
 @property NSMutableArray * rollValues;
 @property NSMutableArray * pitchValues;
-@property NSMutableArray * yawValues;
 @property BOOL wantScan;
 @property BOOL wantSetNotify;
 @property BOOL wantDisconnect;

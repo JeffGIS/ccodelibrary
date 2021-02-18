@@ -15,11 +15,12 @@
 //#define SOLAR2_UUID1 @"0000FFE4-0000-1000-8000-00805F9A34FB"
 //#define SOLAR2_UUID2 @"0000FFE9-0000-1000-8000-00805F9A34FB"
 //#define SOLAR2_SERVICE_UUID @"0000FFE5-0000-1000-8000-00805F9A34FB"
-#define SOLAR2_UUID1 @"00001800-0000-1000-8000-00805F9B34FB"
-#define SOLAR2_UUID2 @"0000FFE9-0000-1000-8000-00805F9B34FB"
-#define SOLAR2_SERVICE_UUID @"0000180A-0000-1000-8000-00805F9B34FB"
+#define SOLAR2_UUID1 @"00031201-0000-1000-8000-00805F9B0130"
+#define SOLAR2_UUID2 @"00031202-0000-1000-8000-00805F9B0130"
+//#define SOLAR2_SERVICE_UUID @"0000180A-0000-1000-8000-00805F9B34FB"
+#define SOLAR2_SERVICE_UUID @"0003ABCD-0000-1000-8000-00805F9B0131"
 
-static unsigned char calibrationBytes[5];
+static unsigned char calibrationBytes[8];
 
 @implementation SOLAR2Input
 
@@ -106,12 +107,10 @@ static unsigned char calibrationBytes[5];
     {
         angles[0] = _roll/_nValues;
         angles[1] = _pitch/_nValues;
-        angles[2] = _yaw/_nValues;
     }
     NSLog (@"%@",_pitchValues.debugDescription);
     angles[0] = -[self computeAngle:_rollValues];
     angles[1] = -[self computeAngle:_pitchValues];
-    angles[2] = [self computeAngle:_yawValues];
 
     return rtn;
 }
@@ -120,10 +119,8 @@ static unsigned char calibrationBytes[5];
     self.nValues = 0;
     self.pitch = 0;
     self.roll = 0;
-    self.yaw = 0;
     self.rollValues = NSMutableArray.new;
     self.pitchValues = NSMutableArray.new;
-    self.yawValues = NSMutableArray.new;
 }
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
@@ -287,19 +284,25 @@ static unsigned char calibrationBytes[5];
     }
         
     long lbytes = characteristic.value.length;
-    
+
+    NSString * data = [NSString stringWithUTF8String:[characteristic.value bytes]];
+
     //NSLog (@"%li bytes for %@",lbytes,characteristic.UUID.UUIDString);
     //CopySerialData(characteristic.value.bytes,lbytes);
     //NSLog (@"Roll:%.2f  Pitch:%.2f  Yaw:%.2f",WITRecord.RollAngle,WITRecord.PitchAngle,WITRecord.YawAngle);
     //NSLog (@"Roll:%4f  Pitch:%4f  Yaw:%4f",WitRecord.RollAngle,WitRecord.PitchAngle,WitRecord.YawAngle);
-    _nValues++;
-    //_roll += WitRecord.RollAngle;
-    //_pitch += WitRecord.PitchAngle;
+    NSArray <NSString*>*strings = [data componentsSeparatedByString:@","];
+    if (strings.count ==2)
+    {
+        _nValues++;
+        _roll += strings[0].doubleValue;
+        _pitch += strings[1].doubleValue;
     //_yaw += WitRecord.YawAngle;
-    //NSNumber * rAngle = [NSNumber numberWithDouble:WitRecord.RollAngle];
-    //[_rollValues addObject:rAngle];
-    //NSNumber * pAngle = [NSNumber numberWithDouble:WitRecord.PitchAngle];
-    //[_pitchValues addObject:pAngle];
+        NSNumber * rAngle = [NSNumber numberWithDouble:strings[0].doubleValue];
+        [_rollValues addObject:rAngle];
+        NSNumber * pAngle = [NSNumber numberWithDouble:strings[1].doubleValue];
+        [_pitchValues addObject:pAngle];
+    }
     //NSNumber * yAngle = [NSNumber numberWithDouble:WitRecord.YawAngle];
     //[_yawValues addObject:yAngle];
     if (_firstValueSinceStartInput)
@@ -420,12 +423,12 @@ static unsigned char calibrationBytes[5];
     _wantScan = YES;
     _wantSetNotify = NO;
     _wantDisconnect = NO;
-    _calibrationStep = InStartCalibrate;
+    _calibrationStep = InStartCalibrateSOLAR2;
     [self.centralManager stopScan];
     NSLog(@"Scanning stopped");
     [CRAPI.sharedInstance.SOLAR2Peripheral setNotifyValue:NO forCharacteristic:_dataCharacteristic];
-    calibrationBytes[3] = 0x01;
-    NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
+    strcpy (calibrationBytes,"setzcur");
+    NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
 
     [self writeCalibrationData:data];
  }
@@ -442,8 +445,8 @@ static unsigned char calibrationBytes[5];
 }
 - (void) leftCalibrate
 {
-    calibrationBytes[3] = 0x05;
-    NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
+    strcpy (calibrationBytes,"setzcur");
+    NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
     
     if (_calibrationCharacteristic)
     {
