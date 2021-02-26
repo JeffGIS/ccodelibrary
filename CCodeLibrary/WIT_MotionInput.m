@@ -423,7 +423,11 @@ static unsigned char calibrationBytes[5];
     [self.centralManager stopScan];
     NSLog(@"Scanning stopped");
     [CRAPI.sharedInstance.WITMotionPeripheral setNotifyValue:NO forCharacteristic:_dataCharacteristic];
+    calibrationBytes[0] = 0xFF;
+    calibrationBytes[1] = 0xAA;
+    calibrationBytes[2] = 0x01;
     calibrationBytes[3] = 0x01;
+    calibrationBytes[4] = 0x00;
     NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
 
     [self writeCalibrationData:data];
@@ -441,7 +445,12 @@ static unsigned char calibrationBytes[5];
 }
 - (void) leftCalibrate
 {
+    calibrationBytes[0] = 0xFF;
+    calibrationBytes[1] = 0xAA;
+    calibrationBytes[2] = 0x01;
     calibrationBytes[3] = 0x05;
+    calibrationBytes[4] = 0x00;
+
     NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
     
     if (_calibrationCharacteristic)
@@ -455,7 +464,11 @@ static unsigned char calibrationBytes[5];
 }
 - (void) rightCalibrate
 {
+    calibrationBytes[0] = 0xFF;
+    calibrationBytes[1] = 0xAA;
+    calibrationBytes[2] = 0x01;
     calibrationBytes[3] = 0x06;
+    calibrationBytes[4] = 0x00;
     NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
     
 
@@ -471,8 +484,11 @@ static unsigned char calibrationBytes[5];
 - (void)endCalibration
 {
     _calibrationStep = InEndCalibration;
+    calibrationBytes[0] = 0xFF;
+    calibrationBytes[1] = 0xAA;
     calibrationBytes[2] = 0x01;
     calibrationBytes[3] = 0x00;
+    calibrationBytes[4] = 0x00;
     NSLog (@"Calibration end");
     NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
     [self writeCalibrationData:data];
@@ -484,13 +500,11 @@ static unsigned char calibrationBytes[5];
 {
     calibrationBytes[0] = 0xFF;
     calibrationBytes[1] = 0xAA;
-    calibrationBytes[2] = 0x01;
-    calibrationBytes[3] = 0x01;
+    calibrationBytes[2] = 0x00;
+    calibrationBytes[3] = 0x00;
     calibrationBytes[4] = 0x00;
 
     _calibrationStep = InSaveCalibration;
-    calibrationBytes[2] = 0x00;
-    calibrationBytes[3] = 0x00;
     NSLog (@"Calibration data saved");
     NSData * data = [NSData dataWithBytes:calibrationBytes length:5];
     [self writeCalibrationData:data];

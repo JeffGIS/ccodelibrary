@@ -551,9 +551,9 @@ static int COUNT=100;
             switch (_WITMotionCalibrationStep)
             {
                 case InLeftCalibrate:
+
+                    [self setPromptText: @"Please wait..." hideButton:YES];
                     [CRAPI.sharedInstance.witMotionInput rightCalibrate];
-                    [_startCancelButton setHidden:YES];
-                    [self setPromptText: @"Please wait..."];
                     break;
                 default:
                     [self stopMotionManager];
@@ -564,7 +564,7 @@ static int COUNT=100;
                     break;
             }
         }
-        if (_inSOLAR2Calibrate)
+        else if (_inSOLAR2Calibrate)
         {
             switch (_SOLAR2CalibrationStep)
             {
@@ -763,8 +763,8 @@ static int COUNT=100;
 {
     if (_inWitMotionCalibrate)
     {
-        [_startCancelButton setHidden:YES];
-        [self setPromptText:@"Connected to WIT-Motion"];
+
+        [self setPromptText:@"Connected to WIT-Motion" hideButton:YES];
         [CRAPI.sharedInstance.witMotionInput startCalibration];
     }
     else
@@ -774,8 +774,8 @@ static int COUNT=100;
 {
     if (_inSOLAR2Calibrate)
     {
-        [_startCancelButton setHidden:YES];
-        [self setPromptText:@"Connected to SOLAR-2"];
+
+        [self setPromptText:@"Connected to SOLAR-2" hideButton:YES];
         [CRAPI.sharedInstance.solar2Input startCalibration];
     }
     else
@@ -1390,11 +1390,13 @@ static int COUNT=100;
 }
 
 - (void)setPromptText:(NSString *)promptText
+           hideButton:(BOOL)hide
 {
     _promptText = promptText;
     dispatch_async(dispatch_get_main_queue(), ^
                    {
-                       _promptLabel.text = promptText;
+                        _promptLabel.text = promptText;
+                        [_startCancelButton setHidden:hide];
                    });
 
 }
@@ -1459,27 +1461,26 @@ static int COUNT=100;
     switch (step)
     {
         case InStartCalibrate:
-            [self setPromptText:@"Please wait..."];
-            [_startCancelButton setHidden:YES];
+            [self setPromptText:@"Please wait..." hideButton:YES];
+            
             [CRAPI.sharedInstance.witMotionInput leftCalibrate];
             break;
         case InLeftCalibrate:
-            [self setPromptText:@"Turn the iPad 180 degrees and tap Continue"];
-            [_startCancelButton setHidden:NO];
+            [self setPromptText:@"Turn the iPad 180 degrees and tap Continue" hideButton:NO];
+
             [_startCancelButton setTitle:@"Continue"
                                 forState:UIControlStateNormal];
             break;
         case InRightCalibrate:
-            [self setPromptText:@"Please wait..."];
-            [CRAPI.sharedInstance.witMotionInput saveCalibration];
+            [self setPromptText:@"Please wait..." hideButton:NO];
+            [CRAPI.sharedInstance.witMotionInput endCalibration];
             break;
         case InEndCalibration:
-            [self setPromptText:@"Please wait..."];
+            [self setPromptText:@"Please wait..." hideButton:NO];
             [CRAPI.sharedInstance.witMotionInput saveCalibration];
            break;
         case InSaveCalibration:
-            [self setPromptText:@"WIT-Motion Calibration Saved"];
-            [_startCancelButton setHidden:NO];
+            [self setPromptText:@"WIT-Motion Calibration Saved" hideButton:NO];
             [_startCancelButton setTitle:@"Finish"
                                 forState:UIControlStateNormal];
             break;
@@ -1491,8 +1492,8 @@ static int COUNT=100;
     switch (step)
     {
         case InStartCalibrateSOLAR2:
-            [self setPromptText:@"Please wait..."];
-            [_startCancelButton setHidden:YES];
+            [self setPromptText:@"Please wait..." hideButton:YES];
+
             [CRAPI.sharedInstance.solar2Input leftCalibrate];
             break;
         case InLeftCalibrateSOLAR2:
@@ -1502,8 +1503,8 @@ static int COUNT=100;
             [CRAPI.sharedInstance.solar2Input endCalibration];
             break;
         case InEndCalibrationSOLAR2:
-            [self setPromptText:@"SOLAR-2 Calibration Saved"];
-            [_startCancelButton setHidden:NO];
+            [self setPromptText:@"SOLAR-2 Calibration Saved" hideButton:NO];
+
             [_startCancelButton setTitle:@"Finish"
                                 forState:UIControlStateNormal];
             break;
