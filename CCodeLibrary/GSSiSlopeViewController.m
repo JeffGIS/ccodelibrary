@@ -22,7 +22,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
 };
 
 static int COUNT=100;
-#define MIN_HEADING_COUNTER 5
+#define MIN_HEADING_COUNTER 3
 
 @interface GSSiSlopeViewController ()
 
@@ -115,6 +115,7 @@ static int COUNT=100;
         if (!CRAPI.sharedInstance.solar2Input)
             CRAPI.sharedInstance.solar2Input = SOLAR2Input.new;
         CRAPI.sharedInstance.solar2Input.delegate = self;
+        _countFactor /= 2;
     }
     if (!_fromCalibration)
     {
@@ -965,7 +966,7 @@ static int COUNT=100;
 {
     if (_counter == COUNT)
     {
-        if (_headingCounter > (MIN_HEADING_COUNTER + 10) || !CLLocationManager.headingAvailable)
+        if (_headingCounter > (MIN_HEADING_COUNTER + 3) || !CLLocationManager.headingAvailable)
         {
             
             _data.accelX = (_aSumX / COUNT);
@@ -1033,7 +1034,7 @@ static int COUNT=100;
             [self slopeMeasurementComplete];
         }
         
-        if (_headingCounter  > MIN_HEADING_COUNTER + 10)
+        if (_headingCounter  > MIN_HEADING_COUNTER + 3)
             _counter++;
     }
     

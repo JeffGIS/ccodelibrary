@@ -1905,4 +1905,9 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     NSString *newLine = [NSString stringWithFormat:@"%@\r\n", line];
     [_debugFileHandle writeData:[newLine dataUsingEncoding:NSUTF8StringEncoding]];
 }
+
+void GSSiViewDidLoad (void)
+{
+    NSLog (@"view did load");
+}
 @end

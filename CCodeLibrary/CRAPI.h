@@ -345,4 +345,5 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void) writeToDebugFile:(NSString *)line;
 - (NSString *_Nonnull) getRouteServer;
 
+void GSSiViewDidLoad (void);
 @end
