@@ -20,7 +20,7 @@
 //#define SOLAR2_SERVICE_UUID @"0000180A-0000-1000-8000-00805F9B34FB"
 #define SOLAR2_SERVICE_UUID @"0003ABCD-0000-1000-8000-00805F9B0131"
 
-static unsigned char calibrationBytes[8];
+static char calibrationBytes[8];
 
 @implementation SOLAR2Input
 
@@ -40,6 +40,9 @@ static unsigned char calibrationBytes[8];
         [self restart];
         self.wantSetNotify = NO;
         self.wantDisconnect = NO;
+        self.sleepTime = 0.5;
+        self.tranRate = @"str0100";
+        self.filter = @"setflt4";
     }
   return self;
 }
@@ -277,35 +280,45 @@ static unsigned char calibrationBytes[8];
         //_textview.text = [NSString stringWithFormat:@"Error discovering characteristics: %@", [error localizedDescription]];
         return;
     }
+    int dataLen = characteristic.value.length;
+
+    if (_calibrationStep == InGetSlopeDataSOLAR2)
+    {
+        NSString * data = [NSString stringWithUTF8String:[characteristic.value bytes]];
+        NSLog (@"DATA:%@",data);
+        NSArray <NSString*>*strings = [data componentsSeparatedByString:@","];
+        if (strings.count ==2)
+        {
+            _nValues++;
+            _roll += strings[0].doubleValue;
+            _pitch += strings[1].doubleValue;
+            //_yaw += WitRecord.YawAngle;
+            NSNumber * rAngle = [NSNumber numberWithDouble:strings[0].doubleValue];
+            [_rollValues addObject:rAngle];
+            NSNumber * pAngle = [NSNumber numberWithDouble:strings[1].doubleValue];
+            [_pitchValues addObject:pAngle];
+        }
+    }
+    else
+    {
+/*        if (_calibrationStep == InEndCalibrationSOLAR2)
+        {
+            short ival;
+            BYTE bytes[2];
+            BYTE bytes2[2];
+            memcpy (bytes,characteristic.value.bytes,2);
+            bytes2[1] = bytes[0];
+            bytes2[0] = bytes[1];
+            memcpy (&ival,bytes2,2);
+            int jval = ival;
+        }*/
+        _ioStatus = [NSString stringWithUTF8String:[characteristic.value bytes]];
+        [self performSelectorOnMainThread:@selector(notifyStepCompleted)
+                               withObject:nil
+                            waitUntilDone:NO];
         
-    long lbytes = characteristic.value.length;
-
-    NSString * data = [NSString stringWithUTF8String:[characteristic.value bytes]];
-
-    //NSLog (@"%li bytes for %@",lbytes,characteristic.UUID.UUIDString);
-    //CopySerialData(characteristic.value.bytes,lbytes);
-    //NSLog (@"Roll:%.2f  Pitch:%.2f  Yaw:%.2f",WITRecord.RollAngle,WITRecord.PitchAngle,WITRecord.YawAngle);
-    //NSLog (@"Roll:%4f  Pitch:%4f  Yaw:%4f",WitRecord.RollAngle,WitRecord.PitchAngle,WitRecord.YawAngle);
-    NSArray <NSString*>*strings = [data componentsSeparatedByString:@","];
-    if (strings.count ==2)
-    {
-        _nValues++;
-        _roll += strings[0].doubleValue;
-        _pitch += strings[1].doubleValue;
-    //_yaw += WitRecord.YawAngle;
-        NSNumber * rAngle = [NSNumber numberWithDouble:strings[0].doubleValue];
-        [_rollValues addObject:rAngle];
-        NSNumber * pAngle = [NSNumber numberWithDouble:strings[1].doubleValue];
-        [_pitchValues addObject:pAngle];
     }
-    //NSNumber * yAngle = [NSNumber numberWithDouble:WitRecord.YawAngle];
-    //[_yawValues addObject:yAngle];
-    if (_firstValueSinceStartInput)
-    {
-        if (_delegate)
-            [_delegate SOLAR2InputDidConnect:self];
-    }
-    _firstValueSinceStartInput = NO;
+    return;
 }
 
 
@@ -387,12 +400,11 @@ static unsigned char calibrationBytes[8];
     [self.centralManager cancelPeripheralConnection:CRAPI.sharedInstance.SOLAR2Peripheral];
 }
 
-- (BOOL) startInput
+- (BOOL) startInput:(BOOL)inCalibrate
 {
     if (_waitingToConnect)
         return FALSE;
-    _wantSetNotify = NO;
-    _firstValueSinceStartInput = YES;
+    _wantSetNotify = YES;
     [self restart];
     if (!CRAPI.sharedInstance.SOLAR2Peripheral || CRAPI.sharedInstance.SOLAR2Peripheral.state == CBPeripheralStateDisconnected)
     {
@@ -401,14 +413,45 @@ static unsigned char calibrationBytes[8];
         [self scan];
     }
     else if (_dataCharacteristic)
+    {
         [CRAPI.sharedInstance.SOLAR2Peripheral setNotifyValue:YES forCharacteristic:_dataCharacteristic];
+        _calibrationStep = InStartInputSOLAR2;
+        if (inCalibrate)
+        {
+            strcpy (calibrationBytes,"stpcasc");
+            NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
+            [self writeCalibrationData:data];
+        }
+        else
+        {
+            strcpy (calibrationBytes,"setcasc");
+            NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
+            [self writeCalibrationData:data];
+        }
+    }
     else
         _wantSetNotify = YES;
     return TRUE;
 }
+- (void) startDataCollection
+{
+    _calibrationStep = InGetSlopeDataSOLAR2;
+}
+
 - (void) stopInput
 {
     _wantDisconnect = NO;
+    strcpy (calibrationBytes,"stpcasc");
+    NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
+    
+    if (_calibrationCharacteristic)
+    {
+        _calibrationStep = InStopInputSOLAR2;
+        [self writeCalibrationData:data];
+        [self sleep:_sleepTime];
+    }
+    
+
     if (CRAPI.sharedInstance.SOLAR2Peripheral&& _dataCharacteristic)
         [CRAPI.sharedInstance.SOLAR2Peripheral setNotifyValue:NO forCharacteristic:_dataCharacteristic];
 }
@@ -416,13 +459,13 @@ static unsigned char calibrationBytes[8];
 {
     [SharedDefaults.defaults saveString:@"" forKey:@"LastCalString"];
     _wantScan = YES;
-    _wantSetNotify = NO;
+    _wantSetNotify = YES;
     _wantDisconnect = NO;
     _calibrationStep = InStartCalibrateSOLAR2;
     [self.centralManager stopScan];
     NSLog(@"Scanning stopped");
-    [CRAPI.sharedInstance.SOLAR2Peripheral setNotifyValue:NO forCharacteristic:_dataCharacteristic];
-    strcpy (calibrationBytes,"setzcur");
+    [CRAPI.sharedInstance.SOLAR2Peripheral setNotifyValue:YES forCharacteristic:_dataCharacteristic];
+    strcpy (calibrationBytes,"setzfac");
     NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
 
     [self writeCalibrationData:data];
@@ -438,46 +481,49 @@ static unsigned char calibrationBytes[8];
     [NSThread sleepForTimeInterval:secs];
     return;
 }
-- (void) leftCalibrate
+- (void) calibrateStep:(int)step
 {
-    strcpy (calibrationBytes,"setcasc");
+    switch (step)
+    {
+        case 1:
+            strcpy (calibrationBytes,"setoasc");
+            _calibrationStep = InCalibrateStep1SOLAR2;
+            break;
+        case 2:
+            strcpy (calibrationBytes,_filter.UTF8String);
+            _calibrationStep = InCalibrateStep2SOLAR2;
+            break;
+        case 3:
+            strcpy (calibrationBytes,_tranRate.UTF8String);
+            _calibrationStep = InCalibrateStep3SOLAR2;
+            break;
+        case 4:
+            strcpy (calibrationBytes,"setdir1");
+            _calibrationStep = InCalibrateStep4SOLAR2;
+            break;
+        case 5:
+            strcpy (calibrationBytes,"setdir3");
+            _calibrationStep = InCalibrateStep5SOLAR2;
+            break;
+        case 6:
+            strcpy (calibrationBytes,"setzcur");
+            _calibrationStep = InCalibrateStep6SOLAR2;
+            break;
+    }
     NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
     
     if (_calibrationCharacteristic)
     {
-        _calibrationStep = InLeftCalibrateSOLAR2;
         [self writeCalibrationData:data];
-        [self sleep:1];
-    }
-    
-
-}
-- (void) rightCalibrate
-{
-    strcpy (calibrationBytes,"str0100");
-    NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
-
-
-    if (_calibrationCharacteristic)
-    {
-        _calibrationStep = InRightCalibrateSOLAR2;
-        [self writeCalibrationData:data];
-        [self sleep:1];
+        [self sleep:_sleepTime];
     }
 
-
 }
-- (void)endCalibration
-{
-    _calibrationStep = InEndCalibrationSOLAR2;
-    NSLog (@"Calibration end");
 
-    [self notifyStepCompleted];
-    
-}
 - (void)notifyStepCompleted
 {
-    [_delegate SOLAR2CompletedCalibrationStep:_calibrationStep];
+    [_delegate SOLAR2CompletedCalibrationStep:_calibrationStep
+                                       status:_ioStatus];
 }
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
@@ -486,20 +532,14 @@ static unsigned char calibrationBytes[8];
     else
     {
         NSLog (@"Calibration data written for step %li",(long)_calibrationStep);
-        [self performSelectorOnMainThread:@selector(notifyStepCompleted)
-                               withObject:nil
-                            waitUntilDone:NO];
-
         
         switch (_calibrationStep)
         {
+            case InStartInputSOLAR2:
+                break;
             case InStartCalibrateSOLAR2:
                 break;
-            case InLeftCalibrateSOLAR2:
-                break;
-            case InRightCalibrateSOLAR2:
-                break;
-            case InEndCalibrationSOLAR2:
+            case InGetSlopeDataSOLAR2:
                 break;
         }
     }

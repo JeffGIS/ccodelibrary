@@ -1324,6 +1324,7 @@ int ControlChar (NSString * controlStr,int whichChar)
     _controlledInterface = c.controlledInterface;
     _controllControlledInterface = !c.controlledInterface;
     _allowSidewalk = c.allowSidewalk;
+    _allowSidewalk = YES;
     [self saveiPadIDs];
     return TRUE;
 }

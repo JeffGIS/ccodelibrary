@@ -721,7 +721,7 @@ static int COUNT=100;
 {
     if (timer)
         [timer invalidate];
-    if (![CRAPI.sharedInstance.solar2Input startInput])
+    if (![CRAPI.sharedInstance.solar2Input startInput:_inSOLAR2Calibrate])
     {
         [self waitingOnSOLAR2Connection:NO];
         _timer = [NSTimer scheduledTimerWithTimeInterval:1
@@ -786,7 +786,13 @@ static int COUNT=100;
 {
     [_motionManager stopAccelerometerUpdates];
     [_locationManager stopUpdatingHeading];
-    [CRAPI.sharedInstance.witMotionInput cancel];
+    if (_wantWitMotion)
+        [CRAPI.sharedInstance.witMotionInput cancel];
+    else if (_wantSOLAR2)
+    {
+        [CRAPI.sharedInstance.solar2Input stopInput];
+        [CRAPI.sharedInstance.solar2Input cancel];
+    }
     if (_slopeClient)
         _slopeClient.delegate = nil;
 }
@@ -1488,27 +1494,51 @@ static int COUNT=100;
     }
 }
 - (void)SOLAR2CompletedCalibrationStep:(SOLAR2CalibrateSteps)step
+                                status:(NSString *)status
 {
     _SOLAR2CalibrationStep = step;
     switch (step)
     {
+        case InStopInputSOLAR2:
+            break;
+        case InStartInputSOLAR2:
+            if (_inSOLAR2Calibrate)
+                [CRAPI.sharedInstance.solar2Input startCalibration];
+            else if (status.length == 18)
+            {
+                [CRAPI.sharedInstance.solar2Input startDataCollection];
+                [self startManagers2];
+            }
+            break;
         case InStartCalibrateSOLAR2:
             [self setPromptText:@"Please wait..." hideButton:YES];
 
-            [CRAPI.sharedInstance.solar2Input leftCalibrate];
+            [CRAPI.sharedInstance.solar2Input calibrateStep:1];
             break;
-        case InLeftCalibrateSOLAR2:
-            [CRAPI.sharedInstance.solar2Input rightCalibrate];
+        case InCalibrateStep1SOLAR2:
+            [CRAPI.sharedInstance.solar2Input calibrateStep:2];
             break;
-        case InRightCalibrateSOLAR2:
-            [CRAPI.sharedInstance.solar2Input endCalibration];
+        case InCalibrateStep2SOLAR2:
+            [CRAPI.sharedInstance.solar2Input calibrateStep:3];
             break;
-        case InEndCalibrationSOLAR2:
+        case InCalibrateStep3SOLAR2:
+            [CRAPI.sharedInstance.solar2Input calibrateStep:4];
+            break;
+        case InCalibrateStep4SOLAR2:
+            [CRAPI.sharedInstance.solar2Input calibrateStep:5];
+            break;
+        case InCalibrateStep5SOLAR2:
+            [CRAPI.sharedInstance.solar2Input calibrateStep:6];
+            break;
+        case InCalibrateStep6SOLAR2:
             [self setPromptText:@"SOLAR-2 Calibration Saved" hideButton:NO];
 
             [_startCancelButton setTitle:@"Finish"
                                 forState:UIControlStateNormal];
             break;
+        case InGetSlopeDataSOLAR2:
+            break;
+
     }
 }
 
