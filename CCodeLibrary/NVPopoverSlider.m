@@ -595,7 +595,16 @@ static BOOL useBosch = FALSE;
     //SharedDefaults *defaults = [SharedDefaults defaults];
     NSString * returnedValues = [defaults stringForKey:@"MeasurementValues"];
     NSArray<NSString *> * array  = [returnedValues componentsSeparatedByString:@"!"];
-    if (array.count == 3)
+    if (array.count == 1)
+    {
+        NSString * value = array[0];
+        NSString * cvalue = textBefore (value,@"|");
+        if ([cvalue isEqual:@"EnterManually"])
+        {
+            useBosch = NO;
+        }
+    }
+    else if (array.count == 3)
     {
         NSString * dist = array[0];
         NSString * value = textAfter(dist,@"|");
