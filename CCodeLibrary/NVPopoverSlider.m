@@ -22,17 +22,17 @@
 
 @end
 
+static BOOL useBosch = FALSE;
+
 @implementation NVPopoverSlider
 - (id)init
 {
     self = [super init];
-    CRAPI.sharedInstance.currentMeasurementView = self;
     return self;
 }
 
 - (void)dealloc
 {
-    CRAPI.sharedInstance.currentMeasurementView = 0;
     return;
 }
 
@@ -429,13 +429,15 @@
         else
         {
             [gotoBoschButton constrainBottomToAnchor:saveButton.topAnchor constant:-24];
-           [gotoBoschButton constrainWidthToAnchor:nvps.widthAnchor multiplier:0.8];
+            [gotoBoschButton constrainWidthToAnchor:nvps.widthAnchor multiplier:0.8];
             [gotoBoschButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.3];
         }
         
         [gotoBoschButton addTarget:nvps
                             action:@selector(gotoBoschTapped)
                   forControlEvents:UIControlEventTouchUpInside];
+        CRAPI.sharedInstance.currentMeasurementView = nvps;
+
     }
     [nvps bringSubviewToFront:nvps.slider];
     [nvps showStepper];
@@ -447,7 +449,10 @@
                          nvps.alpha = 1.0;
                          nvps.tabBar.alpha = 0.0;
                      }];
-    
+    if (nvps.allowBosch && useBosch)
+    {
+        [nvps performSelector:@selector(gotoBoschTapped) withObject:nil afterDelay:0.1];
+    }
     return nvps;
 }
 
@@ -540,11 +545,15 @@
 
 - (void)cancelTapped
 {
+    CRAPI.sharedInstance.currentMeasurementView = 0;
+
     [_delegate popoverSliderDidCancel:self];
 }
 
 - (void)saveTapped
 {
+    CRAPI.sharedInstance.currentMeasurementView = 0;
+
     float value = roundf(_slider.value);
     
     if (_roundToTenths)
@@ -565,14 +574,39 @@
               didReturnValue:value
                          tag:self.tag];
 }
+
+-(double) adjustValue:(double) inVal
+            fromUnits:(NSString *)inUnits
+{
+    double outVal = 0;
+    
+    if ([inUnits isEqual:@"m"])
+    {
+        if ([_units isEqual:@"Inches"])
+        {
+            outVal = inVal * MFT * 12;
+        }
+    }
+    return outVal;
+}
 -(void) setMeasurementValues
 {
     NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:APP_GROUP_ID];
     //SharedDefaults *defaults = [SharedDefaults defaults];
     NSString * returnedValues = [defaults stringForKey:@"MeasurementValues"];
-    _slider.value = 10.3;
-    [_slider setValue:_slider.value animated:NO];
-    [self updateSliderLabel];
+    NSArray<NSString *> * array  = [returnedValues componentsSeparatedByString:@"!"];
+    if (array.count == 3)
+    {
+        NSString * dist = array[0];
+        NSString * value = textAfter(dist,@"|");
+        NSString * incomingUnits = textAfter (value,@" ");
+        NSString * cvalue = textBefore (value,@" ");
+        double dvalue = cvalue.doubleValue;
+        _slider.value = [self adjustValue:dvalue fromUnits:incomingUnits];
+        [_slider setValue:_slider.value animated:NO];
+        [self updateSliderLabel];
+    }
+    
     return;
 }
 void returnToCallerInOC (void)
@@ -589,8 +623,10 @@ void returnToCallerInOC (void)
     [SharedDefaults.defaults saveString:@"SidewalkAssistant://" forKey:@"MeasureSourceApplication"];
     returnToCallerInOC();
     if ([UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:measureURL]])
+    {
+        useBosch = YES;
         [UIApplication.sharedApplication openURL:[NSURL URLWithString:measureURL]];
-    
+    }
     else
     {
         NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
