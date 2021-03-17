@@ -86,6 +86,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 
 @interface CRAPI : NSObject
 
+@property (nonatomic, nullable) id currentMeasurementView;
 @property (nonatomic, nullable) NSMutableArray *savedNotesArray;//temp till store in DB
 
 @property (nonatomic, nullable) WIT_MotionInput *witMotionInput;

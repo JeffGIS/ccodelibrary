@@ -447,6 +447,7 @@
 		EBC1F6401F97DB0900BBEC69 /* PDFCreator.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB9C3C2A1F914C8600E95644 /* PDFCreator.h */; };
 		EBC2BC8F1FA1A19D00F2F329 /* HotSpotVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC2BC8E1FA1A19D00F2F329 /* HotSpotVideo.m */; };
 		EBC2BC901FA1A2CC00F2F329 /* HotSpotVideo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBC2BC8D1FA1A19D00F2F329 /* HotSpotVideo.h */; };
+		EBCAF6912600E5D900476983 /* Tran.c in Sources */ = {isa = PBXBuildFile; fileRef = EBCAF6902600E5D900476983 /* Tran.c */; };
 		EBFC2A301BE90A0F00E0C1B3 /* DisplayCharacteristics.m in Sources */ = {isa = PBXBuildFile; fileRef = EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */; };
 		EBFC2A311BE90AE900E0C1B3 /* DisplayCharacteristics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */; };
 /* End PBXBuildFile section */
@@ -1140,6 +1141,7 @@
 		EBC01D061BED1C8C0004C751 /* zatan2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zatan2.c; sourceTree = "<group>"; };
 		EBC2BC8D1FA1A19D00F2F329 /* HotSpotVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HotSpotVideo.h; sourceTree = "<group>"; };
 		EBC2BC8E1FA1A19D00F2F329 /* HotSpotVideo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HotSpotVideo.m; sourceTree = "<group>"; };
+		EBCAF6902600E5D900476983 /* Tran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Tran.c; sourceTree = "<group>"; };
 		EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayCharacteristics.h; sourceTree = "<group>"; };
 		EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayCharacteristics.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1361,6 +1363,7 @@
 		A94A771D19F813040062906E /* CCode */ = {
 			isa = PBXGroup;
 			children = (
+				EBCAF6902600E5D900476983 /* Tran.c */,
 				EBAEED0A19B610260084A579 /* CCodeTypes.h */,
 				EB268A171AC5E9F700A68EC8 /* code.c */,
 				EBAEED0819B605E20084A579 /* compress.c */,
@@ -2143,6 +2146,7 @@
 				69FD71311FE1CD4B00EAFDEF /* RHController.m in Sources */,
 				698C20C81DCB030B00F800C3 /* NVKeyboard.m in Sources */,
 				A9C525D01A3B59880056711F /* Colors.m in Sources */,
+				EBCAF6912600E5D900476983 /* Tran.c in Sources */,
 				698A69F721DA837D003E73D3 /* CustomRampTypeBuilder.m in Sources */,
 				6997D86320446AB700A24F5D /* NVFrontBackPhotoCapture.m in Sources */,
 				699DD7391CEA057600C7A651 /* NVSynchronizeVC.m in Sources */,

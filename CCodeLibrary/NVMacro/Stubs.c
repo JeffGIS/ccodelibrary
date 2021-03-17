@@ -6,6 +6,56 @@
 #include "shapefil.h"
 #include "gmextern.h"
 
+HANDLE STRANRect (LPRECT FromRect,LPRECT ToRect)
+{
+    HANDLE hTran;
+    double    XFROM[4],YFROM[4],XTO[4],YTO[4];
+    float    RSQMIN;
+    
+    XFROM[0] = FromRect->left;
+    XFROM[1] = FromRect->left;
+    XFROM[2] = FromRect->right;
+    XFROM[3] = FromRect->right;
+    YFROM[0] = FromRect->bottom;
+    YFROM[1] = FromRect->top;
+    YFROM[2] = FromRect->top;
+    YFROM[3] = FromRect->bottom;
+    XTO[0] = ToRect->left;
+    XTO[1] = ToRect->left;
+    XTO[2] = ToRect->right;
+    XTO[3] = ToRect->right;
+    YTO[0] = ToRect->bottom;
+    YTO[1] = ToRect->top;
+    YTO[2] = ToRect->top;
+    YTO[3] = ToRect->bottom;
+    
+    hTran = STRAN2 (1662,XFROM,YFROM,XTO,YTO,4,(LPFLOAT)&RSQMIN,1,NULL);
+    return hTran;
+}
+void TRANRect (LPRECT Rect,HANDLE hTran)
+{
+    double    Xfrom,Yfrom,Xto,Yto;
+    RECT    OutRect;
+    POINT    Point,OutPoint;
+    
+    RectInit (&OutRect);
+    Point.x = Rect->left;
+    Point.y = Rect->bottom;
+    OutPoint = TranPoint16 (Point,hTran);
+    AddPointToRect (OutPoint,&OutRect);
+    Point.y = Rect->top;
+    OutPoint = TranPoint16 (Point,hTran);
+    AddPointToRect (OutPoint,&OutRect);
+    Point.x = Rect->right;
+    OutPoint = TranPoint16 (Point,hTran);
+    AddPointToRect (OutPoint,&OutRect);
+    Point.y = Rect->bottom;
+    OutPoint = TranPoint16 (Point,hTran);
+    AddPointToRect (OutPoint,&OutRect);
+    *Rect = OutRect;
+    return;
+}
+
 LPSTR strupr (LPSTR txt)
 {
     LPSTR c = txt;
@@ -1052,11 +1102,6 @@ DPOINT dnewptproj(DPOINT OldPoint, double AZM, double DIS)
 	return pt;
 }
 
-Bool DestroyStatusWindow(long Macro)
-{
-	return FALSE;
-}
-
 HDIB32 GMDestroyDIB32(HDIB32 hDib)
 {
 	return 0;
@@ -1401,6 +1446,27 @@ void UnallocateConfig(void)
 {
 	return;
 }
+Bool CreateStatusWind (HWND hWnd,int nStatusBars,LPSTR Title)
+{
+    return TRUE;
+}
+Bool StatusWindowUpdate (LPSTR Title, LPSTR Mess, LONGLONG Tot, LONGLONG Done)
+{
+    return TRUE;
+}
+void StatusExtraInfoUpdate(LPSTR mess)
+{
+    return;
+}
+Bool StatusWindowUpdate2(LPSTR Mess, LONGLONG Tot, LONGLONG Done)
+{
+    return TRUE;
+}
+Bool DestroyStatusWindow(long Macro)
+{
+    return TRUE;
+}
+
 Bool rread(LPSTR str, LPDOUBLE lpRval, LPINT lpNdp)
 #if ENABLETRACE
 {
@@ -1431,6 +1497,74 @@ Bool rread(LPSTR str, LPDOUBLE lpRval, LPINT lpNdp)
 #if ENABLETRACE
 	}
 #endif
+}
+void TranToParcelPoints(LPDOUBLE XIN, LPDOUBLE YIN, LPDOUBLE  XOUT, LPDOUBLE  YOUT, LPPARCELTRAN pTran)
+{
+    return;
+}
+void DebugShowLine (LPDPOINT p1,LPDPOINT p2)
+{
+    return;
+}
+DPOINT BasePtToFilePtD (DPOINT WPoint)
+{
+    return WPoint;
+}
+HCURSOR LoadCursor(HINSTANCE hInstance,LPCSTR lpCursorName)
+{
+    HCURSOR cur = 0;
+    return cur;
+}
+void hmemset (HPSTR out,char in,DWORD len)
+{
+    memset (out,in,len);
+    return;
+}
+long Factorial (long value)
+{
+    long    n=0;
+    
+    while (value--)
+        n+=value;
+    return  n;
+}
+double MinAngleToTheRight (double AZ1,double AZ2)
+{
+    double AZDiff;
+    
+    if (AZ1 < AZ2)
+        AZDiff = AZ2 - AZ1;
+    else
+        AZDiff = AZ2 + (TWOPI - AZ1);
+    return AZDiff;
+}
+
+void RectInit (LPRECT pMinMax)
+{
+    pMinMax->left=INT_MAX;
+    pMinMax->top=INT_MAX;
+    pMinMax->bottom=INT_MIN;
+    pMinMax->right=INT_MIN;
+    return;
+}
+void AddPointToRect(POINT Point, LPRECT pBounds)
+{
+    pBounds->left = min(pBounds->left, Point.x);
+    pBounds->right = max(pBounds->right, Point.x);
+    pBounds->top = min(pBounds->top, Point.y);
+    pBounds->bottom = max(pBounds->bottom, Point.y);
+    return;
+}
+
+void AddDPointToRect(DPOINT Point, LPRECT pBounds)
+{
+    int x = IDNINT(Point.x);
+    int y = IDNINT(Point.y);
+    pBounds->left = min(pBounds->left, x);
+    pBounds->right = max(pBounds->right, x);
+    pBounds->top = min (pBounds->top,y);
+    pBounds->bottom = max (pBounds->bottom,y);
+    return;
 }
 
 /*int test(int in)

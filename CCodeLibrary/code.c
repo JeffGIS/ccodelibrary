@@ -919,12 +919,9 @@ GSSiExitProg (359);
 #endif
 }
 
-/*
-static Bool LININT (double L1X1, double L1Y1, double L1X2, double L1Y2,
+
+Bool LININT (double L1X1, double L1Y1, double L1X2, double L1Y2,
 			 double L2X1, double L2Y1, double L2X2, double L2Y2)
-#if ENABLETRACE
-{GSSiEnterProg (360);
-#endif
 {
       double SLOPE1 = 0.0, SLOPE2 = 0.0, YINT1, YINT2, X, Y, XDIFF, YDIFF;
       Bool INF1, INF2;
@@ -980,24 +977,13 @@ S500: if (X <min (L1X1,L1X2) || X > max (L1X1,L1X2) ||
           Y <min (L2Y1,L2Y2) || Y > max (L2Y1,L2Y2))
           goto S550;
 S510:
-{
-#if ENABLETRACE
-GSSiExitProg (360);
-#endif
 	return TRUE;
-}
+
 S550:
-{
-#if ENABLETRACE
-GSSiExitProg (360);
-#endif
 	return FALSE;
+
 }
-#if ENABLETRACE
-}
-#endif
-}
-*/
+
 
 short LIN_SEC (double X1IN,double Y1IN,double A1,double X2IN,double Y2IN,
              double A2,double *X3,double *Y3)

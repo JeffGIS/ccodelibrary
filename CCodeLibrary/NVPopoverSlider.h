@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 @import UIKit;
+#import "NVAlertView.h"
 
 @class NVPopoverSlider;
 
@@ -15,10 +16,11 @@
 
 @end
 
-@interface NVPopoverSlider : UIView
+@interface NVPopoverSlider : UIView <NVAlertViewDelegate>
 
 @property (nonatomic) BOOL roundToTenths;
 @property (nonatomic, copy) NSString *units;
+@property BOOL allowBosch;
 @property NSString * title;
 
 + (instancetype)showPopoverSliderInView:(UIView *)view
@@ -27,10 +29,13 @@
                              startValue:(float)startValue
                                delegate:(id)delegate
                                     tag:(NSInteger)tag
-                                  title:(NSString *)title;
+                                  title:(NSString *)title
+                             allowBosch:(BOOL)allowBosch;
 
 - (void)hidePopoverSliderView:(BOOL)animated;
 - (void)showStepper;
 - (void)showRelativeModeSwitch;
+- (void)setMeasurementValues;
+
 
 @end

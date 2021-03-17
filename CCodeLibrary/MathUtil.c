@@ -24,6 +24,12 @@ double AZMToHeading (double azm)
     return deg;
 }
 
+Bool SameDPoint (LPDPOINT p1, LPDPOINT p2)
+{
+    if (p1->x == p2->x && p1->y == p2->y)
+        return TRUE;
+    return FALSE;
+}
 Bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol)
 {
     if (fabs(p1->x - p2->x) >tol || fabs(p1->y - p2->y) >tol)
@@ -36,6 +42,13 @@ Bool sameDPoint (LPDPOINT p1, LPDPOINT p2,double tol)
 Bool samePoint (LPPOINT p1, LPPOINT p2)
 {
     if (p1->x == p2->x && p1->y == p2->y)
+        return TRUE;
+    return FALSE;
+}
+
+Bool SamePoint (POINT p1, POINT p2)
+{
+    if (p1.x == p2.x && p1.y == p2.y)
         return TRUE;
     return FALSE;
 }
@@ -795,12 +808,11 @@ double getaz (POINT Point1, POINT Point2)
     return rtn;
 }
 
-double getazd (DPOINT Point1, DPOINT Point2)
+double getazd (HPDPOINT Point1, HPDPOINT Point2)
 {
-    double rtn = DTWOPI(atan2((Point2.y - Point1.y), (Point2.x - Point1.x)));
+    double     rtn=LTWOPI(atan2((Point2->y-Point1->y),(Point2->x-Point1->x)));
     return rtn;
 }
-
 double getazdp(LPDPOINT Point1, LPDPOINT Point2)
 {
     double rtn = DTWOPI(atan2((Point2->y - Point1->y), (Point2->x - Point1->x)));

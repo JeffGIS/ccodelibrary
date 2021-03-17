@@ -340,7 +340,8 @@ HGLOBAL GSSiGlobAlloc(int From, UINT fuAlloc, long cbAlloc)
 {
 	HANDLE mem;
 	long *pmemLen;
-	if (fuAlloc | GMEM_ZEROINIT)
+    int doZero = fuAlloc & GMEM_ZEROINIT;
+	if (doZero)
 		mem = (HANDLE)calloc(1, cbAlloc + sizeof(long));
 	else
 		mem = (HANDLE)malloc(cbAlloc + sizeof(long));

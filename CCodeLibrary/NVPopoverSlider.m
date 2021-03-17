@@ -1,17 +1,21 @@
 //  NVPopoverSlider.m
 //  CCodeLibrary
 
+#import "GSSiDefs.h"
 #import "NVPopoverSlider.h"
 #import "UserDefaults.h"
+#import "SharedDefaults.h"
+#import "CRAPI.h"
 
 @interface NVPopoverSlider ()
 
+@property (nonatomic) UIView *fromView;
 @property (nonatomic) UIView *overlayView;
 @property (nonatomic) UITabBar *tabBar;
 @property (nonatomic) UISlider *slider;
 @property (nonatomic) UITapGestureRecognizer *tap;
 @property (nonatomic) UILabel *titleLabel, *valueLabel;
-@property (nonatomic) UIButton *left, *right, *mid, *leftMid, *rightMid;
+@property (nonatomic) UIButton *left, *right, *mid, *leftMid, *rightMid, *cancelButton;
 @property (nonatomic, weak) id <NVPopoverSliderDelegate> delegate;
 @property float initialValue, initialMin, initialMax;
 @property (nonatomic) UISwitch *modeSwitch;
@@ -19,6 +23,18 @@
 @end
 
 @implementation NVPopoverSlider
+- (id)init
+{
+    self = [super init];
+    CRAPI.sharedInstance.currentMeasurementView = self;
+    return self;
+}
+
+- (void)dealloc
+{
+    CRAPI.sharedInstance.currentMeasurementView = 0;
+    return;
+}
 
 + (instancetype)showPopoverSliderInView:(UIView *)view
                                minValue:(float)minValue
@@ -27,6 +43,8 @@
                                delegate:(id)delegate
                                     tag:(NSInteger)tag
                                   title:(NSString *)title
+                             allowBosch:(BOOL)allowBosch;
+
 {
     if (!delegate || !view)
     {
@@ -43,7 +61,7 @@
     
     CGRect bounds = UIScreen.mainScreen.bounds;
     CGFloat shortestSide = MIN(bounds.size.height, bounds.size.width);
-    CGFloat height = (shortestSide * 0.75);
+    CGFloat height = (shortestSide * 0.95);
     CGFloat width = 80.0;
     
     NVPopoverSlider *nvps = NVPopoverSlider.new;
@@ -57,6 +75,8 @@
     nvps.backgroundColor = UIColor.whiteColor;
     nvps.layer.cornerRadius = 10.0;
     nvps.units = @"";
+    nvps.allowBosch = allowBosch;
+    nvps.fromView = view;
     
     nvps.overlayView = UIView.new;
     nvps.overlayView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -328,9 +348,10 @@
     [leftButtonSpace constrainLeadingToAnchor:nvps.leadingAnchor];
     [leftButtonSpace constrainTrailingToAnchor:nvps.centerXAnchor];
     [leftButtonSpace constrainBottomToAnchor:nvps.bottomAnchor];
-    [leftButtonSpace constrainTopToAnchor:nvps.slider.bottomAnchor constant:40.0];
+   // [leftButtonSpace constrainTopToAnchor:nvps.slider.bottomAnchor constant:40.0];
     
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    nvps.cancelButton = cancelButton;
     [nvps setupButton:cancelButton];
     [cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
     
@@ -388,6 +409,34 @@
                    action:@selector(saveTapped)
          forControlEvents:UIControlEventTouchUpInside];
     
+    if (nvps.allowBosch)
+    {
+        CGRect rect = cancelButton.frame;
+        UIButton *gotoBoschButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [nvps setupButton:gotoBoschButton];
+        [gotoBoschButton setTitle:@"Use Laser Device" forState:UIControlStateNormal];
+        
+        [nvps addSubview:gotoBoschButton];
+        [gotoBoschButton constrainCenterXToAnchor:nvps.centerXAnchor];
+         
+        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        {
+            [gotoBoschButton constrainBottomToAnchor:saveButton.topAnchor constant:-8];
+            [gotoBoschButton constrainWidthToAnchor:nvps.widthAnchor multiplier:0.8];
+            [gotoBoschButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.6];
+        }
+        
+        else
+        {
+            [gotoBoschButton constrainBottomToAnchor:saveButton.topAnchor constant:-24];
+           [gotoBoschButton constrainWidthToAnchor:nvps.widthAnchor multiplier:0.8];
+            [gotoBoschButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.3];
+        }
+        
+        [gotoBoschButton addTarget:nvps
+                            action:@selector(gotoBoschTapped)
+                  forControlEvents:UIControlEventTouchUpInside];
+    }
     [nvps bringSubviewToFront:nvps.slider];
     [nvps showStepper];
     [nvps updateTicLabels];
@@ -516,7 +565,45 @@
               didReturnValue:value
                          tag:self.tag];
 }
-
+-(void) setMeasurementValues
+{
+    NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:APP_GROUP_ID];
+    //SharedDefaults *defaults = [SharedDefaults defaults];
+    NSString * returnedValues = [defaults stringForKey:@"MeasurementValues"];
+    _slider.value = 10.3;
+    [_slider setValue:_slider.value animated:NO];
+    [self updateSliderLabel];
+    return;
+}
+void returnToCallerInOC (void)
+{
+    NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:APP_GROUP_ID];
+    //SharedDefaults *defaults = [SharedDefaults defaults];
+    NSString * returnUrl = [defaults stringForKey:@"MeasureSourceApplication"];
+    NSLog (@"%@",returnUrl);
+    return;
+}
+-(void)gotoBoschTapped
+{
+    NSString *measureURL = @"DeviceConnect://";
+    [SharedDefaults.defaults saveString:@"SidewalkAssistant://" forKey:@"MeasureSourceApplication"];
+    returnToCallerInOC();
+    if ([UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:measureURL]])
+        [UIApplication.sharedApplication openURL:[NSURL URLWithString:measureURL]];
+    
+    else
+    {
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
+                                                          delegate:self
+                                                             title:@"NVMobile cannot launch DeviceConnect App"
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
+        
+        alert.identifier = @"CannotLaunchDeviceConnectApp";
+    }
+    
+    return;
+}
 - (void)ticTapped:(UIButton *)button
 {
     [_slider setValue:button.titleLabel.text.floatValue animated:NO];
@@ -689,6 +776,16 @@
     _units = units;
     [self updateSliderLabel];
     [self updateTicLabels];
+}
+- (void)alertView:(NVAlertView *)alertView
+didTapButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex)
+    {
+         default:break;
+    }
+    
+    [alertView hideLargeAlertView:YES];
 }
 
 @end

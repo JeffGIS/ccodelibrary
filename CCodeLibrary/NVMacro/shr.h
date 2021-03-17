@@ -6,6 +6,7 @@
 #include "COMPUTE.H"
 #include "DIBAPI.H"
 #include "TileGraphics.h"
+#import <CoreGraphics/CoreGraphics.h>
 
 //include <windowsx.h>
 #ifdef	_WIN32_WCE
@@ -555,6 +556,10 @@ void SetVPRotation (double AZ);
 XFORM SetXFORMFromTRANS (HANDLE hlpTran);
 HANDLE TRFTRI_SET (LPDOUBLE XT,LPDOUBLE YT,LPDOUBLE XT2,LPDOUBLE YT2,int NSETPT,
 				   double BASX1, double BASY1,double BASX2, double BASY2, HANDLE hTran,LPMNMXCORD pTriBounds);
+HANDLE STRANCGRect (CGRect fromCGRect,CGRect toCGRect);
+RECT CGRectToRect (CGRect cgRect);
+CGRect RECTtoCGRect (RECT rect);
+CGRect TranCGRect (CGRect fromCGRect,HANDLE hTran);
 
 //HANDLE STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN);//,LPMNMXCORD pBounds);
 LPTRANDATA STRANPointsP (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN);//,LPMNMXCORD pBounds);
@@ -689,7 +694,7 @@ double getaz(POINT Point1, POINT Point2);
 double getazF(FPOINT Point1, FPOINT Point2);
 double fgetaz(FLTPOINT Point1, FLTPOINT Point2);
 double getazl (LPOINT Point1, LPOINT Point2);
-double getazd (DPOINT Point1, DPOINT Point2);
+double getazd (LPDPOINT Point1, LPDPOINT Point2);
 double getazdp(LPDPOINT Point1, LPDPOINT Point2);
 double get2dazfrom3d (HPDPOINT3D Point1, HPDPOINT3D Point2);
 double LTWOPI (double AZ1);
