@@ -33,6 +33,7 @@
 @property (nonatomic, copy, readwrite) NSString *username2;
 @property (nonatomic, copy, readwrite) NSString *password2;
 @property (nonatomic, copy, readwrite) NSString *urlText;
+@property (nonatomic, copy, readwrite) NSString *tempExtension;
 @property (nonatomic, assign, readwrite) BOOL hasFailed;
 @property (nonatomic) int geoid;
 @property (nonatomic) CGFloat progress;

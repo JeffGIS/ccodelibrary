@@ -176,6 +176,9 @@ NVSlopeData CurrentSlopeData;
         {
             NSUserDefaults *defaults = [[NSUserDefaults alloc] init];
             _NVCRIS_GroupNum = (int)[defaults integerForKey:@"NVCRIS_group_number"];
+            NSString * tst = [defaults stringForKey:@"NVCRIS_group_number"];
+            NSString * tst2 = [defaults stringForKey:@"NVCRIS group number"];
+            _NVCRIS_GroupNum = max (_NVCRIS_GroupNum,1);
             char groupc = '1' + _NVCRIS_GroupNum - 1;
             _group_NVCRIS_SERVICE_UUID = replaceLastChar(NVCRIS_SERVICE_UUID,groupc);
             _group_NVCRIS_SLOPEDATA_CHARACTERISTIC_UUID = replaceLastChar(NVCRIS_SLOPEDATA_CHARACTERISTIC_UUID,groupc);

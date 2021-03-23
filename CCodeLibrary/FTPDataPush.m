@@ -23,7 +23,6 @@ enum {
 @property (nonatomic) int ii;
 @property id <GSSiPopoverViewDelegate> savePopoverDelegate;
 //@property BOOL useOnlyPrimaryFTP;
-@property (nonatomic, copy) NSString *tempExtension;
 
 @end
 
