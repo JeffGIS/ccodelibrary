@@ -700,7 +700,7 @@
             }
             else
             {
-                [NSThread sleepForTimeInterval:FTP_CATCHUP_DELAY*2];
+                //[NSThread sleepForTimeInterval:FTP_CATCHUP_DELAY*2];
                 msg = [NSString stringWithFormat:@"$M(UploadCompletePict,%i,%i,%i,%i,%i)",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid,
                        CRAPI.sharedInstance.currentiPadWithinManager, _nextFileNumToUpload,_lastUploadFileSize];
