@@ -15,13 +15,16 @@
 @property (strong, nonatomic) CBMutableCharacteristic   *slopeDataCharacteristic;
 @property (strong, nonatomic) CBMutableCharacteristic   *takePhotoCharacteristic;
 @property (strong, nonatomic) CBMutableCharacteristic   *photoTakenCharacteristic;
+@property (strong, nonatomic) CBMutableCharacteristic   *holdForMeasurementCharacteristic;
 @property (strong, nonatomic) NSData                    *photoDataToSend;
 @property (nonatomic, readwrite) NSInteger              sendPhotoDataIndex;
 @property (strong, nonatomic) NSData                    *slopeDataToSend;
 @property (nonatomic, readwrite) NSInteger              slopeDataIndex;
 @property NSString * slopeCommand;
 @property NSString * photoCommand;
-
+@property (strong, nonatomic) NSData                    *holdForMeasurementDataToSend;
+@property NSString * holdForMeasurementCommand;
+@property int currentHoldStatus;
 @property BOOL photoEOMsent;
 @property BOOL slopeEOMsent;
 @property NVSlopeData currentSlopeData;
@@ -76,11 +79,17 @@
                                                                            value:nil
                                                                      permissions:CBAttributePermissionsWriteable];
     
+    // then the hold for measurement char
+    _holdForMeasurementCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_HOLDFORMEASUREMENT_CHARACTERISTIC_UUID]
+                                                                      properties:CBCharacteristicPropertyNotify|CBCharacteristicPropertyRead|CBCharacteristicPropertyWrite
+                                                                           value:nil
+                                                                     permissions:CBAttributePermissionsReadable|CBAttributePermissionsWriteable];
+    
     // Then the service
      CBMutableService *NVCRISService = [[CBMutableService alloc] initWithType:[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_SERVICE_UUID]
                                                                        primary:YES];
     // Add the characteristics to the service
-    NVCRISService.characteristics = @[_takePhotoCharacteristic,_photoTakenCharacteristic,_slopeDataCharacteristic];
+    NVCRISService.characteristics = @[_takePhotoCharacteristic,_photoTakenCharacteristic,_slopeDataCharacteristic,_holdForMeasurementCharacteristic];
     
     // And add it to the peripheral manager
     [_manager removeAllServices];
@@ -103,6 +112,10 @@
 {
     NSLog(@"Central subscribed to characteristic %@",characteristic);
     
+    if (characteristic == _holdForMeasurementCharacteristic)
+    {
+        [self updateHoldStatus:_currentHoldStatus];
+     }
     if (characteristic == _slopeDataCharacteristic)
     {
         _slopeEOMsent = YES;
@@ -232,13 +245,13 @@
         }
     }
 }
-
 - (void)sendSlopeData
 {
     // First up, check if we're meant to be sending an EOM
     static BOOL sendingEOM = NO;
     
-    if (sendingEOM) {
+    if (sendingEOM)
+    {
         
         // send it
         BOOL didSend = [_manager updateValue:[@"EOM" dataUsingEncoding:NSUTF8StringEncoding] forCharacteristic:_slopeDataCharacteristic onSubscribedCentrals:nil];
@@ -379,5 +392,52 @@
         [self sendSlopeData];
     }
 }
+- (NSString *)packageCurrentHoldStatus
+{
+    NSString * data = [NSString stringWithFormat:@"HOLD STATUS %i",_currentHoldStatus];
+    
+    return data;
+}
+- (void)sendHoldForMeasurementData
+{
+    BOOL didSend = [_manager updateValue:_holdForMeasurementDataToSend forCharacteristic:_holdForMeasurementCharacteristic onSubscribedCentrals:nil];
+    
+    // If it didn't work, drop out and wait for the callback
+    if (!didSend)
+    {
+        NSLog(@"Failed to send hold command");
+    }
+    else
+    {
+        NSLog(@"Hold command sent");
+    }
+    return;
+}
 
+-(void) updateHoldStatus:(int) holdStatus
+{
+    _currentHoldStatus = holdStatus;
+    _holdForMeasurementCommand = [self packageCurrentHoldStatus];
+    _holdForMeasurementDataToSend = [_holdForMeasurementCommand dataUsingEncoding:NSUTF8StringEncoding];
+    [self sendHoldForMeasurementData];
+}
+- (void)peripheralManager:(CBPeripheralManager *)peripheral didReceiveWriteRequests:(NSArray *)requests
+{
+    for (CBATTRequest *request in requests)
+    {
+        if ([request.characteristic.UUID isEqual:[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_HOLDFORMEASUREMENT_CHARACTERISTIC_UUID]])
+        {
+            NSData * data = request.value;
+            NSString * cdata = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSString *header = [cdata substringToIndex:11];
+            if ([header isEqual:@"HOLD STATUS"])
+            {
+                NSString * status = textAfter(cdata,header);
+                _currentHoldStatus = (int)status.integerValue;
+                [self updateHoldStatus:_currentHoldStatus];
+            }
+        }
+    }
+    return;
+}
 @end

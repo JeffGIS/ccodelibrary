@@ -1103,9 +1103,6 @@ Bool WriteTranCHeader (HANDLE hTran,HFILE Fid)
 
 
 void TRANS2 (double XIN,double YIN, LPDOUBLE XOUT,LPDOUBLE YOUT, HANDLE hlpTran)
-#if ENABLETRACE
-{GSSiEnterProg (1435);
-#endif
 {    DPOINT WinPointD, Intmod;
 
 	double XI, YI;
@@ -1231,15 +1228,7 @@ void TRANS2 (double XIN,double YIN, LPDOUBLE XOUT,LPDOUBLE YOUT, HANDLE hlpTran)
 Exit:
       GlobalUnlock(hlpTran);
 Exit2:
-{
-#if ENABLETRACE
-GSSiExitProg (1435);
-#endif
      return;
-}
-#if ENABLETRACE
-}
-#endif
 }
 
 XFORM SetXFORMFromTRANS (HANDLE hlpTran)

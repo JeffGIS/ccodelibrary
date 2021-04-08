@@ -184,6 +184,7 @@ NVSlopeData CurrentSlopeData;
             _group_NVCRIS_SLOPEDATA_CHARACTERISTIC_UUID = replaceLastChar(NVCRIS_SLOPEDATA_CHARACTERISTIC_UUID,groupc);
             _group_NVCRIS_TAKEPHOTO_CHARACTERISTIC_UUID = replaceLastChar(NVCRIS_TAKEPHOTO_CHARACTERISTIC_UUID,groupc);
             _group_NVCRIS_PHOTOTAKEN_CHARACTERISTIC_UUID = replaceLastChar(NVCRIS_PHOTOTAKEN_CHARACTERISTIC_UUID,groupc);
+            _group_NVCRIS_HOLDFORMEASUREMENT_CHARACTERISTIC_UUID = replaceLastChar(NVCRIS_HOLDFORMEASUREMENT_CHARACTERISTIC_UUID,groupc);
             _NVCRIS_Central_Server = (int)[defaults integerForKey:@"NVCRIS_central_server"];
             _NVCRIS_Slope_Client = (int)[defaults integerForKey:@"NVCRIS_slope_client"];
 

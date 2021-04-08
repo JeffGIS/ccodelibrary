@@ -278,11 +278,6 @@ HANDLE STRANBoundsToBounds(LPMNMXCORD FromRect, LPMNMXCORD ToRect)
 	HANDLE rtn = 0;
 	return rtn;
 }
-HANDLE STRANPoints(int id, LPDPOINT FromPt, LPDPOINT ToPt, int nPt, LPFLOAT pRSQMIN, int Type, LPMNMXCORD pBounds)
-{
-	HANDLE rtn = 0;
-	return rtn;
-}
 POINT TRANDPointToPoint(HPDPOINT pDpoint, HANDLE hTran)
 {
 	POINT pt = { 0 };
@@ -304,11 +299,6 @@ HANDLE ReadTranData(HFILE Fid)
 	return rtn;
 }
 
-DPOINT TranPoint(LPDPOINT pPoint, HANDLE hTran)
-{
-	DPOINT pt = { 0 };
-	return pt;
-}
 short TestFieldVal(LPGWDHEADER lpGWDHead, int FieldNum, LPSTR lpVal, short OpCode)
 {
 	return 0;

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
       underManager:(int)manager
            inGeoid:(int)geoid;
 -(void) updateSlopeData:(NVSlopeData)slopeData;
-
+-(void) updateHoldStatus:(int) holdStatus;
 @end
 
 NS_ASSUME_NONNULL_END
