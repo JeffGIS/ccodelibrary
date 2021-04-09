@@ -7,7 +7,7 @@
 #import "CRAPI.h"
 
 #define STEADY_MULTIPLIER 0.02
-#define COUNT_MULTIPLIER 100
+#define COUNT_MULTIPLIER 50
 #define ORIENTATION_MULTIPLER 0.1
 #define MEASUREMENT_FREQUENCY 0.02
 
@@ -126,6 +126,8 @@
 
 - (void)computeSlopeFromAccelerometer:(CMAccelerometerData *)accelerometerData
 {
+    if (CRAPI.sharedInstance.holdForMeasurement)
+        return;
     if (_counter == _count)
     {
         double accelX = (_sumX / _count);

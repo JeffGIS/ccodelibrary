@@ -109,7 +109,7 @@ static char calibrationBytes[8];
     NSLog (@"%@",_pitchValues.debugDescription);
     angles[0] = [self computeAngle:_rollValues];
     angles[1] = [self computeAngle:_pitchValues];
-
+    angles[2] = _nValues;
     return rtn;
 }
  - (void) restart

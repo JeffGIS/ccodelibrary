@@ -211,7 +211,10 @@ NVSlopeData CurrentSlopeData;
 - (nullable CBCentralManager *)getCentralManager:(id)delegate
 {
     if (!self.centralManager)
-        self.centralManager = [[CBCentralManager alloc] initWithDelegate:delegate queue:nil];
+    {
+        _centralmanque = nil;//dispatch_queue_create("com.gssi.centralManQue", DISPATCH_QUEUE_SERIAL);
+        self.centralManager = [[CBCentralManager alloc] initWithDelegate:delegate queue:_centralmanque];
+    }
     self.centralManager.delegate = delegate;
     return self.centralManager;
 }
@@ -219,7 +222,10 @@ NVSlopeData CurrentSlopeData;
 - (nullable CBPeripheralManager *) getPeripheralManager:(id)delegate
 {
     if (!self.peripheralManager)
-        self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:delegate queue:nil];
+    {
+        _peripheralmanque = nil;//dispatch_queue_create("com.gssi.peripheralManQue", DISPATCH_QUEUE_SERIAL);
+        self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:delegate queue:_peripheralmanque];
+    }
     self.peripheralManager.delegate = delegate;
     return self.peripheralManager;
 }

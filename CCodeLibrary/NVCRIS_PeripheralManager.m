@@ -416,6 +416,7 @@
 
 -(void) updateHoldStatus:(int) holdStatus
 {
+    CRAPI.sharedInstance.holdForMeasurement = holdStatus;
     _currentHoldStatus = holdStatus;
     _holdForMeasurementCommand = [self packageCurrentHoldStatus];
     _holdForMeasurementDataToSend = [_holdForMeasurementCommand dataUsingEncoding:NSUTF8StringEncoding];
@@ -439,5 +440,17 @@
         }
     }
     return;
+}
+- (NSString *)packageAmWalking
+{
+    NSString * data = [NSString stringWithFormat:@"HOLD STATUS 2"];
+    
+    return data;
+}
+-(void) sendAmWalking
+{
+    _holdForMeasurementCommand = [self packageAmWalking];
+    _holdForMeasurementDataToSend = [_holdForMeasurementCommand dataUsingEncoding:NSUTF8StringEncoding];
+    [self sendHoldForMeasurementData];
 }
 @end

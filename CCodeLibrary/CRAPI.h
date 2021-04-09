@@ -226,6 +226,9 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic) int useExternalAccelerometer;
 @property NSFileHandle *debugFileHandle;
 @property NSString * debugFilePath;
+@property dispatch_queue_t peripheralmanque;
+@property dispatch_queue_t centralmanque;
+@property int holdForMeasurement;
 
 + (nullable CRAPI *)sharedInstance;
 

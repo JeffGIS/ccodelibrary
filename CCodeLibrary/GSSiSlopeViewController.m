@@ -119,56 +119,61 @@ static int COUNT=100;
     }
     if (!_fromCalibration)
     {
-        _calDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 964.0, 728.0, 60.0)];
-        _calDateLabel.backgroundColor = UIColor.clearColor;
-        _calDateLabel.font = [UIFont boldSystemFontOfSize:28.0];
-        _calDateLabel.adjustsFontSizeToFitWidth = YES;
-        _calDateLabel.textAlignment = NSTextAlignmentCenter;
-        [self.view addSubview:_calDateLabel];
-        
-        NSDate *date = NSDate.date;
-        NSDate *lastCalDate = [SharedDefaults.defaults dateForKey:@"LastCalDate"];
-        
-        if (lastCalDate)
+        if (_wantSOLAR2)
+            _useCalibration = NO;
+        else
         {
-            NSDateFormatter *dayFormatter = [[NSDateFormatter alloc] init];
-            [dayFormatter setDateFormat:@"dd"];
-            NSString *currentDay = [dayFormatter stringFromDate:date];
-            NSString *lastCalDay = [dayFormatter stringFromDate:lastCalDate];
-            NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
-            [timeFormatter setDateFormat:@"HH:mm a"];
-            [timeFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
-            NSString *lastCalTime = [timeFormatter stringFromDate:lastCalDate];
+            _calDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 964.0, 728.0, 60.0)];
+            _calDateLabel.backgroundColor = UIColor.clearColor;
+            _calDateLabel.font = [UIFont boldSystemFontOfSize:28.0];
+            _calDateLabel.adjustsFontSizeToFitWidth = YES;
+            _calDateLabel.textAlignment = NSTextAlignmentCenter;
+            [self.view addSubview:_calDateLabel];
             
-            NSTimeInterval timeSinceCal = [date timeIntervalSinceDate:lastCalDate];
-            timeSinceCal = floor(timeSinceCal / 86400);
+            NSDate *date = NSDate.date;
+            NSDate *lastCalDate = [SharedDefaults.defaults dateForKey:@"LastCalDate"];
             
-            if (timeSinceCal > 5.0)
+            if (lastCalDate)
             {
-                _calDateLabel.text = @"WARNING: Slope not calibrated.";
-                _calDateLabel.textColor = UIColor.redColor;
-            }
-            
-            else if (timeSinceCal > 1.0 || ![currentDay isEqualToString:lastCalDay])
-            {
-                timeSinceCal = max(timeSinceCal, 1.0);
+                NSDateFormatter *dayFormatter = [[NSDateFormatter alloc] init];
+                [dayFormatter setDateFormat:@"dd"];
+                NSString *currentDay = [dayFormatter stringFromDate:date];
+                NSString *lastCalDay = [dayFormatter stringFromDate:lastCalDate];
+                NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
+                [timeFormatter setDateFormat:@"HH:mm a"];
+                [timeFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"]];
+                NSString *lastCalTime = [timeFormatter stringFromDate:lastCalDate];
                 
-                _calDateLabel.text = [NSString stringWithFormat:@"WARNING: Calibrated %.0f days ago.", timeSinceCal];
-                _calDateLabel.textColor = UIColor.redColor;
+                NSTimeInterval timeSinceCal = [date timeIntervalSinceDate:lastCalDate];
+                timeSinceCal = floor(timeSinceCal / 86400);
+                
+                if (timeSinceCal > 5.0)
+                {
+                    _calDateLabel.text = @"WARNING: Slope not calibrated.";
+                    _calDateLabel.textColor = UIColor.redColor;
+                }
+                
+                else if (timeSinceCal > 1.0 || ![currentDay isEqualToString:lastCalDay])
+                {
+                    timeSinceCal = max(timeSinceCal, 1.0);
+                    
+                    _calDateLabel.text = [NSString stringWithFormat:@"WARNING: Calibrated %.0f days ago.", timeSinceCal];
+                    _calDateLabel.textColor = UIColor.redColor;
+                }
+                
+                else
+                {
+                    _calDateLabel.text = [NSString stringWithFormat:@"Calibrated today at %@", lastCalTime];
+                    _calDateLabel.textColor = UIColor.blackColor;
+                }
             }
             
             else
             {
-                _calDateLabel.text = [NSString stringWithFormat:@"Calibrated today at %@", lastCalTime];
-                _calDateLabel.textColor = UIColor.blackColor;
+                _calDateLabel.text = @"WARNING: This device has NOT been calibrated.";
+                _calDateLabel.textColor = UIColor.redColor;
+                _useCalibration = NO;
             }
-        }
-        
-        else
-        {
-            _calDateLabel.text = @"WARNING: This device has NOT been calibrated.";
-            _calDateLabel.textColor = UIColor.redColor;
-            _useCalibration = NO;
         }
     }
     
@@ -970,6 +975,8 @@ static int COUNT=100;
 
 - (void)computeSlopeFromAccelerometer:(CMAccelerometerData *)accelerometerData
 {
+    if (CRAPI.sharedInstance.holdForMeasurement)
+        return;
     if (_counter == COUNT)
     {
         if (_headingCounter > (MIN_HEADING_COUNTER + 3) || !CLLocationManager.headingAvailable)
