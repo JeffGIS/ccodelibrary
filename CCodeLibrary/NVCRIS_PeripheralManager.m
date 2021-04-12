@@ -343,6 +343,7 @@
     // Start sending again
     [self sendSlopeData];
     [self sendPhotoData:0];
+    [self sendHoldForMeasurementData:0];
 }
 
 - (BOOL) takePhoto:(int)photoNum
@@ -398,18 +399,22 @@
     
     return data;
 }
-- (void)sendHoldForMeasurementData
+- (void)sendHoldForMeasurementData:(int)start
 {
-    BOOL didSend = [_manager updateValue:_holdForMeasurementDataToSend forCharacteristic:_holdForMeasurementCharacteristic onSubscribedCentrals:nil];
+    static BOOL didSend = TRUE;
     
+    if (!start && didSend)
+        return;
+    didSend = [_manager updateValue:_holdForMeasurementDataToSend forCharacteristic:_holdForMeasurementCharacteristic onSubscribedCentrals:nil];
     // If it didn't work, drop out and wait for the callback
+    NSString *stringFromData = [[NSString alloc] initWithData:_holdForMeasurementDataToSend encoding:NSUTF8StringEncoding];
     if (!didSend)
     {
-        NSLog(@"Failed to send hold command");
+        NSLog(@"Failed to send hold command:%@",stringFromData);
     }
     else
     {
-        NSLog(@"Hold command sent");
+        NSLog(@"Hold command sent:%@",stringFromData);
     }
     return;
 }
@@ -420,7 +425,7 @@
     _currentHoldStatus = holdStatus;
     _holdForMeasurementCommand = [self packageCurrentHoldStatus];
     _holdForMeasurementDataToSend = [_holdForMeasurementCommand dataUsingEncoding:NSUTF8StringEncoding];
-    [self sendHoldForMeasurementData];
+    [self sendHoldForMeasurementData:1];
 }
 - (void)peripheralManager:(CBPeripheralManager *)peripheral didReceiveWriteRequests:(NSArray *)requests
 {
@@ -451,6 +456,18 @@
 {
     _holdForMeasurementCommand = [self packageAmWalking];
     _holdForMeasurementDataToSend = [_holdForMeasurementCommand dataUsingEncoding:NSUTF8StringEncoding];
-    [self sendHoldForMeasurementData];
+    [self sendHoldForMeasurementData:1];
+}
+- (NSString *)packageAdjustPhotos
+{
+    NSString * data = [NSString stringWithFormat:@"HOLD STATUS 3"];
+    
+    return data;
+}
+-(void) sendAdjustForPhotos
+{
+    _holdForMeasurementCommand = [self packageAdjustPhotos];
+    _holdForMeasurementDataToSend = [_holdForMeasurementCommand dataUsingEncoding:NSUTF8StringEncoding];
+    [self sendHoldForMeasurementData:1];
 }
 @end

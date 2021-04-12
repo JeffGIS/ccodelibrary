@@ -36,7 +36,7 @@
         return UIInterfaceOrientationPortraitUpsideDown;
     
     else
-        return UIInterfaceOrientationPortrait;
+        return UIInterfaceOrientationLandscapeRight;//UIInterfaceOrientationPortrait;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
@@ -45,7 +45,7 @@
         return UIInterfaceOrientationMaskPortraitUpsideDown;
     
     else
-        return UIInterfaceOrientationMaskPortrait;
+        return UIInterfaceOrientationMaskLandscape;//UIInterfaceOrientationMaskPortrait;
 }
 
 @end

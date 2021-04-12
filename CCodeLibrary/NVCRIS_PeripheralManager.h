@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void) updateSlopeData:(NVSlopeData)slopeData;
 -(void) updateHoldStatus:(int) holdStatus;
 -(void) sendAmWalking;
+-(void) sendAdjustForPhotos;
+
 @end
 
 NS_ASSUME_NONNULL_END

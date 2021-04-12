@@ -176,6 +176,12 @@ NVSlopeData CurrentSlopeData;
         {
             NSUserDefaults *defaults = [[NSUserDefaults alloc] init];
             _NVCRIS_GroupNum = (int)[defaults integerForKey:@"NVCRIS_group_number"];
+            if (!_NVCRIS_GroupNum)
+            {
+                NSString *deviceName = UIDevice.currentDevice.name;
+                NSString *deviceNumber = textAfterLastChar(deviceName, @" ");
+                _NVCRIS_GroupNum = deviceNumber.intValue;
+            }
             NSString * tst = [defaults stringForKey:@"NVCRIS_group_number"];
             NSString * tst2 = [defaults stringForKey:@"NVCRIS group number"];
             _NVCRIS_GroupNum = max (_NVCRIS_GroupNum,1);

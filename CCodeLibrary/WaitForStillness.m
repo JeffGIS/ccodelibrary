@@ -94,13 +94,24 @@
     return wfs;
 }
 
-+ (void)determineIsDeviceIsPortraitOrUpsideDown:(id)aTarget
++ (WaitForStillness*)determineIsDeviceIsPortraitOrUpsideDown:(id)aTarget
 {
     WaitForStillness *wfs = WaitForStillness.new;
     wfs.aTarget = aTarget;
     wfs.motionManager = CMMotionManager.new;
     wfs.count = 5;
     [wfs verifyPortraitOrUpsideDown];
+    return wfs;
+}
+- (id)init
+{
+    self = [super init];
+    
+    return self;
+}
+- (void)dealloc
+{
+    return;
 }
 
 - (void)verifyStillness

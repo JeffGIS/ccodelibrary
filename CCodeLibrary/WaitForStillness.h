@@ -48,7 +48,7 @@
                        target:(id)aTarget
                      selector:(SEL)aSelector;
 
-+ (void)determineIsDeviceIsPortraitOrUpsideDown:(id)aTarget;
++ (WaitForStillness*)determineIsDeviceIsPortraitOrUpsideDown:(id)aTarget;
 
 - (void)cancelWaitForStillness;
 
