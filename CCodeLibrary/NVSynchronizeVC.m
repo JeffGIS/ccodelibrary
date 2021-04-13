@@ -847,6 +847,22 @@
     }
 }
 
+-(void) fileUploadedOK
+{
+    _nextFileNumToUpload++;
+    _uploadedFiles++;
+    _processedFiles++;
+    if (_totFilesToProcess)
+        [self updateOverallProgress:(float)_processedFiles/_totFilesToProcess];
+    
+    if (_process == UPLOAD_DATA_PROCESS)
+        _upFiles--;
+    else
+        _upPix--;
+    [self updateLabels];
+    [self uploadNextFile];
+}
+
 - (void)GMServer:(GeoMasterServer *)server
 didReceiveMessage:(NSString *)message
       withStatus:(long)status
@@ -953,18 +969,7 @@ didReceiveMessage:(NSString *)message
                 }
                 else if ([message isEqualToString:@"OK"])
                 {
-                    _nextFileNumToUpload++;
-                    _uploadedFiles++;
-                    _processedFiles++;
-                    if (_totFilesToProcess)
-                        [self updateOverallProgress:(float)_processedFiles/_totFilesToProcess];
-                    
-                    if (_process == UPLOAD_DATA_PROCESS)
-                        _upFiles--;
-                    else
-                        _upPix--;
-                    [self updateLabels];
-                    [self uploadNextFile];
+                    [self fileUploadedOK];
                 }
                 else if ([[message substringToIndex:3] isEqualToString:@"ERR1"] &&
                          _numAttemps++ < MAX_ATTEMPS)
@@ -1173,6 +1178,9 @@ Top:
     {
         if ([[_filePath pathExtension] isEqualToString:@"jpg"])
         {
+            [self fileUploadedOK];
+            return;
+            /*
             NSError *error = nil;
             
             NSString *defaultPath = [NSBundle.mainBundle pathForResource:@"deletedImage"
@@ -1185,7 +1193,7 @@ Top:
                                           withHeader:@"Copy empty image"];
 
             }
-            
+            */
         }
         else
         {
@@ -1202,9 +1210,13 @@ Top:
     {
         _push.dataType = FTPData;
         _sendDataStartTime = NSDate.date;
+        _push.tempExtension = @".upload";
     }
     else
+    {
         _push.dataType = FTPDataPhoto;
+        _push.tempExtension = @"";
+    }
     
     NSString *toDir = [NSString stringWithFormat:@"NVCRISData/%i/%i",
                        CRAPI.sharedInstance.currentManageriPad, CRAPI.sharedInstance.currentGeoid];
@@ -1382,7 +1394,13 @@ Top:
     {
         [_popoverView hide];
         _numAttemps = 0;
-        if (dataType != FTPDatabase)
+        if (dataType == FTPDatabase)
+        {
+            
+        }
+//        else if (dataType == FTPDataPhoto)
+//            [self fileUploadedOK];
+        else
             [self sendGMServerMessage:GMSMessageFileUploaded];
     }
     
