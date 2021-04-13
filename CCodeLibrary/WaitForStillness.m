@@ -17,6 +17,7 @@
 @property double maxX, minX, maxY, minY, maxZ, minZ, sumX, sumY, sumZ;
 @property id aTarget;
 @property SEL aSelector;
+@property SEL holdSelector;
 @property int counter, count;
 @property (nonatomic) CMMotionManager *motionManager;
 
@@ -37,6 +38,7 @@
                        beepFactor:beepSeconds
                            target:aTarget
                          selector:aSelector
+                 ifInHoldSelector:nil
                       orientation:VERTICAL];
 }
 
@@ -46,6 +48,7 @@
                                 beepFactor:(double)beepSeconds
                                     target:(id)aTarget
                                   selector:(SEL)aSelector
+                            ifInHoldSelector:(SEL)holdSelector
 {
     return [self waitForStillness:steadyFactor
                       countFactor:countFactor
@@ -53,6 +56,7 @@
                        beepFactor:beepSeconds
                            target:aTarget
                          selector:aSelector
+                 ifInHoldSelector:holdSelector
                       orientation:HORIZONTAL];
 }
 
@@ -69,6 +73,7 @@
                        beepFactor:beepSeconds
                            target:aTarget
                          selector:aSelector
+                 ifInHoldSelector:nil
                       orientation:WAITFORMOTION];
 }
 
@@ -78,6 +83,7 @@
                       beepFactor:(double)beepSeconds
                           target:(id)aTarget
                         selector:(SEL)aSelector
+                  ifInHoldSelector:(SEL)holdSelector
                      orientation:(int)orientation
 {
     WaitForStillness *wfs = WaitForStillness.new;
@@ -86,6 +92,7 @@
     wfs.orientationTolerance = (orientationFactor * ORIENTATION_MULTIPLER);
     wfs.aTarget = aTarget;
     wfs.aSelector = aSelector;
+    wfs.holdSelector = holdSelector;
     wfs.orientation = orientation;
     wfs.motionManager = CMMotionManager.new;
     
@@ -137,8 +144,13 @@
 
 - (void)computeSlopeFromAccelerometer:(CMAccelerometerData *)accelerometerData
 {
+    NSTimeInterval delay = 0.1;
     if (CRAPI.sharedInstance.holdForMeasurement)
+    {
+        if (_holdSelector)
+            [_aTarget performSelector:_holdSelector withObject:nil afterDelay:delay];
         return;
+    }
     if (_counter == _count)
     {
         double accelX = (_sumX / _count);
@@ -176,8 +188,6 @@
             (angleY < _orientationTolerance) &&
             (angleZ < _orientationTolerance))
         {
-            NSTimeInterval delay = 0.1;
-            
             [self cancelOperations:delay];
             [_aTarget performSelector:_aSelector withObject:nil afterDelay:delay];
         }
