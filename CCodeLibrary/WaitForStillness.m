@@ -19,6 +19,7 @@
 @property SEL aSelector;
 @property SEL holdSelector;
 @property int counter, count;
+@property BOOL wantAccelerometerData;
 @property (nonatomic) CMMotionManager *motionManager;
 
 @end
@@ -89,12 +90,12 @@
     WaitForStillness *wfs = WaitForStillness.new;
     wfs.steadyDiff = (steadyFactor * STEADY_MULTIPLIER);
     wfs.count = (int)(countFactor * COUNT_MULTIPLIER);
-    wfs.orientationTolerance = (orientationFactor * ORIENTATION_MULTIPLER);
+    wfs.orientationTolerance = orientationFactor;
     wfs.aTarget = aTarget;
     wfs.aSelector = aSelector;
     wfs.holdSelector = holdSelector;
     wfs.orientation = orientation;
-    wfs.motionManager = CMMotionManager.new;
+    wfs.motionManager = [CRAPI.sharedInstance getMotionManager];
     
     [CRAPI.sharedInstance startBeepTimer:beepSeconds];
     [wfs verifyStillness];
@@ -105,7 +106,7 @@
 {
     WaitForStillness *wfs = WaitForStillness.new;
     wfs.aTarget = aTarget;
-    wfs.motionManager = CMMotionManager.new;
+    wfs.motionManager = [CRAPI.sharedInstance getMotionManager];
     wfs.count = 5;
     [wfs verifyPortraitOrUpsideDown];
     return wfs;
@@ -124,8 +125,10 @@
 - (void)verifyStillness
 {
     [self resetSumsAndCounter];
-    
+    _wantAccelerometerData = YES;
     typedef void (^CMAccelerometerHandler)(CMAccelerometerData *accelerometerData, NSError *error);
+    
+    [_motionManager startDeviceMotionUpdates];
     _motionManager.accelerometerUpdateInterval = MEASUREMENT_FREQUENCY;
     
     if (_motionManager.isAccelerometerAvailable)
@@ -145,6 +148,8 @@
 - (void)computeSlopeFromAccelerometer:(CMAccelerometerData *)accelerometerData
 {
     NSTimeInterval delay = 0.1;
+    if (!_wantAccelerometerData)
+        return;
     if (CRAPI.sharedInstance.holdForMeasurement)
     {
         if (_holdSelector)
@@ -156,27 +161,19 @@
         double accelX = (_sumX / _count);
         double accelY = (_sumY / _count);
         double accelZ = (_sumZ / _count);
-        
-        double denom = sqrt(square(accelX) + square(accelY) + square(accelZ));
-        double angleX = acos(accelX / denom);
-        double angleY = acos(accelY / denom);
-        double angleZ = acos(accelZ / denom);
-        angleX = min (angleX,fabs (M_PI - angleX));
-        angleY = min (angleY,fabs (M_PI - angleY));
-        //angleZ = min (angleZ,fabs (M_PI - angleZ));
+        double wantVal = -1.0;
+        BOOL inPosition = FALSE;
         switch (_orientation)
         {
             //horizontal: x=90°, y=90°, z=180°
             case HORIZONTAL:
-                angleX = fabs(angleX - M_PI_2);
-                angleY = fabs(angleY - M_PI_2);
-                angleZ = fabs(angleZ - M_PI);
+                if (fabs (accelZ - wantVal) <_orientationTolerance && fabs(accelX) < 0.5 && fabs (accelY) < 0.5)
+                    inPosition = TRUE;
                 break;
             //vertical: x=0°, y=90°, z=90°
             case VERTICAL:
-                angleX = fabs(angleX);
-                angleY = fabs(angleY - M_PI_2);
-                angleZ = fabs(angleZ - M_PI_2);
+                if (fabs (accelX - wantVal) <_orientationTolerance && fabs(accelY) < 0.5 && fabs (accelZ) < 0.5)
+                    inPosition = TRUE;
                 break;
             case WAITFORMOTION:
                 [self resetSumsAndCounter];
@@ -184,16 +181,19 @@
                 break;
        }
         
-        if ((angleX < _orientationTolerance) &&
-            (angleY < _orientationTolerance) &&
-            (angleZ < _orientationTolerance))
+        if (inPosition)
         {
+            _wantAccelerometerData = NO;
             [self cancelOperations:delay];
             [_aTarget performSelector:_aSelector withObject:nil afterDelay:delay];
         }
         
         else
-            [self verifyStillness];
+        {
+            [self resetSumsAndCounter];
+            //[_motionManager stopAccelerometerUpdates];
+            //[self verifyStillness];
+        }
     }
     
     else if (_counter < _count)
@@ -245,7 +245,6 @@
 - (void)cancelOperations:(NSTimeInterval)stopBeepDelay
 {
     [_motionManager stopAccelerometerUpdates];
-    
     [CRAPI.sharedInstance performSelector:@selector(cancelBeepTimer)
                                withObject:nil
                                afterDelay:stopBeepDelay];
@@ -262,6 +261,8 @@
 - (void)verifyPortraitOrUpsideDown
 {
     typedef void (^CMAccelerometerHandler)(CMAccelerometerData *accelerometerData, NSError *error);
+    
+    [_motionManager startDeviceMotionUpdates];
     _motionManager.accelerometerUpdateInterval = MEASUREMENT_FREQUENCY;
     
     if (_motionManager.isAccelerometerAvailable)

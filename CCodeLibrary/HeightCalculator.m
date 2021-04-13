@@ -181,7 +181,7 @@
     _counter = _collectionMode = 0;
     _collectData = NO;
     
-    _motionManager = CMMotionManager.new;
+    _motionManager = [CRAPI.sharedInstance getMotionManager];
     _motionManager.accelerometerUpdateInterval = 0.02;
     typedef void (^CMAccelerometerHandler)(CMAccelerometerData *accelerometerData, NSError *error);
     

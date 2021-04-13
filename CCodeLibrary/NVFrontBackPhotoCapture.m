@@ -163,9 +163,10 @@
     }
 }
 
--(void) computeCurrentHeading
+-(int) computeCurrentHeading
 {
-    if (_nHeadingUpdates >4)
+    int rtn = -1;
+    if (_nHeadingUpdates >0)
     {
         double AZ1, AZ2;
         double maxDiff = 0;
@@ -177,8 +178,9 @@
             double azDiff = DeltaAZD (AZ1, AZ2);
             maxDiff = max (maxDiff,azDiff);
         }
-        _currentHeading = AZ1 * RADtoDEG;
+        rtn = AZ1 * RADtoDEG;
     }
+    return rtn;
 }
 -(LLPOINT) computeCurrentLocation
 {
@@ -201,7 +203,7 @@
 - (void) endCapture
 {
     LLPOINT curloc = [self computeCurrentLocation];
-    [self computeCurrentHeading];
+    int currentHeading = [self computeCurrentHeading];
     if (_delegate && [_delegate respondsToSelector:@selector
                       (frontBackPhotoCaptureDidReturnFrontImage:backImage:atLocation:withHeading:
                        numLocationUpdates:numHeadingUpdates:)])

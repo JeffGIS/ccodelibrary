@@ -160,7 +160,7 @@
     if (error)
         NSLog(@"AVAudioSession set category ERROR");
     
-    bd.motionManager = CMMotionManager.new;
+    bd.motionManager = [CRAPI.sharedInstance getMotionManager];
     
     [UIView animateWithDuration:0.25
                      animations:^{

@@ -24,6 +24,7 @@
 #import "SOLAR-2Input.h"
 
 @import AVKit;
+@import CoreMotion;
 
 #ifndef LE_Transfer_TransferService_h
 #define LE_Transfer_TransferService_h
@@ -349,6 +350,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void) closeDebugFile;
 - (void) writeToDebugFile:(NSString *)line;
 - (NSString *_Nonnull) getRouteServer;
+- (CMMotionManager *) getMotionManager;
 
 void GSSiViewDidLoad (void);
 @end

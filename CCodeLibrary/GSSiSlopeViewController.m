@@ -236,7 +236,7 @@ static int COUNT=100;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     _locationManager.delegate = self;
     
-    _motionManager = CMMotionManager.new;
+    _motionManager = [CRAPI.sharedInstance getMotionManager];
     [self resetSumsAndCounter];
 
     if (_hideDoesNotExistButton || _fromCalibration)

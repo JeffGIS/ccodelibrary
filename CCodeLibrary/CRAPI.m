@@ -33,6 +33,7 @@ NVSlopeData CurrentSlopeData;
 @property (nonatomic, nullable) AVAudioPlayer *beep, *finalBeep;
 @property (nonatomic, nullable) NSTimer *beepTimer;
 @property (nonatomic, nullable) NSString * routeServer;
+@property (nonatomic, nullable) CMMotionManager *motionManager;
 
 @end
 
@@ -213,6 +214,12 @@ NVSlopeData CurrentSlopeData;
                   });
     
     return sharedInstance;
+}
+- (CMMotionManager *) getMotionManager
+{
+    if (!_motionManager)
+        _motionManager = CMMotionManager.new;
+    return _motionManager;
 }
 - (nullable CBCentralManager *)getCentralManager:(id)delegate
 {

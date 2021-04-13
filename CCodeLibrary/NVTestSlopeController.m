@@ -80,7 +80,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     _locationManager.headingFilter = kCLHeadingFilterNone;
     _locationManager.headingOrientation = CLDeviceOrientationFaceDown;
     
-    _motionManager = [[CMMotionManager alloc] init];
+    _motionManager = [CRAPI.sharedInstance getMotionManager];
 }
 
 - (void)didReceiveMemoryWarning
