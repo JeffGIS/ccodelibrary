@@ -115,7 +115,7 @@ static int COUNT=100;
         if (!CRAPI.sharedInstance.solar2Input)
             CRAPI.sharedInstance.solar2Input = SOLAR2Input.new;
         CRAPI.sharedInstance.solar2Input.delegate = self;
-        _countFactor /= 2;
+        _countFactor /= 1.5;
     }
     if (!_fromCalibration)
     {
