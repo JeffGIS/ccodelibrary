@@ -155,6 +155,7 @@ static BOOL useBosch = FALSE;
     ticView.backgroundColor = UIColor.clearColor;
     
     [nvps addSubview:ticView];
+    offset = 11;
     [ticView constrainLeadingToAnchor:nvps.slider.leadingAnchor constant:offset];
     [ticView constrainTrailingToAnchor:nvps.slider.trailingAnchor constant:-offset];
     [ticView constrainBottomToAnchor:nvps.slider.centerYAnchor];
@@ -186,7 +187,7 @@ static BOOL useBosch = FALSE;
     [leftTic constrainWidthToAnchor:midTic.widthAnchor];
     
     [nvps bringSubviewToFront:nvps.slider];
-    
+
     UIView *rightTic = UIView.new;
     rightTic.translatesAutoresizingMaskIntoConstraints = NO;
     rightTic.backgroundColor = UIColor.blackColor;
@@ -200,11 +201,12 @@ static BOOL useBosch = FALSE;
     UIView *leftFill = UIView.new;
     leftFill.translatesAutoresizingMaskIntoConstraints = NO;
     leftFill.backgroundColor = UIColor.clearColor;
-    
+    leftFill.backgroundColor = UIColor.redColor;
+
     [ticView addSubview:leftFill];
     [leftFill constrainTopToAnchor:ticView.topAnchor];
     [leftFill constrainBottomToAnchor:ticView.bottomAnchor];
-    [leftFill constrainLeadingToAnchor:leftTic.trailingAnchor];
+    [leftFill constrainLeadingToAnchor:leftTic.leadingAnchor];
     [leftFill constrainTrailingToAnchor:midTic.leadingAnchor];
     
     UIView *leftMidTic = UIView.new;
