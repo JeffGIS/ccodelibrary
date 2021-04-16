@@ -17,7 +17,7 @@
 @property (nonatomic) UILabel *titleLabel, *valueLabel;
 @property (nonatomic) UIButton *left, *right, *mid, *leftMid, *rightMid, *cancelButton;
 @property (nonatomic, weak) id <NVPopoverSliderDelegate> delegate;
-@property float initialValue, initialMin, initialMax;
+@property float initialValue, initialMin, initialMax, factor;
 @property (nonatomic) UISwitch *modeSwitch;
 
 @end
@@ -63,8 +63,8 @@ static BOOL useBosch = FALSE;
     CGFloat shortestSide = MIN(bounds.size.height, bounds.size.width);
     CGFloat height = (shortestSide * 0.95);
     CGFloat width = 80.0;
-    
     NVPopoverSlider *nvps = NVPopoverSlider.new;
+    nvps.factor = height / 300 *1.1;
     nvps.translatesAutoresizingMaskIntoConstraints = NO;
     nvps.delegate = delegate;
     nvps.title = title;
@@ -201,7 +201,6 @@ static BOOL useBosch = FALSE;
     UIView *leftFill = UIView.new;
     leftFill.translatesAutoresizingMaskIntoConstraints = NO;
     leftFill.backgroundColor = UIColor.clearColor;
-    leftFill.backgroundColor = UIColor.redColor;
 
     [ticView addSubview:leftFill];
     [leftFill constrainTopToAnchor:ticView.topAnchor];
@@ -350,7 +349,7 @@ static BOOL useBosch = FALSE;
     [leftButtonSpace constrainLeadingToAnchor:nvps.leadingAnchor];
     [leftButtonSpace constrainTrailingToAnchor:nvps.centerXAnchor];
     [leftButtonSpace constrainBottomToAnchor:nvps.bottomAnchor];
-   // [leftButtonSpace constrainTopToAnchor:nvps.slider.bottomAnchor constant:40.0];
+    [leftButtonSpace constrainTopToAnchor:nvps.bottomAnchor constant:-50.0*nvps.factor];
     
     UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
     nvps.cancelButton = cancelButton;
@@ -674,8 +673,8 @@ void returnToCallerInOC (void)
     
     [self addSubview:stepperSC];
     [stepperSC constrainCenterXToAnchor:_slider.centerXAnchor];
-    [stepperSC constrainTopToAnchor:_slider.bottomAnchor constant:20.0];
-    [stepperSC constrainHeightToConstant:50.0];
+    [stepperSC constrainTopToAnchor:_slider.bottomAnchor constant:10 * _factor];
+    [stepperSC constrainHeightToConstant:40.0*_factor];
     [stepperSC constrainWidthToAnchor:stepperSC.heightAnchor multiplier:3.0];
     
     [stepperSC addTarget:self
