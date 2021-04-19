@@ -34,6 +34,7 @@ NVSlopeData CurrentSlopeData;
 @property (nonatomic, nullable) NSTimer *beepTimer;
 @property (nonatomic, nullable) NSString * routeServer;
 @property (nonatomic, nullable) CMMotionManager *motionManager;
+@property (nonatomic, nullable) CLLocationManager *locationManager;
 
 @end
 
@@ -220,6 +221,12 @@ NVSlopeData CurrentSlopeData;
     if (!_motionManager)
         _motionManager = CMMotionManager.new;
     return _motionManager;
+}
+- (CLLocationManager *) getLocationManager
+{
+    if (!_locationManager)
+        _locationManager = CLLocationManager.new;
+    return _locationManager;
 }
 - (nullable CBCentralManager *)getCentralManager:(id)delegate
 {
