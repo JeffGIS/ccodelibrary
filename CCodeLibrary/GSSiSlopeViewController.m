@@ -230,7 +230,7 @@ static int COUNT=100;
              forControlEvents:UIControlEventTouchUpInside];
         [_zeroButton setHidden:NO];
    }
-    _locationManager = CLLocationManager.new;
+    _locationManager = [CRAPI.sharedInstance getLocationManager];
     _locationManager.headingFilter = kCLHeadingFilterNone;
     _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;

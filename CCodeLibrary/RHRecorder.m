@@ -55,7 +55,7 @@
     
     if ([CLLocationManager locationServicesEnabled])
     {
-        _locMgr = CLLocationManager.new;
+        _locMgr = [CRAPI.sharedInstance getLocationManager];
         _locMgr.delegate = self;
         
         if (CLLocationManager.authorizationStatus == kCLAuthorizationStatusNotDetermined)

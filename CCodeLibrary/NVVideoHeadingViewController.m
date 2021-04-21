@@ -118,7 +118,7 @@ typedef NS_ENUM(NSInteger, NVVideoHeadingStatus)
     
     CLAuthorizationStatus status = CLLocationManager.authorizationStatus;
     
-    _locationManager = [[CLLocationManager alloc] init];
+    _locationManager = [CRAPI.sharedInstance getLocationManager];
     _locationManager.delegate = self;
     _locationManager.headingFilter = kCLHeadingFilterNone;
     _locationManager.headingOrientation = CLDeviceOrientationPortrait;

@@ -2,6 +2,7 @@
 //  CCodeLibrary
 
 #import "NVFrontBackPhotoCapture.h"
+#import "CRAPI.h"
 @import AVFoundation;
 @import VideoToolbox;
 
@@ -30,7 +31,7 @@
     capture.locationUpdates = NSMutableArray.new;
     if (wantHeading)
     {
-        capture.locationManager = CLLocationManager.new;
+        capture.locationManager = [CRAPI.sharedInstance getLocationManager];
         capture.locationManager.headingFilter = kCLHeadingFilterNone;
         capture.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         capture.locationManager.delegate = capture;

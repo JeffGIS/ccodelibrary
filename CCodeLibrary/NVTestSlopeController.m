@@ -76,7 +76,7 @@ typedef NS_ENUM(NSInteger, SCStatus)
     [self setupProgressView];
     [self setupManualButtons];
     
-    _locationManager = [[CLLocationManager alloc] init];
+    _locationManager = [CRAPI.sharedInstance getLocationManager];
     _locationManager.headingFilter = kCLHeadingFilterNone;
     _locationManager.headingOrientation = CLDeviceOrientationFaceDown;
     

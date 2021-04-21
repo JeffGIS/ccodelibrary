@@ -198,7 +198,7 @@
     
     if (_from == FROM_HOME || _from == FROM_CORNER)
     {
-        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager = [CRAPI.sharedInstance getLocationManager];
         _locationManager.delegate = self;
         _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
         _locationManager.headingFilter = kCLHeadingFilterNone;

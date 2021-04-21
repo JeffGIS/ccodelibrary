@@ -946,7 +946,7 @@ didReceiveMessage:(NSString *)message
                     }
                 }
                 
-                _locationManager = [[CLLocationManager alloc] init];
+                _locationManager = [CRAPI.sharedInstance getLocationManager];
                 _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
                 _locationManager.distanceFilter = kCLDistanceFilterNone;
                 _locationManager.delegate = self;
