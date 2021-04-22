@@ -221,6 +221,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) NSString *group_NVCRIS_TAKEPHOTO_CHARACTERISTIC_UUID;
 @property (nonatomic, nullable) NSString *group_NVCRIS_PHOTOTAKEN_CHARACTERISTIC_UUID;
 @property (nonatomic, nullable) NSString *group_NVCRIS_HOLDFORMEASUREMENT_CHARACTERISTIC_UUID;
+@property (nonatomic, nullable) NSString *group_NVCRIS_DOORTIMER_CHARACTERISTIC_UUID;
 @property BOOL NVCRIS_Central_Server;
 @property BOOL NVCRIS_Slope_Client;
 @property (strong, nonatomic) SlopeClient *slopeClient;

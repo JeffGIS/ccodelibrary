@@ -7,15 +7,17 @@
 //
 
 #import "CRAPI.h"
+#import "GSSiBumpDetector.h"
 
 
 
-@interface NVCRIS_PeripheralManager () <CBPeripheralManagerDelegate>
+@interface NVCRIS_PeripheralManager () <CBPeripheralManagerDelegate,GSSiBumpDetectorDelegate>
 @property CBPeripheralManager * manager;
 @property (strong, nonatomic) CBMutableCharacteristic   *slopeDataCharacteristic;
 @property (strong, nonatomic) CBMutableCharacteristic   *takePhotoCharacteristic;
 @property (strong, nonatomic) CBMutableCharacteristic   *photoTakenCharacteristic;
 @property (strong, nonatomic) CBMutableCharacteristic   *holdForMeasurementCharacteristic;
+@property (strong, nonatomic) CBMutableCharacteristic   *doorTimerCharacteristic;
 @property (strong, nonatomic) NSData                    *photoDataToSend;
 @property (nonatomic, readwrite) NSInteger              sendPhotoDataIndex;
 @property (strong, nonatomic) NSData                    *slopeDataToSend;
@@ -85,11 +87,17 @@
                                                                            value:nil
                                                                      permissions:CBAttributePermissionsReadable|CBAttributePermissionsWriteable];
     
+    // then the door timer char
+    _doorTimerCharacteristic = [[CBMutableCharacteristic alloc] initWithType:[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_DOORTIMER_CHARACTERISTIC_UUID]
+                                                                      properties:CBCharacteristicPropertyNotify|CBCharacteristicPropertyRead|CBCharacteristicPropertyWrite
+                                                                           value:nil
+                                                                     permissions:CBAttributePermissionsReadable|CBAttributePermissionsWriteable];
+    
     // Then the service
      CBMutableService *NVCRISService = [[CBMutableService alloc] initWithType:[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_SERVICE_UUID]
                                                                        primary:YES];
     // Add the characteristics to the service
-    NVCRISService.characteristics = @[_takePhotoCharacteristic,_photoTakenCharacteristic,_slopeDataCharacteristic,_holdForMeasurementCharacteristic];
+    NVCRISService.characteristics = @[_takePhotoCharacteristic,_photoTakenCharacteristic,_slopeDataCharacteristic,_holdForMeasurementCharacteristic,_doorTimerCharacteristic];
     
     // And add it to the peripheral manager
     [_manager removeAllServices];
@@ -443,7 +451,32 @@
                 [self updateHoldStatus:_currentHoldStatus];
             }
         }
+        else if ([request.characteristic.UUID isEqual:[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_DOORTIMER_CHARACTERISTIC_UUID]])
+        {
+            NSData * data = request.value;
+            NSString * cdata = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSString *header = [cdata substringToIndex:4];
+            if ([header isEqual:@"INIT"])
+            {
+                UIViewController *parentVC = UIApplication.sharedApplication.keyWindow.rootViewController;
+                [GSSiBumpDetector showBumpDetectorWithView:parentVC.view
+                                              coundownTime:5
+                                                     title:@"Door Close Timer"
+                                                    prompt:@""
+                                                  delegate:self];
+                
+            }
+        }
     }
+    return;
+}
+- (void)bumpDetectorDidCancel:(GSSiBumpDetector *)bumpDetector
+{
+    return;
+}
+- (void)bumpDetectorDidFinish:(GSSiBumpDetector *)bumpDetector
+                    closeTime:(float) time
+{
     return;
 }
 - (NSString *)packageAmWalking

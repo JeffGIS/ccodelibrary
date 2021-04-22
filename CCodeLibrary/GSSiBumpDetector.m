@@ -375,6 +375,14 @@
             _start.layer.borderColor = UIColor.blackColor.CGColor;
             [_start setTitle:@"Use It" forState:UIControlStateNormal];
             [_cancel setTitle:@"Do Over" forState:UIControlStateNormal];
+            if (_delegate &&
+                [_delegate respondsToSelector:@selector(bumpDetectorDidFinish:closeTime:)])
+            {
+                [_delegate bumpDetectorDidFinish:self
+                                       closeTime:_elapsedTime];
+                [self hideBumpDetector:YES];
+            }
+
             return;
         }
     }

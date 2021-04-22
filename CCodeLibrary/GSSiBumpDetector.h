@@ -12,6 +12,9 @@
 didReturnTimeInterval:(NSString *)timeInterval;
 
 - (void)bumpDetectorDidCancel:(GSSiBumpDetector *)bumpDetector;
+@optional
+- (void)bumpDetectorDidFinish:(GSSiBumpDetector *)bumpDetector
+                     closeTime:(float) time;
 
 @end
 
