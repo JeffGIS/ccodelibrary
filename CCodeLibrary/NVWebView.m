@@ -64,7 +64,11 @@
 @property (nonatomic) UIImageView *imageView;
 @property (nonatomic, copy) NSString *highlights;
 @property (nonatomic) UIView *overlay;
+@property (nonatomic) UIView *fromView;
+@property (nonatomic) UIView *zoomView;
 @property (nonatomic) NSTimer *lookForPasteBufferTimer;
+@property (nonatomic) NSString *path;
+@property (nonatomic) NSURL *url;
 @end
 
 @implementation NVWebView
@@ -190,6 +194,7 @@
     }
     
     NVWebView *nvwv = NVWebView.new;
+    nvwv.fromView = view;
     [nvwv setupViewComponents:view];
     NSString *type = path.pathExtension.lowercaseString;
     NSString *name = path.stringByDeletingPathExtension;
@@ -205,10 +210,11 @@
         [nvwv addWebViewToView:view];
     
     nvwv.isFile = YES;
-    NSURL *url = [NSURL fileURLWithPath:path isDirectory:NO];
+    nvwv.path = path;
+    nvwv.url = [NSURL fileURLWithPath:path isDirectory:NO];
     NSError *error = nil;
     
-    if (![url checkResourceIsReachableAndReturnError:&error])
+    if (![nvwv.url checkResourceIsReachableAndReturnError:&error])
         showAlert([NSString stringWithFormat:@"PDF resource not available at %@", path]);
     
     else if ([type isEqualToString:@"pdf"])
@@ -218,7 +224,7 @@
         
         else
         {
-            CFURLRef urlRef = (__bridge CFURLRef)url;
+            CFURLRef urlRef = (__bridge CFURLRef)nvwv.url;
             CGPDFDocumentRef pdfRef = CGPDFDocumentCreateWithURL(urlRef);
             nvwv.numPages = (int)CGPDFDocumentGetNumberOfPages(pdfRef);
             CGPDFDocumentRelease(pdfRef);
@@ -229,13 +235,20 @@
             rotGR.delegate = nvwv;
             [nvwv.scrollView addGestureRecognizer:rotGR];
             nvwv.rotationEnabled = YES;
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:nvwv
+                                                                                         action:@selector(webViewWasTapped:)];
+            tapGesture.delegate = nvwv;
+            [view addGestureRecognizer:tapGesture];
+            if (!nvwv.delegate)
+                nvwv.delegate = nvwv;
+
         }
     }
     
     [nvwv bringSubviewToFront:nvwv.returnButton];
     [nvwv bringSubviewToFront:nvwv.saveLinkButton];
  
-    [nvwv.webView loadFileURL:url allowingReadAccessToURL:url];
+    [nvwv.webView loadFileURL:nvwv.url allowingReadAccessToURL:nvwv.url];
     [nvwv show];
 
     return nvwv;
@@ -246,6 +259,7 @@
                         inView:(UIView *)view
                 withHighlights:(NSString *)highlights
                    enableSwipe:(BOOL)enableSwipe
+                      zoomView:(UIView *)zoomView
 {
     NSString *resourcePath = @"";
     
@@ -288,6 +302,7 @@
     [nvwv disableUserInteraction];
     nvwv.drawing = drawing;
     nvwv.highlights = highlights;
+    nvwv.zoomView = zoomView;
     
     CGFloat xMargin = 0.0, yMargin = 0.0;
     CGFloat width = ((drawing.lowerRight.x - drawing.upperLeft.x) * nvwv.aspectRatio);
@@ -1589,6 +1604,23 @@ double roundTo1000th(double value)
          wasLongPressedAtPoint:dPoint
                     withinPage:page];
         }
+    }
+}
+
+- (void)webView:(NVWebView *)webView
+wasTappedAtPoint:(DPOINT)point
+     withinPage:(int)page
+{
+    NSLog(@"(%f,%f)", point.x, point.y);
+    if (_zoomView)
+    {
+        NSLog(@"have fromview");
+        [NVWebView showWebViewInView:_zoomView showFileAtPath:_path delegate:nil];
+/*        [NVWebView showWebViewInView:_zoomView
+                      showFileAtPath:[NSBundle.mainBundle pathForResource:@"NVFIS_Help_PromptsScreen"
+                                                                   ofType:@"pdf"]
+                            delegate:nil];
+*/
     }
 }
 

@@ -545,7 +545,8 @@
                             fromDocument:_document
                                   inView:_containerView
                           withHighlights:@""
-                             enableSwipe:NO];
+                             enableSwipe:NO
+                                zoomView:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -923,7 +924,8 @@
                             fromDocument:_document
                                   inView:_containerView
                           withHighlights:@""
-                             enableSwipe:NO];
+                             enableSwipe:NO
+                                zoomView:nil];
 }
 
 - (void)updatePageSectIDLabel

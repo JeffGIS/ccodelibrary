@@ -73,7 +73,8 @@
                               fromDocument:NVPDFDocumentADAChecklist
                                     inView:bd.countdownLabel
                             withHighlights:@""
-                               enableSwipe:NO];
+                               enableSwipe:NO
+                                  zoomView:nil];
     
     bd.titleLabel = [[UILabel alloc] initWithFrame:
                                CGRectMake((size.width * 0.05), (size.height * 0.025),

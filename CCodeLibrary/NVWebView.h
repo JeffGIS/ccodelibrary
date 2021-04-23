@@ -80,7 +80,8 @@ wasLongPressedAtPoint:(DPOINT)point
                   fromDocument:(NVPDFDocument)document
                         inView:(UIView *)view
                 withHighlights:(NSString *)highlights
-                   enableSwipe:(BOOL)enableSwipe;
+                   enableSwipe:(BOOL)enableSwipe
+                      zoomView:(UIView *)zoomView;
 
 - (void)hide:(BOOL)animated;
 - (void)showRealtorButton;

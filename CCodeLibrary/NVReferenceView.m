@@ -113,7 +113,8 @@
                      fromDocument:NVPDFDocumentMNAccessbility
                            inView:_containerView
                    withHighlights:@""
-                      enableSwipe:NO];
+                      enableSwipe:NO
+                        zoomView:nil];
     }
     
     else
