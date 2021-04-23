@@ -3,6 +3,10 @@
 
 #import "NVSliderController.h"
 #import "UserDefaults.h"
+#import "SharedDefaults.h"
+#import "GSSiDefs.h"
+
+static BOOL useBosch = FALSE;
 
 typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 {
@@ -17,7 +21,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 @property (nonatomic, weak) id <NVSliderControllerDelegate>delegate;
 @property (nonatomic) UISlider *slider;
 @property (nonatomic) UILabel *sliderLabel, *lowTic, *highTic, *midTic, *midLowTic, *midHighTic, *promptLabel;
-@property (nonatomic) UIButton *saveButton, *cancelButton, *rangeButton;
+@property (nonatomic) UIButton *saveButton, *cancelButton, *rangeButton, *boschButton;
 @property (nonatomic) UIView *ticView, *overlayView;
 @property double minValue, maxValue, unitFactor;
 @property NVSliderControllerRange range;
@@ -40,6 +44,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
        configuration:(NVSliderConfiguration)configuration
                 type:(NVSliderMeasurementType)type
                 unit:(NSString *)unit
+          allowBosch:(BOOL)allowBosch
 {
     double height = 260.0;
     
@@ -52,6 +57,7 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         self.layer.borderWidth = 4.0;
         self.layer.cornerRadius = 10.0;
         self.backgroundColor = UIColor.whiteColor;
+        self.allowBosch = allowBosch;
         _buttonHeight = 56.0;
         _configuration = configuration;
         _delegate = delegate;
@@ -121,10 +127,19 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
         [self addSubview:_slider];
         
         CGFloat labelHeight = 52.0;
-        CGFloat labelMargin = (labelHeight + _slider.frame.origin.x);
+        CGFloat labelMargin = (labelHeight * 1.5 + _slider.frame.origin.x);
         _sliderLabel = [[UILabel alloc] initWithFrame:CGRectMake(labelMargin, 0.0, (width - (labelMargin * 2.0)), labelHeight)];
         _sliderLabel.backgroundColor = UIColor.clearColor;
-        
+        if (_allowBosch)
+        {
+            _boschButton = [[UIButton alloc] initWithFrame:CGRectMake((width -labelMargin), 0,
+                                                                       labelMargin, labelHeight)];
+            [self setupButton:_boschButton
+                       target:self
+                     selector:@selector(gotoBoschTapped:)
+                        title:@"ULD"];
+            CRAPI.sharedInstance.currentMeasurementView = self;
+        }
         switch (_configuration)
         {
             case NVSliderConfigurationManualSlope:
@@ -395,6 +410,8 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
 
 - (void)saveButtonTapped:(UIButton *)button
 {
+    CRAPI.sharedInstance.currentMeasurementView = 0;
+
     if (_delegate && [_delegate respondsToSelector:@selector(sliderView:didReturnValue:)])
     {
         if (![_unit.uppercaseString isEqualToString:_origUnit.uppercaseString])
@@ -405,10 +422,110 @@ typedef NS_ENUM(NSInteger, NVSliderControllerRange)
     }
 }
 
+
 - (void)cancelButtonTapped:(UIButton *)button
 {
+    CRAPI.sharedInstance.currentMeasurementView = 0;
     if (_delegate)
         [_delegate sliderViewDidCancel:self];
+}
+
+-(double) adjustValue:(double) inVal
+            fromUnits:(NSString *)inUnits
+{
+    double outVal = 0;
+    
+    if ([inUnits isEqual:@"m"])
+    {
+        if ([_unit isEqual:@"Inches"])
+        {
+            outVal = inVal * MFT * 12;
+        }
+        else if ([_unit isEqual:@"Feet"])
+        {
+            outVal = inVal * MFT;
+        }
+    }
+    return outVal;
+}
+-(void) setMeasurementValues
+{
+    NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:APP_GROUP_ID];
+    //SharedDefaults *defaults = [SharedDefaults defaults];
+    NSString * returnedValues = [defaults stringForKey:@"MeasurementValues"];
+    NSArray<NSString *> * array  = [returnedValues componentsSeparatedByString:@"!"];
+    if (array.count == 1)
+    {
+        NSString * value = array[0];
+        NSString * cvalue = textBefore (value,@"|");
+        if ([cvalue isEqual:@"EnterManually"])
+        {
+            useBosch = NO;
+        }
+    }
+    else if (array.count == 3)
+    {
+        NSString * dist = array[0];
+        NSString * value = textAfter(dist,@"|");
+        NSString * incomingUnits = textAfter (value,@" ");
+        NSString * cvalue = textBefore (value,@" ");
+        double dvalue = cvalue.doubleValue;
+        _slider.value = [self adjustValue:dvalue fromUnits:incomingUnits];
+        [_slider setValue:_slider.value animated:NO];
+        [self updateSliderLabel];
+        [self sliderValueChanged];
+
+    }
+    
+    return;
+}
+- (void)updateSliderLabel
+{
+    double value = 0.0;
+    
+    if (_roundToTenths)
+    {
+        value = roundf(_slider.value * 10.0) / 10.0;
+        _sliderLabel.text = [NSString stringWithFormat:@"%.1f %@", value, _unit];
+    }
+    
+    else
+    {
+        value = roundf(_slider.value);
+        _sliderLabel.text = [NSString stringWithFormat:@"%.0f %@", value, _unit];
+    }
+}
+
+void returnToCallerInOC2 (void)
+{
+    NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:APP_GROUP_ID];
+    //SharedDefaults *defaults = [SharedDefaults defaults];
+    NSString * returnUrl = [defaults stringForKey:@"MeasureSourceApplication"];
+    NSLog (@"%@",returnUrl);
+    return;
+}
+-(void)gotoBoschTapped:(UIButton *)button
+{
+    NSString *measureURL = @"DeviceConnect://";
+    [SharedDefaults.defaults saveString:@"FISDetail://" forKey:@"MeasureSourceApplication"];
+    returnToCallerInOC();
+    if ([UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:measureURL]])
+    {
+        useBosch = YES;
+        [UIApplication.sharedApplication openURL:[NSURL URLWithString:measureURL]];
+    }
+    else
+    {
+        NVAlertView *alert = [NVAlertView showLargeAlertViewinView:self
+                                                          delegate:self
+                                                             title:@"NVMobile cannot launch DeviceConnect App"
+                                                   buttonTextArray:@[@"OK"]
+                                                  destructiveIndex:0];
+        
+        alert.identifier = @"CannotLaunchDeviceConnectApp";
+    }
+    
+    return;
 }
 
 - (void)rangeButtonTapped:(UIButton *)button

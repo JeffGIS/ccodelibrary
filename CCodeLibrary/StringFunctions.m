@@ -1008,6 +1008,18 @@ NSString *removeOpeningReturn(NSString *string)
     return string;
 }
 
+NSString *lastCharInString(NSString *string)
+{
+    NSString * rtn = @"";
+    NSUInteger l = string.length;
+    NSRange range = NSMakeRange(l-1,1);
+    if (l > 0)
+    {
+        rtn = [string substringWithRange:range];
+    }
+    return rtn;
+}
+
 NSString *replaceLastChar(NSString *string,char with)
 {
     char withchars[2];

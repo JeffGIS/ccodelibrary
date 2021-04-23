@@ -43,6 +43,8 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
 @property CGFloat usedTopSpace;
 @property (nonatomic) int numDecimals;
 @property BOOL allowSteps;
+@property BOOL allowBosch;
+@property (nonatomic) BOOL roundToTenths;
 
 - (id)initWithCenter:(CGPoint)center
                width:(double)width
@@ -52,7 +54,8 @@ typedef NS_ENUM(NSInteger, NVSliderMeasurementType)
             delegate:(id)delegate
        configuration:(NVSliderConfiguration)configuration
                 type:(NVSliderMeasurementType)type
-                unit:(NSString *)unit;
+                unit:(NSString *)unit
+          allowBosch:(BOOL)allowBosch;
 
 - (void)showSliderControllerInView:(UIView *)view
                           animated:(BOOL)animated

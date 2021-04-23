@@ -937,7 +937,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                        delegate:self
                                                   configuration:NVSliderConfigurationCalibrationRunningSlope
                                                            type:NVSliderMeasurementTypeDefault
-                                                           unit:@""];
+                                                           unit:@""
+                                                     allowBosch:NO];
         }
             break;
             
@@ -951,7 +952,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                        delegate:self
                                                   configuration:NVSliderConfigurationCalibrationDegrees
                                                            type:NVSliderMeasurementTypeDefault
-                                                           unit:@""];
+                                                           unit:@""
+                                                     allowBosch:NO];
         }
             break;
             
@@ -965,7 +967,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                        delegate:self
                                                   configuration:NVSliderConfigurationCalibrationRiseRun
                                                            type:NVSliderMeasurementTypeDefault
-                                                           unit:@""];
+                                                           unit:@""
+                                                     allowBosch:NO];
         }
             break;
             

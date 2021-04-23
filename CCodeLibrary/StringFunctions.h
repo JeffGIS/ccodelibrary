@@ -94,4 +94,6 @@ void showReference(NSString *refID);
 void UploadToTheCloud (LPCSTR filePath, BOOL deleteWhenDone);
 void uploadToCloud(NSString *filePath, BOOL deleteWhenDone);
 Bool GetStringArrayElement (int index,LPSTR string,LPSTR seperator,LPSTR OutLoc,int maxOutLocLen);
+NSString *lastCharInString(NSString *string);
+
 #endif

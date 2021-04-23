@@ -93,8 +93,14 @@
         sectID = ID;
         type = defType;
     }
+    NSString * match = @"=";
+    if ([lastCharInString (sectID) isEqual:@"*"])
+    {
+        sectID = textBeforeLastChar(sectID, @"*");
+        match = @">=";
+    }
     int lenSectID = (int)sectID.length;
-    NSString *query = [NSString stringWithFormat:@"SELECT SECTIONID,NAME,PAGE,ULX,ULY,LRX,LRY FROM MNACCESSCODE WHERE SECTIONID>='%@' AND TYPE='%@'",sectID,type];
+    NSString *query = [NSString stringWithFormat:@"SELECT SECTIONID,NAME,PAGE,ULX,ULY,LRX,LRY FROM MNACCESSCODE WHERE SECTIONID%@'%@' AND TYPE='%@'",match,sectID,type];
     
     sqlite3_stmt *statement = NULL;
     

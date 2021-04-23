@@ -332,7 +332,8 @@ typedef NS_ENUM(NSInteger, SCStatus)
                                                                    delegate:self
                                                               configuration:NVSliderConfigurationManualSlope
                                                                        type:NVSliderMeasurementTypeFrontSlope
-                                                                       unit:@""];
+                                                                       unit:@""
+                                                                 allowBosch:NO];
     
     slider.tag = button.tag;
     

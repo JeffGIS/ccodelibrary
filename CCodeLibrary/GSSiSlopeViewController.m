@@ -627,7 +627,8 @@ static int COUNT=100;
                                                    delegate:self
                                               configuration:NVSliderConfigurationManualSlope
                                                        type:NVSliderMeasurementTypeFrontSlope
-                                                       unit:@"°"];
+                                                       unit:@"°"
+                                                 allowBosch:NO];
     }
     
     else
@@ -640,7 +641,8 @@ static int COUNT=100;
                                                    delegate:self
                                               configuration:NVSliderConfigurationManualSlope
                                                        type:NVSliderMeasurementTypeFrontSlope
-                                                       unit:@"%"];
+                                                       unit:@"%"
+                                                 allowBosch:NO];
     }
     
     [slider showSliderControllerInView:self.view
@@ -664,7 +666,8 @@ static int COUNT=100;
                                                    delegate:self
                                               configuration:NVSliderConfigurationManualSlope
                                                        type:NVSliderMeasurementTypeSideSlope
-                                                       unit:@"°"];
+                                                       unit:@"°"
+                                                 allowBosch:NO];
     }
     
     else
@@ -677,7 +680,8 @@ static int COUNT=100;
                                                    delegate:self
                                               configuration:NVSliderConfigurationManualSlope
                                                        type:NVSliderMeasurementTypeSideSlope
-                                                       unit:@"%"];
+                                                       unit:@"%"
+                                                 allowBosch:NO];
     }
     
     [slider showSliderControllerInView:self.view
@@ -1192,7 +1196,8 @@ static int COUNT=100;
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
                                                            type:NVSliderMeasurementTypeFrontSlope
-                                                           unit:@"°"];
+                                                           unit:@"°"
+                                                     allowBosch:NO];
         }
         
         else
@@ -1205,7 +1210,8 @@ static int COUNT=100;
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
                                                            type:NVSliderMeasurementTypeFrontSlope
-                                                           unit:@"%"];
+                                                           unit:@"%"
+                                                     allowBosch:NO];
         }
         
         [slider showSliderControllerInView:self.view
@@ -1227,7 +1233,8 @@ static int COUNT=100;
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
                                                            type:NVSliderMeasurementTypeSideSlope
-                                                           unit:@"°"];
+                                                           unit:@"°"
+                                                     allowBosch:NO];
         }
         
         else
@@ -1240,7 +1247,8 @@ static int COUNT=100;
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
                                                            type:NVSliderMeasurementTypeSideSlope
-                                                           unit:@"%"];
+                                                           unit:@"%"
+                                                     allowBosch:NO];
         }
         
         [slider showSliderControllerInView:self.view
@@ -1347,7 +1355,8 @@ static int COUNT=100;
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
                                                            type:NVSliderMeasurementTypeSideSlope
-                                                           unit:@"°"];
+                                                           unit:@"°"
+                                                     allowBosch:NO];
         }
         
         else
@@ -1360,7 +1369,8 @@ static int COUNT=100;
                                                        delegate:self
                                                   configuration:NVSliderConfigurationManualSlope
                                                            type:NVSliderMeasurementTypeSideSlope
-                                                           unit:@"%"];
+                                                           unit:@"%"
+                                                     allowBosch:NO];
         }
         
         [slider showSliderControllerInView:self.view
