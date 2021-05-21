@@ -52,6 +52,7 @@ typedef NS_ENUM(NSInteger, SOLAR2CalibrateSteps)
 @property SOLAR2CalibrateSteps calibrationStep;
 @property NSString * ioStatus;
 @property BOOL firstValueSinceStartInput;
+@property BOOL inCalibrate;
 @property CBCharacteristic *dataCharacteristic;
 @property CBCharacteristic *calibrationCharacteristic;
 

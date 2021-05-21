@@ -353,6 +353,5 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (NSString *_Nonnull) getRouteServer;
 - (CMMotionManager *) getMotionManager;
 - (CLLocationManager *) getLocationManager;
-
 void GSSiViewDidLoad (void);
 @end

@@ -257,13 +257,21 @@ static char calibrationBytes[8];
             
             // If it is, subscribe to it
             _dataCharacteristic = characteristic;
-            if (_wantSetNotify)
-                [CRAPI.sharedInstance.SOLAR2Peripheral setNotifyValue:YES forCharacteristic:_dataCharacteristic];
-
+            if (_wantSetNotify && _calibrationCharacteristic)
+            {
+                [self setNotify:_inCalibrate];
+                _wantSetNotify = NO;
+            }
          }
-        if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:SOLAR2_UUID2]]) {
+        if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:SOLAR2_UUID2]])
+        {
             _calibrationCharacteristic = characteristic;
-            
+            if (_wantSetNotify && _dataCharacteristic)
+            {
+                [self setNotify:_inCalibrate];
+                _wantSetNotify = NO;
+            }
+
          }
    }
     
@@ -404,6 +412,7 @@ static char calibrationBytes[8];
 {
     if (_waitingToConnect)
         return FALSE;
+    _inCalibrate = inCalibrate;
     _wantSetNotify = YES;
     [self restart];
     if (!CRAPI.sharedInstance.SOLAR2Peripheral || CRAPI.sharedInstance.SOLAR2Peripheral.state == CBPeripheralStateDisconnected)
@@ -414,24 +423,30 @@ static char calibrationBytes[8];
     }
     else if (_dataCharacteristic)
     {
-        [CRAPI.sharedInstance.SOLAR2Peripheral setNotifyValue:YES forCharacteristic:_dataCharacteristic];
-        _calibrationStep = InStartInputSOLAR2;
-        if (inCalibrate)
-        {
-            strcpy (calibrationBytes,"stpcasc");
-            NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
-            [self writeCalibrationData:data];
-        }
-        else
-        {
-            strcpy (calibrationBytes,"setcasc");
-            NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
-            [self writeCalibrationData:data];
-        }
+        [self setNotify:inCalibrate];
     }
     else
         _wantSetNotify = YES;
     return TRUE;
+}
+
+- (void) setNotify:(BOOL) inCalibrate
+{
+    [CRAPI.sharedInstance.SOLAR2Peripheral setNotifyValue:YES forCharacteristic:_dataCharacteristic];
+    _calibrationStep = InStartInputSOLAR2;
+    if (inCalibrate)
+    {
+        strcpy (calibrationBytes,"stpcasc");
+        NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
+        [self writeCalibrationData:data];
+    }
+    else
+    {
+        strcpy (calibrationBytes,"setcasc");
+        NSData * data = [NSData dataWithBytes:calibrationBytes length:7];
+        [self writeCalibrationData:data];
+    }
+
 }
 - (void) startDataCollection
 {

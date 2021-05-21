@@ -230,12 +230,14 @@ static int COUNT=100;
              forControlEvents:UIControlEventTouchUpInside];
         [_zeroButton setHidden:NO];
    }
-    _locationManager = [CRAPI.sharedInstance getLocationManager];
-    _locationManager.headingFilter = kCLHeadingFilterNone;
-    _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
-    _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    _locationManager.delegate = self;
-    
+    if (_wantLocation)
+    {
+        _locationManager = [CRAPI.sharedInstance getLocationManager];
+        _locationManager.headingFilter = kCLHeadingFilterNone;
+        _locationManager.headingOrientation = CLDeviceOrientationFaceUp;
+        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        _locationManager.delegate = self;
+    }
     _motionManager = [CRAPI.sharedInstance getMotionManager];
     [self resetSumsAndCounter];
 
@@ -1448,14 +1450,7 @@ static int COUNT=100;
     {
         [button setTitle:@"Stop Auto Loop" forState:UIControlStateNormal];
         _errorValue = 0.0;
-        
-        if (CLLocationManager.locationServicesEnabled)
-        {
-            _locations = NSMutableArray.new;
-            [_locationManager startUpdatingLocation];
-        }
     }
-    
     else
     {
         [_locationManager stopUpdatingLocation];

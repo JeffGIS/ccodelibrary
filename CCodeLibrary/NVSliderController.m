@@ -508,7 +508,7 @@ void returnToCallerInOC2 (void)
 {
     NSString *measureURL = @"DeviceConnect://";
     [SharedDefaults.defaults saveString:@"FISDetail://" forKey:@"MeasureSourceApplication"];
-    returnToCallerInOC();
+    returnToCallerInOC2();
     if ([UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:measureURL]])
     {
         useBosch = YES;
