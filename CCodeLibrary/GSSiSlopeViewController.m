@@ -49,6 +49,8 @@ static int COUNT=100;
 @property BOOL inSOLAR2Calibrate;
 @property SlopeClient * slopeClient;
 @property BOOL clearWMM;
+@property BOOL locationsStarted;
+@property int waitingForLocation;
 @end
 
 @implementation GSSiSlopeViewController
@@ -274,7 +276,9 @@ static int COUNT=100;
             if (CLLocationManager.locationServicesEnabled)
             {
                 _locations = NSMutableArray.new;
+                [_locationManager stopUpdatingLocation];
                 [_locationManager startUpdatingLocation];
+                _locationsStarted = YES;
             }
         }
         
@@ -751,6 +755,18 @@ static int COUNT=100;
     typedef void (^CMAccelerometerHandler)(CMAccelerometerData *accelerometerData, NSError *error);
     _motionManager.accelerometerUpdateInterval = 0.04;
     
+    if (CLLocationManager.headingAvailable && !_hasRun)
+        [_locationManager startUpdatingHeading];
+    if (_wantLocation)
+    {
+        if (!_locationsStarted)
+        {
+            _locations = NSMutableArray.new;
+            [_locationManager stopUpdatingLocation];
+            [_locationManager startUpdatingLocation];
+            _locationsStarted = YES;
+        }
+    }
     if ([_motionManager isAccelerometerAvailable])
     {
         [_motionManager startAccelerometerUpdatesToQueue:NSOperationQueue.currentQueue
@@ -762,13 +778,6 @@ static int COUNT=100;
                                              }];
     }
     
-    if (CLLocationManager.headingAvailable && !_hasRun)
-        [_locationManager startUpdatingHeading];
-    if (_wantLocation)
-    {
-        _locations = NSMutableArray.new;
-        [_locationManager startUpdatingLocation];
-    }
     _promptLabel.text = @"Slope measurement in progress.\nPlease keep iPad stable.";
 }
 - (void)WIT_MotionInputDidConnect:(WIT_MotionInput *)controller
@@ -797,6 +806,7 @@ static int COUNT=100;
 {
     [_motionManager stopAccelerometerUpdates];
     [_locationManager stopUpdatingHeading];
+    [_locationManager stopUpdatingLocation];
     if (_wantWitMotion)
         [CRAPI.sharedInstance.witMotionInput cancel];
     else if (_wantSOLAR2)
@@ -812,7 +822,6 @@ static int COUNT=100;
 {
     [_motionManager stopDeviceMotionUpdates];
     [_motionManager stopAccelerometerUpdates];
-    [_locationManager stopUpdatingHeading];
 }
 
 - (BOOL)loadCalibration
@@ -985,76 +994,85 @@ static int COUNT=100;
         return;
     if (_counter == COUNT)
     {
-        if (_headingCounter > (MIN_HEADING_COUNTER + 3) || !CLLocationManager.headingAvailable)
+        if (_locations.count > 0 || _waitingForLocation > 100)
         {
-            
-            _data.accelX = (_aSumX / COUNT);
-            _data.accelY = (_aSumY / COUNT);
-            _data.accelZ = (_aSumZ / COUNT);
-            
-            if (_headingCounter)
+            if (_waitingForLocation > 100)
             {
-                _data.heading = _sumHeading / (_headingCounter - MIN_HEADING_COUNTER);
-                _data.heading = Between0And360D(_data.heading);
+                
             }
-            
-            else
+            if (_headingCounter > (MIN_HEADING_COUNTER + 3) || !CLLocationManager.headingAvailable)
             {
-                _data.heading = 999;
-                _headingCounter = 1;
-            }
-            
-            double denom = sqrt(square(_data.accelX) + square(_data.accelY) + square(_data.accelZ));
-            double angy = acos(_data.accelY / denom);
-            double angx = acos(_data.accelX / denom);
-            angx *= RADtoDEG;
-            angy *= RADtoDEG;
-            angx = (angx - 90.0);
-            angy = (angy - 90.0);
-
-            if (_wantWitMotion)
-            {
-                if ([CRAPI.sharedInstance.witMotionInput getResults:WitMotionAngles] > 4)
+                
+                _data.accelX = (_aSumX / COUNT);
+                _data.accelY = (_aSumY / COUNT);
+                _data.accelZ = (_aSumZ / COUNT);
+                
+                if (_headingCounter)
                 {
-                    angy = WitMotionAngles[1];
-                    angx = WitMotionAngles[0];
+                    _data.heading = _sumHeading / (_headingCounter - MIN_HEADING_COUNTER);
+                    _data.heading = Between0And360D(_data.heading);
                 }
+                
                 else
                 {
-                    [self resetSumsAndCounter];
-                    [self startWitMotion:nil];
-                    return;
+                    _data.heading = 999;
+                    _headingCounter = 1;
                 }
-            }
-            if (_wantSOLAR2)
-            {
-                if ([CRAPI.sharedInstance.solar2Input getResults:WitMotionAngles] > 4)
+                
+                double denom = sqrt(square(_data.accelX) + square(_data.accelY) + square(_data.accelZ));
+                double angy = acos(_data.accelY / denom);
+                double angx = acos(_data.accelX / denom);
+                angx *= RADtoDEG;
+                angy *= RADtoDEG;
+                angx = (angx - 90.0);
+                angy = (angy - 90.0);
+                
+                if (_wantWitMotion)
                 {
-                    angy = WitMotionAngles[1];
-                    angx = WitMotionAngles[0];
+                    if ([CRAPI.sharedInstance.witMotionInput getResults:WitMotionAngles] > 4)
+                    {
+                        angy = WitMotionAngles[1];
+                        angx = WitMotionAngles[0];
+                    }
+                    else
+                    {
+                        [self resetSumsAndCounter];
+                        [self startWitMotion:nil];
+                        return;
+                    }
                 }
-                else
+                if (_wantSOLAR2)
                 {
-                    [self resetSumsAndCounter];
-                    [self startWitMotion:nil];
-                    return;
+                    if ([CRAPI.sharedInstance.solar2Input getResults:WitMotionAngles] > 4)
+                    {
+                        angy = WitMotionAngles[1];
+                        angx = WitMotionAngles[0];
+                    }
+                    else
+                    {
+                        [self resetSumsAndCounter];
+                        [self startWitMotion:nil];
+                        return;
+                    }
                 }
+                _lastDegrees = angy;
+                [self stopManagers];
+                
+                _data.frontSlopeDegrees = [self adjustSlope:angy isSideSlope:NO];
+                _data.sideSlopeDegrees = [self adjustSlope:angx isSideSlope:YES];
+                
+                _data.frontSlopePct = (tan(_data.frontSlopeDegrees * DEGtoRAD) * 100);
+                _data.sideSlopePct = (tan(_data.sideSlopeDegrees * DEGtoRAD) * 100);
+                _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
+                _data.maxSlopeDegrees = (atan(_data.maxSlopePct / 100) * RADtoDEG);
+                [self slopeMeasurementComplete];
             }
-            _lastDegrees = angy;
-            [self stopManagers];
-
-            _data.frontSlopeDegrees = [self adjustSlope:angy isSideSlope:NO];
-            _data.sideSlopeDegrees = [self adjustSlope:angx isSideSlope:YES];
             
-            _data.frontSlopePct = (tan(_data.frontSlopeDegrees * DEGtoRAD) * 100);
-            _data.sideSlopePct = (tan(_data.sideSlopeDegrees * DEGtoRAD) * 100);
-            _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
-            _data.maxSlopeDegrees = (atan(_data.maxSlopePct / 100) * RADtoDEG);
-            [self slopeMeasurementComplete];
+            if (_headingCounter  > MIN_HEADING_COUNTER + 3)
+                _counter++;
         }
-        
-        if (_headingCounter  > MIN_HEADING_COUNTER + 3)
-            _counter++;
+        else
+            _waitingForLocation++;
     }
     
     else if (_counter < COUNT)
@@ -1089,6 +1107,7 @@ static int COUNT=100;
 
 - (void)resetSumsAndCounter
 {
+    _waitingForLocation = 0;
     _maxX = _maxY = _maxZ = -10.0;
     _minX = _minY = _minZ = 10.0;
     _aSumX = _aSumY = _aSumZ = 0.0;
@@ -1103,31 +1122,34 @@ static int COUNT=100;
 
 - (void) setCurrentSlopeData:(NVSlopeData)slopeData
 {
-     if (CRAPI.sharedInstance.nvcpm)
+    if (CRAPI.sharedInstance.nvcpm)
         [CRAPI.sharedInstance.nvcpm updateSlopeData:slopeData];
 }
 - (void)slopeMeasurementComplete
 {
     [self setCurrentSlopeData:_data];
     
-
+    
     if (CRAPI.sharedInstance.inAutoLoopMode)
     {
         [self stopMotionManager];
-        [_locationManager stopUpdatingLocation];
         
         int count = 0;
         CLLocationDegrees lat = 0.0, lon = 0.0;
+        //use the last 5 coords
         int numCoords = min(5, (int)(_locations.count));
-        
-        for (int i = (int)(_locations.count - numCoords); i < _locations.count; i++)
+        if (_locations.count > 0)
         {
-            CLLocationCoordinate2D coord = _locations[i].coordinate;
-            lat += coord.latitude;
-            lon += coord.longitude;
-            count++;
+            for (int i = (int)(_locations.count - numCoords); i < _locations.count; i++)
+            {
+                CLLocationCoordinate2D coord = _locations[i].coordinate;
+                lat += coord.latitude;
+                lon += coord.longitude;
+                count++;
+            }
         }
-        
+        if (count == 0)
+            count = 1;
         CLLocationCoordinate2D avgCoord = CLLocationCoordinate2DMake((lat / (double)count),
                                                                      (lon / (double)count));
         
