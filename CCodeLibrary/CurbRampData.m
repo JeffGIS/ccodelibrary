@@ -1205,7 +1205,7 @@ void convertVersion_2_to_3 (LPSTR str)
         refno = 1;
     SQLOK(__FILE__,__LINE__, SQLiteFinalize(statement), _database);
     
-    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, fromIntersection, side, house_num, street, latitude, longitude, deleted) VALUES (%ld,%i,%d,%ld,'%@',%f,%f,0);", (long)refno, CRAPI.sharedInstance.currentIntersection, sideOfStreet, (long)iHouse, street, location.latitude, location.longitude];
+    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO SidewalkPoints (id, iPad, fromIntersection, side, house_num, street, latitude, longitude, deleted) VALUES (%ld,%i,%i,%ld,%ld,'%@',%f,%f,0);", (long)refno,CRAPI.sharedInstance.currentiPadWithinManager, CRAPI.sharedInstance.currentIntersection, (long)sideOfStreet, (long)iHouse, street, location.latitude, location.longitude];
     
     [self executeCmd:(LPSTR)cmd.UTF8String
         sendToServer:YES

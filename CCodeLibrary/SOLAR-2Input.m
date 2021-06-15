@@ -169,7 +169,10 @@ static char calibrationBytes[8];
     NSLog(@"Discovered %@ at %@", peripheral.name, RSSI);
     
     // Ok, it's in range - have we already seen it?
-    //if ([peripheral.name isEqualToString:@"WT901BLE"])
+    NSString * wantName = [NSString stringWithFormat:@"GSSiInc-%i",CRAPI.sharedInstance.NVCRIS_GroupNum];
+    NSString * deviceName = [advertisementData objectForKey:@"kCBAdvDataLocalName"];
+    if ([deviceName isEqualToString:wantName])
+    {
         if (CRAPI.sharedInstance.SOLAR2Peripheral != peripheral)
         {
             
@@ -185,6 +188,7 @@ static char calibrationBytes[8];
             NSLog(@"Connecting to peripheral %@", peripheral);
             [self.centralManager connectPeripheral:peripheral options:nil];
         }
+    }
 }
 
 
@@ -463,7 +467,7 @@ static char calibrationBytes[8];
     {
         _calibrationStep = InStopInputSOLAR2;
         [self writeCalibrationData:data];
-        [self sleep:_sleepTime];
+       // [self sleep:_sleepTime];
     }
     
 
@@ -555,6 +559,9 @@ static char calibrationBytes[8];
             case InStartCalibrateSOLAR2:
                 break;
             case InGetSlopeDataSOLAR2:
+                break;
+            case InStopInputSOLAR2:
+                [self cleanup];
                 break;
         }
     }

@@ -804,7 +804,7 @@ static int COUNT=100;
  }
 - (void)stopManagers
 {
-    [_motionManager stopAccelerometerUpdates];
+    [self stopMotionManager];
     [_locationManager stopUpdatingHeading];
     [_locationManager stopUpdatingLocation];
     if (_wantWitMotion)
@@ -812,7 +812,7 @@ static int COUNT=100;
     else if (_wantSOLAR2)
     {
         [CRAPI.sharedInstance.solar2Input stopInput];
-        [CRAPI.sharedInstance.solar2Input cancel];
+        //[CRAPI.sharedInstance.solar2Input cancel];
     }
     if (_slopeClient)
         _slopeClient.delegate = nil;
@@ -994,13 +994,13 @@ static int COUNT=100;
         return;
     if (_counter == COUNT)
     {
-        if (_locations.count > 0 || _waitingForLocation > 100)
+        if (!_wantLocation || _locations.count > 0 || _waitingForLocation > 100)
         {
             if (_waitingForLocation > 100)
             {
                 
             }
-            if (_headingCounter > (MIN_HEADING_COUNTER + 3) || !CLLocationManager.headingAvailable)
+            if (!_wantLocation || _headingCounter > (MIN_HEADING_COUNTER + 3) || !CLLocationManager.headingAvailable)
             {
                 
                 _data.accelX = (_aSumX / COUNT);
