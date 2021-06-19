@@ -5,7 +5,7 @@
 //  Created by JEFFREY E SMITH on 6/12/15.
 //  Copyright (c) 2015 GSSi. All rights reserved.
 //
-#define CURRENT_INTERSECTION_VERSION "4.0"
+#define CURRENT_INTERSECTION_VERSION "5.0"
 
 #import "CurbRampData.h"
 #import "UserDefaults.h"
@@ -173,7 +173,7 @@ static int nInit=0;
     {
         if (!doesSQLiteTableExist("SidewalkPoints",_database) || forceDelete)
         {
-            NSString *cmd = @"DROP TABLE IF EXISTS SidewalkPoints;DROP TABLE IF EXISTS SidewalkPoints_index;CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), latitude REAL, longitude REAL, fromIntersection INT, toIntersection INT, side INT, steps INT, slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, type INT, deleted INT); CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
+            NSString *cmd = @"DROP TABLE IF EXISTS SidewalkPoints;DROP TABLE IF EXISTS SidewalkPoints_index;CREATE TABLE IF NOT EXISTS SidewalkPoints (id INTEGER PRIMARY KEY, note CHAR(512), street CHAR(64), latitude REAL, longitude REAL, fromIntersection INT, toIntersection INT, side INT, steps INT, slope_front REAL, slope_side REAL, slope_heading REAL, crack_width REAL, width REAL, level_change REAL, last_update INT, condition INT, obstruction INT, house_num INT, type INT, deleted INT, iPad INT); CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
             rtn = [self executeCmd:(char *)cmd.UTF8String
                       sendToServer:YES
                               from:1662];
@@ -583,6 +583,27 @@ static int nInit=0;
     {
         switch (version)
         {
+            case 4://convert version 4 to version 5
+            {
+                BOOL st = TRUE;
+                rtn = FALSE;
+                [self startTransaction];
+                NSString * cmd = @"";
+                cmd = @"ALTER TABLE SidewalkPoints ADD COLUMN iPad INT;";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = @"DROP TABLE SidewalkPoints_index;CREATE VIRTUAL TABLE IF NOT EXISTS SidewalkPoints_index USING rtree (id, minX, maxX, minY, maxY);";
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                cmd = [NSString stringWithFormat:@"UPDATE Version SET VersionID = '%s' WHERE vid = 1;",CURRENT_INTERSECTION_VERSION];
+                if (st) st = [self executeCmd:cmd.UTF8String sendToServer:NO from:0];
+                if (st)
+                {
+                    [self commitTransaction];
+                    rtn = TRUE;
+                }
+                else
+                    [self cancelTransaction];
+            }
+                break;
             case 3://convert version 3 to version 4
             {
                 BOOL st = TRUE;

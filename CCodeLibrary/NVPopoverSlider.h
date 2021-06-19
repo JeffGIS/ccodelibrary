@@ -21,6 +21,7 @@
 @property (nonatomic) BOOL roundToTenths;
 @property (nonatomic, copy) NSString *units;
 @property BOOL allowBosch;
+@property BOOL addFromPhotoButton;
 @property NSString * title;
 
 + (instancetype)showPopoverSliderInView:(UIView *)view
@@ -30,7 +31,8 @@
                                delegate:(id)delegate
                                     tag:(NSInteger)tag
                                   title:(NSString *)title
-                             allowBosch:(BOOL)allowBosch;
+                             allowBosch:(BOOL)allowBosch
+                     addFromPhotoButton:(BOOL)addFromPhotoButton;
 
 - (void)hidePopoverSliderView:(BOOL)animated;
 - (void)showStepper;

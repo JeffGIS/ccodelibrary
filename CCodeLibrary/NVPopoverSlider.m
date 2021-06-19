@@ -43,7 +43,8 @@ static BOOL useBosch = FALSE;
                                delegate:(id)delegate
                                     tag:(NSInteger)tag
                                   title:(NSString *)title
-                             allowBosch:(BOOL)allowBosch;
+                             allowBosch:(BOOL)allowBosch
+                     addFromPhotoButton:(BOOL)addFromPhotoButton
 
 {
     if (!delegate || !view)
@@ -76,6 +77,9 @@ static BOOL useBosch = FALSE;
     nvps.layer.cornerRadius = 10.0;
     nvps.units = @"";
     nvps.allowBosch = allowBosch;
+    if (!CRAPI.sharedInstance.boschIsAvailable)
+        nvps.allowBosch = NO;
+    nvps.addFromPhotoButton = addFromPhotoButton;
     nvps.fromView = view;
     
     nvps.overlayView = UIView.new;
@@ -440,6 +444,36 @@ static BOOL useBosch = FALSE;
         CRAPI.sharedInstance.currentMeasurementView = nvps;
 
     }
+    else if (nvps.addFromPhotoButton)
+    {
+        CGRect rect = cancelButton.frame;
+        UIButton *fromPhotoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [nvps setupButton:fromPhotoButton];
+        [fromPhotoButton setTitle:@"Get Later From Photo" forState:UIControlStateNormal];
+        
+        [nvps addSubview:fromPhotoButton];
+        [fromPhotoButton constrainCenterXToAnchor:nvps.centerXAnchor];
+         
+        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        {
+            [fromPhotoButton constrainBottomToAnchor:saveButton.topAnchor constant:-8];
+            [fromPhotoButton constrainWidthToAnchor:nvps.widthAnchor multiplier:0.8];
+            [fromPhotoButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.6];
+        }
+        
+        else
+        {
+            [fromPhotoButton constrainBottomToAnchor:saveButton.topAnchor constant:-24];
+            [fromPhotoButton constrainWidthToAnchor:nvps.widthAnchor multiplier:0.8];
+            [fromPhotoButton constrainHeightToAnchor:leftButtonSpace.heightAnchor multiplier:0.3];
+        }
+        
+        [fromPhotoButton addTarget:nvps
+                            action:@selector(fromPhotoTapped)
+                  forControlEvents:UIControlEventTouchUpInside];
+
+    }
+
     [nvps bringSubviewToFront:nvps.slider];
     [nvps showStepper];
     [nvps updateTicLabels];
@@ -649,6 +683,13 @@ void returnToCallerInOC (void)
     }
     
     return;
+}
+- (void) fromPhotoTapped
+{
+    [_delegate popoverSlider:self
+              didReturnValue:-1
+                         tag:self.tag];
+
 }
 - (void)ticTapped:(UIButton *)button
 {

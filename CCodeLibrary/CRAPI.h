@@ -88,6 +88,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @interface CRAPI : NSObject
 
 @property (nonatomic, nullable) id currentMeasurementView;
+@property (nonatomic, nullable) id currentUploadView;
 @property (nonatomic, nullable) NSMutableArray *savedNotesArray;//temp till store in DB
 
 @property (nonatomic, nullable) WIT_MotionInput *witMotionInput;
@@ -231,6 +232,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property dispatch_queue_t peripheralmanque;
 @property dispatch_queue_t centralmanque;
 @property int holdForMeasurement;
+@property (nonatomic, nullable) NVAlertView *connectionAlert;
+@property BOOL boschIsAvailable;
 
 + (nullable CRAPI *)sharedInstance;
 
@@ -353,5 +356,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (NSString *_Nonnull) getRouteServer;
 - (CMMotionManager *) getMotionManager;
 - (CLLocationManager *) getLocationManager;
+- (void) updateConnectionAlertTitle:(NSString *)text;
+- (void) hideConnectionAlert;
+
 void GSSiViewDidLoad (void);
 @end

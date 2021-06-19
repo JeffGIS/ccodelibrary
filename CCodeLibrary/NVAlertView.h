@@ -30,5 +30,7 @@ didTapButtonAtIndex:(NSInteger)buttonIndex;
 
 - (void)hideLargeAlertView:(BOOL)animated;
 - (void)showTabBar;
+- (void)updateTitle:(NSString *)text;
+
 
 @end

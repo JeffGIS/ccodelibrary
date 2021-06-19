@@ -990,8 +990,12 @@ static int COUNT=100;
 
 - (void)computeSlopeFromAccelerometer:(CMAccelerometerData *)accelerometerData
 {
+    if (CRAPI.sharedInstance.connectionAlert)
+        return;
+
     if (CRAPI.sharedInstance.holdForMeasurement)
         return;
+    
     if (_counter == COUNT)
     {
         if (!_wantLocation || _locations.count > 0 || _waitingForLocation > 100)

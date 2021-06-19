@@ -22,6 +22,17 @@
     
     return self;
 }
+int numLinesInText(const char *txt)
+{
+    int numLines = 1;
+    
+    while (*txt)
+    {
+        if (*txt++ == '\n')
+            numLines++;
+    }
+    return numLines;
+}
 
 + (instancetype)showLargeAlertViewinView:(UIView *)view
                                 delegate:(id)delegate
@@ -65,17 +76,19 @@
     [alert.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
     CGFloat width = 340.0, heightSpacer = 10.0;
-    UIFont *font = [UIFont boldSystemFontOfSize:28.0];
+    UIFont *font = [UIFont boldSystemFontOfSize:36.0];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        width = 240.0, heightSpacer = 6.0, font = [UIFont boldSystemFontOfSize:20.0];
-    
+        width = 240.0, heightSpacer = 6.0, font = [UIFont boldSystemFontOfSize:28.0];
+    width *= 1.5;
     CGFloat yPosition = heightSpacer;
     
+    if (buttonTextArray.count == 0)
+        yPosition *= 3;
     CGFloat height = [alert getHeightForText:title
                                         font:font
                                        width:width];
-    
+    height *= numLinesInText(title.UTF8String) * 1.5;
     alert.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(heightSpacer, yPosition,
                                                                  (width - (heightSpacer * 2.0)), height)];
     
@@ -90,7 +103,6 @@
     [alert addSubview:alert.titleLabel];
     
     yPosition += (height + heightSpacer);
-    
     for (int i = 0; i < buttonTextArray.count; i++)
     {
         NSString *title = textBeforePipe(buttonTextArray[i]);
@@ -154,6 +166,11 @@
                      }];
     
     return alert;
+}
+
+- (void)updateTitle:(NSString *)text
+{
+    self.titleLabel.text = text;
 }
 
 - (void)buttonTapped:(UIButton *)button

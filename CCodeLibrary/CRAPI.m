@@ -70,6 +70,7 @@ NVSlopeData CurrentSlopeData;
         _newDataset = CURBRAMPS;
         //_newDataset = ALLEYWALLS;
         _kp = 0;
+        _boschIsAvailable = NO;
         _currentGeoidValue = 0;
         _pickApInPixels = 50;
         _numAllowedZooms = 3;
@@ -239,11 +240,33 @@ NVSlopeData CurrentSlopeData;
     self.centralManager.delegate = delegate;
     return self.centralManager;
 }
-
+- (void) updateConnectionAlertTitle:(NSString *)text
+{
+    if (!_connectionAlert)
+    {
+        _connectionAlert = [NVAlertView showLargeAlertViewinView:UIApplication.sharedApplication.keyWindow
+                                                        delegate:CRAPI.sharedInstance
+                                                           title:text
+                                                 buttonTextArray:@[@"Go to Upload Screen",@"Exit Application"]
+                                                destructiveIndex:0];
+        
+        _connectionAlert.identifier = @"BlueToothConnections";
+    }
+    [_connectionAlert updateTitle:text];
+}
+- (void) hideConnectionAlert
+{
+    if (_connectionAlert)
+    {
+        [_connectionAlert hideLargeAlertView:YES];
+        _connectionAlert = nil;
+    }
+}
 - (nullable CBPeripheralManager *) getPeripheralManager:(id)delegate
 {
     if (!self.peripheralManager)
     {
+        [self updateConnectionAlertTitle:@"Assistant Disconnected\niPhone Disconnected"];
         _peripheralmanque = nil;//dispatch_queue_create("com.gssi.peripheralManQue", DISPATCH_QUEUE_SERIAL);
         self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:delegate queue:_peripheralmanque];
     }
@@ -1501,10 +1524,28 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     else if ([alertView.identifier isEqualToString:@"LaunchAppStore"])
         [self gotoAppStore];
     
+    else if ([alertView.identifier isEqualToString:@"BlueToothConnections"])
+        [self bluetoothConnectionOps:buttonIndex];
+   
     else
         [alertView hideLargeAlertView:YES];
 }
 
+- (void) bluetoothConnectionOps:(NSInteger)opt
+{
+    switch (opt)
+    {
+        case 0:
+            [self hideConnectionAlert];
+            if ([CRAPI.sharedInstance.currentUploadView respondsToSelector:@selector(upload:)])
+                [CRAPI.sharedInstance.currentUploadView performSelector:@selector(upload:) withObject:nil afterDelay:0.1];
+            break;
+        case 1:
+            exit (-1);
+            break;
+
+    }
+}
 - (void)gotoAppStore
 {
     NSString *urlString = @"";

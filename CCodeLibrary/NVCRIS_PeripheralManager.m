@@ -30,6 +30,9 @@
 @property BOOL photoEOMsent;
 @property BOOL slopeEOMsent;
 @property NVSlopeData currentSlopeData;
+@property BOOL connectedToAssistant, connectedToiPhone;
+@property NSUUID * iPhoneCentralID;
+@property NSUUID * assistantCentralID;
 
 @end
 @implementation NVCRIS_PeripheralManager
@@ -157,6 +160,15 @@
 - (void)peripheralManager:(CBPeripheralManager *)peripheral central:(CBCentral *)central didUnsubscribeFromCharacteristic:(CBCharacteristic *)characteristic
 {
     NSLog(@"Central unsubscribed from characteristic %@",characteristic);
+    if ([central.identifier isEqual:_assistantCentralID])
+    {
+        _connectedToAssistant = NO;
+    }
+    if ([central.identifier isEqual:_iPhoneCentralID])
+    {
+        _connectedToiPhone = NO;
+    }
+    [self checkIfAllConnected];
 }
 
 
@@ -450,6 +462,18 @@
                 _currentHoldStatus = (int)status.integerValue;
                 [self updateHoldStatus:_currentHoldStatus];
             }
+            else if ([header isEqual:@"CONNECT ASS"])
+            {
+                _connectedToAssistant = YES;
+                _assistantCentralID = request.central.identifier;
+                [self checkIfAllConnected];
+            }
+            else if ([header isEqual:@"CONNECT FON"])
+            {
+                _connectedToiPhone = YES;
+                _iPhoneCentralID = request.central.identifier;
+                [self checkIfAllConnected];
+            }
         }
         else if ([request.characteristic.UUID isEqual:[CBUUID UUIDWithString:CRAPI.sharedInstance.group_NVCRIS_DOORTIMER_CHARACTERISTIC_UUID]])
         {
@@ -469,6 +493,25 @@
         }
     }
     return;
+}
+-(void) checkIfAllConnected
+{
+    if (_connectedToiPhone && _connectedToAssistant)
+    {
+        [CRAPI.sharedInstance hideConnectionAlert];
+    }
+    else if (!_connectedToiPhone && _connectedToAssistant)
+    {
+        [CRAPI.sharedInstance updateConnectionAlertTitle:@"iPhone Disconnected\n"];
+    }
+    else if (_connectedToiPhone && !_connectedToAssistant)
+    {
+        [CRAPI.sharedInstance updateConnectionAlertTitle:@"Assistant Disconnected\n"];
+    }
+    else
+    {
+        [CRAPI.sharedInstance updateConnectionAlertTitle:@"iPhone Disconnected\n\n\nAssistant Disconnected"];
+    }
 }
 - (void)bumpDetectorDidCancel:(GSSiBumpDetector *)bumpDetector
 {

@@ -150,6 +150,8 @@
     NSTimeInterval delay = 0.1;
     if (!_wantAccelerometerData)
         return;
+    if (CRAPI.sharedInstance.connectionAlert)
+        return;
     if (CRAPI.sharedInstance.holdForMeasurement)
     {
         if (_holdSelector)
