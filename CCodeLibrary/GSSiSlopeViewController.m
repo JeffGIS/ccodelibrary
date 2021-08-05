@@ -51,6 +51,7 @@ static int COUNT=100;
 @property BOOL clearWMM;
 @property BOOL locationsStarted;
 @property int waitingForLocation;
+@property BOOL inRepeat;
 @end
 
 @implementation GSSiSlopeViewController
@@ -102,6 +103,7 @@ static int COUNT=100;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _inRepeat = NO;
     _wantWitMotion = NO;
     _wantSOLAR2 = CRAPI.sharedInstance.useExternalAccelerometer;
     _inWitMotionCalibrate = NO;
@@ -591,7 +593,7 @@ static int COUNT=100;
         }
         else
         {
-            [self startManagers];
+            [self startManagers:nil];
             [self resetSumsAndCounter];
             
             _status = SCStatusCancel;
@@ -696,8 +698,10 @@ static int COUNT=100;
     
     [slider removeRequiredFromLabel];
 }
-- (void)startManagers
+- (void)startManagers:(NSTimer*)timer
 {
+    if (timer)
+        [timer invalidate];
     if (CRAPI.sharedInstance.NVCRIS_Slope_Client)
     {
         _slopeClient = [CRAPI.sharedInstance getSlopeClient:self];
@@ -991,11 +995,17 @@ static int COUNT=100;
 - (void)computeSlopeFromAccelerometer:(CMAccelerometerData *)accelerometerData
 {
     if (CRAPI.sharedInstance.connectionAlert)
+    {
+        [self stopManagers];
         return;
+    }
 
     if (CRAPI.sharedInstance.holdForMeasurement)
+    {
+        [self resetSumsAndCounter];
         return;
-    
+    }
+
     if (_counter == COUNT)
     {
         if (!_wantLocation || _locations.count > 0 || _waitingForLocation > 100)
@@ -1055,13 +1065,12 @@ static int COUNT=100;
                     else
                     {
                         [self resetSumsAndCounter];
-                        [self startWitMotion:nil];
+                        [self startSOLAR2:nil];
                         return;
                     }
                 }
                 _lastDegrees = angy;
-                [self stopManagers];
-                
+               
                 _data.frontSlopeDegrees = [self adjustSlope:angy isSideSlope:NO];
                 _data.sideSlopeDegrees = [self adjustSlope:angx isSideSlope:YES];
                 
@@ -1069,6 +1078,22 @@ static int COUNT=100;
                 _data.sideSlopePct = (tan(_data.sideSlopeDegrees * DEGtoRAD) * 100);
                 _data.maxSlopePct = ComputeMaxSlope(_data.frontSlopePct, _data.sideSlopePct);
                 _data.maxSlopeDegrees = (atan(_data.maxSlopePct / 100) * RADtoDEG);
+                
+                if ([self overCriticalValue])
+                {
+                    [self resetSumsAndCounter];
+                    [self stopManagers];
+                    _inRepeat = YES;
+                    _timer = [NSTimer scheduledTimerWithTimeInterval:0.2
+                                                               target:self
+                                                             selector:@selector(startManagers:)
+                                                             userInfo:nil
+                                                              repeats:NO];
+
+                    return;
+                }
+                [self stopManagers];
+ 
                 [self slopeMeasurementComplete];
             }
             
@@ -1107,6 +1132,15 @@ static int COUNT=100;
         
         _progressView.progress = (_counter / (double)COUNT);
     }
+}
+
+-(BOOL) overCriticalValue
+{
+    if (!_inRepeat && (fabs(_data.frontSlopePct) > _criticalValue || fabs (_data.sideSlopePct) > _criticalSideValue))
+    {
+        return NO;
+    }
+    return NO;
 }
 
 - (void)resetSumsAndCounter

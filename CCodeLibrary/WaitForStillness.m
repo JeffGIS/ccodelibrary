@@ -32,6 +32,7 @@
                               beepFactor:(double)beepSeconds
                                   target:(id)aTarget
                                 selector:(SEL)aSelector
+                        ifInHoldSelector:(SEL)holdSelector
 {
     return [self waitForStillness:steadyFactor
                       countFactor:countFactor
@@ -39,7 +40,7 @@
                        beepFactor:beepSeconds
                            target:aTarget
                          selector:aSelector
-                 ifInHoldSelector:nil
+                 ifInHoldSelector:holdSelector
                       orientation:VERTICAL];
 }
 
@@ -155,7 +156,10 @@
     if (CRAPI.sharedInstance.holdForMeasurement)
     {
         if (_holdSelector)
+        {
+            [self cancelOperations:delay];
             [_aTarget performSelector:_holdSelector withObject:nil afterDelay:delay];
+        }
         return;
     }
     if (_counter == _count)

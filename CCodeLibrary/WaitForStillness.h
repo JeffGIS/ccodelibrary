@@ -40,7 +40,9 @@
                        orientationFactor:(double)orientationFactor
                               beepFactor:(double)beepSeconds
                                   target:(id)aTarget
-                                selector:(SEL)aSelector;
+                                selector:(SEL)aSelector
+                        ifInHoldSelector:(SEL)holdSelector;
+
 
 + (instancetype)waitForMotion:(double)steadyFactor
                   countFactor:(double)countFactor
