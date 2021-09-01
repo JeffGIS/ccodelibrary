@@ -56,5 +56,5 @@
                                                   countFactor:(double)countFac
                                                displayDegrees:(BOOL)displayDegrees
                                                      delegate:(id)delegate;
-
+- (void)startStopAutoLoop:(UIButton *)button;
 @end
