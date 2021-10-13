@@ -304,7 +304,7 @@ C
 		   pPoints[0].y = A + pPoints[0].x * B;
 		   pPoints[1].x = xmax;
 		   pPoints[1].y = A + pPoints[1].x * B;
-		   TranPtr->FitPointAZFrom = getazd (&pPoints[0],&pPoints[1]);
+		   TranPtr->FitPointAZFrom = getazd (pPoints[0],pPoints[1]);
 	  }
 	  xmin = DBL_MAX;
 	  xmax = -DBL_MAX;
@@ -321,7 +321,7 @@ C
 		   pPoints[0].y = A + pPoints[0].x * B;
 		   pPoints[1].x = xmax;
 		   pPoints[1].y = A + pPoints[1].x * B;
-		   TranPtr->FitPointAZTo = getazd (&pPoints[0],&pPoints[1]);
+		   TranPtr->FitPointAZTo = getazd (pPoints[0],pPoints[1]);
 	  }
 	  GSSiGlobUlFree (&hPoints);
       TranPtr->A1 = TranPtr->A1 / N;
@@ -742,7 +742,7 @@ double GetTranAZ (HANDLE hTrans)
 	GlobalUnlock (hTrans);
 	ToPt[0] = TranPoint (&FromPt[0],hTrans);
 	ToPt[1] = TranPoint (&FromPt[1],hTrans);
-	AZ = getazd (&ToPt[0],&ToPt[1]);
+	AZ = getazdp (&ToPt[0],&ToPt[1]);
 	return AZ;
 }
 
@@ -1613,7 +1613,7 @@ typedef TRACK	FAR	*LPTRACK;
       			Tri[NUMTRI].ToPT[0].y = YT2[AtPt]+BASY2;
       			Tri[NUMTRI].ToPT[1].x = XT2[ToPt]+BASX2;
       			Tri[NUMTRI].ToPT[1].y = YT2[ToPt]+BASY2; 
-      			InAZ = getazd (&Tri[NUMTRI].FromPT[1], &Tri[NUMTRI].FromPT[0]); 
+      			InAZ = getazdp (&Tri[NUMTRI].FromPT[1], &Tri[NUMTRI].FromPT[0]); 
       			MinAZ = 9999;
       			for (J=0;J<PointInfo[ToPt].nlines;J++)
       			{   

@@ -63,6 +63,7 @@ NVSlopeData CurrentSlopeData;
         {
             //_bundleID = @"com.gssi.newvisioncrime";
             _bundleID = @"com.gssi.newvisionmetro";
+            _bundleID = @"com.gssi.newvisionmngame";
         }
 #endif
         

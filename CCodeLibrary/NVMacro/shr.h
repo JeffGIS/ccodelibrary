@@ -694,7 +694,7 @@ double getaz(POINT Point1, POINT Point2);
 double getazF(FPOINT Point1, FPOINT Point2);
 double fgetaz(FLTPOINT Point1, FLTPOINT Point2);
 double getazl (LPOINT Point1, LPOINT Point2);
-double getazd (LPDPOINT Point1, LPDPOINT Point2);
+double getazd (DPOINT Point1, DPOINT Point2);
 double getazdp(LPDPOINT Point1, LPDPOINT Point2);
 double get2dazfrom3d (HPDPOINT3D Point1, HPDPOINT3D Point2);
 double LTWOPI (double AZ1);

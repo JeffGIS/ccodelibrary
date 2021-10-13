@@ -808,9 +808,9 @@ double getaz (POINT Point1, POINT Point2)
     return rtn;
 }
 
-double getazd (HPDPOINT Point1, HPDPOINT Point2)
+double getazd (DPOINT Point1, DPOINT Point2)
 {
-    double     rtn=LTWOPI(atan2((Point2->y-Point1->y),(Point2->x-Point1->x)));
+    double     rtn=LTWOPI(atan2((Point2.y-Point1.y),(Point2.x-Point1.x)));
     return rtn;
 }
 double getazdp(LPDPOINT Point1, LPDPOINT Point2)
