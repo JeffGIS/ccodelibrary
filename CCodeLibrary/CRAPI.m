@@ -62,8 +62,9 @@ NVSlopeData CurrentSlopeData;
         else
         {
             //_bundleID = @"com.gssi.newvisioncrime";
-            _bundleID = @"com.gssi.newvisionmetro";
             _bundleID = @"com.gssi.newvisionmngame";
+            _bundleID = @"com.gssi.newvisionaccess";
+            _bundleID = @"com.gssi.newvisionmetro";
         }
 #endif
         
@@ -166,14 +167,6 @@ NVSlopeData CurrentSlopeData;
             NSURL *outputURL = [NSURL fileURLWithPath:outputPath isDirectory:NO];
             _rhVideoURL = outputURL;
         }
-        
-        _beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
-                 [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
-                                         NSBundle.mainBundle.resourcePath]] error:nil];
-        
-        _finalBeep = [[AVAudioPlayer alloc] initWithContentsOfURL:
-                      [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/finalBeep.mp3",
-                                              NSBundle.mainBundle.resourcePath]] error:nil];
         _rebuildYear = max (2012,(int)[UserDefaults.defaults integerForKey:@"RebuildYear"]);
         _requirePhotoLandscape = YES;
         _currentSideOfStreet = SideOfStreetNotSet;
@@ -1875,6 +1868,17 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 {
     _rhVideoURL = rhVideoURL;
     [UserDefaults.defaults saveString:rhVideoURL.lastPathComponent forKey:@"RHVideoPath"];
+}
+
+- (void)initBeep
+{
+_beep = [[AVAudioPlayer alloc] initWithContentsOfURL:
+         [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/beep.mp3",
+                                 NSBundle.mainBundle.resourcePath]] error:nil];
+
+_finalBeep = [[AVAudioPlayer alloc] initWithContentsOfURL:
+              [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/finalBeep.mp3",
+                                      NSBundle.mainBundle.resourcePath]] error:nil];
 }
 
 - (void)playBeep
