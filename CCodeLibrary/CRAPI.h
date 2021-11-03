@@ -52,6 +52,8 @@ typedef NS_ENUM(NSInteger, ModuleNames)
 
 #define PROJECT_MPLS            1
 #define PROJECT_METROGIS        2
+#define PROJECT_HUNTING         3
+
 
 #define RH_QUERY_INTERVAL 3
 #define RH_ERROR_INTERVAL 432

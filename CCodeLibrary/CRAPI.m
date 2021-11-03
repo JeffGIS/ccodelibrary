@@ -1467,6 +1467,10 @@ dispatch_async(dispatch_get_main_queue(),
     }
 }
 
+-(void) setMapToolbar:(MapToolbar *)mapToolbar
+{
+    _mapToolbar = mapToolbar;
+}
 - (NSString*) getNVCRISServer
 {
     NSString *server = [NSString stringWithFormat:@"gssiserver%i.com", _serverToUse];

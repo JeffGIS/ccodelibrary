@@ -7,7 +7,7 @@
 
 @interface MapToolbar ()
 
-@property (nonatomic) UIButton *extentsButton, *userLocationButton, *legendsButton, *digitizeButton;
+@property (nonatomic) UIButton *extentsButton, *userLocationButton, *legendsButton, *digitizeButton, *mapTypeButton;
 @property (nonatomic) UIButton *grayscaleButton, *clearMarkerButton, *emailPDFButton, *helpButton, *returnButton;
 @property (nonatomic) UISegmentedControl *mapTypeSC, *platSC;
 @property (nonatomic) CGSize size;
@@ -36,6 +36,8 @@
         return nil;
     }
     
+    int nButtons=0;
+    
     MapToolbar *mt = [[MapToolbar alloc] init];
     mt.configChanged = mt.myLocationEnabled = mt.platOverride = mt.helpLongPressed = NO;
     mt.isOffset = mt.showIndicator = mt.applyRotation = NO;
@@ -52,6 +54,7 @@
     [mt setConfigurationProperty:MapToolbarPropertyWantPlat value:NO];
     [mt setConfigurationProperty:MapToolbarPropertyWantDigitize value:NO];
     [mt setConfigurationProperty:MapToolbarPropertyWantMapType value:NO];
+    [mt setConfigurationProperty:MapToolbarPropertyWantMapTypeButton value:YES];
     [mt setConfigurationProperty:MapToolbarPropertyWantLegends value:NO];
     [mt setConfigurationProperty:MapToolbarPropertyWantReturnButton value:NO];
     
@@ -88,7 +91,7 @@
     
     mt.userLocationButton.frame = CGRectMake(mt.buttonMargin, mt.buttonMargin,
                                              mt.buttonSize, mt.buttonSize);
-    
+    nButtons++;
     [mt setupButton:mt.userLocationButton
          imageTitle:@"userLocation"
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
@@ -99,13 +102,26 @@
     
     [mt.userLocationButton addGestureRecognizer:longPress];
     [mt addSubview:mt.userLocationButton];
-    
-    //add extents button added by default
+
+    //add map type button added by default
+    mt.mapTypeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    CGRect rect;
+    rect = CGRectMake((mt.buttonSize*nButtons + (mt.buttonMargin * (nButtons+1))),
+            mt.buttonMargin,mt.buttonSize, mt.buttonSize);
+    mt.mapTypeButton.frame = rect;
+    nButtons++;
+    [mt setupButton:mt.mapTypeButton
+         imageTitle:@"update"
+         edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
+           selector:@selector(mapTypeButtonSelected:)];
+    [mt addSubview:mt.mapTypeButton];
+   
+   //add extents button added by default
     mt.extentsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    
-    mt.extentsButton.frame = CGRectMake((mt.buttonSize + (mt.buttonMargin * 2.0)),
-                                        mt.buttonMargin, mt.buttonSize, mt.buttonSize);
-    
+    rect = CGRectMake((mt.buttonSize*nButtons + (mt.buttonMargin * (nButtons+1))),
+                      mt.buttonMargin, mt.buttonSize, mt.buttonSize);
+    mt.extentsButton.frame = rect;
+    nButtons++;
     [mt setupButton:mt.extentsButton
          imageTitle:@"zoom"
          edgeInsets:UIEdgeInsetsMake(-2.0, -2.0, -2.0, -2.0)
@@ -119,10 +135,11 @@
     
     //grayscale button added by default
     mt.grayscaleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    
-    mt.grayscaleButton.frame = CGRectMake(((mt.buttonSize * 2.0) + (mt.buttonMargin * 3.0)),
-                                          mt.buttonMargin, mt.buttonSize, mt.buttonSize);
-    
+    rect = CGRectMake((mt.buttonSize*nButtons + (mt.buttonMargin * (nButtons+1))),
+                      mt.buttonMargin, mt.buttonSize, mt.buttonSize);
+
+    mt.grayscaleButton.frame = rect;
+    nButtons++;
     [mt setupButton:mt.grayscaleButton
          imageTitle:@"grayscale"
          edgeInsets:UIEdgeInsetsZero
@@ -132,10 +149,11 @@
     
     //clear marker button added by default
     mt.clearMarkerButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    
-    mt.clearMarkerButton.frame = CGRectMake(((mt.buttonSize * 3.0) + (mt.buttonMargin * 4.0)),
-                                            mt.buttonMargin, mt.buttonSize, mt.buttonSize);
+    rect = CGRectMake((mt.buttonSize*nButtons + (mt.buttonMargin * (nButtons+1))),
+                      mt.buttonMargin, mt.buttonSize, mt.buttonSize);
 
+    mt.clearMarkerButton.frame = rect;
+    nButtons++;
     [mt setupButton:mt.clearMarkerButton
          imageTitle:@"clearMarkers"
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
@@ -145,10 +163,11 @@
     
     //email PDF button added by default
     mt.emailPDFButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    
-    mt.emailPDFButton.frame = CGRectMake(((mt.buttonSize * 4.0) + (mt.buttonMargin * 5.0)),
-                                         mt.buttonMargin, mt.buttonSize, mt.buttonSize);
-    
+    rect = CGRectMake((mt.buttonSize*nButtons + (mt.buttonMargin * (nButtons+1))),
+                      mt.buttonMargin, mt.buttonSize, mt.buttonSize);
+
+    mt.emailPDFButton.frame = rect;
+    nButtons++;
     [mt setupButton:mt.emailPDFButton
          imageTitle:@"emailIcon"
          edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
@@ -158,10 +177,11 @@
     
     //help button added by default
     mt.helpButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    
-    mt.helpButton.frame = CGRectMake(((mt.buttonSize * 5.0) + (mt.buttonMargin * 5.0)),
-                                     mt.buttonMargin, mt.buttonSize, mt.buttonSize);
-    
+    rect = CGRectMake((mt.buttonSize*nButtons + (mt.buttonMargin * (nButtons+1))),
+                      mt.buttonMargin, mt.buttonSize, mt.buttonSize);
+
+    mt.helpButton.frame = rect;
+    nButtons++;
     [mt setupButton:mt.helpButton
          imageTitle:@"questionMark"
          edgeInsets:UIEdgeInsetsMake(4.0, -2.0, 4.0, -2.0)
@@ -181,6 +201,7 @@
     mt.progressView.progressTintColor = UIColor.whiteColor;
     [mt addSubview:mt.progressView];
     
+/*
     //map type SC is NOT added by default
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
         mt.mapTypeSC = [[UISegmentedControl alloc] initWithItems:@[@"St", @"Hy"]];
@@ -191,7 +212,7 @@
     [mt setupSegControl:mt.mapTypeSC
    selectedSegmentIndex:0
                selector:@selector(mapTypeSelected:)];
-    
+*/
     //digitize button is NOT added by default
     mt.digitizeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
@@ -316,6 +337,14 @@
     _userLocationButton.backgroundColor = UIColor.whiteColor;
     _myLocationEnabled = NO;
 }
+- (void)mapTypeButtonSelected:(UIButton *)button
+{
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = _bordWidth;
+    
+    [_delegate mapToolbarDidToggleMapType];
+}
+
 
 - (void)extentsSelected:(UIButton *)button
 {
@@ -652,6 +681,12 @@
         xCount += (_buttonMargin + _buttonSize);
     }
     
+    if (_wantMapTypeButton)
+    {
+        _mapTypeButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
+        xCount += (_buttonMargin + _buttonSize);
+    }
+
     if (_wantMapType)
     {
         _mapTypeSC.frame = CGRectMake(xCount, _SCMargin, _mapTypeSCWidth, _SCHeight);
@@ -901,6 +936,10 @@
             
         case MapToolbarPropertyWantMapType:
             _wantMapType = value;
+            break;
+            
+        case MapToolbarPropertyWantMapTypeButton:
+            _wantMapTypeButton = value;
             break;
             
         case MapToolbarPropertyWantUserLocation:

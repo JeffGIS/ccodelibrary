@@ -1825,7 +1825,6 @@ DPOINT TranDPOINT (LPDPOINT pPoint,HANDLE hTranPtr)
     GlobalUnlock (hTranPtr);
     return pt;
 }
-
 DPOINT TranDPOINTP (LPDPOINT pPoint,LPTRANDATA  hTran)
 {
     DPOINT Point;
@@ -1836,7 +1835,7 @@ DPOINT TranDPOINTP (LPDPOINT pPoint,LPTRANDATA  hTran)
 
 POINT TranDPOINTtoPOINT (LPDPOINT pPoint,HANDLE  hTranPtr)
 {
-    LPTRANDATA TranPtr = GlobalLock (hTranPtr);
+    LPTRANDATA TranPtr = (LPTRANDATA)GlobalLock (hTranPtr);
     POINT pt = TranDPOINTtoPOINTP (pPoint,TranPtr);
     GlobalUnlock (hTranPtr);
     return pt;
