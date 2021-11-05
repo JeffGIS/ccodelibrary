@@ -7,12 +7,12 @@
 
 NVColor *color(int r, int g, int b);
 
-+ (NSArray *)allColors;
++ (NSArray<NVColor*> *)allColors;
 + (NSArray *)lightColors;
 + (NSArray *)mediumColors;
 + (NSArray *)darkColors;
 + (NSArray *)pastelColors;
-+ (NSArray *)boldColors;
++ (NSArray<NVColor*> *)boldColors;
 + (NSArray *)neutralColors;
 + (NSArray *)warmColors;
 + (NSArray *)coolColors;

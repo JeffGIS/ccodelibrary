@@ -591,6 +591,13 @@
         xCount = max(xCount, (_buttonMargin * 2.0) + _mapTypeSCWidth);
     }
     
+    if (_wantMapTypeButton)
+    {
+        _mapTypeButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+        yCount += (_buttonMargin + _buttonSize);
+        xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+    }
+    
     if (_wantPlat)
     {
         _platSC.frame = CGRectMake(_buttonMargin, yCount, _platSCVertWidth, _SCHeight);

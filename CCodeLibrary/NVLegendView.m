@@ -155,22 +155,24 @@
                     
                     NSUInteger index = ((labels.tag / 10) - 1);
                     
-                    UILabel *countLabel = [[UILabel alloc] init];
-                    
-                    countLabel.text = [NSString stringWithFormat:@"%lu",
-                                       (unsigned long)[_delegate countForRowInLegendViewAtIndex:index]];
-                    
-                    countLabel.textAlignment = NSTextAlignmentLeft;
-                    countLabel.textColor = UIColor.blackColor;
-                    countLabel.backgroundColor = UIColor.clearColor;
-                    countLabel.font = font;
-                    countLabel.tag = (labels.tag + 1);
-                    countWidth = max(countWidth, countLabel.intrinsicContentSize.width);
-                    
-                    countLabel.frame = CGRectMake((labels.frame.size.width + xMargin),
-                                                  0.0, countLabel.intrinsicContentSize.width, height);
-                    
-                    [labels addSubview:countLabel];
+                    long count = [_delegate countForRowInLegendViewAtIndex:index];
+                    if (count >= 0)
+                    {
+                        UILabel *countLabel = [[UILabel alloc] init];
+                        countLabel.text = [NSString stringWithFormat:@"%lu",
+                                           (unsigned long)count];
+                        countLabel.textAlignment = NSTextAlignmentLeft;
+                        countLabel.textColor = UIColor.blackColor;
+                        countLabel.backgroundColor = UIColor.clearColor;
+                        countLabel.font = font;
+                        countLabel.tag = (labels.tag + 1);
+                        countWidth = max(countWidth, countLabel.intrinsicContentSize.width);
+                        
+                        countLabel.frame = CGRectMake((labels.frame.size.width + xMargin),
+                                                      0.0, countLabel.intrinsicContentSize.width, height);
+                        
+                        [labels addSubview:countLabel];
+                    }
                 }
             }
         }
