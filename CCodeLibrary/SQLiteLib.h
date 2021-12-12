@@ -37,5 +37,6 @@ int SQLiteExec(
                void *arg,                                    /* 1st argument to callback */
                char **errmsg                              /* Error msg written here */
 );
+int query_rtree_bbox(sqlite3 *db_handle, const char *rtree_name, LPMNMXCORD pBounds);
 
 #endif /* defined(__CCodeLibrary__SQLiteLib__) */

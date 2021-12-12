@@ -374,6 +374,7 @@
 		EB568F391C8C9BAB00C45ACE /* CompressDecompress.m in Sources */ = {isa = PBXBuildFile; fileRef = EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */; };
 		EB568F3A1C8CA52D00C45ACE /* CompressDecompress.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */; };
 		EB568F3B1C8CA70E00C45ACE /* CompressDecompress.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB568F371C8C9BAB00C45ACE /* CompressDecompress.h */; };
+		EB6A71B027664AB9002A162C /* rtree_bbox.c in Sources */ = {isa = PBXBuildFile; fileRef = EB6A71AF27664AB8002A162C /* rtree_bbox.c */; };
 		EB6D4B28219C07A700D5602B /* PhotoTakerTransferService.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB6D4B27219C071A00D5602B /* PhotoTakerTransferService.h */; };
 		EB7C6A161BD158D8006E985B /* StringFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7C6A151BD158D8006E985B /* StringFunctions.m */; };
 		EB7C6A171BD159B9006E985B /* StringFunctions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB7C6A141BD158D8006E985B /* StringFunctions.h */; };
@@ -1043,6 +1044,7 @@
 		EB55FB7022CA593000E8EF6B /* NVSlopeData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NVSlopeData.h; sourceTree = "<group>"; };
 		EB568F371C8C9BAB00C45ACE /* CompressDecompress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CompressDecompress.h; path = ../CompressDecompress.h; sourceTree = "<group>"; };
 		EB568F381C8C9BAB00C45ACE /* CompressDecompress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CompressDecompress.m; path = ../CompressDecompress.m; sourceTree = "<group>"; };
+		EB6A71AF27664AB8002A162C /* rtree_bbox.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rtree_bbox.c; sourceTree = "<group>"; };
 		EB6D4B26219C06C900D5602B /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		EB6D4B27219C071A00D5602B /* PhotoTakerTransferService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoTakerTransferService.h; sourceTree = "<group>"; };
 		EB7C6A141BD158D8006E985B /* StringFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringFunctions.h; sourceTree = "<group>"; };
@@ -1612,6 +1614,7 @@
 		EB95A1A41CB16EAF00158B40 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				EB6A71AF27664AB8002A162C /* rtree_bbox.c */,
 				BB3CF3091E5CE1410064EC9C /* ArrayOfNumbers.h */,
 				BB3CF30A1E5CE1410064EC9C /* ArrayOfNumbers.m */,
 				EBA2E462199527660085B2E0 /* CCodeLibrary.h */,
@@ -2031,6 +2034,7 @@
 				69F975971ECCB8200044CCED /* NVContactsViewer.m in Sources */,
 				BBC361C01F429C0200B51DF3 /* bigmem.c in Sources */,
 				BBC361C21F429C0200B51DF3 /* floatap.c in Sources */,
+				EB6A71B027664AB9002A162C /* rtree_bbox.c in Sources */,
 				1F4972A21F6C513600A60B63 /* DPoint.m in Sources */,
 				69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */,
 				BBC361C81F429C0200B51DF3 /* Stubs.c in Sources */,
