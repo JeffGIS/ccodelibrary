@@ -8,8 +8,8 @@
 #import "CCodeTypes.h"
 
 
-BPOINT POINTtoBPOINT (IPOINT p);
-IPOINT BPOINTtoPOINT (BPOINT p);
+//BPOINT POINTtoBPOINT (IPOINT p);
+//IPOINT BPOINTtoPOINT (BPOINT p);
 
 typedef struct
 {
