@@ -22,7 +22,8 @@ removeViewControllerWithID:(NSString *)ID
     }
     
     [tabBarController setViewControllers:newTabBarVCs.copy
-                                animated:NO];
+                                animated:YES];
+    [tabBarController.view setNeedsDisplay];
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController
@@ -45,7 +46,10 @@ replaceViewControllerWithID:(NSString *)ID
         }
     }
     
-        tabBarController.viewControllers = newTabBarVCs.copy;
+    tabBarController.viewControllers = newTabBarVCs.copy;
+    [tabBarController setViewControllers:newTabBarVCs.copy
+                                animated:YES];
+    [tabBarController.view setNeedsDisplay];
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController
@@ -68,7 +72,7 @@ replaceViewControllerWithID:(NSString *)ID
                        atIndex:index];
     
     [tabBarController setViewControllers:newTabBarVCs.copy
-                                animated:NO];
+                                animated:YES];
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController
@@ -85,7 +89,7 @@ replaceViewControllerWithID:(NSString *)ID
     [newTabBarVCs addObject:viewController];
     
     [tabBarController setViewControllers:newTabBarVCs.copy
-                                animated:NO];
+                                animated:YES];
 }
 
 + (void)tabBarController:(UITabBarController *)tabBarController

@@ -80,7 +80,7 @@
     mt.layer.borderWidth = mt.bordWidth;
     mt.layer.borderColor = UIColor.blackColor.CGColor;
     mt.delegate = delegate;
-    mt.orientation = MapToolbarOrientationTop;
+    mt.orientation = MapToolbarOrientationBottom;
     mt.previousOrientation = MapToolbarOrientationDefault;
     mt.previousFrame = CGRectZero;
     
