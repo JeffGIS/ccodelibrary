@@ -360,6 +360,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (CLLocationManager *) getLocationManager;
 - (void) updateConnectionAlertTitle:(NSString *)text;
 - (void) hideConnectionAlert;
+-(BOOL) getLastBounds:(LPMNMXCORD)pBounds;
 
 void GSSiViewDidLoad (void);
 @end

@@ -512,7 +512,8 @@
     }
     
     else if (gesture.state == UIGestureRecognizerStateEnded)
-        [_delegate mapToolbarDidFinishDrag:[gesture locationInView:self.superview]];
+        [_delegate mapToolbarDidFinishDrag:[gesture locationInView:self.superview]
+                                            superView:self.superview];
 }
 
 - (void)animateToVerticalOrientation

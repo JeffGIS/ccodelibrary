@@ -443,6 +443,27 @@ NVSlopeData CurrentSlopeData;
     return _currentBAR;
 }
 
+-(void) setLastDisplayBounds:(MNMXCORD)lastDisplayBounds
+{
+    _lastDisplayBounds = lastDisplayBounds;
+    NSString *sBounds = [NSString stringWithFormat:@"%f,%f,%f,%f",lastDisplayBounds.xmn,lastDisplayBounds.xmx,lastDisplayBounds.ymn,lastDisplayBounds.ymx];
+    [UserDefaults.defaults saveString:sBounds forKey:@"LastBounds"];
+}
+-(BOOL) getLastBounds:(LPMNMXCORD)pBounds
+{
+    NSString *lastBounds = [UserDefaults.defaults stringForKey:@"LastBounds"];
+    NSArray <NSString*>*array = [lastBounds componentsSeparatedByString:@","];
+    if (array.count == 4)
+    {
+        pBounds->xmn = array[0].doubleValue;
+        pBounds->xmx = array[1].doubleValue;
+        pBounds->ymn = array[2].doubleValue;
+        pBounds->ymx = array[3].doubleValue;
+        return TRUE;
+    }
+    else
+        return FALSE;
+}
 -(BOOL)showPolylineForBounds
 {
     return _showPolylineForBounds;

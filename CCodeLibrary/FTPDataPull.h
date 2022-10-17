@@ -36,6 +36,7 @@ typedef NS_ENUM(NSInteger, FTPDataType)
     GetDatabaseSettingHunting,
     GetDatabaseSettingNVMetro,
     GetDatabaseSettingNWI,
+    GetDatabaseSettingForest,
     FTPDataPhoto,
     FTPData,
     FTPDatabase,
