@@ -16,6 +16,7 @@ void setP_TOL (double val);
 //1D
 float ClockwiseDegFromNorth (float deg);
 float DegreesToRadians(float degrees);
+float RadiansToDegrees(float radians);
 float Lerp(float f0, float f1, float t);
 int	Clamp(int n, int clampMin, int clampMax);
 float ClampF(float n, float clampMin, float clampMax);

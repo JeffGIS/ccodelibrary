@@ -401,6 +401,30 @@ static UserDefaults *_defaults;
     return useDirectory;
 }
 
+- (NSURL *)notBackedUpFilePath
+{
+    NSFileManager *fileManager = NSFileManager.defaultManager;
+    NSArray *paths = [fileManager URLsForDirectory:NSDocumentDirectory
+                               inDomains:NSUserDomainMask];
+    NSURL *useDirectory = paths.firstObject;
+    NSURL *outDirectory = [useDirectory URLByAppendingPathComponent:@"notbackedup"];
+    if (![fileManager fileExistsAtPath:[outDirectory path]])
+    {
+        NSError *error=nil;
+        [fileManager createDirectoryAtURL:outDirectory
+              withIntermediateDirectories:YES
+                               attributes:nil
+                                    error:&error];
+        BOOL status = [outDirectory setResourceValue: [NSNumber numberWithBool: YES]
+                                              forKey: NSURLIsExcludedFromBackupKey error: &error];
+        if (!status)
+        {
+            NSLog (@"Unable to exclude from backup");
+        }
+    }
+    return outDirectory;
+}
+
 - (NSArray *)realtorList
 {
     return @[@"Coldwell Banker",@"Edina Realty", @"Keller Williams", @"Kris Lindahl Real Estate",@"Realtor.com",@"Remax", @"Trulia", @"Zillow"];

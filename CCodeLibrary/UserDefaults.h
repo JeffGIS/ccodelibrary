@@ -59,6 +59,7 @@
 - (NSString *)sharedFilePath;
 - (NSString *)localFilePath;
 - (NSString *)nonBackedUpFilePath;
+- (NSURL *)notBackedUpFilePath;
 - (NSArray *)realtorList;
 - (NSArray *)realtorWebSites;
 

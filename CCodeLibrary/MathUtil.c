@@ -358,7 +358,11 @@ float ClampF(float n, float clampMin, float clampMax)
 
 float DegreesToRadians(float degrees)
 {
-	return degrees * 0.0174532925f;
+    return degrees * 0.0174532925f;
+}
+float RadiansToDegrees(float radians)
+{
+    return radians / 0.0174532925f;
 }
 
 float DotVec2(vec2* vec0, vec2* vec1)
