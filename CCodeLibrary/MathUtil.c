@@ -1836,6 +1836,21 @@ DPOINT TranDPOINTP (LPDPOINT pPoint,LPTRANDATA  hTran)
     TRANS2P (pPoint->x,pPoint->y, &Point.x,&Point.y,hTran);
     return Point;
 }
+DPOINT TranLLPOINT (LLPOINT LLPoint,LPTRANDATA  hTran)
+{
+    DPOINT Point;
+    
+    TRANS2P (LLPoint.lon,LLPoint.lat, &Point.x,&Point.y,hTran);
+    return Point;
+}
+
+DPOINT TranLLPOINTP (LPLLPOINT pLLPoint,LPTRANDATA  hTran)
+{
+    DPOINT Point;
+    
+    TRANS2P (pLLPoint->lon,pLLPoint->lat, &Point.x,&Point.y,hTran);
+    return Point;
+}
 
 POINT TranDPOINTtoPOINT (LPDPOINT pPoint,HANDLE  hTranPtr)
 {

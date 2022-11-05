@@ -14,6 +14,14 @@
                   fillColor:(CGColorRef)fcolor
                   lineColor:(CGColorRef)lcolor
                   lineWidth:(CGFloat)lwidth;
++ (void)drawPointWithSymbol:(CGContextRef)context
+                         at:(LPDPOINT)pt
+                usingSymbol:(PointSymbols)sym
+                       Size:(CGFloat)size
+                  fillColor:(CGColorRef)fcolor
+                  lineColor:(CGColorRef)lcolor
+                  lineWidth:(CGFloat)lwidth
+                    andText:(NSString *)text;
 
 UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor);
 + (UIColor *)polygonSymbolFillColor:(PolygonSymbols)symbol;

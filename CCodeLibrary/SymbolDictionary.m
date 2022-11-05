@@ -2,6 +2,7 @@
 //  GMMobile
 
 #import "SymbolDictionary.h"
+#import "NVTextDrawing.h"
 #import "shr.h"
 #import "MathUtil.h"
 
@@ -99,11 +100,46 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                 [symbolDef addObject:point];
             }
             break;
-   }
+    }
     
     return symbolDef.copy;
 }
 
++ (void)drawPointWithSymbol:(CGContextRef)context
+                         at:(LPDPOINT)pt
+                usingSymbol:(PointSymbols)sym
+                       Size:(CGFloat)size
+                  fillColor:(CGColorRef)fcolor
+                  lineColor:(CGColorRef)lcolor
+                  lineWidth:(CGFloat)lwidth
+                    andText:(NSString *)text
+{
+    [SymbolDictionary drawPointWithSymbol:context
+                                      at:pt
+                             usingSymbol:sym
+                                    Size:size
+                               fillColor:fcolor
+                               lineColor:lcolor
+                                lineWidth:lwidth];
+    CGRect pointRect = CGRectMake((pt->x - size / 2.0),
+                                  (pt->y - size / 2.0), size, size);
+
+    LPDPOINT pPoints = PointsFromCGRect (&pointRect);
+
+    BOOL st = [NVTextDrawing drawText:text
+                  inContext:context
+              withinPolygon:pPoints
+              withNumPoints:4
+                andNumLoops:0
+                    loopLen:0
+               withinBounds:0
+                   fontSize:size
+                minFontSize:size/2
+                  textColor:[UIColor blackColor]
+               processingID:0];
+    free (pPoints);
+
+}
 + (void)drawPointWithSymbol:(CGContextRef)context
                          at:(LPDPOINT)pt
                 usingSymbol:(PointSymbols)sym
@@ -137,26 +173,26 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
             symImage = [UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"BusSymbol"
                                                                                       ofType:@"png"]];
             CGContextDrawImage(context, imageRect, symImage.CGImage);
-
+            
             break;
         default:
             break;
     }
-   CGContextSetFillColorWithColor(context,fcolor);
+    CGContextSetFillColorWithColor(context,fcolor);
     
     if (sym == CircleSym)
     {
         size *= 0.75;
         CGRect pointRect = CGRectMake((pt->x - size / 2.0),
                                       (pt->y - size / 2.0), size, size);
-
+        
         CGContextFillEllipseInRect(context, pointRect);
         /*if (dispersed)
-        {
-            CGContextSetLineWidth(context, lwidth*4);
-            CGContextSetStrokeColorWithColor(context,UIColor.whiteColor.CGColor);
-            CGContextStrokeEllipseInRect(context, pointRect);
-        }*/
+         {
+         CGContextSetLineWidth(context, lwidth*4);
+         CGContextSetStrokeColorWithColor(context,UIColor.whiteColor.CGColor);
+         CGContextStrokeEllipseInRect(context, pointRect);
+         }*/
         CGContextSetLineWidth(context, lwidth);
         CGContextSetStrokeColorWithColor(context,lcolor);
         CGContextStrokeEllipseInRect(context, pointRect);
@@ -222,19 +258,19 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
         if (!CGContextIsPathEmpty(context))
         {
             /*if (dispersed)
-            {
-                CGPathRef path = CGContextCopyPath(context);
-                CGContextFillPath(context);
-                CGContextAddPath(context, path);
-                CGContextSetLineWidth(context, lwidth*4);
-                CGContextSetStrokeColorWithColor(context,UIColor.whiteColor.CGColor);
-                CGContextStrokePath(context);
-                CGContextAddPath(context, path);
-                CGContextSetLineWidth(context, lwidth);
-                CGContextSetStrokeColorWithColor(context,lcolor);
-                CGContextStrokePath(context);
-            }
-            else*/
+             {
+             CGPathRef path = CGContextCopyPath(context);
+             CGContextFillPath(context);
+             CGContextAddPath(context, path);
+             CGContextSetLineWidth(context, lwidth*4);
+             CGContextSetStrokeColorWithColor(context,UIColor.whiteColor.CGColor);
+             CGContextStrokePath(context);
+             CGContextAddPath(context, path);
+             CGContextSetLineWidth(context, lwidth);
+             CGContextSetStrokeColorWithColor(context,lcolor);
+             CGContextStrokePath(context);
+             }
+             else*/
             {
                 CGContextSetLineWidth(context, lwidth);
                 CGContextSetStrokeColorWithColor(context,lcolor);
