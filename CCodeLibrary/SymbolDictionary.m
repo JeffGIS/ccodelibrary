@@ -121,6 +121,10 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                                fillColor:fcolor
                                lineColor:lcolor
                                 lineWidth:lwidth];
+    size /= 1.5;
+    pt->x += size / 10;
+    pt->y -= size / 6;
+
     CGRect pointRect = CGRectMake((pt->x - size / 2.0),
                                   (pt->y - size / 2.0), size, size);
 

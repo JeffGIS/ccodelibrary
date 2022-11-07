@@ -249,7 +249,9 @@ Top:
         
         //int numTextLines = [NVTextDrawing numLinesInText:text.UTF8String];
         
-        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"AppleSDGothicNeo-Medium", fontSize, NULL);
+//        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"AppleSDGothicNeo-Medium", fontSize, NULL);
+//        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"CourierNewPS-BoldMT", fontSize, NULL);
+        CTFontRef fontRef = CTFontCreateWithName((CFStringRef)@"AppleSDGothicNeo-Bold", fontSize, NULL);
         NSMutableParagraphStyle *style = NSParagraphStyle.defaultParagraphStyle.mutableCopy;
         style.alignment = NSTextAlignmentCenter;
         
