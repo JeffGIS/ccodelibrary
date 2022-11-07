@@ -258,8 +258,8 @@ double AZMLatLon (LLPOINT pt1,LLPOINT pt2)
 {
     double azm;
     DPOINT pixPt1, pixPt2;
-    LatLongToPixelXYd (pt1.lat,pt1.lon,21,&pixPt1.x,&pixPt1.y);
-    LatLongToPixelXYd (pt2.lat,pt2.lon,21,&pixPt2.x,&pixPt2.y);
+    LatLongToPixelXY_oldd (pt1.lat,pt1.lon,21,&pixPt1.x,&pixPt1.y);
+    LatLongToPixelXY_oldd (pt2.lat,pt2.lon,21,&pixPt2.x,&pixPt2.y);
     azm = getazdp(&pixPt1, &pixPt2);
     return azm;
 }
