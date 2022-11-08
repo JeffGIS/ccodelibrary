@@ -64,6 +64,7 @@
         fontSize:(CGFloat)desiredFontSize
      minFontSize:(CGFloat)minFontSize
        textColor:(UIColor *)textColor
+     shadowColor:(UIColor *)shadowColor
     processingID:(NSInteger)processingID
 {
     if (!textIN.length)
@@ -73,7 +74,6 @@
     int nAttempts = 0;
     int npass = 0;
     NSString *text;
-    
 Top:
     text = textIN;
     //try it level
@@ -119,7 +119,8 @@ Top:
                          height:ta[nAttempts-1].textHeight
                        rotation:ta[nAttempts-1].rotation
                        fontSize:ta[nAttempts-1].fontSize
-                      textColor:textColor];
+                      textColor:textColor
+                    shadowColor:shadowColor];
         return st;
     }
     NSString * splitText = splitLongestLine (textIN);
@@ -149,7 +150,8 @@ Top:
                              height:ta[nAttempts-1].textHeight
                            rotation:ta[nAttempts-1].rotation
                            fontSize:ta[nAttempts-1].fontSize
-                          textColor:textColor];
+                          textColor:textColor
+                        shadowColor:shadowColor];
             return st;
         }
     }
@@ -182,7 +184,8 @@ Top:
                          height:ta[maxi].textHeight
                        rotation:ta[maxi].rotation
                        fontSize:ta[maxi].fontSize
-                      textColor:textColor];
+                      textColor:textColor
+                    shadowColor:shadowColor];
         return st;
     }
     return FALSE;
@@ -432,6 +435,8 @@ Top:
         rotation:(CGFloat)rotateRadians
         fontSize:(CGFloat)fontSize
        textColor:(UIColor *)textColor
+     shadowColor:(UIColor *)shadowColor
+
 {
     BOOL rtn = TRUE;
     CGRect rect = CGRectZero;
@@ -464,12 +469,7 @@ Top:
                                 style, kCTParagraphStyleAttributeName,
                                 textColor.CGColor, kCTForegroundColorAttributeName, nil];
     
-    NSDictionary *shadowAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                      (__bridge id)fontRef, kCTFontAttributeName,
-                                      style, kCTParagraphStyleAttributeName,
-                                      UIColor.whiteColor.CGColor, kCTForegroundColorAttributeName, nil];
     
-    CFRelease(fontRef);
     
     /*   if (CRAPI.sharedInstance.GMTilesVisible)
      {
@@ -485,11 +485,19 @@ Top:
      CTFrameDraw(frame, context);
      }*/
     
-    attString = [[NSAttributedString alloc] initWithString:text
-                                                attributes:shadowAttributes];
-    [self drawTextShadowForRect:rect
-                      attString:attString
-                        context:context];
+    if (shadowColor)
+    {
+        NSDictionary *shadowAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                          (__bridge id)fontRef, kCTFontAttributeName,
+                                          style, kCTParagraphStyleAttributeName,
+                                          shadowColor.CGColor, kCTForegroundColorAttributeName, nil];
+        attString = [[NSAttributedString alloc] initWithString:text
+                                                    attributes:shadowAttributes];
+        [self drawTextShadowForRect:rect
+                          attString:attString
+                            context:context];
+    }
+    CFRelease(fontRef);
     CGPathRef path = CGPathCreateWithRect(rect, NULL);
     
     attString = [[NSAttributedString alloc] initWithString:text

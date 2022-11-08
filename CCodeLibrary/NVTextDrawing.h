@@ -18,6 +18,7 @@
         fontSize:(CGFloat)fontSize
      minFontSize:(CGFloat)minFontSize
        textColor:(UIColor *)textColor
+     shadowColor:(UIColor *)shadowColor
     processingID:(NSInteger)processingID;
 
 + (BOOL)drawText:(NSString *)text
@@ -28,7 +29,9 @@
           height:(CGFloat)textHeight
         rotation:(CGFloat)rotateRadians
         fontSize:(CGFloat)fontSize
-       textColor:(UIColor *)textColor;
+       textColor:(UIColor *)textColor
+     shadowColor:(UIColor *)shadowColor;
+
 
 + (NSUInteger)getTextContainerPoints:(LPDPOINT)textPoints
                             numLines:(NSInteger *)pnLines

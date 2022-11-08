@@ -140,6 +140,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                    fontSize:size
                 minFontSize:size/2
                   textColor:[UIColor blackColor]
+               shadowColor:nil
                processingID:0];
     free (pPoints);
 
