@@ -361,6 +361,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 - (void) updateConnectionAlertTitle:(NSString *)text;
 - (void) hideConnectionAlert;
 -(BOOL) getLastBounds:(LPMNMXCORD)pBounds;
+-(BOOL) getLastBounds:(LPMNMXCORD)pBounds
+              andZoom:(float *)pZoom;
 
 void GSSiViewDidLoad (void);
 @end
