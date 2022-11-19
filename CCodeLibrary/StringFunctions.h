@@ -96,4 +96,7 @@ void uploadToCloud(NSString *filePath, BOOL deleteWhenDone);
 Bool GetStringArrayElement (int index,LPSTR string,LPSTR seperator,LPSTR OutLoc,int maxOutLocLen);
 NSString *lastCharInString(NSString *string);
 
+bool PointInCGRect (CGPoint pt,CGRect rect);
+bool PointInView(CGPoint target,UIView* view);
+
 #endif

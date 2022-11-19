@@ -17,6 +17,24 @@ typedef FILE * LPFILE;
 static LPFILE openFiles[MAXOPENFILES]={0};
 static Bool fileInUse[MAXOPENFILES] = {0};
 
+bool PointInCGRect (CGPoint pt,CGRect rect)
+{
+    bool rtn = TRUE;
+    if (pt.x < rect.origin.x ||
+        pt.x > rect.origin.x + rect.size.width ||
+        pt.y < rect.origin.y ||
+        pt.y > rect.origin.y + rect.size.height)
+        rtn = FALSE;
+    return rtn;
+}
+bool PointInView(CGPoint target,UIView* view)
+{
+    CGRect frame;
+    frame = view.frame;
+    bool rtn = PointInCGRect(target,frame);
+    return rtn;
+}
+
 
 int __attribute__ ((noinline)) debugMessage (LPCSTR mess)
 {
