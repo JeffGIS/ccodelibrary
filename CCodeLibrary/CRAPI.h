@@ -236,6 +236,11 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property int holdForMeasurement;
 @property (nonatomic, nullable) NVAlertView *connectionAlert;
 @property BOOL boschIsAvailable;
+@property int currentFocusWaypoint;
+@property int currentSelectedWaypoint;
+@property (nonatomic, nullable) NSMutableArray *currentRoute;
+@property (nonatomic, nullable) NSMutableArray *currentTrackRoute;
+@property int currentRoutePoint;
 
 + (nullable CRAPI *)sharedInstance;
 

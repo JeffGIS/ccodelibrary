@@ -453,7 +453,7 @@ NVSlopeData CurrentSlopeData;
 {
     NSString *lastBounds = [UserDefaults.defaults stringForKey:@"LastBounds"];
     NSArray <NSString*>*array = [lastBounds componentsSeparatedByString:@","];
-    if (array.count == 4)
+    if (array.count >= 4)
     {
         pBounds->xmn = array[0].doubleValue;
         pBounds->xmx = array[1].doubleValue;
