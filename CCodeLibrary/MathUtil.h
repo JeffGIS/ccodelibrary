@@ -106,6 +106,7 @@ IPOINT IBoundsMid (IBOUNDS* bnds);
 DPOINT DBoundsMid(MNMXCORD *bnds);
 DPOINT MidPointD (DPOINT pt1,DPOINT pt2);
 Bool DPointInBounds (LPDPOINT pt,LPMNMXCORD pbounds);
+Bool POINTInBounds (LPPOINT pt,LPMNMXCORD pbounds);
 Bool BoundsInBounds (LPMNMXCORD pBounds1,LPMNMXCORD pBounds2,short Opt);
 void AddPointToDBounds (dbounds* bnds,dvec2 *pt);
 void AddPointToIBounds (IBOUNDS* pBounds,IPOINT *pt);

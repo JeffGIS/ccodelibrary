@@ -241,6 +241,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) NSMutableArray *currentRoute;
 @property (nonatomic, nullable) NSMutableArray *currentTrackRoute;
 @property int currentRoutePoint;
+@property bool evaluateEdges;
 
 + (nullable CRAPI *)sharedInstance;
 

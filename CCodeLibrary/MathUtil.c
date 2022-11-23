@@ -2118,6 +2118,17 @@ Bool DPointInBounds (LPDPOINT pt,LPMNMXCORD pbounds)
     return TRUE;
 }
 
+Bool POINTInBounds (LPPOINT pt,LPMNMXCORD pbounds)
+{
+    if (pbounds &&
+        (pt->x < pbounds->xmn ||
+        pt->x > pbounds->xmx ||
+        pt->y < pbounds->ymn ||
+        pt->y > pbounds->ymx))
+        return FALSE;
+    return TRUE;
+}
+
 int iDist(double X1, double Y1, double X2, double Y2)
 {
     double xdf = (X1-X2);

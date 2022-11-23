@@ -27,6 +27,16 @@ bool PointInCGRect (CGPoint pt,CGRect rect)
         rtn = FALSE;
     return rtn;
 }
+bool POINTInCGRectP (LPPOINT pt,CGRect *rect)
+{
+    bool rtn = TRUE;
+    if (pt->x < rect->origin.x ||
+        pt->x > rect->origin.x + rect->size.width ||
+        pt->y < rect->origin.y ||
+        pt->y > rect->origin.y + rect->size.height)
+        rtn = FALSE;
+    return rtn;
+}
 bool PointInView(CGPoint target,UIView* view)
 {
     CGRect frame;
@@ -94,7 +104,24 @@ long GSSifilelength(HFILE Fid)
     fseek (openFiles[Fid],curloc,SEEK_SET);
     return len;
 }
-
+BOOL DeleteFile (NSString * file)
+{
+    NSFileManager *fileManager = NSFileManager.defaultManager;
+    NSError *error = nil;
+    BOOL success = FALSE;
+    
+    
+    if ([fileManager fileExistsAtPath:file])
+    {
+        success = [fileManager removeItemAtPath:file
+                                          error:&error];
+        
+        if (success)
+            NSLog(@"Deleted %@ from device", file);
+    }
+    return success;
+}
+ 
 UIColor *UIColorFromInt (unsigned int ival)
 {
     int ii;
