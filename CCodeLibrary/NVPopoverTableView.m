@@ -98,7 +98,7 @@
     CGFloat shortestSide = MIN(bounds.size.height, bounds.size.width);
     CGFloat margin = 80.0;
     nvptv.cornerRadius = 16.0;
-    nvptv.font = [UIFont boldSystemFontOfSize:28.0];
+    nvptv.font = [UIFont boldSystemFontOfSize:36.0];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
