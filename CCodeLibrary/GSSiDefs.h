@@ -18,6 +18,7 @@
 #define RADIANS(degrees) ((degrees) / 180.0 * M_PI)
 #define RADIANS_SLOPE(degrees) (100.0 * sin(RADIANS(degrees)))
 #define METERS_PER_FOOT 0.3048
+#define METERS_PER_YARD (3*0.3048)
 
 @interface GSSiDefs : NSObject
 

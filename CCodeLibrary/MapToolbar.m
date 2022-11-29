@@ -337,6 +337,11 @@
     _userLocationButton.backgroundColor = UIColor.whiteColor;
     _myLocationEnabled = NO;
 }
+- (void)selectMyLocationButton
+{
+    _userLocationButton.backgroundColor = UIColor.greenColor;
+    _myLocationEnabled = YES;
+}
 - (void)mapTypeButtonSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;

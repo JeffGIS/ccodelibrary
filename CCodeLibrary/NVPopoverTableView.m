@@ -387,7 +387,7 @@ viewForHeaderInSection:(NSInteger)section
         
         else
         {
-            cell.textLabel.text = textBefore(cellText, @"\x03");
+            cell.textLabel.text = textBefore(textBefore(cellText, @"\x03"),@"|");
             group = textBefore(textAfter(cellText, @"\x05"), @"\x04");
         }
         
