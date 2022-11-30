@@ -20,6 +20,7 @@
 @property int lastRowTapped;
 @property (nonatomic) NSMutableArray *groupArray;
 @property (nonatomic) UIImage *ytImage, *pdfImage;
+@property CGFloat factor;
 
 @end
 
@@ -96,14 +97,16 @@
     
     CGRect bounds = UIScreen.mainScreen.bounds;
     CGFloat shortestSide = MIN(bounds.size.height, bounds.size.width);
-    CGFloat margin = 80.0;
-    nvptv.cornerRadius = 16.0;
-    nvptv.font = [UIFont boldSystemFontOfSize:36.0];
+    nvptv.factor = min(1,shortestSide/428.0);
+    CGFloat margin = 80.0 * nvptv.factor;
+    nvptv.cornerRadius = 16.0 * nvptv.factor;;
+    nvptv.font = [UIFont boldSystemFontOfSize:36.0*nvptv.factor];
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
-        margin = 40.0, nvptv.cornerRadius = 8.0;
-        nvptv.font = [UIFont boldSystemFontOfSize:20.0];
+        margin = 40.0 * nvptv.factor;
+        nvptv.cornerRadius = 8.0 *nvptv.factor;
+        nvptv.font = [UIFont boldSystemFontOfSize:20.0*nvptv.factor];
     }
     
     nvptv.returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -152,7 +155,7 @@
                           action:@selector(clearButtonTapped:)
                 forControlEvents:UIControlEventTouchUpInside];
     
-    nvptv.cellWidth = (shortestSide - (margin * 2.0) - 30.0);
+    nvptv.cellWidth = (shortestSide - (margin * 2.0) - 30.0*nvptv.factor);
     
     [view addSubview:nvptv];
     
@@ -163,7 +166,7 @@
                                                    style:UITableViewStylePlain];
     
     nvptv.tableView.translatesAutoresizingMaskIntoConstraints = NO;
-    nvptv.tableView.layer.cornerRadius = 10.0;
+    nvptv.tableView.layer.cornerRadius = 10.0*nvptv.factor;
     nvptv.tableView.dataSource = nvptv;
     nvptv.tableView.delegate = nvptv;
     nvptv.tableView.backgroundColor = UIColor.whiteColor;

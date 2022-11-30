@@ -337,9 +337,12 @@
     _userLocationButton.backgroundColor = UIColor.whiteColor;
     _myLocationEnabled = NO;
 }
-- (void)selectMyLocationButton
+- (void)selectMyLocationButton:(BOOL)amCreatingTrackRoute
 {
-    _userLocationButton.backgroundColor = UIColor.greenColor;
+    if (amCreatingTrackRoute)
+        _userLocationButton.backgroundColor = UIColor.redColor;
+    else
+        _userLocationButton.backgroundColor = UIColor.greenColor;
     _myLocationEnabled = YES;
 }
 - (void)mapTypeButtonSelected:(UIButton *)button

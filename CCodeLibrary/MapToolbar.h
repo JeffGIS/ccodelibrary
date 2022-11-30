@@ -67,7 +67,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 + (MapToolbar *)showMapToolbarWithCenter:(CGPoint)center
                                    view:(UIView *)view
                                 delegate:(id)delegate;
-- (void)selectMyLocationButton;
+- (void)selectMyLocationButton:(BOOL)amCreatingTrackRoute;
 - (void)deselectMyLocationButton;
 - (void)animateToVerticalOrientation;
 - (void)animateToHorizontalOrientation;
