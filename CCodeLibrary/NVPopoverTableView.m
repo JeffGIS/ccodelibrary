@@ -21,6 +21,7 @@
 @property (nonatomic) NSMutableArray *groupArray;
 @property (nonatomic) UIImage *ytImage, *pdfImage;
 @property CGFloat factor;
+@property NSMutableArray *returnValues;
 
 @end
 
@@ -43,7 +44,16 @@
         NSLog(@"NVPopoverTableView ERROR:Delegate must respond to [popoverTableView:didSelectRowWithText:atIndex:]");
         return nil;
     }
-    
+    NSMutableArray *returnValues = NSMutableArray.new;
+    NSMutableArray *newValues = NSMutableArray.new;
+    for (NSString *str in textArray)
+    {
+        NSString *value = textBefore(str, @"|");
+        NSString *returnValue = textAfter (str,@"|");
+        [returnValues addObject:returnValue];
+        [newValues addObject:value];
+    }
+    textArray = newValues;
     if (includeCancel)
     {
         NSMutableArray *tempArray = [NSMutableArray arrayWithArray:textArray];
@@ -63,6 +73,7 @@
     nvptv.delegate = delegate;
     nvptv.title = title;
     nvptv.textArray = textArray;
+    nvptv.returnValues = returnValues;
     nvptv.includeCancel = includeCancel;
     nvptv.allowsMultipleSelection = NO;
     nvptv.parseTextToButtons = NO;
@@ -456,7 +467,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
             
             else
                 index = indexPath.row;
-            
+            NSString * returnValue = _returnValues[index];
+            if (returnValue.length)
+                text = returnValue;
             [_delegate popoverTableView:self
                    didSelectRowWithText:text
                                 atIndex:index];
