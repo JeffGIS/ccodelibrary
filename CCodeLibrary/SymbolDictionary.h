@@ -33,4 +33,9 @@ UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor);
 + (int)polygonSymbolBorderWidth:(PolygonSymbols)symbol;
 + (NSArray <DPoint *> *)symbolDefForType:(PointSymbols)type;
 
++ (UIImage *)imageOfArrow:(CGRect)rect
+                lineWidth:(int)lwidth
+                lineColor:(UIColor *)lineColor
+                fillColor:(UIColor *)fillColor;
+
 @end

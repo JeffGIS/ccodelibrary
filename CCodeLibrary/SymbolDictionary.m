@@ -456,5 +456,39 @@ UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor)
 {
     return 0;
 }
++ (UIImage *)imageOfArrow:(CGRect)r
+                lineWidth:(int)lwidth
+                lineColor:(UIColor *)lineColor
+                fillColor:(UIColor *)fillColor
+{
+    CGRect rect = CGRectMake(0, 0, r.size.width, r.size.height);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, UIColor.clearColor.CGColor);
+    CGContextFillRect(context, rect);
+    CGContextSetStrokeColorWithColor(context, lineColor.CGColor);
+    CGContextSetFillColorWithColor(context, fillColor.CGColor);
+    CGContextSetLineWidth(context, lwidth);
+    CGPoint startPoint, pt;
+    startPoint.x = rect.origin.x + rect.size.width/2;
+    startPoint.y = rect.origin.y;
+    
+    CGContextMoveToPoint(context,startPoint.x,startPoint.y);
+    pt.x = rect.origin.x + rect.size.width;
+    pt.y = rect.origin.y + rect.size.height/2;
+    CGContextAddLineToPoint(context,pt.x,pt.y);
+    pt.x = rect.origin.x;
+    CGContextAddLineToPoint(context,pt.x,pt.y);
+    CGContextAddLineToPoint(context,startPoint.x,startPoint.y);
+
+    
+    if (!CGContextIsPathEmpty(context))
+    {
+        CGContextDrawPath(context, kCGPathEOFillStroke);
+    }
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
 
 @end

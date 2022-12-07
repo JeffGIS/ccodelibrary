@@ -273,6 +273,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
                                 heading:(CGFloat)heading
                                   pitch:(CGFloat)pitch
                                     fov:(CGFloat)fov;
+- (nullable NSString *)getWeatherDataAtLatlon:(LLPOINT)atLatLon;
 
 - (BOOL)getPlaceIntersectionFile:(nullable id)intFile
                         forGeoid:(int)geoid;
