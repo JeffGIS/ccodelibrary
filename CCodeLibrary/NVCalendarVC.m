@@ -72,6 +72,7 @@
     _returnButton.backgroundColor = UIColor.clearColor;
     _returnButton.titleLabel.font = _font;
     _returnButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+    _returnButton.titleLabel.font = [UIFont systemFontOfSize: 12];
     _returnButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     _returnButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     
