@@ -460,10 +460,12 @@ UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor)
                 lineWidth:(int)lwidth
                 lineColor:(UIColor *)lineColor
                 fillColor:(UIColor *)fillColor
+                 withText:(NSString *)text
 {
     CGRect rect = CGRectMake(0, 0, r.size.width, r.size.height);
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetLineJoin(context,kCGLineJoinRound);
     CGContextSetFillColorWithColor(context, UIColor.clearColor.CGColor);
     CGContextFillRect(context, rect);
     CGContextSetStrokeColorWithColor(context, lineColor.CGColor);
@@ -477,15 +479,42 @@ UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor)
     pt.x = rect.origin.x + rect.size.width;
     pt.y = rect.origin.y + rect.size.height/2;
     CGContextAddLineToPoint(context,pt.x,pt.y);
+    pt.x = rect.origin.x + 3 * rect.size.width / 4;
+    CGContextAddLineToPoint(context,pt.x,pt.y);
+    pt.y = rect.origin.y + rect.size.height;
+    CGContextAddLineToPoint(context,pt.x,pt.y);
+    pt.x = rect.origin.x + rect.size.width / 4;
+    CGContextAddLineToPoint(context,pt.x,pt.y);
+    pt.y = rect.origin.y + rect.size.height/2;
+    CGContextAddLineToPoint(context,pt.x,pt.y);
     pt.x = rect.origin.x;
     CGContextAddLineToPoint(context,pt.x,pt.y);
     CGContextAddLineToPoint(context,startPoint.x,startPoint.y);
 
-    
+    CGContextClosePath(context);
     if (!CGContextIsPathEmpty(context))
     {
         CGContextDrawPath(context, kCGPathEOFillStroke);
     }
+    if (text)
+    {
+        LPDPOINT pPoints = PointsFromCGRect (&rect);
+        CGFloat size = rect.size.width;
+        BOOL st = [NVTextDrawing drawText:text
+                                inContext:context
+                            withinPolygon:pPoints
+                            withNumPoints:4
+                              andNumLoops:0
+                                  loopLen:0
+                             withinBounds:0
+                                 fontSize:size
+                              minFontSize:size/16
+                                textColor:[UIColor whiteColor]
+                              shadowColor:nil
+                             processingID:0];
+        free (pPoints);
+    }
+    
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;

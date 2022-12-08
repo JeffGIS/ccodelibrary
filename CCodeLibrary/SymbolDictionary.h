@@ -36,6 +36,7 @@ UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor);
 + (UIImage *)imageOfArrow:(CGRect)rect
                 lineWidth:(int)lwidth
                 lineColor:(UIColor *)lineColor
-                fillColor:(UIColor *)fillColor;
+                fillColor:(UIColor *)fillColor
+                 withText:(NSString *)text;
 
 @end

@@ -72,6 +72,7 @@
 #import "HotSpotVideo.h"
 #import "RHEditor.h"
 #import "NVWebView.h"
+#import "WeatherData.h"
 
 extern int ii, idebug;
 @interface CCodeLibrary : NSObject
