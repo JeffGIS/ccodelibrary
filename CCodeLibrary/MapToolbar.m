@@ -8,7 +8,7 @@
 @interface MapToolbar ()
 
 @property (nonatomic) UIButton *extentsButton, *userLocationButton, *legendsButton, *digitizeButton, *mapTypeButton;
-@property (nonatomic) UIButton *grayscaleButton, *clearMarkerButton, *emailPDFButton, *helpButton, *returnButton;
+@property (nonatomic) UIButton *grayscaleButton, *clearMarkerButton, *emailPDFButton, *helpButton, *returnButton, *weatherButton;
 @property (nonatomic) UISegmentedControl *mapTypeSC, *platSC;
 @property (nonatomic) CGSize size;
 @property BOOL configChanged, myLocationEnabled, platOverride;
@@ -57,7 +57,8 @@
     [mt setConfigurationProperty:MapToolbarPropertyWantMapTypeButton value:YES];
     [mt setConfigurationProperty:MapToolbarPropertyWantLegends value:NO];
     [mt setConfigurationProperty:MapToolbarPropertyWantReturnButton value:NO];
-    
+    [mt setConfigurationProperty:MapToolbarPropertyWantWeatherButton value:NO];
+
     //set internal sizes for all devices
     mt.buttonSize = 47.0, mt.SCHeight = 29.0, mt.mapTypeSCWidth = 76.0;
     mt.buttonMargin = 8.0, mt.switchMargin = 16.0, mt.SCMargin = 17.0, mt.platSCWidth = 196.0;

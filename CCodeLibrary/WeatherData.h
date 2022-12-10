@@ -9,12 +9,22 @@
 #ifndef WeatherData_h
 #define WeatherData_h
 
+@interface WeatherRecord : NSObject
+
+@property int timeStamp;
+@property NSString *desc;
+@property int temp;
+@property int windSpeed;
+@property int windDir;
+@property int sunRise, sunSet;
+@end
+
 @class WeatherData;
 
 @protocol WeatherDataDelegate <NSObject>
 
-- (void)weatherDataaDidReturnData:(NSString*)data;
-- (void)weatherDataaDidReturnError:(NSString *) message;
+- (void)weatherDataDidReturnData:(WeatherRecord *)data;
+- (void)weatherDataDidReturnError:(NSString *) message;
 
 @end
 

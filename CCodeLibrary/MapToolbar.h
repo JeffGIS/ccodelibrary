@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, MapToolbarProperty)
     MapToolbarPropertyWantProgressBar,
     MapToolbarPropertyWantHelpButton,
     MapToolbarPropertyWantReturnButton,
+    MapToolbarPropertyWantWeatherButton,
 NUMMapToolbarProperty};
 
 typedef NS_ENUM(NSInteger, MapToolbarOrientation)
