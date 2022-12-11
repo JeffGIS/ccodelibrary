@@ -162,6 +162,24 @@
     
     [mt addSubview:mt.clearMarkerButton];
     
+    //weather button added by default
+    mt.weatherButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    rect = CGRectMake((mt.buttonSize*nButtons + (mt.buttonMargin * (nButtons+1))),
+                      mt.buttonMargin, mt.buttonSize, mt.buttonSize);
+
+    mt.weatherButton.frame = rect;
+    nButtons++;
+    [mt setupButton:mt.weatherButton
+         imageTitle:@"weather"
+         edgeInsets:UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0)
+           selector:@selector(weatherButtonSelected:)];
+    UILongPressGestureRecognizer *longWeatherPress = [[UILongPressGestureRecognizer alloc] initWithTarget:mt
+                                                                                            action:@selector(weatherButtonLongPressed:)];
+    
+    [mt.weatherButton addGestureRecognizer:longWeatherPress];
+ 
+    [mt addSubview:mt.weatherButton];
+    
     //email PDF button added by default
     mt.emailPDFButton = [UIButton buttonWithType:UIButtonTypeCustom];
     rect = CGRectMake((mt.buttonSize*nButtons + (mt.buttonMargin * (nButtons+1))),
@@ -391,6 +409,18 @@
     [_delegate mapToolbarDidSelectClearMarkers];
 }
 
+- (void)weatherButtonSelected:(UIButton *)button
+{
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = _bordWidth;
+    [_delegate mapToolbarDidSelectWeatherButton:FALSE];
+}
+- (void)weatherButtonLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateEnded)
+        [_delegate mapToolbarDidSelectWeatherButton:TRUE];
+}
+
 - (void)emailPDFSelected:(UIButton *)button
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
@@ -608,6 +638,13 @@
         xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
     }
     
+    if (_wantWeatherButton)
+    {
+        _weatherButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+        yCount += (_buttonMargin + _buttonSize);
+        xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+    }
+    
     if (_wantPlat)
     {
         _platSC.frame = CGRectMake(_buttonMargin, yCount, _platSCVertWidth, _SCHeight);
@@ -701,6 +738,12 @@
     if (_wantMapTypeButton)
     {
         _mapTypeButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
+        xCount += (_buttonMargin + _buttonSize);
+    }
+
+    if (_wantWeatherButton)
+    {
+        _weatherButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
         xCount += (_buttonMargin + _buttonSize);
     }
 
@@ -920,6 +963,7 @@
     _previousConfig[MapToolbarPropertyWantDigitize] = _wantDigitize;
     _previousConfig[MapToolbarPropertyWantHelpButton] = _wantHelpButton;
     _previousConfig[MapToolbarPropertyWantHelpButton] = _wantReturnButton;
+    _previousConfig[MapToolbarPropertyWantWeatherButton] = _wantWeatherButton;
 }
 
 - (void)getPreviousConfiguration
@@ -936,6 +980,7 @@
     _wantDigitize = _previousConfig[MapToolbarPropertyWantDigitize];
     _wantHelpButton = _previousConfig[MapToolbarPropertyWantHelpButton];
     _wantReturnButton = _previousConfig[MapToolbarPropertyWantReturnButton];
+    _wantWeatherButton = _previousConfig[MapToolbarPropertyWantWeatherButton];
 }
 
 - (void)setConfigurationProperty:(MapToolbarProperty)property
@@ -989,9 +1034,15 @@
             
         case MapToolbarPropertyWantHelpButton:
             _wantHelpButton = value;
+            break;
             
         case MapToolbarPropertyWantReturnButton:
             _wantReturnButton = value;
+            break;
+            
+        case MapToolbarPropertyWantWeatherButton:
+            _wantWeatherButton = value;
+            break;
             
         default:
             break;
@@ -1172,6 +1223,22 @@
         {
             if ([self.subviews containsObject:_mapTypeSC])
                 [_mapTypeSC removeFromSuperview];
+        }
+        
+        if (_wantWeatherButton)
+        {
+            _weatherButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
+            
+            if (![self.subviews containsObject:_weatherButton])
+                [self addSubview:_weatherButton];
+            
+            xCount += (_buttonMargin + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_weatherButton])
+                [_weatherButton removeFromSuperview];
         }
         
         if (_wantPlat)

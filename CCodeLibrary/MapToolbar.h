@@ -47,6 +47,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 - (void)mapToolbarDidSelectDigitize;
 - (void)mapToolbarDidSelectLegends;
 - (void)mapToolbarDidSelectReturnButton;
+- (void)mapToolbarDidSelectWeatherButton:(BOOL)longPressed;
 - (void)mapToolbarDidFinishDrag:(CGPoint)locationInSuperview
                       superView:(UIView *)view;
 - (void)mapToolbarDidWantExpand;
@@ -57,7 +58,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 
 @property (nonatomic, weak) id <MapToolbarDelegate> delegate;
 @property (nonatomic) MapToolbarOrientation orientation, previousOrientation;
-@property (readonly) BOOL wantPlat, wantDigitize, wantMapType, wantMapTypeButton, wantUserLocation;
+@property (readonly) BOOL wantPlat, wantDigitize, wantMapType, wantMapTypeButton, wantUserLocation, wantWeatherButton;
 @property (readonly) BOOL wantExtents, wantLegends, wantGrayscale, wantClearMarkers;
 @property (readonly) BOOL wantEmailPDF, wantProgressBar, wantHelpButton, wantReturnButton;
 @property (nonatomic) CGFloat progress, legendOffset;

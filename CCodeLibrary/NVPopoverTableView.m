@@ -48,8 +48,8 @@
     NSMutableArray *newValues = NSMutableArray.new;
     for (NSString *str in textArray)
     {
-        NSString *value = textBefore(str, @"|");
-        NSString *returnValue = textAfter (str,@"|");
+        NSString *value = textBefore(str, @"||");
+        NSString *returnValue = textAfter (str,@"||");
         [returnValues addObject:returnValue];
         [newValues addObject:value];
     }
