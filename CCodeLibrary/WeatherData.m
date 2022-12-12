@@ -169,7 +169,7 @@
    for (WeatherRecord *rec in forecast)
     {
         NSString * date = [WeatherData forecastDayandTime:rec.timeStamp];
-        date = [date stringByAppendingFormat:@"|||%i",rec.timeStamp];
+        date = [date stringByAppendingFormat:@"\nTemp:%i deg Wind:%i mph\n%@|||%i",rec.temp,rec.windSpeed,rec.desc,rec.timeStamp];
         [dates addObject:date];
     }
     return  dates;
