@@ -24,7 +24,7 @@
 @protocol WeatherDataDelegate <NSObject>
 
 - (void)weatherDataDidReturnData:(WeatherRecord *)data;
-- (void)weatherDataDidReturnForcast:(NSArray *)forcast;
+- (void)weatherDataDidReturnforecast:(NSArray *)forecast;
 - (void)weatherDataDidReturnError:(NSString *) message;
 
 @end
@@ -34,9 +34,13 @@
 
 -(bool) getCurrentWeather:(LLPOINT)at
                  delegate:(id)delegate;
--(bool) getWeatherForcast:(LLPOINT)at
+-(bool) getWeatherforecast:(LLPOINT)at
                   forTime:(time_t)time
                  delegate:(id)delegate;
-+(NSArray*) getDatesFromForcast:(NSArray*) forcast;
++(NSArray*) getDatesFromforecast:(NSArray*) forecast;
++(NSString *) forecastDayandTime:(time_t)iTime;
++(WeatherRecord *)getRecordFromForecast:(NSArray*)forecast
+                                 atTime:(time_t)iTime;
+
 @end
 #endif /* WeatherData_h */

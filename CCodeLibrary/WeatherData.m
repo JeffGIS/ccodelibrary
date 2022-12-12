@@ -109,7 +109,7 @@
 
     return rtn;
 }
--(bool) getWeatherForcast:(LLPOINT)at
+-(bool) getWeatherforecast:(LLPOINT)at
                   forTime:(time_t)time
                  delegate:(id)delegate
 {
@@ -147,13 +147,13 @@
                 NSArray * keys = json.allKeys;
                 NSArray * vals = json.allValues;
                 NSArray *list = [json objectForKey:@"list"];
-                NSMutableArray * forcast = NSMutableArray.new;
+                NSMutableArray * forecast = NSMutableArray.new;
                 for (NSDictionary * rec in list)
                 {
                     WeatherRecord * record = [self decodeWeatherRecord:rec];
-                    [forcast addObject:record];
+                    [forecast addObject:record];
                 }
-                [self->_delegate weatherDataDidReturnForcast:forcast];
+                [self->_delegate weatherDataDidReturnforecast:forecast];
             }
         }
     }];
@@ -162,23 +162,54 @@
 
     return rtn;
 }
-+(NSArray*) getDatesFromForcast:(NSArray*) forcast
++(NSArray*) getDatesFromforecast:(NSArray*) forecast
 {
     NSMutableArray * dates = NSMutableArray.new;
     
-    NSDateFormatter *formatter = NSDateFormatter.new;
-    formatter.dateStyle = NSDateFormatterShortStyle;
-    formatter.timeStyle = NSDateFormatterShortStyle;
-    //[formatter setDateFormat:@"MM-dd HH"];
-
-    for (WeatherRecord *rec in forcast)
+   for (WeatherRecord *rec in forecast)
     {
-        NSString *date = [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:rec.timeStamp]];
-        date = [date stringByAppendingFormat:@"||%i",rec.timeStamp];
+        NSString * date = [WeatherData forecastDayandTime:rec.timeStamp];
+        date = [date stringByAppendingFormat:@"|||%i",rec.timeStamp];
         [dates addObject:date];
     }
     return  dates;
 }
 
++(NSString *) forecastDayandTime:(time_t)iTime
+{
+    NSString * rtn;
+    NSArray * daysOfWeek = @[@"Sunday ",@"Monday ",@"Tuesday ",@"Wednesday ",@"Thursday ",@"Friday ",@"Saturday "];
+    struct tm forecast_time = *localtime (&iTime);
+    time_t currentTime = NSDate.date.timeIntervalSince1970;
+    struct tm current_time = *localtime (&currentTime);
+    int today = current_time.tm_wday;
+    int forecastday = forecast_time.tm_wday;
+    if  (forecastday < today)
+        forecastday += 7;
+    NSString * sday;
+    if (forecastday == today)
+        sday = @"Today ";
+    else if (forecastday - today == 1)
+        sday = @"Tommorow ";
+    else
+        sday = daysOfWeek[forecastday];
+    NSDateFormatter *formatter = NSDateFormatter.new;
+    formatter.dateStyle = NSDateFormatterNoStyle;
+    formatter.timeStyle = NSDateFormatterShortStyle;
+    NSString * stime = [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:iTime]];
+    rtn = [sday stringByAppendingString:stime];
+    return rtn;
+}
 
++(WeatherRecord *)getRecordFromForecast:(NSArray*)forecast
+                                 atTime:(time_t)iTime;
+{
+    WeatherRecord * rtn = nil;
+    for (WeatherRecord * rec in forecast)
+    {
+        if (rec.timeStamp == iTime)
+            rtn = rec;
+    }
+    return rtn;
+}
 @end
