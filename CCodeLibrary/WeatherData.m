@@ -169,7 +169,8 @@
    for (WeatherRecord *rec in forecast)
     {
         NSString * date = [WeatherData forecastDayandTime:rec.timeStamp];
-        date = [date stringByAppendingFormat:@"\nTemp:%i deg Wind:%i mph\n%@|||%i",rec.temp,rec.windSpeed,rec.desc,rec.timeStamp];
+        NSString * windCH = [WeatherData compassFromDeg:rec.windDir];
+        date = [date stringByAppendingFormat:@"\nTemp:%i deg Wind:%@ %i mph\n%@|||%i",rec.temp,windCH,rec.windSpeed,rec.desc,rec.timeStamp];
         [dates addObject:date];
     }
     return  dates;
@@ -210,6 +211,19 @@
         if (rec.timeStamp == iTime)
             rtn = rec;
     }
+    return rtn;
+}
++(NSString *)compassFromDeg:(int) deg
+{
+    NSString * rtn = @"";
+    NSArray * compassHeadings = @[@"N",@"NE",@"NE",@"E",@"E",@"SE",@"SE",@"S",@"S",@"SW",@"SW",@"W",@"W",@"NW",@"NW",@"N"];
+    int indx = deg %= 360;
+    indx /= 22.5;
+    
+    if (indx >= 0 && indx <= 15)
+        rtn = compassHeadings[indx];
+    else
+        rtn = @"";
     return rtn;
 }
 @end

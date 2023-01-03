@@ -41,6 +41,7 @@
 +(NSString *) forecastDayandTime:(time_t)iTime;
 +(WeatherRecord *)getRecordFromForecast:(NSArray*)forecast
                                  atTime:(time_t)iTime;
++(NSString *)compassFromDeg:(int) deg;
 
 @end
 #endif /* WeatherData_h */
