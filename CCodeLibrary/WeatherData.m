@@ -192,7 +192,7 @@
     else if (forecastday - today == 1)
         sday = @"Tommorow ";
     else
-        sday = daysOfWeek[forecastday];
+        sday = daysOfWeek[forecast_time.tm_wday];
     NSDateFormatter *formatter = NSDateFormatter.new;
     formatter.dateStyle = NSDateFormatterNoStyle;
     formatter.timeStyle = NSDateFormatterShortStyle;
