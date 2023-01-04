@@ -46,6 +46,7 @@
 #define		MAXPROFILEROUTES	8
 #define     MAXTRANPOINTS	32
 #define     MAXFILEHANDLES  32
+#define     MAX_VARNAME_LEN 61
 
                                      
 

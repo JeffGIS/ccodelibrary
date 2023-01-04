@@ -2,11 +2,14 @@
 #define __GSSITYPE_H_INCLUDED 1
 
 #include "CCodeTypes.h"
+#import "SQLiteLib.h"
 
 #include <stdlib.h>
 #include <time.h>    
 //#include <commdlg.h>
 #include <ctype.h>
+
+typedef Bool BOOL;
 
 #define INT64 long long
 #define LONGLONG    long long
@@ -68,6 +71,11 @@
 #define VPFILETYPE_MACRO	7
 #define VPFILETYPE_SUBVP	8
 #define VPFILETYPE_DTM	9
+
+#define DTMTYPE_NGI			1
+#define DTMTYPE_TIN_GM		2
+#define DTMTYPE_LIDAR_GM	3
+#define DTMTYPE_LIDAR_LAZ	4
 #ifdef	_WIN32_WCE
 typedef long clock_t;
 /* OpenFile() Structure */
@@ -108,6 +116,8 @@ typedef OFSTRUCT *LPOFSTRUCT;
 #define HFILE_GPX	-4
 #define HFILE_FGDB	-5
 #define HFILE_KML	-6
+#define HFILE_SQLITE	-7
+#define HFILE_DGN8	-8
 
 #define SYMTYPEPARENT	0
 #define SYMTYPEPOINT	1
@@ -133,7 +143,7 @@ typedef OFSTRUCT *LPOFSTRUCT;
 #define LEAVE_WINDOW_TIMER 22
 #define TCPREPLAYTIMER	99
 #define USERTIMER	100    
-#define	MAXOPENSOCKETS	32
+#define	MAXOPENSOCKETS	64
 
 #define MT_PLT	0
 #define MT_SHP	1
@@ -151,6 +161,12 @@ typedef OFSTRUCT *LPOFSTRUCT;
 #define MT_GPX	13
 #define MT_FILE_GEO_DB	14 
 #define MT_KML	15
+#define MT_SQLITE 16
+#define MT_DGN8	17
+#define MT_GOOGLE_ROADMAP 18
+#define MT_GOOGLE_SATELLITE 19
+#define MT_GOOGLE_TERRAIN 20
+#define MT_GOOGLE_HYBRID 21
 
 
 
@@ -359,7 +375,7 @@ typedef struct
      } LIDARFILEHEADER;
 typedef struct
      {  
-     	short	xoff,yoff;
+     	short	xoff,yoff,intensity;
      	float	Elevation;
      } LIDARPNT;
 typedef struct
@@ -435,6 +451,9 @@ typedef struct {
 				 short		Type;//0 if world 1 if window
 				 short		unused;
 				 HBITMAP	hBitMap[2];
+				 HBITMAP	hBitMapOrig;
+				 HDC		hDC;
+				 BOOL		CreateAreaPoint;
 				} PCTIAStruct;
 typedef PCTIAStruct	*LPPCTIAStruct;
 
@@ -495,10 +514,11 @@ typedef	struct	{
 typedef	PENDESC	FAR	*LPPENDESC; 
 
 typedef struct {
-		unsigned short	Transparent	:1;
-		unsigned short	BGOpt		:1;
-		unsigned short	Pattern		:6;
-		} PATBYTE; 
+	unsigned char	Transparent : 1;
+	unsigned char	BGOpt : 1;
+	unsigned char	Pattern : 5;
+	unsigned char	notUsingPattern : 1;
+} PATBYTE;
 typedef PATBYTE	FAR	*LPPATBYTE;
 
 typedef struct {
@@ -567,12 +587,17 @@ typedef FIELDINFO FAR  *LPFIELDINFO;
 
 typedef struct
 	{   
-		short	NumFields;  
+		int		NumFields;  
 		HANDLE	DBHandle;
-		char	DBName[128];
+		char	DBName[MAX_PATH];
 		char	Select[8192]; 
 		char	From[1024];
-		char	Where[1024]; 
+		char	Where[4096];
+		char	Query[8192];
+		BOOL	hasRowID;
+		int		xLoc, yLoc;
+		unsigned int numRetreived;
+		sqlite3_stmt *statement;
 		FIELDINFO	FldInfo[1];
 	}SQLDATABASE;
 typedef	SQLDATABASE FAR	*LPSQLDATABASE;
@@ -642,6 +667,9 @@ typedef struct
         short	Unique;
         short   NumGlobals;
 		short	singleValID;
+		sqlite3* TextFileIndex;
+		sqlite3_stmt *statement;
+		char	TextFileIndexName[512];
         SQLFIELD    SQLField; 
     }OPENSQLDATA; 
 typedef OPENSQLDATA FAR *LPOPENSQLDATA;    
@@ -684,12 +712,12 @@ typedef struct
         HANDLE  Handle;
         short   Len;     
         short   Type;
-        BYTE	ValueIsHandle;
+        short	ValueIsHandle;
         short	NumLinkedVars;  
         DWORD   changetime; 
-        Bool	ContainsGorF;
-        Bool	Save;
-        char    Name[MAXVARNAMELEN];
+        BOOL	ContainsGorF;
+        BOOL	Save;
+        char    Name[MAX_VARNAME_LEN + 1];
         char    Value[MAXVARLEN]; 
         HANDLE	LinkedVar[1];
     } VARINFO;
@@ -777,7 +805,7 @@ typedef struct
 	{
 		char	Name[MAX_PATH];
 		char	OrigName[68];
-		Bool	DIBColorsArePalleteEntries;
+		BOOL	DIBColorsArePalleteEntries;
 		long	Frame;
 		HDIB32	hDib;
 		short	DeleteBM;
@@ -964,7 +992,7 @@ typedef	PICKDATAHEADER	*LPPICKDATAHEADER;
 typedef struct {
 					long	FromSeg;
 					double	AtDist, FromDist, Length;
-					Bool	Reverse;
+					BOOL	Reverse;
 					long	FirstPointID;
 					MNMXCORD Bounds; 
 					PICKDATAHEADER   PD;  
@@ -1112,7 +1140,7 @@ typedef struct {char	ID[32],
 						Driver[64],
 						Macro[32];
 				COLORREF	Color,TrackColor;     
-				Bool	ComputeAZ, ComputeSpeed;
+				BOOL	ComputeAZ, ComputeSpeed;
 				long	ComputeTimeSpan;
 				short	nLoc,
 						Size[2],
@@ -1129,7 +1157,7 @@ typedef struct {char	ID[32],
 				short	FenceStatus;
 				long	NumHist;
 				HANDLE	hHist;
-				Bool	Display;
+				BOOL	Display;
 				RECT	Rect, MenuRect,LastDrawRect,LastFlagRect;
 				int		index;
 				} VEHLOCATION;
@@ -1187,7 +1215,7 @@ typedef	struct	{
 
 typedef struct {
 				short	Type;
-				long	nSavePoly;
+				long	nPoints;
 				HANDLE	hSavePoly; 
 				HANDLE	hSavePolyParts; 
 				HANDLE	hSavePolyElev;
@@ -1262,7 +1290,7 @@ typedef struct {
 				DPOINT	Point1;
 				int		NumLinks,
 						NumSides; 
-				Bool	Reverse; 
+				BOOL	Reverse; 
 				long	StoredAsInclusionRef;
 				}	LOOPDATA;
 
@@ -1402,7 +1430,7 @@ typedef POLYID	FAR	*LPPOLYID;
  
 typedef struct {char Name[32];
                 MNMXCORD    Bounds;
-                Bool    HaveBounds;
+                BOOL    HaveBounds;
                 HANDLE	hMask; 
                 HANDLE	hMaskAccelerator[3];
                 long	NumMaskPoints;
@@ -1419,7 +1447,7 @@ typedef struct {HANDLE	MyHandle,
 								CurFun,
 								CommandLimit,
 								CommandSuccessCount; 
-				Bool	AddLBUTTON;  
+				BOOL	AddLBUTTON;  
 				HCURSOR	hCursor; 
 				HANDLE	hWhile; 
 				HANDLE	hError;
@@ -3610,11 +3638,20 @@ typedef struct{
 								lTAddR:4;
 			}ADDRESSLENGTHS;
 typedef ADDRESSLENGTHS FAR *LPADDRESSLENGTHS;
+typedef struct {
+	char lazFiles[4][256];
+	int lazFileNums[4];
+	INT64 lastUse[4];
+	//laszip_POINTER laszip_readers[4];
+}LAZFILESTRUCT;
+typedef LAZFILESTRUCT *LPLAZFILESTRUCT;
 
 typedef struct {                                        
 				HANDLE	hDB;                            //handle of file if .dtm or viewport if TIN Plt files
 				short	Type;
-				HFILE	Fid;							//1 = dtm grid, 2 = TIN plt files, 3 = Lidar points
+				short	Version;
+				HFILE	Fid;							//1 = dtm grid, 2 = TIN plt files, 3 = Lidar points, 4 = LIDAR in laz format
+				sqlite3 *db;
 				double	NULLElv;
 				double	GridSpace; 
 				short	ElevUnits; 						//0=feet,1=feet*100,2=decimeters,3=meters     
@@ -3629,6 +3666,8 @@ typedef struct {
 				long	CellID[MAXDTMCELLBUFFERS];
 				long	CellUse[MAXDTMCELLBUFFERS];  
 				char	TINIndex[256];
+				char	LAZDir[256];
+				LAZFILESTRUCT lazFiles;
 				VISLIST	VisList; //location of data for TIN surface
 				} DTMINFO;
 typedef DTMINFO	FAR	*LPDTMINFO;

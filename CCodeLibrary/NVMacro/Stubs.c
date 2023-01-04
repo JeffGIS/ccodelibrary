@@ -1556,7 +1556,6 @@ void AddDPointToRect(DPOINT Point, LPRECT pBounds)
     pBounds->bottom = max (pBounds->bottom,y);
     return;
 }
-
 /*int test(int in)
 {
 	char str[256] = "[VAR]=1;";

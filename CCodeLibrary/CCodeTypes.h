@@ -48,7 +48,7 @@
 typedef unsigned int WPARAM;
 typedef unsigned int LPARAM;
 typedef int DLGPROC;
-typedef int Bool;
+typedef bool Bool;
 typedef Bool *LPBool;
 typedef short BOOL16;
 typedef int SOCKET;

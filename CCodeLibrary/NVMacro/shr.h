@@ -589,7 +589,7 @@ LPTRANDATA  LoadTranFromBPWP (char * Name, int dir);
 LPTRANDATA  LoadTranFromCPTP (const char * Name, int dir);
 
 
-
+void SetContinueProcessing (Bool set);
 Bool makedirectories (LPSTR Name,Bool IsDir,Bool Verify);   
 short GSSiMakeDir (LPSTR Name,LPDWORD pErrCode);
 short GSSiRemove32 (LPSTR Name); 
@@ -1554,11 +1554,11 @@ Bool IsPointOnTouchScreen(HWND hWnd,POINT pt);
 int GetWifiName(LPSTR Name);
 int GetWifiAddress(LPSTR address);
 
-/*int mainlaszip(int argc, char *argv[]);
+int mainlaszip(int argc, char *argv[]);
 Bool getLAZMinMax(char * file, double * xmin, double * xmax, double * ymin, double * ymax, double * zmin, double * zmax);
 int getLAZPointsInBounds(LPLAZFILESTRUCT pFiles, int fileNum, char * file, int wantType, LPMNMXCORD pBounds, int maxPoints, LPDPOINT3D points);
 int writeLAZFileToText(char * file, int wantType, char * outFile);
-int classifyLAZFile(char * file, char * outFile);*/
+int classifyLAZFile(char * file, char * outFile);
 
 LPSTR _fullpath (LPSTR fullpath,LPSTR path,int maxpath);
 void _splitpath (LPSTR PathName,LPSTR drive,LPSTR dir,LPSTR fname,LPSTR ext);

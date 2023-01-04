@@ -7255,7 +7255,7 @@ Bool GetGlobalPVal (LPSTR Global,LPDPOINT Default,LPDPOINT pPoint)
 #endif
 }
 
-int GetVal (LPSTR VarName, LPSTR OutStr)
+Bool GetVal (LPSTR VarName, LPSTR OutStr)
 #if ENABLETRACE
 {GSSiEnterProg (570);
 #endif

@@ -359,6 +359,11 @@
 		EB36639C1A55A97C00ABA486 /* PointInAreaClass.m in Sources */ = {isa = PBXBuildFile; fileRef = EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */; };
 		EB366E6025DC5246008A781A /* SOLAR-2Input.m in Sources */ = {isa = PBXBuildFile; fileRef = EB366E5F25DC5246008A781A /* SOLAR-2Input.m */; };
 		EB366E6825DCB63F008A781A /* SOLAR-2Input.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB366E6525DC546A008A781A /* SOLAR-2Input.h */; };
+		EB36DB1D2964A9EF004EF377 /* dtm.c in Sources */ = {isa = PBXBuildFile; fileRef = EB36DB1C2964A9EF004EF377 /* dtm.c */; };
+		EB36DB222964AD15004EF377 /* bci.c in Sources */ = {isa = PBXBuildFile; fileRef = EB36DB1F2964AD14004EF377 /* bci.c */; };
+		EB36DB232964AD15004EF377 /* tdspl.c in Sources */ = {isa = PBXBuildFile; fileRef = EB36DB202964AD15004EF377 /* tdspl.c */; };
+		EB36DB242964AD15004EF377 /* tools.c in Sources */ = {isa = PBXBuildFile; fileRef = EB36DB212964AD15004EF377 /* tools.c */; };
+		EB36DB272964E934004EF377 /* laszip_dll.c in Sources */ = {isa = PBXBuildFile; fileRef = EB36DB262964E934004EF377 /* laszip_dll.c */; };
 		EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EB3CC5F61AD95F8B002453A9 /* PickedItem.m */; };
 		EB40255322B0295E005862AD /* WIT_MotionInput.m in Sources */ = {isa = PBXBuildFile; fileRef = EB40255222B0295E005862AD /* WIT_MotionInput.m */; };
 		EB40255522BC0BFA005862AD /* WIT_MotionInput.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB40255122B0295E005862AD /* WIT_MotionInput.h */; };
@@ -1030,6 +1035,13 @@
 		EB36639B1A55A97C00ABA486 /* PointInAreaClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInAreaClass.m; sourceTree = "<group>"; };
 		EB366E5F25DC5246008A781A /* SOLAR-2Input.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SOLAR-2Input.m"; sourceTree = "<group>"; };
 		EB366E6525DC546A008A781A /* SOLAR-2Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SOLAR-2Input.h"; sourceTree = "<group>"; };
+		EB36DB1C2964A9EF004EF377 /* dtm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dtm.c; sourceTree = "<group>"; };
+		EB36DB1E2964ACB4004EF377 /* bci.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bci.h; sourceTree = "<group>"; };
+		EB36DB1F2964AD14004EF377 /* bci.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bci.c; sourceTree = "<group>"; };
+		EB36DB202964AD15004EF377 /* tdspl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tdspl.c; sourceTree = "<group>"; };
+		EB36DB212964AD15004EF377 /* tools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tools.c; sourceTree = "<group>"; };
+		EB36DB252964C65A004EF377 /* laszip_dll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = laszip_dll.h; sourceTree = "<group>"; };
+		EB36DB262964E934004EF377 /* laszip_dll.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = laszip_dll.c; sourceTree = "<group>"; };
 		EB3CC5F51AD95F8B002453A9 /* PickedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickedItem.h; sourceTree = "<group>"; };
 		EB3CC5F61AD95F8B002453A9 /* PickedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickedItem.m; sourceTree = "<group>"; };
 		EB40255122B0295E005862AD /* WIT_MotionInput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WIT_MotionInput.h; sourceTree = "<group>"; };
@@ -1616,6 +1628,20 @@
 			path = NVMacro;
 			sourceTree = "<group>";
 		};
+		EB36DB1B2964A9BF004EF377 /* DTM */ = {
+			isa = PBXGroup;
+			children = (
+				EB36DB262964E934004EF377 /* laszip_dll.c */,
+				EB36DB252964C65A004EF377 /* laszip_dll.h */,
+				EB36DB1F2964AD14004EF377 /* bci.c */,
+				EB36DB202964AD15004EF377 /* tdspl.c */,
+				EB36DB212964AD15004EF377 /* tools.c */,
+				EB36DB1E2964ACB4004EF377 /* bci.h */,
+				EB36DB1C2964A9EF004EF377 /* dtm.c */,
+			);
+			name = DTM;
+			sourceTree = "<group>";
+		};
 		EB95A1A41CB16EAF00158B40 /* Other */ = {
 			isa = PBXGroup;
 			children = (
@@ -1737,6 +1763,7 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				EB36DB1B2964A9BF004EF377 /* DTM */,
 				695C062B1FF2B0F60081712C /* RiteHome */,
 				BBC361921F429C0200B51DF3 /* NVMacro */,
 				A933D9F31B5D494600D621CD /* 3D Views */,
@@ -1999,12 +2026,14 @@
 				EB366E6025DC5246008A781A /* SOLAR-2Input.m in Sources */,
 				6943041F1C3351E20077EC9F /* NVColor.m in Sources */,
 				690B3FA91D6A69A600DAC87D /* RampCompliance.c in Sources */,
+				EB36DB232964AD15004EF377 /* tdspl.c in Sources */,
 				693493441FE02671000F192D /* NVPeerConnect.m in Sources */,
 				69987CF71C94683F000EC26F /* UIView+Constraints.m in Sources */,
 				EBC01D191BED1C8C0004C751 /* kepler.c in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,
 				69D5EFB51C7237FD004CE1C0 /* NVCalendarView.m in Sources */,
 				EB9C3C2C1F914C8600E95644 /* PDFCreator.m in Sources */,
+				EB36DB272964E934004EF377 /* laszip_dll.c in Sources */,
 				EBC01D161BED1C8C0004C751 /* fk4fk5.c in Sources */,
 				6925896C2108CB5400E841AF /* NVPDFDefCreatorVC.m in Sources */,
 				A90D1FB51AE60FDF00CBFEE7 /* NVColorWheel.m in Sources */,
@@ -2048,6 +2077,7 @@
 				EBC01D1A1BED1C8C0004C751 /* kfiles.c in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
 				69E7FCA61D81249500171E44 /* NVPopoverSlider.m in Sources */,
+				EB36DB242964AD15004EF377 /* tools.c in Sources */,
 				EBC01D071BED1C8C0004C751 /* aa.c in Sources */,
 				EBC01D201BED1C8C0004C751 /* mlr404.c in Sources */,
 				EB0E4FF51C62785200849766 /* SymbolDictionary.m in Sources */,
@@ -2068,6 +2098,7 @@
 				692ACC671B86309B00400B36 /* NVRoutes.m in Sources */,
 				EBAEBB4C294106CA0004D22D /* WeatherData.m in Sources */,
 				EBAB422F1B2B073A00C36FFC /* CurbRampData.m in Sources */,
+				EB36DB222964AD15004EF377 /* bci.c in Sources */,
 				A94A771619F8079E0062906E /* FacilityPoint.m in Sources */,
 				EB86BFA71B0B62520074728E /* minilzo.c in Sources */,
 				EBC01D171BED1C8C0004C751 /* gplan.c in Sources */,
@@ -2095,6 +2126,7 @@
 				6948D5D51BC780EE009CA04F /* NVStaticMapView.m in Sources */,
 				EB333D1A20962F0A00254B87 /* varstuff2.c in Sources */,
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
+				EB36DB1D2964A9EF004EF377 /* dtm.c in Sources */,
 				699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBC01D0A1BED1C8C0004C751 /* annuab.c in Sources */,

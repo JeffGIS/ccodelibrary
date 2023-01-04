@@ -1097,6 +1097,7 @@ void LoadDescBlocks (long	Offset);
 Bool AddTextRect(LPRECT Rect); 
 Bool AddTextRect2(LPRECT Rect,Bool ForceAdd);
 short GetNumTextLines (LPSTR pText,LPSHORT pNumUpLines,LPSHORT MaxLineLen,Bool UltiMapStyle);
+void SetTextColor (HDC hDC,COLORREF color);
 DWORD DispText (HDC hDC,Bool GetExtents,int left, int right, int y, int symsize, int hJust,int vJust, double Size,double SymSizeFactor,double SymbolTextFactor,
 			   int Weight, Bool Italic, double AZ, LPSTR Text,int Symbol,Bool TestRect,
 			   Bool Shadow, COLORREF ShadowColor,long RemoveColor,
