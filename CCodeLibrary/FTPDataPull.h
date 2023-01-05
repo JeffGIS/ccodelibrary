@@ -34,6 +34,7 @@ typedef NS_ENUM(NSInteger, FTPDataType)
     GetDatabaseSettingCrimes,
     GetDatabaseSettingMapleGrove,
     GetDatabaseSettingHunting,
+    GetDatabaseSettingDTM,
     GetDatabaseSettingNVMetro,
     GetDatabaseSettingNWI,
     GetDatabaseSettingForest,
