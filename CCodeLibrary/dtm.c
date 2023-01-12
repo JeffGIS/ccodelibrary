@@ -1,5 +1,5 @@
 #include "graphint.h"
-#include "bci.h"
+//#include "bci.h"
 
 
 static	short	NumRawPointsToUse=4;
@@ -715,8 +715,8 @@ HANDLE DTMOpen (LPSTR FileNameIN, double NULLElv,short Mode,LPSHORT pSurfType)
 																							#endif
 		return 0;
 }
-	if (DTMRenderGridSpacing < 0)
-    	DTMRenderGridSpacing = (CurView->WBounds.xmx - CurView->WBounds.xmn) / (-DTMRenderGridSpacing);	
+//	if (DTMRenderGridSpacing < 0)
+//    	DTMRenderGridSpacing = (CurView->WBounds.xmx - CurView->WBounds.xmn) / (-DTMRenderGridSpacing);	
 	DTMSmooth = GetGlobalDVal2 ("[%DTMSmooth]",0);
 	HaveLastTriangle = FALSE; 
 	if (First)
@@ -724,9 +724,9 @@ HANDLE DTMOpen (LPSTR FileNameIN, double NULLElv,short Mode,LPSHORT pSurfType)
 			hOpenSurf[i] = 0;
 	First = FALSE;
 	
-	_fstrcpy (FileName,FileNameIN);  
+	strcpy (FileName,FileNameIN);  
 	ExpandText (FileName);
-	_fstrupr (FileName);
+	//strupr (FileName);
 	if (StringEndsWith(FileName,".DTM"))
 		Type = DTMTYPE_NGI;
 	else if (StringEndsWith(FileName,".TIN"))
@@ -793,7 +793,8 @@ ReOpen:
 		GlobalUnlock (hSurf);
 		break;
 	
-		case DTMTYPE_TIN_GM: 
+		case DTMTYPE_TIN_GM:
+            /*
 		{
 			LPVISLIST	SaveVis=CurVis; 
 			short		TinSymbol,i;
@@ -828,6 +829,7 @@ ReOpen:
 			CurVis = SaveVis;
 			GlobalUnlock (hSurf);
 		}
+             */
 		break;
 		case DTMTYPE_LIDAR_GM:
 		{
@@ -1392,6 +1394,7 @@ HANDLE GetDTMSubCellFromPoint (DPOINT Point,HANDLE hSurf)
 
 double NGIELV_bci (DPOINT Point,HANDLE hSurf,short DesiredUnits)
 {
+    /*
 	doublexyz	xyzgrid[16], xyzpoint[256]; 
 	LPDTMINFO	pDTMInfo; 
 	USHORT	i,j;   
@@ -1432,6 +1435,8 @@ double NGIELV_bci (DPOINT Point,HANDLE hSurf,short DesiredUnits)
 	td_fillgrid(xyzgrid, 4, 4, xyzpoint, 8, 8);   
 	GlobalUnlock (hSurf);
 	return xyzpoint[27].z;
+     */
+    return 0;
 }
 
 double NGIELV (DPOINT Point,HANDLE hSurf,short DesiredUnits)
@@ -2009,7 +2014,7 @@ static	ii=0,debugii=171;
 																							#endif
 }
 
-
+/*
 long GetDTMHoles (LPSTR DTMName, LPSTR OutFile)
 																							#if ENABLETRACE
 																							{GSSiEnterProg (1368);
@@ -2094,7 +2099,7 @@ long GetDTMHoles (LPSTR DTMName, LPSTR OutFile)
 																							}
 																							#endif
 }
-
+*/
 
 BOOL DTMCopy (LPSTR ToSurf,LPSTR FromSurf,LPSTR AreaRefOrTAG)
 {
@@ -2408,7 +2413,7 @@ BOOL DisplayDTMPoint (long Refno,DPOINT DPoint,double Elevation,double AZ,short 
 BOOL DisplayDTMArea (long Refno,LPDPOINT DPoint,short Nump,double SlopePCT,double AZ,short SymbolNumber,LPDTMINFO pDTMInfo)
 {   
 	double	size;
-	
+/*
 	CurrentDesc = SymbolNumber; 
 	CurrentRefno = Refno;
 	CurrentType = GF_AREA;
@@ -2431,7 +2436,8 @@ BOOL DisplayDTMArea (long Refno,LPDPOINT DPoint,short Nump,double SlopePCT,doubl
 		}
 	}  
 
-	ShowValue (CurView->hDC,FALSE); 
+	ShowValue (CurView->hDC,FALSE);
+ */
 	return TRUE;
 } 
 
@@ -2908,16 +2914,15 @@ Exit:
     return rtn;
 }
 
+
 BOOL FindContourVectors (LPDPOINT TriPoints,LPDOUBLE Z1, LPDOUBLE Z2, LPDOUBLE Z3)
-																							#if ENABLETRACE
-																							{GSSiEnterProg (1370);
-																							#endif
-{
+ {
 	double	Z[4], ZC, Dist, d, AZ, ElevDiff, pct;
 	USHORT	i, iside, ii; 
 	DPOINT	Point1, Point2;
 	BOOL	rtn=FALSE;
-	
+    /*
+
 	if (*Z1 == CurNullElv || *Z2 == CurNullElv || *Z3 == CurNullElv)
 		goto Exit;
 	Z[0] = *Z1;
@@ -2974,16 +2979,9 @@ BOOL FindContourVectors (LPDPOINT TriPoints,LPDOUBLE Z1, LPDOUBLE Z2, LPDOUBLE Z
 	}
 	rtn = TRUE;  
 Exit:
-{
-																							#if ENABLETRACE
-																							GSSiExitProg (1370);
-																							#endif
+ */
 	return rtn;
 }
-																							#if ENABLETRACE
-																							}
-																							#endif
-}  
 
 BOOL ComputeSlopeParameters (LPDOUBLE pNullElv,LPDPOINT TriPoints,LPDOUBLE Z1, LPDOUBLE Z2, LPDOUBLE Z3, LPDOUBLE pSlopePCT, LPDOUBLE pSlopeAZ)
 {   
@@ -3075,7 +3073,8 @@ BOOL ComputeSlopeParameters (LPDOUBLE pNullElv,LPDPOINT TriPoints,LPDOUBLE Z1, L
 }
 
 BOOL DisplayDTMSegment (void)
-{   
+{
+    /*
 	LPLIDARCELL	pCell; 
 	USHORT	ip, irow, icol,iTri, iTriPnt;  
 	long	Refno;
@@ -3219,10 +3218,10 @@ BOOL DisplayDTMSegment (void)
 				    	{ 
 				    		GWPolylineD (CurView->hDC, TriPoints, 3,GridLineDesc);
 				    	}
-				    	/*if (DTMRenderAs == DTM_RENDER_SLOPE_POLYGONS)
-				    	{
-							DisplayDTMArea (Refno++,TriPoints,3,SlopePCTArray[iTri],LTWOPI(SlopeAZArray[iTri]-HALFPI+SlopeCorrection),DTMSlopeAreaSymbol,0);
-				    	} */
+				    	//if (DTMRenderAs == DTM_RENDER_SLOPE_POLYGONS)
+				    	//{
+							//DisplayDTMArea (Refno++,TriPoints,3,SlopePCTArray[iTri],LTWOPI(SlopeAZArray[iTri]-HALFPI+SlopeCorrection),DTMSlopeAreaSymbol,0);
+				    	//}
 					}
 				    if (DTMRenderAs == DTM_RENDER_SLOPE_VECTORS && nTri == 4 && TotSlopePCT && !ShowTriSlopes)
 				    {   
@@ -3300,14 +3299,15 @@ BOOL DisplayDTMSegment (void)
 	}
 	ShowValue (CurView->hDC,FALSE); 
 	InGraphicsProcessor = FALSE;
-   	GlobalUnlock (hDTM); 
+   	GlobalUnlock (hDTM);
+*/
 	return TRUE;
 }
 
 BOOL SetDTMRenderAs (int Layer)
 {    
 	char	str[128];
-	
+/*
 	DTMRenderAs = CurView->DTMRenderAs[Layer];
 	if (DTMRenderAs == DTM_RENDER_CONTOURS)
 	{
@@ -3354,9 +3354,10 @@ BOOL SetDTMRenderAs (int Layer)
 	LightContourSymbol = GetDictSymbolNumber (str);
 	GetGlobalCVal ("[%CONTOURLINEDARK]",str,"CONTOURD");
 	DarkContourSymbol = GetDictSymbolNumber (str);
+ */
 	return TRUE;
 }  
-
+/*
 BOOL GetTriangleData (TRIANGLEID TriID,LPTRIANGLEDATA pCurrentTriData,LPTRIANGLEDATA pNewTriData)
 {   
 	double	Z[3], SlopePCT, SlopeAZ, AZ;
@@ -3404,7 +3405,7 @@ BOOL GetTriangleData (TRIANGLEID TriID,LPTRIANGLEDATA pCurrentTriData,LPTRIANGLE
 	BT_PUT (hComputedTriangles,(LPSTR)&TriID,(LPSTR)pNewTriData);
 	return TRUE;
 }
-
+*/
 BOOL GetTriCoords (TRIANGLEID TriID,LPDPOINT TriPoints)
 {    
 	DPOINT	GridBasePoint;  
@@ -3444,7 +3445,7 @@ TRIANGLEID GetCornerTriangleID (TRIANGLEID FromTriID,short ipoint,LPSHORT pConne
 	return TriID;
 }
 
-BOOL TriangleSlopesTowardPoint (TRIANGLEID TriID,short ipoint,LPTRIANGLEDATA pNewTriData)
+/*BOOL TriangleSlopesTowardPoint (TRIANGLEID TriID,short ipoint,LPTRIANGLEDATA pNewTriData)
 {   
 	TRIANGLEDATA	SideTriData;  
 	TRIANGLEID 		SideTriID;
@@ -3478,7 +3479,7 @@ BOOL TriangleSlopesTowardPoint (TRIANGLEID TriID,short ipoint,LPTRIANGLEDATA pNe
 	}
 	return FALSE;
 }
-
+*/
 
 /*BOOL FindBasinsAroundPoints (LPSTR DTMName,short nPoints, LPDPOINT StartPoints)
 { 

@@ -1288,7 +1288,17 @@ NSString * splitLongestLine (NSString * text)
     }
     return splitText;
 }
-
+BOOL StringEndsWith (LPSTR str,LPSTR endstr)
+{
+    BOOL rtn = FALSE;
+    int lstr = strlen (str);
+    int lestr = strlen (endstr);
+    LPSTR pEnd = str + (lstr - lestr);
+    
+    if (!stricmp (pEnd,endstr))
+        rtn = TRUE;
+    return rtn;
+}
 BOOL appendStringToFile (NSString * str,NSString * filePath)
 {
     BOOL rtn;

@@ -20,17 +20,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include"bci.h"
 
-inline double td_func16(doublexyz xyz, const double *c);
-inline double td_firstxderfunc16(doublexyz xyz, const double *c);
-inline double td_firstyderfunc16(doublexyz xyz, const double *c);
-inline double td_mixedderfunc16(doublexyz xyz, const double *c);
+ double td_func16(doublexyz xyz, const double *c);
+ double td_firstxderfunc16(doublexyz xyz, const double *c);
+ double td_firstyderfunc16(doublexyz xyz, const double *c);
+ double td_mixedderfunc16(doublexyz xyz, const double *c);
 
 void copyxyz(long width, const doublexyz *xyzfrom, doublexyz *xyz, long cols,
              long i, long j);
 void copy4xyzwder(doublexyzwder *xyzwder, const doublexyz *xyz,
                   const doubleder *der, long cols, long x, long y);
 
-inline void countderivs(doubleder *der, const doublexyz *xyz, const double *c,
+void countderivs(doubleder *der, const doublexyz *xyz, const double *c,
                  long cols, long x, long y);
 void td_fillgrid(const doublexyz *xyz, long cols, long rows, doublexyz *fxyz,
                  long fcols, long frows);
@@ -73,7 +73,7 @@ void bzerox (HPSTR str,long n)
 		*str = 0;
 	return;
 }
-inline double td_func16(doublexyz xyz, const double *c)
+ double td_func16(doublexyz xyz, const double *c)
 {
     return c[0] + c[1]*xyz.y + c[2]*pow_2(xyz.y) + c[3]*pow_3(xyz.y) +
         c[4]*xyz.x + c[5]*xyz.x*xyz.y + c[6]*xyz.x*pow_2(xyz.y) +
@@ -88,7 +88,7 @@ inline double td_func16(doublexyz xyz, const double *c)
 /*
  first x derivative for func16
  */
-inline double td_firstxderfunc16(doublexyz xyz, const double *c)
+ double td_firstxderfunc16(doublexyz xyz, const double *c)
 {
     return c[4] + c[5]*xyz.y + c[6]*pow_2(xyz.y) + c[7]*pow_3(xyz.y) +
         c[8]*2.*xyz.x + c[9]*2.*xyz.x*xyz.y + c[10]*2.*xyz.x*pow_2(xyz.y) +
@@ -101,7 +101,7 @@ inline double td_firstxderfunc16(doublexyz xyz, const double *c)
 /*
  first y derivative for func16
  */
-inline double td_firstyderfunc16(doublexyz xyz, const double *c)
+ double td_firstyderfunc16(doublexyz xyz, const double *c)
 {
     return c[1] + c[2]*2.*xyz.y + c[3]*3.*pow_2(xyz.y) + c[5]*xyz.x +
         c[6]*xyz.x*2.*xyz.y + c[7]*xyz.x*3.*pow_2(xyz.y) +
@@ -114,7 +114,7 @@ inline double td_firstyderfunc16(doublexyz xyz, const double *c)
 /*
  mixed derivative for func16
  */
-inline double td_mixedderfunc16(doublexyz xyz, const double *c)
+ double td_mixedderfunc16(doublexyz xyz, const double *c)
 {
     return c[5] + c[6]*2.*xyz.y + c[7]*3.*pow_2(xyz.y) + c[9]*2.*xyz.x +
         c[10]*4.*xyz.x*xyz.y + c[11]*6.*xyz.x*pow_2(xyz.y) +
@@ -158,7 +158,7 @@ void copy4xyzwder(doublexyzwder *xyzwder, const doublexyz *xyz,
     xyzwder[3].dxdy = der_def(x,y + 1).dxdy;
 }
 
-inline void countderivs(doubleder *der, const doublexyz *xyz, const double *c,
+void countderivs(doubleder *der, const doublexyz *xyz, const double *c,
                         long cols, long x, long y)
 {
     der_def(x,y).dx = td_firstxderfunc16(xyz_def(x,y), c);

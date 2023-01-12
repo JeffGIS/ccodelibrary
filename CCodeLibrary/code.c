@@ -1254,4 +1254,30 @@ Bool WriteBitmapDataToFile (LPSTR file,int pixelsWide, int pixelsHigh, CGColorSp
     
     return rtn;
 }
+void SetGWDCurrentOffset (LPGWDHEADER lpGWDHead,long Offset)
+{
+    return;
+}
+Bool GetPerpendicularIntersect2 (LPDPOINT Point,LPDPOINT LinePt,LPDOUBLE pLineAZ,LPDPOINT IntPoint)
+{
+    return FALSE;
+}
+int getLAZPointsInBounds(LPLAZFILESTRUCT pFiles, int fileNum, char * file, int wantType, LPMNMXCORD pBounds, int maxPoints, LPDPOINT3D points)
+{
+    return 0;
+}
 
+void ConvertBounds(LPMNMXCORD pBounds, int from, int to)
+{
+    return;
+}
+
+void InflateBounds (LPMNMXCORD pBounds, double Value)
+{
+    return;
+}
+Bool IntersectBounds (LPMNMXCORD pBounds1,LPMNMXCORD pBounds2,LPMNMXCORD pBoundsInt)
+{
+    Bool rtn = FALSE;
+    return rtn;
+}

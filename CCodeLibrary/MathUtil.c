@@ -2128,6 +2128,10 @@ Bool POINTInBounds (LPPOINT pt,LPMNMXCORD pbounds)
         return FALSE;
     return TRUE;
 }
+Bool PointInBounds (DPOINT Point,LPMNMXCORD pBounds)
+{
+    return (DPointInBounds(&Point,pBounds));
+}
 
 int iDist(double X1, double Y1, double X2, double Y2)
 {

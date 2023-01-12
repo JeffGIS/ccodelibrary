@@ -1076,15 +1076,6 @@ HANDLE	EnterBlockingWindow(HWND hWndDlg)
 {
 	return 0;
 }
-HANDLE DTMOpen(LPSTR FileName, double NULLElv, short Mode, LPSHORT SurfaceType)
-{
-	return 0;
-}
-void DTMClose(LPHANDLE pHandle)
-{
-	return;
-}
-
 
 DPOINT dnewptproj(DPOINT OldPoint, double AZM, double DIS)
 {
