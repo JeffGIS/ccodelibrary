@@ -77,6 +77,8 @@ doOpen:
         fullPath = [fullPath stringByReplacingOccurrencesOfString:@"BUNDLE:" withString:@""];
         fullPath = [NSBundle.mainBundle pathForResource:fullPath ofType:type];
     }
+    else
+        fullPath = [NSString stringWithUTF8String:Name];
     openFiles[iFile] = fopen(fullPath.UTF8String,"rb");
     return iFile;
  }

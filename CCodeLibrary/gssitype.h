@@ -76,6 +76,8 @@ typedef Bool BOOL;
 #define DTMTYPE_TIN_GM		2
 #define DTMTYPE_LIDAR_GM	3
 #define DTMTYPE_LIDAR_LAZ	4
+#define DTMTYPE_SLT    5
+
 #ifdef	_WIN32_WCE
 typedef long clock_t;
 /* OpenFile() Structure */
@@ -918,7 +920,7 @@ typedef MOVELIST	FAR	*LPMOVELIST;
  typedef DIGCNTLPOINT	FAR	*LPDIGCNTLPOINT; 
 
 typedef struct {
-				unsigned	long	GEOSEG_ROW:12, 
+				unsigned	int 	GEOSEG_ROW:12, 
 									GEOSEG_COL:12,
 									SUBCEL_ROW:4,
 									SUBCEL_COL:4;
@@ -3650,8 +3652,8 @@ typedef struct {
 				HANDLE	hDB;                            //handle of file if .dtm or viewport if TIN Plt files
 				short	Type;
 				short	Version;
-				HFILE	Fid;							//1 = dtm grid, 2 = TIN plt files, 3 = Lidar points, 4 = LIDAR in laz format
-				sqlite3 *db;
+				FILE*	Fid;							//1 = dtm grid, 2 = TIN plt files, 3 = Lidar points, 4 = LIDAR in laz format
+                LPsqlite3nv db;
 				double	NULLElv;
 				double	GridSpace; 
 				short	ElevUnits; 						//0=feet,1=feet*100,2=decimeters,3=meters     

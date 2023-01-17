@@ -456,6 +456,7 @@
 		EBC2BC8F1FA1A19D00F2F329 /* HotSpotVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC2BC8E1FA1A19D00F2F329 /* HotSpotVideo.m */; };
 		EBC2BC901FA1A2CC00F2F329 /* HotSpotVideo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBC2BC8D1FA1A19D00F2F329 /* HotSpotVideo.h */; };
 		EBCAF6912600E5D900476983 /* Tran.c in Sources */ = {isa = PBXBuildFile; fileRef = EBCAF6902600E5D900476983 /* Tran.c */; };
+		EBD02DDE297709220083396D /* graphint.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBC361A91F429C0200B51DF3 /* graphint.h */; };
 		EBFC2A301BE90A0F00E0C1B3 /* DisplayCharacteristics.m in Sources */ = {isa = PBXBuildFile; fileRef = EBFC2A2F1BE90A0F00E0C1B3 /* DisplayCharacteristics.m */; };
 		EBFC2A311BE90AE900E0C1B3 /* DisplayCharacteristics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBFC2A2E1BE90A0F00E0C1B3 /* DisplayCharacteristics.h */; };
 /* End PBXBuildFile section */
@@ -477,6 +478,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EBD02DDE297709220083396D /* graphint.h in CopyFiles */,
 				EBAEBB4E294109BB0004D22D /* WeatherData.h in CopyFiles */,
 				EB366E6825DCB63F008A781A /* SOLAR-2Input.h in CopyFiles */,
 				EB55FB7122CA5B3300E8EF6B /* NVSlopeData.h in CopyFiles */,

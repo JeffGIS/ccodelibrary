@@ -5,6 +5,7 @@
 #include "proj_api.h"
 #include "shapefil.h"
 #include "gmextern.h"
+#include "PROJ.H"
 
 HANDLE STRANRect (LPRECT FromRect,LPRECT ToRect)
 {
@@ -1124,19 +1125,258 @@ int ConvertToNewLocation(LPSTR Path, Bool DoCopy)
 {
 	return 0;
 }
-double ConvertDist(double Dist, int opt)
+double ConvertDist (double Dist,int outUnits)
 {
-	return 0;
+//char    DistUnitOpts[5][12]={"FEET","METERS","YARDS","MILES","KILOMETERS"};
+    extern  long  PRJ_UNITS[MAX_PROJ];
+    switch (PRJ_UNITS[1])
+    {
+    case PRJ_UNITS_FEET:
+        switch (outUnits)
+            {
+            case IU_FEET:
+                    return (Dist);
+            case IU_METERS:
+                    return Dist * FTM;
+            case IU_MILES:
+                    return (Dist) / 5280.0;
+            case IU_YARDS:
+                    return (Dist) / 3.0;
+            case IU_KILOMETERS:
+                    return Dist/1000 * FTM;
+            }
+            break;
+        case PRJ_UNITS_METERS:
+        case PRJ_UNITS_LATLON:
+            switch (outUnits)
+            {
+                case IU_FEET:
+                    return (Dist * MFT);
+                case IU_METERS:
+                    return Dist;
+                case IU_MILES:
+                    return (Dist * MFT) / 5280.0;
+                case IU_YARDS:
+                    return (Dist * MFT) / 3.0;
+                case IU_KILOMETERS:
+                    return Dist / 1000;
+            }
+            break;
+    }
+    return Dist;
 }
-double ConvertDist2(double Dist, int from, int to)
+
+double ConvertInDist (double Dist,int opt)
 {
-	return 0;
+//char    DistUnitOpts[5][12]={"FEET","METERS","YARDS","MILES","KILOMETERS"};
+    extern  long  PRJ_UNITS[MAX_PROJ];
+    if (PRJ_UNITS[1] == PRJ_UNITS_METERS) //meters
+    switch (opt)
+    {
+        case 1:
+            return (Dist * FTM);
+        case 2:
+            return Dist;
+        case 4:
+            return (Dist * FTM) * 5280.0;
+        case 3:
+            return (Dist * FTM) * 3.0;
+        case 5:
+            return Dist*1000;
+    }
+    if (PRJ_UNITS[1] == PRJ_UNITS_FEET)//feet
+    switch (opt)
+    {
+        case 1:
+            return Dist;
+        case 2:
+            return Dist * MFT;
+        case 4:
+            return Dist * 5280.0;
+        case 3:
+            return Dist * 3.0;
+        case 5:
+            return Dist * MFT * 1000;
+    }
+    if (PRJ_UNITS[1] == PRJ_UNITS_LATLON)//latlon
+    {
+        DPOINT newPt;
+        DPOINT zpt={0,0};
+
+        switch (opt)
+            {
+            case 1:
+                Dist = Dist * FTM;
+                break;
+            case 2:
+                break;
+            case 4:
+                Dist = (Dist * FTM) * 5280.0;
+                break;
+            case 3:
+                Dist = (Dist * FTM) * 3.0;
+                break;
+            case 5:
+                Dist*=1000;
+                break;
+            }
+        newPt = NewLatLong(0,0,Dist,0);
+        Dist = ldistp (zpt,newPt);
+        Dist = ArcDistance(zpt,newPt);
+    }
+    return Dist;
+}
+
+double ConvertAltDist(double Dist, int opt)
+{
+    //char    DistUnitOpts[5][12]={"FEET","METERS","YARDS","MILES","KILOMETERS"};
+    extern  long  PRJ_UNITS[MAX_PROJ];
+    if (PRJ_UNITS[3] == PRJ_UNITS_METERS) //meters
+        switch (opt)
+        {
+        case 1:
+            return (Dist * FTM);
+        case 2:
+            return Dist;
+        case 4:
+            return (Dist * FTM) * 5280.0;
+        case 3:
+            return (Dist * FTM) * 3.0;
+        case 5:
+            return Dist * 1000;
+        }
+    if (PRJ_UNITS[3] == PRJ_UNITS_FEET)//feet
+        switch (opt)
+        {
+        case 1:
+            return Dist;
+        case 2:
+            return Dist * MFT;
+        case 4:
+            return Dist * 5280.0;
+        case 3:
+            return Dist * 3.0;
+        case 5:
+            return Dist * MFT * 1000;
+        }
+    if (PRJ_UNITS[3] == PRJ_UNITS_LATLON)//latlon
+    {
+        DPOINT newPt;
+        DPOINT zpt = { 0,0 };
+
+        switch (opt)
+        {
+        case 1:
+            Dist = Dist * FTM;
+            break;
+        case 2:
+            break;
+        case 4:
+            Dist = (Dist * FTM) * 5280.0;
+            break;
+        case 3:
+            Dist = (Dist * FTM) * 3.0;
+            break;
+        case 5:
+            Dist *= 1000;
+            break;
+        }
+        newPt = NewLatLong(0, 0, Dist, 0);
+        Dist = ldistp(zpt, newPt);
+        Dist = ArcDistance(zpt, newPt);
+    }
+    return Dist;
+}
+
+double ConvertDist2 (double Dist,int from, int to)
+{
+//char    DistUnitOpts[5][12]={"FEET","METERS","YARDS","MILES","KILOMETERS"};
+    if (from == 4)
+    {
+        from = 1;
+        Dist *= 5280;
+    }
+    switch (from)
+    {
+        case 3:
+            Dist *= 3;
+        case 1:
+            switch (to)
+            {
+                case 1:
+                    return (Dist);
+                case 2:
+                    return Dist * FTM;
+                case 4:
+                    return (Dist) / 5280.0;
+                case 3:
+                    return (Dist) / 3.0;
+                case 5:
+                    return Dist/1000 * FTM;
+            }
+        break;
+        
+        case 5:
+            Dist *= 1000;
+        case 2:
+            switch (to)
+            {
+                case 1:
+                    return (Dist * MFT);
+                case 2:
+                    return Dist;
+                case 4:
+                    return (Dist * MFT) / 5280.0;
+                case 3:
+                    return (Dist * MFT) / 3.0;
+                case 5:
+                    return Dist / 1000;
+            }
+        break;
+    }
+    return Dist;
+}
+
+
+double ConvertArea (double area,int opt)
+{
+    extern  long  PRJ_UNITS[MAX_PROJ];
+//char    AreaUnitOpts[6][10]={"SQRFEET","SQRMETERS","SQRYARDS","SQRMILES","SQRKILOS","ACRES"};
+    if (PRJ_UNITS[1] == 1)
+    switch (opt)
+    {
+        case 1:
+            return area;
+        case 2:
+            return (area * SFTSM);
+        case 4:
+            return (area / ((double)5280 * (double)5280));
+        case 3:
+            return (area/9);
+        case 5:
+            return ((area * SFTSM) /(double) 1000000);
+        case 6:
+            return ((area * SFTSM) / ACRSM);
+    }
+    if (PRJ_UNITS[1] == 2)
+    switch (opt)
+    {
+        case 1:
+            return (area * SMSFT);
+        case 2:
+            return area;
+        case 4:
+            return (area * (SMSFT / ((double)5280 * (double)5280)));
+        case 3:
+            return (area/9 * SMSFT);
+        case 5:
+            return (area /(double) 1000000);
+        case 6:
+            return (area / ACRSM);
+    }
+    return area;
 }
 SLONG ConvertCMDToNum(LPSTR CMD)
-{
-	return 0;
-}
-double ConvertArea(double Area, int opt)
 {
 	return 0;
 }
