@@ -23,6 +23,7 @@ enum INUNITS { IU_FEET = 1, IU_METERS = 2, IU_YARDS = 3, IU_MILES = 4, IU_KILOME
 #define LATLONPROJECTION     2
 #define LATLONGTYPE     0
 #define GOOGLEMAPSPROJECTION 5
+#define UTM15PROJECTION 15
 #define SphericalMercatorPROJECTION    -1
 #define PROJ4PROJECTION    999
 #define PRJ_UNITS_FEET    1
@@ -132,7 +133,6 @@ extern        double       PRJ_OUTFACTOR[MAX_PROJ];
 #endif
 
 void FreePROJ(int id);
-BOOL InitProj4CoordConv(BOOL Delete);
 LPSTR SHPGetNVP(LPSTR ShpFileName, LPDOUBLE pFactor);
 BOOL IsProjectionFile(LPSTR File);
 

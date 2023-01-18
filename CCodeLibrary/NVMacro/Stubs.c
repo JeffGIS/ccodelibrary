@@ -206,14 +206,6 @@ Bool ConvertCoordClose (void)
 {
     return FALSE;
 }
-Bool NeedToConvertCoord (int from, int to)
-{
-    return FALSE;
-}
-long ConvertCoord (LPDPOINT DPoint,int from, int to)
-{
-    return 0;
-}
 long ConvertCoordInit (void)
 {
     return 0;

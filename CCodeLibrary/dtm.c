@@ -281,7 +281,7 @@ void DTMOutputType2Run (short nRun,long CURDIF,LPSHORT CompressedDTMData,LPSHORT
 																							#endif
 }  
 
-void ExpandSubcell (LPLONG DTMData,SUBCELLINFO SUBCELLInfo,LPSTR CompressedData,LPLONG pBias)
+void ExpandSubcell (LPLONG DTMData,SUBCELLINFO SUBCELLInfo,LPBYTE CompressedData,LONG Bias)
 																							#if ENABLETRACE
 																							{GSSiEnterProg (1354);
 																							#endif
@@ -292,7 +292,7 @@ void ExpandSubcell (LPLONG DTMData,SUBCELLINFO SUBCELLInfo,LPSTR CompressedData,
 	{   
 		case 0:
 			for (ExpLoc=0;ExpLoc<1024;ExpLoc++)
-				DTMData[ExpLoc] = *pBias;
+				DTMData[ExpLoc] = Bias;
 		break; 
 			
 		case 1: 
@@ -302,7 +302,7 @@ void ExpandSubcell (LPLONG DTMData,SUBCELLINFO SUBCELLInfo,LPSTR CompressedData,
 			if (CompressedDTMData[0] == SCHAR_MAX)
 				DTMData[0] = INT_MAX;
 			else	
-				DTMData[0] = CompressedDTMData[0] + *pBias;
+				DTMData[0] = CompressedDTMData[0] + Bias;
 			do
 			{
 				if (CompressedDTMData[CmpLoc] == 94)
@@ -331,7 +331,7 @@ void ExpandSubcell (LPLONG DTMData,SUBCELLINFO SUBCELLInfo,LPSTR CompressedData,
 					if (CompressedDTMData[CmpLoc] == SCHAR_MAX)
 						DTMData[ExpLoc++] = INT_MAX;
 					else	
-						DTMData[ExpLoc++] = CompressedDTMData[CmpLoc] + *pBias;  
+						DTMData[ExpLoc++] = CompressedDTMData[CmpLoc] + Bias;
 					CmpLoc++;
 				} 
 			}
@@ -347,7 +347,7 @@ void ExpandSubcell (LPLONG DTMData,SUBCELLINFO SUBCELLInfo,LPSTR CompressedData,
 			if (CompressedDTMData[0] == SHRT_MAX)
 				DTMData[0] = INT_MAX;
 			else	
-				DTMData[0] = CompressedDTMData[0] + *pBias;
+				DTMData[0] = CompressedDTMData[0] + Bias;
 			do
 			{
 				if (CompressedDTMData[CmpLoc] > 31100 && CompressedDTMData[CmpLoc] < SHRT_MAX)
@@ -367,7 +367,7 @@ void ExpandSubcell (LPLONG DTMData,SUBCELLINFO SUBCELLInfo,LPSTR CompressedData,
 					if (CompressedDTMData[CmpLoc] == SHRT_MAX)
 						DTMData[ExpLoc++] = INT_MAX;
 					else	
-						DTMData[ExpLoc++] = CompressedDTMData[CmpLoc] + *pBias;
+						DTMData[ExpLoc++] = CompressedDTMData[CmpLoc] + Bias;
 					CmpLoc++;
 				} 
 			}
@@ -382,11 +382,11 @@ void ExpandSubcell (LPLONG DTMData,SUBCELLINFO SUBCELLInfo,LPSTR CompressedData,
 			
 			for (ExpLoc=0;ExpLoc<EndLoc;ExpLoc++)
 				if (CompressedDTMData[ExpLoc] < INT_MAX)
-					DTMData[ExpLoc] = CompressedDTMData[ExpLoc] + *pBias;
+					DTMData[ExpLoc] = CompressedDTMData[ExpLoc] + Bias;
 				else
 					DTMData[ExpLoc] = CompressedDTMData[ExpLoc];
 			for (ExpLoc=EndLoc;ExpLoc<1024;ExpLoc++) //added to fix problem in mpls 25ft surf with 0 length subcell
-				DTMData[ExpLoc] = *pBias;
+				DTMData[ExpLoc] = Bias;
 		}
 	}
 {
@@ -1000,6 +1000,7 @@ void DTMClose (LPHANDLE pHandle)
                 case DTMTYPE_SLT:
                     GSSiClose2(&pDTMInfo->Fid);
                 case DTMTYPE_LIDAR_LAZ:
+                        //SQLOK(__FILE__,__LINE__,SQLite_Close(&pDTMInfo->db),pDTMInfo->db);
                         SQLite_Close(&pDTMInfo->db);
                     break;
                 case DTMTYPE_NGI:
@@ -1034,9 +1035,10 @@ void DTMClose (LPHANDLE pHandle)
                     CloseGWDatabase(pDTMInfo->hDB);
                     break;
                 case DTMTYPE_SLT:
-                    GSSiClose2(&pDTMInfo->Fid);
+                    fclose(pDTMInfo->Fid);
+                    pDTMInfo->Fid = 0;
                 case DTMTYPE_LIDAR_LAZ:
-                    sqlite3_close(pDTMInfo->db);
+                    sqlite3_close(pDTMInfo->db->db);
                     break;
                 }
 				for (j=0;j<MAXDTMCELLBUFFERS;j++)
@@ -1164,9 +1166,11 @@ HANDLE GetDTMSubCell (HANDLE hSurf,long GeoSeg, short SubCell,LPDTMINFO pDTMInfo
                 pCell = (LPLONG)GlobalLock(pDTMInfo->hCell[MinUseID]);
                 pSUBCELLInfo = (LPSUBCELLINFO)(pDeCompressedRec + (sizeof(DTMKEY)));
                 pBias = (LPLONG)(pDeCompressedRec + (sizeof(DTMKEY) + sizeof(SUBCELLINFO)));
+                LONG Bias;
+                memcpy (&Bias,pDeCompressedRec + (sizeof(DTMKEY) + sizeof(SUBCELLINFO)),sizeof(LONG));
                 CompressedDTMData = pDeCompressedRec + (sizeof(DTMKEY) + sizeof(SUBCELLINFO) + 4);
 
-                ExpandSubcell(pCell, *pSUBCELLInfo, CompressedDTMData, pBias);
+                ExpandSubcell(pCell, *pSUBCELLInfo, CompressedDTMData, Bias);
                 free(pCompressedRec);
                 free(pDeCompressedRec);
                 GlobalUnlock(pDTMInfo->hCell[MinUseID]);

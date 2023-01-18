@@ -1,7 +1,7 @@
 #include "shr.h"
 #include "MathUtil.h"
 #include "PROJ.H"       
-#include "P_TOL.H"
+#include "P_TOL.h"
 #include "resource.h"
 
 void SetBounds (HWND hWnd,HDC hDC);
