@@ -86,6 +86,8 @@
 
 #define		CDSize	630
 
+int SQLOKpd(int sqlReturn, sqlite3nv *database, int method);
+
 Bool FAR PASCAL TemplateMsgProc(HWND hWndDlg, int Message, WPARAM wParam, LPARAM lParam);
 Bool FAR PASCAL ImageDisplayMultipleMsgProc(HWND hWndDlg, int Message, WPARAM wParam, LPARAM lParam);
 void CallImageDisplayMultipleMsgProc(LPSTR ImageList,LPSTR Title);

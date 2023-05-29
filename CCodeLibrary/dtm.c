@@ -10,7 +10,6 @@ static  double  PlaneElev = 0;
 #import "SQLiteLib.h"
 #include "compress.h"
 
-int SQLOKpd(int sqlReturn, sqlite3nv *database, int method);
 
 
 
