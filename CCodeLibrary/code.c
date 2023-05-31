@@ -1260,8 +1260,6 @@ void SetGWDCurrentOffset (LPGWDHEADER lpGWDHead,long Offset)
 }
 Bool GetPerpendicularIntersect (LPDPOINT Point,LPDPOINT Line,LPDPOINT IntPoint,Bool IncludeDistToEPs,LPINT pLeftOrRight)
 {
-#define LEFT 1
-#define RIGHT 2
     double    AZ1, AZ2, AZToPoint,LineLen, dtobp, dtoep, dtoint;
     BOOL    rtn=FALSE;
 

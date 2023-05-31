@@ -11,6 +11,10 @@
 
 typedef Bool BOOL;
 
+#define LEFT 1
+#define MIDDLE 2
+#define RIGHT 3
+
 #define INT64 long long
 #define LONGLONG    long long
 

@@ -12,9 +12,6 @@
 #define iPAD_WIDTH 768.0
 #define APP_GROUP_ID @"group.com.gssi.appgroup"
 #define NUMREADINGS 30
-#define LEFT 1
-#define MIDDLE 2
-#define RIGHT 3
 #define DEGREES(radians) ((radians) * (180.0 / M_PI))
 #define RADIANS(degrees) ((degrees) / 180.0 * M_PI)
 #define RADIANS_SLOPE(degrees) (100.0 * sin(RADIANS(degrees)))
