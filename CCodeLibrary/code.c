@@ -1258,10 +1258,60 @@ void SetGWDCurrentOffset (LPGWDHEADER lpGWDHead,long Offset)
 {
     return;
 }
+Bool GetPerpendicularIntersect (LPDPOINT Point,LPDPOINT Line,LPDPOINT IntPoint,Bool IncludeDistToEPs,LPINT pLeftOrRight)
+{
+#define LEFT 1
+#define RIGHT 2
+    double    AZ1, AZ2, AZToPoint,LineLen, dtobp, dtoep, dtoint;
+    BOOL    rtn=FALSE;
+
+    AZ1 = getazdp (&Line[0],&Line[1]);
+    AZ2 = LTWOPI (AZ1 + HALFPI);
+    LineLen = ldistp (Line[0],Line[1]);
+    if (LINSEC (Line[0].x,Line[0].y,AZ1,Point->x,Point->y,AZ2,&IntPoint->x,&IntPoint->y) != 1)
+        goto Exit;
+    
+    dtoint = ldistpp (IntPoint,Point);
+    dtobp = ldistpp (IntPoint,&Line[0]);
+    dtoep = ldistpp (IntPoint,&Line[1]);
+    if (dtobp > LineLen || dtoep > LineLen)
+    {
+        if (IncludeDistToEPs)
+        {
+            if (dtobp < dtoep)
+                *IntPoint = Line[0];
+            else
+                *IntPoint = Line[1];
+            rtn = TRUE;
+        }
+    }
+    else
+        rtn = TRUE;
+    if (rtn)
+    {
+        double azToEP = getazdp (IntPoint,&Line[1]);
+        AZToPoint = getazdp (IntPoint,Point);
+        AZToPoint = LTWOPI (AZToPoint - AZ1);
+        if (AZToPoint > PY)
+            *pLeftOrRight = RIGHT;
+        else
+            *pLeftOrRight = LEFT;
+    }
+Exit:
+
+    return rtn;
+}
+
 Bool GetPerpendicularIntersect2 (LPDPOINT Point,LPDPOINT LinePt,LPDOUBLE pLineAZ,LPDPOINT IntPoint)
 {
-    return FALSE;
+    double    AZ2, LineLen;
+
+    AZ2 = LTWOPI (*pLineAZ + HALFPI);
+    if (LINSEC (LinePt->x,LinePt->y,*pLineAZ,Point->x,Point->y,AZ2,&IntPoint->x,&IntPoint->y) != 1)
+        return FALSE;
+    return TRUE;
 }
+
 int getLAZPointsInBounds(LPLAZFILESTRUCT pFiles, int fileNum, char * file, int wantType, LPMNMXCORD pBounds, int maxPoints, LPDPOINT3D points)
 {
     return 0;

@@ -1294,7 +1294,7 @@ Bool CompressFrameEX (LPBITMAPINFOHEADER	lpbiIn, LPBITMAPINFOHEADER lpbiOut, lon
 Bool SetupVirtualPrinter (HWND hWnd,LPSTR VPName);
 int GSSiMsgBox (HWND hWnd, LPSTR Mess, LPSTR Title, UINT Flag,LPSTR Position);
 int MessageBoxAtPosition (HWND hWnd, LPSTR Mess, LPSTR Title, UINT Flag,LPSTR Position);
-Bool GetPerpendicularIntersect (LPDPOINT Point,LPDPOINT Line,LPDPOINT IntPoint,Bool IncludeDistToEPs);
+Bool GetPerpendicularIntersect (LPDPOINT Point,LPDPOINT Line,LPDPOINT IntPoint,Bool IncludeDistToEPs,LPINT pLeftOrRight);
 Bool GetPerpendicularIntersect2 (LPDPOINT Point,LPDPOINT LinePt,LPDOUBLE pLineAZ,LPDPOINT IntPoint);
 Bool GetPerpendicularOffsetToPoly (LPDPOINT Point,long nPolyPoints,HPDPOINT PolyPoints,LPDPOINT IntPoint,LPDOUBLE OffDist,LPDOUBLE PolyDist,double LastPolyDist);
 void AreaFromLineAndOffset (LPPOINT Line,double Offset,LPPOINT AreaPoints);  
