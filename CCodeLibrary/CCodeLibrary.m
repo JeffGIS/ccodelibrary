@@ -1,7 +1,7 @@
 //  CCodeLibrary.m
 //  CCodeLibrary
-int ii=0;
-int idebug = 0;
+int iii = -1;
+int idebug = -1;
 
 #import "CCodeLibrary.h"
 

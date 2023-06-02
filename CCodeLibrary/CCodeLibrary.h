@@ -74,7 +74,8 @@
 #import "NVWebView.h"
 #import "WeatherData.h"
 
-extern int ii, idebug;
+extern int iii;
+extern int idebug;
 @interface CCodeLibrary : NSObject
 
 @end
