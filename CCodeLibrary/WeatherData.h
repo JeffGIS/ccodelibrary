@@ -11,7 +11,7 @@
 
 @interface WeatherRecord : NSObject
 
-@property int timeStamp;
+@property long timeStamp;
 @property NSString *desc;
 @property int temp;
 @property int windSpeed;

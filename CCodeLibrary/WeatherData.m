@@ -165,7 +165,12 @@
 +(NSArray*) getDatesFromforecast:(NSArray*) forecast
 {
     NSMutableArray * dates = NSMutableArray.new;
-    
+    time_t now = NSDate.date.timeIntervalSince1970;
+    NSString * curTime = @"Current Time";
+    NSString * date = [WeatherData forecastDayandTime:now];
+    curTime = [curTime stringByAppendingFormat:@"\n%@|||0",date];
+    [dates addObject:date];
+
    for (WeatherRecord *rec in forecast)
     {
         NSString * date = [WeatherData forecastDayandTime:rec.timeStamp];
