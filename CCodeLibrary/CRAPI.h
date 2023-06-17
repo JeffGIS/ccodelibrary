@@ -244,6 +244,9 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property bool evaluateEdges;
 @property int maxEvaluaterScore;
 @property int currentEvaluaterScore;
+@property LLPOINT currentLocation;
+@property BOOL locationTrackingEnabled;
+
 
 + (nullable CRAPI *)sharedInstance;
 
