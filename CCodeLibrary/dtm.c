@@ -1,6 +1,7 @@
 #include "graphint.h"
 //#include "bci.h"
 
+extern int iii;
 
 static	short	NumRawPointsToUse=4;
 static  BOOL    HaveLastTriangle=FALSE;
@@ -12,15 +13,15 @@ static  double  PlaneElev = 0;
 
 
 
-
+static  int     nOpenDTM=0;
 static	HANDLE	hOpenSurf[MAXOPENSURF]; 
-static	long	NextDTMUse=LONG_MIN;
+static	int	NextDTMUse=INT_MIN;
 static	POINT	LidarCellOffsets[9]={0,0,-1,0,-1,1,0,1,1,1,1,0,1,-1,0,-1,-1,-1};    
 static	MNMXCORD	DTMBounds;
 static	DPOINT	DTMPoint;
 static	HANDLE	DTMCellHandle=0;
 static	HANDLE	DTMSubCellHandle=0;   
-static	long	DTMCellID;  
+static	int	DTMCellID;
 static	short	DTMPointSymbol, DTMSlopeArrowSymbol, DTMSlopeAreaSymbol,GridLineDesc; 
 static	short	DTMRenderAs=DTM_RENDER_GRID_POINTS; 
 static	double	DTMRenderGridSpacing=1.0;  
@@ -29,9 +30,9 @@ static	double	DTMContourInterval;
 static	double	ContourIntervals[7]={1.0,2.0,5.0,10.0,20.0,50.0,100.0};
 static	short	DTMSmooth;
 static	HANDLE	hDTMRenderGridRow[3]={0,0,0};
-static	long	DTMRow;
+static	int	DTMRow;
 static	DPOINT	DTMRenderRowBeginPoint[3];     
-static	long	DTMNumPointsInRenderGridRow;  
+static	int	DTMNumPointsInRenderGridRow;
 static	short	DTMRenderUnits=0; 
 static	short	DTMTriPointRow[4][2]={0,2,2,2,2,0,0,0};
 static	short	DTMTriPointCol[4][2]={0,0,0,1,1,1,1,0};   
@@ -280,123 +281,125 @@ void DTMOutputType2Run (short nRun,long CURDIF,LPSHORT CompressedDTMData,LPSHORT
 																							#endif
 }  
 
-void ExpandSubcell (LPLONG DTMData,SUBCELLINFO SUBCELLInfo,LPBYTE CompressedData,LONG Bias)
-																							#if ENABLETRACE
-																							{GSSiEnterProg (1354);
-																							#endif
-{   
-	UINT	ExpLoc=1, CmpLoc=1, ii;
-	
-	switch (SUBCELLInfo.TYPE)
-	{   
-		case 0:
-			for (ExpLoc=0;ExpLoc<1024;ExpLoc++)
-				DTMData[ExpLoc] = Bias;
-		break; 
-			
-		case 1: 
-		{
-			signed char	FAR	*CompressedDTMData = CompressedData;
-		
-			if (CompressedDTMData[0] == SCHAR_MAX)
-				DTMData[0] = INT_MAX;
-			else	
-				DTMData[0] = CompressedDTMData[0] + Bias;
-			do
-			{
-				if (CompressedDTMData[CmpLoc] == 94)
-				{
-					short	nRepeat = CompressedDTMData[++CmpLoc] + 128 + 1;
-					short	Inc = CompressedDTMData[++CmpLoc]; 
-					CmpLoc++;
-					while (nRepeat--)  
-					{
-						DTMData[ExpLoc] = DTMData[ExpLoc-1] + Inc;
-						ExpLoc++;
-					}	
-				}
-				else if (CompressedDTMData[CmpLoc] > 94 && CompressedDTMData[CmpLoc] < SCHAR_MAX)
-				{
-					short	nRepeat = CompressedDTMData[CmpLoc++] - 94 + 1;
-					short	Inc = CompressedDTMData[CmpLoc++]; 
-					while (nRepeat--)  
-					{
-						DTMData[ExpLoc] = DTMData[ExpLoc-1] + Inc;
-						ExpLoc++;
-					}	
-				}
-				else 
-				{
-					if (CompressedDTMData[CmpLoc] == SCHAR_MAX)
-						DTMData[ExpLoc++] = INT_MAX;
-					else	
-						DTMData[ExpLoc++] = CompressedDTMData[CmpLoc] + Bias;
-					CmpLoc++;
-				} 
-			}
-			while (CmpLoc < SUBCELLInfo.LENGTH); 
-		}
-		break; 
-		
-		case 2:
-		{ 
-			LPSHORT	CompressedDTMData = (LPSHORT)CompressedData; 
-			short	EndLoc = SUBCELLInfo.LENGTH/2;
-			
-			if (CompressedDTMData[0] == SHRT_MAX)
-				DTMData[0] = INT_MAX;
-			else	
-				DTMData[0] = CompressedDTMData[0] + Bias;
-			do
-			{
-				if (CompressedDTMData[CmpLoc] > 31100 && CompressedDTMData[CmpLoc] < SHRT_MAX)
-				{
-					short	nRepeat = CompressedDTMData[CmpLoc++] - 31100 + 1;
-					short	Inc = CompressedDTMData[CmpLoc++]; 
-					while (nRepeat--)  
-					{   
-						if (ExpLoc > 1023)
-							ii=1;
-						DTMData[ExpLoc] = DTMData[ExpLoc-1] + Inc;
-						ExpLoc++;
-					}	
-				}
-				else 
-				{
-					if (CompressedDTMData[CmpLoc] == SHRT_MAX)
-						DTMData[ExpLoc++] = INT_MAX;
-					else	
-						DTMData[ExpLoc++] = CompressedDTMData[CmpLoc] + Bias;
-					CmpLoc++;
-				} 
-			}
-			while (CmpLoc < EndLoc);  
-		}
-		break;  
-		
-		case 3:
-		{
-			LPLONG CompressedDTMData = (LPLONG)CompressedData;  
-			short	EndLoc = SUBCELLInfo.LENGTH/4;
-			
-			for (ExpLoc=0;ExpLoc<EndLoc;ExpLoc++)
-				if (CompressedDTMData[ExpLoc] < INT_MAX)
-					DTMData[ExpLoc] = CompressedDTMData[ExpLoc] + Bias;
-				else
-					DTMData[ExpLoc] = CompressedDTMData[ExpLoc];
-			for (ExpLoc=EndLoc;ExpLoc<1024;ExpLoc++) //added to fix problem in mpls 25ft surf with 0 length subcell
-				DTMData[ExpLoc] = Bias;
-		}
-	}
+int ExpandSubcell (LPLONG DTMData,SUBCELLINFO SUBCELLInfo,LPBYTE CompressedData,LONG Bias)
+                                                                                            #if ENABLETRACE
+                                                                                            {GSSiEnterProg (1354);
+                                                                                            #endif
 {
-																							#if ENABLETRACE
-																							GSSiExitProg (1354);
-																							#endif
-	return;
+    UINT    ExpLoc=1, CmpLoc=1, ii;
+    int     subCellLen = SUBCELLInfo.LENGTH;
+    int     subCellType = SUBCELLInfo.TYPE;
+    
+    switch (subCellType)
+    {
+        case 0:
+            for (ExpLoc=0;ExpLoc<1024;ExpLoc++)
+                DTMData[ExpLoc] = Bias;
+        break;
+            
+        case 1:
+        {
+            signed char* CompressedDTMData = (signed char* )CompressedData;
+        
+            if (CompressedDTMData[0] == SCHAR_MAX)
+                DTMData[0] = INT_MAX;
+            else
+                DTMData[0] = CompressedDTMData[0] + Bias;
+            do
+            {
+                if (CompressedDTMData[CmpLoc] == 94)
+                {
+                    short    nRepeat = CompressedDTMData[++CmpLoc] + 128 + 1;
+                    short    Inc = CompressedDTMData[++CmpLoc];
+                    CmpLoc++;
+                    while (nRepeat--)
+                    {
+                        DTMData[ExpLoc] = DTMData[ExpLoc-1] + Inc;
+                        ExpLoc++;
+                    }
+                }
+                else if (CompressedDTMData[CmpLoc] > 94 && CompressedDTMData[CmpLoc] < SCHAR_MAX)
+                {
+                    short    nRepeat = CompressedDTMData[CmpLoc++] - 94 + 1;
+                    short    Inc = CompressedDTMData[CmpLoc++];
+                    while (nRepeat--)
+                    {
+                        DTMData[ExpLoc] = DTMData[ExpLoc-1] + Inc;
+                        ExpLoc++;
+                    }
+                }
+                else
+                {
+                    if (CompressedDTMData[CmpLoc] == SCHAR_MAX)
+                        DTMData[ExpLoc++] = INT_MAX;
+                    else
+                        DTMData[ExpLoc++] = CompressedDTMData[CmpLoc] + Bias;
+                    CmpLoc++;
+                }
+            }
+            while (CmpLoc < subCellLen);
+        }
+        break;
+        
+        case 2:
+        {
+            LPSHORT    CompressedDTMData = (LPSHORT)CompressedData;
+            short    EndLoc = SUBCELLInfo.LENGTH/2;
+            
+            if (CompressedDTMData[0] == SHRT_MAX)
+                DTMData[0] = INT_MAX;
+            else
+                DTMData[0] = CompressedDTMData[0] + Bias;
+            do
+            {
+                if (CompressedDTMData[CmpLoc] > 31100 && CompressedDTMData[CmpLoc] < SHRT_MAX)
+                {
+                    short    nRepeat = CompressedDTMData[CmpLoc++] - 31100 + 1;
+                    short    Inc = CompressedDTMData[CmpLoc++];
+                    while (nRepeat--)
+                    {
+                        if (ExpLoc > 1023)
+                            ii=1;
+                        DTMData[ExpLoc] = DTMData[ExpLoc-1] + Inc;
+                        ExpLoc++;
+                    }
+                }
+                else
+                {
+                    if (CompressedDTMData[CmpLoc] == SHRT_MAX)
+                        DTMData[ExpLoc++] = INT_MAX;
+                    else
+                        DTMData[ExpLoc++] = CompressedDTMData[CmpLoc] + Bias;
+                    CmpLoc++;
+                }
+            }
+            while (CmpLoc < EndLoc);
+        }
+        break;
+        
+        case 3:
+        {
+            LPLONG CompressedDTMData = (LPLONG)CompressedData;
+            short    EndLoc = SUBCELLInfo.LENGTH/4;
+            
+            for (ExpLoc=0;ExpLoc<EndLoc;ExpLoc++)
+                if (CompressedDTMData[ExpLoc] < INT_MAX)
+                    DTMData[ExpLoc] = CompressedDTMData[ExpLoc] + Bias;
+                else
+                    DTMData[ExpLoc] = CompressedDTMData[ExpLoc];
+            for (ExpLoc=EndLoc;ExpLoc<1024;ExpLoc++) //added to fix problem in mpls 25ft surf with 0 length subcell
+                DTMData[ExpLoc] = Bias;
+        }
+    }
+{
+                                                                                            #if ENABLETRACE
+                                                                                            GSSiExitProg (1354);
+                                                                                            #endif
+    return ExpLoc * sizeof(LONG);
 }
-																							#if ENABLETRACE
-																							}
-																							#endif
+                                                                                            #if ENABLETRACE
+                                                                                            }
+                                                                                            #endif
 }
 
 SUBCELLINFO CompressSubcell (LPLONG DTMData,LPSTR CompressedData,LPLONG	Bias)
@@ -405,7 +408,7 @@ SUBCELLINFO CompressSubcell (LPLONG DTMData,LPSTR CompressedData,LPLONG	Bias)
 																							#endif
 {
 	SUBCELLINFO	SUBCELLInfo;
-	long	MinElv=INT_MAX, MaxElv=LONG_MIN;
+	int	MinElv=INT_MAX, MaxElv=INT_MIN;
 	UINT	i,CmpLen=0;  
 	BOOL	HaveData=FALSE;
 	
@@ -438,7 +441,7 @@ SUBCELLINFO CompressSubcell (LPLONG DTMData,LPSTR CompressedData,LPLONG	Bias)
 		long	CURDIF=INT_MAX, DIF;
 		short	nRun=-1;
 		USHORT	NextData=1, NextCmp=0;
-		signed char	FAR	*CompressedDTMData = CompressedData;
+		signed char* CompressedDTMData = (signed char*)CompressedData;
 		
 		SUBCELLInfo.TYPE = 1;
 		*Bias = MaxElv - 93; 
@@ -959,11 +962,12 @@ ReOpen:
 				break;
 			}
 		}
-	} 
+	}
+    nOpenDTM++;
 {
 																							#if ENABLETRACE
 																							GSSiExitProg (1362);
-																							#endif
+    																					#endif
 	return hSurf;
 }
 																							#if ENABLETRACE
@@ -972,54 +976,59 @@ ReOpen:
 }
 
 void DTMClose (LPHANDLE pHandle)
-																							#if ENABLETRACE
-																							{GSSiEnterProg (1363);
-																							#endif
-{   
-	UINT	i,j;
-	LPDTMINFO	pDTMInfo;
-	          
-	GSSiGlobFree (&DTMCellHandle); 
-	GSSiGlobFree (&hDTMRenderGridRow[0]);
-	GSSiGlobFree (&hDTMRenderGridRow[1]);
-	GSSiGlobFree (&hDTMRenderGridRow[2]);
-	if (!pHandle)
-	{
-		for (i=0;i<MAXOPENSURF;i++)
-		{
-		
-			if (hOpenSurf[i])
-			{
-				pDTMInfo = (LPDTMINFO)GlobalLock (hOpenSurf[i]); 
+                                                                                            #if ENABLETRACE
+                                                                                            {GSSiEnterProg (1363);
+                                                                                            #endif
+{
+    UINT    i,j;
+    LPDTMINFO    pDTMInfo;
+    GSSiGlobFree (&DTMCellHandle);
+    GSSiGlobFree (&hDTMRenderGridRow[0]);
+    GSSiGlobFree (&hDTMRenderGridRow[1]);
+    GSSiGlobFree (&hDTMRenderGridRow[2]);
+    if (!pHandle)
+    {
+        
+        for (i=0;i<MAXOPENSURF;i++)
+        {
+        
+            if (hOpenSurf[i])
+            {
+                pDTMInfo = (LPDTMINFO)GlobalLock (hOpenSurf[i]);
                 switch (pDTMInfo->Type)
                 {
                 case DTMTYPE_LIDAR_GM:
-                    GSSiClose2(&pDTMInfo->Fid);
+                    fclose (pDTMInfo->Fid);
+                    pDTMInfo->Fid = 0;
                     break;
                 case DTMTYPE_SLT:
-                    GSSiClose2(&pDTMInfo->Fid);
+                    fclose(pDTMInfo->Fid);
+                    pDTMInfo->Fid = 0;
                 case DTMTYPE_LIDAR_LAZ:
-                        //SQLOK(__FILE__,__LINE__,SQLite_Close(&pDTMInfo->db),pDTMInfo->db);
-                        SQLite_Close(&pDTMInfo->db);
+                    SQLite_Close(&pDTMInfo->db);
+                    break;
+                case DTMTYPE_INDEX:
+                    SQLite_Close(&pDTMInfo->db);
                     break;
                 case DTMTYPE_NGI:
                     CloseGWDatabase(pDTMInfo->hDB);
                     break;
                 }
-				for (j=0;j<MAXDTMCELLBUFFERS;j++)
-					if (pDTMInfo->hCell[j] > (HANDLE)1)
-						GSSiGlobFree (&pDTMInfo->hCell[j]);
-			} 
-			GSSiGlobUlFree (&hOpenSurf[i]);
-		}	
-	}
-	else if (*pHandle)
-	{ 
-		for (i=0;i<MAXOPENSURF;i++)
-		{ 
-			if (hOpenSurf[i] == *pHandle) 
-			{
-				pDTMInfo = (LPDTMINFO)GlobalLock (hOpenSurf[i]);
+                for (j=0;j<MAXDTMCELLBUFFERS;j++)
+                    if (pDTMInfo->hCell[j] > (HANDLE)1)
+                        GSSiGlobFree (&pDTMInfo->hCell[j]);
+            }
+            GSSiGlobUlFree (&hOpenSurf[i]);
+        }
+        
+    }
+    else if (*pHandle)
+    {
+        for (i=0;i<MAXOPENSURF;i++)
+        {
+            if (hOpenSurf[i] == *pHandle)
+            {
+                pDTMInfo = (LPDTMINFO)GlobalLock (hOpenSurf[i]);
                 switch (pDTMInfo->Type)
                 {
                 case  DTMTYPE_LIDAR_GM:
@@ -1037,75 +1046,84 @@ void DTMClose (LPHANDLE pHandle)
                     fclose(pDTMInfo->Fid);
                     pDTMInfo->Fid = 0;
                 case DTMTYPE_LIDAR_LAZ:
-                    sqlite3_close(pDTMInfo->db->db);
+                    SQLite_Close(&pDTMInfo->db);
+                    break;
+                case DTMTYPE_INDEX:
+                    SQLite_Close(&pDTMInfo->db);
+                    for (int i = 0; i < pDTMInfo->numOpenDTMs; i++)
+                        DTMClose(&pDTMInfo->DTMHandles[i]);
                     break;
                 }
-				for (j=0;j<MAXDTMCELLBUFFERS;j++)
-					if (pDTMInfo->hCell[j] > (HANDLE)1)
-						GSSiGlobFree (&pDTMInfo->hCell[j]); 
-				/*if (pDTMInfo->Type == 2)
-					EndFastPick ();*/
-				GSSiGlobUlFree (&hOpenSurf[i]);
-				break;
-			}
-		}
-		*pHandle = 0;
-	}
+                for (j=0;j<MAXDTMCELLBUFFERS;j++)
+                    if (pDTMInfo->hCell[j] > (HANDLE)1)
+                        GSSiGlobFree (&pDTMInfo->hCell[j]);
+                /*if (pDTMInfo->Type == 2)
+                    EndFastPick ();*/
+                GSSiGlobUlFree (&hOpenSurf[i]);
+                break;
+            }
+        }
+        nOpenDTM--;
+        *pHandle = 0;
+    }
 {
-																							#if ENABLETRACE
-																							GSSiExitProg (1363);
-																							#endif
-	return;
+                                                                                            #if ENABLETRACE
+                                                                                            GSSiExitProg (1363);
+                                                                                            #endif
+    return;
 }
-																							#if ENABLETRACE
-																							}
-																							#endif
+                                                                                            #if ENABLETRACE
+                                                                                            }
+                                                                                            #endif
 }
 
-HANDLE GetDTMSubCell (HANDLE hSurf,long GeoSeg, short SubCell,LPDTMINFO pDTMInfo)
-																							#if ENABLETRACE
-																							{GSSiEnterProg (1364);
-																							#endif
+
+HANDLE GetDTMSubCell (int GeoSeg, short SubCell,LPDTMINFO pDTMInfo)
+                                                                                            #if ENABLETRACE
+                                                                                            {GSSiEnterProg (1364);
+                                                                                            #endif
 {
-	int		CellID,ii;
-	DTMKEY		DTMKey;
-	SUBCELLINFO	SUBCELLInfo;
-	LPBYTE		CompressedDTMData;
-	UINT		i, MinUseID;  
-	long		MinUse=INT_MAX, Offset;
-	LPLONG		pBias;  
-	LPSUBCELLINFO	pSUBCELLInfo;
-	LPGWDHEADER	lpGWDHead;     
-	HANDLE		handle=0;  
-	static	long	nio=0;
-	
-	GeoSeg--; 
-	SubCell--; 
-	DTMKey.GEOSEG_ROW = GeoSeg / 4096; 
-	DTMKey.GEOSEG_COL = GeoSeg % 4096;    
-	DTMKey.SUBCEL_ROW = SubCell / 16;
-	DTMKey.SUBCEL_COL = SubCell % 16;   
-	_fmemmove (&CellID,&DTMKey,4);
-	DTMSubCellPoint.x = pDTMInfo->SouthWestNode.x + ((long)DTMKey.GEOSEG_COL * 16 * 32 + (long)DTMKey.SUBCEL_COL * 32) * pDTMInfo->GridSpace;
-	DTMSubCellPoint.y = pDTMInfo->SouthWestNode.y + ((long)DTMKey.GEOSEG_ROW * 16 * 32 + (long)DTMKey.SUBCEL_ROW * 32) * pDTMInfo->GridSpace;
-	for (i=0;i<MAXDTMCELLBUFFERS;i++)
-		if (CellID == pDTMInfo->CellID[i])
-		{
-			pDTMInfo->CellUse[i]=++NextDTMUse;
-			if (pDTMInfo->hCell[i] > (HANDLE)1)
-				handle = pDTMInfo->hCell[i];
+    int        CellID;
+    DTMKEY        DTMKey;
+    LPBYTE        CompressedDTMData;
+    UINT        i, MinUseID=0;
+    int        MinUse=INT_MAX, Offset;
+    LPINT        pBias;
+    LPSUBCELLINFO    pSUBCELLInfo;
+    LPGWDHEADER    lpGWDHead;
+    HANDLE        handle=0;
+    static    long    nio=0;
+    
+    GeoSeg--;
+    SubCell--;
+    DTMKey.GEOSEG_ROW = GeoSeg / 4096;
+    DTMKey.GEOSEG_COL = GeoSeg % 4096;
+    DTMKey.SUBCEL_ROW = SubCell / 16;
+    DTMKey.SUBCEL_COL = SubCell % 16;
+    int li = sizeof(DTMKEY);
+    int lh = sizeof(HANDLE);
+    HANDLE h1 = (HANDLE)1;
+    _fmemmove (&CellID,&DTMKey,4);
+    DTMSubCellPoint.x = pDTMInfo->SouthWestNode.x + ((long)DTMKey.GEOSEG_COL * 16 * 32 + (long)DTMKey.SUBCEL_COL * 32) * pDTMInfo->GridSpace;
+    DTMSubCellPoint.y = pDTMInfo->SouthWestNode.y + ((long)DTMKey.GEOSEG_ROW * 16 * 32 + (long)DTMKey.SUBCEL_ROW * 32) * pDTMInfo->GridSpace;
+    for (i=0;i<MAXDTMCELLBUFFERS;i++)
+        if (CellID == pDTMInfo->CellID[i])
+        {
+            pDTMInfo->CellUse[i]=++NextDTMUse;
+            if (pDTMInfo->hCell[i] > (HANDLE)1)
+                handle = pDTMInfo->hCell[i];
 {
-																							#if ENABLETRACE
-																							GSSiExitProg (1364);
-																							#endif
-			return (handle);
+                                                                                            #if ENABLETRACE
+                                                                                            GSSiExitProg (1364);
+                                                                                            #endif
+            return (handle);
 }
-		}
-		else if (pDTMInfo->CellUse[i] < MinUse)
-		{
-			MinUse = pDTMInfo->CellUse[i];
-			MinUseID = i;
-		}
+        }
+        else if (pDTMInfo->CellUse[i] < MinUse)
+        {
+            MinUse = pDTMInfo->CellUse[i];
+            MinUseID = i;
+        }
     if (pDTMInfo->hCell[MinUseID] > (HANDLE)1)
         GSSiGlobFree (&pDTMInfo->hCell[MinUseID]);
     else
@@ -1114,28 +1132,29 @@ HANDLE GetDTMSubCell (HANDLE hSurf,long GeoSeg, short SubCell,LPDTMINFO pDTMInfo
     {
     case DTMTYPE_NGI:
     {
-	lpGWDHead = (LPGWDHEADER)GlobalLock (pDTMInfo->hDB);
-	pSUBCELLInfo = (LPSUBCELLINFO)((LPSTR)&lpGWDHead->GWDData + (sizeof(DTMKEY)));
-	pBias = (LPLONG)((LPSTR)&lpGWDHead->GWDData + (sizeof(DTMKEY) + sizeof(SUBCELLINFO)));
-	CompressedDTMData = (LPSTR)&lpGWDHead->GWDData + (sizeof(DTMKEY) + sizeof(SUBCELLINFO) + 4); 
-   	if (!BT_FIND (lpGWDHead->BTHandle[0],(LPSTR)&CellID,BT_FIRST,BT_EQ,(LPSTR)&Offset))
-   	{
-		unsigned short	len;    
-		LPLONG	pCell;
+        lpGWDHead = (LPGWDHEADER)GlobalLock(pDTMInfo->hDB);
+        pSUBCELLInfo = (LPSUBCELLINFO)((LPSTR)&lpGWDHead->GWDData + (sizeof(DTMKEY)));
+        pBias = (LPLONG)((LPSTR)&lpGWDHead->GWDData + (sizeof(DTMKEY) + sizeof(SUBCELLINFO)));
+        CompressedDTMData = (LPBYTE)&lpGWDHead->GWDData + (sizeof(DTMKEY) + sizeof(SUBCELLINFO) + 4);
+        if (!BT_FIND(lpGWDHead->BTHandle[0], (LPSTR)&CellID, BT_FIRST, BT_EQ, (LPSTR)&Offset))
+        {
+            unsigned short    len;
+            LPINT    pCell;
 
-	    GSSillseek (lpGWDHead->Fid,Offset,0);
-	    BigRead (lpGWDHead->Fid,(HPSTR)&len,2);
-	    BigRead (lpGWDHead->Fid,(HPSTR)&lpGWDHead->GWDData,len); 
-	    SetGWDCurrentOffset (lpGWDHead,Offset);
-	    pDTMInfo->hCell[MinUseID] = GSSiGlobAlloc (1099,GMEM_MOVEABLE,4096);
-	    pCell = (LPLONG)GlobalLock (pDTMInfo->hCell[MinUseID]);
-		ExpandSubcell (pCell,*pSUBCELLInfo,CompressedDTMData,pBias);
-		GlobalUnlock (pDTMInfo->hCell[MinUseID]);
-		handle = pDTMInfo->hCell[MinUseID]; 
-		nio++;
-	} 
-	else
-	    pDTMInfo->hCell[MinUseID] = (HANDLE)1;
+            GSSillseek(lpGWDHead->Fid, Offset, 0);
+            BigRead(lpGWDHead->Fid, (HPSTR)&len, 2);
+            BigRead(lpGWDHead->Fid, (HPSTR)&lpGWDHead->GWDData, len);
+            SetGWDCurrentOffset(lpGWDHead, Offset);
+            pDTMInfo->hCell[MinUseID] = GSSiGlobAlloc(1099, GMEM_MOVEABLE, 4096);
+            pCell = (LPINT)GlobalLock(pDTMInfo->hCell[MinUseID]);
+            int expLen = ExpandSubcell(pCell, *pSUBCELLInfo, CompressedDTMData, *pBias);
+            GlobalUnlock(pDTMInfo->hCell[MinUseID]);
+            handle = pDTMInfo->hCell[MinUseID];
+            nio++;
+        }
+        else
+            pDTMInfo->hCell[MinUseID] = (HANDLE)1;
+        GlobalUnlock(pDTMInfo->hDB);
     }
         break;
     case DTMTYPE_SLT:
@@ -1147,9 +1166,8 @@ HANDLE GetDTMSubCell (HANDLE hSurf,long GeoSeg, short SubCell,LPDTMINFO pDTMInfo
         int  lenDecompressed;
         LPLONG    pCell;
 
-        sprintf(query, "SELECT OFFSET FROM DTM WHERE CELLID = %li", CellID);
-
-        if (SQLitePrepare(pDTMInfo->db, query, -1, &statement, 0) == SQLITE_OK)
+        sprintf(query, "SELECT OFFSET FROM DTM WHERE CELLID = %i", CellID);
+        if (SQLitePrepare(pDTMInfo->db, query, 64, &statement, 0) == SQLITE_OK)
         {
             if (sqlite3_step(statement) == SQLITE_ROW)
             {
@@ -1168,8 +1186,7 @@ HANDLE GetDTMSubCell (HANDLE hSurf,long GeoSeg, short SubCell,LPDTMINFO pDTMInfo
                 LONG Bias;
                 memcpy (&Bias,pDeCompressedRec + (sizeof(DTMKEY) + sizeof(SUBCELLINFO)),sizeof(LONG));
                 CompressedDTMData = pDeCompressedRec + (sizeof(DTMKEY) + sizeof(SUBCELLINFO) + 4);
-
-                ExpandSubcell(pCell, *pSUBCELLInfo, CompressedDTMData, Bias);
+                int expLen = ExpandSubcell(pCell, *pSUBCELLInfo, CompressedDTMData, Bias);
                 free(pCompressedRec);
                 free(pDeCompressedRec);
                 GlobalUnlock(pDTMInfo->hCell[MinUseID]);
@@ -1181,18 +1198,17 @@ HANDLE GetDTMSubCell (HANDLE hSurf,long GeoSeg, short SubCell,LPDTMINFO pDTMInfo
     }
         break;
     }
-	pDTMInfo->CellID[MinUseID] = CellID;
-	pDTMInfo->CellUse[MinUseID] = ++NextDTMUse;    
-	GlobalUnlock (pDTMInfo->hDB);
+    pDTMInfo->CellID[MinUseID] = CellID;
+    pDTMInfo->CellUse[MinUseID] = ++NextDTMUse;
 {
-																							#if ENABLETRACE
-																							GSSiExitProg (1364);
-																							#endif
-	return handle;
+                                                                                            #if ENABLETRACE
+                                                                                            GSSiExitProg (1364);
+                                                                                            #endif
+    return handle;
 }
-																							#if ENABLETRACE
-																							}
-																							#endif
+                                                                                            #if ENABLETRACE
+                                                                                            }
+                                                                                            #endif
 }
 
 BOOL SetDTMSubCell (long GeoSeg, short SubCell,int node,double Elev,short Units,LPDTMINFO pDTMInfo)
@@ -1257,14 +1273,14 @@ BOOL SetDTMSubCell (long GeoSeg, short SubCell,int node,double Elev,short Units,
    	if (!BT_FIND (lpGWDHead->BTHandle[0],(LPSTR)&CellID,BT_FIRST,BT_EQ,(LPSTR)&Offset)) 
    	{
 		unsigned short	len, length;    
-		LPLONG	pCell;
+		LPINT	pCell;
 
 	    GSSillseek (lpGWDHead->Fid,Offset,0);
 	    BigRead (lpGWDHead->Fid,(HPSTR)&len,2);
 	    BigRead (lpGWDHead->Fid,(HPSTR)&lpGWDHead->GWDData,len); 
 	    hCell = GSSiGlobAlloc (1100,GMEM_MOVEABLE,4096);
-	    pCell = (LPLONG)GlobalLock (hCell);
-		ExpandSubcell (pCell,*pSUBCELLInfo,CompressedDTMData,pBias);
+	    pCell = (LPINT)GlobalLock (hCell);
+		ExpandSubcell (pCell,*pSUBCELLInfo,CompressedDTMData,*pBias);
 		pCell[node] = IElev;
 		*pSUBCELLInfo = CompressSubcell (pCell,CompressedDTMData,pBias); 
 		length = sizeof(DTMKEY) + sizeof(SUBCELLINFO) + 4 + pSUBCELLInfo->LENGTH;
@@ -1490,15 +1506,15 @@ double AddToUsePointList (LPDTMINFO pDTMInfo,double MaxDist,LPSHORT pnNearPoints
 
 HANDLE GetDTMSubCellFromPoint (DPOINT Point,HANDLE hSurf)
 {
-	  LPDTMINFO	pDTMInfo = (LPDTMINFO)GlobalLock (hSurf);
-      double    SPX=Point.x, SPY=Point.y, TSPX, TSPY, ELV, X, Y; 
-      long		INTX, INTY, LSPXDM, LSPYDM;
-      long      SURNOD[5], SNGNUM[5];
-      short		SNSCNM[5], SNELNM[5]; 
-      HANDLE	hCell=0;
-	   
-	  SPX -= pDTMInfo->SouthWestNode.x;
-	  SPY -= pDTMInfo->SouthWestNode.y;
+      LPDTMINFO    pDTMInfo = (LPDTMINFO)GlobalLock (hSurf);
+      double    SPX=Point.x, SPY=Point.y, TSPX, TSPY, ELV, X, Y;
+      int        INTX, INTY, LSPXDM, LSPYDM;
+      int      SURNOD[5], SNGNUM[5];
+      short        SNSCNM[5], SNELNM[5];
+      HANDLE    hCell=0;
+       
+      SPX -= pDTMInfo->SouthWestNode.x;
+      SPY -= pDTMInfo->SouthWestNode.y;
       TSPX   = SPX / pDTMInfo->GridSpace;
       TSPY   = SPY / pDTMInfo->GridSpace;
       X      = fmod (TSPX,1.0E0);
@@ -1506,10 +1522,10 @@ HANDLE GetDTMSubCellFromPoint (DPOINT Point,HANDLE hSurf)
       INTX   = TSPX;
       INTY   = TSPY;
       NGSANE (INTX,INTY,&SNGNUM[1],&SNSCNM[1],&SNELNM[1]);
-      hCell = GetDTMSubCell (hSurf,SNGNUM[1],SNSCNM[1],pDTMInfo);
-  	  GlobalUnlock (hSurf);
-  	  return hCell;
-}  
+      hCell = GetDTMSubCell (SNGNUM[1],SNSCNM[1],pDTMInfo);
+        GlobalUnlock (hSurf);
+        return hCell;
+}
 
 double NGIELV_bci (DPOINT Point,HANDLE hSurf,short DesiredUnits)
 {
@@ -1558,7 +1574,7 @@ double NGIELV_bci (DPOINT Point,HANDLE hSurf,short DesiredUnits)
     return 0;
 }
 
-double NGIELV (DPOINT Point,HANDLE hSurf,short DesiredUnits)
+double NGIELV2 (DPOINT Point,HANDLE hSurf,short DesiredUnits)
 																							#if ENABLETRACE
 																							{GSSiEnterProg (1366);
 																							#endif
@@ -1567,7 +1583,7 @@ double NGIELV (DPOINT Point,HANDLE hSurf,short DesiredUnits)
       double    SPX=Point.x, SPY=Point.y, TSPX, TSPY, ELV, X, Y; 
       int		INTX, INTY, LSPXDM, LSPYDM;
       int      SURNOD[5], SNGNUM[5];
-      short		SNSCNM[5], SNELNM[5], NODE, NOFINN, MISING, I, SurfUnits,ii;
+      short		SNSCNM[5], SNELNM[5], NODE, NOFINN, MISING=0, I, SurfUnits,ii;
     int i = sizeof(long);
       LPLONG	pCell;
       HANDLE	hCell;
@@ -1859,8 +1875,8 @@ double NGIELV (DPOINT Point,HANDLE hSurf,short DesiredUnits)
 //C******* PLACE THE SUBCELL INTO THE SUBCELL BUFFER. IF IT DOES NOT
 //C        EXIST SET NGIELV TO INTMAX AND RETRN.
       NODE = 1;
-      if (!(hCell = GetDTMSubCell (hSurf,SNGNUM[NODE],SNSCNM[NODE],pDTMInfo)))
-      	goto S500;
+    if (!(hCell = GetDTMSubCell (SNGNUM[NODE],SNSCNM[NODE],pDTMInfo)))
+        goto S500;
 //C******* DETERMINE THE ELEMENT NUMBERS OF THE REMAINING THREE
 //C        SURROUNDING NODES, THEN DETERMINE HOW MANY OF THE SURROUNDING
 //C        NODES ARE DETERMINATE AND PLACE THEIR ELEVATIONS INTO SURNOD.
@@ -1869,6 +1885,7 @@ double NGIELV (DPOINT Point,HANDLE hSurf,short DesiredUnits)
       SNELNM[4] = SNELNM[1] + 1;
       NOFINN = 0;
       pCell = (LPLONG)GlobalLock (hCell);
+      MISING = 0;
       for (I=1; I<=4; I++)
       {   
       	  if (pCell[SNELNM[I]-1] == INT_MAX)
@@ -1880,7 +1897,8 @@ double NGIELV (DPOINT Point,HANDLE hSurf,short DesiredUnits)
    	  }    
    	  GlobalUnlock (hCell);  
 S10:
-   	  if (NOFINN > 1) 
+   	  if (NOFINN > 1)
+          
    	  {
    	  	if (SURNOD[1] < INT_MAX && X < P_TOL && Y < P_TOL)
    	  	{
@@ -1972,8 +1990,8 @@ S15:
 S130: NOFINN = 0;
       for (NODE = 1; NODE <= 4; NODE++) 
       {
-      	  if ((hCell = GetDTMSubCell (hSurf,SNGNUM[NODE],SNSCNM[NODE],pDTMInfo))) 
-      	  {
+          if ((hCell = GetDTMSubCell (SNGNUM[NODE],SNSCNM[NODE],pDTMInfo)))
+          {
       		pCell = (LPLONG)GlobalLock (hCell);
       	  	if (pCell[SNELNM[NODE]-1] != INT_MAX)
       	  	{ 
@@ -2044,7 +2062,73 @@ S1000:
 																							#if ENABLETRACE
 																							}
 																							#endif
-} 
+}
+
+double NGIELV(DPOINT Point, HANDLE hSurf, short DesiredUnits)
+{
+    double rtn = PlaneElev;
+    HANDLE hDTM = 0;
+    if (!hSurf)
+    {
+        return PlaneElev;
+    }
+    LPDTMINFO pDTMInfo = (LPDTMINFO)GlobalLock(hSurf);
+    if (pDTMInfo->Type != DTMTYPE_INDEX)
+    {
+        GlobalUnlock(hSurf);
+        return NGIELV2(Point, hSurf, DesiredUnits);
+    }
+    else
+    {
+        memset(pDTMInfo->triedDTM, 0, sizeof(BOOL) * MAXOPENSURF);
+        if (DPointInBounds(&Point, &pDTMInfo->DTMBounds[pDTMInfo->currentHandleID]))
+        {
+            pDTMInfo->triedDTM[pDTMInfo->currentHandleID] = TRUE;
+            hDTM = pDTMInfo->DTMHandles[pDTMInfo->currentHandleID];
+        }
+        else
+        {
+            pDTMInfo->triedDTM[pDTMInfo->currentHandleID] = TRUE;
+            pDTMInfo->currentHandleID = 0;
+            while (!hDTM && pDTMInfo->currentHandleID < pDTMInfo->numOpenDTMs)
+            {
+                if (!pDTMInfo->triedDTM[pDTMInfo->currentHandleID] && DPointInBounds(&Point, &pDTMInfo->DTMBounds[pDTMInfo->currentHandleID]))
+                {
+                    pDTMInfo->triedDTM[pDTMInfo->currentHandleID] = TRUE;
+                    hDTM = pDTMInfo->DTMHandles[pDTMInfo->currentHandleID];
+                }
+                else
+                    pDTMInfo->currentHandleID++;
+            }
+        }
+        
+        while (hDTM && rtn == PlaneElev)
+        {
+            rtn = NGIELV2(Point, hDTM, DesiredUnits);
+            if (rtn == PlaneElev)
+            {
+                hDTM = 0;
+                pDTMInfo->currentHandleID = 0;
+                while (!hDTM && pDTMInfo->currentHandleID < pDTMInfo->numOpenDTMs)
+                {
+                    if (!pDTMInfo->triedDTM[pDTMInfo->currentHandleID] && DPointInBounds(&Point, &pDTMInfo->DTMBounds[pDTMInfo->currentHandleID]))
+                    {
+                        pDTMInfo->triedDTM[pDTMInfo->currentHandleID] = TRUE;
+                        hDTM = pDTMInfo->DTMHandles[pDTMInfo->currentHandleID];
+                    }
+                    else
+                        pDTMInfo->currentHandleID++;
+                }
+            }
+        }
+    }
+
+    GlobalUnlock(hSurf);
+    if (rtn == PlaneElev)
+        iii = 1;
+    return rtn;
+}
+
 
 BOOL SetNGIELV (DPOINT Point,double Elev,HANDLE hSurf,short Units)
 																							#if ENABLETRACE
@@ -2181,7 +2265,7 @@ long GetDTMHoles (LPSTR DTMName, LPSTR OutFile)
    	while (ContinueProcessing && !BT_FIND (lpGWDHead->BTHandle[0],(LPSTR)&DTMKey,pos,BT_ANY,(LPSTR)&Offset)) 
    	{
 		unsigned short	len;    
-		LPLONG	pCell;
+		LPINT	pCell;
         
         pos = BT_NEXT;
 	    GSSillseek (lpGWDHead->Fid,Offset,0);
@@ -2191,7 +2275,7 @@ long GetDTMHoles (LPSTR DTMName, LPSTR OutFile)
 	    {   
 	    	XLL = pDTMInfo->SouthWestNode.x + ((long)DTMKey.GEOSEG_COL * 16 * 32 + (long)DTMKey.SUBCEL_COL * 32) * pDTMInfo->GridSpace;
 	    	YLL = pDTMInfo->SouthWestNode.y + ((long)DTMKey.GEOSEG_ROW * 16 * 32 + (long)DTMKey.SUBCEL_ROW * 32) * pDTMInfo->GridSpace;
-			ExpandSubcell ((LPLONG)Cell,*pSUBCELLInfo,CompressedDTMData,pBias);
+			ExpandSubcell ((LPINT)Cell,*pSUBCELLInfo,CompressedDTMData,*pBias);
 			for (i=0;i<32;i++)
 				for (j=0;j<32;j++)
 					if (Cell[i][j] == INT_MAX)

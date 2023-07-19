@@ -81,6 +81,7 @@ typedef Bool BOOL;
 #define DTMTYPE_LIDAR_GM	3
 #define DTMTYPE_LIDAR_LAZ	4
 #define DTMTYPE_SLT    5
+#define DTMTYPE_INDEX    6
 
 #ifdef	_WIN32_WCE
 typedef long clock_t;
@@ -930,6 +931,7 @@ typedef struct {
 									SUBCEL_COL:4;
 				} DTMKEY;
 typedef DTMKEY	FAR	*LPDTMKEY;
+#pragma pack(1)
 
 typedef struct {
 				unsigned	short	LENGTH:12, 
@@ -943,6 +945,7 @@ typedef struct {
 									INDT:1;
 				} SUBCELLINFO;
 typedef SUBCELLINFO	FAR	*LPSUBCELLINFO;  
+#pragma pack()
 
 typedef	struct
 {	LONG	Segment;
@@ -3652,31 +3655,37 @@ typedef struct {
 }LAZFILESTRUCT;
 typedef LAZFILESTRUCT *LPLAZFILESTRUCT;
 
-typedef struct {                                        
-				HANDLE	hDB;                            //handle of file if .dtm or viewport if TIN Plt files
-				short	Type;
-				short	Version;
-				FILE*	Fid;							//1 = dtm grid, 2 = TIN plt files, 3 = Lidar points, 4 = LIDAR in laz format
+typedef struct {
+                HANDLE    hDB;                            //handle of file if .dtm or viewport if TIN Plt files
+                short    Type;
+                short    Version;
+    FILE*    Fid;                            //1 = dtm grid, 2 = TIN plt files, 3 = Lidar points, 4 = LIDAR in laz format
                 LPsqlite3nv db;
-				double	NULLElv;
-				double	GridSpace; 
-				short	ElevUnits; 						//0=feet,1=feet*100,2=decimeters,3=meters     
-				short	CoordUnits;                     //0=meters, 1=feet
-				DPOINT	SouthWestNode; 
-				MNMXCORD	Bounds; 
-				double	MaxDistToRawPoint;
-				long	MaxRawPointsToUse;
-				long	NumRows,
-						NumCols;
-				HANDLE	hCell[MAXDTMCELLBUFFERS];
-				long	CellID[MAXDTMCELLBUFFERS];
-				long	CellUse[MAXDTMCELLBUFFERS];  
-				char	TINIndex[256];
-				char	LAZDir[256];
-				LAZFILESTRUCT lazFiles;
-				VISLIST	VisList; //location of data for TIN surface
-				} DTMINFO;
-typedef DTMINFO	FAR	*LPDTMINFO;
+                double    NULLElv;
+                double    GridSpace;
+                short    ElevUnits;                         //0=feet,1=feet*100,2=decimeters,3=meters
+                short    CoordUnits;                     //0=meters, 1=feet
+                DPOINT    SouthWestNode;
+                MNMXCORD    Bounds;
+                double    MaxDistToRawPoint;
+                long     MaxRawPointsToUse;
+                long     NumRows,
+                        NumCols;
+                HANDLE    hCell[MAXDTMCELLBUFFERS];
+                int    CellID[MAXDTMCELLBUFFERS];
+                int    CellUse[MAXDTMCELLBUFFERS];
+                char    TINIndex[256];
+                char    LAZDir[256];
+                LAZFILESTRUCT lazFiles;
+                VISLIST    VisList; //location of data for TIN surface
+                BOOL    useProjection;
+                int numOpenDTMs;
+                HANDLE DTMHandles[MAXOPENSURF];
+                MNMXCORD DTMBounds[MAXOPENSURF];
+                BOOL triedDTM[MAXOPENSURF];
+                int    currentHandleID;
+                } DTMINFO;
+typedef DTMINFO    FAR    *LPDTMINFO;
 
 typedef struct {
 				double	NULLElv;
