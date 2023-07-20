@@ -388,17 +388,71 @@ Bool SLTSpatialIndexAdd3D(sqlite3nv *db, LPSTR tableName, LONGLONG id, LPSTR Nam
 {
 	return FALSE;
 }
-
 MNMXCORD SLTSpatialIndexBounds(sqlite3nv *db, LPSTR tableName)
 {
-	MNMXCORD rtn = { 0 };
-	return rtn;
+    HANDLE hCmd = GSSiGlobAlloc(1796, GMEM_MOVEABLE, USHRT_MAX);
+    LPSTR  pCmd = GlobalLock(hCmd);
+    sqlite3_stmt *statement;
+    MNMXCORD Bounds;
+    int n = 0;
+    DBoundsInit(&Bounds);
+
+    if (db)
+    {
+        sprintf(pCmd, "SELECT MinX, MaxX, MinY, MaxY FROM %s_index", tableName);
+        if (SQLitePrepare(db, pCmd, (int)strlen(pCmd), &statement, 0) == SQLITE_OK)
+        {
+            while (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                MNMXCORD bounds;
+                bounds.xmn = sqlite3_column_double(statement, 0);
+                bounds.xmx = sqlite3_column_double(statement, 1);
+                bounds.ymn = sqlite3_column_double(statement, 2);
+                bounds.ymx = sqlite3_column_double(statement, 3);
+                n++;
+                AddMinMaxD(&Bounds, &bounds);
+            }
+            sqlite3_finalize(statement);
+        }
+    }
+    GSSiGlobUlFree(&hCmd);
+    return Bounds;
 }
 MNMXCORD3D SLTSpatialIndexBounds3D(sqlite3nv *db, LPSTR tableName)
 {
-	MNMXCORD3D rtn = { 0 };
-	return rtn;
+    HANDLE hCmd = GSSiGlobAlloc(1796, GMEM_MOVEABLE, USHRT_MAX);
+    LPSTR  pCmd = GlobalLock(hCmd);
+    sqlite3_stmt *statement;
+    MNMXCORD3D Bounds;
+    int n = 0;
+    //DBoundsInit3D(&Bounds);
+
+    if (db)
+    {
+        sprintf(pCmd, "SELECT MinX, MaxX, MinY, MaxY, MinZ, MaxZ FROM %s_index", tableName);
+
+        if (SQLitePrepare(db, pCmd, (int)strlen(pCmd), &statement, 0) == SQLITE_OK)
+        {
+            while (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                MNMXCORD3D bounds;
+                bounds.xmn = sqlite3_column_double(statement, 0);
+                bounds.xmx = sqlite3_column_double(statement, 1);
+                bounds.ymn = sqlite3_column_double(statement, 2);
+                bounds.ymx = sqlite3_column_double(statement, 3);
+                bounds.zmn = sqlite3_column_double(statement, 4);
+                bounds.zmx = sqlite3_column_double(statement, 5);
+                n++;
+                //AddMinMax3D(&Bounds, &bounds);
+            }
+            sqlite3_finalize(statement);
+        }
+    }
+    GSSiGlobUlFree(&hCmd);
+    return Bounds;
 }
+
+
 LPVIEWPORT SetVPFromName(LPSTR Arg2, LPBool pErr)
 {
 	LPVIEWPORT pvp = 0;

@@ -1753,7 +1753,7 @@ double NGIELV (DPOINT Point,HANDLE hSurf,short DesiredUnits);
 double NGIELV_bci (DPOINT Point,HANDLE hSurf,short DesiredUnits);
 Bool SetNGIELV (DPOINT Point,double Elev,HANDLE hSurf,short Units);
 //Bool SetDTMSubCell (long GeoSeg, short SubCell,int node,double Elev,short Units,LPDTMINFO pDTMInfo);
-HANDLE DTMOpen (LPSTR FileName, double NULLElv,LPsqlite3nv database,FILE* fidBin,LPSHORT SurfaceType);
+HANDLE DTMOpen (LPSTR FileName, double NULLElv,LPsqlite3nv database,FILE* fidBin,LPSHORT SurfaceType,LPMNMXCORD pWindowBounds);
 void DTMClose (LPHANDLE pHandle);
 //Bool DisplayDTMPoint (long Refno,DPOINT DPoint,double Elevation,double AZ,short SymbolNumber,double Size,LPDTMINFO	pDTMInfo);
 //Bool DisplayDTMArea (long Refno,LPDPOINT DPoint,short Nump,double SlopePCT,double AZ,short SymbolNumber,LPDTMINFO pDTMInfo);

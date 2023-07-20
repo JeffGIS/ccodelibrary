@@ -699,8 +699,40 @@ void NGSANE (long ISPXDM,long ISPYDM,LPINT pIGESEG,LPSHORT pISUBCL,LPSHORT pIEL)
 																							}
 																							#endif
 }  
+int OpenIndexedDTMs(LPDTMINFO pDTMInfo,LPSTR path, LPMNMXCORD pBounds)
+{
+    sqlite3_stmt* statement;
+    int id = -1;
+    char Cmd[256]={0};
+    int numDTM = 0;
+    pDTMInfo->currentHandleID = 0;
+    if (pBounds)
+        sprintf(Cmd, "SELECT * FROM DTMINDEX, DTMINDEX_index WHERE    DTM_FILE_NUM =DTMINDEX_index.id AND maxX>=%f AND minX<=%f AND maxY>=%f AND minY<=%f", pBounds->xmn, pBounds->xmx, pBounds->ymn, pBounds->ymx);
+    else
+        sprintf(Cmd, "SELECT * FROM DTMINDEX");
 
-HANDLE DTMOpen (LPSTR FileNameIN, double NULLElv,LPsqlite3nv database,FILE* fidBin,LPSHORT pSurfType)
+    SQLOKpd(SQLitePrepare(pDTMInfo->db, Cmd, (int)strlen(Cmd), &statement, 0), pDTMInfo->db, 0);
+    while (numDTM < MAXOPENSURF && sqlite3_step(statement) == SQLITE_ROW)
+    {
+        int i = 0;
+        id = sqlite3_column_int(statement, i++);
+        LPSTR DTMPath = (LPSTR)sqlite3_column_text(statement, i++);
+        LPSTR surfName = strrchr (DTMPath,'\\');
+        if (surfName)
+            surfName++;
+        char surfPath[MAX_PATH] = {0};
+        sprintf (surfPath,"%s/%s",path,surfName);
+        pDTMInfo->DTMBounds[numDTM].xmn = sqlite3_column_double(statement, i++);
+        pDTMInfo->DTMBounds[numDTM].ymn = sqlite3_column_double(statement, i++);
+        pDTMInfo->DTMBounds[numDTM].xmx = sqlite3_column_double(statement, i++);
+        pDTMInfo->DTMBounds[numDTM].ymx = sqlite3_column_double(statement, i++);
+        pDTMInfo->DTMHandles[numDTM++] = DTMOpen(surfPath, pDTMInfo->NULLElv, BT_READ, 0, 0,0);
+    }
+    sqlite3_finalize(statement);
+    pDTMInfo->numOpenDTMs = numDTM;
+    return numDTM;
+}
+HANDLE DTMOpen (LPSTR FileNameIN, double NULLElv,LPsqlite3nv database,FILE* fidBin,LPSHORT pSurfType,LPMNMXCORD pWindowBounds)
 																							#if ENABLETRACE
 																							{GSSiEnterProg (1362);
 																							#endif
@@ -746,6 +778,8 @@ HANDLE DTMOpen (LPSTR FileNameIN, double NULLElv,LPsqlite3nv database,FILE* fidB
 		Type = DTMTYPE_LIDAR_GM;
 	else if (StringEndsWith(FileName, ".LA"))
 		Type = DTMTYPE_LIDAR_LAZ;
+    else if (StringEndsWith(FileName, ".DTI"))
+        Type = DTMTYPE_INDEX;
 	if (!Type)
 {
 																							#if ENABLETRACE
@@ -904,7 +938,7 @@ ReOpen:
         case DTMTYPE_SLT:
         {
             LPSTR pDot;
-            char FileNameBin[MAX_PATH];
+            char FileNameBin[MAX_PATH]={0};
 
             strcpy(FileNameBin, FileName);
             pDot = strrchr(FileNameBin, '.');
@@ -913,12 +947,20 @@ ReOpen:
 
             pDTMInfo = (LPDTMINFO)GlobalLock(hSurf);
             pDTMInfo->Type = Type;
-            pDTMInfo->db = database;
-            pDTMInfo->Fid = fidBin;
+            if (database)
+            {
+                pDTMInfo->db = database;
+                pDTMInfo->Fid = fidBin;
+            }
+            else
+            {
+                SQLOK(__FILE__,__LINE__,SQLite_Open(FileName, &pDTMInfo->db), pDTMInfo->db);
+                pDTMInfo->Fid  = fopen (FileNameBin,"rb");
+            }
             char query[64];
             sqlite3_stmt* statement;
             sprintf(query, "SELECT * FROM DTMINFO");
-            if (SQLOKpd(SQLitePrepare(pDTMInfo->db, query, -1, &statement, 0), pDTMInfo->db, 6) == SQLITE_OK)
+            if (SQLOKpd(SQLitePrepare(pDTMInfo->db, query, (int)strlen(query), &statement, 0), pDTMInfo->db, 6) == SQLITE_OK)
 
             {
                 if (sqlite3_step(statement) == SQLITE_ROW)
@@ -941,13 +983,41 @@ ReOpen:
 
             for (i = 0; i < MAXDTMCELLBUFFERS; i++)
             {
-                pDTMInfo->CellUse[i] = LONG_MIN;
-                pDTMInfo->CellID[i] = LONG_MIN;
+                pDTMInfo->CellUse[i] = INT_MIN;
+                pDTMInfo->CellID[i] = INT_MIN;
             }
             GlobalUnlock(hSurf);
 
         }
         break;
+        case DTMTYPE_INDEX:
+        {
+            sqlite3nv* db;
+
+            if (SQLite_Open(FileName, &db) != SQLITE_OK)
+                return FALSE;
+
+            hSurf = GSSiGlobAlloc(1097, GHND, sizeof(DTMINFO));
+
+            pDTMInfo = (LPDTMINFO)GlobalLock(hSurf);
+            pDTMInfo->Type = Type;
+            pDTMInfo->db = db;
+            pDTMInfo->Fid = 0;
+            pDTMInfo->Bounds = SLTSpatialIndexBounds(db, "DTMINDEX");
+
+            pDTMInfo->NULLElv = NULLElv;
+            PlaneElev = pDTMInfo->NULLElv;
+            char path[MAX_PATH]={0};
+            strcpy (path,FileName);
+            LPSTR pEnd = strrchr (path,'/');
+            if (pEnd)
+                *pEnd = 0;
+            if (pWindowBounds)
+                OpenIndexedDTMs(pDTMInfo,path, pWindowBounds);
+            GlobalUnlock(hSurf);
+        }
+        break;
+
 	}
 	if (hSurf) 
 	{   
@@ -1034,9 +1104,7 @@ void DTMClose (LPHANDLE pHandle)
                 case  DTMTYPE_LIDAR_GM:
                 {
                     short    ii;
-                    GSSiClose2(&pDTMInfo->Fid);
-                    if (pDTMInfo->Fid == 35)
-                        ii = 1;
+                    fclose(pDTMInfo->Fid);
                 }
                 break;
                 case DTMTYPE_NGI:
