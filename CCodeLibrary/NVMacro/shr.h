@@ -221,6 +221,9 @@ typedef struct _OFSTRUCTGM {
 
 int testVars (int i);
 
+FILE    *fopenGSSi(const char * filename, const char * mode);
+int     fcloseGSSi(FILE * file);
+
 HWND GetFocus (void);
 HWND WindowExists(HWND hWnd);
 HWND FindWindowByName (LPSTR WindowName);
@@ -560,6 +563,9 @@ HANDLE STRANCGRect (CGRect fromCGRect,CGRect toCGRect);
 RECT CGRectToRect (CGRect cgRect);
 CGRect RECTtoCGRect (RECT rect);
 CGRect TranCGRect (CGRect fromCGRect,HANDLE hTran);
+LLPOINT CGPointToLLPoint (CGPoint inPt);
+CGPoint LLPointToCGPoint (LLPOINT inPt);
+CGPoint DPointToCGPoint (DPOINT inPt);
 
 //HANDLE STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN);//,LPMNMXCORD pBounds);
 LPTRANDATA STRANPointsP (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN);//,LPMNMXCORD pBounds);

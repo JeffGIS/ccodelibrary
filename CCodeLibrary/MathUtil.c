@@ -1943,7 +1943,7 @@ Bool fputstringF(LPSTR lpStr, FILE *Fid)
 //dir = 1 bitmap to world, 2 = world to bmp
 LPTRANDATA  LoadTranFromBPWP(char *Name, int dir)
 {
-	FILE *Fid = fopen(Name,"rb");
+	FILE *Fid = fopenGSSi(Name,"rb");
     LPTRANDATA TranPtr = 0;
 	double XFROM[4], YFROM[4], XTO[4], YTO[4];
 	double xres, yres, bpx, bpy, wx, wy;
@@ -1987,7 +1987,7 @@ LPTRANDATA  LoadTranFromBPWP(char *Name, int dir)
         else
             TranPtr = STRAN2P(1660, XFROM, YFROM, XTO, YTO, 4, 1,&RSQMIN);
         
-		fclose(Fid);
+		fcloseGSSi(Fid);
 	}
     
 	return TranPtr;
@@ -1996,7 +1996,7 @@ LPTRANDATA  LoadTranFromBPWP(char *Name, int dir)
 //dir = 1 bitmap to world, 2 = world to bmp
 LPTRANDATA  LoadTranFromCPTP(const char *Name, int dir)
 {
-	FILE *Fid = fopen(Name,"rb");
+	FILE *Fid = fopenGSSi(Name,"rb");
     LPTRANDATA TranPtr = 0;
 	double XFROM[4], YFROM[4], XTO[4], YTO[4];
 	char str[130];
@@ -2016,7 +2016,7 @@ LPTRANDATA  LoadTranFromCPTP(const char *Name, int dir)
         else
             TranPtr = STRAN2P (1660, XFROM, YFROM, XTO, YTO, 4, 1,&RSQMIN);
         
-		fclose(Fid);
+		fcloseGSSi(Fid);
 	}
 	return TranPtr;
 }

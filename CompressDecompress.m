@@ -29,7 +29,7 @@
     int lRec, rtn = FALSE;
     int	CompressedLength, LenRead = 0;
     double curLoc;
-    FILE *Fid = fopen(FileToGet,"wb");
+    FILE *Fid = fopenGSSi(FileToGet,"wb");
     
     if (Fid == NULL)
         goto Exit;
@@ -60,7 +60,7 @@
         }
     }
     
-    fclose(Fid);
+    fcloseGSSi(Fid);
     
 Exit:
     return rtn;
@@ -76,7 +76,7 @@ Exit:
     FILE *FidTF;
     BOOL rtn = TRUE;
     LPSTR pBS;
-    FidTF = fopen(TransferFileName,"rb");
+    FidTF = fopenGSSi(TransferFileName,"rb");
     long fileLen;
     long nFilesRead = 0;
     
@@ -128,7 +128,7 @@ Exit:
     }
     
 Exit:
-    fclose(FidTF);
+    fcloseGSSi(FidTF);
     return rtn;
 }
 @end

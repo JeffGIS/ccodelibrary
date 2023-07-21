@@ -1242,7 +1242,7 @@ Bool WriteBitmapDataToFile (LPSTR file,int pixelsWide, int pixelsHigh, CGColorSp
     bfh.bfOffBits = sizeof(BITMAPFILEHEADER) + bih.biSize;
     bfh.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + bitmapByteCount;
     
-    FILE *Fid = fopen(file,"wb");
+    FILE *Fid = fopenGSSi(file,"wb");
     if (BigWriteF(Fid ,(LPCSTR)&bfh ,sizeof(BITMAPFILEHEADER), -1) != sizeof(BITMAPFILEHEADER))
         rtn = FALSE;
     if (BigWriteF(Fid ,(LPCSTR)&bih ,sizeof(BITMAPINFOHEADER), -1) != sizeof(BITMAPINFOHEADER))
@@ -1250,7 +1250,7 @@ Bool WriteBitmapDataToFile (LPSTR file,int pixelsWide, int pixelsHigh, CGColorSp
     if (BigWriteF(Fid ,(LPCSTR)bmData ,bitmapByteCount, -1) != bitmapByteCount)
         rtn = FALSE;
     
-    fclose (Fid);
+    fcloseGSSi (Fid);
     
     return rtn;
 }

@@ -382,7 +382,7 @@
 
 - (void)drawCityBoundsInContext:(CGContextRef)context
 {
-    FILE *fid = fopen(self.areaFile.UTF8String,"rb");
+    FILE *fid = fopenGSSi(self.areaFile.UTF8String,"rb");
     int nLoops, nPoints, ix, iy;
     int *pnPointsInLoop = 0;
     bounds bnds;
@@ -452,7 +452,7 @@
         }
     }
     
-    fclose(fid);
+    fcloseGSSi(fid);
     
     if (pnPointsInLoop)
         free(pnPointsInLoop);
@@ -506,7 +506,7 @@
 }
 - (void)maskCityBoundsInContext:(CGContextRef)context
 {
-    FILE *fid = fopen(_areaFile.UTF8String, "rb");
+    FILE *fid = fopenGSSi(_areaFile.UTF8String, "rb");
     int nLoops = 0, nPoints = 0, ix = 0, iy = 0;
     int *pnPointsInLoop = 0;
     MNMXCORD bnds = {0};
@@ -569,7 +569,7 @@
         }
     }
     
-    fclose(fid);
+    fcloseGSSi(fid);
     
     if (!CGContextIsPathEmpty(context))
     {

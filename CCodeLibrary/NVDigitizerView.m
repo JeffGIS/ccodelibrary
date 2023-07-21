@@ -3,6 +3,8 @@
 
 #import "NVDigitizerView.h"
 #import "UserDefaults.h"
+FILE    *fopenGSSi(const char * filename, const char * mode);
+int     fcloseGSSi(FILE * file);
 
 @interface NVDigitizerView ()
 
@@ -173,11 +175,11 @@
             llpoints[numPoints - 1].y = value.MKCoordinateValue.latitude;
             
             const char *filePath = [NSString stringWithFormat:@"%@/testArea.bin", UserDefaults.defaults.localFilePath].UTF8String;
-            FILE *testAreaFile = fopen(filePath, "wb");
+            FILE *testAreaFile = fopenGSSi(filePath, "wb");
             
             fwrite(&numPoints, sizeof(int), 1, testAreaFile);
             fwrite(llpoints, sizeof(DPOINT), numPoints, testAreaFile);
-            fclose(testAreaFile);
+            fcloseGSSi(testAreaFile);
             free(llpoints);
             
             NSLog(@"NVDigitizerView did write test area file to %s", filePath);

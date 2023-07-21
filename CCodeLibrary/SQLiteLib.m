@@ -9,6 +9,8 @@
 #import "SQLiteLib.h"
 #import "CRAPI.h"
 #import <string.h>
+static int numOpenDB = 0;
+static int ii=0;
 
 SQLITE_API int SQLite_Open(
                            const char *filename,   /* Database filename (UTF-8) */
@@ -20,6 +22,10 @@ SQLITE_API int SQLite_Open(
     sqlite3 * db;
     int rtn = sqlite3_open(filename, &db);
     (*ppDb)->db = db;
+    if (rtn == SQLITE_OK)
+        numOpenDB++;
+    if (numOpenDB > 10)
+        ii = 1;
     return rtn;
 }
 SQLITE_API int SQLite_Close(LPsqlite3nv *pdb)
@@ -35,6 +41,8 @@ SQLITE_API int SQLite_Close(LPsqlite3nv *pdb)
         }
         free (*pdb);
         *pdb = 0;
+        if (rtn == SQLITE_OK)
+            numOpenDB--;
     }
     return rtn;
 }

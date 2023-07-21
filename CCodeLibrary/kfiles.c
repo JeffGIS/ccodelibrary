@@ -63,6 +63,8 @@ double Clightaud; /* C in au/day  */
 
 extern double tlong, tlat, glat, trho, attemp, atpress, dtgiven;
 extern double Rearth;
+FILE    *fopenGSSi(const char * filename, const char * mode);
+int     fcloseGSSi(FILE * file);
 
 int kinit()
 {
@@ -73,7 +75,7 @@ char s[84];
 printf( "\n\tSteve Moshier's Ephemeris Program v5.6\n\n" );
 printf( "Planetary and lunar positions approximate DE404.\n" );
 
-f = fopen( "aa.ini", "r" );
+f = fopenGSSi( "aa.ini", "r" );
 if( f )
 	{
 	fgets( s, 80, f );
@@ -143,7 +145,7 @@ if( f )
 	sscanf( s, "%lf", &dtgiven );
 	if( dtgiven != 0.0 )
 		printf( "Using deltaT = %.2fs.\n", dtgiven );
-	fclose(f);
+	fcloseGSSi(f);
 	}
 Clightaud = 86400.0 * Clight / au;
 /* Radius of the earth in au
@@ -313,7 +315,7 @@ char *str1, *str2;
 int i;
 FILE *f, *fopen();
 
-f = fopen( name, "r" );
+f = fopenGSSi( name, "r" );
 if( f == 0 )
 	{
 	printf( "Can't find file %s\n", name );
@@ -337,14 +339,14 @@ for( i=0; i<linenum; i++ )
 			goto endf;
 		}
 	}
-fclose(f);
+fcloseGSSi(f);
 return( f );
 
 
 endf:
 printf( "End of file reached.\n" );
 failure:
-fclose(f);
+fcloseGSSi(f);
 return(0);
 }
 

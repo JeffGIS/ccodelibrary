@@ -10,6 +10,7 @@
 #import "CRAPI.h"
 #import "NVDocumentManager.h"
 
+static int nOpenFiles = 0;
 static BOOL useMasterID = FALSE;
 static BOOL useDemoID = FALSE;
 static int useIDInc = 0;
@@ -79,7 +80,7 @@ doOpen:
     }
     else
         fullPath = [NSString stringWithUTF8String:Name];
-    openFiles[iFile] = fopen(fullPath.UTF8String,"rb");
+    openFiles[iFile] = fopenGSSi(fullPath.UTF8String,"rb");
     return iFile;
  }
 HFILE GSSiClose(HFILE Fid)
@@ -87,7 +88,7 @@ HFILE GSSiClose(HFILE Fid)
     if (Fid != HFILE_ERROR)
     {
         fileInUse[Fid] = FALSE;
-        fclose(openFiles[Fid]);
+        fcloseGSSi(openFiles[Fid]);
     }
     return 0;
 }
@@ -123,7 +124,33 @@ BOOL DeleteFile (NSString * file)
     }
     return success;
 }
- 
+FILE    *fopenGSSi(const char * filename, const char * mode)
+{
+    FILE* rtn = fopen (filename,mode);
+    if (!rtn)
+    {
+        char errtext[256];
+        strcpy (errtext,strerror(errno));
+        NSLog(@"Failed to open:%s\nNum Open:%i",errtext,nOpenFiles);
+    }
+    else
+        nOpenFiles++;
+    return rtn;
+}
+int     fcloseGSSi(FILE * file)
+{
+    int rtn = fclose (file);
+    if (rtn == EOF)
+    {
+        char errtext[256];
+        strcpy (errtext,strerror(errno));
+        NSLog(@"Failed to close:%s",errtext);
+    }
+    else
+        nOpenFiles--;
+    return rtn;
+}
+
 UIColor *UIColorFromInt (unsigned int ival)
 {
     int ii;

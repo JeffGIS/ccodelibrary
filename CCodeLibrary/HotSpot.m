@@ -307,7 +307,7 @@
     NSString *filePath = [NSString stringWithFormat:@"%@/%@.bin",
                           CRAPI.sharedInstance.sharedFilePath, outFile];
     
-    FILE *Fid = fopen(filePath.UTF8String,"wb");
+    FILE *Fid = fopenGSSi(filePath.UTF8String,"wb");
     
     if (Fid == NULL)
         return FALSE;
@@ -328,7 +328,7 @@
     BigWriteF(Fid, (LPBYTE)&_height, sizeof(int), -1);
     BigWriteF(Fid, (LPBYTE)&_width, sizeof(int), -1);
     BigWriteF(Fid, pgrid, (_width * _height) * sizeof(BYTE), -1);
-    fclose(Fid);
+    fcloseGSSi(Fid);
     
     /*[CRAPI.sharedInstance.docManager exportDocumentFromFilePath:filePath
                                                        delegate:nil

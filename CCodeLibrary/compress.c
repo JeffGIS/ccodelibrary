@@ -48,7 +48,7 @@ int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long
 {
 	int lRec, rtn = FALSE;
     int	CompressedLength, LenRead = 0;
-	FILE *Fid = fopen(FileToGet,"wb");
+	FILE *Fid = fopenGSSi(FileToGet,"wb");
 	
 	if (Fid == NULL)
 		goto Exit;
@@ -68,7 +68,7 @@ int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long
         free(pRec);
     }
     
-    fclose(Fid);
+    fcloseGSSi(Fid);
     rtn = TRUE;
     
 Exit:
@@ -83,7 +83,7 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
     FILE *FidTF;
     BOOL rtn = FALSE;
     LPSTR pBS;
-    FidTF = fopen(TransferFileName,"rb");
+    FidTF = fopenGSSi(TransferFileName,"rb");
     long fileLen;
     long nFilesRead = 0;
     
@@ -140,6 +140,6 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
     }
     
 Exit:
-    fclose(FidTF);
+    fcloseGSSi(FidTF);
     return rtn;
 }

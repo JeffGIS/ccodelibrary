@@ -989,6 +989,22 @@ CGRect RECTtoCGRect (RECT rect)
     outRect.size.width = rect.right - rect.left;
     return outRect;
 }
+LLPOINT CGPointToLLPoint (CGPoint inPt)
+{
+    LLPOINT rtn = {inPt.x,inPt.y};
+    return rtn;
+}
+CGPoint LLPointToCGPoint (LLPOINT inPt)
+{
+    CGPoint rtn = {inPt.lon,inPt.lat};
+    return rtn;
+}
+CGPoint DPointToCGPoint (DPOINT inPt)
+{
+    CGPoint rtn = {inPt.x,inPt.y};
+    return rtn;
+}
+
 HANDLE STRANCGRect (CGRect fromCGRect,CGRect toCGRect)
 {
     HANDLE hTran;

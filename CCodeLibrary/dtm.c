@@ -737,15 +737,13 @@ HANDLE DTMOpen (LPSTR FileNameIN, double NULLElv,LPsqlite3nv database,FILE* fidB
 																							{GSSiEnterProg (1362);
 																							#endif
 {
-	HANDLE	hSurf=0, hDB; 
+    HANDLE	hSurf=0;
 	UINT	i;    
 	LPDTMINFO	pDTMInfo; 
-	long	DTMKey=INT_MAX, Offset;
-	LPGWDHEADER	lpGWDHead;     
-	LPDTMDATA	pDTMData;
-	static	BOOL	First=TRUE;  
+
+	static	BOOL	First=TRUE;
 	short	Type=0;
-	char	FileName[MAX_PATH],str[MAX_PATH], Projection[MAX_PATH]; 
+	char	FileName[MAX_PATH], Projection[MAX_PATH];
 	HFILE	FidSurf;
 	
 	DTMRenderGridSpacing = GetGlobalDVal2("[%DTMGridSpacing]",-300.0);   
@@ -899,8 +897,8 @@ ReOpen:
 			pDTMInfo->NULLElv = NULLElv;
 			for (i = 0; i<MAXDTMCELLBUFFERS; i++)
 			{
-				pDTMInfo->CellUse[i] = LONG_MIN;
-				pDTMInfo->CellID[i] = LONG_MIN;
+				pDTMInfo->CellUse[i] = INT_MIN;
+				pDTMInfo->CellID[i] = INT_MIN;
 			}
 			GlobalUnlock(hSurf);
 		}
@@ -955,7 +953,15 @@ ReOpen:
             else
             {
                 SQLOK(__FILE__,__LINE__,SQLite_Open(FileName, &pDTMInfo->db), pDTMInfo->db);
-                pDTMInfo->Fid  = fopen (FileNameBin,"rb");
+                pDTMInfo->Fid  = fopenGSSi (FileNameBin,"rb");
+                if (!pDTMInfo->Fid)
+                {
+                    char errtext[1024];
+                    
+                    strcpy (errtext,strerror(errno));
+                    iii = errno;
+                    iii = 1;
+                }
             }
             char query[64];
             sqlite3_stmt* statement;
@@ -992,18 +998,13 @@ ReOpen:
         break;
         case DTMTYPE_INDEX:
         {
-            sqlite3nv* db;
-
-            if (SQLite_Open(FileName, &db) != SQLITE_OK)
-                return FALSE;
-
             hSurf = GSSiGlobAlloc(1097, GHND, sizeof(DTMINFO));
 
             pDTMInfo = (LPDTMINFO)GlobalLock(hSurf);
             pDTMInfo->Type = Type;
-            pDTMInfo->db = db;
+            pDTMInfo->db = database;
             pDTMInfo->Fid = 0;
-            pDTMInfo->Bounds = SLTSpatialIndexBounds(db, "DTMINDEX");
+            pDTMInfo->Bounds = SLTSpatialIndexBounds(pDTMInfo->db, "DTMINDEX");
 
             pDTMInfo->NULLElv = NULLElv;
             PlaneElev = pDTMInfo->NULLElv;
@@ -1068,11 +1069,11 @@ void DTMClose (LPHANDLE pHandle)
                 switch (pDTMInfo->Type)
                 {
                 case DTMTYPE_LIDAR_GM:
-                    fclose (pDTMInfo->Fid);
+                    fcloseGSSi (pDTMInfo->Fid);
                     pDTMInfo->Fid = 0;
                     break;
                 case DTMTYPE_SLT:
-                    fclose(pDTMInfo->Fid);
+                    fcloseGSSi(pDTMInfo->Fid);
                     pDTMInfo->Fid = 0;
                 case DTMTYPE_LIDAR_LAZ:
                     SQLite_Close(&pDTMInfo->db);
@@ -1103,15 +1104,14 @@ void DTMClose (LPHANDLE pHandle)
                 {
                 case  DTMTYPE_LIDAR_GM:
                 {
-                    short    ii;
-                    fclose(pDTMInfo->Fid);
+                    fcloseGSSi(pDTMInfo->Fid);
                 }
                 break;
                 case DTMTYPE_NGI:
                     CloseGWDatabase(pDTMInfo->hDB);
                     break;
                 case DTMTYPE_SLT:
-                    fclose(pDTMInfo->Fid);
+                    fcloseGSSi(pDTMInfo->Fid);
                     pDTMInfo->Fid = 0;
                 case DTMTYPE_LIDAR_LAZ:
                     SQLite_Close(&pDTMInfo->db);

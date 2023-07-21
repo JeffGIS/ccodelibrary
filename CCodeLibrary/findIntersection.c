@@ -13,6 +13,7 @@
 #include <string.h>
 #import "TileGraphics.h"
 #import "MathUtil.h"
+#import "shr.h"
 
 static int OFFSETLOC = 30;
 static int RECLEN = 40;
@@ -48,10 +49,10 @@ int DoTestStruct(const char *testFile)
     TESTSTRUCT testStruct;
     int l = sizeof(testStruct);
     
-    FILE * fid = fopen(testFile,"rb");
+    FILE * fid = fopenGSSi(testFile,"rb");
     
     fread(&testStruct, l, 1, fid);
-    fclose(fid);
+    fcloseGSSi(fid);
     return 1;
 }
 
@@ -97,7 +98,7 @@ int FindIntersectionFromID (const char *indexPath, const char *dataPath, int int
     char indxtxt[256];
     char *pLoc;
     char *pAZ, *pnumRamp;
-    FILE *fid = fopen(indexPath,"rb");
+    FILE *fid = fopenGSSi(indexPath,"rb");
     
     if (fid == NULL)
         goto Exit;
@@ -129,20 +130,20 @@ int FindIntersectionFromID (const char *indexPath, const char *dataPath, int int
         }
     }
     
-    fclose (fid);
+    fcloseGSSi (fid);
     goto Exit;
     
 HaveInt:
     pLoc = indxtxt;
-    fclose(fid);
+    fcloseGSSi(fid);
     {
-        FILE *fidData = fopen(dataPath,"rb");
+        FILE *fidData = fopenGSSi(dataPath,"rb");
         char *pend;
         
         fseek(fidData,iOffset,0);
         fread(pLoc,1,255,fidData);
         pLoc[255] = 0;
-        fclose (fidData);
+        fcloseGSSi (fidData);
         
         if ((pend = strchr(pLoc,'\r')))
             *pend = 0;
@@ -185,7 +186,7 @@ int FindIntersection(const char *indexPath, const char *dataPath, int x, int y, 
     int yStop = y + (1000 / metersPerPixel);
     long nrecs, iloc, j, k;
     int nFound = 0;
-    FILE *fid = fopen(indexPath,"rb");
+    FILE *fid = fopenGSSi(indexPath,"rb");
 
     printf("iWant = %i, fid exists = %d\n", iWant, (fid != NULL));
     
@@ -278,7 +279,7 @@ int FindIntersection(const char *indexPath, const char *dataPath, int x, int y, 
     
     if (iWant <= nFound)
     {
-        FILE *fidData = fopen(dataPath, "rb");
+        FILE *fidData = fopenGSSi(dataPath, "rb");
         char *pend;
         
         fseek (fidData, ioffset[iWant-1], 0);
@@ -287,7 +288,7 @@ int FindIntersection(const char *indexPath, const char *dataPath, int x, int y, 
         pLoc = indxtxt;
         fread(pLoc, 1, 255, fidData);
         pLoc[255] = 0;
-        fclose(fidData);
+        fcloseGSSi(fidData);
         
         if ((pend = strchr(pLoc,'\r')))
             *pend = 0;
@@ -309,7 +310,7 @@ int FindIntersection(const char *indexPath, const char *dataPath, int x, int y, 
     
 Exit:
     if (fid)
-        fclose(fid);
+        fcloseGSSi(fid);
     
 //    printf ("rtn = %i\n", rtn);
     
