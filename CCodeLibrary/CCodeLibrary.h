@@ -74,6 +74,11 @@
 #import "NVWebView.h"
 #import "WeatherData.h"
 
+HANDLE DTMOpen (LPSTR FileNameIN, double NULLElv,LPsqlite3nv database,FILE* fidBin,LPSHORT pSurfType,LPMNMXCORD pWindowBounds);
+void DTMClose (LPHANDLE pHandle);
+double NGIELV (DPOINT Point,HANDLE hSurf,short DesiredUnits);
+double NGIELV_bci (DPOINT Point,HANDLE hSurf,short DesiredUnits);
+
 extern int iii;
 extern int idebug;
 @interface CCodeLibrary : NSObject

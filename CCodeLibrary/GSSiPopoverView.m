@@ -238,10 +238,12 @@
 
 - (void)updateProgress:(CGFloat)progress
 {
-    _progressView.progress = progress;
-    
-    _progressLabel.text = [NSString stringWithFormat:@"%i%% complete",
-                           (int)roundf(progress * 100.0)];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _progressView.progress = progress;
+        self->_progressLabel.text = [NSString stringWithFormat:@"%.1f%% complete",
+                               roundf(progress * 1000.0)/10.0];
+    });
+
     
     [_parentView bringSubviewToFront:self];
 }

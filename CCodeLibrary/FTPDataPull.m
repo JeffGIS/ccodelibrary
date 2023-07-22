@@ -249,7 +249,7 @@ didReceiveResponse:(NSURLResponse *)response
     assert(theConnection == _connection);
     assert(response);
     
-    _fileSize = (int)response.expectedContentLength;
+    _fileSize = response.expectedContentLength;
     
     NSLog(@"FileSizeOnDevice:%llu,FileSizeOnFTP:%llu", _existingFileSize, _fileSize);
     
