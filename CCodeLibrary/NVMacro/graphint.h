@@ -520,7 +520,6 @@ Bool CurrentMidPoint (int Type,double Just,LPFLOAT MidPointAZ,LPFLOAT Length,LPS
 Bool CurrentMidPointArea (LPFLOAT MidPointAZ,LPFLOAT Length,Bool Clip, LPMNMXCORL pMinMax,LPPOINT pPoint,LPSHORT pNum,short From);
 void ThemeDisplayScatterDiagram (void);
 RECT PctRect (RECT Rect, float Pct);
-void SmoothProfile (HPDPOINT pProfile,long np);
 HANDLE OpenProfileDataFile (LPMNMXCORD Bounds);
 Bool CreateCrossSection (short vpid,short opt);
 Bool CreateNextCrossSection (int Direction);

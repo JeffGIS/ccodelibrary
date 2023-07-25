@@ -639,6 +639,7 @@ DPOINT	PIAAPointToDPoint (POINT Point,LPMNMXCORD pBounds,LPDOUBLE pFactor,short 
 LPHANDLE GetPolygonPickAccelerator (int Opt);
 void ThinPoly (LPLONG pnPnts, HPDPOINT pPoints, double maxdist);
 int	ReducePolyPoints (int nPnts,LPHANDLE phPoly,int MaxPoints);
+void SmoothProfile (HPDPOINT pProfile,long np,int ProfileSmoothOption);
 Bool NextLine (LPSTR *lpText,LPSTR lpLine,short nAutoLines); 
 LPSTR PadString (LPSTR str,char padchr,int padlen);
 LPSTR Truncate(LPSTR str); 

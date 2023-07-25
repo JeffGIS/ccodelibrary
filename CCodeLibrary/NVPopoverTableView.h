@@ -35,6 +35,7 @@ didSelectYTButtonWithText:(NSString *)text
 @property (nonatomic, copy) NSArray<UIImage *> *imageArray;
 @property BOOL allowsMultipleSelection;
 @property BOOL allowsSubtitle;
+@property BOOL isVisible;
 @property (nonatomic) BOOL parseTextToButtons;
 @property (nonatomic, copy) NSString *identifier;
 @property (nonatomic, copy) NSArray *textArray;

@@ -1329,3 +1329,32 @@ Bool IntersectBounds (LPMNMXCORD pBounds1,LPMNMXCORD pBounds2,LPMNMXCORD pBounds
     Bool rtn = FALSE;
     return rtn;
 }
+void SmoothProfile (HPDPOINT pProfile,long np,int ProfileSmoothOption)
+{
+    long    n = max(0, ProfileSmoothOption);
+    long    i,j;
+    double    y, w,totw;
+    
+    if (n && np)
+    {
+        HANDLE    h2=GSSiGlobAlloc (0,GMEM_MOVEABLE,sizeof(DPOINT)*np);
+        HPDPOINT    pProfile2=(HPDPOINT)GlobalLock (h2);
+        
+        hmemmove ((HPSTR)pProfile2,(HPSTR)pProfile,sizeof(DPOINT)*np);
+        for (i=0;i<np;i++)
+        {
+            y=0;
+            totw = 0;
+            for (j=i-n;j<=i+n;j++)
+            {
+                w = 1.0/(double)(labs (i-j) + 1);
+                y += w * pProfile2[min(np-1,max(0,j))].y;
+                totw += w;
+            }
+            pProfile[i].y = y/totw;
+            
+        }
+        GSSiGlobUlFree (&h2);
+    }
+    return;
+}

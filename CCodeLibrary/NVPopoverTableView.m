@@ -184,7 +184,7 @@
     nvptv.tableView.delaysContentTouches = NO;
     nvptv.tableView.bounces = NO;
     nvptv.tableView.bouncesZoom = NO;
-    
+    nvptv.isVisible = TRUE;
     [nvptv addSubview:nvptv.tableView];
     [nvptv.tableView constrainToView:nvptv leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
     
@@ -225,6 +225,7 @@
         _tabBar.alpha = 1.0;
         _tabBar.userInteractionEnabled = YES;
     }
+    _isVisible = FALSE;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
