@@ -1004,6 +1004,11 @@ CGPoint DPointToCGPoint (DPOINT inPt)
     CGPoint rtn = {inPt.x,inPt.y};
     return rtn;
 }
+DPOINT CGPointToDPOINT (CGPoint inPt)
+{
+    DPOINT rtn = {inPt.x,inPt.y};
+    return rtn;
+}
 
 HANDLE STRANCGRect (CGRect fromCGRect,CGRect toCGRect)
 {

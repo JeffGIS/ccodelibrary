@@ -72,6 +72,7 @@ NVSlopeData CurrentSlopeData;
         _newDataset = CURBRAMPS;
         //_newDataset = ALLEYWALLS;
         _kp = 0;
+        _routeBearing = nil;
         _boschIsAvailable = NO;
         _currentGeoidValue = 0;
         _pickApInPixels = 50;

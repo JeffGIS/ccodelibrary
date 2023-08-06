@@ -820,7 +820,19 @@ double getazd (DPOINT Point1, DPOINT Point2)
 double getazdp(LPDPOINT Point1, LPDPOINT Point2)
 {
     double rtn = DTWOPI(atan2((Point2->y - Point1->y), (Point2->x - Point1->x)));
-	return rtn;
+    return rtn;
+}
+
+double getazLL(LLPOINT LLPoint1, LLPOINT LLPoint2)
+{
+    DPOINT p1 = LLPointToDPoint(LLPoint1);
+    DPOINT p2 = LLPointToDPoint(LLPoint2);
+    DPOINT Point1, Point2;
+    LatLongToPixelXYd (p1.y,p1.x,21,&Point1.x,&Point1.y);
+    LatLongToPixelXYd (p2.y,p2.x,21,&Point2.x,&Point2.y);
+
+    double rtn = getazd (Point1,Point2);
+    return rtn;
 }
 
 float DeltaAZ(float *AZ1, float *AZ2)

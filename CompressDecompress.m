@@ -42,6 +42,10 @@
         LPBYTE	pRec = (LPBYTE)malloc(MaxLength * 2);
         LenRead += CompressedLength + 4;
         BigReadF(FidTF,pCompressedRec,CompressedLength);
+       // NSData * data = [NSData dataWithBytes:pCompressedRec length:CompressedLength];
+       // NSError *error = nil;
+       // NSData * dcdata = [data decompressedDataUsingAlgorithm:NSDataCompressionAlgorithmZlib error:&error];
+       // NSString * er = [error localizedDescription];
         lRec = DecompressBinaryRecordUnsafe(pRec, pCompressedRec, CompressedLength);
         if (BigWriteF(Fid ,(LPCSTR)pRec ,lRec, -1) != lRec)
             rtn = FALSE;

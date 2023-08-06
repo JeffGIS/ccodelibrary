@@ -246,6 +246,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property int currentEvaluaterScore;
 @property LLPOINT currentLocation;
 @property BOOL locationTrackingEnabled;
+@property (nonatomic, nullable) NSNumber *routeBearing;
+@property BOOL firstTimeZoomToCentract;
 
 
 + (nullable CRAPI *)sharedInstance;

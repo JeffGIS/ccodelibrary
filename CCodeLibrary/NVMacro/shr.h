@@ -566,6 +566,7 @@ CGRect TranCGRect (CGRect fromCGRect,HANDLE hTran);
 LLPOINT CGPointToLLPoint (CGPoint inPt);
 CGPoint LLPointToCGPoint (LLPOINT inPt);
 CGPoint DPointToCGPoint (DPOINT inPt);
+DPOINT CGPointToDPOINT (CGPoint inPt);
 
 //HANDLE STRANPoints (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN);//,LPMNMXCORD pBounds);
 LPTRANDATA STRANPointsP (LPDPOINT FromPt,LPDPOINT ToPt,int nPt,int Type,LPFLOAT pRSQMIN);//,LPMNMXCORD pBounds);
@@ -705,6 +706,7 @@ double fgetaz(FLTPOINT Point1, FLTPOINT Point2);
 double getazl (LPOINT Point1, LPOINT Point2);
 double getazd (DPOINT Point1, DPOINT Point2);
 double getazdp(LPDPOINT Point1, LPDPOINT Point2);
+double getazLL(LLPOINT LLPoint1, LLPOINT LLPoint2);
 double get2dazfrom3d (HPDPOINT3D Point1, HPDPOINT3D Point2);
 double LTWOPI (double AZ1);
 double LGETAZ(double X1, double Y1, double X2, double Y2);
