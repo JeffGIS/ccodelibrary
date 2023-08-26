@@ -239,6 +239,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property int currentFocusWaypoint;
 @property int currentSelectedWaypoint;
 @property (nonatomic, nullable) NSMutableArray *currentRoute;
+@property int currentRouteSegment;
 @property (nonatomic, nullable) NSMutableArray *currentTrackRoute;
 @property int currentRoutePoint;
 @property bool evaluateEdges;
