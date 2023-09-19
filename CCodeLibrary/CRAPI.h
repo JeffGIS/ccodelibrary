@@ -75,16 +75,18 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 };
 
 @interface TimeRange : NSObject
-
 @property int beginTime, endTime;
-
 @end
 
 @interface AreaText : NSObject
-
 @property int refno;
 @property (nonatomic, copy, nonnull) NSString *areaID, *text;
+@end
 
+@interface TrackRoutePoint : NSObject
+@property (nonatomic) INT64 refno;
+@property (nonatomic) LLPOINT latlon;
+@property int time;
 @end
 
 @interface CRAPI : NSObject
@@ -249,6 +251,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property BOOL locationTrackingEnabled;
 @property (nonatomic, nullable) NSNumber *routeBearing;
 @property BOOL firstTimeZoomToCentract;
+@property BOOL amTrackingRoute;
 
 
 + (nullable CRAPI *)sharedInstance;
@@ -378,6 +381,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 -(BOOL) getLastBounds:(LPMNMXCORD)pBounds;
 -(BOOL) getLastBounds:(LPMNMXCORD)pBounds
               andZoom:(float *)pZoom;
+-(BOOL) addPointToTrackRoute:(CLLocationCoordinate2D) location;
 
 void GSSiViewDidLoad (void);
 @end

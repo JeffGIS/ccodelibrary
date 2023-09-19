@@ -433,6 +433,33 @@ NVSlopeData CurrentSlopeData;
     else
         UIApplication.sharedApplication.idleTimerDisabled = saveIdleTimer;
 }
+-(BOOL) addPointToTrackRoute:(CLLocationCoordinate2D) location
+{
+    BOOL rtn = FALSE;
+    if (_amTrackingRoute)
+    {
+        TrackRoutePoint *routePoint = TrackRoutePoint.new;
+        routePoint.time = NSDate.timeIntervalSinceReferenceDate;
+        LLPOINT llpt;
+        llpt.lat = location.latitude;
+        llpt.lon = location.longitude;
+        routePoint.latlon = llpt;
+
+        BOOL addIt = TRUE;
+        int npt = _currentTrackRoute.count;
+        if (npt)
+        {
+            TrackRoutePoint *lastPoint = CRAPI.sharedInstance.currentTrackRoute[npt-1];
+            double dist = ArcDistanceLL(routePoint.latlon,lastPoint.latlon);
+            if (dist < 1)
+                addIt = FALSE;
+        }
+        if (addIt)
+            [_currentTrackRoute addObject:routePoint];
+        rtn = addIt;
+    }
+    return rtn;
+}
 
 -(void) setCurrentOverallBoundaryRefno:(int)i
 {
