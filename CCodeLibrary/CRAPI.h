@@ -252,6 +252,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) NSNumber *routeBearing;
 @property BOOL firstTimeZoomToCentract;
 @property BOOL amTrackingRoute;
+@property (nonatomic) LLPOINT currentVehicleLocation;
 
 
 + (nullable CRAPI *)sharedInstance;

@@ -35,6 +35,8 @@ NVSlopeData CurrentSlopeData;
 @property (nonatomic, nullable) NSString * routeServer;
 @property (nonatomic, nullable) CMMotionManager *motionManager;
 @property (nonatomic, nullable) CLLocationManager *locationManager;
+@property BOOL waitingToMoveAwayFromVehicle;
+@property double moveAwayDist, returnToDist;
 
 @end
 
@@ -195,6 +197,8 @@ NVSlopeData CurrentSlopeData;
 
         }
         _savedNotesArray = NSMutableArray.new;
+        _moveAwayDist = 50;
+        _returnToDist = 25;
     }
     
     return self;
@@ -433,9 +437,18 @@ NVSlopeData CurrentSlopeData;
     else
         UIApplication.sharedApplication.idleTimerDisabled = saveIdleTimer;
 }
--(BOOL) addPointToTrackRoute:(CLLocationCoordinate2D) location
+
+-(void) setCurrentVehicleLocation:(LLPOINT)currentVehicleLocation
 {
-    BOOL rtn = FALSE;
+    _waitingToMoveAwayFromVehicle = YES;
+    return;
+}
+-(int) addPointToTrackRoute:(CLLocationCoordinate2D) location
+{
+    //rtn = 1 means point added
+    //rtn = 2 means point added and route should be saved
+    int rtn = 0;
+    double dist;
     if (_amTrackingRoute)
     {
         TrackRoutePoint *routePoint = TrackRoutePoint.new;
@@ -450,13 +463,28 @@ NVSlopeData CurrentSlopeData;
         if (npt)
         {
             TrackRoutePoint *lastPoint = CRAPI.sharedInstance.currentTrackRoute[npt-1];
-            double dist = ArcDistanceLL(routePoint.latlon,lastPoint.latlon);
+            dist = ArcDistanceLL(routePoint.latlon,lastPoint.latlon);
             if (dist < 1)
                 addIt = FALSE;
         }
         if (addIt)
+        {
+            rtn = 1;
             [_currentTrackRoute addObject:routePoint];
-        rtn = addIt;
+            if (_currentVehicleLocation.lon != 0)
+            {
+                dist = ArcDistanceLL(routePoint.latlon,_currentVehicleLocation);
+                if (_waitingToMoveAwayFromVehicle)
+                {
+                    if (dist > _moveAwayDist)
+                        _waitingToMoveAwayFromVehicle = NO;
+                }
+                else if (dist < _returnToDist)
+                {
+                    rtn = 2;
+                }
+            }
+        }
     }
     return rtn;
 }
