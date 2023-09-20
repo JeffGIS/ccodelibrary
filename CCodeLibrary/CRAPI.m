@@ -440,6 +440,7 @@ NVSlopeData CurrentSlopeData;
 
 -(void) setCurrentVehicleLocation:(LLPOINT)currentVehicleLocation
 {
+    _currentVehicleLocation = currentVehicleLocation;
     _waitingToMoveAwayFromVehicle = YES;
     return;
 }
@@ -481,6 +482,8 @@ NVSlopeData CurrentSlopeData;
                 }
                 else if (dist < _returnToDist)
                 {
+                    _currentVehicleLocation.lon = 0;
+                    _currentVehicleLocation.lat = 0;
                     rtn = 2;
                 }
             }

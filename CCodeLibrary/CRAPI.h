@@ -382,7 +382,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 -(BOOL) getLastBounds:(LPMNMXCORD)pBounds;
 -(BOOL) getLastBounds:(LPMNMXCORD)pBounds
               andZoom:(float *)pZoom;
--(BOOL) addPointToTrackRoute:(CLLocationCoordinate2D) location;
+-(int) addPointToTrackRoute:(CLLocationCoordinate2D) location;
 
 void GSSiViewDidLoad (void);
 @end
