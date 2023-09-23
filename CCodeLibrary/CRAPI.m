@@ -197,8 +197,8 @@ NVSlopeData CurrentSlopeData;
 
         }
         _savedNotesArray = NSMutableArray.new;
-        _moveAwayDist = 50;
-        _returnToDist = 25;
+        _moveAwayDist = 40;
+        _returnToDist = 20;
     }
     
     return self;
