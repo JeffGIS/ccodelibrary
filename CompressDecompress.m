@@ -25,6 +25,7 @@
 -(int) GetFileFromTransferFile:(FILE *)FidTF
                      fileToGet:(LPSTR) FileToGet
                     bufferSize:(long) MaxLength
+                       useGZIP:(BOOL) useGZIP
 {
     int lRec, rtn = FALSE;
     int	CompressedLength, LenRead = 0;
@@ -46,7 +47,10 @@
        // NSError *error = nil;
        // NSData * dcdata = [data decompressedDataUsingAlgorithm:NSDataCompressionAlgorithmZlib error:&error];
        // NSString * er = [error localizedDescription];
-        lRec = DecompressBinaryRecordUnsafe(pRec, pCompressedRec, CompressedLength);
+        if (useGZIP)
+            lRec = ZLibUncompress(pRec, MaxLength * 2,pCompressedRec, CompressedLength);
+        else
+            lRec = DecompressBinaryRecordUnsafe(pRec, pCompressedRec, CompressedLength);
         if (BigWriteF(Fid ,(LPCSTR)pRec ,lRec, -1) != lRec)
             rtn = FALSE;
         BigReadF(FidTF, (HPSTR)&CompressedLength, 4);
@@ -83,6 +87,7 @@ Exit:
     FidTF = fopenGSSi(TransferFileName,"rb");
     long fileLen;
     long nFilesRead = 0;
+    BOOL useGZIP = FALSE;
     
     if (FidTF == NULL)
         return FALSE;
@@ -98,7 +103,11 @@ Exit:
     fseek(FidTF, -4, SEEK_END);
     fread(&endMarker, sizeof(short), 1, FidTF);
     
-    if (endMarker != 32349)
+    if (endMarker == 32449)
+    {
+        useGZIP = TRUE;
+    }
+    else if (endMarker != 32349)
     {
         rtn = FALSE;
         goto Exit;
@@ -124,7 +133,8 @@ Exit:
         sprintf(OutFile, "%s/%s", toDirectory, pBS);
         rtn = [self GetFileFromTransferFile:FidTF
                                   fileToGet:OutFile
-                                 bufferSize:MaxLength];
+                                 bufferSize:MaxLength
+                                    useGZIP:useGZIP];
         nFilesRead++;
         if (!rtn)
             goto Exit;

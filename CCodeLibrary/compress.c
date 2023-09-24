@@ -44,7 +44,7 @@ int DecompressBinaryRecordUnsafe (LPBYTE pDecompressedRec, LPBYTE pCompressedRec
     
 	return 0;
 }
-int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long MaxLength)
+int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long MaxLength,BOOL useGZIP)
 {
 	int lRec, rtn = FALSE;
     int	CompressedLength, LenRead = 0;
@@ -61,7 +61,10 @@ int GetFileFromTransferFile (HWND hWndStatus, FILE *FidTF, LPSTR FileToGet, long
         LPBYTE	pRec = (LPBYTE)malloc(MaxLength * 2);
 		LenRead += CompressedLength + 4;
 		BigReadF(FidTF,pCompressedRec,CompressedLength);
-		lRec = DecompressBinaryRecordUnsafe(pRec, pCompressedRec, CompressedLength);
+        if (useGZIP)
+            lRec = ZLibUncompress(pRec, MaxLength * 2,pCompressedRec, CompressedLength);
+        else
+            lRec = DecompressBinaryRecordUnsafe(pRec, pCompressedRec, CompressedLength);
     	BigWriteF(Fid ,(LPCSTR)pRec ,lRec, -1);
         BigReadF(FidTF, (HPSTR)&CompressedLength, 4);
         free (pCompressedRec);
@@ -86,6 +89,7 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
     FidTF = fopenGSSi(TransferFileName,"rb");
     long fileLen;
     long nFilesRead = 0;
+    BOOL useGZIP = FALSE;
     
     if (FidTF == NULL)
         return FALSE;
@@ -100,12 +104,16 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
     fseek(FidTF, -4, SEEK_END);
     fread(&endMarker, sizeof(short), 1, FidTF);
     
-    if (endMarker != 32349)
+    if (endMarker == 32449)
+    {
+        useGZIP = TRUE;
+    }
+    else if (endMarker != 32349)
     {
         rtn = FALSE;
         goto Exit;
     }
-    
+
     fseek(FidTF, 0, SEEK_SET);
     fread(&Version, sizeof(short), 1, FidTF);
     fread(&MaxLength, sizeof(int), 1, FidTF);
@@ -130,7 +138,7 @@ BOOL DecompressGMZipFile(char *TransferFileName, char *toDirectory,long offset,i
             sprintf(OutFile, "%s/%s", toDirectory, pBS);
             if (outFilePath)
                 strcpy (outFilePath,OutFile);
-            rtn = GetFileFromTransferFile(0, FidTF, OutFile,  MaxLength);
+            rtn = GetFileFromTransferFile(0, FidTF, OutFile,  MaxLength,useGZIP);
             nFilesRead++;
             if (!rtn || (nfilestodecompress && nFilesRead >= nfilestodecompress))
                 goto Exit;

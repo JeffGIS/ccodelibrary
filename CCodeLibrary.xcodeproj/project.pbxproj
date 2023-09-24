@@ -396,6 +396,22 @@
 		EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E48819952BCA0085B2E0 /* TileIndex.c */; };
 		EBA517B71BCA1355005A9CA8 /* CrimeData.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA517B61BCA1355005A9CA8 /* CrimeData.m */; };
 		EBA517B81BCA1405005A9CA8 /* CrimeData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA517B51BCA1355005A9CA8 /* CrimeData.h */; };
+		EBA6C0EA2ABDF1CA0086BDA3 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0CE2ABDF1C80086BDA3 /* adler32.c */; };
+		EBA6C0EB2ABDF1CA0086BDA3 /* gzread.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0CF2ABDF1C90086BDA3 /* gzread.c */; };
+		EBA6C0EC2ABDF1CA0086BDA3 /* gzlib.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0D02ABDF1C90086BDA3 /* gzlib.c */; };
+		EBA6C0ED2ABDF1CA0086BDA3 /* deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0D32ABDF1C90086BDA3 /* deflate.c */; };
+		EBA6C0EE2ABDF1CA0086BDA3 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0D42ABDF1C90086BDA3 /* crc32.c */; };
+		EBA6C0EF2ABDF1CA0086BDA3 /* ZLIBGSSi.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0D52ABDF1C90086BDA3 /* ZLIBGSSi.c */; };
+		EBA6C0F02ABDF1CA0086BDA3 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0D62ABDF1C90086BDA3 /* zutil.c */; };
+		EBA6C0F12ABDF1CA0086BDA3 /* uncompr.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0D72ABDF1C90086BDA3 /* uncompr.c */; };
+		EBA6C0F22ABDF1CA0086BDA3 /* infback.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0D92ABDF1C90086BDA3 /* infback.c */; };
+		EBA6C0F32ABDF1CA0086BDA3 /* inffast.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0DB2ABDF1C90086BDA3 /* inffast.c */; };
+		EBA6C0F42ABDF1CA0086BDA3 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0DC2ABDF1C90086BDA3 /* inftrees.c */; };
+		EBA6C0F52ABDF1CA0086BDA3 /* gzclose.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0DD2ABDF1C90086BDA3 /* gzclose.c */; };
+		EBA6C0F62ABDF1CA0086BDA3 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0DE2ABDF1C90086BDA3 /* compress.c */; };
+		EBA6C0F72ABDF1CA0086BDA3 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0E12ABDF1C90086BDA3 /* inflate.c */; };
+		EBA6C0F82ABDF1CA0086BDA3 /* gzwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0E72ABDF1CA0086BDA3 /* gzwrite.c */; };
+		EBA6C0F92ABDF1CA0086BDA3 /* trees.c in Sources */ = {isa = PBXBuildFile; fileRef = EBA6C0E92ABDF1CA0086BDA3 /* trees.c */; };
 		EBAB31C71AE6DC2D00C5CCEF /* NamedColors.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */; };
 		EBAB422F1B2B073A00C36FFC /* CurbRampData.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAB422E1B2B073A00C36FFC /* CurbRampData.m */; };
 		EBAB42331B2B3CEF00C36FFC /* CurbRampData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBAB422D1B2B073A00C36FFC /* CurbRampData.h */; };
@@ -1095,6 +1111,34 @@
 		EBA2E48819952BCA0085B2E0 /* TileIndex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TileIndex.c; sourceTree = "<group>"; };
 		EBA517B51BCA1355005A9CA8 /* CrimeData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrimeData.h; sourceTree = "<group>"; };
 		EBA517B61BCA1355005A9CA8 /* CrimeData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CrimeData.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		EBA6C0CE2ABDF1C80086BDA3 /* adler32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = adler32.c; sourceTree = "<group>"; };
+		EBA6C0CF2ABDF1C90086BDA3 /* gzread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gzread.c; sourceTree = "<group>"; };
+		EBA6C0D02ABDF1C90086BDA3 /* gzlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gzlib.c; sourceTree = "<group>"; };
+		EBA6C0D12ABDF1C90086BDA3 /* zlib.3 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = zlib.3; sourceTree = "<group>"; };
+		EBA6C0D22ABDF1C90086BDA3 /* inftrees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inftrees.h; sourceTree = "<group>"; };
+		EBA6C0D32ABDF1C90086BDA3 /* deflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = deflate.c; sourceTree = "<group>"; };
+		EBA6C0D42ABDF1C90086BDA3 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crc32.c; sourceTree = "<group>"; };
+		EBA6C0D52ABDF1C90086BDA3 /* ZLIBGSSi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ZLIBGSSi.c; sourceTree = "<group>"; };
+		EBA6C0D62ABDF1C90086BDA3 /* zutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zutil.c; sourceTree = "<group>"; };
+		EBA6C0D72ABDF1C90086BDA3 /* uncompr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uncompr.c; sourceTree = "<group>"; };
+		EBA6C0D82ABDF1C90086BDA3 /* inffixed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inffixed.h; sourceTree = "<group>"; };
+		EBA6C0D92ABDF1C90086BDA3 /* infback.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = infback.c; sourceTree = "<group>"; };
+		EBA6C0DA2ABDF1C90086BDA3 /* inffast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inffast.h; sourceTree = "<group>"; };
+		EBA6C0DB2ABDF1C90086BDA3 /* inffast.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inffast.c; sourceTree = "<group>"; };
+		EBA6C0DC2ABDF1C90086BDA3 /* inftrees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inftrees.c; sourceTree = "<group>"; };
+		EBA6C0DD2ABDF1C90086BDA3 /* gzclose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gzclose.c; sourceTree = "<group>"; };
+		EBA6C0DE2ABDF1C90086BDA3 /* compress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress.c; sourceTree = "<group>"; };
+		EBA6C0DF2ABDF1C90086BDA3 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crc32.h; sourceTree = "<group>"; };
+		EBA6C0E02ABDF1C90086BDA3 /* trees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trees.h; sourceTree = "<group>"; };
+		EBA6C0E12ABDF1C90086BDA3 /* inflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inflate.c; sourceTree = "<group>"; };
+		EBA6C0E22ABDF1C90086BDA3 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zlib.h; sourceTree = "<group>"; };
+		EBA6C0E32ABDF1C90086BDA3 /* inflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inflate.h; sourceTree = "<group>"; };
+		EBA6C0E42ABDF1C90086BDA3 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; };
+		EBA6C0E52ABDF1CA0086BDA3 /* deflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = deflate.h; sourceTree = "<group>"; };
+		EBA6C0E62ABDF1CA0086BDA3 /* zconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zconf.h; sourceTree = "<group>"; };
+		EBA6C0E72ABDF1CA0086BDA3 /* gzwrite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gzwrite.c; sourceTree = "<group>"; };
+		EBA6C0E82ABDF1CA0086BDA3 /* gzguts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gzguts.h; sourceTree = "<group>"; };
+		EBA6C0E92ABDF1CA0086BDA3 /* trees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trees.c; sourceTree = "<group>"; };
 		EBAB31C41AE6DBF000C5CCEF /* colorsByName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = colorsByName.h; sourceTree = "<group>"; };
 		EBAB31C51AE6DC2D00C5CCEF /* NamedColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NamedColors.h; sourceTree = "<group>"; };
 		EBAB31C61AE6DC2D00C5CCEF /* NamedColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NamedColors.m; sourceTree = "<group>"; };
@@ -1769,6 +1813,7 @@
 		EBA2E45F199527660085B2E0 /* CCodeLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				EBA6C0CD2ABDF1440086BDA3 /* ZLIB */,
 				EB36DB1B2964A9BF004EF377 /* DTM */,
 				695C062B1FF2B0F60081712C /* RiteHome */,
 				BBC361921F429C0200B51DF3 /* NVMacro */,
@@ -1811,6 +1856,41 @@
 				EBA2E475199527660085B2E0 /* CCodeLibraryTests-Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EBA6C0CD2ABDF1440086BDA3 /* ZLIB */ = {
+			isa = PBXGroup;
+			children = (
+				EBA6C0CE2ABDF1C80086BDA3 /* adler32.c */,
+				EBA6C0DE2ABDF1C90086BDA3 /* compress.c */,
+				EBA6C0D42ABDF1C90086BDA3 /* crc32.c */,
+				EBA6C0DF2ABDF1C90086BDA3 /* crc32.h */,
+				EBA6C0D32ABDF1C90086BDA3 /* deflate.c */,
+				EBA6C0E52ABDF1CA0086BDA3 /* deflate.h */,
+				EBA6C0DD2ABDF1C90086BDA3 /* gzclose.c */,
+				EBA6C0E82ABDF1CA0086BDA3 /* gzguts.h */,
+				EBA6C0D02ABDF1C90086BDA3 /* gzlib.c */,
+				EBA6C0CF2ABDF1C90086BDA3 /* gzread.c */,
+				EBA6C0E72ABDF1CA0086BDA3 /* gzwrite.c */,
+				EBA6C0D92ABDF1C90086BDA3 /* infback.c */,
+				EBA6C0DB2ABDF1C90086BDA3 /* inffast.c */,
+				EBA6C0DA2ABDF1C90086BDA3 /* inffast.h */,
+				EBA6C0D82ABDF1C90086BDA3 /* inffixed.h */,
+				EBA6C0E12ABDF1C90086BDA3 /* inflate.c */,
+				EBA6C0E32ABDF1C90086BDA3 /* inflate.h */,
+				EBA6C0DC2ABDF1C90086BDA3 /* inftrees.c */,
+				EBA6C0D22ABDF1C90086BDA3 /* inftrees.h */,
+				EBA6C0E92ABDF1CA0086BDA3 /* trees.c */,
+				EBA6C0E02ABDF1C90086BDA3 /* trees.h */,
+				EBA6C0D72ABDF1C90086BDA3 /* uncompr.c */,
+				EBA6C0E62ABDF1CA0086BDA3 /* zconf.h */,
+				EBA6C0D12ABDF1C90086BDA3 /* zlib.3 */,
+				EBA6C0E22ABDF1C90086BDA3 /* zlib.h */,
+				EBA6C0D52ABDF1C90086BDA3 /* ZLIBGSSi.c */,
+				EBA6C0D62ABDF1C90086BDA3 /* zutil.c */,
+				EBA6C0E42ABDF1C90086BDA3 /* zutil.h */,
+			);
+			path = ZLIB;
 			sourceTree = "<group>";
 		};
 		EBAB422C1B2B071700C36FFC /* Databases */ = {
@@ -1983,6 +2063,7 @@
 				A951CD1F1B18E070009C13E2 /* NVTwoTextAlert.m in Sources */,
 				EBA517B71BCA1355005A9CA8 /* CrimeData.m in Sources */,
 				69F52BA41FB519C400583485 /* SSDelegate.m in Sources */,
+				EBA6C0F82ABDF1CA0086BDA3 /* gzwrite.c in Sources */,
 				A98A57A81B20ADE600906FBC /* NVCalibrationController.m in Sources */,
 				EB05C21319ED378400F0688B /* FTPDataPush.m in Sources */,
 				A90D1FB01AE5F3A900CBFEE7 /* TableViewCellButton.m in Sources */,
@@ -1992,13 +2073,16 @@
 				6944D86020C319D000E0B49B /* NVReferenceView.m in Sources */,
 				697560BE1CB18D5A006EEA14 /* NVMarkerInfoButton.m in Sources */,
 				A94A771319F807570062906E /* Facility.m in Sources */,
+				EBA6C0EB2ABDF1CA0086BDA3 /* gzread.c in Sources */,
 				692F54A21CDB9B1B001600C9 /* NVRampTypePageController.m in Sources */,
 				692EFA521D36A84B007B0D18 /* NVEmailFileList.m in Sources */,
 				6944D86320C325ED00E0B49B /* DriverDefinitions.m in Sources */,
 				694A9B621F4DF24A00B02C28 /* function1.c in Sources */,
+				EBA6C0F72ABDF1CA0086BDA3 /* inflate.c in Sources */,
 				691B5DD11E52668600C90383 /* NVGetODR.m in Sources */,
 				EB40255822C0EEB9005862AD /* NVCRIS_PeripheralManager.m in Sources */,
 				EBC01D301BED1C8C0004C751 /* ven404.c in Sources */,
+				EBA6C0F92ABDF1CA0086BDA3 /* trees.c in Sources */,
 				EB2C7DB119BA004900F6D9F0 /* IntersectionsDatabase.m in Sources */,
 				A9A7E3671B75795300DC7F3D /* NVSignalButton.m in Sources */,
 				EBC01D131BED1C8C0004C751 /* domoon.c in Sources */,
@@ -2008,10 +2092,13 @@
 				690746E51CD41DCB00B31D8F /* NVTextViewAlert.m in Sources */,
 				694F00791C1B4BBA0074AF72 /* MapToolbar.m in Sources */,
 				69BD0D6D1FA22D3400B3E6E0 /* HotSpotVideoVC.m in Sources */,
+				EBA6C0EC2ABDF1CA0086BDA3 /* gzlib.c in Sources */,
 				69BB52781CA4689E00DA7BC2 /* ExitApp.c in Sources */,
 				A9D3A06C1AF539E600E0D834 /* NVSliderController.m in Sources */,
+				EBA6C0EE2ABDF1CA0086BDA3 /* crc32.c in Sources */,
 				A9BCBBF01B175FB7007C5C48 /* NVTestSlopeController.m in Sources */,
 				A9E792841AEFE989005DA4BB /* NVLegendView.m in Sources */,
+				EBA6C0F52ABDF1CA0086BDA3 /* gzclose.c in Sources */,
 				69F4823A1DB7CBC300E4BDB5 /* NVGridLayout.m in Sources */,
 				691636221C1FC790000C61B8 /* NVTileCompiler.m in Sources */,
 				1F838AEA19B1021C00943A8C /* PlacesInfo.m in Sources */,
@@ -2038,6 +2125,7 @@
 				EBC01D191BED1C8C0004C751 /* kepler.c in Sources */,
 				A9E792811AEFA880005DA4BB /* NVLargeAlertView.m in Sources */,
 				69D5EFB51C7237FD004CE1C0 /* NVCalendarView.m in Sources */,
+				EBA6C0F02ABDF1CA0086BDA3 /* zutil.c in Sources */,
 				EB9C3C2C1F914C8600E95644 /* PDFCreator.m in Sources */,
 				EB36DB272964E934004EF377 /* laszip_dll.c in Sources */,
 				EBC01D161BED1C8C0004C751 /* fk4fk5.c in Sources */,
@@ -2080,6 +2168,7 @@
 				1F4972A21F6C513600A60B63 /* DPoint.m in Sources */,
 				69F5B22F1BC5EFB800119212 /* NVDestinationOptions.m in Sources */,
 				BBC361C81F429C0200B51DF3 /* Stubs.c in Sources */,
+				EBA6C0EF2ABDF1CA0086BDA3 /* ZLIBGSSi.c in Sources */,
 				EBC01D1A1BED1C8C0004C751 /* kfiles.c in Sources */,
 				EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */,
 				69E7FCA61D81249500171E44 /* NVPopoverSlider.m in Sources */,
@@ -2134,6 +2223,7 @@
 				1F0B41FB19AEAE0A00981F57 /* FTPDataPull.m in Sources */,
 				EB36DB1D2964A9EF004EF377 /* dtm.c in Sources */,
 				699AEF861BAFA6B10084C2B4 /* PolylineCompression.c in Sources */,
+				EBA6C0F32ABDF1CA0086BDA3 /* inffast.c in Sources */,
 				EBA2E48A19952BCA0085B2E0 /* TileIndex.c in Sources */,
 				EBC01D0A1BED1C8C0004C751 /* annuab.c in Sources */,
 				697B37711B94B7D60066978B /* NVTextDrawing.m in Sources */,
@@ -2144,6 +2234,7 @@
 				A9A7E36A1B75796500DC7F3D /* NVXWalkButton.m in Sources */,
 				BB6777981C95C13200A2D508 /* CensusData.m in Sources */,
 				A9D5A8B01A0D0A7A00314E8B /* GSSiSlopeViewController.m in Sources */,
+				EBA6C0F12ABDF1CA0086BDA3 /* uncompr.c in Sources */,
 				693C9BA01BEC523500564F93 /* UIImage+ImageFromColor.m in Sources */,
 				6954DC5E20597905007D4C65 /* HeightCalculator.m in Sources */,
 				1F5150A31CE3959000BA4A5E /* AlleyWallData.m in Sources */,
@@ -2151,6 +2242,7 @@
 				69751B402090F13F00F221D6 /* NVPageIndicator.m in Sources */,
 				EBC01D0B1BED1C8C0004C751 /* arcdot.c in Sources */,
 				EB3CC5F71AD95F8B002453A9 /* PickedItem.m in Sources */,
+				EBA6C0F22ABDF1CA0086BDA3 /* infback.c in Sources */,
 				EBC01D291BED1C8C0004C751 /* sat404.c in Sources */,
 				69848C771EB9415D00EC1EB3 /* NVPDFDrawing.m in Sources */,
 				EB95A1A71CB16EF500158B40 /* PercentInArea.m in Sources */,
@@ -2159,6 +2251,7 @@
 				69C441AA1BB474B200D026A7 /* NVTabBarEdit.m in Sources */,
 				EB0E4FFD1C6288BF00849766 /* DispersePoint.m in Sources */,
 				698037531E82D58A00C3E49D /* NVSendEmail.m in Sources */,
+				EBA6C0F62ABDF1CA0086BDA3 /* compress.c in Sources */,
 				EB568F391C8C9BAB00C45ACE /* CompressDecompress.m in Sources */,
 				EBC01D2D1BED1C8C0004C751 /* trnsit.c in Sources */,
 				EBC01D281BED1C8C0004C751 /* rstar.c in Sources */,
@@ -2181,6 +2274,7 @@
 				EBAEED0919B605E20084A579 /* compress.c in Sources */,
 				EBC01D261BED1C8C0004C751 /* refrac.c in Sources */,
 				695C062E1FF2B1300081712C /* RHWalkScore.m in Sources */,
+				EBA6C0ED2ABDF1CA0086BDA3 /* deflate.c in Sources */,
 				69D5EFBC1C7248DB004CE1C0 /* NVCalendarCell.m in Sources */,
 				A94A771919F807CE0062906E /* FacilityRecord.m in Sources */,
 				69D9E76E1B7BAD32003058E0 /* NVSecretAlertView.m in Sources */,
@@ -2211,9 +2305,11 @@
 				A9A7E3601B75361800DC7F3D /* NVInventoryViewController.m in Sources */,
 				EBC01D1D1BED1C8C0004C751 /* mar404.c in Sources */,
 				697486441E5C85BD0051B5BC /* NVPager.m in Sources */,
+				EBA6C0F42ABDF1CA0086BDA3 /* inftrees.c in Sources */,
 				A9D258C71B62C67F00DF553A /* FTPDirectoryCreate.m in Sources */,
 				EB0E4FE71C60D21700849766 /* HotSpot.m in Sources */,
 				A97407C61AF6A63900B2FF30 /* NVProgressView.m in Sources */,
+				EBA6C0EA2ABDF1CA0086BDA3 /* adler32.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

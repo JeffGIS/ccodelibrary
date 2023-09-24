@@ -1577,6 +1577,12 @@ LPSTR _ultoa (unsigned long i,LPSTR str, int radix);
 
 DWORD GetTempPath (int len,LPSTR OutStr);
 
+int fopen_gssi(char const* _FileName,int _OpenFlag, int opt);
+int fread_gssi(int _FileHandle,void* _DstBuf,unsigned int _MaxCharCount);
+long ftell_gssi(int _FileHandle);
+int fwrite_gssi(int _FileHandle, void const*  _Buf, int _MaxCharCount);
+int fseek_gssi(int _FileHandle, int offset, int opt);
+
 SQLRETURN   SQLCancel(SQLHSTMT StatementHandle);
 SQLRETURN   SQLCancelHandle(SQLSMALLINT HandleType, SQLHANDLE InputHandle);
 SQLRETURN   SQLCloseCursor(SQLHSTMT StatementHandle);
