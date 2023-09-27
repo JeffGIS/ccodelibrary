@@ -459,6 +459,15 @@ NVSlopeData CurrentSlopeData;
     _waitingToMoveAwayFromVehicle = YES;
     return;
 }
+
+-(void) setCurrentSelectedWaypoint:(int)currentSelectedWaypoint
+{
+    _currentSelectedWaypoint = currentSelectedWaypoint;
+}
+-(void) setInRouteMode:(BOOL)inRouteMode
+{
+    _inRouteMode = inRouteMode;
+}
 -(int) addPointToTrackRoute:(CLLocationCoordinate2D) location
 {
     //rtn = 1 means point added

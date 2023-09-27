@@ -247,7 +247,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) NVAlertView *connectionAlert;
 @property BOOL boschIsAvailable;
 @property int currentFocusWaypoint;
-@property int currentSelectedWaypoint;
+@property (nonatomic) int currentSelectedWaypoint;
 @property (nonatomic, nullable) NSMutableArray *currentRoute;
 @property int currentRouteSegment;
 @property (nonatomic, nullable) NSMutableArray *currentTrackRoute;
@@ -261,6 +261,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property BOOL firstTimeZoomToCentract;
 @property BOOL amTrackingRoute;
 @property (nonatomic) LLPOINT currentVehicleLocation;
+@property (nonatomic) BOOL inRouteMode;
 
 
 + (nullable CRAPI *)sharedInstance;
