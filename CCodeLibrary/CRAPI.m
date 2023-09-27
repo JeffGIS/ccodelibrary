@@ -26,6 +26,21 @@ NVSlopeData CurrentSlopeData;
 
 @end
 
+@implementation RoutePoint
+@synthesize refno;
+@synthesize latlon;
+@synthesize layer;
+@synthesize layerRefno;
+@synthesize fromPCT, toPCT;
+
+@end
+
+@implementation TrackRoutePoint
+@synthesize refno;
+@synthesize latlon;
+@synthesize time;
+@end
+
 @interface CRAPI () <NVAlertViewDelegate, NVDocumentManagerDelegate>
 
 @property (nonatomic, nullable) NVAlertView *alert;

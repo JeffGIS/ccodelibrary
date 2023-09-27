@@ -89,6 +89,14 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property int time;
 @end
 
+@interface RoutePoint : NSObject
+@property (nonatomic) INT64 refno;
+@property (nonatomic) LLPOINT latlon;
+@property int layer;
+@property INT64 layerRefno;
+@property double fromPCT, toPCT;
+@end
+
 @interface CRAPI : NSObject
 
 @property (nonatomic, nullable) id currentMeasurementView;
