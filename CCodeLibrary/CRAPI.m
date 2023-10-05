@@ -1084,7 +1084,10 @@ NVSlopeData CurrentSlopeData;
     bnds.ymx = (pt->lat + pickapY);
     return bnds;
 }
-
+- (void) setGMMSetting:(NSInteger)GMMSetting
+{
+    _GMMSetting = GMMSetting;
+}
 - (dbounds) getPixelPickApBoundsAtPoint:(DPOINT*)pt
 {
     dbounds bnds;

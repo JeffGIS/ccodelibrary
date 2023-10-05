@@ -135,6 +135,8 @@ FILE    *fopenGSSi(const char * filename, const char * mode)
     }
     else
         nOpenFiles++;
+    if (nOpenFiles > 10)
+        nOpenFiles /= 1;
     return rtn;
 }
 int     fcloseGSSi(FILE * file)

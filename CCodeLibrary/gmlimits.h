@@ -27,7 +27,7 @@
 //#define 	MAXTRANPOINTS		4096
 #define		MAXORTHOBUFS		2 
 #define		MAXCFGTAGS			32
-#define		MAXOPENSURF			16   
+#define		MAXOPENSURF			4096
 #define		MAXDTMCELLBUFFERS	64
 #define		MAXLIDARPERREC		512  
 #define		LIDARCELLSIZE		6
