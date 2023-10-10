@@ -2101,6 +2101,7 @@ Bool BoundsInBounds (LPMNMXCORD pBounds1,LPMNMXCORD pBounds2,short Opt)
                 break;
                 
             case 1: //bounds 1 at least partially in bounds2
+
                 if (pBounds1->xmx < pBounds2->xmn ||
                     pBounds1->xmn > pBounds2->xmx ||
                     pBounds1->ymx < pBounds2->ymn ||

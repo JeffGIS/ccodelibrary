@@ -218,7 +218,9 @@ typedef NS_ENUM(NSInteger, MarkerInfoWindowType)
     MarkerInfoWindowTypeMGVSanMain,
     MarkerInfoWindowTypeCensusBoundary,
     MarkerInfoWindowTypeBA,
-    MarkerInfoWindowTypeSdwk,
+    MarkerInfoWindowTypeHunterWalkingTrail,
+    MarkerInfoWindowTypeWalkInArea,
+    MarkerInfoWindowTypeWildlifeManagementArea,
 };
 
 typedef NS_ENUM(NSInteger, HardCodedConfigs)
