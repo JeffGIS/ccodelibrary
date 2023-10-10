@@ -20,6 +20,7 @@
                                delegate:(id)delegate
                                   title:(NSString *)title
                                    text:(NSString *)text
+                                 idText:(NSString *)idtext
 {
     if (!delegate || !view || !title || !text)
     {
@@ -39,6 +40,8 @@
     alert.overlayView.backgroundColor = UIColor.blackColor;
     alert.overlayView.alpha = 0.0;
     alert.delegate = delegate;
+    alert.title = title;
+    alert.idText = idtext;
     
     [view addSubview:alert.overlayView];
     

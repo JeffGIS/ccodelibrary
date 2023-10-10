@@ -482,7 +482,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
             NVTextViewAlert *alert = [NVTextViewAlert showTextViewAlertinView:self.view
                                                                      delegate:self
                                                                         title:@"Enter Notes for this Clip"
-                                                                         text:@""];
+                                                                         text:@""
+                                                                       idText:@"Notes"];
 #pragma unused(alert)
         }
         
