@@ -255,7 +255,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property bool evaluateEdges;
 @property int maxEvaluaterScore;
 @property int currentEvaluaterScore;
-@property LLPOINT currentLocation;
+@property (nonatomic) LLPOINT currentGPSLocation;
+@property (nonatomic) LLPOINT currentCameraLocation;
 @property BOOL locationTrackingEnabled;
 @property (nonatomic, nullable) NSNumber *routeBearing;
 @property BOOL firstTimeZoomToCentract;
@@ -394,4 +395,6 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 -(int) addPointToTrackRoute:(CLLocationCoordinate2D) location;
 
 void GSSiViewDidLoad (void);
+-(void) setGPSLocation:(LLPOINT)pt
+                    from:(int)from;
 @end

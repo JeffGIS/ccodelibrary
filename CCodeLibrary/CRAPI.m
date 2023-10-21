@@ -1821,6 +1821,20 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
     _forAllYears = forAllYears;
     [UserDefaults.defaults saveBool:forAllYears forKey:@"ForAllYears"];
 }
+-(void) setCurrentGPSLocation:(LLPOINT)currentLocation
+{
+    _currentGPSLocation = currentLocation;
+}
+-(void) setCurrentCameraLocation:(LLPOINT)currentLocation
+{
+    _currentCameraLocation = currentLocation;
+}
+-(void) setGPSLocation:(LLPOINT)pt
+                    from:(int)from
+{
+    _currentGPSLocation = pt;
+
+}
 
 - (NSArray<TimeRange *> *)getTimeRanges
 {
