@@ -21,7 +21,8 @@
                   fillColor:(CGColorRef)fcolor
                   lineColor:(CGColorRef)lcolor
                   lineWidth:(CGFloat)lwidth
-                    andText:(NSString *)text;
+                    andText:(NSString *)text
+                  textColor:(CGColorRef)tcolor;
 
 UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor);
 + (UIColor *)polygonSymbolFillColor:(PolygonSymbols)symbol;

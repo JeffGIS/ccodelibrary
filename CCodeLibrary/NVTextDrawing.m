@@ -63,8 +63,8 @@
     withinBounds:(LPMNMXCORD)pBounds
         fontSize:(CGFloat)desiredFontSize
      minFontSize:(CGFloat)minFontSize
-       textColor:(UIColor *)textColor
-     shadowColor:(UIColor *)shadowColor
+       textColor:(CGColorRef)textColor
+     shadowColor:(CGColorRef)shadowColor
     processingID:(NSInteger)processingID
 {
     if (!textIN.length)
@@ -201,7 +201,7 @@ Top:
                    fontSize:(CGFloat)fontSize
                 minFontSize:(CGFloat)minFontSize
                    rotation:(CGFloat)rotation
-                  textColor:(UIColor *)textColor
+                  textColor:(CGColorRef)textColor
                processingID:(NSInteger)processingID
 
 {
@@ -434,8 +434,8 @@ Top:
           height:(CGFloat)textHeight
         rotation:(CGFloat)rotateRadians
         fontSize:(CGFloat)fontSize
-       textColor:(UIColor *)textColor
-     shadowColor:(UIColor *)shadowColor
+       textColor:(CGColorRef)textColor
+     shadowColor:(CGColorRef)shadowColor
 
 {
     BOOL rtn = TRUE;
@@ -467,7 +467,7 @@ Top:
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                 (__bridge id)fontRef, kCTFontAttributeName,
                                 style, kCTParagraphStyleAttributeName,
-                                textColor.CGColor, kCTForegroundColorAttributeName, nil];
+                                textColor, kCTForegroundColorAttributeName, nil];
     
     
     
@@ -490,7 +490,7 @@ Top:
         NSDictionary *shadowAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                                           (__bridge id)fontRef, kCTFontAttributeName,
                                           style, kCTParagraphStyleAttributeName,
-                                          shadowColor.CGColor, kCTForegroundColorAttributeName, nil];
+                                          shadowColor, kCTForegroundColorAttributeName, nil];
         attString = [[NSAttributedString alloc] initWithString:text
                                                     attributes:shadowAttributes];
         [self drawTextShadowForRect:rect

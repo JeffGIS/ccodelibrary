@@ -113,6 +113,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                   lineColor:(CGColorRef)lcolor
                   lineWidth:(CGFloat)lwidth
                     andText:(NSString *)text
+                  textColor:(CGColorRef)tcolor
 {
     [SymbolDictionary drawPointWithSymbol:context
                                       at:pt
@@ -139,7 +140,7 @@ static DPOINT Splash[]={-4.4,-1.6,-1.4,.7,-2.1,3.3,-.3,1.4,1.3,4.4,.9,.8,4.0,.7,
                withinBounds:0
                    fontSize:size
                 minFontSize:size/2
-                  textColor:[UIColor blackColor]
+                  textColor:tcolor
                shadowColor:nil
                processingID:0];
     free (pPoints);
@@ -509,7 +510,7 @@ UIImage *imageFromSymbol(PointSymbols sym, CGFloat size, UIColor *symColor)
                              withinBounds:0
                                  fontSize:size
                               minFontSize:size/16
-                                textColor:[UIColor whiteColor]
+                                textColor:[UIColor whiteColor].CGColor
                               shadowColor:nil
                              processingID:0];
         free (pPoints);
