@@ -272,7 +272,7 @@ long ConvertCoord (LPDPOINT DPoint, int from, int to)
 {
 TranP TP;
 lpTranP lpTP; 
-long ok;     
+long ok;
      extern HWND    hWndMain; 
      long	SaveFromUnits;
      long	SaveToUnits;
