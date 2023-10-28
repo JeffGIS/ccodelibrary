@@ -186,7 +186,14 @@
     nvptv.tableView.bouncesZoom = NO;
     nvptv.isVisible = TRUE;
     [nvptv addSubview:nvptv.tableView];
-    [nvptv.tableView constrainToView:nvptv leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    CGFloat tabBarHeight = 0;
+    UIViewController *vc = view.parentViewController;
+    if (vc)
+    {
+        UITabBarController *tabBarController = [UITabBarController new];
+        tabBarHeight = tabBarController.tabBar.frame.size.height;
+    }
+    [nvptv.tableView constrainToView:nvptv leading:0.0 trailing:0.0 top:0.0 bottom:-tabBarHeight];
     
     [UIView animateWithDuration:0.25
                      animations:^{

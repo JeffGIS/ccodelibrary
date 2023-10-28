@@ -484,7 +484,7 @@ NVSlopeData CurrentSlopeData;
         routePoint.latlon = llpt;
 
         BOOL addIt = TRUE;
-        int npt = _currentTrackRoute.count;
+        int npt = (int)_currentTrackRoute.count;
         if (npt)
         {
             TrackRoutePoint *lastPoint = CRAPI.sharedInstance.currentTrackRoute[npt-1];
