@@ -388,6 +388,7 @@
 		EB96A8602058248200A4B9B2 /* WaitForStillness.m in Sources */ = {isa = PBXBuildFile; fileRef = EB96A85F2058248100A4B9B2 /* WaitForStillness.m */; };
 		EB96A8612058284400A4B9B2 /* WaitForStillness.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EB96A85E2058248100A4B9B2 /* WaitForStillness.h */; };
 		EB9C3C2C1F914C8600E95644 /* PDFCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9C3C2B1F914C8600E95644 /* PDFCreator.m */; };
+		EBA28C902AFFEAD700A2B67A /* TrackLocationManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBB838572AFC4107002E58A7 /* TrackLocationManager.h */; };
 		EBA2E463199527660085B2E0 /* CCodeLibrary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBA2E462199527660085B2E0 /* CCodeLibrary.h */; };
 		EBA2E465199527660085B2E0 /* CCodeLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA2E464199527660085B2E0 /* CCodeLibrary.m */; };
 		EBA2E472199527660085B2E0 /* libCCodeLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA2E45A199527660085B2E0 /* libCCodeLibrary.a */; };
@@ -423,6 +424,7 @@
 		EBB1BFCC199DD7C10059B547 /* MPIntersection.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1BFCB199DD7C10059B547 /* MPIntersection.m */; };
 		EBB3C42C1C36F6E000054DB5 /* PointInAreas.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB3C42B1C36F6E000054DB5 /* PointInAreas.m */; };
 		EBB3C42E1C37143000054DB5 /* PointInAreas.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = EBB3C42A1C36F6E000054DB5 /* PointInAreas.h */; };
+		EBB838562AFC40C5002E58A7 /* TrackLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB838552AFC40C5002E58A7 /* TrackLocationManager.m */; };
 		EBB9A61A19FFC02900685716 /* GetAssignments.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB9A61919FFC02900685716 /* GetAssignments.m */; };
 		EBBFA62119CA3C9600FE1FFC /* GSSiPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBFA62019CA3C9600FE1FFC /* GSSiPopoverView.m */; };
 		EBC01D071BED1C8C0004C751 /* aa.c in Sources */ = {isa = PBXBuildFile; fileRef = EBC01CD91BED1C8C0004C751 /* aa.c */; };
@@ -496,6 +498,7 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				EBA28C902AFFEAD700A2B67A /* TrackLocationManager.h in CopyFiles */,
 				EBD02DE029782BC60083396D /* proj_api.h in CopyFiles */,
 				EBD02DDF29782B890083396D /* PROJ.H in CopyFiles */,
 				EBD02DDE297709220083396D /* graphint.h in CopyFiles */,
@@ -1158,6 +1161,8 @@
 		EBB1BFCB199DD7C10059B547 /* MPIntersection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPIntersection.m; sourceTree = "<group>"; };
 		EBB3C42A1C36F6E000054DB5 /* PointInAreas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointInAreas.h; sourceTree = "<group>"; };
 		EBB3C42B1C36F6E000054DB5 /* PointInAreas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointInAreas.m; sourceTree = "<group>"; };
+		EBB838552AFC40C5002E58A7 /* TrackLocationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrackLocationManager.m; sourceTree = "<group>"; };
+		EBB838572AFC4107002E58A7 /* TrackLocationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrackLocationManager.h; sourceTree = "<group>"; };
 		EBB9A61819FFC02900685716 /* GetAssignments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAssignments.h; sourceTree = "<group>"; };
 		EBB9A61919FFC02900685716 /* GetAssignments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAssignments.m; sourceTree = "<group>"; };
 		EBBFA61F19CA3C9600FE1FFC /* GSSiPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSSiPopoverView.h; sourceTree = "<group>"; };
@@ -1771,6 +1776,8 @@
 				EB40255222B0295E005862AD /* WIT_MotionInput.m */,
 				EBAEBB4B294106CA0004D22D /* WeatherData.m */,
 				EBAEBB4D2941072C0004D22D /* WeatherData.h */,
+				EBB838552AFC40C5002E58A7 /* TrackLocationManager.m */,
+				EBB838572AFC4107002E58A7 /* TrackLocationManager.h */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -2185,6 +2192,7 @@
 				EBC01D151BED1C8C0004C751 /* epsiln.c in Sources */,
 				EBC01D0C1BED1C8C0004C751 /* conjunct.c in Sources */,
 				EBC01D2B1BED1C8C0004C751 /* sun.c in Sources */,
+				EBB838562AFC40C5002E58A7 /* TrackLocationManager.m in Sources */,
 				EB2C7DB419BA5A6F00F6D9F0 /* IntersectionRecord.m in Sources */,
 				BB9B8FAB1EAE8A6600AFB3CA /* TimeLine.m in Sources */,
 				69B36F1A1BCB0F30004C4B69 /* NVDateRange.m in Sources */,
