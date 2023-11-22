@@ -511,7 +511,14 @@
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = _bordWidth;
-    [_delegate mapToolbarDidSelectLegends];
+    [_delegate mapToolbarDidSelectOptions];
+}
+
+- (void)optionsSelected:(UIButton *)button
+{
+    button.layer.borderColor = UIColor.blackColor.CGColor;
+    button.layer.borderWidth = _bordWidth;
+    [_delegate mapToolbarDidSelectOptions];
 }
 
 - (void)splitScreenSettingSelected:(UISegmentedControl *)segControl
