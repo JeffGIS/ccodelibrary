@@ -54,14 +54,16 @@
         [newValues addObject:value];
     }
     textArray = newValues;
+    
+    int cancelButtonHeight = 0;
     if (includeCancel)
     {
-        NSMutableArray *tempArray = [NSMutableArray arrayWithArray:textArray];
-        
-        [tempArray insertObject:@"Cancel"
-                        atIndex:0];
-        
-        textArray = tempArray.copy;
+        cancelButtonHeight = 40;
+        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+        {
+            cancelButtonHeight = 30;
+        }
+
     }
     
     NVPopoverTableView *nvptv = NVPopoverTableView.new;
@@ -119,31 +121,9 @@
         nvptv.cornerRadius = 8.0 *nvptv.factor;
         nvptv.font = [UIFont boldSystemFontOfSize:20.0*nvptv.factor];
     }
+
     
-    nvptv.returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    nvptv.returnButton.translatesAutoresizingMaskIntoConstraints = NO;
-    nvptv.returnButton.backgroundColor = UIColor.whiteColor;
-    nvptv.returnButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    nvptv.returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:36.0];
-    nvptv.returnButton.layer.borderColor = UserDefaults.defaults.appleBlue.CGColor;
-    nvptv.returnButton.layer.borderWidth = 4.0;
-    nvptv.returnButton.alpha = 0.0;
-    
-    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-        nvptv.returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:26.0];
-    
-    [nvptv.returnButton setTitle:@" < Return  " forState:UIControlStateNormal];
-    [nvptv.returnButton setTitleColor:UIColor.blackColor forState:UIControlStateNormal];
-    [nvptv.returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
-    [view addSubview:nvptv.returnButton];
-    [nvptv.returnButton constrainLeadingToAnchor:view.leadingAnchor constant:20.0];
-    [nvptv.returnButton constrainTopToAnchor:view.topAnchor constant:(margin / 4.0)];
-    
-    [nvptv.returnButton addTarget:nvptv
-                           action:@selector(rtnButtonTapped:)
-                 forControlEvents:UIControlEventTouchUpInside];
-    
-    nvptv.clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+/*   nvptv.clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
     nvptv.clearButton.translatesAutoresizingMaskIntoConstraints = NO;
     nvptv.clearButton.backgroundColor = UIColor.whiteColor;
     nvptv.clearButton.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -165,17 +145,17 @@
     [nvptv.clearButton addTarget:nvptv
                           action:@selector(clearButtonTapped:)
                 forControlEvents:UIControlEventTouchUpInside];
-    
+*/
     nvptv.cellWidth = (shortestSide - (margin * 2.0) - 30.0*nvptv.factor);
     
     [view addSubview:nvptv];
     
     [nvptv constrainToView:view leading:margin trailing:-margin top:(margin * 1.5)
                     bottom:(nvptv.tabBar.frame.size.height - (margin * 1.5))];
-    
+
     nvptv.tableView = [[UITableView alloc] initWithFrame:CGRectZero
                                                    style:UITableViewStylePlain];
-    
+
     nvptv.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     nvptv.tableView.layer.cornerRadius = 10.0*nvptv.factor;
     nvptv.tableView.dataSource = nvptv;
@@ -193,8 +173,33 @@
         UITabBarController *tabBarController = [UITabBarController new];
         tabBarHeight = tabBarController.tabBar.frame.size.height;
     }
-    [nvptv.tableView constrainToView:nvptv leading:0.0 trailing:0.0 top:0.0 bottom:-tabBarHeight];
-    
+    [nvptv.tableView constrainToView:nvptv leading:0.0 trailing:0.0 top:0 bottom:-(tabBarHeight + cancelButtonHeight+2)];
+
+    if (includeCancel)
+    {
+        nvptv.returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        nvptv.returnButton.translatesAutoresizingMaskIntoConstraints = NO;
+        nvptv.returnButton.backgroundColor = UIColor.whiteColor;
+        nvptv.returnButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        nvptv.returnButton.titleLabel.font = [UIFont boldSystemFontOfSize:cancelButtonHeight-4];
+        nvptv.returnButton.layer.borderColor = UserDefaults.defaults.appleBlue.CGColor;
+        nvptv.returnButton.layer.borderWidth = 2.0;
+        nvptv.returnButton.alpha = 1.0;
+        
+        
+        [nvptv.returnButton setTitle:@"Cancel" forState:UIControlStateNormal];
+        [nvptv.returnButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
+        [nvptv.returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
+        [view addSubview:nvptv.returnButton];
+        
+        [nvptv.returnButton addTarget:nvptv
+                               action:@selector(rtnButtonTapped:)
+                     forControlEvents:UIControlEventTouchUpInside];
+        
+        [nvptv.returnButton constrainTopToAnchor:nvptv.tableView.bottomAnchor constant: 4];
+        [nvptv.returnButton constrainLeadingToAnchor:nvptv.tableView.leadingAnchor constant: 0];
+        [nvptv.returnButton constrainTrailingToAnchor:nvptv.tableView.trailingAnchor constant: 0];
+    }
     [UIView animateWithDuration:0.25
                      animations:^{
                          nvptv.overlayView.alpha = 0.7;
@@ -336,13 +341,6 @@ viewForHeaderInSection:(NSInteger)section
         cell.textLabel.adjustsFontSizeToFitWidth = YES;
         cell.textLabel.numberOfLines = 1;
         
-        if (_includeCancel && indexPath.row == 0)
-        {
-            cell.textLabel.textColor = UIColor.redColor;
-            cell.textLabel.textAlignment = NSTextAlignmentCenter;
-        }
-        
-        else
         {
             for (UIView *subviews in cell.subviews)
             {
@@ -431,10 +429,6 @@ viewForHeaderInSection:(NSInteger)section
         cell.textLabel.textAlignment = NSTextAlignmentCenter;
         cell.textLabel.numberOfLines = 0;
         
-        if (_includeCancel && indexPath.row == 0)
-            cell.textLabel.textColor = UIColor.redColor;
-        
-        else
         {
             cell.textLabel.textColor = UserDefaults.defaults.appleBlue;
             
@@ -457,10 +451,7 @@ viewForHeaderInSection:(NSInteger)section
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_includeCancel && indexPath.row == 0 && [_delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
-        [_delegate popoverTableViewDidCancel:self];
-    
-    else if (!_parseTextToButtons)
+    if (!_parseTextToButtons)
     {
         if (_tableView.allowsMultipleSelection)
             _lastRowTapped = (int)indexPath.row;
@@ -468,13 +459,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         else
         {
             NSString *text = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
-            NSInteger index = 0;
-            
-            if (_includeCancel)
-                index = (indexPath.row - 1);
-            
-            else
-                index = indexPath.row;
+            NSInteger index = indexPath.row;
             NSString * returnValue = _returnValues[index];
             if (returnValue.length)
                 text = returnValue;
