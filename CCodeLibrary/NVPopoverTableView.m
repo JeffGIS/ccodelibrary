@@ -193,7 +193,7 @@
         [view addSubview:nvptv.returnButton];
         
         [nvptv.returnButton addTarget:nvptv
-                               action:@selector(rtnButtonTapped:)
+                               action:@selector(cancelButtonTapped:)
                      forControlEvents:UIControlEventTouchUpInside];
         
         [nvptv.returnButton constrainTopToAnchor:nvptv.tableView.bottomAnchor constant: 4];
@@ -592,6 +592,15 @@ didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
                              }];
         }
     }
+}
+
+- (void)cancelButtonTapped:(UIButton *)button
+{
+        if ([_delegate respondsToSelector:@selector(popoverTableViewDidCancel:)])
+        {
+            [_delegate popoverTableViewDidCancel:self];
+            return;
+        }
 }
 
 - (void)rtnButtonTapped:(UIButton *)button
