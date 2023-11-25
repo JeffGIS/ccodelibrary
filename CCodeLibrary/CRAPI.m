@@ -1828,6 +1828,8 @@ didTapButtonAtIndex:(NSInteger)buttonIndex
 -(void) setCurrentCameraLocation:(LLPOINT)currentLocation
 {
     _currentCameraLocation = currentLocation;
+    if (!_locationTrackingEnabled)
+        _currentGPSLocation = currentLocation;
 }
 -(void) setGPSLocation:(LLPOINT)pt
                     from:(int)from
