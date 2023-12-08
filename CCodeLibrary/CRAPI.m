@@ -49,7 +49,7 @@ NVSlopeData CurrentSlopeData;
 @property (nonatomic, nullable) NSTimer *beepTimer;
 @property (nonatomic, nullable) NSString * routeServer;
 @property (nonatomic, nullable) CMMotionManager *motionManager;
-@property (nonatomic, nullable) CLLocationManager *locationManager;
+@property (nonatomic, nullable) TrackLocationManager *locationManager;
 @property BOOL waitingToMoveAwayFromVehicle;
 @property double moveAwayDist, returnToDist;
 
@@ -238,10 +238,10 @@ NVSlopeData CurrentSlopeData;
         _motionManager = CMMotionManager.new;
     return _motionManager;
 }
-- (CLLocationManager *) getLocationManager
+- (TrackLocationManager *) getLocationManager
 {
     if (!_locationManager)
-        _locationManager = CLLocationManager.new;
+        _locationManager = TrackLocationManager.new;
     return _locationManager;
 }
 - (nullable CBCentralManager *)getCentralManager:(id)delegate

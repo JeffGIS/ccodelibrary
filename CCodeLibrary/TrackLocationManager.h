@@ -14,14 +14,28 @@
 
 @protocol TrackLocationManagerDelegate <NSObject>
 
--(void)locationFromTrack:(TrackLocationManager *)manager
+- (void)locationManager:(TrackLocationManager *)manager
       didUpdateLocations:(NSArray *)locations;
+- (void)locationManager:(TrackLocationManager *)manager
+       didUpdateHeading:(CLHeading *)newHeading;
 
 @optional
 
 @end
 
-@interface TrackLocationManager : NSObject
+@interface TrackLocationManager : NSObject<CLLocationManagerDelegate>
+@property (nonatomic, weak) id <TrackLocationManagerDelegate> delegate;
+
+@property (nonatomic)CLLocationDegrees headingFilter;
+@property (nonatomic)CLDeviceOrientation headingOrientation;
+@property (nonatomic)CLLocationAccuracy desiredAccuracy;
+@property (nonatomic)CLActivityType activityType;
+@property (nonatomic)BOOL pausesLocationUpdatesAutomatically;
+
+- (void)startUpdatingLocation;
+- (void)startUpdatingHeading;
+- (void)stopUpdatingLocation;
+- (void)stopUpdatingHeading;
 
 @end
 

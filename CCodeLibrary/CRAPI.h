@@ -22,6 +22,7 @@
 #import "NVSlopeData.h"
 #import "WIT_MotionInput.h"
 #import "SOLAR-2Input.h"
+#import "TrackLocationManager.h"
 
 @import AVKit;
 @import CoreMotion;
