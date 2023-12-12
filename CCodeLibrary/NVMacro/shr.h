@@ -1,11 +1,11 @@
 #ifndef shr_h
 #define shr_h
-#include "CCodeTypes.h"
-#include "bigmem.h"
-#include "gssitype.h"
-#include "COMPUTE.H"
-#include "DIBAPI.H"
-#include "TileGraphics.h"
+#import "CCodeTypes.h"
+#import "bigmem.h"
+#import "gssitype.h"
+#import "COMPUTE.H"
+#import "DIBAPI.H"
+#import "TileGraphics.h"
 #import <CoreGraphics/CoreGraphics.h>
 
 //include <windowsx.h>

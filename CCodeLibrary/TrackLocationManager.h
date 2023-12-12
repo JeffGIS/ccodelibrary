@@ -31,11 +31,26 @@
 @property (nonatomic)CLLocationAccuracy desiredAccuracy;
 @property (nonatomic)CLActivityType activityType;
 @property (nonatomic)BOOL pausesLocationUpdatesAutomatically;
+@property DPOINT fromUTM, toUTM, atUTM, nextUTM;
+@property int atDistance;
+@property int nearDistance;
+@property int closeDistance;
+@property BOOL checkOff;
+@property double offDist;
+@property int leftOrRight;
+@property int nearDist;
+
+
+@property NSTimer * offCourseTimer;
 
 - (void)startUpdatingLocation;
 - (void)startUpdatingHeading;
 - (void)stopUpdatingLocation;
 - (void)stopUpdatingHeading;
+
+-(void) offCourseNotification:(int) opt
+                    withDelay:(CGFloat) delay;
+- (void) exitRouteMode;
 
 @end
 
