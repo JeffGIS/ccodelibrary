@@ -6,11 +6,13 @@
 //  Copyright © 2023 GSSi. All rights reserved.
 //
 #import "TrackLocationManager.h"
-#import <UIKit/UIKit.h>
+//#import <UIKit/UIKit.h>
 #import "CRAPI.h"
 #import "GSSiDefs.h"
 #import "CVTCoord.h"
 #include "PROJ.H"
+#import "HuntingData.h"
+
 @interface TrackLocationManager ()
 
 @property CLLocationManager *locationManager;
@@ -87,16 +89,27 @@
 }
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
-    [self.delegate locationManager:self didUpdateLocations:locations];
-    double distToDest = ldistp(_atUTM, _toUTM)/ METERS_PER_YARD;
-    if (distToDest < _atDistance)
+    if (locations.count > 0)
     {
-        [self offCourseNotification:0
-                          withDelay:0];
-    }
-    else if (_checkOff && [self checkIfOffRoute:_atUTM])
-    {
+        CLLocation * loc = locations.lastObject;
         
+        _currentPoint.lat = loc.coordinate.latitude;
+        _currentPoint.lon = loc.coordinate.longitude;
+        
+        [self.delegate locationManager:self didUpdateLocations:locations];
+        double distToDest = ldistp(_atUTM, _toUTM)/ METERS_PER_YARD;
+        if (distToDest < _atDistance)
+        {
+            [self offCourseNotification:0
+                              withDelay:0];
+        }
+        else if (_checkOff && [self checkIfOffRoute:_atUTM])
+        {
+            
+        }
+        if (CRAPI.sharedInstance.inRouteMode)
+            [self computeNextRoutePoint];
+
     }
 
     return;
@@ -241,5 +254,71 @@
         [_offCourseTimer invalidate];
 
 }
+
+-(void) createTwoPointRoute:(LLPOINT)fromLL
+                    toLL:(LLPOINT)toLL
+{
+    CRAPI.sharedInstance.currentRoute = NSMutableArray.new;
+    CGPoint llp = {0};
+    llp.y = fromLL.lat;
+    llp.x = fromLL.lon;
+    DPOINT pt1 = CGPointToDPOINT (llp);
+    NSNumber *routePoint = [NSNumber valueWithCGPoint:llp];
+    [CRAPI.sharedInstance.currentRoute addObject:routePoint];
+    llp.y = toLL.lat;
+    llp.x = toLL.lon;
+    DPOINT pt2 = CGPointToDPOINT (llp);
+    routePoint = [NSNumber valueWithCGPoint:llp];
+    [CRAPI.sharedInstance.currentRoute addObject:routePoint];
+    double az = getazd (pt1,pt2);
+    double azLL = getazLL (fromLL,toLL);
+    double bearing = LTWOPI (HALFPI - az)*DEGRAD;
+    double bearingLL = LTWOPI (HALFPI - azLL)*DEGRAD;
+    CRAPI.sharedInstance.routeBearing = [NSNumber numberWithDouble:bearingLL];
+
+    return;
+}
+-(BOOL) computeNextRoutePoint
+{
+    BOOL rtn = FALSE;
+    HuntingData *hd = HuntingData.new;
+    DPOINT Line[2];
+    DPOINT IntPoint;
+    DPOINT CurrentPoint;
+    CurrentPoint.x = _currentPoint.lon;
+    CurrentPoint.y = _currentPoint.lat;
+    ConvertCoord(&CurrentPoint, LATLONPROJECTION, UTM15PROJECTION);
+    Line[0] = LLPointToDPoint (_routeStartPoint);
+    ConvertCoord(&Line[0], LATLONPROJECTION, UTM15PROJECTION);
+
+    CRAPI.sharedInstance.currentSelectedWaypoint = -1;
+    _currentRoutePointNumber = 0;
+    double minDist = DBL_MAX;
+    
+    NSArray <UserWaypoint*> *routePointArray = [hd getWaypointsOfType:@"RoutePoint"];
+    for (UserWaypoint *wp in routePointArray)
+    {
+        Line[1] = LLPointToDPoint (wp.latlon);
+        ConvertCoord(&Line[1], LATLONPROJECTION, UTM15PROJECTION);
+        int leftOrRight=0;
+        if (GetPerpendicularIntersect (&CurrentPoint,Line,&IntPoint,TRUE,&leftOrRight))
+        {
+            double offDist = ldistpp (&CurrentPoint,&IntPoint);
+            _locationManager.leftOrRight = leftOrRight;
+            if (offDist < minDist)
+            {
+                minDist = offDist;
+                CRAPI.sharedInstance.currentSelectedWaypoint = wp.refno;
+                _currentRoutePointNumber = wp.refno;
+                rtn = TRUE;
+            }
+        }
+        Line[0] = Line[1];
+    }
+
+    return rtn;
+}
+
+
 @end
 

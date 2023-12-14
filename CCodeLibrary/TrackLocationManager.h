@@ -39,7 +39,10 @@
 @property double offDist;
 @property int leftOrRight;
 @property int nearDist;
-
+@property BOOL checkOffset;
+@property LLPOINT currentPoint;
+@property LLPOINT routeStartPoint;
+@property LLPOINT fromPoint;
 
 @property NSTimer * offCourseTimer;
 
@@ -50,7 +53,9 @@
 
 -(void) offCourseNotification:(int) opt
                     withDelay:(CGFloat) delay;
-- (void) exitRouteMode;
+-(void) exitRouteMode;
+-(void) createTwoPointRoute:(LLPOINT)fromLL
+                       toLL:(LLPOINT)toLL;
 
 @end
 
