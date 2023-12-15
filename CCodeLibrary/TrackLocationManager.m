@@ -304,7 +304,7 @@
         if (GetPerpendicularIntersect (&CurrentPoint,Line,&IntPoint,TRUE,&leftOrRight))
         {
             double offDist = ldistpp (&CurrentPoint,&IntPoint);
-            _locationManager.leftOrRight = leftOrRight;
+            _leftOrRight = leftOrRight;
             if (offDist < minDist)
             {
                 minDist = offDist;

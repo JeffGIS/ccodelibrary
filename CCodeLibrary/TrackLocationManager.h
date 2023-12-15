@@ -43,6 +43,7 @@
 @property LLPOINT currentPoint;
 @property LLPOINT routeStartPoint;
 @property LLPOINT fromPoint;
+@property int currentRoutePointNumber;
 
 @property NSTimer * offCourseTimer;
 
