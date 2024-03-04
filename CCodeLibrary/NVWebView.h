@@ -34,6 +34,8 @@ typedef NS_ENUM(NSInteger, NVPDFDocument)
 @optional
 - (BOOL)webViewDidReturn:(NVWebView *)webView
                     link:(NSString *)linktext;
+- (BOOL)webViewDidReturn:(NVWebView *)webView
+                    withCurrentURL:(NSString *)linktext;
 - (void)webViewDidZoom;
 - (void)webViewDidFinishNavigation:(NVWebView *)webView;
 - (void)webViewDidRequestNextImage:(NVWebView *)webView;
@@ -62,9 +64,12 @@ wasLongPressedAtPoint:(DPOINT)point
 @interface NVWebView : UIView
 
 @property (nonatomic, weak) id <NVWebViewDelegate> delegate;
+@property (nonatomic) WKWebView *webView;
 @property BOOL drawsMarkers, drawsMultipleMarkers;
 @property (nonatomic) BOOL rotationEnabled;
 @property int numPages;
+@property (nonatomic) UIButton *returnButton, *realtor, *nextButton, *previousButton, *saveLinkButton;
+
 
 + (instancetype)showWebViewInView:(UIView *)view
                         urlString:(NSString *)urlString;
@@ -82,7 +87,7 @@ wasLongPressedAtPoint:(DPOINT)point
                 withHighlights:(NSString *)highlights
                    enableSwipe:(BOOL)enableSwipe
                       zoomView:(UIView *)zoomView;
-
+- (void)setURL:(NSString *)url;
 - (void)hide:(BOOL)animated;
 - (void)showRealtorButton;
 - (void)hideReturnButton;
@@ -94,6 +99,8 @@ wasLongPressedAtPoint:(DPOINT)point
 - (void)removeLastMarker;
 - (void)maskPolygon;
 - (void)showNextAndPrevious;
+- (void)showSaveLinkButton;
+- (void)hideSaveLinkButton;
 - (void)updateImageViewToImageAtPath:(NSString *)path;
 - (CORNERPOINTS)cornerPoints;
 - (void)getHtmlString;

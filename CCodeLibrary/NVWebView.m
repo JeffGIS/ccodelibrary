@@ -44,8 +44,6 @@
 
 @interface NVWebView () <WKNavigationDelegate,WKUIDelegate,NVPopoverTableViewDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate>
 
-@property (nonatomic) WKWebView *webView;
-@property (nonatomic) UIButton *returnButton, *realtor, *nextButton, *previousButton, *saveLinkButton;
 @property CGFloat headerHeight, headerSideMargin, zoomScale, zoomRotation;
 @property CGFloat origScale, origRotation, markerSize, fontSize, aspectRatio, lastScale;
 @property (nonatomic) UITabBar *tabBar;
@@ -123,6 +121,7 @@
     if (urlString && urlString.length)
     {
         NVWebView *nvwv = NVWebView.new;
+                
         [nvwv setupViewComponents:view];
         [nvwv addWebViewToView:view];
         nvwv.isFile = NO;
@@ -451,6 +450,11 @@
     _webView.navigationDelegate = self;
     _webView.UIDelegate = self;
     _webView.clipsToBounds = YES;
+    
+    _webView.UIDelegate = self;
+    _webView.allowsBackForwardNavigationGestures = true;
+    _webView.allowsLinkPreview = true;
+    _webView.navigationDelegate = self;
     _scrollView = _webView.scrollView;
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self
@@ -523,6 +527,11 @@
     [_saveLinkButton setHidden:YES];
 }
 
+- (void)showSaveLinkButton
+{
+    [_saveLinkButton setHidden:NO];
+}
+
 - (void)returnButtonTapped:(UIButton *)button
 {
     if (_lookForPasteBufferTimer)
@@ -568,6 +577,12 @@
     if (_delegate && [_delegate respondsToSelector:@selector(webViewDidReturn:link:)])
     {
         stayAlive = ![_delegate webViewDidReturn:self link:linkText];
+    }
+    if (_delegate && [_delegate respondsToSelector:@selector(webViewDidReturn:withCurrentURL:)])
+    {
+        NSString *currentURL = _webView.URL;
+
+        stayAlive = ![_delegate webViewDidReturn:self withCurrentURL:currentURL];
     }
     if (stayAlive)
         [self startLookForPasteBufferTimer];
@@ -1623,5 +1638,11 @@ wasTappedAtPoint:(DPOINT)point
 */
     }
 }
+-(void) setURL:(NSString *)urlString
+{
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
+    [self.webView loadRequest:urlRequest];
 
+}
 @end
