@@ -159,7 +159,7 @@
 
 -(BOOL) createUsersData
 {
-    static alreadyRan = FALSE;
+    static int alreadyRan = FALSE;
     if (alreadyRan)
         return TRUE;
     BOOL rtn = TRUE;

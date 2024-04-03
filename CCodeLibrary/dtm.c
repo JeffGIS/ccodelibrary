@@ -2212,7 +2212,7 @@ BOOL SetNGIELV (DPOINT Point,double Elev,HANDLE hSurf,short Units)
       HANDLE	hCell;
 	  LPDTMINFO	pDTMInfo; 
 	  BOOL		rtn;  
-static	ii=0,debugii=171;
+static	int ii=0,debugii=171;
 /*      long		INTMAX, BUFPNT, SCIDNO, NOFBUF,SAVEGN,GU,
      +          BIASBF(20), INPOS(2), SAVEBIAS,
      +          SCRTID(2)         , ISURID(2)           , SAVELENGTH,
