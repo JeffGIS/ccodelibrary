@@ -84,6 +84,7 @@ NSString *doubleToBlob(double val);
 NSString *floatToBlob(float val);
 NSString *intToBlob(int val);
 BOOL stringContainsCaseInsenitiveString(NSString * str, NSString *substr);
+BOOL stringBeginsWithString (NSString * str, NSString * substr);
 int numberOfOccurencesOfStringInString(NSString *str, NSString *substr);
 UIColor *UIColorFromInt (unsigned int ival);
 BOOL hasNetwork(void);

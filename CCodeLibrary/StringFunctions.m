@@ -1687,6 +1687,15 @@ BOOL stringContainsCaseInsenitiveString (NSString * str, NSString * substr)
     return rtn;
 }
 
+BOOL stringBeginsWithString (NSString * str, NSString * substr)
+{
+    BOOL rtn = NO;
+    NSRange range = [str rangeOfString:substr options:NSCaseInsensitiveSearch];
+    if (range.location == 0)
+        rtn = YES;
+    return rtn;
+}
+
 Bool GetStringArrayElement (int index,LPSTR string,LPSTR seperator,LPSTR OutLoc,int maxOutLocLen)
 {
     BOOL rtn = FALSE;
