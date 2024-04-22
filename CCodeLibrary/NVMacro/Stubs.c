@@ -237,7 +237,7 @@ long TranProjection(long I, long O, double *x, double *y)
 {
 	return 0;
 }
-HANDLE STRAN2(int ID, double X1[], double Y1[], double X2[], double Y2[], int N, LPFLOAT RSQMIN, int Type, LPMNMXCORD pBounds)
+/*HANDLE STRAN2(int ID, double X1[], double Y1[], double X2[], double Y2[], int N, LPFLOAT RSQMIN, int Type, LPMNMXCORD pBounds)
 {
 	HANDLE rtn = 0;
 	return rtn;
@@ -247,14 +247,16 @@ void TRANS2(double XIN, double YIN, LPDOUBLE XOUT, LPDOUBLE YOUT, HANDLE hlpTran
 {
 	return;
 }
+ */
 void TRNPRO(double XIN, double YIN, LPDOUBLE XOUT, LPDOUBLE YOUT, HANDLE hlpTran)
 {
 	return;
 }
-void CloseTRANS2(LPHANDLE phlpTran)
+/*void CloseTRANS2(LPHANDLE phlpTran)
 {
 	return;
 }
+*/
 
 HANDLE STRANBoundsToRect(LPMNMXCORD FromRect, LPRECT ToRect)
 {
