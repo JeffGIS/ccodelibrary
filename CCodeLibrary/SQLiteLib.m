@@ -79,6 +79,10 @@ int SQLOK(char * fromFile, int fromLine,int sqlReturn, LPsqlite3nv pdatabase)
     
     return sqlReturn;
 }
+int SQLOKpd(int sqlReturn, sqlite3nv *database, int method)
+{
+    return SQLOK (__FILE__,__LINE__,sqlReturn,database);
+}
 
 bool doesSQLiteFieldExist(char* tableName, char* fieldName,LPsqlite3nv pdatabase)
 {
