@@ -168,8 +168,9 @@
     time_t now = NSDate.date.timeIntervalSince1970;
     NSString * curTime = @"Current Time";
     NSString * date = [WeatherData forecastDayandTime:now];
+    date = textAfter (date,@"Today ");
     curTime = [curTime stringByAppendingFormat:@"\n%@|||0",date];
-    [dates addObject:date];
+    [dates addObject:curTime];
 
    for (WeatherRecord *rec in forecast)
     {
