@@ -21,7 +21,7 @@
 @property double notifyDist;
 @property int currentTimerDelay;
 @property BOOL goLeft;
-@property SystemSoundID lowSoundID, highSoundID;
+@property SystemSoundID lowSoundID, highSoundID, gotGPSInputSound;
 
 @end
 
@@ -45,10 +45,34 @@
         _closeDistance = 100;
 
         InitProj4CoordConv (FALSE);
+        NSString *soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/short_double_high.caf"];
+        NSURL *url = [NSURL URLWithString:soundFile];
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(url), &_highSoundID);
+        soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/short_double_low.caf"];
+        url = [NSURL URLWithString:soundFile];
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(url), &_lowSoundID);
+        soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/Tock.caf"];
+        url = [NSURL URLWithString:soundFile];
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(url), &_gotGPSInputSound);
 
     }
     return self;
 
+}
+
+- (void) dealloc
+{
+    AudioServicesDisposeSystemSoundID(_lowSoundID);
+    AudioServicesDisposeSystemSoundID(_highSoundID);
+}
+
+- (void) setDistanceFilter:(CLLocationDistance) dist
+{
+    _locationManager.distanceFilter = dist;
+}
+- (void) setAllowsBackgroundLocationUpdates:(BOOL) set
+{
+    _locationManager.allowsBackgroundLocationUpdates = set;
 }
 - (void) setHeadingFilter:(CLLocationDegrees) headingFilter
 {
@@ -89,6 +113,8 @@
 }
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
+    NSLog (@"GPS input recieved");
+    AudioServicesPlaySystemSound(_gotGPSInputSound);
     if (locations.count > 0)
     {
         CLLocation * loc = locations.lastObject;
@@ -96,7 +122,8 @@
         _currentPoint.lat = loc.coordinate.latitude;
         _currentPoint.lon = loc.coordinate.longitude;
         
-        [self.delegate locationManager:self didUpdateLocations:locations];
+        if (self.delegate)
+            [self.delegate locationManager:self didUpdateLocations:locations];
         double distToDest = ldistp(_atUTM, _toUTM)/ METERS_PER_YARD;
         if (distToDest < _atDistance)
         {

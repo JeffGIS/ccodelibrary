@@ -29,7 +29,9 @@
 @property (nonatomic)CLLocationDegrees headingFilter;
 @property (nonatomic)CLDeviceOrientation headingOrientation;
 @property (nonatomic)CLLocationAccuracy desiredAccuracy;
+@property (nonatomic)CLLocationDistance distanceFilter;
 @property (nonatomic)CLActivityType activityType;
+@property (nonatomic) BOOL allowsBackgroundLocationUpdates;
 @property (nonatomic)BOOL pausesLocationUpdatesAutomatically;
 @property DPOINT fromUTM, toUTM, atUTM, nextUTM;
 @property int atDistance;

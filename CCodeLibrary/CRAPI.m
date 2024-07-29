@@ -2166,4 +2166,67 @@ void GSSiViewDidLoad (void)
 {
     NSLog (@"view did load");
 }
+/*
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+    UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+      [application endBackgroundTask:bgTask];
+      bgTask = UIBackgroundTaskInvalid;
+   }];
+
+   // Background task
+   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      NSLog(@"Background time remaining: %f seconds (%d mins)",
+     [[UIApplication sharedApplication] backgroundTimeRemaining],
+     (int)([[UIApplication sharedApplication] backgroundTimeRemaining] / 60));
+
+      // Need to get data from database here
+
+      // Finished
+      if (bgTask != UIBackgroundTaskInvalid) {
+         [application endBackgroundTask:bgTask];
+         bgTask = UIBackgroundTaskInvalid;
+      }
+
+   });
+
+   // Start location manager
+   locationManager = [[CLLocationManager alloc] init];
+   if ([CLLocationManager locationServicesEnabled]) {
+      locationManager.delegate = self;
+      locationManager.distanceFilter = 20;
+      locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+      [locationManager startUpdatingLocation];
+   }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+   bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+      [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+      bgTask = UIBackgroundTaskInvalid;
+   }];
+
+   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
+      // Want to perform some data processing here, including concurrent tasks
+      // and several network calls to get and send data to server
+
+      [self locationProcessingCompleted];
+
+   });
+}
+
+- (void)locationProcessingCompleted
+{
+   // Check results. If needed, some more data processing and several network
+   // calls to send data to server
+
+   // Close background task
+   if (bgTask != UIBackgroundTaskInvalid) {
+      [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+      bgTask = UIBackgroundTaskInvalid;
+   }
+}
+ */
 @end
