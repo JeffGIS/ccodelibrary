@@ -144,7 +144,8 @@
 - (void)locationManager:(CLLocationManager *)manager
        didUpdateHeading:(CLHeading *)newHeading
 {
-    [self.delegate locationManager:self didUpdateHeading:newHeading];
+    if (self.delegate)
+        [self.delegate locationManager:self didUpdateHeading:newHeading];
     return;
 }
 
