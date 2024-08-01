@@ -261,9 +261,9 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property BOOL locationTrackingEnabled;
 @property (nonatomic, nullable) NSNumber *routeBearing;
 @property BOOL firstTimeZoomToCentract;
-@property BOOL amTrackingRoute;
+@property BOOL amBuildingRoute;
 @property (nonatomic) LLPOINT currentVehicleLocation;
-@property (nonatomic) BOOL inRouteMode;
+@property (nonatomic) BOOL inFollowingRouteMode;
 
 
 + (nullable CRAPI *)sharedInstance;
@@ -393,7 +393,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 -(BOOL) getLastBounds:(LPMNMXCORD)pBounds;
 -(BOOL) getLastBounds:(LPMNMXCORD)pBounds
               andZoom:(float *)pZoom;
--(int) addPointToTrackRoute:(CLLocationCoordinate2D) location;
+-(int) addPointToTrackRoute:(LLPOINT) location;
 
 void GSSiViewDidLoad (void);
 -(void) setGPSLocation:(LLPOINT)pt

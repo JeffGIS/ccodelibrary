@@ -59,7 +59,8 @@
 -(void) exitRouteMode;
 -(void) createTwoPointRoute:(LLPOINT)fromLL
                        toLL:(LLPOINT)toLL;
-
+-(void) startSavingLocations;
+-(NSArray *) retrieveSavedLocations;
 @end
 
 #endif /* TrackLocationManager_h */

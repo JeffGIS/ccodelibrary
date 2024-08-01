@@ -21,7 +21,10 @@
 @property double notifyDist;
 @property int currentTimerDelay;
 @property BOOL goLeft;
+@property BOOL amSavingLocations;
 @property SystemSoundID lowSoundID, highSoundID, gotGPSInputSound;
+@property NSString * savedLocationsFile;
+@property NSString * tempDirectory;
 
 @end
 
@@ -43,6 +46,8 @@
         _nearDistance = 20;
         _atDistance = 10;
         _closeDistance = 100;
+        _tempDirectory = UserDefaults.defaults.nonBackedUpFilePath;
+        _savedLocationsFile = [_tempDirectory stringByAppendingString:@"/savedlocations.bin"];
 
         InitProj4CoordConv (FALSE);
         NSString *soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/short_double_high.caf"];
@@ -111,6 +116,7 @@
 {
     [_locationManager stopUpdatingHeading];
 }
+
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
     NSLog (@"GPS input recieved");
@@ -121,7 +127,8 @@
         
         _currentPoint.lat = loc.coordinate.latitude;
         _currentPoint.lon = loc.coordinate.longitude;
-        
+        if (_amSavingLocations)
+            [self saveLocation];
         if (self.delegate)
             [self.delegate locationManager:self didUpdateLocations:locations];
         double distToDest = ldistp(_atUTM, _toUTM)/ METERS_PER_YARD;
@@ -134,7 +141,7 @@
         {
             
         }
-        if (CRAPI.sharedInstance.inRouteMode)
+        if (CRAPI.sharedInstance.inFollowingRouteMode)
             [self computeNextRoutePoint];
 
     }
@@ -147,6 +154,44 @@
     if (self.delegate)
         [self.delegate locationManager:self didUpdateHeading:newHeading];
     return;
+}
+
+- (void) saveLocation
+{
+    FILE *Fid = fopenGSSi(_savedLocationsFile.cString,"a");
+    
+    if (Fid == NULL)
+        return;
+    BigWriteF(Fid ,(LPSTR)&_currentPoint ,sizeof(LLPOINT), -1);
+    fcloseGSSi(Fid);
+}
+
+-(void) startSavingLocations
+{
+    _amSavingLocations = TRUE;
+}
+-(NSArray *) retrieveSavedLocations
+{
+    _amSavingLocations = FALSE;
+    NSMutableArray * array=NSMutableArray.new;
+    FILE *Fid = fopenGSSi(_savedLocationsFile.cString,"r");
+    
+    if (Fid != NULL)
+    {
+        LLPOINT point;
+        while (BigReadF(Fid, (HPSTR)&point ,sizeof(LLPOINT)) == sizeof(LLPOINT))
+        {
+            TrackRoutePoint * pt = TrackRoutePoint.new;
+            pt.latlon = point;
+            [array addObject:pt];
+        }
+        fcloseGSSi(Fid);
+        NSError *err = nil;
+        NSFileManager *fm = [NSFileManager defaultManager];
+        [fm removeItemAtPath:_savedLocationsFile error:&err];
+    }
+
+    return array;
 }
 
 
@@ -234,7 +279,7 @@
     //saveFromUTM = _fromUTM;
     //saveToUTM = _toUTM;
     
-    if (CRAPI.sharedInstance.inRouteMode)
+    if (CRAPI.sharedInstance.inFollowingRouteMode)
     {
         if (_nextUTM.x)
         {
@@ -277,7 +322,7 @@
 
 - (void) exitRouteMode
 {
-    CRAPI.sharedInstance.inRouteMode = FALSE;
+    CRAPI.sharedInstance.inFollowingRouteMode = FALSE;
     if (_offCourseTimer)
         [_offCourseTimer invalidate];
 
@@ -346,7 +391,22 @@
 
     return rtn;
 }
+-(Bool) locationManagerShouldDisplayHeadingCalibration:(TrackLocationManager*)manager
+{
+    return true;
+}
 
+-(void) locationManager:(CLLocationManager *) manager
+       didFailWithError:(NSError*) error
+{
+    NSLog(@"Location manager error");
+}
+
+-(void) locationManager:(CLLocationManager *)manager
+ didChangeAuthorization:(CLAuthorizationStatus)status
+{
+    NSLog(@"Location manager changed autorization");
+}
 
 @end
 

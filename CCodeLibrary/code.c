@@ -1200,7 +1200,7 @@ long GSSifilelengthF(FILE *fid)
 long __attribute__ ((noinline)) BigReadF(FILE *fid, LPVOID pmem, long len)
 {
     long didRead = fread(pmem, 1, len, fid);
-     return didRead;
+    return didRead;
 }
 
 long __attribute__ ((noinline)) BigWriteF(FILE *fid, LPCSTR pbuf, long len, long loc)

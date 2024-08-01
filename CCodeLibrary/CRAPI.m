@@ -464,23 +464,23 @@ NVSlopeData CurrentSlopeData;
 {
     _currentSelectedWaypoint = currentSelectedWaypoint;
 }
--(void) setInRouteMode:(BOOL)inRouteMode
+-(void) setInFollowingRouteMode:(BOOL)inRouteMode
 {
-    _inRouteMode = inRouteMode;
+    _inFollowingRouteMode = inRouteMode;
 }
--(int) addPointToTrackRoute:(CLLocationCoordinate2D) location
+-(int) addPointToTrackRoute:(LLPOINT) location
 {
     //rtn = 1 means point added
     //rtn = 2 means point added and route should be saved
     int rtn = 0;
     double dist;
-    if (_amTrackingRoute)
+    if (_amBuildingRoute)
     {
         TrackRoutePoint *routePoint = TrackRoutePoint.new;
         routePoint.time = NSDate.timeIntervalSinceReferenceDate;
         LLPOINT llpt;
-        llpt.lat = location.latitude;
-        llpt.lon = location.longitude;
+        llpt.lat = location.lat;
+        llpt.lon = location.lon;
         routePoint.latlon = llpt;
 
         BOOL addIt = TRUE;
