@@ -29,6 +29,7 @@ NVSlopeData CurrentSlopeData;
 @implementation RoutePoint
 @synthesize refno;
 @synthesize latlon;
+@synthesize UTM;
 @synthesize layer;
 @synthesize layerRefno;
 @synthesize fromPCT, toPCT;
@@ -38,6 +39,7 @@ NVSlopeData CurrentSlopeData;
 @implementation TrackRoutePoint
 @synthesize refno;
 @synthesize latlon;
+@synthesize UTM;
 @synthesize time;
 @end
 
@@ -468,7 +470,7 @@ NVSlopeData CurrentSlopeData;
 {
     _inFollowingRouteMode = inRouteMode;
 }
--(int) addPointToTrackRoute:(LLPOINT) location
+-(int) addPointToTrackRoute:(TrackRoutePoint *) routePoint
 {
     //rtn = 1 means point added
     //rtn = 2 means point added and route should be saved
@@ -476,12 +478,6 @@ NVSlopeData CurrentSlopeData;
     double dist;
     if (_amBuildingRoute)
     {
-        TrackRoutePoint *routePoint = TrackRoutePoint.new;
-        routePoint.time = NSDate.timeIntervalSinceReferenceDate;
-        LLPOINT llpt;
-        llpt.lat = location.lat;
-        llpt.lon = location.lon;
-        routePoint.latlon = llpt;
 
         BOOL addIt = TRUE;
         int npt = (int)_currentTrackRoute.count;

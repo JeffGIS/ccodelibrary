@@ -866,7 +866,7 @@ static HINSTANCE laszip_HINSTANCE = NULL;
         laszip_I32 ptr = 0;
         return ptr;
     }
-    char * TEXT (char * inText)
+    char * TEXTlz (char * inText)
     {
         return inText;
     }
@@ -877,7 +877,7 @@ laszip_I32 laszip_load_dll()
     return 2;
   }
   // Load DLL file
-  laszip_HINSTANCE = LoadLibrary(TEXT("LASzip.dll"));
+  laszip_HINSTANCE = LoadLibrary(TEXTlz("LASzip.dll"));
   if (laszip_HINSTANCE == NULL) {
      return 1;
   }

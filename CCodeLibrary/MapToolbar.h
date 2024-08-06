@@ -66,6 +66,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 @property BOOL helpLongPressed, isOffset, applyRotation;
 @property (nonatomic) BOOL showIndicator;
 @property (nonatomic) CGRect previousFrame;
+@property (nonatomic) UIButton *userLocationButton;
 
 + (MapToolbar *)showMapToolbarWithCenter:(CGPoint)center
                                    view:(UIView *)view

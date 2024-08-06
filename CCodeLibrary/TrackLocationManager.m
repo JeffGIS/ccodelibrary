@@ -25,6 +25,9 @@
 @property SystemSoundID lowSoundID, highSoundID, gotGPSInputSound;
 @property NSString * savedLocationsFile;
 @property NSString * tempDirectory;
+@property int currentSimulationIndex;
+@property BOOL inSimulationMode;
+@property NSTimer *simulationTimer;
 
 @end
 
@@ -116,37 +119,81 @@
 {
     [_locationManager stopUpdatingHeading];
 }
+- (void) startSimulation
+{
+    if (CRAPI.sharedInstance.currentTrackRoute.count > 1)
+    {
+        CRAPI.sharedInstance.locationTrackingEnabled = TRUE;
+        _inSimulationMode = YES;
+        _currentSimulationIndex = 0;
+        _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:2
+                                                      target:self
+                                                    selector:@selector(simulateGPS)                                                            userInfo:nil
+                                                     repeats:YES];
+    }
 
--(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
+}
+
+- (void) simulateGPS
+{
+    if (_currentSimulationIndex < CRAPI.sharedInstance.currentTrackRoute.count)
+    {
+        TrackRoutePoint *tpt = CRAPI.sharedInstance.currentTrackRoute[_currentSimulationIndex++];
+        [self newGPSLocation:tpt.latlon];
+    }
+    else
+    {
+        [_simulationTimer invalidate];
+        _inSimulationMode = NO;
+    }
+    return;
+}
+
+- (void) newGPSLocation:(LLPOINT)pt
 {
     NSLog (@"GPS input recieved");
     AudioServicesPlaySystemSound(_gotGPSInputSound);
-    if (locations.count > 0)
+    _currentPoint = pt;
+    _atUTM = LLPointToDPoint (pt);
+    ConvertCoord(&_atUTM, LATLONPROJECTION, UTM15PROJECTION);
+    if (_amSavingLocations)
+        [self saveLocation];
+    if (self.delegate)
+        [self.delegate locationManager:self didUpdateLocations:_currentPoint];
+    double distToDest = ldistp(_atUTM, _toUTM)/ METERS_PER_YARD;
+    if (distToDest < _atDistance)
+    {
+        [self offCourseNotification:0
+                          withDelay:0];
+    }
+    if (CRAPI.sharedInstance.inFollowingRouteMode)
+    {
+        [self computeNextRoutePoint];
+        [self checkIfOffRoute:_atUTM];
+    }
+    return;
+}
+
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
+{
+    if (locations.count > 0 && !_inSimulationMode)
     {
         CLLocation * loc = locations.lastObject;
-        
-        _currentPoint.lat = loc.coordinate.latitude;
-        _currentPoint.lon = loc.coordinate.longitude;
-        if (_amSavingLocations)
-            [self saveLocation];
-        if (self.delegate)
-            [self.delegate locationManager:self didUpdateLocations:locations];
-        double distToDest = ldistp(_atUTM, _toUTM)/ METERS_PER_YARD;
-        if (distToDest < _atDistance)
-        {
-            [self offCourseNotification:0
-                              withDelay:0];
-        }
-        else if (_checkOff && [self checkIfOffRoute:_atUTM])
-        {
-            
-        }
-        if (CRAPI.sharedInstance.inFollowingRouteMode)
-            [self computeNextRoutePoint];
-
+        LLPOINT pt;
+        pt.lat = loc.coordinate.latitude;
+        pt.lon = loc.coordinate.longitude;
+        [self newGPSLocation:pt];
     }
-
     return;
+}
+
+- (void) requestWhenInUseAuthorization
+{
+    [_locationManager requestWhenInUseAuthorization];
+}
+- (void)requestLocation
+{
+    [_locationManager requestLocation];
 }
 - (void)locationManager:(CLLocationManager *)manager
        didUpdateHeading:(CLHeading *)newHeading
@@ -162,7 +209,11 @@
     
     if (Fid == NULL)
         return;
-    BigWriteF(Fid ,(LPSTR)&_currentPoint ,sizeof(LLPOINT), -1);
+    RoutePointStruct routePoint;
+    routePoint.time = NSDate.timeIntervalSinceReferenceDate;
+    routePoint.pt = _currentPoint;
+
+    BigWriteF(Fid ,(LPSTR)&routePoint ,sizeof(RoutePointStruct), -1);
     fcloseGSSi(Fid);
 }
 
@@ -178,11 +229,12 @@
     
     if (Fid != NULL)
     {
-        LLPOINT point;
-        while (BigReadF(Fid, (HPSTR)&point ,sizeof(LLPOINT)) == sizeof(LLPOINT))
+        RoutePointStruct routePoint;
+        while (BigReadF(Fid, (HPSTR)&routePoint ,sizeof(RoutePointStruct)) == sizeof(RoutePointStruct))
         {
             TrackRoutePoint * pt = TrackRoutePoint.new;
-            pt.latlon = point;
+            pt.latlon = routePoint.pt;
+            pt.time = routePoint.time;
             [array addObject:pt];
         }
         fcloseGSSi(Fid);
@@ -260,24 +312,12 @@
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
-/*-(BOOL) checkIfOffRouteTest:(LLPOINT) atLL
-{
-    DPOINT atUTM;
-    _fromUTM = saveFromUTM;
-    _toUTM = saveToUTM;
-    atUTM.x = atLL.lon;
-    atUTM.y = atLL.lat;
-    ConvertCoord(&atUTM, LATLONPROJECTION, UTM15PROJECTION);
-    [self checkIfOffRoute:atUTM];
-}*/
 -(BOOL) checkIfOffRoute:(DPOINT) currentPoint
 {
     BOOL offRoute = FALSE;
     DPOINT Line[2];
     DPOINT IntPoint;
     double offDistNext = -1;
-    //saveFromUTM = _fromUTM;
-    //saveToUTM = _toUTM;
     
     if (CRAPI.sharedInstance.inFollowingRouteMode)
     {
@@ -357,12 +397,7 @@
     HuntingData *hd = HuntingData.new;
     DPOINT Line[2];
     DPOINT IntPoint;
-    DPOINT CurrentPoint;
-    CurrentPoint.x = _currentPoint.lon;
-    CurrentPoint.y = _currentPoint.lat;
-    ConvertCoord(&CurrentPoint, LATLONPROJECTION, UTM15PROJECTION);
-    Line[0] = LLPointToDPoint (_routeStartPoint);
-    ConvertCoord(&Line[0], LATLONPROJECTION, UTM15PROJECTION);
+    Line[0] = _routeStartPoint;
 
     CRAPI.sharedInstance.currentSelectedWaypoint = -1;
     _currentRoutePointNumber = 0;
@@ -371,15 +406,15 @@
     NSArray <UserWaypoint*> *routePointArray = [hd getWaypointsOfType:@"RoutePoint"];
     for (UserWaypoint *wp in routePointArray)
     {
-        Line[1] = LLPointToDPoint (wp.latlon);
-        ConvertCoord(&Line[1], LATLONPROJECTION, UTM15PROJECTION);
+        Line[1] = wp.UTM;
         int leftOrRight=0;
-        if (GetPerpendicularIntersect (&CurrentPoint,Line,&IntPoint,TRUE,&leftOrRight))
+        if (GetPerpendicularIntersect (&_atUTM,Line,&IntPoint,TRUE,&leftOrRight))
         {
-            double offDist = ldistpp (&CurrentPoint,&IntPoint);
-            _leftOrRight = leftOrRight;
+            double offDist = ldistpp (&_atUTM,&IntPoint);
             if (offDist < minDist)
             {
+                _atUTM = Line[0];
+                _leftOrRight = leftOrRight;
                 minDist = offDist;
                 CRAPI.sharedInstance.currentSelectedWaypoint = wp.refno;
                 _currentRoutePointNumber = wp.refno;

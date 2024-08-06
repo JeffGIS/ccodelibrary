@@ -7,7 +7,7 @@
 
 @interface MapToolbar ()
 
-@property (nonatomic) UIButton *extentsButton, *userLocationButton, *legendsButton, *digitizeButton, *mapTypeButton;
+@property (nonatomic) UIButton *extentsButton, *legendsButton, *digitizeButton, *mapTypeButton;
 @property (nonatomic) UIButton *grayscaleButton, *clearMarkerButton, *emailPDFButton, *helpButton, *returnButton, *weatherButton;
 @property (nonatomic) UISegmentedControl *mapTypeSC, *platSC;
 @property (nonatomic) CGSize size;

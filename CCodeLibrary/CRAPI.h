@@ -87,12 +87,14 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @interface TrackRoutePoint : NSObject
 @property (nonatomic) INT64 refno;
 @property (nonatomic) LLPOINT latlon;
+@property (nonatomic) DPOINT UTM;
 @property int time;
 @end
 
 @interface RoutePoint : NSObject
 @property (nonatomic) INT64 refno;
 @property (nonatomic) LLPOINT latlon;
+@property (nonatomic) DPOINT UTM;
 @property int layer;
 @property INT64 layerRefno;
 @property double fromPCT, toPCT;
@@ -248,7 +250,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, nullable) NVAlertView *connectionAlert;
 @property BOOL boschIsAvailable;
 @property int currentFocusWaypoint;
-@property (nonatomic) int currentSelectedWaypoint;
+@property (nonatomic) INT64 currentSelectedWaypoint;
 @property (nonatomic, nullable) NSMutableArray *currentRoute;
 @property int currentRouteSegment;
 @property (nonatomic, nullable) NSMutableArray *currentTrackRoute;
@@ -393,7 +395,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 -(BOOL) getLastBounds:(LPMNMXCORD)pBounds;
 -(BOOL) getLastBounds:(LPMNMXCORD)pBounds
               andZoom:(float *)pZoom;
--(int) addPointToTrackRoute:(LLPOINT) location;
+-(int) addPointToTrackRoute:(TrackRoutePoint*) location;
 
 void GSSiViewDidLoad (void);
 -(void) setGPSLocation:(LLPOINT)pt

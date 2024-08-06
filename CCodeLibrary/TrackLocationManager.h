@@ -10,12 +10,16 @@
 #define TrackLocationManager_h
 
 #import <Foundation/Foundation.h>
+
+typedef struct {LLPOINT pt;
+                int time;} RoutePointStruct ;
+
 @class TrackLocationManager;
 
 @protocol TrackLocationManagerDelegate <NSObject>
 
 - (void)locationManager:(TrackLocationManager *)manager
-      didUpdateLocations:(NSArray *)locations;
+     didUpdateLocations:(LLPOINT)point;
 - (void)locationManager:(TrackLocationManager *)manager
        didUpdateHeading:(CLHeading *)newHeading;
 
@@ -43,9 +47,9 @@
 @property int nearDist;
 @property BOOL checkOffset;
 @property LLPOINT currentPoint;
-@property LLPOINT routeStartPoint;
+@property DPOINT routeStartPoint;
 @property LLPOINT fromPoint;
-@property int currentRoutePointNumber;
+@property INT64 currentRoutePointNumber;
 
 @property NSTimer * offCourseTimer;
 
@@ -53,6 +57,8 @@
 - (void)startUpdatingHeading;
 - (void)stopUpdatingLocation;
 - (void)stopUpdatingHeading;
+- (void)requestLocation;
+- (void) requestWhenInUseAuthorization;
 
 -(void) offCourseNotification:(int) opt
                     withDelay:(CGFloat) delay;
@@ -61,6 +67,8 @@
                        toLL:(LLPOINT)toLL;
 -(void) startSavingLocations;
 -(NSArray *) retrieveSavedLocations;
+- (void) startSimulation;
+
 @end
 
 #endif /* TrackLocationManager_h */

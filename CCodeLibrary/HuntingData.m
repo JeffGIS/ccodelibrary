@@ -11,6 +11,8 @@
 #import "HuntingData.h"
 #import "UserDefaults.h"
 #import "CCodeLibrary.h"
+#import "CVTCoord.h"
+#include "PROJ.H"
 
 //#import "ConfigurationControl.h"
 #define COORDINATE_FACTOR 10000000.0
@@ -424,6 +426,9 @@
         wp.time = itime;
         wp.displayOnCompass = displayOnCompass;
         wp.latlon = latlon;
+        DPOINT UTMpt = LLPointToDPoint (latlon);
+        ConvertCoord(&UTMpt, LATLONPROJECTION, UTM15PROJECTION);
+        wp.UTM = UTMpt;
         [array addObject:wp];
     }
     
@@ -463,6 +468,9 @@
         wp.time = itime;
         wp.displayOnCompass = displayOnCompass;
         wp.latlon = latlon;
+        DPOINT UTMpt = LLPointToDPoint (latlon);
+        ConvertCoord(&UTMpt, LATLONPROJECTION, UTM15PROJECTION);
+        wp.UTM = UTMpt;
         rtn = wp;
     }
     SQLOKpd(SQLiteFinalize(statement), _database, 7);
@@ -503,6 +511,9 @@
         wp.time = itime;
         wp.displayOnCompass = displayOnCompass;
         wp.latlon = latlon;
+        DPOINT UTMpt = LLPointToDPoint (latlon);
+        ConvertCoord(&UTMpt, LATLONPROJECTION, UTM15PROJECTION);
+        wp.UTM = UTMpt;
         [array addObject:wp];
     }
     
@@ -544,6 +555,9 @@
         wp.time = itime;
         wp.displayOnCompass = displayOnCompass;
         wp.latlon = latlon;
+        DPOINT UTMpt = LLPointToDPoint (latlon);
+        ConvertCoord(&UTMpt, LATLONPROJECTION, UTM15PROJECTION);
+        wp.UTM = UTMpt;
         [array addObject:wp];
     }
     
