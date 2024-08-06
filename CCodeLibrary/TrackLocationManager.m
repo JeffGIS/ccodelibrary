@@ -17,7 +17,7 @@
 
 @property CLLocationManager *locationManager;
 @property int minTimerDelay,maxTimerDelay;
-@property CGFloat timerDelay;
+@property int timerDelay;
 @property double notifyDist;
 @property int currentTimerDelay;
 @property BOOL goLeft;
@@ -28,6 +28,7 @@
 @property int currentSimulationIndex;
 @property BOOL inSimulationMode;
 @property NSTimer *simulationTimer;
+@property int numUpdates;
 
 @end
 
@@ -49,6 +50,7 @@
         _nearDistance = 20;
         _atDistance = 10;
         _closeDistance = 100;
+        _updateNotificationFrequency = 5;
         _tempDirectory = UserDefaults.defaults.nonBackedUpFilePath;
         _savedLocationsFile = [_tempDirectory stringByAppendingString:@"/savedlocations.bin"];
 
@@ -114,6 +116,8 @@
 - (void)stopUpdatingLocation
 {
     [_locationManager stopUpdatingLocation];
+    [self offCourseNotification:0
+                      withDelay:0];
 }
 - (void)stopUpdatingHeading
 {
@@ -126,7 +130,7 @@
         CRAPI.sharedInstance.locationTrackingEnabled = TRUE;
         _inSimulationMode = YES;
         _currentSimulationIndex = 0;
-        _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:2
+        _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:1
                                                       target:self
                                                     selector:@selector(simulateGPS)                                                            userInfo:nil
                                                      repeats:YES];
@@ -145,14 +149,22 @@
     {
         [_simulationTimer invalidate];
         _inSimulationMode = NO;
+        [self offCourseNotification:0
+                          withDelay:0];
+
     }
     return;
 }
 
+- (void) setDelegate:(id<TrackLocationManagerDelegate>)delegate
+{
+    _delegate = delegate;
+}
 - (void) newGPSLocation:(LLPOINT)pt
 {
     NSLog (@"GPS input recieved");
-    AudioServicesPlaySystemSound(_gotGPSInputSound);
+    if (! (_numUpdates++ % _updateNotificationFrequency))
+        AudioServicesPlaySystemSound(_gotGPSInputSound);
     _currentPoint = pt;
     _atUTM = LLPointToDPoint (pt);
     ConvertCoord(&_atUTM, LATLONPROJECTION, UTM15PROJECTION);
@@ -168,8 +180,16 @@
     }
     if (CRAPI.sharedInstance.inFollowingRouteMode)
     {
-        [self computeNextRoutePoint];
-        [self checkIfOffRoute:_atUTM];
+       INT64 destRoutePoint = [self computeNextRoutePoint];
+        if (destRoutePoint && destRoutePoint != _currentRoutePointNumber)
+        {
+            _currentRoutePointNumber = destRoutePoint;
+            if (self.delegate && [self.delegate respondsToSelector:@selector(shouldRefreshScreen:)])
+            {
+                [self.delegate shouldRefreshScreen:self];
+            }
+
+        }
     }
     return;
 }
@@ -248,10 +268,10 @@
 
 
 -(void) offCourseNotification:(int) opt
-                    withDelay:(CGFloat) delay
+                    withDelay:(int) intDelay
 {
     static int currentTimerOpt = 0;
-    int intDelay = max (IDNINT (delay/_minTimerDelay) * _minTimerDelay,_minTimerDelay);
+//    int intDelay = max (IDNINT (delay/_minTimerDelay) * _minTimerDelay,_minTimerDelay);
     
     if (opt == currentTimerOpt && intDelay == _currentTimerDelay)
         return;
@@ -259,7 +279,10 @@
     currentTimerOpt = opt;
     _currentTimerDelay = intDelay;
     if (_offCourseTimer)
+    {
         [_offCourseTimer invalidate];
+        _offCourseTimer = nil;
+    }
     switch (opt)
     {
         default:
@@ -312,57 +335,10 @@
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
--(BOOL) checkIfOffRoute:(DPOINT) currentPoint
-{
-    BOOL offRoute = FALSE;
-    DPOINT Line[2];
-    DPOINT IntPoint;
-    double offDistNext = -1;
-    
-    if (CRAPI.sharedInstance.inFollowingRouteMode)
-    {
-        if (_nextUTM.x)
-        {
-            Line[0] = _toUTM;
-            Line[1] = _nextUTM;
-            if (GetPerpendicularIntersect (&currentPoint,Line,&IntPoint,FALSE,&_leftOrRight))
-            {
-                offDistNext = ldistpp (&currentPoint,&IntPoint);
-            }
-        }
-        Line[0] = _fromUTM;
-        Line[1] = _toUTM;
-        if (GetPerpendicularIntersect (&currentPoint,Line,&IntPoint,TRUE,&_leftOrRight))
-        {
-            _offDist = ldistpp (&currentPoint,&IntPoint);
-            if (_offDist > offDistNext) //switch to next point in route
-            {
-                
-            }
-            _offDist /= METERS_PER_YARD;
-            if (_offDist > _notifyDist)
-            {
-                _timerDelay = max (_minTimerDelay,(_notifyDist/_offDist) * _maxTimerDelay);
-                [self offCourseNotification:_leftOrRight
-                                  withDelay:_timerDelay];
-            }
-            else
-                [self offCourseNotification:0
-                                  withDelay:0];
-        }
-        else
-        {
-            _offDist = 0;
-            [self offCourseNotification:0
-                              withDelay:0];
-        }
-    }
-    return offRoute;
-}
-
 - (void) exitRouteMode
 {
     CRAPI.sharedInstance.inFollowingRouteMode = FALSE;
+    CRAPI.sharedInstance.currentSelectedWaypoint = -1;
     if (_offCourseTimer)
         [_offCourseTimer invalidate];
 
@@ -391,7 +367,7 @@
 
     return;
 }
--(BOOL) computeNextRoutePoint
+-(INT64) computeNextRoutePoint
 {
     BOOL rtn = FALSE;
     HuntingData *hd = HuntingData.new;
@@ -400,7 +376,7 @@
     Line[0] = _routeStartPoint;
 
     CRAPI.sharedInstance.currentSelectedWaypoint = -1;
-    _currentRoutePointNumber = 0;
+    INT64 destinationRoutePointNumber = 0;
     double minDist = DBL_MAX;
     
     NSArray <UserWaypoint*> *routePointArray = [hd getWaypointsOfType:@"RoutePoint"];
@@ -413,18 +389,41 @@
             double offDist = ldistpp (&_atUTM,&IntPoint);
             if (offDist < minDist)
             {
-                _atUTM = Line[0];
+                _fromUTM = Line[0];
+                _toUTM = wp.UTM;
                 _leftOrRight = leftOrRight;
                 minDist = offDist;
                 CRAPI.sharedInstance.currentSelectedWaypoint = wp.refno;
-                _currentRoutePointNumber = wp.refno;
+                destinationRoutePointNumber = wp.refno;
                 rtn = TRUE;
             }
         }
         Line[0] = Line[1];
     }
+    if (rtn)
+    {
+        _offDist = minDist;
+        _offDist /= METERS_PER_YARD;
+        if (_offDist > _notifyDist)
+        {
+            if (_offDist > _notifyDist * 5)
+                _timerDelay = _minTimerDelay;
+            else if (_offDist > _notifyDist * 2)
+                _timerDelay = _minTimerDelay * 2;
+            else
+                _timerDelay = _maxTimerDelay;
+            [self offCourseNotification:_leftOrRight
+                              withDelay:_timerDelay];
+        }
+        else
+            [self offCourseNotification:0
+                              withDelay:0];
+    }
+    else
+        [self offCourseNotification:0
+                          withDelay:0];
 
-    return rtn;
+    return destinationRoutePointNumber;
 }
 -(Bool) locationManagerShouldDisplayHeadingCalibration:(TrackLocationManager*)manager
 {

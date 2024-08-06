@@ -24,6 +24,7 @@ typedef struct {LLPOINT pt;
        didUpdateHeading:(CLHeading *)newHeading;
 
 @optional
+- (void)shouldRefreshScreen:(TrackLocationManager *)manager;
 
 @end
 
@@ -50,6 +51,7 @@ typedef struct {LLPOINT pt;
 @property DPOINT routeStartPoint;
 @property LLPOINT fromPoint;
 @property INT64 currentRoutePointNumber;
+@property int updateNotificationFrequency;
 
 @property NSTimer * offCourseTimer;
 
@@ -61,7 +63,7 @@ typedef struct {LLPOINT pt;
 - (void) requestWhenInUseAuthorization;
 
 -(void) offCourseNotification:(int) opt
-                    withDelay:(CGFloat) delay;
+                    withDelay:(int) delay;
 -(void) exitRouteMode;
 -(void) createTwoPointRoute:(LLPOINT)fromLL
                        toLL:(LLPOINT)toLL;
