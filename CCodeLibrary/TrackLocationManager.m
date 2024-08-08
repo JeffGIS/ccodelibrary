@@ -23,12 +23,16 @@
 @property BOOL goLeft;
 @property BOOL amSavingLocations;
 @property SystemSoundID lowSoundID, highSoundID, gotGPSInputSound;
+@property SystemSoundID bearRightSoundID, right45SoundID, right90SoundID, right135SoundID;
+@property SystemSoundID bearLeftSoundID, left45SoundID, left90SoundID, left135SoundID, endOfRouteSoundID;
 @property NSString * savedLocationsFile;
 @property NSString * tempDirectory;
 @property int currentSimulationIndex;
 @property BOOL inSimulationMode;
 @property NSTimer *simulationTimer;
 @property int numUpdates;
+@property BOOL setTurnDegrees;
+@property double turnDegrees;
 
 @end
 
@@ -64,6 +68,25 @@
         soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/Tock.caf"];
         url = [NSURL URLWithString:soundFile];
         AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(url), &_gotGPSInputSound);
+        
+        NSURL *soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"BearRight" ofType:@"m4a"]];
+        OSStatus st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_bearRightSoundID);
+        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Right45Degrees" ofType:@"m4a"]];
+        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_right45SoundID);
+        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Right90Degrees" ofType:@"m4a"]];
+        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_right90SoundID);
+        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Right135Degrees" ofType:@"m4a"]];
+        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_right135SoundID);
+        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"BearLeft" ofType:@"m4a"]];
+        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_bearLeftSoundID);
+        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Left45Degrees" ofType:@"m4a"]];
+        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_left45SoundID);
+        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Left90Degrees" ofType:@"m4a"]];
+        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_left90SoundID);
+        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Left135Degrees" ofType:@"m4a"]];
+        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_left135SoundID);
+        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"EndOfRoute" ofType:@"m4a"]];
+        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_endOfRouteSoundID);
 
     }
     return self;
@@ -177,6 +200,7 @@
     {
         [self offCourseNotification:0
                           withDelay:0];
+        [self turnAlert];
     }
     if (CRAPI.sharedInstance.inFollowingRouteMode)
     {
@@ -335,6 +359,38 @@
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
+- (void) turnAlert
+{
+    static INT64 currentPointID = 0;
+    if (currentPointID == CRAPI.sharedInstance.currentSelectedWaypoint)
+        return;
+    currentPointID = CRAPI.sharedInstance.currentSelectedWaypoint;
+    if (_setTurnDegrees)
+    {
+        AudioServicesPlaySystemSound(_endOfRouteSoundID);
+    }
+    else
+    {
+        if (_turnDegrees < -5 && _turnDegrees > -45 * 0.5)
+            AudioServicesPlaySystemSound(_bearRightSoundID);
+        else if (_turnDegrees > -45 * 1.5 && _turnDegrees < -45 * 0.5)
+            AudioServicesPlaySystemSound(_right45SoundID);
+        else if (_turnDegrees > -45 * 2.5 && _turnDegrees < -45 * 1.5)
+            AudioServicesPlaySystemSound(_right90SoundID);
+        else if (_turnDegrees < -45 * 2.5)
+            AudioServicesPlaySystemSound(_right135SoundID);
+        else if (_turnDegrees > 5 && _turnDegrees < 45 * 0.5)
+            AudioServicesPlaySystemSound(_bearLeftSoundID);
+        else if (_turnDegrees < 45 * 1.5 && _turnDegrees > 45 * 0.5)
+            AudioServicesPlaySystemSound(_left45SoundID);
+        else if (_turnDegrees < 45 * 2.5 && _turnDegrees > 45 * 1.5)
+            AudioServicesPlaySystemSound(_left90SoundID);
+        else if (_turnDegrees > 45 * 2.5)
+            AudioServicesPlaySystemSound(_left135SoundID);
+
+    }
+}
+
 - (void) exitRouteMode
 {
     CRAPI.sharedInstance.inFollowingRouteMode = FALSE;
@@ -378,11 +434,22 @@
     CRAPI.sharedInstance.currentSelectedWaypoint = -1;
     INT64 destinationRoutePointNumber = 0;
     double minDist = DBL_MAX;
-    
+    _setTurnDegrees = FALSE;
+    double AZ1=0, AZ2=0;
+    int legNum = 0;
+    _turnDegrees = 0;
     NSArray <UserWaypoint*> *routePointArray = [hd getWaypointsOfType:@"RoutePoint"];
     for (UserWaypoint *wp in routePointArray)
     {
+        legNum++;
         Line[1] = wp.UTM;
+        AZ2 = getazdp (&Line[0],&Line[1]);
+        if (_setTurnDegrees)
+        {
+            _turnDegrees = DeltaAZD(AZ1, AZ2);
+            _turnDegrees *= RADtoDEG;
+            _setTurnDegrees = FALSE;
+        }
         int leftOrRight=0;
         if (GetPerpendicularIntersect (&_atUTM,Line,&IntPoint,TRUE,&leftOrRight))
         {
@@ -395,10 +462,12 @@
                 minDist = offDist;
                 CRAPI.sharedInstance.currentSelectedWaypoint = wp.refno;
                 destinationRoutePointNumber = wp.refno;
+                _setTurnDegrees = TRUE;
                 rtn = TRUE;
             }
         }
         Line[0] = Line[1];
+        AZ1 = AZ2;
     }
     if (rtn)
     {
