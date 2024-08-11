@@ -169,7 +169,7 @@
     NSString *cmd = @"CREATE TABLE IF NOT EXISTS UserWayPoints (id INTEGER PRIMARY KEY AUTOINCREMENT,Name CHAR(32), Type CHAR(32), LAT DOUBLE,LON DOUBLE, TimeCreated INT, Description CHAR(256), DisplayOnCompass INT)";
     rtn = !SQLOK(__FILE__,__LINE__, SQLiteExec(_database, cmd.UTF8String, 0, 0, 0), _database);
     
-    cmd = @"CREATE TABLE IF NOT EXISTS TrackRoutes (id INTEGER PRIMARY KEY AUTOINCREMENT,TimeSaved INT, TimeCreated INT, LAT double, LON double)";
+    cmd = @"CREATE TABLE IF NOT EXISTS TrackRoutes (id INTEGER PRIMARY KEY AUTOINCREMENT,TimeSaved INT, TimeCreated INT, LAT double, LON double, GPSHeading double)";
     rtn = !SQLOK(__FILE__,__LINE__, SQLiteExec(_database, cmd.UTF8String, 0, 0, 0), _database);
     
     cmd = @"CREATE TABLE IF NOT EXISTS Configs (id INTEGER PRIMARY KEY AUTOINCREMENT,Name CHAR(128), TimeSaved INT, MapType INT, LAT double, LON double, Zoom double)";
@@ -253,7 +253,7 @@
     BOOL rtn;
     for (TrackRoutePoint *tpt in CRAPI.sharedInstance.currentTrackRoute)
     {
-        cmd = [NSString stringWithFormat:@"INSERT INTO USERDATA.TrackRoutes (TimeSaved,TimeCreated,LAT,LON) VALUES(%i,%i,%f,%f)",saveTime,tpt.time,tpt.latlon.lat,tpt.latlon.lon];
+        cmd = [NSString stringWithFormat:@"INSERT INTO USERDATA.TrackRoutes (TimeSaved,TimeCreated,LAT,LON,GPSHeading) VALUES(%i,%i,%f,%f,%f)",saveTime,tpt.time,tpt.latlon.lat,tpt.latlon.lon,tpt.GPSHeading];
         rtn = !SQLOK(__FILE__,__LINE__, SQLiteExec(_database, cmd.UTF8String, 0, 0, 0), _database);
     }
 
@@ -267,7 +267,7 @@
     NSMutableArray *array = NSMutableArray.new;
     int nPointsInRoute = 0;
     BOOL opened = [self open];
-    NSString *query = [NSString stringWithFormat:@"SELECT TimeCreated,LAT,LON FROM USERDATA.TrackRoutes WHERE TimeSaved = %i",timeSaved];
+    NSString *query = [NSString stringWithFormat:@"SELECT TimeCreated,LAT,LON,GPSHeading FROM USERDATA.TrackRoutes WHERE TimeSaved = %i",timeSaved];
     
     sqlite3_stmt *statement = NULL;
     
@@ -281,6 +281,7 @@
         routePoint.time = sqlite3_column_int(statement, i++);
         llpt.lat = sqlite3_column_double(statement, i++);
         llpt.lon = sqlite3_column_double(statement, i++);
+        routePoint.GPSHeading = sqlite3_column_double(statement, i++);
         routePoint.latlon = llpt;
         [array addObject:routePoint];
         nPointsInRoute++;

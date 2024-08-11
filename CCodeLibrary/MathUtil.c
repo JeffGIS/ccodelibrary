@@ -1368,13 +1368,13 @@ Bool LINFIT(LPDPOINT pPoint, long N, double *A, double *B, double *MAXDIF, long 
     if (MAXDIF)
     {
         pPoint = pPointIn;
-        //double A1=slopeToAZ(*B), A2=A1 + HALFPI;
-        //double tol = 0.0001;
+        double A1=slopeToAZ(*B), A2=A1 + HALFPI;
+        double tol = 0.0001;
         for (I = 0; I < N; I++, pPoint++)
         {
             DPOINT intPt;
             DIFF = fabs(pPoint->y - (*A + *B * pPoint->x));
-            //short rtn = LINSEC_TOL (pPoint->x,pPoint->y,A2,0,*A,A1,&intPt.x,&intPt.y,tol);
+            short rtn = LINSEC_TOL (pPoint->x,pPoint->y,A2,0,*A,A1,&intPt.x,&intPt.y,tol);
             DIFF = ldistpp(&intPt,pPoint);
             if (DIFF > *MAXDIF)
             {

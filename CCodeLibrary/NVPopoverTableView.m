@@ -252,7 +252,7 @@
         return MAX(_groupArray.count, 1);
     
     else
-        return MAX(_textArray.count, 1);
+        return MAX(_textArray.count, 0);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView

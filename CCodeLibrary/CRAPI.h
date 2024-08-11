@@ -88,6 +88,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic) INT64 refno;
 @property (nonatomic) LLPOINT latlon;
 @property (nonatomic) DPOINT UTM;
+@property double GPSHeading;
 @property int time;
 @end
 

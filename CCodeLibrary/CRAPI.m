@@ -40,6 +40,7 @@ NVSlopeData CurrentSlopeData;
 @synthesize refno;
 @synthesize latlon;
 @synthesize UTM;
+@synthesize GPSHeading;
 @synthesize time;
 @end
 

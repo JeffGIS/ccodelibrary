@@ -12,14 +12,16 @@
 #import <Foundation/Foundation.h>
 
 typedef struct {LLPOINT pt;
-                int time;} RoutePointStruct ;
+    int time;
+    double GPSHeading;} RoutePointStruct ;
 
 @class TrackLocationManager;
 
 @protocol TrackLocationManagerDelegate <NSObject>
 
 - (void)locationManager:(TrackLocationManager *)manager
-     didUpdateLocations:(LLPOINT)point;
+     didUpdateLocations:(LLPOINT)point
+             GPSHeading:(double)gpsHeading;
 - (void)locationManager:(TrackLocationManager *)manager
        didUpdateHeading:(CLHeading *)newHeading;
 
@@ -38,6 +40,8 @@ typedef struct {LLPOINT pt;
 @property (nonatomic)CLActivityType activityType;
 @property (nonatomic) BOOL allowsBackgroundLocationUpdates;
 @property (nonatomic)BOOL pausesLocationUpdatesAutomatically;
+@property (nonatomic) double GPSHeading;
+@property (nonatomic) double GPSHeadingFromPoints;
 @property DPOINT fromUTM, toUTM, atUTM, nextUTM;
 @property int atDistance;
 @property int nearDistance;

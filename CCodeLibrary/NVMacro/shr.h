@@ -717,6 +717,8 @@ POINT newptscreen(POINT OldPoint, double AZM, double DIS);
 DPOINT dnewptproj (DPOINT OldPoint, double AZM, double DIS);
 void LNEWPT (double X,double Y,LPDOUBLE NewX,LPDOUBLE NewY, double AZM, double DIS);  
 Bool MemError (void);
+double HeadingToAzimuth (double heading);
+
 
 //Bool copyfile (LPSTR ToFile, LPSTR FromFile,short AppendOrReplace,long StartPos,long EndPos,HWND hWndDlg,UINT StatusCntl,long TotLen,LPLONG pCurLoc);
 LPSTR FirstNonBlank(LPSTR Text);

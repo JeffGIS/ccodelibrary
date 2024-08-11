@@ -33,6 +33,11 @@
 @property int numUpdates;
 @property BOOL setTurnDegrees;
 @property double turnDegrees;
+@property int numLastPoints;
+@property int maxLastPoints;
+@property LPDPOINT pLastPoints;
+@property double distToRoute;
+@property double currentGPSHeading;
 
 @end
 
@@ -51,6 +56,9 @@
         _timerDelay = _maxTimerDelay;
         _currentTimerDelay = 0;
         _notifyDist = 10;
+        _numLastPoints = 0;
+        _maxLastPoints = 8;
+        _pLastPoints = malloc (sizeof(DPOINT)*_maxLastPoints+4);
         _nearDistance = 20;
         _atDistance = 10;
         _closeDistance = 100;
@@ -131,6 +139,7 @@
 - (void)startUpdatingLocation
 {
     [_locationManager startUpdatingLocation];
+    _numLastPoints = 0;
 }
 - (void)startUpdatingHeading
 {
@@ -141,6 +150,7 @@
     [_locationManager stopUpdatingLocation];
     [self offCourseNotification:0
                       withDelay:0];
+    _numLastPoints = 0;
 }
 - (void)stopUpdatingHeading
 {
@@ -166,7 +176,8 @@
     if (_currentSimulationIndex < CRAPI.sharedInstance.currentTrackRoute.count)
     {
         TrackRoutePoint *tpt = CRAPI.sharedInstance.currentTrackRoute[_currentSimulationIndex++];
-        [self newGPSLocation:tpt.latlon];
+        [self newGPSLocation:tpt.latlon
+                     heading:tpt.GPSHeading];
     }
     else
     {
@@ -184,23 +195,27 @@
     _delegate = delegate;
 }
 - (void) newGPSLocation:(LLPOINT)pt
+                heading:(double)GPSHeading
 {
     NSLog (@"GPS input recieved");
     if (! (_numUpdates++ % _updateNotificationFrequency))
         AudioServicesPlaySystemSound(_gotGPSInputSound);
     _currentPoint = pt;
+    _currentGPSHeading = GPSHeading;
     _atUTM = LLPointToDPoint (pt);
     ConvertCoord(&_atUTM, LATLONPROJECTION, UTM15PROJECTION);
+    [self addPointToLastPoints];
     if (_amSavingLocations)
         [self saveLocation];
     if (self.delegate)
-        [self.delegate locationManager:self didUpdateLocations:_currentPoint];
+        [self.delegate locationManager:self didUpdateLocations:_currentPoint
+                            GPSHeading:GPSHeading];
     double distToDest = ldistp(_atUTM, _toUTM)/ METERS_PER_YARD;
     if (distToDest < _atDistance)
     {
         [self offCourseNotification:0
                           withDelay:0];
-        [self turnAlert];
+        //[self turnAlert];
     }
     if (CRAPI.sharedInstance.inFollowingRouteMode)
     {
@@ -212,7 +227,8 @@
             {
                 [self.delegate shouldRefreshScreen:self];
             }
-
+            if (_distToRoute < _atDistance)
+                [self turnAlert];
         }
     }
     return;
@@ -226,7 +242,9 @@
         LLPOINT pt;
         pt.lat = loc.coordinate.latitude;
         pt.lon = loc.coordinate.longitude;
-        [self newGPSLocation:pt];
+        _GPSHeading = loc.course;
+        [self newGPSLocation:pt
+                     heading:loc.course];
     }
     return;
 }
@@ -256,6 +274,7 @@
     RoutePointStruct routePoint;
     routePoint.time = NSDate.timeIntervalSinceReferenceDate;
     routePoint.pt = _currentPoint;
+    routePoint.GPSHeading = _currentGPSHeading;
 
     BigWriteF(Fid ,(LPSTR)&routePoint ,sizeof(RoutePointStruct), -1);
     fcloseGSSi(Fid);
@@ -279,6 +298,7 @@
             TrackRoutePoint * pt = TrackRoutePoint.new;
             pt.latlon = routePoint.pt;
             pt.time = routePoint.time;
+            pt.GPSHeading = routePoint.GPSHeading;
             [array addObject:pt];
         }
         fcloseGSSi(Fid);
@@ -290,6 +310,48 @@
     return array;
 }
 
+- (void) addPointToLastPoints
+{
+    if (_numLastPoints < _maxLastPoints)
+        _pLastPoints[_numLastPoints++] = _atUTM;
+    else
+    {
+        for (int i = 0;i < _numLastPoints; i++)
+        {
+            if (i < _maxLastPoints -1)
+            _pLastPoints[i+1] = _pLastPoints[i];
+        }
+        _pLastPoints[0] = _atUTM;
+    }
+   
+}
+
+- (double) GPSHeadingFromPoints
+{
+    double A, B, maxDiff=0;
+    long locOfMaxDiff;
+    if (_numLastPoints < 3)
+        return 1000;
+    double xmin = UINT_MAX, xmax = -UINT_MAX;
+    for (int i=0;i<_numLastPoints;i++)
+    {
+        if (_pLastPoints[i].x < xmin)
+            xmin = _pLastPoints[i].x;
+        if (_pLastPoints[i].x > xmax)
+            xmax = _pLastPoints[i].x;
+    }
+    if (LINFIT(_pLastPoints, _numLastPoints, &A, &B, &maxDiff, &locOfMaxDiff))
+    {
+        DPOINT pPoints[2];
+        pPoints[0].x = xmin;
+        pPoints[0].y = A + pPoints[0].x * B;
+        pPoints[1].x = xmax;
+        pPoints[1].y = A + pPoints[1].x * B;
+        double AZ = getazdp(&pPoints[0], &pPoints[1]);
+        return AZMToHeading(AZ);
+    }
+    return 1000;
+}
 
 -(void) offCourseNotification:(int) opt
                     withDelay:(int) intDelay
@@ -446,7 +508,8 @@
         AZ2 = getazdp (&Line[0],&Line[1]);
         if (_setTurnDegrees)
         {
-            _turnDegrees = DeltaAZD(AZ1, AZ2);
+            double gpsAz = HeadingToAzimuth (_GPSHeading);
+            _turnDegrees = DeltaAZD(gpsAz, AZ2);
             _turnDegrees *= RADtoDEG;
             _setTurnDegrees = FALSE;
         }
@@ -458,8 +521,10 @@
             {
                 _fromUTM = Line[0];
                 _toUTM = wp.UTM;
+                AZ1 = getazdp (&_atUTM,&IntPoint);
                 _leftOrRight = leftOrRight;
                 minDist = offDist;
+                _distToRoute = minDist / METERS_PER_YARD;
                 CRAPI.sharedInstance.currentSelectedWaypoint = wp.refno;
                 destinationRoutePointNumber = wp.refno;
                 _setTurnDegrees = TRUE;
@@ -467,7 +532,6 @@
             }
         }
         Line[0] = Line[1];
-        AZ1 = AZ2;
     }
     if (rtn)
     {
