@@ -56,6 +56,8 @@ typedef struct {LLPOINT pt;
 @property LLPOINT fromPoint;
 @property INT64 currentRoutePointNumber;
 @property int updateNotificationFrequency;
+@property BOOL inSimulationMode;
+
 
 @property NSTimer * offCourseTimer;
 
@@ -74,6 +76,7 @@ typedef struct {LLPOINT pt;
 -(void) startSavingLocations;
 -(NSArray *) retrieveSavedLocations;
 - (void) startSimulation;
+- (void) startSimulationAt:(LLPOINT)startPoint;
 
 @end
 

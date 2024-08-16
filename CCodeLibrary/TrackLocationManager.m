@@ -28,16 +28,16 @@
 @property NSString * savedLocationsFile;
 @property NSString * tempDirectory;
 @property int currentSimulationIndex;
-@property BOOL inSimulationMode;
 @property NSTimer *simulationTimer;
 @property int numUpdates;
-@property BOOL setTurnDegrees;
+@property BOOL atEndOfRoute;
 @property double turnDegrees;
 @property int numLastPoints;
 @property int maxLastPoints;
 @property LPDPOINT pLastPoints;
 @property double distToRoute;
 @property double currentGPSHeading;
+@property double headingToNextPoint;
 
 @end
 
@@ -170,7 +170,33 @@
     }
 
 }
+- (void) startSimulationAt:(LLPOINT)startPoint
+{
+    int nearPoint = 0;
+    int index = 0;
+    double nearDist = DBL_MAX;
+    for (TrackRoutePoint *tpt in CRAPI.sharedInstance.currentTrackRoute)
+    {
+        double dist = ArcDistanceLL(tpt.latlon, startPoint);
+        if (dist < nearDist)
+        {
+            nearDist = dist;
+            nearPoint = index;
+        }
+        index++;
+    }
+    if (CRAPI.sharedInstance.currentTrackRoute.count > 1)
+    {
+        CRAPI.sharedInstance.locationTrackingEnabled = TRUE;
+        _inSimulationMode = YES;
+        _currentSimulationIndex = nearPoint;
+        _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:1
+                                                      target:self
+                                                    selector:@selector(simulateGPS)                                                            userInfo:nil
+                                                     repeats:YES];
+    }
 
+}
 - (void) simulateGPS
 {
     if (_currentSimulationIndex < CRAPI.sharedInstance.currentTrackRoute.count)
@@ -227,7 +253,7 @@
             {
                 [self.delegate shouldRefreshScreen:self];
             }
-            if (_distToRoute < _atDistance)
+            //if (_distToRoute < _atDistance)
                 [self turnAlert];
         }
     }
@@ -427,12 +453,14 @@
     if (currentPointID == CRAPI.sharedInstance.currentSelectedWaypoint)
         return;
     currentPointID = CRAPI.sharedInstance.currentSelectedWaypoint;
-    if (_setTurnDegrees)
+    if (_atEndOfRoute)
     {
         AudioServicesPlaySystemSound(_endOfRouteSoundID);
     }
     else
     {
+        double ch = _currentGPSHeading;
+        double nextPt = _headingToNextPoint;
         if (_turnDegrees < -5 && _turnDegrees > -45 * 0.5)
             AudioServicesPlaySystemSound(_bearRightSoundID);
         else if (_turnDegrees > -45 * 1.5 && _turnDegrees < -45 * 0.5)
@@ -485,18 +513,25 @@
 
     return;
 }
+static double HeadingFromAZ (double az)
+{
+    double heading = az + HALFPI;
+    heading = LTWOPI (heading);
+    return heading;
+}
+
 -(INT64) computeNextRoutePoint
 {
     BOOL rtn = FALSE;
     HuntingData *hd = HuntingData.new;
-    DPOINT Line[2];
+    DPOINT RoutePoint[2];
     DPOINT IntPoint;
-    Line[0] = _routeStartPoint;
+    RoutePoint[0] = _routeStartPoint;
 
     CRAPI.sharedInstance.currentSelectedWaypoint = -1;
     INT64 destinationRoutePointNumber = 0;
     double minDist = DBL_MAX;
-    _setTurnDegrees = FALSE;
+    _atEndOfRoute = FALSE;
     double AZ1=0, AZ2=0;
     int legNum = 0;
     _turnDegrees = 0;
@@ -504,22 +539,16 @@
     for (UserWaypoint *wp in routePointArray)
     {
         legNum++;
-        Line[1] = wp.UTM;
-        AZ2 = getazdp (&Line[0],&Line[1]);
-        if (_setTurnDegrees)
-        {
-            double gpsAz = HeadingToAzimuth (_GPSHeading);
-            _turnDegrees = DeltaAZD(gpsAz, AZ2);
-            _turnDegrees *= RADtoDEG;
-            _setTurnDegrees = FALSE;
-        }
+        _atEndOfRoute = FALSE;
+        RoutePoint[1] = wp.UTM;
+        AZ2 = getazdp (&RoutePoint[0],&RoutePoint[1]);
         int leftOrRight=0;
-        if (GetPerpendicularIntersect (&_atUTM,Line,&IntPoint,TRUE,&leftOrRight))
+        if (GetPerpendicularIntersect (&_atUTM,RoutePoint,&IntPoint,TRUE,&leftOrRight))
         {
             double offDist = ldistpp (&_atUTM,&IntPoint);
             if (offDist < minDist)
             {
-                _fromUTM = Line[0];
+                _fromUTM = RoutePoint[0];
                 _toUTM = wp.UTM;
                 AZ1 = getazdp (&_atUTM,&IntPoint);
                 _leftOrRight = leftOrRight;
@@ -527,11 +556,15 @@
                 _distToRoute = minDist / METERS_PER_YARD;
                 CRAPI.sharedInstance.currentSelectedWaypoint = wp.refno;
                 destinationRoutePointNumber = wp.refno;
-                _setTurnDegrees = TRUE;
+                double gpsAz = HeadingToAzimuth (_currentGPSHeading);
+                _turnDegrees = DeltaAZD(gpsAz, AZ2);
+                _headingToNextPoint = HeadingFromAZ(AZ2) * RADtoDEG;
+                _turnDegrees *= RADtoDEG;
+                _atEndOfRoute = FALSE;
                 rtn = TRUE;
             }
         }
-        Line[0] = Line[1];
+        RoutePoint[0] = RoutePoint[1];
     }
     if (rtn)
     {
