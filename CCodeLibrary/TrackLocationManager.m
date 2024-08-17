@@ -19,12 +19,15 @@
 @property int minTimerDelay,maxTimerDelay;
 @property int timerDelay;
 @property double notifyDist;
+@property double maxVolumeDist;
 @property int currentTimerDelay;
 @property BOOL goLeft;
 @property BOOL amSavingLocations;
-@property SystemSoundID lowSoundID, highSoundID, gotGPSInputSound;
-@property SystemSoundID bearRightSoundID, right45SoundID, right90SoundID, right135SoundID;
-@property SystemSoundID bearLeftSoundID, left45SoundID, left90SoundID, left135SoundID, endOfRouteSoundID;
+@property NSURL *leftSoundURL, *rightSoundURL, *gotGPSInputSoundURL;
+@property NSURL *bearRightSoundURL, *right45SoundURL, *right90SoundURL, *right135SoundURL;
+@property NSURL *bearLeftSoundURL, *left45SoundURL, *left90SoundURL, *left135SoundURL, *endOfRouteSoundURL, *turnArroundSoundURL;
+@property NSURL *currentGPSTickURL;
+@property float currentGPSTickVol;
 @property NSString * savedLocationsFile;
 @property NSString * tempDirectory;
 @property int currentSimulationIndex;
@@ -38,6 +41,8 @@
 @property double distToRoute;
 @property double currentGPSHeading;
 @property double headingToNextPoint;
+@property AVAudioPlayer *appSoundPlayer;
+@property BOOL isPlayingAudio;
 
 @end
 
@@ -56,6 +61,7 @@
         _timerDelay = _maxTimerDelay;
         _currentTimerDelay = 0;
         _notifyDist = 10;
+        _maxVolumeDist = 500;
         _numLastPoints = 0;
         _maxLastPoints = 8;
         _pLastPoints = malloc (sizeof(DPOINT)*_maxLastPoints+4);
@@ -65,36 +71,25 @@
         _updateNotificationFrequency = 5;
         _tempDirectory = UserDefaults.defaults.nonBackedUpFilePath;
         _savedLocationsFile = [_tempDirectory stringByAppendingString:@"/savedlocations.bin"];
-
         InitProj4CoordConv (FALSE);
         NSString *soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/short_double_high.caf"];
-        NSURL *url = [NSURL URLWithString:soundFile];
-        AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(url), &_highSoundID);
+        _leftSoundURL = [NSURL URLWithString:soundFile];
         soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/short_double_low.caf"];
-        url = [NSURL URLWithString:soundFile];
-        AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(url), &_lowSoundID);
+        _rightSoundURL = [NSURL URLWithString:soundFile];
         soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/Tock.caf"];
-        url = [NSURL URLWithString:soundFile];
-        AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(url), &_gotGPSInputSound);
-        
-        NSURL *soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"BearRight" ofType:@"m4a"]];
-        OSStatus st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_bearRightSoundID);
-        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Right45Degrees" ofType:@"m4a"]];
-        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_right45SoundID);
-        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Right90Degrees" ofType:@"m4a"]];
-        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_right90SoundID);
-        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Right135Degrees" ofType:@"m4a"]];
-        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_right135SoundID);
-        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"BearLeft" ofType:@"m4a"]];
-        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_bearLeftSoundID);
-        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Left45Degrees" ofType:@"m4a"]];
-        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_left45SoundID);
-        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Left90Degrees" ofType:@"m4a"]];
-        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_left90SoundID);
-        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Left135Degrees" ofType:@"m4a"]];
-        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_left135SoundID);
-        soundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"EndOfRoute" ofType:@"m4a"]];
-        st = AudioServicesCreateSystemSoundID((__bridge CFURLRef _Nonnull)(soundURL), &_endOfRouteSoundID);
+        _gotGPSInputSoundURL = [NSURL URLWithString:soundFile];
+        _bearRightSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"BearRight" ofType:@"m4a"]];
+        _right45SoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Right45Degrees" ofType:@"m4a"]];
+        _right90SoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Right90Degrees" ofType:@"m4a"]];
+        _right135SoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Right135Degrees" ofType:@"m4a"]];
+        _bearLeftSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"BearLeft" ofType:@"m4a"]];
+        _left45SoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Left45Degrees" ofType:@"m4a"]];
+        _left90SoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Left90Degrees" ofType:@"m4a"]];
+        _left135SoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Left135Degrees" ofType:@"m4a"]];
+        _endOfRouteSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"EndOfRoute" ofType:@"m4a"]];
+        _turnArroundSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"EndOfRoute" ofType:@"m4a"]];
+        _currentGPSTickURL = _gotGPSInputSoundURL;
+        _currentGPSTickVol = 1;
 
     }
     return self;
@@ -103,8 +98,8 @@
 
 - (void) dealloc
 {
-    AudioServicesDisposeSystemSoundID(_lowSoundID);
-    AudioServicesDisposeSystemSoundID(_highSoundID);
+    //AudioServicesDisposeSystemSoundID(_lowSoundID);
+    //AudioServicesDisposeSystemSoundID(_highSoundID);
 }
 
 - (void) setDistanceFilter:(CLLocationDistance) dist
@@ -158,6 +153,7 @@
 }
 - (void) startSimulation
 {
+    [_simulationTimer invalidate];
     if (CRAPI.sharedInstance.currentTrackRoute.count > 1)
     {
         CRAPI.sharedInstance.locationTrackingEnabled = TRUE;
@@ -175,6 +171,8 @@
     int nearPoint = 0;
     int index = 0;
     double nearDist = DBL_MAX;
+    if (_simulationTimer)
+        [_simulationTimer invalidate];
     for (TrackRoutePoint *tpt in CRAPI.sharedInstance.currentTrackRoute)
     {
         double dist = ArcDistanceLL(tpt.latlon, startPoint);
@@ -223,9 +221,12 @@
 - (void) newGPSLocation:(LLPOINT)pt
                 heading:(double)GPSHeading
 {
+    static int turnArroundCount = 0;
     NSLog (@"GPS input recieved");
     if (! (_numUpdates++ % _updateNotificationFrequency))
-        AudioServicesPlaySystemSound(_gotGPSInputSound);
+        //AudioServicesPlaySystemSound(_gotGPSInputSound);
+        [self playRecording:_currentGPSTickURL
+                     volume:_currentGPSTickVol];
     _currentPoint = pt;
     _currentGPSHeading = GPSHeading;
     _atUTM = LLPointToDPoint (pt);
@@ -255,6 +256,17 @@
             }
             //if (_distToRoute < _atDistance)
                 [self turnAlert];
+        }
+        if (_turnDegrees >= 150 || _turnDegrees <= -150)
+        {
+            turnArroundCount++;
+        }
+        else
+            turnArroundCount = 0;
+        if (turnArroundCount > 2)
+        {
+            turnArroundCount = 0;
+            [self playRecording:_turnArroundSoundURL];
         }
     }
     return;
@@ -382,11 +394,23 @@
 -(void) offCourseNotification:(int) opt
                     withDelay:(int) intDelay
 {
+    [self offCourseNotification:opt
+                      withDelay:intDelay
+                         volume:1];
+}
+-(void) offCourseNotification:(int) opt
+                    withDelay:(int) intDelay
+                       volume:(float)vol
+    {
     static int currentTimerOpt = 0;
 //    int intDelay = max (IDNINT (delay/_minTimerDelay) * _minTimerDelay,_minTimerDelay);
     
     if (opt == currentTimerOpt && intDelay == _currentTimerDelay)
+    {
+        if (opt)
+            _currentGPSTickVol = vol;
         return;
+    }
     _goLeft = FALSE;
     currentTimerOpt = opt;
     _currentTimerDelay = intDelay;
@@ -400,10 +424,17 @@
         default:
         case 0:
             _offCourseTimer = nil;
+            _currentGPSTickURL = _gotGPSInputSoundURL;
+            _currentGPSTickVol = 1;
             break;
         case RIGHT: //go left
+            _currentGPSTickURL = _rightSoundURL;
+            _currentGPSTickVol = vol;
             _goLeft = TRUE;
+            break;
         case LEFT: //go right
+            _currentGPSTickURL = _leftSoundURL;
+            _currentGPSTickVol = vol;
             if (!_offCourseTimer)
                 _offCourseTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(offCourseNotificationPlay:) userInfo:nil repeats:NO];
             _offCourseTimer = [NSTimer scheduledTimerWithTimeInterval:_currentTimerDelay target:self selector:@selector(offCourseNotificationPlay:) userInfo:nil repeats:YES];
@@ -414,9 +445,10 @@
 }
 -(void) offCourseNotificationPlay:(NSTimer *) timer
 {
+    return;
     if (_goLeft)
     {
-        AudioServicesPlaySystemSound(_lowSoundID);
+        //AudioServicesPlaySystemSound(_lowSoundID);
         [self performSelector:@selector(vibrate)
                    withObject:nil
                    afterDelay:0.5];
@@ -430,7 +462,7 @@
     else
     {
 
-        AudioServicesPlaySystemSound(_highSoundID);
+        //AudioServicesPlaySystemSound(_highSoundID);
         [self performSelector:@selector(vibrate)
                    withObject:nil
                    afterDelay:0.5];
@@ -455,28 +487,28 @@
     currentPointID = CRAPI.sharedInstance.currentSelectedWaypoint;
     if (_atEndOfRoute)
     {
-        AudioServicesPlaySystemSound(_endOfRouteSoundID);
+        [self playRecording:_endOfRouteSoundURL];
     }
     else
     {
         double ch = _currentGPSHeading;
         double nextPt = _headingToNextPoint;
         if (_turnDegrees < -5 && _turnDegrees > -45 * 0.5)
-            AudioServicesPlaySystemSound(_bearRightSoundID);
+            [self playRecording:_bearRightSoundURL];
         else if (_turnDegrees > -45 * 1.5 && _turnDegrees < -45 * 0.5)
-            AudioServicesPlaySystemSound(_right45SoundID);
+            [self playRecording:_right45SoundURL];
         else if (_turnDegrees > -45 * 2.5 && _turnDegrees < -45 * 1.5)
-            AudioServicesPlaySystemSound(_right90SoundID);
+            [self playRecording:_right90SoundURL];
         else if (_turnDegrees < -45 * 2.5)
-            AudioServicesPlaySystemSound(_right135SoundID);
+            [self playRecording:_right135SoundURL];
         else if (_turnDegrees > 5 && _turnDegrees < 45 * 0.5)
-            AudioServicesPlaySystemSound(_bearLeftSoundID);
+            [self playRecording:_bearLeftSoundURL];
         else if (_turnDegrees < 45 * 1.5 && _turnDegrees > 45 * 0.5)
-            AudioServicesPlaySystemSound(_left45SoundID);
+            [self playRecording:_left45SoundURL];
         else if (_turnDegrees < 45 * 2.5 && _turnDegrees > 45 * 1.5)
-            AudioServicesPlaySystemSound(_left90SoundID);
+            [self playRecording:_left90SoundURL];
         else if (_turnDegrees > 45 * 2.5)
-            AudioServicesPlaySystemSound(_left135SoundID);
+            [self playRecording:_left135SoundURL];
 
     }
 }
@@ -526,6 +558,8 @@ static double HeadingFromAZ (double az)
     HuntingData *hd = HuntingData.new;
     DPOINT RoutePoint[2];
     DPOINT IntPoint;
+    DPOINT routeEndPoint;
+    
     RoutePoint[0] = _routeStartPoint;
 
     CRAPI.sharedInstance.currentSelectedWaypoint = -1;
@@ -536,6 +570,11 @@ static double HeadingFromAZ (double az)
     int legNum = 0;
     _turnDegrees = 0;
     NSArray <UserWaypoint*> *routePointArray = [hd getWaypointsOfType:@"RoutePoint"];
+    if (routePointArray.count)
+    {
+        UserWaypoint *wp = routePointArray.lastObject;
+        routeEndPoint = wp.UTM;
+    }
     for (UserWaypoint *wp in routePointArray)
     {
         legNum++;
@@ -560,7 +599,14 @@ static double HeadingFromAZ (double az)
                 _turnDegrees = DeltaAZD(gpsAz, AZ2);
                 _headingToNextPoint = HeadingFromAZ(AZ2) * RADtoDEG;
                 _turnDegrees *= RADtoDEG;
-                _atEndOfRoute = FALSE;
+                if (legNum >= routePointArray.count)
+                {
+                    double d = ldistpp (&routeEndPoint,&IntPoint);
+                    if (d < _atDistance)
+                        _atEndOfRoute = TRUE;
+                }
+                else
+                    _atEndOfRoute = FALSE;
                 rtn = TRUE;
             }
         }
@@ -568,10 +614,12 @@ static double HeadingFromAZ (double az)
     }
     if (rtn)
     {
+        float vol;
         _offDist = minDist;
         _offDist /= METERS_PER_YARD;
         if (_offDist > _notifyDist)
         {
+            vol = 0.01 + (_offDist - _notifyDist) / _maxVolumeDist;
             if (_offDist > _notifyDist * 5)
                 _timerDelay = _minTimerDelay;
             else if (_offDist > _notifyDist * 2)
@@ -579,7 +627,8 @@ static double HeadingFromAZ (double az)
             else
                 _timerDelay = _maxTimerDelay;
             [self offCourseNotification:_leftOrRight
-                              withDelay:_timerDelay];
+                              withDelay:_timerDelay
+                                 volume:vol];
         }
         else
             [self offCourseNotification:0
@@ -606,6 +655,44 @@ static double HeadingFromAZ (double az)
  didChangeAuthorization:(CLAuthorizationStatus)status
 {
     NSLog(@"Location manager changed autorization");
+}
+
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
+{
+    _isPlayingAudio = FALSE;
+}
+
+- (BOOL)playRecording:(NSURL*)url
+               volume:(float)vol
+{
+    if (!_isPlayingAudio)
+    {
+        
+        NSError *error;
+        
+        AVAudioPlayer *newPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL: url error:&error];
+        if (error)
+        {
+            NSLog(@"Player ERROR: %@", error.localizedDescription);
+            return FALSE;
+        }
+        _appSoundPlayer = newPlayer;
+        [_appSoundPlayer prepareToPlay];
+        [_appSoundPlayer setVolume: vol];
+        [_appSoundPlayer setDelegate: self];
+        _isPlayingAudio = TRUE;
+
+        [_appSoundPlayer play];
+        
+        return TRUE;
+    }
+    return FALSE;
+}
+
+- (void) playRecording:(NSURL*)url
+{
+    [self playRecording:url
+                 volume:1];
 }
 
 @end

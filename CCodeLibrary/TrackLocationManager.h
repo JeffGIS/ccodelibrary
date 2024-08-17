@@ -10,6 +10,7 @@
 #define TrackLocationManager_h
 
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 
 typedef struct {LLPOINT pt;
     int time;
@@ -30,7 +31,7 @@ typedef struct {LLPOINT pt;
 
 @end
 
-@interface TrackLocationManager : NSObject<CLLocationManagerDelegate>
+@interface TrackLocationManager : NSObject<CLLocationManagerDelegate,AVAudioPlayerDelegate>
 @property (nonatomic, weak) id <TrackLocationManagerDelegate> delegate;
 
 @property (nonatomic)CLLocationDegrees headingFilter;
