@@ -54,6 +54,7 @@
     
     if (self)
     {
+        NSError *error = nil;
         _locationManager = CLLocationManager.new;
         _locationManager.delegate = self;
         _maxTimerDelay = 60;
@@ -87,9 +88,10 @@
         _left90SoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Left90Degrees" ofType:@"m4a"]];
         _left135SoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Left135Degrees" ofType:@"m4a"]];
         _endOfRouteSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"EndOfRoute" ofType:@"m4a"]];
-        _turnArroundSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"EndOfRoute" ofType:@"m4a"]];
+        _turnArroundSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"TurnArround" ofType:@"m4a"]];
         _currentGPSTickURL = _gotGPSInputSoundURL;
         _currentGPSTickVol = 1;
+        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:&error];
 
     }
     return self;
@@ -105,6 +107,7 @@
 - (void) setDistanceFilter:(CLLocationDistance) dist
 {
     _locationManager.distanceFilter = dist;
+    _distanceFilter = dist;
 }
 - (void) setAllowsBackgroundLocationUpdates:(BOOL) set
 {
@@ -133,7 +136,17 @@
 
 - (void)startUpdatingLocation
 {
-    [_locationManager startUpdatingLocation];
+    if (_inSimulationMode)
+    {
+        [_simulationTimer invalidate];
+        _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:1
+                                                      target:self
+                                                    selector:@selector(simulateGPS)                                                            userInfo:nil
+                                                     repeats:YES];
+
+    }
+    else
+        [_locationManager startUpdatingLocation];
     _numLastPoints = 0;
 }
 - (void)startUpdatingHeading
@@ -142,7 +155,12 @@
 }
 - (void)stopUpdatingLocation
 {
-    [_locationManager stopUpdatingLocation];
+    if (_inSimulationMode)
+    {
+        [_simulationTimer invalidate];
+    }
+    else
+        [_locationManager stopUpdatingLocation];
     [self offCourseNotification:0
                       withDelay:0];
     _numLastPoints = 0;
@@ -166,6 +184,16 @@
     }
 
 }
+
+- (void) stopSimulation
+{
+    if (_inSimulationMode)
+    {
+        [_simulationTimer invalidate];
+        _inSimulationMode = NO;
+    }
+}
+
 - (void) startSimulationAt:(LLPOINT)startPoint
 {
     int nearPoint = 0;
@@ -222,7 +250,7 @@
                 heading:(double)GPSHeading
 {
     static int turnArroundCount = 0;
-    NSLog (@"GPS input recieved");
+//    NSLog (@"GPS input recieved");
     if (! (_numUpdates++ % _updateNotificationFrequency))
         //AudioServicesPlaySystemSound(_gotGPSInputSound);
         [self playRecording:_currentGPSTickURL
@@ -257,7 +285,7 @@
             //if (_distToRoute < _atDistance)
                 [self turnAlert];
         }
-        if (_turnDegrees >= 150 || _turnDegrees <= -150)
+        if (_currentGPSHeading >= 0 && (_turnDegrees >= 150 || _turnDegrees <= -150))
         {
             turnArroundCount++;
         }
@@ -595,10 +623,13 @@ static double HeadingFromAZ (double az)
                 _distToRoute = minDist / METERS_PER_YARD;
                 CRAPI.sharedInstance.currentSelectedWaypoint = wp.refno;
                 destinationRoutePointNumber = wp.refno;
-                double gpsAz = HeadingToAzimuth (_currentGPSHeading);
-                _turnDegrees = DeltaAZD(gpsAz, AZ2);
-                _headingToNextPoint = HeadingFromAZ(AZ2) * RADtoDEG;
-                _turnDegrees *= RADtoDEG;
+                if (_currentGPSHeading >= 0)
+                {
+                    double gpsAz = HeadingToAzimuth (_currentGPSHeading);
+                    _turnDegrees = DeltaAZD(gpsAz, AZ2);
+                    _headingToNextPoint = HeadingFromAZ(AZ2) * RADtoDEG;
+                    _turnDegrees *= RADtoDEG;
+                }
                 if (legNum >= routePointArray.count)
                 {
                     double d = ldistpp (&routeEndPoint,&IntPoint);
@@ -676,6 +707,7 @@ static double HeadingFromAZ (double az)
             NSLog(@"Player ERROR: %@", error.localizedDescription);
             return FALSE;
         }
+        
         _appSoundPlayer = newPlayer;
         [_appSoundPlayer prepareToPlay];
         [_appSoundPlayer setVolume: vol];

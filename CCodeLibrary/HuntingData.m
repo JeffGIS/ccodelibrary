@@ -97,7 +97,7 @@
             }
             
         }
-        NSLog(@"Hunting Database init");
+        //NSLog(@"Hunting Database init");
     }
     
     return self;
@@ -106,7 +106,7 @@
 - (void)dealloc
 {
     [self close:TRUE];
-    NSLog(@"Hunting Database dealloc");
+    //NSLog(@"Hunting Database dealloc");
 }
 
 - (BOOL)open
@@ -121,7 +121,7 @@
         [self createUsersData];
 
         _isOpen = !SQLOK(__FILE__,__LINE__,SQLite_Open(_path.UTF8String, &_database), _database);
-        NSLog(@"Hunting Database open");
+        //NSLog(@"Hunting Database open");
         
         if (_isOpen)
         {
@@ -729,7 +729,7 @@
         fcloseGSSi(_fidNWIBin);
         fcloseGSSi(_fidForestBin);
         fcloseGSSi(_fidFEESURFBin);
-        NSLog(@"Hunting Database close");
+        //NSLog(@"Hunting Database close");
         _isOpen = NO;
     }
 }

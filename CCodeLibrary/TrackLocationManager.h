@@ -78,6 +78,7 @@ typedef struct {LLPOINT pt;
 -(NSArray *) retrieveSavedLocations;
 - (void) startSimulation;
 - (void) startSimulationAt:(LLPOINT)startPoint;
+- (void) stopSimulation;
 
 @end
 

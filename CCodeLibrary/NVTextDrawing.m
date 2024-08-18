@@ -447,6 +447,8 @@ Top:
     rect.origin.x =  (-rect.size.width  / 2.0);
     rect.origin.y =  (textHeight / 2.0);
     
+    if (!context)
+        return FALSE;
     CGContextSaveGState(context);
     CGContextTranslateCTM(context, mpX, mpY);
     CGContextRotateCTM(context,rotateRadians);
