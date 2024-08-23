@@ -79,6 +79,7 @@ typedef struct {LLPOINT pt;
 - (void) startSimulation;
 - (void) startSimulationAt:(LLPOINT)startPoint;
 - (void) stopSimulation;
+- (BOOL) pointInMessageList:(INT64)pointID;
 
 @end
 
