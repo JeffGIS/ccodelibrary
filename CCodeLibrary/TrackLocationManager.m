@@ -19,7 +19,7 @@
 @property int minTimerDelay,maxTimerDelay;
 @property int timerDelay;
 @property double notifyDist;
-@property double maxVolumeDist;
+@property double offCourseDist;
 @property int currentTimerDelay;
 @property BOOL goLeft;
 @property BOOL amSavingLocations;
@@ -64,7 +64,7 @@
         _timerDelay = _maxTimerDelay;
         _currentTimerDelay = 0;
         _notifyDist = 7;
-        _maxVolumeDist = 500;
+        _offCourseDist = 15 * _notifyDist;
         _numLastPoints = 0;
         _maxLastPoints = 8;
         _pLastPoints = malloc (sizeof(DPOINT)*_maxLastPoints+4);
@@ -260,10 +260,10 @@
         [self playRecording:_currentGPSTickURL
                      volume:_currentGPSTickVol];
     _currentPoint = pt;
-    _currentGPSHeading = GPSHeading;
     _atUTM = LLPointToDPoint (pt);
     ConvertCoord(&_atUTM, LATLONPROJECTION, UTM15PROJECTION);
-    //[self addPointToLastPoints];
+    [self addPointToLastPoints];
+    _currentGPSHeading = [self GPSHeadingFromPoints];
     if (_amSavingLocations)
         [self saveLocation];
     if (self.delegate)
@@ -279,6 +279,8 @@
             //[self turnAlert];
         }
         INT64 destRoutePoint = [self computeNextRoutePoint];
+        if (!CRAPI.sharedInstance.inFollowingRouteMode)
+            return;
         if (_atEndOfRoute)
         {
             [self playRecording:_endOfRouteSoundURL];
@@ -302,7 +304,7 @@
         if (_currentGPSHeading >= 0 && (_turnDegrees >= 150 || _turnDegrees <= -150))
         {
             int inow = NSDate.now.timeIntervalSince1970;
-            if (_lastTurnAroundTime - inow > 30)
+            if (!_lastTurnAroundTime || (inow - _lastTurnAroundTime) > 30)
             {
                 [self playRecording:_turnArroundSoundURL];
                 _lastTurnAroundTime = inow;
@@ -321,6 +323,7 @@
         pt.lat = loc.coordinate.latitude;
         pt.lon = loc.coordinate.longitude;
         _GPSHeading = loc.course;
+        _GPSHeadingAccuracy = loc.courseAccuracy;
         [self newGPSLocation:pt
                      heading:loc.course];
     }
@@ -394,12 +397,11 @@
         _pLastPoints[_numLastPoints++] = _atUTM;
     else
     {
-        for (int i = 0;i < _numLastPoints; i++)
+        for (int i = 1;i < _numLastPoints; i++)
         {
-            if (i < _maxLastPoints -1)
-            _pLastPoints[i+1] = _pLastPoints[i];
+            _pLastPoints[i-1] = _pLastPoints[i];
         }
-        _pLastPoints[0] = _atUTM;
+        _pLastPoints[_maxLastPoints -1] = _atUTM;
     }
    
 }
@@ -409,7 +411,7 @@
     double A, B, maxDiff=0;
     long locOfMaxDiff;
     if (_numLastPoints < 3)
-        return 1000;
+        return -1;
     double xmin = UINT_MAX, xmax = -UINT_MAX;
     for (int i=0;i<_numLastPoints;i++)
     {
@@ -421,14 +423,14 @@
     if (LINFIT(_pLastPoints, _numLastPoints, &A, &B, &maxDiff, &locOfMaxDiff))
     {
         DPOINT pPoints[2];
-        pPoints[0].x = xmin;
+        pPoints[0].x = _pLastPoints[0].x;
         pPoints[0].y = A + pPoints[0].x * B;
-        pPoints[1].x = xmax;
+        pPoints[1].x = _pLastPoints[_numLastPoints-1].x;
         pPoints[1].y = A + pPoints[1].x * B;
         double AZ = getazdp(&pPoints[0], &pPoints[1]);
         return AZMToHeading(AZ);
     }
-    return 1000;
+    return -1;
 }
 
 -(void) offCourseNotification:(int) opt
@@ -622,6 +624,8 @@ static double HeadingFromAZ (double az)
     DPOINT IntPoint;
     DPOINT routeEndPoint;
     
+    if (!CRAPI.sharedInstance.inFollowingRouteMode)
+        return -1;
     RoutePoint[0] = _routeStartPoint;
 
     INT64 destinationRoutePointNumber = 0;
@@ -694,7 +698,7 @@ static double HeadingFromAZ (double az)
         float vol;
         _offDist = minDist;
         _offDist /= METERS_PER_YARD;
-        if (_offDist > _notifyDist * 8)
+        if (_offDist > _notifyDist * 6)
         {
             [self playRecording:_offCourseSoundURL];
             [self exitRouteMode];
@@ -702,7 +706,7 @@ static double HeadingFromAZ (double az)
         }
         if (_offDist > _notifyDist)
         {
-            vol = 0.01 + (_offDist - _notifyDist) / _maxVolumeDist;
+            vol = (_offDist - _notifyDist) / _offCourseDist;
             if (_offDist > _notifyDist * 5)
                 _timerDelay = _minTimerDelay;
             else if (_offDist > _notifyDist * 2)

@@ -42,6 +42,7 @@ typedef struct {LLPOINT pt;
 @property (nonatomic) BOOL allowsBackgroundLocationUpdates;
 @property (nonatomic)BOOL pausesLocationUpdatesAutomatically;
 @property (nonatomic) double GPSHeading;
+@property (nonatomic) double GPSHeadingAccuracy;
 @property (nonatomic) double GPSHeadingFromPoints;
 @property DPOINT fromUTM, toUTM, atUTM, nextUTM;
 @property int atDistance;
