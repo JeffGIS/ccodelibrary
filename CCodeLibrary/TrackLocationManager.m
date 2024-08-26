@@ -45,6 +45,7 @@
 @property BOOL isPlayingAudio;
 @property int lastTurnAroundTime;
 @property NSMutableArray *pointsInMessageList;
+@property float simulationInterval;
 
 @end
 
@@ -57,6 +58,7 @@
     if (self)
     {
         NSError *error = nil;
+        _simulationInterval = 0.2;
         _locationManager = CLLocationManager.new;
         _locationManager.delegate = self;
         _maxTimerDelay = 60;
@@ -147,7 +149,7 @@
     if (_inSimulationMode)
     {
         [_simulationTimer invalidate];
-        _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:1
+        _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:_simulationInterval
                                                       target:self
                                                     selector:@selector(simulateGPS)                                                            userInfo:nil
                                                      repeats:YES];
@@ -186,7 +188,7 @@
         CRAPI.sharedInstance.locationTrackingEnabled = TRUE;
         _inSimulationMode = YES;
         _currentSimulationIndex = 0;
-        _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:1
+        _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:_simulationInterval
                                                       target:self
                                                     selector:@selector(simulateGPS)                                                            userInfo:nil
                                                      repeats:YES];
@@ -227,7 +229,7 @@
         CRAPI.sharedInstance.locationTrackingEnabled = TRUE;
         _inSimulationMode = YES;
         _currentSimulationIndex = nearPoint;
-        _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:1
+        _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:_simulationInterval
                                                       target:self
                                                     selector:@selector(simulateGPS)                                                            userInfo:nil
                                                      repeats:YES];
@@ -326,13 +328,18 @@
         }
         if (_currentGPSHeading >= 0 && (_turnDegrees >= 150 || _turnDegrees <= -150))
         {
-            int inow = NSDate.now.timeIntervalSince1970;
-            if (!_lastTurnAroundTime || (inow - _lastTurnAroundTime) > 30)
+            if (turnArroundCount++ == 3)
             {
-                [self playRecording:_turnArroundSoundURL];
-                _lastTurnAroundTime = inow;
+                int inow = NSDate.now.timeIntervalSince1970;
+                if (!_lastTurnAroundTime || (inow - _lastTurnAroundTime) > 30)
+                {
+                    [self playRecording:_turnArroundSoundURL];
+                    _lastTurnAroundTime = inow;
+                }
             }
         }
+        else
+            turnArroundCount = 0;
     }
     return;
 }
@@ -376,18 +383,8 @@
 
 - (void) saveLocation
 {
-    FILE *Fid = fopenGSSi(_savedLocationsFile.cString,"a");
-    
-    if (Fid == NULL)
+    if (!CRAPI.sharedInstance.amBuildingRoute)
         return;
-    RoutePointStruct routePoint;
-    routePoint.time = NSDate.timeIntervalSinceReferenceDate;
-    routePoint.pt = _currentPoint;
-    routePoint.GPSHeading = _currentGPSHeading;
-
-    BigWriteF(Fid ,(LPSTR)&routePoint ,sizeof(RoutePointStruct), -1);
-    fcloseGSSi(Fid);
-    
     TrackRoutePoint *trackRoutePoint = TrackRoutePoint.new;
     trackRoutePoint.time = NSDate.timeIntervalSinceReferenceDate;
     trackRoutePoint.latlon = _currentPoint;
@@ -403,6 +400,7 @@
             CRAPI.sharedInstance.currentTrackRoute = NSMutableArray.new;
             CRAPI.sharedInstance.amBuildingRoute = FALSE;
             [self endLocationTrackingMessage];
+            _routeWasSaved = TRUE;
         }
     }
 
@@ -411,11 +409,13 @@
 -(void) startSavingLocations
 {
     _amSavingLocations = TRUE;
+    _routeWasSaved = FALSE;
 }
 -(NSArray *) retrieveSavedLocations
 {
     _amSavingLocations = FALSE;
     NSMutableArray * array=NSMutableArray.new;
+    /*
     FILE *Fid = fopenGSSi(_savedLocationsFile.cString,"r");
     
     if (Fid != NULL)
@@ -433,7 +433,7 @@
         NSError *err = nil;
         NSFileManager *fm = [NSFileManager defaultManager];
         [fm removeItemAtPath:_savedLocationsFile error:&err];
-    }
+    }*/
 
     return array;
 }
@@ -810,7 +810,7 @@ static double HeadingFromAZ (double az)
         NSError *error;
         
         if (url == _gotGPSInputSoundURL2)
-            vol *= 0.5;
+            vol *= 0.25;
         AVAudioPlayer *newPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL: url error:&error];
         if (error)
         {

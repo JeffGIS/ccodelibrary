@@ -59,6 +59,7 @@ typedef struct {LLPOINT pt;
 @property INT64 currentRoutePointNumber;
 @property int updateNotificationFrequency;
 @property BOOL inSimulationMode;
+@property BOOL routeWasSaved;
 
 
 @property NSTimer * offCourseTimer;
