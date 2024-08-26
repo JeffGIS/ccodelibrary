@@ -64,7 +64,7 @@
         _timerDelay = _maxTimerDelay;
         _currentTimerDelay = 0;
         _notifyDist = 7;
-        _offCourseDist = 15 * _notifyDist;
+        _offCourseDist = 25 * _notifyDist;
         _numLastPoints = 0;
         _maxLastPoints = 8;
         _pLastPoints = malloc (sizeof(DPOINT)*_maxLastPoints+4);
@@ -175,6 +175,7 @@
 - (void) startSimulation
 {
     [_simulationTimer invalidate];
+    _numLastPoints = 0;
     if (CRAPI.sharedInstance.currentTrackRoute.count > 1)
     {
         CRAPI.sharedInstance.locationTrackingEnabled = TRUE;
@@ -202,6 +203,7 @@
     int nearPoint = 0;
     int index = 0;
     double nearDist = DBL_MAX;
+    _numLastPoints = 0;
     if (_simulationTimer)
         [_simulationTimer invalidate];
     [self pointInMessageList:-1];
@@ -256,7 +258,6 @@
     static int turnArroundCount = 0;
 //    NSLog (@"GPS input recieved");
     if (CRAPI.sharedInstance.inFollowingRouteMode && !(_numUpdates++ % _updateNotificationFrequency))
-        //AudioServicesPlaySystemSound(_gotGPSInputSound);
         [self playRecording:_currentGPSTickURL
                      volume:_currentGPSTickVol];
     _currentPoint = pt;
@@ -271,13 +272,14 @@
                             GPSHeading:GPSHeading];
     if (CRAPI.sharedInstance.inFollowingRouteMode)
     {
+        /*
         double distToDest = ldistp(_atUTM, _toUTM)/ METERS_PER_YARD;
         if (distToDest < _atDistance)
         {
             [self offCourseNotification:0
                               withDelay:0];
             //[self turnAlert];
-        }
+        }*/
         INT64 destRoutePoint = [self computeNextRoutePoint];
         if (!CRAPI.sharedInstance.inFollowingRouteMode)
             return;
@@ -465,7 +467,6 @@
     {
         default:
         case 0:
-            _offCourseTimer = nil;
             _currentGPSTickURL = _gotGPSInputSoundURL;
             _currentGPSTickVol = 1;
             break;
@@ -477,9 +478,11 @@
         case LEFT: //go right
             _currentGPSTickURL = _leftSoundURL;
             _currentGPSTickVol = vol;
+            /*
             if (!_offCourseTimer)
                 _offCourseTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(offCourseNotificationPlay:) userInfo:nil repeats:NO];
             _offCourseTimer = [NSTimer scheduledTimerWithTimeInterval:_currentTimerDelay target:self selector:@selector(offCourseNotificationPlay:) userInfo:nil repeats:YES];
+             */
             break;
     }
     return;
