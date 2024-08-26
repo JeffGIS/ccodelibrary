@@ -23,10 +23,10 @@
 @property int currentTimerDelay;
 @property BOOL goLeft;
 @property BOOL amSavingLocations;
-@property NSURL *leftSoundURL, *rightSoundURL, *gotGPSInputSoundURL;
+@property NSURL *leftSoundURL, *rightSoundURL, *gotGPSInputSoundURL1, *gotGPSInputSoundURL2;
 @property NSURL *bearRightSoundURL, *right45SoundURL, *right90SoundURL, *right135SoundURL, *offCourseSoundURL;
 @property NSURL *bearLeftSoundURL, *left45SoundURL, *left90SoundURL, *left135SoundURL, *endOfRouteSoundURL, *turnArroundSoundURL;
-@property NSURL *currentGPSTickURL;
+@property NSURL *currentGPSTickURL, *endLocationTrackingSoundURL;
 @property float currentGPSTickVol;
 @property NSString * savedLocationsFile;
 @property NSString * tempDirectory;
@@ -80,7 +80,11 @@
         soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/short_double_low.caf"];
         _rightSoundURL = [NSURL URLWithString:soundFile];
         soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/Tock.caf"];
-        _gotGPSInputSoundURL = [NSURL URLWithString:soundFile];
+        _gotGPSInputSoundURL1 = [NSURL URLWithString:soundFile];
+        soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/ct-path-ack.caf"];
+        soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/ct-busy.caf"];
+        soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/jbl_confirm.caf"];
+        _gotGPSInputSoundURL2 = [NSURL URLWithString:soundFile];
         _bearRightSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"BearRight" ofType:@"m4a"]];
         _right45SoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Right45Degrees" ofType:@"m4a"]];
         _right90SoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"Right90Degrees" ofType:@"m4a"]];
@@ -92,7 +96,8 @@
         _endOfRouteSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"EndOfRoute" ofType:@"m4a"]];
         _turnArroundSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"TurnArround" ofType:@"m4a"]];
         _offCourseSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"OffCourse" ofType:@"m4a"]];
-        _currentGPSTickURL = _gotGPSInputSoundURL;
+        _endLocationTrackingSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"EndLocationTracking" ofType:@"m4a"]];
+        _currentGPSTickURL = _gotGPSInputSoundURL1;
         _currentGPSTickVol = 1;
         [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:&error];
 
@@ -257,9 +262,25 @@
 {
     static int turnArroundCount = 0;
 //    NSLog (@"GPS input recieved");
-    if (CRAPI.sharedInstance.inFollowingRouteMode && !(_numUpdates++ % _updateNotificationFrequency))
-        [self playRecording:_currentGPSTickURL
-                     volume:_currentGPSTickVol];
+    if ((CRAPI.sharedInstance.inFollowingRouteMode || CRAPI.sharedInstance.amBuildingRoute) &&
+        !(_numUpdates++ % _updateNotificationFrequency))
+    {
+        if (_currentGPSTickURL == _gotGPSInputSoundURL1)
+        {
+            if (CRAPI.sharedInstance.amBuildingRoute)
+                [self playRecording:_gotGPSInputSoundURL2
+                             volume:_currentGPSTickVol];
+            else
+                [self playRecording:_gotGPSInputSoundURL1
+                         volume:_currentGPSTickVol];
+        }
+        else
+        {
+            [self playRecording:_currentGPSTickURL
+                         volume:_currentGPSTickVol];
+
+        }
+    }
     _currentPoint = pt;
     _atUTM = LLPointToDPoint (pt);
     ConvertCoord(&_atUTM, LATLONPROJECTION, UTM15PROJECTION);
@@ -316,6 +337,11 @@
     return;
 }
 
+- (void)endLocationTrackingMessage
+{
+    [self playRecording:_endLocationTrackingSoundURL];
+}
+
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
     if (locations.count > 0 && !_inSimulationMode)
@@ -361,6 +387,25 @@
 
     BigWriteF(Fid ,(LPSTR)&routePoint ,sizeof(RoutePointStruct), -1);
     fcloseGSSi(Fid);
+    
+    TrackRoutePoint *trackRoutePoint = TrackRoutePoint.new;
+    trackRoutePoint.time = NSDate.timeIntervalSinceReferenceDate;
+    trackRoutePoint.latlon = _currentPoint;
+    trackRoutePoint.GPSHeading = _currentGPSHeading;
+
+    int st = [CRAPI.sharedInstance addPointToTrackRoute: trackRoutePoint];
+    if (st > 0)
+    {
+        if (st == 2)
+        {
+            HuntingData *hd = HuntingData.new;
+            [hd saveTrackRoute:CRAPI.sharedInstance.currentTrackRoute];
+            CRAPI.sharedInstance.currentTrackRoute = NSMutableArray.new;
+            CRAPI.sharedInstance.amBuildingRoute = FALSE;
+            [self endLocationTrackingMessage];
+        }
+    }
+
 }
 
 -(void) startSavingLocations
@@ -467,7 +512,11 @@
     {
         default:
         case 0:
-            _currentGPSTickURL = _gotGPSInputSoundURL;
+            if (CRAPI.sharedInstance.amBuildingRoute)
+                _currentGPSTickURL = _gotGPSInputSoundURL2;
+            else
+                _currentGPSTickURL = _gotGPSInputSoundURL1;
+
             _currentGPSTickVol = 1;
             break;
         case RIGHT: //go left
@@ -760,6 +809,8 @@ static double HeadingFromAZ (double az)
         
         NSError *error;
         
+        if (url == _gotGPSInputSoundURL2)
+            vol *= 0.5;
         AVAudioPlayer *newPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL: url error:&error];
         if (error)
         {

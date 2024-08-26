@@ -81,6 +81,7 @@ typedef struct {LLPOINT pt;
 - (void) startSimulationAt:(LLPOINT)startPoint;
 - (void) stopSimulation;
 - (BOOL) pointInMessageList:(INT64)pointID;
+- (void) endLocationTrackingMessage;
 
 @end
 
