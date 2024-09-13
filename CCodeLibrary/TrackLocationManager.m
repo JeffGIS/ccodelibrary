@@ -26,7 +26,7 @@
 @property NSURL *leftSoundURL, *rightSoundURL, *gotGPSInputSoundURL1, *gotGPSInputSoundURL2;
 @property NSURL *bearRightSoundURL, *right45SoundURL, *right90SoundURL, *right135SoundURL, *offCourseSoundURL;
 @property NSURL *bearLeftSoundURL, *left45SoundURL, *left90SoundURL, *left135SoundURL, *endOfRouteSoundURL, *turnArroundSoundURL;
-@property NSURL *currentGPSTickURL, *endLocationTrackingSoundURL;
+@property NSURL *currentGPSTickURL, *endLocationTrackingSoundURL, *vehicleLocationSavedSoundURL;
 @property float currentGPSTickVol;
 @property NSString * savedLocationsFile;
 @property NSString * tempDirectory;
@@ -46,6 +46,9 @@
 @property int lastTurnAroundTime;
 @property NSMutableArray *pointsInMessageList;
 @property float simulationInterval;
+@property CMMotionActivityManager *motionActivityManager;
+@property AVAudioPlayer *ticPlayer;
+@property AVAudioPlayer *messagePlayer;
 
 @end
 
@@ -58,6 +61,8 @@
     if (self)
     {
         NSError *error = nil;
+        
+        _currentMotionActivity = @"Undefined";
         _simulationInterval = 0.2;
         _locationManager = CLLocationManager.new;
         _locationManager.delegate = self;
@@ -99,9 +104,21 @@
         _turnArroundSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"TurnArround" ofType:@"m4a"]];
         _offCourseSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"OffCourse" ofType:@"m4a"]];
         _endLocationTrackingSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"EndLocationTracking" ofType:@"m4a"]];
+        _vehicleLocationSavedSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"VehicleLocationSaved" ofType:@"m4a"]];
         _currentGPSTickURL = _gotGPSInputSoundURL1;
         _currentGPSTickVol = 1;
         [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error:&error];
+        if (error)
+        {
+            NSLog(@"Received error configuring audio: %@", error);
+        }
+        _ticPlayer = AVAudioPlayer.new;
+        _messagePlayer = AVAudioPlayer.new;
+        if (error)
+        {
+            NSLog(@"Player ERROR: %@", error.localizedDescription);
+            return FALSE;
+        }
 
     }
     return self;
@@ -138,10 +155,56 @@
 - (void) setActivityType:(CLActivityType) activityType
 {
     _locationManager.activityType = activityType;
+    [self startMotionActivityMonitoring];
 }
 - (void) setPausesLocationUpdatesAutomatically:(BOOL) pausesLocationUpdatesAutomatically
 {
     _locationManager.pausesLocationUpdatesAutomatically = pausesLocationUpdatesAutomatically;
+}
+- (void)startMotionActivityMonitoring
+{
+    // create the motion activity handler
+    CMMotionActivityHandler motionActivityHandler = ^(CMMotionActivity *activity) {
+        NSLog(@"Motion activity detected");
+        self.currentMotionActivity = @"Other";
+        if (activity.stationary)
+            self.currentMotionActivity = @"Stationary";
+        else if (activity.walking)
+            self.currentMotionActivity = @"Walking";
+        else if (activity.running)
+            self.currentMotionActivity = @"Running";
+        else if (activity.automotive)
+            self.currentMotionActivity = @"Vehicle";
+        else if (activity.unknown)
+            self.currentMotionActivity = @"Unknown";
+        
+        if (activity.confidence == CMMotionActivityConfidenceLow)
+            self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":low"];
+        else if (activity.confidence == CMMotionActivityConfidenceMedium)
+            self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":medium"];
+        else if (activity.confidence == CMMotionActivityConfidenceHigh)
+            self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":high"];
+        else
+            self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":unknown"];
+        
+
+    };
+
+    // check to see if the motion activity manager exists
+    if ([CMMotionActivityManager isActivityAvailable])
+    {
+        _motionActivityManager = CMMotionActivityManager.new;
+
+//        if ([CMMotionActivityManager authorizationStatus] == CMAuthorizationStatusAuthorized)
+        {
+
+            if (_motionActivityManager) {
+                // if so, start monitoring activity
+                // notice that we add updates to the mainQueue. This will call your handler on the main thread
+                [_motionActivityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:motionActivityHandler];
+            }
+        }
+    }
 }
 
 - (void)startUpdatingLocation
@@ -804,27 +867,21 @@ static double HeadingFromAZ (double az)
 - (BOOL)playRecording:(NSURL*)url
                volume:(float)vol
 {
-    if (!_isPlayingAudio)
+    //if (!_isPlayingAudio)
     {
         
         NSError *error;
         
         if (url == _gotGPSInputSoundURL2)
             vol *= 0.25;
-        AVAudioPlayer *newPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL: url error:&error];
-        if (error)
-        {
-            NSLog(@"Player ERROR: %@", error.localizedDescription);
-            return FALSE;
-        }
-        
-        _appSoundPlayer = newPlayer;
-        [_appSoundPlayer prepareToPlay];
-        [_appSoundPlayer setVolume: vol];
-        [_appSoundPlayer setDelegate: self];
+       
+        _ticPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+        [_ticPlayer prepareToPlay];
+        [_ticPlayer setVolume: vol];
+        [_ticPlayer setDelegate: self];
         _isPlayingAudio = TRUE;
 
-        [_appSoundPlayer play];
+        [_ticPlayer play];
         
         return TRUE;
     }
@@ -833,9 +890,16 @@ static double HeadingFromAZ (double az)
 
 - (void) playRecording:(NSURL*)url
 {
+    NSError *error = nil;
+    float vol = 1;
     _isPlayingAudio = NO;
-    [self playRecording:url
-                 volume:1];
+    _messagePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    [_messagePlayer prepareToPlay];
+    [_messagePlayer setVolume: vol];
+    [_messagePlayer setDelegate: self];
+    _isPlayingAudio = TRUE;
+
+    [_messagePlayer play];
 }
 
 @end

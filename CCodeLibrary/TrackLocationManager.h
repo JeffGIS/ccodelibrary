@@ -11,10 +11,16 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+@import CoreLocation;
 
 typedef struct {LLPOINT pt;
     int time;
     double GPSHeading;} RoutePointStruct ;
+typedef NS_ENUM(NSInteger, Activities)
+{
+    Vehicle,
+    Walking,
+};
 
 @class TrackLocationManager;
 
@@ -60,6 +66,10 @@ typedef struct {LLPOINT pt;
 @property int updateNotificationFrequency;
 @property BOOL inSimulationMode;
 @property BOOL routeWasSaved;
+@property NSString *currentMotionActivity;
+@property Activities currentActivity;
+@property Activities previousActivity;
+@property int currentActivityStartTime;
 
 
 @property NSTimer * offCourseTimer;

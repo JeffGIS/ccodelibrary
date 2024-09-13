@@ -103,7 +103,7 @@
     [nvptv.overlayView addGestureRecognizer:tap];
     
     [view addSubview:nvptv.overlayView];
-    [nvptv.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:0.0];
+    [nvptv.overlayView constrainToView:view leading:0.0 trailing:0.0 top:0.0 bottom:-cancelButtonHeight*2];
     
     nvptv.tabBar = view.parentViewController.tabBarController.tabBar;
     nvptv.tabBar.userInteractionEnabled = NO;
@@ -190,13 +190,13 @@
         [nvptv.returnButton setTitle:@"Cancel" forState:UIControlStateNormal];
         [nvptv.returnButton setTitleColor:UIColor.redColor forState:UIControlStateNormal];
         [nvptv.returnButton setTitleColor:UIColor.lightGrayColor forState:UIControlStateHighlighted];
-        [view addSubview:nvptv.returnButton];
+        [nvptv addSubview:nvptv.returnButton];
         
         [nvptv.returnButton addTarget:nvptv
                                action:@selector(cancelButtonTapped:)
                      forControlEvents:UIControlEventTouchUpInside];
         
-        [nvptv.returnButton constrainTopToAnchor:nvptv.tableView.bottomAnchor constant: 4];
+        [nvptv.returnButton constrainTopToAnchor:nvptv.tableView.bottomAnchor constant: 1];
         [nvptv.returnButton constrainLeadingToAnchor:nvptv.tableView.leadingAnchor constant: 0];
         [nvptv.returnButton constrainTrailingToAnchor:nvptv.tableView.trailingAnchor constant: 0];
     }
@@ -223,8 +223,10 @@
                              _tabBar.alpha = 1.0;
                          } completion:^(BOOL finished) {
                              [_overlayView removeFromSuperview];
-                             [_returnButton removeFromSuperview];
-                             [_clearButton removeFromSuperview];
+                             if (_returnButton)
+                                 [_returnButton removeFromSuperview];
+                             if (_clearButton)
+                                 [_clearButton removeFromSuperview];
                              [self removeFromSuperview];
                              _tabBar.userInteractionEnabled = YES;
                          }];
@@ -233,6 +235,10 @@
     else
     {
         [_overlayView removeFromSuperview];
+        if (_returnButton)
+            [_returnButton removeFromSuperview];
+        if (_clearButton)
+            [_clearButton removeFromSuperview];
         [self removeFromSuperview];
         _tabBar.alpha = 1.0;
         _tabBar.userInteractionEnabled = YES;
