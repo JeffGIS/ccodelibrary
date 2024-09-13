@@ -34,6 +34,7 @@ typedef NS_ENUM(NSInteger, Activities)
 
 @optional
 - (void)shouldRefreshScreen:(TrackLocationManager *)manager;
+- (void)didMarkVehicleLocation:(TrackLocationManager *)manager;
 
 @end
 
@@ -93,6 +94,7 @@ typedef NS_ENUM(NSInteger, Activities)
 - (void) stopSimulation;
 - (BOOL) pointInMessageList:(INT64)pointID;
 - (void) endLocationTrackingMessage;
+- (void) markVehicleLocation;
 
 @end
 

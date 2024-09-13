@@ -49,6 +49,7 @@
 @property CMMotionActivityManager *motionActivityManager;
 @property AVAudioPlayer *ticPlayer;
 @property AVAudioPlayer *messagePlayer;
+@property int needToSetVehicleLocation;
 
 @end
 
@@ -259,6 +260,12 @@
 
 }
 
+- (void) markVehicleLocation
+{
+    _needToSetVehicleLocation = 5;
+    _locationManager.distanceFilter = kCLDistanceFilterNone;
+
+}
 - (void) stopSimulation
 {
     if (_inSimulationMode)
@@ -327,12 +334,12 @@
 {
     static int turnArroundCount = 0;
 //    NSLog (@"GPS input recieved");
-    if ((CRAPI.sharedInstance.inFollowingRouteMode || CRAPI.sharedInstance.amBuildingRoute) &&
+    if ((CRAPI.sharedInstance.inFollowingRouteMode || CRAPI.sharedInstance.amBuildingTrackRoute) &&
         !(_numUpdates++ % _updateNotificationFrequency))
     {
         if (_currentGPSTickURL == _gotGPSInputSoundURL1)
         {
-            if (CRAPI.sharedInstance.amBuildingRoute)
+            if (CRAPI.sharedInstance.amBuildingTrackRoute)
                 [self playRecording:_gotGPSInputSoundURL2
                              volume:_currentGPSTickVol];
             else
@@ -353,6 +360,26 @@
     _currentGPSHeading = [self GPSHeadingFromPoints];
     if (_amSavingLocations)
         [self saveLocation];
+    
+    if (_needToSetVehicleLocation)
+    {
+        if (_needToSetVehicleLocation-- == 1)
+        {
+            HuntingData *hd = HuntingData.new;
+            CRAPI.sharedInstance.currentTrackRoute = NSMutableArray.new;
+            CRAPI.sharedInstance.amBuildingTrackRoute = TRUE;
+            [hd deleteWaypointsOfType:@"Vehicle"];
+            [hd addWaypoint:@"V" type:@"Vehicle" latlon:_currentPoint description:@"" displayOnCompass:YES];
+            CRAPI.sharedInstance.currentVehicleLocation = _currentPoint;
+            if (self.delegate && [self.delegate respondsToSelector:@selector(didMarkVehicleLocation:)])
+            {
+                [self.delegate didMarkVehicleLocation:self];
+            }
+            [self playRecording:_vehicleLocationSavedSoundURL];
+        }
+    }
+ 
+    
     if (self.delegate)
         [self.delegate locationManager:self didUpdateLocations:_currentPoint
                             GPSHeading:GPSHeading];
@@ -446,7 +473,7 @@
 
 - (void) saveLocation
 {
-    if (!CRAPI.sharedInstance.amBuildingRoute)
+    if (!CRAPI.sharedInstance.amBuildingTrackRoute)
         return;
     TrackRoutePoint *trackRoutePoint = TrackRoutePoint.new;
     trackRoutePoint.time = NSDate.timeIntervalSinceReferenceDate;
@@ -461,7 +488,7 @@
             HuntingData *hd = HuntingData.new;
             [hd saveTrackRoute:CRAPI.sharedInstance.currentTrackRoute];
             CRAPI.sharedInstance.currentTrackRoute = NSMutableArray.new;
-            CRAPI.sharedInstance.amBuildingRoute = FALSE;
+            CRAPI.sharedInstance.amBuildingTrackRoute = FALSE;
             [self endLocationTrackingMessage];
             _routeWasSaved = TRUE;
         }
@@ -575,7 +602,7 @@
     {
         default:
         case 0:
-            if (CRAPI.sharedInstance.amBuildingRoute)
+            if (CRAPI.sharedInstance.amBuildingTrackRoute)
                 _currentGPSTickURL = _gotGPSInputSoundURL2;
             else
                 _currentGPSTickURL = _gotGPSInputSoundURL1;

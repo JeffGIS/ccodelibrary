@@ -477,7 +477,7 @@ NVSlopeData CurrentSlopeData;
     //rtn = 2 means point added and route should be saved
     int rtn = 0;
     double dist;
-    if (_amBuildingRoute)
+    if (_amBuildingTrackRoute)
     {
 
         BOOL addIt = TRUE;
