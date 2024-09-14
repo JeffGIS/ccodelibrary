@@ -84,23 +84,6 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic, copy, nonnull) NSString *areaID, *text;
 @end
 
-@interface TrackRoutePoint : NSObject
-@property (nonatomic) INT64 refno;
-@property (nonatomic) LLPOINT latlon;
-@property (nonatomic) DPOINT UTM;
-@property double GPSHeading;
-@property int time;
-@end
-
-@interface RoutePoint : NSObject
-@property (nonatomic) INT64 refno;
-@property (nonatomic) LLPOINT latlon;
-@property (nonatomic) DPOINT UTM;
-@property int layer;
-@property INT64 layerRefno;
-@property double fromPCT, toPCT;
-@end
-
 @interface CRAPI : NSObject
 
 @property (nonatomic, nullable) id currentMeasurementView;
@@ -267,6 +250,8 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property BOOL amBuildingTrackRoute;
 @property (nonatomic) LLPOINT currentVehicleLocation;
 @property (nonatomic) BOOL inFollowingRouteMode;
+@property BOOL waitingToMoveAwayFromVehicle;
+@property double moveAwayDist, returnToDist;
 
 
 + (nullable CRAPI *)sharedInstance;
@@ -396,7 +381,6 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 -(BOOL) getLastBounds:(LPMNMXCORD)pBounds;
 -(BOOL) getLastBounds:(LPMNMXCORD)pBounds
               andZoom:(float *)pZoom;
--(int) addPointToTrackRoute:(TrackRoutePoint*) location;
 
 void GSSiViewDidLoad (void);
 -(void) setGPSLocation:(LLPOINT)pt

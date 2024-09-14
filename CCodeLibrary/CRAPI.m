@@ -53,8 +53,6 @@ NVSlopeData CurrentSlopeData;
 @property (nonatomic, nullable) NSString * routeServer;
 @property (nonatomic, nullable) CMMotionManager *motionManager;
 @property (nonatomic, nullable) TrackLocationManager *locationManager;
-@property BOOL waitingToMoveAwayFromVehicle;
-@property double moveAwayDist, returnToDist;
 
 @end
 
@@ -471,48 +469,6 @@ NVSlopeData CurrentSlopeData;
 {
     _inFollowingRouteMode = inRouteMode;
 }
--(int) addPointToTrackRoute:(TrackRoutePoint *) routePoint
-{
-    //rtn = 1 means point added
-    //rtn = 2 means point added and route should be saved
-    int rtn = 0;
-    double dist;
-    if (_amBuildingTrackRoute)
-    {
-
-        BOOL addIt = TRUE;
-        int npt = (int)_currentTrackRoute.count;
-        if (npt)
-        {
-            TrackRoutePoint *lastPoint = CRAPI.sharedInstance.currentTrackRoute[npt-1];
-            dist = ArcDistanceLL(routePoint.latlon,lastPoint.latlon);
-            if (dist < 1)
-                addIt = FALSE;
-        }
-        if (addIt)
-        {
-            rtn = 1;
-            [_currentTrackRoute addObject:routePoint];
-            if (_currentVehicleLocation.lon != 0)
-            {
-                dist = ArcDistanceLL(routePoint.latlon,_currentVehicleLocation);
-                if (_waitingToMoveAwayFromVehicle)
-                {
-                    if (dist > _moveAwayDist)
-                        _waitingToMoveAwayFromVehicle = NO;
-                }
-                else if (dist < _returnToDist)
-                {
-                    _currentVehicleLocation.lon = 0;
-                    _currentVehicleLocation.lat = 0;
-                    rtn = 2;
-                }
-            }
-        }
-    }
-    return rtn;
-}
-
 -(void) setCurrentOverallBoundaryRefno:(int)i
 {
     _currentBAR = i;

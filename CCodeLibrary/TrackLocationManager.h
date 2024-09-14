@@ -13,6 +13,24 @@
 #import <AVFoundation/AVFoundation.h>
 @import CoreLocation;
 
+@interface TrackRoutePoint : NSObject
+@property (nonatomic) INT64 refno;
+@property (nonatomic) LLPOINT latlon;
+@property (nonatomic) DPOINT UTM;
+@property double GPSHeading;
+@property int time;
+@end
+
+@interface RoutePoint : NSObject
+@property (nonatomic) INT64 refno;
+@property (nonatomic) LLPOINT latlon;
+@property (nonatomic) DPOINT UTM;
+@property int layer;
+@property INT64 layerRefno;
+@property double fromPCT, toPCT;
+@end
+
+
 typedef struct {LLPOINT pt;
     int time;
     double GPSHeading;} RoutePointStruct ;
@@ -35,6 +53,7 @@ typedef NS_ENUM(NSInteger, Activities)
 @optional
 - (void)shouldRefreshScreen:(TrackLocationManager *)manager;
 - (void)didMarkVehicleLocation:(TrackLocationManager *)manager;
+- (void)didInitiateTracking:(TrackLocationManager *)manager;
 
 @end
 
@@ -93,8 +112,8 @@ typedef NS_ENUM(NSInteger, Activities)
 - (void) startSimulationAt:(LLPOINT)startPoint;
 - (void) stopSimulation;
 - (BOOL) pointInMessageList:(INT64)pointID;
-- (void) endLocationTrackingMessage;
 - (void) markVehicleLocation;
+- (int) addPointToTrackRoute:(TrackRoutePoint*) location;
 
 @end
 
