@@ -251,7 +251,6 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic) LLPOINT currentVehicleLocation;
 @property (nonatomic) BOOL inFollowingRouteMode;
 @property BOOL waitingToMoveAwayFromVehicle;
-@property double moveAwayDist, returnToDist;
 
 
 + (nullable CRAPI *)sharedInstance;

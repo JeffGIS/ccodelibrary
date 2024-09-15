@@ -50,6 +50,7 @@
 @property AVAudioPlayer *ticPlayer;
 @property AVAudioPlayer *messagePlayer;
 @property int needToSetVehicleLocation;
+@property double moveAwayFromVehicleDist, returnToVehicleDist;
 
 @end
 
@@ -79,6 +80,9 @@
         _nearDistance = 20;
         _atDistance = 5;
         _closeDistance = 100;
+        _moveAwayFromVehicleDist = 35;
+        _returnToVehicleDist = 25;
+
         _updateNotificationFrequency = 5;
         _tempDirectory = UserDefaults.defaults.nonBackedUpFilePath;
         _savedLocationsFile = [_tempDirectory stringByAppendingString:@"/savedlocations.bin"];
@@ -562,7 +566,7 @@
                 dist = ArcDistanceLL(routePoint.latlon,CRAPI.sharedInstance.currentVehicleLocation);
                 if (CRAPI.sharedInstance.waitingToMoveAwayFromVehicle)
                 {
-                    if (dist > CRAPI.sharedInstance.moveAwayDist)
+                    if (dist > _moveAwayFromVehicleDist)
                     {
                         CRAPI.sharedInstance.waitingToMoveAwayFromVehicle = NO;
                         CRAPI.sharedInstance.locationTrackingEnabled = YES;
@@ -575,7 +579,7 @@
                         }
                     }
                 }
-                else if (dist < CRAPI.sharedInstance.returnToDist)
+                else if (dist < _returnToVehicleDist)
                 {
                     LLPOINT pt = {0,0};
                     CRAPI.sharedInstance.currentVehicleLocation = pt;
