@@ -59,16 +59,17 @@
     [mt setConfigurationProperty:MapToolbarPropertyWantReturnButton value:NO];
     [mt setConfigurationProperty:MapToolbarPropertyWantWeatherButton value:NO];
 
+    float factor = 1.2;
     //set internal sizes for all devices
-    mt.buttonSize = 47.0, mt.SCHeight = 29.0, mt.mapTypeSCWidth = 76.0;
-    mt.buttonMargin = 8.0, mt.switchMargin = 16.0, mt.SCMargin = 17.0, mt.platSCWidth = 196.0;
-    mt.platSCVertWidth = 112.0, mt.cornerRad = 10.0, mt.progressMargin = 10.0, mt.bordWidth = 2.0;
+    mt.buttonSize = 47.0 * factor, mt.SCHeight = 29.0 * factor, mt.mapTypeSCWidth = 76.0 * factor;
+    mt.buttonMargin = 8.0 * factor, mt.switchMargin = 16.0 * factor, mt.SCMargin = 17.0 * factor, mt.platSCWidth = 196.0 * factor;
+    mt.platSCVertWidth = 112.0 * factor, mt.cornerRad = 10.0 * factor, mt.progressMargin = 10.0 * factor, mt.bordWidth = 2.0 * factor;
     
     if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
     {
         //reset internal sizes for iPhone
-        mt.buttonSize = 38.0, mt.buttonMargin = 2.0, mt.SCMargin = 8.5, mt.progressMargin = 4.0;
-        mt.mapTypeSCWidth = 60.0, mt.platSCWidth = 166.0, mt.cornerRad = 4.0, mt.bordWidth = 1.0;
+        mt.buttonSize = 38.0 * factor, mt.buttonMargin = 2.0 * factor, mt.SCMargin = 8.5 * factor, mt.progressMargin = 4.0 * factor;
+        mt.mapTypeSCWidth = 60.0 * factor, mt.platSCWidth = 166.0 * factor, mt.cornerRad = 4.0 * factor, mt.bordWidth = 1.0 * factor;
     }
     
     //set default size for all devices
