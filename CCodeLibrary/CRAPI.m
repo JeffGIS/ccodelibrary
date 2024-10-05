@@ -90,6 +90,7 @@ NVSlopeData CurrentSlopeData;
         _newDataset = CURBRAMPS;
         //_newDataset = ALLEYWALLS;
         _kp = 0;
+        _autoStartRoute = YES;
         _routeBearing = nil;
         _boschIsAvailable = NO;
         _currentGeoidValue = 0;
@@ -459,7 +460,11 @@ NVSlopeData CurrentSlopeData;
     return;
 }
 
--(void) setCurrentSelectedWaypoint:(int)currentSelectedWaypoint
+-(void) setAmBuildingTrackRoute:(BOOL)amBuildingTrackRoute
+{
+    _amBuildingTrackRoute = amBuildingTrackRoute;
+}
+-(void) setCurrentSelectedWaypoint:(INT64)currentSelectedWaypoint
 {
     _currentSelectedWaypoint = currentSelectedWaypoint;
 }

@@ -54,6 +54,7 @@ typedef NS_ENUM(NSInteger, Activities)
 - (void)shouldRefreshScreen:(TrackLocationManager *)manager;
 - (void)didMarkVehicleLocation:(TrackLocationManager *)manager;
 - (void)didInitiateTracking:(TrackLocationManager *)manager;
+- (void)didInitiateRoute:(TrackLocationManager *)manager;
 
 @end
 
@@ -77,7 +78,6 @@ typedef NS_ENUM(NSInteger, Activities)
 @property BOOL checkOff;
 @property double offDist;
 @property int leftOrRight;
-@property int nearDist;
 @property BOOL checkOffset;
 @property LLPOINT currentPoint;
 @property DPOINT routeStartPoint;
@@ -90,6 +90,7 @@ typedef NS_ENUM(NSInteger, Activities)
 @property Activities currentActivity;
 @property Activities previousActivity;
 @property int currentActivityStartTime;
+@property LLPOINT firstRoutePoint;
 
 
 @property NSTimer * offCourseTimer;
@@ -113,7 +114,7 @@ typedef NS_ENUM(NSInteger, Activities)
 - (void) stopSimulation;
 - (BOOL) pointInMessageList:(INT64)pointID;
 - (void) markVehicleLocation;
-- (int) addPointToTrackRoute:(TrackRoutePoint*) location;
+- (void) startRoute;
 
 @end
 

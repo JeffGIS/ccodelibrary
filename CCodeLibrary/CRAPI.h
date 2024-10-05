@@ -247,10 +247,11 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property BOOL locationTrackingEnabled;
 @property (nonatomic, nullable) NSNumber *routeBearing;
 @property BOOL firstTimeZoomToCentract;
-@property BOOL amBuildingTrackRoute;
+@property (nonatomic) BOOL amBuildingTrackRoute;
 @property (nonatomic) LLPOINT currentVehicleLocation;
 @property (nonatomic) BOOL inFollowingRouteMode;
 @property BOOL waitingToMoveAwayFromVehicle;
+@property BOOL autoStartRoute;
 
 
 + (nullable CRAPI *)sharedInstance;

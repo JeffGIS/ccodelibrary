@@ -67,6 +67,9 @@
      shadowColor:(CGColorRef)shadowColor
     processingID:(NSInteger)processingID
 {
+    static BOOL noText = TRUE;
+    if (noText)
+        return FALSE;
     if (!textIN.length)
         return FALSE;
     CGFloat rotation = 0;
@@ -90,23 +93,6 @@ Top:
                                        textColor:textColor
                                     processingID:processingID];
     CGFloat minTextWidth = ta[nAttempts-1].textWidth;
-    /*
-     int ii;
-     if (![text isEqualToString:@"New Hope"])
-     return;
-     for (int i = 0;i<polyPartLen[0]-1;i++)
-     {
-     [NVTextDrawing drawText:[NSString stringWithFormat:@"%i",i]
-     inRotatedRect:context
-     rectMidX:pPoints[i].x
-     rectMidY:pPoints[i].y
-     width:40
-     height:40
-     rotation:0
-     fontSize:18
-     textColor:textColor];
-     
-     }*/
     if (!context)
         return TRUE;
     if (ta[nAttempts-1].fontSize >= desiredFontSize)
