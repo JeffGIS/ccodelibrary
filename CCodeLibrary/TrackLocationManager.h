@@ -55,6 +55,7 @@ typedef NS_ENUM(NSInteger, Activities)
 - (void)didMarkVehicleLocation:(TrackLocationManager *)manager;
 - (void)didInitiateTracking:(TrackLocationManager *)manager;
 - (void)didInitiateRoute:(TrackLocationManager *)manager;
+- (void)trackRouteChanged:(TrackLocationManager *)manager;
 
 @end
 

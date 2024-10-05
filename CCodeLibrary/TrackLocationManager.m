@@ -27,6 +27,7 @@
 @property NSURL *bearRightSoundURL, *right45SoundURL, *right90SoundURL, *right135SoundURL, *offCourseSoundURL;
 @property NSURL *bearLeftSoundURL, *left45SoundURL, *left90SoundURL, *left135SoundURL, *endOfRouteSoundURL, *turnArroundSoundURL;
 @property NSURL *currentGPSTickURL, *endLocationTrackingSoundURL, *vehicleLocationSavedSoundURL, *startTrackingSoundURL, *startFollowingRouteSoundURL;
+@property NSURL *playNextURL;
 @property float currentGPSTickVol;
 @property NSString * savedLocationsFile;
 @property NSString * tempDirectory;
@@ -52,6 +53,7 @@
 @property int needToSetVehicleLocation;
 @property BOOL needToInitiateRoute;
 @property double moveAwayFromVehicleDist, returnToVehicleDist;
+@property int minTrackTime;
 
 @end
 
@@ -78,11 +80,12 @@
         _numLastPoints = 0;
         _maxLastPoints = 8;
         _pLastPoints = malloc (sizeof(DPOINT)*_maxLastPoints+4);
-        _nearDistance = 20;
+        _nearDistance = 10;
         _atDistance = 5;
         _closeDistance = 100;
         _moveAwayFromVehicleDist = 35;
         _returnToVehicleDist = 25;
+        _minTrackTime = 60 * 5;
 
         _updateNotificationFrequency = 5;
         _tempDirectory = UserDefaults.defaults.nonBackedUpFilePath;
@@ -520,6 +523,10 @@
             CRAPI.sharedInstance.amBuildingTrackRoute = FALSE;
             [self playRecording:_endLocationTrackingSoundURL];
         }
+        if (self.delegate && [self.delegate respondsToSelector:@selector(trackRouteChanged:)])
+        {
+            [self.delegate trackRouteChanged:self];
+        }
     }
 
 }
@@ -605,9 +612,12 @@
                 }
                 else if (dist < _returnToVehicleDist && CRAPI.sharedInstance.amBuildingTrackRoute)
                 {
-                    LLPOINT pt = {0,0};
-                    CRAPI.sharedInstance.currentVehicleLocation = pt;
-                    rtn = 2;
+                    if (NSDate.now.timeIntervalSince1970 - CRAPI.sharedInstance.trackRouteStartTime > _minTrackTime)
+                    {
+                        LLPOINT pt = {0,0};
+                        CRAPI.sharedInstance.currentVehicleLocation = pt;
+                        rtn = 2;
+                    }
                 }
             }
         }
@@ -997,12 +1007,14 @@ static double HeadingFromAZ (double az)
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
     _isPlayingAudio = FALSE;
+    if (_playNextURL)
+        [self playRecording:_playNextURL];
 }
 
 - (BOOL)playRecording:(NSURL*)url
                volume:(float)vol
 {
-    //if (!_isPlayingAudio)
+    if (!_isPlayingAudio)
     {
         
         NSError *error;
@@ -1014,7 +1026,6 @@ static double HeadingFromAZ (double az)
         [_ticPlayer prepareToPlay];
         [_ticPlayer setVolume: vol];
         [_ticPlayer setDelegate: self];
-        _isPlayingAudio = TRUE;
 
         [_ticPlayer play];
         
@@ -1027,12 +1038,17 @@ static double HeadingFromAZ (double az)
 {
     NSError *error = nil;
     float vol = 1;
-    _isPlayingAudio = NO;
-    _messagePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
-    [_messagePlayer prepareToPlay];
-    [_messagePlayer setVolume: vol];
-    [_messagePlayer setDelegate: self];
-    _isPlayingAudio = TRUE;
+    if (_isPlayingAudio)
+        _playNextURL = url;
+    else
+    {
+        _playNextURL = nil;
+        _messagePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+        [_messagePlayer prepareToPlay];
+        [_messagePlayer setVolume: vol];
+        [_messagePlayer setDelegate: self];
+        _isPlayingAudio = TRUE;
+    }
 
     [_messagePlayer play];
 }
