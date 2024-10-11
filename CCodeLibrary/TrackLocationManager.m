@@ -18,6 +18,7 @@
 @property CLLocationManager *locationManager;
 @property int minTimerDelay,maxTimerDelay;
 @property int timerDelay;
+@property int lastDriveTime;
 @property double notifyDist;
 @property double offCourseDist;
 @property int currentTimerDelay;
@@ -33,6 +34,7 @@
 @property NSString * tempDirectory;
 @property int currentSimulationIndex;
 @property NSTimer *simulationTimer;
+@property NSTimer *drivingTimer, *walkingTimer;
 @property int numUpdates;
 @property BOOL atEndOfRoute;
 @property double turnDegrees;
@@ -54,6 +56,7 @@
 @property BOOL needToInitiateRoute;
 @property double moveAwayFromVehicleDist, returnToVehicleDist;
 @property int minTrackTime;
+@property LLPOINT lastVehicleLocation;
 
 @end
 
@@ -198,7 +201,44 @@
         else
             self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":unknown"];
         
-
+        if ([self.currentMotionActivity isEqual:@"Vehicle:high"])
+        {
+            if (![self.previousMotionActivity isEqual:self.currentMotionActivity])
+            {
+                [self.drivingTimer invalidate];
+                self.lastDriveTime = 0;
+                self.drivingTimer = [NSTimer scheduledTimerWithTimeInterval:30
+                                                                     target:self
+                                                                   selector:@selector(markLastDriveTime:)
+                                                                   userInfo:nil
+                                                                    repeats:YES];
+            }
+        }
+        else if ([self.currentMotionActivity isEqual:@"Walking:high"])
+        {
+            if (![self.previousMotionActivity isEqual:self.currentMotionActivity])
+            {
+                [self.walkingTimer invalidate];
+                self.walkingTimer = [NSTimer scheduledTimerWithTimeInterval:30
+                                                                     target:self
+                                                                   selector:@selector(markLastWalkingTime:)
+                                                                   userInfo:nil
+                                                                    repeats:YES];
+            }
+        }
+        else if ([self.currentMotionActivity isEqual:@"Vehicle:high"])
+        {
+        }
+        else
+        {
+            if ([self.previousMotionActivity isEqual:@"Vehicle:high"])
+                self.lastVehicleLocation = CRAPI.sharedInstance.currentGPSLocation;
+;
+            
+            [self.drivingTimer invalidate];
+            [self.walkingTimer invalidate];
+        }
+        self.previousMotionActivity = self.currentMotionActivity;
     };
 
     // check to see if the motion activity manager exists
@@ -218,6 +258,19 @@
     }
 }
 
+- (void) markLastDriveTime:(NSTimer *)timer
+{
+    _lastDriveTime = NSDate.now.timeIntervalSince1970;
+}
+- (void) markLastWalkingTime:(NSTimer *)timer
+{
+    int now = NSDate.now.timeIntervalSince1970;
+    if (now - _lastDriveTime < 600)
+    {
+        [self markVehicleLocation];
+        _lastDriveTime = 0;
+    }
+}
 - (void)startUpdatingLocation
 {
     if (_inSimulationMode)
@@ -274,7 +327,7 @@
 {
     _needToSetVehicleLocation = 5;
     _locationManager.distanceFilter = kCLDistanceFilterNone;
-
+    [_locationManager startUpdatingLocation];
 }
 - (void) stopSimulation
 {
@@ -344,6 +397,7 @@
 {
     static int turnArroundCount = 0;
 //    NSLog (@"GPS input recieved");
+    CRAPI.sharedInstance.currentGPSLocation = pt;
     if ((CRAPI.sharedInstance.inFollowingRouteMode || CRAPI.sharedInstance.amBuildingTrackRoute) &&
         !(_numUpdates++ % _updateNotificationFrequency))
     {
@@ -378,7 +432,13 @@
             CRAPI.sharedInstance.currentTrackRoute = NSMutableArray.new;
             CRAPI.sharedInstance.amBuildingTrackRoute = TRUE;
             [hd deleteWaypointsOfType:@"Vehicle"];
-            [hd addWaypoint:@"V" type:@"Vehicle" latlon:_currentPoint description:@"" displayOnCompass:YES];
+            LLPOINT pnt;
+            if (_lastVehicleLocation.lat == 0)
+                pnt = _currentPoint;
+            else
+                pnt = _lastVehicleLocation;
+            _lastVehicleLocation.lat = 0;
+            [hd addWaypoint:@"V" type:@"Vehicle" latlon:pnt description:@"" displayOnCompass:YES];
             CRAPI.sharedInstance.currentVehicleLocation = _currentPoint;
             if (self.delegate && [self.delegate respondsToSelector:@selector(didMarkVehicleLocation:)])
             {

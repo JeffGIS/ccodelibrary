@@ -67,7 +67,10 @@
      shadowColor:(CGColorRef)shadowColor
     processingID:(NSInteger)processingID
 {
-    static BOOL noText = TRUE;
+    static BOOL noText = FALSE;
+    float zm = CRAPI.sharedInstance.currentZoom;
+    if (zm < 13)
+        return FALSE;
     if (noText)
         return FALSE;
     if (!textIN.length)

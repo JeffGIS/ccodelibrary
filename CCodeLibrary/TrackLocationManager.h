@@ -88,6 +88,7 @@ typedef NS_ENUM(NSInteger, Activities)
 @property BOOL inSimulationMode;
 @property BOOL routeWasSaved;
 @property NSString *currentMotionActivity;
+@property NSString *previousMotionActivity;
 @property Activities currentActivity;
 @property Activities previousActivity;
 @property int currentActivityStartTime;
