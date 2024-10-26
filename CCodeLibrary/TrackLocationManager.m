@@ -21,10 +21,9 @@
 @property int lastDriveTime;
 @property double notifyDist;
 @property double offCourseDist;
-@property int currentTimerDelay;
 @property BOOL goLeft;
 @property BOOL amSavingLocations;
-@property NSURL *leftSoundURL, *rightSoundURL, *gotGPSInputSoundURL1, *gotGPSInputSoundURL2;
+@property NSURL *leftSoundURL, *rightSoundURL, *gotGPSInputSoundURL1, *gotGPSInputSoundURL2, *gotGPSInputSoundURL3;
 @property NSURL *bearRightSoundURL, *right45SoundURL, *right90SoundURL, *right135SoundURL, *offCourseSoundURL;
 @property NSURL *bearLeftSoundURL, *left45SoundURL, *left90SoundURL, *left135SoundURL, *endOfRouteSoundURL, *turnArroundSoundURL;
 @property NSURL *currentGPSTickURL, *endLocationTrackingSoundURL, *vehicleLocationSavedSoundURL, *startTrackingSoundURL, *startFollowingRouteSoundURL;
@@ -77,7 +76,6 @@
         _maxTimerDelay = 60;
         _minTimerDelay = 10;
         _timerDelay = _maxTimerDelay;
-        _currentTimerDelay = 0;
         _notifyDist = 7;
         _offCourseDist = 25 * _notifyDist;
         _numLastPoints = 0;
@@ -100,8 +98,9 @@
         _rightSoundURL = [NSURL URLWithString:soundFile];
         soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/Tock.caf"];
         _gotGPSInputSoundURL1 = [NSURL URLWithString:soundFile];
-        soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/ct-path-ack.caf"];
         soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/ct-busy.caf"];
+        soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/ct-path-ack.caf"];
+        _gotGPSInputSoundURL3 = [NSURL URLWithString:soundFile];
         soundFile = [NSString stringWithUTF8String:"///System/Library/Audio/UISounds/jbl_confirm.caf"];
         _gotGPSInputSoundURL2 = [NSURL URLWithString:soundFile];
         _bearRightSoundURL = [NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"BearRight" ofType:@"m4a"]];
@@ -242,7 +241,7 @@
     };
 
     // check to see if the motion activity manager exists
-    if ([CMMotionActivityManager isActivityAvailable])
+/*    if ([CMMotionActivityManager isActivityAvailable])
     {
         _motionActivityManager = CMMotionActivityManager.new;
 
@@ -255,7 +254,7 @@
                 [_motionActivityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:motionActivityHandler];
             }
         }
-    }
+    }*/
 }
 
 - (void) markLastDriveTime:(NSTimer *)timer
@@ -298,8 +297,8 @@
     }
     else
         [_locationManager stopUpdatingLocation];
-    [self offCourseNotification:0
-                      withDelay:0];
+    [self setOffCourseSound:0
+                 withVolume:0];
     _numLastPoints = 0;
 }
 - (void)stopUpdatingHeading
@@ -314,6 +313,7 @@
     {
         CRAPI.sharedInstance.locationTrackingEnabled = TRUE;
         _inSimulationMode = YES;
+        [self pointInMessageList:-1];
         _currentSimulationIndex = 0;
         _simulationTimer = [NSTimer scheduledTimerWithTimeInterval:_simulationInterval
                                                       target:self
@@ -381,8 +381,9 @@
     {
         [_simulationTimer invalidate];
         _inSimulationMode = NO;
-        [self offCourseNotification:0
-                          withDelay:0];
+        [self setOffCourseSound:0
+                     withVolume:0];
+
 
     }
     return;
@@ -392,31 +393,17 @@
 {
     _delegate = delegate;
 }
+
+- (void) clearTrackRoute
+{
+    [CRAPI.sharedInstance clearTrackRoute];
+}
 - (void) newGPSLocation:(LLPOINT)pt
                 heading:(double)GPSHeading
 {
     static int turnArroundCount = 0;
 //    NSLog (@"GPS input recieved");
     CRAPI.sharedInstance.currentGPSLocation = pt;
-    if ((CRAPI.sharedInstance.inFollowingRouteMode || CRAPI.sharedInstance.amBuildingTrackRoute) &&
-        !(_numUpdates++ % _updateNotificationFrequency))
-    {
-        if (_currentGPSTickURL == _gotGPSInputSoundURL1)
-        {
-            if (CRAPI.sharedInstance.amBuildingTrackRoute)
-                [self playRecording:_gotGPSInputSoundURL2
-                             volume:_currentGPSTickVol];
-            else
-                [self playRecording:_gotGPSInputSoundURL1
-                         volume:_currentGPSTickVol];
-        }
-        else
-        {
-            [self playRecording:_currentGPSTickURL
-                         volume:_currentGPSTickVol];
-
-        }
-    }
     _currentPoint = pt;
     _atUTM = LLPointToDPoint (pt);
     ConvertCoord(&_atUTM, LATLONPROJECTION, UTM15PROJECTION);
@@ -429,7 +416,7 @@
         if (_needToSetVehicleLocation-- == 1)
         {
             HuntingData *hd = HuntingData.new;
-            CRAPI.sharedInstance.currentTrackRoute = NSMutableArray.new;
+            [self clearTrackRoute];
             CRAPI.sharedInstance.amBuildingTrackRoute = TRUE;
             [hd deleteWaypointsOfType:@"Vehicle"];
             LLPOINT pnt;
@@ -457,17 +444,10 @@
         _fromPoint = _currentPoint;
         [self initiateRoute];
     }
+    [self setOffCourseSound:0];
 
     if (CRAPI.sharedInstance.inFollowingRouteMode)
     {
-        /*
-        double distToDest = ldistp(_atUTM, _toUTM)/ METERS_PER_YARD;
-        if (distToDest < _atDistance)
-        {
-            [self offCourseNotification:0
-                              withDelay:0];
-            //[self turnAlert];
-        }*/
         INT64 destRoutePoint = [self computeNextRoutePoint];
         if (!CRAPI.sharedInstance.inFollowingRouteMode)
             return;
@@ -506,6 +486,13 @@
         else
             turnArroundCount = 0;
     }
+    if ((CRAPI.sharedInstance.inFollowingRouteMode || CRAPI.sharedInstance.amBuildingTrackRoute) &&
+        !(_numUpdates++ % _updateNotificationFrequency))
+    {
+        [self playRecording:_currentGPSTickURL
+                     volume:_currentGPSTickVol];
+        
+    }
     return;
 }
 
@@ -515,6 +502,7 @@
     _routeStartPoint = _atUTM;
     self.distanceFilter = kCLDistanceFilterNone;
     CRAPI.sharedInstance.inFollowingRouteMode = YES;
+    [self pointInMessageList:-1];
     [self playRecording:_startFollowingRouteSoundURL];
     if (self.delegate && [self.delegate respondsToSelector:@selector(didInitiateRoute:)])
     {
@@ -579,7 +567,7 @@
         {
             HuntingData *hd = HuntingData.new;
             [hd saveTrackRoute:CRAPI.sharedInstance.currentTrackRoute];
-            CRAPI.sharedInstance.currentTrackRoute = NSMutableArray.new;
+            [self clearTrackRoute];
             CRAPI.sharedInstance.amBuildingTrackRoute = FALSE;
             [self playRecording:_endLocationTrackingSoundURL];
         }
@@ -690,7 +678,7 @@
     CRAPI.sharedInstance.waitingToMoveAwayFromVehicle = NO;
     CRAPI.sharedInstance.locationTrackingEnabled = YES;
     CRAPI.sharedInstance.amBuildingTrackRoute = TRUE;
-    CRAPI.sharedInstance.currentTrackRoute = NSMutableArray.new;
+    [self clearTrackRoute];
     [self playRecording:_startTrackingSoundURL];
     if (self.delegate && [self.delegate respondsToSelector:@selector(didInitiateTracking:)])
     {
@@ -725,44 +713,31 @@
     return -1;
 }
 
--(void) offCourseNotification:(int) opt
-                    withDelay:(int) intDelay
+-(void) setOffCourseSound:(int) opt
 {
-    [self offCourseNotification:opt
-                      withDelay:intDelay
-                         volume:1];
+    [self setOffCourseSound:opt
+                 withVolume:1];
 }
--(void) offCourseNotification:(int) opt
-                    withDelay:(int) intDelay
-                       volume:(float)vol
+-(void) setOffCourseSound:(int) opt
+               withVolume:(float)vol
     {
-    static int currentTimerOpt = 0;
-//    int intDelay = max (IDNINT (delay/_minTimerDelay) * _minTimerDelay,_minTimerDelay);
-    
-    if (opt == currentTimerOpt && intDelay == _currentTimerDelay)
-    {
-        if (opt)
-            _currentGPSTickVol = vol;
-        return;
-    }
-    _goLeft = FALSE;
-    currentTimerOpt = opt;
-    _currentTimerDelay = intDelay;
-    if (_offCourseTimer)
-    {
-        [_offCourseTimer invalidate];
-        _offCourseTimer = nil;
-    }
+
     switch (opt)
     {
         default:
         case 0:
-            if (CRAPI.sharedInstance.amBuildingTrackRoute)
+            _currentGPSTickVol = 1;
+            if (CRAPI.sharedInstance.inFollowingRouteMode)
+            {
+                if (CRAPI.sharedInstance.amBuildingTrackRoute)
+                    _currentGPSTickURL = _gotGPSInputSoundURL3;
+                else
+                    _currentGPSTickURL = _gotGPSInputSoundURL1;
+            }
+            else if (CRAPI.sharedInstance.amBuildingTrackRoute)
                 _currentGPSTickURL = _gotGPSInputSoundURL2;
             else
-                _currentGPSTickURL = _gotGPSInputSoundURL1;
-
-            _currentGPSTickVol = 1;
+                _currentGPSTickVol = 0;
             break;
         case RIGHT: //go left
             _currentGPSTickURL = _rightSoundURL;
@@ -772,11 +747,6 @@
         case LEFT: //go right
             _currentGPSTickURL = _leftSoundURL;
             _currentGPSTickVol = vol;
-            /*
-            if (!_offCourseTimer)
-                _offCourseTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(offCourseNotificationPlay:) userInfo:nil repeats:NO];
-            _offCourseTimer = [NSTimer scheduledTimerWithTimeInterval:_currentTimerDelay target:self selector:@selector(offCourseNotificationPlay:) userInfo:nil repeats:YES];
-             */
             break;
     }
     return;
@@ -901,8 +871,6 @@
 {
     CRAPI.sharedInstance.inFollowingRouteMode = FALSE;
     CRAPI.sharedInstance.currentSelectedWaypoint = -1;
-    if (_offCourseTimer)
-        [_offCourseTimer invalidate];
 
 }
 
@@ -1033,17 +1001,18 @@ static double HeadingFromAZ (double az)
                 _timerDelay = _minTimerDelay * 2;
             else
                 _timerDelay = _maxTimerDelay;
-            [self offCourseNotification:_leftOrRight
-                              withDelay:_timerDelay
-                                 volume:vol];
+            [self setOffCourseSound:_leftOrRight
+                         withVolume:vol];
         }
         else
-            [self offCourseNotification:0
-                              withDelay:0];
+            [self setOffCourseSound:0
+                         withVolume:0];
+
     }
     else
-        [self offCourseNotification:0
-                          withDelay:0];
+        [self setOffCourseSound:0
+                     withVolume:0];
+
 
     return destinationRoutePointNumber;
 }
@@ -1074,6 +1043,8 @@ static double HeadingFromAZ (double az)
 - (BOOL)playRecording:(NSURL*)url
                volume:(float)vol
 {
+    if (vol == 0)
+        return FALSE;
     if (!_isPlayingAudio)
     {
         

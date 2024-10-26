@@ -263,7 +263,7 @@
 
 -(int) getSavedTrack:(int)timeSaved
 {
-    CRAPI.sharedInstance.currentTrackRoute = NSMutableArray.new;
+    [CRAPI.sharedInstance clearTrackRoute];
     NSMutableArray *array = NSMutableArray.new;
     int nPointsInRoute = 0;
     BOOL opened = [self open];

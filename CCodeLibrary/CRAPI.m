@@ -480,6 +480,10 @@ NVSlopeData CurrentSlopeData;
 {
     _currentBAR = i;
 }
+- (void) clearTrackRoute
+{
+    _currentTrackRoute = NSMutableArray.new;
+}
 
 -(int) currentOverallBoundaryRefno
 {

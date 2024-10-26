@@ -95,8 +95,6 @@ typedef NS_ENUM(NSInteger, Activities)
 @property LLPOINT firstRoutePoint;
 
 
-@property NSTimer * offCourseTimer;
-
 - (void)startUpdatingLocation;
 - (void)startUpdatingHeading;
 - (void)stopUpdatingLocation;
@@ -104,8 +102,6 @@ typedef NS_ENUM(NSInteger, Activities)
 - (void)requestLocation;
 - (void) requestWhenInUseAuthorization;
 
--(void) offCourseNotification:(int) opt
-                    withDelay:(int) delay;
 -(void) exitRouteMode;
 -(void) createTwoPointRoute:(LLPOINT)fromLL
                        toLL:(LLPOINT)toLL;
@@ -117,7 +113,9 @@ typedef NS_ENUM(NSInteger, Activities)
 - (BOOL) pointInMessageList:(INT64)pointID;
 - (void) markVehicleLocation;
 - (void) startRoute;
-
+- (void) setOffCourseSound:(int) opt
+                withVolume:(float)vol;
+ 
 @end
 
 #endif /* TrackLocationManager_h */
