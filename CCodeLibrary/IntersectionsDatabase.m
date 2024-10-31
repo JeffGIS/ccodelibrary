@@ -10,7 +10,7 @@
 #import "RampCompliance.h"
 #include "shr.h"
 
-static int ii;
+extern int ii;
 
 @interface IntersectionsDatabase ()
 

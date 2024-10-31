@@ -10,7 +10,7 @@
 #import "CRAPI.h"
 #import <string.h>
 static int numOpenDB = 0;
-static int ii=0;
+int ii=0;
 
 SQLITE_API int SQLite_Open(
                            const char *filename,   /* Database filename (UTF-8) */

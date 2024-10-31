@@ -29,7 +29,7 @@ static int COLORFAC=1;
 
 @implementation PointInAreas
 
-static int ii;
+extern int ii;
 
 - (BOOL)continueProcessing
 {

@@ -35,7 +35,7 @@ typedef struct {CGFloat c1,c2,c3,c4;} COLORDEF;
 
 @implementation PercentInArea
 
-static int ii;
+extern int ii;
 
 - (void) releaseMem
 {
