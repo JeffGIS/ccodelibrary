@@ -56,6 +56,11 @@
 @property double moveAwayFromVehicleDist, returnToVehicleDist;
 @property int minTrackTime;
 @property LLPOINT lastVehicleLocation;
+@property BOOL needTurnAdvice;
+@property double lastRouteOffset;
+@property BOOL crossedRouteSegment;
+@property DPOINT minDistIntPoint;
+@property DPOINT lastMessageIntPoint;
 
 @end
 
@@ -468,9 +473,10 @@
             {
                 [self.delegate shouldRefreshScreen:self];
             }
-            //if (_distToRoute < _atDistance)
-                [self turnAlert];
+            [self turnAlert];
         }
+        else if (_crossedRouteSegment && _needTurnAdvice)
+            [self turnAlert];
         if (_currentGPSHeading >= 0 && (_turnDegrees >= 150 || _turnDegrees <= -150))
         {
             if (turnArroundCount++ == 3)
@@ -500,6 +506,7 @@
 {
     _needToInitiateRoute = FALSE;
     _routeStartPoint = _atUTM;
+    _lastMessageIntPoint.x = 0;
     self.distanceFilter = kCLDistanceFilterNone;
     CRAPI.sharedInstance.inFollowingRouteMode = YES;
     [self pointInMessageList:-1];
@@ -818,8 +825,10 @@
         [self playRecording:_endOfRouteSoundURL];
         [self exitRouteMode];
     }
-    else if ([self pointInMessageList:CRAPI.sharedInstance.currentSelectedWaypoint])
+    else if (!_crossedRouteSegment && [self pointInMessageList:CRAPI.sharedInstance.currentSelectedWaypoint])
+    {
         return;
+    }
     else
     {
         double ch = _currentGPSHeading;
@@ -840,7 +849,9 @@
             [self playRecording:_left90SoundURL];
         else if (_turnDegrees > 45 * 2.5)
             [self playRecording:_left135SoundURL];
-
+        _crossedRouteSegment = FALSE;
+        _lastSide = 0;
+        _needTurnAdvice = FALSE;
     }
 }
 - (void) startRoute
@@ -933,7 +944,7 @@ static double HeadingFromAZ (double az)
     {
         index++;
         INT64 iref = CRAPI.sharedInstance.currentSelectedWaypoint;
-        if (CRAPI.sharedInstance.currentSelectedWaypoint == wp.refno && index < routePointArray.count)
+        if (iref == wp.refno && index < routePointArray.count)
         {
             double distToDest = ldistp(_atUTM, wp.UTM)/ METERS_PER_YARD;
             if (distToDest < _atDistance/2)
@@ -976,6 +987,7 @@ static double HeadingFromAZ (double az)
                 }
                 else
                     _atEndOfRoute = FALSE;
+                _minDistIntPoint = IntPoint;
                 rtn = TRUE;
             }
         }
@@ -985,6 +997,12 @@ static double HeadingFromAZ (double az)
     {
         float vol;
         _offDist = minDist;
+        if (_lastSide && _leftOrRight != _lastSide)
+        {
+            if (_needTurnAdvice)
+                _crossedRouteSegment = TRUE;
+        }
+        _lastSide = _leftOrRight;
         _offDist /= METERS_PER_YARD;
         if (_offDist > _notifyDist * 6)
         {
@@ -1003,6 +1021,8 @@ static double HeadingFromAZ (double az)
                 _timerDelay = _maxTimerDelay;
             [self setOffCourseSound:_leftOrRight
                          withVolume:vol];
+            if (!_lastMessageIntPoint.x || ldistpp (&_minDistIntPoint,&_lastMessageIntPoint) > _notifyDist * 2)
+                _needTurnAdvice = TRUE;
         }
         else
             [self setOffCourseSound:0
@@ -1080,7 +1100,7 @@ static double HeadingFromAZ (double az)
         [_messagePlayer setDelegate: self];
         _isPlayingAudio = TRUE;
     }
-
+    _lastMessageIntPoint = _minDistIntPoint;
     [_messagePlayer play];
 }
 

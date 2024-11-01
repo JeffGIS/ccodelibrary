@@ -5,6 +5,7 @@
 //  Created by Jeff Smith on 11/8/23.
 //  Copyright © 2023 GSSi. All rights reserved.
 //
+extern int ii;
 
 #ifndef TrackLocationManager_h
 #define TrackLocationManager_h
@@ -79,6 +80,7 @@ typedef NS_ENUM(NSInteger, Activities)
 @property BOOL checkOff;
 @property double offDist;
 @property int leftOrRight;
+@property int lastSide;
 @property BOOL checkOffset;
 @property LLPOINT currentPoint;
 @property DPOINT routeStartPoint;

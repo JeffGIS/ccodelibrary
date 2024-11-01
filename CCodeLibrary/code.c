@@ -1292,6 +1292,8 @@ Bool GetPerpendicularIntersect (LPDPOINT Point,LPDPOINT Line,LPDPOINT IntPoint,B
             else
                 *IntPoint = Line[1];
             rtn = TRUE;
+            *pLeftOrRight = 0;
+            goto Exit;
         }
     }
     else
