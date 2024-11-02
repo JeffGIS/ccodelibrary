@@ -13,6 +13,17 @@
 #include "PROJ.H"
 #import "HuntingData.h"
 
+typedef struct {
+    CMMotionActivityConfidence confidence;
+    int startTime;
+    BOOL unknown;
+    BOOL stationary;
+    BOOL walking;
+    BOOL running;
+    BOOL automotive;
+    BOOL cycling;
+} GSSiMotionActivity;
+
 @interface TrackLocationManager ()
 
 @property CLLocationManager *locationManager;
@@ -179,74 +190,90 @@
 {
     _locationManager.pausesLocationUpdatesAutomatically = pausesLocationUpdatesAutomatically;
 }
+- (void) processMotionActivity:(GSSiMotionActivity *)activity
+{
+    //NSLog(@"Motion activity detected");
+
+    if (activity->stationary)
+        self.currentMotionActivity = @"Stationary";
+    else if (activity->walking)
+        self.currentMotionActivity = @"Walking";
+    else if (activity->running)
+        self.currentMotionActivity = @"Running";
+    else if (activity->automotive)
+        self.currentMotionActivity = @"Vehicle";
+    else if (activity->cycling)
+        self.currentMotionActivity = @"Cycling";
+    else if (activity->unknown)
+        self.currentMotionActivity = @"Unknown";
+    else
+        self.currentMotionActivity = @"Moving";
+
+    if (activity->confidence == CMMotionActivityConfidenceLow)
+        self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":low"];
+    else if (activity->confidence == CMMotionActivityConfidenceMedium)
+        self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":medium"];
+    else if (activity->confidence == CMMotionActivityConfidenceHigh)
+        self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":high"];
+    else
+        self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":unknown"];
+    
+    if ([self.currentMotionActivity isEqual:@"Vehicle:high"])
+    {
+        if (![self.previousMotionActivity isEqual:self.currentMotionActivity])
+        {
+            [self.drivingTimer invalidate];
+            self.lastDriveTime = 0;
+            self.drivingTimer = [NSTimer scheduledTimerWithTimeInterval:30
+                                                                 target:self
+                                                               selector:@selector(markLastDriveTime:)
+                                                               userInfo:nil
+                                                                repeats:YES];
+        }
+    }
+    else if ([self.currentMotionActivity isEqual:@"Walking:high"])
+    {
+        if (![self.previousMotionActivity isEqual:self.currentMotionActivity])
+        {
+            [self.walkingTimer invalidate];
+            self.walkingTimer = [NSTimer scheduledTimerWithTimeInterval:30
+                                                                 target:self
+                                                               selector:@selector(markLastWalkingTime:)
+                                                               userInfo:nil
+                                                                repeats:YES];
+        }
+    }
+    else
+    {
+        if ([self.previousMotionActivity isEqual:@"Vehicle:high"])
+            self.lastVehicleLocation = CRAPI.sharedInstance.currentGPSLocation;
+        
+        [self.drivingTimer invalidate];
+        [self.walkingTimer invalidate];
+    }
+    self.previousMotionActivity = self.currentMotionActivity;
+
+}
 - (void)startMotionActivityMonitoring
 {
     // create the motion activity handler
     CMMotionActivityHandler motionActivityHandler = ^(CMMotionActivity *activity) {
-        NSLog(@"Motion activity detected");
-        self.currentMotionActivity = @"Other";
-        if (activity.stationary)
-            self.currentMotionActivity = @"Stationary";
-        else if (activity.walking)
-            self.currentMotionActivity = @"Walking";
-        else if (activity.running)
-            self.currentMotionActivity = @"Running";
-        else if (activity.automotive)
-            self.currentMotionActivity = @"Vehicle";
-        else if (activity.unknown)
-            self.currentMotionActivity = @"Unknown";
+        GSSiMotionActivity myActivity;
         
-        if (activity.confidence == CMMotionActivityConfidenceLow)
-            self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":low"];
-        else if (activity.confidence == CMMotionActivityConfidenceMedium)
-            self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":medium"];
-        else if (activity.confidence == CMMotionActivityConfidenceHigh)
-            self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":high"];
-        else
-            self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":unknown"];
-        
-        if ([self.currentMotionActivity isEqual:@"Vehicle:high"])
-        {
-            if (![self.previousMotionActivity isEqual:self.currentMotionActivity])
-            {
-                [self.drivingTimer invalidate];
-                self.lastDriveTime = 0;
-                self.drivingTimer = [NSTimer scheduledTimerWithTimeInterval:30
-                                                                     target:self
-                                                                   selector:@selector(markLastDriveTime:)
-                                                                   userInfo:nil
-                                                                    repeats:YES];
-            }
-        }
-        else if ([self.currentMotionActivity isEqual:@"Walking:high"])
-        {
-            if (![self.previousMotionActivity isEqual:self.currentMotionActivity])
-            {
-                [self.walkingTimer invalidate];
-                self.walkingTimer = [NSTimer scheduledTimerWithTimeInterval:30
-                                                                     target:self
-                                                                   selector:@selector(markLastWalkingTime:)
-                                                                   userInfo:nil
-                                                                    repeats:YES];
-            }
-        }
-        else if ([self.currentMotionActivity isEqual:@"Vehicle:high"])
-        {
-        }
-        else
-        {
-            if ([self.previousMotionActivity isEqual:@"Vehicle:high"])
-                self.lastVehicleLocation = CRAPI.sharedInstance.currentGPSLocation;
-;
-            
-            [self.drivingTimer invalidate];
-            [self.walkingTimer invalidate];
-        }
-        self.previousMotionActivity = self.currentMotionActivity;
+        myActivity.confidence = activity.confidence;
+        myActivity.startTime = activity.startDate.timeIntervalSinceReferenceDate;
+        myActivity.unknown = activity.unknown;
+        myActivity.running = activity.running;
+        myActivity.stationary = activity.stationary;
+        myActivity.walking = activity.walking;
+        myActivity.automotive = activity.automotive;
+        myActivity.cycling = activity.cycling;
+
+        [self processMotionActivity:&myActivity];
     };
 
     // check to see if the motion activity manager exists
-/*    if ([CMMotionActivityManager isActivityAvailable])
+    if ([CMMotionActivityManager isActivityAvailable])
     {
         _motionActivityManager = CMMotionActivityManager.new;
 
@@ -259,7 +286,7 @@
                 [_motionActivityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:motionActivityHandler];
             }
         }
-    }*/
+    }
 }
 
 - (void) markLastDriveTime:(NSTimer *)timer
