@@ -117,6 +117,9 @@ typedef NS_ENUM(NSInteger, Activities)
 - (void) startRoute;
 - (void) setOffCourseSound:(int) opt
                 withVolume:(float)vol;
+- (void) startTrackingMotion;
+- (void) stopTrackingMotion;
+- (void) replayMotion;
  
 @end
 

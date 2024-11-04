@@ -13,6 +13,8 @@
 #include "PROJ.H"
 #import "HuntingData.h"
 
+#define DOCUMENTS_FOLDER [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"]
+
 typedef struct {
     CMMotionActivityConfidence confidence;
     int startTime;
@@ -72,7 +74,10 @@ typedef struct {
 @property BOOL crossedRouteSegment;
 @property DPOINT minDistIntPoint;
 @property DPOINT lastMessageIntPoint;
-
+@property BOOL savingMotion;
+@property FILE *fidMotion;
+@property NSTimer *motionReplayTimer;
+@property int motionRecordID;
 @end
 
 @implementation TrackLocationManager
@@ -160,6 +165,99 @@ typedef struct {
     //AudioServicesDisposeSystemSoundID(_highSoundID);
 }
 
+- (void) startTrackingMotion
+{
+    NSString *path = [NSString stringWithFormat:@"%@/motion.bin", DOCUMENTS_FOLDER];
+    [self createMotion:path];
+    _savingMotion = TRUE;
+}
+
+- (void) stopTrackingMotion
+{
+    [self closeMotion];
+    _savingMotion = FALSE;
+}
+- (BOOL) createMotion:(NSString *)path
+{
+    BOOL rtn = FALSE;
+
+    _fidMotion = fopenGSSi (path.UTF8String,"w");
+    return rtn;
+}
+- (BOOL) openMotion:(NSString *)path
+{
+    BOOL rtn = TRUE;
+    _fidMotion = fopenGSSi (path.UTF8String,"rb");
+    if (_fidMotion == 0)
+        rtn = FALSE;
+    return rtn;
+}
+- (void) closeMotion
+{
+    int type = 0;
+    fwrite (&type,sizeof(type),1,_fidMotion);
+    fcloseGSSi(_fidMotion);
+}
+- (void) replayMotion
+{
+    NSString *path = [NSString stringWithFormat:@"%@/motion.bin", DOCUMENTS_FOLDER];
+    _motionRecordID = 0;
+    if ([self openMotion:path])
+    {
+        [self.motionReplayTimer invalidate];
+        self.motionReplayTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                             target:self
+                                                           selector:@selector(getNextMotionRecord)
+                                                           userInfo:nil
+                                                            repeats:YES];
+    }
+}
+- (void) saveMotionLocation:(LLPOINT *)pt
+{
+    int type = 1;
+    fwrite (&type,sizeof(type),1,_fidMotion);
+    fwrite (pt,sizeof(LLPOINT),1,_fidMotion);
+    fwrite (&_GPSHeading,sizeof(_GPSHeading),1,_fidMotion);
+    fwrite (&_GPSHeadingAccuracy,sizeof(_GPSHeadingAccuracy),1,_fidMotion);
+    return;
+}
+- (void) saveMotion:(GSSiMotionActivity *)activity
+{
+    int type = 2;
+    fwrite (&type,sizeof(type),1,_fidMotion);
+    fwrite (activity,sizeof(GSSiMotionActivity),1,_fidMotion);
+    return;
+}
+ - (BOOL) getNextMotionRecord
+{
+    int type;
+    LLPOINT pt;
+    fread (&type,sizeof(type),1,_fidMotion);
+    _motionRecordID++;
+    switch (type)
+    {
+        case 0:
+            [self closeMotion];
+            [self.motionReplayTimer invalidate];
+            return FALSE;
+        case 1:
+            fread (&pt,sizeof(LLPOINT),1,_fidMotion);
+            fread (&_GPSHeading,sizeof(_GPSHeading),1,_fidMotion);
+            fread (&_GPSHeadingAccuracy,sizeof(_GPSHeadingAccuracy),1,_fidMotion);
+            [self newGPSLocation:pt
+                         heading:_GPSHeading];
+            break;
+        case 2:
+        {
+            GSSiMotionActivity activity;
+            fread (&activity,sizeof(GSSiMotionActivity),1,_fidMotion);
+            [self processMotionActivity:&activity];
+        }
+            break;
+    }
+    return TRUE;
+}
+
 - (void) setDistanceFilter:(CLLocationDistance) dist
 {
     _locationManager.distanceFilter = dist;
@@ -184,7 +282,7 @@ typedef struct {
 - (void) setActivityType:(CLActivityType) activityType
 {
     _locationManager.activityType = activityType;
-    [self startMotionActivityMonitoring];
+    //[self startMotionActivityMonitoring];
 }
 - (void) setPausesLocationUpdatesAutomatically:(BOOL) pausesLocationUpdatesAutomatically
 {
@@ -192,8 +290,13 @@ typedef struct {
 }
 - (void) processMotionActivity:(GSSiMotionActivity *)activity
 {
-    //NSLog(@"Motion activity detected");
+    ii = _motionRecordID;
+   //NSLog(@"Motion activity detected");
 
+    if (_savingMotion)
+    {
+        [self saveMotion:activity];
+    }
     if (activity->stationary)
         self.currentMotionActivity = @"Stationary";
     else if (activity->walking)
@@ -217,10 +320,10 @@ typedef struct {
         self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":high"];
     else
         self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":unknown"];
-    
+    NSLog (@"%i %@",_motionRecordID,_currentMotionActivity);
     if ([self.currentMotionActivity isEqual:@"Vehicle:high"])
     {
-        if (![self.previousMotionActivity isEqual:self.currentMotionActivity])
+        if (![_previousMotionActivity isEqual:_currentMotionActivity])
         {
             [self.drivingTimer invalidate];
             self.lastDriveTime = 0;
@@ -553,6 +656,8 @@ typedef struct {
         pt.lon = loc.coordinate.longitude;
         _GPSHeading = loc.course;
         _GPSHeadingAccuracy = loc.courseAccuracy;
+        if (_savingMotion)
+            [self saveMotionLocation:&pt];
         [self newGPSLocation:pt
                      heading:loc.course];
     }
