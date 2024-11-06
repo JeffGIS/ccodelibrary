@@ -265,6 +265,9 @@ typedef struct {
             [self processMotionActivity:&activity];
         }
             break;
+        default:
+            ii = 1;
+            break;
     }
     return TRUE;
 }
