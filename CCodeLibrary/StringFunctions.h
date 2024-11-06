@@ -103,6 +103,8 @@ bool POINTInCGRectP (LPPOINT pt,CGRect *rect);
 bool PointInView(CGPoint target,UIView* view);
 
 BOOL DeleteFile (NSString * file);
+int getCurrentTime (void);
+void setCurrentTime (int itime);
 
 
 #endif

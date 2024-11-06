@@ -17,7 +17,19 @@ static int useIDInc = 0;
 typedef FILE * LPFILE;
 static LPFILE openFiles[MAXOPENFILES]={0};
 static Bool fileInUse[MAXOPENFILES] = {0};
+static int currentTime = 0;
+int getCurrentTime (void)
+{
+    if (currentTime)
+        return currentTime;
+    int itime = NSDate.date.timeIntervalSinceReferenceDate;
+    return itime;
+}
 
+void setCurrentTime (int itime)
+{
+    currentTime = itime;
+}
 bool PointInCGRect (CGPoint pt,CGRect rect)
 {
     bool rtn = TRUE;

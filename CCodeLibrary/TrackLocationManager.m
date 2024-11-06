@@ -78,6 +78,7 @@ typedef struct {
 @property FILE *fidMotion;
 @property NSTimer *motionReplayTimer;
 @property int motionRecordID;
+@property BOOL replayingMotion;
 @end
 
 @implementation TrackLocationManager
@@ -108,7 +109,6 @@ typedef struct {
         _moveAwayFromVehicleDist = 35;
         _returnToVehicleDist = 25;
         _minTrackTime = 60 * 5;
-
         _updateNotificationFrequency = 5;
         _tempDirectory = UserDefaults.defaults.nonBackedUpFilePath;
         _savedLocationsFile = [_tempDirectory stringByAppendingString:@"/savedlocations.bin"];
@@ -170,6 +170,8 @@ typedef struct {
     NSString *path = [NSString stringWithFormat:@"%@/motion.bin", DOCUMENTS_FOLDER];
     [self createMotion:path];
     _savingMotion = TRUE;
+    [self startUpdatingLocation];
+    [self startMotionActivityMonitoring];
 }
 
 - (void) stopTrackingMotion
@@ -202,6 +204,7 @@ typedef struct {
 {
     NSString *path = [NSString stringWithFormat:@"%@/motion.bin", DOCUMENTS_FOLDER];
     _motionRecordID = 0;
+    _replayingMotion = TRUE;
     if ([self openMotion:path])
     {
         [self.motionReplayTimer invalidate];
@@ -216,6 +219,8 @@ typedef struct {
 {
     int type = 1;
     fwrite (&type,sizeof(type),1,_fidMotion);
+    int itime = NSDate.date.timeIntervalSinceReferenceDate;
+    fwrite (&itime,sizeof(int),1,_fidMotion);
     fwrite (pt,sizeof(LLPOINT),1,_fidMotion);
     fwrite (&_GPSHeading,sizeof(_GPSHeading),1,_fidMotion);
     fwrite (&_GPSHeadingAccuracy,sizeof(_GPSHeadingAccuracy),1,_fidMotion);
@@ -225,6 +230,8 @@ typedef struct {
 {
     int type = 2;
     fwrite (&type,sizeof(type),1,_fidMotion);
+    int itime = NSDate.date.timeIntervalSinceReferenceDate;
+    fwrite (&itime,sizeof(int),1,_fidMotion);
     fwrite (activity,sizeof(GSSiMotionActivity),1,_fidMotion);
     return;
 }
@@ -232,13 +239,17 @@ typedef struct {
 {
     int type;
     LLPOINT pt;
+    int itime;
     fread (&type,sizeof(type),1,_fidMotion);
+    fread (&itime,sizeof(type),1,_fidMotion);
+    setCurrentTime(itime);
     _motionRecordID++;
     switch (type)
     {
         case 0:
             [self closeMotion];
             [self.motionReplayTimer invalidate];
+            _replayingMotion = FALSE;
             return FALSE;
         case 1:
             fread (&pt,sizeof(LLPOINT),1,_fidMotion);
@@ -297,6 +308,8 @@ typedef struct {
     {
         [self saveMotion:activity];
     }
+    if (activity->confidence != CMMotionActivityConfidenceHigh)
+        return;
     if (activity->stationary)
         self.currentMotionActivity = @"Stationary";
     else if (activity->walking)
@@ -394,11 +407,11 @@ typedef struct {
 
 - (void) markLastDriveTime:(NSTimer *)timer
 {
-    _lastDriveTime = NSDate.now.timeIntervalSince1970;
+    _lastDriveTime = getCurrentTime();
 }
 - (void) markLastWalkingTime:(NSTimer *)timer
 {
-    int now = NSDate.now.timeIntervalSince1970;
+    int now = getCurrentTime();
     if (now - _lastDriveTime < 600)
     {
         [self markVehicleLocation];
@@ -611,7 +624,7 @@ typedef struct {
         {
             if (turnArroundCount++ == 3)
             {
-                int inow = NSDate.now.timeIntervalSince1970;
+                int inow = getCurrentTime();
                 if (!_lastTurnAroundTime || (inow - _lastTurnAroundTime) > 30)
                 {
                     [self playRecording:_turnArroundSoundURL];
@@ -648,7 +661,7 @@ typedef struct {
 }
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
-    if (locations.count > 0 && !_inSimulationMode)
+    if (locations.count > 0 && !_inSimulationMode && !_replayingMotion)
     {
         CLLocation * loc = locations.lastObject;
         LLPOINT pt;
@@ -799,7 +812,7 @@ typedef struct {
                 }
                 else if (dist < _returnToVehicleDist && CRAPI.sharedInstance.amBuildingTrackRoute)
                 {
-                    if (NSDate.now.timeIntervalSince1970 - CRAPI.sharedInstance.trackRouteStartTime > _minTrackTime)
+                    if (getCurrentTime() - CRAPI.sharedInstance.trackRouteStartTime > _minTrackTime)
                     {
                         LLPOINT pt = {0,0};
                         CRAPI.sharedInstance.currentVehicleLocation = pt;

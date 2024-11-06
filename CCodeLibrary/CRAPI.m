@@ -465,7 +465,7 @@ NVSlopeData CurrentSlopeData;
     if (!amBuildingTrackRoute)
         NSLog (@"tract route no");
     else
-        _trackRouteStartTime = NSDate.now.timeIntervalSince1970;
+        _trackRouteStartTime = NSDate.date.timeIntervalSince1970;
     _amBuildingTrackRoute = amBuildingTrackRoute;
 }
 -(void) setCurrentSelectedWaypoint:(INT64)currentSelectedWaypoint
