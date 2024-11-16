@@ -150,6 +150,7 @@ int CreateMask (LPDPOINT *pPointsIN, int *pnPoints,LPMNMXCORD pbnds,Bool freeExi
 DPOINT NewLatLong(double Lat,double Long,double Dist,double Direction);
 LLPOINT NewLLPoint(LLPOINT pt,double dist,double az);
 DPOINT LLPointToDPoint (LLPOINT llpt);
+LLPOINT DPointToLLPoint (DPOINT dpt);
 LLCORNERPOINTS LLCornerPointsFromCornerPoints (CORNERPOINTS * cp);
 double ArcDistance(DPOINT p1, DPOINT p2);
 double ArcDistanceLL(LLPOINT p1, LLPOINT p2);

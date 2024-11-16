@@ -163,6 +163,15 @@ DPOINT LLPointToDPoint (LLPOINT llpt)
     return dpt;
 }
 
+LLPOINT DPointToLLPoint (DPOINT dpt)
+{
+    LLPOINT llpt;
+    
+    llpt.lon = dpt.x;
+    llpt.lat = dpt.y;
+    return llpt;
+}
+
 double LLRectInSQMeters (LLCORNERPOINTS latlonCornerPoints)
 {
     double area = 0;

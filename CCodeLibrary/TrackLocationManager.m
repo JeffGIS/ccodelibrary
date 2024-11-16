@@ -79,6 +79,9 @@ typedef struct {
 @property NSTimer *motionReplayTimer;
 @property int motionRecordID;
 @property BOOL replayingMotion;
+@property int lastReplayMotionTime;
+@property float replayTimeFactor;
+@property NSMutableArray * vehicleCoordinates;
 @end
 
 @implementation TrackLocationManager
@@ -91,6 +94,8 @@ typedef struct {
     {
         NSError *error = nil;
         
+        _vehicleCoordinates = nil;
+        _replayTimeFactor = 1;
         _currentMotionActivity = @"Undefined";
         _simulationInterval = 0.2;
         _locationManager = CLLocationManager.new;
@@ -106,9 +111,9 @@ typedef struct {
         _nearDistance = 10;
         _atDistance = 5;
         _closeDistance = 100;
-        _moveAwayFromVehicleDist = 35;
-        _returnToVehicleDist = 25;
-        _minTrackTime = 60 * 5;
+        _moveAwayFromVehicleDist = 20;
+        _returnToVehicleDist = 30;
+        _minTrackTime = 90;
         _updateNotificationFrequency = 5;
         _tempDirectory = UserDefaults.defaults.nonBackedUpFilePath;
         _savedLocationsFile = [_tempDirectory stringByAppendingString:@"/savedlocations.bin"];
@@ -176,13 +181,12 @@ typedef struct {
 
 - (void) stopTrackingMotion
 {
-    [self closeMotion];
+    [self closeMotion:TRUE];
     _savingMotion = FALSE;
 }
 - (BOOL) createMotion:(NSString *)path
 {
     BOOL rtn = FALSE;
-
     _fidMotion = fopenGSSi (path.UTF8String,"w");
     return rtn;
 }
@@ -194,63 +198,110 @@ typedef struct {
         rtn = FALSE;
     return rtn;
 }
-- (void) closeMotion
+- (void) closeMotion:(BOOL)update
 {
     int type = 0;
-    fwrite (&type,sizeof(type),1,_fidMotion);
+    if (update)
+        fwrite (&type,sizeof(type),1,_fidMotion);
     fcloseGSSi(_fidMotion);
 }
-- (void) replayMotion
-{
-    NSString *path = [NSString stringWithFormat:@"%@/motion.bin", DOCUMENTS_FOLDER];
-    _motionRecordID = 0;
-    _replayingMotion = TRUE;
-    if ([self openMotion:path])
-    {
-        [self.motionReplayTimer invalidate];
-        self.motionReplayTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
-                                                             target:self
-                                                           selector:@selector(getNextMotionRecord)
-                                                           userInfo:nil
-                                                            repeats:YES];
-    }
-}
+
 - (void) saveMotionLocation:(LLPOINT *)pt
 {
-    int type = 1;
-    fwrite (&type,sizeof(type),1,_fidMotion);
     int itime = NSDate.date.timeIntervalSinceReferenceDate;
     fwrite (&itime,sizeof(int),1,_fidMotion);
+    int type = 1;
+    fwrite (&type,sizeof(type),1,_fidMotion);
     fwrite (pt,sizeof(LLPOINT),1,_fidMotion);
     fwrite (&_GPSHeading,sizeof(_GPSHeading),1,_fidMotion);
     fwrite (&_GPSHeadingAccuracy,sizeof(_GPSHeadingAccuracy),1,_fidMotion);
     return;
 }
-- (void) saveMotion:(GSSiMotionActivity *)activity
+- (void) saveMotionHeading:(CLHeading *)newHeading
 {
-    int type = 2;
-    fwrite (&type,sizeof(type),1,_fidMotion);
     int itime = NSDate.date.timeIntervalSinceReferenceDate;
     fwrite (&itime,sizeof(int),1,_fidMotion);
+    int type = 3;
+    fwrite (&type,sizeof(type),1,_fidMotion);
+    double trueHeading = newHeading.trueHeading;
+    fwrite (&trueHeading,sizeof(double),1,_fidMotion);
+    double headingAccuracy =  newHeading.headingAccuracy;
+    fwrite (&headingAccuracy,sizeof(double),1,_fidMotion);
+    return;
+}
+- (void) saveMotion:(GSSiMotionActivity *)activity
+{
+    int itime = NSDate.date.timeIntervalSinceReferenceDate;
+    fwrite (&itime,sizeof(int),1,_fidMotion);
+    int type = 2;
+    fwrite (&type,sizeof(type),1,_fidMotion);
     fwrite (activity,sizeof(GSSiMotionActivity),1,_fidMotion);
     return;
 }
- - (BOOL) getNextMotionRecord
+
+- (int) getNextMotionTime
 {
+    int itime = 0;
+    fread (&itime,sizeof(itime),1,_fidMotion);
+    setCurrentTime(itime);
+    return itime;
+}
+- (void) replayMotion
+{
+    NSString *path = [NSString stringWithFormat:@"%@/motion.bin", DOCUMENTS_FOLDER];
+    _motionRecordID = 0;
+    int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:path
+                                                                         error:nil].fileSize;
+
+    if ([self openMotion:path])
+    {
+        _motionActivityManager = nil;
+        _replayTimeFactor = 0.2;
+        _lastReplayMotionTime = [self getNextMotionTime];
+        if (_lastReplayMotionTime)
+        {
+            _replayingMotion = TRUE;
+            [self replayNextMotionRecord];
+        }
+        else
+        {
+            [self closeMotion:FALSE];
+            _replayingMotion = FALSE;
+            NSLog (@"Stop replaying motion");
+        }
+    }
+}
+- (void) replayNextMotionRecord
+{
+    [self getNextMotionRecord];
+    int itime = [self getNextMotionTime];
+    if (itime)
+    {
+        double delay = _replayTimeFactor * ((double)itime - (double)_lastReplayMotionTime);
+        NSLog (@"%f",delay);
+        _lastReplayMotionTime = itime;
+        [self.motionReplayTimer invalidate];
+        self.motionReplayTimer = [NSTimer scheduledTimerWithTimeInterval:delay
+                                                                  target:self
+                                                                selector:@selector(replayNextMotionRecord)
+                                                                userInfo:nil
+                                                                 repeats:NO];
+    }
+    else
+    {
+        [self closeMotion:FALSE];
+        _replayingMotion = FALSE;
+    }
+}
+- (BOOL) getNextMotionRecord
+{
+    BOOL rtn = TRUE;
     int type;
     LLPOINT pt;
-    int itime;
     fread (&type,sizeof(type),1,_fidMotion);
-    fread (&itime,sizeof(type),1,_fidMotion);
-    setCurrentTime(itime);
     _motionRecordID++;
     switch (type)
     {
-        case 0:
-            [self closeMotion];
-            [self.motionReplayTimer invalidate];
-            _replayingMotion = FALSE;
-            return FALSE;
         case 1:
             fread (&pt,sizeof(LLPOINT),1,_fidMotion);
             fread (&_GPSHeading,sizeof(_GPSHeading),1,_fidMotion);
@@ -265,11 +316,19 @@ typedef struct {
             [self processMotionActivity:&activity];
         }
             break;
+        case 3:
+        {
+            double trueHeading;
+            fread (&trueHeading,sizeof(double),1,_fidMotion);
+            double headingAccuracy;
+            fread (&headingAccuracy,sizeof(double),1,_fidMotion);
+        }
+            break;
         default:
-            ii = 1;
+            rtn = FALSE;
             break;
     }
-    return TRUE;
+    return rtn;
 }
 
 - (void) setDistanceFilter:(CLLocationDistance) dist
@@ -296,7 +355,7 @@ typedef struct {
 - (void) setActivityType:(CLActivityType) activityType
 {
     _locationManager.activityType = activityType;
-    //[self startMotionActivityMonitoring];
+    [self startMotionActivityMonitoring];
 }
 - (void) setPausesLocationUpdatesAutomatically:(BOOL) pausesLocationUpdatesAutomatically
 {
@@ -305,28 +364,45 @@ typedef struct {
 - (void) processMotionActivity:(GSSiMotionActivity *)activity
 {
     ii = _motionRecordID;
+    NSString * motionName;
    //NSLog(@"Motion activity detected");
 
     if (_savingMotion)
     {
         [self saveMotion:activity];
     }
-    if (activity->confidence != CMMotionActivityConfidenceHigh)
-        return;
     if (activity->stationary)
-        self.currentMotionActivity = @"Stationary";
+        motionName = @"Stationary";
     else if (activity->walking)
-        self.currentMotionActivity = @"Walking";
+        motionName = @"Walking";
     else if (activity->running)
-        self.currentMotionActivity = @"Running";
+        motionName = @"Running";
     else if (activity->automotive)
-        self.currentMotionActivity = @"Vehicle";
+        motionName = @"Vehicle";
     else if (activity->cycling)
-        self.currentMotionActivity = @"Cycling";
+        motionName = @"Cycling";
     else if (activity->unknown)
-        self.currentMotionActivity = @"Unknown";
+        motionName = @"Unknown";
     else
-        self.currentMotionActivity = @"Moving";
+        motionName = @"None";
+
+    if (activity->confidence != CMMotionActivityConfidenceHigh)
+    {
+        NSLog (@"Skip %@ %i",motionName,(int)activity->confidence);
+        return;
+    }
+    self.currentMotionActivity = motionName;
+    
+    if (activity->unknown)
+    {
+        NSLog (@"Skip Unknown 1");
+        return;
+    }
+    else if ([motionName isEqual:@"None"])
+    {
+        NSLog (@"Skip Unknown 2");
+        return;
+    }
 
     if (activity->confidence == CMMotionActivityConfidenceLow)
         self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":low"];
@@ -339,11 +415,22 @@ typedef struct {
     NSLog (@"%i %@",_motionRecordID,_currentMotionActivity);
     if ([self.currentMotionActivity isEqual:@"Vehicle:high"])
     {
+        [self.walkingTimer invalidate];
+        self.lastVehicleLocation = CRAPI.sharedInstance.currentGPSLocation;
+        _vehicleCoordinates = NSMutableArray.new;
         if (![_previousMotionActivity isEqual:_currentMotionActivity])
         {
+            if (CRAPI.sharedInstance.amBuildingTrackRoute)
+            {
+                HuntingData *hd = HuntingData.new;
+                [hd saveTrackRoute:CRAPI.sharedInstance.currentTrackRoute];
+                [CRAPI.sharedInstance clearTrackRoute];
+                CRAPI.sharedInstance.amBuildingTrackRoute = FALSE;
+                [self playRecording:_endLocationTrackingSoundURL];
+            }
             [self.drivingTimer invalidate];
             self.lastDriveTime = 0;
-            self.drivingTimer = [NSTimer scheduledTimerWithTimeInterval:30
+            self.drivingTimer = [NSTimer scheduledTimerWithTimeInterval:30 * _replayTimeFactor
                                                                  target:self
                                                                selector:@selector(markLastDriveTime:)
                                                                userInfo:nil
@@ -352,10 +439,13 @@ typedef struct {
     }
     else if ([self.currentMotionActivity isEqual:@"Walking:high"])
     {
+        if ([self.previousMotionActivity isEqual:@"Vehicle:high"])
+            self.lastVehicleLocation = CRAPI.sharedInstance.currentGPSLocation;
+        [self.drivingTimer invalidate];
         if (![self.previousMotionActivity isEqual:self.currentMotionActivity])
         {
             [self.walkingTimer invalidate];
-            self.walkingTimer = [NSTimer scheduledTimerWithTimeInterval:30
+            self.walkingTimer = [NSTimer scheduledTimerWithTimeInterval:30 * _replayTimeFactor
                                                                  target:self
                                                                selector:@selector(markLastWalkingTime:)
                                                                userInfo:nil
@@ -419,6 +509,7 @@ typedef struct {
     {
         [self markVehicleLocation];
         _lastDriveTime = 0;
+        [self.drivingTimer invalidate];
     }
 }
 - (void)startUpdatingLocation
@@ -476,7 +567,8 @@ typedef struct {
 
 - (void) markVehicleLocation
 {
-    _needToSetVehicleLocation = 5;
+    NSLog (@"Mark Vehicle Location");
+    _needToSetVehicleLocation = 2;
     _locationManager.distanceFilter = kCLDistanceFilterNone;
     [_locationManager startUpdatingLocation];
 }
@@ -562,22 +654,37 @@ typedef struct {
     _currentGPSHeading = [self GPSHeadingFromPoints];
     [self saveLocation];
     
+    if (_vehicleCoordinates)
+    {
+        DPOINT dpnt = LLPointToDPoint (pt);
+        DPoint * dpt = [DPoint fromDPOINT:&dpnt];
+        [_vehicleCoordinates addObject:dpt];
+    }
     if (_needToSetVehicleLocation)
     {
-        if (_needToSetVehicleLocation-- == 1)
+        if (_needToSetVehicleLocation-- <= 1)
         {
             HuntingData *hd = HuntingData.new;
             [self clearTrackRoute];
             CRAPI.sharedInstance.amBuildingTrackRoute = TRUE;
             [hd deleteWaypointsOfType:@"Vehicle"];
             LLPOINT pnt;
+            //_vehicleCoordinates = nil;
+            if (_vehicleCoordinates)
+            {
+                int midCoorIndex = _vehicleCoordinates.count / 2;
+                DPoint * midCoor = _vehicleCoordinates[midCoorIndex];
+                DPOINT dpt = [midCoor toDPOINT];
+                _lastVehicleLocation = DPointToLLPoint(dpt);
+                _vehicleCoordinates = nil;
+            }
             if (_lastVehicleLocation.lat == 0)
                 pnt = _currentPoint;
             else
                 pnt = _lastVehicleLocation;
             _lastVehicleLocation.lat = 0;
             [hd addWaypoint:@"V" type:@"Vehicle" latlon:pnt description:@"" displayOnCompass:YES];
-            CRAPI.sharedInstance.currentVehicleLocation = _currentPoint;
+            CRAPI.sharedInstance.currentVehicleLocation = pnt;
             if (self.delegate && [self.delegate respondsToSelector:@selector(didMarkVehicleLocation:)])
             {
                 [self.delegate didMarkVehicleLocation:self];
@@ -691,6 +798,9 @@ typedef struct {
 - (void)locationManager:(CLLocationManager *)manager
        didUpdateHeading:(CLHeading *)newHeading
 {
+    if (_savingMotion)
+        [self saveMotionHeading:newHeading];
+
     if (self.delegate)
         [self.delegate locationManager:self didUpdateHeading:newHeading];
     return;
@@ -813,9 +923,11 @@ typedef struct {
                         [self movedAwayFromVehicle];
                     }
                 }
-                else if (dist < _returnToVehicleDist && CRAPI.sharedInstance.amBuildingTrackRoute)
+                else if (dist < (_returnToVehicleDist + _moveAwayFromVehicleDist) && CRAPI.sharedInstance.amBuildingTrackRoute)
                 {
-                    if (getCurrentTime() - CRAPI.sharedInstance.trackRouteStartTime > _minTrackTime)
+                    int trackTime = getCurrentTime() - CRAPI.sharedInstance.trackRouteStartTime;
+                    NSLog (@"Track time:%i",trackTime);
+                    if (trackTime > _minTrackTime)
                     {
                         LLPOINT pt = {0,0};
                         CRAPI.sharedInstance.currentVehicleLocation = pt;
