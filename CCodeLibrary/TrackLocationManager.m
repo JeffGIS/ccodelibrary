@@ -31,7 +31,6 @@ typedef struct {
 @property CLLocationManager *locationManager;
 @property int minTimerDelay,maxTimerDelay;
 @property int timerDelay;
-@property int lastDriveTime;
 @property double notifyDist;
 @property double offCourseDist;
 @property BOOL goLeft;
@@ -46,7 +45,6 @@ typedef struct {
 @property NSString * tempDirectory;
 @property int currentSimulationIndex;
 @property NSTimer *simulationTimer;
-@property NSTimer *drivingTimer, *walkingTimer;
 @property int numUpdates;
 @property BOOL atEndOfRoute;
 @property double turnDegrees;
@@ -68,7 +66,6 @@ typedef struct {
 @property BOOL needToInitiateRoute;
 @property double moveAwayFromVehicleDist, returnToVehicleDist;
 @property int minTrackTime;
-@property LLPOINT lastVehicleLocation;
 @property BOOL needTurnAdvice;
 @property double lastRouteOffset;
 @property BOOL crossedRouteSegment;
@@ -415,9 +412,13 @@ typedef struct {
     NSLog (@"%i %@",_motionRecordID,_currentMotionActivity);
     if ([self.currentMotionActivity isEqual:@"Vehicle:high"])
     {
-        [self.walkingTimer invalidate];
-        self.lastVehicleLocation = CRAPI.sharedInstance.currentGPSLocation;
+        LLPOINT pt = {0,0};
+        CRAPI.sharedInstance.currentVehicleLocation = pt;
+
         _vehicleCoordinates = NSMutableArray.new;
+        DPOINT dpnt = LLPointToDPoint (CRAPI.sharedInstance.currentGPSLocation);
+        DPoint * dpt = [DPoint fromDPOINT:&dpnt];
+        [_vehicleCoordinates addObject:dpt];
         if (![_previousMotionActivity isEqual:_currentMotionActivity])
         {
             if (CRAPI.sharedInstance.amBuildingTrackRoute)
@@ -428,37 +429,12 @@ typedef struct {
                 CRAPI.sharedInstance.amBuildingTrackRoute = FALSE;
                 [self playRecording:_endLocationTrackingSoundURL];
             }
-            [self.drivingTimer invalidate];
-            self.lastDriveTime = 0;
-            self.drivingTimer = [NSTimer scheduledTimerWithTimeInterval:30 * _replayTimeFactor
-                                                                 target:self
-                                                               selector:@selector(markLastDriveTime:)
-                                                               userInfo:nil
-                                                                repeats:YES];
         }
     }
     else if ([self.currentMotionActivity isEqual:@"Walking:high"])
     {
-        if ([self.previousMotionActivity isEqual:@"Vehicle:high"])
-            self.lastVehicleLocation = CRAPI.sharedInstance.currentGPSLocation;
-        [self.drivingTimer invalidate];
-        if (![self.previousMotionActivity isEqual:self.currentMotionActivity])
-        {
-            [self.walkingTimer invalidate];
-            self.walkingTimer = [NSTimer scheduledTimerWithTimeInterval:30 * _replayTimeFactor
-                                                                 target:self
-                                                               selector:@selector(markLastWalkingTime:)
-                                                               userInfo:nil
-                                                                repeats:YES];
-        }
-    }
-    else
-    {
-        if ([self.previousMotionActivity isEqual:@"Vehicle:high"])
-            self.lastVehicleLocation = CRAPI.sharedInstance.currentGPSLocation;
-        
-        [self.drivingTimer invalidate];
-        [self.walkingTimer invalidate];
+        if (_vehicleCoordinates && _vehicleCoordinates.count > 0)
+            [self setVehicleLocation];
     }
     self.previousMotionActivity = self.currentMotionActivity;
 
@@ -498,20 +474,6 @@ typedef struct {
     }
 }
 
-- (void) markLastDriveTime:(NSTimer *)timer
-{
-    _lastDriveTime = getCurrentTime();
-}
-- (void) markLastWalkingTime:(NSTimer *)timer
-{
-    int now = getCurrentTime();
-    if (now - _lastDriveTime < 600)
-    {
-        [self markVehicleLocation];
-        _lastDriveTime = 0;
-        [self.drivingTimer invalidate];
-    }
-}
 - (void)startUpdatingLocation
 {
     if (_inSimulationMode)
@@ -641,6 +603,34 @@ typedef struct {
 {
     [CRAPI.sharedInstance clearTrackRoute];
 }
+
+- (void) setVehicleLocation
+{
+    HuntingData *hd = HuntingData.new;
+    [self clearTrackRoute];
+    CRAPI.sharedInstance.amBuildingTrackRoute = TRUE;
+    [hd deleteWaypointsOfType:@"Vehicle"];
+    LLPOINT pnt;
+    //_vehicleCoordinates = nil;
+    if (_vehicleCoordinates)
+    {
+        int midCoorIndex = _vehicleCoordinates.count / 2;
+        DPoint * midCoor = _vehicleCoordinates[midCoorIndex];
+        DPOINT dpt = [midCoor toDPOINT];
+        pnt = DPointToLLPoint(dpt);
+        _vehicleCoordinates = nil;
+    }
+    else
+        pnt = _currentPoint;
+    [hd addWaypoint:@"V" type:@"Vehicle" latlon:pnt description:@"" displayOnCompass:YES];
+    CRAPI.sharedInstance.currentVehicleLocation = pnt;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didMarkVehicleLocation:)])
+    {
+        [self.delegate didMarkVehicleLocation:self];
+    }
+    [self playRecording:_vehicleLocationSavedSoundURL];
+}
+
 - (void) newGPSLocation:(LLPOINT)pt
                 heading:(double)GPSHeading
 {
@@ -663,34 +653,7 @@ typedef struct {
     if (_needToSetVehicleLocation)
     {
         if (_needToSetVehicleLocation-- <= 1)
-        {
-            HuntingData *hd = HuntingData.new;
-            [self clearTrackRoute];
-            CRAPI.sharedInstance.amBuildingTrackRoute = TRUE;
-            [hd deleteWaypointsOfType:@"Vehicle"];
-            LLPOINT pnt;
-            //_vehicleCoordinates = nil;
-            if (_vehicleCoordinates)
-            {
-                int midCoorIndex = _vehicleCoordinates.count / 2;
-                DPoint * midCoor = _vehicleCoordinates[midCoorIndex];
-                DPOINT dpt = [midCoor toDPOINT];
-                _lastVehicleLocation = DPointToLLPoint(dpt);
-                _vehicleCoordinates = nil;
-            }
-            if (_lastVehicleLocation.lat == 0)
-                pnt = _currentPoint;
-            else
-                pnt = _lastVehicleLocation;
-            _lastVehicleLocation.lat = 0;
-            [hd addWaypoint:@"V" type:@"Vehicle" latlon:pnt description:@"" displayOnCompass:YES];
-            CRAPI.sharedInstance.currentVehicleLocation = pnt;
-            if (self.delegate && [self.delegate respondsToSelector:@selector(didMarkVehicleLocation:)])
-            {
-                [self.delegate didMarkVehicleLocation:self];
-            }
-            [self playRecording:_vehicleLocationSavedSoundURL];
-        }
+            [self setVehicleLocation];
     }
  
     
