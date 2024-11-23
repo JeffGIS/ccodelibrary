@@ -293,10 +293,13 @@ typedef struct {
 - (BOOL) getNextMotionRecord
 {
     BOOL rtn = TRUE;
+    static int wantRecID = 563;
     int type;
     LLPOINT pt;
     fread (&type,sizeof(type),1,_fidMotion);
     _motionRecordID++;
+    if (_motionRecordID == wantRecID)
+        ii = 1;
     switch (type)
     {
         case 1:
@@ -1153,7 +1156,8 @@ static double HeadingFromAZ (double az)
     INT64 destinationRoutePointNumber = 0;
     double minDist = DBL_MAX;
     _atEndOfRoute = FALSE;
-    double AZ1=0, AZ2=0;
+    double AZ1=0, AZ2=0, AZ3=0;
+    double pctToInt = 0;
     int legNum = 0;
     _turnDegrees = 0;
     NSArray <UserWaypoint*> *routePointArray = CRAPI.sharedInstance.currentRoute;
@@ -1181,6 +1185,7 @@ static double HeadingFromAZ (double az)
         _atEndOfRoute = FALSE;
         RoutePoint[1] = wp.UTM;
         AZ2 = getazdp (&RoutePoint[0],&RoutePoint[1]);
+        AZ3 = getazdp (&_atUTM,&RoutePoint[1]);
         int leftOrRight=0;
         if (GetPerpendicularIntersect (&_atUTM,RoutePoint,&IntPoint,TRUE,&leftOrRight))
         {
@@ -1198,8 +1203,8 @@ static double HeadingFromAZ (double az)
                 if (_currentGPSHeading >= 0)
                 {
                     double gpsAz = HeadingToAzimuth (_currentGPSHeading);
-                    _turnDegrees = DeltaAZD(gpsAz, AZ2);
-                    _headingToNextPoint = HeadingFromAZ(AZ2) * RADtoDEG;
+                    _turnDegrees = DeltaAZD(gpsAz, AZ3);
+                    _headingToNextPoint = HeadingFromAZ(AZ3) * RADtoDEG;
                     _turnDegrees *= RADtoDEG;
                 }
                 if (legNum >= routePointArray.count)
@@ -1211,6 +1216,9 @@ static double HeadingFromAZ (double az)
                 else
                     _atEndOfRoute = FALSE;
                 _minDistIntPoint = IntPoint;
+                double seglen = ldistpp (&RoutePoint[0],&RoutePoint[1]);
+                double dtoint = ldistpp (&RoutePoint[0],&IntPoint);
+                pctToInt = dtoint / seglen;
                 rtn = TRUE;
             }
         }
@@ -1223,7 +1231,11 @@ static double HeadingFromAZ (double az)
         if (_lastSide && _leftOrRight != _lastSide)
         {
             if (_needTurnAdvice)
-                _crossedRouteSegment = TRUE;
+            {
+                if (pctToInt >= 0.25 && pctToInt <= 0.75)
+                    _crossedRouteSegment = TRUE;
+
+            }
         }
         _lastSide = _leftOrRight;
         _offDist /= METERS_PER_YARD;
@@ -1244,7 +1256,7 @@ static double HeadingFromAZ (double az)
                 _timerDelay = _maxTimerDelay;
             [self setOffCourseSound:_leftOrRight
                          withVolume:vol];
-            if (!_lastMessageIntPoint.x || ldistpp (&_minDistIntPoint,&_lastMessageIntPoint) > _notifyDist * 2)
+            if (_offDist > _notifyDist * 2)
                 _needTurnAdvice = TRUE;
         }
         else
@@ -1312,6 +1324,7 @@ static double HeadingFromAZ (double az)
 {
     NSError *error = nil;
     float vol = 1;
+    ii = _motionRecordID;
     if (_isPlayingAudio)
         _playNextURL = url;
     else
@@ -1322,9 +1335,9 @@ static double HeadingFromAZ (double az)
         [_messagePlayer setVolume: vol];
         [_messagePlayer setDelegate: self];
         _isPlayingAudio = TRUE;
+        [_messagePlayer play];
     }
     _lastMessageIntPoint = _minDistIntPoint;
-    [_messagePlayer play];
 }
 
 @end
