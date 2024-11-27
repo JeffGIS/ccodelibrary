@@ -50,6 +50,7 @@ typedef struct {
 @property double turnDegrees;
 @property int numLastPoints;
 @property int maxLastPoints;
+@property int * pLastPointsTime;
 @property LPDPOINT pLastPoints;
 @property double distToRoute;
 @property double currentGPSHeading;
@@ -79,6 +80,9 @@ typedef struct {
 @property int lastReplayMotionTime;
 @property float replayTimeFactor;
 @property NSMutableArray * vehicleCoordinates;
+@property int walkingCoordinates;
+@property float currentSpeed;
+@property float maxWalkingSpeed;
 @end
 
 @implementation TrackLocationManager
@@ -91,7 +95,9 @@ typedef struct {
     {
         NSError *error = nil;
         
+        _maxWalkingSpeed = 1.5;
         _vehicleCoordinates = nil;
+        _walkingCoordinates = -1;
         _replayTimeFactor = 1;
         _currentMotionActivity = @"Undefined";
         _simulationInterval = 0.2;
@@ -105,11 +111,12 @@ typedef struct {
         _numLastPoints = 0;
         _maxLastPoints = 8;
         _pLastPoints = malloc (sizeof(DPOINT)*_maxLastPoints+4);
+        _pLastPointsTime = malloc (sizeof(int)*_maxLastPoints+4);
         _nearDistance = 10;
         _atDistance = 5;
         _closeDistance = 100;
-        _moveAwayFromVehicleDist = 20;
-        _returnToVehicleDist = 30;
+        _moveAwayFromVehicleDist = 30;
+        _returnToVehicleDist = 20;
         _minTrackTime = 90;
         _updateNotificationFrequency = 5;
         _tempDirectory = UserDefaults.defaults.nonBackedUpFilePath;
@@ -243,8 +250,31 @@ typedef struct {
     setCurrentTime(itime);
     return itime;
 }
+- (void) listMotion
+{
+    NSString *path = [NSString stringWithFormat:@"%@/motion.bin", DOCUMENTS_FOLDER];
+    _motionRecordID = 0;
+    _motionActivityManager = nil;
+    int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:path
+                                                                         error:nil].fileSize;
+
+    if ([self openMotion:path])
+    {
+        int nrecs = 0;
+        while ([self getNextMotionTime])
+        {
+            [self getNextMotionRecord:TRUE];
+            nrecs++;
+        }
+        [self closeMotion:FALSE];
+        NSLog (@"End of list:%i records",nrecs);
+        
+    }
+}
 - (void) replayMotion
 {
+//    [self listMotion];
+//    return;
     NSString *path = [NSString stringWithFormat:@"%@/motion.bin", DOCUMENTS_FOLDER];
     _motionRecordID = 0;
     int fileSize = (NSInteger)[NSFileManager.defaultManager attributesOfItemAtPath:path
@@ -270,12 +300,12 @@ typedef struct {
 }
 - (void) replayNextMotionRecord
 {
-    [self getNextMotionRecord];
+    [self getNextMotionRecord:FALSE];
     int itime = [self getNextMotionTime];
     if (itime)
     {
         double delay = _replayTimeFactor * ((double)itime - (double)_lastReplayMotionTime);
-        NSLog (@"%f",delay);
+        //NSLog (@"%f",delay);
         _lastReplayMotionTime = itime;
         [self.motionReplayTimer invalidate];
         self.motionReplayTimer = [NSTimer scheduledTimerWithTimeInterval:delay
@@ -290,10 +320,10 @@ typedef struct {
         _replayingMotion = FALSE;
     }
 }
-- (BOOL) getNextMotionRecord
+- (BOOL) getNextMotionRecord:(BOOL)list
 {
     BOOL rtn = TRUE;
-    static int wantRecID = 563;
+    static int wantRecID = 1484;
     int type;
     LLPOINT pt;
     fread (&type,sizeof(type),1,_fidMotion);
@@ -306,14 +336,21 @@ typedef struct {
             fread (&pt,sizeof(LLPOINT),1,_fidMotion);
             fread (&_GPSHeading,sizeof(_GPSHeading),1,_fidMotion);
             fread (&_GPSHeadingAccuracy,sizeof(_GPSHeadingAccuracy),1,_fidMotion);
-            [self newGPSLocation:pt
+            if (!list)
+                [self newGPSLocation:pt
                          heading:_GPSHeading];
             break;
         case 2:
         {
             GSSiMotionActivity activity;
             fread (&activity,sizeof(GSSiMotionActivity),1,_fidMotion);
-            [self processMotionActivity:&activity];
+            if (list)
+            {
+                NSString * motionName = [self setMotionName:&activity];
+                NSLog(@"%@:%i",motionName,(int)activity.confidence);
+            }
+            else
+                [self processMotionActivity:&activity];
         }
             break;
         case 3:
@@ -361,6 +398,53 @@ typedef struct {
 {
     _locationManager.pausesLocationUpdatesAutomatically = pausesLocationUpdatesAutomatically;
 }
+
+- (NSString*) setMotionName:(GSSiMotionActivity *)activity
+{
+    static NSString * lastHigh = @"Unknown";
+    NSString *motionName;
+    if (activity->walking)
+    {
+        motionName = @"Walking";
+    }
+    else if (activity->running)
+        motionName = @"Running";
+    else if (activity->automotive)
+    {
+        motionName = @"Vehicle";
+    }
+    else if (activity->cycling)
+    {
+        _currentSpeed = [self GPSSpeedFromPoints];
+        if (_currentSpeed < _maxWalkingSpeed)
+            motionName = @"Walking";
+        else
+            motionName = @"Vehicle";
+    }
+    else if (activity->unknown)
+        motionName = @"Unknown";
+    else if (activity->stationary)
+        motionName = lastHigh;
+    else
+    {
+        _currentSpeed = [self GPSSpeedFromPoints];
+        if (_currentSpeed < 0)
+            motionName = @"Unknown";
+        else if (_currentSpeed < _maxWalkingSpeed)
+            motionName = @"Walking";
+        else
+            motionName = @"Vehicle";
+        activity->confidence = CMMotionActivityConfidenceLow;
+    }
+
+    if (activity->confidence == CMMotionActivityConfidenceHigh)
+    {
+        if (![lastHigh isEqual:motionName])
+            _numLastPoints = 0;
+        lastHigh = motionName;
+    }
+    return motionName;
+}
 - (void) processMotionActivity:(GSSiMotionActivity *)activity
 {
     ii = _motionRecordID;
@@ -371,36 +455,18 @@ typedef struct {
     {
         [self saveMotion:activity];
     }
-    if (activity->stationary)
-        motionName = @"Stationary";
-    else if (activity->walking)
-        motionName = @"Walking";
-    else if (activity->running)
-        motionName = @"Running";
-    else if (activity->automotive)
-        motionName = @"Vehicle";
-    else if (activity->cycling)
-        motionName = @"Cycling";
-    else if (activity->unknown)
-        motionName = @"Unknown";
-    else
-        motionName = @"None";
+    motionName = [self setMotionName:activity];
 
-    if (activity->confidence != CMMotionActivityConfidenceHigh)
+/*    if (activity->confidence == CMMotionActivityConfidenceLow)
     {
         NSLog (@"Skip %@ %i",motionName,(int)activity->confidence);
         return;
-    }
+    }*/
     self.currentMotionActivity = motionName;
     
     if (activity->unknown)
     {
         NSLog (@"Skip Unknown 1");
-        return;
-    }
-    else if ([motionName isEqual:@"None"])
-    {
-        NSLog (@"Skip Unknown 2");
         return;
     }
 
@@ -413,7 +479,8 @@ typedef struct {
     else
         self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":unknown"];
     NSLog (@"%i %@",_motionRecordID,_currentMotionActivity);
-    if ([self.currentMotionActivity isEqual:@"Vehicle:high"])
+    if ([self.currentMotionActivity isEqual:@"Vehicle:high"] ||
+        [self.currentMotionActivity isEqual:@"Vehicle:medium"])
     {
         LLPOINT pt = {0,0};
         CRAPI.sharedInstance.currentVehicleLocation = pt;
@@ -422,24 +489,36 @@ typedef struct {
         DPOINT dpnt = LLPointToDPoint (CRAPI.sharedInstance.currentGPSLocation);
         DPoint * dpt = [DPoint fromDPOINT:&dpnt];
         [_vehicleCoordinates addObject:dpt];
-        if (![_previousMotionActivity isEqual:_currentMotionActivity])
+        if (CRAPI.sharedInstance.amBuildingTrackRoute)
         {
-            if (CRAPI.sharedInstance.amBuildingTrackRoute)
+            HuntingData *hd = HuntingData.new;
+            int numPointsInRoute = CRAPI.sharedInstance.currentTrackRoute.count;
+            if (_walkingCoordinates > 1)
             {
-                HuntingData *hd = HuntingData.new;
-                [hd saveTrackRoute:CRAPI.sharedInstance.currentTrackRoute];
-                [CRAPI.sharedInstance clearTrackRoute];
-                CRAPI.sharedInstance.amBuildingTrackRoute = FALSE;
-                [self playRecording:_endLocationTrackingSoundURL];
+                int numPointsToRemove = _walkingCoordinates / 2;
+                if (numPointsInRoute > numPointsToRemove)
+                {
+                    while (numPointsToRemove--)
+                        [CRAPI.sharedInstance.currentTrackRoute removeLastObject];
+                    numPointsInRoute = CRAPI.sharedInstance.currentTrackRoute.count;
+                }
             }
+
+            [hd saveTrackRoute:CRAPI.sharedInstance.currentTrackRoute];
+            [CRAPI.sharedInstance clearTrackRoute];
+            CRAPI.sharedInstance.amBuildingTrackRoute = FALSE;
+            [self playRecording:_endLocationTrackingSoundURL];
         }
+        _walkingCoordinates = -1;
     }
-    else if ([self.currentMotionActivity isEqual:@"Walking:high"])
+    else if ([self.currentMotionActivity isEqual:@"Walking:high"]||
+             [self.currentMotionActivity isEqual:@"Walking:medium"])
     {
         if (_vehicleCoordinates && _vehicleCoordinates.count > 0)
             [self setVehicleLocation];
+        _walkingCoordinates = 0;
     }
-    self.previousMotionActivity = self.currentMotionActivity;
+    _previousMotionActivity = _currentMotionActivity;
 
 }
 - (void)startMotionActivityMonitoring
@@ -653,6 +732,8 @@ typedef struct {
         DPoint * dpt = [DPoint fromDPOINT:&dpnt];
         [_vehicleCoordinates addObject:dpt];
     }
+    if (_walkingCoordinates >= 0)
+        _walkingCoordinates++;
     if (_needToSetVehicleLocation)
     {
         if (_needToSetVehicleLocation-- <= 1)
@@ -844,14 +925,21 @@ typedef struct {
 
 - (void) addPointToLastPoints
 {
+    int itime = getCurrentTime ();
+    
     if (_numLastPoints < _maxLastPoints)
+    {
+        _pLastPointsTime[_numLastPoints] = itime;
         _pLastPoints[_numLastPoints++] = _atUTM;
+    }
     else
     {
         for (int i = 1;i < _numLastPoints; i++)
         {
+            _pLastPointsTime[i-1] = _pLastPointsTime[i];
             _pLastPoints[i-1] = _pLastPoints[i];
         }
+        _pLastPointsTime[_maxLastPoints -1] = itime;
         _pLastPoints[_maxLastPoints -1] = _atUTM;
     }
    
@@ -889,7 +977,7 @@ typedef struct {
                         [self movedAwayFromVehicle];
                     }
                 }
-                else if (dist < (_returnToVehicleDist + _moveAwayFromVehicleDist) && CRAPI.sharedInstance.amBuildingTrackRoute)
+                /*else if (dist < _returnToVehicleDist && CRAPI.sharedInstance.amBuildingTrackRoute)
                 {
                     int trackTime = getCurrentTime() - CRAPI.sharedInstance.trackRouteStartTime;
                     NSLog (@"Track time:%i",trackTime);
@@ -899,7 +987,7 @@ typedef struct {
                         CRAPI.sharedInstance.currentVehicleLocation = pt;
                         rtn = 2;
                     }
-                }
+                }*/
             }
         }
     }
@@ -942,6 +1030,20 @@ typedef struct {
         pPoints[1].y = A + pPoints[1].x * B;
         double AZ = getazdp(&pPoints[0], &pPoints[1]);
         return AZMToHeading(AZ);
+    }
+    return -1;
+}
+
+- (float) GPSSpeedFromPoints
+{
+    if (_numLastPoints < 3)
+        return -1;
+    double dist = ldistp(_pLastPoints[0],_pLastPoints[_numLastPoints-1]);
+    int itime = _pLastPointsTime[_numLastPoints-1] - _pLastPointsTime[0];
+    if (itime > 0)
+    {
+        float speed = dist/itime;
+        return speed;
     }
     return -1;
 }
