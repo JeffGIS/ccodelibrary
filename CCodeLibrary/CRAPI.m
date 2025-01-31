@@ -468,6 +468,11 @@ NVSlopeData CurrentSlopeData;
         _trackRouteStartTime = getCurrentTime();
     _amBuildingTrackRoute = amBuildingTrackRoute;
 }
+
+-(void) setLocationTrackingEnabled:(BOOL)locationTrackingEnabled
+{
+    _locationTrackingEnabled = locationTrackingEnabled;
+}
 -(void) setCurrentSelectedWaypoint:(INT64)currentSelectedWaypoint
 {
     _currentSelectedWaypoint = currentSelectedWaypoint;

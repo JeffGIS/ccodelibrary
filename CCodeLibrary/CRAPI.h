@@ -244,7 +244,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property int currentEvaluaterScore;
 @property (nonatomic) LLPOINT currentGPSLocation;
 @property (nonatomic) LLPOINT currentCameraLocation;
-@property BOOL locationTrackingEnabled;
+@property (nonatomic) BOOL locationTrackingEnabled;
 @property (nonatomic, nullable) NSNumber *routeBearing;
 @property BOOL firstTimeZoomToCentract;
 @property (nonatomic) BOOL amBuildingTrackRoute;

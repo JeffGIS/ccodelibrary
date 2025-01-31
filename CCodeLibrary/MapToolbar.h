@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger, MapToolbarProperty)
     MapToolbarPropertyWantHelpButton,
     MapToolbarPropertyWantReturnButton,
     MapToolbarPropertyWantWeatherButton,
+    MapToolbarPropertyWantOptions,
 NUMMapToolbarProperty};
 
 typedef NS_ENUM(NSInteger, MapToolbarOrientation)
@@ -60,7 +61,7 @@ typedef NS_ENUM(NSInteger, MapToolbarOrientation)
 @property (nonatomic, weak) id <MapToolbarDelegate> delegate;
 @property (nonatomic) MapToolbarOrientation orientation, previousOrientation;
 @property (readonly) BOOL wantPlat, wantDigitize, wantMapType, wantMapTypeButton, wantUserLocation, wantWeatherButton;
-@property (readonly) BOOL wantExtents, wantLegends, wantGrayscale, wantClearMarkers;
+@property (readonly) BOOL wantExtents, wantLegends, wantOptions, wantGrayscale, wantClearMarkers;
 @property (readonly) BOOL wantEmailPDF, wantProgressBar, wantHelpButton, wantReturnButton;
 @property (nonatomic) CGFloat progress, legendOffset;
 @property BOOL helpLongPressed, isOffset, applyRotation;

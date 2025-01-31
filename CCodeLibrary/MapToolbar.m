@@ -7,7 +7,7 @@
 
 @interface MapToolbar ()
 
-@property (nonatomic) UIButton *extentsButton, *legendsButton, *digitizeButton, *mapTypeButton;
+@property (nonatomic) UIButton *extentsButton, *legendsButton, *digitizeButton, *mapTypeButton, *optionsButton;
 @property (nonatomic) UIButton *grayscaleButton, *clearMarkerButton, *emailPDFButton, *helpButton, *returnButton, *weatherButton;
 @property (nonatomic) UISegmentedControl *mapTypeSC, *platSC;
 @property (nonatomic) CGSize size;
@@ -55,7 +55,8 @@
     [mt setConfigurationProperty:MapToolbarPropertyWantDigitize value:NO];
     [mt setConfigurationProperty:MapToolbarPropertyWantMapType value:NO];
     [mt setConfigurationProperty:MapToolbarPropertyWantMapTypeButton value:YES];
-    [mt setConfigurationProperty:MapToolbarPropertyWantLegends value:NO];
+    [mt setConfigurationProperty:MapToolbarPropertyWantOptions value:YES];
+    [mt setConfigurationProperty:MapToolbarPropertyWantLegends value:YES];
     [mt setConfigurationProperty:MapToolbarPropertyWantReturnButton value:NO];
     [mt setConfigurationProperty:MapToolbarPropertyWantWeatherButton value:NO];
 
@@ -248,6 +249,14 @@
          imageTitle:@"list"
          edgeInsets:UIEdgeInsetsZero
            selector:@selector(legendsSelected:)];
+    
+    //options button is added by default
+    mt.optionsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [mt setupButton:mt.optionsButton
+         imageTitle:@"list"
+         edgeInsets:UIEdgeInsetsZero
+           selector:@selector(optionsSelected:)];
     
     //plat SC is NOT added by default
     mt.platSC = [[UISegmentedControl alloc] initWithItems:@[@"Map", @"Split", @"Tri", @"Plat"]];
@@ -512,7 +521,7 @@
 {
     button.layer.borderColor = UIColor.blackColor.CGColor;
     button.layer.borderWidth = _bordWidth;
-    [_delegate mapToolbarDidSelectOptions];
+    [_delegate mapToolbarDidSelectLegends];
 }
 
 - (void)optionsSelected:(UIButton *)button
@@ -593,6 +602,13 @@
     if (_wantLegends)
     {
         _legendsButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+        yCount += (_buttonMargin + _buttonSize);
+        xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+    }
+    
+    if (_wantOptions)
+    {
+        _optionsButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
         yCount += (_buttonMargin + _buttonSize);
         xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
     }
@@ -710,6 +726,12 @@
     if (_wantLegends)
     {
         _legendsButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
+        xCount += (_buttonMargin + _buttonSize);
+    }
+    
+    if (_wantOptions)
+    {
+        _optionsButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
         xCount += (_buttonMargin + _buttonSize);
     }
     
@@ -930,7 +952,7 @@
 {
     [self setPreviousConfiguration];
     
-    _wantDigitize = _wantExtents = _wantLegends = _wantMapType =
+    _wantDigitize = _wantExtents = _wantLegends = _wantMapType = _wantOptions =
     _wantGrayscale = _wantUserLocation = _wantHelpButton =
     _wantEmailPDF = _wantProgressBar = _wantClearMarkers = _wantReturnButton = NO;
     _wantPlat = _configChanged = YES;
@@ -967,6 +989,7 @@
     _previousConfig[MapToolbarPropertyWantProgressBar] = _wantProgressBar;
     _previousConfig[MapToolbarPropertyWantMapType] = _wantMapType;
     _previousConfig[MapToolbarPropertyWantLegends] = _wantLegends;
+    _previousConfig[MapToolbarPropertyWantOptions] = _wantOptions;
     _previousConfig[MapToolbarPropertyWantExtents] = _wantExtents;
     _previousConfig[MapToolbarPropertyWantDigitize] = _wantDigitize;
     _previousConfig[MapToolbarPropertyWantHelpButton] = _wantHelpButton;
@@ -984,6 +1007,7 @@
     _wantProgressBar = _previousConfig[MapToolbarPropertyWantProgressBar];
     _wantMapType = _previousConfig[MapToolbarPropertyWantMapType];
     _wantLegends = _previousConfig[MapToolbarPropertyWantLegends];
+    _wantOptions = _previousConfig[MapToolbarPropertyWantOptions];
     _wantExtents = _previousConfig[MapToolbarPropertyWantExtents];
     _wantDigitize = _previousConfig[MapToolbarPropertyWantDigitize];
     _wantHelpButton = _previousConfig[MapToolbarPropertyWantHelpButton];
@@ -1022,6 +1046,10 @@
             
         case MapToolbarPropertyWantLegends:
             _wantLegends = value;
+            break;
+            
+        case MapToolbarPropertyWantOptions:
+            _wantOptions = value;
             break;
             
         case MapToolbarPropertyWantGrayscale:
@@ -1135,6 +1163,22 @@
         {
             if ([self.subviews containsObject:_legendsButton])
                 [_legendsButton removeFromSuperview];
+        }
+        
+        if (_wantOptions)
+        {
+            _optionsButton.frame = CGRectMake(xCount, _buttonMargin, _buttonSize, _buttonSize);
+            
+            if (![self.subviews containsObject:_optionsButton])
+                [self addSubview:_optionsButton];
+            
+            xCount += (_buttonMargin + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_optionsButton])
+                [_optionsButton removeFromSuperview];
         }
         
         if (_wantDigitize)
@@ -1361,6 +1405,23 @@
         {
             if ([self.subviews containsObject:_legendsButton])
                 [_legendsButton removeFromSuperview];
+        }
+        
+        if (_wantOptions)
+        {
+            _legendsButton.frame = CGRectMake(_buttonMargin, yCount, _buttonSize, _buttonSize);
+            
+            if (![self.subviews containsObject:_optionsButton])
+                [self addSubview:_optionsButton];
+            
+            yCount += (_buttonMargin + _buttonSize);
+            xCount = max(xCount, (_buttonMargin * 2.0) + _buttonSize);
+        }
+        
+        else
+        {
+            if ([self.subviews containsObject:_optionsButton])
+                [_optionsButton removeFromSuperview];
         }
         
         if (_wantDigitize)
