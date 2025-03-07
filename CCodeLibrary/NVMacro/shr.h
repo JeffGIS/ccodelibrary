@@ -907,6 +907,7 @@ LPOINT PointToLPoint (POINT Point);
 HANDLE DPointsToHFPoints(LPDPOINT DPoints, int np);
 HANDLE HDPointsToHFPoints(HANDLE hDPoints, int np);
 HANDLE DPointsToFPoints(HANDLE hDPoints, int np);
+CGPoint TranCGPoint (CGPoint Point,HANDLE hTran);
 LPOINT DPointToLPoint(LPDPOINT pPoint);
 DPOINT LPointToDPoint (LPOINT Point);
 FPOINT DPointToFPoint (DPOINT DPoint);

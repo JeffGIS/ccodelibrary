@@ -1064,10 +1064,17 @@ void CloseTRANS2 (LPHANDLE phlpTran)
 
 DPOINT TranPoint (LPDPOINT pPoint,HANDLE hTran)
 {
-	DPOINT Point;
-	
-	TRANS2 (pPoint->x,pPoint->y, &Point.x,&Point.y,hTran);
-	return Point;
+    DPOINT Point;
+    
+    TRANS2 (pPoint->x,pPoint->y, &Point.x,&Point.y,hTran);
+    return Point;
+}
+CGPoint TranCGPoint (CGPoint Point,HANDLE hTran)
+{
+    CGPoint OutPoint;
+    
+    TRANS2 (Point.x,Point.y, &OutPoint.x,&OutPoint.y,hTran);
+    return OutPoint;
 }
 
 POINT TranPoint16 (POINT InPoint,HANDLE hTran)
