@@ -56,6 +56,12 @@ void TRANRect (LPRECT Rect,HANDLE hTran)
     *Rect = OutRect;
     return;
 }
+RECT TranRect (LPRECT Rect,HANDLE hTran)
+{
+    RECT rtn = *Rect;
+    TRANRect (&rtn,hTran);
+    return rtn;    
+}
 
 LPSTR strupr (LPSTR txt)
 {
