@@ -955,7 +955,7 @@ HANDLE DPolyToPPoly (LPINT pnpnts, HANDLE hDPoly,HANDLE hTran)
 {
 	HANDLE handle = GSSiGlobAlloc ( 761,GMEM_MOVEABLE,(*pnpnts)*sizeof(POINT));
 	HPPOINT	pPoints = (HPPOINT)GlobalLock (handle);
-	HPDPOINT	pDPoints = GlobalLock(hDPoly);
+	HPDPOINT	pDPoints = (HPDPOINT)GlobalLock(hDPoly);
 	DWORD	i,np=*pnpnts, nnewpnts=1;
 	
 	pPoints[0] = TRANDPointToPoint (pDPoints++,hTran);
@@ -973,7 +973,7 @@ RECT CGRectToRect (CGRect cgRect)
 {
     RECT rect;
     
-    rect.left = cgRect.origin.x;
+    rect.left = (int)cgRect.origin.x;
     rect.right = cgRect.origin.x + cgRect.size.width;
     rect.top = cgRect.origin.y;
     rect.bottom = cgRect.origin.y + cgRect.size.height;

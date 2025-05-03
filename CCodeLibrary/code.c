@@ -506,7 +506,7 @@ Bool PickPolylineD (HPDPOINT lpPointsIn,long nPnts, int PolyID,short Type,LPDOUB
 	HPDPOINT lpPoints = lpPointsIn;//lpPointsIn[1]
 	//POINT	BeginPointFile, EndPointFile, PickedPointFile;
 	int	i, mini = 0;
-    double	PCT, OffDist, TotDistW, AZ[3], MinDist, Dist;
+    double	PCT, OffDist=0, TotDistW=0, AZ[3], MinDist, Dist;
     //double Area = 0;
 	Bool	First=TRUE, rtn=FALSE;   
 	MNMXCORD	Rect;       
