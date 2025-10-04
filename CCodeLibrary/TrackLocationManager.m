@@ -83,6 +83,7 @@ typedef struct {
 @property int walkingCoordinates;
 @property float currentSpeed;
 @property float maxWalkingSpeed;
+@property BOOL motionIsActive;
 @end
 
 @implementation TrackLocationManager
@@ -119,6 +120,7 @@ typedef struct {
         _returnToVehicleDist = 20;
         _minTrackTime = 90;
         _updateNotificationFrequency = 5;
+        _motionIsActive = NO;
         _tempDirectory = UserDefaults.defaults.nonBackedUpFilePath;
         _savedLocationsFile = [_tempDirectory stringByAppendingString:@"/savedlocations.bin"];
         InitProj4CoordConv (FALSE);
@@ -542,20 +544,39 @@ typedef struct {
     // check to see if the motion activity manager exists
     if ([CMMotionActivityManager isActivityAvailable])
     {
+        CMAuthorizationStatus status = [CMMotionActivityManager authorizationStatus];
         _motionActivityManager = CMMotionActivityManager.new;
 
-//        if ([CMMotionActivityManager authorizationStatus] == CMAuthorizationStatusAuthorized)
+        if ([CMMotionActivityManager authorizationStatus] == CMAuthorizationStatusAuthorized)
         {
 
             if (_motionActivityManager) {
                 // if so, start monitoring activity
                 // notice that we add updates to the mainQueue. This will call your handler on the main thread
                 [_motionActivityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:motionActivityHandler];
+                _motionIsActive = YES;
             }
         }
     }
 }
 
+- (void)pauseMotionActivityMonitoring
+{
+    if (_motionActivityManager) {
+        // if so, start monitoring activity
+        // notice that we add updates to the mainQueue. This will call your handler on the main thread
+        [_motionActivityManager stopActivityUpdates];
+    }
+    _motionIsActive = NO;
+}
+
+- (NSString *) getCurrentMotionActivity
+{
+    NSString * rtn = @"";
+    if (_motionIsActive)
+        rtn = _currentMotionActivity;
+    return rtn;
+}
 - (void)startUpdatingLocation
 {
     if (_inSimulationMode)

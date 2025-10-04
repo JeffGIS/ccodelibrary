@@ -120,6 +120,9 @@ typedef NS_ENUM(NSInteger, Activities)
 - (void) startTrackingMotion;
 - (void) stopTrackingMotion;
 - (void) replayMotion;
+- (void)startMotionActivityMonitoring;
+- (void)pauseMotionActivityMonitoring;
+- (NSString *)getCurrentMotionActivity;
  
 @end
 
