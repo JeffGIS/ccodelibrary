@@ -246,7 +246,7 @@
     mt.legendsButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [mt setupButton:mt.legendsButton
-         imageTitle:@"list"
+         imageTitle:@"legends"
          edgeInsets:UIEdgeInsetsZero
            selector:@selector(legendsSelected:)];
     
@@ -308,6 +308,11 @@
     
     if (imageTitle && imageTitle.length)
     {
+        if ([imageTitle isEqual:@"legends"])
+            [button setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:@"fieldOptions"
+                                                                                            ofType:@"png"]]
+                    forState:UIControlStateNormal];
+        else
         [button setImage:[UIImage imageWithContentsOfFile:[NSBundle.mainBundle pathForResource:imageTitle
                                                                                         ofType:@"png"]]
                 forState:UIControlStateNormal];
