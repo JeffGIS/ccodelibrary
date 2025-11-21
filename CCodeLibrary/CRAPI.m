@@ -92,6 +92,7 @@ NVSlopeData CurrentSlopeData;
         _kp = 0;
         _autoStartRoute = YES;
         _routeBearing = nil;
+        self.currentBearing = 0;
         _boschIsAvailable = NO;
         _currentGeoidValue = 0;
         _pickApInPixels = 50;
@@ -231,6 +232,11 @@ NVSlopeData CurrentSlopeData;
                   });
     
     return sharedInstance;
+}
+
+-(void) setCurrentBearing:(double)currentBearing
+{
+    _currentBearing = currentBearing;
 }
 - (CMMotionManager *) getMotionManager
 {

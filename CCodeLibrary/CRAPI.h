@@ -246,6 +246,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic) LLPOINT currentCameraLocation;
 @property (nonatomic) BOOL locationTrackingEnabled;
 @property (nonatomic, nullable) NSNumber *routeBearing;
+@property (nonatomic) double currentBearing;
 @property BOOL firstTimeZoomToCentract;
 @property (nonatomic) BOOL amBuildingTrackRoute;
 @property int trackRouteStartTime;
