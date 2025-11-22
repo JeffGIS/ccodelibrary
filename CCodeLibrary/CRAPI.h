@@ -254,6 +254,7 @@ typedef NS_ENUM(NSInteger, FieldDisplayOption)
 @property (nonatomic) BOOL inFollowingRouteMode;
 @property BOOL waitingToMoveAwayFromVehicle;
 @property BOOL autoStartRoute;
+@property BOOL displayMotion;
 
 
 + (nullable CRAPI *)sharedInstance;

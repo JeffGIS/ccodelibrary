@@ -66,6 +66,7 @@ typedef struct {
 @property int needToSetVehicleLocation;
 @property BOOL needToInitiateRoute;
 @property double moveAwayFromVehicleDist, returnToVehicleDist;
+@property double maxDistFromVehicle, minTrackRouteDist;
 @property int minTrackTime;
 @property BOOL needTurnAdvice;
 @property double lastRouteOffset;
@@ -118,6 +119,8 @@ typedef struct {
         _closeDistance = 100;
         _moveAwayFromVehicleDist = 30;
         _returnToVehicleDist = 20;
+        _maxDistFromVehicle = 0;
+        _minTrackRouteDist = 50;
         _minTrackTime = 90;
         _updateNotificationFrequency = 5;
         _motionIsActive = NO;
@@ -451,6 +454,8 @@ typedef struct {
 {
     ii = _motionRecordID;
     NSString * motionName;
+    static int numVehicleLow = 0;
+    
    //NSLog(@"Motion activity detected");
 
     if (_savingMotion)
@@ -481,12 +486,20 @@ typedef struct {
     else
         self.currentMotionActivity = [self.currentMotionActivity stringByAppendingString:@":unknown"];
     NSLog (@"%i %@",_motionRecordID,_currentMotionActivity);
-    if ([self.currentMotionActivity isEqual:@"Vehicle:high"] ||
+    if ([self.currentMotionActivity isEqual:@"Vehicle:low"])
+    {
+        numVehicleLow++;
+    }
+    else
+        numVehicleLow = 0;
+    if (numVehicleLow > 2 ||
+        [self.currentMotionActivity isEqual:@"Vehicle:high"] ||
         [self.currentMotionActivity isEqual:@"Vehicle:medium"])
     {
         LLPOINT pt = {0,0};
         CRAPI.sharedInstance.currentVehicleLocation = pt;
 
+        numVehicleLow = 0;
         _vehicleCoordinates = NSMutableArray.new;
         DPOINT dpnt = LLPointToDPoint (CRAPI.sharedInstance.currentGPSLocation);
         DPoint * dpt = [DPoint fromDPOINT:&dpnt];
@@ -494,7 +507,7 @@ typedef struct {
         if (CRAPI.sharedInstance.amBuildingTrackRoute)
         {
             HuntingData *hd = HuntingData.new;
-            int numPointsInRoute = CRAPI.sharedInstance.currentTrackRoute.count;
+            int numPointsInRoute = (int) CRAPI.sharedInstance.currentTrackRoute.count;
             if (_walkingCoordinates > 1)
             {
                 int numPointsToRemove = _walkingCoordinates / 2;
@@ -502,7 +515,7 @@ typedef struct {
                 {
                     while (numPointsToRemove--)
                         [CRAPI.sharedInstance.currentTrackRoute removeLastObject];
-                    numPointsInRoute = CRAPI.sharedInstance.currentTrackRoute.count;
+                    numPointsInRoute = (int) CRAPI.sharedInstance.currentTrackRoute.count;
                 }
             }
 
@@ -573,7 +586,7 @@ typedef struct {
 - (NSString *) getCurrentMotionActivity
 {
     NSString * rtn = @"";
-    if (_motionIsActive)
+    if (_motionIsActive && CRAPI.sharedInstance.displayMotion)
         rtn = _currentMotionActivity;
     return rtn;
 }
@@ -713,18 +726,15 @@ typedef struct {
     [self clearTrackRoute];
     CRAPI.sharedInstance.amBuildingTrackRoute = TRUE;
     [hd deleteWaypointsOfType:@"Vehicle"];
-    LLPOINT pnt;
-    //_vehicleCoordinates = nil;
+    LLPOINT pnt = _currentPoint;
     if (_vehicleCoordinates)
     {
-        int midCoorIndex = _vehicleCoordinates.count / 2;
+        int midCoorIndex = (int)_vehicleCoordinates.count / 2;
         DPoint * midCoor = _vehicleCoordinates[midCoorIndex];
         DPOINT dpt = [midCoor toDPOINT];
         pnt = DPointToLLPoint(dpt);
         _vehicleCoordinates = nil;
     }
-    else
-        pnt = _currentPoint;
     [hd addWaypoint:@"V" type:@"Vehicle" latlon:pnt description:@"" displayOnCompass:YES];
     CRAPI.sharedInstance.currentVehicleLocation = pnt;
     if (self.delegate && [self.delegate respondsToSelector:@selector(didMarkVehicleLocation:)])
@@ -983,6 +993,8 @@ typedef struct {
             if (dist < 1)
                 addIt = FALSE;
         }
+        else
+            _maxDistFromVehicle = 0;
         if (addIt)
         {
             rtn = 1;
@@ -991,6 +1003,7 @@ typedef struct {
             if (CRAPI.sharedInstance.currentVehicleLocation.lon != 0)
             {
                 dist = ArcDistanceLL(routePoint.latlon,CRAPI.sharedInstance.currentVehicleLocation);
+                _maxDistFromVehicle = max (_maxDistFromVehicle,dist);
                 if (CRAPI.sharedInstance.waitingToMoveAwayFromVehicle)
                 {
                     if (dist > _moveAwayFromVehicleDist)
@@ -998,7 +1011,7 @@ typedef struct {
                         [self movedAwayFromVehicle];
                     }
                 }
-                /*else if (dist < _returnToVehicleDist && CRAPI.sharedInstance.amBuildingTrackRoute)
+                else if (dist < _returnToVehicleDist && CRAPI.sharedInstance.amBuildingTrackRoute && _maxDistFromVehicle > _minTrackRouteDist)
                 {
                     int trackTime = getCurrentTime() - CRAPI.sharedInstance.trackRouteStartTime;
                     NSLog (@"Track time:%i",trackTime);
@@ -1008,7 +1021,7 @@ typedef struct {
                         CRAPI.sharedInstance.currentVehicleLocation = pt;
                         rtn = 2;
                     }
-                }*/
+                }
             }
         }
     }

@@ -90,6 +90,7 @@ NVSlopeData CurrentSlopeData;
         _newDataset = CURBRAMPS;
         //_newDataset = ALLEYWALLS;
         _kp = 0;
+        _displayMotion = NO;
         _autoStartRoute = YES;
         _routeBearing = nil;
         self.currentBearing = 0;
