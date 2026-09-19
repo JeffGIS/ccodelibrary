@@ -226,6 +226,9 @@ int     fcloseGSSi(FILE * file);
     {
         CLLocationCoordinate2D coord = [_delegate coordinateForPoint:gesture.view.center];
         [_coordinates addObject:[NSValue valueWithMKCoordinate:coord]];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(digitizerViewDidAddPoint:)])
+            [self.delegate digitizerViewDidAddPoint:coord];
+
         _targetTapped = YES;
     }
     

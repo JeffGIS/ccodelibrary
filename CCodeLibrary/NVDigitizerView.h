@@ -14,6 +14,8 @@
 
 - (void)zoomMapToNearLeft:(CLLocationCoordinate2D)nearLeft
                  farRight:(CLLocationCoordinate2D)farRight;
+@optional
+- (void)digitizerViewDidAddPoint:(CLLocationCoordinate2D)point;
 
 @end
 
