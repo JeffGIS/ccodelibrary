@@ -16,7 +16,7 @@
 @property int temp;
 @property int windSpeed;
 @property int windDir;
-@property int sunRise, sunSet;
+@property long sunRise, sunSet;
 @end
 
 @class WeatherData;
@@ -31,6 +31,7 @@
 
 
 @interface WeatherData : NSObject <NSURLConnectionDataDelegate>
+@property int currentGMTOff;
 
 -(bool) getCurrentWeather:(LLPOINT)at
                  delegate:(id)delegate;

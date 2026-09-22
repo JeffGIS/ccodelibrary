@@ -5,6 +5,8 @@
 //  Created by Jeff Smith on 12/7/22.
 //  Copyright © 2022 GSSi. All rights reserved.
 //
+long currentGMTOff = 0;
+int currentIsDST = 0;
 
 #import <Foundation/Foundation.h>
 #import "WeatherData.h"
@@ -189,6 +191,9 @@
     struct tm forecast_time = *localtime (&iTime);
     time_t currentTime = NSDate.date.timeIntervalSince1970;
     struct tm current_time = *localtime (&currentTime);
+    currentGMTOff = current_time.tm_gmtoff;
+    currentIsDST = current_time.tm_isdst;
+    
     int today = current_time.tm_wday;
     int forecastday = forecast_time.tm_wday;
     if  (forecastday < today)
