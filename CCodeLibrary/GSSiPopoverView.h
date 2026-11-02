@@ -3,6 +3,7 @@
 
 #import <UIKit/UIKit.h>
 #import "NVProgressView.h"
+#import "UIView+Constraints.h"
 @class GSSiPopoverView;
 
 @protocol GSSiPopoverViewDelegate <NSObject>
